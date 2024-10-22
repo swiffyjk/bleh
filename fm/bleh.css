@@ -6377,7 +6377,7 @@ button,
 /*     ICON MASK     */
 .error-page h3:before,
 .requesting:before,
-.modal-processing:before,
+.modal-processing:before, #bleh--window-bleh_wait--body:before,
 .side-right .setting-item:before, .action:before,
 .setup-icon:before, .setup-icon:after,
 .btn.back:before,
@@ -8252,6 +8252,7 @@ form[action="/inbox/notifications"] {
 .gallery--initialised .gallery-slide {
     transition: left var(--trans) var(--trans-function);
 }
+#bleh--window-bleh_wait--body,
 .modal-processing,
 .gallery-placeholder {
     color: hsl(var(--c3));
@@ -8264,6 +8265,10 @@ form[action="/inbox/notifications"] {
     &:before {
         animation: spinner 0.8s linear infinite;
     }
+}
+
+#bleh--window-bleh_wait--body {
+    min-height: 200px;
 }
 
 

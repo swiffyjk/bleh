@@ -2783,24 +2783,15 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bleh/setup$');
                         <div class="icon bleh--updates"></div>
                         <span class="text">
                             <h5>${trans[lang].settings.home.update.name}</h5>
-                            <p>${trans[lang].settings.home.update.bio}</p>
+                            <p>${version.build}</p>
                         </span>
                     </a>
-                    ${(!settings.dev ? (`
-                    <button class="btn action" onclick="_force_refresh_theme()">
-                        <div class="icon bleh--updates"></div>
-                        <span class="text">
-                            <h5>${trans[lang].settings.home.update.css}</h5>
-                            <p>${trans[lang].settings.home.update.bio}</p>
-                        </span>
-                    </button>
-                    `) : '')}
                     ${(settings.dev ? (`
                     <a class="btn action" href="https://github.com/katelyynn/bleh/raw/uwu/fm/bleh.user.css">
                         <div class="icon bleh--updates"></div>
                         <span class="text">
                             <h5>${trans[lang].settings.home.update.css}</h5>
-                            <p>${trans[lang].settings.home.update.bio}</p>
+                            <p>${theme_version}</p>
                         </span>
                     </a>
                     `) : '')}
@@ -2810,8 +2801,8 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bleh/setup$');
                 <button class="btn" onclick="_ignore_update()">
                     ${trans[lang].settings.home.update.ignore}
                 </button>
-                <button class="btn primary continue" onclick="_invoke_reload()">
-                    ${trans[lang].settings.continue}
+                <button class="btn primary continue" onclick="_finish_update()">
+                    ${trans[lang].settings.finish}
                 </button>
             </div>
         `));
@@ -2827,7 +2818,19 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bleh/setup$');
         console.info('bleh - style is cached until', api_expire);
     }
 
-    function fetch_new_style(delete_old_style = false) {
+    unsafeWindow._finish_update = function() {
+        kill_window('bleh_update');
+
+        if (!settings.dev) {
+            create_window('bleh_wait',trans[lang].settings.home.update.name,'');
+            fetch_new_style(false, true);
+        } else {
+            // dev
+            invoke_reload();
+        }
+    }
+
+    function fetch_new_style(delete_old_style = false, reload_on_finish = false) {
         let xhr = new XMLHttpRequest();
         let url = 'https://katelyynn.github.io/bleh/fm/bleh.css';
         xhr.open('GET',url,true);
@@ -2852,6 +2855,9 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bleh/setup$');
             api_expire.setHours(api_expire.getHours() + 1);
             localStorage.setItem('bleh_cached_style_timeout',api_expire);
             console.info('bleh - style is cached until', api_expire);
+
+            if (reload_on_finish)
+                invoke_reload();
 
             setTimeout(function() {document.body.classList.add('bleh');}, 200);
             theme_version = getComputedStyle(document.body).getPropertyValue('--version-build').replaceAll("'", ''); // remove quotations
