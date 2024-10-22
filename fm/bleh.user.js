@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         bleh
 // @namespace    http://last.fm/
-// @version      2024.1020
+// @version      2024.1021
 // @description  bleh!!! ^-^
 // @author       kate
 // @match        https://www.last.fm/*
@@ -18,7 +18,7 @@
 // ==/UserScript==
 
 let version = {
-    build: '2024.1020',
+    build: '2024.1021',
     sku: 'falter',
     feature_flags: {
         bleh_settings_tabs: {

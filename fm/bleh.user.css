@@ -1,7 +1,7 @@
 /* ==UserStyle==
 @name           bleh (dev)
 @namespace      github.com/katelyynn/bleh
-@version        2024.1020
+@version        2024.1021
 @license        GPL-3.0
 @author         kate
 @updateURL      https://github.com/katelyynn/bleh/raw/uwu/fm/bleh.user.css
@@ -15,7 +15,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Ubuntu+Sans:ital,wght@0,100..800;1,100..800&display=swap');
 
 body {
-    --version-build: '2024.1020';
+    --version-build: '2024.1021';
 
     --hue:  var(--hue-over,
             var(--hue-album,
@@ -7083,16 +7083,16 @@ very, very, very dated - who looks up a song on ebay? */
         [data-analytics-label="labs"],
         .more-item--obsession
         ) {
-        --hue: var(--hue-neg);
-        --sat: 1;
-        --lit: 1;
+        --hue-over: var(--hue-neg);
+        --sat-over: 1;
+        --lit-over: 1;
     }
 }
 #manage_data .btn-primary
 {
-    --hue: var(--hue-neg);
-    --sat: 1;
-    --lit: 1;
+    --hue-over: var(--hue-neg);
+    --sat-over: 1;
+    --lit-over: 1;
     --mask: var(--icon-16-user-remove);
     position: relative;
 }
@@ -7101,18 +7101,18 @@ very, very, very dated - who looks up a song on ebay? */
 /*     SPECIAL     */
 .more-item--obsession
 {
-    --hue: 255;
-    --sat: 1;
-    --lit: 1;
+    --hue-over: 255;
+    --sat-over: 1;
+    --lit-over: 1;
 }
 
 
 /*     LABS     */
 [data-analytics-label="labs"]
 {
-    --hue: 200;
-    --sat: 1;
-    --lit: 1;
+    --hue-over: 200;
+    --sat-over: 1;
+    --lit-over: 1;
 }
 
 
@@ -7122,14 +7122,14 @@ very, very, very dated - who looks up a song on ebay? */
     --bg-hov: hsla(var(--h3), 8%) !important;
     --bg-atv: hsla(var(--h3), 18%) !important;
     --col: hsl(var(--l3-c)) !important;
-    --hue: var(--hue-pro);
-    --sat: 1;
-    --lit: 1;
+    --hue-over: var(--hue-pro);
+    --sat-over: 1;
+    --lit-over: 1;
 }
 #pro-header-cta button {
-    --hue: var(--pro) !important;
-    --sat: 1;
-    --lit: 1;
+    --hue-over: var(--pro) !important;
+    --sat-over: 1;
+    --lit-over: 1;
 }
 
 
