@@ -1,7 +1,7 @@
 /* ==UserStyle==
 @name           bleh (dev)
 @namespace      github.com/katelyynn/bleh
-@version        2024.1021
+@version        2024.1024
 @license        GPL-3.0
 @author         kate
 @updateURL      https://github.com/katelyynn/bleh/raw/uwu/fm/bleh.user.css
@@ -15,7 +15,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Ubuntu+Sans:ital,wght@0,100..800;1,100..800&display=swap');
 
 body {
-    --version-build: '2024.1021';
+    --version-build: '2024.1024';
 
     --hue:  var(--hue-over,
             var(--hue-album,
@@ -62,7 +62,7 @@ body {
     }
     [data-season="fall"],
     [data-bleh--season="fall"] & {
-        --hue-seasonal: 228;
+        --hue-seasonal: 224;
         --sat-seasonal: 0.85;
         --lit-seasonal: 1.1;
 
@@ -72,9 +72,14 @@ body {
     [data-bleh--season="christmas"] & {
         --hue-seasonal: 204;
         --sat-seasonal: 0.85;
-        --lit-seasonal: 1.2;
+        --lit-seasonal: 1.17;
 
         --hue-pos: 150;
+
+        --icon-16-snowgirl: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyLjUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgY2xhc3M9Imx1Y2lkZSBsdWNpZGUtc25vd21hbiI+PGNpcmNsZSBjeD0iMTIiIGN5PSI2IiByPSI0Ii8+PHBhdGggZD0iTTEyIDE0aC4wMSIvPjxwYXRoIGQ9Ik0xMiAxOGguMDEiLz48cGF0aCBkPSJNMiA5aDJWNyIvPjxwYXRoIGQ9Ik03IDEyIDQgOSIvPjxwYXRoIGQ9Ik0xNy44IDExLjEgMjAgOSIvPjxwYXRoIGQ9Ik0yMCA3djJoMiIvPjxwYXRoIGQ9Ik05IDguN2E3IDcgMCAxIDAgNiAwIi8+PHBhdGggZD0iTTUgMjJoMTQiLz48L3N2Zz4=');
+        --icon-16-profile: var(--icon-16-snowgirl);
+        --icon-16-artist: var(--icon-16-snowgirl);
+        --icon-artist: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLXNub3dtYW4iPjxjaXJjbGUgY3g9IjEyIiBjeT0iNiIgcj0iNCIvPjxwYXRoIGQ9Ik0xMiAxNGguMDEiLz48cGF0aCBkPSJNMTIgMThoLjAxIi8+PHBhdGggZD0iTTIgOWgyVjciLz48cGF0aCBkPSJNNyAxMiA0IDkiLz48cGF0aCBkPSJNMTcuOCAxMS4xIDIwIDkiLz48cGF0aCBkPSJNMjAgN3YyaDIiLz48cGF0aCBkPSJNOSA4LjdhNyA3IDAgMSAwIDYgMCIvPjxwYXRoIGQ9Ik01IDIyaDE0Ii8+PC9zdmc+');
     }
     [data-season="new_years"],
     [data-bleh--season="new_years"] & {
@@ -1031,6 +1036,25 @@ last.fm changes as of 2024-05-20 */
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
 
+        [data-bleh--season="pride"] & {
+            /* this isnt using https://cesque.com/gaydient/ but shoutout,
+            based on https://codepen.io/charliewilco/pen/BzrJzE */
+            --g-red: hsl(8, 62%, 60%);
+            --g-orange: hsl(24, 86%, 60%);
+            --g-yellow: hsl(44, 100%, 60%);
+            --g-green: hsl(163, 100%, 60%);
+            --g-blue: hsl(199, 79%, 60%);
+            --g-indigo: hsl(254, 46%, 60%);
+            background-image: linear-gradient(90deg,
+            var(--g-red) 16.6666%,
+            var(--g-orange) 33.333%,
+            var(--g-yellow) 50%,
+            var(--g-green) 66.6666%,
+            var(--g-blue) 83.3333%,
+            var(--g-indigo) 100%
+            );
+        }
+
         /* bleh */
         &:before {
             all: inherit;
@@ -1640,10 +1664,14 @@ body[class*="namespace--user_library_"] .col-sidebar, .library-header,
             background-position: unset !important;
         }
     }
-    [data-bleh--seasonal_overlays="true"][data-bleh--season="fall"] &:not(.header-featured-track, .shh),
     [data-bleh--seasonal_overlays="true"][data-bleh--season="christmas"] &:not(.header-featured-track, .shh),
     [data-bleh--seasonal_overlays="true"][data-bleh--season="new_years"] &:not(.header-featured-track, .shh) {
-        background-image: var(--overlay-ice), linear-gradient(180deg, rgba(190,233,250,0.04) 0%, rgba(0,0,0,0) 100%) !important;
+        background-image: var(--overlay-ice), linear-gradient(180deg, rgba(190,233,250,0.06) 0%, rgba(0,0,0,0) 100%) !important;
+        background-repeat: repeat-x;
+        background-position: unset !important;
+    }
+    [data-bleh--seasonal_overlays="true"][data-bleh--season="fall"] &:not(.header-featured-track, .shh) {
+        background-image: var(--overlay-ice), linear-gradient(180deg, rgba(190,233,250,0.03) 0%, rgba(0,0,0,0) 100%) !important;
         background-repeat: repeat-x;
         background-position: unset !important;
     }
@@ -5199,11 +5227,11 @@ better than the default selector '#app a' i suppose */
     left: calc(84px - 2px);
     margin-top: 16px;
 }
-.chartlist--with-bar.chartlist--with-index.chartlist--with-play.chartlist--with-image.chartlist--with-loved.chartlist--with-index--length-3 .chartlist-row--with-artist .chartlist-artist, .chartlist--with-multi-playlinks.chartlist--with-index.chartlist--with-play.chartlist--with-image.chartlist--with-loved.chartlist--with-index--length-3 .chartlist-row--with-artist .chartlist-artist {
+.chartlist--with-bar.chartlist--with-index.chartlist--with-play.chartlist--with-image.chartlist--with-index--length-3 .chartlist-row--with-artist .chartlist-artist, .chartlist--with-multi-playlinks.chartlist--with-index.chartlist--with-play.chartlist--with-image.chartlist--with-index--length-3 .chartlist-row--with-artist .chartlist-artist {
     left: calc(92px - 2px);
     margin-top: 16px;
 }
-.chartlist--with-bar.chartlist--with-index.chartlist--with-play.chartlist--with-image.chartlist--with-loved.chartlist--with-index--length-4 .chartlist-row--with-artist .chartlist-artist, .chartlist--with-multi-playlinks.chartlist--with-index.chartlist--with-play.chartlist--with-image.chartlist--with-loved.chartlist--with-index--length-4 .chartlist-row--with-artist .chartlist-artist {
+.chartlist--with-bar.chartlist--with-index.chartlist--with-play.chartlist--with-image.chartlist--with-index--length-4 .chartlist-row--with-artist .chartlist-artist, .chartlist--with-multi-playlinks.chartlist--with-index.chartlist--with-play.chartlist--with-image.chartlist--with-index--length-4 .chartlist-row--with-artist .chartlist-artist {
     left: calc(103px - 2px);
 }
 
@@ -15987,6 +16015,28 @@ button.bleh--gallery-bookmark-image-btn {
 
         &[data-season="easter"] {
             --mask: var(--icon-16-egg);
+        }
+        &[data-season="pride"] {
+            --mask: var(--icon-16-pride);
+            /* this isnt using https://cesque.com/gaydient/ but shoutout,
+            based on https://codepen.io/charliewilco/pen/BzrJzE */
+            --g-red: hsl(8, 62%, 60%);
+            --g-orange: hsl(24, 86%, 60%);
+            --g-yellow: hsl(44, 100%, 60%);
+            --g-green: hsl(163, 100%, 60%);
+            --g-blue: hsl(199, 79%, 60%);
+            --g-indigo: hsl(254, 46%, 60%);
+            background-image: linear-gradient(90deg,
+            var(--g-red) 16.6666%,
+            var(--g-orange) 33.333%,
+            var(--g-yellow) 50%,
+            var(--g-green) 66.6666%,
+            var(--g-blue) 83.3333%,
+            var(--g-indigo) 100%
+            );
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
         &[data-season="halloween"] {
             --mask: var(--icon-16-pumpkin);

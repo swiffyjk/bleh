@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         bleh
 // @namespace    http://last.fm/
-// @version      2024.1021
+// @version      2024.1024
 // @description  bleh!!! ^-^
 // @author       kate
 // @match        https://www.last.fm/*
@@ -18,7 +18,7 @@
 // ==/UserScript==
 
 let version = {
-    build: '2024.1021',
+    build: '2024.1024',
     sku: 'falter',
     feature_flags: {
         bleh_settings_tabs: {
@@ -279,6 +279,7 @@ const trans = {
                     bio: 'During seasonal events, bleh can automatically change the default accent colour, add particles, and add overlays to various interface elements.',
                     listing: {
                         easter: 'Easter',
+                        pride: 'Pride',
                         halloween: 'Halloween',
                         pre_fall: 'Pre-Fall',
                         fall: 'Fall',
@@ -842,6 +843,7 @@ const trans = {
                     bio: 'Während saisonaler Ereignisse kann bleh automatisch die Standardakzentfarbe ändern, Partikel hinzufügen und verschiedenen Schnittstellenelementen Overlays hinzufügen.',
                     listing: {
                         easter: 'Ostern',
+                        pride: 'Pride',
                         halloween: 'Halloween',
                         pre_fall: 'Vorherbst',
                         fall: 'Herbst',
@@ -1657,6 +1659,16 @@ let seasonal_events = [
         name: 'Easter',
         start: 'y0-04-05',
         end: 'y0-04-30T23:59:59',
+
+        snowflakes: {
+            state: false
+        }
+    },
+    {
+        id: 'pride',
+        name: 'Pride',
+        start: 'y0-05-31',
+        end: 'y0-07-07T23:59:59',
 
         snowflakes: {
             state: false
