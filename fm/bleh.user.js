@@ -2726,9 +2726,18 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bleh/setup$');
         let cached_style = localStorage.getItem('bleh_cached_style') || '';
         let body = document.body.classList;
 
-        // style is not fetched in dev mode
-        if (settings.dev || body.contains('namespace--user_listening-report_playback') || (body.contains('labs-section') && !body.contains('namespace--labs_overview')))
+        // style is neither fetched or applied in these interfaces
+        if (body.contains('namespace--user_listening-report_playback') || (body.contains('labs-section') && !body.contains('namespace--labs_overview')))
             return;
+
+        // while the style is not to be applied in dev mode,
+        // we now fetch it to retrieve current version info
+        if (settings.dev) {
+            console.info('bleh - dev mode is on, so style will be fetched for version info only');
+            fetch_style_info();
+
+            return;
+        }
 
         if (cached_style == '') {
             // style has never been cached
@@ -2872,8 +2881,10 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bleh/setup$');
             if (reload_on_finish)
                 invoke_reload();
 
-            setTimeout(function() {document.body.classList.add('bleh');}, 200);
-            theme_version = getComputedStyle(document.body).getPropertyValue('--version-build').replaceAll("'", ''); // remove quotations
+            setTimeout(function() {
+                document.body.classList.add('bleh');
+                theme_version = getComputedStyle(document.body).getPropertyValue('--version-build').replaceAll("'", ''); // remove quotations
+            }, 200);
 
 
             // in versions 2024.1019 and onwards, the css stores version itself
@@ -2882,6 +2893,51 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bleh/setup$');
             if (theme_version != version.build && theme_version != '') {
                 // script is either out of date, or more in date (not gonna happen)
                 console.info('bleh - attempted to fetch new style, however theme returned version', theme_version, 'meanwhile script is running', version.build, '- halted');
+
+                prompt_for_update();
+                return;
+            }
+        }
+
+        xhr.send();
+    }
+
+    function fetch_style_info(delete_old_style = false, reload_on_finish = false) {
+        let xhr = new XMLHttpRequest();
+        let url = 'https://katelyynn.github.io/bleh/fm/bleh.css';
+        xhr.open('GET',url,true);
+
+        xhr.onload = function() {
+            console.info('bleh - style responded with', xhr.status);
+
+            // create style element
+            let style = document.createElement('style');
+            style.textContent = this.response;
+            document.documentElement.appendChild(style);
+
+            // save to cache for next page load
+            localStorage.setItem('bleh_cached_style',this.response);
+
+            // set expire date
+            let api_expire = new Date();
+            api_expire.setHours(api_expire.getHours() + 1);
+            localStorage.setItem('bleh_cached_style_timeout',api_expire);
+            console.info('bleh - style is cached until', api_expire);
+
+            // we will temporarily apply the style just for theme info, then remove it
+            setTimeout(function() {
+                theme_version = getComputedStyle(document.body).getPropertyValue('--version-build').replaceAll("'", ''); // remove quotations
+
+                document.documentElement.removeChild(style);
+            }, 200);
+
+
+            // in versions 2024.1019 and onwards, the css stores version itself
+            // we can use this to compare if we should fetch a new one
+            // as we don't want to fetch a new css while the js is out of date
+            if (theme_version != version.build && theme_version != '') {
+                // script is either out of date, or more in date (not gonna happen)
+                console.info('bleh - fetched style info, in result theme returned version', theme_version, 'meanwhile script is running', version.build, '- halted');
 
                 prompt_for_update();
                 return;
