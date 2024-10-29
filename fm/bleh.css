@@ -5,7 +5,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Ubuntu+Sans:ital,wght@0,100..800;1,100..800&display=swap');
 
 body {
-    --version-build: '2024.1028';
+    --version-build: '2024.1029';
 
     --hue:  var(--hue-over,
             var(--hue-album,
@@ -7554,8 +7554,8 @@ input:is([name="track_name"], [name="artist_name"], [name="album_name"], [name="
 
 .modal-body .modal-title {
     padding-bottom: unset;
-    font-size: var(--font-size);
-    line-height: var(--line-height);
+    font-size: 16px;
+    line-height: 20px;
     font-weight: var(--font-weight-medium);
     letter-spacing: unset;
     text-align: left;
