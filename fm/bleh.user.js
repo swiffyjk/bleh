@@ -2805,7 +2805,7 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bleh/setup$');
                         <div class="icon bleh--updates"></div>
                         <span class="text">
                             <h5>${trans[lang].settings.home.update.name}</h5>
-                            <p>${version.build}</p>
+                            <p>${theme_version}</p>
                         </span>
                     </a>
                     ${(settings.dev ? (`
