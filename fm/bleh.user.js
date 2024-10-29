@@ -1678,7 +1678,7 @@ let seasonal_events = [
         id: 'halloween',
         name: 'Halloween',
         start: 'y0-09-22',
-        end: 'y0-11-02T23:59:59',
+        end: 'y0-11-01T23:59:59',
 
         snowflakes: {
             state: false
@@ -1687,7 +1687,7 @@ let seasonal_events = [
     {
         id: 'pre_fall',
         name: 'Pre-Fall',
-        start: 'y0-11-03',
+        start: 'y0-11-02',
         end: 'y0-11-12T23:59:59',
 
         snowflakes: {
