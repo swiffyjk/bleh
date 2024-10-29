@@ -3916,7 +3916,7 @@ state is not active, which then falls back to primary button styling */
     --mask: var(--icon-cat);
     color: hsl(var(--l3-c)) !important;
 
-    &.user-status--bleh-user-Iexyy {
+    &.user-status--bleh-user-rainsleep {
         --hue-over: 206;
         --sat-over: 1;
         --lit-over: 1.1;

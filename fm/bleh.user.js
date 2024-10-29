@@ -2189,7 +2189,7 @@ let profile_badges = {
             name: 'cute'
         }
     ],
-    'Iexyy': {
+    'rainsleep': {
         type: 'cat',
         name: 'it\'s a kitty!!'
     },
