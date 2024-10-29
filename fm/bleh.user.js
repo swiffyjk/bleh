@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         bleh
 // @namespace    http://last.fm/
-// @version      2024.1027
+// @version      2024.1028
 // @description  bleh!!! ^-^
 // @author       kate
 // @match        https://www.last.fm/*
@@ -18,7 +18,7 @@
 // ==/UserScript==
 
 let version = {
-    build: '2024.1027',
+    build: '2024.1028',
     sku: 'falter',
     feature_flags: {
         bleh_settings_tabs: {
@@ -1730,7 +1730,8 @@ function set_season() {
     seasonal_events.forEach((season) => {
         if (
             now >= new Date(season.start.replace('y0', current_year)) &&
-            now <= new Date(season.end.replace('y0', current_year))
+            now <= new Date(season.end.replace('y0', current_year)) &&
+            stored_season != season
         ) {
             stored_season = season;
             stored_season.now = now;
