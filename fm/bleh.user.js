@@ -5286,25 +5286,15 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bleh/setup$');
                 <h4>${trans[lang].settings.home.thanks
                 .replace('{m}', `<a class="mention" href="${root}user/${auth}">@${auth}</a>`)
                 .replace('{v}', `<span class="version-link" onclick="_change_settings_page('sku')">${version.build}.${version.sku}</span>`)}</h4>
-                ${(theme_version != version.build && theme_version != '') ? `<div class="alert alert-update">${trans[lang].settings.home.update.notice}</div>` : ''}
                 <div class="screen-row actions-only">
                     <div class="actions">
-                        <a class="btn action" href="https://github.com/katelyynn/bleh/raw/uwu/fm/bleh.user.js">
+                        <button class="btn action" onclick="_force_refresh_theme()">
                             <div class="icon bleh--updates"></div>
                             <span class="text">
                                 <h5>${trans[lang].settings.home.update.name}</h5>
                                 <p>${trans[lang].settings.home.update.bio}</p>
                             </span>
-                        </a>
-                        ${((!settings.dev && theme_version != version.build && theme_version != '') ? (`
-                        <button class="btn action" onclick="_force_refresh_theme()">
-                            <div class="icon bleh--updates"></div>
-                            <span class="text">
-                                <h5>${trans[lang].settings.home.update.css}</h5>
-                                <p>${trans[lang].settings.home.update.bio}</p>
-                            </span>
                         </button>
-                        `) : '')}
                         ${(settings.dev ? (`
                         <a class="btn action" href="https://github.com/katelyynn/bleh/raw/uwu/fm/bleh.user.css">
                             <div class="icon bleh--updates"></div>
