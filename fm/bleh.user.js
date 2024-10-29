@@ -1827,6 +1827,8 @@ let artist_corrections = {
     'Boa': 'BoA',
     'Paris Match': 'paris match',
     'Iri': 'iri',
+    'Rosé': 'ROSÉ',
+    'Aran': 'aran',
     //
     'ty dolla $ign': 'Ty Dolla $ign',
     'juicy J': 'Juicy J',
@@ -7628,8 +7630,10 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bleh/setup$');
             let field_group = extras[extra].group;
             // remove beginning tag
             let field_text = extras[extra].text
-            .replace(' feat. ', '').replace('feat. ', '').replace('featuring ', '').replace('Feat. ', '').replace('ft. ', '').replace('FEAT. ', '').replace('WITH', 'with')
-            .replace('w/ ', '').replace('with ', '')
+            .replace(' feat. ', '').replace('feat. ', '')
+            .replace('featuring ', '').replace('Feat. ', '')
+            .replace('ft. ', '').replace('FEAT. ', '')
+            .replace('WITH', 'with').replace('w/ ', '').replace('with ', '').replace('With ', '')
             .replaceAll(' & ', ';').replaceAll(', ', ';').replaceAll(' and ', ';')
             .replaceAll('Tyler;the', 'Tyler, the').replaceAll(' with ', ';')
             .replaceAll('- ', '')
