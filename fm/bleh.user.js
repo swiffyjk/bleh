@@ -2886,19 +2886,18 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bleh/setup$');
             setTimeout(function() {
                 document.body.classList.add('bleh');
                 theme_version = getComputedStyle(document.body).getPropertyValue('--version-build').replaceAll("'", ''); // remove quotations
+
+                // in versions 2024.1019 and onwards, the css stores version itself
+                // we can use this to compare if we should fetch a new one
+                // as we don't want to fetch a new css while the js is out of date
+                if (theme_version != version.build && theme_version != '') {
+                    // script is either out of date, or more in date (not gonna happen)
+                    console.info('bleh - attempted to fetch new style, however theme returned version', theme_version, 'meanwhile script is running', version.build, '- halted');
+
+                    prompt_for_update();
+                    return;
+                }
             }, 200);
-
-
-            // in versions 2024.1019 and onwards, the css stores version itself
-            // we can use this to compare if we should fetch a new one
-            // as we don't want to fetch a new css while the js is out of date
-            if (theme_version != version.build && theme_version != '') {
-                // script is either out of date, or more in date (not gonna happen)
-                console.info('bleh - attempted to fetch new style, however theme returned version', theme_version, 'meanwhile script is running', version.build, '- halted');
-
-                prompt_for_update();
-                return;
-            }
         }
 
         xhr.send();
@@ -2931,19 +2930,18 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bleh/setup$');
                 theme_version = getComputedStyle(document.body).getPropertyValue('--version-build').replaceAll("'", ''); // remove quotations
 
                 document.documentElement.removeChild(style);
+
+                // in versions 2024.1019 and onwards, the css stores version itself
+                // we can use this to compare if we should fetch a new one
+                // as we don't want to fetch a new css while the js is out of date
+                if (theme_version != version.build && theme_version != '') {
+                    // script is either out of date, or more in date (not gonna happen)
+                    console.info('bleh - fetched style info, in result theme returned version', theme_version, 'meanwhile script is running', version.build, '- halted');
+
+                    prompt_for_update();
+                    return;
+                }
             }, 200);
-
-
-            // in versions 2024.1019 and onwards, the css stores version itself
-            // we can use this to compare if we should fetch a new one
-            // as we don't want to fetch a new css while the js is out of date
-            if (theme_version != version.build && theme_version != '') {
-                // script is either out of date, or more in date (not gonna happen)
-                console.info('bleh - fetched style info, in result theme returned version', theme_version, 'meanwhile script is running', version.build, '- halted');
-
-                prompt_for_update();
-                return;
-            }
         }
 
         xhr.send();
