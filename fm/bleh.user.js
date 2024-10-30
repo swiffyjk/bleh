@@ -18,7 +18,7 @@
 // ==/UserScript==
 
 let version = {
-    build: '2024.1030.1',
+    build: '2024.1030.2',
     sku: 'falter',
     feature_flags: {
         bleh_settings_tabs: {

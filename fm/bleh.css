@@ -5,7 +5,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Ubuntu+Sans:ital,wght@0,100..800;1,100..800&display=swap');
 
 body {
-    --version-build: '2024.1030.1';
+    --version-build: '2024.1030.2';
 
     --hue:  var(--hue-over,
             var(--hue-album,
@@ -4438,7 +4438,6 @@ state is not active, which then falls back to primary button styling */
         box-shadow: unset;
         background-color: hsl(var(--b6));
         color: hsl(var(--c3));
-        outline: var(--card-border);
     }
 
     &:after {
@@ -15656,7 +15655,6 @@ button.bleh--gallery-bookmark-image-btn {
 
     html:not([data-bleh--theme="oled"], [data-bleh--theme="light"]) &.profile-top-header {
         background-color: hsl(var(--b5));
-        outline: var(--card-border);
     }
 
     &.profile-top-header,
