@@ -5,7 +5,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Ubuntu+Sans:ital,wght@0,100..800;1,100..800&display=swap');
 
 body {
-    --version-build: '2024.1029';
+    --version-build: '2024.1030';
 
     --hue:  var(--hue-over,
             var(--hue-album,
@@ -246,7 +246,8 @@ input[type="range"],
 .track .bar .colourful,
 .setup-colour-behind,
 .action .icon,
-[data-season]
+[data-season],
+.small-alert
 {
     --hue:  var(--hue-over,
             var(--hue-album,
@@ -505,7 +506,10 @@ body {
 
     --icon-10-revert: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIzIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLXJvdGF0ZS1jY3ciPjxwYXRoIGQ9Ik0zIDEyYTkgOSAwIDEgMCA5LTkgOS43NSA5Ljc1IDAgMCAwLTYuNzQgMi43NEwzIDgiLz48cGF0aCBkPSJNMyAzdjVoNSIvPjwvc3ZnPg==');
 
+    --icon-40-finish: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIxLjUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgY2xhc3M9Imx1Y2lkZSBsdWNpZGUtY2hlY2siPjxwYXRoIGQ9Ik0yMCA2IDkgMTdsLTUtNSIvPjwvc3ZnPg==');
+    --icon-40-download: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIxLjUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgY2xhc3M9Imx1Y2lkZSBsdWNpZGUtYXJyb3ctZG93bi10by1saW5lIj48cGF0aCBkPSJNMTIgMTdWMyIvPjxwYXRoIGQ9Im02IDExIDYgNiA2LTYiLz48cGF0aCBkPSJNMTkgMjFINSIvPjwvc3ZnPg==');
     --icon-40-upload: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIxLjUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgY2xhc3M9Imx1Y2lkZSBsdWNpZGUtYXJyb3ctdXAtZnJvbS1saW5lIj48cGF0aCBkPSJtMTggOS02LTYtNiA2Ii8+PHBhdGggZD0iTTEyIDN2MTQiLz48cGF0aCBkPSJNNSAyMWgxNCIvPjwvc3ZnPg==');
+    --icon-40-cancel: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIxLjUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgY2xhc3M9Imx1Y2lkZSBsdWNpZGUtY2lyY2xlLXNsYXNoIj48Y2lyY2xlIGN4PSIxMiIgY3k9IjEyIiByPSIxMCIvPjxsaW5lIHgxPSI5IiB4Mj0iMTUiIHkxPSIxNSIgeTI9IjkiLz48L3N2Zz4=');
     --icon-40-trash: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIxLjUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgY2xhc3M9Imx1Y2lkZSBsdWNpZGUtdHJhc2gtMiI+PHBhdGggZD0iTTMgNmgxOCIvPjxwYXRoIGQ9Ik0xOSA2djE0YzAgMS0xIDItMiAySDdjLTEgMC0yLTEtMi0yVjYiLz48cGF0aCBkPSJNOCA2VjRjMC0xIDEtMiAyLTJoNGMxIDAgMiAxIDIgMnYyIi8+PGxpbmUgeDE9IjEwIiB4Mj0iMTAiIHkxPSIxMSIgeTI9IjE3Ii8+PGxpbmUgeDE9IjE0IiB4Mj0iMTQiIHkxPSIxMSIgeTI9IjE3Ii8+PC9zdmc+');
     --icon-40-x: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIxLjUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgY2xhc3M9Imx1Y2lkZSBsdWNpZGUteCI+PHBhdGggZD0iTTE4IDYgNiAxOCIvPjxwYXRoIGQ9Im02IDYgMTIgMTIiLz48L3N2Zz4=');
     --icon-40-edit: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIxLjUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgY2xhc3M9Imx1Y2lkZSBsdWNpZGUtcGVuY2lsIj48cGF0aCBkPSJNMjEuMTc0IDYuODEyYTEgMSAwIDAgMC0zLjk4Ni0zLjk4N0wzLjg0MiAxNi4xNzRhMiAyIDAgMCAwLS41LjgzbC0xLjMyMSA0LjM1MmEuNS41IDAgMCAwIC42MjMuNjIybDQuMzUzLTEuMzJhMiAyIDAgMCAwIC44My0uNDk3eiIvPjxwYXRoIGQ9Im0xNSA1IDQgNCIvPjwvc3ZnPg==');
@@ -6403,6 +6407,7 @@ button,
 
 
 /*     ICON MASK     */
+.big-btn:before,
 .error-page h3:before,
 .requesting:before,
 .modal-processing:before, #bleh--window-bleh_wait--body:before,
@@ -15184,6 +15189,55 @@ trying to list every song ever made by someone identifying as a female, which is
         }
     }
 }
+.bleh--update-checker-container {
+    display: flex;
+    margin-top: var(--card-gap);
+
+    .modal-dialog:has(&) {
+        width: calc(450px + (5px * 2)) !important;
+    }
+
+    .form {
+        display: flex;
+        flex-direction: column;
+        flex: 1;
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            flex: 1;
+            gap: var(--card-gap);
+            font-weight: var(--font-weight-medium);
+
+            .big-btn {
+                width: 100px;
+                aspect-ratio: 1 / 1;
+                --radius: 50%;
+                --font-size: 0;
+                --left: 50%;
+                --top: 50%;
+                --mask-size: 40px;
+                --margin-left: calc(-1 * (var(--mask-size) / 2));
+                --margin-top: calc(-1 * (var(--mask-size) / 2));
+                margin: unset !important;
+
+                position: relative;
+
+                &.ignore {
+                    --mask: var(--icon-40-cancel);
+                }
+                &.update {
+                    --mask: var(--icon-40-download);
+                }
+                &.finish {
+                    --mask: var(--icon-40-finish);
+                }
+            }
+        }
+    }
+}
 
 
 .profile-container {
@@ -16541,5 +16595,30 @@ h4 {
             display: flex;
             gap: var(--card-gap);
         }
+    }
+}
+
+
+
+
+.small-alert {
+    padding: 0 6px;
+    background-color: hsla(var(--h4), 20%);
+    color: hsl(var(--l2-c));
+    border-radius: var(--item-small-radius);
+
+    &.red {
+        --hue-over: var(--hue-neg);
+        --sat-over: 1;
+        --lit-over: 1;
+    }
+    &.green {
+        --hue-over: var(--hue-pos);
+        --sat-over: 1;
+        --lit-over: 1;
+    }
+
+    h2 & {
+        display: inline-flex;
     }
 }

@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         bleh
 // @namespace    http://last.fm/
-// @version      2024.1029
+// @version      2024.1030
 // @description  bleh!!! ^-^
 // @author       kate
 // @match        https://www.last.fm/*
@@ -18,7 +18,7 @@
 // ==/UserScript==
 
 let version = {
-    build: '2024.1029',
+    build: '2024.1030',
     sku: 'falter',
     feature_flags: {
         bleh_settings_tabs: {
@@ -184,8 +184,11 @@ const trans = {
                     name: 'Updates',
                     css: 'Update style',
                     bio: 'Check now',
-                    notice: 'bleh is out of date! - use the update buttons below',
-                    ignore: 'Ignore for 1 hour'
+                    notice: 'There are updates available!',
+                    ignore: 'Ignore for 1 hour',
+
+                    update_now: 'Update now',
+                    update_to_v: 'Update to {v}'
                 },
                 setup: {
                     name: 'Setup',
@@ -2799,35 +2802,22 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bleh/setup$');
     }
     function prompt_for_update() {
         // prompt the user
-        create_window('bleh_update',trans[lang].settings.home.update.name,(`
-            <div class="alert alert-update">${trans[lang].settings.home.update.notice}</div>
-            <div class="screen-row actions-only">
-                <div class="actions">
-                    <a class="btn action" href="https://github.com/katelyynn/bleh/raw/uwu/fm/bleh.user.js">
-                        <div class="icon bleh--updates"></div>
-                        <span class="text">
-                            <h5>${trans[lang].settings.home.update.name}</h5>
-                            <p>${theme_version}</p>
-                        </span>
-                    </a>
-                    ${(settings.dev ? (`
-                    <a class="btn action" href="https://github.com/katelyynn/bleh/raw/uwu/fm/bleh.user.css">
-                        <div class="icon bleh--updates"></div>
-                        <span class="text">
-                            <h5>${trans[lang].settings.home.update.css}</h5>
-                            <p>${theme_version}</p>
-                        </span>
-                    </a>
-                    `) : '')}
+        create_window('bleh_update',trans[lang].settings.home.update.update_to_v.replace('{v}', theme_version),(`
+            <div class="bleh--update-checker-container">
+                <div class="form">
+                    <div class="form-group">
+                        <button class="big-btn ignore" onclick="_ignore_update()"></button>
+                        ${trans[lang].settings.home.update.ignore}
+                        <div class="small-alert red">${version.build}</div>
+                    </div>
                 </div>
-            </div>
-            <div class="modal-footer">
-                <button class="btn" onclick="_ignore_update()">
-                    ${trans[lang].settings.home.update.ignore}
-                </button>
-                <button class="btn primary continue" onclick="_finish_update()">
-                    ${trans[lang].settings.finish}
-                </button>
+                <div class="form">
+                    <div class="form-group">
+                        <button class="big-btn primary update" onclick="_start_update()"></button>
+                        ${trans[lang].settings.home.update.update_now}
+                        <div class="small-alert green">${theme_version}</div>
+                    </div>
+                </div>
             </div>
         `));
     }
@@ -2840,6 +2830,48 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bleh/setup$');
         api_expire.setHours(api_expire.getHours() + 1);
         localStorage.setItem('bleh_cached_style_timeout',api_expire);
         console.info('bleh - style is cached until', api_expire);
+    }
+
+    unsafeWindow._start_update = function() {
+        open('https://github.com/katelyynn/bleh/raw/uwu/fm/bleh.user.js');
+
+        kill_window('bleh_update');
+
+        if (!settings.dev) {
+            _final_update();
+        } else {
+            create_window('bleh_update',trans[lang].settings.home.update.update_to_v.replace('{v}', theme_version),(`
+                <div class="bleh--update-checker-container">
+                    <div class="form">
+                        <div class="form-group">
+                            <button class="big-btn primary update" onclick="_start_css_update()"></button>
+                            ${trans[lang].settings.home.update.css}
+                            <div class="small-alert green">${theme_version}</div>
+                        </div>
+                    </div>
+                </div>
+            `));
+        }
+    }
+
+    unsafeWindow._start_css_update = function() {
+        open('https://github.com/katelyynn/bleh/raw/uwu/fm/bleh.user.css');
+
+        kill_window('bleh_update');
+        _final_update();
+    }
+
+    unsafeWindow._final_update = function() {
+        create_window('bleh_update',trans[lang].settings.home.update.update_to_v.replace('{v}', theme_version),(`
+            <div class="bleh--update-checker-container">
+                <div class="form">
+                    <div class="form-group">
+                        <button class="big-btn primary finish" onclick="_finish_update()"></button>
+                        ${trans[lang].settings.finish}
+                    </div>
+                </div>
+            </div>
+        `));
     }
 
     unsafeWindow._finish_update = function() {
@@ -7404,7 +7436,7 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bleh/setup$');
         // title
         let header = document.createElement('h2');
         header.classList.add('modal-title');
-        header.textContent = title;
+        header.innerHTML = title;
         header.setAttribute('data-kate-processed','true');
 
         // inner content
