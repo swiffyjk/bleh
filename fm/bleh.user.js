@@ -3020,7 +3020,7 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bleh/setup$');
             let version_text = document.createElement('a');
             version_text.classList.add('bleh--version');
             version_text.setAttribute('href', `${root}bleh`);
-            version_text.textContent = `${version.build}.${version.sku}`;
+            version_text.textContent = `${version.build}.${version.sku}${(settings.dev) ? ` (dev)` : ''}`;
 
             masthead_logo.appendChild(version_text);
         }
