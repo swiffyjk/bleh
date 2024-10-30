@@ -3924,7 +3924,7 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bleh/setup$');
                         ${trans[lang].settings.inbuilt.profile.avatar.upload}
                     </div>
                     <div class="modal-footer">
-                        <button type="submit save" class="btn-primary" onclick="_save_avatar_changer()">
+                        <button type="submit" class="btn-primary save" onclick="_save_avatar_changer()">
                             ${trans[lang].settings.save}
                         </button>
                         <input type="hidden" value="avatar" name="submit">
