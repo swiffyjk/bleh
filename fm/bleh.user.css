@@ -7298,6 +7298,10 @@ very, very, very dated - who looks up a song on ebay? */
         }
     }
 
+    &#id_email:not(:hover, :focus-visible) {
+        --col: transparent;
+    }
+
     &:hover, &:focus-visible {
         background-color: var(--bg-hov) !important;
         transition: none !important;
