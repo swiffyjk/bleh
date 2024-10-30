@@ -15,7 +15,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Ubuntu+Sans:ital,wght@0,100..800;1,100..800&display=swap');
 
 body {
-    --version-build: '2024.1030';
+    --version-build: '2024.1030.1';
 
     --hue:  var(--hue-over,
             var(--hue-album,
@@ -144,25 +144,25 @@ body, [data-page-resource-type="album"], [data-page-resource-type="track"],
     --b4: var(--hue), calc(var(--sat) * 8%), 22%;
 
     /* card */
-    --b5: var(--hue), calc(var(--sat) * 9%), 15%;
+    --b5: var(--hue), calc(var(--sat) * 10%), 15%;
 
     /* root */
-    --b6: var(--hue), calc(var(--sat) * 12%), 10%;
+    --b6: var(--hue), calc(var(--sat) * 14%), 10%;
     --b7: 0, 0%, 0%;
 
     .preview[data-bleh--theme="darker"],
     [data-bleh--theme="darker"] &:not(.preview) {
         /* any additional highlights */
-        --b3: var(--hue), calc(var(--sat) * 4%), 24%;
+        --b3: var(--hue), calc(var(--sat) * 8%), 24%;
 
         /* card border */
-        --b4: var(--hue), calc(var(--sat) * 6%), 16%;
+        --b4: var(--hue), calc(var(--sat) * 10%), 16%;
 
         /* card */
-        --b5: var(--hue), calc(var(--sat) * 7%), 8%;
+        --b5: var(--hue), calc(var(--sat) * 12%), 8%;
 
         /* root */
-        --b6: var(--hue), calc(var(--sat) * 10%), 4%;
+        --b6: var(--hue), calc(var(--sat) * 20%), 4%;
         --b7: 0, 0%, 0%;
     }
     .preview[data-bleh--theme="oled"],
@@ -280,13 +280,13 @@ input[type="range"],
     --c3: var(--hue), calc(var(--sat) * 10%), 60%;
     --ov-c1: var(--c1);
 
-    --l2: var(--hue), calc(var(--sat) * 55%), calc(var(--lit) * 83%);
-    --l3: var(--hue), calc(var(--sat) * 65%), calc(var(--lit) * 70%);
+    --l2: var(--hue), calc(var(--sat) * 50%), calc(var(--lit) * 83%);
+    --l3: var(--hue), calc(var(--sat) * 60%), calc(var(--lit) * 70%);
     --l4: var(--hue), calc(var(--sat) * 70%), calc(var(--lit) * 50%);
 
-    --l2-c: var(--hue), calc(var(--sat) * 50%), calc(clamp(min(0.5), var(--lit), max(1.5)) * 83%);
-    --l3-c: var(--hue), calc(var(--sat) * 60%), calc(clamp(min(0.5), var(--lit), max(1.5)) * 70%);
-    --l4-c: var(--hue), calc(var(--sat) * 70%), calc(clamp(min(0.5), var(--lit), max(1.5)) * 50%);
+    --l2-c: var(--hue), calc(var(--sat) * 40%), calc(clamp(min(0.5), var(--lit), max(1.5)) * 83%);
+    --l3-c: var(--hue), calc(var(--sat) * 50%), calc(clamp(min(0.5), var(--lit), max(1.5)) * 70%);
+    --l4-c: var(--hue), calc(var(--sat) * 60%), calc(clamp(min(0.5), var(--lit), max(1.5)) * 50%);
 
     --h2: var(--l2-c);
     --h3: var(--l3-c);
@@ -373,7 +373,7 @@ input[type="range"],
 .preview,
 body {
     --card-padding: 20px;
-    --card-radius: 8px;
+    --card-radius: var(--item-big-radius);
     --card-shadow: hsla(var(--b7), 0.25) 0 2px 4px 0;
     --card-gap: 15px;
     --card-border: 1px solid hsla(var(--b4), 0.7);
@@ -1007,7 +1007,7 @@ last.fm changes as of 2024-05-20 */
 .masthead-inner-wrap {
     width: var(--cards-width) !important;
     max-width: unset !important;
-    padding: 0 calc(var(--card-padding) + 1px) !important;
+    padding: 0 var(--card-padding) !important;
     float: unset !important;
     display: flex;
     justify-content: center;
@@ -1646,10 +1646,6 @@ body[class*="namespace--user_library_"] .col-sidebar, .library-header,
     content: '';
     --override-background: hsl(var(--card-specific-background, var(--card-background, var(--b5))));
     background: var(--card-specific-background, var(--card-background, hsl(var(--b5))));
-    border-left: var(--border-sides, var(--card-specific-border, var(--card-border)));
-    border-right: var(--border-sides, var(--card-specific-border, var(--card-border)));
-    border-top: var(--card-border-top, var(--card-specific-border, var(--card-border)));
-    border-bottom: var(--card-border-bottom, var(--card-specific-border, var(--card-border)));
     border-radius: var(--card-specific-radius, var(--card-radius));
     box-shadow: var(--card-specific-shadow, var(--card-shadow));
     padding: var(--card-padding);
@@ -2029,7 +2025,7 @@ span.header-new-gallery-inner a,
 /* apply tag styling to everything tag-related */
 .catalogue-tags .tags-add,
 .catalogue-tags .tag a, .catalogue-tags .tags-add-cta {
-    box-shadow: 0 0 0 1px hsla(var(--b3), 40%) inset, var(--interact-shadow) !important;
+    box-shadow: var(--interact-shadow) !important;
     color: hsl(var(--c3)) !important;
     font-weight: var(--font-weight);
     background-color: hsl(var(--b4));
@@ -2278,7 +2274,7 @@ li.header-metadata-item--event-attendance {
         linear-gradient(hsl(var(--b5)), hsl(var(--g4))) padding-box,
         linear-gradient(0deg, hsla(var(--h3), 80%) 0%, hsl(var(--b5)) 100%) border-box;
         border: 2px solid transparent !important;
-        padding: calc(var(--card-padding) - 1px) !important;
+        padding: var(--card-padding) !important;
 
         /*.cover-art {
             background: linear-gradient(180deg, hsla(var(--h3), 20%) 0%, var(--avatar-generic-background) 100%);
@@ -2305,8 +2301,8 @@ li.header-metadata-item--event-attendance {
     left: var(--card-padding);
 
     [data-bleh--pretty_obsessions="true"] & {
-        top: calc(var(--card-padding) - 1px);
-        left: calc(var(--card-padding) - 1px);
+        top: var(--card-padding);
+        left: var(--card-padding);
     }
 }
 .featured-item-heading-link {
@@ -2689,8 +2685,8 @@ header:not(:has(.header-featured-track)) .header-message-user {
     position: relative;
     top: calc(67px + var(--card-gap));
     border-bottom: 2px solid var(--card-border-base);
-    left: calc(-1 * (var(--card-padding) + 1px));
-    right: calc(-1 * (var(--card-padding) + 1px));
+    left: calc(-1 * var(--card-padding));
+    right: calc(-1 * var(--card-padding));
 }
 
 .header--user .secondary-nav {
@@ -2702,8 +2698,8 @@ header:not(:has(.header-featured-track)) .header-message-user {
 .secondary-nav, .user-dashboard-controls .secondary-nav {
     box-shadow: unset;
     border-bottom: 2px solid var(--card-border-base) !important;
-    margin: 0 calc(var(--card-padding) + 1px) !important;
-    width: calc(var(--cards-width) - ((var(--card-padding) + 1px) * 2));
+    margin: 0 var(--card-padding) !important;
+    width: calc(var(--cards-width) - (var(--card-padding) * 2));
 
     .header-new--subpage & {
         margin-top: -46px !important;
@@ -2744,8 +2740,8 @@ header:not(:has(.header-featured-track)) .header-message-user {
     position: absolute;
     /*top: calc(92px + var(--card-gap) + var(--card-padding)); /* 50px */
     top: 50px; /* revert to above once theres an easy way to detect searchbox presence */
-    right: calc(var(--card-padding) + 1px);
-    width: calc(var(--cards-sidebar-width) - ((var(--card-padding) + 1px) * 2));
+    right: var(--card-padding);
+    width: calc(var(--cards-sidebar-width) - (var(--card-padding) * 2));
     z-index: 100;
 
     .library-search-input {
@@ -2862,7 +2858,7 @@ hr + .library-search-results-header {
 .content-top .secondary-nav {
     padding: unset !important;
     border-bottom: 2px solid var(--card-border-base);
-    width: calc(var(--cards-width) - ((var(--card-padding) + 1px) * 2));
+    width: calc(var(--cards-width) - (var(--card-padding) * 2));
     /* ensure tab highlight is visible */
     overflow-y: unset;
     overflow: visible;
@@ -3002,7 +2998,7 @@ button.navlist-more {
 .user-dashboard-pagination {
     top: unset;
     bottom: 2px; /* underline */
-    right: calc(var(--card-padding) + 1px);
+    right: var(--card-padding);
 }
 .user-dashboard-pagination ul {
     display: flex;
@@ -3315,9 +3311,7 @@ button.navlist-more {
     margin-top: var(--card-gap);
 }
 .header-new-content {
-    /* --header-padding-extra is used if no border is present to preserve alignemnt
-    it is set to 0px in case of no artist image below */
-    padding: calc(var(--card-padding) + var(--header-padding-extra, 1px)) !important;
+    padding: var(--card-padding) !important;
     width: var(--cards-width);
     z-index: 1;
     margin-left: unset;
@@ -3338,9 +3332,6 @@ button.navlist-more {
 /* an artist does not have an image */
 .header-new-inner--without-image {
     background: hsl(var(--b5)) !important;
-    /* as we have a border now, remove the 1px padding in place of it */
-    border: 1px solid hsl(var(--b4)) !important;
-    --header-padding-extra: 0px;
 }
 .header-new-inner--without-image:before {
     /* lastfm supplies a repeating image for each media type */
@@ -4265,7 +4256,7 @@ state is not active, which then falls back to primary button styling */
     gap: 10px;
     height: 32px;
     margin: unset !important;
-    box-shadow: 0 0 0 1px hsla(var(--b3), 40%) inset, var(--interact-shadow);
+    box-shadow: var(--interact-shadow);
     position: relative;
     --show-icon: none;
 }
@@ -4457,7 +4448,6 @@ state is not active, which then falls back to primary button styling */
         box-shadow: unset;
         background-color: hsl(var(--b6));
         color: hsl(var(--c3));
-        outline: var(--card-border);
     }
 
     &:after {
@@ -4560,7 +4550,7 @@ h2:not(.count, .mask-multi-text, .mask-text, .sr-only, .js-gallery-heading, .top
     letter-spacing: unset !important;
     text-transform: unset !important;
 
-    margin-left: calc(var(--card-padding) + 1px);
+    margin-left: var(--card-padding);
 }
 
 
@@ -5345,7 +5335,7 @@ a.chartlist-love-button:after {
 .chartlist-count-bar {
     line-height: 22px; /* 22 */
     background: linear-gradient(270deg, hsla(var(--c2), 30%) 7%, hsl(var(--b4)) 40%);
-    box-shadow: 0 0 0 1px hsla(var(--b3), 40%) inset, var(--interact-shadow);
+    box-shadow: var(--interact-shadow);
     width: 180px;
     display: flex;
     transition-property: transform;
@@ -5380,7 +5370,7 @@ a.chartlist-love-button:after {
 }
 .chartlist-count-bar-slug {
     background: hsl(var(--h3)) !important;
-    box-shadow: 0 0 0 1px hsla(var(--h2), 40%) inset, 0px 0px 16px hsla(var(--h3), 50%);
+    box-shadow: 0px 0px 16px hsla(var(--h3), 50%);
     left: unset;
     right: 0;
 }
@@ -6118,7 +6108,7 @@ button,
     --bg-hov: hsla(var(--b4), 80%);
     --bg-atv: hsla(var(--b4), 60%);
     --col: hsl(var(--c2));
-    --shadow: 0 0 0 1px hsla(var(--b3), 40%) inset, var(--interact-shadow);
+    --shadow: var(--interact-shadow);
     --shadow-hov: var(--active-shadow);
     --btn-top: 7px;
     --btn-right: 12px;
@@ -6135,7 +6125,7 @@ button,
     font-family: var(--font) !important;
     font-size: var(--font-size) !important;
     font-weight: var(--force-font-weight, var(--font-weight-medium)) !important;
-    border-radius: var(--radius, var(--item-med-radius)) !important;
+    border-radius: var(--radius, var(--item-big-radius)) !important;
     box-shadow: var(--shadow) !important;
     border: unset !important;
     text-decoration: none !important;
@@ -6205,7 +6195,7 @@ button,
         --bg-hov: hsla(var(--h3), 80%) !important;
         --bg-atv: hsla(var(--h3), 60%) !important;
         --col: hsl(var(--b7)) !important;
-        --shadow: 0 0 0 1px hsla(var(--h2), 40%) inset, var(--interactable-outer);
+        --shadow: var(--interactable-outer);
         --shadow-hov: var(--interactable-outer), var(--interactable-active-outer);
 
         [data-bleh--invert_interactable_colour="true"] & {
@@ -6297,7 +6287,8 @@ button,
 .player-bar .player-bar-playback-options-external-link, .player-bar .player-bar-playback-options-settings, .player-bar .player-bar-playback-options-switch-device,
 .event-metadata + .event-metadata a,
 #manage_data .btn-primary,
-.obsession-history-play-all
+.obsession-history-play-all,
+.done, .cancel, .download, .upload, .save
 {
     --btn-left: calc(12px + 16px + 6px) !important;
 
@@ -6417,6 +6408,7 @@ button,
 
 
 /*     ICON MASK     */
+.modal-action-button:before,
 .big-btn:before,
 .error-page h3:before,
 .requesting:before,
@@ -6424,7 +6416,7 @@ button,
 .side-right .setting-item:before, .action:before,
 .setup-icon:before, .setup-icon:after,
 .btn.back:before,
-.continue:before, .external:before,
+.continue:before, .external:before, .done:before, .cancel:before, .download:before, .upload:before, .save:before,
 .badge:before,
 .btn-post-shout:before,
 .auth-link:before, .language-nav:before, .language-nav > span:before,
@@ -6837,7 +6829,7 @@ on the bottom of a panel !! */
 /*     DROPDOWN     */
 .player-bar-playback-options-wrap,
 .dropdown-menu-clickable, .auth-dropdown-menu, .navlist-hidden-list-wrap .navlist-hidden-list {
-    padding: 5px !important;
+    padding: 7px !important;
 }
 .dropdown-menu-item-dark,
 .dropdown-menu-clickable-item, .auth-dropdown-menu-item, .navlist-hidden-list a,
@@ -6899,24 +6891,8 @@ on the bottom of a panel !! */
     display: none;
 }
 
-.dropdown-menu-clickable-item:after, .auth-dropdown-menu-item:after {
-    content: '';
-    position: absolute;
-    bottom: -6px;
-    left: 0;
-    right: 0;
-    height: 1px;
-    background-color: hsl(var(--b4));
-    border: unset;
-}
 .auth-dropdown-menu-item:after {
     display: none !important;
-}
-.more-item--submit-correction:after,
-.more-item--delete:after
-{
-    bottom: unset;
-    top: -6px;
 }
 
 .lang-item.active,
@@ -6924,12 +6900,12 @@ on the bottom of a panel !! */
 .more-item--edit-old,
 [data-analytics-label="settings"]
 {
-    margin-bottom: 11px !important;
+    margin-bottom: 7px !important;
 }
 .more-item--submit-correction,
 .more-item--delete
 {
-    margin-top: 11px !important;
+    margin-top: 7px !important;
 }
 .lang-item.active:after,
 .more-item--submit-correction:after,
@@ -6938,7 +6914,7 @@ on the bottom of a panel !! */
 .more-item--delete:after,
 [data-analytics-label="settings"]:after
 {
-    display: block !important;
+    display: none !important;
 }
 
 li:first-child .more-item--delete {
@@ -7107,9 +7083,14 @@ very, very, very dated - who looks up a song on ebay? */
 [data-analytics-action="delete"],
 [data-analytics-action="unpublish"], [data-analytics-action="publish"]
 {
-    --bg-hov: hsla(var(--h4), 10%) !important;
-    --bg-atv: hsla(var(--h4), 20%) !important;
+    --bg-hov: hsla(var(--h4), 7%) !important;
+    --bg-atv: hsla(var(--h4), 17%) !important;
     --col: hsl(var(--l3-c)) !important;
+
+    [data-bleh--theme="light"] & {
+        --bg-hov: hsla(var(--h4), 15%) !important;
+        --bg-atv: hsla(var(--h4), 25%) !important;
+    }
 
     &:not(
         .bleh--configure-menu-item,
@@ -7465,7 +7446,6 @@ input:is([name="track_name"], [name="artist_name"], [name="album_name"], [name="
 .dropdown-menu-clickable, .auth-dropdown-menu, .navlist-hidden-list, .modal-body, .library-search-results, .events-filter-location-dropdown {
     margin: unset !important;
     background: hsl(var(--b5)) !important;
-    border: var(--card-border) !important;
     border-radius: var(--card-radius) !important;
     box-shadow: var(--menu-shadow) !important;
     color: hsl(var(--c2));
@@ -7550,13 +7530,45 @@ input:is([name="track_name"], [name="artist_name"], [name="album_name"], [name="
     width: calc(650px + (5px * 2));
 }
 /* modal dialog v3 */
+.modal-buttons {
+    width: fit-content;
+    margin-right: -16px !important;
+    z-index: 100000000000000;
+
+    gap: var(--button-list-gap);
+}
+.modal-actions,
+.modal-buttons {
+    display: flex;
+    height: 32px;
+    margin: unset;
+}
 .modal-action-button {
-    --bg: transparent !important;
-    --bg-hov: hsla(var(--b7), 40%) !important;
-    --bg-atv: hsla(var(--b7), 60%) !important;
-    --shadow: none !important;
-    --shadow-hov: none !important;
+    --left: 8px;
     --font-size: 0;
+
+    width: 32px !important;
+    height: 32px !important;
+
+    &.modal-download {
+        --mask: var(--icon-16-download);
+    }
+    &.modal-dismiss {
+        --mask: var(--icon-16-x);
+        clip: unset !important;
+        margin: unset !important;
+        display: flex !important;
+        visibility: visible !important;
+    }
+
+    &:before {
+        filter: unset !important;
+    }
+}
+.report-share-modal,
+.top-item-modal,
+.modal-share-content {
+    margin-top: -16px;
 }
 
 .modal-body .content-form .form-horizontal .form-submit {
@@ -7578,17 +7590,17 @@ input:is([name="track_name"], [name="artist_name"], [name="album_name"], [name="
 
 @keyframes dropdown {
     from {
-        transform: scaleY(0.85);
+        transform: scale(0.9);
         opacity: 0;
     }
     to {
-        transform: scaleY(1);
+        transform: scale(1);
         opacity: 1;
     }
 }
 @keyframes dropdown_side {
     from {
-        transform: scaleX(0.85);
+        transform: scaleX(0.9);
         opacity: 0;
     }
     to {
@@ -7629,7 +7641,7 @@ that literally is 1 user from 2007 who hasnt even gotten a scrobble */
     margin-top: var(--card-gap);
 
     .metadata-list + & {
-        padding: 0 calc(var(--card-padding) + 1px);
+        padding: 0 var(--card-padding);
     }
 }
 .library-artist-section-header {
@@ -7721,7 +7733,7 @@ that literally is 1 user from 2007 who hasnt even gotten a scrobble */
     /* 48px = image width */
     padding-left: calc(var(--card-padding) + 48px + var(--card-gap));
     /* account for height (2px accounts for border) */
-    height: calc(var(--card-padding) + 48px + var(--card-padding) + 2px);
+    height: calc(var(--card-padding) + 48px + var(--card-padding));
     z-index: 2;
 }
 
@@ -8728,7 +8740,6 @@ text[style^="color: rgb(255, 172, 172)"] {
 .user-dashboard-tooltip {
     background: hsla(var(--b6), 60%);
     backdrop-filter: blur(10px) saturate(160%);
-    border: var(--card-border);
     border-radius: 50px;
     box-shadow: var(--card-shadow);
     padding: 5px 14px;
@@ -8747,9 +8758,8 @@ text[style^="color: rgb(255, 172, 172)"] {
 
     &[data-theme="language-menu"],
     &[data-theme="menu"] {
-        padding: 5px !important;
+        padding: 7px !important;
         background: hsl(var(--b5)) !important;
-        border: var(--card-border) !important;
         border-radius: var(--card-radius) !important;
         box-shadow: var(--menu-shadow) !important;
         animation: dropdown_side calc(var(--trans-short) + 0.02s) var(--trans-function);
@@ -8768,16 +8778,16 @@ text[style^="color: rgb(255, 172, 172)"] {
 
         &[data-theme="language-menu"] {
             animation: dropdown calc(var(--trans-short) + 0.02s) var(--trans-function);
-            transform-origin: top;
+            transform-origin: center;
 
             &[data-state="hidden"] {
-                transform: scaleY(0.85);
+                transform: scale(0.9);
                 opacity: 0;
             }
         }
 
         &[data-state="hidden"] {
-            transform: scaleX(0.85);
+            transform: scale(0.9);
             opacity: 0;
         }
     }
@@ -8786,7 +8796,7 @@ text[style^="color: rgb(255, 172, 172)"] {
         padding: 10px !important;
         border-radius: var(--card-radius) !important;
         animation: dropdown calc(var(--trans-short) + 0.02s) var(--trans-function);
-        transform-origin: top;
+        transform-origin: center;
         color: hsl(var(--c2));
         max-width: 500px !important;
 
@@ -8846,7 +8856,7 @@ text[style^="color: rgb(255, 172, 172)"] {
         }
 
         &[data-state="hidden"] {
-            transform: scaleY(0.85);
+            transform: scale(0.9);
             opacity: 0;
         }
     }
@@ -8855,7 +8865,7 @@ text[style^="color: rgb(255, 172, 172)"] {
         padding: 10px !important;
         border-radius: var(--card-radius) !important;
         animation: dropdown calc(var(--trans-short) + 0.02s) var(--trans-function);
-        transform-origin: top;
+        transform-origin: center;
         color: hsl(var(--c2));
         max-width: 500px !important;
 
@@ -8914,7 +8924,7 @@ text[style^="color: rgb(255, 172, 172)"] {
         }
 
         &[data-state="hidden"] {
-            transform: scaleY(0.85);
+            transform: scale(0.9);
             opacity: 0;
         }
     }
@@ -9015,6 +9025,10 @@ text[style^="color: rgb(255, 172, 172)"] {
 .top-new-item--footer {
     border-bottom-left-radius: var(--item-med-radius);
     border-bottom-right-radius: var(--item-med-radius);
+}
+
+.top-item-modal-header {
+    font-weight: 700;
 }
 
 .report-box-container {
@@ -9656,15 +9670,10 @@ text[style^="color: rgb(0, 0, 0)"] {
     margin-top: var(--card-gap);
     padding: 7px 12px 7px calc(12px + 16px + 6px);
     border-radius: var(--item-big-radius);
-    background-color: hsla(var(--h4), 20%);
-    box-shadow: 0 0 0 1px hsla(var(--h2), 40%) inset, 0 0 20px hsla(var(--h4), 15%);
-    color: hsl(var(--l2-c));
+    background-color: hsl(var(--h3));
+    color: hsl(var(--b6));
     text-align: left;
     position: relative;
-
-    [data-bleh--theme="light"] & {
-        color: hsl(var(--l4-c));
-    }
 
     &:before {
         color: currentColor;
@@ -13055,7 +13064,7 @@ code, kbd, samp {
         --bg-hov: hsla(var(--h3), 80%);
         --bg-atv: hsla(var(--h3), 60%);
         --col: hsl(var(--b7));
-        --shadow: 0 0 0 1px hsla(var(--h2), 40%) inset, var(--interactable-outer);
+        --shadow: var(--interactable-outer);
     }
 
     h5 {
@@ -13167,7 +13176,7 @@ code, kbd, samp {
     --bg-hov: hsla(var(--h3), 90%);
     --bg-atv: hsla(var(--h3), 80%);
     --col: hsl(var(--b7));
-    --shadow: 0 0 0 1px hsla(var(--h2), 40%) inset, var(--card-shadow);
+    --shadow: var(--card-shadow);
     --shadow-hov: var(--shadow);
     --sat: 1;
     --lit: 1;
@@ -14055,7 +14064,7 @@ input[type="range"]::-moz-range-progress {
         --bg-hov: hsla(var(--h3), 80%) !important;
         --bg-atv: hsla(var(--h3), 60%) !important;
         --col: hsl(var(--b7)) !important;
-        --shadow: 0 0 0 1px hsla(var(--h2), 40%) inset, var(--interactable-outer);
+        --shadow: var(--interactable-outer);
         --shadow-hov: var(--interactable-outer), var(--interactable-active-outer);
 
         .dot {
@@ -15533,13 +15542,13 @@ button.bleh--gallery-bookmark-image-btn {
     color: #fff;
     background: linear-gradient(159deg, rgba(0,0,0,1) 0%, rgba(1,11,70,1) 32%, rgba(1,21,84,1) 50%, rgba(1,29,94,1) 62%, rgba(2,61,95,1) 76%, rgba(2,90,78,1) 88%, rgba(0,119,55,1) 100%);
     border: unset;
-    padding: calc(var(--card-padding) + 1px);
+    padding: var(--card-padding);
     position: relative;
 
     .screen-row {
         position: absolute;
-        top: calc(var(--card-padding) + 1px);
-        right: calc(var(--card-padding) + 1px);
+        top: var(--card-padding);
+        right: var(--card-padding);
         margin: unset;
         padding: unset;
         border: none;
@@ -15642,7 +15651,7 @@ button.bleh--gallery-bookmark-image-btn {
     gap: var(--button-list-gap);
     padding: var(--button-list-gap);
     background-color: hsl(var(--b6));
-    border-radius: var(--item-med-radius);
+    border-radius: var(--item-big-radius);
 
     &:not(.profile-top-header) {
         margin-bottom: var(--card-gap);
@@ -15656,7 +15665,6 @@ button.bleh--gallery-bookmark-image-btn {
 
     html:not([data-bleh--theme="oled"], [data-bleh--theme="light"]) &.profile-top-header {
         background-color: hsl(var(--b5));
-        outline: var(--card-border);
     }
 
     &.profile-top-header,
@@ -16212,6 +16220,26 @@ button.bleh--gallery-bookmark-image-btn {
     position: relative;
     --mask: var(--icon-16-external);
 }
+.done {
+    position: relative;
+    --mask: var(--icon-16-check);
+}
+.cancel {
+    position: relative;
+    --mask: var(--icon-16-x);
+}
+.download {
+    position: relative;
+    --mask: var(--icon-16-download);
+}
+.upload {
+    position: relative;
+    --mask: var(--icon-16-upload);
+}
+.save {
+    position: relative;
+    --mask: var(--icon-16-save);
+}
 
 
 /* this allows tooltips */
@@ -16525,7 +16553,7 @@ h4 {
 .new-badge {
     display: inline-flex;
     background-color: hsla(var(--h4), 40%);
-    box-shadow: 0 0 0 1px hsla(var(--h2), 40%) inset, 0 0 20px hsla(var(--h3), 60%);
+    box-shadow: 0 0 20px hsla(var(--h3), 60%);
     color: hsl(var(--l2-c));
 
     font-size: var(--font-size-sm);

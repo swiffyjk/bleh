@@ -18,7 +18,7 @@
 // ==/UserScript==
 
 let version = {
-    build: '2024.1030',
+    build: '2024.1030.1',
     sku: 'falter',
     feature_flags: {
         bleh_settings_tabs: {
@@ -2739,7 +2739,7 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bleh/setup$');
         // we now fetch it to retrieve current version info
         if (settings.dev) {
             console.info('bleh - dev mode is on, so style will be fetched for version info only');
-            fetch_style_info();
+            check_style_info();
 
             return;
         }
@@ -2792,6 +2792,18 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bleh/setup$');
 
             console.info('bleh - fetching new style, timeout has expired');
             fetch_new_style();
+        } else {
+            console.info('bleh - style timeout is still valid');
+        }
+    }
+
+    function check_style_info() {
+        let cached_style_timeout = new Date(localStorage.getItem('bleh_cached_style_timeout'));
+        let current_time = new Date();
+
+        // check if timeout has expired
+        if (cached_style_timeout < current_time) {
+            fetch_style_info();
         } else {
             console.info('bleh - style timeout is still valid');
         }
@@ -3866,7 +3878,7 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bleh/setup$');
                         ${trans[lang].settings.inbuilt.profile.avatar.upload}
                     </div>
                     <div class="modal-footer">
-                        <button type="submit" class="btn-primary" onclick="_save_avatar_changer()">
+                        <button type="submit save" class="btn-primary" onclick="_save_avatar_changer()">
                             ${trans[lang].settings.save}
                         </button>
                         <input type="hidden" value="avatar" name="submit">
@@ -3879,7 +3891,7 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bleh/setup$');
                         ${trans[lang].settings.inbuilt.profile.avatar.delete}
                     </div>
                     <div class="modal-footer">
-                        <button class="btn" onclick="_kill_window('edit_avatar')">${trans[lang].settings.cancel}</button>
+                        <button class="btn cancel" onclick="_kill_window('edit_avatar')">${trans[lang].settings.cancel}</button>
                     </div>
                 </form>
             </div>
@@ -6871,10 +6883,10 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bleh/setup$');
         create_window('edit_profile_note',trans[lang].settings.profiles.notes.edit_user.replace('{u}', username),`
         <textarea id="bleh--profile-note" placeholder="Enter a local note for this user">${profile_notes[username]}</textarea>
         <div class="modal-footer">
-            <button class="btn primary" onclick="_save_profile_note_in_window('${username}')">
+            <button class="btn primary save" onclick="_save_profile_note_in_window('${username}')">
                 ${trans[lang].settings.save}
             </button>
-            <button class="btn" onclick="_kill_window('edit_profile_note')">
+            <button class="btn cancel" onclick="_kill_window('edit_profile_note')">
                 ${trans[lang].settings.cancel}
             </button>
         </div>
@@ -7275,7 +7287,7 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bleh/setup$');
         create_window('continue_dev',trans[lang].settings.performance.dev.name,`
             ${trans[lang].settings.performance.dev.modals.continue.next_step}
             <div class="modal-footer">
-                <button class="btn primary" onclick="_finish_dev()">
+                <button class="btn primary continue" onclick="_finish_dev()">
                     ${trans[lang].settings.continue}
                 </button>
             </div>
@@ -7288,7 +7300,7 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bleh/setup$');
         create_window('finish_dev',trans[lang].settings.performance.dev.name,`
             <p class="alert alert-success">${trans[lang].settings.performance.dev.modals.finish.alert}</p>
             <div class="modal-footer">
-                <button class="btn primary" onclick="_kill_window('finish_dev')">
+                <button class="btn primary done" onclick="_kill_window('finish_dev')">
                     ${trans[lang].settings.done}
                 </button>
             </div>
@@ -7375,7 +7387,7 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bleh/setup$');
             </div>
         </div>
         <div class="modal-footer">
-            <button class="btn primary" onclick="_kill_window('custom_colour')">
+            <button class="btn primary done" onclick="_kill_window('custom_colour')">
                 ${trans[lang].settings.done}
             </button>
         </div>
@@ -7488,10 +7500,10 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bleh/setup$');
             <br>
             <textarea id="import_area"></textarea>
             <div class="modal-footer">
-                <button class="btn primary" onclick="_confirm_import()">
+                <button class="btn primary download" onclick="_confirm_import()">
                     ${trans[lang].settings.actions.import.name}
                 </button>
-                <button class="btn" onclick="_kill_window('import_settings')">
+                <button class="btn cancel" onclick="_kill_window('import_settings')">
                     ${trans[lang].settings.cancel}
                 </button>
             </div>
@@ -7516,7 +7528,7 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bleh/setup$');
             create_window('import_failed',trans[lang].settings.actions.import.modals.failed.name,`
             <p class="alert alert-error">${trans[lang].settings.actions.import.modals.failed.alert}</p>
             <div class="modal-footer">
-                <button class="btn primary" onclick="_kill_window('import_failed')">
+                <button class="btn primary done" onclick="_kill_window('import_failed')">
                     ${trans[lang].settings.done}
                 </button>
             </div>
@@ -7533,7 +7545,7 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bleh/setup$');
             <br>
             <textarea>${JSON.stringify(settings)}</textarea>
             <div class="modal-footer">
-                <button class="btn primary" onclick="_kill_window('export_settings')">
+                <button class="btn primary done" onclick="_kill_window('export_settings')">
                     ${trans[lang].settings.done}
                 </button>
             </div>
@@ -7549,13 +7561,13 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bleh/setup$');
         create_window('reset_settings',trans[lang].settings.actions.reset.modals.initial.name,`
             <p class="alert alert-warning">${trans[lang].settings.actions.reset.modals.initial.alert}</p>
             <div class="modal-footer">
-                <button class="btn" onclick="_confirm_reset()">
+                <button class="btn done" onclick="_confirm_reset()">
                     ${trans[lang].settings.actions.reset.modals.initial.confirm}
                 </button>
-                <button class="btn" onclick="_export_first()">
+                <button class="btn upload" onclick="_export_first()">
                     ${trans[lang].settings.actions.reset.modals.initial.export}
                 </button>
-                <button class="btn primary" onclick="_kill_window('reset_settings')">
+                <button class="btn primary cancel" onclick="_kill_window('reset_settings')">
                     ${trans[lang].settings.cancel}
                 </button>
             </div>
