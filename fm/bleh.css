@@ -5,7 +5,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Ubuntu+Sans:ital,wght@0,100..800;1,100..800&display=swap');
 
 body {
-    --version-build: '2024.1030.2';
+    --version-build: '2024.1030.3';
 
     --hue:  var(--hue-over,
             var(--hue-album,
@@ -102,7 +102,7 @@ body {
     --sat-brand-twt: 1.1;
     --lit-brand-twt: 0.9;
 
-    --font: Ubuntu Sans, Spline Sans, Inter, Roboto, Noto Sans, Noto Sans JP, Noto Color Emoji, -apple-system, BlinkMacSystemFont, sans-serif;
+    --font: var(--custom_font, ''), Ubuntu Sans, Spline Sans, Inter, Roboto, Noto Sans, Noto Sans JP, Noto Color Emoji, -apple-system, BlinkMacSystemFont, sans-serif;
     --font-code: Spline Sans Mono, Iosevka, JetBrains Mono, Roboto Mono, monospace;
     --font-brand: Comfortaa, var(--font);
     --font-size: 14px;
@@ -110,9 +110,9 @@ body {
     --font-size-sm: 12px;
     --line-height-sm: calc(var(--font-size-sm) + 4px);
 
-    --font-weight: 480;
-    --font-weight-medium: 650;
-    --font-weight-bold: 730;
+    --font-weight: var(--custom_font_weight, 480);
+    --font-weight-medium: var(--custom_font_weight_medium, 650);
+    --font-weight-bold: var(--custom_font_weight_bold, 730);
 
     --trans-short: 0.25s;
     --trans: 0.3s;
@@ -641,6 +641,7 @@ body {
     --icon-16-motion: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyLjUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgY2xhc3M9Imx1Y2lkZSBsdWNpZGUtbGF5ZXJzLTIiPjxwYXRoIGQ9Im0xNi4wMiAxMiA1LjQ4IDMuMTNhMSAxIDAgMCAxIDAgMS43NEwxMyAyMS43NGEyIDIgMCAwIDEtMiAwbC04LjUtNC44N2ExIDEgMCAwIDEgMC0xLjc0TDcuOTggMTIiLz48cGF0aCBkPSJNMTMgMTMuNzRhMiAyIDAgMCAxLTIgMEwyLjUgOC44N2ExIDEgMCAwIDEgMC0xLjc0TDExIDIuMjZhMiAyIDAgMCAxIDIgMGw4LjUgNC44N2ExIDEgMCAwIDEgMCAxLjc0WiIvPjwvc3ZnPg==');
     --icon-16-profile-shortcut: var(--icon-16-link);
     --icon-16-unlink: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyLjUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgY2xhc3M9Imx1Y2lkZSBsdWNpZGUtdW5saW5rLTIiPjxwYXRoIGQ9Ik0xNSA3aDJhNSA1IDAgMCAxIDAgMTBoLTJtLTYgMEg3QTUgNSAwIDAgMSA3IDdoMiIvPjwvc3ZnPg==');
+    --icon-16-save: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyLjUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgY2xhc3M9Imx1Y2lkZSBsdWNpZGUtc2F2ZSI+PHBhdGggZD0iTTE1LjIgM2EyIDIgMCAwIDEgMS40LjZsMy44IDMuOGEyIDIgMCAwIDEgLjYgMS40VjE5YTIgMiAwIDAgMS0yIDJINWEyIDIgMCAwIDEtMi0yVjVhMiAyIDAgMCAxIDItMnoiLz48cGF0aCBkPSJNMTcgMjF2LTdhMSAxIDAgMCAwLTEtMUg4YTEgMSAwIDAgMC0xIDF2NyIvPjxwYXRoIGQ9Ik03IDN2NGExIDEgMCAwIDAgMSAxaDciLz48L3N2Zz4=');
 
     --icon-20-check: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyMCIgaGVpZ2h0PSIyMCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImhzbCgyNTUsMjAlLDkwJSkiIHN0cm9rZS13aWR0aD0iMi4yNSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiBjbGFzcz0ibHVjaWRlIGx1Y2lkZS1jaGVjayI+PHBhdGggZD0iTTIwIDYgOSAxN2wtNS01Ii8+PC9zdmc+');
     --icon-20-plus: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyMCIgaGVpZ2h0PSIyMCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImhzbCgyNTUsMjAlLDkwJSkiIHN0cm9rZS13aWR0aD0iMi4yNSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiBjbGFzcz0ibHVjaWRlIGx1Y2lkZS1wbHVzIj48cGF0aCBkPSJNNSAxMmgxNCIvPjxwYXRoIGQ9Ik0xMiA1djE0Ii8+PC9zdmc+');
@@ -4473,6 +4474,13 @@ state is not active, which then falls back to primary button styling */
 
 
 /*     TEXT     */
+
+
+h4,
+h3 {
+    font-weight: var(--font-weight-bold);
+    margin: unset;
+}
 
 
 /*     CARD HEAD     */
@@ -13508,6 +13516,10 @@ input[type="range"]::-moz-range-progress {
     & + .slider-container {
         margin-top: var(--card-gap);
     }
+
+    .bleh--panel & {
+        margin: unset !important;
+    }
 }
 .slider-container .slider {
     display: flex;
@@ -16228,7 +16240,7 @@ button.bleh--gallery-bookmark-image-btn {
 }
 .save {
     position: relative;
-    --mask: var(--icon-16-save);
+    --mask: var(--icon-16-check);
 }
 
 
@@ -16465,6 +16477,10 @@ button.bleh--gallery-bookmark-image-btn {
     display: flex;
     gap: var(--card-gap);
 
+    h4 + & {
+        margin-top: -10px;
+    }
+
     .avatar-container {
         .avatar-inner {
             width: 50px;
@@ -16516,6 +16532,10 @@ button.bleh--gallery-bookmark-image-btn {
         .input-container {
             display: flex;
             gap: var(--button-list-gap);
+
+            #text-font {
+                width: 400px;
+            }
         }
     }
 }

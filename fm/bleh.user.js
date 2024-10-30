@@ -18,7 +18,7 @@
 // ==/UserScript==
 
 let version = {
-    build: '2024.1030.2',
+    build: '2024.1030.3',
     sku: 'falter',
     feature_flags: {
         bleh_settings_tabs: {
@@ -467,6 +467,22 @@ const trans = {
                     bio: 'Enables line-breaks, bold, italics, and links.',
                     shouts: 'In shouts',
                     profile: 'In profile bios'
+                },
+                font: {
+                    name: 'Font settings',
+                    placeholder: 'Font name(s), separated by commas'
+                },
+                font_weight: {
+                    name: 'Font weight',
+                    bio: 'Used for most regular text'
+                },
+                font_weight_medium: {
+                    name: 'Medium font weight',
+                    bio: 'Used for bold text'
+                },
+                font_weight_bold: {
+                    name: 'Bold font weight',
+                    bio: 'Used for header and selected text (eg. current tab)'
                 }
             },
             inbuilt: {
@@ -2308,7 +2324,11 @@ let settings_template = {
     seasonal_overlays: true,
     profile_header_own: true,
     profile_header_others: true,
-    profile_shortcut: ''
+    profile_shortcut: '',
+    font: '',
+    font_weight: 480,
+    font_weight_medium: 650,
+    font_weight_bold: 730
 };
 let settings_base = {
     high_contrast: {
@@ -2538,6 +2558,30 @@ let settings_base = {
         value: true,
         values: [true, false],
         type: 'toggle'
+    },
+    font: {
+        css: 'custom_font',
+        unit: '',
+        value: '',
+        type: 'text'
+    },
+    font_weight: {
+        css: 'custom_font_weight',
+        unit: '',
+        value: 480,
+        type: 'slider'
+    },
+    font_weight_medium: {
+        css: 'custom_font_weight_medium',
+        unit: '',
+        value: 650,
+        type: 'slider'
+    },
+    font_weight_bold: {
+        css: 'custom_font_weight_bold',
+        unit: '',
+        value: 730,
+        type: 'slider'
     }
 };
 let inbuilt_settings = {
@@ -3252,7 +3296,9 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bleh/setup$');
 
             try {
                 document.body.style.setProperty(`--${settings_base[setting].css}`, settings[setting]);
-            } catch(e) {}
+            } catch(e) {
+                console.log('bleh - setting base entry for', setting, 'is not accessible');
+            }
             document.documentElement.setAttribute(`data-bleh--${setting}`, `${settings[setting]}`);
         }
 
@@ -6339,6 +6385,53 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bleh/setup$');
             return (`
                 <div class="bleh--panel">
                     <h3>${trans[lang].settings.text.name}</h3>
+                    <h4>${trans[lang].settings.text.font.name} <div class="new-badge">${trans[lang].settings.new}</div></h4>
+                    <div class="text-container" id="container-font">
+                        <button class="btn reset" onclick="_reset_item('font')">${trans[lang].settings.reset}</button>
+                        <div class="heading content-form">
+                            <div class="input-container">
+                                <input type="text" maxlength="120" id="text-font" value="${settings.font}" placeholder="${trans[lang].settings.text.font.placeholder}">
+                                <button class="bleh--btn primary save" onclick="_save_font()">${trans[lang].settings.save}</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="slider-container" id="container-font_weight">
+                        <button class="btn reset" onclick="_reset_item('font_weight')">${trans[lang].settings.reset}</button>
+                        <div class="heading">
+                            <h5>${trans[lang].settings.text.font_weight.name}</h5>
+                            <p>${trans[lang].settings.text.font_weight.bio}</p>
+                        </div>
+                        <div class="slider">
+                            <div class="slider-track" id="slider-track-font_weight"><div class="slider-fill"></div><div class="slider-nub"></div></div>
+                            <input type="range" min="0" max="900" value="0" step="10" id="slider-font_weight" oninput="_update_item('font_weight', this.value)">
+                            <p id="value-font_weight">0</p>
+                        </div>
+                    </div>
+                    <div class="slider-container" id="container-font_weight_medium">
+                        <button class="btn reset" onclick="_reset_item('font_weight_medium')">${trans[lang].settings.reset}</button>
+                        <div class="heading">
+                            <h5>${trans[lang].settings.text.font_weight_medium.name}</h5>
+                            <p>${trans[lang].settings.text.font_weight_medium.bio}</p>
+                        </div>
+                        <div class="slider">
+                            <div class="slider-track" id="slider-track-font_weight_medium"><div class="slider-fill"></div><div class="slider-nub"></div></div>
+                            <input type="range" min="0" max="900" value="0" step="10" id="slider-font_weight_medium" oninput="_update_item('font_weight_medium', this.value)">
+                            <p id="value-font_weight_medium">0</p>
+                        </div>
+                    </div>
+                    <div class="slider-container" id="container-font_weight_bold">
+                        <button class="btn reset" onclick="_reset_item('font_weight_bold')">${trans[lang].settings.reset}</button>
+                        <div class="heading">
+                            <h5>${trans[lang].settings.text.font_weight_bold.name}</h5>
+                            <p>${trans[lang].settings.text.font_weight_bold.bio}</p>
+                        </div>
+                        <div class="slider">
+                            <div class="slider-track" id="slider-track-font_weight_bold"><div class="slider-fill"></div><div class="slider-nub"></div></div>
+                            <input type="range" min="0" max="900" value="0" step="10" id="slider-font_weight_bold" oninput="_update_item('font_weight_bold', this.value)">
+                            <p id="value-font_weight_bold">0</p>
+                        </div>
+                    </div>
+                    <div class="sep"></div>
                     <div class="inner-preview pad flex">
                         <div class="shout js-shout js-link-block" data-kate-processed="true">
                             <h3 class="shout-user">
@@ -6487,7 +6580,7 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bleh/setup$');
                             <h5>${trans[lang].settings.music.profile_shortcut.placeholder}</h5>
                             <div class="input-container">
                                 <input type="text" maxlength="40" id="text-profile_shortcut" value="${settings.profile_shortcut}" placeholder="${trans[lang].settings.music.profile_shortcut.header}">
-                                <button class="bleh--btn primary" onclick="_save_profile_shortcut()">${trans[lang].settings.save}</button>
+                                <button class="bleh--btn primary save" onclick="_save_profile_shortcut()">${trans[lang].settings.save}</button>
                             </div>
                         </div>
                     </div>
@@ -6775,9 +6868,9 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bleh/setup$');
     function load_skus() {
         for (let flag in version.feature_flags) {
             let current_state = version.feature_flags[flag].default;
-            console.info('flag', flag, current_state);
+            console.log('flag', flag, current_state);
             if (settings.feature_flags[flag] != undefined) current_state = settings.feature_flags[flag];
-            console.info('flag', flag, current_state);
+            console.log('flag', flag, current_state);
 
             document.documentElement.setAttribute(`data-ff--${flag}`, current_state);
         }
@@ -7079,7 +7172,7 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bleh/setup$');
 
                 document.getElementById(`value-${item}`).textContent = `${settings[item]}${settings_base[item].unit}`;
                 slider.value = settings[item];
-                document.getElementById(`slider-track-${item}`).style.setProperty('--percent', `${(settings[item] / slider.getAttribute('max')) * 100}%`);
+                document.getElementById(`slider-track-${item}`).style.setProperty('--percent', `${(settings[item] / (slider.getAttribute('max'))) * 100}%`);
 
                 if (settings[item] != settings_base[item].value)
                     document.getElementById(`container-${item}`).classList.add('modified');
@@ -7674,7 +7767,7 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bleh/setup$');
             let field_text = extras[extra].text
             .replace(' feat. ', '').replace('feat. ', '')
             .replace('featuring ', '').replace('Feat. ', '')
-            .replace('ft. ', '').replace('FEAT. ', '')
+            .replace('ft. ', '').replace('FEAT. ', '').replace('Ft. ', '')
             .replace('WITH', 'with').replace('w/ ', '').replace('with ', '').replace('With ', '')
             .replaceAll(' & ', ';').replaceAll(', ', ';').replaceAll(' and ', ';')
             .replaceAll('Tyler;the', 'Tyler, the').replaceAll(' with ', ';')
@@ -9437,6 +9530,20 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bleh/setup$');
                 menu_item.textContent = '';
             }
         });
+    }
+
+
+
+
+    unsafeWindow._save_font = function() {
+        let font = document.getElementById('text-font').value;
+
+        document.body.style.setProperty(`--${settings_base.font.css}`, font);
+        document.documentElement.setAttribute(`data-bleh--font`, font);
+
+        // save to settings
+        settings.font = font;
+        localStorage.setItem('bleh', JSON.stringify(settings));
     }
 
 
