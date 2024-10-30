@@ -3949,7 +3949,10 @@ let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bleh/setup$');
         document.getElementById('bleh--window-edit_avatar--body').classList.add('modal-processing');
 
         setTimeout(function() {
-            kill_window('edit_avatar')
+            kill_window('edit_avatar');
+
+            my_avi = auth_link.querySelector('img').getAttribute('src');
+            document.querySelector('.auth-dropdown-menu').style.setProperty('--url', `url(${my_avi.replace('avatar42s', 'avatar170s')})`);
         }, 5000);
     }
 
