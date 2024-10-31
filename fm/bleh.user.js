@@ -185,7 +185,7 @@ const trans = {
                     css: 'Update style',
                     bio: 'Check now',
                     notice: 'There are updates available!',
-                    ignore: 'Ignore for 1 hour',
+                    ignore: 'Ignore temporarily',
 
                     update_now: 'Update now',
                     update_to_v: 'Update to {v}'
