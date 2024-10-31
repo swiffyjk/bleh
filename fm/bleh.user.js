@@ -18,7 +18,7 @@
 // ==/UserScript==
 
 let version = {
-    build: '2024.1030.3',
+    build: '2024.1030.4',
     sku: 'falter',
     feature_flags: {
         bleh_settings_tabs: {
@@ -1848,6 +1848,7 @@ let artist_corrections = {
     'Iri': 'iri',
     'Rosé': 'ROSÉ',
     'Aran': 'aran',
+    'Like a Kid': 'LIKE A KID',
     //
     'ty dolla $ign': 'Ty Dolla $ign',
     'juicy J': 'Juicy J',
