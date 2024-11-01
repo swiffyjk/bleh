@@ -18,7 +18,7 @@
 // ==/UserScript==
 
 let version = {
-    build: '2024.1101.1',
+    build: '2024.1101.2',
     sku: 'lotus',
     feature_flags: {
         bleh_settings_tabs: {
@@ -1756,12 +1756,18 @@ function set_season() {
     seasonal_events.forEach((season) => {
         if (
             now >= new Date(season.start.replace('y0', current_year)) &&
-            now <= new Date(season.end.replace('y0', current_year)) &&
-            stored_season != season
+            now <= new Date(season.end.replace('y0', current_year))
         ) {
-            stored_season = season;
             stored_season.now = now;
             stored_season.year = current_year;
+
+            if (stored_season == season)
+                return;
+            stored_season.id = season.id;
+            stored_season.start = season.start;
+            stored_season.end = season.end;
+            stored_season.snowflakes = season.snowflakes;
+
             console.info('bleh - it is season', season.name, 'starting', season.start, 'ending', season.end, season);
 
             document.documentElement.setAttribute('data-bleh--season', season.id);
