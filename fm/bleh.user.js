@@ -18,8 +18,8 @@
 // ==/UserScript==
 
 let version = {
-    build: '2024.1101',
-    sku: 'falter',
+    build: '2024.1101.1',
+    sku: 'lotus',
     feature_flags: {
         bleh_settings_tabs: {
             default: false,
