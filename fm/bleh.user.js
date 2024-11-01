@@ -18,7 +18,7 @@
 // ==/UserScript==
 
 let version = {
-    build: '2024.1101.3',
+    build: '2024.1101.4',
     sku: 'lotus',
     feature_flags: {
         bleh_settings_tabs: {
@@ -9909,7 +9909,7 @@ let has_prompted_for_update = false;
         }
     }
 
-    function lotus_request(type = 'artist') {
+    function lotus_request(type = 'artist', notify = false) {
         let button = document.body.querySelector('[onclick="_lotus_check()"]');
         if (button != null)
             button.setAttribute('disabled', '');
@@ -9926,7 +9926,8 @@ let has_prompted_for_update = false;
             else
                 album_track_corrections = JSON.parse(this.response);
 
-            deliver_notif(trans[lang].lotus[type], false, true, 'lotus');
+            if (notify)
+                deliver_notif(trans[lang].lotus[type], false, true, 'lotus');
 
             // save to cache for next page load
             localStorage.setItem(`lotus_${type}`, this.response);
@@ -9946,7 +9947,7 @@ let has_prompted_for_update = false;
 
 
     unsafeWindow._lotus_check = function() {
-        lotus(true);
+        lotus(true, true);
     }
 
 
