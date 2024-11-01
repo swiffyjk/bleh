@@ -74,6 +74,11 @@ let lang_info = {
 
 const trans = {
     en: {
+        lotus: {
+            artist: 'Artist corrections have been downloaded!',
+            album_track: 'Album and track corrections have been downloaded!',
+            version: 'You are running lotus version {v}.'
+        },
         auth_menu: {
             dev: 'Toggle dev mode',
             configure_bleh: 'Configure bleh',
@@ -1815,210 +1820,8 @@ tippy.setDefaultProps({
     delay: [null, 50]
 });
 
-let artist_corrections = {
-    'Miraie': 'miraie',
-    'Julie': 'julie',
-    'Glaive': 'glaive',
-    'Yandere': 'yandere',
-    'Mental': 'mental',
-    'Valorant': 'VALORANT',
-    'Tuyu': 'TUYU',
-    'Hivemind': 'HIVEMIND',
-    'MGK': 'mgk',
-    'Horrormovies': 'horrormovies',
-    'Lieu': 'lieu',
-    'Funeral': 'funeral',
-    'Kuru': 'kuru',
-    'Quinn': 'quinn',
-    'Charli XCX': 'Charli xcx',
-    'Underscores': 'underscores',
-    'Thrown': 'thrown',
-    'Mitsu': 'mitsu',
-    'Vexed': 'VEXED',
-    'HeavensGate': 'HEAVENSGATE',
-    'Tool': 'TOOL',
-    'Blackshape': 'BLACKSHAPE',
-    'Olivia': 'OLIVIA',
-    'Diesect': 'DIESECT',
-    'Milet': 'milet',
-    'Ino': 'ino',
-    'Hana': 'HANA',
-    'Boa': 'BoA',
-    'Paris Match': 'paris match',
-    'Iri': 'iri',
-    'Rosé': 'ROSÉ',
-    'Aran': 'aran',
-    'Like a Kid': 'LIKE A KID',
-    //
-    'ty dolla $ign': 'Ty Dolla $ign',
-    'juicy J': 'Juicy J',
-    'eminem': 'Eminem',
-    'project pat': 'Project Pat',
-    'kenny Mason': 'Kenny Mason',
-    'SKI mask THE slump God': 'Ski Mask The Slump God',
-    'that mexican ot': 'That Mexican OT',
-    'TWELVE\'LEN': 'Twelve\'len',
-    'ariana grande': 'Ariana Grande',
-    'robyn': 'Robyn',
-    'yung lean': 'Yung Lean',
-    'troye sivan': 'Troye Sivan',
-    'addison rae': 'Addison Rae',
-    'a. g. cook': 'A. G. Cook',
-    'lorde': 'Lorde',
-    'the japanese house': 'The Japanese House',
-    'tinashe': 'Tinashe',
-    'julian casablancas': 'Julian Casablancas',
-    'bon iver': 'Bon Iver',
-    'shygirl': 'Shygirl',
-    'billie eilish': 'Billie Eilish',
-    //
-    'J.I.D | J.1.D': 'JID',
-    'ZILLAKAMI | JPEGMAF1A + Z1LLAKAM1': 'ZILLAKAMI',
-    'GOLDLINK | TWELVE\'LEN + GOLDL1NK': 'GoldLink',
-    'Pharrell': 'Pharrell Williams'
-}
-let song_title_corrections = {
-    'quadeca': {
-        'BORN YESTERDAY': 'born yesterday',
-        'Tell Me A Joke': 'tell me a joke',
-        'Gone Gone': 'gone gone',
-        'Guess Who?': 'GUESS WHO?',
-        'UNDER My Skin': 'UNDER MY SKIN',
-        'being yourself': 'BEING YOURSELF',
-        'I Make It Look Effortless': 'I MAKE IT LOOK EFFORTLESS',
-        'Scrapyard': 'SCRAPYARD',
-        'i didn\'t mean to haunt you': 'I Didn\'t Mean To Haunt You',
-        'Scrapyard II - Single': 'SCRAPYARD II - Single'
-    },
-    'yeule': {
-        'Sulky Baby': 'sulky baby'
-    },
-    'brakence': {
-        'Drank 3 of My Parents\' Craft Beers To Make Eye Contact With You (feat. Login)': 'drank 3 of my parents\' craft beers to make eye contact with you (feat. login)',
-        'tonight\'s no good how about wednesday oh you\'re in dallas on wednesday oh ok well then let\'s just not see each other for 8 months and It doesn\'t matter at all': 'tonight\'s no good how about wednesday oh you\'re in dallas on wednesday oh ok well then let\'s just not see each other for 8 months and it doesn\'t matter at all',
-        'Introvert': 'introvert',
-        'Hypochondriac (Demo)': 'hypochondriac (demo)'
-    },
-    'young thug': {
-        'Pick up the Phone': 'pick up the phone'
-    },
-    'nirvana': {
-        'Tourette\'s - 1992/Live at Reading': 'tourette\'s - 1992/Live at Reading',
-        'Tourette\'s (Alternative Mix)': 'tourette\'s (Alternative Mix)',
-        'Tourette\'s (2013 Mix)': 'tourette\'s (2013 Mix)',
-        'Tourette\'s - 2013 Mix': 'tourette\'s - 2013 Mix',
-        'Tourette\'s (Demo / Instrumental)': 'tourette\'s (Demo / Instrumental)',
-        'Tourette\'s - Demo / Instrumental': 'tourette\'s - Demo / Instrumental'
-    },
-    'julie': {
-        'April’s-Bloom': 'april’s-bloom',
-        'Pushing Daises': 'pushing daises',
-        'Starjump / Kit': 'starjump/kit'
-    },
-    '21 savage': {
-        'Savage Mode II': 'SAVAGE MODE II'
-    },
-    'future': {
-        'OUT OF MY HANDS': 'Out Of My Hands',
-        'NIGHTS LIKE THIS': 'Night Like This',
-        'BEAT IT': 'Beat It',
-        'ONE BIG FAMILY': 'One Big Family',
-        'YOUNG METRO': 'Young Metro',
-        'ICE ATTACK': 'Ice Attack',
-        'TYPE SHIT': 'Type Shit',
-        'CLAUSTROPHOBIC': 'Claustrophobic',
-        'SLIMED IN': 'Slimed In',
-        'MAGIC DON JUAN (PRINCESS DIANA)': 'Magic Don Juan (Princess Diana)',
-        'RUNNIN OUTTA TIME': 'Runnin Outta Time',
-        'FRIED (SHE A VIBE)': 'Fried (She a Vibe)',
-        'AIN\'T NO LOVE': 'Ain\'t No Love',
-        'EVERYDAY HUSTLE': 'Everyday Hustle',
-        'SEEN IT ALL': 'Seen it All'
-    },
-    'tyler, the creator': {
-        'What A Day': 'WHAT A DAY',
-        'Sorry Not Sorry': 'SORRY NOT SORRY'
-    },
-    'quinn': {
-        'Quinn': 'quinn'
-    },
-    'glaive': {
-        'Huh': 'huh',
-        'Prick (feat. Midwxst)': 'prick (feat. midwxst)',
-        '17250 (V2)': '17250 (v2)',
-        'Hate 2 See U Cry': 'hate 2 see u cry',
-        'Bastard (V2)': 'bastard (v2)',
-        'Stay + Love Story (Cover)': 'stay + love story (cover)',
-        'SYNOPSIS (demo)': 'synopsis (demo)',
-        'Living Proof (That It Hurts)': 'living proof (that it hurts)',
-        'Shoreditch (Bsun N Thr6x Remix)': 'shoreditch (bsun n thr6x remix)',
-        'Que Onda': 'que onda',
-        'A Date w Karma (V1)': 'a date w karma (v1)',
-        'Minnesota is a place that exists (V2)': 'minnesota is a place that exists (v2)',
-        //
-        'may it never falter': 'May It Never Falter',
-        'may it never falter (sessions)': 'May It Never Falter (Sessions)',
-        'for god and country': 'For God and country',
-        'count it up': 'Count It Up',
-        'knock, draw, release': 'Knock, Draw, Release',
-        'everydog has its day': 'Everydog has its day',
-        'Nobodys fault / Accept my own': 'Nobodys Fault / Accept My Own',
-        'by birthright': 'By Birthright'
-    },
-    'juice wrld': {
-        'Off the rip': 'Off the Rip',
-        'lace it (with eminem & benny blanco)': 'Lace It (with Eminem & benny blanco)'
-    },
-    'travis scott': {
-        'Days Before Rodeo': 'DAYS BEFORE RODEO',
-        'Mamacita (Feat. Rich Homie Quan & Young Thug)': 'Mamacita (feat. Rich Homie Quan & Young Thug)',
-        'Basement Freestyle (Live)': 'BASEMENT FREESTYLE (Live)',
-        'Mamacita (live)': 'MAMACITA (Live)',
-        'Astroworld [Explicit]': 'ASTROWORLD [Explicit]'
-    },
-    'yumi': {
-        'Dance': 'DANCE'
-    },
-    'ericdoa': {
-        'Search & Destroy': 'search & destroy'
-    },
-    'playboi carti': {
-        'All Red': 'ALL RED',
-        'Music': 'MUSIC'
-    },
-    '2hollis': {
-        'TEENAGE SOLDIER': 'teenage soldier'
-    },
-    'denzel curry': {
-        'cole pImp (with ty dolla $ign & juicy J)': 'COLE PIMP (with Ty Dolla $ign & Juicy J)',
-        'sked (with kenny Mason & project pat)': 'SKED (with Kenny Mason & Project Pat)',
-        'black FlAG freestyle (with that mexican ot)': 'BLACK FLAG FREESTYLE (with That Mexican OT)'
-    },
-    'olivia rodrigo': {
-        'Guts': 'GUTS'
-    },
-    'charli xcx': {
-        'talk talk featuring troye sivan': 'Talk talk featuring Troye Sivan',
-        'guess featuring billie eilish': 'Guess featuring billie eilish'
-    },
-    'my bloody valentine': {
-        'Loveless': 'loveless',
-        'Only Shallow': 'only shallow',
-        'Loomer': 'loomer',
-        'Touched': 'touched',
-        'To Here Knows When': 'to here knows when',
-        'When You Sleep': 'when you sleep',
-        'I Only Said': 'i only said',
-        'Come in Alone': 'come in alone',
-        'Sometimes': 'sometimes',
-        'Blown a Wish': 'blown a wish',
-        'What You Want': 'what you want',
-        'Soon': 'soon'
-    },
-    'jpegmafia': {
-        'Are you happy?': 'ARE YOU HAPPY?'
-    }
-};
+let artist_corrections;
+let album_track_corrections;
 
 let ranks = {
     15: {
@@ -2674,6 +2477,8 @@ let has_prompted_for_update = false;
         notify_if_new_update();
 
         console.log(bleh_url,window.location.href,bleh_regex.test(window.location.href));
+
+        lotus();
 
         if (window.location.href == bleh_url || bleh_regex.test(window.location.href)) {
             // start bleh settings
@@ -5192,10 +4997,10 @@ let has_prompted_for_update = false;
         if (!settings.corrections)
             return item;
 
-        if (song_title_corrections.hasOwnProperty(artist)) {
-            if (song_title_corrections[artist].hasOwnProperty(item)) {
-                console.info('bleh - correction handler: corrected as', song_title_corrections[artist][item]);
-                return song_title_corrections[artist][item];
+        if (album_track_corrections.hasOwnProperty(artist)) {
+            if (album_track_corrections[artist].hasOwnProperty(item)) {
+                console.info('bleh - correction handler: corrected as', album_track_corrections[artist][item]);
+                return album_track_corrections[artist][item];
             } else {
                 return item;
             }
@@ -6603,6 +6408,9 @@ let has_prompted_for_update = false;
                 <div class="bleh--panel">
                     <h3>${trans[lang].settings.corrections.name}</h3>
                     <p>${trans[lang].settings.corrections.bio}</p>
+                    <h4>${trans[lang].lotus.version
+                    .replace('lotus', `<a class="lotus lotus-name" href="https://github.com/katelyynn/lotus" target="_blank" id="lotus_hover">lotus</a>`)
+                    .replace('{v}', `<span class="version-link lotus">${(artist_corrections.version >= album_track_corrections.version) ? artist_corrections.version : album_track_corrections.version}</span>`)}</h4>
                     <!--<div class="screen-row actions-only">
                         <div class="actions">
                             <a class="btn action" href="https://github.com/katelyynn/bleh/issues/new/choose" target="_blank">
@@ -7047,7 +6855,7 @@ let has_prompted_for_update = false;
 
         let corrections_table_albums_tracks = document.getElementById('corrections-albums_tracks');
 
-        for (let artist in song_title_corrections) {
+        for (let artist in album_track_corrections) {
             let artist_row = document.createElement('div');
             artist_row.classList.add('artist-row');
             artist_row.innerHTML = (`
@@ -7056,7 +6864,7 @@ let has_prompted_for_update = false;
 
             corrections_table_albums_tracks.appendChild(artist_row);
 
-            for (let media in song_title_corrections[artist]) {
+            for (let media in album_track_corrections[artist]) {
                 let correction = document.createElement('div');
                 correction.classList.add('correction-row');
                 correction.innerHTML = (`
@@ -7065,7 +6873,7 @@ let has_prompted_for_update = false;
                 </div>
                 <div class="arrow-divider"></div>
                 <div class="primary-name post-transition">
-                    <h5>${song_title_corrections[artist][media]}</h5>
+                    <h5>${album_track_corrections[artist][media]}</h5>
                 </div>
                 `);
 
@@ -7703,9 +7511,9 @@ let has_prompted_for_update = false;
         console.log(original_title, original_artist);
         let formatted_title = original_title;
 
-        if (song_title_corrections.hasOwnProperty(original_artist.toLowerCase()) && settings.corrections) {
-            if (song_title_corrections[original_artist.toLowerCase()].hasOwnProperty(formatted_title))
-                formatted_title = song_title_corrections[original_artist.toLowerCase()][formatted_title];
+        if (album_track_corrections.hasOwnProperty(original_artist.toLowerCase()) && settings.corrections) {
+            if (album_track_corrections[original_artist.toLowerCase()].hasOwnProperty(formatted_title))
+                formatted_title = album_track_corrections[original_artist.toLowerCase()][formatted_title];
         }
 
         // remove double feature detection in titles breakign things
@@ -10011,5 +9819,73 @@ let has_prompted_for_update = false;
                 </div>
             </div>
         `);
+    }
+
+
+
+
+    // correction system
+    function lotus() {
+        let lotus_artist = localStorage.getItem('lotus_artist');
+        let lotus_artist_expire = new Date(localStorage.getItem('lotus_artist_expire'));
+
+        let lotus_album_track = localStorage.getItem('lotus_album_track');
+        let lotus_album_track_expire = new Date(localStorage.getItem('lotus_album_track_expire'));
+
+        let current_time = new Date();
+
+        if (lotus_artist == null) {
+            console.info('lotus - artist list is not cached, fetching');
+            lotus_request();
+        } else {
+            // we prefer to load the current cache before waiting for a new response
+            artist_corrections = JSON.parse(lotus_artist);
+
+            // is it valid?
+            if (lotus_artist_expire < current_time) {
+                lotus_request();
+            }
+        }
+
+        if (lotus_album_track == null) {
+            console.info('lotus - album_track list is not cached, fetching');
+            lotus_request('album_track');
+        } else {
+            // we prefer to load the current cache before waiting for a new response
+            album_track_corrections = JSON.parse(lotus_album_track);
+
+            // is it valid?
+            if (lotus_album_track_expire < current_time) {
+                lotus_request('album_track');
+            }
+        }
+    }
+
+    function lotus_request(type = 'artist') {
+        let xhr = new XMLHttpRequest();
+        let url = `https://katelyynn.github.io/lotus/${type}.json`;
+        xhr.open('GET',url,true);
+
+        xhr.onload = function() {
+            console.info('lotus -', type, 'list responded with', xhr.status);
+
+            if (type == 'artist')
+                artist_corrections = JSON.parse(this.response);
+            else
+                album_track_corrections = JSON.parse(this.response);
+
+            deliver_notif(trans[lang].lotus[type]);
+
+            // save to cache for next page load
+            localStorage.setItem(`lotus_${type}`, this.response);
+
+            // set expire date
+            let api_expire = new Date();
+            api_expire.setHours(api_expire.getHours() + 4);
+            localStorage.setItem(`lotus_${type}_expire`, api_expire);
+            console.info('lotus -', type, 'list is cached until', api_expire);
+        }
+
+        xhr.send();
     }
 })();
