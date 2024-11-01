@@ -18,8 +18,8 @@
 // ==/UserScript==
 
 let version = {
-    build: '2024.1101',
-    sku: 'falter',
+    build: '2024.1101.1',
+    sku: 'lotus',
     feature_flags: {
         bleh_settings_tabs: {
             default: false,
@@ -74,6 +74,14 @@ let lang_info = {
 
 const trans = {
     en: {
+        lotus: {
+            artist: 'Artist corrections have been downloaded!',
+            album_track: 'Album and track corrections have been downloaded!',
+            version: 'You are running lotus version {v}.',
+            tooltip: 'lotus is the community correction system used in bleh and bwaa',
+            check: 'Check for updates',
+            correct: 'Submit name correction'
+        },
         auth_menu: {
             dev: 'Toggle dev mode',
             configure_bleh: 'Configure bleh',
@@ -82,7 +90,6 @@ const trans = {
         },
         music: {
             submit_lastfm_correction: 'Submit correction to Last.fm',
-            submit_bleh_correction: 'Submit correction to bleh',
             search_variations: 'Search for variations of this title',
             fetch_plays: {
                 name: 'Tracklist',
@@ -412,7 +419,7 @@ const trans = {
             },
             corrections: {
                 name: 'Corrections',
-                bio: 'Manage bleh\'s in-built correction system for artist, album, and track titles.',
+                bio: 'Manage capitalisation of artist, album, and track names with community contributions.',
                 toggle: {
                     name: 'Enable the correction system'
                 },
@@ -1815,210 +1822,8 @@ tippy.setDefaultProps({
     delay: [null, 50]
 });
 
-let artist_corrections = {
-    'Miraie': 'miraie',
-    'Julie': 'julie',
-    'Glaive': 'glaive',
-    'Yandere': 'yandere',
-    'Mental': 'mental',
-    'Valorant': 'VALORANT',
-    'Tuyu': 'TUYU',
-    'Hivemind': 'HIVEMIND',
-    'MGK': 'mgk',
-    'Horrormovies': 'horrormovies',
-    'Lieu': 'lieu',
-    'Funeral': 'funeral',
-    'Kuru': 'kuru',
-    'Quinn': 'quinn',
-    'Charli XCX': 'Charli xcx',
-    'Underscores': 'underscores',
-    'Thrown': 'thrown',
-    'Mitsu': 'mitsu',
-    'Vexed': 'VEXED',
-    'HeavensGate': 'HEAVENSGATE',
-    'Tool': 'TOOL',
-    'Blackshape': 'BLACKSHAPE',
-    'Olivia': 'OLIVIA',
-    'Diesect': 'DIESECT',
-    'Milet': 'milet',
-    'Ino': 'ino',
-    'Hana': 'HANA',
-    'Boa': 'BoA',
-    'Paris Match': 'paris match',
-    'Iri': 'iri',
-    'Rosé': 'ROSÉ',
-    'Aran': 'aran',
-    'Like a Kid': 'LIKE A KID',
-    //
-    'ty dolla $ign': 'Ty Dolla $ign',
-    'juicy J': 'Juicy J',
-    'eminem': 'Eminem',
-    'project pat': 'Project Pat',
-    'kenny Mason': 'Kenny Mason',
-    'SKI mask THE slump God': 'Ski Mask The Slump God',
-    'that mexican ot': 'That Mexican OT',
-    'TWELVE\'LEN': 'Twelve\'len',
-    'ariana grande': 'Ariana Grande',
-    'robyn': 'Robyn',
-    'yung lean': 'Yung Lean',
-    'troye sivan': 'Troye Sivan',
-    'addison rae': 'Addison Rae',
-    'a. g. cook': 'A. G. Cook',
-    'lorde': 'Lorde',
-    'the japanese house': 'The Japanese House',
-    'tinashe': 'Tinashe',
-    'julian casablancas': 'Julian Casablancas',
-    'bon iver': 'Bon Iver',
-    'shygirl': 'Shygirl',
-    'billie eilish': 'Billie Eilish',
-    //
-    'J.I.D | J.1.D': 'JID',
-    'ZILLAKAMI | JPEGMAF1A + Z1LLAKAM1': 'ZILLAKAMI',
-    'GOLDLINK | TWELVE\'LEN + GOLDL1NK': 'GoldLink',
-    'Pharrell': 'Pharrell Williams'
-}
-let song_title_corrections = {
-    'quadeca': {
-        'BORN YESTERDAY': 'born yesterday',
-        'Tell Me A Joke': 'tell me a joke',
-        'Gone Gone': 'gone gone',
-        'Guess Who?': 'GUESS WHO?',
-        'UNDER My Skin': 'UNDER MY SKIN',
-        'being yourself': 'BEING YOURSELF',
-        'I Make It Look Effortless': 'I MAKE IT LOOK EFFORTLESS',
-        'Scrapyard': 'SCRAPYARD',
-        'i didn\'t mean to haunt you': 'I Didn\'t Mean To Haunt You',
-        'Scrapyard II - Single': 'SCRAPYARD II - Single'
-    },
-    'yeule': {
-        'Sulky Baby': 'sulky baby'
-    },
-    'brakence': {
-        'Drank 3 of My Parents\' Craft Beers To Make Eye Contact With You (feat. Login)': 'drank 3 of my parents\' craft beers to make eye contact with you (feat. login)',
-        'tonight\'s no good how about wednesday oh you\'re in dallas on wednesday oh ok well then let\'s just not see each other for 8 months and It doesn\'t matter at all': 'tonight\'s no good how about wednesday oh you\'re in dallas on wednesday oh ok well then let\'s just not see each other for 8 months and it doesn\'t matter at all',
-        'Introvert': 'introvert',
-        'Hypochondriac (Demo)': 'hypochondriac (demo)'
-    },
-    'young thug': {
-        'Pick up the Phone': 'pick up the phone'
-    },
-    'nirvana': {
-        'Tourette\'s - 1992/Live at Reading': 'tourette\'s - 1992/Live at Reading',
-        'Tourette\'s (Alternative Mix)': 'tourette\'s (Alternative Mix)',
-        'Tourette\'s (2013 Mix)': 'tourette\'s (2013 Mix)',
-        'Tourette\'s - 2013 Mix': 'tourette\'s - 2013 Mix',
-        'Tourette\'s (Demo / Instrumental)': 'tourette\'s (Demo / Instrumental)',
-        'Tourette\'s - Demo / Instrumental': 'tourette\'s - Demo / Instrumental'
-    },
-    'julie': {
-        'April’s-Bloom': 'april’s-bloom',
-        'Pushing Daises': 'pushing daises',
-        'Starjump / Kit': 'starjump/kit'
-    },
-    '21 savage': {
-        'Savage Mode II': 'SAVAGE MODE II'
-    },
-    'future': {
-        'OUT OF MY HANDS': 'Out Of My Hands',
-        'NIGHTS LIKE THIS': 'Night Like This',
-        'BEAT IT': 'Beat It',
-        'ONE BIG FAMILY': 'One Big Family',
-        'YOUNG METRO': 'Young Metro',
-        'ICE ATTACK': 'Ice Attack',
-        'TYPE SHIT': 'Type Shit',
-        'CLAUSTROPHOBIC': 'Claustrophobic',
-        'SLIMED IN': 'Slimed In',
-        'MAGIC DON JUAN (PRINCESS DIANA)': 'Magic Don Juan (Princess Diana)',
-        'RUNNIN OUTTA TIME': 'Runnin Outta Time',
-        'FRIED (SHE A VIBE)': 'Fried (She a Vibe)',
-        'AIN\'T NO LOVE': 'Ain\'t No Love',
-        'EVERYDAY HUSTLE': 'Everyday Hustle',
-        'SEEN IT ALL': 'Seen it All'
-    },
-    'tyler, the creator': {
-        'What A Day': 'WHAT A DAY',
-        'Sorry Not Sorry': 'SORRY NOT SORRY'
-    },
-    'quinn': {
-        'Quinn': 'quinn'
-    },
-    'glaive': {
-        'Huh': 'huh',
-        'Prick (feat. Midwxst)': 'prick (feat. midwxst)',
-        '17250 (V2)': '17250 (v2)',
-        'Hate 2 See U Cry': 'hate 2 see u cry',
-        'Bastard (V2)': 'bastard (v2)',
-        'Stay + Love Story (Cover)': 'stay + love story (cover)',
-        'SYNOPSIS (demo)': 'synopsis (demo)',
-        'Living Proof (That It Hurts)': 'living proof (that it hurts)',
-        'Shoreditch (Bsun N Thr6x Remix)': 'shoreditch (bsun n thr6x remix)',
-        'Que Onda': 'que onda',
-        'A Date w Karma (V1)': 'a date w karma (v1)',
-        'Minnesota is a place that exists (V2)': 'minnesota is a place that exists (v2)',
-        //
-        'may it never falter': 'May It Never Falter',
-        'may it never falter (sessions)': 'May It Never Falter (Sessions)',
-        'for god and country': 'For God and country',
-        'count it up': 'Count It Up',
-        'knock, draw, release': 'Knock, Draw, Release',
-        'everydog has its day': 'Everydog has its day',
-        'Nobodys fault / Accept my own': 'Nobodys Fault / Accept My Own',
-        'by birthright': 'By Birthright'
-    },
-    'juice wrld': {
-        'Off the rip': 'Off the Rip',
-        'lace it (with eminem & benny blanco)': 'Lace It (with Eminem & benny blanco)'
-    },
-    'travis scott': {
-        'Days Before Rodeo': 'DAYS BEFORE RODEO',
-        'Mamacita (Feat. Rich Homie Quan & Young Thug)': 'Mamacita (feat. Rich Homie Quan & Young Thug)',
-        'Basement Freestyle (Live)': 'BASEMENT FREESTYLE (Live)',
-        'Mamacita (live)': 'MAMACITA (Live)',
-        'Astroworld [Explicit]': 'ASTROWORLD [Explicit]'
-    },
-    'yumi': {
-        'Dance': 'DANCE'
-    },
-    'ericdoa': {
-        'Search & Destroy': 'search & destroy'
-    },
-    'playboi carti': {
-        'All Red': 'ALL RED',
-        'Music': 'MUSIC'
-    },
-    '2hollis': {
-        'TEENAGE SOLDIER': 'teenage soldier'
-    },
-    'denzel curry': {
-        'cole pImp (with ty dolla $ign & juicy J)': 'COLE PIMP (with Ty Dolla $ign & Juicy J)',
-        'sked (with kenny Mason & project pat)': 'SKED (with Kenny Mason & Project Pat)',
-        'black FlAG freestyle (with that mexican ot)': 'BLACK FLAG FREESTYLE (with That Mexican OT)'
-    },
-    'olivia rodrigo': {
-        'Guts': 'GUTS'
-    },
-    'charli xcx': {
-        'talk talk featuring troye sivan': 'Talk talk featuring Troye Sivan',
-        'guess featuring billie eilish': 'Guess featuring billie eilish'
-    },
-    'my bloody valentine': {
-        'Loveless': 'loveless',
-        'Only Shallow': 'only shallow',
-        'Loomer': 'loomer',
-        'Touched': 'touched',
-        'To Here Knows When': 'to here knows when',
-        'When You Sleep': 'when you sleep',
-        'I Only Said': 'i only said',
-        'Come in Alone': 'come in alone',
-        'Sometimes': 'sometimes',
-        'Blown a Wish': 'blown a wish',
-        'What You Want': 'what you want',
-        'Soon': 'soon'
-    },
-    'jpegmafia': {
-        'Are you happy?': 'ARE YOU HAPPY?'
-    }
-};
+let artist_corrections;
+let album_track_corrections;
 
 let ranks = {
     15: {
@@ -2674,6 +2479,8 @@ let has_prompted_for_update = false;
         notify_if_new_update();
 
         console.log(bleh_url,window.location.href,bleh_regex.test(window.location.href));
+
+        lotus();
 
         if (window.location.href == bleh_url || bleh_regex.test(window.location.href)) {
             // start bleh settings
@@ -3953,7 +3760,7 @@ let has_prompted_for_update = false;
                     </div>
                 </form>
             </div>
-            `);
+            `, true);
     }
 
 
@@ -5192,10 +4999,10 @@ let has_prompted_for_update = false;
         if (!settings.corrections)
             return item;
 
-        if (song_title_corrections.hasOwnProperty(artist)) {
-            if (song_title_corrections[artist].hasOwnProperty(item)) {
-                console.info('bleh - correction handler: corrected as', song_title_corrections[artist][item]);
-                return song_title_corrections[artist][item];
+        if (album_track_corrections.hasOwnProperty(artist)) {
+            if (album_track_corrections[artist].hasOwnProperty(item)) {
+                console.info('bleh - correction handler: corrected as', album_track_corrections[artist][item]);
+                return album_track_corrections[artist][item];
             } else {
                 return item;
             }
@@ -5338,9 +5145,6 @@ let has_prompted_for_update = false;
                         </button>
                     </div>
                     <div class="btns sep">
-                        <button class="btn bleh--btn" data-bleh-page="corrections" onclick="_change_settings_page('corrections')">
-                            ${trans[lang].settings.corrections.name}
-                        </button>
                         <button class="btn bleh--btn" data-bleh-page="redirects" onclick="_change_settings_page('redirects')">
                             ${trans[lang].settings.redirects.name}
                         </button>
@@ -5451,7 +5255,7 @@ let has_prompted_for_update = false;
                                 <p>${trans[lang].settings.home.colours.bio}</p>
                             </div>
                         </button>
-                        <button class="btn setting-item" onclick="_change_settings_page('corrections')">
+                        <button class="btn setting-item" onclick="_change_settings_page('music')">
                             <div class="icon bleh--corrections"></div>
                             <div class="text">
                                 <h5>${trans[lang].settings.corrections.name}</h5>
@@ -6224,11 +6028,17 @@ let has_prompted_for_update = false;
                         </div>
                     </div>
                     <div class="sep"></div>
-                    <h5>Debug information</h5>
+                    <h4>Debug information</h4>
                     <ul>
-                        <li>Theme loading is currently ${settings.dev}</li>
-                        <li>Theme will expire at ${new Date(localStorage.getItem('bleh_cached_style_timeout'))}</li>
-                        <li>It is currently ${new Date()}</li>
+                        <li>Theme loading is currently ${!settings.dev}</li>
+                        <li><span class="lotus lotus-name lotus-name-small">lotus</span> is currently ${settings.corrections}</li>
+                        <br>
+                        <li>Theme will expire at <span class="time">${moment(localStorage.getItem('bleh_cached_style_timeout')).format('HH:mm:ss Z')}</span></li>
+                        <li><span class="lotus lotus-name lotus-name-small">lotus</span> (artist) will expire at <span class="time">${moment(localStorage.getItem('lotus_artist_expire')).format('HH:mm:ss Z')}</span></li>
+                        <li><span class="lotus lotus-name lotus-name-small">lotus</span> (album_track) will expire at <span class="time">${moment(localStorage.getItem('lotus_album_track_expire')).format('HH:mm:ss Z')}</span></li>
+                        <br>
+                        <li>It is currently <span class="time">${moment().format('HH:mm:ss Z')}</span></li>
+                        <br>
                         <li>Has the timeout expired? ${new Date(localStorage.getItem('bleh_cached_style_timeout')) < new Date()}</li>
                     </ul>
                 </div>
@@ -6277,17 +6087,6 @@ let has_prompted_for_update = false;
                             <a class="btn bleh--btn primary" href="${root}settings/website" target="_blank">${trans[lang].settings.redirects.autocorrect.action}</a>
                         </div>
                     </div>
-                </div>
-                `);
-        } else if (page == 'corrections') {
-            return (`
-                <div class="bleh--panel">
-                    <h3>${trans[lang].settings.corrections.name}</h3>
-                    <p>${trans[lang].settings.corrections.bio}</p>
-                    <h4>${trans[lang].settings.corrections.listing.artists}</h4>
-                    <div class="corrections artist" id="corrections-artist"></div>
-                    <h4>${trans[lang].settings.corrections.listing.albums_tracks}</h4>
-                    <div class="corrections album_tracks" id="corrections-albums_tracks"></div>
                 </div>
                 `);
         } else if (page == 'language') {
@@ -6600,8 +6399,10 @@ let has_prompted_for_update = false;
                         </div>
                     </div>
                 </div>
-                <div class="bleh--panel">
-                    <h3>${trans[lang].settings.corrections.name}</h3>
+                <div class="bleh--panel lotus">
+                    <h4>${trans[lang].lotus.version
+                    .replace('lotus', `<a class="lotus lotus-name" href="https://github.com/katelyynn/lotus" target="_blank" id="lotus_hover">lotus</a>`)
+                    .replace('{v}', `<span class="version-link lotus">${(artist_corrections.version >= album_track_corrections.version) ? artist_corrections.version : album_track_corrections.version}</span>`)}</h4>
                     <p>${trans[lang].settings.corrections.bio}</p>
                     <!--<div class="screen-row actions-only">
                         <div class="actions">
@@ -6621,15 +6422,14 @@ let has_prompted_for_update = false;
                     </div>-->
                     <div class="screen-row actions-only">
                         <div class="actions">
-                            <a class="btn primary external" href="https://github.com/katelyynn/bleh/issues/new/choose" target="_blank">
+                            <a class="btn primary external lotus" href="https://github.com/katelyynn/lotus/issues/new/choose" target="_blank">
                                 ${trans[lang].settings.corrections.submit.name}
                             </a>
-                            <!--<button class="btn continue" onclick="_open_correction_modal()">
+                            <button class="btn continue" onclick="_open_correction_modal()">
                                 ${trans[lang].settings.corrections.view.name}
-                            </button>-->
-                            <!-- TEMP: make a modal for this like above -->
-                            <button class="btn continue" onclick="_change_settings_page('corrections')">
-                                ${trans[lang].settings.corrections.view.name}
+                            </button>
+                            <button class="btn continue" onclick="_lotus_check()">
+                                ${trans[lang].lotus.check}
                             </button>
                         </div>
                     </div>
@@ -6639,12 +6439,13 @@ let has_prompted_for_update = false;
                             <h5>${trans[lang].settings.corrections.toggle.name}</h5>
                         </div>
                         <div class="toggle-wrap">
-                            <button class="toggle" id="toggle-corrections" aria-checked="true">
+                            <button class="toggle lotus" id="toggle-corrections" aria-checked="true">
                                 <div class="dot"></div>
                             </button>
                         </div>
                     </div>
-                    <div class="sep"></div>
+                </div>
+                <div class="bleh--panel">
                     <h4>${trans[lang].settings.corrections.formatting}</h4>
                     <div class="inner-preview pad flex">
                         <table class="chartlist chartlist--with-index chartlist--with-index--length-2 chartlist--with-image chartlist--with-play chartlist--with-artist chartlist--with-bar">
@@ -6773,11 +6574,6 @@ let has_prompted_for_update = false;
                             </a>
                         </li>
                         <li class="navlist-item secondary-nav-item">
-                            <a class="secondary-nav-item-link bleh--nav" data-bleh-page="corrections" onclick="_change_settings_page('corrections')">
-                                ${trans[lang].settings.corrections.name}
-                            </a>
-                        </li>
-                        <li class="navlist-item secondary-nav-item">
                             <a class="secondary-nav-item-link bleh--nav" data-bleh-page="redirects" onclick="_change_settings_page('redirects')">
                                 ${trans[lang].settings.redirects.name}
                             </a>
@@ -6816,7 +6612,7 @@ let has_prompted_for_update = false;
         if (page == 'themes') {
             refresh_all();
             show_theme_change_in_settings();
-        } else if (page == 'customise' || page == 'performance' || page == 'redirects' || page == 'corrections' || page == 'accessibility' || page == 'text' || page == 'seasonal' || page == 'music') {
+        } else if (page == 'customise' || page == 'performance' || page == 'redirects' || page == 'accessibility' || page == 'text' || page == 'seasonal' || page == 'music') {
             refresh_all();
         } else if (page == 'profiles') {
             init_profile_notes();
@@ -6826,8 +6622,11 @@ let has_prompted_for_update = false;
             bleh_sku_page();
         }
 
-        if (page == 'corrections')
-            prepare_corrections_page();
+        if (page == 'music')
+            tippy(document.getElementById('lotus_hover'), {
+                content: trans[lang].lotus.tooltip.replace('lotus', '<span class="lotus lotus-name lotus-name-small">lotus</span>'),
+                allowHTML: true
+            })
 
         if (page == 'themes') {
             tippy(document.body.querySelector('.swatch.default'), {
@@ -6998,7 +6797,7 @@ let has_prompted_for_update = false;
                 ${trans[lang].settings.cancel}
             </button>
         </div>
-        `);
+        `, true);
 
         profile_notes[username] = document.getElementById('bleh--profile-note').value;
 
@@ -7028,6 +6827,9 @@ let has_prompted_for_update = false;
         let corrections_table_artist = document.getElementById('corrections-artist');
 
         for (let artist in artist_corrections) {
+            if (artist == 'version')
+                continue;
+
             let correction = document.createElement('div');
             correction.classList.add('correction-row');
             correction.innerHTML = (`
@@ -7047,7 +6849,10 @@ let has_prompted_for_update = false;
 
         let corrections_table_albums_tracks = document.getElementById('corrections-albums_tracks');
 
-        for (let artist in song_title_corrections) {
+        for (let artist in album_track_corrections) {
+            if (artist == 'version')
+                continue;
+
             let artist_row = document.createElement('div');
             artist_row.classList.add('artist-row');
             artist_row.innerHTML = (`
@@ -7056,7 +6861,7 @@ let has_prompted_for_update = false;
 
             corrections_table_albums_tracks.appendChild(artist_row);
 
-            for (let media in song_title_corrections[artist]) {
+            for (let media in album_track_corrections[artist]) {
                 let correction = document.createElement('div');
                 correction.classList.add('correction-row');
                 correction.innerHTML = (`
@@ -7065,7 +6870,7 @@ let has_prompted_for_update = false;
                 </div>
                 <div class="arrow-divider"></div>
                 <div class="primary-name post-transition">
-                    <h5>${song_title_corrections[artist][media]}</h5>
+                    <h5>${album_track_corrections[artist][media]}</h5>
                 </div>
                 `);
 
@@ -7245,7 +7050,7 @@ let has_prompted_for_update = false;
                                 <p class="caption">${trans[lang].settings.performance.dev.modals.prompt.browsers.firefox.bio}</p>
                             </button>
                         </div>
-                    `);
+                    `, true);
                 }
 
                 // save setting into body
@@ -7499,7 +7304,7 @@ let has_prompted_for_update = false;
                 ${trans[lang].settings.done}
             </button>
         </div>
-        `);
+        `, true);
 
         // this displays the "reset to default" button if you are not on the defaults
         update_item('hue',settings.hue);
@@ -7511,7 +7316,7 @@ let has_prompted_for_update = false;
 
 
     // create a window
-    function create_window(id, title, inner_content, classname='') {
+    function create_window(id, title, inner_content, has_close = false, classname='') {
         let background = document.createElement('div');
         background.classList.add('popup_background');
         background.setAttribute('id',`bleh--window-${id}--background`);
@@ -7537,6 +7342,23 @@ let has_prompted_for_update = false;
         content.classList.add('modal-content');
         content.setAttribute('id',`bleh--window-${id}--content`);
         content.setAttribute('data-kate-processed','true');
+
+        if (has_close) {
+            let actions = document.createElement('div');
+            actions.classList.add('modal-actions');
+            actions.setAttribute('id',`bleh--window-${id}--actions`);
+            actions.setAttribute('data-kate-processed','true');
+
+            actions.innerHTML = (`
+                <div class="modal-buttons">
+                    <button class="modal-action-button modal-dismiss" onclick="_kill_window('${id}')">
+                        ${trans[lang].settings.close}
+                    </button>
+                </div>
+            `);
+
+            content.insertBefore(actions, content.firstElementChild);
+        }
 
         // share content
         let share = document.createElement('div');
@@ -7615,7 +7437,7 @@ let has_prompted_for_update = false;
                     ${trans[lang].settings.cancel}
                 </button>
             </div>
-        `);
+        `, true);
     }
 
     unsafeWindow._confirm_import = function() {
@@ -7640,7 +7462,7 @@ let has_prompted_for_update = false;
                     ${trans[lang].settings.done}
                 </button>
             </div>
-            `);
+            `, true);
         }
     }
 
@@ -7657,7 +7479,7 @@ let has_prompted_for_update = false;
                     ${trans[lang].settings.done}
                 </button>
             </div>
-        `);
+        `, true);
     }
     unsafeWindow._export_settings = function() {
         export_settings();
@@ -7679,7 +7501,7 @@ let has_prompted_for_update = false;
                     ${trans[lang].settings.cancel}
                 </button>
             </div>
-        `);
+        `, true);
     }
 
     unsafeWindow._confirm_reset = function() {
@@ -7703,9 +7525,9 @@ let has_prompted_for_update = false;
         console.log(original_title, original_artist);
         let formatted_title = original_title;
 
-        if (song_title_corrections.hasOwnProperty(original_artist.toLowerCase()) && settings.corrections) {
-            if (song_title_corrections[original_artist.toLowerCase()].hasOwnProperty(formatted_title))
-                formatted_title = song_title_corrections[original_artist.toLowerCase()][formatted_title];
+        if (album_track_corrections.hasOwnProperty(original_artist.toLowerCase()) && settings.corrections) {
+            if (album_track_corrections[original_artist.toLowerCase()].hasOwnProperty(formatted_title))
+                formatted_title = album_track_corrections[original_artist.toLowerCase()][formatted_title];
         }
 
         // remove double feature detection in titles breakign things
@@ -8757,7 +8579,7 @@ let has_prompted_for_update = false;
                     </div>
                 </div>
             </div>
-        `, 'setup');
+        `, false, 'setup');
     }
 
     unsafeWindow._setup_accessibility = function() {
@@ -8840,7 +8662,7 @@ let has_prompted_for_update = false;
                     </div>
                 </div>
             </div>
-        `, 'setup');
+        `, false, 'setup');
         refresh_all();
     }
 
@@ -9234,7 +9056,7 @@ let has_prompted_for_update = false;
                     </div>
                 </div>
             </div>
-        `, 'setup');
+        `, false, 'setup');
         refresh_all();
 
         tippy(document.body.querySelector('.swatch.default'), {
@@ -9324,7 +9146,7 @@ let has_prompted_for_update = false;
                     </div>
                 </div>
             </div>
-        `, 'setup');
+        `, false, 'setup');
         refresh_all();
         show_theme_change_in_settings();
     }
@@ -9430,7 +9252,7 @@ let has_prompted_for_update = false;
                     </div>
                 </div>
             </div>
-        `, 'setup');
+        `, false, 'setup');
         refresh_all();
     }
 
@@ -9772,6 +9594,20 @@ let has_prompted_for_update = false;
         interact_container.appendChild(search_btn);
 
 
+        // lotus
+        let lotus_btn = document.createElement('a');
+        lotus_btn.classList.add('btn', 'view-item', 'interact-item', 'lotus', 'lotus-btn');
+        lotus_btn.textContent = trans[lang].lotus.correct;
+        lotus_btn.href = 'https://github.com/katelyynn/lotus/issues/new/choose';
+        lotus_btn.target = '_blank';
+
+        tippy(lotus_btn, {
+            content: trans[lang].lotus.correct
+        });
+
+        interact_container.appendChild(lotus_btn);
+
+
         top_container.appendChild(interact_container);
     }
 
@@ -10011,5 +9847,103 @@ let has_prompted_for_update = false;
                 </div>
             </div>
         `);
+    }
+
+
+
+
+    // correction system
+    function lotus(force = false) {
+        let lotus_artist = localStorage.getItem('lotus_artist');
+        let lotus_artist_expire = new Date(localStorage.getItem('lotus_artist_expire'));
+
+        let lotus_album_track = localStorage.getItem('lotus_album_track');
+        let lotus_album_track_expire = new Date(localStorage.getItem('lotus_album_track_expire'));
+
+        let current_time = new Date();
+
+        if (lotus_artist == null) {
+            console.info('lotus - artist list is not cached, fetching');
+            lotus_request();
+        } else {
+            // we prefer to load the current cache before waiting for a new response
+            artist_corrections = JSON.parse(lotus_artist);
+
+            // is it valid?
+            if (lotus_artist_expire < current_time && !force) {
+                lotus_request();
+            } else if (force) {
+                lotus_request();
+            }
+        }
+
+        if (lotus_album_track == null) {
+            console.info('lotus - album_track list is not cached, fetching');
+            lotus_request('album_track');
+        } else {
+            // we prefer to load the current cache before waiting for a new response
+            album_track_corrections = JSON.parse(lotus_album_track);
+
+            // is it valid?
+            if (lotus_album_track_expire < current_time && !force) {
+                lotus_request('album_track');
+            } else if (force) {
+                lotus_request('album_track');
+            }
+        }
+    }
+
+    function lotus_request(type = 'artist') {
+        let button = document.body.querySelector('[onclick="_lotus_check()"]');
+        if (button != null)
+            button.setAttribute('disabled', '');
+
+        let xhr = new XMLHttpRequest();
+        let url = `https://katelyynn.github.io/lotus/${type}.json?${Math.random()}`;
+        xhr.open('GET',url,true);
+
+        xhr.onload = function() {
+            console.info('lotus -', type, 'list responded with', xhr.status);
+
+            if (type == 'artist')
+                artist_corrections = JSON.parse(this.response);
+            else
+                album_track_corrections = JSON.parse(this.response);
+
+            deliver_notif(trans[lang].lotus[type], false, true, 'lotus');
+
+            // save to cache for next page load
+            localStorage.setItem(`lotus_${type}`, this.response);
+
+            // set expire date
+            let api_expire = new Date();
+            api_expire.setHours(api_expire.getHours() + 4);
+            localStorage.setItem(`lotus_${type}_expire`, api_expire);
+            console.info('lotus -', type, 'list is cached until', api_expire);
+
+            if (button != null)
+                button.removeAttribute('disabled');
+        }
+
+        xhr.send();
+    }
+
+
+    unsafeWindow._lotus_check = function() {
+        lotus(true);
+    }
+
+
+
+
+    unsafeWindow._open_correction_modal = function() {
+        create_window('corrections', trans[lang].settings.corrections.name, (`
+            <h4>${trans[lang].settings.corrections.listing.artists}</h4>
+            <div class="corrections artist" id="corrections-artist"></div>
+            <h4>${trans[lang].settings.corrections.listing.albums_tracks}</h4>
+            <div class="corrections album_tracks" id="corrections-albums_tracks"></div>
+        `), true, 'corrections');
+
+        prepare_corrections_page();
     }
 })();
