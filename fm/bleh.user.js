@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         bleh
 // @namespace    http://last.fm/
-// @version      2024.1030
+// @version      2024.1101
 // @description  bleh!!! ^-^
 // @author       kate
 // @match        https://www.last.fm/*
@@ -18,7 +18,7 @@
 // ==/UserScript==
 
 let version = {
-    build: '2024.1030.5',
+    build: '2024.1101',
     sku: 'falter',
     feature_flags: {
         bleh_settings_tabs: {
@@ -1697,7 +1697,7 @@ let seasonal_events = [
         id: 'halloween',
         name: 'Halloween',
         start: 'y0-09-22',
-        end: 'y0-11-01T23:59:59',
+        end: 'y0-11-01T11:59:59',
 
         snowflakes: {
             state: false
@@ -1706,7 +1706,7 @@ let seasonal_events = [
     {
         id: 'pre_fall',
         name: 'Pre-Fall',
-        start: 'y0-11-02',
+        start: 'y0-11-01T:12:00:00',
         end: 'y0-11-12T23:59:59',
 
         snowflakes: {
