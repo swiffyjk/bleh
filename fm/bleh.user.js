@@ -1822,8 +1822,8 @@ tippy.setDefaultProps({
     delay: [null, 50]
 });
 
-let artist_corrections;
-let album_track_corrections;
+let artist_corrections = {};
+let album_track_corrections = {};
 
 let ranks = {
     15: {
@@ -4999,14 +4999,19 @@ let has_prompted_for_update = false;
         if (!settings.corrections)
             return item;
 
-        if (album_track_corrections.hasOwnProperty(artist)) {
-            if (album_track_corrections[artist].hasOwnProperty(item)) {
-                console.info('bleh - correction handler: corrected as', album_track_corrections[artist][item]);
-                return album_track_corrections[artist][item];
+        try {
+            if (album_track_corrections.hasOwnProperty(artist)) {
+                if (album_track_corrections[artist].hasOwnProperty(item)) {
+                    console.info('bleh - correction handler: corrected as', album_track_corrections[artist][item]);
+                    return album_track_corrections[artist][item];
+                } else {
+                    return item;
+                }
             } else {
                 return item;
             }
-        } else {
+        } catch(e) {
+            console.error(e);
             return item;
         }
     }
@@ -5021,10 +5026,15 @@ let has_prompted_for_update = false;
         if (!settings.corrections)
             return artist;
 
-        if (artist_corrections.hasOwnProperty(artist)) {
-            console.info('bleh - correction handler: corrected as', artist_corrections[artist]);
-            return artist_corrections[artist];
-        } else {
+        try {
+            if (artist_corrections.hasOwnProperty(artist)) {
+                console.info('bleh - correction handler: corrected as', artist_corrections[artist]);
+                return artist_corrections[artist];
+            } else {
+                return artist;
+            }
+        } catch(e) {
+            console.error(e);
             return artist;
         }
     }
