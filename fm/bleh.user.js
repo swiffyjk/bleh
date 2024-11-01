@@ -3760,7 +3760,7 @@ let has_prompted_for_update = false;
                     </div>
                 </form>
             </div>
-            `);
+            `, true);
     }
 
 
@@ -5145,9 +5145,6 @@ let has_prompted_for_update = false;
                         </button>
                     </div>
                     <div class="btns sep">
-                        <button class="btn bleh--btn" data-bleh-page="corrections" onclick="_change_settings_page('corrections')">
-                            ${trans[lang].settings.corrections.name}
-                        </button>
                         <button class="btn bleh--btn" data-bleh-page="redirects" onclick="_change_settings_page('redirects')">
                             ${trans[lang].settings.redirects.name}
                         </button>
@@ -5258,7 +5255,7 @@ let has_prompted_for_update = false;
                                 <p>${trans[lang].settings.home.colours.bio}</p>
                             </div>
                         </button>
-                        <button class="btn setting-item" onclick="_change_settings_page('corrections')">
+                        <button class="btn setting-item" onclick="_change_settings_page('music')">
                             <div class="icon bleh--corrections"></div>
                             <div class="text">
                                 <h5>${trans[lang].settings.corrections.name}</h5>
@@ -6031,11 +6028,17 @@ let has_prompted_for_update = false;
                         </div>
                     </div>
                     <div class="sep"></div>
-                    <h5>Debug information</h5>
+                    <h4>Debug information</h4>
                     <ul>
-                        <li>Theme loading is currently ${settings.dev}</li>
-                        <li>Theme will expire at ${new Date(localStorage.getItem('bleh_cached_style_timeout'))}</li>
-                        <li>It is currently ${new Date()}</li>
+                        <li>Theme loading is currently ${!settings.dev}</li>
+                        <li><span class="lotus lotus-name lotus-name-small">lotus</span> is currently ${settings.corrections}</li>
+                        <br>
+                        <li>Theme will expire at <span class="time">${moment(localStorage.getItem('bleh_cached_style_timeout')).format('HH:mm:ss Z')}</span></li>
+                        <li><span class="lotus lotus-name lotus-name-small">lotus</span> (artist) will expire at <span class="time">${moment(localStorage.getItem('lotus_artist_expire')).format('HH:mm:ss Z')}</span></li>
+                        <li><span class="lotus lotus-name lotus-name-small">lotus</span> (album_track) will expire at <span class="time">${moment(localStorage.getItem('lotus_album_track_expire')).format('HH:mm:ss Z')}</span></li>
+                        <br>
+                        <li>It is currently <span class="time">${moment().format('HH:mm:ss Z')}</span></li>
+                        <br>
                         <li>Has the timeout expired? ${new Date(localStorage.getItem('bleh_cached_style_timeout')) < new Date()}</li>
                     </ul>
                 </div>
@@ -6084,17 +6087,6 @@ let has_prompted_for_update = false;
                             <a class="btn bleh--btn primary" href="${root}settings/website" target="_blank">${trans[lang].settings.redirects.autocorrect.action}</a>
                         </div>
                     </div>
-                </div>
-                `);
-        } else if (page == 'corrections') {
-            return (`
-                <div class="bleh--panel">
-                    <h3>${trans[lang].settings.corrections.name}</h3>
-                    <p>${trans[lang].settings.corrections.bio}</p>
-                    <h4>${trans[lang].settings.corrections.listing.artists}</h4>
-                    <div class="corrections artist" id="corrections-artist"></div>
-                    <h4>${trans[lang].settings.corrections.listing.albums_tracks}</h4>
-                    <div class="corrections album_tracks" id="corrections-albums_tracks"></div>
                 </div>
                 `);
         } else if (page == 'language') {
@@ -6433,11 +6425,7 @@ let has_prompted_for_update = false;
                             <a class="btn primary external lotus" href="https://github.com/katelyynn/lotus/issues/new/choose" target="_blank">
                                 ${trans[lang].settings.corrections.submit.name}
                             </a>
-                            <!--<button class="btn continue" onclick="_open_correction_modal()">
-                                ${trans[lang].settings.corrections.view.name}
-                            </button>-->
-                            <!-- TEMP: make a modal for this like above -->
-                            <button class="btn continue" onclick="_change_settings_page('corrections')">
+                            <button class="btn continue" onclick="_open_correction_modal()">
                                 ${trans[lang].settings.corrections.view.name}
                             </button>
                             <button class="btn continue" onclick="_lotus_check()">
@@ -6586,11 +6574,6 @@ let has_prompted_for_update = false;
                             </a>
                         </li>
                         <li class="navlist-item secondary-nav-item">
-                            <a class="secondary-nav-item-link bleh--nav" data-bleh-page="corrections" onclick="_change_settings_page('corrections')">
-                                ${trans[lang].settings.corrections.name}
-                            </a>
-                        </li>
-                        <li class="navlist-item secondary-nav-item">
                             <a class="secondary-nav-item-link bleh--nav" data-bleh-page="redirects" onclick="_change_settings_page('redirects')">
                                 ${trans[lang].settings.redirects.name}
                             </a>
@@ -6629,7 +6612,7 @@ let has_prompted_for_update = false;
         if (page == 'themes') {
             refresh_all();
             show_theme_change_in_settings();
-        } else if (page == 'customise' || page == 'performance' || page == 'redirects' || page == 'corrections' || page == 'accessibility' || page == 'text' || page == 'seasonal' || page == 'music') {
+        } else if (page == 'customise' || page == 'performance' || page == 'redirects' || page == 'accessibility' || page == 'text' || page == 'seasonal' || page == 'music') {
             refresh_all();
         } else if (page == 'profiles') {
             init_profile_notes();
@@ -6644,9 +6627,6 @@ let has_prompted_for_update = false;
                 content: trans[lang].lotus.tooltip.replace('lotus', '<span class="lotus lotus-name lotus-name-small">lotus</span>'),
                 allowHTML: true
             })
-
-        if (page == 'corrections')
-            prepare_corrections_page();
 
         if (page == 'themes') {
             tippy(document.body.querySelector('.swatch.default'), {
@@ -6817,7 +6797,7 @@ let has_prompted_for_update = false;
                 ${trans[lang].settings.cancel}
             </button>
         </div>
-        `);
+        `, true);
 
         profile_notes[username] = document.getElementById('bleh--profile-note').value;
 
@@ -6847,6 +6827,9 @@ let has_prompted_for_update = false;
         let corrections_table_artist = document.getElementById('corrections-artist');
 
         for (let artist in artist_corrections) {
+            if (artist == 'version')
+                continue;
+
             let correction = document.createElement('div');
             correction.classList.add('correction-row');
             correction.innerHTML = (`
@@ -6867,6 +6850,9 @@ let has_prompted_for_update = false;
         let corrections_table_albums_tracks = document.getElementById('corrections-albums_tracks');
 
         for (let artist in album_track_corrections) {
+            if (artist == 'version')
+                continue;
+
             let artist_row = document.createElement('div');
             artist_row.classList.add('artist-row');
             artist_row.innerHTML = (`
@@ -7064,7 +7050,7 @@ let has_prompted_for_update = false;
                                 <p class="caption">${trans[lang].settings.performance.dev.modals.prompt.browsers.firefox.bio}</p>
                             </button>
                         </div>
-                    `);
+                    `, true);
                 }
 
                 // save setting into body
@@ -7318,7 +7304,7 @@ let has_prompted_for_update = false;
                 ${trans[lang].settings.done}
             </button>
         </div>
-        `);
+        `, true);
 
         // this displays the "reset to default" button if you are not on the defaults
         update_item('hue',settings.hue);
@@ -7330,7 +7316,7 @@ let has_prompted_for_update = false;
 
 
     // create a window
-    function create_window(id, title, inner_content, classname='') {
+    function create_window(id, title, inner_content, has_close = false, classname='') {
         let background = document.createElement('div');
         background.classList.add('popup_background');
         background.setAttribute('id',`bleh--window-${id}--background`);
@@ -7356,6 +7342,23 @@ let has_prompted_for_update = false;
         content.classList.add('modal-content');
         content.setAttribute('id',`bleh--window-${id}--content`);
         content.setAttribute('data-kate-processed','true');
+
+        if (has_close) {
+            let actions = document.createElement('div');
+            actions.classList.add('modal-actions');
+            actions.setAttribute('id',`bleh--window-${id}--actions`);
+            actions.setAttribute('data-kate-processed','true');
+
+            actions.innerHTML = (`
+                <div class="modal-buttons">
+                    <button class="modal-action-button modal-dismiss" onclick="_kill_window('${id}')">
+                        ${trans[lang].settings.close}
+                    </button>
+                </div>
+            `);
+
+            content.insertBefore(actions, content.firstElementChild);
+        }
 
         // share content
         let share = document.createElement('div');
@@ -7434,7 +7437,7 @@ let has_prompted_for_update = false;
                     ${trans[lang].settings.cancel}
                 </button>
             </div>
-        `);
+        `, true);
     }
 
     unsafeWindow._confirm_import = function() {
@@ -7459,7 +7462,7 @@ let has_prompted_for_update = false;
                     ${trans[lang].settings.done}
                 </button>
             </div>
-            `);
+            `, true);
         }
     }
 
@@ -7476,7 +7479,7 @@ let has_prompted_for_update = false;
                     ${trans[lang].settings.done}
                 </button>
             </div>
-        `);
+        `, true);
     }
     unsafeWindow._export_settings = function() {
         export_settings();
@@ -7498,7 +7501,7 @@ let has_prompted_for_update = false;
                     ${trans[lang].settings.cancel}
                 </button>
             </div>
-        `);
+        `, true);
     }
 
     unsafeWindow._confirm_reset = function() {
@@ -8576,7 +8579,7 @@ let has_prompted_for_update = false;
                     </div>
                 </div>
             </div>
-        `, 'setup');
+        `, false, 'setup');
     }
 
     unsafeWindow._setup_accessibility = function() {
@@ -8659,7 +8662,7 @@ let has_prompted_for_update = false;
                     </div>
                 </div>
             </div>
-        `, 'setup');
+        `, false, 'setup');
         refresh_all();
     }
 
@@ -9053,7 +9056,7 @@ let has_prompted_for_update = false;
                     </div>
                 </div>
             </div>
-        `, 'setup');
+        `, false, 'setup');
         refresh_all();
 
         tippy(document.body.querySelector('.swatch.default'), {
@@ -9143,7 +9146,7 @@ let has_prompted_for_update = false;
                     </div>
                 </div>
             </div>
-        `, 'setup');
+        `, false, 'setup');
         refresh_all();
         show_theme_change_in_settings();
     }
@@ -9249,7 +9252,7 @@ let has_prompted_for_update = false;
                     </div>
                 </div>
             </div>
-        `, 'setup');
+        `, false, 'setup');
         refresh_all();
     }
 
@@ -9850,7 +9853,7 @@ let has_prompted_for_update = false;
 
 
     // correction system
-    function lotus() {
+    function lotus(force = false) {
         let lotus_artist = localStorage.getItem('lotus_artist');
         let lotus_artist_expire = new Date(localStorage.getItem('lotus_artist_expire'));
 
@@ -9867,7 +9870,9 @@ let has_prompted_for_update = false;
             artist_corrections = JSON.parse(lotus_artist);
 
             // is it valid?
-            if (lotus_artist_expire < current_time) {
+            if (lotus_artist_expire < current_time && !force) {
+                lotus_request();
+            } else if (force) {
                 lotus_request();
             }
         }
@@ -9880,15 +9885,21 @@ let has_prompted_for_update = false;
             album_track_corrections = JSON.parse(lotus_album_track);
 
             // is it valid?
-            if (lotus_album_track_expire < current_time) {
+            if (lotus_album_track_expire < current_time && !force) {
+                lotus_request('album_track');
+            } else if (force) {
                 lotus_request('album_track');
             }
         }
     }
 
     function lotus_request(type = 'artist') {
+        let button = document.body.querySelector('[onclick="_lotus_check()"]');
+        if (button != null)
+            button.setAttribute('disabled', '');
+
         let xhr = new XMLHttpRequest();
-        let url = `https://katelyynn.github.io/lotus/${type}.json`;
+        let url = `https://katelyynn.github.io/lotus/${type}.json?${Math.random()}`;
         xhr.open('GET',url,true);
 
         xhr.onload = function() {
@@ -9899,7 +9910,7 @@ let has_prompted_for_update = false;
             else
                 album_track_corrections = JSON.parse(this.response);
 
-            deliver_notif(trans[lang].lotus[type]);
+            deliver_notif(trans[lang].lotus[type], false, true, 'lotus');
 
             // save to cache for next page load
             localStorage.setItem(`lotus_${type}`, this.response);
@@ -9909,8 +9920,30 @@ let has_prompted_for_update = false;
             api_expire.setHours(api_expire.getHours() + 4);
             localStorage.setItem(`lotus_${type}_expire`, api_expire);
             console.info('lotus -', type, 'list is cached until', api_expire);
+
+            if (button != null)
+                button.removeAttribute('disabled');
         }
 
         xhr.send();
+    }
+
+
+    unsafeWindow._lotus_check = function() {
+        lotus(true);
+    }
+
+
+
+
+    unsafeWindow._open_correction_modal = function() {
+        create_window('corrections', trans[lang].settings.corrections.name, (`
+            <h4>${trans[lang].settings.corrections.listing.artists}</h4>
+            <div class="corrections artist" id="corrections-artist"></div>
+            <h4>${trans[lang].settings.corrections.listing.albums_tracks}</h4>
+            <div class="corrections album_tracks" id="corrections-albums_tracks"></div>
+        `), true, 'corrections');
+
+        prepare_corrections_page();
     }
 })();

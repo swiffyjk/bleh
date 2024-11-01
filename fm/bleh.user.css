@@ -7548,6 +7548,8 @@ input:is([name="track_name"], [name="artist_name"], [name="album_name"], [name="
 }
 /* modal dialog v3 */
 .modal-buttons {
+    background-color: hsl(var(--b6));
+
     width: fit-content;
     margin-right: -16px !important;
     z-index: 100000000000000;
@@ -7566,6 +7568,8 @@ input:is([name="track_name"], [name="artist_name"], [name="album_name"], [name="
 
     width: 32px !important;
     height: 32px !important;
+
+    outline: 3px solid hsl(var(--b6)) !important;
 
     &.modal-download {
         --mask: var(--icon-16-download);
@@ -16626,6 +16630,8 @@ h4 {
 
 
 .modal-body {
+    outline: 3px solid hsl(var(--b6)) !important;
+
     .alert + .screen-row {
         margin-top: var(--card-gap);
 
@@ -16729,5 +16735,44 @@ h4 {
     &.bleh--panel {
         color: hsl(var(--c2));
     }
+
+    &.bleh-notif {
+        --mask: var(--icon-16-lotus);
+    }
+}
+
+
+.time {
+    padding: 0 6px;
+    background-color: hsl(var(--b6));
+    border-radius: var(--item-med-radius);
+    font-family: var(--font-code);
+    color: hsl(var(--c3));
+}
+
+
+.modal--corrections {
+    .modal-inner-content {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+
+        max-height: 70vh;
+        overflow-y: hidden;
+
+        &:hover {
+            overflow-y: auto;
+        }
+    }
+}
+
+
+h5 {
+    margin: unset;
+    color: hsl(var(--c1));
+    font-weight: var(--font-weight-medium);
+}
+h4 {
+    color: hsl(var(--c1));
 }
 }
