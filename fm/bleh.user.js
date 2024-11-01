@@ -18,7 +18,7 @@
 // ==/UserScript==
 
 let version = {
-    build: '2024.1101.2',
+    build: '2024.1101.3',
     sku: 'lotus',
     feature_flags: {
         bleh_settings_tabs: {
@@ -1761,7 +1761,7 @@ function set_season() {
             stored_season.now = now;
             stored_season.year = current_year;
 
-            if (stored_season == season)
+            if (stored_season.id == season.id)
                 return;
             stored_season.id = season.id;
             stored_season.start = season.start;
