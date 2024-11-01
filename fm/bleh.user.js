@@ -77,7 +77,10 @@ const trans = {
         lotus: {
             artist: 'Artist corrections have been downloaded!',
             album_track: 'Album and track corrections have been downloaded!',
-            version: 'You are running lotus version {v}.'
+            version: 'You are running lotus version {v}.',
+            tooltip: 'lotus is the community correction system used in bleh and bwaa',
+            check: 'Check for updates',
+            correct: 'Submit name correction'
         },
         auth_menu: {
             dev: 'Toggle dev mode',
@@ -87,7 +90,6 @@ const trans = {
         },
         music: {
             submit_lastfm_correction: 'Submit correction to Last.fm',
-            submit_bleh_correction: 'Submit correction to bleh',
             search_variations: 'Search for variations of this title',
             fetch_plays: {
                 name: 'Tracklist',
@@ -417,7 +419,7 @@ const trans = {
             },
             corrections: {
                 name: 'Corrections',
-                bio: 'Manage bleh\'s in-built correction system for artist, album, and track titles.',
+                bio: 'Manage capitalisation of artist, album, and track names with community contributions.',
                 toggle: {
                     name: 'Enable the correction system'
                 },
@@ -6405,12 +6407,11 @@ let has_prompted_for_update = false;
                         </div>
                     </div>
                 </div>
-                <div class="bleh--panel">
-                    <h3>${trans[lang].settings.corrections.name}</h3>
-                    <p>${trans[lang].settings.corrections.bio}</p>
+                <div class="bleh--panel lotus">
                     <h4>${trans[lang].lotus.version
                     .replace('lotus', `<a class="lotus lotus-name" href="https://github.com/katelyynn/lotus" target="_blank" id="lotus_hover">lotus</a>`)
                     .replace('{v}', `<span class="version-link lotus">${(artist_corrections.version >= album_track_corrections.version) ? artist_corrections.version : album_track_corrections.version}</span>`)}</h4>
+                    <p>${trans[lang].settings.corrections.bio}</p>
                     <!--<div class="screen-row actions-only">
                         <div class="actions">
                             <a class="btn action" href="https://github.com/katelyynn/bleh/issues/new/choose" target="_blank">
@@ -6429,7 +6430,7 @@ let has_prompted_for_update = false;
                     </div>-->
                     <div class="screen-row actions-only">
                         <div class="actions">
-                            <a class="btn primary external" href="https://github.com/katelyynn/bleh/issues/new/choose" target="_blank">
+                            <a class="btn primary external lotus" href="https://github.com/katelyynn/lotus/issues/new/choose" target="_blank">
                                 ${trans[lang].settings.corrections.submit.name}
                             </a>
                             <!--<button class="btn continue" onclick="_open_correction_modal()">
@@ -6439,6 +6440,9 @@ let has_prompted_for_update = false;
                             <button class="btn continue" onclick="_change_settings_page('corrections')">
                                 ${trans[lang].settings.corrections.view.name}
                             </button>
+                            <button class="btn continue" onclick="_lotus_check()">
+                                ${trans[lang].lotus.check}
+                            </button>
                         </div>
                     </div>
                     <div class="toggle-container" id="container-corrections" onclick="_update_item('corrections')">
@@ -6447,12 +6451,13 @@ let has_prompted_for_update = false;
                             <h5>${trans[lang].settings.corrections.toggle.name}</h5>
                         </div>
                         <div class="toggle-wrap">
-                            <button class="toggle" id="toggle-corrections" aria-checked="true">
+                            <button class="toggle lotus" id="toggle-corrections" aria-checked="true">
                                 <div class="dot"></div>
                             </button>
                         </div>
                     </div>
-                    <div class="sep"></div>
+                </div>
+                <div class="bleh--panel">
                     <h4>${trans[lang].settings.corrections.formatting}</h4>
                     <div class="inner-preview pad flex">
                         <table class="chartlist chartlist--with-index chartlist--with-index--length-2 chartlist--with-image chartlist--with-play chartlist--with-artist chartlist--with-bar">
@@ -6633,6 +6638,12 @@ let has_prompted_for_update = false;
         } else if (page == 'sku') {
             bleh_sku_page();
         }
+
+        if (page == 'music')
+            tippy(document.getElementById('lotus_hover'), {
+                content: trans[lang].lotus.tooltip.replace('lotus', '<span class="lotus lotus-name lotus-name-small">lotus</span>'),
+                allowHTML: true
+            })
 
         if (page == 'corrections')
             prepare_corrections_page();
@@ -9578,6 +9589,20 @@ let has_prompted_for_update = false;
         });
 
         interact_container.appendChild(search_btn);
+
+
+        // lotus
+        let lotus_btn = document.createElement('a');
+        lotus_btn.classList.add('btn', 'view-item', 'interact-item', 'lotus', 'lotus-btn');
+        lotus_btn.textContent = trans[lang].lotus.correct;
+        lotus_btn.href = 'https://github.com/katelyynn/lotus/issues/new/choose';
+        lotus_btn.target = '_blank';
+
+        tippy(lotus_btn, {
+            content: trans[lang].lotus.correct
+        });
+
+        interact_container.appendChild(lotus_btn);
 
 
         top_container.appendChild(interact_container);

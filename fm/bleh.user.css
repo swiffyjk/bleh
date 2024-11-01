@@ -135,7 +135,8 @@ body, [data-page-resource-type="album"], [data-page-resource-type="track"],
 .user-dashboard-layout,
 .obsession-history-item-inner,
 .preview, .preview[data-bleh--theme="dark"],
-.listen-item
+.listen-item,
+.lotus.bleh--panel
 {
     /* any additional highlights */
     --b3: var(--hue), calc(var(--sat) * 6%), 30%;
@@ -8764,6 +8765,8 @@ text[style^="color: rgb(255, 172, 172)"] {
     line-height: var(--line-height);
     color: hsl(var(--c2));
 
+    text-align: center;
+
     [data-bleh--theme="light"] & {
         background: hsla(var(--b5), 70%);
     }
@@ -8781,6 +8784,8 @@ text[style^="color: rgb(255, 172, 172)"] {
         animation: dropdown_side calc(var(--trans-short) + 0.02s) var(--trans-function);
         transform-origin: right;
         color: hsl(var(--c2));
+
+        text-align: left;
 
         font-size: var(--font-size);
 
@@ -8815,6 +8820,8 @@ text[style^="color: rgb(255, 172, 172)"] {
         transform-origin: center;
         color: hsl(var(--c2));
         max-width: 500px !important;
+
+        text-align: left;
 
         font-size: var(--font-size);
 
@@ -8884,6 +8891,8 @@ text[style^="color: rgb(255, 172, 172)"] {
         transform-origin: center;
         color: hsl(var(--c2));
         max-width: 500px !important;
+
+        text-align: left;
 
         font-size: var(--font-size);
 
@@ -15881,6 +15890,13 @@ button.bleh--gallery-bookmark-image-btn {
                 --mask: var(--icon-16-search);
                 --font-size: 0;
             }
+            &.lotus-btn {
+                --mask: var(--icon-16-lotus);
+                --font-size: 0;
+                --bg-hov: hsla(var(--h3), 10%);
+                --bg-atv: hsla(var(--h3), 20%);
+                --col: hsl(var(--l2-c));
+            }
             &.obsession-btn {
                 --mask: var(--icon-16-obsession);
                 --font-size: 0;
@@ -16704,6 +16720,14 @@ h4 {
 
         --left: 0;
         --mask: var(--icon-16-lotus);
+
+        &.lotus-name-small {
+            font-weight: var(--font-weight-medium);
+        }
+    }
+
+    &.bleh--panel {
+        color: hsl(var(--c2));
     }
 }
 }
