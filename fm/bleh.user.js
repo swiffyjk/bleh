@@ -9889,7 +9889,7 @@ let has_prompted_for_update = false;
             if (lotus_artist_expire < current_time && !force) {
                 lotus_request();
             } else if (force) {
-                lotus_request();
+                lotus_request('artist', true);
             }
         }
 
@@ -9904,7 +9904,7 @@ let has_prompted_for_update = false;
             if (lotus_album_track_expire < current_time && !force) {
                 lotus_request('album_track');
             } else if (force) {
-                lotus_request('album_track');
+                lotus_request('album_track', true);
             }
         }
     }
@@ -9947,7 +9947,7 @@ let has_prompted_for_update = false;
 
 
     unsafeWindow._lotus_check = function() {
-        lotus(true, true);
+        lotus(true);
     }
 
 
