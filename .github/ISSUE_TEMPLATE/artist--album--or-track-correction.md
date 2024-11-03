@@ -7,14 +7,4 @@ assignees: ''
 
 ---
 
-**What type is this? (artist or album/track)**
-...
-
-**How should this be capitalised?**
-...
-
-**Could you link the Last.fm page?**
-...
-
-**Do you have a source for this? (eg. Spotify)**
-A source helps me verify this capitalisation is the most popular and should be applied. Enter one here.
+# [CORRECTIONS HAVE MOVED! PLEASE MAKE THEM HERE](https://github.com/katelyynn/lotus/issues/new/choose)
