@@ -2558,6 +2558,10 @@ let has_prompted_for_update = false;
             bleh_setup();
         } else {
             bleh_profiles();
+            bleh_artists();
+            bleh_albums();
+            bleh_tracks();
+
             patch_shouts(document.body);
             patch_lastfm_settings(document.body);
             patch_artist_ranks(document.body);
@@ -2566,7 +2570,6 @@ let has_prompted_for_update = false;
 
             album_missing_a_tracklist();
 
-            patch_header_title(document.body);
             patch_artist_grids(document.body);
             patch_titles(document.body);
 
@@ -2617,6 +2620,10 @@ let has_prompted_for_update = false;
                 bleh_setup();
             } else {
                 bleh_profiles();
+                bleh_artists();
+                bleh_albums();
+                bleh_tracks();
+
                 patch_shouts(document.body);
                 patch_lastfm_settings(document.body);
                 patch_artist_ranks(document.body);
@@ -4822,13 +4829,13 @@ let has_prompted_for_update = false;
                 let this_badge = profile_badges[name];
                 if (!Array.isArray(profile_badges[name])) {
                     // default
-                    log(`1 badge:`, 'profile', 'info', profile_badges[name]);
+                    log(`@${name} 1 badge:`, 'shout', 'info', profile_badges[name]);
                 } else {
                     // multiple
-                    log(`multiple badges:`, 'profile', 'info', profile_badges[name]);
+                    log(`@${name} multiple badges:`, 'shout', 'info', profile_badges[name]);
                     let badges_length = Object.keys(profile_badges[name]).length - 1;
                     this_badge = profile_badges[name][badges_length];
-                    console.info('bleh - using badge', badges_length, profile_badges[name][badges_length], 'as primary badge');
+                    log(`@${name} using badge ${badges_length} as primary`, 'shout', 'info', this_badge);
                 }
 
                 // make new badge
@@ -5020,7 +5027,7 @@ let has_prompted_for_update = false;
 
 
 
-        console.info('bleh - scrobble milestone for artist is', scrobble_milestone, 'with', scrobbles,'scrobbles', '- scrobble proximity of', scrobble_proximity, [milestone_hue, milestone_sat, milestone_lit]);
+        log(`milestone for ${scrobbles} is ${scrobble_milestone} within ${scrobble_proximity} proximity`, 'colourful counts', 'info', {hue: milestone_hue, sat: milestone_sat, lit: milestone_lit});
 
         return {
             milestone: scrobble_milestone,
@@ -5090,7 +5097,6 @@ let has_prompted_for_update = false;
         albums.forEach((album) => {
             if (!album.hasAttribute('data-kate-processed')) {
                 album.setAttribute('data-kate-processed','true');
-                console.info('bleh - correcting generic combo for a child of', parent);
 
                 let album_name = album.querySelector(`.${parent.replace('-details','')}-name a`);
                 let artist_name = album.querySelector(`.${parent.replace('-details','')}-artist a`);
@@ -5120,7 +5126,6 @@ let has_prompted_for_update = false;
         albums.forEach((album) => {
             if (!album.hasAttribute('data-kate-processed')) {
                 album.setAttribute('data-kate-processed','true');
-                console.info('bleh - correcting generic combo (no artist) for a child of', parent);
 
                 let album_name = album.querySelector(`.${parent.replace('-details','')}-name a`);
                 let artist_name = album_name.getAttribute('href').split('/')[2].replaceAll('+',' ');
@@ -5147,7 +5152,7 @@ let has_prompted_for_update = false;
         try {
             if (album_track_corrections.hasOwnProperty(artist)) {
                 if (album_track_corrections[artist].hasOwnProperty(item)) {
-                    log(`corrected ${item} by ${artist} as ${album_track_corrections[artist[item]]}`, 'lotus');
+                    log(`corrected ${item} by ${artist} as ${album_track_corrections[artist][item]}`, 'lotus');
                     return album_track_corrections[artist][item];
                 } else {
                     return item;
@@ -7709,8 +7714,10 @@ let has_prompted_for_update = false;
         let formatted_title = original_title;
 
         if (album_track_corrections.hasOwnProperty(original_artist.toLowerCase()) && settings.corrections) {
-            if (album_track_corrections[original_artist.toLowerCase()].hasOwnProperty(formatted_title))
+            if (album_track_corrections[original_artist.toLowerCase()].hasOwnProperty(formatted_title)) {
                 formatted_title = album_track_corrections[original_artist.toLowerCase()][formatted_title];
+                log(`corrected ${original_title} by ${original_artist} as ${formatted_title}`, 'lotus');
+            }
         }
 
         // remove double feature detection in titles breakign things
@@ -7970,30 +7977,31 @@ let has_prompted_for_update = false;
         });
     }
 
-    function patch_header_title(element) {
+    function patch_header_title() {
+        let track_title = document.body.querySelector('.header-new-title');
+        let track_artist = document.body.querySelector('.header-new-crumb span');
 
-        let track_title = element.querySelector('.header-new-title');
-        let track_artist = element.querySelector('.header-new-crumb span');
-
-        if (track_title == undefined)
+        if (track_title == null)
             return;
 
         // correct artist
-        if (track_artist == undefined) {
+        if (track_artist == null) {
             // must be on artist page
             if (artist_corrections.hasOwnProperty(track_title.textContent)) {
                 let corrected_artist = artist_corrections[track_title.textContent];
+                log(`corrected ${track_artist.textContent} as ${corrected_artist}`, 'lotus');
                 track_title.textContent = corrected_artist;
             }
         } else {
             // album/track page
             if (artist_corrections.hasOwnProperty(track_artist.textContent)) {
                 let corrected_artist = artist_corrections[track_artist.textContent];
+                log(`corrected ${track_artist.textContent} as ${corrected_artist}`, 'lotus');
                 track_artist.textContent = corrected_artist;
             }
         }
 
-        if (track_artist == undefined)
+        if (track_artist == null)
             return;
 
         if (settings.format_guest_features) {
@@ -8035,6 +8043,7 @@ let has_prompted_for_update = false;
                 track_title.setAttribute('data-kate-processed','true');
 
                 let corrected_title = correct_item_by_artist(track_title.textContent, track_artist.textContent);
+                log(`corrected ${track_title.textContent} by ${track_artist.textContent} as ${corrected_title}`, 'lotus');
                 track_title.textContent = corrected_title;
             }
         }
@@ -8493,7 +8502,7 @@ let has_prompted_for_update = false;
             try {
                 let bg = header_inner.getAttribute('style').replace('background: #', '');
                 let hsl = hex_to_hsl(bg);
-                console.info('hsl', hsl);
+                console.log('hsl', hsl);
                 document.body.style.setProperty('--hue-album', hsl.h);
                 document.body.style.setProperty('--sat-album', clamp_sat((hsl.s / 100) * 3));
             } catch(e) {
@@ -9801,7 +9810,7 @@ let has_prompted_for_update = false;
     }
 
     function create_listen_item(parent, {name, listens, link, avi, count=0}, header_type) {
-        console.info('bleh - creating listen item', name, listens, link, avi, count);
+        log(`creating listen item of ${name}, ${count}, ${listens}`, 'artist', 'info', {avi: avi, link: link});
 
         let listen_item = document.createElement('a');
         listen_item.classList.add('btn', 'listen-item', 'view-item');
@@ -9961,7 +9970,7 @@ let has_prompted_for_update = false;
             let video_col = document.body.querySelector('.track-overview-video-column.col-sidebar');
             let video = video_col.querySelector('.video-preview');
 
-            console.info(video_col, video);
+            //console.info(video_col, video);
 
             if (video != null) {
                 let container = document.createElement('div');
@@ -10135,5 +10144,134 @@ let has_prompted_for_update = false;
         `), true, 'corrections');
 
         prepare_corrections_page();
+    }
+
+
+
+
+    function bleh_artists() {
+        let artist_header = document.body.querySelector('.header-new--artist');
+
+        if (artist_header == undefined)
+            return;
+
+        if (artist_header.hasAttribute('data-bwaa'))
+            return;
+        artist_header.setAttribute('data-bwaa', 'true');
+
+        log('artist', 'page');
+        page.type = 'artist';
+
+        patch_header_title();
+
+        page.name = artist_header.querySelector('.header-new-title').textContent;
+        page.sister = '';
+
+        let is_subpage = artist_header.classList.contains('header-new--subpage');
+
+
+        page.structure.container = document.body.querySelector('.page-content:not(.visible-xs, :has(.content-top-lower-row, a + .js-gallery-heading))');
+        page.structure.row = page.structure.container.querySelector('.row');
+        try {
+            page.structure.main = page.structure.row.querySelector('.col-main');
+            page.structure.side = page.structure.row.querySelector('.col-sidebar:not(.masonry-right)');
+        } catch(e) {
+            log('unable to find elements', 'page structure');
+        }
+
+        checkup_page_structure();
+
+        if (!is_subpage) {
+            page.subpage = 'overview';
+        } else {
+            // which subpage is it?
+            page.subpage = document.body.classList[2].replace('namespace--', '');
+        }
+
+        log('status is', 'page', 'info', page);
+    }
+
+    function bleh_albums() {
+        let album_header = document.body.querySelector('.header-new--album');
+
+        if (album_header == undefined)
+            return;
+
+        if (album_header.hasAttribute('data-bwaa'))
+            return;
+        album_header.setAttribute('data-bwaa', 'true');
+
+        log('album', 'page');
+        page.type = 'album';
+
+        patch_header_title();
+
+        page.name = album_header.querySelector('.header-new-title').textContent;
+        page.sister = album_header.querySelector('.header-new-crumb span').textContent;
+
+        let is_subpage = artist_header.classList.contains('header-new--subpage');
+
+
+        page.structure.container = document.body.querySelector('.page-content:not(:has(.content-top-lower-row, a + .js-gallery-heading))');
+        page.structure.row = page.structure.container.querySelector('.row');
+        try {
+            page.structure.main = page.structure.row.querySelector('.col-main:not(.visible-xs)');
+            page.structure.side = page.structure.row.querySelector('.col-sidebar.hidden-xs');
+        } catch(e) {
+            log('unable to find elements', 'page structure');
+        }
+
+        checkup_page_structure();
+
+        if (!is_subpage) {
+            page.subpage = 'overview';
+        } else {
+            // which subpage is it?
+            page.subpage = document.body.classList[2].replace('namespace--', '');
+        }
+
+        log('status is', 'page', 'info', page);
+    }
+
+    function bleh_tracks() {
+        let track_header = document.body.querySelector('.header-new--track');
+
+        if (track_header == undefined)
+            return;
+
+        if (track_header.hasAttribute('data-bwaa'))
+            return;
+        track_header.setAttribute('data-bwaa', 'true');
+
+        log('track', 'page');
+        page.type = 'track';
+
+        patch_header_title();
+
+        page.name = track_header.querySelector('.header-new-title').textContent;
+        page.sister = track_header.querySelector('.header-new-crumb span').textContent;
+
+        let is_subpage = track_header.classList.contains('header-new--subpage');
+
+
+        page.structure.container = document.body.querySelector('.page-content');
+        page.structure.row = page.structure.container.querySelector('.row');
+        try {
+            page.structure.main = page.structure.row.querySelector('.col-main');
+            page.structure.side = page.structure.row.querySelector('.col-sidebar');
+        } catch(e) {
+            log('unable to find elements', 'page structure');
+        }
+
+        checkup_page_structure();
+
+        if (!is_subpage) {
+            page.subpage = 'overview';
+        } else {
+            // which subpage is it?
+            page.subpage = document.body.classList[2].replace('namespace--', '');
+        }
+
+        log('status is', 'page', 'info', page);
     }
 })();
