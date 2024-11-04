@@ -141,6 +141,8 @@ body, [data-page-resource-type="album"], [data-page-resource-type="track"],
     --b6: var(--hue), calc(var(--sat) * 14%), 10%;
     --b7: 0, 0%, 0%;
 
+    --snow: snow;
+
     .preview[data-bleh--theme="darker"],
     [data-bleh--theme="darker"] &:not(.preview) {
         /* any additional highlights */
@@ -185,6 +187,8 @@ body, [data-page-resource-type="album"], [data-page-resource-type="track"],
         /* root */
         --b6: 0, 0%, 98%;
         --b7: 0, 0%, 0%;
+
+        --snow: rgb(109, 173, 199);
     }
     [data-bleh--theme="classic"] & {
         /* any additional highlights */
@@ -16239,7 +16243,7 @@ button.bleh--gallery-bookmark-image-btn {
 
 .snow {
     position: fixed;
-    background-color: snow;
+    background-color: var(--snow);
     user-select: none;
     z-index: 1000;
     pointer-events: none;
