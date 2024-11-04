@@ -4149,9 +4149,26 @@ let has_prompted_for_update = false;
         checkup_page_structure();
 
 
+        let is_own_profile = (page.name == auth);
+        if (is_own_profile)
+            profile_header.setAttribute('data-is-own-profile', 'true');
+
         if (!is_subpage) {
             // recent tracks
             patch_profile_tracks();
+
+            if (settings.feature_flags.redesigned_profile_header != false)
+                redesign_profile_header(is_own_profile);
+
+            // make avatar clickable
+            let header_avatar = document.querySelector('.header-avatar .avatar');
+
+            let src = header_avatar.querySelector('img').getAttribute('src');
+
+            let avatar_link = document.createElement('a');
+            avatar_link.classList.add('bleh--avatar-clickable-link');
+            avatar_link.setAttribute('onclick', `_expand_avatar('${src.replace('avatar170s', 'ar0')}')`);
+            header_avatar.appendChild(avatar_link);
         } else {
             // which subpage is it?
             page.subpage = document.body.classList[1].replace('namespace--', '');
@@ -4161,10 +4178,6 @@ let has_prompted_for_update = false;
 
 
         patch_profile_following();
-
-        let is_own_profile = (page.name == auth);
-        if (is_own_profile)
-            profile_header.setAttribute('data-is-own-profile', 'true');
 
         // profile note
         let profile_notes = JSON.parse(localStorage.getItem('bleh_profile_notes')) || {};
@@ -4181,21 +4194,10 @@ let has_prompted_for_update = false;
         if (content_top.querySelector('h1') == null && content_top.querySelector('.navlist') == null)
             adaptive_skin.removeChild(content_top);
 
-        if (settings.feature_flags.redesigned_profile_header != false)
-            redesign_profile_header(is_own_profile);
-
         patch_profile_obsession();
 
         // is this their profile?
-        if (is_own_profile) {
-            // make avatar clickable
-            let header_avatar = document.querySelector('.header-avatar .avatar');
-
-            let avatar_link = document.createElement('a');
-            avatar_link.classList.add('bleh--avatar-clickable-link');
-            avatar_link.href = `${root}settings`;
-            header_avatar.appendChild(avatar_link);
-        } else {
+        if (!is_own_profile) {
             // is there a follow button?
             let header_avatar = document.querySelector('.header--overview .header-avatar');
 
@@ -10290,5 +10292,18 @@ let has_prompted_for_update = false;
         }
 
         log('status is', 'page', 'info', page);
+    }
+
+
+
+
+    unsafeWindow._expand_avatar = function(src) {
+        create_window('avatar', '', (`
+            <div class="full-avatar-wrapper">
+                <div class="full-avatar">
+                    <img src="${src}">
+                </div>
+            </div>
+        `), true, 'avatar');
     }
 })();

@@ -3765,6 +3765,7 @@ state is not active, which then falls back to primary button styling */
         inset: 0;
         z-index: 50;
         border-radius: var(--avatar-radius);
+        cursor: pointer;
     }
 }
 .header--overview.header--with-avatar .header-avatar {
@@ -16826,5 +16827,40 @@ h5 {
 }
 h4 {
     color: hsl(var(--c1));
+}
+
+
+
+
+#bleh--window-avatar--dialog {
+    width: fit-content;
+    max-width: 800px;
+}
+.modal--avatar {
+    padding: unset !important;
+
+    .modal-title {
+        display: none;
+    }
+    .modal-inner-content {
+        margin: unset !important;
+
+        .full-avatar-wrapper {
+            display: flex;
+            flex-direction: column;
+
+            .full-avatar {
+                height: 100%;
+
+                img {
+                    max-height: 70vh;
+                    border-radius: var(--card-radius);
+
+                    min-width: 300px;
+                    min-height: 300px;
+                }
+            }
+        }
+    }
 }
 }
