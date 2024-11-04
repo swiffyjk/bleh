@@ -1823,6 +1823,9 @@ function log(text, system, type = 'info', append={}) {
         case 'profile':
             system_colour = '#D56854';
             break;
+        case 'settings':
+            system_colour = '#6D6977';
+            break;
         default:
             system_colour = '#C8DD88';
             break;
@@ -7126,7 +7129,6 @@ let has_prompted_for_update = false;
     }
 
     function update_item(item, value, modify=true) {
-        console.log('update item',item,value);
         try {
         // is this a new value?
         let new_value = false;
@@ -7263,6 +7265,9 @@ let has_prompted_for_update = false;
             }
         }
 
+        if (modify)
+            log(`updated ${item} to ${settings[item]}`, 'settings');
+
         // save to settings
         localStorage.setItem('bleh', JSON.stringify(settings));
         } catch(e) {}
@@ -7278,6 +7283,7 @@ let has_prompted_for_update = false;
     }
 
     function request_reload() {
+        log('requesting reload', 'settings');
         reload_pending = true;
         deliver_notif(trans[lang].settings.reload, true, false, '', '_invoke_reload()');
     }
@@ -7318,20 +7324,20 @@ let has_prompted_for_update = false;
     }
 
     function update_inbuilt_item(item, value, modify=true) {
-        console.log('update item',item,value);
+        //console.log('update item',item,value);
 
         let test_if_valid = document.getElementById(`toggle-${item}`);
-        console.info(test_if_valid, item, value, inbuilt_settings[item], 'modify', modify);
+        //console.info(test_if_valid, item, value, inbuilt_settings[item], 'modify', modify);
         if (test_if_valid == undefined)
             return;
 
         if (inbuilt_settings[item].type == 'toggle') {
             if (modify) {
                 value = (document.getElementById(`toggle-${item}`).getAttribute('aria-checked') === 'true');
-                console.info('new value', value);
+                log(`updated (inbuilt) ${item} to ${!value}`, 'settings');
             }
 
-            console.info(value, inbuilt_settings[item].values[0], value == inbuilt_settings[item].values[0], modify);
+            //console.info(value, inbuilt_settings[item].values[0], value == inbuilt_settings[item].values[0], modify);
 
             if (value == inbuilt_settings[item].values[0] && modify) {
                 document.getElementById(`inbuilt-companion-checkbox-${item}`).checked = false;
