@@ -7833,6 +7833,9 @@ let has_prompted_for_update = false;
 
 
     function patch_titles(element) {
+        if (page.subpage == 'user_tags_overview')
+            return;
+
         let tracklists = element.querySelectorAll('.chartlist:not(.chartlist__placeholder)');
 
         tracklists.forEach((tracklist) => {
