@@ -9634,18 +9634,22 @@ let has_prompted_for_update = false;
 
 
         // lotus
-        let lotus_btn = document.createElement('a');
-        lotus_btn.classList.add('btn', 'view-item', 'interact-item', 'lotus', 'lotus-btn');
-        lotus_btn.textContent = trans[lang].lotus.correct;
-        lotus_btn.href = 'https://github.com/katelyynn/lotus/issues/new/choose';
-        lotus_btn.target = '_blank';
+        if (settings.corrections) {
+            let lotus_btn = document.createElement('a');
+            lotus_btn.classList.add('btn', 'view-item', 'interact-item', 'lotus', 'lotus-btn');
+            lotus_btn.textContent = trans[lang].lotus.correct;
+            lotus_btn.href = 'https://github.com/katelyynn/lotus/issues/new/choose';
+            lotus_btn.target = '_blank';
 
-        tippy(lotus_btn, {
-            content: (`${trans[lang].lotus.correct}<br><div class="tooltip-sub">${document.body.querySelector('.main-content > [itemscope]').getAttribute('data-page-resource-name')}</div>`),
-            allowHTML: true
-        });
+            // TODO: switch based on if a correction is active
 
-        interact_container.appendChild(lotus_btn);
+            tippy(lotus_btn, {
+                content: (`${trans[lang].lotus.correct}<br><div class="tooltip-sub">${document.body.querySelector('.main-content > [itemscope]').getAttribute('data-page-resource-name')}</div>`),
+                allowHTML: true
+            });
+
+            interact_container.appendChild(lotus_btn);
+        }
 
 
         top_container.appendChild(interact_container);
