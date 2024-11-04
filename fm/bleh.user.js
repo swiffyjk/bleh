@@ -8000,7 +8000,7 @@ let has_prompted_for_update = false;
             // must be on artist page
             if (artist_corrections.hasOwnProperty(track_title.textContent)) {
                 let corrected_artist = artist_corrections[track_title.textContent];
-                log(`corrected ${track_artist.textContent} as ${corrected_artist}`, 'lotus');
+                log(`corrected ${track_title.textContent} as ${corrected_artist}`, 'lotus');
                 track_title.textContent = corrected_artist;
 
                 page.corrected = true;
