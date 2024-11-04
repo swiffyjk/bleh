@@ -16895,10 +16895,6 @@ h4 {
     color: hsl(var(--c2));
     text-decoration: none !important;
 
-    &:hover .title {
-        text-decoration: underline;
-    }
-
     position: relative;
     padding-left: calc(16px + 6px);
     --left: 0;
@@ -16918,6 +16914,12 @@ h4 {
     }
     &.activity--wiki {
         --mask: var(--icon-16-bio);
+    }
+    &.activity--obsess {
+        --mask: var(--icon-16-obsession);
+    }
+    &.activity--unobsess {
+        --mask: var(--icon-16-obsession-remove);
     }
 
     .title {
