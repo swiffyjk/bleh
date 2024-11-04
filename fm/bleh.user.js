@@ -1820,6 +1820,9 @@ function log(text, system, type = 'info', append={}) {
         case 'style':
             system_colour = '#C9C678';
             break;
+        case 'profile':
+            system_colour = '#D56854';
+            break;
         default:
             system_colour = '#C8DD88';
             break;
@@ -2765,7 +2768,7 @@ let has_prompted_for_update = false;
         let api_expire = new Date();
         api_expire.setHours(api_expire.getHours() + 1);
         localStorage.setItem('bleh_cached_style_timeout',api_expire);
-        console.info('bleh - style is cached until', api_expire);
+        log(`cached until ${api_expire}`, 'style');
     }
 
     unsafeWindow._start_update = function() {
@@ -4217,12 +4220,12 @@ let has_prompted_for_update = false;
         }
 
         // badges
-        console.info('bleh - checking if user', page.name, 'has any badges');
+        log(`querying badges for ${page.name}`, 'profile');
         let profile_name_obj = profile_header.querySelector('.header-title-label-wrap');
         if (profile_badges.hasOwnProperty(page.name)) {
             if (!Array.isArray(profile_badges[page.name])) {
                 // default
-                console.info('bleh - user has 1 badge', profile_badges[page.name]);
+                log(`1 badge:`, 'profile', 'info', profile_badges[page.name]);
                 let this_badge = profile_badges[page.name];
 
                 let badge = document.createElement('span');
@@ -4231,7 +4234,7 @@ let has_prompted_for_update = false;
                 profile_name_obj.appendChild(badge);
             } else {
                 // multiple
-                console.info('bleh - user has multiple badges', profile_badges[page.name]);
+                log(`multiple badges:`, 'profile', 'info', profile_badges[page.name]);
                 for (let badge_entry in profile_badges[page.name]) {
                     let this_badge = profile_badges[page.name][badge_entry];
 
@@ -4502,7 +4505,7 @@ let has_prompted_for_update = false;
     }
 
     function create_profile_top_item(parent, {name, link, text='', type, taste='', artists=[], avi='', percent='', action=''}) {
-        console.info('bleh - creating profile top item', name, link, text);
+        log(`creating top item of ${name}, ${link}, ${text}`, 'profile');
 
         let listen_item = document.createElement((action != 'button') ? 'a' : 'button');
         listen_item.classList.add('btn', 'profile-top-item', `profile-top-item--${type}`, 'view-item');
@@ -4816,10 +4819,10 @@ let has_prompted_for_update = false;
                 let this_badge = profile_badges[name];
                 if (!Array.isArray(profile_badges[name])) {
                     // default
-                    console.info('bleh - user has 1 badge', profile_badges[name]);
+                    log(`1 badge:`, 'profile', 'info', profile_badges[name]);
                 } else {
                     // multiple
-                    console.info('bleh - user has multiple badges', profile_badges[name]);
+                    log(`multiple badges:`, 'profile', 'info', profile_badges[name]);
                     let badges_length = Object.keys(profile_badges[name]).length - 1;
                     this_badge = profile_badges[name][badges_length];
                     console.info('bleh - using badge', badges_length, profile_badges[name][badges_length], 'as primary badge');
