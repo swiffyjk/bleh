@@ -673,6 +673,25 @@ const trans = {
                     }
                 }
             }
+        },
+        activities: {
+            name: 'Recent Activity',
+            description: 'Your latest 10 activities are tracked locally on your profile, try leaving a shout and check back here!',
+            notifications: 'Read your notifications',
+
+            test: 'TEST {involved}',
+            shout: 'You left a shout for {i}',
+            image_upload: 'You uploaded an image for {i}',
+            image_star: 'You starred an image for {i}',
+            obsess: 'You’re obsessed with {i}',
+            unobsess: 'You’re no longer obsessed with {i}',
+            love: 'You love {i}',
+            unlove: 'You no longer love {i}',
+            install_bwaa: 'You installed bwaa',
+            update_bwaa: 'You updated bwaa to {i}',
+            bookmark: 'You bookmarked {i}',
+            unbookmark: 'You removed {i}’s bookmark',
+            wiki: 'You edited on {i}'
         }
     },
     de: {
@@ -2488,6 +2507,9 @@ let my_avi = '';
 // etc.
 let root = '';
 
+// recent activity
+let recent_activity_list;
+
 // page type
 let page = {
     type: '',
@@ -2546,6 +2568,7 @@ let has_prompted_for_update = false;
 
         append_nav();
 
+        load_activities();
         notify_if_new_update();
 
         console.log(bleh_url,window.location.href,bleh_regex.test(window.location.href));
@@ -2592,6 +2615,8 @@ let has_prompted_for_update = false;
             patch_wiki_editor();
 
             error_page();
+
+            subscribe_to_events();
         }
 
         // last.fm is a single page application
@@ -2604,6 +2629,8 @@ let has_prompted_for_update = false;
 
             // load seasonal data
             set_season();
+
+            load_activities();
 
             theme_version = getComputedStyle(document.body).getPropertyValue('--version-build').replaceAll("'", ''); // remove quotations
             if (theme_version != version.build && theme_version != '' && !has_prompted_for_update) {
@@ -2654,6 +2681,8 @@ let has_prompted_for_update = false;
                 patch_wiki_editor();
 
                 error_page();
+
+                subscribe_to_events();
             }
         });
 
@@ -4230,6 +4259,79 @@ let has_prompted_for_update = false;
                     });
                 }
             }
+        } else {
+            let recent_activity_section = document.createElement('section');
+            recent_activity_section.classList.add('recent-activity-section');
+            recent_activity_section.innerHTML = (`
+                <h2>${trans[lang].activities.name} <i class="subtext"><a id="what-are-activities">(?)</a></i></h2>
+            `);
+
+            // we want to show in date order from latest to oldest down
+            // but .reverse() is destructive, so we copy first
+            let recent_activity_list_r = recent_activity_list;
+            recent_activity_list_r.reverse();
+
+            recent_activity_list_r.forEach((activity) => {
+                // type: string,
+                // involved: [{name: string, type: user | artist | album | track}, sister?: string],
+                // context: string,
+                // date: string
+
+                let activity_item = document.createElement('a');
+                activity_item.classList.add('activity-item', `activity--${activity.type}`);
+                activity_item.setAttribute('href', activity.context);
+
+                let involved_text = '';
+
+                let tooltip_name;
+                let tooltip_sister;
+
+                activity.involved.forEach((involved) => {
+                    let involved_link;
+
+                    if (involved.type == 'user')
+                        involved_link = `${root}user/${involved.name}`;
+                    else if (involved.type == 'artist')
+                        involved_link = `${root}music/${sanitise(involved.name)}`;
+                    else if (involved.type == 'album')
+                        involved_link = `${root}music/${sanitise(involved.sister)}/${sanitise(involved.name)}`;
+                    else if (involved.type == 'track')
+                        involved_link = `${root}music/${sanitise(involved.sister)}/_/${sanitise(involved.name)}`;
+                    else if (involved.type == 'bwaa')
+                        involved_link = `${root}bwaa`;
+
+                    // tooltip
+                    if (involved.type != 'artist' && involved.type != 'user' && involved.type != 'bwaa') {
+                        tooltip_name = involved.name;
+                        tooltip_sister = involved.sister;
+                    }
+
+                    if (involved_text != '')
+                        involved_text = `${involved_text}, <a class="involved--${involved.type}" href="${involved_link}">${involved.name}</a>`;
+                    else
+                        involved_text = `${involved_text}<a class="involved--${involved.type}" href="${involved_link}">${involved.name}</a>`;
+                });
+
+                let activity_text = trans[lang].activities[activity.type].replace('{i}', involved_text);
+
+                activity_item.innerHTML = (`
+                    <div class="title">${activity_text}</div>
+                    <div class="date">${moment(activity.date).fromNow(true)}</div>
+                `);
+
+                recent_activity_section.appendChild(activity_item);
+
+                if (tooltip_name != undefined)
+                    tippy(activity_item.querySelector('.title a'), {
+                        content: `${tooltip_sister} - ${tooltip_name}`
+                    });
+
+                let bio = page.structure.side.querySelector('.about-me-sidebar');
+                if (bio != null)
+                    bio.after(recent_activity_section);
+                else
+                    page.structure.side.insertBefore(recent_activity_section, page.structure.side.firstElementChild);
+            });
         }
 
         // badges
@@ -10316,5 +10418,165 @@ let has_prompted_for_update = false;
                 </div>
             </div>
         `), true, 'avatar');
+    }
+
+
+
+
+    function subscribe_to_events() {
+        let love_track = document.body.querySelectorAll(`form[action$="${auth}/loved"]:not([data-bleh-subscribed])`);
+        love_track.forEach((form) => {
+            form.setAttribute('data-bleh-subscribed', 'true');
+
+            let track = form.querySelector('[name="track"]').getAttribute('value');
+            let artist = form.querySelector('[name="artist"]').getAttribute('value');
+
+            let btn = form.querySelector('button');
+
+            btn.addEventListener('click', (event) => {
+                log('heard', 'event', 'info', event);
+
+                let action = btn.getAttribute('data-analytics-action');
+
+                register_activity((action == 'LoveTrack') ? 'love' : 'unlove', [{name: track, type: 'track', sister: artist}], `${root}music/${sanitise(artist)}/_/${sanitise(track)}`);
+
+                if (page.type == 'track')
+                    update_love_btn(btn);
+            }, false);
+        });
+
+
+        let bookmark_item = document.body.querySelectorAll(`form[action="/music/+bookmarks"]:not([data-bleh-subscribed])`);
+        bookmark_item.forEach((form) => {
+            form.setAttribute('data-bleh-subscribed', 'true');
+
+            let btn = form.querySelector('button');
+
+            btn.addEventListener('click', (event) => {
+                log('heard', 'event', 'info', event);
+
+                let action = btn.getAttribute('data-analytics-action');
+
+                register_activity((action.startsWith('Bookmark')) ? 'bookmark' : 'unbookmark', [{name: page.name, type: page.type, sister: page.sister}], window.location.href);
+
+                update_bookmark_btn(btn);
+            }, false);
+        });
+
+
+        let obsess = document.body.querySelectorAll(`.modal-body form[action$="${auth}/obsessions"]:not([data-bleh-subscribed])`);
+        obsess.forEach((form) => {
+            form.setAttribute('data-bleh-subscribed', 'true');
+
+            let track = form.querySelector('[name="name"]').getAttribute('value');
+            let artist = form.querySelector('[name="artist_name"]').getAttribute('value');
+
+            let btn = form.querySelector('button');
+
+            btn.addEventListener('click', (event) => {
+                log('heard', 'event', 'info', event);
+
+                register_activity('obsess', [{name: track, type: 'track', sister: artist}], window.location.href);
+            }, false);
+        });
+
+
+        let post_shouts_btn = document.body.querySelector('.btn-post-shout:not([data-bleh-subscribed])');
+        if (post_shouts_btn != null) {
+            post_shouts_btn.setAttribute('data-bleh-subscribed', 'true');
+
+            post_shouts_btn.addEventListener('click', (event) => {
+                log('heard', 'event', 'info', event);
+
+                // wait 0.15s
+                window.setTimeout(function() {
+                    let actual_btn = event.target.parentElement;
+
+                    let is_loading = actual_btn.classList.contains('btn--loading');
+                    console.log('is button loading', is_loading, actual_btn, event.target);
+
+                    if (!is_loading)
+                        return;
+
+                    register_activity('shout', [{name: page.name, type: page.type, sister: page.sister}], window.location.href);
+                }, 150);
+            }, false);
+        }
+
+
+        let save_wiki_form = document.body.querySelector('.wiki-edit-form:not([data-bleh-subscribed])');
+        if (save_wiki_form != null) {
+            save_wiki_form.setAttribute('data-bleh-subscribed', 'true');
+
+            let btn = save_wiki_form.querySelector('.form-submit button');
+
+            btn.addEventListener('click', (event) => {
+                log('heard', 'event', 'info', event);
+
+                register_activity('wiki', [{name: page.name, type: page.type, sister: page.sister}], window.location.href);
+            }, false);
+        }
+
+
+        let upload_img_form = document.body.querySelector('form[action$="/+images/upload"]:not([data-bleh-subscribed])');
+        if (upload_img_form != null) {
+            upload_img_form.setAttribute('data-bleh-subscribed', 'true');
+
+            let btn = upload_img_form.querySelector('.form-submit button');
+
+            btn.addEventListener('click', (event) => {
+                log('heard', 'event', 'info', event);
+
+                register_activity('image_upload', [{name: page.name, type: page.type, sister: page.sister}], window.location.href);
+            }, false);
+        }
+    }
+
+
+    function load_activities() {
+        recent_activity_list = JSON.parse(localStorage.getItem('bwaa_recent_activity')) || [];
+        log('loaded', 'activity', 'info', recent_activity_list);
+
+        // check if over 10
+        check_activities_length();
+
+        log('saved', 'activity', 'info', recent_activity_list);
+        localStorage.setItem('bwaa_recent_activity', JSON.stringify(recent_activity_list));
+    }
+
+    function check_activities_length() {
+        if (recent_activity_list.length > 10) {
+            let to_delete = recent_activity_list.length - 10;
+
+            recent_activity_list.splice(0, to_delete);
+            log(`reached maximum of 10, removed leftovers`, 'activity');
+        }
+
+        return recent_activity_list;
+    }
+
+    unsafeWindow._register_activity = function(type, involved, context, date=new Date()) {
+        register_activity(type, involved, context, date);
+    }
+    function register_activity(type, involved, context, date=new Date()) {
+        recent_activity_list.push({
+            type: type,
+            involved: involved,
+            context: context,
+            date: date
+        });
+
+        log('registered new', 'activity', 'info', {
+            type: type,
+            involved: involved,
+            context: context,
+            date: date
+        });
+
+        // check if over 10
+        check_activities_length();
+
+        log('saved', 'activity', 'info', recent_activity_list);
+        localStorage.setItem('bwaa_recent_activity', JSON.stringify(recent_activity_list));
     }
 })();
