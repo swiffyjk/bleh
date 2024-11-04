@@ -4120,7 +4120,7 @@ let has_prompted_for_update = false;
             return;
         profile_header.setAttribute('data-bleh', 'true');
 
-        log('navigated to profile', 'page');
+        log('profile', 'page');
         page.type = 'user';
         page.name = profile_header.querySelector('.header-title a').textContent;
 
@@ -5247,6 +5247,9 @@ let has_prompted_for_update = false;
             // initial
             adaptive_skin_container.innerHTML = '';
             document.title = 'bleh settings | Last.fm';
+
+            log('internal bleh settings', 'page');
+            page.type = 'bleh_settings';
 
 
             // go wild
@@ -7486,6 +7489,8 @@ let has_prompted_for_update = false;
 
     // create a window
     function create_window(id, title, inner_content, has_close = false, classname='') {
+        log(`created ${id} - '${title}'`, 'window', 'info', {content: [inner_content], has_close: has_close, classname: classname});
+
         let background = document.createElement('div');
         background.classList.add('popup_background');
         background.setAttribute('id',`bleh--window-${id}--background`);
@@ -7580,9 +7585,12 @@ let has_prompted_for_update = false;
     // kill a window
     function kill_window(id) {
         try {
+            log(`killed ${id}`, 'window');
             document.body.removeChild(document.getElementById(`bleh--window-${id}--background`));
             document.body.removeChild(document.getElementById(`bleh--window-${id}--wrapper`));
-        } catch(e) {}
+        } catch(e) {
+            log(`kill failed, ${id} does not exist`, 'window');
+        }
     }
 
     unsafeWindow._kill_window = function(id) {
@@ -8701,6 +8709,9 @@ let has_prompted_for_update = false;
         // initial
         adaptive_skin_container.innerHTML = '';
         document.title = 'bleh setup | Last.fm';
+
+        log('internal bleh setup', 'page');
+        page.type = 'bleh_setup';
 
 
         // go wild
