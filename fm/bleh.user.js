@@ -2494,6 +2494,7 @@ let page = {
     sister: '',
     subpage: '',
     avatar: '',
+    corrected: false,
     structure: {
         container: null,
         row: null,
@@ -2632,7 +2633,6 @@ let has_prompted_for_update = false;
 
                 album_missing_a_tracklist();
 
-                patch_header_title(document.body);
                 patch_artist_grids(document.body);
                 patch_titles(document.body);
 
@@ -7713,10 +7713,14 @@ let has_prompted_for_update = false;
         console.log(original_title, original_artist);
         let formatted_title = original_title;
 
+        let original_title_corrected = false;
+
         if (album_track_corrections.hasOwnProperty(original_artist.toLowerCase()) && settings.corrections) {
             if (album_track_corrections[original_artist.toLowerCase()].hasOwnProperty(formatted_title)) {
                 formatted_title = album_track_corrections[original_artist.toLowerCase()][formatted_title];
                 log(`corrected ${original_title} by ${original_artist} as ${formatted_title}`, 'lotus');
+
+                original_title_corrected = true;
             }
         }
 
@@ -7819,7 +7823,7 @@ let has_prompted_for_update = false;
 
         if (extras.length > 0)
             log(`parsed ${original_title} as ${formatted_title} by ${original_artist} with`, 'guest features', 'info', {extras: extras, song_guests: song_guests});
-        return [formatted_title, extras, original_artist, song_guests];
+        return [formatted_title, extras, original_artist, song_guests, original_title_corrected];
     }
 
 
@@ -7978,6 +7982,11 @@ let has_prompted_for_update = false;
     }
 
     function patch_header_title() {
+        if (!settings.corrections && !settings.format_guest_features)
+            return;
+
+        page.corrected = false;
+
         let track_title = document.body.querySelector('.header-new-title');
         let track_artist = document.body.querySelector('.header-new-crumb span');
 
@@ -7991,6 +8000,8 @@ let has_prompted_for_update = false;
                 let corrected_artist = artist_corrections[track_title.textContent];
                 log(`corrected ${track_artist.textContent} as ${corrected_artist}`, 'lotus');
                 track_title.textContent = corrected_artist;
+
+                page.corrected = true;
             }
         } else {
             // album/track page
@@ -8013,6 +8024,8 @@ let has_prompted_for_update = false;
                 let song_title = formatted_title[0];
                 let song_tags = formatted_title[1];
 
+                page.corrected = formatted_title[4];
+
                 // parse tags into text
                 let song_tags_text = '';
                 for (let song_tag in song_tags) {
@@ -8022,7 +8035,7 @@ let has_prompted_for_update = false;
                 // combine
                 track_title.innerHTML = `<div class="title">${song_title}</div>${song_tags_text}`;
 
-                let song_artist_element = element.querySelector('span[itemprop="byArtist"]');
+                let song_artist_element = document.body.querySelector('span[itemprop="byArtist"]');
                 let song_guests = formatted_title[3];
                 for (let guest in song_guests) {
                     // &
@@ -8044,6 +8057,10 @@ let has_prompted_for_update = false;
 
                 let corrected_title = correct_item_by_artist(track_title.textContent, track_artist.textContent);
                 log(`corrected ${track_title.textContent} by ${track_artist.textContent} as ${corrected_title}`, 'lotus');
+
+                if (corrected_title != track_title.textContent)
+                    page.corrected = true;
+
                 track_title.textContent = corrected_title;
             }
         }
