@@ -7537,6 +7537,8 @@ let has_prompted_for_update = false;
             actions.setAttribute('id',`bleh--window-${id}--actions`);
             actions.setAttribute('data-kate-processed','true');
 
+            background.setAttribute('onclick', `_kill_window('${id}')`);
+
             actions.innerHTML = (`
                 <div class="modal-buttons">
                     <button class="modal-action-button modal-dismiss" onclick="_kill_window('${id}')">

@@ -16341,6 +16341,14 @@ button.bleh--gallery-bookmark-image-btn {
     z-index: 9998;
 }
 
+.popup_wrapper {
+    pointer-events: none;
+
+    .modal-dialog {
+        pointer-events: auto;
+    }
+}
+
 .modal--setup {
     .modal-dialog:has(&) {
         width: 940px;
