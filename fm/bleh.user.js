@@ -1662,7 +1662,7 @@ function lookup_lang() {
     non_override_lang = lang;
 
     if (!valid_langs.includes(lang)) {
-        console.info('bleh - language fallback from', lang, 'to en (language is not listed as valid)', valid_langs);
+        log(`language fallback from ${lang} to ${en} - not supported`, 'trans');
         lang = 'en';
     }
 
@@ -1766,12 +1766,13 @@ function set_season() {
             stored_season.end = season.end;
             stored_season.snowflakes = season.snowflakes;
 
-            console.info('bleh - it is season', season.name, 'starting', season.start, 'ending', season.end, season);
+            log(`${season.id} from ${season.start} to ${season.end}`, 'season');
 
             document.documentElement.setAttribute('data-bleh--season', season.id);
 
             // snow
             if (season.snowflakes.state && settings.seasonal_particles) {
+                log('let the snow start!', 'season');
                 prep_snow();
 
                 snowflakes_enabled = true;
@@ -1795,6 +1796,42 @@ function prep_snow() {
     `);
 
     document.documentElement.appendChild(container);
+}
+
+function log(text, system, type = 'info', append=[]) {
+    let system_colour;
+
+    switch(system) {
+        case 'load':
+            system_colour = '#8CB9D9';
+            break;
+        case 'lotus':
+            system_colour = '#8CD9A6';
+            break;
+        case 'season':
+            system_colour = '#65B6D8';
+            break;
+        case 'page':
+            system_colour = '#E4B381';
+            break;
+        case 'page structure':
+            system_colour = '#D88A69';
+            break;
+        case 'style':
+            system_colour = '#C9C678';
+            break;
+        default:
+            system_colour = '#C8DD88';
+            break;
+    }
+
+    console[type](`%cbleh~%c${system}%c: ${text}`, 'color: #9F8CD9', `color: ${system_colour}; font-weight: bold`, 'color: unset');
+
+    if (append.length > 0) {
+        append.forEach((item) => {
+            console[type](item);
+        });
+    }
 }
 
 let theme_preview = (`
@@ -2447,6 +2484,22 @@ let my_avi = '';
 // etc.
 let root = '';
 
+// page type
+let page = {
+    type: '',
+    name: '',
+    sister: '',
+    subpage: '',
+    avatar: '',
+    structure: {
+        container: null,
+        row: null,
+        main: null,
+        side: null,
+        nav: null
+    }
+};
+
 let bleh_url = 'https://www.last.fm/bleh';
 let bleh_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bleh$');
 
@@ -2464,7 +2517,7 @@ let has_prompted_for_update = false;
     if (auth_link != null)
         auth = auth_link.querySelector('img').getAttribute('alt');
 
-    console.info('loading bleh', version.build, 'with sku', version.sku);
+    log(`starting ${version.build}.${version.sku}`, 'load');
 
     initia();
 
@@ -2501,7 +2554,7 @@ let has_prompted_for_update = false;
             // start bleh setup
             bleh_setup();
         } else {
-            patch_profile(document.body);
+            bleh_profiles();
             patch_shouts(document.body);
             patch_lastfm_settings(document.body);
             patch_artist_ranks(document.body);
@@ -2547,7 +2600,7 @@ let has_prompted_for_update = false;
             theme_version = getComputedStyle(document.body).getPropertyValue('--version-build').replaceAll("'", ''); // remove quotations
             if (theme_version != version.build && theme_version != '' && !has_prompted_for_update) {
                 // script is either out of date, or more in date (not gonna happen)
-                console.info('bleh - theme returned version', theme_version, 'meanwhile script is running', version.build);
+                log(`version mismatch! running ${version.build}, downloaded theme ${theme_version}`, 'update');
 
                 prompt_for_update();
                 has_prompted_for_update = true;
@@ -2560,7 +2613,7 @@ let has_prompted_for_update = false;
                 // start bleh setup
                 bleh_setup();
             } else {
-                patch_profile(document.body);
+                bleh_profiles();
                 patch_shouts(document.body);
                 patch_lastfm_settings(document.body);
                 patch_artist_ranks(document.body);
@@ -2599,7 +2652,7 @@ let has_prompted_for_update = false;
         });
 
         let performance_end = performance.now();
-        console.info('bleh finished loading in', performance_end - performance_start);
+        log(`finished in ${performance_end - performance_start}`, 'load');
     }
 
     function append_style() {
@@ -2613,7 +2666,7 @@ let has_prompted_for_update = false;
         // while the style is not to be applied in dev mode,
         // we now fetch it to retrieve current version info
         if (settings.dev) {
-            console.info('bleh - dev mode is on, so style will be fetched for version info only');
+            log('dev mode is on, will fetch for version only', 'style');
             check_style_info();
 
             return;
@@ -2621,16 +2674,16 @@ let has_prompted_for_update = false;
 
         if (cached_style == '') {
             // style has never been cached
-            console.info('bleh - style has never been cached, fetching now');
+            log('never cached, fetching', 'style');
             fetch_new_style();
         } else {
             // style is currently cached, load that first
             // ensures no flashing missing styles hopefully
-            console.info('bleh - requesting cached style');
+            log('requesting cache', 'style');
             load_cached_style(cached_style);
 
             // now, analyse if we should fetch a new one
-            console.info('bleh - checking cache timeout status of style');
+            log('checking timeout', 'style');
             check_if_style_cache_is_valid();
         }
     }
@@ -2641,10 +2694,11 @@ let has_prompted_for_update = false;
         style_cache.textContent = cached_style;
         document.documentElement.appendChild(style_cache);
 
-        console.info('bleh - loaded cached style');
+        log('loaded cache', 'style');
         setTimeout(function() {
             document.body.classList.add('bleh');
             theme_version = getComputedStyle(document.body).getPropertyValue('--version-build').replaceAll("'", ''); // remove quotations
+            log(`theme version reporting as ${theme_version}`, 'style');
         }, 200);
     }
 
@@ -2659,16 +2713,16 @@ let has_prompted_for_update = false;
             // as we don't want to fetch a new css while the js is out of date
             if (theme_version != version.build && theme_version != '') {
                 // script is either out of date, or more in date (not gonna happen)
-                console.info('bleh - attempted to fetch new style, however theme returned version', theme_version, 'meanwhile script is running', version.build, '- halted');
+                log(`version mismatch! running ${version.build}, downloaded theme ${theme_version}`, 'update');
 
                 prompt_for_update();
                 return;
             }
 
-            console.info('bleh - fetching new style, timeout has expired');
+            log('fetching new, expired timeout', 'style');
             fetch_new_style();
         } else {
-            console.info('bleh - style timeout is still valid');
+            log(`timeout valid until ${cached_style_timeout}`, 'style');
         }
     }
 
@@ -2679,8 +2733,6 @@ let has_prompted_for_update = false;
         // check if timeout has expired
         if (cached_style_timeout < current_time) {
             fetch_style_info();
-        } else {
-            console.info('bleh - style timeout is still valid');
         }
     }
 
@@ -2779,7 +2831,7 @@ let has_prompted_for_update = false;
         xhr.open('GET',url,true);
 
         xhr.onload = function() {
-            console.info('bleh - style responded with', xhr.status);
+            log(`style responded ${xhr.status}`, 'style');
 
             // create style element
             let style = document.createElement('style');
@@ -2797,7 +2849,7 @@ let has_prompted_for_update = false;
             let api_expire = new Date();
             api_expire.setHours(api_expire.getHours() + 1);
             localStorage.setItem('bleh_cached_style_timeout',api_expire);
-            console.info('bleh - style is cached until', api_expire);
+            log(`cached until ${api_expire}`, 'style');
 
             if (reload_on_finish)
                 invoke_reload();
@@ -2811,7 +2863,7 @@ let has_prompted_for_update = false;
                 // as we don't want to fetch a new css while the js is out of date
                 if (theme_version != version.build && theme_version != '') {
                     // script is either out of date, or more in date (not gonna happen)
-                    console.info('bleh - attempted to fetch new style, however theme returned version', theme_version, 'meanwhile script is running', version.build, '- halted');
+                    log(`version mismatch! running ${version.build}, downloaded theme ${theme_version}`, 'update');
 
                     prompt_for_update();
                     return;
@@ -2828,7 +2880,7 @@ let has_prompted_for_update = false;
         xhr.open('GET',url,true);
 
         xhr.onload = function() {
-            console.info('bleh - style responded with', xhr.status);
+            log(`style responded ${xhr.status}`, 'style');
 
             // create style element
             let style = document.createElement('style');
@@ -2842,7 +2894,7 @@ let has_prompted_for_update = false;
             let api_expire = new Date();
             api_expire.setHours(api_expire.getHours() + 1);
             localStorage.setItem('bleh_cached_style_timeout',api_expire);
-            console.info('bleh - style is cached until', api_expire);
+            log(`cached until ${api_expire}`, 'style');
 
             // we will temporarily apply the style just for theme info, then remove it
             setTimeout(function() {
@@ -2855,7 +2907,7 @@ let has_prompted_for_update = false;
                 // as we don't want to fetch a new css while the js is out of date
                 if (theme_version != version.build && theme_version != '') {
                     // script is either out of date, or more in date (not gonna happen)
-                    console.info('bleh - fetched style info, in result theme returned version', theme_version, 'meanwhile script is running', version.build, '- halted');
+                    log(`version mismatch! running ${version.build}, downloaded theme ${theme_version}`, 'update');
 
                     prompt_for_update();
                     return;
@@ -4003,144 +4055,228 @@ let has_prompted_for_update = false;
 
 
 
+    // general health
+    function checkup_page_structure() {
+        if (page.structure.container == null || !document.body.contains(page.structure.container)) {
+            log('page missing container, creating', 'page structure');
+            page.structure.container = document.createElement('div');
+            page.structure.container.classList.add('page-content', 'container');
+
+            // listening report error
+            let container_full_width = document.body.querySelector('.container--full-width');
+
+            container_full_width.insertBefore(page.structure.container, container_full_width.firstElementChild);
+        }
+
+        if (page.structure.row == null || !document.body.contains(page.structure.row)) {
+            log('page missing row, creating', 'page structure');
+            page.structure.row = document.createElement('div');
+            page.structure.row.classList.add('row');
+
+            page.structure.container.insertBefore(page.structure.row, page.structure.container.firstElementChild);
+        }
+
+        if (page.structure.main == null || !document.body.contains(page.structure.main)) {
+            log('page missing main, creating', 'page structure');
+            page.structure.main = document.createElement('div');
+            page.structure.main.classList.add('col-main');
+
+            page.structure.row.appendChild(page.structure.main);
+        }
+
+        if (page.structure.side == null || !document.body.contains(page.structure.side)) {
+            log('page missing side', 'page structure');
+            // check first if another sidebar exists
+            page.structure.side = page.structure.row.querySelector('.col-sidebar');
+
+            if (page.structure != null) {
+                log('finished', 'page structure');
+                console.info(page);
+                return;
+            }
+            log('page missing side, creating', 'page structure');
+
+            // otherwise, make anew
+            page.structure.side = document.createElement('div');
+            page.structure.side.classList.add('col-sidebar');
+
+            page.structure.row.appendChild(page.structure.side);
+        }
+
+        log('finished', 'page structure');
+        console.info(page);
+    }
+
+
+
+
     // patch profile pages
-    function patch_profile(element) {
-        let profile_header = element.querySelector('.header--user .header-title-label-wrap');
+    function bleh_profiles() {
+        // are we on a profile?
+        let profile_header = document.body.querySelector('.header--user');
 
         if (profile_header == null)
             return;
 
+        if (profile_header.hasAttribute('data-bleh'))
+            return;
+        profile_header.setAttribute('data-bleh', 'true');
+
+        log('navigated to profile', 'page');
+        page.type = 'user';
+        page.name = profile_header.querySelector('.header-title a').textContent;
+
+        // are we on the overview page?
+        let is_subpage = !profile_header.classList.contains('header--overview');
+
+        page.structure.container = document.body.querySelector('.page-content:not(.profile-cards-container)');
+        try {
+            page.structure.row = page.structure.container.querySelector('.row');
+            page.structure.main = page.structure.row.querySelector('.col-main');
+            page.structure.side = page.structure.row.querySelector('.col-sidebar');
+        } catch(e) {
+            log('unable to find elements', 'page structure');
+        }
+
+        checkup_page_structure();
+
+
+        if (!is_subpage) {
+            // recent tracks
+            patch_profile_tracks();
+        } else {
+            // which subpage is it?
+            page.subpage = document.body.classList[1].replace('namespace--', '');
+        }
+
+        log('page status is', 'page', 'info', [page]);
+
+
         patch_profile_following();
-        patch_profile_tracks();
 
-        let profile_name = profile_header.querySelector('a');
-        let is_own_profile = (profile_name.textContent == auth);
-
+        let is_own_profile = (page.name == auth);
         if (is_own_profile)
-            document.body.querySelector('.header--user').setAttribute('data-is-own-profile', 'true');
+            profile_header.setAttribute('data-is-own-profile', 'true');
 
         // profile note
         let profile_notes = JSON.parse(localStorage.getItem('bleh_profile_notes')) || {};
-        let profile_note = profile_notes[profile_name.textContent];
+        let profile_note = profile_notes[page.name];
 
         let profile_has_note = false;
         if (profile_note != undefined)
             profile_has_note = true;
 
-        if (!profile_header.hasAttribute('data-kate-processed')) {
-            profile_header.setAttribute('data-kate-processed', 'true');
+        let adaptive_skin = document.body.querySelector('.adaptive-skin-container');
+        let content_top = adaptive_skin.querySelector('.content-top');
 
-            let adaptive_skin = document.body.querySelector('.adaptive-skin-container');
-            let content_top = adaptive_skin.querySelector('.content-top');
+        // has header?
+        if (content_top.querySelector('h1') == null && content_top.querySelector('.navlist') == null)
+            adaptive_skin.removeChild(content_top);
 
-            // has header?
-            if (content_top.querySelector('h1') == null && content_top.querySelector('.navlist') == null)
-                adaptive_skin.removeChild(content_top);
+        if (settings.feature_flags.redesigned_profile_header != false)
+            redesign_profile_header(is_own_profile);
 
-            if (settings.feature_flags.redesigned_profile_header != false)
-                redesign_profile_header(profile_name, is_own_profile);
+        patch_profile_obsession();
 
-            patch_profile_obsession();
+        // is this their profile?
+        if (is_own_profile) {
+            // make avatar clickable
+            let header_avatar = document.querySelector('.header-avatar .avatar');
 
-            // is this their profile?
-            if (is_own_profile) {
-                // make avatar clickable
-                let header_avatar = document.querySelector('.header-avatar .avatar');
+            let avatar_link = document.createElement('a');
+            avatar_link.classList.add('bleh--avatar-clickable-link');
+            avatar_link.href = `${root}settings`;
+            header_avatar.appendChild(avatar_link);
+        } else {
+            // is there a follow button?
+            let header_avatar = document.querySelector('.header--overview .header-avatar');
 
-                let avatar_link = document.createElement('a');
-                avatar_link.classList.add('bleh--avatar-clickable-link');
-                avatar_link.href = `${root}settings`;
-                header_avatar.appendChild(avatar_link);
-            } else {
-                // is there a follow button?
-                let header_avatar = document.querySelector('.header--overview .header-avatar');
+            if (header_avatar != undefined && settings.feature_flags.redesigned_profile_header == false) {
+                let header_follow_btn = header_avatar.querySelector('form');
 
-                if (header_avatar != undefined && settings.feature_flags.redesigned_profile_header == false) {
-                    let header_follow_btn = header_avatar.querySelector('form');
+                if (header_follow_btn == undefined) {
+                    // user is on their ignore list
+                    let toggle_btn = document.createElement('button');
+                    toggle_btn.classList.add('toggle-button','header-follower-btn','header-follower-btn--denied');
+                    toggle_btn.textContent = trans[lang].profile.on_ignore_list;
 
-                    if (header_follow_btn == undefined) {
-                        // user is on their ignore list
-                        let toggle_btn = document.createElement('button');
-                        toggle_btn.classList.add('toggle-button','header-follower-btn','header-follower-btn--denied');
-                        toggle_btn.textContent = trans[lang].profile.on_ignore_list;
-
-                        tippy(toggle_btn, {
-                            content: trans[lang].profile.on_ignore_list
-                        });
-                        header_avatar.appendChild(toggle_btn);
-                    } else {
-                        let inner_btn = header_follow_btn.querySelector('button');
-                        let inner_btn_tooltip = tippy(inner_btn, {
-                            content: inner_btn.textContent
-                        });
-
-                        console.info(inner_btn_tooltip);
-
-                        inner_btn.addEventListener('click', () => {
-                            window.setTimeout(() => {
-                                inner_btn_tooltip.setContent(inner_btn.textContent);
-                            }, 50);
-                        });
-                    }
-                }
-            }
-
-            // badges
-            console.info('bleh - checking if user', profile_name.textContent, 'has any badges');
-            if (profile_badges.hasOwnProperty(profile_name.textContent)) {
-                if (!Array.isArray(profile_badges[profile_name.textContent])) {
-                    // default
-                    console.info('bleh - user has 1 badge', profile_badges[profile_name.textContent]);
-                    let this_badge = profile_badges[profile_name.textContent];
-
-                    let badge = document.createElement('span');
-                    badge.classList.add('label',`user-status--bleh-${this_badge.type}`,`user-status--bleh-user-${profile_name.textContent}`);
-                    badge.textContent = this_badge.name;
-                    profile_header.appendChild(badge);
+                    tippy(toggle_btn, {
+                        content: trans[lang].profile.on_ignore_list
+                    });
+                    header_avatar.appendChild(toggle_btn);
                 } else {
-                    // multiple
-                    console.info('bleh - user has multiple badges', profile_badges[profile_name.textContent]);
-                    for (let badge_entry in profile_badges[profile_name.textContent]) {
-                        let this_badge = profile_badges[profile_name.textContent][badge_entry];
+                    let inner_btn = header_follow_btn.querySelector('button');
+                    let inner_btn_tooltip = tippy(inner_btn, {
+                        content: inner_btn.textContent
+                    });
 
-                        let badge = document.createElement('span');
-                        badge.classList.add('label',`user-status--bleh-${this_badge.type}`,`user-status--bleh-user-${profile_name.textContent}`);
-                        badge.textContent = this_badge.name;
-                        profile_header.appendChild(badge);
-                    }
+                    console.info(inner_btn_tooltip);
+
+                    inner_btn.addEventListener('click', () => {
+                        window.setTimeout(() => {
+                            inner_btn_tooltip.setContent(inner_btn.textContent);
+                        }, 50);
+                    });
                 }
             }
-
-            // me :3
-            if (cute.includes(profile_name.textContent)) {
-                profile_name.classList.add('bleh--name-is-cute');
-            }
-
-            // secondary text
-            let profile_sub_text = element.querySelector('.header-title-secondary');
-
-            if (profile_sub_text == undefined)
-                return;
-
-            let display_name = profile_sub_text.querySelector('.header-title-display-name');
-            let scrobble_since = profile_sub_text.querySelector('.header-scrobble-since');
-            scrobble_since.textContent = scrobble_since.textContent.replace(trans[lang].profile.created.replace,'');
-
-            // pronouns?
-            let pronouns = use_pronouns(display_name.textContent);
-
-            let display_name_pre = document.createElement('span');
-            display_name_pre.classList.add('header-title-secondary--pre');
-            display_name_pre.textContent = pronouns ? trans[lang].profile.display_name.pronouns : trans[lang].profile.display_name.aka;
-            profile_sub_text.insertBefore(display_name_pre, display_name);
-
-            let scrobble_since_pre = document.createElement('span');
-            scrobble_since_pre.classList.add('header-title-secondary--pre');
-            scrobble_since_pre.textContent = trans[lang].profile.created.name;
-            profile_sub_text.insertBefore(scrobble_since_pre, scrobble_since);
         }
 
-        let about_me_sidebar = element.querySelector('.about-me-sidebar');
+        // badges
+        console.info('bleh - checking if user', page.name, 'has any badges');
+        let profile_name_obj = profile_header.querySelector('.header-title-label-wrap');
+        if (profile_badges.hasOwnProperty(page.name)) {
+            if (!Array.isArray(profile_badges[page.name])) {
+                // default
+                console.info('bleh - user has 1 badge', profile_badges[page.name]);
+                let this_badge = profile_badges[page.name];
+
+                let badge = document.createElement('span');
+                badge.classList.add('label',`user-status--bleh-${this_badge.type}`,`user-status--bleh-user-${page.name}`);
+                badge.textContent = this_badge.name;
+                profile_name_obj.appendChild(badge);
+            } else {
+                // multiple
+                console.info('bleh - user has multiple badges', profile_badges[page.name]);
+                for (let badge_entry in profile_badges[page.name]) {
+                    let this_badge = profile_badges[page.name][badge_entry];
+
+                    let badge = document.createElement('span');
+                    badge.classList.add('label',`user-status--bleh-${this_badge.type}`,`user-status--bleh-user-${page.name}`);
+                    badge.textContent = this_badge.name;
+                    profile_name_obj.appendChild(badge);
+                }
+            }
+        }
+
+        // me :3
+        if (cute.includes(page.name)) {
+            profile_name_obj.querySelector('.header-title a').classList.add('bleh--name-is-cute');
+        }
+
+        // secondary text
+        let profile_sub_text = document.body.querySelector('.header-title-secondary');
+
+        if (profile_sub_text == undefined)
+            return;
+
+        let display_name = profile_sub_text.querySelector('.header-title-display-name');
+        let scrobble_since = profile_sub_text.querySelector('.header-scrobble-since');
+        scrobble_since.textContent = scrobble_since.textContent.replace(trans[lang].profile.created.replace,'');
+
+        // pronouns?
+        let pronouns = use_pronouns(display_name.textContent);
+
+        let display_name_pre = document.createElement('span');
+        display_name_pre.classList.add('header-title-secondary--pre');
+        display_name_pre.textContent = pronouns ? trans[lang].profile.display_name.pronouns : trans[lang].profile.display_name.aka;
+        profile_sub_text.insertBefore(display_name_pre, display_name);
+
+        let scrobble_since_pre = document.createElement('span');
+        scrobble_since_pre.classList.add('header-title-secondary--pre');
+        scrobble_since_pre.textContent = trans[lang].profile.created.name;
+        profile_sub_text.insertBefore(scrobble_since_pre, scrobble_since);
+
+        let about_me_sidebar = document.body.querySelector('.about-me-sidebar');
 
         if (about_me_sidebar == undefined)
             return;
@@ -4187,16 +4323,16 @@ let has_prompted_for_update = false;
                 add_note_button.classList.add('btn','bleh--add-note');
                 add_note_button.setAttribute('id','bleh--add-note');
                 add_note_button.textContent = 'Add note';
-                add_note_button.setAttribute('onclick',`_add_profile_note('${profile_name.textContent}',${profile_has_note})`);
+                add_note_button.setAttribute('onclick',`_add_profile_note('${page.name}',${profile_has_note})`);
 
                 tippy(add_note_button, {
-                    content: trans[lang].settings.profiles.notes.edit_user.replace('{u}', profile_name.textContent)
+                    content: trans[lang].settings.profiles.notes.edit_user.replace('{u}', page.name)
                 });
 
                 let about_me_header = about_me_sidebar.querySelector('h2');
                 about_me_header.appendChild(add_note_button);
             } else {
-                create_profile_note_panel(profile_name.textContent, true);
+                create_profile_note_panel(page.name, true);
             }
         }
     }
@@ -4217,13 +4353,11 @@ let has_prompted_for_update = false;
         artist_elem.textContent = artist;
     }
 
-    function redesign_profile_header(profile_name, is_own_profile) {
+    function redesign_profile_header(is_own_profile) {
         let base_header = document.body.querySelector('.header-info-secondary');
 
         if (base_header == null)
             return;
-
-        profile_name = profile_name.textContent.trim();
 
         let header_meta = base_header.querySelector('.header-metadata');
         header_meta.classList.add('profile-header-metadata-legacy');
@@ -4318,15 +4452,15 @@ let has_prompted_for_update = false;
 
             // shortcut
             create_profile_top_item(profile_header, {
-                name: profile_name,
+                name: page.name,
                 type: 'shortcut',
-                link: `_set_profile_as_shortcut(this, '${profile_name}')`,
+                link: `_set_profile_as_shortcut(this, '${page.name}')`,
                 action: 'button'
             });
         } else {
             // edit
             create_profile_top_item(profile_header, {
-                name: profile_name,
+                name: page.name,
                 type: 'edit',
                 link: `${root}settings`
             });
@@ -4338,30 +4472,30 @@ let has_prompted_for_update = false;
         profile_header.appendChild(listen_divider);
 
         create_profile_top_item(profile_header, {
-            name: profile_name,
+            name: page.name,
             text: scrobbles,
             type: 'scrobbles',
-            link: `${root}user/${profile_name}/library`
+            link: `${root}user/${page.name}/library`
         });
         create_profile_top_item(profile_header, {
-            name: profile_name,
+            name: page.name,
             text: artists,
             type: 'artists',
-            link: `${root}user/${profile_name}/library/artists`
+            link: `${root}user/${page.name}/library/artists`
         });
         create_profile_top_item(profile_header, {
-            name: profile_name,
+            name: page.name,
             text: loved,
             type: 'loved',
-            link: `${root}user/${profile_name}/loved`
+            link: `${root}user/${page.name}/loved`
         });
 
         if (!is_own_profile) {
             // taste
             create_profile_top_item(profile_header, {
-                name: profile_name,
+                name: page.name,
                 type: 'taste',
-                link: `${root}user/${profile_name}/library/artists?date_preset=LAST_7_DAYS&page=1`,
+                link: `${root}user/${page.name}/library/artists?date_preset=LAST_7_DAYS&page=1`,
                 taste: taste,
                 artists: taste_artists,
                 avi: profile_avi,
@@ -5005,16 +5139,14 @@ let has_prompted_for_update = false;
      * @returns corrected title if applicable or original title
      */
     function correct_item_by_artist(item, artist) {
-        artist = artist.toLowerCase();
-        console.info('bleh - correction handler: correcting', item, 'by', artist);
-
         if (!settings.corrections)
             return item;
+        artist = artist.toLowerCase();
 
         try {
             if (album_track_corrections.hasOwnProperty(artist)) {
                 if (album_track_corrections[artist].hasOwnProperty(item)) {
-                    console.info('bleh - correction handler: corrected as', album_track_corrections[artist][item]);
+                    log(`corrected ${item} by ${artist} as ${album_track_corrections[artist[item]]}`, 'lotus');
                     return album_track_corrections[artist][item];
                 } else {
                     return item;
@@ -5023,6 +5155,7 @@ let has_prompted_for_update = false;
                 return item;
             }
         } catch(e) {
+            log(`correcting ${item} by ${artist}`, 'lotus');
             console.error(e);
             return item;
         }
@@ -5033,19 +5166,18 @@ let has_prompted_for_update = false;
      * @returns corrected artist if applicable or original artist
      */
     function correct_artist(artist) {
-        console.info('bleh - correction handler: correcting', artist);
-
         if (!settings.corrections)
             return artist;
 
         try {
             if (artist_corrections.hasOwnProperty(artist)) {
-                console.info('bleh - correction handler: corrected as', artist_corrections[artist]);
+                log(`corrected ${artist} as ${artist_corrections[artist]}`, 'lotus');
                 return artist_corrections[artist];
             } else {
                 return artist;
             }
         } catch(e) {
+            log(`correcting ${artist}`, 'lotus');
             console.error(e);
             return artist;
         }
