@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         bleh
 // @namespace    http://last.fm/
-// @version      2024.1101
+// @version      2024.1103
 // @description  bleh!!! ^-^
 // @author       kate
 // @match        https://www.last.fm/*
@@ -18,7 +18,7 @@
 // ==/UserScript==
 
 let version = {
-    build: '2024.1101.4',
+    build: '2024.1103',
     sku: 'lotus',
     feature_flags: {
         bleh_settings_tabs: {
@@ -1671,7 +1671,6 @@ let stored_season = {
 let seasonal_events = [
     {
         id: 'new_years',
-        name: 'New Years',
         start: 'y0-01-01',
         end: 'y0-01-10T23:59:59',
 
@@ -1682,7 +1681,6 @@ let seasonal_events = [
     },
     {
         id: 'easter',
-        name: 'Easter',
         start: 'y0-04-05',
         end: 'y0-04-30T23:59:59',
 
@@ -1692,7 +1690,6 @@ let seasonal_events = [
     },
     {
         id: 'pride',
-        name: 'Pride',
         start: 'y0-05-31',
         end: 'y0-07-07T23:59:59',
 
@@ -1702,7 +1699,6 @@ let seasonal_events = [
     },
     {
         id: 'halloween',
-        name: 'Halloween',
         start: 'y0-09-22',
         end: 'y0-11-01T11:59:59',
 
@@ -1712,8 +1708,7 @@ let seasonal_events = [
     },
     {
         id: 'pre_fall',
-        name: 'Pre-Fall',
-        start: 'y0-11-01T:12:00:00',
+        start: 'y0-11-01T12:00:00',
         end: 'y0-11-12T23:59:59',
 
         snowflakes: {
@@ -1723,7 +1718,6 @@ let seasonal_events = [
     },
     {
         id: 'fall',
-        name: 'Fall',
         start: 'y0-11-13',
         end: 'y0-11-22T23:59:59',
 
@@ -1734,7 +1728,6 @@ let seasonal_events = [
     },
     {
         id: 'christmas',
-        name: 'Christmas',
         start: 'y0-11-23',
         end: 'y0-12-31T23:59:59',
 
