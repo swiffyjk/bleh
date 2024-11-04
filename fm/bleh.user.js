@@ -10228,7 +10228,7 @@ let has_prompted_for_update = false;
         page.name = album_header.querySelector('.header-new-title').textContent;
         page.sister = album_header.querySelector('.header-new-crumb span').textContent;
 
-        let is_subpage = artist_header.classList.contains('header-new--subpage');
+        let is_subpage = album_header.classList.contains('header-new--subpage');
 
 
         page.structure.container = document.body.querySelector('.page-content:not(:has(.content-top-lower-row, a + .js-gallery-heading))');
