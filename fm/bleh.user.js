@@ -1798,7 +1798,7 @@ function prep_snow() {
     document.documentElement.appendChild(container);
 }
 
-function log(text, system, type = 'info', append=[]) {
+function log(text, system, type = 'info', append={}) {
     let system_colour;
 
     switch(system) {
@@ -1825,13 +1825,10 @@ function log(text, system, type = 'info', append=[]) {
             break;
     }
 
-    console[type](`%cbleh~%c${system}%c: ${text}`, 'color: #9F8CD9', `color: ${system_colour}; font-weight: bold`, 'color: unset');
-
-    if (append.length > 0) {
-        append.forEach((item) => {
-            console[type](item);
-        });
-    }
+    if (Object.keys(append).length > 0)
+        console[type](`%cbleh~%c${system}%c: ${text}`, 'color: #9F8CD9', `color: ${system_colour}; font-weight: bold`, 'color: unset', append);
+    else
+        console[type](`%cbleh~%c${system}%c: ${text}`, 'color: #9F8CD9', `color: ${system_colour}; font-weight: bold`, 'color: unset');
 }
 
 let theme_preview = (`
@@ -2588,7 +2585,7 @@ let has_prompted_for_update = false;
 
         // last.fm is a single page application
         const observer = new MutationObserver((mutations) => {
-            console.log('new bleh mutation');
+            //console.info('---');
             load_settings();
             lookup_lang();
             append_nav(document.body);
@@ -4091,7 +4088,6 @@ let has_prompted_for_update = false;
 
             if (page.structure != null) {
                 log('finished', 'page structure');
-                console.info(page);
                 return;
             }
             log('page missing side, creating', 'page structure');
@@ -4104,7 +4100,6 @@ let has_prompted_for_update = false;
         }
 
         log('finished', 'page structure');
-        console.info(page);
     }
 
 
@@ -4149,7 +4144,7 @@ let has_prompted_for_update = false;
             page.subpage = document.body.classList[1].replace('namespace--', '');
         }
 
-        log('page status is', 'page', 'info', [page]);
+        log('status is', 'page', 'info', page);
 
 
         patch_profile_following();
@@ -7794,14 +7789,13 @@ let has_prompted_for_update = false;
 
 
         // song artist
-        if (artist_corrections.hasOwnProperty(original_artist))
+        if (artist_corrections.hasOwnProperty(original_artist) && settings.corrections)
             original_artist = correct_artist(artist_corrections[original_artist]);
 
 
         if (extras.length > 0)
-            return [formatted_title, extras, original_artist, song_guests];
-        else
-            return [formatted_title, [], original_artist, song_guests];
+            log(`parsed ${original_title} as ${formatted_title} by ${original_artist} with`, 'guest features', 'info', {extras: extras, song_guests: song_guests});
+        return [formatted_title, extras, original_artist, song_guests];
     }
 
 
@@ -7857,7 +7851,6 @@ let has_prompted_for_update = false;
 
                 if (settings.format_guest_features) {
                     let track_title = track.querySelector('.chartlist-name a');
-                    console.info('bleh - guest features, track title:', track_title);
 
                     if (track_title == undefined)
                         return;
