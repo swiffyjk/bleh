@@ -18,7 +18,7 @@
 // ==/UserScript==
 
 let version = {
-    build: '2024.1104',
+    build: '2024.1104.1',
     sku: 'lotus',
     feature_flags: {
         bleh_settings_tabs: {
