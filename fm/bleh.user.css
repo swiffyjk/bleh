@@ -6346,7 +6346,7 @@ button,
     }
 }
 .side-right .setting-item,
-.continue, .external,
+.continue, .external, .open,
 .btn--has-icon-right,
 .dropdown-menu-clickable-button, .dropdown-menu-clickable-button-js-only,
 .pagination-next a,
@@ -6466,7 +6466,7 @@ button,
 .side-right .setting-item:before, .action:before,
 .setup-icon:before, .setup-icon:after,
 .btn.back:before,
-.continue:before, .external:before, .done:before, .cancel:before, .download:before, .upload:before, .save:before,
+.continue:before, .external:before, .done:before, .cancel:before, .download:before, .upload:before, .save:before, .open:before,
 .badge:before,
 .btn-post-shout:before,
 .auth-link:before, .language-nav:before, .language-nav > span:before,
@@ -6631,7 +6631,7 @@ span.header-new-gallery-inner a:before,
     transition-duration: var(--trans) !important;
     transition-timing-function: var(--trans-function) !important;
 }
-.continue:before, .external:before,
+.continue:before, .external:before, .open:before,
 .pagination-next a:before,
 .more-link a:before, .more-link-fullwidth-right a:before, .more-link-fullwidth-right-flush-top a:before, .more-link-with-action a:not(.inline-add-icon):after,
 .more-items:before,
@@ -16309,6 +16309,7 @@ button.bleh--gallery-bookmark-image-btn {
     position: relative;
     --mask: var(--icon-16-arrow-right);
 }
+.open,
 .external {
     position: relative;
     --mask: var(--icon-16-external);
@@ -16837,7 +16838,10 @@ h4 {
     max-width: 800px;
 }
 .modal--avatar {
+    background: unset !important;
     padding: unset !important;
+    outline: unset !important;
+    box-shadow: unset !important;
 
     .modal-title {
         display: none;
@@ -16851,14 +16855,22 @@ h4 {
 
             .full-avatar {
                 height: 100%;
+                background: var(--avatar-generic-background);
+                border-radius: var(--card-radius);
+                box-shadow: var(--menu-shadow);
+                overflow: hidden;
 
                 img {
                     max-height: 70vh;
-                    border-radius: var(--card-radius);
 
                     min-width: 300px;
                     min-height: 300px;
                 }
+            }
+
+            .modal-footer {
+                padding: unset;
+                border: unset;
             }
         }
     }

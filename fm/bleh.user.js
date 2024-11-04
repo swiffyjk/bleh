@@ -156,7 +156,8 @@ const trans = {
                 you_share_1: 'You share {artist}',
                 you_share_2: 'You share {artist1} and {artist2}',
                 you_share_3: 'You share {artist1}, {artist2}, and {artist3}'
-            }
+            },
+            open_avatar: 'Open in a new tab'
         },
         messaging: {
             update: 'bleh has updated to version {v}!'
@@ -10302,6 +10303,11 @@ let has_prompted_for_update = false;
             <div class="full-avatar-wrapper">
                 <div class="full-avatar">
                     <img src="${src}">
+                </div>
+                <div class="modal-footer">
+                    <a class="btn primary open" href="${src}" target="_blank">
+                        ${trans[lang].profile.open_avatar}
+                    </a>
                 </div>
             </div>
         `), true, 'avatar');
