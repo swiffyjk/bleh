@@ -9641,7 +9641,8 @@ let has_prompted_for_update = false;
         lotus_btn.target = '_blank';
 
         tippy(lotus_btn, {
-            content: trans[lang].lotus.correct
+            content: (`${trans[lang].lotus.correct}<br><div class="tooltip-sub">${document.body.querySelector('.main-content > [itemscope]').getAttribute('data-page-resource-name')}</div>`),
+            allowHTML: true
         });
 
         interact_container.appendChild(lotus_btn);

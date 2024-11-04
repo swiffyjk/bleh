@@ -8787,7 +8787,7 @@ text[style^="color: rgb(255, 172, 172)"] {
 .user-dashboard-tooltip {
     background: hsla(var(--b6), 60%);
     backdrop-filter: blur(10px) saturate(160%);
-    border-radius: 50px;
+    border-radius: 30px;
     box-shadow: var(--card-shadow);
     padding: 5px 14px;
     font-size: calc(var(--font-size) - 1px);
@@ -8796,6 +8796,11 @@ text[style^="color: rgb(255, 172, 172)"] {
     color: hsl(var(--c2));
 
     text-align: center;
+
+    .tooltip-sub {
+        font-size: 12px;
+        color: hsl(var(--c3));
+    }
 
     [data-bleh--theme="light"] & {
         background: hsla(var(--b5), 70%);
