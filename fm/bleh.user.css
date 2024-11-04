@@ -1,7 +1,7 @@
 /* ==UserStyle==
 @name           bleh (dev)
 @namespace      github.com/katelyynn/bleh
-@version        2024.1103
+@version        2024.1104
 @license        GPL-3.0
 @author         kate
 @updateURL      https://github.com/katelyynn/bleh/raw/uwu/fm/bleh.user.css
@@ -15,7 +15,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Ubuntu+Sans:ital,wght@0,100..800;1,100..800&display=swap');
 
 body {
-    --version-build: '2024.1103';
+    --version-build: '2024.1104';
 
     --hue:  var(--hue-over,
             var(--hue-album,
@@ -4835,6 +4835,36 @@ better than the default selector '#app a' i suppose */
 }
 .chartlist:not(.chartlist--with-image) .chartlist-row {
     padding: 3px 12px;
+}
+
+.lastfm-bulk-edit-chartlist-scrobbles {
+    [data-bleh--show_bulk_edit_album="false"] & {
+        .chartlist-album {
+            display: none;
+        }
+    }
+    [data-bleh--show_bulk_edit_album="true"] & {
+        .chartlist-name,
+        .chartlist-artist {
+            width: 40% !important;
+        }
+
+        .chartlist-album {
+            position: relative;
+            left: 20px;
+            margin: unset !important;
+            color: hsl(var(--c3));
+
+            width: 18%;
+        }
+    }
+
+    [data-bleh--stacked_chartlist_info="false"] & {
+        .chartlist-name {
+            margin-top: unset !important;
+            margin-bottom: unset !important;
+        }
+    }
 }
 
 @keyframes slide_down {
@@ -13663,6 +13693,17 @@ input[type="range"]::-moz-range-progress {
 
 .toggle-container {
     display: flex;
+    transition-property: background-color, padding, margin, border-radius;
+    transition-duration: var(--trans);
+    transition-timing-function: var(--trans-function);
+
+    &[aria-describedby] {
+        background-color: hsla(var(--h4), 10%);
+        padding: 8px;
+        margin: -8px;
+        transition: none;
+        border-radius: var(--item-big-radius);
+    }
 
     .companion-checkbox {
         display: none;

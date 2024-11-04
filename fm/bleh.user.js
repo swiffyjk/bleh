@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         bleh
 // @namespace    http://last.fm/
-// @version      2024.1103
+// @version      2024.1104
 // @description  bleh!!! ^-^
 // @author       kate
 // @match        https://www.last.fm/*
@@ -18,7 +18,7 @@
 // ==/UserScript==
 
 let version = {
-    build: '2024.1103',
+    build: '2024.1104',
     sku: 'lotus',
     feature_flags: {
         bleh_settings_tabs: {
@@ -244,6 +244,11 @@ const trans = {
                     header: 'Enter username',
                     saved: 'Profile shortcut is valid',
                     failed: 'Profile does not exist or failed to load'
+                },
+                show_bulk_edit_album: {
+                    name: 'Show album in chartlists',
+                    bio: 'This is disabled by default as hovering over tracks reveals the album title in all areas',
+                    require: 'Only applicable with the ‘Last.fm Bulk Edit’ extension'
                 }
             },
             accessibility: {
@@ -2133,7 +2138,8 @@ let settings_template = {
     font: '',
     font_weight: 480,
     font_weight_medium: 650,
-    font_weight_bold: 730
+    font_weight_bold: 730,
+    show_bulk_edit_album: false
 };
 let settings_base = {
     high_contrast: {
@@ -2387,6 +2393,13 @@ let settings_base = {
         unit: '',
         value: 730,
         type: 'slider'
+    },
+    show_bulk_edit_album: {
+        css: 'show_bulk_edit_album',
+        unit: '',
+        value: true,
+        values: [true, false],
+        type: 'toggle'
     }
 };
 let inbuilt_settings = {
@@ -6389,6 +6402,18 @@ let has_prompted_for_update = false;
                             </button>
                         </div>
                     </div>
+                    <div class="toggle-container hide-if-no-bulk-edit" id="container-show_bulk_edit_album" onclick="_update_item('show_bulk_edit_album')">
+                        <button class="btn reset" onclick="_reset_item('show_bulk_edit_album')">${trans[lang].settings.reset}</button>
+                        <div class="heading">
+                            <h5>${trans[lang].settings.music.show_bulk_edit_album.name}</h5>
+                            <p>${trans[lang].settings.music.show_bulk_edit_album.bio}</p>
+                        </div>
+                        <div class="toggle-wrap">
+                            <button class="toggle" id="toggle-show_bulk_edit_album" aria-checked="false">
+                                <div class="dot"></div>
+                            </button>
+                        </div>
+                    </div>
                     <div class="sep"></div>
                     <h4>${trans[lang].settings.music.profile_shortcut.name} <div class="new-badge">${trans[lang].settings.new}</div></h4>
                     <p>${trans[lang].settings.music.profile_shortcut.bio}</p>
@@ -6631,11 +6656,16 @@ let has_prompted_for_update = false;
             bleh_sku_page();
         }
 
-        if (page == 'music')
+        if (page == 'music') {
             tippy(document.getElementById('lotus_hover'), {
                 content: trans[lang].lotus.tooltip.replace('lotus', '<span class="lotus lotus-name lotus-name-small">lotus</span>'),
                 allowHTML: true
-            })
+            });
+
+            tippy(document.getElementById('container-show_bulk_edit_album'), {
+                content: trans[lang].settings.music.show_bulk_edit_album.require
+            });
+        }
 
         if (page == 'themes') {
             tippy(document.body.querySelector('.swatch.default'), {
