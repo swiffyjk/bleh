@@ -5060,28 +5060,30 @@ better than the default selector '#app a' i suppose */
         --shadow: 0 0 50px 5px hsla(var(--h4), 35%) !important;
     }
 
-    &:before, &:after {
-        content: '';
-        position: absolute;
-        display: block;
-        top: 0;
-        bottom: 0;
-        width: var(--size);
-        border: unset !important;
+    [data-ff--chartlist_highlight_shadow="true"] & {
+        border-radius: 0;
 
-        --size: 40px;
+        &:before, &:after {
+            content: '';
+            position: absolute;
+            display: block;
+            top: 0;
+            bottom: 0;
+            width: var(--size);
+            border: unset !important;
 
-        display: none;
-    }
+            --size: 40px;
+        }
 
-    &:before {
-        left: calc(-1 * var(--size));
-        background: linear-gradient(90deg, transparent, hsla(var(--h4), 25%));
-    }
-    &:after {
-        left: unset !important;
-        right: calc(-1 * var(--size));
-        background: linear-gradient(270deg, transparent, hsla(var(--h4), 25%));
+        &:before {
+            left: calc(-1 * var(--size));
+            background: linear-gradient(90deg, transparent, hsla(var(--h4), 25%));
+        }
+        &:after {
+            left: unset !important;
+            right: calc(-1 * var(--size));
+            background: linear-gradient(270deg, transparent, hsla(var(--h4), 25%));
+        }
     }
 }
 

@@ -47,6 +47,11 @@ let version = {
             default: false,
             name: 'Music page charts',
             date: '2024-11-05'
+        },
+        chartlist_highlight_shadow: {
+            default: false,
+            name: 'Chartlist row highlight side shadow',
+            date: '2024-11-05'
         }
     }
 }
