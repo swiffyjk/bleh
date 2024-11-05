@@ -1912,27 +1912,11 @@ article, section, .buffer-standard, .buffer-standard:not(.col-sidebar) .buffer-s
 }
 .album-overview-cover-art-action-row a {
     position: relative;
-    width: 100% !important;
-    height: 32px !important;
-    display: flex;
     --font-size: 0;
-    --bg: transparent !important;
-    --left: 50%;
-    --margin-left: -8px;
-    --bg-hov: hsla(var(--b7), 40%) !important;
-    --bg-atv: hsla(var(--b7), 60%) !important;
-    --shadow: none !important;
-    --shadow-hov: none !important;
 }
 
 .album-overview-cover-art-action-row {
-    height: 32px;
-    padding-left: var(--card-padding);
-    padding-right: var(--card-padding);
-    bottom: var(--card-padding);
-    display: flex;
-    justify-content: space-between;
-    gap: var(--card-gap);
+    width: fit-content;
 }
 .album-overview-cover-art-action-row > span {
     height: 32px;
@@ -1944,7 +1928,7 @@ article, section, .buffer-standard, .buffer-standard:not(.col-sidebar) .buffer-s
 
 
 .album-overview-cover-art-upload-action a {
-    --mask: var(--icon-16-plus);
+    --mask: var(--icon-16-upload);
 }
 .album-overview-cover-art-gallery-action a {
     --mask: var(--icon-16-photo);
@@ -15830,6 +15814,7 @@ button.bleh--gallery-bookmark-image-btn {
     display: flex;
     justify-content: end;
 }
+.album-overview-cover-art-action-row,
 .tab-container,
 .footer-timezone,
 .view-buttons {
@@ -15872,6 +15857,7 @@ button.bleh--gallery-bookmark-image-btn {
         }
     }
 
+    &.album-overview-cover-art-action-row a,
     &.tab-container button:not(.tab--selected),
     .footer-language .mimic-link,
     .btn:not([aria-checked="true"]) {
@@ -15882,6 +15868,7 @@ button.bleh--gallery-bookmark-image-btn {
         --shadow-hov: none;
     }
 
+    &.album-overview-cover-art-action-row a,
     .view-item {
         display: flex;
         align-items: center;
@@ -16097,6 +16084,7 @@ button.bleh--gallery-bookmark-image-btn {
     display: none;
 }
 
+.album-overview-cover-art,
 .video-preview {
     img {
         transition-property: opacity;
@@ -16110,12 +16098,14 @@ button.bleh--gallery-bookmark-image-btn {
             transition: none;
         }
 
+        .album-overview-cover-art-actions,
         .video-overlay-container {
             opacity: 1;
             transition: none;
         }
     }
 }
+.album-overview-cover-art-actions,
 .video-overlay-container {
     position: absolute;
     inset: 0;
@@ -16126,13 +16116,18 @@ button.bleh--gallery-bookmark-image-btn {
 
     opacity: 0;
 
+    background: unset;
+
     transition-property: opacity;
     transition-duration: var(--trans);
     transition-timing-function: var(--trans-function);
 
+    .album-overview-cover-art-action-row,
     .view-buttons {
         background-color: hsl(var(--b5)) !important;
         box-shadow: var(--card-shadow);
+        margin: unset;
+        inset: unset;
     }
 }
 

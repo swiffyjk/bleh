@@ -10472,6 +10472,17 @@ let has_prompted_for_update = false;
             bleh_music_page_charts();
 
             album_missing_a_tracklist();
+
+            // tooltips on album cover
+            let button_row = page.structure.side.querySelector('.album-overview-cover-art-action-row');
+            if (button_row != null) {
+                let buttons = button_row.querySelectorAll('a');
+                buttons.forEach((button) => {
+                    tippy(button, {
+                        content: button.textContent
+                    });
+                });
+            }
         } else {
             // which subpage is it?
             page.subpage = document.body.classList[2].replace('namespace--', '');
