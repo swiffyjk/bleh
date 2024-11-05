@@ -44,7 +44,7 @@ let version = {
             date: '2024-10-11'
         },
         music_page_charts: {
-            default: false,
+            default: true,
             name: 'Music page charts',
             date: '2024-11-05'
         },
@@ -10280,6 +10280,9 @@ let has_prompted_for_update = false;
 
     // correction system
     function lotus(force = false) {
+        if (!settings.corrections)
+            return;
+
         let lotus_artist = localStorage.getItem('lotus_artist');
         let lotus_artist_expire = new Date(localStorage.getItem('lotus_artist_expire'));
 
@@ -10545,7 +10548,7 @@ let has_prompted_for_update = false;
 
 
     function bleh_music_page_charts() {
-        if (!settings.feature_flags.music_page_charts)
+        if (settings.feature_flags.music_page_charts != true)
             return;
 
         log('beginning replacement', 'music charts');
