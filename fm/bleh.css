@@ -5,7 +5,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Ubuntu+Sans:ital,wght@0,100..800;1,100..800&display=swap');
 
 body {
-    --version-build: '2024.1104';
+    --version-build: '2024.1105';
 
     --hue:  var(--hue-over,
             var(--hue-album,
@@ -1877,11 +1877,6 @@ article, section, .buffer-standard, .buffer-standard:not(.col-sidebar) .buffer-s
     box-shadow: var(--card-shadow) !important;
 }
 
-/* border if default background is present */
-.video-preview-upload-cta.link-block, p.album-artwork-upload-cta {
-    border: var(--card-border) !important;
-}
-
 /* take up full space */
 .album-overview-cover-art, .album-artwork-upload-cta-container {
     margin-top: calc(-104px - var(--card-gap)) !important;
@@ -1907,27 +1902,11 @@ article, section, .buffer-standard, .buffer-standard:not(.col-sidebar) .buffer-s
 }
 .album-overview-cover-art-action-row a {
     position: relative;
-    width: 100% !important;
-    height: 32px !important;
-    display: flex;
     --font-size: 0;
-    --bg: transparent !important;
-    --left: 50%;
-    --margin-left: -8px;
-    --bg-hov: hsla(var(--b7), 40%) !important;
-    --bg-atv: hsla(var(--b7), 60%) !important;
-    --shadow: none !important;
-    --shadow-hov: none !important;
 }
 
 .album-overview-cover-art-action-row {
-    height: 32px;
-    padding-left: var(--card-padding);
-    padding-right: var(--card-padding);
-    bottom: var(--card-padding);
-    display: flex;
-    justify-content: space-between;
-    gap: var(--card-gap);
+    width: fit-content;
 }
 .album-overview-cover-art-action-row > span {
     height: 32px;
@@ -1939,7 +1918,7 @@ article, section, .buffer-standard, .buffer-standard:not(.col-sidebar) .buffer-s
 
 
 .album-overview-cover-art-upload-action a {
-    --mask: var(--icon-16-plus);
+    --mask: var(--icon-16-upload);
 }
 .album-overview-cover-art-gallery-action a {
     --mask: var(--icon-16-photo);
@@ -3755,6 +3734,7 @@ state is not active, which then falls back to primary button styling */
         inset: 0;
         z-index: 50;
         border-radius: var(--avatar-radius);
+        cursor: pointer;
     }
 }
 .header--overview.header--with-avatar .header-avatar {
@@ -5047,6 +5027,38 @@ better than the default selector '#app a' i suppose */
     --bg: hsla(var(--h4), 25%) !important;
     --bg-hov: hsla(var(--h4), 35%) !important;
     --shadow: 0 0 50px 5px hsla(var(--h4), 35%) !important;
+
+    [data-bleh--theme="light"] & {
+        --bg: hsla(var(--h4), 35%) !important;
+        --bg-hov: hsla(var(--h4), 50%) !important;
+        --shadow: 0 0 50px 5px hsla(var(--h4), 35%) !important;
+    }
+
+    [data-ff--chartlist_highlight_shadow="true"] & {
+        border-radius: 0;
+
+        &:before, &:after {
+            content: '';
+            position: absolute;
+            display: block;
+            top: 0;
+            bottom: 0;
+            width: var(--size);
+            border: unset !important;
+
+            --size: 40px;
+        }
+
+        &:before {
+            left: calc(-1 * var(--size));
+            background: linear-gradient(90deg, transparent, hsla(var(--h4), 25%));
+        }
+        &:after {
+            left: unset !important;
+            right: calc(-1 * var(--size));
+            background: linear-gradient(270deg, transparent, hsla(var(--h4), 25%));
+        }
+    }
 }
 
 
@@ -6326,7 +6338,7 @@ button,
 .event-metadata + .event-metadata a,
 #manage_data .btn-primary,
 .obsession-history-play-all,
-.done, .cancel, .download, .upload, .save
+.done, .cancel, .download, .upload, .save, .js-close:not(.modal-action-button)
 {
     --btn-left: calc(12px + 16px + 6px) !important;
 
@@ -6335,7 +6347,7 @@ button,
     }
 }
 .side-right .setting-item,
-.continue, .external,
+.continue, .external, .open,
 .btn--has-icon-right,
 .dropdown-menu-clickable-button, .dropdown-menu-clickable-button-js-only,
 .pagination-next a,
@@ -6346,7 +6358,8 @@ button,
 .gallery-next .arrow,
 .header-new-gallery--link .header-new-gallery-inner,
 .date-range-picker-button,
-.source-album, .big-tags-item
+.source-album, .big-tags-item,
+.select-button
 {
     --btn-right: calc(12px + 16px + 6px) !important;
 }
@@ -6446,6 +6459,9 @@ button,
 
 
 /*     ICON MASK     */
+.select-button:before,
+.involved--track:before, .involved--album:before, .involved--artist:before,
+.activity-item:before,
 .lotus-name:before,
 .modal-action-button:before,
 .big-btn:before,
@@ -6455,7 +6471,7 @@ button,
 .side-right .setting-item:before, .action:before,
 .setup-icon:before, .setup-icon:after,
 .btn.back:before,
-.continue:before, .external:before, .done:before, .cancel:before, .download:before, .upload:before, .save:before,
+.continue:before, .external:before, .done:before, .cancel:before, .download:before, .upload:before, .save:before, .open:before, .js-close:not(.modal-action-button):before,
 .badge:before,
 .btn-post-shout:before,
 .auth-link:before, .language-nav:before, .language-nav > span:before,
@@ -6602,11 +6618,12 @@ span.header-new-gallery-inner a:before,
     left: var(--left, 12px) !important;
     margin-top: var(--margin-top, -8px) !important;
     margin-left: var(--margin-left, unset) !important;
+    margin-right: var(--margin-right, unset) !important;
     width: var(--mask-size, 16px) !important;
     height: var(--mask-size, 16px) !important;
     box-shadow: unset !important;
     position: absolute;
-    right: var(--right, auto);
+    right: var(--right, auto) !important;
     top: var(--top, 50%) !important;
     background-repeat: no-repeat;
     background-image: var(--flag-url, unset) !important;
@@ -6620,7 +6637,8 @@ span.header-new-gallery-inner a:before,
     transition-duration: var(--trans) !important;
     transition-timing-function: var(--trans-function) !important;
 }
-.continue:before, .external:before,
+.select-button:before,
+.continue:before, .external:before, .open:before,
 .pagination-next a:before,
 .more-link a:before, .more-link-fullwidth-right a:before, .more-link-fullwidth-right-flush-top a:before, .more-link-with-action a:not(.inline-add-icon):after,
 .more-items:before,
@@ -6883,6 +6901,9 @@ on the bottom of a panel !! */
     position: relative !important;
     min-width: 170px !important;
     --show-icon: block;
+
+    --left: 12px;
+    --right: none;
 
     &.active {
         --bg: hsla(var(--h4), 20%) !important;
@@ -7519,11 +7540,34 @@ input:is([name="track_name"], [name="artist_name"], [name="album_name"], [name="
         animation: fade_popup_reduced var(--trans) var(--trans-function);
     }*/
 
+    transition-property: opacity;
+    transition-duration: calc(var(--trans-short) + 0.02s);
+    transition-timing-function: var(--trans-function);
+
     &[style^="opacity: 0.8;"] {
         opacity: 0.7 !important;
 
         [data-bleh--theme="light"] & {
             opacity: 0.5 !important;
+        }
+    }
+
+    &.window-removing {
+        opacity: 0 !important;
+    }
+}
+.popup_wrapper {
+    transform-origin: top;
+
+    transition-property: transform, opacity;
+    transition-duration: calc(var(--trans-short) + 0.02s);
+    transition-timing-function: var(--trans-function);
+
+    &.window-removing {
+        opacity: 0 !important;
+
+        [data-bleh--reduced_motion="false"] & {
+            transform: scale(0.9);
         }
     }
 }
@@ -7537,9 +7581,19 @@ input:is([name="track_name"], [name="artist_name"], [name="album_name"], [name="
 }
 @keyframes fade_popup_reduced {
     from {
-        opacity: 0;
+        opacity: 0 !important;
     }
     to {
+        opacity: 1 !important;
+    }
+}
+@keyframes fade_popup_reverse_reduced {
+    to {
+        visibility: visible !important;
+        opacity: 0;
+    }
+    from {
+        visibility: visible !important;
         opacity: 1;
     }
 }
@@ -7573,7 +7627,7 @@ input:is([name="track_name"], [name="artist_name"], [name="album_name"], [name="
     width: calc(650px + (5px * 2));
 }
 /* modal dialog v3 */
-.modal-buttons {
+.modal-actions .modal-buttons {
     background-color: hsl(var(--b6));
 
     width: fit-content;
@@ -7583,7 +7637,7 @@ input:is([name="track_name"], [name="artist_name"], [name="album_name"], [name="
     gap: var(--button-list-gap);
 }
 .modal-actions,
-.modal-buttons {
+.modal-actions .modal-buttons {
     display: flex;
     height: 32px;
     margin: unset;
@@ -7641,6 +7695,18 @@ input:is([name="track_name"], [name="artist_name"], [name="album_name"], [name="
         opacity: 0;
     }
     to {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+@keyframes dropdown_reverse {
+    to {
+        visibility: visible !important;
+        transform: scale(0.9);
+        opacity: 0;
+    }
+    from {
+        visibility: visible !important;
         transform: scale(1);
         opacity: 1;
     }
@@ -8718,6 +8784,10 @@ text[style^="color: rgb(255, 172, 172)"] {
             }
         }
     }
+
+    .scrobble-canvas-container {
+        margin-top: var(--card-gap);
+    }
 }
 .listener-trend {
     /* makes the listener trend bigger */
@@ -8810,6 +8880,7 @@ text[style^="color: rgb(255, 172, 172)"] {
         transform: none !important;
     }
 
+    &[data-theme="select-menu"],
     &[data-theme="language-menu"],
     &[data-theme="menu"] {
         padding: 7px !important;
@@ -8832,6 +8903,7 @@ text[style^="color: rgb(255, 172, 172)"] {
             background-position: unset !important;
         }
 
+        &[data-theme="select-menu"],
         &[data-theme="language-menu"] {
             animation: dropdown calc(var(--trans-short) + 0.02s) var(--trans-function);
             transform-origin: center;
@@ -8839,6 +8911,16 @@ text[style^="color: rgb(255, 172, 172)"] {
             &[data-state="hidden"] {
                 transform: scale(0.9);
                 opacity: 0;
+            }
+        }
+
+        &[data-theme="select-menu"] {
+            max-height: 500px;
+            overflow-x: hidden;
+            overflow-y: auto;
+
+            .active {
+                --mask: var(--icon-16-check);
             }
         }
 
@@ -12688,6 +12770,9 @@ so this is good enough - use the community docs */
                         --mask: var(--icon-16-new-years);
                     }
                 }
+                &[data-bleh-page="activities"] {
+                    --mask: var(--icon-16-notifications);
+                }
 
                 &:not(.active) {
                     --bg: transparent;
@@ -13430,6 +13515,7 @@ code, kbd, samp {
 }
 
 
+.modal-body .modal-buttons,
 .modal-footer {
     display: flex;
     gap: var(--button-list-gap);
@@ -13437,6 +13523,11 @@ code, kbd, samp {
     margin-top: var(--card-gap);
     padding-top: var(--card-gap);
     border-top: var(--card-border);
+
+    /* native modal footer */
+    .modal-button {
+        margin: unset;
+    }
 }
 .modal-body .form-group--submit {
     padding-top: var(--card-gap) !important;
@@ -14188,6 +14279,7 @@ input[type="range"]::-moz-range-progress {
     --left: 4px;
     --mask-size: 14px;
 }
+.involved--user,
 .mention,
 :is(.shout-body, .about-me-sidebar, .bleh--about-me-preview, .wiki-content) a[href*="/user/"] {
     padding: 0 4px;
@@ -15718,6 +15810,7 @@ button.bleh--gallery-bookmark-image-btn {
     display: flex;
     justify-content: end;
 }
+.album-overview-cover-art-action-row,
 .tab-container,
 .footer-timezone,
 .view-buttons {
@@ -15760,6 +15853,7 @@ button.bleh--gallery-bookmark-image-btn {
         }
     }
 
+    &.album-overview-cover-art-action-row a,
     &.tab-container button:not(.tab--selected),
     .footer-language .mimic-link,
     .btn:not([aria-checked="true"]) {
@@ -15770,6 +15864,7 @@ button.bleh--gallery-bookmark-image-btn {
         --shadow-hov: none;
     }
 
+    &.album-overview-cover-art-action-row a,
     .view-item {
         display: flex;
         align-items: center;
@@ -15985,6 +16080,7 @@ button.bleh--gallery-bookmark-image-btn {
     display: none;
 }
 
+.album-overview-cover-art,
 .video-preview {
     img {
         transition-property: opacity;
@@ -15998,12 +16094,14 @@ button.bleh--gallery-bookmark-image-btn {
             transition: none;
         }
 
+        .album-overview-cover-art-actions,
         .video-overlay-container {
             opacity: 1;
             transition: none;
         }
     }
 }
+.album-overview-cover-art-actions,
 .video-overlay-container {
     position: absolute;
     inset: 0;
@@ -16014,13 +16112,18 @@ button.bleh--gallery-bookmark-image-btn {
 
     opacity: 0;
 
+    background: unset;
+
     transition-property: opacity;
     transition-duration: var(--trans);
     transition-timing-function: var(--trans-function);
 
+    .album-overview-cover-art-action-row,
     .view-buttons {
         background-color: hsl(var(--b5)) !important;
         box-shadow: var(--card-shadow);
+        margin: unset;
+        inset: unset;
     }
 }
 
@@ -16298,6 +16401,7 @@ button.bleh--gallery-bookmark-image-btn {
     position: relative;
     --mask: var(--icon-16-arrow-right);
 }
+.open,
 .external {
     position: relative;
     --mask: var(--icon-16-external);
@@ -16306,6 +16410,7 @@ button.bleh--gallery-bookmark-image-btn {
     position: relative;
     --mask: var(--icon-16-check);
 }
+.js-close,
 .cancel {
     position: relative;
     --mask: var(--icon-16-x);
@@ -16327,6 +16432,14 @@ button.bleh--gallery-bookmark-image-btn {
 /* this allows tooltips */
 .modal-background, .modal-dialog, .popup_background, .popup_wrapper {
     z-index: 9998;
+}
+
+.popup_wrapper {
+    pointer-events: none;
+
+    .modal-dialog {
+        pointer-events: auto;
+    }
 }
 
 .modal--setup {
@@ -16816,4 +16929,153 @@ h5 {
 }
 h4 {
     color: hsl(var(--c1));
+}
+
+
+
+
+#bleh--window-avatar--dialog {
+    width: fit-content;
+    max-width: 800px;
+}
+.modal--avatar {
+    background: unset !important;
+    padding: unset !important;
+    outline: unset !important;
+    box-shadow: unset !important;
+
+    .modal-title {
+        display: none;
+    }
+    .modal-inner-content {
+        margin: unset !important;
+
+        .full-avatar-wrapper {
+            display: flex;
+            flex-direction: column;
+
+            .full-avatar {
+                height: 100%;
+                background: var(--avatar-generic-background);
+                border-radius: var(--card-radius);
+                box-shadow: var(--menu-shadow);
+                overflow: hidden;
+
+                img {
+                    max-height: 70vh;
+
+                    min-width: 300px;
+                    min-height: 300px;
+                }
+            }
+
+            .modal-footer {
+                padding: unset;
+                border: unset;
+            }
+        }
+    }
+}
+
+
+
+
+.activity-item {
+    display: flex;
+    flex-direction: column;
+
+    color: hsl(var(--c2));
+    text-decoration: none !important;
+
+    position: relative;
+    padding-left: calc(16px + 6px);
+    --left: 0;
+
+    &:before {
+        color: hsl(var(--c3));
+    }
+
+    &.activity--shout {
+        --mask: var(--icon-16-shoutbox);
+    }
+    &.activity--love {
+        --mask: var(--icon-16-heart-solid);
+
+        &:before {
+            color: hsl(var(--l3-c));
+        }
+    }
+    &.activity--unlove {
+        --mask: var(--icon-16-heart);
+    }
+    &.activity--wiki {
+        --mask: var(--icon-16-bio);
+    }
+    &.activity--obsess {
+        --mask: var(--icon-16-obsession);
+    }
+    &.activity--unobsess {
+        --mask: var(--icon-16-obsession-remove);
+    }
+    &.activity--unobsess {
+        --mask: var(--icon-16-obsession-remove);
+    }
+    &.activity--update_bleh,
+    &.activity--install_bleh,
+    &.activity--update_bwaa,
+    &.activity--install_bwaa {
+        --mask: var(--icon-16-download);
+    }
+
+    .title {
+        font-weight: var(--font-weight-medium);
+
+        .involved--track, .involved--album, .involved--artist {
+            position: relative;
+            padding-left: calc(12px + 2px);
+            --left: 0;
+            --mask-size: 12px;
+            --margin-top: -6px;
+        }
+        .involved--track {
+            --mask: var(--icon-16-track);
+        }
+        .involved--album {
+            --mask: var(--icon-16-album);
+        }
+        .involved--artist {
+            --mask: var(--icon-16-artist);
+        }
+
+        .involved--user {
+            &:before {
+                content: '@';
+            }
+        }
+    }
+
+    .date {
+        color: hsl(var(--c3));
+        font-size: var(--font-size-sm);
+        line-height: var(--line-height-sm);
+    }
+
+    & + .activity-item {
+        margin-top: var(--item-list-gap);
+    }
+}
+
+
+
+
+.custom-selector select {
+    display: none;
+}
+.select-button {
+    width: max-content;
+    position: relative;
+    --mask: var(--icon-16-dropdown);
+}
+.select-item {
+    width: 100% !important;
 }
