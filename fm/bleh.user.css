@@ -5053,6 +5053,36 @@ better than the default selector '#app a' i suppose */
     --bg: hsla(var(--h4), 25%) !important;
     --bg-hov: hsla(var(--h4), 35%) !important;
     --shadow: 0 0 50px 5px hsla(var(--h4), 35%) !important;
+
+    [data-bleh--theme="light"] & {
+        --bg: hsla(var(--h4), 35%) !important;
+        --bg-hov: hsla(var(--h4), 50%) !important;
+        --shadow: 0 0 50px 5px hsla(var(--h4), 35%) !important;
+    }
+
+    &:before, &:after {
+        content: '';
+        position: absolute;
+        display: block;
+        top: 0;
+        bottom: 0;
+        width: var(--size);
+        border: unset !important;
+
+        --size: 40px;
+
+        display: none;
+    }
+
+    &:before {
+        left: calc(-1 * var(--size));
+        background: linear-gradient(90deg, transparent, hsla(var(--h4), 25%));
+    }
+    &:after {
+        left: unset !important;
+        right: calc(-1 * var(--size));
+        background: linear-gradient(270deg, transparent, hsla(var(--h4), 25%));
+    }
 }
 
 
