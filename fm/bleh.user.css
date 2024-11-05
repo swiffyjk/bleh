@@ -6364,7 +6364,7 @@ button,
 .event-metadata + .event-metadata a,
 #manage_data .btn-primary,
 .obsession-history-play-all,
-.done, .cancel, .download, .upload, .save
+.done, .cancel, .download, .upload, .save, .js-close:not(.modal-action-button)
 {
     --btn-left: calc(12px + 16px + 6px) !important;
 
@@ -6497,7 +6497,7 @@ button,
 .side-right .setting-item:before, .action:before,
 .setup-icon:before, .setup-icon:after,
 .btn.back:before,
-.continue:before, .external:before, .done:before, .cancel:before, .download:before, .upload:before, .save:before, .open:before,
+.continue:before, .external:before, .done:before, .cancel:before, .download:before, .upload:before, .save:before, .open:before, .js-close:not(.modal-action-button):before,
 .badge:before,
 .btn-post-shout:before,
 .auth-link:before, .language-nav:before, .language-nav > span:before,
@@ -7616,7 +7616,7 @@ input:is([name="track_name"], [name="artist_name"], [name="album_name"], [name="
     width: calc(650px + (5px * 2));
 }
 /* modal dialog v3 */
-.modal-buttons {
+.modal-actions .modal-buttons {
     background-color: hsl(var(--b6));
 
     width: fit-content;
@@ -7626,7 +7626,7 @@ input:is([name="track_name"], [name="artist_name"], [name="album_name"], [name="
     gap: var(--button-list-gap);
 }
 .modal-actions,
-.modal-buttons {
+.modal-actions .modal-buttons {
     display: flex;
     height: 32px;
     margin: unset;
@@ -13489,6 +13489,7 @@ code, kbd, samp {
 }
 
 
+.modal-body .modal-buttons,
 .modal-footer {
     display: flex;
     gap: var(--button-list-gap);
@@ -13496,6 +13497,11 @@ code, kbd, samp {
     margin-top: var(--card-gap);
     padding-top: var(--card-gap);
     border-top: var(--card-border);
+
+    /* native modal footer */
+    .modal-button {
+        margin: unset;
+    }
 }
 .modal-body .form-group--submit {
     padding-top: var(--card-gap) !important;
@@ -16367,6 +16373,7 @@ button.bleh--gallery-bookmark-image-btn {
     position: relative;
     --mask: var(--icon-16-check);
 }
+.js-close,
 .cancel {
     position: relative;
     --mask: var(--icon-16-x);

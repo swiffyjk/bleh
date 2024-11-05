@@ -3517,7 +3517,7 @@ let has_prompted_for_update = false;
                     <div class="heading">
                         <h5>${trans[lang].settings.inbuilt.charts.artists.timeframe.name}</h5>
                     </div>
-                    <div class="select-wrap">
+                    <div class="select-wrap custom-selector" id="id_chart_range_top_artists_select">
                         ${original_chart_settings.artists.timeframe}
                     </div>
                 </div>
@@ -3674,6 +3674,8 @@ let has_prompted_for_update = false;
                 </div>
             </form>
         `);
+
+        custom_select(charts_panel.querySelector('#chart_range_top_artists'), charts_panel.querySelector('#id_chart_range_top_artists_select'));
 
         for (let category in original_chart_settings) {
             for (let setting in original_chart_settings[category]) {
@@ -4724,7 +4726,7 @@ let has_prompted_for_update = false;
 
         if (action != 'button') {
             listen_item.setAttribute('href', link);
-            listen_item.setAttribute('target', '_blank');
+            //listen_item.setAttribute('target', '_blank');
         } else {
             listen_item.setAttribute('onclick', link);
         }
@@ -10590,7 +10592,8 @@ let has_prompted_for_update = false;
                     display: false,
                     grid: {
                         display: false
-                    }
+                    },
+                    suggestedMax: 10
                 }
             }
         }
