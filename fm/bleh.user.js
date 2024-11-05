@@ -4304,6 +4304,85 @@ let has_prompted_for_update = false;
             avatar_link.classList.add('bleh--avatar-clickable-link');
             avatar_link.setAttribute('onclick', `_expand_avatar('${src.replace('avatar170s', 'ar0')}')`);
             header_avatar.appendChild(avatar_link);
+
+
+            //
+
+
+            if (is_own_profile) {
+                let recent_activity_section = document.createElement('section');
+                recent_activity_section.classList.add('recent-activity-section');
+                recent_activity_section.innerHTML = (`
+                    <h2>${trans[lang].activities.name}</h2>
+                `);
+
+                // we want to show in date order from latest to oldest down
+                // but .reverse() is destructive, so we copy first
+                let recent_activity_list_r = recent_activity_list;
+                recent_activity_list_r.reverse();
+
+                recent_activity_list_r.forEach((activity) => {
+                    // type: string,
+                    // involved: [{name: string, type: user | artist | album | track}, sister?: string],
+                    // context: string,
+                    // date: string
+
+                    let activity_item = document.createElement('a');
+                    activity_item.classList.add('activity-item', `activity--${activity.type}`);
+                    activity_item.setAttribute('href', activity.context);
+
+                    let involved_text = '';
+
+                    let tooltip_name;
+                    let tooltip_sister;
+
+                    activity.involved.forEach((involved) => {
+                        let involved_link;
+
+                        if (involved.type == 'user')
+                            involved_link = `${root}user/${involved.name}`;
+                        else if (involved.type == 'artist')
+                            involved_link = `${root}music/${sanitise(involved.name)}`;
+                        else if (involved.type == 'album')
+                            involved_link = `${root}music/${sanitise(involved.sister)}/${sanitise(involved.name)}`;
+                        else if (involved.type == 'track')
+                            involved_link = `${root}music/${sanitise(involved.sister)}/_/${sanitise(involved.name)}`;
+                        else if (involved.type == 'bwaa')
+                            involved_link = `${root}bwaa`;
+
+                        // tooltip
+                        if (involved.type != 'artist' && involved.type != 'user' && involved.type != 'bwaa') {
+                            tooltip_name = involved.name;
+                            tooltip_sister = involved.sister;
+                        }
+
+                        if (involved_text != '')
+                            involved_text = `${involved_text}, <a class="involved--${involved.type}" href="${involved_link}">${involved.name}</a>`;
+                        else
+                            involved_text = `${involved_text}<a class="involved--${involved.type}" href="${involved_link}">${involved.name}</a>`;
+                    });
+
+                    let activity_text = trans[lang].activities[activity.type].replace('{i}', involved_text);
+
+                    activity_item.innerHTML = (`
+                        <div class="title">${activity_text}</div>
+                        <div class="date">${moment(activity.date).fromNow(true)}</div>
+                    `);
+
+                    recent_activity_section.appendChild(activity_item);
+
+                    if (tooltip_name != undefined)
+                        tippy(activity_item.querySelector('.title a'), {
+                            content: `${tooltip_sister} - ${tooltip_name}`
+                        });
+
+                    let bio = page.structure.side.querySelector('.about-me-sidebar');
+                    if (bio != null)
+                        bio.after(recent_activity_section);
+                    else
+                        page.structure.side.insertBefore(recent_activity_section, page.structure.side.firstElementChild);
+                });
+            }
         } else {
             // which subpage is it?
             page.subpage = document.body.classList[1].replace('namespace--', '');
@@ -4364,79 +4443,6 @@ let has_prompted_for_update = false;
                     });
                 }
             }
-        } else {
-            let recent_activity_section = document.createElement('section');
-            recent_activity_section.classList.add('recent-activity-section');
-            recent_activity_section.innerHTML = (`
-                <h2>${trans[lang].activities.name} <i class="subtext"><a id="what-are-activities">(?)</a></i></h2>
-            `);
-
-            // we want to show in date order from latest to oldest down
-            // but .reverse() is destructive, so we copy first
-            let recent_activity_list_r = recent_activity_list;
-            recent_activity_list_r.reverse();
-
-            recent_activity_list_r.forEach((activity) => {
-                // type: string,
-                // involved: [{name: string, type: user | artist | album | track}, sister?: string],
-                // context: string,
-                // date: string
-
-                let activity_item = document.createElement('a');
-                activity_item.classList.add('activity-item', `activity--${activity.type}`);
-                activity_item.setAttribute('href', activity.context);
-
-                let involved_text = '';
-
-                let tooltip_name;
-                let tooltip_sister;
-
-                activity.involved.forEach((involved) => {
-                    let involved_link;
-
-                    if (involved.type == 'user')
-                        involved_link = `${root}user/${involved.name}`;
-                    else if (involved.type == 'artist')
-                        involved_link = `${root}music/${sanitise(involved.name)}`;
-                    else if (involved.type == 'album')
-                        involved_link = `${root}music/${sanitise(involved.sister)}/${sanitise(involved.name)}`;
-                    else if (involved.type == 'track')
-                        involved_link = `${root}music/${sanitise(involved.sister)}/_/${sanitise(involved.name)}`;
-                    else if (involved.type == 'bwaa')
-                        involved_link = `${root}bwaa`;
-
-                    // tooltip
-                    if (involved.type != 'artist' && involved.type != 'user' && involved.type != 'bwaa') {
-                        tooltip_name = involved.name;
-                        tooltip_sister = involved.sister;
-                    }
-
-                    if (involved_text != '')
-                        involved_text = `${involved_text}, <a class="involved--${involved.type}" href="${involved_link}">${involved.name}</a>`;
-                    else
-                        involved_text = `${involved_text}<a class="involved--${involved.type}" href="${involved_link}">${involved.name}</a>`;
-                });
-
-                let activity_text = trans[lang].activities[activity.type].replace('{i}', involved_text);
-
-                activity_item.innerHTML = (`
-                    <div class="title">${activity_text}</div>
-                    <div class="date">${moment(activity.date).fromNow(true)}</div>
-                `);
-
-                recent_activity_section.appendChild(activity_item);
-
-                if (tooltip_name != undefined)
-                    tippy(activity_item.querySelector('.title a'), {
-                        content: `${tooltip_sister} - ${tooltip_name}`
-                    });
-
-                let bio = page.structure.side.querySelector('.about-me-sidebar');
-                if (bio != null)
-                    bio.after(recent_activity_section);
-                else
-                    page.structure.side.insertBefore(recent_activity_section, page.structure.side.firstElementChild);
-            });
         }
 
         // badges
