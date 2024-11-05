@@ -14201,6 +14201,7 @@ input[type="range"]::-moz-range-progress {
     --left: 4px;
     --mask-size: 14px;
 }
+.involved--user,
 .mention,
 :is(.shout-body, .about-me-sidebar, .bleh--about-me-preview, .wiki-content) a[href*="/user/"] {
     padding: 0 4px;
@@ -16926,6 +16927,15 @@ h4 {
     &.activity--unobsess {
         --mask: var(--icon-16-obsession-remove);
     }
+    &.activity--unobsess {
+        --mask: var(--icon-16-obsession-remove);
+    }
+    &.activity--update_bleh,
+    &.activity--install_bleh,
+    &.activity--update_bwaa,
+    &.activity--install_bwaa {
+        --mask: var(--icon-16-download);
+    }
 
     .title {
         font-weight: var(--font-weight-medium);
@@ -16945,6 +16955,12 @@ h4 {
         }
         .involved--artist {
             --mask: var(--icon-16-artist);
+        }
+
+        .involved--user {
+            &:before {
+                content: '@';
+            }
         }
     }
 
