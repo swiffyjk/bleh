@@ -6645,7 +6645,6 @@ span.header-new-gallery-inner a:before,
 .btn-shortcut:before,
 .gallery-next .arrow,
 .header-new-gallery--link .header-new-gallery-inner:before,
-.date-range-picker-button:after,
 .form-group-controls:has(select):before,
 .dropdown-menu-list-button::after, .dropdown-menu-clickable-button::after, .dropdown-menu-clickable-button-js-only::after,
 .all-results-list li:before
@@ -7235,6 +7234,7 @@ very, very, very dated - who looks up a song on ebay? */
             --btn-top: 0;
             --btn-left: 0;
             --btn-right: calc(16px + 6px) !important;
+            --left: none;
             --right: 0;
             --btn-bottom: 0;
 

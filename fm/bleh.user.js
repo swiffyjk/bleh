@@ -4327,7 +4327,7 @@ let has_prompted_for_update = false;
             //
 
 
-            if (is_own_profile) {
+            if (is_own_profile && settings.activities) {
                 let recent_activity_section = document.createElement('section');
                 recent_activity_section.classList.add('recent-activity-section');
                 recent_activity_section.innerHTML = (`
@@ -4367,9 +4367,11 @@ let has_prompted_for_update = false;
                             involved_link = `${root}music/${sanitise(involved.sister)}/_/${sanitise(involved.name)}`;
                         else if (involved.type == 'bwaa')
                             involved_link = `${root}bwaa`;
+                        else if (involved.type == 'bleh')
+                            involved_link = `${root}bleh`;
 
                         // tooltip
-                        if (involved.type != 'artist' && involved.type != 'user' && involved.type != 'bwaa') {
+                        if (involved.type != 'artist' && involved.type != 'user' && involved.type != 'bwaa' && involved.type != 'bleh') {
                             tooltip_name = involved.name;
                             tooltip_sister = involved.sister;
                         }
