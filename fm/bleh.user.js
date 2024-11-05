@@ -21,7 +21,7 @@
 
 let version = {
     build: '2024.1105',
-    sku: 'lotus',
+    sku: 'petal',
     feature_flags: {
         bleh_settings_tabs: {
             default: false,
