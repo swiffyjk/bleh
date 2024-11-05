@@ -10037,7 +10037,7 @@ let has_prompted_for_update = false;
         let listen_item = document.createElement('a');
         listen_item.classList.add('btn', 'listen-item', 'view-item');
         listen_item.setAttribute('href', `${root}user/${name}/library/music/${link}`);
-        listen_item.setAttribute('target', '_blank');
+        //listen_item.setAttribute('target', '_blank');
         listen_item.setAttribute('data-listens', listens);
         listen_item.setAttribute('id', `listen-item--${name}`);
 
