@@ -6384,7 +6384,8 @@ button,
 .gallery-next .arrow,
 .header-new-gallery--link .header-new-gallery-inner,
 .date-range-picker-button,
-.source-album, .big-tags-item
+.source-album, .big-tags-item,
+.select-button
 {
     --btn-right: calc(12px + 16px + 6px) !important;
 }
@@ -6484,6 +6485,7 @@ button,
 
 
 /*     ICON MASK     */
+.select-button:before,
 .involved--track:before, .involved--album:before, .involved--artist:before,
 .activity-item:before,
 .lotus-name:before,
@@ -6660,6 +6662,7 @@ span.header-new-gallery-inner a:before,
     transition-duration: var(--trans) !important;
     transition-timing-function: var(--trans-function) !important;
 }
+.select-button:before,
 .continue:before, .external:before, .open:before,
 .pagination-next a:before,
 .more-link a:before, .more-link-fullwidth-right a:before, .more-link-fullwidth-right-flush-top a:before, .more-link-with-action a:not(.inline-add-icon):after,
@@ -8854,6 +8857,7 @@ text[style^="color: rgb(255, 172, 172)"] {
         transform: none !important;
     }
 
+    &[data-theme="select-menu"],
     &[data-theme="language-menu"],
     &[data-theme="menu"] {
         padding: 7px !important;
@@ -8876,6 +8880,7 @@ text[style^="color: rgb(255, 172, 172)"] {
             background-position: unset !important;
         }
 
+        &[data-theme="select-menu"],
         &[data-theme="language-menu"] {
             animation: dropdown calc(var(--trans-short) + 0.02s) var(--trans-function);
             transform-origin: center;
@@ -8883,6 +8888,16 @@ text[style^="color: rgb(255, 172, 172)"] {
             &[data-state="hidden"] {
                 transform: scale(0.9);
                 opacity: 0;
+            }
+        }
+
+        &[data-theme="select-menu"] {
+            max-height: 500px;
+            overflow-x: hidden;
+            overflow-y: auto;
+
+            .active {
+                --mask: var(--icon-16-check);
             }
         }
 
@@ -17004,5 +17019,20 @@ h4 {
     & + .activity-item {
         margin-top: var(--item-list-gap);
     }
+}
+
+
+
+
+.custom-selector select {
+    display: none;
+}
+.select-button {
+    width: fit-content;
+    position: relative;
+    --mask: var(--icon-16-dropdown);
+}
+.select-item {
+    width: 100% !important;
 }
 }
