@@ -374,6 +374,14 @@ const trans = {
                     for_others: 'On other profiles'
                 }
             },
+            activities: {
+                name: 'Activities',
+                bio: 'Track your most recent activities locally on your profile.',
+                toggle: {
+                    name: 'Enable activity tracking',
+                    bio: 'Events will only be registered and displayed while enabled.'
+                }
+            },
             performance: {
                 name: 'Troubleshooting',
                 bio: 'Running into noticeable issues in theme loading? Try out these settings.',
@@ -701,6 +709,8 @@ const trans = {
             unlove: 'You no longer love {i}',
             install_bwaa: 'You installed bwaa',
             update_bwaa: 'You updated bwaa to {i}',
+            install_bleh: 'You installed bleh',
+            update_bleh: 'You updated bleh to {i}',
             bookmark: 'You bookmarked {i}',
             unbookmark: 'You removed {i}’s bookmark',
             wiki: 'You edited on {i}'
@@ -2212,7 +2222,8 @@ let settings_template = {
     font_weight_medium: 650,
     font_weight_bold: 730,
     show_bulk_edit_album: false,
-    chart_decimation: true
+    chart_decimation: true,
+    activities: true
 };
 let settings_base = {
     high_contrast: {
@@ -2476,6 +2487,13 @@ let settings_base = {
     },
     chart_decimation: {
         css: 'chart_decimation',
+        unit: '',
+        value: true,
+        values: [true, false],
+        type: 'toggle'
+    },
+    activities: {
+        css: 'activities',
         unit: '',
         value: true,
         values: [true, false],
@@ -5527,6 +5545,9 @@ let has_prompted_for_update = false;
                         <button class="btn bleh--btn" data-bleh-page="redirects" onclick="_change_settings_page('redirects')">
                             ${trans[lang].settings.redirects.name}
                         </button>
+                        <button class="btn bleh--btn" data-bleh-page="activities" onclick="_change_settings_page('activities')">
+                            ${trans[lang].settings.activities.name}
+                        </button>
                     </div>
                     <div class="btns sep">
                         <button class="btn" data-bleh-action="import" onclick="_import_settings()">
@@ -6468,6 +6489,25 @@ let has_prompted_for_update = false;
                     </div>
                 </div>
                 `);
+        } else if (page == 'activities') {
+            return (`
+                <div class="bleh--panel">
+                    <h3>${trans[lang].settings.activities.name}</h3>
+                    <p>${trans[lang].settings.activities.bio}</p>
+                    <div class="toggle-container" id="container-activities" onclick="_update_item('activities')">
+                        <button class="btn reset" onclick="_reset_item('activities')">${trans[lang].settings.reset}</button>
+                        <div class="heading">
+                            <h5>${trans[lang].settings.activities.toggle.name}</h5>
+                            <p>${trans[lang].settings.activities.toggle.bio}</p>
+                        </div>
+                        <div class="toggle-wrap">
+                            <button class="toggle" id="toggle-activities" aria-checked="true">
+                                <div class="dot"></div>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                `);
         } else if (page == 'language') {
             return (`
                 <div class="bleh--panel">
@@ -7003,7 +7043,7 @@ let has_prompted_for_update = false;
         if (page == 'themes') {
             refresh_all();
             show_theme_change_in_settings();
-        } else if (page == 'customise' || page == 'performance' || page == 'redirects' || page == 'accessibility' || page == 'text' || page == 'seasonal' || page == 'music') {
+        } else if (page == 'customise' || page == 'performance' || page == 'redirects' || page == 'accessibility' || page == 'text' || page == 'seasonal' || page == 'music' || page == 'activities') {
             refresh_all();
         } else if (page == 'profiles') {
             init_profile_notes();
@@ -9696,12 +9736,14 @@ let has_prompted_for_update = false;
         if (last_version_used == '') {
             window.location.href = `${root}bleh/setup`;
             localStorage.setItem('bleh_last_version_used', version.build);
+            register_activity('install_bleh', [], `${root}bleh`);
             return;
         }
 
         // otherwise, it's a usual update
         if (last_version_used != version.build) {
             deliver_notif(trans[lang].messaging.update.replace('{v}', `${version.build}.${version.sku}`), true);
+            register_activity('update_bleh', [{name: version.build, type: 'bleh'}], `${root}bleh`);
             localStorage.setItem('bleh_last_version_used', version.build);
         }
     }
@@ -10696,6 +10738,9 @@ let has_prompted_for_update = false;
 
 
     function subscribe_to_events() {
+        if (!settings.activities)
+            return;
+
         let love_track = document.body.querySelectorAll(`form[action$="${auth}/loved"]:not([data-bleh-subscribed])`);
         love_track.forEach((form) => {
             form.setAttribute('data-bleh-subscribed', 'true');
@@ -10806,6 +10851,9 @@ let has_prompted_for_update = false;
 
 
     function load_activities() {
+        if (!settings.activities)
+            return;
+
         recent_activity_list = JSON.parse(localStorage.getItem('bwaa_recent_activity')) || [];
         log('loaded', 'activity', 'info', recent_activity_list);
 
@@ -10831,6 +10879,9 @@ let has_prompted_for_update = false;
         register_activity(type, involved, context, date);
     }
     function register_activity(type, involved, context, date=new Date()) {
+        if (!settings.activities)
+            return;
+
         recent_activity_list.push({
             type: type,
             involved: involved,

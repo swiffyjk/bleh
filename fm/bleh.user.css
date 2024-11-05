@@ -12780,6 +12780,9 @@ so this is good enough - use the community docs */
                         --mask: var(--icon-16-new-years);
                     }
                 }
+                &[data-bleh-page="activities"] {
+                    --mask: var(--icon-16-notifications);
+                }
 
                 &:not(.active) {
                     --bg: transparent;
