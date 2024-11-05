@@ -6628,11 +6628,12 @@ span.header-new-gallery-inner a:before,
     left: var(--left, 12px) !important;
     margin-top: var(--margin-top, -8px) !important;
     margin-left: var(--margin-left, unset) !important;
+    margin-right: var(--margin-right, unset) !important;
     width: var(--mask-size, 16px) !important;
     height: var(--mask-size, 16px) !important;
     box-shadow: unset !important;
     position: absolute;
-    right: var(--right, auto);
+    right: var(--right, auto) !important;
     top: var(--top, 50%) !important;
     background-repeat: no-repeat;
     background-image: var(--flag-url, unset) !important;
@@ -7549,6 +7550,10 @@ input:is([name="track_name"], [name="artist_name"], [name="album_name"], [name="
         animation: fade_popup_reduced var(--trans) var(--trans-function);
     }*/
 
+    transition-property: opacity;
+    transition-duration: calc(var(--trans-short) + 0.02s);
+    transition-timing-function: var(--trans-function);
+
     &[style^="opacity: 0.8;"] {
         opacity: 0.7 !important;
 
@@ -7558,9 +7563,7 @@ input:is([name="track_name"], [name="artist_name"], [name="album_name"], [name="
     }
 
     &.window-removing {
-        visibility: hidden !important;
-        animation: fade_popup_reverse_reduced var(--trans) var(--trans-function);
-        transform-origin: top;
+        opacity: 0 !important;
     }
 }
 .popup_wrapper {
@@ -7588,10 +7591,10 @@ input:is([name="track_name"], [name="artist_name"], [name="album_name"], [name="
 }
 @keyframes fade_popup_reduced {
     from {
-        opacity: 0;
+        opacity: 0 !important;
     }
     to {
-        opacity: 1;
+        opacity: 1 !important;
     }
 }
 @keyframes fade_popup_reverse_reduced {
