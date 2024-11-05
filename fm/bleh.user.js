@@ -3425,7 +3425,7 @@ let has_prompted_for_update = false;
                     <div class="heading">
                         <h5>${trans[lang].settings.inbuilt.charts.recent.count.name}</h5>
                     </div>
-                    <div class="select-wrap">
+                    <div class="select-wrap custom-selector" id="id_chart_length_recent_tracks_select">
                         ${original_chart_settings.recent.count}
                     </div>
                 </div>
@@ -3525,7 +3525,7 @@ let has_prompted_for_update = false;
                     <div class="heading">
                         <h5>${trans[lang].settings.inbuilt.charts.artists.style.name}</h5>
                     </div>
-                    <div class="select-wrap">
+                    <div class="select-wrap custom-selector" id="id_chart_style_and_length_top_artists_select">
                         ${original_chart_settings.artists.style}
                     </div>
                 </div>
@@ -3592,7 +3592,7 @@ let has_prompted_for_update = false;
                     <div class="heading">
                         <h5>${trans[lang].settings.inbuilt.charts.albums.timeframe.name}</h5>
                     </div>
-                    <div class="select-wrap">
+                    <div class="select-wrap custom-selector" id="id_chart_range_top_albums_select">
                         ${original_chart_settings.albums.timeframe}
                     </div>
                 </div>
@@ -3600,7 +3600,7 @@ let has_prompted_for_update = false;
                     <div class="heading">
                         <h5>${trans[lang].settings.inbuilt.charts.albums.style.name}</h5>
                     </div>
-                    <div class="select-wrap">
+                    <div class="select-wrap custom-selector" id="id_chart_style_and_length_top_albums_select">
                         ${original_chart_settings.albums.style}
                     </div>
                 </div>
@@ -3653,7 +3653,7 @@ let has_prompted_for_update = false;
                     <div class="heading">
                         <h5>${trans[lang].settings.inbuilt.charts.tracks.timeframe.name}</h5>
                     </div>
-                    <div class="select-wrap">
+                    <div class="select-wrap custom-selector" id="id_chart_range_top_tracks_select">
                         ${original_chart_settings.tracks.timeframe}
                     </div>
                 </div>
@@ -3661,7 +3661,7 @@ let has_prompted_for_update = false;
                     <div class="heading">
                         <h5>${trans[lang].settings.inbuilt.charts.tracks.count.name}</h5>
                     </div>
-                    <div class="select-wrap">
+                    <div class="select-wrap custom-selector" id="id_chart_length_top_tracks_select">
                         ${original_chart_settings.tracks.count}
                     </div>
                 </div>
@@ -3675,7 +3675,13 @@ let has_prompted_for_update = false;
             </form>
         `);
 
-        custom_select(charts_panel.querySelector('#chart_range_top_artists'), charts_panel.querySelector('#id_chart_range_top_artists_select'));
+        custom_select(charts_panel.querySelector('#id_chart_length_recent_tracks'), charts_panel.querySelector('#id_chart_length_recent_tracks_select'));
+        custom_select(charts_panel.querySelector('#id_chart_range_top_artists'), charts_panel.querySelector('#id_chart_range_top_artists_select'));
+        custom_select(charts_panel.querySelector('#id_chart_style_and_length_top_artists'), charts_panel.querySelector('#id_chart_style_and_length_top_artists_select'));
+        custom_select(charts_panel.querySelector('#id_chart_range_top_albums'), charts_panel.querySelector('#id_chart_range_top_albums_select'));
+        custom_select(charts_panel.querySelector('#id_chart_style_and_length_top_albums'), charts_panel.querySelector('#id_chart_style_and_length_top_albums_select'));
+        custom_select(charts_panel.querySelector('#id_chart_range_top_tracks'), charts_panel.querySelector('#id_chart_range_top_tracks_select'));
+        custom_select(charts_panel.querySelector('#id_chart_length_top_tracks'), charts_panel.querySelector('#id_chart_length_top_tracks_select'));
 
         for (let category in original_chart_settings) {
             for (let setting in original_chart_settings[category]) {
@@ -3709,7 +3715,7 @@ let has_prompted_for_update = false;
 
             let item = document.createElement('button');
             item.classList.add('btn', 'dropdown-menu-clickable-item', 'select-item');
-            item.setAttribute('onclick', `_set_custom_select_value('${id}', ${object_value})`);
+            item.setAttribute('onclick', `_set_custom_select_value('${id}', '${object_value}')`);
             item.setAttribute('data-value', object_value);
             item.setAttribute('type', 'button');
             item.textContent = object_text;

@@ -6927,6 +6927,9 @@ on the bottom of a panel !! */
     min-width: 170px !important;
     --show-icon: block;
 
+    --left: 12px;
+    --right: none;
+
     &.active {
         --bg: hsla(var(--h4), 20%) !important;
         --bg-hov: var(--bg) !important;
@@ -17035,7 +17038,7 @@ h4 {
     display: none;
 }
 .select-button {
-    width: fit-content;
+    width: max-content;
     position: relative;
     --mask: var(--icon-16-dropdown);
 }
