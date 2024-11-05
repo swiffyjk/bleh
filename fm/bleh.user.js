@@ -10548,7 +10548,7 @@ let has_prompted_for_update = false;
 
 
     function bleh_music_page_charts() {
-        if (!settings.feature_flags.music_page_charts == false)
+        if (settings.feature_flags.music_page_charts == false)
             return;
 
         log('beginning replacement', 'music charts');
