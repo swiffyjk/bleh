@@ -10368,6 +10368,8 @@ let has_prompted_for_update = false;
             page.subpage = 'overview';
 
             show_your_scrobbles();
+
+            bleh_music_page_charts();
         } else {
             // which subpage is it?
             page.subpage = document.body.classList[2].replace('namespace--', '');
@@ -10412,6 +10414,8 @@ let has_prompted_for_update = false;
             page.subpage = 'overview';
 
             show_your_scrobbles();
+
+            bleh_music_page_charts();
         } else {
             // which subpage is it?
             page.subpage = document.body.classList[2].replace('namespace--', '');
