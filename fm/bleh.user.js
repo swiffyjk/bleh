@@ -15,6 +15,7 @@
 // @require      https://unpkg.com/tippy.js@6
 // @require      https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.30.1/moment.min.js
 // @require      https://katelyynn.github.io/bleh/fm/js/snow.js?a=b
+// @require      https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js
 // ==/UserScript==
 
 let version = {
@@ -40,6 +41,11 @@ let version = {
             default: false,
             name: 'Show \'About\' label above wikis',
             date: '2024-10-11'
+        },
+        music_page_charts: {
+            default: false,
+            name: 'Music page charts',
+            date: '2024-11-05'
         }
     }
 }
@@ -2199,7 +2205,8 @@ let settings_template = {
     font_weight: 480,
     font_weight_medium: 650,
     font_weight_bold: 730,
-    show_bulk_edit_album: false
+    show_bulk_edit_album: false,
+    chart_decimation: true
 };
 let settings_base = {
     high_contrast: {
@@ -2460,6 +2467,13 @@ let settings_base = {
         value: true,
         values: [true, false],
         type: 'toggle'
+    },
+    chart_decimation: {
+        css: 'chart_decimation',
+        unit: '',
+        value: true,
+        values: [true, false],
+        type: 'toggle'
     }
 };
 let inbuilt_settings = {
@@ -2598,8 +2612,6 @@ let has_prompted_for_update = false;
             patch_artist_grids(document.body);
             patch_titles(document.body);
 
-            show_your_scrobbles();
-
             if (settings.corrections) {
                 correct_generic_combo_no_artist('artist-header-featured-items-item');
                 correct_generic_combo_no_artist('artist-top-albums-item');
@@ -2663,8 +2675,6 @@ let has_prompted_for_update = false;
 
                 patch_artist_grids(document.body);
                 patch_titles(document.body);
-
-                show_your_scrobbles();
 
                 if (settings.corrections) {
                     correct_generic_combo_no_artist('artist-header-featured-items-item');
@@ -10310,6 +10320,10 @@ let has_prompted_for_update = false;
 
         if (!is_subpage) {
             page.subpage = 'overview';
+
+            show_your_scrobbles();
+
+            bleh_music_page_charts();
         } else {
             // which subpage is it?
             page.subpage = document.body.classList[2].replace('namespace--', '');
@@ -10352,6 +10366,8 @@ let has_prompted_for_update = false;
 
         if (!is_subpage) {
             page.subpage = 'overview';
+
+            show_your_scrobbles();
         } else {
             // which subpage is it?
             page.subpage = document.body.classList[2].replace('namespace--', '');
@@ -10394,12 +10410,132 @@ let has_prompted_for_update = false;
 
         if (!is_subpage) {
             page.subpage = 'overview';
+
+            show_your_scrobbles();
         } else {
             // which subpage is it?
             page.subpage = document.body.classList[2].replace('namespace--', '');
         }
 
         log('status is', 'page', 'info', page);
+    }
+
+
+    function bleh_music_page_charts() {
+        if (!settings.feature_flags.music_page_charts)
+            return;
+
+        log('beginning replacement', 'music charts');
+
+        let panel = page.structure.side.querySelector('.listen-panel');
+        let trend = panel.querySelector('.listener-trend');
+
+        let table = trend.querySelector('tbody');
+        let days = table.querySelectorAll('tr');
+
+        let labels = [];
+        let values = [];
+
+        days.forEach((day) => {
+            let label = day.querySelector('time').textContent.trim();
+            let value = day.querySelector('.js-value').getAttribute('data-value');
+
+            labels.push(label);
+            values.push(value);
+        });
+
+        // colours
+        let link_col = `hsl(${getComputedStyle(document.body).getPropertyValue('--l3-c')})`;
+        let link_h_col = getComputedStyle(document.body).getPropertyValue('--l3-c');
+        let link_bg_col = `hsla(${getComputedStyle(document.body).getPropertyValue('--h4')}, 20%)`;
+        let text_col = `hsl(${getComputedStyle(document.body).getPropertyValue('--c3')})`;
+        let axis_col = `hsla(${getComputedStyle(document.body).getPropertyValue('--b4')}, 40%)`;
+        let text_primary_col = `hsl(${getComputedStyle(document.body).getPropertyValue('--c2')})`;
+        let bg_col = `hsl(${getComputedStyle(document.body).getPropertyValue('--b5')})`;
+        let root_bg_col = `hsla(${getComputedStyle(document.body).getPropertyValue('--b6')}, 85%)`;
+        let hue = getComputedStyle(document.body).getPropertyValue('--hue');
+        let chart_colours = {
+            link_col: link_col,
+            link_h_col: link_h_col,
+            link_bg_col: link_bg_col,
+            text_col: text_col,
+            axis_col: axis_col,
+            text_primary_col: text_primary_col,
+            bg_col: bg_col,
+            root_bg_col: root_bg_col,
+            hue: hue
+        }
+
+        let chart_line_options = {
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    display: false
+                },
+                tooltip: {
+                    backgroundColor: root_bg_col,
+                    titleColor: text_primary_col,
+                    bodyColor: text_primary_col,
+                    padding: 7,
+                    cornerRadius: 10,
+                    caretSize: 0
+                },
+                decimation: {
+                    enabled: settings.chart_decimation,
+                    algorithm: 'lttb'
+                }
+            },
+            scales: {
+                x: {
+                    display: false,
+                    grid: {
+                        color: axis_col
+                    },
+                    title: {
+                        display: false
+                    }
+                },
+                y: {
+                    display: false,
+                    grid: {
+                        display: false
+                    }
+                }
+            }
+        }
+
+        let scrobble_canvas_container = document.createElement('div');
+        scrobble_canvas_container.classList.add('scrobble-canvas-container');
+
+        let scrobble_canvas = document.createElement('canvas');
+        scrobble_canvas.classList.add('scrobble-canvas');
+
+        Chart.defaults.color = text_col;
+        Chart.defaults.font.family = 'Ubuntu Sans';
+        let scrobble_chart = new Chart(scrobble_canvas.getContext('2d'), {
+            type: 'line',
+            data: {
+                labels: labels,
+                datasets: [{
+                    data: values,
+                    borderWidth: 2,
+                    backgroundColor: link_bg_col,
+                    borderColor: link_col,
+                    fill: true,
+                    pointRadius: 0,
+                    pointHitRadius: 20,
+                    tension: 0.1
+                }]
+            },
+            options: chart_line_options
+        });
+
+        scrobble_canvas_container.appendChild(scrobble_canvas);
+        panel.appendChild(scrobble_canvas_container);
+
+        panel.removeChild(trend);
+
+        log('finished', 'music charts');
     }
 
 
