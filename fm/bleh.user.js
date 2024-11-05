@@ -7806,11 +7806,27 @@ let has_prompted_for_update = false;
     }
 
     // kill a window
-    function kill_window(id) {
+    function kill_window(id, replacing = false) {
         try {
-            log(`killed ${id}`, 'window');
-            document.body.removeChild(document.getElementById(`bleh--window-${id}--background`));
-            document.body.removeChild(document.getElementById(`bleh--window-${id}--wrapper`));
+            if (replacing) {
+                log(`killed ${id}`, 'window');
+                document.body.removeChild(document.getElementById(`bleh--window-${id}--background`));
+                document.body.removeChild(document.getElementById(`bleh--window-${id}--wrapper`));
+            } else {
+                // not replacing, can transition out
+                log(`queuing ${id} to kill`, 'window');
+
+                let background = document.getElementById(`bleh--window-${id}--background`);
+                let window = document.getElementById(`bleh--window-${id}--wrapper`);
+
+                background.classList.add('window-removing');
+                window.classList.add('window-removing');
+
+                setTimeout(function() {
+                    document.body.removeChild(background);
+                    document.body.removeChild(window);
+                }, 270);
+            }
         } catch(e) {
             log(`kill failed, ${id} does not exist`, 'window');
         }

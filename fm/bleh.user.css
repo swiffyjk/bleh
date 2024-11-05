@@ -7572,6 +7572,27 @@ input:is([name="track_name"], [name="artist_name"], [name="album_name"], [name="
             opacity: 0.5 !important;
         }
     }
+
+    &.window-removing {
+        visibility: hidden !important;
+        animation: fade_popup_reverse_reduced var(--trans) var(--trans-function);
+        transform-origin: top;
+    }
+}
+.popup_wrapper {
+    transform-origin: top;
+
+    transition-property: transform, opacity;
+    transition-duration: calc(var(--trans-short) + 0.02s);
+    transition-timing-function: var(--trans-function);
+
+    &.window-removing {
+        opacity: 0 !important;
+
+        [data-bleh--reduced_motion="false"] & {
+            transform: scale(0.9);
+        }
+    }
 }
 @keyframes fade_popup {
     from {
@@ -7586,6 +7607,16 @@ input:is([name="track_name"], [name="artist_name"], [name="album_name"], [name="
         opacity: 0;
     }
     to {
+        opacity: 1;
+    }
+}
+@keyframes fade_popup_reverse_reduced {
+    to {
+        visibility: visible !important;
+        opacity: 0;
+    }
+    from {
+        visibility: visible !important;
         opacity: 1;
     }
 }
@@ -7687,6 +7718,18 @@ input:is([name="track_name"], [name="artist_name"], [name="album_name"], [name="
         opacity: 0;
     }
     to {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+@keyframes dropdown_reverse {
+    to {
+        visibility: visible !important;
+        transform: scale(0.9);
+        opacity: 0;
+    }
+    from {
+        visibility: visible !important;
         transform: scale(1);
         opacity: 1;
     }
