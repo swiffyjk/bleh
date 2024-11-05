@@ -3753,7 +3753,7 @@ let has_prompted_for_update = false;
 
         select.value = value;
 
-        console.error(`#select-${select_id}`);
+        console.log(`#select-${select_id}`);
 
         update_custom_select(document.getElementById(`select-${select_id}`)._tippy.popper, value, select_id);
     }
@@ -3774,7 +3774,7 @@ let has_prompted_for_update = false;
 
                 let sel_button = document.body.querySelector(`#select-${select_id}`);
 
-                console.error(sel_button);
+                console.log(sel_button);
 
                 if (sel_button == null)
                     return;
