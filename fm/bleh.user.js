@@ -16,6 +16,7 @@
 // @require      https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.30.1/moment.min.js
 // @require      https://katelyynn.github.io/bleh/fm/js/snow.js?a=b
 // @require      https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js
+// @require      https://cdn.jsdelivr.net/npm/chartjs-adapter-moment@^1
 // ==/UserScript==
 
 let version = {
@@ -2607,8 +2608,6 @@ let has_prompted_for_update = false;
             patch_header_menu();
             patch_gallery_page();
 
-            album_missing_a_tracklist();
-
             patch_artist_grids(document.body);
             patch_titles(document.body);
 
@@ -2670,8 +2669,6 @@ let has_prompted_for_update = false;
                 patch_artist_ranks(document.body);
                 patch_header_menu();
                 patch_gallery_page();
-
-                album_missing_a_tracklist();
 
                 patch_artist_grids(document.body);
                 patch_titles(document.body);
@@ -4107,6 +4104,9 @@ let has_prompted_for_update = false;
 
     // general health
     function checkup_page_structure() {
+        document.body.style.removeProperty('--hue-album');
+        document.body.style.removeProperty('--sat-album');
+
         if (page.structure.container == null || !document.body.contains(page.structure.container)) {
             log('page missing container, creating', 'page structure');
             page.structure.container = document.createElement('div');
@@ -8626,38 +8626,12 @@ let has_prompted_for_update = false;
     }
 
     function album_missing_a_tracklist() {
-        document.body.style.removeProperty('--hue-album');
-        document.body.style.removeProperty('--sat-album');
-
-        let header = document.querySelector('.header-new--album');
-        if (header == null)
-            return;
-
-        // cover
-        if (settings.hue_from_album) {
-            let header_inner = document.querySelector('.header-new-inner');
-            try {
-                let bg = header_inner.getAttribute('style').replace('background: #', '');
-                let hsl = hex_to_hsl(bg);
-                console.log('hsl', hsl);
-                document.body.style.setProperty('--hue-album', hsl.h);
-                document.body.style.setProperty('--sat-album', clamp_sat((hsl.s / 100) * 3));
-            } catch(e) {
-                console.info('bleh - album is missing a cover');
-            }
-        }
-
-        if (header.hasAttribute('data-kate-processed'))
-            return;
-        header.setAttribute('data-kate-processed', 'true');
-
         // tracklist
         let tracklist = document.getElementById('tracklist');
         if (tracklist == null) {
-            let masonry = document.querySelector('.masonry-left-bottom');
+            let top_overview = document.querySelector('.top-overview-panel');
 
-            if (masonry == null) {
-                /*deliver_notif('an error occured loading your tracklist');*/
+            if (top_overview == null) {
                 return;
             }
 
@@ -8668,7 +8642,7 @@ let has_prompted_for_update = false;
                     <p class="loading-data-text">${trans[lang].music.fetch_plays.loading}</p>
                 </div>
             `);
-            masonry.insertBefore(tracklist, masonry.firstElementChild);
+            top_overview.after(tracklist);
 
             /*let url_split = window.location.href.split('/');
             let album_url = `${url_split[(url_split.length - 2)]}/${url_split[(url_split.length - 1)]}`;
@@ -9821,9 +9795,9 @@ let has_prompted_for_update = false;
                     let parsed_scrobble_as_rank = parse_scrobbles_as_rank(listens);
 
                     listen_item.setAttribute('data-bleh--scrobble-milestone',parsed_scrobble_as_rank.milestone);
-                    listen_item.style.setProperty('--hue-user',parsed_scrobble_as_rank.hue);
-                    listen_item.style.setProperty('--sat-user',parsed_scrobble_as_rank.sat);
-                    listen_item.style.setProperty('--lit-user',parsed_scrobble_as_rank.lit);
+                    listen_item.style.setProperty('--hue-over',parsed_scrobble_as_rank.hue);
+                    listen_item.style.setProperty('--sat-over',parsed_scrobble_as_rank.sat);
+                    listen_item.style.setProperty('--lit-over',parsed_scrobble_as_rank.lit);
                 }
             });
         }
@@ -10364,12 +10338,29 @@ let has_prompted_for_update = false;
 
         checkup_page_structure();
 
+        // cover
+        if (settings.hue_from_album) {
+            let header_inner = album_header.querySelector('.header-new-inner');
+            try {
+                let bg = header_inner.getAttribute('style').replace('background: #', '');
+                let hsl = hex_to_hsl(bg);
+                document.body.style.setProperty('--hue-album', hsl.h);
+                document.body.style.setProperty('--sat-album', clamp_sat((hsl.s / 100) * 3));
+
+                log(`sourced hsl of (${hsl.h}, ${hsl.s}, ${hsl.l}) - using final value of (${hsl.h}, ${clamp_sat((hsl.s / 100) * 3)}, ${hsl.l})`, 'hue from album');
+            } catch(e) {
+                log('no cover present', 'hue from album');
+            }
+        }
+
         if (!is_subpage) {
             page.subpage = 'overview';
 
             show_your_scrobbles();
 
             bleh_music_page_charts();
+
+            album_missing_a_tracklist();
         } else {
             // which subpage is it?
             page.subpage = document.body.classList[2].replace('namespace--', '');
@@ -10403,7 +10394,7 @@ let has_prompted_for_update = false;
         page.structure.row = page.structure.container.querySelector('.row');
         try {
             page.structure.main = page.structure.row.querySelector('.col-main');
-            page.structure.side = page.structure.row.querySelector('.col-sidebar');
+            page.structure.side = page.structure.row.querySelector('.col-sidebar:not(.track-overview-video-column)');
         } catch(e) {
             log('unable to find elements', 'page structure');
         }
@@ -10440,9 +10431,13 @@ let has_prompted_for_update = false;
         let labels = [];
         let values = [];
 
-        days.forEach((day) => {
-            let label = day.querySelector('time').textContent.trim();
+        days.forEach((day, index) => {
+            //let label = day.querySelector('time').textContent.trim();
+            let label = moment(day.querySelector('time').getAttribute('datetime'));
             let value = day.querySelector('.js-value').getAttribute('data-value');
+
+            if (value == '0' && index < 120)
+                return;
 
             labels.push(label);
             values.push(value);
@@ -10491,11 +10486,16 @@ let has_prompted_for_update = false;
             },
             scales: {
                 x: {
-                    display: false,
-                    grid: {
-                        color: axis_col
+                    type: 'time',
+                    time: {
+                        unit: 'month',
+                        displayFormats: {
+                            month: 'MMM'
+                        },
+                        tooltipFormat: 'dddd, MMMM Do YYYY'
                     },
-                    title: {
+                    grid: {
+                        color: axis_col,
                         display: false
                     }
                 },

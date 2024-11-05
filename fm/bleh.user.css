@@ -1887,11 +1887,6 @@ article, section, .buffer-standard, .buffer-standard:not(.col-sidebar) .buffer-s
     box-shadow: var(--card-shadow) !important;
 }
 
-/* border if default background is present */
-.video-preview-upload-cta.link-block, p.album-artwork-upload-cta {
-    border: var(--card-border) !important;
-}
-
 /* take up full space */
 .album-overview-cover-art, .album-artwork-upload-cta-container {
     margin-top: calc(-104px - var(--card-gap)) !important;
@@ -8730,6 +8725,10 @@ text[style^="color: rgb(255, 172, 172)"] {
                 }
             }
         }
+    }
+
+    .scrobble-canvas-container {
+        margin-top: var(--card-gap);
     }
 }
 .listener-trend {
