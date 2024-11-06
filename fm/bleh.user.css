@@ -8543,7 +8543,7 @@ form[action="/inbox/notifications"] {
     border-radius: var(--item-small-radius);
     box-shadow: var(--card-shadow);
     margin-left: 10px;
-    transition-property: opacity, border, box-shadow;
+    transition-property: opacity, border, box-shadow, transform;
     transition-duration: var(--trans);
     transition-timing-function: var(--trans-function);
 }
@@ -17162,7 +17162,7 @@ h4 {
             }
         }
 
-        .gallery-thumbnail-container {
+        /*.gallery-thumbnail-container {
             position: absolute;
             inset: 0;
 
@@ -17183,6 +17183,25 @@ h4 {
 
                     &.selected {
                         box-shadow: unset;
+                    }
+                }
+            }
+        }*/
+
+        .gallery-thumbnail-container {
+            padding: 0 var(--card-gap) var(--card-padding) var(--card-gap);
+
+            ul {
+                overflow: unset;
+
+                li {
+                    &:not(.selected) {
+                        transform: scale(0.85);
+                    }
+
+                    &.selected {
+                        border: 2px solid hsl(var(--l3-c));
+                        box-shadow: 0 0 10px hsl(var(--h4));
                     }
                 }
             }

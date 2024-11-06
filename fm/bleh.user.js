@@ -11069,6 +11069,15 @@ let has_prompted_for_update = false;
         page.structure.main.removeChild(view_all_container);
 
 
+        // extra thumbnails for clarity
+        // doesnt work :(
+        /*let gallery_thumbnail_panel = document.createElement('section');
+        gallery_thumbnail_panel.classList.add('gallery-thumbnail-panel');
+        gallery_thumbnail_panel.innerHTML = page.structure.container.querySelector('.gallery-thumbnail-container').innerHTML;
+
+        view_all_panel.after(gallery_thumbnail_panel);*/
+
+
         // bookmark-related info
         if (settings.feature_flags.display_album_bookmark)
             patch_gallery_focused_image(image_sidebar, buttons);
