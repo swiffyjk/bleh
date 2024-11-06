@@ -3034,7 +3034,7 @@ let has_prompted_for_update = false;
         text.textContent = auth;
         auth_link.appendChild(text);
 
-        if (document.body.querySelector('.masthead .masthead-nav-wrap') != null) {
+        if (document.body.querySelector('.masthead .masthead-pro-wrap') != null) {
             let pro_badge = document.createElement('p');
             pro_badge.classList.add('pro-badge');
             pro_badge.textContent = 'Pro';
