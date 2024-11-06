@@ -20,7 +20,7 @@
 // ==/UserScript==
 
 let version = {
-    build: '2024.1106.2',
+    build: '2024.1106.3',
     sku: 'petal',
     feature_flags: {
         bleh_settings_tabs: {
@@ -10490,6 +10490,8 @@ let has_prompted_for_update = false;
 
             if (page.subpage == 'music_artist_images_image-upload')
                 bleh_gallery_upload();
+            else if (page.subpage == 'music_artist_images_overview')
+                bleh_gallery_list();
         }
 
         log('status is', 'page', 'info', page);
@@ -10567,6 +10569,8 @@ let has_prompted_for_update = false;
 
             if (page.subpage == 'music_album_images_image-upload')
                 bleh_gallery_upload();
+            else if (page.subpage == 'music_album_images_overview')
+                bleh_gallery_list();
         }
 
         log('status is', 'page', 'info', page);
@@ -11220,5 +11224,19 @@ let has_prompted_for_update = false;
 
         let image_preview_container = page.structure.container.querySelector('.image-preview-hook');
         image_preview_container.setAttribute('src', image_preview.getAttribute('src'));
+    }
+
+
+    function bleh_gallery_list() {
+        let upload_btn = page.structure.main.querySelector('.btn-add');
+        if (upload_btn != null) {
+            upload_btn.classList = 'btn view-all-button back upload-button';
+
+            let upload_panel = document.createElement('section');
+            upload_panel.classList.add('view-all-panel', 'upload-panel');
+
+            upload_panel.appendChild(upload_btn);
+            page.structure.side.insertBefore(upload_panel, page.structure.side.firstElementChild)
+        }
     }
 })();
