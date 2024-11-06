@@ -11079,7 +11079,7 @@ let has_prompted_for_update = false;
 
 
         // bookmark-related info
-        if (settings.feature_flags.display_album_bookmark)
+        if (page.type == 'artist' || settings.feature_flags.display_album_bookmark)
             patch_gallery_focused_image(image_sidebar, buttons);
 
         /*let gallery_slides = gallery_section.querySelectorAll('.gallery-slide');
