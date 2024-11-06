@@ -11028,7 +11028,7 @@ let has_prompted_for_update = false;
         expand_gallery_image();
     }
     function expand_gallery_image() {
-        let image_src = page.structure.container.querySelector('.active-slide .js-gallery-image').getAttribute('src');
+        let image_src = page.structure.container.querySelector('.active-slide .js-gallery-image').getAttribute('src').replace('770x0', 'ar0');
         expand_avatar(image_src);
     }
 })();
