@@ -703,6 +703,10 @@ const trans = {
             },
             report: {
                 name: 'Report'
+            },
+            open: {
+                name: 'Expand',
+                tooltip: 'Expand image to full resolution'
             }
         },
         activities: {
@@ -10916,14 +10920,17 @@ let has_prompted_for_update = false;
 
         // move image to its own spot above
         let image_details;
+        let gallery_section;
         try {
-            let gallery_section = page.structure.main.querySelector('.gallery-section');
+            gallery_section = page.structure.main.querySelector('.gallery-section');
             page.structure.container.insertBefore(gallery_section, page.structure.container.firstElementChild);
 
             // move image details to main column
             image_details = document.createElement('section');
             image_details.classList.add('image-details');
         } catch(e) {
+            gallery_section = page.structure.container.querySelector('.gallery-section');
+
             image_details = page.structure.main.querySelector('.image-details');
             image_details.innerHTML = '';
         }
@@ -10971,6 +10978,19 @@ let has_prompted_for_update = false;
         button_container.appendChild(buttons_extra);
 
         image_details.appendChild(button_container);
+
+        // open in a new tab button
+        let open_button = document.createElement('button');
+        open_button.classList.add('image-open-button');
+        tippy(open_button, {
+            content: trans[lang].gallery.open.tooltip
+        });
+        open_button.textContent = trans[lang].gallery.open.name;
+
+        let image_src = gallery_section.querySelector('.js-gallery-image').getAttribute('src');
+        open_button.setAttribute('onclick', `_expand_avatar('${image_src}')`);
+
+        buttons_extra.appendChild(open_button);
 
         // delete
         let delete_button = image_details.querySelector('.gallery-image-delete');
