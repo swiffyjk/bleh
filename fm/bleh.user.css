@@ -17247,6 +17247,12 @@ h4 {
                 font-size: 24px !important;
                 line-height: 30px !important;
             }
+
+            .title-layer {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+            }
         }
 
         .gallery-image-buttons {

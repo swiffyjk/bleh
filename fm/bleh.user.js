@@ -10978,7 +10978,10 @@ let has_prompted_for_update = false;
                 </div>
                 ${image_date.outerHTML}
             </div>
-            ${image_title.outerHTML}
+            <div class="title-layer">
+                ${image_title.outerHTML}
+                <div class="vote-number" data-side="pos">+0</div>
+            </div>
         `);
 
         image_details.insertBefore(image_title_container, image_sidebar);
