@@ -9929,6 +9929,7 @@ let has_prompted_for_update = false;
 
     unsafeWindow._setup_corrections = function() {
         kill_window('bleh_setup_theme');
+        kill_window('bleh_setup_seasons');
         create_window('bleh_setup_corrections','',`
             <div class="setup-sides">
                 <div class="setup-preview">
@@ -10019,6 +10020,61 @@ let has_prompted_for_update = false;
                     </div>
                     <div class="modal-footer">
                         <button class="btn back" onclick="_setup_theme()">
+                            ${trans[lang].settings.back}
+                        </button>
+                        <div class="btn-fill"></div>
+                        <button class="btn skip" onclick="_setup_skip()">
+                            ${trans[lang].settings.skip}
+                        </button>
+                        <button class="btn primary continue" onclick="_setup_seasons()">
+                            ${trans[lang].settings.continue}
+                        </button>
+                    </div>
+                </div>
+            </div>
+        `, false, 'setup');
+        refresh_all();
+    }
+
+    unsafeWindow._setup_seasons = function() {
+        kill_window('bleh_setup_corrections');
+        create_window('bleh_setup_seasons','',`
+            <div class="setup-sides">
+                <div class="setup-preview">
+                    <div class="setup-icon setup-icon-main setup-icon-seasons"></div>
+                </div>
+                <div class="setup-body">
+                    <div class="setup-body-main">
+                        <h1>${trans[lang].settings.customise.seasonal.name}</h1>
+                        <p>${trans[lang].settings.customise.seasonal.bio}</p>
+                        <div class="inner-preview pad click-thru">
+                            <div class="current-season-container season-column">
+                                <div class="current-season" data-season="${stored_season.id}" id="current_season">
+                                    ${(stored_season.id != 'none')
+                                    ? trans[lang].settings.customise.seasonal.marker.current.replace('{season}', trans[lang].settings.customise.seasonal.listing[stored_season.id]).replace('{time}', moment(stored_season.end.replace('y0', stored_season.year)).to(stored_season.now, true))
+                                    : (settings.seasonal) ? trans[lang].settings.customise.seasonal.marker.none : trans[lang].settings.customise.seasonal.marker.disabled}
+                                </div>
+                                <div class="current-season-started" id="current_season_start">
+                                    ${(stored_season.id != 'none')
+                                    ? trans[lang].settings.customise.seasonal.marker.started.replace('{time}', moment(stored_season.start.replace('y0', stored_season.year)).from(stored_season.now))
+                                    : ''}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="toggle-container" id="container-seasonal" onclick="_update_item('seasonal')">
+                            <button class="btn reset" onclick="_reset_item('seasonal')">${trans[lang].settings.reset}</button>
+                            <div class="heading">
+                                <h5>${trans[lang].settings.customise.seasonal.option.name}</h5>
+                            </div>
+                            <div class="toggle-wrap">
+                                <button class="toggle" id="toggle-seasonal" aria-checked="true">
+                                    <div class="dot"></div>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn back" onclick="_setup_corrections()">
                             ${trans[lang].settings.back}
                         </button>
                         <div class="btn-fill"></div>
