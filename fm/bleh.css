@@ -5326,10 +5326,10 @@ p + .chartlist {
 }
 .btn-post-shout {
     position: relative;
-    --mask: var(--icon-16-shoutbox);
+    --mask: var(--icon-16-shoutbox) !important;
 
     &[data-analytics-action="PostShoutReply"] {
-        --mask: var(--icon-16-reply);
+        --mask: var(--icon-16-reply) !important;
     }
 
     &:before {
