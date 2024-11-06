@@ -715,7 +715,8 @@ const trans = {
                 tooltip: 'Expand image to full resolution'
             },
             up: 'Up votes:',
-            down: 'Down votes:'
+            down: 'Down votes:',
+            vote: 'This is the sum of votes used for ordering.'
         },
         activities: {
             name: 'Recent Activity',
@@ -3061,7 +3062,7 @@ let has_prompted_for_update = false;
         text.textContent = auth;
         auth_link.appendChild(text);
 
-        if (document.body.querySelector('.masthead .masthead-nav-wrap') != null) {
+        if (document.body.querySelector('.masthead .masthead-pro-wrap') != null) {
             let pro_badge = document.createElement('p');
             pro_badge.classList.add('pro-badge');
             pro_badge.textContent = 'Pro';
@@ -11029,6 +11030,10 @@ let has_prompted_for_update = false;
         vote_badge.textContent = `${(is_negative) ? '' : '+'}${number}`;
         vote_badge.setAttribute('data-side', (is_negative) ? 'neg' : 'pos');
 
+        tippy(vote_badge, {
+            content: trans[lang].gallery.vote
+        });
+
 
         // 2nd side
         let buttons_extra = document.createElement('div');
@@ -11067,8 +11072,9 @@ let has_prompted_for_update = false;
         buttons_extra.appendChild(report_button);
 
         // star
-        let star_buttons = image_details.querySelectorAll('[data-analytics-label="PreferredImage"]');
+        let star_buttons = image_details.querySelectorAll('.gallery-image-preferred-button :is(button, a)');
         star_buttons.forEach((star_button) => {
+            star_button.removeAttribute('title');
             let text = star_button.querySelector('.gallery-image-preferred-states');
 
             tippy(star_button, {
