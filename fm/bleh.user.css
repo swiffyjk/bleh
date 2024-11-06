@@ -219,7 +219,7 @@ body, [data-page-resource-type="album"], [data-page-resource-type="track"],
 .gallery-image-buttons button, .gallery-image-preferred-button,
 .vote-button--voted,
 button, .btn-primary, .gallery-image-report,
-.gallery-image-preferred-states::before,
+.gallery-image-preferred-states, .image-details .gallery-image-buttons button,
 .masthead-logo a,
 body:after,
 .listening-report-brick--combo .tag-label,
@@ -6322,6 +6322,7 @@ button,
 
 
 /*     BUTTON HAS ICON     */
+.bleh--gallery-bookmark-image-btn,
 .btn.back,
 .btn-post-shout,
 .view-item:not(.video-item, .listen-item, .profile-top-item--taste, .interact-item, .profile-top-item--shortcut, .profile-top-item--follow, .profile-top-item--message, .profile-top-item--edit),
@@ -15586,8 +15587,6 @@ trying to list every song ever made by someone identifying as a female, which is
 /*     BOOKMARK     */
 button.bleh--gallery-bookmark-image-btn {
     position: relative;
-    width: 40px;
-    --font-size: 0;
     --mask: var(--icon-16-bookmark);
     margin-left: var(--button-list-gap) !important;
 }
@@ -15821,6 +15820,7 @@ button.bleh--gallery-bookmark-image-btn {
     display: flex;
     justify-content: end;
 }
+.image-details .gallery-image-buttons,
 .album-overview-cover-art-action-row,
 .tab-container,
 .footer-timezone,
@@ -15864,6 +15864,7 @@ button.bleh--gallery-bookmark-image-btn {
         }
     }
 
+    &.gallery-image-buttons button,
     &.album-overview-cover-art-action-row a,
     &.tab-container button:not(.tab--selected),
     .footer-language .mimic-link,
@@ -17148,6 +17149,47 @@ h4 {
 
                 font-size: 24px !important;
                 line-height: 30px !important;
+            }
+        }
+
+        .gallery-image-buttons {
+            margin: unset;
+
+            button,
+            form {
+                margin: unset !important;
+                inset: unset !important;
+            }
+
+            .gallery-image-report-form {
+                order: 1;
+            }
+
+            button {
+                --col: hsl(var(--l3-c));
+                --sat-over: 1;
+                --lit-over: 1;
+
+                .gallery-image-preferred-states:before,
+                &:before {
+                    background: currentColor !important;
+                }
+            }
+            .gallery-image-preferred-button button {
+                --hue-over: var(--hue-fav);
+            }
+            [value="up"] {
+                --col: hsl(var(--c2));
+                --hue-over: var(--hue-pos);
+            }
+            [value="down"] {
+                --col: hsl(var(--c2));
+                --hue-over: var(--hue-neg);
+            }
+
+            .gallery-image-preferred-states {
+                color: inherit !important;
+                padding-left: calc(16px + 6px) !important;
             }
         }
     }

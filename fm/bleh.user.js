@@ -689,14 +689,17 @@ const trans = {
                         name: 'You have saved this image'
                     },
                     bookmark_this_image: {
-                        name: 'Save this image',
+                        name: 'Save',
                         bio: 'Save this image for later'
                     },
                     unbookmark_this_image: {
-                        name: 'Unsave this image',
+                        name: 'Unsave',
                         bio: 'Unsave this image'
                     }
                 }
+            },
+            prefer: {
+                name: 'Star'
             }
         },
         activities: {
@@ -8552,9 +8555,7 @@ let has_prompted_for_update = false;
         gallery_bookmark_button.setAttribute('data-bleh--image-is-bookmarked', image_is_bookmarked);
         gallery_bookmark_button.setAttribute('onclick', `_update_image_bookmark(this, '${artist_name}', '${focused_image_id}')`)
         // true / false
-        gallery_bookmark_button.textContent = (image_is_bookmarked)
-        ? trans[lang].gallery.bookmarks.button.unbookmark_this_image.name
-        : trans[lang].gallery.bookmarks.button.bookmark_this_image.name;
+        gallery_bookmark_button.textContent = trans[lang].gallery.bookmarks.button.bookmark_this_image.name;
 
         unsafeWindow.bookmark_tooltip = tippy(gallery_bookmark_button, {
             content: (image_is_bookmarked)
@@ -10956,6 +10957,21 @@ let has_prompted_for_update = false;
         breadcrumbs.style.setProperty('display', 'none');
 
         page.structure.main.insertBefore(image_details, page.structure.main.firstElementChild);
+
+        let buttons = image_details.querySelector('.gallery-image-buttons');
+        let report_button = image_details.querySelector('.gallery-image-report-form');
+
+        let star_buttons = image_details.querySelectorAll('[data-analytics-label="PreferredImage"]');
+        star_buttons.forEach((star_button) => {
+            let text = star_button.querySelector('.gallery-image-preferred-states');
+
+            tippy(star_button, {
+                content: star_button.textContent
+            });
+            text.textContent = trans[lang].gallery.prefer.name;
+        });
+
+        buttons.appendChild(report_button);
 
         // bookmark-related info
         patch_gallery_focused_image(image_sidebar);
