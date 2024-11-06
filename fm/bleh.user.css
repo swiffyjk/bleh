@@ -260,7 +260,7 @@ input[type="range"],
 [data-season],
 .small-alert,
 .lotus,
-.pro-badge
+.pro-badge, .vote-number
 {
     --hue:  var(--hue-over,
             var(--hue-album,
@@ -17252,6 +17252,25 @@ h4 {
                 display: flex;
                 justify-content: space-between;
                 align-items: center;
+
+                .vote-number {
+                    background-color: hsla(var(--h4), 40%);
+                    box-shadow: 0 0 20px hsla(var(--h4), 60%);
+                    color: hsl(var(--l2-c));
+                    font-size: var(--font-size-sm);
+                    padding: 0 6px;
+                    border-radius: var(--item-med-radius);
+
+                    --sat-over: 1;
+                    --lit-over: 1;
+
+                    &[data-side="pos"] {
+                        --hue-over: var(--hue-pos);
+                    }
+                    &[data-side="neg"] {
+                        --hue-over: var(--hue-neg);
+                    }
+                }
             }
         }
 

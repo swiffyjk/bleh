@@ -713,7 +713,9 @@ const trans = {
             open: {
                 name: 'Expand',
                 tooltip: 'Expand image to full resolution'
-            }
+            },
+            up: 'Up votes:',
+            down: 'Down votes:'
         },
         activities: {
             name: 'Recent Activity',
@@ -11009,6 +11011,24 @@ let has_prompted_for_update = false;
         // divider after vote btns
         let vote_buttons = buttons.querySelector('.gallery-image-vote-buttons');
         vote_buttons.after(create_divider());
+
+
+        // determine current vote number
+        let positive_btn = vote_buttons.querySelector(':is([data-ajax-form-state=""] .gallery-image-vote-up-off, [data-ajax-form-state="up-voted"] .gallery-image-vote-up-on, [data-ajax-form-state="down-voted"] .gallery-image-vote-up-off)').cloneNode(true);
+        let negative_btn = vote_buttons.querySelector(':is([data-ajax-form-state=""] .gallery-image-vote-down-off, [data-ajax-form-state="up-voted"] .gallery-image-vote-down-off, [data-ajax-form-state="down-voted"] .gallery-image-vote-down-on)').cloneNode(true);
+
+        let positive = parseInt(positive_btn.textContent.replace(trans[lang].gallery.up, ''));
+        let negative = parseInt(negative_btn.textContent.replace(trans[lang].gallery.down, ''));
+
+        let number = (positive - negative);
+        let is_negative = (number < 0);
+
+        console.info(positive_btn, positive, negative_btn, negative, number);
+
+        let vote_badge = image_title_container.querySelector('.vote-number');
+        vote_badge.textContent = `${(is_negative) ? '' : '+'}${number}`;
+        vote_badge.setAttribute('data-side', (is_negative) ? 'neg' : 'pos');
+
 
         // 2nd side
         let buttons_extra = document.createElement('div');
