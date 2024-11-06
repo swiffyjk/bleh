@@ -11086,16 +11086,18 @@ let has_prompted_for_update = false;
 
         // view all artwork
         let view_all_container = page.structure.main.querySelector('.more-link-fullwidth-right-flush-top');
-        let view_all = view_all_container.querySelector('a');
-        view_all.classList.add('btn', 'view-all-button', 'back');
+        if (view_all_container != null) {
+            let view_all = view_all_container.querySelector('a');
+            view_all.classList.add('btn', 'view-all-button', 'back');
 
-        let view_all_panel = document.createElement('section');
-        view_all_panel.classList.add('view-all-panel');
+            let view_all_panel = document.createElement('section');
+            view_all_panel.classList.add('view-all-panel');
 
-        view_all_panel.appendChild(view_all);
-        page.structure.side.insertBefore(view_all_panel, page.structure.side.firstElementChild);
+            view_all_panel.appendChild(view_all);
+            page.structure.side.insertBefore(view_all_panel, page.structure.side.firstElementChild);
 
-        page.structure.main.removeChild(view_all_container);
+            page.structure.main.removeChild(view_all_container);
+        }
 
 
         // extra thumbnails for clarity
