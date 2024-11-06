@@ -1,7 +1,7 @@
 /* ==UserStyle==
 @name           bleh (dev)
 @namespace      github.com/katelyynn/bleh
-@version        2024.1105
+@version        2024.1106
 @license        GPL-3.0
 @author         kate
 @updateURL      https://github.com/katelyynn/bleh/raw/uwu/fm/bleh.user.css
@@ -15,7 +15,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Ubuntu+Sans:ital,wght@0,100..800;1,100..800&display=swap');
 
 body {
-    --version-build: '2024.1105';
+    --version-build: '2024.1106';
 
     --hue:  var(--hue-over,
             var(--hue-album,
@@ -6469,6 +6469,7 @@ button,
 
 
 /*     ICON MASK     */
+.breadcrumb a:before, .gallery-image-uploaded-by:before,
 .select-button:before,
 .involved--track:before, .involved--album:before, .involved--artist:before,
 .activity-item:before,
@@ -17088,5 +17089,99 @@ h4 {
 }
 .select-item {
     width: 100% !important;
+}
+
+
+
+
+[data-ff--new_gallery_experience="true"] {
+    .gallery-section {
+        background: unset !important;
+        padding: unset !important;
+        box-shadow: inset 0 0 0 1px var(--card-border-base) !important;
+        border-radius: var(--card-radius);
+
+        position: relative;
+
+        .gallery-image-container {
+            background: unset;
+            padding: unset;
+            height: 500px;
+        }
+
+        .gallery-thumbnail-container {
+            display: none;
+        }
+    }
+
+    .js-gallery-image-details {
+        display: none;
+    }
+
+
+    .image-details {
+        display: flex;
+        flex-direction: column;
+        gap: var(--card-gap);
+
+        & > div:not(.image-title-container) {
+            display: flex;
+            flex-direction: column;
+            gap: var(--card-gap);
+
+            .gallery-image-title {
+                display: none;
+            }
+            .gallery-image-description {
+                min-width: unset;
+                margin: unset;
+            }
+            .gallery-image-uploaded-by {
+                display: none;
+            }
+        }
+
+        .image-title-container {
+            .gallery-image-title {
+                min-width: unset;
+                margin: unset !important;
+
+                font-size: 24px !important;
+                line-height: 30px !important;
+            }
+        }
+    }
+}
+
+.sub-text {
+    color: hsl(var(--c3));
+    font-size: var(--font-size);
+    line-height: var(--line-height);
+    font-weight: var(--font-weight-medium);
+
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+
+    .breadcrumb {
+        display: flex;
+        gap: 16px;
+
+        a {
+            position: relative;
+            --left: none;
+            --right: -16px;
+            --mask: var(--icon-16-dot);
+            color: inherit;
+        }
+    }
+
+    .gallery-image-uploaded-by {
+        position: relative;
+        padding-left: calc(16px + 6px);
+        --mask: var(--icon-16-upload);
+        --left: 0;
+        min-width: unset;
+    }
 }
 }

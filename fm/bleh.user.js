@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         bleh
 // @namespace    http://last.fm/
-// @version      2024.1105
+// @version      2024.1106
 // @description  bleh!!! ^-^
 // @author       kate
 // @match        https://www.last.fm/*
@@ -20,7 +20,7 @@
 // ==/UserScript==
 
 let version = {
-    build: '2024.1105',
+    build: '2024.1106',
     sku: 'petal',
     feature_flags: {
         bleh_settings_tabs: {
@@ -52,6 +52,11 @@ let version = {
             default: false,
             name: 'Chartlist row highlight side shadow',
             date: '2024-11-05'
+        },
+        new_gallery_experience: {
+            default: true,
+            name: 'New gallery experience',
+            date: '2024-11-06'
         }
     }
 }
@@ -2625,6 +2630,8 @@ let has_prompted_for_update = false;
             bleh_albums();
             bleh_tracks();
 
+            bleh_gallery();
+
             patch_shouts(document.body);
             patch_lastfm_settings(document.body);
             patch_artist_ranks(document.body);
@@ -2686,6 +2693,8 @@ let has_prompted_for_update = false;
                 bleh_artists();
                 bleh_albums();
                 bleh_tracks();
+
+                bleh_gallery();
 
                 patch_shouts(document.body);
                 patch_lastfm_settings(document.body);
@@ -8410,17 +8419,7 @@ let has_prompted_for_update = false;
 
         let image_list = document.body.querySelector('.image-list');
 
-        if (image_list == undefined) {
-            // dont return yet, check to see if we're focused on a gallery image
-
-            let focused_image_details = document.body.querySelector('.gallery-sidebar');
-
-            if (focused_image_details == null)
-                return;
-
-            // we are focused on a gallery image
-            patch_gallery_focused_image(focused_image_details);
-        } else {
+        if (image_list != undefined) {
             // we are on the gallery main page
             patch_gallery_image_listing(image_list);
         }
@@ -8530,15 +8529,7 @@ let has_prompted_for_update = false;
     }
 
     // gallery focused image
-    function patch_gallery_focused_image(sidebar) {
-        let focused_image_details = sidebar.querySelector('.js-gallery-image-details > div');
-        if (focused_image_details == null)
-            return;
-
-        if (focused_image_details.hasAttribute('data-kate-processed'))
-            return;
-        focused_image_details.setAttribute('data-kate-processed', 'true');
-
+    function patch_gallery_focused_image(focused_image_details) {
         let artist_name = document.body.querySelector('.header-new-title').textContent;
         let focused_image_id = focused_image_details.getAttribute('data-image-url').split('/')[4];
 
@@ -8547,7 +8538,7 @@ let has_prompted_for_update = false;
         if (bookmarked_images.hasOwnProperty(artist_name)) {
             if (bookmarked_images[artist_name].includes(focused_image_id)) {
                 image_is_bookmarked = true;
-                console.info('bleh - focused image is bookmarked');
+                log('focused is bookmarked', 'gallery');
             }
         }
 
@@ -8608,13 +8599,13 @@ let has_prompted_for_update = false;
             }
             bookmarked_images[artist] = new_artist_bookmarks;
 
-            console.info('bleh - image', id, 'from artist', artist, 'has been removed from bookmarks');
+            log(`image ${id} from ${artist} removed from bookmarks`, 'gallery');
         } else {
             // add to bookmarks
 
             button.setAttribute('data-bleh--image-is-bookmarked', 'true');
             bookmarked_images[artist].push(id);
-            console.info('bleh - image', id, 'from artist', artist, 'has been added to bookmarks');
+            log(`image ${id} from ${artist} added to bookmarks`, 'gallery');
         }
 
         localStorage.setItem('bleh_bookmarked_images', JSON.stringify(bookmarked_images));
@@ -10903,5 +10894,70 @@ let has_prompted_for_update = false;
 
         log('saved', 'activity', 'info', recent_activity_list);
         localStorage.setItem('bwaa_recent_activity', JSON.stringify(recent_activity_list));
+    }
+
+
+
+
+    function bleh_gallery() {
+        if (page.subpage != 'music_artist_image' && page.subpage != 'music_album_image')
+            return;
+
+        log('focusing on image', 'gallery');
+
+        let image_sidebar = page.structure.side.querySelector('.js-gallery-image-details > div');
+
+        if (image_sidebar == null)
+            return;
+
+        if (image_sidebar.hasAttribute('data-bleh-gallery'))
+            return;
+        image_sidebar.setAttribute('data-bleh-gallery', 'true');
+
+        // move image to its own spot above
+        let image_details;
+        try {
+            let gallery_section = page.structure.main.querySelector('.gallery-section');
+            page.structure.container.insertBefore(gallery_section, page.structure.container.firstElementChild);
+
+            // move image details to main column
+            image_details = document.createElement('section');
+            image_details.classList.add('image-details');
+        } catch(e) {
+            image_details = page.structure.main.querySelector('.image-details');
+            image_details.innerHTML = '';
+        }
+        image_details.appendChild(image_sidebar);
+
+        // top title
+        let image_title = image_details.querySelector('.gallery-image-title');
+        let image_date = image_details.querySelector('.gallery-image-uploaded-by');
+
+        let breadcrumbs = document.body.querySelector('.content-top-lower-row');
+        let breadcrumb_root = breadcrumbs.querySelector('a');
+        let breadcrumb_name = breadcrumbs.querySelector('.subpage-title');
+
+        let image_title_container = document.createElement('div');
+        image_title_container.classList.add('image-title-container');
+        image_title_container.innerHTML = (`
+            <div class="sub-text">
+                <div class="breadcrumb">
+                    ${breadcrumb_root.outerHTML}
+                    <div class="breadcrumb-name">
+                        ${breadcrumb_name.textContent}
+                    </div>
+                </div>
+                ${image_date.outerHTML}
+            </div>
+            ${image_title.outerHTML}
+        `);
+
+        image_details.insertBefore(image_title_container, image_sidebar);
+        breadcrumbs.style.setProperty('display', 'none');
+
+        page.structure.main.insertBefore(image_details, page.structure.main.firstElementChild);
+
+        // bookmark-related info
+        patch_gallery_focused_image(image_sidebar);
     }
 })();
