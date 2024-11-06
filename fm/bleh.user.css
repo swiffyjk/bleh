@@ -15,7 +15,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Ubuntu+Sans:ital,wght@0,100..800;1,100..800&display=swap');
 
 body {
-    --version-build: '2024.1106.2';
+    --version-build: '2024.1106.3';
 
     --hue:  var(--hue-over,
             var(--hue-album,
@@ -1180,8 +1180,8 @@ last.fm changes as of 2024-05-20 */
     color: transparent !important;
 }
 .masthead-nav .masthead-nav-item .notification-count-badge {
-    top: 6px;
-    right: -2px;
+    top: 7px;
+    right: -1px;
 }
 
 @keyframes bubble {
@@ -1443,7 +1443,6 @@ body[class*="namespace--user_library_"] .col-sidebar, .library-header,
 /* listening reports */ .user-dashboard > .user-dashboard-buffer,
 /* katie doesnt have any scrobbles yet */ .profile-mobile-featured-track + .no-data-message,
 /* quick create playlists */ .section-with-separator[action*="/create/from-"],
-/* add artwork */ .namespace--music_album_images_image-upload .full-bleed-ad-container + .page-content + .page-content .col-main .form-horizontal,
 /* inbox */ .inbox-compose-view, .inbox-message-view,
 .event-summary-with-poster,
 /* event attendance column */ [class*="namespace--events"][class*="_attendance"] .col-main,
@@ -1469,7 +1468,8 @@ body[class*="namespace--user_library_"] .col-sidebar, .library-header,
 /* user did not scrobble album in date range */ .library-header + .message,
 /* no loved tracks */ .namespace--user_loved .no-data-message,
 /* no playlists */ .no-data-message--playlists,
-/* neighbours */ .friends-col-main
+/* neighbours */ .friends-col-main,
+.panel-form
 {
     content: '';
     --override-background: hsl(var(--card-specific-background, var(--card-background, var(--b5))));
@@ -1588,12 +1588,6 @@ body[class*="namespace--user_library_"] .col-sidebar, .library-header,
 }
 
 
-.namespace--music_album_images_image-upload .full-bleed-ad-container + .page-content {
-    display: flex;
-    align-items: center;
-    /* same height as the above one with button */
-    min-height: 123px;
-}
 .page-content:has(> .section .upper-overview-to-hide),
 .upper-overview-to-hide,
 .col-sidebar.masonry-right {
@@ -7285,8 +7279,7 @@ very, very, very dated - who looks up a song on ebay? */
 .content-form .form-horizontal .form-group-controls {
     margin-left: 150px;
 }
-.wiki-style-rules,
-.gallery-upload-rules {
+.wiki-style-rules {
     background-color: hsla(var(--h4), 15%);
     border-radius: var(--item-med-radius);
     padding: var(--card-gap);
@@ -7302,6 +7295,15 @@ very, very, very dated - who looks up a song on ebay? */
         margin-top: 4px;
     }
 }
+
+
+.rules-panel {
+    .bulleted-list,
+    h3 {
+        margin-bottom: var(--card-gap);
+    }
+}
+
 
 .form-group--create_automatic_edit_rule .form-group-controls {
     flex-direction: column;
@@ -17034,6 +17036,10 @@ h4 {
 
                 font-size: 24px !important;
                 line-height: 30px !important;
+
+                &.gallery-image-title-empty {
+                    color: hsl(var(--c3)) !important;
+                }
             }
 
             .title-layer {
@@ -17135,6 +17141,15 @@ h4 {
     }
 }
 
+
+/* default last.fm css, used for upload page */
+.gallery-image {
+    text-align: center;
+}
+.form-image-preview {
+    display: none;
+}
+
 .sub-text {
     color: hsl(var(--c3));
     font-size: var(--font-size);
@@ -17178,6 +17193,10 @@ h4 {
         flex: 1;
         --padding: var(--card-gap) var(--card-padding) var(--card-gap) calc(var(--card-padding) + 16px + 6px);
         --mask: var(--icon-16-gallery-vertical);
+
+        &.upload-button {
+            --mask: var(--icon-16-upload);
+        }
     }
 }
 
