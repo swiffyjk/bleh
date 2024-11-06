@@ -17036,6 +17036,10 @@ h4 {
 
                 font-size: 24px !important;
                 line-height: 30px !important;
+
+                &.gallery-image-title-empty {
+                    color: hsl(var(--c3)) !important;
+                }
             }
 
             .title-layer {

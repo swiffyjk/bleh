@@ -228,7 +228,7 @@ const trans = {
                     name: 'Colours',
                     bio: 'Pick your favourite!'
                 },
-                thanks: 'Welcome {m}, you are running bleh version {v}.',
+                thanks: 'Welcome {m}, you are running bleh version {v}.'
             },
             appearance: {
                 name: 'Appearance'
@@ -703,7 +703,10 @@ const trans = {
                     }
                 }
             },
-            empty: 'No description',
+            empty: {
+                title: 'No title',
+                description: 'No description'
+            },
             prefer: {
                 name: 'Star'
             },
@@ -1007,6 +1010,14 @@ const trans = {
                     for_others: 'Auf anderen Profilen'
                 }
             },
+            activities: {
+                name: 'Activities',
+                bio: 'Track your most recent activities locally on your profile.',
+                toggle: {
+                    name: 'Enable activity tracking',
+                    bio: 'Events will only be registered and displayed while enabled.'
+                }
+            },
             performance: {
                 name: 'Fehlerbehebung',
                 bio: 'Running into noticeable issues in theme loading? Try out these settings.',
@@ -1124,6 +1135,22 @@ const trans = {
                     bio: 'Aktiviert Zeilenumbrüche, Fettdruck, Kursivschrift und Links.',
                     shouts: 'In Shouts',
                     profile: 'In Profilbiografien'
+                },
+                font: {
+                    name: 'Font settings',
+                    placeholder: 'Font name(s), separated by commas'
+                },
+                font_weight: {
+                    name: 'Font weight',
+                    bio: 'Used for most regular text'
+                },
+                font_weight_medium: {
+                    name: 'Medium font weight',
+                    bio: 'Used for bold text'
+                },
+                font_weight_bold: {
+                    name: 'Bold font weight',
+                    bio: 'Used for header and selected text (eg. current tab)'
                 }
             },
             inbuilt: {
@@ -1299,24 +1326,84 @@ const trans = {
                     }
                 }
             }
+        },
+        empty: {
+            title: 'No title',
+            description: 'No description'
+        },
+        prefer: {
+            name: 'Star'
+        },
+        report: {
+            name: 'Report'
+        },
+        open: {
+            name: 'Expand',
+            tooltip: 'Expand image to full resolution'
+        },
+        up: 'Up votes:',
+        down: 'Down votes:',
+        vote: 'This is the sum of votes used for ordering.',
+        activities: {
+            name: 'Recent Activity',
+            description: 'Your latest 10 activities are tracked locally on your profile, try leaving a shout and check back here!',
+            notifications: 'Read your notifications',
+
+            test: 'TEST {involved}',
+            shout: 'You left a shout for {i}',
+            image_upload: 'You uploaded an image for {i}',
+            image_star: 'You starred an image for {i}',
+            obsess: 'You’re obsessed with {i}',
+            unobsess: 'You’re no longer obsessed with {i}',
+            love: 'You love {i}',
+            unlove: 'You no longer love {i}',
+            install_bwaa: 'You installed bwaa',
+            update_bwaa: 'You updated bwaa to {i}',
+            install_bleh: 'You installed bleh',
+            update_bleh: 'You updated bleh to {i}',
+            bookmark: 'You bookmarked {i}',
+            unbookmark: 'You removed {i}’s bookmark',
+            wiki: 'You edited on {i}'
         }
     },
     pl: {
+        lotus: {
+            artist: 'Artist corrections have been downloaded!',
+            album_track: 'Album and track corrections have been downloaded!',
+            version: 'You are running lotus version {v}.',
+            tooltip: 'lotus is the community correction system used in bleh and bwaa',
+            check: 'Check for updates',
+            correct: 'Submit name correction'
+        },
         auth_menu: {
             dev: 'Przełącz tryb deweloperski',
             configure_bleh: 'Skonfiguruj bleh',
+            library: 'Library',
             shouts: 'Wiadomości'
         },
         music: {
             submit_lastfm_correction: 'Submit correction to Last.fm',
-            submit_bleh_correction: 'Submit correction to bleh',
             search_variations: 'Search for variations of this title',
             fetch_plays: {
                 name: 'Tracklist',
                 loading: 'Fetching your plays on this album',
                 fail: 'You do not have any plays on this album',
                 open_as_track: 'Open album title as a track'
-            }
+            },
+            from_the_album: 'From the album: {album}',
+            listens: {
+                count_listens: '{c} listens',
+                loading_listens: 'listens',
+                other_listeners: '{c} others'
+            },
+            wiki: 'About',
+            refresh_tracks: 'Refresh tracks'
+        },
+        error: {
+            name: 'This page is missing...',
+            go_back: 'Go back',
+            visit_profile: 'Visit profile',
+            try_again: 'Try again'
         },
         statistics: {
             scrobbles: {
@@ -1331,7 +1418,43 @@ const trans = {
             on_ignore_list: 'Jesteś na liście ignorowanych tego użytkownika.',
             friends: {
                 name: 'Friends'
-            }
+            },
+            display_name: {
+                aka: 'aka.',
+                pronouns: 'pronouns'
+            },
+            created: {
+                name: 'created',
+
+                replace: '• scrobbling since '
+            },
+            edit: 'Edit profile',
+            shortcut: {
+                add: 'Add as shortcut',
+                remove: 'Your profiles are linked!'
+            },
+            scrobbles: 'Scrobbles',
+            artists: 'Artists',
+            loved: 'Loved tracks',
+            taste: 'Taste similarity',
+            taste_meter: {
+                level: {
+                    super: 'Super',
+                    very_high: 'Very High',
+                    high: 'High',
+                    medium: 'Medium',
+                    low: 'Low',
+                    very_low: 'Very Low',
+                    unknown: 'Unknown'
+                },
+                you_share_1: 'You share {artist}',
+                you_share_2: 'You share {artist1} and {artist2}',
+                you_share_3: 'You share {artist1}, {artist2}, and {artist3}'
+            },
+            open_avatar: 'Open in a new tab'
+        },
+        messaging: {
+            update: 'bleh has updated to version {v}!'
         },
         settings: {
             save: 'Zapisz',
@@ -1339,9 +1462,14 @@ const trans = {
             close: 'Zamknij',
             clear: 'Wyczyść',
             done: 'Gotowe',
+            finish: 'Finish',
             continue: 'Kontynuuj',
             reset: 'Przywróć domyślne',
             go: 'Go',
+            skip: 'Skip',
+            back: 'Back',
+            reload: 'A setting you changed requires a page reload to take effect, click to reload.',
+            new: 'New',
             examples: {
                 button: 'Przycisk przykładowy'
             },
@@ -1354,10 +1482,28 @@ const trans = {
                     name: 'Problemy',
                     bio: 'Zgłoś błędy'
                 },
+                update: {
+                    name: 'Updates',
+                    css: 'Update style',
+                    bio: 'Check now',
+                    notice: 'There are updates available!',
+                    ignore: 'Ignore temporarily',
+
+                    update_now: 'Update now',
+                    update_to_v: 'Update to {v}'
+                },
+                setup: {
+                    name: 'Setup',
+                    bio: 'Re-enter setup'
+                },
                 colours: {
                     name: 'Kolory',
                     bio: 'Wybierz swój ulubiony!'
-                }
+                },
+                thanks: 'Welcome {m}, you are running bleh version {v}.'
+            },
+            appearance: {
+                name: 'Appearance'
             },
             themes: {
                 name: 'Motywy',
@@ -1383,6 +1529,23 @@ const trans = {
                     bio: 'Re-live early computing'
                 }
             },
+            music: {
+                name: 'Music',
+                bio: 'Configure your music-related settings for profiles, artists, albums, and tracks.',
+                profile_shortcut: {
+                    name: 'Profile shortcut',
+                    bio: 'Quickly access a user\'s plays on an artist, album, or track page.',
+                    placeholder: 'Profile',
+                    header: 'Enter username',
+                    saved: 'Profile shortcut is valid',
+                    failed: 'Profile does not exist or failed to load'
+                },
+                show_bulk_edit_album: {
+                    name: 'Show album in chartlists',
+                    bio: 'This is disabled by default as hovering over tracks reveals the album title in all areas',
+                    require: 'Only applicable with the ‘Last.fm Bulk Edit’ extension'
+                }
+            },
             accessibility: {
                 name: 'Accessibility',
                 shout_preview: 'jakikolwiek losowy tekst, który <a href="https://cutensilly.org">nic nie znaczy</a>',
@@ -1402,13 +1565,52 @@ const trans = {
                     presets: 'Ustawienia wstępne',
                     manual: 'Ręcznie',
                     custom: 'Stwórz niestandardowy kolor',
+                    default_with_season: 'Default colour for {season}',
+                    default: 'Default colour',
                     modals: {
                         custom_colour: {
                             preface: 'Kolory są kontrolowane przez trzy wartości: odcień (hue), nasycenie (saturation) i jasność (lightness). Przesuń suwaki, aby dostosować kolor.',
                             hue: 'Kolor akcentu (hue)',
                             sat: 'Nasycenie (saturation)',
-                            lit: 'Jasność (lightness)'
+                            lit: 'Jasność (lightness)',
+                            seasonal_alert: 'The current season is overriding your accent colour, adjust sliders to disable.'
                         }
+                    }
+                },
+                high_contrast: {
+                    name: 'Enable high contrast mode'
+                },
+                seasonal: {
+                    name: 'Seasonal',
+                    bio: 'During seasonal events, bleh can automatically change the default accent colour, add particles, and add overlays to various interface elements.',
+                    listing: {
+                        easter: 'Easter',
+                        pride: 'Pride',
+                        halloween: 'Halloween',
+                        pre_fall: 'Pre-Fall',
+                        fall: 'Fall',
+                        christmas: 'Christmas',
+                        new_years: 'New Years'
+                    },
+                    option: {
+                        name: 'Enable seasonal event system'
+                    },
+                    marker: {
+                        current: 'The current season is {season} for {time}.',
+                        started: 'started {time}',
+                        none: 'There is no active season currently.',
+                        disabled: 'You have seasons disabled, enable to view current event.'
+                    },
+                    particles: {
+                        name: 'Display particles during select seasons',
+                        bio: 'During winter seasons you get snowflakes!'
+                    },
+                    show_less_particles: {
+                        name: 'Display a reduced number of particles'
+                    },
+                    overlays: {
+                        name: 'Display additional seasonal effects',
+                        bio: 'During winter seasons this is used for ice effects, otherwise mainly just gradients.'
                     }
                 },
                 artwork: {
@@ -1443,6 +1645,19 @@ const trans = {
                 },
                 pretty_obsessions: {
                     name: 'Pretty obsessions'
+                },
+                profile_header: {
+                    name: 'Display profile backgrounds',
+                    for_own: 'On my profile',
+                    for_others: 'On other profiles'
+                }
+            },
+            activities: {
+                name: 'Activities',
+                bio: 'Track your most recent activities locally on your profile.',
+                toggle: {
+                    name: 'Enable activity tracking',
+                    bio: 'Events will only be registered and displayed while enabled.'
                 }
             },
             performance: {
@@ -1511,9 +1726,26 @@ const trans = {
                 toggle: {
                     name: 'Enable the correction system'
                 },
+                view: {
+                    name: 'View current corrections',
+                    bio: 'Lists all active in your install'
+                },
+                formatting: 'Smart music titles',
                 format_guest_features: {
                     name: 'Formatuj występy i tagi utworów',
                     bio: 'Mniej eksponuje występy i tagi utworów (np. Remix, Deluxe Edition, itp.)'
+                },
+                show_guest_features: {
+                    name: 'Display guest features in title and artist',
+                    bio: 'Turning off will remove from title and prefer artist field.'
+                },
+                stacked_chartlist_info: {
+                    name: 'Stack track name and title',
+                    bio: 'Both matches streaming services and increases max length of each.'
+                },
+                show_remaster_tags: {
+                    name: 'Show remaster tags',
+                    bio: 'Nobody likes remasters (or the tags), if you\'d prefer to still listen but remove the annoyance hide them!'
                 },
                 submit: {
                     name: 'Submit new correction',
@@ -1544,6 +1776,22 @@ const trans = {
                     bio: 'Enables line-breaks, bold, italics, and links.',
                     shouts: 'In shouts',
                     profile: 'In profile bios'
+                },
+                font: {
+                    name: 'Font settings',
+                    placeholder: 'Font name(s), separated by commas'
+                },
+                font_weight: {
+                    name: 'Font weight',
+                    bio: 'Used for most regular text'
+                },
+                font_weight_medium: {
+                    name: 'Medium font weight',
+                    bio: 'Used for bold text'
+                },
+                font_weight_bold: {
+                    name: 'Bold font weight',
+                    bio: 'Used for header and selected text (eg. current tab)'
                 }
             },
             inbuilt: {
@@ -1695,7 +1943,45 @@ const trans = {
                         bio: 'Usuń zapis tego zdjęcia'
                     }
                 }
-            }
+            },
+            empty: {
+                title: 'No title',
+                description: 'No description'
+            },
+            prefer: {
+                name: 'Star'
+            },
+            report: {
+                name: 'Report'
+            },
+            open: {
+                name: 'Expand',
+                tooltip: 'Expand image to full resolution'
+            },
+            up: 'Up votes:',
+            down: 'Down votes:',
+            vote: 'This is the sum of votes used for ordering.'
+        },
+        activities: {
+            name: 'Recent Activity',
+            description: 'Your latest 10 activities are tracked locally on your profile, try leaving a shout and check back here!',
+            notifications: 'Read your notifications',
+
+            test: 'TEST {involved}',
+            shout: 'You left a shout for {i}',
+            image_upload: 'You uploaded an image for {i}',
+            image_star: 'You starred an image for {i}',
+            obsess: 'You’re obsessed with {i}',
+            unobsess: 'You’re no longer obsessed with {i}',
+            love: 'You love {i}',
+            unlove: 'You no longer love {i}',
+            install_bwaa: 'You installed bwaa',
+            update_bwaa: 'You updated bwaa to {i}',
+            install_bleh: 'You installed bleh',
+            update_bleh: 'You updated bleh to {i}',
+            bookmark: 'You bookmarked {i}',
+            unbookmark: 'You removed {i}’s bookmark',
+            wiki: 'You edited on {i}'
         }
     },
 }
@@ -10990,6 +11276,11 @@ let has_prompted_for_update = false;
         let image_title = image_details.querySelector('.gallery-image-title');
         let image_date = image_details.querySelector('.gallery-image-uploaded-by');
 
+        if (image_title.textContent.trim() == '') {
+            image_title.classList.add('gallery-image-title-empty');
+            image_title.textContent = trans[lang].gallery.empty.title;
+        }
+
         let breadcrumbs = document.body.querySelector('.content-top-lower-row');
         let breadcrumb_root = breadcrumbs.querySelector('a');
         let breadcrumb_name = breadcrumbs.querySelector('.subpage-title');
@@ -11021,7 +11312,7 @@ let has_prompted_for_update = false;
         if (description == null) {
             description = document.createElement('p');
             description.classList.add('gallery-image-description', 'gallery-image-description-empty');
-            description.textContent = trans[lang].gallery.empty;
+            description.textContent = trans[lang].gallery.empty.description;
 
             image_details.querySelector('[data-image-url]').appendChild(description);
         }
