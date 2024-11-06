@@ -1443,7 +1443,6 @@ body[class*="namespace--user_library_"] .col-sidebar, .library-header,
 /* listening reports */ .user-dashboard > .user-dashboard-buffer,
 /* katie doesnt have any scrobbles yet */ .profile-mobile-featured-track + .no-data-message,
 /* quick create playlists */ .section-with-separator[action*="/create/from-"],
-/* add artwork */ .namespace--music_album_images_image-upload .full-bleed-ad-container + .page-content + .page-content .col-main .form-horizontal,
 /* inbox */ .inbox-compose-view, .inbox-message-view,
 .event-summary-with-poster,
 /* event attendance column */ [class*="namespace--events"][class*="_attendance"] .col-main,
@@ -1469,7 +1468,8 @@ body[class*="namespace--user_library_"] .col-sidebar, .library-header,
 /* user did not scrobble album in date range */ .library-header + .message,
 /* no loved tracks */ .namespace--user_loved .no-data-message,
 /* no playlists */ .no-data-message--playlists,
-/* neighbours */ .friends-col-main
+/* neighbours */ .friends-col-main,
+.panel-form
 {
     content: '';
     --override-background: hsl(var(--card-specific-background, var(--card-background, var(--b5))));
@@ -1588,12 +1588,6 @@ body[class*="namespace--user_library_"] .col-sidebar, .library-header,
 }
 
 
-.namespace--music_album_images_image-upload .full-bleed-ad-container + .page-content {
-    display: flex;
-    align-items: center;
-    /* same height as the above one with button */
-    min-height: 123px;
-}
 .page-content:has(> .section .upper-overview-to-hide),
 .upper-overview-to-hide,
 .col-sidebar.masonry-right {
@@ -7285,8 +7279,7 @@ very, very, very dated - who looks up a song on ebay? */
 .content-form .form-horizontal .form-group-controls {
     margin-left: 150px;
 }
-.wiki-style-rules,
-.gallery-upload-rules {
+.wiki-style-rules {
     background-color: hsla(var(--h4), 15%);
     border-radius: var(--item-med-radius);
     padding: var(--card-gap);
@@ -7302,6 +7295,15 @@ very, very, very dated - who looks up a song on ebay? */
         margin-top: 4px;
     }
 }
+
+
+.rules-panel {
+    .bulleted-list,
+    h3 {
+        margin-bottom: var(--card-gap);
+    }
+}
+
 
 .form-group--create_automatic_edit_rule .form-group-controls {
     flex-direction: column;
@@ -17133,6 +17135,15 @@ h4 {
             }
         }
     }
+}
+
+
+/* default last.fm css, used for upload page */
+.gallery-image {
+    text-align: center;
+}
+.form-image-preview {
+    display: none;
 }
 
 .sub-text {

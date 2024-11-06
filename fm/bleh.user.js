@@ -2650,6 +2650,7 @@ let has_prompted_for_update = false;
             bleh_tracks();
 
             bleh_gallery();
+            bleh_gallery_upload_check();
 
             patch_shouts(document.body);
             patch_lastfm_settings(document.body);
@@ -2714,6 +2715,7 @@ let has_prompted_for_update = false;
                 bleh_tracks();
 
                 bleh_gallery();
+                bleh_gallery_upload_check();
 
                 patch_shouts(document.body);
                 patch_lastfm_settings(document.body);
@@ -4296,7 +4298,7 @@ let has_prompted_for_update = false;
             // check first if another sidebar exists
             page.structure.side = page.structure.row.querySelector('.col-sidebar');
 
-            if (page.structure != null) {
+            if (page.structure.side != null) {
                 log('finished', 'page structure');
                 return;
             }
@@ -10485,6 +10487,9 @@ let has_prompted_for_update = false;
         } else {
             // which subpage is it?
             page.subpage = document.body.classList[2].replace('namespace--', '');
+
+            if (page.subpage == 'music_artist_images_image-upload')
+                bleh_gallery_upload();
         }
 
         log('status is', 'page', 'info', page);
@@ -10559,6 +10564,9 @@ let has_prompted_for_update = false;
         } else {
             // which subpage is it?
             page.subpage = document.body.classList[2].replace('namespace--', '');
+
+            if (page.subpage == 'music_album_images_image-upload')
+                bleh_gallery_upload();
         }
 
         log('status is', 'page', 'info', page);
@@ -11149,5 +11157,68 @@ let has_prompted_for_update = false;
         divider.classList.add('listen-divider');
 
         return divider;
+    }
+
+
+
+
+    function bleh_gallery_upload() {
+        let gallery_section = document.createElement('section');
+        gallery_section.classList.add('gallery-section', 'gallery--initialised');
+
+        let image_container = document.createElement('div');
+        image_container.classList.add('gallery-image-container');
+
+        let slides = document.createElement('div');
+        slides.classList.add('gallery-slides');
+
+
+        let image = document.createElement('div');
+        image.classList.add('gallery-image', 'gallery-slide', 'image-preview', 'active-slide');
+        image.innerHTML = (`
+            <img class="image-preview-hook">
+        `);
+
+
+        slides.appendChild(image);
+        image_container.appendChild(slides);
+        gallery_section.appendChild(image_container);
+        page.structure.container.insertBefore(gallery_section, page.structure.container.firstElementChild);
+
+
+        // remove content top
+        let content_top = document.body.querySelector('.page-content');
+        content_top.innerHTML = '';
+
+        // apply card style to form
+        let form = page.structure.main.querySelector('.form-horizontal');
+        form.classList.add('panel-form');
+
+
+        // upload rules
+        let upload_rules_group = form.querySelector('.form-group--description + .form-group');
+        let rules = upload_rules_group.querySelector('.gallery-upload-rules');
+
+        let rules_panel = document.createElement('section');
+        rules_panel.classList.add('rules-panel');
+        rules_panel.innerHTML = rules.innerHTML;
+
+        page.structure.side.appendChild(rules_panel);
+
+        form.removeChild(upload_rules_group);
+    }
+
+    function bleh_gallery_upload_check() {
+        if (page.subpage != 'music_album_images_image-upload' && page.subpage != 'music_artist_images_image-upload')
+            return;
+
+        // update image preview
+        let image_preview = page.structure.main.querySelector('.form-image-preview');
+
+        if (image_preview == null)
+            return;
+
+        let image_preview_container = page.structure.container.querySelector('.image-preview-hook');
+        image_preview_container.setAttribute('src', image_preview.getAttribute('src'));
     }
 })();
