@@ -2797,6 +2797,10 @@ let has_prompted_for_update = false;
             document.body.classList.add('bleh');
             theme_version = getComputedStyle(document.body).getPropertyValue('--version-build').replaceAll("'", ''); // remove quotations
             log(`theme version reporting as ${theme_version}`, 'style');
+
+            // trigger re-flow of chart
+            if ((page.type == 'artist' || page.type == 'album' || page.type == 'track') && page.subpage == 'overview')
+                bleh_music_page_charts();
         }, 200);
     }
 
@@ -2955,6 +2959,10 @@ let has_prompted_for_update = false;
             setTimeout(function() {
                 document.body.classList.add('bleh');
                 theme_version = getComputedStyle(document.body).getPropertyValue('--version-build').replaceAll("'", ''); // remove quotations
+
+                // trigger re-flow of chart
+                if ((page.type == 'artist' || page.type == 'album' || page.type == 'track') && page.subpage == 'overview')
+                    bleh_music_page_charts();
 
                 // in versions 2024.1019 and onwards, the css stores version itself
                 // we can use this to compare if we should fetch a new one
@@ -10612,6 +10620,11 @@ let has_prompted_for_update = false;
         let panel = document.body.querySelector('.listen-panel'); // page.structure.side fails without pro
         let trend = panel.querySelector('.listener-trend');
 
+        // is this a chart reflow due to style loading?
+        let previous_chart = panel.querySelector('.scrobble-canvas-container');
+        if (previous_chart != null)
+            panel.removeChild(previous_chart);
+
         let table = trend.querySelector('tbody');
         let days = table.querySelectorAll('tr');
 
@@ -10725,7 +10738,7 @@ let has_prompted_for_update = false;
         scrobble_canvas_container.appendChild(scrobble_canvas);
         panel.appendChild(scrobble_canvas_container);
 
-        panel.removeChild(trend);
+        trend.style.setProperty('display', 'none');
 
         log('finished', 'music charts');
     }
