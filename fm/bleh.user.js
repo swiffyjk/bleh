@@ -698,6 +698,7 @@ const trans = {
                     }
                 }
             },
+            empty: 'No description',
             prefer: {
                 name: 'Star'
             },
@@ -10921,6 +10922,11 @@ let has_prompted_for_update = false;
             return;
         image_sidebar.setAttribute('data-bleh-gallery', 'true');
 
+        if (settings.feature_flags.new_gallery_experience == false) {
+            patch_gallery_focused_image(image_sidebar, page.structure.container.querySelector('.gallery-image-buttons'));
+            return;
+        }
+
         // move image to its own spot above
         let image_details;
         let gallery_section;
@@ -10966,6 +10972,15 @@ let has_prompted_for_update = false;
         breadcrumbs.style.setProperty('display', 'none');
 
         page.structure.main.insertBefore(image_details, page.structure.main.firstElementChild);
+
+        let description = image_details.querySelector('.gallery-image-description');
+        if (description == null) {
+            description = document.createElement('p');
+            description.classList.add('gallery-image-description', 'gallery-image-description-empty');
+            description.textContent = trans[lang].gallery.empty;
+
+            image_details.querySelector('[data-image-url]').appendChild(description);
+        }
 
         let buttons = image_details.querySelector('.gallery-image-buttons');
 
