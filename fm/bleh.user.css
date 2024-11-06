@@ -6322,7 +6322,7 @@ button,
 
 
 /*     BUTTON HAS ICON     */
-.bleh--gallery-bookmark-image-btn,
+.image-details :is(.bleh--gallery-bookmark-image-btn, .gallery-image-report, .gallery-image-delete button),
 .btn.back,
 .btn-post-shout,
 .view-item:not(.video-item, .listen-item, .profile-top-item--taste, .interact-item, .profile-top-item--shortcut, .profile-top-item--follow, .profile-top-item--message, .profile-top-item--edit),
@@ -6693,7 +6693,7 @@ span.header-new-gallery-inner a:before,
 .share-button-profile,
 .shout-more-actions,
 .toggle-button:not(.dropdown-menu-clickable-item), .header-new-more-button,
-.gallery-image-report, .gallery-image-delete button,
+.gallery-image-buttons:not(.gallery-image-buttons-extra) :is(.gallery-image-report, .gallery-image-delete button),
 .modal-dismiss,
 .content-form .table .delete,
 .masthead-search-submit,
@@ -7990,8 +7990,7 @@ body:is(.namespace--user_library_music_artist_overview, .namespace--user_library
     margin: unset !important;
 }
 
-.gallery-image-delete button,
-.gallery-image-report {
+.gallery-image-buttons:not(.gallery-image-buttons-extra) :is(.gallery-image-report, .gallery-image-delete button) {
     width: 40px !important;
 }
 .gallery-image-delete button,
@@ -16075,6 +16074,7 @@ button.bleh--gallery-bookmark-image-btn {
         background: var(--card-border-base);
     }
 }
+.button-container-wrapper,
 .top-container {
     display: flex;
     justify-content: space-between;
@@ -17125,7 +17125,7 @@ h4 {
         flex-direction: column;
         gap: var(--card-gap);
 
-        & > div:not(.image-title-container) {
+        & > div:not(.image-title-container, .button-container-wrapper) {
             display: flex;
             flex-direction: column;
             gap: var(--card-gap);
@@ -17154,6 +17154,7 @@ h4 {
 
         .gallery-image-buttons {
             margin: unset;
+            flex-grow: 0;
 
             button,
             form {
@@ -17186,10 +17187,22 @@ h4 {
                 --col: hsl(var(--c2));
                 --hue-over: var(--hue-neg);
             }
+            .gallery-image-delete button,
+            .gallery-image-report {
+                --hue-over: var(--hue-neg);
+            }
 
             .gallery-image-preferred-states {
                 color: inherit !important;
                 padding-left: calc(16px + 6px) !important;
+            }
+
+            .gallery-image-delete {
+                position: static;
+
+                button {
+                    position: relative;
+                }
             }
         }
     }

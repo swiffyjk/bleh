@@ -700,6 +700,9 @@ const trans = {
             },
             prefer: {
                 name: 'Star'
+            },
+            report: {
+                name: 'Report'
             }
         },
         activities: {
@@ -8532,7 +8535,7 @@ let has_prompted_for_update = false;
     }
 
     // gallery focused image
-    function patch_gallery_focused_image(focused_image_details) {
+    function patch_gallery_focused_image(focused_image_details, gallery_interactions) {
         let artist_name = document.body.querySelector('.header-new-title').textContent;
         let focused_image_id = focused_image_details.getAttribute('data-image-url').split('/')[4];
 
@@ -8544,10 +8547,6 @@ let has_prompted_for_update = false;
                 log('focused is bookmarked', 'gallery');
             }
         }
-
-        let gallery_interactions = focused_image_details.querySelector('.gallery-image-buttons');
-        if (gallery_interactions == undefined)
-            return;
 
         // append a bookmark button
         let gallery_bookmark_button = document.createElement('button');
@@ -10959,8 +10958,36 @@ let has_prompted_for_update = false;
         page.structure.main.insertBefore(image_details, page.structure.main.firstElementChild);
 
         let buttons = image_details.querySelector('.gallery-image-buttons');
-        let report_button = image_details.querySelector('.gallery-image-report-form');
 
+        // button container, to split into two
+        let button_container = document.createElement('div');
+        button_container.classList.add('button-container-wrapper');
+
+        button_container.appendChild(buttons);
+
+        let buttons_extra = document.createElement('div');
+        buttons_extra.classList.add('gallery-image-buttons', 'gallery-image-buttons-extra');
+
+        button_container.appendChild(buttons_extra);
+
+        image_details.appendChild(button_container);
+
+        // delete
+        let delete_button = image_details.querySelector('.gallery-image-delete');
+        if (delete_button != null)
+            buttons_extra.appendChild(delete_button);
+
+        // report
+        let report_button = image_details.querySelector('.gallery-image-report-form');
+        let report_text = report_button.querySelector('button');
+        tippy(report_text, {
+            content: report_text.textContent
+        });
+        report_text.textContent = trans[lang].gallery.report.name;
+
+        buttons_extra.appendChild(report_button);
+
+        // star
         let star_buttons = image_details.querySelectorAll('[data-analytics-label="PreferredImage"]');
         star_buttons.forEach((star_button) => {
             let text = star_button.querySelector('.gallery-image-preferred-states');
@@ -10971,9 +10998,7 @@ let has_prompted_for_update = false;
             text.textContent = trans[lang].gallery.prefer.name;
         });
 
-        buttons.appendChild(report_button);
-
         // bookmark-related info
-        patch_gallery_focused_image(image_sidebar);
+        patch_gallery_focused_image(image_sidebar, buttons);
     }
 })();
