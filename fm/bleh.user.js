@@ -10990,6 +10990,11 @@ let has_prompted_for_update = false;
 
         button_container.appendChild(buttons);
 
+        // divider after vote btns
+        let vote_buttons = buttons.querySelector('.gallery-image-vote-buttons');
+        vote_buttons.after(create_divider());
+
+        // 2nd side
         let buttons_extra = document.createElement('div');
         buttons_extra.classList.add('gallery-image-buttons', 'gallery-image-buttons-extra');
 
@@ -11008,6 +11013,7 @@ let has_prompted_for_update = false;
         open_button.setAttribute('onclick', `_expand_gallery_image()`);
 
         buttons_extra.appendChild(open_button);
+        open_button.after(create_divider());
 
         // delete
         let delete_button = image_details.querySelector('.gallery-image-delete');
@@ -11045,5 +11051,12 @@ let has_prompted_for_update = false;
     function expand_gallery_image() {
         let image_src = page.structure.container.querySelector('.active-slide .js-gallery-image').getAttribute('src').replace('770x0', 'ar0');
         expand_avatar(image_src);
+    }
+
+    function create_divider() {
+        let divider = document.createElement('div');
+        divider.classList.add('listen-divider');
+
+        return divider;
     }
 })();

@@ -801,6 +801,11 @@ inferred by it being opened in the first place */
     right: 0;
     height: fit-content !important;
 
+    /* v2 */
+    &.top-bar--pro {
+        display: none;
+    }
+
     &:before {
         content: '';
         position: fixed;
@@ -8433,6 +8438,17 @@ form[action="/inbox/notifications"] {
 }
 .gallery--initialised .gallery-slide {
     transition: left var(--trans) var(--trans-function);
+
+    [data-ff--new_gallery_experience="true"] & {
+        transition-property: left, opacity;
+        transition-duration: var(--trans);
+        transition-timing-function: var(--trans-function);
+
+        &:not(.active-slide) {
+            opacity: 0;
+            /*transform: scale(0.3);*/
+        }
+    }
 }
 #bleh--window-bleh_wait--body,
 .modal-processing,
