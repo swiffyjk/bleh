@@ -2845,6 +2845,7 @@ let inbuilt_settings = {
 // use the top-right link to determine the current user
 let auth = '';
 let auth_link = '';
+let is_pro = false;
 
 // stores ur current authorised avatar
 let my_avi = '';
@@ -3364,6 +3365,10 @@ let has_prompted_for_update = false;
             pro_badge.textContent = 'Pro';
 
             auth_link.appendChild(pro_badge);
+
+            is_pro = true;
+        } else {
+            is_pro = false;
         }
 
 
@@ -10474,15 +10479,13 @@ let has_prompted_for_update = false;
 
 
         // get panel
-        let col_sidebar = document.body.querySelector('.col-sidebar:not(.track-overview-video-column, .masonry-right)');
-
-        let panel = col_sidebar.querySelector('section.section-with-separator:has(.listener-trend)');
+        let panel = page.structure.side.querySelector('section.section-with-separator:has(.listener-trend)');
 
         if (panel == null) {
             panel = document.createElement('section');
             panel.classList.add('section-with-separator');
 
-            col_sidebar.insertBefore(panel, col_sidebar.firstElementChild);
+            page.structure.side.insertBefore(panel, page.structure.side.firstElementChild);
         }
 
         panel.classList.add('listen-panel');
@@ -10518,30 +10521,24 @@ let has_prompted_for_update = false;
 
 
         // is there album artwork?
-        if (header_type == 'album') {
+        if (page.type == 'album') {
             let album_artwork = document.body.querySelector('.artwork-and-metadata-row');
 
             if (album_artwork != null) {
-                col_sidebar.insertBefore(album_artwork, col_sidebar.firstElementChild);
+                page.structure.side.insertBefore(album_artwork, page.structure.side.firstElementChild);
             }
         }
 
-        let main_panel = document.body.querySelector('.col-main');
-        if (header_type == 'album' || header_type == 'artist') {
+        if (page.type == 'album' || page.type == 'artist') {
             let upper = document.body.querySelector('.col-main');
             upper.classList.add('upper-overview-to-hide');
 
             let new_upper = document.createElement('section');
             new_upper.classList.add('top-overview-panel');
-            new_upper.setAttribute('data-page-type', header_type);
+            new_upper.setAttribute('data-page-type', page.type);
             new_upper.innerHTML = upper.innerHTML;
 
-            let col_main = document.body.querySelector('.col-main:not(.upper-overview-to-hide)');
-
-            col_main.insertBefore(new_upper, col_main.firstElementChild);
-
-
-            main_panel = new_upper;
+            page.structure.main.insertBefore(new_upper, page.structure.main.firstElementChild);
         }
 
 
@@ -10583,7 +10580,7 @@ let has_prompted_for_update = false;
 
         // add info notes to things
         if (settings.feature_flags.show_wiki_label) {
-            let wiki_col = main_panel.querySelector('.wiki-column');
+            let wiki_col = page.structure.main.querySelector('.wiki-column');
 
             let wiki_header = document.createElement('h3');
             wiki_header.classList.add('text-18', 'subtle-header');
@@ -10753,10 +10750,26 @@ let has_prompted_for_update = false;
         let is_subpage = artist_header.classList.contains('header-new--subpage');
 
 
-        page.structure.container = document.body.querySelector('.page-content:not(.visible-xs, :has(.content-top-lower-row, a + .js-gallery-heading))');
+        // without pro theres two containers
+        if (is_pro) {
+            // pro
+
+            page.structure.container = document.body.querySelector('.page-content:not(.visible-xs, :has(.content-top-lower-row, a + .js-gallery-heading))');
+        } else {
+            // not pro
+
+            if (!is_subpage)
+                page.structure.container = document.body.querySelector('.page-content:not(header + .page-content)');
+            else
+                page.structure.container = document.body.querySelector('.page-content:not(.visible-xs, :has(.content-top-lower-row, a + .js-gallery-heading))');
+        }
         page.structure.row = page.structure.container.querySelector('.row');
         try {
-            page.structure.main = page.structure.row.querySelector('.col-main');
+            if (!is_subpage)
+                page.structure.main = page.structure.row.querySelector('.col-main.buffer-standard');
+            else
+                page.structure.main = page.structure.row.querySelector('.col-main');
+
             page.structure.side = page.structure.row.querySelector('.col-sidebar:not(.masonry-right)');
         } catch(e) {
             log('unable to find elements', 'page structure');
@@ -10804,10 +10817,22 @@ let has_prompted_for_update = false;
         let is_subpage = album_header.classList.contains('header-new--subpage');
 
 
-        page.structure.container = document.body.querySelector('.page-content:not(:has(.content-top-lower-row, a + .js-gallery-heading))');
+        // without pro theres two containers
+        if (is_pro) {
+            // pro
+
+            page.structure.container = document.body.querySelector('.page-content:not(:has(.content-top-lower-row, a + .js-gallery-heading))');
+        } else {
+            // not pro
+
+            if (!is_subpage)
+                page.structure.container = document.body.querySelector('.page-content:not(header + .page-content)');
+            else
+                page.structure.container = document.body.querySelector('.page-content:not(:has(.content-top-lower-row, a + .js-gallery-heading))');
+        }
         page.structure.row = page.structure.container.querySelector('.row');
         try {
-            page.structure.main = page.structure.row.querySelector('.col-main:not(.visible-xs)');
+            page.structure.main = page.structure.row.querySelector('.col-main:not(.visible-xs, .upper-overview)');
             page.structure.side = page.structure.row.querySelector('.col-sidebar.hidden-xs');
         } catch(e) {
             log('unable to find elements', 'page structure');
@@ -10883,7 +10908,19 @@ let has_prompted_for_update = false;
         let is_subpage = track_header.classList.contains('header-new--subpage');
 
 
-        page.structure.container = document.body.querySelector('.page-content');
+        // without pro theres two containers
+        if (is_pro) {
+            // pro
+
+            page.structure.container = document.body.querySelector('.page-content');
+        } else {
+            // not pro
+
+            if (!is_subpage)
+                page.structure.container = document.body.querySelector('.page-content:not(header + .page-content)');
+            else
+                page.structure.container = document.body.querySelector('.page-content');
+        }
         page.structure.row = page.structure.container.querySelector('.row');
         try {
             page.structure.main = page.structure.row.querySelector('.col-main');
@@ -10917,6 +10954,9 @@ let has_prompted_for_update = false;
 
         let panel = document.body.querySelector('.listen-panel'); // page.structure.side fails without pro
         let trend = panel.querySelector('.listener-trend');
+
+        if (trend == null)
+            return;
 
         // is this a chart reflow due to style loading?
         let previous_chart = panel.querySelector('.scrobble-canvas-container');
