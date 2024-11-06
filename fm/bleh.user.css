@@ -17138,7 +17138,7 @@ h4 {
             }
             .gallery-image-description {
                 min-width: unset;
-                margin: unset;
+                margin: -10px 0 0 0;
             }
             .gallery-image-uploaded-by {
                 display: none;

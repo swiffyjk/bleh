@@ -10717,6 +10717,9 @@ let has_prompted_for_update = false;
 
 
     unsafeWindow._expand_avatar = function(src) {
+        expand_avatar(src);
+    }
+    function expand_avatar(src) {
         create_window('avatar', '', (`
             <div class="full-avatar-wrapper">
                 <div class="full-avatar">
@@ -10987,8 +10990,7 @@ let has_prompted_for_update = false;
         });
         open_button.textContent = trans[lang].gallery.open.name;
 
-        let image_src = gallery_section.querySelector('.js-gallery-image').getAttribute('src');
-        open_button.setAttribute('onclick', `_expand_avatar('${image_src}')`);
+        open_button.setAttribute('onclick', `_expand_gallery_image()`);
 
         buttons_extra.appendChild(open_button);
 
@@ -11020,5 +11022,13 @@ let has_prompted_for_update = false;
 
         // bookmark-related info
         patch_gallery_focused_image(image_sidebar, buttons);
+    }
+
+    unsafeWindow._expand_gallery_image = function() {
+        expand_gallery_image();
+    }
+    function expand_gallery_image() {
+        let image_src = page.structure.container.querySelector('.active-slide .js-gallery-image').getAttribute('src');
+        expand_avatar(image_src);
     }
 })();
