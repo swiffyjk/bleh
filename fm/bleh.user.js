@@ -11057,6 +11057,15 @@ let has_prompted_for_update = false;
         // bookmark-related info
         if (settings.feature_flags.display_album_bookmark)
             patch_gallery_focused_image(image_sidebar, buttons);
+
+        /*let gallery_slides = gallery_section.querySelectorAll('.gallery-slide');
+        gallery_slides.forEach((slide) => {
+            console.info(slide);
+            let left = parseInt(slide.style.getPropertyValue('left').replace('%', ''));
+            console.info(left);
+
+            slide.style.setProperty('left', `${left / 10}%`)
+        });*/
     }
 
     unsafeWindow._expand_gallery_image = function() {

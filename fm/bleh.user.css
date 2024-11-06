@@ -16461,7 +16461,7 @@ button.bleh--gallery-bookmark-image-btn {
     position: relative;
     --mask: var(--icon-16-external);
 }
-button[type="submit"],
+.form-group button[type="submit"],
 .done {
     position: relative;
     --mask: var(--icon-16-check);
@@ -17152,10 +17152,33 @@ h4 {
             background: unset;
             padding: unset;
             height: 500px;
+            z-index: 1000;
         }
 
         .gallery-thumbnail-container {
-            display: none;
+            position: absolute;
+            inset: 0;
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            --size: 200px;
+
+            .gallery-thumbnails {
+                height: var(--size);
+                overflow: hidden;
+                filter: blur(3px);
+                opacity: 0.5;
+
+                li {
+                    width: var(--size);
+                    height: var(--size);
+
+                    &.selected {
+                        box-shadow: unset;
+                    }
+                }
+            }
         }
     }
 
