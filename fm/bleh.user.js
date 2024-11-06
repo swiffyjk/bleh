@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         bleh
 // @namespace    http://last.fm/
-// @version      2024.1105
+// @version      2024.1106
 // @description  bleh!!! ^-^
 // @author       kate
 // @match        https://www.last.fm/*
@@ -20,7 +20,7 @@
 // ==/UserScript==
 
 let version = {
-    build: '2024.1105',
+    build: '2024.1106',
     sku: 'petal',
     feature_flags: {
         bleh_settings_tabs: {
@@ -3033,6 +3033,14 @@ let has_prompted_for_update = false;
         let text = document.createElement('p');
         text.textContent = auth;
         auth_link.appendChild(text);
+
+        if (document.body.querySelector('.masthead .masthead-nav-wrap') != null) {
+            let pro_badge = document.createElement('p');
+            pro_badge.classList.add('pro-badge');
+            pro_badge.textContent = 'Pro';
+
+            auth_link.appendChild(pro_badge);
+        }
 
 
         let notif_btn = document.body.querySelector('.masthead-nav-control[data-analytics-label="notifications"]');

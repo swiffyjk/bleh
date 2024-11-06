@@ -1,7 +1,7 @@
 /* ==UserStyle==
 @name           bleh (dev)
 @namespace      github.com/katelyynn/bleh
-@version        2024.1105
+@version        2024.1106
 @license        GPL-3.0
 @author         kate
 @updateURL      https://github.com/katelyynn/bleh/raw/uwu/fm/bleh.user.css
@@ -15,7 +15,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Ubuntu+Sans:ital,wght@0,100..800;1,100..800&display=swap');
 
 body {
-    --version-build: '2024.1105';
+    --version-build: '2024.1106';
 
     --hue:  var(--hue-over,
             var(--hue-album,
@@ -259,7 +259,8 @@ input[type="range"],
 .action .icon,
 [data-season],
 .small-alert,
-.lotus
+.lotus,
+.pro-badge
 {
     --hue:  var(--hue-over,
             var(--hue-album,
@@ -800,6 +801,11 @@ inferred by it being opened in the first place */
     right: 0;
     height: fit-content !important;
 
+    /* v2 */
+    &.top-bar--pro {
+        display: none;
+    }
+
     &:before {
         content: '';
         position: fixed;
@@ -993,6 +999,11 @@ last.fm changes as of 2024-05-20 */
     display: flex !important;
     justify-content: center;
     align-items: center;
+
+    /* v2 */
+    .masthead-pro-wrap {
+        display: none;
+    }
 
     &:before {
         content: '';
@@ -1277,6 +1288,23 @@ last.fm changes as of 2024-05-20 */
     --mask: var(--icon-16-arrow-down);
     --left: none !important;
     --right: 0;
+
+    .pro-badge {
+        background-color: hsla(var(--h4), 40%);
+        box-shadow: 0 0 20px hsla(var(--h4), 60%);
+        color: hsl(var(--l2-c));
+        font-size: var(--font-size-sm);
+        padding: 0 6px;
+        border-radius: var(--item-med-radius);
+
+        --hue-over: var(--hue-pro);
+        --sat-over: 1;
+        --lit-over: 1;
+    }
+
+    p {
+        margin: unset;
+    }
 }
 
 .auth-link.disclose-active .auth-avatar-desktop {
@@ -6348,7 +6376,7 @@ button,
 .event-metadata + .event-metadata a,
 #manage_data .btn-primary,
 .obsession-history-play-all,
-.done, .cancel, .download, .upload, .save, .js-close:not(.modal-action-button)
+.done, .cancel, .download, .upload, .save, .js-close:not(.modal-action-button), button[type="submit"]
 {
     --btn-left: calc(12px + 16px + 6px) !important;
 
@@ -6469,6 +6497,7 @@ button,
 
 
 /*     ICON MASK     */
+/* v2 */ .form-arrow:before,
 .select-button:before,
 .involved--track:before, .involved--album:before, .involved--artist:before,
 .activity-item:before,
@@ -6481,7 +6510,7 @@ button,
 .side-right .setting-item:before, .action:before,
 .setup-icon:before, .setup-icon:after,
 .btn.back:before,
-.continue:before, .external:before, .done:before, .cancel:before, .download:before, .upload:before, .save:before, .open:before, .js-close:not(.modal-action-button):before,
+.continue:before, .external:before, .done:before, .cancel:before, .download:before, .upload:before, .save:before, .open:before, .js-close:not(.modal-action-button):before, button[type="submit"]:before,
 .badge:before,
 .btn-post-shout:before,
 .auth-link:before, .language-nav:before, .language-nav > span:before,
@@ -16416,6 +16445,7 @@ button.bleh--gallery-bookmark-image-btn {
     position: relative;
     --mask: var(--icon-16-external);
 }
+button[type="submit"],
 .done {
     position: relative;
     --mask: var(--icon-16-check);
@@ -16766,7 +16796,7 @@ h4 {
 .new-badge {
     display: inline-flex;
     background-color: hsla(var(--h4), 40%);
-    box-shadow: 0 0 20px hsla(var(--h3), 60%);
+    box-shadow: 0 0 20px hsla(var(--h4), 60%);
     color: hsl(var(--l2-c));
 
     font-size: var(--font-size-sm);
@@ -17088,5 +17118,73 @@ h4 {
 }
 .select-item {
     width: 100% !important;
+}
+
+
+
+
+/*     TRACK/ALBUM EDITING (V2)     */
+.automatic-edit-modal-body-v2 {
+    .edit-scrobble-top-box {
+        border: 1px solid var(--card-border-base);
+        border-radius: var(--card-radius);
+        box-shadow: unset;
+        padding: var(--card-gap);
+
+        .edit-scrobble-top-box__album-name {
+            font-weight: var(--font-weight-medium) !important;
+        }
+        .scrobble-count {
+            color: hsl(var(--c3)) !important;
+            font: inherit !important;
+        }
+    }
+    .edit-scrobble-form {
+        margin-top: var(--card-gap);
+    }
+
+    .edit-scrobble-label {
+        color: hsl(var(--c3));
+
+        .control-label.hidden + &,
+        .form-group + & {
+            margin: var(--item-list-gap) 0;
+        }
+    }
+    .control-label.hidden {
+        display: none !important;
+    }
+
+    .modal-dialog:has(&) {
+        width: 900px;
+        max-width: 95vw;
+    }
+
+    a {
+        color: hsl(var(--l3-c)) !important;
+    }
+
+    .checkbox {
+        padding: unset !important;
+        margin-top: calc(-1 * var(--item-list-gap)) !important;
+    }
+}
+.original-field {
+    width: 80% !important;
+}
+.form-arrow {
+    display: block !important;
+    width: calc(16px + var(--card-gap)) !important;
+    min-width: calc(16px + var(--card-gap));
+    height: 32px !important;
+    padding: unset !important;
+    margin: unset !important;
+    position: relative !important;
+
+    background: none !important;
+    --left: 50%;
+    --margin-left: -8px;
+    --mask: var(--icon-16-arrow-right);
+    color: hsl(var(--c3));
 }
 }
