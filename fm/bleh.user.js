@@ -57,6 +57,11 @@ let version = {
             default: true,
             name: 'New gallery experience',
             date: '2024-11-06'
+        },
+        display_album_bookmark: {
+            default: false,
+            name: 'Display album bookmark button in gallery refresh',
+            date: '2024-11-06'
         }
     }
 }
@@ -11050,7 +11055,8 @@ let has_prompted_for_update = false;
         });
 
         // bookmark-related info
-        patch_gallery_focused_image(image_sidebar, buttons);
+        if (settings.feature_flags.display_album_bookmark)
+            patch_gallery_focused_image(image_sidebar, buttons);
     }
 
     unsafeWindow._expand_gallery_image = function() {
