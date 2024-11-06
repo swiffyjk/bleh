@@ -11054,6 +11054,21 @@ let has_prompted_for_update = false;
             text.textContent = trans[lang].gallery.prefer.name;
         });
 
+
+        // view all artwork
+        let view_all_container = page.structure.main.querySelector('.more-link-fullwidth-right-flush-top');
+        let view_all = view_all_container.querySelector('a');
+        view_all.classList.add('btn', 'view-all-button', 'back');
+
+        let view_all_panel = document.createElement('section');
+        view_all_panel.classList.add('view-all-panel');
+
+        view_all_panel.appendChild(view_all);
+        page.structure.side.insertBefore(view_all_panel, page.structure.side.firstElementChild);
+
+        page.structure.main.removeChild(view_all_container);
+
+
         // bookmark-related info
         if (settings.feature_flags.display_album_bookmark)
             patch_gallery_focused_image(image_sidebar, buttons);

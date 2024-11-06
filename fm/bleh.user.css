@@ -1960,7 +1960,7 @@ article, section, .buffer-standard, .buffer-standard:not(.col-sidebar) .buffer-s
     --mask: var(--icon-16-upload);
 }
 .album-overview-cover-art-gallery-action a {
-    --mask: var(--icon-16-photo);
+    --mask: var(--icon-16-gallery-vertical);
 }
 
 .video-preview-upload-cta a {
@@ -2001,7 +2001,7 @@ span.header-new-gallery-inner,
 span.header-new-gallery-inner a,
 .gallery-preview-cta a,
 .album-artwork-upload-cta a {
-    --mask: var(--icon-photo);
+    --mask: var(--icon-16-gallery-vertical);
 }
 
 
@@ -3169,7 +3169,7 @@ button.navlist-more {
     --mask: var(--icon-16-album);
 }
 .secondary-nav-item--images a:before {
-    --mask: var(--icon-16-photo);
+    --mask: var(--icon-16-gallery-vertical);
 }
 .secondary-nav-item--listeners a:before {
     --mask: var(--icon-16-listener);
@@ -17153,6 +17153,13 @@ h4 {
             padding: unset;
             height: 500px;
             z-index: 1000;
+
+            .gallery-next {
+                left: 50%;
+            }
+            .gallery-previous {
+                right: 50%;
+            }
         }
 
         .gallery-thumbnail-container {
@@ -17313,6 +17320,20 @@ h4 {
         --mask: var(--icon-16-upload);
         --left: 0;
         min-width: unset;
+    }
+}
+
+
+.view-all-panel {
+    display: flex;
+    background: unset !important;
+    padding: unset !important;
+
+    .view-all-button {
+        --shadow: none;
+        flex: 1;
+        --padding: var(--card-gap) var(--card-padding) var(--card-gap) calc(var(--card-padding) + 16px + 6px);
+        --mask: var(--icon-16-gallery-vertical);
     }
 }
 
