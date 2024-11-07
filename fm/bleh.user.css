@@ -15178,12 +15178,11 @@ trying to list every song ever made by someone identifying as a female, which is
         display: none;
     }
 }
+.modal-dialog--upload-avatar {
+    width: calc(450px + (5px * 2)) !important;
+}
 .bleh--upload-avatar-container {
     display: flex;
-
-    .modal-dialog:has(&) {
-        width: calc(450px + (5px * 2)) !important;
-    }
 
     form {
         display: flex;
@@ -15221,13 +15220,12 @@ trying to list every song ever made by someone identifying as a female, which is
         }
     }
 }
+.modal-dialog--update {
+    width: calc(450px + (5px * 2)) !important;
+}
 .bleh--update-checker-container {
     display: flex;
     margin-top: var(--card-gap);
-
-    .modal-dialog:has(&) {
-        width: calc(450px + (5px * 2)) !important;
-    }
 
     .form {
         display: flex;
@@ -16295,11 +16293,10 @@ button.bleh--gallery-bookmark-image-btn {
     }
 }
 
+.modal-dialog--setup {
+    width: 940px !important;
+}
 .modal--setup {
-    .modal-dialog:has(&) {
-        width: 940px;
-    }
-
     .modal-title {
         display: none;
     }
@@ -17214,6 +17211,10 @@ h4 {
 
 
 /*     TRACK/ALBUM EDITING (V2)     */
+.modal-dialog:has(.automatic-edit-modal-body-v2) {
+    width: 900px;
+    max-width: 95vw;
+}
 .automatic-edit-modal-body-v2 {
     .edit-scrobble-top-box {
         border: 1px solid var(--card-border-base);
@@ -17243,11 +17244,6 @@ h4 {
     }
     .control-label.hidden {
         display: none !important;
-    }
-
-    .modal-dialog:has(&) {
-        width: 900px;
-        max-width: 95vw;
     }
 
     a {

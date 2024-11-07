@@ -3149,7 +3149,7 @@ let has_prompted_for_update = false;
                     </div>
                 </div>
             </div>
-        `));
+        `), false, 'update');
     }
 
     unsafeWindow._ignore_update = function() {
@@ -3180,7 +3180,7 @@ let has_prompted_for_update = false;
                         </div>
                     </div>
                 </div>
-            `));
+            `), false, 'update');
         }
     }
 
@@ -3201,7 +3201,7 @@ let has_prompted_for_update = false;
                     </div>
                 </div>
             </div>
-        `));
+        `), false, 'update');
     }
 
     unsafeWindow._finish_update = function() {
@@ -4321,7 +4321,7 @@ let has_prompted_for_update = false;
                     </div>
                 </form>
             </div>
-            `, true);
+            `, true, 'upload-avatar');
     }
 
 
@@ -8116,6 +8116,9 @@ let has_prompted_for_update = false;
         dialog.setAttribute('id',`bleh--window-${id}--dialog`);
         dialog.style = 'opacity: 1; visibility: visible; pointer-events: auto; display: inline-block; outline: none; text-align: left; position: relative; vertical-align: middle;';
         dialog.setAttribute('data-kate-processed','true');
+
+        if (classname != '')
+            dialog.classList.add(`modal-dialog--${classname}`);
 
         // content
         let content = document.createElement('div');
