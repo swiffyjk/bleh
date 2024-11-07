@@ -17092,10 +17092,13 @@ h4 {
             }
 
             button {
-                --col: hsl(var(--l3-c));
-                --sat-over: 1;
-                --lit-over: 1;
                 position: relative;
+
+                &:not(.image-open-button) {
+                    --col: hsl(var(--l3-c));
+                    --sat-over: 1;
+                    --lit-over: 1;
+                }
 
                 .gallery-image-preferred-states:before,
                 &:before {
@@ -17118,7 +17121,6 @@ h4 {
                 --hue-over: var(--hue-neg);
             }
             .image-open-button {
-                --col: hsl(var(--c2));
                 --mask: var(--icon-16-expand);
             }
 
