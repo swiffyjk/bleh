@@ -235,20 +235,17 @@ a,
 .image-list-item-preferred-icon:before,
 .header-metadata-item:after,
 #current-subscription,
-.header-metadata-tnew-item,
 .header:before,
 #ignorelist > p,
 .events-list-item-date-icon, .calendar-icon,
 .async-content-error-message,
 .avatar-status-dot, .label, .shout-user-avatar:before, .user-status-None,
 .masthead-nav-control,
-.header-new-inner:not(.header-new-inner--without-image) .header-new-actions :is(a, button), .header-new-inner:not(.header-new-inner--without-image), .header-new-inner:not(.header-new-inner--without-image) span[itemprop="byArtist"] a,
-.user-dashboard-layout .masthead a,
+.header-new-inner:not(.header-new-inner--without-image), .header-new-inner:not(.header-new-inner--without-image) span[itemprop="byArtist"] a,
 .bleh--redacted-message,
 .listen-item, .chartlist-count-bar, .chartlist-count-bar-value,
 .primary-selection,
 .nag-bar--alert,
-input[type="range"],
 .form-row-help-text,
 .chartlist-loved,
 .preview, .preview[data-bleh--theme="dark"],
@@ -260,7 +257,8 @@ input[type="range"],
 .small-alert,
 .lotus,
 .pro-badge, .vote-number,
-.staff-profile .header-title, .staff-shout, .staff-shout a
+.staff-profile .header-title, .staff-shout, .staff-shout a,
+.changelog-version-item
 {
     --hue:  var(--hue-over,
             var(--hue-album,
@@ -1520,6 +1518,11 @@ body[class*="namespace--user_library_"] .col-sidebar, .library-header,
     .section-controls {
         margin-top: unset !important;
     }
+
+    [data-bleh--theme="light"] &,
+    [data-bleh--theme="oled"] & {
+        box-shadow: 0 0 0 1px var(--card-border-base) inset;
+    }
 }
 .content-top-header,
 .artist-similar-sidebar,
@@ -1641,7 +1644,7 @@ body[class*="namespace--user_library_"] .col-sidebar, .library-header,
     --override-background: unset !important;
     border: unset;
     border-radius: unset;
-    box-shadow: unset;
+    box-shadow: unset !important;
     padding: unset;
     margin-top: unset;
     background-image: unset;
@@ -15476,7 +15479,7 @@ button.bleh--gallery-bookmark-image-btn {
 
 .secondary-nav-item-link {
     .secondary-nav-item--gallery-overview & {
-        --mask: var(--icon-16-photo);
+        --mask: var(--icon-16-gallery-vertical);
     }
     .secondary-nav-item--gallery-bookmarks & {
         --mask: var(--icon-16-bookmark);
@@ -16802,8 +16805,10 @@ h4 {
         gap: 20px;
     }
 }
-.modal-inner-content {
+.modal-inner-content.allow-scroll {
     max-height: 70vh;
+    padding: var(--card-gap);
+    margin: calc(-1 * var(--card-gap)) !important;
     overflow-y: hidden;
 
     &:hover {
@@ -16856,6 +16861,8 @@ h4 {
 
                     min-width: 300px;
                     min-height: 300px;
+
+                    --mask-size: var(--cover-size-300);
                 }
             }
 
@@ -17243,6 +17250,9 @@ h4 {
         &.upload-button {
             --mask: var(--icon-16-upload);
         }
+        &.all-saved-button {
+            --mask: var(--icon-16-bookmark);
+        }
     }
 }
 
@@ -17322,25 +17332,105 @@ h4 {
 .changelog-list {
     display: flex;
     flex-direction: column;
-    gap: var(--card-gap);
+    gap: var(--card-padding);
 
     .changelog-version-item {
         display: flex;
         flex-direction: column;
         gap: var(--item-list-gap);
+        position: relative;
+
+        &[data-changelog-latest="true"] {
+            padding: var(--card-gap);
+            background-color: hsla(var(--h4), 15%);
+            box-shadow: 0 0 20px hsla(var(--h4), 15%);
+            border-radius: var(--item-big-radius);
+
+            &:before {
+                display: none;
+            }
+
+            [data-bleh--theme="light"] & {
+                background-color: hsla(var(--h4), 35%);
+                box-shadow: 0 0 20px hsla(var(--h4), 35%);
+            }
+        }
 
         .version-item-header {
-            h4 {
-                font-size: inherit;
-                line-height: inherit;
-                color: hsl(var(--c3));
+            h3 {
+                color: hsl(var(--c1));
             }
         }
 
         & + .changelog-version-item {
             border-top: 1px solid var(--card-border-base);
-            padding-top: var(--card-gap);
+            padding-top: var(--card-padding);
         }
+
+        &:before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(180deg, hsl(var(--b5)) 0%, transparent 20%, transparent 80%, hsl(var(--b5)) 100%);
+        }
+
+        div {
+            position: relative;
+            z-index: 10;
+        }
+
+        &:first-child {
+            --hue-over: var(--hue-pro);
+            --sat-over: 1;
+            --lit-over: 1;
+
+            .version-item-header {
+                .sub-text {
+                    color: hsl(var(--l3-c));
+                    text-shadow: 0 0 20px hsla(var(--h4), 40%);
+                }
+            }
+        }
+
+        &[data-changelog-type="major"] {
+            --hue-over: var(--hue-pos);
+            --sat-over: 1;
+            --lit-over: 1;
+            background: radial-gradient(circle, hsla(var(--h4), 10%) 0%, rgba(255,255,255,0) 75%);
+
+            .version-item-header {
+                .sub-text {
+                    color: hsl(var(--l3-c));
+                    text-shadow: 0 0 20px hsla(var(--h4), 40%);
+                }
+            }
+        }
+    }
+}
+
+.latest-line {
+    flex: 1;
+    text-align: right;
+    position: relative;
+    display: flex;
+    justify-content: end;
+
+    &:before {
+        content: '';
+        left: var(--card-gap);
+        right: 0;
+        top: 50%;
+        position: absolute;
+
+        height: 2px;
+        margin-top: -1px;
+        background-color: hsla(var(--l3-c), 30%);
+    }
+
+    div {
+        background-color: hsl(var(--b5));
+        padding-left: var(--card-gap);
+        width: fit-content;
     }
 }
 
@@ -17354,9 +17444,33 @@ h4 {
         }
     }
 
+    &.version-item-body {
+        li {
+            &:before {
+                content: '+';
+            }
+        }
+    }
+
     img {
         width: 100%;
         border-radius: var(--item-big-radius);
+    }
+
+    p {
+        margin: var(--card-gap) 0;
+    }
+    h5 {
+        font-size: 16px;
+        line-height: 20px;
+        margin: var(--card-gap) 0 0 0;
+    }
+
+    :first-child {
+        margin-top: unset;
+    }
+    :last-child {
+        margin-bottom: unset;
     }
 }
 }

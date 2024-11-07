@@ -3,15 +3,15 @@
     "latest": "2024.1107",
     "2024.1107": {
         "name": "changelogs :3",
-        "type": "major",
+        "type": "minor",
         "force": false,
-        "bio": "Update changelogs are now available version per version, detailing updates in each build. Speaking of, here are the changes today:\n\n- First pass of light theme readability, there is more to come in the future\nSome top panel buttons have been moved into a ... menu for artists, albums, and tracks\n- Custom charts now correctly update on theme change\n- Minor bulk edit colour fix\n- Improve optimisation of staff shouts and colour staff profiles\n\n![](https://katelyynn.github.io/bleh/fm/changelog/img/bleh3-gallery.png)"
+        "bio": "Update changelogs are now available version per version, detailing updates in each build. Speaking of, here are the changes today:\n\n- First pass of light theme readability, there is more to come in the future\nSome top panel buttons have been moved into a ... menu for artists, albums, and tracks\n- Custom charts now correctly update on theme change\n- Minor bulk edit colour fix\n- Improve optimisation of staff shouts and colour staff profiles"
     },
     "2024.1106.1": {
         "name": "Gallery redesign is now live",
         "type": "major",
         "force": false,
-        "bio": "Following (kinda) coincidentally with Last.fm's debut of album image saving, bleh now features a fully redesigned gallery page."
+        "bio": "Following (kinda) coincidentally with Last.fm's debut of album image saving, bleh now features a fully redesigned gallery page.\n\n![Redesigned gallery image](https://katelyynn.github.io/bleh/fm/changelog/img/bleh3-gallery.png)\n\n# A walkthrough\nGallery pages have been restructured to place primary focus on the image in question, now stretching across both columns. To further help this, a new 'Expand' button is located below to view the image in it's full resolution. Along with this, a vote tally is now displayed taking the positive votes minus the negative votes to give you the current number used for ordering."
     },
     "2024.1106": {
         "name": "Last.fm fixes",

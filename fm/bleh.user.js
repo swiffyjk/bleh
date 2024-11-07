@@ -117,8 +117,11 @@ const trans = {
             name: 'What’s New?',
             type: {
                 major: 'Major release',
+                minor: 'Minor release',
+                general: 'General improvements',
                 fix: 'Bug fix'
-            }
+            },
+            latest: 'Latest'
         },
         auth_menu: {
             dev: 'Toggle dev mode',
@@ -703,13 +706,14 @@ const trans = {
         },
         gallery: {
             tabs: {
-                overview: 'Photos',
+                overview: 'All',
                 bookmarks: 'Saved'
             },
             bookmarks: {
                 name: 'Saved',
                 bio: 'Gallery photos can be saved for future reference.',
                 no_data: 'no images saved (・・ )',
+                link: 'View all saved photos',
                 button: {
                     image_is_bookmarked: {
                         name: 'You have saved this image'
@@ -2894,6 +2898,9 @@ let page = {
         main: null,
         side: null,
         nav: null
+    },
+    requested: {
+        tab: null
     }
 };
 
@@ -4585,6 +4592,9 @@ let has_prompted_for_update = false;
     function checkup_page_structure() {
         document.body.style.removeProperty('--hue-album');
         document.body.style.removeProperty('--sat-album');
+
+        let params = new URLSearchParams(document.location.search);
+        page.requested.tab = params.get('tab');
 
         if (page.structure.container == null || !document.body.contains(page.structure.container)) {
             log('page missing container, creating', 'page structure');
@@ -8147,7 +8157,7 @@ let has_prompted_for_update = false;
 
 
     // create a window
-    function create_window(id, title, inner_content, has_close = false, classname='') {
+    function create_window(id, title, inner_content, has_close = false, classname='', allow_scroll = false) {
         log(`created ${id} - '${title}'`, 'window', 'info', {content: [inner_content], has_close: has_close, classname: classname});
 
         let background = document.createElement('div');
@@ -8224,6 +8234,9 @@ let has_prompted_for_update = false;
         inner_content_em.classList.add('modal-inner-content');
         inner_content_em.innerHTML = inner_content;
         inner_content_em.setAttribute('data-kate-processed','true');
+
+        if (allow_scroll)
+            inner_content_em.classList.add('allow-scroll');
 
 
         let align = document.createElement('div');
@@ -8825,7 +8838,10 @@ let has_prompted_for_update = false;
         let adaptive_skin = document.body.querySelector('.adaptive-skin-container');
         let page_content = adaptive_skin.querySelector('.page-content');
 
-        document.body.setAttribute('data-bleh--gallery-tab', 'overview');
+        if (page.requested.tab != 'saved')
+            document.body.setAttribute('data-bleh--gallery-tab', 'overview');
+        else
+            document.body.setAttribute('data-bleh--gallery-tab', 'bookmarks');
 
 
         // create nav
@@ -10879,7 +10895,7 @@ let has_prompted_for_update = false;
             <div class="corrections artist" id="corrections-artist"></div>
             <h4>${trans[lang].settings.corrections.listing.albums_tracks}</h4>
             <div class="corrections album_tracks" id="corrections-albums_tracks"></div>
-        `), true, 'corrections');
+        `), true, 'corrections', true);
 
         prepare_corrections_page();
     }
@@ -11611,6 +11627,21 @@ let has_prompted_for_update = false;
             page.structure.side.insertBefore(view_all_panel, page.structure.side.firstElementChild);
 
             page.structure.main.removeChild(view_all_container);
+
+
+            // saved button
+            if (page.type == 'artist' || settings.feature_flags.display_album_bookmark) {
+                let all_saved_panel = document.createElement('section');
+                all_saved_panel.classList.add('view-all-panel');
+
+                all_saved_panel.innerHTML = (`
+                    <a class="btn view-all-button back all-saved-button" href="${view_all.getAttribute('href')}?tab=saved">
+                        ${trans[lang].gallery.bookmarks.link}
+                    </a>
+                `);
+
+                view_all_panel.after(all_saved_panel);
+            }
         }
 
 
@@ -11741,19 +11772,20 @@ let has_prompted_for_update = false;
         let changelog = JSON.parse(localStorage.getItem('bleh_changelog') || '{}');
 
         let window = create_window('changelog', trans[lang].changelog.name, (`
-            <div class="changelog-list">
-
-            </div>
-        `), true, 'changelog');
+            <div class="changelog-list"></div>
+        `), true, 'changelog', true);
 
         let changelog_list = window.querySelector('.changelog-list');
 
+        let index = 0;
         for (let version in changelog) {
             if (version == 'updated' || version == 'latest')
                 continue;
 
             let version_item = document.createElement('div');
             version_item.classList.add('changelog-version-item');
+            version_item.setAttribute('data-changelog-type', changelog[version].type);
+            version_item.setAttribute('data-changelog-latest', (index == 0) ? 'true' : 'false');
             version_item.innerHTML = (`
                 <div class="version-item-header">
                     <div class="sub-text">
@@ -11765,6 +11797,11 @@ let has_prompted_for_update = false;
                                 ${trans[lang].changelog.type[changelog[version].type]}
                             </div>
                         </div>
+                        ${(index == 0) ? (`
+                        <!--<div class="latest-line">
+                            <div>${trans[lang].changelog.latest}</div>
+                        </div>-->
+                        `) : ''}
                     </div>
                     <h3>${changelog[version].name}</h3>
                 </div>
@@ -11805,6 +11842,12 @@ let has_prompted_for_update = false;
             version_item.appendChild(body);
 
             changelog_list.appendChild(version_item);
+
+            index += 1;
         }
+    }
+
+    unsafeWindow._update_local_changelog_cache = function(json) {
+        localStorage.setItem('bleh_changelog', JSON.stringify(json));
     }
 })();
