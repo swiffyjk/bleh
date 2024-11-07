@@ -8886,9 +8886,9 @@ let has_prompted_for_update = false;
         let adaptive_skin = document.body.querySelector('.adaptive-skin-container');
         let page_content = adaptive_skin.querySelector('.page-content');
 
-        if (page.requested.tab != 'saved')
+        if (page.requested.tab != 'saved' || page.requested.page != null)
             document.body.setAttribute('data-bleh--gallery-tab', 'overview');
-        else if (page.requested.page == null)
+        else
             document.body.setAttribute('data-bleh--gallery-tab', 'bookmarks');
 
 
