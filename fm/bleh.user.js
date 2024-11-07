@@ -4642,6 +4642,7 @@ let has_prompted_for_update = false;
 
         let params = new URLSearchParams(document.location.search);
         page.requested.tab = params.get('tab');
+        page.requested.page = params.get('page');
 
         if (page.structure.container == null || !document.body.contains(page.structure.container)) {
             log('page missing container, creating', 'page structure');
@@ -8887,7 +8888,7 @@ let has_prompted_for_update = false;
 
         if (page.requested.tab != 'saved')
             document.body.setAttribute('data-bleh--gallery-tab', 'overview');
-        else
+        else if (page.requested.page == null)
             document.body.setAttribute('data-bleh--gallery-tab', 'bookmarks');
 
 
@@ -8975,6 +8976,15 @@ let has_prompted_for_update = false;
     }
     function set_gallery_page(id) {
         document.body.setAttribute('data-bleh--gallery-tab', id);
+
+        // remove ?tab=saved
+        /*if (page.requested.tab == 'saved') {
+            let params = new URLSearchParams(document.location.search);
+            params.delete('tab');
+            // https://stackoverflow.com/a/43440356
+            // location.hash preserves #
+            history.replaceState(null, '', '?' + params + location.hash);
+        }*/
     }
 
     // gallery focused image
