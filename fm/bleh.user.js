@@ -102,7 +102,11 @@ const trans = {
             version: 'You are running lotus version {v}.',
             tooltip: 'lotus is the community correction system used in bleh and bwaa',
             check: 'Check for updates',
-            correct: 'Submit name correction'
+            correct: {
+                name: 'Correct',
+                tooltip: 'Submit name correction',
+                tooltip_active: 'Active name correction'
+            }
         },
         auth_menu: {
             dev: 'Toggle dev mode',
@@ -112,7 +116,10 @@ const trans = {
         },
         music: {
             submit_lastfm_correction: 'Submit correction to Last.fm',
-            search_variations: 'Search for variations of this title',
+            search_variations: {
+                name: 'Search',
+                tooltip: 'Search for variations of this title'
+            },
             fetch_plays: {
                 name: 'Tracklist',
                 loading: 'Fetching your plays on this album',
@@ -126,7 +133,9 @@ const trans = {
                 other_listeners: '{c} others'
             },
             wiki: 'About',
-            refresh_tracks: 'Refresh tracks'
+            refresh_tracks: 'Refresh tracks',
+            menu: 'Extra options',
+            obsession: 'Obsess'
         },
         error: {
             name: 'This page is missing...',
@@ -10400,15 +10409,26 @@ let has_prompted_for_update = false;
 
         let buttons = interact_container.querySelectorAll('button');
         buttons.forEach((button) => {
-            button.classList.add('btn', 'view-item', 'interact-item');
+            if (button.classList[0] != 'header-new-playlink')
+                button.classList.add('btn', 'view-item', 'interact-item');
+            else
+                button.classList.add('dropdown-menu-clickable-item');
 
             if (button.classList[0] == 'header-new-more-button')
                 interact_container.removeChild(button.parentElement);
         });
         let links = interact_container.querySelectorAll('a');
         links.forEach((button) => {
-            button.classList.add('btn', 'view-item', 'interact-item');
+            if (button.classList[0] != 'header-new-playlink')
+                button.classList.add('btn', 'view-item', 'interact-item');
+            else
+                button.classList.add('dropdown-menu-clickable-item');
         });
+
+
+        // bookmark
+        let bookmark_btn = interact_container.querySelector('[data-toggle-button-current-state*="bookmark"]');
+        bookmark_btn.after(create_divider());
 
 
         // obsession
@@ -10420,6 +10440,7 @@ let has_prompted_for_update = false;
             tippy(obsession_btn, {
                 content: obsession_btn.textContent
             });
+            obsession_btn.textContent = trans[lang].music.obsession;
 
             interact_container.appendChild(obsession_form);
         }
@@ -10428,34 +10449,66 @@ let has_prompted_for_update = false;
         // search similar!
         let search_btn = document.createElement('a');
         search_btn.classList.add('btn', 'view-item', 'interact-item', 'search-similar-btn');
-        search_btn.textContent = trans[lang].music.search_variations;
+        search_btn.textContent = trans[lang].music.search_variations.name;
         search_btn.href = `${root}search/${header_type}s?q=${text}`;
         search_btn.target = '_blank';
 
         tippy(search_btn, {
-            content: trans[lang].music.search_variations
+            content: trans[lang].music.search_variations.tooltip
         });
 
         interact_container.appendChild(search_btn);
 
 
         // lotus
+        let lotus_btn = null;
         if (settings.corrections) {
-            let lotus_btn = document.createElement('a');
-            lotus_btn.classList.add('btn', 'view-item', 'interact-item', 'lotus', 'lotus-btn');
-            lotus_btn.textContent = trans[lang].lotus.correct;
+            lotus_btn = document.createElement('a');
+            /*lotus_btn.classList.add('btn', 'view-item', 'interact-item', 'lotus', 'lotus-btn');*/
+            lotus_btn.classList.add('dropdown-menu-clickable-item', 'lotus', 'lotus-btn');
+            lotus_btn.textContent = trans[lang].lotus.correct.name;
             lotus_btn.href = 'https://github.com/katelyynn/lotus/issues/new/choose';
             lotus_btn.target = '_blank';
 
-            // TODO: switch based on if a correction is active
+            /*if (page.corrected)
+                tippy(lotus_btn, {
+                    content: (`<span class="lotus-active">${trans[lang].lotus.correct.tooltip_active}</span><br><div class="tooltip-sub">${document.body.querySelector('.main-content > [itemscope]').getAttribute('data-page-resource-name')}</div>`),
+                    allowHTML: true
+                });
+            else
+                tippy(lotus_btn, {
+                    content: (`${trans[lang].lotus.correct.tooltip}<br><div class="tooltip-sub">${document.body.querySelector('.main-content > [itemscope]').getAttribute('data-page-resource-name')}</div>`),
+                    allowHTML: true
+                });
 
-            tippy(lotus_btn, {
-                content: (`${trans[lang].lotus.correct}<br><div class="tooltip-sub">${document.body.querySelector('.main-content > [itemscope]').getAttribute('data-page-resource-name')}</div>`),
-                allowHTML: true
-            });
-
-            interact_container.appendChild(lotus_btn);
+            interact_container.appendChild(lotus_btn);*/
         }
+
+
+        // ...
+        let menu_btn = document.createElement('button');
+        menu_btn.classList.add('btn', 'view-item', 'interact-item', 'menu-btn');
+        menu_btn.textContent = trans[lang].music.menu;
+
+        let play_btn = interact_container.querySelector('.header-new-playlink');
+
+        let music_menu = tippy(menu_btn, {
+            theme: 'select-menu',
+            content: (`
+                ${(play_btn != null) ? play_btn.outerHTML : ''}
+                ${(lotus_btn != null) ? lotus_btn.outerHTML : ''}
+            `),
+            allowHTML: true,
+            placement: 'bottom',
+            interactive: true,
+            interactiveBorder: 10,
+            trigger: 'click'
+        });
+
+        if (play_btn != null)
+            interact_container.removeChild(play_btn);
+
+        interact_container.appendChild(menu_btn);
 
 
         top_container.appendChild(interact_container);

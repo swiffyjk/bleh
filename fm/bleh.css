@@ -6123,6 +6123,7 @@ button,
 
 
 /*     BUTTON HAS ICON     */
+.search-similar-btn, .obsession-btn,
 .image-open-button,
 .image-details :is(.bleh--gallery-bookmark-image-btn, .gallery-image-report, .gallery-image-delete button),
 .btn.back,
@@ -6950,6 +6951,7 @@ very, very, very dated - who looks up a song on ebay? */
 
 
 /*     DANGEROUS     */
+.dropdown-menu-clickable-item.lotus,
 .more-item--obsession,
 [data-analytics-label="labs"],
 .bleh--configure-menu-item,
@@ -6970,7 +6972,8 @@ very, very, very dated - who looks up a song on ebay? */
     &:not(
         .bleh--configure-menu-item,
         [data-analytics-label="labs"],
-        .more-item--obsession
+        .more-item--obsession,
+        .lotus
         ) {
         --hue-over: var(--hue-neg);
         --sat-over: 1;
@@ -15859,18 +15862,21 @@ button.bleh--gallery-bookmark-image-btn {
 
             &.search-similar-btn {
                 --mask: var(--icon-16-search);
-                --font-size: 0;
             }
             &.lotus-btn {
                 --mask: var(--icon-16-lotus);
-                --font-size: 0;
                 --bg-hov: hsla(var(--h4), 10%);
                 --bg-atv: hsla(var(--h4), 20%);
-                --col: hsl(var(--l2-c));
+                --col: hsl(var(--l3-c));
             }
             &.obsession-btn {
                 --mask: var(--icon-16-obsession);
+            }
+
+            &.menu-btn {
                 --font-size: 0;
+                width: 40px;
+                --mask: var(--icon-16-dots);
             }
         }
     }
@@ -16735,6 +16741,10 @@ h4 {
     }
 
     &.bleh-notif {
+        --mask: var(--icon-16-lotus);
+    }
+
+    &.dropdown-menu-clickable-item {
         --mask: var(--icon-16-lotus);
     }
 }
