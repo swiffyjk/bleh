@@ -324,11 +324,11 @@ input[type="range"],
         --ov-c1: var(--hue), calc(var(--sat) * 40%), 100%;
 
         --l2: var(--hue), calc(var(--sat) * 40%), calc(var(--lit) * 63%);
-        --l3: var(--hue), calc(var(--sat) * 50%), calc(var(--lit) * 55%);
+        --l3: var(--hue), calc(var(--sat) * 50%), calc(var(--lit) * 40%);
         --l4: var(--hue), calc(var(--sat) * 60%), calc(var(--lit) * 25%);
 
         --l2-c: var(--hue), calc(var(--sat) * 40%), calc(clamp(min(0.5), var(--lit), max(1.5)) * 63%);
-        --l3-c: var(--hue), calc(var(--sat) * 50%), calc(clamp(min(0.5), var(--lit), max(1.5)) * 55%);
+        --l3-c: var(--hue), calc(var(--sat) * 50%), calc(clamp(min(0.5), var(--lit), max(1.5)) * 40%);
         --l4-c: var(--hue), calc(var(--sat) * 60%), calc(clamp(min(0.5), var(--lit), max(1.5)) * 25%);
 
         --h3: var(--hue), calc(var(--sat) * 50%), calc(clamp(min(0.5), var(--lit), max(1.5)) * 80%);
@@ -1081,6 +1081,10 @@ last.fm changes as of 2024-05-20 */
         --hue-over: var(--hue-pro);
         --sat-over: 1;
         --lit-over: 1;
+
+        [data-bleh--theme="light"] & {
+            color: hsl(var(--l4-c));
+        }
     }
 
     p {
@@ -3661,32 +3665,31 @@ state is not active, which then falls back to primary button styling */
 .header-title-label-wrap .label:hover, .header-new-on-tour:hover {
     max-width: 220px;
     padding-right: 6px;
-    background-color: hsla(var(--h4), 15%) !important;
+    background-color: hsla(var(--h4), 20%) !important;
+}
+.label:not(.user-follow) {
+    color: hsl(var(--l3-c)) !important;
 }
 .label.user-status-subscriber {
     --mask: var(--icon-pro);
-    color: hsl(var(--l3-c)) !important;
     --hue-over: var(--hue-pro);
     --sat-over: 1;
     --lit-over: 1;
 }
 .label.user-status-staff {
     --mask: var(--icon-staff);
-    color: hsl(var(--l3-c)) !important;
     --hue-over: var(--hue-neg);
     --sat-over: 1;
     --lit-over: 1;
 }
 .label.user-status-mod {
     --mask: var(--icon-mod);
-    color: hsl(var(--l3-c)) !important;
     --hue-over: 10;
     --sat-over: 1;
     --lit-over: 1;
 }
 .label.user-status-alum {
     --mask: var(--icon-alum);
-    color: hsl(var(--l3-c)) !important;
     --hue-over: 20;
     --sat-over: 1;
     --lit-over: 1;
@@ -3696,7 +3699,6 @@ state is not active, which then falls back to primary button styling */
 .user-status--bleh-queen,
 .label.user-status--bleh-queen {
     --mask: var(--icon-queen);
-    color: hsl(var(--l3-c)) !important;
     --hue: 20;
     --sat: 1.2;
     --lit: 1;
@@ -3704,7 +3706,6 @@ state is not active, which then falls back to primary button styling */
 .user-status--bleh-cute,
 .label.user-status--bleh-cute {
     --mask: var(--icon-cute);
-    color: hsl(var(--l3-c)) !important;
     --hue: 260;
     --sat: 1.1;
     --lit: 1;
@@ -3713,7 +3714,6 @@ state is not active, which then falls back to primary button styling */
 .user-status--bleh-cat,
 .label.user-status--bleh-cat {
     --mask: var(--icon-cat);
-    color: hsl(var(--l3-c)) !important;
 
     &.user-status--bleh-user-rainsleep {
         --hue-over: 206;
@@ -3765,7 +3765,6 @@ state is not active, which then falls back to primary button styling */
 .user-status--bleh-mask,
 .label.user-status--bleh-mask {
     --mask: var(--icon-mask);
-    color: hsl(var(--l3-c)) !important;
 
     &.user-status--bleh-user-KuroinHeroin {
         --hue: 343;
@@ -3777,7 +3776,6 @@ state is not active, which then falls back to primary button styling */
 .user-status--bleh-paw,
 .label.user-status--bleh-paw {
     --mask: var(--icon-paw);
-    color: hsl(var(--l3-c)) !important;
 
     &.user-status--bleh-user-u5c {
         --hue: 273;
@@ -3789,7 +3787,6 @@ state is not active, which then falls back to primary button styling */
 .user-status--bleh-colon-three,
 .label.user-status--bleh-colon-three {
     --mask: var(--icon-colon-three);
-    color: hsl(var(--l3-c)) !important;
 
     &.user-status--bleh-user-destons {
         --hue: 35;
@@ -3801,7 +3798,6 @@ state is not active, which then falls back to primary button styling */
 .user-status--bleh-glaive,
 .label.user-status--bleh-glaive {
     --mask: var(--icon-glaive);
-    color: hsl(var(--l3-c)) !important;
 
     &.user-status--bleh-user-bIeak {
         --hue: 0;
@@ -3818,7 +3814,6 @@ state is not active, which then falls back to primary button styling */
 .user-status--bleh-contributor,
 .label.user-status--bleh-contributor {
     --mask: var(--icon-contributor);
-    color: hsl(var(--l3-c)) !important;
 
     --hue: 333;
     --sat: 1;
@@ -3828,7 +3823,6 @@ state is not active, which then falls back to primary button styling */
 .user-status--bleh-translation,
 .label.user-status--bleh-translation {
     --mask: var(--icon-translation);
-    color: hsl(var(--l3-c)) !important;
 
     --hue: 190;
     --sat: 1;
@@ -3841,7 +3835,6 @@ state is not active, which then falls back to primary button styling */
 }
 .header-new-on-tour {
     --mask: var(--icon-tour);
-    color: hsl(var(--l3-c)) !important;
     --hue: 333;
     --sat: 1;
     --lit: 1;
@@ -5492,6 +5485,7 @@ the body text becomes bigger by default - this reverts that */
     width: fit-content;
     display: inline-flex;
     margin-right: 6px;
+    font-weight: var(--font-weight-medium);
 }
 .shout-timestamp {
     height: fit-content;
@@ -15765,16 +15759,14 @@ button.bleh--gallery-bookmark-image-btn {
 
             &[data-bleh--scrobble-milestone] {
                 --bg: transparent;
-                --bg-hov: hsla(var(--h3), 10%);
-                --bg-atv: hsla(var(--h3), 20%);
+                --bg-hov: hsla(var(--h4), 10%);
+                --bg-atv: hsla(var(--h4), 20%);
                 --col: hsl(var(--l2-c));
                 text-shadow: 0 0 10px hsla(var(--h4), 90%);
 
                 [data-bleh--theme="light"] & {
-                    --bg-hov: hsla(var(--h3), 20%);
-                    --bg-atv: hsla(var(--h3), 40%);
-                    --col: hsl(var(--l4-c));;
-                    text-shadow: 0 0 10px hsla(var(--h4), 60%);
+                    --col: hsl(var(--l3-c));
+                    text-shadow: 0 0 10px hsla(var(--h4), 45%);
                 }
             }
 
@@ -15825,9 +15817,9 @@ button.bleh--gallery-bookmark-image-btn {
 
             [data-toggle-button-current-state="followed"] &,
             &[data-is-shortcut="true"] {
-                --bg: hsla(var(--h3), 30%);
-                --bg-hov: hsla(var(--h3), 40%);
-                --bg-atv: hsla(var(--h3), 50%);
+                --bg: hsla(var(--h4), 30%);
+                --bg-hov: hsla(var(--h4), 40%);
+                --bg-atv: hsla(var(--h4), 50%);
                 --col: hsl(var(--c1));
             }
 
@@ -15859,9 +15851,9 @@ button.bleh--gallery-bookmark-image-btn {
             [data-toggle-button-current-state="loved"] &,
             [data-toggle-button-current-state="bookmarked"] &
             {
-                --bg: hsla(var(--h3), 30%);
-                --bg-hov: hsla(var(--h3), 40%);
-                --bg-atv: hsla(var(--h3), 50%);
+                --bg: hsla(var(--h4), 30%);
+                --bg-hov: hsla(var(--h4), 40%);
+                --bg-atv: hsla(var(--h4), 50%);
                 --col: hsl(var(--c1));
             }
 
@@ -15872,8 +15864,8 @@ button.bleh--gallery-bookmark-image-btn {
             &.lotus-btn {
                 --mask: var(--icon-16-lotus);
                 --font-size: 0;
-                --bg-hov: hsla(var(--h3), 10%);
-                --bg-atv: hsla(var(--h3), 20%);
+                --bg-hov: hsla(var(--h4), 10%);
+                --bg-atv: hsla(var(--h4), 20%);
                 --col: hsl(var(--l2-c));
             }
             &.obsession-btn {
@@ -16609,6 +16601,10 @@ h4 {
     font-size: var(--font-size-sm);
     padding: 0 6px;
     border-radius: var(--item-med-radius);
+
+    [data-bleh--theme="light"] & {
+        color: hsl(var(--l4-c));
+    }
 }
 
 
