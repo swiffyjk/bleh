@@ -3657,6 +3657,10 @@ let has_prompted_for_update = false;
 
         // save to settings
         localStorage.setItem('bleh', JSON.stringify(settings));
+
+        // trigger re-flow of chart
+        if ((page.type == 'artist' || page.type == 'album' || page.type == 'track') && page.subpage == 'overview')
+            bleh_music_page_charts();
     }
 
     unsafeWindow.change_theme_from_settings = function(theme) {
@@ -3685,6 +3689,10 @@ let has_prompted_for_update = false;
 
         // save to settings
         localStorage.setItem('bleh', JSON.stringify(settings));
+
+        // trigger re-flow of chart
+        if ((page.type == 'artist' || page.type == 'album' || page.type == 'track') && page.subpage == 'overview')
+            bleh_music_page_charts();
     }
 
 
