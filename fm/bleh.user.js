@@ -4851,6 +4851,12 @@ let has_prompted_for_update = false;
             profile_name_obj.querySelector('.header-title a').classList.add('bleh--name-is-cute');
         }
 
+        // staff
+        let is_staff = (profile_header.querySelector('.user-status-staff') != null);
+        if (is_staff) {
+            profile_header.classList.add('staff-profile');
+        }
+
         // secondary text
         let profile_sub_text = document.body.querySelector('.header-title-secondary');
 
@@ -5349,7 +5355,10 @@ let has_prompted_for_update = false;
 
                 let shout_avatar = shout.querySelector('.shout-user-avatar');
 
-                patch_avatar(shout_avatar, shout_name, 'shout');
+                let badge = patch_avatar(shout_avatar, shout_name, 'shout');
+
+                if (badge.type == 'avatar-status-dot--staff')
+                    shout.classList.add('staff-shout');
 
                 if (settings.shout_markdown) {
                     let shout_body = shout.querySelector('.shout-body p');
@@ -5451,6 +5460,8 @@ let has_prompted_for_update = false;
                     delay: [100, 50],
                     placement: 'bottom'
                 });
+
+                return this_badge;
             } else {
                 let pre_existing_badge = element.querySelector('.avatar-status-dot');
                 if (pre_existing_badge == null) {
@@ -5470,6 +5481,8 @@ let has_prompted_for_update = false;
                         delay: [100, 50],
                         placement: 'bottom'
                     });
+
+                    return {};
                 } else {
                     tippy(element, {
                         theme: 'user',
@@ -5490,6 +5503,10 @@ let has_prompted_for_update = false;
                         placement: 'bottom'
                     });
                     element.setAttribute('title', '');
+
+                    return {
+                        type: pre_existing_badge.classList[1]
+                    };
                 }
             }
         }

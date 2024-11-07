@@ -225,7 +225,6 @@ a,
 .image-list-item-preferred-icon:before,
 .header-metadata-item:after,
 #current-subscription,
-.shout,
 .header-metadata-tnew-item,
 .header:before,
 #ignorelist > p,
@@ -250,7 +249,8 @@ input[type="range"],
 [data-season],
 .small-alert,
 .lotus,
-.pro-badge, .vote-number
+.pro-badge, .vote-number,
+.staff-profile .header-title, .staff-shout, .staff-shout a
 {
     --hue:  var(--hue-over,
             var(--hue-album,
@@ -3581,6 +3581,13 @@ state is not active, which then falls back to primary button styling */
     font-weight: var(--font-weight-bold) !important;
     margin: 0 6px 0 0 !important;
     color: hsl(var(--c1));
+
+    .staff-profile & {
+        color: hsl(var(--l4-c));
+        --hue-over: var(--hue-neg);
+        --sat-over: 1;
+        --lit-over: 1;
+    }
 }
 
 .header-title-secondary {
@@ -5790,11 +5797,21 @@ span.shout-user-avatar:before,
 }
 
 
-.shout:has(.avatar-status-dot--staff) {
+.staff-shout {
     --hue-over: var(--hue-neg);
     --sat-over: 1;
     --lit-over: 1;
     color: hsl(var(--c2));
+
+    .shout-user a {
+        color: hsl(var(--l3-c));
+    }
+
+    a {
+        --hue-over: var(--hue-neg);
+        --sat-over: 1;
+        --lit-over: 1;
+    }
 }
 
 /* missing avatar */
