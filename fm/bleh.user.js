@@ -11813,7 +11813,7 @@ let has_prompted_for_update = false;
 
 
     unsafeWindow._query_changelog = function() {
-        if (!settings.feature_flags.changelogs == false) {
+        if (settings.feature_flags.changelogs == false) {
             deliver_notif('not just yet..');
             return;
         }
