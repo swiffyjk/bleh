@@ -258,7 +258,8 @@ a,
 .lotus,
 .pro-badge, .vote-number,
 .staff-profile .header-title, .staff-shout, .staff-shout a,
-.changelog-version-item
+.changelog-version-item,
+.version-item-body li u
 {
     --hue:  var(--hue-over,
             var(--hue-album,
@@ -17442,12 +17443,32 @@ h4 {
             color: hsl(var(--c3));
             margin-right: var(--item-list-gap);
         }
+
+        p {
+            display: inline;
+        }
     }
 
     &.version-item-body {
         li {
             &:before {
                 content: '+';
+            }
+
+            u {
+                text-decoration: none;
+                color: hsl(var(--l3-c));
+                text-shadow: 0 0 20px hsla(var(--h4), 40%);
+                font-weight: var(--font-weight-medium);
+
+                --hue-over: 40;
+                --sat-over: 1;
+                --lit-over: 1.1;
+
+                [data-bleh--theme="light"] & {
+                    --hue-over: var(--hue-fav);
+                    --lit-over: 1;
+                }
             }
         }
     }

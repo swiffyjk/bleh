@@ -5965,7 +5965,7 @@ let has_prompted_for_update = false;
                     </div>
                     ${(settings.feature_flags.changelogs) ? (`
                     <div class="btns sep">
-                        <button class="btn bleh--btn" data-bleh-page="changelog" onclick="_open_changelog()">
+                        <button class="btn bleh--btn" data-bleh-page="changelog" onclick="_query_changelog()">
                             ${trans[lang].changelog.name}
                         </button>
                     </div>
@@ -11763,14 +11763,60 @@ let has_prompted_for_update = false;
 
 
 
-    unsafeWindow._open_changelog = function() {
+    unsafeWindow._query_changelog = function() {
         if (!settings.feature_flags.changelogs) {
             deliver_notif('not just yet..');
             return;
         }
 
-        let changelog = JSON.parse(localStorage.getItem('bleh_changelog') || '{}');
+        let changelog = localStorage.getItem('bleh_changelog');
+        let changelog_expire = new Date(localStorage.getItem('bleh_changelog_expire'));
 
+        let current_time = new Date();
+
+        if (changelog == null) {
+            log('not cached, fetching', 'changelog');
+            request_changelog();
+        } else {
+            if (changelog_expire < current_time)
+                request_changelog();
+            else
+                open_changelog(JSON.parse(changelog));
+        }
+    }
+
+    function request_changelog(open_after = true) {
+        let button = document.body.querySelector('[data-bleh-page="changelog"]');
+        if (button != null)
+            button.setAttribute('disabled', '');
+
+        let xhr = new XMLHttpRequest();
+        let url = `https://katelyynn.github.io/bleh/fm/changelog/changelog.json?${Math.random()}`;
+        xhr.open('GET',url,true);
+
+        xhr.onload = function() {
+            log(`responded with ${xhr.status}`, 'changelog');
+
+            if (open_after)
+                open_changelog(JSON.parse(this.response));
+
+            // save to cache for next page load
+            localStorage.setItem('bleh_changelog', this.response);
+
+            // set expire date
+            let api_expire = new Date();
+            api_expire.setHours(api_expire.getHours() + 2);
+            localStorage.setItem('bleh_changelog_expire', api_expire);
+            log(`cached until ${api_expire}`, 'changelog');
+
+            if (button != null)
+                button.removeAttribute('disabled');
+        }
+
+        xhr.send();
+    }
+
+    function open_changelog(changelog) {
         let window = create_window('changelog', trans[lang].changelog.name, (`
             <div class="changelog-list"></div>
         `), true, 'changelog', true);
