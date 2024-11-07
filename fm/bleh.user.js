@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         bleh
 // @namespace    http://last.fm/
-// @version      2024.1106
+// @version      2024.1107
 // @description  bleh!!! ^-^
 // @author       kate
 // @match        https://www.last.fm/*
@@ -20,7 +20,7 @@
 // ==/UserScript==
 
 let version = {
-    build: '2024.1106.3',
+    build: '2024.1107',
     sku: 'petal',
     feature_flags: {
         bleh_settings_tabs: {
@@ -64,7 +64,7 @@ let version = {
             date: '2024-11-06'
         },
         changelogs: {
-            default: false,
+            default: true,
             name: 'Enable changelog system',
             date: '2024-11-07'
         }
@@ -769,6 +769,28 @@ const trans = {
         }
     },
     de: {
+        lotus: {
+            artist: 'Artist corrections have been downloaded!',
+            album_track: 'Album and track corrections have been downloaded!',
+            version: 'You are running lotus version {v}.',
+            tooltip: 'lotus is the community correction system used in bleh and bwaa',
+            check: 'Check for updates',
+            correct: {
+                name: 'Correct',
+                tooltip: 'Submit name correction',
+                tooltip_active: 'Active name correction'
+            }
+        },
+        changelog: {
+            name: 'What’s New?',
+            type: {
+                major: 'Major release',
+                minor: 'Minor release',
+                general: 'General improvements',
+                fix: 'Bug fix'
+            },
+            latest: 'Latest'
+        },
         auth_menu: {
             dev: 'Toggle dev mode',
             configure_bleh: 'bleh einstellen',
@@ -1399,6 +1421,16 @@ const trans = {
             tooltip: 'lotus is the community correction system used in bleh and bwaa',
             check: 'Check for updates',
             correct: 'Submit name correction'
+        },
+        changelog: {
+            name: 'What’s New?',
+            type: {
+                major: 'Major release',
+                minor: 'Minor release',
+                general: 'General improvements',
+                fix: 'Bug fix'
+            },
+            latest: 'Latest'
         },
         auth_menu: {
             dev: 'Przełącz tryb deweloperski',
@@ -3425,6 +3457,8 @@ let has_prompted_for_update = false;
         }
 
         let inbox_container = document.body.querySelector('.masthead-nav-item:has([data-analytics-label="inbox"])');
+
+        // configure bleh
         let bleh_container = document.createElement('li');
         bleh_container.classList.add('masthead-nav-item');
         bleh_container.innerHTML = (`
@@ -3436,6 +3470,19 @@ let has_prompted_for_update = false;
             content: trans[lang].auth_menu.configure_bleh
         });
         inbox_container.after(bleh_container);
+
+        // what's new?
+        let changelog_container = document.createElement('li');
+        changelog_container.classList.add('masthead-nav-item');
+        changelog_container.innerHTML = (`
+            <a class="masthead-nav-control" onclick="_query_changelog()" data-bleh--label="changelog">
+                ${trans[lang].changelog.name}
+            </a>
+        `);
+        tippy(changelog_container, {
+            content: trans[lang].changelog.name
+        });
+        bleh_container.after(changelog_container);
 
 
         let settings = JSON.parse(localStorage.getItem('bleh')) || create_settings_template();
@@ -5963,7 +6010,7 @@ let has_prompted_for_update = false;
                             ${trans[lang].settings.actions.reset.name}
                         </button>
                     </div>
-                    ${(settings.feature_flags.changelogs) ? (`
+                    ${(settings.feature_flags.changelogs != false) ? (`
                     <div class="btns sep">
                         <button class="btn bleh--btn" data-bleh-page="changelog" onclick="_query_changelog()">
                             ${trans[lang].changelog.name}
@@ -10190,6 +10237,8 @@ let has_prompted_for_update = false;
             deliver_notif(trans[lang].messaging.update.replace('{v}', `${version.build}.${version.sku}`), true);
             register_activity('update_bleh', [{name: version.build, type: 'bleh'}], `${root}bleh`);
             localStorage.setItem('bleh_last_version_used', version.build);
+
+            request_changelog();
         }
     }
 
@@ -11764,7 +11813,7 @@ let has_prompted_for_update = false;
 
 
     unsafeWindow._query_changelog = function() {
-        if (!settings.feature_flags.changelogs) {
+        if (!settings.feature_flags.changelogs == false) {
             deliver_notif('not just yet..');
             return;
         }
