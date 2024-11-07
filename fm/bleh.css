@@ -4645,6 +4645,10 @@ better than the default selector '#app a' i suppose */
             color: hsl(var(--c3));
 
             width: 18%;
+
+            .lastfm-bulk-edit-text-danger {
+                color: hsla(var(--c3), 60%);
+            }
         }
     }
 
