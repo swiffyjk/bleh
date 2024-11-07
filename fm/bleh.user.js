@@ -62,6 +62,11 @@ let version = {
             default: false,
             name: 'Display album bookmark button in gallery refresh',
             date: '2024-11-06'
+        },
+        changelogs: {
+            default: false,
+            name: 'Enable changelog system',
+            date: '2024-11-07'
         }
     }
 }
@@ -106,6 +111,13 @@ const trans = {
                 name: 'Correct',
                 tooltip: 'Submit name correction',
                 tooltip_active: 'Active name correction'
+            }
+        },
+        changelog: {
+            name: 'What’s New?',
+            type: {
+                major: 'Major release',
+                fix: 'Bug fix'
             }
         },
         auth_menu: {
@@ -5941,6 +5953,13 @@ let has_prompted_for_update = false;
                             ${trans[lang].settings.actions.reset.name}
                         </button>
                     </div>
+                    ${(settings.feature_flags.changelogs) ? (`
+                    <div class="btns sep">
+                        <button class="btn bleh--btn" data-bleh-page="changelog" onclick="_open_changelog()">
+                            ${trans[lang].changelog.name}
+                        </button>
+                    </div>
+                    `) : ''}
                 </div>
             `);
 
@@ -8225,6 +8244,8 @@ let has_prompted_for_update = false;
 
         document.body.appendChild(background);
         document.body.appendChild(wrapper);
+
+        return wrapper;
     }
 
     // kill a window
@@ -11705,6 +11726,85 @@ let has_prompted_for_update = false;
 
             upload_panel.appendChild(upload_btn);
             page.structure.side.insertBefore(upload_panel, page.structure.side.firstElementChild)
+        }
+    }
+
+
+
+
+    unsafeWindow._open_changelog = function() {
+        if (!settings.feature_flags.changelogs) {
+            deliver_notif('not just yet..');
+            return;
+        }
+
+        let changelog = JSON.parse(localStorage.getItem('bleh_changelog') || '{}');
+
+        let window = create_window('changelog', trans[lang].changelog.name, (`
+            <div class="changelog-list">
+
+            </div>
+        `), true, 'changelog');
+
+        let changelog_list = window.querySelector('.changelog-list');
+
+        for (let version in changelog) {
+            if (version == 'updated' || version == 'latest')
+                continue;
+
+            let version_item = document.createElement('div');
+            version_item.classList.add('changelog-version-item');
+            version_item.innerHTML = (`
+                <div class="version-item-header">
+                    <div class="sub-text">
+                        <div class="breadcrumb">
+                            <div class="breadcrumb-origin">
+                                ${version}
+                            </div>
+                            <div class="breadcrumb-name">
+                                ${trans[lang].changelog.type[changelog[version].type]}
+                            </div>
+                        </div>
+                    </div>
+                    <h3>${changelog[version].name}</h3>
+                </div>
+            `);
+
+            let body = document.createElement('div');
+            body.classList.add('version-item-body', 'markdown-body');
+
+            let converter = new showdown.Converter({
+                emoji: true,
+                excludeTrailingPunctuationFromURLs: true,
+                ghMentions: true,
+                ghMentionsLink: `${root}user/{u}`,
+                headerLevelStart: 5,
+                noHeaderId: true,
+                openLinksInNewWindow: true,
+                requireSpaceBeforeHeadingText: true,
+                simpleLineBreaks: true,
+                simplifiedAutoLink: true,
+                strikethrough: true,
+                underline: true,
+                ghCodeBlocks: false,
+                smartIndentationFix: true
+            });
+            let parsed_text = converter.makeHtml(changelog[version].bio
+            .replace(/([@])([a-zA-Z0-9_]+)/g, `[$1$2](${root}user/$2)`)
+            .replace(/\[artist\]([a-zA-Z0-9]+)\[\/artist\]/g, `[$1](${root}music/$1)`)
+            .replace(/\[album artist=([a-zA-Z0-9]+)\]([a-zA-Z0-9\s]+)\[\/album\]/g, `[$2](${root}music/$1/$2)`)
+            .replace(/\[track artist=([a-zA-Z0-9]+)\]([a-zA-Z0-9\s]+)\[\/track\]/g, `[$2](${root}music/$1/_/$2)`)
+            .replace(/https:\/\/open\.spotify\.com\/user\/([A-Za-z0-9]+)\?si=([A-Za-z0-9]+)/g, '[@$1](https://open.spotify.com/user/$1)')
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#039;'));
+            body.innerHTML = parsed_text;
+
+            version_item.appendChild(body);
+
+            changelog_list.appendChild(version_item);
         }
     }
 })();

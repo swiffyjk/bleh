@@ -660,6 +660,7 @@ body {
     --icon-16-save: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyLjUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgY2xhc3M9Imx1Y2lkZSBsdWNpZGUtc2F2ZSI+PHBhdGggZD0iTTE1LjIgM2EyIDIgMCAwIDEgMS40LjZsMy44IDMuOGEyIDIgMCAwIDEgLjYgMS40VjE5YTIgMiAwIDAgMS0yIDJINWEyIDIgMCAwIDEtMi0yVjVhMiAyIDAgMCAxIDItMnoiLz48cGF0aCBkPSJNMTcgMjF2LTdhMSAxIDAgMCAwLTEtMUg4YTEgMSAwIDAgMC0xIDF2NyIvPjxwYXRoIGQ9Ik03IDN2NGExIDEgMCAwIDAgMSAxaDciLz48L3N2Zz4=');
     --icon-16-expand: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyLjUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgY2xhc3M9Imx1Y2lkZSBsdWNpZGUtZXhwYW5kIj48cGF0aCBkPSJtMjEgMjEtNi02bTYgNnYtNC44bTAgNC44aC00LjgiLz48cGF0aCBkPSJNMyAxNi4yVjIxbTAgMGg0LjhNMyAyMWw2LTYiLz48cGF0aCBkPSJNMjEgNy44VjNtMCAwaC00LjhNMjEgM2wtNiA2Ii8+PHBhdGggZD0iTTMgNy44VjNtMCAwaDQuOE0zIDNsNiA2Ii8+PC9zdmc+');
     --icon-16-season: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyLjUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgY2xhc3M9Imx1Y2lkZSBsdWNpZGUtY2FsZW5kYXItY2xvY2siPjxwYXRoIGQ9Ik0yMSA3LjVWNmEyIDIgMCAwIDAtMi0ySDVhMiAyIDAgMCAwLTIgMnYxNGEyIDIgMCAwIDAgMiAyaDMuNSIvPjxwYXRoIGQ9Ik0xNiAydjQiLz48cGF0aCBkPSJNOCAydjQiLz48cGF0aCBkPSJNMyAxMGg1Ii8+PHBhdGggZD0iTTE3LjUgMTcuNSAxNiAxNi4zVjE0Ii8+PGNpcmNsZSBjeD0iMTYiIGN5PSIxNiIgcj0iNiIvPjwvc3ZnPg==');
+    --icon-16-changelog: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyLjUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgY2xhc3M9Imx1Y2lkZSBsdWNpZGUtc2Nyb2xsIj48cGF0aCBkPSJNMTkgMTdWNWEyIDIgMCAwIDAtMi0ySDQiLz48cGF0aCBkPSJNOCAyMWgxMmEyIDIgMCAwIDAgMi0ydi0xYTEgMSAwIDAgMC0xLTFIMTFhMSAxIDAgMCAwLTEgMXYxYTIgMiAwIDEgMS00IDBWNWEyIDIgMCAxIDAtNCAwdjJhMSAxIDAgMCAwIDEgMWgzIi8+PC9zdmc+');
 
     --icon-20-check: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyMCIgaGVpZ2h0PSIyMCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImhzbCgyNTUsMjAlLDkwJSkiIHN0cm9rZS13aWR0aD0iMi4yNSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiBjbGFzcz0ibHVjaWRlIGx1Y2lkZS1jaGVjayI+PHBhdGggZD0iTTIwIDYgOSAxN2wtNS01Ii8+PC9zdmc+');
     --icon-20-plus: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyMCIgaGVpZ2h0PSIyMCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImhzbCgyNTUsMjAlLDkwJSkiIHN0cm9rZS13aWR0aD0iMi4yNSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiBjbGFzcz0ibHVjaWRlIGx1Y2lkZS1wbHVzIj48cGF0aCBkPSJNNSAxMmgxNCIvPjxwYXRoIGQ9Ik0xMiA1djE0Ii8+PC9zdmc+');
@@ -6301,7 +6302,7 @@ button,
 
 /*     ICON MASK     */
 .image-open-button:before,
-.breadcrumb a:before, .gallery-image-uploaded-by:before,
+.breadcrumb :is(a, .breadcrumb-origin):before, .gallery-image-uploaded-by:before,
 /* v2 */ .form-arrow:before,
 .select-button:before,
 .involved--track:before, .involved--album:before, .involved--artist:before,
@@ -12642,6 +12643,9 @@ so this is good enough - use the community docs */
                 &[data-bleh-page="activities"] {
                     --mask: var(--icon-16-notifications);
                 }
+                &[data-bleh-page="changelog"] {
+                    --mask: var(--icon-16-changelog);
+                }
 
                 &:not(.active) {
                     --bg: transparent;
@@ -16796,13 +16800,14 @@ h4 {
         display: flex;
         flex-direction: column;
         gap: 20px;
+    }
+}
+.modal-inner-content {
+    max-height: 70vh;
+    overflow-y: hidden;
 
-        max-height: 70vh;
-        overflow-y: hidden;
-
-        &:hover {
-            overflow-y: auto;
-        }
+    &:hover {
+        overflow-y: auto;
     }
 }
 
@@ -17045,19 +17050,18 @@ h4 {
     .image-details {
         display: flex;
         flex-direction: column;
-        gap: var(--card-gap);
+        gap: var(--item-list-gap);
 
         & > div:not(.image-title-container, .button-container-wrapper) {
             display: flex;
             flex-direction: column;
-            gap: var(--card-gap);
 
             .gallery-image-title {
                 display: none;
             }
             .gallery-image-description {
                 min-width: unset;
-                margin: -10px 0 0 0;
+                margin: unset;
 
                 &.gallery-image-description-empty {
                     color: hsl(var(--c3));
@@ -17119,7 +17123,7 @@ h4 {
         }
 
         .gallery-image-buttons {
-            margin: unset;
+            margin: calc(var(--card-gap) - var(--item-list-gap)) 0 0 0;
             flex-grow: 0;
 
             /* non-pro */ .gallery-image-preferred-button,
@@ -17205,6 +17209,7 @@ h4 {
         display: flex;
         gap: 16px;
 
+        .breadcrumb-origin,
         a {
             position: relative;
             --left: none;
@@ -17306,5 +17311,52 @@ h4 {
     --margin-left: -8px;
     --mask: var(--icon-16-arrow-right);
     color: hsl(var(--c3));
+}
+
+
+
+
+/*.modal-dialog--changelog {
+    width: 700px !important;
+}*/
+.changelog-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--card-gap);
+
+    .changelog-version-item {
+        display: flex;
+        flex-direction: column;
+        gap: var(--item-list-gap);
+
+        .version-item-header {
+            h4 {
+                font-size: inherit;
+                line-height: inherit;
+                color: hsl(var(--c3));
+            }
+        }
+
+        & + .changelog-version-item {
+            border-top: 1px solid var(--card-border-base);
+            padding-top: var(--card-gap);
+        }
+    }
+}
+
+
+.markdown-body {
+    li {
+        &:before {
+            content: '•';
+            color: hsl(var(--c3));
+            margin-right: var(--item-list-gap);
+        }
+    }
+
+    img {
+        width: 100%;
+        border-radius: var(--item-big-radius);
+    }
 }
 }
