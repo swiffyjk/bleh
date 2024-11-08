@@ -20,7 +20,7 @@
 // ==/UserScript==
 
 let version = {
-    build: '2024.1107',
+    build: '2024.1107.1',
     sku: 'petal',
     feature_flags: {
         bleh_settings_tabs: {
@@ -3002,7 +3002,6 @@ let has_prompted_for_update = false;
             patch_shouts(document.body);
             patch_lastfm_settings(document.body);
             patch_artist_ranks(document.body);
-            patch_header_menu();
             patch_gallery_page();
 
             patch_artist_grids(document.body);
@@ -3067,7 +3066,6 @@ let has_prompted_for_update = false;
                 patch_shouts(document.body);
                 patch_lastfm_settings(document.body);
                 patch_artist_ranks(document.body);
-                patch_header_menu();
                 patch_gallery_page();
 
                 patch_artist_grids(document.body);
@@ -5797,7 +5795,7 @@ let has_prompted_for_update = false;
     function correct_generic_combo_no_artist(parent) {
         let albums = document.body.querySelectorAll(`.${parent}`);
 
-        if (albums == undefined)
+        if (albums == null)
             return;
 
         albums.forEach((album) => {
@@ -5805,7 +5803,7 @@ let has_prompted_for_update = false;
                 album.setAttribute('data-kate-processed','true');
 
                 let album_name = album.querySelector(`.${parent.replace('-details','')}-name a`);
-                let artist_name = album_name.getAttribute('href').split('/')[2].replaceAll('+',' ');
+                let artist_name = return_artist_from_generic(album_name.getAttribute('href'));
 
                 let corrected_album_name = correct_item_by_artist(album_name.textContent, artist_name);
                 album_name.textContent = corrected_album_name;
@@ -5884,33 +5882,6 @@ let has_prompted_for_update = false;
 
         let artist_name = about_artist_name.querySelector('a');
         artist_name.textContent = correct_artist(artist_name.textContent);
-    }
-
-
-
-
-    // patch track/album/artist menu
-    function patch_header_menu() {
-        let menu = document.body.querySelector('.header-new-more-actions-menu');
-
-        if (menu == undefined)
-            return;
-
-        if (!menu.hasAttribute('data-kate-processed')) {
-            menu.setAttribute('data-kate-processed','true');
-
-            let extra_items = document.createElement('li');
-            extra_items.innerHTML = (`
-            <a class="dropdown-menu-clickable-item more-item--submit-correction" href="https://docs.google.com/forms/d/e/1FAIpQLScRzZaMfpjgKUq4CCA8iuEQCxVdalyv9bwnZEjPDm7lit_Ohg/viewform" target="_blank">
-                ${trans[lang].music.submit_lastfm_correction}
-            </a>
-            <a class="dropdown-menu-clickable-item more-item--submit-correction-bleh" href="https://github.com/katelyynn/bleh/issues/new/choose" target="_blank">
-                ${trans[lang].music.submit_bleh_correction}
-            </a>
-            `);
-
-            menu.appendChild(extra_items);
-        }
     }
 
 
@@ -8881,8 +8852,6 @@ let has_prompted_for_update = false;
 
         let bookmarked_images = JSON.parse(localStorage.getItem('bleh_bookmarked_images')) || {};
 
-        let artist_name = document.body.querySelector('.header-new-title').textContent;
-
         let adaptive_skin = document.body.querySelector('.adaptive-skin-container');
         let page_content = adaptive_skin.querySelector('.page-content');
 
@@ -8933,15 +8902,15 @@ let has_prompted_for_update = false;
 
 
         // append images
-        if (bookmarked_images.hasOwnProperty(artist_name)) {
-            bookmarked_images[artist_name].forEach((image) => {
+        if (bookmarked_images.hasOwnProperty(page.name)) {
+            bookmarked_images[page.name].forEach((image) => {
                 console.info(image);
                 let image_element = document.createElement('li');
                 image_element.classList.add('image-list-item-wrapper');
                 // link has to open in new tab as sometimes last.fm breaks the rendering
                 // of the gallery image, no clue..
                 image_element.innerHTML = (`
-                    <a class="image-list-item" href="/music/${artist_name}/+images/${image}">
+                    <a class="image-list-item" href="${root}music/+noredirect/${page.name}/+images/${image}">
                         <img src="https://lastfm.freetls.fastly.net/i/u/avatar170s/${image}" loading="lazy">
                     </a>
                 `);
@@ -8958,7 +8927,7 @@ let has_prompted_for_update = false;
                 let image_id_length = image_id_split.length;
                 let image_id = image_id_split[image_id_length - 1];
 
-                if (bookmarked_images[artist_name].includes(image_id)) {
+                if (bookmarked_images[page.name].includes(image_id)) {
                     image_list_item.classList.add('image-list-item-bookmarked');
                 }
             });
@@ -8989,13 +8958,15 @@ let has_prompted_for_update = false;
 
     // gallery focused image
     function patch_gallery_focused_image(focused_image_details, gallery_interactions) {
-        let artist_name = document.body.querySelector('.header-new-title').textContent;
-        let focused_image_id = focused_image_details.getAttribute('data-image-url').split('/')[4];
+        let focused_image_id_split = focused_image_details.getAttribute('data-image-url').split('/');
+        let focused_image_id_length = focused_image_id_split.length - 1;
+
+        let focused_image_id = focused_image_id_split[focused_image_id_length];
 
         let bookmarked_images = JSON.parse(localStorage.getItem('bleh_bookmarked_images')) || {};
         let image_is_bookmarked = false;
-        if (bookmarked_images.hasOwnProperty(artist_name)) {
-            if (bookmarked_images[artist_name].includes(focused_image_id)) {
+        if (bookmarked_images.hasOwnProperty(page.name)) {
+            if (bookmarked_images[page.name].includes(focused_image_id)) {
                 image_is_bookmarked = true;
                 log('focused is bookmarked', 'gallery');
             }
@@ -9005,7 +8976,7 @@ let has_prompted_for_update = false;
         let gallery_bookmark_button = document.createElement('button');
         gallery_bookmark_button.classList.add('bleh--gallery-bookmark-image-btn', 'btn--has-icon');
         gallery_bookmark_button.setAttribute('data-bleh--image-is-bookmarked', image_is_bookmarked);
-        gallery_bookmark_button.setAttribute('onclick', `_update_image_bookmark(this, '${artist_name}', '${focused_image_id}')`)
+        gallery_bookmark_button.setAttribute('onclick', `_update_image_bookmark(this, '${focused_image_id}')`)
         // true / false
         gallery_bookmark_button.textContent = trans[lang].gallery.bookmarks.button.bookmark_this_image.name;
 
@@ -9018,26 +8989,21 @@ let has_prompted_for_update = false;
         gallery_interactions.appendChild(gallery_bookmark_button);
     }
 
-    unsafeWindow._update_image_bookmark = function(button, artist, id) {
-        update_image_bookmark(button, artist, id);
+    unsafeWindow._update_image_bookmark = function(button, id) {
+        update_image_bookmark(button, id);
     }
-    function update_image_bookmark(button, artist, id) {
+    function update_image_bookmark(button, id) {
         let bookmarked_images = JSON.parse(localStorage.getItem('bleh_bookmarked_images')) || {};
         let is_bookmarked = (button.getAttribute('data-bleh--image-is-bookmarked') === 'true');
 
-        button.textContent = (is_bookmarked)
-        ? trans[lang].gallery.bookmarks.button.unbookmark_this_image.name
-        : trans[lang].gallery.bookmarks.button.bookmark_this_image.name;
-
-        console.info(unsafeWindow.bookmark_tooltip);
         unsafeWindow.bookmark_tooltip.setContent(
             (!is_bookmarked)
             ? trans[lang].gallery.bookmarks.button.unbookmark_this_image.bio
             : trans[lang].gallery.bookmarks.button.bookmark_this_image.bio
         );
 
-        if (!bookmarked_images.hasOwnProperty(artist))
-            bookmarked_images[artist] = [];
+        if (!bookmarked_images.hasOwnProperty(page.name))
+            bookmarked_images[page.name] = [];
 
         if (is_bookmarked) {
             // remove from bookmarks
@@ -9045,20 +9011,20 @@ let has_prompted_for_update = false;
             button.setAttribute('data-bleh--image-is-bookmarked', 'false');
 
             let new_artist_bookmarks = [];
-            for (let image in bookmarked_images[artist]) {
-                if (bookmarked_images[artist][image] != id) {
-                    new_artist_bookmarks.push(bookmarked_images[artist][image]);
+            for (let image in bookmarked_images[page.name]) {
+                if (bookmarked_images[page.name][image] != id) {
+                    new_artist_bookmarks.push(bookmarked_images[page.name][image]);
                 }
             }
-            bookmarked_images[artist] = new_artist_bookmarks;
+            bookmarked_images[page.name] = new_artist_bookmarks;
 
-            log(`image ${id} from ${artist} removed from bookmarks`, 'gallery');
+            log(`image ${id} from ${page.name} removed from bookmarks`, 'gallery');
         } else {
             // add to bookmarks
 
             button.setAttribute('data-bleh--image-is-bookmarked', 'true');
-            bookmarked_images[artist].push(id);
-            log(`image ${id} from ${artist} added to bookmarks`, 'gallery');
+            bookmarked_images[page.name].push(id);
+            log(`image ${id} from ${page.name} added to bookmarks`, 'gallery');
         }
 
         localStorage.setItem('bleh_bookmarked_images', JSON.stringify(bookmarked_images));
@@ -9415,6 +9381,17 @@ let has_prompted_for_update = false;
 
         // lets treat unicode properly
         if (is_album)
+            return decodeURI(desanitise(split[length - 1]));
+        else
+            return decodeURI(desanitise(split[length - 2]));
+    }
+
+    function return_artist_from_generic(url) {
+        let split = url.split('/');
+        let length = (split.length - 1);
+
+        // lets treat unicode properly
+        if (split[length - 1] != '_')
             return decodeURI(desanitise(split[length - 1]));
         else
             return decodeURI(desanitise(split[length - 2]));

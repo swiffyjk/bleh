@@ -1,6 +1,12 @@
 {
     "updated": "2024-11-07",
-    "latest": "2024.1107",
+    "latest": "2024.1107.1",
+    "2024.1107.1": {
+        "name": "Checking off the list",
+        "type": "fix",
+        "force": false,
+        "bio": "- __Fixed image saving system for artists under `+noredirect`__\n- Using the saved image tab shortcut no longer swaps back to the tab when changing pages"
+    },
     "2024.1107": {
         "name": "changelogs :3",
         "type": "minor",

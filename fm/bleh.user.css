@@ -15,7 +15,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Ubuntu+Sans:ital,wght@0,100..800;1,100..800&display=swap');
 
 body {
-    --version-build: '2024.1107';
+    --version-build: '2024.1107.1';
 
     --hue:  var(--hue-over,
             var(--hue-album,
@@ -5237,7 +5237,7 @@ a.chartlist-love-button:after {
 }
 .chartlist-count-bar-link {
     text-decoration: none !important;
-    padding: 0 7px !important; /* 14 */
+    padding: 0 9px !important; /* 14 */
     font-size: var(--font-size);
     flex: 1;
     text-align: right;
@@ -5250,7 +5250,7 @@ a.chartlist-love-button:after {
 
 .chartlist-count-bar,
 .chartlist-count-bar-slug {
-    border-radius: var(--item-small-radius); /* 50 */
+    border-radius: var(--item-med-radius); /* 50 */
 }
 .chartlist-count-bar-slug {
     background: hsl(var(--h3)) !important;
@@ -6754,11 +6754,16 @@ on the bottom of a panel !! */
     --left: 12px;
     --right: none;
 
+    &.dropdown-menu-clickable-item--selected,
     &.active {
         --bg: hsla(var(--h4), 20%) !important;
         --bg-hov: var(--bg) !important;
         --bg-atv: var(--bg) !important;
     }
+}
+
+.dropdown-menu-clickable-item--selected {
+    --mask: var(--icon-16-check) !important;
 }
 
 .auth-dropdown-menu-item {
@@ -6945,10 +6950,6 @@ very, very, very dated - who looks up a song on ebay? */
 }
 [data-analytics-action="export"] {
     --mask: var(--icon-16-upload);
-}
-
-.dropdown-menu-clickable-item--selected {
-    --mask: var(--icon-16-check);
 }
 
 [data-bleh--label="bleh"] {
@@ -7372,7 +7373,7 @@ input:is([name="track_name"], [name="artist_name"], [name="album_name"], [name="
 .date-range-picker-content,
 .dropdown-menu-clickable, .auth-dropdown-menu, .navlist-hidden-list, .modal-body, .library-search-results, .events-filter-location-dropdown {
     margin: unset !important;
-    background: hsl(var(--b5)) !important;
+    background: hsl(var(--b6)) !important;
     border-radius: var(--card-radius) !important;
     box-shadow: var(--menu-shadow) !important;
     color: hsl(var(--c2));
@@ -8757,7 +8758,7 @@ text[style^="color: rgb(255, 172, 172)"] {
     &[data-theme="language-menu"],
     &[data-theme="menu"] {
         padding: 7px !important;
-        background: hsl(var(--b5)) !important;
+        background: hsl(var(--b6)) !important;
         border-radius: var(--card-radius) !important;
         box-shadow: var(--menu-shadow) !important;
         animation: dropdown_side calc(var(--trans-short) + 0.02s) var(--trans-function);
