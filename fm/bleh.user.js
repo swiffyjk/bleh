@@ -11994,7 +11994,7 @@ let has_prompted_for_update = false;
         if (about_me != null)
             about_me.after(panel);
         else
-            page.structure.side.insertBefore(about_me, page.structure.side.firstElementChild);
+            page.structure.side.insertBefore(panel, page.structure.side.firstElementChild);
     }
 
 
