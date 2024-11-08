@@ -2113,8 +2113,14 @@ li.header-metadata-item--event-attendance {
     flex-shrink: 0;
 }
 
-.featured-item-heading-link {
+.featured-item-heading {
+    font: inherit;
     color: inherit;
+    text-transform: unset;
+
+    .featured-item-heading-link {
+        color: inherit;
+    }
 }
 
 .featured-item-details {
@@ -4272,7 +4278,6 @@ h3 {
 /*     CARD HEAD     */
 h2:not(.count, .mask-multi-text, .mask-text, .sr-only, .js-gallery-heading, .top-item-modal-header), h3.text-18, h2.text-18, .subpage-title:not(.subpage-breadcrumb + .subpage-title, .js-gallery-heading),
 .stationlinks-header,
-.featured-item-heading,
 .library-artist-section-header,
 .date-heading, .user-sidebar-header,
 .gallery-image-title,
