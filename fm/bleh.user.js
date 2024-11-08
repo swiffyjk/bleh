@@ -10887,24 +10887,32 @@ let has_prompted_for_update = false;
         xhr.open('GET',url,true);
 
         xhr.onload = function() {
-            console.info('lotus -', type, 'list responded with', xhr.status);
+            log(`${type} list responded with ${xhr.status}`, 'lotus');
 
-            if (type == 'artist')
-                artist_corrections = JSON.parse(this.response);
-            else
-                album_track_corrections = JSON.parse(this.response);
-
-            if (notify)
-                deliver_notif(trans[lang].lotus[type], false, true, 'lotus');
-
-            // save to cache for next page load
-            localStorage.setItem(`lotus_${type}`, this.response);
+            if (xhr.status != 200) {
+                log('request has been cancelled, will request again in 1h', 'lotus');
+                api_expire.setHours(api_expire.getHours() + 1);
+            }
 
             // set expire date
             let api_expire = new Date();
-            api_expire.setHours(api_expire.getHours() + 4);
+
+            if (xhr.status == 200) {
+                if (type == 'artist')
+                    artist_corrections = JSON.parse(this.response);
+                else
+                    album_track_corrections = JSON.parse(this.response);
+
+                if (notify)
+                    deliver_notif(trans[lang].lotus[type], false, true, 'lotus');
+
+                // save to cache for next page load
+                localStorage.setItem(`lotus_${type}`, this.response);
+                api_expire.setHours(api_expire.getHours() + 4);
+                log(`${type} list cached until ${api_expire}`, 'lotus');
+            }
+
             localStorage.setItem(`lotus_${type}_expire`, api_expire);
-            console.info('lotus -', type, 'list is cached until', api_expire);
 
             if (button != null)
                 button.removeAttribute('disabled');
@@ -11829,17 +11837,25 @@ let has_prompted_for_update = false;
         xhr.onload = function() {
             log(`responded with ${xhr.status}`, 'changelog');
 
-            if (open_after)
-                open_changelog(JSON.parse(this.response));
-
-            // save to cache for next page load
-            localStorage.setItem('bleh_changelog', this.response);
+            if (xhr.status != 200) {
+                log('request has been cancelled, will request again in 1h', 'changelog');
+                api_expire.setHours(api_expire.getHours() + 1);
+            }
 
             // set expire date
             let api_expire = new Date();
-            api_expire.setHours(api_expire.getHours() + 2);
+
+            if (xhr.status == 200) {
+                if (open_after)
+                    open_changelog(JSON.parse(this.response));
+
+                // save to cache for next page load
+                localStorage.setItem('bleh_changelog', this.response);
+                api_expire.setHours(api_expire.getHours() + 2);
+                log(`cached until ${api_expire}`, 'changelog');
+            }
+
             localStorage.setItem('bleh_changelog_expire', api_expire);
-            log(`cached until ${api_expire}`, 'changelog');
 
             if (button != null)
                 button.removeAttribute('disabled');
