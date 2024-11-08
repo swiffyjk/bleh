@@ -447,6 +447,7 @@ body {
     --card-shadow: hsla(var(--b7), 0.05) 0 2px 4px 0;
 
     --menu-shadow: 2px 2px 24px 0 hsla(var(--b7), 0.15), 3px 6px 48px 16px hsla(var(--b7), 0.03);
+    --standout-shadow: 3px 6px 20px 7px hsla(var(--b7), 0.06);
 
     --interactable-outer: hsla(var(--b7), 0.03) 0 2px 2px 0;
     --interactable-active-outer: transparent 0 0 0;
@@ -4399,7 +4400,7 @@ better than the default selector '#app a' i suppose */
     width: auto;
     height: auto;
     aspect-ratio: 1 / 1;
-    border-radius: var(--item-med-radius);
+    border-radius: var(--item-big-radius);
     overflow: hidden;
     box-shadow: var(--standout-shadow);
 }
@@ -4588,7 +4589,7 @@ better than the default selector '#app a' i suppose */
     padding: 5px 12px;
     min-height: 36px;
     max-height: 44px;
-    border-radius: var(--item-med-radius);
+    border-radius: var(--item-big-radius);
     box-shadow: var(--shadow);
     transition-property: background-color;
     transition-duration: var(--trans);
@@ -16912,6 +16913,9 @@ h4 {
     &.activity--update_bwaa,
     &.activity--install_bwaa {
         --mask: var(--icon-16-download);
+    }
+    &.activity--image_upload {
+        --mask: var(--icon-16-gallery-vertical);
     }
 
     .title {
