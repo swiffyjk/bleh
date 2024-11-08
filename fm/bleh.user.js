@@ -121,7 +121,8 @@ const trans = {
                 general: 'General improvements',
                 fix: 'Bug fix'
             },
-            latest: 'Latest'
+            latest: 'Latest',
+            view_major: 'View latest major release'
         },
         auth_menu: {
             dev: 'Toggle dev mode',
@@ -789,7 +790,8 @@ const trans = {
                 general: 'General improvements',
                 fix: 'Bug fix'
             },
-            latest: 'Latest'
+            latest: 'Latest',
+            view_major: 'View latest major release'
         },
         auth_menu: {
             dev: 'Toggle dev mode',
@@ -1434,7 +1436,8 @@ const trans = {
                 general: 'General improvements',
                 fix: 'Bug fix'
             },
-            latest: 'Latest'
+            latest: 'Latest',
+            view_major: 'View latest major release'
         },
         auth_menu: {
             dev: 'Przełącz tryb deweloperski',
@@ -11859,6 +11862,11 @@ let has_prompted_for_update = false;
     function open_changelog(changelog) {
         let window = create_window('changelog', trans[lang].changelog.name, (`
             <div class="changelog-list"></div>
+            <div class="modal-footer">
+                <a class="btn primary skip" href="#latest_major_release">
+                    ${trans[lang].changelog.view_major}
+                </a>
+            </div>
         `), true, 'changelog', true);
 
         let changelog_list = window.querySelector('.changelog-list');
@@ -11892,6 +11900,9 @@ let has_prompted_for_update = false;
                     <h3>${changelog[version].name}</h3>
                 </div>
             `);
+
+            if (changelog[version].type == 'major')
+                version_item.setAttribute('id', 'latest_major_release');
 
             let body = document.createElement('div');
             body.classList.add('version-item-body', 'markdown-body');

@@ -2089,6 +2089,7 @@ li.header-metadata-item--event-attendance {
         linear-gradient(0deg, hsla(var(--h3), 80%) 0%, hsl(var(--b5)) 100%) border-box;
         border: 2px solid transparent !important;
         padding: var(--card-padding) !important;
+        box-shadow: var(--card-shadow) !important;
 
         /*.cover-art {
             background: linear-gradient(180deg, hsla(var(--h3), 20%) 0%, var(--avatar-generic-background) 100%);
@@ -7397,7 +7398,7 @@ input:is([name="track_name"], [name="artist_name"], [name="album_name"], [name="
 
     [data-bleh--theme="light"] &,
     [data-bleh--theme="oled"] & {
-        box-shadow: 0 0 0 1px var(--card-border-base) inset, var(--menu-shadow) !important;
+        box-shadow: var(--override-full-shadow, 0 0 0 1px var(--card-border-base) inset, var(--menu-shadow)) !important;
     }
 }
 
@@ -16823,7 +16824,7 @@ h4 {
     }
 }
 .modal-inner-content.allow-scroll {
-    max-height: 70vh;
+    max-height: 80vh;
     padding: var(--card-gap);
     margin: calc(-1 * var(--card-gap)) !important;
     overflow-y: hidden;
@@ -16854,7 +16855,7 @@ h4 {
     background: unset !important;
     padding: unset !important;
     outline: unset !important;
-    box-shadow: unset !important;
+    --override-full-shadow: none !important;
 
     .modal-title {
         display: none;
@@ -17357,11 +17358,16 @@ h4 {
         gap: var(--item-list-gap);
         position: relative;
 
+        padding: 0 var(--card-gap);
+        margin: 0 calc(-1 * var(--card-gap));
+
         &[data-changelog-latest="true"] {
             padding: var(--card-gap);
             background-color: hsla(var(--h4), 15%);
             box-shadow: 0 0 20px hsla(var(--h4), 15%);
             border-radius: var(--item-big-radius);
+
+            margin: unset;
 
             &:before {
                 display: none;
@@ -17375,6 +17381,7 @@ h4 {
 
         .version-item-header {
             text-align: center;
+            cursor: default;
 
             .sub-text {
                 justify-content: center;
@@ -17388,8 +17395,20 @@ h4 {
         }
 
         & + .changelog-version-item {
-            border-top: 1px solid var(--card-border-base);
+            /*border-top: 1px solid var(--card-border-base);*/
+            border-top: 1px solid transparent;
             padding-top: var(--card-padding);
+
+            &:after {
+                content: '';
+                position: absolute;
+                left: var(--card-gap);
+                right: var(--card-gap);
+                top: -1px;
+                height: 1px;
+                display: block;
+                background: var(--card-border-base);
+            }
         }
 
         &:before {
@@ -17422,8 +17441,17 @@ h4 {
             --sat-over: 1;
             --lit-over: 1;
 
-            &[data-changelog-latest="false"] {
+            /*&[data-changelog-latest="false"] {
                 background: radial-gradient(circle, hsla(var(--h4), 10%) 0%, rgba(255,255,255,0) 75%);
+            }*/
+            &[data-changelog-latest="false"] {
+                background: linear-gradient(180deg, hsla(var(--h4), 15%), transparent);
+            }
+
+            [data-bleh--theme="light"] & {
+                &[data-changelog-latest="false"] {
+                    background: linear-gradient(180deg, hsla(var(--h4), 40%), transparent);
+                }
             }
 
             .version-item-header {
@@ -17496,6 +17524,10 @@ h4 {
                     --hue-over: var(--hue-fav);
                     --lit-over: 1;
                 }
+
+                code {
+                    font-weight: var(--font-weight);
+                }
             }
         }
     }
@@ -17512,6 +17544,7 @@ h4 {
         font-size: 16px;
         line-height: 20px;
         margin: var(--card-gap) 0 0 0;
+        cursor: default;
     }
 
     :first-child {
