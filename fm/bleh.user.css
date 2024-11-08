@@ -1450,7 +1450,7 @@ last.fm changes as of 2024-05-20 */
 .shoutbox--with-header#shoutbox:not(#shoutbox > #shoutbox /* for shoutbox on gallery image */, section > #shoutbox /* events */),
 :is(.namespace--user_following, .namespace--user_followers) :is(.col-main, .col-sidebar),
 /* individual library selection */
-body[class*="namespace--user_library_"] .col-sidebar, .library-header,
+.library-header,
 .page-content:has(.inbox-notifications),
 /* gallery */ .js-gallery-image-details,
 /* listening reports */ .user-dashboard > .user-dashboard-buffer,
@@ -7029,46 +7029,45 @@ very, very, very dated - who looks up a song on ebay? */
 
 
 /*     DATE PICKER     */
-.row:has(> .library-controls-datepicker) {
-    display: flex;
-    flex-direction: column;
-
-    /* space for search */
-    margin-top: calc(32px + var(--card-gap));
-
-    .user-sidebar-header {
-        margin: unset !important;
-        color: hsl(var(--c3));
-    }
-
-    .library-controls-datepicker > .library-date-picker {
+.date-panel {
+    .row {
         display: flex;
-        justify-content: start;
-        height: 30px;
+        flex-direction: column;
 
-        .date-range-picker-button {
-            --bg: transparent;
-            --bg-hov: transparent;
-            --bg-atv: transparent;
-            --shadow: none;
+        .user-sidebar-header {
+            margin: unset !important;
+            color: hsl(var(--c3));
+        }
 
-            --mask: var(--icon-16-dropdown);
-            --btn-top: 0;
-            --btn-left: 0;
-            --btn-right: calc(16px + 6px) !important;
-            --left: none;
-            --right: 0;
-            --btn-bottom: 0;
+        .library-controls-datepicker > .library-date-picker {
+            display: flex;
+            justify-content: start;
+            height: 30px;
 
-            font-size: 24px !important;
-            line-height: 30px !important;
+            .date-range-picker-button {
+                --bg: transparent;
+                --bg-hov: transparent;
+                --bg-atv: transparent;
+                --shadow: none;
 
-            .date-range-picker-button-inner {
-                max-width: unset;
-            }
+                --mask: var(--icon-16-dropdown);
+                --btn-top: 0;
+                --btn-left: 0;
+                --btn-right: calc(16px + 6px) !important;
+                --left: none;
+                --right: 0;
+                --btn-bottom: 0;
 
-            &:before {
-                display: none;
+                font-size: 24px !important;
+                line-height: 30px !important;
+
+                .date-range-picker-button-inner {
+                    max-width: unset;
+                }
+
+                &:before {
+                    display: none;
+                }
             }
         }
     }

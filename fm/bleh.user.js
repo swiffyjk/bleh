@@ -4842,6 +4842,9 @@ let has_prompted_for_update = false;
         } else {
             // which subpage is it?
             page.subpage = document.body.classList[1].replace('namespace--', '');
+
+            if (page.subpage.startsWith('user_library'))
+                bleh_user_library();
         }
 
         log('status is', 'page', 'info', page);
@@ -11992,5 +11995,22 @@ let has_prompted_for_update = false;
             about_me.after(panel);
         else
             page.structure.side.insertBefore(about_me, page.structure.side.firstElementChild);
+    }
+
+
+
+
+    function bleh_user_library() {
+        // date sidebar into its own panel
+        let date_items = page.structure.side.querySelectorAll(':scope > :is(div, figure)');
+
+        let date_panel = document.createElement('section');
+        date_panel.classList.add('date-panel');
+
+        date_items.forEach((item) => {
+            date_panel.appendChild(item);
+        });
+
+        page.structure.side.appendChild(date_panel);
     }
 })();
