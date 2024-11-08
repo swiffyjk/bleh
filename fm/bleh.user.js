@@ -369,7 +369,8 @@ const trans = {
                     overlays: {
                         name: 'Display additional seasonal effects',
                         bio: 'During winter seasons this is used for ice effects, otherwise mainly just gradients.'
-                    }
+                    },
+                    announce: 'It is now {s}!'
                 },
                 artwork: {
                     name: 'Artwork'
@@ -1017,7 +1018,8 @@ const trans = {
                     overlays: {
                         name: 'Zusätzliche saisonale Effekte anzeigen',
                         bio: 'During winter seasons this is used for ice effects, otherwise mainly just gradients.'
-                    }
+                    },
+                    announce: 'It is now {s}!'
                 },
                 artwork: {
                     name: 'Cover'
@@ -1672,7 +1674,8 @@ const trans = {
                     overlays: {
                         name: 'Display additional seasonal effects',
                         bio: 'During winter seasons this is used for ice effects, otherwise mainly just gradients.'
-                    }
+                    },
+                    announce: 'It is now {s}!'
                 },
                 artwork: {
                     name: 'Okładka'
@@ -2152,61 +2155,6 @@ let seasonal_events = [
         }
     }
 ];
-
-function set_season() {
-    if (!settings.seasonal)
-        return;
-
-    let now = new Date();
-
-    let current_year = now.getFullYear();
-
-    seasonal_events.forEach((season) => {
-        if (
-            now >= new Date(season.start.replace('y0', current_year)) &&
-            now <= new Date(season.end.replace('y0', current_year))
-        ) {
-            stored_season.now = now;
-            stored_season.year = current_year;
-
-            if (stored_season.id == season.id)
-                return;
-            stored_season.id = season.id;
-            stored_season.start = season.start;
-            stored_season.end = season.end;
-            stored_season.snowflakes = season.snowflakes;
-
-            log(`${season.id} from ${season.start} to ${season.end}`, 'season');
-
-            document.documentElement.setAttribute('data-bleh--season', season.id);
-
-            // snow
-            if (season.snowflakes.state && settings.seasonal_particles) {
-                log('let the snow start!', 'season');
-                prep_snow();
-
-                snowflakes_enabled = true;
-                snowflakes_count = season.snowflakes.count;
-                begin_snowflakes();
-            }
-        }
-    });
-}
-
-function prep_snow() {
-    let prev_container = document.getElementById('snowflakes');
-    if (prev_container != null)
-        return;
-
-    let container = document.createElement('div');
-    container.classList.add('snow-container');
-    container.setAttribute('id', 'snowflakes');
-    container.innerHTML = (`
-        <span class="snow snowflake"></span>
-    `);
-
-    document.documentElement.appendChild(container);
-}
 
 function log(text, system, type = 'info', append={}) {
     let system_colour;
@@ -3382,6 +3330,73 @@ let has_prompted_for_update = false;
         menu_item.appendChild(menu_item_btn);
         parent.appendChild(menu_item);
     }
+
+
+
+
+    function set_season() {
+        if (!settings.seasonal)
+            return;
+
+        let last_season_seen = localStorage.getItem('bleh_last_season_seen') || '';
+
+        let now = new Date();
+
+        let current_year = now.getFullYear();
+
+        seasonal_events.forEach((season) => {
+            if (
+                now >= new Date(season.start.replace('y0', current_year)) &&
+                now <= new Date(season.end.replace('y0', current_year))
+            ) {
+                stored_season.now = now;
+                stored_season.year = current_year;
+
+                if (stored_season.id == season.id)
+                    return;
+                stored_season.id = season.id;
+                stored_season.start = season.start;
+                stored_season.end = season.end;
+                stored_season.snowflakes = season.snowflakes;
+
+                log(`${season.id} from ${season.start} to ${season.end}`, 'season');
+
+                document.documentElement.setAttribute('data-bleh--season', season.id);
+
+                // snow
+                if (season.snowflakes.state && settings.seasonal_particles) {
+                    log('let the snow start!', 'season');
+                    prep_snow();
+
+                    snowflakes_enabled = true;
+                    snowflakes_count = season.snowflakes.count;
+                    begin_snowflakes();
+                }
+
+                // new season?
+                if (last_season_seen != '' && last_season_seen != season.id)
+                    deliver_notif(trans[lang].settings.customise.seasonal.announce.replace('{s}', trans[lang].settings.customise.seasonal.listing[stored_season.id]))
+                localStorage.setItem('bleh_last_season_seen', season.id);
+            }
+        });
+    }
+
+    function prep_snow() {
+        let prev_container = document.getElementById('snowflakes');
+        if (prev_container != null)
+            return;
+
+        let container = document.createElement('div');
+        container.classList.add('snow-container');
+        container.setAttribute('id', 'snowflakes');
+        container.innerHTML = (`
+            <span class="snow snowflake"></span>
+        `);
+
+        document.documentElement.appendChild(container);
+    }
+
+
 
 
     function patch_masthead(element) {
