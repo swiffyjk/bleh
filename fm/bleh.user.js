@@ -11946,7 +11946,7 @@ let has_prompted_for_update = false;
         let form = document.body.querySelector('.header-info-primary form');
 
         let heading = details.querySelector('.featured-item-heading');
-        let heading_link = heading.querySelector('a').outerHTML;
+        let heading_link = heading.outerHTML;
         details.removeChild(heading);
 
         if (settings.corrections) {
