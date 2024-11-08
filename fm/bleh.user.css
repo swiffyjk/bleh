@@ -1,7 +1,7 @@
 /* ==UserStyle==
 @name           bleh (dev)
 @namespace      github.com/katelyynn/bleh
-@version        2024.1107
+@version        2024.1108
 @license        GPL-3.0
 @author         kate
 @updateURL      https://github.com/katelyynn/bleh/raw/uwu/fm/bleh.user.css
@@ -15,7 +15,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Ubuntu+Sans:ital,wght@0,100..800;1,100..800&display=swap');
 
 body {
-    --version-build: '2024.1107.1';
+    --version-build: '2024.1108';
 
     --hue:  var(--hue-over,
             var(--hue-album,
@@ -1441,13 +1441,11 @@ last.fm changes as of 2024-05-20 */
 .album-and-lyrics-row,
 /* dont question it too far, refer to the above display: grid for more insight, this is jus applying the card styling */
 .shoutbox--with-header#shoutbox:not(#shoutbox > #shoutbox /* for shoutbox on gallery image */, section > #shoutbox /* events */),
-.header-featured-track,
 :is(.namespace--user_following, .namespace--user_followers) :is(.col-main, .col-sidebar),
 /* individual library selection */
 body[class*="namespace--user_library_"] .col-sidebar, .library-header,
 .page-content:has(.inbox-notifications),
 /* gallery */ .js-gallery-image-details,
-/* send a message box */ .header--overview:not(:has(.header-featured-track)):has(.header-message-user) + .adaptive-skin-container .col-sidebar:before,
 /* listening reports */ .user-dashboard > .user-dashboard-buffer,
 /* katie doesnt have any scrobbles yet */ .profile-mobile-featured-track + .no-data-message,
 /* quick create playlists */ .section-with-separator[action*="/create/from-"],
@@ -1494,19 +1492,19 @@ body[class*="namespace--user_library_"] .col-sidebar, .library-header,
     background-position: unset !important;*/
 
     [data-bleh--seasonal_overlays="true"] & {
-        [data-bleh--season="halloween"] &:not(.header-featured-track, .shh) {
+        [data-bleh--season="halloween"] &:not(.featured-item-panel, .shh) {
             background-image: linear-gradient(0deg, rgba(252, 139, 105, 0.04) 0%, rgba(0,0,0,0) 100%) !important;
             background-repeat: repeat-x;
             background-position: unset !important;
         }
     }
-    [data-bleh--seasonal_overlays="true"][data-bleh--season="christmas"] &:not(.header-featured-track, .shh),
-    [data-bleh--seasonal_overlays="true"][data-bleh--season="new_years"] &:not(.header-featured-track, .shh) {
+    [data-bleh--seasonal_overlays="true"][data-bleh--season="christmas"] &:not(.featured-item-panel, .shh),
+    [data-bleh--seasonal_overlays="true"][data-bleh--season="new_years"] &:not(.featured-item-panel, .shh) {
         background-image: var(--overlay-ice), linear-gradient(180deg, rgba(190,233,250,0.06) 0%, rgba(0,0,0,0) 100%) !important;
         background-repeat: repeat-x;
         background-position: unset !important;
     }
-    [data-bleh--seasonal_overlays="true"][data-bleh--season="fall"] &:not(.header-featured-track, .shh) {
+    [data-bleh--seasonal_overlays="true"][data-bleh--season="fall"] &:not(.featured-item-panel, .shh) {
         background-image: var(--overlay-ice), linear-gradient(180deg, rgba(190,233,250,0.03) 0%, rgba(0,0,0,0) 100%) !important;
         background-repeat: repeat-x;
         background-position: unset !important;
@@ -2067,37 +2065,35 @@ li.header-metadata-item--event-attendance {
 
 /*     FEATURED TRACK     */
 .header-featured-track {
-    padding-right: unset;
-    position: absolute;
-    top: calc(var(--profile-header-avatar-size) + 76px);
-    right: 0;
-    left: unset;
-    bottom: unset;
-    width: var(--cards-sidebar-width);
-    min-height: calc(123px + 36px); /* additions for the button */
-    max-width: unset;
-    display: flex !important;
-    gap: 10px;
-    z-index: 1;
-
-    padding: var(--card-padding) !important;
-
-    [data-bleh--pretty_obsessions="true"] & {
-        background: var(--card-specific-background) !important;
-        --card-specific-background:
-        linear-gradient(hsl(var(--b5)), hsl(var(--g4))) padding-box,
-        linear-gradient(0deg, hsla(var(--h3), 80%) 0%, hsl(var(--b5)) 100%) border-box;
-        border: 2px solid transparent !important;
-        padding: var(--card-padding) !important;
-        box-shadow: var(--card-shadow) !important;
-
-        /*.cover-art {
-            background: linear-gradient(180deg, hsla(var(--h3), 20%) 0%, var(--avatar-generic-background) 100%);
-        }*/
-    }
+    display: none !important;
 }
-.featured-item--right {
-    text-align: left;
+
+.featured-item-panel {
+    background: var(--card-specific-background) !important;
+    --card-specific-background:
+    linear-gradient(hsl(var(--b5)), hsl(var(--g4))) padding-box,
+    linear-gradient(0deg, hsla(var(--h3), 80%) 0%, hsl(var(--b5)) 100%) border-box;
+    border: 2px solid transparent !important;
+    padding: var(--card-padding) !important;
+    box-shadow: var(--card-shadow) !important;
+
+    /*.cover-art {
+        background: linear-gradient(180deg, hsla(var(--h3), 20%) 0%, var(--avatar-generic-background) 100%);
+    }*/
+
+    display: flex;
+    flex-direction: column;
+    gap: var(--card-gap);
+
+    .track-template {
+        display: flex;
+        gap: var(--item-list-gap);
+    }
+
+    form {
+        display: flex;
+        justify-content: end;
+    }
 }
 
 .header--sub-page .header-featured-track {
@@ -2110,21 +2106,8 @@ li.header-metadata-item--event-attendance {
     flex-shrink: 0;
 }
 
-.featured-item-heading {
-    position: absolute !important;
-    top: var(--card-padding);
-    left: var(--card-padding);
-
-    [data-bleh--pretty_obsessions="true"] & {
-        top: var(--card-padding);
-        left: var(--card-padding);
-    }
-}
 .featured-item-heading-link {
     color: inherit;
-}
-.featured-item-art, .featured-item-details {
-    margin-top: calc(18px + var(--card-gap)); /* for the header */
 }
 
 .featured-item-details {
@@ -2150,24 +2133,24 @@ hide the button in this case
 
 usually there would be header-featured-track in between these two
 elements, this is how we detect its missing */
-.header-info-primary-col1 + form:has(.profile-header-set-obsession) {
+/*.header-info-primary-col1 + form:has(.profile-header-set-obsession) {
     display: none;
-}
+}*/
 
 
 /*     MANAGE OBSESSION     */
 .profile-header-set-obsession {
-    bottom: calc(-128px - 86px); /* -129 to put top right */
-    z-index: 2;
-    right: 21px;
+    position: relative;
+    inset: unset !important;
     --mask: var(--icon-16-obsession);
 
-    [data-ff--redesigned_profile_header="true"] & {
-        bottom: calc(-125px - 86px);
+    .header & {
+        display: none;
     }
-}
-[action$="/obsessions/remove"] .profile-header-set-obsession {
-    --mask: var(--icon-16-obsession-remove);
+
+    [action$="/obsessions/remove"] > & {
+        --mask: var(--icon-16-obsession-remove);
+    }
 }
 
 .featured-item-art .image-overlay-playlink-link {
@@ -2176,21 +2159,11 @@ elements, this is how we detect its missing */
 
 /*     MESSAGE USER (takes place)     */
 .header-message-user {
-    top: calc((var(--profile-header-avatar-size) + 32px) + 83px) !important; /* -129 to put top right */
-    z-index: 2;
-    right: 21px !important;
-    width: fit-content !important;
-    margin: unset !important;
-}
-.header-message-user:before {
-    --mask: var(--icon-16-mail) !important;
+    display: none !important;
 }
 
 
 /* move the sidebar to fit */
-.header--overview:has(.header-featured-track) + .adaptive-skin-container .col-sidebar {
-    padding-top: calc(138px + 36px) !important;
-}
 .about-me-header, .about-me-sidebar p {
     overflow-y: hidden;
 }
@@ -2479,21 +2452,6 @@ elements, this is how we detect its missing */
 }
 
 
-
-
-/* no featured track, leave space for message button box instead */
-.header--overview:not(:has(.header-featured-track)):has(.header-message-user) + .adaptive-skin-container .col-sidebar {
-    padding-top: calc(138px + 33px - 82px) !important;
-}
-.col-sidebar:before {
-    position: absolute;
-    width: var(--cards-sidebar-width);
-    height: calc(32px + 20px + 20px + 2px);
-    top: 0;
-}
-header:not(:has(.header-featured-track)) .header-message-user {
-    top: 129px !important;
-}
 
 
 .header-new--subpage .secondary-nav {
@@ -15716,14 +15674,14 @@ button.bleh--gallery-bookmark-image-btn {
         margin-bottom: var(--card-gap);
     }
 
-    [data-bleh--theme="oled"] &,
-    [data-bleh--theme="light"] & {
-        background-color: transparent;
-        outline: var(--card-border);
+    &.profile-top-header {
+        background-color: hsl(var(--b5));
     }
 
-    html:not([data-bleh--theme="oled"], [data-bleh--theme="light"]) &.profile-top-header {
+    [data-bleh--theme="oled"] &,
+    [data-bleh--theme="light"] & {
         background-color: hsl(var(--b5));
+        box-shadow: 0 0 0 1px var(--card-border-base) inset;
     }
 
     &.profile-top-header,
@@ -15846,6 +15804,9 @@ button.bleh--gallery-bookmark-image-btn {
             }
             &.profile-top-item--loved {
                 --mask: var(--icon-16-heart);
+            }
+            &.profile-top-item--message {
+                --mask: var(--icon-16-mail);
             }
             &.profile-top-item--shortcut {
                 --mask: var(--icon-16-profile-shortcut);
@@ -17545,6 +17506,10 @@ h4 {
         line-height: 20px;
         margin: var(--card-gap) 0 0 0;
         cursor: default;
+
+        & + ul {
+            margin-top: var(--item-list-gap);
+        }
     }
 
     :first-child {

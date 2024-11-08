@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         bleh
 // @namespace    http://last.fm/
-// @version      2024.1107
+// @version      2024.1108
 // @description  bleh!!! ^-^
 // @author       kate
 // @match        https://www.last.fm/*
@@ -20,7 +20,7 @@
 // ==/UserScript==
 
 let version = {
-    build: '2024.1107.1',
+    build: '2024.1108',
     sku: 'petal',
     feature_flags: {
         bleh_settings_tabs: {
@@ -182,6 +182,7 @@ const trans = {
                 replace: '• scrobbling since '
             },
             edit: 'Edit profile',
+            message: 'Private message',
             shortcut: {
                 add: 'Add as shortcut',
                 remove: 'Your profiles are linked!'
@@ -399,9 +400,6 @@ const trans = {
                 show_your_progress: {
                     name: 'Show your weekly progress',
                     bio: 'too many numbers ~w~'
-                },
-                pretty_obsessions: {
-                    name: 'Pretty obsessions'
                 },
                 profile_header: {
                     name: 'Display profile backgrounds',
@@ -841,6 +839,7 @@ const trans = {
                 replace: '• scrobbelt seit '
             },
             edit: 'Profil bearbeiten',
+            message: 'Private message',
             shortcut: {
                 add: 'Als Verknüpfung hinzufügen',
                 remove: 'Deine Profile sind verlinkt!'
@@ -1049,9 +1048,6 @@ const trans = {
                 show_your_progress: {
                     name: 'Show your weekly progress',
                     bio: 'too many numbers ~w~'
-                },
-                pretty_obsessions: {
-                    name: 'Pretty obsessions'
                 },
                 profile_header: {
                     name: 'Profilhintergründe anzeigen',
@@ -1493,6 +1489,7 @@ const trans = {
                 replace: '• scrobbling since '
             },
             edit: 'Edit profile',
+            message: 'Private message',
             shortcut: {
                 add: 'Add as shortcut',
                 remove: 'Your profiles are linked!'
@@ -1706,9 +1703,6 @@ const trans = {
                 show_your_progress: {
                     name: 'Show your weekly progress',
                     bio: 'too many numbers ~w~'
-                },
-                pretty_obsessions: {
-                    name: 'Pretty obsessions'
                 },
                 profile_header: {
                     name: 'Display profile backgrounds',
@@ -2583,7 +2577,6 @@ let settings_template = {
     list_view: 1,
     shout_markdown: true,
     bio_markdown: true,
-    pretty_obsessions: true,
     hue_from_album: true,
     seasonal: true,
     seasonal_particles: true,
@@ -2772,13 +2765,6 @@ let settings_base = {
     },
     bio_markdown: {
         css: 'bio_markdown',
-        unit: '',
-        value: true,
-        values: [true, false],
-        type: 'toggle'
-    },
-    pretty_obsessions: {
-        css: 'pretty_obsessions',
         unit: '',
         value: true,
         values: [true, false],
@@ -4832,6 +4818,12 @@ let has_prompted_for_update = false;
                         page.structure.side.insertBefore(recent_activity_section, page.structure.side.firstElementChild);
                 });
             }
+
+
+            // featured track
+            let featured_track_panel = profile_header.querySelector('.header-featured-track');
+            if (featured_track_panel != null)
+                bleh_featured_profile_track(featured_track_panel);
         } else {
             // which subpage is it?
             page.subpage = document.body.classList[1].replace('namespace--', '');
@@ -4856,8 +4848,6 @@ let has_prompted_for_update = false;
         // has header?
         if (content_top.querySelector('h1') == null && content_top.querySelector('.navlist') == null)
             adaptive_skin.removeChild(content_top);
-
-        patch_profile_obsession();
 
         // is this their profile?
         if (!is_own_profile) {
@@ -5016,22 +5006,6 @@ let has_prompted_for_update = false;
         }
     }
 
-    function patch_profile_obsession() {
-        let header_featured_track = document.body.querySelector('.featured-item-details');
-
-        if (header_featured_track == null)
-            return;
-
-        let name_elem = header_featured_track.querySelector('.featured-item-name');
-        let artist_elem = header_featured_track.querySelector('.featured-item-artist');
-
-        let name = correct_item_by_artist(name_elem.textContent.trim(), artist_elem.textContent.trim());
-        let artist = correct_artist(artist_elem.textContent.trim());
-
-        name_elem.textContent = name;
-        artist_elem.textContent = artist;
-    }
-
     function redesign_profile_header(is_own_profile) {
         let base_header = document.body.querySelector('.header-info-secondary');
 
@@ -5128,6 +5102,18 @@ let has_prompted_for_update = false;
 
                 profile_header.appendChild(follow_placeholder);
             }
+
+
+            // message
+            let msg_button = document.body.querySelector('.header-message-user');
+            if (msg_button != null) {
+                create_profile_top_item(profile_header, {
+                    name: page.name,
+                    type: 'message',
+                    link: msg_button.getAttribute('href')
+                });
+            }
+
 
             // shortcut
             create_profile_top_item(profile_header, {
@@ -6731,18 +6717,6 @@ let has_prompted_for_update = false;
                         </div>
                         <div class="toggle-wrap">
                             <button class="toggle" id="toggle-show_your_progress" aria-checked="true">
-                                <div class="dot"></div>
-                            </button>
-                        </div>
-                    </div>
-                    <div class="sep"></div>
-                    <div class="toggle-container" id="container-pretty_obsessions" onclick="_update_item('pretty_obsessions')">
-                        <button class="btn reset" onclick="_reset_item('pretty_obsessions')">${trans[lang].settings.reset}</button>
-                        <div class="heading">
-                            <h5>${trans[lang].settings.customise.pretty_obsessions.name}</h5>
-                        </div>
-                        <div class="toggle-wrap">
-                            <button class="toggle" id="toggle-pretty_obsessions" aria-checked="true">
                                 <div class="dot"></div>
                             </button>
                         </div>
@@ -11946,5 +11920,46 @@ let has_prompted_for_update = false;
 
     unsafeWindow._update_local_changelog_cache = function(json) {
         localStorage.setItem('bleh_changelog', JSON.stringify(json));
+    }
+
+
+
+
+    function bleh_featured_profile_track(object) {
+        let art = object.querySelector('.featured-item-art');
+        let details = object.querySelector('.featured-item-details');
+        let form = document.body.querySelector('.header-info-primary form');
+
+        let heading = details.querySelector('.featured-item-heading');
+        let heading_link = heading.querySelector('a').outerHTML;
+        details.removeChild(heading);
+
+        if (settings.corrections) {
+            let name_elem = object.querySelector('.featured-item-name');
+            let artist_elem = object.querySelector('.featured-item-artist');
+
+            let name = correct_item_by_artist(name_elem.textContent.trim(), artist_elem.textContent.trim());
+            let artist = correct_artist(artist_elem.textContent.trim());
+
+            name_elem.textContent = name;
+            artist_elem.textContent = artist;
+        }
+
+        let panel = document.createElement('section');
+        panel.classList.add('featured-item-panel');
+        panel.innerHTML = (`
+            <div class="sub-text">${heading_link}</div>
+            <div class="track-template">
+                ${art.outerHTML}
+                ${details.outerHTML}
+            </div>
+            ${(form != null) ? form.outerHTML : ''}
+        `);
+
+        let about_me = page.structure.side.querySelector('.about-me-sidebar');
+        if (about_me != null)
+            about_me.after(panel);
+        else
+            page.structure.side.insertBefore(about_me, page.structure.side.firstElementChild);
     }
 })();
