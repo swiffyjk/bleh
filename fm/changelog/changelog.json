@@ -5,7 +5,7 @@
         "name": "Checking off the list",
         "type": "fix",
         "force": false,
-        "bio": "- __Fixed image saving system for artists under `+noredirect`__\n- Using the saved image tab shortcut no longer swaps back to the tab when changing pages"
+        "bio": "- __Fixed image saving system for artists under `+noredirect`__\n- Standardise changelog styling on all pages\n- Standardise styling of modals and dropdowns\n- Using the saved image tab shortcut no longer swaps back to the tab when changing pages"
     },
     "2024.1107": {
         "name": "changelogs :3",

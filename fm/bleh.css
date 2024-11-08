@@ -17361,6 +17361,8 @@ h4 {
             }
 
             h3 {
+                font-size: 18px;
+                line-height: 22px;
                 color: hsl(var(--c1));
             }
         }
@@ -17374,7 +17376,7 @@ h4 {
             content: '';
             position: absolute;
             inset: 0;
-            background: linear-gradient(180deg, hsl(var(--b5)) 0%, transparent 20%, transparent 80%, hsl(var(--b5)) 100%);
+            background: linear-gradient(180deg, hsl(var(--b6)) 0%, transparent 20%, transparent 80%, hsl(var(--b6)) 100%);
         }
 
         div {
