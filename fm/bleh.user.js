@@ -1420,7 +1420,11 @@ const trans = {
             version: 'You are running lotus version {v}.',
             tooltip: 'lotus is the community correction system used in bleh and bwaa',
             check: 'Check for updates',
-            correct: 'Submit name correction'
+            correct: {
+                name: 'Correct',
+                tooltip: 'Submit name correction',
+                tooltip_active: 'Active name correction'
+            }
         },
         changelog: {
             name: 'What’s New?',
