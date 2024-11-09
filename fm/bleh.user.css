@@ -17184,6 +17184,10 @@ h4 {
         margin-bottom: var(--card-gap);
     }
 
+    .prominent {
+        color: hsl(var(--c1));
+    }
+
     .breadcrumb {
         display: flex;
         gap: 16px;
