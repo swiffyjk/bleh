@@ -3324,56 +3324,23 @@ span[itemprop="byArtist"] + .header-new-title {
     margin-top: var(--card-gap);
 }
 
-.header-new-inner:not(.header-new-inner--without-image) .header-new-actions :is(button, a):not(.dropdown-menu-clickable-item, .header-new-love-button, .header-new-bookmark-button) {
-    --bg: hsla(var(--b7), 40%) !important;
-    --bg-hov: hsla(var(--b7), 50%) !important;
-    --bg-atv: hsla(var(--b7), 60%) !important;
-    --shadow: var(--interactable-outer) !important;
-    --shadow-hov: var(--shadow) !important;
-    --sat: 0;
-    --lit: 1;
+.header-new-playlink {
+    --mask: var(--icon-16-play) !important;
 }
-/* restore heart & bookmark colour only if the current
-state is not active, which then falls back to primary button styling */
-.header-new-inner:not(.header-new-inner--without-image) :is([data-analytics-action^="Love"], [data-analytics-action^="Bookmark"]) {
-    --bg: hsla(var(--b7), 40%) !important;
-    --bg-hov: hsla(var(--b7), 50%) !important;
-    --bg-atv: hsla(var(--b7), 60%) !important;
-    --shadow: var(--interactable-outer) !important;
-    --shadow-hov: var(--shadow) !important;
-}
-/*.header-metadata .header-metadata-item,*/
-.header-new-inner:not(.header-new-inner--without-image) .header-metadata-tnew-item {
-    background-color: hsla(var(--b7), 40%);
-    box-shadow: var(--interactable-outer);
-    --sat: 0;
-    --lit: 1;
-}
-
-.header-metadata-tnew {
-    display: flex;
-    gap: 10px;
-    margin-left: 10px;
-}
-
-.header-new-playlink:before {
-    --mask: var(--icon-16-play);
-}
-.header-new-more-button:before {
-    --mask: var(--icon-16-dots);
-}
-.header-new-bookmark-button:before {
+.header-new-bookmark-button {
     --mask: var(--icon-16-bookmark);
-}
-[data-toggle-button-current-state="bookmarked"] .header-new-bookmark-button:before {
-    --mask: var(--icon-16-bookmark-saved);
+
+    [data-toggle-button-current-state="bookmarked"] & {
+        --mask: var(--icon-16-bookmark-saved);
+    }
 }
 
-.header-new-love-button:before {
+.header-new-love-button {
     --mask: var(--icon-16-heart);
-}
-[data-toggle-button-current-state="loved"] .header-new-love-button:before {
-    --mask: var(--icon-16-heart-solid) !important;
+
+    [data-toggle-button-current-state="loved"] & {
+        --mask: var(--icon-16-heart-solid) !important;
+    }
 }
 
 /*[data-toggle-button-current-state="bookmarked"] .header-new-bookmark-button:after,
@@ -3390,10 +3357,6 @@ state is not active, which then falls back to primary button styling */
     border-radius: 50px;
     box-shadow: 0px 0px 20px 4px hsl(var(--hue), calc(var(--sat)*100%), calc(var(--lit)*65%));
 }*/
-
-.header-new-actions button:not(.dropdown-menu-clickable-item) {
-    height: 32px;
-}
 
 
 /*     FEATURED ITEMS     */
@@ -6054,7 +6017,9 @@ button,
         #manage_data .btn-primary,
         .primary,
         [data-bleh--image-is-bookmarked="true"],
-        .btn-primary.profile-header-set-obsession
+        .btn-primary.profile-header-set-obsession,
+        [data-toggle-button-current-state="loved"] .interact-item,
+        [data-toggle-button-current-state="bookmarked"] .interact-item
     ) {
         --bg: hsl(var(--h3)) !important;
         --bg-hov: hsla(var(--h3), 80%) !important;
@@ -6127,6 +6092,7 @@ button,
 
 
 /*     BUTTON HAS ICON     */
+.qa-wiki-edit.btn-primary,
 .refresh-tracklist-btn,
 .search-similar-btn, .obsession-btn,
 .image-open-button,
@@ -6278,6 +6244,7 @@ button,
 
 
 /*     ICON MASK     */
+.qa-wiki-edit.btn-primary:before,
 .image-open-button:before,
 .breadcrumb :is(a, .breadcrumb-origin):before, .gallery-image-uploaded-by:before,
 /* v2 */ .form-arrow:before,
@@ -6713,8 +6680,8 @@ on the bottom of a panel !! */
 .date-range-picker-preset a
 {
     --bg: transparent !important;
-    --bg-hov: hsla(var(--b4), 30%) !important;
-    --bg-atv: hsla(var(--b4), 50%) !important;
+    --bg-hov: hsla(var(--b4), 60%) !important;
+    --bg-atv: hsla(var(--b4), 80%) !important;
     --shadow: none !important;
     --shadow-hov: none !important;
     position: relative !important;
@@ -7366,6 +7333,7 @@ input:is([name="track_name"], [name="artist_name"], [name="album_name"], [name="
 
     [data-bleh--theme="light"] &,
     [data-bleh--theme="oled"] & {
+        background: hsl(var(--b5)) !important;
         box-shadow: var(--override-full-shadow, 0 0 0 1px var(--card-border-base) inset, var(--menu-shadow)) !important;
     }
 }
@@ -8745,7 +8713,8 @@ text[style^="color: rgb(255, 172, 172)"] {
 
         [data-bleh--theme="light"] &,
         [data-bleh--theme="oled"] & {
-            box-shadow: 0 0 0 1px var(--card-border-base) inset, var(--menu-shadow) !important;
+            background: hsl(var(--b5)) !important;
+            box-shadow: var(--override-full-shadow, 0 0 0 1px var(--card-border-base) inset, var(--menu-shadow)) !important;
         }
 
         [data-bleh--seasonal_overlays="true"][data-bleh--season="fall"] &,
@@ -10507,6 +10476,11 @@ table.table tr:nth-child(2n) td {
     font-size: 16px !important;
     line-height: 24px;
     margin-bottom: var(--card-gap);
+}
+
+.qa-wiki-edit.btn-primary {
+    position: relative;
+    --mask: var(--icon-16-edit);
 }
 
 
@@ -15883,15 +15857,6 @@ button.bleh--gallery-bookmark-image-btn {
         }
 
         &.interact-item {
-            [data-toggle-button-current-state="loved"] &,
-            [data-toggle-button-current-state="bookmarked"] &
-            {
-                --bg: hsla(var(--h4), 30%);
-                --bg-hov: hsla(var(--h4), 40%);
-                --bg-atv: hsla(var(--h4), 50%);
-                --col: hsl(var(--c1));
-            }
-
             &.search-similar-btn {
                 --mask: var(--icon-16-search);
             }
