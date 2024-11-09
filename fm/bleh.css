@@ -5,7 +5,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Ubuntu+Sans:ital,wght@0,100..800;1,100..800&display=swap');
 
 body {
-    --version-build: '2024.1108';
+    --version-build: '2024.1109';
 
     --hue:  var(--hue-over,
             var(--hue-album,
@@ -437,8 +437,9 @@ body {
     --card-shadow: hsla(var(--b7), 0.05) 0 2px 4px 0;
 
     --menu-shadow: 2px 2px 24px 0 hsla(var(--b7), 0.15), 3px 6px 48px 16px hsla(var(--b7), 0.03);
+    --standout-shadow: 3px 6px 20px 7px hsla(var(--b7), 0.06);
 
-    --interactable-outer: hsla(var(--b7), 0.07) 0 2px 4px 0;
+    --interactable-outer: hsla(var(--b7), 0.03) 0 2px 2px 0;
     --interactable-active-outer: transparent 0 0 0;
 
     color-scheme: light !important;
@@ -582,6 +583,8 @@ body {
     --icon-16-listener: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyLjUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgY2xhc3M9Imx1Y2lkZSBsdWNpZGUtaGVhZHBob25lcyI+PHBhdGggZD0iTTMgMTRoM2EyIDIgMCAwIDEgMiAydjNhMiAyIDAgMCAxLTIgMkg1YTIgMiAwIDAgMS0yLTJ2LTdhOSA5IDAgMCAxIDE4IDB2N2EyIDIgMCAwIDEtMiAyaC0xYTIgMiAwIDAgMS0yLTJ2LTNhMiAyIDAgMCAxIDItMmgzIi8+PC9zdmc+');
     --icon-16-arrows: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyLjUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgY2xhc3M9Imx1Y2lkZSBsdWNpZGUtYXJyb3ctcmlnaHQtbGVmdCI+PHBhdGggZD0ibTE2IDMgNCA0LTQgNCIvPjxwYXRoIGQ9Ik0yMCA3SDQiLz48cGF0aCBkPSJtOCAyMS00LTQgNC00Ii8+PHBhdGggZD0iTTQgMTdoMTYiLz48L3N2Zz4=');
     --icon-16-bio: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyLjUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgY2xhc3M9Imx1Y2lkZSBsdWNpZGUtdGV4dCI+PHBhdGggZD0iTTE3IDYuMUgzIi8+PHBhdGggZD0iTTIxIDEyLjFIMyIvPjxwYXRoIGQ9Ik0xNS4xIDE4SDMiLz48L3N2Zz4=');
+    --icon-16-bio-edit: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyLjUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgY2xhc3M9Imx1Y2lkZSBsdWNpZGUtdGV4dC1zcXVhcmUiPjxyZWN0IHdpZHRoPSIxOCIgaGVpZ2h0PSIxOCIgeD0iMyIgeT0iMyIgcng9IjIiLz48cGF0aCBkPSJNNyAxMmgxMCIvPjxwYXRoIGQ9Ik03IDE2aDYiLz48cGF0aCBkPSJNNyA4aDgiLz48L3N2Zz4=');
+    --icon-16-bio-history: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyLjUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgY2xhc3M9Imx1Y2lkZSBsdWNpZGUtZmlsZS1jbG9jayI+PHBhdGggZD0iTTE2IDIyaDJhMiAyIDAgMCAwIDItMlY3bC01LTVINmEyIDIgMCAwIDAtMiAydjMiLz48cGF0aCBkPSJNMTQgMnY0YTIgMiAwIDAgMCAyIDJoNCIvPjxjaXJjbGUgY3g9IjgiIGN5PSIxNiIgcj0iNiIvPjxwYXRoIGQ9Ik05LjUgMTcuNSA4IDE2LjI1VjE0Ii8+PC9zdmc+');
     --icon-16-external: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyLjUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgY2xhc3M9Imx1Y2lkZSBsdWNpZGUtc3F1YXJlLWFycm93LW91dC11cC1yaWdodCI+PHBhdGggZD0iTTIxIDEzdjZhMiAyIDAgMCAxLTIgMkg1YTIgMiAwIDAgMS0yLTJWNWEyIDIgMCAwIDEgMi0yaDYiLz48cGF0aCBkPSJtMjEgMy05IDkiLz48cGF0aCBkPSJNMTUgM2g2djYiLz48L3N2Zz4=');
     --icon-16-calendar: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyLjUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgY2xhc3M9Imx1Y2lkZSBsdWNpZGUtY2FsZW5kYXIiPjxyZWN0IHdpZHRoPSIxOCIgaGVpZ2h0PSIxOCIgeD0iMyIgeT0iNCIgcng9IjIiIHJ5PSIyIi8+PGxpbmUgeDE9IjE2IiB4Mj0iMTYiIHkxPSIyIiB5Mj0iNiIvPjxsaW5lIHgxPSI4IiB4Mj0iOCIgeTE9IjIiIHkyPSI2Ii8+PGxpbmUgeDE9IjMiIHgyPSIyMSIgeTE9IjEwIiB5Mj0iMTAiLz48L3N2Zz4=');
     --icon-16-redirect: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyLjUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgY2xhc3M9Imx1Y2lkZSBsdWNpZGUtcmVkby0yIj48cGF0aCBkPSJtMTUgMTQgNS01LTUtNSIvPjxwYXRoIGQ9Ik0yMCA5SDkuNUE1LjUgNS41IDAgMCAwIDQgMTQuNXYwQTUuNSA1LjUgMCAwIDAgOS41IDIwSDEzIi8+PC9zdmc+');
@@ -1077,6 +1080,7 @@ last.fm changes as of 2024-05-20 */
         box-shadow: 0 0 20px hsla(var(--h4), 60%);
         color: hsl(var(--l2-c));
         font-size: var(--font-size-sm);
+        font-weight: var(--font-weight-medium);
         padding: 0 6px;
         border-radius: var(--item-med-radius);
 
@@ -1152,7 +1156,7 @@ last.fm changes as of 2024-05-20 */
     background-color: hsl(var(--h3));
     color: hsl(var(--b7)) !important;
     box-shadow: 0px 0 60px 20px hsla(var(--h3), 45%) !important;
-    border: 2px solid hsl(var(--b5));
+    border: 2px solid hsl(var(--b6));
     font-weight: 700;
     font-size: 10px;
     line-height: 14px;
@@ -1160,6 +1164,11 @@ last.fm changes as of 2024-05-20 */
     min-width: 18px;
     height: 18px;
     padding: 0 4px;
+
+    [data-bleh--theme="light"] & {
+        background-color: hsl(var(--h4));
+        box-shadow: 0px 0 60px 20px hsla(var(--h4), 45%) !important;
+    }
 }
 .masthead-nav .masthead-nav-item .notification-count-badge {
     animation: bubble 0.9s var(--trans-function);
@@ -1427,13 +1436,13 @@ last.fm changes as of 2024-05-20 */
 .col-main > section:not(.neighbours-items-section), .col-sidebar > section,
 .your-progress-component,
 /* this fixes places of the site (tracks, artist, albums watever that use a weird method of 2 col-mains, 2 col-sidebars as appose to profiles */
-/* -> could be simplified, idk if it affects other parts of the site tho */.row.buffer-4 > .col-main:first-child /* <- */, .row.buffer-4 > .col-main:nth-child(3) > :is(section, #shoutbox),
+/* -> could be simplified, idk if it affects other parts of the site tho */.row.buffer-4 > .col-main:not(.not-a-panel):first-child /* <- */, .row.buffer-4 > .col-main:nth-child(3) > :is(section, #shoutbox),
 .album-and-lyrics-row,
 /* dont question it too far, refer to the above display: grid for more insight, this is jus applying the card styling */
 .shoutbox--with-header#shoutbox:not(#shoutbox > #shoutbox /* for shoutbox on gallery image */, section > #shoutbox /* events */),
 :is(.namespace--user_following, .namespace--user_followers) :is(.col-main, .col-sidebar),
 /* individual library selection */
-body[class*="namespace--user_library_"] .col-sidebar, .library-header,
+.library-header,
 .page-content:has(.inbox-notifications),
 /* gallery */ .js-gallery-image-details,
 /* listening reports */ .user-dashboard > .user-dashboard-buffer,
@@ -1629,7 +1638,7 @@ body[class*="namespace--user_library_"] .col-sidebar, .library-header,
 
 
 /*     UNDO CARD STYLES     */
-.row.buffer-4 > .col-main:first-child > section /* for shoutbox in tabs */
+.row.buffer-4 > .col-main:not(.not-a-panel):first-child > section /* for shoutbox in tabs */
 {
     --override-background: unset !important;
     border: unset;
@@ -3307,56 +3316,23 @@ span[itemprop="byArtist"] + .header-new-title {
     margin-top: var(--card-gap);
 }
 
-.header-new-inner:not(.header-new-inner--without-image) .header-new-actions :is(button, a):not(.dropdown-menu-clickable-item, .header-new-love-button, .header-new-bookmark-button) {
-    --bg: hsla(var(--b7), 40%) !important;
-    --bg-hov: hsla(var(--b7), 50%) !important;
-    --bg-atv: hsla(var(--b7), 60%) !important;
-    --shadow: var(--interactable-outer) !important;
-    --shadow-hov: var(--shadow) !important;
-    --sat: 0;
-    --lit: 1;
+.header-new-playlink {
+    --mask: var(--icon-16-play) !important;
 }
-/* restore heart & bookmark colour only if the current
-state is not active, which then falls back to primary button styling */
-.header-new-inner:not(.header-new-inner--without-image) :is([data-analytics-action^="Love"], [data-analytics-action^="Bookmark"]) {
-    --bg: hsla(var(--b7), 40%) !important;
-    --bg-hov: hsla(var(--b7), 50%) !important;
-    --bg-atv: hsla(var(--b7), 60%) !important;
-    --shadow: var(--interactable-outer) !important;
-    --shadow-hov: var(--shadow) !important;
-}
-/*.header-metadata .header-metadata-item,*/
-.header-new-inner:not(.header-new-inner--without-image) .header-metadata-tnew-item {
-    background-color: hsla(var(--b7), 40%);
-    box-shadow: var(--interactable-outer);
-    --sat: 0;
-    --lit: 1;
-}
-
-.header-metadata-tnew {
-    display: flex;
-    gap: 10px;
-    margin-left: 10px;
-}
-
-.header-new-playlink:before {
-    --mask: var(--icon-16-play);
-}
-.header-new-more-button:before {
-    --mask: var(--icon-16-dots);
-}
-.header-new-bookmark-button:before {
+.header-new-bookmark-button {
     --mask: var(--icon-16-bookmark);
-}
-[data-toggle-button-current-state="bookmarked"] .header-new-bookmark-button:before {
-    --mask: var(--icon-16-bookmark-saved);
+
+    [data-toggle-button-current-state="bookmarked"] & {
+        --mask: var(--icon-16-bookmark-saved);
+    }
 }
 
-.header-new-love-button:before {
+.header-new-love-button {
     --mask: var(--icon-16-heart);
-}
-[data-toggle-button-current-state="loved"] .header-new-love-button:before {
-    --mask: var(--icon-16-heart-solid) !important;
+
+    [data-toggle-button-current-state="loved"] & {
+        --mask: var(--icon-16-heart-solid) !important;
+    }
 }
 
 /*[data-toggle-button-current-state="bookmarked"] .header-new-bookmark-button:after,
@@ -3373,10 +3349,6 @@ state is not active, which then falls back to primary button styling */
     border-radius: 50px;
     box-shadow: 0px 0px 20px 4px hsl(var(--hue), calc(var(--sat)*100%), calc(var(--lit)*65%));
 }*/
-
-.header-new-actions button:not(.dropdown-menu-clickable-item) {
-    height: 32px;
-}
 
 
 /*     FEATURED ITEMS     */
@@ -4388,7 +4360,7 @@ better than the default selector '#app a' i suppose */
     width: auto;
     height: auto;
     aspect-ratio: 1 / 1;
-    border-radius: var(--item-med-radius);
+    border-radius: var(--item-big-radius);
     overflow: hidden;
     box-shadow: var(--standout-shadow);
 }
@@ -4577,7 +4549,7 @@ better than the default selector '#app a' i suppose */
     padding: 5px 12px;
     min-height: 36px;
     max-height: 44px;
-    border-radius: var(--item-med-radius);
+    border-radius: var(--item-big-radius);
     box-shadow: var(--shadow);
     transition-property: background-color;
     transition-duration: var(--trans);
@@ -5950,7 +5922,8 @@ button,
 /* gallery upload artwork breadcrumbs */ a:has(+ .js-gallery-heading), .js-gallery-heading,
 .chartlist-play-button,
 .footer-language :is(strong, button),
-.source-album, .big-tags-item
+.source-album, .big-tags-item,
+.wiki-history-entry
 {
     --bg: hsl(var(--b4));
     --bg-hov: hsla(var(--b4), 80%);
@@ -6037,7 +6010,9 @@ button,
         #manage_data .btn-primary,
         .primary,
         [data-bleh--image-is-bookmarked="true"],
-        .btn-primary.profile-header-set-obsession
+        .btn-primary.profile-header-set-obsession,
+        [data-toggle-button-current-state="loved"] .interact-item,
+        [data-toggle-button-current-state="bookmarked"] .interact-item
     ) {
         --bg: hsl(var(--h3)) !important;
         --bg-hov: hsla(var(--h3), 80%) !important;
@@ -6110,6 +6085,7 @@ button,
 
 
 /*     BUTTON HAS ICON     */
+.refresh-tracklist-btn,
 .search-similar-btn, .obsession-btn,
 .image-open-button,
 .image-details :is(.bleh--gallery-bookmark-image-btn, .gallery-image-report, .gallery-image-delete button),
@@ -6507,7 +6483,6 @@ span.header-new-gallery-inner a:before,
 }
 
 
-.refresh-tracklist-btn,
 .share-chart .share-button-profile, .section-settings-toggle {
     width: 32px;
     height: 32px;
@@ -6531,7 +6506,6 @@ span.header-new-gallery-inner a:before,
 .refresh-tracklist-btn {
     --mask: var(--icon-16-refresh);
     position: absolute;
-    --font-size: 0;
 
     &[disabled]:before {
         --mask: var(--icon-16-spinner);
@@ -6697,8 +6671,8 @@ on the bottom of a panel !! */
 .date-range-picker-preset a
 {
     --bg: transparent !important;
-    --bg-hov: hsla(var(--b4), 30%) !important;
-    --bg-atv: hsla(var(--b4), 50%) !important;
+    --bg-hov: hsla(var(--b4), 60%) !important;
+    --bg-atv: hsla(var(--b4), 80%) !important;
     --shadow: none !important;
     --shadow-hov: none !important;
     position: relative !important;
@@ -7017,46 +6991,45 @@ very, very, very dated - who looks up a song on ebay? */
 
 
 /*     DATE PICKER     */
-.row:has(> .library-controls-datepicker) {
-    display: flex;
-    flex-direction: column;
-
-    /* space for search */
-    margin-top: calc(32px + var(--card-gap));
-
-    .user-sidebar-header {
-        margin: unset !important;
-        color: hsl(var(--c3));
-    }
-
-    .library-controls-datepicker > .library-date-picker {
+.date-panel {
+    .row {
         display: flex;
-        justify-content: start;
-        height: 30px;
+        flex-direction: column;
 
-        .date-range-picker-button {
-            --bg: transparent;
-            --bg-hov: transparent;
-            --bg-atv: transparent;
-            --shadow: none;
+        .user-sidebar-header {
+            margin: unset !important;
+            color: hsl(var(--c3));
+        }
 
-            --mask: var(--icon-16-dropdown);
-            --btn-top: 0;
-            --btn-left: 0;
-            --btn-right: calc(16px + 6px) !important;
-            --left: none;
-            --right: 0;
-            --btn-bottom: 0;
+        .library-controls-datepicker > .library-date-picker {
+            display: flex;
+            justify-content: start;
+            height: 30px;
 
-            font-size: 24px !important;
-            line-height: 30px !important;
+            .date-range-picker-button {
+                --bg: transparent;
+                --bg-hov: transparent;
+                --bg-atv: transparent;
+                --shadow: none;
 
-            .date-range-picker-button-inner {
-                max-width: unset;
-            }
+                --mask: var(--icon-16-dropdown);
+                --btn-top: 0;
+                --btn-left: 0;
+                --btn-right: calc(16px + 6px) !important;
+                --left: none;
+                --right: 0;
+                --btn-bottom: 0;
 
-            &:before {
-                display: none;
+                font-size: 24px !important;
+                line-height: 30px !important;
+
+                .date-range-picker-button-inner {
+                    max-width: unset;
+                }
+
+                &:before {
+                    display: none;
+                }
             }
         }
     }
@@ -7263,28 +7236,17 @@ very, very, very dated - who looks up a song on ebay? */
 .content-form .form-horizontal .form-group-controls {
     margin-left: 150px;
 }
-.wiki-style-rules {
-    background-color: hsla(var(--h4), 15%);
-    border-radius: var(--item-med-radius);
-    padding: var(--card-gap);
-
-    h3 {
-        font-size: var(--font-size);
-        line-height: var(--line-height);
-        font-weight: var(--font-weight-medium);
-        color: hsl(var(--l3-c));
-    }
-
-    p, p + p, ul {
-        margin-top: 4px;
-    }
-}
 
 
 .rules-panel {
+    .wiki-style-rules-list,
     .bulleted-list,
     h3 {
         margin-bottom: var(--card-gap);
+
+        &:last-child {
+            margin-bottom: unset;
+        }
     }
 }
 
@@ -7351,6 +7313,7 @@ input:is([name="track_name"], [name="artist_name"], [name="album_name"], [name="
 
     [data-bleh--theme="light"] &,
     [data-bleh--theme="oled"] & {
+        background: hsl(var(--b5)) !important;
         box-shadow: var(--override-full-shadow, 0 0 0 1px var(--card-border-base) inset, var(--menu-shadow)) !important;
     }
 }
@@ -8730,7 +8693,8 @@ text[style^="color: rgb(255, 172, 172)"] {
 
         [data-bleh--theme="light"] &,
         [data-bleh--theme="oled"] & {
-            box-shadow: 0 0 0 1px var(--card-border-base) inset, var(--menu-shadow) !important;
+            background: hsl(var(--b5)) !important;
+            box-shadow: var(--override-full-shadow, 0 0 0 1px var(--card-border-base) inset, var(--menu-shadow)) !important;
         }
 
         [data-bleh--seasonal_overlays="true"][data-bleh--season="fall"] &,
@@ -9663,6 +9627,10 @@ text[style^="color: rgb(0, 0, 0)"] {
     &:before {
         color: currentColor;
     }
+
+    [data-bleh--theme="light"] & {
+        color: hsl(var(--l4-c));
+    }
 }
 
 .async-content-error-message {
@@ -10477,6 +10445,10 @@ table.table tr:nth-child(2n) td {
 .wiki-container,
 .wiki-edit-container {
     margin-top: unset;
+
+    .alert + & {
+        margin-top: var(--card-gap);
+    }
 }
 .wiki-edit-container {
     .alert-warning {
@@ -10490,6 +10462,13 @@ table.table tr:nth-child(2n) td {
     margin-bottom: var(--card-gap);
 }
 
+.wiki-style-rules,
+.wiki-author,
+.wiki-history-link--desktop,
+.qa-wiki-edit.btn-primary {
+    display: none;
+}
+
 
 /*     WIKI HISTORY     */
 .wiki-history {
@@ -10501,32 +10480,69 @@ table.table tr:nth-child(2n) td {
     box-shadow: unset;
 }
 
-.wiki-history-entry + .wiki-history-entry {
-    border-top: 1px solid hsl(var(--b4));
-}
-
 
 .wiki-history-table thead {
     display: none;
 }
 
 
+.wiki-history-table tbody {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;animation: slide_down var(--trans) var(--trans-function);
+    transform-origin: top;
+
+    [data-bleh--reduced_motion="true"] & {
+        animation: fade_popup_reduced var(--trans) var(--trans-function) !important;
+    }
+}
 .wiki-history-entry {
-    --bg: transparent;
-    --bg-hov: hsla(var(--b3), 30%);
-    --bg-atv: hsla(var(--b3), 50%);
-    background: var(--bg) !important;
-    transition-property: background-color, transform, box-shadow, color, opacity !important;
-    transition-duration: var(--trans) !important;
-    transition-timing-function: var(--trans-function) !important;
-}
-.wiki-history-entry:hover {
-    background: var(--bg-hov) !important;
-    transition: none !important;
-}
-.wiki-history-entry:active {
-    background: var(--bg-atv) !important;
-    /*transform: scale(0.98);*/
+    --bg: hsla(var(--b4), 40%);
+    --bg-hov: hsla(var(--b4), 80%);
+    --bg-atv: hsl(var(--b4));
+    --shadow: none !important;
+    --shadow-hov: none !important;
+
+    .wiki-history-revision {
+        padding: unset;
+        width: 50px;
+
+        flex-shrink: 0;
+    }
+    .wiki-history-action {
+        height: fit-content;
+        width: 130px;
+        margin: unset;
+        color: hsl(var(--c3));
+
+        flex-shrink: 0;
+    }
+    .wiki-history-summary {
+        flex: 1;
+        position: static;
+        font-weight: var(--font-weight);
+
+        .link-block-cover-link {
+            position: absolute;
+            inset: 0;
+        }
+    }
+    .wiki-history-author {
+        order: 5;
+        padding-left: unset !important;
+        padding-right: calc(32px + 6px) !important;
+
+        width: fit-content;
+        text-align: right;
+
+        flex-shrink: 0;
+
+        .wiki-history-author-avatar {
+            left: unset;
+            right: 0;
+            --mask-size: var(--cover-size-32);
+        }
+    }
 }
 
 
@@ -10545,13 +10561,6 @@ table.table tr:nth-child(2n) td {
 
 .wiki-history-action {
     padding-left: calc(16px + 6px) !important;
-}
-
-.wiki-history-author {
-    padding-left: calc(32px + 6px) !important;
-}
-.wiki-history-author-avatar {
-    left: 0;
 }
 
 .wiki-history-revision-number {
@@ -15864,15 +15873,6 @@ button.bleh--gallery-bookmark-image-btn {
         }
 
         &.interact-item {
-            [data-toggle-button-current-state="loved"] &,
-            [data-toggle-button-current-state="bookmarked"] &
-            {
-                --bg: hsla(var(--h4), 30%);
-                --bg-hov: hsla(var(--h4), 40%);
-                --bg-atv: hsla(var(--h4), 50%);
-                --col: hsl(var(--c1));
-            }
-
             &.search-similar-btn {
                 --mask: var(--icon-16-search);
             }
@@ -16041,9 +16041,6 @@ button.bleh--gallery-bookmark-image-btn {
 
 
 .wiki-syntax-panel {
-    margin-top: unset;
-    margin-bottom: var(--card-gap);
-
     .syntax-listing {
         display: flex;
         flex-direction: column;
@@ -16618,6 +16615,7 @@ h4 {
     color: hsl(var(--l2-c));
 
     font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-medium);
     padding: 0 6px;
     border-radius: var(--item-med-radius);
 
@@ -16888,14 +16886,24 @@ h4 {
     &.activity--unobsess {
         --mask: var(--icon-16-obsession-remove);
     }
-    &.activity--unobsess {
-        --mask: var(--icon-16-obsession-remove);
-    }
     &.activity--update_bleh,
     &.activity--install_bleh,
     &.activity--update_bwaa,
     &.activity--install_bwaa {
         --mask: var(--icon-16-download);
+    }
+    &.activity--image_upload {
+        --mask: var(--icon-16-gallery-vertical);
+    }
+    &.activity--unbookmark {
+        --mask: var(--icon-16-bookmark);
+    }
+    &.activity--bookmark {
+        --mask: var(--icon-16-bookmark-saved);
+
+        &:before {
+            color: hsl(var(--l3-c));
+        }
     }
 
     .title {
@@ -17086,12 +17094,17 @@ h4 {
                     box-shadow: 0 0 20px hsla(var(--h4), 60%);
                     color: hsl(var(--l2-c));
                     font-size: var(--font-size-sm);
+                    font-weight: var(--font-weight-medium);
                     padding: 0 6px;
                     border-radius: var(--item-med-radius);
                     cursor: default;
 
                     --sat-over: 1;
                     --lit-over: 1;
+
+                    [data-bleh--theme="light"] & {
+                        color: hsl(var(--l4-c));
+                    }
 
                     &[data-side="pos"] {
                         --hue-over: var(--hue-pos);
@@ -17186,6 +17199,14 @@ h4 {
     justify-content: space-between;
     width: 100%;
 
+    &.space-below {
+        margin-bottom: var(--card-gap);
+    }
+
+    .prominent {
+        color: hsl(var(--c1));
+    }
+
     .breadcrumb {
         display: flex;
         gap: 16px;
@@ -17214,6 +17235,7 @@ h4 {
     display: flex;
     background: unset !important;
     padding: unset !important;
+    box-shadow: unset !important;
 
     .view-all-button {
         --shadow: none;
@@ -17226,6 +17248,15 @@ h4 {
         }
         &.all-saved-button {
             --mask: var(--icon-16-bookmark);
+        }
+        &.wiki-edit-button {
+            --mask: var(--icon-16-bio-edit);
+        }
+        &.wiki-history-button {
+            --mask: var(--icon-16-bio-history);
+        }
+        &.wiki-latest-button {
+            --mask: var(--icon-16-bio);
         }
     }
 }
@@ -17374,6 +17405,13 @@ h4 {
             background: linear-gradient(180deg, hsl(var(--b6)) 0%, transparent 20%, transparent 80%, hsl(var(--b6)) 100%);
         }
 
+        [data-bleh--theme="light"] &,
+        [data-bleh--theme="oled"] & {
+            &:before {
+                background: linear-gradient(180deg, hsl(var(--b5)) 0%, transparent 20%, transparent 80%, hsl(var(--b5)) 100%);
+            }
+        }
+
         div {
             position: relative;
             z-index: 10;
@@ -17458,6 +17496,20 @@ h4 {
         p {
             display: inline;
         }
+
+        ul {
+            margin-left: var(--card-padding);
+
+            li:first-child {
+                &:before {
+                    display: none;
+                }
+
+                & + li {
+                    margin-top: var(--item-list-gap);
+                }
+            }
+        }
     }
 
     &.version-item-body {
@@ -17512,5 +17564,24 @@ h4 {
     }
     :last-child {
         margin-bottom: unset;
+    }
+}
+
+
+
+
+.presets {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+    gap: var(--item-list-gap);
+
+    .preset {
+        display: flex;
+        justify-content: center;
+        padding: 12px;
+        box-shadow: 0 0 0 1px var(--card-border-base) inset;
+        border-radius: var(--item-big-radius);
+        font-size: 20px;
+        font-weight: var(--font-weight-medium);
     }
 }
