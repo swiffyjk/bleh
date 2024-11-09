@@ -6127,6 +6127,7 @@ button,
 
 
 /*     BUTTON HAS ICON     */
+.refresh-tracklist-btn,
 .search-similar-btn, .obsession-btn,
 .image-open-button,
 .image-details :is(.bleh--gallery-bookmark-image-btn, .gallery-image-report, .gallery-image-delete button),
@@ -6524,7 +6525,6 @@ span.header-new-gallery-inner a:before,
 }
 
 
-.refresh-tracklist-btn,
 .share-chart .share-button-profile, .section-settings-toggle {
     width: 32px;
     height: 32px;
@@ -6548,7 +6548,6 @@ span.header-new-gallery-inner a:before,
 .refresh-tracklist-btn {
     --mask: var(--icon-16-refresh);
     position: absolute;
-    --font-size: 0;
 
     &[disabled]:before {
         --mask: var(--icon-16-spinner);
