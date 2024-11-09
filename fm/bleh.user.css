@@ -17513,4 +17513,23 @@ h4 {
         margin-bottom: unset;
     }
 }
+
+
+
+
+.presets {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+    gap: var(--item-list-gap);
+
+    .preset {
+        display: flex;
+        justify-content: center;
+        padding: 12px;
+        box-shadow: 0 0 0 1px var(--card-border-base) inset;
+        border-radius: var(--item-big-radius);
+        font-size: 20px;
+        font-weight: var(--font-weight-medium);
+    }
+}
 }

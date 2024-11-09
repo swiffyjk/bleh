@@ -215,6 +215,9 @@ const trans = {
             syntax: {
                 name: 'Use fancy syntax when editing',
                 links_to: 'Links to {link}'
+            },
+            presets: {
+                name: 'Symbol presets'
             }
         },
         settings: {
@@ -12172,6 +12175,25 @@ let has_prompted_for_update = false;
         `);
 
         page.structure.side.appendChild(latest_version_panel);
+
+
+        // presets
+        let wiki_presets_panel = document.createElement('section');
+        wiki_presets_panel.classList.add('wiki-presets-panel');
+
+        wiki_presets_panel.innerHTML = (`
+            <h3 class="text-18">${trans[lang].wiki.presets.name}</h3>
+            <div class="presets">
+                <div class="preset">“</div>
+                <div class="preset">”</div>
+                <div class="preset">—</div>
+                <div class="preset">‘</div>
+                <div class="preset">’</div>
+                <div class="preset">-</div>
+            </div>
+        `);
+
+        page.structure.side.appendChild(wiki_presets_panel);
 
         page.structure.side.appendChild(wiki_syntax);
 
