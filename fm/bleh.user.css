@@ -5932,7 +5932,8 @@ button,
 /* gallery upload artwork breadcrumbs */ a:has(+ .js-gallery-heading), .js-gallery-heading,
 .chartlist-play-button,
 .footer-language :is(strong, button),
-.source-album, .big-tags-item
+.source-album, .big-tags-item,
+.wiki-history-entry
 {
     --bg: hsl(var(--b4));
     --bg-hov: hsla(var(--b4), 80%);
@@ -10454,6 +10455,10 @@ table.table tr:nth-child(2n) td {
 .wiki-container,
 .wiki-edit-container {
     margin-top: unset;
+
+    .alert + & {
+        margin-top: var(--card-gap);
+    }
 }
 .wiki-edit-container {
     .alert-warning {
@@ -10485,32 +10490,69 @@ table.table tr:nth-child(2n) td {
     box-shadow: unset;
 }
 
-.wiki-history-entry + .wiki-history-entry {
-    border-top: 1px solid hsl(var(--b4));
-}
-
 
 .wiki-history-table thead {
     display: none;
 }
 
 
+.wiki-history-table tbody {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;animation: slide_down var(--trans) var(--trans-function);
+    transform-origin: top;
+
+    [data-bleh--reduced_motion="true"] & {
+        animation: fade_popup_reduced var(--trans) var(--trans-function) !important;
+    }
+}
 .wiki-history-entry {
-    --bg: transparent;
-    --bg-hov: hsla(var(--b3), 30%);
-    --bg-atv: hsla(var(--b3), 50%);
-    background: var(--bg) !important;
-    transition-property: background-color, transform, box-shadow, color, opacity !important;
-    transition-duration: var(--trans) !important;
-    transition-timing-function: var(--trans-function) !important;
-}
-.wiki-history-entry:hover {
-    background: var(--bg-hov) !important;
-    transition: none !important;
-}
-.wiki-history-entry:active {
-    background: var(--bg-atv) !important;
-    /*transform: scale(0.98);*/
+    --bg: hsla(var(--b4), 40%);
+    --bg-hov: hsla(var(--b4), 80%);
+    --bg-atv: hsl(var(--b4));
+    --shadow: none !important;
+    --shadow-hov: none !important;
+
+    .wiki-history-revision {
+        padding: unset;
+        width: 50px;
+
+        flex-shrink: 0;
+    }
+    .wiki-history-action {
+        height: fit-content;
+        width: 130px;
+        margin: unset;
+        color: hsl(var(--c3));
+
+        flex-shrink: 0;
+    }
+    .wiki-history-summary {
+        flex: 1;
+        position: static;
+        font-weight: var(--font-weight);
+
+        .link-block-cover-link {
+            position: absolute;
+            inset: 0;
+        }
+    }
+    .wiki-history-author {
+        order: 5;
+        padding-left: unset !important;
+        padding-right: calc(32px + 6px) !important;
+
+        width: fit-content;
+        text-align: right;
+
+        flex-shrink: 0;
+
+        .wiki-history-author-avatar {
+            left: unset;
+            right: 0;
+            --mask-size: var(--cover-size-32);
+        }
+    }
 }
 
 
@@ -10529,13 +10571,6 @@ table.table tr:nth-child(2n) td {
 
 .wiki-history-action {
     padding-left: calc(16px + 6px) !important;
-}
-
-.wiki-history-author {
-    padding-left: calc(32px + 6px) !important;
-}
-.wiki-history-author-avatar {
-    left: 0;
 }
 
 .wiki-history-revision-number {
@@ -17371,6 +17406,13 @@ h4 {
             position: absolute;
             inset: 0;
             background: linear-gradient(180deg, hsl(var(--b6)) 0%, transparent 20%, transparent 80%, hsl(var(--b6)) 100%);
+        }
+
+        [data-bleh--theme="light"] &,
+        [data-bleh--theme="oled"] & {
+            &:before {
+                background: linear-gradient(180deg, hsl(var(--b5)) 0%, transparent 20%, transparent 80%, hsl(var(--b5)) 100%);
+            }
         }
 
         div {

@@ -12090,6 +12090,22 @@ let has_prompted_for_update = false;
         `);
 
         page.structure.side.appendChild(latest_version_panel);
+
+
+        // entries
+        let entries = page.structure.main.querySelectorAll('.wiki-history-entry');
+        entries.forEach((entry) => {
+            let author = entry.querySelector('.wiki-history-author');
+            let avatar = author.querySelector('.wiki-history-author-avatar');
+            let name = author.querySelector('.link-block-target');
+
+            if (name != null && avatar != null) {
+                let badge = patch_avatar(avatar, name.textContent, 'wiki');
+
+                if (badge.type == 'avatar-status-dot--staff')
+                    entry.classList.add('staff-shout');
+            }
+        });
     }
 
     function bleh_wiki_editor() {
