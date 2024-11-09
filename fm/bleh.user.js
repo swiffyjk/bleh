@@ -2948,6 +2948,7 @@ let has_prompted_for_update = false;
             bleh_artists();
             bleh_albums();
             bleh_tracks();
+            bleh_events();
 
             bleh_gallery();
             bleh_gallery_upload_check();
@@ -3011,6 +3012,7 @@ let has_prompted_for_update = false;
                 bleh_artists();
                 bleh_albums();
                 bleh_tracks();
+                bleh_events();
 
                 bleh_gallery();
                 bleh_gallery_upload_check();
@@ -12231,5 +12233,82 @@ let has_prompted_for_update = false;
         rules_panel.innerHTML = rules.innerHTML;
 
         page.structure.side.appendChild(rules_panel);
+    }
+
+
+
+
+    function bleh_events() {
+        let event_header = document.body.querySelector('.header-info-primary--with-calendar');
+
+        if (event_header == null) {
+            // new profile pages?
+            if (document.body.classList[2] == null)
+                return;
+
+            // is this an event edit page?
+            if (document.body.classList[2].startsWith('namespace--events'))
+                bleh_events_edit();
+
+            return;
+        }
+
+        if (event_header.hasAttribute('data-bwaa'))
+            return;
+        event_header.setAttribute('data-bwaa', 'true');
+
+        log('event', 'page');
+        page.type = 'event';
+
+        let is_subpage = document.body.querySelector('.header').classList.contains('header--sub-page');
+
+
+        // without pro theres two containers
+        if (is_pro) {
+            // pro
+
+            page.structure.container = document.body.querySelector('.page-content');
+        } else {
+            // not pro
+
+            if (!is_subpage)
+                page.structure.container = document.body.querySelector('.page-content:not(header + .page-content)');
+            else
+                page.structure.container = document.body.querySelector('.page-content');
+        }
+        page.structure.row = page.structure.container.querySelector('.row');
+        try {
+            page.structure.main = page.structure.row.querySelector('.col-main');
+            page.structure.side = page.structure.row.querySelector('.col-sidebar:not(.track-overview-video-column)');
+        } catch(e) {
+            log('unable to find elements', 'page structure');
+        }
+
+        checkup_page_structure();
+
+        if (!is_subpage) {
+            try {
+                page.name = page.structure.main.querySelector('.grid-items-item-main-text a').textContent;
+            } catch(e) {
+                // if the artist page doesnt.. exist?
+                page.name = event_header.querySelector('.header-title-secondary span').textContent;
+            }
+        } else {
+            page.name = event_header.querySelector('.header-title-secondary a').textContent;
+        }
+        page.sister = event_header.querySelector('.header-title').textContent.trim();
+
+        if (!is_subpage) {
+            page.subpage = 'overview';
+        } else {
+            // which subpage is it?
+            page.subpage = document.body.classList[2].replace('namespace--', '');
+        }
+
+        log('status is', 'page', 'info', page);
+    }
+
+    function bleh_events_edit() {
+        return;
     }
 })();
