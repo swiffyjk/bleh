@@ -207,6 +207,11 @@ const trans = {
             },
             open_avatar: 'Open in a new tab'
         },
+        event: {
+            going: '{c} going',
+            maybe: '{c} interested',
+            you_know: 'Who you know'
+        },
         messaging: {
             update: 'bleh has updated to version {v}!'
         },
@@ -12300,6 +12305,44 @@ let has_prompted_for_update = false;
 
         if (!is_subpage) {
             page.subpage = 'overview';
+
+            let header_meta = document.body.querySelector('.header-metadata');
+            header_meta.classList.add('profile-header-metadata-legacy');
+
+            // acquire info
+            let metadata = header_meta.querySelectorAll('.header-metadata-display');
+
+            let going = 0;
+            let maybe = 0;
+
+            metadata.forEach((item, index) => {
+                let para = item.querySelector('p');
+                if (index == 0) {
+                    going = clean_number(para.textContent.trim());
+                } else if (index == 1) {
+                    maybe = clean_number(item.textContent.trim());
+                }
+            });
+
+
+            // create new
+            let event_top_header = document.createElement('div');
+            event_top_header.classList.add('view-buttons', 'event-top-header');
+
+            let form = document.body.querySelector('.attendance-control');
+            let buttons = form.querySelectorAll('button');
+            buttons.forEach((button) => {
+                button.classList.add('btn', 'event-top-item', 'view-item');
+            });
+
+            event_top_header.appendChild(form);
+
+
+            let main_panel = page.structure.main.querySelector('.event-summary-with-poster');
+            if (main_panel == null)
+                main_panel = page.structure.main.querySelector('.event-details');
+
+            main_panel.insertBefore(event_top_header, main_panel.firstElementChild);
         } else {
             // which subpage is it?
             page.subpage = document.body.classList[2].replace('namespace--', '');

@@ -10932,11 +10932,10 @@ table.table tr:nth-child(2n) td {
     padding: unset;
     width: unset;
     flex: 1;
-    order: -1;
 }
 .event-summary-with-poster {
     display: flex;
-    gap: var(--card-gap);
+    flex-direction: column;
 }
 .event-summary-with-poster:before, .event-summary-with-poster:after {
     display: none;
@@ -11390,27 +11389,12 @@ is inconsistent and full of duplication */
     position: relative;
     --show-icon: block;
 }
-.attendance-btn--turn-on:not(:hover):before, .attendance-btn--turn-off:not(:hover) + .attendance-btn--turn-on:before {
-    --left: 0;
-    opacity: 0;
-}
-.attendance-btn--turn-on:hover:before, .attendance-btn--turn-off:hover + .attendance-btn--turn-on:before {
-    --left: 12px !important;
-    opacity: 1 !important;
-}
 
 .attendance-btn--attending {
     --mask: var(--icon-16-check);
 }
 .attendance-btn--maybe {
     --mask: var(--icon-16-question);
-}
-
-.attendance-btn--attending {
-    margin-right: 6px;
-}
-.attendance-btn--maybe {
-    margin-right: calc(var(--card-gap) - 6px);
 }
 
 
@@ -15699,6 +15683,13 @@ button.bleh--gallery-bookmark-image-btn {
         box-shadow: 0 0 0 1px var(--card-border-base) inset;
     }
 
+    & > form {
+        display: flex;
+        align-items: center;
+        gap: var(--button-list-gap);
+    }
+
+    &.event-top-header,
     &.profile-top-header,
     &.listen-container {
         width: fit-content;
@@ -15734,6 +15725,7 @@ button.bleh--gallery-bookmark-image-btn {
         display: flex;
         align-items: center;
         position: relative;
+        margin: unset;
         /*--font-size: 0;
         --left: 8px;
         width: 32px;*/
