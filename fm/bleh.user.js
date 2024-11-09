@@ -11014,6 +11014,8 @@ let has_prompted_for_update = false;
                 bleh_gallery_upload();
             else if (page.subpage == 'music_artist_images_overview')
                 bleh_gallery_list();
+            else if (page.subpage == 'music_artist_wiki_overview')
+                bleh_wiki();
         }
 
         log('status is', 'page', 'info', page);
@@ -11105,6 +11107,8 @@ let has_prompted_for_update = false;
                 bleh_gallery_upload();
             else if (page.subpage == 'music_album_images_overview')
                 bleh_gallery_list();
+            else if (page.subpage == 'music_album_wiki_overview')
+                bleh_wiki();
         }
 
         log('status is', 'page', 'info', page);
@@ -11163,6 +11167,9 @@ let has_prompted_for_update = false;
         } else {
             // which subpage is it?
             page.subpage = document.body.classList[2].replace('namespace--', '');
+
+            if (page.subpage == 'music_track_wiki_overview')
+                bleh_wiki();
         }
 
         log('status is', 'page', 'info', page);
@@ -12018,5 +12025,63 @@ let has_prompted_for_update = false;
         });
 
         page.structure.side.appendChild(date_panel);
+    }
+
+
+
+
+    function bleh_wiki() {
+        let original_edit_button = page.structure.main.querySelector('.qa-wiki-edit');
+        let original_version_history = page.structure.main.querySelector('.wiki-history-link--desktop a');
+
+        let new_edit_panel;
+        if (original_edit_button != null) {
+            new_edit_panel = document.createElement('section');
+            new_edit_panel.classList.add('view-all-panel');
+            new_edit_panel.innerHTML = (`
+                <a class="btn view-all-button back wiki-edit-button" href="${original_edit_button.getAttribute('href')}">
+                    ${original_edit_button.textContent}
+                </a>
+            `);
+
+            page.structure.side.insertBefore(new_edit_panel, page.structure.side.firstElementChild);
+        }
+
+        if (original_version_history != null) {
+            let new_version_panel = document.createElement('section');
+            new_version_panel.classList.add('view-all-panel');
+            new_version_panel.innerHTML = (`
+                <a class="btn view-all-button back wiki-history-button" href="${original_version_history.getAttribute('href')}">
+                    ${original_version_history.textContent}
+                </a>
+            `);
+
+            if (original_edit_button != null)
+                new_edit_panel.after(new_version_panel);
+            else
+                page.structure.side.insertBefore(new_version_panel, page.structure.side.firstElementChild);
+        }
+
+
+        // author
+        let wiki_author = page.structure.main.querySelector('.wiki-author');
+        // this cant be null i believe but still
+        if (wiki_author != null) {
+            let h2 = page.structure.main.querySelector('h2.text-18');
+
+            let sub_text = document.createElement('div');
+            sub_text.classList.add('sub-text', 'space-below');
+            sub_text.innerHTML = (`
+                <div class="breadcrumb-origin prominent">
+                    ${h2.innerHTML}
+                </div>
+                <div class="wiki-author-side">
+                    ${wiki_author.innerHTML}
+                </div>
+            `);
+
+            page.structure.main.insertBefore(sub_text, page.structure.main.firstElementChild);
+            page.structure.main.removeChild(h2);
+        }
     }
 })();
