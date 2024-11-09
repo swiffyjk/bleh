@@ -210,6 +210,13 @@ const trans = {
         messaging: {
             update: 'bleh has updated to version {v}!'
         },
+        wiki: {
+            latest: 'View latest version',
+            syntax: {
+                name: 'Use fancy syntax when editing',
+                links_to: 'Links to {link}'
+            }
+        },
         settings: {
             save: 'Save',
             cancel: 'Cancel',
@@ -642,12 +649,6 @@ const trans = {
                         name: 'Hide your shoutbox',
                         bio: 'Your shoutbox will be hidden for you and anyone else.'
                     }
-                },
-                wiki: {
-                    syntax: {
-                        name: 'Use fancy syntax when editing',
-                        links_to: 'Links to {link}'
-                    }
                 }
             },
             actions: {
@@ -866,6 +867,13 @@ const trans = {
         },
         messaging: {
             update: 'bleh wurde auf Version {v} aktualisiert!'
+        },
+        wiki: {
+            latest: 'View latest version',
+            syntax: {
+                name: 'Use fancy syntax when editing',
+                links_to: 'Links to {link}'
+            }
         },
         settings: {
             save: 'Speichern',
@@ -1288,12 +1296,6 @@ const trans = {
                         name: 'Hide your shoutbox',
                         bio: 'Your shoutbox will be hidden for you and anyone else.'
                     }
-                },
-                wiki: {
-                    syntax: {
-                        name: 'Use fancy syntax when editing',
-                        links_to: 'Links to {link}'
-                    }
                 }
             },
             actions: {
@@ -1518,6 +1520,13 @@ const trans = {
         },
         messaging: {
             update: 'bleh has updated to version {v}!'
+        },
+        wiki: {
+            latest: 'View latest version',
+            syntax: {
+                name: 'Use fancy syntax when editing',
+                links_to: 'Links to {link}'
+            }
         },
         settings: {
             save: 'Zapisz',
@@ -2960,7 +2969,6 @@ let has_prompted_for_update = false;
 
             patch_about_this_artist();
             patch_obsession_view();
-            patch_wiki_editor();
 
             error_page();
 
@@ -3024,7 +3032,6 @@ let has_prompted_for_update = false;
 
                 patch_about_this_artist();
                 patch_obsession_view();
-                patch_wiki_editor();
 
                 error_page();
 
@@ -9307,67 +9314,6 @@ let has_prompted_for_update = false;
     }
 
 
-
-
-    function patch_wiki_editor() {
-        let wiki_editor_container = document.querySelector('.wiki-edit-container');
-
-        if (wiki_editor_container == null)
-            return;
-
-        if (wiki_editor_container.hasAttribute('data-kate-processed'))
-            return;
-        wiki_editor_container.setAttribute('data-kate-processed', 'true');
-
-
-        let col_sidebar = document.querySelector('.col-sidebar');
-
-        let wiki_syntax = document.createElement('section');
-        wiki_syntax.classList.add('bleh--blank-panel', 'wiki-syntax-panel');
-        wiki_syntax.innerHTML = (`
-            <h3 class="text-18">${trans[lang].settings.inbuilt.wiki.syntax.name}</h3>
-            <div class="syntax-listing">
-                <div class="syntax-listing-item">
-                    <div class="code-side">[artist]julie[/artist]</div>
-                    <div class="detail-side">${trans[lang].settings.inbuilt.wiki.syntax.links_to.replace('{link}', `<a href="${root}music/julie" target="_blank">julie</a>`)}</div>
-                </div>
-                <div class="syntax-listing-item">
-                    <div class="code-side">[album artist=julie]pushing daisies[/album]</div>
-                    <div class="detail-side">${trans[lang].settings.inbuilt.wiki.syntax.links_to.replace('{link}', `<a href="${root}music/julie/pushing+daisies" target="_blank">pushing daisies</a>`)}</div>
-                </div>
-                <div class="syntax-listing-item">
-                    <div class="code-side">[track artist=julie]very little effort[/track]</div>
-                    <div class="detail-side">${trans[lang].settings.inbuilt.wiki.syntax.links_to.replace('{link}', `<a href="${root}music/julie/_/very+little+effort" target="_blank">very little effort</a>`)}</div>
-                </div>
-            </div>
-            <div class="sep"></div>
-            <div class="syntax-listing">
-                <div class="syntax-listing-item">
-                    <div class="code-side">[url]https://cutensilly.org/bleh/fm[/url]</div>
-                    <div class="detail-side">${trans[lang].settings.inbuilt.wiki.syntax.links_to.replace('{link}', `<a href="https://cutensilly.org/bleh/fm" target="_blank">https://cutensilly.org/bleh/fm</a>`)}</div>
-                </div>
-                <div class="syntax-listing-item">
-                    <div class="code-side">[url=https://cutensilly.org/bleh/fm]blehhh[/url]</div>
-                    <div class="detail-side">${trans[lang].settings.inbuilt.wiki.syntax.links_to.replace('{link}', `<a href="https://cutensilly.org/bleh/fm" target="_blank">blehhh</a>`)}</div>
-                </div>
-            </div>
-            <div class="sep"></div>
-            <div class="syntax-listing">
-                <div class="syntax-listing-item">
-                    <div class="code-side">[tag]grunge[/tag]</div>
-                    <div class="detail-side">${trans[lang].settings.inbuilt.wiki.syntax.links_to.replace('{link}', `<a href="${root}tag/grunge" target="_blank">grunge</a>`)}</div>
-                </div>
-                <div class="syntax-listing-item">
-                    <div class="code-side">[user]${auth}[/user]</div>
-                    <div class="detail-side">${trans[lang].settings.inbuilt.wiki.syntax.links_to.replace('{link}', `<a class="mention" href="${root}user/${auth}" target="_blank">@${auth}</a>`)}</div>
-                </div>
-            </div>
-        `);
-
-        col_sidebar.insertBefore(wiki_syntax, col_sidebar.firstElementChild);
-    }
-
-
     function sanitise(text) {
         return text
         .replaceAll(' ', '+')
@@ -11016,6 +10962,10 @@ let has_prompted_for_update = false;
                 bleh_gallery_list();
             else if (page.subpage == 'music_artist_wiki_overview')
                 bleh_wiki();
+            else if (page.subpage == 'music_artist_wiki_history')
+                bleh_wiki_history();
+            else if (page.subpage == 'music_artist_wiki_edit')
+                bleh_wiki_editor();
         }
 
         log('status is', 'page', 'info', page);
@@ -11109,6 +11059,10 @@ let has_prompted_for_update = false;
                 bleh_gallery_list();
             else if (page.subpage == 'music_album_wiki_overview')
                 bleh_wiki();
+            else if (page.subpage == 'music_album_wiki_history')
+                bleh_wiki_history();
+            else if (page.subpage == 'music_album_wiki_edit')
+                bleh_wiki_editor();
         }
 
         log('status is', 'page', 'info', page);
@@ -11170,6 +11124,10 @@ let has_prompted_for_update = false;
 
             if (page.subpage == 'music_track_wiki_overview')
                 bleh_wiki();
+            else if (page.subpage == 'music_track_wiki_history')
+                bleh_wiki_history();
+            else if (page.subpage == 'music_track_wiki_edit')
+                bleh_wiki_editor();
         }
 
         log('status is', 'page', 'info', page);
@@ -12083,5 +12041,148 @@ let has_prompted_for_update = false;
             page.structure.main.insertBefore(sub_text, page.structure.main.firstElementChild);
             page.structure.main.removeChild(h2);
         }
+    }
+
+    function bleh_wiki_history() {
+        let breadcrumb_root = page.structure.container.querySelector('.subpage-breadcrumb');
+        let breadcrumb_name = page.structure.container.querySelector('.subpage-title');
+
+        let sub_text = document.createElement('div');
+        sub_text.classList.add('sub-text', 'space-below');
+        sub_text.innerHTML = (`
+            <div class="breadcrumb">
+                ${breadcrumb_root.querySelector('a').outerHTML}
+                <div class="breadcrumb-name prominent">
+                    ${breadcrumb_name.textContent}
+                </div>
+            </div>
+        `);
+
+        breadcrumb_root.style.setProperty('display', 'none');
+        breadcrumb_name.style.setProperty('display', 'none');
+
+
+        let buffer_container = page.structure.container.querySelector('.row + .buffer-4');
+        let wiki_history_table = buffer_container.querySelector('.wiki-history-table');
+
+
+        // put this in col-main
+        let wiki_panel = document.createElement('section');
+        wiki_panel.classList.add('wiki-history-panel');
+
+        wiki_panel.appendChild(sub_text);
+        wiki_panel.appendChild(wiki_history_table);
+
+        page.structure.main.appendChild(wiki_panel);
+        buffer_container.style.setProperty('display', 'none');
+
+
+        // latest
+        let latest_version_panel = document.createElement('section');
+        latest_version_panel.classList.add('view-all-panel');
+        latest_version_panel.innerHTML = (`
+            <a class="btn view-all-button back wiki-latest-button" href="${sub_text.querySelector('a').getAttribute('href')}">
+                ${trans[lang].wiki.latest}
+            </a>
+        `);
+
+        page.structure.side.appendChild(latest_version_panel);
+    }
+
+    function bleh_wiki_editor() {
+        // make a new panel
+        let wiki_edit_panel = document.createElement('section');
+        wiki_edit_panel.classList.add('wiki-edit-panel');
+        wiki_edit_panel.innerHTML = page.structure.main.innerHTML;
+
+        page.structure.main.innerHTML = '';
+        page.structure.main.appendChild(wiki_edit_panel);
+        page.structure.main.classList.add('not-a-panel');
+
+        let breadcrumb_root = page.structure.container.querySelector('.subpage-breadcrumb');
+        let breadcrumb_name = page.structure.container.querySelector('.subpage-title');
+
+        let sub_text = document.createElement('div');
+        sub_text.classList.add('sub-text', 'space-below');
+        sub_text.innerHTML = (`
+            <div class="breadcrumb">
+                ${breadcrumb_root.querySelector('a').outerHTML}
+                <div class="breadcrumb-name prominent">
+                    ${breadcrumb_name.textContent}
+                </div>
+            </div>
+        `);
+
+        breadcrumb_root.style.setProperty('display', 'none');
+        breadcrumb_name.style.setProperty('display', 'none');
+
+        wiki_edit_panel.insertBefore(sub_text, wiki_edit_panel.firstElementChild);
+
+        let wiki_syntax = document.createElement('section');
+        wiki_syntax.classList.add('bleh--blank-panel', 'wiki-syntax-panel');
+        wiki_syntax.innerHTML = (`
+            <h3 class="text-18">${trans[lang].wiki.syntax.name}</h3>
+            <div class="syntax-listing">
+                <div class="syntax-listing-item">
+                    <div class="code-side">[artist]julie[/artist]</div>
+                    <div class="detail-side">${trans[lang].wiki.syntax.links_to.replace('{link}', `<a href="${root}music/julie" target="_blank">julie</a>`)}</div>
+                </div>
+                <div class="syntax-listing-item">
+                    <div class="code-side">[album artist=julie]pushing daisies[/album]</div>
+                    <div class="detail-side">${trans[lang].wiki.syntax.links_to.replace('{link}', `<a href="${root}music/julie/pushing+daisies" target="_blank">pushing daisies</a>`)}</div>
+                </div>
+                <div class="syntax-listing-item">
+                    <div class="code-side">[track artist=julie]very little effort[/track]</div>
+                    <div class="detail-side">${trans[lang].wiki.syntax.links_to.replace('{link}', `<a href="${root}music/julie/_/very+little+effort" target="_blank">very little effort</a>`)}</div>
+                </div>
+            </div>
+            <div class="sep"></div>
+            <div class="syntax-listing">
+                <div class="syntax-listing-item">
+                    <div class="code-side">[url]https://cutensilly.org/bleh/fm[/url]</div>
+                    <div class="detail-side">${trans[lang].wiki.syntax.links_to.replace('{link}', `<a href="https://cutensilly.org/bleh/fm" target="_blank">https://cutensilly.org/bleh/fm</a>`)}</div>
+                </div>
+                <div class="syntax-listing-item">
+                    <div class="code-side">[url=https://cutensilly.org/bleh/fm]blehhh[/url]</div>
+                    <div class="detail-side">${trans[lang].wiki.syntax.links_to.replace('{link}', `<a href="https://cutensilly.org/bleh/fm" target="_blank">blehhh</a>`)}</div>
+                </div>
+            </div>
+            <div class="sep"></div>
+            <div class="syntax-listing">
+                <div class="syntax-listing-item">
+                    <div class="code-side">[tag]grunge[/tag]</div>
+                    <div class="detail-side">${trans[lang].wiki.syntax.links_to.replace('{link}', `<a href="${root}tag/grunge" target="_blank">grunge</a>`)}</div>
+                </div>
+                <div class="syntax-listing-item">
+                    <div class="code-side">[user]${auth}[/user]</div>
+                    <div class="detail-side">${trans[lang].wiki.syntax.links_to.replace('{link}', `<a class="mention" href="${root}user/${auth}" target="_blank">@${auth}</a>`)}</div>
+                </div>
+            </div>
+        `);
+
+        page.structure.side.innerHTML = '';
+
+        // latest
+        let latest_version_panel = document.createElement('section');
+        latest_version_panel.classList.add('view-all-panel');
+        latest_version_panel.innerHTML = (`
+            <a class="btn view-all-button back wiki-latest-button" href="${sub_text.querySelector('a').getAttribute('href')}">
+                ${trans[lang].wiki.latest}
+            </a>
+        `);
+
+        page.structure.side.appendChild(latest_version_panel);
+
+        page.structure.side.appendChild(wiki_syntax);
+
+
+        // rules
+        let rules = page.structure.main.querySelector('.wiki-style-rules');
+
+        let rules_panel = document.createElement('section');
+        rules_panel.classList.add('rules-panel');
+        rules_panel.innerHTML = rules.innerHTML;
+
+        page.structure.side.appendChild(rules_panel);
     }
 })();

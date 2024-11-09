@@ -1446,7 +1446,7 @@ last.fm changes as of 2024-05-20 */
 .col-main > section:not(.neighbours-items-section), .col-sidebar > section,
 .your-progress-component,
 /* this fixes places of the site (tracks, artist, albums watever that use a weird method of 2 col-mains, 2 col-sidebars as appose to profiles */
-/* -> could be simplified, idk if it affects other parts of the site tho */.row.buffer-4 > .col-main:first-child /* <- */, .row.buffer-4 > .col-main:nth-child(3) > :is(section, #shoutbox),
+/* -> could be simplified, idk if it affects other parts of the site tho */.row.buffer-4 > .col-main:not(.not-a-panel):first-child /* <- */, .row.buffer-4 > .col-main:nth-child(3) > :is(section, #shoutbox),
 .album-and-lyrics-row,
 /* dont question it too far, refer to the above display: grid for more insight, this is jus applying the card styling */
 .shoutbox--with-header#shoutbox:not(#shoutbox > #shoutbox /* for shoutbox on gallery image */, section > #shoutbox /* events */),
@@ -1648,7 +1648,7 @@ last.fm changes as of 2024-05-20 */
 
 
 /*     UNDO CARD STYLES     */
-.row.buffer-4 > .col-main:first-child > section /* for shoutbox in tabs */
+.row.buffer-4 > .col-main:not(.not-a-panel):first-child > section /* for shoutbox in tabs */
 {
     --override-background: unset !important;
     border: unset;
@@ -7245,28 +7245,17 @@ very, very, very dated - who looks up a song on ebay? */
 .content-form .form-horizontal .form-group-controls {
     margin-left: 150px;
 }
-.wiki-style-rules {
-    background-color: hsla(var(--h4), 15%);
-    border-radius: var(--item-med-radius);
-    padding: var(--card-gap);
-
-    h3 {
-        font-size: var(--font-size);
-        line-height: var(--line-height);
-        font-weight: var(--font-weight-medium);
-        color: hsl(var(--l3-c));
-    }
-
-    p, p + p, ul {
-        margin-top: 4px;
-    }
-}
 
 
 .rules-panel {
+    .wiki-style-rules-list,
     .bulleted-list,
     h3 {
         margin-bottom: var(--card-gap);
+
+        &:last-child {
+            margin-bottom: unset;
+        }
     }
 }
 
@@ -10478,6 +10467,7 @@ table.table tr:nth-child(2n) td {
     margin-bottom: var(--card-gap);
 }
 
+.wiki-style-rules,
 .wiki-author,
 .wiki-history-link--desktop,
 .qa-wiki-edit.btn-primary {
@@ -16026,9 +16016,6 @@ button.bleh--gallery-bookmark-image-btn {
 
 
 .wiki-syntax-panel {
-    margin-top: unset;
-    margin-bottom: var(--card-gap);
-
     .syntax-listing {
         display: flex;
         flex-direction: column;
@@ -17216,6 +17203,7 @@ h4 {
     display: flex;
     background: unset !important;
     padding: unset !important;
+    box-shadow: unset !important;
 
     .view-all-button {
         --shadow: none;
@@ -17234,6 +17222,9 @@ h4 {
         }
         &.wiki-history-button {
             --mask: var(--icon-16-bio-history);
+        }
+        &.wiki-latest-button {
+            --mask: var(--icon-16-bio);
         }
     }
 }
