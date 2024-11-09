@@ -11992,6 +11992,15 @@ let has_prompted_for_update = false;
 
 
     function bleh_wiki() {
+        // make a new panel
+        let wiki_panel = document.createElement('section');
+        wiki_panel.classList.add('wiki-panel');
+        wiki_panel.innerHTML = page.structure.main.innerHTML;
+
+        page.structure.main.innerHTML = '';
+        page.structure.main.appendChild(wiki_panel);
+        page.structure.main.classList.add('not-a-panel');
+
         let original_edit_button = page.structure.main.querySelector('.qa-wiki-edit');
         let original_version_history = page.structure.main.querySelector('.wiki-history-link--desktop a');
 
@@ -12025,10 +12034,10 @@ let has_prompted_for_update = false;
 
 
         // author
-        let wiki_author = page.structure.main.querySelector('.wiki-author');
+        let wiki_author = wiki_panel.querySelector('.wiki-author');
         // this cant be null i believe but still
         if (wiki_author != null) {
-            let h2 = page.structure.main.querySelector('h2.text-18');
+            let h2 = wiki_panel.querySelector('h2.text-18');
 
             let sub_text = document.createElement('div');
             sub_text.classList.add('sub-text', 'space-below');
@@ -12041,8 +12050,8 @@ let has_prompted_for_update = false;
                 </div>
             `);
 
-            page.structure.main.insertBefore(sub_text, page.structure.main.firstElementChild);
-            page.structure.main.removeChild(h2);
+            wiki_panel.insertBefore(sub_text, wiki_panel.firstElementChild);
+            wiki_panel.removeChild(h2);
         }
     }
 
