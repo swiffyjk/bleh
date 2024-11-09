@@ -5158,7 +5158,8 @@ let has_prompted_for_update = false;
             name: page.name,
             text: scrobbles,
             type: 'scrobbles',
-            link: `${root}user/${page.name}/library`
+            link: `${root}user/${page.name}/library`,
+            tooltip: average
         });
         create_profile_top_item(profile_header, {
             name: page.name,
@@ -5189,7 +5190,7 @@ let has_prompted_for_update = false;
         base_header.appendChild(profile_header);
     }
 
-    function create_profile_top_item(parent, {name, link, text='', type, taste='', artists=[], avi='', percent='', action=''}) {
+    function create_profile_top_item(parent, {name, link, text='', type, taste='', artists=[], avi='', percent='', action='', tooltip=''}) {
         log(`creating top item of ${name}, ${link}, ${text}`, 'profile');
 
         let listen_item = document.createElement((action != 'button') ? 'a' : 'button');
@@ -5239,9 +5240,14 @@ let has_prompted_for_update = false;
             return;
         }
 
-        tippy(listen_item, {
-            content: trans[lang].profile[type]
-        });
+        if (tooltip == '')
+            tippy(listen_item, {
+                content: trans[lang].profile[type]
+            });
+        else
+            tippy(listen_item, {
+                content: tooltip
+            });
     }
 
     function patch_profile_tracks() {
