@@ -1,6 +1,12 @@
 {
-    "updated": "2024-11-08",
-    "latest": "2024.1108",
+    "updated": "2024-11-09",
+    "latest": "2024.1109",
+    "2024.1109": {
+        "name": "Wiki improvements and more",
+        "type": "major",
+        "force": false,
+        "bio": "# Wikis\n- __Wiki pages have been redesigned__\n    - This is less of a grand redesign compared to the recent gallery changes but still a massive improvement for those wiki editing (like myself)\n\n![Wiki overview page](https://katelyynn.github.io/bleh/fm/changelog/img/wiki.png)\nWiki overviews now have the two common action buttons located for easy access in the sidebar. The most recent wiki author is now also inline with the title.\n\n![Wiki edit page](https://katelyynn.github.io/bleh/fm/changelog/img/wiki-edit.png)\nWiki editing has received the biggest improvement in this update. The previously available wiki syntax guide is now accompanied with a selection of 6 symbol presets that can be used for writing wikis. These includes two stylised quotation marks, apostrophes, and two variations of the dash. Style rules have also been re-located into the sidebar to reduce the scrolling needed to save.\n\n![Wiki history page](https://katelyynn.github.io/bleh/fm/changelog/img/wiki-history.png)\nThe wiki history has now been updated to fit the overall aesthetic of today's bleh, including longer summaries depending on username width. These items now also display custom user badges and highlight staff members.\n\n# Profiles\n- Hovering over scrobbles now once again displays average\n- Fixed icons for bookmarks in recent activity\n\n# Theming\n- __Massively improved readability in light theme__\n    - There will most likely be one final pass on readability but here is a batch of improvements :3\n    - Shadows beneath buttons have been decreased\n    - New, pro, and vote badges now use a darker text\n    - Notification bubbles now use a darker colour\n\n# General\n- Some web requests can now handle error responses\n    - This allows bleh to recover in the event lotus or the changelog cannot be downloaded"
+    },
     "2024.1108": {
         "name": "Building on profiles",
         "type": "minor",

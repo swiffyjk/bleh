@@ -1,7 +1,7 @@
 /* ==UserStyle==
 @name           bleh (dev)
 @namespace      github.com/katelyynn/bleh
-@version        2024.1108
+@version        2024.1109
 @license        GPL-3.0
 @author         kate
 @updateURL      https://github.com/katelyynn/bleh/raw/uwu/fm/bleh.user.css
@@ -15,7 +15,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Ubuntu+Sans:ital,wght@0,100..800;1,100..800&display=swap');
 
 body {
-    --version-build: '2024.1108';
+    --version-build: '2024.1109';
 
     --hue:  var(--hue-over,
             var(--hue-album,
@@ -16896,9 +16896,6 @@ h4 {
     &.activity--unobsess {
         --mask: var(--icon-16-obsession-remove);
     }
-    &.activity--unobsess {
-        --mask: var(--icon-16-obsession-remove);
-    }
     &.activity--update_bleh,
     &.activity--install_bleh,
     &.activity--update_bwaa,
@@ -16907,6 +16904,16 @@ h4 {
     }
     &.activity--image_upload {
         --mask: var(--icon-16-gallery-vertical);
+    }
+    &.activity--unbookmark {
+        --mask: var(--icon-16-bookmark);
+    }
+    &.activity--bookmark {
+        --mask: var(--icon-16-bookmark-saved);
+
+        &:before {
+            color: hsl(var(--l3-c));
+        }
     }
 
     .title {
@@ -17498,6 +17505,20 @@ h4 {
 
         p {
             display: inline;
+        }
+
+        ul {
+            margin-left: var(--card-padding);
+
+            li:first-child {
+                &:before {
+                    display: none;
+                }
+
+                & + li {
+                    margin-top: var(--item-list-gap);
+                }
+            }
         }
     }
 

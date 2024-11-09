@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         bleh
 // @namespace    http://last.fm/
-// @version      2024.1108
+// @version      2024.1109
 // @description  bleh!!! ^-^
 // @author       kate
 // @match        https://www.last.fm/*
@@ -20,7 +20,7 @@
 // ==/UserScript==
 
 let version = {
-    build: '2024.1108',
+    build: '2024.1109',
     sku: 'petal',
     feature_flags: {
         bleh_settings_tabs: {
@@ -12074,7 +12074,7 @@ let has_prompted_for_update = false;
         breadcrumb_name.style.setProperty('display', 'none');
 
 
-        let buffer_container = page.structure.container.querySelector('.row + .buffer-4');
+        let buffer_container = page.structure.container.querySelector('.row ~ .buffer-4');
         let wiki_history_table = buffer_container.querySelector('.wiki-history-table');
 
 
