@@ -1944,7 +1944,7 @@ spacing between is removed and aligned to tag icon */
     padding-top: unset !important;
     padding-bottom: var(--card-gap) !important;
 
-    .header--user.header--overview + .adaptive-skin-container > &,
+    &[data-page-type="user"][data-page-subpage=""],
     header.header-new--subpage + &,
     header.header-new--subpage + .full-bleed-ad-container + &
     {
@@ -1973,8 +1973,7 @@ spacing between is removed and aligned to tag icon */
 /* some pages due to recent changes (see event danger zone in this code) have cards go beneath tabs */
 .content-top:has(.content-top-back-link ~ .navlist) + .page-content,
 /* */
-.header--tag:not(.header--sub-page) + .adaptive-skin-container .page-content,
-[class*="namespace--events"][class*="_overview"]:not([class*="_shoutbox"]) .page-content {
+.header--tag:not(.header--sub-page) + .adaptive-skin-container .page-content {
     padding-top: calc(46px + (9px + var(--card-gap)) + (var(--card-gap) * 2)) !important;
 }
 
@@ -2019,29 +2018,10 @@ spacing between is removed and aligned to tag icon */
     position: relative;
     padding-bottom: 22px;
 }
-[class*="namespace--events"] .secondary-nav {
-    bottom: calc(-100px + var(--card-gap));
-}
 [class*="namespace--events"] .header-info-secondary {
     top: calc(24px + 22px);
     z-index: 10;
 }
-
-/* realigns nav on subpages */
-[class*="namespace--events"]:is([class*="_shoutbox"], [class*="_attendance"], [class*="_lineup"]) .secondary-nav {
-    bottom: calc(-100px + var(--card-gap) + 10px);
-}
-/* removes extra gap above page content, as its
-expecting a nav which is not present */
-[class*="namespace--events"]:is([class*="_shoutbox"], [class*="_lineup"]) .page-content {
-    padding-top: unset !important;
-    margin-top: var(--card-gap);
-}
-/* this breaks alignment on event pages as they rely on the 24px default.. */
-/* this 24px value is used above */
-/*.content-top-has-nav .content-top .content-top-lower, .two-column-layout .content-top .content-top-lower {
-    padding-bottom: var(--card-gap);
-}*/
 
 
 /* for some reason has a -24 default */
@@ -2051,10 +2031,6 @@ expecting a nav which is not present */
 }
 .content-top-has-nav .content-top-lower .library-controls, .content-top-has-nav .content-top-lower .secondary-nav, .two-column-layout .content-top-lower .library-controls, .two-column-layout .content-top-lower .secondary-nav {
     margin-bottom: unset;
-}
-
-[class*="namespace--events"][class*="_attendance"] .content-top-lower .navlist {
-    margin-top: var(--card-gap);
 }
 
 
@@ -10942,19 +10918,11 @@ table.table tr:nth-child(2n) td {
 }
 
 
-.event-poster {
-    padding: unset;
-    margin: unset;
-}
 .expanded-image,
 .event-poster-inner-wrap {
     border-radius: var(--item-med-radius);
     box-shadow: var(--card-shadow);
     overflow: hidden;
-}
-
-.expand-image {
-    --font-size: 0;
 }
 
 
@@ -17586,6 +17554,22 @@ h4 {
         border-radius: var(--item-big-radius);
         font-size: 20px;
         font-weight: var(--font-weight-medium);
+    }
+}
+
+
+
+
+.header-info-primary--with-calendar {
+    margin-bottom: -37px;
+}
+.event-poster {
+    display: none;
+}
+
+.poster-panel {
+    .event-poster-preview {
+        border-radius: var(--item-big-radius);
     }
 }
 }

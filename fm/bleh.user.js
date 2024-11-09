@@ -67,6 +67,11 @@ let version = {
             default: true,
             name: 'Enable changelog system',
             date: '2024-11-07'
+        },
+        refreshed_nav: {
+            default: false,
+            name: 'Refreshed nav structure, reducing a lot of jank',
+            date: '2024-11-09'
         }
     }
 }
@@ -4748,6 +4753,21 @@ let has_prompted_for_update = false;
 
         checkup_page_structure();
 
+        if (settings.feature_flags.refreshed_nav) {
+            let navlist = profile_header.querySelector('.navlist');
+            if (navlist != null) {
+                navlist.classList.add('redesigned-navigation');
+                page.structure.container.insertBefore(navlist, page.structure.container.firstElementChild);
+            }
+
+            if (is_subpage) {
+                let content_top = document.body.querySelector('.content-top');
+
+                if (content_top != null)
+                    navlist.after(content_top);
+            }
+        }
+
 
         let is_own_profile = (page.name == auth);
         if (is_own_profile)
@@ -4865,6 +4885,7 @@ let has_prompted_for_update = false;
         }
 
         log('status is', 'page', 'info', page);
+        update_page();
 
 
         patch_profile_following();
@@ -10979,6 +11000,7 @@ let has_prompted_for_update = false;
         }
 
         log('status is', 'page', 'info', page);
+        update_page();
     }
 
     function bleh_albums() {
@@ -11076,6 +11098,7 @@ let has_prompted_for_update = false;
         }
 
         log('status is', 'page', 'info', page);
+        update_page();
     }
 
     function bleh_tracks() {
@@ -12291,6 +12314,19 @@ let has_prompted_for_update = false;
 
         checkup_page_structure();
 
+        let navlist = event_header.querySelector('.navlist');
+        if (navlist != null) {
+            navlist.classList.add('redesigned-navigation');
+            page.structure.container.insertBefore(navlist, page.structure.container.firstElementChild);
+        }
+
+        if (is_subpage) {
+            let content_top = document.body.querySelector('.content-top');
+
+            if (content_top != null)
+                navlist.after(content_top);
+        }
+
         if (!is_subpage) {
             try {
                 page.name = page.structure.main.querySelector('.grid-items-item-main-text a').textContent;
@@ -12343,15 +12379,38 @@ let has_prompted_for_update = false;
                 main_panel = page.structure.main.querySelector('.event-details');
 
             main_panel.insertBefore(event_top_header, main_panel.firstElementChild);
+
+
+
+
+            // move poster
+            let poster = main_panel.querySelector('.event-poster-preview');
+            if (poster != null) {
+                let poster_panel = document.createElement('section');
+                poster_panel.classList.add('poster-panel', 'view-all-panel');
+
+                poster_panel.appendChild(poster);
+
+                page.structure.side.insertBefore(poster_panel, page.structure.side.firstElementChild);
+            }
         } else {
             // which subpage is it?
             page.subpage = document.body.classList[2].replace('namespace--', '');
         }
 
         log('status is', 'page', 'info', page);
+        update_page();
     }
 
     function bleh_events_edit() {
         return;
+    }
+
+
+
+
+    function update_page() {
+        page.structure.container.setAttribute('data-page-type', page.type);
+        page.structure.container.setAttribute('data-page-subpage', page.subpage);
     }
 })();
