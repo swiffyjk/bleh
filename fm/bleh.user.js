@@ -5988,6 +5988,10 @@ let has_prompted_for_update = false;
             log('internal bleh settings', 'page');
             page.type = 'bleh_settings';
 
+            if (settings.feature_flags.refreshed_nav != false) {
+                register_background(my_avi);
+            }
+
 
             // go wild
             let outer = document.createElement('div');

@@ -15555,6 +15555,7 @@ button.bleh--gallery-bookmark-image-btn {
 
     &.profile-top-header {
         background-color: hsl(var(--b5));
+        box-shadow: var(--card-shadow);
 
         [data-bleh--theme="oled"] &,
         [data-bleh--theme="light"] & {
@@ -17690,7 +17691,7 @@ h4 {
 }
 
 /* artists massive gap */
-.page-content:has(.content-top-lower-row) {
+.page-content:not([data-page-type]):has(.content-top-lower-row) {
     display: none;
 }
 
