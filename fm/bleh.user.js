@@ -11137,6 +11137,11 @@ let has_prompted_for_update = false;
             let redesigned_album_header = document.createElement('section');
             redesigned_album_header.classList.add('redesigned-header', 'redesigned-album-header', 'no-background');
             redesigned_album_header.innerHTML = (`
+                ${(is_subpage) ? (`
+                <div class="avatar-side">
+                    ${(avatar != null) ? `<img src="${avatar.getAttribute('content').replace('/ar0/', '/arXL/')}">` : ''}
+                </div>
+                `) : ''}
                 <div class="info-side">
                     <div class="sub-text">${trans[lang].album.name}</div>
                     <div class="title-container">

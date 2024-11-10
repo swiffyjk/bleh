@@ -1443,7 +1443,7 @@ last.fm changes as of 2024-05-20 */
 .col-main > section:not(.neighbours-items-section), .col-sidebar > section,
 .your-progress-component,
 /* this fixes places of the site (tracks, artist, albums watever that use a weird method of 2 col-mains, 2 col-sidebars as appose to profiles */
-/* -> could be simplified, idk if it affects other parts of the site tho */ .page-content:not([data-page-subpage="overview"]) .row.col-main-is-primary > .col-main:not(.not-a-panel):first-child /* <- */, .row.col-main-is-primary > .col-main:nth-child(3) > :is(section, #shoutbox),
+/* -> could be simplified, idk if it affects other parts of the site tho */ .page-content[data-page-type="user"]:not([data-page-subpage="overview"]) .row.col-main-is-primary > .col-main:not(.not-a-panel):first-child /* <- */, .row.col-main-is-primary > .col-main:nth-child(3) > :is(section, #shoutbox),
 .album-and-lyrics-row,
 /* dont question it too far, refer to the above display: grid for more insight, this is jus applying the card styling */
 .shoutbox--with-header#shoutbox:not(#shoutbox > #shoutbox /* for shoutbox on gallery image */, section > #shoutbox /* events */),
@@ -1939,10 +1939,12 @@ spacing between is removed and aligned to tag icon */
     padding-top: unset !important;
     padding-bottom: var(--card-gap) !important;
 
-    header.header-new--subpage + &,
-    header.header-new--subpage + .full-bleed-ad-container + &
-    {
-        padding-top: calc(46px + (var(--card-gap))) !important;
+    [data-ff--refreshed_music_nav="false"] & {
+        header.header-new--subpage + &,
+        header.header-new--subpage + .full-bleed-ad-container + &
+        {
+            padding-top: calc(46px + (var(--card-gap))) !important;
+        }
     }
 
     &:before, &:after {
@@ -3228,7 +3230,7 @@ header:is(.header-new--album, .header-new--track) .header-new-background-overlay
     }
 }
 
-.redesigned-album-header h2,
+.redesigned-album-header h2, .redesigned-track-header h2,
 span[itemprop="byArtist"] {
     display: flex;
     color: rgba(255, 255, 255, 0.8);
@@ -17519,6 +17521,12 @@ h4 {
 
         .page-content[data-page-subpage="overview"] & {
             height: 127px;
+        }
+
+        .page-content[data-page-type="album"] &,
+        .page-content[data-page-type="track"] & {
+            height: 70px;
+            border-radius: var(--item-big-radius);
         }
 
         img {
