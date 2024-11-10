@@ -1957,8 +1957,6 @@ spacing between is removed and aligned to tag icon */
     }
 }
 
-/* playlists */ .section-controls-full-width,
-/* obsessions */ .section-controls,
 /* profile subpages with tabs eg. library */ .content-top-lower,
 /* gallery page breadcrumbs */ .content-top-lower-row,
 /* floating breadcrumbs */ .buffer-4 > .subpage-breadcrumb {
@@ -1966,6 +1964,11 @@ spacing between is removed and aligned to tag icon */
 }
 /* gallery page breadcrumbs */ .content-top-lower-row {
     margin-bottom: calc(-1 * var(--card-gap));
+}
+
+.section-controls-full-width,
+.section-controls {
+    margin-right: var(--card-padding);
 }
 
 
@@ -3719,6 +3722,7 @@ span[itemprop="byArtist"] + .header-new-title {
 
 .label.user-follow {
     --mask: var(--icon-follow);
+    order: 10;
 }
 .header-new-on-tour {
     --mask: var(--icon-tour);
@@ -17510,11 +17514,11 @@ h4 {
     .avatar-side {
         height: 48px;
         border-radius: var(--avatar-radius);
-        box-shadow: var(--card-shadow);
+        box-shadow: var(--menu-shadow);
         overflow: hidden;
         position: relative;
 
-        .page-content[data-page-subpage=""] & {
+        .page-content[data-page-subpage="overview"] & {
             height: 127px;
         }
 

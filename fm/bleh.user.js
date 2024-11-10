@@ -4810,6 +4810,8 @@ let has_prompted_for_update = false;
             profile_header.setAttribute('data-is-own-profile', 'true');
 
         if (!is_subpage) {
+            page.subpage = 'overview';
+
             // recent tracks
             patch_profile_tracks();
 
@@ -4937,48 +4939,6 @@ let has_prompted_for_update = false;
         let profile_has_note = false;
         if (profile_note != undefined)
             profile_has_note = true;
-
-        let adaptive_skin = document.body.querySelector('.adaptive-skin-container');
-        let content_top = adaptive_skin.querySelector('.content-top');
-
-        // has header?
-        if (settings.feature_flags.refreshed_nav == false && content_top.querySelector('h1') == null && content_top.querySelector('.navlist') == null)
-            adaptive_skin.removeChild(content_top);
-
-        // is this their profile?
-        if (!is_own_profile) {
-            // is there a follow button?
-            let header_avatar = document.querySelector('.header--overview .header-avatar');
-
-            if (header_avatar != undefined && settings.feature_flags.redesigned_profile_header == false) {
-                let header_follow_btn = header_avatar.querySelector('form');
-
-                if (header_follow_btn == undefined) {
-                    // user is on their ignore list
-                    let toggle_btn = document.createElement('button');
-                    toggle_btn.classList.add('toggle-button','header-follower-btn','header-follower-btn--denied');
-                    toggle_btn.textContent = trans[lang].profile.on_ignore_list;
-
-                    tippy(toggle_btn, {
-                        content: trans[lang].profile.on_ignore_list
-                    });
-                    header_avatar.appendChild(toggle_btn);
-                } else {
-                    let inner_btn = header_follow_btn.querySelector('button');
-                    let inner_btn_tooltip = tippy(inner_btn, {
-                        content: inner_btn.textContent
-                    });
-
-                    console.info(inner_btn_tooltip);
-
-                    inner_btn.addEventListener('click', () => {
-                        window.setTimeout(() => {
-                            inner_btn_tooltip.setContent(inner_btn.textContent);
-                        }, 50);
-                    });
-                }
-            }
-        }
 
         // badges
         log(`querying badges for ${page.name}`, 'profile');
