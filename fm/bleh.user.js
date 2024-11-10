@@ -11012,7 +11012,7 @@ let has_prompted_for_update = false;
             redesigned_artist_header.classList.add('redesigned-header', 'redesigned-artist-header', 'no-background');
             redesigned_artist_header.innerHTML = (`
                 <div class="avatar-side">
-                    ${(avatar != null) ? `<img src="${avatar.getAttribute('content').replace('/ar0/', '/arXL/')}">` : ''}
+                    ${(avatar != null) ? `<img src="${avatar.getAttribute('content').replace('/ar0/', '/avatar170s/')}">` : ''}
                 </div>
                 <div class="info-side">
                     <div class="sub-text">${trans[lang].artist.name}</div>
@@ -11139,7 +11139,7 @@ let has_prompted_for_update = false;
             redesigned_album_header.innerHTML = (`
                 ${(is_subpage) ? (`
                 <div class="avatar-side">
-                    ${(avatar != null) ? `<img src="${avatar.getAttribute('content').replace('/ar0/', '/arXL/')}">` : ''}
+                    ${(avatar != null) ? `<img src="${avatar.getAttribute('content').replace('/ar0/', '/avatar170s/')}">` : ''}
                 </div>
                 `) : ''}
                 <div class="info-side">
