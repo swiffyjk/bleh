@@ -72,6 +72,11 @@ let version = {
             default: true,
             name: 'Refreshed nav structure, reducing a lot of jank',
             date: '2024-11-09'
+        },
+        refreshed_music_nav: {
+            default: true,
+            name: 'Refreshed music nav structure',
+            date: '2024-11-10'
         }
     }
 }
@@ -10976,6 +10981,54 @@ let has_prompted_for_update = false;
 
         checkup_page_structure();
 
+        if (settings.feature_flags.refreshed_music_nav != false) {
+            let navlist = artist_header.querySelector('.navlist');
+            if (navlist != null) {
+                navlist.classList.add('redesigned-navigation');
+                page.structure.container.insertBefore(navlist, page.structure.container.firstElementChild);
+                page.structure.nav = navlist;
+            }
+
+            if (is_subpage) {
+                let content_top = document.body.querySelector('.content-top');
+
+                if (content_top != null) {
+                    content_top.classList.add('redesigned-content-top');
+                    page.structure.content_top = content_top;
+                    navlist.after(content_top);
+                }
+            }
+
+            let avatar = artist_header.querySelector('.header-new-background-image');
+            let title = artist_header.querySelector('.header-new-title');
+            let on_tour = artist_header.querySelector('.header-new-on-tour');
+            let featured_items = artist_header.querySelector('.artist-header-featured-items');
+            let position = artist_header.querySelector('.header-new-chart-position-number');
+
+            let redesigned_artist_header = document.createElement('section');
+            redesigned_artist_header.classList.add('redesigned-header', 'redesigned-artist-header', 'no-background');
+            redesigned_artist_header.innerHTML = (`
+                <div class="avatar-side">
+                    ${(avatar != null) ? `<img src="${avatar.getAttribute('content').replace('/ar0/', '/arXL/')}">` : ''}
+                </div>
+                <div class="info-side">
+                    <div class="sub-text">${trans[lang].artist.name}</div>
+                    <div class="title-container">
+                        <h1>${title.innerHTML}</h1>
+                        ${(position != null) ? position.outerHTML : ''}
+                        ${(on_tour != null) ? on_tour.outerHTML : ''}
+                    </div>
+                    ${(featured_items != null) ? featured_items.outerHTML : ''}
+                </div>
+                <div class="gallery-side">
+
+                </div>
+            `);
+
+            page.structure.container.insertBefore(redesigned_artist_header, page.structure.container.firstElementChild);
+            artist_header.classList.add('legacy-header');
+        }
+
         if (!is_subpage) {
             page.subpage = 'overview';
 
@@ -11519,11 +11572,16 @@ let has_prompted_for_update = false;
         let gallery_section;
         try {
             gallery_section = page.structure.main.querySelector('.gallery-section');
-            page.structure.container.insertBefore(gallery_section, page.structure.container.firstElementChild);
+            if (gallery_section != null) {
+                page.structure.nav.after(gallery_section);
 
-            // move image details to main column
-            image_details = document.createElement('section');
-            image_details.classList.add('image-details');
+                // move image details to main column
+                image_details = document.createElement('section');
+                image_details.classList.add('image-details');
+            } else {
+                image_details = page.structure.main.querySelector('.image-details');
+                image_details.innerHTML = '';
+            }
         } catch(e) {
             gallery_section = page.structure.container.querySelector('.gallery-section');
 

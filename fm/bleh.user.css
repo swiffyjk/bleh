@@ -1537,8 +1537,7 @@ last.fm changes as of 2024-05-20 */
     }
 }
 .content-top-header,
-.artist-similar-sidebar,
-/* gallery */ .gallery-section
+.artist-similar-sidebar
 {
     margin-top: var(--force-margin-top, unset) !important;
 }
@@ -3235,13 +3234,6 @@ header:is(.header-new--album, .header-new--track) .header-new-background-overlay
     }
 }
 
-.header-new-on-tour {
-    width: fit-content;
-    display: none !important;
-    top: -8px !important;
-    /* appears weird */
-}
-
 span[itemprop="byArtist"] {
     display: flex;
     color: rgba(255, 255, 255, 0.8);
@@ -3339,6 +3331,8 @@ span[itemprop="byArtist"] + .header-new-title {
 }
 .artist-header-featured-items-item-wrap {
     padding: unset;
+    width: unset;
+    flex: 1;
 }
 
 .artist-header-featured-items-item {
@@ -3383,26 +3377,16 @@ span[itemprop="byArtist"] + .header-new-title {
     font-size: var(--font-size);
     line-height: var(--line-height);
     font-weight: var(--font-weight-medium);
-
-    .header-new-inner--without-image & {
-        color: hsl(var(--c2));
-    }
+    color: hsl(var(--c2));
 }
 .artist-header-featured-items-item-aux-text {
     font-size: calc(var(--font-size) - 1px);
     line-height: var(--line-height);
-    color: rgba(255,255,255, 0.7);
-
-    .header-new-inner--without-image & {
-        color: hsla(var(--c2), 80%);
-    }
+    color: hsla(var(--c2), 80%);
 }
 .artist-header-featured-items-item-header {
     text-transform: initial;
-
-    .header-new-inner--without-image & {
-        color: hsl(var(--c3));
-    }
+    color: hsl(var(--c3));
 }
 
 
@@ -3551,12 +3535,21 @@ span[itemprop="byArtist"] + .header-new-title {
     &:not(:hover) {
         transition-delay: 0.2s;
     }
+
+    &:hover {
+        max-width: 220px;
+        padding-right: 6px;
+        background-color: hsla(var(--h4), 20%) !important;
+    }
 }
-.title-container .label:hover, .header-new-on-tour:hover {
-    max-width: 220px;
-    padding-right: 6px;
-    background-color: hsla(var(--h4), 20%) !important;
+
+.header-new-on-tour {
+    top: unset;
+    text-align: unset;
+    white-space: nowrap;
 }
+
+.header-new-on-tour,
 .label:not(.user-follow) {
     color: hsl(var(--l3-c)) !important;
 }
@@ -17570,6 +17563,11 @@ h4 {
                     --lit-over: 1;
                 }
             }
+
+            .header-new-chart-position-number {
+                font-weight: var(--font-weight-medium);
+                margin-left: calc(var(--card-gap) - 6px);
+            }
         }
 
         .header-title-secondary {
@@ -17580,5 +17578,14 @@ h4 {
             margin-top: var(--card-gap);
         }
     }
+
+    .gallery-side {
+        width: calc(var(--cards-sidebar-width) - var(--card-padding) - var(--card-padding));
+    }
+}
+
+/* artists massive gap */
+.page-content:has(.content-top-lower-row) {
+    display: none;
 }
 }
