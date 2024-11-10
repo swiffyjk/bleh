@@ -3384,6 +3384,10 @@ span[itemprop="byArtist"] + .header-new-title {
 .artist-header-featured-items-item-header {
     text-transform: initial;
     color: hsl(var(--c3));
+    opacity: unset;
+
+    font-size: 12px;
+    line-height: 16px;
 }
 
 

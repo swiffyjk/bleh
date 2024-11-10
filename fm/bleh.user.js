@@ -6075,7 +6075,7 @@ let has_prompted_for_update = false;
                 <h3>${trans[lang].settings.home.name}</h3>
                 <div class="user-top-panel">
                     <div class="user-top-avatar user-top-avatar-side-left"></div>
-                    <img class="user-top-avatar user-top-avatar-main" src="${my_avi.replace('avatar42s', 'avatar170s')}" alt="${auth}">
+                    <img class="user-top-avatar user-top-avatar-main" src="${my_avi.replace('avatar42s', '300x300')}" alt="${auth}">
                     <div class="user-top-avatar user-top-avatar-side-right"></div>
                 </div>
                 <h4>${trans[lang].settings.home.thanks
@@ -11012,7 +11012,7 @@ let has_prompted_for_update = false;
             redesigned_artist_header.classList.add('redesigned-header', 'redesigned-artist-header', 'no-background');
             redesigned_artist_header.innerHTML = (`
                 <div class="avatar-side">
-                    ${(avatar != null) ? `<img src="${avatar.getAttribute('content').replace('/ar0/', '/avatar170s/')}">` : ''}
+                    ${(avatar != null) ? `<img src="${avatar.getAttribute('content').replace('/ar0/', '/300x300/')}">` : ''}
                 </div>
                 <div class="info-side">
                     <div class="sub-text">${trans[lang].artist.name}</div>
