@@ -390,9 +390,7 @@ body {
     --item-med-radius: 6px;
     --item-big-radius: 9px;
 
-    --profile-header-avatar-size: 96px;
-    --profile-header-avatar-small-size: 54px;
-    --profile-header-background-height: 200px;
+    --profile-header-background-height: 300px;
     --profile-header-background-offset: 33%;
 
     --playlist-cover-size: 230px;
@@ -1718,7 +1716,7 @@ article, section, .buffer-standard, .buffer-standard:not(.col-sidebar) .buffer-s
 
 /* take up full space */
 .album-overview-cover-art, .album-artwork-upload-cta-container {
-    margin-top: calc(-104px - var(--card-gap)) !important;
+    margin-top: calc(-72px - var(--card-gap) - var(--card-gap)) !important;
     overflow: hidden;
     z-index: 1;
 }
@@ -17460,7 +17458,7 @@ h4 {
 }
 .redesigned-header {
     display: flex;
-    gap: var(--card-gap);
+    gap: var(--card-padding);
     margin-top: var(--card-gap) !important;
     margin-bottom: var(--card-gap) !important;
 
@@ -17511,6 +17509,10 @@ h4 {
         overflow: hidden;
         position: relative;
 
+        .redesigned-artist-header & {
+            border-radius: var(--item-big-radius);
+        }
+
         .page-content[data-page-subpage="overview"] & {
             height: 127px;
         }
@@ -17542,12 +17544,18 @@ h4 {
             margin: unset;
             font-size: 24px;
             line-height: 30px;
-            font-weight: var(--font-weight-medium);
+            font-weight: var(--font-weight-bold);
             letter-spacing: unset;
+
+            color: hsl(var(--c1));
 
             a {
                 color: inherit;
             }
+        }
+
+        h2 {
+            margin: unset !important;
         }
 
         .title-container {
@@ -17556,6 +17564,8 @@ h4 {
             gap: 6px;
 
             h1 {
+                color: hsl(var(--c1));
+
                 .staff-profile & {
                     color: hsl(var(--l4-c));
                     --hue-over: var(--hue-neg);
@@ -17593,5 +17603,34 @@ h4 {
 /* artists massive gap */
 .page-content:has(.content-top-lower-row) {
     display: none;
+}
+
+
+
+
+.bleh-background {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background-position: 0 var(--profile-header-background-offset);
+    background-size: cover;
+    filter: blur(10px);
+
+    height: var(--profile-header-background-height);
+
+    &:before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background-color: hsl(var(--h4));
+        mix-blend-mode: multiply;
+    }
+
+    &:after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(180deg, hsla(var(--b6), 70%) 0%, hsl(var(--b6)) 100%) !important;
+    }
 }
 }

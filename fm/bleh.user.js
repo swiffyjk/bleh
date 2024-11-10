@@ -4808,6 +4808,9 @@ let has_prompted_for_update = false;
                 </div>
             `);
 
+            if (avatar != null)
+                register_background(avatar.querySelector('img').getAttribute('src'));
+
             page.structure.container.insertBefore(redesigned_profile_header, page.structure.container.firstElementChild);
             profile_header.classList.add('legacy-header');
         }
@@ -11028,6 +11031,9 @@ let has_prompted_for_update = false;
                 `) : ''}
             `);
 
+            if (avatar != null)
+                register_background(avatar.getAttribute('content'));
+
             page.structure.container.insertBefore(redesigned_artist_header, page.structure.container.firstElementChild);
             artist_header.classList.add('legacy-header');
         }
@@ -11101,6 +11107,49 @@ let has_prompted_for_update = false;
         }
 
         checkup_page_structure();
+
+        if (settings.feature_flags.refreshed_music_nav != false) {
+            let navlist = album_header.querySelector('.navlist');
+            if (navlist != null) {
+                navlist.classList.add('redesigned-navigation');
+                page.structure.container.insertBefore(navlist, page.structure.container.firstElementChild);
+                page.structure.nav = navlist;
+            }
+
+            if (is_subpage) {
+                let content_top = document.body.querySelector('.content-top');
+
+                if (content_top != null) {
+                    content_top.classList.add('redesigned-content-top');
+                    page.structure.content_top = content_top;
+                    navlist.after(content_top);
+                }
+            }
+
+            let avatar = album_header.querySelector('.header-new-background-image');
+            let title = album_header.querySelector('.header-new-title');
+            let artist = album_header.querySelector('[itemprop="byArtist"]');
+            let position = album_header.querySelector('.header-new-chart-position-number');
+
+            let redesigned_album_header = document.createElement('section');
+            redesigned_album_header.classList.add('redesigned-header', 'redesigned-album-header', 'no-background');
+            redesigned_album_header.innerHTML = (`
+                <div class="info-side">
+                    <div class="sub-text">${trans[lang].album.name}</div>
+                    <div class="title-container">
+                        <h1>${title.innerHTML}</h1>
+                        ${(position != null) ? position.outerHTML : ''}
+                    </div>
+                    <h2>${artist.innerHTML}</h2>
+                </div>
+            `);
+
+            if (avatar != null)
+                register_background(avatar.getAttribute('content'));
+
+            page.structure.container.insertBefore(redesigned_album_header, page.structure.container.firstElementChild);
+            album_header.classList.add('legacy-header');
+        }
 
         // cover
         if (settings.hue_from_album) {
@@ -12522,5 +12571,21 @@ let has_prompted_for_update = false;
     function update_page() {
         page.structure.container.setAttribute('data-page-type', page.type);
         page.structure.container.setAttribute('data-page-subpage', page.subpage);
+    }
+
+
+
+
+    function register_background(url) {
+        let background = document.body.querySelector('.bleh-background');
+        if (background == null) {
+            background = document.createElement('div');
+            background.classList.add('bleh-background');
+
+            document.body.appendChild(background);
+        }
+
+        background.setAttribute('data-page-type', page.type);
+        background.style.setProperty('background-image', `url(${url})`);
     }
 })();
