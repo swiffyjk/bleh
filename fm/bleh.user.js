@@ -2903,7 +2903,8 @@ let page = {
         row: null,
         main: null,
         side: null,
-        nav: null
+        nav: null,
+        content_top: null
     },
     requested: {
         tab: null
@@ -4774,10 +4775,12 @@ let has_prompted_for_update = false;
 
             if (is_subpage) {
                 let content_top = document.body.querySelector('.content-top');
-                content_top.classList.add('redesigned-content-top');
 
-                if (content_top != null)
+                if (content_top != null) {
+                    content_top.classList.add('redesigned-content-top');
+                    page.structure.content_top = content_top;
                     navlist.after(content_top);
+                }
             }
 
             let avatar = profile_header.querySelector('.avatar');
@@ -5476,7 +5479,7 @@ let has_prompted_for_update = false;
             </nav>
         `);
 
-        page.structure.nav.after(follow_nav);
+        page.structure.content_top.after(follow_nav);
 
 
         // view-related buttons
@@ -12358,10 +12361,12 @@ let has_prompted_for_update = false;
 
         if (is_subpage) {
             let content_top = document.body.querySelector('.content-top');
-            content_top.classList.add('redesigned-content-top');
 
-            if (content_top != null)
+            if (content_top != null) {
+                content_top.classList.add('redesigned-content-top');
+                page.structure.content_top = content_top;
                 navlist.after(content_top);
+            }
         }
 
         if (!is_subpage) {
