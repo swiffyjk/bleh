@@ -149,43 +149,43 @@ body, [data-page-resource-type="album"], [data-page-resource-type="track"],
 .lotus.bleh--panel
 {
     /* any additional highlights */
-    --b3: var(--hue), calc(var(--sat) * 6%), 30%;
+    --b3: var(--hue), calc(var(--sat) * 6% * var(--sat-bg, 1)), 30%;
 
     /* card border */
-    --b4: var(--hue), calc(var(--sat) * 8%), 22%;
+    --b4: var(--hue), calc(var(--sat) * 8% * var(--sat-bg, 1)), 22%;
 
     /* card */
-    --b5: var(--hue), calc(var(--sat) * 10%), 15%;
+    --b5: var(--hue), calc(var(--sat) * 10% * var(--sat-bg, 1)), 15%;
 
     /* root */
-    --b6: var(--hue), calc(var(--sat) * 14%), 10%;
+    --b6: var(--hue), calc(var(--sat) * 14% * var(--sat-bg, 1)), 10%;
     --b7: 0, 0%, 0%;
 
     .preview[data-bleh--theme="darker"],
     [data-bleh--theme="darker"] &:not(.preview) {
         /* any additional highlights */
-        --b3: var(--hue), calc(var(--sat) * 8%), 24%;
+        --b3: var(--hue), calc(var(--sat) * 8% * var(--sat-bg, 1)), 24%;
 
         /* card border */
-        --b4: var(--hue), calc(var(--sat) * 10%), 16%;
+        --b4: var(--hue), calc(var(--sat) * 10% * var(--sat-bg, 1)), 16%;
 
         /* card */
-        --b5: var(--hue), calc(var(--sat) * 12%), 8%;
+        --b5: var(--hue), calc(var(--sat) * 12% * var(--sat-bg, 1)), 8%;
 
         /* root */
-        --b6: var(--hue), calc(var(--sat) * 20%), 4%;
+        --b6: var(--hue), calc(var(--sat) * 20% * var(--sat-bg, 1)), 4%;
         --b7: 0, 0%, 0%;
     }
     .preview[data-bleh--theme="oled"],
     [data-bleh--theme="oled"] &:not(.preview) {
         /* any additional highlights */
-        --b3: var(--hue), calc(var(--sat) * 6%), 16%;
+        --b3: var(--hue), calc(var(--sat) * 6% * var(--sat-bg, 1)), 16%;
 
         /* card border */
-        --b4: var(--hue), calc(var(--sat) * 8%), 9%;
+        --b4: var(--hue), calc(var(--sat) * 8% * var(--sat-bg, 1)), 9%;
 
         /* card */
-        --b5: var(--hue), calc(var(--sat) * 20%), 2%;
+        --b5: var(--hue), calc(var(--sat) * 20% * var(--sat-bg, 1)), 2%;
 
         /* root */
         --b6: 0, 0%, 0%;
@@ -194,10 +194,10 @@ body, [data-page-resource-type="album"], [data-page-resource-type="track"],
     .preview[data-bleh--theme="light"],
     [data-bleh--theme="light"] &:not(.preview) {
         /* any additional highlights */
-        --b3: var(--hue), calc(var(--sat) * 6%), 75%;
+        --b3: var(--hue), calc(var(--sat) * 6% * var(--sat-bg, 1)), 75%;
 
         /* card border */
-        --b4: var(--hue), calc(var(--sat) * 6%), 90%;
+        --b4: var(--hue), calc(var(--sat) * 6% * var(--sat-bg, 1)), 90%;
 
         /* card */
         --b5: 0, 0%, 100%;

@@ -77,6 +77,11 @@ let version = {
             default: true,
             name: 'Refreshed music nav structure',
             date: '2024-11-10'
+        },
+        card_saturation: {
+            default: true,
+            name: 'Enable card saturation slider',
+            date: '2024-11-10'
         }
     }
 }
@@ -433,6 +438,10 @@ const trans = {
                     name: 'Display profile backgrounds',
                     for_own: 'On my profile',
                     for_others: 'On other profiles'
+                },
+                sat_bg: {
+                    name: 'Card background saturation',
+                    bio: 'Control the colour of backgrounds in addition to main accent'
                 }
             },
             activities: {
@@ -2543,6 +2552,7 @@ let settings_template = {
     show_extra_nav: true,
     hue: 255,
     sat: 1,
+    sat_bg: 1,
     lit: 1,
     invert_interactable_colour: false,
     dev: false,
@@ -2595,6 +2605,12 @@ let settings_base = {
     },
     sat: {
         css: 'sat-user',
+        unit: '',
+        value: 1,
+        type: 'slider'
+    },
+    sat_bg: {
+        css: 'sat-bg',
         unit: '',
         value: 1,
         type: 'slider'
@@ -6618,6 +6634,20 @@ let has_prompted_for_update = false;
                             })"></button>
                         </div>
                     </div>
+                    ${(settings.feature_flags.card_saturation != false) ? (`
+                    <div class="slider-container" id="container-sat_bg">
+                        <button class="btn reset" onclick="_reset_item('sat_bg')">${trans[lang].settings.reset}</button>
+                        <div class="heading">
+                            <h5>${trans[lang].settings.customise.sat_bg.name}</h5>
+                            <p>${trans[lang].settings.customise.sat_bg.bio}</p>
+                        </div>
+                        <div class="slider">
+                            <div class="slider-track" id="slider-track-sat_bg"><div class="slider-fill"></div><div class="slider-nub"></div></div>
+                            <input type="range" min="0" max="3" value="0" step="0.1" id="slider-sat_bg" oninput="_update_item('sat_bg', this.value)">
+                            <p id="value-sat_bg">0</p>
+                        </div>
+                    </div>
+                    `) : ''}
                     <div class="sep"></div>
                     <div class="inner-preview pad">
                         <div class="personal-stats-preview-bar-container">
