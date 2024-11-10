@@ -4769,10 +4769,12 @@ let has_prompted_for_update = false;
             if (navlist != null) {
                 navlist.classList.add('redesigned-navigation');
                 page.structure.container.insertBefore(navlist, page.structure.container.firstElementChild);
+                page.structure.nav = navlist;
             }
 
             if (is_subpage) {
                 let content_top = document.body.querySelector('.content-top');
+                content_top.classList.add('redesigned-content-top');
 
                 if (content_top != null)
                     navlist.after(content_top);
@@ -5428,7 +5430,7 @@ let has_prompted_for_update = false;
     // patch following
     function patch_profile_following() {
         // this happens on your main profile, no matter the tab
-        let following_tab = document.body.querySelector('.secondary-nav-item--following');
+        let following_tab = page.structure.nav.querySelector('.secondary-nav-item--following');
         let following_tab_html = following_tab.outerHTML;
         if (following_tab == undefined)
             return;
@@ -5441,32 +5443,24 @@ let has_prompted_for_update = false;
 
 
         // the rest happens on a following/followers page
-        let on_following_page = document.body.classList.contains('namespace--user_following');
-        let on_followers_page = document.body.classList.contains('namespace--user_followers');
-        let on_neighbours_page = document.body.classList.contains('namespace--user_neighbours');
-
-        if (!on_following_page && !on_followers_page && !on_neighbours_page)
+        if (page.subpage != 'user_following' && page.subpage != 'user_followers' && page.subpage != 'user_neighbours')
             return;
 
         //let following_tab = document.body.querySelector('.secondary-nav-item--following');
-        let followers_tab = document.body.querySelector('.secondary-nav-item--followers');
+        let followers_tab = page.structure.nav.querySelector('.secondary-nav-item--followers');
         let followers_tab_html = followers_tab.outerHTML;
-        let neighbours_tab = document.body.querySelector('.secondary-nav-item--neighbours');
+        let neighbours_tab = page.structure.nav.querySelector('.secondary-nav-item--neighbours');
         let neighbours_tab_html = neighbours_tab.outerHTML;
 
         let tab = undefined;
-        if (on_followers_page)
+        if (page.subpage == 'user_followers')
             tab = followers_tab;
-        else if (on_following_page)
+        else if (page.subpage == 'user_following')
             tab = following_tab;
         else
             tab = neighbours_tab;
 
         tab.querySelector('a').textContent = trans[lang].profile.friends.name;
-
-
-        let adaptive_skin = document.body.querySelector('.adaptive-skin-container');
-        let page_content = adaptive_skin.querySelector('.page-content');
 
 
         // create nav
@@ -5482,16 +5476,10 @@ let has_prompted_for_update = false;
             </nav>
         `);
 
-        adaptive_skin.insertBefore(follow_nav, page_content);
+        page.structure.nav.after(follow_nav);
 
 
         // view-related buttons
-        let col_main = page_content.querySelector('.col-main');
-        if (col_main == null)
-            col_main = page_content.querySelector('.neighbours-items-section');
-
-        col_main.classList.add('friends-col-main');
-
         let view_buttons = document.createElement('div');
         view_buttons.classList.add('view-buttons-wrapper');
         view_buttons.innerHTML = (`
@@ -5504,7 +5492,7 @@ let has_prompted_for_update = false;
                 </button>
             </div>
         `);
-        col_main.insertBefore(view_buttons, col_main.firstElementChild);
+        page.structure.main.insertBefore(view_buttons, page.structure.main.firstElementChild);
 
         refresh_all();
     }
@@ -12370,6 +12358,7 @@ let has_prompted_for_update = false;
 
         if (is_subpage) {
             let content_top = document.body.querySelector('.content-top');
+            content_top.classList.add('redesigned-content-top');
 
             if (content_top != null)
                 navlist.after(content_top);
