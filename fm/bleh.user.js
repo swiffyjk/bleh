@@ -12351,6 +12351,14 @@ let has_prompted_for_update = false;
         page.sister = event_header.querySelector('.header-title').textContent.trim();
 
 
+        let event_description = event_header.querySelector('.header-title-secondary');
+        if (settings.corrections) {
+            let links = event_description.querySelectorAll('a');
+            links.forEach((link) => {
+                link.textContent = correct_artist(link.textContent);
+            });
+        }
+
         let redesigned_event_header = document.createElement('section');
         redesigned_event_header.classList.add('redesigned-header', 'redesigned-event-header', 'no-background');
         redesigned_event_header.innerHTML = (`
@@ -12362,7 +12370,7 @@ let has_prompted_for_update = false;
             <div class="info-side">
                 <div class="sub-text">${trans[lang].event.name}</div>
                 <h1>${page.sister}</h1>
-                <p class="sub-info">${event_header.querySelector('.header-title-secondary').innerHTML}</p>
+                <p class="sub-info">${event_description.innerHTML}</p>
             </div>
         `);
 
