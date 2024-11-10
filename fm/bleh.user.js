@@ -631,6 +631,9 @@ const trans = {
                         },
                         style: {
                             name: 'Chart style'
+                        },
+                        length: {
+                            name: 'Chart size'
                         }
                     },
                     albums: {
@@ -639,6 +642,9 @@ const trans = {
                         },
                         style: {
                             name: 'Chart style'
+                        },
+                        length: {
+                            name: 'Chart size'
                         }
                     },
                     tracks: {
@@ -2891,8 +2897,7 @@ let inbuilt_settings = {
         value: true,
         values: [true, false],
         type: 'toggle'
-    },
-    profile_shortcut: {}
+    }
 }
 
 // use the top-right link to determine the current user
@@ -3867,7 +3872,7 @@ let has_prompted_for_update = false;
             recent: {
                 recent_artwork: document.getElementById('id_show_recent_tracks_artwork').checked,
                 count: document.getElementById('id_chart_length_recent_tracks').outerHTML,
-                realtime: document.getElementById('id_auto_refresh_recent_tracks').checked
+                recent_realtime: document.getElementById('id_auto_refresh_recent_tracks').checked
             },
             artists: {
                 timeframe: document.getElementById('id_chart_range_top_artists').outerHTML,
@@ -4193,7 +4198,7 @@ let has_prompted_for_update = false;
         selects.forEach((select) => {
             select.setAttribute('onchange', `_update_inbuilt_select('${select.getAttribute('id')}', this.value)`);
             update_inbuilt_select(select.getAttribute('id'), select.value);
-        })
+        });
     }
 
     unsafeWindow._update_inbuilt_select = function(id, value) {
@@ -4204,6 +4209,7 @@ let has_prompted_for_update = false;
     }
 
     function custom_select(select, element_to_append) {
+        console.info(select);
         let id = select.getAttribute('id');
         let value = select.value;
         let value_objects = select.querySelectorAll('option');
@@ -4861,6 +4867,11 @@ let has_prompted_for_update = false;
 
 
             //
+
+
+            if (is_own_profile) {
+                patch_profiles_chart_windows();
+            }
 
 
             if (is_own_profile && settings.activities) {
@@ -8094,8 +8105,10 @@ let has_prompted_for_update = false;
 
     function update_inbuilt_item(item, value, modify=true) {
         //console.log('update item',item,value);
+        console.warn('update item',item,value, 'modify', modify);
 
         let test_if_valid = document.getElementById(`toggle-${item}`);
+        console.warn(test_if_valid);
         //console.info(test_if_valid, item, value, inbuilt_settings[item], 'modify', modify);
         if (test_if_valid == undefined)
             return;
@@ -8118,14 +8131,17 @@ let has_prompted_for_update = false;
                 document.documentElement.setAttribute(`data-bleh--inbuilt-${item}`, inbuilt_settings[item].values[0]);
             } else {
                 // dont modify, just show
-                if (value == inbuilt_settings[item].values[0]) {
+                console.warn(item, value, value == true, value == false, typeof(value), typeof(true));
+                if (value == true) {
+                    console.warn(item, value, 'TRUE');
                     document.getElementById(`inbuilt-companion-checkbox-${item}`).checked = true;
                     document.getElementById(`toggle-${item}`).setAttribute('aria-checked', true);
-                    document.documentElement.setAttribute(`data-bleh--inbuilt-${item}`, inbuilt_settings[item].values[0]);
-                } else {
+                    document.documentElement.setAttribute(`data-bleh--inbuilt-${item}`, true);
+                } else if (value == false) {
+                    console.warn(item, value, 'FALSE');
                     document.getElementById(`inbuilt-companion-checkbox-${item}`).checked = false;
                     document.getElementById(`toggle-${item}`).setAttribute('aria-checked', false);
-                    document.documentElement.setAttribute(`data-bleh--inbuilt-${item}`, inbuilt_settings[item].values[1]);
+                    document.documentElement.setAttribute(`data-bleh--inbuilt-${item}`, false);
                 }
             }
         }
@@ -12675,5 +12691,249 @@ let has_prompted_for_update = false;
 
         background.setAttribute('data-page-type', page.type);
         background.style.setProperty('background-image', `url(${url})`);
+    }
+
+
+
+
+    function patch_profiles_chart_windows() {
+        let recent_tracks_settings = page.structure.main.querySelector('#recent-tracks-settings');
+        let artist_settings = page.structure.main.querySelector('#artist-chart-settings');
+        let album_settings = page.structure.main.querySelector('#albums-chart-settings');
+        let track_settings = page.structure.main.querySelector('#track-chart-settings');
+
+
+        let token = recent_tracks_settings.querySelector('[name="csrfmiddlewaretoken"]').getAttribute('value');
+
+        // get info before destroying
+        let original_chart_settings = {};
+
+        if (recent_tracks_settings != null) {
+            original_chart_settings.recent = {
+                recent_artwork: recent_tracks_settings.querySelector('#id_show_recent_tracks_artwork').checked,
+                count: recent_tracks_settings.querySelector('#id_chart_length_recent_tracks').outerHTML,
+                recent_realtime: recent_tracks_settings.querySelector('#id_auto_refresh_recent_tracks').checked
+            }
+        }
+        if (artist_settings != null) {
+            original_chart_settings.artists = {
+                timeframe: artist_settings.querySelector('#id_chart_range_top_artists').outerHTML,
+                style: artist_settings.querySelector('#id_chart_style_top_artists').outerHTML,
+                length: artist_settings.querySelector('#id_artists_image_grid_length').outerHTML
+            }
+        }
+        if (album_settings != null) {
+            original_chart_settings.albums = {
+                timeframe: album_settings.querySelector('#id_chart_range_top_albums').outerHTML,
+                style: album_settings.querySelector('#id_chart_style_top_albums').outerHTML,
+                length: album_settings.querySelector('#id_albums_image_grid_length').outerHTML
+            }
+        }
+        if (track_settings != null) {
+            original_chart_settings.tracks = {
+                timeframe: track_settings.querySelector('#id_chart_range_top_tracks').outerHTML,
+                count: track_settings.querySelector('#id_chart_length_top_tracks').outerHTML
+            }
+        }
+
+        if (recent_tracks_settings != null) {
+            recent_tracks_settings.innerHTML = (`
+                <input type="hidden" name="csrfmiddlewaretoken" value="${token}">
+                <div class="select-container">
+                    <div class="heading">
+                        <h5>${trans[lang].settings.inbuilt.charts.recent.count.name}</h5>
+                    </div>
+                    <div class="select-wrap custom-selector" id="id_chart_length_recent_tracks_select">
+                        ${original_chart_settings.recent.count}
+                    </div>
+                </div>
+                <div class="toggle-container" id="container-recent_artwork">
+                    <button class="btn reset" onclick="_reset_inbuilt_item('recent_artwork')">Reset to default</button>
+                    <div class="heading">
+                        <h5>${trans[lang].settings.inbuilt.charts.recent.artwork.name}</h5>
+                    </div>
+                    <div class="toggle-wrap">
+                        <input class="companion-checkbox" type="checkbox" name="show_recent_tracks_artwork" id="inbuilt-companion-checkbox-recent_artwork">
+                        <span class="btn toggle" id="toggle-recent_artwork" onclick="_update_inbuilt_item('recent_artwork')" aria-checked="false">
+                            <div class="dot"></div>
+                        </span>
+                    </div>
+                </div>
+                <div class="toggle-container" id="container-recent_realtime">
+                    <button class="btn reset" onclick="_reset_inbuilt_item('recent_realtime')">Reset to default</button>
+                    <div class="heading">
+                        <h5>${trans[lang].settings.inbuilt.charts.recent.realtime.name}</h5>
+                        <p>${trans[lang].settings.inbuilt.charts.recent.realtime.bio}</p>
+                    </div>
+                    <div class="toggle-wrap">
+                        <input class="companion-checkbox" type="checkbox" name="auto_refresh_recent_tracks" id="inbuilt-companion-checkbox-recent_realtime">
+                        <span class="btn toggle" id="toggle-recent_realtime" onclick="_update_inbuilt_item('recent_realtime')" aria-checked="false" type="button">
+                            <div class="dot"></div>
+                        </span>
+                    </div>
+                </div>
+                <div class="sep"></div>
+                <div class="settings-footer">
+                    <button type="submit" class="btn-primary">
+                        ${trans[lang].settings.save}
+                    </button>
+                    <button class="btn-cancel btn cancel js-disclose-close">
+                        ${trans[lang].settings.cancel}
+                    </button>
+                </div>
+            `);
+
+            custom_select(recent_tracks_settings.querySelector('#id_chart_length_recent_tracks'), recent_tracks_settings.querySelector('#id_chart_length_recent_tracks_select'));
+
+            let selects = recent_tracks_settings.querySelectorAll('select');
+            selects.forEach((select) => {
+                select.setAttribute('onchange', `_update_inbuilt_select('${select.getAttribute('id')}', this.value)`);
+                update_inbuilt_select(select.getAttribute('id'), select.value);
+            });
+        }
+
+        if (artist_settings != null) {
+            artist_settings.innerHTML = (`
+                <input type="hidden" name="csrfmiddlewaretoken" value="${token}">
+                <div class="select-container">
+                    <div class="heading">
+                        <h5>${trans[lang].settings.inbuilt.charts.artists.timeframe.name}</h5>
+                    </div>
+                    <div class="select-wrap custom-selector" id="id_chart_range_top_artists_select">
+                        ${original_chart_settings.artists.timeframe}
+                    </div>
+                </div>
+                <div class="select-container">
+                    <div class="heading">
+                        <h5>${trans[lang].settings.inbuilt.charts.artists.style.name}</h5>
+                    </div>
+                    <div class="select-wrap custom-selector" id="id_chart_style_top_artists_select">
+                        ${original_chart_settings.artists.style}
+                    </div>
+                </div>
+                <div class="select-container">
+                    <div class="heading">
+                        <h5>${trans[lang].settings.inbuilt.charts.artists.length.name}</h5>
+                    </div>
+                    <div class="select-wrap custom-selector" id="id_artists_image_grid_length_select">
+                        ${original_chart_settings.artists.length}
+                    </div>
+                </div>
+                <div class="sep"></div>
+                <div class="settings-footer">
+                    <button type="submit" class="btn-primary">
+                        ${trans[lang].settings.save}
+                    </button>
+                    <button class="btn-cancel btn cancel js-disclose-close">
+                        ${trans[lang].settings.cancel}
+                    </button>
+                </div>
+            `);
+
+            custom_select(artist_settings.querySelector('#id_chart_range_top_artists'), artist_settings.querySelector('#id_chart_range_top_artists_select'));
+            custom_select(artist_settings.querySelector('#id_chart_style_top_artists'), artist_settings.querySelector('#id_chart_style_top_artists_select'));
+            custom_select(artist_settings.querySelector('#id_artists_image_grid_length'), artist_settings.querySelector('#id_artists_image_grid_length_select'));
+
+            let selects = artist_settings.querySelectorAll('select');
+            selects.forEach((select) => {
+                select.setAttribute('onchange', `_update_inbuilt_select('${select.getAttribute('id')}', this.value)`);
+                update_inbuilt_select(select.getAttribute('id'), select.value);
+            });
+        }
+
+        if (album_settings != null) {
+            album_settings.innerHTML = (`
+                <input type="hidden" name="csrfmiddlewaretoken" value="${token}">
+                <div class="select-container">
+                    <div class="heading">
+                        <h5>${trans[lang].settings.inbuilt.charts.albums.timeframe.name}</h5>
+                    </div>
+                    <div class="select-wrap custom-selector" id="id_chart_range_top_albums_select">
+                        ${original_chart_settings.albums.timeframe}
+                    </div>
+                </div>
+                <div class="select-container">
+                    <div class="heading">
+                        <h5>${trans[lang].settings.inbuilt.charts.albums.style.name}</h5>
+                    </div>
+                    <div class="select-wrap custom-selector" id="id_chart_style_top_albums_select">
+                        ${original_chart_settings.albums.style}
+                    </div>
+                </div>
+                <div class="select-container">
+                    <div class="heading">
+                        <h5>${trans[lang].settings.inbuilt.charts.albums.length.name}</h5>
+                    </div>
+                    <div class="select-wrap custom-selector" id="id_albums_image_grid_length_select">
+                        ${original_chart_settings.albums.length}
+                    </div>
+                </div>
+                <div class="sep"></div>
+                <div class="settings-footer">
+                    <button type="submit" class="btn-primary">
+                        ${trans[lang].settings.save}
+                    </button>
+                    <button class="btn-cancel btn cancel js-disclose-close">
+                        ${trans[lang].settings.cancel}
+                    </button>
+                </div>
+            `);
+
+            custom_select(album_settings.querySelector('#id_chart_range_top_albums'), album_settings.querySelector('#id_chart_range_top_albums_select'));
+            custom_select(album_settings.querySelector('#id_chart_style_top_albums'), album_settings.querySelector('#id_chart_style_top_albums_select'));
+            custom_select(album_settings.querySelector('#id_albums_image_grid_length'), album_settings.querySelector('#id_albums_image_grid_length_select'));
+
+            let selects = album_settings.querySelectorAll('select');
+            selects.forEach((select) => {
+                select.setAttribute('onchange', `_update_inbuilt_select('${select.getAttribute('id')}', this.value)`);
+                update_inbuilt_select(select.getAttribute('id'), select.value);
+            });
+        }
+
+        if (track_settings != null) {
+            track_settings.innerHTML = (`
+                <input type="hidden" name="csrfmiddlewaretoken" value="${token}">
+                <div class="select-container">
+                    <div class="heading">
+                        <h5>${trans[lang].settings.inbuilt.charts.tracks.timeframe.name}</h5>
+                    </div>
+                    <div class="select-wrap custom-selector" id="id_chart_range_top_tracks_select">
+                        ${original_chart_settings.tracks.timeframe}
+                    </div>
+                </div>
+                <div class="select-container">
+                    <div class="heading">
+                        <h5>${trans[lang].settings.inbuilt.charts.tracks.count.name}</h5>
+                    </div>
+                    <div class="select-wrap custom-selector" id="id_chart_length_top_tracks_select">
+                        ${original_chart_settings.tracks.count}
+                    </div>
+                </div>
+                <div class="sep"></div>
+                <div class="settings-footer">
+                    <button type="submit" class="btn-primary">
+                        ${trans[lang].settings.save}
+                    </button>
+                    <button class="btn-cancel btn cancel js-disclose-close">
+                        ${trans[lang].settings.cancel}
+                    </button>
+                </div>
+            `);
+
+            custom_select(track_settings.querySelector('#id_chart_range_top_tracks'), track_settings.querySelector('#id_chart_range_top_tracks_select'));
+            custom_select(track_settings.querySelector('#id_chart_length_top_tracks'), track_settings.querySelector('#id_chart_length_top_tracks_select'));
+
+            let selects = track_settings.querySelectorAll('select');
+            selects.forEach((select) => {
+                select.setAttribute('onchange', `_update_inbuilt_select('${select.getAttribute('id')}', this.value)`);
+                update_inbuilt_select(select.getAttribute('id'), select.value);
+            });
+        }
+
+        for (let category in original_chart_settings) {
+            for (let setting in original_chart_settings[category]) {
+                update_inbuilt_item(setting, original_chart_settings[category][setting], false);
+            }
+        }
     }
 })();
