@@ -1385,11 +1385,7 @@ last.fm changes as of 2024-05-20 */
     display: flex;
     gap: var(--card-gap);
 }
-.container > .row.buffer-4, .container > .row:has(:nth-child(2)),
-/* artist pages without a similar artists panel */
-.container > .row:has(.col-main + .col-main + .col-sidebar.hidden-xs):not(:has(.masonry-left-bottom)),
-/* album pages without pro, first section */ .page-content > .section .row
-{
+.row {
     display: grid;
     grid-template-columns: auto auto;
     grid-template-areas:
@@ -1449,7 +1445,7 @@ last.fm changes as of 2024-05-20 */
 .col-main > section:not(.neighbours-items-section), .col-sidebar > section,
 .your-progress-component,
 /* this fixes places of the site (tracks, artist, albums watever that use a weird method of 2 col-mains, 2 col-sidebars as appose to profiles */
-/* -> could be simplified, idk if it affects other parts of the site tho */.row.buffer-4 > .col-main:not(.not-a-panel):first-child /* <- */, .row.buffer-4 > .col-main:nth-child(3) > :is(section, #shoutbox),
+/* -> could be simplified, idk if it affects other parts of the site tho */.row.col-main-is-primary > .col-main:not(.not-a-panel):first-child /* <- */, .row.col-main-is-primary > .col-main:nth-child(3) > :is(section, #shoutbox),
 .album-and-lyrics-row,
 /* dont question it too far, refer to the above display: grid for more insight, this is jus applying the card styling */
 .shoutbox--with-header#shoutbox:not(#shoutbox > #shoutbox /* for shoutbox on gallery image */, section > #shoutbox /* events */),
@@ -15308,10 +15304,10 @@ button.bleh--gallery-bookmark-image-btn {
     }
 }
 
-[data-bleh--gallery-tab="bookmarks"] .container.page-content:not(.bleh--bookmarks):has(.image-list) {
+[data-bleh--gallery-tab="bookmarks"] .bleh--gallery {
     display: none;
 }
-[data-bleh--gallery-tab="overview"] .container.page-content.bleh--bookmarks {
+[data-bleh--gallery-tab="overview"] .bleh--bookmarks {
     display: none;
 }
 
@@ -17473,6 +17469,10 @@ h4 {
         margin-right: var(--card-padding);
     }
 
+    [data-page-subpage="overview"] &.redesigned-artist-header {
+        margin-bottom: unset !important;
+    }
+
     .calendar-side {
         display: flex;
         width: fit-content;
@@ -17580,7 +17580,13 @@ h4 {
     }
 
     .gallery-side {
-        width: calc(var(--cards-sidebar-width) - var(--card-padding) - var(--card-padding));
+        /*width: calc(var(--cards-sidebar-width) - var(--card-padding) - var(--card-padding));*/
+        width: var(--cards-sidebar-width);
+        margin-right: calc(-1 * var(--card-padding));
+
+        display: flex;
+        flex-direction: column;
+        justify-content: end;
     }
 }
 

@@ -765,7 +765,8 @@ const trans = {
             },
             up: 'Up votes:',
             down: 'Down votes:',
-            vote: 'This is the sum of votes used for ordering.'
+            vote: 'This is the sum of votes used for ordering.',
+            view: 'View photos'
         },
         activities: {
             name: 'Recent Activity',
@@ -4707,6 +4708,8 @@ let has_prompted_for_update = false;
 
             page.structure.container.insertBefore(page.structure.row, page.structure.container.firstElementChild);
         }
+        if (page.structure.row.classList.contains('buffer-4'))
+            page.structure.row.classList = 'row col-main-is-primary';
 
         if (page.structure.main == null || !document.body.contains(page.structure.main)) {
             log('page missing main, creating', 'page structure');
@@ -8899,13 +8902,10 @@ let has_prompted_for_update = false;
 
         let bookmarked_images = JSON.parse(localStorage.getItem('bleh_bookmarked_images')) || {};
 
-        let adaptive_skin = document.body.querySelector('.adaptive-skin-container');
-        let page_content = adaptive_skin.querySelector('.page-content');
-
         if (page.requested.tab != 'saved' || page.requested.page != null)
-            document.body.setAttribute('data-bleh--gallery-tab', 'overview');
+            page.structure.container.setAttribute('data-bleh--gallery-tab', 'overview');
         else
-            document.body.setAttribute('data-bleh--gallery-tab', 'bookmarks');
+        page.structure.container.setAttribute('data-bleh--gallery-tab', 'bookmarks');
 
 
         // create nav
@@ -8928,24 +8928,22 @@ let has_prompted_for_update = false;
             </nav>
         `);
 
-        adaptive_skin.insertBefore(bookmark_nav, page_content);
+        page.structure.nav.after(bookmark_nav);
 
 
         // content
         let bookmarks_content = document.createElement('div');
-        bookmarks_content.classList.add('container', 'page-content', 'bleh--bookmarks');
+        bookmarks_content.classList.add('col-main', 'bleh--bookmarks');
         bookmarks_content.innerHTML = (`
-            <div class="row buffer-4">
-                <div class="col-main">
-                    <h2>${trans[lang].gallery.bookmarks.name}</h2>
-                    <p>${trans[lang].gallery.bookmarks.bio}</p>
-                    <ul class="image-list" id="bleh--bookmarked-images" data-kate-processed="true"></ul>
-                </div>
-                <div class="col-sidebar"></div>
-            </div>
+            <section class="bookmarks-panel">
+                <h2>${trans[lang].gallery.bookmarks.name}</h2>
+                <p>${trans[lang].gallery.bookmarks.bio}</p>
+                <ul class="image-list" id="bleh--bookmarked-images" data-kate-processed="true"></ul>
+            </section>
         `);
 
-        adaptive_skin.insertBefore(bookmarks_content, page_content);
+        page.structure.main.classList.add('bleh--gallery');
+        page.structure.main.after(bookmarks_content);
 
 
         // append images
@@ -8967,8 +8965,7 @@ let has_prompted_for_update = false;
 
 
             // mark images as bookmarked
-            let col_main = page_content.querySelector('.col-main');
-            let image_list = col_main.querySelectorAll('.image-list-item');
+            let image_list = page.structure.main.querySelectorAll('.image-list-item');
             image_list.forEach((image_list_item) => {
                 let image_id_split = image_list_item.getAttribute('href').split('/');
                 let image_id_length = image_id_split.length;
@@ -8991,7 +8988,7 @@ let has_prompted_for_update = false;
         set_gallery_page(id);
     }
     function set_gallery_page(id) {
-        document.body.setAttribute('data-bleh--gallery-tab', id);
+        page.structure.container.setAttribute('data-bleh--gallery-tab', id);
 
         // remove ?tab=saved
         /*if (page.requested.tab == 'saved') {
@@ -11020,9 +11017,15 @@ let has_prompted_for_update = false;
                     </div>
                     ${(featured_items != null) ? featured_items.outerHTML : ''}
                 </div>
+                ${(!is_subpage) ? (`
                 <div class="gallery-side">
-
+                    <section class="view-all-panel">
+                        <a class="btn view-all-button back top-gallery-button" href="${window.location.href}/+images">
+                            ${trans[lang].gallery.view}
+                        </a>
+                    </section>
                 </div>
+                `) : ''}
             `);
 
             page.structure.container.insertBefore(redesigned_artist_header, page.structure.container.firstElementChild);
