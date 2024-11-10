@@ -446,8 +446,10 @@ body {
     --card-border: 1px solid hsl(var(--b4));
     --card-border-base: hsl(var(--b4));
     --card-shadow: hsla(var(--b7), 0.05) 0 2px 4px 0;
+    --card-shadow: 0 1.5px 4px 0 hsla(var(--b7), 0.05);
 
     --menu-shadow: 2px 2px 24px 0 hsla(var(--b7), 0.15), 3px 6px 48px 16px hsla(var(--b7), 0.03);
+    --menu-shadow: 0 12px 36px 0 hsla(var(--b7), 0.15);
     --standout-shadow: 3px 6px 20px 7px hsla(var(--b7), 0.06);
 
     --interactable-outer: hsla(var(--b7), 0.03) 0 2px 2px 0;
@@ -1950,6 +1952,10 @@ spacing between is removed and aligned to tag icon */
     {
         padding-top: calc(46px + (var(--card-gap))) !important;
     }
+
+    &:before, &:after {
+        display: none !important;
+    }
 }
 
 /* playlists */ .section-controls-full-width,
@@ -2014,16 +2020,6 @@ spacing between is removed and aligned to tag icon */
 /*     WARNING : THIS MAY GIVE YOU A HEADACHE     */
 
 
-[class*="namespace--events"] .header-inner-wrap {
-    position: relative;
-    padding-bottom: 22px;
-}
-[class*="namespace--events"] .header-info-secondary {
-    top: calc(24px + 22px);
-    z-index: 10;
-}
-
-
 /* for some reason has a -24 default */
 /* it breaks the attendance page, making the users go beneath the tabs */
 .content-top-has-nav .content-top .content-top-lower, .two-column-layout .content-top .content-top-lower {
@@ -2036,11 +2032,6 @@ spacing between is removed and aligned to tag icon */
 
 /*     DANGER ZONE OVER     */
 
-
-
-.header-info-primary--with-calendar .header-title, .header-info-primary--with-calendar .header-title-secondary, .header-info-primary--with-calendar .label {
-    top: unset;
-}
 
 li.header-metadata-item--event-attendance {
     padding: unset !important;
@@ -5893,7 +5884,6 @@ button,
 .library-top .library-view-button,
 .content-top-back-link, .content-top-back-link + .content-top-header,
 .subpage-breadcrumb li, .subpage-breadcrumb + h2.subpage-title,
-.event-metadata + .event-metadata a,
 .back-button,
 .auth-avatar-mobile, .masthead-search-toggle,
 .album-overview-cover-art-action-row a,
@@ -6099,7 +6089,6 @@ button,
 .profile-header-set-obsession,
 .back-button, .delete-button,
 .player-bar .player-bar-playback-options-external-link, .player-bar .player-bar-playback-options-settings, .player-bar .player-bar-playback-options-switch-device,
-.event-metadata + .event-metadata a,
 #manage_data .btn-primary,
 .obsession-history-play-all,
 .done, .cancel, .download, .upload, .save, .js-close:not(.modal-action-button), .form-group button[type="submit"]
@@ -6297,9 +6286,7 @@ button,
 /* managing an inbox msg */ :is(.back-button, .delete-button):before,
 /*     EVENTS     */
 .event-detail:before, .event-metadata:not(:last-child):before,
-.events-list-item-date-icon:before, .calendar-icon:before,
 .attendance-btn:before,
-/* edit */ .event-metadata + .event-metadata a:before,
 /*     BREADCRUMBS     */
 .content-top-back-link:after, .subpage-breadcrumb li:after,
 /*     HEADER     */
@@ -10944,9 +10931,6 @@ table.table tr:nth-child(2n) td {
 .event-detail:has(.event-detail-heading-link) {
     --mask: var(--icon-16-link);
 }
-.event-metadata + .event-metadata a {
-    --mask: var(--icon-16-edit);
-}
 .event-metadata:not(:last-child) {
     --mask: var(--icon-16-dot);
 }
@@ -10987,33 +10971,10 @@ table.table tr:nth-child(2n) td {
     position: relative;
     margin-bottom: calc(32px + var(--card-gap)) !important;
 }
-.event-metadata + .event-metadata a {
-    display: inline-flex;
-    /*--padding: 1px 9px;
-    margin-left: var(--card-gap);*/
-    position: absolute;
-    left: 0;
-    bottom: calc(-1 * (32px + var(--card-gap)));
-}
 
 .stubhub-section + section,
 .qa-event-description {
     margin-bottom: var(--card-gap);
-}
-
-
-
-
-/*      EVENT CALENDAR     */
-.header-info-primary--with-calendar {
-    padding-left: 72px !important;
-}
-.header-info-primary .calendar-icon {
-    /* 40px height, 54px of container */
-    margin: calc(((54px - 40px) / 2)) 0 0 0 !important;
-    box-shadow: unset;
-    width: 72px !important;
-    --event-icon: var(--icon-16-calendar);
 }
 
 
@@ -11081,50 +11042,16 @@ table.table tr:nth-child(2n) td {
 
 
 /*     EVENTS ON ARTIST/PROFILE     */
-/* selectors must be duplicated as last.fm chose to reimplement the
-entire component different between artist and profile pages, no
-wonder they havent done anything in years */
-.events-list-item-art,
-.events-list-item-date {
-    display: flex !important;
-    justify-content: center !important;
-    align-items: center !important;
-    text-align: center;
-}
-.calendar-icon,
-.events-list-item-date-icon {
-    display: inline !important;
-    flex-direction: unset !important;
-    justify-content: unset !important;
-    padding-top: calc(16px + 6px) !important;
-    position: relative;
-    color: var(--event-icon-colour);
-    width: fit-content !important;
-
-    &:before {
-        --top: 0;
-        --left: 50%;
-        --margin-left: -8px;
-        --margin-top: 0;
-        --mask: var(--event-icon);
-    }
+.calendar-icon-month, .calendar-icon-day {
+    font-size: var(--font-size);
+    line-height: var(--line-height);
+    font-weight: var(--font-weight);
+    text-transform: initial;
+    width: fit-content;
+    display: inline;
 
     /* calendar-icon specific */
     background: unset;
-    box-shadow: unset;
-}
-.calendar-icon-month, .calendar-icon-day,
-.events-list-item-date-icon-month, .events-list-item-date-icon-day {
-    font-size: var(--font-size) !important;
-    line-height: var(--line-height) !important;
-    font-weight: var(--font-weight) !important;
-    color: var(--event-icon-colour) !important;
-    text-transform: initial !important;
-    width: fit-content !important;
-    display: inline !important;
-
-    /* calendar-icon specific */
-    background: unset !important;
 }
 
 
@@ -17560,9 +17487,6 @@ h4 {
 
 
 
-.header-info-primary--with-calendar {
-    margin-bottom: -37px;
-}
 .event-poster {
     display: none;
 }
@@ -17570,6 +17494,68 @@ h4 {
 .poster-panel {
     .event-poster-preview {
         border-radius: var(--item-big-radius);
+    }
+}
+
+
+
+
+.content-top,
+.legacy-header {
+    display: none;
+}
+.redesigned-header {
+    display: flex;
+    gap: var(--card-gap);
+    margin-top: var(--card-gap) !important;
+    margin-bottom: var(--card-gap) !important;
+
+    &.no-background {
+        margin-left: var(--card-padding);
+        margin-right: var(--card-padding);
+    }
+
+    .calendar-side {
+        display: flex;
+        width: fit-content;
+        flex-shrink: 0;
+
+        .calendar {
+            display: flex;
+            background-color: hsl(var(--b5));
+            width: 66px;
+            aspect-ratio: 1 / 1;
+
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+
+            border-radius: var(--item-big-radius);
+            box-shadow: var(--card-shadow);
+
+            .calendar-icon-day {
+                font-size: 24px;
+                line-height: 28px;
+                font-weight: var(--font-weight-medium);
+            }
+
+            [data-bleh--theme="light"] &,
+            [data-bleh--theme="oled"] & {
+                box-shadow: 0 0 0 1px var(--card-border-base) inset, var(--card-shadow);
+            }
+        }
+    }
+
+    .info-side {
+        flex: 1;
+
+        h1 {
+            margin: unset;
+            font-size: 24px;
+            line-height: 30px;
+            font-weight: var(--font-weight-medium);
+            letter-spacing: unset;
+        }
     }
 }
 }

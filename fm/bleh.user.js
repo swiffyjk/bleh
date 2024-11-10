@@ -173,6 +173,7 @@ const trans = {
             }
         },
         profile: {
+            name: 'Profile',
             on_ignore_list: 'You are on this user\'s ignore list.',
             friends: {
                 name: 'Friends'
@@ -213,6 +214,7 @@ const trans = {
             open_avatar: 'Open in a new tab'
         },
         event: {
+            name: 'Event',
             going: '{c} going',
             maybe: '{c} interested',
             you_know: 'Who you know'
@@ -780,6 +782,15 @@ const trans = {
             bookmark: 'You bookmarked {i}',
             unbookmark: 'You removed {i}’s bookmark',
             wiki: 'You edited on {i}'
+        },
+        artist: {
+            name: 'Artist'
+        },
+        album: {
+            name: 'Album'
+        },
+        track: {
+            name: 'Track'
         }
     },
     de: {
@@ -12339,6 +12350,26 @@ let has_prompted_for_update = false;
         }
         page.sister = event_header.querySelector('.header-title').textContent.trim();
 
+
+        let redesigned_event_header = document.createElement('section');
+        redesigned_event_header.classList.add('redesigned-header', 'redesigned-event-header', 'no-background');
+        redesigned_event_header.innerHTML = (`
+            <div class="calendar-side">
+                <div class="calendar">
+                    ${event_header.querySelector('.calendar-icon').innerHTML}
+                </div>
+            </div>
+            <div class="info-side">
+                <div class="sub-text">${trans[lang].event.name}</div>
+                <h1>${page.sister}</h1>
+                <p class="sub-info">${event_header.querySelector('.header-title-secondary').innerHTML}</p>
+            </div>
+        `);
+
+        page.structure.container.insertBefore(redesigned_event_header, page.structure.container.firstElementChild);
+        document.body.querySelector('.header').classList.add('legacy-header');
+
+
         if (!is_subpage) {
             page.subpage = 'overview';
 
@@ -12385,13 +12416,32 @@ let has_prompted_for_update = false;
 
             // move poster
             let poster = main_panel.querySelector('.event-poster-preview');
+            let poster_panel;
             if (poster != null) {
-                let poster_panel = document.createElement('section');
+                poster_panel = document.createElement('section');
                 poster_panel.classList.add('poster-panel', 'view-all-panel');
 
                 poster_panel.appendChild(poster);
 
                 page.structure.side.insertBefore(poster_panel, page.structure.side.firstElementChild);
+            }
+
+
+
+
+            // edit button
+            let edit_button = main_panel.querySelector('.event-metadata + .event-metadata a');
+            if (edit_button != null) {
+                edit_button.classList.add('btn', 'view-all-button', 'back', 'edit-event-button');
+
+                let edit_panel = document.createElement('section');
+                edit_panel.classList.add('view-all-panel');
+
+                edit_panel.appendChild(edit_button);
+                if (poster != null)
+                    poster_panel.after(edit_panel);
+                else
+                    page.structure.side.insertBefore(edit_panel, page.structure.side.firstElementChild);
             }
         } else {
             // which subpage is it?
