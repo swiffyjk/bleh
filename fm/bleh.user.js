@@ -69,7 +69,7 @@ let version = {
             date: '2024-11-07'
         },
         refreshed_nav: {
-            default: false,
+            default: true,
             name: 'Refreshed nav structure, reducing a lot of jank',
             date: '2024-11-09'
         }
@@ -4764,7 +4764,7 @@ let has_prompted_for_update = false;
 
         checkup_page_structure();
 
-        if (settings.feature_flags.refreshed_nav) {
+        if (settings.feature_flags.refreshed_nav != false) {
             let navlist = profile_header.querySelector('.navlist');
             if (navlist != null) {
                 navlist.classList.add('redesigned-navigation');
@@ -4777,6 +4777,26 @@ let has_prompted_for_update = false;
                 if (content_top != null)
                     navlist.after(content_top);
             }
+
+            let avatar = profile_header.querySelector('.avatar');
+            let title_wrap = profile_header.querySelector('.header-title-label-wrap');
+            let sub_wrap = profile_header.querySelector('.header-title-secondary');
+
+            let redesigned_profile_header = document.createElement('section');
+            redesigned_profile_header.classList.add('redesigned-header', 'redesigned-profile-header', 'no-background');
+            redesigned_profile_header.innerHTML = (`
+                <div class="avatar-side">
+                    ${avatar.innerHTML}
+                </div>
+                <div class="info-side">
+                    <div class="sub-text">${trans[lang].profile.name}</div>
+                    ${(title_wrap != null) ? `<div class="title-container">${title_wrap.innerHTML}</div>` : ''}
+                    ${(sub_wrap != null) ? sub_wrap.outerHTML : ''}
+                </div>
+            `);
+
+            page.structure.container.insertBefore(redesigned_profile_header, page.structure.container.firstElementChild);
+            profile_header.classList.add('legacy-header');
         }
 
 
@@ -4792,7 +4812,11 @@ let has_prompted_for_update = false;
                 redesign_profile_header(is_own_profile);
 
             // make avatar clickable
-            let header_avatar = document.querySelector('.header-avatar .avatar');
+            let header_avatar;
+            if (settings.feature_flags.refreshed_nav != false)
+                header_avatar = page.structure.container.querySelector('.redesigned-profile-header .avatar-side');
+            else
+                header_avatar = document.querySelector('.header-avatar .avatar');
 
             let src = header_avatar.querySelector('img').getAttribute('src');
 
@@ -4913,7 +4937,7 @@ let has_prompted_for_update = false;
         let content_top = adaptive_skin.querySelector('.content-top');
 
         // has header?
-        if (content_top.querySelector('h1') == null && content_top.querySelector('.navlist') == null)
+        if (settings.feature_flags.refreshed_nav == false && content_top.querySelector('h1') == null && content_top.querySelector('.navlist') == null)
             adaptive_skin.removeChild(content_top);
 
         // is this their profile?
@@ -4953,7 +4977,13 @@ let has_prompted_for_update = false;
 
         // badges
         log(`querying badges for ${page.name}`, 'profile');
-        let profile_name_obj = profile_header.querySelector('.header-title-label-wrap');
+
+        let profile_name_obj;
+        if (settings.feature_flags.refreshed_nav != false)
+            profile_name_obj = page.structure.container.querySelector('.redesigned-profile-header .title-container');
+        else
+            profile_name_obj = profile_header.querySelector('.header-title-label-wrap');
+
         if (profile_badges.hasOwnProperty(page.name)) {
             if (!Array.isArray(profile_badges[page.name])) {
                 // default
@@ -4990,7 +5020,11 @@ let has_prompted_for_update = false;
         }
 
         // secondary text
-        let profile_sub_text = document.body.querySelector('.header-title-secondary');
+        let profile_sub_text;
+        if (settings.feature_flags.refreshed_nav != false)
+            profile_sub_text = page.structure.container.querySelector('.redesigned-profile-header .header-title-secondary');
+        else
+            profile_sub_text = document.body.querySelector('.header-title-secondary');
 
         if (profile_sub_text == undefined)
             return;
@@ -5236,7 +5270,10 @@ let has_prompted_for_update = false;
             });
         }
 
-        base_header.appendChild(profile_header);
+        if (settings.feature_flags.refreshed_nav != false)
+            page.structure.container.querySelector('.redesigned-profile-header .info-side').appendChild(profile_header);
+        else
+            base_header.appendChild(profile_header);
     }
 
     function create_profile_top_item(parent, {name, link, text='', type, taste='', artists=[], avi='', percent='', action='', tooltip=''}) {

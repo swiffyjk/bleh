@@ -1946,7 +1946,6 @@ spacing between is removed and aligned to tag icon */
     padding-top: unset !important;
     padding-bottom: var(--card-gap) !important;
 
-    &[data-page-type="user"][data-page-subpage=""],
     header.header-new--subpage + &,
     header.header-new--subpage + .full-bleed-ad-container + &
     {
@@ -3455,27 +3454,6 @@ span[itemprop="byArtist"] + .header-new-title {
     min-height: unset;
 }
 
-.header-avatar {
-    padding: unset !important;
-    border-radius: var(--avatar-radius);
-    box-shadow: var(--menu-shadow);
-
-    transition-property: transform;
-    transition-duration: var(--trans);
-    transition-timing-function: var(--trans-function);
-
-    &:has(a):hover {
-        transform: scale(1.08);
-    }
-
-    .bleh--avatar-clickable-link {
-        position: absolute;
-        inset: 0;
-        z-index: 50;
-        border-radius: var(--avatar-radius);
-        cursor: pointer;
-    }
-}
 .header--overview.header--with-avatar .header-avatar {
     width: var(--profile-header-avatar-size);
 }
@@ -3491,28 +3469,8 @@ span[itemprop="byArtist"] + .header-new-title {
 
 
 /*     PROFILE NAME     */
-.header-title-label-wrap {
-    display: flex;
-    gap: 6px;
-}
-.header-title {
-    font-size: 24px !important;
-    line-height: 28px !important;
-    letter-spacing: unset !important;
-    font-weight: var(--font-weight-bold) !important;
-    margin: 0 6px 0 0 !important;
-    color: hsl(var(--c1));
-
-    .staff-profile & {
-        color: hsl(var(--l4-c));
-        --hue-over: var(--hue-neg);
-        --sat-over: 1;
-        --lit-over: 1;
-    }
-}
-
 .header-title-secondary {
-    margin-top: 8px !important;
+    margin-top: unset !important;
     font-size: var(--font-size) !important;
     line-height: var(--line-height) !important;
 
@@ -3554,7 +3512,7 @@ span[itemprop="byArtist"] + .header-new-title {
 
 
 /*     PROFILE LABEL     */
-.header-title-label-wrap .label, .header-new-on-tour {
+.title-container .label, .header-new-on-tour {
     /*width: 100%;*/
     max-width: 20px;
     height: 20px;
@@ -3591,7 +3549,7 @@ span[itemprop="byArtist"] + .header-new-title {
         transition-delay: 0.2s;
     }
 }
-.header-title-label-wrap .label:hover, .header-new-on-tour:hover {
+.title-container .label:hover, .header-new-on-tour:hover {
     max-width: 220px;
     padding-right: 6px;
     background-color: hsla(var(--h4), 20%) !important;
@@ -3772,10 +3730,6 @@ span[itemprop="byArtist"] + .header-new-title {
 /* hides cancelled label on event pages */ .label[itemprop="eventStatus"],
 /* hides empty label unless user page has override */ .user-status-None {
     display: var(--override-none-status, none) !important;
-}
-
-.header-title-label-wrap {
-    width: 600px;
 }
 
 
@@ -6297,7 +6251,7 @@ button,
 .alert:before, .event-status:before, .async-content-error-message:before,
 .modal-dialog .big-modal-alert.alert-success::before,
 /*     USER NAME LABELS     */
-:is(.header-title-label-wrap .label, .header-new-on-tour):before,
+:is(.title-container .label, .header-new-on-tour):before,
 /*     CUSTOM AVATAR ICONS WITHOUT PRO     */
 .avatar-status-dot:after,
 /*     MODAL     */
@@ -15570,6 +15524,12 @@ button.bleh--gallery-bookmark-image-btn {
 
     &.profile-top-header {
         background-color: hsl(var(--b5));
+
+        [data-bleh--theme="oled"] &,
+        [data-bleh--theme="light"] & {
+            background-color: hsl(var(--b5));
+            box-shadow: 0 0 0 1px var(--card-border-base) inset, var(--card-shadow);
+        }
     }
 
     [data-bleh--theme="oled"] &,
@@ -17546,6 +17506,37 @@ h4 {
         }
     }
 
+    .avatar-side {
+        height: 48px;
+        border-radius: var(--avatar-radius);
+        box-shadow: var(--card-shadow);
+        overflow: hidden;
+        position: relative;
+
+        .page-content[data-page-subpage=""] & {
+            height: 127px;
+        }
+
+        img {
+            height: 100%;
+        }
+
+        a {
+            position: absolute;
+            inset: 0;
+            z-index: 10;
+            cursor: pointer;
+        }
+
+        transition-property: transform;
+        transition-duration: var(--trans);
+        transition-timing-function: var(--trans-function);
+
+        &:hover {
+            transform: scale(1.08);
+        }
+    }
+
     .info-side {
         flex: 1;
 
@@ -17555,6 +17546,33 @@ h4 {
             line-height: 30px;
             font-weight: var(--font-weight-medium);
             letter-spacing: unset;
+
+            a {
+                color: inherit;
+            }
+        }
+
+        .title-container {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+
+            h1 {
+                .staff-profile & {
+                    color: hsl(var(--l4-c));
+                    --hue-over: var(--hue-neg);
+                    --sat-over: 1;
+                    --lit-over: 1;
+                }
+            }
+        }
+
+        .header-title-secondary {
+            margin-top: 6px !important;
+        }
+
+        .profile-top-header {
+            margin-top: var(--card-gap);
         }
     }
 }
