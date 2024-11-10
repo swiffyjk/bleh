@@ -1481,7 +1481,8 @@ last.fm changes as of 2024-05-20 */
 /* no loved tracks */ .namespace--user_loved .no-data-message,
 /* no playlists */ .no-data-message--playlists,
 /* neighbours */ .friends-col-main,
-.panel-form
+.panel-form,
+.bleh--gallery
 {
     content: '';
     --override-background: hsl(var(--card-specific-background, var(--card-background, var(--b5))));
@@ -3323,13 +3324,18 @@ span[itemprop="byArtist"] + .header-new-title {
 /*     FEATURED ITEMS     */
 .artist-header-featured-items {
     margin: var(--card-gap) 0 0 0;
-    display: var(--show-artist-featured, flex);
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
     gap: var(--card-gap);
+    overflow: hidden;
+
+    &:before, &:after {
+        display: none;
+    }
 }
 .artist-header-featured-items-item-wrap {
     padding: unset;
-    width: unset;
-    flex: 1;
+    width: unset !important;
 }
 
 .artist-header-featured-items-item {
@@ -4189,6 +4195,7 @@ h2:not(.count, .mask-multi-text, .mask-text, .sr-only, .js-gallery-heading, .top
     padding: unset;
     position: static;
     width: unset;
+    cursor: default;
 
     /*font-size: 24px !important;
     line-height: 30px !important;*/
@@ -8571,6 +8578,11 @@ text[style^="color: rgb(255, 172, 172)"] {
     font-size: var(--font-size) !important;
     color: hsl(var(--b5)) !important;
     fill: hsl(var(--c2)) !important;
+}
+
+/* remove random leftovers tooltips from corner */
+[data-tippy-root][style$="transform: translate(0px, 10px);"] {
+    display: none !important;
 }
 
 .tippy-box,
@@ -17042,6 +17054,30 @@ h4 {
 
 
 /* default last.fm css, used for upload page */
+.gallery-image-container {
+    .gallery-slides {
+        height: 100%;
+        left: 0;
+        position: absolute;
+        top: 0;
+        width: 100%;
+
+        .gallery-image {
+            display: block;
+            height: 100%;
+            left: 0;
+            position: absolute;
+            top: 0;
+            width: 100%;
+
+            img {
+                display: inline-block;
+                max-height: 100%;
+                max-width: 100%;
+            }
+        }
+    }
+}
 .gallery-image {
     text-align: center;
 }
@@ -17054,6 +17090,7 @@ h4 {
     font-size: var(--font-size);
     line-height: var(--line-height);
     font-weight: var(--font-weight-medium);
+    cursor: default;
 
     display: flex;
     justify-content: space-between;
@@ -17609,6 +17646,7 @@ h4 {
             font-size: 18px;
             line-height: 22px;
             color: hsla(var(--c2), 80%);
+            cursor: default;
 
             .header-new-crumb {
                 font-size: inherit;

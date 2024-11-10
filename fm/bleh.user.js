@@ -10740,10 +10740,10 @@ let has_prompted_for_update = false;
         // is there a video?
         if (page.type == 'track') {
             let video_col = page.structure.container.querySelector('.track-overview-video-column.col-sidebar');
+            video_col.classList.remove('col-sidebar');
+            page.structure.side.insertBefore(video_col, page.structure.side.firstElementChild);
 
             let video = video_col.querySelector('.video-preview');
-
-            //console.info(video_col, video);
 
             if (video != null) {
                 video_col.classList.remove('col-sidebar');
@@ -11917,7 +11917,7 @@ let has_prompted_for_update = false;
         slides.appendChild(image);
         image_container.appendChild(slides);
         gallery_section.appendChild(image_container);
-        page.structure.container.insertBefore(gallery_section, page.structure.container.firstElementChild);
+        page.structure.nav.after(gallery_section);
 
 
         // remove content top
