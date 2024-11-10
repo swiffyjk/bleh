@@ -14100,7 +14100,7 @@ input[type="range"]::-moz-range-progress {
 }
 .involved--user,
 .mention,
-:is(.shout-body, .about-me-sidebar, .bleh--about-me-preview, .wiki-content) a[href*="/user/"] {
+:is(.shout-body, .about-me-sidebar, .bleh--about-me-preview, .wiki-content, .markdown-body) a[href*="/user/"]:not([href^=https]) {
     padding: 0 4px;
     background-color: hsla(var(--h4), 20%);
     border-radius: var(--item-small-radius);
