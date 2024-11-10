@@ -10317,26 +10317,25 @@ let has_prompted_for_update = false;
 
 
     function show_your_scrobbles() {
-        let header_new = document.body.querySelector('.header-new');
+        show_numbers_on_side(page.type);
 
-        if (header_new == null)
-            return;
-
-        if (header_new.classList.contains('header-new--subpage'))
-            return;
-
-        if (header_new.hasAttribute('data-bleh'))
-            return;
-        header_new.setAttribute('data-bleh', 'true');
-
-        let header_type = header_new.classList[1].replace('header-new--', '');
-
-        show_numbers_on_side(header_type);
-
-
-        let col_main = document.body.querySelector('.top-overview-panel');
+        let col_main = page.structure.container.querySelector('.top-overview-panel');
         if (col_main == null)
-            col_main = document.body.querySelector('.col-main');
+            col_main = page.structure.container.querySelector('.col-main');
+
+
+        if (page.type == 'track') {
+            let new_panel = document.createElement('section');
+            new_panel.classList.add('track-info-panel');
+            new_panel.innerHTML = col_main.innerHTML;
+
+            page.structure.main.insertBefore(new_panel, page.structure.main.firstElementChild);
+
+            col_main.style.setProperty('display', 'none');
+
+            // now redirect later code
+            col_main = new_panel;
+        }
 
 
         // create container
@@ -10354,9 +10353,9 @@ let has_prompted_for_update = false;
 
         // artist
         let scrobble_page = page_url_split[page_url_length];
-        if (header_type == 'album') {
+        if (page.type == 'album') {
             scrobble_page = page_url_split[page_url_length - 1] + '/' + page_url_split[page_url_length];
-        } else if (header_type == 'track') {
+        } else if (page.type == 'track') {
             scrobble_page = page_url_split[page_url_length - 2] + '/_/' + page_url_split[page_url_length];
         }
 
@@ -10374,7 +10373,7 @@ let has_prompted_for_update = false;
             your_listens.listens = clean_number(scrobble_button.textContent.trim());
         }
         // create child for u
-        create_listen_item(listen_container, your_listens, header_type);
+        create_listen_item(listen_container, your_listens, page.type);
 
 
         // profile shortcut :3
@@ -10417,7 +10416,7 @@ let has_prompted_for_update = false;
                 `);
 
                 // colourful counts
-                if (settings.colourful_counts && header_type == 'artist') {
+                if (settings.colourful_counts && page.type == 'artist') {
                     let parsed_scrobble_as_rank = parse_scrobbles_as_rank(listens);
 
                     listen_item.setAttribute('data-bleh--scrobble-milestone',parsed_scrobble_as_rank.milestone);
@@ -10435,7 +10434,7 @@ let has_prompted_for_update = false;
 
 
         // other listeners
-        if (header_type == 'artist') {
+        if (page.type == 'artist') {
             //
             let other_container = col_main.querySelector('.personal-stats-item--listeners');
             if (other_container == null)
@@ -10457,7 +10456,7 @@ let has_prompted_for_update = false;
                 count: (count != null) ? clean_number(count.textContent.trim()) : 5
             }
             // create child for them
-            create_listen_item(listen_container, other_listeners, header_type);
+            create_listen_item(listen_container, other_listeners, page.type);
         }
 
 
@@ -10526,7 +10525,7 @@ let has_prompted_for_update = false;
         let search_btn = document.createElement('a');
         search_btn.classList.add('btn', 'view-item', 'interact-item', 'search-similar-btn');
         search_btn.textContent = trans[lang].music.search_variations.name;
-        search_btn.href = `${root}search/${header_type}s?q=${text}`;
+        search_btn.href = `${root}search/${page.type}s?q=${text}`;
         search_btn.target = '_blank';
 
         tippy(search_btn, {
@@ -10739,13 +10738,17 @@ let has_prompted_for_update = false;
 
 
         // is there a video?
-        if (header_type == 'track') {
-            let video_col = document.body.querySelector('.track-overview-video-column.col-sidebar');
+        if (page.type == 'track') {
+            let video_col = page.structure.container.querySelector('.track-overview-video-column.col-sidebar');
+
             let video = video_col.querySelector('.video-preview');
 
             //console.info(video_col, video);
 
             if (video != null) {
+                video_col.classList.remove('col-sidebar');
+                page.structure.side.insertBefore(video_col, page.structure.side.firstElementChild);
+
                 let container = document.createElement('div');
                 container.classList.add('video-overlay-container');
 
@@ -11241,13 +11244,59 @@ let has_prompted_for_update = false;
         }
         page.structure.row = page.structure.container.querySelector('.row');
         try {
-            page.structure.main = page.structure.row.querySelector('.col-main');
+            if (!is_subpage)
+                page.structure.main = page.structure.row.querySelector('.col-main:not(:first-child)');
+            else
+                page.structure.main = page.structure.row.querySelector('.col-main');
             page.structure.side = page.structure.row.querySelector('.col-sidebar:not(.track-overview-video-column)');
         } catch(e) {
             log('unable to find elements', 'page structure');
         }
 
         checkup_page_structure();
+
+        if (settings.feature_flags.refreshed_music_nav != false) {
+            let navlist = track_header.querySelector('.navlist');
+            if (navlist != null) {
+                navlist.classList.add('redesigned-navigation');
+                page.structure.container.insertBefore(navlist, page.structure.container.firstElementChild);
+                page.structure.nav = navlist;
+            }
+
+            if (is_subpage) {
+                let content_top = document.body.querySelector('.content-top');
+
+                if (content_top != null) {
+                    content_top.classList.add('redesigned-content-top');
+                    page.structure.content_top = content_top;
+                    navlist.after(content_top);
+                }
+            }
+
+            let avatar = track_header.querySelector('.header-new-background-image');
+            let title = track_header.querySelector('.header-new-title');
+            let artist = track_header.querySelector('[itemprop="byArtist"]');
+            let position = track_header.querySelector('.header-new-chart-position-number');
+
+            let redesigned_track_header = document.createElement('section');
+            redesigned_track_header.classList.add('redesigned-header', 'redesigned-track-header', 'no-background');
+            redesigned_track_header.innerHTML = (`
+                <div class="info-side">
+                    <div class="sub-text">${trans[lang].track.name}</div>
+                    <div class="title-container">
+                        <h1>${title.innerHTML}</h1>
+                        ${(position != null) ? position.outerHTML : ''}
+                    </div>
+                    <h2>${artist.innerHTML}</h2>
+                </div>
+            `);
+
+            if (avatar != null)
+                register_background(avatar.getAttribute('content'));
+
+            page.structure.container.insertBefore(redesigned_track_header, page.structure.container.firstElementChild);
+            track_header.classList.add('legacy-header');
+        }
 
         if (!is_subpage) {
             page.subpage = 'overview';

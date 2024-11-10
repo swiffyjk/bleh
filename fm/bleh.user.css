@@ -1443,7 +1443,7 @@ last.fm changes as of 2024-05-20 */
 .col-main > section:not(.neighbours-items-section), .col-sidebar > section,
 .your-progress-component,
 /* this fixes places of the site (tracks, artist, albums watever that use a weird method of 2 col-mains, 2 col-sidebars as appose to profiles */
-/* -> could be simplified, idk if it affects other parts of the site tho */.row.col-main-is-primary > .col-main:not(.not-a-panel):first-child /* <- */, .row.col-main-is-primary > .col-main:nth-child(3) > :is(section, #shoutbox),
+/* -> could be simplified, idk if it affects other parts of the site tho */ .page-content:not([data-page-subpage="overview"]) .row.col-main-is-primary > .col-main:not(.not-a-panel):first-child /* <- */, .row.col-main-is-primary > .col-main:nth-child(3) > :is(section, #shoutbox),
 .album-and-lyrics-row,
 /* dont question it too far, refer to the above display: grid for more insight, this is jus applying the card styling */
 .shoutbox--with-header#shoutbox:not(#shoutbox > #shoutbox /* for shoutbox on gallery image */, section > #shoutbox /* events */),
@@ -1716,7 +1716,7 @@ article, section, .buffer-standard, .buffer-standard:not(.col-sidebar) .buffer-s
 
 /* take up full space */
 .album-overview-cover-art, .album-artwork-upload-cta-container {
-    margin-top: calc(-72px - var(--card-gap) - var(--card-gap)) !important;
+    margin-top: calc(-70px - var(--card-gap) - var(--card-gap)) !important;
     overflow: hidden;
     z-index: 1;
 }
@@ -3228,6 +3228,7 @@ header:is(.header-new--album, .header-new--track) .header-new-background-overlay
     }
 }
 
+.redesigned-album-header h2,
 span[itemprop="byArtist"] {
     display: flex;
     color: rgba(255, 255, 255, 0.8);
@@ -11341,12 +11342,15 @@ a:has(+ .js-gallery-heading), .js-gallery-heading,
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
     gap: var(--card-gap);
-}
-.album-and-lyrics-row:before, .album-and-lyrics-row:after {
-    display: none;
-}
-.album-and-lyrics-row section {
-    width: unset;
+    margin-top: var(--card-gap);
+
+    &:before, &:after {
+        display: none;
+    }
+
+    section {
+        width: unset;
+    }
 }
 
 
@@ -17562,6 +17566,7 @@ h4 {
             display: flex;
             align-items: center;
             gap: 6px;
+            cursor: default;
 
             h1 {
                 color: hsl(var(--c1));
@@ -17572,11 +17577,30 @@ h4 {
                     --sat-over: 1;
                     --lit-over: 1;
                 }
+
+                display: flex;
+                gap: var(--item-list-gap);
+
+                .feat {
+                    font-size: 18px;
+                    color: hsl(var(--c3));
+                }
             }
 
             .header-new-chart-position-number {
                 font-weight: var(--font-weight-medium);
                 margin-left: calc(var(--card-gap) - 6px);
+            }
+        }
+
+        h2 {
+            font-size: 18px;
+            line-height: 22px;
+            color: hsla(var(--c2), 80%);
+
+            .header-new-crumb {
+                font-size: inherit;
+                line-height: inherit;
             }
         }
 
@@ -17614,16 +17638,16 @@ h4 {
     z-index: -1;
     background-position: 0 var(--profile-header-background-offset);
     background-size: cover;
-    filter: blur(10px);
+    filter: blur(16px);
 
     height: var(--profile-header-background-height);
 
-    &:before {
+    &[data-page-type="album"]:before {
         content: '';
         position: absolute;
         inset: 0;
         background-color: hsl(var(--h4));
-        mix-blend-mode: multiply;
+        mix-blend-mode: overlay;
     }
 
     &:after {
