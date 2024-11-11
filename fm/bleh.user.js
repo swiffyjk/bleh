@@ -12616,22 +12616,6 @@ let has_prompted_for_update = false;
 
         checkup_page_structure(is_subpage, event_header);
 
-        let navlist = event_header.querySelector('.navlist');
-        if (navlist != null) {
-            navlist.classList.add('redesigned-navigation');
-            page.structure.container.insertBefore(navlist, page.structure.container.firstElementChild);
-        }
-
-        if (is_subpage) {
-            let content_top = document.body.querySelector('.content-top');
-
-            if (content_top != null) {
-                content_top.classList.add('redesigned-content-top');
-                page.structure.content_top = content_top;
-                navlist.after(content_top);
-            }
-        }
-
         if (!is_subpage) {
             try {
                 page.name = page.structure.main.querySelector('.grid-items-item-main-text a').textContent;
