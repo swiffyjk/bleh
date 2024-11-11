@@ -87,6 +87,11 @@ let version = {
             default: true,
             name: 'Show album cover in header overview',
             date: '2024-11-11'
+        },
+        new_auth_menu: {
+            default: true,
+            name: 'New custom-built auth menu to reduce lag',
+            date: '2024-11-11'
         }
     }
 }
@@ -3558,101 +3563,122 @@ let has_prompted_for_update = false;
         bleh_container.after(changelog_container);
 
 
-        let settings = JSON.parse(localStorage.getItem('bleh')) || create_settings_template();
-        let user_nav = document.body.querySelectorAll('.auth-dropdown-menu > li')[0];
-        let inbox_nav = document.body.querySelectorAll('.auth-dropdown-menu > li')[2];
+        // auth menu
+        let legacy_auth_menu = document.body.querySelector('.auth-dropdown-menu');
+        let auth_menu = tippy(auth_link, {
+            theme: 'auth-menu',
+            content: (`
+                ${legacy_auth_menu.innerHTML}
+            `),
+            allowHTML: true,
+            placement: 'top',
+            interactive: true,
+            interactiveBorder: 10,
+            trigger: 'contextmenu',
 
-        document.querySelector('.auth-dropdown-menu').style.setProperty('--url', `url(${my_avi.replace('avatar42s', 'avatar170s')})`);
+            onShow(instance) {
+                console.info(instance.popper);
+                let items = instance.popper.querySelectorAll('li');
+                console.info(items);
 
-        if (!inbox_nav.hasAttribute('data-bleh')) {
-            inbox_nav.setAttribute('data-bleh','true');
-            let profile_link = user_nav.querySelector('a').getAttribute('href');
+                let user_nav = items[0];
+                let inbox_nav = items[2];
 
-            let extra_nav = document.createElement('li');
-            extra_nav.innerHTML = (`
-                <li>
-                    <a class="auth-dropdown-menu-item bleh--shortcut-menu-item" data-profile-shortcut="${settings.profile_shortcut}" id="profile_shortcut" href="${root}user/${settings.profile_shortcut}">
-                        ${settings.profile_shortcut}
-                    </a>
-                </li>
-                <li>
-                    <a class="auth-dropdown-menu-item bleh--library-menu-item" href="${profile_link}/library">
-                        <span class="auth-dropdown-item-row">
-                            <span class="auth-dropdown-item-left">${trans[lang].auth_menu.library}</span>
-                        </span>
-                    </a>
-                </li>
-                <li>
-                    <a class="auth-dropdown-menu-item bleh--shouts-menu-item" href="${profile_link}/shoutbox">
-                        <span class="auth-dropdown-item-row">
-                            <span class="auth-dropdown-item-left">${trans[lang].auth_menu.shouts}</span>
-                        </span>
-                    </a>
-                </li>
-                `);
+                console.info(user_nav, inbox_nav);
 
-            user_nav.appendChild(extra_nav);
-        }
+                instance.popper.style.setProperty('--url', `url(${my_avi.replace('avatar42s', 'avatar170s')})`);
 
-        if (!user_nav.hasAttribute('data-bleh')) {
-            user_nav.setAttribute('data-bleh','true');
+                if (!inbox_nav.hasAttribute('data-bleh')) {
+                    inbox_nav.setAttribute('data-bleh','true');
+                    let profile_link = user_nav.querySelector('a').getAttribute('href');
 
-            let bleh_nav = document.createElement('li');
-            bleh_nav.innerHTML = (`
-                <li>
-                    <button class="auth-dropdown-menu-item bleh--theme-menu-item" id="theme_menu_item" onclick="toggle_theme()">
-                        <span class="auth-dropdown-item-row">
-                            <span class="auth-dropdown-item-left">${trans[lang].settings.themes.name}</span>
-                            <span class="auth-dropdown-item-right" id="theme-value">${trans[lang].settings.themes[settings.theme].name}</span>
-                        </span>
-                    </button>
-                </li>
-                ${(ff('dev')) ? (`
-                <li>
-                    <button class="auth-dropdown-menu-item bleh--dev-menu-item" onclick="_update_flag_toggle('dev', this)" aria-checked="true">
-                        <span class="auth-dropdown-item-row">
-                            <span class="auth-dropdown-item-left">${trans[lang].auth_menu.dev}</span>
-                        </span>
-                    </button>
-                </li>
-                `) : ''}
-                <li>
-                    <a class="auth-dropdown-menu-item bleh--configure-menu-item" href="${root}bleh">
-                        <span class="auth-dropdown-item-row">
-                            <span class="auth-dropdown-item-left">${trans[lang].auth_menu.configure_bleh}</span>
-                        </span>
-                    </a>
-                </li>
-            `);
-            user_nav.appendChild(bleh_nav);
+                    let extra_nav = document.createElement('li');
+                    extra_nav.innerHTML = (`
+                        <li>
+                            <a class="auth-dropdown-menu-item bleh--shortcut-menu-item" data-profile-shortcut="${settings.profile_shortcut}" id="profile_shortcut" href="${root}user/${settings.profile_shortcut}">
+                                ${settings.profile_shortcut}
+                            </a>
+                        </li>
+                        <li>
+                            <a class="auth-dropdown-menu-item bleh--library-menu-item" href="${profile_link}/library">
+                                <span class="auth-dropdown-item-row">
+                                    <span class="auth-dropdown-item-left">${trans[lang].auth_menu.library}</span>
+                                </span>
+                            </a>
+                        </li>
+                        <li>
+                            <a class="auth-dropdown-menu-item bleh--shouts-menu-item" href="${profile_link}/shoutbox">
+                                <span class="auth-dropdown-item-row">
+                                    <span class="auth-dropdown-item-left">${trans[lang].auth_menu.shouts}</span>
+                                </span>
+                            </a>
+                        </li>
+                        `);
 
-            let theme_menu_item = tippy(document.getElementById('theme_menu_item'), {
-                theme: 'menu',
-                content: (`
-                    <button class="dropdown-menu-clickable-item theme-item-in-menu" data-bleh-theme="light" onclick="change_theme_from_menu('light')">
-                        ${trans[lang].settings.themes.light.name}
-                    </button>
-                    <button class="dropdown-menu-clickable-item theme-item-in-menu" data-bleh-theme="dark" onclick="change_theme_from_menu('dark')">
-                        ${trans[lang].settings.themes.dark.name}
-                    </button>
-                    <button class="dropdown-menu-clickable-item theme-item-in-menu" data-bleh-theme="darker" onclick="change_theme_from_menu('darker')">
-                        ${trans[lang].settings.themes.darker.name}
-                    </button>
-                    <button class="dropdown-menu-clickable-item theme-item-in-menu" data-bleh-theme="oled" onclick="change_theme_from_menu('oled')">
-                        ${trans[lang].settings.themes.oled.name}
-                    </button>
-                `),
-                allowHTML: true,
-                placement: 'left',
-                hideOnClick: false,
-                interactive: true,
-                interactiveBorder: 10,
-
-                onShow(instance) {
-                    show_theme_change_in_menu('', instance.popper);
+                    user_nav.appendChild(extra_nav);
                 }
-            });
-        }
+
+                if (!user_nav.hasAttribute('data-bleh')) {
+                    user_nav.setAttribute('data-bleh','true');
+
+                    let bleh_nav = document.createElement('li');
+                    bleh_nav.innerHTML = (`
+                        <li>
+                            <button class="auth-dropdown-menu-item bleh--theme-menu-item" id="theme_menu_item" onclick="toggle_theme()">
+                                <span class="auth-dropdown-item-row">
+                                    <span class="auth-dropdown-item-left">${trans[lang].settings.themes.name}</span>
+                                    <span class="auth-dropdown-item-right" id="theme-value">${trans[lang].settings.themes[settings.theme].name}</span>
+                                </span>
+                            </button>
+                        </li>
+                        ${(ff('dev')) ? (`
+                        <li>
+                            <button class="auth-dropdown-menu-item bleh--dev-menu-item" onclick="_update_flag_toggle('dev', this)" aria-checked="true">
+                                <span class="auth-dropdown-item-row">
+                                    <span class="auth-dropdown-item-left">${trans[lang].auth_menu.dev}</span>
+                                </span>
+                            </button>
+                        </li>
+                        `) : ''}
+                        <li>
+                            <a class="auth-dropdown-menu-item bleh--configure-menu-item" href="${root}bleh">
+                                <span class="auth-dropdown-item-row">
+                                    <span class="auth-dropdown-item-left">${trans[lang].auth_menu.configure_bleh}</span>
+                                </span>
+                            </a>
+                        </li>
+                    `);
+                    user_nav.appendChild(bleh_nav);
+
+                    let theme_menu_item = tippy(document.getElementById('theme_menu_item'), {
+                        theme: 'menu',
+                        content: (`
+                            <button class="dropdown-menu-clickable-item theme-item-in-menu" data-bleh-theme="light" onclick="change_theme_from_menu('light')">
+                                ${trans[lang].settings.themes.light.name}
+                            </button>
+                            <button class="dropdown-menu-clickable-item theme-item-in-menu" data-bleh-theme="dark" onclick="change_theme_from_menu('dark')">
+                                ${trans[lang].settings.themes.dark.name}
+                            </button>
+                            <button class="dropdown-menu-clickable-item theme-item-in-menu" data-bleh-theme="darker" onclick="change_theme_from_menu('darker')">
+                                ${trans[lang].settings.themes.darker.name}
+                            </button>
+                            <button class="dropdown-menu-clickable-item theme-item-in-menu" data-bleh-theme="oled" onclick="change_theme_from_menu('oled')">
+                                ${trans[lang].settings.themes.oled.name}
+                            </button>
+                        `),
+                        allowHTML: true,
+                        placement: 'left',
+                        hideOnClick: false,
+                        interactive: true,
+                        interactiveBorder: 10,
+
+                        onShow(instance) {
+                            show_theme_change_in_menu('', instance.popper);
+                        }
+                    });
+                }
+            }
+        });
 
 
         // language
