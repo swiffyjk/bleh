@@ -12784,9 +12784,6 @@ let has_prompted_for_update = false;
                             <button type="submit" class="btn-primary save">
                                 ${trans[lang].settings.save}
                             </button>
-                            <button class="btn-cancel btn cancel js-disclose-close">
-                                ${trans[lang].settings.cancel}
-                            </button>
                         </div>
                     `);
 
@@ -12864,9 +12861,6 @@ let has_prompted_for_update = false;
                             <button type="submit" class="btn-primary save">
                                 ${trans[lang].settings.save}
                             </button>
-                            <button class="btn-cancel btn cancel js-disclose-close">
-                                ${trans[lang].settings.cancel}
-                            </button>
                         </div>
                     `);
 
@@ -12942,9 +12936,6 @@ let has_prompted_for_update = false;
                             <button type="submit" class="btn-primary save">
                                 ${trans[lang].settings.save}
                             </button>
-                            <button class="btn-cancel btn cancel js-disclose-close">
-                                ${trans[lang].settings.cancel}
-                            </button>
                         </div>
                     `);
 
@@ -13011,9 +13002,6 @@ let has_prompted_for_update = false;
                         <div class="settings-footer">
                             <button type="submit" class="btn-primary save">
                                 ${trans[lang].settings.save}
-                            </button>
-                            <button class="btn-cancel btn cancel js-disclose-close">
-                                ${trans[lang].settings.cancel}
                             </button>
                         </div>
                     `);
