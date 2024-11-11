@@ -4738,7 +4738,7 @@ let has_prompted_for_update = false;
 
 
     // general health
-    function checkup_page_structure() {
+    function checkup_page_structure(is_subpage, header) {
         document.body.style.removeProperty('--hue-album');
         document.body.style.removeProperty('--sat-album');
 
@@ -4794,6 +4794,88 @@ let has_prompted_for_update = false;
         }
 
         log('finished', 'page structure');
+
+        if (ff('refreshed_music_nav')) {
+            let navlist = header.querySelector('.navlist');
+            if (navlist != null) {
+                navlist.classList.add('redesigned-navigation');
+                page.structure.container.insertBefore(navlist, page.structure.container.firstElementChild);
+                page.structure.nav = navlist;
+            }
+
+            if (is_subpage) {
+                let content_top = document.body.querySelector('.content-top');
+
+                if (content_top != null) {
+                    content_top.classList.add('redesigned-content-top');
+                    page.structure.content_top = content_top;
+                    navlist.after(content_top);
+                } else {
+                    let subpage_title = page.structure.main.querySelector(':scope > .subpage-title');
+                    if (subpage_title == null)
+                        subpage_title = page.structure.main.querySelector(':scope > .section-controls > .subpage-title');
+
+                    if (subpage_title != null) {
+                        content_top = document.createElement('div');
+                        content_top.classList.add('content-top', 'redesigned-content-top');
+
+                        content_top.innerHTML = (`
+                            <div class="content-top-inner-wrap">
+                                <div class="container content-top-lower">
+                                    <h1 class="content-top-header">${subpage_title.textContent.trim()}</h1>
+                                </div>
+                            </div>
+                        `);
+
+                        page.structure.content_top = content_top;
+                        navlist.after(content_top);
+
+                        try {
+                            page.structure.main.removeChild(subpage_title);
+                        } catch(e) {}
+                    }
+
+                    // is there another navlist?
+                    navlist = page.structure.main.querySelector('.navlist');
+
+                    if (navlist != null) {
+                        navlist.classList.add('redesigned-navigation');
+
+                        if (page.structure.content_top != null)
+                            page.structure.content_top.after(navlist);
+                        else
+                            page.structure.container.insertBefore(navlist, page.structure.row);
+                    }
+
+                    // is there a btn-add?
+                    let btn_add = page.structure.main.querySelector(':scope > .btn-add');
+
+                    if (btn_add != null) {
+                        btn_add.classList = 'btn view-all-button back add-button';
+
+                        let add_panel = document.createElement('section');
+                        add_panel.classList.add('view-all-panel');
+
+                        add_panel.appendChild(btn_add);
+                        page.structure.side.insertBefore(add_panel, page.structure.side.firstElementChild);
+                    }
+
+
+                    // is there a playlink?
+                    let playlink = page.structure.main.querySelector(':scope > .section-controls > .section-playlink');
+
+                    if (playlink != null) {
+                        playlink.classList.add('btn', 'view-all-button', 'back', 'play-button');
+
+                        let playlink_panel = document.createElement('section');
+                        playlink_panel.classList.add('view-all-panel');
+
+                        playlink_panel.appendChild(playlink);
+                        page.structure.side.insertBefore(playlink_panel, page.structure.side.firstElementChild);
+                    }
+                }
+            }
+        }
     }
 
 
@@ -4827,26 +4909,9 @@ let has_prompted_for_update = false;
             log('unable to find elements', 'page structure');
         }
 
-        checkup_page_structure();
+        checkup_page_structure(is_subpage, profile_header);
 
         if (ff('refreshed_nav')) {
-            let navlist = profile_header.querySelector('.navlist');
-            if (navlist != null) {
-                navlist.classList.add('redesigned-navigation');
-                page.structure.container.insertBefore(navlist, page.structure.container.firstElementChild);
-                page.structure.nav = navlist;
-            }
-
-            if (is_subpage) {
-                let content_top = document.body.querySelector('.content-top');
-
-                if (content_top != null) {
-                    content_top.classList.add('redesigned-content-top');
-                    page.structure.content_top = content_top;
-                    navlist.after(content_top);
-                }
-            }
-
             let avatar = profile_header.querySelector('.avatar');
             let title_wrap = profile_header.querySelector('.header-title-label-wrap');
             let sub_wrap = profile_header.querySelector('.header-title-secondary');
@@ -5005,6 +5070,10 @@ let has_prompted_for_update = false;
         } else {
             // which subpage is it?
             page.subpage = document.body.classList[1].replace('namespace--', '');
+
+            let btn_add = page.structure.side.querySelector('.add-button');
+            if (btn_add != null)
+                btn_add.setAttribute('data-page-subpage', page.subpage);
 
             if (page.subpage.startsWith('user_library'))
                 bleh_user_library();
@@ -9019,7 +9088,7 @@ let has_prompted_for_update = false;
             </nav>
         `);
 
-        page.structure.nav.after(bookmark_nav);
+        page.structure.content_top.after(bookmark_nav);
 
 
         // content
@@ -11083,57 +11152,9 @@ let has_prompted_for_update = false;
             log('unable to find elements', 'page structure');
         }
 
-        checkup_page_structure();
+        checkup_page_structure(is_subpage, artist_header);
 
         if (ff('refreshed_music_nav')) {
-            let navlist = artist_header.querySelector('.navlist');
-            if (navlist != null) {
-                navlist.classList.add('redesigned-navigation');
-                page.structure.container.insertBefore(navlist, page.structure.container.firstElementChild);
-                page.structure.nav = navlist;
-            }
-
-            if (is_subpage) {
-                let content_top = document.body.querySelector('.content-top');
-
-                if (content_top != null) {
-                    content_top.classList.add('redesigned-content-top');
-                    page.structure.content_top = content_top;
-                    navlist.after(content_top);
-                } else {
-                    let subpage_title = page.structure.main.querySelector(':scope > .subpage-title');
-
-                    if (subpage_title != null) {
-                        content_top = document.createElement('div');
-                        content_top.classList.add('content-top', 'redesigned-content-top');
-
-                        content_top.innerHTML = (`
-                            <div class="content-top-inner-wrap">
-                                <div class="container content-top-lower">
-                                    <h1 class="content-top-header">${subpage_title.textContent.trim()}</h1>
-                                </div>
-                            </div>
-                        `);
-
-                        page.structure.content_top = content_top;
-                        navlist.after(content_top);
-
-                        page.structure.main.removeChild(subpage_title);
-                    }
-
-                    // is there another navlist?
-                    navlist = page.structure.main.querySelector('.navlist');
-                    if (navlist != null) {
-                        navlist.classList.add('redesigned-navigation');
-
-                        if (page.structure.content_top != null)
-                            page.structure.content_top.after(navlist);
-                        else
-                            page.structure.container.insertBefore(navlist, page.structure.row);
-                    }
-                }
-            }
-
             let avatar = artist_header.querySelector('.header-new-background-image');
             let title = artist_header.querySelector('.header-new-title');
             let on_tour = artist_header.querySelector('.header-new-on-tour');
@@ -11144,7 +11165,7 @@ let has_prompted_for_update = false;
             redesigned_artist_header.classList.add('redesigned-header', 'redesigned-artist-header', 'no-background');
             redesigned_artist_header.innerHTML = (`
                 <div class="avatar-side">
-                    ${(avatar != null) ? `<img src="${avatar.getAttribute('content').replace('/ar0/', '/300x300/')}"><a onclick="_expand_avatar('${avatar.getAttribute('content')}')" class="bleh--avatar-clickable-link"></a>` : ''}
+                    ${(avatar != null) ? `<img src="${avatar.getAttribute('content').replace('/ar0/', '/300x300/')}"><a onclick="_expand_avatar('${avatar.getAttribute('content')}')" class="bleh--avatar-clickable-link"></a>` : '<img class="missing-artist">'}
                 </div>
                 <div class="info-side">
                     <div class="sub-text">${trans[lang].artist.name}</div>
@@ -11182,6 +11203,10 @@ let has_prompted_for_update = false;
         } else {
             // which subpage is it?
             page.subpage = document.body.classList[2].replace('namespace--', '');
+
+            let btn_add = page.structure.side.querySelector('.add-button');
+            if (btn_add != null)
+                btn_add.setAttribute('data-page-subpage', page.subpage);
 
             if (page.subpage == 'music_artist_images_image-upload')
                 bleh_gallery_upload();
@@ -11241,57 +11266,9 @@ let has_prompted_for_update = false;
             log('unable to find elements', 'page structure');
         }
 
-        checkup_page_structure();
+        checkup_page_structure(is_subpage, album_header);
 
         if (ff('refreshed_music_nav')) {
-            let navlist = album_header.querySelector('.navlist');
-            if (navlist != null) {
-                navlist.classList.add('redesigned-navigation');
-                page.structure.container.insertBefore(navlist, page.structure.container.firstElementChild);
-                page.structure.nav = navlist;
-            }
-
-            if (is_subpage) {
-                let content_top = document.body.querySelector('.content-top');
-
-                if (content_top != null) {
-                    content_top.classList.add('redesigned-content-top');
-                    page.structure.content_top = content_top;
-                    navlist.after(content_top);
-                } else {
-                    let subpage_title = page.structure.main.querySelector(':scope > .subpage-title');
-
-                    if (subpage_title != null) {
-                        content_top = document.createElement('div');
-                        content_top.classList.add('content-top', 'redesigned-content-top');
-
-                        content_top.innerHTML = (`
-                            <div class="content-top-inner-wrap">
-                                <div class="container content-top-lower">
-                                    <h1 class="content-top-header">${subpage_title.textContent.trim()}</h1>
-                                </div>
-                            </div>
-                        `);
-
-                        page.structure.content_top = content_top;
-                        navlist.after(content_top);
-
-                        page.structure.main.removeChild(subpage_title);
-                    }
-
-                    // is there another navlist?
-                    navlist = page.structure.main.querySelector('.navlist');
-                    if (navlist != null) {
-                        navlist.classList.add('redesigned-navigation');
-
-                        if (page.structure.content_top != null)
-                            page.structure.content_top.after(navlist);
-                        else
-                            page.structure.container.insertBefore(navlist, page.structure.row);
-                    }
-                }
-            }
-
             let avatar = album_header.querySelector('.header-new-background-image');
             let title = album_header.querySelector('.header-new-title');
             let artist = album_header.querySelector('[itemprop="byArtist"]');
@@ -11302,7 +11279,7 @@ let has_prompted_for_update = false;
             redesigned_album_header.innerHTML = (`
                 ${(is_subpage || ff('show_album_cover_always')) ? (`
                 <div class="avatar-side">
-                    ${(avatar != null) ? `<img src="${avatar.getAttribute('content').replace('/ar0/', '/avatar170s/')}"><a onclick="_expand_avatar('${avatar.getAttribute('content')}')" class="bleh--avatar-clickable-link"></a>` : ''}
+                    ${(avatar != null) ? `<img src="${avatar.getAttribute('content').replace('/ar0/', '/avatar170s/')}"><a onclick="_expand_avatar('${avatar.getAttribute('content')}')" class="bleh--avatar-clickable-link"></a>` : '<img class="missing-album">'}
                 </div>
                 `) : ''}
                 <div class="info-side">
@@ -11425,57 +11402,9 @@ let has_prompted_for_update = false;
             log('unable to find elements', 'page structure');
         }
 
-        checkup_page_structure();
+        checkup_page_structure(is_subpage, track_header);
 
         if (ff('refreshed_music_nav')) {
-            let navlist = track_header.querySelector('.navlist');
-            if (navlist != null) {
-                navlist.classList.add('redesigned-navigation');
-                page.structure.container.insertBefore(navlist, page.structure.container.firstElementChild);
-                page.structure.nav = navlist;
-            }
-
-            if (is_subpage) {
-                let content_top = document.body.querySelector('.content-top');
-
-                if (content_top != null) {
-                    content_top.classList.add('redesigned-content-top');
-                    page.structure.content_top = content_top;
-                    navlist.after(content_top);
-                } else {
-                    let subpage_title = page.structure.main.querySelector(':scope > .subpage-title');
-
-                    if (subpage_title != null) {
-                        content_top = document.createElement('div');
-                        content_top.classList.add('content-top', 'redesigned-content-top');
-
-                        content_top.innerHTML = (`
-                            <div class="content-top-inner-wrap">
-                                <div class="container content-top-lower">
-                                    <h1 class="content-top-header">${subpage_title.textContent.trim()}</h1>
-                                </div>
-                            </div>
-                        `);
-
-                        page.structure.content_top = content_top;
-                        navlist.after(content_top);
-
-                        page.structure.main.removeChild(subpage_title);
-                    }
-
-                    // is there another navlist?
-                    navlist = page.structure.main.querySelector('.navlist');
-                    if (navlist != null) {
-                        navlist.classList.add('redesigned-navigation');
-
-                        if (page.structure.content_top != null)
-                            page.structure.content_top.after(navlist);
-                        else
-                            page.structure.container.insertBefore(navlist, page.structure.row);
-                    }
-                }
-            }
-
             let artist_avatar = track_header.querySelector('.header-new-background-image');
             let album_avatar = page.structure.main.querySelector('.source-album-art img');
             let title = track_header.querySelector('.header-new-title');
@@ -11487,7 +11416,7 @@ let has_prompted_for_update = false;
             redesigned_track_header.innerHTML = (`
                 <div class="avatar-side">
                     ${(album_avatar != null) ? `<img src="${album_avatar.getAttribute('src')}"><a onclick="_expand_avatar('${album_avatar.getAttribute('src').replace('300x300', 'ar0')}')" class="bleh--avatar-clickable-link"></a>`
-                    : (artist_avatar != null) ? `<img src="${artist_avatar.getAttribute('content').replace('/ar0/', '/avatar170s/')}"><a onclick="_expand_avatar('${artist_avatar.getAttribute('content')}')" class="bleh--avatar-clickable-link"></a>` : ''}
+                    : (artist_avatar != null) ? `<img src="${artist_avatar.getAttribute('content').replace('/ar0/', '/avatar170s/')}"><a onclick="_expand_avatar('${artist_avatar.getAttribute('content')}')" class="bleh--avatar-clickable-link"></a>` : '<img class="missing-track">'}
                 </div>
                 <div class="info-side">
                     <div class="sub-text">${trans[lang].track.name}</div>
@@ -11517,6 +11446,10 @@ let has_prompted_for_update = false;
         } else {
             // which subpage is it?
             page.subpage = document.body.classList[2].replace('namespace--', '');
+
+            let btn_add = page.structure.side.querySelector('.add-button');
+            if (btn_add != null)
+                btn_add.setAttribute('data-page-subpage', page.subpage);
 
             if (page.subpage == 'music_track_wiki_overview')
                 bleh_wiki();
@@ -12681,7 +12614,7 @@ let has_prompted_for_update = false;
             log('unable to find elements', 'page structure');
         }
 
-        checkup_page_structure();
+        checkup_page_structure(is_subpage, event_header);
 
         let navlist = event_header.querySelector('.navlist');
         if (navlist != null) {

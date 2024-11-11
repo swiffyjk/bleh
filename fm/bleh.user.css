@@ -1506,7 +1506,8 @@ last.fm changes as of 2024-05-20 */
 /* neighbours */ .friends-col-main,
 .panel-form,
 .bleh--gallery,
-.navlist + div.buffer-standard /* listeners */
+/* listeners */ .col-main:not(.bleh--gallery) > .buffer-standard,
+/* similar artists */ .similar-artists
 {
     content: '';
     --override-background: hsl(var(--card-specific-background, var(--card-background, var(--b5))));
@@ -1548,6 +1549,7 @@ last.fm changes as of 2024-05-20 */
 
     .section-controls {
         margin-top: unset !important;
+        margin-right: unset !important;
     }
 
     [data-bleh--theme="light"] &,
@@ -2948,7 +2950,7 @@ button.navlist-more {
 }
 
 .secondary-nav-item-link[href*="events/1"], .secondary-nav-item-link[href*="events/2"] {
-    padding-left: 16px !important;
+    padding-left: unset !important;
 }
 .secondary-nav-item-link[href*="events/1"]:before, .secondary-nav-item-link[href*="events/2"]:before {
     display: none !important;
@@ -5701,6 +5703,7 @@ span.shout-user-avatar:before,
     }
 }
 /* missing album */
+.missing-album,
 [src^="/static/images/defaults/player_default_album"],
 [src$="c6f59c1e5e7240a4c0d427abd71f3dbb.jpg"] {
     content: url() !important;
@@ -5718,6 +5721,7 @@ span.shout-user-avatar:before,
     aspect-ratio: 1 / 1;
 }
 /* missing artist */
+.missing-artist,
 [src$="2a96cbd8b46e442fc41c2b86b821562f.jpg"] {
     content: url() !important;
     font-size: 0;
@@ -5735,6 +5739,7 @@ span.shout-user-avatar:before,
 }
 /* missing track */
 /*[alt*="Now That\'s What I Call Music"],*/
+.missing-artist,
 [src$="4128a6eb29f94943c9d206c08e625904.jpg"],
 .obsession-history-item-background[style*="url(https://lastfm.freetls.fastly.net/i/u/arG/4128a6eb29f94943c9d206c08e625904.jpg)"]
 {
@@ -6034,7 +6039,7 @@ button,
 .back-button, .delete-button,
 #manage_data .btn-primary,
 .obsession-history-play-all,
-.done, .cancel, .download, .upload, .save, .js-close:not(.modal-action-button), .form-group button[type="submit"]
+.done, .cancel, .download, .upload, .save, .btn-secondary.js-close:not(.modal-action-button), .form-group button[type="submit"]
 {
     --btn-left: calc(12px + 16px + 6px) !important;
 
@@ -6170,7 +6175,7 @@ button,
 .side-right .setting-item:before, .action:before,
 .setup-icon:before, .setup-icon:after,
 .btn.back:before,
-.continue:before, .external:before, .done:before, .cancel:before, .download:before, .upload:before, .save:before, .open:before, .js-close:not(.modal-action-button):before, .form-group button[type="submit"]:before,
+.continue:before, .external:before, .done:before, .cancel:before, .download:before, .upload:before, .save:before, .open:before, .btn-secondary.js-close:not(.modal-action-button):before, .form-group button[type="submit"]:before,
 .badge:before,
 .btn-post-shout:before,
 .auth-link:before, .language-nav:before, .language-nav > span:before,
@@ -9941,7 +9946,7 @@ text[style^="color: rgb(0, 0, 0)"] {
 }
 
 
-/*     ARTIST LISTENERS     */
+/*     TOP ARTIST LISTENERS     */
 .listeners-section-item, .top-listeners-item {
     justify-content: unset;
     min-height: unset;
@@ -9965,9 +9970,7 @@ text[style^="color: rgb(0, 0, 0)"] {
 
 
 .top-listeners {
-    margin-top: var(--card-gap);
-    margin-left: unset;
-    margin-right: unset;
+    margin: unset;
 }
 
 
@@ -16245,7 +16248,7 @@ button.bleh--gallery-bookmark-image-btn {
     position: relative;
     --mask: var(--icon-16-check);
 }
-.js-close,
+.btn-secondary.js-close,
 .cancel {
     position: relative;
     --mask: var(--icon-16-x);
@@ -17266,6 +17269,17 @@ h4 {
         &.wiki-latest-button {
             --mask: var(--icon-16-bio);
         }
+        &.play-button {
+            --mask: var(--icon-16-play);
+        }
+
+        &.add-button {
+            --mask: var(--icon-16-plus);
+
+            &[data-page-subpage="music_artist_events"] {
+                --mask: var(--icon-16-calendar-add);
+            }
+        }
     }
 }
 
@@ -17788,6 +17802,9 @@ h4 {
 .redesigned-navigation {
     margin-top: var(--card-gap) !important;
 }
+.col-main > .section-controls {
+    display: none;
+}
 
 /* artists massive gap */
 .page-content:not([data-page-type]):has(.content-top-lower-row) {
@@ -17843,5 +17860,13 @@ h4 {
     .auth-dropdown-menu-wrap {
         display: none !important;
     }
+}
+
+
+
+
+/*     SIMILAR ARTISTS     */
+.similar-artists {
+    margin: unset;
 }
 }
