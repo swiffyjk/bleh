@@ -1500,7 +1500,8 @@ last.fm changes as of 2024-05-20 */
 /* no playlists */ .no-data-message--playlists,
 /* neighbours */ .friends-col-main,
 .panel-form,
-.bleh--gallery
+.bleh--gallery,
+.navlist + div.buffer-standard /* listeners */
 {
     content: '';
     --override-background: hsl(var(--card-specific-background, var(--card-background, var(--b5))));
