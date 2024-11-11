@@ -6749,78 +6749,6 @@ let has_prompted_for_update = false;
         } else if (page == 'customise') {
             return (`
                 <div class="bleh--panel">
-                    <h3>${trans[lang].settings.customise.artwork.name}</h3>
-                    <div class="inner-preview pad">
-                        <div class="palette albums" style="height: fit-content">
-                            <div class="album-cover swatch" style="background-image: url('https://lastfm.freetls.fastly.net/i/u/770x0/1569198c4cf0a3b2ff8728975e8359fa.jpg')"></div>
-                            <div class="album-cover swatch" style="background-image: url('https://lastfm.freetls.fastly.net/i/u/770x0/b897255bf422baa93a42536af293f9f8.jpg')"></div>
-                            <div class="album-cover swatch" style="background-image: url('https://lastfm.freetls.fastly.net/i/u/770x0/def68d94aae8e52ef2d1c0c9d3e16ff4.jpg')"></div>
-                            <div class="album-cover swatch" style="background-image: url('https://lastfm.freetls.fastly.net/i/u/770x0/e9dd5c8d3294ca0a0f58cbf7ad5fd6a6.jpg')"></div>
-                            <div class="album-cover swatch" style="background-image: url('https://lastfm.freetls.fastly.net/i/u/770x0/570021b68d3d9d2db08bc99a473303b0.jpg')"></div>
-                            <div class="album-cover swatch" style="background-image: url('https://lastfm.freetls.fastly.net/i/u/770x0/4cc13056c7568b5c207dd7aee03fdb0f.jpg')"></div>
-                        </div>
-                    </div>
-                    <div class="toggle-container" id="container-hue_from_album">
-                        <button class="btn reset" onclick="_reset_item('hue_from_album')">${trans[lang].settings.reset}</button>
-                        <div class="heading">
-                            <h5>${trans[lang].settings.customise.hue_from_album.name}</h5>
-                            <p>${trans[lang].settings.customise.hue_from_album.bio}</p>
-                        </div>
-                        <div class="toggle-wrap">
-                            <button class="toggle" id="toggle-hue_from_album" onclick="_update_item('hue_from_album')" aria-checked="true">
-                                <div class="dot"></div>
-                            </button>
-                        </div>
-                    </div>
-                    <div class="slider-container" id="container-gloss">
-                        <button class="btn reset" onclick="_reset_item('gloss')">${trans[lang].settings.reset}</button>
-                        <div class="heading">
-                            <h5>${trans[lang].settings.customise.gloss.name}</h5>
-                            <p>${trans[lang].settings.customise.gloss.bio}</p>
-                        </div>
-                        <div class="slider">
-                            <div class="slider-track" id="slider-track-gloss"><div class="slider-fill"></div><div class="slider-nub"></div></div>
-                            <input type="range" min="0" max="1" value="0" step="0.05" id="slider-gloss" oninput="_update_item('gloss', this.value)">
-                            <p id="value-gloss">0</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="bleh--panel">
-                    <h3>${trans[lang].settings.customise.display.name}</h3>
-                    <div class="inner-preview pad flex">
-                        <section class="catalogue-tags">
-                            <ul class="tags-list tags-list--global">
-                                <li class="tag">
-                                    <a href="/tag/pop">pop</a>
-                                </li>
-                                <li class="tag">
-                                    <a href="/tag/country">country</a>
-                                </li>
-                                <li class="tag">
-                                    <a href="/tag/singer-songwriter">singer-songwriter</a>
-                                </li>
-                                <li class="tag">
-                                    <a href="/tag/female+vocalists">female vocalists</a>
-                                </li>
-                                <li class="tag">
-                                    <a href="/tag/synthpop">synthpop</a>
-                                </li>
-                            </ul>
-                        </section>
-                    </div>
-                    <div class="toggle-container" id="container-gendered_tags" onclick="_update_item('gendered_tags')">
-                        <button class="btn reset" onclick="_reset_item('gendered_tags')">${trans[lang].settings.reset}</button>
-                        <div class="heading">
-                            <h5>${trans[lang].settings.customise.gendered_tags.name}</h5>
-                            <p>${trans[lang].settings.customise.gendered_tags.bio}</p>
-                        </div>
-                        <div class="toggle-wrap">
-                            <button class="toggle" id="toggle-gendered_tags" aria-checked="true">
-                                <div class="dot"></div>
-                            </button>
-                        </div>
-                    </div>
-                    <div class="sep"></div>
                     <h4>${trans[lang].settings.customise.profile_header.name}</h4>
                     <div class="toggle-container" id="container-profile_header_own" onclick="_update_item('profile_header_own')">
                         <button class="btn reset" onclick="_reset_item('profile_header_own')">${trans[lang].settings.reset}</button>
@@ -7487,6 +7415,79 @@ let has_prompted_for_update = false;
                         </div>
                         <div class="toggle-wrap">
                             <button class="toggle" id="toggle-show_remaster_tags" aria-checked="true">
+                                <div class="dot"></div>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="bleh--panel">
+                    <h4>${trans[lang].settings.customise.artwork.name}</h4>
+                    <div class="inner-preview pad">
+                        <div class="palette albums" style="height: fit-content">
+                            <div class="album-cover swatch" style="background-image: url('https://lastfm.freetls.fastly.net/i/u/770x0/1569198c4cf0a3b2ff8728975e8359fa.jpg')"></div>
+                            <div class="album-cover swatch" style="background-image: url('https://lastfm.freetls.fastly.net/i/u/770x0/b897255bf422baa93a42536af293f9f8.jpg')"></div>
+                            <div class="album-cover swatch" style="background-image: url('https://lastfm.freetls.fastly.net/i/u/770x0/def68d94aae8e52ef2d1c0c9d3e16ff4.jpg')"></div>
+                            <div class="album-cover swatch" style="background-image: url('https://lastfm.freetls.fastly.net/i/u/770x0/e9dd5c8d3294ca0a0f58cbf7ad5fd6a6.jpg')"></div>
+                            <div class="album-cover swatch" style="background-image: url('https://lastfm.freetls.fastly.net/i/u/770x0/570021b68d3d9d2db08bc99a473303b0.jpg')"></div>
+                            <div class="album-cover swatch" style="background-image: url('https://lastfm.freetls.fastly.net/i/u/770x0/4cc13056c7568b5c207dd7aee03fdb0f.jpg')"></div>
+                        </div>
+                    </div>
+                    <div class="toggle-container" id="container-hue_from_album">
+                        <button class="btn reset" onclick="_reset_item('hue_from_album')">${trans[lang].settings.reset}</button>
+                        <div class="heading">
+                            <h5>${trans[lang].settings.customise.hue_from_album.name}</h5>
+                            <p>${trans[lang].settings.customise.hue_from_album.bio}</p>
+                        </div>
+                        <div class="toggle-wrap">
+                            <button class="toggle" id="toggle-hue_from_album" onclick="_update_item('hue_from_album')" aria-checked="true">
+                                <div class="dot"></div>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="slider-container" id="container-gloss">
+                        <button class="btn reset" onclick="_reset_item('gloss')">${trans[lang].settings.reset}</button>
+                        <div class="heading">
+                            <h5>${trans[lang].settings.customise.gloss.name}</h5>
+                            <p>${trans[lang].settings.customise.gloss.bio}</p>
+                        </div>
+                        <div class="slider">
+                            <div class="slider-track" id="slider-track-gloss"><div class="slider-fill"></div><div class="slider-nub"></div></div>
+                            <input type="range" min="0" max="1" value="0" step="0.05" id="slider-gloss" oninput="_update_item('gloss', this.value)">
+                            <p id="value-gloss">0</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="bleh--panel">
+                    <h4>${trans[lang].settings.customise.display.name}</h4>
+                    <div class="inner-preview pad flex">
+                        <section class="catalogue-tags">
+                            <ul class="tags-list tags-list--global">
+                                <li class="tag">
+                                    <a href="/tag/pop">pop</a>
+                                </li>
+                                <li class="tag">
+                                    <a href="/tag/country">country</a>
+                                </li>
+                                <li class="tag">
+                                    <a href="/tag/singer-songwriter">singer-songwriter</a>
+                                </li>
+                                <li class="tag">
+                                    <a href="/tag/female+vocalists">female vocalists</a>
+                                </li>
+                                <li class="tag">
+                                    <a href="/tag/synthpop">synthpop</a>
+                                </li>
+                            </ul>
+                        </section>
+                    </div>
+                    <div class="toggle-container" id="container-gendered_tags" onclick="_update_item('gendered_tags')">
+                        <button class="btn reset" onclick="_reset_item('gendered_tags')">${trans[lang].settings.reset}</button>
+                        <div class="heading">
+                            <h5>${trans[lang].settings.customise.gendered_tags.name}</h5>
+                            <p>${trans[lang].settings.customise.gendered_tags.bio}</p>
+                        </div>
+                        <div class="toggle-wrap">
+                            <button class="toggle" id="toggle-gendered_tags" aria-checked="true">
                                 <div class="dot"></div>
                             </button>
                         </div>
