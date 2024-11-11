@@ -11258,6 +11258,37 @@ let has_prompted_for_update = false;
                     content_top.classList.add('redesigned-content-top');
                     page.structure.content_top = content_top;
                     navlist.after(content_top);
+                } else {
+                    let subpage_title = page.structure.main.querySelector(':scope > .subpage-title');
+
+                    if (subpage_title != null) {
+                        content_top = document.createElement('div');
+                        content_top.classList.add('content-top', 'redesigned-content-top');
+
+                        content_top.innerHTML = (`
+                            <div class="content-top-inner-wrap">
+                                <div class="container content-top-lower">
+                                    <h1 class="content-top-header">${subpage_title.textContent.trim()}</h1>
+                                </div>
+                            </div>
+                        `);
+
+                        page.structure.content_top = content_top;
+                        navlist.after(content_top);
+
+                        page.structure.main.removeChild(subpage_title);
+                    }
+
+                    // is there another navlist?
+                    navlist = page.structure.main.querySelector('.navlist');
+                    if (navlist != null) {
+                        navlist.classList.add('redesigned-navigation');
+
+                        if (page.structure.content_top != null)
+                            page.structure.content_top.after(navlist);
+                        else
+                            page.structure.container.insertBefore(navlist, page.structure.row);
+                    }
                 }
             }
 
@@ -11411,6 +11442,37 @@ let has_prompted_for_update = false;
                     content_top.classList.add('redesigned-content-top');
                     page.structure.content_top = content_top;
                     navlist.after(content_top);
+                } else {
+                    let subpage_title = page.structure.main.querySelector(':scope > .subpage-title');
+
+                    if (subpage_title != null) {
+                        content_top = document.createElement('div');
+                        content_top.classList.add('content-top', 'redesigned-content-top');
+
+                        content_top.innerHTML = (`
+                            <div class="content-top-inner-wrap">
+                                <div class="container content-top-lower">
+                                    <h1 class="content-top-header">${subpage_title.textContent.trim()}</h1>
+                                </div>
+                            </div>
+                        `);
+
+                        page.structure.content_top = content_top;
+                        navlist.after(content_top);
+
+                        page.structure.main.removeChild(subpage_title);
+                    }
+
+                    // is there another navlist?
+                    navlist = page.structure.main.querySelector('.navlist');
+                    if (navlist != null) {
+                        navlist.classList.add('redesigned-navigation');
+
+                        if (page.structure.content_top != null)
+                            page.structure.content_top.after(navlist);
+                        else
+                            page.structure.container.insertBefore(navlist, page.structure.row);
+                    }
                 }
             }
 

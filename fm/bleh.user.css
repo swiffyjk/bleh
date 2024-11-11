@@ -4670,9 +4670,9 @@ better than the default selector '#app a' i suppose */
 
 /*     ACTIVE     */
 .chartlist-row--now-scrobbling {
-    --bg: hsla(var(--h4), 45%) !important;
-    --bg-hov: hsla(var(--h4), 60%) !important;
-    --shadow: 0 0 50px 5px hsla(var(--h4), 45%) !important;
+    --bg: hsla(var(--h3), 45%) !important;
+    --bg-hov: hsla(var(--h3), 60%) !important;
+    --shadow: 0 0 50px 5px hsla(var(--h3), 45%) !important;
 
     [data-bleh--theme="light"] & {
         --bg: hsla(var(--h4), 35%) !important;
