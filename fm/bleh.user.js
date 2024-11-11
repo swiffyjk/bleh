@@ -4780,17 +4780,15 @@ let has_prompted_for_update = false;
             // check first if another sidebar exists
             page.structure.side = page.structure.row.querySelector('.col-sidebar');
 
-            if (page.structure.side != null) {
-                log('finished', 'page structure');
-                return;
+            if (page.structure.side == null) {
+                log('page missing side, creating', 'page structure');
+
+                // otherwise, make anew
+                page.structure.side = document.createElement('div');
+                page.structure.side.classList.add('col-sidebar');
+
+                page.structure.row.appendChild(page.structure.side);
             }
-            log('page missing side, creating', 'page structure');
-
-            // otherwise, make anew
-            page.structure.side = document.createElement('div');
-            page.structure.side.classList.add('col-sidebar');
-
-            page.structure.row.appendChild(page.structure.side);
         }
 
         log('finished', 'page structure');
@@ -11336,6 +11334,10 @@ let has_prompted_for_update = false;
         } else {
             // which subpage is it?
             page.subpage = document.body.classList[2].replace('namespace--', '');
+
+            let btn_add = page.structure.side.querySelector('.add-button');
+            if (btn_add != null)
+                btn_add.setAttribute('data-page-subpage', page.subpage);
 
             if (page.subpage == 'music_album_images_image-upload')
                 bleh_gallery_upload();

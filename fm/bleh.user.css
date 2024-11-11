@@ -11123,36 +11123,13 @@ table.table tr:nth-child(2n) td {
     font-size: var(--font-size);
     line-height: var(--line-height);
     color: hsl(var(--c3));
-    font-weight: var(--font-weight);
+    font-weight: var(--font-weight-medium);
     margin-top: unset;
-    display: none;
+    margin-bottom: var(--card-gap);
 }
 .user-events-sidebar .events-list-sidebar {
     margin-top: unset;
 }
-
-
-/* causes issue with button shadow on artist
-event sidebar */
-/*[data-lazy-filter-options="events-select"] {
-    overflow: hidden;
-}*/
-[data-lazy-filter-options="events-select"] .text-bold {
-    font-weight: var(--font-weight);
-    color: hsl(var(--c3));
-    padding-right: var(--card-gap);
-    position: relative;
-    width: fit-content;
-}
-/*[data-lazy-filter-options="events-select"] .text-bold:after {
-    content: '';
-    position: absolute;
-    left: 100%;
-    top: 8px;
-    width: 500px;
-    height: 1px;
-    background: hsl(var(--b4));
-}*/
 
 
 /* now shown in icon */
@@ -11209,8 +11186,43 @@ event sidebar */
 
 /* card-gap is already given from below */
 .events-list-sidebar {
-    margin: 0 0 calc(-1 * var(--card-gap)) 0;
+    margin: var(--card-gap) 0;
+
+    tbody {
+        display: flex;
+        flex-direction: column;
+        gap: var(--item-list-gap);
+    }
+
+    .events-list-item {
+        min-height: unset;
+        margin: unset !important;
+        padding: 0 0 0 calc(52px + var(--card-gap));
+        height: 52px !important;
+    }
 }
+.events-list {
+    tbody {
+        display: flex;
+        flex-direction: column;
+        gap: var(--item-list-gap);
+    }
+}
+
+[data-lazy-filter-options="events-select"] {
+    .text-bold {
+        font-weight: var(--font-weight-medium);
+        color: hsl(var(--c3));
+        position: relative;
+        width: fit-content;
+    }
+
+    /* upcoming events */
+    .buffer-standard.text-bold + .buffer-standard {
+        display: none;
+    }
+}
+
 :is(.events-list, .events-list-anhv1) {
     margin: unset;
 }
@@ -11251,14 +11263,6 @@ is inconsistent and full of duplication */
 :is(.events-list, .events-list-anhv1) td, :is(.events-list, .events-list-anhv1) th {
     display: flex;
     flex-direction: column;
-}
-.events-list-sidebar .events-list-item {
-    min-height: unset;
-    margin: unset !important;
-    padding: var(--card-gap) 0 var(--card-gap) calc(48px + var(--card-gap));
-}
-.events-list-item + .events-list-item {
-    border-top: 1px solid hsl(var(--b4));
 }
 .events-list-sidebar .events-list-item--with-followed-attendees, :is(.events-list, .events-list-anhv1) .events-list-item--with-followed-attendees {
     padding-right: unset;
@@ -11303,9 +11307,30 @@ is inconsistent and full of duplication */
 
 
 /*     EVENTS LIST VIEW     */
+#events-section {
+    margin-top: unset;
+}
+.events-list:not(:last-child) {
+    margin-bottom: var(--card-gap);
+}
+
 :is(.events-list, .events-list-anhv1) td {
     box-shadow: none;
-    padding: var(--card-gap) 0 !important;
+    padding: unset !important;
+
+    &.events-list-item-event {
+        width: 400px;
+    }
+
+    .events-list-item-venue--address, .events-list-item-venue--title,
+    a, .events-list-item-acts {
+        display: -webkit-box;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        line-clamp: 1;
+        -webkit-line-clamp: 1;
+        -webkit-box-orient: vertical;
+    }
 }
 :is(.events-list, .events-list-anhv1) .events-list-item--cancelled .events-list-item-event {
     padding-top: unset;
