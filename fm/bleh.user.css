@@ -17299,6 +17299,8 @@ h4 {
 
     .edit-scrobble-label {
         color: hsl(var(--c3));
+        font-weight: var(--font-weight-medium);
+        margin-bottom: var(--item-list-gap);
 
         .control-label.hidden + &,
         .form-group + & {

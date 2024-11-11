@@ -2913,6 +2913,20 @@ let inbuilt_settings = {
         value: true,
         values: [true, false],
         type: 'toggle'
+    },
+    edit_all: {
+        css: 'edit_all',
+        unit: '',
+        value: true,
+        values: [true, false],
+        type: 'toggle'
+    },
+    create_automatic_edit_rule: {
+        css: 'create_automatic_edit_rule',
+        unit: '',
+        value: true,
+        values: [true, false],
+        type: 'toggle'
     }
 }
 
@@ -3042,6 +3056,7 @@ let has_prompted_for_update = false;
             error_page();
 
             subscribe_to_events();
+            auto_edit_modal();
         }
 
         // last.fm is a single page application
@@ -3106,6 +3121,7 @@ let has_prompted_for_update = false;
                 error_page();
 
                 subscribe_to_events();
+                auto_edit_modal();
             }
         });
 
@@ -13066,5 +13082,43 @@ let has_prompted_for_update = false;
 
         if (version.feature_flags[flag] != null)
             return version.feature_flags[flag].default;
+    }
+
+
+
+
+    function auto_edit_modal() {
+        let modal = document.querySelector('.automatic-edit-modal-body-v2');
+
+        if (modal == null)
+            return;
+
+        if (modal.hasAttribute('data-bwaa-edit'))
+            return;
+        modal.setAttribute('data-bwaa-edit', 'true');
+
+        log('auto edit v2', 'modal');
+
+
+        let checkboxes = modal.querySelectorAll('.checkbox');
+
+        checkboxes.forEach((checkbox) => {
+            let id = checkbox.querySelector('input').getAttribute('name');
+            let text = checkbox.textContent.trim();
+
+            checkbox.classList = 'toggle-container';
+            checkbox.setAttribute('onclick', `_update_inbuilt_item('${id}')`);
+            checkbox.innerHTML = (`
+                <div class="heading">
+                    <h5>${text}</h5>
+                </div>
+                <div class="toggle-wrap">
+                    <input class="companion-checkbox" type="checkbox" name="${id}" id="inbuilt-companion-checkbox-${id}">
+                    <span class="btn toggle" id="toggle-${id}" onclick="_update_inbuilt_item('${id}')" aria-checked="false">
+                        <div class="dot"></div>
+                    </span>
+                </div>
+            `);
+        });
     }
 })();
