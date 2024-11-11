@@ -9163,14 +9163,14 @@ let has_prompted_for_update = false;
 
             deliver_notif('refreshed tracks');
 
-            let tracklist_panel = doc.getElementById('recent-tracks-section');
+            let tracklist_panel = doc.querySelector('#recent-tracks-section .chartlist');
 
             if (tracklist_panel == null) {
                 deliver_notif('recent tracks could not be found ;-;');
                 return;
             }
 
-            document.getElementById('recent-tracks-section').innerHTML = tracklist_panel.innerHTML;
+            page.structure.main.querySelector('#recent-tracks-section .chartlist').outerHTML = tracklist_panel.outerHTML;
 
             let refresh_btn = document.createElement('button');
             refresh_btn.classList.add('refresh-tracklist-btn');
