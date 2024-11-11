@@ -4852,6 +4852,21 @@ let has_prompted_for_update = false;
 
             page.structure.container.insertBefore(redesigned_profile_header, page.structure.container.firstElementChild);
             profile_header.classList.add('legacy-header');
+
+
+            // make avatar clickable
+            let header_avatar;
+            if (ff('refreshed_nav'))
+                header_avatar = page.structure.container.querySelector('.redesigned-profile-header .avatar-side');
+            else
+                header_avatar = document.querySelector('.header-avatar .avatar');
+
+            let src = header_avatar.querySelector('img').getAttribute('src');
+
+            let avatar_link = document.createElement('a');
+            avatar_link.classList.add('bleh--avatar-clickable-link');
+            avatar_link.setAttribute('onclick', `_expand_avatar('${src.replace('avatar170s', 'ar0')}')`);
+            header_avatar.appendChild(avatar_link);
         }
 
 
@@ -4867,20 +4882,6 @@ let has_prompted_for_update = false;
 
             if (ff('redesigned_profile_header'))
                 redesign_profile_header(is_own_profile);
-
-            // make avatar clickable
-            let header_avatar;
-            if (ff('refreshed_nav'))
-                header_avatar = page.structure.container.querySelector('.redesigned-profile-header .avatar-side');
-            else
-                header_avatar = document.querySelector('.header-avatar .avatar');
-
-            let src = header_avatar.querySelector('img').getAttribute('src');
-
-            let avatar_link = document.createElement('a');
-            avatar_link.classList.add('bleh--avatar-clickable-link');
-            avatar_link.setAttribute('onclick', `_expand_avatar('${src.replace('avatar170s', 'ar0')}')`);
-            header_avatar.appendChild(avatar_link);
 
 
             //
