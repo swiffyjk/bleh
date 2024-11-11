@@ -11327,7 +11327,9 @@ is inconsistent and full of duplication */
         width: 400px;
     }
 
-    .events-list-item-venue--address, .events-list-item-venue--title,
+    &:not(.events-list-anhv1 td) .events-list-item-venue--address,
+    .events-list-item-venue--country,
+    .events-list-item-venue--city, .events-list-item-venue--title,
     a, .events-list-item-acts {
         display: -webkit-box;
         overflow: hidden;
