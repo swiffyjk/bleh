@@ -12620,6 +12620,10 @@ let has_prompted_for_update = false;
             </div>
         `);
 
+        let background = document.body.querySelector('.header-background--has-image');
+        if (background != null)
+            register_background(background.style.getPropertyValue('background-image').replace('url("', '').replace('")', ''));
+
         page.structure.container.insertBefore(redesigned_event_header, page.structure.container.firstElementChild);
         document.body.querySelector('.header').classList.add('legacy-header');
 

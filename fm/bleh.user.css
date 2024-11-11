@@ -11358,6 +11358,12 @@ is inconsistent and full of duplication */
 .attendance-btn {
     position: relative;
     --show-icon: block;
+
+    /* weirdly displaying if u have none selected */
+    [data-ajax-form-state=""] &.attendance-btn--turn-off,
+    [data-ajax-form-state="no"] &.attendance-btn--turn-off {
+        display: none !important;
+    }
 }
 
 .attendance-btn--attending {
