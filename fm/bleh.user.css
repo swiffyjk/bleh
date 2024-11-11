@@ -6070,7 +6070,6 @@ button,
 .image-upload-remove,
 .profile-header-set-obsession,
 .back-button, .delete-button,
-.player-bar .player-bar-playback-options-external-link, .player-bar .player-bar-playback-options-settings, .player-bar .player-bar-playback-options-switch-device,
 #manage_data .btn-primary,
 .obsession-history-play-all,
 .done, .cancel, .download, .upload, .save, .js-close:not(.modal-action-button), .form-group button[type="submit"]
@@ -7243,13 +7242,12 @@ input:is([name="track_name"], [name="artist_name"], [name="album_name"], [name="
 
 
 /*     WINDOW     */
-.player-bar-playback-options-wrap,
 .date-range-picker-content,
 .dropdown-menu-clickable, .auth-dropdown-menu, .navlist-hidden-list, .modal-body, .library-search-results, .events-filter-location-dropdown {
     margin: unset !important;
     background: hsl(var(--b6)) !important;
     border-radius: var(--card-radius) !important;
-    box-shadow: var(--menu-shadow) !important;
+    box-shadow: var(--override-full-shadow, var(--menu-shadow)) !important;
     color: hsl(var(--c2));
 
     &:not(.modal-body) {
@@ -7269,10 +7267,14 @@ input:is([name="track_name"], [name="artist_name"], [name="album_name"], [name="
         background-position: unset !important;
     }
 
-    [data-bleh--theme="light"] &,
-    [data-bleh--theme="oled"] & {
-        background: hsl(var(--b5)) !important;
-        box-shadow: var(--override-full-shadow, 0 0 0 1px var(--card-border-base) inset, var(--menu-shadow)) !important;
+    &:not(
+        .modal--avatar
+    ) {
+        [data-bleh--theme="light"] &,
+        [data-bleh--theme="oled"] & {
+            background: hsl(var(--b5)) !important;
+            box-shadow: var(--override-full-shadow, 0 0 0 1px var(--card-border-base) inset, var(--menu-shadow)) !important;
+        }
     }
 }
 
