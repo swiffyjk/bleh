@@ -4818,6 +4818,11 @@ let has_prompted_for_update = false;
             let title_wrap = profile_header.querySelector('.header-title-label-wrap');
             let sub_wrap = profile_header.querySelector('.header-title-secondary');
 
+            // me :3
+            if (cute.includes(page.name)) {
+                title_wrap.querySelector('.header-title a').classList.add('bleh--name-is-cute');
+            }
+
             let redesigned_profile_header = document.createElement('section');
             redesigned_profile_header.classList.add('redesigned-header', 'redesigned-profile-header', 'no-background');
             redesigned_profile_header.innerHTML = (`
@@ -4830,6 +4835,12 @@ let has_prompted_for_update = false;
                     ${(sub_wrap != null) ? sub_wrap.outerHTML : ''}
                 </div>
             `);
+
+            // staff
+            let is_staff = (title_wrap.querySelector('.user-status-staff') != null);
+            if (is_staff) {
+                redesigned_profile_header.classList.add('staff-profile');
+            }
 
             if (avatar != null)
                 register_background(avatar.querySelector('img').getAttribute('src'));
@@ -5010,17 +5021,6 @@ let has_prompted_for_update = false;
                     profile_name_obj.appendChild(badge);
                 }
             }
-        }
-
-        // me :3
-        if (cute.includes(page.name)) {
-            profile_name_obj.querySelector('.header-title a').classList.add('bleh--name-is-cute');
-        }
-
-        // staff
-        let is_staff = (profile_header.querySelector('.user-status-staff') != null);
-        if (is_staff) {
-            profile_header.classList.add('staff-profile');
         }
 
         // secondary text

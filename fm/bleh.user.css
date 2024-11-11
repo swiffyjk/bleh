@@ -1716,6 +1716,9 @@ article, section, .buffer-standard, .buffer-standard:not(.col-sidebar) .buffer-s
     padding: unset !important;
     aspect-ratio: 1 / 1;
 }
+.track-overview-video-column {
+    position: relative;
+}
 .track-overview-new .video-preview, .video-preview-upload-cta.link-block, .album-artwork-upload-cta {
     --bg: hsl(var(--b5)) !important;
     --bg-hov: hsla(var(--b5), 80%) !important;
@@ -3346,7 +3349,7 @@ span[itemprop="byArtist"] + .header-new-title {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
     gap: var(--card-gap);
-    overflow: hidden;
+    /*overflow: hidden;*/
 
     &:before, &:after {
         display: none;
@@ -17226,7 +17229,7 @@ h4 {
     box-shadow: unset !important;
 
     .view-all-button {
-        --shadow: none;
+        --shadow: var(--card-shadow);
         flex: 1;
         --padding: var(--card-gap) var(--card-padding) var(--card-gap) calc(var(--card-padding) + 16px + 6px);
         --mask: var(--icon-16-gallery-vertical);
@@ -17710,7 +17713,7 @@ h4 {
                 color: hsl(var(--c1));
 
                 .staff-profile & {
-                    color: hsl(var(--l4-c));
+                    color: hsl(var(--l3-c));
                     --hue-over: var(--hue-neg);
                     --sat-over: 1;
                     --lit-over: 1;
@@ -17728,6 +17731,8 @@ h4 {
             .header-new-chart-position-number {
                 font-weight: var(--font-weight-medium);
                 margin-left: calc(var(--card-gap) - 6px);
+                color: hsl(var(--l2-c));
+                text-shadow: 0 0 20px hsl(var(--h4));
             }
         }
 
