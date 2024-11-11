@@ -2087,7 +2087,7 @@ function lookup_lang() {
     non_override_lang = lang;
 
     if (!valid_langs.includes(lang)) {
-        log(`language fallback from ${lang} to ${en} - not supported`, 'trans');
+        log(`language fallback from ${lang} to en - not supported`, 'trans');
         lang = 'en';
     }
 
