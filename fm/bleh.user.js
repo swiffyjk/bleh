@@ -10624,6 +10624,9 @@ let has_prompted_for_update = false;
             lotus_btn.href = 'https://github.com/katelyynn/lotus/issues/new/choose';
             lotus_btn.target = '_blank';
 
+            if (page.corrected)
+                lotus_btn.classList.add('active');
+
             /*if (page.corrected)
                 tippy(lotus_btn, {
                     content: (`<span class="lotus-active">${trans[lang].lotus.correct.tooltip_active}</span><br><div class="tooltip-sub">${document.body.querySelector('.main-content > [itemscope]').getAttribute('data-page-resource-name')}</div>`),
@@ -10656,7 +10659,26 @@ let has_prompted_for_update = false;
             placement: 'bottom',
             interactive: true,
             interactiveBorder: 10,
-            trigger: 'click'
+            trigger: 'click',
+
+            onShow(instance) {
+                /*let lotus_item = instance.popper.querySelector('.lotus-btn:not([aria-describedby])');
+
+                if (page.corrected)
+                    tippy(lotus_item, {
+                        theme: 'lotus-tooltip-corrected',
+                        content: (`<span class="lotus-active">${trans[lang].lotus.correct.tooltip_active}</span><br><div class="tooltip-sub">${document.body.querySelector('.main-content > [itemscope]').getAttribute('data-page-resource-name')}</div>`),
+                        allowHTML: true,
+                        placement: 'right'
+                    });
+                else
+                    tippy(lotus_item, {
+                        theme: 'lotus-tooltip',
+                        content: (`${trans[lang].lotus.correct.tooltip}<br><div class="tooltip-sub">${document.body.querySelector('.main-content > [itemscope]').getAttribute('data-page-resource-name')}</div>`),
+                        allowHTML: true,
+                        placement: 'right'
+                    });*/
+            }
         });
 
         if (play_btn != null)
