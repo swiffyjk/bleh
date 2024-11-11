@@ -11113,7 +11113,7 @@ table.table tr:nth-child(2n) td {
     margin: unset !important;
 
     /* calendar-icon specific */
-    background: unset;
+    background: unset !important;
 
     &.calendar-icon-day {
         font-size: 24px !important;
@@ -11189,7 +11189,9 @@ event sidebar */
 
     .events-list-item-date-icon, .calendar-icon {
         display: flex;
-        background-color: hsl(var(--b4));
+        background: hsl(var(--b4)) !important;
+        box-shadow: unset !important;
+        color: hsl(var(--c2));
         width: 52px;
         aspect-ratio: 1 / 1;
         cursor: default;
