@@ -4940,6 +4940,7 @@ better than the default selector '#app a' i suppose */
     height: fit-content;
     color: hsl(var(--c3));
     text-align: right;
+    cursor: default;
 }
 
 .obsession-candidate-image,
