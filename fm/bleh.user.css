@@ -11142,6 +11142,9 @@ table.table tr:nth-child(2n) td {
 
 /* icon */
 .events-list-item {
+    min-height: 52px !important;
+
+    .events-list-item-art,
     .events-list-item-date {
         width: 52px !important;
         display: flex;
@@ -11201,6 +11204,7 @@ table.table tr:nth-child(2n) td {
         height: 52px !important;
     }
 }
+.events-list-anhv1,
 .events-list {
     tbody {
         display: flex;
@@ -11310,6 +11314,7 @@ is inconsistent and full of duplication */
 #events-section {
     margin-top: unset;
 }
+.events-list-anhv1:not(:last-child),
 .events-list:not(:last-child) {
     margin-bottom: var(--card-gap);
 }
