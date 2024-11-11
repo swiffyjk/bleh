@@ -221,7 +221,8 @@ const trans = {
                 you_share_2: 'You share {artist1} and {artist2}',
                 you_share_3: 'You share {artist1}, {artist2}, and {artist3}'
             },
-            open_avatar: 'Open in a new tab'
+            open_avatar: 'Open in a new tab',
+            settings: 'Configure'
         },
         event: {
             name: 'Event',
@@ -4259,7 +4260,7 @@ let has_prompted_for_update = false;
 
         select.value = value;
 
-        console.log(`#select-${select_id}`);
+        console.info(select, `#select-${select_id}`);
 
         update_custom_select(document.getElementById(`select-${select_id}`)._tippy.popper, value, select_id);
     }
@@ -8103,12 +8104,12 @@ let has_prompted_for_update = false;
         update_inbuilt_item(item, value);
     }
 
-    function update_inbuilt_item(item, value, modify=true) {
+    function update_inbuilt_item(item, value, modify=true, element=document.body) {
         //console.log('update item',item,value);
         console.warn('update item',item,value, 'modify', modify);
 
-        let test_if_valid = document.getElementById(`toggle-${item}`);
-        console.warn(test_if_valid);
+        let test_if_valid = element.querySelector(`#toggle-${item}`);
+        console.warn(test_if_valid, `toggle-${item}`);
         //console.info(test_if_valid, item, value, inbuilt_settings[item], 'modify', modify);
         if (test_if_valid == undefined)
             return;
@@ -8122,25 +8123,25 @@ let has_prompted_for_update = false;
             //console.info(value, inbuilt_settings[item].values[0], value == inbuilt_settings[item].values[0], modify);
 
             if (value == inbuilt_settings[item].values[0] && modify) {
-                document.getElementById(`inbuilt-companion-checkbox-${item}`).checked = false;
-                document.getElementById(`toggle-${item}`).setAttribute('aria-checked', false);
+                element.querySelector(`#inbuilt-companion-checkbox-${item}`).checked = false;
+                element.querySelector(`#toggle-${item}`).setAttribute('aria-checked', false);
                 document.documentElement.setAttribute(`data-bleh--inbuilt-${item}`, inbuilt_settings[item].values[1]);
             } else if (modify) {
-                document.getElementById(`inbuilt-companion-checkbox-${item}`).checked = true;
-                document.getElementById(`toggle-${item}`).setAttribute('aria-checked', true);
+                element.querySelector(`#inbuilt-companion-checkbox-${item}`).checked = true;
+                element.querySelector(`#toggle-${item}`).setAttribute('aria-checked', true);
                 document.documentElement.setAttribute(`data-bleh--inbuilt-${item}`, inbuilt_settings[item].values[0]);
             } else {
                 // dont modify, just show
                 console.warn(item, value, value == true, value == false, typeof(value), typeof(true));
                 if (value == true) {
                     console.warn(item, value, 'TRUE');
-                    document.getElementById(`inbuilt-companion-checkbox-${item}`).checked = true;
-                    document.getElementById(`toggle-${item}`).setAttribute('aria-checked', true);
+                    element.querySelector(`#inbuilt-companion-checkbox-${item}`).checked = true;
+                    element.querySelector(`#toggle-${item}`).setAttribute('aria-checked', true);
                     document.documentElement.setAttribute(`data-bleh--inbuilt-${item}`, true);
                 } else if (value == false) {
                     console.warn(item, value, 'FALSE');
-                    document.getElementById(`inbuilt-companion-checkbox-${item}`).checked = false;
-                    document.getElementById(`toggle-${item}`).setAttribute('aria-checked', false);
+                    element.querySelector(`#inbuilt-companion-checkbox-${item}`).checked = false;
+                    element.querySelector(`#toggle-${item}`).setAttribute('aria-checked', false);
                     document.documentElement.setAttribute(`data-bleh--inbuilt-${item}`, false);
                 }
             }
@@ -12697,10 +12698,26 @@ let has_prompted_for_update = false;
 
 
     function patch_profiles_chart_windows() {
-        let recent_tracks_settings = page.structure.main.querySelector('#recent-tracks-settings');
-        let artist_settings = page.structure.main.querySelector('#artist-chart-settings');
-        let album_settings = page.structure.main.querySelector('#albums-chart-settings');
-        let track_settings = page.structure.main.querySelector('#track-chart-settings');
+        let recent_tracks = page.structure.main.querySelector('#recent-tracks-section');
+        let recent_tracks_settings = recent_tracks.querySelector('#recent-tracks-settings');
+        let recent_tracks_link = recent_tracks.querySelector('[aria-controls="recent-tracks-settings"]');
+        let recent_tracks_tooltip;
+
+        let artist = page.structure.main.querySelector('#top-artists');
+        let artist_settings = artist.querySelector('#artist-chart-settings');
+        let artist_link = artist.querySelector('[aria-controls="artist-chart-settings"]');
+        let artist_tooltip;
+
+        let album = page.structure.main.querySelector('#top-albums');
+        let album_settings = album.querySelector('#albums-chart-settings');
+        let album_link = album.querySelector('[aria-controls="album-chart-settings"]');
+        let album_tooltip;
+
+        let track = page.structure.main.querySelector('#top-tracks');
+        let track_settings = track.querySelector('#track-chart-settings');
+        let track_link = track.querySelector('[aria-controls="track-chart-settings"]');
+        let track_tooltip;
+
 
 
         let token = recent_tracks_settings.querySelector('[name="csrfmiddlewaretoken"]').getAttribute('value');
@@ -12709,231 +12726,317 @@ let has_prompted_for_update = false;
         let original_chart_settings = {};
 
         if (recent_tracks_settings != null) {
+            let new_button = document.createElement('button');
+            new_button.classList.add('panel-settings-button');
+            new_button.textContent = trans[lang].profile.settings;
+
+            recent_tracks_settings.classList = '';
+
+            recent_tracks_tooltip = tippy(new_button, {
+                theme: 'window',
+                content: (`${recent_tracks_settings.outerHTML}`),
+                allowHTML: true,
+                placement: 'bottom',
+                interactive: true,
+                interactiveBorder: 10,
+                trigger: 'click',
+
+                onShow(instance) {
+                    let form = instance.popper.querySelector('form');
+
+                    form.innerHTML = (`
+                        <input type="hidden" name="csrfmiddlewaretoken" value="${token}">
+                        <div class="select-container">
+                            <div class="heading">
+                                <h5>${trans[lang].settings.inbuilt.charts.recent.count.name}</h5>
+                            </div>
+                            <div class="select-wrap custom-selector" id="id_chart_length_recent_tracks_select">
+                                ${original_chart_settings.recent.count}
+                            </div>
+                        </div>
+                        <div class="toggle-container" id="container-recent_artwork">
+                            <button class="btn reset" onclick="_reset_inbuilt_item('recent_artwork')">Reset to default</button>
+                            <div class="heading">
+                                <h5>${trans[lang].settings.inbuilt.charts.recent.artwork.name}</h5>
+                            </div>
+                            <div class="toggle-wrap">
+                                <input class="companion-checkbox" type="checkbox" name="show_recent_tracks_artwork" id="inbuilt-companion-checkbox-recent_artwork">
+                                <span class="btn toggle" id="toggle-recent_artwork" onclick="_update_inbuilt_item('recent_artwork')" aria-checked="false">
+                                    <div class="dot"></div>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="toggle-container" id="container-recent_realtime">
+                            <button class="btn reset" onclick="_reset_inbuilt_item('recent_realtime')">Reset to default</button>
+                            <div class="heading">
+                                <h5>${trans[lang].settings.inbuilt.charts.recent.realtime.name}</h5>
+                                <p>${trans[lang].settings.inbuilt.charts.recent.realtime.bio}</p>
+                            </div>
+                            <div class="toggle-wrap">
+                                <input class="companion-checkbox" type="checkbox" name="auto_refresh_recent_tracks" id="inbuilt-companion-checkbox-recent_realtime">
+                                <span class="btn toggle" id="toggle-recent_realtime" onclick="_update_inbuilt_item('recent_realtime')" aria-checked="false" type="button">
+                                    <div class="dot"></div>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="sep"></div>
+                        <div class="settings-footer">
+                            <button type="submit" class="btn-primary save">
+                                ${trans[lang].settings.save}
+                            </button>
+                            <button class="btn-cancel btn cancel js-disclose-close">
+                                ${trans[lang].settings.cancel}
+                            </button>
+                        </div>
+                    `);
+
+                    custom_select(form.querySelector('#id_chart_length_recent_tracks'), form.querySelector('#id_chart_length_recent_tracks_select'));
+
+                    let selects = form.querySelectorAll('select');
+                    selects.forEach((select) => {
+                        select.setAttribute('onchange', `_update_inbuilt_select('${select.getAttribute('id')}', this.value)`);
+                        update_inbuilt_select(select.getAttribute('id'), select.value);
+                    });
+
+                    for (let setting in original_chart_settings.recent) {
+                        update_inbuilt_item(setting, original_chart_settings.recent[setting], false, form);
+                    }
+                }
+            });
+
+            recent_tracks.appendChild(new_button);
+
             original_chart_settings.recent = {
                 recent_artwork: recent_tracks_settings.querySelector('#id_show_recent_tracks_artwork').checked,
                 count: recent_tracks_settings.querySelector('#id_chart_length_recent_tracks').outerHTML,
                 recent_realtime: recent_tracks_settings.querySelector('#id_auto_refresh_recent_tracks').checked
             }
+
+            recent_tracks_settings.innerHTML = '';
         }
         if (artist_settings != null) {
+            let new_button = document.createElement('button');
+            new_button.classList.add('panel-settings-button');
+            new_button.textContent = trans[lang].profile.settings;
+
+            artist_settings.classList = '';
+
+            artist_tooltip = tippy(new_button, {
+                theme: 'window',
+                content: (`${artist_settings.outerHTML}`),
+                allowHTML: true,
+                placement: 'bottom',
+                interactive: true,
+                interactiveBorder: 10,
+                trigger: 'click',
+
+                onShow(instance) {
+                    let form = instance.popper.querySelector('form');
+
+                    form.innerHTML = (`
+                        <input type="hidden" name="csrfmiddlewaretoken" value="${token}">
+                        <div class="select-container">
+                            <div class="heading">
+                                <h5>${trans[lang].settings.inbuilt.charts.artists.timeframe.name}</h5>
+                            </div>
+                            <div class="select-wrap custom-selector" id="id_chart_range_top_artists_select">
+                                ${original_chart_settings.artists.timeframe}
+                            </div>
+                        </div>
+                        <div class="select-container">
+                            <div class="heading">
+                                <h5>${trans[lang].settings.inbuilt.charts.artists.style.name}</h5>
+                            </div>
+                            <div class="select-wrap custom-selector" id="id_chart_style_top_artists_select">
+                                ${original_chart_settings.artists.style}
+                            </div>
+                        </div>
+                        <div class="select-container">
+                            <div class="heading">
+                                <h5>${trans[lang].settings.inbuilt.charts.artists.length.name}</h5>
+                            </div>
+                            <div class="select-wrap custom-selector" id="id_artists_image_grid_length_select">
+                                ${original_chart_settings.artists.length}
+                            </div>
+                        </div>
+                        <div class="sep"></div>
+                        <div class="settings-footer">
+                            <button type="submit" class="btn-primary save">
+                                ${trans[lang].settings.save}
+                            </button>
+                            <button class="btn-cancel btn cancel js-disclose-close">
+                                ${trans[lang].settings.cancel}
+                            </button>
+                        </div>
+                    `);
+
+                    custom_select(form.querySelector('#id_chart_range_top_artists'), form.querySelector('#id_chart_range_top_artists_select'));
+                    custom_select(form.querySelector('#id_chart_style_top_artists'), form.querySelector('#id_chart_style_top_artists_select'));
+                    custom_select(form.querySelector('#id_artists_image_grid_length'), form.querySelector('#id_artists_image_grid_length_select'));
+
+                    let selects = form.querySelectorAll('select');
+                    selects.forEach((select) => {
+                        select.setAttribute('onchange', `_update_inbuilt_select('${select.getAttribute('id')}', this.value)`);
+                        update_inbuilt_select(select.getAttribute('id'), select.value);
+                    });
+                }
+            });
+
+            artist.appendChild(new_button);
+
             original_chart_settings.artists = {
                 timeframe: artist_settings.querySelector('#id_chart_range_top_artists').outerHTML,
                 style: artist_settings.querySelector('#id_chart_style_top_artists').outerHTML,
                 length: artist_settings.querySelector('#id_artists_image_grid_length').outerHTML
             }
+
+            artist_settings.innerHTML = '';
         }
         if (album_settings != null) {
+            let new_button = document.createElement('button');
+            new_button.classList.add('panel-settings-button');
+            new_button.textContent = trans[lang].profile.settings;
+
+            album_settings.classList = '';
+
+            album_tooltip = tippy(new_button, {
+                theme: 'window',
+                content: (`${album_settings.outerHTML}`),
+                allowHTML: true,
+                placement: 'bottom',
+                interactive: true,
+                interactiveBorder: 10,
+                trigger: 'click',
+
+                onShow(instance) {
+                    let form = instance.popper.querySelector('form');
+
+                    form.innerHTML = (`
+                        <input type="hidden" name="csrfmiddlewaretoken" value="${token}">
+                        <div class="select-container">
+                            <div class="heading">
+                                <h5>${trans[lang].settings.inbuilt.charts.albums.timeframe.name}</h5>
+                            </div>
+                            <div class="select-wrap custom-selector" id="id_chart_range_top_albums_select">
+                                ${original_chart_settings.albums.timeframe}
+                            </div>
+                        </div>
+                        <div class="select-container">
+                            <div class="heading">
+                                <h5>${trans[lang].settings.inbuilt.charts.albums.style.name}</h5>
+                            </div>
+                            <div class="select-wrap custom-selector" id="id_chart_style_top_albums_select">
+                                ${original_chart_settings.albums.style}
+                            </div>
+                        </div>
+                        <div class="select-container">
+                            <div class="heading">
+                                <h5>${trans[lang].settings.inbuilt.charts.albums.length.name}</h5>
+                            </div>
+                            <div class="select-wrap custom-selector" id="id_albums_image_grid_length_select">
+                                ${original_chart_settings.albums.length}
+                            </div>
+                        </div>
+                        <div class="sep"></div>
+                        <div class="settings-footer">
+                            <button type="submit" class="btn-primary save">
+                                ${trans[lang].settings.save}
+                            </button>
+                            <button class="btn-cancel btn cancel js-disclose-close">
+                                ${trans[lang].settings.cancel}
+                            </button>
+                        </div>
+                    `);
+
+                    custom_select(form.querySelector('#id_chart_range_top_albums'), form.querySelector('#id_chart_range_top_albums_select'));
+                    custom_select(form.querySelector('#id_chart_style_top_albums'), form.querySelector('#id_chart_style_top_albums_select'));
+                    custom_select(form.querySelector('#id_albums_image_grid_length'), form.querySelector('#id_albums_image_grid_length_select'));
+
+                    let selects = form.querySelectorAll('select');
+                    selects.forEach((select) => {
+                        select.setAttribute('onchange', `_update_inbuilt_select('${select.getAttribute('id')}', this.value)`);
+                        update_inbuilt_select(select.getAttribute('id'), select.value);
+                    });
+                }
+            });
+
+            album.appendChild(new_button);
+
             original_chart_settings.albums = {
                 timeframe: album_settings.querySelector('#id_chart_range_top_albums').outerHTML,
                 style: album_settings.querySelector('#id_chart_style_top_albums').outerHTML,
                 length: album_settings.querySelector('#id_albums_image_grid_length').outerHTML
             }
+
+            album_settings.innerHTML = '';
         }
         if (track_settings != null) {
+            let new_button = document.createElement('button');
+            new_button.classList.add('panel-settings-button');
+            new_button.textContent = trans[lang].profile.settings;
+
+            track_settings.classList = '';
+
+            track_tooltip = tippy(new_button, {
+                theme: 'window',
+                content: (`${track_settings.outerHTML}`),
+                allowHTML: true,
+                placement: 'bottom',
+                interactive: true,
+                interactiveBorder: 10,
+                trigger: 'click',
+
+                onShow(instance) {
+                    let form = instance.popper.querySelector('form');
+
+                    form.innerHTML = (`
+                        <input type="hidden" name="csrfmiddlewaretoken" value="${token}">
+                        <div class="select-container">
+                            <div class="heading">
+                                <h5>${trans[lang].settings.inbuilt.charts.tracks.timeframe.name}</h5>
+                            </div>
+                            <div class="select-wrap custom-selector" id="id_chart_range_top_tracks_select">
+                                ${original_chart_settings.tracks.timeframe}
+                            </div>
+                        </div>
+                        <div class="select-container">
+                            <div class="heading">
+                                <h5>${trans[lang].settings.inbuilt.charts.tracks.count.name}</h5>
+                            </div>
+                            <div class="select-wrap custom-selector" id="id_chart_length_top_tracks_select">
+                                ${original_chart_settings.tracks.count}
+                            </div>
+                        </div>
+                        <div class="sep"></div>
+                        <div class="settings-footer">
+                            <button type="submit" class="btn-primary save">
+                                ${trans[lang].settings.save}
+                            </button>
+                            <button class="btn-cancel btn cancel js-disclose-close">
+                                ${trans[lang].settings.cancel}
+                            </button>
+                        </div>
+                    `);
+
+                    custom_select(form.querySelector('#id_chart_range_top_tracks'), form.querySelector('#id_chart_range_top_tracks_select'));
+                    custom_select(form.querySelector('#id_chart_length_top_tracks'), form.querySelector('#id_chart_length_top_tracks_select'));
+
+                    let selects = form.querySelectorAll('select');
+                    selects.forEach((select) => {
+                        select.setAttribute('onchange', `_update_inbuilt_select('${select.getAttribute('id')}', this.value)`);
+                        update_inbuilt_select(select.getAttribute('id'), select.value);
+                    });
+                }
+            });
+
+            track.appendChild(new_button);
+
             original_chart_settings.tracks = {
                 timeframe: track_settings.querySelector('#id_chart_range_top_tracks').outerHTML,
                 count: track_settings.querySelector('#id_chart_length_top_tracks').outerHTML
             }
-        }
 
-        if (recent_tracks_settings != null) {
-            recent_tracks_settings.innerHTML = (`
-                <input type="hidden" name="csrfmiddlewaretoken" value="${token}">
-                <div class="select-container">
-                    <div class="heading">
-                        <h5>${trans[lang].settings.inbuilt.charts.recent.count.name}</h5>
-                    </div>
-                    <div class="select-wrap custom-selector" id="id_chart_length_recent_tracks_select">
-                        ${original_chart_settings.recent.count}
-                    </div>
-                </div>
-                <div class="toggle-container" id="container-recent_artwork">
-                    <button class="btn reset" onclick="_reset_inbuilt_item('recent_artwork')">Reset to default</button>
-                    <div class="heading">
-                        <h5>${trans[lang].settings.inbuilt.charts.recent.artwork.name}</h5>
-                    </div>
-                    <div class="toggle-wrap">
-                        <input class="companion-checkbox" type="checkbox" name="show_recent_tracks_artwork" id="inbuilt-companion-checkbox-recent_artwork">
-                        <span class="btn toggle" id="toggle-recent_artwork" onclick="_update_inbuilt_item('recent_artwork')" aria-checked="false">
-                            <div class="dot"></div>
-                        </span>
-                    </div>
-                </div>
-                <div class="toggle-container" id="container-recent_realtime">
-                    <button class="btn reset" onclick="_reset_inbuilt_item('recent_realtime')">Reset to default</button>
-                    <div class="heading">
-                        <h5>${trans[lang].settings.inbuilt.charts.recent.realtime.name}</h5>
-                        <p>${trans[lang].settings.inbuilt.charts.recent.realtime.bio}</p>
-                    </div>
-                    <div class="toggle-wrap">
-                        <input class="companion-checkbox" type="checkbox" name="auto_refresh_recent_tracks" id="inbuilt-companion-checkbox-recent_realtime">
-                        <span class="btn toggle" id="toggle-recent_realtime" onclick="_update_inbuilt_item('recent_realtime')" aria-checked="false" type="button">
-                            <div class="dot"></div>
-                        </span>
-                    </div>
-                </div>
-                <div class="sep"></div>
-                <div class="settings-footer">
-                    <button type="submit" class="btn-primary">
-                        ${trans[lang].settings.save}
-                    </button>
-                    <button class="btn-cancel btn cancel js-disclose-close">
-                        ${trans[lang].settings.cancel}
-                    </button>
-                </div>
-            `);
-
-            custom_select(recent_tracks_settings.querySelector('#id_chart_length_recent_tracks'), recent_tracks_settings.querySelector('#id_chart_length_recent_tracks_select'));
-
-            let selects = recent_tracks_settings.querySelectorAll('select');
-            selects.forEach((select) => {
-                select.setAttribute('onchange', `_update_inbuilt_select('${select.getAttribute('id')}', this.value)`);
-                update_inbuilt_select(select.getAttribute('id'), select.value);
-            });
-        }
-
-        if (artist_settings != null) {
-            artist_settings.innerHTML = (`
-                <input type="hidden" name="csrfmiddlewaretoken" value="${token}">
-                <div class="select-container">
-                    <div class="heading">
-                        <h5>${trans[lang].settings.inbuilt.charts.artists.timeframe.name}</h5>
-                    </div>
-                    <div class="select-wrap custom-selector" id="id_chart_range_top_artists_select">
-                        ${original_chart_settings.artists.timeframe}
-                    </div>
-                </div>
-                <div class="select-container">
-                    <div class="heading">
-                        <h5>${trans[lang].settings.inbuilt.charts.artists.style.name}</h5>
-                    </div>
-                    <div class="select-wrap custom-selector" id="id_chart_style_top_artists_select">
-                        ${original_chart_settings.artists.style}
-                    </div>
-                </div>
-                <div class="select-container">
-                    <div class="heading">
-                        <h5>${trans[lang].settings.inbuilt.charts.artists.length.name}</h5>
-                    </div>
-                    <div class="select-wrap custom-selector" id="id_artists_image_grid_length_select">
-                        ${original_chart_settings.artists.length}
-                    </div>
-                </div>
-                <div class="sep"></div>
-                <div class="settings-footer">
-                    <button type="submit" class="btn-primary">
-                        ${trans[lang].settings.save}
-                    </button>
-                    <button class="btn-cancel btn cancel js-disclose-close">
-                        ${trans[lang].settings.cancel}
-                    </button>
-                </div>
-            `);
-
-            custom_select(artist_settings.querySelector('#id_chart_range_top_artists'), artist_settings.querySelector('#id_chart_range_top_artists_select'));
-            custom_select(artist_settings.querySelector('#id_chart_style_top_artists'), artist_settings.querySelector('#id_chart_style_top_artists_select'));
-            custom_select(artist_settings.querySelector('#id_artists_image_grid_length'), artist_settings.querySelector('#id_artists_image_grid_length_select'));
-
-            let selects = artist_settings.querySelectorAll('select');
-            selects.forEach((select) => {
-                select.setAttribute('onchange', `_update_inbuilt_select('${select.getAttribute('id')}', this.value)`);
-                update_inbuilt_select(select.getAttribute('id'), select.value);
-            });
-        }
-
-        if (album_settings != null) {
-            album_settings.innerHTML = (`
-                <input type="hidden" name="csrfmiddlewaretoken" value="${token}">
-                <div class="select-container">
-                    <div class="heading">
-                        <h5>${trans[lang].settings.inbuilt.charts.albums.timeframe.name}</h5>
-                    </div>
-                    <div class="select-wrap custom-selector" id="id_chart_range_top_albums_select">
-                        ${original_chart_settings.albums.timeframe}
-                    </div>
-                </div>
-                <div class="select-container">
-                    <div class="heading">
-                        <h5>${trans[lang].settings.inbuilt.charts.albums.style.name}</h5>
-                    </div>
-                    <div class="select-wrap custom-selector" id="id_chart_style_top_albums_select">
-                        ${original_chart_settings.albums.style}
-                    </div>
-                </div>
-                <div class="select-container">
-                    <div class="heading">
-                        <h5>${trans[lang].settings.inbuilt.charts.albums.length.name}</h5>
-                    </div>
-                    <div class="select-wrap custom-selector" id="id_albums_image_grid_length_select">
-                        ${original_chart_settings.albums.length}
-                    </div>
-                </div>
-                <div class="sep"></div>
-                <div class="settings-footer">
-                    <button type="submit" class="btn-primary">
-                        ${trans[lang].settings.save}
-                    </button>
-                    <button class="btn-cancel btn cancel js-disclose-close">
-                        ${trans[lang].settings.cancel}
-                    </button>
-                </div>
-            `);
-
-            custom_select(album_settings.querySelector('#id_chart_range_top_albums'), album_settings.querySelector('#id_chart_range_top_albums_select'));
-            custom_select(album_settings.querySelector('#id_chart_style_top_albums'), album_settings.querySelector('#id_chart_style_top_albums_select'));
-            custom_select(album_settings.querySelector('#id_albums_image_grid_length'), album_settings.querySelector('#id_albums_image_grid_length_select'));
-
-            let selects = album_settings.querySelectorAll('select');
-            selects.forEach((select) => {
-                select.setAttribute('onchange', `_update_inbuilt_select('${select.getAttribute('id')}', this.value)`);
-                update_inbuilt_select(select.getAttribute('id'), select.value);
-            });
-        }
-
-        if (track_settings != null) {
-            track_settings.innerHTML = (`
-                <input type="hidden" name="csrfmiddlewaretoken" value="${token}">
-                <div class="select-container">
-                    <div class="heading">
-                        <h5>${trans[lang].settings.inbuilt.charts.tracks.timeframe.name}</h5>
-                    </div>
-                    <div class="select-wrap custom-selector" id="id_chart_range_top_tracks_select">
-                        ${original_chart_settings.tracks.timeframe}
-                    </div>
-                </div>
-                <div class="select-container">
-                    <div class="heading">
-                        <h5>${trans[lang].settings.inbuilt.charts.tracks.count.name}</h5>
-                    </div>
-                    <div class="select-wrap custom-selector" id="id_chart_length_top_tracks_select">
-                        ${original_chart_settings.tracks.count}
-                    </div>
-                </div>
-                <div class="sep"></div>
-                <div class="settings-footer">
-                    <button type="submit" class="btn-primary">
-                        ${trans[lang].settings.save}
-                    </button>
-                    <button class="btn-cancel btn cancel js-disclose-close">
-                        ${trans[lang].settings.cancel}
-                    </button>
-                </div>
-            `);
-
-            custom_select(track_settings.querySelector('#id_chart_range_top_tracks'), track_settings.querySelector('#id_chart_range_top_tracks_select'));
-            custom_select(track_settings.querySelector('#id_chart_length_top_tracks'), track_settings.querySelector('#id_chart_length_top_tracks_select'));
-
-            let selects = track_settings.querySelectorAll('select');
-            selects.forEach((select) => {
-                select.setAttribute('onchange', `_update_inbuilt_select('${select.getAttribute('id')}', this.value)`);
-                update_inbuilt_select(select.getAttribute('id'), select.value);
-            });
-        }
-
-        for (let category in original_chart_settings) {
-            for (let setting in original_chart_settings[category]) {
-                update_inbuilt_item(setting, original_chart_settings[category][setting], false);
-            }
+            track_settings.innerHTML = '';
         }
     }
 })();
