@@ -11102,16 +11102,29 @@ table.table tr:nth-child(2n) td {
 
 
 /*     EVENTS ON ARTIST/PROFILE     */
+.events-list-item-date-icon-month, .events-list-item-date-icon-day,
 .calendar-icon-month, .calendar-icon-day {
-    font-size: var(--font-size);
-    line-height: var(--line-height);
-    font-weight: var(--font-weight);
-    text-transform: initial;
-    width: fit-content;
-    display: inline;
+    font-size: var(--font-size) !important;
+    line-height: var(--line-height) !important;
+    font-weight: var(--font-weight) !important;
+    text-transform: initial !important;
+    width: fit-content !important;
+    color: hsl(var(--c2)) !important;
+    margin: unset !important;
 
     /* calendar-icon specific */
     background: unset;
+
+    &.calendar-icon-day {
+        font-size: 24px !important;
+        line-height: 28px !important;
+        font-weight: var(--font-weight-medium) !important;
+    }
+    &.events-list-item-date-icon-day {
+        font-size: 20px !important;
+        line-height: 24px !important;
+        font-weight: var(--font-weight-medium) !important;
+    }
 }
 
 
@@ -11168,31 +11181,34 @@ event sidebar */
 
 /* icon */
 .events-list-item {
+    .events-list-item-date {
+        width: 52px !important;
+        display: flex;
+        align-items: center;
+    }
+
     .events-list-item-date-icon, .calendar-icon {
-        --event-icon: var(--icon-16-calendar);
-        --event-icon-colour: hsl(var(--c2));
+        display: flex;
+        background-color: hsl(var(--b4));
+        width: 52px;
+        aspect-ratio: 1 / 1;
+        cursor: default;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        border-radius: var(--item-big-radius);
     }
 
     &.events-list-item--attending {
         --hue-over: var(--hue-pos);
         --sat-over: 1;
         --lit-over: 1;
-
-        .events-list-item-date-icon, .calendar-icon {
-            --event-icon: var(--icon-16-check-circle);
-            --event-icon-colour: hsl(var(--l3-c));
-        }
     }
 
     &.events-list-item--cancelled {
         --hue-over: var(--hue-neg);
         --sat-over: 1;
         --lit-over: 1;
-
-        .events-list-item-date-icon, .calendar-icon {
-            --event-icon: var(--icon-16-block);
-            --event-icon-colour: hsl(var(--l3-c));
-        }
     }
 }
 
@@ -11302,6 +11318,7 @@ is inconsistent and full of duplication */
 }
 
 
+.events-list-item-venue,
 .events-list-item-attendees,
 .events-list-item-venue--title,
 .events-list-item-event--lineup,
@@ -17620,6 +17637,7 @@ h4 {
             background-color: hsl(var(--b4));
             width: 66px;
             aspect-ratio: 1 / 1;
+            cursor: default;
 
             justify-content: center;
             align-items: center;
@@ -17627,12 +17645,6 @@ h4 {
 
             border-radius: var(--item-big-radius);
             box-shadow: var(--card-shadow);
-
-            .calendar-icon-day {
-                font-size: 24px;
-                line-height: 28px;
-                font-weight: var(--font-weight-medium);
-            }
         }
     }
 
@@ -17689,6 +17701,7 @@ h4 {
             line-height: 30px;
             font-weight: var(--font-weight-bold);
             letter-spacing: unset;
+            cursor: default;
 
             color: hsl(var(--c1));
 
