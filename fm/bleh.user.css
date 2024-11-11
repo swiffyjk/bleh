@@ -11185,12 +11185,20 @@ event sidebar */
         --hue-over: var(--hue-pos);
         --sat-over: 1;
         --lit-over: 1;
+
+        .events-list-item-date-icon, .calendar-icon {
+            background: hsl(var(--h4), 20%) !important;
+        }
     }
 
     &.events-list-item--cancelled {
         --hue-over: var(--hue-neg);
         --sat-over: 1;
         --lit-over: 1;
+
+        .events-list-item-date-icon, .calendar-icon {
+            background: hsl(var(--h4), 20%) !important;
+        }
     }
 }
 
