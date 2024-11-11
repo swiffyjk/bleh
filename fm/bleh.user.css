@@ -1230,7 +1230,7 @@ last.fm changes as of 2024-05-20 */
 
 
 
-/*     REMOVE ADS     */
+/*     REMOVE PROMO     */
 .subscribe-cta,
 .profile-cards-container, .profile-cards-container + .content-top-lower,
 /* don't want to see ads? upgrade now */ .mpu-subscription-upsell,
@@ -1243,6 +1243,11 @@ last.fm changes as of 2024-05-20 */
 .full-bleed-ad-container + .image-list,
 .tonefuze + .buffer-4 {
     margin-top: unset;
+}
+
+/* still theme ads a little */
+.full-bleed-ad-container, .sidebar-ad-container {
+    background: unset;
 }
 
 
@@ -1705,6 +1710,11 @@ article, section, .buffer-standard, .buffer-standard:not(.col-sidebar) .buffer-s
 .buffer-2 {
     /* default 12px */
     margin-top: var(--card-gap);
+}
+
+/* without pro it adds spacing to these presumably for ad spots */
+.buffer-standard.row {
+    margin-top: unset;
 }
 
 

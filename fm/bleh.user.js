@@ -10372,7 +10372,7 @@ let has_prompted_for_update = false;
 
         let col_main = page.structure.container.querySelector('.top-overview-panel');
         if (col_main == null)
-            col_main = page.structure.container.querySelector('.col-main');
+            col_main = document.body.querySelector('.col-main');
 
 
         if (page.type == 'track') {
@@ -10383,6 +10383,8 @@ let has_prompted_for_update = false;
             page.structure.main.insertBefore(new_panel, page.structure.main.firstElementChild);
 
             col_main.style.setProperty('display', 'none');
+
+            console.info(col_main, new_panel);
 
             // now redirect later code
             col_main = new_panel;
@@ -10488,26 +10490,25 @@ let has_prompted_for_update = false;
         if (page.type == 'artist') {
             //
             let other_container = col_main.querySelector('.personal-stats-item--listeners');
-            if (other_container == null)
-                return;
+            if (other_container != null) {
+                let listen_divider = document.createElement('div');
+                listen_divider.classList.add('listen-divider');
 
-            let listen_divider = document.createElement('div');
-            listen_divider.classList.add('listen-divider');
+                listen_container.appendChild(listen_divider);
 
-            listen_container.appendChild(listen_divider);
+                let avatars = other_container.querySelectorAll('.personal-stats-listener-avatar img');
+                let count = other_container.querySelector('.header-metadata-display a');
 
-            let avatars = other_container.querySelectorAll('.personal-stats-listener-avatar img');
-            let count = other_container.querySelector('.header-metadata-display a');
-
-            let other_listeners = {
-                name: 'others',
-                listens: -2,
-                link: scrobble_page,
-                avi: avatars,
-                count: (count != null) ? clean_number(count.textContent.trim()) : 5
+                let other_listeners = {
+                    name: 'others',
+                    listens: -2,
+                    link: scrobble_page,
+                    avi: avatars,
+                    count: (count != null) ? clean_number(count.textContent.trim()) : 5
+                }
+                // create child for them
+                create_listen_item(listen_container, other_listeners, page.type);
             }
-            // create child for them
-            create_listen_item(listen_container, other_listeners, page.type);
         }
 
 
@@ -10790,7 +10791,7 @@ let has_prompted_for_update = false;
 
         // is there a video?
         if (page.type == 'track') {
-            let video_col = page.structure.container.querySelector('.track-overview-video-column.col-sidebar');
+            let video_col = document.body.querySelector('.track-overview-video-column.col-sidebar');
             video_col.classList.remove('col-sidebar');
             page.structure.side.insertBefore(video_col, page.structure.side.firstElementChild);
 
@@ -11300,10 +11301,14 @@ let has_prompted_for_update = false;
         }
         page.structure.row = page.structure.container.querySelector('.row');
         try {
-            if (!is_subpage)
-                page.structure.main = page.structure.row.querySelector('.col-main:not(:first-child)');
-            else
+            if (is_pro) {
+                if (!is_subpage)
+                    page.structure.main = page.structure.row.querySelector('.col-main:not(:first-child)');
+                else
+                    page.structure.main = page.structure.row.querySelector('.col-main');
+            } else {
                 page.structure.main = page.structure.row.querySelector('.col-main');
+            }
             page.structure.side = page.structure.row.querySelector('.col-sidebar:not(.track-overview-video-column)');
         } catch(e) {
             log('unable to find elements', 'page structure');
