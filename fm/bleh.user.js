@@ -11071,7 +11071,7 @@ let has_prompted_for_update = false;
             redesigned_artist_header.classList.add('redesigned-header', 'redesigned-artist-header', 'no-background');
             redesigned_artist_header.innerHTML = (`
                 <div class="avatar-side">
-                    ${(avatar != null) ? `<img src="${avatar.getAttribute('content').replace('/ar0/', '/300x300/')}">` : ''}
+                    ${(avatar != null) ? `<img src="${avatar.getAttribute('content').replace('/ar0/', '/300x300/')}"><a onclick="_expand_avatar('${avatar.getAttribute('content')}')" class="bleh--avatar-clickable-link"></a>` : ''}
                 </div>
                 <div class="info-side">
                     <div class="sub-text">${trans[lang].artist.name}</div>
@@ -11198,7 +11198,7 @@ let has_prompted_for_update = false;
             redesigned_album_header.innerHTML = (`
                 ${(is_subpage || ff('show_album_cover_always')) ? (`
                 <div class="avatar-side">
-                    ${(avatar != null) ? `<img src="${avatar.getAttribute('content').replace('/ar0/', '/avatar170s/')}">` : ''}
+                    ${(avatar != null) ? `<img src="${avatar.getAttribute('content').replace('/ar0/', '/avatar170s/')}"><a onclick="_expand_avatar('${avatar.getAttribute('content')}')" class="bleh--avatar-clickable-link"></a>` : ''}
                 </div>
                 `) : ''}
                 <div class="info-side">
@@ -11351,8 +11351,8 @@ let has_prompted_for_update = false;
             redesigned_track_header.classList.add('redesigned-header', 'redesigned-track-header', 'no-background');
             redesigned_track_header.innerHTML = (`
                 <div class="avatar-side">
-                    ${(album_avatar != null) ? `<img src="${album_avatar.getAttribute('src')}">`
-                    : (artist_avatar != null) ? `<img src="${artist_avatar.getAttribute('content').replace('/ar0/', '/avatar170s/')}">` : ''}
+                    ${(album_avatar != null) ? `<img src="${album_avatar.getAttribute('src')}"><a onclick="_expand_avatar('${album_avatar.getAttribute('src').replace('300x300', 'ar0')}')" class="bleh--avatar-clickable-link"></a>`
+                    : (artist_avatar != null) ? `<img src="${artist_avatar.getAttribute('content').replace('/ar0/', '/avatar170s/')}"><a onclick="_expand_avatar('${artist_avatar.getAttribute('content')}')" class="bleh--avatar-clickable-link"></a>` : ''}
                 </div>
                 <div class="info-side">
                     <div class="sub-text">${trans[lang].track.name}</div>
