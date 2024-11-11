@@ -1749,7 +1749,7 @@ article, section, .buffer-standard, .buffer-standard:not(.col-sidebar) .buffer-s
 
 /* take up full space */
 .album-overview-cover-art, .album-artwork-upload-cta-container {
-    margin-top: calc(-70px - var(--card-gap) - var(--card-gap)) !important;
+    margin-top: calc(-55px - var(--card-gap) - var(--card-gap)) !important;
     overflow: hidden;
     z-index: 1;
 }
@@ -2470,7 +2470,6 @@ elements, this is how we detect its missing */
 .header-new--subpage .secondary-nav {
     position: relative;
     top: calc(67px + var(--card-gap));
-    border-bottom: 2px solid var(--card-border-base);
     left: calc(-1 * var(--card-padding));
     right: calc(-1 * var(--card-padding));
 }
@@ -2478,7 +2477,6 @@ elements, this is how we detect its missing */
 .header--user .secondary-nav {
     position: relative;
     top: calc((var(--profile-header-avatar-size) - 50px) + var(--card-gap) + 15px - 19px);
-    border-bottom: 2px solid var(--card-border-base);
 }
 .bleh--nav-wrap .navlist,
 .secondary-nav, .user-dashboard-controls .secondary-nav {
@@ -2487,8 +2485,8 @@ elements, this is how we detect its missing */
     margin: 0 var(--card-padding) !important;
     width: calc(var(--cards-width) - (var(--card-padding) * 2));
 
-    .header-new--subpage & {
-        margin-top: -46px !important;
+    [data-bleh--theme="light"] & {
+        border-bottom: 2px solid hsla(var(--c3), 10%) !important;
     }
 }
 
@@ -3266,13 +3264,9 @@ header:is(.header-new--album, .header-new--track) .header-new-background-overlay
 .redesigned-album-header h2, .redesigned-track-header h2,
 span[itemprop="byArtist"] {
     display: flex;
-    color: rgba(255, 255, 255, 0.8);
+    color: hsla(var(--c1), 0.8);
     font-size: 24px;
     line-height: 24px;
-
-    .header-new-inner--without-image & {
-        color: hsla(var(--c1), 0.8);
-    }
 
     .header-new-crumb {
         color: inherit;
@@ -3284,12 +3278,8 @@ span[itemprop="byArtist"] {
         transition-timing-function: var(--trans-function);
 
         &:hover {
-            color: #fff;
-            transition: none;
-        }
-
-        .header-new-inner--without-image &:hover {
             color: hsl(var(--c1));
+            transition: none;
         }
     }
 
@@ -17612,15 +17602,10 @@ h4 {
     display: flex;
     gap: var(--card-padding);
     margin-top: var(--card-gap) !important;
-    margin-bottom: var(--card-gap) !important;
 
     &.no-background {
         margin-left: var(--card-padding);
         margin-right: var(--card-padding);
-    }
-
-    [data-page-subpage="overview"] &.redesigned-artist-header {
-        margin-bottom: unset !important;
     }
 
     .calendar-side {
@@ -17737,6 +17722,10 @@ h4 {
                     font-size: 18px;
                     color: hsl(var(--c3));
                 }
+
+                [data-bleh--theme="light"] & {
+                    text-shadow: 0 0 20px hsl(var(--b6));
+                }
             }
 
             .header-new-chart-position-number {
@@ -17756,6 +17745,10 @@ h4 {
             .header-new-crumb {
                 font-size: inherit;
                 line-height: inherit;
+            }
+
+            [data-bleh--theme="light"] & {
+                text-shadow: 0 0 20px hsl(var(--b6));
             }
         }
 
@@ -17777,6 +17770,9 @@ h4 {
         flex-direction: column;
         justify-content: end;
     }
+}
+.redesigned-navigation {
+    margin-top: var(--card-gap) !important;
 }
 
 /* artists massive gap */

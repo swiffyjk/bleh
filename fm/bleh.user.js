@@ -82,6 +82,11 @@ let version = {
             default: true,
             name: 'Enable card saturation slider',
             date: '2024-11-10'
+        },
+        show_album_cover_always: {
+            default: true,
+            name: 'Show album cover in header overview',
+            date: '2024-11-11'
         }
     }
 }
@@ -3602,7 +3607,7 @@ let has_prompted_for_update = false;
                         </span>
                     </button>
                 </li>
-                ${(settings.feature_flags.dev) ? (`
+                ${(ff('dev')) ? (`
                 <li>
                     <button class="auth-dropdown-menu-item bleh--dev-menu-item" onclick="_update_flag_toggle('dev', this)" aria-checked="true">
                         <span class="auth-dropdown-item-row">
@@ -4796,7 +4801,7 @@ let has_prompted_for_update = false;
 
         checkup_page_structure();
 
-        if (settings.feature_flags.refreshed_nav != false) {
+        if (ff('refreshed_nav')) {
             let navlist = profile_header.querySelector('.navlist');
             if (navlist != null) {
                 navlist.classList.add('redesigned-navigation');
@@ -4860,12 +4865,12 @@ let has_prompted_for_update = false;
             // recent tracks
             patch_profile_tracks();
 
-            if (settings.feature_flags.redesigned_profile_header != false)
+            if (ff('redesigned_profile_header'))
                 redesign_profile_header(is_own_profile);
 
             // make avatar clickable
             let header_avatar;
-            if (settings.feature_flags.refreshed_nav != false)
+            if (ff('refreshed_nav'))
                 header_avatar = page.structure.container.querySelector('.redesigned-profile-header .avatar-side');
             else
                 header_avatar = document.querySelector('.header-avatar .avatar');
@@ -4994,7 +4999,7 @@ let has_prompted_for_update = false;
         log(`querying badges for ${page.name}`, 'profile');
 
         let profile_name_obj;
-        if (settings.feature_flags.refreshed_nav != false)
+        if (ff('refreshed_nav'))
             profile_name_obj = page.structure.container.querySelector('.redesigned-profile-header .title-container');
         else
             profile_name_obj = profile_header.querySelector('.header-title-label-wrap');
@@ -5025,7 +5030,7 @@ let has_prompted_for_update = false;
 
         // secondary text
         let profile_sub_text;
-        if (settings.feature_flags.refreshed_nav != false)
+        if (ff('refreshed_nav'))
             profile_sub_text = page.structure.container.querySelector('.redesigned-profile-header .header-title-secondary');
         else
             profile_sub_text = document.body.querySelector('.header-title-secondary');
@@ -5274,7 +5279,7 @@ let has_prompted_for_update = false;
             });
         }
 
-        if (settings.feature_flags.refreshed_nav != false)
+        if (ff('refreshed_nav'))
             page.structure.container.querySelector('.redesigned-profile-header .info-side').appendChild(profile_header);
         else
             base_header.appendChild(profile_header);
@@ -6000,7 +6005,7 @@ let has_prompted_for_update = false;
             log('internal bleh settings', 'page');
             page.type = 'bleh_settings';
 
-            if (settings.feature_flags.refreshed_nav != false) {
+            if (ff('refreshed_nav')) {
                 register_background(my_avi);
             }
 
@@ -6290,7 +6295,7 @@ let has_prompted_for_update = false;
                             </button>
                         </div>
                     </div>
-                    ${(settings.feature_flags.high_contrast) ? (`
+                    ${(ff('high_contrast')) ? (`
                     <div class="toggle-container" id="container-high_contrast" onclick="_update_item('high_contrast')">
                         <button class="btn reset" onclick="_reset_item('high_contrast')">${trans[lang].settings.reset}</button>
                         <div class="heading">
@@ -6650,7 +6655,7 @@ let has_prompted_for_update = false;
                             })"></button>
                         </div>
                     </div>
-                    ${(settings.feature_flags.card_saturation != false) ? (`
+                    ${(ff('card_saturation')) ? (`
                     <div class="slider-container" id="container-sat_bg">
                         <button class="btn reset" onclick="_reset_item('sat_bg')">${trans[lang].settings.reset}</button>
                         <div class="heading">
@@ -7483,7 +7488,7 @@ let has_prompted_for_update = false;
     }
 
     function change_settings_page(page) {
-        if (!settings.feature_flags.bleh_settings_tabs)
+        if (!ff('bleh_settings_tabs'))
             document.getElementById('bleh--panel-main').innerHTML = '';
         else
             document.getElementById('bleh--panel-main').innerHTML = (`
@@ -7638,9 +7643,9 @@ let has_prompted_for_update = false;
     function load_skus() {
         for (let flag in version.feature_flags) {
             let current_state = version.feature_flags[flag].default;
-            console.log('flag', flag, current_state);
-            if (settings.feature_flags[flag] != undefined) current_state = settings.feature_flags[flag];
-            console.log('flag', flag, current_state);
+
+            if (settings.feature_flags[flag] != null)
+                current_state = settings.feature_flags[flag];
 
             document.documentElement.setAttribute(`data-ff--${flag}`, current_state);
         }
@@ -7651,7 +7656,9 @@ let has_prompted_for_update = false;
 
         for (let flag in version.feature_flags) {
             let current_state = version.feature_flags[flag].default;
-            if (settings.feature_flags[flag] != undefined) current_state = settings.feature_flags[flag];
+
+            if (settings.feature_flags[flag] != undefined)
+                current_state = settings.feature_flags[flag];
 
             let feature_flag_element = document.createElement('div');
             feature_flag_element.classList.add('toggle-container');
@@ -10039,7 +10046,7 @@ let has_prompted_for_update = false;
                                 </button>
                             </div>
                         </div>
-                        ${(settings.feature_flags.high_contrast) ? (`
+                        ${(ff('high_contrast')) ? (`
                         <div class="toggle-container" id="container-high_contrast">
                             <button class="btn reset" onclick="_reset_item('high_contrast')">${trans[lang].settings.reset}</button>
                             <div class="heading">
@@ -10830,7 +10837,7 @@ let has_prompted_for_update = false;
 
 
         // add info notes to things
-        if (settings.feature_flags.show_wiki_label) {
+        if (ff('show_wiki_label')) {
             let wiki_col = page.structure.main.querySelector('.wiki-column');
 
             let wiki_header = document.createElement('h3');
@@ -11036,7 +11043,7 @@ let has_prompted_for_update = false;
 
         checkup_page_structure();
 
-        if (settings.feature_flags.refreshed_music_nav != false) {
+        if (ff('refreshed_music_nav')) {
             let navlist = artist_header.querySelector('.navlist');
             if (navlist != null) {
                 navlist.classList.add('redesigned-navigation');
@@ -11163,7 +11170,7 @@ let has_prompted_for_update = false;
 
         checkup_page_structure();
 
-        if (settings.feature_flags.refreshed_music_nav != false) {
+        if (ff('refreshed_music_nav')) {
             let navlist = album_header.querySelector('.navlist');
             if (navlist != null) {
                 navlist.classList.add('redesigned-navigation');
@@ -11189,7 +11196,7 @@ let has_prompted_for_update = false;
             let redesigned_album_header = document.createElement('section');
             redesigned_album_header.classList.add('redesigned-header', 'redesigned-album-header', 'no-background');
             redesigned_album_header.innerHTML = (`
-                ${(is_subpage) ? (`
+                ${(is_subpage || ff('show_album_cover_always')) ? (`
                 <div class="avatar-side">
                     ${(avatar != null) ? `<img src="${avatar.getAttribute('content').replace('/ar0/', '/avatar170s/')}">` : ''}
                 </div>
@@ -11316,7 +11323,7 @@ let has_prompted_for_update = false;
 
         checkup_page_structure();
 
-        if (settings.feature_flags.refreshed_music_nav != false) {
+        if (ff('refreshed_music_nav')) {
             let navlist = track_header.querySelector('.navlist');
             if (navlist != null) {
                 navlist.classList.add('redesigned-navigation');
@@ -11334,7 +11341,8 @@ let has_prompted_for_update = false;
                 }
             }
 
-            let avatar = track_header.querySelector('.header-new-background-image');
+            let artist_avatar = track_header.querySelector('.header-new-background-image');
+            let album_avatar = page.structure.main.querySelector('.source-album-art img');
             let title = track_header.querySelector('.header-new-title');
             let artist = track_header.querySelector('[itemprop="byArtist"]');
             let position = track_header.querySelector('.header-new-chart-position-number');
@@ -11342,6 +11350,10 @@ let has_prompted_for_update = false;
             let redesigned_track_header = document.createElement('section');
             redesigned_track_header.classList.add('redesigned-header', 'redesigned-track-header', 'no-background');
             redesigned_track_header.innerHTML = (`
+                <div class="avatar-side">
+                    ${(album_avatar != null) ? `<img src="${album_avatar.getAttribute('src')}">`
+                    : (artist_avatar != null) ? `<img src="${artist_avatar.getAttribute('content').replace('/ar0/', '/avatar170s/')}">` : ''}
+                </div>
                 <div class="info-side">
                     <div class="sub-text">${trans[lang].track.name}</div>
                     <div class="title-container">
@@ -11352,8 +11364,10 @@ let has_prompted_for_update = false;
                 </div>
             `);
 
-            if (avatar != null)
-                register_background(avatar.getAttribute('content'));
+            if (album_avatar != null)
+                register_background(album_avatar.getAttribute('src'));
+            else if (artist_avatar != null)
+                register_background(artist_avatar.getAttribute('content'));
 
             page.structure.container.insertBefore(redesigned_track_header, page.structure.container.firstElementChild);
             track_header.classList.add('legacy-header');
@@ -11378,11 +11392,12 @@ let has_prompted_for_update = false;
         }
 
         log('status is', 'page', 'info', page);
+        update_page();
     }
 
 
     function bleh_music_page_charts() {
-        if (settings.feature_flags.music_page_charts == false)
+        if (!ff('music_page_charts'))
             return;
 
         log('beginning replacement', 'music charts');
@@ -11724,7 +11739,7 @@ let has_prompted_for_update = false;
             return;
         image_sidebar.setAttribute('data-bleh-gallery', 'true');
 
-        if (settings.feature_flags.new_gallery_experience == false) {
+        if (!ff('new_gallery_experience')) {
             patch_gallery_focused_image(image_sidebar, page.structure.container.querySelector('.gallery-image-buttons'));
             return;
         }
@@ -11896,7 +11911,7 @@ let has_prompted_for_update = false;
 
 
             // saved button
-            if (page.type == 'artist' || settings.feature_flags.display_album_bookmark) {
+            if (page.type == 'artist' || ff('display_album_bookmark')) {
                 let all_saved_panel = document.createElement('section');
                 all_saved_panel.classList.add('view-all-panel');
 
@@ -11921,7 +11936,7 @@ let has_prompted_for_update = false;
 
 
         // bookmark-related info
-        if (page.type == 'artist' || settings.feature_flags.display_album_bookmark)
+        if (page.type == 'artist' || ff('display_album_bookmark'))
             patch_gallery_focused_image(image_sidebar, buttons);
 
         /*let gallery_slides = gallery_section.querySelectorAll('.gallery-slide');
@@ -12030,7 +12045,7 @@ let has_prompted_for_update = false;
 
 
     unsafeWindow._query_changelog = function() {
-        if (settings.feature_flags.changelogs == false) {
+        if (!ff('changelogs')) {
             deliver_notif('not just yet..');
             return;
         }
@@ -13031,5 +13046,21 @@ let has_prompted_for_update = false;
 
             track_settings.innerHTML = '';
         }
+    }
+
+
+
+
+    function ff(flag) {
+        log(`parsing ${flag}`, 'flag', 'info', {
+            setting: settings.feature_flags[flag],
+            sku: version.feature_flags[flag]
+        });
+
+        if (settings.feature_flags[flag] != null)
+            return settings.feature_flags[flag];
+
+        if (version.feature_flags[flag] != null)
+            return version.feature_flags[flag].default;
     }
 })();
