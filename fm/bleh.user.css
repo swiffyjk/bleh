@@ -413,6 +413,7 @@ body {
     --avatar-generic-background: linear-gradient(180deg, hsla(var(--h3), 20%) 0%, hsl(var(--b6)) 100%);
     --avatar-radius: 50%;
 
+    --highlight-shadow: hsla(var(--b3), 0.25) 0 0 2px 1px;
     --menu-shadow: 2px 2px 24px 0 hsla(var(--b7), 0.35), 3px 6px 48px 16px hsla(var(--b7), 0.25);
     --menu-overlay-shadow: 0 -250px 10px 100px hsla(var(--b6), 70%);
     --avatar-shadow: 3px 6px 15px 10px hsla(var(--b7), 0.05);
@@ -8643,6 +8644,10 @@ text[style^="color: rgb(255, 172, 172)"] {
         animation: dropdown_side calc(var(--trans-short) + 0.02s) var(--trans-function);
         transform-origin: right;
         color: hsl(var(--c2));
+
+        [data-theme="window"] & {
+            box-shadow: var(--highlight-shadow), var(--menu-shadow) !important;
+        }
 
         text-align: left;
 
