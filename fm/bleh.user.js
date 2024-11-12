@@ -2610,6 +2610,7 @@ let settings_template = {
     hue_from_album: true,
     seasonal: true,
     seasonal_particles: true,
+    seasonal_particles_reduced: false,
     seasonal_overlays: true,
     profile_header_own: true,
     profile_header_others: true,
@@ -2825,6 +2826,14 @@ let settings_base = {
     },
     seasonal_particles: {
         css: 'seasonal_particles',
+        unit: '',
+        value: true,
+        values: [true, false],
+        type: 'toggle',
+        require_reload: true
+    },
+    seasonal_particles_reduced: {
+        css: 'seasonal_particles_reduced',
         unit: '',
         value: true,
         values: [true, false],
@@ -3485,6 +3494,10 @@ let has_prompted_for_update = false;
 
                     snowflakes_enabled = true;
                     snowflakes_count = season.snowflakes.count;
+
+                    if (settings.seasonal_particles_reduced && snowflakes_count > 10)
+                        snowflakes_count = snowflakes_count * 0.75;
+
                     begin_snowflakes();
                 }
 
@@ -7121,6 +7134,18 @@ let has_prompted_for_update = false;
                             </button>
                         </div>
                     </div>
+                    <div class="toggle-container hide-if-seasonal-disabled" id="container-seasonal_particles_reduced" onclick="_update_item('seasonal_particles_reduced')">
+                        <button class="btn reset" onclick="_reset_item('seasonal_particles_reduced')">${trans[lang].settings.reset}</button>
+                        <div class="heading">
+                            <h5>${trans[lang].settings.customise.seasonal.show_less_particles.name}</h5>
+                        </div>
+                        <div class="toggle-wrap">
+                            <button class="toggle" id="toggle-seasonal_particles_reduced" aria-checked="true">
+                                <div class="dot"></div>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="sep"></div>
                     <div class="toggle-container hide-if-seasonal-disabled" id="container-seasonal_overlays" onclick="_update_item('seasonal_overlays')">
                         <button class="btn reset" onclick="_reset_item('seasonal_overlays')">${trans[lang].settings.reset}</button>
                         <div class="heading">

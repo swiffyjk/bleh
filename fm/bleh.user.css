@@ -1578,7 +1578,7 @@ last.fm changes as of 2024-05-20 */
 .page-content:has(.playlisting-playlists, .gallery-section, .obsession-search),
 /* obsessions */ .namespace--user_obsessions_overview .container.page-content
 {
-    padding-top: unset !important;
+    padding-top: var(--override-padding-top, unset) !important;
 }
 
 .subpage-breadcrumb + .subpage-title {
