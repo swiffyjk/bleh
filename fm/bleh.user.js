@@ -6401,7 +6401,7 @@ let has_prompted_for_update = false;
                 <h3>${trans[lang].settings.home.name}</h3>
                 <div class="user-top-panel">
                     <div class="user-top-avatar user-top-avatar-side-left"></div>
-                    <img class="user-top-avatar user-top-avatar-main" src="${my_avi.replace('avatar42s', '300x300')}" alt="${auth}">
+                    <img class="user-top-avatar user-top-avatar-main" src="${my_avi.replace('avatar42s', 'avatar300s')}" alt="${auth}">
                     <div class="user-top-avatar user-top-avatar-side-right"></div>
                 </div>
                 <h4>${trans[lang].settings.home.thanks
@@ -10603,15 +10603,9 @@ let has_prompted_for_update = false;
 
 
     unsafeWindow._set_profile_as_shortcut = function(button, profile_name) {
-        let menu_item = document.getElementById('profile_shortcut');
-
         let avatar_src = document.body.querySelector('.header-avatar-inner-wrap img').getAttribute('src');
         localStorage.setItem('bleh_profile_shortcut_avi', avatar_src);
         deliver_notif(trans[lang].settings.music.profile_shortcut.saved);
-
-        menu_item.setAttribute('data-profile-shortcut', profile_name);
-        menu_item.setAttribute('href', `${root}user/${profile_name}`);
-        menu_item.textContent = profile_name;
 
         // show on button
         button.setAttribute('data-is-shortcut', 'true');
@@ -11393,7 +11387,7 @@ let has_prompted_for_update = false;
             redesigned_artist_header.classList.add('redesigned-header', 'redesigned-artist-header', 'no-background');
             redesigned_artist_header.innerHTML = (`
                 <div class="avatar-side">
-                    ${(avatar != null) ? `<img src="${avatar.getAttribute('content').replace('/ar0/', '/300x300/')}"><a onclick="_expand_avatar('${avatar.getAttribute('content')}')" class="bleh--avatar-clickable-link"></a>` : '<img class="missing-artist">'}
+                    ${(avatar != null) ? `<img src="${avatar.getAttribute('content').replace('/ar0/', '/avatar300s/')}"><a onclick="_expand_avatar('${avatar.getAttribute('content')}')" class="bleh--avatar-clickable-link"></a>` : '<img class="missing-artist">'}
                 </div>
                 <div class="info-side">
                     <div class="sub-text">${trans[lang].artist.name}</div>
@@ -11647,7 +11641,7 @@ let has_prompted_for_update = false;
             redesigned_track_header.classList.add('redesigned-header', 'redesigned-track-header', 'no-background');
             redesigned_track_header.innerHTML = (`
                 <div class="avatar-side">
-                    ${(album_avatar != null) ? `<img src="${album_avatar.getAttribute('src')}"><a onclick="_expand_avatar('${album_avatar.getAttribute('src').replace('300x300', 'ar0')}')" class="bleh--avatar-clickable-link"></a>`
+                    ${(album_avatar != null) ? `<img src="${album_avatar.getAttribute('src').replace('300x300', 'avatar300s')}"><a onclick="_expand_avatar('${album_avatar.getAttribute('src').replace('300x300', 'ar0')}')" class="bleh--avatar-clickable-link"></a>`
                     : (artist_avatar != null) ? `<img src="${artist_avatar.getAttribute('content').replace('/ar0/', '/avatar170s/')}"><a onclick="_expand_avatar('${artist_avatar.getAttribute('content')}')" class="bleh--avatar-clickable-link"></a>` : '<img class="missing-track">'}
                 </div>
                 <div class="info-side">
