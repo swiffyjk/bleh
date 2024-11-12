@@ -241,7 +241,8 @@ const trans = {
                 you_share_3: 'You share {artist1}, {artist2}, and {artist3}'
             },
             open_avatar: 'Open in a new tab',
-            settings: 'Configure'
+            settings: 'Configure',
+            events: 'Events'
         },
         event: {
             name: 'Event',
@@ -5129,10 +5130,12 @@ let has_prompted_for_update = false;
             if (page.subpage.startsWith('user_library')) {
                 bleh_user_library();
             } else if (page.subpage == 'user_events') {
+                let selected_tab = page.structure.content_top.querySelector('.secondary-nav-item-link--active');
+
                 let value_panel = document.createElement('section');
                 value_panel.classList.add('value-panel');
                 value_panel.innerHTML = (`
-                    <h2 class="text-18">${page.structure.content_top.querySelector('.secondary-nav-item-link--active').textContent}</h2>
+                    <h2 class="text-18">${(selected_tab != null) ? selected_tab.textContent : trans[lang].profile.events}</h2>
                 `);
 
                 let values = page.structure.main.querySelectorAll('.metadata-display');
@@ -5156,27 +5159,26 @@ let has_prompted_for_update = false;
                 value_panel.appendChild(value_header);
 
 
-                let total_text = document.createElement('h2');
-                total_text.classList.add('text-18');
-                total_text.textContent = trans[lang].event.all_time;
-
-                value_panel.appendChild(total_text);
-
-                let total_header = document.createElement('div');
-                total_header.classList.add('event-value-top-header', 'view-buttons');
-
                 let total_value = page.structure.side.querySelector('.metadata-display');
                 if (total_value != null) {
+                    let total_text = document.createElement('h2');
+                    total_text.classList.add('text-18');
+                    total_text.textContent = trans[lang].event.all_time;
+
+                    value_panel.appendChild(total_text);
+
+                    let total_header = document.createElement('div');
+                    total_header.classList.add('event-value-top-header', 'view-buttons');
+
                     create_profile_top_item(total_header, {
                         name: page.name,
                         text: total_value.textContent,
                         type: 'total',
                         tooltip:  trans[lang].event.total.replace('{c}', total_value.textContent)
                     });
+
+                    value_panel.appendChild(total_header);
                 }
-
-                value_panel.appendChild(total_header);
-
 
                 let legacy_metadata = page.structure.main.querySelector('.metadata-list');
                 page.structure.main.removeChild(legacy_metadata);
