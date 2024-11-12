@@ -276,6 +276,7 @@ const trans = {
             back: 'Back',
             reload: 'A setting you changed requires a page reload to take effect, click to reload.',
             new: 'New',
+            configure: 'Configure',
             examples: {
                 button: 'Example button'
             },
@@ -3656,6 +3657,8 @@ let has_prompted_for_update = false;
                     shortcut_item.textContent = settings.profile_shortcut;
                 }
 
+                instance.popper.querySelector('#theme-value').textContent = trans[lang].settings.themes[settings.theme].name;
+
 
                 let theme_menu_item = tippy(instance.popper.querySelector('[data-menu-item="themes"]:not([aria-expanded])'), {
                     theme: 'menu',
@@ -3828,7 +3831,6 @@ let has_prompted_for_update = false;
         else if (current_theme == 'light')
             current_theme = 'dark';
 
-        document.getElementById('theme-value').textContent = trans[lang].settings.themes[current_theme].name;
         show_theme_change_in_menu(current_theme);
 
         // save value
@@ -3844,8 +3846,6 @@ let has_prompted_for_update = false;
     }
 
     unsafeWindow.change_theme_from_settings = function(theme) {
-        document.getElementById('theme-value').textContent = trans[lang].settings.themes[theme].name;
-
         // save value
         settings.theme = theme;
         document.documentElement.setAttribute(`data-bleh--theme`, `${theme}`);
@@ -3858,8 +3858,6 @@ let has_prompted_for_update = false;
         localStorage.setItem('bleh', JSON.stringify(settings));
     }
     unsafeWindow.change_theme_from_menu = function(theme) {
-        document.getElementById('theme-value').textContent = trans[lang].settings.themes[theme].name;
-
         // save value
         settings.theme = theme;
         document.documentElement.setAttribute(`data-bleh--theme`, `${theme}`);
@@ -5432,6 +5430,28 @@ let has_prompted_for_update = false;
                 });
             }
 
+            let menu = tippy(listen_item, {
+                theme: 'context-menu',
+                /*content: (`
+                    <button class="dropdown-menu-clickable-item" onclick="_open_profile_shortcut_window()" data-menu-item="configure">
+                        ${trans[lang].settings.configure}
+                    </button>
+                `),*/
+                content: (`
+                    <a class="dropdown-menu-clickable-item" href="${root}bleh" data-menu-item="configure">
+                        ${trans[lang].settings.configure}
+                    </a>
+                `),
+                allowHTML: true,
+                placement: 'right-start',
+                trigger: 'manual',
+                interactive: true,
+                interactiveBorder: 10,
+                offset: [0, 0]
+            });
+
+            register_menu(listen_item, menu);
+
             return;
         }
 
@@ -5473,22 +5493,7 @@ let has_prompted_for_update = false;
                 offset: [0, 0]
             });
 
-            listen_item.addEventListener('contextmenu', (e) => {
-                e.preventDefault();
-
-                menu.setProps({
-                    getReferenceClientRect: () => ({
-                        width: 0,
-                        height: 0,
-                        top: e.clientY,
-                        bottom: e.clientY,
-                        left: e.clientX,
-                        right: e.clientX,
-                    }),
-                });
-
-                menu.show();
-            });
+            register_menu(listen_item, menu);
         }
 
         if (tooltip == '')
@@ -5640,6 +5645,7 @@ let has_prompted_for_update = false;
         `);
 
         page.structure.content_top.after(follow_nav);
+        page.structure.row.classList.add('col-main-is-primary');
 
 
         // view-related buttons
@@ -13218,5 +13224,48 @@ let has_prompted_for_update = false;
                 </div>
             `);
         });
+    }
+
+
+
+
+    function register_menu(element, menu) {
+        element.addEventListener('contextmenu', (e) => {
+            e.preventDefault();
+
+            menu.setProps({
+                getReferenceClientRect: () => ({
+                    width: 0,
+                    height: 0,
+                    top: e.clientY,
+                    bottom: e.clientY,
+                    left: e.clientX,
+                    right: e.clientX,
+                }),
+            });
+
+            menu.show();
+        });
+    }
+
+
+    unsafeWindow._open_profile_shortcut_window = function() {
+        create_window('profile_shortcut',trans[lang].settings.music.profile_shortcut.name,(`
+            <div class="text-container" id="container-profile_shortcut">
+                <button class="btn reset" onclick="_reset_item('profile_shortcut')">${trans[lang].settings.reset}</button>
+                <div class="avatar-container">
+                    <div class="avatar-inner" id="avatar-profile_shortcut">
+                        <img id="avatar_src-profile_shortcut" src="${localStorage.getItem('bleh_profile_shortcut_avi') || ''}">
+                    </div>
+                </div>
+                <div class="heading content-form">
+                    <h5>${trans[lang].settings.music.profile_shortcut.placeholder}</h5>
+                    <div class="input-container">
+                        <input type="text" maxlength="40" id="text-profile_shortcut" value="${settings.profile_shortcut}" placeholder="${trans[lang].settings.music.profile_shortcut.header}">
+                        <button class="bleh--btn primary save" onclick="_save_profile_shortcut()">${trans[lang].settings.save}</button>
+                    </div>
+                </div>
+            </div>
+        `), true);
     }
 })();

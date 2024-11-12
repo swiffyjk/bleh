@@ -1469,13 +1469,13 @@ last.fm changes as of 2024-05-20 */
 /* this fixes places of the site (tracks, artist, albums watever that use a weird method of 2 col-mains, 2 col-sidebars as appose to profiles */
 /* -> could be simplified, idk if it affects other parts of the site tho */ .page-content[data-page-type="user"]:not([data-page-subpage="overview"]) .row.col-main-is-primary > .col-main:not(.not-a-panel):first-child /* <- */, .row.col-main-is-primary > .col-main:nth-child(3) > :is(section, #shoutbox),
 .album-and-lyrics-row,
-/* dont question it too far, refer to the above display: grid for more insight, this is jus applying the card styling */
-.shoutbox--with-header#shoutbox:not(.buffer-standard > #shoutbox, #shoutbox > #shoutbox /* for shoutbox on gallery image */, section > #shoutbox /* events */),
-:is(.namespace--user_following, .namespace--user_followers) :is(.col-main, .col-sidebar),
+.lazy-shoutbox:not(
+    /* event pages */ section > .lazy-shoutbox,
+    /* gallery pages, col-main on tracks */ div.buffer-standard:not(.col-main) > .lazy-shoutbox
+    ),
 /* individual library selection */
 .library-header,
 .page-content:has(.inbox-notifications),
-/* gallery */ .js-gallery-image-details,
 /* listening reports */ .user-dashboard > .user-dashboard-buffer,
 /* katie doesnt have any scrobbles yet */ .profile-mobile-featured-track + .no-data-message,
 /* quick create playlists */ .section-with-separator[action*="/create/from-"],
@@ -1493,8 +1493,6 @@ last.fm changes as of 2024-05-20 */
 .library-top,
 :is(.namespace--music_track_tags_add, .namespace--music_artist_tags_add, .namespace--music_album_tags_add) .col-main,
 /* make a playlist */ .playlisting-create-options,
-/* album pages without pro, first section */ .page-content > .section .row .col-main,
-/* is the same as .row.buffer-4 > .col-main:first-child but for non-pro, also applies to pro */ .header-new--track + .page-content .col-main:first-child,
 /* home page recommendations */ .homefeed .col-main,
 /* playlist content */ .playlisting-playlist-header + .page-content > .row,
 .playlisting-playlists,
@@ -1651,6 +1649,10 @@ last.fm changes as of 2024-05-20 */
 
 .section-with-separator {
     padding-bottom: unset;
+
+    &.lazy-shoutbox {
+        padding-bottom: var(--card-padding);
+    }
 }
 
 
@@ -11572,7 +11574,7 @@ a:has(+ .js-gallery-heading), .js-gallery-heading,
     align-items: center;
     height: 285px;
 }
-.lazy-shoutbox {
+.lazy-shoutbox.async-content-loading {
     background-image: none !important;
     position: relative;
     min-height: 200px !important;
