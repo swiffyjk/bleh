@@ -1466,8 +1466,8 @@ last.fm changes as of 2024-05-20 */
 .bleh--panel, .bleh--blank-panel,
 .col-main > section:not(.neighbours-items-section), .col-sidebar > section,
 .your-progress-component,
-/* this fixes places of the site (tracks, artist, albums watever that use a weird method of 2 col-mains, 2 col-sidebars as appose to profiles */
-/* -> could be simplified, idk if it affects other parts of the site tho */ .page-content[data-page-type="user"]:not([data-page-subpage="overview"]) .row.col-main-is-primary > .col-main:not(.not-a-panel):first-child /* <- */, .row.col-main-is-primary > .col-main:nth-child(3) > :is(section, #shoutbox),
+/* main column is a card, no sub-cards */ .page-content[data-page-type="user"]:not([data-page-subpage="overview"]) .row.col-main-is-primary > .col-main:not(.not-a-panel):first-child /* <- */, .row.col-main-is-primary > .col-main:nth-child(3) > :is(section, #shoutbox),
+.primary-column,
 .album-and-lyrics-row,
 .lazy-shoutbox:not(
     /* event pages */ section > .lazy-shoutbox,
@@ -1481,14 +1481,11 @@ last.fm changes as of 2024-05-20 */
 /* quick create playlists */ .section-with-separator[action*="/create/from-"],
 /* inbox */ .inbox-compose-view, .inbox-message-view,
 .event-summary-with-poster,
-/* event attendance column */ [class*="namespace--events"][class*="_attendance"] .col-main,
-/* tag wiki pages r just a col-main */ .header--tag + .adaptive-skin-container .col-main:has(.wiki-container),
 /* event overview thing */ .event-details:not(.event-summary-with-poster .event-details),
 .inbox,
 .wiki-history,
 /* error 500 */ .container:has(#marvin),
 /* error 404 */ .row:has(.error-page-marvin),
-.profile-mobile-featured-track,
 .library-header + .metadata-list, .library-header + .library-track-metadata,
 .library-top,
 :is(.namespace--music_track_tags_add, .namespace--music_artist_tags_add, .namespace--music_album_tags_add) .col-main,
@@ -11746,6 +11743,7 @@ hr {
 }
 
 /* no need for a sidebar */
+.row.force-col-main-primary,
 .page-content:is(
     [data-page-subpage="user_following"], [data-page-subpage="user_followers"], [data-page-subpage="user_neighbours"],
     [data-page-subpage="user_obsessions_set"],

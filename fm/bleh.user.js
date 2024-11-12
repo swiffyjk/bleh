@@ -12804,6 +12804,27 @@ let has_prompted_for_update = false;
         } else {
             // which subpage is it?
             page.subpage = document.body.classList[2].replace('namespace--', '');
+
+            if (page.subpage == 'events_event_attendance_going' || page.subpage == 'events_event_attendance_interested') {
+                // view-related buttons
+                let view_buttons = document.createElement('div');
+                view_buttons.classList.add('view-buttons-wrapper');
+                view_buttons.innerHTML = (`
+                    <div class="view-buttons">
+                        <button class="btn view-item" id="toggle-list_view-1" data-toggle="list_view" data-toggle-value="1" onclick="_update_item('list_view', 1)">
+                            Grid
+                        </button>
+                        <button class="btn view-item" id="toggle-list_view-0" data-toggle="list_view" data-toggle-value="0" onclick="_update_item('list_view', 0)">
+                            List
+                        </button>
+                    </div>
+                `);
+                page.structure.row.classList.add('force-col-main-primary');
+                page.structure.main.classList.add('primary-column');
+                page.structure.main.insertBefore(view_buttons, page.structure.main.firstElementChild);
+
+                refresh_all();
+            }
         }
 
         log('status is', 'page', 'info', page);
