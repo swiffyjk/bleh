@@ -833,6 +833,9 @@ const trans = {
         },
         track: {
             name: 'Track'
+        },
+        tag: {
+            name: 'Tag'
         }
     },
     de: {
@@ -3033,6 +3036,7 @@ let has_prompted_for_update = false;
             bleh_albums();
             bleh_tracks();
             bleh_events();
+            bleh_tags();
 
             bleh_gallery();
             bleh_gallery_upload_check();
@@ -3098,6 +3102,7 @@ let has_prompted_for_update = false;
                 bleh_albums();
                 bleh_tracks();
                 bleh_events();
+                bleh_tags();
 
                 bleh_gallery();
                 bleh_gallery_upload_check();
@@ -4874,6 +4879,11 @@ let has_prompted_for_update = false;
                         page.structure.side.insertBefore(playlink_panel, page.structure.side.firstElementChild);
                     }
                 }
+            } else {
+                let content_top = document.body.querySelector('.content-top');
+
+                if (content_top != null)
+                    content_top.classList.add('legacy-content-top');
             }
         }
     }
@@ -8842,7 +8852,9 @@ let has_prompted_for_update = false;
                                 ${trans[lang].settings.configure}
                             </button>
                         `),*/
-                        content: '',
+                        content: (`
+                            ${track_legacy_menu.innerHTML}
+                        `),
                         allowHTML: true,
                         placement: 'right-start',
                         trigger: 'manual',
@@ -8855,12 +8867,12 @@ let has_prompted_for_update = false;
                                 instance.hide();
                             });
 
-                            let menu_items = track_legacy_menu.querySelectorAll('li > *');
+                            /*let menu_items = track_legacy_menu.querySelectorAll('li > *');
                             let content = instance.popper.querySelector('.tippy-content');
 
                             menu_items.forEach((item) => {
                                 content.appendChild(item);
-                            });
+                            });*/
                         }
                     });
 
@@ -9607,14 +9619,12 @@ let has_prompted_for_update = false;
 
 
     function sanitise(text) {
-        return text
-        .replaceAll(' ', '+')
-        .replaceAll('?', '%3F');
+        return encodeURI(text
+        .replaceAll(' ', '+'));
     }
     function desanitise(text) {
-        return text
-        .replaceAll('+', ' ')
-        .replaceAll('%3F', '?');
+        return decodeURI(text
+        .replaceAll('+', ' '));
     }
 
 
@@ -9624,9 +9634,9 @@ let has_prompted_for_update = false;
 
         // lets treat unicode properly
         if (is_album)
-            return decodeURI(desanitise(split[length - 1]));
+            return desanitise(split[length - 1]);
         else
-            return decodeURI(desanitise(split[length - 2]));
+            return desanitise(split[length - 2]);
     }
 
     function return_artist_from_generic(url) {
@@ -11561,6 +11571,82 @@ let has_prompted_for_update = false;
             else if (page.subpage == 'music_track_wiki_history')
                 bleh_wiki_history();
             else if (page.subpage == 'music_track_wiki_edit')
+                bleh_wiki_editor();
+        }
+
+        log('status is', 'page', 'info', page);
+        update_page();
+    }
+
+
+    function bleh_tags() {
+        let tag_header = document.body.querySelector('.header--tag');
+
+        if (tag_header == undefined)
+            return;
+
+        if (tag_header.hasAttribute('data-bwaa'))
+            return;
+        tag_header.setAttribute('data-bwaa', 'true');
+
+        log('tag', 'page');
+        page.type = 'tag';
+
+        patch_header_title();
+
+        page.name = tag_header.querySelector('.header-title').textContent;
+
+        let is_subpage = tag_header.classList.contains('header--subpage');
+
+
+        page.structure.container = document.body.querySelector('.page-content');
+        page.structure.row = page.structure.container.querySelector('.row');
+        try {
+            page.structure.main = page.structure.row.querySelector('.col-main');
+            page.structure.side = page.structure.row.querySelector('.col-sidebar');
+        } catch(e) {
+            log('unable to find elements', 'page structure');
+        }
+
+        checkup_page_structure(is_subpage, tag_header);
+
+        if (ff('refreshed_music_nav')) {
+            let split = window.location.href.split('/');
+            let length = (split.length - 1);
+
+            let title = desanitise(split[length]);
+
+            let redesigned_tag_header = document.createElement('section');
+            redesigned_tag_header.classList.add('redesigned-header', 'redesigned-tag-header', 'no-background');
+            redesigned_tag_header.innerHTML = (`
+                <div class="tag-side">
+                    <div class="tag-icon"></div>
+                </div>
+                <div class="info-side">
+                    <div class="sub-text">${trans[lang].tag.name}</div>
+                    <h1>${title}</h1>
+                </div>
+            `);
+
+            let background = document.body.querySelector('.header-background--has-image');
+            if (background != null)
+                register_background(background.style.getPropertyValue('background-image').replace('url("', '').replace('")', ''));
+
+            page.structure.container.insertBefore(redesigned_tag_header, page.structure.container.firstElementChild);
+            tag_header.classList.add('legacy-header');
+        }
+
+        if (!is_subpage) {
+            page.subpage = 'overview';
+        } else {
+            // which subpage is it?
+            page.subpage = document.body.classList[2].replace('namespace--', '');
+
+            if (page.subpage == 'tag_wiki_overview')
+                bleh_wiki();
+            else if (page.subpage == 'tag_wiki_history')
+                bleh_wiki_history();
+            else if (page.subpage == 'tag_wiki_edit')
                 bleh_wiki_editor();
         }
 
