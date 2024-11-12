@@ -9494,8 +9494,11 @@ text[style^="color: rgb(0, 0, 0)"] {
 
 /*     TRACK ALBUMS TAB TEXT     */
 /* Showing albums featuring x. */
+[data-page-subpage="music_track_albums"] .col-main > .buffer-standard:first-child {
+    display: none;
+}
 #track-albums-section {
-    margin-top: var(--card-gap);
+    margin-top: unset;
 }
 
 
@@ -11278,19 +11281,19 @@ table.table tr:nth-child(2n) td {
     color: hsl(var(--c3));
     margin-top: var(--card-gap);
     margin-bottom: var(--card-gap);
+    text-align: left;
 
     &:after {
         display: none;
     }
-}
-.sidebar-date-heading + .events-list-sidebar {
-    margin-top: unset;
+
+    & + .events-list-sidebar {
+        margin-top: unset;
+    }
 }
 
 
-/* profile page events specifically, no wonder
-this site cant implement anything if their whole site
-is inconsistent and full of duplication */
+/* profile page events specifically */
 .events-list-cover-link {
     inset: 0 !important;
     width: 100% !important;

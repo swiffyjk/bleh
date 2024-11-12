@@ -5446,22 +5446,28 @@ let has_prompted_for_update = false;
 
             let menu = tippy(listen_item, {
                 theme: 'context-menu',
-                /*content: (`
+                content: (`
                     <button class="dropdown-menu-clickable-item" onclick="_open_profile_shortcut_window()" data-menu-item="configure">
                         ${trans[lang].settings.configure}
                     </button>
-                `),*/
-                content: (`
+                `),
+                /*content: (`
                     <a class="dropdown-menu-clickable-item" href="${root}bleh" data-menu-item="configure">
                         ${trans[lang].settings.configure}
                     </a>
-                `),
+                `),*/
                 allowHTML: true,
                 placement: 'right-start',
                 trigger: 'manual',
                 interactive: true,
                 interactiveBorder: 10,
-                offset: [0, 0]
+                offset: [0, 0],
+
+                onShow(instance) {
+                    instance.popper.addEventListener('click', event => {
+                        instance.hide();
+                    });
+                }
             });
 
             register_menu(listen_item, menu);
