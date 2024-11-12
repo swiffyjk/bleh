@@ -57,6 +57,11 @@ body {
         --lit-seasonal: 1.1;
 
         --hue-pos: 150;
+
+        --icon-16-snowgirl: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyLjUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgY2xhc3M9Imx1Y2lkZSBsdWNpZGUtc25vd21hbiI+PGNpcmNsZSBjeD0iMTIiIGN5PSI2IiByPSI0Ii8+PHBhdGggZD0iTTEyIDE0aC4wMSIvPjxwYXRoIGQ9Ik0xMiAxOGguMDEiLz48cGF0aCBkPSJNMiA5aDJWNyIvPjxwYXRoIGQ9Ik03IDEyIDQgOSIvPjxwYXRoIGQ9Ik0xNy44IDExLjEgMjAgOSIvPjxwYXRoIGQ9Ik0yMCA3djJoMiIvPjxwYXRoIGQ9Ik05IDguN2E3IDcgMCAxIDAgNiAwIi8+PHBhdGggZD0iTTUgMjJoMTQiLz48L3N2Zz4=');
+        --icon-16-profile: var(--icon-16-snowgirl);
+        --icon-16-artist: var(--icon-16-snowgirl);
+        --icon-artist: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLXNub3dtYW4iPjxjaXJjbGUgY3g9IjEyIiBjeT0iNiIgcj0iNCIvPjxwYXRoIGQ9Ik0xMiAxNGguMDEiLz48cGF0aCBkPSJNMTIgMThoLjAxIi8+PHBhdGggZD0iTTIgOWgyVjciLz48cGF0aCBkPSJNNyAxMiA0IDkiLz48cGF0aCBkPSJNMTcuOCAxMS4xIDIwIDkiLz48cGF0aCBkPSJNMjAgN3YyaDIiLz48cGF0aCBkPSJNOSA4LjdhNyA3IDAgMSAwIDYgMCIvPjxwYXRoIGQ9Ik01IDIyaDE0Ii8+PC9zdmc+');
     }
     [data-season="christmas"],
     [data-bleh--season="christmas"] & {
@@ -78,6 +83,11 @@ body {
         --lit-seasonal: 1.1;
 
         --hue-pos: 150;
+
+        --icon-16-snowgirl: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyLjUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgY2xhc3M9Imx1Y2lkZSBsdWNpZGUtc25vd21hbiI+PGNpcmNsZSBjeD0iMTIiIGN5PSI2IiByPSI0Ii8+PHBhdGggZD0iTTEyIDE0aC4wMSIvPjxwYXRoIGQ9Ik0xMiAxOGguMDEiLz48cGF0aCBkPSJNMiA5aDJWNyIvPjxwYXRoIGQ9Ik03IDEyIDQgOSIvPjxwYXRoIGQ9Ik0xNy44IDExLjEgMjAgOSIvPjxwYXRoIGQ9Ik0yMCA3djJoMiIvPjxwYXRoIGQ9Ik05IDguN2E3IDcgMCAxIDAgNiAwIi8+PHBhdGggZD0iTTUgMjJoMTQiLz48L3N2Zz4=');
+        --icon-16-profile: var(--icon-16-snowgirl);
+        --icon-16-artist: var(--icon-16-snowgirl);
+        --icon-artist: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLXNub3dtYW4iPjxjaXJjbGUgY3g9IjEyIiBjeT0iNiIgcj0iNCIvPjxwYXRoIGQ9Ik0xMiAxNGguMDEiLz48cGF0aCBkPSJNMTIgMThoLjAxIi8+PHBhdGggZD0iTTIgOWgyVjciLz48cGF0aCBkPSJNNyAxMiA0IDkiLz48cGF0aCBkPSJNMTcuOCAxMS4xIDIwIDkiLz48cGF0aCBkPSJNMjAgN3YyaDIiLz48cGF0aCBkPSJNOSA4LjdhNyA3IDAgMSAwIDYgMCIvPjxwYXRoIGQ9Ik01IDIyaDE0Ii8+PC9zdmc+');
     }
 
     --brand: 'bleh';
