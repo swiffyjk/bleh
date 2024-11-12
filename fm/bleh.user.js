@@ -2170,8 +2170,8 @@ let stored_season = {
 let seasonal_events = [
     {
         id: 'new_years',
-        start: 'y0-01-01',
-        end: 'y0-01-10T23:59:59',
+        start: 'y0-01-01T00:00:00+0000',
+        end: 'y0-01-10T23:59:59+0000',
 
         snowflakes: {
             state: true,
@@ -2180,8 +2180,8 @@ let seasonal_events = [
     },
     {
         id: 'easter',
-        start: 'y0-04-05',
-        end: 'y0-04-30T23:59:59',
+        start: 'y0-04-05T00:00:00+0000',
+        end: 'y0-04-30T23:59:59+0000',
 
         snowflakes: {
             state: false
@@ -2189,8 +2189,8 @@ let seasonal_events = [
     },
     {
         id: 'pride',
-        start: 'y0-05-31',
-        end: 'y0-07-07T23:59:59',
+        start: 'y0-05-31T00:00:00+0000',
+        end: 'y0-07-07T23:59:59+0000',
 
         snowflakes: {
             state: false
@@ -2198,8 +2198,8 @@ let seasonal_events = [
     },
     {
         id: 'halloween',
-        start: 'y0-09-22',
-        end: 'y0-11-01T11:59:59',
+        start: 'y0-09-22T00:00:00+0000',
+        end: 'y0-11-01T11:59:59+0000',
 
         snowflakes: {
             state: false
@@ -2208,7 +2208,7 @@ let seasonal_events = [
     {
         id: 'pre_fall',
         start: 'y0-11-01T12:00:00',
-        end: 'y0-11-12T23:59:59',
+        end: 'y0-11-12T23:59:59+0000',
 
         snowflakes: {
             state: true,
@@ -2217,8 +2217,8 @@ let seasonal_events = [
     },
     {
         id: 'fall',
-        start: 'y0-11-13',
-        end: 'y0-11-22T23:59:59',
+        start: 'y0-11-13T00:00:00+0000',
+        end: 'y0-11-22T23:59:59+0000',
 
         snowflakes: {
             state: true,
@@ -2227,8 +2227,8 @@ let seasonal_events = [
     },
     {
         id: 'christmas',
-        start: 'y0-11-23',
-        end: 'y0-12-31T23:59:59',
+        start: 'y0-11-23T00:00:00+0000',
+        end: 'y0-12-31T23:59:59+0000',
 
         snowflakes: {
             state: true,
@@ -3465,10 +3465,13 @@ let has_prompted_for_update = false;
         let last_season_seen = localStorage.getItem('bleh_last_season_seen') || '';
 
         let now = new Date();
+        log(`it is now ${now}`, 'season', 'log');
 
         let current_year = now.getFullYear();
 
         seasonal_events.forEach((season) => {
+            log(`running thru, ${season.id} - ${new Date(season.start.replace('y0', current_year))} ${new Date(season.end.replace('y0', current_year))}`, 'season', 'log');
+            log(`${now >= new Date(season.start.replace('y0', current_year))} ${now <= new Date(season.end.replace('y0', current_year))}`, 'season', 'log');
             if (
                 now >= new Date(season.start.replace('y0', current_year)) &&
                 now <= new Date(season.end.replace('y0', current_year))
