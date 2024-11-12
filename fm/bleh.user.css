@@ -1831,6 +1831,8 @@ span.header-new-gallery-inner a,
     position: relative;
 }
 .catalogue-tags:before {
+    --top: 2px;
+    --margin-top: none;
     --left: 0;
     --mask: var(--icon-16-tag);
     color: hsl(var(--c3));
@@ -1901,13 +1903,24 @@ span.header-new-gallery-inner a,
 
 /* user personal tags */
 .catalogue-tags .tags-separator {
-    display: none;
+    display: block;
+    width: 100%;
+    margin: unset;
 }
+/* scuffed but it works */
 .catalogue-tags .tags-user-avatar {
-    width: 20px;
-    height: 20px;
-    margin-left: calc(var(--card-gap) - 6px);
+    width: 16px;
+    height: 16px;
+    margin-left: calc(-10px - 16px - 4px);
     margin-right: 10px;
+
+    position: relative;
+    top: 2px;
+    left: -2px;
+
+    & + .tags-list {
+        margin-left: -2px;
+    }
 }
 
 
