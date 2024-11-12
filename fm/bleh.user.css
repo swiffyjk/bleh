@@ -1501,7 +1501,7 @@ last.fm changes as of 2024-05-20 */
 /* no playlists */ .no-data-message--playlists,
 /* neighbours */ .friends-col-main,
 .panel-form,
-.bleh--gallery,
+.bleh--gallery, [data-page-subpage="music_album_images_overview"] .col-main,
 /* listeners */ .col-main:not(.bleh--gallery) > .buffer-standard,
 /* similar artists */ .similar-artists
 {
@@ -15557,6 +15557,23 @@ button.bleh--gallery-bookmark-image-btn {
 }
 [data-bleh--gallery-tab="overview"] .bleh--bookmarks {
     display: none;
+}
+
+.bleh--gallery {
+    & > .buffer-standard {
+        margin-top: unset;
+    }
+}
+
+/* albums dont support saved tabs yet so */
+[data-page-subpage="music_album_images_overview"] .col-main {
+    & > .buffer-standard {
+        display: none;
+    }
+
+    .image-list {
+        margin-top: unset;
+    }
 }
 
 

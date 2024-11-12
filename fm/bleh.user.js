@@ -12786,6 +12786,15 @@ let has_prompted_for_update = false;
         let breadcrumb_root = page.structure.container.querySelector('.subpage-breadcrumb');
         let breadcrumb_name = page.structure.container.querySelector('.subpage-title');
 
+        // probably moved to a content-top by bleh prior
+        if (breadcrumb_name == null) {
+            breadcrumb_name = page.structure.content_top.querySelector('.content-top-header');
+
+            if (breadcrumb_name != null) {
+                page.structure.content_top.style.setProperty('display', 'none');
+            }
+        }
+
         // tags
         if (breadcrumb_root == null) {
             breadcrumb_root = page.structure.container.querySelector('.content-top-back-link');
