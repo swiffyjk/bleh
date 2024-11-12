@@ -5479,7 +5479,7 @@ let has_prompted_for_update = false;
             create_profile_top_item(profile_header, {
                 name: page.name,
                 type: 'taste',
-                link: `${root}user/${page.name}/library/artists?date_preset=LAST_7_DAYS&page=1`,
+                link: `${root}user/${page.name}/library/artists?date_preset=LAST_30_DAYS&page=1`,
                 taste: taste,
                 artists: taste_artists,
                 avi: profile_avi,
