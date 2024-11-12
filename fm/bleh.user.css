@@ -8686,6 +8686,7 @@ text[style^="color: rgb(255, 172, 172)"] {
                 color: hsl(var(--c3));
                 font-weight: var(--font-weight-medium);
                 padding: 0 12px;
+                cursor: default;
             }
 
             .dropdown-menu-clickable-item {
