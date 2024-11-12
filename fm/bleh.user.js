@@ -11002,8 +11002,9 @@ let has_prompted_for_update = false;
                 video.appendChild(container);
 
                 tippy(playlink, {
-                    content: playlink.textContent
+                    content: playlink.getAttribute('title')
                 });
+                playlink.removeAttribute('title');
                 tippy(replace, {
                     content: replace.textContent
                 });
