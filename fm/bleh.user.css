@@ -4282,7 +4282,7 @@ better than the default selector '#app a' i suppose */
 }
 .grid-items:not(.grid-items--big-first) {
     display: grid;
-    grid-template-columns: auto auto auto auto;
+    grid-template-columns: 200px 200px 200px 200px;
     grid-template-rows: auto auto auto auto;
     grid-template-areas:
     ". . . ."
