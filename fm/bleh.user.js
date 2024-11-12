@@ -4815,6 +4815,10 @@ let has_prompted_for_update = false;
                     content_top.classList.add('redesigned-content-top');
                     page.structure.content_top = content_top;
                     navlist.after(content_top);
+
+                    // should be covered by bleh
+                    if (content_top.querySelector('.content-top-back-link') != null)
+                        content_top.style.setProperty('display', 'none');
                 } else {
                     let subpage_title = page.structure.main.querySelector(':scope > .subpage-title');
                     if (subpage_title == null)
@@ -11596,7 +11600,7 @@ let has_prompted_for_update = false;
 
         page.name = tag_header.querySelector('.header-title').textContent;
 
-        let is_subpage = tag_header.classList.contains('header--subpage');
+        let is_subpage = tag_header.classList.contains('header--sub-page');
 
 
         page.structure.container = document.body.querySelector('.page-content');
@@ -11612,9 +11616,13 @@ let has_prompted_for_update = false;
 
         if (ff('refreshed_music_nav')) {
             let split = window.location.href.split('/');
-            let length = (split.length - 1);
 
-            let title = desanitise(split[length]);
+            /* languages */
+            let index = 4;
+            if (split[3] != 'tag')
+                index = 5;
+
+            let title = desanitise(split[index]);
 
             let redesigned_tag_header = document.createElement('section');
             redesigned_tag_header.classList.add('redesigned-header', 'redesigned-tag-header', 'no-background');
@@ -11640,7 +11648,11 @@ let has_prompted_for_update = false;
             page.subpage = 'overview';
         } else {
             // which subpage is it?
-            page.subpage = document.body.classList[2].replace('namespace--', '');
+            try {
+                page.subpage = document.body.classList[2].replace('namespace--', '');
+            } catch(e) {
+                page.subpage = document.body.classList[1].replace('namespace--', '');
+            }
 
             if (page.subpage == 'tag_wiki_overview')
                 bleh_wiki();
@@ -12566,7 +12578,7 @@ let has_prompted_for_update = false;
             sub_text.classList.add('sub-text', 'space-below');
             sub_text.innerHTML = (`
                 <div class="breadcrumb-origin prominent">
-                    ${h2.innerHTML}
+                    ${(h2 != null) ? h2.innerHTML : page.structure.container.querySelector('.content-top-header').textContent}
                 </div>
                 <div class="wiki-author-side">
                     ${wiki_author.innerHTML}
@@ -12574,13 +12586,20 @@ let has_prompted_for_update = false;
             `);
 
             wiki_panel.insertBefore(sub_text, wiki_panel.firstElementChild);
-            wiki_panel.removeChild(h2);
+            if (h2 != null)
+                wiki_panel.removeChild(h2);
         }
     }
 
     function bleh_wiki_history() {
         let breadcrumb_root = page.structure.container.querySelector('.subpage-breadcrumb');
         let breadcrumb_name = page.structure.container.querySelector('.subpage-title');
+
+        // tags
+        if (breadcrumb_root == null) {
+            breadcrumb_root = page.structure.container.querySelector('.content-top-back-link');
+            breadcrumb_name = page.structure.container.querySelector('.content-top-header');
+        }
 
         let sub_text = document.createElement('div');
         sub_text.classList.add('sub-text', 'space-below');
@@ -12598,6 +12617,11 @@ let has_prompted_for_update = false;
 
 
         let buffer_container = page.structure.container.querySelector('.row ~ .buffer-4');
+
+        // tags
+        if (buffer_container == null)
+            buffer_container = page.structure.container.querySelector('.wiki-history');
+
         let wiki_history_table = buffer_container.querySelector('.wiki-history-table');
 
 
@@ -12652,6 +12676,12 @@ let has_prompted_for_update = false;
 
         let breadcrumb_root = page.structure.container.querySelector('.subpage-breadcrumb');
         let breadcrumb_name = page.structure.container.querySelector('.subpage-title');
+
+        // tags
+        if (breadcrumb_root == null) {
+            breadcrumb_root = page.structure.container.querySelector('.content-top-back-link');
+            breadcrumb_name = page.structure.container.querySelector('.content-top-header');
+        }
 
         let sub_text = document.createElement('div');
         sub_text.classList.add('sub-text', 'space-below');

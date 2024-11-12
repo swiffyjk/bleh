@@ -7170,6 +7170,8 @@ very, very, very dated - who looks up a song on ebay? */
     .wiki-style-rules-list,
     .bulleted-list,
     h3 {
+        font-size: inherit;
+        line-height: inherit;
         margin-bottom: var(--card-gap);
 
         &:last-child {
