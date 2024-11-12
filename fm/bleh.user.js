@@ -8831,6 +8831,42 @@ let has_prompted_for_update = false;
                 bla.classList.add('kate-placeholder');
                 track.appendChild(bla);
 
+                // menu
+                let track_legacy_menu = track.querySelector('.chartlist-more-menu');
+
+                if (track_legacy_menu != null) {
+                    let menu = tippy(track, {
+                        theme: 'context-menu',
+                        /*content: (`
+                            <button class="dropdown-menu-clickable-item" onclick="_open_profile_shortcut_window()" data-menu-item="configure">
+                                ${trans[lang].settings.configure}
+                            </button>
+                        `),*/
+                        content: '',
+                        allowHTML: true,
+                        placement: 'right-start',
+                        trigger: 'manual',
+                        interactive: true,
+                        interactiveBorder: 10,
+                        offset: [0, 0],
+
+                        onShow(instance) {
+                            instance.popper.addEventListener('click', event => {
+                                instance.hide();
+                            });
+
+                            let menu_items = track_legacy_menu.querySelectorAll('li > *');
+                            let content = instance.popper.querySelector('.tippy-content');
+
+                            menu_items.forEach((item) => {
+                                content.appendChild(item);
+                            });
+                        }
+                    });
+
+                    register_menu(track, menu);
+                }
+
                 // image
                 let track_image = track.querySelector('.chartlist-image a.cover-art');
 
