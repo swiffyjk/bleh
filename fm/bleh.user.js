@@ -3529,11 +3529,35 @@ let has_prompted_for_update = false;
         auth_link.appendChild(text);
 
         if (document.body.querySelector('.masthead .masthead-pro-wrap') != null) {
-            let pro_badge = document.createElement('p');
-            pro_badge.classList.add('pro-badge');
-            pro_badge.textContent = 'Pro';
+            if (profile_badges.hasOwnProperty(auth)) {
+                if (!Array.isArray(profile_badges[auth])) {
+                    // default
+                    log(`1 badge:`, 'auth', 'info', profile_badges[auth]);
+                    let this_badge = profile_badges[auth];
 
-            auth_link.appendChild(pro_badge);
+                    let badge = document.createElement('span');
+                    badge.classList.add('label', `user-status--bleh-${this_badge.type}`, `user-status--bleh-user-${auth}`, 'auth-badge');
+                    badge.textContent = this_badge.name;
+                    auth_link.appendChild(badge);
+                } else {
+                    // multiple
+                    log(`multiple badges:`, 'auth', 'info', profile_badges[auth]);
+                    let badges_length = Object.keys(profile_badges[auth]).length - 1;
+                    let this_badge = profile_badges[auth][badges_length];
+                    log(`using badge ${badges_length} as primary`, 'auth', 'info', this_badge);
+
+                    let badge = document.createElement('span');
+                    badge.classList.add('label', `user-status--bleh-${this_badge.type}`, `user-status--bleh-user-${auth}`, 'auth-badge');
+                    badge.textContent = this_badge.name;
+                    auth_link.appendChild(badge);
+                }
+            } else {
+                let pro_badge = document.createElement('p');
+                pro_badge.classList.add('label', 'user-status-subscriber', 'auth-badge');
+                pro_badge.textContent = 'Pro';
+
+                auth_link.appendChild(pro_badge);
+            }
 
             is_pro = true;
         } else {

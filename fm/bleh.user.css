@@ -3494,6 +3494,7 @@ span[itemprop="byArtist"] + .header-new-title {
 
 
 /*     PROFILE LABEL     */
+.label.auth-badge,
 .title-container .label, .header-new-on-tour {
     /*width: 100%;*/
     max-width: 20px;
@@ -3531,10 +3532,17 @@ span[itemprop="byArtist"] + .header-new-title {
         transition-delay: 0.2s;
     }
 
-    &:hover {
+    &:not(.auth-badge):hover {
         max-width: 220px;
         padding-right: 6px;
         background-color: hsla(var(--h4), 20%) !important;
+    }
+
+    &.auth-badge {
+        padding-left: 16px;
+        --mask-size: 16px;
+        width: 16px;
+        height: 16px;
     }
 }
 
@@ -6185,7 +6193,7 @@ button,
 .gallery-placeholder:before,
 .image-list-item-bookmarked:after, .image-list-item-preferred:after,
 .data-loading:before, .lazy-shoutbox.async-content-loading:before, .loading:not(.library-fetch, .library-date-picker):before,
-.user-list-inner-wrap .label:before,
+.user-list-inner-wrap .label:before, .label.auth-badge:before,
 .nag-bar-message:before,
 .source-album:before,
 /*     BLEH     */
