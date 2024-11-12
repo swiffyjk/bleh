@@ -5859,7 +5859,8 @@ button,
 .chartlist-play-button,
 .footer-language :is(strong, button),
 .source-album, .big-tags-item,
-.wiki-history-entry
+.wiki-history-entry,
+.attendee-summary-user
 {
     --bg: hsl(var(--b4));
     --bg-hov: hsla(var(--b4), 80%);
@@ -9804,7 +9805,6 @@ text[style^="color: rgb(0, 0, 0)"] {
 .user-list-avatar {
     width: 32px;
     height: 32px;
-    --show-status: none;
     --mask-size: var(--cover-size-32);
 }
 
@@ -9814,6 +9814,16 @@ text[style^="color: rgb(0, 0, 0)"] {
     margin: 6px 0;
     min-height: unset;
     height: 32px;
+
+    .link-block-cover-link {
+        display: none;
+    }
+
+    &.staff-user {
+        --hue-over: var(--hue-neg);
+        --sat-over: 1;
+        --lit-over: 1;
+    }
 }
 .user-list-item {
     width: 100%;
@@ -9846,6 +9856,12 @@ text[style^="color: rgb(0, 0, 0)"] {
                 width: 56px;
                 height: 56px;
                 --mask-size: var(--cover-size-50);
+
+                .avatar-status-dot {
+                    width: 20px;
+                    height: 20px;
+                    --mask-size: 20px;
+                }
             }
 
             .user-list-name {
@@ -9860,7 +9876,7 @@ text[style^="color: rgb(0, 0, 0)"] {
 
             .user-follow {
                 position: absolute;
-                top: calc(56px - 18px);
+                bottom: calc(56px - 18px);
                 left: calc(56px - 18px);
                 z-index: 12;
                 width: calc(16px + (1px * 2));
@@ -9951,9 +9967,9 @@ text[style^="color: rgb(0, 0, 0)"] {
     --show-icon: none;
 
     .avatar-status-dot {
-        width: 24px;
-        height: 24px;
-        background-size: 100%;
+        width: 16px;
+        height: 16px;
+        --mask-size: 16px;
     }
 }
 
@@ -11478,10 +11494,23 @@ table.table tr:nth-child(2n) td {
     grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
     gap: var(--item-list-gap);
     margin: unset;
+
+    &:before, &:after {
+        display: none;
+    }
 }
 .attendee-summary-user {
-    padding: unset !important;
     margin: unset !important;
+    width: unset;
+
+    --bg: hsla(var(--b4), 40%);
+    --bg-hov: hsla(var(--b4), 60%);
+    --bg-atv: hsla(var(--b4), 80%);
+    --shadow: none;
+
+    .attendee-summary-user-link {
+        text-decoration: none !important;
+    }
 }
 
 .attendee-summary-user-inner-wrap {
@@ -15911,6 +15940,15 @@ button.bleh--gallery-bookmark-image-btn {
             &.profile-top-item--edit {
                 --mask: var(--icon-16-settings);
             }
+            &.profile-top-item--going {
+                --mask: var(--icon-16-check);
+            }
+            &.profile-top-item--maybe {
+                --mask: var(--icon-16-question);
+            }
+            &.profile-top-item--total {
+                --mask: var(--icon-16-event);
+            }
 
             [data-toggle-button-current-state="followed"] &,
             &[data-is-shortcut="true"] {
@@ -17987,5 +18025,14 @@ h4 {
 /*     SIMILAR ARTISTS     */
 .similar-artists {
     margin: unset;
+}
+
+
+
+
+.event-value-top-header {
+    &:last-child {
+        margin-bottom: unset !important;
+    }
 }
 }

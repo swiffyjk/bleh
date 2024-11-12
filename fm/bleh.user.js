@@ -247,7 +247,9 @@ const trans = {
             name: 'Event',
             going: '{c} going',
             maybe: '{c} interested',
-            you_know: 'Who you know'
+            you_know: 'Who you know',
+            all_time: 'All time',
+            total: '{c} total'
         },
         messaging: {
             update: 'bleh has updated to version {v}!'
@@ -5113,8 +5115,65 @@ let has_prompted_for_update = false;
             if (btn_add != null)
                 btn_add.setAttribute('data-page-subpage', page.subpage);
 
-            if (page.subpage.startsWith('user_library'))
+            if (page.subpage.startsWith('user_library')) {
                 bleh_user_library();
+            } else if (page.subpage == 'user_events') {
+                let value_panel = document.createElement('section');
+                value_panel.classList.add('value-panel');
+                value_panel.innerHTML = (`
+                    <h2 class="text-18">${page.structure.content_top.querySelector('.secondary-nav-item-link--active').textContent}</h2>
+                `);
+
+                let values = page.structure.main.querySelectorAll('.metadata-display');
+
+                let value_header = document.createElement('div');
+                value_header.classList.add('event-value-top-header', 'view-buttons');
+
+                values.forEach((value, index) => {
+                    let type = 'going';
+                    if (index == 1)
+                        type = 'maybe';
+
+                    create_profile_top_item(value_header, {
+                        name: page.name,
+                        text: value.textContent,
+                        type: type,
+                        tooltip:  trans[lang].event[type].replace('{c}', value.textContent)
+                    });
+                });
+
+                value_panel.appendChild(value_header);
+
+
+                let total_text = document.createElement('h2');
+                total_text.classList.add('text-18');
+                total_text.textContent = trans[lang].event.all_time;
+
+                value_panel.appendChild(total_text);
+
+                let total_header = document.createElement('div');
+                total_header.classList.add('event-value-top-header', 'view-buttons');
+
+                let total_value = page.structure.side.querySelector('.metadata-display');
+                if (total_value != null) {
+                    create_profile_top_item(total_header, {
+                        name: page.name,
+                        text: total_value.textContent,
+                        type: 'total',
+                        tooltip:  trans[lang].event.total.replace('{c}', total_value.textContent)
+                    });
+                }
+
+                value_panel.appendChild(total_header);
+
+
+                let legacy_metadata = page.structure.main.querySelector('.metadata-list');
+                page.structure.main.removeChild(legacy_metadata);
+
+
+                page.structure.side.innerHTML = '';
+                page.structure.side.appendChild(value_panel);
+            }
         }
 
         log('status is', 'page', 'info', page);
@@ -5427,10 +5486,10 @@ let has_prompted_for_update = false;
         let listen_item = document.createElement((action != 'button') ? 'a' : 'button');
         listen_item.classList.add('btn', 'profile-top-item', `profile-top-item--${type}`, 'view-item');
 
-        if (action != 'button') {
+        if (action != 'button' && type != 'going' && type != 'maybe' && type != 'total') {
             listen_item.setAttribute('href', link);
             //listen_item.setAttribute('target', '_blank');
-        } else {
+        } else if (type != 'going' && type != 'maybe' && type != 'total') {
             listen_item.setAttribute('onclick', link);
         }
 
@@ -5708,6 +5767,19 @@ let has_prompted_for_update = false;
         page.structure.main.insertBefore(view_buttons, page.structure.main.firstElementChild);
 
         refresh_all();
+
+
+        // users
+        let users = page.structure.main.querySelectorAll('.user-list-inner-wrap');
+        users.forEach((user) => {
+            let avatar = user.querySelector('.user-list-avatar');
+            let name = user.querySelector('.user-list-link').textContent;
+
+            let badge = patch_avatar(avatar, name, 'follow');
+
+            if (badge.type == 'avatar-status-dot--staff')
+                user.classList.add('staff-user');
+        });
     }
 
 
@@ -12984,6 +13056,18 @@ let has_prompted_for_update = false;
                 else
                     page.structure.side.insertBefore(edit_panel, page.structure.side.firstElementChild);
             }
+
+
+
+
+            // attendees
+            let users = page.structure.main.querySelectorAll('.attendee-summary-user-inner-wrap');
+            users.forEach((user) => {
+                let avatar = user.querySelector('.attendee-summary-user-avatar');
+                let name = user.querySelector('.attendee-summary-user-link').textContent;
+
+                patch_avatar(avatar, name, 'event');
+            });
         } else {
             // which subpage is it?
             page.subpage = document.body.classList[2].replace('namespace--', '');
@@ -13007,6 +13091,19 @@ let has_prompted_for_update = false;
                 page.structure.main.insertBefore(view_buttons, page.structure.main.firstElementChild);
 
                 refresh_all();
+
+
+                // users
+                let users = page.structure.main.querySelectorAll('.user-list-inner-wrap');
+                users.forEach((user) => {
+                    let avatar = user.querySelector('.user-list-avatar');
+                    let name = user.querySelector('.user-list-link').textContent;
+
+                    let badge = patch_avatar(avatar, name, 'follow');
+
+                    if (badge.type == 'avatar-status-dot--staff')
+                        user.classList.add('staff-user');
+                });
             }
         }
 
