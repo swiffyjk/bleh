@@ -2619,7 +2619,9 @@ let settings_template = {
     font_weight_bold: 730,
     show_bulk_edit_album: false,
     chart_decimation: true,
-    activities: true
+    activities: true,
+
+    auth_menu_obsessions: false
 };
 let settings_base = {
     high_contrast: {
@@ -2889,6 +2891,13 @@ let settings_base = {
     },
     activities: {
         css: 'activities',
+        unit: '',
+        value: true,
+        values: [true, false],
+        type: 'toggle'
+    },
+    auth_menu_obsessions: {
+        css: 'auth_menu_obsessions',
         unit: '',
         value: true,
         values: [true, false],
@@ -3639,9 +3648,11 @@ let has_prompted_for_update = false;
                 <a class="dropdown-menu-clickable-item" data-menu-item="shouts" href="${root}user/${auth}/shoutbox">
                     ${trans[lang].auth_menu.shouts}
                 </a>
+                ${(settings.auth_menu_obsessions) ? (`
                 <a class="dropdown-menu-clickable-item" data-menu-item="obsessions" href="${root}user/${auth}/obsessions">
                     ${trans[lang].auth_menu.obsessions}
                 </a>
+                `) : ''}
                 <button class="dropdown-menu-clickable-item" data-menu-item="themes" onclick="toggle_theme()">
                     <span class="auth-dropdown-item-row">
                         <span class="auth-dropdown-item-left">${trans[lang].settings.themes.name}</span>
