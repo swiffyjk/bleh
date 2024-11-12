@@ -181,7 +181,11 @@ const trans = {
             wiki: 'About',
             refresh_tracks: 'Refresh tracks',
             menu: 'Extra options',
-            obsession: 'Obsess'
+            obsession: 'Obsess',
+            compare: {
+                name: 'Compare',
+                header: 'Compare plays'
+            }
         },
         error: {
             name: 'This page is missing...',
@@ -5429,6 +5433,62 @@ let has_prompted_for_update = false;
             }
 
             return;
+        }
+
+        if (type == 'taste' && artists.length >= 1) {
+            let menu = tippy(listen_item, {
+                theme: 'context-menu',
+                content: (`
+                    <h4 class="menu-header">${trans[lang].music.compare.header}</h4>
+                    <a class="dropdown-menu-clickable-item" href="${root}user/${name}/library/music/${sanitise(artists[0])}" data-menu-item="shared-artist">
+                        <img class="view-item-avatar" src="${avi}" alt="${name}">${artists[0]}
+                    </a>
+                    <a class="dropdown-menu-clickable-item" href="${root}user/${auth}/library/music/${sanitise(artists[0])}" data-menu-item="shared-artist">
+                        <img class="view-item-avatar" src="${my_avi}" alt="${auth}">${artists[0]}
+                    </a>
+                    ${(artists.length >= 2) ? (`
+                    <div class="sep"></div>
+                    <a class="dropdown-menu-clickable-item" href="${root}user/${name}/library/music/${sanitise(artists[1])}" data-menu-item="shared-artist">
+                        <img class="view-item-avatar" src="${avi}" alt="${name}">${artists[1]}
+                    </a>
+                    <a class="dropdown-menu-clickable-item" href="${root}user/${auth}/library/music/${sanitise(artists[1])}" data-menu-item="shared-artist">
+                        <img class="view-item-avatar" src="${my_avi}" alt="${auth}">${artists[1]}
+                    </a>
+                    `) : ''}
+                    ${(artists.length >= 3) ? (`
+                    <div class="sep"></div>
+                    <a class="dropdown-menu-clickable-item" href="${root}user/${name}/library/music/${sanitise(artists[2])}" data-menu-item="shared-artist">
+                        <img class="view-item-avatar" src="${avi}" alt="${name}">${artists[2]}
+                    </a>
+                    <a class="dropdown-menu-clickable-item" href="${root}user/${auth}/library/music/${sanitise(artists[2])}" data-menu-item="shared-artist">
+                        <img class="view-item-avatar" src="${my_avi}" alt="${auth}">${artists[2]}
+                    </a>
+                    `) : ''}
+                `),
+                allowHTML: true,
+                placement: 'right-start',
+                trigger: 'manual',
+                interactive: true,
+                interactiveBorder: 10,
+                offset: [0, 0]
+            });
+
+            listen_item.addEventListener('contextmenu', (e) => {
+                e.preventDefault();
+
+                menu.setProps({
+                    getReferenceClientRect: () => ({
+                        width: 0,
+                        height: 0,
+                        top: e.clientY,
+                        bottom: e.clientY,
+                        left: e.clientX,
+                        right: e.clientX,
+                    }),
+                });
+
+                menu.show();
+            });
         }
 
         if (tooltip == '')
