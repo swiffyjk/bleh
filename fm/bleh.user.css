@@ -1503,7 +1503,8 @@ last.fm changes as of 2024-05-20 */
 .panel-form,
 .bleh--gallery, [data-page-subpage="music_album_images_overview"] .col-main,
 /* listeners */ .col-main:not(.bleh--gallery) > .buffer-standard,
-/* similar artists */ .similar-artists
+/* similar artists */ .similar-artists,
+.no-data-message--gallery
 {
     content: '';
     --override-background: hsl(var(--card-specific-background, var(--card-background, var(--b5))));
@@ -17865,14 +17866,17 @@ h4 {
 
         .page-content[data-page-subpage="overview"] & {
             --avatar-size: 127px;
+            --mask-size: var(--cover-size-100);
         }
         .about-artist-panel & {
             --avatar-size: 127px !important;
+            --mask-size: var(--cover-size-100);
         }
 
         .page-content[data-page-type="album"] &,
         .page-content[data-page-type="track"] & {
             --avatar-size: 70px;
+            --mask-size: var(--cover-size-50);
             border-radius: var(--item-big-radius);
         }
 
@@ -17985,6 +17989,10 @@ h4 {
                 margin-left: calc(var(--card-gap) - 6px);
                 color: hsl(var(--l2-c));
                 text-shadow: 0 0 20px hsl(var(--h4));
+
+                [data-bleh--theme="light"] & {
+                    color: hsl(var(--l4-c));
+                }
             }
         }
 
