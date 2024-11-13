@@ -3499,7 +3499,7 @@ let has_prompted_for_update = false;
                     snowflakes_count = season.snowflakes.count;
 
                     if (settings.seasonal_particles_reduced && snowflakes_count > 10)
-                        snowflakes_count = snowflakes_count * 0.75;
+                        snowflakes_count = snowflakes_count * 0.45;
 
                     begin_snowflakes();
                 }

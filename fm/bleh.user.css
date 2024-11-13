@@ -1520,19 +1520,19 @@ last.fm changes as of 2024-05-20 */
     background-position: unset !important;*/
 
     [data-bleh--seasonal_overlays="true"] & {
-        [data-bleh--season="halloween"] &:not(.featured-item-panel, .shh) {
+        [data-bleh--season="halloween"] &:not(.featured-item-panel, .shh, .view-all-panel) {
             background-image: linear-gradient(0deg, rgba(252, 139, 105, 0.04) 0%, rgba(0,0,0,0) 100%) !important;
             background-repeat: repeat-x;
             background-position: unset !important;
         }
     }
-    [data-bleh--seasonal_overlays="true"][data-bleh--season="christmas"] &:not(.featured-item-panel, .shh),
-    [data-bleh--seasonal_overlays="true"][data-bleh--season="new_years"] &:not(.featured-item-panel, .shh) {
+    [data-bleh--seasonal_overlays="true"][data-bleh--season="christmas"] &:not(.featured-item-panel, .shh, .view-all-panel),
+    [data-bleh--seasonal_overlays="true"][data-bleh--season="new_years"] &:not(.featured-item-panel, .shh, .view-all-panel) {
         background-image: var(--overlay-ice), linear-gradient(180deg, rgba(190,233,250,0.06) 0%, rgba(0,0,0,0) 100%) !important;
         background-repeat: repeat-x;
         background-position: unset !important;
     }
-    [data-bleh--seasonal_overlays="true"][data-bleh--season="fall"] &:not(.featured-item-panel, .shh) {
+    [data-bleh--seasonal_overlays="true"][data-bleh--season="fall"] &:not(.featured-item-panel, .shh, .view-all-panel) {
         background-image: var(--overlay-ice), linear-gradient(180deg, rgba(190,233,250,0.03) 0%, rgba(0,0,0,0) 100%) !important;
         background-repeat: repeat-x;
         background-position: unset !important;
@@ -15147,7 +15147,7 @@ trying to list every song ever made by someone identifying as a female, which is
         bottom: calc(12px + 7px) !important;
         overflow: visible;
         margin: 0;
-        left: -80px;
+        opacity: 0;
         transition-property: left, opacity;
         transition-duration: var(--trans);
         transition-timing-function: var(--trans-function);
@@ -15167,19 +15167,7 @@ trying to list every song ever made by someone identifying as a female, which is
         }
     }
     &:focus-within .form-row-help-text {
-        left: 0;
-    }
-
-    /* mask to hide character text */
-    &:before {
-        position: absolute;
-        background: hsl(var(--b5));
-        content: '';
-        height: 18px;
-        width: 80px;
-        left: -80px;
-        bottom: calc(12px + 7px);
-        z-index: 3;
+        opacity: 1;
     }
 }
 
