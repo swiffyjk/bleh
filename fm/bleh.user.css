@@ -6760,6 +6760,10 @@ very, very, very dated - who looks up a song on ebay? */
 
     &[data-menu-item="profile-shortcut"] {
         --mask: var(--icon-16-profile-shortcut);
+
+        &[data-profile-shortcut=""] {
+            display: none;
+        }
     }
 }
 [data-theme="auth-menu"] {
