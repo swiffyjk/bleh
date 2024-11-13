@@ -9041,6 +9041,13 @@ text[style^="color: rgb(255, 172, 172)"] {
 
 
 /*     PLAYBACK 2023 / LISTENING REPORT V3     */
+.report-box-container--overview {
+    margin-top: var(--card-gap);
+    margin-left: unset;
+    margin-right: unset;
+}
+
+
 .top-item-overview, .listening-report-top-item-wrap--version-3, .top-new-item-image img, .report-box-container, .top-new-item-type, .listening-report-top-item-badge, .mainstream-score--artist-thumb img {
     border-radius: var(--item-med-radius);
 }

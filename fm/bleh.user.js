@@ -3879,6 +3879,9 @@ let has_prompted_for_update = false;
 
     // theme
     unsafeWindow.toggle_theme = function() {
+        if (page.subpage == 'user-dashboard-layout--version-3')
+            return;
+
         let current_theme = settings.theme;
 
         if (current_theme == 'dark')
@@ -3917,6 +3920,9 @@ let has_prompted_for_update = false;
         localStorage.setItem('bleh', JSON.stringify(settings));
     }
     unsafeWindow.change_theme_from_menu = function(theme) {
+        if (page.subpage == 'user-dashboard-layout--version-3')
+            return;
+
         // save value
         settings.theme = theme;
         document.documentElement.setAttribute(`data-bleh--theme`, `${theme}`);
@@ -4968,7 +4974,7 @@ let has_prompted_for_update = false;
         // are we on the overview page?
         let is_subpage = !profile_header.classList.contains('header--overview');
 
-        page.structure.container = document.body.querySelector('.page-content:not(.profile-cards-container)');
+        page.structure.container = document.body.querySelector('.page-content:not(.profile-cards-container, .report-box-container .page-content)');
         try {
             page.structure.row = page.structure.container.querySelector('.row');
             page.structure.main = page.structure.row.querySelector('.col-main');
@@ -5202,6 +5208,11 @@ let has_prompted_for_update = false;
 
                 page.structure.side.innerHTML = '';
                 page.structure.side.appendChild(value_panel);
+            } else if (page.subpage == 'user-dashboard-layout--version-3') {
+                let report_box_container = document.body.querySelector('.report-box-container--overview');
+
+                if (report_box_container != null)
+                    page.structure.content_top.after(report_box_container);
             }
         }
 
