@@ -2993,6 +2993,7 @@ let page = {
     type: '',
     name: '',
     sister: '',
+    sister_others: [],
     subpage: '',
     avatar: '',
     corrected: false,
