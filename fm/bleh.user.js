@@ -5891,6 +5891,17 @@ let has_prompted_for_update = false;
                     console.log(shout_body.textContent, parsed_body);
                     shout_body.innerHTML = parsed_body;
                 }
+
+
+                // timestamp
+                let shout_timestamp = shout.querySelector('.shout-timestamp time');
+                if (shout_timestamp != null) {
+                    tippy(shout_timestamp, {
+                        content: shout_timestamp.getAttribute('title')
+                    });
+
+                    shout_timestamp.removeAttribute('title');
+                }
             } catch(e) {
                 deliver_notif('a shout on this page failed to be modified :(');
                 console.error('bleh - a shout failed to patch', e);
