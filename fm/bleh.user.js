@@ -10675,10 +10675,6 @@ let has_prompted_for_update = false;
             localStorage.removeItem('bleh_profile_shortcut_avi');
             document.getElementById('avatar_src-profile_shortcut').setAttribute('src', '');
 
-            menu_item.setAttribute('data-profile-shortcut', '');
-            menu_item.setAttribute('href', '');
-            menu_item.textContent = '';
-
             // save to settings
             settings.profile_shortcut = '';
             localStorage.setItem('bleh', JSON.stringify(settings));
