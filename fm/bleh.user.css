@@ -17941,6 +17941,10 @@ h4 {
             a {
                 color: inherit;
             }
+
+            [data-bleh--theme="light"] & {
+                text-shadow: 0 0 15px hsl(var(--b5));
+            }
         }
 
         h2 {
@@ -17972,7 +17976,7 @@ h4 {
                 }
 
                 [data-bleh--theme="light"] & {
-                    text-shadow: 0 0 20px hsl(var(--b6));
+                    text-shadow: 0 0 15px hsl(var(--b5));
                 }
             }
 
@@ -17996,7 +18000,7 @@ h4 {
             }
 
             [data-bleh--theme="light"] & {
-                text-shadow: 0 0 20px hsl(var(--b6));
+                text-shadow: 0 0 15px hsl(var(--b5));
             }
         }
 
