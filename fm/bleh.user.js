@@ -13662,7 +13662,7 @@ let has_prompted_for_update = false;
                 </div>
                 <div class="info-side">
                     <div class="sub-text">${trans[lang].music.about}</div>
-                    <h1>${page.sister}</h1>
+                    <h1><a href="${root}music/${sanitise(page.sister)}">${page.sister}</a></h1>
                     ${(listeners != null) ? listeners.outerHTML : ''}
                     ${(tags != null) ? tags.outerHTML : ''}
                     ${(wiki != null) ? wiki.outerHTML : ''}
