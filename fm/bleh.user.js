@@ -2612,8 +2612,11 @@ let settings_template = {
     seasonal_particles: true,
     seasonal_particles_reduced: false,
     seasonal_overlays: true,
+
     profile_header_own: true,
     profile_header_others: true,
+    profile_avi_background: false,
+
     profile_shortcut: '',
     font: '',
     font_weight: 480,
@@ -2856,6 +2859,13 @@ let settings_base = {
     },
     profile_header_others: {
         css: 'profile_header_others',
+        unit: '',
+        value: true,
+        values: [true, false],
+        type: 'toggle'
+    },
+    profile_avi_background: {
+        css: 'profile_avi_background',
         unit: '',
         value: true,
         values: [true, false],
@@ -5014,8 +5024,14 @@ let has_prompted_for_update = false;
                 redesigned_profile_header.classList.add('staff-profile');
             }
 
-            if (avatar != null)
-                register_background(avatar.querySelector('img').getAttribute('src'));
+            if (settings.profile_avi_background) {
+                if (avatar != null)
+                    register_background(avatar.querySelector('img').getAttribute('src'));
+            } else {
+                let background = document.body.querySelector('.header-background--has-image');
+                if (background != null)
+                    register_background(background.style.getPropertyValue('background-image').replace('url("', '').replace('")', ''));
+            }
 
             page.structure.container.insertBefore(redesigned_profile_header, page.structure.container.firstElementChild);
             profile_header.classList.add('legacy-header');
