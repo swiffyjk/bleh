@@ -13101,7 +13101,7 @@ let has_prompted_for_update = false;
                 poster_panel = document.createElement('section');
                 poster_panel.classList.add('poster-panel', 'view-all-panel');
 
-                poster_panel.appendChild(poster);
+                poster_panel.innerHTML = (`${poster.outerHTML}<a onclick="_expand_avatar('${poster.getAttribute('src').replace('/arXL/', '/ar0/')}')" class="bleh--avatar-clickable-link"></a>`);
 
                 page.structure.side.insertBefore(poster_panel, page.structure.side.firstElementChild);
             }

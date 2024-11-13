@@ -17773,6 +17773,15 @@ h4 {
     .event-poster-preview {
         border-radius: var(--item-big-radius);
     }
+
+    position: relative;
+
+    .bleh--avatar-clickable-link {
+        position: absolute;
+        inset: 0;
+        z-index: 10;
+        cursor: pointer;
+    }
 }
 
 
