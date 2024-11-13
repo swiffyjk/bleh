@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         bleh
 // @namespace    http://last.fm/
-// @version      2024.1109
+// @version      2024.1113
 // @description  bleh!!! ^-^
 // @author       kate
 // @match        https://www.last.fm/*
@@ -20,8 +20,8 @@
 // ==/UserScript==
 
 let version = {
-    build: '2024.1109',
-    sku: 'petal',
+    build: '2024.1113',
+    sku: 'yoshimi',
     feature_flags: {
         bleh_settings_tabs: {
             default: false,
@@ -67,6 +67,31 @@ let version = {
             default: true,
             name: 'Enable changelog system',
             date: '2024-11-07'
+        },
+        refreshed_nav: {
+            default: true,
+            name: 'Refreshed nav structure, reducing a lot of jank',
+            date: '2024-11-09'
+        },
+        refreshed_music_nav: {
+            default: true,
+            name: 'Refreshed music nav structure',
+            date: '2024-11-10'
+        },
+        card_saturation: {
+            default: true,
+            name: 'Enable card saturation slider',
+            date: '2024-11-10'
+        },
+        show_album_cover_always: {
+            default: true,
+            name: 'Show album cover in header overview',
+            date: '2024-11-11'
+        },
+        new_auth_menu: {
+            default: true,
+            name: 'New custom-built auth menu to reduce lag',
+            date: '2024-11-11'
         }
     }
 }
@@ -128,7 +153,12 @@ const trans = {
             dev: 'Toggle dev mode',
             configure_bleh: 'Configure bleh',
             library: 'Library',
-            shouts: 'Shouts'
+            shouts: 'Shouts',
+            obsessions: 'Obsessions',
+            labs: 'Labs',
+            bookmarks: 'Bookmarks',
+            settings: 'Settings',
+            logout: 'Logout'
         },
         music: {
             submit_lastfm_correction: 'Submit correction to Last.fm',
@@ -151,7 +181,13 @@ const trans = {
             wiki: 'About',
             refresh_tracks: 'Refresh tracks',
             menu: 'Extra options',
-            obsession: 'Obsess'
+            obsession: 'Obsess',
+            compare: {
+                name: 'Compare',
+                header: 'Compare plays'
+            },
+            about: 'About',
+            about_guests: 'Others featured'
         },
         error: {
             name: 'This page is missing...',
@@ -168,6 +204,7 @@ const trans = {
             }
         },
         profile: {
+            name: 'Profile',
             on_ignore_list: 'You are on this user\'s ignore list.',
             friends: {
                 name: 'Friends'
@@ -205,7 +242,17 @@ const trans = {
                 you_share_2: 'You share {artist1} and {artist2}',
                 you_share_3: 'You share {artist1}, {artist2}, and {artist3}'
             },
-            open_avatar: 'Open in a new tab'
+            open_avatar: 'Open in a new tab',
+            settings: 'Configure',
+            events: 'Events'
+        },
+        event: {
+            name: 'Event',
+            going: '{c} going',
+            maybe: '{c} interested',
+            you_know: 'Who you know',
+            all_time: 'All time',
+            total: '{c} total'
         },
         messaging: {
             update: 'bleh has updated to version {v}!'
@@ -234,6 +281,7 @@ const trans = {
             back: 'Back',
             reload: 'A setting you changed requires a page reload to take effect, click to reload.',
             new: 'New',
+            configure: 'Configure',
             examples: {
                 button: 'Example button'
             },
@@ -414,8 +462,14 @@ const trans = {
                 },
                 profile_header: {
                     name: 'Display profile backgrounds',
-                    for_own: 'On my profile',
-                    for_others: 'On other profiles'
+                    see_type: 'Source from avatar instead of top artist',
+                    view_on: 'View backgrounds on',
+                    for_own: 'My own profile',
+                    for_others: 'Other profiles'
+                },
+                sat_bg: {
+                    name: 'Card background saturation',
+                    bio: 'Control the colour of backgrounds in addition to main accent'
                 }
             },
             activities: {
@@ -605,6 +659,9 @@ const trans = {
                         },
                         style: {
                             name: 'Chart style'
+                        },
+                        length: {
+                            name: 'Chart size'
                         }
                     },
                     albums: {
@@ -613,6 +670,9 @@ const trans = {
                         },
                         style: {
                             name: 'Chart style'
+                        },
+                        length: {
+                            name: 'Chart size'
                         }
                     },
                     tracks: {
@@ -748,7 +808,8 @@ const trans = {
             },
             up: 'Up votes:',
             down: 'Down votes:',
-            vote: 'This is the sum of votes used for ordering.'
+            vote: 'This is the sum of votes used for ordering.',
+            view: 'View photos'
         },
         activities: {
             name: 'Recent Activity',
@@ -770,6 +831,18 @@ const trans = {
             bookmark: 'You bookmarked {i}',
             unbookmark: 'You removed {i}’s bookmark',
             wiki: 'You edited on {i}'
+        },
+        artist: {
+            name: 'Artist'
+        },
+        album: {
+            name: 'Album'
+        },
+        track: {
+            name: 'Track'
+        },
+        tag: {
+            name: 'Tag'
         }
     },
     de: {
@@ -2101,8 +2174,8 @@ let stored_season = {
 let seasonal_events = [
     {
         id: 'new_years',
-        start: 'y0-01-01',
-        end: 'y0-01-10T23:59:59',
+        start: 'y0-01-01T00:00:00+0000',
+        end: 'y0-01-10T23:59:59+0000',
 
         snowflakes: {
             state: true,
@@ -2111,8 +2184,8 @@ let seasonal_events = [
     },
     {
         id: 'easter',
-        start: 'y0-04-05',
-        end: 'y0-04-30T23:59:59',
+        start: 'y0-04-05T00:00:00+0000',
+        end: 'y0-04-30T23:59:59+0000',
 
         snowflakes: {
             state: false
@@ -2120,8 +2193,8 @@ let seasonal_events = [
     },
     {
         id: 'pride',
-        start: 'y0-05-31',
-        end: 'y0-07-07T23:59:59',
+        start: 'y0-05-31T00:00:00+0000',
+        end: 'y0-07-07T23:59:59+0000',
 
         snowflakes: {
             state: false
@@ -2129,8 +2202,8 @@ let seasonal_events = [
     },
     {
         id: 'halloween',
-        start: 'y0-09-22',
-        end: 'y0-11-01T11:59:59',
+        start: 'y0-09-22T00:00:00+0000',
+        end: 'y0-11-01T11:59:59+0000',
 
         snowflakes: {
             state: false
@@ -2139,7 +2212,7 @@ let seasonal_events = [
     {
         id: 'pre_fall',
         start: 'y0-11-01T12:00:00',
-        end: 'y0-11-12T23:59:59',
+        end: 'y0-11-12T23:59:59+0000',
 
         snowflakes: {
             state: true,
@@ -2148,8 +2221,8 @@ let seasonal_events = [
     },
     {
         id: 'fall',
-        start: 'y0-11-13',
-        end: 'y0-11-22T23:59:59',
+        start: 'y0-11-13T00:00:00+0000',
+        end: 'y0-11-22T23:59:59+0000',
 
         snowflakes: {
             state: true,
@@ -2158,12 +2231,12 @@ let seasonal_events = [
     },
     {
         id: 'christmas',
-        start: 'y0-11-23',
-        end: 'y0-12-31T23:59:59',
+        start: 'y0-11-23T00:00:00+0000',
+        end: 'y0-12-31T23:59:59+0000',
 
         snowflakes: {
             state: true,
-            count: 80
+            count: 70
         }
     }
 ];
@@ -2516,6 +2589,7 @@ let settings_template = {
     show_extra_nav: true,
     hue: 255,
     sat: 1,
+    sat_bg: 1,
     lit: 1,
     invert_interactable_colour: false,
     dev: false,
@@ -2540,9 +2614,13 @@ let settings_template = {
     hue_from_album: true,
     seasonal: true,
     seasonal_particles: true,
+    seasonal_particles_reduced: false,
     seasonal_overlays: true,
+
     profile_header_own: true,
     profile_header_others: true,
+    profile_avi_background: false,
+
     profile_shortcut: '',
     font: '',
     font_weight: 480,
@@ -2550,7 +2628,9 @@ let settings_template = {
     font_weight_bold: 730,
     show_bulk_edit_album: false,
     chart_decimation: true,
-    activities: true
+    activities: true,
+
+    auth_menu_obsessions: false
 };
 let settings_base = {
     high_contrast: {
@@ -2568,6 +2648,12 @@ let settings_base = {
     },
     sat: {
         css: 'sat-user',
+        unit: '',
+        value: 1,
+        type: 'slider'
+    },
+    sat_bg: {
+        css: 'sat-bg',
         unit: '',
         value: 1,
         type: 'slider'
@@ -2753,6 +2839,14 @@ let settings_base = {
         type: 'toggle',
         require_reload: true
     },
+    seasonal_particles_reduced: {
+        css: 'seasonal_particles_reduced',
+        unit: '',
+        value: true,
+        values: [true, false],
+        type: 'toggle',
+        require_reload: true
+    },
     seasonal_overlays: {
         css: 'seasonal_overlays',
         unit: '',
@@ -2769,6 +2863,13 @@ let settings_base = {
     },
     profile_header_others: {
         css: 'profile_header_others',
+        unit: '',
+        value: true,
+        values: [true, false],
+        type: 'toggle'
+    },
+    profile_avi_background: {
+        css: 'profile_avi_background',
         unit: '',
         value: true,
         values: [true, false],
@@ -2818,6 +2919,13 @@ let settings_base = {
         value: true,
         values: [true, false],
         type: 'toggle'
+    },
+    auth_menu_obsessions: {
+        css: 'auth_menu_obsessions',
+        unit: '',
+        value: true,
+        values: [true, false],
+        type: 'toggle'
     }
 };
 let inbuilt_settings = {
@@ -2849,7 +2957,20 @@ let inbuilt_settings = {
         values: [true, false],
         type: 'toggle'
     },
-    profile_shortcut: {}
+    edit_all: {
+        css: 'edit_all',
+        unit: '',
+        value: true,
+        values: [true, false],
+        type: 'toggle'
+    },
+    create_automatic_edit_rule: {
+        css: 'create_automatic_edit_rule',
+        unit: '',
+        value: true,
+        values: [true, false],
+        type: 'toggle'
+    }
 }
 
 // use the top-right link to determine the current user
@@ -2874,6 +2995,7 @@ let page = {
     type: '',
     name: '',
     sister: '',
+    sister_others: [],
     subpage: '',
     avatar: '',
     corrected: false,
@@ -2882,7 +3004,8 @@ let page = {
         row: null,
         main: null,
         side: null,
-        nav: null
+        nav: null,
+        content_top: null
     },
     requested: {
         tab: null
@@ -2948,6 +3071,8 @@ let has_prompted_for_update = false;
             bleh_artists();
             bleh_albums();
             bleh_tracks();
+            bleh_events();
+            bleh_tags();
 
             bleh_gallery();
             bleh_gallery_upload_check();
@@ -2970,12 +3095,12 @@ let has_prompted_for_update = false;
                 correct_generic_combo('similar-items-sidebar-item');
             }
 
-            patch_about_this_artist();
             patch_obsession_view();
 
             error_page();
 
             subscribe_to_events();
+            auto_edit_modal();
         }
 
         // last.fm is a single page application
@@ -3011,6 +3136,8 @@ let has_prompted_for_update = false;
                 bleh_artists();
                 bleh_albums();
                 bleh_tracks();
+                bleh_events();
+                bleh_tags();
 
                 bleh_gallery();
                 bleh_gallery_upload_check();
@@ -3033,12 +3160,12 @@ let has_prompted_for_update = false;
                     correct_generic_combo('similar-items-sidebar-item');
                 }
 
-                patch_about_this_artist();
                 patch_obsession_view();
 
                 error_page();
 
                 subscribe_to_events();
+                auto_edit_modal();
             }
         });
 
@@ -3351,10 +3478,13 @@ let has_prompted_for_update = false;
         let last_season_seen = localStorage.getItem('bleh_last_season_seen') || '';
 
         let now = new Date();
+        log(`it is now ${now}`, 'season', 'log');
 
         let current_year = now.getFullYear();
 
         seasonal_events.forEach((season) => {
+            log(`running thru, ${season.id} - ${new Date(season.start.replace('y0', current_year))} ${new Date(season.end.replace('y0', current_year))}`, 'season', 'log');
+            log(`${now >= new Date(season.start.replace('y0', current_year))} ${now <= new Date(season.end.replace('y0', current_year))}`, 'season', 'log');
             if (
                 now >= new Date(season.start.replace('y0', current_year)) &&
                 now <= new Date(season.end.replace('y0', current_year))
@@ -3380,6 +3510,10 @@ let has_prompted_for_update = false;
 
                     snowflakes_enabled = true;
                     snowflakes_count = season.snowflakes.count;
+
+                    if (settings.seasonal_particles_reduced && snowflakes_count > 10)
+                        snowflakes_count = snowflakes_count * 0.45;
+
                     begin_snowflakes();
                 }
 
@@ -3436,15 +3570,39 @@ let has_prompted_for_update = false;
         auth_link.appendChild(text);
 
         if (document.body.querySelector('.masthead .masthead-pro-wrap') != null) {
-            let pro_badge = document.createElement('p');
-            pro_badge.classList.add('pro-badge');
-            pro_badge.textContent = 'Pro';
-
-            auth_link.appendChild(pro_badge);
-
             is_pro = true;
         } else {
             is_pro = false;
+        }
+
+        if (profile_badges.hasOwnProperty(auth)) {
+            if (!Array.isArray(profile_badges[auth])) {
+                // default
+                log(`1 badge:`, 'auth', 'info', profile_badges[auth]);
+                let this_badge = profile_badges[auth];
+
+                let badge = document.createElement('span');
+                badge.classList.add('label', `user-status--bleh-${this_badge.type}`, `user-status--bleh-user-${auth}`, 'auth-badge');
+                badge.textContent = this_badge.name;
+                auth_link.appendChild(badge);
+            } else {
+                // multiple
+                log(`multiple badges:`, 'auth', 'info', profile_badges[auth]);
+                let badges_length = Object.keys(profile_badges[auth]).length - 1;
+                let this_badge = profile_badges[auth][badges_length];
+                log(`using badge ${badges_length} as primary`, 'auth', 'info', this_badge);
+
+                let badge = document.createElement('span');
+                badge.classList.add('label', `user-status--bleh-${this_badge.type}`, `user-status--bleh-user-${auth}`, 'auth-badge');
+                badge.textContent = this_badge.name;
+                auth_link.appendChild(badge);
+            }
+        } else if (is_pro) {
+            let pro_badge = document.createElement('p');
+            pro_badge.classList.add('label', 'user-status-subscriber', 'auth-badge');
+            pro_badge.textContent = 'Pro';
+
+            auth_link.appendChild(pro_badge);
         }
 
 
@@ -3501,101 +3659,107 @@ let has_prompted_for_update = false;
         bleh_container.after(changelog_container);
 
 
-        let settings = JSON.parse(localStorage.getItem('bleh')) || create_settings_template();
-        let user_nav = document.body.querySelectorAll('.auth-dropdown-menu > li')[0];
-        let inbox_nav = document.body.querySelectorAll('.auth-dropdown-menu > li')[2];
-
-        document.querySelector('.auth-dropdown-menu').style.setProperty('--url', `url(${my_avi.replace('avatar42s', 'avatar170s')})`);
-
-        if (!inbox_nav.hasAttribute('data-bleh')) {
-            inbox_nav.setAttribute('data-bleh','true');
-            let profile_link = user_nav.querySelector('a').getAttribute('href');
-
-            let extra_nav = document.createElement('li');
-            extra_nav.innerHTML = (`
-                <li>
-                    <a class="auth-dropdown-menu-item bleh--shortcut-menu-item" data-profile-shortcut="${settings.profile_shortcut}" id="profile_shortcut" href="${root}user/${settings.profile_shortcut}">
-                        ${settings.profile_shortcut}
-                    </a>
-                </li>
-                <li>
-                    <a class="auth-dropdown-menu-item bleh--library-menu-item" href="${profile_link}/library">
-                        <span class="auth-dropdown-item-row">
-                            <span class="auth-dropdown-item-left">${trans[lang].auth_menu.library}</span>
-                        </span>
-                    </a>
-                </li>
-                <li>
-                    <a class="auth-dropdown-menu-item bleh--shouts-menu-item" href="${profile_link}/shoutbox">
-                        <span class="auth-dropdown-item-row">
-                            <span class="auth-dropdown-item-left">${trans[lang].auth_menu.shouts}</span>
-                        </span>
-                    </a>
-                </li>
-                `);
-
-            user_nav.appendChild(extra_nav);
-        }
-
-        if (!user_nav.hasAttribute('data-bleh')) {
-            user_nav.setAttribute('data-bleh','true');
-
-            let bleh_nav = document.createElement('li');
-            bleh_nav.innerHTML = (`
-                <li>
-                    <button class="auth-dropdown-menu-item bleh--theme-menu-item" id="theme_menu_item" onclick="toggle_theme()">
-                        <span class="auth-dropdown-item-row">
-                            <span class="auth-dropdown-item-left">${trans[lang].settings.themes.name}</span>
-                            <span class="auth-dropdown-item-right" id="theme-value">${trans[lang].settings.themes[settings.theme].name}</span>
-                        </span>
-                    </button>
-                </li>
-                ${(settings.feature_flags.dev) ? (`
-                <li>
-                    <button class="auth-dropdown-menu-item bleh--dev-menu-item" onclick="_update_flag_toggle('dev', this)" aria-checked="true">
-                        <span class="auth-dropdown-item-row">
-                            <span class="auth-dropdown-item-left">${trans[lang].auth_menu.dev}</span>
-                        </span>
-                    </button>
-                </li>
+        // auth menu
+        let legacy_auth_menu = document.body.querySelector('.auth-dropdown-menu');
+        let token = legacy_auth_menu.querySelector('[name="csrfmiddlewaretoken"]').getAttribute('value');
+        let auth_menu = tippy(auth_link, {
+            theme: 'auth-menu',
+            content: (`
+                <a class="dropdown-menu-clickable-item" data-menu-item="profile" href="${root}user/${auth}">
+                    ${auth}
+                </a>
+                <a class="dropdown-menu-clickable-item" data-menu-item="profile-shortcut" href="${root}user/${settings.profile_shortcut}" data-profile-shortcut="${settings.profile_shortcut}">
+                    ${settings.profile_shortcut}
+                </a>
+                <div class="sep"></div>
+                <a class="dropdown-menu-clickable-item" data-menu-item="library" href="${root}user/${auth}/library">
+                    ${trans[lang].auth_menu.library}
+                </a>
+                <a class="dropdown-menu-clickable-item" data-menu-item="shouts" href="${root}user/${auth}/shoutbox">
+                    ${trans[lang].auth_menu.shouts}
+                </a>
+                ${(settings.auth_menu_obsessions) ? (`
+                <a class="dropdown-menu-clickable-item" data-menu-item="obsessions" href="${root}user/${auth}/obsessions">
+                    ${trans[lang].auth_menu.obsessions}
+                </a>
                 `) : ''}
-                <li>
-                    <a class="auth-dropdown-menu-item bleh--configure-menu-item" href="${root}bleh">
-                        <span class="auth-dropdown-item-row">
-                            <span class="auth-dropdown-item-left">${trans[lang].auth_menu.configure_bleh}</span>
-                        </span>
+                <button class="dropdown-menu-clickable-item" data-menu-item="themes" onclick="toggle_theme()">
+                    <span class="auth-dropdown-item-row">
+                        <span class="auth-dropdown-item-left">${trans[lang].settings.themes.name}</span>
+                        <span class="auth-dropdown-item-right" id="theme-value">${trans[lang].settings.themes[settings.theme].name}</span>
+                    </span>
+                </button>
+                ${(ff('dev')) ? (`
+                <button class="dropdown-menu-clickable-item" data-menu-item="developer" onclick="_update_flag_toggle('dev', this)">
+                    ${trans[lang].auth_menu.dev}
+                </button>
+                `) : ''}
+                <a class="dropdown-menu-clickable-item" data-menu-item="bleh" href="${root}bleh">
+                    ${trans[lang].auth_menu.configure_bleh}
+                </a>
+                <div class="sep"></div>
+                <a class="dropdown-menu-clickable-item" data-menu-item="labs" href="${root}labs">
+                    ${trans[lang].auth_menu.labs}
+                </a>
+                <a class="dropdown-menu-clickable-item" data-menu-item="bookmarks" href="${root}music/+bookmarks">
+                    ${trans[lang].auth_menu.bookmarks}
+                </a>
+                <a class="dropdown-menu-clickable-item" data-menu-item="settings" href="${root}settings">
+                    ${trans[lang].auth_menu.settings}
+                </a>
+                <form>
+                    <input type="hidden" name="csrfmiddlewaretoken" value="${token}">
+                    <a class="dropdown-menu-clickable-item" data-menu-item="logout" href="${root}logout">
+                        ${trans[lang].auth_menu.logout}
                     </a>
-                </li>
-            `);
-            user_nav.appendChild(bleh_nav);
+                </form>
+            `),
+            allowHTML: true,
+            placement: 'top',
+            interactive: true,
+            interactiveBorder: 10,
 
-            let theme_menu_item = tippy(document.getElementById('theme_menu_item'), {
-                theme: 'menu',
-                content: (`
-                    <button class="dropdown-menu-clickable-item theme-item-in-menu" data-bleh-theme="light" onclick="change_theme_from_menu('light')">
-                        ${trans[lang].settings.themes.light.name}
-                    </button>
-                    <button class="dropdown-menu-clickable-item theme-item-in-menu" data-bleh-theme="dark" onclick="change_theme_from_menu('dark')">
-                        ${trans[lang].settings.themes.dark.name}
-                    </button>
-                    <button class="dropdown-menu-clickable-item theme-item-in-menu" data-bleh-theme="darker" onclick="change_theme_from_menu('darker')">
-                        ${trans[lang].settings.themes.darker.name}
-                    </button>
-                    <button class="dropdown-menu-clickable-item theme-item-in-menu" data-bleh-theme="oled" onclick="change_theme_from_menu('oled')">
-                        ${trans[lang].settings.themes.oled.name}
-                    </button>
-                `),
-                allowHTML: true,
-                placement: 'left',
-                hideOnClick: false,
-                interactive: true,
-                interactiveBorder: 10,
+            onShow(instance) {
+                instance.popper.style.setProperty('--url', `url(${my_avi.replace('avatar42s', 'avatar170s')})`);
 
-                onShow(instance) {
-                    show_theme_change_in_menu('', instance.popper);
+                let shortcut_item = instance.popper.querySelector('[data-menu-item="profile-shortcut"]');
+                if (shortcut_item.getAttribute('data-profile-shortcut') != settings.profile_shortcut) {
+                    shortcut_item.setAttribute('data-profile-shortcut', settings.profile_shortcut);
+                    shortcut_item.setAttribute('href', `${root}user/${settings.profile_shortcut}`);
+                    shortcut_item.textContent = settings.profile_shortcut;
                 }
-            });
-        }
+
+                instance.popper.querySelector('#theme-value').textContent = trans[lang].settings.themes[settings.theme].name;
+
+
+                let theme_menu_item = tippy(instance.popper.querySelector('[data-menu-item="themes"]:not([aria-expanded])'), {
+                    theme: 'menu',
+                    content: (`
+                        <button class="dropdown-menu-clickable-item theme-item-in-menu" data-bleh-theme="light" onclick="change_theme_from_menu('light')">
+                            ${trans[lang].settings.themes.light.name}
+                        </button>
+                        <button class="dropdown-menu-clickable-item theme-item-in-menu" data-bleh-theme="dark" onclick="change_theme_from_menu('dark')">
+                            ${trans[lang].settings.themes.dark.name}
+                        </button>
+                        <button class="dropdown-menu-clickable-item theme-item-in-menu" data-bleh-theme="darker" onclick="change_theme_from_menu('darker')">
+                            ${trans[lang].settings.themes.darker.name}
+                        </button>
+                        <button class="dropdown-menu-clickable-item theme-item-in-menu" data-bleh-theme="oled" onclick="change_theme_from_menu('oled')">
+                            ${trans[lang].settings.themes.oled.name}
+                        </button>
+                    `),
+                    allowHTML: true,
+                    placement: 'left',
+                    hideOnClick: false,
+                    interactive: true,
+                    interactiveBorder: 10,
+
+                    onShow(instance_2) {
+                        show_theme_change_in_menu('', instance_2.popper);
+                    }
+                });
+            }
+        });
 
 
         // language
@@ -3728,6 +3892,9 @@ let has_prompted_for_update = false;
 
     // theme
     unsafeWindow.toggle_theme = function() {
+        if (page.subpage == 'user-dashboard-layout--version-3')
+            return;
+
         let current_theme = settings.theme;
 
         if (current_theme == 'dark')
@@ -3739,7 +3906,6 @@ let has_prompted_for_update = false;
         else if (current_theme == 'light')
             current_theme = 'dark';
 
-        document.getElementById('theme-value').textContent = trans[lang].settings.themes[current_theme].name;
         show_theme_change_in_menu(current_theme);
 
         // save value
@@ -3755,8 +3921,6 @@ let has_prompted_for_update = false;
     }
 
     unsafeWindow.change_theme_from_settings = function(theme) {
-        document.getElementById('theme-value').textContent = trans[lang].settings.themes[theme].name;
-
         // save value
         settings.theme = theme;
         document.documentElement.setAttribute(`data-bleh--theme`, `${theme}`);
@@ -3769,7 +3933,8 @@ let has_prompted_for_update = false;
         localStorage.setItem('bleh', JSON.stringify(settings));
     }
     unsafeWindow.change_theme_from_menu = function(theme) {
-        document.getElementById('theme-value').textContent = trans[lang].settings.themes[theme].name;
+        if (page.subpage == 'user-dashboard-layout--version-3')
+            return;
 
         // save value
         settings.theme = theme;
@@ -3821,7 +3986,7 @@ let has_prompted_for_update = false;
             recent: {
                 recent_artwork: document.getElementById('id_show_recent_tracks_artwork').checked,
                 count: document.getElementById('id_chart_length_recent_tracks').outerHTML,
-                realtime: document.getElementById('id_auto_refresh_recent_tracks').checked
+                recent_realtime: document.getElementById('id_auto_refresh_recent_tracks').checked
             },
             artists: {
                 timeframe: document.getElementById('id_chart_range_top_artists').outerHTML,
@@ -4147,7 +4312,7 @@ let has_prompted_for_update = false;
         selects.forEach((select) => {
             select.setAttribute('onchange', `_update_inbuilt_select('${select.getAttribute('id')}', this.value)`);
             update_inbuilt_select(select.getAttribute('id'), select.value);
-        })
+        });
     }
 
     unsafeWindow._update_inbuilt_select = function(id, value) {
@@ -4158,6 +4323,7 @@ let has_prompted_for_update = false;
     }
 
     function custom_select(select, element_to_append) {
+        console.info(select);
         let id = select.getAttribute('id');
         let value = select.value;
         let value_objects = select.querySelectorAll('option');
@@ -4207,7 +4373,7 @@ let has_prompted_for_update = false;
 
         select.value = value;
 
-        console.log(`#select-${select_id}`);
+        console.info(select, `#select-${select_id}`);
 
         update_custom_select(document.getElementById(`select-${select_id}`)._tippy.popper, value, select_id);
     }
@@ -4652,7 +4818,7 @@ let has_prompted_for_update = false;
 
 
     // general health
-    function checkup_page_structure() {
+    function checkup_page_structure(is_subpage, header) {
         document.body.style.removeProperty('--hue-album');
         document.body.style.removeProperty('--sat-album');
 
@@ -4678,6 +4844,8 @@ let has_prompted_for_update = false;
 
             page.structure.container.insertBefore(page.structure.row, page.structure.container.firstElementChild);
         }
+        if (page.structure.row.classList.contains('buffer-4'))
+            page.structure.row.classList = 'row col-main-is-primary';
 
         if (page.structure.main == null || !document.body.contains(page.structure.main)) {
             log('page missing main, creating', 'page structure');
@@ -4692,20 +4860,109 @@ let has_prompted_for_update = false;
             // check first if another sidebar exists
             page.structure.side = page.structure.row.querySelector('.col-sidebar');
 
-            if (page.structure.side != null) {
-                log('finished', 'page structure');
-                return;
+            if (page.structure.side == null) {
+                log('page missing side, creating', 'page structure');
+
+                // otherwise, make anew
+                page.structure.side = document.createElement('div');
+                page.structure.side.classList.add('col-sidebar');
+
+                page.structure.row.appendChild(page.structure.side);
             }
-            log('page missing side, creating', 'page structure');
-
-            // otherwise, make anew
-            page.structure.side = document.createElement('div');
-            page.structure.side.classList.add('col-sidebar');
-
-            page.structure.row.appendChild(page.structure.side);
         }
 
         log('finished', 'page structure');
+
+        if (ff('refreshed_music_nav')) {
+            let navlist = header.querySelector('.navlist');
+            if (navlist != null) {
+                navlist.classList.add('redesigned-navigation');
+                page.structure.container.insertBefore(navlist, page.structure.container.firstElementChild);
+                page.structure.nav = navlist;
+            }
+
+            if (is_subpage) {
+                let content_top = document.body.querySelector('.content-top');
+
+                if (content_top != null) {
+                    content_top.classList.add('redesigned-content-top');
+                    page.structure.content_top = content_top;
+                    navlist.after(content_top);
+
+                    // should be covered by bleh
+                    if (content_top.querySelector('.content-top-back-link') != null)
+                        content_top.style.setProperty('display', 'none');
+                } else {
+                    let subpage_title = page.structure.main.querySelector(':scope > .subpage-title');
+                    if (subpage_title == null)
+                        subpage_title = page.structure.main.querySelector(':scope > .section-controls > .subpage-title');
+
+                    if (subpage_title != null) {
+                        content_top = document.createElement('div');
+                        content_top.classList.add('content-top', 'redesigned-content-top');
+
+                        content_top.innerHTML = (`
+                            <div class="content-top-inner-wrap">
+                                <div class="container content-top-lower">
+                                    <h1 class="content-top-header">${subpage_title.textContent.trim()}</h1>
+                                </div>
+                            </div>
+                        `);
+
+                        page.structure.content_top = content_top;
+                        navlist.after(content_top);
+
+                        try {
+                            page.structure.main.removeChild(subpage_title);
+                        } catch(e) {}
+                    }
+
+                    // is there another navlist?
+                    navlist = page.structure.main.querySelector('.navlist');
+
+                    if (navlist != null) {
+                        navlist.classList.add('redesigned-navigation');
+
+                        if (page.structure.content_top != null)
+                            page.structure.content_top.after(navlist);
+                        else
+                            page.structure.container.insertBefore(navlist, page.structure.row);
+                    }
+
+                    // is there a btn-add?
+                    let btn_add = page.structure.main.querySelector(':scope > .btn-add');
+
+                    if (btn_add != null) {
+                        btn_add.classList = 'btn view-all-button back add-button';
+
+                        let add_panel = document.createElement('section');
+                        add_panel.classList.add('view-all-panel');
+
+                        add_panel.appendChild(btn_add);
+                        page.structure.side.insertBefore(add_panel, page.structure.side.firstElementChild);
+                    }
+
+
+                    // is there a playlink?
+                    let playlink = page.structure.main.querySelector(':scope > .section-controls > .section-playlink');
+
+                    if (playlink != null) {
+                        playlink.classList.add('btn', 'view-all-button', 'back', 'play-button');
+
+                        let playlink_panel = document.createElement('section');
+                        playlink_panel.classList.add('view-all-panel');
+
+                        playlink_panel.appendChild(playlink);
+                        page.structure.side.insertBefore(playlink_panel, page.structure.side.firstElementChild);
+                    }
+                }
+            } else {
+                let content_top = document.body.querySelector('.content-top');
+
+                if (content_top != null)
+                    content_top.classList.add('legacy-content-top');
+            }
+        }
     }
 
 
@@ -4730,7 +4987,7 @@ let has_prompted_for_update = false;
         // are we on the overview page?
         let is_subpage = !profile_header.classList.contains('header--overview');
 
-        page.structure.container = document.body.querySelector('.page-content:not(.profile-cards-container)');
+        page.structure.container = document.body.querySelector('.page-content:not(.profile-cards-container, .report-box-container .page-content)');
         try {
             page.structure.row = page.structure.container.querySelector('.row');
             page.structure.main = page.structure.row.querySelector('.col-main');
@@ -4739,22 +4996,56 @@ let has_prompted_for_update = false;
             log('unable to find elements', 'page structure');
         }
 
-        checkup_page_structure();
+        checkup_page_structure(is_subpage, profile_header);
 
+        if (ff('refreshed_nav')) {
+            let avatar = profile_header.querySelector('.avatar');
+            let title_wrap = profile_header.querySelector('.header-title-label-wrap');
+            let sub_wrap = profile_header.querySelector('.header-title-secondary');
 
-        let is_own_profile = (page.name == auth);
-        if (is_own_profile)
-            profile_header.setAttribute('data-is-own-profile', 'true');
+            // me :3
+            if (cute.includes(page.name)) {
+                title_wrap.querySelector('.header-title a').classList.add('bleh--name-is-cute');
+            }
 
-        if (!is_subpage) {
-            // recent tracks
-            patch_profile_tracks();
+            let redesigned_profile_header = document.createElement('section');
+            redesigned_profile_header.classList.add('redesigned-header', 'redesigned-profile-header', 'no-background');
+            redesigned_profile_header.innerHTML = (`
+                <div class="avatar-side">
+                    ${avatar.innerHTML}
+                </div>
+                <div class="info-side">
+                    <div class="sub-text">${trans[lang].profile.name}</div>
+                    ${(title_wrap != null) ? `<div class="title-container">${title_wrap.innerHTML}</div>` : ''}
+                    ${(sub_wrap != null) ? sub_wrap.outerHTML : ''}
+                </div>
+            `);
 
-            if (settings.feature_flags.redesigned_profile_header != false)
-                redesign_profile_header(is_own_profile);
+            // staff
+            let is_staff = (title_wrap.querySelector('.user-status-staff') != null);
+            if (is_staff) {
+                redesigned_profile_header.classList.add('staff-profile');
+            }
+
+            if (settings.profile_avi_background) {
+                if (avatar != null)
+                    register_background(avatar.querySelector('img').getAttribute('src'));
+            } else {
+                let background = document.body.querySelector('.header-background--has-image');
+                if (background != null)
+                    register_background(background.style.getPropertyValue('background-image').replace('url("', '').replace('")', ''));
+            }
+
+            page.structure.container.insertBefore(redesigned_profile_header, page.structure.container.firstElementChild);
+            profile_header.classList.add('legacy-header');
+
 
             // make avatar clickable
-            let header_avatar = document.querySelector('.header-avatar .avatar');
+            let header_avatar;
+            if (ff('refreshed_nav'))
+                header_avatar = page.structure.container.querySelector('.redesigned-profile-header .avatar-side');
+            else
+                header_avatar = document.querySelector('.header-avatar .avatar');
 
             let src = header_avatar.querySelector('img').getAttribute('src');
 
@@ -4762,9 +5053,29 @@ let has_prompted_for_update = false;
             avatar_link.classList.add('bleh--avatar-clickable-link');
             avatar_link.setAttribute('onclick', `_expand_avatar('${src.replace('avatar170s', 'ar0')}')`);
             header_avatar.appendChild(avatar_link);
+        }
+
+
+        let is_own_profile = (page.name == auth);
+        if (is_own_profile)
+            profile_header.setAttribute('data-is-own-profile', 'true');
+
+        if (!is_subpage) {
+            page.subpage = 'overview';
+
+            // recent tracks
+            patch_profile_tracks();
+
+            if (ff('redesigned_profile_header'))
+                redesign_profile_header(is_own_profile);
 
 
             //
+
+
+            if (is_own_profile) {
+                patch_profiles_chart_windows();
+            }
 
 
             if (is_own_profile && settings.activities) {
@@ -4853,11 +5164,79 @@ let has_prompted_for_update = false;
             // which subpage is it?
             page.subpage = document.body.classList[1].replace('namespace--', '');
 
-            if (page.subpage.startsWith('user_library'))
+            let btn_add = page.structure.side.querySelector('.add-button');
+            if (btn_add != null)
+                btn_add.setAttribute('data-page-subpage', page.subpage);
+
+            if (page.subpage.startsWith('user_library')) {
                 bleh_user_library();
+            } else if (page.subpage == 'user_events') {
+                let selected_tab = page.structure.content_top.querySelector('.secondary-nav-item-link--active');
+
+                let value_panel = document.createElement('section');
+                value_panel.classList.add('value-panel');
+                value_panel.innerHTML = (`
+                    <h2 class="text-18">${(selected_tab != null) ? selected_tab.textContent : trans[lang].profile.events}</h2>
+                `);
+
+                let values = page.structure.main.querySelectorAll('.metadata-display');
+
+                let value_header = document.createElement('div');
+                value_header.classList.add('event-value-top-header', 'view-buttons');
+
+                values.forEach((value, index) => {
+                    let type = 'going';
+                    if (index == 1)
+                        type = 'maybe';
+
+                    create_profile_top_item(value_header, {
+                        name: page.name,
+                        text: value.textContent,
+                        type: type,
+                        tooltip:  trans[lang].event[type].replace('{c}', value.textContent)
+                    });
+                });
+
+                value_panel.appendChild(value_header);
+
+
+                let total_value = page.structure.side.querySelector('.metadata-display');
+                if (total_value != null) {
+                    let total_text = document.createElement('h2');
+                    total_text.classList.add('text-18');
+                    total_text.textContent = trans[lang].event.all_time;
+
+                    value_panel.appendChild(total_text);
+
+                    let total_header = document.createElement('div');
+                    total_header.classList.add('event-value-top-header', 'view-buttons');
+
+                    create_profile_top_item(total_header, {
+                        name: page.name,
+                        text: total_value.textContent,
+                        type: 'total',
+                        tooltip:  trans[lang].event.total.replace('{c}', total_value.textContent)
+                    });
+
+                    value_panel.appendChild(total_header);
+                }
+
+                let legacy_metadata = page.structure.main.querySelector('.metadata-list');
+                page.structure.main.removeChild(legacy_metadata);
+
+
+                page.structure.side.innerHTML = '';
+                page.structure.side.appendChild(value_panel);
+            } else if (page.subpage == 'user-dashboard-layout--version-3') {
+                let report_box_container = document.body.querySelector('.report-box-container--overview');
+
+                if (report_box_container != null)
+                    page.structure.content_top.after(report_box_container);
+            }
         }
 
         log('status is', 'page', 'info', page);
+        update_page();
 
 
         patch_profile_following();
@@ -4870,51 +5249,15 @@ let has_prompted_for_update = false;
         if (profile_note != undefined)
             profile_has_note = true;
 
-        let adaptive_skin = document.body.querySelector('.adaptive-skin-container');
-        let content_top = adaptive_skin.querySelector('.content-top');
-
-        // has header?
-        if (content_top.querySelector('h1') == null && content_top.querySelector('.navlist') == null)
-            adaptive_skin.removeChild(content_top);
-
-        // is this their profile?
-        if (!is_own_profile) {
-            // is there a follow button?
-            let header_avatar = document.querySelector('.header--overview .header-avatar');
-
-            if (header_avatar != undefined && settings.feature_flags.redesigned_profile_header == false) {
-                let header_follow_btn = header_avatar.querySelector('form');
-
-                if (header_follow_btn == undefined) {
-                    // user is on their ignore list
-                    let toggle_btn = document.createElement('button');
-                    toggle_btn.classList.add('toggle-button','header-follower-btn','header-follower-btn--denied');
-                    toggle_btn.textContent = trans[lang].profile.on_ignore_list;
-
-                    tippy(toggle_btn, {
-                        content: trans[lang].profile.on_ignore_list
-                    });
-                    header_avatar.appendChild(toggle_btn);
-                } else {
-                    let inner_btn = header_follow_btn.querySelector('button');
-                    let inner_btn_tooltip = tippy(inner_btn, {
-                        content: inner_btn.textContent
-                    });
-
-                    console.info(inner_btn_tooltip);
-
-                    inner_btn.addEventListener('click', () => {
-                        window.setTimeout(() => {
-                            inner_btn_tooltip.setContent(inner_btn.textContent);
-                        }, 50);
-                    });
-                }
-            }
-        }
-
         // badges
         log(`querying badges for ${page.name}`, 'profile');
-        let profile_name_obj = profile_header.querySelector('.header-title-label-wrap');
+
+        let profile_name_obj;
+        if (ff('refreshed_nav'))
+            profile_name_obj = page.structure.container.querySelector('.redesigned-profile-header .title-container');
+        else
+            profile_name_obj = profile_header.querySelector('.header-title-label-wrap');
+
         if (profile_badges.hasOwnProperty(page.name)) {
             if (!Array.isArray(profile_badges[page.name])) {
                 // default
@@ -4939,19 +5282,12 @@ let has_prompted_for_update = false;
             }
         }
 
-        // me :3
-        if (cute.includes(page.name)) {
-            profile_name_obj.querySelector('.header-title a').classList.add('bleh--name-is-cute');
-        }
-
-        // staff
-        let is_staff = (profile_header.querySelector('.user-status-staff') != null);
-        if (is_staff) {
-            profile_header.classList.add('staff-profile');
-        }
-
         // secondary text
-        let profile_sub_text = document.body.querySelector('.header-title-secondary');
+        let profile_sub_text;
+        if (ff('refreshed_nav'))
+            profile_sub_text = page.structure.container.querySelector('.redesigned-profile-header .header-title-secondary');
+        else
+            profile_sub_text = document.body.querySelector('.header-title-secondary');
 
         if (profile_sub_text == undefined)
             return;
@@ -5189,7 +5525,7 @@ let has_prompted_for_update = false;
             create_profile_top_item(profile_header, {
                 name: page.name,
                 type: 'taste',
-                link: `${root}user/${page.name}/library/artists?date_preset=LAST_7_DAYS&page=1`,
+                link: `${root}user/${page.name}/library/artists?date_preset=LAST_30_DAYS&page=1`,
                 taste: taste,
                 artists: taste_artists,
                 avi: profile_avi,
@@ -5197,7 +5533,10 @@ let has_prompted_for_update = false;
             });
         }
 
-        base_header.appendChild(profile_header);
+        if (ff('refreshed_nav'))
+            page.structure.container.querySelector('.redesigned-profile-header .info-side').appendChild(profile_header);
+        else
+            base_header.appendChild(profile_header);
     }
 
     function create_profile_top_item(parent, {name, link, text='', type, taste='', artists=[], avi='', percent='', action='', tooltip=''}) {
@@ -5206,10 +5545,10 @@ let has_prompted_for_update = false;
         let listen_item = document.createElement((action != 'button') ? 'a' : 'button');
         listen_item.classList.add('btn', 'profile-top-item', `profile-top-item--${type}`, 'view-item');
 
-        if (action != 'button') {
+        if (action != 'button' && type != 'going' && type != 'maybe' && type != 'total') {
             listen_item.setAttribute('href', link);
             //listen_item.setAttribute('target', '_blank');
-        } else {
+        } else if (type != 'going' && type != 'maybe' && type != 'total') {
             listen_item.setAttribute('onclick', link);
         }
 
@@ -5247,7 +5586,76 @@ let has_prompted_for_update = false;
                 });
             }
 
+            let menu = tippy(listen_item, {
+                theme: 'context-menu',
+                content: (`
+                    <button class="dropdown-menu-clickable-item" onclick="_open_profile_shortcut_window()" data-menu-item="configure">
+                        ${trans[lang].settings.configure}
+                    </button>
+                `),
+                /*content: (`
+                    <a class="dropdown-menu-clickable-item" href="${root}bleh" data-menu-item="configure">
+                        ${trans[lang].settings.configure}
+                    </a>
+                `),*/
+                allowHTML: true,
+                placement: 'right-start',
+                trigger: 'manual',
+                interactive: true,
+                interactiveBorder: 10,
+                offset: [0, 0],
+
+                onShow(instance) {
+                    instance.popper.addEventListener('click', event => {
+                        instance.hide();
+                    });
+                }
+            });
+
+            register_menu(listen_item, menu);
+
             return;
+        }
+
+        if (type == 'taste' && artists.length >= 1) {
+            let menu = tippy(listen_item, {
+                theme: 'context-menu',
+                content: (`
+                    <h4 class="menu-header">${trans[lang].music.compare.header}</h4>
+                    <a class="dropdown-menu-clickable-item" href="${root}user/${name}/library/music/${sanitise(artists[0])}" data-menu-item="shared-artist">
+                        <img class="view-item-avatar" src="${avi}" alt="${name}">${artists[0]}
+                    </a>
+                    <a class="dropdown-menu-clickable-item" href="${root}user/${auth}/library/music/${sanitise(artists[0])}" data-menu-item="shared-artist">
+                        <img class="view-item-avatar" src="${my_avi}" alt="${auth}">${artists[0]}
+                    </a>
+                    ${(artists.length >= 2) ? (`
+                    <div class="sep"></div>
+                    <a class="dropdown-menu-clickable-item" href="${root}user/${name}/library/music/${sanitise(artists[1])}" data-menu-item="shared-artist">
+                        <img class="view-item-avatar" src="${avi}" alt="${name}">${artists[1]}
+                    </a>
+                    <a class="dropdown-menu-clickable-item" href="${root}user/${auth}/library/music/${sanitise(artists[1])}" data-menu-item="shared-artist">
+                        <img class="view-item-avatar" src="${my_avi}" alt="${auth}">${artists[1]}
+                    </a>
+                    `) : ''}
+                    ${(artists.length >= 3) ? (`
+                    <div class="sep"></div>
+                    <a class="dropdown-menu-clickable-item" href="${root}user/${name}/library/music/${sanitise(artists[2])}" data-menu-item="shared-artist">
+                        <img class="view-item-avatar" src="${avi}" alt="${name}">${artists[2]}
+                    </a>
+                    <a class="dropdown-menu-clickable-item" href="${root}user/${auth}/library/music/${sanitise(artists[2])}" data-menu-item="shared-artist">
+                        <img class="view-item-avatar" src="${my_avi}" alt="${auth}">${artists[2]}
+                    </a>
+                    `) : ''}
+                `),
+                allowHTML: true,
+                placement: 'right-start',
+                trigger: 'manual',
+                interactive: true,
+                interactiveBorder: 10,
+                offset: [0, 0]
+            });
+
+            register_menu(listen_item, menu);
         }
 
         if (tooltip == '')
@@ -5352,7 +5760,7 @@ let has_prompted_for_update = false;
     // patch following
     function patch_profile_following() {
         // this happens on your main profile, no matter the tab
-        let following_tab = document.body.querySelector('.secondary-nav-item--following');
+        let following_tab = page.structure.nav.querySelector('.secondary-nav-item--following');
         let following_tab_html = following_tab.outerHTML;
         if (following_tab == undefined)
             return;
@@ -5365,32 +5773,24 @@ let has_prompted_for_update = false;
 
 
         // the rest happens on a following/followers page
-        let on_following_page = document.body.classList.contains('namespace--user_following');
-        let on_followers_page = document.body.classList.contains('namespace--user_followers');
-        let on_neighbours_page = document.body.classList.contains('namespace--user_neighbours');
-
-        if (!on_following_page && !on_followers_page && !on_neighbours_page)
+        if (page.subpage != 'user_following' && page.subpage != 'user_followers' && page.subpage != 'user_neighbours')
             return;
 
         //let following_tab = document.body.querySelector('.secondary-nav-item--following');
-        let followers_tab = document.body.querySelector('.secondary-nav-item--followers');
+        let followers_tab = page.structure.nav.querySelector('.secondary-nav-item--followers');
         let followers_tab_html = followers_tab.outerHTML;
-        let neighbours_tab = document.body.querySelector('.secondary-nav-item--neighbours');
+        let neighbours_tab = page.structure.nav.querySelector('.secondary-nav-item--neighbours');
         let neighbours_tab_html = neighbours_tab.outerHTML;
 
         let tab = undefined;
-        if (on_followers_page)
+        if (page.subpage == 'user_followers')
             tab = followers_tab;
-        else if (on_following_page)
+        else if (page.subpage == 'user_following')
             tab = following_tab;
         else
             tab = neighbours_tab;
 
         tab.querySelector('a').textContent = trans[lang].profile.friends.name;
-
-
-        let adaptive_skin = document.body.querySelector('.adaptive-skin-container');
-        let page_content = adaptive_skin.querySelector('.page-content');
 
 
         // create nav
@@ -5406,16 +5806,11 @@ let has_prompted_for_update = false;
             </nav>
         `);
 
-        adaptive_skin.insertBefore(follow_nav, page_content);
+        page.structure.content_top.after(follow_nav);
+        page.structure.row.classList.add('col-main-is-primary');
 
 
         // view-related buttons
-        let col_main = page_content.querySelector('.col-main');
-        if (col_main == null)
-            col_main = page_content.querySelector('.neighbours-items-section');
-
-        col_main.classList.add('friends-col-main');
-
         let view_buttons = document.createElement('div');
         view_buttons.classList.add('view-buttons-wrapper');
         view_buttons.innerHTML = (`
@@ -5428,9 +5823,22 @@ let has_prompted_for_update = false;
                 </button>
             </div>
         `);
-        col_main.insertBefore(view_buttons, col_main.firstElementChild);
+        page.structure.main.insertBefore(view_buttons, page.structure.main.firstElementChild);
 
         refresh_all();
+
+
+        // users
+        let users = page.structure.main.querySelectorAll('.user-list-inner-wrap');
+        users.forEach((user) => {
+            let avatar = user.querySelector('.user-list-avatar');
+            let name = user.querySelector('.user-list-link').textContent;
+
+            let badge = patch_avatar(avatar, name, 'follow');
+
+            if (badge.type == 'avatar-status-dot--staff')
+                user.classList.add('staff-user');
+        });
     }
 
 
@@ -5485,6 +5893,17 @@ let has_prompted_for_update = false;
                     .replace(/'/g, '&#039;'));
                     console.log(shout_body.textContent, parsed_body);
                     shout_body.innerHTML = parsed_body;
+                }
+
+
+                // timestamp
+                let shout_timestamp = shout.querySelector('.shout-timestamp time');
+                if (shout_timestamp != null) {
+                    tippy(shout_timestamp, {
+                        content: shout_timestamp.getAttribute('title')
+                    });
+
+                    shout_timestamp.removeAttribute('title');
                 }
             } catch(e) {
                 deliver_notif('a shout on this page failed to be modified :(');
@@ -5894,26 +6313,6 @@ let has_prompted_for_update = false;
 
 
 
-    function patch_about_this_artist() {
-        if (!settings.corrections)
-            return;
-
-        let about_artist_name = document.querySelector('.about-artist-name');
-
-        if (about_artist_name == null)
-            return;
-
-        if (about_artist_name.hasAttribute('data-kate-processed'))
-            return;
-        about_artist_name.setAttribute('data-kate-processed', 'true');
-
-        let artist_name = about_artist_name.querySelector('a');
-        artist_name.textContent = correct_artist(artist_name.textContent);
-    }
-
-
-
-
     // bleh settings
     unsafeWindow.open_bleh_settings = function() {
         create_window('bleh_settings','Theme settings','');
@@ -5933,6 +6332,10 @@ let has_prompted_for_update = false;
 
             log('internal bleh settings', 'page');
             page.type = 'bleh_settings';
+
+            if (ff('refreshed_nav')) {
+                register_background(my_avi);
+            }
 
 
             // go wild
@@ -6037,7 +6440,7 @@ let has_prompted_for_update = false;
                 <h3>${trans[lang].settings.home.name}</h3>
                 <div class="user-top-panel">
                     <div class="user-top-avatar user-top-avatar-side-left"></div>
-                    <img class="user-top-avatar user-top-avatar-main" src="${my_avi.replace('avatar42s', 'avatar170s')}" alt="${auth}">
+                    <img class="user-top-avatar user-top-avatar-main" src="${my_avi.replace('avatar42s', 'avatar300s')}" alt="${auth}">
                     <div class="user-top-avatar user-top-avatar-side-right"></div>
                 </div>
                 <h4>${trans[lang].settings.home.thanks
@@ -6220,7 +6623,7 @@ let has_prompted_for_update = false;
                             </button>
                         </div>
                     </div>
-                    ${(settings.feature_flags.high_contrast) ? (`
+                    ${(ff('high_contrast')) ? (`
                     <div class="toggle-container" id="container-high_contrast" onclick="_update_item('high_contrast')">
                         <button class="btn reset" onclick="_reset_item('high_contrast')">${trans[lang].settings.reset}</button>
                         <div class="heading">
@@ -6580,6 +6983,20 @@ let has_prompted_for_update = false;
                             })"></button>
                         </div>
                     </div>
+                    ${(ff('card_saturation')) ? (`
+                    <div class="slider-container" id="container-sat_bg">
+                        <button class="btn reset" onclick="_reset_item('sat_bg')">${trans[lang].settings.reset}</button>
+                        <div class="heading">
+                            <h5>${trans[lang].settings.customise.sat_bg.name}</h5>
+                            <p>${trans[lang].settings.customise.sat_bg.bio}</p>
+                        </div>
+                        <div class="slider">
+                            <div class="slider-track" id="slider-track-sat_bg"><div class="slider-fill"></div><div class="slider-nub"></div></div>
+                            <input type="range" min="0" max="3" value="0" step="0.1" id="slider-sat_bg" oninput="_update_item('sat_bg', this.value)">
+                            <p id="value-sat_bg">0</p>
+                        </div>
+                    </div>
+                    `) : ''}
                     <div class="sep"></div>
                     <div class="inner-preview pad">
                         <div class="personal-stats-preview-bar-container">
@@ -6647,79 +7064,41 @@ let has_prompted_for_update = false;
         } else if (page == 'customise') {
             return (`
                 <div class="bleh--panel">
-                    <h3>${trans[lang].settings.customise.artwork.name}</h3>
-                    <div class="inner-preview pad">
-                        <div class="palette albums" style="height: fit-content">
-                            <div class="album-cover swatch" style="background-image: url('https://lastfm.freetls.fastly.net/i/u/770x0/1569198c4cf0a3b2ff8728975e8359fa.jpg')"></div>
-                            <div class="album-cover swatch" style="background-image: url('https://lastfm.freetls.fastly.net/i/u/770x0/b897255bf422baa93a42536af293f9f8.jpg')"></div>
-                            <div class="album-cover swatch" style="background-image: url('https://lastfm.freetls.fastly.net/i/u/770x0/def68d94aae8e52ef2d1c0c9d3e16ff4.jpg')"></div>
-                            <div class="album-cover swatch" style="background-image: url('https://lastfm.freetls.fastly.net/i/u/770x0/e9dd5c8d3294ca0a0f58cbf7ad5fd6a6.jpg')"></div>
-                            <div class="album-cover swatch" style="background-image: url('https://lastfm.freetls.fastly.net/i/u/770x0/570021b68d3d9d2db08bc99a473303b0.jpg')"></div>
-                            <div class="album-cover swatch" style="background-image: url('https://lastfm.freetls.fastly.net/i/u/770x0/4cc13056c7568b5c207dd7aee03fdb0f.jpg')"></div>
-                        </div>
-                    </div>
-                    <div class="toggle-container" id="container-hue_from_album">
-                        <button class="btn reset" onclick="_reset_item('hue_from_album')">${trans[lang].settings.reset}</button>
-                        <div class="heading">
-                            <h5>${trans[lang].settings.customise.hue_from_album.name}</h5>
-                            <p>${trans[lang].settings.customise.hue_from_album.bio}</p>
-                        </div>
-                        <div class="toggle-wrap">
-                            <button class="toggle" id="toggle-hue_from_album" onclick="_update_item('hue_from_album')" aria-checked="true">
-                                <div class="dot"></div>
-                            </button>
-                        </div>
-                    </div>
-                    <div class="slider-container" id="container-gloss">
-                        <button class="btn reset" onclick="_reset_item('gloss')">${trans[lang].settings.reset}</button>
-                        <div class="heading">
-                            <h5>${trans[lang].settings.customise.gloss.name}</h5>
-                            <p>${trans[lang].settings.customise.gloss.bio}</p>
-                        </div>
-                        <div class="slider">
-                            <div class="slider-track" id="slider-track-gloss"><div class="slider-fill"></div><div class="slider-nub"></div></div>
-                            <input type="range" min="0" max="1" value="0" step="0.05" id="slider-gloss" oninput="_update_item('gloss', this.value)">
-                            <p id="value-gloss">0</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="bleh--panel">
-                    <h3>${trans[lang].settings.customise.display.name}</h3>
-                    <div class="inner-preview pad flex">
-                        <section class="catalogue-tags">
-                            <ul class="tags-list tags-list--global">
-                                <li class="tag">
-                                    <a href="/tag/pop">pop</a>
-                                </li>
-                                <li class="tag">
-                                    <a href="/tag/country">country</a>
-                                </li>
-                                <li class="tag">
-                                    <a href="/tag/singer-songwriter">singer-songwriter</a>
-                                </li>
-                                <li class="tag">
-                                    <a href="/tag/female+vocalists">female vocalists</a>
-                                </li>
-                                <li class="tag">
-                                    <a href="/tag/synthpop">synthpop</a>
-                                </li>
-                            </ul>
-                        </section>
-                    </div>
-                    <div class="toggle-container" id="container-gendered_tags" onclick="_update_item('gendered_tags')">
-                        <button class="btn reset" onclick="_reset_item('gendered_tags')">${trans[lang].settings.reset}</button>
-                        <div class="heading">
-                            <h5>${trans[lang].settings.customise.gendered_tags.name}</h5>
-                            <p>${trans[lang].settings.customise.gendered_tags.bio}</p>
-                        </div>
-                        <div class="toggle-wrap">
-                            <button class="toggle" id="toggle-gendered_tags" aria-checked="true">
-                                <div class="dot"></div>
-                            </button>
-                        </div>
-                    </div>
-                    <div class="sep"></div>
                     <h4>${trans[lang].settings.customise.profile_header.name}</h4>
+                    <div class="inner-preview pad">
+                        <div class="profile-mockup">
+                            <div class="mockup-header">
+                                <img class="mockup-avatar" src="${my_avi}">
+                                <div class="mockup-name"></div>
+                            </div>
+                            <div class="mockup-container">
+                                <div class="mockup-col-main">
+                                    <div class="mockup-panel main"></div>
+                                </div>
+                                <div class="mockup-col-sidebar">
+                                    <div class="mockup-panel">
+                                        <img class="mockup-obsession-art" src="https://lastfm.freetls.fastly.net/i/u/64s/e8e5ed62eba543442fe85ac61dead730.jpg">
+                                        <div class="mockup-obsession-name"></div>
+                                    </div>
+                                    <div class="mockup-panel main"></div>
+                                </div>
+                            </div>
+                            <div class="profile-mockup-background from-avatar" style="background-image: url(${my_avi});"></div>
+                            <div class="profile-mockup-background from-track" style="background-image: url(https://lastfm.freetls.fastly.net/i/u/avatar170s/90b39fa67cd3ec8159e116385952a05b);"></div>
+                        </div>
+                    </div>
+                    <div class="toggle-container" id="container-profile_avi_background" onclick="_update_item('profile_avi_background')">
+                        <button class="btn reset" onclick="_reset_item('profile_avi_background')">${trans[lang].settings.reset}</button>
+                        <div class="heading">
+                            <h5>${trans[lang].settings.customise.profile_header.see_type}</h5>
+                        </div>
+                        <div class="toggle-wrap">
+                            <button class="toggle" id="toggle-profile_avi_background" aria-checked="false">
+                                <div class="dot"></div>
+                            </button>
+                        </div>
+                    </div>
+                    <h4>${trans[lang].settings.customise.profile_header.view_on}</h4>
                     <div class="toggle-container" id="container-profile_header_own" onclick="_update_item('profile_header_own')">
                         <button class="btn reset" onclick="_reset_item('profile_header_own')">${trans[lang].settings.reset}</button>
                         <div class="heading">
@@ -6813,6 +7192,18 @@ let has_prompted_for_update = false;
                             </button>
                         </div>
                     </div>
+                    <div class="toggle-container hide-if-seasonal-disabled" id="container-seasonal_particles_reduced" onclick="_update_item('seasonal_particles_reduced')">
+                        <button class="btn reset" onclick="_reset_item('seasonal_particles_reduced')">${trans[lang].settings.reset}</button>
+                        <div class="heading">
+                            <h5>${trans[lang].settings.customise.seasonal.show_less_particles.name}</h5>
+                        </div>
+                        <div class="toggle-wrap">
+                            <button class="toggle" id="toggle-seasonal_particles_reduced" aria-checked="true">
+                                <div class="dot"></div>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="sep"></div>
                     <div class="toggle-container hide-if-seasonal-disabled" id="container-seasonal_overlays" onclick="_update_item('seasonal_overlays')">
                         <button class="btn reset" onclick="_reset_item('seasonal_overlays')">${trans[lang].settings.reset}</button>
                         <div class="heading">
@@ -7390,6 +7781,79 @@ let has_prompted_for_update = false;
                         </div>
                     </div>
                 </div>
+                <div class="bleh--panel">
+                    <h4>${trans[lang].settings.customise.artwork.name}</h4>
+                    <div class="inner-preview pad">
+                        <div class="palette albums" style="height: fit-content">
+                            <div class="album-cover swatch" style="background-image: url('https://lastfm.freetls.fastly.net/i/u/770x0/1569198c4cf0a3b2ff8728975e8359fa.jpg')"></div>
+                            <div class="album-cover swatch" style="background-image: url('https://lastfm.freetls.fastly.net/i/u/770x0/b897255bf422baa93a42536af293f9f8.jpg')"></div>
+                            <div class="album-cover swatch" style="background-image: url('https://lastfm.freetls.fastly.net/i/u/770x0/def68d94aae8e52ef2d1c0c9d3e16ff4.jpg')"></div>
+                            <div class="album-cover swatch" style="background-image: url('https://lastfm.freetls.fastly.net/i/u/770x0/e9dd5c8d3294ca0a0f58cbf7ad5fd6a6.jpg')"></div>
+                            <div class="album-cover swatch" style="background-image: url('https://lastfm.freetls.fastly.net/i/u/770x0/570021b68d3d9d2db08bc99a473303b0.jpg')"></div>
+                            <div class="album-cover swatch" style="background-image: url('https://lastfm.freetls.fastly.net/i/u/770x0/4cc13056c7568b5c207dd7aee03fdb0f.jpg')"></div>
+                        </div>
+                    </div>
+                    <div class="toggle-container" id="container-hue_from_album">
+                        <button class="btn reset" onclick="_reset_item('hue_from_album')">${trans[lang].settings.reset}</button>
+                        <div class="heading">
+                            <h5>${trans[lang].settings.customise.hue_from_album.name}</h5>
+                            <p>${trans[lang].settings.customise.hue_from_album.bio}</p>
+                        </div>
+                        <div class="toggle-wrap">
+                            <button class="toggle" id="toggle-hue_from_album" onclick="_update_item('hue_from_album')" aria-checked="true">
+                                <div class="dot"></div>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="slider-container" id="container-gloss">
+                        <button class="btn reset" onclick="_reset_item('gloss')">${trans[lang].settings.reset}</button>
+                        <div class="heading">
+                            <h5>${trans[lang].settings.customise.gloss.name}</h5>
+                            <p>${trans[lang].settings.customise.gloss.bio}</p>
+                        </div>
+                        <div class="slider">
+                            <div class="slider-track" id="slider-track-gloss"><div class="slider-fill"></div><div class="slider-nub"></div></div>
+                            <input type="range" min="0" max="1" value="0" step="0.05" id="slider-gloss" oninput="_update_item('gloss', this.value)">
+                            <p id="value-gloss">0</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="bleh--panel">
+                    <h4>${trans[lang].settings.customise.display.name}</h4>
+                    <div class="inner-preview pad flex">
+                        <section class="catalogue-tags">
+                            <ul class="tags-list tags-list--global">
+                                <li class="tag">
+                                    <a href="/tag/pop">pop</a>
+                                </li>
+                                <li class="tag">
+                                    <a href="/tag/country">country</a>
+                                </li>
+                                <li class="tag">
+                                    <a href="/tag/singer-songwriter">singer-songwriter</a>
+                                </li>
+                                <li class="tag">
+                                    <a href="/tag/female+vocalists">female vocalists</a>
+                                </li>
+                                <li class="tag">
+                                    <a href="/tag/synthpop">synthpop</a>
+                                </li>
+                            </ul>
+                        </section>
+                    </div>
+                    <div class="toggle-container" id="container-gendered_tags" onclick="_update_item('gendered_tags')">
+                        <button class="btn reset" onclick="_reset_item('gendered_tags')">${trans[lang].settings.reset}</button>
+                        <div class="heading">
+                            <h5>${trans[lang].settings.customise.gendered_tags.name}</h5>
+                            <p>${trans[lang].settings.customise.gendered_tags.bio}</p>
+                        </div>
+                        <div class="toggle-wrap">
+                            <button class="toggle" id="toggle-gendered_tags" aria-checked="true">
+                                <div class="dot"></div>
+                            </button>
+                        </div>
+                    </div>
+                </div>
                 `);
         }
     }
@@ -7399,7 +7863,7 @@ let has_prompted_for_update = false;
     }
 
     function change_settings_page(page) {
-        if (!settings.feature_flags.bleh_settings_tabs)
+        if (!ff('bleh_settings_tabs'))
             document.getElementById('bleh--panel-main').innerHTML = '';
         else
             document.getElementById('bleh--panel-main').innerHTML = (`
@@ -7554,9 +8018,9 @@ let has_prompted_for_update = false;
     function load_skus() {
         for (let flag in version.feature_flags) {
             let current_state = version.feature_flags[flag].default;
-            console.log('flag', flag, current_state);
-            if (settings.feature_flags[flag] != undefined) current_state = settings.feature_flags[flag];
-            console.log('flag', flag, current_state);
+
+            if (settings.feature_flags[flag] != null)
+                current_state = settings.feature_flags[flag];
 
             document.documentElement.setAttribute(`data-ff--${flag}`, current_state);
         }
@@ -7567,7 +8031,9 @@ let has_prompted_for_update = false;
 
         for (let flag in version.feature_flags) {
             let current_state = version.feature_flags[flag].default;
-            if (settings.feature_flags[flag] != undefined) current_state = settings.feature_flags[flag];
+
+            if (settings.feature_flags[flag] != undefined)
+                current_state = settings.feature_flags[flag];
 
             let feature_flag_element = document.createElement('div');
             feature_flag_element.classList.add('toggle-container');
@@ -8020,10 +8486,12 @@ let has_prompted_for_update = false;
         update_inbuilt_item(item, value);
     }
 
-    function update_inbuilt_item(item, value, modify=true) {
+    function update_inbuilt_item(item, value, modify=true, element=document.body) {
         //console.log('update item',item,value);
+        console.warn('update item',item,value, 'modify', modify);
 
-        let test_if_valid = document.getElementById(`toggle-${item}`);
+        let test_if_valid = element.querySelector(`#toggle-${item}`);
+        console.warn(test_if_valid, `toggle-${item}`);
         //console.info(test_if_valid, item, value, inbuilt_settings[item], 'modify', modify);
         if (test_if_valid == undefined)
             return;
@@ -8037,23 +8505,26 @@ let has_prompted_for_update = false;
             //console.info(value, inbuilt_settings[item].values[0], value == inbuilt_settings[item].values[0], modify);
 
             if (value == inbuilt_settings[item].values[0] && modify) {
-                document.getElementById(`inbuilt-companion-checkbox-${item}`).checked = false;
-                document.getElementById(`toggle-${item}`).setAttribute('aria-checked', false);
+                element.querySelector(`#inbuilt-companion-checkbox-${item}`).checked = false;
+                element.querySelector(`#toggle-${item}`).setAttribute('aria-checked', false);
                 document.documentElement.setAttribute(`data-bleh--inbuilt-${item}`, inbuilt_settings[item].values[1]);
             } else if (modify) {
-                document.getElementById(`inbuilt-companion-checkbox-${item}`).checked = true;
-                document.getElementById(`toggle-${item}`).setAttribute('aria-checked', true);
+                element.querySelector(`#inbuilt-companion-checkbox-${item}`).checked = true;
+                element.querySelector(`#toggle-${item}`).setAttribute('aria-checked', true);
                 document.documentElement.setAttribute(`data-bleh--inbuilt-${item}`, inbuilt_settings[item].values[0]);
             } else {
                 // dont modify, just show
-                if (value == inbuilt_settings[item].values[0]) {
-                    document.getElementById(`inbuilt-companion-checkbox-${item}`).checked = true;
-                    document.getElementById(`toggle-${item}`).setAttribute('aria-checked', true);
-                    document.documentElement.setAttribute(`data-bleh--inbuilt-${item}`, inbuilt_settings[item].values[0]);
-                } else {
-                    document.getElementById(`inbuilt-companion-checkbox-${item}`).checked = false;
-                    document.getElementById(`toggle-${item}`).setAttribute('aria-checked', false);
-                    document.documentElement.setAttribute(`data-bleh--inbuilt-${item}`, inbuilt_settings[item].values[1]);
+                console.warn(item, value, value == true, value == false, typeof(value), typeof(true));
+                if (value == true) {
+                    console.warn(item, value, 'TRUE');
+                    element.querySelector(`#inbuilt-companion-checkbox-${item}`).checked = true;
+                    element.querySelector(`#toggle-${item}`).setAttribute('aria-checked', true);
+                    document.documentElement.setAttribute(`data-bleh--inbuilt-${item}`, true);
+                } else if (value == false) {
+                    console.warn(item, value, 'FALSE');
+                    element.querySelector(`#inbuilt-companion-checkbox-${item}`).checked = false;
+                    element.querySelector(`#toggle-${item}`).setAttribute('aria-checked', false);
+                    document.documentElement.setAttribute(`data-bleh--inbuilt-${item}`, false);
                 }
             }
         }
@@ -8572,6 +9043,44 @@ let has_prompted_for_update = false;
                 bla.classList.add('kate-placeholder');
                 track.appendChild(bla);
 
+                // menu
+                let track_legacy_menu = track.querySelector('.chartlist-more-menu');
+
+                if (track_legacy_menu != null) {
+                    let menu = tippy(track, {
+                        theme: 'context-menu',
+                        /*content: (`
+                            <button class="dropdown-menu-clickable-item" onclick="_open_profile_shortcut_window()" data-menu-item="configure">
+                                ${trans[lang].settings.configure}
+                            </button>
+                        `),*/
+                        content: (`
+                            ${track_legacy_menu.innerHTML}
+                        `),
+                        allowHTML: true,
+                        placement: 'right-start',
+                        trigger: 'manual',
+                        interactive: true,
+                        interactiveBorder: 10,
+                        offset: [0, 0],
+
+                        onShow(instance) {
+                            instance.popper.addEventListener('click', event => {
+                                instance.hide();
+                            });
+
+                            /*let menu_items = track_legacy_menu.querySelectorAll('li > *');
+                            let content = instance.popper.querySelector('.tippy-content');
+
+                            menu_items.forEach((item) => {
+                                content.appendChild(item);
+                            });*/
+                        }
+                    });
+
+                    register_menu(track, menu);
+                }
+
                 // image
                 let track_image = track.querySelector('.chartlist-image a.cover-art');
 
@@ -8758,6 +9267,7 @@ let has_prompted_for_update = false;
 
                 let song_artist_element = document.body.querySelector('span[itemprop="byArtist"]');
                 let song_guests = formatted_title[3];
+                page.sister_others = formatted_title[3];
                 for (let guest in song_guests) {
                     // &
                     song_artist_element.innerHTML = `${song_artist_element.innerHTML},`;
@@ -8867,13 +9377,10 @@ let has_prompted_for_update = false;
 
         let bookmarked_images = JSON.parse(localStorage.getItem('bleh_bookmarked_images')) || {};
 
-        let adaptive_skin = document.body.querySelector('.adaptive-skin-container');
-        let page_content = adaptive_skin.querySelector('.page-content');
-
         if (page.requested.tab != 'saved' || page.requested.page != null)
-            document.body.setAttribute('data-bleh--gallery-tab', 'overview');
+            page.structure.container.setAttribute('data-bleh--gallery-tab', 'overview');
         else
-            document.body.setAttribute('data-bleh--gallery-tab', 'bookmarks');
+        page.structure.container.setAttribute('data-bleh--gallery-tab', 'bookmarks');
 
 
         // create nav
@@ -8896,24 +9403,22 @@ let has_prompted_for_update = false;
             </nav>
         `);
 
-        adaptive_skin.insertBefore(bookmark_nav, page_content);
+        page.structure.content_top.after(bookmark_nav);
 
 
         // content
         let bookmarks_content = document.createElement('div');
-        bookmarks_content.classList.add('container', 'page-content', 'bleh--bookmarks');
+        bookmarks_content.classList.add('col-main', 'bleh--bookmarks');
         bookmarks_content.innerHTML = (`
-            <div class="row buffer-4">
-                <div class="col-main">
-                    <h2>${trans[lang].gallery.bookmarks.name}</h2>
-                    <p>${trans[lang].gallery.bookmarks.bio}</p>
-                    <ul class="image-list" id="bleh--bookmarked-images" data-kate-processed="true"></ul>
-                </div>
-                <div class="col-sidebar"></div>
-            </div>
+            <section class="bookmarks-panel">
+                <h2>${trans[lang].gallery.bookmarks.name}</h2>
+                <p>${trans[lang].gallery.bookmarks.bio}</p>
+                <ul class="image-list" id="bleh--bookmarked-images" data-kate-processed="true"></ul>
+            </section>
         `);
 
-        adaptive_skin.insertBefore(bookmarks_content, page_content);
+        page.structure.main.classList.add('bleh--gallery');
+        page.structure.main.after(bookmarks_content);
 
 
         // append images
@@ -8935,8 +9440,7 @@ let has_prompted_for_update = false;
 
 
             // mark images as bookmarked
-            let col_main = page_content.querySelector('.col-main');
-            let image_list = col_main.querySelectorAll('.image-list-item');
+            let image_list = page.structure.main.querySelectorAll('.image-list-item');
             image_list.forEach((image_list_item) => {
                 let image_id_split = image_list_item.getAttribute('href').split('/');
                 let image_id_length = image_id_split.length;
@@ -8959,7 +9463,7 @@ let has_prompted_for_update = false;
         set_gallery_page(id);
     }
     function set_gallery_page(id) {
-        document.body.setAttribute('data-bleh--gallery-tab', id);
+        page.structure.container.setAttribute('data-bleh--gallery-tab', id);
 
         // remove ?tab=saved
         /*if (page.requested.tab == 'saved') {
@@ -9080,14 +9584,14 @@ let has_prompted_for_update = false;
 
             deliver_notif('refreshed tracks');
 
-            let tracklist_panel = doc.getElementById('recent-tracks-section');
+            let tracklist_panel = doc.querySelector('#recent-tracks-section .chartlist');
 
             if (tracklist_panel == null) {
                 deliver_notif('recent tracks could not be found ;-;');
                 return;
             }
 
-            document.getElementById('recent-tracks-section').innerHTML = tracklist_panel.innerHTML;
+            page.structure.main.querySelector('#recent-tracks-section .chartlist').outerHTML = tracklist_panel.outerHTML;
 
             let refresh_btn = document.createElement('button');
             refresh_btn.classList.add('refresh-tracklist-btn');
@@ -9318,14 +9822,12 @@ let has_prompted_for_update = false;
 
 
     function sanitise(text) {
-        return text
-        .replaceAll(' ', '+')
-        .replaceAll('?', '%3F');
+        return encodeURI(text
+        .replaceAll(' ', '+'));
     }
     function desanitise(text) {
-        return text
-        .replaceAll('+', ' ')
-        .replaceAll('%3F', '?');
+        return decodeURI(text
+        .replaceAll('+', ' '));
     }
 
 
@@ -9335,9 +9837,9 @@ let has_prompted_for_update = false;
 
         // lets treat unicode properly
         if (is_album)
-            return decodeURI(desanitise(split[length - 1]));
+            return desanitise(split[length - 1]);
         else
-            return decodeURI(desanitise(split[length - 2]));
+            return desanitise(split[length - 2]);
     }
 
     function return_artist_from_generic(url) {
@@ -9956,7 +10458,7 @@ let has_prompted_for_update = false;
                                 </button>
                             </div>
                         </div>
-                        ${(settings.feature_flags.high_contrast) ? (`
+                        ${(ff('high_contrast')) ? (`
                         <div class="toggle-container" id="container-high_contrast">
                             <button class="btn reset" onclick="_reset_item('high_contrast')">${trans[lang].settings.reset}</button>
                             <div class="heading">
@@ -10187,20 +10689,15 @@ let has_prompted_for_update = false;
 
 
     unsafeWindow._set_profile_as_shortcut = function(button, profile_name) {
-        let menu_item = document.getElementById('profile_shortcut');
-
         let avatar_src = document.body.querySelector('.header-avatar-inner-wrap img').getAttribute('src');
         localStorage.setItem('bleh_profile_shortcut_avi', avatar_src);
         deliver_notif(trans[lang].settings.music.profile_shortcut.saved);
 
-        menu_item.setAttribute('data-profile-shortcut', profile_name);
-        menu_item.setAttribute('href', `${root}user/${profile_name}`);
-        menu_item.textContent = profile_name;
-
         // show on button
         button.setAttribute('data-is-shortcut', 'true');
         button.removeAttribute('onclick');
-        button._tippy.setContent(trans[lang].profile.shortcut.remove);
+        // this breaks the configure menu
+        //button._tippy.setContent(trans[lang].profile.shortcut.remove);
 
         // save to settings
         settings.profile_shortcut = profile_name;
@@ -10211,15 +10708,9 @@ let has_prompted_for_update = false;
         let profile_name = document.getElementById('text-profile_shortcut').value;
         let profile_img = document.getElementById('avatar-profile_shortcut');
 
-        let menu_item = document.getElementById('profile_shortcut');
-
         if (profile_name == '' || profile_name == auth) {
             localStorage.removeItem('bleh_profile_shortcut_avi');
             document.getElementById('avatar_src-profile_shortcut').setAttribute('src', '');
-
-            menu_item.setAttribute('data-profile-shortcut', '');
-            menu_item.setAttribute('href', '');
-            menu_item.textContent = '';
 
             // save to settings
             settings.profile_shortcut = '';
@@ -10248,10 +10739,6 @@ let has_prompted_for_update = false;
                 document.getElementById('avatar_src-profile_shortcut').setAttribute('src', avatar_src);
                 deliver_notif(trans[lang].settings.music.profile_shortcut.saved);
 
-                menu_item.setAttribute('data-profile-shortcut', profile_name);
-                menu_item.setAttribute('href', `${root}user/${profile_name}`);
-                menu_item.textContent = profile_name;
-
                 // save to settings
                 settings.profile_shortcut = profile_name;
                 localStorage.setItem('bleh', JSON.stringify(settings));
@@ -10259,10 +10746,6 @@ let has_prompted_for_update = false;
                 deliver_notif(trans[lang].settings.music.profile_shortcut.failed);
                 localStorage.removeItem('bleh_profile_shortcut_avi');
                 document.getElementById('avatar_src-profile_shortcut').setAttribute('src', '');
-
-                menu_item.setAttribute('data-profile-shortcut', '');
-                menu_item.setAttribute('href', '');
-                menu_item.textContent = '';
             }
         });
     }
@@ -10285,26 +10768,27 @@ let has_prompted_for_update = false;
 
 
     function show_your_scrobbles() {
-        let header_new = document.body.querySelector('.header-new');
+        show_numbers_on_side(page.type);
 
-        if (header_new == null)
-            return;
-
-        if (header_new.classList.contains('header-new--subpage'))
-            return;
-
-        if (header_new.hasAttribute('data-bleh'))
-            return;
-        header_new.setAttribute('data-bleh', 'true');
-
-        let header_type = header_new.classList[1].replace('header-new--', '');
-
-        show_numbers_on_side(header_type);
-
-
-        let col_main = document.body.querySelector('.top-overview-panel');
+        let col_main = page.structure.container.querySelector('.top-overview-panel');
         if (col_main == null)
             col_main = document.body.querySelector('.col-main');
+
+
+        if (page.type == 'track') {
+            let new_panel = document.createElement('section');
+            new_panel.classList.add('track-info-panel');
+            new_panel.innerHTML = col_main.innerHTML;
+
+            page.structure.main.insertBefore(new_panel, page.structure.main.firstElementChild);
+
+            col_main.style.setProperty('display', 'none');
+
+            console.info(col_main, new_panel);
+
+            // now redirect later code
+            col_main = new_panel;
+        }
 
 
         // create container
@@ -10322,9 +10806,9 @@ let has_prompted_for_update = false;
 
         // artist
         let scrobble_page = page_url_split[page_url_length];
-        if (header_type == 'album') {
+        if (page.type == 'album') {
             scrobble_page = page_url_split[page_url_length - 1] + '/' + page_url_split[page_url_length];
-        } else if (header_type == 'track') {
+        } else if (page.type == 'track') {
             scrobble_page = page_url_split[page_url_length - 2] + '/_/' + page_url_split[page_url_length];
         }
 
@@ -10342,7 +10826,7 @@ let has_prompted_for_update = false;
             your_listens.listens = clean_number(scrobble_button.textContent.trim());
         }
         // create child for u
-        create_listen_item(listen_container, your_listens, header_type);
+        create_listen_item(listen_container, your_listens, page.type);
 
 
         // profile shortcut :3
@@ -10385,7 +10869,7 @@ let has_prompted_for_update = false;
                 `);
 
                 // colourful counts
-                if (settings.colourful_counts && header_type == 'artist') {
+                if (settings.colourful_counts && page.type == 'artist') {
                     let parsed_scrobble_as_rank = parse_scrobbles_as_rank(listens);
 
                     listen_item.setAttribute('data-bleh--scrobble-milestone',parsed_scrobble_as_rank.milestone);
@@ -10403,29 +10887,28 @@ let has_prompted_for_update = false;
 
 
         // other listeners
-        if (header_type == 'artist') {
+        if (page.type == 'artist') {
             //
             let other_container = col_main.querySelector('.personal-stats-item--listeners');
-            if (other_container == null)
-                return;
+            if (other_container != null) {
+                let listen_divider = document.createElement('div');
+                listen_divider.classList.add('listen-divider');
 
-            let listen_divider = document.createElement('div');
-            listen_divider.classList.add('listen-divider');
+                listen_container.appendChild(listen_divider);
 
-            listen_container.appendChild(listen_divider);
+                let avatars = other_container.querySelectorAll('.personal-stats-listener-avatar img');
+                let count = other_container.querySelector('.header-metadata-display a');
 
-            let avatars = other_container.querySelectorAll('.personal-stats-listener-avatar img');
-            let count = other_container.querySelector('.header-metadata-display a');
-
-            let other_listeners = {
-                name: 'others',
-                listens: -2,
-                link: scrobble_page,
-                avi: avatars,
-                count: (count != null) ? clean_number(count.textContent.trim()) : 5
+                let other_listeners = {
+                    name: 'others',
+                    listens: -2,
+                    link: scrobble_page,
+                    avi: avatars,
+                    count: (count != null) ? clean_number(count.textContent.trim()) : 5
+                }
+                // create child for them
+                create_listen_item(listen_container, other_listeners, page.type);
             }
-            // create child for them
-            create_listen_item(listen_container, other_listeners, header_type);
         }
 
 
@@ -10494,7 +10977,7 @@ let has_prompted_for_update = false;
         let search_btn = document.createElement('a');
         search_btn.classList.add('btn', 'view-item', 'interact-item', 'search-similar-btn');
         search_btn.textContent = trans[lang].music.search_variations.name;
-        search_btn.href = `${root}search/${header_type}s?q=${text}`;
+        search_btn.href = `${root}search/${page.type}s?q=${text}`;
         search_btn.target = '_blank';
 
         tippy(search_btn, {
@@ -10513,6 +10996,9 @@ let has_prompted_for_update = false;
             lotus_btn.textContent = trans[lang].lotus.correct.name;
             lotus_btn.href = 'https://github.com/katelyynn/lotus/issues/new/choose';
             lotus_btn.target = '_blank';
+
+            if (page.corrected)
+                lotus_btn.classList.add('active');
 
             /*if (page.corrected)
                 tippy(lotus_btn, {
@@ -10546,7 +11032,26 @@ let has_prompted_for_update = false;
             placement: 'bottom',
             interactive: true,
             interactiveBorder: 10,
-            trigger: 'click'
+            trigger: 'click',
+
+            onShow(instance) {
+                /*let lotus_item = instance.popper.querySelector('.lotus-btn:not([aria-describedby])');
+
+                if (page.corrected)
+                    tippy(lotus_item, {
+                        theme: 'lotus-tooltip-corrected',
+                        content: (`<span class="lotus-active">${trans[lang].lotus.correct.tooltip_active}</span><br><div class="tooltip-sub">${document.body.querySelector('.main-content > [itemscope]').getAttribute('data-page-resource-name')}</div>`),
+                        allowHTML: true,
+                        placement: 'right'
+                    });
+                else
+                    tippy(lotus_item, {
+                        theme: 'lotus-tooltip',
+                        content: (`${trans[lang].lotus.correct.tooltip}<br><div class="tooltip-sub">${document.body.querySelector('.main-content > [itemscope]').getAttribute('data-page-resource-name')}</div>`),
+                        allowHTML: true,
+                        placement: 'right'
+                    });*/
+            }
         });
 
         if (play_btn != null)
@@ -10707,13 +11212,17 @@ let has_prompted_for_update = false;
 
 
         // is there a video?
-        if (header_type == 'track') {
+        if (page.type == 'track') {
             let video_col = document.body.querySelector('.track-overview-video-column.col-sidebar');
+            video_col.classList.remove('col-sidebar');
+            page.structure.side.insertBefore(video_col, page.structure.side.firstElementChild);
+
             let video = video_col.querySelector('.video-preview');
 
-            //console.info(video_col, video);
-
             if (video != null) {
+                video_col.classList.remove('col-sidebar');
+                page.structure.side.insertBefore(video_col, page.structure.side.firstElementChild);
+
                 let container = document.createElement('div');
                 container.classList.add('video-overlay-container');
 
@@ -10733,8 +11242,9 @@ let has_prompted_for_update = false;
                 video.appendChild(container);
 
                 tippy(playlink, {
-                    content: playlink.textContent
+                    content: playlink.getAttribute('title')
                 });
+                playlink.removeAttribute('title');
                 tippy(replace, {
                     content: replace.textContent
                 });
@@ -10743,7 +11253,7 @@ let has_prompted_for_update = false;
 
 
         // add info notes to things
-        if (settings.feature_flags.show_wiki_label) {
+        if (ff('show_wiki_label')) {
             let wiki_col = page.structure.main.querySelector('.wiki-column');
 
             let wiki_header = document.createElement('h3');
@@ -10947,7 +11457,47 @@ let has_prompted_for_update = false;
             log('unable to find elements', 'page structure');
         }
 
-        checkup_page_structure();
+        checkup_page_structure(is_subpage, artist_header);
+
+        if (ff('refreshed_music_nav')) {
+            let avatar = artist_header.querySelector('.header-new-background-image');
+            let title = artist_header.querySelector('.header-new-title');
+            let on_tour = artist_header.querySelector('.header-new-on-tour');
+            let featured_items = artist_header.querySelector('.artist-header-featured-items');
+            let position = artist_header.querySelector('.header-new-chart-position-number');
+
+            let redesigned_artist_header = document.createElement('section');
+            redesigned_artist_header.classList.add('redesigned-header', 'redesigned-artist-header', 'no-background');
+            redesigned_artist_header.innerHTML = (`
+                <div class="avatar-side">
+                    ${(avatar != null) ? `<img src="${avatar.getAttribute('content').replace('/ar0/', '/avatar300s/')}"><a onclick="_expand_avatar('${avatar.getAttribute('content')}')" class="bleh--avatar-clickable-link"></a>` : '<img class="missing-artist">'}
+                </div>
+                <div class="info-side">
+                    <div class="sub-text">${trans[lang].artist.name}</div>
+                    <div class="title-container">
+                        <h1>${title.innerHTML}</h1>
+                        ${(position != null) ? position.outerHTML : ''}
+                        ${(on_tour != null) ? on_tour.outerHTML : ''}
+                    </div>
+                    ${(featured_items != null) ? featured_items.outerHTML : ''}
+                </div>
+                ${(!is_subpage) ? (`
+                <div class="gallery-side">
+                    <section class="view-all-panel">
+                        <a class="btn view-all-button back top-gallery-button" href="${window.location.href}/+images">
+                            ${trans[lang].gallery.view}
+                        </a>
+                    </section>
+                </div>
+                `) : ''}
+            `);
+
+            if (avatar != null)
+                register_background(avatar.getAttribute('content'));
+
+            page.structure.container.insertBefore(redesigned_artist_header, page.structure.container.firstElementChild);
+            artist_header.classList.add('legacy-header');
+        }
 
         if (!is_subpage) {
             page.subpage = 'overview';
@@ -10958,6 +11508,10 @@ let has_prompted_for_update = false;
         } else {
             // which subpage is it?
             page.subpage = document.body.classList[2].replace('namespace--', '');
+
+            let btn_add = page.structure.side.querySelector('.add-button');
+            if (btn_add != null)
+                btn_add.setAttribute('data-page-subpage', page.subpage);
 
             if (page.subpage == 'music_artist_images_image-upload')
                 bleh_gallery_upload();
@@ -10972,6 +11526,7 @@ let has_prompted_for_update = false;
         }
 
         log('status is', 'page', 'info', page);
+        update_page();
     }
 
     function bleh_albums() {
@@ -11016,7 +11571,38 @@ let has_prompted_for_update = false;
             log('unable to find elements', 'page structure');
         }
 
-        checkup_page_structure();
+        checkup_page_structure(is_subpage, album_header);
+
+        if (ff('refreshed_music_nav')) {
+            let avatar = album_header.querySelector('.header-new-background-image');
+            let title = album_header.querySelector('.header-new-title');
+            let artist = album_header.querySelector('[itemprop="byArtist"]');
+            let position = album_header.querySelector('.header-new-chart-position-number');
+
+            let redesigned_album_header = document.createElement('section');
+            redesigned_album_header.classList.add('redesigned-header', 'redesigned-album-header', 'no-background');
+            redesigned_album_header.innerHTML = (`
+                ${(is_subpage || ff('show_album_cover_always')) ? (`
+                <div class="avatar-side">
+                    ${(avatar != null) ? `<img src="${avatar.getAttribute('content').replace('/ar0/', '/avatar170s/')}"><a onclick="_expand_avatar('${avatar.getAttribute('content')}')" class="bleh--avatar-clickable-link"></a>` : '<img class="missing-album">'}
+                </div>
+                `) : ''}
+                <div class="info-side">
+                    <div class="sub-text">${trans[lang].album.name}</div>
+                    <div class="title-container">
+                        <h1>${title.innerHTML}</h1>
+                        ${(position != null) ? position.outerHTML : ''}
+                    </div>
+                    <h2>${artist.innerHTML}</h2>
+                </div>
+            `);
+
+            if (avatar != null)
+                register_background(avatar.getAttribute('content'));
+
+            page.structure.container.insertBefore(redesigned_album_header, page.structure.container.firstElementChild);
+            album_header.classList.add('legacy-header');
+        }
 
         // cover
         if (settings.hue_from_album) {
@@ -11042,6 +11628,8 @@ let has_prompted_for_update = false;
 
             album_missing_a_tracklist();
 
+            bleh_about_artist();
+
             // tooltips on album cover
             let button_row = page.structure.side.querySelector('.album-overview-cover-art-action-row');
             if (button_row != null) {
@@ -11056,6 +11644,10 @@ let has_prompted_for_update = false;
             // which subpage is it?
             page.subpage = document.body.classList[2].replace('namespace--', '');
 
+            let btn_add = page.structure.side.querySelector('.add-button');
+            if (btn_add != null)
+                btn_add.setAttribute('data-page-subpage', page.subpage);
+
             if (page.subpage == 'music_album_images_image-upload')
                 bleh_gallery_upload();
             else if (page.subpage == 'music_album_images_overview')
@@ -11069,6 +11661,7 @@ let has_prompted_for_update = false;
         }
 
         log('status is', 'page', 'info', page);
+        update_page();
     }
 
     function bleh_tracks() {
@@ -11107,13 +11700,53 @@ let has_prompted_for_update = false;
         }
         page.structure.row = page.structure.container.querySelector('.row');
         try {
-            page.structure.main = page.structure.row.querySelector('.col-main');
+            if (is_pro) {
+                if (!is_subpage)
+                    page.structure.main = page.structure.row.querySelector('.col-main:not(:first-child)');
+                else
+                    page.structure.main = page.structure.row.querySelector('.col-main');
+            } else {
+                page.structure.main = page.structure.row.querySelector('.col-main');
+            }
             page.structure.side = page.structure.row.querySelector('.col-sidebar:not(.track-overview-video-column)');
         } catch(e) {
             log('unable to find elements', 'page structure');
         }
 
-        checkup_page_structure();
+        checkup_page_structure(is_subpage, track_header);
+
+        if (ff('refreshed_music_nav')) {
+            let artist_avatar = track_header.querySelector('.header-new-background-image');
+            let album_avatar = page.structure.main.querySelector('.source-album-art img');
+            let title = track_header.querySelector('.header-new-title');
+            let artist = track_header.querySelector('[itemprop="byArtist"]');
+            let position = track_header.querySelector('.header-new-chart-position-number');
+
+            let redesigned_track_header = document.createElement('section');
+            redesigned_track_header.classList.add('redesigned-header', 'redesigned-track-header', 'no-background');
+            redesigned_track_header.innerHTML = (`
+                <div class="avatar-side">
+                    ${(album_avatar != null) ? `<img src="${album_avatar.getAttribute('src').replace('300x300', 'avatar300s')}"><a onclick="_expand_avatar('${album_avatar.getAttribute('src').replace('300x300', 'ar0')}')" class="bleh--avatar-clickable-link"></a>`
+                    : (artist_avatar != null) ? `<img src="${artist_avatar.getAttribute('content').replace('/ar0/', '/avatar170s/')}"><a onclick="_expand_avatar('${artist_avatar.getAttribute('content')}')" class="bleh--avatar-clickable-link"></a>` : '<img class="missing-track">'}
+                </div>
+                <div class="info-side">
+                    <div class="sub-text">${trans[lang].track.name}</div>
+                    <div class="title-container">
+                        <h1>${title.innerHTML}</h1>
+                        ${(position != null) ? position.outerHTML : ''}
+                    </div>
+                    <h2>${artist.innerHTML}</h2>
+                </div>
+            `);
+
+            if (album_avatar != null)
+                register_background(album_avatar.getAttribute('src'));
+            else if (artist_avatar != null)
+                register_background(artist_avatar.getAttribute('content'));
+
+            page.structure.container.insertBefore(redesigned_track_header, page.structure.container.firstElementChild);
+            track_header.classList.add('legacy-header');
+        }
 
         if (!is_subpage) {
             page.subpage = 'overview';
@@ -11121,9 +11754,15 @@ let has_prompted_for_update = false;
             show_your_scrobbles();
 
             bleh_music_page_charts();
+
+            bleh_about_artist();
         } else {
             // which subpage is it?
             page.subpage = document.body.classList[2].replace('namespace--', '');
+
+            let btn_add = page.structure.side.querySelector('.add-button');
+            if (btn_add != null)
+                btn_add.setAttribute('data-page-subpage', page.subpage);
 
             if (page.subpage == 'music_track_wiki_overview')
                 bleh_wiki();
@@ -11134,11 +11773,96 @@ let has_prompted_for_update = false;
         }
 
         log('status is', 'page', 'info', page);
+        update_page();
+    }
+
+
+    function bleh_tags() {
+        let tag_header = document.body.querySelector('.header--tag');
+
+        if (tag_header == undefined)
+            return;
+
+        if (tag_header.hasAttribute('data-bwaa'))
+            return;
+        tag_header.setAttribute('data-bwaa', 'true');
+
+        log('tag', 'page');
+        page.type = 'tag';
+
+        patch_header_title();
+
+        page.name = tag_header.querySelector('.header-title').textContent;
+
+        let is_subpage = tag_header.classList.contains('header--sub-page');
+
+
+        page.structure.container = document.body.querySelector('.page-content');
+        page.structure.row = page.structure.container.querySelector('.row');
+        try {
+            page.structure.main = page.structure.row.querySelector('.col-main');
+            page.structure.side = page.structure.row.querySelector('.col-sidebar');
+        } catch(e) {
+            log('unable to find elements', 'page structure');
+        }
+
+        checkup_page_structure(is_subpage, tag_header);
+
+        if (ff('refreshed_music_nav')) {
+            let split = window.location.href.split('/');
+
+            /* languages */
+            let index = 4;
+            if (split[3] != 'tag')
+                index = 5;
+
+            let title = desanitise(split[index]);
+
+            let redesigned_tag_header = document.createElement('section');
+            redesigned_tag_header.classList.add('redesigned-header', 'redesigned-tag-header', 'no-background');
+            redesigned_tag_header.innerHTML = (`
+                <div class="tag-side">
+                    <div class="tag-icon"></div>
+                </div>
+                <div class="info-side">
+                    <div class="sub-text">${trans[lang].tag.name}</div>
+                    <h1>${title}</h1>
+                </div>
+            `);
+
+            let background = document.body.querySelector('.header-background--has-image');
+            if (background != null)
+                register_background(background.style.getPropertyValue('background-image').replace('url("', '').replace('")', ''));
+
+            page.structure.container.insertBefore(redesigned_tag_header, page.structure.container.firstElementChild);
+            tag_header.classList.add('legacy-header');
+        }
+
+        if (!is_subpage) {
+            page.subpage = 'overview';
+        } else {
+            // which subpage is it?
+            try {
+                page.subpage = document.body.classList[2].replace('namespace--', '');
+            } catch(e) {
+                page.subpage = document.body.classList[1].replace('namespace--', '');
+            }
+
+            if (page.subpage == 'tag_wiki_overview')
+                bleh_wiki();
+            else if (page.subpage == 'tag_wiki_history')
+                bleh_wiki_history();
+            else if (page.subpage == 'tag_wiki_edit')
+                bleh_wiki_editor();
+        }
+
+        log('status is', 'page', 'info', page);
+        update_page();
     }
 
 
     function bleh_music_page_charts() {
-        if (settings.feature_flags.music_page_charts == false)
+        if (!ff('music_page_charts'))
             return;
 
         log('beginning replacement', 'music charts');
@@ -11480,7 +12204,7 @@ let has_prompted_for_update = false;
             return;
         image_sidebar.setAttribute('data-bleh-gallery', 'true');
 
-        if (settings.feature_flags.new_gallery_experience == false) {
+        if (!ff('new_gallery_experience')) {
             patch_gallery_focused_image(image_sidebar, page.structure.container.querySelector('.gallery-image-buttons'));
             return;
         }
@@ -11490,11 +12214,16 @@ let has_prompted_for_update = false;
         let gallery_section;
         try {
             gallery_section = page.structure.main.querySelector('.gallery-section');
-            page.structure.container.insertBefore(gallery_section, page.structure.container.firstElementChild);
+            if (gallery_section != null) {
+                page.structure.nav.after(gallery_section);
 
-            // move image details to main column
-            image_details = document.createElement('section');
-            image_details.classList.add('image-details');
+                // move image details to main column
+                image_details = document.createElement('section');
+                image_details.classList.add('image-details');
+            } else {
+                image_details = page.structure.main.querySelector('.image-details');
+                image_details.innerHTML = '';
+            }
         } catch(e) {
             gallery_section = page.structure.container.querySelector('.gallery-section');
 
@@ -11647,7 +12376,7 @@ let has_prompted_for_update = false;
 
 
             // saved button
-            if (page.type == 'artist' || settings.feature_flags.display_album_bookmark) {
+            if (page.type == 'artist' || ff('display_album_bookmark')) {
                 let all_saved_panel = document.createElement('section');
                 all_saved_panel.classList.add('view-all-panel');
 
@@ -11672,7 +12401,7 @@ let has_prompted_for_update = false;
 
 
         // bookmark-related info
-        if (page.type == 'artist' || settings.feature_flags.display_album_bookmark)
+        if (page.type == 'artist' || ff('display_album_bookmark'))
             patch_gallery_focused_image(image_sidebar, buttons);
 
         /*let gallery_slides = gallery_section.querySelectorAll('.gallery-slide');
@@ -11724,7 +12453,7 @@ let has_prompted_for_update = false;
         slides.appendChild(image);
         image_container.appendChild(slides);
         gallery_section.appendChild(image_container);
-        page.structure.container.insertBefore(gallery_section, page.structure.container.firstElementChild);
+        page.structure.nav.after(gallery_section);
 
 
         // remove content top
@@ -11781,7 +12510,7 @@ let has_prompted_for_update = false;
 
 
     unsafeWindow._query_changelog = function() {
-        if (settings.feature_flags.changelogs == false) {
+        if (!ff('changelogs')) {
             deliver_notif('not just yet..');
             return;
         }
@@ -12043,7 +12772,7 @@ let has_prompted_for_update = false;
             sub_text.classList.add('sub-text', 'space-below');
             sub_text.innerHTML = (`
                 <div class="breadcrumb-origin prominent">
-                    ${h2.innerHTML}
+                    ${(h2 != null) ? h2.innerHTML : page.structure.container.querySelector('.content-top-header').textContent}
                 </div>
                 <div class="wiki-author-side">
                     ${wiki_author.innerHTML}
@@ -12051,13 +12780,20 @@ let has_prompted_for_update = false;
             `);
 
             wiki_panel.insertBefore(sub_text, wiki_panel.firstElementChild);
-            wiki_panel.removeChild(h2);
+            if (h2 != null)
+                wiki_panel.removeChild(h2);
         }
     }
 
     function bleh_wiki_history() {
         let breadcrumb_root = page.structure.container.querySelector('.subpage-breadcrumb');
         let breadcrumb_name = page.structure.container.querySelector('.subpage-title');
+
+        // tags
+        if (breadcrumb_root == null) {
+            breadcrumb_root = page.structure.container.querySelector('.content-top-back-link');
+            breadcrumb_name = page.structure.container.querySelector('.content-top-header');
+        }
 
         let sub_text = document.createElement('div');
         sub_text.classList.add('sub-text', 'space-below');
@@ -12075,6 +12811,11 @@ let has_prompted_for_update = false;
 
 
         let buffer_container = page.structure.container.querySelector('.row ~ .buffer-4');
+
+        // tags
+        if (buffer_container == null)
+            buffer_container = page.structure.container.querySelector('.wiki-history');
+
         let wiki_history_table = buffer_container.querySelector('.wiki-history-table');
 
 
@@ -12129,6 +12870,21 @@ let has_prompted_for_update = false;
 
         let breadcrumb_root = page.structure.container.querySelector('.subpage-breadcrumb');
         let breadcrumb_name = page.structure.container.querySelector('.subpage-title');
+
+        // probably moved to a content-top by bleh prior
+        if (breadcrumb_name == null) {
+            breadcrumb_name = page.structure.content_top.querySelector('.content-top-header');
+
+            if (breadcrumb_name != null) {
+                page.structure.content_top.style.setProperty('display', 'none');
+            }
+        }
+
+        // tags
+        if (breadcrumb_root == null) {
+            breadcrumb_root = page.structure.container.querySelector('.content-top-back-link');
+            breadcrumb_name = page.structure.container.querySelector('.content-top-header');
+        }
 
         let sub_text = document.createElement('div');
         sub_text.classList.add('sub-text', 'space-below');
@@ -12231,5 +12987,749 @@ let has_prompted_for_update = false;
         rules_panel.innerHTML = rules.innerHTML;
 
         page.structure.side.appendChild(rules_panel);
+    }
+
+
+
+
+    function bleh_events() {
+        let event_header = document.body.querySelector('.header-info-primary--with-calendar');
+
+        if (event_header == null) {
+            // new profile pages?
+            if (document.body.classList[2] == null)
+                return;
+
+            // is this an event edit page?
+            if (document.body.classList[2].startsWith('namespace--events'))
+                bleh_events_edit();
+
+            return;
+        }
+
+        if (event_header.hasAttribute('data-bwaa'))
+            return;
+        event_header.setAttribute('data-bwaa', 'true');
+
+        log('event', 'page');
+        page.type = 'event';
+
+        let is_subpage = document.body.querySelector('.header').classList.contains('header--sub-page');
+
+
+        // without pro theres two containers
+        if (is_pro) {
+            // pro
+
+            page.structure.container = document.body.querySelector('.page-content');
+        } else {
+            // not pro
+
+            if (!is_subpage)
+                page.structure.container = document.body.querySelector('.page-content:not(header + .page-content)');
+            else
+                page.structure.container = document.body.querySelector('.page-content');
+        }
+        page.structure.row = page.structure.container.querySelector('.row');
+        try {
+            page.structure.main = page.structure.row.querySelector('.col-main');
+            page.structure.side = page.structure.row.querySelector('.col-sidebar:not(.track-overview-video-column)');
+        } catch(e) {
+            log('unable to find elements', 'page structure');
+        }
+
+        checkup_page_structure(is_subpage, event_header);
+
+        if (!is_subpage) {
+            try {
+                page.name = page.structure.main.querySelector('.grid-items-item-main-text a').textContent;
+            } catch(e) {
+                // if the artist page doesnt.. exist?
+                page.name = event_header.querySelector('.header-title-secondary span').textContent;
+            }
+        } else {
+            page.name = event_header.querySelector('.header-title-secondary a').textContent;
+        }
+        page.sister = event_header.querySelector('.header-title').textContent.trim();
+
+
+        let event_description = event_header.querySelector('.header-title-secondary');
+        if (settings.corrections) {
+            let links = event_description.querySelectorAll('a');
+            links.forEach((link) => {
+                link.textContent = correct_artist(link.textContent);
+            });
+        }
+
+        let redesigned_event_header = document.createElement('section');
+        redesigned_event_header.classList.add('redesigned-header', 'redesigned-event-header', 'no-background');
+        redesigned_event_header.innerHTML = (`
+            <div class="calendar-side">
+                <div class="calendar">
+                    ${event_header.querySelector('.calendar-icon').innerHTML}
+                </div>
+            </div>
+            <div class="info-side">
+                <div class="sub-text">${trans[lang].event.name}</div>
+                <h1>${page.sister}</h1>
+                <p class="sub-info">${event_description.innerHTML}</p>
+            </div>
+        `);
+
+        let background = document.body.querySelector('.header-background--has-image');
+        if (background != null)
+            register_background(background.style.getPropertyValue('background-image').replace('url("', '').replace('")', ''));
+
+        page.structure.container.insertBefore(redesigned_event_header, page.structure.container.firstElementChild);
+        document.body.querySelector('.header').classList.add('legacy-header');
+
+
+        if (!is_subpage) {
+            page.subpage = 'overview';
+
+            let header_meta = document.body.querySelector('.header-metadata');
+            header_meta.classList.add('profile-header-metadata-legacy');
+
+            // acquire info
+            let metadata = header_meta.querySelectorAll('.header-metadata-display');
+
+            let going = 0;
+            let maybe = 0;
+
+            metadata.forEach((item, index) => {
+                let para = item.querySelector('p');
+                if (index == 0) {
+                    going = clean_number(para.textContent.trim());
+                } else if (index == 1) {
+                    maybe = clean_number(item.textContent.trim());
+                }
+            });
+
+
+            // create new
+            let event_top_header = document.createElement('div');
+            event_top_header.classList.add('view-buttons', 'event-top-header');
+
+            let form = document.body.querySelector('.attendance-control');
+            let buttons = form.querySelectorAll('button');
+            buttons.forEach((button) => {
+                button.classList.add('btn', 'event-top-item', 'view-item');
+            });
+
+            event_top_header.appendChild(form);
+
+
+            let main_panel = page.structure.main.querySelector('.event-summary-with-poster');
+            if (main_panel == null)
+                main_panel = page.structure.main.querySelector('.event-details');
+
+            main_panel.insertBefore(event_top_header, main_panel.firstElementChild);
+
+
+
+
+            // move poster
+            let poster = main_panel.querySelector('.event-poster-preview');
+            let poster_panel;
+            if (poster != null) {
+                poster_panel = document.createElement('section');
+                poster_panel.classList.add('poster-panel', 'view-all-panel');
+
+                poster_panel.innerHTML = (`${poster.outerHTML}<a onclick="_expand_avatar('${poster.getAttribute('src').replace('/arXL/', '/ar0/')}')" class="bleh--avatar-clickable-link"></a>`);
+
+                page.structure.side.insertBefore(poster_panel, page.structure.side.firstElementChild);
+            }
+
+
+
+
+            // edit button
+            let edit_button = main_panel.querySelector('.event-metadata + .event-metadata a');
+            if (edit_button != null) {
+                edit_button.classList.add('btn', 'view-all-button', 'back', 'edit-event-button');
+
+                let edit_panel = document.createElement('section');
+                edit_panel.classList.add('view-all-panel');
+
+                edit_panel.appendChild(edit_button);
+                if (poster != null)
+                    poster_panel.after(edit_panel);
+                else
+                    page.structure.side.insertBefore(edit_panel, page.structure.side.firstElementChild);
+            }
+
+
+
+
+            // attendees
+            let users = page.structure.main.querySelectorAll('.attendee-summary-user-inner-wrap');
+            users.forEach((user) => {
+                let avatar = user.querySelector('.attendee-summary-user-avatar');
+                let name = user.querySelector('.attendee-summary-user-link').textContent;
+
+                patch_avatar(avatar, name, 'event');
+            });
+        } else {
+            // which subpage is it?
+            page.subpage = document.body.classList[2].replace('namespace--', '');
+
+            if (page.subpage == 'events_event_attendance_going' || page.subpage == 'events_event_attendance_interested') {
+                // view-related buttons
+                let view_buttons = document.createElement('div');
+                view_buttons.classList.add('view-buttons-wrapper');
+                view_buttons.innerHTML = (`
+                    <div class="view-buttons">
+                        <button class="btn view-item" id="toggle-list_view-1" data-toggle="list_view" data-toggle-value="1" onclick="_update_item('list_view', 1)">
+                            Grid
+                        </button>
+                        <button class="btn view-item" id="toggle-list_view-0" data-toggle="list_view" data-toggle-value="0" onclick="_update_item('list_view', 0)">
+                            List
+                        </button>
+                    </div>
+                `);
+                page.structure.row.classList.add('force-col-main-primary');
+                page.structure.main.classList.add('primary-column');
+                page.structure.main.insertBefore(view_buttons, page.structure.main.firstElementChild);
+
+                refresh_all();
+
+
+                // users
+                let users = page.structure.main.querySelectorAll('.user-list-inner-wrap');
+                users.forEach((user) => {
+                    let avatar = user.querySelector('.user-list-avatar');
+                    let name = user.querySelector('.user-list-link').textContent;
+
+                    let badge = patch_avatar(avatar, name, 'follow');
+
+                    if (badge.type == 'avatar-status-dot--staff')
+                        user.classList.add('staff-user');
+                });
+            }
+        }
+
+        log('status is', 'page', 'info', page);
+        update_page();
+    }
+
+    function bleh_events_edit() {
+        return;
+    }
+
+
+
+
+    function update_page() {
+        page.structure.container.setAttribute('data-page-type', page.type);
+        page.structure.container.setAttribute('data-page-subpage', page.subpage);
+    }
+
+
+
+
+    function register_background(url) {
+        let background = document.body.querySelector('.bleh-background');
+        if (background == null) {
+            background = document.createElement('div');
+            background.classList.add('bleh-background');
+
+            document.body.appendChild(background);
+        }
+
+        background.setAttribute('data-page-type', page.type);
+        background.style.setProperty('background-image', `url(${url})`);
+
+        if (page.type == 'user') {
+            if (page.name == auth) {
+                background.setAttribute('data-page-user-is-self', 'true');
+            } else {
+                background.setAttribute('data-page-user-is-self', 'false');
+            }
+        }
+    }
+
+
+
+
+    function patch_profiles_chart_windows() {
+        let recent_tracks = page.structure.main.querySelector('#recent-tracks-section');
+        let recent_tracks_settings = recent_tracks.querySelector('#recent-tracks-settings');
+        let recent_tracks_link = recent_tracks.querySelector('[aria-controls="recent-tracks-settings"]');
+        let recent_tracks_tooltip;
+
+        let artist = page.structure.main.querySelector('#top-artists');
+        let artist_settings = artist.querySelector('#artist-chart-settings');
+        let artist_link = artist.querySelector('[aria-controls="artist-chart-settings"]');
+        let artist_tooltip;
+
+        let album = page.structure.main.querySelector('#top-albums');
+        let album_settings = album.querySelector('#albums-chart-settings');
+        let album_link = album.querySelector('[aria-controls="album-chart-settings"]');
+        let album_tooltip;
+
+        let track = page.structure.main.querySelector('#top-tracks');
+        let track_settings = track.querySelector('#track-chart-settings');
+        let track_link = track.querySelector('[aria-controls="track-chart-settings"]');
+        let track_tooltip;
+
+
+
+        let token = recent_tracks_settings.querySelector('[name="csrfmiddlewaretoken"]').getAttribute('value');
+
+        // get info before destroying
+        let original_chart_settings = {};
+
+        if (recent_tracks_settings != null) {
+            let new_button = document.createElement('button');
+            new_button.classList.add('panel-settings-button');
+            new_button.textContent = trans[lang].profile.settings;
+
+            recent_tracks_settings.classList = '';
+
+            recent_tracks_tooltip = tippy(new_button, {
+                theme: 'window',
+                content: (`${recent_tracks_settings.outerHTML}`),
+                allowHTML: true,
+                placement: 'bottom',
+                interactive: true,
+                interactiveBorder: 10,
+                trigger: 'click',
+
+                onShow(instance) {
+                    let form = instance.popper.querySelector('form');
+
+                    form.innerHTML = (`
+                        <input type="hidden" name="csrfmiddlewaretoken" value="${token}">
+                        <div class="select-container">
+                            <div class="heading">
+                                <h5>${trans[lang].settings.inbuilt.charts.recent.count.name}</h5>
+                            </div>
+                            <div class="select-wrap custom-selector" id="id_chart_length_recent_tracks_select">
+                                ${original_chart_settings.recent.count}
+                            </div>
+                        </div>
+                        <div class="toggle-container" id="container-recent_artwork">
+                            <button class="btn reset" onclick="_reset_inbuilt_item('recent_artwork')">Reset to default</button>
+                            <div class="heading">
+                                <h5>${trans[lang].settings.inbuilt.charts.recent.artwork.name}</h5>
+                            </div>
+                            <div class="toggle-wrap">
+                                <input class="companion-checkbox" type="checkbox" name="show_recent_tracks_artwork" id="inbuilt-companion-checkbox-recent_artwork">
+                                <span class="btn toggle" id="toggle-recent_artwork" onclick="_update_inbuilt_item('recent_artwork')" aria-checked="false">
+                                    <div class="dot"></div>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="toggle-container" id="container-recent_realtime">
+                            <button class="btn reset" onclick="_reset_inbuilt_item('recent_realtime')">Reset to default</button>
+                            <div class="heading">
+                                <h5>${trans[lang].settings.inbuilt.charts.recent.realtime.name}</h5>
+                                <p>${trans[lang].settings.inbuilt.charts.recent.realtime.bio}</p>
+                            </div>
+                            <div class="toggle-wrap">
+                                <input class="companion-checkbox" type="checkbox" name="auto_refresh_recent_tracks" id="inbuilt-companion-checkbox-recent_realtime">
+                                <span class="btn toggle" id="toggle-recent_realtime" onclick="_update_inbuilt_item('recent_realtime')" aria-checked="false" type="button">
+                                    <div class="dot"></div>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="sep"></div>
+                        <div class="settings-footer">
+                            <button type="submit" class="btn-primary save">
+                                ${trans[lang].settings.save}
+                            </button>
+                        </div>
+                    `);
+
+                    custom_select(form.querySelector('#id_chart_length_recent_tracks'), form.querySelector('#id_chart_length_recent_tracks_select'));
+
+                    let selects = form.querySelectorAll('select');
+                    selects.forEach((select) => {
+                        select.setAttribute('onchange', `_update_inbuilt_select('${select.getAttribute('id')}', this.value)`);
+                        update_inbuilt_select(select.getAttribute('id'), select.value);
+                    });
+
+                    for (let setting in original_chart_settings.recent) {
+                        update_inbuilt_item(setting, original_chart_settings.recent[setting], false, form);
+                    }
+                }
+            });
+
+            recent_tracks.appendChild(new_button);
+
+            original_chart_settings.recent = {
+                recent_artwork: recent_tracks_settings.querySelector('#id_show_recent_tracks_artwork').checked,
+                count: recent_tracks_settings.querySelector('#id_chart_length_recent_tracks').outerHTML,
+                recent_realtime: recent_tracks_settings.querySelector('#id_auto_refresh_recent_tracks').checked
+            }
+
+            recent_tracks_settings.innerHTML = '';
+        }
+        if (artist_settings != null) {
+            let new_button = document.createElement('button');
+            new_button.classList.add('panel-settings-button');
+            new_button.textContent = trans[lang].profile.settings;
+
+            artist_settings.classList = '';
+
+            artist_tooltip = tippy(new_button, {
+                theme: 'window',
+                content: (`${artist_settings.outerHTML}`),
+                allowHTML: true,
+                placement: 'bottom',
+                interactive: true,
+                interactiveBorder: 10,
+                trigger: 'click',
+
+                onShow(instance) {
+                    let form = instance.popper.querySelector('form');
+
+                    form.innerHTML = (`
+                        <input type="hidden" name="csrfmiddlewaretoken" value="${token}">
+                        <div class="select-container">
+                            <div class="heading">
+                                <h5>${trans[lang].settings.inbuilt.charts.artists.timeframe.name}</h5>
+                            </div>
+                            <div class="select-wrap custom-selector" id="id_chart_range_top_artists_select">
+                                ${original_chart_settings.artists.timeframe}
+                            </div>
+                        </div>
+                        <div class="select-container">
+                            <div class="heading">
+                                <h5>${trans[lang].settings.inbuilt.charts.artists.style.name}</h5>
+                            </div>
+                            <div class="select-wrap custom-selector" id="id_chart_style_top_artists_select">
+                                ${original_chart_settings.artists.style}
+                            </div>
+                        </div>
+                        <div class="select-container">
+                            <div class="heading">
+                                <h5>${trans[lang].settings.inbuilt.charts.artists.length.name}</h5>
+                            </div>
+                            <div class="select-wrap custom-selector" id="id_artists_image_grid_length_select">
+                                ${original_chart_settings.artists.length}
+                            </div>
+                        </div>
+                        <div class="sep"></div>
+                        <div class="settings-footer">
+                            <button type="submit" class="btn-primary save">
+                                ${trans[lang].settings.save}
+                            </button>
+                        </div>
+                    `);
+
+                    custom_select(form.querySelector('#id_chart_range_top_artists'), form.querySelector('#id_chart_range_top_artists_select'));
+                    custom_select(form.querySelector('#id_chart_style_top_artists'), form.querySelector('#id_chart_style_top_artists_select'));
+                    custom_select(form.querySelector('#id_artists_image_grid_length'), form.querySelector('#id_artists_image_grid_length_select'));
+
+                    let selects = form.querySelectorAll('select');
+                    selects.forEach((select) => {
+                        select.setAttribute('onchange', `_update_inbuilt_select('${select.getAttribute('id')}', this.value)`);
+                        update_inbuilt_select(select.getAttribute('id'), select.value);
+                    });
+                }
+            });
+
+            artist.appendChild(new_button);
+
+            original_chart_settings.artists = {
+                timeframe: artist_settings.querySelector('#id_chart_range_top_artists').outerHTML,
+                style: artist_settings.querySelector('#id_chart_style_top_artists').outerHTML,
+                length: artist_settings.querySelector('#id_artists_image_grid_length').outerHTML
+            }
+
+            artist_settings.innerHTML = '';
+        }
+        if (album_settings != null) {
+            let new_button = document.createElement('button');
+            new_button.classList.add('panel-settings-button');
+            new_button.textContent = trans[lang].profile.settings;
+
+            album_settings.classList = '';
+
+            album_tooltip = tippy(new_button, {
+                theme: 'window',
+                content: (`${album_settings.outerHTML}`),
+                allowHTML: true,
+                placement: 'bottom',
+                interactive: true,
+                interactiveBorder: 10,
+                trigger: 'click',
+
+                onShow(instance) {
+                    let form = instance.popper.querySelector('form');
+
+                    form.innerHTML = (`
+                        <input type="hidden" name="csrfmiddlewaretoken" value="${token}">
+                        <div class="select-container">
+                            <div class="heading">
+                                <h5>${trans[lang].settings.inbuilt.charts.albums.timeframe.name}</h5>
+                            </div>
+                            <div class="select-wrap custom-selector" id="id_chart_range_top_albums_select">
+                                ${original_chart_settings.albums.timeframe}
+                            </div>
+                        </div>
+                        <div class="select-container">
+                            <div class="heading">
+                                <h5>${trans[lang].settings.inbuilt.charts.albums.style.name}</h5>
+                            </div>
+                            <div class="select-wrap custom-selector" id="id_chart_style_top_albums_select">
+                                ${original_chart_settings.albums.style}
+                            </div>
+                        </div>
+                        <div class="select-container">
+                            <div class="heading">
+                                <h5>${trans[lang].settings.inbuilt.charts.albums.length.name}</h5>
+                            </div>
+                            <div class="select-wrap custom-selector" id="id_albums_image_grid_length_select">
+                                ${original_chart_settings.albums.length}
+                            </div>
+                        </div>
+                        <div class="sep"></div>
+                        <div class="settings-footer">
+                            <button type="submit" class="btn-primary save">
+                                ${trans[lang].settings.save}
+                            </button>
+                        </div>
+                    `);
+
+                    custom_select(form.querySelector('#id_chart_range_top_albums'), form.querySelector('#id_chart_range_top_albums_select'));
+                    custom_select(form.querySelector('#id_chart_style_top_albums'), form.querySelector('#id_chart_style_top_albums_select'));
+                    custom_select(form.querySelector('#id_albums_image_grid_length'), form.querySelector('#id_albums_image_grid_length_select'));
+
+                    let selects = form.querySelectorAll('select');
+                    selects.forEach((select) => {
+                        select.setAttribute('onchange', `_update_inbuilt_select('${select.getAttribute('id')}', this.value)`);
+                        update_inbuilt_select(select.getAttribute('id'), select.value);
+                    });
+                }
+            });
+
+            album.appendChild(new_button);
+
+            original_chart_settings.albums = {
+                timeframe: album_settings.querySelector('#id_chart_range_top_albums').outerHTML,
+                style: album_settings.querySelector('#id_chart_style_top_albums').outerHTML,
+                length: album_settings.querySelector('#id_albums_image_grid_length').outerHTML
+            }
+
+            album_settings.innerHTML = '';
+        }
+        if (track_settings != null) {
+            let new_button = document.createElement('button');
+            new_button.classList.add('panel-settings-button');
+            new_button.textContent = trans[lang].profile.settings;
+
+            track_settings.classList = '';
+
+            track_tooltip = tippy(new_button, {
+                theme: 'window',
+                content: (`${track_settings.outerHTML}`),
+                allowHTML: true,
+                placement: 'bottom',
+                interactive: true,
+                interactiveBorder: 10,
+                trigger: 'click',
+
+                onShow(instance) {
+                    let form = instance.popper.querySelector('form');
+
+                    form.innerHTML = (`
+                        <input type="hidden" name="csrfmiddlewaretoken" value="${token}">
+                        <div class="select-container">
+                            <div class="heading">
+                                <h5>${trans[lang].settings.inbuilt.charts.tracks.timeframe.name}</h5>
+                            </div>
+                            <div class="select-wrap custom-selector" id="id_chart_range_top_tracks_select">
+                                ${original_chart_settings.tracks.timeframe}
+                            </div>
+                        </div>
+                        <div class="select-container">
+                            <div class="heading">
+                                <h5>${trans[lang].settings.inbuilt.charts.tracks.count.name}</h5>
+                            </div>
+                            <div class="select-wrap custom-selector" id="id_chart_length_top_tracks_select">
+                                ${original_chart_settings.tracks.count}
+                            </div>
+                        </div>
+                        <div class="sep"></div>
+                        <div class="settings-footer">
+                            <button type="submit" class="btn-primary save">
+                                ${trans[lang].settings.save}
+                            </button>
+                        </div>
+                    `);
+
+                    custom_select(form.querySelector('#id_chart_range_top_tracks'), form.querySelector('#id_chart_range_top_tracks_select'));
+                    custom_select(form.querySelector('#id_chart_length_top_tracks'), form.querySelector('#id_chart_length_top_tracks_select'));
+
+                    let selects = form.querySelectorAll('select');
+                    selects.forEach((select) => {
+                        select.setAttribute('onchange', `_update_inbuilt_select('${select.getAttribute('id')}', this.value)`);
+                        update_inbuilt_select(select.getAttribute('id'), select.value);
+                    });
+                }
+            });
+
+            track.appendChild(new_button);
+
+            original_chart_settings.tracks = {
+                timeframe: track_settings.querySelector('#id_chart_range_top_tracks').outerHTML,
+                count: track_settings.querySelector('#id_chart_length_top_tracks').outerHTML
+            }
+
+            track_settings.innerHTML = '';
+        }
+    }
+
+
+
+
+    function ff(flag) {
+        log(`parsing ${flag}`, 'flag', 'info', {
+            setting: settings.feature_flags[flag],
+            sku: version.feature_flags[flag]
+        });
+
+        if (settings.feature_flags[flag] != null)
+            return settings.feature_flags[flag];
+
+        if (version.feature_flags[flag] != null)
+            return version.feature_flags[flag].default;
+    }
+
+
+
+
+    function auto_edit_modal() {
+        let modal = document.querySelector('.automatic-edit-modal-body-v2');
+
+        if (modal == null)
+            return;
+
+        if (modal.hasAttribute('data-bwaa-edit'))
+            return;
+        modal.setAttribute('data-bwaa-edit', 'true');
+
+        log('auto edit v2', 'modal');
+
+
+        let checkboxes = modal.querySelectorAll('.checkbox');
+
+        checkboxes.forEach((checkbox) => {
+            let id = checkbox.querySelector('input').getAttribute('name');
+            let text = checkbox.textContent.trim();
+
+            checkbox.classList = 'toggle-container';
+            checkbox.setAttribute('onclick', `_update_inbuilt_item('${id}')`);
+            checkbox.innerHTML = (`
+                <div class="heading">
+                    <h5>${text}</h5>
+                </div>
+                <div class="toggle-wrap">
+                    <input class="companion-checkbox" type="checkbox" name="${id}" id="inbuilt-companion-checkbox-${id}">
+                    <span class="btn toggle" id="toggle-${id}" onclick="_update_inbuilt_item('${id}')" aria-checked="false">
+                        <div class="dot"></div>
+                    </span>
+                </div>
+            `);
+        });
+    }
+
+
+
+
+    function register_menu(element, menu) {
+        element.addEventListener('contextmenu', (e) => {
+            e.preventDefault();
+
+            menu.setProps({
+                getReferenceClientRect: () => ({
+                    width: 0,
+                    height: 0,
+                    top: e.clientY,
+                    bottom: e.clientY,
+                    left: e.clientX,
+                    right: e.clientX,
+                }),
+            });
+
+            menu.show();
+        });
+    }
+
+
+    unsafeWindow._open_profile_shortcut_window = function() {
+        create_window('profile_shortcut',trans[lang].settings.music.profile_shortcut.name,(`
+            <div class="text-container" id="container-profile_shortcut">
+                <button class="btn reset" onclick="_reset_item('profile_shortcut')">${trans[lang].settings.reset}</button>
+                <div class="avatar-container">
+                    <div class="avatar-inner" id="avatar-profile_shortcut">
+                        <img id="avatar_src-profile_shortcut" src="${localStorage.getItem('bleh_profile_shortcut_avi') || ''}">
+                    </div>
+                </div>
+                <div class="heading content-form">
+                    <h5>${trans[lang].settings.music.profile_shortcut.placeholder}</h5>
+                    <div class="input-container">
+                        <input type="text" maxlength="40" id="text-profile_shortcut" value="${settings.profile_shortcut}" placeholder="${trans[lang].settings.music.profile_shortcut.header}">
+                        <button class="bleh--btn primary save" onclick="_save_profile_shortcut()">${trans[lang].settings.save}</button>
+                    </div>
+                </div>
+            </div>
+        `), true);
+    }
+
+
+
+
+    function bleh_about_artist() {
+        let legacy_container = page.structure.main.querySelector('.about-artist');
+
+        if (legacy_container == null)
+            return;
+
+        let avatar = legacy_container.querySelector('.gallery-preview-image--0 img');
+        let listeners = legacy_container.querySelector('.about-artist-listeners');
+        let tags = legacy_container.querySelector('.about-artist-tags');
+
+        let wiki = legacy_container.querySelector('.wiki-block.visible-lg');
+        if (wiki != null)
+            wiki.classList.remove('visible-lg');
+
+        let about_artist_container = legacy_container.parentElement;
+        about_artist_container.classList.add('about-artist-container');
+
+        about_artist_container.innerHTML = (`
+            <div class="about-artist-panel">
+                <div class="avatar-side">
+                    ${(avatar != null) ? `<img src="${avatar.getAttribute('src')}"><a onclick="_expand_avatar('${avatar.getAttribute('src').replace('/300x300/', '/ar0/')}')" class="bleh--avatar-clickable-link"></a>` : '<img class="missing-artist">'}
+                </div>
+                <div class="info-side">
+                    <div class="sub-text">${trans[lang].music.about}</div>
+                    <h1><a href="${root}music/${sanitise(page.sister)}">${page.sister}</a></h1>
+                    ${(listeners != null) ? listeners.outerHTML : ''}
+                    ${(tags != null) ? tags.outerHTML : ''}
+                    ${(wiki != null) ? wiki.outerHTML : ''}
+                </div>
+            </div>
+            ${(page.sister_others.length > 0) ? `<div class="sep"></div><div class="sub-text">${trans[lang].music.about_guests}</div>` : ''}
+        `);
+
+        // there are guest features
+        if (page.sister_others.length > 0) {
+            let guest_feature_panel = document.createElement('div');
+            guest_feature_panel.classList.add('about-guest-features-panel');
+
+            for (let guest in page.sister_others) {
+                let guest_element = document.createElement('a');
+                guest_element.classList.add('about-guest-feature');
+                guest_element.setAttribute('href', `${root}music/${sanitise(page.sister_others[guest])}`);
+                guest_element.textContent = page.sister_others[guest];
+
+                guest_feature_panel.appendChild(guest_element);
+            }
+
+            about_artist_container.appendChild(guest_feature_panel);
+        }
     }
 })();
