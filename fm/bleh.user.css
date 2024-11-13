@@ -5860,7 +5860,8 @@ button,
 .footer-language :is(strong, button),
 .source-album, .big-tags-item,
 .wiki-history-entry,
-.attendee-summary-user
+.attendee-summary-user,
+.about-guest-feature
 {
     --bg: hsl(var(--b4));
     --bg-hov: hsla(var(--b4), 80%);
@@ -6022,6 +6023,7 @@ button,
 
 
 /*     BUTTON HAS ICON     */
+.about-guest-feature,
 .refresh-tracklist-btn,
 .search-similar-btn, .obsession-btn,
 .image-open-button,
@@ -6058,6 +6060,7 @@ button,
         --btn-left: calc(12px + 20px + 6px) !important;
     }
 }
+.about-guest-feature,
 .side-right .setting-item,
 .continue, .external, .open,
 .btn--has-icon-right,
@@ -6171,6 +6174,7 @@ button,
 
 
 /*     ICON MASK     */
+.about-guest-feature:before, .about-guest-feature:after,
 .tag-icon:before,
 .image-open-button:before,
 .breadcrumb :is(a, .breadcrumb-origin):before, .gallery-image-uploaded-by:before,
@@ -17778,10 +17782,15 @@ h4 {
 .legacy-header {
     display: none;
 }
+.about-artist-panel,
 .redesigned-header {
     display: flex;
     gap: var(--card-padding);
     margin-top: var(--card-gap) !important;
+
+    &.about-artist-panel {
+        margin: unset !important;
+    }
 
     &.no-background {
         margin-left: var(--card-padding);
@@ -17827,12 +17836,16 @@ h4 {
         overflow: hidden;
         position: relative;
 
+        .about-artist-panel &,
         .redesigned-artist-header & {
             border-radius: var(--item-big-radius);
         }
 
         .page-content[data-page-subpage="overview"] & {
             --avatar-size: 127px;
+        }
+        .about-artist-panel & {
+            --avatar-size: 127px !important;
         }
 
         .page-content[data-page-type="album"] &,
@@ -17972,6 +17985,15 @@ h4 {
         .profile-top-header {
             margin-top: var(--card-gap);
         }
+
+        .about-artist-panel & {
+            .about-artist-listeners {
+                margin: 6px 0;
+            }
+            .about-artist-tags {
+                margin-bottom: var(--card-gap);
+            }
+        }
     }
 
     .gallery-side {
@@ -17994,6 +18016,32 @@ h4 {
 /* artists massive gap */
 .page-content:not([data-page-type]):has(.content-top-lower-row) {
     display: none;
+}
+
+
+.about-artist-container {
+    .sep {
+        margin: var(--card-gap) 0;
+    }
+    .about-guest-features-panel {
+        margin-top: var(--card-gap);
+        display: flex;
+        gap: var(--item-list-gap);
+        flex-wrap: wrap;
+
+        .about-guest-feature {
+            position: relative;
+
+            &:before {
+                --mask: var(--icon-16-artist);
+            }
+            &:after {
+                --left: none;
+                --right: 12px;
+                --mask: var(--icon-16-arrow-right);
+            }
+        }
+    }
 }
 
 

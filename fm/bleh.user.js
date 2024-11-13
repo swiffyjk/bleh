@@ -185,7 +185,9 @@ const trans = {
             compare: {
                 name: 'Compare',
                 header: 'Compare plays'
-            }
+            },
+            about: 'About',
+            about_guests: 'Others featured'
         },
         error: {
             name: 'This page is missing...',
@@ -3090,7 +3092,6 @@ let has_prompted_for_update = false;
                 correct_generic_combo('similar-items-sidebar-item');
             }
 
-            patch_about_this_artist();
             patch_obsession_view();
 
             error_page();
@@ -3156,7 +3157,6 @@ let has_prompted_for_update = false;
                     correct_generic_combo('similar-items-sidebar-item');
                 }
 
-                patch_about_this_artist();
                 patch_obsession_view();
 
                 error_page();
@@ -6310,26 +6310,6 @@ let has_prompted_for_update = false;
 
 
 
-    function patch_about_this_artist() {
-        if (!settings.corrections)
-            return;
-
-        let about_artist_name = document.querySelector('.about-artist-name');
-
-        if (about_artist_name == null)
-            return;
-
-        if (about_artist_name.hasAttribute('data-kate-processed'))
-            return;
-        about_artist_name.setAttribute('data-kate-processed', 'true');
-
-        let artist_name = about_artist_name.querySelector('a');
-        artist_name.textContent = correct_artist(artist_name.textContent);
-    }
-
-
-
-
     // bleh settings
     unsafeWindow.open_bleh_settings = function() {
         create_window('bleh_settings','Theme settings','');
@@ -9250,6 +9230,7 @@ let has_prompted_for_update = false;
 
                 let song_artist_element = document.body.querySelector('span[itemprop="byArtist"]');
                 let song_guests = formatted_title[3];
+                page.sister_others = formatted_title[3];
                 for (let guest in song_guests) {
                     // &
                     song_artist_element.innerHTML = `${song_artist_element.innerHTML},`;
@@ -11613,6 +11594,8 @@ let has_prompted_for_update = false;
 
             album_missing_a_tracklist();
 
+            bleh_about_artist();
+
             // tooltips on album cover
             let button_row = page.structure.side.querySelector('.album-overview-cover-art-action-row');
             if (button_row != null) {
@@ -11737,6 +11720,8 @@ let has_prompted_for_update = false;
             show_your_scrobbles();
 
             bleh_music_page_charts();
+
+            bleh_about_artist();
         } else {
             // which subpage is it?
             page.subpage = document.body.classList[2].replace('namespace--', '');
@@ -13650,5 +13635,59 @@ let has_prompted_for_update = false;
                 </div>
             </div>
         `), true);
+    }
+
+
+
+
+    function bleh_about_artist() {
+        let legacy_container = page.structure.main.querySelector('.about-artist');
+
+        if (legacy_container == null)
+            return;
+
+        let avatar = legacy_container.querySelector('.gallery-preview-image--0 img');
+        let listeners = legacy_container.querySelector('.about-artist-listeners');
+        let tags = legacy_container.querySelector('.about-artist-tags');
+
+        let wiki = legacy_container.querySelector('.wiki-block.visible-lg');
+        if (wiki != null)
+            wiki.classList.remove('visible-lg');
+
+        let about_artist_container = legacy_container.parentElement;
+        about_artist_container.classList.add('about-artist-container');
+
+        about_artist_container.innerHTML = (`
+            <div class="about-artist-panel">
+                <div class="avatar-side">
+                    ${(avatar != null) ? `<img src="${avatar.getAttribute('src')}"><a onclick="_expand_avatar('${avatar.getAttribute('src').replace('/300x300/', '/ar0/')}')" class="bleh--avatar-clickable-link"></a>` : '<img class="missing-artist">'}
+                </div>
+                <div class="info-side">
+                    <div class="sub-text">${trans[lang].music.about}</div>
+                    <h1>${page.sister}</h1>
+                    ${(listeners != null) ? listeners.outerHTML : ''}
+                    ${(tags != null) ? tags.outerHTML : ''}
+                    ${(wiki != null) ? wiki.outerHTML : ''}
+                </div>
+            </div>
+            ${(page.sister_others.length > 0) ? `<div class="sep"></div><div class="sub-text">${trans[lang].music.about_guests}</div>` : ''}
+        `);
+
+        // there are guest features
+        if (page.sister_others.length > 0) {
+            let guest_feature_panel = document.createElement('div');
+            guest_feature_panel.classList.add('about-guest-features-panel');
+
+            for (let guest in page.sister_others) {
+                let guest_element = document.createElement('a');
+                guest_element.classList.add('about-guest-feature');
+                guest_element.setAttribute('href', `${root}music/${sanitise(page.sister_others[guest])}`);
+                guest_element.textContent = page.sister_others[guest];
+
+                guest_feature_panel.appendChild(guest_element);
+            }
+
+            about_artist_container.appendChild(guest_feature_panel);
+        }
     }
 })();
