@@ -10660,7 +10660,8 @@ let has_prompted_for_update = false;
         // show on button
         button.setAttribute('data-is-shortcut', 'true');
         button.removeAttribute('onclick');
-        button._tippy.setContent(trans[lang].profile.shortcut.remove);
+        // this breaks the configure menu
+        //button._tippy.setContent(trans[lang].profile.shortcut.remove);
 
         // save to settings
         settings.profile_shortcut = profile_name;
