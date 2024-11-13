@@ -17866,11 +17866,11 @@ h4 {
 
         .page-content[data-page-subpage="overview"] & {
             --avatar-size: 127px;
-            --mask-size: var(--cover-size-100);
+            --mask-size: var(--cover-size-200);
         }
         .about-artist-panel & {
             --avatar-size: 127px !important;
-            --mask-size: var(--cover-size-100);
+            --mask-size: var(--cover-size-200);
         }
 
         .page-content[data-page-type="album"] &,
@@ -17881,6 +17881,7 @@ h4 {
         }
 
         img {
+            width: 100%;
             height: 100%;
         }
 
