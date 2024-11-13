@@ -462,8 +462,10 @@ const trans = {
                 },
                 profile_header: {
                     name: 'Display profile backgrounds',
-                    for_own: 'On my profile',
-                    for_others: 'On other profiles'
+                    see_type: 'Source from avatar instead of top artist',
+                    view_on: 'View backgrounds on',
+                    for_own: 'My own profile',
+                    for_others: 'Other profiles'
                 },
                 sat_bg: {
                     name: 'Card background saturation',
@@ -7063,6 +7065,40 @@ let has_prompted_for_update = false;
             return (`
                 <div class="bleh--panel">
                     <h4>${trans[lang].settings.customise.profile_header.name}</h4>
+                    <div class="inner-preview pad">
+                        <div class="profile-mockup">
+                            <div class="mockup-header">
+                                <img class="mockup-avatar" src="${my_avi}">
+                                <div class="mockup-name"></div>
+                            </div>
+                            <div class="mockup-container">
+                                <div class="mockup-col-main">
+                                    <div class="mockup-panel main"></div>
+                                </div>
+                                <div class="mockup-col-sidebar">
+                                    <div class="mockup-panel">
+                                        <img class="mockup-obsession-art" src="https://lastfm.freetls.fastly.net/i/u/64s/e8e5ed62eba543442fe85ac61dead730.jpg">
+                                        <div class="mockup-obsession-name"></div>
+                                    </div>
+                                    <div class="mockup-panel main"></div>
+                                </div>
+                            </div>
+                            <div class="profile-mockup-background from-avatar" style="background-image: url(${my_avi});"></div>
+                            <div class="profile-mockup-background from-track" style="background-image: url(https://lastfm.freetls.fastly.net/i/u/avatar170s/90b39fa67cd3ec8159e116385952a05b);"></div>
+                        </div>
+                    </div>
+                    <div class="toggle-container" id="container-profile_avi_background" onclick="_update_item('profile_avi_background')">
+                        <button class="btn reset" onclick="_reset_item('profile_avi_background')">${trans[lang].settings.reset}</button>
+                        <div class="heading">
+                            <h5>${trans[lang].settings.customise.profile_header.see_type}</h5>
+                        </div>
+                        <div class="toggle-wrap">
+                            <button class="toggle" id="toggle-profile_avi_background" aria-checked="false">
+                                <div class="dot"></div>
+                            </button>
+                        </div>
+                    </div>
+                    <h4>${trans[lang].settings.customise.profile_header.view_on}</h4>
                     <div class="toggle-container" id="container-profile_header_own" onclick="_update_item('profile_header_own')">
                         <button class="btn reset" onclick="_reset_item('profile_header_own')">${trans[lang].settings.reset}</button>
                         <div class="heading">
@@ -13202,6 +13238,14 @@ let has_prompted_for_update = false;
 
         background.setAttribute('data-page-type', page.type);
         background.style.setProperty('background-image', `url(${url})`);
+
+        if (page.type == 'user') {
+            if (page.name == auth) {
+                background.setAttribute('data-page-user-is-self', 'true');
+            } else {
+                background.setAttribute('data-page-user-is-self', 'false');
+            }
+        }
     }
 
 
