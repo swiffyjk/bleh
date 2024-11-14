@@ -8748,6 +8748,13 @@ text[style^="color: rgb(255, 172, 172)"] {
                         border-left: 1px solid hsl(var(--b5));
                     }
                 }
+
+                &[data-menu-item="expand"] {
+                    --mask: var(--icon-16-expand);
+                }
+                &[data-menu-item="gallery"] {
+                    --mask: var(--icon-16-gallery-vertical);
+                }
             }
         }
 

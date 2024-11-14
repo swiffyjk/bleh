@@ -11497,6 +11497,38 @@ let has_prompted_for_update = false;
 
             page.structure.container.insertBefore(redesigned_artist_header, page.structure.container.firstElementChild);
             artist_header.classList.add('legacy-header');
+
+
+            let avatar_side = redesigned_artist_header.querySelector('.avatar-side');
+            let expand_btn = avatar_side.querySelector('a');
+
+            let menu = tippy(avatar_side, {
+                theme: 'context-menu',
+                content: (`
+                    ${(expand_btn != null) ? (`
+                    <button class="dropdown-menu-clickable-item" onclick="${expand_btn.getAttribute('onclick')}" data-menu-item="expand">
+                        ${trans[lang].gallery.open.name}
+                    </button>
+                    `) : ''}
+                    <a class="dropdown-menu-clickable-item" href="${root}music/${sanitise(page.name)}/+images" data-menu-item="gallery">
+                        ${trans[lang].gallery.view}
+                    </a>
+                `),
+                allowHTML: true,
+                placement: 'right-start',
+                trigger: 'manual',
+                interactive: true,
+                interactiveBorder: 10,
+                offset: [0, 0],
+
+                onShow(instance) {
+                    instance.popper.addEventListener('click', event => {
+                        instance.hide();
+                    });
+                }
+            });
+
+            register_menu(avatar_side, menu);
         }
 
         if (!is_subpage) {
