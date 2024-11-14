@@ -3068,12 +3068,12 @@ let has_prompted_for_update = false;
 
         lotus();
 
-        if (window.location.href.startsWith(bleh_url.replace('{root}', root))) {
-            // start bleh settings
-            bleh_settings();
-        } else if (window.location.href.startsWith(setup_url.replace('{root}', root))) {
+        if (window.location.href.startsWith(setup_url.replace('{root}', root))) {
             // start bleh setup
             bleh_setup();
+        } else if (window.location.href.startsWith(bleh_url.replace('{root}', root))) {
+            // start bleh settings
+            bleh_settings();
         } else {
             bleh_profiles();
             bleh_artists();
@@ -3133,12 +3133,12 @@ let has_prompted_for_update = false;
                 has_prompted_for_update = true;
             }
 
-            if (window.location.href.startsWith(bleh_url.replace('{root}', root))) {
-                // start bleh settings
-                bleh_settings();
-            } else if (window.location.href.startsWith(setup_url.replace('{root}', root))) {
+            if (window.location.href.startsWith(setup_url.replace('{root}', root))) {
                 // start bleh setup
                 bleh_setup();
+            } else if (window.location.href.startsWith(bleh_url.replace('{root}', root))) {
+                // start bleh settings
+                bleh_settings();
             } else {
                 bleh_profiles();
                 bleh_artists();
@@ -6682,6 +6682,7 @@ let has_prompted_for_update = false;
                             --sat: var(--sat-user, 1);
                             --lit: var(--lit-user, 1)" onclick="_create_a_custom_colour()"></button>
                     </div>
+                    <p class="subtext">${trans[lang].setup.appearance.subtext}</p>
                     <div class="palette options colours">
                         <div class="side">
                             <button class="swatch btn" style="

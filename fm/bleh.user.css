@@ -12625,7 +12625,7 @@ so this is good enough - use the community docs */
         .bleh--panel {
             display: flex;
             flex-direction: column;
-            gap: 20px;
+            gap: var(--card-gap);
             flex: 1;
 
 
@@ -12636,6 +12636,13 @@ so this is good enough - use the community docs */
             .alert {
                 margin: unset;
             }
+
+            .subtext {
+                color: hsl(var(--c3));
+                font-size: var(--font-size-sm);
+                line-height: var(--line-height-sm);
+                margin-top: -5px;
+            }
         }
 
 
@@ -12645,7 +12652,7 @@ so this is good enough - use the community docs */
             gap: var(--button-list-gap);
 
             &.sep {
-                margin-top: calc(-20px + var(--card-gap));
+                margin-top: unset;
                 padding-top: var(--card-gap);
                 border-top: var(--card-border);
             }
@@ -12859,7 +12866,7 @@ so this is good enough - use the community docs */
 .bleh--panel:not(.bleh--profile-note-panel) {
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    gap: var(--card-gap);
     flex: 1;
 
 
@@ -16747,7 +16754,8 @@ button.bleh--gallery-bookmark-image-btn {
 h4 {
     &:not(.source-album-name) {
         & + p {
-            margin-top: calc(-1 * var(--card-gap));
+            /*margin-top: calc(-1 * var(--card-gap));*/
+            margin-top: -5px;
         }
     }
 }
