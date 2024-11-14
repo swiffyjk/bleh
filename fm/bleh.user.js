@@ -3012,11 +3012,9 @@ let page = {
     }
 };
 
-let bleh_url = 'https://www.last.fm/bleh';
-let bleh_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bleh$');
+let bleh_url = 'https://www.last.fm{root}bleh';
 
-let setup_url = 'https://www.last.fm/bleh/setup';
-let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bleh/setup$');
+let setup_url = 'https://www.last.fm{root}bleh/setup';
 
 let has_prompted_for_update = false;
 
@@ -3056,14 +3054,12 @@ let has_prompted_for_update = false;
         load_activities();
         notify_if_new_update();
 
-        console.log(bleh_url,window.location.href,bleh_regex.test(window.location.href));
-
         lotus();
 
-        if (window.location.href == bleh_url || bleh_regex.test(window.location.href)) {
+        if (window.location.href.startsWith(bleh_url.replace('{root}', root))) {
             // start bleh settings
             bleh_settings();
-        } else if (window.location.href == setup_url || setup_regex.test(window.location.href)) {
+        } else if (window.location.href.startsWith(setup_url.replace('{root}', root))) {
             // start bleh setup
             bleh_setup();
         } else {
@@ -3125,10 +3121,10 @@ let has_prompted_for_update = false;
                 has_prompted_for_update = true;
             }
 
-            if (window.location.href == bleh_url || bleh_regex.test(window.location.href)) {
+            if (window.location.href.startsWith(bleh_url.replace('{root}', root))) {
                 // start bleh settings
                 bleh_settings();
-            } else if (window.location.href == setup_url || setup_regex.test(window.location.href)) {
+            } else if (window.location.href.startsWith(setup_url.replace('{root}', root))) {
                 // start bleh setup
                 bleh_setup();
             } else {
@@ -11512,6 +11508,10 @@ let has_prompted_for_update = false;
                     `) : ''}
                     <a class="dropdown-menu-clickable-item" href="${root}music/${sanitise(page.name)}/+images" data-menu-item="gallery">
                         ${trans[lang].gallery.view}
+                    </a>
+                    <div class="sep"></div>
+                    <a class="dropdown-menu-clickable-item" href="${root}bleh?tab=music" data-menu-item="settings">
+                        ${trans[lang].settings.configure}
                     </a>
                 `),
                 allowHTML: true,
