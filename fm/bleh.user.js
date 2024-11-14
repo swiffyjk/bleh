@@ -4863,6 +4863,12 @@ let has_prompted_for_update = false;
             page.structure.row.appendChild(page.structure.main);
         }
 
+        page.structure.main.setAttribute('data-assigned', 'true');
+
+        let other_main = page.structure.row.querySelector('.col-main.hidden-xs:not([data-assigned])');
+        if (other_main != null)
+            other_main.style.setProperty('display', 'none');
+
         if (page.structure.side == null || !document.body.contains(page.structure.side)) {
             log('page missing side', 'page structure');
             // check first if another sidebar exists
@@ -11607,8 +11613,11 @@ let has_prompted_for_update = false;
         }
         page.structure.row = page.structure.container.querySelector('.row');
         try {
-            page.structure.main = page.structure.row.querySelector('.col-main:not(.visible-xs, .upper-overview)');
-            page.structure.side = page.structure.row.querySelector('.col-sidebar.hidden-xs');
+            page.structure.main = page.structure.row.querySelector('.col-main:not(.visible-xs, .hidden-xs, .upper-overview)');
+            if (!is_subpage)
+                page.structure.side = page.structure.row.querySelector('.col-sidebar.hidden-xs.masonry-right-bottom');
+            else
+                page.structure.side = page.structure.row.querySelector('.col-sidebar.hidden-xs');
         } catch(e) {
             log('unable to find elements', 'page structure');
         }
