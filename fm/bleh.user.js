@@ -6329,6 +6329,10 @@ let has_prompted_for_update = false;
             log('internal bleh settings', 'page');
             page.type = 'bleh_settings';
 
+            let params = new URLSearchParams(document.location.search);
+            page.requested.tab = params.get('tab');
+            page.requested.setting = params.get('setting');
+
             if (ff('refreshed_nav')) {
                 register_background(my_avi);
             }
@@ -6424,7 +6428,12 @@ let has_prompted_for_update = false;
             outer.appendChild(inner);
             adaptive_skin_container.appendChild(outer);
 
-            change_settings_page('home');
+            console.info(page);
+
+            if (page.requested.tab == null)
+                change_settings_page('home');
+            else
+                change_settings_page(page.requested.tab);
         }
     }
 
