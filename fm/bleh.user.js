@@ -6434,6 +6434,18 @@ let has_prompted_for_update = false;
                 change_settings_page('home');
             else
                 change_settings_page(page.requested.tab);
+
+            if (page.requested.setting != null) {
+                let setting = document.body.querySelector(`#container-${page.requested.setting}`);
+
+                if (setting != null) {
+                    let y = setting.getBoundingClientRect().top + window.scrollY - 300;
+                    window.scroll({
+                        top: y,
+                        behavior: 'smooth'
+                    });
+                }
+            }
         }
     }
 
