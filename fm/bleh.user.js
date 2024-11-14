@@ -9835,11 +9835,13 @@ let has_prompted_for_update = false;
 
     function sanitise(text) {
         return encodeURI(text
-        .replaceAll(' ', '+'));
+        .replaceAll(' ', '+')
+        .replaceAll('/', '%2F'));
     }
     function desanitise(text) {
         return decodeURI(text
-        .replaceAll('+', ' '));
+        .replaceAll('+', ' ')
+        .replaceAll('%2F', '/'));
     }
 
 
