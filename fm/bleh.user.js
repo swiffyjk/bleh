@@ -1137,8 +1137,14 @@ const trans = {
                 },
                 profile_header: {
                     name: 'Profilhintergründe anzeigen',
+                    see_type: 'Source from avatar instead of top artist',
+                    view_on: 'View backgrounds on',
                     for_own: 'Auf meinem Profil',
                     for_others: 'Auf anderen Profilen'
+                },
+                sat_bg: {
+                    name: 'Card background saturation',
+                    bio: 'Control the colour of backgrounds in addition to main accent'
                 }
             },
             activities: {
@@ -1794,8 +1800,14 @@ const trans = {
                 },
                 profile_header: {
                     name: 'Display profile backgrounds',
-                    for_own: 'On my profile',
-                    for_others: 'On other profiles'
+                    see_type: 'Source from avatar instead of top artist',
+                    view_on: 'View backgrounds on',
+                    for_own: 'My own profile',
+                    for_others: 'Other profiles'
+                },
+                sat_bg: {
+                    name: 'Card background saturation',
+                    bio: 'Control the colour of backgrounds in addition to main accent'
                 }
             },
             activities: {
@@ -7000,6 +7012,18 @@ let has_prompted_for_update = false;
                             })"></button>
                         </div>
                     </div>
+                    <div class="toggle-container" id="container-hue_from_album">
+                        <button class="btn reset" onclick="_reset_item('hue_from_album')">${trans[lang].settings.reset}</button>
+                        <div class="heading">
+                            <h5>${trans[lang].settings.customise.hue_from_album.name}</h5>
+                            <p>${trans[lang].settings.customise.hue_from_album.bio}</p>
+                        </div>
+                        <div class="toggle-wrap">
+                            <button class="toggle" id="toggle-hue_from_album" onclick="_update_item('hue_from_album')" aria-checked="true">
+                                <div class="dot"></div>
+                            </button>
+                        </div>
+                    </div>
                     ${(ff('card_saturation')) ? (`
                     <div class="slider-container" id="container-sat_bg">
                         <button class="btn reset" onclick="_reset_item('sat_bg')">${trans[lang].settings.reset}</button>
@@ -7432,30 +7456,6 @@ let has_prompted_for_update = false;
                             </button>
                         </div>
                     </div>
-                    <div class="sep"></div>
-                    <h4>${trans[lang].settings.customise.profile_header.name}</h4>
-                    <div class="toggle-container" id="container-profile_header_own" onclick="_update_item('profile_header_own')">
-                        <button class="btn reset" onclick="_reset_item('profile_header_own')">${trans[lang].settings.reset}</button>
-                        <div class="heading">
-                            <h5>${trans[lang].settings.customise.profile_header.for_own}</h5>
-                        </div>
-                        <div class="toggle-wrap">
-                            <button class="toggle" id="toggle-profile_header_own" aria-checked="false">
-                                <div class="dot"></div>
-                            </button>
-                        </div>
-                    </div>
-                    <div class="toggle-container" id="container-profile_header_others" onclick="_update_item('profile_header_others')">
-                        <button class="btn reset" onclick="_reset_item('profile_header_others')">${trans[lang].settings.reset}</button>
-                        <div class="heading">
-                            <h5>${trans[lang].settings.customise.profile_header.for_others}</h5>
-                        </div>
-                        <div class="toggle-wrap">
-                            <button class="toggle" id="toggle-profile_header_others" aria-checked="false">
-                                <div class="dot"></div>
-                            </button>
-                        </div>
-                    </div>
                 </div>
                 `);
         } else if (page == 'text') {
@@ -7808,18 +7808,6 @@ let has_prompted_for_update = false;
                             <div class="album-cover swatch" style="background-image: url('https://lastfm.freetls.fastly.net/i/u/770x0/e9dd5c8d3294ca0a0f58cbf7ad5fd6a6.jpg')"></div>
                             <div class="album-cover swatch" style="background-image: url('https://lastfm.freetls.fastly.net/i/u/770x0/570021b68d3d9d2db08bc99a473303b0.jpg')"></div>
                             <div class="album-cover swatch" style="background-image: url('https://lastfm.freetls.fastly.net/i/u/770x0/4cc13056c7568b5c207dd7aee03fdb0f.jpg')"></div>
-                        </div>
-                    </div>
-                    <div class="toggle-container" id="container-hue_from_album">
-                        <button class="btn reset" onclick="_reset_item('hue_from_album')">${trans[lang].settings.reset}</button>
-                        <div class="heading">
-                            <h5>${trans[lang].settings.customise.hue_from_album.name}</h5>
-                            <p>${trans[lang].settings.customise.hue_from_album.bio}</p>
-                        </div>
-                        <div class="toggle-wrap">
-                            <button class="toggle" id="toggle-hue_from_album" onclick="_update_item('hue_from_album')" aria-checked="true">
-                                <div class="dot"></div>
-                            </button>
                         </div>
                     </div>
                     <div class="slider-container" id="container-gloss">
