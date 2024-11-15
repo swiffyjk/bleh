@@ -528,6 +528,8 @@ body {
     --icon-listening-report-yearly: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMiIgaGVpZ2h0PSIzMiIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLXBpZS1jaGFydCI+PHBhdGggZD0iTTIxLjIxIDE1Ljg5QTEwIDEwIDAgMSAxIDggMi44MyIvPjxwYXRoIGQ9Ik0yMiAxMkExMCAxMCAwIDAgMCAxMiAydjEweiIvPjwvc3ZnPg==');
     --icon-history: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMiIgaGVpZ2h0PSIzMiIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWhpc3RvcnkiPjxwYXRoIGQ9Ik0zIDEyYTkgOSAwIDEgMCA5LTkgOS43NSA5Ljc1IDAgMCAwLTYuNzQgMi43NEwzIDgiLz48cGF0aCBkPSJNMyAzdjVoNSIvPjxwYXRoIGQ9Ik0xMiA3djVsNCAyIi8+PC9zdmc+');
 
+    --icon-layout: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLXVuZm9sZC1ob3Jpem9udGFsIj48cGF0aCBkPSJNMTYgMTJoNiIvPjxwYXRoIGQ9Ik04IDEySDIiLz48cGF0aCBkPSJNMTIgMnYyIi8+PHBhdGggZD0iTTEyIDh2MiIvPjxwYXRoIGQ9Ik0xMiAxNHYyIi8+PHBhdGggZD0iTTEyIDIwdjIiLz48cGF0aCBkPSJtMTkgMTUgMy0zLTMtMyIvPjxwYXRoIGQ9Im01IDktMyAzIDMgMyIvPjwvc3ZnPg==');
+
     --icon-track: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMiIgaGVpZ2h0PSIzMiIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLW11c2ljLTMiPjxjaXJjbGUgY3g9IjEyIiBjeT0iMTgiIHI9IjQiLz48cGF0aCBkPSJNMTYgMThWMiIvPjwvc3ZnPg==');
 
     --icon-10-revert: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIzIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLXJvdGF0ZS1jY3ciPjxwYXRoIGQ9Ik0zIDEyYTkgOSAwIDEgMCA5LTkgOS43NSA5Ljc1IDAgMCAwLTYuNzQgMi43NEwzIDgiLz48cGF0aCBkPSJNMyAzdjVoNSIvPjwvc3ZnPg==');
@@ -6177,7 +6179,7 @@ button,
 
 /*     ICON MASK     */
 .about-guest-feature:before, .about-guest-feature:after,
-.tag-icon:before,
+.tag-icon:before, .setting-icon:before,
 .image-open-button:before,
 .breadcrumb :is(a, .breadcrumb-origin):before, .gallery-image-uploaded-by:before,
 /* v2 */ .form-arrow:before,
@@ -12612,7 +12614,8 @@ so this is good enough - use the community docs */
 .bleh--page-outer {
     width: 100%;
     display: flex;
-    justify-content: center;
+    flex-direction: column;
+    align-items: center;
     padding-top: var(--card-gap);
 
     .bleh--page-inner {
@@ -12854,6 +12857,81 @@ so this is good enough - use the community docs */
         }
     }
 
+    .bleh-settings-header {
+        width: calc(var(--cards-width) - (var(--card-padding) * 2));
+        display: flex;
+        gap: var(--card-padding);
+        margin-bottom: var(--card-gap);
+
+        .icon-side {
+            display: flex;
+            width: fit-content;
+            flex-shrink: 0;
+
+            .setting-icon {
+                display: flex;
+                background-color: hsl(var(--b4));
+                width: 48px;
+                aspect-ratio: 1 / 1;
+                cursor: default;
+
+                justify-content: center;
+                align-items: center;
+                flex-direction: column;
+
+                border-radius: var(--item-big-radius);
+                box-shadow: var(--card-shadow);
+
+                position: relative;
+                --left: 50%;
+                --mask-size: 24px;
+                --margin-left: -12px;
+                --margin-top: -12px;
+                --mask: var(--icon-16-dot);
+                color: hsl(var(--c3));
+
+                [data-page="themes"] & {
+                    --mask: var(--icon-colour-default);
+                }
+                [data-page="customise"] & {
+                    --mask: var(--icon-layout);
+                }
+                [data-page="music"] & {
+                    --mask: var(--icon-track);
+                }
+                [data-page="seasonal"] & {
+                    --mask: var(--icon-season);
+                }
+                [data-page="accessibility"] & {
+                    --mask: var(--icon-accessibility);
+                }
+            }
+        }
+
+        .info-side {
+            flex: 1;
+
+            h1 {
+                margin: unset;
+                font-size: 24px;
+                line-height: 30px;
+                font-weight: var(--font-weight-bold);
+                letter-spacing: unset;
+                cursor: default;
+
+                color: hsl(var(--c1));
+
+                a {
+                    color: inherit;
+                }
+
+                [data-bleh--theme="light"] & {
+                    text-shadow: 0 0 15px hsl(var(--b5));
+                }
+            }
+        }
+    }
+
 
     h3 {
         font-size: 24px;
@@ -12869,6 +12947,8 @@ so this is good enough - use the community docs */
             width: fit-content;
             padding-bottom: calc(var(--card-gap) + 1px);
             position: relative;
+
+            display: none;
 
             &:after {
                 content: '';
@@ -16797,7 +16877,7 @@ button.bleh--gallery-bookmark-image-btn {
 
 
 h4 {
-    &:not(.source-album-name) {
+    &:not(.source-album-name, .top-header) {
         & + p {
             /*margin-top: calc(-1 * var(--card-gap));*/
             margin-top: -5px;

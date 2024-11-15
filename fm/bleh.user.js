@@ -268,6 +268,7 @@ const trans = {
             }
         },
         settings: {
+            name: 'Settings',
             save: 'Save',
             cancel: 'Cancel',
             close: 'Close',
@@ -6392,6 +6393,19 @@ let has_prompted_for_update = false;
             let outer = document.createElement('div');
             outer.classList.add('bleh--page-outer');
 
+            let header = document.createElement('div');
+            header.classList.add('bleh-settings-header');
+            header.setAttribute('id', 'settings_header');
+            header.innerHTML = (`
+                <div class="icon-side">
+                    <div class="setting-icon"></div>
+                </div>
+                <div class="info-side">
+                    <div class="sub-text">${trans[lang].settings.name}</div>
+                    <h1 id="settings_header_name"></h1>
+                </div>
+            `);
+
             let inner = document.createElement('div');
             inner.classList.add('bleh--page-inner');
 
@@ -6475,6 +6489,7 @@ let has_prompted_for_update = false;
 
             inner.appendChild(main);
             inner.appendChild(side);
+            outer.appendChild(header);
             outer.appendChild(inner);
             adaptive_skin_container.appendChild(outer);
 
@@ -6500,8 +6515,12 @@ let has_prompted_for_update = false;
     }
 
     function render_setting_page(page) {
+        let head = document.getElementById('settings_header_name');
+
         console.info(theme_version != version.build, theme_version, version.build, typeof(theme_version), typeof(version.build));
         if (page == 'home') {
+            head.textContent = trans[lang].settings.home.name;
+
             return (`
             <div class="bleh--panel">
                 <h4 class="top-header">${trans[lang].settings.home.name}</h4>
@@ -6617,6 +6636,8 @@ let has_prompted_for_update = false;
             </div>
             `);
         } else if (page == 'themes') {
+            head.textContent = trans[lang].settings.appearance.name;
+
             let preview_bar = 'background: linear-gradient(90deg';
             let preview_bar_text = '';
 
@@ -7142,6 +7163,8 @@ let has_prompted_for_update = false;
                 </div>
                 `);
         } else if (page == 'customise') {
+            head.textContent = trans[lang].settings.layout.name;
+
             return (`
                 <div class="bleh--panel">
                     <h4 class="top-header">${trans[lang].settings.layout.name}</h4>
@@ -7287,6 +7310,8 @@ let has_prompted_for_update = false;
                 </div>
                 `);
         } else if (page == 'seasonal') {
+            head.textContent = trans[lang].settings.customise.seasonal.name;
+
             return (`
                 <div class="bleh--panel">
                     <h4 class="top-header">${trans[lang].settings.customise.seasonal.name}</h4>
@@ -7356,6 +7381,8 @@ let has_prompted_for_update = false;
                 </div>
             `);
         } else if (page == 'performance') {
+            head.textContent = trans[lang].settings.performance.name;
+
             return (`
                 <div class="bleh--panel">
                     <h4 class="top-header">${trans[lang].settings.performance.name}</h4>
@@ -7408,6 +7435,8 @@ let has_prompted_for_update = false;
                 </div>
                 `);
         } else if (page == 'profiles') {
+            head.textContent = trans[lang].settings.profiles.name;
+
             return (`
                 <div class="bleh--panel">
                     <h4 class="top-header">${trans[lang].settings.profiles.name}</h4>
@@ -7417,6 +7446,8 @@ let has_prompted_for_update = false;
                 </div>
                 `);
         } else if (page == 'redirects') {
+            head.textContent = trans[lang].settings.redirects.name;
+
             return (`
                 <div class="bleh--panel">
                     <h4 class="top-header">${trans[lang].settings.redirects.name}</h4>
@@ -7454,6 +7485,8 @@ let has_prompted_for_update = false;
                 </div>
                 `);
         } else if (page == 'activities') {
+            head.textContent = trans[lang].settings.activities.name;
+
             return (`
                 <div class="bleh--panel">
                     <h4 class="top-header">${trans[lang].settings.activities.name}</h4>
@@ -7473,6 +7506,8 @@ let has_prompted_for_update = false;
                 </div>
                 `);
         } else if (page == 'language') {
+            head.textContent = trans[lang].settings.language.name;
+
             return (`
                 <div class="bleh--panel">
                     <h4 class="top-header">${trans[lang].settings.language.name}</h4>
@@ -7495,6 +7530,8 @@ let has_prompted_for_update = false;
                 </div>
                 `);
         } else if (page == 'accessibility') {
+            head.textContent = trans[lang].settings.accessibility.name;
+
             return (`
                 <div class="bleh--panel">
                     <h4 class="top-header">${trans[lang].settings.accessibility.name}</h4>
@@ -7555,6 +7592,8 @@ let has_prompted_for_update = false;
                 </div>
                 `);
         } else if (page == 'text') {
+            head.textContent = trans[lang].settings.text.name;
+
             return (`
                 <div class="bleh--panel">
                     <h4 class="top-header">${trans[lang].settings.text.name}</h4>
@@ -7653,6 +7692,8 @@ let has_prompted_for_update = false;
                 </div>
                 `);
         } else if (page == 'sku') {
+            head.textContent = 'shhhhhhh :3';
+
             return (`
                 <div class="bleh--panel shh">
                     ☆⌒(>w<)
@@ -7679,6 +7720,8 @@ let has_prompted_for_update = false;
                 </div>
                 `);
         } else if (page == 'music') {
+            head.textContent = trans[lang].settings.music.name;
+
             return (`
                 <div class="bleh--panel">
                     <h4 class="top-header">${trans[lang].settings.music.name}</h4>
@@ -7964,6 +8007,8 @@ let has_prompted_for_update = false;
     }
 
     function change_settings_page(page) {
+        document.getElementById('settings_header').setAttribute('data-page', page);
+
         if (!ff('bleh_settings_tabs'))
             document.getElementById('bleh--panel-main').innerHTML = '';
         else
