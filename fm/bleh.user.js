@@ -6504,7 +6504,7 @@ let has_prompted_for_update = false;
         if (page == 'home') {
             return (`
             <div class="bleh--panel">
-                <h3>${trans[lang].settings.home.name}</h3>
+                <h4 class="top-header">${trans[lang].settings.home.name}</h4>
                 <div class="user-top-panel">
                     <div class="user-top-avatar user-top-avatar-side-left"></div>
                     <img class="user-top-avatar user-top-avatar-main" src="${my_avi.replace('avatar42s', 'avatar300s')}" alt="${auth}">
@@ -6651,7 +6651,7 @@ let has_prompted_for_update = false;
 
             return (`
                 <div class="bleh--panel">
-                    <h3>${trans[lang].settings.appearance.name}</h3>
+                    <h4 class="top-header">${trans[lang].settings.appearance.name}</h4>
                     <h4>${trans[lang].settings.themes.name}</h4>
                     <!--<h4>${trans[lang].settings.themes.dark.name}</h4>-->
                     <div class="setting-items full">
@@ -7144,6 +7144,7 @@ let has_prompted_for_update = false;
         } else if (page == 'customise') {
             return (`
                 <div class="bleh--panel">
+                    <h4 class="top-header">${trans[lang].settings.layout.name}</h4>
                     <h4>${trans[lang].settings.layout.header}</h4>
                     <div class="inner-preview pad">
                         <div class="profile-mockup artist">
@@ -7288,7 +7289,7 @@ let has_prompted_for_update = false;
         } else if (page == 'seasonal') {
             return (`
                 <div class="bleh--panel">
-                    <h3>${trans[lang].settings.customise.seasonal.name}</h3>
+                    <h4 class="top-header">${trans[lang].settings.customise.seasonal.name}</h4>
                     <p>${trans[lang].settings.customise.seasonal.bio}</p>
                     <div class="inner-preview pad click-thru">
                         <div class="current-season-container">
@@ -7357,7 +7358,7 @@ let has_prompted_for_update = false;
         } else if (page == 'performance') {
             return (`
                 <div class="bleh--panel">
-                    <h3>${trans[lang].settings.performance.name}</h3>
+                    <h4 class="top-header">${trans[lang].settings.performance.name}</h4>
                     <p>${trans[lang].settings.performance.bio}</p>
                     <div class="toggle-container">
                         <div class="heading">
@@ -7409,7 +7410,7 @@ let has_prompted_for_update = false;
         } else if (page == 'profiles') {
             return (`
                 <div class="bleh--panel">
-                    <h3>${trans[lang].settings.profiles.name}</h3>
+                    <h4 class="top-header">${trans[lang].settings.profiles.name}</h4>
                     <p>${trans[lang].settings.profiles.bio}</p>
                     <h4>${trans[lang].settings.profiles.notes.name}</h4>
                     <div class="profile-notes" id="profile-notes"></div>
@@ -7418,7 +7419,7 @@ let has_prompted_for_update = false;
         } else if (page == 'redirects') {
             return (`
                 <div class="bleh--panel">
-                    <h3>${trans[lang].settings.redirects.name}</h3>
+                    <h4 class="top-header">${trans[lang].settings.redirects.name}</h4>
                     <p>${trans[lang].settings.redirects.bio}</p>
                     <div class="inner-preview">
                         <div class="nag-bar nag-bar--corrections nag-bar--corrections--artist preview-bar">
@@ -7455,7 +7456,7 @@ let has_prompted_for_update = false;
         } else if (page == 'activities') {
             return (`
                 <div class="bleh--panel">
-                    <h3>${trans[lang].settings.activities.name}</h3>
+                    <h4 class="top-header">${trans[lang].settings.activities.name}</h4>
                     <p>${trans[lang].settings.activities.bio}</p>
                     <div class="toggle-container" id="container-activities" onclick="_update_item('activities')">
                         <button class="btn reset" onclick="_reset_item('activities')">${trans[lang].settings.reset}</button>
@@ -7474,7 +7475,7 @@ let has_prompted_for_update = false;
         } else if (page == 'language') {
             return (`
                 <div class="bleh--panel">
-                    <h3>${trans[lang].settings.language.name}</h3>
+                    <h4 class="top-header">${trans[lang].settings.language.name}</h4>
                     ${(!valid_langs.includes(document.documentElement.getAttribute('lang'))) ? `
                     <div class="alert alert-error">Selected language is not currently supported in bleh, sorry for the inconvenience.</div>
                     ` : ''}
@@ -7496,7 +7497,7 @@ let has_prompted_for_update = false;
         } else if (page == 'accessibility') {
             return (`
                 <div class="bleh--panel">
-                    <h3>${trans[lang].settings.accessibility.name}</h3>
+                    <h4 class="top-header">${trans[lang].settings.accessibility.name}</h4>
                     <div class="toggle-container" id="container-reduced_motion" onclick="_update_item('reduced_motion')">
                         <button class="btn reset" onclick="_reset_item('reduced_motion')">${trans[lang].settings.reset}</button>
                         <div class="heading">
@@ -7556,7 +7557,7 @@ let has_prompted_for_update = false;
         } else if (page == 'text') {
             return (`
                 <div class="bleh--panel">
-                    <h3>${trans[lang].settings.text.name}</h3>
+                    <h4 class="top-header">${trans[lang].settings.text.name}</h4>
                     <h4>${trans[lang].settings.text.font.name} <div class="new-badge">${trans[lang].settings.new}</div></h4>
                     <div class="text-container" id="container-font">
                         <button class="btn reset" onclick="_reset_item('font')">${trans[lang].settings.reset}</button>
@@ -7680,6 +7681,7 @@ let has_prompted_for_update = false;
         } else if (page == 'music') {
             return (`
                 <div class="bleh--panel">
+                    <h4 class="top-header">${trans[lang].settings.music.name}</h4>
                     <h4>${trans[lang].settings.music.header}</h4>
                     <div class="inner-preview pad">
                         <div class="tracks">

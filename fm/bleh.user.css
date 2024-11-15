@@ -12864,6 +12864,22 @@ so this is good enough - use the community docs */
         font-size: 16px;
         line-height: 20px;
         color: hsl(var(--c1));
+
+        &.top-header {
+            width: fit-content;
+            padding-bottom: calc(var(--card-gap) + 1px);
+            position: relative;
+
+            &:after {
+                content: '';
+                position: absolute;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                height: 1px;
+                background-color: var(--card-border-base);
+            }
+        }
     }
     h5 {
         margin: unset;
