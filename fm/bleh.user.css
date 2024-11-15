@@ -1738,6 +1738,9 @@ article, section, .buffer-standard, .buffer-standard:not(.col-sidebar) .buffer-s
 .album-overview-cover-art-upload-action a {
     --mask: var(--icon-16-upload);
 }
+.album-overview-cover-art-expand-action a {
+    --mask: var(--icon-16-expand);
+}
 .album-overview-cover-art-gallery-action a {
     --mask: var(--icon-16-gallery-vertical);
 }
