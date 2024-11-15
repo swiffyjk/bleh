@@ -6534,7 +6534,7 @@ let has_prompted_for_update = false;
                 .replace('{v}', `<span class="version-link" onclick="_change_settings_page('sku')">${version.build}.${version.sku}</span>`)}</h4>
                 <div class="screen-row actions-only">
                     <div class="actions">
-                        <button class="btn action" onclick="_force_refresh_theme()">
+                        <button class="btn action highlight bleh--updates" onclick="_force_refresh_theme()">
                             <div class="icon bleh--updates"></div>
                             <span class="text">
                                 <h5>${trans[lang].settings.home.update.name}</h5>
@@ -6542,7 +6542,7 @@ let has_prompted_for_update = false;
                             </span>
                         </button>
                         ${(settings.dev ? (`
-                        <a class="btn action" href="https://github.com/katelyynn/bleh/raw/uwu/fm/bleh.user.css">
+                        <a class="btn action highlight bleh--updates" href="https://github.com/katelyynn/bleh/raw/uwu/fm/bleh.user.css">
                             <div class="icon bleh--updates"></div>
                             <span class="text">
                                 <h5>${trans[lang].settings.home.update.css}</h5>

@@ -262,7 +262,7 @@ a,
 .badge,
 .track .bar .colourful,
 .setup-colour-behind,
-.action .icon,
+.action,
 [data-season],
 .small-alert,
 .lotus, [data-theme="lotus-tooltip-corrected"],
@@ -604,7 +604,7 @@ body {
     --icon-16-users: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyLjUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgY2xhc3M9Imx1Y2lkZSBsdWNpZGUtdXNlcnMiPjxwYXRoIGQ9Ik0xNiAyMXYtMmE0IDQgMCAwIDAtNC00SDZhNCA0IDAgMCAwLTQgNHYyIi8+PGNpcmNsZSBjeD0iOSIgY3k9IjciIHI9IjQiLz48cGF0aCBkPSJNMjIgMjF2LTJhNCA0IDAgMCAwLTMtMy44NyIvPjxwYXRoIGQ9Ik0xNiAzLjEzYTQgNCAwIDAgMSAwIDcuNzUiLz48L3N2Zz4=');
     --icon-16-event: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyLjUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgY2xhc3M9Imx1Y2lkZSBsdWNpZGUtdGlja2V0Ij48cGF0aCBkPSJNMiA5YTMgMyAwIDAgMSAwIDZ2MmEyIDIgMCAwIDAgMiAyaDE2YTIgMiAwIDAgMCAyLTJ2LTJhMyAzIDAgMCAxIDAtNlY3YTIgMiAwIDAgMC0yLTJINGEyIDIgMCAwIDAtMiAyWiIvPjxwYXRoIGQ9Ik0xMyA1djIiLz48cGF0aCBkPSJNMTMgMTd2MiIvPjxwYXRoIGQ9Ik0xMyAxMXYyIi8+PC9zdmc+');
     --icon-16-tag: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyLjUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgY2xhc3M9Imx1Y2lkZSBsdWNpZGUtdGFnIj48cGF0aCBkPSJNMTIgMkgydjEwbDkuMjkgOS4yOWMuOTQuOTQgMi40OC45NCAzLjQyIDBsNi41OC02LjU4Yy45NC0uOTQuOTQtMi40OCAwLTMuNDJMMTIgMloiLz48cGF0aCBkPSJNNyA3aC4wMSIvPjwvc3ZnPg==');
-    --icon-16-listener: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyLjUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgY2xhc3M9Imx1Y2lkZSBsdWNpZGUtaGVhZHBob25lcyI+PHBhdGggZD0iTTMgMTRoM2EyIDIgMCAwIDEgMiAydjNhMiAyIDAgMCAxLTIgMkg1YTIgMiAwIDAgMS0yLTJ2LTdhOSA5IDAgMCAxIDE4IDB2N2EyIDIgMCAwIDEtMiAyaC0xYTIgMiAwIDAgMS0yLTJ2LTNhMiAyIDAgMCAxIDItMmgzIi8+PC9zdmc+');
+    --icon-16-listener: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyLjUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgY2xhc3M9Imx1Y2lkZSBsdWNpZGUtY2hhcnQtbm8tYXhlcy1jb2x1bW4iPjxsaW5lIHgxPSIxOCIgeDI9IjE4IiB5MT0iMjAiIHkyPSIxMCIvPjxsaW5lIHgxPSIxMiIgeDI9IjEyIiB5MT0iMjAiIHkyPSI0Ii8+PGxpbmUgeDE9IjYiIHgyPSI2IiB5MT0iMjAiIHkyPSIxNCIvPjwvc3ZnPg==');
     --icon-16-arrows: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyLjUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgY2xhc3M9Imx1Y2lkZSBsdWNpZGUtYXJyb3ctcmlnaHQtbGVmdCI+PHBhdGggZD0ibTE2IDMgNCA0LTQgNCIvPjxwYXRoIGQ9Ik0yMCA3SDQiLz48cGF0aCBkPSJtOCAyMS00LTQgNC00Ii8+PHBhdGggZD0iTTQgMTdoMTYiLz48L3N2Zz4=');
     --icon-16-bio: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyLjUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgY2xhc3M9Imx1Y2lkZSBsdWNpZGUtdGV4dCI+PHBhdGggZD0iTTE3IDYuMUgzIi8+PHBhdGggZD0iTTIxIDEyLjFIMyIvPjxwYXRoIGQ9Ik0xNS4xIDE4SDMiLz48L3N2Zz4=');
     --icon-16-bio-edit: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyLjUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgY2xhc3M9Imx1Y2lkZSBsdWNpZGUtdGV4dC1zcXVhcmUiPjxyZWN0IHdpZHRoPSIxOCIgaGVpZ2h0PSIxOCIgeD0iMyIgeT0iMyIgcng9IjIiLz48cGF0aCBkPSJNNyAxMmgxMCIvPjxwYXRoIGQ9Ik03IDE2aDYiLz48cGF0aCBkPSJNNyA4aDgiLz48L3N2Zz4=');
@@ -13051,7 +13051,8 @@ code, kbd, samp {
         .action {
             --padding: 9px 16px;
             padding-right: calc(16px + 16px + 6px) !important;
-            gap: 12px;
+            padding-left: calc(16px + 12px + 6px + 4px) !important;
+            gap: 6px;
             text-decoration: none;
             text-align: left;
 
@@ -13065,20 +13066,29 @@ code, kbd, samp {
             align-items: center;
             width: unset !important;
 
+            &.highlight {
+                --bg: hsla(var(--h4), 35%);
+                --bg-hov: hsla(var(--h4), 45%);
+                --bg-atv: hsla(var(--h4), 55%);
+                --shadow: none;
+                --shadow-hov: none;
+
+                &.bleh--updates {
+                    --hue-over: var(--hue-pos);
+                    --sat-over: 1;
+                    --lit-over: 1;
+                }
+            }
+
             .icon {
                 display: block;
-                width: 32px;
-                height: 32px;
-                padding: 6px;
-                background-color: hsl(var(--h3));
-                box-shadow: 0 0 0 1px hsla(var(--h2), 40%) inset;
-                color: hsl(var(--b7));
-                border-radius: var(--item-med-radius);
+                width: 16px;
+                height: 16px;
                 position: relative;
+                margin-left: calc(-1 * (12px + 16px));
 
                 &:before {
-                    --left: 50%;
-                    --margin-left: -8px;
+                    --left: 0;
                 }
 
                 &.bleh--issues {
@@ -13086,9 +13096,6 @@ code, kbd, samp {
                 }
                 &.bleh--updates {
                     --mask: var(--icon-16-download);
-                    --hue-over: var(--hue-pos);
-                    --sat-over: 1;
-                    --lit-over: 1;
                 }
             }
 
