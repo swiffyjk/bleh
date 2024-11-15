@@ -14123,7 +14123,11 @@ input[type="range"]::-moz-range-progress {
             }
 
             &.realtime {
-                background-color: hsla(var(--h3), 45%);
+                background-color: hsla(var(--h4), 35%);
+
+                [data-bleh--theme="light"] & {
+                    background-color: hsla(var(--h4), 35%);
+                }
 
                 .title {
                     background-color: hsl(var(--l2-c));
