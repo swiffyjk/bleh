@@ -4950,6 +4950,8 @@ let has_prompted_for_update = false;
                     let subpage_title = page.structure.main.querySelector(':scope > .subpage-title');
                     if (subpage_title == null)
                         subpage_title = page.structure.main.querySelector(':scope > .section-controls > .subpage-title');
+                    if (subpage_title == null)
+                        subpage_title = page.structure.main.querySelector(':scope > section:first-child .section-controls > .subpage-title');
 
                     if (subpage_title != null) {
                         content_top = document.createElement('div');
@@ -4985,6 +4987,8 @@ let has_prompted_for_update = false;
 
                     // is there a btn-add?
                     let btn_add = page.structure.main.querySelector(':scope > .btn-add');
+                    if (btn_add == null)
+                        btn_add = page.structure.main.querySelector(':scope > section:first-child .btn-add');
 
                     if (btn_add != null) {
                         btn_add.classList = 'btn view-all-button back add-button';
@@ -11746,6 +11750,8 @@ let has_prompted_for_update = false;
                 bleh_wiki_history();
             else if (page.subpage == 'music_artist_wiki_edit')
                 bleh_wiki_editor();
+            else if (page.subpage == 'music_artist_listeners_overview')
+                bleh_top_listeners();
         }
 
         log('status is', 'page', 'info', page);
@@ -14070,5 +14076,20 @@ let has_prompted_for_update = false;
 
             about_artist_container.appendChild(guest_feature_panel);
         }
+    }
+
+
+
+
+    function bleh_top_listeners() {
+        let legacy_top_listeners_container = page.structure.main.querySelector('.top-listeners');
+        let legacy_top_listeners = legacy_top_listeners_container.querySelectorAll('.top-listeners-item');
+
+        legacy_top_listeners.forEach((listener) => {
+            let avatar = listener.querySelector('.top-listeners-item-image');
+            let name = listener.querySelector('.top-listeners-item-name').textContent;
+
+            patch_avatar(avatar, name, 'listener');
+        });
     }
 })();

@@ -4030,6 +4030,7 @@ span[itemprop="byArtist"] + .header-new-title {
 .metadata-and-wiki-row .catalogue-metadata .catalogue-metadata-heading, .factbox-heading {
     font-weight: var(--font-weight-medium);
     color: hsl(var(--c3));
+    cursor: default;
 }
 
 /* empty lyrics container on pro pages */
@@ -9873,11 +9874,13 @@ text[style^="color: rgb(0, 0, 0)"] {
         --lit-over: 1;
     }
 }
+.top-listeners-item-wrap,
 .user-list-item {
     width: 100%;
     padding: unset;
 }
 
+.top-listeners,
 .user-list {
     margin: unset !important;
 
@@ -9886,12 +9889,22 @@ text[style^="color: rgb(0, 0, 0)"] {
         grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
         gap: var(--card-gap);
 
+        .top-listeners-item-wrap,
         .user-list-item {
             border: unset !important;
             padding: var(--button-list-gap);
             border-radius: var(--item-med-radius);
+
+            &.listeners-section-item-wrap:first-child, &.top-listeners-item-wrap:first-child {
+                background: hsla(var(--h4), 20%);
+            }
+
+            &.top-listeners-item-wrap {
+                padding-left: calc(var(--button-list-gap) + 20px + var(--button-list-gap));
+            }
         }
 
+        .top-listeners-item,
         .user-list-inner-wrap {
             flex-direction: column;
             align-items: unset;
@@ -9900,6 +9913,7 @@ text[style^="color: rgb(0, 0, 0)"] {
             height: 56px;
             padding-left: calc(56px + 10px);
 
+            .top-listeners-item-image,
             .user-list-avatar {
                 width: 56px;
                 height: 56px;
@@ -9912,9 +9926,11 @@ text[style^="color: rgb(0, 0, 0)"] {
                 }
             }
 
+            .top-listeners-item-name,
             .user-list-name {
                 margin: unset !important;
             }
+            .top-listeners-track,
             .user-list-description {
                 overflow: visible;
                 padding-right: calc(32px + 10px);
@@ -10110,13 +10126,13 @@ text[style^="color: rgb(0, 0, 0)"] {
 .listeners-section, .top-listeners {
     counter-reset: listener;
 }
-.listeners-section-item:before, .top-listeners-item:before {
+.listeners-section-item-wrap:before, .top-listeners-item-wrap:before {
     counter-increment: listener;
     content: counter(listener);
     color: hsl(var(--c3));
     position: absolute;
     top: 0;
-    left: -25px;
+    left: var(--button-list-gap);
     bottom: 0;
     display: flex;
     align-items: center;
@@ -10127,7 +10143,7 @@ text[style^="color: rgb(0, 0, 0)"] {
 
 .top-listeners-item-wrap {
     padding-right: unset;
-    width: calc(400px - (9px / 2));
+    width: unset;
 }
 .top-listeners-item-wrap:nth-child(even) {
     position: relative;
@@ -10791,6 +10807,7 @@ table.table tr:nth-child(2n) td {
     color: hsl(var(--c2));
     margin-top: unset;
     margin-bottom: var(--card-gap);
+    cursor: default;
 }
 .about-artist .wiki-block, .about-artist .wiki-block-cta {
     margin-top: var(--card-gap);
@@ -11128,10 +11145,8 @@ table.table tr:nth-child(2n) td {
 
 .stubhub-section + section {
     position: relative;
-    margin-bottom: calc(32px + var(--card-gap)) !important;
 }
 
-.stubhub-section + section,
 .qa-event-description {
     margin-bottom: var(--card-gap);
 }
@@ -17994,12 +18009,21 @@ h4 {
     }
 
     position: relative;
+    z-index: 9;
 
     .bleh--avatar-clickable-link {
         position: absolute;
         inset: 0;
         z-index: 10;
         cursor: pointer;
+    }
+
+    transition-property: transform;
+    transition-duration: var(--trans);
+    transition-timing-function: var(--trans-function);
+
+    &:hover {
+        transform: scale(1.03);
     }
 }
 
@@ -18018,6 +18042,10 @@ h4 {
 
     &.about-artist-panel {
         margin: unset !important;
+
+        .wiki-block {
+            width: 470px;
+        }
     }
 
     &.no-background {
@@ -18248,6 +18276,10 @@ h4 {
 }
 .redesigned-navigation {
     margin-top: var(--card-gap) !important;
+}
+
+section > .section-controls .subpage-title {
+    visibility: hidden !important;
 }
 .col-main > .section-controls {
     display: none;
