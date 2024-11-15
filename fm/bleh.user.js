@@ -14082,7 +14082,26 @@ let has_prompted_for_update = false;
 
 
     function bleh_top_listeners() {
-        let legacy_top_listeners_container = page.structure.main.querySelector('.top-listeners');
+        let panel = page.structure.main.querySelector(':scope > .buffer-standard');
+
+        // view-related buttons
+        let view_buttons = document.createElement('div');
+        view_buttons.classList.add('view-buttons-wrapper');
+        view_buttons.innerHTML = (`
+            <div class="view-buttons">
+                <button class="btn view-item" id="toggle-list_view-1" data-toggle="list_view" data-toggle-value="1" onclick="_update_item('list_view', 1)">
+                    Grid
+                </button>
+                <button class="btn view-item" id="toggle-list_view-0" data-toggle="list_view" data-toggle-value="0" onclick="_update_item('list_view', 0)">
+                    List
+                </button>
+            </div>
+        `);
+        panel.insertBefore(view_buttons, panel.firstElementChild);
+
+        refresh_all();
+
+        let legacy_top_listeners_container = panel.querySelector('.top-listeners');
         let legacy_top_listeners = legacy_top_listeners_container.querySelectorAll('.top-listeners-item');
 
         legacy_top_listeners.forEach((listener) => {
