@@ -1507,7 +1507,7 @@ last.fm changes as of 2024-05-20 */
 .bleh--gallery, [data-page-subpage="music_album_images_overview"] .col-main,
 /* listeners */ .col-main:not(.bleh--gallery) > .buffer-standard,
 /* similar artists */ .similar-artists,
-.no-data-message--gallery
+.no-data-message--gallery:not([data-page-subpage="music_album_images_overview"] .no-data-message--gallery), .no-data-message--album
 {
     content: '';
     --override-background: hsl(var(--card-specific-background, var(--card-background, var(--b5))));
@@ -8323,6 +8323,9 @@ form[action="/inbox/notifications"] {
 
 
 /*     NAV     */
+.pagination {
+    margin-top: var(--card-gap);
+}
 .pagination-list {
     cursor: default;
 }
@@ -15707,6 +15710,10 @@ button.bleh--gallery-bookmark-image-btn {
 
     .image-list {
         margin-top: unset;
+    }
+
+    .no-data-message--gallery {
+        padding: unset;
     }
 }
 

@@ -13151,6 +13151,9 @@ let has_prompted_for_update = false;
 
         let wiki_history_table = buffer_container.querySelector('.wiki-history-table');
 
+        // nav
+        let pagination = buffer_container.querySelector('.pagination');
+
 
         // put this in col-main
         let wiki_panel = document.createElement('section');
@@ -13161,6 +13164,9 @@ let has_prompted_for_update = false;
 
         page.structure.main.appendChild(wiki_panel);
         buffer_container.style.setProperty('display', 'none');
+
+        if (pagination != null)
+            wiki_panel.appendChild(pagination);
 
 
         // latest
