@@ -11684,7 +11684,7 @@ let has_prompted_for_update = false;
                         ${trans[lang].gallery.view}
                     </a>
                     <div class="sep"></div>
-                    <a class="dropdown-menu-clickable-item" href="${root}bleh?tab=music" data-menu-item="settings">
+                    <a class="dropdown-menu-clickable-item" href="${root}bleh?tab=customise" data-menu-item="settings">
                         ${trans[lang].settings.configure}
                     </a>
                 `),
@@ -11840,7 +11840,7 @@ let has_prompted_for_update = false;
                         ${trans[lang].gallery.view}
                     </a>
                     <div class="sep"></div>
-                    <a class="dropdown-menu-clickable-item" href="${root}bleh?tab=music" data-menu-item="settings">
+                    <a class="dropdown-menu-clickable-item" href="${root}bleh?tab=customise" data-menu-item="settings">
                         ${trans[lang].settings.configure}
                     </a>
                 `),
@@ -12043,7 +12043,7 @@ let has_prompted_for_update = false;
                     </a>
                     `) : ''}
                     <div class="sep"></div>
-                    <a class="dropdown-menu-clickable-item" href="${root}bleh?tab=music" data-menu-item="settings">
+                    <a class="dropdown-menu-clickable-item" href="${root}bleh?tab=customise" data-menu-item="settings">
                         ${trans[lang].settings.configure}
                     </a>
                 `),
