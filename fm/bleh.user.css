@@ -13983,6 +13983,9 @@ input[type="range"]::-moz-range-progress {
         &[data-toggle-value="wiki"] {
             --mask: var(--icon-16-bio);
         }
+        &[data-toggle-value="listens"] {
+            --mask: var(--icon-16-listener);
+        }
 
         &[aria-checked="true"],
         [data-bleh--inbuilt-id_message_privacy="all"] &#primary-selection-receiving_msgs-everyone,
@@ -17566,6 +17569,9 @@ h4 {
         }
         &.top-wiki-button {
             --mask: var(--icon-16-bio);
+        }
+        &.top-listens-button {
+            --mask: var(--icon-16-listener);
         }
 
         &.add-button {

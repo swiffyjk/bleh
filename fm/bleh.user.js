@@ -389,7 +389,8 @@ const trans = {
                     name: 'Quick artist button',
                     bio: 'Control the right-side button on artist profiles.',
                     shouts: 'View shouts',
-                    wiki: 'View biography'
+                    wiki: 'View biography',
+                    listens: 'View listeners'
                 }
             },
             customise: {
@@ -6593,7 +6594,7 @@ let has_prompted_for_update = false;
                                 <p>${trans[lang].settings.home.colours.bio}</p>
                             </div>
                         </button>
-                        <button class="btn setting-item bleh--corrections" onclick="_change_settings_page('music')">
+                        <button class="btn setting-item bleh--corrections" onclick="_change_settings_page('music', 'corrections')">
                             <div class="text">
                                 <h5>${trans[lang].settings.corrections.name}</h5>
                                 <p>${trans[lang].settings.corrections.bio}</p>
@@ -7213,6 +7214,9 @@ let has_prompted_for_update = false;
                         </div>
                         <div class="btn primary-selection" id="toggle-quick_artist_button-wiki" data-toggle="quick_artist_button" data-toggle-value="wiki" onclick="_update_item('quick_artist_button', 'wiki')">
                             <h5>${trans[lang].settings.layout.quick_artist_button.wiki}</h5>
+                        </div>
+                        <div class="btn primary-selection" id="toggle-quick_artist_button-listens" data-toggle="quick_artist_button" data-toggle-value="listens" onclick="_update_item('quick_artist_button', 'listens')">
+                            <h5>${trans[lang].settings.layout.quick_artist_button.listens}</h5>
                         </div>
                     </div>
                 </div>
@@ -7998,11 +8002,11 @@ let has_prompted_for_update = false;
         }
     }
 
-    unsafeWindow._change_settings_page = function(page) {
-        change_settings_page(page);
+    unsafeWindow._change_settings_page = function(page, setting = null) {
+        change_settings_page(page, setting);
     }
 
-    function change_settings_page(page) {
+    function change_settings_page(page, setting = null) {
         document.getElementById('settings_header').setAttribute('data-page', page);
 
         if (!ff('bleh_settings_tabs'))
@@ -8124,6 +8128,18 @@ let has_prompted_for_update = false;
             tippy(document.getElementById('current_season_start'), {
                 content: new Date(stored_season.start.replace('y0', stored_season.year)).toLocaleString(lang)
             });
+        }
+
+        if (setting != null) {
+            let setting_container = document.body.querySelector(`#container-${setting}`);
+
+            if (setting_container != null) {
+                let y = setting_container.getBoundingClientRect().top + window.scrollY - 300;
+                window.scroll({
+                    top: y,
+                    behavior: 'smooth'
+                });
+            }
         }
     }
 
@@ -11642,6 +11658,10 @@ let has_prompted_for_update = false;
                         `) : (settings.quick_artist_button == 'wiki') ? (`
                         <a class="btn view-all-button back top-wiki-button" href="${window.location.href}/+wiki">
                             ${trans[lang].settings.layout.quick_artist_button.wiki}
+                        </a>
+                        `) : (settings.quick_artist_button == 'listens') ? (`
+                        <a class="btn view-all-button back top-listens-button" href="${window.location.href}/+listeners/you-know">
+                            ${trans[lang].settings.layout.quick_artist_button.listens}
                         </a>
                         `) : ''}
                     </section>
