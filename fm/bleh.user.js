@@ -5478,7 +5478,7 @@ let has_prompted_for_update = false;
 
             let artists = taste_meter.querySelectorAll('a');
             artists.forEach((artist) => {
-                taste_artists.push(correct_artist(artist.textContent.trim()));
+                taste_artists.push(correct_artist(artist.getAttribute('title')));
             });
 
             profile_avi = document.body.querySelector('.header-avatar img');
