@@ -92,6 +92,11 @@ let version = {
             default: true,
             name: 'New custom-built auth menu to reduce lag',
             date: '2024-11-11'
+        },
+        unify_top_listeners: {
+            default: false,
+            name: 'Unify top listeners',
+            date: '2024-11-15'
         }
     }
 }
@@ -14082,6 +14087,9 @@ let has_prompted_for_update = false;
 
 
     function bleh_top_listeners() {
+        if (!ff('unify_top_listeners'))
+            return;
+
         let panel = page.structure.main.querySelector(':scope > .buffer-standard');
 
         // view-related buttons

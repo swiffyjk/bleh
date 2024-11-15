@@ -9880,7 +9880,7 @@ text[style^="color: rgb(0, 0, 0)"] {
     padding: unset;
 }
 
-.top-listeners,
+[data-ff--unify_top_listeners="true"] .top-listeners,
 .user-list {
     margin: unset !important;
 
