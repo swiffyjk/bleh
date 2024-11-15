@@ -5653,15 +5653,10 @@ let has_prompted_for_update = false;
             let menu = tippy(listen_item, {
                 theme: 'context-menu',
                 content: (`
-                    <button class="dropdown-menu-clickable-item" onclick="_open_profile_shortcut_window()" data-menu-item="configure">
+                    <button class="dropdown-menu-clickable-item" onclick="_open_profile_shortcut_window()" data-menu-item="settings">
                         ${trans[lang].settings.configure}
                     </button>
                 `),
-                /*content: (`
-                    <a class="dropdown-menu-clickable-item" href="${root}bleh" data-menu-item="configure">
-                        ${trans[lang].settings.configure}
-                    </a>
-                `),*/
                 allowHTML: true,
                 placement: 'right-start',
                 trigger: 'manual',
@@ -11258,6 +11253,29 @@ let has_prompted_for_update = false;
             listen_item.innerHTML = (`
                 <img class="view-item-avatar" src="${avi}" alt="${name}">${trans[lang].music.listens.loading_listens}
             `);
+
+            let menu = tippy(listen_item, {
+                theme: 'context-menu',
+                content: (`
+                    <button class="dropdown-menu-clickable-item" onclick="_open_profile_shortcut_window()" data-menu-item="settings">
+                        ${trans[lang].settings.configure}
+                    </button>
+                `),
+                allowHTML: true,
+                placement: 'right-start',
+                trigger: 'manual',
+                interactive: true,
+                interactiveBorder: 10,
+                offset: [0, 0],
+
+                onShow(instance) {
+                    instance.popper.addEventListener('click', event => {
+                        instance.hide();
+                    });
+                }
+            });
+
+            register_menu(listen_item, menu);
         } else {
             // other listeners by clicking this link (artist)
             listen_item.innerHTML = (`
