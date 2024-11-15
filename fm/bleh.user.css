@@ -6192,7 +6192,7 @@ button,
 .error-page h3:before,
 .requesting:before,
 .modal-processing:before, #bleh--window-bleh_wait--body:before,
-.side-right .setting-item:before, .action:before,
+.side-right .setting-item:before, .action:before, .action:after,
 .setup-icon:before, .setup-icon:after,
 .btn.back:before,
 .continue:before, .external:before, .done:before, .cancel:before, .download:before, .upload:before, .save:before, .open:before, .btn-secondary.js-close:not(.modal-action-button):before, .form-group button[type="submit"]:before,
@@ -13049,18 +13049,22 @@ code, kbd, samp {
         gap: 6px;
 
         .action {
-            --padding: 9px 16px;
-            padding-right: calc(16px + 16px + 6px) !important;
-            padding-left: calc(16px + 12px + 6px + 4px) !important;
+            --btn-top: 9px;
+            --btn-bottom: 9px;
+            --btn-left: calc(16px + 12px + 6px + 4px);
+            --btn-right: calc(16px + 16px + 6px);
             gap: 6px;
             text-decoration: none;
             text-align: left;
 
+            &:after {
+                --mask: var(--icon-16-arrow-right);
+                --left: none;
+                --right: 12px;
+            }
+
             position: relative;
             --show-icon: block;
-            --mask: var(--icon-16-arrow-right);
-            --left: none;
-            --right: 12px;
 
             display: flex;
             align-items: center;
@@ -13080,23 +13084,11 @@ code, kbd, samp {
                 }
             }
 
-            .icon {
-                display: block;
-                width: 16px;
-                height: 16px;
-                position: relative;
-                margin-left: calc(-1 * (12px + 16px));
-
-                &:before {
-                    --left: 0;
-                }
-
-                &.bleh--issues {
-                    --mask: var(--icon-16-issues);
-                }
-                &.bleh--updates {
-                    --mask: var(--icon-16-download);
-                }
+            &.bleh--issues {
+                --mask: var(--icon-16-issues);
+            }
+            &.bleh--updates {
+                --mask: var(--icon-16-download);
             }
 
             h5 {

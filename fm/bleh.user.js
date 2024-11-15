@@ -6535,7 +6535,6 @@ let has_prompted_for_update = false;
                 <div class="screen-row actions-only">
                     <div class="actions">
                         <button class="btn action highlight bleh--updates" onclick="_force_refresh_theme()">
-                            <div class="icon bleh--updates"></div>
                             <span class="text">
                                 <h5>${trans[lang].settings.home.update.name}</h5>
                                 <p>${trans[lang].settings.home.update.bio}</p>
@@ -6543,15 +6542,13 @@ let has_prompted_for_update = false;
                         </button>
                         ${(settings.dev ? (`
                         <a class="btn action highlight bleh--updates" href="https://github.com/katelyynn/bleh/raw/uwu/fm/bleh.user.css">
-                            <div class="icon bleh--updates"></div>
                             <span class="text">
                                 <h5>${trans[lang].settings.home.update.css}</h5>
                                 <p>${trans[lang].settings.home.update.bio}</p>
                             </span>
                         </a>
                         `) : '')}
-                        <a class="btn action" href="https://github.com/katelyynn/bleh/issues" target="_blank">
-                            <div class="icon bleh--issues"></div>
+                        <a class="btn action bleh--issues" href="https://github.com/katelyynn/bleh/issues" target="_blank">
                             <span class="text">
                                 <h5>${trans[lang].settings.home.issues.name}</h5>
                                 <p>${trans[lang].settings.home.issues.bio}</p>
