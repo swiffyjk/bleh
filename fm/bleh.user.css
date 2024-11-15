@@ -8756,6 +8756,9 @@ text[style^="color: rgb(255, 172, 172)"] {
                 &[data-menu-item="gallery"] {
                     --mask: var(--icon-16-gallery-vertical);
                 }
+                &[data-menu-item="album"] {
+                    --mask: var(--icon-16-album);
+                }
             }
         }
 
@@ -8767,6 +8770,10 @@ text[style^="color: rgb(255, 172, 172)"] {
         .sep {
             margin: 7px 0;
             height: 0;
+
+            &:first-child {
+                display: none;
+            }
         }
     }
 

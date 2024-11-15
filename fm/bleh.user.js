@@ -381,7 +381,8 @@ const trans = {
                 avatar_action: {
                     name: 'Default avatar action',
                     bio: 'What do you want to happen when you click avatars?',
-                    gallery: 'View photos (or featured album for tracks)'
+                    gallery: 'View photos (or featured album for tracks)',
+                    album: 'View featured album'
                 },
                 quick_artist_button: {
                     name: 'Quick artist button',
@@ -11702,7 +11703,7 @@ let has_prompted_for_update = false;
 
         patch_header_title();
 
-        page.name = album_header.querySelector('.header-new-title').textContent;
+        page.name = document.body.querySelector('[data-page-resource-name]').getAttribute('data-page-resource-name');
         page.sister = album_header.querySelector('.header-new-crumb span').textContent;
 
         let is_subpage = album_header.classList.contains('header-new--subpage');
@@ -11745,7 +11746,10 @@ let has_prompted_for_update = false;
             redesigned_album_header.innerHTML = (`
                 ${(is_subpage || ff('show_album_cover_always')) ? (`
                 <div class="avatar-side">
-                    ${(avatar != null) ? `<img src="${avatar.getAttribute('content').replace('/ar0/', '/avatar170s/')}"><a onclick="_expand_avatar('${avatar.getAttribute('content')}')" class="bleh--avatar-clickable-link"></a>` : '<img class="missing-album">'}
+                    ${(avatar != null) ? (`
+                    <img src="${avatar.getAttribute('content').replace('/ar0/', '/avatar170s/')}">
+                    <a class="bleh--avatar-clickable-link"></a>
+                    `) : '<img class="missing-album">'}
                 </div>
                 `) : ''}
                 <div class="info-side">
@@ -11763,6 +11767,51 @@ let has_prompted_for_update = false;
 
             page.structure.container.insertBefore(redesigned_album_header, page.structure.container.firstElementChild);
             album_header.classList.add('legacy-header');
+
+
+            let avatar_side = redesigned_album_header.querySelector('.avatar-side');
+            let avatar_link = avatar_side.querySelector('a');
+
+            let expand_link;
+            if (avatar != null)
+                expand_link = `_expand_avatar('${avatar.getAttribute('content')}')`;
+
+            if (settings.default_avatar_action == 'expand' && avatar != null)
+                avatar_link.setAttribute('onclick', expand_link);
+            else if (settings.default_avatar_action == 'gallery')
+                avatar_link.href = `${root}music/${sanitise(page.sister)}/${sanitise(page.name)}/+images`;
+
+            let menu = tippy(avatar_side, {
+                theme: 'context-menu',
+                content: (`
+                    ${(avatar != null) ? (`
+                    <button class="dropdown-menu-clickable-item" onclick="${expand_link}" data-menu-item="expand">
+                        ${trans[lang].gallery.open.name}
+                    </button>
+                    `) : ''}
+                    <a class="dropdown-menu-clickable-item" href="${root}music/${sanitise(page.sister)}/${sanitise(page.name)}/+images" data-menu-item="gallery">
+                        ${trans[lang].gallery.view}
+                    </a>
+                    <div class="sep"></div>
+                    <a class="dropdown-menu-clickable-item" href="${root}bleh?tab=music" data-menu-item="settings">
+                        ${trans[lang].settings.configure}
+                    </a>
+                `),
+                allowHTML: true,
+                placement: 'right-start',
+                trigger: 'manual',
+                interactive: true,
+                interactiveBorder: 10,
+                offset: [0, 0],
+
+                onShow(instance) {
+                    instance.popper.addEventListener('click', event => {
+                        instance.hide();
+                    });
+                }
+            });
+
+            register_menu(avatar_side, menu);
         }
 
         // cover
@@ -11840,7 +11889,7 @@ let has_prompted_for_update = false;
 
         patch_header_title();
 
-        page.name = track_header.querySelector('.header-new-title').textContent;
+        page.name = document.body.querySelector('[data-page-resource-name]').getAttribute('data-page-resource-name');
         page.sister = track_header.querySelector('.header-new-crumb span').textContent;
 
         let is_subpage = track_header.classList.contains('header-new--subpage');
@@ -11878,17 +11927,27 @@ let has_prompted_for_update = false;
 
         if (ff('refreshed_music_nav')) {
             let artist_avatar = track_header.querySelector('.header-new-background-image');
-            let album_avatar = page.structure.main.querySelector('.source-album-art img');
             let title = track_header.querySelector('.header-new-title');
             let artist = track_header.querySelector('[itemprop="byArtist"]');
             let position = track_header.querySelector('.header-new-chart-position-number');
+
+            let source_album = page.structure.main.querySelector('.source-album');
+            let album_avatar;
+            if (source_album != null)
+                album_avatar = source_album.querySelector('.source-album-art img');
 
             let redesigned_track_header = document.createElement('section');
             redesigned_track_header.classList.add('redesigned-header', 'redesigned-track-header', 'no-background');
             redesigned_track_header.innerHTML = (`
                 <div class="avatar-side">
-                    ${(album_avatar != null) ? `<img src="${album_avatar.getAttribute('src').replace('300x300', 'avatar300s')}"><a onclick="_expand_avatar('${album_avatar.getAttribute('src').replace('300x300', 'ar0')}')" class="bleh--avatar-clickable-link"></a>`
-                    : (artist_avatar != null) ? `<img src="${artist_avatar.getAttribute('content').replace('/ar0/', '/avatar170s/')}"><a onclick="_expand_avatar('${artist_avatar.getAttribute('content')}')" class="bleh--avatar-clickable-link"></a>` : '<img class="missing-track">'}
+                    ${(album_avatar != null) ? (`
+                    <img src="${album_avatar.getAttribute('src').replace('300x300', 'avatar300s')}">
+                    <a class="bleh--avatar-clickable-link"></a>
+                    `)
+                    : (artist_avatar != null) ? (`
+                    <img src="${artist_avatar.getAttribute('content').replace('/ar0/', '/avatar170s/')}">
+                    <a class="bleh--avatar-clickable-link"></a>
+                    `) : '<img class="missing-track">'}
                 </div>
                 <div class="info-side">
                     <div class="sub-text">${trans[lang].track.name}</div>
@@ -11907,6 +11966,55 @@ let has_prompted_for_update = false;
 
             page.structure.container.insertBefore(redesigned_track_header, page.structure.container.firstElementChild);
             track_header.classList.add('legacy-header');
+
+
+            let avatar_side = redesigned_track_header.querySelector('.avatar-side');
+            let avatar_link = avatar_side.querySelector('a');
+
+            let expand_link;
+            if (album_avatar != null)
+                expand_link = `_expand_avatar('${album_avatar.getAttribute('src').replace('300x300', 'ar0')}')`;
+            else if (artist_avatar != null)
+                expand_link = `_expand_avatar('${artist_avatar.getAttribute('content')}')`;
+
+            if (settings.default_avatar_action == 'expand' && (album_avatar != null || artist_avatar != null))
+                avatar_link.setAttribute('onclick', expand_link);
+            else if (settings.default_avatar_action == 'gallery' && album_avatar != null)
+                avatar_link.href = source_album.querySelector('.link-block-cover-link').getAttribute('href');
+
+            let menu = tippy(avatar_side, {
+                theme: 'context-menu',
+                content: (`
+                    ${(album_avatar != null || artist_avatar != null) ? (`
+                    <button class="dropdown-menu-clickable-item" onclick="${expand_link}" data-menu-item="expand">
+                        ${trans[lang].gallery.open.name}
+                    </button>
+                    `) : ''}
+                    ${(album_avatar != null) ? (`
+                    <a class="dropdown-menu-clickable-item" href="${source_album.querySelector('.link-block-cover-link').getAttribute('href')}" data-menu-item="album">
+                        ${trans[lang].settings.layout.avatar_action.album}
+                    </a>
+                    `) : ''}
+                    <div class="sep"></div>
+                    <a class="dropdown-menu-clickable-item" href="${root}bleh?tab=music" data-menu-item="settings">
+                        ${trans[lang].settings.configure}
+                    </a>
+                `),
+                allowHTML: true,
+                placement: 'right-start',
+                trigger: 'manual',
+                interactive: true,
+                interactiveBorder: 10,
+                offset: [0, 0],
+
+                onShow(instance) {
+                    instance.popper.addEventListener('click', event => {
+                        instance.hide();
+                    });
+                }
+            });
+
+            register_menu(avatar_side, menu);
         }
 
         if (!is_subpage) {
