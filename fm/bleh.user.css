@@ -8731,6 +8731,9 @@ text[style^="color: rgb(255, 172, 172)"] {
                 &[data-menu-item="album"] {
                     --mask: var(--icon-16-album);
                 }
+                &[data-menu-item="view_profile"] {
+                    --mask: var(--icon-16-profile);
+                }
             }
         }
 

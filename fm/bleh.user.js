@@ -192,7 +192,8 @@ const trans = {
                 header: 'Compare plays'
             },
             about: 'About',
-            about_guests: 'Others featured'
+            about_guests: 'Others featured',
+            view_profile: 'View profile'
         },
         error: {
             name: 'This page is missing...',
@@ -11248,6 +11249,29 @@ let has_prompted_for_update = false;
             listen_item.innerHTML = (`
                 <img class="view-item-avatar" src="${avi}" alt="${name}">${trans[lang].music.listens.count_listens.replace('{c}', listens.toLocaleString(lang))}
             `);
+
+            let menu = tippy(listen_item, {
+                theme: 'context-menu',
+                content: (`
+                    <a class="dropdown-menu-clickable-item" href="${root}user/${name}" data-menu-item="view_profile">
+                        ${trans[lang].music.view_profile}
+                    </a>
+                `),
+                allowHTML: true,
+                placement: 'right-start',
+                trigger: 'manual',
+                interactive: true,
+                interactiveBorder: 10,
+                offset: [0, 0],
+
+                onShow(instance) {
+                    instance.popper.addEventListener('click', event => {
+                        instance.hide();
+                    });
+                }
+            });
+
+            register_menu(listen_item, menu);
         } else if (listens > -2) {
             // loading listens
             listen_item.innerHTML = (`
@@ -11257,6 +11281,10 @@ let has_prompted_for_update = false;
             let menu = tippy(listen_item, {
                 theme: 'context-menu',
                 content: (`
+                    <a class="dropdown-menu-clickable-item" href="${root}user/${name}" data-menu-item="view_profile">
+                        ${trans[lang].music.view_profile}
+                    </a>
+                    <div class="sep"></div>
                     <button class="dropdown-menu-clickable-item" onclick="_open_profile_shortcut_window()" data-menu-item="settings">
                         ${trans[lang].settings.configure}
                     </button>
