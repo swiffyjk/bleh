@@ -11703,8 +11703,8 @@ let has_prompted_for_update = false;
 
         patch_header_title();
 
-        page.name = document.body.querySelector('[data-page-resource-name]').getAttribute('data-page-resource-name');
         page.sister = album_header.querySelector('.header-new-crumb span').textContent;
+        page.name = correct_item_by_artist(document.body.querySelector('[data-page-resource-name]').getAttribute('data-page-resource-name'), page.sister);
 
         let is_subpage = album_header.classList.contains('header-new--subpage');
 
@@ -11889,8 +11889,8 @@ let has_prompted_for_update = false;
 
         patch_header_title();
 
-        page.name = document.body.querySelector('[data-page-resource-name]').getAttribute('data-page-resource-name');
         page.sister = track_header.querySelector('.header-new-crumb span').textContent;
+        page.name = correct_item_by_artist(document.body.querySelector('[data-page-resource-name]').getAttribute('data-page-resource-name'), page.sister);
 
         let is_subpage = track_header.classList.contains('header-new--subpage');
 
