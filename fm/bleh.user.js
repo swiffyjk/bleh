@@ -11781,29 +11781,31 @@ let has_prompted_for_update = false;
 
             register_menu(avatar_side, menu);
 
-            let view_button = redesigned_artist_header.querySelector('.view-all-button');
-            let view_menu = tippy(view_button, {
-                theme: 'context-menu',
-                content: (`
-                    <a class="dropdown-menu-clickable-item" href="${root}bleh?tab=customise" data-menu-item="settings">
-                        ${trans[lang].settings.configure}
-                    </a>
-                `),
-                allowHTML: true,
-                placement: 'right-start',
-                trigger: 'manual',
-                interactive: true,
-                interactiveBorder: 10,
-                offset: [0, 0],
+            if (!is_subpage) {
+                let view_button = redesigned_artist_header.querySelector('.view-all-button');
+                let view_menu = tippy(view_button, {
+                    theme: 'context-menu',
+                    content: (`
+                        <a class="dropdown-menu-clickable-item" href="${root}bleh?tab=customise" data-menu-item="settings">
+                            ${trans[lang].settings.configure}
+                        </a>
+                    `),
+                    allowHTML: true,
+                    placement: 'right-start',
+                    trigger: 'manual',
+                    interactive: true,
+                    interactiveBorder: 10,
+                    offset: [0, 0],
 
-                onShow(instance) {
-                    instance.popper.addEventListener('click', event => {
-                        instance.hide();
-                    });
-                }
-            });
+                    onShow(instance) {
+                        instance.popper.addEventListener('click', event => {
+                            instance.hide();
+                        });
+                    }
+                });
 
-            register_menu(view_button, view_menu);
+                register_menu(view_button, view_menu);
+            }
         }
 
         if (!is_subpage) {
