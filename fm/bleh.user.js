@@ -9148,9 +9148,10 @@ let has_prompted_for_update = false;
             .replace('ft. ', '').replace('FEAT. ', '').replace('Ft. ', '')
             .replace('WITH', 'with').replace('w/ ', '').replace('with ', '').replace('With ', '')
             .replaceAll(' & ', ';').replaceAll(', ', ';').replaceAll(' and ', ';')
-            .replaceAll('Tyler;the', 'Tyler, the').replaceAll(' with ', ';')
+            .replaceAll(' with ', ';')
             .replaceAll('- ', '')
-            .replaceAll(',; ', ';');
+            .replaceAll(',; ', ';')
+            .replaceAll('Tyler;the', 'Tyler, the').replaceAll('Tyler;The', 'Tyler, The');
 
             console.log('pre-split', field_text);
 

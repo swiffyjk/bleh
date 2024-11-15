@@ -13076,8 +13076,6 @@ code, kbd, samp {
                 --bg: hsla(var(--h4), 35%);
                 --bg-hov: hsla(var(--h4), 45%);
                 --bg-atv: hsla(var(--h4), 55%);
-                --shadow: none;
-                --shadow-hov: none;
 
                 &.bleh--updates {
                     --hue-over: var(--hue-pos);
@@ -13994,8 +13992,6 @@ input[type="range"]::-moz-range-progress {
             --bg: hsla(var(--h4), 35%);
             --bg-hov: hsla(var(--h4), 45%);
             --bg-atv: hsla(var(--h4), 55%);
-            --shadow: none;
-            --shadow-hov: none;
             /*--mask: var(--icon-16-check);*/
 
             &:before {
