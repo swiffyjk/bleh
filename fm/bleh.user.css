@@ -16058,6 +16058,11 @@ button.bleh--gallery-bookmark-image-btn {
             }
             &.profile-top-item--loved {
                 --mask: var(--icon-16-heart);
+                /*--mask: var(--icon-16-heart-solid);
+
+                &:before {
+                    color: hsl(var(--l3-c));
+                }*/
             }
             &.profile-top-item--message {
                 --mask: var(--icon-16-mail);
