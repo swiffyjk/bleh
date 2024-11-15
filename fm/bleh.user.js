@@ -343,6 +343,7 @@ const trans = {
             },
             music: {
                 name: 'Music',
+                header: 'Music configuration',
                 bio: 'Configure your music-related settings for profiles, artists, albums, and tracks.',
                 profile_shortcut: {
                     name: 'Profile shortcut',
@@ -7678,8 +7679,7 @@ let has_prompted_for_update = false;
         } else if (page == 'music') {
             return (`
                 <div class="bleh--panel">
-                    <h3>${trans[lang].settings.music.name}</h3>
-                    <p>${trans[lang].settings.music.bio}</p>
+                    <h4>${trans[lang].settings.music.header}</h4>
                     <div class="inner-preview pad">
                         <div class="tracks">
                             <div class="track realtime">
@@ -11587,9 +11587,19 @@ let has_prompted_for_update = false;
                 ${(!is_subpage) ? (`
                 <div class="gallery-side">
                     <section class="view-all-panel">
+                        ${(settings.quick_artist_button == 'gallery') ? (`
                         <a class="btn view-all-button back top-gallery-button" href="${window.location.href}/+images">
                             ${trans[lang].gallery.view}
                         </a>
+                        `) : (settings.quick_artist_button == 'shouts') ? (`
+                        <a class="btn view-all-button back top-shout-button" href="${window.location.href}/+shoutbox">
+                            ${trans[lang].settings.layout.quick_artist_button.shouts}
+                        </a>
+                        `) : (settings.quick_artist_button == 'wiki') ? (`
+                        <a class="btn view-all-button back top-wiki-button" href="${window.location.href}/+wiki">
+                            ${trans[lang].settings.layout.quick_artist_button.wiki}
+                        </a>
+                        `) : ''}
                     </section>
                 </div>
                 `) : ''}

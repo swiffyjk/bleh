@@ -12758,7 +12758,7 @@ so this is good enough - use the community docs */
                 }
 
                 &.active {
-                    --bg: hsla(var(--h4), 20%);
+                    --bg: hsla(var(--h4), 35%);
                     --bg-hov: var(--bg);
                     --bg-atv: var(--bg);
 
@@ -13124,9 +13124,9 @@ code, kbd, samp {
         }
 
         &.active {
-            --bg: hsla(var(--h4), 40%);
-            --bg-hov: hsla(var(--h4), 60%);
-            --bg-atv: hsla(var(--h4), 80%);
+            --bg: hsla(var(--h4), 35%);
+            --bg-hov: hsla(var(--h4), 45%);
+            --bg-atv: hsla(var(--h4), 55%);
         }
 
         h5 {
@@ -17465,6 +17465,12 @@ h4 {
         }
         &.edit-event-button {
             --mask: var(--icon-16-calendar-edit);
+        }
+        &.top-shout-button {
+            --mask: var(--icon-16-shoutbox);
+        }
+        &.top-wiki-button {
+            --mask: var(--icon-16-bio);
         }
 
         &.add-button {
