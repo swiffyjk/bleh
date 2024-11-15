@@ -4878,6 +4878,12 @@ let has_prompted_for_update = false;
             container_full_width.insertBefore(page.structure.container, container_full_width.firstElementChild);
         }
 
+        page.structure.container.setAttribute('data-assigned', 'true');
+
+        let other_container = document.body.querySelector('.page-content.container:not([data-assigned])');
+        if (other_container != null)
+            other_container.style.setProperty('display', 'none');
+
         if (page.structure.row == null || !document.body.contains(page.structure.row)) {
             log('page missing row, creating', 'page structure');
             page.structure.row = document.createElement('div');
@@ -6575,36 +6581,31 @@ let has_prompted_for_update = false;
                 <h4>${trans[lang].settings.home.recommended}</h4>
                 <div class="setting-items full">
                     <div class="side-right full">
-                        <button class="btn setting-item" onclick="_change_settings_page('themes')">
-                            <div class="icon bleh--themes"></div>
+                        <button class="btn setting-item bleh--themes" onclick="_change_settings_page('themes')">
                             <div class="text">
                                 <h5>${trans[lang].settings.themes.name}</h5>
                                 <p>${trans[lang].settings.themes.bio}</p>
                             </div>
                         </button>
-                        <button class="btn setting-item" onclick="_change_settings_page('themes')">
-                            <div class="icon bleh--palette"></div>
+                        <button class="btn setting-item bleh--palette" onclick="_change_settings_page('themes')">
                             <div class="text">
                                 <h5>${trans[lang].settings.home.colours.name}</h5>
                                 <p>${trans[lang].settings.home.colours.bio}</p>
                             </div>
                         </button>
-                        <button class="btn setting-item" onclick="_change_settings_page('music')">
-                            <div class="icon bleh--corrections"></div>
+                        <button class="btn setting-item bleh--corrections" onclick="_change_settings_page('music')">
                             <div class="text">
                                 <h5>${trans[lang].settings.corrections.name}</h5>
                                 <p>${trans[lang].settings.corrections.bio}</p>
                             </div>
                         </button>
-                        <button class="btn setting-item" onclick="_change_settings_page('accessibility')">
-                            <div class="icon bleh--motion"></div>
+                        <button class="btn setting-item bleh--motion" onclick="_change_settings_page('accessibility')">
                             <div class="text">
                                 <h5>${trans[lang].settings.accessibility.reduced_motion.name}</h5>
                                 <p>${trans[lang].settings.accessibility.reduced_motion.bio}</p>
                             </div>
                         </button>
-                        <button class="btn setting-item" onclick="_change_settings_page('accessibility')">
-                            <div class="icon bleh--link"></div>
+                        <button class="btn setting-item bleh--link" onclick="_change_settings_page('accessibility')">
                             <div class="text">
                                 <h5>${trans[lang].settings.accessibility.underline_links.name}</h5>
                                 <p>${trans[lang].settings.accessibility.underline_links.bio}</p>
@@ -6616,10 +6617,8 @@ let has_prompted_for_update = false;
                 <h4>Try out the latest</h4>
                 <div class="setting-items">
                     <div class="side-left">
-                        <a class="btn setting-item has-image" href="https://cutensilly.org/bwaa/fm" target="_blank">
-                            <div class="image">
-                                <div class="icon bleh--bwaa"></div>
-                            </div>
+                        <a class="btn setting-item has-image bleh--bwaa" href="https://cutensilly.org/bwaa/fm" target="_blank">
+                            <div class="image"></div>
                             <div class="text">
                                 <h5>bwaa (BETA) for Last.fm</h5>
                                 <p>bring last.fm back to 2012 while retaining all modern features. (includes a dark mode)</p>

@@ -4686,9 +4686,12 @@ better than the default selector '#app a' i suppose */
 
 /*     ACTIVE     */
 .chartlist-row--now-scrobbling {
-    --bg: hsla(var(--h3), 45%) !important;
+    /*--bg: hsla(var(--h3), 45%) !important;
     --bg-hov: hsla(var(--h3), 60%) !important;
-    --shadow: 0 0 50px 5px hsla(var(--h3), 45%) !important;
+    --shadow: 0 0 50px 5px hsla(var(--h3), 45%) !important;*/
+    --bg: hsla(var(--h4), 35%) !important;
+    --bg-hov: hsla(var(--h4), 45%) !important;
+    --shadow: 0 0 50px 5px hsla(var(--h4), 35%) !important;
 
     [data-bleh--theme="light"] & {
         --bg: hsla(var(--h4), 35%) !important;
@@ -6192,7 +6195,7 @@ button,
 .error-page h3:before,
 .requesting:before,
 .modal-processing:before, #bleh--window-bleh_wait--body:before,
-.side-right .setting-item:before, .action:before, .action:after,
+.side-right .setting-item:before, .side-right .setting-item:after, .action:before, .action:after,
 .setup-icon:before, .setup-icon:after,
 .btn.back:before,
 .continue:before, .external:before, .done:before, .cancel:before, .download:before, .upload:before, .save:before, .open:before, .btn-secondary.js-close:not(.modal-action-button):before, .form-group button[type="submit"]:before,
@@ -6213,7 +6216,6 @@ button,
 .loading-data-text:before,
 .btns .btn:before,
 .btn.reset:before,
-.setting-item .icon:before, .action .icon:before,
 .bleh--add-note:before,
 .profile-note-row .btn:before,
 .header-follower-btn--denied:before,
@@ -13160,75 +13162,66 @@ code, kbd, samp {
             display: flex;
 
             position: relative;
-            --show-icon: block;
-            --mask: var(--icon-16-arrow-right);
-            --left: none;
-            --right: 12px;
+
+            &:after {
+                --show-icon: block;
+                --mask: var(--icon-16-arrow-right);
+                --left: none;
+                --right: 12px;
+            }
 
             padding-right: calc(16px + 16px + 6px) !important;
         }
     }
 
     .setting-item {
-        gap: 9px 12px;
-        --padding: 9px 16px;
-        --radius: var(--card-radius);
+        --btn-top: 9px;
+        --btn-bottom: 9px;
+        --btn-left: calc(16px + 12px + 6px + 4px);
+        --btn-right: calc(16px + 16px + 6px);
+        gap: 9px 6px;
+        text-decoration: none;
         text-align: left;
 
         align-items: center;
 
-        .icon {
-            display: block;
-            width: 32px;
-            height: 32px;
-            padding: 6px;
-            background-color: hsl(var(--h3));
-            box-shadow: 0 0 0 1px hsla(var(--h2), 40%) inset;
-            color: hsl(var(--b7));
-            border-radius: var(--item-med-radius);
-            position: relative;
-
-            &:before {
-                --left: 50%;
-                --margin-left: -8px;
-            }
-
-            &.bleh--theme-dark {
-                --mask: var(--icon-16-moon);
-            }
-            &.bleh--theme-darker {
-                --mask: var(--icon-16-moon-star);
-            }
-            &.bleh--theme-oled {
-                --mask: var(--icon-16-moon-fill);
-            }
-            &.bleh--theme-light {
-                --mask: var(--icon-16-sun);
-            }
-            &.bleh--themes {
-                --mask: var(--icon-16-themes);
-            }
-            &.bleh--bwaa {
-                --mask: var(--icon-16-bwaa);
-            }
-            &.bleh--palette {
-                --mask: var(--icon-16-palette);
-            }
-            &.bleh--link {
-                --mask: var(--icon-16-link);
-            }
-            &.bleh--corrections {
-                --mask: var(--icon-16-correction);
-            }
-            &.bleh--motion {
-                --mask: var(--icon-16-motion);
-            }
+        &.bleh--theme-dark {
+            --mask: var(--icon-16-moon);
+        }
+        &.bleh--theme-darker {
+            --mask: var(--icon-16-moon-star);
+        }
+        &.bleh--theme-oled {
+            --mask: var(--icon-16-moon-fill);
+        }
+        &.bleh--theme-light {
+            --mask: var(--icon-16-sun);
+        }
+        &.bleh--themes {
+            --mask: var(--icon-16-themes);
+        }
+        &.bleh--bwaa {
+            --mask: var(--icon-16-bwaa);
+        }
+        &.bleh--palette {
+            --mask: var(--icon-16-palette);
+        }
+        &.bleh--link {
+            --mask: var(--icon-16-link);
+        }
+        &.bleh--corrections {
+            --mask: var(--icon-16-correction);
+        }
+        &.bleh--motion {
+            --mask: var(--icon-16-motion);
         }
 
         &.active {
             --bg: hsla(var(--h4), 35%);
             --bg-hov: hsla(var(--h4), 45%);
             --bg-atv: hsla(var(--h4), 55%);
+            --shadow: none;
+            --shadow-hov: none;
         }
 
         h5 {
