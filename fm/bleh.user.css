@@ -251,7 +251,6 @@ a,
 .async-content-error-message,
 .avatar-status-dot, .label, .shout-user-avatar:before, .user-status-None,
 .masthead-nav-control,
-.header-new-inner:not(.header-new-inner--without-image), .header-new-inner:not(.header-new-inner--without-image) span[itemprop="byArtist"] a,
 .bleh--redacted-message,
 .listen-item, .chartlist-count-bar, .chartlist-count-bar-value,
 .primary-selection,
@@ -333,10 +332,8 @@ a,
     }
     .preview[data-bleh--theme="light"],
     [data-bleh--theme="light"] &:not(
-        .preview, .grid-items-item [data-bleh--scrobble-milestone],
-        .header-new-inner:not(.header-new-inner--without-image) .header-metadata-tnew-item,
-        .header-new-inner:not(.header-new-inner--without-image) .header-new-actions :is(a, button),
-        .header-new-inner:not(.header-new-inner--without-image) .header-new-inner, .header-new-inner:not(.header-new-inner--without-image) span[itemprop="byArtist"] a, .user-dashboard-layout .masthead a) {
+        .preview, .grid-items-item [data-bleh--scrobble-milestone]
+        ){
         --c1: var(--hue), calc(var(--sat) * 6%), 0%;
         --c2: var(--hue), calc(var(--sat) * 4%), 4%;
         --c3: var(--hue), calc(var(--sat) * 10%), 30%;
@@ -349,29 +346,6 @@ a,
         --l2-c: var(--hue), calc(var(--sat) * 40%), calc(clamp(min(0.5), var(--lit), max(1.5)) * 63%);
         --l3-c: var(--hue), calc(var(--sat) * 50%), calc(clamp(min(0.5), var(--lit), max(1.5)) * 40%);
         --l4-c: var(--hue), calc(var(--sat) * 60%), calc(clamp(min(0.5), var(--lit), max(1.5)) * 25%);
-
-        --h3: var(--hue), calc(var(--sat) * 50%), calc(clamp(min(0.5), var(--lit), max(1.5)) * 80%);
-        --h3-sat: calc(var(--sat) * 50%);
-        --h3-lit: calc(clamp(min(0.5), var(--lit), max(1.5)) * 80%);
-        --h4: var(--hue), calc(var(--sat) * 60%), calc(clamp(min(0.5), var(--lit), max(1.5)) * 65%);
-        --g4: var(--hue), calc(var(--sat) * 70%), 92%;
-    }
-    [data-bleh--theme="classic"] &:not(
-        .user-dashboard-layout, .header-metadata-tnew-item, .grid-items-item,
-        .header-new-actions :is(a, button),
-        .header-new-inner, span[itemprop="byArtist"] a, .user-dashboard-layout .masthead a) {
-        --c1: var(--hue), calc(var(--sat) * 6%), 0%;
-        --c2: var(--hue), calc(var(--sat) * 4%), 4%;
-        --c3: var(--hue), calc(var(--sat) * 10%), 30%;
-        --ov-c1: var(--hue), calc(var(--sat) * 40%), 100%;
-
-        --l2: var(--hue), calc(var(--sat) * 40%), calc(var(--lit) * 63%);
-        --l3: var(--hue), calc(var(--sat) * 50%), calc(var(--lit) * 50%);
-        --l4: var(--hue), calc(var(--sat) * 50%), calc(var(--lit) * 20%);
-
-        --l2-c: var(--hue), calc(var(--sat) * 40%), calc(clamp(min(0.5), var(--lit), max(1.5)) * 63%);
-        --l3-c: var(--hue), calc(var(--sat) * 50%), calc(clamp(min(0.5), var(--lit), max(1.5)) * 50%);
-        --l4-c: var(--hue), calc(var(--sat) * 50%), calc(clamp(min(0.5), var(--lit), max(1.5)) * 20%);
 
         --h3: var(--hue), calc(var(--sat) * 50%), calc(clamp(min(0.5), var(--lit), max(1.5)) * 80%);
         --h3-sat: calc(var(--sat) * 50%);
@@ -3234,8 +3208,7 @@ header:is(.header-new--album, .header-new--track) .header-new-background-overlay
     }
 }
 
-.redesigned-album-header h2, .redesigned-track-header h2,
-span[itemprop="byArtist"] {
+.redesigned-album-header h2, .redesigned-track-header h2 {
     display: flex;
     color: hsla(var(--c1), 0.8);
     font-size: 24px;
@@ -3256,29 +3229,10 @@ span[itemprop="byArtist"] {
         }
     }
 
+    a ~ a,
     a + a {
         margin-left: 4px;
     }
-}
-span[itemprop="byArtist"] + .header-new-title {
-    margin-bottom: 4px !important;
-}
-
-.header-new-chart-position-desktop .header-new-chart-position-number {
-    font-size: 32px;
-    line-height: 32px;
-    margin-top: unset;
-    font-weight: 700;
-    text-shadow: 0 0 10px rgba(255,255,255, 0.7);
-
-    .header-new-inner--without-image & {
-        color: hsl(var(--c1));
-        text-shadow: unset;
-    }
-}
-
-.header-new-info-desktop {
-    margin-top: var(--card-gap);
 }
 
 .header-new-playlink {
@@ -4854,7 +4808,7 @@ better than the default selector '#app a' i suppose */
     }
 }
 [data-bleh--show_remaster_tags="false"] {
-    .header-new-title .feat,
+    .title-container .feat,
     .chartlist-name .feat {
         &[data-bleh--tag-group="remasters"] {
             display: none;
@@ -14431,12 +14385,12 @@ input[type="range"]::-moz-range-progress {
 }
 
 [data-bleh--format_guest_features="true"] {
-    .bleh--chartlist-name-without-features {
+    .bleh--name-without-features {
         display: none !important;
     }
 }
 [data-bleh--format_guest_features="false"] {
-    .bleh--chartlist-name-with-features {
+    .bleh--name-with-features {
         display: none !important;
     }
 }
@@ -18057,6 +18011,11 @@ h4 {
         margin-right: var(--card-padding);
     }
 
+    &.mockup,
+    &.no-margin {
+        margin-top: unset !important;
+    }
+
     .calendar-side {
         display: flex;
         width: fit-content;
@@ -18110,11 +18069,28 @@ h4 {
             --mask-size: var(--cover-size-200) !important;
         }
 
-        .page-content[data-page-type="album"] &,
-        .page-content[data-page-type="track"] & {
-            --avatar-size: 70px;
-            --mask-size: var(--cover-size-50);
+        .redesigned-album-header &,
+        .redesigned-track-header & {
+            --avatar-size: 70px !important;
+            --mask-size: var(--cover-size-50) !important;
             border-radius: var(--item-big-radius);
+        }
+
+        .redesigned-artist-header &,
+        .redesigned-album-header &,
+        .redesigned-track-header &,
+        .about-artist-panel & {
+            &:after {
+                content: '';
+                position: absolute;
+                inset: 0;
+                background-image: var(--gloss-image) !important;
+                background-size: 100% !important;
+                opacity: var(--gloss, 0);
+                pointer-events: none;
+                padding: unset !important;
+                box-shadow: unset !important;
+            }
         }
 
         img {

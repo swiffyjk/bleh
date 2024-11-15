@@ -287,6 +287,7 @@ const trans = {
             back: 'Back',
             reload: 'A setting you changed requires a page reload to take effect, click to reload.',
             new: 'New',
+            beta: 'Beta',
             configure: 'Configure',
             examples: {
                 button: 'Example button'
@@ -7733,6 +7734,134 @@ let has_prompted_for_update = false;
 
             return (`
                 <div class="bleh--panel">
+                    <h4>${trans[lang].settings.corrections.formatting}</h4>
+                    <div class="inner-preview pad flex">
+                        <section class="redesigned-header mockup redesigned-track-header">
+                            <div class="avatar-side">
+                                <img src="https://lastfm.freetls.fastly.net/i/u/avatar170s/8bd696cbd4aa4d4eb6d35393232f55e4.jpg">
+                            </div>
+                            <div class="info-side">
+                                <div class="sub-text">${trans[lang].track.name}</div>
+                                <div class="title-container">
+                                    <h1 class="bleh--name-with-features">
+                                        <div class="title">California Love</div>
+                                        <div class="feat" data-bleh--tag-type="ft." data-bleh--tag-group="guests">ft. Dr. Dre, Roger Troutman</div>
+                                        <div class="feat" data-bleh--tag-type="- remix" data-bleh--tag-group="mixes">Remix</div>
+                                    </h1>
+                                    <h1 class="bleh--name-without-features">
+                                        California Love (ft. Dr. Dre, Roger Troutman) - Remix
+                                    </h1>
+                                </div>
+                                <h2>
+                                    <a class="header-new-crumb">2Pac</a><span class="bleh--name-with-features">, </span>
+                                    <a class="header-new-crumb bleh--name-with-features">Dr. Dre</a><span class="bleh--name-with-features">, </span>
+                                    <a class="header-new-crumb bleh--name-with-features">Roger Troutman</a>
+                                </h2>
+                            </div>
+                        </section>
+                    </div>
+                    <div class="toggle-container" id="container-format_guest_features" onclick="_update_item('format_guest_features')">
+                        <button class="btn reset" onclick="_reset_item('format_guest_features')">${trans[lang].settings.reset}</button>
+                        <div class="heading">
+                            <h5>${trans[lang].settings.corrections.format_guest_features.name}</h5>
+                            <p>${trans[lang].settings.corrections.format_guest_features.bio}</p>
+                        </div>
+                        <div class="toggle-wrap">
+                            <button class="toggle" id="toggle-format_guest_features" aria-checked="true">
+                                <div class="dot"></div>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="toggle-container hide-if-format-guest-disabled" id="container-show_guest_features" onclick="_update_item('show_guest_features')">
+                        <button class="btn reset" onclick="_reset_item('show_guest_features')">${trans[lang].settings.reset}</button>
+                        <div class="heading">
+                            <h5>${trans[lang].settings.corrections.show_guest_features.name}</h5>
+                            <p>${trans[lang].settings.corrections.show_guest_features.bio}</p>
+                        </div>
+                        <div class="toggle-wrap">
+                            <button class="toggle" id="toggle-show_guest_features" aria-checked="true">
+                                <div class="dot"></div>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="inner-preview pad flex">
+                        <section class="redesigned-header mockup redesigned-album-header">
+                            <div class="avatar-side">
+                                <img src="https://lastfm.freetls.fastly.net/i/u/avatar170s/3324e5982f0d81338d2749d5161eb2a8.jpg">
+                            </div>
+                            <div class="info-side">
+                                <div class="sub-text">${trans[lang].album.name}</div>
+                                <div class="title-container">
+                                    <h1>
+                                        <div class="title">Nevermind</div>
+                                        <div class="feat" data-bleh--tag-type="(remaster" data-bleh--tag-group="remasters">Remastered</div>
+                                    </h1>
+                                </div>
+                                <h2>
+                                    <a class="header-new-crumb">Nirvana</a>
+                                </h2>
+                            </div>
+                        </section>
+                    </div>
+                    <div class="toggle-container hide-if-format-guest-disabled" id="container-show_remaster_tags" onclick="_update_item('show_remaster_tags')">
+                        <button class="btn reset" onclick="_reset_item('show_remaster_tags')">${trans[lang].settings.reset}</button>
+                        <div class="heading">
+                            <h5>${trans[lang].settings.corrections.show_remaster_tags.name} <div class="new-badge">${trans[lang].settings.beta}</div></h5>
+                        </div>
+                        <div class="toggle-wrap">
+                            <button class="toggle" id="toggle-show_remaster_tags" aria-checked="true">
+                                <div class="dot"></div>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="bleh--panel lotus">
+                    <h4>${trans[lang].lotus.version
+                    .replace('lotus', `<a class="lotus lotus-name" href="https://github.com/katelyynn/lotus" target="_blank" id="lotus_hover">lotus</a>`)
+                    .replace('{v}', `<span class="version-link lotus">${(artist_corrections.version >= album_track_corrections.version) ? artist_corrections.version : album_track_corrections.version}</span>`)}</h4>
+                    <p>${trans[lang].settings.corrections.bio}</p>
+                    <!--<div class="screen-row actions-only">
+                        <div class="actions">
+                            <a class="btn action" href="https://github.com/katelyynn/bleh/issues/new/choose" target="_blank">
+                                <div class="icon bleh--correction"></div>
+                                <span class="text">
+                                    <h5>${trans[lang].settings.corrections.submit.name}</h5>
+                                </span>
+                            </a>
+                            <button class="btn action" onclick="_open_correction_modal()">
+                                <div class="icon bleh--correction_modal"></div>
+                                <span class="text">
+                                    <h5>${trans[lang].settings.corrections.view.name}</h5>
+                                </span>
+                            </button>
+                        </div>
+                    </div>-->
+                    <div class="screen-row actions-only">
+                        <div class="actions">
+                            <a class="btn primary external lotus" href="https://github.com/katelyynn/lotus/issues/new/choose" target="_blank">
+                                ${trans[lang].settings.corrections.submit.name}
+                            </a>
+                            <button class="btn continue" onclick="_open_correction_modal()">
+                                ${trans[lang].settings.corrections.view.name}
+                            </button>
+                            <button class="btn continue" onclick="_lotus_check()">
+                                ${trans[lang].lotus.check}
+                            </button>
+                        </div>
+                    </div>
+                    <div class="toggle-container" id="container-corrections" onclick="_update_item('corrections')">
+                        <button class="btn reset" onclick="_reset_item('corrections')">${trans[lang].settings.reset}</button>
+                        <div class="heading">
+                            <h5>${trans[lang].settings.corrections.toggle.name}</h5>
+                        </div>
+                        <div class="toggle-wrap">
+                            <button class="toggle lotus" id="toggle-corrections" aria-checked="true">
+                                <div class="dot"></div>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="bleh--panel">
                     <h4 class="top-header">${trans[lang].settings.music.name}</h4>
                     <h4>${trans[lang].settings.music.header}</h4>
                     <div class="inner-preview pad">
@@ -7819,130 +7948,6 @@ let has_prompted_for_update = false;
                                 <input type="text" maxlength="40" id="text-profile_shortcut" value="${settings.profile_shortcut}" placeholder="${trans[lang].settings.music.profile_shortcut.header}">
                                 <button class="bleh--btn primary save" onclick="_save_profile_shortcut()">${trans[lang].settings.save}</button>
                             </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="bleh--panel lotus">
-                    <h4>${trans[lang].lotus.version
-                    .replace('lotus', `<a class="lotus lotus-name" href="https://github.com/katelyynn/lotus" target="_blank" id="lotus_hover">lotus</a>`)
-                    .replace('{v}', `<span class="version-link lotus">${(artist_corrections.version >= album_track_corrections.version) ? artist_corrections.version : album_track_corrections.version}</span>`)}</h4>
-                    <p>${trans[lang].settings.corrections.bio}</p>
-                    <!--<div class="screen-row actions-only">
-                        <div class="actions">
-                            <a class="btn action" href="https://github.com/katelyynn/bleh/issues/new/choose" target="_blank">
-                                <div class="icon bleh--correction"></div>
-                                <span class="text">
-                                    <h5>${trans[lang].settings.corrections.submit.name}</h5>
-                                </span>
-                            </a>
-                            <button class="btn action" onclick="_open_correction_modal()">
-                                <div class="icon bleh--correction_modal"></div>
-                                <span class="text">
-                                    <h5>${trans[lang].settings.corrections.view.name}</h5>
-                                </span>
-                            </button>
-                        </div>
-                    </div>-->
-                    <div class="screen-row actions-only">
-                        <div class="actions">
-                            <a class="btn primary external lotus" href="https://github.com/katelyynn/lotus/issues/new/choose" target="_blank">
-                                ${trans[lang].settings.corrections.submit.name}
-                            </a>
-                            <button class="btn continue" onclick="_open_correction_modal()">
-                                ${trans[lang].settings.corrections.view.name}
-                            </button>
-                            <button class="btn continue" onclick="_lotus_check()">
-                                ${trans[lang].lotus.check}
-                            </button>
-                        </div>
-                    </div>
-                    <div class="toggle-container" id="container-corrections" onclick="_update_item('corrections')">
-                        <button class="btn reset" onclick="_reset_item('corrections')">${trans[lang].settings.reset}</button>
-                        <div class="heading">
-                            <h5>${trans[lang].settings.corrections.toggle.name}</h5>
-                        </div>
-                        <div class="toggle-wrap">
-                            <button class="toggle lotus" id="toggle-corrections" aria-checked="true">
-                                <div class="dot"></div>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-                <div class="bleh--panel">
-                    <h4>${trans[lang].settings.corrections.formatting}</h4>
-                    <div class="inner-preview pad flex">
-                        <table class="chartlist chartlist--with-index chartlist--with-index--length-2 chartlist--with-image chartlist--with-play chartlist--with-artist chartlist--with-bar">
-                            <tbody>
-                                <tr class="chartlist-row chartlist-row--with-artist">
-                                    <td class="chartlist-index">
-                                        1
-                                    </td>
-                                    <td class="chartlist-image">
-                                        <span class="cover-art">
-                                            <img src="https://lastfm.freetls.fastly.net/i/u/64s/c15d3ed1bd8574260f9378e26847501d.jpg" alt="fractions of infinity" loading="lazy">
-                                        </span>
-                                    </td>
-                                    <td class="chartlist-name">
-                                        <a href="/music/Quadeca/_/fractions+of+infinity" title="fractions of infinity" class="bleh--chartlist-name-without-features">fractions of infinity (feat. Sunday Service Choir)</a>
-                                        <a href="/music/Quadeca/_/fractions+of+infinity" title="fractions of infinity" class="bleh--chartlist-name-with-features">
-                                            <span class="title">fractions of infinity</span>
-                                            <span class="feat" data-bleh--tag-group="guests">feat. Sunday Service Choir</span>
-                                        </a>
-                                    </td>
-                                    <td class="chartlist-artist bleh--chartlist-name-without-features">
-                                        <a href="/music/Quadeca" title="Quadeca">Quadeca</a>
-                                    </td>
-                                    <td class="chartlist-artist bleh--chartlist-name-with-features">
-                                        <a href="/music/Quadeca" title="Quadeca">Quadeca</a>,
-                                        <a href="/music/Quadeca" title="Quadeca">Sunday Service Choir</a>
-                                    </td>
-                                    <td class="chartlist-bar">
-                                        <span class="chartlist-count-bar">
-                                            <span class="chartlist-count-bar-link">
-                                                <span class="chartlist-count-bar-slug" style="width:100.0%;"></span>
-                                                <span class="chartlist-count-bar-value">
-                                                    104,321
-                                                </span>
-                                            </span>
-                                        </span>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <div class="toggle-container" id="container-format_guest_features" onclick="_update_item('format_guest_features')">
-                        <button class="btn reset" onclick="_reset_item('format_guest_features')">${trans[lang].settings.reset}</button>
-                        <div class="heading">
-                            <h5>${trans[lang].settings.corrections.format_guest_features.name}</h5>
-                            <p>${trans[lang].settings.corrections.format_guest_features.bio}</p>
-                        </div>
-                        <div class="toggle-wrap">
-                            <button class="toggle" id="toggle-format_guest_features" aria-checked="true">
-                                <div class="dot"></div>
-                            </button>
-                        </div>
-                    </div>
-                    <div class="toggle-container hide-if-format-guest-disabled" id="container-show_guest_features" onclick="_update_item('show_guest_features')">
-                        <button class="btn reset" onclick="_reset_item('show_guest_features')">${trans[lang].settings.reset}</button>
-                        <div class="heading">
-                            <h5>${trans[lang].settings.corrections.show_guest_features.name}</h5>
-                            <p>${trans[lang].settings.corrections.show_guest_features.bio}</p>
-                        </div>
-                        <div class="toggle-wrap">
-                            <button class="toggle" id="toggle-show_guest_features" aria-checked="true">
-                                <div class="dot"></div>
-                            </button>
-                        </div>
-                    </div>
-                    <div class="toggle-container hide-if-format-guest-disabled" id="container-show_remaster_tags" onclick="_update_item('show_remaster_tags')">
-                        <button class="btn reset" onclick="_reset_item('show_remaster_tags')">${trans[lang].settings.reset}</button>
-                        <div class="heading">
-                            <h5>${trans[lang].settings.corrections.show_remaster_tags.name}</h5>
-                        </div>
-                        <div class="toggle-wrap">
-                            <button class="toggle" id="toggle-show_remaster_tags" aria-checked="true">
-                                <div class="dot"></div>
-                            </button>
                         </div>
                     </div>
                 </div>
@@ -9109,7 +9114,7 @@ let has_prompted_for_update = false;
 
                     // differentiate 2017 remaster to 20th deluxe
                     console.log(group, group == 'remasters', lowercase_title.includes(' remaster'));
-                    if (group == 'remasters' && !lowercase_title.includes(' remaster')) {
+                    if (group == 'remasters' && !lowercase_title.includes(' remaster') && !lowercase_title.includes('(remaster')) {
                         continue;
                     } else {
                         // everything else
