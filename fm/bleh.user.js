@@ -7787,7 +7787,7 @@ let has_prompted_for_update = false;
                     <div class="inner-preview pad flex">
                         <section class="redesigned-header mockup redesigned-album-header">
                             <div class="avatar-side">
-                                <img src="https://lastfm.freetls.fastly.net/i/u/avatar170s/3324e5982f0d81338d2749d5161eb2a8.jpg">
+                                <img src="https://lastfm.freetls.fastly.net/i/u/avatar170s/49cc807f69d59746b6b04be3434e6637.jpg">
                             </div>
                             <div class="info-side">
                                 <div class="sub-text">${trans[lang].album.name}</div>
