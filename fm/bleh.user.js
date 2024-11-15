@@ -13967,7 +13967,7 @@ let has_prompted_for_update = false;
                 </div>
                 <div class="toggle-wrap">
                     <input class="companion-checkbox" type="checkbox" name="${id}" id="inbuilt-companion-checkbox-${id}">
-                    <span class="btn toggle" id="toggle-${id}" onclick="_update_inbuilt_item('${id}')" aria-checked="false">
+                    <span class="btn toggle" id="toggle-${id}" aria-checked="false">
                         <div class="dot"></div>
                     </span>
                 </div>
