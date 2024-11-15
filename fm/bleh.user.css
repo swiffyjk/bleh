@@ -13806,7 +13806,7 @@ input[type="range"]::-moz-range-progress {
 .bleh--panel > form {
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    gap: var(--card-gap);
     margin: unset !important;
 }
 .settings-footer {
@@ -13818,7 +13818,10 @@ input[type="range"]::-moz-range-progress {
 .primary-selections {
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: var(--item-list-gap);
+    /*padding: var(--item-list-gap);
+    border: 1px solid var(--card-border-base);
+    border-radius: var(--item-big-radius);*/
 
     select {
         display: none;
@@ -18228,15 +18231,67 @@ h4 {
             height: 40px;
             background-color: hsl(var(--b5));
             border-radius: 50%;
+
+            .artist & {
+                border-radius: 6px;
+            }
+        }
+
+        .mockup-info {
+            display: flex;
+            flex-direction: column;
+            margin-top: 4px;
+            gap: 4px;
+
+            flex: 1;
+        }
+
+        .mockup-subtext {
+            display: flex;
+            width: 35px;
+            height: 4px;
+            background-color: hsl(var(--c3));
+            border-radius: 10px;
+
+            .artist & {
+                width: 45px;
+            }
         }
 
         .mockup-name {
             display: flex;
-            width: 110px;
-            margin-top: 4px;
-            height: 8px;
+            width: 90px;
+            height: 6px;
             background-color: hsl(var(--c1));
             border-radius: 10px;
+
+            .artist & {
+                width: 120px;
+            }
+        }
+
+        .mockup-actions {
+            display: flex;
+            flex-direction: column;
+            justify-content: end;
+            width: 140px;
+        }
+
+        .mockup-big-button {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 20px;
+            background-color: hsl(var(--b4));
+            border-radius: 6px;
+
+            .mockup-text {
+                display: flex;
+                width: 90px;
+                height: 4px;
+                background-color: hsl(var(--c2));
+                border-radius: 10px;
+            }
         }
     }
 
@@ -18250,9 +18305,17 @@ h4 {
 
         .mockup-col-main {
             flex: 1;
+
+            .mockup-panel {
+                min-height: 60px;
+            }
         }
         .mockup-col-sidebar {
-            width: 180px;
+            width: 140px;
+
+            .mockup-panel:not(.mockup-obsession-panel) {
+                min-height: 70px;
+            }
         }
 
         .mockup-col-main, .mockup-col-sidebar {
@@ -18273,6 +18336,10 @@ h4 {
                 flex: 1;
                 border-bottom-left-radius: 0;
                 border-bottom-right-radius: 0;
+            }
+
+            &.mockup-obsession-panel {
+                background: linear-gradient(hsl(var(--b5)), hsl(var(--g4)));
             }
 
             .mockup-obsession-art {

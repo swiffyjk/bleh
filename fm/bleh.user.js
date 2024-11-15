@@ -376,6 +376,7 @@ const trans = {
             },
             layout: {
                 name: 'Layout',
+                header: 'Manage header layout',
                 avatar_action: {
                     name: 'Default avatar action',
                     bio: 'What do you want to happen when you click avatars?',
@@ -7141,6 +7142,34 @@ let has_prompted_for_update = false;
         } else if (page == 'customise') {
             return (`
                 <div class="bleh--panel">
+                    <h4>${trans[lang].settings.layout.header}</h4>
+                    <div class="inner-preview pad">
+                        <div class="profile-mockup artist">
+                            <div class="mockup-header">
+                                <img class="mockup-avatar" src="https://lastfm.freetls.fastly.net/i/u/avatar170s/c8f797b26b24f4cf1a4fe93854148951">
+                                <div class="mockup-info">
+                                    <div class="mockup-subtext"></div>
+                                    <div class="mockup-name"></div>
+                                </div>
+                                <div class="mockup-actions">
+                                    <div class="mockup-big-button">
+                                        <div class="mockup-text"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mockup-container">
+                                <div class="mockup-col-main">
+                                    <div class="mockup-panel"></div>
+                                    <div class="mockup-panel main"></div>
+                                </div>
+                                <div class="mockup-col-sidebar">
+                                    <div class="mockup-panel"></div>
+                                    <div class="mockup-panel main"></div>
+                                </div>
+                            </div>
+                            <div class="profile-mockup-background" style="background-image: url(https://lastfm.freetls.fastly.net/i/u/avatar170s/c8f797b26b24f4cf1a4fe93854148951);"></div>
+                        </div>
+                    </div>
                     <h4>${trans[lang].settings.layout.avatar_action.name}</h4>
                     <p>${trans[lang].settings.layout.avatar_action.bio}</p>
                     <div class="primary-selections">
@@ -7171,14 +7200,17 @@ let has_prompted_for_update = false;
                         <div class="profile-mockup">
                             <div class="mockup-header">
                                 <img class="mockup-avatar" src="${my_avi}">
-                                <div class="mockup-name"></div>
+                                <div class="mockup-info">
+                                    <div class="mockup-subtext"></div>
+                                    <div class="mockup-name"></div>
+                                </div>
                             </div>
                             <div class="mockup-container">
                                 <div class="mockup-col-main">
                                     <div class="mockup-panel main"></div>
                                 </div>
                                 <div class="mockup-col-sidebar">
-                                    <div class="mockup-panel">
+                                    <div class="mockup-panel mockup-obsession-panel">
                                         <img class="mockup-obsession-art" src="https://lastfm.freetls.fastly.net/i/u/64s/e8e5ed62eba543442fe85ac61dead730.jpg">
                                         <div class="mockup-obsession-name"></div>
                                     </div>
@@ -11538,7 +11570,10 @@ let has_prompted_for_update = false;
             redesigned_artist_header.classList.add('redesigned-header', 'redesigned-artist-header', 'no-background');
             redesigned_artist_header.innerHTML = (`
                 <div class="avatar-side">
-                    ${(avatar != null) ? `<img src="${avatar.getAttribute('content').replace('/ar0/', '/avatar300s/')}"><a onclick="_expand_avatar('${avatar.getAttribute('content')}')" class="bleh--avatar-clickable-link"></a>` : '<img class="missing-artist">'}
+                    ${(avatar != null) ? (`
+                    <img src="${avatar.getAttribute('content').replace('/ar0/', '/avatar300s/')}">
+                    <a class="bleh--avatar-clickable-link"></a>
+                    `) : '<img class="missing-artist">'}
                 </div>
                 <div class="info-side">
                     <div class="sub-text">${trans[lang].artist.name}</div>
@@ -11568,13 +11603,22 @@ let has_prompted_for_update = false;
 
 
             let avatar_side = redesigned_artist_header.querySelector('.avatar-side');
-            let expand_btn = avatar_side.querySelector('a');
+            let avatar_link = avatar_side.querySelector('a');
+
+            let expand_link;
+            if (avatar != null)
+                expand_link = `_expand_avatar('${avatar.getAttribute('content')}')`;
+
+            if (settings.default_avatar_action == 'expand' && avatar != null)
+                avatar_link.setAttribute('onclick', expand_link);
+            else if (settings.default_avatar_action == 'gallery')
+                avatar_link.href = `${root}music/${sanitise(page.name)}/+images`;
 
             let menu = tippy(avatar_side, {
                 theme: 'context-menu',
                 content: (`
-                    ${(expand_btn != null) ? (`
-                    <button class="dropdown-menu-clickable-item" onclick="${expand_btn.getAttribute('onclick')}" data-menu-item="expand">
+                    ${(avatar != null) ? (`
+                    <button class="dropdown-menu-clickable-item" onclick="${expand_link}" data-menu-item="expand">
                         ${trans[lang].gallery.open.name}
                     </button>
                     `) : ''}
