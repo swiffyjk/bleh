@@ -636,6 +636,7 @@ body {
     --icon-16-block: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyLjUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgY2xhc3M9Imx1Y2lkZSBsdWNpZGUtY2lyY2xlLXNsYXNoIj48bGluZSB4MT0iOSIgeDI9IjE1IiB5MT0iMTUiIHkyPSI5Ii8+PGNpcmNsZSBjeD0iMTIiIGN5PSIxMiIgcj0iMTAiLz48L3N2Zz4=');
     --icon-16-warning: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyLjUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgY2xhc3M9Imx1Y2lkZSBsdWNpZGUtdHJpYW5nbGUtYWxlcnQiPjxwYXRoIGQ9Im0yMS43MyAxOC04LTE0YTIgMiAwIDAgMC0zLjQ4IDBsLTggMTRBMiAyIDAgMCAwIDQgMjFoMTZhMiAyIDAgMCAwIDEuNzMtMyIvPjxwYXRoIGQ9Ik0xMiA5djQiLz48cGF0aCBkPSJNMTIgMTdoLjAxIi8+PC9zdmc+');
     --icon-16-layout: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyLjUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgY2xhc3M9Imx1Y2lkZSBsdWNpZGUtbWVudSI+PGxpbmUgeDE9IjQiIHgyPSIyMCIgeTE9IjEyIiB5Mj0iMTIiLz48bGluZSB4MT0iNCIgeDI9IjIwIiB5MT0iNiIgeTI9IjYiLz48bGluZSB4MT0iNCIgeDI9IjIwIiB5MT0iMTgiIHkyPSIxOCIvPjwvc3ZnPg==');
+    --icon-16-layout-manage: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyLjUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgY2xhc3M9Imx1Y2lkZSBsdWNpZGUtdW5mb2xkLWhvcml6b250YWwiPjxwYXRoIGQ9Ik0xNiAxMmg2Ii8+PHBhdGggZD0iTTggMTJIMiIvPjxwYXRoIGQ9Ik0xMiAydjIiLz48cGF0aCBkPSJNMTIgOHYyIi8+PHBhdGggZD0iTTEyIDE0djIiLz48cGF0aCBkPSJNMTIgMjB2MiIvPjxwYXRoIGQ9Im0xOSAxNSAzLTMtMy0zIi8+PHBhdGggZD0ibTUgOS0zIDMgMyAzIi8+PC9zdmc+');
     --icon-16-check-circle: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyLjUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgY2xhc3M9Imx1Y2lkZSBsdWNpZGUtY2lyY2xlLWNoZWNrIj48Y2lyY2xlIGN4PSIxMiIgY3k9IjEyIiByPSIxMCIvPjxwYXRoIGQ9Im05IDEyIDIgMiA0LTQiLz48L3N2Zz4=');
     --icon-16-question: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyLjUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgY2xhc3M9Imx1Y2lkZSBsdWNpZGUtY2lyY2xlLWhlbHAiPjxjaXJjbGUgY3g9IjEyIiBjeT0iMTIiIHI9IjEwIi8+PHBhdGggZD0iTTkuMDkgOWEzIDMgMCAwIDEgNS44MyAxYzAgMi0zIDMtMyAzIi8+PHBhdGggZD0iTTEyIDE3aC4wMSIvPjwvc3ZnPg==');
     --icon-16-location: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyLjUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgY2xhc3M9Imx1Y2lkZSBsdWNpZGUtbWFwLXBpbiI+PHBhdGggZD0iTTIwIDEwYzAgNi04IDEyLTggMTJzLTgtNi04LTEyYTggOCAwIDAgMSAxNiAwWiIvPjxjaXJjbGUgY3g9IjEyIiBjeT0iMTAiIHI9IjMiLz48L3N2Zz4=');
@@ -12684,7 +12685,7 @@ so this is good enough - use the community docs */
                     --mask: var(--icon-16-track);
                 }
                 &[data-bleh-page="customise"] {
-                    --mask: var(--icon-16-palette);
+                    --mask: var(--icon-16-layout-manage);
                 }
                 &[data-bleh-action="import"] {
                     --mask: var(--icon-16-download);
@@ -12768,6 +12769,7 @@ so this is good enough - use the community docs */
                         height: 14px;
                         border-radius: 50px;
                         background-color: hsl(var(--l3-c));
+                        box-shadow: 0 0 20px 3px hsl(var(--h4));
                         left: 0;
                         top: 50%;
                         margin-top: -7px;
@@ -13844,6 +13846,9 @@ input[type="range"]::-moz-range-progress {
             opacity: 0;
         }
 
+        h5 {
+            color: inherit;
+        }
         p {
             font-size: 12px;
             color: hsl(var(--c3));
@@ -13868,6 +13873,20 @@ input[type="range"]::-moz-range-progress {
             --mask: var(--icon-16-lock);
         }
 
+        &[data-toggle-value="expand"] {
+            --mask: var(--icon-16-expand);
+        }
+        &[data-toggle-value="gallery"] {
+            --mask: var(--icon-16-gallery-vertical);
+        }
+        &[data-toggle-value="shouts"] {
+            --mask: var(--icon-16-shoutbox);
+        }
+        &[data-toggle-value="wiki"] {
+            --mask: var(--icon-16-bio);
+        }
+
+        &[aria-checked="true"],
         [data-bleh--inbuilt-id_message_privacy="all"] &#primary-selection-receiving_msgs-everyone,
         [data-bleh--inbuilt-id_message_privacy="n"] &#primary-selection-receiving_msgs-neighbours,
         [data-bleh--inbuilt-id_message_privacy="f"] &#primary-selection-receiving_msgs-follow {

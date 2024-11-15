@@ -374,6 +374,20 @@ const trans = {
                     bio: 'Will in most cases either slowly fade or hard-cut, no scaling.'
                 }
             },
+            layout: {
+                name: 'Layout',
+                avatar_action: {
+                    name: 'Default avatar action',
+                    bio: 'What do you want to happen when you click avatars?',
+                    gallery: 'View photos (or featured album for tracks)'
+                },
+                quick_artist_button: {
+                    name: 'Quick artist button',
+                    bio: 'Control the right-side button on artist profiles.',
+                    shouts: 'View shouts',
+                    wiki: 'View biography'
+                }
+            },
             customise: {
                 name: 'Customise',
                 colours: {
@@ -2642,7 +2656,10 @@ let settings_template = {
     chart_decimation: true,
     activities: true,
 
-    auth_menu_obsessions: false
+    auth_menu_obsessions: false,
+
+    default_avatar_action: 'expand',
+    quick_artist_button: 'gallery'
 };
 let settings_base = {
     high_contrast: {
@@ -2938,6 +2955,18 @@ let settings_base = {
         value: true,
         values: [true, false],
         type: 'toggle'
+    },
+    default_avatar_action: {
+        css: 'default_avatar_action',
+        unit: '',
+        value: 'expand',
+        type: 'options'
+    },
+    quick_artist_button: {
+        css: 'quick_artist_button',
+        unit: '',
+        value: 'gallery',
+        type: 'options'
     }
 };
 let inbuilt_settings = {
@@ -6379,6 +6408,9 @@ let has_prompted_for_update = false;
                         <button class="btn bleh--btn" data-bleh-page="themes" onclick="_change_settings_page('themes')">
                             ${trans[lang].settings.appearance.name}
                         </button>
+                        <button class="btn bleh--btn" data-bleh-page="customise" onclick="_change_settings_page('customise')">
+                            ${trans[lang].settings.layout.name}
+                        </button>
                         <button class="btn bleh--btn" data-bleh-page="music" onclick="_change_settings_page('music')">
                             ${trans[lang].settings.music.name}
                         </button>
@@ -6387,9 +6419,6 @@ let has_prompted_for_update = false;
                         </button>
                         <button class="btn bleh--btn" data-bleh-page="seasonal" data-season="${stored_season.id}" onclick="_change_settings_page('seasonal')">
                             ${trans[lang].settings.customise.seasonal.name}
-                        </button>
-                        <button class="btn bleh--btn" data-bleh-page="customise" onclick="_change_settings_page('customise')">
-                            ${trans[lang].settings.customise.name}
                         </button>
                     </div>
                     <div class="btns sep">
@@ -7111,6 +7140,31 @@ let has_prompted_for_update = false;
                 `);
         } else if (page == 'customise') {
             return (`
+                <div class="bleh--panel">
+                    <h4>${trans[lang].settings.layout.avatar_action.name}</h4>
+                    <p>${trans[lang].settings.layout.avatar_action.bio}</p>
+                    <div class="primary-selections">
+                        <div class="btn primary-selection" id="toggle-default_avatar_action-expand" data-toggle="default_avatar_action" data-toggle-value="expand" onclick="_update_item('default_avatar_action', 'expand')">
+                            <h5>${trans[lang].gallery.open.name}</h5>
+                        </div>
+                        <div class="btn primary-selection" id="toggle-default_avatar_action-gallery" data-toggle="default_avatar_action" data-toggle-value="gallery" onclick="_update_item('default_avatar_action', 'gallery')">
+                            <h5>${trans[lang].settings.layout.avatar_action.gallery}</h5>
+                        </div>
+                    </div>
+                    <h4>${trans[lang].settings.layout.quick_artist_button.name}</h4>
+                    <p>${trans[lang].settings.layout.quick_artist_button.bio}</p>
+                    <div class="primary-selections">
+                        <div class="btn primary-selection" id="toggle-quick_artist_button-gallery" data-toggle="quick_artist_button" data-toggle-value="gallery" onclick="_update_item('quick_artist_button', 'gallery')">
+                            <h5>${trans[lang].gallery.view}</h5>
+                        </div>
+                        <div class="btn primary-selection" id="toggle-quick_artist_button-shouts" data-toggle="quick_artist_button" data-toggle-value="shouts" onclick="_update_item('quick_artist_button', 'shouts')">
+                            <h5>${trans[lang].settings.layout.quick_artist_button.shouts}</h5>
+                        </div>
+                        <div class="btn primary-selection" id="toggle-quick_artist_button-wiki" data-toggle="quick_artist_button" data-toggle-value="wiki" onclick="_update_item('quick_artist_button', 'wiki')">
+                            <h5>${trans[lang].settings.layout.quick_artist_button.wiki}</h5>
+                        </div>
+                    </div>
+                </div>
                 <div class="bleh--panel">
                     <h4>${trans[lang].settings.customise.profile_header.name}</h4>
                     <div class="inner-preview pad">
@@ -7903,7 +7957,7 @@ let has_prompted_for_update = false;
                         </li>
                         <li class="navlist-item secondary-nav-item">
                             <a class="secondary-nav-item-link bleh--nav" data-bleh-page="customise" onclick="_change_settings_page('customise')">
-                                ${trans[lang].settings.customise.name}
+                                ${trans[lang].settings.layout.name}
                             </a>
                         </li>
                         <li class="navlist-item secondary-nav-item">
