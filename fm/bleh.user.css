@@ -1501,19 +1501,19 @@ last.fm changes as of 2024-05-20 */
     background-position: unset !important;*/
 
     [data-bleh--seasonal_overlays="true"] & {
-        [data-bleh--season="halloween"] &:not(.featured-item-panel, .shh, .view-all-panel) {
+        [data-bleh--season="halloween"] &:not(.featured-item-panel, .shh, .view-all-panel, .metadata-list, .bleh--profile-note-panel) {
             background-image: linear-gradient(0deg, rgba(252, 139, 105, 0.04) 0%, rgba(0,0,0,0) 100%) !important;
             background-repeat: repeat-x;
             background-position: unset !important;
         }
     }
-    [data-bleh--seasonal_overlays="true"][data-bleh--season="christmas"] &:not(.featured-item-panel, .shh, .view-all-panel),
-    [data-bleh--seasonal_overlays="true"][data-bleh--season="new_years"] &:not(.featured-item-panel, .shh, .view-all-panel) {
+    [data-bleh--seasonal_overlays="true"][data-bleh--season="christmas"] &:not(.featured-item-panel, .shh, .view-all-panel, .metadata-list, .bleh--profile-note-panel),
+    [data-bleh--seasonal_overlays="true"][data-bleh--season="new_years"] &:not(.featured-item-panel, .shh, .view-all-panel, .metadata-list, .bleh--profile-note-panel) {
         background-image: var(--overlay-ice), linear-gradient(180deg, rgba(190,233,250,0.06) 0%, rgba(0,0,0,0) 100%) !important;
         background-repeat: repeat-x;
         background-position: unset !important;
     }
-    [data-bleh--seasonal_overlays="true"][data-bleh--season="fall"] &:not(.featured-item-panel, .shh, .view-all-panel) {
+    [data-bleh--seasonal_overlays="true"][data-bleh--season="fall"] &:not(.featured-item-panel, .shh, .view-all-panel, .metadata-list, .bleh--profile-note-panel) {
         background-image: var(--overlay-ice), linear-gradient(180deg, rgba(190,233,250,0.03) 0%, rgba(0,0,0,0) 100%) !important;
         background-repeat: repeat-x;
         background-position: unset !important;
