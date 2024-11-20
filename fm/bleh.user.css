@@ -1,7 +1,7 @@
 /* ==UserStyle==
 @name           bleh (dev)
 @namespace      github.com/katelyynn/bleh
-@version        2024.1113
+@version        2024.1120
 @license        GPL-3.0
 @author         kate
 @updateURL      https://github.com/katelyynn/bleh/raw/uwu/fm/bleh.user.css
@@ -15,7 +15,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Ubuntu+Sans:ital,wght@0,100..800;1,100..800&display=swap');
 
 body {
-    --version-build: '2024.1113';
+    --version-build: '2024.1120';
 
     --hue:  var(--hue-over,
             var(--hue-album,
@@ -7394,8 +7394,8 @@ input:is([name="track_name"], [name="artist_name"], [name="album_name"], [name="
     letter-spacing: unset;
     text-align: left;
 
-    & + div {
-        margin: unset !important;
+    & + .modal-inner-content {
+        margin: unset;
     }
 }
 
@@ -17714,6 +17714,8 @@ h4 {
         flex-direction: column;
         gap: var(--item-list-gap);
         position: relative;
+
+        color: hsl(var(--c2));
 
         padding: 0 var(--card-gap);
         margin: 0 calc(-1 * var(--card-gap));
