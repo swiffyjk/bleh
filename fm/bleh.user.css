@@ -1,7 +1,7 @@
 /* ==UserStyle==
 @name           bleh (dev)
 @namespace      github.com/katelyynn/bleh
-@version        2024.1113
+@version        2024.1120
 @license        GPL-3.0
 @author         kate
 @updateURL      https://github.com/katelyynn/bleh/raw/uwu/fm/bleh.user.css
@@ -15,7 +15,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Ubuntu+Sans:ital,wght@0,100..800;1,100..800&display=swap');
 
 body {
-    --version-build: '2024.1113';
+    --version-build: '2024.1120';
 
     --hue:  var(--hue-over,
             var(--hue-album,
@@ -251,7 +251,6 @@ a,
 .async-content-error-message,
 .avatar-status-dot, .label, .shout-user-avatar:before, .user-status-None,
 .masthead-nav-control,
-.header-new-inner:not(.header-new-inner--without-image), .header-new-inner:not(.header-new-inner--without-image) span[itemprop="byArtist"] a,
 .bleh--redacted-message,
 .listen-item, .chartlist-count-bar, .chartlist-count-bar-value,
 .primary-selection,
@@ -262,7 +261,7 @@ a,
 .badge,
 .track .bar .colourful,
 .setup-colour-behind,
-.action .icon,
+.action,
 [data-season],
 .small-alert,
 .lotus, [data-theme="lotus-tooltip-corrected"],
@@ -333,10 +332,8 @@ a,
     }
     .preview[data-bleh--theme="light"],
     [data-bleh--theme="light"] &:not(
-        .preview, .grid-items-item [data-bleh--scrobble-milestone],
-        .header-new-inner:not(.header-new-inner--without-image) .header-metadata-tnew-item,
-        .header-new-inner:not(.header-new-inner--without-image) .header-new-actions :is(a, button),
-        .header-new-inner:not(.header-new-inner--without-image) .header-new-inner, .header-new-inner:not(.header-new-inner--without-image) span[itemprop="byArtist"] a, .user-dashboard-layout .masthead a) {
+        .preview, .grid-items-item [data-bleh--scrobble-milestone]
+        ){
         --c1: var(--hue), calc(var(--sat) * 6%), 0%;
         --c2: var(--hue), calc(var(--sat) * 4%), 4%;
         --c3: var(--hue), calc(var(--sat) * 10%), 30%;
@@ -349,29 +346,6 @@ a,
         --l2-c: var(--hue), calc(var(--sat) * 40%), calc(clamp(min(0.5), var(--lit), max(1.5)) * 63%);
         --l3-c: var(--hue), calc(var(--sat) * 50%), calc(clamp(min(0.5), var(--lit), max(1.5)) * 40%);
         --l4-c: var(--hue), calc(var(--sat) * 60%), calc(clamp(min(0.5), var(--lit), max(1.5)) * 25%);
-
-        --h3: var(--hue), calc(var(--sat) * 50%), calc(clamp(min(0.5), var(--lit), max(1.5)) * 80%);
-        --h3-sat: calc(var(--sat) * 50%);
-        --h3-lit: calc(clamp(min(0.5), var(--lit), max(1.5)) * 80%);
-        --h4: var(--hue), calc(var(--sat) * 60%), calc(clamp(min(0.5), var(--lit), max(1.5)) * 65%);
-        --g4: var(--hue), calc(var(--sat) * 70%), 92%;
-    }
-    [data-bleh--theme="classic"] &:not(
-        .user-dashboard-layout, .header-metadata-tnew-item, .grid-items-item,
-        .header-new-actions :is(a, button),
-        .header-new-inner, span[itemprop="byArtist"] a, .user-dashboard-layout .masthead a) {
-        --c1: var(--hue), calc(var(--sat) * 6%), 0%;
-        --c2: var(--hue), calc(var(--sat) * 4%), 4%;
-        --c3: var(--hue), calc(var(--sat) * 10%), 30%;
-        --ov-c1: var(--hue), calc(var(--sat) * 40%), 100%;
-
-        --l2: var(--hue), calc(var(--sat) * 40%), calc(var(--lit) * 63%);
-        --l3: var(--hue), calc(var(--sat) * 50%), calc(var(--lit) * 50%);
-        --l4: var(--hue), calc(var(--sat) * 50%), calc(var(--lit) * 20%);
-
-        --l2-c: var(--hue), calc(var(--sat) * 40%), calc(clamp(min(0.5), var(--lit), max(1.5)) * 63%);
-        --l3-c: var(--hue), calc(var(--sat) * 50%), calc(clamp(min(0.5), var(--lit), max(1.5)) * 50%);
-        --l4-c: var(--hue), calc(var(--sat) * 50%), calc(clamp(min(0.5), var(--lit), max(1.5)) * 20%);
 
         --h3: var(--hue), calc(var(--sat) * 50%), calc(clamp(min(0.5), var(--lit), max(1.5)) * 80%);
         --h3-sat: calc(var(--sat) * 50%);
@@ -528,6 +502,8 @@ body {
     --icon-listening-report-yearly: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMiIgaGVpZ2h0PSIzMiIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLXBpZS1jaGFydCI+PHBhdGggZD0iTTIxLjIxIDE1Ljg5QTEwIDEwIDAgMSAxIDggMi44MyIvPjxwYXRoIGQ9Ik0yMiAxMkExMCAxMCAwIDAgMCAxMiAydjEweiIvPjwvc3ZnPg==');
     --icon-history: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMiIgaGVpZ2h0PSIzMiIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWhpc3RvcnkiPjxwYXRoIGQ9Ik0zIDEyYTkgOSAwIDEgMCA5LTkgOS43NSA5Ljc1IDAgMCAwLTYuNzQgMi43NEwzIDgiLz48cGF0aCBkPSJNMyAzdjVoNSIvPjxwYXRoIGQ9Ik0xMiA3djVsNCAyIi8+PC9zdmc+');
 
+    --icon-layout: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLXVuZm9sZC1ob3Jpem9udGFsIj48cGF0aCBkPSJNMTYgMTJoNiIvPjxwYXRoIGQ9Ik04IDEySDIiLz48cGF0aCBkPSJNMTIgMnYyIi8+PHBhdGggZD0iTTEyIDh2MiIvPjxwYXRoIGQ9Ik0xMiAxNHYyIi8+PHBhdGggZD0iTTEyIDIwdjIiLz48cGF0aCBkPSJtMTkgMTUgMy0zLTMtMyIvPjxwYXRoIGQ9Im01IDktMyAzIDMgMyIvPjwvc3ZnPg==');
+
     --icon-track: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMiIgaGVpZ2h0PSIzMiIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLW11c2ljLTMiPjxjaXJjbGUgY3g9IjEyIiBjeT0iMTgiIHI9IjQiLz48cGF0aCBkPSJNMTYgMThWMiIvPjwvc3ZnPg==');
 
     --icon-10-revert: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIzIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLXJvdGF0ZS1jY3ciPjxwYXRoIGQ9Ik0zIDEyYTkgOSAwIDEgMCA5LTkgOS43NSA5Ljc1IDAgMCAwLTYuNzQgMi43NEwzIDgiLz48cGF0aCBkPSJNMyAzdjVoNSIvPjwvc3ZnPg==');
@@ -602,7 +578,7 @@ body {
     --icon-16-users: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyLjUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgY2xhc3M9Imx1Y2lkZSBsdWNpZGUtdXNlcnMiPjxwYXRoIGQ9Ik0xNiAyMXYtMmE0IDQgMCAwIDAtNC00SDZhNCA0IDAgMCAwLTQgNHYyIi8+PGNpcmNsZSBjeD0iOSIgY3k9IjciIHI9IjQiLz48cGF0aCBkPSJNMjIgMjF2LTJhNCA0IDAgMCAwLTMtMy44NyIvPjxwYXRoIGQ9Ik0xNiAzLjEzYTQgNCAwIDAgMSAwIDcuNzUiLz48L3N2Zz4=');
     --icon-16-event: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyLjUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgY2xhc3M9Imx1Y2lkZSBsdWNpZGUtdGlja2V0Ij48cGF0aCBkPSJNMiA5YTMgMyAwIDAgMSAwIDZ2MmEyIDIgMCAwIDAgMiAyaDE2YTIgMiAwIDAgMCAyLTJ2LTJhMyAzIDAgMCAxIDAtNlY3YTIgMiAwIDAgMC0yLTJINGEyIDIgMCAwIDAtMiAyWiIvPjxwYXRoIGQ9Ik0xMyA1djIiLz48cGF0aCBkPSJNMTMgMTd2MiIvPjxwYXRoIGQ9Ik0xMyAxMXYyIi8+PC9zdmc+');
     --icon-16-tag: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyLjUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgY2xhc3M9Imx1Y2lkZSBsdWNpZGUtdGFnIj48cGF0aCBkPSJNMTIgMkgydjEwbDkuMjkgOS4yOWMuOTQuOTQgMi40OC45NCAzLjQyIDBsNi41OC02LjU4Yy45NC0uOTQuOTQtMi40OCAwLTMuNDJMMTIgMloiLz48cGF0aCBkPSJNNyA3aC4wMSIvPjwvc3ZnPg==');
-    --icon-16-listener: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyLjUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgY2xhc3M9Imx1Y2lkZSBsdWNpZGUtaGVhZHBob25lcyI+PHBhdGggZD0iTTMgMTRoM2EyIDIgMCAwIDEgMiAydjNhMiAyIDAgMCAxLTIgMkg1YTIgMiAwIDAgMS0yLTJ2LTdhOSA5IDAgMCAxIDE4IDB2N2EyIDIgMCAwIDEtMiAyaC0xYTIgMiAwIDAgMS0yLTJ2LTNhMiAyIDAgMCAxIDItMmgzIi8+PC9zdmc+');
+    --icon-16-listener: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyLjUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgY2xhc3M9Imx1Y2lkZSBsdWNpZGUtY2hhcnQtbm8tYXhlcy1jb2x1bW4iPjxsaW5lIHgxPSIxOCIgeDI9IjE4IiB5MT0iMjAiIHkyPSIxMCIvPjxsaW5lIHgxPSIxMiIgeDI9IjEyIiB5MT0iMjAiIHkyPSI0Ii8+PGxpbmUgeDE9IjYiIHgyPSI2IiB5MT0iMjAiIHkyPSIxNCIvPjwvc3ZnPg==');
     --icon-16-arrows: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyLjUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgY2xhc3M9Imx1Y2lkZSBsdWNpZGUtYXJyb3ctcmlnaHQtbGVmdCI+PHBhdGggZD0ibTE2IDMgNCA0LTQgNCIvPjxwYXRoIGQ9Ik0yMCA3SDQiLz48cGF0aCBkPSJtOCAyMS00LTQgNC00Ii8+PHBhdGggZD0iTTQgMTdoMTYiLz48L3N2Zz4=');
     --icon-16-bio: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyLjUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgY2xhc3M9Imx1Y2lkZSBsdWNpZGUtdGV4dCI+PHBhdGggZD0iTTE3IDYuMUgzIi8+PHBhdGggZD0iTTIxIDEyLjFIMyIvPjxwYXRoIGQ9Ik0xNS4xIDE4SDMiLz48L3N2Zz4=');
     --icon-16-bio-edit: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyLjUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgY2xhc3M9Imx1Y2lkZSBsdWNpZGUtdGV4dC1zcXVhcmUiPjxyZWN0IHdpZHRoPSIxOCIgaGVpZ2h0PSIxOCIgeD0iMyIgeT0iMyIgcng9IjIiLz48cGF0aCBkPSJNNyAxMmgxMCIvPjxwYXRoIGQ9Ik03IDE2aDYiLz48cGF0aCBkPSJNNyA4aDgiLz48L3N2Zz4=');
@@ -636,6 +612,7 @@ body {
     --icon-16-block: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyLjUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgY2xhc3M9Imx1Y2lkZSBsdWNpZGUtY2lyY2xlLXNsYXNoIj48bGluZSB4MT0iOSIgeDI9IjE1IiB5MT0iMTUiIHkyPSI5Ii8+PGNpcmNsZSBjeD0iMTIiIGN5PSIxMiIgcj0iMTAiLz48L3N2Zz4=');
     --icon-16-warning: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyLjUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgY2xhc3M9Imx1Y2lkZSBsdWNpZGUtdHJpYW5nbGUtYWxlcnQiPjxwYXRoIGQ9Im0yMS43MyAxOC04LTE0YTIgMiAwIDAgMC0zLjQ4IDBsLTggMTRBMiAyIDAgMCAwIDQgMjFoMTZhMiAyIDAgMCAwIDEuNzMtMyIvPjxwYXRoIGQ9Ik0xMiA5djQiLz48cGF0aCBkPSJNMTIgMTdoLjAxIi8+PC9zdmc+');
     --icon-16-layout: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyLjUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgY2xhc3M9Imx1Y2lkZSBsdWNpZGUtbWVudSI+PGxpbmUgeDE9IjQiIHgyPSIyMCIgeTE9IjEyIiB5Mj0iMTIiLz48bGluZSB4MT0iNCIgeDI9IjIwIiB5MT0iNiIgeTI9IjYiLz48bGluZSB4MT0iNCIgeDI9IjIwIiB5MT0iMTgiIHkyPSIxOCIvPjwvc3ZnPg==');
+    --icon-16-layout-manage: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyLjUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgY2xhc3M9Imx1Y2lkZSBsdWNpZGUtdW5mb2xkLWhvcml6b250YWwiPjxwYXRoIGQ9Ik0xNiAxMmg2Ii8+PHBhdGggZD0iTTggMTJIMiIvPjxwYXRoIGQ9Ik0xMiAydjIiLz48cGF0aCBkPSJNMTIgOHYyIi8+PHBhdGggZD0iTTEyIDE0djIiLz48cGF0aCBkPSJNMTIgMjB2MiIvPjxwYXRoIGQ9Im0xOSAxNSAzLTMtMy0zIi8+PHBhdGggZD0ibTUgOS0zIDMgMyAzIi8+PC9zdmc+');
     --icon-16-check-circle: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyLjUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgY2xhc3M9Imx1Y2lkZSBsdWNpZGUtY2lyY2xlLWNoZWNrIj48Y2lyY2xlIGN4PSIxMiIgY3k9IjEyIiByPSIxMCIvPjxwYXRoIGQ9Im05IDEyIDIgMiA0LTQiLz48L3N2Zz4=');
     --icon-16-question: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyLjUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgY2xhc3M9Imx1Y2lkZSBsdWNpZGUtY2lyY2xlLWhlbHAiPjxjaXJjbGUgY3g9IjEyIiBjeT0iMTIiIHI9IjEwIi8+PHBhdGggZD0iTTkuMDkgOWEzIDMgMCAwIDEgNS44MyAxYzAgMi0zIDMtMyAzIi8+PHBhdGggZD0iTTEyIDE3aC4wMSIvPjwvc3ZnPg==');
     --icon-16-location: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyLjUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgY2xhc3M9Imx1Y2lkZSBsdWNpZGUtbWFwLXBpbiI+PHBhdGggZD0iTTIwIDEwYzAgNi04IDEyLTggMTJzLTgtNi04LTEyYTggOCAwIDAgMSAxNiAwWiIvPjxjaXJjbGUgY3g9IjEyIiBjeT0iMTAiIHI9IjMiLz48L3N2Zz4=');
@@ -676,6 +653,9 @@ body {
     --icon-16-expand: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyLjUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgY2xhc3M9Imx1Y2lkZSBsdWNpZGUtZXhwYW5kIj48cGF0aCBkPSJtMjEgMjEtNi02bTYgNnYtNC44bTAgNC44aC00LjgiLz48cGF0aCBkPSJNMyAxNi4yVjIxbTAgMGg0LjhNMyAyMWw2LTYiLz48cGF0aCBkPSJNMjEgNy44VjNtMCAwaC00LjhNMjEgM2wtNiA2Ii8+PHBhdGggZD0iTTMgNy44VjNtMCAwaDQuOE0zIDNsNiA2Ii8+PC9zdmc+');
     --icon-16-season: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyLjUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgY2xhc3M9Imx1Y2lkZSBsdWNpZGUtY2FsZW5kYXItY2xvY2siPjxwYXRoIGQ9Ik0yMSA3LjVWNmEyIDIgMCAwIDAtMi0ySDVhMiAyIDAgMCAwLTIgMnYxNGEyIDIgMCAwIDAgMiAyaDMuNSIvPjxwYXRoIGQ9Ik0xNiAydjQiLz48cGF0aCBkPSJNOCAydjQiLz48cGF0aCBkPSJNMyAxMGg1Ii8+PHBhdGggZD0iTTE3LjUgMTcuNSAxNiAxNi4zVjE0Ii8+PGNpcmNsZSBjeD0iMTYiIGN5PSIxNiIgcj0iNiIvPjwvc3ZnPg==');
     --icon-16-changelog: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyLjUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgY2xhc3M9Imx1Y2lkZSBsdWNpZGUtc2Nyb2xsIj48cGF0aCBkPSJNMTkgMTdWNWEyIDIgMCAwIDAtMi0ySDQiLz48cGF0aCBkPSJNOCAyMWgxMmEyIDIgMCAwIDAgMi0ydi0xYTEgMSAwIDAgMC0xLTFIMTFhMSAxIDAgMCAwLTEgMXYxYTIgMiAwIDEgMS00IDBWNWEyIDIgMCAxIDAtNCAwdjJhMSAxIDAgMCAwIDEgMWgzIi8+PC9zdmc+');
+
+    --icon-16-select-all: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyLjUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgY2xhc3M9Imx1Y2lkZSBsdWNpZGUtc3F1YXJlIj48cmVjdCB3aWR0aD0iMTgiIGhlaWdodD0iMTgiIHg9IjMiIHk9IjMiIHJ4PSIyIi8+PC9zdmc+');
+    --icon-16-deselect-all: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyLjUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgY2xhc3M9Imx1Y2lkZSBsdWNpZGUtc3F1YXJlLWRhc2hlZCI+PHBhdGggZD0iTTUgM2EyIDIgMCAwIDAtMiAyIi8+PHBhdGggZD0iTTE5IDNhMiAyIDAgMCAxIDIgMiIvPjxwYXRoIGQ9Ik0yMSAxOWEyIDIgMCAwIDEtMiAyIi8+PHBhdGggZD0iTTUgMjFhMiAyIDAgMCAxLTItMiIvPjxwYXRoIGQ9Ik05IDNoMSIvPjxwYXRoIGQ9Ik05IDIxaDEiLz48cGF0aCBkPSJNMTQgM2gxIi8+PHBhdGggZD0iTTE0IDIxaDEiLz48cGF0aCBkPSJNMyA5djEiLz48cGF0aCBkPSJNMjEgOXYxIi8+PHBhdGggZD0iTTMgMTR2MSIvPjxwYXRoIGQ9Ik0yMSAxNHYxIi8+PC9zdmc+');
 
     --icon-20-check: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyMCIgaGVpZ2h0PSIyMCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImhzbCgyNTUsMjAlLDkwJSkiIHN0cm9rZS13aWR0aD0iMi4yNSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiBjbGFzcz0ibHVjaWRlIGx1Y2lkZS1jaGVjayI+PHBhdGggZD0iTTIwIDYgOSAxN2wtNS01Ii8+PC9zdmc+');
     --icon-20-plus: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyMCIgaGVpZ2h0PSIyMCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImhzbCgyNTUsMjAlLDkwJSkiIHN0cm9rZS13aWR0aD0iMi4yNSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiBjbGFzcz0ibHVjaWRlIGx1Y2lkZS1wbHVzIj48cGF0aCBkPSJNNSAxMmgxNCIvPjxwYXRoIGQ9Ik0xMiA1djE0Ii8+PC9zdmc+');
@@ -1504,7 +1484,7 @@ last.fm changes as of 2024-05-20 */
 .bleh--gallery, [data-page-subpage="music_album_images_overview"] .col-main,
 /* listeners */ .col-main:not(.bleh--gallery) > .buffer-standard,
 /* similar artists */ .similar-artists,
-.no-data-message--gallery
+.no-data-message--gallery:not([data-page-subpage="music_album_images_overview"] .no-data-message--gallery), .no-data-message--album
 {
     content: '';
     --override-background: hsl(var(--card-specific-background, var(--card-background, var(--b5))));
@@ -1521,19 +1501,19 @@ last.fm changes as of 2024-05-20 */
     background-position: unset !important;*/
 
     [data-bleh--seasonal_overlays="true"] & {
-        [data-bleh--season="halloween"] &:not(.featured-item-panel, .shh, .view-all-panel) {
+        [data-bleh--season="halloween"] &:not(.featured-item-panel, .shh, .view-all-panel, .metadata-list, .bleh--profile-note-panel) {
             background-image: linear-gradient(0deg, rgba(252, 139, 105, 0.04) 0%, rgba(0,0,0,0) 100%) !important;
             background-repeat: repeat-x;
             background-position: unset !important;
         }
     }
-    [data-bleh--seasonal_overlays="true"][data-bleh--season="christmas"] &:not(.featured-item-panel, .shh, .view-all-panel),
-    [data-bleh--seasonal_overlays="true"][data-bleh--season="new_years"] &:not(.featured-item-panel, .shh, .view-all-panel) {
+    [data-bleh--seasonal_overlays="true"][data-bleh--season="christmas"] &:not(.featured-item-panel, .shh, .view-all-panel, .metadata-list, .bleh--profile-note-panel),
+    [data-bleh--seasonal_overlays="true"][data-bleh--season="new_years"] &:not(.featured-item-panel, .shh, .view-all-panel, .metadata-list, .bleh--profile-note-panel) {
         background-image: var(--overlay-ice), linear-gradient(180deg, rgba(190,233,250,0.06) 0%, rgba(0,0,0,0) 100%) !important;
         background-repeat: repeat-x;
         background-position: unset !important;
     }
-    [data-bleh--seasonal_overlays="true"][data-bleh--season="fall"] &:not(.featured-item-panel, .shh, .view-all-panel) {
+    [data-bleh--seasonal_overlays="true"][data-bleh--season="fall"] &:not(.featured-item-panel, .shh, .view-all-panel, .metadata-list, .bleh--profile-note-panel) {
         background-image: var(--overlay-ice), linear-gradient(180deg, rgba(190,233,250,0.03) 0%, rgba(0,0,0,0) 100%) !important;
         background-repeat: repeat-x;
         background-position: unset !important;
@@ -1757,6 +1737,9 @@ article, section, .buffer-standard, .buffer-standard:not(.col-sidebar) .buffer-s
 
 .album-overview-cover-art-upload-action a {
     --mask: var(--icon-16-upload);
+}
+.album-overview-cover-art-expand-action a {
+    --mask: var(--icon-16-expand);
 }
 .album-overview-cover-art-gallery-action a {
     --mask: var(--icon-16-gallery-vertical);
@@ -3228,8 +3211,7 @@ header:is(.header-new--album, .header-new--track) .header-new-background-overlay
     }
 }
 
-.redesigned-album-header h2, .redesigned-track-header h2,
-span[itemprop="byArtist"] {
+.redesigned-album-header h2, .redesigned-track-header h2 {
     display: flex;
     color: hsla(var(--c1), 0.8);
     font-size: 24px;
@@ -3250,29 +3232,10 @@ span[itemprop="byArtist"] {
         }
     }
 
+    a ~ a,
     a + a {
         margin-left: 4px;
     }
-}
-span[itemprop="byArtist"] + .header-new-title {
-    margin-bottom: 4px !important;
-}
-
-.header-new-chart-position-desktop .header-new-chart-position-number {
-    font-size: 32px;
-    line-height: 32px;
-    margin-top: unset;
-    font-weight: 700;
-    text-shadow: 0 0 10px rgba(255,255,255, 0.7);
-
-    .header-new-inner--without-image & {
-        color: hsl(var(--c1));
-        text-shadow: unset;
-    }
-}
-
-.header-new-info-desktop {
-    margin-top: var(--card-gap);
 }
 
 .header-new-playlink {
@@ -4024,6 +3987,7 @@ span[itemprop="byArtist"] + .header-new-title {
 .metadata-and-wiki-row .catalogue-metadata .catalogue-metadata-heading, .factbox-heading {
     font-weight: var(--font-weight-medium);
     color: hsl(var(--c3));
+    cursor: default;
 }
 
 /* empty lyrics container on pro pages */
@@ -4683,9 +4647,12 @@ better than the default selector '#app a' i suppose */
 
 /*     ACTIVE     */
 .chartlist-row--now-scrobbling {
-    --bg: hsla(var(--h3), 45%) !important;
+    /*--bg: hsla(var(--h3), 45%) !important;
     --bg-hov: hsla(var(--h3), 60%) !important;
-    --shadow: 0 0 50px 5px hsla(var(--h3), 45%) !important;
+    --shadow: 0 0 50px 5px hsla(var(--h3), 45%) !important;*/
+    --bg: hsla(var(--h4), 35%) !important;
+    --bg-hov: hsla(var(--h4), 45%) !important;
+    --shadow: 0 0 50px 5px hsla(var(--h4), 35%) !important;
 
     [data-bleh--theme="light"] & {
         --bg: hsla(var(--h4), 35%) !important;
@@ -4844,7 +4811,7 @@ better than the default selector '#app a' i suppose */
     }
 }
 [data-bleh--show_remaster_tags="false"] {
-    .header-new-title .feat,
+    .title-container .feat,
     .chartlist-name .feat {
         &[data-bleh--tag-group="remasters"] {
             display: none;
@@ -6024,6 +5991,7 @@ button,
 
 
 /*     BUTTON HAS ICON     */
+.lastfm-bulk-edit-form-group-controls button,
 .about-guest-feature,
 .refresh-tracklist-btn,
 .search-similar-btn, .obsession-btn,
@@ -6175,8 +6143,10 @@ button,
 
 
 /*     ICON MASK     */
+.lastfm-bulk-edit-form-group-controls button:before,
+.lastfm-bulk-edit-progress:before,
 .about-guest-feature:before, .about-guest-feature:after,
-.tag-icon:before,
+.tag-icon:before, .setting-icon:before,
 .image-open-button:before,
 .breadcrumb :is(a, .breadcrumb-origin):before, .gallery-image-uploaded-by:before,
 /* v2 */ .form-arrow:before,
@@ -6189,7 +6159,7 @@ button,
 .error-page h3:before,
 .requesting:before,
 .modal-processing:before, #bleh--window-bleh_wait--body:before,
-.side-right .setting-item:before, .action:before,
+.side-right .setting-item:before, .side-right .setting-item:after, .action:before, .action:after,
 .setup-icon:before, .setup-icon:after,
 .btn.back:before,
 .continue:before, .external:before, .done:before, .cancel:before, .download:before, .upload:before, .save:before, .open:before, .btn-secondary.js-close:not(.modal-action-button):before, .form-group button[type="submit"]:before,
@@ -6210,7 +6180,6 @@ button,
 .loading-data-text:before,
 .btns .btn:before,
 .btn.reset:before,
-.setting-item .icon:before, .action .icon:before,
 .bleh--add-note:before,
 .profile-note-row .btn:before,
 .header-follower-btn--denied:before,
@@ -7424,6 +7393,10 @@ input:is([name="track_name"], [name="artist_name"], [name="album_name"], [name="
     font-weight: var(--font-weight-medium);
     letter-spacing: unset;
     text-align: left;
+
+    & + .modal-inner-content {
+        margin: unset;
+    }
 }
 
 @keyframes dropdown {
@@ -8318,6 +8291,9 @@ form[action="/inbox/notifications"] {
 
 
 /*     NAV     */
+.pagination {
+    margin-top: var(--card-gap);
+}
 .pagination-list {
     cursor: default;
 }
@@ -8748,6 +8724,19 @@ text[style^="color: rgb(255, 172, 172)"] {
                         border-left: 1px solid hsl(var(--b5));
                     }
                 }
+
+                &[data-menu-item="expand"] {
+                    --mask: var(--icon-16-expand);
+                }
+                &[data-menu-item="gallery"] {
+                    --mask: var(--icon-16-gallery-vertical);
+                }
+                &[data-menu-item="album"] {
+                    --mask: var(--icon-16-album);
+                }
+                &[data-menu-item="view_profile"] {
+                    --mask: var(--icon-16-profile);
+                }
             }
         }
 
@@ -8759,6 +8748,10 @@ text[style^="color: rgb(255, 172, 172)"] {
         .sep {
             margin: 7px 0;
             height: 0;
+
+            &:first-child {
+                display: none;
+            }
         }
     }
 
@@ -9841,11 +9834,13 @@ text[style^="color: rgb(0, 0, 0)"] {
         --lit-over: 1;
     }
 }
+.top-listeners-item-wrap,
 .user-list-item {
     width: 100%;
     padding: unset;
 }
 
+[data-ff--unify_top_listeners="true"] .top-listeners,
 .user-list {
     margin: unset !important;
 
@@ -9854,12 +9849,22 @@ text[style^="color: rgb(0, 0, 0)"] {
         grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
         gap: var(--card-gap);
 
+        .top-listeners-item-wrap,
         .user-list-item {
             border: unset !important;
             padding: var(--button-list-gap);
             border-radius: var(--item-med-radius);
+
+            &.listeners-section-item-wrap:first-child, &.top-listeners-item-wrap:first-child {
+                background: hsla(var(--h4), 20%);
+            }
+
+            &.top-listeners-item-wrap {
+                padding-left: calc(var(--button-list-gap) + 20px + var(--button-list-gap));
+            }
         }
 
+        .top-listeners-item,
         .user-list-inner-wrap {
             flex-direction: column;
             align-items: unset;
@@ -9868,6 +9873,7 @@ text[style^="color: rgb(0, 0, 0)"] {
             height: 56px;
             padding-left: calc(56px + 10px);
 
+            .top-listeners-item-image,
             .user-list-avatar {
                 width: 56px;
                 height: 56px;
@@ -9880,9 +9886,11 @@ text[style^="color: rgb(0, 0, 0)"] {
                 }
             }
 
+            .top-listeners-item-name,
             .user-list-name {
                 margin: unset !important;
             }
+            .top-listeners-track,
             .user-list-description {
                 overflow: visible;
                 padding-right: calc(32px + 10px);
@@ -10078,13 +10086,13 @@ text[style^="color: rgb(0, 0, 0)"] {
 .listeners-section, .top-listeners {
     counter-reset: listener;
 }
-.listeners-section-item:before, .top-listeners-item:before {
+.listeners-section-item-wrap:before, .top-listeners-item-wrap:before {
     counter-increment: listener;
     content: counter(listener);
     color: hsl(var(--c3));
     position: absolute;
     top: 0;
-    left: -25px;
+    left: var(--button-list-gap);
     bottom: 0;
     display: flex;
     align-items: center;
@@ -10095,7 +10103,7 @@ text[style^="color: rgb(0, 0, 0)"] {
 
 .top-listeners-item-wrap {
     padding-right: unset;
-    width: calc(400px - (9px / 2));
+    width: unset;
 }
 .top-listeners-item-wrap:nth-child(even) {
     position: relative;
@@ -10759,6 +10767,7 @@ table.table tr:nth-child(2n) td {
     color: hsl(var(--c2));
     margin-top: unset;
     margin-bottom: var(--card-gap);
+    cursor: default;
 }
 .about-artist .wiki-block, .about-artist .wiki-block-cta {
     margin-top: var(--card-gap);
@@ -11096,10 +11105,8 @@ table.table tr:nth-child(2n) td {
 
 .stubhub-section + section {
     position: relative;
-    margin-bottom: calc(32px + var(--card-gap)) !important;
 }
 
-.stubhub-section + section,
 .qa-event-description {
     margin-bottom: var(--card-gap);
 }
@@ -12597,7 +12604,8 @@ so this is good enough - use the community docs */
 .bleh--page-outer {
     width: 100%;
     display: flex;
-    justify-content: center;
+    flex-direction: column;
+    align-items: center;
     padding-top: var(--card-gap);
 
     .bleh--page-inner {
@@ -12618,7 +12626,7 @@ so this is good enough - use the community docs */
         .bleh--panel {
             display: flex;
             flex-direction: column;
-            gap: 20px;
+            gap: var(--card-gap);
             flex: 1;
 
 
@@ -12629,6 +12637,13 @@ so this is good enough - use the community docs */
             .alert {
                 margin: unset;
             }
+
+            .subtext {
+                color: hsl(var(--c3));
+                font-size: var(--font-size-sm);
+                line-height: var(--line-height-sm);
+                margin-top: -5px;
+            }
         }
 
 
@@ -12638,7 +12653,7 @@ so this is good enough - use the community docs */
             gap: var(--button-list-gap);
 
             &.sep {
-                margin-top: calc(-20px + var(--card-gap));
+                margin-top: unset;
                 padding-top: var(--card-gap);
                 border-top: var(--card-border);
             }
@@ -12670,7 +12685,7 @@ so this is good enough - use the community docs */
                     --mask: var(--icon-16-track);
                 }
                 &[data-bleh-page="customise"] {
-                    --mask: var(--icon-16-palette);
+                    --mask: var(--icon-16-layout-manage);
                 }
                 &[data-bleh-action="import"] {
                     --mask: var(--icon-16-download);
@@ -12743,7 +12758,7 @@ so this is good enough - use the community docs */
                 }
 
                 &.active {
-                    --bg: hsla(var(--h4), 20%);
+                    --bg: hsla(var(--h4), 35%);
                     --bg-hov: var(--bg);
                     --bg-atv: var(--bg);
 
@@ -12754,6 +12769,7 @@ so this is good enough - use the community docs */
                         height: 14px;
                         border-radius: 50px;
                         background-color: hsl(var(--l3-c));
+                        box-shadow: 0 0 20px 3px hsl(var(--h4));
                         left: 0;
                         top: 50%;
                         margin-top: -7px;
@@ -12831,6 +12847,81 @@ so this is good enough - use the community docs */
         }
     }
 
+    .bleh-settings-header {
+        width: calc(var(--cards-width) - (var(--card-padding) * 2));
+        display: flex;
+        gap: var(--card-padding);
+        margin-bottom: var(--card-gap);
+
+        .icon-side {
+            display: flex;
+            width: fit-content;
+            flex-shrink: 0;
+
+            .setting-icon {
+                display: flex;
+                background-color: hsl(var(--b4));
+                width: 48px;
+                aspect-ratio: 1 / 1;
+                cursor: default;
+
+                justify-content: center;
+                align-items: center;
+                flex-direction: column;
+
+                border-radius: var(--item-big-radius);
+                box-shadow: var(--card-shadow);
+
+                position: relative;
+                --left: 50%;
+                --mask-size: 24px;
+                --margin-left: -12px;
+                --margin-top: -12px;
+                --mask: var(--icon-16-dot);
+                color: hsl(var(--c3));
+
+                [data-page="themes"] & {
+                    --mask: var(--icon-colour-default);
+                }
+                [data-page="customise"] & {
+                    --mask: var(--icon-layout);
+                }
+                [data-page="music"] & {
+                    --mask: var(--icon-track);
+                }
+                [data-page="seasonal"] & {
+                    --mask: var(--icon-season);
+                }
+                [data-page="accessibility"] & {
+                    --mask: var(--icon-accessibility);
+                }
+            }
+        }
+
+        .info-side {
+            flex: 1;
+
+            h1 {
+                margin: unset;
+                font-size: 24px;
+                line-height: 30px;
+                font-weight: var(--font-weight-bold);
+                letter-spacing: unset;
+                cursor: default;
+
+                color: hsl(var(--c1));
+
+                a {
+                    color: inherit;
+                }
+
+                [data-bleh--theme="light"] & {
+                    text-shadow: 0 0 15px hsl(var(--b5));
+                }
+            }
+        }
+    }
+
 
     h3 {
         font-size: 24px;
@@ -12841,6 +12932,24 @@ so this is good enough - use the community docs */
         font-size: 16px;
         line-height: 20px;
         color: hsl(var(--c1));
+
+        &.top-header {
+            width: fit-content;
+            padding-bottom: calc(var(--card-gap) + 1px);
+            position: relative;
+
+            display: none;
+
+            &:after {
+                content: '';
+                position: absolute;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                height: 1px;
+                background-color: var(--card-border-base);
+            }
+        }
     }
     h5 {
         margin: unset;
@@ -12852,7 +12961,7 @@ so this is good enough - use the community docs */
 .bleh--panel:not(.bleh--profile-note-panel) {
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    gap: var(--card-gap);
     flex: 1;
 
 
@@ -12930,47 +13039,44 @@ code, kbd, samp {
         gap: 6px;
 
         .action {
-            --padding: 9px 16px;
-            padding-right: calc(16px + 16px + 6px) !important;
-            gap: 12px;
+            --btn-top: 9px;
+            --btn-bottom: 9px;
+            --btn-left: calc(16px + 12px + 6px + 4px);
+            --btn-right: calc(16px + 16px + 6px);
+            gap: 6px;
             text-decoration: none;
             text-align: left;
 
+            &:after {
+                --mask: var(--icon-16-arrow-right);
+                --left: none;
+                --right: 12px;
+            }
+
             position: relative;
             --show-icon: block;
-            --mask: var(--icon-16-arrow-right);
-            --left: none;
-            --right: 12px;
 
             display: flex;
             align-items: center;
             width: unset !important;
 
-            .icon {
-                display: block;
-                width: 32px;
-                height: 32px;
-                padding: 6px;
-                background-color: hsl(var(--h3));
-                box-shadow: 0 0 0 1px hsla(var(--h2), 40%) inset;
-                color: hsl(var(--b7));
-                border-radius: var(--item-med-radius);
-                position: relative;
+            &.highlight {
+                --bg: hsla(var(--h4), 35%);
+                --bg-hov: hsla(var(--h4), 45%);
+                --bg-atv: hsla(var(--h4), 55%);
 
-                &:before {
-                    --left: 50%;
-                    --margin-left: -8px;
-                }
-
-                &.bleh--issues {
-                    --mask: var(--icon-16-issues);
-                }
                 &.bleh--updates {
-                    --mask: var(--icon-16-download);
                     --hue-over: var(--hue-pos);
                     --sat-over: 1;
                     --lit-over: 1;
                 }
+            }
+
+            &.bleh--issues {
+                --mask: var(--icon-16-issues);
+            }
+            &.bleh--updates {
+                --mask: var(--icon-16-download);
             }
 
             h5 {
@@ -13042,75 +13148,66 @@ code, kbd, samp {
             display: flex;
 
             position: relative;
-            --show-icon: block;
-            --mask: var(--icon-16-arrow-right);
-            --left: none;
-            --right: 12px;
+
+            &:after {
+                --show-icon: block;
+                --mask: var(--icon-16-arrow-right);
+                --left: none;
+                --right: 12px;
+            }
 
             padding-right: calc(16px + 16px + 6px) !important;
         }
     }
 
     .setting-item {
-        gap: 9px 12px;
-        --padding: 9px 16px;
-        --radius: var(--card-radius);
+        --btn-top: 9px;
+        --btn-bottom: 9px;
+        --btn-left: calc(16px + 12px + 6px + 4px);
+        --btn-right: calc(16px + 16px + 6px);
+        gap: 9px 6px;
+        text-decoration: none;
         text-align: left;
 
         align-items: center;
 
-        .icon {
-            display: block;
-            width: 32px;
-            height: 32px;
-            padding: 6px;
-            background-color: hsl(var(--h3));
-            box-shadow: 0 0 0 1px hsla(var(--h2), 40%) inset;
-            color: hsl(var(--b7));
-            border-radius: var(--item-med-radius);
-            position: relative;
-
-            &:before {
-                --left: 50%;
-                --margin-left: -8px;
-            }
-
-            &.bleh--theme-dark {
-                --mask: var(--icon-16-moon);
-            }
-            &.bleh--theme-darker {
-                --mask: var(--icon-16-moon-star);
-            }
-            &.bleh--theme-oled {
-                --mask: var(--icon-16-moon-fill);
-            }
-            &.bleh--theme-light {
-                --mask: var(--icon-16-sun);
-            }
-            &.bleh--themes {
-                --mask: var(--icon-16-themes);
-            }
-            &.bleh--bwaa {
-                --mask: var(--icon-16-bwaa);
-            }
-            &.bleh--palette {
-                --mask: var(--icon-16-palette);
-            }
-            &.bleh--link {
-                --mask: var(--icon-16-link);
-            }
-            &.bleh--corrections {
-                --mask: var(--icon-16-correction);
-            }
-            &.bleh--motion {
-                --mask: var(--icon-16-motion);
-            }
+        &.bleh--theme-dark {
+            --mask: var(--icon-16-moon);
+        }
+        &.bleh--theme-darker {
+            --mask: var(--icon-16-moon-star);
+        }
+        &.bleh--theme-oled {
+            --mask: var(--icon-16-moon-fill);
+        }
+        &.bleh--theme-light {
+            --mask: var(--icon-16-sun);
+        }
+        &.bleh--themes {
+            --mask: var(--icon-16-themes);
+        }
+        &.bleh--bwaa {
+            --mask: var(--icon-16-bwaa);
+        }
+        &.bleh--palette {
+            --mask: var(--icon-16-palette);
+        }
+        &.bleh--link {
+            --mask: var(--icon-16-link);
+        }
+        &.bleh--corrections {
+            --mask: var(--icon-16-correction);
+        }
+        &.bleh--motion {
+            --mask: var(--icon-16-motion);
         }
 
         &.active {
-            --bg: hsla(var(--h4), 40%);
-            --bg-hov: hsla(var(--h4), 60%);
-            --bg-atv: hsla(var(--h4), 80%);
+            --bg: hsla(var(--h4), 35%);
+            --bg-hov: hsla(var(--h4), 45%);
+            --bg-atv: hsla(var(--h4), 55%);
+            --shadow: none;
+            --shadow-hov: none;
         }
 
         h5 {
@@ -13790,7 +13887,7 @@ input[type="range"]::-moz-range-progress {
 .bleh--panel > form {
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    gap: var(--card-gap);
     margin: unset !important;
 }
 .settings-footer {
@@ -13802,7 +13899,10 @@ input[type="range"]::-moz-range-progress {
 .primary-selections {
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: var(--item-list-gap);
+    /*padding: var(--item-list-gap);
+    border: 1px solid var(--card-border-base);
+    border-radius: var(--item-big-radius);*/
 
     select {
         display: none;
@@ -13830,6 +13930,9 @@ input[type="range"]::-moz-range-progress {
             opacity: 0;
         }
 
+        h5 {
+            color: inherit;
+        }
         p {
             font-size: 12px;
             color: hsl(var(--c3));
@@ -13854,14 +13957,29 @@ input[type="range"]::-moz-range-progress {
             --mask: var(--icon-16-lock);
         }
 
+        &[data-toggle-value="expand"] {
+            --mask: var(--icon-16-expand);
+        }
+        &[data-toggle-value="gallery"] {
+            --mask: var(--icon-16-gallery-vertical);
+        }
+        &[data-toggle-value="shouts"] {
+            --mask: var(--icon-16-shoutbox);
+        }
+        &[data-toggle-value="wiki"] {
+            --mask: var(--icon-16-bio);
+        }
+        &[data-toggle-value="listens"] {
+            --mask: var(--icon-16-listener);
+        }
+
+        &[aria-checked="true"],
         [data-bleh--inbuilt-id_message_privacy="all"] &#primary-selection-receiving_msgs-everyone,
         [data-bleh--inbuilt-id_message_privacy="n"] &#primary-selection-receiving_msgs-neighbours,
         [data-bleh--inbuilt-id_message_privacy="f"] &#primary-selection-receiving_msgs-follow {
             --bg: hsla(var(--h4), 35%);
             --bg-hov: hsla(var(--h4), 45%);
             --bg-atv: hsla(var(--h4), 55%);
-            --shadow: none;
-            --shadow-hov: none;
             /*--mask: var(--icon-16-check);*/
 
             &:before {
@@ -13965,7 +14083,11 @@ input[type="range"]::-moz-range-progress {
             }
 
             &.realtime {
-                background-color: hsla(var(--h3), 45%);
+                background-color: hsla(var(--h4), 35%);
+
+                [data-bleh--theme="light"] & {
+                    background-color: hsla(var(--h4), 35%);
+                }
 
                 .title {
                     background-color: hsl(var(--l2-c));
@@ -14269,12 +14391,12 @@ input[type="range"]::-moz-range-progress {
 }
 
 [data-bleh--format_guest_features="true"] {
-    .bleh--chartlist-name-without-features {
+    .bleh--name-without-features {
         display: none !important;
     }
 }
 [data-bleh--format_guest_features="false"] {
-    .bleh--chartlist-name-with-features {
+    .bleh--name-with-features {
         display: none !important;
     }
 }
@@ -15578,6 +15700,10 @@ button.bleh--gallery-bookmark-image-btn {
     .image-list {
         margin-top: unset;
     }
+
+    .no-data-message--gallery {
+        padding: unset;
+    }
 }
 
 
@@ -15938,6 +16064,11 @@ button.bleh--gallery-bookmark-image-btn {
             }
             &.profile-top-item--loved {
                 --mask: var(--icon-16-heart);
+                /*--mask: var(--icon-16-heart-solid);
+
+                &:before {
+                    color: hsl(var(--l3-c));
+                }*/
             }
             &.profile-top-item--message {
                 --mask: var(--icon-16-mail);
@@ -16738,9 +16869,10 @@ button.bleh--gallery-bookmark-image-btn {
 
 
 h4 {
-    &:not(.source-album-name) {
+    &:not(.source-album-name, .top-header) {
         & + p {
-            margin-top: calc(-1 * var(--card-gap));
+            /*margin-top: calc(-1 * var(--card-gap));*/
+            margin-top: -5px;
         }
     }
 }
@@ -16775,9 +16907,57 @@ h4 {
 
 
 
+.lastfm-bulk-edit-loading {
+    background: unset;
+    height: fit-content;
+
+    .lastfm-bulk-edit-progress {
+        font-weight: var(--font-weight-medium);
+        color: hsl(var(--c3));
+        padding-left: calc(16px + 6px);
+        position: relative;
+        --left: 0;
+        --mask: var(--icon-16-spinner);
+
+        &:before {
+            animation: spinner 0.8s linear infinite;
+        }
+    }
+}
+
+.form-disclaimer {
+    margin-bottom: var(--card-gap);
+}
+.lastfm-bulk-edit-form-group-controls {
+    padding-left: unset !important;
+    gap: var(--button-list-gap);
+
+    button {
+        position: relative;
+
+        &#lastfm-bulk-edit-select-all {
+            --mask: var(--icon-16-select-all);
+        }
+        &#lastfm-bulk-edit-deselect-all {
+            --mask: var(--icon-16-deselect-all);
+        }
+    }
+}
+
 .lastfm-bulk-edit-list {
     display: flex;
     flex-direction: column;
+    padding-left: 5px;
+
+    .lastfm-bulk-edit-text-info {
+        color: hsl(var(--l3-c));
+    }
+    strong + .lastfm-bulk-edit-ellipsis {
+        color: hsla(var(--c2), 80%);
+    }
+    small {
+        color: hsl(var(--c3));
+    }
 }
 
 
@@ -17429,6 +17609,15 @@ h4 {
         &.edit-event-button {
             --mask: var(--icon-16-calendar-edit);
         }
+        &.top-shout-button {
+            --mask: var(--icon-16-shoutbox);
+        }
+        &.top-wiki-button {
+            --mask: var(--icon-16-bio);
+        }
+        &.top-listens-button {
+            --mask: var(--icon-16-listener);
+        }
 
         &.add-button {
             --mask: var(--icon-16-plus);
@@ -17525,6 +17714,8 @@ h4 {
         flex-direction: column;
         gap: var(--item-list-gap);
         position: relative;
+
+        color: hsl(var(--c2));
 
         padding: 0 var(--card-gap);
         margin: 0 calc(-1 * var(--card-gap));
@@ -17789,12 +17980,21 @@ h4 {
     }
 
     position: relative;
+    z-index: 9;
 
     .bleh--avatar-clickable-link {
         position: absolute;
         inset: 0;
         z-index: 10;
         cursor: pointer;
+    }
+
+    transition-property: transform;
+    transition-duration: var(--trans);
+    transition-timing-function: var(--trans-function);
+
+    &:hover {
+        transform: scale(1.03);
     }
 }
 
@@ -17813,11 +18013,20 @@ h4 {
 
     &.about-artist-panel {
         margin: unset !important;
+
+        .wiki-block {
+            width: 470px;
+        }
     }
 
     &.no-background {
         margin-left: var(--card-padding);
         margin-right: var(--card-padding);
+    }
+
+    &.mockup,
+    &.no-margin {
+        margin-top: unset !important;
     }
 
     .calendar-side {
@@ -17873,11 +18082,28 @@ h4 {
             --mask-size: var(--cover-size-200) !important;
         }
 
-        .page-content[data-page-type="album"] &,
-        .page-content[data-page-type="track"] & {
-            --avatar-size: 70px;
-            --mask-size: var(--cover-size-50);
+        .redesigned-album-header &,
+        .redesigned-track-header & {
+            --avatar-size: 70px !important;
+            --mask-size: var(--cover-size-50) !important;
             border-radius: var(--item-big-radius);
+        }
+
+        .redesigned-artist-header &,
+        .redesigned-album-header &,
+        .redesigned-track-header &,
+        .about-artist-panel & {
+            &:after {
+                content: '';
+                position: absolute;
+                inset: 0;
+                background-image: var(--gloss-image) !important;
+                background-size: 100% !important;
+                opacity: var(--gloss, 0);
+                pointer-events: none;
+                padding: unset !important;
+                box-shadow: unset !important;
+            }
         }
 
         img {
@@ -18044,6 +18270,10 @@ h4 {
 .redesigned-navigation {
     margin-top: var(--card-gap) !important;
 }
+
+section > .section-controls .subpage-title {
+    visibility: hidden !important;
+}
 .col-main > .section-controls {
     display: none;
 }
@@ -18194,15 +18424,67 @@ h4 {
             height: 40px;
             background-color: hsl(var(--b5));
             border-radius: 50%;
+
+            .artist & {
+                border-radius: 6px;
+            }
+        }
+
+        .mockup-info {
+            display: flex;
+            flex-direction: column;
+            margin-top: 4px;
+            gap: 4px;
+
+            flex: 1;
+        }
+
+        .mockup-subtext {
+            display: flex;
+            width: 35px;
+            height: 4px;
+            background-color: hsl(var(--c3));
+            border-radius: 10px;
+
+            .artist & {
+                width: 45px;
+            }
         }
 
         .mockup-name {
             display: flex;
-            width: 110px;
-            margin-top: 4px;
-            height: 8px;
+            width: 90px;
+            height: 6px;
             background-color: hsl(var(--c1));
             border-radius: 10px;
+
+            .artist & {
+                width: 120px;
+            }
+        }
+
+        .mockup-actions {
+            display: flex;
+            flex-direction: column;
+            justify-content: end;
+            width: 140px;
+        }
+
+        .mockup-big-button {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 20px;
+            background-color: hsl(var(--b4));
+            border-radius: 6px;
+
+            .mockup-text {
+                display: flex;
+                width: 90px;
+                height: 4px;
+                background-color: hsl(var(--c2));
+                border-radius: 10px;
+            }
         }
     }
 
@@ -18216,9 +18498,17 @@ h4 {
 
         .mockup-col-main {
             flex: 1;
+
+            .mockup-panel {
+                min-height: 60px;
+            }
         }
         .mockup-col-sidebar {
-            width: 180px;
+            width: 140px;
+
+            .mockup-panel:not(.mockup-obsession-panel) {
+                min-height: 70px;
+            }
         }
 
         .mockup-col-main, .mockup-col-sidebar {
@@ -18239,6 +18529,10 @@ h4 {
                 flex: 1;
                 border-bottom-left-radius: 0;
                 border-bottom-right-radius: 0;
+            }
+
+            &.mockup-obsession-panel {
+                background: linear-gradient(hsl(var(--b5)), hsl(var(--g4)));
             }
 
             .mockup-obsession-art {

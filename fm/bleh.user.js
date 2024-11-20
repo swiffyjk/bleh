@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         bleh
 // @namespace    http://last.fm/
-// @version      2024.1113
+// @version      2024.1120
 // @description  bleh!!! ^-^
 // @author       kate
 // @match        https://www.last.fm/*
@@ -20,8 +20,8 @@
 // ==/UserScript==
 
 let version = {
-    build: '2024.1113',
-    sku: 'yoshimi',
+    build: '2024.1120',
+    sku: 'iroha',
     feature_flags: {
         bleh_settings_tabs: {
             default: false,
@@ -92,6 +92,11 @@ let version = {
             default: true,
             name: 'New custom-built auth menu to reduce lag',
             date: '2024-11-11'
+        },
+        unify_top_listeners: {
+            default: false,
+            name: 'Unify top listeners',
+            date: '2024-11-15'
         }
     }
 }
@@ -187,7 +192,8 @@ const trans = {
                 header: 'Compare plays'
             },
             about: 'About',
-            about_guests: 'Others featured'
+            about_guests: 'Others featured',
+            view_profile: 'View profile'
         },
         error: {
             name: 'This page is missing...',
@@ -268,6 +274,7 @@ const trans = {
             }
         },
         settings: {
+            name: 'Settings',
             save: 'Save',
             cancel: 'Cancel',
             close: 'Close',
@@ -281,6 +288,7 @@ const trans = {
             back: 'Back',
             reload: 'A setting you changed requires a page reload to take effect, click to reload.',
             new: 'New',
+            beta: 'Beta',
             configure: 'Configure',
             examples: {
                 button: 'Example button'
@@ -343,6 +351,7 @@ const trans = {
             },
             music: {
                 name: 'Music',
+                header: 'Music configuration',
                 bio: 'Configure your music-related settings for profiles, artists, albums, and tracks.',
                 profile_shortcut: {
                     name: 'Profile shortcut',
@@ -372,6 +381,23 @@ const trans = {
                 reduced_motion: {
                     name: 'Reduce animations around interfaces',
                     bio: 'Will in most cases either slowly fade or hard-cut, no scaling.'
+                }
+            },
+            layout: {
+                name: 'Layout',
+                header: 'Manage header layout',
+                avatar_action: {
+                    name: 'Default avatar action',
+                    bio: 'What do you want to happen when you click avatars?',
+                    gallery: 'View photos (or featured album for tracks)',
+                    album: 'View featured album'
+                },
+                quick_artist_button: {
+                    name: 'Quick artist button',
+                    bio: 'Control the right-side button on artist profiles.',
+                    shouts: 'View shouts',
+                    wiki: 'View biography',
+                    listens: 'View listeners'
                 }
             },
             customise: {
@@ -1137,8 +1163,14 @@ const trans = {
                 },
                 profile_header: {
                     name: 'Profilhintergründe anzeigen',
+                    see_type: 'Source from avatar instead of top artist',
+                    view_on: 'View backgrounds on',
                     for_own: 'Auf meinem Profil',
                     for_others: 'Auf anderen Profilen'
+                },
+                sat_bg: {
+                    name: 'Card background saturation',
+                    bio: 'Control the colour of backgrounds in addition to main accent'
                 }
             },
             activities: {
@@ -1794,8 +1826,14 @@ const trans = {
                 },
                 profile_header: {
                     name: 'Display profile backgrounds',
-                    for_own: 'On my profile',
-                    for_others: 'On other profiles'
+                    see_type: 'Source from avatar instead of top artist',
+                    view_on: 'View backgrounds on',
+                    for_own: 'My own profile',
+                    for_others: 'Other profiles'
+                },
+                sat_bg: {
+                    name: 'Card background saturation',
+                    bio: 'Control the colour of backgrounds in addition to main accent'
                 }
             },
             activities: {
@@ -2630,7 +2668,10 @@ let settings_template = {
     chart_decimation: true,
     activities: true,
 
-    auth_menu_obsessions: false
+    auth_menu_obsessions: false,
+
+    default_avatar_action: 'expand',
+    quick_artist_button: 'gallery'
 };
 let settings_base = {
     high_contrast: {
@@ -2926,6 +2967,18 @@ let settings_base = {
         value: true,
         values: [true, false],
         type: 'toggle'
+    },
+    default_avatar_action: {
+        css: 'default_avatar_action',
+        unit: '',
+        value: 'expand',
+        type: 'options'
+    },
+    quick_artist_button: {
+        css: 'quick_artist_button',
+        unit: '',
+        value: 'gallery',
+        type: 'options'
     }
 };
 let inbuilt_settings = {
@@ -3012,11 +3065,9 @@ let page = {
     }
 };
 
-let bleh_url = 'https://www.last.fm/bleh';
-let bleh_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bleh$');
+let bleh_url = 'https://www.last.fm{root}bleh';
 
-let setup_url = 'https://www.last.fm/bleh/setup';
-let setup_regex = new RegExp('^https://www\.last\.fm/[a-z]+/bleh/setup$');
+let setup_url = 'https://www.last.fm{root}bleh/setup';
 
 let has_prompted_for_update = false;
 
@@ -3056,16 +3107,14 @@ let has_prompted_for_update = false;
         load_activities();
         notify_if_new_update();
 
-        console.log(bleh_url,window.location.href,bleh_regex.test(window.location.href));
-
         lotus();
 
-        if (window.location.href == bleh_url || bleh_regex.test(window.location.href)) {
-            // start bleh settings
-            bleh_settings();
-        } else if (window.location.href == setup_url || setup_regex.test(window.location.href)) {
+        if (window.location.href.startsWith(setup_url.replace('{root}', root))) {
             // start bleh setup
             bleh_setup();
+        } else if (window.location.href.startsWith(bleh_url.replace('{root}', root))) {
+            // start bleh settings
+            bleh_settings();
         } else {
             bleh_profiles();
             bleh_artists();
@@ -3125,12 +3174,12 @@ let has_prompted_for_update = false;
                 has_prompted_for_update = true;
             }
 
-            if (window.location.href == bleh_url || bleh_regex.test(window.location.href)) {
-                // start bleh settings
-                bleh_settings();
-            } else if (window.location.href == setup_url || setup_regex.test(window.location.href)) {
+            if (window.location.href.startsWith(setup_url.replace('{root}', root))) {
                 // start bleh setup
                 bleh_setup();
+            } else if (window.location.href.startsWith(bleh_url.replace('{root}', root))) {
+                // start bleh settings
+                bleh_settings();
             } else {
                 bleh_profiles();
                 bleh_artists();
@@ -4837,6 +4886,12 @@ let has_prompted_for_update = false;
             container_full_width.insertBefore(page.structure.container, container_full_width.firstElementChild);
         }
 
+        page.structure.container.setAttribute('data-assigned', 'true');
+
+        let other_container = document.body.querySelector('.page-content.container:not([data-assigned])');
+        if (other_container != null)
+            other_container.style.setProperty('display', 'none');
+
         if (page.structure.row == null || !document.body.contains(page.structure.row)) {
             log('page missing row, creating', 'page structure');
             page.structure.row = document.createElement('div');
@@ -4854,6 +4909,12 @@ let has_prompted_for_update = false;
 
             page.structure.row.appendChild(page.structure.main);
         }
+
+        page.structure.main.setAttribute('data-assigned', 'true');
+
+        let other_main = page.structure.row.querySelector('.col-main.hidden-xs:not([data-assigned])');
+        if (other_main != null)
+            other_main.style.setProperty('display', 'none');
 
         if (page.structure.side == null || !document.body.contains(page.structure.side)) {
             log('page missing side', 'page structure');
@@ -4896,6 +4957,8 @@ let has_prompted_for_update = false;
                     let subpage_title = page.structure.main.querySelector(':scope > .subpage-title');
                     if (subpage_title == null)
                         subpage_title = page.structure.main.querySelector(':scope > .section-controls > .subpage-title');
+                    if (subpage_title == null)
+                        subpage_title = page.structure.main.querySelector(':scope > section:first-child .section-controls > .subpage-title');
 
                     if (subpage_title != null) {
                         content_top = document.createElement('div');
@@ -4931,6 +4994,8 @@ let has_prompted_for_update = false;
 
                     // is there a btn-add?
                     let btn_add = page.structure.main.querySelector(':scope > .btn-add');
+                    if (btn_add == null)
+                        btn_add = page.structure.main.querySelector(':scope > section:first-child .btn-add');
 
                     if (btn_add != null) {
                         btn_add.classList = 'btn view-all-button back add-button';
@@ -5414,7 +5479,7 @@ let has_prompted_for_update = false;
 
             let artists = taste_meter.querySelectorAll('a');
             artists.forEach((artist) => {
-                taste_artists.push(correct_artist(artist.textContent.trim()));
+                taste_artists.push(correct_artist(artist.getAttribute('title')));
             });
 
             profile_avi = document.body.querySelector('.header-avatar img');
@@ -5589,15 +5654,10 @@ let has_prompted_for_update = false;
             let menu = tippy(listen_item, {
                 theme: 'context-menu',
                 content: (`
-                    <button class="dropdown-menu-clickable-item" onclick="_open_profile_shortcut_window()" data-menu-item="configure">
+                    <button class="dropdown-menu-clickable-item" onclick="_open_profile_shortcut_window()" data-menu-item="settings">
                         ${trans[lang].settings.configure}
                     </button>
                 `),
-                /*content: (`
-                    <a class="dropdown-menu-clickable-item" href="${root}bleh" data-menu-item="configure">
-                        ${trans[lang].settings.configure}
-                    </a>
-                `),*/
                 allowHTML: true,
                 placement: 'right-start',
                 trigger: 'manual',
@@ -6333,6 +6393,10 @@ let has_prompted_for_update = false;
             log('internal bleh settings', 'page');
             page.type = 'bleh_settings';
 
+            let params = new URLSearchParams(document.location.search);
+            page.requested.tab = params.get('tab');
+            page.requested.setting = params.get('setting');
+
             if (ff('refreshed_nav')) {
                 register_background(my_avi);
             }
@@ -6341,6 +6405,19 @@ let has_prompted_for_update = false;
             // go wild
             let outer = document.createElement('div');
             outer.classList.add('bleh--page-outer');
+
+            let header = document.createElement('div');
+            header.classList.add('bleh-settings-header');
+            header.setAttribute('id', 'settings_header');
+            header.innerHTML = (`
+                <div class="icon-side">
+                    <div class="setting-icon"></div>
+                </div>
+                <div class="info-side">
+                    <div class="sub-text">${trans[lang].settings.name}</div>
+                    <h1 id="settings_header_name"></h1>
+                </div>
+            `);
 
             let inner = document.createElement('div');
             inner.classList.add('bleh--page-inner');
@@ -6361,6 +6438,9 @@ let has_prompted_for_update = false;
                         <button class="btn bleh--btn" data-bleh-page="themes" onclick="_change_settings_page('themes')">
                             ${trans[lang].settings.appearance.name}
                         </button>
+                        <button class="btn bleh--btn" data-bleh-page="customise" onclick="_change_settings_page('customise')">
+                            ${trans[lang].settings.layout.name}
+                        </button>
                         <button class="btn bleh--btn" data-bleh-page="music" onclick="_change_settings_page('music')">
                             ${trans[lang].settings.music.name}
                         </button>
@@ -6369,9 +6449,6 @@ let has_prompted_for_update = false;
                         </button>
                         <button class="btn bleh--btn" data-bleh-page="seasonal" data-season="${stored_season.id}" onclick="_change_settings_page('seasonal')">
                             ${trans[lang].settings.customise.seasonal.name}
-                        </button>
-                        <button class="btn bleh--btn" data-bleh-page="customise" onclick="_change_settings_page('customise')">
-                            ${trans[lang].settings.customise.name}
                         </button>
                     </div>
                     <div class="btns sep">
@@ -6425,19 +6502,41 @@ let has_prompted_for_update = false;
 
             inner.appendChild(main);
             inner.appendChild(side);
+            outer.appendChild(header);
             outer.appendChild(inner);
             adaptive_skin_container.appendChild(outer);
 
-            change_settings_page('home');
+            console.info(page);
+
+            if (page.requested.tab == null)
+                change_settings_page('home');
+            else
+                change_settings_page(page.requested.tab);
+
+            if (page.requested.setting != null) {
+                let setting = document.body.querySelector(`#container-${page.requested.setting}`);
+
+                if (setting != null) {
+                    let y = setting.getBoundingClientRect().top + window.scrollY - 300;
+                    window.scroll({
+                        top: y,
+                        behavior: 'smooth'
+                    });
+                }
+            }
         }
     }
 
     function render_setting_page(page) {
+        let head = document.getElementById('settings_header_name');
+
         console.info(theme_version != version.build, theme_version, version.build, typeof(theme_version), typeof(version.build));
         if (page == 'home') {
+            head.textContent = trans[lang].settings.home.name;
+
             return (`
             <div class="bleh--panel">
-                <h3>${trans[lang].settings.home.name}</h3>
+                <h4 class="top-header">${trans[lang].settings.home.name}</h4>
                 <div class="user-top-panel">
                     <div class="user-top-avatar user-top-avatar-side-left"></div>
                     <img class="user-top-avatar user-top-avatar-main" src="${my_avi.replace('avatar42s', 'avatar300s')}" alt="${auth}">
@@ -6448,24 +6547,21 @@ let has_prompted_for_update = false;
                 .replace('{v}', `<span class="version-link" onclick="_change_settings_page('sku')">${version.build}.${version.sku}</span>`)}</h4>
                 <div class="screen-row actions-only">
                     <div class="actions">
-                        <button class="btn action" onclick="_force_refresh_theme()">
-                            <div class="icon bleh--updates"></div>
+                        <button class="btn action highlight bleh--updates" onclick="_force_refresh_theme()">
                             <span class="text">
                                 <h5>${trans[lang].settings.home.update.name}</h5>
                                 <p>${trans[lang].settings.home.update.bio}</p>
                             </span>
                         </button>
                         ${(settings.dev ? (`
-                        <a class="btn action" href="https://github.com/katelyynn/bleh/raw/uwu/fm/bleh.user.css">
-                            <div class="icon bleh--updates"></div>
+                        <a class="btn action highlight bleh--updates" href="https://github.com/katelyynn/bleh/raw/uwu/fm/bleh.user.css">
                             <span class="text">
                                 <h5>${trans[lang].settings.home.update.css}</h5>
                                 <p>${trans[lang].settings.home.update.bio}</p>
                             </span>
                         </a>
                         `) : '')}
-                        <a class="btn action" href="https://github.com/katelyynn/bleh/issues" target="_blank">
-                            <div class="icon bleh--issues"></div>
+                        <a class="btn action bleh--issues" href="https://github.com/katelyynn/bleh/issues" target="_blank">
                             <span class="text">
                                 <h5>${trans[lang].settings.home.issues.name}</h5>
                                 <p>${trans[lang].settings.home.issues.bio}</p>
@@ -6492,36 +6588,31 @@ let has_prompted_for_update = false;
                 <h4>${trans[lang].settings.home.recommended}</h4>
                 <div class="setting-items full">
                     <div class="side-right full">
-                        <button class="btn setting-item" onclick="_change_settings_page('themes')">
-                            <div class="icon bleh--themes"></div>
+                        <button class="btn setting-item bleh--themes" onclick="_change_settings_page('themes')">
                             <div class="text">
                                 <h5>${trans[lang].settings.themes.name}</h5>
                                 <p>${trans[lang].settings.themes.bio}</p>
                             </div>
                         </button>
-                        <button class="btn setting-item" onclick="_change_settings_page('themes')">
-                            <div class="icon bleh--palette"></div>
+                        <button class="btn setting-item bleh--palette" onclick="_change_settings_page('themes')">
                             <div class="text">
                                 <h5>${trans[lang].settings.home.colours.name}</h5>
                                 <p>${trans[lang].settings.home.colours.bio}</p>
                             </div>
                         </button>
-                        <button class="btn setting-item" onclick="_change_settings_page('music')">
-                            <div class="icon bleh--corrections"></div>
+                        <button class="btn setting-item bleh--corrections" onclick="_change_settings_page('music', 'corrections')">
                             <div class="text">
                                 <h5>${trans[lang].settings.corrections.name}</h5>
                                 <p>${trans[lang].settings.corrections.bio}</p>
                             </div>
                         </button>
-                        <button class="btn setting-item" onclick="_change_settings_page('accessibility')">
-                            <div class="icon bleh--motion"></div>
+                        <button class="btn setting-item bleh--motion" onclick="_change_settings_page('accessibility')">
                             <div class="text">
                                 <h5>${trans[lang].settings.accessibility.reduced_motion.name}</h5>
                                 <p>${trans[lang].settings.accessibility.reduced_motion.bio}</p>
                             </div>
                         </button>
-                        <button class="btn setting-item" onclick="_change_settings_page('accessibility')">
-                            <div class="icon bleh--link"></div>
+                        <button class="btn setting-item bleh--link" onclick="_change_settings_page('accessibility')">
                             <div class="text">
                                 <h5>${trans[lang].settings.accessibility.underline_links.name}</h5>
                                 <p>${trans[lang].settings.accessibility.underline_links.bio}</p>
@@ -6533,10 +6624,8 @@ let has_prompted_for_update = false;
                 <h4>Try out the latest</h4>
                 <div class="setting-items">
                     <div class="side-left">
-                        <a class="btn setting-item has-image" href="https://cutensilly.org/bwaa/fm" target="_blank">
-                            <div class="image">
-                                <div class="icon bleh--bwaa"></div>
-                            </div>
+                        <a class="btn setting-item has-image bleh--bwaa" href="https://cutensilly.org/bwaa/fm" target="_blank">
+                            <div class="image"></div>
                             <div class="text">
                                 <h5>bwaa (BETA) for Last.fm</h5>
                                 <p>bring last.fm back to 2012 while retaining all modern features. (includes a dark mode)</p>
@@ -6550,6 +6639,8 @@ let has_prompted_for_update = false;
             </div>
             `);
         } else if (page == 'themes') {
+            head.textContent = trans[lang].settings.appearance.name;
+
             let preview_bar = 'background: linear-gradient(90deg';
             let preview_bar_text = '';
 
@@ -6584,7 +6675,7 @@ let has_prompted_for_update = false;
 
             return (`
                 <div class="bleh--panel">
-                    <h3>${trans[lang].settings.appearance.name}</h3>
+                    <h4 class="top-header">${trans[lang].settings.appearance.name}</h4>
                     <h4>${trans[lang].settings.themes.name}</h4>
                     <!--<h4>${trans[lang].settings.themes.dark.name}</h4>-->
                     <div class="setting-items full">
@@ -6653,6 +6744,7 @@ let has_prompted_for_update = false;
                             --sat: var(--sat-user, 1);
                             --lit: var(--lit-user, 1)" onclick="_create_a_custom_colour()"></button>
                     </div>
+                    <p class="subtext">${trans[lang].setup.appearance.subtext}</p>
                     <div class="palette options colours">
                         <div class="side">
                             <button class="swatch btn" style="
@@ -6983,6 +7075,18 @@ let has_prompted_for_update = false;
                             })"></button>
                         </div>
                     </div>
+                    <div class="toggle-container" id="container-hue_from_album">
+                        <button class="btn reset" onclick="_reset_item('hue_from_album')">${trans[lang].settings.reset}</button>
+                        <div class="heading">
+                            <h5>${trans[lang].settings.customise.hue_from_album.name}</h5>
+                            <p>${trans[lang].settings.customise.hue_from_album.bio}</p>
+                        </div>
+                        <div class="toggle-wrap">
+                            <button class="toggle" id="toggle-hue_from_album" onclick="_update_item('hue_from_album')" aria-checked="true">
+                                <div class="dot"></div>
+                            </button>
+                        </div>
+                    </div>
                     ${(ff('card_saturation')) ? (`
                     <div class="slider-container" id="container-sat_bg">
                         <button class="btn reset" onclick="_reset_item('sat_bg')">${trans[lang].settings.reset}</button>
@@ -7062,21 +7166,83 @@ let has_prompted_for_update = false;
                 </div>
                 `);
         } else if (page == 'customise') {
+            head.textContent = trans[lang].settings.layout.name;
+
             return (`
+                <div class="bleh--panel">
+                    <h4 class="top-header">${trans[lang].settings.layout.name}</h4>
+                    <h4>${trans[lang].settings.layout.header}</h4>
+                    <div class="inner-preview pad">
+                        <div class="profile-mockup artist">
+                            <div class="mockup-header">
+                                <img class="mockup-avatar" src="https://lastfm.freetls.fastly.net/i/u/avatar170s/c8f797b26b24f4cf1a4fe93854148951">
+                                <div class="mockup-info">
+                                    <div class="mockup-subtext"></div>
+                                    <div class="mockup-name"></div>
+                                </div>
+                                <div class="mockup-actions">
+                                    <div class="mockup-big-button">
+                                        <div class="mockup-text"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mockup-container">
+                                <div class="mockup-col-main">
+                                    <div class="mockup-panel"></div>
+                                    <div class="mockup-panel main"></div>
+                                </div>
+                                <div class="mockup-col-sidebar">
+                                    <div class="mockup-panel"></div>
+                                    <div class="mockup-panel main"></div>
+                                </div>
+                            </div>
+                            <div class="profile-mockup-background" style="background-image: url(https://lastfm.freetls.fastly.net/i/u/avatar170s/c8f797b26b24f4cf1a4fe93854148951);"></div>
+                        </div>
+                    </div>
+                    <h4>${trans[lang].settings.layout.avatar_action.name}</h4>
+                    <p>${trans[lang].settings.layout.avatar_action.bio}</p>
+                    <div class="primary-selections">
+                        <div class="btn primary-selection" id="toggle-default_avatar_action-expand" data-toggle="default_avatar_action" data-toggle-value="expand" onclick="_update_item('default_avatar_action', 'expand')">
+                            <h5>${trans[lang].gallery.open.name}</h5>
+                        </div>
+                        <div class="btn primary-selection" id="toggle-default_avatar_action-gallery" data-toggle="default_avatar_action" data-toggle-value="gallery" onclick="_update_item('default_avatar_action', 'gallery')">
+                            <h5>${trans[lang].settings.layout.avatar_action.gallery}</h5>
+                        </div>
+                    </div>
+                    <h4>${trans[lang].settings.layout.quick_artist_button.name}</h4>
+                    <p>${trans[lang].settings.layout.quick_artist_button.bio}</p>
+                    <div class="primary-selections">
+                        <div class="btn primary-selection" id="toggle-quick_artist_button-gallery" data-toggle="quick_artist_button" data-toggle-value="gallery" onclick="_update_item('quick_artist_button', 'gallery')">
+                            <h5>${trans[lang].gallery.view}</h5>
+                        </div>
+                        <div class="btn primary-selection" id="toggle-quick_artist_button-shouts" data-toggle="quick_artist_button" data-toggle-value="shouts" onclick="_update_item('quick_artist_button', 'shouts')">
+                            <h5>${trans[lang].settings.layout.quick_artist_button.shouts}</h5>
+                        </div>
+                        <div class="btn primary-selection" id="toggle-quick_artist_button-wiki" data-toggle="quick_artist_button" data-toggle-value="wiki" onclick="_update_item('quick_artist_button', 'wiki')">
+                            <h5>${trans[lang].settings.layout.quick_artist_button.wiki}</h5>
+                        </div>
+                        <div class="btn primary-selection" id="toggle-quick_artist_button-listens" data-toggle="quick_artist_button" data-toggle-value="listens" onclick="_update_item('quick_artist_button', 'listens')">
+                            <h5>${trans[lang].settings.layout.quick_artist_button.listens}</h5>
+                        </div>
+                    </div>
+                </div>
                 <div class="bleh--panel">
                     <h4>${trans[lang].settings.customise.profile_header.name}</h4>
                     <div class="inner-preview pad">
                         <div class="profile-mockup">
                             <div class="mockup-header">
                                 <img class="mockup-avatar" src="${my_avi}">
-                                <div class="mockup-name"></div>
+                                <div class="mockup-info">
+                                    <div class="mockup-subtext"></div>
+                                    <div class="mockup-name"></div>
+                                </div>
                             </div>
                             <div class="mockup-container">
                                 <div class="mockup-col-main">
                                     <div class="mockup-panel main"></div>
                                 </div>
                                 <div class="mockup-col-sidebar">
-                                    <div class="mockup-panel">
+                                    <div class="mockup-panel mockup-obsession-panel">
                                         <img class="mockup-obsession-art" src="https://lastfm.freetls.fastly.net/i/u/64s/e8e5ed62eba543442fe85ac61dead730.jpg">
                                         <div class="mockup-obsession-name"></div>
                                     </div>
@@ -7150,9 +7316,11 @@ let has_prompted_for_update = false;
                 </div>
                 `);
         } else if (page == 'seasonal') {
+            head.textContent = trans[lang].settings.customise.seasonal.name;
+
             return (`
                 <div class="bleh--panel">
-                    <h3>${trans[lang].settings.customise.seasonal.name}</h3>
+                    <h4 class="top-header">${trans[lang].settings.customise.seasonal.name}</h4>
                     <p>${trans[lang].settings.customise.seasonal.bio}</p>
                     <div class="inner-preview pad click-thru">
                         <div class="current-season-container">
@@ -7219,9 +7387,11 @@ let has_prompted_for_update = false;
                 </div>
             `);
         } else if (page == 'performance') {
+            head.textContent = trans[lang].settings.performance.name;
+
             return (`
                 <div class="bleh--panel">
-                    <h3>${trans[lang].settings.performance.name}</h3>
+                    <h4 class="top-header">${trans[lang].settings.performance.name}</h4>
                     <p>${trans[lang].settings.performance.bio}</p>
                     <div class="toggle-container">
                         <div class="heading">
@@ -7271,18 +7441,22 @@ let has_prompted_for_update = false;
                 </div>
                 `);
         } else if (page == 'profiles') {
+            head.textContent = trans[lang].settings.profiles.name;
+
             return (`
                 <div class="bleh--panel">
-                    <h3>${trans[lang].settings.profiles.name}</h3>
+                    <h4 class="top-header">${trans[lang].settings.profiles.name}</h4>
                     <p>${trans[lang].settings.profiles.bio}</p>
                     <h4>${trans[lang].settings.profiles.notes.name}</h4>
                     <div class="profile-notes" id="profile-notes"></div>
                 </div>
                 `);
         } else if (page == 'redirects') {
+            head.textContent = trans[lang].settings.redirects.name;
+
             return (`
                 <div class="bleh--panel">
-                    <h3>${trans[lang].settings.redirects.name}</h3>
+                    <h4 class="top-header">${trans[lang].settings.redirects.name}</h4>
                     <p>${trans[lang].settings.redirects.bio}</p>
                     <div class="inner-preview">
                         <div class="nag-bar nag-bar--corrections nag-bar--corrections--artist preview-bar">
@@ -7317,9 +7491,11 @@ let has_prompted_for_update = false;
                 </div>
                 `);
         } else if (page == 'activities') {
+            head.textContent = trans[lang].settings.activities.name;
+
             return (`
                 <div class="bleh--panel">
-                    <h3>${trans[lang].settings.activities.name}</h3>
+                    <h4 class="top-header">${trans[lang].settings.activities.name}</h4>
                     <p>${trans[lang].settings.activities.bio}</p>
                     <div class="toggle-container" id="container-activities" onclick="_update_item('activities')">
                         <button class="btn reset" onclick="_reset_item('activities')">${trans[lang].settings.reset}</button>
@@ -7336,9 +7512,11 @@ let has_prompted_for_update = false;
                 </div>
                 `);
         } else if (page == 'language') {
+            head.textContent = trans[lang].settings.language.name;
+
             return (`
                 <div class="bleh--panel">
-                    <h3>${trans[lang].settings.language.name}</h3>
+                    <h4 class="top-header">${trans[lang].settings.language.name}</h4>
                     ${(!valid_langs.includes(document.documentElement.getAttribute('lang'))) ? `
                     <div class="alert alert-error">Selected language is not currently supported in bleh, sorry for the inconvenience.</div>
                     ` : ''}
@@ -7358,9 +7536,11 @@ let has_prompted_for_update = false;
                 </div>
                 `);
         } else if (page == 'accessibility') {
+            head.textContent = trans[lang].settings.accessibility.name;
+
             return (`
                 <div class="bleh--panel">
-                    <h3>${trans[lang].settings.accessibility.name}</h3>
+                    <h4 class="top-header">${trans[lang].settings.accessibility.name}</h4>
                     <div class="toggle-container" id="container-reduced_motion" onclick="_update_item('reduced_motion')">
                         <button class="btn reset" onclick="_reset_item('reduced_motion')">${trans[lang].settings.reset}</button>
                         <div class="heading">
@@ -7415,36 +7595,14 @@ let has_prompted_for_update = false;
                             </button>
                         </div>
                     </div>
-                    <div class="sep"></div>
-                    <h4>${trans[lang].settings.customise.profile_header.name}</h4>
-                    <div class="toggle-container" id="container-profile_header_own" onclick="_update_item('profile_header_own')">
-                        <button class="btn reset" onclick="_reset_item('profile_header_own')">${trans[lang].settings.reset}</button>
-                        <div class="heading">
-                            <h5>${trans[lang].settings.customise.profile_header.for_own}</h5>
-                        </div>
-                        <div class="toggle-wrap">
-                            <button class="toggle" id="toggle-profile_header_own" aria-checked="false">
-                                <div class="dot"></div>
-                            </button>
-                        </div>
-                    </div>
-                    <div class="toggle-container" id="container-profile_header_others" onclick="_update_item('profile_header_others')">
-                        <button class="btn reset" onclick="_reset_item('profile_header_others')">${trans[lang].settings.reset}</button>
-                        <div class="heading">
-                            <h5>${trans[lang].settings.customise.profile_header.for_others}</h5>
-                        </div>
-                        <div class="toggle-wrap">
-                            <button class="toggle" id="toggle-profile_header_others" aria-checked="false">
-                                <div class="dot"></div>
-                            </button>
-                        </div>
-                    </div>
                 </div>
                 `);
         } else if (page == 'text') {
+            head.textContent = trans[lang].settings.text.name;
+
             return (`
                 <div class="bleh--panel">
-                    <h3>${trans[lang].settings.text.name}</h3>
+                    <h4 class="top-header">${trans[lang].settings.text.name}</h4>
                     <h4>${trans[lang].settings.text.font.name} <div class="new-badge">${trans[lang].settings.new}</div></h4>
                     <div class="text-container" id="container-font">
                         <button class="btn reset" onclick="_reset_item('font')">${trans[lang].settings.reset}</button>
@@ -7540,6 +7698,8 @@ let has_prompted_for_update = false;
                 </div>
                 `);
         } else if (page == 'sku') {
+            head.textContent = 'shhhhhhh :3';
+
             return (`
                 <div class="bleh--panel shh">
                     ☆⌒(>w<)
@@ -7566,10 +7726,140 @@ let has_prompted_for_update = false;
                 </div>
                 `);
         } else if (page == 'music') {
+            head.textContent = trans[lang].settings.music.name;
+
             return (`
                 <div class="bleh--panel">
-                    <h3>${trans[lang].settings.music.name}</h3>
-                    <p>${trans[lang].settings.music.bio}</p>
+                    <h4>${trans[lang].settings.corrections.formatting}</h4>
+                    <div class="inner-preview pad flex">
+                        <section class="redesigned-header mockup redesigned-track-header">
+                            <div class="avatar-side">
+                                <img src="https://lastfm.freetls.fastly.net/i/u/avatar170s/8bd696cbd4aa4d4eb6d35393232f55e4.jpg">
+                            </div>
+                            <div class="info-side">
+                                <div class="sub-text">${trans[lang].track.name}</div>
+                                <div class="title-container">
+                                    <h1 class="bleh--name-with-features">
+                                        <div class="title">California Love</div>
+                                        <div class="feat" data-bleh--tag-type="ft." data-bleh--tag-group="guests">ft. Dr. Dre, Roger Troutman</div>
+                                        <div class="feat" data-bleh--tag-type="- remix" data-bleh--tag-group="mixes">Remix</div>
+                                    </h1>
+                                    <h1 class="bleh--name-without-features">
+                                        California Love (ft. Dr. Dre, Roger Troutman) - Remix
+                                    </h1>
+                                </div>
+                                <h2>
+                                    <a class="header-new-crumb">2Pac</a><span class="bleh--name-with-features">, </span>
+                                    <a class="header-new-crumb bleh--name-with-features">Dr. Dre</a><span class="bleh--name-with-features">, </span>
+                                    <a class="header-new-crumb bleh--name-with-features">Roger Troutman</a>
+                                </h2>
+                            </div>
+                        </section>
+                    </div>
+                    <div class="toggle-container" id="container-format_guest_features" onclick="_update_item('format_guest_features')">
+                        <button class="btn reset" onclick="_reset_item('format_guest_features')">${trans[lang].settings.reset}</button>
+                        <div class="heading">
+                            <h5>${trans[lang].settings.corrections.format_guest_features.name}</h5>
+                            <p>${trans[lang].settings.corrections.format_guest_features.bio}</p>
+                        </div>
+                        <div class="toggle-wrap">
+                            <button class="toggle" id="toggle-format_guest_features" aria-checked="true">
+                                <div class="dot"></div>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="toggle-container hide-if-format-guest-disabled" id="container-show_guest_features" onclick="_update_item('show_guest_features')">
+                        <button class="btn reset" onclick="_reset_item('show_guest_features')">${trans[lang].settings.reset}</button>
+                        <div class="heading">
+                            <h5>${trans[lang].settings.corrections.show_guest_features.name}</h5>
+                            <p>${trans[lang].settings.corrections.show_guest_features.bio}</p>
+                        </div>
+                        <div class="toggle-wrap">
+                            <button class="toggle" id="toggle-show_guest_features" aria-checked="true">
+                                <div class="dot"></div>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="inner-preview pad flex">
+                        <section class="redesigned-header mockup redesigned-album-header">
+                            <div class="avatar-side">
+                                <img src="https://lastfm.freetls.fastly.net/i/u/avatar170s/49cc807f69d59746b6b04be3434e6637.jpg">
+                            </div>
+                            <div class="info-side">
+                                <div class="sub-text">${trans[lang].album.name}</div>
+                                <div class="title-container">
+                                    <h1>
+                                        <div class="title">Nevermind</div>
+                                        <div class="feat" data-bleh--tag-type="(remaster" data-bleh--tag-group="remasters">Remastered</div>
+                                    </h1>
+                                </div>
+                                <h2>
+                                    <a class="header-new-crumb">Nirvana</a>
+                                </h2>
+                            </div>
+                        </section>
+                    </div>
+                    <div class="toggle-container hide-if-format-guest-disabled" id="container-show_remaster_tags" onclick="_update_item('show_remaster_tags')">
+                        <button class="btn reset" onclick="_reset_item('show_remaster_tags')">${trans[lang].settings.reset}</button>
+                        <div class="heading">
+                            <h5>${trans[lang].settings.corrections.show_remaster_tags.name} <div class="new-badge">${trans[lang].settings.beta}</div></h5>
+                        </div>
+                        <div class="toggle-wrap">
+                            <button class="toggle" id="toggle-show_remaster_tags" aria-checked="true">
+                                <div class="dot"></div>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="bleh--panel lotus">
+                    <h4>${trans[lang].lotus.version
+                    .replace('lotus', `<a class="lotus lotus-name" href="https://github.com/katelyynn/lotus" target="_blank" id="lotus_hover">lotus</a>`)
+                    .replace('{v}', `<span class="version-link lotus">${(artist_corrections.version >= album_track_corrections.version) ? artist_corrections.version : album_track_corrections.version}</span>`)}</h4>
+                    <p>${trans[lang].settings.corrections.bio}</p>
+                    <!--<div class="screen-row actions-only">
+                        <div class="actions">
+                            <a class="btn action" href="https://github.com/katelyynn/bleh/issues/new/choose" target="_blank">
+                                <div class="icon bleh--correction"></div>
+                                <span class="text">
+                                    <h5>${trans[lang].settings.corrections.submit.name}</h5>
+                                </span>
+                            </a>
+                            <button class="btn action" onclick="_open_correction_modal()">
+                                <div class="icon bleh--correction_modal"></div>
+                                <span class="text">
+                                    <h5>${trans[lang].settings.corrections.view.name}</h5>
+                                </span>
+                            </button>
+                        </div>
+                    </div>-->
+                    <div class="screen-row actions-only">
+                        <div class="actions">
+                            <a class="btn primary external lotus" href="https://github.com/katelyynn/lotus/issues/new/choose" target="_blank">
+                                ${trans[lang].settings.corrections.submit.name}
+                            </a>
+                            <button class="btn continue" onclick="_open_correction_modal()">
+                                ${trans[lang].settings.corrections.view.name}
+                            </button>
+                            <button class="btn continue" onclick="_lotus_check()">
+                                ${trans[lang].lotus.check}
+                            </button>
+                        </div>
+                    </div>
+                    <div class="toggle-container" id="container-corrections" onclick="_update_item('corrections')">
+                        <button class="btn reset" onclick="_reset_item('corrections')">${trans[lang].settings.reset}</button>
+                        <div class="heading">
+                            <h5>${trans[lang].settings.corrections.toggle.name}</h5>
+                        </div>
+                        <div class="toggle-wrap">
+                            <button class="toggle lotus" id="toggle-corrections" aria-checked="true">
+                                <div class="dot"></div>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="bleh--panel">
+                    <h4 class="top-header">${trans[lang].settings.music.name}</h4>
+                    <h4>${trans[lang].settings.music.header}</h4>
                     <div class="inner-preview pad">
                         <div class="tracks">
                             <div class="track realtime">
@@ -7657,130 +7947,6 @@ let has_prompted_for_update = false;
                         </div>
                     </div>
                 </div>
-                <div class="bleh--panel lotus">
-                    <h4>${trans[lang].lotus.version
-                    .replace('lotus', `<a class="lotus lotus-name" href="https://github.com/katelyynn/lotus" target="_blank" id="lotus_hover">lotus</a>`)
-                    .replace('{v}', `<span class="version-link lotus">${(artist_corrections.version >= album_track_corrections.version) ? artist_corrections.version : album_track_corrections.version}</span>`)}</h4>
-                    <p>${trans[lang].settings.corrections.bio}</p>
-                    <!--<div class="screen-row actions-only">
-                        <div class="actions">
-                            <a class="btn action" href="https://github.com/katelyynn/bleh/issues/new/choose" target="_blank">
-                                <div class="icon bleh--correction"></div>
-                                <span class="text">
-                                    <h5>${trans[lang].settings.corrections.submit.name}</h5>
-                                </span>
-                            </a>
-                            <button class="btn action" onclick="_open_correction_modal()">
-                                <div class="icon bleh--correction_modal"></div>
-                                <span class="text">
-                                    <h5>${trans[lang].settings.corrections.view.name}</h5>
-                                </span>
-                            </button>
-                        </div>
-                    </div>-->
-                    <div class="screen-row actions-only">
-                        <div class="actions">
-                            <a class="btn primary external lotus" href="https://github.com/katelyynn/lotus/issues/new/choose" target="_blank">
-                                ${trans[lang].settings.corrections.submit.name}
-                            </a>
-                            <button class="btn continue" onclick="_open_correction_modal()">
-                                ${trans[lang].settings.corrections.view.name}
-                            </button>
-                            <button class="btn continue" onclick="_lotus_check()">
-                                ${trans[lang].lotus.check}
-                            </button>
-                        </div>
-                    </div>
-                    <div class="toggle-container" id="container-corrections" onclick="_update_item('corrections')">
-                        <button class="btn reset" onclick="_reset_item('corrections')">${trans[lang].settings.reset}</button>
-                        <div class="heading">
-                            <h5>${trans[lang].settings.corrections.toggle.name}</h5>
-                        </div>
-                        <div class="toggle-wrap">
-                            <button class="toggle lotus" id="toggle-corrections" aria-checked="true">
-                                <div class="dot"></div>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-                <div class="bleh--panel">
-                    <h4>${trans[lang].settings.corrections.formatting}</h4>
-                    <div class="inner-preview pad flex">
-                        <table class="chartlist chartlist--with-index chartlist--with-index--length-2 chartlist--with-image chartlist--with-play chartlist--with-artist chartlist--with-bar">
-                            <tbody>
-                                <tr class="chartlist-row chartlist-row--with-artist">
-                                    <td class="chartlist-index">
-                                        1
-                                    </td>
-                                    <td class="chartlist-image">
-                                        <span class="cover-art">
-                                            <img src="https://lastfm.freetls.fastly.net/i/u/64s/c15d3ed1bd8574260f9378e26847501d.jpg" alt="fractions of infinity" loading="lazy">
-                                        </span>
-                                    </td>
-                                    <td class="chartlist-name">
-                                        <a href="/music/Quadeca/_/fractions+of+infinity" title="fractions of infinity" class="bleh--chartlist-name-without-features">fractions of infinity (feat. Sunday Service Choir)</a>
-                                        <a href="/music/Quadeca/_/fractions+of+infinity" title="fractions of infinity" class="bleh--chartlist-name-with-features">
-                                            <span class="title">fractions of infinity</span>
-                                            <span class="feat" data-bleh--tag-group="guests">feat. Sunday Service Choir</span>
-                                        </a>
-                                    </td>
-                                    <td class="chartlist-artist bleh--chartlist-name-without-features">
-                                        <a href="/music/Quadeca" title="Quadeca">Quadeca</a>
-                                    </td>
-                                    <td class="chartlist-artist bleh--chartlist-name-with-features">
-                                        <a href="/music/Quadeca" title="Quadeca">Quadeca</a>,
-                                        <a href="/music/Quadeca" title="Quadeca">Sunday Service Choir</a>
-                                    </td>
-                                    <td class="chartlist-bar">
-                                        <span class="chartlist-count-bar">
-                                            <span class="chartlist-count-bar-link">
-                                                <span class="chartlist-count-bar-slug" style="width:100.0%;"></span>
-                                                <span class="chartlist-count-bar-value">
-                                                    104,321
-                                                </span>
-                                            </span>
-                                        </span>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <div class="toggle-container" id="container-format_guest_features" onclick="_update_item('format_guest_features')">
-                        <button class="btn reset" onclick="_reset_item('format_guest_features')">${trans[lang].settings.reset}</button>
-                        <div class="heading">
-                            <h5>${trans[lang].settings.corrections.format_guest_features.name}</h5>
-                            <p>${trans[lang].settings.corrections.format_guest_features.bio}</p>
-                        </div>
-                        <div class="toggle-wrap">
-                            <button class="toggle" id="toggle-format_guest_features" aria-checked="true">
-                                <div class="dot"></div>
-                            </button>
-                        </div>
-                    </div>
-                    <div class="toggle-container hide-if-format-guest-disabled" id="container-show_guest_features" onclick="_update_item('show_guest_features')">
-                        <button class="btn reset" onclick="_reset_item('show_guest_features')">${trans[lang].settings.reset}</button>
-                        <div class="heading">
-                            <h5>${trans[lang].settings.corrections.show_guest_features.name}</h5>
-                            <p>${trans[lang].settings.corrections.show_guest_features.bio}</p>
-                        </div>
-                        <div class="toggle-wrap">
-                            <button class="toggle" id="toggle-show_guest_features" aria-checked="true">
-                                <div class="dot"></div>
-                            </button>
-                        </div>
-                    </div>
-                    <div class="toggle-container hide-if-format-guest-disabled" id="container-show_remaster_tags" onclick="_update_item('show_remaster_tags')">
-                        <button class="btn reset" onclick="_reset_item('show_remaster_tags')">${trans[lang].settings.reset}</button>
-                        <div class="heading">
-                            <h5>${trans[lang].settings.corrections.show_remaster_tags.name}</h5>
-                        </div>
-                        <div class="toggle-wrap">
-                            <button class="toggle" id="toggle-show_remaster_tags" aria-checked="true">
-                                <div class="dot"></div>
-                            </button>
-                        </div>
-                    </div>
-                </div>
                 <div class="bleh--panel">
                     <h4>${trans[lang].settings.customise.artwork.name}</h4>
                     <div class="inner-preview pad">
@@ -7791,18 +7957,6 @@ let has_prompted_for_update = false;
                             <div class="album-cover swatch" style="background-image: url('https://lastfm.freetls.fastly.net/i/u/770x0/e9dd5c8d3294ca0a0f58cbf7ad5fd6a6.jpg')"></div>
                             <div class="album-cover swatch" style="background-image: url('https://lastfm.freetls.fastly.net/i/u/770x0/570021b68d3d9d2db08bc99a473303b0.jpg')"></div>
                             <div class="album-cover swatch" style="background-image: url('https://lastfm.freetls.fastly.net/i/u/770x0/4cc13056c7568b5c207dd7aee03fdb0f.jpg')"></div>
-                        </div>
-                    </div>
-                    <div class="toggle-container" id="container-hue_from_album">
-                        <button class="btn reset" onclick="_reset_item('hue_from_album')">${trans[lang].settings.reset}</button>
-                        <div class="heading">
-                            <h5>${trans[lang].settings.customise.hue_from_album.name}</h5>
-                            <p>${trans[lang].settings.customise.hue_from_album.bio}</p>
-                        </div>
-                        <div class="toggle-wrap">
-                            <button class="toggle" id="toggle-hue_from_album" onclick="_update_item('hue_from_album')" aria-checked="true">
-                                <div class="dot"></div>
-                            </button>
                         </div>
                     </div>
                     <div class="slider-container" id="container-gloss">
@@ -7858,11 +8012,13 @@ let has_prompted_for_update = false;
         }
     }
 
-    unsafeWindow._change_settings_page = function(page) {
-        change_settings_page(page);
+    unsafeWindow._change_settings_page = function(page, setting = null) {
+        change_settings_page(page, setting);
     }
 
-    function change_settings_page(page) {
+    function change_settings_page(page, setting = null) {
+        document.getElementById('settings_header').setAttribute('data-page', page);
+
         if (!ff('bleh_settings_tabs'))
             document.getElementById('bleh--panel-main').innerHTML = '';
         else
@@ -7891,7 +8047,7 @@ let has_prompted_for_update = false;
                         </li>
                         <li class="navlist-item secondary-nav-item">
                             <a class="secondary-nav-item-link bleh--nav" data-bleh-page="customise" onclick="_change_settings_page('customise')">
-                                ${trans[lang].settings.customise.name}
+                                ${trans[lang].settings.layout.name}
                             </a>
                         </li>
                         <li class="navlist-item secondary-nav-item">
@@ -7982,6 +8138,18 @@ let has_prompted_for_update = false;
             tippy(document.getElementById('current_season_start'), {
                 content: new Date(stored_season.start.replace('y0', stored_season.year)).toLocaleString(lang)
             });
+        }
+
+        if (setting != null) {
+            let setting_container = document.body.querySelector(`#container-${setting}`);
+
+            if (setting_container != null) {
+                let y = setting_container.getBoundingClientRect().top + window.scrollY - 300;
+                window.scroll({
+                    top: y,
+                    behavior: 'smooth'
+                });
+            }
         }
     }
 
@@ -8942,7 +9110,7 @@ let has_prompted_for_update = false;
 
                     // differentiate 2017 remaster to 20th deluxe
                     console.log(group, group == 'remasters', lowercase_title.includes(' remaster'));
-                    if (group == 'remasters' && !lowercase_title.includes(' remaster')) {
+                    if (group == 'remasters' && !lowercase_title.includes(' remaster') && !lowercase_title.includes('(remaster')) {
                         continue;
                     } else {
                         // everything else
@@ -8990,9 +9158,10 @@ let has_prompted_for_update = false;
             .replace('ft. ', '').replace('FEAT. ', '').replace('Ft. ', '')
             .replace('WITH', 'with').replace('w/ ', '').replace('with ', '').replace('With ', '')
             .replaceAll(' & ', ';').replaceAll(', ', ';').replaceAll(' and ', ';')
-            .replaceAll('Tyler;the', 'Tyler, the').replaceAll(' with ', ';')
+            .replaceAll(' with ', ';')
             .replaceAll('- ', '')
-            .replaceAll(',; ', ';');
+            .replaceAll(',; ', ';')
+            .replaceAll('Tyler;the', 'Tyler, the').replaceAll('Tyler;The', 'Tyler, The');
 
             console.log('pre-split', field_text);
 
@@ -9823,11 +9992,13 @@ let has_prompted_for_update = false;
 
     function sanitise(text) {
         return encodeURI(text
-        .replaceAll(' ', '+'));
+        .replaceAll(' ', '+')
+        .replaceAll('/', '%2F'));
     }
     function desanitise(text) {
         return decodeURI(text
-        .replaceAll('+', ' '));
+        .replaceAll('+', ' ')
+        .replaceAll('%2F', '/'));
     }
 
 
@@ -11078,11 +11249,61 @@ let has_prompted_for_update = false;
             listen_item.innerHTML = (`
                 <img class="view-item-avatar" src="${avi}" alt="${name}">${trans[lang].music.listens.count_listens.replace('{c}', listens.toLocaleString(lang))}
             `);
+
+            let menu = tippy(listen_item, {
+                theme: 'context-menu',
+                content: (`
+                    <a class="dropdown-menu-clickable-item" href="${root}user/${name}" data-menu-item="view_profile">
+                        ${trans[lang].music.view_profile}
+                    </a>
+                `),
+                allowHTML: true,
+                placement: 'right-start',
+                trigger: 'manual',
+                interactive: true,
+                interactiveBorder: 10,
+                offset: [0, 0],
+
+                onShow(instance) {
+                    instance.popper.addEventListener('click', event => {
+                        instance.hide();
+                    });
+                }
+            });
+
+            register_menu(listen_item, menu);
         } else if (listens > -2) {
             // loading listens
             listen_item.innerHTML = (`
                 <img class="view-item-avatar" src="${avi}" alt="${name}">${trans[lang].music.listens.loading_listens}
             `);
+
+            let menu = tippy(listen_item, {
+                theme: 'context-menu',
+                content: (`
+                    <a class="dropdown-menu-clickable-item" href="${root}user/${name}" data-menu-item="view_profile">
+                        ${trans[lang].music.view_profile}
+                    </a>
+                    <div class="sep"></div>
+                    <button class="dropdown-menu-clickable-item" onclick="_open_profile_shortcut_window()" data-menu-item="settings">
+                        ${trans[lang].settings.configure}
+                    </button>
+                `),
+                allowHTML: true,
+                placement: 'right-start',
+                trigger: 'manual',
+                interactive: true,
+                interactiveBorder: 10,
+                offset: [0, 0],
+
+                onShow(instance) {
+                    instance.popper.addEventListener('click', event => {
+                        instance.hide();
+                    });
+                }
+            });
+
+            register_menu(listen_item, menu);
         } else {
             // other listeners by clicking this link (artist)
             listen_item.innerHTML = (`
@@ -11470,7 +11691,10 @@ let has_prompted_for_update = false;
             redesigned_artist_header.classList.add('redesigned-header', 'redesigned-artist-header', 'no-background');
             redesigned_artist_header.innerHTML = (`
                 <div class="avatar-side">
-                    ${(avatar != null) ? `<img src="${avatar.getAttribute('content').replace('/ar0/', '/avatar300s/')}"><a onclick="_expand_avatar('${avatar.getAttribute('content')}')" class="bleh--avatar-clickable-link"></a>` : '<img class="missing-artist">'}
+                    ${(avatar != null) ? (`
+                    <img src="${avatar.getAttribute('content').replace('/ar0/', '/avatar300s/')}">
+                    <a class="bleh--avatar-clickable-link"></a>
+                    `) : '<img class="missing-artist">'}
                 </div>
                 <div class="info-side">
                     <div class="sub-text">${trans[lang].artist.name}</div>
@@ -11484,9 +11708,23 @@ let has_prompted_for_update = false;
                 ${(!is_subpage) ? (`
                 <div class="gallery-side">
                     <section class="view-all-panel">
+                        ${(settings.quick_artist_button == 'gallery') ? (`
                         <a class="btn view-all-button back top-gallery-button" href="${window.location.href}/+images">
                             ${trans[lang].gallery.view}
                         </a>
+                        `) : (settings.quick_artist_button == 'shouts') ? (`
+                        <a class="btn view-all-button back top-shout-button" href="${window.location.href}/+shoutbox">
+                            ${trans[lang].settings.layout.quick_artist_button.shouts}
+                        </a>
+                        `) : (settings.quick_artist_button == 'wiki') ? (`
+                        <a class="btn view-all-button back top-wiki-button" href="${window.location.href}/+wiki">
+                            ${trans[lang].settings.layout.quick_artist_button.wiki}
+                        </a>
+                        `) : (settings.quick_artist_button == 'listens') ? (`
+                        <a class="btn view-all-button back top-listens-button" href="${window.location.href}/+listeners/you-know">
+                            ${trans[lang].settings.layout.quick_artist_button.listens}
+                        </a>
+                        `) : ''}
                     </section>
                 </div>
                 `) : ''}
@@ -11497,6 +11735,77 @@ let has_prompted_for_update = false;
 
             page.structure.container.insertBefore(redesigned_artist_header, page.structure.container.firstElementChild);
             artist_header.classList.add('legacy-header');
+
+
+            let avatar_side = redesigned_artist_header.querySelector('.avatar-side');
+            let avatar_link = avatar_side.querySelector('a');
+
+            let expand_link;
+            if (avatar != null)
+                expand_link = `_expand_avatar('${avatar.getAttribute('content')}')`;
+
+            if (settings.default_avatar_action == 'expand' && avatar != null)
+                avatar_link.setAttribute('onclick', expand_link);
+            else if (settings.default_avatar_action == 'gallery')
+                avatar_link.href = `${root}music/${sanitise(page.name)}/+images`;
+
+            let menu = tippy(avatar_side, {
+                theme: 'context-menu',
+                content: (`
+                    ${(avatar != null) ? (`
+                    <button class="dropdown-menu-clickable-item" onclick="${expand_link}" data-menu-item="expand">
+                        ${trans[lang].gallery.open.name}
+                    </button>
+                    `) : ''}
+                    <a class="dropdown-menu-clickable-item" href="${root}music/${sanitise(page.name)}/+images" data-menu-item="gallery">
+                        ${trans[lang].gallery.view}
+                    </a>
+                    <div class="sep"></div>
+                    <a class="dropdown-menu-clickable-item" href="${root}bleh?tab=customise" data-menu-item="settings">
+                        ${trans[lang].settings.configure}
+                    </a>
+                `),
+                allowHTML: true,
+                placement: 'right-start',
+                trigger: 'manual',
+                interactive: true,
+                interactiveBorder: 10,
+                offset: [0, 0],
+
+                onShow(instance) {
+                    instance.popper.addEventListener('click', event => {
+                        instance.hide();
+                    });
+                }
+            });
+
+            register_menu(avatar_side, menu);
+
+            if (!is_subpage) {
+                let view_button = redesigned_artist_header.querySelector('.view-all-button');
+                let view_menu = tippy(view_button, {
+                    theme: 'context-menu',
+                    content: (`
+                        <a class="dropdown-menu-clickable-item" href="${root}bleh?tab=customise" data-menu-item="settings">
+                            ${trans[lang].settings.configure}
+                        </a>
+                    `),
+                    allowHTML: true,
+                    placement: 'right-start',
+                    trigger: 'manual',
+                    interactive: true,
+                    interactiveBorder: 10,
+                    offset: [0, 0],
+
+                    onShow(instance) {
+                        instance.popper.addEventListener('click', event => {
+                            instance.hide();
+                        });
+                    }
+                });
+
+                register_menu(view_button, view_menu);
+            }
         }
 
         if (!is_subpage) {
@@ -11523,6 +11832,8 @@ let has_prompted_for_update = false;
                 bleh_wiki_history();
             else if (page.subpage == 'music_artist_wiki_edit')
                 bleh_wiki_editor();
+            else if (page.subpage == 'music_artist_listeners_overview')
+                bleh_top_listeners();
         }
 
         log('status is', 'page', 'info', page);
@@ -11544,8 +11855,8 @@ let has_prompted_for_update = false;
 
         patch_header_title();
 
-        page.name = album_header.querySelector('.header-new-title').textContent;
         page.sister = album_header.querySelector('.header-new-crumb span').textContent;
+        page.name = correct_item_by_artist(document.body.querySelector('[data-page-resource-name]').getAttribute('data-page-resource-name'), page.sister);
 
         let is_subpage = album_header.classList.contains('header-new--subpage');
 
@@ -11565,8 +11876,11 @@ let has_prompted_for_update = false;
         }
         page.structure.row = page.structure.container.querySelector('.row');
         try {
-            page.structure.main = page.structure.row.querySelector('.col-main:not(.visible-xs, .upper-overview)');
-            page.structure.side = page.structure.row.querySelector('.col-sidebar.hidden-xs');
+            page.structure.main = page.structure.row.querySelector('.col-main:not(.visible-xs, .hidden-xs, .upper-overview)');
+            if (!is_subpage)
+                page.structure.side = page.structure.row.querySelector('.col-sidebar.hidden-xs.masonry-right-bottom');
+            else
+                page.structure.side = page.structure.row.querySelector('.col-sidebar.hidden-xs');
         } catch(e) {
             log('unable to find elements', 'page structure');
         }
@@ -11584,7 +11898,10 @@ let has_prompted_for_update = false;
             redesigned_album_header.innerHTML = (`
                 ${(is_subpage || ff('show_album_cover_always')) ? (`
                 <div class="avatar-side">
-                    ${(avatar != null) ? `<img src="${avatar.getAttribute('content').replace('/ar0/', '/avatar170s/')}"><a onclick="_expand_avatar('${avatar.getAttribute('content')}')" class="bleh--avatar-clickable-link"></a>` : '<img class="missing-album">'}
+                    ${(avatar != null) ? (`
+                    <img src="${avatar.getAttribute('content').replace('/ar0/', '/avatar170s/')}">
+                    <a class="bleh--avatar-clickable-link"></a>
+                    `) : '<img class="missing-album">'}
                 </div>
                 `) : ''}
                 <div class="info-side">
@@ -11602,6 +11919,51 @@ let has_prompted_for_update = false;
 
             page.structure.container.insertBefore(redesigned_album_header, page.structure.container.firstElementChild);
             album_header.classList.add('legacy-header');
+
+
+            let avatar_side = redesigned_album_header.querySelector('.avatar-side');
+            let avatar_link = avatar_side.querySelector('a');
+
+            let expand_link;
+            if (avatar != null)
+                expand_link = `_expand_avatar('${avatar.getAttribute('content')}')`;
+
+            if (settings.default_avatar_action == 'expand' && avatar != null)
+                avatar_link.setAttribute('onclick', expand_link);
+            else if (settings.default_avatar_action == 'gallery')
+                avatar_link.href = `${root}music/${sanitise(page.sister)}/${sanitise(page.name)}/+images`;
+
+            let menu = tippy(avatar_side, {
+                theme: 'context-menu',
+                content: (`
+                    ${(avatar != null) ? (`
+                    <button class="dropdown-menu-clickable-item" onclick="${expand_link}" data-menu-item="expand">
+                        ${trans[lang].gallery.open.name}
+                    </button>
+                    `) : ''}
+                    <a class="dropdown-menu-clickable-item" href="${root}music/${sanitise(page.sister)}/${sanitise(page.name)}/+images" data-menu-item="gallery">
+                        ${trans[lang].gallery.view}
+                    </a>
+                    <div class="sep"></div>
+                    <a class="dropdown-menu-clickable-item" href="${root}bleh?tab=customise" data-menu-item="settings">
+                        ${trans[lang].settings.configure}
+                    </a>
+                `),
+                allowHTML: true,
+                placement: 'right-start',
+                trigger: 'manual',
+                interactive: true,
+                interactiveBorder: 10,
+                offset: [0, 0],
+
+                onShow(instance) {
+                    instance.popper.addEventListener('click', event => {
+                        instance.hide();
+                    });
+                }
+            });
+
+            register_menu(avatar_side, menu);
         }
 
         // cover
@@ -11640,6 +12002,24 @@ let has_prompted_for_update = false;
                     });
                 });
             }
+
+            let upload_container = page.structure.side.querySelector('.album-overview-cover-art-upload-action');
+            let avatar = album_header.querySelector('.header-new-background-image');
+
+            let expand_container = document.createElement('span');
+            expand_container.classList.add('album-overview-cover-art-expand-action');
+
+            let expand_link = document.createElement('a');
+            expand_link.setAttribute('onclick', `_expand_avatar('${avatar.getAttribute('content')}')`);
+            expand_link.textContent = trans[lang].gallery.open.name;
+
+            tippy(expand_link, {
+                content: trans[lang].gallery.open.name
+            });
+
+            expand_container.appendChild(expand_link);
+
+            upload_container.after(expand_container);
         } else {
             // which subpage is it?
             page.subpage = document.body.classList[2].replace('namespace--', '');
@@ -11679,8 +12059,8 @@ let has_prompted_for_update = false;
 
         patch_header_title();
 
-        page.name = track_header.querySelector('.header-new-title').textContent;
         page.sister = track_header.querySelector('.header-new-crumb span').textContent;
+        page.name = correct_item_by_artist(document.body.querySelector('[data-page-resource-name]').getAttribute('data-page-resource-name'), page.sister);
 
         let is_subpage = track_header.classList.contains('header-new--subpage');
 
@@ -11717,17 +12097,27 @@ let has_prompted_for_update = false;
 
         if (ff('refreshed_music_nav')) {
             let artist_avatar = track_header.querySelector('.header-new-background-image');
-            let album_avatar = page.structure.main.querySelector('.source-album-art img');
             let title = track_header.querySelector('.header-new-title');
             let artist = track_header.querySelector('[itemprop="byArtist"]');
             let position = track_header.querySelector('.header-new-chart-position-number');
+
+            let source_album = page.structure.main.querySelector('.source-album');
+            let album_avatar;
+            if (source_album != null)
+                album_avatar = source_album.querySelector('.source-album-art img');
 
             let redesigned_track_header = document.createElement('section');
             redesigned_track_header.classList.add('redesigned-header', 'redesigned-track-header', 'no-background');
             redesigned_track_header.innerHTML = (`
                 <div class="avatar-side">
-                    ${(album_avatar != null) ? `<img src="${album_avatar.getAttribute('src').replace('300x300', 'avatar300s')}"><a onclick="_expand_avatar('${album_avatar.getAttribute('src').replace('300x300', 'ar0')}')" class="bleh--avatar-clickable-link"></a>`
-                    : (artist_avatar != null) ? `<img src="${artist_avatar.getAttribute('content').replace('/ar0/', '/avatar170s/')}"><a onclick="_expand_avatar('${artist_avatar.getAttribute('content')}')" class="bleh--avatar-clickable-link"></a>` : '<img class="missing-track">'}
+                    ${(album_avatar != null) ? (`
+                    <img src="${album_avatar.getAttribute('src').replace('300x300', 'avatar300s')}">
+                    <a class="bleh--avatar-clickable-link"></a>
+                    `)
+                    : (artist_avatar != null) ? (`
+                    <img src="${artist_avatar.getAttribute('content').replace('/ar0/', '/avatar170s/')}">
+                    <a class="bleh--avatar-clickable-link"></a>
+                    `) : '<img class="missing-track">'}
                 </div>
                 <div class="info-side">
                     <div class="sub-text">${trans[lang].track.name}</div>
@@ -11746,6 +12136,55 @@ let has_prompted_for_update = false;
 
             page.structure.container.insertBefore(redesigned_track_header, page.structure.container.firstElementChild);
             track_header.classList.add('legacy-header');
+
+
+            let avatar_side = redesigned_track_header.querySelector('.avatar-side');
+            let avatar_link = avatar_side.querySelector('a');
+
+            let expand_link;
+            if (album_avatar != null)
+                expand_link = `_expand_avatar('${album_avatar.getAttribute('src').replace('300x300', 'ar0')}')`;
+            else if (artist_avatar != null)
+                expand_link = `_expand_avatar('${artist_avatar.getAttribute('content')}')`;
+
+            if (settings.default_avatar_action == 'expand' && (album_avatar != null || artist_avatar != null))
+                avatar_link.setAttribute('onclick', expand_link);
+            else if (settings.default_avatar_action == 'gallery' && album_avatar != null)
+                avatar_link.href = source_album.querySelector('.link-block-cover-link').getAttribute('href');
+
+            let menu = tippy(avatar_side, {
+                theme: 'context-menu',
+                content: (`
+                    ${(album_avatar != null || artist_avatar != null) ? (`
+                    <button class="dropdown-menu-clickable-item" onclick="${expand_link}" data-menu-item="expand">
+                        ${trans[lang].gallery.open.name}
+                    </button>
+                    `) : ''}
+                    ${(album_avatar != null) ? (`
+                    <a class="dropdown-menu-clickable-item" href="${source_album.querySelector('.link-block-cover-link').getAttribute('href')}" data-menu-item="album">
+                        ${trans[lang].settings.layout.avatar_action.album}
+                    </a>
+                    `) : ''}
+                    <div class="sep"></div>
+                    <a class="dropdown-menu-clickable-item" href="${root}bleh?tab=customise" data-menu-item="settings">
+                        ${trans[lang].settings.configure}
+                    </a>
+                `),
+                allowHTML: true,
+                placement: 'right-start',
+                trigger: 'manual',
+                interactive: true,
+                interactiveBorder: 10,
+                offset: [0, 0],
+
+                onShow(instance) {
+                    instance.popper.addEventListener('click', event => {
+                        instance.hide();
+                    });
+                }
+            });
+
+            register_menu(avatar_side, menu);
         }
 
         if (!is_subpage) {
@@ -12818,6 +13257,9 @@ let has_prompted_for_update = false;
 
         let wiki_history_table = buffer_container.querySelector('.wiki-history-table');
 
+        // nav
+        let pagination = buffer_container.querySelector('.pagination');
+
 
         // put this in col-main
         let wiki_panel = document.createElement('section');
@@ -12828,6 +13270,9 @@ let has_prompted_for_update = false;
 
         page.structure.main.appendChild(wiki_panel);
         buffer_container.style.setProperty('display', 'none');
+
+        if (pagination != null)
+            wiki_panel.appendChild(pagination);
 
 
         // latest
@@ -13628,7 +14073,7 @@ let has_prompted_for_update = false;
                 </div>
                 <div class="toggle-wrap">
                     <input class="companion-checkbox" type="checkbox" name="${id}" id="inbuilt-companion-checkbox-${id}">
-                    <span class="btn toggle" id="toggle-${id}" onclick="_update_inbuilt_item('${id}')" aria-checked="false">
+                    <span class="btn toggle" id="toggle-${id}" aria-checked="false">
                         <div class="dot"></div>
                     </span>
                 </div>
@@ -13731,5 +14176,42 @@ let has_prompted_for_update = false;
 
             about_artist_container.appendChild(guest_feature_panel);
         }
+    }
+
+
+
+
+    function bleh_top_listeners() {
+        if (!ff('unify_top_listeners'))
+            return;
+
+        let panel = page.structure.main.querySelector(':scope > .buffer-standard');
+
+        // view-related buttons
+        let view_buttons = document.createElement('div');
+        view_buttons.classList.add('view-buttons-wrapper');
+        view_buttons.innerHTML = (`
+            <div class="view-buttons">
+                <button class="btn view-item" id="toggle-list_view-1" data-toggle="list_view" data-toggle-value="1" onclick="_update_item('list_view', 1)">
+                    Grid
+                </button>
+                <button class="btn view-item" id="toggle-list_view-0" data-toggle="list_view" data-toggle-value="0" onclick="_update_item('list_view', 0)">
+                    List
+                </button>
+            </div>
+        `);
+        panel.insertBefore(view_buttons, panel.firstElementChild);
+
+        refresh_all();
+
+        let legacy_top_listeners_container = panel.querySelector('.top-listeners');
+        let legacy_top_listeners = legacy_top_listeners_container.querySelectorAll('.top-listeners-item');
+
+        legacy_top_listeners.forEach((listener) => {
+            let avatar = listener.querySelector('.top-listeners-item-image');
+            let name = listener.querySelector('.top-listeners-item-name').textContent;
+
+            patch_avatar(avatar, name, 'listener');
+        });
     }
 })();

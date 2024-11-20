@@ -1,6 +1,12 @@
 {
-    "updated": "2024-11-13",
-    "latest": "2024.1113",
+    "updated": "2024-11-20",
+    "latest": "2024.1120",
+    "2024.1120": {
+        "name": "Redesign improvements",
+        "type": "major",
+        "force": false,
+        "bio": "This update is a little late (i got sidetracked) but it is now released in a complete-enough state. More changes will come when i'm a little more focused on the blehs.\n\n# Settings\n- __Continued redesign of bleh settings__\n    - This was very much needed and will continue overtime :3\n    - Settings now uses the header redesign seen across the site (not all icons are finished yet)\n    - The 'Appearance' tab has seen a shift in layout too, with added subtext and the album colour toggle moved up to the colour selection (where it should've been)\n- __'Customise' has changed into a new 'Layout' tab__\n    - Here will be the home for customising page layouts for your profile, artists, albums, etc.\n    - New in this tab is the ability to customise the action upon clicking avatars (default is still expand to full resolution) and the handy 'view photos' button on the right of artist pages.\n\n![Layout tab](https://katelyynn.github.io/bleh/fm/changelog/img/layout.png)\n\n# Editing\n- Fixed toggles being unable to click\n    - Labels were still clickable but this was still annoying"
+    },
     "2024.1113": {
         "name": "Major redesign season",
         "type": "major",
