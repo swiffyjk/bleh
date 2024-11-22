@@ -5987,47 +5987,78 @@ let has_prompted_for_update = false;
 
 
     // patch avatar
-    function patch_avatar(element, name, type = '') {
-        if (!element.hasAttribute('data-kate-processed')) {
-            element.setAttribute('data-kate-processed', 'true');
+    function patch_avatar(avatar, name, type = '') {
+        if (avatar.hasAttribute('data-bleh-avatar'))
+            return;
+        avatar.setAttribute('data-bleh-avatar', 'true');
 
-            if (profile_badges.hasOwnProperty(name)) {
-                // remove pre-existing badge
-                let pre_existing_badge = element.querySelector('.avatar-status-dot');
-                if (pre_existing_badge !== null)
-                    element.removeChild(pre_existing_badge);
+        let avatar_img = avatar.querySelector('img');
+        if (avatar_img == null)
+            return;
 
-                element.setAttribute('title','');
+        // last.fm bug: it uses 64s instead of avatar70s for
+        // event attendees - this causes it to center in the middle of the image
+        // rather than the top
+        avatar_img.setAttribute('src', avatar_img.getAttribute('src').replace('/64s/', '/avatar70s/'));
 
-                let this_badge = profile_badges[name];
-                if (!Array.isArray(profile_badges[name])) {
-                    // default
-                    log(`@${name} 1 badge:`, 'shout', 'info', profile_badges[name]);
-                } else {
-                    // multiple
-                    log(`@${name} multiple badges:`, 'shout', 'info', profile_badges[name]);
-                    let badges_length = Object.keys(profile_badges[name]).length - 1;
-                    this_badge = profile_badges[name][badges_length];
-                    log(`@${name} using badge ${badges_length} as primary`, 'shout', 'info', this_badge);
-                }
+        if (profile_badges.hasOwnProperty(name)) {
+            // remove pre-existing badge
+            let pre_existing_badge = avatar.querySelector('.avatar-status-dot');
+            if (pre_existing_badge !== null)
+                avatar.removeChild(pre_existing_badge);
 
-                // make new badge
-                let badge = document.createElement('span');
-                badge.classList.add('avatar-status-dot',`user-status--bleh-${this_badge.type}`,`user-status--bleh-user-${name}`);
-                element.appendChild(badge);
+            avatar.setAttribute('title','');
 
-                tippy(element, {
+            let this_badge = profile_badges[name];
+            if (!Array.isArray(profile_badges[name])) {
+                // default
+                log(`@${name} 1 badge:`, 'shout', 'info', profile_badges[name]);
+            } else {
+                // multiple
+                log(`@${name} multiple badges:`, 'shout', 'info', profile_badges[name]);
+                let badges_length = Object.keys(profile_badges[name]).length - 1;
+                this_badge = profile_badges[name][badges_length];
+                log(`@${name} using badge ${badges_length} as primary`, 'shout', 'info', this_badge);
+            }
+
+            // make new badge
+            let badge = document.createElement('span');
+            badge.classList.add('avatar-status-dot',`user-status--bleh-${this_badge.type}`,`user-status--bleh-user-${name}`);
+            avatar.appendChild(badge);
+
+            tippy(avatar, {
+                theme: 'user',
+                content: (`
+                    <div class="image">
+                        <div class="inner-image">
+                            ${avatar_img.outerHTML}
+                        </div>
+                    </div>
+                    <div class="info">
+                        <h5 class="title ${(cute.includes(name)) ? 'bleh--name-is-cute-less' : ''}">${name}</h5>
+                        <p class="descriptor">Top Badge</p>
+                        <p class="badge user-status--bleh-${this_badge.type} user-status--bleh-user-${name}" data-badge-type="${this_badge.type}" data-badge-user="${name}">${this_badge.name}</p>
+                    </div>
+                `),
+                allowHTML: true,
+                delay: [100, 50],
+                placement: 'bottom'
+            });
+
+            return this_badge;
+        } else {
+            let pre_existing_badge = avatar.querySelector('.avatar-status-dot');
+            if (pre_existing_badge == null) {
+                tippy(avatar, {
                     theme: 'user',
                     content: (`
                         <div class="image">
                             <div class="inner-image">
-                                ${element.querySelector('img').outerHTML}
+                                ${avatar_img.outerHTML}
                             </div>
                         </div>
                         <div class="info">
                             <h5 class="title ${(cute.includes(name)) ? 'bleh--name-is-cute-less' : ''}">${name}</h5>
-                            <p class="descriptor">Top Badge</p>
-                            <p class="badge user-status--bleh-${this_badge.type} user-status--bleh-user-${name}" data-badge-type="${this_badge.type}" data-badge-user="${name}">${this_badge.name}</p>
                         </div>
                     `),
                     allowHTML: true,
@@ -6035,53 +6066,31 @@ let has_prompted_for_update = false;
                     placement: 'bottom'
                 });
 
-                return this_badge;
+                return {};
             } else {
-                let pre_existing_badge = element.querySelector('.avatar-status-dot');
-                if (pre_existing_badge == null) {
-                    tippy(element, {
-                        theme: 'user',
-                        content: (`
-                            <div class="image">
-                                <div class="inner-image">
-                                    ${element.querySelector('img').outerHTML}
-                                </div>
+                tippy(avatar, {
+                    theme: 'user',
+                    content: (`
+                        <div class="image">
+                            <div class="inner-image">
+                                ${avatar_img.outerHTML}
                             </div>
-                            <div class="info">
-                                <h5 class="title ${(cute.includes(name)) ? 'bleh--name-is-cute-less' : ''}">${name}</h5>
-                            </div>
-                        `),
-                        allowHTML: true,
-                        delay: [100, 50],
-                        placement: 'bottom'
-                    });
+                        </div>
+                        <div class="info">
+                            <h5 class="title ${(cute.includes(name)) ? 'bleh--name-is-cute-less' : ''}">${name}</h5>
+                            <p class="descriptor">Top Badge</p>
+                            <p class="badge ${pre_existing_badge.classList[1]}">${avatar.getAttribute('title')}</p>
+                        </div>
+                    `),
+                    allowHTML: true,
+                    delay: [100, 50],
+                    placement: 'bottom'
+                });
+                avatar.setAttribute('title', '');
 
-                    return {};
-                } else {
-                    tippy(element, {
-                        theme: 'user',
-                        content: (`
-                            <div class="image">
-                                <div class="inner-image">
-                                    ${element.querySelector('img').outerHTML}
-                                </div>
-                            </div>
-                            <div class="info">
-                                <h5 class="title ${(cute.includes(name)) ? 'bleh--name-is-cute-less' : ''}">${name}</h5>
-                                <p class="descriptor">Top Badge</p>
-                                <p class="badge ${pre_existing_badge.classList[1]}">${element.getAttribute('title')}</p>
-                            </div>
-                        `),
-                        allowHTML: true,
-                        delay: [100, 50],
-                        placement: 'bottom'
-                    });
-                    element.setAttribute('title', '');
-
-                    return {
-                        type: pre_existing_badge.classList[1]
-                    };
-                }
+                return {
+                    type: pre_existing_badge.classList[1]
+                };
             }
         }
     }
