@@ -12324,13 +12324,15 @@ let has_prompted_for_update = false;
         let labels = [];
         let values = [];
 
+        let has_seen_more_than_0 = false;
         days.forEach((day, index) => {
             //let label = day.querySelector('time').textContent.trim();
             let label = moment(day.querySelector('time').getAttribute('datetime'));
             let value = day.querySelector('.js-value').getAttribute('data-value');
 
-            if (value == '0' && index < 120)
+            if (value == '0' && index < 120 && !has_seen_more_than_0)
                 return;
+            has_seen_more_than_0 = true;
 
             labels.push(label);
             values.push(value);
