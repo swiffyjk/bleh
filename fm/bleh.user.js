@@ -2665,7 +2665,6 @@ let settings_template = {
     font_weight_medium: 650,
     font_weight_bold: 730,
     show_bulk_edit_album: false,
-    chart_decimation: true,
     activities: true,
 
     auth_menu_obsessions: false,
@@ -2942,13 +2941,6 @@ let settings_base = {
     },
     show_bulk_edit_album: {
         css: 'show_bulk_edit_album',
-        unit: '',
-        value: true,
-        values: [true, false],
-        type: 'toggle'
-    },
-    chart_decimation: {
-        css: 'chart_decimation',
         unit: '',
         value: true,
         values: [true, false],
@@ -12379,10 +12371,6 @@ let has_prompted_for_update = false;
                     padding: 7,
                     cornerRadius: 10,
                     caretSize: 0
-                },
-                decimation: {
-                    enabled: settings.chart_decimation,
-                    algorithm: 'lttb'
                 }
             },
             scales: {
