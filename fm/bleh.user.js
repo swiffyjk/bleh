@@ -11745,46 +11745,48 @@ let has_prompted_for_update = false;
             let avatar_side = redesigned_artist_header.querySelector('.avatar-side');
             let avatar_link = avatar_side.querySelector('a');
 
-            let expand_link;
-            if (avatar != null)
-                expand_link = `_expand_avatar('${avatar.getAttribute('content')}')`;
+            if (avatar_link != null) {
+                let expand_link;
+                if (avatar != null)
+                    expand_link = `_expand_avatar('${avatar.getAttribute('content')}')`;
 
-            if (settings.default_avatar_action == 'expand' && avatar != null)
-                avatar_link.setAttribute('onclick', expand_link);
-            else if (settings.default_avatar_action == 'gallery')
-                avatar_link.href = `${root}music/${sanitise(page.name)}/+images`;
+                if (settings.default_avatar_action == 'expand' && avatar != null)
+                    avatar_link.setAttribute('onclick', expand_link);
+                else if (settings.default_avatar_action == 'gallery')
+                    avatar_link.href = `${root}music/${sanitise(page.name)}/+images`;
 
-            let menu = tippy(avatar_side, {
-                theme: 'context-menu',
-                content: (`
-                    ${(avatar != null) ? (`
-                    <button class="dropdown-menu-clickable-item" onclick="${expand_link}" data-menu-item="expand">
-                        ${trans[lang].gallery.open.name}
-                    </button>
-                    `) : ''}
-                    <a class="dropdown-menu-clickable-item" href="${root}music/${sanitise(page.name)}/+images" data-menu-item="gallery">
-                        ${trans[lang].gallery.view}
-                    </a>
-                    <div class="sep"></div>
-                    <a class="dropdown-menu-clickable-item" href="${root}bleh?tab=customise" data-menu-item="settings">
-                        ${trans[lang].settings.configure}
-                    </a>
-                `),
-                allowHTML: true,
-                placement: 'right-start',
-                trigger: 'manual',
-                interactive: true,
-                interactiveBorder: 10,
-                offset: [0, 0],
+                let menu = tippy(avatar_side, {
+                    theme: 'context-menu',
+                    content: (`
+                        ${(avatar != null) ? (`
+                        <button class="dropdown-menu-clickable-item" onclick="${expand_link}" data-menu-item="expand">
+                            ${trans[lang].gallery.open.name}
+                        </button>
+                        `) : ''}
+                        <a class="dropdown-menu-clickable-item" href="${root}music/${sanitise(page.name)}/+images" data-menu-item="gallery">
+                            ${trans[lang].gallery.view}
+                        </a>
+                        <div class="sep"></div>
+                        <a class="dropdown-menu-clickable-item" href="${root}bleh?tab=customise" data-menu-item="settings">
+                            ${trans[lang].settings.configure}
+                        </a>
+                    `),
+                    allowHTML: true,
+                    placement: 'right-start',
+                    trigger: 'manual',
+                    interactive: true,
+                    interactiveBorder: 10,
+                    offset: [0, 0],
 
-                onShow(instance) {
-                    instance.popper.addEventListener('click', event => {
-                        instance.hide();
-                    });
-                }
-            });
+                    onShow(instance) {
+                        instance.popper.addEventListener('click', event => {
+                            instance.hide();
+                        });
+                    }
+                });
 
-            register_menu(avatar_side, menu);
+                register_menu(avatar_side, menu);
+            }
 
             if (!is_subpage) {
                 let view_button = redesigned_artist_header.querySelector('.view-all-button');
@@ -11929,46 +11931,48 @@ let has_prompted_for_update = false;
             let avatar_side = redesigned_album_header.querySelector('.avatar-side');
             let avatar_link = avatar_side.querySelector('a');
 
-            let expand_link;
-            if (avatar != null)
-                expand_link = `_expand_avatar('${avatar.getAttribute('content')}')`;
+            if (avatar_link != null) {
+                let expand_link;
+                if (avatar != null)
+                    expand_link = `_expand_avatar('${avatar.getAttribute('content')}')`;
 
-            if (settings.default_avatar_action == 'expand' && avatar != null)
-                avatar_link.setAttribute('onclick', expand_link);
-            else if (settings.default_avatar_action == 'gallery')
-                avatar_link.href = `${root}music/${sanitise(page.sister)}/${sanitise(page.name)}/+images`;
+                if (settings.default_avatar_action == 'expand' && avatar != null)
+                    avatar_link.setAttribute('onclick', expand_link);
+                else if (settings.default_avatar_action == 'gallery')
+                    avatar_link.href = `${root}music/${sanitise(page.sister)}/${sanitise(page.name)}/+images`;
 
-            let menu = tippy(avatar_side, {
-                theme: 'context-menu',
-                content: (`
-                    ${(avatar != null) ? (`
-                    <button class="dropdown-menu-clickable-item" onclick="${expand_link}" data-menu-item="expand">
-                        ${trans[lang].gallery.open.name}
-                    </button>
-                    `) : ''}
-                    <a class="dropdown-menu-clickable-item" href="${root}music/${sanitise(page.sister)}/${sanitise(page.name)}/+images" data-menu-item="gallery">
-                        ${trans[lang].gallery.view}
-                    </a>
-                    <div class="sep"></div>
-                    <a class="dropdown-menu-clickable-item" href="${root}bleh?tab=customise" data-menu-item="settings">
-                        ${trans[lang].settings.configure}
-                    </a>
-                `),
-                allowHTML: true,
-                placement: 'right-start',
-                trigger: 'manual',
-                interactive: true,
-                interactiveBorder: 10,
-                offset: [0, 0],
+                let menu = tippy(avatar_side, {
+                    theme: 'context-menu',
+                    content: (`
+                        ${(avatar != null) ? (`
+                        <button class="dropdown-menu-clickable-item" onclick="${expand_link}" data-menu-item="expand">
+                            ${trans[lang].gallery.open.name}
+                        </button>
+                        `) : ''}
+                        <a class="dropdown-menu-clickable-item" href="${root}music/${sanitise(page.sister)}/${sanitise(page.name)}/+images" data-menu-item="gallery">
+                            ${trans[lang].gallery.view}
+                        </a>
+                        <div class="sep"></div>
+                        <a class="dropdown-menu-clickable-item" href="${root}bleh?tab=customise" data-menu-item="settings">
+                            ${trans[lang].settings.configure}
+                        </a>
+                    `),
+                    allowHTML: true,
+                    placement: 'right-start',
+                    trigger: 'manual',
+                    interactive: true,
+                    interactiveBorder: 10,
+                    offset: [0, 0],
 
-                onShow(instance) {
-                    instance.popper.addEventListener('click', event => {
-                        instance.hide();
-                    });
-                }
-            });
+                    onShow(instance) {
+                        instance.popper.addEventListener('click', event => {
+                            instance.hide();
+                        });
+                    }
+                });
 
-            register_menu(avatar_side, menu);
+                register_menu(avatar_side, menu);
+            }
         }
 
         // cover
