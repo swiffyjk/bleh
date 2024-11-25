@@ -3118,6 +3118,8 @@ let has_prompted_for_update = false;
             bleh_gallery();
             bleh_gallery_upload_check();
 
+            bleh_charts();
+
             patch_shouts(document.body);
             patch_lastfm_settings(document.body);
             patch_artist_ranks(document.body);
@@ -3182,6 +3184,8 @@ let has_prompted_for_update = false;
 
                 bleh_gallery();
                 bleh_gallery_upload_check();
+
+                bleh_charts();
 
                 patch_shouts(document.body);
                 patch_lastfm_settings(document.body);
@@ -4859,7 +4863,7 @@ let has_prompted_for_update = false;
 
 
     // general health
-    function checkup_page_structure(is_subpage, header) {
+    function checkup_page_structure(is_subpage = false, header = null) {
         document.body.style.removeProperty('--hue-album');
         document.body.style.removeProperty('--sat-album');
 
@@ -4926,7 +4930,7 @@ let has_prompted_for_update = false;
 
         log('finished', 'page structure');
 
-        if (ff('refreshed_music_nav')) {
+        if (ff('refreshed_music_nav') && header != null) {
             let navlist = header.querySelector('.navlist');
             if (navlist != null) {
                 navlist.classList.add('redesigned-navigation');
@@ -14212,5 +14216,42 @@ let has_prompted_for_update = false;
 
             patch_avatar(avatar, name, 'listener');
         });
+    }
+
+
+
+
+    function bleh_charts() {
+        let chart_row = document.body.querySelector('.charts-row');
+
+        if (chart_row == null)
+            return;
+
+        if (chart_row.hasAttribute('data-bleh-charts'))
+            return;
+        chart_row.setAttribute('data-bleh-charts', 'true');
+
+        log('charts', 'page');
+        page.type = 'charts';
+        page.name = auth;
+        page.avatar = my_avi;
+
+        try {
+            page.subpage = document.body.classList[2].replace('namespace--', '');
+        } catch(e) {}
+
+        page.structure.container = document.body.querySelector('.page-content');
+        try {
+            page.structure.row = page.structure.container.querySelector('.row');
+            page.structure.main = page.structure.row.querySelector('.col-main');
+            page.structure.side = page.structure.row.querySelector('.col-sidebar');
+        } catch(e) {
+            log('unable to find elements', 'page structure');
+        }
+
+        checkup_page_structure();
+
+        log('status is', 'page', 'info', page);
+        update_page();
     }
 })();
