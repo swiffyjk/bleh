@@ -5829,7 +5829,8 @@ button,
 .source-album, .big-tags-item,
 .wiki-history-entry,
 .attendee-summary-user,
-.about-guest-feature
+.about-guest-feature,
+.weeklychart-item
 {
     --bg: hsl(var(--b4));
     --bg-hov: hsla(var(--b4), 80%);
@@ -18584,6 +18585,64 @@ section > .section-controls .subpage-title {
             [data-bleh--profile_avi_background="true"] & {
                 display: none;
             }
+        }
+    }
+}
+
+
+
+
+/*     CHARTS     */
+.weeklychart {
+    display: flex;
+    padding: unset;
+
+    thead {
+        display: none;
+    }
+    tbody {
+        display: flex;
+        flex-direction: column;
+        gap: var(--item-list-gap);
+        flex: 1;
+    }
+}
+.weeklychart-item {
+    display: flex;
+    align-items: center;
+    gap: var(--item-list-gap);
+
+    td {
+        padding: unset !important;
+    }
+
+    .weeklychart-rank {
+        width: 24px;
+    }
+
+    .weeklychart-image {
+        width: fit-content;
+        box-shadow: var(--card-shadow);
+
+        .avatar {
+            margin: unset;
+            width: 36px;
+            height: 36px;
+            border-radius: var(--item-big-radius);
+
+            img {
+                border-radius: inherit;
+            }
+        }
+    }
+
+    .weeklychart-name {
+        display: flex;
+
+        .link-block-target {
+            text-decoration: none;
+            flex: 1;
+            font-weight: var(--font-weight-medium);
         }
     }
 }
