@@ -3340,7 +3340,9 @@ let has_prompted_for_update = false;
     }
 
     unsafeWindow._ignore_update = function() {
-        kill_window('bleh_update');
+        dialog_rm({
+            id: 'bleh_update'
+        });
 
         // set expire date
         let api_expire = new Date();
@@ -3352,7 +3354,9 @@ let has_prompted_for_update = false;
     unsafeWindow._start_update = function() {
         open('https://github.com/katelyynn/bleh/raw/uwu/fm/bleh.user.js');
 
-        kill_window('bleh_update');
+        dialog_rm({
+            id: 'bleh_update'
+        });
 
         if (!settings.dev) {
             _final_update();
@@ -3374,7 +3378,9 @@ let has_prompted_for_update = false;
     unsafeWindow._start_css_update = function() {
         open('https://github.com/katelyynn/bleh/raw/uwu/fm/bleh.user.css');
 
-        kill_window('bleh_update');
+        dialog_rm({
+            id: 'bleh_update'
+        });
         _final_update();
     }
 
@@ -3392,10 +3398,17 @@ let has_prompted_for_update = false;
     }
 
     unsafeWindow._finish_update = function() {
-        kill_window('bleh_update');
+        dialog_rm({
+            id: 'bleh_update'
+        });
 
         if (!settings.dev) {
-            dialog_legacy('bleh_wait',trans[lang].settings.home.update.name,'');
+            dialog({
+                id: 'bleh_wait',
+                title: trans[lang].settings.home.update.name,
+                type: 'wait',
+                dismiss: false
+            });
             fetch_new_style(false, true);
         } else {
             // dev
@@ -3869,8 +3882,9 @@ let has_prompted_for_update = false;
     }
 
     // load settings
-    function load_settings() {
-        settings = JSON.parse(localStorage.getItem('bleh')) || create_settings_template();
+    function load_settings(skip = false) {
+        if (!skip)
+            settings = JSON.parse(localStorage.getItem('bleh')) || create_settings_template();
 
         // missing? set to default value
         for (let setting in settings_template)
@@ -8853,20 +8867,50 @@ let has_prompted_for_update = false;
         id = '',
         title = null,
         body = document.createElement('div').innerHTML,
-        has_close = true,
+        dismiss = true,
         type = '',
-        has_overlays = true
+        has_overlays = true,
+        replace = false,
+        replace_if_possible = false,
+        replace_id = ''
     }) {
         log(`creating ${id}`, 'window', 'info', {
             id: id,
             title: title,
             body: body,
-            has_close: has_close,
-            type: type
+            dismiss: dismiss,
+            type: type,
+            has_overlays: has_overlays,
+            replace: replace,
+            replace_id: replace_id
         });
 
-        let modal = document.createElement('div');
-        modal.classList.add('bleh-modal');
+        let modal;
+
+        if (replace_if_possible && Object.keys(dialogs).length > 0) {
+            replace = true;
+
+            for (let dialog in dialogs) {
+                replace_id = dialog;
+                break;
+            }
+        }
+
+        if (!replace) {
+            modal = document.createElement('div');
+            modal.classList.add('bleh-modal');
+        } else {
+            log(`window set to replace ${replace_id}`, 'window');
+
+            if (!dialogs.hasOwnProperty(replace_id))
+                return;
+
+            modal = dialogs[replace_id].instance;
+            delete dialogs[replace_id];
+
+            modal.innerHTML = '';
+        }
+
         modal.setAttribute('data-modal-id', id);
         modal.setAttribute('data-modal-has-overlays', has_overlays);
 
@@ -8883,7 +8927,7 @@ let has_prompted_for_update = false;
             modal.appendChild(modal_title);
         }
 
-        if (has_close) {
+        if (dismiss) {
             let modal_close = document.createElement('button');
             modal_close.classList.add('modal-close-button');
             modal_close.setAttribute('onclick', `_dialog_rm({id: "${id}"})`);
@@ -8962,8 +9006,8 @@ let has_prompted_for_update = false;
         }
     }
 
-    function dialog_legacy(id, title, inner_content, has_close = false, classname='', allow_scroll = false) {
-        log(`created ${id} - '${title}'`, 'window', 'info', {content: [inner_content], has_close: has_close, classname: classname});
+    function dialog_legacy(id, title, inner_content, dismiss = false, classname='', allow_scroll = false) {
+        log(`created ${id} - '${title}'`, 'window', 'info', {content: [inner_content], dismiss: dismiss, classname: classname});
 
         let background = document.createElement('div');
         background.classList.add('popup_background');
@@ -8994,7 +9038,7 @@ let has_prompted_for_update = false;
         content.setAttribute('id',`bleh--window-${id}--content`);
         content.setAttribute('data-kate-processed','true');
 
-        if (has_close) {
+        if (dismiss) {
             let actions = document.createElement('div');
             actions.classList.add('modal-actions');
             actions.setAttribute('id',`bleh--window-${id}--actions`);
@@ -9117,8 +9161,7 @@ let has_prompted_for_update = false;
                         ${trans[lang].settings.cancel}
                     </button>
                 </div>
-            `),
-            has_close: true
+            `)
         });
     }
 
@@ -9133,35 +9176,46 @@ let has_prompted_for_update = false;
             localStorage.setItem('bleh', requesting_setting);
             load_settings();
 
-            kill_window('import_settings');
+            dialog_rm({
+                id: 'import_settings'
+            });
         } catch(e) {
             // cannot continue, halt
-            kill_window('import_settings');
-            dialog_legacy('import_failed',trans[lang].settings.actions.import.modals.failed.name,`
-            <p class="alert alert-error">${trans[lang].settings.actions.import.modals.failed.alert}</p>
-            <div class="modal-footer">
-                <button class="btn primary done" onclick="_kill_window('import_failed')">
-                    ${trans[lang].settings.done}
-                </button>
-            </div>
-            `, true);
+            dialog_rm({
+                id: 'import_settings'
+            });
+            dialog({
+                id: 'import_failed',
+                title: trans[lang].settings.actions.import.modals.failed.name,
+                body: (`
+                    <p class="alert alert-error">${trans[lang].settings.actions.import.modals.failed.alert}</p>
+                    <div class="modal-footer">
+                        <button class="btn primary done" onclick="_kill_window('import_failed')">
+                            ${trans[lang].settings.done}
+                        </button>
+                    </div>
+                `)
+            });
         }
     }
 
 
     // export settings
     function export_settings() {
-
-        dialog_legacy('export_settings',trans[lang].settings.actions.export.modals.initial.name,`
-            <p class="alert alert-success">${trans[lang].settings.actions.export.modals.initial.alert}</p>
-            <br>
-            <textarea>${JSON.stringify(settings)}</textarea>
-            <div class="modal-footer">
-                <button class="btn primary done" onclick="_kill_window('export_settings')">
-                    ${trans[lang].settings.done}
-                </button>
-            </div>
-        `, true);
+        dialog({
+            id: 'export_settings',
+            title: trans[lang].settings.actions.export.modals.initial.name,
+            body: (`
+                <p class="alert alert-success">${trans[lang].settings.actions.export.modals.initial.alert}</p>
+                <br>
+                <textarea>${JSON.stringify(settings)}</textarea>
+                <div class="modal-footer">
+                    <button class="btn primary done" onclick="_kill_window('export_settings')">
+                        ${trans[lang].settings.done}
+                    </button>
+                </div>
+            `)
+        });
     }
     unsafeWindow._export_settings = function() {
         export_settings();
@@ -9170,32 +9224,39 @@ let has_prompted_for_update = false;
 
     // reset settings
     unsafeWindow._reset_settings = function() {
-        dialog_legacy('reset_settings',trans[lang].settings.actions.reset.modals.initial.name,`
-            <p class="alert alert-warning">${trans[lang].settings.actions.reset.modals.initial.alert}</p>
-            <div class="modal-footer">
-                <button class="btn done" onclick="_confirm_reset()">
-                    ${trans[lang].settings.actions.reset.modals.initial.confirm}
-                </button>
-                <button class="btn upload" onclick="_export_first()">
-                    ${trans[lang].settings.actions.reset.modals.initial.export}
-                </button>
-                <button class="btn primary cancel" onclick="_kill_window('reset_settings')">
-                    ${trans[lang].settings.cancel}
-                </button>
-            </div>
-        `, true);
+        dialog({
+            id: 'export_settings',
+            title: trans[lang].settings.actions.export.modals.initial.name,
+            body: (`
+                <p class="alert alert-warning">${trans[lang].settings.actions.reset.modals.initial.alert}</p>
+                <div class="modal-footer">
+                    <button class="btn done" onclick="_confirm_reset()">
+                        ${trans[lang].settings.actions.reset.modals.initial.confirm}
+                    </button>
+                    <button class="btn upload" onclick="_export_first()">
+                        ${trans[lang].settings.actions.reset.modals.initial.export}
+                    </button>
+                    <button class="btn primary cancel" onclick="_dialog_rm({id: 'reset_settings'})">
+                        ${trans[lang].settings.cancel}
+                    </button>
+                </div>
+            `)
+        });
     }
 
     unsafeWindow._confirm_reset = function() {
-        let settings = create_settings_template();
-        localStorage.setItem('bleh', JSON.stringify(settings));
-        load_settings();
+        settings = create_settings_template();
+        load_settings(true);
 
-        kill_window('reset_settings');
+        dialog_rm({
+            id: 'reset_settings'
+        });
     }
 
     unsafeWindow._export_first = function() {
-        kill_window('reset_settings');
+        dialog_rm({
+            id: 'reset_settings'
+        });
         export_settings();
     }
 
@@ -10170,11 +10231,11 @@ let has_prompted_for_update = false;
 
         console.info('bleh - loading first-time setup');
 
-        let adaptive_skin_container = document.querySelector('.adaptive-skin-container:not([data-kate-processed])');
+        let adaptive_skin_container = document.querySelector('.adaptive-skin-container:not([data-bleh])');
 
         if (adaptive_skin_container == null)
             return;
-        adaptive_skin_container.setAttribute('data-kate-processed','true');
+        adaptive_skin_container.setAttribute('data-bleh','true');
 
         // initial
         adaptive_skin_container.innerHTML = '';
@@ -10194,517 +10255,532 @@ let has_prompted_for_update = false;
         document.body.classList.add('bleh-setup');
         document.body.style.setProperty('background-image', `url(${my_avi})`);
 
-        dialog_legacy('bleh_setup_start','',`
-            <div class="setup-sides">
-                <div class="setup-preview">
-                    <div class="setup-icon setup-icon-main setup-icon-home"></div>
-                </div>
-                <div class="setup-body">
-                    <div class="setup-body-main">
-                        <h1>${trans[lang].setup.start.name}</h1>
-                        <div class="user-top-panel">
-                            <div class="user-top-avatar user-top-avatar-side-left"></div>
-                            <img class="user-top-avatar user-top-avatar-main" src="${my_avi.replace('avatar42s', 'avatar170s')}" alt="${auth}">
-                            <div class="user-top-avatar user-top-avatar-side-right"></div>
+        dialog({
+            id: 'bleh_setup_start',
+            body: (`
+                <div class="setup-sides">
+                    <div class="setup-preview">
+                        <div class="setup-icon setup-icon-main setup-icon-home"></div>
+                    </div>
+                    <div class="setup-body">
+                        <div class="setup-body-main">
+                            <h1>${trans[lang].setup.start.name}</h1>
+                            <div class="user-top-panel">
+                                <div class="user-top-avatar user-top-avatar-side-left"></div>
+                                <img class="user-top-avatar user-top-avatar-main" src="${my_avi.replace('avatar42s', 'avatar170s')}" alt="${auth}">
+                                <div class="user-top-avatar user-top-avatar-side-right"></div>
+                            </div>
+                            <h4>${trans[lang].setup.start.thanks.replace('{m}', `<a class="mention" href="${root}user/${auth}">@${auth}</a>`)}</h4>
+                            <p>${trans[lang].setup.start.info[0]}</p>
+                            <ul>
+                                <li>${trans[lang].setup.start.info[1]}</li>
+                                <li>${trans[lang].setup.start.info[2]}</li>
+                                <li>${trans[lang].setup.start.info[3]}</li>
+                                <li>${trans[lang].setup.start.info[4]}</li>
+                            </ul>
+                            <p>${trans[lang].setup.start.info[5]}</p>
                         </div>
-                        <h4>${trans[lang].setup.start.thanks.replace('{m}', `<a class="mention" href="${root}user/${auth}">@${auth}</a>`)}</h4>
-                        <p>${trans[lang].setup.start.info[0]}</p>
-                        <ul>
-                            <li>${trans[lang].setup.start.info[1]}</li>
-                            <li>${trans[lang].setup.start.info[2]}</li>
-                            <li>${trans[lang].setup.start.info[3]}</li>
-                            <li>${trans[lang].setup.start.info[4]}</li>
-                        </ul>
-                        <p>${trans[lang].setup.start.info[5]}</p>
-                    </div>
-                    <div class="modal-footer">
-                        <button class="btn skip" onclick="_setup_skip()">
-                            ${trans[lang].settings.skip}
-                        </button>
-                        <button class="btn primary continue" onclick="_setup_accessibility()">
-                            ${trans[lang].settings.continue}
-                        </button>
+                        <div class="modal-footer">
+                            <button class="btn skip" onclick="_setup_skip()">
+                                ${trans[lang].settings.skip}
+                            </button>
+                            <button class="btn primary continue" onclick="_setup_accessibility()">
+                                ${trans[lang].settings.continue}
+                            </button>
+                        </div>
                     </div>
                 </div>
-            </div>
-        `, false, 'setup');
+            `),
+            dismiss: false,
+            type: 'setup'
+        });
     }
 
     unsafeWindow._setup_accessibility = function() {
-        kill_window('bleh_setup_start');
-        kill_window('bleh_setup_appearance');
-        dialog_legacy('bleh_setup_accessibility','',`
-            <div class="setup-sides">
-                <div class="setup-preview">
-                    <div class="setup-icon setup-icon-main setup-icon-accessibility"></div>
-                </div>
-                <div class="setup-body">
-                    <div class="setup-body-main">
-                        <h1>${trans[lang].settings.accessibility.name}</h1>
-                        <div class="toggle-container" id="container-reduced_motion">
-                            <button class="btn reset" onclick="_reset_item('reduced_motion')">${trans[lang].settings.reset}</button>
-                            <div class="heading">
-                                <h5>${trans[lang].settings.accessibility.reduced_motion.name}</h5>
-                                <p>${trans[lang].settings.accessibility.reduced_motion.bio}</p>
+        dialog({
+            id: 'bleh_setup_accessibility',
+            body: (`
+                <div class="setup-sides">
+                    <div class="setup-preview">
+                        <div class="setup-icon setup-icon-main setup-icon-accessibility"></div>
+                    </div>
+                    <div class="setup-body">
+                        <div class="setup-body-main">
+                            <h1>${trans[lang].settings.accessibility.name}</h1>
+                            <div class="toggle-container" id="container-reduced_motion">
+                                <button class="btn reset" onclick="_reset_item('reduced_motion')">${trans[lang].settings.reset}</button>
+                                <div class="heading">
+                                    <h5>${trans[lang].settings.accessibility.reduced_motion.name}</h5>
+                                    <p>${trans[lang].settings.accessibility.reduced_motion.bio}</p>
+                                </div>
+                                <div class="toggle-wrap">
+                                    <button class="toggle" id="toggle-reduced_motion" onclick="_update_item('reduced_motion')" aria-checked="false">
+                                        <div class="dot"></div>
+                                    </button>
+                                </div>
                             </div>
-                            <div class="toggle-wrap">
-                                <button class="toggle" id="toggle-reduced_motion" onclick="_update_item('reduced_motion')" aria-checked="false">
-                                    <div class="dot"></div>
-                                </button>
+                            <div class="inner-preview pad flex">
+                                <div class="shout js-shout js-link-block" data-kate-processed="true">
+                                    <h3 class="shout-user">
+                                        <a>${auth}</a>
+                                    </h3>
+                                    <span class="avatar shout-user-avatar avatar--bleh-missing">
+                                        <img src="" alt="Your avatar" loading="lazy">
+                                    </span>
+                                    <a class="shout-permalink shout-timestamp">
+                                        <time datetime="2024-06-05T02:33:39+01:00" title="Wednesday 5 Jun 2024, 2:33am">
+                                            5 Jun 2:33am
+                                        </time>
+                                    </a>
+                                    <div class="shout-body">
+                                        <p>${trans[lang].settings.accessibility.shout_preview}</p>
+                                    </div>
+                                </div>
                             </div>
-                        </div>
-                        <div class="inner-preview pad flex">
-                            <div class="shout js-shout js-link-block" data-kate-processed="true">
-                                <h3 class="shout-user">
-                                    <a>${auth}</a>
-                                </h3>
-                                <span class="avatar shout-user-avatar avatar--bleh-missing">
-                                    <img src="" alt="Your avatar" loading="lazy">
-                                </span>
-                                <a class="shout-permalink shout-timestamp">
-                                    <time datetime="2024-06-05T02:33:39+01:00" title="Wednesday 5 Jun 2024, 2:33am">
-                                        5 Jun 2:33am
-                                    </time>
-                                </a>
-                                <div class="shout-body">
-                                    <p>${trans[lang].settings.accessibility.shout_preview}</p>
+                            <div class="toggle-container" id="container-accessible_name_colours">
+                                <button class="btn reset" onclick="_reset_item('accessible_name_colours')">${trans[lang].settings.reset}</button>
+                                <div class="heading">
+                                    <h5>${trans[lang].settings.accessibility.accessible_name_colours.name}</h5>
+                                    <p>${trans[lang].settings.accessibility.accessible_name_colours.bio}</p>
+                                </div>
+                                <div class="toggle-wrap">
+                                    <button class="toggle" id="toggle-accessible_name_colours" onclick="_update_item('accessible_name_colours')" aria-checked="false">
+                                        <div class="dot"></div>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="toggle-container" id="container-underline_links">
+                                <button class="btn reset" onclick="_reset_item('underline_links')">${trans[lang].settings.reset}</button>
+                                <div class="heading">
+                                    <h5>${trans[lang].settings.accessibility.underline_links.name}</h5>
+                                    <p>${trans[lang].settings.accessibility.underline_links.bio}</p>
+                                </div>
+                                <div class="toggle-wrap">
+                                    <button class="toggle" id="toggle-underline_links" onclick="_update_item('underline_links')" aria-checked="false">
+                                        <div class="dot"></div>
+                                    </button>
                                 </div>
                             </div>
                         </div>
-                        <div class="toggle-container" id="container-accessible_name_colours">
-                            <button class="btn reset" onclick="_reset_item('accessible_name_colours')">${trans[lang].settings.reset}</button>
-                            <div class="heading">
-                                <h5>${trans[lang].settings.accessibility.accessible_name_colours.name}</h5>
-                                <p>${trans[lang].settings.accessibility.accessible_name_colours.bio}</p>
-                            </div>
-                            <div class="toggle-wrap">
-                                <button class="toggle" id="toggle-accessible_name_colours" onclick="_update_item('accessible_name_colours')" aria-checked="false">
-                                    <div class="dot"></div>
-                                </button>
-                            </div>
+                        <div class="modal-footer">
+                            <button class="btn back" disabled>
+                                ${trans[lang].settings.back}
+                            </button>
+                            <div class="btn-fill"></div>
+                            <button class="btn skip" onclick="_setup_skip()">
+                                ${trans[lang].settings.skip}
+                            </button>
+                            <button class="btn primary continue" onclick="_setup_appearance()">
+                                ${trans[lang].settings.continue}
+                            </button>
                         </div>
-                        <div class="toggle-container" id="container-underline_links">
-                            <button class="btn reset" onclick="_reset_item('underline_links')">${trans[lang].settings.reset}</button>
-                            <div class="heading">
-                                <h5>${trans[lang].settings.accessibility.underline_links.name}</h5>
-                                <p>${trans[lang].settings.accessibility.underline_links.bio}</p>
-                            </div>
-                            <div class="toggle-wrap">
-                                <button class="toggle" id="toggle-underline_links" onclick="_update_item('underline_links')" aria-checked="false">
-                                    <div class="dot"></div>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button class="btn back" disabled>
-                            ${trans[lang].settings.back}
-                        </button>
-                        <div class="btn-fill"></div>
-                        <button class="btn skip" onclick="_setup_skip()">
-                            ${trans[lang].settings.skip}
-                        </button>
-                        <button class="btn primary continue" onclick="_setup_appearance()">
-                            ${trans[lang].settings.continue}
-                        </button>
                     </div>
                 </div>
-            </div>
-        `, false, 'setup');
+            `),
+            dismiss: false,
+            type: 'setup',
+            replace_if_possible: true
+        });
         refresh_all();
     }
 
     unsafeWindow._setup_appearance = function() {
-        kill_window('bleh_setup_accessibility');
-        kill_window('bleh_setup_theme');
-        dialog_legacy('bleh_setup_appearance','',`
-            <div class="setup-sides">
-                <div class="setup-preview">
-                    <div class="setup-icon setup-icon-main setup-icon-appearance">
-                        <div class="setup-colour-behind for-appearance-0"></div>
-                        <div class="setup-colour-behind for-appearance-1"></div>
-                        <div class="setup-colour-behind for-appearance-2"></div>
-                    </div>
-                </div>
-                <div class="setup-body">
-                    <div class="setup-body-main">
-                        <h1>${trans[lang].settings.appearance.name}</h1>
-                        <p>${trans[lang].setup.appearance.bio}</p>
-                        <h4>${trans[lang].settings.customise.colours.name}</h4>
-                        <!--<h5>${trans[lang].settings.customise.colours.presets}</h5>-->
-                        <div class="palette options colours" id="custom_colours">
-                            <button class="swatch btn default" style="
-                                --hue: var(--hue-seasonal, 255);
-                                --sat: var(--sat-seasonal, 1);
-                                --lit: var(--lit-seasonal, 1)" onclick="_update_params({
-                                hue: 255,
-                                sat: 1,
-                                lit: 1
-                            })"></button>
-                            <button class="swatch btn custom" style="
-                                --hue: var(--hue-user, 255);
-                                --sat: var(--sat-user, 1);
-                                --lit: var(--lit-user, 1)" onclick="_create_a_custom_colour()"></button>
+        dialog_rm({
+            all: true
+        });
+        dialog({
+            id: 'bleh_setup_appearance',
+            body: (`
+                <div class="setup-sides">
+                    <div class="setup-preview">
+                        <div class="setup-icon setup-icon-main setup-icon-appearance">
+                            <div class="setup-colour-behind for-appearance-0"></div>
+                            <div class="setup-colour-behind for-appearance-1"></div>
+                            <div class="setup-colour-behind for-appearance-2"></div>
                         </div>
-                        <p class="subtext">${trans[lang].setup.appearance.subtext}</p>
-                        <div class="palette options colours">
-                            <div class="side">
-                                <button class="swatch btn" style="
-                                    --hue: -2;
-                                    --sat: 1.35;
-                                    --lit: 0.85" onclick="_update_params({
-                                    hue: -2,
-                                    sat: 1.35,
-                                    lit: 0.85
-                                })"></button>
-                                <button class="swatch btn" style="
-                                    --hue: -2;
-                                    --sat: 1.25;
-                                    --lit: 0.85" onclick="_update_params({
-                                    hue: -2,
-                                    sat: 1.25,
-                                    lit: 0.85
-                                })"></button>
-                                <button class="swatch btn" style="
-                                    --hue: 356;
-                                    --sat: 1.25;
-                                    --lit: 0.9" onclick="_update_params({
-                                    hue: 356,
-                                    sat: 1.25,
-                                    lit: 0.9
-                                })"></button>
-                                <button class="swatch btn" style="
-                                    --hue: 351;
-                                    --sat: 1.2;
-                                    --lit: 0.9" onclick="_update_params({
-                                    hue: 351,
-                                    sat: 1.2,
-                                    lit: 0.9
-                                })"></button>
-                                <button class="swatch btn" style="
-                                    --hue: 346;
-                                    --sat: 1.3;
-                                    --lit: 0.85" onclick="_update_params({
-                                    hue: 346,
-                                    sat: 1.3,
-                                    lit: 0.85
-                                })"></button>
-                                <button class="swatch btn" style="
-                                    --hue: 339;
-                                    --sat: 1.3;
-                                    --lit: 0.85" onclick="_update_params({
-                                    hue: 339,
-                                    sat: 1.3,
-                                    lit: 0.85
-                                })"></button>
-                                <button class="swatch btn" style="
-                                    --hue: 331;
-                                    --sat: 1.1;
-                                    --lit: 0.8" onclick="_update_params({
-                                    hue: 331,
-                                    sat: 1.1,
-                                    lit: 0.8
-                                })"></button>
-                                <button class="swatch btn" style="
-                                    --hue: 310;
-                                    --sat: 1.2;
-                                    --lit: 0.85" onclick="_update_params({
-                                    hue: 310,
-                                    sat: 1.2,
-                                    lit: 0.85
-                                })"></button>
-                                <button class="swatch btn" style="
-                                    --hue: 286;
-                                    --sat: 1.2;
-                                    --lit: 0.9" onclick="_update_params({
-                                    hue: 286,
-                                    sat: 1.2,
-                                    lit: 0.9
-                                })"></button>
-                                <button class="swatch btn" style="
-                                    --hue: 274;
-                                    --sat: 1.25;
-                                    --lit: 0.9" onclick="_update_params({
-                                    hue: 274,
-                                    sat: 1.25,
-                                    lit: 0.9
-                                })"></button>
-                            </div>
-                            <div class="side">
-                                <button class="swatch btn" style="
-                                    --hue: 7;
-                                    --sat: 1.35;
-                                    --lit: 0.8" onclick="_update_params({
-                                    hue: 7,
-                                    sat: 1.35,
-                                    lit: 0.8
-                                })"></button>
-                                <button class="swatch btn" style="
-                                    --hue: 9;
-                                    --sat: 1.25;
-                                    --lit: 0.84" onclick="_update_params({
-                                    hue: 9,
-                                    sat: 1.25,
-                                    lit: 0.84
-                                })"></button>
-                                <button class="swatch btn" style="
-                                    --hue: 14;
-                                    --sat: 1.25;
-                                    --lit: 0.88" onclick="_update_params({
-                                    hue: 14,
-                                    sat: 1.25,
-                                    lit: 0.88
-                                })"></button>
-                                <button class="swatch btn" style="
-                                    --hue: 18;
-                                    --sat: 1.2;
-                                    --lit: 0.9" onclick="_update_params({
-                                    hue: 18,
-                                    sat: 1.2,
-                                    lit: 0.9
-                                })"></button>
-                                <button class="swatch btn" style="
-                                    --hue: 24;
-                                    --sat: 1.2;
-                                    --lit: 0.93" onclick="_update_params({
-                                    hue: 24,
-                                    sat: 1.2,
-                                    lit: 0.93
-                                })"></button>
-                                <button class="swatch btn" style="
-                                    --hue: 30;
-                                    --sat: 1.3;
-                                    --lit: 1" onclick="_update_params({
-                                    hue: 30,
-                                    sat: 1.3,
-                                    lit: 1
-                                })"></button>
-                                <button class="swatch btn" style="
-                                    --hue: 38;
-                                    --sat: 1.3;
-                                    --lit: 0.98" onclick="_update_params({
-                                    hue: 38,
-                                    sat: 1.3,
-                                    lit: 0.98
-                                })"></button>
-                                <button class="swatch btn" style="
-                                    --hue: 49;
-                                    --sat: 1.3;
-                                    --lit: 0.98" onclick="_update_params({
-                                    hue: 49,
-                                    sat: 1.3,
-                                    lit: 0.98
-                                })"></button>
-                                <button class="swatch btn" style="
-                                    --hue: 53;
-                                    --sat: 1.3;
-                                    --lit: 0.95" onclick="_update_params({
-                                    hue: 53,
-                                    sat: 1.3,
-                                    lit: 0.95
-                                })"></button>
-                                <button class="swatch btn" style="
-                                    --hue: 62;
-                                    --sat: 1.25;
-                                    --lit: 0.95" onclick="_update_params({
-                                    hue: 62,
-                                    sat: 1.25,
-                                    lit: 0.95
-                                })"></button>
-                            </div>
-                            <div class="side">
-                                <button class="swatch btn" style="
-                                    --hue: 75;
-                                    --sat: 1.1;
-                                    --lit: 1" onclick="_update_params({
-                                    hue: 75,
-                                    sat: 1.1,
-                                    lit: 1
-                                })"></button>
-                                <button class="swatch btn" style="
-                                    --hue: 85;
-                                    --sat: 1;
-                                    --lit: 1" onclick="_update_params({
-                                    hue: 85,
-                                    sat: 1,
-                                    lit: 1
-                                })"></button>
-                                <button class="swatch btn" style="
-                                    --hue: 95;
-                                    --sat: 1.1;
-                                    --lit: 1" onclick="_update_params({
-                                    hue: 95,
-                                    sat: 1.1,
-                                    lit: 1
-                                })"></button>
-                                <button class="swatch btn" style="
-                                    --hue: 115;
-                                    --sat: 1;
-                                    --lit: 1" onclick="_update_params({
-                                    hue: 115,
-                                    sat: 1,
-                                    lit: 1
-                                })"></button>
-                                <button class="swatch btn" style="
-                                    --hue: 130;
-                                    --sat: 1.2;
-                                    --lit: 0.95" onclick="_update_params({
-                                    hue: 130,
-                                    sat: 1.2,
-                                    lit: 0.95
-                                })"></button>
-                                <button class="swatch btn" style="
-                                    --hue: 140;
-                                    --sat: 1.2;
-                                    --lit: 0.9" onclick="_update_params({
-                                    hue: 140,
-                                    sat: 1.2,
-                                    lit: 0.9
-                                })"></button>
-                                <button class="swatch btn" style="
-                                    --hue: 155;
-                                    --sat: 1.2;
-                                    --lit: 0.85" onclick="_update_params({
-                                    hue: 155,
-                                    sat: 1.2,
-                                    lit: 0.85
-                                })"></button>
-                                <button class="swatch btn" style="
-                                    --hue: 165;
-                                    --sat: 1.1;
-                                    --lit: 0.8" onclick="_update_params({
-                                    hue: 165,
-                                    sat: 1.1,
-                                    lit: 0.8
-                                })"></button>
-                                <button class="swatch btn" style="
-                                    --hue: 174;
-                                    --sat: 1.1;
-                                    --lit: 0.8" onclick="_update_params({
-                                    hue: 174,
-                                    sat: 1.1,
-                                    lit: 0.8
-                                })"></button>
-                                <button class="swatch btn" style="
-                                    --hue: 184;
-                                    --sat: 1.05;
-                                    --lit: 0.75" onclick="_update_params({
-                                    hue: 184,
-                                    sat: 1.05,
-                                    lit: 0.75
-                                })"></button>
-                            </div>
-                            <div class="side">
-                                <button class="swatch btn" style="
-                                    --hue: 205;
-                                    --sat: 1;
-                                    --lit: 1" onclick="_update_params({
-                                    hue: 205,
-                                    sat: 1,
-                                    lit: 1
-                                })"></button>
-                                <button class="swatch btn" style="
-                                    --hue: 222;
-                                    --sat: 1;
-                                    --lit: 0.9" onclick="_update_params({
-                                    hue: 222,
-                                    sat: 1,
-                                    lit: 0.9
-                                })"></button>
-                                <button class="swatch btn" style="
-                                    --hue: 230;
-                                    --sat: 1.3;
-                                    --lit: 0.9" onclick="_update_params({
-                                    hue: 230,
-                                    sat: 1.3,
-                                    lit: 0.9
-                                })"></button>
-                                <button class="swatch btn" style="
-                                    --hue: 230;
-                                    --sat: 1.3;
-                                    --lit: 0.825" onclick="_update_params({
-                                    hue: 230,
-                                    sat: 1.3,
-                                    lit: 0.825
-                                })"></button>
-                                <button class="swatch btn" style="
-                                    --hue: 243;
-                                    --sat: 1.3;
-                                    --lit: 0.9" onclick="_update_params({
-                                    hue: 243,
-                                    sat: 1.3,
-                                    lit: 0.9
-                                })"></button>
-                                <button class="swatch btn" style="
-                                    --hue: 249;
-                                    --sat: 1.3;
-                                    --lit: 0.9" onclick="_update_params({
-                                    hue: 249,
-                                    sat: 1.3,
-                                    lit: 0.9
-                                })"></button>
-                                <button class="swatch btn" style="
-                                    --hue: 255;
-                                    --sat: 1.2;
-                                    --lit: 0.9" onclick="_update_params({
-                                    hue: 255,
-                                    sat: 1.2,
-                                    lit: 0.9
-                                })"></button>
-                                <button class="swatch btn" style="
-                                    --hue: 263;
-                                    --sat: 1.2;
-                                    --lit: 0.9" onclick="_update_params({
-                                    hue: 263,
-                                    sat: 1.2,
-                                    lit: 0.9
-                                })"></button>
-                                <button class="swatch btn" style="
-                                    --hue: 260;
-                                    --sat: 1.1;
-                                    --lit: 0.95" onclick="_update_params({
-                                    hue: 260,
-                                    sat: 1.1,
-                                    lit: 0.95
-                                })"></button>
-                                <button class="swatch btn" style="
-                                    --hue: 255;
-                                    --sat: 1;
-                                    --lit: 0.95" onclick="_update_params({
+                    </div>
+                    <div class="setup-body">
+                        <div class="setup-body-main">
+                            <h1>${trans[lang].settings.appearance.name}</h1>
+                            <p>${trans[lang].setup.appearance.bio}</p>
+                            <h4>${trans[lang].settings.customise.colours.name}</h4>
+                            <!--<h5>${trans[lang].settings.customise.colours.presets}</h5>-->
+                            <div class="palette options colours" id="custom_colours">
+                                <button class="swatch btn default" style="
+                                    --hue: var(--hue-seasonal, 255);
+                                    --sat: var(--sat-seasonal, 1);
+                                    --lit: var(--lit-seasonal, 1)" onclick="_update_params({
                                     hue: 255,
                                     sat: 1,
-                                    lit: 0.95
+                                    lit: 1
                                 })"></button>
+                                <button class="swatch btn custom" style="
+                                    --hue: var(--hue-user, 255);
+                                    --sat: var(--sat-user, 1);
+                                    --lit: var(--lit-user, 1)" onclick="_create_a_custom_colour()"></button>
+                            </div>
+                            <p class="subtext">${trans[lang].setup.appearance.subtext}</p>
+                            <div class="palette options colours">
+                                <div class="side">
+                                    <button class="swatch btn" style="
+                                        --hue: -2;
+                                        --sat: 1.35;
+                                        --lit: 0.85" onclick="_update_params({
+                                        hue: -2,
+                                        sat: 1.35,
+                                        lit: 0.85
+                                    })"></button>
+                                    <button class="swatch btn" style="
+                                        --hue: -2;
+                                        --sat: 1.25;
+                                        --lit: 0.85" onclick="_update_params({
+                                        hue: -2,
+                                        sat: 1.25,
+                                        lit: 0.85
+                                    })"></button>
+                                    <button class="swatch btn" style="
+                                        --hue: 356;
+                                        --sat: 1.25;
+                                        --lit: 0.9" onclick="_update_params({
+                                        hue: 356,
+                                        sat: 1.25,
+                                        lit: 0.9
+                                    })"></button>
+                                    <button class="swatch btn" style="
+                                        --hue: 351;
+                                        --sat: 1.2;
+                                        --lit: 0.9" onclick="_update_params({
+                                        hue: 351,
+                                        sat: 1.2,
+                                        lit: 0.9
+                                    })"></button>
+                                    <button class="swatch btn" style="
+                                        --hue: 346;
+                                        --sat: 1.3;
+                                        --lit: 0.85" onclick="_update_params({
+                                        hue: 346,
+                                        sat: 1.3,
+                                        lit: 0.85
+                                    })"></button>
+                                    <button class="swatch btn" style="
+                                        --hue: 339;
+                                        --sat: 1.3;
+                                        --lit: 0.85" onclick="_update_params({
+                                        hue: 339,
+                                        sat: 1.3,
+                                        lit: 0.85
+                                    })"></button>
+                                    <button class="swatch btn" style="
+                                        --hue: 331;
+                                        --sat: 1.1;
+                                        --lit: 0.8" onclick="_update_params({
+                                        hue: 331,
+                                        sat: 1.1,
+                                        lit: 0.8
+                                    })"></button>
+                                    <button class="swatch btn" style="
+                                        --hue: 310;
+                                        --sat: 1.2;
+                                        --lit: 0.85" onclick="_update_params({
+                                        hue: 310,
+                                        sat: 1.2,
+                                        lit: 0.85
+                                    })"></button>
+                                    <button class="swatch btn" style="
+                                        --hue: 286;
+                                        --sat: 1.2;
+                                        --lit: 0.9" onclick="_update_params({
+                                        hue: 286,
+                                        sat: 1.2,
+                                        lit: 0.9
+                                    })"></button>
+                                    <button class="swatch btn" style="
+                                        --hue: 274;
+                                        --sat: 1.25;
+                                        --lit: 0.9" onclick="_update_params({
+                                        hue: 274,
+                                        sat: 1.25,
+                                        lit: 0.9
+                                    })"></button>
+                                </div>
+                                <div class="side">
+                                    <button class="swatch btn" style="
+                                        --hue: 7;
+                                        --sat: 1.35;
+                                        --lit: 0.8" onclick="_update_params({
+                                        hue: 7,
+                                        sat: 1.35,
+                                        lit: 0.8
+                                    })"></button>
+                                    <button class="swatch btn" style="
+                                        --hue: 9;
+                                        --sat: 1.25;
+                                        --lit: 0.84" onclick="_update_params({
+                                        hue: 9,
+                                        sat: 1.25,
+                                        lit: 0.84
+                                    })"></button>
+                                    <button class="swatch btn" style="
+                                        --hue: 14;
+                                        --sat: 1.25;
+                                        --lit: 0.88" onclick="_update_params({
+                                        hue: 14,
+                                        sat: 1.25,
+                                        lit: 0.88
+                                    })"></button>
+                                    <button class="swatch btn" style="
+                                        --hue: 18;
+                                        --sat: 1.2;
+                                        --lit: 0.9" onclick="_update_params({
+                                        hue: 18,
+                                        sat: 1.2,
+                                        lit: 0.9
+                                    })"></button>
+                                    <button class="swatch btn" style="
+                                        --hue: 24;
+                                        --sat: 1.2;
+                                        --lit: 0.93" onclick="_update_params({
+                                        hue: 24,
+                                        sat: 1.2,
+                                        lit: 0.93
+                                    })"></button>
+                                    <button class="swatch btn" style="
+                                        --hue: 30;
+                                        --sat: 1.3;
+                                        --lit: 1" onclick="_update_params({
+                                        hue: 30,
+                                        sat: 1.3,
+                                        lit: 1
+                                    })"></button>
+                                    <button class="swatch btn" style="
+                                        --hue: 38;
+                                        --sat: 1.3;
+                                        --lit: 0.98" onclick="_update_params({
+                                        hue: 38,
+                                        sat: 1.3,
+                                        lit: 0.98
+                                    })"></button>
+                                    <button class="swatch btn" style="
+                                        --hue: 49;
+                                        --sat: 1.3;
+                                        --lit: 0.98" onclick="_update_params({
+                                        hue: 49,
+                                        sat: 1.3,
+                                        lit: 0.98
+                                    })"></button>
+                                    <button class="swatch btn" style="
+                                        --hue: 53;
+                                        --sat: 1.3;
+                                        --lit: 0.95" onclick="_update_params({
+                                        hue: 53,
+                                        sat: 1.3,
+                                        lit: 0.95
+                                    })"></button>
+                                    <button class="swatch btn" style="
+                                        --hue: 62;
+                                        --sat: 1.25;
+                                        --lit: 0.95" onclick="_update_params({
+                                        hue: 62,
+                                        sat: 1.25,
+                                        lit: 0.95
+                                    })"></button>
+                                </div>
+                                <div class="side">
+                                    <button class="swatch btn" style="
+                                        --hue: 75;
+                                        --sat: 1.1;
+                                        --lit: 1" onclick="_update_params({
+                                        hue: 75,
+                                        sat: 1.1,
+                                        lit: 1
+                                    })"></button>
+                                    <button class="swatch btn" style="
+                                        --hue: 85;
+                                        --sat: 1;
+                                        --lit: 1" onclick="_update_params({
+                                        hue: 85,
+                                        sat: 1,
+                                        lit: 1
+                                    })"></button>
+                                    <button class="swatch btn" style="
+                                        --hue: 95;
+                                        --sat: 1.1;
+                                        --lit: 1" onclick="_update_params({
+                                        hue: 95,
+                                        sat: 1.1,
+                                        lit: 1
+                                    })"></button>
+                                    <button class="swatch btn" style="
+                                        --hue: 115;
+                                        --sat: 1;
+                                        --lit: 1" onclick="_update_params({
+                                        hue: 115,
+                                        sat: 1,
+                                        lit: 1
+                                    })"></button>
+                                    <button class="swatch btn" style="
+                                        --hue: 130;
+                                        --sat: 1.2;
+                                        --lit: 0.95" onclick="_update_params({
+                                        hue: 130,
+                                        sat: 1.2,
+                                        lit: 0.95
+                                    })"></button>
+                                    <button class="swatch btn" style="
+                                        --hue: 140;
+                                        --sat: 1.2;
+                                        --lit: 0.9" onclick="_update_params({
+                                        hue: 140,
+                                        sat: 1.2,
+                                        lit: 0.9
+                                    })"></button>
+                                    <button class="swatch btn" style="
+                                        --hue: 155;
+                                        --sat: 1.2;
+                                        --lit: 0.85" onclick="_update_params({
+                                        hue: 155,
+                                        sat: 1.2,
+                                        lit: 0.85
+                                    })"></button>
+                                    <button class="swatch btn" style="
+                                        --hue: 165;
+                                        --sat: 1.1;
+                                        --lit: 0.8" onclick="_update_params({
+                                        hue: 165,
+                                        sat: 1.1,
+                                        lit: 0.8
+                                    })"></button>
+                                    <button class="swatch btn" style="
+                                        --hue: 174;
+                                        --sat: 1.1;
+                                        --lit: 0.8" onclick="_update_params({
+                                        hue: 174,
+                                        sat: 1.1,
+                                        lit: 0.8
+                                    })"></button>
+                                    <button class="swatch btn" style="
+                                        --hue: 184;
+                                        --sat: 1.05;
+                                        --lit: 0.75" onclick="_update_params({
+                                        hue: 184,
+                                        sat: 1.05,
+                                        lit: 0.75
+                                    })"></button>
+                                </div>
+                                <div class="side">
+                                    <button class="swatch btn" style="
+                                        --hue: 205;
+                                        --sat: 1;
+                                        --lit: 1" onclick="_update_params({
+                                        hue: 205,
+                                        sat: 1,
+                                        lit: 1
+                                    })"></button>
+                                    <button class="swatch btn" style="
+                                        --hue: 222;
+                                        --sat: 1;
+                                        --lit: 0.9" onclick="_update_params({
+                                        hue: 222,
+                                        sat: 1,
+                                        lit: 0.9
+                                    })"></button>
+                                    <button class="swatch btn" style="
+                                        --hue: 230;
+                                        --sat: 1.3;
+                                        --lit: 0.9" onclick="_update_params({
+                                        hue: 230,
+                                        sat: 1.3,
+                                        lit: 0.9
+                                    })"></button>
+                                    <button class="swatch btn" style="
+                                        --hue: 230;
+                                        --sat: 1.3;
+                                        --lit: 0.825" onclick="_update_params({
+                                        hue: 230,
+                                        sat: 1.3,
+                                        lit: 0.825
+                                    })"></button>
+                                    <button class="swatch btn" style="
+                                        --hue: 243;
+                                        --sat: 1.3;
+                                        --lit: 0.9" onclick="_update_params({
+                                        hue: 243,
+                                        sat: 1.3,
+                                        lit: 0.9
+                                    })"></button>
+                                    <button class="swatch btn" style="
+                                        --hue: 249;
+                                        --sat: 1.3;
+                                        --lit: 0.9" onclick="_update_params({
+                                        hue: 249,
+                                        sat: 1.3,
+                                        lit: 0.9
+                                    })"></button>
+                                    <button class="swatch btn" style="
+                                        --hue: 255;
+                                        --sat: 1.2;
+                                        --lit: 0.9" onclick="_update_params({
+                                        hue: 255,
+                                        sat: 1.2,
+                                        lit: 0.9
+                                    })"></button>
+                                    <button class="swatch btn" style="
+                                        --hue: 263;
+                                        --sat: 1.2;
+                                        --lit: 0.9" onclick="_update_params({
+                                        hue: 263,
+                                        sat: 1.2,
+                                        lit: 0.9
+                                    })"></button>
+                                    <button class="swatch btn" style="
+                                        --hue: 260;
+                                        --sat: 1.1;
+                                        --lit: 0.95" onclick="_update_params({
+                                        hue: 260,
+                                        sat: 1.1,
+                                        lit: 0.95
+                                    })"></button>
+                                    <button class="swatch btn" style="
+                                        --hue: 255;
+                                        --sat: 1;
+                                        --lit: 0.95" onclick="_update_params({
+                                        hue: 255,
+                                        sat: 1,
+                                        lit: 0.95
+                                    })"></button>
+                                </div>
+                            </div>
+                            <div class="toggle-container" id="container-hue_from_album">
+                                <button class="btn reset" onclick="_reset_item('hue_from_album')">${trans[lang].settings.reset}</button>
+                                <div class="heading">
+                                    <h5>${trans[lang].settings.customise.hue_from_album.name}</h5>
+                                    <p>${trans[lang].settings.customise.hue_from_album.bio}</p>
+                                </div>
+                                <div class="toggle-wrap">
+                                    <button class="toggle" id="toggle-hue_from_album" onclick="_update_item('hue_from_album')" aria-checked="true">
+                                        <div class="dot"></div>
+                                    </button>
+                                </div>
                             </div>
                         </div>
-                        <div class="toggle-container" id="container-hue_from_album">
-                            <button class="btn reset" onclick="_reset_item('hue_from_album')">${trans[lang].settings.reset}</button>
-                            <div class="heading">
-                                <h5>${trans[lang].settings.customise.hue_from_album.name}</h5>
-                                <p>${trans[lang].settings.customise.hue_from_album.bio}</p>
-                            </div>
-                            <div class="toggle-wrap">
-                                <button class="toggle" id="toggle-hue_from_album" onclick="_update_item('hue_from_album')" aria-checked="true">
-                                    <div class="dot"></div>
-                                </button>
-                            </div>
+                        <div class="modal-footer">
+                            <button class="btn back" onclick="_setup_accessibility()">
+                                ${trans[lang].settings.back}
+                            </button>
+                            <div class="btn-fill"></div>
+                            <button class="btn skip" onclick="_setup_skip()">
+                                ${trans[lang].settings.skip}
+                            </button>
+                            <button class="btn primary continue" onclick="_setup_theme()">
+                                ${trans[lang].settings.continue}
+                            </button>
                         </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button class="btn back" onclick="_setup_accessibility()">
-                            ${trans[lang].settings.back}
-                        </button>
-                        <div class="btn-fill"></div>
-                        <button class="btn skip" onclick="_setup_skip()">
-                            ${trans[lang].settings.skip}
-                        </button>
-                        <button class="btn primary continue" onclick="_setup_theme()">
-                            ${trans[lang].settings.continue}
-                        </button>
                     </div>
                 </div>
-            </div>
-        `, false, 'setup');
+            `),
+            dismiss: false,
+            type: 'setup'
+        })
         refresh_all();
 
         tippy(document.body.querySelector('.swatch.default'), {
@@ -10718,250 +10794,271 @@ let has_prompted_for_update = false;
     }
 
     unsafeWindow._setup_theme = function() {
-        kill_window('bleh_setup_appearance');
-        kill_window('bleh_setup_corrections');
-        dialog_legacy('bleh_setup_theme','',`
-            <div class="setup-sides">
-                <div class="setup-preview">
-                    <div class="setup-icon setup-icon-main setup-icon-theme"></div>
-                </div>
-                <div class="setup-body">
-                    <div class="setup-body-main">
-                        <h1>${trans[lang].settings.appearance.name}</h1>
-                        <h4>${trans[lang].settings.themes.name}</h4>
-                        <!--<h4>${trans[lang].settings.themes.dark.name}</h4>-->
-                        <div class="setting-items full">
-                            <div class="side-left full even-more">
-                                <button class="btn theme-item" data-bleh-theme="light" onclick="change_theme_from_settings('light')">
-                                    <div class="preview" data-bleh--theme="light">
-                                        ${theme_preview}
-                                    </div>
-                                    <div class="text">
-                                        <h5>${trans[lang].settings.themes.light.name}</h5>
-                                    </div>
-                                </button>
-                                <button class="btn theme-item" data-bleh-theme="dark" onclick="change_theme_from_settings('dark')">
-                                    <div class="preview" data-bleh--theme="dark">
-                                        ${theme_preview}
-                                    </div>
-                                    <div class="text">
-                                        <h5>${trans[lang].settings.themes.dark.name}</h5>
-                                    </div>
-                                </button>
-                                <button class="btn theme-item" data-bleh-theme="darker" onclick="change_theme_from_settings('darker')">
-                                    <div class="preview" data-bleh--theme="darker">
-                                        ${theme_preview}
-                                    </div>
-                                    <div class="text">
-                                        <h5>${trans[lang].settings.themes.darker.name}</h5>
-                                    </div>
-                                </button>
-                                <button class="btn theme-item" data-bleh-theme="oled" onclick="change_theme_from_settings('oled')">
-                                    <div class="preview" data-bleh--theme="oled">
-                                        ${theme_preview}
-                                    </div>
-                                    <div class="text">
-                                        <h5>${trans[lang].settings.themes.oled.name}</h5>
-                                    </div>
-                                </button>
-                            </div>
-                        </div>
-                        ${(ff('high_contrast')) ? (`
-                        <div class="toggle-container" id="container-high_contrast">
-                            <button class="btn reset" onclick="_reset_item('high_contrast')">${trans[lang].settings.reset}</button>
-                            <div class="heading">
-                                <h5>${trans[lang].settings.customise.high_contrast.name}</h5>
-                            </div>
-                            <div class="toggle-wrap">
-                                <button class="toggle" id="toggle-high_contrast" onclick="_update_item('high_contrast')" aria-checked="true">
-                                    <div class="dot"></div>
-                                </button>
-                            </div>
-                        </div>
-                        `) : ''}
+        dialog_rm({
+            all: true
+        });
+        dialog({
+            id: 'bleh_setup_theme',
+            body: (`
+                <div class="setup-sides">
+                    <div class="setup-preview">
+                        <div class="setup-icon setup-icon-main setup-icon-theme"></div>
                     </div>
-                    <div class="modal-footer">
-                        <button class="btn back" onclick="_setup_appearance()">
-                            ${trans[lang].settings.back}
-                        </button>
-                        <div class="btn-fill"></div>
-                        <button class="btn skip" onclick="_setup_skip()">
-                            ${trans[lang].settings.skip}
-                        </button>
-                        <button class="btn primary continue" onclick="_setup_corrections()">
-                            ${trans[lang].settings.continue}
-                        </button>
+                    <div class="setup-body">
+                        <div class="setup-body-main">
+                            <h1>${trans[lang].settings.appearance.name}</h1>
+                            <h4>${trans[lang].settings.themes.name}</h4>
+                            <!--<h4>${trans[lang].settings.themes.dark.name}</h4>-->
+                            <div class="setting-items full">
+                                <div class="side-left full even-more">
+                                    <button class="btn theme-item" data-bleh-theme="light" onclick="change_theme_from_settings('light')">
+                                        <div class="preview" data-bleh--theme="light">
+                                            ${theme_preview}
+                                        </div>
+                                        <div class="text">
+                                            <h5>${trans[lang].settings.themes.light.name}</h5>
+                                        </div>
+                                    </button>
+                                    <button class="btn theme-item" data-bleh-theme="dark" onclick="change_theme_from_settings('dark')">
+                                        <div class="preview" data-bleh--theme="dark">
+                                            ${theme_preview}
+                                        </div>
+                                        <div class="text">
+                                            <h5>${trans[lang].settings.themes.dark.name}</h5>
+                                        </div>
+                                    </button>
+                                    <button class="btn theme-item" data-bleh-theme="darker" onclick="change_theme_from_settings('darker')">
+                                        <div class="preview" data-bleh--theme="darker">
+                                            ${theme_preview}
+                                        </div>
+                                        <div class="text">
+                                            <h5>${trans[lang].settings.themes.darker.name}</h5>
+                                        </div>
+                                    </button>
+                                    <button class="btn theme-item" data-bleh-theme="oled" onclick="change_theme_from_settings('oled')">
+                                        <div class="preview" data-bleh--theme="oled">
+                                            ${theme_preview}
+                                        </div>
+                                        <div class="text">
+                                            <h5>${trans[lang].settings.themes.oled.name}</h5>
+                                        </div>
+                                    </button>
+                                </div>
+                            </div>
+                            ${(ff('high_contrast')) ? (`
+                            <div class="toggle-container" id="container-high_contrast">
+                                <button class="btn reset" onclick="_reset_item('high_contrast')">${trans[lang].settings.reset}</button>
+                                <div class="heading">
+                                    <h5>${trans[lang].settings.customise.high_contrast.name}</h5>
+                                </div>
+                                <div class="toggle-wrap">
+                                    <button class="toggle" id="toggle-high_contrast" onclick="_update_item('high_contrast')" aria-checked="true">
+                                        <div class="dot"></div>
+                                    </button>
+                                </div>
+                            </div>
+                            `) : ''}
+                        </div>
+                        <div class="modal-footer">
+                            <button class="btn back" onclick="_setup_appearance()">
+                                ${trans[lang].settings.back}
+                            </button>
+                            <div class="btn-fill"></div>
+                            <button class="btn skip" onclick="_setup_skip()">
+                                ${trans[lang].settings.skip}
+                            </button>
+                            <button class="btn primary continue" onclick="_setup_corrections()">
+                                ${trans[lang].settings.continue}
+                            </button>
+                        </div>
                     </div>
                 </div>
-            </div>
-        `, false, 'setup');
+            `),
+            dismiss: false,
+            type: 'setup'
+        })
         refresh_all();
         show_theme_change_in_settings();
     }
 
     unsafeWindow._setup_corrections = function() {
-        kill_window('bleh_setup_theme');
-        kill_window('bleh_setup_seasons');
-        dialog_legacy('bleh_setup_corrections','',`
-            <div class="setup-sides">
-                <div class="setup-preview">
-                    <div class="setup-icon setup-icon-main setup-icon-corrections"></div>
-                </div>
-                <div class="setup-body">
-                    <div class="setup-body-main">
-                        <h1>${trans[lang].settings.corrections.name}</h1>
-                        <p>${trans[lang].settings.corrections.bio}</p>
-                        <div class="inner-preview pad flex">
-                            <table class="chartlist chartlist--with-index chartlist--with-index--length-2 chartlist--with-image chartlist--with-play chartlist--with-artist chartlist--with-bar">
-                                <tbody>
-                                    <tr class="chartlist-row chartlist-row--with-artist">
-                                        <td class="chartlist-index">
-                                            1
-                                        </td>
-                                        <td class="chartlist-image">
-                                            <span class="cover-art">
-                                                <img src="https://lastfm.freetls.fastly.net/i/u/64s/c15d3ed1bd8574260f9378e26847501d.jpg" alt="fractions of infinity" loading="lazy">
-                                            </span>
-                                        </td>
-                                        <td class="chartlist-name">
-                                            <a href="/music/Quadeca/_/fractions+of+infinity" title="fractions of infinity" class="bleh--chartlist-name-without-features">fractions of infinity (feat. Sunday Service Choir)</a>
-                                            <a href="/music/Quadeca/_/fractions+of+infinity" title="fractions of infinity" class="bleh--chartlist-name-with-features">
-                                                <span class="title">fractions of infinity</span>
-                                                <span class="feat" data-bleh--tag-group="guests">feat. Sunday Serv..</span>
-                                            </a>
-                                        </td>
-                                        <td class="chartlist-artist bleh--chartlist-name-without-features">
-                                            <a href="/music/Quadeca" title="Quadeca">Quadeca</a>
-                                        </td>
-                                        <td class="chartlist-artist bleh--chartlist-name-with-features">
-                                            <a href="/music/Quadeca" title="Quadeca">Quadeca</a>,
-                                            <a href="/music/Quadeca" title="Quadeca">Sunday Service</a>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
+        dialog_rm({
+            all: true
+        });
+        dialog({
+            id: 'bleh_setup_corrections',
+            body: (`
+                <div class="setup-sides">
+                    <div class="setup-preview">
+                        <div class="setup-icon setup-icon-main setup-icon-corrections"></div>
+                    </div>
+                    <div class="setup-body">
+                        <div class="setup-body-main">
+                            <h1>${trans[lang].settings.corrections.name}</h1>
+                            <p>${trans[lang].settings.corrections.bio}</p>
+                            <div class="inner-preview pad flex">
+                                <table class="chartlist chartlist--with-index chartlist--with-index--length-2 chartlist--with-image chartlist--with-play chartlist--with-artist chartlist--with-bar">
+                                    <tbody>
+                                        <tr class="chartlist-row chartlist-row--with-artist">
+                                            <td class="chartlist-index">
+                                                1
+                                            </td>
+                                            <td class="chartlist-image">
+                                                <span class="cover-art">
+                                                    <img src="https://lastfm.freetls.fastly.net/i/u/64s/c15d3ed1bd8574260f9378e26847501d.jpg" alt="fractions of infinity" loading="lazy">
+                                                </span>
+                                            </td>
+                                            <td class="chartlist-name">
+                                                <a href="/music/Quadeca/_/fractions+of+infinity" title="fractions of infinity" class="bleh--chartlist-name-without-features">fractions of infinity (feat. Sunday Service Choir)</a>
+                                                <a href="/music/Quadeca/_/fractions+of+infinity" title="fractions of infinity" class="bleh--chartlist-name-with-features">
+                                                    <span class="title">fractions of infinity</span>
+                                                    <span class="feat" data-bleh--tag-group="guests">feat. Sunday Serv..</span>
+                                                </a>
+                                            </td>
+                                            <td class="chartlist-artist bleh--chartlist-name-without-features">
+                                                <a href="/music/Quadeca" title="Quadeca">Quadeca</a>
+                                            </td>
+                                            <td class="chartlist-artist bleh--chartlist-name-with-features">
+                                                <a href="/music/Quadeca" title="Quadeca">Quadeca</a>,
+                                                <a href="/music/Quadeca" title="Quadeca">Sunday Service</a>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="toggle-container" id="container-format_guest_features">
+                                <button class="btn reset" onclick="_reset_item('format_guest_features')">${trans[lang].settings.reset}</button>
+                                <div class="heading">
+                                    <h5>${trans[lang].settings.corrections.format_guest_features.name}</h5>
+                                    <p>${trans[lang].settings.corrections.format_guest_features.bio}</p>
+                                </div>
+                                <div class="toggle-wrap">
+                                    <button class="toggle" id="toggle-format_guest_features" onclick="_update_item('format_guest_features')" aria-checked="true">
+                                        <div class="dot"></div>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="toggle-container" id="container-show_guest_features">
+                                <button class="btn reset" onclick="_reset_item('show_guest_features')">${trans[lang].settings.reset}</button>
+                                <div class="heading">
+                                    <h5>${trans[lang].settings.corrections.show_guest_features.name}</h5>
+                                    <p>${trans[lang].settings.corrections.show_guest_features.bio}</p>
+                                </div>
+                                <div class="toggle-wrap">
+                                    <button class="toggle" id="toggle-show_guest_features" onclick="_update_item('show_guest_features')" aria-checked="true">
+                                        <div class="dot"></div>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="toggle-container" id="container-show_remaster_tags">
+                                <button class="btn reset" onclick="_reset_item('show_remaster_tags')">${trans[lang].settings.reset}</button>
+                                <div class="heading">
+                                    <h5>${trans[lang].settings.corrections.show_remaster_tags.name}</h5>
+                                    <p>${trans[lang].settings.corrections.show_remaster_tags.bio}</p>
+                                </div>
+                                <div class="toggle-wrap">
+                                    <button class="toggle" id="toggle-show_remaster_tags" onclick="_update_item('show_remaster_tags')" aria-checked="true">
+                                        <div class="dot"></div>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="toggle-container" id="container-stacked_chartlist_info">
+                                <button class="btn reset" onclick="_reset_item('stacked_chartlist_info')">${trans[lang].settings.reset}</button>
+                                <div class="heading">
+                                    <h5>${trans[lang].settings.corrections.stacked_chartlist_info.name}</h5>
+                                    <p>${trans[lang].settings.corrections.stacked_chartlist_info.bio}</p>
+                                </div>
+                                <div class="toggle-wrap">
+                                    <button class="toggle" id="toggle-stacked_chartlist_info" onclick="_update_item('stacked_chartlist_info')" aria-checked="true">
+                                        <div class="dot"></div>
+                                    </button>
+                                </div>
+                            </div>
                         </div>
-                        <div class="toggle-container" id="container-format_guest_features">
-                            <button class="btn reset" onclick="_reset_item('format_guest_features')">${trans[lang].settings.reset}</button>
-                            <div class="heading">
-                                <h5>${trans[lang].settings.corrections.format_guest_features.name}</h5>
-                                <p>${trans[lang].settings.corrections.format_guest_features.bio}</p>
-                            </div>
-                            <div class="toggle-wrap">
-                                <button class="toggle" id="toggle-format_guest_features" onclick="_update_item('format_guest_features')" aria-checked="true">
-                                    <div class="dot"></div>
-                                </button>
-                            </div>
-                        </div>
-                        <div class="toggle-container" id="container-show_guest_features">
-                            <button class="btn reset" onclick="_reset_item('show_guest_features')">${trans[lang].settings.reset}</button>
-                            <div class="heading">
-                                <h5>${trans[lang].settings.corrections.show_guest_features.name}</h5>
-                                <p>${trans[lang].settings.corrections.show_guest_features.bio}</p>
-                            </div>
-                            <div class="toggle-wrap">
-                                <button class="toggle" id="toggle-show_guest_features" onclick="_update_item('show_guest_features')" aria-checked="true">
-                                    <div class="dot"></div>
-                                </button>
-                            </div>
-                        </div>
-                        <div class="toggle-container" id="container-show_remaster_tags">
-                            <button class="btn reset" onclick="_reset_item('show_remaster_tags')">${trans[lang].settings.reset}</button>
-                            <div class="heading">
-                                <h5>${trans[lang].settings.corrections.show_remaster_tags.name}</h5>
-                                <p>${trans[lang].settings.corrections.show_remaster_tags.bio}</p>
-                            </div>
-                            <div class="toggle-wrap">
-                                <button class="toggle" id="toggle-show_remaster_tags" onclick="_update_item('show_remaster_tags')" aria-checked="true">
-                                    <div class="dot"></div>
-                                </button>
-                            </div>
-                        </div>
-                        <div class="toggle-container" id="container-stacked_chartlist_info">
-                            <button class="btn reset" onclick="_reset_item('stacked_chartlist_info')">${trans[lang].settings.reset}</button>
-                            <div class="heading">
-                                <h5>${trans[lang].settings.corrections.stacked_chartlist_info.name}</h5>
-                                <p>${trans[lang].settings.corrections.stacked_chartlist_info.bio}</p>
-                            </div>
-                            <div class="toggle-wrap">
-                                <button class="toggle" id="toggle-stacked_chartlist_info" onclick="_update_item('stacked_chartlist_info')" aria-checked="true">
-                                    <div class="dot"></div>
-                                </button>
-                            </div>
+                        <div class="modal-footer">
+                            <button class="btn back" onclick="_setup_theme()">
+                                ${trans[lang].settings.back}
+                            </button>
+                            <div class="btn-fill"></div>
+                            <button class="btn skip" onclick="_setup_skip()">
+                                ${trans[lang].settings.skip}
+                            </button>
+                            <button class="btn primary continue" onclick="_setup_seasons()">
+                                ${trans[lang].settings.continue}
+                            </button>
                         </div>
                     </div>
-                    <div class="modal-footer">
-                        <button class="btn back" onclick="_setup_theme()">
-                            ${trans[lang].settings.back}
-                        </button>
-                        <div class="btn-fill"></div>
-                        <button class="btn skip" onclick="_setup_skip()">
-                            ${trans[lang].settings.skip}
-                        </button>
-                        <button class="btn primary continue" onclick="_setup_seasons()">
-                            ${trans[lang].settings.continue}
-                        </button>
-                    </div>
                 </div>
-            </div>
-        `, false, 'setup');
+            `),
+            dismiss: false,
+            type: 'setup'
+        });
         refresh_all();
     }
 
     unsafeWindow._setup_seasons = function() {
-        kill_window('bleh_setup_corrections');
-        dialog_legacy('bleh_setup_seasons','',`
-            <div class="setup-sides">
-                <div class="setup-preview">
-                    <div class="setup-icon setup-icon-main setup-icon-seasons"></div>
-                </div>
-                <div class="setup-body">
-                    <div class="setup-body-main">
-                        <h1>${trans[lang].settings.customise.seasonal.name}</h1>
-                        <p>${trans[lang].settings.customise.seasonal.bio}</p>
-                        <div class="inner-preview pad click-thru">
-                            <div class="current-season-container season-column">
-                                <div class="current-season" data-season="${stored_season.id}" id="current_season">
-                                    ${(stored_season.id != 'none')
-                                    ? trans[lang].settings.customise.seasonal.marker.current.replace('{season}', trans[lang].settings.customise.seasonal.listing[stored_season.id]).replace('{time}', moment(stored_season.end.replace('y0', stored_season.year)).to(stored_season.now, true))
-                                    : (settings.seasonal) ? trans[lang].settings.customise.seasonal.marker.none : trans[lang].settings.customise.seasonal.marker.disabled}
+        dialog_rm({
+            all: true
+        });
+        dialog({
+            id: 'bleh_setup_seasons',
+            body: (`
+                <div class="setup-sides">
+                    <div class="setup-preview">
+                        <div class="setup-icon setup-icon-main setup-icon-seasons"></div>
+                    </div>
+                    <div class="setup-body">
+                        <div class="setup-body-main">
+                            <h1>${trans[lang].settings.customise.seasonal.name}</h1>
+                            <p>${trans[lang].settings.customise.seasonal.bio}</p>
+                            <div class="inner-preview pad click-thru">
+                                <div class="current-season-container season-column">
+                                    <div class="current-season" data-season="${stored_season.id}" id="current_season">
+                                        ${(stored_season.id != 'none')
+                                        ? trans[lang].settings.customise.seasonal.marker.current.replace('{season}', trans[lang].settings.customise.seasonal.listing[stored_season.id]).replace('{time}', moment(stored_season.end.replace('y0', stored_season.year)).to(stored_season.now, true))
+                                        : (settings.seasonal) ? trans[lang].settings.customise.seasonal.marker.none : trans[lang].settings.customise.seasonal.marker.disabled}
+                                    </div>
+                                    <div class="current-season-started" id="current_season_start">
+                                        ${(stored_season.id != 'none')
+                                        ? trans[lang].settings.customise.seasonal.marker.started.replace('{time}', moment(stored_season.start.replace('y0', stored_season.year)).from(stored_season.now))
+                                        : ''}
+                                    </div>
                                 </div>
-                                <div class="current-season-started" id="current_season_start">
-                                    ${(stored_season.id != 'none')
-                                    ? trans[lang].settings.customise.seasonal.marker.started.replace('{time}', moment(stored_season.start.replace('y0', stored_season.year)).from(stored_season.now))
-                                    : ''}
+                            </div>
+                            <div class="toggle-container" id="container-seasonal" onclick="_update_item('seasonal')">
+                                <button class="btn reset" onclick="_reset_item('seasonal')">${trans[lang].settings.reset}</button>
+                                <div class="heading">
+                                    <h5>${trans[lang].settings.customise.seasonal.option.name}</h5>
+                                </div>
+                                <div class="toggle-wrap">
+                                    <button class="toggle" id="toggle-seasonal" aria-checked="true">
+                                        <div class="dot"></div>
+                                    </button>
                                 </div>
                             </div>
                         </div>
-                        <div class="toggle-container" id="container-seasonal" onclick="_update_item('seasonal')">
-                            <button class="btn reset" onclick="_reset_item('seasonal')">${trans[lang].settings.reset}</button>
-                            <div class="heading">
-                                <h5>${trans[lang].settings.customise.seasonal.option.name}</h5>
-                            </div>
-                            <div class="toggle-wrap">
-                                <button class="toggle" id="toggle-seasonal" aria-checked="true">
-                                    <div class="dot"></div>
-                                </button>
-                            </div>
+                        <div class="modal-footer">
+                            <button class="btn back" onclick="_setup_corrections()">
+                                ${trans[lang].settings.back}
+                            </button>
+                            <div class="btn-fill"></div>
+                            <button class="btn primary continue" onclick="_setup_skip()">
+                                ${trans[lang].settings.finish}
+                            </button>
                         </div>
                     </div>
-                    <div class="modal-footer">
-                        <button class="btn back" onclick="_setup_corrections()">
-                            ${trans[lang].settings.back}
-                        </button>
-                        <div class="btn-fill"></div>
-                        <button class="btn primary continue" onclick="_setup_skip()">
-                            ${trans[lang].settings.finish}
-                        </button>
-                    </div>
                 </div>
-            </div>
-        `, false, 'setup');
+            `),
+            dismiss: false,
+            type: 'setup'
+        })
         refresh_all();
     }
 
     unsafeWindow._setup_skip = function() {
-        kill_window('bleh_setup_start');
+        dialog_rm({
+            all: true
+        });
         document.location.href = `${root}user/${auth}`;
     }
 

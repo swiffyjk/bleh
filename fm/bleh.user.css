@@ -16403,6 +16403,11 @@ button.bleh--gallery-bookmark-image-btn {
 
     .bleh-modal {
         max-width: 800px;
+
+        &[data-modal-type="setup"] {
+            width: 1000px;
+            max-width: 80vw;
+        }
     }
 }
 
@@ -16420,10 +16425,7 @@ button.bleh--gallery-bookmark-image-btn {
     }
 }
 
-.modal-dialog--setup {
-    width: 940px !important;
-}
-.modal--setup {
+[data-modal-type="setup"] .bleh-modal-body {
     .modal-title {
         display: none;
     }
