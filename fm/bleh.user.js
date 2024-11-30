@@ -2341,6 +2341,9 @@ let cute = ['cutensilly', 'inozom'];
 // require page reload
 let reload_pending = false;
 
+let dialogs = {};
+let notifications = {};
+
 tippy.setDefaultProps({
     arrow: false,
     duration: [150, 250],
@@ -3074,16 +3077,19 @@ let has_prompted_for_update = false;
 
     log(`starting ${version.build}.${version.sku}`, 'load');
 
-    initia();
+    bleh();
 
-    function initia() {
+    function bleh() {
         let performance_start = performance.now();
 
         load_settings();
         lookup_lang();
         append_style();
         patch_masthead(document.body);
-        load_notifs();
+
+        // messaging
+        load_dialogs();
+        load_notifications();
 
         // load seasonal data
         set_season();
@@ -3313,7 +3319,7 @@ let has_prompted_for_update = false;
     }
     function prompt_for_update() {
         // prompt the user
-        create_window('bleh_update',trans[lang].settings.home.update.update_to_v.replace('{v}', theme_version),(`
+        dialog_legacy('bleh_update',trans[lang].settings.home.update.update_to_v.replace('{v}', theme_version),(`
             <div class="bleh--update-checker-container">
                 <div class="form">
                     <div class="form-group">
@@ -3351,7 +3357,7 @@ let has_prompted_for_update = false;
         if (!settings.dev) {
             _final_update();
         } else {
-            create_window('bleh_update',trans[lang].settings.home.update.update_to_v.replace('{v}', theme_version),(`
+            dialog_legacy('bleh_update',trans[lang].settings.home.update.update_to_v.replace('{v}', theme_version),(`
                 <div class="bleh--update-checker-container">
                     <div class="form">
                         <div class="form-group">
@@ -3373,7 +3379,7 @@ let has_prompted_for_update = false;
     }
 
     unsafeWindow._final_update = function() {
-        create_window('bleh_update',trans[lang].settings.home.update.update_to_v.replace('{v}', theme_version),(`
+        dialog_legacy('bleh_update',trans[lang].settings.home.update.update_to_v.replace('{v}', theme_version),(`
             <div class="bleh--update-checker-container">
                 <div class="form">
                     <div class="form-group">
@@ -3389,7 +3395,7 @@ let has_prompted_for_update = false;
         kill_window('bleh_update');
 
         if (!settings.dev) {
-            create_window('bleh_wait',trans[lang].settings.home.update.name,'');
+            dialog_legacy('bleh_wait',trans[lang].settings.home.update.name,'');
             fetch_new_style(false, true);
         } else {
             // dev
@@ -4600,7 +4606,7 @@ let has_prompted_for_update = false;
         open_avatar_changer(token);
     }
     function open_avatar_changer(token) {
-        create_window('edit_avatar',trans[lang].settings.inbuilt.profile.avatar.name,`
+        dialog_legacy('edit_avatar',trans[lang].settings.inbuilt.profile.avatar.name,`
             <div class="bleh--upload-avatar-container">
                 <form class="avatar-upload-form bleh--upload-avatar-form" action="${root}settings" name="avatar-form" method="post" enctype="multipart/form-data">
                     <input type="hidden" name="csrfmiddlewaretoken" value="${token}">
@@ -6380,7 +6386,7 @@ let has_prompted_for_update = false;
 
     // bleh settings
     unsafeWindow.open_bleh_settings = function() {
-        create_window('bleh_settings','Theme settings','');
+        dialog_legacy('bleh_settings','Theme settings','');
     }
 
     function bleh_settings() {
@@ -8298,7 +8304,7 @@ let has_prompted_for_update = false;
     unsafeWindow._edit_profile_note = function(username) {
         let profile_notes = JSON.parse(localStorage.getItem('bleh_profile_notes')) || {};
 
-        create_window('edit_profile_note',trans[lang].settings.profiles.notes.edit_user.replace('{u}', username),`
+        dialog_legacy('edit_profile_note',trans[lang].settings.profiles.notes.edit_user.replace('{u}', username),`
         <textarea id="bleh--profile-note" placeholder="Enter a local note for this user">${profile_notes[username]}</textarea>
         <div class="modal-footer">
             <button class="btn primary save" onclick="_save_profile_note_in_window('${username}')">
@@ -8543,7 +8549,7 @@ let has_prompted_for_update = false;
 
 
                 if (item == 'dev') {
-                    create_window('prompt_dev',trans[lang].settings.performance.dev.name,`
+                    dialog_legacy('prompt_dev',trans[lang].settings.performance.dev.name,`
                         <p class="alert alert-info">${trans[lang].settings.performance.dev.modals.prompt.alert}</p>
                         <br>
                         ${trans[lang].settings.performance.dev.modals.prompt.stylus}
@@ -8716,7 +8722,7 @@ let has_prompted_for_update = false;
 
     function continue_dev() {
         kill_window('prompt_dev');
-        create_window('continue_dev',trans[lang].settings.performance.dev.name,`
+        dialog_legacy('continue_dev',trans[lang].settings.performance.dev.name,`
             ${trans[lang].settings.performance.dev.modals.continue.next_step}
             <div class="modal-footer">
                 <button class="btn primary continue" onclick="_finish_dev()">
@@ -8729,7 +8735,7 @@ let has_prompted_for_update = false;
     unsafeWindow._finish_dev = function() {
         open('https://github.com/katelyynn/bleh/raw/uwu/fm/bleh.user.css');
         kill_window('continue_dev');
-        create_window('finish_dev',trans[lang].settings.performance.dev.name,`
+        dialog_legacy('finish_dev',trans[lang].settings.performance.dev.name,`
             <p class="alert alert-success">${trans[lang].settings.performance.dev.modals.finish.alert}</p>
             <div class="modal-footer">
                 <button class="btn primary done" onclick="_kill_window('finish_dev')">
@@ -8742,7 +8748,7 @@ let has_prompted_for_update = false;
 
     // create a custom colour
     unsafeWindow._create_a_custom_colour = function() {
-        create_window('custom_colour',trans[lang].settings.customise.colours.custom,`
+        dialog_legacy('custom_colour',trans[lang].settings.customise.colours.custom,`
         <p>${trans[lang].settings.customise.colours.modals.custom_colour.preface}</p>
         <br>
         <div class="inner-preview pad">
@@ -8835,7 +8841,128 @@ let has_prompted_for_update = false;
 
 
     // create a window
-    function create_window(id, title, inner_content, has_close = false, classname='', allow_scroll = false) {
+    function load_dialogs() {
+        let dialogs = document.createElement('div');
+        dialogs.classList.add('bleh-modals');
+
+        document.body.appendChild(dialogs);
+
+        page.structure.dialogs = dialogs;
+    }
+    function dialog({
+        id = '',
+        title = null,
+        body = document.createElement('div').innerHTML,
+        has_close = true,
+        type = '',
+        has_overlays = true
+    }) {
+        log(`creating ${id}`, 'window', 'info', {
+            id: id,
+            title: title,
+            body: body,
+            has_close: has_close,
+            type: type
+        });
+
+        let modal = document.createElement('div');
+        modal.classList.add('bleh-modal');
+        modal.setAttribute('data-modal-id', id);
+        modal.setAttribute('data-modal-has-overlays', has_overlays);
+
+        if (type != '')
+            modal.setAttribute('data-modal-type', type);
+
+        if (title != null) {
+            let modal_title = document.createElement('div');
+            modal_title.classList.add('bleh-modal-title');
+            modal_title.innerHTML = (`
+                <h1>${title}</h1>
+            `);
+
+            modal.appendChild(modal_title);
+        }
+
+        if (has_close) {
+            let modal_close = document.createElement('button');
+            modal_close.classList.add('modal-close-button');
+            modal_close.setAttribute('onclick', `_dialog_rm({id: "${id}"})`);
+
+            modal.appendChild(modal_close);
+
+            // allow clicking out of the modal to close
+            page.structure.dialogs.setAttribute('onclick', '_dialog_rm({all: true})');
+        } else {
+            page.structure.dialogs.removeAttribute('onclick');
+        }
+
+        let modal_body = document.createElement('div');
+        modal_body.classList.add('bleh-modal-body');
+        modal_body.innerHTML = body;
+
+        modal.appendChild(modal_body);
+
+        dialogs[id] = {
+            instance: modal
+        };
+
+        page.structure.dialogs.appendChild(modal);
+        page.structure.dialogs.classList.add('has-dialog');
+    }
+    unsafeWindow._dialog_rm = function({
+        id = null,
+        all = false
+    }) {
+        dialog_rm({
+            id: id,
+            all: all
+        });
+    }
+    function dialog_rm({
+        id = null,
+        all = false
+    }) {
+        if (all) {
+            log('requested kill all', 'window');
+            console.info(dialogs);
+            for (let dialog in dialogs) {
+                dialog_rm({
+                    id: dialog
+                });
+            }
+
+            return;
+        }
+
+        if (id == null)
+            return;
+
+        if (page.structure.dialogs == null)
+            return;
+
+        if (dialogs.hasOwnProperty(id)) {
+            let dialog = dialogs[id];
+
+            if (!page.structure.dialogs.contains(dialog.instance))
+                return;
+
+            log(`queuing ${id} to kill`, 'window');
+
+            dialog.instance.classList.add('to-remove');
+
+            setTimeout(function() {
+                page.structure.dialogs.removeChild(dialog.instance);
+            }, 400);
+
+            delete dialogs[id];
+
+            if (JSON.stringify(dialogs) == '{}') {
+                page.structure.dialogs.classList.remove('has-dialog');
+            }
+        }
+    }
+
+    function dialog_legacy(id, title, inner_content, has_close = false, classname='', allow_scroll = false) {
         log(`created ${id} - '${title}'`, 'window', 'info', {content: [inner_content], has_close: has_close, classname: classname});
 
         let background = document.createElement('div');
@@ -8975,19 +9102,24 @@ let has_prompted_for_update = false;
 
     // import settings
     unsafeWindow._import_settings = function() {
-        create_window('import_settings',trans[lang].settings.actions.import.modals.initial.name,`
-            <p class="alert alert-warning">${trans[lang].settings.actions.import.modals.initial.alert}</p>
-            <br>
-            <textarea id="import_area"></textarea>
-            <div class="modal-footer">
-                <button class="btn primary download" onclick="_confirm_import()">
-                    ${trans[lang].settings.actions.import.name}
-                </button>
-                <button class="btn cancel" onclick="_kill_window('import_settings')">
-                    ${trans[lang].settings.cancel}
-                </button>
-            </div>
-        `, true);
+        dialog({
+            id: 'import_settings',
+            title: trans[lang].settings.actions.import.modals.initial.name,
+            body: (`
+                <p class="alert alert-warning">${trans[lang].settings.actions.import.modals.initial.alert}</p>
+                <br>
+                <textarea id="import_area"></textarea>
+                <div class="modal-footer">
+                    <button class="btn primary download" onclick="_confirm_import()">
+                        ${trans[lang].settings.actions.import.name}
+                    </button>
+                    <button class="btn cancel" onclick="_dialog_rm({id: 'import_settings'})">
+                        ${trans[lang].settings.cancel}
+                    </button>
+                </div>
+            `),
+            has_close: true
+        });
     }
 
     unsafeWindow._confirm_import = function() {
@@ -9005,7 +9137,7 @@ let has_prompted_for_update = false;
         } catch(e) {
             // cannot continue, halt
             kill_window('import_settings');
-            create_window('import_failed',trans[lang].settings.actions.import.modals.failed.name,`
+            dialog_legacy('import_failed',trans[lang].settings.actions.import.modals.failed.name,`
             <p class="alert alert-error">${trans[lang].settings.actions.import.modals.failed.alert}</p>
             <div class="modal-footer">
                 <button class="btn primary done" onclick="_kill_window('import_failed')">
@@ -9020,7 +9152,7 @@ let has_prompted_for_update = false;
     // export settings
     function export_settings() {
 
-        create_window('export_settings',trans[lang].settings.actions.export.modals.initial.name,`
+        dialog_legacy('export_settings',trans[lang].settings.actions.export.modals.initial.name,`
             <p class="alert alert-success">${trans[lang].settings.actions.export.modals.initial.alert}</p>
             <br>
             <textarea>${JSON.stringify(settings)}</textarea>
@@ -9038,7 +9170,7 @@ let has_prompted_for_update = false;
 
     // reset settings
     unsafeWindow._reset_settings = function() {
-        create_window('reset_settings',trans[lang].settings.actions.reset.modals.initial.name,`
+        dialog_legacy('reset_settings',trans[lang].settings.actions.reset.modals.initial.name,`
             <p class="alert alert-warning">${trans[lang].settings.actions.reset.modals.initial.alert}</p>
             <div class="modal-footer">
                 <button class="btn done" onclick="_confirm_reset()">
@@ -9784,12 +9916,12 @@ let has_prompted_for_update = false;
 
 
     // notifs
-    function load_notifs() {
-        let prev_notif = document.getElementById('bleh-notifs');
+    function load_notifications() {
+        let prev_notif = document.getElementById('bleh-notifications');
         if (prev_notif == null) {
             let notifs = document.createElement('div');
-            notifs.classList.add('bleh-notifs');
-            notifs.setAttribute('id', 'bleh-notifs');
+            notifs.classList.add('bleh-notifications');
+            page.structure.notifications = notifs;
             document.body.appendChild(notifs);
         }
     }
@@ -9799,11 +9931,11 @@ let has_prompted_for_update = false;
     }
     function deliver_notif(content, persist=false, has_icon=false, append_class='', action='') {
         let notif = document.createElement('button');
-        notif.classList.add('bleh-notif');
+        notif.classList.add('bleh-notification');
         notif.setAttribute('onclick', '_kill_notif(this)');
         notif.textContent = content;
 
-        document.getElementById('bleh-notifs').appendChild(notif);
+        page.structure.notifs.appendChild(notif);
 
         if (has_icon)
             notif.classList.add('btn--has-icon');
@@ -10062,7 +10194,7 @@ let has_prompted_for_update = false;
         document.body.classList.add('bleh-setup');
         document.body.style.setProperty('background-image', `url(${my_avi})`);
 
-        create_window('bleh_setup_start','',`
+        dialog_legacy('bleh_setup_start','',`
             <div class="setup-sides">
                 <div class="setup-preview">
                     <div class="setup-icon setup-icon-main setup-icon-home"></div>
@@ -10101,7 +10233,7 @@ let has_prompted_for_update = false;
     unsafeWindow._setup_accessibility = function() {
         kill_window('bleh_setup_start');
         kill_window('bleh_setup_appearance');
-        create_window('bleh_setup_accessibility','',`
+        dialog_legacy('bleh_setup_accessibility','',`
             <div class="setup-sides">
                 <div class="setup-preview">
                     <div class="setup-icon setup-icon-main setup-icon-accessibility"></div>
@@ -10185,7 +10317,7 @@ let has_prompted_for_update = false;
     unsafeWindow._setup_appearance = function() {
         kill_window('bleh_setup_accessibility');
         kill_window('bleh_setup_theme');
-        create_window('bleh_setup_appearance','',`
+        dialog_legacy('bleh_setup_appearance','',`
             <div class="setup-sides">
                 <div class="setup-preview">
                     <div class="setup-icon setup-icon-main setup-icon-appearance">
@@ -10588,7 +10720,7 @@ let has_prompted_for_update = false;
     unsafeWindow._setup_theme = function() {
         kill_window('bleh_setup_appearance');
         kill_window('bleh_setup_corrections');
-        create_window('bleh_setup_theme','',`
+        dialog_legacy('bleh_setup_theme','',`
             <div class="setup-sides">
                 <div class="setup-preview">
                     <div class="setup-icon setup-icon-main setup-icon-theme"></div>
@@ -10670,7 +10802,7 @@ let has_prompted_for_update = false;
     unsafeWindow._setup_corrections = function() {
         kill_window('bleh_setup_theme');
         kill_window('bleh_setup_seasons');
-        create_window('bleh_setup_corrections','',`
+        dialog_legacy('bleh_setup_corrections','',`
             <div class="setup-sides">
                 <div class="setup-preview">
                     <div class="setup-icon setup-icon-main setup-icon-corrections"></div>
@@ -10778,7 +10910,7 @@ let has_prompted_for_update = false;
 
     unsafeWindow._setup_seasons = function() {
         kill_window('bleh_setup_corrections');
-        create_window('bleh_setup_seasons','',`
+        dialog_legacy('bleh_setup_seasons','',`
             <div class="setup-sides">
                 <div class="setup-preview">
                     <div class="setup-icon setup-icon-main setup-icon-seasons"></div>
@@ -11624,7 +11756,7 @@ let has_prompted_for_update = false;
 
 
     unsafeWindow._open_correction_modal = function() {
-        create_window('corrections', trans[lang].settings.corrections.name, (`
+        dialog_legacy('corrections', trans[lang].settings.corrections.name, (`
             <h4>${trans[lang].settings.corrections.listing.artists}</h4>
             <div class="corrections artist" id="corrections-artist"></div>
             <h4>${trans[lang].settings.corrections.listing.albums_tracks}</h4>
@@ -12449,7 +12581,7 @@ let has_prompted_for_update = false;
         expand_avatar(src);
     }
     function expand_avatar(src) {
-        create_window('avatar', '', (`
+        dialog_legacy('avatar', '', (`
             <div class="full-avatar-wrapper">
                 <div class="full-avatar">
                     <img src="${src}">
@@ -13017,7 +13149,7 @@ let has_prompted_for_update = false;
     }
 
     function open_changelog(changelog) {
-        let window = create_window('changelog', trans[lang].changelog.name, (`
+        let window = dialog_legacy('changelog', trans[lang].changelog.name, (`
             <div class="changelog-list"></div>
             <div class="modal-footer">
                 <a class="btn primary skip" href="#latest_major_release">
@@ -14112,7 +14244,7 @@ let has_prompted_for_update = false;
 
 
     unsafeWindow._open_profile_shortcut_window = function() {
-        create_window('profile_shortcut',trans[lang].settings.music.profile_shortcut.name,(`
+        dialog_legacy('profile_shortcut',trans[lang].settings.music.profile_shortcut.name,(`
             <div class="text-container" id="container-profile_shortcut">
                 <button class="btn reset" onclick="_reset_item('profile_shortcut')">${trans[lang].settings.reset}</button>
                 <div class="avatar-container">
