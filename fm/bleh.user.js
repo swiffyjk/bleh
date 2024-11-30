@@ -10385,9 +10385,6 @@ let has_prompted_for_update = false;
     }
 
     unsafeWindow._setup_appearance = function() {
-        dialog_rm({
-            all: true
-        });
         dialog({
             id: 'bleh_setup_appearance',
             body: (`
@@ -10779,7 +10776,8 @@ let has_prompted_for_update = false;
                 </div>
             `),
             dismiss: false,
-            type: 'setup'
+            type: 'setup',
+            replace_if_possible: true
         })
         refresh_all();
 
@@ -10794,9 +10792,6 @@ let has_prompted_for_update = false;
     }
 
     unsafeWindow._setup_theme = function() {
-        dialog_rm({
-            all: true
-        });
         dialog({
             id: 'bleh_setup_theme',
             body: (`
@@ -10875,16 +10870,14 @@ let has_prompted_for_update = false;
                 </div>
             `),
             dismiss: false,
-            type: 'setup'
+            type: 'setup',
+            replace_if_possible: true
         })
         refresh_all();
         show_theme_change_in_settings();
     }
 
     unsafeWindow._setup_corrections = function() {
-        dialog_rm({
-            all: true
-        });
         dialog({
             id: 'bleh_setup_corrections',
             body: (`
@@ -10991,15 +10984,13 @@ let has_prompted_for_update = false;
                 </div>
             `),
             dismiss: false,
-            type: 'setup'
+            type: 'setup',
+            replace_if_possible: true
         });
         refresh_all();
     }
 
     unsafeWindow._setup_seasons = function() {
-        dialog_rm({
-            all: true
-        });
         dialog({
             id: 'bleh_setup_seasons',
             body: (`
@@ -11050,7 +11041,8 @@ let has_prompted_for_update = false;
                 </div>
             `),
             dismiss: false,
-            type: 'setup'
+            type: 'setup',
+            replace_if_possible: true
         })
         refresh_all();
     }
