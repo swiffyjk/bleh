@@ -2558,10 +2558,6 @@ let profile_badges = {
             name: '#1 glaive fan'
         }
     ],
-    'peoplepleasr': {
-        type: 'cat',
-        name: 'it\'s a kitty!!'
-    },
     'twolay': [
         {
             type: 'cat',

@@ -3342,11 +3342,6 @@ button.navlist-more {
             --lit-over: 1;
         }
     }
-    &.user-status--bleh-user-peoplepleasr {
-        --hue-over: 264;
-        --sat-over: 1;
-        --lit-over: 1;
-    }
     &.user-status--bleh-user-twolay {
         --hue-over: 333;
         --sat-over: 1;
