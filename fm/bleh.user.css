@@ -4124,9 +4124,9 @@ better than the default selector '#app a' i suppose */
 .grid-items-item-details {
     font-size: var(--font-size);
     line-height: var(--line-height);
-    text-shadow: 0 0 10px rgba(0,0,0,1);
+    text-shadow: 0 0 6px rgba(0,0,0,1);
     overflow: hidden;
-    padding: 15px;
+    padding: 12px;
     left: 0;
     bottom: 0;
     right: 0;
