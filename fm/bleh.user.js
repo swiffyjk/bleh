@@ -8872,7 +8872,8 @@ let has_prompted_for_update = false;
         has_overlays = true,
         replace = false,
         replace_if_possible = false,
-        replace_id = ''
+        replace_id = '',
+        allow_scroll = false
     }) {
         log(`creating ${id}`, 'window', 'info', {
             id: id,
@@ -8882,7 +8883,8 @@ let has_prompted_for_update = false;
             type: type,
             has_overlays: has_overlays,
             replace: replace,
-            replace_id: replace_id
+            replace_id: replace_id,
+            allow_scroll: allow_scroll
         });
 
         let modal;
@@ -8942,6 +8944,7 @@ let has_prompted_for_update = false;
 
         let modal_body = document.createElement('div');
         modal_body.classList.add('bleh-modal-body');
+        modal_body.setAttribute('data-allow-scroll', allow_scroll);
         modal_body.innerHTML = body;
 
         modal.appendChild(modal_body);
@@ -11845,12 +11848,19 @@ let has_prompted_for_update = false;
 
 
     unsafeWindow._open_correction_modal = function() {
-        dialog_legacy('corrections', trans[lang].settings.corrections.name, (`
-            <h4>${trans[lang].settings.corrections.listing.artists}</h4>
-            <div class="corrections artist" id="corrections-artist"></div>
-            <h4>${trans[lang].settings.corrections.listing.albums_tracks}</h4>
-            <div class="corrections album_tracks" id="corrections-albums_tracks"></div>
-        `), true, 'corrections', true);
+        dialog({
+            id: 'corrections',
+            title: trans[lang].settings.corrections.name,
+            body: (`
+                <h4>${trans[lang].settings.corrections.listing.artists}</h4>
+                <div class="corrections artist" id="corrections-artist"></div>
+                <h4>${trans[lang].settings.corrections.listing.albums_tracks}</h4>
+                <div class="corrections album_tracks" id="corrections-albums_tracks"></div>
+            `),
+            has_close: true,
+            type: 'corrections',
+            allow_scroll: true
+        });
 
         prepare_corrections_page();
     }

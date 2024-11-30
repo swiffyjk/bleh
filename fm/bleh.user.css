@@ -16954,6 +16954,7 @@ h4 {
         gap: 20px;
     }
 }
+.bleh-modal-body[data-allow-scroll="true"],
 .modal-inner-content.allow-scroll {
     max-height: 80vh;
     padding: var(--card-gap);
