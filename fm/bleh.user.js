@@ -6146,22 +6146,24 @@ let has_prompted_for_update = false;
                         let swatches = vibrant.swatches();
 
                         if (swatches.DarkMuted != null) {
+                            console.info('dark muted', swatches.DarkMuted.getHex());
                             let hsl = hex_to_hsl(swatches.DarkMuted.getHex());
 
                             grid_colour.style.setProperty('background', swatches.DarkMuted.getHex());
 
                             grid.classList.add('grid-items-item-has-colour');
                             grid.style.setProperty('--hue-over', hsl.h);
-                            grid.style.setProperty('--sat-over', clamp_sat(hsl.s));
+                            grid.style.setProperty('--sat-over', clamp_sat((hsl.s / 100) * 3));
                             grid.style.setProperty('--lit-over', 1);
                         } else {
+                            console.info('vibrant', swatches.Vibrant.getHex());
                             let hsl = hex_to_hsl(swatches.Vibrant.getHex());
 
                             grid_colour.style.setProperty('background', swatches.Vibrant.getHex());
 
                             grid.classList.add('grid-items-item-has-colour');
                             grid.style.setProperty('--hue-over', hsl.h);
-                            grid.style.setProperty('--sat-over', clamp_sat(hsl.s));
+                            grid.style.setProperty('--sat-over', clamp_sat((hsl.s / 100) * 3));
                             grid.style.setProperty('--lit-over', 1);
                         }
                     });
@@ -10105,6 +10107,8 @@ let has_prompted_for_update = false;
         s = Math.round(s);
         l = l * 100;
         l = Math.round(l);
+
+        console.info('converted', hex, 'to', h, s, l);
 
         return {
             h: h,

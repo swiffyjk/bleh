@@ -4060,7 +4060,7 @@ better than the default selector '#app a' i suppose */
                 position: relative;
                 z-index: 10;
 
-                --mask: linear-gradient(0deg, transparent 5%, white 50%);
+                --mask: linear-gradient(0deg, transparent 0%, white 60%);
                 mask-image: var(--mask);
                 -webkit-mask-image: var(--mask);
             }
@@ -4076,6 +4076,10 @@ better than the default selector '#app a' i suppose */
             transition-property: background;
             transition-duration: var(--trans);
             transition-timing-function: var(--trans-function);
+
+            &[style] {
+                background: hsl(var(--h4), 20%) !important;
+            }
         }
     }
 
@@ -4159,6 +4163,15 @@ better than the default selector '#app a' i suppose */
 
     display: flex;
     gap: 10px;
+
+    a:first-child {
+        display: inline-block;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        line-clamp: 1;
+        -webkit-line-clamp: 1;
+        -webkit-box-orient: vertical;
+    }
 
     a:last-child {
         position: relative;
