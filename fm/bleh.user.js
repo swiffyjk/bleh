@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         bleh
 // @namespace    http://last.fm/
-// @version      2024.1120
+// @version      2024.1202
 // @description  bleh!!! ^-^
 // @author       kate
 // @match        https://www.last.fm/*
@@ -21,7 +21,7 @@
 // ==/UserScript==
 
 let version = {
-    build: '2024.1120',
+    build: '2024.1202',
     sku: 'iroha',
     feature_flags: {
         bleh_settings_tabs: {
@@ -10040,7 +10040,7 @@ let has_prompted_for_update = false;
         notif.setAttribute('onclick', '_kill_notif(this)');
         notif.textContent = content;
 
-        page.structure.notifs.appendChild(notif);
+        page.structure.notifications.appendChild(notif);
 
         if (has_icon)
             notif.classList.add('btn--has-icon');

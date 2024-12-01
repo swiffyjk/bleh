@@ -1,7 +1,7 @@
 /* ==UserStyle==
 @name           bleh (dev)
 @namespace      github.com/katelyynn/bleh
-@version        2024.1120
+@version        2024.1202
 @license        GPL-3.0
 @author         kate
 @updateURL      https://github.com/katelyynn/bleh/raw/uwu/fm/bleh.user.css
@@ -15,7 +15,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Ubuntu+Sans:ital,wght@0,100..800;1,100..800&display=swap');
 
 body {
-    --version-build: '2024.1120';
+    --version-build: '2024.1202';
 
     --hue:  var(--hue-over,
             var(--hue-album,
@@ -232,7 +232,6 @@ button, .btn-primary, .gallery-image-report,
 .gallery-image-preferred-states, .image-details .gallery-image-buttons button,
 .masthead-logo a,
 body:after,
-.listening-report-brick--combo .tag-label,
 .listening-report-promo--year,
 .highcharts-point, .user-dashboard-legend-item::before, stop,
 .user-dashboard--monthly, .user-dashboard--yearly,
@@ -6100,7 +6099,7 @@ a:has(+ .js-gallery-heading):after,
 .player-bar-btn:before,
 .dropdown-menu-item-dark:before,
 /*     LISTENING REPORTS     */
-.user-dashboard-pagination :is(a, span:not(.user-dashboard-controls-tooltip)):before,
+.listening-report-brick--combo .tag-label:before,
 .listening-report-promo:before,
 /*     UPLOAD CTA     */
 .video-preview-upload-cta .cta-link:before, .gallery-preview-cta .cta-link:before, .album-artwork-upload-cta .cta-link:before,
@@ -6758,7 +6757,7 @@ very, very, very dated - who looks up a song on ebay? */
                 line-height: 30px !important;
 
                 .date-range-picker-button-inner {
-                    max-width: unset;
+                    max-width: 340px;
                 }
 
                 &:before {
@@ -8894,33 +8893,6 @@ text[style^="color: rgb(255, 172, 172)"] {
 
 
 /*     LISTENING REPORT     */
-
-
-/* lil boxes, 3s and 4s */
-.listening-report-brick--combo .tag-label {
-    border-radius: var(--item-small-radius);
-
-    &:before {
-        background-image: unset !important;
-        background-color: hsl(var(--b7));
-        mask-image: var(--mask-icon);
-        margin-top: -9px;
-        mask-size: 16px;
-    }
-}
-
-.tag-label--total-scrobbles {
-    --mask-icon: var(--icon-16-scrobble);
-}
-.tag-label--discovery {
-    --mask-icon: var(--icon-16-globe);
-}
-
-.tag-label--followers {
-    --mask-icon: var(--icon-16-users);
-}
-
-
 .user-dashboard-musical-matches, .user-dashboard-module {
     margin-top: unset;
 }
@@ -8952,20 +8924,26 @@ text[style^="color: rgb(255, 172, 172)"] {
     border-bottom-right-radius: var(--item-med-radius);
 }
 
-.top-item-modal-header {
-    font-weight: 700;
-}
-
 .report-box-container {
     .listening-report-brick-head {
         min-height: 149px !important;
     }
 
     .tag-label {
-        top: -20px;
-        left: 20px;
-        background: hsl(var(--l3));
-        --c2: var(--b7);
+        background: hsl(var(--h3));
+        color: hsl(var(--b7));
+        border-radius: var(--item-small-radius);
+        --left: 8px;
+
+        &.tag-label--scrobble {
+            --mask: var(--icon-16-scrobble);
+        }
+        &.tag-label--discovery {
+            --mask: var(--icon-16-globe);
+        }
+        &.tag-label--followers {
+            --mask: var(--icon-16-users);
+        }
     }
 
     .header-metadata {
@@ -8996,29 +8974,22 @@ text[style^="color: rgb(255, 172, 172)"] {
 
 
 .report-dropdown-button {
+    --bg: hsla(var(--b7), 5%);
+    --bg-hov: hsla(var(--b7), 15%);
+    --bg-atv: hsla(var(--b7), 25%);
+    --shadow: none;
     --btn-right: 12px !important;
-    width: 36px; /* todo: investigate why dropdown icons are weird */
+    width: 32px;
+
+    &:after {
+        --left: 8px !important;
+        --mask: var(--icon-16-dots);
+    }
 
     img {
         display: none;
     }
 }
-
-
-/*.user-dashboard-layout--version-3 .header-background {
-    background: #000 !important;
-
-    &:before {
-        display: none;
-    }
-}*/
-
-
-/*.user-dashboard-layout--version-3 {
-    --hue: var(--hue-neg);
-    --sat: 1;
-    --lit: 1;
-}*/
 
 
 .catalogue-chart-inner .item, .listening-clock-stat-container {
@@ -9036,11 +9007,26 @@ text[style^="color: rgb(255, 172, 172)"] {
 }
 
 
+.top-item-modal-header,
+.quick-fact-title, .listening-report-brick-head .header-metadata-title,
+.report-box-header .report-box-title,
+.mainstream-score--score,
+.listening-report-top-item-badge, .top-new-item-type, .top-item-overview__type,
+.listening-report-top-item-heading-name,
+.quick-fact-data-detail,
 .top-item-overview__scrobbles, .quick-fact-data-value, .report-headline-total {
-    font-weight: 700;
+    font-weight: var(--font-weight-medium) !important;
 }
-.quick-fact-data-detail {
-    font-weight: 600;
+
+.listening-report-row {
+    width: var(--cards-width) !important;;
+}
+.listening-report-top-item-container,
+.listening-report-row--3-wide .listening-report-row__col {
+    width: calc((var(--cards-width) / 3) - 5.5px) !important;
+}
+.listening-report-row--2-wide .listening-report-row__col {
+    width: calc((var(--cards-width) / 2) - 5px) !important;
 }
 
 
@@ -9054,14 +9040,6 @@ text[style^="color: rgb(255, 172, 172)"] {
 /* match the rest */
 .user-dashboard-layout--version-3 .listening-report-row {
     width: 1170px;
-}
-
-
-.report-dropdown-button {
-    padding: 0 !important;
-    --bg: hsla(var(--b7), 15%);
-    --bg-hov: hsla(var(--b7), 25%);
-    --bg-atv: hsla(var(--b7), 35%);
 }
 
 .report-box-container .user-dashboard-musical-matches .header-metadata-display strong {
