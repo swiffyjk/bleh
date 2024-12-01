@@ -6139,31 +6139,33 @@ let has_prompted_for_update = false;
                 grid_colour.classList.add('grid-item-colour-bg');
                 image_wrap.appendChild(grid_colour);
 
-                image.setAttribute('crossorigin', 'anonymous');
-                image.addEventListener('load', function() {
-                    let vibrant = new Vibrant(image);
-                    let swatches = vibrant.swatches();
+                try {
+                    image.setAttribute('crossorigin', 'anonymous');
+                    image.addEventListener('load', function() {
+                        let vibrant = new Vibrant(image);
+                        let swatches = vibrant.swatches();
 
-                    if (swatches.DarkMuted != null) {
-                        let hsl = hex_to_hsl(swatches.DarkMuted.getHex());
+                        if (swatches.DarkMuted != null) {
+                            let hsl = hex_to_hsl(swatches.DarkMuted.getHex());
 
-                        grid_colour.style.setProperty('background', swatches.DarkMuted.getHex());
+                            grid_colour.style.setProperty('background', swatches.DarkMuted.getHex());
 
-                        grid.classList.add('grid-items-item-has-colour');
-                        grid.style.setProperty('--hue-over', hsl.h);
-                        grid.style.setProperty('--sat-over', clamp_sat(hsl.s));
-                        grid.style.setProperty('--lit-over', 1);
-                    } else {
-                        let hsl = hex_to_hsl(swatches.Vibrant.getHex());
+                            grid.classList.add('grid-items-item-has-colour');
+                            grid.style.setProperty('--hue-over', hsl.h);
+                            grid.style.setProperty('--sat-over', clamp_sat(hsl.s));
+                            grid.style.setProperty('--lit-over', 1);
+                        } else {
+                            let hsl = hex_to_hsl(swatches.Vibrant.getHex());
 
-                        grid_colour.style.setProperty('background', swatches.Vibrant.getHex());
+                            grid_colour.style.setProperty('background', swatches.Vibrant.getHex());
 
-                        grid.classList.add('grid-items-item-has-colour');
-                        grid.style.setProperty('--hue-over', hsl.h);
-                        grid.style.setProperty('--sat-over', clamp_sat(hsl.s));
-                        grid.style.setProperty('--lit-over', 1);
-                    }
-                });
+                            grid.classList.add('grid-items-item-has-colour');
+                            grid.style.setProperty('--hue-over', hsl.h);
+                            grid.style.setProperty('--sat-over', clamp_sat(hsl.s));
+                            grid.style.setProperty('--lit-over', 1);
+                        }
+                    });
+                } catch(e) {}
             }
 
             let plays_elem = grid.querySelector('.grid-items-item-aux-text a:last-child');
@@ -6175,7 +6177,9 @@ let has_prompted_for_update = false;
                 if (!is_album && settings.colourful_counts) {
                     if (
                         !plays_elem.getAttribute('href')
-                        .includes('?from=')
+                        .includes('?from=') &&
+                        !plays_elem.getAttribute('href')
+                        .includes('?date_preset=')
                     ) {
                         let parsed_scrobble_as_rank = parse_scrobbles_as_rank(plays);
 
