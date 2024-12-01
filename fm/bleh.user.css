@@ -4154,9 +4154,9 @@ better than the default selector '#app a' i suppose */
     font-size: var(--font-size);
     font-weight: var(--font-weight-medium);
 }
-/*.grid-items-item-main-text {
+.grid-items-item-main-text {
     color: hsl(var(--c1));
-}*/
+}
 .grid-items-item-aux-text {
     opacity: unset;
     z-index: 10;
