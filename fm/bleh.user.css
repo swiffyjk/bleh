@@ -269,7 +269,7 @@ a,
 .staff-profile .header-title, .staff-shout, .staff-shout a,
 .changelog-version-item,
 .version-item-body li u,
-.grid-items-item
+.grid-items-item.grid-items-item-has-colour
 {
     --hue:  var(--hue-over,
             var(--hue-album,
@@ -309,7 +309,6 @@ a,
 
     --icon: var(--c2);
 
-    .grid-items-item [data-bleh--scrobble-milestone],
     .preview[data-bleh--theme="oled"],
     [data-bleh--theme="oled"] &:not(.preview) {
         --c1: var(--hue), calc(var(--sat) * 40%), 100%;
@@ -333,7 +332,7 @@ a,
     }
     .preview[data-bleh--theme="light"],
     [data-bleh--theme="light"] &:not(
-        .preview, .grid-items-item [data-bleh--scrobble-milestone]
+        .preview, .grid-items-item.grid-items-item-has-colour
         ){
         --c1: var(--hue), calc(var(--sat) * 6%), 0%;
         --c2: var(--hue), calc(var(--sat) * 4%), 4%;
@@ -344,14 +343,14 @@ a,
         --l3: var(--hue), calc(var(--sat) * 50%), calc(var(--lit) * 40%);
         --l4: var(--hue), calc(var(--sat) * 60%), calc(var(--lit) * 25%);
 
-        --l2-c: var(--hue), calc(var(--sat) * 40%), calc(clamp(min(0.5), var(--lit), max(1.5)) * 63%);
-        --l3-c: var(--hue), calc(var(--sat) * 50%), calc(clamp(min(0.5), var(--lit), max(1.5)) * 40%);
-        --l4-c: var(--hue), calc(var(--sat) * 60%), calc(clamp(min(0.5), var(--lit), max(1.5)) * 25%);
+        --l2-c: var(--hue), calc(var(--sat) * 40%), calc(clamp(min(0.5), var(--lit), max(1.1)) * 63%);
+        --l3-c: var(--hue), calc(var(--sat) * 50%), calc(clamp(min(0.5), var(--lit), max(1.1)) * 40%);
+        --l4-c: var(--hue), calc(var(--sat) * 60%), calc(clamp(min(0.5), var(--lit), max(1.1)) * 25%);
 
-        --h3: var(--hue), calc(var(--sat) * 50%), calc(clamp(min(0.5), var(--lit), max(1.5)) * 80%);
+        --h3: var(--hue), calc(var(--sat) * 50%), calc(clamp(min(0.5), var(--lit), max(1.1)) * 80%);
         --h3-sat: calc(var(--sat) * 50%);
-        --h3-lit: calc(clamp(min(0.5), var(--lit), max(1.5)) * 80%);
-        --h4: var(--hue), calc(var(--sat) * 60%), calc(clamp(min(0.5), var(--lit), max(1.5)) * 65%);
+        --h3-lit: calc(clamp(min(0.5), var(--lit), max(1.1)) * 80%);
+        --h4: var(--hue), calc(var(--sat) * 60%), calc(clamp(min(0.5), var(--lit), max(1.1)) * 65%);
         --g4: var(--hue), calc(var(--sat) * 70%), 92%;
     }
 }
@@ -4056,6 +4055,8 @@ better than the default selector '#app a' i suppose */
         }
 
         &:not(.grid-items-cover-default) {
+            background: #000;
+
             img {
                 position: relative;
                 z-index: 10;
@@ -4153,11 +4154,13 @@ better than the default selector '#app a' i suppose */
     font-size: var(--font-size);
     font-weight: var(--font-weight-medium);
 }
+/*.grid-items-item-main-text {
+    color: hsl(var(--c1));
+}*/
 .grid-items-item-aux-text {
     opacity: unset;
     z-index: 10;
     position: relative;
-    color: rgba(255,255,255,0.8);
     color: hsl(var(--c2));
     overflow: visible;
 
@@ -4871,7 +4874,8 @@ a.chartlist-love-button:after {
     transition-timing-function: var(--trans-function);
 
     [data-bleh--theme="light"] & {
-        background: hsl(var(--b4));
+        background: hsl(var(--b5));
+        /*box-shadow: inset 0 0 0 1px hsl(var(--c3), 10%);*/
     }
     [data-bleh--season="halloween"] & {
         --hue-seasonal: 70;
