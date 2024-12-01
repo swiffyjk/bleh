@@ -268,7 +268,8 @@ a,
 .pro-badge, .vote-number,
 .staff-profile .header-title, .staff-shout, .staff-shout a,
 .changelog-version-item,
-.version-item-body li u
+.version-item-body li u,
+.grid-items-item
 {
     --hue:  var(--hue-over,
             var(--hue-album,
@@ -589,7 +590,7 @@ body {
     --icon-16-correction: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyLjUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgY2xhc3M9Imx1Y2lkZSBsdWNpZGUtYm9vay1vcGVuLWNoZWNrIj48cGF0aCBkPSJNOCAzSDJ2MTVoN2MxLjcgMCAzIDEuMyAzIDNWN2MwLTIuMi0xLjgtNC00LTRaIi8+PHBhdGggZD0ibTE2IDEyIDIgMiA0LTQiLz48cGF0aCBkPSJNMjIgNlYzaC02Yy0yLjIgMC00IDEuOC00IDR2MTRjMC0xLjcgMS4zLTMgMy0zaDd2LTIuMyIvPjwvc3ZnPg==');
     --icon-16-language: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyLjUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgY2xhc3M9Imx1Y2lkZSBsdWNpZGUtbGFuZ3VhZ2VzIj48cGF0aCBkPSJtNSA4IDYgNiIvPjxwYXRoIGQ9Im00IDE0IDYtNiAyLTMiLz48cGF0aCBkPSJNMiA1aDEyIi8+PHBhdGggZD0iTTcgMmgxIi8+PHBhdGggZD0ibTIyIDIyLTUtMTAtNSAxMCIvPjxwYXRoIGQ9Ik0xNCAxOGg2Ii8+PC9zdmc+');
     --icon-16-clock: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyLjUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgY2xhc3M9Imx1Y2lkZSBsdWNpZGUtY2xvY2siPjxjaXJjbGUgY3g9IjEyIiBjeT0iMTIiIHI9IjEwIi8+PHBvbHlsaW5lIHBvaW50cz0iMTIgNiAxMiAxMiAxNiAxNCIvPjwvc3ZnPg==');
-    --icon-16-scrobble: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyLjUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgY2xhc3M9Imx1Y2lkZSBsdWNpZGUtcGxheS1zcXVhcmUiPjxyZWN0IHdpZHRoPSIxOCIgaGVpZ2h0PSIxOCIgeD0iMyIgeT0iMyIgcng9IjIiLz48cGF0aCBkPSJtOSA4IDYgNC02IDRaIi8+PC9zdmc+');
+    --icon-16-scrobble: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyLjUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgY2xhc3M9Imx1Y2lkZSBsdWNpZGUtY2hhcnQtbm8tYXhlcy1jb2x1bW4iPjxsaW5lIHgxPSIxOCIgeDI9IjE4IiB5MT0iMjAiIHkyPSIxMCIvPjxsaW5lIHgxPSIxMiIgeDI9IjEyIiB5MT0iMjAiIHkyPSI0Ii8+PGxpbmUgeDE9IjYiIHgyPSI2IiB5MT0iMjAiIHkyPSIxNCIvPjwvc3ZnPg==');
     --icon-16-search: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyLjUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgY2xhc3M9Imx1Y2lkZSBsdWNpZGUtc2VhcmNoIj48Y2lyY2xlIGN4PSIxMSIgY3k9IjExIiByPSI4Ii8+PHBhdGggZD0ibTIxIDIxLTQuMy00LjMiLz48L3N2Zz4=');
     --icon-16-globe: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyLjUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgY2xhc3M9Imx1Y2lkZSBsdWNpZGUtZ2xvYmUiPjxjaXJjbGUgY3g9IjEyIiBjeT0iMTIiIHI9IjEwIi8+PHBhdGggZD0iTTEyIDJhMTQuNSAxNC41IDAgMCAwIDAgMjAgMTQuNSAxNC41IDAgMCAwIDAtMjAiLz48cGF0aCBkPSJNMiAxMmgyMCIvPjwvc3ZnPg==');
     --icon-16-profile: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyLjUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgY2xhc3M9Imx1Y2lkZSBsdWNpZGUtYXQtc2lnbiI+PGNpcmNsZSBjeD0iMTIiIGN5PSIxMiIgcj0iNCIvPjxwYXRoIGQ9Ik0xNiA4djVhMyAzIDAgMCAwIDYgMHYtMWExMCAxMCAwIDEgMC00IDgiLz48L3N2Zz4=');
@@ -4040,20 +4041,53 @@ better than the default selector '#app a' i suppose */
 }
 
 
-.grid-items-item .grid-items-cover-image-image {
-    background: var(--avatar-generic-background);
-    transition-property: filter;
-    transition-duration: var(--trans);
-    transition-timing-function: var(--trans-function);
-}
-.grid-items-cover-image-image:after {
-    background-image: linear-gradient(180deg,transparent 0,transparent 60%,rgba(0,0,0,.7));
-}
-.grid-items-item:hover .grid-items-cover-image-image {
-    filter: brightness(115%);
-    transition: none;
-}
+.grid-items-item {
+    .grid-items-cover-image-image {
+        background: var(--avatar-generic-background);
+        transition-property: filter;
+        transition-duration: var(--trans);
+        transition-timing-function: var(--trans-function);
 
+        position: relative;
+
+        &:after {
+            background-image: linear-gradient(180deg,transparent 0,transparent 50%,rgba(0,0,0,.85));
+            display: none;
+        }
+
+        &:not(.grid-items-cover-default) {
+            img {
+                position: relative;
+                z-index: 10;
+
+                --mask: linear-gradient(0deg, transparent 5%, white 50%);
+                mask-image: var(--mask);
+                -webkit-mask-image: var(--mask);
+            }
+        }
+
+        .grid-item-colour-bg {
+            position: absolute;
+            inset: 0;
+            z-index: 9;
+
+            background: hsl(var(--b5));
+
+            transition-property: background;
+            transition-duration: var(--trans);
+            transition-timing-function: var(--trans-function);
+        }
+    }
+
+    .grid-items-item-details {
+        z-index: 11;
+    }
+
+    &:hover .grid-items-cover-image-image {
+        filter: brightness(115%);
+        transition: none;
+    }
+}
 
 .grid-items-empty-inner {
     background: hsla(var(--b4), 60%);
@@ -4110,6 +4144,7 @@ better than the default selector '#app a' i suppose */
 }
 
 
+.grid-items-item-aux-text,
 .grid-items-item-main-text {
     font-size: var(--font-size);
     font-weight: var(--font-weight-medium);
@@ -4119,14 +4154,25 @@ better than the default selector '#app a' i suppose */
     z-index: 10;
     position: relative;
     color: rgba(255,255,255,0.8);
+    color: hsl(var(--c2));
     overflow: visible;
+
+    display: flex;
+    gap: 10px;
+
+    a:last-child {
+        position: relative;
+        padding-left: calc(16px + 4px);
+        --left: 0;
+        --mask: var(--icon-16-scrobble);
+    }
 }
 .grid-items-item-details {
     font-size: var(--font-size);
     line-height: var(--line-height);
-    text-shadow: 0 0 6px rgba(0,0,0,1);
+    text-shadow: 0 0 10px hsl(var(--b7), 50%);
     overflow: hidden;
-    padding: 12px;
+    padding: 10px;
     left: 0;
     bottom: 0;
     right: 0;
@@ -5901,6 +5947,7 @@ button,
 
 
 /*     ICON MASK     */
+.grid-items-item-aux-text a:last-child:before,
 .lastfm-bulk-edit-form-group-controls button:before,
 .lastfm-bulk-edit-progress:before,
 .about-guest-feature:before, .about-guest-feature:after,

@@ -15,6 +15,7 @@
 // @require      https://unpkg.com/tippy.js@6
 // @require      https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.30.1/moment.min.js
 // @require      https://katelyynn.github.io/bleh/fm/js/snow.js?a=b
+// @require      https://katelyynn.github.io/bleh/fm/js/vibrant/Vibrant.min.js
 // @require      https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js
 // @require      https://cdn.jsdelivr.net/npm/chartjs-adapter-moment@^1
 // ==/UserScript==
@@ -3122,9 +3123,10 @@ let has_prompted_for_update = false;
 
             bleh_charts();
 
+            music_grids();
+
             patch_shouts(document.body);
             patch_lastfm_settings(document.body);
-            patch_artist_ranks(document.body);
             patch_gallery_page();
 
             patch_artist_grids(document.body);
@@ -3189,9 +3191,10 @@ let has_prompted_for_update = false;
 
                 bleh_charts();
 
+                music_grids();
+
                 patch_shouts(document.body);
                 patch_lastfm_settings(document.body);
-                patch_artist_ranks(document.body);
                 patch_gallery_page();
 
                 patch_artist_grids(document.body);
@@ -6110,14 +6113,6 @@ let has_prompted_for_update = false;
 
 
 
-    // artist ranks
-    function patch_artist_ranks(element) {
-
-        if (settings.colourful_counts) {
-            patch_artist_ranks_in_grid_view(document.body);
-        }
-    }
-
     function clean_number(string) {
         return parseInt(string
         .replaceAll(',','')
@@ -6125,26 +6120,70 @@ let has_prompted_for_update = false;
         );
     }
 
-    function patch_artist_ranks_in_grid_view(element) {
-        let artist_statistics = element.querySelectorAll('.grid-items-item-aux-text a');
+    function music_grids() {
+        let grids = page.structure.main.querySelectorAll('.grid-items-item:not([data-bleh-music-grids])');
+        grids.forEach((grid) => {
+            let is_loading = (grid.querySelector('.grid-items-empty-inner') != null);
 
-        if (artist_statistics == undefined)
-            return;
+            if (is_loading)
+                return;
 
-        artist_statistics.forEach((artist_statistic) => {
-            if (!artist_statistic.hasAttribute('data-kate-processed')) {
-                artist_statistic.setAttribute('data-kate-processed','true');
+            grid.setAttribute('data-bleh-music-grids', 'true');
 
-                if (!artist_statistic.getAttribute('href').endsWith('DAYS') && !artist_statistic.classList.contains('grid-items-item-aux-block')) {
-                    console.info('bleh - artist grid plays match');
+            let is_album = (grid.querySelector('.grid-items-item-aux-block') != null);
 
-                    let scrobbles = clean_number(artist_statistic.textContent.replace(` ${trans[lang].statistics.plays.name}`,''));
-                    let parsed_scrobble_as_rank = parse_scrobbles_as_rank(scrobbles);
+            let image_wrap = grid.querySelector('.grid-items-cover-image-image');
+            let image = image_wrap.querySelector('img');
+            if (image != null && !image_wrap.classList.contains('grid-items-cover-default')) {
+                let grid_colour = document.createElement('div');
+                grid_colour.classList.add('grid-item-colour-bg');
+                image_wrap.appendChild(grid_colour);
 
-                    artist_statistic.setAttribute('data-bleh--scrobble-milestone',parsed_scrobble_as_rank.milestone);
-                    artist_statistic.style.setProperty('--hue',parsed_scrobble_as_rank.hue);
-                    artist_statistic.style.setProperty('--sat',parsed_scrobble_as_rank.sat);
-                    artist_statistic.style.setProperty('--lit',parsed_scrobble_as_rank.lit);
+                image.setAttribute('crossorigin', 'anonymous');
+                image.addEventListener('load', function() {
+                    let vibrant = new Vibrant(image);
+                    let swatches = vibrant.swatches();
+
+                    if (swatches.DarkMuted != null) {
+                        let hsl = hex_to_hsl(swatches.DarkMuted.getHex());
+
+                        grid_colour.style.setProperty('background', swatches.DarkMuted.getHex());
+
+                        grid.classList.add('grid-items-item-has-colour');
+                        grid.style.setProperty('--hue-over', hsl.h);
+                        grid.style.setProperty('--sat-over', clamp_sat(hsl.s));
+                        grid.style.setProperty('--lit-over', 1);
+                    } else {
+                        let hsl = hex_to_hsl(swatches.Vibrant.getHex());
+
+                        grid_colour.style.setProperty('background', swatches.Vibrant.getHex());
+
+                        grid.classList.add('grid-items-item-has-colour');
+                        grid.style.setProperty('--hue-over', hsl.h);
+                        grid.style.setProperty('--sat-over', clamp_sat(hsl.s));
+                        grid.style.setProperty('--lit-over', 1);
+                    }
+                });
+            }
+
+            let plays_elem = grid.querySelector('.grid-items-item-aux-text a:last-child');
+            if (plays_elem != null) {
+                let plays = clean_number(plays_elem.textContent.trim().replace(` ${trans[lang].statistics.plays.name}`, ''));
+                plays_elem.classList.add('grid-item-plays');
+                plays_elem.textContent = plays.toLocaleString(lang);
+
+                if (!is_album && settings.colourful_counts) {
+                    if (
+                        !plays_elem.getAttribute('href')
+                        .includes('?from=')
+                    ) {
+                        let parsed_scrobble_as_rank = parse_scrobbles_as_rank(plays);
+
+                        plays_elem.setAttribute('data-bleh--scrobble-milestone', parsed_scrobble_as_rank.milestone);
+                        plays_elem.style.setProperty('--hue-over', parsed_scrobble_as_rank.hue);
+                        plays_elem.style.setProperty('--sat-over', parsed_scrobble_as_rank.sat);
+                        plays_elem.style.setProperty('--lit-over', parsed_scrobble_as_rank.lit);
+                    }
                 }
             }
         });
