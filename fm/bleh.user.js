@@ -3040,6 +3040,7 @@ let root = '';
 let recent_activity_list;
 
 // page type
+let last_page_type;
 let page = {
     type: '',
     name: '',
@@ -4870,9 +4871,15 @@ let has_prompted_for_update = false;
                 page.type = page_split[0];
                 if (page.type == 'music')
                     page.type = page_split[1];
-                //page.subpage = page_name.replace(page.type, '').replace('_', '');
 
-                console.info(page);
+                if (page.type != last_page_type) {
+                    last_page_type = page.type;
+                    log(page.type, 'page');
+                }
+
+                page.subpage = page_name.replace(page.type, '').replace('_', '');
+
+                console.log(page);
 
                 //document.title = `${page.type}_${page.subpage} - bleh ${version.build}.${version.sku}`;
 
@@ -5066,8 +5073,6 @@ let has_prompted_for_update = false;
             return;
         profile_header.setAttribute('data-bleh', 'true');
 
-        log('profile', 'page');
-        page.type = 'user';
         page.name = profile_header.querySelector('.header-title a').textContent;
 
         // are we on the overview page?
@@ -10114,7 +10119,7 @@ let has_prompted_for_update = false;
         l = l * 100;
         l = Math.round(l);
 
-        console.info('converted', hex, 'to', h, s, l);
+        console.log('converted', hex, 'to', h, s, l);
 
         return {
             h: h,
@@ -11927,9 +11932,6 @@ let has_prompted_for_update = false;
             return;
         artist_header.setAttribute('data-bwaa', 'true');
 
-        log('artist', 'page');
-        page.type = 'artist';
-
         patch_header_title();
 
         page.name = artist_header.querySelector('.header-new-title').textContent;
@@ -12137,9 +12139,6 @@ let has_prompted_for_update = false;
             return;
         album_header.setAttribute('data-bwaa', 'true');
 
-        log('album', 'page');
-        page.type = 'album';
-
         patch_header_title();
 
         page.sister = album_header.querySelector('.header-new-crumb span').textContent;
@@ -12343,9 +12342,6 @@ let has_prompted_for_update = false;
             return;
         track_header.setAttribute('data-bwaa', 'true');
 
-        log('track', 'page');
-        page.type = 'track';
-
         patch_header_title();
 
         page.sister = track_header.querySelector('.header-new-crumb span').textContent;
@@ -12514,9 +12510,6 @@ let has_prompted_for_update = false;
         if (tag_header.hasAttribute('data-bwaa'))
             return;
         tag_header.setAttribute('data-bwaa', 'true');
-
-        log('tag', 'page');
-        page.type = 'tag';
 
         patch_header_title();
 
@@ -13743,9 +13736,6 @@ let has_prompted_for_update = false;
             return;
         event_header.setAttribute('data-bwaa', 'true');
 
-        log('event', 'page');
-        page.type = 'event';
-
         let is_subpage = document.body.querySelector('.header').classList.contains('header--sub-page');
 
 
@@ -14567,8 +14557,6 @@ let has_prompted_for_update = false;
             return;
         chart_row.setAttribute('data-bleh-charts', 'true');
 
-        log('charts', 'page');
-        page.type = 'charts';
         page.name = auth;
         page.avatar = my_avi;
 
