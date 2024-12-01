@@ -3050,6 +3050,7 @@ let page = {
     avatar: '',
     corrected: false,
     structure: {
+        wrapper: null,
         container: null,
         row: null,
         main: null,
@@ -3155,19 +3156,6 @@ let has_prompted_for_update = false;
             // start bleh settings
             bleh_settings();
         } else {
-            if (page.type == 'user')
-                bleh_profiles();
-            else if (page.type == 'artist')
-                bleh_artists();
-            else if (page.type == 'album')
-                bleh_albums();
-            else if (page.type == 'track')
-                bleh_tracks();
-            else if (page.type == 'event' || page.type == 'festival')
-                bleh_events();
-            else if (page.type == 'tag')
-                bleh_tags();
-
             if (page.type == 'artist' || page.type == 'album') {
                 bleh_gallery();
                 bleh_gallery_upload_check();
@@ -3176,12 +3164,13 @@ let has_prompted_for_update = false;
             if (page.type == 'charts')
                 bleh_charts();
 
-            music_grids();
+            if (page.type == 'user')
+                music_grids();
 
             if (page.type == 'user' ||
                 page.type == 'artist' ||
                 page.type == 'album' ||
-                page.type == 'event' ||
+                page.type == 'events' ||
                 page.type == 'festival' ||
                 page.type == 'tag'
             ) {
@@ -3212,6 +3201,60 @@ let has_prompted_for_update = false;
             subscribe_to_events();
             auto_edit_modal();
         }
+    }
+
+    function assign_page() {
+        if (page.structure.wrapper == null)
+            page.structure.wrapper = document.body.querySelector('.main-content');
+
+        let main_content = page.structure.wrapper.querySelector(':scope > :last-child:not([data-orchid])');
+        if (main_content != null) {
+            load_page();
+        }
+        main_content.setAttribute('data-bleh', 'true');
+
+        let page_classes = document.body.classList;
+        page_classes.forEach((page_class, index) => {
+            if (page_class.startsWith('namespace')) {
+                let page_name = page_class.replace('namespace--', '');
+                let page_split = page_name.split('_');
+
+                page.type = page_split[0];
+                if (page.type == 'music')
+                    page.type = page_split[1];
+
+                if (page.type != last_page_type) {
+                    last_page_type = page.type;
+                    log(page.type, 'page');
+                }
+
+                page.subpage = page_name.replace(page.type, '').replace('_', '');
+
+                console.log(page);
+
+                //document.title = `${page.type}_${page.subpage} - bleh ${version.build}.${version.sku}`;
+
+                return;
+            }
+
+            if (index > 4)
+                return;
+        });
+    }
+
+    function load_page() {
+        if (page.type == 'user')
+            bleh_profiles();
+        else if (page.type == 'artist')
+            bleh_artists();
+        else if (page.type == 'album')
+            bleh_albums();
+        else if (page.type == 'track')
+            bleh_tracks();
+        else if (page.type == 'events' || page.type == 'festival')
+            bleh_events();
+        else if (page.type == 'tag')
+            bleh_tags();
     }
 
     function append_style() {
@@ -4862,39 +4905,6 @@ let has_prompted_for_update = false;
     unsafeWindow._update_inbuilt_selection = function(id, index) {
         document.getElementById(id).selectedIndex = index;
         update_inbuilt_select(id, document.getElementById(id).value);
-    }
-
-
-
-
-    function assign_page() {
-        let page_classes = document.body.classList;
-        page_classes.forEach((page_class, index) => {
-            if (page_class.startsWith('namespace')) {
-                let page_name = page_class.replace('namespace--', '');
-                let page_split = page_name.split('_');
-
-                page.type = page_split[0];
-                if (page.type == 'music')
-                    page.type = page_split[1];
-
-                if (page.type != last_page_type) {
-                    last_page_type = page.type;
-                    log(page.type, 'page');
-                }
-
-                page.subpage = page_name.replace(page.type, '').replace('_', '');
-
-                console.log(page);
-
-                //document.title = `${page.type}_${page.subpage} - bleh ${version.build}.${version.sku}`;
-
-                return;
-            }
-
-            if (index > 4)
-                return;
-        });
     }
 
 
