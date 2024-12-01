@@ -3178,20 +3178,18 @@ let has_prompted_for_update = false;
 
             music_grids();
 
-            setTimeout(function() {
-                if (page.type == 'user' ||
-                    page.type == 'artist' ||
-                    page.type == 'album' ||
-                    page.type == 'event' ||
-                    page.type == 'festival' ||
-                    page.type == 'tag'
-                ) {
-                    patch_shouts();
+            if (page.type == 'user' ||
+                page.type == 'artist' ||
+                page.type == 'album' ||
+                page.type == 'event' ||
+                page.type == 'festival' ||
+                page.type == 'tag'
+            ) {
+                patch_shouts();
 
-                    if (shout_parse_queue.length > 0)
-                        parse_shout_queue();
-                }
-            }, 5);
+                if (shout_parse_queue.length > 0)
+                    parse_shout_queue();
+            }
             patch_lastfm_settings(document.body);
             patch_gallery_page();
 
