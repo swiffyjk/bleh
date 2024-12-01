@@ -3062,6 +3062,8 @@ let page = {
     }
 };
 
+let shout_parse_queue = [];
+
 let bleh_url = 'https://www.last.fm{root}bleh';
 
 let setup_url = 'https://www.last.fm{root}bleh/setup';
@@ -3176,14 +3178,20 @@ let has_prompted_for_update = false;
 
             music_grids();
 
-            if (page.type == 'user' ||
-                page.type == 'artist' ||
-                page.type == 'album' ||
-                page.type == 'event' ||
-                page.type == 'festival' ||
-                page.type == 'tag'
-            )
-                patch_shouts(document.body);
+            setTimeout(function() {
+                if (page.type == 'user' ||
+                    page.type == 'artist' ||
+                    page.type == 'album' ||
+                    page.type == 'event' ||
+                    page.type == 'festival' ||
+                    page.type == 'tag'
+                ) {
+                    patch_shouts();
+
+                    if (shout_parse_queue.length > 0)
+                        parse_shout_queue();
+                }
+            }, 5);
             patch_lastfm_settings(document.body);
             patch_gallery_page();
 
@@ -5929,8 +5937,8 @@ let has_prompted_for_update = false;
 
 
     // patch shouts
-    function patch_shouts(element) {
-        let shouts = element.querySelectorAll('.shout:not([data-kate-processed])');
+    function patch_shouts() {
+        let shouts = page.structure.main.querySelectorAll('.shout:not([data-kate-processed])');
 
         shouts.forEach((shout) => {
             try {
@@ -5952,33 +5960,9 @@ let has_prompted_for_update = false;
                 if (settings.shout_markdown) {
                     let shout_body = shout.querySelector('.shout-body p');
 
-                    let converter = new showdown.Converter({
-                        emoji: true,
-                        excludeTrailingPunctuationFromURLs: true,
-                        headerLevelStart: 5,
-                        noHeaderId: true,
-                        openLinksInNewWindow: true,
-                        requireSpaceBeforeHeadingText: true,
-                        simpleLineBreaks: true,
-                        simplifiedAutoLink: true,
-                        strikethrough: true,
-                        underline: true,
-                        ghCodeBlocks: false,
-                        smartIndentationFix: true
+                    shout_parse_queue.push({
+                        element: shout_body
                     });
-                    let parsed_body = converter.makeHtml(shout_body.textContent
-                    .replace(/([@])([a-zA-Z0-9_]+)/g, `[$1$2](${root}user/$2)`)
-                    .replace(/\[artist\]([a-zA-Z0-9]+)\[\/artist\]/g, `[$1](${root}music/$1)`)
-                    .replace(/\[album artist=([a-zA-Z0-9]+)\]([a-zA-Z0-9\s]+)\[\/album\]/g, `[$2](${root}music/$1/$2)`)
-                    .replace(/\[track artist=([a-zA-Z0-9]+)\]([a-zA-Z0-9\s]+)\[\/track\]/g, `[$2](${root}music/$1/_/$2)`)
-                    .replace(/https:\/\/open\.spotify\.com\/user\/([A-Za-z0-9]+)\?si=([A-Za-z0-9]+)/g, '[@$1](https://open.spotify.com/user/$1)')
-                    .replace(/&/g, '&amp;')
-                    .replace(/</g, '&lt;')
-                    .replace(/>/g, '&gt;')
-                    .replace(/"/g, '&quot;')
-                    .replace(/'/g, '&#039;'));
-                    console.log(shout_body.textContent, parsed_body);
-                    shout_body.innerHTML = parsed_body;
                 }
 
 
@@ -6005,6 +5989,57 @@ let has_prompted_for_update = false;
 
             patch_avatar(shout_avatar, auth);
         });
+    }
+
+    function parse_shout_queue() {
+        let response = parse_shout(0);
+
+        if (response == 0)
+            return;
+
+        setTimeout(function() {
+            parse_shout(0);
+        }, 100);
+    }
+
+    function parse_shout(index) {
+        if (shout_parse_queue.length <= 0)
+            return 0;
+
+        let shout = shout_parse_queue[index];
+
+        console.info(index, shout_parse_queue, shout);
+
+        let converter = new showdown.Converter({
+            emoji: true,
+            excludeTrailingPunctuationFromURLs: true,
+            headerLevelStart: 5,
+            noHeaderId: true,
+            openLinksInNewWindow: true,
+            requireSpaceBeforeHeadingText: true,
+            simpleLineBreaks: true,
+            simplifiedAutoLink: true,
+            strikethrough: true,
+            underline: true,
+            ghCodeBlocks: false,
+            smartIndentationFix: true
+        });
+        let parsed_body = converter.makeHtml(shout.element.textContent
+        .replace(/([@])([a-zA-Z0-9_]+)/g, `[$1$2](${root}user/$2)`)
+        .replace(/\[artist\]([a-zA-Z0-9]+)\[\/artist\]/g, `[$1](${root}music/$1)`)
+        .replace(/\[album artist=([a-zA-Z0-9]+)\]([a-zA-Z0-9\s]+)\[\/album\]/g, `[$2](${root}music/$1/$2)`)
+        .replace(/\[track artist=([a-zA-Z0-9]+)\]([a-zA-Z0-9\s]+)\[\/track\]/g, `[$2](${root}music/$1/_/$2)`)
+        .replace(/https:\/\/open\.spotify\.com\/user\/([A-Za-z0-9]+)\?si=([A-Za-z0-9]+)/g, '[@$1](https://open.spotify.com/user/$1)')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;'));
+        shout.element.innerHTML = parsed_body;
+        log(`parsed index ${index}`, 'shout');
+
+        shout_parse_queue.splice(index, 1);
+        return 1;
     }
 
     unsafeWindow._show_hidden_shout = function(shout_id) {
