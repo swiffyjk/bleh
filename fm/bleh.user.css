@@ -2904,7 +2904,7 @@ button.navlist-more {
 
 /* library scrobbles tab */
 .library-controls .secondary-nav-item--overview:first-child a:before {
-    --mask: var(--icon-16-list);
+    --mask: var(--icon-16-scrobble);
 }
 
 
@@ -4236,8 +4236,9 @@ better than the default selector '#app a' i suppose */
 
 /*     CHARTLIST     */
 .chartlist {
-    animation: slide_down var(--trans) var(--trans-function);
-    transform-origin: top;
+    /*animation: slide_down var(--trans) var(--trans-function);
+    transform-origin: top;*/
+    animation: fade_popup_reduced var(--trans) var(--trans-function);
 
     &:not(.chartlist--with-image) {
         .chartlist-image {
@@ -4245,9 +4246,9 @@ better than the default selector '#app a' i suppose */
         }
     }
 
-    [data-bleh--reduced_motion="true"] & {
+    /*[data-bleh--reduced_motion="true"] & {
         animation: fade_popup_reduced var(--trans) var(--trans-function) !important;
-    }
+    }*/
 }
 .chartlist tbody {
     display: flex;
@@ -9331,7 +9332,6 @@ text[style^="color: rgb(0, 0, 0)"] {
 .resource-list--release-list-item-aux-text, .resource-list--release-list-item-regular-tags,
 .artist-top-albums-item-aux-text, .artist-top-albums-item-regular-tags,
 .similar-albums-item-aux-text, .similar-albums-item-regular-tags,
-.listening-report-brick-item-scrobbles,
 .source-album-stats,
 .similar-albums-item-artist + .similar-albums-item-aux-text, .similar-albums-item-artist + .similar-albums-item-regular-tags,
 .similar-items-sidebar-item-artist + .similar-items-sidebar-item-aux-text, .similar-items-sidebar-item-artist + .similar-items-sidebar-item-regular-tags,

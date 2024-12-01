@@ -2342,6 +2342,10 @@ let cute = ['cutensilly', 'inozom'];
 // require page reload
 let reload_pending = false;
 
+// lookup
+let last_lookup;
+let next_lookup;
+
 let dialogs = {};
 let notifications = {};
 
@@ -3097,12 +3101,49 @@ let has_prompted_for_update = false;
         if (auth == '')
             return;
 
+        assign_page();
+
         append_nav();
 
         load_activities();
         notify_if_new_update();
 
         lotus();
+
+        main_flow();
+
+        // last.fm is a single page application
+        const observer = new MutationObserver((mutations) => {
+            lookup_lang();
+            append_nav(document.body);
+            patch_masthead(document.body);
+
+            // load seasonal data
+            set_season();
+
+            theme_version = getComputedStyle(document.body).getPropertyValue('--version-build').replaceAll("'", ''); // remove quotations
+            if (theme_version != version.build && theme_version != '' && !has_prompted_for_update) {
+                // script is either out of date, or more in date (not gonna happen)
+                log(`version mismatch! running ${version.build}, downloaded theme ${theme_version}`, 'update');
+
+                prompt_for_update();
+                has_prompted_for_update = true;
+            }
+
+            main_flow();
+        });
+
+        observer.observe(document.body, {
+            childList: true,
+            subtree: true
+        });
+
+        let performance_end = performance.now();
+        log(`finished in ${performance_end - performance_start}`, 'load');
+    }
+
+    function main_flow() {
+        assign_page();
 
         if (window.location.href.startsWith(setup_url.replace('{root}', root))) {
             // start bleh setup
@@ -3111,25 +3152,40 @@ let has_prompted_for_update = false;
             // start bleh settings
             bleh_settings();
         } else {
-            bleh_profiles();
-            bleh_artists();
-            bleh_albums();
-            bleh_tracks();
-            bleh_events();
-            bleh_tags();
+            if (page.type == 'user')
+                bleh_profiles();
+            else if (page.type == 'artist')
+                bleh_artists();
+            else if (page.type == 'album')
+                bleh_albums();
+            else if (page.type == 'track')
+                bleh_tracks();
+            else if (page.type == 'event' || page.type == 'festival')
+                bleh_events();
+            else if (page.type == 'tag')
+                bleh_tags();
 
-            bleh_gallery();
-            bleh_gallery_upload_check();
+            if (page.type == 'artist' || page.type == 'album') {
+                bleh_gallery();
+                bleh_gallery_upload_check();
+            }
 
-            bleh_charts();
+            if (page.type == 'charts')
+                bleh_charts();
 
             music_grids();
 
-            patch_shouts(document.body);
+            if (page.type == 'user' ||
+                page.type == 'artist' ||
+                page.type == 'album' ||
+                page.type == 'event' ||
+                page.type == 'festival' ||
+                page.type == 'tag'
+            )
+                patch_shouts(document.body);
             patch_lastfm_settings(document.body);
             patch_gallery_page();
 
-            patch_artist_grids(document.body);
             patch_titles(document.body);
 
             if (settings.corrections) {
@@ -3149,83 +3205,6 @@ let has_prompted_for_update = false;
             subscribe_to_events();
             auto_edit_modal();
         }
-
-        // last.fm is a single page application
-        const observer = new MutationObserver((mutations) => {
-            //console.info('---');
-            load_settings();
-            lookup_lang();
-            append_nav(document.body);
-            patch_masthead(document.body);
-
-            // load seasonal data
-            set_season();
-
-            load_activities();
-
-            theme_version = getComputedStyle(document.body).getPropertyValue('--version-build').replaceAll("'", ''); // remove quotations
-            if (theme_version != version.build && theme_version != '' && !has_prompted_for_update) {
-                // script is either out of date, or more in date (not gonna happen)
-                log(`version mismatch! running ${version.build}, downloaded theme ${theme_version}`, 'update');
-
-                prompt_for_update();
-                has_prompted_for_update = true;
-            }
-
-            if (window.location.href.startsWith(setup_url.replace('{root}', root))) {
-                // start bleh setup
-                bleh_setup();
-            } else if (window.location.href.startsWith(bleh_url.replace('{root}', root))) {
-                // start bleh settings
-                bleh_settings();
-            } else {
-                bleh_profiles();
-                bleh_artists();
-                bleh_albums();
-                bleh_tracks();
-                bleh_events();
-                bleh_tags();
-
-                bleh_gallery();
-                bleh_gallery_upload_check();
-
-                bleh_charts();
-
-                music_grids();
-
-                patch_shouts(document.body);
-                patch_lastfm_settings(document.body);
-                patch_gallery_page();
-
-                patch_artist_grids(document.body);
-                patch_titles(document.body);
-
-                if (settings.corrections) {
-                    correct_generic_combo_no_artist('artist-header-featured-items-item');
-                    correct_generic_combo_no_artist('artist-top-albums-item');
-                    correct_generic_combo('source-album-details');
-                    correct_generic_combo('resource-list--release-list-item');
-                    correct_generic_combo('similar-albums-item');
-                    correct_generic_combo('track-similar-tracks-item');
-                    correct_generic_combo('similar-items-sidebar-item');
-                }
-
-                patch_obsession_view();
-
-                error_page();
-
-                subscribe_to_events();
-                auto_edit_modal();
-            }
-        });
-
-        observer.observe(document.body, {
-            childList: true,
-            subtree: true
-        });
-
-        let performance_end = performance.now();
-        log(`finished in ${performance_end - performance_start}`, 'load');
     }
 
     function append_style() {
@@ -4876,6 +4855,33 @@ let has_prompted_for_update = false;
     unsafeWindow._update_inbuilt_selection = function(id, index) {
         document.getElementById(id).selectedIndex = index;
         update_inbuilt_select(id, document.getElementById(id).value);
+    }
+
+
+
+
+    function assign_page() {
+        let page_classes = document.body.classList;
+        page_classes.forEach((page_class, index) => {
+            if (page_class.startsWith('namespace')) {
+                let page_name = page_class.replace('namespace--', '');
+                let page_split = page_name.split('_');
+
+                page.type = page_split[0];
+                if (page.type == 'music')
+                    page.type = page_split[1];
+                //page.subpage = page_name.replace(page.type, '').replace('_', '');
+
+                console.info(page);
+
+                //document.title = `${page.type}_${page.subpage} - bleh ${version.build}.${version.sku}`;
+
+                return;
+            }
+
+            if (index > 4)
+                return;
+        });
     }
 
 
