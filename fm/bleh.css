@@ -5,7 +5,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Ubuntu+Sans:ital,wght@0,100..800;1,100..800&display=swap');
 
 body {
-    --version-build: '2024.1120';
+    --version-build: '2024.1201';
 
     --hue:  var(--hue-over,
             var(--hue-album,
@@ -2607,7 +2607,6 @@ hr + .library-search-results-header {
     left: calc((-1 * var(--profile-header-avatar-size)) - 15px) !important;
 }
 
-.user-dashboard-pagination li,
 .secondary-nav-item, .masthead-nav-item {
     margin-left: unset !important;
     color: hsla(var(--c2), 85%);
@@ -2630,7 +2629,6 @@ button.navlist-more {
 }
 
 .auth-link, .language-nav,
-.user-dashboard-pagination a, .user-dashboard-pagination span:not(.user-dashboard-controls-tooltip),
 .navlist-more, .secondary-nav-item-link, .masthead-nav-control {
     /* left padding for icon, otherwise just 12px 16px */
     --padding: 12px 0 12px calc(16px + 6px) !important;
@@ -2721,37 +2719,6 @@ button.navlist-more {
 }
 .secondary-nav-item-link:before {
     background: currentColor !important;
-}
-
-
-/* pagination on listening reports */
-.user-dashboard-pagination {
-    top: unset;
-    bottom: 2px; /* underline */
-    right: var(--card-padding);
-}
-.user-dashboard-pagination ul {
-    display: flex;
-}
-.user-dashboard-pagination li {
-    display: flex;
-}
-.user-dashboard-pagination span:not(.user-dashboard-controls-tooltip),
-.user-dashboard-pagination a {
-    height: 42px;
-    --left: 8px;
-    transform: unset !important;
-}
-
-.user-dashboard-pagination-previous-link {
-    --mask: var(--icon-16-arrow-left);
-}
-.user-dashboard-pagination-next-link {
-    --mask: var(--icon-16-arrow-right);
-}
-
-.user-dashboard-pagination .disabled {
-    color: hsl(var(--c3)) !important;
 }
 
 
@@ -6267,7 +6234,6 @@ a:has(+ .js-gallery-heading):after,
 .player-bar-btn:before,
 .dropdown-menu-item-dark:before,
 /*     LISTENING REPORTS     */
-.user-dashboard-pagination :is(a, span:not(.user-dashboard-controls-tooltip)):before,
 .listening-report-promo:before,
 /*     UPLOAD CTA     */
 .video-preview-upload-cta .cta-link:before, .gallery-preview-cta .cta-link:before, .album-artwork-upload-cta .cta-link:before,
@@ -9123,6 +9089,12 @@ text[style^="color: rgb(255, 172, 172)"] {
     --sat: 1;
     --lit: 1;
 }*/
+
+
+/* fix reports */
+.report-headline-border + .page-content {
+    display: block !important;
+}
 
 
 .catalogue-chart-inner .item, .listening-clock-stat-container {

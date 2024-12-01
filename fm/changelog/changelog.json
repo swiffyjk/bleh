@@ -1,6 +1,12 @@
 {
-    "updated": "2024-11-20",
-    "latest": "2024.1120",
+    "updated": "2024-12-01",
+    "latest": "2024.1201",
+    "2024.1201": {
+        "name": "Reports",
+        "type": "fix",
+        "force": false,
+        "bio": "Fixed listening reports not showing top card most likely due to new Last.fm changes."
+    },
     "2024.1120": {
         "name": "Redesign improvements",
         "type": "major",
