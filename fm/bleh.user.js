@@ -13932,9 +13932,13 @@ let has_prompted_for_update = false;
 
     function patch_profiles_chart_windows() {
         let recent_tracks = page.structure.main.querySelector('#recent-tracks-section');
-        let recent_tracks_settings = recent_tracks.querySelector('#recent-tracks-settings');
-        let recent_tracks_link = recent_tracks.querySelector('[aria-controls="recent-tracks-settings"]');
+        let recent_tracks_settings = null;
+        let recent_tracks_link;
         let recent_tracks_tooltip;
+        if (recent_tracks != null) {
+            recent_tracks_settings = recent_tracks.querySelector('#recent-tracks-settings');
+            recent_tracks_link = recent_tracks.querySelector('[aria-controls="recent-tracks-settings"]');
+        }
 
         let artist = page.structure.main.querySelector('#top-artists');
         let artist_settings = artist.querySelector('#artist-chart-settings');
