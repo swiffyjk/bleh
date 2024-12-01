@@ -95,7 +95,7 @@ let version = {
             date: '2024-11-11'
         },
         unify_top_listeners: {
-            default: false,
+            default: true,
             name: 'Unify top listeners',
             date: '2024-11-15'
         }
@@ -14488,12 +14488,60 @@ let has_prompted_for_update = false;
         let legacy_top_listeners_container = panel.querySelector('.top-listeners');
         let legacy_top_listeners = legacy_top_listeners_container.querySelectorAll('.top-listeners-item');
 
-        legacy_top_listeners.forEach((listener) => {
-            let avatar = listener.querySelector('.top-listeners-item-image');
-            let name = listener.querySelector('.top-listeners-item-name').textContent;
+        let new_container = document.createElement('ul');
+        new_container.classList.add('user-list', 'top-listeners-list');
 
-            patch_avatar(avatar, name, 'listener');
+        legacy_top_listeners.forEach((listener, index) => {
+            let new_listener = document.createElement('li');
+            new_listener.classList.add('user-list-item', 'listener-list-item');
+
+            let position = index + 1;
+            if (page.requested.page != null && page.requested.page != "1") {
+                position += (parseInt(page.requested.page) * 50);
+            }
+
+            let name_wrap = listener.querySelector('.top-listeners-item-name a');
+            let name = name_wrap.textContent;
+            let track_wrap = listener.querySelector('.top-listeners-track');
+
+            let avatar = listener.querySelector('.top-listeners-item-image');
+
+            let follow = listener.querySelector('.class');
+
+            new_listener.innerHTML = (`
+                <div class="user-list-inner-wrap">
+                    <span class="listener-list-position">
+                        ${position}
+                    </span>
+                    <h4 class="user-list-name">
+                        <a class="user-list-link link-block-target" href="${name_wrap.getAttribute('href')}">
+                            ${name}
+                        </a>
+                    </h4>
+                    <span class="avatar user-list-avatar">
+                        ${avatar.innerHTML}
+                    </span>
+                    ${follow.outerHTML}
+                    <div class="user-list-description">
+                        <p class="user-list-about-me">
+                            ${track_wrap.innerHTML}
+                        </p>
+                    </div>
+                </div>
+            `);
+
+            patch_avatar(new_listener.querySelector('.user-list-avatar'), name, 'listener');
+
+            let track_link = new_listener.querySelector('.user-list-about-me a');
+            let artist = return_artist_from_track(track_link.getAttribute('href'), false);
+            let track = correct_item_by_artist(track_link.textContent.trim(), artist);
+            track_link.textContent = track;
+
+            new_container.appendChild(new_listener);
         });
+
+        view_buttons.after(new_container);
+        panel.removeChild(legacy_top_listeners_container);
     }
 
 

@@ -9686,10 +9686,10 @@ text[style^="color: rgb(0, 0, 0)"] {
     --mask-size: var(--cover-size-32);
 }
 
-.user-list-inner-wrap, .listeners-section-item, .top-listeners-item {
+.user-list-inner-wrap {
     padding-left: calc(32px + var(--card-gap));
     padding-right: unset;
-    margin: 6px 0;
+    margin: var(--item-list-gap) 0;
     min-height: unset;
     height: 32px;
 
@@ -9703,37 +9703,51 @@ text[style^="color: rgb(0, 0, 0)"] {
         --lit-over: 1;
     }
 }
-.top-listeners-item-wrap,
 .user-list-item {
     width: 100%;
-    padding: unset;
+    padding: 0 var(--item-list-gap);
+    border-radius: var(--item-med-radius);
+
+    &.listener-list-item {
+        padding-left: calc(var(--item-list-gap) + 20px + var(--item-list-gap));
+
+        .listener-list-position {
+            position: absolute;
+            left: calc(-20px - var(--item-list-gap) - var(--item-list-gap));
+            top: 50%;
+            margin-top: -9px;
+            color: hsl(var(--c3));
+        }
+    }
+
+    .user-list-follower-btn {
+        top: 50%;
+        margin-top: -16px;
+    }
 }
 
-[data-ff--unify_top_listeners="true"] .top-listeners,
 .user-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--item-list-gap);
     margin: unset !important;
 
     [data-bleh--list_view="1"] & {
         display: grid;
         grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
-        gap: var(--card-gap);
 
-        .top-listeners-item-wrap,
         .user-list-item {
-            border: unset !important;
-            padding: var(--button-list-gap);
-            border-radius: var(--item-med-radius);
+            padding: var(--item-list-gap);
 
             &.listeners-section-item-wrap:first-child, &.top-listeners-item-wrap:first-child {
                 background: hsla(var(--h4), 20%);
             }
 
-            &.top-listeners-item-wrap {
-                padding-left: calc(var(--button-list-gap) + 20px + var(--button-list-gap));
+            &.listener-list-item {
+                padding-left: calc(var(--item-list-gap) + 20px + var(--item-list-gap));
             }
         }
 
-        .top-listeners-item,
         .user-list-inner-wrap {
             flex-direction: column;
             align-items: unset;
@@ -9821,7 +9835,7 @@ text[style^="color: rgb(0, 0, 0)"] {
     }
 }
 
-.user-list-item:not(:has(.label.user-follow)) {
+.user-list-item:not(.listener-list-item):not(:has(.label.user-follow)) {
     .user-list-name {
         margin-left: calc(16px + var(--card-gap));
     }
@@ -9849,11 +9863,6 @@ text[style^="color: rgb(0, 0, 0)"] {
     .user-list-item:has(&) {
         background: linear-gradient(90deg, hsla(var(--h4), 20%) 0%, transparent 100%);
     }
-}
-
-
-.user-list-item + .user-list-item {
-    border-top: 1px solid hsl(var(--b4));
 }
 
 .user-list-avatar {
