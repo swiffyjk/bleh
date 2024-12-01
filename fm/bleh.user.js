@@ -14501,7 +14501,7 @@ let has_prompted_for_update = false;
 
             let position = index + 1;
             if (page.requested.page != null && page.requested.page != "1") {
-                position += (parseInt(page.requested.page) * 30);
+                position += ((parseInt(page.requested.page) - 1) * 30);
             }
 
             let name_wrap = listener.querySelector('.top-listeners-item-name a');
