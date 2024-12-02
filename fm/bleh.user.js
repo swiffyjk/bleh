@@ -12936,6 +12936,8 @@ let has_prompted_for_update = false;
         if (!settings.activities)
             return;
 
+        load_activities();
+
         recent_activity_list.push({
             type: type,
             involved: involved,

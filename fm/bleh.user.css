@@ -1593,9 +1593,8 @@ last.fm changes as of 2024-05-20 */
     padding-top: var(--override-padding-top, unset) !important;
 }
 
-.subpage-breadcrumb + .subpage-title {
-    padding: unset !important;
-    margin: unset !important;
+.subpage-breadcrumb, .subpage-title {
+    display: none;
 }
 
 
