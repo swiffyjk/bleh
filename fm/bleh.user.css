@@ -678,6 +678,29 @@ body {
     &[data-bleh--theme="light"] {
         --snow: rgb(109, 173, 199);
     }
+
+    &[data-bleh--seasonal_overlays="true"] {
+        &[data-bleh--season="halloween"],
+        &[data-bleh--season="fall"],
+        &[data-bleh--season="christmas"],
+        &[data-bleh--season="new_years"] {
+            --cards-overlay-display: block;
+        }
+
+        &[data-bleh--season="halloween"] {
+           --cards-overlay: linear-gradient(0deg, rgba(252, 139, 105, 0.04) 0%, rgba(0,0,0,0) 100%);
+        }
+
+        &[data-bleh--season="fall"] {
+           --cards-overlay: linear-gradient(180deg, rgba(157, 211, 255, 0.03) 0%, rgba(0,0,0,0) 100%);
+           --cards-overlay-image: var(--overlay-ice);
+        }
+        &[data-bleh--season="christmas"],
+        &[data-bleh--season="new_years"] {
+           --cards-overlay: linear-gradient(180deg, rgba(157, 211, 255, 0.06) 0%, rgba(0,0,0,0) 100%);
+           --cards-overlay-image: var(--overlay-ice);
+        }
+    }
 }
 
 
@@ -1500,23 +1523,23 @@ last.fm changes as of 2024-05-20 */
     /*background-repeat: repeat-x;
     background-position: unset !important;*/
 
-    [data-bleh--seasonal_overlays="true"] & {
-        [data-bleh--season="halloween"] &:not(.featured-item-panel, .shh, .view-all-panel, .metadata-list, .bleh--profile-note-panel) {
-            background-image: linear-gradient(0deg, rgba(252, 139, 105, 0.04) 0%, rgba(0,0,0,0) 100%) !important;
-            background-repeat: repeat-x;
-            background-position: unset !important;
-        }
-    }
-    [data-bleh--seasonal_overlays="true"][data-bleh--season="christmas"] &:not(.featured-item-panel, .shh, .view-all-panel, .metadata-list, .bleh--profile-note-panel),
-    [data-bleh--seasonal_overlays="true"][data-bleh--season="new_years"] &:not(.featured-item-panel, .shh, .view-all-panel, .metadata-list, .bleh--profile-note-panel) {
-        background-image: var(--overlay-ice), linear-gradient(180deg, rgba(190,233,250,0.06) 0%, rgba(0,0,0,0) 100%) !important;
-        background-repeat: repeat-x;
-        background-position: unset !important;
-    }
-    [data-bleh--seasonal_overlays="true"][data-bleh--season="fall"] &:not(.featured-item-panel, .shh, .view-all-panel, .metadata-list, .bleh--profile-note-panel) {
-        background-image: var(--overlay-ice), linear-gradient(180deg, rgba(190,233,250,0.03) 0%, rgba(0,0,0,0) 100%) !important;
-        background-repeat: repeat-x;
-        background-position: unset !important;
+    position: relative;
+
+    background-image: var(--cards-overlay-image, unset);
+    background-repeat: repeat-x;
+    background-position: unset !important;
+
+    &:before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 0;
+        right: 0;
+        height: 150px;
+        display: var(--cards-overlay-display);
+        background: var(--cards-overlay);
+        border-top-left-radius: var(--card-radius);
+        border-top-right-radius: var(--card-radius);
     }
 
     .navlist {

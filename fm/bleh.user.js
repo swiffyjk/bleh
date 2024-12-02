@@ -5279,9 +5279,9 @@ let has_prompted_for_update = false;
             if (btn_add != null)
                 btn_add.setAttribute('data-page-subpage', page.subpage);
 
-            if (page.subpage.startsWith('user_library')) {
+            if (page.subpage.startsWith('library')) {
                 bleh_user_library();
-            } else if (page.subpage == 'user_events') {
+            } else if (page.subpage == 'events') {
                 let selected_tab = page.structure.content_top.querySelector('.secondary-nav-item-link--active');
 
                 let value_panel = document.createElement('section');
