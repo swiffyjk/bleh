@@ -17819,6 +17819,10 @@ section > .section-controls .subpage-title {
         height: 100px;
         z-index: 8;
 
+        transition-property: opacity, filter;
+        transition-duration: var(--trans);
+        transition-timing-function: var(--trans-function);
+
         &:after {
             content: '';
             position: absolute;
@@ -17827,17 +17831,20 @@ section > .section-controls .subpage-title {
         }
 
         [data-bleh--profile_header_own="false"] & {
-            display: none;
+            opacity: 0;
+            filter: none;
         }
 
         &.from-avatar {
             [data-bleh--profile_avi_background="false"] & {
-                display: none;
+                opacity: 0;
+                filter: none;
             }
         }
         &.from-track {
             [data-bleh--profile_avi_background="true"] & {
-                display: none;
+                opacity: 0;
+                filter: none;
             }
         }
     }
