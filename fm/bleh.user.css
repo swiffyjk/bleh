@@ -4037,8 +4037,30 @@ better than the default selector '#app a' i suppose */
     height: auto;
     aspect-ratio: 1 / 1;
     border-radius: var(--item-big-radius);
-    overflow: hidden;
+    /*overflow: hidden;*/
     box-shadow: var(--standout-shadow);
+
+    &:before {
+        content: '';
+        position: absolute;
+        inset: -4px;
+        border-radius: calc(var(--item-big-radius) + 4px);
+        opacity: 0;
+
+        border: 2px solid hsl(var(--l3-c), 30%);
+        box-shadow: 0 0 30px hsl(var(--l3-c), 10%);
+
+        transition-property: opacity;
+        transition-duration: var(--trans);
+        transition-timing-function: var(--trans-function);
+    }
+
+    &:hover {
+        &:before {
+            opacity: 1;
+            transition: none;
+        }
+    }
 }
 
 .grid-items--big-first {
@@ -4067,6 +4089,8 @@ better than the default selector '#app a' i suppose */
         transition-property: filter;
         transition-duration: var(--trans);
         transition-timing-function: var(--trans-function);
+        border-radius: var(--item-big-radius);
+        overflow: hidden;
 
         position: relative;
 
@@ -4177,6 +4201,10 @@ better than the default selector '#app a' i suppose */
 }
 .grid-items-item-main-text {
     color: hsl(var(--c1));
+
+    a {
+        text-decoration: var(--force-underline, none) !important;
+    }
 }
 .grid-items-item-aux-text {
     opacity: unset;
