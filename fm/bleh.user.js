@@ -9485,11 +9485,11 @@ let has_prompted_for_update = false;
     }
 
 
-    function patch_titles(element) {
-        if (page.subpage == 'user_tags_overview')
+    function patch_titles() {
+        if (page.subpage == 'tags_overview')
             return;
 
-        let tracklists = element.querySelectorAll('.chartlist:not(.chartlist__placeholder)');
+        let tracklists = page.structure.main.querySelectorAll('.chartlist:not(.chartlist__placeholder)');
 
         tracklists.forEach((tracklist) => {
             if (tracklist == null)

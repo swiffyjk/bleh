@@ -688,18 +688,22 @@ body {
         }
 
         &[data-bleh--season="halloween"] {
-           --cards-overlay: linear-gradient(0deg, rgba(252, 139, 105, 0.04) 0%, rgba(0,0,0,0) 100%);
+            --cards-overlay: linear-gradient(0deg, rgba(252, 139, 105, 0.04) 0%, rgba(0,0,0,0) 100%);
         }
 
         &[data-bleh--season="fall"] {
-           --cards-overlay: linear-gradient(180deg, rgba(157, 211, 255, 0.03) 0%, rgba(0,0,0,0) 100%);
-           --cards-overlay-image: var(--overlay-ice);
+            --cards-overlay: linear-gradient(180deg, rgba(157, 211, 255, 0.03) 0%, rgba(0,0,0,0) 100%);
+            --cards-overlay-image: var(--overlay-ice);
         }
         &[data-bleh--season="christmas"],
         &[data-bleh--season="new_years"] {
-           --cards-overlay: linear-gradient(180deg, rgba(157, 211, 255, 0.06) 0%, rgba(0,0,0,0) 100%);
-           --cards-overlay-image: var(--overlay-ice);
+            --cards-overlay: linear-gradient(180deg, rgba(157, 211, 255, 0.06) 0%, rgba(0,0,0,0) 100%);
+            --cards-overlay-image: var(--overlay-ice);
         }
+    }
+
+    &[data-bleh--underline_links="true"] {
+        --force-underline: underline;
     }
 }
 
@@ -1098,7 +1102,7 @@ last.fm changes as of 2024-05-20 */
     align-items: center;
     gap: 6px;
     height: 40px !important;
-    text-decoration: none !important;
+    text-decoration: var(--force-underline, none) !important;
     padding-right: calc(16px + 6px) !important;
     --mask: var(--icon-16-arrow-down);
     --left: none !important;
@@ -1149,7 +1153,7 @@ last.fm changes as of 2024-05-20 */
     align-items: center;
     gap: 6px;
     height: 40px !important;
-    text-decoration: none !important;
+    text-decoration: var(--force-underline, none) !important;
     padding: 0 calc(16px + 6px) 0 calc(20px) !important;
 
     --font-size: 0;
@@ -1788,7 +1792,7 @@ span.header-new-gallery-inner,
         line-height: var(--line-height);
         color: hsl(var(--c2)) !important;
         font-weight: var(--font-weight-medium) !important;
-        text-decoration: none !important;
+        text-decoration: var(--force-underline, none) !important;
         padding-top: calc(24px + 6px);
         --left: 50%;
         --margin-left: -12px;
@@ -2590,7 +2594,7 @@ hr + .library-search-results-header {
     -webkit-line-clamp: 1 !important;
     margin: unset !important;
     flex-shrink: 0;
-    text-decoration: none !important;
+    text-decoration: var(--force-underline, none) !important;
 }
 .column-tracks-item-aux-text {
     color: hsl(var(--c3)) !important;
@@ -3993,7 +3997,7 @@ better than the default selector '#app a' i suppose */
     color: hsl(var(--l3-c)) !important;
 }
 .hide-link {
-    text-decoration: none !important;
+    text-decoration: var(--force-underline, none) !important;
 }
 .hide-link a:hover {
     text-decoration: underline !important;
@@ -4612,6 +4616,10 @@ better than the default selector '#app a' i suppose */
 .chartlist-name, .chartlist-artist {
     z-index: 5;
     position: relative;
+
+    a {
+        text-decoration: var(--force-underline, none) !important;
+    }
 }
 .obsession-candidate-artist,
 .chartlist-name .feat, .chartlist-artist a, .featured-item-artist, .artist-top-albums-item-artist, .similar-albums-item-artist, .track-similar-tracks-item-artist {
@@ -4907,7 +4915,7 @@ a.chartlist-love-button:after {
     }
 }
 .chartlist-count-bar-link {
-    text-decoration: none !important;
+    text-decoration: var(--force-underline, none) !important;
     padding: 0 9px !important; /* 14 */
     font-size: var(--font-size);
     flex: 1;
@@ -5699,7 +5707,7 @@ button,
     border-radius: var(--radius, var(--item-big-radius)) !important;
     box-shadow: var(--shadow) !important;
     border: unset !important;
-    text-decoration: none !important;
+    text-decoration: var(--force-underline, none) !important;
     transition-property: background-color, transform, box-shadow, color, opacity, padding !important;
     transition-duration: var(--trans) !important;
     transition-timing-function: var(--trans-function) !important;
@@ -5923,7 +5931,7 @@ button,
         font-size: var(--font-size);
         line-height: var(--line-height);
         color: hsl(var(--c2));
-        text-decoration: none !important;
+        text-decoration: var(--force-underline, none) !important;
     }
 
 
@@ -7879,7 +7887,7 @@ form[action="/inbox/notifications"] {
     min-height: unset;
 }
 .inbox a {
-    text-decoration: none !important;
+    text-decoration: var(--force-underline, none) !important;
 }
 .inbox-table .inbox-message-timestamp,
 .inbox-table .inbox-message-preview {
@@ -9375,7 +9383,7 @@ text[style^="color: rgb(0, 0, 0)"] {
     z-index: 10;
 }
 .resource-list--release-list-item-name a, .artist-top-albums-item-name a, .similar-albums-item-name a, .similar-albums-item-artist a, .source-album-name a, .source-album-artist a, .track-similar-tracks-item-name a, .track-similar-tracks-item-artist a, .similar-items-sidebar-item-name a, .similar-items-sidebar-item-artist a {
-    text-decoration: none !important;
+    text-decoration: var(--force-underline, none) !important;
 }
 
 .resource-list--release-list-item-playlink, .similar-albums-item-playlink, .track-similar-tracks-item-playlink, .artist-top-albums-item-playlink, .similar-items-sidebar-item-playlink {
@@ -9909,7 +9917,7 @@ text[style^="color: rgb(0, 0, 0)"] {
 }*/
 
 .user-list-name a, .listeners-section-item-name a, .top-listeners-item-name a {
-    text-decoration: none !important;
+    text-decoration: var(--force-underline, none) !important;
 }
 .user-list-description {
     max-width: fit-content;
@@ -11042,7 +11050,7 @@ table.table tr:nth-child(2n) td {
 }
 
 .big-artist-list-title a {
-    text-decoration: none !important;
+    text-decoration: var(--force-underline, none) !important;
 }
 
 /* matches artist pages */
@@ -11265,7 +11273,7 @@ table.table tr:nth-child(2n) td {
     font-size: var(--font-size) !important;
     line-height: var(--line-height) !important;
     font-weight: var(--font-weight-medium) !important;
-    text-decoration: none !important;
+    text-decoration: var(--force-underline, none) !important;
 }
 .events-list-item-venue {
     color: hsla(var(--c2), 80%);
@@ -11428,7 +11436,7 @@ table.table tr:nth-child(2n) td {
     --shadow: none;
 
     .attendee-summary-user-link {
-        text-decoration: none !important;
+        text-decoration: var(--force-underline, none) !important;
     }
 }
 
@@ -11468,7 +11476,7 @@ a:has(+ .js-gallery-heading):after,
 .subpage-breadcrumb a,
 .content-top-back-link a {
     color: hsl(var(--c3)) !important;
-    text-decoration: none !important;
+    text-decoration: var(--force-underline, none) !important;
 }
 
 
@@ -11834,7 +11842,7 @@ hr {
             display: block;
             --left: 0;
             font: inherit;
-            text-decoration: none !important;
+            text-decoration: var(--force-underline, none) !important;
 
             -webkit-line-clamp: 1;
             letter-spacing: unset;
@@ -14263,7 +14271,7 @@ input[type="range"]::-moz-range-progress {
     background-color: hsla(var(--h4), 20%);
     border-radius: var(--item-small-radius);
     font-weight: var(--font-weight-medium);
-    text-decoration: none !important;
+    text-decoration: var(--force-underline, none) !important;
 }
 :is(.shout-body, .about-me-sidebar, .bleh--about-me-preview) a[href^="https://open.spotify.com/user/"] {
     padding: 0 4px 0 calc(4px + 14px + 4px);
@@ -17101,7 +17109,7 @@ h4 {
     flex-direction: column;
 
     color: hsl(var(--c2));
-    text-decoration: none !important;
+    text-decoration: var(--force-underline, none) !important;
 
     position: relative;
     padding-left: calc(16px + 6px);
