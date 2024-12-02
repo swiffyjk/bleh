@@ -6273,6 +6273,18 @@ let has_prompted_for_update = false;
                     }
                 }
             }
+
+            let name = grid.querySelector('.grid-items-item-main-text a');
+
+            if (!is_album) {
+                name.textContent = correct_artist(name.textContent.trim());
+            } else {
+                let artist = grid.querySelector('.grid-items-item-aux-block');
+
+                artist.textContent = correct_artist(artist.textContent.trim());
+
+                name.textContent = correct_item_by_artist(name.textContent.trim(), artist.textContent.trim());
+            }
         });
     }
 
