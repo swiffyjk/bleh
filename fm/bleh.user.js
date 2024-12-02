@@ -2275,7 +2275,7 @@ let seasonal_events = [
 
         snowflakes: {
             state: true,
-            count: 70
+            count: 60
         }
     }
 ];
@@ -3041,6 +3041,7 @@ let recent_activity_list;
 
 // page type
 let last_page_type;
+let last_page_subpage;
 let page = {
     type: '',
     name: '',
@@ -3105,12 +3106,10 @@ let has_prompted_for_update = false;
         if (auth == '')
             return;
 
-        assign_page();
-
-        append_nav();
-
         load_activities();
         notify_if_new_update();
+
+        append_nav();
 
         lotus();
 
@@ -3209,30 +3208,36 @@ let has_prompted_for_update = false;
 
         let main_content = page.structure.wrapper.querySelector(':scope > :last-child:not([data-orchid])');
         if (main_content != null) {
+            assign_page_type();
             load_page();
+        } else {
+            assign_page_subpage();
         }
         main_content.setAttribute('data-bleh', 'true');
+    }
 
+    function assign_page_type() {
         let page_classes = document.body.classList;
         page_classes.forEach((page_class, index) => {
             if (page_class.startsWith('namespace')) {
-                let page_name = page_class.replace('namespace--', '');
-                let page_split = page_name.split('_');
+                page.initial = page_class.replace('namespace--', '');
+                let page_split = page.initial.split('_');
 
                 page.type = page_split[0];
-                if (page.type == 'music')
+                if (page.type == 'music') {
                     page.type = page_split[1];
+                }
 
                 if (page.type != last_page_type) {
                     last_page_type = page.type;
                     log(page.type, 'page');
                 }
 
-                page.subpage = page_name.replace(page.type, '').replace('_', '');
-
                 console.log(page);
 
                 //document.title = `${page.type}_${page.subpage} - bleh ${version.build}.${version.sku}`;
+
+                assign_page_subpage();
 
                 return;
             }
@@ -3240,6 +3245,10 @@ let has_prompted_for_update = false;
             if (index > 4)
                 return;
         });
+    }
+
+    function assign_page_subpage() {
+        page.subpage = page.initial.replace(page.type, '').replace('_', '').replace('music_', '');
     }
 
     function load_page() {
@@ -5168,8 +5177,6 @@ let has_prompted_for_update = false;
             profile_header.setAttribute('data-is-own-profile', 'true');
 
         if (!is_subpage) {
-            page.subpage = 'overview';
-
             // recent tracks
             patch_profile_tracks();
 
@@ -5268,9 +5275,6 @@ let has_prompted_for_update = false;
             if (featured_track_panel != null)
                 bleh_featured_profile_track(featured_track_panel);
         } else {
-            // which subpage is it?
-            page.subpage = document.body.classList[1].replace('namespace--', '');
-
             let btn_add = page.structure.side.querySelector('.add-button');
             if (btn_add != null)
                 btn_add.setAttribute('data-page-subpage', page.subpage);
@@ -12141,30 +12145,25 @@ let has_prompted_for_update = false;
         }
 
         if (!is_subpage) {
-            page.subpage = 'overview';
-
             show_your_scrobbles();
 
             bleh_music_page_charts();
         } else {
-            // which subpage is it?
-            page.subpage = document.body.classList[2].replace('namespace--', '');
-
             let btn_add = page.structure.side.querySelector('.add-button');
             if (btn_add != null)
                 btn_add.setAttribute('data-page-subpage', page.subpage);
 
-            if (page.subpage == 'music_artist_images_image-upload')
+            if (page.subpage == 'images_image-upload')
                 bleh_gallery_upload();
-            else if (page.subpage == 'music_artist_images_overview')
+            else if (page.subpage == 'images_overview')
                 bleh_gallery_list();
-            else if (page.subpage == 'music_artist_wiki_overview')
+            else if (page.subpage == 'wiki_overview')
                 bleh_wiki();
-            else if (page.subpage == 'music_artist_wiki_history')
+            else if (page.subpage == 'wiki_history')
                 bleh_wiki_history();
-            else if (page.subpage == 'music_artist_wiki_edit')
+            else if (page.subpage == 'wiki_edit')
                 bleh_wiki_editor();
-            else if (page.subpage == 'music_artist_listeners_overview')
+            else if (page.subpage == 'listeners_overview')
                 bleh_top_listeners();
         }
 
@@ -12313,8 +12312,6 @@ let has_prompted_for_update = false;
         }
 
         if (!is_subpage) {
-            page.subpage = 'overview';
-
             show_your_scrobbles();
 
             bleh_music_page_charts();
@@ -12352,22 +12349,19 @@ let has_prompted_for_update = false;
 
             upload_container.after(expand_container);
         } else {
-            // which subpage is it?
-            page.subpage = document.body.classList[2].replace('namespace--', '');
-
             let btn_add = page.structure.side.querySelector('.add-button');
             if (btn_add != null)
                 btn_add.setAttribute('data-page-subpage', page.subpage);
 
-            if (page.subpage == 'music_album_images_image-upload')
+            if (page.subpage == 'images_image-upload')
                 bleh_gallery_upload();
-            else if (page.subpage == 'music_album_images_overview')
+            else if (page.subpage == 'images_overview')
                 bleh_gallery_list();
-            else if (page.subpage == 'music_album_wiki_overview')
+            else if (page.subpage == 'wiki_overview')
                 bleh_wiki();
-            else if (page.subpage == 'music_album_wiki_history')
+            else if (page.subpage == 'wiki_history')
                 bleh_wiki_history();
-            else if (page.subpage == 'music_album_wiki_edit')
+            else if (page.subpage == 'wiki_edit')
                 bleh_wiki_editor();
         }
 
@@ -12516,26 +12510,21 @@ let has_prompted_for_update = false;
         }
 
         if (!is_subpage) {
-            page.subpage = 'overview';
-
             show_your_scrobbles();
 
             bleh_music_page_charts();
 
             bleh_about_artist();
         } else {
-            // which subpage is it?
-            page.subpage = document.body.classList[2].replace('namespace--', '');
-
             let btn_add = page.structure.side.querySelector('.add-button');
             if (btn_add != null)
                 btn_add.setAttribute('data-page-subpage', page.subpage);
 
-            if (page.subpage == 'music_track_wiki_overview')
+            if (page.subpage == 'wiki_overview')
                 bleh_wiki();
-            else if (page.subpage == 'music_track_wiki_history')
+            else if (page.subpage == 'wiki_history')
                 bleh_wiki_history();
-            else if (page.subpage == 'music_track_wiki_edit')
+            else if (page.subpage == 'wiki_edit')
                 bleh_wiki_editor();
         }
 
@@ -12603,15 +12592,8 @@ let has_prompted_for_update = false;
         }
 
         if (!is_subpage) {
-            page.subpage = 'overview';
+            //
         } else {
-            // which subpage is it?
-            try {
-                page.subpage = document.body.classList[2].replace('namespace--', '');
-            } catch(e) {
-                page.subpage = document.body.classList[1].replace('namespace--', '');
-            }
-
             if (page.subpage == 'tag_wiki_overview')
                 bleh_wiki();
             else if (page.subpage == 'tag_wiki_history')
@@ -12952,7 +12934,7 @@ let has_prompted_for_update = false;
 
 
     function bleh_gallery() {
-        if (page.subpage != 'music_artist_image' && page.subpage != 'music_album_image')
+        if (page.subpage != 'image')
             return;
 
         log('focusing on image', 'gallery');
@@ -13241,7 +13223,7 @@ let has_prompted_for_update = false;
     }
 
     function bleh_gallery_upload_check() {
-        if (page.subpage != 'music_album_images_image-upload' && page.subpage != 'music_artist_images_image-upload')
+        if (page.subpage != 'images_image-upload')
             return;
 
         // update image preview
@@ -13850,8 +13832,6 @@ let has_prompted_for_update = false;
 
 
         if (!is_subpage) {
-            page.subpage = 'overview';
-
             let header_meta = document.body.querySelector('.header-metadata');
             header_meta.classList.add('profile-header-metadata-legacy');
 
@@ -13935,9 +13915,6 @@ let has_prompted_for_update = false;
                 patch_avatar(avatar, name, 'event');
             });
         } else {
-            // which subpage is it?
-            page.subpage = document.body.classList[2].replace('namespace--', '');
-
             if (page.subpage == 'events_event_attendance_going' || page.subpage == 'events_event_attendance_interested') {
                 // view-related buttons
                 let view_buttons = document.createElement('div');
@@ -14602,10 +14579,6 @@ let has_prompted_for_update = false;
 
         page.name = auth;
         page.avatar = my_avi;
-
-        try {
-            page.subpage = document.body.classList[2].replace('namespace--', '');
-        } catch(e) {}
 
         page.structure.container = document.body.querySelector('.page-content');
         try {

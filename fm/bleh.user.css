@@ -652,6 +652,7 @@ body {
     --icon-16-expand: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyLjUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgY2xhc3M9Imx1Y2lkZSBsdWNpZGUtZXhwYW5kIj48cGF0aCBkPSJtMjEgMjEtNi02bTYgNnYtNC44bTAgNC44aC00LjgiLz48cGF0aCBkPSJNMyAxNi4yVjIxbTAgMGg0LjhNMyAyMWw2LTYiLz48cGF0aCBkPSJNMjEgNy44VjNtMCAwaC00LjhNMjEgM2wtNiA2Ii8+PHBhdGggZD0iTTMgNy44VjNtMCAwaDQuOE0zIDNsNiA2Ii8+PC9zdmc+');
     --icon-16-season: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyLjUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgY2xhc3M9Imx1Y2lkZSBsdWNpZGUtY2FsZW5kYXItY2xvY2siPjxwYXRoIGQ9Ik0yMSA3LjVWNmEyIDIgMCAwIDAtMi0ySDVhMiAyIDAgMCAwLTIgMnYxNGEyIDIgMCAwIDAgMiAyaDMuNSIvPjxwYXRoIGQ9Ik0xNiAydjQiLz48cGF0aCBkPSJNOCAydjQiLz48cGF0aCBkPSJNMyAxMGg1Ii8+PHBhdGggZD0iTTE3LjUgMTcuNSAxNiAxNi4zVjE0Ii8+PGNpcmNsZSBjeD0iMTYiIGN5PSIxNiIgcj0iNiIvPjwvc3ZnPg==');
     --icon-16-changelog: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyLjUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgY2xhc3M9Imx1Y2lkZSBsdWNpZGUtc2Nyb2xsIj48cGF0aCBkPSJNMTkgMTdWNWEyIDIgMCAwIDAtMi0ySDQiLz48cGF0aCBkPSJNOCAyMWgxMmEyIDIgMCAwIDAgMi0ydi0xYTEgMSAwIDAgMC0xLTFIMTFhMSAxIDAgMCAwLTEgMXYxYTIgMiAwIDEgMS00IDBWNWEyIDIgMCAxIDAtNCAwdjJhMSAxIDAgMCAwIDEgMWgzIi8+PC9zdmc+');
+    --icon-16-import: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyLjUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgY2xhc3M9Imx1Y2lkZSBsdWNpZGUtaW1wb3J0Ij48cGF0aCBkPSJNMTIgM3YxMiIvPjxwYXRoIGQ9Im04IDExIDQgNCA0LTQiLz48cGF0aCBkPSJNOCA1SDRhMiAyIDAgMCAwLTIgMnYxMGEyIDIgMCAwIDAgMiAyaDE2YTIgMiAwIDAgMCAyLTJWN2EyIDIgMCAwIDAtMi0yaC00Ii8+PC9zdmc+');
 
     --icon-16-select-all: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyLjUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgY2xhc3M9Imx1Y2lkZSBsdWNpZGUtc3F1YXJlIj48cmVjdCB3aWR0aD0iMTgiIGhlaWdodD0iMTgiIHg9IjMiIHk9IjMiIHJ4PSIyIi8+PC9zdmc+');
     --icon-16-deselect-all: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyLjUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgY2xhc3M9Imx1Y2lkZSBsdWNpZGUtc3F1YXJlLWRhc2hlZCI+PHBhdGggZD0iTTUgM2EyIDIgMCAwIDAtMiAyIi8+PHBhdGggZD0iTTE5IDNhMiAyIDAgMCAxIDIgMiIvPjxwYXRoIGQ9Ik0yMSAxOWEyIDIgMCAwIDEtMiAyIi8+PHBhdGggZD0iTTUgMjFhMiAyIDAgMCAxLTItMiIvPjxwYXRoIGQ9Ik05IDNoMSIvPjxwYXRoIGQ9Ik05IDIxaDEiLz48cGF0aCBkPSJNMTQgM2gxIi8+PHBhdGggZD0iTTE0IDIxaDEiLz48cGF0aCBkPSJNMyA5djEiLz48cGF0aCBkPSJNMjEgOXYxIi8+PHBhdGggZD0iTTMgMTR2MSIvPjxwYXRoIGQ9Ik0yMSAxNHYxIi8+PC9zdmc+');
@@ -1480,10 +1481,10 @@ last.fm changes as of 2024-05-20 */
 /* no playlists */ .no-data-message--playlists,
 /* neighbours */ .friends-col-main,
 .panel-form,
-.bleh--gallery, [data-page-subpage="music_album_images_overview"] .col-main,
+.bleh--gallery, [data-page-subpage="images_overview"] .col-main,
 /* listeners */ .col-main:not(.bleh--gallery) > .buffer-standard,
 /* similar artists */ .similar-artists,
-.no-data-message--gallery:not([data-page-subpage="music_album_images_overview"] .no-data-message--gallery), .no-data-message--album
+.no-data-message--gallery:not([data-page-subpage="images_overview"] .no-data-message--gallery), .no-data-message--album
 {
     content: '';
     --override-background: hsl(var(--card-specific-background, var(--card-background, var(--b5))));
@@ -4238,7 +4239,6 @@ better than the default selector '#app a' i suppose */
 .chartlist {
     /*animation: slide_down var(--trans) var(--trans-function);
     transform-origin: top;*/
-    animation: fade_popup_reduced var(--trans) var(--trans-function);
 
     &:not(.chartlist--with-image) {
         .chartlist-image {
@@ -9376,7 +9376,7 @@ text[style^="color: rgb(0, 0, 0)"] {
 
 /*     TRACK ALBUMS TAB TEXT     */
 /* Showing albums featuring x. */
-[data-page-subpage="music_track_albums"] .col-main > .buffer-standard:first-child {
+[data-page-subpage="albums"] .col-main > .buffer-standard:first-child {
     display: none;
 }
 #track-albums-section {
@@ -12561,10 +12561,10 @@ so this is good enough - use the community docs */
                     --mask: var(--icon-16-layout-manage);
                 }
                 &[data-bleh-action="import"] {
-                    --mask: var(--icon-16-download);
+                    --mask: var(--icon-16-import);
                 }
                 &[data-bleh-action="export"] {
-                    --mask: var(--icon-16-upload);
+                    --mask: var(--icon-16-external);
                 }
                 &[data-bleh-action="reset"] {
                     --mask: var(--icon-16-revert);
@@ -15566,7 +15566,7 @@ button.bleh--gallery-bookmark-image-btn {
 }
 
 /* albums dont support saved tabs yet so */
-[data-page-subpage="music_album_images_overview"] .col-main {
+[data-page-subpage="images_overview"] .col-main {
     & > .buffer-standard {
         display: none;
     }
@@ -17526,7 +17526,7 @@ h4 {
         &.add-button {
             --mask: var(--icon-16-plus);
 
-            &[data-page-subpage="music_artist_events"] {
+            &[data-page-subpage="events"] {
                 --mask: var(--icon-16-calendar-add);
             }
         }

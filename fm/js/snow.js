@@ -84,7 +84,7 @@ function create_snowflakes() {
 
         var initialx = get_pos(50, browser_w);
         var initialy = get_pos(50, browser_h);
-        var speed = 5 + Math.random() * 40;
+        var speed = 6 + Math.random() * 40;
 
         // create object
         var em_snowflake = new Snowflake(clone_snowflake, speed, initialx, initialy);
