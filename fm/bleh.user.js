@@ -3043,6 +3043,7 @@ let recent_activity_list;
 let last_page_type;
 let last_page_subpage;
 let page = {
+    initial: '',
     type: '',
     name: '',
     sister: '',
@@ -3061,6 +3062,9 @@ let page = {
     },
     requested: {
         tab: null
+    },
+    state: {
+        settings_reload: false
     }
 };
 
@@ -3249,6 +3253,15 @@ let has_prompted_for_update = false;
 
     function assign_page_subpage() {
         page.subpage = page.initial.replace(page.type, '').replace('_', '').replace('music_', '');
+
+        if (last_page_subpage != page.subpage) {
+            last_page_subpage = page.subpage;
+
+            if (page.state.settings_reload) {
+                load_settings();
+                page.state.settings_reload = false;
+            }
+        }
     }
 
     function load_page() {
@@ -3955,8 +3968,10 @@ let has_prompted_for_update = false;
         localStorage.setItem('bleh', JSON.stringify(settings));
 
         // override theme when browsing listening reports
-        if (document.body.classList.contains('user-dashboard-layout'))
+        if (document.body.classList.contains('user-dashboard-layout')) {
             document.documentElement.setAttribute('data-bleh--theme', 'oled');
+            page.state.settings_reload = true;
+        }
     }
 
     // save a setting
@@ -3994,7 +4009,7 @@ let has_prompted_for_update = false;
 
     // theme
     unsafeWindow.toggle_theme = function() {
-        if (page.subpage == 'user-dashboard-layout--version-3')
+        if (page.subpage.startsWith('listening-report'))
             return;
 
         let current_theme = settings.theme;
@@ -4035,7 +4050,7 @@ let has_prompted_for_update = false;
         localStorage.setItem('bleh', JSON.stringify(settings));
     }
     unsafeWindow.change_theme_from_menu = function(theme) {
-        if (page.subpage == 'user-dashboard-layout--version-3')
+        if (page.subpage.startsWith('listening-report'))
             return;
 
         // save value
@@ -5338,7 +5353,7 @@ let has_prompted_for_update = false;
 
                 page.structure.side.innerHTML = '';
                 page.structure.side.appendChild(value_panel);
-            } else if (page.subpage == 'user-dashboard-layout--version-3') {
+            } else if (page.subpage.startsWith('listening-report')) {
                 let report_box_container = document.body.querySelector('.report-box-container--overview');
 
                 if (report_box_container != null)
@@ -5879,7 +5894,7 @@ let has_prompted_for_update = false;
 
 
         // the rest happens on a following/followers page
-        if (page.subpage != 'user_following' && page.subpage != 'user_followers' && page.subpage != 'user_neighbours')
+        if (page.subpage != 'following' && page.subpage != 'followers' && page.subpage != 'neighbours')
             return;
 
         //let following_tab = document.body.querySelector('.secondary-nav-item--following');
@@ -5889,9 +5904,9 @@ let has_prompted_for_update = false;
         let neighbours_tab_html = neighbours_tab.outerHTML;
 
         let tab = undefined;
-        if (page.subpage == 'user_followers')
+        if (page.subpage == 'followers')
             tab = followers_tab;
-        else if (page.subpage == 'user_following')
+        else if (page.subpage == 'following')
             tab = following_tab;
         else
             tab = neighbours_tab;
