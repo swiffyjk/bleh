@@ -12074,7 +12074,7 @@ let has_prompted_for_update = false;
             let avatar_side = redesigned_artist_header.querySelector('.avatar-side');
             let avatar_link = avatar_side.querySelector('a');
 
-            if (avatar_link != null) {
+            if (avatar != null && avatar_link != null) {
                 let expand_link;
                 if (avatar != null)
                     expand_link = `_expand_avatar('${avatar.getAttribute('content')}')`;
@@ -12252,7 +12252,7 @@ let has_prompted_for_update = false;
             let avatar_side = redesigned_album_header.querySelector('.avatar-side');
             let avatar_link = avatar_side.querySelector('a');
 
-            if (avatar_link != null) {
+            if (avatar != null && avatar_link != null) {
                 let expand_link;
                 if (avatar != null)
                     expand_link = `_expand_avatar('${avatar.getAttribute('content')}')`;

@@ -5259,15 +5259,8 @@ the body text becomes bigger by default - this reverts that */
 
     /* in shoutboxes */
     .shoutbox & {
-        font-size: 0;
         margin-top: 48px !important;
         padding-bottom: 24px;
-
-        &:after {
-            content: '. . . so empty ⠀ ( ╥ω╥ )';
-            font-size: var(--font-size);
-            line-height: var(--line-height);
-        }
     }
 
     /* what even...............
