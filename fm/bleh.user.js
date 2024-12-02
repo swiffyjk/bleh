@@ -12334,20 +12334,22 @@ let has_prompted_for_update = false;
             let upload_container = page.structure.side.querySelector('.album-overview-cover-art-upload-action');
             let avatar = album_header.querySelector('.header-new-background-image');
 
-            let expand_container = document.createElement('span');
-            expand_container.classList.add('album-overview-cover-art-expand-action');
+            if (avatar != null) {
+                let expand_container = document.createElement('span');
+                expand_container.classList.add('album-overview-cover-art-expand-action');
 
-            let expand_link = document.createElement('a');
-            expand_link.setAttribute('onclick', `_expand_avatar('${avatar.getAttribute('content')}')`);
-            expand_link.textContent = trans[lang].gallery.open.name;
+                let expand_link = document.createElement('a');
+                expand_link.setAttribute('onclick', `_expand_avatar('${avatar.getAttribute('content')}')`);
+                expand_link.textContent = trans[lang].gallery.open.name;
 
-            tippy(expand_link, {
-                content: trans[lang].gallery.open.name
-            });
+                tippy(expand_link, {
+                    content: trans[lang].gallery.open.name
+                });
 
-            expand_container.appendChild(expand_link);
+                expand_container.appendChild(expand_link);
 
-            upload_container.after(expand_container);
+                upload_container.after(expand_container);
+            }
         } else {
             let btn_add = page.structure.side.querySelector('.add-button');
             if (btn_add != null)
