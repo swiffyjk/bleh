@@ -12875,10 +12875,11 @@ code, kbd, samp {
             }
 
             h5 {
+                color: hsl(var(--c2));
                 font-weight: var(--font-weight-medium);
-                margin: unset;
             }
             p {
+                color: hsl(var(--c2), 80%);
                 font-weight: var(--font-weight) !important;
             }
 
@@ -13006,9 +13007,11 @@ code, kbd, samp {
         }
 
         h5 {
+            color: hsl(var(--c2));
             font-weight: var(--font-weight-medium);
         }
         p {
+            color: hsl(var(--c2), 80%);
             font-weight: var(--font-weight) !important;
         }
 
@@ -13204,8 +13207,23 @@ code, kbd, samp {
         opacity: 0;
     }
 
+    &:after {
+        content: '';
+        position: absolute;
+        inset: -4px;
+        border-radius: calc(var(--item-big-radius) + 4px);
+        opacity: 0;
+
+        border: 2px solid hsl(var(--c1), 80%);
+        box-shadow: 0 0 30px hsl(var(--c1), 20%);
+
+        transition-property: opacity;
+        transition-duration: var(--trans);
+        transition-timing-function: var(--trans-function);
+    }
+
     &.selected {
-        outline: 2px solid hsl(var(--c1)) !important;
+        /*outline: 2px solid hsl(var(--c1)) !important;*/
         /*border: 3px solid hsl(var(--b6)) !important;
 
         --left: 10px;*/
@@ -13213,6 +13231,10 @@ code, kbd, samp {
 
         [data-bleh--theme="light"] & {
             --shadow: 0 0 20px hsla(var(--h4), 70%);
+        }
+
+        &:after {
+            opacity: 1;
         }
     }
 }
@@ -15053,7 +15075,7 @@ button.bleh--gallery-bookmark-image-btn {
     gap: var(--button-list-gap);
     padding: var(--button-list-gap);
     background-color: hsl(var(--b6));
-    border-radius: var(--item-big-radius);
+    border-radius: calc(var(--item-big-radius) + var(--button-list-gap));
 
     &:not(.profile-top-header) {
         margin-bottom: var(--card-gap);
