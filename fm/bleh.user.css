@@ -1544,6 +1544,7 @@ last.fm changes as of 2024-05-20 */
         background: var(--cards-overlay);
         border-top-left-radius: var(--card-radius);
         border-top-right-radius: var(--card-radius);
+        pointer-events: none;
     }
 
     .navlist {
