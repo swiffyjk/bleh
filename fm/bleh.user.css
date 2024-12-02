@@ -414,7 +414,7 @@ body {
     /* cover masks */
     --cover-size-20: 14px;
     --cover-size-32: 20px;
-    --cover-size-50: 32px;
+    --cover-size-50: 24px;
     --cover-size-100: 40px;
     --cover-size-200: 72px;
     --cover-size-300: 96px;
@@ -1094,6 +1094,7 @@ last.fm changes as of 2024-05-20 */
     transition-property: transform, border-color, box-shadow;
     transition-duration: calc(var(--trans-short) * 1.5);
     transition-timing-function: var(--trans-function);
+    --mask-size: 20px;
 }
 
 .auth-link {
@@ -2126,15 +2127,6 @@ li.header-metadata-item--event-attendance {
     font-weight: var(--font-weight-medium);
 }
 
-
-/* rare case where the header-featured-track does not render,
-hide the button in this case
-
-usually there would be header-featured-track in between these two
-elements, this is how we detect its missing */
-/*.header-info-primary-col1 + form:has(.profile-header-set-obsession) {
-    display: none;
-}*/
 
 
 /*     MANAGE OBSESSION     */
@@ -4062,7 +4054,7 @@ better than the default selector '#app a' i suppose */
 .grid-items.grid-items--big-first .grid-items-item--big {
     grid-area: b;
     /* chromium freaks out if u put auto here :\ */
-    aspect-ratio: 1 / 1.01;
+    aspect-ratio: 1 / 1;
 }
 .grid-items-item--big .grid-items-cover-image-image:after,
 .grid-items-item--big img {
@@ -8933,6 +8925,37 @@ text[style^="color: rgb(255, 172, 172)"] {
     margin-top: var(--card-gap);
     margin-left: unset;
     margin-right: unset;
+}
+
+
+.listening-report-daily-scrobbles-day {
+    --bg: hsl(var(--h3));
+    --bg-hov: var(--bg);
+    --bg-sat: var(--bg);
+
+    --hue-over: 224;
+    --sat-over: 0.85;
+    --lit-over: 1;
+
+    &.listening-report-daily-scrobbles-day--colour-0 {
+        --lit-over: 0.8;
+        opacity: 0.1;
+    }
+    &.listening-report-daily-scrobbles-day--colour-1 {
+        --lit-over: 0.85;
+        opacity: 0.25;
+    }
+    &.listening-report-daily-scrobbles-day--colour-2 {
+        --lit-over: 0.9;
+        opacity: 0.5;
+    }
+    &.listening-report-daily-scrobbles-day--colour-3 {
+        --lit-over: 0.95;
+        opacity: 0.65;
+    }
+    &.listening-report-daily-scrobbles-day--colour-4 {
+        opacity: 0.85;
+    }
 }
 
 

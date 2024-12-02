@@ -3185,7 +3185,15 @@ let has_prompted_for_update = false;
             patch_lastfm_settings(document.body);
             patch_gallery_page();
 
-            patch_titles(document.body);
+            if (page.type == 'user' ||
+                page.type == 'artist' ||
+                page.type == 'album' ||
+                page.type == 'events' ||
+                page.type == 'festival' ||
+                page.type == 'tag'
+            ) {
+                patch_titles();
+            }
 
             if (settings.corrections) {
                 correct_generic_combo_no_artist('artist-header-featured-items-item');
@@ -9069,6 +9077,8 @@ let has_prompted_for_update = false;
 
         page.structure.dialogs.appendChild(modal);
         page.structure.dialogs.classList.add('has-dialog');
+
+        return modal;
     }
     unsafeWindow._dialog_rm = function({
         id = null,
@@ -13332,14 +13342,20 @@ let has_prompted_for_update = false;
     }
 
     function open_changelog(changelog) {
-        let window = dialog_legacy('changelog', trans[lang].changelog.name, (`
-            <div class="changelog-list"></div>
-            <div class="modal-footer">
-                <a class="btn primary skip" href="#latest_major_release">
-                    ${trans[lang].changelog.view_major}
-                </a>
-            </div>
-        `), true, 'changelog', true);
+        let window = dialog({
+            id: 'changelog',
+            title: trans[lang].changelog.name,
+            body: (`
+                <div class="changelog-list"></div>
+                <div class="modal-footer">
+                    <a class="btn primary skip" href="#latest_major_release">
+                        ${trans[lang].changelog.view_major}
+                    </a>
+                </div>
+            `),
+            type: 'changelog',
+            allow_scroll: true
+        });
 
         let changelog_list = window.querySelector('.changelog-list');
 
