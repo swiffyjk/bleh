@@ -12936,7 +12936,8 @@ let has_prompted_for_update = false;
         if (!settings.activities)
             return;
 
-        load_activities();
+        recent_activity_list = JSON.parse(localStorage.getItem('bwaa_recent_activity')) || [];
+        log('loaded', 'activity', 'info', recent_activity_list);
 
         recent_activity_list.push({
             type: type,
