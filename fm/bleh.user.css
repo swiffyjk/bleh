@@ -13662,13 +13662,13 @@ input[type="range"]::-moz-range-progress {
     transition-duration: var(--trans);
     transition-timing-function: var(--trans-function);
 
-    &[aria-describedby] {
+    /*&[aria-describedby] {
         background-color: hsla(var(--h4), 10%);
         padding: 8px;
         margin: -8px;
         transition: none;
         border-radius: var(--item-big-radius);
-    }
+    }*/
 
     .companion-checkbox {
         display: none;
@@ -14133,6 +14133,33 @@ input[type="range"]::-moz-range-progress {
 
         .dot {
             left: calc(48px - 7px - 12px);
+        }
+
+        &:after {
+            border: 2px solid hsl(var(--c1), 65%);
+            box-shadow: 0 0 30px hsl(var(--c1), 30%);
+        }
+    }
+
+    &:after {
+        content: '';
+        position: absolute;
+        inset: -5px;
+        border-radius: 50px;
+        opacity: 0;
+
+        border: 2px solid hsl(var(--c1), 30%);
+        box-shadow: 0 0 30px hsl(var(--c1), 10%);
+
+        transition-property: opacity;
+        transition-duration: var(--trans);
+        transition-timing-function: var(--trans-function);
+    }
+
+    .toggle-container:hover & {
+        &:after {
+            opacity: 1;
+            transition: none;
         }
     }
 }
