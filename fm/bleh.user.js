@@ -6227,7 +6227,7 @@ let has_prompted_for_update = false;
                         let swatches = vibrant.swatches();
 
                         if (swatches.DarkMuted != null) {
-                            console.info('dark muted', swatches.DarkMuted.getHex());
+                            console.log('dark muted', swatches.DarkMuted.getHex());
                             let hsl = hex_to_hsl(swatches.DarkMuted.getHex());
 
                             grid_colour.style.setProperty('background', swatches.DarkMuted.getHex());
@@ -6237,7 +6237,7 @@ let has_prompted_for_update = false;
                             grid.style.setProperty('--sat-over', clamp_sat((hsl.s / 100) * 3));
                             grid.style.setProperty('--lit-over', 1);
                         } else {
-                            console.info('vibrant', swatches.Vibrant.getHex());
+                            console.log('vibrant', swatches.Vibrant.getHex());
                             let hsl = hex_to_hsl(swatches.Vibrant.getHex());
 
                             grid_colour.style.setProperty('background', swatches.Vibrant.getHex());
