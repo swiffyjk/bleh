@@ -14061,7 +14061,7 @@ let has_prompted_for_update = false;
         header.appendChild(view_buttons);
         panel.insertBefore(header, panel.firstElementChild);
 
-        if (panel == null)
+        if (form == null)
             return;
 
         if (page.token == '')
