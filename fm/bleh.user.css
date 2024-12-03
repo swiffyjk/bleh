@@ -1547,11 +1547,6 @@ last.fm changes as of 2024-05-20 */
     background-position: unset !important;*/
 
     position: relative;
-    &:not(
-        .date-panel
-    ) {
-        overflow: hidden;
-    }
 
     &:not(.featured-item-panel, .shh, .view-all-panel, .metadata-list, .bleh--profile-note-panel) {
         background-image: var(--cards-overlay-image, unset) !important;
@@ -1565,6 +1560,7 @@ last.fm changes as of 2024-05-20 */
             top: 0;
             right: 0;
             height: 150px;
+            max-height: 100%;
             display: var(--cards-overlay-display);
             background: var(--cards-overlay);
             border-top-left-radius: var(--card-radius);
@@ -4238,6 +4234,7 @@ better than the default selector '#app a' i suppose */
 #recent-tracks-section {
     /* add space for the button */
     padding-bottom: calc(var(--card-padding) + 32px + var(--card-gap));
+    overflow: hidden;
 
     &.has-refreshed {
         &:after {
