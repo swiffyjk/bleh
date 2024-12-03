@@ -98,6 +98,11 @@ let version = {
             default: true,
             name: 'Unify top listeners',
             date: '2024-11-15'
+        },
+        hide_chartlist_more: {
+            default: true,
+            name: 'Hide chartlist more button, accessible the same with right-clicking',
+            date: '2024-12-03'
         }
     }
 }
@@ -9923,7 +9928,7 @@ let has_prompted_for_update = false;
 
         // content
         let bookmarks_content = document.createElement('div');
-        bookmarks_content.classList.add('col-main', 'bleh--bookmarks');
+        bookmarks_content.classList.add('col-main', 'bleh--bookmarks', 'not-a-panel');
         bookmarks_content.innerHTML = (`
             <section class="bookmarks-panel">
                 <h2>${trans[lang].gallery.bookmarks.name}</h2>
