@@ -713,6 +713,11 @@ body {
     &[data-bleh--underline_links="true"] {
         --force-underline: underline;
     }
+
+    --display-under-reduced-motion: unset;
+    &[data-bleh--reduced_motion="true"] {
+        --display-under-reduced-motion: none;
+    }
 }
 
 
@@ -3230,6 +3235,7 @@ button.navlist-more {
         color: hsl(var(--c3));
         font-weight: var(--font-weight-bold);
         font-size: var(--font-size-sm);
+        cursor: default;
 
         [data-bleh--profile_header_others="false"] .header--user:not([data-is-own-profile="true"]) &,
         [data-bleh--profile_header_own="false"] [data-is-own-profile="true"] & {
@@ -4230,12 +4236,50 @@ better than the default selector '#app a' i suppose */
 #recent-tracks-section {
     /* add space for the button */
     padding-bottom: calc(var(--card-padding) + 32px + var(--card-gap));
+
+    &.has-refreshed {
+        &:after {
+            animation-name: wash;
+            animation-duration: 2.2s;
+            animation-timing-function: cubic-bezier(0.77, 0.22, 0.18, 1);
+        }
+    }
+
+    &:after {
+        content: '';
+        position: absolute;
+        inset: -2px;
+        border-radius: calc(var(--item-big-radius) + 2px);
+        opacity: 0;
+
+        background-image: linear-gradient(180deg, rgba(0,0,0,0) 0%, hsl(var(--l3-c)) 50%, rgba(0,0,0,0) 100%);
+        pointer-events: none;
+
+        display: var(--display-under-reduced-motion, flex);
+        clear: unset;
+        z-index: 100;
+
+        transition-property: opacity;
+        transition-duration: var(--trans);
+        transition-timing-function: var(--trans-function);
+    }
 }
 #recent-tracks-section + .more-link {
     position: relative;
     top: calc(-1 * (32px + var(--card-gap) + var(--card-padding)));
     margin-bottom: calc(-1 * (32px + var(--card-gap)));
     right: var(--card-padding);
+}
+
+@keyframes wash {
+    from {
+        opacity: 0.15;
+        transform: translateY(-100%);
+    }
+    to {
+        opacity: 0.15;
+        transform: translateY(100%);
+    }
 }
 
 
@@ -12744,7 +12788,6 @@ so this is good enough - use the community docs */
     display: flex;
     flex-direction: column;
     gap: var(--card-gap);
-    flex: 1;
 
 
     .btn {
@@ -12755,11 +12798,13 @@ so this is good enough - use the community docs */
         font-size: 24px;
         line-height: 28px;
         color: hsl(var(--c1));
+        cursor: default;
     }
     h4 {
         font-size: 16px;
         line-height: 20px;
         color: hsl(var(--c1));
+        cursor: default;
     }
     h5 {
         margin: unset;

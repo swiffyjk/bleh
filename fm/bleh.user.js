@@ -10062,6 +10062,8 @@ let has_prompted_for_update = false;
         refresh_tracks(button);
     }
     function refresh_tracks(button) {
+        let panel = page.structure.main.querySelector('#recent-tracks-section');
+        panel.classList.remove('has-refreshed');
         button.setAttribute('disabled', '');
 
         // we need to fetch the tracklist, this function presumes that
@@ -10078,6 +10080,7 @@ let has_prompted_for_update = false;
             console.error('DOC', doc);
 
             deliver_notif('refreshed tracks');
+            panel.classList.add('has-refreshed');
 
             let tracklist_panel = doc.querySelector('#recent-tracks-section .chartlist');
 
@@ -10140,7 +10143,7 @@ let has_prompted_for_update = false;
     function kill_notif(notif) {
         notif.classList.add('fade-out');
         setTimeout(function() {
-            document.getElementById('bleh-notifs').removeChild(notif);
+            page.structure.notifications.removeChild(notif);
         }, 400);
     }
 
