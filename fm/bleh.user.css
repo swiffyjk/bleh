@@ -729,6 +729,9 @@ body {
 
 
 /*     BASIC STYLES     */
+:root {
+    scrollbar-width: thin;
+}
 body {
     color: hsl(var(--c2));
     font-family: var(--font);
@@ -8669,6 +8672,7 @@ text[style^="color: rgb(255, 172, 172)"] {
             max-height: 500px;
             overflow-x: hidden;
             overflow-y: auto;
+            scrollbar-width: thin;
 
             .active {
                 --mask: var(--icon-16-check);
@@ -16358,6 +16362,7 @@ h4 {
 
     &:hover {
         overflow-y: auto;
+        scrollbar-width: thin;
     }
 }
 
