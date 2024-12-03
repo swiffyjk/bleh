@@ -1542,7 +1542,11 @@ last.fm changes as of 2024-05-20 */
     background-position: unset !important;*/
 
     position: relative;
-    overflow: hidden;
+    &:not(
+        .date-panel
+    ) {
+        overflow: hidden;
+    }
 
     &:not(.featured-item-panel, .shh, .view-all-panel, .metadata-list, .bleh--profile-note-panel) {
         background-image: var(--cards-overlay-image, unset) !important;
@@ -3882,6 +3886,10 @@ h2:not(.count, .mask-multi-text, .mask-text, .sr-only, .js-gallery-heading, .top
         color: hsl(var(--c3));
         margin: 0 0 var(--item-list-gap) 0 !important;
         cursor: default;
+    }
+
+    &.metadata-title {
+        font: inherit;
     }
 }
 .user-sidebar-header
@@ -6809,6 +6817,9 @@ very, very, very dated - who looks up a song on ebay? */
 }
 
 .user-sidebar-header {
+    font-size: var(--font-size) !important;
+    line-height: var(--line-height) !important;
+
     /* last.fm has a default 150px */
     min-width: unset;
 }
