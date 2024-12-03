@@ -298,6 +298,8 @@ a,
 
     --l2-c: var(--hue), calc(var(--sat) * 40%), calc(clamp(min(0.5), var(--lit), max(1.5)) * 83%);
     --l3-c: var(--hue), calc(var(--sat) * 50%), calc(clamp(min(0.5), var(--lit), max(1.5)) * 70%);
+    --l3-c-sat: calc(var(--sat) * 50%);
+    --l3-c-lit: calc(clamp(min(0.5), var(--lit), max(1.5)) * 70%);
     --l4-c: var(--hue), calc(var(--sat) * 60%), calc(clamp(min(0.5), var(--lit), max(1.5)) * 50%);
 
     --h2: var(--l2-c);
@@ -319,6 +321,8 @@ a,
         --l4: var(--hue), calc(var(--sat) * 60%), calc(var(--lit) * 45%);
 
         --l3-c: var(--hue), calc(var(--sat) * 50%), calc(clamp(min(0.5), var(--lit), max(1.5)) * 70%);
+        --l3-c-sat: calc(var(--sat) * 50%);
+        --l3-c-lit: calc(clamp(min(0.5), var(--lit), max(1.5)) * 70%);
         --l4-c: var(--hue), calc(var(--sat) * 60%), calc(clamp(min(0.5), var(--lit), max(1.5)) * 45%);
 
         --h2: var(--l2-c);
@@ -345,6 +349,8 @@ a,
 
         --l2-c: var(--hue), calc(var(--sat) * 40%), calc(clamp(min(0.5), var(--lit), max(1.1)) * 63%);
         --l3-c: var(--hue), calc(var(--sat) * 50%), calc(clamp(min(0.5), var(--lit), max(1.1)) * 40%);
+        --l3-c-sat: calc(var(--sat) * 50%);
+        --l3-c-lit: calc(clamp(min(0.5), var(--lit), max(1.1)) * 40%);
         --l4-c: var(--hue), calc(var(--sat) * 60%), calc(clamp(min(0.5), var(--lit), max(1.1)) * 25%);
 
         --h3: var(--hue), calc(var(--sat) * 50%), calc(clamp(min(0.5), var(--lit), max(1.1)) * 80%);
@@ -1530,6 +1536,7 @@ last.fm changes as of 2024-05-20 */
     background-position: unset !important;*/
 
     position: relative;
+    overflow: hidden;
 
     &:not(.featured-item-panel, .shh, .view-all-panel, .metadata-list, .bleh--profile-note-panel) {
         background-image: var(--cards-overlay-image, unset) !important;
@@ -1548,6 +1555,10 @@ last.fm changes as of 2024-05-20 */
             border-top-left-radius: var(--card-radius);
             border-top-right-radius: var(--card-radius);
             pointer-events: none;
+
+            /* fix for no-data-message overriding and stuff */
+            margin: unset;
+            width: unset;
         }
     }
 
@@ -2377,7 +2388,7 @@ li.header-metadata-item--event-attendance {
         &.active {
             position: relative;
             background-color: hsla(var(--h4), 20%);
-            border-radius: var(--item-med-radius);
+            border-radius: var(--item-big-radius);
 
             [data-bleh--theme="light"] & {
                 background-color: hsla(var(--h4), 10%);
@@ -2397,7 +2408,7 @@ li.header-metadata-item--event-attendance {
             display: block;
             width: 32px;
             height: 32px;
-            border-radius: var(--item-med-radius);
+            border-radius: var(--item-big-radius);
         }
 
         .name {
@@ -2693,10 +2704,24 @@ button.navlist-more {
     }
 
     /*&.masthead-nav-control--active,*/
+    [data-bleh--gallery-tab="overview"] .secondary-nav-item--gallery-overview  &,
+    [data-bleh--gallery-tab="bookmarks"] .secondary-nav-item--gallery-bookmarks &,
     &.secondary-nav-item-link.active,
     &.secondary-nav-item-link--active {
         color: hsl(var(--c1)) !important;
         font-weight: var(--font-weight-bold);
+
+        [data-bleh--season="christmas"] &,
+        [data-bleh--season="new_years"] & {
+            --hue-seasonal: -2;
+            --sat-seasonal: 1.3;
+            --lit-seasonal: 0.9;
+
+            --candy-cane-0: hsl(-2, var(--h3-sat), var(--h3-lit));
+            --candy-cane-1: hsl(-2, var(--h3-sat), 80%);
+
+            --hue-gradient: 0% 0% / 20px auto repeat repeating-linear-gradient(87deg, var(--candy-cane-0) 0% 24.9%, var(--candy-cane-1) 25% 50%, var(--candy-cane-1) 50%);
+        }
     }
 
     &:after {
@@ -3130,7 +3155,7 @@ button.navlist-more {
 .artist-header-featured-items-item-video,
 .artist-header-featured-items-item-image {
     background: var(--avatar-generic-background);
-    border-radius: var(--item-med-radius);
+    border-radius: var(--item-big-radius);
     box-shadow: var(--card-shadow);
     overflow: hidden;
 }
@@ -3519,66 +3544,6 @@ button.navlist-more {
 
 
 /* ranks */
-.personal-stats-item--scrobbles[data-bleh--scrobble-milestone] {
-    .header-metadata-item {
-        position: relative;
-
-        &:after {
-            content: '';
-            position: absolute;
-            display: block;
-            top: 0;
-            right: 0;
-            bottom: 0;
-            width: 150px;
-            background: linear-gradient(90deg, transparent 0%, hsla(var(--h3), 20%) 100%);
-            border-top-right-radius: var(--item-med-radius);
-            border-bottom-right-radius: var(--item-med-radius);
-            pointer-events: none;
-        }
-    }
-
-
-    &[data-bleh--scrobble-milestone="15"],
-    &[data-bleh--scrobble-milestone="14"] {
-        .header-metadata-item:after {
-            background: linear-gradient(90deg, transparent 0%, hsla(var(--h4), 60%) 100%);
-        }
-    }
-
-
-    .header-metadata-display {
-        color: hsl(var(--l2-c)) !important;
-        text-shadow: 0 0 20px hsl(var(--h4));
-        padding-left: calc(6px + 4px);
-        position: relative;
-
-        [data-bleh--scrobble-milestone="15"] &,
-        [data-bleh--scrobble-milestone="14"] & {
-            --hue: 35;
-            --sat: 1;
-            --lit: 1;
-
-            [data-bleh--theme="light"] & {
-                text-shadow: 0 0 5px hsla(var(--c1), 40%);
-            }
-        }
-
-        &:before {
-            content: '';
-            display: block;
-            background-color: hsl(var(--l3-c)) !important;
-            width: 6px;
-            height: 6px;
-            border-radius: 50%;
-            position: absolute;
-            left: 0;
-            top: 50%;
-            margin-top: -3px;
-        }
-    }
-}
-
 .chartlist-count-bar[data-bleh--scrobble-milestone] {
     &[data-bleh--scrobble-milestone="15"],
     &[data-bleh--scrobble-milestone="14"] {
@@ -4121,7 +4086,7 @@ better than the default selector '#app a' i suppose */
     background: hsla(var(--b4), 60%);
     width: 100%;
     height: 100%;
-    border-radius: var(--item-med-radius);
+    border-radius: var(--item-big-radius);
 }
 .grid-items__placeholder .grid-items-item--loading {
     background-image: linear-gradient(270deg,hsla(var(--b3),.05),hsla(var(--b3),.3),hsla(var(--b3),.6),hsla(var(--b3),.3),hsla(var(--b3),.05));
@@ -4442,12 +4407,19 @@ better than the default selector '#app a' i suppose */
         --lit-seasonal: 1;
     }
 
+    [data-bleh--season="christmas"] &,
+    [data-bleh--season="new_years"] & {
+        --hue-seasonal: -2;
+        --sat-seasonal: 1.3;
+        --lit-seasonal: 0.9;
+    }
+
     &:before {
         content: '';
         position: absolute;
         inset: 0;
         background: linear-gradient(90deg, transparent 0%, hsla(var(--h3), 40%) 100%);
-        border-radius: var(--item-med-radius);
+        border-radius: var(--item-big-radius);
         transition-property: opacity;
         transition-duration: var(--trans);
         transition-timing-function: var(--trans-function);
@@ -4611,15 +4583,12 @@ better than the default selector '#app a' i suppose */
     display: flex;
     gap: 6px;
     font-weight: inherit;
+    text-decoration: var(--force-underline, none) !important;
 }
 
 .chartlist-name, .chartlist-artist {
     z-index: 5;
     position: relative;
-
-    a {
-        text-decoration: var(--force-underline, none) !important;
-    }
 }
 .obsession-candidate-artist,
 .chartlist-name .feat, .chartlist-artist a, .featured-item-artist, .artist-top-albums-item-artist, .similar-albums-item-artist, .track-similar-tracks-item-artist {
@@ -4912,6 +4881,13 @@ a.chartlist-love-button:after {
         --hue-seasonal: 70;
         --sat-seasonal: 1;
         --lit-seasonal: 1;
+    }
+
+    [data-bleh--season="christmas"] &,
+    [data-bleh--season="new_years"] & {
+        --hue-seasonal: 120;
+        --sat-seasonal: 1.15;
+        --lit-seasonal: 0.95;
     }
 }
 .chartlist-count-bar-link {
@@ -5775,6 +5751,13 @@ button,
 
         [data-bleh--invert_interactable_colour="true"] & {
             --col: hsl(var(--ov-c1)) !important;
+        }
+
+        [data-bleh--season="christmas"] &,
+        [data-bleh--season="new_years"] & {
+            --hue-seasonal: 120;
+            --sat-seasonal: 1.15;
+            --lit-seasonal: 0.95;
         }
     }
 
@@ -6852,7 +6835,7 @@ very, very, very dated - who looks up a song on ebay? */
     line-height: var(--line-height);
     font-size: var(--font-size) !important;
     font-weight: var(--font-weight) !important;
-    border-radius: var(--radius, var(--item-med-radius)) !important;
+    border-radius: var(--radius, var(--item-big-radius)) !important;
     box-shadow: var(--shadow, var(--interact-shadow)) !important;
     border: unset !important;
     height: 32px;
@@ -7113,6 +7096,40 @@ input:is([name="track_name"], [name="artist_name"], [name="album_name"], [name="
         width: 32px;
         height: 32px;
     }
+
+    &[data-modal-id="avatar"] {
+        background: unset;
+        padding: unset;
+        outline: unset;
+        --override-full-shadow: none;
+
+        .full-avatar-wrapper {
+            display: flex;
+            flex-direction: column;
+
+            .full-avatar {
+                height: 100%;
+                background: var(--avatar-generic-background);
+                border-radius: var(--card-radius);
+                box-shadow: var(--menu-shadow);
+                overflow: hidden;
+
+                img {
+                    max-height: 70vh;
+
+                    min-width: 300px;
+                    min-height: 300px;
+
+                    --mask-size: var(--cover-size-300);
+                }
+            }
+
+            .modal-footer {
+                padding: unset;
+                border: unset;
+            }
+        }
+    }
 }
 .date-range-picker-content,
 .dropdown-menu-clickable, .auth-dropdown-menu, .navlist-hidden-list, .modal-body, .library-search-results, .events-filter-location-dropdown {
@@ -7266,6 +7283,7 @@ input:is([name="track_name"], [name="artist_name"], [name="album_name"], [name="
 
     width: 32px !important;
     height: 32px !important;
+    margin: unset !important;
 
     outline: 3px solid hsl(var(--b6)) !important;
 
@@ -8397,7 +8415,7 @@ text[style^="color: rgb(255, 172, 172)"] {
 
                 margin: 0 -6px;
                 padding: 0 6px;
-                border-radius: var(--item-med-radius);
+                border-radius: var(--item-big-radius);
                 transition-property: background-color;
                 transition-duration: var(--trans);
                 transition-timing-function: var(--trans-function);
@@ -8756,7 +8774,7 @@ text[style^="color: rgb(255, 172, 172)"] {
                     height: 60px;
                     background: var(--avatar-generic-background);
                     box-shadow: var(--card-shadow);
-                    border-radius: var(--item-med-radius);
+                    border-radius: var(--item-big-radius);
                     overflow: hidden;
 
                     img {
@@ -9222,7 +9240,7 @@ text[style^="color: rgb(0, 0, 0)"] {
 }
 .other-obsession-artwork,
 .image-list-item, .featured-item-art .cover-art, .globalchart .globalchart-playlink .cover-art {
-    border-radius: var(--item-med-radius);
+    border-radius: var(--item-big-radius);
     box-shadow: var(--card-shadow);
     overflow: hidden;
     aspect-ratio: 1 / 1;
@@ -9269,7 +9287,7 @@ text[style^="color: rgb(0, 0, 0)"] {
         top: 0;
         right: 0;
         z-index: 3;
-        border-bottom-left-radius: var(--item-med-radius);
+        border-bottom-left-radius: var(--item-big-radius);
 
         display: var(--show-icon);
         width: calc(16px + (8px * 2));
@@ -9353,7 +9371,7 @@ text[style^="color: rgb(0, 0, 0)"] {
 .artist-similar-artists-sidebar-item-image,
 .music-bookmarks-artists-item-image, .music-bookmarks-albums-item-image,
 .resource-list--release-list-item-image, .artist-top-albums-item-image, .similar-albums-item-image, .source-album-art .cover-art, .track-similar-tracks-item-image, .similar-items-sidebar-item-image {
-    border-radius: var(--item-med-radius);
+    border-radius: var(--item-big-radius);
     box-shadow: var(--card-shadow);
     overflow: hidden;
     background: var(--avatar-generic-background);
@@ -9795,7 +9813,7 @@ text[style^="color: rgb(0, 0, 0)"] {
 .user-list-item {
     width: 100%;
     padding: 0 var(--item-list-gap);
-    border-radius: var(--item-med-radius);
+    border-radius: var(--item-big-radius);
 
     &.listener-list-item {
         padding-left: calc(var(--item-list-gap) + 20px + var(--item-list-gap));
@@ -10302,7 +10320,7 @@ table.table tr:nth-child(2n) td {
 }
 .obsession-history-item-inner {
     background: var(--avatar-generic-background);
-    border-radius: var(--item-med-radius);
+    border-radius: var(--item-big-radius);
     box-shadow: var(--card-shadow);
     overflow: hidden;
     height: 245px;
@@ -10648,102 +10666,6 @@ table.table tr:nth-child(2n) td {
 
 
 
-/*     ABOUT THIS ARTIST     */
-.gallery-preview-missing-image,
-.gallery-preview-image {
-    border-radius: var(--item-med-radius);
-    box-shadow: var(--card-shadow);
-    overflow: hidden;
-    aspect-ratio: 1 / 1;
-    width: var(--w);
-    height: var(--w);
-    right: unset !important;
-}
-.gallery-preview-image--0 {
-    border-radius: var(--item-big-radius);
-    --w: 240px;
-    z-index: 3;
-}
-.gallery-preview-missing-image--1, .gallery-preview-missing-image--2,
-.gallery-preview-image--1, .gallery-preview-image--2 {
-    background-color: hsla(var(--b4), 40%);
-    --w: 240px;
-    top: calc(15px * var(--mult));
-    left: calc(15px * var(--mult));
-}
-:is(.gallery-preview-image--1, .gallery-preview-image--2) img {
-    filter: brightness(calc(0.8 - (0.3 * var(--mult))));
-}
-
-.about-artist-images {
-    width: 270px;
-}
-.gallery-preview {
-    overflow: visible;
-    padding-top: unset;
-    height: 270px;
-    width: 270px;
-}
-.gallery-preview:after {
-    display: none;
-}
-.gallery-preview-missing-image--1,
-.gallery-preview-image--1 {
-    --mult: 1;
-    z-index: 2;
-}
-.gallery-preview-missing-image--2,
-.gallery-preview-image--2 {
-    --mult: 2;
-    z-index: 1;
-}
-
-.gallery-preview-missing-image--3,
-.gallery-preview-more, .gallery-preview-image--3 {
-    display: none;
-}
-
-
-.gallery-preview-cta {
-    background: var(--avatar-generic-background) !important;
-    box-sizing: border-box;
-    border-radius: var(--item-med-radius);
-    padding: var(--card-padding);
-    font-weight: var(--font-weight-medium);
-}
-
-
-.about-artist-images, .about-artist-info {
-    padding: unset;
-}
-.about-artist-row {
-    margin: unset;
-    display: flex;
-    gap: var(--card-gap);
-}
-
-
-.about-artist-name {
-    letter-spacing: unset;
-    font-size: 24px;
-    line-height: 28px;
-    font-weight: var(--font-weight-medium);
-    color: hsl(var(--c1));
-}
-.about-artist-listeners {
-    color: hsl(var(--c2));
-    margin-top: unset;
-    margin-bottom: var(--card-gap);
-    cursor: default;
-}
-.about-artist .wiki-block, .about-artist .wiki-block-cta {
-    margin-top: var(--card-gap);
-    margin-bottom: unset;
-}
-
-
-
-
 /*     OBSESSION     */
 .obsession-container {
     height: 100vh;
@@ -11010,7 +10932,7 @@ table.table tr:nth-child(2n) td {
 
 .expanded-image,
 .event-poster-inner-wrap {
-    border-radius: var(--item-med-radius);
+    border-radius: var(--item-big-radius);
     box-shadow: var(--card-shadow);
     overflow: hidden;
 }
@@ -12853,26 +12775,6 @@ code, kbd, samp {
 .screen-row {
     display: flex;
 
-    .screen-wrap {
-        display: flex;
-        align-items: center;
-        gap: 12px;
-        flex: 1;
-
-        .screen {
-            width: 120px;
-            aspect-ratio: 15 / 9;
-            border: 3px solid hsl(var(--b4));
-            border-radius: var(--item-med-radius);
-        }
-
-        .text {
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
-        }
-    }
-
     .actions {
         display: flex;
         align-items: center;
@@ -13122,7 +13024,7 @@ code, kbd, samp {
         max-height: 101px;
         background-color: hsl(var(--b6));
         position: relative;
-        border-radius: var(--item-med-radius);
+        border-radius: var(--item-big-radius);
         overflow: hidden;
 
         .preview-inner {
@@ -13149,7 +13051,7 @@ code, kbd, samp {
                     width: 90px;
                     height: 6px;
                     background-color: hsl(var(--c1));
-                    border-radius: var(--item-med-radius);
+                    border-radius: var(--item-big-radius);
                 }
 
                 .preview-text {
@@ -13286,7 +13188,7 @@ code, kbd, samp {
 
 .swatch {
     background-color: var(--col, hsl(var(--b6)));
-    border-radius: var(--item-med-radius);
+    border-radius: var(--item-big-radius);
 }
 
 .palette.albums {
@@ -13324,7 +13226,7 @@ code, kbd, samp {
 .inner-preview {
     background-color: hsl(var(--b6));
     padding: var(--card-gap);
-    border-radius: var(--item-med-radius);
+    border-radius: var(--item-big-radius);
 
     [data-bleh--theme="light"] &,
     [data-bleh--theme="oled"] & {
@@ -13495,7 +13397,7 @@ input[type="range"] {
     display: flex;
     background: hsla(var(--b6), 20%);
     box-shadow: 0 0 0 1px var(--card-border-base) inset;
-    border-radius: var(--item-med-radius);
+    border-radius: var(--item-big-radius);
     width: calc(100% - (30px + var(--card-gap))); /* 30px = value width */
     height: 20px;
     position: absolute;
@@ -13506,7 +13408,7 @@ input[type="range"] {
         display: flex;
         width: var(--percent);
         background-color: hsl(var(--h3));
-        border-radius: var(--item-med-radius);
+        border-radius: var(--item-big-radius);
         box-shadow: 0 0 0 1px hsla(var(--h2), 40%) inset;
     }
 
@@ -13515,7 +13417,7 @@ input[type="range"] {
         width: 12px;
         background-color: hsl(var(--h4));
         border: 2px solid hsl(var(--b5));
-        border-radius: var(--item-med-radius);
+        border-radius: var(--item-big-radius);
         margin: -5px -5px;
     }
 
@@ -13874,7 +13776,7 @@ input[type="range"]::-moz-range-progress {
             background-color: hsla(var(--b4), 40%);
             padding: 6px 12px;
             min-height: 24px;
-            border-radius: var(--item-small-radius);
+            border-radius: var(--item-big-radius);
             display: flex;
             align-items: center;
             gap: 12px;
@@ -13975,7 +13877,7 @@ input[type="range"]::-moz-range-progress {
             .grid-item {
                 width: 224px;
                 height: 224px;
-                border-radius: var(--item-small-radius);
+                border-radius: var(--item-big-radius);
                 background-color: hsl(var(--b4));
                 position: relative;
                 color: hsl(var(--c3));
@@ -14160,7 +14062,7 @@ input[type="range"]::-moz-range-progress {
         width: 12px;
         height: 12px;
         left: 7px;
-        border-radius: var(--item-med-radius);
+        border-radius: var(--item-big-radius);
         background: var(--col);
 
         transition-property: left, background;
@@ -14183,6 +14085,13 @@ input[type="range"]::-moz-range-progress {
         &:after {
             border: 2px solid hsl(var(--c1), 65%);
             box-shadow: 0 0 30px hsl(var(--c1), 30%);
+        }
+
+        [data-bleh--season="christmas"] &,
+        [data-bleh--season="new_years"] & {
+            --hue-seasonal: -2;
+            --sat-seasonal: 1.3;
+            --lit-seasonal: 0.9;
         }
     }
 
@@ -14312,6 +14221,25 @@ input[type="range"]::-moz-range-progress {
     background-clip: text;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
+
+    [data-bleh--season="christmas"] &,
+    [data-bleh--season="new_years"] & {
+        --hue-seasonal: -2;
+        --sat-seasonal: 1.3;
+        --lit-seasonal: 0.9;
+
+        --candy-cane-0: hsl(-2, var(--l3-c-sat), var(--l3-c-lit));
+        --candy-cane-1: hsl(-2, var(--l3-c-sat), 80%);
+
+        background: 0% 0% / 150px auto repeat repeating-linear-gradient(45deg, var(--candy-cane-0) 0% 24.9%, var(--candy-cane-1) 25% 50%, var(--candy-cane-1) 50%);
+        background-clip: text;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+
+        [data-bleh--theme="light"] & {
+            --candy-cane-1: hsl(-2, var(--l3-c-sat), 60%);
+        }
+    }
 }
 
 
@@ -15105,7 +15033,7 @@ button.bleh--gallery-bookmark-image-btn {
         .default-flag {
             padding: 0 4px;
             background-color: hsl(var(--b6));
-            border-radius: var(--item-med-radius);
+            border-radius: var(--item-big-radius);
             font-size: 12px;
             width: 45px;
             text-align: center;
@@ -16028,7 +15956,7 @@ button.bleh--gallery-bookmark-image-btn {
 .user-top-panel {
     padding: calc(var(--card-gap) * 2) calc(var(--card-gap) * 6);
     background-color: hsl(var(--b6));
-    border-radius: var(--item-med-radius);
+    border-radius: var(--item-big-radius);
     user-select: none;
 
     display: flex;
@@ -16154,8 +16082,8 @@ h4 {
 .taste-badge,
 .new-badge {
     display: inline-flex;
-    background-color: hsla(var(--h4), 40%);
-    box-shadow: 0 0 20px hsla(var(--h4), 60%);
+    background-color: hsl(var(--h4), 40%);
+    box-shadow: 0 0 20px hsl(var(--h4), 40%);
     color: hsl(var(--l2-c));
 
     font-size: var(--font-size-sm);
@@ -16390,54 +16318,6 @@ h5 {
 }
 h4 {
     color: hsl(var(--c1));
-}
-
-
-
-
-#bleh--window-avatar--dialog {
-    width: fit-content;
-    max-width: unset;
-}
-.modal--avatar {
-    background: unset !important;
-    padding: unset !important;
-    outline: unset !important;
-    --override-full-shadow: none !important;
-
-    .modal-title {
-        display: none;
-    }
-    .modal-inner-content {
-        margin: unset !important;
-
-        .full-avatar-wrapper {
-            display: flex;
-            flex-direction: column;
-
-            .full-avatar {
-                height: 100%;
-                background: var(--avatar-generic-background);
-                border-radius: var(--card-radius);
-                box-shadow: var(--menu-shadow);
-                overflow: hidden;
-
-                img {
-                    max-height: 70vh;
-
-                    min-width: 300px;
-                    min-height: 300px;
-
-                    --mask-size: var(--cover-size-300);
-                }
-            }
-
-            .modal-footer {
-                padding: unset;
-                border: unset;
-            }
-        }
-    }
 }
 
 
@@ -17700,7 +17580,7 @@ section > .section-controls .subpage-title {
             border-radius: 50%;
 
             .artist & {
-                border-radius: 6px;
+                border-radius: var(--item-big-radius);
             }
         }
 
@@ -17750,7 +17630,7 @@ section > .section-controls .subpage-title {
             align-items: center;
             height: 20px;
             background-color: hsl(var(--b4));
-            border-radius: 6px;
+            border-radius: var(--item-big-radius);
 
             .mockup-text {
                 display: flex;
@@ -17797,7 +17677,7 @@ section > .section-controls .subpage-title {
             padding: 13px;
             width: 100%;
             background-color: hsl(var(--b5));
-            border-radius: 6px;
+            border-radius: var(--item-big-radius);
 
             &.main {
                 flex: 1;

@@ -120,8 +120,7 @@ let lang_info = {
     de: {
         name: 'Deutsch',
         by: ['inozom', 'cutensilly'],
-        last_updated:  'latest',
-        new: true
+        last_updated:  '2024-10-15'
     },
     pl: {
         name: 'Polski',
@@ -584,8 +583,8 @@ const trans = {
                     bio: 'Splits track and album titles into their individual tags such as guest features, versions, remixes.'
                 },
                 show_guest_features: {
-                    name: 'Display guest features in title and artist',
-                    bio: 'Turning off will remove from title and prefer artist field.'
+                    name: 'Show featured artists in track title',
+                    bio: 'Featured artists are always shown below the title regardless.'
                 },
                 stacked_chartlist_info: {
                     name: 'Stack track name and title',
@@ -2174,20 +2173,20 @@ moment.updateLocale('de', {
     relativeTime : {
         future: 'in %s',
         past:   'vor %s',
-        s  : 'ein paar Sekunden',
-        ss : '%d Sekunden',
-        m:  'eine Minute',
-        mm: '%d Minuten',
-        h:  'eine Stunde',
-        hh: '%d Stunden',
-        d:  'ein Tag',
-        dd: '%d Tagen',
-        w:  'eine Woche',
-        ww: '%d Wochen',
-        M:  'im Monat',
-        MM: '%d Monate',
-        y:  'ein Jahr',
-        yy: '%d Jahre'
+        s:      'ein paar Sekunden',
+        ss:     '%d Sekunden',
+        m:      'eine Minute',
+        mm:     '%d Minuten',
+        h:      'eine Stunde',
+        hh:     '%d Stunden',
+        d:      'ein Tag',
+        dd:     '%d Tagen',
+        w:      'eine Woche',
+        ww:     '%d Wochen',
+        M:      'im Monat',
+        MM:     '%d Monate',
+        y:      'ein Jahr',
+        yy:     '%d Jahre'
     }
 });
 
@@ -2214,11 +2213,11 @@ let seasonal_events = [
     {
         id: 'new_years',
         start: 'y0-01-01T00:00:00+0000',
-        end: 'y0-01-10T23:59:59+0000',
+        end: 'y0-01-12T23:59:59+0000',
 
         snowflakes: {
             state: true,
-            count: 50
+            count: 45
         }
     },
     {
@@ -2255,7 +2254,7 @@ let seasonal_events = [
 
         snowflakes: {
             state: true,
-            count: 2
+            count: 4
         }
     },
     {
@@ -2265,7 +2264,7 @@ let seasonal_events = [
 
         snowflakes: {
             state: true,
-            count: 16
+            count: 22
         }
     },
     {
@@ -7234,14 +7233,14 @@ let has_prompted_for_update = false;
                             })"></button>
                         </div>
                     </div>
-                    <div class="toggle-container" id="container-hue_from_album">
+                    <div class="toggle-container" id="container-hue_from_album" onclick="_update_item('hue_from_album')">
                         <button class="btn reset" onclick="_reset_item('hue_from_album')">${trans[lang].settings.reset}</button>
                         <div class="heading">
                             <h5>${trans[lang].settings.customise.hue_from_album.name}</h5>
                             <p>${trans[lang].settings.customise.hue_from_album.bio}</p>
                         </div>
                         <div class="toggle-wrap">
-                            <button class="toggle" id="toggle-hue_from_album" onclick="_update_item('hue_from_album')" aria-checked="true">
+                            <button class="toggle" id="toggle-hue_from_album" aria-checked="true">
                                 <div class="dot"></div>
                             </button>
                         </div>
@@ -7762,7 +7761,7 @@ let has_prompted_for_update = false;
             return (`
                 <div class="bleh--panel">
                     <h4 class="top-header">${trans[lang].settings.text.name}</h4>
-                    <h4>${trans[lang].settings.text.font.name} <div class="new-badge">${trans[lang].settings.new}</div></h4>
+                    <h4>${trans[lang].settings.text.font.name}</h4>
                     <div class="text-container" id="container-font">
                         <button class="btn reset" onclick="_reset_item('font')">${trans[lang].settings.reset}</button>
                         <div class="heading content-form">
@@ -8088,7 +8087,7 @@ let has_prompted_for_update = false;
                         </div>
                     </div>
                     <div class="sep"></div>
-                    <h4>${trans[lang].settings.music.profile_shortcut.name} <div class="new-badge">${trans[lang].settings.new}</div></h4>
+                    <h4>${trans[lang].settings.music.profile_shortcut.name}</h4>
                     <p>${trans[lang].settings.music.profile_shortcut.bio}</p>
                     <div class="text-container" id="container-profile_shortcut">
                         <button class="btn reset" onclick="_reset_item('profile_shortcut')">${trans[lang].settings.reset}</button>
@@ -12796,18 +12795,23 @@ let has_prompted_for_update = false;
         expand_avatar(src);
     }
     function expand_avatar(src) {
-        dialog_legacy('avatar', '', (`
-            <div class="full-avatar-wrapper">
-                <div class="full-avatar">
-                    <img src="${src}">
+        dialog({
+            id: 'avatar',
+            body: (`
+                <div class="full-avatar-wrapper">
+                    <div class="full-avatar">
+                        <img src="${src}">
+                    </div>
+                    <div class="modal-footer">
+                        <a class="btn primary open" href="${src}" target="_blank">
+                            ${trans[lang].profile.open_avatar}
+                        </a>
+                    </div>
                 </div>
-                <div class="modal-footer">
-                    <a class="btn primary open" href="${src}" target="_blank">
-                        ${trans[lang].profile.open_avatar}
-                    </a>
-                </div>
-            </div>
-        `), true, 'avatar');
+            `),
+            type: 'avatar',
+            has_overlays: false
+        });
     }
 
 
