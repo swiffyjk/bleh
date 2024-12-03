@@ -13,6 +13,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Noto+Color+Emoji&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Comfortaa:wght@700&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Ubuntu+Sans:ital,wght@0,100..800;1,100..800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Work+Sans:ital,wght@0,100..900;1,100..900&display=swap');
 
 body {
     --version-build: '2024.1202';
@@ -15816,6 +15817,8 @@ button.bleh--gallery-bookmark-image-btn {
 
     .bleh-modal {
         max-width: 800px;
+        position: relative;
+        z-index: 9999;
 
         &[data-modal-type="setup"] {
             width: 1000px;

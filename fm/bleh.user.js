@@ -9071,7 +9071,7 @@ let has_prompted_for_update = false;
             modal.appendChild(modal_close);
 
             // allow clicking out of the modal to close
-            page.structure.dialogs.setAttribute('onclick', '_dialog_rm({all: true})');
+            page.structure.dialogs.setAttribute('onclick', '_dialog_rm({all: true, modal_bg: true})');
         } else {
             page.structure.dialogs.removeAttribute('onclick');
         }
@@ -9094,18 +9094,28 @@ let has_prompted_for_update = false;
     }
     unsafeWindow._dialog_rm = function({
         id = null,
-        all = false
+        all = false,
+        modal_bg = false
     }) {
         dialog_rm({
             id: id,
-            all: all
+            all: all,
+            modal_bg: modal_bg
         });
     }
     function dialog_rm({
         id = null,
-        all = false
+        all = false,
+        modal_bg = false
     }) {
         if (all) {
+            // prevents clicks inside modal being broken
+            if (modal_bg) {
+                console.log(event);
+                if (event.target.classList[0] != 'bleh-modals')
+                    return;
+            }
+
             log('requested kill all', 'window');
             console.info(dialogs);
             for (let dialog in dialogs) {
