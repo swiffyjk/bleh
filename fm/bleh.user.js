@@ -14218,7 +14218,7 @@ let has_prompted_for_update = false;
                             <h5>${trans[lang].settings.inbuilt.charts.artists.timeframe.name}</h5>
                         </div>
                         <div class="select-wrap custom-selector" id="id_chart_range_top_artists_select">
-                            ${original_chart_settings.artists.timeframe}
+                            ${original_chart_settings.timeframe}
                         </div>
                     </div>
                     <div class="select-container">
@@ -14226,7 +14226,7 @@ let has_prompted_for_update = false;
                             <h5>${trans[lang].settings.inbuilt.charts.artists.style.name}</h5>
                         </div>
                         <div class="select-wrap custom-selector" id="id_chart_style_top_artists_select">
-                            ${original_chart_settings.artists.style}
+                            ${original_chart_settings.style}
                         </div>
                     </div>
                     <div class="select-container">
@@ -14234,7 +14234,7 @@ let has_prompted_for_update = false;
                             <h5>${trans[lang].settings.inbuilt.charts.artists.length.name}</h5>
                         </div>
                         <div class="select-wrap custom-selector" id="id_artists_image_grid_length_select">
-                            ${original_chart_settings.artists.length}
+                            ${original_chart_settings.length}
                         </div>
                     </div>
                     <div class="sep"></div>

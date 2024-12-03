@@ -14091,10 +14091,10 @@ input[type="range"]::-moz-range-progress {
             left: calc(48px - 7px - 12px);
         }
 
-        &:after {
+        /*&:after {
             border: 2px solid hsl(var(--c1), 65%);
             box-shadow: 0 0 30px hsl(var(--c1), 30%);
-        }
+        }*/
 
         [data-bleh--season="christmas"] &,
         [data-bleh--season="new_years"] & {
@@ -14104,7 +14104,7 @@ input[type="range"]::-moz-range-progress {
         }
     }
 
-    &:after {
+    /*&:after {
         content: '';
         position: absolute;
         inset: -5px;
@@ -14124,7 +14124,7 @@ input[type="range"]::-moz-range-progress {
             opacity: 1;
             transition: none;
         }
-    }
+    }*/
 }
 
 
@@ -15144,7 +15144,7 @@ button.bleh--gallery-bookmark-image-btn {
     &.album-overview-cover-art-action-row a,
     &.tab-container button:not(.tab--selected),
     .footer-language .mimic-link,
-    .btn:not([aria-checked="true"]) {
+    .btn:not(.toggle, [aria-checked="true"]) {
         --bg: transparent;
         --bg-hov: hsla(var(--b4), 60%);
         --bg-atv: hsla(var(--b4), 80%);
