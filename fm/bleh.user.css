@@ -4040,6 +4040,10 @@ better than the default selector '#app a' i suppose */
     /*overflow: hidden;*/
     box-shadow: var(--standout-shadow);
 
+    transition-property: transform;
+    transition-duration: var(--trans);
+    transition-timing-function: var(--trans-function);
+
     &:before {
         content: '';
         position: absolute;
@@ -4056,10 +4060,16 @@ better than the default selector '#app a' i suppose */
     }
 
     &:hover {
+        transition-duration: 0.1s !important;
+
         &:before {
             opacity: 1;
             transition: none;
         }
+    }
+
+    &:active {
+        transform: scale(0.98);
     }
 }
 
@@ -8987,19 +8997,19 @@ text[style^="color: rgb(255, 172, 172)"] {
 
 
 .top-item-overview, .listening-report-top-item-wrap--version-3, .top-new-item-image img, .report-box-container, .top-new-item-type, .listening-report-top-item-badge, .mainstream-score--artist-thumb img {
-    border-radius: var(--item-med-radius);
+    border-radius: var(--item-big-radius);
 }
 .music-decades-chart-container rect, .highcharts-label-box {
-    rx: var(--item-med-radius) !important;
-    ry: var(--item-med-radius) !important;
+    rx: var(--item-big-radius) !important;
+    ry: var(--item-big-radius) !important;
 }
 .top-new-item {
-    border-top-left-radius: var(--item-med-radius);
-    border-top-right-radius: var(--item-med-radius);
+    border-top-left-radius: var(--item-big-radius);
+    border-top-right-radius: var(--item-big-radius);
 }
 .top-new-item--footer {
-    border-bottom-left-radius: var(--item-med-radius);
-    border-bottom-right-radius: var(--item-med-radius);
+    border-bottom-left-radius: var(--item-big-radius);
+    border-bottom-right-radius: var(--item-big-radius);
 }
 
 .report-box-container {
@@ -9010,7 +9020,7 @@ text[style^="color: rgb(255, 172, 172)"] {
     .tag-label {
         background: hsl(var(--h3));
         color: hsl(var(--b7));
-        border-radius: var(--item-small-radius);
+        border-radius: var(--item-big-radius);
         --left: 8px;
 
         &.tag-label--scrobble {

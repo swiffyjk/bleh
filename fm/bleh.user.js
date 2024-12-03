@@ -4128,7 +4128,7 @@ let has_prompted_for_update = false;
         };
 
         charts_panel.innerHTML = (`
-            <h3>${trans[lang].settings.inbuilt.charts.name}</h3>
+            <h4>${trans[lang].settings.inbuilt.charts.name}</h4>
             <form action="${root}settings#update-chart" name="chart-form" method="post">
                 <input type="hidden" name="csrfmiddlewaretoken" value="${token}">
                 <div class="inner-preview pad">
@@ -4545,7 +4545,7 @@ let has_prompted_for_update = false;
         document.getElementById('update-profile').outerHTML = '';
 
         update_picture.innerHTML = (`
-            <h3>${trans[lang].settings.inbuilt.profile.name}</h3>
+            <h4>${trans[lang].settings.inbuilt.profile.name}</h4>
             <div class="profile-container">
                 <div class="avatar-side">
                     <div class="avatar image-upload-preview" onclick="_open_avatar_changer('${token}')">
@@ -4788,7 +4788,7 @@ let has_prompted_for_update = false;
         }
 
         privacy_panel.innerHTML = (`
-            <h3>${trans[lang].settings.inbuilt.privacy.name}</h3>
+            <h4>${trans[lang].settings.inbuilt.privacy.name}</h4>
             <form action="${root}settings/privacy" name="privacy" method="post">
                 <input type="hidden" name="csrfmiddlewaretoken" value="${token}">
                 <div class="inner-preview pad">
@@ -7880,7 +7880,7 @@ let has_prompted_for_update = false;
                     </div>
                 </div>
                 <div class="bleh--panel">
-                    <h3>Feature Flags</h3>
+                    <h4>Feature Flags</h4>
                     <div class="feature-flags" id="feature-flags"></div>
                 </div>
                 `);
