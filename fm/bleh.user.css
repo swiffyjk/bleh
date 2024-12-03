@@ -3858,8 +3858,8 @@ h2:not(.count, .mask-multi-text, .mask-text, .sr-only, .js-gallery-heading, .top
 .obsession-search-result-header
 {
     color: hsl(var(--c1));
-    font-size: var(--font-size);
-    line-height: var(--line-height);
+    font-size: 16px;
+    line-height: 20px;
     /*margin-bottom: 12px;*/
     font-weight: var(--font-weight-bold);
     letter-spacing: unset;
@@ -5843,8 +5843,7 @@ button,
 /*     BUTTON HAS ICON     */
 .lastfm-bulk-edit-form-group-controls button,
 .about-guest-feature,
-.refresh-tracklist-btn,
-.search-similar-btn, .obsession-btn,
+.search-similar-btn, .obsession-btn, .refresh-tracklist-btn, .panel-settings-button,
 .image-open-button,
 .image-details :is(.bleh--gallery-bookmark-image-btn, .gallery-image-report, .gallery-image-delete button),
 .btn.back,
@@ -6097,7 +6096,6 @@ button,
 /*     PROFILE     */
 .profile-header-set-obsession:before,
 .share-button-profile:before, .panel-settings-button:before,
-.refresh-tracklist-btn:before,
 .stationlink-list .stationlink:before, .inline-section-control:before,
 .header .header-message-user:before,
 /*     TRACK/ALBUM/ARTIST HEADER     */
@@ -6244,7 +6242,7 @@ span.header-new-gallery-inner a:before,
 }
 
 
-.share-chart .share-button-profile, .panel-settings-button {
+.share-chart .share-button-profile {
     position: absolute;
     width: 32px;
     height: 32px;
@@ -6268,7 +6266,6 @@ span.header-new-gallery-inner a:before,
 }
 .refresh-tracklist-btn {
     --mask: var(--icon-16-refresh);
-    position: absolute;
 
     &[disabled]:before {
         --mask: var(--icon-16-spinner);
@@ -6277,9 +6274,7 @@ span.header-new-gallery-inner a:before,
 }
 
 /* align settings button */
-.refresh-tracklist-btn,
-.dropdown-menu-clickable-button.section-control, .section-control,
-.panel-settings-button {
+.dropdown-menu-clickable-button.section-control, .section-control {
     top: var(--card-padding);
     right: var(--card-padding);
     margin: unset;
@@ -6287,7 +6282,6 @@ span.header-new-gallery-inner a:before,
 }
 
 /* align dropdown next to settings button */
-#recent-tracks-section:has(.panel-settings-button) .refresh-tracklist-btn,
 .section-with-settings.section-with-share .section-control {
     /*right: calc(var(--card-padding) + 32px + 4px + 36px);*/
     /* 32px refers to the settings button,
@@ -15345,6 +15339,12 @@ button.bleh--gallery-bookmark-image-btn {
                 --font-size: 0;
                 width: 40px;
                 --mask: var(--icon-16-dots);
+            }
+        }
+
+        &.dropdown-menu-clickable-button {
+            &:before {
+                --show-icon: none;
             }
         }
     }
