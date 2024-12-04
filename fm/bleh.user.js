@@ -22,7 +22,7 @@
 
 let version = {
     build: '2024.1204',
-    sku: 'iroha',
+    sku: 'glacier',
     feature_flags: {
         bleh_settings_tabs: {
             default: false,
