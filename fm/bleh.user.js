@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         bleh
 // @namespace    http://last.fm/
-// @version      2024.1201
+// @version      2024.1204
 // @description  bleh!!! ^-^
 // @author       kate
 // @match        https://www.last.fm/*
@@ -15,13 +15,14 @@
 // @require      https://unpkg.com/tippy.js@6
 // @require      https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.30.1/moment.min.js
 // @require      https://katelyynn.github.io/bleh/fm/js/snow.js?a=b
+// @require      https://katelyynn.github.io/bleh/fm/js/vibrant/Vibrant.min.js
 // @require      https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js
 // @require      https://cdn.jsdelivr.net/npm/chartjs-adapter-moment@^1
 // ==/UserScript==
 
 let version = {
-    build: '2024.1201',
-    sku: 'iroha',
+    build: '2024.1204',
+    sku: 'glacier',
     feature_flags: {
         bleh_settings_tabs: {
             default: false,
@@ -94,9 +95,19 @@ let version = {
             date: '2024-11-11'
         },
         unify_top_listeners: {
-            default: false,
+            default: true,
             name: 'Unify top listeners',
             date: '2024-11-15'
+        },
+        hide_chartlist_more: {
+            default: false,
+            name: 'Hide chartlist more button, accessible the same with right-clicking',
+            date: '2024-12-03'
+        },
+        glacier_library: {
+            default: false,
+            name: 'Glacier library (new library beta)',
+            date: '2024-12-04'
         }
     }
 }
@@ -119,8 +130,7 @@ let lang_info = {
     de: {
         name: 'Deutsch',
         by: ['inozom', 'cutensilly'],
-        last_updated:  'latest',
-        new: true
+        last_updated:  '2024-10-15'
     },
     pl: {
         name: 'Polski',
@@ -583,8 +593,8 @@ const trans = {
                     bio: 'Splits track and album titles into their individual tags such as guest features, versions, remixes.'
                 },
                 show_guest_features: {
-                    name: 'Display guest features in title and artist',
-                    bio: 'Turning off will remove from title and prefer artist field.'
+                    name: 'Show featured artists in track title',
+                    bio: 'Featured artists are always shown below the title regardless.'
                 },
                 stacked_chartlist_info: {
                     name: 'Stack track name and title',
@@ -2173,20 +2183,20 @@ moment.updateLocale('de', {
     relativeTime : {
         future: 'in %s',
         past:   'vor %s',
-        s  : 'ein paar Sekunden',
-        ss : '%d Sekunden',
-        m:  'eine Minute',
-        mm: '%d Minuten',
-        h:  'eine Stunde',
-        hh: '%d Stunden',
-        d:  'ein Tag',
-        dd: '%d Tagen',
-        w:  'eine Woche',
-        ww: '%d Wochen',
-        M:  'im Monat',
-        MM: '%d Monate',
-        y:  'ein Jahr',
-        yy: '%d Jahre'
+        s:      'ein paar Sekunden',
+        ss:     '%d Sekunden',
+        m:      'eine Minute',
+        mm:     '%d Minuten',
+        h:      'eine Stunde',
+        hh:     '%d Stunden',
+        d:      'ein Tag',
+        dd:     '%d Tagen',
+        w:      'eine Woche',
+        ww:     '%d Wochen',
+        M:      'im Monat',
+        MM:     '%d Monate',
+        y:      'ein Jahr',
+        yy:     '%d Jahre'
     }
 });
 
@@ -2213,11 +2223,11 @@ let seasonal_events = [
     {
         id: 'new_years',
         start: 'y0-01-01T00:00:00+0000',
-        end: 'y0-01-10T23:59:59+0000',
+        end: 'y0-01-14T23:59:59+0000',
 
         snowflakes: {
             state: true,
-            count: 50
+            count: 45
         }
     },
     {
@@ -2254,7 +2264,7 @@ let seasonal_events = [
 
         snowflakes: {
             state: true,
-            count: 2
+            count: 4
         }
     },
     {
@@ -2264,7 +2274,7 @@ let seasonal_events = [
 
         snowflakes: {
             state: true,
-            count: 16
+            count: 22
         }
     },
     {
@@ -2274,7 +2284,7 @@ let seasonal_events = [
 
         snowflakes: {
             state: true,
-            count: 70
+            count: 60
         }
     }
 ];
@@ -2340,6 +2350,13 @@ let cute = ['cutensilly', 'inozom'];
 
 // require page reload
 let reload_pending = false;
+
+// lookup
+let last_lookup;
+let next_lookup;
+
+let dialogs = {};
+let notifications = {};
 
 tippy.setDefaultProps({
     arrow: false,
@@ -2555,10 +2572,6 @@ let profile_badges = {
             name: '#1 glaive fan'
         }
     ],
-    'peoplepleasr': {
-        type: 'cat',
-        name: 'it\'s a kitty!!'
-    },
     'twolay': [
         {
             type: 'cat',
@@ -3036,7 +3049,10 @@ let root = '';
 let recent_activity_list;
 
 // page type
+let last_page_type;
+let last_page_subpage;
 let page = {
+    initial: '',
     type: '',
     name: '',
     sister: '',
@@ -3044,18 +3060,26 @@ let page = {
     subpage: '',
     avatar: '',
     corrected: false,
+    token: '',
     structure: {
+        wrapper: null,
         container: null,
         row: null,
         main: null,
         side: null,
         nav: null,
-        content_top: null
+        content_top: null,
+        glacier: {}
     },
     requested: {
         tab: null
+    },
+    state: {
+        settings_reload: false
     }
 };
+
+let shout_parse_queue = [];
 
 let bleh_url = 'https://www.last.fm{root}bleh';
 
@@ -3074,16 +3098,19 @@ let has_prompted_for_update = false;
 
     log(`starting ${version.build}.${version.sku}`, 'load');
 
-    initia();
+    bleh();
 
-    function initia() {
+    function bleh() {
         let performance_start = performance.now();
 
         load_settings();
         lookup_lang();
         append_style();
         patch_masthead(document.body);
-        load_notifs();
+
+        // messaging
+        load_dialogs();
+        load_notifications();
 
         // load seasonal data
         set_season();
@@ -3094,12 +3121,73 @@ let has_prompted_for_update = false;
         if (auth == '')
             return;
 
-        append_nav();
-
         load_activities();
         notify_if_new_update();
 
+        append_nav();
+
         lotus();
+
+        try {
+            //throw new Error;
+            main_flow();
+
+            // last.fm is a single page application
+            const observer = new MutationObserver((mutations) => {
+                lookup_lang();
+                append_nav(document.body);
+                patch_masthead(document.body);
+
+                // load seasonal data
+                set_season();
+
+                theme_version = getComputedStyle(document.body).getPropertyValue('--version-build').replaceAll("'", ''); // remove quotations
+                if (theme_version != version.build && theme_version != '' && !has_prompted_for_update) {
+                    // script is either out of date, or more in date (not gonna happen)
+                    log(`version mismatch! running ${version.build}, downloaded theme ${theme_version}`, 'update');
+
+                    prompt_for_update();
+                    has_prompted_for_update = true;
+                }
+
+                main_flow();
+            });
+
+            observer.observe(document.body, {
+                childList: true,
+                subtree: true
+            });
+
+            let performance_end = performance.now();
+            log(`finished in ${performance_end - performance_start}`, 'load');
+        } catch(e) {
+            handle_error(e);
+        }
+    }
+
+    function handle_error(e = null) {
+        dialog({
+            id: 'error',
+            title: 'An error has occured',
+            body: (`
+                bleh was unable to start correctly, please report this on Github.
+                <p class="subtext">Error information available in console</p>
+                <div class="modal-footer">
+                    <a class="btn primary report-bug continue" href="https://github.com/katelyynn/bleh/issues/new/choose" target="_blank">
+                        Report bug now
+                    </a>
+                </div>
+            `)
+        });
+
+        if (e != null) {
+            log('fatal failure', 'load');
+            console.error(e);
+        }
+    }
+
+    function main_flow() {
+        assign_page();
 
         if (window.location.href.startsWith(setup_url.replace('{root}', root))) {
             // start bleh setup
@@ -3108,23 +3196,47 @@ let has_prompted_for_update = false;
             // start bleh settings
             bleh_settings();
         } else {
-            bleh_profiles();
-            bleh_artists();
-            bleh_albums();
-            bleh_tracks();
-            bleh_events();
-            bleh_tags();
+            if (page.type == 'artist' || page.type == 'album') {
+                bleh_gallery();
+                bleh_gallery_upload_check();
+            }
 
-            bleh_gallery();
-            bleh_gallery_upload_check();
+            if (page.type == 'charts')
+                bleh_charts();
 
-            patch_shouts(document.body);
+            if (page.type == 'user' ||
+                page.type == 'search' ||
+                page.type == 'tag'
+            )
+                music_grids();
+
+            if (page.type == 'user' ||
+                page.type == 'artist' ||
+                page.type == 'album' ||
+                page.type == 'events' ||
+                page.type == 'festival' ||
+                page.type == 'tag'
+            ) {
+                patch_shouts();
+
+                if (shout_parse_queue.length > 0)
+                    parse_shout_queue();
+            }
             patch_lastfm_settings(document.body);
-            patch_artist_ranks(document.body);
             patch_gallery_page();
 
-            patch_artist_grids(document.body);
-            patch_titles(document.body);
+            if (page.type == 'user' && page.subpage.startsWith('library') && page.subpage != 'library_overview')
+                bleh_glacier_library();
+
+            if (page.type == 'user' ||
+                page.type == 'artist' ||
+                page.type == 'album' ||
+                page.type == 'events' ||
+                page.type == 'festival' ||
+                page.type == 'tag'
+            ) {
+                patch_titles();
+            }
 
             if (settings.corrections) {
                 correct_generic_combo_no_artist('artist-header-featured-items-item');
@@ -3143,80 +3255,94 @@ let has_prompted_for_update = false;
             subscribe_to_events();
             auto_edit_modal();
         }
+    }
 
-        // last.fm is a single page application
-        const observer = new MutationObserver((mutations) => {
-            //console.info('---');
-            load_settings();
-            lookup_lang();
-            append_nav(document.body);
-            patch_masthead(document.body);
+    function assign_page() {
+        if (page.structure.wrapper == null)
+            page.structure.wrapper = document.body.querySelector('.main-content');
 
-            // load seasonal data
-            set_season();
+        let main_content = page.structure.wrapper.querySelector(':scope > :last-child:not([data-orchid])');
+        if (main_content != null) {
+            assign_page_type();
+            load_page();
+        } else {
+            assign_page_subpage();
+        }
+        main_content.setAttribute('data-bleh', 'true');
+    }
 
-            load_activities();
+    function assign_page_type() {
+        let page_classes = document.body.classList;
+        page_classes.forEach((page_class, index) => {
+            if (page_class.startsWith('namespace')) {
+                page.initial = page_class.replace('namespace--', '');
+                let page_split = page.initial.split('_');
 
-            theme_version = getComputedStyle(document.body).getPropertyValue('--version-build').replaceAll("'", ''); // remove quotations
-            if (theme_version != version.build && theme_version != '' && !has_prompted_for_update) {
-                // script is either out of date, or more in date (not gonna happen)
-                log(`version mismatch! running ${version.build}, downloaded theme ${theme_version}`, 'update');
-
-                prompt_for_update();
-                has_prompted_for_update = true;
-            }
-
-            if (window.location.href.startsWith(setup_url.replace('{root}', root))) {
-                // start bleh setup
-                bleh_setup();
-            } else if (window.location.href.startsWith(bleh_url.replace('{root}', root))) {
-                // start bleh settings
-                bleh_settings();
-            } else {
-                bleh_profiles();
-                bleh_artists();
-                bleh_albums();
-                bleh_tracks();
-                bleh_events();
-                bleh_tags();
-
-                bleh_gallery();
-                bleh_gallery_upload_check();
-
-                patch_shouts(document.body);
-                patch_lastfm_settings(document.body);
-                patch_artist_ranks(document.body);
-                patch_gallery_page();
-
-                patch_artist_grids(document.body);
-                patch_titles(document.body);
-
-                if (settings.corrections) {
-                    correct_generic_combo_no_artist('artist-header-featured-items-item');
-                    correct_generic_combo_no_artist('artist-top-albums-item');
-                    correct_generic_combo('source-album-details');
-                    correct_generic_combo('resource-list--release-list-item');
-                    correct_generic_combo('similar-albums-item');
-                    correct_generic_combo('track-similar-tracks-item');
-                    correct_generic_combo('similar-items-sidebar-item');
+                page.type = page_split[0];
+                if (page.type == 'music') {
+                    page.type = page_split[1];
                 }
 
-                patch_obsession_view();
+                if (page.type != last_page_type) {
+                    last_page_type = page.type;
+                    log(page.type, 'page');
+                }
 
-                error_page();
+                console.log(page);
 
-                subscribe_to_events();
-                auto_edit_modal();
+                //document.title = `${page.type}_${page.subpage} - bleh ${version.build}.${version.sku}`;
+
+                assign_page_subpage();
+
+                return;
             }
-        });
 
-        observer.observe(document.body, {
-            childList: true,
-            subtree: true
+            if (index > 4)
+                return;
         });
+    }
 
-        let performance_end = performance.now();
-        log(`finished in ${performance_end - performance_start}`, 'load');
+    function assign_page_subpage() {
+        page.subpage = page.initial.replace(page.type, '').replace('_', '').replace('music_', '');
+
+        if (last_page_subpage != page.subpage) {
+            last_page_subpage = page.subpage;
+
+            if (page.state.settings_reload) {
+                load_settings();
+                page.state.settings_reload = false;
+            }
+        }
+    }
+
+    function load_page() {
+        if (page.type == 'user')
+            bleh_profiles();
+        else if (page.type == 'artist')
+            bleh_artists();
+        else if (page.type == 'album')
+            bleh_albums();
+        else if (page.type == 'track')
+            bleh_tracks();
+        else if (page.type == 'events' || page.type == 'festival')
+            bleh_events();
+        else if (page.type == 'tag')
+            bleh_tags();
+        else if (page.type == 'search')
+            basic_page_structure();
+    }
+
+    function basic_page_structure() {
+        page.structure.container = document.body.querySelector('.page-content');
+        try {
+            page.structure.row = page.structure.container.querySelector('.row');
+            page.structure.main = page.structure.row.querySelector('.col-main');
+            page.structure.side = page.structure.row.querySelector('.col-sidebar');
+        } catch(e) {
+            log('unable to find elements', 'page structure');
+        }
+
+        checkup_page_structure();
     }
 
     function append_style() {
@@ -3309,7 +3435,7 @@ let has_prompted_for_update = false;
     }
     function prompt_for_update() {
         // prompt the user
-        create_window('bleh_update',trans[lang].settings.home.update.update_to_v.replace('{v}', theme_version),(`
+        dialog_legacy('bleh_update',trans[lang].settings.home.update.update_to_v.replace('{v}', theme_version),(`
             <div class="bleh--update-checker-container">
                 <div class="form">
                     <div class="form-group">
@@ -3330,7 +3456,9 @@ let has_prompted_for_update = false;
     }
 
     unsafeWindow._ignore_update = function() {
-        kill_window('bleh_update');
+        dialog_rm({
+            id: 'bleh_update'
+        });
 
         // set expire date
         let api_expire = new Date();
@@ -3342,12 +3470,14 @@ let has_prompted_for_update = false;
     unsafeWindow._start_update = function() {
         open('https://github.com/katelyynn/bleh/raw/uwu/fm/bleh.user.js');
 
-        kill_window('bleh_update');
+        dialog_rm({
+            id: 'bleh_update'
+        });
 
         if (!settings.dev) {
             _final_update();
         } else {
-            create_window('bleh_update',trans[lang].settings.home.update.update_to_v.replace('{v}', theme_version),(`
+            dialog_legacy('bleh_update',trans[lang].settings.home.update.update_to_v.replace('{v}', theme_version),(`
                 <div class="bleh--update-checker-container">
                     <div class="form">
                         <div class="form-group">
@@ -3364,12 +3494,14 @@ let has_prompted_for_update = false;
     unsafeWindow._start_css_update = function() {
         open('https://github.com/katelyynn/bleh/raw/uwu/fm/bleh.user.css');
 
-        kill_window('bleh_update');
+        dialog_rm({
+            id: 'bleh_update'
+        });
         _final_update();
     }
 
     unsafeWindow._final_update = function() {
-        create_window('bleh_update',trans[lang].settings.home.update.update_to_v.replace('{v}', theme_version),(`
+        dialog_legacy('bleh_update',trans[lang].settings.home.update.update_to_v.replace('{v}', theme_version),(`
             <div class="bleh--update-checker-container">
                 <div class="form">
                     <div class="form-group">
@@ -3382,10 +3514,17 @@ let has_prompted_for_update = false;
     }
 
     unsafeWindow._finish_update = function() {
-        kill_window('bleh_update');
+        dialog_rm({
+            id: 'bleh_update'
+        });
 
         if (!settings.dev) {
-            create_window('bleh_wait',trans[lang].settings.home.update.name,'');
+            dialog({
+                id: 'bleh_wait',
+                title: trans[lang].settings.home.update.name,
+                type: 'wait',
+                dismiss: false
+            });
             fetch_new_style(false, true);
         } else {
             // dev
@@ -3859,8 +3998,9 @@ let has_prompted_for_update = false;
     }
 
     // load settings
-    function load_settings() {
-        settings = JSON.parse(localStorage.getItem('bleh')) || create_settings_template();
+    function load_settings(skip = false) {
+        if (!skip)
+            settings = JSON.parse(localStorage.getItem('bleh')) || create_settings_template();
 
         // missing? set to default value
         for (let setting in settings_template)
@@ -3894,8 +4034,10 @@ let has_prompted_for_update = false;
         localStorage.setItem('bleh', JSON.stringify(settings));
 
         // override theme when browsing listening reports
-        if (document.body.classList.contains('user-dashboard-layout'))
+        if (document.body.classList.contains('user-dashboard-layout')) {
             document.documentElement.setAttribute('data-bleh--theme', 'oled');
+            page.state.settings_reload = true;
+        }
     }
 
     // save a setting
@@ -3933,7 +4075,7 @@ let has_prompted_for_update = false;
 
     // theme
     unsafeWindow.toggle_theme = function() {
-        if (page.subpage == 'user-dashboard-layout--version-3')
+        if (page.subpage.startsWith('listening-report'))
             return;
 
         let current_theme = settings.theme;
@@ -3974,7 +4116,7 @@ let has_prompted_for_update = false;
         localStorage.setItem('bleh', JSON.stringify(settings));
     }
     unsafeWindow.change_theme_from_menu = function(theme) {
-        if (page.subpage == 'user-dashboard-layout--version-3')
+        if (page.subpage.startsWith('listening-report'))
             return;
 
         // save value
@@ -4044,7 +4186,7 @@ let has_prompted_for_update = false;
         };
 
         charts_panel.innerHTML = (`
-            <h3>${trans[lang].settings.inbuilt.charts.name}</h3>
+            <h4>${trans[lang].settings.inbuilt.charts.name}</h4>
             <form action="${root}settings#update-chart" name="chart-form" method="post">
                 <input type="hidden" name="csrfmiddlewaretoken" value="${token}">
                 <div class="inner-preview pad">
@@ -4461,7 +4603,7 @@ let has_prompted_for_update = false;
         document.getElementById('update-profile').outerHTML = '';
 
         update_picture.innerHTML = (`
-            <h3>${trans[lang].settings.inbuilt.profile.name}</h3>
+            <h4>${trans[lang].settings.inbuilt.profile.name}</h4>
             <div class="profile-container">
                 <div class="avatar-side">
                     <div class="avatar image-upload-preview" onclick="_open_avatar_changer('${token}')">
@@ -4596,7 +4738,7 @@ let has_prompted_for_update = false;
         open_avatar_changer(token);
     }
     function open_avatar_changer(token) {
-        create_window('edit_avatar',trans[lang].settings.inbuilt.profile.avatar.name,`
+        dialog_legacy('edit_avatar',trans[lang].settings.inbuilt.profile.avatar.name,`
             <div class="bleh--upload-avatar-container">
                 <form class="avatar-upload-form bleh--upload-avatar-form" action="${root}settings" name="avatar-form" method="post" enctype="multipart/form-data">
                     <input type="hidden" name="csrfmiddlewaretoken" value="${token}">
@@ -4704,7 +4846,7 @@ let has_prompted_for_update = false;
         }
 
         privacy_panel.innerHTML = (`
-            <h3>${trans[lang].settings.inbuilt.privacy.name}</h3>
+            <h4>${trans[lang].settings.inbuilt.privacy.name}</h4>
             <form action="${root}settings/privacy" name="privacy" method="post">
                 <input type="hidden" name="csrfmiddlewaretoken" value="${token}">
                 <div class="inner-preview pad">
@@ -4859,7 +5001,7 @@ let has_prompted_for_update = false;
 
 
     // general health
-    function checkup_page_structure(is_subpage, header) {
+    function checkup_page_structure(is_subpage = false, header = null) {
         document.body.style.removeProperty('--hue-album');
         document.body.style.removeProperty('--sat-album');
 
@@ -4926,7 +5068,7 @@ let has_prompted_for_update = false;
 
         log('finished', 'page structure');
 
-        if (ff('refreshed_music_nav')) {
+        if (ff('refreshed_music_nav') && header != null) {
             let navlist = header.querySelector('.navlist');
             if (navlist != null) {
                 navlist.classList.add('redesigned-navigation');
@@ -5037,8 +5179,6 @@ let has_prompted_for_update = false;
             return;
         profile_header.setAttribute('data-bleh', 'true');
 
-        log('profile', 'page');
-        page.type = 'user';
         page.name = profile_header.querySelector('.header-title a').textContent;
 
         // are we on the overview page?
@@ -5112,17 +5252,22 @@ let has_prompted_for_update = false;
             header_avatar.appendChild(avatar_link);
         }
 
+        if (ff('glacier_library')) {
+            let tab = page.structure.nav.querySelector('.secondary-nav-item--library a');
+
+            let beta = document.createElement('span');
+            beta.classList.add('new-badge', 'beta-badge');
+            beta.textContent = trans[lang].settings.beta;
+
+            tab.appendChild(beta);
+        }
+
 
         let is_own_profile = (page.name == auth);
         if (is_own_profile)
             profile_header.setAttribute('data-is-own-profile', 'true');
 
         if (!is_subpage) {
-            page.subpage = 'overview';
-
-            // recent tracks
-            patch_profile_tracks();
-
             if (ff('redesigned_profile_header'))
                 redesign_profile_header(is_own_profile);
 
@@ -5130,9 +5275,10 @@ let has_prompted_for_update = false;
             //
 
 
-            if (is_own_profile) {
-                patch_profiles_chart_windows();
-            }
+            profile_recents();
+            profile_artists();
+            profile_albums();
+            profile_tracks();
 
 
             if (is_own_profile && settings.activities) {
@@ -5218,16 +5364,13 @@ let has_prompted_for_update = false;
             if (featured_track_panel != null)
                 bleh_featured_profile_track(featured_track_panel);
         } else {
-            // which subpage is it?
-            page.subpage = document.body.classList[1].replace('namespace--', '');
-
             let btn_add = page.structure.side.querySelector('.add-button');
             if (btn_add != null)
                 btn_add.setAttribute('data-page-subpage', page.subpage);
 
-            if (page.subpage.startsWith('user_library')) {
+            if (page.subpage.startsWith('library')) {
                 bleh_user_library();
-            } else if (page.subpage == 'user_events') {
+            } else if (page.subpage == 'events') {
                 let selected_tab = page.structure.content_top.querySelector('.secondary-nav-item-link--active');
 
                 let value_panel = document.createElement('section');
@@ -5284,7 +5427,7 @@ let has_prompted_for_update = false;
 
                 page.structure.side.innerHTML = '';
                 page.structure.side.appendChild(value_panel);
-            } else if (page.subpage == 'user-dashboard-layout--version-3') {
+            } else if (page.subpage.startsWith('listening-report')) {
                 let report_box_container = document.body.querySelector('.report-box-container--overview');
 
                 if (report_box_container != null)
@@ -5720,29 +5863,6 @@ let has_prompted_for_update = false;
             });
     }
 
-    function patch_profile_tracks() {
-        // tracklist
-        let tracklist_panel = document.getElementById('recent-tracks-section');
-
-        if (tracklist_panel == null)
-            return;
-
-        if (tracklist_panel.hasAttribute('data-kate-processed'))
-            return;
-        tracklist_panel.setAttribute('data-kate-processed', 'true');
-
-        let refresh_btn = document.createElement('button');
-        refresh_btn.classList.add('refresh-tracklist-btn');
-        refresh_btn.textContent = 'Refresh';
-        refresh_btn.setAttribute('onclick', '_refresh_tracks(this)');
-
-        tippy(refresh_btn, {
-            content: trans[lang].music.refresh_tracks
-        });
-
-        tracklist_panel.appendChild(refresh_btn);
-    }
-
     unsafeWindow._add_profile_note = function(username, has_note) {
         add_profile_note(username, has_note);
     }
@@ -5825,7 +5945,7 @@ let has_prompted_for_update = false;
 
 
         // the rest happens on a following/followers page
-        if (page.subpage != 'user_following' && page.subpage != 'user_followers' && page.subpage != 'user_neighbours')
+        if (page.subpage != 'following' && page.subpage != 'followers' && page.subpage != 'neighbours')
             return;
 
         //let following_tab = document.body.querySelector('.secondary-nav-item--following');
@@ -5835,9 +5955,9 @@ let has_prompted_for_update = false;
         let neighbours_tab_html = neighbours_tab.outerHTML;
 
         let tab = undefined;
-        if (page.subpage == 'user_followers')
+        if (page.subpage == 'followers')
             tab = followers_tab;
-        else if (page.subpage == 'user_following')
+        else if (page.subpage == 'following')
             tab = following_tab;
         else
             tab = neighbours_tab;
@@ -5895,8 +6015,8 @@ let has_prompted_for_update = false;
 
 
     // patch shouts
-    function patch_shouts(element) {
-        let shouts = element.querySelectorAll('.shout:not([data-kate-processed])');
+    function patch_shouts() {
+        let shouts = page.structure.main.querySelectorAll('.shout:not([data-kate-processed])');
 
         shouts.forEach((shout) => {
             try {
@@ -5918,33 +6038,9 @@ let has_prompted_for_update = false;
                 if (settings.shout_markdown) {
                     let shout_body = shout.querySelector('.shout-body p');
 
-                    let converter = new showdown.Converter({
-                        emoji: true,
-                        excludeTrailingPunctuationFromURLs: true,
-                        headerLevelStart: 5,
-                        noHeaderId: true,
-                        openLinksInNewWindow: true,
-                        requireSpaceBeforeHeadingText: true,
-                        simpleLineBreaks: true,
-                        simplifiedAutoLink: true,
-                        strikethrough: true,
-                        underline: true,
-                        ghCodeBlocks: false,
-                        smartIndentationFix: true
+                    shout_parse_queue.push({
+                        element: shout_body
                     });
-                    let parsed_body = converter.makeHtml(shout_body.textContent
-                    .replace(/([@])([a-zA-Z0-9_]+)/g, `[$1$2](${root}user/$2)`)
-                    .replace(/\[artist\]([a-zA-Z0-9]+)\[\/artist\]/g, `[$1](${root}music/$1)`)
-                    .replace(/\[album artist=([a-zA-Z0-9]+)\]([a-zA-Z0-9\s]+)\[\/album\]/g, `[$2](${root}music/$1/$2)`)
-                    .replace(/\[track artist=([a-zA-Z0-9]+)\]([a-zA-Z0-9\s]+)\[\/track\]/g, `[$2](${root}music/$1/_/$2)`)
-                    .replace(/https:\/\/open\.spotify\.com\/user\/([A-Za-z0-9]+)\?si=([A-Za-z0-9]+)/g, '[@$1](https://open.spotify.com/user/$1)')
-                    .replace(/&/g, '&amp;')
-                    .replace(/</g, '&lt;')
-                    .replace(/>/g, '&gt;')
-                    .replace(/"/g, '&quot;')
-                    .replace(/'/g, '&#039;'));
-                    console.log(shout_body.textContent, parsed_body);
-                    shout_body.innerHTML = parsed_body;
                 }
 
 
@@ -5971,6 +6067,57 @@ let has_prompted_for_update = false;
 
             patch_avatar(shout_avatar, auth);
         });
+    }
+
+    function parse_shout_queue() {
+        let response = parse_shout(0);
+
+        if (response == 0)
+            return;
+
+        setTimeout(function() {
+            parse_shout(0);
+        }, 100);
+    }
+
+    function parse_shout(index) {
+        if (shout_parse_queue.length <= 0)
+            return 0;
+
+        let shout = shout_parse_queue[index];
+
+        console.info(index, shout_parse_queue, shout);
+
+        let converter = new showdown.Converter({
+            emoji: true,
+            excludeTrailingPunctuationFromURLs: true,
+            headerLevelStart: 5,
+            noHeaderId: true,
+            openLinksInNewWindow: true,
+            requireSpaceBeforeHeadingText: true,
+            simpleLineBreaks: true,
+            simplifiedAutoLink: true,
+            strikethrough: true,
+            underline: true,
+            ghCodeBlocks: false,
+            smartIndentationFix: true
+        });
+        let parsed_body = converter.makeHtml(shout.element.textContent
+        .replace(/([@])([a-zA-Z0-9_]+)/g, `[$1$2](${root}user/$2)`)
+        .replace(/\[artist\]([a-zA-Z0-9]+)\[\/artist\]/g, `[$1](${root}music/$1)`)
+        .replace(/\[album artist=([a-zA-Z0-9]+)\]([a-zA-Z0-9\s]+)\[\/album\]/g, `[$2](${root}music/$1/$2)`)
+        .replace(/\[track artist=([a-zA-Z0-9]+)\]([a-zA-Z0-9\s]+)\[\/track\]/g, `[$2](${root}music/$1/_/$2)`)
+        .replace(/https:\/\/open\.spotify\.com\/user\/([A-Za-z0-9]+)\?si=([A-Za-z0-9]+)/g, '[@$1](https://open.spotify.com/user/$1)')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;'));
+        shout.element.innerHTML = parsed_body;
+        log(`parsed index ${index}`, 'shout');
+
+        shout_parse_queue.splice(index, 1);
+        return 1;
     }
 
     unsafeWindow._show_hidden_shout = function(shout_id) {
@@ -6090,14 +6237,6 @@ let has_prompted_for_update = false;
 
 
 
-    // artist ranks
-    function patch_artist_ranks(element) {
-
-        if (settings.colourful_counts) {
-            patch_artist_ranks_in_grid_view(document.body);
-        }
-    }
-
     function clean_number(string) {
         return parseInt(string
         .replaceAll(',','')
@@ -6105,27 +6244,137 @@ let has_prompted_for_update = false;
         );
     }
 
-    function patch_artist_ranks_in_grid_view(element) {
-        let artist_statistics = element.querySelectorAll('.grid-items-item-aux-text a');
+    function music_grids() {
+        let grids = page.structure.main.querySelectorAll('.grid-items-item:not([data-bleh-music-grids])');
+        grids.forEach((grid) => {
+            let is_loading = (grid.querySelector('.grid-items-empty-inner') != null);
 
-        if (artist_statistics == undefined)
-            return;
+            if (is_loading)
+                return;
 
-        artist_statistics.forEach((artist_statistic) => {
-            if (!artist_statistic.hasAttribute('data-kate-processed')) {
-                artist_statistic.setAttribute('data-kate-processed','true');
+            grid.setAttribute('data-bleh-music-grids', 'true');
 
-                if (!artist_statistic.getAttribute('href').endsWith('DAYS') && !artist_statistic.classList.contains('grid-items-item-aux-block')) {
-                    console.info('bleh - artist grid plays match');
+            let is_album;
+            if (page.type == 'search') {
+                // search, tag pages
+                is_album = (grid.querySelector('.stat-name') == null);
+            } else {
+                // profiles
+                is_album = (grid.querySelector('.grid-items-item-aux-block') != null);
+            }
 
-                    let scrobbles = clean_number(artist_statistic.textContent.replace(` ${trans[lang].statistics.plays.name}`,''));
-                    let parsed_scrobble_as_rank = parse_scrobbles_as_rank(scrobbles);
+            let image_wrap = grid.querySelector('.grid-items-cover-image-image');
+            let image = image_wrap.querySelector('img');
+            if (image != null && !image_wrap.classList.contains('grid-items-cover-default')) {
+                let grid_colour = document.createElement('div');
+                grid_colour.classList.add('grid-item-colour-bg');
+                image_wrap.appendChild(grid_colour);
 
-                    artist_statistic.setAttribute('data-bleh--scrobble-milestone',parsed_scrobble_as_rank.milestone);
-                    artist_statistic.style.setProperty('--hue',parsed_scrobble_as_rank.hue);
-                    artist_statistic.style.setProperty('--sat',parsed_scrobble_as_rank.sat);
-                    artist_statistic.style.setProperty('--lit',parsed_scrobble_as_rank.lit);
+                try {
+                    image.setAttribute('crossorigin', 'anonymous');
+                    image.addEventListener('load', function() {
+                        let vibrant = new Vibrant(image);
+                        let swatches = vibrant.swatches();
+
+                        if (swatches.DarkMuted != null) {
+                            console.log('dark muted', swatches.DarkMuted.getHex());
+                            let hsl = hex_to_hsl(swatches.DarkMuted.getHex());
+
+                            grid_colour.style.setProperty('background', swatches.DarkMuted.getHex());
+
+                            grid.classList.add('grid-items-item-has-colour');
+                            grid.style.setProperty('--hue-over', hsl.h);
+                            grid.style.setProperty('--sat-over', clamp_sat((hsl.s / 100) * 3));
+                            grid.style.setProperty('--lit-over', 1);
+                        } else {
+                            console.log('vibrant', swatches.Vibrant.getHex());
+                            let hsl = hex_to_hsl(swatches.Vibrant.getHex());
+
+                            grid_colour.style.setProperty('background', swatches.Vibrant.getHex());
+
+                            grid.classList.add('grid-items-item-has-colour');
+                            grid.style.setProperty('--hue-over', hsl.h);
+                            grid.style.setProperty('--sat-over', clamp_sat((hsl.s / 100) * 3));
+                            grid.style.setProperty('--lit-over', 1);
+                        }
+                    });
+                } catch(e) {}
+            }
+
+            let plays_elem;
+            if (page.type == 'search') {
+                if (!is_album) {
+                    let aux_text = grid.querySelector('.grid-items-item-aux-text');
+                    let stat_name = aux_text.querySelector('.stat-name');
+
+                    aux_text.removeChild(stat_name);
+
+                    plays_elem = aux_text;
                 }
+            } else if (page.type == 'tag') {
+                let aux_text = grid.querySelector('.grid-items-item-aux-text');
+                let stat_name = aux_text.querySelector('.stat-name');
+                if (stat_name == null)
+                    return;
+
+                aux_text.removeChild(stat_name);
+
+                plays_elem = aux_text;
+
+                if (is_album) {
+                    let artist = grid.querySelector('.grid-items-item-aux-block');
+
+                    aux_text.removeChild(artist);
+
+                    plays_elem = document.createElement('a');
+                    plays_elem.textContent = aux_text.textContent;
+
+                    aux_text.textContent = '';
+
+                    aux_text.appendChild(artist);
+                    aux_text.appendChild(plays_elem);
+                }
+            } else {
+                plays_elem = grid.querySelector('.grid-items-item-aux-text a:last-child');
+            }
+
+            if (plays_elem != null) {
+                let plays = clean_number(plays_elem.textContent.trim().replace(` ${trans[lang].statistics.plays.name}`, ''));
+                plays_elem.classList.add('grid-item-plays');
+                plays_elem.textContent = plays.toLocaleString(lang);
+
+                if (page.type == 'search' || page.type == 'tag')
+                    plays_elem.classList.add('grid-item-listeners');
+
+                if (!is_album && settings.colourful_counts && page.type == 'user') {
+                    if (
+                        !plays_elem.getAttribute('href')
+                        .includes('?from=') &&
+                        !plays_elem.getAttribute('href')
+                        .includes('?date_preset=')
+                    ) {
+                        let parsed_scrobble_as_rank = parse_scrobbles_as_rank(plays);
+
+                        plays_elem.setAttribute('data-bleh--scrobble-milestone', parsed_scrobble_as_rank.milestone);
+                        plays_elem.style.setProperty('--hue-over', parsed_scrobble_as_rank.hue);
+                        plays_elem.style.setProperty('--sat-over', parsed_scrobble_as_rank.sat);
+                        plays_elem.style.setProperty('--lit-over', parsed_scrobble_as_rank.lit);
+                    }
+                }
+            }
+
+            let name = grid.querySelector('.grid-items-item-main-text a');
+
+            if (!is_album) {
+                name.textContent = correct_artist(name.textContent.trim());
+            } else {
+                let artist = grid.querySelector('.grid-items-item-aux-block');
+                if (artist == null)
+                    return;
+
+                artist.textContent = correct_artist(artist.textContent.trim());
+
+                name.textContent = correct_item_by_artist(name.textContent.trim(), artist.textContent.trim());
             }
         });
     }
@@ -6376,7 +6625,7 @@ let has_prompted_for_update = false;
 
     // bleh settings
     unsafeWindow.open_bleh_settings = function() {
-        create_window('bleh_settings','Theme settings','');
+        dialog_legacy('bleh_settings','Theme settings','');
     }
 
     function bleh_settings() {
@@ -7076,14 +7325,14 @@ let has_prompted_for_update = false;
                             })"></button>
                         </div>
                     </div>
-                    <div class="toggle-container" id="container-hue_from_album">
+                    <div class="toggle-container" id="container-hue_from_album" onclick="_update_item('hue_from_album')">
                         <button class="btn reset" onclick="_reset_item('hue_from_album')">${trans[lang].settings.reset}</button>
                         <div class="heading">
                             <h5>${trans[lang].settings.customise.hue_from_album.name}</h5>
                             <p>${trans[lang].settings.customise.hue_from_album.bio}</p>
                         </div>
                         <div class="toggle-wrap">
-                            <button class="toggle" id="toggle-hue_from_album" onclick="_update_item('hue_from_album')" aria-checked="true">
+                            <button class="toggle" id="toggle-hue_from_album" aria-checked="true">
                                 <div class="dot"></div>
                             </button>
                         </div>
@@ -7604,7 +7853,7 @@ let has_prompted_for_update = false;
             return (`
                 <div class="bleh--panel">
                     <h4 class="top-header">${trans[lang].settings.text.name}</h4>
-                    <h4>${trans[lang].settings.text.font.name} <div class="new-badge">${trans[lang].settings.new}</div></h4>
+                    <h4>${trans[lang].settings.text.font.name}</h4>
                     <div class="text-container" id="container-font">
                         <button class="btn reset" onclick="_reset_item('font')">${trans[lang].settings.reset}</button>
                         <div class="heading content-form">
@@ -7722,7 +7971,7 @@ let has_prompted_for_update = false;
                     </div>
                 </div>
                 <div class="bleh--panel">
-                    <h3>Feature Flags</h3>
+                    <h4>Feature Flags</h4>
                     <div class="feature-flags" id="feature-flags"></div>
                 </div>
                 `);
@@ -7930,7 +8179,7 @@ let has_prompted_for_update = false;
                         </div>
                     </div>
                     <div class="sep"></div>
-                    <h4>${trans[lang].settings.music.profile_shortcut.name} <div class="new-badge">${trans[lang].settings.new}</div></h4>
+                    <h4>${trans[lang].settings.music.profile_shortcut.name}</h4>
                     <p>${trans[lang].settings.music.profile_shortcut.bio}</p>
                     <div class="text-container" id="container-profile_shortcut">
                         <button class="btn reset" onclick="_reset_item('profile_shortcut')">${trans[lang].settings.reset}</button>
@@ -8294,7 +8543,7 @@ let has_prompted_for_update = false;
     unsafeWindow._edit_profile_note = function(username) {
         let profile_notes = JSON.parse(localStorage.getItem('bleh_profile_notes')) || {};
 
-        create_window('edit_profile_note',trans[lang].settings.profiles.notes.edit_user.replace('{u}', username),`
+        dialog_legacy('edit_profile_note',trans[lang].settings.profiles.notes.edit_user.replace('{u}', username),`
         <textarea id="bleh--profile-note" placeholder="Enter a local note for this user">${profile_notes[username]}</textarea>
         <div class="modal-footer">
             <button class="btn primary save" onclick="_save_profile_note_in_window('${username}')">
@@ -8539,7 +8788,7 @@ let has_prompted_for_update = false;
 
 
                 if (item == 'dev') {
-                    create_window('prompt_dev',trans[lang].settings.performance.dev.name,`
+                    dialog_legacy('prompt_dev',trans[lang].settings.performance.dev.name,`
                         <p class="alert alert-info">${trans[lang].settings.performance.dev.modals.prompt.alert}</p>
                         <br>
                         ${trans[lang].settings.performance.dev.modals.prompt.stylus}
@@ -8712,7 +8961,7 @@ let has_prompted_for_update = false;
 
     function continue_dev() {
         kill_window('prompt_dev');
-        create_window('continue_dev',trans[lang].settings.performance.dev.name,`
+        dialog_legacy('continue_dev',trans[lang].settings.performance.dev.name,`
             ${trans[lang].settings.performance.dev.modals.continue.next_step}
             <div class="modal-footer">
                 <button class="btn primary continue" onclick="_finish_dev()">
@@ -8725,7 +8974,7 @@ let has_prompted_for_update = false;
     unsafeWindow._finish_dev = function() {
         open('https://github.com/katelyynn/bleh/raw/uwu/fm/bleh.user.css');
         kill_window('continue_dev');
-        create_window('finish_dev',trans[lang].settings.performance.dev.name,`
+        dialog_legacy('finish_dev',trans[lang].settings.performance.dev.name,`
             <p class="alert alert-success">${trans[lang].settings.performance.dev.modals.finish.alert}</p>
             <div class="modal-footer">
                 <button class="btn primary done" onclick="_kill_window('finish_dev')">
@@ -8738,7 +8987,7 @@ let has_prompted_for_update = false;
 
     // create a custom colour
     unsafeWindow._create_a_custom_colour = function() {
-        create_window('custom_colour',trans[lang].settings.customise.colours.custom,`
+        dialog_legacy('custom_colour',trans[lang].settings.customise.colours.custom,`
         <p>${trans[lang].settings.customise.colours.modals.custom_colour.preface}</p>
         <br>
         <div class="inner-preview pad">
@@ -8831,8 +9080,174 @@ let has_prompted_for_update = false;
 
 
     // create a window
-    function create_window(id, title, inner_content, has_close = false, classname='', allow_scroll = false) {
-        log(`created ${id} - '${title}'`, 'window', 'info', {content: [inner_content], has_close: has_close, classname: classname});
+    function load_dialogs() {
+        let dialogs = document.createElement('div');
+        dialogs.classList.add('bleh-modals');
+
+        document.body.appendChild(dialogs);
+
+        page.structure.dialogs = dialogs;
+    }
+    function dialog({
+        id = '',
+        title = null,
+        body = document.createElement('div').innerHTML,
+        dismiss = true,
+        type = '',
+        has_overlays = true,
+        replace = false,
+        replace_if_possible = false,
+        replace_id = '',
+        allow_scroll = false
+    }) {
+        log(`creating ${id}`, 'window', 'info', {
+            id: id,
+            title: title,
+            body: body,
+            dismiss: dismiss,
+            type: type,
+            has_overlays: has_overlays,
+            replace: replace,
+            replace_id: replace_id,
+            allow_scroll: allow_scroll
+        });
+
+        let modal;
+
+        if (replace_if_possible && Object.keys(dialogs).length > 0) {
+            replace = true;
+
+            for (let dialog in dialogs) {
+                replace_id = dialog;
+                break;
+            }
+        }
+
+        if (!replace) {
+            modal = document.createElement('div');
+            modal.classList.add('bleh-modal');
+        } else {
+            log(`window set to replace ${replace_id}`, 'window');
+
+            if (!dialogs.hasOwnProperty(replace_id))
+                return;
+
+            modal = dialogs[replace_id].instance;
+            delete dialogs[replace_id];
+
+            modal.innerHTML = '';
+        }
+
+        modal.setAttribute('data-modal-id', id);
+        modal.setAttribute('data-modal-has-overlays', has_overlays);
+
+        if (type != '')
+            modal.setAttribute('data-modal-type', type);
+
+        if (title != null) {
+            let modal_title = document.createElement('div');
+            modal_title.classList.add('bleh-modal-title');
+            modal_title.innerHTML = (`
+                <h1>${title}</h1>
+            `);
+
+            modal.appendChild(modal_title);
+        }
+
+        if (dismiss) {
+            let modal_close = document.createElement('button');
+            modal_close.classList.add('modal-close-button');
+            modal_close.setAttribute('onclick', `_dialog_rm({id: "${id}"})`);
+
+            modal.appendChild(modal_close);
+
+            // allow clicking out of the modal to close
+            page.structure.dialogs.setAttribute('onclick', '_dialog_rm({all: true, modal_bg: true})');
+        } else {
+            page.structure.dialogs.removeAttribute('onclick');
+        }
+
+        let modal_body = document.createElement('div');
+        modal_body.classList.add('bleh-modal-body');
+        modal_body.setAttribute('data-allow-scroll', allow_scroll);
+        modal_body.innerHTML = body;
+
+        modal.appendChild(modal_body);
+
+        dialogs[id] = {
+            instance: modal
+        };
+
+        page.structure.dialogs.appendChild(modal);
+        page.structure.dialogs.classList.add('has-dialog');
+
+        return modal;
+    }
+    unsafeWindow._dialog_rm = function({
+        id = null,
+        all = false,
+        modal_bg = false
+    }) {
+        dialog_rm({
+            id: id,
+            all: all,
+            modal_bg: modal_bg
+        });
+    }
+    function dialog_rm({
+        id = null,
+        all = false,
+        modal_bg = false
+    }) {
+        if (all) {
+            // prevents clicks inside modal being broken
+            if (modal_bg) {
+                console.log(event);
+                if (event.target.classList[0] != 'bleh-modals')
+                    return;
+            }
+
+            log('requested kill all', 'window');
+            console.info(dialogs);
+            for (let dialog in dialogs) {
+                dialog_rm({
+                    id: dialog
+                });
+            }
+
+            return;
+        }
+
+        if (id == null)
+            return;
+
+        if (page.structure.dialogs == null)
+            return;
+
+        if (dialogs.hasOwnProperty(id)) {
+            let dialog = dialogs[id];
+
+            if (!page.structure.dialogs.contains(dialog.instance))
+                return;
+
+            log(`queuing ${id} to kill`, 'window');
+
+            dialog.instance.classList.add('to-remove');
+
+            setTimeout(function() {
+                page.structure.dialogs.removeChild(dialog.instance);
+            }, 400);
+
+            delete dialogs[id];
+
+            if (JSON.stringify(dialogs) == '{}') {
+                page.structure.dialogs.classList.remove('has-dialog');
+            }
+        }
+    }
+
+    function dialog_legacy(id, title, inner_content, dismiss = false, classname='', allow_scroll = false) {
+        log(`created ${id} - '${title}'`, 'window', 'info', {content: [inner_content], dismiss: dismiss, classname: classname});
 
         let background = document.createElement('div');
         background.classList.add('popup_background');
@@ -8863,7 +9278,7 @@ let has_prompted_for_update = false;
         content.setAttribute('id',`bleh--window-${id}--content`);
         content.setAttribute('data-kate-processed','true');
 
-        if (has_close) {
+        if (dismiss) {
             let actions = document.createElement('div');
             actions.classList.add('modal-actions');
             actions.setAttribute('id',`bleh--window-${id}--actions`);
@@ -8971,19 +9386,23 @@ let has_prompted_for_update = false;
 
     // import settings
     unsafeWindow._import_settings = function() {
-        create_window('import_settings',trans[lang].settings.actions.import.modals.initial.name,`
-            <p class="alert alert-warning">${trans[lang].settings.actions.import.modals.initial.alert}</p>
-            <br>
-            <textarea id="import_area"></textarea>
-            <div class="modal-footer">
-                <button class="btn primary download" onclick="_confirm_import()">
-                    ${trans[lang].settings.actions.import.name}
-                </button>
-                <button class="btn cancel" onclick="_kill_window('import_settings')">
-                    ${trans[lang].settings.cancel}
-                </button>
-            </div>
-        `, true);
+        dialog({
+            id: 'import_settings',
+            title: trans[lang].settings.actions.import.modals.initial.name,
+            body: (`
+                <p class="alert alert-warning">${trans[lang].settings.actions.import.modals.initial.alert}</p>
+                <br>
+                <textarea id="import_area"></textarea>
+                <div class="modal-footer">
+                    <button class="btn primary download" onclick="_confirm_import()">
+                        ${trans[lang].settings.actions.import.name}
+                    </button>
+                    <button class="btn cancel" onclick="_dialog_rm({id: 'import_settings'})">
+                        ${trans[lang].settings.cancel}
+                    </button>
+                </div>
+            `)
+        });
     }
 
     unsafeWindow._confirm_import = function() {
@@ -8997,35 +9416,46 @@ let has_prompted_for_update = false;
             localStorage.setItem('bleh', requesting_setting);
             load_settings();
 
-            kill_window('import_settings');
+            dialog_rm({
+                id: 'import_settings'
+            });
         } catch(e) {
             // cannot continue, halt
-            kill_window('import_settings');
-            create_window('import_failed',trans[lang].settings.actions.import.modals.failed.name,`
-            <p class="alert alert-error">${trans[lang].settings.actions.import.modals.failed.alert}</p>
-            <div class="modal-footer">
-                <button class="btn primary done" onclick="_kill_window('import_failed')">
-                    ${trans[lang].settings.done}
-                </button>
-            </div>
-            `, true);
+            dialog_rm({
+                id: 'import_settings'
+            });
+            dialog({
+                id: 'import_failed',
+                title: trans[lang].settings.actions.import.modals.failed.name,
+                body: (`
+                    <p class="alert alert-error">${trans[lang].settings.actions.import.modals.failed.alert}</p>
+                    <div class="modal-footer">
+                        <button class="btn primary done" onclick="_dialog_rm({id: 'import_failed'})">
+                            ${trans[lang].settings.done}
+                        </button>
+                    </div>
+                `)
+            });
         }
     }
 
 
     // export settings
     function export_settings() {
-
-        create_window('export_settings',trans[lang].settings.actions.export.modals.initial.name,`
-            <p class="alert alert-success">${trans[lang].settings.actions.export.modals.initial.alert}</p>
-            <br>
-            <textarea>${JSON.stringify(settings)}</textarea>
-            <div class="modal-footer">
-                <button class="btn primary done" onclick="_kill_window('export_settings')">
-                    ${trans[lang].settings.done}
-                </button>
-            </div>
-        `, true);
+        dialog({
+            id: 'export_settings',
+            title: trans[lang].settings.actions.export.modals.initial.name,
+            body: (`
+                <p class="alert alert-success">${trans[lang].settings.actions.export.modals.initial.alert}</p>
+                <br>
+                <textarea>${JSON.stringify(settings)}</textarea>
+                <div class="modal-footer">
+                    <button class="btn primary done" onclick="_dialog_rm({id: 'export_settings'})">
+                        ${trans[lang].settings.done}
+                    </button>
+                </div>
+            `)
+        });
     }
     unsafeWindow._export_settings = function() {
         export_settings();
@@ -9034,32 +9464,39 @@ let has_prompted_for_update = false;
 
     // reset settings
     unsafeWindow._reset_settings = function() {
-        create_window('reset_settings',trans[lang].settings.actions.reset.modals.initial.name,`
-            <p class="alert alert-warning">${trans[lang].settings.actions.reset.modals.initial.alert}</p>
-            <div class="modal-footer">
-                <button class="btn done" onclick="_confirm_reset()">
-                    ${trans[lang].settings.actions.reset.modals.initial.confirm}
-                </button>
-                <button class="btn upload" onclick="_export_first()">
-                    ${trans[lang].settings.actions.reset.modals.initial.export}
-                </button>
-                <button class="btn primary cancel" onclick="_kill_window('reset_settings')">
-                    ${trans[lang].settings.cancel}
-                </button>
-            </div>
-        `, true);
+        dialog({
+            id: 'export_settings',
+            title: trans[lang].settings.actions.export.modals.initial.name,
+            body: (`
+                <p class="alert alert-warning">${trans[lang].settings.actions.reset.modals.initial.alert}</p>
+                <div class="modal-footer">
+                    <button class="btn done" onclick="_confirm_reset()">
+                        ${trans[lang].settings.actions.reset.modals.initial.confirm}
+                    </button>
+                    <button class="btn upload" onclick="_export_first()">
+                        ${trans[lang].settings.actions.reset.modals.initial.export}
+                    </button>
+                    <button class="btn primary cancel" onclick="_dialog_rm({id: 'reset_settings'})">
+                        ${trans[lang].settings.cancel}
+                    </button>
+                </div>
+            `)
+        });
     }
 
     unsafeWindow._confirm_reset = function() {
-        let settings = create_settings_template();
-        localStorage.setItem('bleh', JSON.stringify(settings));
-        load_settings();
+        settings = create_settings_template();
+        load_settings(true);
 
-        kill_window('reset_settings');
+        dialog_rm({
+            id: 'reset_settings'
+        });
     }
 
     unsafeWindow._export_first = function() {
-        kill_window('reset_settings');
+        dialog_rm({
+            id: 'reset_settings'
+        });
         export_settings();
     }
 
@@ -9186,11 +9623,11 @@ let has_prompted_for_update = false;
     }
 
 
-    function patch_titles(element) {
-        if (page.subpage == 'user_tags_overview')
+    function patch_titles() {
+        if (page.subpage == 'tags_overview')
             return;
 
-        let tracklists = element.querySelectorAll('.chartlist:not(.chartlist__placeholder)');
+        let tracklists = page.structure.main.querySelectorAll('.chartlist:not(.chartlist__placeholder)');
 
         tracklists.forEach((tracklist) => {
             if (tracklist == null)
@@ -9578,7 +10015,7 @@ let has_prompted_for_update = false;
 
         // content
         let bookmarks_content = document.createElement('div');
-        bookmarks_content.classList.add('col-main', 'bleh--bookmarks');
+        bookmarks_content.classList.add('col-main', 'bleh--bookmarks', 'not-a-panel');
         bookmarks_content.innerHTML = (`
             <section class="bookmarks-panel">
                 <h2>${trans[lang].gallery.bookmarks.name}</h2>
@@ -9736,7 +10173,8 @@ let has_prompted_for_update = false;
         refresh_tracks(button);
     }
     function refresh_tracks(button) {
-        button.setAttribute('onclick', '');
+        let panel = page.structure.main.querySelector('#recent-tracks-section');
+        panel.classList.remove('has-refreshed');
         button.setAttribute('disabled', '');
 
         // we need to fetch the tracklist, this function presumes that
@@ -9753,6 +10191,7 @@ let has_prompted_for_update = false;
             console.error('DOC', doc);
 
             deliver_notif('refreshed tracks');
+            panel.classList.add('has-refreshed');
 
             let tracklist_panel = doc.querySelector('#recent-tracks-section .chartlist');
 
@@ -9763,16 +10202,7 @@ let has_prompted_for_update = false;
 
             page.structure.main.querySelector('#recent-tracks-section .chartlist').outerHTML = tracklist_panel.outerHTML;
 
-            let refresh_btn = document.createElement('button');
-            refresh_btn.classList.add('refresh-tracklist-btn');
-            refresh_btn.textContent = 'Refresh';
-            refresh_btn.setAttribute('onclick', '_refresh_tracks(this)');
-
-            tippy(refresh_btn, {
-                content: 'Refresh tracks'
-            });
-
-            document.getElementById('recent-tracks-section').appendChild(refresh_btn);
+            button.removeAttribute('disabled');
         });
     }
 
@@ -9780,12 +10210,12 @@ let has_prompted_for_update = false;
 
 
     // notifs
-    function load_notifs() {
-        let prev_notif = document.getElementById('bleh-notifs');
+    function load_notifications() {
+        let prev_notif = document.getElementById('bleh-notifications');
         if (prev_notif == null) {
             let notifs = document.createElement('div');
-            notifs.classList.add('bleh-notifs');
-            notifs.setAttribute('id', 'bleh-notifs');
+            notifs.classList.add('bleh-notifications');
+            page.structure.notifications = notifs;
             document.body.appendChild(notifs);
         }
     }
@@ -9795,11 +10225,11 @@ let has_prompted_for_update = false;
     }
     function deliver_notif(content, persist=false, has_icon=false, append_class='', action='') {
         let notif = document.createElement('button');
-        notif.classList.add('bleh-notif');
+        notif.classList.add('bleh-notification');
         notif.setAttribute('onclick', '_kill_notif(this)');
         notif.textContent = content;
 
-        document.getElementById('bleh-notifs').appendChild(notif);
+        page.structure.notifications.appendChild(notif);
 
         if (has_icon)
             notif.classList.add('btn--has-icon');
@@ -9824,7 +10254,7 @@ let has_prompted_for_update = false;
     function kill_notif(notif) {
         notif.classList.add('fade-out');
         setTimeout(function() {
-            document.getElementById('bleh-notifs').removeChild(notif);
+            page.structure.notifications.removeChild(notif);
         }, 400);
     }
 
@@ -9866,6 +10296,8 @@ let has_prompted_for_update = false;
         s = Math.round(s);
         l = l * 100;
         l = Math.round(l);
+
+        console.log('converted', hex, 'to', h, s, l);
 
         return {
             h: h,
@@ -10034,11 +10466,11 @@ let has_prompted_for_update = false;
 
         console.info('bleh - loading first-time setup');
 
-        let adaptive_skin_container = document.querySelector('.adaptive-skin-container:not([data-kate-processed])');
+        let adaptive_skin_container = document.querySelector('.adaptive-skin-container:not([data-bleh])');
 
         if (adaptive_skin_container == null)
             return;
-        adaptive_skin_container.setAttribute('data-kate-processed','true');
+        adaptive_skin_container.setAttribute('data-bleh','true');
 
         // initial
         adaptive_skin_container.innerHTML = '';
@@ -10058,517 +10490,530 @@ let has_prompted_for_update = false;
         document.body.classList.add('bleh-setup');
         document.body.style.setProperty('background-image', `url(${my_avi})`);
 
-        create_window('bleh_setup_start','',`
-            <div class="setup-sides">
-                <div class="setup-preview">
-                    <div class="setup-icon setup-icon-main setup-icon-home"></div>
-                </div>
-                <div class="setup-body">
-                    <div class="setup-body-main">
-                        <h1>${trans[lang].setup.start.name}</h1>
-                        <div class="user-top-panel">
-                            <div class="user-top-avatar user-top-avatar-side-left"></div>
-                            <img class="user-top-avatar user-top-avatar-main" src="${my_avi.replace('avatar42s', 'avatar170s')}" alt="${auth}">
-                            <div class="user-top-avatar user-top-avatar-side-right"></div>
+        dialog({
+            id: 'bleh_setup_start',
+            body: (`
+                <div class="setup-sides">
+                    <div class="setup-preview">
+                        <div class="setup-icon setup-icon-main setup-icon-home"></div>
+                    </div>
+                    <div class="setup-body">
+                        <div class="setup-body-main">
+                            <h1>${trans[lang].setup.start.name}</h1>
+                            <div class="user-top-panel">
+                                <div class="user-top-avatar user-top-avatar-side-left"></div>
+                                <img class="user-top-avatar user-top-avatar-main" src="${my_avi.replace('avatar42s', 'avatar170s')}" alt="${auth}">
+                                <div class="user-top-avatar user-top-avatar-side-right"></div>
+                            </div>
+                            <h4>${trans[lang].setup.start.thanks.replace('{m}', `<a class="mention" href="${root}user/${auth}">@${auth}</a>`)}</h4>
+                            <p>${trans[lang].setup.start.info[0]}</p>
+                            <ul>
+                                <li>${trans[lang].setup.start.info[1]}</li>
+                                <li>${trans[lang].setup.start.info[2]}</li>
+                                <li>${trans[lang].setup.start.info[3]}</li>
+                                <li>${trans[lang].setup.start.info[4]}</li>
+                            </ul>
+                            <p>${trans[lang].setup.start.info[5]}</p>
                         </div>
-                        <h4>${trans[lang].setup.start.thanks.replace('{m}', `<a class="mention" href="${root}user/${auth}">@${auth}</a>`)}</h4>
-                        <p>${trans[lang].setup.start.info[0]}</p>
-                        <ul>
-                            <li>${trans[lang].setup.start.info[1]}</li>
-                            <li>${trans[lang].setup.start.info[2]}</li>
-                            <li>${trans[lang].setup.start.info[3]}</li>
-                            <li>${trans[lang].setup.start.info[4]}</li>
-                        </ul>
-                        <p>${trans[lang].setup.start.info[5]}</p>
-                    </div>
-                    <div class="modal-footer">
-                        <button class="btn skip" onclick="_setup_skip()">
-                            ${trans[lang].settings.skip}
-                        </button>
-                        <button class="btn primary continue" onclick="_setup_accessibility()">
-                            ${trans[lang].settings.continue}
-                        </button>
+                        <div class="modal-footer">
+                            <button class="btn skip" onclick="_setup_skip()">
+                                ${trans[lang].settings.skip}
+                            </button>
+                            <button class="btn primary continue" onclick="_setup_accessibility()">
+                                ${trans[lang].settings.continue}
+                            </button>
+                        </div>
                     </div>
                 </div>
-            </div>
-        `, false, 'setup');
+            `),
+            dismiss: false,
+            type: 'setup'
+        });
     }
 
     unsafeWindow._setup_accessibility = function() {
-        kill_window('bleh_setup_start');
-        kill_window('bleh_setup_appearance');
-        create_window('bleh_setup_accessibility','',`
-            <div class="setup-sides">
-                <div class="setup-preview">
-                    <div class="setup-icon setup-icon-main setup-icon-accessibility"></div>
-                </div>
-                <div class="setup-body">
-                    <div class="setup-body-main">
-                        <h1>${trans[lang].settings.accessibility.name}</h1>
-                        <div class="toggle-container" id="container-reduced_motion">
-                            <button class="btn reset" onclick="_reset_item('reduced_motion')">${trans[lang].settings.reset}</button>
-                            <div class="heading">
-                                <h5>${trans[lang].settings.accessibility.reduced_motion.name}</h5>
-                                <p>${trans[lang].settings.accessibility.reduced_motion.bio}</p>
+        dialog({
+            id: 'bleh_setup_accessibility',
+            body: (`
+                <div class="setup-sides">
+                    <div class="setup-preview">
+                        <div class="setup-icon setup-icon-main setup-icon-accessibility"></div>
+                    </div>
+                    <div class="setup-body">
+                        <div class="setup-body-main">
+                            <h1>${trans[lang].settings.accessibility.name}</h1>
+                            <div class="toggle-container" id="container-reduced_motion">
+                                <button class="btn reset" onclick="_reset_item('reduced_motion')">${trans[lang].settings.reset}</button>
+                                <div class="heading">
+                                    <h5>${trans[lang].settings.accessibility.reduced_motion.name}</h5>
+                                    <p>${trans[lang].settings.accessibility.reduced_motion.bio}</p>
+                                </div>
+                                <div class="toggle-wrap">
+                                    <button class="toggle" id="toggle-reduced_motion" onclick="_update_item('reduced_motion')" aria-checked="false">
+                                        <div class="dot"></div>
+                                    </button>
+                                </div>
                             </div>
-                            <div class="toggle-wrap">
-                                <button class="toggle" id="toggle-reduced_motion" onclick="_update_item('reduced_motion')" aria-checked="false">
-                                    <div class="dot"></div>
-                                </button>
+                            <div class="inner-preview pad flex">
+                                <div class="shout js-shout js-link-block" data-kate-processed="true">
+                                    <h3 class="shout-user">
+                                        <a>${auth}</a>
+                                    </h3>
+                                    <span class="avatar shout-user-avatar avatar--bleh-missing">
+                                        <img src="" alt="Your avatar" loading="lazy">
+                                    </span>
+                                    <a class="shout-permalink shout-timestamp">
+                                        <time datetime="2024-06-05T02:33:39+01:00" title="Wednesday 5 Jun 2024, 2:33am">
+                                            5 Jun 2:33am
+                                        </time>
+                                    </a>
+                                    <div class="shout-body">
+                                        <p>${trans[lang].settings.accessibility.shout_preview}</p>
+                                    </div>
+                                </div>
                             </div>
-                        </div>
-                        <div class="inner-preview pad flex">
-                            <div class="shout js-shout js-link-block" data-kate-processed="true">
-                                <h3 class="shout-user">
-                                    <a>${auth}</a>
-                                </h3>
-                                <span class="avatar shout-user-avatar avatar--bleh-missing">
-                                    <img src="" alt="Your avatar" loading="lazy">
-                                </span>
-                                <a class="shout-permalink shout-timestamp">
-                                    <time datetime="2024-06-05T02:33:39+01:00" title="Wednesday 5 Jun 2024, 2:33am">
-                                        5 Jun 2:33am
-                                    </time>
-                                </a>
-                                <div class="shout-body">
-                                    <p>${trans[lang].settings.accessibility.shout_preview}</p>
+                            <div class="toggle-container" id="container-accessible_name_colours">
+                                <button class="btn reset" onclick="_reset_item('accessible_name_colours')">${trans[lang].settings.reset}</button>
+                                <div class="heading">
+                                    <h5>${trans[lang].settings.accessibility.accessible_name_colours.name}</h5>
+                                    <p>${trans[lang].settings.accessibility.accessible_name_colours.bio}</p>
+                                </div>
+                                <div class="toggle-wrap">
+                                    <button class="toggle" id="toggle-accessible_name_colours" onclick="_update_item('accessible_name_colours')" aria-checked="false">
+                                        <div class="dot"></div>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="toggle-container" id="container-underline_links">
+                                <button class="btn reset" onclick="_reset_item('underline_links')">${trans[lang].settings.reset}</button>
+                                <div class="heading">
+                                    <h5>${trans[lang].settings.accessibility.underline_links.name}</h5>
+                                    <p>${trans[lang].settings.accessibility.underline_links.bio}</p>
+                                </div>
+                                <div class="toggle-wrap">
+                                    <button class="toggle" id="toggle-underline_links" onclick="_update_item('underline_links')" aria-checked="false">
+                                        <div class="dot"></div>
+                                    </button>
                                 </div>
                             </div>
                         </div>
-                        <div class="toggle-container" id="container-accessible_name_colours">
-                            <button class="btn reset" onclick="_reset_item('accessible_name_colours')">${trans[lang].settings.reset}</button>
-                            <div class="heading">
-                                <h5>${trans[lang].settings.accessibility.accessible_name_colours.name}</h5>
-                                <p>${trans[lang].settings.accessibility.accessible_name_colours.bio}</p>
-                            </div>
-                            <div class="toggle-wrap">
-                                <button class="toggle" id="toggle-accessible_name_colours" onclick="_update_item('accessible_name_colours')" aria-checked="false">
-                                    <div class="dot"></div>
-                                </button>
-                            </div>
+                        <div class="modal-footer">
+                            <button class="btn back" disabled>
+                                ${trans[lang].settings.back}
+                            </button>
+                            <div class="btn-fill"></div>
+                            <button class="btn skip" onclick="_setup_skip()">
+                                ${trans[lang].settings.skip}
+                            </button>
+                            <button class="btn primary continue" onclick="_setup_appearance()">
+                                ${trans[lang].settings.continue}
+                            </button>
                         </div>
-                        <div class="toggle-container" id="container-underline_links">
-                            <button class="btn reset" onclick="_reset_item('underline_links')">${trans[lang].settings.reset}</button>
-                            <div class="heading">
-                                <h5>${trans[lang].settings.accessibility.underline_links.name}</h5>
-                                <p>${trans[lang].settings.accessibility.underline_links.bio}</p>
-                            </div>
-                            <div class="toggle-wrap">
-                                <button class="toggle" id="toggle-underline_links" onclick="_update_item('underline_links')" aria-checked="false">
-                                    <div class="dot"></div>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button class="btn back" disabled>
-                            ${trans[lang].settings.back}
-                        </button>
-                        <div class="btn-fill"></div>
-                        <button class="btn skip" onclick="_setup_skip()">
-                            ${trans[lang].settings.skip}
-                        </button>
-                        <button class="btn primary continue" onclick="_setup_appearance()">
-                            ${trans[lang].settings.continue}
-                        </button>
                     </div>
                 </div>
-            </div>
-        `, false, 'setup');
+            `),
+            dismiss: false,
+            type: 'setup',
+            replace_if_possible: true
+        });
         refresh_all();
     }
 
     unsafeWindow._setup_appearance = function() {
-        kill_window('bleh_setup_accessibility');
-        kill_window('bleh_setup_theme');
-        create_window('bleh_setup_appearance','',`
-            <div class="setup-sides">
-                <div class="setup-preview">
-                    <div class="setup-icon setup-icon-main setup-icon-appearance">
-                        <div class="setup-colour-behind for-appearance-0"></div>
-                        <div class="setup-colour-behind for-appearance-1"></div>
-                        <div class="setup-colour-behind for-appearance-2"></div>
-                    </div>
-                </div>
-                <div class="setup-body">
-                    <div class="setup-body-main">
-                        <h1>${trans[lang].settings.appearance.name}</h1>
-                        <p>${trans[lang].setup.appearance.bio}</p>
-                        <h4>${trans[lang].settings.customise.colours.name}</h4>
-                        <!--<h5>${trans[lang].settings.customise.colours.presets}</h5>-->
-                        <div class="palette options colours" id="custom_colours">
-                            <button class="swatch btn default" style="
-                                --hue: var(--hue-seasonal, 255);
-                                --sat: var(--sat-seasonal, 1);
-                                --lit: var(--lit-seasonal, 1)" onclick="_update_params({
-                                hue: 255,
-                                sat: 1,
-                                lit: 1
-                            })"></button>
-                            <button class="swatch btn custom" style="
-                                --hue: var(--hue-user, 255);
-                                --sat: var(--sat-user, 1);
-                                --lit: var(--lit-user, 1)" onclick="_create_a_custom_colour()"></button>
+        dialog({
+            id: 'bleh_setup_appearance',
+            body: (`
+                <div class="setup-sides">
+                    <div class="setup-preview">
+                        <div class="setup-icon setup-icon-main setup-icon-appearance">
+                            <div class="setup-colour-behind for-appearance-0"></div>
+                            <div class="setup-colour-behind for-appearance-1"></div>
+                            <div class="setup-colour-behind for-appearance-2"></div>
                         </div>
-                        <p class="subtext">${trans[lang].setup.appearance.subtext}</p>
-                        <div class="palette options colours">
-                            <div class="side">
-                                <button class="swatch btn" style="
-                                    --hue: -2;
-                                    --sat: 1.35;
-                                    --lit: 0.85" onclick="_update_params({
-                                    hue: -2,
-                                    sat: 1.35,
-                                    lit: 0.85
-                                })"></button>
-                                <button class="swatch btn" style="
-                                    --hue: -2;
-                                    --sat: 1.25;
-                                    --lit: 0.85" onclick="_update_params({
-                                    hue: -2,
-                                    sat: 1.25,
-                                    lit: 0.85
-                                })"></button>
-                                <button class="swatch btn" style="
-                                    --hue: 356;
-                                    --sat: 1.25;
-                                    --lit: 0.9" onclick="_update_params({
-                                    hue: 356,
-                                    sat: 1.25,
-                                    lit: 0.9
-                                })"></button>
-                                <button class="swatch btn" style="
-                                    --hue: 351;
-                                    --sat: 1.2;
-                                    --lit: 0.9" onclick="_update_params({
-                                    hue: 351,
-                                    sat: 1.2,
-                                    lit: 0.9
-                                })"></button>
-                                <button class="swatch btn" style="
-                                    --hue: 346;
-                                    --sat: 1.3;
-                                    --lit: 0.85" onclick="_update_params({
-                                    hue: 346,
-                                    sat: 1.3,
-                                    lit: 0.85
-                                })"></button>
-                                <button class="swatch btn" style="
-                                    --hue: 339;
-                                    --sat: 1.3;
-                                    --lit: 0.85" onclick="_update_params({
-                                    hue: 339,
-                                    sat: 1.3,
-                                    lit: 0.85
-                                })"></button>
-                                <button class="swatch btn" style="
-                                    --hue: 331;
-                                    --sat: 1.1;
-                                    --lit: 0.8" onclick="_update_params({
-                                    hue: 331,
-                                    sat: 1.1,
-                                    lit: 0.8
-                                })"></button>
-                                <button class="swatch btn" style="
-                                    --hue: 310;
-                                    --sat: 1.2;
-                                    --lit: 0.85" onclick="_update_params({
-                                    hue: 310,
-                                    sat: 1.2,
-                                    lit: 0.85
-                                })"></button>
-                                <button class="swatch btn" style="
-                                    --hue: 286;
-                                    --sat: 1.2;
-                                    --lit: 0.9" onclick="_update_params({
-                                    hue: 286,
-                                    sat: 1.2,
-                                    lit: 0.9
-                                })"></button>
-                                <button class="swatch btn" style="
-                                    --hue: 274;
-                                    --sat: 1.25;
-                                    --lit: 0.9" onclick="_update_params({
-                                    hue: 274,
-                                    sat: 1.25,
-                                    lit: 0.9
-                                })"></button>
-                            </div>
-                            <div class="side">
-                                <button class="swatch btn" style="
-                                    --hue: 7;
-                                    --sat: 1.35;
-                                    --lit: 0.8" onclick="_update_params({
-                                    hue: 7,
-                                    sat: 1.35,
-                                    lit: 0.8
-                                })"></button>
-                                <button class="swatch btn" style="
-                                    --hue: 9;
-                                    --sat: 1.25;
-                                    --lit: 0.84" onclick="_update_params({
-                                    hue: 9,
-                                    sat: 1.25,
-                                    lit: 0.84
-                                })"></button>
-                                <button class="swatch btn" style="
-                                    --hue: 14;
-                                    --sat: 1.25;
-                                    --lit: 0.88" onclick="_update_params({
-                                    hue: 14,
-                                    sat: 1.25,
-                                    lit: 0.88
-                                })"></button>
-                                <button class="swatch btn" style="
-                                    --hue: 18;
-                                    --sat: 1.2;
-                                    --lit: 0.9" onclick="_update_params({
-                                    hue: 18,
-                                    sat: 1.2,
-                                    lit: 0.9
-                                })"></button>
-                                <button class="swatch btn" style="
-                                    --hue: 24;
-                                    --sat: 1.2;
-                                    --lit: 0.93" onclick="_update_params({
-                                    hue: 24,
-                                    sat: 1.2,
-                                    lit: 0.93
-                                })"></button>
-                                <button class="swatch btn" style="
-                                    --hue: 30;
-                                    --sat: 1.3;
-                                    --lit: 1" onclick="_update_params({
-                                    hue: 30,
-                                    sat: 1.3,
-                                    lit: 1
-                                })"></button>
-                                <button class="swatch btn" style="
-                                    --hue: 38;
-                                    --sat: 1.3;
-                                    --lit: 0.98" onclick="_update_params({
-                                    hue: 38,
-                                    sat: 1.3,
-                                    lit: 0.98
-                                })"></button>
-                                <button class="swatch btn" style="
-                                    --hue: 49;
-                                    --sat: 1.3;
-                                    --lit: 0.98" onclick="_update_params({
-                                    hue: 49,
-                                    sat: 1.3,
-                                    lit: 0.98
-                                })"></button>
-                                <button class="swatch btn" style="
-                                    --hue: 53;
-                                    --sat: 1.3;
-                                    --lit: 0.95" onclick="_update_params({
-                                    hue: 53,
-                                    sat: 1.3,
-                                    lit: 0.95
-                                })"></button>
-                                <button class="swatch btn" style="
-                                    --hue: 62;
-                                    --sat: 1.25;
-                                    --lit: 0.95" onclick="_update_params({
-                                    hue: 62,
-                                    sat: 1.25,
-                                    lit: 0.95
-                                })"></button>
-                            </div>
-                            <div class="side">
-                                <button class="swatch btn" style="
-                                    --hue: 75;
-                                    --sat: 1.1;
-                                    --lit: 1" onclick="_update_params({
-                                    hue: 75,
-                                    sat: 1.1,
-                                    lit: 1
-                                })"></button>
-                                <button class="swatch btn" style="
-                                    --hue: 85;
-                                    --sat: 1;
-                                    --lit: 1" onclick="_update_params({
-                                    hue: 85,
-                                    sat: 1,
-                                    lit: 1
-                                })"></button>
-                                <button class="swatch btn" style="
-                                    --hue: 95;
-                                    --sat: 1.1;
-                                    --lit: 1" onclick="_update_params({
-                                    hue: 95,
-                                    sat: 1.1,
-                                    lit: 1
-                                })"></button>
-                                <button class="swatch btn" style="
-                                    --hue: 115;
-                                    --sat: 1;
-                                    --lit: 1" onclick="_update_params({
-                                    hue: 115,
-                                    sat: 1,
-                                    lit: 1
-                                })"></button>
-                                <button class="swatch btn" style="
-                                    --hue: 130;
-                                    --sat: 1.2;
-                                    --lit: 0.95" onclick="_update_params({
-                                    hue: 130,
-                                    sat: 1.2,
-                                    lit: 0.95
-                                })"></button>
-                                <button class="swatch btn" style="
-                                    --hue: 140;
-                                    --sat: 1.2;
-                                    --lit: 0.9" onclick="_update_params({
-                                    hue: 140,
-                                    sat: 1.2,
-                                    lit: 0.9
-                                })"></button>
-                                <button class="swatch btn" style="
-                                    --hue: 155;
-                                    --sat: 1.2;
-                                    --lit: 0.85" onclick="_update_params({
-                                    hue: 155,
-                                    sat: 1.2,
-                                    lit: 0.85
-                                })"></button>
-                                <button class="swatch btn" style="
-                                    --hue: 165;
-                                    --sat: 1.1;
-                                    --lit: 0.8" onclick="_update_params({
-                                    hue: 165,
-                                    sat: 1.1,
-                                    lit: 0.8
-                                })"></button>
-                                <button class="swatch btn" style="
-                                    --hue: 174;
-                                    --sat: 1.1;
-                                    --lit: 0.8" onclick="_update_params({
-                                    hue: 174,
-                                    sat: 1.1,
-                                    lit: 0.8
-                                })"></button>
-                                <button class="swatch btn" style="
-                                    --hue: 184;
-                                    --sat: 1.05;
-                                    --lit: 0.75" onclick="_update_params({
-                                    hue: 184,
-                                    sat: 1.05,
-                                    lit: 0.75
-                                })"></button>
-                            </div>
-                            <div class="side">
-                                <button class="swatch btn" style="
-                                    --hue: 205;
-                                    --sat: 1;
-                                    --lit: 1" onclick="_update_params({
-                                    hue: 205,
-                                    sat: 1,
-                                    lit: 1
-                                })"></button>
-                                <button class="swatch btn" style="
-                                    --hue: 222;
-                                    --sat: 1;
-                                    --lit: 0.9" onclick="_update_params({
-                                    hue: 222,
-                                    sat: 1,
-                                    lit: 0.9
-                                })"></button>
-                                <button class="swatch btn" style="
-                                    --hue: 230;
-                                    --sat: 1.3;
-                                    --lit: 0.9" onclick="_update_params({
-                                    hue: 230,
-                                    sat: 1.3,
-                                    lit: 0.9
-                                })"></button>
-                                <button class="swatch btn" style="
-                                    --hue: 230;
-                                    --sat: 1.3;
-                                    --lit: 0.825" onclick="_update_params({
-                                    hue: 230,
-                                    sat: 1.3,
-                                    lit: 0.825
-                                })"></button>
-                                <button class="swatch btn" style="
-                                    --hue: 243;
-                                    --sat: 1.3;
-                                    --lit: 0.9" onclick="_update_params({
-                                    hue: 243,
-                                    sat: 1.3,
-                                    lit: 0.9
-                                })"></button>
-                                <button class="swatch btn" style="
-                                    --hue: 249;
-                                    --sat: 1.3;
-                                    --lit: 0.9" onclick="_update_params({
-                                    hue: 249,
-                                    sat: 1.3,
-                                    lit: 0.9
-                                })"></button>
-                                <button class="swatch btn" style="
-                                    --hue: 255;
-                                    --sat: 1.2;
-                                    --lit: 0.9" onclick="_update_params({
-                                    hue: 255,
-                                    sat: 1.2,
-                                    lit: 0.9
-                                })"></button>
-                                <button class="swatch btn" style="
-                                    --hue: 263;
-                                    --sat: 1.2;
-                                    --lit: 0.9" onclick="_update_params({
-                                    hue: 263,
-                                    sat: 1.2,
-                                    lit: 0.9
-                                })"></button>
-                                <button class="swatch btn" style="
-                                    --hue: 260;
-                                    --sat: 1.1;
-                                    --lit: 0.95" onclick="_update_params({
-                                    hue: 260,
-                                    sat: 1.1,
-                                    lit: 0.95
-                                })"></button>
-                                <button class="swatch btn" style="
-                                    --hue: 255;
-                                    --sat: 1;
-                                    --lit: 0.95" onclick="_update_params({
+                    </div>
+                    <div class="setup-body">
+                        <div class="setup-body-main">
+                            <h1>${trans[lang].settings.appearance.name}</h1>
+                            <p>${trans[lang].setup.appearance.bio}</p>
+                            <h4>${trans[lang].settings.customise.colours.name}</h4>
+                            <!--<h5>${trans[lang].settings.customise.colours.presets}</h5>-->
+                            <div class="palette options colours" id="custom_colours">
+                                <button class="swatch btn default" style="
+                                    --hue: var(--hue-seasonal, 255);
+                                    --sat: var(--sat-seasonal, 1);
+                                    --lit: var(--lit-seasonal, 1)" onclick="_update_params({
                                     hue: 255,
                                     sat: 1,
-                                    lit: 0.95
+                                    lit: 1
                                 })"></button>
+                                <button class="swatch btn custom" style="
+                                    --hue: var(--hue-user, 255);
+                                    --sat: var(--sat-user, 1);
+                                    --lit: var(--lit-user, 1)" onclick="_create_a_custom_colour()"></button>
+                            </div>
+                            <p class="subtext">${trans[lang].setup.appearance.subtext}</p>
+                            <div class="palette options colours">
+                                <div class="side">
+                                    <button class="swatch btn" style="
+                                        --hue: -2;
+                                        --sat: 1.35;
+                                        --lit: 0.85" onclick="_update_params({
+                                        hue: -2,
+                                        sat: 1.35,
+                                        lit: 0.85
+                                    })"></button>
+                                    <button class="swatch btn" style="
+                                        --hue: -2;
+                                        --sat: 1.25;
+                                        --lit: 0.85" onclick="_update_params({
+                                        hue: -2,
+                                        sat: 1.25,
+                                        lit: 0.85
+                                    })"></button>
+                                    <button class="swatch btn" style="
+                                        --hue: 356;
+                                        --sat: 1.25;
+                                        --lit: 0.9" onclick="_update_params({
+                                        hue: 356,
+                                        sat: 1.25,
+                                        lit: 0.9
+                                    })"></button>
+                                    <button class="swatch btn" style="
+                                        --hue: 351;
+                                        --sat: 1.2;
+                                        --lit: 0.9" onclick="_update_params({
+                                        hue: 351,
+                                        sat: 1.2,
+                                        lit: 0.9
+                                    })"></button>
+                                    <button class="swatch btn" style="
+                                        --hue: 346;
+                                        --sat: 1.3;
+                                        --lit: 0.85" onclick="_update_params({
+                                        hue: 346,
+                                        sat: 1.3,
+                                        lit: 0.85
+                                    })"></button>
+                                    <button class="swatch btn" style="
+                                        --hue: 339;
+                                        --sat: 1.3;
+                                        --lit: 0.85" onclick="_update_params({
+                                        hue: 339,
+                                        sat: 1.3,
+                                        lit: 0.85
+                                    })"></button>
+                                    <button class="swatch btn" style="
+                                        --hue: 331;
+                                        --sat: 1.1;
+                                        --lit: 0.8" onclick="_update_params({
+                                        hue: 331,
+                                        sat: 1.1,
+                                        lit: 0.8
+                                    })"></button>
+                                    <button class="swatch btn" style="
+                                        --hue: 310;
+                                        --sat: 1.2;
+                                        --lit: 0.85" onclick="_update_params({
+                                        hue: 310,
+                                        sat: 1.2,
+                                        lit: 0.85
+                                    })"></button>
+                                    <button class="swatch btn" style="
+                                        --hue: 286;
+                                        --sat: 1.2;
+                                        --lit: 0.9" onclick="_update_params({
+                                        hue: 286,
+                                        sat: 1.2,
+                                        lit: 0.9
+                                    })"></button>
+                                    <button class="swatch btn" style="
+                                        --hue: 274;
+                                        --sat: 1.25;
+                                        --lit: 0.9" onclick="_update_params({
+                                        hue: 274,
+                                        sat: 1.25,
+                                        lit: 0.9
+                                    })"></button>
+                                </div>
+                                <div class="side">
+                                    <button class="swatch btn" style="
+                                        --hue: 7;
+                                        --sat: 1.35;
+                                        --lit: 0.8" onclick="_update_params({
+                                        hue: 7,
+                                        sat: 1.35,
+                                        lit: 0.8
+                                    })"></button>
+                                    <button class="swatch btn" style="
+                                        --hue: 9;
+                                        --sat: 1.25;
+                                        --lit: 0.84" onclick="_update_params({
+                                        hue: 9,
+                                        sat: 1.25,
+                                        lit: 0.84
+                                    })"></button>
+                                    <button class="swatch btn" style="
+                                        --hue: 14;
+                                        --sat: 1.25;
+                                        --lit: 0.88" onclick="_update_params({
+                                        hue: 14,
+                                        sat: 1.25,
+                                        lit: 0.88
+                                    })"></button>
+                                    <button class="swatch btn" style="
+                                        --hue: 18;
+                                        --sat: 1.2;
+                                        --lit: 0.9" onclick="_update_params({
+                                        hue: 18,
+                                        sat: 1.2,
+                                        lit: 0.9
+                                    })"></button>
+                                    <button class="swatch btn" style="
+                                        --hue: 24;
+                                        --sat: 1.2;
+                                        --lit: 0.93" onclick="_update_params({
+                                        hue: 24,
+                                        sat: 1.2,
+                                        lit: 0.93
+                                    })"></button>
+                                    <button class="swatch btn" style="
+                                        --hue: 30;
+                                        --sat: 1.3;
+                                        --lit: 1" onclick="_update_params({
+                                        hue: 30,
+                                        sat: 1.3,
+                                        lit: 1
+                                    })"></button>
+                                    <button class="swatch btn" style="
+                                        --hue: 38;
+                                        --sat: 1.3;
+                                        --lit: 0.98" onclick="_update_params({
+                                        hue: 38,
+                                        sat: 1.3,
+                                        lit: 0.98
+                                    })"></button>
+                                    <button class="swatch btn" style="
+                                        --hue: 49;
+                                        --sat: 1.3;
+                                        --lit: 0.98" onclick="_update_params({
+                                        hue: 49,
+                                        sat: 1.3,
+                                        lit: 0.98
+                                    })"></button>
+                                    <button class="swatch btn" style="
+                                        --hue: 53;
+                                        --sat: 1.3;
+                                        --lit: 0.95" onclick="_update_params({
+                                        hue: 53,
+                                        sat: 1.3,
+                                        lit: 0.95
+                                    })"></button>
+                                    <button class="swatch btn" style="
+                                        --hue: 62;
+                                        --sat: 1.25;
+                                        --lit: 0.95" onclick="_update_params({
+                                        hue: 62,
+                                        sat: 1.25,
+                                        lit: 0.95
+                                    })"></button>
+                                </div>
+                                <div class="side">
+                                    <button class="swatch btn" style="
+                                        --hue: 75;
+                                        --sat: 1.1;
+                                        --lit: 1" onclick="_update_params({
+                                        hue: 75,
+                                        sat: 1.1,
+                                        lit: 1
+                                    })"></button>
+                                    <button class="swatch btn" style="
+                                        --hue: 85;
+                                        --sat: 1;
+                                        --lit: 1" onclick="_update_params({
+                                        hue: 85,
+                                        sat: 1,
+                                        lit: 1
+                                    })"></button>
+                                    <button class="swatch btn" style="
+                                        --hue: 95;
+                                        --sat: 1.1;
+                                        --lit: 1" onclick="_update_params({
+                                        hue: 95,
+                                        sat: 1.1,
+                                        lit: 1
+                                    })"></button>
+                                    <button class="swatch btn" style="
+                                        --hue: 115;
+                                        --sat: 1;
+                                        --lit: 1" onclick="_update_params({
+                                        hue: 115,
+                                        sat: 1,
+                                        lit: 1
+                                    })"></button>
+                                    <button class="swatch btn" style="
+                                        --hue: 130;
+                                        --sat: 1.2;
+                                        --lit: 0.95" onclick="_update_params({
+                                        hue: 130,
+                                        sat: 1.2,
+                                        lit: 0.95
+                                    })"></button>
+                                    <button class="swatch btn" style="
+                                        --hue: 140;
+                                        --sat: 1.2;
+                                        --lit: 0.9" onclick="_update_params({
+                                        hue: 140,
+                                        sat: 1.2,
+                                        lit: 0.9
+                                    })"></button>
+                                    <button class="swatch btn" style="
+                                        --hue: 155;
+                                        --sat: 1.2;
+                                        --lit: 0.85" onclick="_update_params({
+                                        hue: 155,
+                                        sat: 1.2,
+                                        lit: 0.85
+                                    })"></button>
+                                    <button class="swatch btn" style="
+                                        --hue: 165;
+                                        --sat: 1.1;
+                                        --lit: 0.8" onclick="_update_params({
+                                        hue: 165,
+                                        sat: 1.1,
+                                        lit: 0.8
+                                    })"></button>
+                                    <button class="swatch btn" style="
+                                        --hue: 174;
+                                        --sat: 1.1;
+                                        --lit: 0.8" onclick="_update_params({
+                                        hue: 174,
+                                        sat: 1.1,
+                                        lit: 0.8
+                                    })"></button>
+                                    <button class="swatch btn" style="
+                                        --hue: 184;
+                                        --sat: 1.05;
+                                        --lit: 0.75" onclick="_update_params({
+                                        hue: 184,
+                                        sat: 1.05,
+                                        lit: 0.75
+                                    })"></button>
+                                </div>
+                                <div class="side">
+                                    <button class="swatch btn" style="
+                                        --hue: 205;
+                                        --sat: 1;
+                                        --lit: 1" onclick="_update_params({
+                                        hue: 205,
+                                        sat: 1,
+                                        lit: 1
+                                    })"></button>
+                                    <button class="swatch btn" style="
+                                        --hue: 222;
+                                        --sat: 1;
+                                        --lit: 0.9" onclick="_update_params({
+                                        hue: 222,
+                                        sat: 1,
+                                        lit: 0.9
+                                    })"></button>
+                                    <button class="swatch btn" style="
+                                        --hue: 230;
+                                        --sat: 1.3;
+                                        --lit: 0.9" onclick="_update_params({
+                                        hue: 230,
+                                        sat: 1.3,
+                                        lit: 0.9
+                                    })"></button>
+                                    <button class="swatch btn" style="
+                                        --hue: 230;
+                                        --sat: 1.3;
+                                        --lit: 0.825" onclick="_update_params({
+                                        hue: 230,
+                                        sat: 1.3,
+                                        lit: 0.825
+                                    })"></button>
+                                    <button class="swatch btn" style="
+                                        --hue: 243;
+                                        --sat: 1.3;
+                                        --lit: 0.9" onclick="_update_params({
+                                        hue: 243,
+                                        sat: 1.3,
+                                        lit: 0.9
+                                    })"></button>
+                                    <button class="swatch btn" style="
+                                        --hue: 249;
+                                        --sat: 1.3;
+                                        --lit: 0.9" onclick="_update_params({
+                                        hue: 249,
+                                        sat: 1.3,
+                                        lit: 0.9
+                                    })"></button>
+                                    <button class="swatch btn" style="
+                                        --hue: 255;
+                                        --sat: 1.2;
+                                        --lit: 0.9" onclick="_update_params({
+                                        hue: 255,
+                                        sat: 1.2,
+                                        lit: 0.9
+                                    })"></button>
+                                    <button class="swatch btn" style="
+                                        --hue: 263;
+                                        --sat: 1.2;
+                                        --lit: 0.9" onclick="_update_params({
+                                        hue: 263,
+                                        sat: 1.2,
+                                        lit: 0.9
+                                    })"></button>
+                                    <button class="swatch btn" style="
+                                        --hue: 260;
+                                        --sat: 1.1;
+                                        --lit: 0.95" onclick="_update_params({
+                                        hue: 260,
+                                        sat: 1.1,
+                                        lit: 0.95
+                                    })"></button>
+                                    <button class="swatch btn" style="
+                                        --hue: 255;
+                                        --sat: 1;
+                                        --lit: 0.95" onclick="_update_params({
+                                        hue: 255,
+                                        sat: 1,
+                                        lit: 0.95
+                                    })"></button>
+                                </div>
+                            </div>
+                            <div class="toggle-container" id="container-hue_from_album">
+                                <button class="btn reset" onclick="_reset_item('hue_from_album')">${trans[lang].settings.reset}</button>
+                                <div class="heading">
+                                    <h5>${trans[lang].settings.customise.hue_from_album.name}</h5>
+                                    <p>${trans[lang].settings.customise.hue_from_album.bio}</p>
+                                </div>
+                                <div class="toggle-wrap">
+                                    <button class="toggle" id="toggle-hue_from_album" onclick="_update_item('hue_from_album')" aria-checked="true">
+                                        <div class="dot"></div>
+                                    </button>
+                                </div>
                             </div>
                         </div>
-                        <div class="toggle-container" id="container-hue_from_album">
-                            <button class="btn reset" onclick="_reset_item('hue_from_album')">${trans[lang].settings.reset}</button>
-                            <div class="heading">
-                                <h5>${trans[lang].settings.customise.hue_from_album.name}</h5>
-                                <p>${trans[lang].settings.customise.hue_from_album.bio}</p>
-                            </div>
-                            <div class="toggle-wrap">
-                                <button class="toggle" id="toggle-hue_from_album" onclick="_update_item('hue_from_album')" aria-checked="true">
-                                    <div class="dot"></div>
-                                </button>
-                            </div>
+                        <div class="modal-footer">
+                            <button class="btn back" onclick="_setup_accessibility()">
+                                ${trans[lang].settings.back}
+                            </button>
+                            <div class="btn-fill"></div>
+                            <button class="btn skip" onclick="_setup_skip()">
+                                ${trans[lang].settings.skip}
+                            </button>
+                            <button class="btn primary continue" onclick="_setup_theme()">
+                                ${trans[lang].settings.continue}
+                            </button>
                         </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button class="btn back" onclick="_setup_accessibility()">
-                            ${trans[lang].settings.back}
-                        </button>
-                        <div class="btn-fill"></div>
-                        <button class="btn skip" onclick="_setup_skip()">
-                            ${trans[lang].settings.skip}
-                        </button>
-                        <button class="btn primary continue" onclick="_setup_theme()">
-                            ${trans[lang].settings.continue}
-                        </button>
                     </div>
                 </div>
-            </div>
-        `, false, 'setup');
+            `),
+            dismiss: false,
+            type: 'setup',
+            replace_if_possible: true
+        })
         refresh_all();
 
         tippy(document.body.querySelector('.swatch.default'), {
@@ -10582,250 +11027,265 @@ let has_prompted_for_update = false;
     }
 
     unsafeWindow._setup_theme = function() {
-        kill_window('bleh_setup_appearance');
-        kill_window('bleh_setup_corrections');
-        create_window('bleh_setup_theme','',`
-            <div class="setup-sides">
-                <div class="setup-preview">
-                    <div class="setup-icon setup-icon-main setup-icon-theme"></div>
-                </div>
-                <div class="setup-body">
-                    <div class="setup-body-main">
-                        <h1>${trans[lang].settings.appearance.name}</h1>
-                        <h4>${trans[lang].settings.themes.name}</h4>
-                        <!--<h4>${trans[lang].settings.themes.dark.name}</h4>-->
-                        <div class="setting-items full">
-                            <div class="side-left full even-more">
-                                <button class="btn theme-item" data-bleh-theme="light" onclick="change_theme_from_settings('light')">
-                                    <div class="preview" data-bleh--theme="light">
-                                        ${theme_preview}
-                                    </div>
-                                    <div class="text">
-                                        <h5>${trans[lang].settings.themes.light.name}</h5>
-                                    </div>
-                                </button>
-                                <button class="btn theme-item" data-bleh-theme="dark" onclick="change_theme_from_settings('dark')">
-                                    <div class="preview" data-bleh--theme="dark">
-                                        ${theme_preview}
-                                    </div>
-                                    <div class="text">
-                                        <h5>${trans[lang].settings.themes.dark.name}</h5>
-                                    </div>
-                                </button>
-                                <button class="btn theme-item" data-bleh-theme="darker" onclick="change_theme_from_settings('darker')">
-                                    <div class="preview" data-bleh--theme="darker">
-                                        ${theme_preview}
-                                    </div>
-                                    <div class="text">
-                                        <h5>${trans[lang].settings.themes.darker.name}</h5>
-                                    </div>
-                                </button>
-                                <button class="btn theme-item" data-bleh-theme="oled" onclick="change_theme_from_settings('oled')">
-                                    <div class="preview" data-bleh--theme="oled">
-                                        ${theme_preview}
-                                    </div>
-                                    <div class="text">
-                                        <h5>${trans[lang].settings.themes.oled.name}</h5>
-                                    </div>
-                                </button>
-                            </div>
-                        </div>
-                        ${(ff('high_contrast')) ? (`
-                        <div class="toggle-container" id="container-high_contrast">
-                            <button class="btn reset" onclick="_reset_item('high_contrast')">${trans[lang].settings.reset}</button>
-                            <div class="heading">
-                                <h5>${trans[lang].settings.customise.high_contrast.name}</h5>
-                            </div>
-                            <div class="toggle-wrap">
-                                <button class="toggle" id="toggle-high_contrast" onclick="_update_item('high_contrast')" aria-checked="true">
-                                    <div class="dot"></div>
-                                </button>
-                            </div>
-                        </div>
-                        `) : ''}
+        dialog({
+            id: 'bleh_setup_theme',
+            body: (`
+                <div class="setup-sides">
+                    <div class="setup-preview">
+                        <div class="setup-icon setup-icon-main setup-icon-theme"></div>
                     </div>
-                    <div class="modal-footer">
-                        <button class="btn back" onclick="_setup_appearance()">
-                            ${trans[lang].settings.back}
-                        </button>
-                        <div class="btn-fill"></div>
-                        <button class="btn skip" onclick="_setup_skip()">
-                            ${trans[lang].settings.skip}
-                        </button>
-                        <button class="btn primary continue" onclick="_setup_corrections()">
-                            ${trans[lang].settings.continue}
-                        </button>
+                    <div class="setup-body">
+                        <div class="setup-body-main">
+                            <h1>${trans[lang].settings.appearance.name}</h1>
+                            <h4>${trans[lang].settings.themes.name}</h4>
+                            <!--<h4>${trans[lang].settings.themes.dark.name}</h4>-->
+                            <div class="setting-items full">
+                                <div class="side-left full even-more">
+                                    <button class="btn theme-item" data-bleh-theme="light" onclick="change_theme_from_settings('light')">
+                                        <div class="preview" data-bleh--theme="light">
+                                            ${theme_preview}
+                                        </div>
+                                        <div class="text">
+                                            <h5>${trans[lang].settings.themes.light.name}</h5>
+                                        </div>
+                                    </button>
+                                    <button class="btn theme-item" data-bleh-theme="dark" onclick="change_theme_from_settings('dark')">
+                                        <div class="preview" data-bleh--theme="dark">
+                                            ${theme_preview}
+                                        </div>
+                                        <div class="text">
+                                            <h5>${trans[lang].settings.themes.dark.name}</h5>
+                                        </div>
+                                    </button>
+                                    <button class="btn theme-item" data-bleh-theme="darker" onclick="change_theme_from_settings('darker')">
+                                        <div class="preview" data-bleh--theme="darker">
+                                            ${theme_preview}
+                                        </div>
+                                        <div class="text">
+                                            <h5>${trans[lang].settings.themes.darker.name}</h5>
+                                        </div>
+                                    </button>
+                                    <button class="btn theme-item" data-bleh-theme="oled" onclick="change_theme_from_settings('oled')">
+                                        <div class="preview" data-bleh--theme="oled">
+                                            ${theme_preview}
+                                        </div>
+                                        <div class="text">
+                                            <h5>${trans[lang].settings.themes.oled.name}</h5>
+                                        </div>
+                                    </button>
+                                </div>
+                            </div>
+                            ${(ff('high_contrast')) ? (`
+                            <div class="toggle-container" id="container-high_contrast">
+                                <button class="btn reset" onclick="_reset_item('high_contrast')">${trans[lang].settings.reset}</button>
+                                <div class="heading">
+                                    <h5>${trans[lang].settings.customise.high_contrast.name}</h5>
+                                </div>
+                                <div class="toggle-wrap">
+                                    <button class="toggle" id="toggle-high_contrast" onclick="_update_item('high_contrast')" aria-checked="true">
+                                        <div class="dot"></div>
+                                    </button>
+                                </div>
+                            </div>
+                            `) : ''}
+                        </div>
+                        <div class="modal-footer">
+                            <button class="btn back" onclick="_setup_appearance()">
+                                ${trans[lang].settings.back}
+                            </button>
+                            <div class="btn-fill"></div>
+                            <button class="btn skip" onclick="_setup_skip()">
+                                ${trans[lang].settings.skip}
+                            </button>
+                            <button class="btn primary continue" onclick="_setup_corrections()">
+                                ${trans[lang].settings.continue}
+                            </button>
+                        </div>
                     </div>
                 </div>
-            </div>
-        `, false, 'setup');
+            `),
+            dismiss: false,
+            type: 'setup',
+            replace_if_possible: true
+        })
         refresh_all();
         show_theme_change_in_settings();
     }
 
     unsafeWindow._setup_corrections = function() {
-        kill_window('bleh_setup_theme');
-        kill_window('bleh_setup_seasons');
-        create_window('bleh_setup_corrections','',`
-            <div class="setup-sides">
-                <div class="setup-preview">
-                    <div class="setup-icon setup-icon-main setup-icon-corrections"></div>
-                </div>
-                <div class="setup-body">
-                    <div class="setup-body-main">
-                        <h1>${trans[lang].settings.corrections.name}</h1>
-                        <p>${trans[lang].settings.corrections.bio}</p>
-                        <div class="inner-preview pad flex">
-                            <table class="chartlist chartlist--with-index chartlist--with-index--length-2 chartlist--with-image chartlist--with-play chartlist--with-artist chartlist--with-bar">
-                                <tbody>
-                                    <tr class="chartlist-row chartlist-row--with-artist">
-                                        <td class="chartlist-index">
-                                            1
-                                        </td>
-                                        <td class="chartlist-image">
-                                            <span class="cover-art">
-                                                <img src="https://lastfm.freetls.fastly.net/i/u/64s/c15d3ed1bd8574260f9378e26847501d.jpg" alt="fractions of infinity" loading="lazy">
-                                            </span>
-                                        </td>
-                                        <td class="chartlist-name">
-                                            <a href="/music/Quadeca/_/fractions+of+infinity" title="fractions of infinity" class="bleh--chartlist-name-without-features">fractions of infinity (feat. Sunday Service Choir)</a>
-                                            <a href="/music/Quadeca/_/fractions+of+infinity" title="fractions of infinity" class="bleh--chartlist-name-with-features">
-                                                <span class="title">fractions of infinity</span>
-                                                <span class="feat" data-bleh--tag-group="guests">feat. Sunday Serv..</span>
-                                            </a>
-                                        </td>
-                                        <td class="chartlist-artist bleh--chartlist-name-without-features">
-                                            <a href="/music/Quadeca" title="Quadeca">Quadeca</a>
-                                        </td>
-                                        <td class="chartlist-artist bleh--chartlist-name-with-features">
-                                            <a href="/music/Quadeca" title="Quadeca">Quadeca</a>,
-                                            <a href="/music/Quadeca" title="Quadeca">Sunday Service</a>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
+        dialog({
+            id: 'bleh_setup_corrections',
+            body: (`
+                <div class="setup-sides">
+                    <div class="setup-preview">
+                        <div class="setup-icon setup-icon-main setup-icon-corrections"></div>
+                    </div>
+                    <div class="setup-body">
+                        <div class="setup-body-main">
+                            <h1>${trans[lang].settings.corrections.name}</h1>
+                            <p>${trans[lang].settings.corrections.bio}</p>
+                            <div class="inner-preview pad flex">
+                                <table class="chartlist chartlist--with-index chartlist--with-index--length-2 chartlist--with-image chartlist--with-play chartlist--with-artist chartlist--with-bar">
+                                    <tbody>
+                                        <tr class="chartlist-row chartlist-row--with-artist">
+                                            <td class="chartlist-index">
+                                                1
+                                            </td>
+                                            <td class="chartlist-image">
+                                                <span class="cover-art">
+                                                    <img src="https://lastfm.freetls.fastly.net/i/u/64s/c15d3ed1bd8574260f9378e26847501d.jpg" alt="fractions of infinity" loading="lazy">
+                                                </span>
+                                            </td>
+                                            <td class="chartlist-name">
+                                                <a href="/music/Quadeca/_/fractions+of+infinity" title="fractions of infinity" class="bleh--chartlist-name-without-features">fractions of infinity (feat. Sunday Service Choir)</a>
+                                                <a href="/music/Quadeca/_/fractions+of+infinity" title="fractions of infinity" class="bleh--chartlist-name-with-features">
+                                                    <span class="title">fractions of infinity</span>
+                                                    <span class="feat" data-bleh--tag-group="guests">feat. Sunday Serv..</span>
+                                                </a>
+                                            </td>
+                                            <td class="chartlist-artist bleh--chartlist-name-without-features">
+                                                <a href="/music/Quadeca" title="Quadeca">Quadeca</a>
+                                            </td>
+                                            <td class="chartlist-artist bleh--chartlist-name-with-features">
+                                                <a href="/music/Quadeca" title="Quadeca">Quadeca</a>,
+                                                <a href="/music/Quadeca" title="Quadeca">Sunday Service</a>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="toggle-container" id="container-format_guest_features">
+                                <button class="btn reset" onclick="_reset_item('format_guest_features')">${trans[lang].settings.reset}</button>
+                                <div class="heading">
+                                    <h5>${trans[lang].settings.corrections.format_guest_features.name}</h5>
+                                    <p>${trans[lang].settings.corrections.format_guest_features.bio}</p>
+                                </div>
+                                <div class="toggle-wrap">
+                                    <button class="toggle" id="toggle-format_guest_features" onclick="_update_item('format_guest_features')" aria-checked="true">
+                                        <div class="dot"></div>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="toggle-container" id="container-show_guest_features">
+                                <button class="btn reset" onclick="_reset_item('show_guest_features')">${trans[lang].settings.reset}</button>
+                                <div class="heading">
+                                    <h5>${trans[lang].settings.corrections.show_guest_features.name}</h5>
+                                    <p>${trans[lang].settings.corrections.show_guest_features.bio}</p>
+                                </div>
+                                <div class="toggle-wrap">
+                                    <button class="toggle" id="toggle-show_guest_features" onclick="_update_item('show_guest_features')" aria-checked="true">
+                                        <div class="dot"></div>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="toggle-container" id="container-show_remaster_tags">
+                                <button class="btn reset" onclick="_reset_item('show_remaster_tags')">${trans[lang].settings.reset}</button>
+                                <div class="heading">
+                                    <h5>${trans[lang].settings.corrections.show_remaster_tags.name}</h5>
+                                    <p>${trans[lang].settings.corrections.show_remaster_tags.bio}</p>
+                                </div>
+                                <div class="toggle-wrap">
+                                    <button class="toggle" id="toggle-show_remaster_tags" onclick="_update_item('show_remaster_tags')" aria-checked="true">
+                                        <div class="dot"></div>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="toggle-container" id="container-stacked_chartlist_info">
+                                <button class="btn reset" onclick="_reset_item('stacked_chartlist_info')">${trans[lang].settings.reset}</button>
+                                <div class="heading">
+                                    <h5>${trans[lang].settings.corrections.stacked_chartlist_info.name}</h5>
+                                    <p>${trans[lang].settings.corrections.stacked_chartlist_info.bio}</p>
+                                </div>
+                                <div class="toggle-wrap">
+                                    <button class="toggle" id="toggle-stacked_chartlist_info" onclick="_update_item('stacked_chartlist_info')" aria-checked="true">
+                                        <div class="dot"></div>
+                                    </button>
+                                </div>
+                            </div>
                         </div>
-                        <div class="toggle-container" id="container-format_guest_features">
-                            <button class="btn reset" onclick="_reset_item('format_guest_features')">${trans[lang].settings.reset}</button>
-                            <div class="heading">
-                                <h5>${trans[lang].settings.corrections.format_guest_features.name}</h5>
-                                <p>${trans[lang].settings.corrections.format_guest_features.bio}</p>
-                            </div>
-                            <div class="toggle-wrap">
-                                <button class="toggle" id="toggle-format_guest_features" onclick="_update_item('format_guest_features')" aria-checked="true">
-                                    <div class="dot"></div>
-                                </button>
-                            </div>
-                        </div>
-                        <div class="toggle-container" id="container-show_guest_features">
-                            <button class="btn reset" onclick="_reset_item('show_guest_features')">${trans[lang].settings.reset}</button>
-                            <div class="heading">
-                                <h5>${trans[lang].settings.corrections.show_guest_features.name}</h5>
-                                <p>${trans[lang].settings.corrections.show_guest_features.bio}</p>
-                            </div>
-                            <div class="toggle-wrap">
-                                <button class="toggle" id="toggle-show_guest_features" onclick="_update_item('show_guest_features')" aria-checked="true">
-                                    <div class="dot"></div>
-                                </button>
-                            </div>
-                        </div>
-                        <div class="toggle-container" id="container-show_remaster_tags">
-                            <button class="btn reset" onclick="_reset_item('show_remaster_tags')">${trans[lang].settings.reset}</button>
-                            <div class="heading">
-                                <h5>${trans[lang].settings.corrections.show_remaster_tags.name}</h5>
-                                <p>${trans[lang].settings.corrections.show_remaster_tags.bio}</p>
-                            </div>
-                            <div class="toggle-wrap">
-                                <button class="toggle" id="toggle-show_remaster_tags" onclick="_update_item('show_remaster_tags')" aria-checked="true">
-                                    <div class="dot"></div>
-                                </button>
-                            </div>
-                        </div>
-                        <div class="toggle-container" id="container-stacked_chartlist_info">
-                            <button class="btn reset" onclick="_reset_item('stacked_chartlist_info')">${trans[lang].settings.reset}</button>
-                            <div class="heading">
-                                <h5>${trans[lang].settings.corrections.stacked_chartlist_info.name}</h5>
-                                <p>${trans[lang].settings.corrections.stacked_chartlist_info.bio}</p>
-                            </div>
-                            <div class="toggle-wrap">
-                                <button class="toggle" id="toggle-stacked_chartlist_info" onclick="_update_item('stacked_chartlist_info')" aria-checked="true">
-                                    <div class="dot"></div>
-                                </button>
-                            </div>
+                        <div class="modal-footer">
+                            <button class="btn back" onclick="_setup_theme()">
+                                ${trans[lang].settings.back}
+                            </button>
+                            <div class="btn-fill"></div>
+                            <button class="btn skip" onclick="_setup_skip()">
+                                ${trans[lang].settings.skip}
+                            </button>
+                            <button class="btn primary continue" onclick="_setup_seasons()">
+                                ${trans[lang].settings.continue}
+                            </button>
                         </div>
                     </div>
-                    <div class="modal-footer">
-                        <button class="btn back" onclick="_setup_theme()">
-                            ${trans[lang].settings.back}
-                        </button>
-                        <div class="btn-fill"></div>
-                        <button class="btn skip" onclick="_setup_skip()">
-                            ${trans[lang].settings.skip}
-                        </button>
-                        <button class="btn primary continue" onclick="_setup_seasons()">
-                            ${trans[lang].settings.continue}
-                        </button>
-                    </div>
                 </div>
-            </div>
-        `, false, 'setup');
+            `),
+            dismiss: false,
+            type: 'setup',
+            replace_if_possible: true
+        });
         refresh_all();
     }
 
     unsafeWindow._setup_seasons = function() {
-        kill_window('bleh_setup_corrections');
-        create_window('bleh_setup_seasons','',`
-            <div class="setup-sides">
-                <div class="setup-preview">
-                    <div class="setup-icon setup-icon-main setup-icon-seasons"></div>
-                </div>
-                <div class="setup-body">
-                    <div class="setup-body-main">
-                        <h1>${trans[lang].settings.customise.seasonal.name}</h1>
-                        <p>${trans[lang].settings.customise.seasonal.bio}</p>
-                        <div class="inner-preview pad click-thru">
-                            <div class="current-season-container season-column">
-                                <div class="current-season" data-season="${stored_season.id}" id="current_season">
-                                    ${(stored_season.id != 'none')
-                                    ? trans[lang].settings.customise.seasonal.marker.current.replace('{season}', trans[lang].settings.customise.seasonal.listing[stored_season.id]).replace('{time}', moment(stored_season.end.replace('y0', stored_season.year)).to(stored_season.now, true))
-                                    : (settings.seasonal) ? trans[lang].settings.customise.seasonal.marker.none : trans[lang].settings.customise.seasonal.marker.disabled}
+        dialog({
+            id: 'bleh_setup_seasons',
+            body: (`
+                <div class="setup-sides">
+                    <div class="setup-preview">
+                        <div class="setup-icon setup-icon-main setup-icon-seasons"></div>
+                    </div>
+                    <div class="setup-body">
+                        <div class="setup-body-main">
+                            <h1>${trans[lang].settings.customise.seasonal.name}</h1>
+                            <p>${trans[lang].settings.customise.seasonal.bio}</p>
+                            <div class="inner-preview pad click-thru">
+                                <div class="current-season-container season-column">
+                                    <div class="current-season" data-season="${stored_season.id}" id="current_season">
+                                        ${(stored_season.id != 'none')
+                                        ? trans[lang].settings.customise.seasonal.marker.current.replace('{season}', trans[lang].settings.customise.seasonal.listing[stored_season.id]).replace('{time}', moment(stored_season.end.replace('y0', stored_season.year)).to(stored_season.now, true))
+                                        : (settings.seasonal) ? trans[lang].settings.customise.seasonal.marker.none : trans[lang].settings.customise.seasonal.marker.disabled}
+                                    </div>
+                                    <div class="current-season-started" id="current_season_start">
+                                        ${(stored_season.id != 'none')
+                                        ? trans[lang].settings.customise.seasonal.marker.started.replace('{time}', moment(stored_season.start.replace('y0', stored_season.year)).from(stored_season.now))
+                                        : ''}
+                                    </div>
                                 </div>
-                                <div class="current-season-started" id="current_season_start">
-                                    ${(stored_season.id != 'none')
-                                    ? trans[lang].settings.customise.seasonal.marker.started.replace('{time}', moment(stored_season.start.replace('y0', stored_season.year)).from(stored_season.now))
-                                    : ''}
+                            </div>
+                            <div class="toggle-container" id="container-seasonal" onclick="_update_item('seasonal')">
+                                <button class="btn reset" onclick="_reset_item('seasonal')">${trans[lang].settings.reset}</button>
+                                <div class="heading">
+                                    <h5>${trans[lang].settings.customise.seasonal.option.name}</h5>
+                                </div>
+                                <div class="toggle-wrap">
+                                    <button class="toggle" id="toggle-seasonal" aria-checked="true">
+                                        <div class="dot"></div>
+                                    </button>
                                 </div>
                             </div>
                         </div>
-                        <div class="toggle-container" id="container-seasonal" onclick="_update_item('seasonal')">
-                            <button class="btn reset" onclick="_reset_item('seasonal')">${trans[lang].settings.reset}</button>
-                            <div class="heading">
-                                <h5>${trans[lang].settings.customise.seasonal.option.name}</h5>
-                            </div>
-                            <div class="toggle-wrap">
-                                <button class="toggle" id="toggle-seasonal" aria-checked="true">
-                                    <div class="dot"></div>
-                                </button>
-                            </div>
+                        <div class="modal-footer">
+                            <button class="btn back" onclick="_setup_corrections()">
+                                ${trans[lang].settings.back}
+                            </button>
+                            <div class="btn-fill"></div>
+                            <button class="btn primary continue" onclick="_setup_skip()">
+                                ${trans[lang].settings.finish}
+                            </button>
                         </div>
                     </div>
-                    <div class="modal-footer">
-                        <button class="btn back" onclick="_setup_corrections()">
-                            ${trans[lang].settings.back}
-                        </button>
-                        <div class="btn-fill"></div>
-                        <button class="btn primary continue" onclick="_setup_skip()">
-                            ${trans[lang].settings.finish}
-                        </button>
-                    </div>
                 </div>
-            </div>
-        `, false, 'setup');
+            `),
+            dismiss: false,
+            type: 'setup',
+            replace_if_possible: true
+        })
         refresh_all();
     }
 
     unsafeWindow._setup_skip = function() {
-        kill_window('bleh_setup_start');
+        dialog_rm({
+            all: true
+        });
         document.location.href = `${root}user/${auth}`;
     }
 
@@ -11620,12 +12080,19 @@ let has_prompted_for_update = false;
 
 
     unsafeWindow._open_correction_modal = function() {
-        create_window('corrections', trans[lang].settings.corrections.name, (`
-            <h4>${trans[lang].settings.corrections.listing.artists}</h4>
-            <div class="corrections artist" id="corrections-artist"></div>
-            <h4>${trans[lang].settings.corrections.listing.albums_tracks}</h4>
-            <div class="corrections album_tracks" id="corrections-albums_tracks"></div>
-        `), true, 'corrections', true);
+        dialog({
+            id: 'corrections',
+            title: trans[lang].settings.corrections.name,
+            body: (`
+                <h4>${trans[lang].settings.corrections.listing.artists}</h4>
+                <div class="corrections artist" id="corrections-artist"></div>
+                <h4>${trans[lang].settings.corrections.listing.albums_tracks}</h4>
+                <div class="corrections album_tracks" id="corrections-albums_tracks"></div>
+            `),
+            has_close: true,
+            type: 'corrections',
+            allow_scroll: true
+        });
 
         prepare_corrections_page();
     }
@@ -11642,9 +12109,6 @@ let has_prompted_for_update = false;
         if (artist_header.hasAttribute('data-bwaa'))
             return;
         artist_header.setAttribute('data-bwaa', 'true');
-
-        log('artist', 'page');
-        page.type = 'artist';
 
         patch_header_title();
 
@@ -11741,46 +12205,48 @@ let has_prompted_for_update = false;
             let avatar_side = redesigned_artist_header.querySelector('.avatar-side');
             let avatar_link = avatar_side.querySelector('a');
 
-            let expand_link;
-            if (avatar != null)
-                expand_link = `_expand_avatar('${avatar.getAttribute('content')}')`;
+            if (avatar != null && avatar_link != null) {
+                let expand_link;
+                if (avatar != null)
+                    expand_link = `_expand_avatar('${avatar.getAttribute('content')}')`;
 
-            if (settings.default_avatar_action == 'expand' && avatar != null)
-                avatar_link.setAttribute('onclick', expand_link);
-            else if (settings.default_avatar_action == 'gallery')
-                avatar_link.href = `${root}music/${sanitise(page.name)}/+images`;
+                if (settings.default_avatar_action == 'expand' && avatar != null)
+                    avatar_link.setAttribute('onclick', expand_link);
+                else if (settings.default_avatar_action == 'gallery')
+                    avatar_link.href = `${root}music/${sanitise(page.name)}/+images`;
 
-            let menu = tippy(avatar_side, {
-                theme: 'context-menu',
-                content: (`
-                    ${(avatar != null) ? (`
-                    <button class="dropdown-menu-clickable-item" onclick="${expand_link}" data-menu-item="expand">
-                        ${trans[lang].gallery.open.name}
-                    </button>
-                    `) : ''}
-                    <a class="dropdown-menu-clickable-item" href="${root}music/${sanitise(page.name)}/+images" data-menu-item="gallery">
-                        ${trans[lang].gallery.view}
-                    </a>
-                    <div class="sep"></div>
-                    <a class="dropdown-menu-clickable-item" href="${root}bleh?tab=customise" data-menu-item="settings">
-                        ${trans[lang].settings.configure}
-                    </a>
-                `),
-                allowHTML: true,
-                placement: 'right-start',
-                trigger: 'manual',
-                interactive: true,
-                interactiveBorder: 10,
-                offset: [0, 0],
+                let menu = tippy(avatar_side, {
+                    theme: 'context-menu',
+                    content: (`
+                        ${(avatar != null) ? (`
+                        <button class="dropdown-menu-clickable-item" onclick="${expand_link}" data-menu-item="expand">
+                            ${trans[lang].gallery.open.name}
+                        </button>
+                        `) : ''}
+                        <a class="dropdown-menu-clickable-item" href="${root}music/${sanitise(page.name)}/+images" data-menu-item="gallery">
+                            ${trans[lang].gallery.view}
+                        </a>
+                        <div class="sep"></div>
+                        <a class="dropdown-menu-clickable-item" href="${root}bleh?tab=customise" data-menu-item="settings">
+                            ${trans[lang].settings.configure}
+                        </a>
+                    `),
+                    allowHTML: true,
+                    placement: 'right-start',
+                    trigger: 'manual',
+                    interactive: true,
+                    interactiveBorder: 10,
+                    offset: [0, 0],
 
-                onShow(instance) {
-                    instance.popper.addEventListener('click', event => {
-                        instance.hide();
-                    });
-                }
-            });
+                    onShow(instance) {
+                        instance.popper.addEventListener('click', event => {
+                            instance.hide();
+                        });
+                    }
+                });
 
-            register_menu(avatar_side, menu);
+                register_menu(avatar_side, menu);
+            }
 
             if (!is_subpage) {
                 let view_button = redesigned_artist_header.querySelector('.view-all-button');
@@ -11810,30 +12276,25 @@ let has_prompted_for_update = false;
         }
 
         if (!is_subpage) {
-            page.subpage = 'overview';
-
             show_your_scrobbles();
 
             bleh_music_page_charts();
         } else {
-            // which subpage is it?
-            page.subpage = document.body.classList[2].replace('namespace--', '');
-
             let btn_add = page.structure.side.querySelector('.add-button');
             if (btn_add != null)
                 btn_add.setAttribute('data-page-subpage', page.subpage);
 
-            if (page.subpage == 'music_artist_images_image-upload')
+            if (page.subpage == 'images_image-upload')
                 bleh_gallery_upload();
-            else if (page.subpage == 'music_artist_images_overview')
+            else if (page.subpage == 'images_overview')
                 bleh_gallery_list();
-            else if (page.subpage == 'music_artist_wiki_overview')
+            else if (page.subpage == 'wiki_overview')
                 bleh_wiki();
-            else if (page.subpage == 'music_artist_wiki_history')
+            else if (page.subpage == 'wiki_history')
                 bleh_wiki_history();
-            else if (page.subpage == 'music_artist_wiki_edit')
+            else if (page.subpage == 'wiki_edit')
                 bleh_wiki_editor();
-            else if (page.subpage == 'music_artist_listeners_overview')
+            else if (page.subpage == 'listeners_overview')
                 bleh_top_listeners();
         }
 
@@ -11850,9 +12311,6 @@ let has_prompted_for_update = false;
         if (album_header.hasAttribute('data-bwaa'))
             return;
         album_header.setAttribute('data-bwaa', 'true');
-
-        log('album', 'page');
-        page.type = 'album';
 
         patch_header_title();
 
@@ -11925,46 +12383,48 @@ let has_prompted_for_update = false;
             let avatar_side = redesigned_album_header.querySelector('.avatar-side');
             let avatar_link = avatar_side.querySelector('a');
 
-            let expand_link;
-            if (avatar != null)
-                expand_link = `_expand_avatar('${avatar.getAttribute('content')}')`;
+            if (avatar != null && avatar_link != null) {
+                let expand_link;
+                if (avatar != null)
+                    expand_link = `_expand_avatar('${avatar.getAttribute('content')}')`;
 
-            if (settings.default_avatar_action == 'expand' && avatar != null)
-                avatar_link.setAttribute('onclick', expand_link);
-            else if (settings.default_avatar_action == 'gallery')
-                avatar_link.href = `${root}music/${sanitise(page.sister)}/${sanitise(page.name)}/+images`;
+                if (settings.default_avatar_action == 'expand' && avatar != null)
+                    avatar_link.setAttribute('onclick', expand_link);
+                else if (settings.default_avatar_action == 'gallery')
+                    avatar_link.href = `${root}music/${sanitise(page.sister)}/${sanitise(page.name)}/+images`;
 
-            let menu = tippy(avatar_side, {
-                theme: 'context-menu',
-                content: (`
-                    ${(avatar != null) ? (`
-                    <button class="dropdown-menu-clickable-item" onclick="${expand_link}" data-menu-item="expand">
-                        ${trans[lang].gallery.open.name}
-                    </button>
-                    `) : ''}
-                    <a class="dropdown-menu-clickable-item" href="${root}music/${sanitise(page.sister)}/${sanitise(page.name)}/+images" data-menu-item="gallery">
-                        ${trans[lang].gallery.view}
-                    </a>
-                    <div class="sep"></div>
-                    <a class="dropdown-menu-clickable-item" href="${root}bleh?tab=customise" data-menu-item="settings">
-                        ${trans[lang].settings.configure}
-                    </a>
-                `),
-                allowHTML: true,
-                placement: 'right-start',
-                trigger: 'manual',
-                interactive: true,
-                interactiveBorder: 10,
-                offset: [0, 0],
+                let menu = tippy(avatar_side, {
+                    theme: 'context-menu',
+                    content: (`
+                        ${(avatar != null) ? (`
+                        <button class="dropdown-menu-clickable-item" onclick="${expand_link}" data-menu-item="expand">
+                            ${trans[lang].gallery.open.name}
+                        </button>
+                        `) : ''}
+                        <a class="dropdown-menu-clickable-item" href="${root}music/${sanitise(page.sister)}/${sanitise(page.name)}/+images" data-menu-item="gallery">
+                            ${trans[lang].gallery.view}
+                        </a>
+                        <div class="sep"></div>
+                        <a class="dropdown-menu-clickable-item" href="${root}bleh?tab=customise" data-menu-item="settings">
+                            ${trans[lang].settings.configure}
+                        </a>
+                    `),
+                    allowHTML: true,
+                    placement: 'right-start',
+                    trigger: 'manual',
+                    interactive: true,
+                    interactiveBorder: 10,
+                    offset: [0, 0],
 
-                onShow(instance) {
-                    instance.popper.addEventListener('click', event => {
-                        instance.hide();
-                    });
-                }
-            });
+                    onShow(instance) {
+                        instance.popper.addEventListener('click', event => {
+                            instance.hide();
+                        });
+                    }
+                });
 
-            register_menu(avatar_side, menu);
+                register_menu(avatar_side, menu);
+            }
         }
 
         // cover
@@ -11983,8 +12443,6 @@ let has_prompted_for_update = false;
         }
 
         if (!is_subpage) {
-            page.subpage = 'overview';
-
             show_your_scrobbles();
 
             bleh_music_page_charts();
@@ -12007,37 +12465,36 @@ let has_prompted_for_update = false;
             let upload_container = page.structure.side.querySelector('.album-overview-cover-art-upload-action');
             let avatar = album_header.querySelector('.header-new-background-image');
 
-            let expand_container = document.createElement('span');
-            expand_container.classList.add('album-overview-cover-art-expand-action');
+            if (avatar != null) {
+                let expand_container = document.createElement('span');
+                expand_container.classList.add('album-overview-cover-art-expand-action');
 
-            let expand_link = document.createElement('a');
-            expand_link.setAttribute('onclick', `_expand_avatar('${avatar.getAttribute('content')}')`);
-            expand_link.textContent = trans[lang].gallery.open.name;
+                let expand_link = document.createElement('a');
+                expand_link.setAttribute('onclick', `_expand_avatar('${avatar.getAttribute('content')}')`);
+                expand_link.textContent = trans[lang].gallery.open.name;
 
-            tippy(expand_link, {
-                content: trans[lang].gallery.open.name
-            });
+                tippy(expand_link, {
+                    content: trans[lang].gallery.open.name
+                });
 
-            expand_container.appendChild(expand_link);
+                expand_container.appendChild(expand_link);
 
-            upload_container.after(expand_container);
+                upload_container.after(expand_container);
+            }
         } else {
-            // which subpage is it?
-            page.subpage = document.body.classList[2].replace('namespace--', '');
-
             let btn_add = page.structure.side.querySelector('.add-button');
             if (btn_add != null)
                 btn_add.setAttribute('data-page-subpage', page.subpage);
 
-            if (page.subpage == 'music_album_images_image-upload')
+            if (page.subpage == 'images_image-upload')
                 bleh_gallery_upload();
-            else if (page.subpage == 'music_album_images_overview')
+            else if (page.subpage == 'images_overview')
                 bleh_gallery_list();
-            else if (page.subpage == 'music_album_wiki_overview')
+            else if (page.subpage == 'wiki_overview')
                 bleh_wiki();
-            else if (page.subpage == 'music_album_wiki_history')
+            else if (page.subpage == 'wiki_history')
                 bleh_wiki_history();
-            else if (page.subpage == 'music_album_wiki_edit')
+            else if (page.subpage == 'wiki_edit')
                 bleh_wiki_editor();
         }
 
@@ -12054,9 +12511,6 @@ let has_prompted_for_update = false;
         if (track_header.hasAttribute('data-bwaa'))
             return;
         track_header.setAttribute('data-bwaa', 'true');
-
-        log('track', 'page');
-        page.type = 'track';
 
         patch_header_title();
 
@@ -12189,26 +12643,21 @@ let has_prompted_for_update = false;
         }
 
         if (!is_subpage) {
-            page.subpage = 'overview';
-
             show_your_scrobbles();
 
             bleh_music_page_charts();
 
             bleh_about_artist();
         } else {
-            // which subpage is it?
-            page.subpage = document.body.classList[2].replace('namespace--', '');
-
             let btn_add = page.structure.side.querySelector('.add-button');
             if (btn_add != null)
                 btn_add.setAttribute('data-page-subpage', page.subpage);
 
-            if (page.subpage == 'music_track_wiki_overview')
+            if (page.subpage == 'wiki_overview')
                 bleh_wiki();
-            else if (page.subpage == 'music_track_wiki_history')
+            else if (page.subpage == 'wiki_history')
                 bleh_wiki_history();
-            else if (page.subpage == 'music_track_wiki_edit')
+            else if (page.subpage == 'wiki_edit')
                 bleh_wiki_editor();
         }
 
@@ -12226,9 +12675,6 @@ let has_prompted_for_update = false;
         if (tag_header.hasAttribute('data-bwaa'))
             return;
         tag_header.setAttribute('data-bwaa', 'true');
-
-        log('tag', 'page');
-        page.type = 'tag';
 
         patch_header_title();
 
@@ -12279,15 +12725,8 @@ let has_prompted_for_update = false;
         }
 
         if (!is_subpage) {
-            page.subpage = 'overview';
+            //
         } else {
-            // which subpage is it?
-            try {
-                page.subpage = document.body.classList[2].replace('namespace--', '');
-            } catch(e) {
-                page.subpage = document.body.classList[1].replace('namespace--', '');
-            }
-
             if (page.subpage == 'tag_wiki_overview')
                 bleh_wiki();
             else if (page.subpage == 'tag_wiki_history')
@@ -12441,18 +12880,23 @@ let has_prompted_for_update = false;
         expand_avatar(src);
     }
     function expand_avatar(src) {
-        create_window('avatar', '', (`
-            <div class="full-avatar-wrapper">
-                <div class="full-avatar">
-                    <img src="${src}">
+        dialog({
+            id: 'avatar',
+            body: (`
+                <div class="full-avatar-wrapper">
+                    <div class="full-avatar">
+                        <img src="${src}">
+                    </div>
+                    <div class="modal-footer">
+                        <a class="btn primary open" href="${src}" target="_blank">
+                            ${trans[lang].profile.open_avatar}
+                        </a>
+                    </div>
                 </div>
-                <div class="modal-footer">
-                    <a class="btn primary open" href="${src}" target="_blank">
-                        ${trans[lang].profile.open_avatar}
-                    </a>
-                </div>
-            </div>
-        `), true, 'avatar');
+            `),
+            type: 'avatar',
+            has_overlays: false
+        });
     }
 
 
@@ -12603,6 +13047,9 @@ let has_prompted_for_update = false;
         if (!settings.activities)
             return;
 
+        recent_activity_list = JSON.parse(localStorage.getItem('bwaa_recent_activity')) || [];
+        log('loaded', 'activity', 'info', recent_activity_list);
+
         recent_activity_list.push({
             type: type,
             involved: involved,
@@ -12628,7 +13075,7 @@ let has_prompted_for_update = false;
 
 
     function bleh_gallery() {
-        if (page.subpage != 'music_artist_image' && page.subpage != 'music_album_image')
+        if (page.subpage != 'image')
             return;
 
         log('focusing on image', 'gallery');
@@ -12917,7 +13364,7 @@ let has_prompted_for_update = false;
     }
 
     function bleh_gallery_upload_check() {
-        if (page.subpage != 'music_album_images_image-upload' && page.subpage != 'music_artist_images_image-upload')
+        if (page.subpage != 'images_image-upload')
             return;
 
         // update image preview
@@ -13009,14 +13456,20 @@ let has_prompted_for_update = false;
     }
 
     function open_changelog(changelog) {
-        let window = create_window('changelog', trans[lang].changelog.name, (`
-            <div class="changelog-list"></div>
-            <div class="modal-footer">
-                <a class="btn primary skip" href="#latest_major_release">
-                    ${trans[lang].changelog.view_major}
-                </a>
-            </div>
-        `), true, 'changelog', true);
+        let window = dialog({
+            id: 'changelog',
+            title: trans[lang].changelog.name,
+            body: (`
+                <div class="changelog-list"></div>
+                <div class="modal-footer">
+                    <a class="btn primary skip" href="#latest_major_release">
+                        ${trans[lang].changelog.view_major}
+                    </a>
+                </div>
+            `),
+            type: 'changelog',
+            allow_scroll: true
+        });
 
         let changelog_list = window.querySelector('.changelog-list');
 
@@ -13153,6 +13606,99 @@ let has_prompted_for_update = false;
         });
 
         page.structure.side.appendChild(date_panel);
+
+
+        if (ff('glacier_library')) {
+            if (page.subpage == 'library_overview') {
+                // scrobbles tab
+                bleh_glacier_library_top(true);
+            }
+        }
+    }
+
+    // can update at any time!!
+    function bleh_glacier_library() {
+        if (!ff('glacier_library'))
+            return;
+
+        log('checking!', 'glacier library');
+
+        // table
+        bleh_glacier_library_table();
+
+        // top header info
+        bleh_glacier_library_top();
+    }
+
+    function bleh_glacier_library_table() {
+        let table = page.structure.side.querySelector('.scrobble-table');
+        page.structure.glacier.refresh = false;
+
+        if (table == null)
+            return;
+
+        if (table.classList.contains('loading')) {
+            table.removeAttribute('data-glacier-library-table');
+            return;
+        }
+
+        if (table.hasAttribute('data-glacier-library-table'))
+            return;
+        table.setAttribute('data-glacier-library-table', 'true');
+
+        page.structure.glacier.table = table;
+        page.structure.glacier.refresh = true;
+    }
+
+    function bleh_glacier_library_top(static_page = false) {
+        let legacy_top_header;
+        if (!static_page)
+            legacy_top_header = page.structure.main.querySelector('.library-top');
+        else
+            legacy_top_header = page.structure.main.querySelector('.metadata-list');
+
+        if (legacy_top_header == null)
+            return;
+
+        if (!static_page) {
+            if (legacy_top_header.style.getPropertyValue('display')) {
+                legacy_top_header.removeAttribute('data-glacier-library-top');
+                return;
+            }
+
+            if (legacy_top_header.hasAttribute('data-glacier-library-top'))
+                return;
+            legacy_top_header.setAttribute('data-glacier-library-top', 'true');
+        }
+
+        log('loading top', 'glacier library');
+
+        let metadata = legacy_top_header.querySelectorAll('.metadata-item');
+
+        let glacier_top = page.structure.glacier.top;
+        if (glacier_top == null)
+            glacier_top = document.createElement('section');
+        else
+            glacier_top.innerHTML = '';
+        glacier_top.classList.add('glacier-library-top');
+
+        let glacier_meta = document.createElement('div');
+        glacier_meta.classList.add('glacier-library-metadata');
+
+        metadata.forEach((meta) => {
+            let glacier_meta_item = document.createElement('div');
+            glacier_meta_item.classList.add('glacier-library-metadata-item');
+            glacier_meta_item.innerHTML = (`
+                <div class="sub-text">${meta.querySelector('.metadata-title').textContent}</div>
+                <div class="glacier-library-metadata-item-value">${meta.querySelector('.metadata-display').textContent}</div>
+            `);
+
+            glacier_meta.appendChild(glacier_meta_item);
+        });
+
+        glacier_top.appendChild(glacier_meta);
+        page.structure.glacier.top = glacier_top;
+        page.structure.main.insertBefore(glacier_top, page.structure.main.firstElementChild);
     }
 
 
@@ -13455,9 +14001,6 @@ let has_prompted_for_update = false;
             return;
         event_header.setAttribute('data-bwaa', 'true');
 
-        log('event', 'page');
-        page.type = 'event';
-
         let is_subpage = document.body.querySelector('.header').classList.contains('header--sub-page');
 
 
@@ -13529,8 +14072,6 @@ let has_prompted_for_update = false;
 
 
         if (!is_subpage) {
-            page.subpage = 'overview';
-
             let header_meta = document.body.querySelector('.header-metadata');
             header_meta.classList.add('profile-header-metadata-legacy');
 
@@ -13614,9 +14155,6 @@ let has_prompted_for_update = false;
                 patch_avatar(avatar, name, 'event');
             });
         } else {
-            // which subpage is it?
-            page.subpage = document.body.classList[2].replace('namespace--', '');
-
             if (page.subpage == 'events_event_attendance_going' || page.subpage == 'events_event_attendance_interested') {
                 // view-related buttons
                 let view_buttons = document.createElement('div');
@@ -13695,335 +14233,462 @@ let has_prompted_for_update = false;
 
 
 
-    function patch_profiles_chart_windows() {
-        let recent_tracks = page.structure.main.querySelector('#recent-tracks-section');
-        let recent_tracks_settings = recent_tracks.querySelector('#recent-tracks-settings');
-        let recent_tracks_link = recent_tracks.querySelector('[aria-controls="recent-tracks-settings"]');
-        let recent_tracks_tooltip;
+    function profile_recents() {
+        let panel = page.structure.main.querySelector('#recent-tracks-section');
 
-        let artist = page.structure.main.querySelector('#top-artists');
-        let artist_settings = artist.querySelector('#artist-chart-settings');
-        let artist_link = artist.querySelector('[aria-controls="artist-chart-settings"]');
-        let artist_tooltip;
+        if (panel == null)
+            return;
 
-        let album = page.structure.main.querySelector('#top-albums');
-        let album_settings = album.querySelector('#albums-chart-settings');
-        let album_link = album.querySelector('[aria-controls="album-chart-settings"]');
-        let album_tooltip;
-
-        let track = page.structure.main.querySelector('#top-tracks');
-        let track_settings = track.querySelector('#track-chart-settings');
-        let track_link = track.querySelector('[aria-controls="track-chart-settings"]');
-        let track_tooltip;
+        let form = panel.querySelector('#recent-tracks-settings');
+        let link = panel.querySelector('[aria-controls="recent-tracks-settings"]');
+        let tooltip;
 
 
+        let view_buttons = document.createElement('div');
+        view_buttons.classList.add('view-buttons');
 
-        let token = recent_tracks_settings.querySelector('[name="csrfmiddlewaretoken"]').getAttribute('value');
+        let header = document.createElement('div');
+        header.classList.add('top-container');
 
-        // get info before destroying
+        let header_text = panel.querySelector('h2');
+        header.appendChild(header_text);
+
+        // refresh
+        let refresh_btn = document.createElement('button');
+        refresh_btn.classList.add('btn', 'view-item', 'interact-item', 'refresh-tracklist-btn');
+        refresh_btn.textContent = 'Refresh';
+        refresh_btn.setAttribute('onclick', '_refresh_tracks(this)');
+
+        tippy(refresh_btn, {
+            content: trans[lang].music.refresh_tracks
+        });
+
+        view_buttons.appendChild(refresh_btn);
+
+        header.appendChild(view_buttons);
+        panel.insertBefore(header, panel.firstElementChild);
+
+        if (form == null)
+            return;
+
+        if (page.token == '')
+            page.token = form.querySelector('[name="csrfmiddlewaretoken"]').getAttribute('value');
+
         let original_chart_settings = {};
 
-        if (recent_tracks_settings != null) {
-            let new_button = document.createElement('button');
-            new_button.classList.add('panel-settings-button');
-            new_button.textContent = trans[lang].profile.settings;
+        let new_button = document.createElement('button');
+        new_button.classList.add('panel-settings-button', 'btn', 'view-item', 'interact-item');
+        new_button.textContent = trans[lang].profile.settings;
 
-            recent_tracks_settings.classList = '';
+        form.classList = '';
 
-            recent_tracks_tooltip = tippy(new_button, {
-                theme: 'window',
-                content: (`${recent_tracks_settings.outerHTML}`),
-                allowHTML: true,
-                placement: 'bottom',
-                interactive: true,
-                interactiveBorder: 10,
-                trigger: 'click',
+        tooltip = tippy(new_button, {
+            theme: 'window',
+            content: form.outerHTML,
+            allowHTML: true,
+            placement: 'bottom',
+            interactive: true,
+            interactiveBorder: 10,
+            trigger: 'click',
 
-                onShow(instance) {
-                    let form = instance.popper.querySelector('form');
+            onShow(instance) {
+                let form = instance.popper.querySelector('form');
 
-                    form.innerHTML = (`
-                        <input type="hidden" name="csrfmiddlewaretoken" value="${token}">
-                        <div class="select-container">
-                            <div class="heading">
-                                <h5>${trans[lang].settings.inbuilt.charts.recent.count.name}</h5>
-                            </div>
-                            <div class="select-wrap custom-selector" id="id_chart_length_recent_tracks_select">
-                                ${original_chart_settings.recent.count}
-                            </div>
+                form.innerHTML = (`
+                    <input type="hidden" name="csrfmiddlewaretoken" value="${page.token}">
+                    <div class="select-container">
+                        <div class="heading">
+                            <h5>${trans[lang].settings.inbuilt.charts.recent.count.name}</h5>
                         </div>
-                        <div class="toggle-container" id="container-recent_artwork">
-                            <button class="btn reset" onclick="_reset_inbuilt_item('recent_artwork')">Reset to default</button>
-                            <div class="heading">
-                                <h5>${trans[lang].settings.inbuilt.charts.recent.artwork.name}</h5>
-                            </div>
-                            <div class="toggle-wrap">
-                                <input class="companion-checkbox" type="checkbox" name="show_recent_tracks_artwork" id="inbuilt-companion-checkbox-recent_artwork">
-                                <span class="btn toggle" id="toggle-recent_artwork" onclick="_update_inbuilt_item('recent_artwork')" aria-checked="false">
-                                    <div class="dot"></div>
-                                </span>
-                            </div>
+                        <div class="select-wrap custom-selector" id="id_chart_length_recent_tracks_select">
+                            ${original_chart_settings.count}
                         </div>
-                        <div class="toggle-container" id="container-recent_realtime">
-                            <button class="btn reset" onclick="_reset_inbuilt_item('recent_realtime')">Reset to default</button>
-                            <div class="heading">
-                                <h5>${trans[lang].settings.inbuilt.charts.recent.realtime.name}</h5>
-                                <p>${trans[lang].settings.inbuilt.charts.recent.realtime.bio}</p>
-                            </div>
-                            <div class="toggle-wrap">
-                                <input class="companion-checkbox" type="checkbox" name="auto_refresh_recent_tracks" id="inbuilt-companion-checkbox-recent_realtime">
-                                <span class="btn toggle" id="toggle-recent_realtime" onclick="_update_inbuilt_item('recent_realtime')" aria-checked="false" type="button">
-                                    <div class="dot"></div>
-                                </span>
-                            </div>
+                    </div>
+                    <div class="toggle-container" id="container-recent_artwork">
+                        <button class="btn reset" onclick="_reset_inbuilt_item('recent_artwork')">Reset to default</button>
+                        <div class="heading">
+                            <h5>${trans[lang].settings.inbuilt.charts.recent.artwork.name}</h5>
                         </div>
-                        <div class="sep"></div>
-                        <div class="settings-footer">
-                            <button type="submit" class="btn-primary save">
-                                ${trans[lang].settings.save}
-                            </button>
+                        <div class="toggle-wrap">
+                            <input class="companion-checkbox" type="checkbox" name="show_recent_tracks_artwork" id="inbuilt-companion-checkbox-recent_artwork">
+                            <span class="btn toggle" id="toggle-recent_artwork" onclick="_update_inbuilt_item('recent_artwork')" aria-checked="false">
+                                <div class="dot"></div>
+                            </span>
                         </div>
-                    `);
+                    </div>
+                    <div class="toggle-container" id="container-recent_realtime">
+                        <button class="btn reset" onclick="_reset_inbuilt_item('recent_realtime')">Reset to default</button>
+                        <div class="heading">
+                            <h5>${trans[lang].settings.inbuilt.charts.recent.realtime.name}</h5>
+                            <p>${trans[lang].settings.inbuilt.charts.recent.realtime.bio}</p>
+                        </div>
+                        <div class="toggle-wrap">
+                            <input class="companion-checkbox" type="checkbox" name="auto_refresh_recent_tracks" id="inbuilt-companion-checkbox-recent_realtime">
+                            <span class="btn toggle" id="toggle-recent_realtime" onclick="_update_inbuilt_item('recent_realtime')" aria-checked="false" type="button">
+                                <div class="dot"></div>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="sep"></div>
+                    <div class="settings-footer">
+                        <button type="submit" class="btn-primary save">
+                            ${trans[lang].settings.save}
+                        </button>
+                    </div>
+                `);
 
-                    custom_select(form.querySelector('#id_chart_length_recent_tracks'), form.querySelector('#id_chart_length_recent_tracks_select'));
+                custom_select(form.querySelector('#id_chart_length_recent_tracks'), form.querySelector('#id_chart_length_recent_tracks_select'));
 
-                    let selects = form.querySelectorAll('select');
-                    selects.forEach((select) => {
-                        select.setAttribute('onchange', `_update_inbuilt_select('${select.getAttribute('id')}', this.value)`);
-                        update_inbuilt_select(select.getAttribute('id'), select.value);
-                    });
+                let selects = form.querySelectorAll('select');
+                selects.forEach((select) => {
+                    select.setAttribute('onchange', `_update_inbuilt_select('${select.getAttribute('id')}', this.value)`);
+                    update_inbuilt_select(select.getAttribute('id'), select.value);
+                });
 
-                    for (let setting in original_chart_settings.recent) {
-                        update_inbuilt_item(setting, original_chart_settings.recent[setting], false, form);
-                    }
+                for (let setting in original_chart_settings) {
+                    update_inbuilt_item(setting, original_chart_settings[setting], false, form);
                 }
-            });
-
-            recent_tracks.appendChild(new_button);
-
-            original_chart_settings.recent = {
-                recent_artwork: recent_tracks_settings.querySelector('#id_show_recent_tracks_artwork').checked,
-                count: recent_tracks_settings.querySelector('#id_chart_length_recent_tracks').outerHTML,
-                recent_realtime: recent_tracks_settings.querySelector('#id_auto_refresh_recent_tracks').checked
             }
+        });
 
-            recent_tracks_settings.innerHTML = '';
+        view_buttons.appendChild(new_button);
+
+        original_chart_settings = {
+            recent_artwork: form.querySelector('#id_show_recent_tracks_artwork').checked,
+            count: form.querySelector('#id_chart_length_recent_tracks').outerHTML,
+            recent_realtime: form.querySelector('#id_auto_refresh_recent_tracks').checked
         }
-        if (artist_settings != null) {
-            let new_button = document.createElement('button');
-            new_button.classList.add('panel-settings-button');
-            new_button.textContent = trans[lang].profile.settings;
 
-            artist_settings.classList = '';
+        form.innerHTML = '';
+    }
 
-            artist_tooltip = tippy(new_button, {
-                theme: 'window',
-                content: (`${artist_settings.outerHTML}`),
-                allowHTML: true,
-                placement: 'bottom',
-                interactive: true,
-                interactiveBorder: 10,
-                trigger: 'click',
+    function profile_artists() {
+        let panel = page.structure.main.querySelector('#top-artists');
+        panel.classList.remove('section-with-settings');
 
-                onShow(instance) {
-                    let form = instance.popper.querySelector('form');
+        if (panel == null)
+            return;
 
-                    form.innerHTML = (`
-                        <input type="hidden" name="csrfmiddlewaretoken" value="${token}">
-                        <div class="select-container">
-                            <div class="heading">
-                                <h5>${trans[lang].settings.inbuilt.charts.artists.timeframe.name}</h5>
-                            </div>
-                            <div class="select-wrap custom-selector" id="id_chart_range_top_artists_select">
-                                ${original_chart_settings.artists.timeframe}
-                            </div>
+        let form = panel.querySelector('#artist-chart-settings');
+        let link = panel.querySelector('[aria-controls="artist-chart-settings"]');
+        let tooltip;
+
+
+        let view_buttons = document.createElement('div');
+        view_buttons.classList.add('view-buttons');
+
+        let header = document.createElement('div');
+        header.classList.add('top-container');
+
+        let header_text = panel.querySelector('h2');
+        header.appendChild(header_text);
+
+        // select
+        let select_btn = panel.querySelector('.dropdown-menu-clickable-button');
+        select_btn.classList.add('btn', 'view-item', 'interact-item');
+        select_btn.classList.remove('section-control')
+        view_buttons.appendChild(select_btn);
+
+        header.appendChild(view_buttons);
+        panel.insertBefore(header, panel.firstElementChild);
+
+        if (form == null)
+            return;
+
+        if (page.token == '')
+            page.token = form.querySelector('[name="csrfmiddlewaretoken"]').getAttribute('value');
+
+        let original_chart_settings = {};
+
+        let new_button = document.createElement('button');
+        new_button.classList.add('panel-settings-button', 'btn', 'view-item', 'interact-item');
+        new_button.textContent = trans[lang].profile.settings;
+
+        form.classList = '';
+
+        tooltip = tippy(new_button, {
+            theme: 'window',
+            content: form.outerHTML,
+            allowHTML: true,
+            placement: 'bottom',
+            interactive: true,
+            interactiveBorder: 10,
+            trigger: 'click',
+
+            onShow(instance) {
+                let form = instance.popper.querySelector('form');
+
+                form.innerHTML = (`
+                    <input type="hidden" name="csrfmiddlewaretoken" value="${page.token}">
+                    <div class="select-container">
+                        <div class="heading">
+                            <h5>${trans[lang].settings.inbuilt.charts.artists.timeframe.name}</h5>
                         </div>
-                        <div class="select-container">
-                            <div class="heading">
-                                <h5>${trans[lang].settings.inbuilt.charts.artists.style.name}</h5>
-                            </div>
-                            <div class="select-wrap custom-selector" id="id_chart_style_top_artists_select">
-                                ${original_chart_settings.artists.style}
-                            </div>
+                        <div class="select-wrap custom-selector" id="id_chart_range_top_artists_select">
+                            ${original_chart_settings.timeframe}
                         </div>
-                        <div class="select-container">
-                            <div class="heading">
-                                <h5>${trans[lang].settings.inbuilt.charts.artists.length.name}</h5>
-                            </div>
-                            <div class="select-wrap custom-selector" id="id_artists_image_grid_length_select">
-                                ${original_chart_settings.artists.length}
-                            </div>
+                    </div>
+                    <div class="select-container">
+                        <div class="heading">
+                            <h5>${trans[lang].settings.inbuilt.charts.artists.style.name}</h5>
                         </div>
-                        <div class="sep"></div>
-                        <div class="settings-footer">
-                            <button type="submit" class="btn-primary save">
-                                ${trans[lang].settings.save}
-                            </button>
+                        <div class="select-wrap custom-selector" id="id_chart_style_top_artists_select">
+                            ${original_chart_settings.style}
                         </div>
-                    `);
+                    </div>
+                    <div class="select-container">
+                        <div class="heading">
+                            <h5>${trans[lang].settings.inbuilt.charts.artists.length.name}</h5>
+                        </div>
+                        <div class="select-wrap custom-selector" id="id_artists_image_grid_length_select">
+                            ${original_chart_settings.length}
+                        </div>
+                    </div>
+                    <div class="sep"></div>
+                    <div class="settings-footer">
+                        <button type="submit" class="btn-primary save">
+                            ${trans[lang].settings.save}
+                        </button>
+                    </div>
+                `);
 
-                    custom_select(form.querySelector('#id_chart_range_top_artists'), form.querySelector('#id_chart_range_top_artists_select'));
-                    custom_select(form.querySelector('#id_chart_style_top_artists'), form.querySelector('#id_chart_style_top_artists_select'));
-                    custom_select(form.querySelector('#id_artists_image_grid_length'), form.querySelector('#id_artists_image_grid_length_select'));
+                custom_select(form.querySelector('#id_chart_range_top_artists'), form.querySelector('#id_chart_range_top_artists_select'));
+                custom_select(form.querySelector('#id_chart_style_top_artists'), form.querySelector('#id_chart_style_top_artists_select'));
+                custom_select(form.querySelector('#id_artists_image_grid_length'), form.querySelector('#id_artists_image_grid_length_select'));
 
-                    let selects = form.querySelectorAll('select');
-                    selects.forEach((select) => {
-                        select.setAttribute('onchange', `_update_inbuilt_select('${select.getAttribute('id')}', this.value)`);
-                        update_inbuilt_select(select.getAttribute('id'), select.value);
-                    });
-                }
-            });
-
-            artist.appendChild(new_button);
-
-            original_chart_settings.artists = {
-                timeframe: artist_settings.querySelector('#id_chart_range_top_artists').outerHTML,
-                style: artist_settings.querySelector('#id_chart_style_top_artists').outerHTML,
-                length: artist_settings.querySelector('#id_artists_image_grid_length').outerHTML
+                let selects = form.querySelectorAll('select');
+                selects.forEach((select) => {
+                    select.setAttribute('onchange', `_update_inbuilt_select('${select.getAttribute('id')}', this.value)`);
+                    update_inbuilt_select(select.getAttribute('id'), select.value);
+                });
             }
+        });
 
-            artist_settings.innerHTML = '';
+        view_buttons.appendChild(new_button);
+
+        original_chart_settings = {
+            timeframe: form.querySelector('#id_chart_range_top_artists').outerHTML,
+            style: form.querySelector('#id_chart_style_top_artists').outerHTML,
+            length: form.querySelector('#id_artists_image_grid_length').outerHTML
         }
-        if (album_settings != null) {
-            let new_button = document.createElement('button');
-            new_button.classList.add('panel-settings-button');
-            new_button.textContent = trans[lang].profile.settings;
 
-            album_settings.classList = '';
+        form.innerHTML = '';
+    }
 
-            album_tooltip = tippy(new_button, {
-                theme: 'window',
-                content: (`${album_settings.outerHTML}`),
-                allowHTML: true,
-                placement: 'bottom',
-                interactive: true,
-                interactiveBorder: 10,
-                trigger: 'click',
+    function profile_albums() {
+        let panel = page.structure.main.querySelector('#top-albums');
+        panel.classList.remove('section-with-settings');
 
-                onShow(instance) {
-                    let form = instance.popper.querySelector('form');
+        if (panel == null)
+            return;
 
-                    form.innerHTML = (`
-                        <input type="hidden" name="csrfmiddlewaretoken" value="${token}">
-                        <div class="select-container">
-                            <div class="heading">
-                                <h5>${trans[lang].settings.inbuilt.charts.albums.timeframe.name}</h5>
-                            </div>
-                            <div class="select-wrap custom-selector" id="id_chart_range_top_albums_select">
-                                ${original_chart_settings.albums.timeframe}
-                            </div>
+        let form = panel.querySelector('#albums-chart-settings');
+        let link = panel.querySelector('[aria-controls="albums-chart-settings"]');
+        let tooltip;
+
+
+        let view_buttons = document.createElement('div');
+        view_buttons.classList.add('view-buttons');
+
+        let header = document.createElement('div');
+        header.classList.add('top-container');
+
+        let header_text = panel.querySelector('h2');
+        header.appendChild(header_text);
+
+        // select
+        let select_btn = panel.querySelector('.dropdown-menu-clickable-button');
+        select_btn.classList.add('btn', 'view-item', 'interact-item');
+        select_btn.classList.remove('section-control')
+        view_buttons.appendChild(select_btn);
+
+        header.appendChild(view_buttons);
+        panel.insertBefore(header, panel.firstElementChild);
+
+        if (form == null)
+            return;
+
+        if (page.token == '')
+            page.token = form.querySelector('[name="csrfmiddlewaretoken"]').getAttribute('value');
+
+        let original_chart_settings = {};
+
+        let new_button = document.createElement('button');
+        new_button.classList.add('panel-settings-button', 'btn', 'view-item', 'interact-item');
+        new_button.textContent = trans[lang].profile.settings;
+
+        form.classList = '';
+
+        tooltip = tippy(new_button, {
+            theme: 'window',
+            content: form.outerHTML,
+            allowHTML: true,
+            placement: 'bottom',
+            interactive: true,
+            interactiveBorder: 10,
+            trigger: 'click',
+
+            onShow(instance) {
+                let form = instance.popper.querySelector('form');
+
+                form.innerHTML = (`
+                    <input type="hidden" name="csrfmiddlewaretoken" value="${page.token}">
+                    <div class="select-container">
+                        <div class="heading">
+                            <h5>${trans[lang].settings.inbuilt.charts.albums.timeframe.name}</h5>
                         </div>
-                        <div class="select-container">
-                            <div class="heading">
-                                <h5>${trans[lang].settings.inbuilt.charts.albums.style.name}</h5>
-                            </div>
-                            <div class="select-wrap custom-selector" id="id_chart_style_top_albums_select">
-                                ${original_chart_settings.albums.style}
-                            </div>
+                        <div class="select-wrap custom-selector" id="id_chart_range_top_albums_select">
+                            ${original_chart_settings.timeframe}
                         </div>
-                        <div class="select-container">
-                            <div class="heading">
-                                <h5>${trans[lang].settings.inbuilt.charts.albums.length.name}</h5>
-                            </div>
-                            <div class="select-wrap custom-selector" id="id_albums_image_grid_length_select">
-                                ${original_chart_settings.albums.length}
-                            </div>
+                    </div>
+                    <div class="select-container">
+                        <div class="heading">
+                            <h5>${trans[lang].settings.inbuilt.charts.albums.style.name}</h5>
                         </div>
-                        <div class="sep"></div>
-                        <div class="settings-footer">
-                            <button type="submit" class="btn-primary save">
-                                ${trans[lang].settings.save}
-                            </button>
+                        <div class="select-wrap custom-selector" id="id_chart_style_top_albums_select">
+                            ${original_chart_settings.style}
                         </div>
-                    `);
+                    </div>
+                    <div class="select-container">
+                        <div class="heading">
+                            <h5>${trans[lang].settings.inbuilt.charts.albums.length.name}</h5>
+                        </div>
+                        <div class="select-wrap custom-selector" id="id_albums_image_grid_length_select">
+                            ${original_chart_settings.length}
+                        </div>
+                    </div>
+                    <div class="sep"></div>
+                    <div class="settings-footer">
+                        <button type="submit" class="btn-primary save">
+                            ${trans[lang].settings.save}
+                        </button>
+                    </div>
+                `);
 
-                    custom_select(form.querySelector('#id_chart_range_top_albums'), form.querySelector('#id_chart_range_top_albums_select'));
-                    custom_select(form.querySelector('#id_chart_style_top_albums'), form.querySelector('#id_chart_style_top_albums_select'));
-                    custom_select(form.querySelector('#id_albums_image_grid_length'), form.querySelector('#id_albums_image_grid_length_select'));
+                custom_select(form.querySelector('#id_chart_range_top_albums'), form.querySelector('#id_chart_range_top_albums_select'));
+                custom_select(form.querySelector('#id_chart_style_top_albums'), form.querySelector('#id_chart_style_top_albums_select'));
+                custom_select(form.querySelector('#id_albums_image_grid_length'), form.querySelector('#id_albums_image_grid_length_select'));
 
-                    let selects = form.querySelectorAll('select');
-                    selects.forEach((select) => {
-                        select.setAttribute('onchange', `_update_inbuilt_select('${select.getAttribute('id')}', this.value)`);
-                        update_inbuilt_select(select.getAttribute('id'), select.value);
-                    });
-                }
-            });
-
-            album.appendChild(new_button);
-
-            original_chart_settings.albums = {
-                timeframe: album_settings.querySelector('#id_chart_range_top_albums').outerHTML,
-                style: album_settings.querySelector('#id_chart_style_top_albums').outerHTML,
-                length: album_settings.querySelector('#id_albums_image_grid_length').outerHTML
+                let selects = form.querySelectorAll('select');
+                selects.forEach((select) => {
+                    select.setAttribute('onchange', `_update_inbuilt_select('${select.getAttribute('id')}', this.value)`);
+                    update_inbuilt_select(select.getAttribute('id'), select.value);
+                });
             }
+        });
 
-            album_settings.innerHTML = '';
+        view_buttons.appendChild(new_button);
+
+        original_chart_settings = {
+            timeframe: form.querySelector('#id_chart_range_top_albums').outerHTML,
+            style: form.querySelector('#id_chart_style_top_albums').outerHTML,
+            length: form.querySelector('#id_albums_image_grid_length').outerHTML
         }
-        if (track_settings != null) {
-            let new_button = document.createElement('button');
-            new_button.classList.add('panel-settings-button');
-            new_button.textContent = trans[lang].profile.settings;
 
-            track_settings.classList = '';
+        form.innerHTML = '';
+    }
 
-            track_tooltip = tippy(new_button, {
-                theme: 'window',
-                content: (`${track_settings.outerHTML}`),
-                allowHTML: true,
-                placement: 'bottom',
-                interactive: true,
-                interactiveBorder: 10,
-                trigger: 'click',
+    function profile_tracks() {
+        let panel = page.structure.main.querySelector('#top-tracks');
+        panel.classList.remove('section-with-settings');
 
-                onShow(instance) {
-                    let form = instance.popper.querySelector('form');
+        if (panel == null)
+            return;
 
-                    form.innerHTML = (`
-                        <input type="hidden" name="csrfmiddlewaretoken" value="${token}">
-                        <div class="select-container">
-                            <div class="heading">
-                                <h5>${trans[lang].settings.inbuilt.charts.tracks.timeframe.name}</h5>
-                            </div>
-                            <div class="select-wrap custom-selector" id="id_chart_range_top_tracks_select">
-                                ${original_chart_settings.tracks.timeframe}
-                            </div>
+        let form = panel.querySelector('#track-chart-settings');
+        let link = panel.querySelector('[aria-controls="track-chart-settings"]');
+        let tooltip;
+
+
+        let view_buttons = document.createElement('div');
+        view_buttons.classList.add('view-buttons');
+
+        let header = document.createElement('div');
+        header.classList.add('top-container');
+
+        let header_text = panel.querySelector('h2');
+        header.appendChild(header_text);
+
+        // select
+        let select_btn = panel.querySelector('.dropdown-menu-clickable-button');
+        select_btn.classList.add('btn', 'view-item', 'interact-item');
+        select_btn.classList.remove('section-control')
+        view_buttons.appendChild(select_btn);
+
+        header.appendChild(view_buttons);
+        panel.insertBefore(header, panel.firstElementChild);
+
+        if (form == null)
+            return;
+
+        if (page.token == '')
+            page.token = form.querySelector('[name="csrfmiddlewaretoken"]').getAttribute('value');
+
+        let original_chart_settings = {};
+
+        let new_button = document.createElement('button');
+        new_button.classList.add('panel-settings-button', 'btn', 'view-item', 'interact-item');
+        new_button.textContent = trans[lang].profile.settings;
+
+        form.classList = '';
+
+        tooltip = tippy(new_button, {
+            theme: 'window',
+            content: form.outerHTML,
+            allowHTML: true,
+            placement: 'bottom',
+            interactive: true,
+            interactiveBorder: 10,
+            trigger: 'click',
+
+            onShow(instance) {
+                let form = instance.popper.querySelector('form');
+
+                form.innerHTML = (`
+                    <input type="hidden" name="csrfmiddlewaretoken" value="${page.token}">
+                    <div class="select-container">
+                        <div class="heading">
+                            <h5>${trans[lang].settings.inbuilt.charts.tracks.timeframe.name}</h5>
                         </div>
-                        <div class="select-container">
-                            <div class="heading">
-                                <h5>${trans[lang].settings.inbuilt.charts.tracks.count.name}</h5>
-                            </div>
-                            <div class="select-wrap custom-selector" id="id_chart_length_top_tracks_select">
-                                ${original_chart_settings.tracks.count}
-                            </div>
+                        <div class="select-wrap custom-selector" id="id_chart_range_top_tracks_select">
+                            ${original_chart_settings.timeframe}
                         </div>
-                        <div class="sep"></div>
-                        <div class="settings-footer">
-                            <button type="submit" class="btn-primary save">
-                                ${trans[lang].settings.save}
-                            </button>
+                    </div>
+                    <div class="select-container">
+                        <div class="heading">
+                            <h5>${trans[lang].settings.inbuilt.charts.tracks.count.name}</h5>
                         </div>
-                    `);
+                        <div class="select-wrap custom-selector" id="id_chart_length_top_tracks_select">
+                            ${original_chart_settings.count}
+                        </div>
+                    </div>
+                    <div class="sep"></div>
+                    <div class="settings-footer">
+                        <button type="submit" class="btn-primary save">
+                            ${trans[lang].settings.save}
+                        </button>
+                    </div>
+                `);
 
-                    custom_select(form.querySelector('#id_chart_range_top_tracks'), form.querySelector('#id_chart_range_top_tracks_select'));
-                    custom_select(form.querySelector('#id_chart_length_top_tracks'), form.querySelector('#id_chart_length_top_tracks_select'));
+                custom_select(form.querySelector('#id_chart_range_top_tracks'), form.querySelector('#id_chart_range_top_tracks_select'));
+                custom_select(form.querySelector('#id_chart_length_top_tracks'), form.querySelector('#id_chart_length_top_tracks_select'));
 
-                    let selects = form.querySelectorAll('select');
-                    selects.forEach((select) => {
-                        select.setAttribute('onchange', `_update_inbuilt_select('${select.getAttribute('id')}', this.value)`);
-                        update_inbuilt_select(select.getAttribute('id'), select.value);
-                    });
-                }
-            });
-
-            track.appendChild(new_button);
-
-            original_chart_settings.tracks = {
-                timeframe: track_settings.querySelector('#id_chart_range_top_tracks').outerHTML,
-                count: track_settings.querySelector('#id_chart_length_top_tracks').outerHTML
+                let selects = form.querySelectorAll('select');
+                selects.forEach((select) => {
+                    select.setAttribute('onchange', `_update_inbuilt_select('${select.getAttribute('id')}', this.value)`);
+                    update_inbuilt_select(select.getAttribute('id'), select.value);
+                });
             }
+        });
 
-            track_settings.innerHTML = '';
+        view_buttons.appendChild(new_button);
+
+        original_chart_settings = {
+            timeframe: form.querySelector('#id_chart_range_top_tracks').outerHTML,
+            count: form.querySelector('#id_chart_length_top_tracks').outerHTML
         }
+
+        form.innerHTML = '';
     }
 
 
@@ -14104,7 +14769,7 @@ let has_prompted_for_update = false;
 
 
     unsafeWindow._open_profile_shortcut_window = function() {
-        create_window('profile_shortcut',trans[lang].settings.music.profile_shortcut.name,(`
+        dialog_legacy('profile_shortcut',trans[lang].settings.music.profile_shortcut.name,(`
             <div class="text-container" id="container-profile_shortcut">
                 <button class="btn reset" onclick="_reset_item('profile_shortcut')">${trans[lang].settings.reset}</button>
                 <div class="avatar-container">
@@ -14206,11 +14871,90 @@ let has_prompted_for_update = false;
         let legacy_top_listeners_container = panel.querySelector('.top-listeners');
         let legacy_top_listeners = legacy_top_listeners_container.querySelectorAll('.top-listeners-item');
 
-        legacy_top_listeners.forEach((listener) => {
-            let avatar = listener.querySelector('.top-listeners-item-image');
-            let name = listener.querySelector('.top-listeners-item-name').textContent;
+        let new_container = document.createElement('ul');
+        new_container.classList.add('user-list', 'top-listeners-list');
 
-            patch_avatar(avatar, name, 'listener');
+        legacy_top_listeners.forEach((listener, index) => {
+            let new_listener = document.createElement('li');
+            new_listener.classList.add('user-list-item', 'listener-list-item');
+
+            let position = index + 1;
+            if (page.requested.page != null && page.requested.page != "1") {
+                position += ((parseInt(page.requested.page) - 1) * 30);
+            }
+
+            let name_wrap = listener.querySelector('.top-listeners-item-name a');
+            let name = name_wrap.textContent;
+            let track_wrap = listener.querySelector('.top-listeners-track');
+
+            let avatar = listener.querySelector('.top-listeners-item-image');
+
+            let follow = listener.querySelector('.class');
+
+            new_listener.innerHTML = (`
+                <div class="user-list-inner-wrap">
+                    <span class="listener-list-position">
+                        ${position}
+                    </span>
+                    <h4 class="user-list-name">
+                        <a class="user-list-link link-block-target" href="${name_wrap.getAttribute('href')}">
+                            ${name}
+                        </a>
+                    </h4>
+                    <span class="avatar user-list-avatar">
+                        ${avatar.innerHTML}
+                    </span>
+                    ${follow.outerHTML}
+                    <div class="user-list-description">
+                        <p class="user-list-about-me">
+                            ${track_wrap.innerHTML}
+                        </p>
+                    </div>
+                </div>
+            `);
+
+            patch_avatar(new_listener.querySelector('.user-list-avatar'), name, 'listener');
+
+            let track_link = new_listener.querySelector('.user-list-about-me a');
+            let artist = return_artist_from_track(track_link.getAttribute('href'), false);
+            let track = correct_item_by_artist(track_link.textContent.trim(), artist);
+            track_link.textContent = track;
+
+            new_container.appendChild(new_listener);
         });
+
+        view_buttons.after(new_container);
+        panel.removeChild(legacy_top_listeners_container);
+    }
+
+
+
+
+    function bleh_charts() {
+        let chart_row = document.body.querySelector('.charts-row');
+
+        if (chart_row == null)
+            return;
+
+        if (chart_row.hasAttribute('data-bleh-charts'))
+            return;
+        chart_row.setAttribute('data-bleh-charts', 'true');
+
+        page.name = auth;
+        page.avatar = my_avi;
+
+        page.structure.container = document.body.querySelector('.page-content');
+        try {
+            page.structure.row = page.structure.container.querySelector('.row');
+            page.structure.main = page.structure.row.querySelector('.col-main');
+            page.structure.side = page.structure.row.querySelector('.col-sidebar');
+        } catch(e) {
+            log('unable to find elements', 'page structure');
+        }
+
+        checkup_page_structure();
+
+        log('status is', 'page', 'info', page);
+        update_page();
     }
 })();
