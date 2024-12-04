@@ -269,7 +269,8 @@ a,
 .staff-profile .header-title, .staff-shout, .staff-shout a,
 .changelog-version-item,
 .version-item-body li u,
-.grid-items-item.grid-items-item-has-colour
+.grid-items-item.grid-items-item-has-colour,
+.toggle /* for toggles that arent buttons */
 {
     --hue:  var(--hue-over,
             var(--hue-album,

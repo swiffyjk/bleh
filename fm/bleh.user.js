@@ -8694,9 +8694,9 @@ let has_prompted_for_update = false;
             reset_item(item);
     }
 
-    function refresh_all() {
+    function refresh_all(search = document) {
         for (let item in settings_base)
-            update_item(item, settings[item], false);
+            update_item(item, settings[item], false, search);
     }
 
     function reset_item(item) {
@@ -8722,7 +8722,7 @@ let has_prompted_for_update = false;
         update_item(item, value);
     }
 
-    function update_item(item, value, modify=true) {
+    function update_item(item, value, modify=true, search = document) {
         try {
         // is this a new value?
         let new_value = false;
@@ -8735,6 +8735,9 @@ let has_prompted_for_update = false;
 
         if (settings_base[item].type == 'slider' && modify)
             settings[item] = value;
+
+        if (!modify)
+            console.info(item, value, modify);
 
         // determine interactable text colour based on --hue & --lit
         if (item == 'hue' || item == 'lit') {
@@ -8789,7 +8792,7 @@ let has_prompted_for_update = false;
         } else if (settings_base[item].type == 'toggle') {
             if (settings[item] == settings_base[item].values[0] && modify) {
                 settings[item] = settings_base[item].values[1];
-                document.getElementById(`toggle-${item}`).setAttribute('aria-checked',false);
+                search.querySelector(`#toggle-${item}`).setAttribute('aria-checked',false);
 
                 // save setting into body
                 document.body.style.setProperty(`--${item}`,settings_base[item].values[1]);
@@ -8797,7 +8800,7 @@ let has_prompted_for_update = false;
             } else if (modify) {
                 settings[item] = settings_base[item].values[0];
                 console.log(`toggle-${item}`);
-                document.getElementById(`toggle-${item}`).setAttribute('aria-checked',true);
+                search.querySelector(`#toggle-${item}`).setAttribute('aria-checked',true);
 
 
                 if (item == 'dev') {
@@ -8827,9 +8830,9 @@ let has_prompted_for_update = false;
             } else {
                 // dont modify, just show
                 if (settings[item] == settings_base[item].values[0]) {
-                    document.getElementById(`toggle-${item}`).setAttribute('aria-checked',true);
+                    search.querySelector(`#toggle-${item}`).setAttribute('aria-checked',true);
                 } else {
-                    document.getElementById(`toggle-${item}`).setAttribute('aria-checked',false);
+                    search.querySelector(`#toggle-${item}`).setAttribute('aria-checked',false);
                 }
             }
         } else if (settings_base[item].type == 'options') {
@@ -14423,6 +14426,43 @@ let has_prompted_for_update = false;
                         </div>
                     </div>
                     <div class="sep"></div>
+                    <div class="toggle-container" id="container-format_guest_features" onclick="_update_item('format_guest_features')">
+                        <button class="btn reset" onclick="_reset_item('format_guest_features')">${trans[lang].settings.reset}</button>
+                        <div class="heading">
+                            <h5>${trans[lang].settings.corrections.format_guest_features.name}</h5>
+                            <p>${trans[lang].settings.corrections.format_guest_features.bio}</p>
+                        </div>
+                        <div class="toggle-wrap">
+                            <button class="toggle" id="toggle-format_guest_features" aria-checked="true" type="button">
+                                <div class="dot"></div>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="toggle-container hide-if-format-guest-disabled" id="container-show_guest_features" onclick="_update_item('show_guest_features')">
+                        <button class="btn reset" onclick="_reset_item('show_guest_features')">${trans[lang].settings.reset}</button>
+                        <div class="heading">
+                            <h5>${trans[lang].settings.corrections.show_guest_features.name}</h5>
+                            <p>${trans[lang].settings.corrections.show_guest_features.bio}</p>
+                        </div>
+                        <div class="toggle-wrap">
+                            <button class="toggle" id="toggle-show_guest_features" aria-checked="true" type="button">
+                                <div class="dot"></div>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="toggle-container" id="container-stacked_chartlist_info" onclick="_update_item('stacked_chartlist_info')">
+                        <button class="btn reset" onclick="_reset_item('stacked_chartlist_info')">${trans[lang].settings.reset}</button>
+                        <div class="heading">
+                            <h5>${trans[lang].settings.corrections.stacked_chartlist_info.name}</h5>
+                            <p>${trans[lang].settings.corrections.stacked_chartlist_info.bio}</p>
+                        </div>
+                        <div class="toggle-wrap">
+                            <button class="toggle" id="toggle-stacked_chartlist_info" aria-checked="true" type="button">
+                                <div class="dot"></div>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="sep"></div>
                     <div class="settings-footer">
                         <button type="submit" class="btn-primary save">
                             ${trans[lang].settings.save}
@@ -14441,6 +14481,8 @@ let has_prompted_for_update = false;
                 for (let setting in original_chart_settings) {
                     update_inbuilt_item(setting, original_chart_settings[setting], false, form);
                 }
+
+                refresh_all(instance.popper);
             }
         });
 
