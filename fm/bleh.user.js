@@ -3161,11 +3161,11 @@ let has_prompted_for_update = false;
             let performance_end = performance.now();
             log(`finished in ${performance_end - performance_start}`, 'load');
         } catch(e) {
-            handle_error();
+            handle_error(e);
         }
     }
 
-    function handle_error() {
+    function handle_error(e = null) {
         dialog({
             id: 'error',
             title: 'An error has occured',
@@ -3178,6 +3178,11 @@ let has_prompted_for_update = false;
                 </div>
             `)
         });
+
+        if (e != null) {
+            log('fatal failure', 'load');
+            console.error(e);
+        }
     }
 
     function main_flow() {
