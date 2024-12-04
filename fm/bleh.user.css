@@ -4031,8 +4031,8 @@ better than the default selector '#app a' i suppose */
         border-radius: calc(var(--item-big-radius) + 4px);
         opacity: 0;
 
-        border: 2px solid hsl(var(--l3-c), 30%);
-        box-shadow: 0 0 30px hsl(var(--l3-c), 10%);
+        border: 2px solid hsl(var(--h4), 30%);
+        box-shadow: 0 0 30px hsl(var(--h4), 10%);
 
         transition-property: opacity;
         transition-duration: var(--trans);

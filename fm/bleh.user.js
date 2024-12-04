@@ -3660,25 +3660,6 @@ let has_prompted_for_update = false;
     }
 
 
-    function add_menu_item(parent, id, type, name, action, open_externally=false, is_auth=false) {
-        let menu_item = document.createElement('li');
-        let menu_item_btn = document.createElement(type == 'btn' ? 'button' : 'a');
-        menu_item_btn.classList.add(
-            is_auth ? 'auth-dropdown-menu-item' : 'dropdown-menu-clickable-item',
-            `bleh--menu-item-${id}`
-        );
-        menu_item_btn.setAttribute(
-            type == 'btn' ? 'onclick' : 'href',
-            action
-        );
-        if (open_externally) menu_item_btn.setAttribute('_target', '_blank');
-        menu_item_btn.textContent = name;
-
-        menu_item.appendChild(menu_item_btn);
-        parent.appendChild(menu_item);
-    }
-
-
 
 
     function set_season() {
@@ -3870,7 +3851,8 @@ let has_prompted_for_update = false;
 
 
         // auth menu
-        let legacy_auth_menu = document.body.querySelector('.auth-dropdown-menu');
+        let site_auth = document.body.querySelector('.site-auth');
+        let legacy_auth_menu = site_auth.querySelector('.auth-dropdown-menu');
         let token = legacy_auth_menu.querySelector('[name="csrfmiddlewaretoken"]').getAttribute('value');
         let auth_menu = tippy(auth_link, {
             theme: 'auth-menu',
@@ -3970,6 +3952,7 @@ let has_prompted_for_update = false;
                 });
             }
         });
+        site_auth.removeChild(site_auth.querySelector('.auth-dropdown-menu-wrap'));
 
 
         // language
