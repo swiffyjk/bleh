@@ -1557,7 +1557,7 @@ last.fm changes as of 2024-05-20 */
 
     &:not(.featured-item-panel, .shh, .view-all-panel, .metadata-list, .bleh--profile-note-panel) {
         background-image: var(--cards-overlay-image, unset) !important;
-        background-repeat: repeat-x;
+        background-repeat: repeat-x !important;
         background-position: unset !important;
 
         &:before {
