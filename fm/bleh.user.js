@@ -105,7 +105,7 @@ let version = {
             date: '2024-12-03'
         },
         glacier_library: {
-            default: false,
+            default: true,
             name: 'Glacier library (new library beta)',
             date: '2024-12-04'
         }
