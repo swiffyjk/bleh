@@ -5946,7 +5946,7 @@ button,
 .image-details :is(.bleh--gallery-bookmark-image-btn, .gallery-image-report, .gallery-image-delete button),
 .btn.back,
 .btn-post-shout,
-.view-item:not(.video-item, .listen-item, .profile-top-item--taste, .interact-item, .profile-top-item--shortcut, .profile-top-item--follow, .profile-top-item--message, .profile-top-item--edit),
+.view-item:not(.video-item, .listen-item, .profile-top-item--taste, .interact-item, .profile-top-item--shortcut, .profile-top-item--follow, .profile-top-item--message, .profile-top-item--edit, .dropdown-menu-clickable-button),
 .btn--has-icon-left,
 .stationlink,
 .dropdown-menu-clickable-item, .auth-dropdown-menu-item,
@@ -15186,7 +15186,7 @@ button.bleh--gallery-bookmark-image-btn {
     background-color: hsl(var(--b6));
     border-radius: calc(var(--item-big-radius) + var(--button-list-gap));
 
-    &:not(.profile-top-header) {
+    &:not(.profile-top-header, .glacier-library-buttons) {
         margin-bottom: var(--card-gap);
     }
 
@@ -17951,6 +17951,10 @@ section > .section-controls .subpage-title {
 
 
 
+.glacier-legacy-top-header {
+    display: none !important;
+}
+
 .glacier-library-top {
     display: flex;
     justify-content: space-between;
@@ -17970,8 +17974,13 @@ section > .section-controls .subpage-title {
     }
 
     .glacier-library-buttons {
-        .library-format-container {
-            display: flex;
+        .glacier-view-button {
+            &[data-glacier-view="list"] {
+                --mask: var(--icon-16-list);
+            }
+            &[data-glacier-view="grid"] {
+                --mask: var(--icon-16-grid);
+            }
         }
     }
 }

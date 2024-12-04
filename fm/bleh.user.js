@@ -154,6 +154,12 @@
                 }
             },
             glacier: {
+                meta: {
+                    artists: 'Artists',
+                    albums: 'Albums',
+                    tracks: 'Tracks',
+                    average: 'Average'
+                },
                 view: {
                     grid: 'Grid',
                     list: 'List'
@@ -13666,6 +13672,8 @@
             if (legacy_top_header == null)
                 return;
 
+            legacy_top_header.classList.add('glacier-legacy-top-header');
+
             if (!static_page) {
                 if (legacy_top_header.style.getPropertyValue('display')) {
                     legacy_top_header.removeAttribute('data-glacier-library-top');
@@ -13693,11 +13701,24 @@
             let glacier_meta = document.createElement('div');
             glacier_meta.classList.add('glacier-library-metadata');
 
-            metadata.forEach((meta) => {
+            metadata.forEach((meta, index) => {
+                let text = meta.querySelector('.metadata-title').textContent;
+
+                if (page.subpage == 'library_overview') {
+                    if (index == 1)
+                        text = trans[lang].glacier.meta.average;
+                } else if (page.subpage == 'library_artists') {
+                    text = trans[lang].glacier.meta.artists;
+                } else if (page.subpage == 'library_albums') {
+                    text = trans[lang].glacier.meta.albums;
+                } else if (page.subpage == 'library_tracks') {
+                    text = trans[lang].glacier.meta.tracks;
+                }
+
                 let glacier_meta_item = document.createElement('div');
                 glacier_meta_item.classList.add('glacier-library-metadata-item');
                 glacier_meta_item.innerHTML = (`
-                    <div class="sub-text">${meta.querySelector('.metadata-title').textContent}</div>
+                    <div class="sub-text">${text}</div>
                     <div class="glacier-library-metadata-item-value">${meta.querySelector('.metadata-display').textContent}</div>
                 `);
 
@@ -13746,6 +13767,8 @@
 
         unsafeWindow._update_glacier_view = function() {
             let format = page.structure.main.querySelector('.library-view-button');
+            if (format == null)
+                return;
 
             format.click();
 
