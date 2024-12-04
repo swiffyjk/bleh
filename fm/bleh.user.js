@@ -3129,7 +3129,7 @@ let has_prompted_for_update = false;
         lotus();
 
         try {
-            //throw new Error;
+            throw new Error;
             main_flow();
 
             // last.fm is a single page application
@@ -3171,6 +3171,7 @@ let has_prompted_for_update = false;
             title: 'An error has occured',
             body: (`
                 bleh was unable to start correctly, please report this on Github.
+                <p class="subtext">Error information available in console</p>
                 <div class="modal-footer">
                     <a class="btn primary report-bug continue" href="https://github.com/katelyynn/bleh/issues/new/choose" target="_blank">
                         Report bug now
