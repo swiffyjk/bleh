@@ -17201,11 +17201,19 @@ h4 {
                 }
             }
         }
+
+        img {
+            max-width: 560px;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+        }
     }
 
     img {
         width: 100%;
         border-radius: var(--item-big-radius);
+        box-shadow: var(--card-shadow);
     }
 
     p {
