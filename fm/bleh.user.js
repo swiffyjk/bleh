@@ -6368,8 +6368,8 @@ let has_prompted_for_update = false;
                     if (
                         !plays_elem.getAttribute('href')
                         .includes('?from=') &&
-                        !plays_elem.getAttribute('href')
-                        .includes('?date_preset=')
+                        (!plays_elem.getAttribute('href')
+                        .includes('?date_preset=') || plays_elem.getAttribute('href').endsWith('?date_preset=ALL'))
                     ) {
                         let parsed_scrobble_as_rank = parse_scrobbles_as_rank(plays);
 
