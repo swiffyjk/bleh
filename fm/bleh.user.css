@@ -1,7 +1,7 @@
 /* ==UserStyle==
 @name           bleh (dev)
 @namespace      github.com/katelyynn/bleh
-@version        2024.1202
+@version        2024.1204
 @license        GPL-3.0
 @author         kate
 @updateURL      https://github.com/katelyynn/bleh/raw/uwu/fm/bleh.user.css
@@ -16,7 +16,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Work+Sans:ital,wght@0,100..900;1,100..900&display=swap');
 
 body {
-    --version-build: '2024.1202';
+    --version-build: '2024.1204';
 
     --hue:  var(--hue-over,
             var(--hue-album,
@@ -701,12 +701,16 @@ body {
         &[data-bleh--season="fall"] {
             --cards-overlay: linear-gradient(180deg, rgba(157, 211, 255, 0.03) 0%, rgba(0,0,0,0) 100%);
             --cards-overlay-image: var(--overlay-ice);
+            --cards-overlay-image-subtlest: var(--overlay-ice-subtlest);
+            --cards-overlay-image-spikes: var(--overlay-ice-spikes);
         }
         &[data-bleh--season="christmas"],
         &[data-bleh--season="new_years"] {
             --cards-overlay: linear-gradient(180deg, rgba(157, 211, 255, 0.06) 0%, rgba(0,0,0,0) 100%);
             --cards-overlay-image: var(--overlay-ice);
             --cards-overlay-image-subtle: var(--overlay-ice-subtle);
+            --cards-overlay-image-subtlest: var(--overlay-ice-subtlest);
+            --cards-overlay-image-spikes: var(--overlay-ice-spikes);
         }
     }
 
@@ -2490,6 +2494,26 @@ li.header-metadata-item--event-attendance {
 
     [data-bleh--theme="light"] & {
         border-bottom: 2px solid hsla(var(--c3), 10%) !important;
+    }
+
+    position: relative;
+
+    &:before {
+        content: '';
+        position: absolute;
+        left: 0;
+        bottom: -26px;
+        right: 0;
+        height: 24px;
+        display: var(--cards-overlay-display);
+        background-image: var(--cards-overlay-image-spikes, unset) !important;
+        background-repeat: repeat-x;
+        background-position: unset !important;
+        pointer-events: none;
+
+        /* fix for no-data-message overriding and stuff */
+        margin: unset;
+        width: unset;
     }
 }
 
@@ -5717,9 +5741,9 @@ button,
 .about-guest-feature,
 .weeklychart-item
 {
-    --bg: hsl(var(--b4));
-    --bg-hov: hsla(var(--b4), 80%);
-    --bg-atv: hsla(var(--b4), 60%);
+    --bg: var(--cards-overlay-image-subtlest, none), hsl(var(--b4));
+    --bg-hov: var(--cards-overlay-image-subtlest, none), hsla(var(--b4), 80%);
+    --bg-atv: var(--cards-overlay-image-subtlest, none), hsla(var(--b4), 60%);
     --col: hsl(var(--c2));
     --shadow: var(--interact-shadow);
     --shadow-hov: var(--active-shadow);
@@ -5727,7 +5751,7 @@ button,
     --btn-right: 12px;
     --btn-bottom: 7px;
     --btn-left: 12px;
-    background-color: var(--bg) !important;
+    background: var(--bg) !important;
     color: var(--col) !important;
     padding: var(--padding, var(--button-padding, var(--btn-top) var(--btn-right) var(--btn-bottom) var(--btn-left))) !important;
     min-height: unset !important;
@@ -5748,19 +5772,28 @@ button,
     user-select: none;
     cursor: pointer;
 
+    background-repeat: repeat-x !important;
+    background-position: unset !important;
+
     &:is(.gallery-next, .gallery-previous):hover .arrow,
     &:hover {
-        background-color: var(--bg-hov) !important;
+        background: var(--bg-hov) !important;
         transition-property: padding, transform !important;
         transition-duration: 0.1s !important;
         --transition-property: opacity, left;
         /*box-shadow: var(--shadow-hov) !important;*/
+
+    background-repeat: repeat-x !important;
+    background-position: unset !important;
     }
 
     &:is(.gallery-next, .gallery-previous):active .arrow,
     &:active {
-        background-color: var(--bg-atv) !important;
+        background: var(--bg-atv) !important;
         transform: scale(0.98);
+
+        background-repeat: repeat-x !important;
+        background-position: unset !important;
     }
 
 
@@ -5806,9 +5839,9 @@ button,
         [data-toggle-button-current-state="loved"] .interact-item,
         [data-toggle-button-current-state="bookmarked"] .interact-item
     ) {
-        --bg: hsl(var(--h3)) !important;
-        --bg-hov: hsla(var(--h3), 80%) !important;
-        --bg-atv: hsla(var(--h3), 60%) !important;
+        --bg: var(--cards-overlay-image-subtlest, none), hsl(var(--h3)) !important;
+        --bg-hov: var(--cards-overlay-image-subtlest, none), hsla(var(--h3), 80%) !important;
+        --bg-atv: var(--cards-overlay-image-subtlest, none), hsla(var(--h3), 60%) !important;
         --col: hsl(var(--b7)) !important;
         --shadow: var(--interactable-outer);
         --shadow-hov: var(--interactable-outer), var(--interactable-active-outer);
@@ -6375,6 +6408,20 @@ on the bottom of a panel !! */
 }
 
 
+.dropdown-menu-list-button, .dropdown-menu-clickable-button, .dropdown-menu-clickable-button-js-only {
+    &:after {
+        transition-property: transform !important;
+        transition-duration: var(--trans) !important;
+        transition-timing-function: var(--trans-function) !important;
+    }
+
+    &.disclose-active {
+        &:after {
+            transform: scaleY(-1) !important;
+        }
+    }
+}
+
 .form-group-controls:has(select):before,
 .dropdown-menu-list-button::after, .dropdown-menu-clickable-button::after, .dropdown-menu-clickable-button-js-only::after {
     --mask: var(--icon-16-dropdown);
@@ -6494,7 +6541,7 @@ on the bottom of a panel !! */
 
     &.dropdown-menu-clickable-item--selected,
     &.active {
-        --bg: hsla(var(--h4), 20%) !important;
+        --bg: var(--cards-overlay-image-subtlest, none), hsla(var(--h4), 20%) !important;
         --bg-hov: var(--bg) !important;
         --bg-atv: var(--bg) !important;
     }
@@ -12586,7 +12633,7 @@ so this is good enough - use the community docs */
                 }
 
                 &.active {
-                    --bg: hsla(var(--h4), 35%);
+                    --bg: var(--cards-overlay-image-subtlest, none), hsla(var(--h4), 35%);
                     --bg-hov: var(--bg);
                     --bg-atv: var(--bg);
 
@@ -13013,9 +13060,9 @@ code, kbd, samp {
         }
 
         &.active {
-            --bg: hsla(var(--h4), 35%);
-            --bg-hov: hsla(var(--h4), 45%);
-            --bg-atv: hsla(var(--h4), 55%);
+            --bg: var(--cards-overlay-image-subtlest, none), hsla(var(--h4), 35%);
+            --bg-hov: var(--cards-overlay-image-subtlest, none), hsla(var(--h4), 45%);
+            --bg-atv: var(--cards-overlay-image-subtlest, none), hsla(var(--h4), 55%);
             --shadow: none;
             --shadow-hov: none;
         }
@@ -13072,9 +13119,9 @@ code, kbd, samp {
     flex-direction: column;
 
     &.active {
-        --bg: hsl(var(--h3));
-        --bg-hov: hsla(var(--h3), 80%);
-        --bg-atv: hsla(var(--h3), 60%);
+        --bg: var(--cards-overlay-image-subtlest, none), hsl(var(--h3));
+        --bg-hov: var(--cards-overlay-image-subtlest, none), hsla(var(--h3), 80%);
+        --bg-atv: var(--cards-overlay-image-subtlest, none), hsla(var(--h3), 60%);
         --col: hsl(var(--b7));
         --shadow: var(--interactable-outer);
     }
@@ -14375,6 +14422,8 @@ body:is(.namespace--user_playlists_create_overview, .music-landing-overview, [cl
 :root {
     --overlay-ice: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAAAICAYAAABJYvnfAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAADySURBVEhLYzz/7Pt/BiD4+BNEIsC7r7+hLFTw+89fKAsCxPk5oCwI4GeHMqAA3VwYQDdfiJsVyoIAUs2B6Yfpw+UfRSFUe5ig9IgFjAfuf++HsmFgO4hwUOTcBaJh8sqCTAUg+s23fyAKFMITQDQwxMHiMD5QXyGIRkpZ7iAaBoDqd4JoQylORhCNbj/MPBEuSNzICrDD1LmBBQgDTxABMwcGcLljNAUgxQB6zINDHBjz4JCCxQQuAFMP0w8DuMQJAZi7YCkPPSWQag9MHuafu+//gVPsiE8BcAAKIVgoDWYAdGMlCEO5JAN0f47wFMDAAACcC3QVXJseuAAAAABJRU5ErkJggg==');
     --overlay-ice-subtle: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAAAICAYAAABJYvnfAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAADqSURBVEhLYzz/7Pt/BiD4+BNEIsC7r7+hLFTw+89fKAsCxPk5oCw4mA+lV0BpMHBQ5NwFog/c/14JFgAKgYhPP/64gWg+DhYQBQf87FAGFCC5D2wOEjgApVWhtB6UNobSYADzj6IQK5iGASYoPWIBIzBG1kHZD6H0dhCBFGP9IFpZkKkARL/59g9EgWJkAogGxhRYHMYH6isE0cQCmPkwADNPhAsSN7IC7IwgGqgOnFJgAOY+dABUtxPKRAe9ULoYRADtAZs3mgKgNDyEcYXsYAFAd4LLEKA728ECJAL0lDTiU8AoGNmAgQEAgetGPKX6JgUAAAAASUVORK5CYII=');
+    --overlay-ice-subtlest: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAAAICAYAAABJYvnfAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsIAAA7CARUoSoAAAADQSURBVEhLYzxw/3soAwTEQ2kwePf1930oEwbsoDQKEOJmlYAyT0PpV1B6BZQGAwdFzl0gGmhfJVgAKAQmFDndQfTm65/Pg+jff/8fAdFAcw+BaBgAqlsNooH6d4IFEOAAlFaF0npQGqwf6A9WMA8KgOb+hjIDQAQTmDmCASgFtEDZN6H0SxCBFGOwFGIJpcExBQSwGMqH0sehNBjAYgwXQDIXBlDMB+pfDOahAaC+WCjTEEqrQelsKI3iHqSUA7YP3V0jPgWMglEwCkYyYGAAAGC7PXtvhjDJAAAAAElFTkSuQmCC');
+    --overlay-ice-spikes: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAAAYCAYAAABKtPtEAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsIAAA7CARUoSoAAAAGKSURBVFhH7ZQ9LwRRFIbvrt01MsuKAgWFgkgoJP6ASDRIVCL+BhqlhkY0otRJEGo62U42ItmIAhE6CQ3rI7tr58N5jzvJ2Cw7u6GQOU9xnnMnM/fM3Dn3RnazjzlFRGPxWXh6MHkAe+ydv47rdBjBdd0FHrnupxybTc+vcqLUKcIP8zCOVdqG+9oNHl89FNjl8/jg+kTF+T18dWa0rxESDWoeLhRLEdgjqh1aIunb/AqSkZ6mRb5ShcPLl2P4OW91wUkj1gJP9Den4KDsnz1lYNtxW/mCUp0IHSljCab3WYPrhb5rTqdZ7U2E+1zhnUe6nnQArdSozhla+SOdVoTuv4BpJe/gNjPBe3Os16ypA2ieLfitaJmwZTsn8NRAahn+bajehk4ntdMI0gFBO4Du47OC6EagDriBjXiUj++gf85Xb0ibO4nq7vDoj6C63png1eczRjpAOzC0kl/2rtkYW4ernR3f4XVEvc/XSnm90HdA3WBP+fbVvyX0HSALoC0IgiAIgiAIoUKpD9AuieddpDZ6AAAAAElFTkSuQmCC');
 
     --overlay-halloween: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsIAAA7CARUoSoAAAACXSURBVFhHY/Sr0XrKAAQCgoIgiuHDoz9getPEk9IgOq7XGiz/7PpXEMXAxc0OptHlv337AaIY1tSeBYvDQEizMVgeBn79/A6mH158BqaZwOQAAkYoDQdmPipgF5/acgfFJ+hARU8QxWd3Lr3Hqx4GXFIMwPp+czwG8wc8BEbBKBgFo2AUjIJRMApGwSgYBaNgFIx0wMAAAPkHKBsZxMgPAAAAAElFTkSuQmCC');
 }

@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         bleh
 // @namespace    http://last.fm/
-// @version      2024.1202
+// @version      2024.1204
 // @description  bleh!!! ^-^
 // @author       kate
 // @match        https://www.last.fm/*
@@ -21,7 +21,7 @@
 // ==/UserScript==
 
 let version = {
-    build: '2024.1202',
+    build: '2024.1204',
     sku: 'iroha',
     feature_flags: {
         bleh_settings_tabs: {
