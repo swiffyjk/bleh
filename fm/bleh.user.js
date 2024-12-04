@@ -5226,6 +5226,16 @@ let has_prompted_for_update = false;
             header_avatar.appendChild(avatar_link);
         }
 
+        if (ff('glacier_library')) {
+            let tab = page.structure.nav.querySelector('.secondary-nav-item--library a');
+
+            let beta = document.createElement('span');
+            beta.classList.add('new-badge', 'beta-badge');
+            beta.textContent = trans[lang].settings.beta;
+
+            tab.appendChild(beta);
+        }
+
 
         let is_own_profile = (page.name == auth);
         if (is_own_profile)
@@ -13572,9 +13582,11 @@ let has_prompted_for_update = false;
         page.structure.side.appendChild(date_panel);
 
 
-        // scrobbles tab
-        if (ff('glacier_library') && page.subpage == 'library_overview') {
-            bleh_glacier_library_top(true);
+        if (ff('glacier_library')) {
+            if (page.subpage == 'library_overview') {
+                // scrobbles tab
+                bleh_glacier_library_top(true);
+            }
         }
     }
 

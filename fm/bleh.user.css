@@ -2741,6 +2741,10 @@ button.navlist-more {
         transform: scale(0.98);
     }
 
+    .new-badge {
+        margin-left: 6px;
+    }
+
     /*&.masthead-nav-control--active,*/
     [data-bleh--gallery-tab="overview"] .secondary-nav-item--gallery-overview  &,
     [data-bleh--gallery-tab="bookmarks"] .secondary-nav-item--gallery-bookmarks &,
