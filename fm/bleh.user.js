@@ -3129,7 +3129,7 @@ let has_prompted_for_update = false;
         lotus();
 
         try {
-            throw new Error;
+            //throw new Error;
             main_flow();
 
             // last.fm is a single page application
@@ -9430,7 +9430,7 @@ let has_prompted_for_update = false;
                 body: (`
                     <p class="alert alert-error">${trans[lang].settings.actions.import.modals.failed.alert}</p>
                     <div class="modal-footer">
-                        <button class="btn primary done" onclick="_kill_window('import_failed')">
+                        <button class="btn primary done" onclick="_dialog_rm({id: 'import_failed'})">
                             ${trans[lang].settings.done}
                         </button>
                     </div>
@@ -9450,7 +9450,7 @@ let has_prompted_for_update = false;
                 <br>
                 <textarea>${JSON.stringify(settings)}</textarea>
                 <div class="modal-footer">
-                    <button class="btn primary done" onclick="_kill_window('export_settings')">
+                    <button class="btn primary done" onclick="_dialog_rm({id: 'export_settings'})">
                         ${trans[lang].settings.done}
                     </button>
                 </div>
