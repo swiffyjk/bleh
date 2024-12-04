@@ -17964,6 +17964,10 @@ section > .section-controls .subpage-title {
         gap: var(--card-gap);
 
         .glacier-library-metadata-item {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+
             .glacier-library-metadata-item-value {
                 font-size: 16px;
                 line-height: 20px;

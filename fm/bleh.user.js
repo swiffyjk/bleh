@@ -13630,11 +13630,6 @@
 
         // can update at any time!!
         function bleh_glacier_library() {
-            if (!ff('glacier_library'))
-                return;
-
-            log('checking!', 'glacier library');
-
             // table
             bleh_glacier_library_table();
 
@@ -13643,6 +13638,9 @@
         }
 
         function bleh_glacier_library_table() {
+            if (!ff('glacier_library'))
+                return;
+
             let table = page.structure.side.querySelector('.scrobble-table');
             page.structure.glacier.refresh = false;
 
@@ -13663,6 +13661,9 @@
         }
 
         function bleh_glacier_library_top(static_page = false) {
+            if (!ff('glacier_library'))
+                return;
+
             let legacy_top_header;
             if (!static_page)
                 legacy_top_header = page.structure.main.querySelector('.library-top');
@@ -13730,34 +13731,41 @@
 
             // buttons
             if (!static_page) {
-                let sort = legacy_top_header.querySelector('.library-sort');
-                let sort_button = sort.querySelector('.dropdown-menu-clickable-button');
-                sort_button.classList.add('btn', 'view-item', 'glacier-library-button');
-                let sort_menu = sort.querySelector('.dropdown-menu-clickable');
-
                 let top_wrap = page.structure.main.querySelector('.library-top-wrap');
-
-                let format_button = document.createElement('button');
-                format_button.classList.add('btn', 'view-item', 'glacier-library-button', 'glacier-view-button');
-                format_button.setAttribute('onclick', '_update_glacier_view()');
-                page.structure.glacier.format = format_button;
-
-                if (top_wrap.getAttribute('data-current-format') == 'grid') {
-                    format_button.setAttribute('data-glacier-view', 'grid');
-                    format_button.textContent = trans[lang].glacier.view.grid;
-                } else {
-                    format_button.setAttribute('data-glacier-view', 'list');
-                    format_button.textContent = trans[lang].glacier.view.list;
-                }
 
                 let view_buttons = document.createElement('div');
                 view_buttons.classList.add('view-buttons', 'glacier-library-buttons');
 
-                view_buttons.appendChild(sort_button);
-                view_buttons.appendChild(sort_menu);
-                view_buttons.appendChild(format_button);
+                let sort = legacy_top_header.querySelector('.library-sort');
+                if (sort != null) {
+                    let sort_button = sort.querySelector('.dropdown-menu-clickable-button');
+                    sort_button.classList.add('btn', 'view-item', 'glacier-library-button');
+                    let sort_menu = sort.querySelector('.dropdown-menu-clickable');
 
-                glacier_top.appendChild(view_buttons);
+                    view_buttons.appendChild(sort_button);
+                    view_buttons.appendChild(sort_menu);
+                }
+
+                if (page.subpage != 'library_tracks') {
+                    let format_button = document.createElement('button');
+                    format_button.classList.add('btn', 'view-item', 'glacier-library-button', 'glacier-view-button');
+                    format_button.setAttribute('onclick', '_update_glacier_view()');
+                    page.structure.glacier.format = format_button;
+
+                    if (top_wrap.getAttribute('data-current-format') == 'grid') {
+                        format_button.setAttribute('data-glacier-view', 'grid');
+                        format_button.textContent = trans[lang].glacier.view.grid;
+                    } else {
+                        format_button.setAttribute('data-glacier-view', 'list');
+                        format_button.textContent = trans[lang].glacier.view.list;
+                    }
+
+                    view_buttons.appendChild(format_button);
+                }
+
+                // only create if theres content
+                if (sort != null && page.subpage != 'library_tracks')
+                    glacier_top.appendChild(view_buttons);
             }
 
 
