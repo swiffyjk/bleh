@@ -3435,24 +3435,30 @@ let has_prompted_for_update = false;
     }
     function prompt_for_update() {
         // prompt the user
-        dialog_legacy('bleh_update',trans[lang].settings.home.update.update_to_v.replace('{v}', theme_version),(`
-            <div class="bleh--update-checker-container">
-                <div class="form">
-                    <div class="form-group">
-                        <button class="big-btn ignore" onclick="_ignore_update()"></button>
-                        ${trans[lang].settings.home.update.ignore}
-                        <div class="small-alert red">${version.build}</div>
+        dialog({
+            id: 'bleh_update',
+            title: trans[lang].settings.home.update.update_to_v.replace('{v}', theme_version),
+            body: (`
+                <div class="bleh--update-checker-container">
+                    <div class="form">
+                        <div class="form-group">
+                            <button class="big-btn ignore" onclick="_ignore_update()"></button>
+                            ${trans[lang].settings.home.update.ignore}
+                            <div class="small-alert red">${version.build}</div>
+                        </div>
+                    </div>
+                    <div class="form">
+                        <div class="form-group">
+                            <button class="big-btn primary update" onclick="_start_update()"></button>
+                            ${trans[lang].settings.home.update.update_now}
+                            <div class="small-alert green">${theme_version}</div>
+                        </div>
                     </div>
                 </div>
-                <div class="form">
-                    <div class="form-group">
-                        <button class="big-btn primary update" onclick="_start_update()"></button>
-                        ${trans[lang].settings.home.update.update_now}
-                        <div class="small-alert green">${theme_version}</div>
-                    </div>
-                </div>
-            </div>
-        `), false, 'update');
+            `),
+            dismiss: false,
+            type: 'update'
+        });
     }
 
     unsafeWindow._ignore_update = function() {
@@ -3477,17 +3483,23 @@ let has_prompted_for_update = false;
         if (!settings.dev) {
             _final_update();
         } else {
-            dialog_legacy('bleh_update',trans[lang].settings.home.update.update_to_v.replace('{v}', theme_version),(`
-                <div class="bleh--update-checker-container">
-                    <div class="form">
-                        <div class="form-group">
-                            <button class="big-btn primary update" onclick="_start_css_update()"></button>
-                            ${trans[lang].settings.home.update.css}
-                            <div class="small-alert green">${theme_version}</div>
+            dialog({
+                id: 'bleh_update',
+                title: trans[lang].settings.home.update.update_to_v.replace('{v}', theme_version),
+                body: (`
+                    <div class="bleh--update-checker-container">
+                        <div class="form">
+                            <div class="form-group">
+                                <button class="big-btn primary update" onclick="_start_css_update()"></button>
+                                ${trans[lang].settings.home.update.css}
+                                <div class="small-alert green">${theme_version}</div>
+                            </div>
                         </div>
                     </div>
-                </div>
-            `), false, 'update');
+                `),
+                dismiss: false,
+                type: 'update'
+            });
         }
     }
 
@@ -3501,16 +3513,22 @@ let has_prompted_for_update = false;
     }
 
     unsafeWindow._final_update = function() {
-        dialog_legacy('bleh_update',trans[lang].settings.home.update.update_to_v.replace('{v}', theme_version),(`
-            <div class="bleh--update-checker-container">
-                <div class="form">
-                    <div class="form-group">
-                        <button class="big-btn primary finish" onclick="_finish_update()"></button>
-                        ${trans[lang].settings.finish}
+        dialog({
+            id: 'bleh_update',
+            title: trans[lang].settings.home.update.update_to_v.replace('{v}', theme_version),
+            body: (`
+                <div class="bleh--update-checker-container">
+                    <div class="form">
+                        <div class="form-group">
+                            <button class="big-btn primary finish" onclick="_finish_update()"></button>
+                            ${trans[lang].settings.finish}
+                        </div>
                     </div>
                 </div>
-            </div>
-        `), false, 'update');
+            `),
+            dismiss: false,
+            type: 'update'
+        });
     }
 
     unsafeWindow._finish_update = function() {
