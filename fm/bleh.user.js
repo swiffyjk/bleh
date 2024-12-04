@@ -6269,6 +6269,8 @@ let has_prompted_for_update = false;
             } else if (page.type == 'tag') {
                 let aux_text = grid.querySelector('.grid-items-item-aux-text');
                 let stat_name = aux_text.querySelector('.stat-name');
+                if (stat_name == null)
+                    return;
 
                 aux_text.removeChild(stat_name);
 
