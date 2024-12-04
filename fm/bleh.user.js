@@ -21,7 +21,7 @@
     // ==/UserScript==
 
     let version = {
-        build: '2024.1204',
+        build: '2024.1204.2',
         sku: 'glacier',
         feature_flags: {
             bleh_settings_tabs: {
