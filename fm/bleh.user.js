@@ -13764,7 +13764,7 @@
                 }
 
                 // only create if theres content
-                if (sort != null && page.subpage != 'library_tracks')
+                if (sort != null || page.subpage != 'library_tracks')
                     glacier_top.appendChild(view_buttons);
             }
 
