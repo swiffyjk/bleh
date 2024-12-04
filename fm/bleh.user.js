@@ -3128,36 +3128,56 @@ let has_prompted_for_update = false;
 
         lotus();
 
-        main_flow();
-
-        // last.fm is a single page application
-        const observer = new MutationObserver((mutations) => {
-            lookup_lang();
-            append_nav(document.body);
-            patch_masthead(document.body);
-
-            // load seasonal data
-            set_season();
-
-            theme_version = getComputedStyle(document.body).getPropertyValue('--version-build').replaceAll("'", ''); // remove quotations
-            if (theme_version != version.build && theme_version != '' && !has_prompted_for_update) {
-                // script is either out of date, or more in date (not gonna happen)
-                log(`version mismatch! running ${version.build}, downloaded theme ${theme_version}`, 'update');
-
-                prompt_for_update();
-                has_prompted_for_update = true;
-            }
-
+        try {
+            //throw new Error;
             main_flow();
-        });
 
-        observer.observe(document.body, {
-            childList: true,
-            subtree: true
-        });
+            // last.fm is a single page application
+            const observer = new MutationObserver((mutations) => {
+                lookup_lang();
+                append_nav(document.body);
+                patch_masthead(document.body);
 
-        let performance_end = performance.now();
-        log(`finished in ${performance_end - performance_start}`, 'load');
+                // load seasonal data
+                set_season();
+
+                theme_version = getComputedStyle(document.body).getPropertyValue('--version-build').replaceAll("'", ''); // remove quotations
+                if (theme_version != version.build && theme_version != '' && !has_prompted_for_update) {
+                    // script is either out of date, or more in date (not gonna happen)
+                    log(`version mismatch! running ${version.build}, downloaded theme ${theme_version}`, 'update');
+
+                    prompt_for_update();
+                    has_prompted_for_update = true;
+                }
+
+                main_flow();
+            });
+
+            observer.observe(document.body, {
+                childList: true,
+                subtree: true
+            });
+
+            let performance_end = performance.now();
+            log(`finished in ${performance_end - performance_start}`, 'load');
+        } catch(e) {
+            handle_error();
+        }
+    }
+
+    function handle_error() {
+        dialog({
+            id: 'error',
+            title: 'An error has occured',
+            body: (`
+                bleh was unable to start correctly, please report this on Github.
+                <div class="modal-footer">
+                    <a class="btn primary report-bug continue" href="https://github.com/katelyynn/bleh/issues/new/choose" target="_blank">
+                        Report bug now
+                    </a>
+                </div>
+            `)
+        });
     }
 
     function main_flow() {
