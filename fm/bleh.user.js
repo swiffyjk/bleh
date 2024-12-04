@@ -13737,13 +13737,17 @@
                 view_buttons.classList.add('view-buttons', 'glacier-library-buttons');
 
                 let sort = legacy_top_header.querySelector('.library-sort');
+                let sort_button;
                 if (sort != null) {
-                    let sort_button = sort.querySelector('.dropdown-menu-clickable-button');
-                    sort_button.classList.add('btn', 'view-item', 'glacier-library-button');
-                    let sort_menu = sort.querySelector('.dropdown-menu-clickable');
+                    sort_button = sort.querySelector('.dropdown-menu-clickable-button');
 
-                    view_buttons.appendChild(sort_button);
-                    view_buttons.appendChild(sort_menu);
+                    if (sort_button != null) {
+                        sort_button.classList.add('btn', 'view-item', 'glacier-library-button');
+                        let sort_menu = sort.querySelector('.dropdown-menu-clickable');
+
+                        view_buttons.appendChild(sort_button);
+                        view_buttons.appendChild(sort_menu);
+                    }
                 }
 
                 if (page.subpage != 'library_tracks') {
@@ -13764,7 +13768,7 @@
                 }
 
                 // only create if theres content
-                if (sort != null || page.subpage != 'library_tracks')
+                if (sort_button != null || page.subpage != 'library_tracks')
                     glacier_top.appendChild(view_buttons);
             }
 

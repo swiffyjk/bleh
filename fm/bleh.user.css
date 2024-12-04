@@ -17988,4 +17988,9 @@ section > .section-controls .subpage-title {
         }
     }
 }
+
+/* 35 ??? */
+.library-overview-header .dropdown-menu-clickable-button {
+    height: 32px;
+}
 }
