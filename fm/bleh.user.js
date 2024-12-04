@@ -14400,19 +14400,19 @@ let has_prompted_for_update = false;
                             ${original_chart_settings.count}
                         </div>
                     </div>
-                    <div class="toggle-container" id="container-recent_artwork">
+                    <div class="toggle-container" id="container-recent_artwork" onclick="_update_inbuilt_item('recent_artwork')">
                         <button class="btn reset" onclick="_reset_inbuilt_item('recent_artwork')">Reset to default</button>
                         <div class="heading">
                             <h5>${trans[lang].settings.inbuilt.charts.recent.artwork.name}</h5>
                         </div>
                         <div class="toggle-wrap">
                             <input class="companion-checkbox" type="checkbox" name="show_recent_tracks_artwork" id="inbuilt-companion-checkbox-recent_artwork">
-                            <span class="btn toggle" id="toggle-recent_artwork" onclick="_update_inbuilt_item('recent_artwork')" aria-checked="false">
+                            <span class="btn toggle" id="toggle-recent_artwork" aria-checked="false">
                                 <div class="dot"></div>
                             </span>
                         </div>
                     </div>
-                    <div class="toggle-container" id="container-recent_realtime">
+                    <div class="toggle-container" id="container-recent_realtime" onclick="_update_inbuilt_item('recent_realtime')">
                         <button class="btn reset" onclick="_reset_inbuilt_item('recent_realtime')">Reset to default</button>
                         <div class="heading">
                             <h5>${trans[lang].settings.inbuilt.charts.recent.realtime.name}</h5>
@@ -14420,7 +14420,7 @@ let has_prompted_for_update = false;
                         </div>
                         <div class="toggle-wrap">
                             <input class="companion-checkbox" type="checkbox" name="auto_refresh_recent_tracks" id="inbuilt-companion-checkbox-recent_realtime">
-                            <span class="btn toggle" id="toggle-recent_realtime" onclick="_update_inbuilt_item('recent_realtime')" aria-checked="false" type="button">
+                            <span class="btn toggle" id="toggle-recent_realtime" aria-checked="false" type="button">
                                 <div class="dot"></div>
                             </span>
                         </div>
@@ -14798,6 +14798,31 @@ let has_prompted_for_update = false;
                         </div>
                     </div>
                     <div class="sep"></div>
+                    <div class="toggle-container" id="container-format_guest_features" onclick="_update_item('format_guest_features')">
+                        <button class="btn reset" onclick="_reset_item('format_guest_features')">${trans[lang].settings.reset}</button>
+                        <div class="heading">
+                            <h5>${trans[lang].settings.corrections.format_guest_features.name}</h5>
+                            <p>${trans[lang].settings.corrections.format_guest_features.bio}</p>
+                        </div>
+                        <div class="toggle-wrap">
+                            <button class="toggle" id="toggle-format_guest_features" aria-checked="true" type="button">
+                                <div class="dot"></div>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="toggle-container hide-if-format-guest-disabled" id="container-show_guest_features" onclick="_update_item('show_guest_features')">
+                        <button class="btn reset" onclick="_reset_item('show_guest_features')">${trans[lang].settings.reset}</button>
+                        <div class="heading">
+                            <h5>${trans[lang].settings.corrections.show_guest_features.name}</h5>
+                            <p>${trans[lang].settings.corrections.show_guest_features.bio}</p>
+                        </div>
+                        <div class="toggle-wrap">
+                            <button class="toggle" id="toggle-show_guest_features" aria-checked="true" type="button">
+                                <div class="dot"></div>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="sep"></div>
                     <div class="settings-footer">
                         <button type="submit" class="btn-primary save">
                             ${trans[lang].settings.save}
@@ -14813,6 +14838,8 @@ let has_prompted_for_update = false;
                     select.setAttribute('onchange', `_update_inbuilt_select('${select.getAttribute('id')}', this.value)`);
                     update_inbuilt_select(select.getAttribute('id'), select.value);
                 });
+
+                refresh_all(instance.popper);
             }
         });
 
