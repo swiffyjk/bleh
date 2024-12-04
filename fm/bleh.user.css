@@ -4219,9 +4219,11 @@ better than the default selector '#app a' i suppose */
         --margin-top: 0;
         --left: 0;
         --mask: var(--icon-16-scrobble);
+        cursor: pointer;
 
         &.grid-item-listeners {
             --mask: var(--icon-16-users);
+            text-decoration: none !important;
         }
     }
 }

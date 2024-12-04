@@ -3173,7 +3173,8 @@ let has_prompted_for_update = false;
                 bleh_charts();
 
             if (page.type == 'user' ||
-                page.type == 'search'
+                page.type == 'search' ||
+                page.type == 'tag'
             )
                 music_grids();
 
@@ -6258,13 +6259,33 @@ let has_prompted_for_update = false;
             let plays_elem;
             if (page.type == 'search') {
                 if (!is_album) {
-                    // search, tag pages
                     let aux_text = grid.querySelector('.grid-items-item-aux-text');
                     let stat_name = aux_text.querySelector('.stat-name');
 
                     aux_text.removeChild(stat_name);
 
                     plays_elem = aux_text;
+                }
+            } else if (page.type == 'tag') {
+                let aux_text = grid.querySelector('.grid-items-item-aux-text');
+                let stat_name = aux_text.querySelector('.stat-name');
+
+                aux_text.removeChild(stat_name);
+
+                plays_elem = aux_text;
+
+                if (is_album) {
+                    let artist = grid.querySelector('.grid-items-item-aux-block');
+
+                    aux_text.removeChild(artist);
+
+                    plays_elem = document.createElement('a');
+                    plays_elem.textContent = aux_text.textContent;
+
+                    aux_text.textContent = '';
+
+                    aux_text.appendChild(artist);
+                    aux_text.appendChild(plays_elem);
                 }
             } else {
                 plays_elem = grid.querySelector('.grid-items-item-aux-text a:last-child');
@@ -6275,7 +6296,7 @@ let has_prompted_for_update = false;
                 plays_elem.classList.add('grid-item-plays');
                 plays_elem.textContent = plays.toLocaleString(lang);
 
-                if (page.type == 'search')
+                if (page.type == 'search' || page.type == 'tag')
                     plays_elem.classList.add('grid-item-listeners');
 
                 if (!is_album && settings.colourful_counts && page.type == 'user') {
