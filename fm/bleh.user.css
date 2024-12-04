@@ -312,6 +312,9 @@ a,
 
     --icon: var(--c2);
 
+    /* l2-c in dark modes, l4-c in light modes */
+    --l2-c-theme-switch: var(--l2-c);
+
     .preview[data-bleh--theme="oled"],
     [data-bleh--theme="oled"] &:not(.preview) {
         --c1: var(--hue), calc(var(--sat) * 40%), 100%;
@@ -359,6 +362,9 @@ a,
         --h3-lit: calc(clamp(min(0.5), var(--lit), max(1.1)) * 80%);
         --h4: var(--hue), calc(var(--sat) * 60%), calc(clamp(min(0.5), var(--lit), max(1.1)) * 65%);
         --g4: var(--hue), calc(var(--sat) * 70%), 92%;
+
+        /* l2-c in dark modes, l4-c in light modes */
+        --l2-c-theme-switch: var(--l4-c);
     }
 }
 
@@ -1138,7 +1144,7 @@ last.fm changes as of 2024-05-20 */
     .pro-badge {
         background-color: hsla(var(--h4), 40%);
         box-shadow: 0 0 20px hsla(var(--h4), 60%);
-        color: hsl(var(--l2-c));
+        color: hsl(var(--l2-c-theme-switch));
         font-size: var(--font-size-sm);
         font-weight: var(--font-weight-medium);
         padding: 0 6px;
@@ -1147,10 +1153,6 @@ last.fm changes as of 2024-05-20 */
         --hue-over: var(--hue-pro);
         --sat-over: 1;
         --lit-over: 1;
-
-        [data-bleh--theme="light"] & {
-            color: hsl(var(--l4-c));
-        }
     }
 
     p {
@@ -9818,17 +9820,14 @@ text[style^="color: rgb(0, 0, 0)"] {
     margin-top: var(--card-gap);
     padding: 7px 12px 7px calc(12px + 16px + 6px);
     border-radius: var(--item-big-radius);
-    background-color: hsl(var(--h3));
-    color: hsl(var(--b6));
+    background-color: hsla(var(--h4), 40%);
+    box-shadow: 0 0 20px hsla(var(--h4), 60%);
+    color: hsl(var(--l2-c-theme-switch));
     text-align: left;
     position: relative;
 
     &:before {
         color: currentColor;
-    }
-
-    [data-bleh--theme="light"] & {
-        color: hsl(var(--l4-c));
     }
 }
 
