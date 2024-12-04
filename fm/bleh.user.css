@@ -17952,6 +17952,9 @@ section > .section-controls .subpage-title {
 
 
 .glacier-library-top {
+    display: flex;
+    justify-content: space-between;
+
     .glacier-library-metadata {
         display: flex;
         gap: var(--card-gap);
@@ -17963,6 +17966,12 @@ section > .section-controls .subpage-title {
                 font-weight: var(--font-weight-medium);
                 cursor: default;
             }
+        }
+    }
+
+    .glacier-library-buttons {
+        .library-format-container {
+            display: flex;
         }
     }
 }

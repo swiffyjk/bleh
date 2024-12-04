@@ -13682,6 +13682,8 @@ let has_prompted_for_update = false;
             glacier_top.innerHTML = '';
         glacier_top.classList.add('glacier-library-top');
 
+
+        // meta
         let glacier_meta = document.createElement('div');
         glacier_meta.classList.add('glacier-library-metadata');
 
@@ -13697,8 +13699,53 @@ let has_prompted_for_update = false;
         });
 
         glacier_top.appendChild(glacier_meta);
+
+
+        // buttons
+        if (!static_page) {
+            let sort = legacy_top_header.querySelector('.library-sort');
+            let sort_button = sort.querySelector('.dropdown-menu-clickable-button');
+            sort_button.classList.add('btn', 'view-item', 'glacier-library-button');
+            let sort_menu = sort.querySelector('.dropdown-menu-clickable');
+
+            let format = page.structure.main.querySelector('.library-view-button');
+
+            let format_button = document.createElement('button');
+            format_button.classList.add('btn', 'view-item', 'glacier-library-button', 'glacier-view-button');
+            format_button.setAttribute('onclick', '_update_glacier_view()');
+            page.structure.glacier.format = format_button;
+
+            if (format.getAttribute('href') && format.getAttribute('href').endsWith('list')) {
+                format_button.setAttribute('data-glacier-view', 'grid');
+            } else {
+                format_button.setAttribute('data-glacier-view', 'list');
+            }
+
+            let view_buttons = document.createElement('div');
+            view_buttons.classList.add('view-buttons', 'glacier-library-buttons');
+
+            view_buttons.appendChild(sort_button);
+            view_buttons.appendChild(sort_menu);
+            view_buttons.appendChild(format_button);
+
+            glacier_top.appendChild(view_buttons);
+        }
+
+
         page.structure.glacier.top = glacier_top;
         page.structure.main.insertBefore(glacier_top, page.structure.main.firstElementChild);
+    }
+
+    unsafeWindow._update_glacier_view = function() {
+        let format = page.structure.main.querySelector('.library-view-button');
+
+        format.click();
+
+        if (format.getAttribute('href') && format.getAttribute('href').endsWith('reset')) {
+            page.structure.glacier.format.setAttribute('data-glacier-view', 'grid');
+        } else {
+            page.structure.glacier.format.setAttribute('data-glacier-view', 'list');
+        }
     }
 
 
