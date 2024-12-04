@@ -100,9 +100,14 @@ let version = {
             date: '2024-11-15'
         },
         hide_chartlist_more: {
-            default: true,
+            default: false,
             name: 'Hide chartlist more button, accessible the same with right-clicking',
             date: '2024-12-03'
+        },
+        glacier_library: {
+            default: false,
+            name: 'Glacier library (new library beta)',
+            date: '2024-12-04'
         }
     }
 }
@@ -3063,7 +3068,8 @@ let page = {
         main: null,
         side: null,
         nav: null,
-        content_top: null
+        content_top: null,
+        glacier: {}
     },
     requested: {
         tab: null
@@ -3192,6 +3198,9 @@ let has_prompted_for_update = false;
             }
             patch_lastfm_settings(document.body);
             patch_gallery_page();
+
+            if (page.type == 'user' && page.subpage.startsWith('library') && page.subpage != 'library_overview')
+                bleh_glacier_library();
 
             if (page.type == 'user' ||
                 page.type == 'artist' ||
@@ -13561,6 +13570,97 @@ let has_prompted_for_update = false;
         });
 
         page.structure.side.appendChild(date_panel);
+
+
+        // scrobbles tab
+        if (ff('glacier_library') && page.subpage == 'library_overview') {
+            bleh_glacier_library_top(true);
+        }
+    }
+
+    // can update at any time!!
+    function bleh_glacier_library() {
+        if (!ff('glacier_library'))
+            return;
+
+        log('checking!', 'glacier library');
+
+        // table
+        bleh_glacier_library_table();
+
+        // top header info
+        bleh_glacier_library_top();
+    }
+
+    function bleh_glacier_library_table() {
+        let table = page.structure.side.querySelector('.scrobble-table');
+        page.structure.glacier.refresh = false;
+
+        if (table == null)
+            return;
+
+        if (table.classList.contains('loading')) {
+            table.removeAttribute('data-glacier-library-table');
+            return;
+        }
+
+        if (table.hasAttribute('data-glacier-library-table'))
+            return;
+        table.setAttribute('data-glacier-library-table', 'true');
+
+        page.structure.glacier.table = table;
+        page.structure.glacier.refresh = true;
+    }
+
+    function bleh_glacier_library_top(static_page = false) {
+        let legacy_top_header;
+        if (!static_page)
+            legacy_top_header = page.structure.main.querySelector('.library-top');
+        else
+            legacy_top_header = page.structure.main.querySelector('.metadata-list');
+
+        if (legacy_top_header == null)
+            return;
+
+        if (!static_page) {
+            if (legacy_top_header.style.getPropertyValue('display')) {
+                legacy_top_header.removeAttribute('data-glacier-library-top');
+                return;
+            }
+
+            if (legacy_top_header.hasAttribute('data-glacier-library-top'))
+                return;
+            legacy_top_header.setAttribute('data-glacier-library-top', 'true');
+        }
+
+        log('loading top', 'glacier library');
+
+        let metadata = legacy_top_header.querySelectorAll('.metadata-item');
+
+        let glacier_top = page.structure.glacier.top;
+        if (glacier_top == null)
+            glacier_top = document.createElement('section');
+        else
+            glacier_top.innerHTML = '';
+        glacier_top.classList.add('glacier-library-top');
+
+        let glacier_meta = document.createElement('div');
+        glacier_meta.classList.add('glacier-library-metadata');
+
+        metadata.forEach((meta) => {
+            let glacier_meta_item = document.createElement('div');
+            glacier_meta_item.classList.add('glacier-library-metadata-item');
+            glacier_meta_item.innerHTML = (`
+                <div class="sub-text">${meta.querySelector('.metadata-title').textContent}</div>
+                <div class="glacier-library-metadata-item-value">${meta.querySelector('.metadata-display').textContent}</div>
+            `);
+
+            glacier_meta.appendChild(glacier_meta_item);
+        });
+
+        glacier_top.appendChild(glacier_meta);
+        page.structure.glacier.top = glacier_top;
+        page.structure.main.insertBefore(glacier_top, page.structure.main.firstElementChild);
     }
 
 

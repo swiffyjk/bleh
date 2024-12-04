@@ -17931,4 +17931,23 @@ section > .section-controls .subpage-title {
         }
     }
 }
+
+
+
+
+.glacier-library-top {
+    .glacier-library-metadata {
+        display: flex;
+        gap: var(--card-gap);
+
+        .glacier-library-metadata-item {
+            .glacier-library-metadata-item-value {
+                font-size: 16px;
+                line-height: 20px;
+                font-weight: var(--font-weight-medium);
+                cursor: default;
+            }
+        }
+    }
+}
 }
