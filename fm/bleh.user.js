@@ -3172,7 +3172,9 @@ let has_prompted_for_update = false;
             if (page.type == 'charts')
                 bleh_charts();
 
-            if (page.type == 'user')
+            if (page.type == 'user' ||
+                page.type == 'search'
+            )
                 music_grids();
 
             if (page.type == 'user' ||
@@ -3290,6 +3292,21 @@ let has_prompted_for_update = false;
             bleh_events();
         else if (page.type == 'tag')
             bleh_tags();
+        else if (page.type == 'search')
+            basic_page_structure();
+    }
+
+    function basic_page_structure() {
+        page.structure.container = document.body.querySelector('.page-content');
+        try {
+            page.structure.row = page.structure.container.querySelector('.row');
+            page.structure.main = page.structure.row.querySelector('.col-main');
+            page.structure.side = page.structure.row.querySelector('.col-sidebar');
+        } catch(e) {
+            log('unable to find elements', 'page structure');
+        }
+
+        checkup_page_structure();
     }
 
     function append_style() {
@@ -6191,7 +6208,14 @@ let has_prompted_for_update = false;
 
             grid.setAttribute('data-bleh-music-grids', 'true');
 
-            let is_album = (grid.querySelector('.grid-items-item-aux-block') != null);
+            let is_album;
+            if (page.type == 'search') {
+                // search, tag pages
+                is_album = (grid.querySelector('.stat-name') == null);
+            } else {
+                // profiles
+                is_album = (grid.querySelector('.grid-items-item-aux-block') != null);
+            }
 
             let image_wrap = grid.querySelector('.grid-items-cover-image-image');
             let image = image_wrap.querySelector('img');
@@ -6231,13 +6255,30 @@ let has_prompted_for_update = false;
                 } catch(e) {}
             }
 
-            let plays_elem = grid.querySelector('.grid-items-item-aux-text a:last-child');
+            let plays_elem;
+            if (page.type == 'search') {
+                if (!is_album) {
+                    // search, tag pages
+                    let aux_text = grid.querySelector('.grid-items-item-aux-text');
+                    let stat_name = aux_text.querySelector('.stat-name');
+
+                    aux_text.removeChild(stat_name);
+
+                    plays_elem = aux_text;
+                }
+            } else {
+                plays_elem = grid.querySelector('.grid-items-item-aux-text a:last-child');
+            }
+
             if (plays_elem != null) {
                 let plays = clean_number(plays_elem.textContent.trim().replace(` ${trans[lang].statistics.plays.name}`, ''));
                 plays_elem.classList.add('grid-item-plays');
                 plays_elem.textContent = plays.toLocaleString(lang);
 
-                if (!is_album && settings.colourful_counts) {
+                if (page.type == 'search')
+                    plays_elem.classList.add('grid-item-listeners');
+
+                if (!is_album && settings.colourful_counts && page.type == 'user') {
                     if (
                         !plays_elem.getAttribute('href')
                         .includes('?from=') &&
@@ -6260,6 +6301,8 @@ let has_prompted_for_update = false;
                 name.textContent = correct_artist(name.textContent.trim());
             } else {
                 let artist = grid.querySelector('.grid-items-item-aux-block');
+                if (artist == null)
+                    return;
 
                 artist.textContent = correct_artist(artist.textContent.trim());
 

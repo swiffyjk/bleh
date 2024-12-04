@@ -4211,13 +4211,18 @@ better than the default selector '#app a' i suppose */
         -webkit-box-orient: vertical;
     }
 
-    a:last-child {
+    &.grid-item-plays,
+    .grid-item-plays {
         position: relative;
         padding-left: calc(16px + 4px);
         --top: 0;
         --margin-top: 0;
         --left: 0;
         --mask: var(--icon-16-scrobble);
+
+        &.grid-item-listeners {
+            --mask: var(--icon-16-users);
+        }
     }
 }
 .grid-items-item-details {
@@ -6079,7 +6084,7 @@ button,
 
 
 /*     ICON MASK     */
-.grid-items-item-aux-text a:last-child:before,
+.grid-item-plays:before,
 .lastfm-bulk-edit-form-group-controls button:before,
 .lastfm-bulk-edit-progress:before,
 .about-guest-feature:before, .about-guest-feature:after,
@@ -13838,9 +13843,9 @@ input[type="range"]::-moz-range-progress {
         [data-bleh--inbuilt-id_message_privacy="all"] &#primary-selection-receiving_msgs-everyone,
         [data-bleh--inbuilt-id_message_privacy="n"] &#primary-selection-receiving_msgs-neighbours,
         [data-bleh--inbuilt-id_message_privacy="f"] &#primary-selection-receiving_msgs-follow {
-            --bg: hsla(var(--h4), 35%);
-            --bg-hov: hsla(var(--h4), 45%);
-            --bg-atv: hsla(var(--h4), 55%);
+            --bg: var(--cards-overlay-image-subtlest, none), hsla(var(--h4), 35%);
+            --bg-hov: var(--cards-overlay-image-subtlest, none), hsla(var(--h4), 45%);
+            --bg-atv: var(--cards-overlay-image-subtlest, none), hsla(var(--h4), 55%);
             /*--mask: var(--icon-16-check);*/
 
             &:before {
@@ -14167,9 +14172,9 @@ input[type="range"]::-moz-range-progress {
     }
 
     &[aria-checked="true"] {
-        --bg: hsl(var(--h3)) !important;
-        --bg-hov: hsla(var(--h3), 80%) !important;
-        --bg-atv: hsla(var(--h3), 60%) !important;
+        --bg: var(--cards-overlay-image-subtlest, none), hsl(var(--h3)) !important;
+        --bg-hov: var(--cards-overlay-image-subtlest, none), hsla(var(--h3), 80%) !important;
+        --bg-atv: var(--cards-overlay-image-subtlest, none), hsla(var(--h3), 60%) !important;
         --col: hsl(var(--b7)) !important;
         --shadow: var(--interactable-outer);
         --shadow-hov: var(--interactable-outer), var(--interactable-active-outer);
@@ -17520,6 +17525,7 @@ h4 {
 
         .about-artist-panel & {
             .about-artist-listeners {
+                color: hsl(var(--c3));
                 margin: 6px 0;
             }
             .about-artist-tags {
