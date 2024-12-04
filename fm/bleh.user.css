@@ -6921,7 +6921,13 @@ very, very, very dated - who looks up a song on ebay? */
 
 .date-range-picker-presets-wrap {
     display: flex;
+    gap: var(--item-list-gap);
     margin: unset;
+
+    .date-range-picker-presets {
+        width: unset;
+        flex: 1;
+    }
 
     .date-range-picker-presets-wide {
         flex: 1;
@@ -7077,10 +7083,10 @@ very, very, very dated - who looks up a song on ebay? */
 }
 
 .content-form .control-label, .events-filter-location-dropdown .control-label {
-    color: hsl(var(--c2));
+    color: hsl(var(--c3));
     font-size: var(--font-size);
     line-height: var(--line-height);
-    font-weight: var(--font-weight);
+    font-weight: var(--font-weight-medium);
 }
 .content-form .form-horizontal .control-label,
 .modal-body .content-form .form-horizontal .control-label
@@ -7101,7 +7107,7 @@ very, very, very dated - who looks up a song on ebay? */
 
 
 .content-form .form-group-controls {
-    margin-top: var(--card-gap);
+    margin-top: var(--item-list-gap);
 }
 
 
@@ -7463,7 +7469,7 @@ input:is([name="track_name"], [name="artist_name"], [name="album_name"], [name="
 }
 
 .date-range-picker-content {
-    width: fit-content;
+    width: 320px;
 }
 
 .modal-body .modal-title {
