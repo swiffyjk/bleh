@@ -2223,7 +2223,7 @@ let seasonal_events = [
     {
         id: 'new_years',
         start: 'y0-01-01T00:00:00+0000',
-        end: 'y0-01-12T23:59:59+0000',
+        end: 'y0-01-14T23:59:59+0000',
 
         snowflakes: {
             state: true,
