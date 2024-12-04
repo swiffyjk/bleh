@@ -15867,6 +15867,10 @@ button.bleh--gallery-bookmark-image-btn {
             width: 1000px;
             max-width: 80vw;
         }
+
+        &[data-modal-type="changelog"] {
+            max-width: 660px;
+        }
     }
 }
 
