@@ -6553,6 +6553,7 @@ on the bottom of a panel !! */
     --left: 12px;
     --right: none;
 
+    .date-range-picker-preset--selected > &,
     &.dropdown-menu-clickable-item--selected,
     &.active {
         --bg: var(--cards-overlay-image-subtlest, none), hsla(var(--h4), 20%) !important;
@@ -6919,7 +6920,24 @@ very, very, very dated - who looks up a song on ebay? */
 }
 
 .date-range-picker-presets-wrap {
+    display: flex;
     margin: unset;
+
+    .date-range-picker-presets-wide {
+        flex: 1;
+
+        a {
+            text-align: center;
+
+            .new-badge {
+                margin-left: var(--item-list-gap);
+            }
+        }
+    }
+
+    & + .date-range-picker-presets-wrap {
+        margin-top: var(--item-list-gap);
+    }
 }
 
 .user-sidebar-header {

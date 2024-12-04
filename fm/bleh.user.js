@@ -163,6 +163,10 @@ const trans = {
             view: {
                 grid: 'Grid',
                 list: 'List'
+            },
+            dates: {
+                last_year: 'Last year',
+                this_year: 'This year'
             }
         },
         changelog: {
@@ -5021,6 +5025,8 @@ let has_prompted_for_update = false;
         let params = new URLSearchParams(document.location.search);
         page.requested.tab = params.get('tab');
         page.requested.page = params.get('page');
+        page.requested.from = params.get('from');
+        page.requested.to = params.get('to');
 
         if (page.structure.container == null || !document.body.contains(page.structure.container)) {
             log('page missing container, creating', 'page structure');
@@ -13624,11 +13630,46 @@ let has_prompted_for_update = false;
         page.structure.side.appendChild(date_panel);
 
 
-        if (ff('glacier_library')) {
-            if (page.subpage == 'library_overview') {
-                // scrobbles tab
-                bleh_glacier_library_top(true);
-            }
+        if (!ff('glacier_library'))
+            return;
+
+
+        let picker_content = date_panel.querySelector('.date-range-picker-content');
+
+        let picker_presets = picker_content.querySelector('.date-range-picker-presets-wrap');
+        let picker_col_2 = picker_content.querySelector('.date-range-picker-presets--col-2');
+
+        /*let all_time_preset = picker_col_2.querySelector('.date-range-picker-preset:last-child');
+        picker_presets.after(all_time_preset);*/
+
+        // this year
+        let new_wrap = document.createElement('div');
+        new_wrap.classList.add('date-range-picker-presets-wrap');
+
+        let new_presets = document.createElement('ul');
+        new_presets.classList.add('date-range-picker-presets', 'date-range-picker-presets-wide');
+
+        let current_year = new Date().getFullYear();
+
+        let this_year = document.createElement('div');
+        this_year.classList.add('date-range-picker-preset', 'date-range-picker-preset-custom', 'date-range-picker-preset-this-year');
+        this_year.innerHTML = (`
+            <a href="${root}user/${page.name}/library?from=${current_year}-01-01&to=${current_year}-12-31" data-date-picker-button="">
+                ${trans[lang].glacier.dates.this_year}<span class="new-badge">${trans[lang].settings.new}</span>
+            </a>
+        `);
+        //picker_col_2.appendChild(this_year);
+        new_wrap.appendChild(new_presets);
+        new_presets.appendChild(this_year);
+        picker_presets.after(new_wrap);
+
+        if (page.requested.from == `${current_year}-01-01` && page.requested.to == `${current_year}-12-31`)
+            this_year.classList.add('date-range-picker-preset--selected');
+
+
+        if (page.subpage == 'library_overview') {
+            // scrobbles tab
+            bleh_glacier_library_top(true);
         }
     }
 
