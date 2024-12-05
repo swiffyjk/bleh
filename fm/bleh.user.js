@@ -13743,7 +13743,7 @@ let has_prompted_for_update = false;
         this_year.classList.add('date-range-picker-preset', 'date-range-picker-preset-custom', 'date-range-picker-preset-this-year');
         this_year.innerHTML = (`
             <a href="${window.location.href.replace(window.location.search, '')}?from=${current_year}-01-01&rangetype=year">
-                ${trans[lang].glacier.dates.this_year}<span class="new-badge">${trans[lang].settings.new}</span>
+                ${current_year}<span class="new-badge">${trans[lang].settings.new}</span>
             </a>
         `);
         //picker_col_2.appendChild(this_year);
