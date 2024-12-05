@@ -173,6 +173,7 @@ const trans = {
         },
         changelog: {
             name: 'What’s New?',
+            subtitle: 'from {u}',
             type: {
                 major: 'Major release',
                 minor: 'Minor release',
@@ -9282,6 +9283,7 @@ let has_prompted_for_update = false;
     function dialog({
         id = '',
         title = null,
+        subtitle = null,
         body = document.createElement('div').innerHTML,
         dismiss = true,
         type = '',
@@ -9294,6 +9296,7 @@ let has_prompted_for_update = false;
         log(`creating ${id}`, 'window', 'info', {
             id: id,
             title: title,
+            subtitle: subtitle,
             body: body,
             dismiss: dismiss,
             type: type,
@@ -9340,6 +9343,7 @@ let has_prompted_for_update = false;
             modal_title.classList.add('bleh-modal-title');
             modal_title.innerHTML = (`
                 <h1>${title}</h1>
+                ${(subtitle != null) ? `<p class="bleh-modal-subtitle">${subtitle}</p>` : ''}
             `);
 
             modal.appendChild(modal_title);
@@ -13598,6 +13602,7 @@ let has_prompted_for_update = false;
         let window = dialog({
             id: 'changelog',
             title: trans[lang].changelog.name,
+            subtitle: trans[lang].changelog.subtitle.replace('{u}', `<a class="mention" href="${root}user/cutensilly">@cutensilly</a>`),
             body: (`
                 <div class="changelog-list"></div>
                 <div class="modal-footer">
