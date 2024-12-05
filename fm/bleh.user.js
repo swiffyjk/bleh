@@ -9866,8 +9866,12 @@ let has_prompted_for_update = false;
 
                     let formatted_title = name_includes(track_title.getAttribute('title'), track_artist);
                     console.log('formatted', formatted_title);
-                    let song_title = formatted_title[0];
-                    let song_tags = formatted_title[1];
+                    let song_title = track_title.getAttribute('title');
+                    let song_tags = {};
+                    if (formatted_title != undefined) {
+                        song_title = formatted_title[0];
+                        song_tags = formatted_title[1];
+                    }
 
                     // parse tags into text
                     let song_tags_text = '';
@@ -9918,7 +9922,7 @@ let has_prompted_for_update = false;
                                 </div>
                             </div>
                             <div class="info">
-                                <h5 class="title">${formatted_title[0]}</h5>
+                                <h5 class="title">${song_title}</h5>
                                 <p class="artist">${song_artist_element.innerHTML}</p>
                                 <div class="tags">${song_tags_text}</div>
                                 ${(is_album) ? '' : `<p class="album">${trans[lang].music.from_the_album.replace('{album}', correct_item_by_artist(track_image.querySelector('img').getAttribute('alt'), track_artist))}</p>`}
@@ -13934,6 +13938,22 @@ let has_prompted_for_update = false;
 
         scrobble_chart_wrap.setAttribute('data-glacier-date-graph', 'true');*/
 
+        let current_view = page.structure.glacier.date_panel.querySelector('.date-range-picker-button-inner');
+
+        if (current_view == null)
+            return;
+        current_view = current_view.textContent.trim();
+
+        if (page.state.glacier.current_view == current_view) {
+            // re-use old values as view matches
+            bleh_glacier_date_graph_generate();
+            page.structure.glacier.refresh = false;
+
+            return;
+        }
+
+        page.state.glacier.current_view = current_view;
+
         let scrobble_chart_content = page.structure.side.querySelector('#scrobble-chart-content');
         if (scrobble_chart_content.getAttribute('data-highcharts-chart') && scrobble_chart_content.getAttribute('data-highcharts-chart') == '0') {
             log('highchart registered', 'glacier library');
@@ -13951,6 +13971,8 @@ let has_prompted_for_update = false;
             scrobble_table = own_table;
         else
             scrobble_table = scrobble_chart_wrap.querySelector('.table');
+
+        bleh_glacier_library_date();
 
         if (scrobble_table == null) {
             // lets see if we can make this request ourselves
@@ -13977,8 +13999,6 @@ let has_prompted_for_update = false;
 
             return;
         }
-
-        bleh_glacier_library_date();
 
         let chart_type = scrobble_table.getAttribute('data-bucket-size');
         let entries = scrobble_table.querySelectorAll('tbody tr');
