@@ -3414,6 +3414,9 @@ let has_prompted_for_update = false;
             // trigger re-flow of chart
             if ((page.type == 'artist' || page.type == 'album' || page.type == 'track') && page.subpage == 'overview')
                 bleh_music_page_charts();
+
+            if (page.type == 'user' && page.subpage.startsWith('library'))
+                bleh_glacier_date_graph_generate();
         }, 200);
     }
 
@@ -3609,6 +3612,9 @@ let has_prompted_for_update = false;
                 // trigger re-flow of chart
                 if ((page.type == 'artist' || page.type == 'album' || page.type == 'track') && page.subpage == 'overview')
                     bleh_music_page_charts();
+
+                if (page.type == 'user' && page.subpage.startsWith('library'))
+                    bleh_glacier_date_graph_generate();
 
                 // in versions 2024.1019 and onwards, the css stores version itself
                 // we can use this to compare if we should fetch a new one
@@ -4187,6 +4193,9 @@ let has_prompted_for_update = false;
         // trigger re-flow of chart
         if ((page.type == 'artist' || page.type == 'album' || page.type == 'track') && page.subpage == 'overview')
             bleh_music_page_charts();
+
+        if (page.type == 'user' && page.subpage.startsWith('library'))
+            bleh_glacier_date_graph_generate();
     }
 
     unsafeWindow.change_theme_from_settings = function(theme) {
@@ -4220,6 +4229,9 @@ let has_prompted_for_update = false;
         // trigger re-flow of chart
         if ((page.type == 'artist' || page.type == 'album' || page.type == 'track') && page.subpage == 'overview')
             bleh_music_page_charts();
+
+        if (page.type == 'user' && page.subpage.startsWith('library'))
+            bleh_glacier_date_graph_generate();
     }
 
 
@@ -13898,8 +13910,24 @@ let has_prompted_for_update = false;
             // lets see if we can make this request ourselves
             let request_url = window.location.href.replace(window.location.search, `/chart${window.location.search}&ajax=1`);
             bleh_glacier_library_request(request_url);
+            /*console.info(page.structure.glacier.table);
 
-            console.info(scrobble_chart_wrap, scrobble_table);
+            let series = page.structure.glacier.table.querySelectorAll('.highcharts-bar-series a');
+
+            // we fake-hover the first bar to get the relationship
+            // between height and real value
+            let subject = series[0];
+            let bar = subject.querySelector('rect');
+            let height = bar.getAttribute('height');
+
+            setTimeout(function() {
+                subject.dispatchEvent(new Event('mouseover'));
+            }, 300);
+
+            subject.addEventListener('mouseover', e => {
+                console.info(e);
+            });*/
+
 
             return;
         }
@@ -13921,6 +13949,33 @@ let has_prompted_for_update = false;
 
         scrobble_table.innerHTML = '';
 
+        bleh_glacier_date_graph_generate();
+
+        page.structure.glacier.refresh = false;
+    }
+
+
+    function bleh_glacier_library_request(request_url) {
+        log(`making our own request with ${request_url}`, 'glacier library');
+        console.info(page.structure.glacier.refresh);
+
+        fetch(request_url)
+        .then(function(response) {
+            console.log('returned', response, response.text);
+
+            return response.text();
+        })
+        .then(function(html) {
+            let doc = new DOMParser().parseFromString(html, 'text/html');
+            console.log('DOC', doc);
+
+            log('received response', 'glacier library');
+            page.structure.glacier.refresh = true;
+            bleh_glacier_date_graph(false, doc.querySelector('.table'));
+        });
+    }
+
+    function bleh_glacier_date_graph_generate() {
         let new_run = false;
         let scrobble_canvas_container = page.structure.glacier.date_panel.querySelector('.scrobble-canvas-container');
         if (scrobble_canvas_container == null) {
@@ -13957,29 +14012,6 @@ let has_prompted_for_update = false;
         scrobble_canvas_container.appendChild(scrobble_canvas);
         if (new_run)
             page.structure.glacier.date_panel.appendChild(scrobble_canvas_container);
-
-        page.structure.glacier.refresh = false;
-    }
-
-
-    function bleh_glacier_library_request(request_url) {
-        log(`making our own request with ${request_url}`, 'glacier library');
-        console.info(page.structure.glacier.refresh);
-
-        fetch(request_url)
-        .then(function(response) {
-            console.log('returned', response, response.text);
-
-            return response.text();
-        })
-        .then(function(html) {
-            let doc = new DOMParser().parseFromString(html, 'text/html');
-            console.log('DOC', doc);
-
-            log('received response', 'glacier library');
-            page.structure.glacier.refresh = true;
-            bleh_glacier_date_graph(false, doc.querySelector('.table'));
-        });
     }
 
 
