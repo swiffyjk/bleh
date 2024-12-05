@@ -13676,20 +13676,21 @@ let has_prompted_for_update = false;
         // date sidebar into its own panel
         let date_items = page.structure.side.querySelectorAll(':scope > :is(div, figure)');
 
-        let date_button_panel = document.createElement('section');
-        date_button_panel.classList.add('date-button-panel');
+        //let date_button_panel = document.createElement('section');
+        //date_button_panel.classList.add('date-button-panel');
 
         let date_panel = document.createElement('section');
         date_panel.classList.add('date-panel');
 
         date_items.forEach((item, index) => {
-            if (index == 0)
+            /*if (index == 0)
                 date_button_panel.appendChild(item);
             else
-                date_panel.appendChild(item);
+                date_panel.appendChild(item);*/
+            date_panel.appendChild(item);
         });
 
-        page.structure.side.appendChild(date_button_panel);
+        //page.structure.side.appendChild(date_button_panel);
         page.structure.side.appendChild(date_panel);
 
         page.structure.glacier.date_panel = date_panel;
@@ -13699,7 +13700,8 @@ let has_prompted_for_update = false;
             return;
 
 
-        let picker_content = date_button_panel.querySelector('.date-range-picker-content');
+        //let picker_content = date_button_panel.querySelector('.date-range-picker-content');
+        let picker_content = date_panel.querySelector('.date-range-picker-content');
 
         let picker_presets = picker_content.querySelector('.date-range-picker-presets-wrap');
         let picker_col_2 = picker_content.querySelector('.date-range-picker-presets--col-2');

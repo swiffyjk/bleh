@@ -6864,7 +6864,7 @@ very, very, very dated - who looks up a song on ebay? */
 
 
 /*     DATE PICKER     */
-.date-button-panel {
+.date-panel {
     .row {
         display: flex;
         flex-direction: column;
@@ -6926,7 +6926,8 @@ very, very, very dated - who looks up a song on ebay? */
     }
 
     .scrobble-canvas-container {
-        height: 320px;
+        height: 240px;
+        margin-top: var(--card-gap);
     }
 }
 
