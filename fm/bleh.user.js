@@ -6405,7 +6405,10 @@ let has_prompted_for_update = false;
             return;
 
         let count_bar_link = count_bar.querySelector('.chartlist-count-bar-link');
-        if (count_bar_link.getAttribute('href').endsWith('DAYS'))
+        if (count_bar_link.getAttribute('href')
+            .includes('?from=') ||
+            (count_bar_link.getAttribute('href')
+            .includes('?date_preset=') && !count_bar_link.getAttribute('href').endsWith('?date_preset=ALL')))
             return;
 
         let count = clean_number(count_bar.querySelector('.chartlist-count-bar-value').textContent.trim().replace(' scrobbles',''));
