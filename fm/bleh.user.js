@@ -5027,6 +5027,7 @@ let has_prompted_for_update = false;
         page.requested.page = params.get('page');
         page.requested.from = params.get('from');
         page.requested.to = params.get('to');
+        page.requested.rangetype = params.get('rangetype');
 
         if (page.structure.container == null || !document.body.contains(page.structure.container)) {
             log('page missing container, creating', 'page structure');
@@ -13664,7 +13665,7 @@ let has_prompted_for_update = false;
         let this_year = document.createElement('div');
         this_year.classList.add('date-range-picker-preset', 'date-range-picker-preset-custom', 'date-range-picker-preset-this-year');
         this_year.innerHTML = (`
-            <a href="${root}user/${page.name}/library?from=${current_year}-01-01&to=${current_year}-12-31" data-date-picker-button="">
+            <a href="${window.location.href.replace(window.location.search, '')}?from=${current_year}-01-01&rangetype=year">
                 ${trans[lang].glacier.dates.this_year}<span class="new-badge">${trans[lang].settings.new}</span>
             </a>
         `);
@@ -13673,7 +13674,7 @@ let has_prompted_for_update = false;
         new_presets.appendChild(this_year);
         picker_presets.after(new_wrap);
 
-        if (page.requested.from == `${current_year}-01-01` && page.requested.to == `${current_year}-12-31`)
+        if (page.requested.from == `${current_year}-01-01` && (page.requested.to == `${current_year}-12-31` || page.requested.rangetype == 'year'))
             this_year.classList.add('date-range-picker-preset--selected');
 
 
