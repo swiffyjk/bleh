@@ -10279,13 +10279,13 @@ let has_prompted_for_update = false;
         // way to call the function on the frontend
         fetch(window.location.href)
         .then(function(response) {
-            console.error('returned', response, response.text);
+            console.log('returned', response, response.text);
 
             return response.text();
         })
         .then(function(html) {
             let doc = new DOMParser().parseFromString(html, 'text/html');
-            console.error('DOC', doc);
+            console.log('DOC', doc);
 
             deliver_notif('refreshed tracks');
             panel.classList.add('has-refreshed');
@@ -13703,7 +13703,7 @@ let has_prompted_for_update = false;
     // can update at any time!!
     function bleh_glacier_library() {
         // table
-        //bleh_glacier_library_table();
+        bleh_glacier_library_table();
 
         // top header info
         bleh_glacier_library_top();
@@ -13717,10 +13717,11 @@ let has_prompted_for_update = false;
             return;
 
         let table = page.structure.glacier.date_panel.querySelector('.highcharts-root');
-        page.structure.glacier.refresh = false;
 
         if (table == null)
             return;
+
+        page.structure.glacier.refresh = false;
 
         if (table.hasAttribute('data-glacier-library-table'))
             return;
@@ -13865,18 +13866,43 @@ let has_prompted_for_update = false;
     }
 
 
-    function bleh_glacier_date_graph(static_page = false) {
+    function bleh_glacier_date_graph(static_page = false, own_table = null) {
+        if (!page.structure.glacier.refresh)
+            return;
+
+        /*let scrobble_chart_wrap = page.structure.side.querySelector('.scrobble-table:not([data-glacier-date-graph])');
+
+        if (scrobble_chart_wrap == null)
+            return;
+
+        scrobble_chart_wrap.setAttribute('data-glacier-date-graph', 'true');*/
+
+        let scrobble_chart_content = page.structure.side.querySelector('#scrobble-chart-content');
+        if (scrobble_chart_content.getAttribute('data-highcharts-chart') && scrobble_chart_content.getAttribute('data-highcharts-chart') == '0') {
+            page.structure.glacier.refresh = false;
+            return;
+        }
+
         let scrobble_chart_wrap = page.structure.side.querySelector('.scrobble-table');
 
         if (scrobble_chart_wrap == null)
             return;
 
-        let scrobble_table = scrobble_chart_wrap.querySelector('.table:not([data-glacier-date-graph])');
+        let scrobble_table;
+        if (own_table != null)
+            scrobble_table = own_table;
+        else
+            scrobble_table = scrobble_chart_wrap.querySelector('.table');
 
-        if (scrobble_table == null)
+        if (scrobble_table == null) {
+            // lets see if we can make this request ourselves
+            let request_url = window.location.href.replace(window.location.search, `/chart${window.location.search}&ajax=1`);
+            bleh_glacier_library_request(request_url);
+
+            console.info(scrobble_chart_wrap, scrobble_table);
+
             return;
-
-        scrobble_table.setAttribute('data-glacier-date-graph', 'true');
+        }
 
         let chart_type = scrobble_table.getAttribute('data-bucket-size');
         let entries = scrobble_table.querySelectorAll('tbody tr');
@@ -13895,7 +13921,14 @@ let has_prompted_for_update = false;
 
         scrobble_table.innerHTML = '';
 
-        let scrobble_canvas_container = document.createElement('div');
+        let new_run = false;
+        let scrobble_canvas_container = page.structure.glacier.date_panel.querySelector('.scrobble-canvas-container');
+        if (scrobble_canvas_container == null) {
+            scrobble_canvas_container = document.createElement('div');
+            new_run = true;
+        } else {
+            scrobble_canvas_container.innerHTML = '';
+        }
         scrobble_canvas_container.classList.add('scrobble-canvas-container');
 
         let scrobble_canvas = document.createElement('canvas');
@@ -13922,7 +13955,31 @@ let has_prompted_for_update = false;
         });
 
         scrobble_canvas_container.appendChild(scrobble_canvas);
-        page.structure.glacier.date_panel.appendChild(scrobble_canvas_container);
+        if (new_run)
+            page.structure.glacier.date_panel.appendChild(scrobble_canvas_container);
+
+        page.structure.glacier.refresh = false;
+    }
+
+
+    function bleh_glacier_library_request(request_url) {
+        log(`making our own request with ${request_url}`, 'glacier library');
+        console.info(page.structure.glacier.refresh);
+
+        fetch(request_url)
+        .then(function(response) {
+            console.log('returned', response, response.text);
+
+            return response.text();
+        })
+        .then(function(html) {
+            let doc = new DOMParser().parseFromString(html, 'text/html');
+            console.log('DOC', doc);
+
+            log('received response', 'glacier library');
+            page.structure.glacier.refresh = true;
+            bleh_glacier_date_graph(false, doc.querySelector('.table'));
+        });
     }
 
 

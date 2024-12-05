@@ -6920,6 +6920,10 @@ very, very, very dated - who looks up a song on ebay? */
             display: none;
         }
     }
+
+    .scrobble-table {
+        display: none;
+    }
 }
 
 .library-controls-datepicker .date-range-picker-form {
