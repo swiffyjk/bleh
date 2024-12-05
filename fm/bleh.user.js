@@ -3085,13 +3085,16 @@ let page = {
         side: null,
         nav: null,
         content_top: null,
-        glacier: {}
+        glacier: {
+            refresh: true
+        }
     },
     requested: {
         tab: null
     },
     state: {
-        settings_reload: false
+        settings_reload: false,
+        glacier: {}
     }
 };
 
@@ -3406,6 +3409,8 @@ let has_prompted_for_update = false;
             theme_version = getComputedStyle(document.body).getPropertyValue('--version-build').replaceAll("'", ''); // remove quotations
             log(`theme version reporting as ${theme_version}`, 'style');
 
+            load_chart_colours();
+
             // trigger re-flow of chart
             if ((page.type == 'artist' || page.type == 'album' || page.type == 'track') && page.subpage == 'overview')
                 bleh_music_page_charts();
@@ -3599,6 +3604,8 @@ let has_prompted_for_update = false;
                 document.body.classList.add('bleh');
                 theme_version = getComputedStyle(document.body).getPropertyValue('--version-build').replaceAll("'", ''); // remove quotations
 
+                load_chart_colours();
+
                 // trigger re-flow of chart
                 if ((page.type == 'artist' || page.type == 'album' || page.type == 'track') && page.subpage == 'overview')
                     bleh_music_page_charts();
@@ -3716,6 +3723,8 @@ let has_prompted_for_update = false;
                 if (last_season_seen != '' && last_season_seen != season.id)
                     deliver_notif(trans[lang].settings.customise.seasonal.announce.replace('{s}', trans[lang].settings.customise.seasonal.listing[stored_season.id]))
                 localStorage.setItem('bleh_last_season_seen', season.id);
+
+                load_chart_colours();
             }
         });
     }
@@ -4055,6 +4064,64 @@ let has_prompted_for_update = false;
             document.documentElement.setAttribute('data-bleh--theme', 'oled');
             page.state.settings_reload = true;
         }
+
+        load_chart_colours();
+    }
+
+    function load_chart_colours() {
+        let link_col = `hsl(${getComputedStyle(document.body).getPropertyValue('--l3-c')})`;
+        let link_h_col = getComputedStyle(document.body).getPropertyValue('--l3-c');
+        let link_bg_col = `hsla(${getComputedStyle(document.body).getPropertyValue('--h4')}, 20%)`;
+        let text_col = `hsl(${getComputedStyle(document.body).getPropertyValue('--c3')})`;
+        let axis_col = `hsla(${getComputedStyle(document.body).getPropertyValue('--b4')}, 40%)`;
+        let text_primary_col = `hsl(${getComputedStyle(document.body).getPropertyValue('--c2')})`;
+        let bg_col = `hsl(${getComputedStyle(document.body).getPropertyValue('--b5')})`;
+        let root_bg_col = `hsla(${getComputedStyle(document.body).getPropertyValue('--b6')}, 85%)`;
+        let hue = getComputedStyle(document.body).getPropertyValue('--hue');
+        page.state.chart_colours = {
+            link_col: link_col,
+            link_h_col: link_h_col,
+            link_bg_col: link_bg_col,
+            text_col: text_col,
+            axis_col: axis_col,
+            text_primary_col: text_primary_col,
+            bg_col: bg_col,
+            root_bg_col: root_bg_col,
+            hue: hue
+        }
+
+        page.state.chart_line_options = {
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    display: false
+                },
+                tooltip: {
+                    backgroundColor: root_bg_col,
+                    titleColor: text_primary_col,
+                    bodyColor: text_primary_col,
+                    padding: 7,
+                    cornerRadius: 10,
+                    caretSize: 0
+                }
+            },
+            scales: {
+                x: {
+                    display: false,
+                    grid: {
+                        color: axis_col,
+                        display: false
+                    }
+                },
+                y: {
+                    display: false,
+                    grid: {
+                        display: false
+                    },
+                    suggestedMax: 10
+                }
+            }
+        }
     }
 
     // save a setting
@@ -4115,6 +4182,8 @@ let has_prompted_for_update = false;
         // save to settings
         localStorage.setItem('bleh', JSON.stringify(settings));
 
+        load_chart_colours();
+
         // trigger re-flow of chart
         if ((page.type == 'artist' || page.type == 'album' || page.type == 'track') && page.subpage == 'overview')
             bleh_music_page_charts();
@@ -4145,6 +4214,8 @@ let has_prompted_for_update = false;
 
         // save to settings
         localStorage.setItem('bleh', JSON.stringify(settings));
+
+        load_chart_colours();
 
         // trigger re-flow of chart
         if ((page.type == 'artist' || page.type == 'album' || page.type == 'track') && page.subpage == 'overview')
@@ -12803,75 +12874,13 @@ let has_prompted_for_update = false;
             values.push(value);
         });
 
-        // colours
-        let link_col = `hsl(${getComputedStyle(document.body).getPropertyValue('--l3-c')})`;
-        let link_h_col = getComputedStyle(document.body).getPropertyValue('--l3-c');
-        let link_bg_col = `hsla(${getComputedStyle(document.body).getPropertyValue('--h4')}, 20%)`;
-        let text_col = `hsl(${getComputedStyle(document.body).getPropertyValue('--c3')})`;
-        let axis_col = `hsla(${getComputedStyle(document.body).getPropertyValue('--b4')}, 40%)`;
-        let text_primary_col = `hsl(${getComputedStyle(document.body).getPropertyValue('--c2')})`;
-        let bg_col = `hsl(${getComputedStyle(document.body).getPropertyValue('--b5')})`;
-        let root_bg_col = `hsla(${getComputedStyle(document.body).getPropertyValue('--b6')}, 85%)`;
-        let hue = getComputedStyle(document.body).getPropertyValue('--hue');
-        let chart_colours = {
-            link_col: link_col,
-            link_h_col: link_h_col,
-            link_bg_col: link_bg_col,
-            text_col: text_col,
-            axis_col: axis_col,
-            text_primary_col: text_primary_col,
-            bg_col: bg_col,
-            root_bg_col: root_bg_col,
-            hue: hue
-        }
-
-        let chart_line_options = {
-            maintainAspectRatio: false,
-            plugins: {
-                legend: {
-                    display: false
-                },
-                tooltip: {
-                    backgroundColor: root_bg_col,
-                    titleColor: text_primary_col,
-                    bodyColor: text_primary_col,
-                    padding: 7,
-                    cornerRadius: 10,
-                    caretSize: 0
-                }
-            },
-            scales: {
-                x: {
-                    type: 'time',
-                    time: {
-                        unit: 'month',
-                        displayFormats: {
-                            month: 'MMM'
-                        },
-                        tooltipFormat: 'dddd, MMMM Do YYYY'
-                    },
-                    grid: {
-                        color: axis_col,
-                        display: false
-                    }
-                },
-                y: {
-                    display: false,
-                    grid: {
-                        display: false
-                    },
-                    suggestedMax: 10
-                }
-            }
-        }
-
         let scrobble_canvas_container = document.createElement('div');
         scrobble_canvas_container.classList.add('scrobble-canvas-container');
 
         let scrobble_canvas = document.createElement('canvas');
         scrobble_canvas.classList.add('scrobble-canvas');
 
-        Chart.defaults.color = text_col;
+        Chart.defaults.color = page.state.chart_colours.text_col;
         Chart.defaults.font.family = 'Ubuntu Sans';
         let scrobble_chart = new Chart(scrobble_canvas.getContext('2d'), {
             type: 'line',
@@ -12880,15 +12889,15 @@ let has_prompted_for_update = false;
                 datasets: [{
                     data: values,
                     borderWidth: 2,
-                    backgroundColor: link_bg_col,
-                    borderColor: link_col,
+                    backgroundColor: page.state.chart_colours.link_bg_col,
+                    borderColor: page.state.chart_colours.link_col,
                     fill: true,
                     pointRadius: 0,
                     pointHitRadius: 20,
                     tension: 0.1
                 }]
             },
-            options: chart_line_options
+            options: page.state.chart_line_options
         });
 
         scrobble_canvas_container.appendChild(scrobble_canvas);
@@ -13640,6 +13649,8 @@ let has_prompted_for_update = false;
         page.structure.side.appendChild(date_button_panel);
         page.structure.side.appendChild(date_panel);
 
+        page.structure.glacier.date_panel = date_panel;
+
 
         if (!ff('glacier_library'))
             return;
@@ -13682,31 +13693,34 @@ let has_prompted_for_update = false;
             // scrobbles tab
             bleh_glacier_library_top(true);
         }
+
+        if (page.subpage == 'library_overview') {
+            // new graph
+            bleh_glacier_date_graph(true);
+        }
     }
 
     // can update at any time!!
     function bleh_glacier_library() {
         // table
-        bleh_glacier_library_table();
+        //bleh_glacier_library_table();
 
         // top header info
         bleh_glacier_library_top();
+
+        // new graph
+        bleh_glacier_date_graph();
     }
 
     function bleh_glacier_library_table() {
         if (!ff('glacier_library'))
             return;
 
-        let table = page.structure.side.querySelector('.scrobble-table');
+        let table = page.structure.glacier.date_panel.querySelector('.highcharts-root');
         page.structure.glacier.refresh = false;
 
         if (table == null)
             return;
-
-        if (table.classList.contains('loading')) {
-            table.removeAttribute('data-glacier-library-table');
-            return;
-        }
 
         if (table.hasAttribute('data-glacier-library-table'))
             return;
@@ -13714,6 +13728,7 @@ let has_prompted_for_update = false;
 
         page.structure.glacier.table = table;
         page.structure.glacier.refresh = true;
+        log('pending refresh', 'glacier library');
     }
 
     function bleh_glacier_library_top(static_page = false) {
@@ -13847,6 +13862,67 @@ let has_prompted_for_update = false;
             page.structure.glacier.format.setAttribute('data-glacier-view', 'grid');
             page.structure.glacier.format.textContent = trans[lang].glacier.view.grid;
         }
+    }
+
+
+    function bleh_glacier_date_graph(static_page = false) {
+        let scrobble_chart_wrap = page.structure.side.querySelector('.scrobble-table');
+
+        if (scrobble_chart_wrap == null)
+            return;
+
+        let scrobble_table = scrobble_chart_wrap.querySelector('.table:not([data-glacier-date-graph])');
+
+        if (scrobble_table == null)
+            return;
+
+        scrobble_table.setAttribute('data-glacier-date-graph', 'true');
+
+        let chart_type = scrobble_table.getAttribute('data-bucket-size');
+        let entries = scrobble_table.querySelectorAll('tbody tr');
+
+        page.state.glacier.labels = [];
+        page.state.glacier.links = [];
+        page.state.glacier.values = [];
+
+        entries.forEach((entry) => {
+            let period = entry.querySelector('.js-period a');
+
+            page.state.glacier.labels.push(period.textContent.trim());
+            page.state.glacier.links.push(period.getAttribute('href'));
+            page.state.glacier.values.push(entry.querySelector('.js-scrobbles').textContent.trim());
+        });
+
+        scrobble_table.innerHTML = '';
+
+        let scrobble_canvas_container = document.createElement('div');
+        scrobble_canvas_container.classList.add('scrobble-canvas-container');
+
+        let scrobble_canvas = document.createElement('canvas');
+        scrobble_canvas.classList.add('scrobble-canvas');
+
+        Chart.defaults.color = page.state.chart_colours.text_col;
+        Chart.defaults.font.family = 'Ubuntu Sans';
+        let scrobble_chart = new Chart(scrobble_canvas.getContext('2d'), {
+            type: 'line',
+            data: {
+                labels: page.state.glacier.labels,
+                datasets: [{
+                    data: page.state.glacier.values,
+                    borderWidth: 2,
+                    backgroundColor: page.state.chart_colours.link_bg_col,
+                    borderColor: page.state.chart_colours.link_col,
+                    fill: true,
+                    pointRadius: 0,
+                    pointHitRadius: 20,
+                    tension: 0.1
+                }]
+            },
+            options: page.state.chart_line_options
+        });
+
+        scrobble_canvas_container.appendChild(scrobble_canvas);
+        page.structure.glacier.date_panel.appendChild(scrobble_canvas_container);
     }
 
 
@@ -14909,7 +14985,7 @@ let has_prompted_for_update = false;
 
 
     function ff(flag) {
-        log(`parsing ${flag}`, 'flag', 'info', {
+        log(`parsing ${flag}`, 'flag', 'log', {
             setting: settings.feature_flags[flag],
             sku: version.feature_flags[flag]
         });
