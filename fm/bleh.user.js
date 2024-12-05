@@ -4128,6 +4128,37 @@ let has_prompted_for_update = false;
                 }
             }
         }
+
+        page.state.chart_library_line_options = {
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    display: false
+                },
+                tooltip: {
+                    backgroundColor: root_bg_col,
+                    titleColor: text_primary_col,
+                    bodyColor: text_primary_col,
+                    padding: 7,
+                    cornerRadius: 10,
+                    caretSize: 0
+                }
+            },
+            scales: {
+                x: {
+                    grid: {
+                        color: axis_col,
+                        display: false
+                    }
+                },
+                y: {
+                    grid: {
+                        display: false
+                    },
+                    suggestedMax: 10
+                }
+            }
+        }
     }
 
     // save a setting
@@ -14006,7 +14037,7 @@ let has_prompted_for_update = false;
                     tension: 0.1
                 }]
             },
-            options: page.state.chart_line_options
+            options: page.state.chart_library_line_options
         });
 
         scrobble_canvas_container.appendChild(scrobble_canvas);
