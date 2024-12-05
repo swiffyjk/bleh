@@ -13976,7 +13976,11 @@ let has_prompted_for_update = false;
         if (current_view == null)
             return;
 
-        if (page.state.glacier.current_view == current_view && own_table == null) {
+        let tab_matches = page.state.glacier.current_tab == page.subpage;
+        if ((page.subpage == 'library_artists') || (page.subpage == 'library_albums') || (page.subpage == 'library_tracks'))
+            tab_matches = true;
+
+        if (page.state.glacier.current_view == current_view && own_table == null && tab_matches) {
             // re-use old values as view matches
             bleh_glacier_date_graph_generate();
             log('refresh is now marked false', 'glacier library');
@@ -13986,6 +13990,7 @@ let has_prompted_for_update = false;
             return;
         }
 
+        page.state.glacier.current_tab = page.subpage;
         page.state.glacier.current_view = current_view;
 
         let scrobble_chart_content = page.structure.side.querySelector('#scrobble-chart-content');
@@ -14064,6 +14069,7 @@ let has_prompted_for_update = false;
     function bleh_glacier_library_request(request_url) {
         log(`making our own request with ${request_url}`, 'glacier library');
         console.info(page.structure.glacier.refresh);
+        page.structure.glacier.refresh = false;
 
         page.structure.glacier.date_panel.classList.add('data-is-loading');
 
