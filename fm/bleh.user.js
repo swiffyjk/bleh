@@ -4077,7 +4077,8 @@ let has_prompted_for_update = false;
     function load_chart_colours() {
         let link_col = `hsl(${getComputedStyle(document.body).getPropertyValue('--l3-c')})`;
         let link_h_col = getComputedStyle(document.body).getPropertyValue('--l3-c');
-        let link_bg_col = `hsla(${getComputedStyle(document.body).getPropertyValue('--h4')}, 20%)`;
+        let link_bg_col = `hsla(${getComputedStyle(document.body).getPropertyValue('--h4')}, 30%)`;
+        let link_bg_col_2 = `hsla(${getComputedStyle(document.body).getPropertyValue('--h4')}, 2%)`;
         let text_col = `hsl(${getComputedStyle(document.body).getPropertyValue('--c3')})`;
         let axis_col = `hsla(${getComputedStyle(document.body).getPropertyValue('--b4')}, 40%)`;
         let text_primary_col = `hsl(${getComputedStyle(document.body).getPropertyValue('--c2')})`;
@@ -4088,6 +4089,7 @@ let has_prompted_for_update = false;
             link_col: link_col,
             link_h_col: link_h_col,
             link_bg_col: link_bg_col,
+            link_bg_col_2: link_bg_col_2,
             text_col: text_col,
             axis_col: axis_col,
             text_primary_col: text_primary_col,
@@ -4113,7 +4115,14 @@ let has_prompted_for_update = false;
             },
             scales: {
                 x: {
-                    display: false,
+                    type: 'time',
+                    time: {
+                        unit: 'month',
+                        displayFormats: {
+                            month: 'MMM'
+                        },
+                        tooltipFormat: 'dddd, MMMM Do YYYY'
+                    },
                     grid: {
                         color: axis_col,
                         display: false
@@ -12924,6 +12933,10 @@ let has_prompted_for_update = false;
         let scrobble_canvas = document.createElement('canvas');
         scrobble_canvas.classList.add('scrobble-canvas');
 
+        let gradient = scrobble_canvas.getContext('2d').createLinearGradient(0, 0, 0, 160);
+        gradient.addColorStop(0, page.state.chart_colours.link_bg_col);
+        gradient.addColorStop(1, page.state.chart_colours.link_bg_col_2);
+
         Chart.defaults.color = page.state.chart_colours.text_col;
         Chart.defaults.font.family = 'Ubuntu Sans';
         let scrobble_chart = new Chart(scrobble_canvas.getContext('2d'), {
@@ -12933,7 +12946,7 @@ let has_prompted_for_update = false;
                 datasets: [{
                     data: values,
                     borderWidth: 2,
-                    backgroundColor: page.state.chart_colours.link_bg_col,
+                    backgroundColor: gradient,
                     borderColor: page.state.chart_colours.link_col,
                     fill: true,
                     pointRadius: 0,
@@ -14057,6 +14070,10 @@ let has_prompted_for_update = false;
         let scrobble_canvas = document.createElement('canvas');
         scrobble_canvas.classList.add('scrobble-canvas');
 
+        let gradient = scrobble_canvas.getContext('2d').createLinearGradient(0, 0, 0, 160);
+        gradient.addColorStop(0, page.state.chart_colours.link_bg_col);
+        gradient.addColorStop(1, page.state.chart_colours.link_bg_col_2);
+
         Chart.defaults.color = page.state.chart_colours.text_col;
         Chart.defaults.font.family = 'Ubuntu Sans';
         let scrobble_chart = new Chart(scrobble_canvas.getContext('2d'), {
@@ -14066,7 +14083,7 @@ let has_prompted_for_update = false;
                 datasets: [{
                     data: page.state.glacier.values,
                     borderWidth: 2,
-                    backgroundColor: page.state.chart_colours.link_bg_col,
+                    backgroundColor: gradient,
                     borderColor: page.state.chart_colours.link_col,
                     fill: true,
                     pointRadius: 0,
