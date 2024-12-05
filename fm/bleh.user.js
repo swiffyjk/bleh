@@ -5179,8 +5179,11 @@ let has_prompted_for_update = false;
 
     // general health
     function checkup_page_structure(is_subpage = false, header = null) {
-        document.body.style.removeProperty('--hue-album');
-        document.body.style.removeProperty('--sat-album');
+        if (document.body.style.getPropertyValue('--hue-album')) {
+            document.body.style.removeProperty('--hue-album');
+            document.body.style.removeProperty('--sat-album');
+            load_chart_colours();
+        }
 
         let params = new URLSearchParams(document.location.search);
         page.requested.tab = params.get('tab');
