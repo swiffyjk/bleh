@@ -162,12 +162,14 @@ const trans = {
             },
             view: {
                 grid: 'Grid',
-                list: 'List'
+                list: 'List',
+                line: 'Line',
+                pie: 'Pie'
             },
             dates: {
                 last_year: 'Last year',
                 this_year: 'This year'
-            }
+            },
         },
         changelog: {
             name: 'What’s New?',
@@ -2676,6 +2678,7 @@ let settings_template = {
     show_your_progress: true,
     travis: false,
     list_view: 1,
+    chart_view: 'line',
     shout_markdown: true,
     bio_markdown: true,
     hue_from_album: true,
@@ -2869,6 +2872,12 @@ let settings_base = {
         css: 'list_view',
         unit: '',
         value: 0,
+        type: 'options'
+    },
+    chart_view: {
+        css: 'list_view',
+        unit: '',
+        value: 'line',
         type: 'options'
     },
     shout_markdown: {
@@ -13709,12 +13718,31 @@ let has_prompted_for_update = false;
             else
                 date_panel.appendChild(item);*/
             date_panel.appendChild(item);
+
+            if (index == 0)
+                page.structure.glacier.selector = item;
         });
 
         //page.structure.side.appendChild(date_button_panel);
         page.structure.side.appendChild(date_panel);
 
         page.structure.glacier.date_panel = date_panel;
+
+
+        let chart_view_selector = document.createElement('div');
+        chart_view_selector.classList.add('view-buttons', 'chart-view-selector', 'view-buttons-middle');
+        chart_view_selector.innerHTML = (`
+            <button class="btn view-item" id="toggle-chart_view-line" data-toggle="chart_view" data-toggle-value="line" onclick="_update_item('chart_view', 'line')">
+                ${trans[lang].glacier.view.line}
+            </button>
+            <button class="btn view-item" id="toggle-chart_view-pie" data-toggle="chart_view" data-toggle-value="pie" onclick="_update_item('chart_view', 'pie')">
+                ${trans[lang].glacier.view.pie}
+            </button>
+        `);
+
+        page.structure.glacier.selector.after(chart_view_selector);
+
+        refresh_all(chart_view_selector);
 
 
         if (!ff('glacier_library'))
