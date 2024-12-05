@@ -13973,6 +13973,8 @@ let has_prompted_for_update = false;
         bleh_glacier_library_date();
 
         let current_view = page.structure.glacier.date_panel.querySelector('.date-range-picker-button-inner').textContent.trim();
+        if (current_view == null)
+            return;
 
         if (page.state.glacier.current_view == current_view && own_table == null) {
             // re-use old values as view matches
