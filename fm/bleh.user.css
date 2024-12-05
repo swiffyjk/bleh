@@ -8646,6 +8646,10 @@ text[style^="color: rgb(255, 172, 172)"] {
 
     .scrobble-canvas-container {
         margin-top: var(--card-gap);
+
+        &:before {
+            opacity: 0;
+        }
     }
 }
 .listener-trend {
