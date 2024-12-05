@@ -6909,6 +6909,8 @@ very, very, very dated - who looks up a song on ebay? */
     }
 }
 .date-panel {
+    min-height: 335px;
+
     .scrobble-chart {
         margin: unset;
     }
