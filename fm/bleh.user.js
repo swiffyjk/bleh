@@ -14175,8 +14175,13 @@ let has_prompted_for_update = false;
         Chart.defaults.font.family = 'Ubuntu Sans';
         if (settings.chart_view == 'line') {
             let gradient = scrobble_canvas.getContext('2d').createLinearGradient(0, 0, 0, 160);
-            gradient.addColorStop(0, page.state.chart_colours.link_bg_col);
-            gradient.addColorStop(1, page.state.chart_colours.link_bg_col_2);
+            try {
+                gradient.addColorStop(0, page.state.chart_colours.link_bg_col);
+                gradient.addColorStop(1, page.state.chart_colours.link_bg_col_2);
+            } catch(e) {
+                load_chart_colours();
+                bleh_glacier_date_graph_generate();
+            }
 
             let scrobble_chart = new Chart(scrobble_canvas.getContext('2d'), {
                 type: 'line',
