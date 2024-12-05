@@ -6370,7 +6370,7 @@ let has_prompted_for_update = false;
                         !plays_elem.getAttribute('href')
                         .includes('?from=') &&
                         (!plays_elem.getAttribute('href')
-                        .includes('?date_preset=') || plays_elem.getAttribute('href').endsWith('?date_preset=ALL'))
+                        .includes('?date_preset=') || plays_elem.getAttribute('href').endsWith('?date_preset=ALL') || plays_elem.getAttribute('href').endsWith('?date_preset=null'))
                     ) {
                         let parsed_scrobble_as_rank = parse_scrobbles_as_rank(plays);
 
@@ -6408,7 +6408,7 @@ let has_prompted_for_update = false;
         if (count_bar_link.getAttribute('href')
             .includes('?from=') ||
             (count_bar_link.getAttribute('href')
-            .includes('?date_preset=') && !count_bar_link.getAttribute('href').endsWith('?date_preset=ALL')))
+            .includes('?date_preset=') && !count_bar_link.getAttribute('href').endsWith('?date_preset=ALL') && !count_bar_link.getAttribute('href').endsWith('?date_preset=null')))
             return;
 
         let count = clean_number(count_bar.querySelector('.chartlist-count-bar-value').textContent.trim().replace(' scrobbles',''));
