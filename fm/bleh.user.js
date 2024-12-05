@@ -13708,6 +13708,7 @@ let has_prompted_for_update = false;
 
         if (page.subpage == 'library_overview') {
             // new graph
+            page.structure.glacier.refresh = true;
             bleh_glacier_date_graph(true);
         }
     }
@@ -13776,6 +13777,7 @@ let has_prompted_for_update = false;
         if (table == null)
             return;
 
+        console.log('glacier library', table);
         page.structure.glacier.refresh = false;
 
         if (table.hasAttribute('data-glacier-library-table'))
@@ -13934,6 +13936,7 @@ let has_prompted_for_update = false;
 
         let scrobble_chart_content = page.structure.side.querySelector('#scrobble-chart-content');
         if (scrobble_chart_content.getAttribute('data-highcharts-chart') && scrobble_chart_content.getAttribute('data-highcharts-chart') == '0') {
+            log('highchart registered', 'glacier library');
             page.structure.glacier.refresh = false;
             return;
         }
