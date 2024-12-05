@@ -4088,7 +4088,7 @@ let has_prompted_for_update = false;
 
     function load_chart_colours() {
         let link_col = `hsl(${getComputedStyle(document.body).getPropertyValue('--l3-c')})`;
-        let link_h_col = getComputedStyle(document.body).getPropertyValue('--l3-c');
+        let link_h_col = getComputedStyle(document.body).getPropertyValue('--h3-s');
         let link_bg_col = `hsla(${getComputedStyle(document.body).getPropertyValue('--h4')}, 30%)`;
         let link_bg_col_2 = `hsla(${getComputedStyle(document.body).getPropertyValue('--h4')}, 2%)`;
         let text_col = `hsl(${getComputedStyle(document.body).getPropertyValue('--c3')})`;
@@ -4177,6 +4177,27 @@ let has_prompted_for_update = false;
                         display: false
                     },
                     suggestedMax: 10
+                }
+            },
+            onClick: (e, active, chart) => {
+                //console.info(active[0].index);
+                bleh_glacier_library_open_index(active[0].index);
+            }
+        }
+
+        page.state.chart_library_pie_options = {
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    display: false
+                },
+                tooltip: {
+                    backgroundColor: root_bg_col,
+                    titleColor: text_primary_col,
+                    bodyColor: text_primary_col,
+                    padding: 7,
+                    cornerRadius: 10,
+                    caretSize: 0
                 }
             },
             onClick: (e, active, chart) => {
@@ -8998,6 +9019,11 @@ let has_prompted_for_update = false;
                 // save setting into body
                 document.body.style.setProperty(`--${item}`, value);
                 document.documentElement.setAttribute(`data-bleh--${item}`, value);
+
+
+                // re-flow chart
+                if (item == 'chart_view' && page.type == 'user' && page.subpage.startsWith('library'))
+                    bleh_glacier_date_graph_generate();
             } else {
                 // dont modify, just show
                 if (settings[item] == value) {
@@ -14009,7 +14035,8 @@ let has_prompted_for_update = false;
             return;
 
         let tab_matches = page.state.glacier.current_tab == page.subpage;
-        if ((page.subpage == 'library_artists') || (page.subpage == 'library_albums') || (page.subpage == 'library_tracks'))
+        if ((page.subpage == 'library_artists') || (page.subpage == 'library_albums') || (page.subpage == 'library_tracks') &&
+            (page.state.glacier.current_tab == 'library_artists' || page.state.glacier.current_tab == 'library_albums' || page.state.glacier.current_tab == 'library_tracks'))
             tab_matches = true;
 
         if (page.state.glacier.current_view == current_view && own_table == null && tab_matches) {
@@ -14144,29 +14171,69 @@ let has_prompted_for_update = false;
         let scrobble_canvas = document.createElement('canvas');
         scrobble_canvas.classList.add('scrobble-canvas');
 
-        let gradient = scrobble_canvas.getContext('2d').createLinearGradient(0, 0, 0, 160);
-        gradient.addColorStop(0, page.state.chart_colours.link_bg_col);
-        gradient.addColorStop(1, page.state.chart_colours.link_bg_col_2);
-
         Chart.defaults.color = page.state.chart_colours.text_col;
         Chart.defaults.font.family = 'Ubuntu Sans';
-        let scrobble_chart = new Chart(scrobble_canvas.getContext('2d'), {
-            type: 'line',
-            data: {
-                labels: page.state.glacier.labels,
-                datasets: [{
-                    data: page.state.glacier.values,
-                    borderWidth: 2,
-                    backgroundColor: gradient,
-                    borderColor: page.state.chart_colours.link_col,
-                    fill: true,
-                    pointRadius: 0,
-                    pointHitRadius: 20,
-                    tension: 0.1
-                }]
-            },
-            options: page.state.chart_library_line_options
-        });
+        if (settings.chart_view == 'line') {
+            let gradient = scrobble_canvas.getContext('2d').createLinearGradient(0, 0, 0, 160);
+            gradient.addColorStop(0, page.state.chart_colours.link_bg_col);
+            gradient.addColorStop(1, page.state.chart_colours.link_bg_col_2);
+
+            let scrobble_chart = new Chart(scrobble_canvas.getContext('2d'), {
+                type: 'line',
+                data: {
+                    labels: page.state.glacier.labels,
+                    datasets: [{
+                        data: page.state.glacier.values,
+                        borderWidth: 2,
+                        backgroundColor: gradient,
+                        borderColor: page.state.chart_colours.link_col,
+                        fill: true,
+                        pointRadius: 0,
+                        pointHitRadius: 20,
+                        tension: 0.1
+                    }]
+                },
+                options: page.state.chart_library_line_options
+            });
+        } else if (settings.chart_view == 'pie') {
+            let scrobble_chart = new Chart(scrobble_canvas.getContext('2d'), {
+                type: 'doughnut',
+                data: {
+                    labels: page.state.glacier.labels,
+                    datasets: [{
+                        data: page.state.glacier.values,
+                        borderWidth: 2,
+                        backgroundColor: [
+                            `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, '360')})`,
+                            `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, '340')})`,
+                            `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, '320')})`,
+                            `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, '300')})`,
+                            `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, '280')})`,
+                            `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, '270')})`,
+                            `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, '255')})`,
+                            `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, '235')})`,
+                            `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, '220')})`,
+                            `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, '208')})`,
+                            `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, '200')})`,
+                            `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, '180')})`,
+                            `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, '160')})`,
+                            `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, '140')})`,
+                            `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, '120')})`,
+                            `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, '100')})`,
+                            `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, '80')})`,
+                            `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, '60')})`,
+                            `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, '40')})`,
+                            `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, '20')})`
+                        ],
+                        borderColor: page.state.chart_colours.bg_col,
+                        pointRadius: 0,
+                        pointHitRadius: 20,
+                        tension: 0.1
+                    }]
+                },
+                options: page.state.chart_library_pie_options
+            });
+        }
 
         scrobble_canvas_container.appendChild(scrobble_canvas);
         if (new_run)
