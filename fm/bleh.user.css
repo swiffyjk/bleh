@@ -6093,6 +6093,7 @@ button,
 
 
 /*     ICON MASK     */
+.scrobble-canvas-container:before,
 .grid-item-plays:before,
 .lastfm-bulk-edit-form-group-controls button:before,
 .lastfm-bulk-edit-progress:before,
@@ -6930,6 +6931,29 @@ very, very, very dated - who looks up a song on ebay? */
     .scrobble-canvas-container {
         height: 240px;
         margin-top: var(--card-gap);
+        position: relative;
+
+        &:before {
+            opacity: 0;
+        }
+    }
+
+    .scrobble-canvas-container:before,
+    .scrobble-canvas {
+        transition-property: opacity;
+        transition-duration: var(--trans);
+        transition-timing-function: var(--trans-function);
+    }
+
+    &.data-is-loading {
+        pointer-events: none;
+
+        .scrobble-canvas-container:before {
+            opacity: 1;
+        }
+        .scrobble-canvas {
+            opacity: 0.2;
+        }
     }
 }
 
@@ -8251,6 +8275,7 @@ form[action="/inbox/notifications"] {
         }
     }
 }
+.scrobble-canvas-container,
 #bleh--window-bleh_wait--body,
 .modal-processing,
 .gallery-placeholder {
@@ -18000,6 +18025,7 @@ section > .section-controls .subpage-title {
 
 
 
+.library-top-wrap /* while loading */,
 .glacier-legacy-top-header {
     display: none !important;
 }

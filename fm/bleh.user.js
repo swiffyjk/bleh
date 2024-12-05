@@ -4166,6 +4166,10 @@ let has_prompted_for_update = false;
                     },
                     suggestedMax: 10
                 }
+            },
+            onClick: (e, active, chart) => {
+                //console.info(active[0].index);
+                bleh_glacier_library_open_index(active[0].index);
             }
         }
     }
@@ -13725,6 +13729,7 @@ let has_prompted_for_update = false;
 
         if (page.subpage == 'library_overview') {
             // new graph
+            log('refresh is now marked true', 'glacier library');
             page.structure.glacier.refresh = true;
             bleh_glacier_date_graph(true);
         }
@@ -13795,13 +13800,25 @@ let has_prompted_for_update = false;
             return;
 
         console.log('glacier library', table);
+        log('refresh is now marked false (table log)', 'glacier library');
         page.structure.glacier.refresh = false;
+
+        let current_view = page.structure.glacier.date_panel.querySelector('.date-range-picker-button-inner');
+
+        if (current_view == null) {
+            console.log('glacier library current view', page.structure.glacier.date_panel.innerHTML);
+            log('returned as current view is null', 'glacier library');
+            log('refresh is now marked true', 'glacier library');
+            page.structure.glacier.refresh = true;
+            return;
+        }
 
         if (table.hasAttribute('data-glacier-library-table'))
             return;
         table.setAttribute('data-glacier-library-table', 'true');
 
         page.structure.glacier.table = table;
+        log('refresh is now marked true (table found)', 'glacier library');
         page.structure.glacier.refresh = true;
         log('pending refresh', 'glacier library');
     }
@@ -13944,6 +13961,8 @@ let has_prompted_for_update = false;
         if (!page.structure.glacier.refresh)
             return;
 
+        log('reviewing graph situation', 'glacier library');
+
         /*let scrobble_chart_wrap = page.structure.side.querySelector('.scrobble-table:not([data-glacier-date-graph])');
 
         if (scrobble_chart_wrap == null)
@@ -13951,17 +13970,17 @@ let has_prompted_for_update = false;
 
         scrobble_chart_wrap.setAttribute('data-glacier-date-graph', 'true');*/
 
-        let current_view = page.structure.glacier.date_panel.querySelector('.date-range-picker-button-inner');
+        bleh_glacier_library_date();
 
-        if (current_view == null)
-            return;
-        current_view = current_view.textContent.trim();
+        let current_view = page.structure.glacier.date_panel.querySelector('.date-range-picker-button-inner').textContent.trim();
 
-        if (page.state.glacier.current_view == current_view) {
+        if (page.state.glacier.current_view == current_view && own_table == null) {
             // re-use old values as view matches
             bleh_glacier_date_graph_generate();
+            log('refresh is now marked false', 'glacier library');
             page.structure.glacier.refresh = false;
 
+            log(`returned as view (${current_view}) matches ${page.state.glacier.current_view}`, 'glacier library');
             return;
         }
 
@@ -13970,6 +13989,7 @@ let has_prompted_for_update = false;
         let scrobble_chart_content = page.structure.side.querySelector('#scrobble-chart-content');
         if (scrobble_chart_content.getAttribute('data-highcharts-chart') && scrobble_chart_content.getAttribute('data-highcharts-chart') == '0') {
             log('highchart registered', 'glacier library');
+            log('refresh is now marked false', 'glacier library');
             page.structure.glacier.refresh = false;
             return;
         }
@@ -13984,8 +14004,6 @@ let has_prompted_for_update = false;
             scrobble_table = own_table;
         else
             scrobble_table = scrobble_chart_wrap.querySelector('.table');
-
-        bleh_glacier_library_date();
 
         if (scrobble_table == null) {
             // lets see if we can make this request ourselves
@@ -14032,13 +14050,20 @@ let has_prompted_for_update = false;
 
         bleh_glacier_date_graph_generate();
 
+        log('refresh is now marked false (finished generating)', 'glacier library');
         page.structure.glacier.refresh = false;
+    }
+
+    function bleh_glacier_library_open_index(index) {
+        window.location.href = page.state.glacier.links[index];
     }
 
 
     function bleh_glacier_library_request(request_url) {
         log(`making our own request with ${request_url}`, 'glacier library');
         console.info(page.structure.glacier.refresh);
+
+        page.structure.glacier.date_panel.classList.add('data-is-loading');
 
         fetch(request_url)
         .then(function(response) {
@@ -14051,12 +14076,21 @@ let has_prompted_for_update = false;
             console.log('DOC', doc);
 
             log('received response', 'glacier library');
+            log('refresh is now marked true', 'glacier library');
             page.structure.glacier.refresh = true;
             bleh_glacier_date_graph(false, doc.querySelector('.table'));
+
+            page.structure.glacier.date_panel.classList.remove('data-is-loading');
         });
     }
 
     function bleh_glacier_date_graph_generate() {
+        log('generating', 'glacier library', 'info', {
+            labels: page.state.glacier.labels,
+            links: page.state.glacier.links,
+            values: page.state.glacier.values
+        });
+
         let new_run = false;
         let scrobble_canvas_container = page.structure.glacier.date_panel.querySelector('.scrobble-canvas-container');
         if (scrobble_canvas_container == null) {
