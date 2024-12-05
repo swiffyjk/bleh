@@ -3244,7 +3244,10 @@ let has_prompted_for_update = false;
             patch_lastfm_settings(document.body);
             patch_gallery_page();
 
-            if (page.type == 'user' && page.subpage.startsWith('library') && page.subpage != 'library_overview')
+            if (page.type == 'user' && page.subpage.startsWith('library') && (
+                page.subpage != 'library_overview' && !page.subpage.startsWith('library_artist_') &&
+                !page.subpage.startsWith('library_album_') && !page.subpage.startsWith('library_track_')
+            ))
                 bleh_glacier_library();
 
             if (page.type == 'user' ||
@@ -13727,7 +13730,8 @@ let has_prompted_for_update = false;
             bleh_glacier_library_top(true);
         }
 
-        if (page.subpage == 'library_overview') {
+        if (page.subpage == 'library_overview' || page.subpage.startsWith('library_artist_') ||
+        page.subpage.startsWith('library_album_') || page.subpage.startsWith('library_track_')) {
             // new graph
             log('refresh is now marked true', 'glacier library');
             page.structure.glacier.refresh = true;
