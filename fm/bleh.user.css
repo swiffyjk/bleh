@@ -6864,10 +6864,11 @@ very, very, very dated - who looks up a song on ebay? */
 
 
 /*     DATE PICKER     */
-.date-panel {
+.date-button-panel {
     .row {
         display: flex;
         flex-direction: column;
+        gap: 2px;
 
         .user-sidebar-header {
             margin: unset !important;
@@ -6877,7 +6878,7 @@ very, very, very dated - who looks up a song on ebay? */
         .library-controls-datepicker > .library-date-picker {
             display: flex;
             justify-content: start;
-            height: 30px;
+            height: 20px;
 
             .date-range-picker-button {
                 --bg: transparent;
@@ -6893,8 +6894,8 @@ very, very, very dated - who looks up a song on ebay? */
                 --right: 0;
                 --btn-bottom: 0;
 
-                font-size: 24px !important;
-                line-height: 30px !important;
+                font-size: 16px !important;
+                line-height: 20px !important;
 
                 .date-range-picker-button-inner {
                     max-width: 340px;
