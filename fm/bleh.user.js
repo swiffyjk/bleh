@@ -10023,23 +10023,20 @@ let has_prompted_for_update = false;
                         }
                     }
 
-                    // tooltip
-                    if (track_image == null || song_artist_element == null)
-                        return;
-
+                    let image = track.querySelector('.chartlist-image img');
                     tippy(track, {
                         theme: 'track',
                         content: (`
                             <div class="image">
                                 <div class="inner-image">
-                                    ${track_image.querySelector('img').outerHTML}
+                                    ${image.outerHTML}
                                 </div>
                             </div>
                             <div class="info">
                                 <h5 class="title">${song_title}</h5>
                                 <p class="artist">${song_artist_element.innerHTML}</p>
                                 <div class="tags">${song_tags_text}</div>
-                                ${(is_album) ? '' : `<p class="album">${trans[lang].music.from_the_album.replace('{album}', correct_item_by_artist(track_image.querySelector('img').getAttribute('alt'), track_artist))}</p>`}
+                                ${(is_album) ? '' : `<p class="album">${trans[lang].music.from_the_album.replace('{album}', correct_item_by_artist(image.getAttribute('alt'), track_artist))}</p>`}
                             </div>
                         `),
                         allowHTML: true,
