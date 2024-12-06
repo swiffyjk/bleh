@@ -172,6 +172,8 @@ const trans = {
                 last_year: 'Last year',
                 this_year: 'This year'
             },
+            edit: 'Edit',
+            delete: 'Delete'
         },
         changelog: {
             name: 'What’s New?',
@@ -14431,6 +14433,39 @@ let has_prompted_for_update = false;
 
         upper_wrap.appendChild(metadata);
         header.appendChild(upper_wrap);
+
+        let view_buttons = document.createElement('div');
+        view_buttons.classList.add('view-buttons', 'glacier-library-buttons');
+
+        let wrappers = legacy_header.querySelectorAll('.library-header-ctas > *');
+        wrappers.forEach((wrapper) => {
+            let button;
+
+            if (wrapper.classList[0] == 'library-header-cta-item')
+                button = wrapper;
+            else
+                button = wrapper.querySelector('.library-header-cta-item');
+
+            button.classList.add('btn', 'view-item', 'glacier-library-button');
+
+            let tooltip = wrapper.querySelector('.user-library-controls-tooltip');
+            if (tooltip != null)
+                wrapper.removeChild(tooltip);
+
+            view_buttons.appendChild(wrapper);
+
+            let action = button.getAttribute('data-analytics-action');
+            if (action) {
+                if (action == 'EditScrobbleOpen')
+                    button.textContent = trans[lang].glacier.edit;
+            } else {
+                // have to read classlist
+                if (button.classList.contains('delete-icon'))
+                    button.textContent = trans[lang].glacier.delete;
+            }
+        });
+
+        upper_wrap.appendChild(view_buttons);
 
         let lower_wrap = document.createElement('div');
         lower_wrap.classList.add('glacier-library-top-lower');

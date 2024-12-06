@@ -18159,12 +18159,30 @@ section > .section-controls .subpage-title {
                 --mask: var(--icon-16-grid);
             }
         }
+
+        .glacier-library-button {
+            &.edit-icon {
+                --mask: var(--icon-16-edit);
+            }
+            &.delete-icon {
+                --mask: var(--icon-16-trash);
+                --col: hsl(var(--l3-c));
+                --hue-over: var(--hue-neg);
+                --sat-over: 1;
+                --lit-over: 1;
+            }
+        }
     }
 }
 .glacier-library-focused-header {
     display: flex;
     flex-direction: column;
     gap: var(--card-gap);
+
+    .glacier-library-top-upper {
+        display: flex;
+        justify-content: space-between;
+    }
 }
 
 /* 35 ??? */
