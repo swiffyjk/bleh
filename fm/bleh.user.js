@@ -3271,7 +3271,7 @@ let has_prompted_for_update = false;
                 bleh_glacier_library();
 
             // bulk edit check
-            if (page.type == 'user' && page.name == auth && page.subpage == 'library_artist_overview' ||
+            if (is_pro && page.type == 'user' && page.name == auth && page.subpage == 'library_artist_overview' ||
                 page.subpage == 'library_album_overview' || page.subpage == 'library_track_overview'
             ) {
                 bleh_glacier_library_bulk_edit();
