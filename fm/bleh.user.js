@@ -14056,6 +14056,12 @@ let has_prompted_for_update = false;
 
         log('reviewing graph situation', 'glacier library');
 
+        if (own_table != null) {
+            log('table has been passed to function (from network request presumably?)', 'glacier library', 'info', own_table);
+        } else {
+            log('no table has been passed, must source ourselves', 'glacier library');
+        }
+
         /*let scrobble_chart_wrap = page.structure.side.querySelector('.scrobble-table:not([data-glacier-date-graph])');
 
         if (scrobble_chart_wrap == null)
@@ -14065,12 +14071,13 @@ let has_prompted_for_update = false;
 
         bleh_glacier_library_date();
 
-        let current_view = page.structure.glacier.date_panel.querySelector('.date-range-picker-button-inner').textContent.trim();
+        let current_view = page.structure.glacier.date_panel.querySelector('.date-range-picker-button-inner');
         if (current_view == null)
             return;
+        current_view = current_view.textContent.trim();
 
-        let tab_matches = page.state.glacier.current_tab == page.subpage;
-        if ((page.subpage == 'library_artists') || (page.subpage == 'library_albums') || (page.subpage == 'library_tracks') &&
+        let tab_matches;
+        if ((page.subpage == 'library_artists' || page.subpage == 'library_albums' || page.subpage == 'library_tracks') &&
             (page.state.glacier.current_tab == 'library_artists' || page.state.glacier.current_tab == 'library_albums' || page.state.glacier.current_tab == 'library_tracks'))
             tab_matches = true;
 
@@ -14080,11 +14087,10 @@ let has_prompted_for_update = false;
             log('refresh is now marked false', 'glacier library');
             page.structure.glacier.refresh = false;
 
-            log(`returned as view (${current_view}) matches ${page.state.glacier.current_view}`, 'glacier library');
+            log(`returned as view (${current_view}) matches ${page.state.glacier.current_view}. last tab was ${page.state.glacier.current_tab} and current tab is ${page.subpage}`, 'glacier library');
             return;
         }
 
-        page.state.glacier.current_tab = page.subpage;
         page.state.glacier.current_view = current_view;
 
         let scrobble_chart_content = page.structure.side.querySelector('#scrobble-chart-content');
@@ -14108,7 +14114,11 @@ let has_prompted_for_update = false;
 
         if (scrobble_table == null) {
             // lets see if we can make this request ourselves
-            let request_url = window.location.href.replace(window.location.search, `/chart${window.location.search}&ajax=1`);
+            let request_url;
+            if (window.location.search == '')
+                request_url = `${window.location.href}/chart?ajax=1`;
+            else
+                request_url = window.location.href.replace(window.location.search, `/chart${window.location.search}&ajax=1`);
             bleh_glacier_library_request(request_url);
             /*console.info(page.structure.glacier.table);
 
@@ -14169,24 +14179,38 @@ let has_prompted_for_update = false;
 
         fetch(request_url)
         .then(function(response) {
-            console.log('returned', response, response.text);
+            console.log('glacier library returned', response, response.text, response.status);
+
+            if (response.status != 200)
+                throw new Error;
 
             return response.text();
         })
         .then(function(html) {
             let doc = new DOMParser().parseFromString(html, 'text/html');
-            console.log('DOC', doc);
+            console.log('glacier library DOC', doc, doc.querySelector('.table'));
 
             log('received response', 'glacier library');
             log('refresh is now marked true', 'glacier library');
             page.structure.glacier.refresh = true;
-            bleh_glacier_date_graph(false, doc.querySelector('.table'));
+
+            let table = doc.querySelector('.table');
+
+            if (table != null) {
+                bleh_glacier_date_graph(false, table);
+            } else {
+                log('table is null?', 'glacier library', 'error');
+                console.info('glacier library', doc.body.innerHTML);
+                console.info('glacier library', new DOMParser().parseFromString(doc.body.innerHTML, 'text/html'));
+                throw new Error;
+            }
 
             page.structure.glacier.date_panel.classList.remove('data-is-loading');
         });
     }
 
     function bleh_glacier_date_graph_generate() {
+        page.state.glacier.current_tab = page.subpage;
         log('generating', 'glacier library', 'info', {
             labels: page.state.glacier.labels,
             links: page.state.glacier.links,
