@@ -1,7 +1,7 @@
 /* ==UserStyle==
 @name           bleh (dev)
 @namespace      github.com/katelyynn/bleh
-@version        2024.1204
+@version        2024.1206
 @license        GPL-3.0
 @author         kate
 @updateURL      https://github.com/katelyynn/bleh/raw/uwu/fm/bleh.user.css
@@ -16,7 +16,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Work+Sans:ital,wght@0,100..900;1,100..900&display=swap');
 
 body {
-    --version-build: '2024.1204.2';
+    --version-build: '2024.1206';
 
     --hue:  var(--hue-over,
             var(--hue-album,
@@ -17081,13 +17081,6 @@ h4 {
             position: absolute;
             inset: 0;
             background: linear-gradient(180deg, hsl(var(--b6)) 0%, transparent 20%, transparent 80%, hsl(var(--b6)) 100%);
-        }
-
-        [data-bleh--theme="light"] &,
-        [data-bleh--theme="oled"] & {
-            &:before {
-                background: linear-gradient(180deg, hsl(var(--b5)) 0%, transparent 20%, transparent 80%, hsl(var(--b5)) 100%);
-            }
         }
 
         div {
