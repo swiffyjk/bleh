@@ -14460,11 +14460,13 @@ let has_prompted_for_update = false;
             else
                 button = wrapper.querySelector('button');
 
+            console.info(wrapper, button);
             button.classList.add('btn', 'view-item', 'glacier-library-button');
 
-            let tooltip = wrapper.querySelector('.user-library-controls-tooltip');
-            if (tooltip != null)
+            let tooltips = wrapper.querySelectorAll('.user-library-controls-tooltip');
+            tooltips.forEach((tooltip) => {
                 tooltip.parentElement.removeChild(tooltip);
+            });
 
             view_buttons.appendChild(wrapper);
 
@@ -14479,9 +14481,14 @@ let has_prompted_for_update = false;
                     listen_divider.classList.add('listen-divider');
 
                     view_buttons.appendChild(listen_divider);
+
+
+                    // we need to target the other button too lol
+                    button = wrapper.querySelector('button:not(.btn)');
+                    if (button != null)
+                        button.classList.add('btn', 'view-item', 'glacier-library-button');
                 }
             } else {
-                console.info(button.classList, button.classList.contains('love-button'));
                 // have to read classlist
                 if (button.classList.contains('delete-icon')) {
                     button.textContent = trans[lang].glacier.delete;
