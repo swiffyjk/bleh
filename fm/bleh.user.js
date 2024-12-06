@@ -10029,14 +10029,14 @@ let has_prompted_for_update = false;
                         content: (`
                             <div class="image">
                                 <div class="inner-image">
-                                    ${image.outerHTML}
+                                    ${(image != null) ? image.outerHTML : '<img class="missing-track">'}
                                 </div>
                             </div>
                             <div class="info">
                                 <h5 class="title">${song_title}</h5>
                                 <p class="artist">${song_artist_element.innerHTML}</p>
                                 <div class="tags">${song_tags_text}</div>
-                                ${(is_album) ? '' : `<p class="album">${trans[lang].music.from_the_album.replace('{album}', correct_item_by_artist(image.getAttribute('alt'), track_artist))}</p>`}
+                                ${(is_album) ? '' : `<p class="album">${trans[lang].music.from_the_album.replace('{album}', (image != null) ? correct_item_by_artist(image.getAttribute('alt'), track_artist) : page.name)}</p>`}
                             </div>
                         `),
                         allowHTML: true,
