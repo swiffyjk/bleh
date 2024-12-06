@@ -164,7 +164,8 @@ const trans = {
                 grid: 'Grid',
                 list: 'List',
                 line: 'Line',
-                pie: 'Pie'
+                pie: 'Pie',
+                bar: 'Bar'
             },
             dates: {
                 last_year: 'Last year',
@@ -4187,6 +4188,27 @@ let has_prompted_for_update = false;
         }
 
         page.state.chart_library_pie_options = {
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    display: false
+                },
+                tooltip: {
+                    backgroundColor: root_bg_col,
+                    titleColor: text_primary_col,
+                    bodyColor: text_primary_col,
+                    padding: 7,
+                    cornerRadius: 10,
+                    caretSize: 0
+                }
+            },
+            onClick: (e, active, chart) => {
+                //console.info(active[0].index);
+                bleh_glacier_library_open_index(active[0].index);
+            }
+        }
+
+        page.state.chart_library_bar_options = {
             maintainAspectRatio: false,
             plugins: {
                 legend: {
@@ -13774,6 +13796,9 @@ let has_prompted_for_update = false;
             <button class="btn view-item" id="toggle-chart_view-pie" data-toggle="chart_view" data-toggle-value="pie" onclick="_update_item('chart_view', 'pie')">
                 ${trans[lang].glacier.view.pie}
             </button>
+            <button class="btn view-item" id="toggle-chart_view-bar" data-toggle="chart_view" data-toggle-value="bar" onclick="_update_item('chart_view', 'bar')">
+                ${trans[lang].glacier.view.bar}
+            </button>
         `);
 
         page.structure.glacier.selector.after(chart_view_selector);
@@ -14212,7 +14237,7 @@ let has_prompted_for_update = false;
             });
         } else if (settings.chart_view == 'pie') {
             let scrobble_chart = new Chart(scrobble_canvas.getContext('2d'), {
-                type: 'doughnut',
+                type: 'pie',
                 data: {
                     labels: page.state.glacier.labels,
                     datasets: [{
@@ -14247,6 +14272,45 @@ let has_prompted_for_update = false;
                     }]
                 },
                 options: page.state.chart_library_pie_options
+            });
+        } else if (settings.chart_view == 'bar') {
+            let scrobble_chart = new Chart(scrobble_canvas.getContext('2d'), {
+                type: 'bar',
+                data: {
+                    labels: page.state.glacier.labels,
+                    datasets: [{
+                        data: page.state.glacier.values,
+                        borderWidth: 0,
+                        backgroundColor: [
+                            `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, '360')})`,
+                            `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, '340')})`,
+                            `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, '320')})`,
+                            `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, '300')})`,
+                            `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, '280')})`,
+                            `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, '270')})`,
+                            `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, '255')})`,
+                            `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, '235')})`,
+                            `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, '220')})`,
+                            `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, '208')})`,
+                            `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, '200')})`,
+                            `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, '180')})`,
+                            `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, '160')})`,
+                            `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, '140')})`,
+                            `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, '120')})`,
+                            `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, '100')})`,
+                            `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, '80')})`,
+                            `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, '60')})`,
+                            `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, '40')})`,
+                            `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, '20')})`
+                        ],
+                        borderColor: page.state.chart_colours.bg_col,
+                        pointRadius: 0,
+                        pointHitRadius: 20,
+                        tension: 0.1,
+                        borderRadius: 9
+                    }]
+                },
+                options: page.state.chart_library_bar_options
             });
         }
 
