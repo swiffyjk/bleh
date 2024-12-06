@@ -3928,6 +3928,10 @@ h2:not(.count, .mask-multi-text, .mask-text, .sr-only, .js-gallery-heading, .top
         cursor: default;
     }
 
+    &.library-artist-section-header {
+        margin: unset !important;
+    }
+
     &.metadata-title {
         font: inherit;
     }
@@ -17966,6 +17970,7 @@ section > .section-controls .subpage-title {
 
 
 
+.library-header + .metadata-list,
 .library-header, .library-track-metadata,
 .library-top-wrap /* while loading */,
 .glacier-legacy-top-header {
@@ -17993,6 +17998,7 @@ section > .section-controls .subpage-title {
 
                 &.glacier-library-metadata-focus&:not([data-type="artist"]) {
                     font-size: var(--font-size);
+                    line-height: 19px;
                     color: hsl(var(--c2), 80%);
                     max-width: 400px;
                     overflow: hidden;
@@ -18077,8 +18083,11 @@ section > .section-controls .subpage-title {
     }
 }
 
-/* 35 ??? */
-.library-overview-header .dropdown-menu-clickable-button {
-    height: 32px;
+.library-overview-header {
+    margin: 0 0 var(--card-gap) 0;
+}
+/* vue is duplicating it lol (it sucks) */
+.library-fetch > div > .library-overview-header {
+    display: none;
 }
 }

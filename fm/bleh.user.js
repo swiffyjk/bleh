@@ -14518,6 +14518,15 @@ let has_prompted_for_update = false;
         header.appendChild(lower_wrap);
 
         page.structure.main.insertBefore(header, page.structure.main.firstElementChild);
+
+
+        // move random overview header into their section below
+        let overview_header = page.structure.main.querySelector(':scope > .library-overview-header');
+
+        if (overview_header == null)
+            return;
+
+        overview_header.nextElementSibling.insertBefore(overview_header, overview_header.nextElementSibling.firstElementChild);
     }
 
     function bleh_glacier_library_bulk_edit() {
