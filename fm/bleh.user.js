@@ -14121,8 +14121,8 @@ let has_prompted_for_update = false;
         current_view = current_view.textContent.trim();
 
         let tab_matches;
-        if ((page.subpage == 'library_artists' || page.subpage == 'library_albums' || page.subpage == 'library_tracks') &&
-            (page.state.glacier.current_tab == 'library_artists' || page.state.glacier.current_tab == 'library_albums' || page.state.glacier.current_tab == 'library_tracks'))
+        if ((page.subpage == 'library_overview' || page.subpage == 'library_artists' || page.subpage == 'library_albums' || page.subpage == 'library_tracks') &&
+            (page.state.glacier.current_tab == 'library_overview' || page.state.glacier.current_tab == 'library_artists' || page.state.glacier.current_tab == 'library_albums' || page.state.glacier.current_tab == 'library_tracks'))
             tab_matches = true;
 
         if (page.state.glacier.current_view == current_view && own_table == null && tab_matches) {
