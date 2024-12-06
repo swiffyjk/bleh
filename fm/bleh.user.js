@@ -174,7 +174,8 @@ const trans = {
             },
             edit: 'Edit',
             delete: 'Delete',
-            love: 'Love'
+            love: 'Love',
+            bulk_edit: 'Bulk edit'
         },
         changelog: {
             name: 'What’s New?',
@@ -3264,6 +3265,13 @@ let has_prompted_for_update = false;
                 !page.subpage.startsWith('library_album_') && !page.subpage.startsWith('library_track_')
             ))
                 bleh_glacier_library();
+
+            // bulk edit check
+            if (page.type == 'user' && page.subpage == 'library_artist_overview' ||
+                page.subpage == 'library_album_overview' || page.subpage == 'library_track_overview'
+            ) {
+                bleh_glacier_library_bulk_edit();
+            }
 
             if (page.type == 'user' ||
                 page.type == 'artist' ||
@@ -14507,6 +14515,28 @@ let has_prompted_for_update = false;
         header.appendChild(lower_wrap);
 
         page.structure.main.insertBefore(header, page.structure.main.firstElementChild);
+    }
+
+    function bleh_glacier_library_bulk_edit() {
+        // quick check to see if bulk edit is present
+        let library_header = page.structure.main.querySelector('.library-header');
+
+        let bulk_edit = library_header.querySelector('[href="javascript:void(0)"]');
+
+        if (bulk_edit == null)
+            return;
+
+        // move to new area
+        let view_buttons = page.structure.main.querySelector('.glacier-library-buttons');
+        let delete_button = view_buttons.querySelector('.delete-icon');
+
+        if (delete_button == null)
+            return;
+
+        bulk_edit.classList.add('btn', 'view-item', 'glacier-library-button', 'bulk-edit-button');
+        bulk_edit.textContent = trans[lang].glacier.bulk_edit;
+
+        view_buttons.insertBefore(bulk_edit, delete_button);
     }
 
 
