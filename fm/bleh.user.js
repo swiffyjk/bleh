@@ -6531,6 +6531,29 @@ let has_prompted_for_update = false;
         if (page.structure.main == null)
             return;
 
+        let insights = {
+            artist: {
+                values: [],
+                labels: [],
+                highest: {
+                    value: 0,
+                    label: '',
+                    link: '',
+                    img: ''
+                }
+            },
+            album: {
+                values: [],
+                labels: [],
+                highest: {
+                    value: 0,
+                    label: '',
+                    link: '',
+                    img: ''
+                }
+            }
+        }
+
         let grids = page.structure.main.querySelectorAll('.grid-items-item:not([data-bleh-music-grids])');
         grids.forEach((grid) => {
             let is_loading = (grid.querySelector('.grid-items-empty-inner') != null);
@@ -6629,6 +6652,18 @@ let has_prompted_for_update = false;
                 plays_elem.classList.add('grid-item-plays');
                 plays_elem.textContent = plays.toLocaleString(lang);
 
+                if (!is_album) {
+                    insights.artist.values.push(plays);
+
+                    if (plays > insights.artist.highest.value)
+                        insights.artist.highest.value = plays;
+                } else {
+                    insights.album.values.push(plays);
+
+                    if (plays > insights.album.highest.value)
+                        insights.album.highest.value = plays;
+                }
+
                 if (page.type == 'search' || page.type == 'tag')
                     plays_elem.classList.add('grid-item-listeners');
 
@@ -6653,6 +6688,7 @@ let has_prompted_for_update = false;
 
             if (!is_album) {
                 name.textContent = correct_artist(name.textContent.trim());
+                insights.artist.labels.push(name.textContent);
             } else {
                 let artist = grid.querySelector('.grid-items-item-aux-block');
                 if (artist == null)
@@ -6661,8 +6697,12 @@ let has_prompted_for_update = false;
                 artist.textContent = correct_artist(artist.textContent.trim());
 
                 name.textContent = correct_item_by_artist(name.textContent.trim(), artist.textContent.trim());
+                insights.album.labels.push(name.textContent);
             }
         });
+
+        if (page.subpage.startsWith('library'))
+            bleh_glacier_insights(insights);
     }
 
     function patch_artist_ranks_in_list_view(track) {
@@ -14365,9 +14405,8 @@ let has_prompted_for_update = false;
         else
             insights = page.state.glacier.insights;
 
-        log('generating insights', 'glacier library', 'info', insights);
+        //log('generating insights', 'glacier library', 'info', insights);
         for (let item in insights) {
-            log(`requesting insights generator for ${item}`, 'glacier library', 'info', insights[item]);
             bleh_glacier_insights_generate(item, insights[item]);
         }
     }
@@ -14375,6 +14414,8 @@ let has_prompted_for_update = false;
     function bleh_glacier_insights_generate(type, item) {
         if (item.highest.value == 0)
             return;
+
+        log(`requesting insights generator for ${type}`, 'glacier library', 'info', item);
 
         let new_run = false;
         let scrobble_insights_panel = page.structure.side.querySelector(`.scrobble-insights-panel[data-type="${type}"]`);
