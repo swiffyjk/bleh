@@ -14406,6 +14406,9 @@ let has_prompted_for_update = false;
         if (header_title == null)
             header_title = legacy_header.querySelector('.library-header-title'); // main
 
+        let duration = header_title.querySelector('.library-header-title-duration');
+        header_title.removeChild(duration);
+
         header_title = header_title.textContent.trim();
 
         let artist = legacy_header.querySelector('.text-colour-link');
@@ -14438,7 +14441,7 @@ let has_prompted_for_update = false;
                     ${trans[lang][type].name}
                 </div>
                 <div class="glacier-library-metadata-item-value glacier-library-metadata-focus" data-type="${type}">
-                    <a href="${link}">${header_title}</a>${(type != 'artist') ? trans[lang].glacier.by_artist.replace('{a}', `<a href="${root}music/${sanitise(artist)}">${artist}</a>`) : ''}
+                    <a href="${link}">${(type == 'artist') ? header_title : correct_item_by_artist(header_title, artist)}</a>${(duration != null) ? ` <span class="glacier-library-track-duration">${duration.textContent}</span>` : ''}${(type != 'artist') ? trans[lang].glacier.by_artist.replace('{a}', `<a href="${root}music/${sanitise(artist)}">${correct_artist(artist)}</a>`) : ''}
                 </div>
             </div>
         `);
