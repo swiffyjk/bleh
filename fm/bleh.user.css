@@ -18111,6 +18111,41 @@ section > .section-controls .subpage-title {
                 line-height: 20px;
                 font-weight: var(--font-weight-medium);
                 cursor: default;
+
+                &.glacier-library-metadata-focus&:not([data-type="artist"]) {
+                    font-size: var(--font-size);
+                    color: hsl(var(--c2), 80%);
+                    max-width: 400px;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                    white-space: nowrap;
+                }
+
+                a:first-child {
+                    font-size: 16px;
+                }
+
+                a:not(:hover) {
+                    color: hsl(var(--c2));
+                }
+
+                a:last-child:not(:hover) {
+                    color: inherit;
+                }
+            }
+        }
+
+        .glacier-library-metadata-avatar {
+            width: 40px;
+            height: 40px;
+            background: var(--avatar-generic-background);
+            border-radius: var(--item-big-radius);
+            box-shadow: var(--card-shadow);
+            overflow: hidden;
+
+            img {
+                width: 40px;
+                height: 40px;
             }
         }
     }
@@ -18125,6 +18160,11 @@ section > .section-controls .subpage-title {
             }
         }
     }
+}
+.glacier-library-focused-header {
+    display: flex;
+    flex-direction: column;
+    gap: var(--card-gap);
 }
 
 /* 35 ??? */

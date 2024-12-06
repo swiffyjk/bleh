@@ -154,6 +154,7 @@ const trans = {
             }
         },
         glacier: {
+            by_artist: ' by {a}',
             meta: {
                 artists: 'Artists',
                 albums: 'Albums',
@@ -13826,6 +13827,14 @@ let has_prompted_for_update = false;
             page.structure.glacier.refresh = true;
             bleh_glacier_date_graph(true);
         }
+
+        if (
+            page.subpage.startsWith('library_artist_') ||
+            page.subpage.startsWith('library_album_') ||
+            page.subpage.startsWith('library_track_')
+        ) {
+            bleh_glacier_library_focused();
+        }
     }
 
     function bleh_glacier_library_date() {
@@ -14160,13 +14169,25 @@ let has_prompted_for_update = false;
         page.state.glacier.links = [];
         page.state.glacier.values = [];
 
+        let values_not_empty = 0;
+
         entries.forEach((entry) => {
             let period = entry.querySelector('.js-period a');
+            let value = entry.querySelector('.js-scrobbles').textContent.trim();
 
             page.state.glacier.labels.push(period.textContent.trim());
             page.state.glacier.links.push(period.getAttribute('href'));
-            page.state.glacier.values.push(entry.querySelector('.js-scrobbles').textContent.trim());
+            page.state.glacier.values.push(value);
+
+            if (value != '0')
+                values_not_empty += 1;
         });
+
+        if (values_not_empty == 0) {
+            log('graph cancelled as all values are 0', 'glacier library');
+            page.structure.glacier.refresh = false;
+            return;
+        }
 
         scrobble_table.innerHTML = '';
 
@@ -14352,6 +14373,92 @@ let has_prompted_for_update = false;
         scrobble_canvas_container.appendChild(scrobble_canvas);
         if (new_run)
             page.structure.glacier.date_panel.appendChild(scrobble_canvas_container);
+    }
+
+
+    function bleh_glacier_library_focused() {
+        let legacy_header = page.structure.main.querySelector('.library-header');
+
+        let type;
+        if (page.subpage.startsWith('library_artist'))
+            type = 'artist';
+        else if (page.subpage.startsWith('library_album'))
+            type = 'album';
+        else if (page.subpage.startsWith('library_track'))
+            type = 'track';
+
+
+        let header_title = legacy_header.querySelector('.library-header-crumb'); // subpage
+        if (header_title == null)
+            header_title = legacy_header.querySelector('.library-header-title'); // main
+
+        header_title = header_title.textContent.trim();
+
+        let artist = legacy_header.querySelector('.text-colour-link');
+        if (artist != null)
+            artist = artist.textContent.trim();
+
+        let image = legacy_header.querySelector('.library-header-image img');
+
+        let link = `${root}music/${sanitise(header_title)}`;
+        if (type == 'album')
+            link = `${root}music/${sanitise(artist)}/${sanitise(header_title)}`;
+        else if (type == 'track')
+            link = `${root}music/${sanitise(artist)}/_/${sanitise(header_title)}`;
+
+
+        let header = document.createElement('section');
+        header.classList.add('glacier-library-top', 'glacier-library-focused-header');
+
+        let upper_wrap = document.createElement('div');
+        upper_wrap.classList.add('glacier-library-top-upper');
+
+        let metadata = document.createElement('div');
+        metadata.classList.add('glacier-library-metadata');
+        metadata.innerHTML = (`
+            <div class="glacier-library-metadata-avatar">
+                ${image.outerHTML}
+            </div>
+            <div class="glacier-library-metadata-item">
+                <div class="sub-text">
+                    ${trans[lang][type].name}
+                </div>
+                <div class="glacier-library-metadata-item-value glacier-library-metadata-focus" data-type="${type}">
+                    <a href="${link}">${header_title}</a>${(type != 'artist') ? trans[lang].glacier.by_artist.replace('{a}', `<a href="${root}music/${sanitise(artist)}">${artist}</a>`) : ''}
+                </div>
+            </div>
+        `);
+
+        upper_wrap.appendChild(metadata);
+        header.appendChild(upper_wrap);
+
+        let lower_wrap = document.createElement('div');
+        lower_wrap.classList.add('glacier-library-top-lower');
+
+        let lower_metadata = document.createElement('div');
+        lower_metadata.classList.add('glacier-library-metadata');
+
+        let legacy_meta_wrap = page.structure.main.querySelector('.metadata-list');
+        if (legacy_meta_wrap != null) {
+            let metadatas = legacy_meta_wrap.querySelectorAll('.metadata-item:not(.library-header-ctas__wrapper)');
+
+            metadatas.forEach((meta) => {
+                let glacier_meta_item = document.createElement('div');
+                glacier_meta_item.classList.add('glacier-library-metadata-item');
+                glacier_meta_item.innerHTML = (`
+                    <div class="sub-text">${meta.querySelector('.metadata-title').textContent}</div>
+                    <div class="glacier-library-metadata-item-value">${meta.querySelector('.metadata-display').textContent}</div>
+                `);
+
+                lower_metadata.appendChild(glacier_meta_item);
+            });
+        }
+
+        lower_wrap.appendChild(lower_metadata);
+
+        header.appendChild(lower_wrap);
+
+        page.structure.main.insertBefore(header, page.structure.main.firstElementChild);
     }
 
 
