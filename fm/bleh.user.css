@@ -9265,11 +9265,10 @@ text[style^="color: rgb(255, 172, 172)"] {
 .user-dashboard-pagination-previous-link, .user-dashboard-pagination-next-link {
     --left: 8px;
     --mask: var(--icon-16-arrow-left);
-    transform: unset;
-
-    .user-dashboard-pagination-next-link {
-        --mask: var(--icon-16-arrow-right);
-    }
+    transform: unset !important;
+}
+.user-dashboard-pagination-next-link {
+    --mask: var(--icon-16-arrow-right);
 }
 
 
