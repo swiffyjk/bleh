@@ -6191,10 +6191,10 @@ let has_prompted_for_update = false;
         view_buttons.innerHTML = (`
             <div class="view-buttons">
                 <button class="btn view-item" id="toggle-list_view-1" data-toggle="list_view" data-toggle-value="1" onclick="_update_item('list_view', 1)">
-                    Grid
+                    ${trans[lang].glacier.view.grid}
                 </button>
                 <button class="btn view-item" id="toggle-list_view-0" data-toggle="list_view" data-toggle-value="0" onclick="_update_item('list_view', 0)">
-                    List
+                    ${trans[lang].glacier.view.list}
                 </button>
             </div>
         `);
@@ -14815,10 +14815,10 @@ let has_prompted_for_update = false;
                 view_buttons.innerHTML = (`
                     <div class="view-buttons">
                         <button class="btn view-item" id="toggle-list_view-1" data-toggle="list_view" data-toggle-value="1" onclick="_update_item('list_view', 1)">
-                            Grid
+                            ${trans[lang].glacier.view.grid}
                         </button>
                         <button class="btn view-item" id="toggle-list_view-0" data-toggle="list_view" data-toggle-value="0" onclick="_update_item('list_view', 0)">
-                            List
+                            ${trans[lang].glacier.view.list}
                         </button>
                     </div>
                 `);
@@ -15576,10 +15576,10 @@ let has_prompted_for_update = false;
         view_buttons.innerHTML = (`
             <div class="view-buttons">
                 <button class="btn view-item" id="toggle-list_view-1" data-toggle="list_view" data-toggle-value="1" onclick="_update_item('list_view', 1)">
-                    Grid
+                    ${trans[lang].glacier.view.grid}
                 </button>
                 <button class="btn view-item" id="toggle-list_view-0" data-toggle="list_view" data-toggle-value="0" onclick="_update_item('list_view', 0)">
-                    List
+                    ${trans[lang].glacier.view.list}
                 </button>
             </div>
         `);
