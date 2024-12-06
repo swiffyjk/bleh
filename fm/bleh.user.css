@@ -6983,6 +6983,12 @@ very, very, very dated - who looks up a song on ebay? */
         }
     }
 }
+.scrobble-insights-panel {
+    .scrobble-insights-canvas-container {
+        height: 240px;
+        /*margin-top: var(--card-gap);*/
+    }
+}
 
 .library-controls-datepicker .date-range-picker-form {
     padding-top: var(--card-gap);

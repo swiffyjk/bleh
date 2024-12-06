@@ -894,13 +894,16 @@ const trans = {
             wiki: 'You edited on {i}'
         },
         artist: {
-            name: 'Artist'
+            name: 'Artist',
+            plural: 'Artists'
         },
         album: {
-            name: 'Album'
+            name: 'Album',
+            plural: 'Albums'
         },
         track: {
-            name: 'Track'
+            name: 'Track',
+            plural: 'Tracks'
         },
         tag: {
             name: 'Tag'
@@ -2686,6 +2689,7 @@ let settings_template = {
     travis: false,
     list_view: 1,
     chart_view: 'line',
+    chart_insights_view: 'pie',
     shout_markdown: true,
     bio_markdown: true,
     hue_from_album: true,
@@ -9863,6 +9867,39 @@ let has_prompted_for_update = false;
 
         let tracklists = page.structure.main.querySelectorAll('.chartlist:not(.chartlist__placeholder)');
 
+        let insights = {
+            artist: {
+                values: [],
+                labels: [],
+                highest: {
+                    value: 0,
+                    label: '',
+                    link: '',
+                    img: ''
+                }
+            },
+            album: {
+                values: [],
+                labels: [],
+                highest: {
+                    value: 0,
+                    label: '',
+                    link: '',
+                    img: ''
+                }
+            },
+            track: {
+                values: [],
+                labels: [],
+                highest: {
+                    value: 0,
+                    label: '',
+                    link: '',
+                    img: ''
+                }
+            }
+        }
+
         tracklists.forEach((tracklist) => {
             if (tracklist == null)
                 return;
@@ -9969,15 +10006,41 @@ let has_prompted_for_update = false;
                         track_title.textContent = correct_artist(track_title.getAttribute('title'));
                     }
 
+                    let bar = track.querySelector('.chartlist-count-bar-slug');
+                    let value = parseInt(bar.getAttribute('data-stat-value'));
+                    insights.artist.values.push(value);
+
+                    if (value > insights.artist.highest.value)
+                        insights.artist.highest.value = value;
+
+                    insights.artist.labels.push(track_title.textContent);
+
                     return;
                 }
 
-                let is_album = ((!is_user && track.querySelector('.chartlist-artist') == null && track.querySelector('.chartlist-love-button') == null) || track.classList.contains('bleh--is-album'));
+                let is_album = track.hasAttribute('data-album-row');
                 if (is_album)
                     track.classList.add('bleh--is-album');
 
                 let track_artist = return_artist_from_track(track_title.getAttribute('href'), is_album);
                 track.classList.add('chartlist-row--with-artist');
+
+                let bar = track.querySelector('.chartlist-count-bar-slug');
+                if (bar != null) {
+                    let value = parseInt(bar.getAttribute('data-stat-value'));
+
+                    if (is_album) {
+                        insights.album.values.push(value);
+
+                        if (value > insights.album.highest.value)
+                            insights.album.highest.value = value;
+                    } else {
+                        insights.track.values.push(value);
+
+                        if (value > insights.track.highest.value)
+                            insights.track.highest.value = value;
+                    }
+                }
 
                 if (settings.format_guest_features) {
                     let formatted_title = name_includes(track_title.getAttribute('title'), track_artist);
@@ -9988,6 +10051,8 @@ let has_prompted_for_update = false;
                         song_title = formatted_title[0];
                         song_tags = formatted_title[1];
                     }
+
+                    track_title.setAttribute('title', correct_item_by_artist(track_title.getAttribute('title'), track_artist));
 
                     // parse tags into text
                     let song_tags_text = '';
@@ -10062,8 +10127,17 @@ let has_prompted_for_update = false;
                         track_title.setAttribute('title', corrected_title);
                     }
                 }
+
+                if (is_album) {
+                    insights.album.labels.push(track_title.getAttribute('title'));
+                } else {
+                    insights.track.labels.push(track_title.getAttribute('title'));
+                }
             }));
         });
+
+        if (page.subpage.startsWith('library'))
+            bleh_glacier_insights(insights);
     }
 
     function patch_header_title() {
@@ -14223,6 +14297,152 @@ let has_prompted_for_update = false;
         page.structure.glacier.refresh = false;
     }
 
+    function bleh_glacier_insights(insights = null) {
+        if (insights != null)
+            page.state.glacier.insights = insights;
+        else
+            insights = page.state.glacier.insights;
+
+        log('generating insights', 'glacier library', 'info', insights);
+        for (let item in insights) {
+            log(`requesting insights generator for ${item}`, 'glacier library', 'info', insights[item]);
+            bleh_glacier_insights_generate(item, insights[item]);
+        }
+    }
+
+    function bleh_glacier_insights_generate(type, item) {
+        if (item.highest.value == 0)
+            return;
+
+        let new_run = false;
+        let scrobble_insights_panel = page.structure.side.querySelector(`.scrobble-insights-panel[data-type="${type}"]`);
+        if (scrobble_insights_panel == null) {
+            scrobble_insights_panel = document.createElement('section');
+            scrobble_insights_panel.classList.add('scrobble-insights-panel');
+            scrobble_insights_panel.setAttribute('data-type', type);
+            new_run = true;
+        }
+        scrobble_insights_panel.innerHTML = `<h2>${trans[lang][type].plural}</h2>`;
+
+        let scrobble_canvas_container = document.createElement('div');
+        scrobble_canvas_container.classList.add('scrobble-insights-canvas-container');
+
+        let scrobble_canvas = document.createElement('canvas');
+        scrobble_canvas.classList.add('scrobble-insights-canvas');
+
+        Chart.defaults.color = page.state.chart_colours.text_col;
+        Chart.defaults.font.family = 'Ubuntu Sans';
+        if (settings.chart_insights_view == 'line') {
+            let gradient = scrobble_canvas.getContext('2d').createLinearGradient(0, 0, 0, 160);
+            try {
+                gradient.addColorStop(0, page.state.chart_colours.link_bg_col);
+                gradient.addColorStop(1, page.state.chart_colours.link_bg_col_2);
+            } catch(e) {
+                gradient = page.state.chart_colours.link_bg_col;
+            }
+
+            let scrobble_chart = new Chart(scrobble_canvas.getContext('2d'), {
+                type: 'line',
+                data: {
+                    labels: item.labels,
+                    datasets: [{
+                        data: item.values,
+                        borderWidth: 2,
+                        backgroundColor: gradient,
+                        borderColor: page.state.chart_colours.link_col,
+                        fill: true,
+                        pointRadius: 0,
+                        pointHitRadius: 20,
+                        tension: 0.1
+                    }]
+                },
+                options: page.state.chart_library_line_options
+            });
+        } else if (settings.chart_insights_view == 'pie') {
+            let scrobble_chart = new Chart(scrobble_canvas.getContext('2d'), {
+                type: 'pie',
+                data: {
+                    labels: item.labels,
+                    datasets: [{
+                        data: item.values,
+                        borderWidth: 2,
+                        backgroundColor: [
+                            `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, '360')})`,
+                            `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, '340')})`,
+                            `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, '320')})`,
+                            `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, '300')})`,
+                            `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, '280')})`,
+                            `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, '270')})`,
+                            `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, '255')})`,
+                            `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, '235')})`,
+                            `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, '220')})`,
+                            `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, '208')})`,
+                            `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, '200')})`,
+                            `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, '180')})`,
+                            `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, '160')})`,
+                            `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, '140')})`,
+                            `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, '120')})`,
+                            `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, '100')})`,
+                            `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, '80')})`,
+                            `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, '60')})`,
+                            `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, '40')})`,
+                            `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, '20')})`
+                        ],
+                        borderColor: page.state.chart_colours.bg_col,
+                        pointRadius: 0,
+                        pointHitRadius: 20,
+                        tension: 0.1
+                    }]
+                },
+                options: page.state.chart_library_pie_options
+            });
+        } else if (settings.chart_insights_view == 'bar') {
+            let scrobble_chart = new Chart(scrobble_canvas.getContext('2d'), {
+                type: 'bar',
+                data: {
+                    labels: item.labels,
+                    datasets: [{
+                        data: item.values,
+                        borderWidth: 0,
+                        backgroundColor: [
+                            `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, '360')})`,
+                            `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, '340')})`,
+                            `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, '320')})`,
+                            `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, '300')})`,
+                            `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, '280')})`,
+                            `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, '270')})`,
+                            `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, '255')})`,
+                            `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, '235')})`,
+                            `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, '220')})`,
+                            `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, '208')})`,
+                            `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, '200')})`,
+                            `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, '180')})`,
+                            `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, '160')})`,
+                            `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, '140')})`,
+                            `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, '120')})`,
+                            `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, '100')})`,
+                            `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, '80')})`,
+                            `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, '60')})`,
+                            `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, '40')})`,
+                            `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, '20')})`
+                        ],
+                        borderColor: page.state.chart_colours.bg_col,
+                        pointRadius: 0,
+                        pointHitRadius: 20,
+                        tension: 0.1,
+                        borderRadius: 9
+                    }]
+                },
+                options: page.state.chart_library_bar_options
+            });
+        }
+
+        scrobble_canvas_container.appendChild(scrobble_canvas);
+        scrobble_insights_panel.appendChild(scrobble_canvas_container);
+        if (new_run)
+            page.structure.side.appendChild(scrobble_insights_panel);
+    }
+
     function bleh_glacier_library_open_index(index) {
         window.location.href = page.state.glacier.links[index];
     }
@@ -14279,11 +14499,11 @@ let has_prompted_for_update = false;
         let scrobble_canvas_container = page.structure.glacier.date_panel.querySelector('.scrobble-canvas-container');
         if (scrobble_canvas_container == null) {
             scrobble_canvas_container = document.createElement('div');
+            scrobble_canvas_container.classList.add('scrobble-canvas-container');
             new_run = true;
         } else {
             scrobble_canvas_container.innerHTML = '';
         }
-        scrobble_canvas_container.classList.add('scrobble-canvas-container');
 
         let scrobble_canvas = document.createElement('canvas');
         scrobble_canvas.classList.add('scrobble-canvas');
@@ -14296,8 +14516,7 @@ let has_prompted_for_update = false;
                 gradient.addColorStop(0, page.state.chart_colours.link_bg_col);
                 gradient.addColorStop(1, page.state.chart_colours.link_bg_col_2);
             } catch(e) {
-                load_chart_colours();
-                bleh_glacier_date_graph_generate();
+                gradient = page.state.chart_colours.link_bg_col;
             }
 
             let scrobble_chart = new Chart(scrobble_canvas.getContext('2d'), {
