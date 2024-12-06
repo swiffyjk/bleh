@@ -5503,6 +5503,8 @@ let has_prompted_for_update = false;
                     <h2>${trans[lang].activities.name}</h2>
                 `);
 
+                load_activities();
+
                 // we want to show in date order from latest to oldest down
                 // but .reverse() is destructive, so we copy first
                 let recent_activity_list_r = recent_activity_list;
