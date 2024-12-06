@@ -8372,17 +8372,18 @@ form[action="/inbox/notifications"] {
 .pagination-page {
     box-shadow: unset !important;
 }
+.pagination-page--ellipsis span,
 .pagination-page a {
     --bg: transparent !important;
-    --bg-hov: hsla(var(--l4), 10%) !important;
-    --bg-atv: hsla(var(--l4), 30%) !important;
+    --bg-hov: hsla(var(--b4), 60%) !important;
+    --bg-atv: hsla(var(--b4), 80%) !important;
     --shadow: none !important;
     --shadow-hov: none !important;
 }
 .pagination-page[aria-current="page"] span {
-    --bg: hsla(var(--l4), 20%) !important;
-    --bg-hov: hsla(var(--l4), 40%) !important;
-    --bg-atv: hsla(var(--l4), 60%) !important;
+    --bg: hsla(var(--h4), 40%) !important;
+    --bg-hov: hsla(var(--h4), 60%) !important;
+    --bg-atv: hsla(var(--h4), 80%) !important;
     --shadow: none !important;
     --shadow-hov: none !important;
     cursor: default;
@@ -18055,6 +18056,8 @@ section > .section-controls .subpage-title {
             }
             &.delete-icon {
                 --mask: var(--icon-16-trash);
+                --bg-hov: hsla(var(--h4), 10%);
+                --bg-atv: hsla(var(--h4), 20%);
                 --col: hsl(var(--l3-c));
                 --hue-over: var(--hue-neg);
                 --sat-over: 1;

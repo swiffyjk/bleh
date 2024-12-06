@@ -9877,6 +9877,8 @@ let has_prompted_for_update = false;
 
             tracks.forEach((track => {
                 console.log('track', track);
+                if (track.getAttribute('data-track-type'))
+                    return;
 
                 let bla = document.createElement('div');
                 bla.classList.add('kate-placeholder');
@@ -9920,23 +9922,6 @@ let has_prompted_for_update = false;
                     register_menu(track, menu);
                 }
 
-                // image
-                let track_image = track.querySelector('.chartlist-image a.cover-art');
-
-                if (track_image == null) {
-                    // is there an avatar?
-                    track_image = track.querySelector('.chartlist-image > span');
-
-                    if (track_image != null) {
-                        // artist statistic
-                        if (track_image.classList.contains('avatar') && settings.colourful_counts) {
-                            patch_artist_ranks_in_list_view(track);
-                            return;
-                        }
-                    }
-                }
-                track.classList.add('chartlist-row--with-artist');
-
                 // duration
                 let track_timestamp = track.querySelector('.chartlist-timestamp span');
                 if (track_timestamp != undefined) {
@@ -9946,19 +9931,53 @@ let has_prompted_for_update = false;
                     track_timestamp.setAttribute('title', '');
                 }
 
+
+                let track_title = track.querySelector('.chartlist-name a');
+
+                if (track_title == null)
+                    return;
+
+                let is_user = (track.querySelector('.chartlist-image .avatar') != null);
+                let is_artist = false;
+                if (is_user) {
+                    // is it really a user?
+                    let link = track_title.getAttribute('href');
+                    if (link.startsWith(`${root}music/`)) {
+                        is_user = false;
+                        is_artist = true;
+                    }
+                }
+
+                if (is_user) {
+                    track.setAttribute('data-track-type', 'user');
+
+                    if (settings.colourful_counts)
+                        patch_artist_ranks_in_list_view(track);
+
+                    return;
+                }
+
+                if (is_artist) {
+                    track.setAttribute('data-track-type', 'artist');
+
+                    if (settings.colourful_counts)
+                        patch_artist_ranks_in_list_view(track);
+
+                    if (settings.corrections) {
+                        track_title.textContent = correct_artist(track_title.getAttribute('title'));
+                    }
+
+                    return;
+                }
+
+                let is_album = ((!is_user && track.querySelector('.chartlist-artist') == null && track.querySelector('.chartlist-love-button') == null) || track.classList.contains('bleh--is-album'));
+                if (is_album)
+                    track.classList.add('bleh--is-album');
+
+                let track_artist = return_artist_from_track(track_title.getAttribute('href'), is_album);
+                track.classList.add('chartlist-row--with-artist');
+
                 if (settings.format_guest_features) {
-                    let track_title = track.querySelector('.chartlist-name a');
-
-                    if (track_title == undefined)
-                        return;
-
-                    let is_user = (track.querySelector('.chartlist-image .avatar') != null);
-                    let is_album = ((!is_user && track.querySelector('.chartlist-artist') == null && track.querySelector('.chartlist-love-button') == null) || track.classList.contains('bleh--is-album'));
-                    if (is_album)
-                        track.classList.add('bleh--is-album');
-
-                    let track_artist = return_artist_from_track(track_title.getAttribute('href'), is_album);
-
                     let formatted_title = name_includes(track_title.getAttribute('title'), track_artist);
                     console.log('formatted', formatted_title);
                     let song_title = track_title.getAttribute('title');
@@ -10029,13 +10048,8 @@ let has_prompted_for_update = false;
                         hideOnClick: false*/
                     });
                 } else if (settings.corrections) {
-                    let track_title = track.querySelector('.chartlist-name a');
-
-                    if (track_title == undefined)
-                        return;
-
                     let song_artist_element = track.querySelector('.chartlist-artist a');
-                    if (song_artist_element != undefined) {
+                    if (song_artist_element != null) {
                         let corrected_title = correct_item_by_artist(track_title.textContent, song_artist_element.textContent);
                         track_title.textContent = corrected_title;
                         track_title.setAttribute('title', corrected_title);
@@ -10044,7 +10058,6 @@ let has_prompted_for_update = false;
                         song_artist_element.textContent = corrected_artist;
                         song_artist_element.setAttribute('title', corrected_artist);
                     } else {
-                        let track_artist = track_title.getAttribute('href').split('/')[2].replaceAll('+',' ');
                         let corrected_title = correct_item_by_artist(track_title.textContent, track_artist);
                         track_title.textContent = corrected_title;
                         track_title.setAttribute('title', corrected_title);
@@ -14407,7 +14420,8 @@ let has_prompted_for_update = false;
             header_title = legacy_header.querySelector('.library-header-title'); // main
 
         let duration = header_title.querySelector('.library-header-title-duration');
-        header_title.removeChild(duration);
+        if (duration != null)
+            header_title.removeChild(duration);
 
         header_title = header_title.textContent.trim();
 
