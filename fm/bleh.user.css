@@ -4156,6 +4156,7 @@ better than the default selector '#app a' i suppose */
 
 
 /*     COVER ART GLOSS     */
+.glacier-library-metadata-avatar:after,
 .big-artist-list-avatar-desktop:after,
 .catalogue-overview-similar-artists-item-image:after,
 .other-obsession-artwork:after,
@@ -17965,6 +17966,7 @@ section > .section-controls .subpage-title {
 
 
 
+.library-header, .library-track-metadata,
 .library-top-wrap /* while loading */,
 .glacier-legacy-top-header {
     display: none !important;
@@ -18013,6 +18015,7 @@ section > .section-controls .subpage-title {
         }
 
         .glacier-library-metadata-avatar {
+            position: relative;
             width: 40px;
             height: 40px;
             background: var(--avatar-generic-background);

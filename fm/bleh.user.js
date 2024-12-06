@@ -3267,7 +3267,7 @@ let has_prompted_for_update = false;
                 bleh_glacier_library();
 
             // bulk edit check
-            if (page.type == 'user' && page.subpage == 'library_artist_overview' ||
+            if (page.type == 'user' && page.name == auth && page.subpage == 'library_artist_overview' ||
                 page.subpage == 'library_album_overview' || page.subpage == 'library_track_overview'
             ) {
                 bleh_glacier_library_bulk_edit();
@@ -6460,6 +6460,9 @@ let has_prompted_for_update = false;
     }
 
     function music_grids() {
+        if (page.structure.main == null)
+            return;
+
         let grids = page.structure.main.querySelectorAll('.grid-items-item:not([data-bleh-music-grids])');
         grids.forEach((grid) => {
             let is_loading = (grid.querySelector('.grid-items-empty-inner') != null);
@@ -14528,7 +14531,12 @@ let has_prompted_for_update = false;
 
         // move to new area
         let view_buttons = page.structure.main.querySelector('.glacier-library-buttons');
-        let delete_button = view_buttons.querySelector('.delete-icon');
+
+        if (view_buttons == null)
+            return;
+
+        let edit_form = view_buttons.querySelector(':scope > .library-header-edit-form');
+        let delete_button = view_buttons.querySelector(':scope > .delete-icon');
 
         if (delete_button == null)
             return;
@@ -14536,7 +14544,10 @@ let has_prompted_for_update = false;
         bulk_edit.classList.add('btn', 'view-item', 'glacier-library-button', 'bulk-edit-button');
         bulk_edit.textContent = trans[lang].glacier.bulk_edit;
 
-        view_buttons.insertBefore(bulk_edit, delete_button);
+        if (edit_form == null)
+            view_buttons.insertBefore(bulk_edit, delete_button);
+        else
+            view_buttons.insertBefore(bulk_edit, edit_form);
     }
 
 
