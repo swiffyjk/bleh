@@ -13282,6 +13282,16 @@ code, kbd, samp {
         border-radius: var(--item-big-radius);
         overflow: hidden;
 
+        &[data-bleh--theme="light"],
+        &[data-bleh--theme="oled"] {
+            .preview-card {
+                border: var(--card-border);
+                border-right: unset;
+                border-bottom: unset;
+                padding: 9px !important;
+            }
+        }
+
         .preview-inner {
             display: block;
             width: 100%;
@@ -13294,16 +13304,13 @@ code, kbd, samp {
                 height: 100%;
                 background-color: hsl(var(--b5));
                 box-shadow: var(--card-shadow);
-                border: var(--card-border);
                 border-top-left-radius: var(--card-radius);
-                border-right: unset;
-                border-bottom: unset;
 
                 padding: 10px;
 
                 .preview-header {
                     display: block;
-                    width: 90px;
+                    width: 50px;
                     height: 6px;
                     background-color: hsl(var(--c1));
                     border-radius: var(--item-big-radius);
@@ -13312,7 +13319,7 @@ code, kbd, samp {
                 .preview-text {
                     display: block;
                     width: 80px;
-                    height: 3px;
+                    height: 4px;
                     background-color: hsl(var(--c2));
                     border-radius: 50px;
 
