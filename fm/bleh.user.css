@@ -1516,7 +1516,6 @@ last.fm changes as of 2024-05-20 */
     /* gallery pages, col-main on tracks */ div.buffer-standard:not(.col-main) > .lazy-shoutbox
     ),
 /* individual library selection */
-.library-header,
 .page-content:has(.inbox-notifications),
 /* listening reports */ .user-dashboard > .user-dashboard-buffer,
 /* katie doesnt have any scrobbles yet */ .profile-mobile-featured-track + .no-data-message,
@@ -1528,8 +1527,6 @@ last.fm changes as of 2024-05-20 */
 .wiki-history,
 /* error 500 */ .container:has(#marvin),
 /* error 404 */ .row:has(.error-page-marvin),
-.library-header + .metadata-list, .library-header + .library-track-metadata,
-.library-top,
 :is(.namespace--music_track_tags_add, .namespace--music_artist_tags_add, .namespace--music_album_tags_add) .col-main,
 /* make a playlist */ .playlisting-create-options,
 /* home page recommendations */ .homefeed .col-main,
@@ -4161,7 +4158,6 @@ better than the default selector '#app a' i suppose */
 .big-artist-list-avatar-desktop:after,
 .catalogue-overview-similar-artists-item-image:after,
 .other-obsession-artwork:after,
-.library-header-image:after,
 .cover-art:after,
 .grid-items-item:after,
 .similar-items-sidebar-item-image:after,
@@ -5749,8 +5745,6 @@ button,
 .masthead-nav-control, .secondary-nav-item-link,
 .dropdown-menu-item-dark,
 .btn-secondary,
-/* track love button in other's library */ .love-button,
-.library-header-cta-item,
 /* go to tag page for a user tag */ .col-main > p > [href^="/tag/"],
 /* gallery upload artwork breadcrumbs */ a:has(+ .js-gallery-heading), .js-gallery-heading,
 .chartlist-play-button,
@@ -6213,7 +6207,7 @@ button,
 .tags-add:before,
 .catalogue-tags:before,
 /*     CHARTLIST     */
-.chartlist-love-button:before, .love-button-toggle button:before,
+.chartlist-love-button:before,
 .chartlist-type:before,
 .chartlist-play-button:before, .chartlist-more-button:before,
 /*     HOME     */
@@ -6248,7 +6242,6 @@ span.header-new-gallery-inner a:before,
 .library-view-button:before,
 .library-search-submit::before,
 .date-range-picker-button:after,
-.love-button:before, .library-header-cta-item:before,
 /*     WIKI     */
 .wiki-history-action:before,
 /*     SEARCH     */
@@ -6330,8 +6323,7 @@ span.header-new-gallery-inner a:before,
 .gallery-image-buttons:not(.gallery-image-buttons-extra) :is(.gallery-image-report, .gallery-image-delete button),
 .modal-dismiss,
 .content-form .table .delete,
-.masthead-search-submit,
-.love-button-toggle button
+.masthead-search-submit
 {
     --font-size: 0;
 }
@@ -7648,121 +7640,6 @@ that literally is 1 user from 2007 who hasnt even gotten a scrobble */
 
 
 /*     LIBRARY     */
-.library-overview-header {
-    margin-top: var(--card-gap);
-
-    .metadata-list + & {
-        padding: 0 var(--card-padding);
-    }
-}
-.library-artist-section-header {
-    margin-bottom: unset !important;
-}
-
-.library-overview-header + section {
-    /* this margin is already accounted for */
-    margin-top: 12px !important;
-}
-
-.namespace--user_library_overview .col-sidebar {
-    --force-margin-top: unset;
-}
-:is(.namespace--user_library_artists, .namespace--user_library_albums, .namespace--user_library_tracks) .col-sidebar {
-    --force-margin-top: 22px;
-}
-
-
-/*     HEADER     */
-.library-header-image {
-    left: var(--card-padding);
-    top: var(--card-padding);
-    background: var(--avatar-generic-background);
-    border-radius: var(--item-small-radius);
-    box-shadow: var(--card-shadow);
-    overflow: hidden;
-}
-.library-header-image img {
-    border-radius: unset;
-    mask-size: 24px;
-}
-
-.library-header-title {
-    font-size: var(--font-size);
-    line-height: var(--line-height);
-    font-weight: var(--font-weight-medium) !important;
-    margin: 0 0 8px 0 !important;
-    position: relative;
-    top: 4px;
-}
-
-/* fuck this !important shit :sob:, i have to override it so specifically */
-.library-header-ctas__wrapper,
-.library-header-ctas__wrapper.library-header-ctas__wrapper--1,
-.library-header-ctas__wrapper.library-header-ctas__wrapper--2 {
-    width: fit-content !important;
-    top: var(--card-padding);
-    right: var(--card-padding);
-}
-
-.library-header-ctas {
-    display: flex;
-    gap: var(--button-list-gap);
-
-    .library-header-cta-item,
-    .love-button {
-        display: flex;
-        width: 32px !important;
-        height: 32px !important;
-        --left: 8px;
-
-        --font-size: 0;
-
-        &.love-button {
-            --mask: var(--icon-16-heart);
-
-            &.love-button--loved {
-                --mask: var(--icon-16-heart-solid);
-            }
-        }
-
-        &.delete-icon {
-            --mask: var(--icon-16-trash);
-            --col: hsl(var(--l3-c));
-            --hue-over: var(--hue-neg);
-            --sat-over: 1;
-            --lit-over: 1;
-        }
-
-        &:before {
-            opacity: unset !important;
-        }
-    }
-}
-
-/* add back spacing to account for image */
-.library-header {
-    /* 48px = image width */
-    padding-left: calc(var(--card-padding) + 48px + var(--card-gap));
-    /* account for height (2px accounts for border) */
-    height: calc(var(--card-padding) + 48px + var(--card-padding));
-    z-index: 2;
-}
-
-body:is(.namespace--user_library_music_artist_overview, .namespace--user_library_music_album_overview, .namespace--user_library_music_track_overview) .content-top-lower {
-    padding-bottom: unset !important;
-}
-.library-track-metadata {
-    margin-top: unset;
-}
-.library-track-metadata .love-button-toggle {
-    margin-top: unset;
-    padding-top: unset;
-}
-.metadata-list:first-child {
-    margin-top: unset;
-}
-
-
 /*     SCROBBLES / ARTISTS / ALBUMS / TRACKS     */
 .library-top {
     /* matches user profile buttons */
@@ -7799,8 +7676,7 @@ body:is(.namespace--user_library_music_artist_overview, .namespace--user_library
 
 
 /* put below :3 */
-.bleh--profile-note-panel,
-.library-header + .metadata-list, .library-header + .library-track-metadata {
+.bleh--profile-note-panel {
     /* the extra card-gap is used as a whitespace of sorts to seemlessly go under the library header */
     margin-top: calc((-1 * var(--card-gap))/* - var(--card-gap)*/) !important;
     padding-top: calc(var(--card-padding) + var(--card-gap));
@@ -18170,6 +18046,15 @@ section > .section-controls .subpage-title {
                 --hue-over: var(--hue-neg);
                 --sat-over: 1;
                 --lit-over: 1;
+            }
+            &.love-button {
+                --mask: var(--icon-16-heart);
+                --font-size: 0;
+                --btn-left: 12px !important;
+
+                &.love-button--loved {
+                    --mask: var(--icon-16-heart-solid);
+                }
             }
         }
     }

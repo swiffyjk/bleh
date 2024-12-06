@@ -173,7 +173,8 @@ const trans = {
                 this_year: 'This year'
             },
             edit: 'Edit',
-            delete: 'Delete'
+            delete: 'Delete',
+            love: 'Love'
         },
         changelog: {
             name: 'What’s New?',
@@ -14441,27 +14442,39 @@ let has_prompted_for_update = false;
         wrappers.forEach((wrapper) => {
             let button;
 
+            console.info('wrapper', wrapper);
+
             if (wrapper.classList[0] == 'library-header-cta-item')
                 button = wrapper;
             else
-                button = wrapper.querySelector('.library-header-cta-item');
+                button = wrapper.querySelector('button');
 
             button.classList.add('btn', 'view-item', 'glacier-library-button');
 
             let tooltip = wrapper.querySelector('.user-library-controls-tooltip');
             if (tooltip != null)
-                wrapper.removeChild(tooltip);
+                tooltip.parentElement.removeChild(tooltip);
 
             view_buttons.appendChild(wrapper);
 
             let action = button.getAttribute('data-analytics-action');
             if (action) {
-                if (action == 'EditScrobbleOpen')
+                if (action == 'EditScrobbleOpen') {
                     button.textContent = trans[lang].glacier.edit;
+                } else if (action == 'UnloveTrack' || action == 'LoveTrack') {
+                    //button.textContent = trans[lang].glacier.love;
+
+                    let listen_divider = document.createElement('div');
+                    listen_divider.classList.add('listen-divider');
+
+                    view_buttons.appendChild(listen_divider);
+                }
             } else {
+                console.info(button.classList, button.classList.contains('love-button'));
                 // have to read classlist
-                if (button.classList.contains('delete-icon'))
+                if (button.classList.contains('delete-icon')) {
                     button.textContent = trans[lang].glacier.delete;
+                }
             }
         });
 
