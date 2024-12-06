@@ -4202,6 +4202,36 @@ let has_prompted_for_update = false;
                 bleh_glacier_library_open_index(active[0].index);
             }
         }
+        page.state.chart_library_line_options_no_click = {
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    display: false
+                },
+                tooltip: {
+                    backgroundColor: root_bg_col,
+                    titleColor: text_primary_col,
+                    bodyColor: text_primary_col,
+                    padding: 7,
+                    cornerRadius: 10,
+                    caretSize: 0
+                }
+            },
+            scales: {
+                x: {
+                    grid: {
+                        color: axis_col,
+                        display: false
+                    }
+                },
+                y: {
+                    grid: {
+                        display: false
+                    },
+                    suggestedMax: 10
+                }
+            }
+        }
 
         page.state.chart_library_pie_options = {
             maintainAspectRatio: false,
@@ -4223,6 +4253,22 @@ let has_prompted_for_update = false;
                 bleh_glacier_library_open_index(active[0].index);
             }
         }
+        page.state.chart_library_pie_options_no_click = {
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    display: false
+                },
+                tooltip: {
+                    backgroundColor: root_bg_col,
+                    titleColor: text_primary_col,
+                    bodyColor: text_primary_col,
+                    padding: 7,
+                    cornerRadius: 10,
+                    caretSize: 0
+                }
+            }
+        }
 
         page.state.chart_library_bar_options = {
             maintainAspectRatio: false,
@@ -4242,6 +4288,22 @@ let has_prompted_for_update = false;
             onClick: (e, active, chart) => {
                 //console.info(active[0].index);
                 bleh_glacier_library_open_index(active[0].index);
+            }
+        }
+        page.state.chart_library_bar_options_no_click = {
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    display: false
+                },
+                tooltip: {
+                    backgroundColor: root_bg_col,
+                    titleColor: text_primary_col,
+                    bodyColor: text_primary_col,
+                    padding: 7,
+                    cornerRadius: 10,
+                    caretSize: 0
+                }
             }
         }
     }
@@ -14356,7 +14418,7 @@ let has_prompted_for_update = false;
                         tension: 0.1
                     }]
                 },
-                options: page.state.chart_library_line_options
+                options: page.state.chart_library_line_options_no_click
             });
         } else if (settings.chart_insights_view == 'pie') {
             let scrobble_chart = new Chart(scrobble_canvas.getContext('2d'), {
@@ -14394,7 +14456,7 @@ let has_prompted_for_update = false;
                         tension: 0.1
                     }]
                 },
-                options: page.state.chart_library_pie_options
+                options: page.state.chart_library_pie_options_no_click
             });
         } else if (settings.chart_insights_view == 'bar') {
             let scrobble_chart = new Chart(scrobble_canvas.getContext('2d'), {
@@ -14433,7 +14495,7 @@ let has_prompted_for_update = false;
                         borderRadius: 9
                     }]
                 },
-                options: page.state.chart_library_bar_options
+                options: page.state.chart_library_bar_options_no_click
             });
         }
 
