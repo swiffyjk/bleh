@@ -14188,10 +14188,10 @@ let has_prompted_for_update = false;
 
         let metadata = legacy_top_header.querySelectorAll('.metadata-item');
 
-        let first_run = true;
+        let first_run = false;
         let glacier_top = page.structure.glacier.top;
-        if (glacier_top != null)
-            first_run = false;
+        if (glacier_top == null || !page.structure.main.contains(glacier_top))
+            first_run = true;
 
         if (first_run) {
             glacier_top = document.createElement('section');
@@ -14279,9 +14279,11 @@ let has_prompted_for_update = false;
             view_buttons.appendChild(format_button);
         }
 
-        let listen_divider = document.createElement('div');
-        listen_divider.classList.add('listen-divider');
-        view_buttons.appendChild(listen_divider);
+        if (!static_page) {
+            let listen_divider = document.createElement('div');
+            listen_divider.classList.add('listen-divider');
+            view_buttons.appendChild(listen_divider);
+        }
 
         let configure_button = document.createElement('button');
         configure_button.classList.add('btn', 'view-item', 'glacier-library-button', 'glacier-configure-button', 'panel-settings-button');
