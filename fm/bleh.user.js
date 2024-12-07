@@ -3459,8 +3459,10 @@ let has_prompted_for_update = false;
             if ((page.type == 'artist' || page.type == 'album' || page.type == 'track') && page.subpage == 'overview')
                 bleh_music_page_charts();
 
-            if (page.type == 'user' && page.subpage.startsWith('library'))
+            if (page.type == 'user' && page.subpage.startsWith('library')) {
                 bleh_glacier_date_graph_generate();
+                bleh_glacier_insights();
+            }
         }, 200);
     }
 
@@ -3657,8 +3659,10 @@ let has_prompted_for_update = false;
                 if ((page.type == 'artist' || page.type == 'album' || page.type == 'track') && page.subpage == 'overview')
                     bleh_music_page_charts();
 
-                if (page.type == 'user' && page.subpage.startsWith('library'))
+                if (page.type == 'user' && page.subpage.startsWith('library')) {
                     bleh_glacier_date_graph_generate();
+                    bleh_glacier_insights();
+                }
 
                 // in versions 2024.1019 and onwards, the css stores version itself
                 // we can use this to compare if we should fetch a new one
@@ -4386,8 +4390,10 @@ let has_prompted_for_update = false;
         if ((page.type == 'artist' || page.type == 'album' || page.type == 'track') && page.subpage == 'overview')
             bleh_music_page_charts();
 
-        if (page.type == 'user' && page.subpage.startsWith('library'))
+        if (page.type == 'user' && page.subpage.startsWith('library')) {
             bleh_glacier_date_graph_generate();
+            bleh_glacier_insights();
+        }
     }
 
     unsafeWindow.change_theme_from_settings = function(theme) {
@@ -4422,8 +4428,10 @@ let has_prompted_for_update = false;
         if ((page.type == 'artist' || page.type == 'album' || page.type == 'track') && page.subpage == 'overview')
             bleh_music_page_charts();
 
-        if (page.type == 'user' && page.subpage.startsWith('library'))
+        if (page.type == 'user' && page.subpage.startsWith('library')) {
             bleh_glacier_date_graph_generate();
+            bleh_glacier_insights();
+        }
     }
 
 
@@ -10268,10 +10276,10 @@ let has_prompted_for_update = false;
                     insights.track.labels.push(track_title.getAttribute('title'));
                 }
             }));
-        });
 
-        if (page.subpage.startsWith('library'))
-            bleh_glacier_insights(insights);
+            if (page.subpage.startsWith('library'))
+                bleh_glacier_insights(insights);
+        });
     }
 
     function patch_header_title() {
@@ -14531,11 +14539,27 @@ let has_prompted_for_update = false;
     }
 
     function bleh_glacier_insights(insights = null) {
-        if (insights != null)
-            page.state.glacier.insights = insights;
-        else
-            insights = page.state.glacier.insights;
+        if (insights != null) {
+            let any_value = 0;
+            if (insights.artist && insights.artist.highest.value > 0) {
+                any_value += 1;
+            } else if (insights.album && insights.album.highest.value > 0) {
+                any_value += 1;
+                console.info('album');
+            } else if (insights.track && insights.track.highest.value > 0) {
+                any_value += 1;
+                console.info('track');
+            }
 
+            if (any_value == 0)
+                return;
+
+            page.state.glacier.insights = insights;
+        } else {
+            insights = page.state.glacier.insights;
+        }
+
+        console.info(page.state.glacier.insights);
         //log('generating insights', 'glacier library', 'info', insights);
         for (let item in insights) {
             bleh_glacier_insights_generate(item, insights[item]);
