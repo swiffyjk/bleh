@@ -9893,7 +9893,7 @@ let has_prompted_for_update = false;
     // reset settings
     unsafeWindow._reset_settings = function() {
         dialog({
-            id: 'export_settings',
+            id: 'reset_settings',
             title: trans[lang].settings.actions.export.modals.initial.name,
             body: (`
                 <p class="alert alert-warning">${trans[lang].settings.actions.reset.modals.initial.alert}</p>
