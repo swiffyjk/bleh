@@ -14197,12 +14197,12 @@ let has_prompted_for_update = false;
 
 
         // buttons
+        let top_wrap = page.structure.main.querySelector('.library-top-wrap');
+
+        let view_buttons = document.createElement('div');
+        view_buttons.classList.add('view-buttons', 'glacier-library-buttons');
+
         if (!static_page) {
-            let top_wrap = page.structure.main.querySelector('.library-top-wrap');
-
-            let view_buttons = document.createElement('div');
-            view_buttons.classList.add('view-buttons', 'glacier-library-buttons');
-
             let sort = legacy_top_header.querySelector('.library-sort');
             let sort_button;
             if (sort != null) {
@@ -14216,28 +14216,87 @@ let has_prompted_for_update = false;
                     view_buttons.appendChild(sort_menu);
                 }
             }
+        }
 
-            if (page.subpage != 'library_tracks') {
-                let format_button = document.createElement('button');
-                format_button.classList.add('btn', 'view-item', 'glacier-library-button', 'glacier-view-button');
-                format_button.setAttribute('onclick', '_update_glacier_view()');
-                page.structure.glacier.format = format_button;
+        if (!static_page && page.subpage != 'library_tracks') {
+            let format_button = document.createElement('button');
+            format_button.classList.add('btn', 'view-item', 'glacier-library-button', 'glacier-view-button');
+            format_button.setAttribute('onclick', '_update_glacier_view()');
+            page.structure.glacier.format = format_button;
 
-                if (top_wrap.getAttribute('data-current-format') == 'grid') {
-                    format_button.setAttribute('data-glacier-view', 'grid');
-                    format_button.textContent = trans[lang].glacier.view.grid;
-                } else {
-                    format_button.setAttribute('data-glacier-view', 'list');
-                    format_button.textContent = trans[lang].glacier.view.list;
-                }
-
-                view_buttons.appendChild(format_button);
+            if (top_wrap.getAttribute('data-current-format') == 'grid') {
+                format_button.setAttribute('data-glacier-view', 'grid');
+                format_button.textContent = trans[lang].glacier.view.grid;
+            } else {
+                format_button.setAttribute('data-glacier-view', 'list');
+                format_button.textContent = trans[lang].glacier.view.list;
             }
 
-            // only create if theres content
-            if (sort_button != null || page.subpage != 'library_tracks')
-                glacier_top.appendChild(view_buttons);
+            view_buttons.appendChild(format_button);
         }
+
+        let configure_button = document.createElement('button');
+        configure_button.classList.add('btn', 'view-item', 'glacier-library-button', 'glacier-configure-button', 'panel-settings-button');
+        configure_button.textContent = trans[lang].settings.configure;
+
+        tippy(configure_button, {
+            theme: 'window',
+            content: (`
+                <div class="dialog-settings">
+                    <div class="toggle-container" id="container-format_guest_features" onclick="_update_item('format_guest_features')">
+                        <button class="btn reset" onclick="_reset_item('format_guest_features')">${trans[lang].settings.reset}</button>
+                        <div class="heading">
+                            <h5>${trans[lang].settings.corrections.format_guest_features.name}</h5>
+                            <p>${trans[lang].settings.corrections.format_guest_features.bio}</p>
+                        </div>
+                        <div class="toggle-wrap">
+                            <button class="toggle" id="toggle-format_guest_features" aria-checked="true">
+                                <div class="dot"></div>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="toggle-container hide-if-format-guest-disabled" id="container-show_guest_features" onclick="_update_item('show_guest_features')">
+                        <button class="btn reset" onclick="_reset_item('show_guest_features')">${trans[lang].settings.reset}</button>
+                        <div class="heading">
+                            <h5>${trans[lang].settings.corrections.show_guest_features.name}</h5>
+                            <p>${trans[lang].settings.corrections.show_guest_features.bio}</p>
+                        </div>
+                        <div class="toggle-wrap">
+                            <button class="toggle" id="toggle-show_guest_features" aria-checked="true" type="button">
+                                <div class="dot"></div>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="toggle-container" id="container-stacked_chartlist_info" onclick="_update_item('stacked_chartlist_info')">
+                        <button class="btn reset" onclick="_reset_item('stacked_chartlist_info')">${trans[lang].settings.reset}</button>
+                        <div class="heading">
+                            <h5>${trans[lang].settings.corrections.stacked_chartlist_info.name}</h5>
+                            <p>${trans[lang].settings.corrections.stacked_chartlist_info.bio}</p>
+                        </div>
+                        <div class="toggle-wrap">
+                            <button class="toggle" id="toggle-stacked_chartlist_info" aria-checked="true" type="button">
+                                <div class="dot"></div>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `),
+            allowHTML: true,
+            placement: 'bottom',
+            interactive: true,
+            interactiveBorder: 10,
+            trigger: 'click',
+
+            onShow(instance) {
+                refresh_all(instance.popper);
+            }
+        });
+
+        view_buttons.appendChild(configure_button);
+
+        // only create if theres content
+        if (page.name == auth)
+            glacier_top.appendChild(view_buttons);
 
 
         page.structure.glacier.top = glacier_top;

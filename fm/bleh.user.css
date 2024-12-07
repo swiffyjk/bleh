@@ -8886,6 +8886,7 @@ text[style^="color: rgb(255, 172, 172)"] {
         & > .tippy-content {
             display: flex;
         }
+        .dialog-settings,
         form {
             display: flex !important;
             flex-direction: column;
