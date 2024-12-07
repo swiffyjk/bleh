@@ -4418,6 +4418,14 @@ better than the default selector '#app a' i suppose */
     }
 }
 
+.chartlist--wide-artist-column .chartlist-album {
+    order: 1;
+    color: hsl(var(--c3));
+
+    /* no hover offset nonsense */
+    margin-right: 7.5px !important;
+}
+
 @keyframes slide_down {
     from {
         transform: scaleY(0.85);
@@ -18002,11 +18010,14 @@ section > .section-controls .subpage-title {
                 &.glacier-library-metadata-focus&:not([data-type="artist"]) {
                     font-size: var(--font-size);
                     line-height: 19px;
-                    color: hsl(var(--c2), 80%);
                     max-width: 400px;
                     overflow: hidden;
                     text-overflow: ellipsis;
                     white-space: nowrap;
+
+                    a:last-child:not(:hover) {
+                        color: inherit;
+                    }
                 }
 
                 a:first-child {
@@ -18014,11 +18025,7 @@ section > .section-controls .subpage-title {
                 }
 
                 a:not(:hover) {
-                    color: hsl(var(--c2));
-                }
-
-                a:last-child:not(:hover) {
-                    color: inherit;
+                    color: hsl(var(--c1));
                 }
             }
         }

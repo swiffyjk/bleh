@@ -10044,6 +10044,9 @@ let has_prompted_for_update = false;
 
             let tracks = tracklist.querySelectorAll('.chartlist-row:not(.chartlist__placeholder-row)');
 
+            // we dont show "from this album" on these pages
+            let is_library_track_page = (page.subpage == 'library_track_overview');
+
             tracks.forEach((track => {
                 console.log('track', track);
                 if (track.getAttribute('data-track-type'))
@@ -10233,7 +10236,7 @@ let has_prompted_for_update = false;
                                 <h5 class="title">${song_title}</h5>
                                 <p class="artist">${song_artist_element.innerHTML}</p>
                                 <div class="tags">${song_tags_text}</div>
-                                ${(is_album) ? '' : `<p class="album">${trans[lang].music.from_the_album.replace('{album}', (image != null) ? correct_item_by_artist(image.getAttribute('alt'), track_artist) : page.name)}</p>`}
+                                ${(!is_library_track_page) ? (is_album) ? '' : `<p class="album">${trans[lang].music.from_the_album.replace('{album}', (image != null) ? correct_item_by_artist(image.getAttribute('alt'), track_artist) : page.name)}</p>` : ''}
                             </div>
                         `),
                         allowHTML: true,
