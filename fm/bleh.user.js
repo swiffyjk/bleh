@@ -6664,7 +6664,8 @@ let has_prompted_for_update = false;
             if (plays_elem != null) {
                 let plays = clean_number(plays_elem.textContent.trim().replace(` ${trans[lang].statistics.plays.name}`, ''));
                 plays_elem.classList.add('grid-item-plays');
-                plays_elem.textContent = plays.toLocaleString(lang);
+                if (is_album)
+                    plays_elem.textContent = plays.toLocaleString(lang);
 
                 if (!is_album) {
                     insights.artist.values.push(plays);

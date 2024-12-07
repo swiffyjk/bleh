@@ -14711,7 +14711,7 @@ trying to list every song ever made by someone identifying as a female, which is
         }
     }
 }
-.modal-dialog--update {
+[data-modal-type="update"] {
     width: calc(450px + (5px * 2)) !important;
 }
 .bleh--update-checker-container {
