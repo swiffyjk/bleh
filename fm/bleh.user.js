@@ -14157,17 +14157,26 @@ let has_prompted_for_update = false;
 
         let metadata = legacy_top_header.querySelectorAll('.metadata-item');
 
+        let first_run = true;
         let glacier_top = page.structure.glacier.top;
-        if (glacier_top == null)
+        if (glacier_top != null)
+            first_run = false;
+
+        if (first_run) {
             glacier_top = document.createElement('section');
-        else
-            glacier_top.innerHTML = '';
-        glacier_top.classList.add('glacier-library-top');
+            glacier_top.classList.add('glacier-library-top');
+        }
 
 
         // meta
-        let glacier_meta = document.createElement('div');
-        glacier_meta.classList.add('glacier-library-metadata');
+        let glacier_meta;
+        if (first_run) {
+            glacier_meta = document.createElement('div');
+            glacier_meta.classList.add('glacier-library-metadata');
+        } else {
+            glacier_meta = page.structure.glacier.top.querySelector('.glacier-library-metadata');
+            glacier_meta.innerHTML = '';
+        }
 
         metadata.forEach((meta, index) => {
             let text = meta.querySelector('.metadata-title').textContent;
@@ -14193,7 +14202,11 @@ let has_prompted_for_update = false;
             glacier_meta.appendChild(glacier_meta_item);
         });
 
-        glacier_top.appendChild(glacier_meta);
+        if (first_run)
+            glacier_top.appendChild(glacier_meta);
+
+        if (!first_run)
+            return;
 
 
         // buttons
