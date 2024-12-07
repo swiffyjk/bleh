@@ -10167,7 +10167,7 @@ let has_prompted_for_update = false;
                 }
 
 
-                let track_title = track.querySelector('.chartlist-name a');
+                let track_title = track.querySelector('.chartlist-name a:not(.offset-section-anchor)');
 
                 if (track_title == null)
                     return;
