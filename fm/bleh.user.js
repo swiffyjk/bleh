@@ -3128,7 +3128,43 @@ let page = {
     },
     state: {
         settings_reload: false,
-        glacier: {}
+        glacier: {
+            insights: {
+                artist: {
+                    display: false,
+                    values: [],
+                    labels: [],
+                    highest: {
+                        value: 0,
+                        label: '',
+                        link: '',
+                        img: ''
+                    }
+                },
+                album: {
+                    display: false,
+                    values: [],
+                    labels: [],
+                    highest: {
+                        value: 0,
+                        label: '',
+                        link: '',
+                        img: ''
+                    }
+                },
+                track: {
+                    display: false,
+                    values: [],
+                    labels: [],
+                    highest: {
+                        value: 0,
+                        label: '',
+                        link: '',
+                        img: ''
+                    }
+                }
+            }
+        }
     }
 };
 
@@ -6555,6 +6591,7 @@ let has_prompted_for_update = false;
 
         let insights = {
             artist: {
+                display: false,
                 values: [],
                 labels: [],
                 highest: {
@@ -6565,6 +6602,18 @@ let has_prompted_for_update = false;
                 }
             },
             album: {
+                display: false,
+                values: [],
+                labels: [],
+                highest: {
+                    value: 0,
+                    label: '',
+                    link: '',
+                    img: ''
+                }
+            },
+            track: {
+                display: false,
                 values: [],
                 labels: [],
                 highest: {
@@ -6574,7 +6623,7 @@ let has_prompted_for_update = false;
                     img: ''
                 }
             }
-        }
+        };
 
         let grids = page.structure.main.querySelectorAll('.grid-items-item:not([data-bleh-music-grids])');
         grids.forEach((grid) => {
@@ -6676,11 +6725,13 @@ let has_prompted_for_update = false;
                     plays_elem.textContent = plays.toLocaleString(lang);
 
                 if (!is_album) {
+                    insights.artist.display = true;
                     insights.artist.values.push(plays);
 
                     if (plays > insights.artist.highest.value)
                         insights.artist.highest.value = plays;
                 } else {
+                    insights.album.display = true;
                     insights.album.values.push(plays);
 
                     if (plays > insights.album.highest.value)
@@ -10008,6 +10059,7 @@ let has_prompted_for_update = false;
 
         let insights = {
             artist: {
+                display: false,
                 values: [],
                 labels: [],
                 highest: {
@@ -10018,6 +10070,7 @@ let has_prompted_for_update = false;
                 }
             },
             album: {
+                display: false,
                 values: [],
                 labels: [],
                 highest: {
@@ -10028,6 +10081,7 @@ let has_prompted_for_update = false;
                 }
             },
             track: {
+                display: false,
                 values: [],
                 labels: [],
                 highest: {
@@ -10037,7 +10091,7 @@ let has_prompted_for_update = false;
                     img: ''
                 }
             }
-        }
+        };
 
         tracklists.forEach((tracklist) => {
             if (tracklist == null)
@@ -10148,6 +10202,7 @@ let has_prompted_for_update = false;
                         track_title.textContent = correct_artist(track_title.getAttribute('title'));
                     }
 
+                    insights.artist.display = true;
                     let bar = track.querySelector('.chartlist-count-bar-slug');
                     let value = parseInt(bar.getAttribute('data-stat-value'));
                     insights.artist.values.push(value);
@@ -10172,11 +10227,13 @@ let has_prompted_for_update = false;
                     let value = parseInt(bar.getAttribute('data-stat-value'));
 
                     if (is_album) {
+                        insights.album.display = true;
                         insights.album.values.push(value);
 
                         if (value > insights.album.highest.value)
                             insights.album.highest.value = value;
                     } else {
+                        insights.track.display = true;
                         insights.track.values.push(value);
 
                         if (value > insights.track.highest.value)
@@ -10276,10 +10333,10 @@ let has_prompted_for_update = false;
                     insights.track.labels.push(track_title.getAttribute('title'));
                 }
             }));
-
-            if (page.subpage.startsWith('library'))
-                bleh_glacier_insights(insights);
         });
+
+        if (page.subpage.startsWith('library'))
+            bleh_glacier_insights(insights);
     }
 
     function patch_header_title() {
@@ -14540,29 +14597,18 @@ let has_prompted_for_update = false;
 
     function bleh_glacier_insights(insights = null) {
         if (insights != null) {
-            let any_value = 0;
-            if (insights.artist && insights.artist.highest.value > 0) {
-                any_value += 1;
-            } else if (insights.album && insights.album.highest.value > 0) {
-                any_value += 1;
-                console.info('album');
-            } else if (insights.track && insights.track.highest.value > 0) {
-                any_value += 1;
-                console.info('track');
+            for (let item in insights) {
+                if (insights[item].display && JSON.stringify(insights[item]) != JSON.stringify(page.state.glacier.insights[item])) {
+                    page.state.glacier.insights[item] = insights[item];
+
+                    bleh_glacier_insights_generate(item, page.state.glacier.insights[item]);
+                }
             }
-
-            if (any_value == 0)
-                return;
-
-            page.state.glacier.insights = insights;
         } else {
-            insights = page.state.glacier.insights;
-        }
-
-        console.info(page.state.glacier.insights);
-        //log('generating insights', 'glacier library', 'info', insights);
-        for (let item in insights) {
-            bleh_glacier_insights_generate(item, insights[item]);
+            for (let item in page.state.glacier.insights) {
+                if (page.state.glacier.insights[item].display)
+                    bleh_glacier_insights_generate(item, page.state.glacier.insights[item]);
+            }
         }
     }
 
