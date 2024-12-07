@@ -5560,7 +5560,7 @@ let has_prompted_for_update = false;
 
             let beta = document.createElement('span');
             beta.classList.add('new-badge', 'beta-badge');
-            beta.textContent = trans[lang].settings.beta;
+            beta.textContent = trans[lang].settings.new;
 
             tab.appendChild(beta);
         }
