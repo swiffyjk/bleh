@@ -14361,9 +14361,7 @@ let has_prompted_for_update = false;
 
         view_buttons.appendChild(configure_button);
 
-        // only create if theres content
-        if (page.name == auth)
-            glacier_top.appendChild(view_buttons);
+        glacier_top.appendChild(view_buttons);
 
 
         page.structure.glacier.top = glacier_top;
