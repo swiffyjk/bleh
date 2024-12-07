@@ -14962,9 +14962,11 @@ let has_prompted_for_update = false;
             }
         });
 
-        let listen_divider = document.createElement('div');
-        listen_divider.classList.add('listen-divider');
-        view_buttons.appendChild(listen_divider);
+        if (wrappers.length > 0) {
+            let listen_divider = document.createElement('div');
+            listen_divider.classList.add('listen-divider');
+            view_buttons.appendChild(listen_divider);
+        }
 
         let configure_button = document.createElement('button');
         configure_button.classList.add('btn', 'view-item', 'glacier-library-button', 'glacier-configure-button', 'panel-settings-button');
