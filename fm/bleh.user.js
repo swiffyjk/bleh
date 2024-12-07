@@ -154,6 +154,7 @@ const trans = {
             }
         },
         glacier: {
+            name: 'Library refresh',
             by_artist: ' by {a}',
             meta: {
                 artists: 'Artists',
@@ -175,7 +176,11 @@ const trans = {
             edit: 'Edit',
             delete: 'Delete',
             love: 'Love',
-            bulk_edit: 'Bulk edit'
+            bulk_edit: 'Bulk edit',
+            option: {
+                name: 'Use new graphs in library',
+                bio: 'This can add a little amount of slow-down in some cases but with the benefit of awesome graphs.'
+            }
         },
         changelog: {
             name: 'What’s New?',
@@ -2713,7 +2718,9 @@ let settings_template = {
     auth_menu_obsessions: false,
 
     default_avatar_action: 'expand',
-    quick_artist_button: 'gallery'
+    quick_artist_button: 'gallery',
+
+    glacier_library_graphs: true
 };
 let settings_base = {
     high_contrast: {
@@ -3020,6 +3027,13 @@ let settings_base = {
         unit: '',
         value: 'gallery',
         type: 'options'
+    },
+    glacier_library_graphs: {
+        css: 'glacier_library_graphs',
+        unit: '',
+        value: true,
+        values: [true, false],
+        type: 'toggle'
     }
 };
 let inbuilt_settings = {
@@ -8508,6 +8522,20 @@ let has_prompted_for_update = false;
                         </div>
                     </div>
                     <div class="sep"></div>
+                    <h4>${trans[lang].glacier.name}</h4>
+                    <div class="toggle-container" id="container-glacier_library_graphs" onclick="_update_item('glacier_library_graphs')">
+                        <button class="btn reset" onclick="_reset_item('glacier_library_graphs')">${trans[lang].settings.reset}</button>
+                        <div class="heading">
+                            <h5>${trans[lang].glacier.option.name}</h5>
+                            <p>${trans[lang].glacier.option.bio}</p>
+                        </div>
+                        <div class="toggle-wrap">
+                            <button class="toggle" id="toggle-glacier_library_graphs" aria-checked="true" type="button">
+                                <div class="dot"></div>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="sep"></div>
                     <h4>${trans[lang].settings.music.profile_shortcut.name}</h4>
                     <p>${trans[lang].settings.music.profile_shortcut.bio}</p>
                     <div class="text-container" id="container-profile_shortcut">
@@ -13972,6 +14000,7 @@ let has_prompted_for_update = false;
 
         let date_panel = document.createElement('section');
         date_panel.classList.add('date-panel');
+        date_panel.setAttribute('data-glacier-graphs', settings.glacier_library_graphs);
 
         date_items.forEach((item, index) => {
             /*if (index == 0)
@@ -13990,27 +14019,29 @@ let has_prompted_for_update = false;
         page.structure.glacier.date_panel = date_panel;
 
 
-        let chart_view_selector = document.createElement('div');
-        chart_view_selector.classList.add('view-buttons', 'chart-view-selector', 'view-buttons-middle');
-        chart_view_selector.innerHTML = (`
-            <button class="btn view-item" id="toggle-chart_view-line" data-toggle="chart_view" data-toggle-value="line" onclick="_update_item('chart_view', 'line')">
-                ${trans[lang].glacier.view.line}
-            </button>
-            <button class="btn view-item" id="toggle-chart_view-pie" data-toggle="chart_view" data-toggle-value="pie" onclick="_update_item('chart_view', 'pie')">
-                ${trans[lang].glacier.view.pie}
-            </button>
-            <button class="btn view-item" id="toggle-chart_view-bar" data-toggle="chart_view" data-toggle-value="bar" onclick="_update_item('chart_view', 'bar')">
-                ${trans[lang].glacier.view.bar}
-            </button>
-        `);
-
-        page.structure.glacier.selector.after(chart_view_selector);
-
-        refresh_all(chart_view_selector);
-
-
         if (!ff('glacier_library'))
             return;
+
+
+        if (settings.glacier_library_graphs) {
+            let chart_view_selector = document.createElement('div');
+            chart_view_selector.classList.add('view-buttons', 'chart-view-selector', 'view-buttons-middle');
+            chart_view_selector.innerHTML = (`
+                <button class="btn view-item" id="toggle-chart_view-line" data-toggle="chart_view" data-toggle-value="line" onclick="_update_item('chart_view', 'line')">
+                    ${trans[lang].glacier.view.line}
+                </button>
+                <button class="btn view-item" id="toggle-chart_view-pie" data-toggle="chart_view" data-toggle-value="pie" onclick="_update_item('chart_view', 'pie')">
+                    ${trans[lang].glacier.view.pie}
+                </button>
+                <button class="btn view-item" id="toggle-chart_view-bar" data-toggle="chart_view" data-toggle-value="bar" onclick="_update_item('chart_view', 'bar')">
+                    ${trans[lang].glacier.view.bar}
+                </button>
+            `);
+
+            page.structure.glacier.selector.after(chart_view_selector);
+
+            refresh_all(chart_view_selector);
+        }
 
 
         //let picker_content = date_button_panel.querySelector('.date-range-picker-content');
@@ -14300,6 +14331,19 @@ let has_prompted_for_update = false;
                             </button>
                         </div>
                     </div>
+                    <div class="sep"></div>
+                    <div class="toggle-container" id="container-glacier_library_graphs" onclick="_update_item('glacier_library_graphs')">
+                        <button class="btn reset" onclick="_reset_item('glacier_library_graphs')">${trans[lang].settings.reset}</button>
+                        <div class="heading">
+                            <h5>${trans[lang].glacier.option.name}</h5>
+                            <p>${trans[lang].glacier.option.bio}</p>
+                        </div>
+                        <div class="toggle-wrap">
+                            <button class="toggle" id="toggle-glacier_library_graphs" aria-checked="true" type="button">
+                                <div class="dot"></div>
+                            </button>
+                        </div>
+                    </div>
                 </div>
             `),
             allowHTML: true,
@@ -14343,6 +14387,9 @@ let has_prompted_for_update = false;
 
     function bleh_glacier_date_graph(static_page = false, own_table = null) {
         if (!page.structure.glacier.refresh)
+            return;
+
+        if (!settings.glacier_library_graphs)
             return;
 
         log('reviewing graph situation', 'glacier library');
@@ -14961,6 +15008,19 @@ let has_prompted_for_update = false;
                         </div>
                         <div class="toggle-wrap">
                             <button class="toggle" id="toggle-stacked_chartlist_info" aria-checked="true" type="button">
+                                <div class="dot"></div>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="sep"></div>
+                    <div class="toggle-container" id="container-glacier_library_graphs" onclick="_update_item('glacier_library_graphs')">
+                        <button class="btn reset" onclick="_reset_item('glacier_library_graphs')">${trans[lang].settings.reset}</button>
+                        <div class="heading">
+                            <h5>${trans[lang].glacier.option.name}</h5>
+                            <p>${trans[lang].glacier.option.bio}</p>
+                        </div>
+                        <div class="toggle-wrap">
+                            <button class="toggle" id="toggle-glacier_library_graphs" aria-checked="true" type="button">
                                 <div class="dot"></div>
                             </button>
                         </div>

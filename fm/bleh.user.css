@@ -6951,8 +6951,10 @@ very, very, very dated - who looks up a song on ebay? */
         }
     }
 
-    .scrobble-table {
-        display: none;
+    &[data-glacier-graphs="true"] {
+        .scrobble-table {
+            display: none;
+        }
     }
 
     .scrobble-canvas-container {
