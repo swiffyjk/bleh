@@ -14235,9 +14235,17 @@ let has_prompted_for_update = false;
             view_buttons.appendChild(format_button);
         }
 
+        let listen_divider = document.createElement('div');
+        listen_divider.classList.add('listen-divider');
+        view_buttons.appendChild(listen_divider);
+
         let configure_button = document.createElement('button');
         configure_button.classList.add('btn', 'view-item', 'glacier-library-button', 'glacier-configure-button', 'panel-settings-button');
         configure_button.textContent = trans[lang].settings.configure;
+
+        tippy(configure_button, {
+            content: trans[lang].settings.configure
+        });
 
         tippy(configure_button, {
             theme: 'window',
@@ -14876,7 +14884,6 @@ let has_prompted_for_update = false;
 
                     let listen_divider = document.createElement('div');
                     listen_divider.classList.add('listen-divider');
-
                     view_buttons.appendChild(listen_divider);
 
 
@@ -14892,6 +14899,73 @@ let has_prompted_for_update = false;
                 }
             }
         });
+
+        let listen_divider = document.createElement('div');
+        listen_divider.classList.add('listen-divider');
+        view_buttons.appendChild(listen_divider);
+
+        let configure_button = document.createElement('button');
+        configure_button.classList.add('btn', 'view-item', 'glacier-library-button', 'glacier-configure-button', 'panel-settings-button');
+        configure_button.textContent = trans[lang].settings.configure;
+
+        tippy(configure_button, {
+            content: trans[lang].settings.configure
+        });
+
+        tippy(configure_button, {
+            theme: 'window',
+            content: (`
+                <div class="dialog-settings">
+                    <div class="toggle-container" id="container-format_guest_features" onclick="_update_item('format_guest_features')">
+                        <button class="btn reset" onclick="_reset_item('format_guest_features')">${trans[lang].settings.reset}</button>
+                        <div class="heading">
+                            <h5>${trans[lang].settings.corrections.format_guest_features.name}</h5>
+                            <p>${trans[lang].settings.corrections.format_guest_features.bio}</p>
+                        </div>
+                        <div class="toggle-wrap">
+                            <button class="toggle" id="toggle-format_guest_features" aria-checked="true">
+                                <div class="dot"></div>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="toggle-container hide-if-format-guest-disabled" id="container-show_guest_features" onclick="_update_item('show_guest_features')">
+                        <button class="btn reset" onclick="_reset_item('show_guest_features')">${trans[lang].settings.reset}</button>
+                        <div class="heading">
+                            <h5>${trans[lang].settings.corrections.show_guest_features.name}</h5>
+                            <p>${trans[lang].settings.corrections.show_guest_features.bio}</p>
+                        </div>
+                        <div class="toggle-wrap">
+                            <button class="toggle" id="toggle-show_guest_features" aria-checked="true" type="button">
+                                <div class="dot"></div>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="toggle-container" id="container-stacked_chartlist_info" onclick="_update_item('stacked_chartlist_info')">
+                        <button class="btn reset" onclick="_reset_item('stacked_chartlist_info')">${trans[lang].settings.reset}</button>
+                        <div class="heading">
+                            <h5>${trans[lang].settings.corrections.stacked_chartlist_info.name}</h5>
+                            <p>${trans[lang].settings.corrections.stacked_chartlist_info.bio}</p>
+                        </div>
+                        <div class="toggle-wrap">
+                            <button class="toggle" id="toggle-stacked_chartlist_info" aria-checked="true" type="button">
+                                <div class="dot"></div>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `),
+            allowHTML: true,
+            placement: 'bottom',
+            interactive: true,
+            interactiveBorder: 10,
+            trigger: 'click',
+
+            onShow(instance) {
+                refresh_all(instance.popper);
+            }
+        });
+
+        view_buttons.appendChild(configure_button);
 
         upper_wrap.appendChild(view_buttons);
 

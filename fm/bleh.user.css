@@ -18072,6 +18072,10 @@ section > .section-controls .subpage-title {
                     --mask: var(--icon-16-heart-solid);
                 }
             }
+            &.glacier-configure-button {
+                --font-size: 0;
+                --btn-left: 12px !important;
+            }
         }
     }
 }
