@@ -4285,9 +4285,11 @@ better than the default selector '#app a' i suppose */
 #recent-tracks-section {
     /* add space for the button */
     padding-bottom: calc(var(--card-padding) + 32px + var(--card-gap));
-    overflow: hidden;
 
     &.has-refreshed {
+        animation-name: wash_panel;
+        animation-duration: 2.2s;
+
         &:after {
             animation-name: wash;
             animation-duration: 2.2s;
@@ -4321,6 +4323,11 @@ better than the default selector '#app a' i suppose */
     right: var(--card-padding);
 }
 
+@keyframes wash_panel {
+    from, to {
+        overflow: hidden;
+    }
+}
 @keyframes wash {
     from {
         opacity: 0.15;
