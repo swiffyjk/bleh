@@ -3631,7 +3631,9 @@ let has_prompted_for_update = false;
                 </div>
             `),
             dismiss: false,
-            type: 'update'
+            type: 'update',
+            replace_id: 'bleh_update',
+            replace: true
         });
     }
 
@@ -9618,14 +9620,11 @@ let has_prompted_for_update = false;
             }
         }
 
-        if (!replace) {
+        if (!replace || replace && !dialogs.hasOwnProperty(replace_id)) {
             modal = document.createElement('div');
             modal.classList.add('bleh-modal');
         } else {
             log(`window set to replace ${replace_id}`, 'window');
-
-            if (!dialogs.hasOwnProperty(replace_id))
-                return;
 
             modal = dialogs[replace_id].instance;
             delete dialogs[replace_id];
