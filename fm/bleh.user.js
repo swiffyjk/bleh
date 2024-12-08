@@ -10278,6 +10278,7 @@ let has_prompted_for_update = false;
                     if (value > insights.artist.highest.value)
                         insights.artist.highest.value = value;
 
+                    log(`pushed insight artist label of ${track_title.textContent}`, 'glacier library', 'log');
                     insights.artist.labels.push(track_title.textContent);
 
                     return;
@@ -10396,8 +10397,10 @@ let has_prompted_for_update = false;
                 }
 
                 if (is_album) {
+                    log(`pushed insight album label of ${track_title.getAttribute('title')}`, 'glacier library', 'log');
                     insights.album.labels.push(track_title.getAttribute('title'));
                 } else {
+                    log(`pushed insight track label of ${track_title.getAttribute('title')}`, 'glacier library', 'log');
                     insights.track.labels.push(track_title.getAttribute('title'));
                 }
             }));
@@ -14188,6 +14191,42 @@ let has_prompted_for_update = false;
         if (page.subpage == 'library_overview') {
             // scrobbles tab
             bleh_glacier_library_top(true);
+
+            page.state.glacier.insights = {
+                artist: {
+                    display: false,
+                    values: [],
+                    labels: [],
+                    highest: {
+                        value: 0,
+                        label: '',
+                        link: '',
+                        img: ''
+                    }
+                },
+                album: {
+                    display: false,
+                    values: [],
+                    labels: [],
+                    highest: {
+                        value: 0,
+                        label: '',
+                        link: '',
+                        img: ''
+                    }
+                },
+                track: {
+                    display: false,
+                    values: [],
+                    labels: [],
+                    highest: {
+                        value: 0,
+                        label: '',
+                        link: '',
+                        img: ''
+                    }
+                }
+            };
         }
 
         if (page.subpage == 'library_overview' || page.subpage.startsWith('library_artist_') ||
@@ -14665,8 +14704,23 @@ let has_prompted_for_update = false;
 
     function bleh_glacier_insights(insights = null) {
         if (insights != null) {
+            if (page.subpage == 'library_artists') {
+                page.state.glacier.insights.album.display = false;
+                page.state.glacier.insights.track.display = false;
+            }
+            if (page.subpage == 'library_albums') {
+                page.state.glacier.insights.artist.display = false;
+                page.state.glacier.insights.track.display = false;
+            }
+            if (page.subpage == 'library_tracks') {
+                page.state.glacier.insights.artist.display = false;
+                page.state.glacier.insights.album.display = false;
+            }
+
             for (let item in insights) {
+                log(`checking insights status of item ${item} - display of ${insights[item].display}`, 'glacier library', 'info', {checking: insights[item], global: page.state.glacier.insights[item]});
                 if (insights[item].display && JSON.stringify(insights[item]) != JSON.stringify(page.state.glacier.insights[item])) {
+                    log(`confirmed insights status of item ${item} - is different`, 'glacier library');
                     page.state.glacier.insights[item] = insights[item];
 
                     bleh_glacier_insights_generate(item, page.state.glacier.insights[item]);
@@ -14994,6 +15048,18 @@ let has_prompted_for_update = false;
 
 
     function bleh_glacier_library_focused() {
+        page.state.glacier.insights.artist = {
+            display: false,
+            values: [],
+            labels: [],
+            highest: {
+                value: 0,
+                label: '',
+                link: '',
+                img: ''
+            }
+        };
+
         let legacy_header = page.structure.main.querySelector('.library-header');
 
         let type;
