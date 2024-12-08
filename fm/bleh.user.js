@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         bleh
 // @namespace    http://last.fm/
-// @version      2024.1204
+// @version      2024.1208
 // @description  bleh!!! ^-^
 // @author       kate
 // @match        https://www.last.fm/*
@@ -21,7 +21,7 @@
 // ==/UserScript==
 
 let version = {
-    build: '2024.1204.1',
+    build: '2024.1208',
     sku: 'glacier',
     feature_flags: {
         bleh_settings_tabs: {
@@ -105,7 +105,7 @@ let version = {
             date: '2024-12-03'
         },
         glacier_library: {
-            default: false,
+            default: true,
             name: 'Glacier library (new library beta)',
             date: '2024-12-04'
         }
@@ -153,8 +153,38 @@ const trans = {
                 tooltip_active: 'Active name correction'
             }
         },
+        glacier: {
+            name: 'Library refresh',
+            by_artist: ' by {a}',
+            meta: {
+                artists: 'Artists',
+                albums: 'Albums',
+                tracks: 'Tracks',
+                average: 'Average'
+            },
+            view: {
+                grid: 'Grid',
+                list: 'List',
+                line: 'Line',
+                pie: 'Pie',
+                bar: 'Bar'
+            },
+            dates: {
+                last_year: 'Last year',
+                this_year: 'This year'
+            },
+            edit: 'Edit',
+            delete: 'Delete',
+            love: 'Love',
+            bulk_edit: 'Bulk edit',
+            option: {
+                name: 'Use new graphs in library',
+                bio: 'This can add a little amount of slow-down in some cases but with the benefit of awesome graphs.'
+            }
+        },
         changelog: {
             name: 'What’s New?',
+            subtitle: 'from {u}',
             type: {
                 major: 'Major release',
                 minor: 'Minor release',
@@ -260,7 +290,8 @@ const trans = {
             },
             open_avatar: 'Open in a new tab',
             settings: 'Configure',
-            events: 'Events'
+            events: 'Events',
+            top_badge: 'Top Badge'
         },
         event: {
             name: 'Event',
@@ -869,13 +900,16 @@ const trans = {
             wiki: 'You edited on {i}'
         },
         artist: {
-            name: 'Artist'
+            name: 'Artist',
+            plural: 'Artists'
         },
         album: {
-            name: 'Album'
+            name: 'Album',
+            plural: 'Albums'
         },
         track: {
-            name: 'Track'
+            name: 'Track',
+            plural: 'Tracks'
         },
         tag: {
             name: 'Tag'
@@ -894,8 +928,38 @@ const trans = {
                 tooltip_active: 'Active name correction'
             }
         },
+        glacier: {
+            name: 'Library refresh',
+            by_artist: ' by {a}',
+            meta: {
+                artists: 'Artists',
+                albums: 'Albums',
+                tracks: 'Tracks',
+                average: 'Average'
+            },
+            view: {
+                grid: 'Grid',
+                list: 'List',
+                line: 'Line',
+                pie: 'Pie',
+                bar: 'Bar'
+            },
+            dates: {
+                last_year: 'Last year',
+                this_year: 'This year'
+            },
+            edit: 'Edit',
+            delete: 'Delete',
+            love: 'Love',
+            bulk_edit: 'Bulk edit',
+            option: {
+                name: 'Use new graphs in library',
+                bio: 'This can add a little amount of slow-down in some cases but with the benefit of awesome graphs.'
+            }
+        },
         changelog: {
             name: 'What’s New?',
+            subtitle: 'from {u}',
             type: {
                 major: 'Major release',
                 minor: 'Minor release',
@@ -975,7 +1039,11 @@ const trans = {
                 you_share_1: 'Ihr hört {artist}',
                 you_share_2: 'Ihr hört {artist1} und {artist2}',
                 you_share_3: 'Ihr hört {artist1}, {artist2}, und {artist3}'
-            }
+            },
+            open_avatar: 'Open in a new tab',
+            settings: 'Configure',
+            events: 'Events',
+            top_badge: 'Top Badge'
         },
         messaging: {
             update: 'bleh wurde auf Version {v} aktualisiert!'
@@ -1546,8 +1614,38 @@ const trans = {
                 tooltip_active: 'Active name correction'
             }
         },
+        glacier: {
+            name: 'Library refresh',
+            by_artist: ' by {a}',
+            meta: {
+                artists: 'Artists',
+                albums: 'Albums',
+                tracks: 'Tracks',
+                average: 'Average'
+            },
+            view: {
+                grid: 'Grid',
+                list: 'List',
+                line: 'Line',
+                pie: 'Pie',
+                bar: 'Bar'
+            },
+            dates: {
+                last_year: 'Last year',
+                this_year: 'This year'
+            },
+            edit: 'Edit',
+            delete: 'Delete',
+            love: 'Love',
+            bulk_edit: 'Bulk edit',
+            option: {
+                name: 'Use new graphs in library',
+                bio: 'This can add a little amount of slow-down in some cases but with the benefit of awesome graphs.'
+            }
+        },
         changelog: {
             name: 'What’s New?',
+            subtitle: 'from {u}',
             type: {
                 major: 'Major release',
                 minor: 'Minor release',
@@ -1634,7 +1732,10 @@ const trans = {
                 you_share_2: 'You share {artist1} and {artist2}',
                 you_share_3: 'You share {artist1}, {artist2}, and {artist3}'
             },
-            open_avatar: 'Open in a new tab'
+            open_avatar: 'Open in a new tab',
+            settings: 'Configure',
+            events: 'Events',
+            top_badge: 'Top Badge'
         },
         messaging: {
             update: 'bleh has updated to version {v}!'
@@ -2660,6 +2761,8 @@ let settings_template = {
     show_your_progress: true,
     travis: false,
     list_view: 1,
+    chart_view: 'line',
+    chart_insights_view: 'pie',
     shout_markdown: true,
     bio_markdown: true,
     hue_from_album: true,
@@ -2683,7 +2786,9 @@ let settings_template = {
     auth_menu_obsessions: false,
 
     default_avatar_action: 'expand',
-    quick_artist_button: 'gallery'
+    quick_artist_button: 'gallery',
+
+    glacier_library_graphs: true
 };
 let settings_base = {
     high_contrast: {
@@ -2855,6 +2960,12 @@ let settings_base = {
         value: 0,
         type: 'options'
     },
+    chart_view: {
+        css: 'list_view',
+        unit: '',
+        value: 'line',
+        type: 'options'
+    },
     shout_markdown: {
         css: 'shout_markdown',
         unit: '',
@@ -2984,6 +3095,13 @@ let settings_base = {
         unit: '',
         value: 'gallery',
         type: 'options'
+    },
+    glacier_library_graphs: {
+        css: 'glacier_library_graphs',
+        unit: '',
+        value: true,
+        values: [true, false],
+        type: 'toggle'
     }
 };
 let inbuilt_settings = {
@@ -3069,13 +3187,52 @@ let page = {
         side: null,
         nav: null,
         content_top: null,
-        glacier: {}
+        glacier: {
+            refresh: true
+        }
     },
     requested: {
         tab: null
     },
     state: {
-        settings_reload: false
+        settings_reload: false,
+        glacier: {
+            insights: {
+                artist: {
+                    display: false,
+                    values: [],
+                    labels: [],
+                    highest: {
+                        value: 0,
+                        label: '',
+                        link: '',
+                        img: ''
+                    }
+                },
+                album: {
+                    display: false,
+                    values: [],
+                    labels: [],
+                    highest: {
+                        value: 0,
+                        label: '',
+                        link: '',
+                        img: ''
+                    }
+                },
+                track: {
+                    display: false,
+                    values: [],
+                    labels: [],
+                    highest: {
+                        value: 0,
+                        label: '',
+                        link: '',
+                        img: ''
+                    }
+                }
+            }
+        }
     }
 };
 
@@ -3225,8 +3382,18 @@ let has_prompted_for_update = false;
             patch_lastfm_settings(document.body);
             patch_gallery_page();
 
-            if (page.type == 'user' && page.subpage.startsWith('library') && page.subpage != 'library_overview')
+            if (page.type == 'user' && page.subpage.startsWith('library') && (
+                page.subpage != 'library_overview' && !page.subpage.startsWith('library_artist_') &&
+                !page.subpage.startsWith('library_album_') && !page.subpage.startsWith('library_track_')
+            ))
                 bleh_glacier_library();
+
+            // bulk edit check
+            if (is_pro && page.type == 'user' && page.name == auth && page.subpage == 'library_artist_overview' ||
+                page.subpage == 'library_album_overview' || page.subpage == 'library_track_overview'
+            ) {
+                bleh_glacier_library_bulk_edit();
+            }
 
             if (page.type == 'user' ||
                 page.type == 'artist' ||
@@ -3390,9 +3557,16 @@ let has_prompted_for_update = false;
             theme_version = getComputedStyle(document.body).getPropertyValue('--version-build').replaceAll("'", ''); // remove quotations
             log(`theme version reporting as ${theme_version}`, 'style');
 
+            load_chart_colours();
+
             // trigger re-flow of chart
             if ((page.type == 'artist' || page.type == 'album' || page.type == 'track') && page.subpage == 'overview')
                 bleh_music_page_charts();
+
+            if (page.type == 'user' && page.subpage.startsWith('library')) {
+                bleh_glacier_date_graph_generate();
+                bleh_glacier_insights();
+            }
         }, 200);
     }
 
@@ -3583,9 +3757,16 @@ let has_prompted_for_update = false;
                 document.body.classList.add('bleh');
                 theme_version = getComputedStyle(document.body).getPropertyValue('--version-build').replaceAll("'", ''); // remove quotations
 
+                load_chart_colours();
+
                 // trigger re-flow of chart
                 if ((page.type == 'artist' || page.type == 'album' || page.type == 'track') && page.subpage == 'overview')
                     bleh_music_page_charts();
+
+                if (page.type == 'user' && page.subpage.startsWith('library')) {
+                    bleh_glacier_date_graph_generate();
+                    bleh_glacier_insights();
+                }
 
                 // in versions 2024.1019 and onwards, the css stores version itself
                 // we can use this to compare if we should fetch a new one
@@ -3648,25 +3829,6 @@ let has_prompted_for_update = false;
     }
 
 
-    function add_menu_item(parent, id, type, name, action, open_externally=false, is_auth=false) {
-        let menu_item = document.createElement('li');
-        let menu_item_btn = document.createElement(type == 'btn' ? 'button' : 'a');
-        menu_item_btn.classList.add(
-            is_auth ? 'auth-dropdown-menu-item' : 'dropdown-menu-clickable-item',
-            `bleh--menu-item-${id}`
-        );
-        menu_item_btn.setAttribute(
-            type == 'btn' ? 'onclick' : 'href',
-            action
-        );
-        if (open_externally) menu_item_btn.setAttribute('_target', '_blank');
-        menu_item_btn.textContent = name;
-
-        menu_item.appendChild(menu_item_btn);
-        parent.appendChild(menu_item);
-    }
-
-
 
 
     function set_season() {
@@ -3719,6 +3881,8 @@ let has_prompted_for_update = false;
                 if (last_season_seen != '' && last_season_seen != season.id)
                     deliver_notif(trans[lang].settings.customise.seasonal.announce.replace('{s}', trans[lang].settings.customise.seasonal.listing[stored_season.id]))
                 localStorage.setItem('bleh_last_season_seen', season.id);
+
+                load_chart_colours();
             }
         });
     }
@@ -3858,7 +4022,8 @@ let has_prompted_for_update = false;
 
 
         // auth menu
-        let legacy_auth_menu = document.body.querySelector('.auth-dropdown-menu');
+        let site_auth = document.body.querySelector('.site-auth');
+        let legacy_auth_menu = site_auth.querySelector('.auth-dropdown-menu');
         let token = legacy_auth_menu.querySelector('[name="csrfmiddlewaretoken"]').getAttribute('value');
         let auth_menu = tippy(auth_link, {
             theme: 'auth-menu',
@@ -3958,6 +4123,7 @@ let has_prompted_for_update = false;
                 });
             }
         });
+        site_auth.removeChild(site_auth.querySelector('.auth-dropdown-menu-wrap'));
 
 
         // language
@@ -4056,6 +4222,212 @@ let has_prompted_for_update = false;
             document.documentElement.setAttribute('data-bleh--theme', 'oled');
             page.state.settings_reload = true;
         }
+
+        load_chart_colours();
+    }
+
+    function load_chart_colours() {
+        let link_col = `hsl(${getComputedStyle(document.body).getPropertyValue('--l3-c')})`;
+        let link_h_col = getComputedStyle(document.body).getPropertyValue('--h3-s');
+        let link_bg_col = `hsla(${getComputedStyle(document.body).getPropertyValue('--h4')}, 30%)`;
+        let link_bg_col_2 = `hsla(${getComputedStyle(document.body).getPropertyValue('--h4')}, 2%)`;
+        let text_col = `hsl(${getComputedStyle(document.body).getPropertyValue('--c3')})`;
+        let axis_col = `hsla(${getComputedStyle(document.body).getPropertyValue('--b4')}, 40%)`;
+        let text_primary_col = `hsl(${getComputedStyle(document.body).getPropertyValue('--c2')})`;
+        let bg_col = `hsl(${getComputedStyle(document.body).getPropertyValue('--b5')})`;
+        let root_bg_col = `hsla(${getComputedStyle(document.body).getPropertyValue('--b6')}, 85%)`;
+        let hue = getComputedStyle(document.body).getPropertyValue('--hue');
+        page.state.chart_colours = {
+            link_col: link_col,
+            link_h_col: link_h_col,
+            link_bg_col: link_bg_col,
+            link_bg_col_2: link_bg_col_2,
+            text_col: text_col,
+            axis_col: axis_col,
+            text_primary_col: text_primary_col,
+            bg_col: bg_col,
+            root_bg_col: root_bg_col,
+            hue: hue
+        }
+
+        page.state.chart_line_options = {
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    display: false
+                },
+                tooltip: {
+                    backgroundColor: root_bg_col,
+                    titleColor: text_primary_col,
+                    bodyColor: text_primary_col,
+                    padding: 7,
+                    cornerRadius: 10,
+                    caretSize: 0
+                }
+            },
+            scales: {
+                x: {
+                    type: 'time',
+                    time: {
+                        unit: 'month',
+                        displayFormats: {
+                            month: 'MMM'
+                        },
+                        tooltipFormat: 'dddd, MMMM Do YYYY'
+                    },
+                    grid: {
+                        color: axis_col,
+                        display: false
+                    }
+                },
+                y: {
+                    display: false,
+                    grid: {
+                        display: false
+                    },
+                    suggestedMax: 10
+                }
+            }
+        }
+
+        page.state.chart_library_line_options = {
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    display: false
+                },
+                tooltip: {
+                    backgroundColor: root_bg_col,
+                    titleColor: text_primary_col,
+                    bodyColor: text_primary_col,
+                    padding: 7,
+                    cornerRadius: 10,
+                    caretSize: 0
+                }
+            },
+            scales: {
+                x: {
+                    grid: {
+                        color: axis_col,
+                        display: false
+                    }
+                },
+                y: {
+                    grid: {
+                        display: false
+                    },
+                    suggestedMax: 10
+                }
+            },
+            onClick: (e, active, chart) => {
+                //console.info(active[0].index);
+                bleh_glacier_library_open_index(active[0].index);
+            }
+        }
+        page.state.chart_library_line_options_no_click = {
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    display: false
+                },
+                tooltip: {
+                    backgroundColor: root_bg_col,
+                    titleColor: text_primary_col,
+                    bodyColor: text_primary_col,
+                    padding: 7,
+                    cornerRadius: 10,
+                    caretSize: 0
+                }
+            },
+            scales: {
+                x: {
+                    grid: {
+                        color: axis_col,
+                        display: false
+                    }
+                },
+                y: {
+                    grid: {
+                        display: false
+                    },
+                    suggestedMax: 10
+                }
+            }
+        }
+
+        page.state.chart_library_pie_options = {
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    display: false
+                },
+                tooltip: {
+                    backgroundColor: root_bg_col,
+                    titleColor: text_primary_col,
+                    bodyColor: text_primary_col,
+                    padding: 7,
+                    cornerRadius: 10,
+                    caretSize: 0
+                }
+            },
+            onClick: (e, active, chart) => {
+                //console.info(active[0].index);
+                bleh_glacier_library_open_index(active[0].index);
+            }
+        }
+        page.state.chart_library_pie_options_no_click = {
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    display: false
+                },
+                tooltip: {
+                    backgroundColor: root_bg_col,
+                    titleColor: text_primary_col,
+                    bodyColor: text_primary_col,
+                    padding: 7,
+                    cornerRadius: 10,
+                    caretSize: 0
+                }
+            }
+        }
+
+        page.state.chart_library_bar_options = {
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    display: false
+                },
+                tooltip: {
+                    backgroundColor: root_bg_col,
+                    titleColor: text_primary_col,
+                    bodyColor: text_primary_col,
+                    padding: 7,
+                    cornerRadius: 10,
+                    caretSize: 0
+                }
+            },
+            onClick: (e, active, chart) => {
+                //console.info(active[0].index);
+                bleh_glacier_library_open_index(active[0].index);
+            }
+        }
+        page.state.chart_library_bar_options_no_click = {
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    display: false
+                },
+                tooltip: {
+                    backgroundColor: root_bg_col,
+                    titleColor: text_primary_col,
+                    bodyColor: text_primary_col,
+                    padding: 7,
+                    cornerRadius: 10,
+                    caretSize: 0
+                }
+            }
+        }
     }
 
     // save a setting
@@ -4116,9 +4488,16 @@ let has_prompted_for_update = false;
         // save to settings
         localStorage.setItem('bleh', JSON.stringify(settings));
 
+        load_chart_colours();
+
         // trigger re-flow of chart
         if ((page.type == 'artist' || page.type == 'album' || page.type == 'track') && page.subpage == 'overview')
             bleh_music_page_charts();
+
+        if (page.type == 'user' && page.subpage.startsWith('library')) {
+            bleh_glacier_date_graph_generate();
+            bleh_glacier_insights();
+        }
     }
 
     unsafeWindow.change_theme_from_settings = function(theme) {
@@ -4147,9 +4526,16 @@ let has_prompted_for_update = false;
         // save to settings
         localStorage.setItem('bleh', JSON.stringify(settings));
 
+        load_chart_colours();
+
         // trigger re-flow of chart
         if ((page.type == 'artist' || page.type == 'album' || page.type == 'track') && page.subpage == 'overview')
             bleh_music_page_charts();
+
+        if (page.type == 'user' && page.subpage.startsWith('library')) {
+            bleh_glacier_date_graph_generate();
+            bleh_glacier_insights();
+        }
     }
 
 
@@ -5020,8 +5406,11 @@ let has_prompted_for_update = false;
 
     // general health
     function checkup_page_structure(is_subpage = false, header = null) {
-        document.body.style.removeProperty('--hue-album');
-        document.body.style.removeProperty('--sat-album');
+        if (document.body.style.getPropertyValue('--hue-album')) {
+            document.body.style.removeProperty('--hue-album');
+            document.body.style.removeProperty('--sat-album');
+            load_chart_colours();
+        }
 
         let params = new URLSearchParams(document.location.search);
         page.requested.tab = params.get('tab');
@@ -5275,7 +5664,7 @@ let has_prompted_for_update = false;
 
             let beta = document.createElement('span');
             beta.classList.add('new-badge', 'beta-badge');
-            beta.textContent = trans[lang].settings.beta;
+            beta.textContent = trans[lang].settings.new;
 
             tab.appendChild(beta);
         }
@@ -5305,6 +5694,8 @@ let has_prompted_for_update = false;
                 recent_activity_section.innerHTML = (`
                     <h2>${trans[lang].activities.name}</h2>
                 `);
+
+                load_activities();
 
                 // we want to show in date order from latest to oldest down
                 // but .reverse() is destructive, so we copy first
@@ -6006,10 +6397,10 @@ let has_prompted_for_update = false;
         view_buttons.innerHTML = (`
             <div class="view-buttons">
                 <button class="btn view-item" id="toggle-list_view-1" data-toggle="list_view" data-toggle-value="1" onclick="_update_item('list_view', 1)">
-                    Grid
+                    ${trans[lang].glacier.view.grid}
                 </button>
                 <button class="btn view-item" id="toggle-list_view-0" data-toggle="list_view" data-toggle-value="0" onclick="_update_item('list_view', 0)">
-                    List
+                    ${trans[lang].glacier.view.list}
                 </button>
             </div>
         `);
@@ -6193,7 +6584,7 @@ let has_prompted_for_update = false;
                     </div>
                     <div class="info">
                         <h5 class="title ${(cute.includes(name)) ? 'bleh--name-is-cute-less' : ''}">${name}</h5>
-                        <p class="descriptor">Top Badge</p>
+                        <p class="descriptor">${trans[lang].profile.top_badge}</p>
                         <p class="badge user-status--bleh-${this_badge.type} user-status--bleh-user-${name}" data-badge-type="${this_badge.type}" data-badge-user="${name}">${this_badge.name}</p>
                     </div>
                 `),
@@ -6235,7 +6626,7 @@ let has_prompted_for_update = false;
                         </div>
                         <div class="info">
                             <h5 class="title ${(cute.includes(name)) ? 'bleh--name-is-cute-less' : ''}">${name}</h5>
-                            <p class="descriptor">Top Badge</p>
+                            <p class="descriptor">${trans[lang].profile.top_badge}</p>
                             <p class="badge ${pre_existing_badge.classList[1]}">${avatar.getAttribute('title')}</p>
                         </div>
                     `),
@@ -6263,6 +6654,45 @@ let has_prompted_for_update = false;
     }
 
     function music_grids() {
+        if (page.structure.main == null)
+            return;
+
+        let insights = {
+            artist: {
+                display: false,
+                values: [],
+                labels: [],
+                highest: {
+                    value: 0,
+                    label: '',
+                    link: '',
+                    img: ''
+                }
+            },
+            album: {
+                display: false,
+                values: [],
+                labels: [],
+                highest: {
+                    value: 0,
+                    label: '',
+                    link: '',
+                    img: ''
+                }
+            },
+            track: {
+                display: false,
+                values: [],
+                labels: [],
+                highest: {
+                    value: 0,
+                    label: '',
+                    link: '',
+                    img: ''
+                }
+            }
+        };
+
         let grids = page.structure.main.querySelectorAll('.grid-items-item:not([data-bleh-music-grids])');
         grids.forEach((grid) => {
             let is_loading = (grid.querySelector('.grid-items-empty-inner') != null);
@@ -6362,6 +6792,20 @@ let has_prompted_for_update = false;
                 if (is_album)
                     plays_elem.textContent = plays.toLocaleString(lang);
 
+                if (!is_album) {
+                    insights.artist.display = true;
+                    insights.artist.values.push(plays);
+
+                    if (plays > insights.artist.highest.value)
+                        insights.artist.highest.value = plays;
+                } else {
+                    insights.album.display = true;
+                    insights.album.values.push(plays);
+
+                    if (plays > insights.album.highest.value)
+                        insights.album.highest.value = plays;
+                }
+
                 if (page.type == 'search' || page.type == 'tag')
                     plays_elem.classList.add('grid-item-listeners');
 
@@ -6370,7 +6814,7 @@ let has_prompted_for_update = false;
                         !plays_elem.getAttribute('href')
                         .includes('?from=') &&
                         (!plays_elem.getAttribute('href')
-                        .includes('?date_preset=') || plays_elem.getAttribute('href').endsWith('?date_preset=ALL'))
+                        .includes('?date_preset=') || plays_elem.getAttribute('href').endsWith('?date_preset=ALL') || plays_elem.getAttribute('href').endsWith('?date_preset=null'))
                     ) {
                         let parsed_scrobble_as_rank = parse_scrobbles_as_rank(plays);
 
@@ -6386,6 +6830,7 @@ let has_prompted_for_update = false;
 
             if (!is_album) {
                 name.textContent = correct_artist(name.textContent.trim());
+                insights.artist.labels.push(name.textContent);
             } else {
                 let artist = grid.querySelector('.grid-items-item-aux-block');
                 if (artist == null)
@@ -6394,8 +6839,12 @@ let has_prompted_for_update = false;
                 artist.textContent = correct_artist(artist.textContent.trim());
 
                 name.textContent = correct_item_by_artist(name.textContent.trim(), artist.textContent.trim());
+                insights.album.labels.push(name.textContent);
             }
         });
+
+        if (page.subpage.startsWith('library'))
+            bleh_glacier_insights(insights);
     }
 
     function patch_artist_ranks_in_list_view(track) {
@@ -6405,7 +6854,10 @@ let has_prompted_for_update = false;
             return;
 
         let count_bar_link = count_bar.querySelector('.chartlist-count-bar-link');
-        if (count_bar_link.getAttribute('href').endsWith('DAYS'))
+        if (count_bar_link.getAttribute('href')
+            .includes('?from=') ||
+            (count_bar_link.getAttribute('href')
+            .includes('?date_preset=') && !count_bar_link.getAttribute('href').endsWith('?date_preset=ALL') && !count_bar_link.getAttribute('href').endsWith('?date_preset=null')))
             return;
 
         let count = clean_number(count_bar.querySelector('.chartlist-count-bar-value').textContent.trim().replace(' scrobbles',''));
@@ -8198,6 +8650,20 @@ let has_prompted_for_update = false;
                         </div>
                     </div>
                     <div class="sep"></div>
+                    <h4>${trans[lang].glacier.name}</h4>
+                    <div class="toggle-container" id="container-glacier_library_graphs" onclick="_update_item('glacier_library_graphs')">
+                        <button class="btn reset" onclick="_reset_item('glacier_library_graphs')">${trans[lang].settings.reset}</button>
+                        <div class="heading">
+                            <h5>${trans[lang].glacier.option.name}</h5>
+                            <p>${trans[lang].glacier.option.bio}</p>
+                        </div>
+                        <div class="toggle-wrap">
+                            <button class="toggle" id="toggle-glacier_library_graphs" aria-checked="true" type="button">
+                                <div class="dot"></div>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="sep"></div>
                     <h4>${trans[lang].settings.music.profile_shortcut.name}</h4>
                     <p>${trans[lang].settings.music.profile_shortcut.bio}</p>
                     <div class="text-container" id="container-profile_shortcut">
@@ -8700,9 +9166,9 @@ let has_prompted_for_update = false;
             reset_item(item);
     }
 
-    function refresh_all() {
+    function refresh_all(search = document) {
         for (let item in settings_base)
-            update_item(item, settings[item], false);
+            update_item(item, settings[item], false, search);
     }
 
     function reset_item(item) {
@@ -8728,7 +9194,7 @@ let has_prompted_for_update = false;
         update_item(item, value);
     }
 
-    function update_item(item, value, modify=true) {
+    function update_item(item, value, modify=true, search = document) {
         try {
         // is this a new value?
         let new_value = false;
@@ -8741,6 +9207,9 @@ let has_prompted_for_update = false;
 
         if (settings_base[item].type == 'slider' && modify)
             settings[item] = value;
+
+        if (!modify)
+            console.info(item, value, modify);
 
         // determine interactable text colour based on --hue & --lit
         if (item == 'hue' || item == 'lit') {
@@ -8795,7 +9264,7 @@ let has_prompted_for_update = false;
         } else if (settings_base[item].type == 'toggle') {
             if (settings[item] == settings_base[item].values[0] && modify) {
                 settings[item] = settings_base[item].values[1];
-                document.getElementById(`toggle-${item}`).setAttribute('aria-checked',false);
+                search.querySelector(`#toggle-${item}`).setAttribute('aria-checked',false);
 
                 // save setting into body
                 document.body.style.setProperty(`--${item}`,settings_base[item].values[1]);
@@ -8803,7 +9272,7 @@ let has_prompted_for_update = false;
             } else if (modify) {
                 settings[item] = settings_base[item].values[0];
                 console.log(`toggle-${item}`);
-                document.getElementById(`toggle-${item}`).setAttribute('aria-checked',true);
+                search.querySelector(`#toggle-${item}`).setAttribute('aria-checked',true);
 
 
                 if (item == 'dev') {
@@ -8833,9 +9302,9 @@ let has_prompted_for_update = false;
             } else {
                 // dont modify, just show
                 if (settings[item] == settings_base[item].values[0]) {
-                    document.getElementById(`toggle-${item}`).setAttribute('aria-checked',true);
+                    search.querySelector(`#toggle-${item}`).setAttribute('aria-checked',true);
                 } else {
-                    document.getElementById(`toggle-${item}`).setAttribute('aria-checked',false);
+                    search.querySelector(`#toggle-${item}`).setAttribute('aria-checked',false);
                 }
             }
         } else if (settings_base[item].type == 'options') {
@@ -8855,6 +9324,11 @@ let has_prompted_for_update = false;
                 // save setting into body
                 document.body.style.setProperty(`--${item}`, value);
                 document.documentElement.setAttribute(`data-bleh--${item}`, value);
+
+
+                // re-flow chart
+                if (item == 'chart_view' && page.type == 'user' && page.subpage.startsWith('library'))
+                    bleh_glacier_date_graph_generate();
             } else {
                 // dont modify, just show
                 if (settings[item] == value) {
@@ -9110,6 +9584,7 @@ let has_prompted_for_update = false;
     function dialog({
         id = '',
         title = null,
+        subtitle = null,
         body = document.createElement('div').innerHTML,
         dismiss = true,
         type = '',
@@ -9122,6 +9597,7 @@ let has_prompted_for_update = false;
         log(`creating ${id}`, 'window', 'info', {
             id: id,
             title: title,
+            subtitle: subtitle,
             body: body,
             dismiss: dismiss,
             type: type,
@@ -9168,6 +9644,7 @@ let has_prompted_for_update = false;
             modal_title.classList.add('bleh-modal-title');
             modal_title.innerHTML = (`
                 <h1>${title}</h1>
+                ${(subtitle != null) ? `<p class="bleh-modal-subtitle">${subtitle}</p>` : ''}
             `);
 
             modal.appendChild(modal_title);
@@ -9484,7 +9961,7 @@ let has_prompted_for_update = false;
     // reset settings
     unsafeWindow._reset_settings = function() {
         dialog({
-            id: 'export_settings',
+            id: 'reset_settings',
             title: trans[lang].settings.actions.export.modals.initial.name,
             body: (`
                 <p class="alert alert-warning">${trans[lang].settings.actions.reset.modals.initial.alert}</p>
@@ -9648,6 +10125,42 @@ let has_prompted_for_update = false;
 
         let tracklists = page.structure.main.querySelectorAll('.chartlist:not(.chartlist__placeholder)');
 
+        let insights = {
+            artist: {
+                display: false,
+                values: [],
+                labels: [],
+                highest: {
+                    value: 0,
+                    label: '',
+                    link: '',
+                    img: ''
+                }
+            },
+            album: {
+                display: false,
+                values: [],
+                labels: [],
+                highest: {
+                    value: 0,
+                    label: '',
+                    link: '',
+                    img: ''
+                }
+            },
+            track: {
+                display: false,
+                values: [],
+                labels: [],
+                highest: {
+                    value: 0,
+                    label: '',
+                    link: '',
+                    img: ''
+                }
+            }
+        };
+
         tracklists.forEach((tracklist) => {
             if (tracklist == null)
                 return;
@@ -9662,8 +10175,13 @@ let has_prompted_for_update = false;
 
             let tracks = tracklist.querySelectorAll('.chartlist-row:not(.chartlist__placeholder-row)');
 
+            // we dont show "from this album" on these pages
+            let is_library_track_page = (page.subpage == 'library_track_overview');
+
             tracks.forEach((track => {
                 console.log('track', track);
+                if (track.getAttribute('data-track-type'))
+                    return;
 
                 let bla = document.createElement('div');
                 bla.classList.add('kate-placeholder');
@@ -9707,23 +10225,6 @@ let has_prompted_for_update = false;
                     register_menu(track, menu);
                 }
 
-                // image
-                let track_image = track.querySelector('.chartlist-image a.cover-art');
-
-                if (track_image == null) {
-                    // is there an avatar?
-                    track_image = track.querySelector('.chartlist-image > span');
-
-                    if (track_image != null) {
-                        // artist statistic
-                        if (track_image.classList.contains('avatar') && settings.colourful_counts) {
-                            patch_artist_ranks_in_list_view(track);
-                            return;
-                        }
-                    }
-                }
-                track.classList.add('chartlist-row--with-artist');
-
                 // duration
                 let track_timestamp = track.querySelector('.chartlist-timestamp span');
                 if (track_timestamp != undefined) {
@@ -9733,23 +10234,93 @@ let has_prompted_for_update = false;
                     track_timestamp.setAttribute('title', '');
                 }
 
+
+                let track_title = track.querySelector('.chartlist-name a:not(.offset-section-anchor)');
+
+                if (track_title == null)
+                    return;
+
+                let is_user = (track.querySelector('.chartlist-image .avatar') != null);
+                let is_artist = false;
+                if (is_user) {
+                    // is it really a user?
+                    let link = track_title.getAttribute('href');
+                    if (link.startsWith(`${root}music/`)) {
+                        is_user = false;
+                        is_artist = true;
+                    }
+                }
+
+                if (is_user) {
+                    track.setAttribute('data-track-type', 'user');
+
+                    if (settings.colourful_counts)
+                        patch_artist_ranks_in_list_view(track);
+
+                    return;
+                }
+
+                if (is_artist) {
+                    track.setAttribute('data-track-type', 'artist');
+
+                    if (settings.colourful_counts)
+                        patch_artist_ranks_in_list_view(track);
+
+                    if (settings.corrections) {
+                        track_title.textContent = correct_artist(track_title.getAttribute('title'));
+                    }
+
+                    insights.artist.display = true;
+                    let bar = track.querySelector('.chartlist-count-bar-slug');
+                    let value = parseInt(bar.getAttribute('data-stat-value'));
+                    insights.artist.values.push(value);
+
+                    if (value > insights.artist.highest.value)
+                        insights.artist.highest.value = value;
+
+                    log(`pushed insight artist label of ${track_title.textContent}`, 'glacier library', 'log');
+                    insights.artist.labels.push(track_title.textContent);
+
+                    return;
+                }
+
+                let is_album = track.hasAttribute('data-album-row');
+                if (is_album)
+                    track.classList.add('bleh--is-album');
+
+                let track_artist = return_artist_from_track(track_title.getAttribute('href'), is_album);
+                track.classList.add('chartlist-row--with-artist');
+
+                let bar = track.querySelector('.chartlist-count-bar-slug');
+                if (bar != null) {
+                    let value = parseInt(bar.getAttribute('data-stat-value'));
+
+                    if (is_album) {
+                        insights.album.display = true;
+                        insights.album.values.push(value);
+
+                        if (value > insights.album.highest.value)
+                            insights.album.highest.value = value;
+                    } else {
+                        insights.track.display = true;
+                        insights.track.values.push(value);
+
+                        if (value > insights.track.highest.value)
+                            insights.track.highest.value = value;
+                    }
+                }
+
                 if (settings.format_guest_features) {
-                    let track_title = track.querySelector('.chartlist-name a');
-
-                    if (track_title == undefined)
-                        return;
-
-                    let is_user = (track.querySelector('.chartlist-image .avatar') != null);
-                    let is_album = ((!is_user && track.querySelector('.chartlist-artist') == null && track.querySelector('.chartlist-love-button') == null) || track.classList.contains('bleh--is-album'));
-                    if (is_album)
-                        track.classList.add('bleh--is-album');
-
-                    let track_artist = return_artist_from_track(track_title.getAttribute('href'), is_album);
-
                     let formatted_title = name_includes(track_title.getAttribute('title'), track_artist);
                     console.log('formatted', formatted_title);
-                    let song_title = formatted_title[0];
-                    let song_tags = formatted_title[1];
+                    let song_title = track_title.getAttribute('title');
+                    let song_tags = {};
+                    if (formatted_title != undefined) {
+                        song_title = formatted_title[0];
+                        song_tags = formatted_title[1];
+                    }
+
+                    track_title.setAttribute('title', correct_item_by_artist(track_title.getAttribute('title'), track_artist));
 
                     // parse tags into text
                     let song_tags_text = '';
@@ -9787,23 +10358,20 @@ let has_prompted_for_update = false;
                         }
                     }
 
-                    // tooltip
-                    if (track_image == null || song_artist_element == null)
-                        return;
-
+                    let image = track.querySelector('.chartlist-image img');
                     tippy(track, {
                         theme: 'track',
                         content: (`
                             <div class="image">
                                 <div class="inner-image">
-                                    ${track_image.querySelector('img').outerHTML}
+                                    ${(image != null) ? image.outerHTML : '<img class="missing-track">'}
                                 </div>
                             </div>
                             <div class="info">
-                                <h5 class="title">${formatted_title[0]}</h5>
+                                <h5 class="title">${song_title}</h5>
                                 <p class="artist">${song_artist_element.innerHTML}</p>
                                 <div class="tags">${song_tags_text}</div>
-                                ${(is_album) ? '' : `<p class="album">${trans[lang].music.from_the_album.replace('{album}', correct_item_by_artist(track_image.querySelector('img').getAttribute('alt'), track_artist))}</p>`}
+                                ${(!is_library_track_page) ? (is_album) ? '' : `<p class="album">${trans[lang].music.from_the_album.replace('{album}', (image != null) ? correct_item_by_artist(image.getAttribute('alt'), track_artist) : page.name)}</p>` : ''}
                             </div>
                         `),
                         allowHTML: true,
@@ -9812,13 +10380,8 @@ let has_prompted_for_update = false;
                         hideOnClick: false*/
                     });
                 } else if (settings.corrections) {
-                    let track_title = track.querySelector('.chartlist-name a');
-
-                    if (track_title == undefined)
-                        return;
-
                     let song_artist_element = track.querySelector('.chartlist-artist a');
-                    if (song_artist_element != undefined) {
+                    if (song_artist_element != null) {
                         let corrected_title = correct_item_by_artist(track_title.textContent, song_artist_element.textContent);
                         track_title.textContent = corrected_title;
                         track_title.setAttribute('title', corrected_title);
@@ -9827,14 +10390,24 @@ let has_prompted_for_update = false;
                         song_artist_element.textContent = corrected_artist;
                         song_artist_element.setAttribute('title', corrected_artist);
                     } else {
-                        let track_artist = track_title.getAttribute('href').split('/')[2].replaceAll('+',' ');
                         let corrected_title = correct_item_by_artist(track_title.textContent, track_artist);
                         track_title.textContent = corrected_title;
                         track_title.setAttribute('title', corrected_title);
                     }
                 }
+
+                if (is_album) {
+                    log(`pushed insight album label of ${track_title.getAttribute('title')}`, 'glacier library', 'log');
+                    insights.album.labels.push(track_title.getAttribute('title'));
+                } else {
+                    log(`pushed insight track label of ${track_title.getAttribute('title')}`, 'glacier library', 'log');
+                    insights.track.labels.push(track_title.getAttribute('title'));
+                }
             }));
         });
+
+        if (page.subpage.startsWith('library'))
+            bleh_glacier_insights(insights);
     }
 
     function patch_header_title() {
@@ -10201,13 +10774,13 @@ let has_prompted_for_update = false;
         // way to call the function on the frontend
         fetch(window.location.href)
         .then(function(response) {
-            console.error('returned', response, response.text);
+            console.log('returned', response, response.text);
 
             return response.text();
         })
         .then(function(html) {
             let doc = new DOMParser().parseFromString(html, 'text/html');
-            console.error('DOC', doc);
+            console.log('DOC', doc);
 
             deliver_notif('refreshed tracks');
             panel.classList.add('has-refreshed');
@@ -12456,6 +13029,8 @@ let has_prompted_for_update = false;
                 document.body.style.setProperty('--sat-album', clamp_sat((hsl.s / 100) * 3));
 
                 log(`sourced hsl of (${hsl.h}, ${hsl.s}, ${hsl.l}) - using final value of (${hsl.h}, ${clamp_sat((hsl.s / 100) * 3)}, ${hsl.l})`, 'hue from album');
+
+                load_chart_colours();
             } catch(e) {
                 log('no cover present', 'hue from album');
             }
@@ -12796,75 +13371,17 @@ let has_prompted_for_update = false;
             values.push(value);
         });
 
-        // colours
-        let link_col = `hsl(${getComputedStyle(document.body).getPropertyValue('--l3-c')})`;
-        let link_h_col = getComputedStyle(document.body).getPropertyValue('--l3-c');
-        let link_bg_col = `hsla(${getComputedStyle(document.body).getPropertyValue('--h4')}, 20%)`;
-        let text_col = `hsl(${getComputedStyle(document.body).getPropertyValue('--c3')})`;
-        let axis_col = `hsla(${getComputedStyle(document.body).getPropertyValue('--b4')}, 40%)`;
-        let text_primary_col = `hsl(${getComputedStyle(document.body).getPropertyValue('--c2')})`;
-        let bg_col = `hsl(${getComputedStyle(document.body).getPropertyValue('--b5')})`;
-        let root_bg_col = `hsla(${getComputedStyle(document.body).getPropertyValue('--b6')}, 85%)`;
-        let hue = getComputedStyle(document.body).getPropertyValue('--hue');
-        let chart_colours = {
-            link_col: link_col,
-            link_h_col: link_h_col,
-            link_bg_col: link_bg_col,
-            text_col: text_col,
-            axis_col: axis_col,
-            text_primary_col: text_primary_col,
-            bg_col: bg_col,
-            root_bg_col: root_bg_col,
-            hue: hue
-        }
-
-        let chart_line_options = {
-            maintainAspectRatio: false,
-            plugins: {
-                legend: {
-                    display: false
-                },
-                tooltip: {
-                    backgroundColor: root_bg_col,
-                    titleColor: text_primary_col,
-                    bodyColor: text_primary_col,
-                    padding: 7,
-                    cornerRadius: 10,
-                    caretSize: 0
-                }
-            },
-            scales: {
-                x: {
-                    type: 'time',
-                    time: {
-                        unit: 'month',
-                        displayFormats: {
-                            month: 'MMM'
-                        },
-                        tooltipFormat: 'dddd, MMMM Do YYYY'
-                    },
-                    grid: {
-                        color: axis_col,
-                        display: false
-                    }
-                },
-                y: {
-                    display: false,
-                    grid: {
-                        display: false
-                    },
-                    suggestedMax: 10
-                }
-            }
-        }
-
         let scrobble_canvas_container = document.createElement('div');
         scrobble_canvas_container.classList.add('scrobble-canvas-container');
 
         let scrobble_canvas = document.createElement('canvas');
         scrobble_canvas.classList.add('scrobble-canvas');
 
-        Chart.defaults.color = text_col;
+        let gradient = scrobble_canvas.getContext('2d').createLinearGradient(0, 0, 0, 160);
+        gradient.addColorStop(0, page.state.chart_colours.link_bg_col);
+        gradient.addColorStop(1, page.state.chart_colours.link_bg_col_2);
+
+        Chart.defaults.color = page.state.chart_colours.text_col;
         Chart.defaults.font.family = 'Ubuntu Sans';
         let scrobble_chart = new Chart(scrobble_canvas.getContext('2d'), {
             type: 'line',
@@ -12873,15 +13390,15 @@ let has_prompted_for_update = false;
                 datasets: [{
                     data: values,
                     borderWidth: 2,
-                    backgroundColor: link_bg_col,
-                    borderColor: link_col,
+                    backgroundColor: gradient,
+                    borderColor: page.state.chart_colours.link_col,
                     fill: true,
                     pointRadius: 0,
                     pointHitRadius: 20,
                     tension: 0.1
                 }]
             },
-            options: chart_line_options
+            options: page.state.chart_line_options
         });
 
         scrobble_canvas_container.appendChild(scrobble_canvas);
@@ -13478,6 +13995,7 @@ let has_prompted_for_update = false;
         let window = dialog({
             id: 'changelog',
             title: trans[lang].changelog.name,
+            subtitle: trans[lang].changelog.subtitle.replace('{u}', `<a class="mention" href="${root}user/cutensilly">@cutensilly</a>`),
             body: (`
                 <div class="changelog-list"></div>
                 <div class="modal-footer">
@@ -13617,47 +14135,192 @@ let has_prompted_for_update = false;
         // date sidebar into its own panel
         let date_items = page.structure.side.querySelectorAll(':scope > :is(div, figure)');
 
+        //let date_button_panel = document.createElement('section');
+        //date_button_panel.classList.add('date-button-panel');
+
         let date_panel = document.createElement('section');
         date_panel.classList.add('date-panel');
+        date_panel.setAttribute('data-glacier-graphs', settings.glacier_library_graphs);
 
-        date_items.forEach((item) => {
+        date_items.forEach((item, index) => {
+            /*if (index == 0)
+                date_button_panel.appendChild(item);
+            else
+                date_panel.appendChild(item);*/
             date_panel.appendChild(item);
+
+            if (index == 0)
+                page.structure.glacier.selector = item;
         });
 
+        //page.structure.side.appendChild(date_button_panel);
         page.structure.side.appendChild(date_panel);
 
+        page.structure.glacier.date_panel = date_panel;
 
-        if (ff('glacier_library')) {
-            if (page.subpage == 'library_overview') {
-                // scrobbles tab
-                bleh_glacier_library_top(true);
-            }
+
+        if (!ff('glacier_library'))
+            return;
+
+
+        if (settings.glacier_library_graphs) {
+            let chart_view_selector = document.createElement('div');
+            chart_view_selector.classList.add('view-buttons', 'chart-view-selector', 'view-buttons-middle');
+            chart_view_selector.innerHTML = (`
+                <button class="btn view-item" id="toggle-chart_view-line" data-toggle="chart_view" data-toggle-value="line" onclick="_update_item('chart_view', 'line')">
+                    ${trans[lang].glacier.view.line}
+                </button>
+                <button class="btn view-item" id="toggle-chart_view-pie" data-toggle="chart_view" data-toggle-value="pie" onclick="_update_item('chart_view', 'pie')">
+                    ${trans[lang].glacier.view.pie}
+                </button>
+                <button class="btn view-item" id="toggle-chart_view-bar" data-toggle="chart_view" data-toggle-value="bar" onclick="_update_item('chart_view', 'bar')">
+                    ${trans[lang].glacier.view.bar}
+                </button>
+            `);
+
+            page.structure.glacier.selector.after(chart_view_selector);
+
+            refresh_all(chart_view_selector);
         }
+
+
+        //let picker_content = date_button_panel.querySelector('.date-range-picker-content');
+        bleh_glacier_library_date();
+
+
+        if (page.subpage == 'library_overview') {
+            // scrobbles tab
+            bleh_glacier_library_top(true);
+
+            page.state.glacier.insights = {
+                artist: {
+                    display: false,
+                    values: [],
+                    labels: [],
+                    highest: {
+                        value: 0,
+                        label: '',
+                        link: '',
+                        img: ''
+                    }
+                },
+                album: {
+                    display: false,
+                    values: [],
+                    labels: [],
+                    highest: {
+                        value: 0,
+                        label: '',
+                        link: '',
+                        img: ''
+                    }
+                },
+                track: {
+                    display: false,
+                    values: [],
+                    labels: [],
+                    highest: {
+                        value: 0,
+                        label: '',
+                        link: '',
+                        img: ''
+                    }
+                }
+            };
+        }
+
+        if (page.subpage == 'library_overview' || page.subpage.startsWith('library_artist_') ||
+        page.subpage.startsWith('library_album_') || page.subpage.startsWith('library_track_')) {
+            // new graph
+            log('refresh is now marked true', 'glacier library');
+            page.structure.glacier.refresh = true;
+            bleh_glacier_date_graph(true);
+        }
+
+        if (
+            page.subpage.startsWith('library_artist_') ||
+            page.subpage.startsWith('library_album_') ||
+            page.subpage.startsWith('library_track_')
+        ) {
+            bleh_glacier_library_focused();
+        }
+    }
+
+    function bleh_glacier_library_date() {
+        let picker_content = page.structure.glacier.date_panel.querySelector('.date-range-picker-content:not([data-glacier-library-date])');
+
+        if (picker_content == null)
+            return;
+        picker_content.setAttribute('data-glacier-library-date', 'true');
+
+        let picker_presets = picker_content.querySelector('.date-range-picker-presets-wrap');
+        let picker_col_2 = picker_content.querySelector('.date-range-picker-presets--col-2');
+
+        /*let all_time_preset = picker_col_2.querySelector('.date-range-picker-preset:last-child');
+        picker_presets.after(all_time_preset);*/
+
+        // this year
+        let new_wrap = document.createElement('div');
+        new_wrap.classList.add('date-range-picker-presets-wrap');
+
+        let new_presets = document.createElement('ul');
+        new_presets.classList.add('date-range-picker-presets', 'date-range-picker-presets-wide');
+
+        let current_year = new Date().getFullYear();
+
+        let this_year = document.createElement('div');
+        this_year.classList.add('date-range-picker-preset', 'date-range-picker-preset-custom', 'date-range-picker-preset-this-year');
+        this_year.innerHTML = (`
+            <a href="${window.location.href.replace(window.location.search, '')}?from=${current_year}-01-01&rangetype=year">
+                ${current_year}<span class="new-badge">${trans[lang].settings.new}</span>
+            </a>
+        `);
+        //picker_col_2.appendChild(this_year);
+        new_wrap.appendChild(new_presets);
+        new_presets.appendChild(this_year);
+        picker_presets.after(new_wrap);
+
+        let params = new URLSearchParams(document.location.search);
+        page.requested.from = params.get('from');
+        page.requested.to = params.get('to');
+        page.requested.rangetype = params.get('rangetype');
+
+        if (page.requested.from == `${current_year}-01-01` && (page.requested.to == `${current_year}-12-31` || page.requested.rangetype == 'year'))
+            this_year.classList.add('date-range-picker-preset--selected');
     }
 
     // can update at any time!!
     function bleh_glacier_library() {
-        if (!ff('glacier_library'))
-            return;
-
-        log('checking!', 'glacier library');
-
         // table
         bleh_glacier_library_table();
 
         // top header info
         bleh_glacier_library_top();
+
+        // new graph
+        bleh_glacier_date_graph();
     }
 
     function bleh_glacier_library_table() {
-        let table = page.structure.side.querySelector('.scrobble-table');
-        page.structure.glacier.refresh = false;
+        if (!ff('glacier_library'))
+            return;
+
+        let table = page.structure.glacier.date_panel.querySelector('.highcharts-root');
 
         if (table == null)
             return;
 
-        if (table.classList.contains('loading')) {
-            table.removeAttribute('data-glacier-library-table');
+        console.log('glacier library', table);
+        log('refresh is now marked false (table log)', 'glacier library');
+        page.structure.glacier.refresh = false;
+
+        let current_view = page.structure.glacier.date_panel.querySelector('.date-range-picker-button-inner');
+
+        if (current_view == null) {
+            console.log('glacier library current view', page.structure.glacier.date_panel.innerHTML);
+            log('returned as current view is null', 'glacier library');
+            log('refresh is now marked true', 'glacier library');
+            page.structure.glacier.refresh = true;
             return;
         }
 
@@ -13666,10 +14329,15 @@ let has_prompted_for_update = false;
         table.setAttribute('data-glacier-library-table', 'true');
 
         page.structure.glacier.table = table;
+        log('refresh is now marked true (table found)', 'glacier library');
         page.structure.glacier.refresh = true;
+        log('pending refresh', 'glacier library');
     }
 
     function bleh_glacier_library_top(static_page = false) {
+        if (!ff('glacier_library'))
+            return;
+
         let legacy_top_header;
         if (!static_page)
             legacy_top_header = page.structure.main.querySelector('.library-top');
@@ -13678,6 +14346,8 @@ let has_prompted_for_update = false;
 
         if (legacy_top_header == null)
             return;
+
+        legacy_top_header.classList.add('glacier-legacy-top-header');
 
         if (!static_page) {
             if (legacy_top_header.style.getPropertyValue('display')) {
@@ -13694,30 +14364,962 @@ let has_prompted_for_update = false;
 
         let metadata = legacy_top_header.querySelectorAll('.metadata-item');
 
+        let first_run = false;
         let glacier_top = page.structure.glacier.top;
-        if (glacier_top == null)
+        if (glacier_top == null || !page.structure.main.contains(glacier_top))
+            first_run = true;
+
+        if (first_run) {
             glacier_top = document.createElement('section');
-        else
-            glacier_top.innerHTML = '';
-        glacier_top.classList.add('glacier-library-top');
+            glacier_top.classList.add('glacier-library-top');
+        }
 
-        let glacier_meta = document.createElement('div');
-        glacier_meta.classList.add('glacier-library-metadata');
 
-        metadata.forEach((meta) => {
+        // meta
+        let glacier_meta;
+        if (first_run) {
+            glacier_meta = document.createElement('div');
+            glacier_meta.classList.add('glacier-library-metadata');
+        } else {
+            glacier_meta = page.structure.glacier.top.querySelector('.glacier-library-metadata');
+            glacier_meta.innerHTML = '';
+        }
+
+        metadata.forEach((meta, index) => {
+            let text = meta.querySelector('.metadata-title').textContent;
+
+            if (page.subpage == 'library_overview') {
+                if (index == 1)
+                    text = trans[lang].glacier.meta.average;
+            } else if (page.subpage == 'library_artists') {
+                text = trans[lang].glacier.meta.artists;
+            } else if (page.subpage == 'library_albums') {
+                text = trans[lang].glacier.meta.albums;
+            } else if (page.subpage == 'library_tracks') {
+                text = trans[lang].glacier.meta.tracks;
+            }
+
             let glacier_meta_item = document.createElement('div');
             glacier_meta_item.classList.add('glacier-library-metadata-item');
             glacier_meta_item.innerHTML = (`
-                <div class="sub-text">${meta.querySelector('.metadata-title').textContent}</div>
+                <div class="sub-text">${text}</div>
                 <div class="glacier-library-metadata-item-value">${meta.querySelector('.metadata-display').textContent}</div>
             `);
 
             glacier_meta.appendChild(glacier_meta_item);
         });
 
-        glacier_top.appendChild(glacier_meta);
+        if (first_run)
+            glacier_top.appendChild(glacier_meta);
+
+        if (!first_run)
+            return;
+
+
+        // buttons
+        let top_wrap = page.structure.main.querySelector('.library-top-wrap');
+
+        let view_buttons = document.createElement('div');
+        view_buttons.classList.add('view-buttons', 'glacier-library-buttons');
+
+        if (!static_page) {
+            let sort = legacy_top_header.querySelector('.library-sort');
+            let sort_button;
+            if (sort != null) {
+                sort_button = sort.querySelector('.dropdown-menu-clickable-button');
+
+                if (sort_button != null) {
+                    sort_button.classList.add('btn', 'view-item', 'glacier-library-button');
+                    let sort_menu = sort.querySelector('.dropdown-menu-clickable');
+
+                    view_buttons.appendChild(sort_button);
+                    view_buttons.appendChild(sort_menu);
+                }
+            }
+        }
+
+        if (!static_page && page.subpage != 'library_tracks') {
+            let format_button = document.createElement('button');
+            format_button.classList.add('btn', 'view-item', 'glacier-library-button', 'glacier-view-button');
+            format_button.setAttribute('onclick', '_update_glacier_view()');
+            page.structure.glacier.format = format_button;
+
+            if (top_wrap.getAttribute('data-current-format') == 'grid') {
+                format_button.setAttribute('data-glacier-view', 'grid');
+                format_button.textContent = trans[lang].glacier.view.grid;
+            } else {
+                format_button.setAttribute('data-glacier-view', 'list');
+                format_button.textContent = trans[lang].glacier.view.list;
+            }
+
+            view_buttons.appendChild(format_button);
+        }
+
+        if (!static_page) {
+            let listen_divider = document.createElement('div');
+            listen_divider.classList.add('listen-divider');
+            view_buttons.appendChild(listen_divider);
+        }
+
+        let configure_button = document.createElement('button');
+        configure_button.classList.add('btn', 'view-item', 'glacier-library-button', 'glacier-configure-button', 'panel-settings-button');
+        configure_button.textContent = trans[lang].settings.configure;
+
+        tippy(configure_button, {
+            content: trans[lang].settings.configure
+        });
+
+        tippy(configure_button, {
+            theme: 'window',
+            content: (`
+                <div class="dialog-settings">
+                    <div class="toggle-container" id="container-format_guest_features" onclick="_update_item('format_guest_features')">
+                        <button class="btn reset" onclick="_reset_item('format_guest_features')">${trans[lang].settings.reset}</button>
+                        <div class="heading">
+                            <h5>${trans[lang].settings.corrections.format_guest_features.name}</h5>
+                            <p>${trans[lang].settings.corrections.format_guest_features.bio}</p>
+                        </div>
+                        <div class="toggle-wrap">
+                            <button class="toggle" id="toggle-format_guest_features" aria-checked="true">
+                                <div class="dot"></div>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="toggle-container hide-if-format-guest-disabled" id="container-show_guest_features" onclick="_update_item('show_guest_features')">
+                        <button class="btn reset" onclick="_reset_item('show_guest_features')">${trans[lang].settings.reset}</button>
+                        <div class="heading">
+                            <h5>${trans[lang].settings.corrections.show_guest_features.name}</h5>
+                            <p>${trans[lang].settings.corrections.show_guest_features.bio}</p>
+                        </div>
+                        <div class="toggle-wrap">
+                            <button class="toggle" id="toggle-show_guest_features" aria-checked="true" type="button">
+                                <div class="dot"></div>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="toggle-container" id="container-stacked_chartlist_info" onclick="_update_item('stacked_chartlist_info')">
+                        <button class="btn reset" onclick="_reset_item('stacked_chartlist_info')">${trans[lang].settings.reset}</button>
+                        <div class="heading">
+                            <h5>${trans[lang].settings.corrections.stacked_chartlist_info.name}</h5>
+                            <p>${trans[lang].settings.corrections.stacked_chartlist_info.bio}</p>
+                        </div>
+                        <div class="toggle-wrap">
+                            <button class="toggle" id="toggle-stacked_chartlist_info" aria-checked="true" type="button">
+                                <div class="dot"></div>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="sep"></div>
+                    <div class="toggle-container" id="container-glacier_library_graphs" onclick="_update_item('glacier_library_graphs')">
+                        <button class="btn reset" onclick="_reset_item('glacier_library_graphs')">${trans[lang].settings.reset}</button>
+                        <div class="heading">
+                            <h5>${trans[lang].glacier.option.name}</h5>
+                            <p>${trans[lang].glacier.option.bio}</p>
+                        </div>
+                        <div class="toggle-wrap">
+                            <button class="toggle" id="toggle-glacier_library_graphs" aria-checked="true" type="button">
+                                <div class="dot"></div>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `),
+            allowHTML: true,
+            placement: 'bottom',
+            interactive: true,
+            interactiveBorder: 10,
+            trigger: 'click',
+
+            onShow(instance) {
+                refresh_all(instance.popper);
+            }
+        });
+
+        view_buttons.appendChild(configure_button);
+
+        glacier_top.appendChild(view_buttons);
+
+
         page.structure.glacier.top = glacier_top;
         page.structure.main.insertBefore(glacier_top, page.structure.main.firstElementChild);
+    }
+
+    unsafeWindow._update_glacier_view = function() {
+        let format = page.structure.main.querySelector('.library-view-button');
+        if (format == null)
+            return;
+
+        format.click();
+
+        if (format.getAttribute('href') && format.getAttribute('href').endsWith('reset')) {
+            page.structure.glacier.format.setAttribute('data-glacier-view', 'list');
+            page.structure.glacier.format.textContent = trans[lang].glacier.view.list;
+        } else {
+            page.structure.glacier.format.setAttribute('data-glacier-view', 'grid');
+            page.structure.glacier.format.textContent = trans[lang].glacier.view.grid;
+        }
+    }
+
+
+    function bleh_glacier_date_graph(static_page = false, own_table = null) {
+        if (!page.structure.glacier.refresh)
+            return;
+
+        if (!settings.glacier_library_graphs)
+            return;
+
+        log('reviewing graph situation', 'glacier library');
+
+        if (own_table != null) {
+            log('table has been passed to function (from network request presumably?)', 'glacier library', 'info', own_table);
+        } else {
+            log('no table has been passed, must source ourselves', 'glacier library');
+        }
+
+        /*let scrobble_chart_wrap = page.structure.side.querySelector('.scrobble-table:not([data-glacier-date-graph])');
+
+        if (scrobble_chart_wrap == null)
+            return;
+
+        scrobble_chart_wrap.setAttribute('data-glacier-date-graph', 'true');*/
+
+        bleh_glacier_library_date();
+
+        let current_view = page.structure.glacier.date_panel.querySelector('.date-range-picker-button-inner');
+        if (current_view == null)
+            return;
+
+        if (current_view.textContent.trim() == new Date().getFullYear()) {
+            current_view.classList.add('date-range-new');
+
+            let new_badge = document.createElement('span');
+            new_badge.classList.add('new-badge');
+            new_badge.textContent = trans[lang].settings.new;
+
+            current_view.appendChild(new_badge);
+        }
+
+        current_view = current_view.textContent.trim();
+
+        let tab_matches;
+        if ((page.subpage == 'library_overview' || page.subpage == 'library_artists' || page.subpage == 'library_albums' || page.subpage == 'library_tracks') &&
+            (page.state.glacier.current_tab == 'library_overview' || page.state.glacier.current_tab == 'library_artists' || page.state.glacier.current_tab == 'library_albums' || page.state.glacier.current_tab == 'library_tracks'))
+            tab_matches = true;
+
+        if (page.state.glacier.current_view == current_view && own_table == null && tab_matches) {
+            // re-use old values as view matches
+            bleh_glacier_date_graph_generate();
+            log('refresh is now marked false', 'glacier library');
+            page.structure.glacier.refresh = false;
+
+            log(`returned as view (${current_view}) matches ${page.state.glacier.current_view}. last tab was ${page.state.glacier.current_tab} and current tab is ${page.subpage}`, 'glacier library');
+            return;
+        }
+
+        page.state.glacier.current_view = current_view;
+
+        let scrobble_chart_content = page.structure.side.querySelector('#scrobble-chart-content');
+        if (scrobble_chart_content.getAttribute('data-highcharts-chart') && scrobble_chart_content.getAttribute('data-highcharts-chart') == '0') {
+            log('highchart registered', 'glacier library');
+            log('refresh is now marked false', 'glacier library');
+            page.structure.glacier.refresh = false;
+            return;
+        }
+
+        let scrobble_chart_wrap = page.structure.side.querySelector('.scrobble-table');
+
+        if (scrobble_chart_wrap == null)
+            return;
+
+        let scrobble_table;
+        if (own_table != null)
+            scrobble_table = own_table;
+        else
+            scrobble_table = scrobble_chart_wrap.querySelector('.table');
+
+        if (scrobble_table == null) {
+            // lets see if we can make this request ourselves
+            let request_url;
+            if (window.location.search == '')
+                request_url = `${window.location.href}/chart?ajax=1`;
+            else
+                request_url = window.location.href.replace(window.location.search, `/chart${window.location.search}&ajax=1`);
+            bleh_glacier_library_request(request_url);
+            /*console.info(page.structure.glacier.table);
+
+            let series = page.structure.glacier.table.querySelectorAll('.highcharts-bar-series a');
+
+            // we fake-hover the first bar to get the relationship
+            // between height and real value
+            let subject = series[0];
+            let bar = subject.querySelector('rect');
+            let height = bar.getAttribute('height');
+
+            setTimeout(function() {
+                subject.dispatchEvent(new Event('mouseover'));
+            }, 300);
+
+            subject.addEventListener('mouseover', e => {
+                console.info(e);
+            });*/
+
+
+            return;
+        }
+
+        let chart_type = scrobble_table.getAttribute('data-bucket-size');
+        let entries = scrobble_table.querySelectorAll('tbody tr');
+
+        page.state.glacier.labels = [];
+        page.state.glacier.links = [];
+        page.state.glacier.values = [];
+
+        let values_not_empty = 0;
+
+        entries.forEach((entry) => {
+            let period = entry.querySelector('.js-period a');
+            let value = entry.querySelector('.js-scrobbles').textContent.trim();
+
+            page.state.glacier.labels.push(period.textContent.trim());
+            page.state.glacier.links.push(period.getAttribute('href'));
+            page.state.glacier.values.push(value);
+
+            if (value != '0')
+                values_not_empty += 1;
+        });
+
+        if (values_not_empty == 0) {
+            log('graph cancelled as all values are 0', 'glacier library');
+            page.structure.glacier.refresh = false;
+            return;
+        }
+
+        scrobble_table.innerHTML = '';
+
+        bleh_glacier_date_graph_generate();
+
+        log('refresh is now marked false (finished generating)', 'glacier library');
+        page.structure.glacier.refresh = false;
+    }
+
+    function bleh_glacier_insights(insights = null) {
+        if (insights != null) {
+            if (page.subpage == 'library_artists') {
+                page.state.glacier.insights.album.display = false;
+                page.state.glacier.insights.track.display = false;
+            }
+            if (page.subpage == 'library_albums') {
+                page.state.glacier.insights.artist.display = false;
+                page.state.glacier.insights.track.display = false;
+            }
+            if (page.subpage == 'library_tracks') {
+                page.state.glacier.insights.artist.display = false;
+                page.state.glacier.insights.album.display = false;
+            }
+
+            for (let item in insights) {
+                log(`checking insights status of item ${item} - display of ${insights[item].display}`, 'glacier library', 'info', {checking: insights[item], global: page.state.glacier.insights[item]});
+                if (insights[item].display && JSON.stringify(insights[item]) != JSON.stringify(page.state.glacier.insights[item])) {
+                    log(`confirmed insights status of item ${item} - is different`, 'glacier library');
+                    page.state.glacier.insights[item] = insights[item];
+
+                    bleh_glacier_insights_generate(item, page.state.glacier.insights[item]);
+                }
+            }
+        } else {
+            for (let item in page.state.glacier.insights) {
+                if (page.state.glacier.insights[item].display)
+                    bleh_glacier_insights_generate(item, page.state.glacier.insights[item]);
+            }
+        }
+    }
+
+    function bleh_glacier_insights_generate(type, item) {
+        if (item.highest.value == 0)
+            return;
+
+        log(`requesting insights generator for ${type}`, 'glacier library', 'info', item);
+
+        let new_run = false;
+        let scrobble_insights_panel = page.structure.side.querySelector(`.scrobble-insights-panel[data-type="${type}"]`);
+        if (scrobble_insights_panel == null) {
+            scrobble_insights_panel = document.createElement('section');
+            scrobble_insights_panel.classList.add('scrobble-insights-panel');
+            scrobble_insights_panel.setAttribute('data-type', type);
+            new_run = true;
+        }
+        scrobble_insights_panel.innerHTML = `<h2>${trans[lang][type].plural}</h2>`;
+
+        let scrobble_canvas_container = document.createElement('div');
+        scrobble_canvas_container.classList.add('scrobble-insights-canvas-container');
+
+        let scrobble_canvas = document.createElement('canvas');
+        scrobble_canvas.classList.add('scrobble-insights-canvas');
+
+        Chart.defaults.color = page.state.chart_colours.text_col;
+        Chart.defaults.font.family = 'Ubuntu Sans';
+        if (settings.chart_insights_view == 'line') {
+            let gradient = scrobble_canvas.getContext('2d').createLinearGradient(0, 0, 0, 160);
+            try {
+                gradient.addColorStop(0, page.state.chart_colours.link_bg_col);
+                gradient.addColorStop(1, page.state.chart_colours.link_bg_col_2);
+            } catch(e) {
+                gradient = page.state.chart_colours.link_bg_col;
+            }
+
+            let scrobble_chart = new Chart(scrobble_canvas.getContext('2d'), {
+                type: 'line',
+                data: {
+                    labels: item.labels,
+                    datasets: [{
+                        data: item.values,
+                        borderWidth: 2,
+                        backgroundColor: gradient,
+                        borderColor: page.state.chart_colours.link_col,
+                        fill: true,
+                        pointRadius: 0,
+                        pointHitRadius: 20,
+                        tension: 0.1
+                    }]
+                },
+                options: page.state.chart_library_line_options_no_click
+            });
+        } else if (settings.chart_insights_view == 'pie') {
+            let scrobble_chart = new Chart(scrobble_canvas.getContext('2d'), {
+                type: 'pie',
+                data: {
+                    labels: item.labels,
+                    datasets: [{
+                        data: item.values,
+                        borderWidth: 2,
+                        backgroundColor: [
+                            `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, '360')})`,
+                            `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, '340')})`,
+                            `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, '320')})`,
+                            `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, '300')})`,
+                            `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, '280')})`,
+                            `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, '270')})`,
+                            `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, '255')})`,
+                            `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, '235')})`,
+                            `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, '220')})`,
+                            `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, '208')})`,
+                            `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, '200')})`,
+                            `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, '180')})`,
+                            `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, '160')})`,
+                            `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, '140')})`,
+                            `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, '120')})`,
+                            `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, '100')})`,
+                            `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, '80')})`,
+                            `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, '60')})`,
+                            `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, '40')})`,
+                            `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, '20')})`
+                        ],
+                        borderColor: page.state.chart_colours.bg_col,
+                        pointRadius: 0,
+                        pointHitRadius: 20,
+                        tension: 0.1
+                    }]
+                },
+                options: page.state.chart_library_pie_options_no_click
+            });
+        } else if (settings.chart_insights_view == 'bar') {
+            let scrobble_chart = new Chart(scrobble_canvas.getContext('2d'), {
+                type: 'bar',
+                data: {
+                    labels: item.labels,
+                    datasets: [{
+                        data: item.values,
+                        borderWidth: 0,
+                        backgroundColor: [
+                            `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, '360')})`,
+                            `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, '340')})`,
+                            `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, '320')})`,
+                            `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, '300')})`,
+                            `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, '280')})`,
+                            `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, '270')})`,
+                            `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, '255')})`,
+                            `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, '235')})`,
+                            `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, '220')})`,
+                            `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, '208')})`,
+                            `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, '200')})`,
+                            `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, '180')})`,
+                            `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, '160')})`,
+                            `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, '140')})`,
+                            `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, '120')})`,
+                            `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, '100')})`,
+                            `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, '80')})`,
+                            `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, '60')})`,
+                            `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, '40')})`,
+                            `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, '20')})`
+                        ],
+                        borderColor: page.state.chart_colours.bg_col,
+                        pointRadius: 0,
+                        pointHitRadius: 20,
+                        tension: 0.1,
+                        borderRadius: 9
+                    }]
+                },
+                options: page.state.chart_library_bar_options_no_click
+            });
+        }
+
+        scrobble_canvas_container.appendChild(scrobble_canvas);
+        scrobble_insights_panel.appendChild(scrobble_canvas_container);
+        if (new_run)
+            page.structure.side.appendChild(scrobble_insights_panel);
+    }
+
+    function bleh_glacier_library_open_index(index) {
+        window.location.href = page.state.glacier.links[index];
+    }
+
+
+    function bleh_glacier_library_request(request_url) {
+        log(`making our own request with ${request_url}`, 'glacier library');
+        console.info(page.structure.glacier.refresh);
+        page.structure.glacier.refresh = false;
+
+        page.structure.glacier.date_panel.classList.add('data-is-loading');
+
+        fetch(request_url)
+        .then(function(response) {
+            console.log('glacier library returned', response, response.text, response.status);
+
+            if (response.status != 200)
+                throw new Error;
+
+            return response.text();
+        })
+        .then(function(html) {
+            let doc = new DOMParser().parseFromString(html, 'text/html');
+            console.log('glacier library DOC', doc, doc.querySelector('.table'));
+
+            log('received response', 'glacier library');
+            log('refresh is now marked true', 'glacier library');
+            page.structure.glacier.refresh = true;
+
+            let table = doc.querySelector('.table');
+
+            if (table != null) {
+                bleh_glacier_date_graph(false, table);
+            } else {
+                log('table is null?', 'glacier library', 'error');
+                console.info('glacier library', doc.body.innerHTML);
+                console.info('glacier library', new DOMParser().parseFromString(doc.body.innerHTML, 'text/html'));
+                throw new Error;
+            }
+
+            page.structure.glacier.date_panel.classList.remove('data-is-loading');
+        });
+    }
+
+    function bleh_glacier_date_graph_generate() {
+        page.state.glacier.current_tab = page.subpage;
+        log('generating', 'glacier library', 'info', {
+            labels: page.state.glacier.labels,
+            links: page.state.glacier.links,
+            values: page.state.glacier.values
+        });
+
+        let new_run = false;
+        let scrobble_canvas_container = page.structure.glacier.date_panel.querySelector('.scrobble-canvas-container');
+        if (scrobble_canvas_container == null) {
+            scrobble_canvas_container = document.createElement('div');
+            scrobble_canvas_container.classList.add('scrobble-canvas-container');
+            new_run = true;
+        } else {
+            scrobble_canvas_container.innerHTML = '';
+        }
+
+        let scrobble_canvas = document.createElement('canvas');
+        scrobble_canvas.classList.add('scrobble-canvas');
+
+        Chart.defaults.color = page.state.chart_colours.text_col;
+        Chart.defaults.font.family = 'Ubuntu Sans';
+        if (settings.chart_view == 'line') {
+            let gradient = scrobble_canvas.getContext('2d').createLinearGradient(0, 0, 0, 160);
+            try {
+                gradient.addColorStop(0, page.state.chart_colours.link_bg_col);
+                gradient.addColorStop(1, page.state.chart_colours.link_bg_col_2);
+            } catch(e) {
+                gradient = page.state.chart_colours.link_bg_col;
+            }
+
+            let scrobble_chart = new Chart(scrobble_canvas.getContext('2d'), {
+                type: 'line',
+                data: {
+                    labels: page.state.glacier.labels,
+                    datasets: [{
+                        data: page.state.glacier.values,
+                        borderWidth: 2,
+                        backgroundColor: gradient,
+                        borderColor: page.state.chart_colours.link_col,
+                        fill: true,
+                        pointRadius: 0,
+                        pointHitRadius: 20,
+                        tension: 0.1
+                    }]
+                },
+                options: page.state.chart_library_line_options
+            });
+        } else if (settings.chart_view == 'pie') {
+            let scrobble_chart = new Chart(scrobble_canvas.getContext('2d'), {
+                type: 'pie',
+                data: {
+                    labels: page.state.glacier.labels,
+                    datasets: [{
+                        data: page.state.glacier.values,
+                        borderWidth: 2,
+                        backgroundColor: [
+                            `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, '360')})`,
+                            `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, '340')})`,
+                            `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, '320')})`,
+                            `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, '300')})`,
+                            `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, '280')})`,
+                            `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, '270')})`,
+                            `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, '255')})`,
+                            `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, '235')})`,
+                            `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, '220')})`,
+                            `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, '208')})`,
+                            `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, '200')})`,
+                            `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, '180')})`,
+                            `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, '160')})`,
+                            `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, '140')})`,
+                            `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, '120')})`,
+                            `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, '100')})`,
+                            `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, '80')})`,
+                            `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, '60')})`,
+                            `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, '40')})`,
+                            `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, '20')})`
+                        ],
+                        borderColor: page.state.chart_colours.bg_col,
+                        pointRadius: 0,
+                        pointHitRadius: 20,
+                        tension: 0.1
+                    }]
+                },
+                options: page.state.chart_library_pie_options
+            });
+        } else if (settings.chart_view == 'bar') {
+            let scrobble_chart = new Chart(scrobble_canvas.getContext('2d'), {
+                type: 'bar',
+                data: {
+                    labels: page.state.glacier.labels,
+                    datasets: [{
+                        data: page.state.glacier.values,
+                        borderWidth: 0,
+                        backgroundColor: [
+                            `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, '360')})`,
+                            `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, '340')})`,
+                            `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, '320')})`,
+                            `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, '300')})`,
+                            `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, '280')})`,
+                            `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, '270')})`,
+                            `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, '255')})`,
+                            `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, '235')})`,
+                            `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, '220')})`,
+                            `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, '208')})`,
+                            `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, '200')})`,
+                            `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, '180')})`,
+                            `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, '160')})`,
+                            `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, '140')})`,
+                            `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, '120')})`,
+                            `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, '100')})`,
+                            `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, '80')})`,
+                            `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, '60')})`,
+                            `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, '40')})`,
+                            `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, '20')})`
+                        ],
+                        borderColor: page.state.chart_colours.bg_col,
+                        pointRadius: 0,
+                        pointHitRadius: 20,
+                        tension: 0.1,
+                        borderRadius: 9
+                    }]
+                },
+                options: page.state.chart_library_bar_options
+            });
+        }
+
+        scrobble_canvas_container.appendChild(scrobble_canvas);
+        if (new_run)
+            page.structure.glacier.date_panel.appendChild(scrobble_canvas_container);
+    }
+
+
+    function bleh_glacier_library_focused() {
+        page.state.glacier.insights.artist = {
+            display: false,
+            values: [],
+            labels: [],
+            highest: {
+                value: 0,
+                label: '',
+                link: '',
+                img: ''
+            }
+        };
+
+        let legacy_header = page.structure.main.querySelector('.library-header');
+
+        let type;
+        if (page.subpage.startsWith('library_artist'))
+            type = 'artist';
+        else if (page.subpage.startsWith('library_album'))
+            type = 'album';
+        else if (page.subpage.startsWith('library_track'))
+            type = 'track';
+
+
+        let header_title = legacy_header.querySelector('.library-header-crumb'); // subpage
+        if (header_title == null)
+            header_title = legacy_header.querySelector('.library-header-title'); // main
+
+        let duration = header_title.querySelector('.library-header-title-duration');
+        if (duration != null)
+            header_title.removeChild(duration);
+
+        header_title = header_title.textContent.trim();
+
+        let artist = legacy_header.querySelector('.text-colour-link');
+        if (artist != null)
+            artist = artist.textContent.trim();
+
+        let image = legacy_header.querySelector('.library-header-image img');
+
+        let link = `${root}music/${sanitise(header_title)}`;
+        if (type == 'album')
+            link = `${root}music/${sanitise(artist)}/${sanitise(header_title)}`;
+        else if (type == 'track')
+            link = `${root}music/${sanitise(artist)}/_/${sanitise(header_title)}`;
+
+
+        let header = document.createElement('section');
+        header.classList.add('glacier-library-top', 'glacier-library-focused-header');
+
+        let upper_wrap = document.createElement('div');
+        upper_wrap.classList.add('glacier-library-top-upper');
+
+        let current_suffix = window.location.search;
+
+        let metadata = document.createElement('div');
+        metadata.classList.add('glacier-library-metadata');
+        metadata.innerHTML = (`
+            <div class="glacier-library-metadata-avatar">
+                ${image.outerHTML}
+            </div>
+            <div class="glacier-library-metadata-item">
+                <div class="sub-text">
+                    ${trans[lang][type].name}
+                </div>
+                <div class="glacier-library-metadata-item-value glacier-library-metadata-focus" data-type="${type}">
+                    <a href="${link}">${(type == 'artist') ? correct_artist(header_title) : correct_item_by_artist(header_title, artist)}</a>${(duration != null) ? ` <span class="glacier-library-track-duration">${duration.textContent}</span>` : ''}${(type != 'artist') ? trans[lang].glacier.by_artist.replace('{a}', `<a href="${root}user/${page.name}/library/music/+noredirect/${sanitise(artist)}${current_suffix}">${correct_artist(artist)}</a>`) : ''}
+                </div>
+            </div>
+        `);
+
+        upper_wrap.appendChild(metadata);
+        header.appendChild(upper_wrap);
+
+        let view_buttons = document.createElement('div');
+        view_buttons.classList.add('view-buttons', 'glacier-library-buttons');
+
+        let wrappers = legacy_header.querySelectorAll('.library-header-ctas > *');
+        wrappers.forEach((wrapper) => {
+            let button;
+
+            console.info('wrapper', wrapper);
+
+            if (wrapper.classList[0] == 'library-header-cta-item')
+                button = wrapper;
+            else
+                button = wrapper.querySelector('button');
+
+            console.info(wrapper, button);
+            button.classList.add('btn', 'view-item', 'glacier-library-button');
+
+            let tooltips = wrapper.querySelectorAll('.user-library-controls-tooltip');
+            tooltips.forEach((tooltip) => {
+                tooltip.parentElement.removeChild(tooltip);
+            });
+
+            view_buttons.appendChild(wrapper);
+
+            let action = button.getAttribute('data-analytics-action');
+            if (action) {
+                if (action == 'EditScrobbleOpen') {
+                    button.textContent = trans[lang].glacier.edit;
+                } else if (action == 'UnloveTrack' || action == 'LoveTrack') {
+                    //button.textContent = trans[lang].glacier.love;
+
+                    let listen_divider = document.createElement('div');
+                    listen_divider.classList.add('listen-divider');
+                    view_buttons.appendChild(listen_divider);
+
+
+                    // we need to target the other button too lol
+                    button = wrapper.querySelector('button:not(.btn)');
+                    if (button != null)
+                        button.classList.add('btn', 'view-item', 'glacier-library-button');
+                }
+            } else {
+                // have to read classlist
+                if (button.classList.contains('delete-icon')) {
+                    button.textContent = trans[lang].glacier.delete;
+                }
+            }
+        });
+
+        if (wrappers.length > 0) {
+            let listen_divider = document.createElement('div');
+            listen_divider.classList.add('listen-divider');
+            view_buttons.appendChild(listen_divider);
+        }
+
+        let configure_button = document.createElement('button');
+        configure_button.classList.add('btn', 'view-item', 'glacier-library-button', 'glacier-configure-button', 'panel-settings-button');
+        configure_button.textContent = trans[lang].settings.configure;
+
+        tippy(configure_button, {
+            content: trans[lang].settings.configure
+        });
+
+        tippy(configure_button, {
+            theme: 'window',
+            content: (`
+                <div class="dialog-settings">
+                    <div class="toggle-container" id="container-format_guest_features" onclick="_update_item('format_guest_features')">
+                        <button class="btn reset" onclick="_reset_item('format_guest_features')">${trans[lang].settings.reset}</button>
+                        <div class="heading">
+                            <h5>${trans[lang].settings.corrections.format_guest_features.name}</h5>
+                            <p>${trans[lang].settings.corrections.format_guest_features.bio}</p>
+                        </div>
+                        <div class="toggle-wrap">
+                            <button class="toggle" id="toggle-format_guest_features" aria-checked="true">
+                                <div class="dot"></div>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="toggle-container hide-if-format-guest-disabled" id="container-show_guest_features" onclick="_update_item('show_guest_features')">
+                        <button class="btn reset" onclick="_reset_item('show_guest_features')">${trans[lang].settings.reset}</button>
+                        <div class="heading">
+                            <h5>${trans[lang].settings.corrections.show_guest_features.name}</h5>
+                            <p>${trans[lang].settings.corrections.show_guest_features.bio}</p>
+                        </div>
+                        <div class="toggle-wrap">
+                            <button class="toggle" id="toggle-show_guest_features" aria-checked="true" type="button">
+                                <div class="dot"></div>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="toggle-container" id="container-stacked_chartlist_info" onclick="_update_item('stacked_chartlist_info')">
+                        <button class="btn reset" onclick="_reset_item('stacked_chartlist_info')">${trans[lang].settings.reset}</button>
+                        <div class="heading">
+                            <h5>${trans[lang].settings.corrections.stacked_chartlist_info.name}</h5>
+                            <p>${trans[lang].settings.corrections.stacked_chartlist_info.bio}</p>
+                        </div>
+                        <div class="toggle-wrap">
+                            <button class="toggle" id="toggle-stacked_chartlist_info" aria-checked="true" type="button">
+                                <div class="dot"></div>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="sep"></div>
+                    <div class="toggle-container" id="container-glacier_library_graphs" onclick="_update_item('glacier_library_graphs')">
+                        <button class="btn reset" onclick="_reset_item('glacier_library_graphs')">${trans[lang].settings.reset}</button>
+                        <div class="heading">
+                            <h5>${trans[lang].glacier.option.name}</h5>
+                            <p>${trans[lang].glacier.option.bio}</p>
+                        </div>
+                        <div class="toggle-wrap">
+                            <button class="toggle" id="toggle-glacier_library_graphs" aria-checked="true" type="button">
+                                <div class="dot"></div>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `),
+            allowHTML: true,
+            placement: 'bottom',
+            interactive: true,
+            interactiveBorder: 10,
+            trigger: 'click',
+
+            onShow(instance) {
+                refresh_all(instance.popper);
+            }
+        });
+
+        view_buttons.appendChild(configure_button);
+
+        upper_wrap.appendChild(view_buttons);
+
+        let lower_wrap = document.createElement('div');
+        lower_wrap.classList.add('glacier-library-top-lower');
+
+        let lower_metadata = document.createElement('div');
+        lower_metadata.classList.add('glacier-library-metadata');
+
+        let legacy_meta_wrap = page.structure.main.querySelector('.metadata-list');
+        if (legacy_meta_wrap != null) {
+            let metadatas = legacy_meta_wrap.querySelectorAll('.metadata-item:not(.library-header-ctas__wrapper)');
+
+            metadatas.forEach((meta) => {
+                let glacier_meta_item = document.createElement('div');
+                glacier_meta_item.classList.add('glacier-library-metadata-item');
+                glacier_meta_item.innerHTML = (`
+                    <div class="sub-text">${meta.querySelector('.metadata-title').textContent}</div>
+                    <div class="glacier-library-metadata-item-value">${meta.querySelector('.metadata-display').textContent}</div>
+                `);
+
+                lower_metadata.appendChild(glacier_meta_item);
+            });
+        }
+
+        lower_wrap.appendChild(lower_metadata);
+
+        header.appendChild(lower_wrap);
+
+        page.structure.main.insertBefore(header, page.structure.main.firstElementChild);
+
+
+        // move random overview header into their section below
+        let overview_header = page.structure.main.querySelector(':scope > .library-overview-header');
+
+        if (overview_header == null)
+            return;
+
+        overview_header.nextElementSibling.insertBefore(overview_header, overview_header.nextElementSibling.firstElementChild);
+    }
+
+    function bleh_glacier_library_bulk_edit() {
+        // quick check to see if bulk edit is present
+        let library_header = page.structure.main.querySelector('.library-header');
+
+        let bulk_edit = library_header.querySelector('[href="javascript:void(0)"]');
+
+        if (bulk_edit == null)
+            return;
+
+        // move to new area
+        let view_buttons = page.structure.main.querySelector('.glacier-library-buttons');
+
+        if (view_buttons == null)
+            return;
+
+        let edit_form = view_buttons.querySelector(':scope > .library-header-edit-form');
+        let delete_button = view_buttons.querySelector(':scope > .delete-icon');
+
+        if (delete_button == null)
+            return;
+
+        bulk_edit.classList.add('btn', 'view-item', 'glacier-library-button', 'bulk-edit-button');
+        bulk_edit.textContent = trans[lang].glacier.bulk_edit;
+
+        if (edit_form == null)
+            view_buttons.insertBefore(bulk_edit, delete_button);
+        else
+            view_buttons.insertBefore(bulk_edit, edit_form);
     }
 
 
@@ -14181,10 +15783,10 @@ let has_prompted_for_update = false;
                 view_buttons.innerHTML = (`
                     <div class="view-buttons">
                         <button class="btn view-item" id="toggle-list_view-1" data-toggle="list_view" data-toggle-value="1" onclick="_update_item('list_view', 1)">
-                            Grid
+                            ${trans[lang].glacier.view.grid}
                         </button>
                         <button class="btn view-item" id="toggle-list_view-0" data-toggle="list_view" data-toggle-value="0" onclick="_update_item('list_view', 0)">
-                            List
+                            ${trans[lang].glacier.view.list}
                         </button>
                     </div>
                 `);
@@ -14323,19 +15925,19 @@ let has_prompted_for_update = false;
                             ${original_chart_settings.count}
                         </div>
                     </div>
-                    <div class="toggle-container" id="container-recent_artwork">
+                    <div class="toggle-container" id="container-recent_artwork" onclick="_update_inbuilt_item('recent_artwork')">
                         <button class="btn reset" onclick="_reset_inbuilt_item('recent_artwork')">Reset to default</button>
                         <div class="heading">
                             <h5>${trans[lang].settings.inbuilt.charts.recent.artwork.name}</h5>
                         </div>
                         <div class="toggle-wrap">
                             <input class="companion-checkbox" type="checkbox" name="show_recent_tracks_artwork" id="inbuilt-companion-checkbox-recent_artwork">
-                            <span class="btn toggle" id="toggle-recent_artwork" onclick="_update_inbuilt_item('recent_artwork')" aria-checked="false">
+                            <span class="btn toggle" id="toggle-recent_artwork" aria-checked="false">
                                 <div class="dot"></div>
                             </span>
                         </div>
                     </div>
-                    <div class="toggle-container" id="container-recent_realtime">
+                    <div class="toggle-container" id="container-recent_realtime" onclick="_update_inbuilt_item('recent_realtime')">
                         <button class="btn reset" onclick="_reset_inbuilt_item('recent_realtime')">Reset to default</button>
                         <div class="heading">
                             <h5>${trans[lang].settings.inbuilt.charts.recent.realtime.name}</h5>
@@ -14343,9 +15945,46 @@ let has_prompted_for_update = false;
                         </div>
                         <div class="toggle-wrap">
                             <input class="companion-checkbox" type="checkbox" name="auto_refresh_recent_tracks" id="inbuilt-companion-checkbox-recent_realtime">
-                            <span class="btn toggle" id="toggle-recent_realtime" onclick="_update_inbuilt_item('recent_realtime')" aria-checked="false" type="button">
+                            <span class="btn toggle" id="toggle-recent_realtime" aria-checked="false" type="button">
                                 <div class="dot"></div>
                             </span>
+                        </div>
+                    </div>
+                    <div class="sep"></div>
+                    <div class="toggle-container" id="container-format_guest_features" onclick="_update_item('format_guest_features')">
+                        <button class="btn reset" onclick="_reset_item('format_guest_features')">${trans[lang].settings.reset}</button>
+                        <div class="heading">
+                            <h5>${trans[lang].settings.corrections.format_guest_features.name}</h5>
+                            <p>${trans[lang].settings.corrections.format_guest_features.bio}</p>
+                        </div>
+                        <div class="toggle-wrap">
+                            <button class="toggle" id="toggle-format_guest_features" aria-checked="true" type="button">
+                                <div class="dot"></div>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="toggle-container hide-if-format-guest-disabled" id="container-show_guest_features" onclick="_update_item('show_guest_features')">
+                        <button class="btn reset" onclick="_reset_item('show_guest_features')">${trans[lang].settings.reset}</button>
+                        <div class="heading">
+                            <h5>${trans[lang].settings.corrections.show_guest_features.name}</h5>
+                            <p>${trans[lang].settings.corrections.show_guest_features.bio}</p>
+                        </div>
+                        <div class="toggle-wrap">
+                            <button class="toggle" id="toggle-show_guest_features" aria-checked="true" type="button">
+                                <div class="dot"></div>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="toggle-container" id="container-stacked_chartlist_info" onclick="_update_item('stacked_chartlist_info')">
+                        <button class="btn reset" onclick="_reset_item('stacked_chartlist_info')">${trans[lang].settings.reset}</button>
+                        <div class="heading">
+                            <h5>${trans[lang].settings.corrections.stacked_chartlist_info.name}</h5>
+                            <p>${trans[lang].settings.corrections.stacked_chartlist_info.bio}</p>
+                        </div>
+                        <div class="toggle-wrap">
+                            <button class="toggle" id="toggle-stacked_chartlist_info" aria-checked="true" type="button">
+                                <div class="dot"></div>
+                            </button>
                         </div>
                     </div>
                     <div class="sep"></div>
@@ -14367,6 +16006,8 @@ let has_prompted_for_update = false;
                 for (let setting in original_chart_settings) {
                     update_inbuilt_item(setting, original_chart_settings[setting], false, form);
                 }
+
+                refresh_all(instance.popper);
             }
         });
 
@@ -14682,6 +16323,31 @@ let has_prompted_for_update = false;
                         </div>
                     </div>
                     <div class="sep"></div>
+                    <div class="toggle-container" id="container-format_guest_features" onclick="_update_item('format_guest_features')">
+                        <button class="btn reset" onclick="_reset_item('format_guest_features')">${trans[lang].settings.reset}</button>
+                        <div class="heading">
+                            <h5>${trans[lang].settings.corrections.format_guest_features.name}</h5>
+                            <p>${trans[lang].settings.corrections.format_guest_features.bio}</p>
+                        </div>
+                        <div class="toggle-wrap">
+                            <button class="toggle" id="toggle-format_guest_features" aria-checked="true" type="button">
+                                <div class="dot"></div>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="toggle-container hide-if-format-guest-disabled" id="container-show_guest_features" onclick="_update_item('show_guest_features')">
+                        <button class="btn reset" onclick="_reset_item('show_guest_features')">${trans[lang].settings.reset}</button>
+                        <div class="heading">
+                            <h5>${trans[lang].settings.corrections.show_guest_features.name}</h5>
+                            <p>${trans[lang].settings.corrections.show_guest_features.bio}</p>
+                        </div>
+                        <div class="toggle-wrap">
+                            <button class="toggle" id="toggle-show_guest_features" aria-checked="true" type="button">
+                                <div class="dot"></div>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="sep"></div>
                     <div class="settings-footer">
                         <button type="submit" class="btn-primary save">
                             ${trans[lang].settings.save}
@@ -14697,6 +16363,8 @@ let has_prompted_for_update = false;
                     select.setAttribute('onchange', `_update_inbuilt_select('${select.getAttribute('id')}', this.value)`);
                     update_inbuilt_select(select.getAttribute('id'), select.value);
                 });
+
+                refresh_all(instance.popper);
             }
         });
 
@@ -14714,7 +16382,7 @@ let has_prompted_for_update = false;
 
 
     function ff(flag) {
-        log(`parsing ${flag}`, 'flag', 'info', {
+        log(`parsing ${flag}`, 'flag', 'log', {
             setting: settings.feature_flags[flag],
             sku: version.feature_flags[flag]
         });
@@ -14876,10 +16544,10 @@ let has_prompted_for_update = false;
         view_buttons.innerHTML = (`
             <div class="view-buttons">
                 <button class="btn view-item" id="toggle-list_view-1" data-toggle="list_view" data-toggle-value="1" onclick="_update_item('list_view', 1)">
-                    Grid
+                    ${trans[lang].glacier.view.grid}
                 </button>
                 <button class="btn view-item" id="toggle-list_view-0" data-toggle="list_view" data-toggle-value="0" onclick="_update_item('list_view', 0)">
-                    List
+                    ${trans[lang].glacier.view.list}
                 </button>
             </div>
         `);

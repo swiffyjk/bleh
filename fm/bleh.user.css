@@ -1,7 +1,7 @@
 /* ==UserStyle==
 @name           bleh (dev)
 @namespace      github.com/katelyynn/bleh
-@version        2024.1204
+@version        2024.1208
 @license        GPL-3.0
 @author         kate
 @updateURL      https://github.com/katelyynn/bleh/raw/uwu/fm/bleh.user.css
@@ -16,7 +16,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Work+Sans:ital,wght@0,100..900;1,100..900&display=swap');
 
 body {
-    --version-build: '2024.1204.1';
+    --version-build: '2024.1208';
 
     --hue:  var(--hue-over,
             var(--hue-album,
@@ -269,7 +269,8 @@ a,
 .staff-profile .header-title, .staff-shout, .staff-shout a,
 .changelog-version-item,
 .version-item-body li u,
-.grid-items-item.grid-items-item-has-colour
+.grid-items-item.grid-items-item-has-colour,
+.toggle /* for toggles that arent buttons */
 {
     --hue:  var(--hue-over,
             var(--hue-album,
@@ -304,12 +305,16 @@ a,
 
     --h2: var(--l2-c);
     --h3: var(--l3-c);
+    --h3-s: var(--hue), 50%, 70%;
     --h3-sat: calc(var(--sat) * 60%);
     --h3-lit: calc(clamp(min(0.5), var(--lit), max(1.5)) * 70%);
     --h4: var(--l4-c);
     --g4: var(--hue), calc(var(--sat) * 40%), calc(clamp(min(0.5), var(--lit), max(1.5)) * 15%);
 
     --icon: var(--c2);
+
+    /* l2-c in dark modes, l4-c in light modes */
+    --l2-c-theme-switch: var(--l2-c);
 
     .preview[data-bleh--theme="oled"],
     [data-bleh--theme="oled"] &:not(.preview) {
@@ -327,6 +332,7 @@ a,
 
         --h2: var(--l2-c);
         --h3: var(--l3-c);
+        --h3-s: var(--hue), 50%, 70%;
         --h3-sat: calc(var(--sat) * 50%);
         --h3-lit: calc(clamp(min(0.5), var(--lit), max(1.5)) * 70%);
         --h4: var(--l4-c);
@@ -354,10 +360,14 @@ a,
         --l4-c: var(--hue), calc(var(--sat) * 60%), calc(clamp(min(0.5), var(--lit), max(1.1)) * 25%);
 
         --h3: var(--hue), calc(var(--sat) * 50%), calc(clamp(min(0.5), var(--lit), max(1.1)) * 80%);
+        --h3-s: var(--hue), 50%, 80%;
         --h3-sat: calc(var(--sat) * 50%);
         --h3-lit: calc(clamp(min(0.5), var(--lit), max(1.1)) * 80%);
         --h4: var(--hue), calc(var(--sat) * 60%), calc(clamp(min(0.5), var(--lit), max(1.1)) * 65%);
         --g4: var(--hue), calc(var(--sat) * 70%), 92%;
+
+        /* l2-c in dark modes, l4-c in light modes */
+        --l2-c-theme-switch: var(--l4-c);
     }
 }
 
@@ -537,6 +547,7 @@ body {
     --icon-16-dropdown: var(--icon-16-arrow-down);
     --icon-16-music-list: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyLjUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgY2xhc3M9Imx1Y2lkZSBsdWNpZGUtbGlzdC1tdXNpYyI+PHBhdGggZD0iTTIxIDE1VjYiLz48cGF0aCBkPSJNMTguNSAxOGEyLjUgMi41IDAgMSAwIDAtNSAyLjUgMi41IDAgMCAwIDAgNVoiLz48cGF0aCBkPSJNMTIgMTJIMyIvPjxwYXRoIGQ9Ik0xNiA2SDMiLz48cGF0aCBkPSJNMTIgMThIMyIvPjwvc3ZnPg==');
     --icon-16-edit: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyLjUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgY2xhc3M9Imx1Y2lkZSBsdWNpZGUtcGVuY2lsIj48cGF0aCBkPSJNMTcgM2EyLjg1IDIuODMgMCAxIDEgNCA0TDcuNSAyMC41IDIgMjJsMS41LTUuNVoiLz48cGF0aCBkPSJtMTUgNSA0IDQiLz48L3N2Zz4=');
+    --icon-16-edit-bulk: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyLjUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgY2xhc3M9Imx1Y2lkZSBsdWNpZGUtc3F1YXJlLXN0YWNrIj48cGF0aCBkPSJNNCAxMGMtMS4xIDAtMi0uOS0yLTJWNGMwLTEuMS45LTIgMi0yaDRjMS4xIDAgMiAuOSAyIDIiLz48cGF0aCBkPSJNMTAgMTZjLTEuMSAwLTItLjktMi0ydi00YzAtMS4xLjktMiAyLTJoNGMxLjEgMCAyIC45IDIgMiIvPjxyZWN0IHdpZHRoPSI4IiBoZWlnaHQ9IjgiIHg9IjE0IiB5PSIxNCIgcng9IjIiLz48L3N2Zz4=');
     --icon-16-track: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyLjUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgY2xhc3M9Imx1Y2lkZSBsdWNpZGUtbXVzaWMtMyI+PGNpcmNsZSBjeD0iMTIiIGN5PSIxOCIgcj0iNCIvPjxwYXRoIGQ9Ik0xNiAxOFYyIi8+PC9zdmc+');
     --icon-16-album: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyLjUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgY2xhc3M9Imx1Y2lkZSBsdWNpZGUtZGlzYyI+PGNpcmNsZSBjeD0iMTIiIGN5PSIxMiIgcj0iMTAiLz48Y2lyY2xlIGN4PSIxMiIgY3k9IjEyIiByPSIyIi8+PC9zdmc+');
     --icon-16-artist: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyLjUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgY2xhc3M9Imx1Y2lkZSBsdWNpZGUtc3RhciI+PHBvbHlnb24gcG9pbnRzPSIxMiAyIDE1LjA5IDguMjYgMjIgOS4yNyAxNyAxNC4xNCAxOC4xOCAyMS4wMiAxMiAxNy43NyA1LjgyIDIxLjAyIDcgMTQuMTQgMiA5LjI3IDguOTEgOC4yNiAxMiAyIi8+PC9zdmc+');
@@ -578,6 +589,9 @@ body {
     --icon-16-shoutbox: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyLjUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgY2xhc3M9Imx1Y2lkZSBsdWNpZGUtbWVzc2FnZS1jaXJjbGUiPjxwYXRoIGQ9Ik03LjkgMjBBOSA5IDAgMSAwIDQgMTYuMUwyIDIyWiIvPjwvc3ZnPg==');
     --icon-16-playlist: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyLjUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgY2xhc3M9Imx1Y2lkZSBsdWNpZGUtbGlzdC1tdXNpYyI+PHBhdGggZD0iTTIxIDE1VjYiLz48cGF0aCBkPSJNMTguNSAxOGEyLjUgMi41IDAgMSAwIDAtNSAyLjUgMi41IDAgMCAwIDAgNVoiLz48cGF0aCBkPSJNMTIgMTJIMyIvPjxwYXRoIGQ9Ik0xNiA2SDMiLz48cGF0aCBkPSJNMTIgMThIMyIvPjwvc3ZnPg==');
     --icon-16-listening-report: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyLjUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgY2xhc3M9Imx1Y2lkZSBsdWNpZGUtYWN0aXZpdHkiPjxwYXRoIGQ9Ik0yMiAxMmgtNGwtMyA5TDkgM2wtMyA5SDIiLz48L3N2Zz4=');
+    --icon-16-chart-line: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyLjUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgY2xhc3M9Imx1Y2lkZSBsdWNpZGUtY2hhcnQtbGluZSI+PHBhdGggZD0iTTMgM3YxNmEyIDIgMCAwIDAgMiAyaDE2Ii8+PHBhdGggZD0ibTE5IDktNSA1LTQtNC0zIDMiLz48L3N2Zz4=');
+    --icon-16-chart-pie: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyLjUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgY2xhc3M9Imx1Y2lkZSBsdWNpZGUtY2hhcnQtcGllIj48cGF0aCBkPSJNMjEgMTJjLjU1MiAwIDEuMDA1LS40NDkuOTUtLjk5OGExMCAxMCAwIDAgMC04Ljk1My04Ljk1MWMtLjU1LS4wNTUtLjk5OC4zOTgtLjk5OC45NXY4YTEgMSAwIDAgMCAxIDF6Ii8+PHBhdGggZD0iTTIxLjIxIDE1Ljg5QTEwIDEwIDAgMSAxIDggMi44MyIvPjwvc3ZnPg==');
+    --icon-16-chart-bar: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyLjUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgY2xhc3M9Imx1Y2lkZSBsdWNpZGUtY2hhcnQtY29sdW1uLWJpZyI+PHBhdGggZD0iTTMgM3YxNmEyIDIgMCAwIDAgMiAyaDE2Ii8+PHJlY3QgeD0iMTUiIHk9IjUiIHdpZHRoPSI0IiBoZWlnaHQ9IjEyIiByeD0iMSIvPjxyZWN0IHg9IjciIHk9IjgiIHdpZHRoPSI0IiBoZWlnaHQ9IjkiIHJ4PSIxIi8+PC9zdmc+');
     --icon-16-heart: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyLjUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgY2xhc3M9ImZlYXRoZXIgZmVhdGhlci1oZWFydCI+PHBhdGggZD0iTTIwLjg0IDQuNjFhNS41IDUuNSAwIDAgMC03Ljc4IDBMMTIgNS42N2wtMS4wNi0xLjA2YTUuNSA1LjUgMCAwIDAtNy43OCA3Ljc4bDEuMDYgMS4wNkwxMiAyMS4yM2w3Ljc4LTcuNzggMS4wNi0xLjA2YTUuNSA1LjUgMCAwIDAgMC03Ljc4eiI+PC9wYXRoPjwvc3ZnPg==');
     --icon-16-heart-solid: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJjdXJyZW50Q29sb3IiIHN0cm9rZT0iY3VycmVudENvbG9yIiBzdHJva2Utd2lkdGg9IjIuNSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiBjbGFzcz0iZmVhdGhlciBmZWF0aGVyLWhlYXJ0Ij48cGF0aCBkPSJNMjAuODQgNC42MWE1LjUgNS41IDAgMCAwLTcuNzggMEwxMiA1LjY3bC0xLjA2LTEuMDZhNS41IDUuNSAwIDAgMC03Ljc4IDcuNzhsMS4wNiAxLjA2TDEyIDIxLjIzbDcuNzgtNy43OCAxLjA2LTEuMDZhNS41IDUuNSAwIDAgMCAwLTcuNzh6Ij48L3BhdGg+PC9zdmc+');
     --icon-16-home: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyLjUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgY2xhc3M9Imx1Y2lkZSBsdWNpZGUtaG9tZSI+PHBhdGggZD0ibTMgOSA5LTcgOSA3djExYTIgMiAwIDAgMS0yIDJINWEyIDIgMCAwIDEtMi0yeiIvPjwvc3ZnPg==');
@@ -699,14 +713,14 @@ body {
         }
 
         &[data-bleh--season="fall"] {
-            --cards-overlay: linear-gradient(180deg, rgba(157, 211, 255, 0.03) 0%, rgba(0,0,0,0) 100%);
+            --cards-overlay: linear-gradient(180deg, rgba(157, 211, 255, 0.04) 0%, rgba(0,0,0,0) 100%);
             --cards-overlay-image: var(--overlay-ice);
             --cards-overlay-image-subtlest: var(--overlay-ice-subtlest);
             --cards-overlay-image-spikes: var(--overlay-ice-spikes);
         }
         &[data-bleh--season="christmas"],
         &[data-bleh--season="new_years"] {
-            --cards-overlay: linear-gradient(180deg, rgba(157, 211, 255, 0.06) 0%, rgba(0,0,0,0) 100%);
+            --cards-overlay: linear-gradient(180deg, rgba(157, 211, 255, 0.09) 0%, rgba(0,0,0,0) 100%);
             --cards-overlay-image: var(--overlay-ice);
             --cards-overlay-image-subtle: var(--overlay-ice-subtle);
             --cards-overlay-image-subtlest: var(--overlay-ice-subtlest);
@@ -1137,7 +1151,7 @@ last.fm changes as of 2024-05-20 */
     .pro-badge {
         background-color: hsla(var(--h4), 40%);
         box-shadow: 0 0 20px hsla(var(--h4), 60%);
-        color: hsl(var(--l2-c));
+        color: hsl(var(--l2-c-theme-switch));
         font-size: var(--font-size-sm);
         font-weight: var(--font-weight-medium);
         padding: 0 6px;
@@ -1146,10 +1160,6 @@ last.fm changes as of 2024-05-20 */
         --hue-over: var(--hue-pro);
         --sat-over: 1;
         --lit-over: 1;
-
-        [data-bleh--theme="light"] & {
-            color: hsl(var(--l4-c));
-        }
     }
 
     p {
@@ -1507,7 +1517,6 @@ last.fm changes as of 2024-05-20 */
     /* gallery pages, col-main on tracks */ div.buffer-standard:not(.col-main) > .lazy-shoutbox
     ),
 /* individual library selection */
-.library-header,
 .page-content:has(.inbox-notifications),
 /* listening reports */ .user-dashboard > .user-dashboard-buffer,
 /* katie doesnt have any scrobbles yet */ .profile-mobile-featured-track + .no-data-message,
@@ -1519,8 +1528,6 @@ last.fm changes as of 2024-05-20 */
 .wiki-history,
 /* error 500 */ .container:has(#marvin),
 /* error 404 */ .row:has(.error-page-marvin),
-.library-header + .metadata-list, .library-header + .library-track-metadata,
-.library-top,
 :is(.namespace--music_track_tags_add, .namespace--music_artist_tags_add, .namespace--music_album_tags_add) .col-main,
 /* make a playlist */ .playlisting-create-options,
 /* home page recommendations */ .homefeed .col-main,
@@ -3921,6 +3928,10 @@ h2:not(.count, .mask-multi-text, .mask-text, .sr-only, .js-gallery-heading, .top
         cursor: default;
     }
 
+    &.library-artist-section-header {
+        margin: unset !important;
+    }
+
     &.metadata-title {
         font: inherit;
     }
@@ -4031,8 +4042,8 @@ better than the default selector '#app a' i suppose */
         border-radius: calc(var(--item-big-radius) + 4px);
         opacity: 0;
 
-        border: 2px solid hsl(var(--l3-c), 30%);
-        box-shadow: 0 0 30px hsl(var(--l3-c), 10%);
+        border: 2px solid hsl(var(--h4), 30%);
+        box-shadow: 0 0 30px hsl(var(--h4), 10%);
 
         transition-property: opacity;
         transition-duration: var(--trans);
@@ -4149,10 +4160,10 @@ better than the default selector '#app a' i suppose */
 
 
 /*     COVER ART GLOSS     */
+.glacier-library-metadata-avatar:after,
 .big-artist-list-avatar-desktop:after,
 .catalogue-overview-similar-artists-item-image:after,
 .other-obsession-artwork:after,
-.library-header-image:after,
 .cover-art:after,
 .grid-items-item:after,
 .similar-items-sidebar-item-image:after,
@@ -4193,6 +4204,8 @@ better than the default selector '#app a' i suppose */
     color: hsl(var(--c1));
 
     a {
+        display: inline-block;
+        width: 100%;
         text-decoration: var(--force-underline, none) !important;
     }
 }
@@ -4272,9 +4285,11 @@ better than the default selector '#app a' i suppose */
 #recent-tracks-section {
     /* add space for the button */
     padding-bottom: calc(var(--card-padding) + 32px + var(--card-gap));
-    overflow: hidden;
 
     &.has-refreshed {
+        animation-name: wash_panel;
+        animation-duration: 2.2s;
+
         &:after {
             animation-name: wash;
             animation-duration: 2.2s;
@@ -4308,6 +4323,11 @@ better than the default selector '#app a' i suppose */
     right: var(--card-padding);
 }
 
+@keyframes wash_panel {
+    from, to {
+        overflow: hidden;
+    }
+}
 @keyframes wash {
     from {
         opacity: 0.15;
@@ -4407,6 +4427,14 @@ better than the default selector '#app a' i suppose */
     }
 }
 
+.chartlist--wide-artist-column .chartlist-album {
+    order: 1;
+    color: hsl(var(--c3));
+
+    /* no hover offset nonsense */
+    margin-right: var(--item-list-gap) !important;
+}
+
 @keyframes slide_down {
     from {
         transform: scaleY(0.85);
@@ -4438,13 +4466,38 @@ better than the default selector '#app a' i suppose */
 }
 .chartlist-image {
     margin-left: unset !important;
+    overflow: unset !important;
 
     transition-property: transform;
     transition-duration: var(--trans);
     transition-timing-function: var(--trans-function);
 
-    &:has(a):hover {
-        transform: scale(1.1);
+    &:before {
+        content: '';
+        position: absolute;
+        inset: -2px;
+        border-radius: calc(var(--item-small-radius) + 2px);
+        opacity: 0;
+
+        border: 2px solid hsl(var(--c2), 30%);
+        box-shadow: 0 0 30px hsl(var(--c2), 10%);
+
+        transition-property: opacity;
+        transition-duration: var(--trans);
+        transition-timing-function: var(--trans-function);
+    }
+
+    &:hover {
+        transition-duration: 0.1s !important;
+
+        &:before {
+            opacity: 1;
+            transition: none;
+        }
+    }
+
+    &:active {
+        transform: scale(0.98);
     }
 }
 .chartlist-bar:last-child,
@@ -4805,13 +4858,27 @@ better than the default selector '#app a' i suppose */
 .chartlist-image {
     width: 38px;
     height: 38px;
-    border-radius: var(--item-small-radius);
+    border-radius: var(--item-small-radius) !important;
     box-shadow: var(--card-shadow);
     overflow: hidden;
     background: var(--avatar-generic-background);
+
+    .cover-art,
+    img,
+    .avatar {
+        border-radius: inherit !important;
+    }
+
+    .avatar-status-dot {
+        display: none;
+    }
 }
-.chartlist-image:has(.avatar) {
-    border-radius: var(--avatar-radius);
+.chartlist-row[data-track-type="user"] .chartlist-image {
+    border-radius: var(--avatar-radius) !important;
+
+    &:before {
+        border-radius: calc(var(--avatar-radius) + 2px);
+    }
 }
 .similar-items-sidebar-item-image img {
     border-radius: var(--item-small-radius);
@@ -4847,10 +4914,12 @@ better than the default selector '#app a' i suppose */
     left: calc(84px - 2px);
     margin-top: 16px;
 }
+.chartlist--with-bar.chartlist--with-index.chartlist--with-play.chartlist--with-image.chartlist--with-loved.chartlist--with-index--length-3 .chartlist-row--with-artist .chartlist-artist, .chartlist--with-multi-playlinks.chartlist--with-index.chartlist--with-play.chartlist--with-image.chartlist--with-loved.chartlist--with-index--length-3 .chartlist-row--with-artist .chartlist-artist,
 .chartlist--with-bar.chartlist--with-index.chartlist--with-play.chartlist--with-image.chartlist--with-index--length-3 .chartlist-row--with-artist .chartlist-artist, .chartlist--with-multi-playlinks.chartlist--with-index.chartlist--with-play.chartlist--with-image.chartlist--with-index--length-3 .chartlist-row--with-artist .chartlist-artist {
     left: calc(92px - 2px);
     margin-top: 16px;
 }
+.chartlist--with-bar.chartlist--with-index.chartlist--with-play.chartlist--with-image.chartlist--with-loved.chartlist--with-index--length-4 .chartlist-row--with-artist .chartlist-artist, .chartlist--with-multi-playlinks.chartlist--with-index.chartlist--with-play.chartlist--with-image.chartlist--with-loved.chartlist--with-index--length-4 .chartlist-row--with-artist .chartlist-artist,
 .chartlist--with-bar.chartlist--with-index.chartlist--with-play.chartlist--with-image.chartlist--with-index--length-4 .chartlist-row--with-artist .chartlist-artist, .chartlist--with-multi-playlinks.chartlist--with-index.chartlist--with-play.chartlist--with-image.chartlist--with-index--length-4 .chartlist-row--with-artist .chartlist-artist {
     left: calc(103px - 2px);
 }
@@ -4968,9 +5037,6 @@ a.chartlist-love-button:after {
     box-shadow: var(--interact-shadow);
     width: 180px;
     display: flex;
-    transition-property: transform;
-    transition-duration: var(--trans);
-    transition-timing-function: var(--trans-function);
 
     [data-bleh--theme="light"] & {
         background: hsl(var(--b5));
@@ -4987,6 +5053,34 @@ a.chartlist-love-button:after {
         --hue-seasonal: 120;
         --sat-seasonal: 1.15;
         --lit-seasonal: 0.95;
+    }
+
+    &:before {
+        content: '';
+        position: absolute;
+        inset: -4px;
+        border-radius: calc(var(--item-med-radius) + 4px);
+        opacity: 0;
+
+        border: 2px solid hsl(var(--h4), 30%);
+        box-shadow: 0 0 30px hsl(var(--h4), 10%);
+
+        transition-property: opacity;
+        transition-duration: var(--trans);
+        transition-timing-function: var(--trans-function);
+    }
+
+    &:hover {
+        transition-duration: 0.1s !important;
+
+        &:before {
+            opacity: 1;
+            transition: none;
+        }
+    }
+
+    &:active {
+        transform: scale(0.98);
     }
 }
 .chartlist-count-bar-link {
@@ -5025,11 +5119,6 @@ a.chartlist-love-button:after {
     [data-bleh--invert_interactable_colour="true"] & {
         color: hsl(var(--ov-c1)) !important;
     }
-}
-
-
-.chartlist-count-bar:has(.chartlist-count-bar-link:hover) {
-    transform: scaleX(1.05);
 }
 
 
@@ -5740,8 +5829,6 @@ button,
 .masthead-nav-control, .secondary-nav-item-link,
 .dropdown-menu-item-dark,
 .btn-secondary,
-/* track love button in other's library */ .love-button,
-.library-header-cta-item,
 /* go to tag page for a user tag */ .col-main > p > [href^="/tag/"],
 /* gallery upload artwork breadcrumbs */ a:has(+ .js-gallery-heading), .js-gallery-heading,
 .chartlist-play-button,
@@ -5946,7 +6033,7 @@ button,
 .image-details :is(.bleh--gallery-bookmark-image-btn, .gallery-image-report, .gallery-image-delete button),
 .btn.back,
 .btn-post-shout,
-.view-item:not(.video-item, .listen-item, .profile-top-item--taste, .interact-item, .profile-top-item--shortcut, .profile-top-item--follow, .profile-top-item--message, .profile-top-item--edit),
+.view-item:not(.video-item, .listen-item, .profile-top-item--taste, .interact-item, .profile-top-item--shortcut, .profile-top-item--follow, .profile-top-item--message, .profile-top-item--edit, .dropdown-menu-clickable-button),
 .btn--has-icon-left,
 .stationlink,
 .dropdown-menu-clickable-item, .auth-dropdown-menu-item,
@@ -6090,6 +6177,7 @@ button,
 
 
 /*     ICON MASK     */
+.scrobble-canvas-container:before,
 .grid-item-plays:before,
 .lastfm-bulk-edit-form-group-controls button:before,
 .lastfm-bulk-edit-progress:before,
@@ -6203,7 +6291,7 @@ button,
 .tags-add:before,
 .catalogue-tags:before,
 /*     CHARTLIST     */
-.chartlist-love-button:before, .love-button-toggle button:before,
+.chartlist-love-button:before,
 .chartlist-type:before,
 .chartlist-play-button:before, .chartlist-more-button:before,
 /*     HOME     */
@@ -6238,7 +6326,6 @@ span.header-new-gallery-inner a:before,
 .library-view-button:before,
 .library-search-submit::before,
 .date-range-picker-button:after,
-.love-button:before, .library-header-cta-item:before,
 /*     WIKI     */
 .wiki-history-action:before,
 /*     SEARCH     */
@@ -6320,8 +6407,7 @@ span.header-new-gallery-inner a:before,
 .gallery-image-buttons:not(.gallery-image-buttons-extra) :is(.gallery-image-report, .gallery-image-delete button),
 .modal-dismiss,
 .content-form .table .delete,
-.masthead-search-submit,
-.love-button-toggle button
+.masthead-search-submit
 {
     --font-size: 0;
 }
@@ -6550,6 +6636,7 @@ on the bottom of a panel !! */
     --left: 12px;
     --right: none;
 
+    .date-range-picker-preset--selected > &,
     &.dropdown-menu-clickable-item--selected,
     &.active {
         --bg: var(--cards-overlay-image-subtlest, none), hsla(var(--h4), 20%) !important;
@@ -6864,6 +6951,7 @@ very, very, very dated - who looks up a song on ebay? */
     .row {
         display: flex;
         flex-direction: column;
+        gap: 2px;
 
         .user-sidebar-header {
             margin: unset !important;
@@ -6873,7 +6961,7 @@ very, very, very dated - who looks up a song on ebay? */
         .library-controls-datepicker > .library-date-picker {
             display: flex;
             justify-content: start;
-            height: 30px;
+            height: 20px;
 
             .date-range-picker-button {
                 --bg: transparent;
@@ -6889,11 +6977,17 @@ very, very, very dated - who looks up a song on ebay? */
                 --right: 0;
                 --btn-bottom: 0;
 
-                font-size: 24px !important;
-                line-height: 30px !important;
+                font-size: 16px !important;
+                line-height: 20px !important;
 
                 .date-range-picker-button-inner {
                     max-width: 340px;
+
+                    &.date-range-new {
+                        display: flex;
+                        gap: 6px;
+                        overflow: unset;
+                    }
                 }
 
                 &:before {
@@ -6901,6 +6995,78 @@ very, very, very dated - who looks up a song on ebay? */
                 }
             }
         }
+    }
+
+    .chart-view-selector {
+        justify-content: center;
+        margin: var(--card-gap) 0 !important;
+
+        .view-item {
+            &[data-toggle-value="line"] {
+                --mask: var(--icon-16-chart-line);
+            }
+            &[data-toggle-value="pie"] {
+                --mask: var(--icon-16-chart-pie);
+            }
+            &[data-toggle-value="bar"] {
+                --mask: var(--icon-16-chart-bar);
+            }
+        }
+    }
+}
+.date-panel {
+    min-height: 335px;
+
+    .scrobble-chart {
+        margin: unset;
+    }
+
+    .scrobble-chart__placeholder {
+        background: unset;
+
+        .scrobble-chart__placeholder-loading {
+            display: none;
+        }
+    }
+
+    &[data-glacier-graphs="true"] {
+        .scrobble-table {
+            display: none;
+        }
+    }
+
+    .scrobble-canvas-container {
+        height: 240px;
+        margin-top: var(--card-gap);
+        position: relative;
+
+        &:before {
+            opacity: 0;
+        }
+    }
+
+    .scrobble-canvas-container:before,
+    .scrobble-canvas {
+        transition-property: opacity;
+        transition-duration: var(--trans);
+        transition-timing-function: var(--trans-function);
+    }
+
+    &.data-is-loading {
+        pointer-events: none;
+
+        .scrobble-canvas-container:before {
+            opacity: 1;
+        }
+        .scrobble-canvas {
+            opacity: 0.2;
+        }
+    }
+}
+.scrobble-insights-panel {
+    .scrobble-insights-canvas-container {
+        height: 240px;
+        /*margin-top: var(--card-gap);*/
     }
 }
 
@@ -6916,7 +7082,30 @@ very, very, very dated - who looks up a song on ebay? */
 }
 
 .date-range-picker-presets-wrap {
+    display: flex;
+    gap: var(--item-list-gap);
     margin: unset;
+
+    .date-range-picker-presets {
+        width: unset;
+        flex: 1;
+    }
+
+    .date-range-picker-presets-wide {
+        flex: 1;
+
+        a {
+            text-align: center;
+
+            .new-badge {
+                margin-left: var(--item-list-gap);
+            }
+        }
+    }
+
+    & + .date-range-picker-presets-wrap {
+        margin-top: var(--item-list-gap);
+    }
 }
 
 .user-sidebar-header {
@@ -7056,10 +7245,10 @@ very, very, very dated - who looks up a song on ebay? */
 }
 
 .content-form .control-label, .events-filter-location-dropdown .control-label {
-    color: hsl(var(--c2));
+    color: hsl(var(--c3));
     font-size: var(--font-size);
     line-height: var(--line-height);
-    font-weight: var(--font-weight);
+    font-weight: var(--font-weight-medium);
 }
 .content-form .form-horizontal .control-label,
 .modal-body .content-form .form-horizontal .control-label
@@ -7080,7 +7269,7 @@ very, very, very dated - who looks up a song on ebay? */
 
 
 .content-form .form-group-controls {
-    margin-top: var(--card-gap);
+    margin-top: var(--item-list-gap);
 }
 
 
@@ -7196,16 +7385,35 @@ input:is([name="track_name"], [name="artist_name"], [name="album_name"], [name="
     }
 
     &[data-modal-has-overlays="true"] {
-        [data-bleh--seasonal_overlays="true"][data-bleh--season="fall"] &,
-        [data-bleh--seasonal_overlays="true"][data-bleh--season="christmas"] &,
-        [data-bleh--seasonal_overlays="true"][data-bleh--season="new_years"] & {
-            background-image: var(--overlay-ice), linear-gradient(180deg, rgba(190,233,250,0.04) 0%, rgba(0,0,0,0) 100%) !important;
-            background-repeat: repeat-x !important;
-            background-position: unset !important;
+        background-image: var(--cards-overlay-image, unset) !important;
+        background-repeat: repeat-x !important;
+        background-position: unset !important;
+
+        &:before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            right: 0;
+            height: 150px;
+            max-height: 100%;
+            display: var(--cards-overlay-display);
+            background: var(--cards-overlay);
+            border-top-left-radius: var(--card-radius);
+            border-top-right-radius: var(--card-radius);
+            pointer-events: none;
+
+            /* fix for no-data-message overriding and stuff */
+            margin: unset;
+            width: unset;
         }
     }
 
     .bleh-modal-title {
+        display: flex;
+        gap: var(--item-list-gap);
+        cursor: default;
+
         h1 {
             margin: unset;
             color: hsl(var(--c1));
@@ -7214,6 +7422,11 @@ input:is([name="track_name"], [name="artist_name"], [name="album_name"], [name="
             font-weight: var(--font-weight-medium);
             letter-spacing: unset;
             text-align: left;
+        }
+
+        .bleh-modal-subtitle {
+            color: hsl(var(--c3));
+            line-height: 20px;
         }
     }
 
@@ -7442,7 +7655,7 @@ input:is([name="track_name"], [name="artist_name"], [name="album_name"], [name="
 }
 
 .date-range-picker-content {
-    width: fit-content;
+    width: 320px;
 }
 
 .modal-body .modal-title {
@@ -7519,121 +7732,6 @@ that literally is 1 user from 2007 who hasnt even gotten a scrobble */
 
 
 /*     LIBRARY     */
-.library-overview-header {
-    margin-top: var(--card-gap);
-
-    .metadata-list + & {
-        padding: 0 var(--card-padding);
-    }
-}
-.library-artist-section-header {
-    margin-bottom: unset !important;
-}
-
-.library-overview-header + section {
-    /* this margin is already accounted for */
-    margin-top: 12px !important;
-}
-
-.namespace--user_library_overview .col-sidebar {
-    --force-margin-top: unset;
-}
-:is(.namespace--user_library_artists, .namespace--user_library_albums, .namespace--user_library_tracks) .col-sidebar {
-    --force-margin-top: 22px;
-}
-
-
-/*     HEADER     */
-.library-header-image {
-    left: var(--card-padding);
-    top: var(--card-padding);
-    background: var(--avatar-generic-background);
-    border-radius: var(--item-small-radius);
-    box-shadow: var(--card-shadow);
-    overflow: hidden;
-}
-.library-header-image img {
-    border-radius: unset;
-    mask-size: 24px;
-}
-
-.library-header-title {
-    font-size: var(--font-size);
-    line-height: var(--line-height);
-    font-weight: var(--font-weight-medium) !important;
-    margin: 0 0 8px 0 !important;
-    position: relative;
-    top: 4px;
-}
-
-/* fuck this !important shit :sob:, i have to override it so specifically */
-.library-header-ctas__wrapper,
-.library-header-ctas__wrapper.library-header-ctas__wrapper--1,
-.library-header-ctas__wrapper.library-header-ctas__wrapper--2 {
-    width: fit-content !important;
-    top: var(--card-padding);
-    right: var(--card-padding);
-}
-
-.library-header-ctas {
-    display: flex;
-    gap: var(--button-list-gap);
-
-    .library-header-cta-item,
-    .love-button {
-        display: flex;
-        width: 32px !important;
-        height: 32px !important;
-        --left: 8px;
-
-        --font-size: 0;
-
-        &.love-button {
-            --mask: var(--icon-16-heart);
-
-            &.love-button--loved {
-                --mask: var(--icon-16-heart-solid);
-            }
-        }
-
-        &.delete-icon {
-            --mask: var(--icon-16-trash);
-            --col: hsl(var(--l3-c));
-            --hue-over: var(--hue-neg);
-            --sat-over: 1;
-            --lit-over: 1;
-        }
-
-        &:before {
-            opacity: unset !important;
-        }
-    }
-}
-
-/* add back spacing to account for image */
-.library-header {
-    /* 48px = image width */
-    padding-left: calc(var(--card-padding) + 48px + var(--card-gap));
-    /* account for height (2px accounts for border) */
-    height: calc(var(--card-padding) + 48px + var(--card-padding));
-    z-index: 2;
-}
-
-body:is(.namespace--user_library_music_artist_overview, .namespace--user_library_music_album_overview, .namespace--user_library_music_track_overview) .content-top-lower {
-    padding-bottom: unset !important;
-}
-.library-track-metadata {
-    margin-top: unset;
-}
-.library-track-metadata .love-button-toggle {
-    margin-top: unset;
-    padding-top: unset;
-}
-.metadata-list:first-child {
-    margin-top: unset;
-}
-
-
 /*     SCROBBLES / ARTISTS / ALBUMS / TRACKS     */
 .library-top {
     /* matches user profile buttons */
@@ -7670,8 +7768,7 @@ body:is(.namespace--user_library_music_artist_overview, .namespace--user_library
 
 
 /* put below :3 */
-.bleh--profile-note-panel,
-.library-header + .metadata-list, .library-header + .library-track-metadata {
+.bleh--profile-note-panel {
     /* the extra card-gap is used as a whitespace of sorts to seemlessly go under the library header */
     margin-top: calc((-1 * var(--card-gap))/* - var(--card-gap)*/) !important;
     padding-top: calc(var(--card-padding) + var(--card-gap));
@@ -8199,6 +8296,7 @@ form[action="/inbox/notifications"] {
         }
     }
 }
+.scrobble-canvas-container,
 #bleh--window-bleh_wait--body,
 .modal-processing,
 .gallery-placeholder {
@@ -8360,17 +8458,18 @@ form[action="/inbox/notifications"] {
 .pagination-page {
     box-shadow: unset !important;
 }
+.pagination-page--ellipsis span,
 .pagination-page a {
     --bg: transparent !important;
-    --bg-hov: hsla(var(--l4), 10%) !important;
-    --bg-atv: hsla(var(--l4), 30%) !important;
+    --bg-hov: hsla(var(--b4), 60%) !important;
+    --bg-atv: hsla(var(--b4), 80%) !important;
     --shadow: none !important;
     --shadow-hov: none !important;
 }
 .pagination-page[aria-current="page"] span {
-    --bg: hsla(var(--l4), 20%) !important;
-    --bg-hov: hsla(var(--l4), 40%) !important;
-    --bg-atv: hsla(var(--l4), 60%) !important;
+    --bg: hsla(var(--h4), 40%) !important;
+    --bg-hov: hsla(var(--h4), 60%) !important;
+    --bg-atv: hsla(var(--h4), 80%) !important;
     --shadow: none !important;
     --shadow-hov: none !important;
     cursor: default;
@@ -8569,6 +8668,10 @@ text[style^="color: rgb(255, 172, 172)"] {
 
     .scrobble-canvas-container {
         margin-top: var(--card-gap);
+
+        &:before {
+            opacity: 0;
+        }
     }
 }
 .listener-trend {
@@ -8863,6 +8966,7 @@ text[style^="color: rgb(255, 172, 172)"] {
         & > .tippy-content {
             display: flex;
         }
+        .dialog-settings,
         form {
             display: flex !important;
             flex-direction: column;
@@ -9137,11 +9241,10 @@ text[style^="color: rgb(255, 172, 172)"] {
 .user-dashboard-pagination-previous-link, .user-dashboard-pagination-next-link {
     --left: 8px;
     --mask: var(--icon-16-arrow-left);
-    transform: unset;
-
-    .user-dashboard-pagination-next-link {
-        --mask: var(--icon-16-arrow-right);
-    }
+    transform: unset !important;
+}
+.user-dashboard-pagination-next-link {
+    --mask: var(--icon-16-arrow-right);
 }
 
 
@@ -9817,17 +9920,14 @@ text[style^="color: rgb(0, 0, 0)"] {
     margin-top: var(--card-gap);
     padding: 7px 12px 7px calc(12px + 16px + 6px);
     border-radius: var(--item-big-radius);
-    background-color: hsl(var(--h3));
-    color: hsl(var(--b6));
+    background-color: hsla(var(--h4), 40%);
+    box-shadow: 0 0 20px hsla(var(--h4), 60%);
+    color: hsl(var(--l2-c-theme-switch));
     text-align: left;
     position: relative;
 
     &:before {
         color: currentColor;
-    }
-
-    [data-bleh--theme="light"] & {
-        color: hsl(var(--l4-c));
     }
 }
 
@@ -13152,6 +13252,16 @@ code, kbd, samp {
         border-radius: var(--item-big-radius);
         overflow: hidden;
 
+        &[data-bleh--theme="light"],
+        &[data-bleh--theme="oled"] {
+            .preview-card {
+                border: var(--card-border);
+                border-right: unset;
+                border-bottom: unset;
+                padding: 9px !important;
+            }
+        }
+
         .preview-inner {
             display: block;
             width: 100%;
@@ -13164,16 +13274,13 @@ code, kbd, samp {
                 height: 100%;
                 background-color: hsl(var(--b5));
                 box-shadow: var(--card-shadow);
-                border: var(--card-border);
                 border-top-left-radius: var(--card-radius);
-                border-right: unset;
-                border-bottom: unset;
 
                 padding: 10px;
 
                 .preview-header {
                     display: block;
-                    width: 90px;
+                    width: 50px;
                     height: 6px;
                     background-color: hsl(var(--c1));
                     border-radius: var(--item-big-radius);
@@ -13182,7 +13289,7 @@ code, kbd, samp {
                 .preview-text {
                     display: block;
                     width: 80px;
-                    height: 3px;
+                    height: 4px;
                     background-color: hsl(var(--c2));
                     border-radius: 50px;
 
@@ -15186,7 +15293,7 @@ button.bleh--gallery-bookmark-image-btn {
     background-color: hsl(var(--b6));
     border-radius: calc(var(--item-big-radius) + var(--button-list-gap));
 
-    &:not(.profile-top-header) {
+    &:not(.profile-top-header, .glacier-library-buttons) {
         margin-bottom: var(--card-gap);
     }
 
@@ -17063,13 +17170,6 @@ h4 {
             background: linear-gradient(180deg, hsl(var(--b6)) 0%, transparent 20%, transparent 80%, hsl(var(--b6)) 100%);
         }
 
-        [data-bleh--theme="light"] &,
-        [data-bleh--theme="oled"] & {
-            &:before {
-                background: linear-gradient(180deg, hsl(var(--b5)) 0%, transparent 20%, transparent 80%, hsl(var(--b5)) 100%);
-            }
-        }
-
         div {
             position: relative;
             z-index: 10;
@@ -17951,19 +18051,129 @@ section > .section-controls .subpage-title {
 
 
 
+.library-header + .metadata-list,
+.library-header, .library-track-metadata,
+.library-top-wrap /* while loading */,
+.glacier-legacy-top-header {
+    display: none !important;
+}
+
 .glacier-library-top {
+    display: flex;
+    justify-content: space-between;
+
     .glacier-library-metadata {
         display: flex;
         gap: var(--card-gap);
 
         .glacier-library-metadata-item {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+
             .glacier-library-metadata-item-value {
                 font-size: 16px;
                 line-height: 20px;
                 font-weight: var(--font-weight-medium);
                 cursor: default;
+
+                &.glacier-library-metadata-focus&:not([data-type="artist"]) {
+                    font-size: var(--font-size);
+                    line-height: 19px;
+                    max-width: 400px;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                    white-space: nowrap;
+
+                    a:last-child:not(:hover) {
+                        color: inherit;
+                    }
+                }
+
+                a:first-child {
+                    font-size: 16px;
+                }
+
+                a:not(:hover) {
+                    color: hsl(var(--c1));
+                }
+            }
+        }
+
+        .glacier-library-metadata-avatar {
+            position: relative;
+            width: 40px;
+            height: 40px;
+            background: var(--avatar-generic-background);
+            border-radius: var(--item-big-radius);
+            box-shadow: var(--card-shadow);
+            overflow: hidden;
+
+            img {
+                width: 40px;
+                height: 40px;
             }
         }
     }
+
+    .glacier-library-buttons {
+        .glacier-view-button {
+            &[data-glacier-view="list"] {
+                --mask: var(--icon-16-list);
+            }
+            &[data-glacier-view="grid"] {
+                --mask: var(--icon-16-grid);
+            }
+        }
+
+        .glacier-library-button {
+            &.bulk-edit-button {
+                --mask: var(--icon-16-edit-bulk);
+            }
+            &.edit-icon {
+                --mask: var(--icon-16-edit);
+            }
+            &.delete-icon {
+                --mask: var(--icon-16-trash);
+                --bg-hov: hsla(var(--h4), 10%);
+                --bg-atv: hsla(var(--h4), 20%);
+                --col: hsl(var(--l3-c));
+                --hue-over: var(--hue-neg);
+                --sat-over: 1;
+                --lit-over: 1;
+            }
+            &.love-button {
+                --mask: var(--icon-16-heart);
+                --font-size: 0;
+                --btn-left: 12px !important;
+
+                &.love-button--loved {
+                    --mask: var(--icon-16-heart-solid);
+                }
+            }
+            &.glacier-configure-button {
+                --font-size: 0;
+                --btn-left: 12px !important;
+            }
+        }
+    }
+}
+.glacier-library-focused-header {
+    display: flex;
+    flex-direction: column;
+    gap: var(--card-gap);
+
+    .glacier-library-top-upper {
+        display: flex;
+        justify-content: space-between;
+    }
+}
+
+.library-overview-header {
+    margin: 0 0 var(--card-gap) 0;
+}
+/* vue is duplicating it lol (it sucks) */
+.library-fetch > div > .library-overview-header {
+    display: none;
 }
 }
