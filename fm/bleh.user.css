@@ -4425,7 +4425,7 @@ better than the default selector '#app a' i suppose */
     color: hsl(var(--c3));
 
     /* no hover offset nonsense */
-    margin-right: 7.5px !important;
+    margin-right: var(--item-list-gap) !important;
 }
 
 @keyframes slide_down {
@@ -4459,13 +4459,38 @@ better than the default selector '#app a' i suppose */
 }
 .chartlist-image {
     margin-left: unset !important;
+    overflow: unset !important;
 
     transition-property: transform;
     transition-duration: var(--trans);
     transition-timing-function: var(--trans-function);
 
-    &:has(a):hover {
-        transform: scale(1.1);
+    &:before {
+        content: '';
+        position: absolute;
+        inset: -2px;
+        border-radius: calc(var(--item-small-radius) + 2px);
+        opacity: 0;
+
+        border: 2px solid hsl(var(--c2), 30%);
+        box-shadow: 0 0 30px hsl(var(--c2), 10%);
+
+        transition-property: opacity;
+        transition-duration: var(--trans);
+        transition-timing-function: var(--trans-function);
+    }
+
+    &:hover {
+        transition-duration: 0.1s !important;
+
+        &:before {
+            opacity: 1;
+            transition: none;
+        }
+    }
+
+    &:active {
+        transform: scale(0.98);
     }
 }
 .chartlist-bar:last-child,
@@ -4826,13 +4851,27 @@ better than the default selector '#app a' i suppose */
 .chartlist-image {
     width: 38px;
     height: 38px;
-    border-radius: var(--item-small-radius);
+    border-radius: var(--item-small-radius) !important;
     box-shadow: var(--card-shadow);
     overflow: hidden;
     background: var(--avatar-generic-background);
+
+    .cover-art,
+    img,
+    .avatar {
+        border-radius: inherit !important;
+    }
+
+    .avatar-status-dot {
+        display: none;
+    }
 }
-.chartlist-image:has(.avatar) {
-    border-radius: var(--avatar-radius);
+.chartlist-row[data-track-type="user"] .chartlist-image {
+    border-radius: var(--avatar-radius) !important;
+
+    &:before {
+        border-radius: calc(var(--avatar-radius) + 2px);
+    }
 }
 .similar-items-sidebar-item-image img {
     border-radius: var(--item-small-radius);

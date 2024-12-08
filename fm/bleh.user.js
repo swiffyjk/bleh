@@ -14966,6 +14966,8 @@ let has_prompted_for_update = false;
         let upper_wrap = document.createElement('div');
         upper_wrap.classList.add('glacier-library-top-upper');
 
+        let current_suffix = window.location.search;
+
         let metadata = document.createElement('div');
         metadata.classList.add('glacier-library-metadata');
         metadata.innerHTML = (`
@@ -14977,7 +14979,7 @@ let has_prompted_for_update = false;
                     ${trans[lang][type].name}
                 </div>
                 <div class="glacier-library-metadata-item-value glacier-library-metadata-focus" data-type="${type}">
-                    <a href="${link}">${(type == 'artist') ? correct_artist(header_title) : correct_item_by_artist(header_title, artist)}</a>${(duration != null) ? ` <span class="glacier-library-track-duration">${duration.textContent}</span>` : ''}${(type != 'artist') ? trans[lang].glacier.by_artist.replace('{a}', `<a href="${root}music/${sanitise(artist)}">${correct_artist(artist)}</a>`) : ''}
+                    <a href="${link}">${(type == 'artist') ? correct_artist(header_title) : correct_item_by_artist(header_title, artist)}</a>${(duration != null) ? ` <span class="glacier-library-track-duration">${duration.textContent}</span>` : ''}${(type != 'artist') ? trans[lang].glacier.by_artist.replace('{a}', `<a href="${root}user/${page.name}/library/music/+noredirect/${sanitise(artist)}${current_suffix}">${correct_artist(artist)}</a>`) : ''}
                 </div>
             </div>
         `);
