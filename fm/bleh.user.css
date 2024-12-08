@@ -4987,9 +4987,6 @@ a.chartlist-love-button:after {
     box-shadow: var(--interact-shadow);
     width: 180px;
     display: flex;
-    transition-property: transform;
-    transition-duration: var(--trans);
-    transition-timing-function: var(--trans-function);
 
     [data-bleh--theme="light"] & {
         background: hsl(var(--b5));
@@ -5006,6 +5003,34 @@ a.chartlist-love-button:after {
         --hue-seasonal: 120;
         --sat-seasonal: 1.15;
         --lit-seasonal: 0.95;
+    }
+
+    &:before {
+        content: '';
+        position: absolute;
+        inset: -4px;
+        border-radius: calc(var(--item-med-radius) + 4px);
+        opacity: 0;
+
+        border: 2px solid hsl(var(--h4), 30%);
+        box-shadow: 0 0 30px hsl(var(--h4), 10%);
+
+        transition-property: opacity;
+        transition-duration: var(--trans);
+        transition-timing-function: var(--trans-function);
+    }
+
+    &:hover {
+        transition-duration: 0.1s !important;
+
+        &:before {
+            opacity: 1;
+            transition: none;
+        }
+    }
+
+    &:active {
+        transform: scale(0.98);
     }
 }
 .chartlist-count-bar-link {
@@ -5044,11 +5069,6 @@ a.chartlist-love-button:after {
     [data-bleh--invert_interactable_colour="true"] & {
         color: hsl(var(--ov-c1)) !important;
     }
-}
-
-
-.chartlist-count-bar:has(.chartlist-count-bar-link:hover) {
-    transform: scaleX(1.05);
 }
 
 
