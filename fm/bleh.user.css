@@ -4204,6 +4204,8 @@ better than the default selector '#app a' i suppose */
     color: hsl(var(--c1));
 
     a {
+        display: inline-block;
+        width: 100%;
         text-decoration: var(--force-underline, none) !important;
     }
 }
