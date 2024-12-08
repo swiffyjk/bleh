@@ -4074,6 +4074,37 @@ better than the default selector '#app a' i suppose */
 }
 
 
+.grid-items.grid-items--fade-out {
+    .grid-items-item {
+        box-shadow: unset;
+        pointer-events: none;
+    }
+
+    &:after {
+        background: linear-gradient(180deg, transparent, hsl(var(--b5)));
+    }
+}
+.grid-items-cta {
+    img {
+        display: none;
+    }
+
+    h3 {
+        color: hsl(var(--c1));
+        font-size: 16px;
+        line-height: 20px;
+    }
+    .grid-cta-text {
+        margin-top: 2px;
+        color: hsl(var(--c2));
+
+        & + p {
+            margin-top: var(--card-gap);
+        }
+    }
+}
+
+
 .grid-items-item {
     .grid-items-cover-image-image {
         background: var(--avatar-generic-background);
@@ -5827,7 +5858,8 @@ button,
 .wiki-history-entry,
 .attendee-summary-user,
 .about-guest-feature,
-.weeklychart-item
+.weeklychart-item,
+.btn-subscribe
 {
     --bg: var(--cards-overlay-image-subtlest, none), hsl(var(--b4));
     --bg-hov: var(--cards-overlay-image-subtlest, none), hsla(var(--b4), 80%);
@@ -5925,7 +5957,8 @@ button,
         [data-bleh--image-is-bookmarked="true"],
         .btn-primary.profile-header-set-obsession,
         [data-toggle-button-current-state="loved"] .interact-item,
-        [data-toggle-button-current-state="bookmarked"] .interact-item
+        [data-toggle-button-current-state="bookmarked"] .interact-item,
+        .btn-subscribe
     ) {
         --bg: var(--cards-overlay-image-subtlest, none), hsl(var(--h3)) !important;
         --bg-hov: var(--cards-overlay-image-subtlest, none), hsla(var(--h3), 80%) !important;
