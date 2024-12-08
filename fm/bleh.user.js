@@ -14421,11 +14421,14 @@ let has_prompted_for_update = false;
         let view_buttons = document.createElement('div');
         view_buttons.classList.add('view-buttons', 'glacier-library-buttons');
 
+        let add_divider = false;
+
+        let sort = legacy_top_header.querySelector('.library-sort');
         if (!static_page) {
-            let sort = legacy_top_header.querySelector('.library-sort');
             let sort_button;
             if (sort != null) {
                 sort_button = sort.querySelector('.dropdown-menu-clickable-button');
+                add_divider = true;
 
                 if (sort_button != null) {
                     sort_button.classList.add('btn', 'view-item', 'glacier-library-button');
@@ -14442,6 +14445,7 @@ let has_prompted_for_update = false;
             format_button.classList.add('btn', 'view-item', 'glacier-library-button', 'glacier-view-button');
             format_button.setAttribute('onclick', '_update_glacier_view()');
             page.structure.glacier.format = format_button;
+            add_divider = true;
 
             if (top_wrap.getAttribute('data-current-format') == 'grid') {
                 format_button.setAttribute('data-glacier-view', 'grid');
@@ -14454,7 +14458,7 @@ let has_prompted_for_update = false;
             view_buttons.appendChild(format_button);
         }
 
-        if (!static_page) {
+        if (!static_page && add_divider) {
             let listen_divider = document.createElement('div');
             listen_divider.classList.add('listen-divider');
             view_buttons.appendChild(listen_divider);
