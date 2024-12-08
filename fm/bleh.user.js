@@ -290,7 +290,8 @@ const trans = {
             },
             open_avatar: 'Open in a new tab',
             settings: 'Configure',
-            events: 'Events'
+            events: 'Events',
+            top_badge: 'Top Badge'
         },
         event: {
             name: 'Event',
@@ -927,8 +928,38 @@ const trans = {
                 tooltip_active: 'Active name correction'
             }
         },
+        glacier: {
+            name: 'Library refresh',
+            by_artist: ' by {a}',
+            meta: {
+                artists: 'Artists',
+                albums: 'Albums',
+                tracks: 'Tracks',
+                average: 'Average'
+            },
+            view: {
+                grid: 'Grid',
+                list: 'List',
+                line: 'Line',
+                pie: 'Pie',
+                bar: 'Bar'
+            },
+            dates: {
+                last_year: 'Last year',
+                this_year: 'This year'
+            },
+            edit: 'Edit',
+            delete: 'Delete',
+            love: 'Love',
+            bulk_edit: 'Bulk edit',
+            option: {
+                name: 'Use new graphs in library',
+                bio: 'This can add a little amount of slow-down in some cases but with the benefit of awesome graphs.'
+            }
+        },
         changelog: {
             name: 'What’s New?',
+            subtitle: 'from {u}',
             type: {
                 major: 'Major release',
                 minor: 'Minor release',
@@ -1008,7 +1039,11 @@ const trans = {
                 you_share_1: 'Ihr hört {artist}',
                 you_share_2: 'Ihr hört {artist1} und {artist2}',
                 you_share_3: 'Ihr hört {artist1}, {artist2}, und {artist3}'
-            }
+            },
+            open_avatar: 'Open in a new tab',
+            settings: 'Configure',
+            events: 'Events',
+            top_badge: 'Top Badge'
         },
         messaging: {
             update: 'bleh wurde auf Version {v} aktualisiert!'
@@ -1579,8 +1614,38 @@ const trans = {
                 tooltip_active: 'Active name correction'
             }
         },
+        glacier: {
+            name: 'Library refresh',
+            by_artist: ' by {a}',
+            meta: {
+                artists: 'Artists',
+                albums: 'Albums',
+                tracks: 'Tracks',
+                average: 'Average'
+            },
+            view: {
+                grid: 'Grid',
+                list: 'List',
+                line: 'Line',
+                pie: 'Pie',
+                bar: 'Bar'
+            },
+            dates: {
+                last_year: 'Last year',
+                this_year: 'This year'
+            },
+            edit: 'Edit',
+            delete: 'Delete',
+            love: 'Love',
+            bulk_edit: 'Bulk edit',
+            option: {
+                name: 'Use new graphs in library',
+                bio: 'This can add a little amount of slow-down in some cases but with the benefit of awesome graphs.'
+            }
+        },
         changelog: {
             name: 'What’s New?',
+            subtitle: 'from {u}',
             type: {
                 major: 'Major release',
                 minor: 'Minor release',
@@ -1667,7 +1732,10 @@ const trans = {
                 you_share_2: 'You share {artist1} and {artist2}',
                 you_share_3: 'You share {artist1}, {artist2}, and {artist3}'
             },
-            open_avatar: 'Open in a new tab'
+            open_avatar: 'Open in a new tab',
+            settings: 'Configure',
+            events: 'Events',
+            top_badge: 'Top Badge'
         },
         messaging: {
             update: 'bleh has updated to version {v}!'
@@ -6516,7 +6584,7 @@ let has_prompted_for_update = false;
                     </div>
                     <div class="info">
                         <h5 class="title ${(cute.includes(name)) ? 'bleh--name-is-cute-less' : ''}">${name}</h5>
-                        <p class="descriptor">Top Badge</p>
+                        <p class="descriptor">${trans[lang].profile.top_badge}</p>
                         <p class="badge user-status--bleh-${this_badge.type} user-status--bleh-user-${name}" data-badge-type="${this_badge.type}" data-badge-user="${name}">${this_badge.name}</p>
                     </div>
                 `),
@@ -6558,7 +6626,7 @@ let has_prompted_for_update = false;
                         </div>
                         <div class="info">
                             <h5 class="title ${(cute.includes(name)) ? 'bleh--name-is-cute-less' : ''}">${name}</h5>
-                            <p class="descriptor">Top Badge</p>
+                            <p class="descriptor">${trans[lang].profile.top_badge}</p>
                             <p class="badge ${pre_existing_badge.classList[1]}">${avatar.getAttribute('title')}</p>
                         </div>
                     `),
