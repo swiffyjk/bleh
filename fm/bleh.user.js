@@ -7312,17 +7312,23 @@ let has_prompted_for_update = false;
                 </div>
                 <div class="sep"></div>
                 <h4>${trans[lang].settings.customise.seasonal.name}</h4>
-                <div class="inner-preview pad click-thru">
-                    <div class="current-season-container">
-                        <div class="current-season" data-season="${stored_season.id}" id="current_season">
-                            ${(stored_season.id != 'none')
-                            ? trans[lang].settings.customise.seasonal.marker.current.replace('{season}', trans[lang].settings.customise.seasonal.listing[stored_season.id]).replace('{time}', moment(stored_season.end.replace('y0', stored_season.year)).to(stored_season.now, true))
-                            : (settings.seasonal) ? trans[lang].settings.customise.seasonal.marker.none : trans[lang].settings.customise.seasonal.marker.disabled}
-                        </div>
-                        <div class="current-season-started" id="current_season_start">
-                            ${(stored_season.id != 'none')
-                            ? trans[lang].settings.customise.seasonal.marker.started.replace('{time}', moment(stored_season.start.replace('y0', stored_season.year)).from(stored_season.now))
-                            : ''}
+                <div class="current-season-box no-margin" data-season="${stored_season.id}">
+                    <div class="current-season-info">
+                        <div class="bleh-icon bleh-seasonal-icon" data-season="${stored_season.id}"></div>
+                        <h4>${trans[lang].settings.customise.seasonal.listing[stored_season.id]}</h4>
+                    </div>
+                    <div class="glacier-library-top season-top">
+                        <div class="glacier-library-metadata">
+                            ${(stored_season.id != 'none') ? (`
+                            <div class="glacier-library-metadata-item">
+                                <div class="sub-text">${trans[lang].settings.customise.seasonal.started}</div>
+                                <div class="glacier-library-metadata-item-value" id="current_season">${moment(stored_season.start.replace('y0', stored_season.year)).from(stored_season.now)}</div>
+                            </div>
+                            <div class="glacier-library-metadata-item">
+                                <div class="sub-text">${trans[lang].settings.customise.seasonal.ends_in}</div>
+                                <div class="glacier-library-metadata-item-value" id="current_season_start">${moment(stored_season.end.replace('y0', stored_season.year)).to(stored_season.now, true)}</div>
+                            </div>
+                            `) : ''}
                         </div>
                     </div>
                 </div>

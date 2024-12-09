@@ -6241,7 +6241,6 @@ button,
 .source-album:before,
 /*     BLEH     */
 .swatch:before,
-.current-season:before,
 .arrow-divider:before,
 .view-item:not(.profile-top-item--taste):before,
 .loading-data-text:before,
@@ -18194,6 +18193,10 @@ section > .section-controls .subpage-title {
     flex-direction: column;
     gap: var(--card-gap);
     margin-top: var(--card-gap);
+
+    &.no-margin {
+        margin-top: unset;
+    }
 
     padding: var(--card-gap);
     background: linear-gradient(180deg, hsla(var(--h4), 30%), transparent);
