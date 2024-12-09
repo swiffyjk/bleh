@@ -465,6 +465,7 @@ const trans = {
                 },
                 seasonal: {
                     name: 'Seasonal',
+                    timeline: 'Seasonal timeline',
                     bio: 'During seasonal events, bleh can automatically change the default accent colour, add particles, and add overlays to various interface elements.',
                     listing: {
                         easter: 'Easter',
@@ -3844,7 +3845,7 @@ let has_prompted_for_update = false;
 
         let current_year = now.getFullYear();
 
-        seasonal_events.forEach((season) => {
+        seasonal_events.forEach((season, index) => {
             log(`running thru, ${season.id} - ${new Date(season.start.replace('y0', current_year))} ${new Date(season.end.replace('y0', current_year))}`, 'season', 'log');
             log(`${now >= new Date(season.start.replace('y0', current_year))} ${now <= new Date(season.end.replace('y0', current_year))}`, 'season', 'log');
             if (
@@ -3861,7 +3862,19 @@ let has_prompted_for_update = false;
                 stored_season.end = season.end;
                 stored_season.snowflakes = season.snowflakes;
 
+                // whats the next season?
+                if (seasonal_events[index + 1] == null) {
+                    stored_season.next_id = seasonal_events[0].id;
+                    stored_season.next_start = seasonal_events[0].start;
+                    stored_season.next_is_new_year = true;
+                } else {
+                    stored_season.next_id = seasonal_events[index + 1].id;
+                    stored_season.next_start = seasonal_events[index + 1].start;
+                    stored_season.next_is_new_year = false;
+                }
+
                 log(`${season.id} from ${season.start} to ${season.end}`, 'season');
+                log(`next will be ${stored_season.next_id} from ${stored_season.next_start} (is new year? ${stored_season.next_is_new_year})`, 'season');
 
                 document.documentElement.setAttribute('data-bleh--season', season.id);
 
@@ -3885,6 +3898,8 @@ let has_prompted_for_update = false;
                 localStorage.setItem('bleh_last_season_seen', season.id);
 
                 load_chart_colours();
+
+                return;
             }
         });
     }
@@ -8044,6 +8059,7 @@ let has_prompted_for_update = false;
             return (`
                 <div class="bleh--panel">
                     <h4 class="top-header">${trans[lang].settings.customise.seasonal.name}</h4>
+                    <h4>${trans[lang].settings.customise.seasonal.timeline}</h4>
                     <p>${trans[lang].settings.customise.seasonal.bio}</p>
                     <div class="inner-preview pad click-thru">
                         <div class="current-season-container">
