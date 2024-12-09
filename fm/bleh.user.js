@@ -467,6 +467,9 @@ const trans = {
                     name: 'Seasonal',
                     timeline: 'Seasonal timeline',
                     bio: 'During seasonal events, bleh can automatically change the default accent colour, add particles, and add overlays to various interface elements.',
+                    info: 'Seasonal events are ran in universal time (UTC) for consistency.',
+                    started: 'Started',
+                    ends_in: 'Ends in',
                     listing: {
                         easter: 'Easter',
                         pride: 'Pride',
@@ -8056,25 +8059,55 @@ let has_prompted_for_update = false;
         } else if (page == 'seasonal') {
             head.textContent = trans[lang].settings.customise.seasonal.name;
 
+            let current_date = new Date();
+            let current_day = 'decmebervbg 09 :3';
+
             return (`
                 <div class="bleh--panel">
-                    <h4 class="top-header">${trans[lang].settings.customise.seasonal.name}</h4>
-                    <h4>${trans[lang].settings.customise.seasonal.timeline}</h4>
-                    <p>${trans[lang].settings.customise.seasonal.bio}</p>
+                    <div class="seasonal-inner">
+                        <div class="sub-text">${trans[lang].settings.customise.seasonal.timeline}</div>
+                        <h4>${current_day}</h4>
+                        <div class="current-season-box" data-season="${stored_season.id}">
+                            <div class="current-season-info">
+                                <div class="bleh-icon bleh-seasonal-icon" data-season="${stored_season.id}"></div>
+                                <h4>${trans[lang].settings.customise.seasonal.listing[stored_season.id]}</h4>
+                            </div>
+                            <div class="glacier-library-top season-top">
+                                <div class="glacier-library-metadata">
+                                    ${(stored_season.id != 'none') ? (`
+                                    <div class="glacier-library-metadata-item">
+                                        <div class="sub-text">${trans[lang].settings.customise.seasonal.started}</div>
+                                        <div class="glacier-library-metadata-item-value" id="current_season">${moment(stored_season.start.replace('y0', stored_season.year)).from(stored_season.now)}</div>
+                                    </div>
+                                    <div class="glacier-library-metadata-item">
+                                        <div class="sub-text">${trans[lang].settings.customise.seasonal.ends_in}</div>
+                                        <div class="glacier-library-metadata-item-value" id="current_season_start">${moment(stored_season.end.replace('y0', stored_season.year)).to(stored_season.now, true)}</div>
+                                    </div>
+                                    `) : ''}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="info-box no-padding">
+                        <div class="bleh-icon bleh-info-icon"></div>
+                        ${trans[lang].settings.customise.seasonal.info}
+                    </div>
+                    <!--<p>${trans[lang].settings.customise.seasonal.bio}</p>
                     <div class="inner-preview pad click-thru">
                         <div class="current-season-container">
                             <div class="current-season" data-season="${stored_season.id}" id="current_season">
                                 ${(stored_season.id != 'none')
-                                ? trans[lang].settings.customise.seasonal.marker.current.replace('{season}', trans[lang].settings.customise.seasonal.listing[stored_season.id]).replace('{time}', moment(stored_season.end.replace('y0', stored_season.year)).to(stored_season.now, true))
+                                ? trans[lang].settings.customise.seasonal.marker.current.replace('{season}', trans[lang].settings.customise.seasonal.listing[stored_season.id])
                                 : (settings.seasonal) ? trans[lang].settings.customise.seasonal.marker.none : trans[lang].settings.customise.seasonal.marker.disabled}
                             </div>
                             <div class="current-season-started" id="current_season_start">
                                 ${(stored_season.id != 'none')
-                                ? trans[lang].settings.customise.seasonal.marker.started.replace('{time}', moment(stored_season.start.replace('y0', stored_season.year)).from(stored_season.now))
+                                ? trans[lang].settings.customise.seasonal.marker.started
                                 : ''}
                             </div>
                         </div>
-                    </div>
+                    </div>-->
+                    <h4>${trans[lang].settings.configure}</h4>
                     <div class="toggle-container" id="container-seasonal" onclick="_update_item('seasonal')">
                         <button class="btn reset" onclick="_reset_item('seasonal')">${trans[lang].settings.reset}</button>
                         <div class="heading">
