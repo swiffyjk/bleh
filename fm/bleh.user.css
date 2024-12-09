@@ -18200,6 +18200,7 @@ section > .section-controls .subpage-title {
 
     padding: var(--card-gap);
     background: linear-gradient(180deg, hsla(var(--h4), 30%), transparent);
+    color: hsl(var(--c2));
     border-radius: var(--item-big-radius);
     border-bottom-left-radius: 0;
     border-bottom-right-radius: 0;
