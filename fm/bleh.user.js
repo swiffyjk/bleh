@@ -5858,9 +5858,28 @@ let has_prompted_for_update = false;
                 page.structure.side.appendChild(value_panel);
             } else if (page.subpage.startsWith('listening-report')) {
                 let report_box_container = document.body.querySelector('.report-box-container--overview');
+                if (report_box_container != null) {
+                    if (report_box_container != null)
+                        page.structure.content_top.after(report_box_container);
+                } else {
+                    let dashboard = page.structure.container.querySelector('.user-dashboard');
 
-                if (report_box_container != null)
-                    page.structure.content_top.after(report_box_container);
+                    if (dashboard == null)
+                        return;
+
+                    // v2
+                    dialog({
+                        id: 'listening_report_v2',
+                        title: 'Listening reports v2',
+                        body: (`
+                            <div class="alert alert-error">Unfortunately, legacy listening reports are not supported in bleh3.</div>
+                            <br>
+                            <p>To view this page properly it's recommended to temporarily disable bleh :3</p>
+                            <p>Sorry for the inconvenience !!</p>
+                        `)
+                    });
+                    return;
+                }
             }
         }
 
@@ -8065,14 +8084,11 @@ let has_prompted_for_update = false;
         } else if (page == 'seasonal') {
             head.textContent = trans[lang].settings.customise.seasonal.name;
 
-            let current_date = new Date();
-            let current_day = 'decmebervbg 09 :3';
-
             return (`
                 <div class="bleh--panel">
                     <div class="seasonal-inner">
                         <div class="sub-text">${trans[lang].settings.customise.seasonal.timeline}</div>
-                        <h4>${current_day}</h4>
+                        <h4>${moment(stored_season.now).format('MMMM Do YYYY')}</h4>
                         <div class="current-season-box" data-season="${stored_season.id}">
                             <div class="current-season-info">
                                 <div class="bleh-icon bleh-seasonal-icon" data-season="${stored_season.id}"></div>
@@ -8083,11 +8099,11 @@ let has_prompted_for_update = false;
                                     ${(stored_season.id != 'none') ? (`
                                     <div class="glacier-library-metadata-item">
                                         <div class="sub-text">${trans[lang].settings.customise.seasonal.started}</div>
-                                        <div class="glacier-library-metadata-item-value" id="current_season">${moment(stored_season.start.replace('y0', stored_season.year)).from(stored_season.now)}</div>
+                                        <div class="glacier-library-metadata-item-value" id="current_season_start">${moment(stored_season.start.replace('y0', stored_season.year)).from(stored_season.now)}</div>
                                     </div>
                                     <div class="glacier-library-metadata-item">
                                         <div class="sub-text">${trans[lang].settings.customise.seasonal.ends_in}</div>
-                                        <div class="glacier-library-metadata-item-value" id="current_season_start">${moment(stored_season.end.replace('y0', stored_season.year)).to(stored_season.now, true)}</div>
+                                        <div class="glacier-library-metadata-item-value" id="current_season">${moment(stored_season.end.replace('y0', stored_season.year)).to(stored_season.now, true)}</div>
                                     </div>
                                     `) : ''}
                                 </div>

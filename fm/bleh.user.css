@@ -715,9 +715,15 @@ body {
             --cards-overlay-image-subtlest: var(--overlay-ice-subtlest);
             --cards-overlay-image-spikes: var(--overlay-ice-spikes);
         }
-        &[data-bleh--season="christmas"],
-        &[data-bleh--season="new_years"] {
+        &[data-bleh--season="christmas"] {
             --cards-overlay: linear-gradient(180deg, rgba(157, 211, 255, 0.09) 0%, rgba(0,0,0,0) 100%);
+            --cards-overlay-image: var(--overlay-ice);
+            --cards-overlay-image-subtle: var(--overlay-ice-subtle);
+            --cards-overlay-image-subtlest: var(--overlay-ice-subtlest);
+            --cards-overlay-image-spikes: var(--overlay-ice-spikes);
+        }
+        &[data-bleh--season="new_years"] {
+            --cards-overlay: linear-gradient(180deg, rgba(71, 43, 124, 0.2) 0%, rgba(0,0,0,0) 60%);
             --cards-overlay-image: var(--overlay-ice);
             --cards-overlay-image-subtle: var(--overlay-ice-subtle);
             --cards-overlay-image-subtlest: var(--overlay-ice-subtlest);
@@ -975,13 +981,6 @@ last.fm changes as of 2024-05-20 */
 
 .masthead-nav-item, .masthead-search-toggle {
     height: 40px !important;
-}
-.masthead-nav-item .masthead-nav-control {
-    /* if classic-playbar is not present, last.fm uses a new header design,
-    featuring this fancy underline thing */
-    &:after {
-        display: none !important;
-    }
 }
 .masthead-nav-control:before, .masthead-search-toggle:before {
     opacity: 1 !important;
@@ -2757,8 +2756,7 @@ button.navlist-more {
         color: hsl(var(--c1)) !important;
         font-weight: var(--font-weight-bold);
 
-        [data-bleh--season="christmas"] &,
-        [data-bleh--season="new_years"] & {
+        [data-bleh--season="christmas"] & {
             --hue-seasonal: -2;
             --sat-seasonal: 1.3;
             --lit-seasonal: 0.9;
@@ -4583,8 +4581,7 @@ better than the default selector '#app a' i suppose */
         --lit-seasonal: 1;
     }
 
-    [data-bleh--season="christmas"] &,
-    [data-bleh--season="new_years"] & {
+    [data-bleh--season="christmas"] & {
         --hue-seasonal: -2;
         --sat-seasonal: 1.3;
         --lit-seasonal: 0.9;
@@ -5076,8 +5073,7 @@ a.chartlist-love-button:after {
         --lit-seasonal: 1;
     }
 
-    [data-bleh--season="christmas"] &,
-    [data-bleh--season="new_years"] & {
+    [data-bleh--season="christmas"] & {
         --hue-seasonal: 120;
         --sat-seasonal: 1.15;
         --lit-seasonal: 0.95;
@@ -5978,11 +5974,16 @@ button,
             --col: hsl(var(--ov-c1)) !important;
         }
 
-        [data-bleh--season="christmas"] &,
-        [data-bleh--season="new_years"] & {
+        [data-bleh--season="christmas"] & {
             --hue-seasonal: 120;
             --sat-seasonal: 1.15;
             --lit-seasonal: 0.95;
+        }
+
+        [data-bleh--season="new_years"] & {
+            --hue-seasonal: 333;
+            --sat-seasonal: 1.1;
+            --lit-seasonal: 1;
         }
     }
 
@@ -9403,8 +9404,11 @@ text[style^="color: rgb(255, 172, 172)"] {
 .listening-report-top-item-badge, .top-new-item-type, .top-item-overview__type,
 .listening-report-top-item-heading-name,
 .quick-fact-data-detail,
-.top-item-overview__scrobbles, .quick-fact-data-value, .report-headline-total {
+.top-item-overview__scrobbles, .quick-fact-data-value {
     font-weight: var(--font-weight-medium) !important;
+}
+.report-headline-total {
+    font-weight: var(--font-weight-bold) !important;
 }
 
 .listening-report-row {
@@ -14352,11 +14356,16 @@ input[type="range"]::-moz-range-progress {
             box-shadow: 0 0 30px hsl(var(--c1), 30%);
         }*/
 
-        [data-bleh--season="christmas"] &,
-        [data-bleh--season="new_years"] & {
+        [data-bleh--season="christmas"] & {
             --hue-seasonal: -2;
             --sat-seasonal: 1.3;
             --lit-seasonal: 0.9;
+        }
+
+        [data-bleh--season="new_years"] & {
+            --hue-seasonal: 333;
+            --sat-seasonal: 1.1;
+            --lit-seasonal: 1;
         }
     }
 
