@@ -169,6 +169,10 @@ const trans = {
                 pie: 'Pie',
                 bar: 'Bar'
             },
+            axis: {
+                horizontal: 'Horizontal',
+                vertical: 'Vertical'
+            },
             dates: {
                 last_year: 'Last year',
                 this_year: 'This year'
@@ -2766,6 +2770,7 @@ let settings_template = {
     travis: false,
     list_view: 1,
     chart_view: 'line',
+    chart_bar_axis: 'horizontal',
     chart_insights_view: 'pie',
     shout_markdown: true,
     bio_markdown: true,
@@ -2965,9 +2970,15 @@ let settings_base = {
         type: 'options'
     },
     chart_view: {
-        css: 'list_view',
+        css: 'chart_view',
         unit: '',
         value: 'line',
+        type: 'options'
+    },
+    chart_bar_axis: {
+        css: 'chart_bar_axis',
+        unit: '',
+        value: 'horizontal',
         type: 'options'
     },
     shout_markdown: {
@@ -4413,6 +4424,27 @@ let has_prompted_for_update = false;
         }
 
         page.state.chart_library_bar_options = {
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    display: false
+                },
+                tooltip: {
+                    backgroundColor: root_bg_col,
+                    titleColor: text_primary_col,
+                    bodyColor: text_primary_col,
+                    padding: 7,
+                    cornerRadius: 10,
+                    caretSize: 0
+                }
+            },
+            onClick: (e, active, chart) => {
+                //console.info(active[0].index);
+                bleh_glacier_library_open_index(active[0].index);
+            }
+        }
+        page.state.chart_library_bar_v_options = {
+            indexAxis: 'y',
             maintainAspectRatio: false,
             plugins: {
                 legend: {
@@ -9401,7 +9433,7 @@ let has_prompted_for_update = false;
 
 
                 // re-flow chart
-                if (item == 'chart_view' && page.type == 'user' && page.subpage.startsWith('library'))
+                if ((item == 'chart_view' || item == 'chart_bar_axis') && page.type == 'user' && page.subpage.startsWith('library'))
                     bleh_glacier_date_graph_generate();
             } else {
                 // dont modify, just show
@@ -14251,7 +14283,20 @@ let has_prompted_for_update = false;
 
             page.structure.glacier.selector.after(chart_view_selector);
 
-            refresh_all(chart_view_selector);
+            let chart_axis_selector = document.createElement('div');
+            chart_axis_selector.classList.add('view-buttons', 'chart-axis-selector', 'view-buttons-middle');
+            chart_axis_selector.innerHTML = (`
+                <button class="btn view-item" id="toggle-chart_bar_axis-horizontal" data-toggle="chart_bar_axis" data-toggle-value="horizontal" onclick="_update_item('chart_bar_axis', 'horizontal')">
+                    ${trans[lang].glacier.axis.horizontal}
+                </button>
+                <button class="btn view-item" id="toggle-chart_bar_axis-vertical" data-toggle="chart_bar_axis" data-toggle-value="vertical" onclick="_update_item('chart_bar_axis', 'vertical')">
+                    ${trans[lang].glacier.axis.vertical}
+                </button>
+            `);
+
+            chart_view_selector.after(chart_axis_selector);
+
+            refresh_all(page.structure.glacier.date_panel);
         }
 
 
@@ -15112,7 +15157,7 @@ let has_prompted_for_update = false;
                         borderRadius: 9
                     }]
                 },
-                options: page.state.chart_library_bar_options
+                options: (settings.chart_bar_axis == 'horizontal') ? page.state.chart_library_bar_options : page.state.chart_library_bar_v_options
             });
         }
 
