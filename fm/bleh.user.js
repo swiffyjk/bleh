@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         bleh
 // @namespace    http://last.fm/
-// @version      2024.1208
+// @version      2024.1210
 // @description  bleh!!! ^-^
 // @author       kate
 // @match        https://www.last.fm/*
@@ -21,7 +21,7 @@
 // ==/UserScript==
 
 let version = {
-    build: '2024.1208',
+    build: '2024.1210',
     sku: 'glacier',
     feature_flags: {
         bleh_settings_tabs: {
@@ -940,9 +940,9 @@ const trans = {
             name: 'Library refresh',
             by_artist: ' by {a}',
             meta: {
-                artists: 'Artists',
-                albums: 'Albums',
-                tracks: 'Tracks',
+                artists: 'Künstler',
+                albums: 'Alben',
+                tracks: 'Titel',
                 average: 'Average'
             },
             view: {
@@ -951,6 +951,10 @@ const trans = {
                 line: 'Line',
                 pie: 'Pie',
                 bar: 'Bar'
+            },
+            axis: {
+                horizontal: 'Horizontal',
+                vertical: 'Vertical'
             },
             dates: {
                 last_year: 'Last year',
@@ -981,7 +985,12 @@ const trans = {
             dev: 'Toggle dev mode',
             configure_bleh: 'bleh einstellen',
             library: 'Musiksammlung',
-            shouts: 'Shouts'
+            shouts: 'Shouts',
+            obsessions: 'Obsessions',
+            labs: 'Labs',
+            bookmarks: 'Bookmarks',
+            settings: 'Settings',
+            logout: 'Logout'
         },
         music: {
             submit_lastfm_correction: 'Submit correction to Last.fm',
@@ -1011,6 +1020,7 @@ const trans = {
             }
         },
         profile: {
+            name: 'Profile',
             on_ignore_list: 'Du stehst auf der Ignorierliste dieses Benutzers.',
             friends: {
                 name: 'Freunde'
@@ -1064,6 +1074,7 @@ const trans = {
             }
         },
         settings: {
+            name: 'Settings',
             save: 'Speichern',
             cancel: 'Abbrechen',
             close: 'Schließen',
@@ -1077,6 +1088,8 @@ const trans = {
             back: 'Zurück',
             reload: 'Klicke zum Neuladen, um deine Einstellungen zu übernehmen.',
             new: 'Neu',
+            beta: 'Beta',
+            configure: 'Configure',
             examples: {
                 button: 'Beispiel-Taste'
             },
@@ -1135,6 +1148,7 @@ const trans = {
             },
             music: {
                 name: 'Musik',
+                header: 'Music configuration',
                 bio: 'Konfiguriere deine musikbezogene Einstellungen für Profile, Künstler, Alben und Titel.',
                 profile_shortcut: {
                     name: 'Profilverknüpfung',
@@ -1143,6 +1157,11 @@ const trans = {
                     header: 'Benutzernamen eingeben',
                     saved: 'Die Profilverknüpfung ist gültig',
                     failed: 'Das Profil existiert nicht oder konnte nicht geladen werden.'
+                },
+                show_bulk_edit_album: {
+                    name: 'Show album in chartlists',
+                    bio: 'This is disabled by default as hovering over tracks reveals the album title in all areas',
+                    require: 'Only applicable with the ‘Last.fm Bulk Edit’ extension'
                 }
             },
             accessibility: {
@@ -1159,6 +1178,23 @@ const trans = {
                 reduced_motion: {
                     name: 'Animationen reduzieren',
                     bio: 'Will in most cases either slowly fade or hard-cut, no scaling.'
+                }
+            },
+            layout: {
+                name: 'Layout',
+                header: 'Manage header layout',
+                avatar_action: {
+                    name: 'Default avatar action',
+                    bio: 'What do you want to happen when you click avatars?',
+                    gallery: 'View photos (or featured album for tracks)',
+                    album: 'View featured album'
+                },
+                quick_artist_button: {
+                    name: 'Quick artist button',
+                    bio: 'Control the right-side button on artist profiles.',
+                    shouts: 'View shouts',
+                    wiki: 'View biography',
+                    listens: 'View listeners'
                 }
             },
             customise: {
@@ -1185,7 +1221,11 @@ const trans = {
                 },
                 seasonal: {
                     name: 'Saisonal',
+                    timeline: 'Seasonal timeline',
                     bio: 'Während saisonaler Ereignisse kann bleh automatisch die Standardakzentfarbe ändern, Partikel hinzufügen und verschiedenen Schnittstellenelementen Overlays hinzufügen.',
+                    info: 'Seasonal events are ran in universal time (UTC) for consistency.',
+                    started: 'Started',
+                    ends_in: 'Ends in',
                     listing: {
                         easter: 'Ostern',
                         pride: 'Pride',
@@ -1443,6 +1483,9 @@ const trans = {
                         },
                         style: {
                             name: 'Chart style'
+                        },
+                        length: {
+                            name: 'Chart size'
                         }
                     },
                     albums: {
@@ -1451,6 +1494,9 @@ const trans = {
                         },
                         style: {
                             name: 'Chart style'
+                        },
+                        length: {
+                            name: 'Chart size'
                         }
                     },
                     tracks: {
@@ -1568,7 +1614,25 @@ const trans = {
                         bio: 'Unsave this image'
                     }
                 }
-            }
+            },
+            empty: {
+                title: 'No title',
+                description: 'No description'
+            },
+            prefer: {
+                name: 'Star'
+            },
+            report: {
+                name: 'Report'
+            },
+            open: {
+                name: 'Expand',
+                tooltip: 'Expand image to full resolution'
+            },
+            up: 'Up votes:',
+            down: 'Down votes:',
+            vote: 'This is the sum of votes used for ordering.',
+            view: 'View photos'
         },
         empty: {
             title: 'No title',
@@ -1607,6 +1671,21 @@ const trans = {
             bookmark: 'You bookmarked {i}',
             unbookmark: 'You removed {i}’s bookmark',
             wiki: 'You edited on {i}'
+        },
+        artist: {
+            name: 'Artist',
+            plural: 'Künstler'
+        },
+        album: {
+            name: 'Album',
+            plural: 'Alben'
+        },
+        track: {
+            name: 'Track',
+            plural: 'Titel'
+        },
+        tag: {
+            name: 'Tag'
         }
     },
     pl: {
@@ -1638,6 +1717,10 @@ const trans = {
                 pie: 'Pie',
                 bar: 'Bar'
             },
+            axis: {
+                horizontal: 'Horizontal',
+                vertical: 'Vertical'
+            },
             dates: {
                 last_year: 'Last year',
                 this_year: 'This year'
@@ -1667,7 +1750,12 @@ const trans = {
             dev: 'Przełącz tryb deweloperski',
             configure_bleh: 'Skonfiguruj bleh',
             library: 'Library',
-            shouts: 'Wiadomości'
+            shouts: 'Wiadomości',
+            obsessions: 'Obsessions',
+            labs: 'Labs',
+            bookmarks: 'Bookmarks',
+            settings: 'Settings',
+            logout: 'Logout'
         },
         music: {
             submit_lastfm_correction: 'Submit correction to Last.fm',
@@ -1702,6 +1790,7 @@ const trans = {
             }
         },
         profile: {
+            name: 'Profile',
             cannot_follow_user: 'Nie możesz zaobserwować tego użytkownika.',
             on_ignore_list: 'Jesteś na liście ignorowanych tego użytkownika.',
             friends: {
@@ -1756,6 +1845,7 @@ const trans = {
             }
         },
         settings: {
+            name: 'Settings',
             save: 'Zapisz',
             cancel: 'Anuluj',
             close: 'Zamknij',
@@ -1769,6 +1859,8 @@ const trans = {
             back: 'Back',
             reload: 'A setting you changed requires a page reload to take effect, click to reload.',
             new: 'New',
+            beta: 'Beta',
+            configure: 'Configure',
             examples: {
                 button: 'Przycisk przykładowy'
             },
@@ -1830,6 +1922,7 @@ const trans = {
             },
             music: {
                 name: 'Music',
+                header: 'Music configuration',
                 bio: 'Configure your music-related settings for profiles, artists, albums, and tracks.',
                 profile_shortcut: {
                     name: 'Profile shortcut',
@@ -1857,6 +1950,23 @@ const trans = {
                     bio: 'Podkreślaj linki do elementów interaktywnych.'
                 }
             },
+            layout: {
+                name: 'Layout',
+                header: 'Manage header layout',
+                avatar_action: {
+                    name: 'Default avatar action',
+                    bio: 'What do you want to happen when you click avatars?',
+                    gallery: 'View photos (or featured album for tracks)',
+                    album: 'View featured album'
+                },
+                quick_artist_button: {
+                    name: 'Quick artist button',
+                    bio: 'Control the right-side button on artist profiles.',
+                    shouts: 'View shouts',
+                    wiki: 'View biography',
+                    listens: 'View listeners'
+                }
+            },
             customise: {
                 name: 'Dostosuj',
                 colours: {
@@ -1881,7 +1991,11 @@ const trans = {
                 },
                 seasonal: {
                     name: 'Seasonal',
+                    timeline: 'Seasonal timeline',
                     bio: 'During seasonal events, bleh can automatically change the default accent colour, add particles, and add overlays to various interface elements.',
+                    info: 'Seasonal events are ran in universal time (UTC) for consistency.',
+                    started: 'Started',
+                    ends_in: 'Ends in',
                     listing: {
                         easter: 'Easter',
                         pride: 'Pride',
@@ -2139,6 +2253,9 @@ const trans = {
                         },
                         style: {
                             name: 'Styl rankingu'
+                        },
+                        length: {
+                            name: 'Chart size'
                         }
                     },
                     albums: {
@@ -2147,6 +2264,9 @@ const trans = {
                         },
                         style: {
                             name: 'Styl rankingu'
+                        },
+                        length: {
+                            name: 'Chart size'
                         }
                     },
                     tracks: {
@@ -2285,6 +2405,21 @@ const trans = {
             bookmark: 'You bookmarked {i}',
             unbookmark: 'You removed {i}’s bookmark',
             wiki: 'You edited on {i}'
+        },
+        artist: {
+            name: 'Artist',
+            plural: 'Artists'
+        },
+        album: {
+            name: 'Album',
+            plural: 'Albums'
+        },
+        track: {
+            name: 'Track',
+            plural: 'Tracks'
+        },
+        tag: {
+            name: 'Tag'
         }
     },
 }
