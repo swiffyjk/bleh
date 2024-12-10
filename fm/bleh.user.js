@@ -21,7 +21,7 @@
 // ==/UserScript==
 
 let version = {
-    build: '2024.1210',
+    build: '2024.1210.1',
     sku: 'glacier',
     feature_flags: {
         bleh_settings_tabs: {
@@ -13616,8 +13616,12 @@ let has_prompted_for_update = false;
         scrobble_canvas.classList.add('scrobble-canvas');
 
         let gradient = scrobble_canvas.getContext('2d').createLinearGradient(0, 0, 0, 160);
-        gradient.addColorStop(0, page.state.chart_colours.link_bg_col);
-        gradient.addColorStop(1, page.state.chart_colours.link_bg_col_2);
+        try {
+            gradient.addColorStop(0, page.state.chart_colours.link_bg_col);
+            gradient.addColorStop(1, page.state.chart_colours.link_bg_col_2);
+        } catch(e) {
+            gradient = page.state.chart_colours.link_bg_col;
+        }
 
         Chart.defaults.color = page.state.chart_colours.text_col;
         Chart.defaults.font.family = 'Ubuntu Sans';

@@ -16,7 +16,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Work+Sans:ital,wght@0,100..900;1,100..900&display=swap');
 
 body {
-    --version-build: '2024.1210';
+    --version-build: '2024.1210.1';
 
     --hue:  var(--hue-over,
             var(--hue-album,
