@@ -6632,6 +6632,9 @@ let has_prompted_for_update = false;
 
     // patch shouts
     function patch_shouts() {
+        if (page.structure.main == null)
+            return;
+
         let shouts = page.structure.main.querySelectorAll('.shout:not([data-kate-processed])');
 
         shouts.forEach((shout) => {
