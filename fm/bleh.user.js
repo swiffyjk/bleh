@@ -10364,6 +10364,9 @@ let has_prompted_for_update = false;
         if (page.subpage == 'tags_overview')
             return;
 
+        if (page.structure.main == null)
+            return;
+
         let tracklists = page.structure.main.querySelectorAll('.chartlist:not(.chartlist__placeholder)');
 
         let insights = {
