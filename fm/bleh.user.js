@@ -4983,6 +4983,7 @@ let has_prompted_for_update = false;
         console.info(select, `#select-${select_id}`);
 
         update_custom_select(document.getElementById(`select-${select_id}`)._tippy.popper, value, select_id);
+        document.documentElement.setAttribute(`data-bleh--inbuilt-${select_id}`, value);
     }
     function update_custom_select(element = document.body, value = '', select_id = '') {
         let btns = element.querySelectorAll('.dropdown-menu-clickable-item');
@@ -16170,12 +16171,20 @@ let has_prompted_for_update = false;
                             ${original_chart_settings.style}
                         </div>
                     </div>
-                    <div class="select-container">
+                    <div class="select-container hide-if-artist-list">
                         <div class="heading">
                             <h5>${trans[lang].settings.inbuilt.charts.artists.length.name}</h5>
                         </div>
                         <div class="select-wrap custom-selector" id="id_artists_image_grid_length_select">
                             ${original_chart_settings.length}
+                        </div>
+                    </div>
+                    <div class="select-container hide-if-artist-grid">
+                        <div class="heading">
+                            <h5>${trans[lang].settings.inbuilt.charts.artists.length.name}</h5>
+                        </div>
+                        <div class="select-wrap custom-selector" id="id_artists_chartlist_length_select">
+                            ${original_chart_settings.length_list}
                         </div>
                     </div>
                     <div class="sep"></div>
@@ -16189,6 +16198,7 @@ let has_prompted_for_update = false;
                 custom_select(form.querySelector('#id_chart_range_top_artists'), form.querySelector('#id_chart_range_top_artists_select'));
                 custom_select(form.querySelector('#id_chart_style_top_artists'), form.querySelector('#id_chart_style_top_artists_select'));
                 custom_select(form.querySelector('#id_artists_image_grid_length'), form.querySelector('#id_artists_image_grid_length_select'));
+                custom_select(form.querySelector('#id_artists_chartlist_length'), form.querySelector('#id_artists_chartlist_length_select'));
 
                 let selects = form.querySelectorAll('select');
                 selects.forEach((select) => {
@@ -16203,7 +16213,8 @@ let has_prompted_for_update = false;
         original_chart_settings = {
             timeframe: form.querySelector('#id_chart_range_top_artists').outerHTML,
             style: form.querySelector('#id_chart_style_top_artists').outerHTML,
-            length: form.querySelector('#id_artists_image_grid_length').outerHTML
+            length: form.querySelector('#id_artists_image_grid_length').outerHTML,
+            length_list: form.querySelector('#id_artists_chartlist_length').outerHTML
         }
 
         form.innerHTML = '';
@@ -16283,12 +16294,20 @@ let has_prompted_for_update = false;
                             ${original_chart_settings.style}
                         </div>
                     </div>
-                    <div class="select-container">
+                    <div class="select-container hide-if-album-list">
                         <div class="heading">
                             <h5>${trans[lang].settings.inbuilt.charts.albums.length.name}</h5>
                         </div>
                         <div class="select-wrap custom-selector" id="id_albums_image_grid_length_select">
                             ${original_chart_settings.length}
+                        </div>
+                    </div>
+                    <div class="select-container hide-if-album-grid">
+                        <div class="heading">
+                            <h5>${trans[lang].settings.inbuilt.charts.albums.length.name}</h5>
+                        </div>
+                        <div class="select-wrap custom-selector" id="id_albums_chartlist_length_select">
+                            ${original_chart_settings.length_list}
                         </div>
                     </div>
                     <div class="sep"></div>
@@ -16302,6 +16321,7 @@ let has_prompted_for_update = false;
                 custom_select(form.querySelector('#id_chart_range_top_albums'), form.querySelector('#id_chart_range_top_albums_select'));
                 custom_select(form.querySelector('#id_chart_style_top_albums'), form.querySelector('#id_chart_style_top_albums_select'));
                 custom_select(form.querySelector('#id_albums_image_grid_length'), form.querySelector('#id_albums_image_grid_length_select'));
+                custom_select(form.querySelector('#id_albums_chartlist_length'), form.querySelector('#id_albums_chartlist_length_select'));
 
                 let selects = form.querySelectorAll('select');
                 selects.forEach((select) => {
@@ -16316,7 +16336,8 @@ let has_prompted_for_update = false;
         original_chart_settings = {
             timeframe: form.querySelector('#id_chart_range_top_albums').outerHTML,
             style: form.querySelector('#id_chart_style_top_albums').outerHTML,
-            length: form.querySelector('#id_albums_image_grid_length').outerHTML
+            length: form.querySelector('#id_albums_image_grid_length').outerHTML,
+            length_list: form.querySelector('#id_albums_chartlist_length').outerHTML
         }
 
         form.innerHTML = '';
