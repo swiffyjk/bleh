@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         bleh
 // @namespace    http://last.fm/
-// @version      2024.1208
+// @version      2024.1210
 // @description  bleh!!! ^-^
 // @author       kate
 // @match        https://www.last.fm/*
@@ -21,7 +21,7 @@
 // ==/UserScript==
 
 let version = {
-    build: '2024.1208',
+    build: '2024.1210',
     sku: 'glacier',
     feature_flags: {
         bleh_settings_tabs: {
@@ -168,6 +168,10 @@ const trans = {
                 line: 'Line',
                 pie: 'Pie',
                 bar: 'Bar'
+            },
+            axis: {
+                horizontal: 'Horizontal',
+                vertical: 'Vertical'
             },
             dates: {
                 last_year: 'Last year',
@@ -465,7 +469,11 @@ const trans = {
                 },
                 seasonal: {
                     name: 'Seasonal',
+                    timeline: 'Seasonal timeline',
                     bio: 'During seasonal events, bleh can automatically change the default accent colour, add particles, and add overlays to various interface elements.',
+                    info: 'Seasonal events are ran in universal time (UTC) for consistency.',
+                    started: 'Started',
+                    ends_in: 'Ends in',
                     listing: {
                         easter: 'Easter',
                         pride: 'Pride',
@@ -932,9 +940,9 @@ const trans = {
             name: 'Library refresh',
             by_artist: ' by {a}',
             meta: {
-                artists: 'Artists',
-                albums: 'Albums',
-                tracks: 'Tracks',
+                artists: 'Künstler',
+                albums: 'Alben',
+                tracks: 'Titel',
                 average: 'Average'
             },
             view: {
@@ -943,6 +951,10 @@ const trans = {
                 line: 'Line',
                 pie: 'Pie',
                 bar: 'Bar'
+            },
+            axis: {
+                horizontal: 'Horizontal',
+                vertical: 'Vertical'
             },
             dates: {
                 last_year: 'Last year',
@@ -973,7 +985,12 @@ const trans = {
             dev: 'Toggle dev mode',
             configure_bleh: 'bleh einstellen',
             library: 'Musiksammlung',
-            shouts: 'Shouts'
+            shouts: 'Shouts',
+            obsessions: 'Obsessions',
+            labs: 'Labs',
+            bookmarks: 'Bookmarks',
+            settings: 'Settings',
+            logout: 'Logout'
         },
         music: {
             submit_lastfm_correction: 'Submit correction to Last.fm',
@@ -1003,6 +1020,7 @@ const trans = {
             }
         },
         profile: {
+            name: 'Profile',
             on_ignore_list: 'Du stehst auf der Ignorierliste dieses Benutzers.',
             friends: {
                 name: 'Freunde'
@@ -1056,6 +1074,7 @@ const trans = {
             }
         },
         settings: {
+            name: 'Settings',
             save: 'Speichern',
             cancel: 'Abbrechen',
             close: 'Schließen',
@@ -1069,6 +1088,8 @@ const trans = {
             back: 'Zurück',
             reload: 'Klicke zum Neuladen, um deine Einstellungen zu übernehmen.',
             new: 'Neu',
+            beta: 'Beta',
+            configure: 'Configure',
             examples: {
                 button: 'Beispiel-Taste'
             },
@@ -1127,6 +1148,7 @@ const trans = {
             },
             music: {
                 name: 'Musik',
+                header: 'Music configuration',
                 bio: 'Konfiguriere deine musikbezogene Einstellungen für Profile, Künstler, Alben und Titel.',
                 profile_shortcut: {
                     name: 'Profilverknüpfung',
@@ -1135,6 +1157,11 @@ const trans = {
                     header: 'Benutzernamen eingeben',
                     saved: 'Die Profilverknüpfung ist gültig',
                     failed: 'Das Profil existiert nicht oder konnte nicht geladen werden.'
+                },
+                show_bulk_edit_album: {
+                    name: 'Show album in chartlists',
+                    bio: 'This is disabled by default as hovering over tracks reveals the album title in all areas',
+                    require: 'Only applicable with the ‘Last.fm Bulk Edit’ extension'
                 }
             },
             accessibility: {
@@ -1151,6 +1178,23 @@ const trans = {
                 reduced_motion: {
                     name: 'Animationen reduzieren',
                     bio: 'Will in most cases either slowly fade or hard-cut, no scaling.'
+                }
+            },
+            layout: {
+                name: 'Layout',
+                header: 'Manage header layout',
+                avatar_action: {
+                    name: 'Default avatar action',
+                    bio: 'What do you want to happen when you click avatars?',
+                    gallery: 'View photos (or featured album for tracks)',
+                    album: 'View featured album'
+                },
+                quick_artist_button: {
+                    name: 'Quick artist button',
+                    bio: 'Control the right-side button on artist profiles.',
+                    shouts: 'View shouts',
+                    wiki: 'View biography',
+                    listens: 'View listeners'
                 }
             },
             customise: {
@@ -1177,7 +1221,11 @@ const trans = {
                 },
                 seasonal: {
                     name: 'Saisonal',
+                    timeline: 'Seasonal timeline',
                     bio: 'Während saisonaler Ereignisse kann bleh automatisch die Standardakzentfarbe ändern, Partikel hinzufügen und verschiedenen Schnittstellenelementen Overlays hinzufügen.',
+                    info: 'Seasonal events are ran in universal time (UTC) for consistency.',
+                    started: 'Started',
+                    ends_in: 'Ends in',
                     listing: {
                         easter: 'Ostern',
                         pride: 'Pride',
@@ -1435,6 +1483,9 @@ const trans = {
                         },
                         style: {
                             name: 'Chart style'
+                        },
+                        length: {
+                            name: 'Chart size'
                         }
                     },
                     albums: {
@@ -1443,6 +1494,9 @@ const trans = {
                         },
                         style: {
                             name: 'Chart style'
+                        },
+                        length: {
+                            name: 'Chart size'
                         }
                     },
                     tracks: {
@@ -1560,7 +1614,25 @@ const trans = {
                         bio: 'Unsave this image'
                     }
                 }
-            }
+            },
+            empty: {
+                title: 'No title',
+                description: 'No description'
+            },
+            prefer: {
+                name: 'Star'
+            },
+            report: {
+                name: 'Report'
+            },
+            open: {
+                name: 'Expand',
+                tooltip: 'Expand image to full resolution'
+            },
+            up: 'Up votes:',
+            down: 'Down votes:',
+            vote: 'This is the sum of votes used for ordering.',
+            view: 'View photos'
         },
         empty: {
             title: 'No title',
@@ -1599,6 +1671,21 @@ const trans = {
             bookmark: 'You bookmarked {i}',
             unbookmark: 'You removed {i}’s bookmark',
             wiki: 'You edited on {i}'
+        },
+        artist: {
+            name: 'Artist',
+            plural: 'Künstler'
+        },
+        album: {
+            name: 'Album',
+            plural: 'Alben'
+        },
+        track: {
+            name: 'Track',
+            plural: 'Titel'
+        },
+        tag: {
+            name: 'Tag'
         }
     },
     pl: {
@@ -1630,6 +1717,10 @@ const trans = {
                 pie: 'Pie',
                 bar: 'Bar'
             },
+            axis: {
+                horizontal: 'Horizontal',
+                vertical: 'Vertical'
+            },
             dates: {
                 last_year: 'Last year',
                 this_year: 'This year'
@@ -1659,7 +1750,12 @@ const trans = {
             dev: 'Przełącz tryb deweloperski',
             configure_bleh: 'Skonfiguruj bleh',
             library: 'Library',
-            shouts: 'Wiadomości'
+            shouts: 'Wiadomości',
+            obsessions: 'Obsessions',
+            labs: 'Labs',
+            bookmarks: 'Bookmarks',
+            settings: 'Settings',
+            logout: 'Logout'
         },
         music: {
             submit_lastfm_correction: 'Submit correction to Last.fm',
@@ -1694,6 +1790,7 @@ const trans = {
             }
         },
         profile: {
+            name: 'Profile',
             cannot_follow_user: 'Nie możesz zaobserwować tego użytkownika.',
             on_ignore_list: 'Jesteś na liście ignorowanych tego użytkownika.',
             friends: {
@@ -1748,6 +1845,7 @@ const trans = {
             }
         },
         settings: {
+            name: 'Settings',
             save: 'Zapisz',
             cancel: 'Anuluj',
             close: 'Zamknij',
@@ -1761,6 +1859,8 @@ const trans = {
             back: 'Back',
             reload: 'A setting you changed requires a page reload to take effect, click to reload.',
             new: 'New',
+            beta: 'Beta',
+            configure: 'Configure',
             examples: {
                 button: 'Przycisk przykładowy'
             },
@@ -1822,6 +1922,7 @@ const trans = {
             },
             music: {
                 name: 'Music',
+                header: 'Music configuration',
                 bio: 'Configure your music-related settings for profiles, artists, albums, and tracks.',
                 profile_shortcut: {
                     name: 'Profile shortcut',
@@ -1849,6 +1950,23 @@ const trans = {
                     bio: 'Podkreślaj linki do elementów interaktywnych.'
                 }
             },
+            layout: {
+                name: 'Layout',
+                header: 'Manage header layout',
+                avatar_action: {
+                    name: 'Default avatar action',
+                    bio: 'What do you want to happen when you click avatars?',
+                    gallery: 'View photos (or featured album for tracks)',
+                    album: 'View featured album'
+                },
+                quick_artist_button: {
+                    name: 'Quick artist button',
+                    bio: 'Control the right-side button on artist profiles.',
+                    shouts: 'View shouts',
+                    wiki: 'View biography',
+                    listens: 'View listeners'
+                }
+            },
             customise: {
                 name: 'Dostosuj',
                 colours: {
@@ -1873,7 +1991,11 @@ const trans = {
                 },
                 seasonal: {
                     name: 'Seasonal',
+                    timeline: 'Seasonal timeline',
                     bio: 'During seasonal events, bleh can automatically change the default accent colour, add particles, and add overlays to various interface elements.',
+                    info: 'Seasonal events are ran in universal time (UTC) for consistency.',
+                    started: 'Started',
+                    ends_in: 'Ends in',
                     listing: {
                         easter: 'Easter',
                         pride: 'Pride',
@@ -2131,6 +2253,9 @@ const trans = {
                         },
                         style: {
                             name: 'Styl rankingu'
+                        },
+                        length: {
+                            name: 'Chart size'
                         }
                     },
                     albums: {
@@ -2139,6 +2264,9 @@ const trans = {
                         },
                         style: {
                             name: 'Styl rankingu'
+                        },
+                        length: {
+                            name: 'Chart size'
                         }
                     },
                     tracks: {
@@ -2277,6 +2405,21 @@ const trans = {
             bookmark: 'You bookmarked {i}',
             unbookmark: 'You removed {i}’s bookmark',
             wiki: 'You edited on {i}'
+        },
+        artist: {
+            name: 'Artist',
+            plural: 'Artists'
+        },
+        album: {
+            name: 'Album',
+            plural: 'Albums'
+        },
+        track: {
+            name: 'Track',
+            plural: 'Tracks'
+        },
+        tag: {
+            name: 'Tag'
         }
     },
 }
@@ -2762,6 +2905,7 @@ let settings_template = {
     travis: false,
     list_view: 1,
     chart_view: 'line',
+    chart_bar_axis: 'horizontal',
     chart_insights_view: 'pie',
     shout_markdown: true,
     bio_markdown: true,
@@ -2961,9 +3105,15 @@ let settings_base = {
         type: 'options'
     },
     chart_view: {
-        css: 'list_view',
+        css: 'chart_view',
         unit: '',
         value: 'line',
+        type: 'options'
+    },
+    chart_bar_axis: {
+        css: 'chart_bar_axis',
+        unit: '',
+        value: 'horizontal',
         type: 'options'
     },
     shout_markdown: {
@@ -3844,7 +3994,7 @@ let has_prompted_for_update = false;
 
         let current_year = now.getFullYear();
 
-        seasonal_events.forEach((season) => {
+        seasonal_events.forEach((season, index) => {
             log(`running thru, ${season.id} - ${new Date(season.start.replace('y0', current_year))} ${new Date(season.end.replace('y0', current_year))}`, 'season', 'log');
             log(`${now >= new Date(season.start.replace('y0', current_year))} ${now <= new Date(season.end.replace('y0', current_year))}`, 'season', 'log');
             if (
@@ -3861,7 +4011,19 @@ let has_prompted_for_update = false;
                 stored_season.end = season.end;
                 stored_season.snowflakes = season.snowflakes;
 
+                // whats the next season?
+                if (seasonal_events[index + 1] == null) {
+                    stored_season.next_id = seasonal_events[0].id;
+                    stored_season.next_start = seasonal_events[0].start;
+                    stored_season.next_is_new_year = true;
+                } else {
+                    stored_season.next_id = seasonal_events[index + 1].id;
+                    stored_season.next_start = seasonal_events[index + 1].start;
+                    stored_season.next_is_new_year = false;
+                }
+
                 log(`${season.id} from ${season.start} to ${season.end}`, 'season');
+                log(`next will be ${stored_season.next_id} from ${stored_season.next_start} (is new year? ${stored_season.next_is_new_year})`, 'season');
 
                 document.documentElement.setAttribute('data-bleh--season', season.id);
 
@@ -3885,6 +4047,8 @@ let has_prompted_for_update = false;
                 localStorage.setItem('bleh_last_season_seen', season.id);
 
                 load_chart_colours();
+
+                return;
             }
         });
     }
@@ -4395,6 +4559,27 @@ let has_prompted_for_update = false;
         }
 
         page.state.chart_library_bar_options = {
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    display: false
+                },
+                tooltip: {
+                    backgroundColor: root_bg_col,
+                    titleColor: text_primary_col,
+                    bodyColor: text_primary_col,
+                    padding: 7,
+                    cornerRadius: 10,
+                    caretSize: 0
+                }
+            },
+            onClick: (e, active, chart) => {
+                //console.info(active[0].index);
+                bleh_glacier_library_open_index(active[0].index);
+            }
+        }
+        page.state.chart_library_bar_v_options = {
+            indexAxis: 'y',
             maintainAspectRatio: false,
             plugins: {
                 legend: {
@@ -4965,6 +5150,7 @@ let has_prompted_for_update = false;
         console.info(select, `#select-${select_id}`);
 
         update_custom_select(document.getElementById(`select-${select_id}`)._tippy.popper, value, select_id);
+        document.documentElement.setAttribute(`data-bleh--inbuilt-${select_id}`, value);
     }
     function update_custom_select(element = document.body, value = '', select_id = '') {
         let btns = element.querySelectorAll('.dropdown-menu-clickable-item');
@@ -5840,9 +6026,28 @@ let has_prompted_for_update = false;
                 page.structure.side.appendChild(value_panel);
             } else if (page.subpage.startsWith('listening-report')) {
                 let report_box_container = document.body.querySelector('.report-box-container--overview');
+                if (report_box_container != null) {
+                    if (report_box_container != null)
+                        page.structure.content_top.after(report_box_container);
+                } else {
+                    let dashboard = page.structure.container.querySelector('.user-dashboard');
 
-                if (report_box_container != null)
-                    page.structure.content_top.after(report_box_container);
+                    if (dashboard == null)
+                        return;
+
+                    // v2
+                    dialog({
+                        id: 'listening_report_v2',
+                        title: 'Listening reports v2',
+                        body: (`
+                            <div class="alert alert-error">Unfortunately, legacy listening reports are not supported in bleh3.</div>
+                            <br>
+                            <p>To view this page properly it's recommended to temporarily disable bleh :3</p>
+                            <p>Sorry for the inconvenience !!</p>
+                        `)
+                    });
+                    return;
+                }
             }
         }
 
@@ -7294,17 +7499,23 @@ let has_prompted_for_update = false;
                 </div>
                 <div class="sep"></div>
                 <h4>${trans[lang].settings.customise.seasonal.name}</h4>
-                <div class="inner-preview pad click-thru">
-                    <div class="current-season-container">
-                        <div class="current-season" data-season="${stored_season.id}" id="current_season">
-                            ${(stored_season.id != 'none')
-                            ? trans[lang].settings.customise.seasonal.marker.current.replace('{season}', trans[lang].settings.customise.seasonal.listing[stored_season.id]).replace('{time}', moment(stored_season.end.replace('y0', stored_season.year)).to(stored_season.now, true))
-                            : (settings.seasonal) ? trans[lang].settings.customise.seasonal.marker.none : trans[lang].settings.customise.seasonal.marker.disabled}
-                        </div>
-                        <div class="current-season-started" id="current_season_start">
-                            ${(stored_season.id != 'none')
-                            ? trans[lang].settings.customise.seasonal.marker.started.replace('{time}', moment(stored_season.start.replace('y0', stored_season.year)).from(stored_season.now))
-                            : ''}
+                <div class="current-season-box no-margin" data-season="${stored_season.id}">
+                    <div class="current-season-info">
+                        <div class="bleh-icon bleh-seasonal-icon" data-season="${stored_season.id}"></div>
+                        <h4>${trans[lang].settings.customise.seasonal.listing[stored_season.id]}</h4>
+                    </div>
+                    <div class="glacier-library-top season-top">
+                        <div class="glacier-library-metadata">
+                            ${(stored_season.id != 'none') ? (`
+                            <div class="glacier-library-metadata-item">
+                                <div class="sub-text">${trans[lang].settings.customise.seasonal.started}</div>
+                                <div class="glacier-library-metadata-item-value" id="current_season">${moment(stored_season.start.replace('y0', stored_season.year)).from(stored_season.now)}</div>
+                            </div>
+                            <div class="glacier-library-metadata-item">
+                                <div class="sub-text">${trans[lang].settings.customise.seasonal.ends_in}</div>
+                                <div class="glacier-library-metadata-item-value" id="current_season_start">${moment(stored_season.end.replace('y0', stored_season.year)).to(stored_season.now, true)}</div>
+                            </div>
+                            `) : ''}
                         </div>
                     </div>
                 </div>
@@ -8043,22 +8254,50 @@ let has_prompted_for_update = false;
 
             return (`
                 <div class="bleh--panel">
-                    <h4 class="top-header">${trans[lang].settings.customise.seasonal.name}</h4>
-                    <p>${trans[lang].settings.customise.seasonal.bio}</p>
+                    <div class="seasonal-inner">
+                        <div class="sub-text">${trans[lang].settings.customise.seasonal.timeline}</div>
+                        <h4>${moment(stored_season.now).format('MMMM Do YYYY')}</h4>
+                        <div class="current-season-box" data-season="${stored_season.id}">
+                            <div class="current-season-info">
+                                <div class="bleh-icon bleh-seasonal-icon" data-season="${stored_season.id}"></div>
+                                <h4>${trans[lang].settings.customise.seasonal.listing[stored_season.id]}</h4>
+                            </div>
+                            <div class="glacier-library-top season-top">
+                                <div class="glacier-library-metadata">
+                                    ${(stored_season.id != 'none') ? (`
+                                    <div class="glacier-library-metadata-item">
+                                        <div class="sub-text">${trans[lang].settings.customise.seasonal.started}</div>
+                                        <div class="glacier-library-metadata-item-value" id="current_season_start">${moment(stored_season.start.replace('y0', stored_season.year)).from(stored_season.now)}</div>
+                                    </div>
+                                    <div class="glacier-library-metadata-item">
+                                        <div class="sub-text">${trans[lang].settings.customise.seasonal.ends_in}</div>
+                                        <div class="glacier-library-metadata-item-value" id="current_season">${moment(stored_season.end.replace('y0', stored_season.year)).to(stored_season.now, true)}</div>
+                                    </div>
+                                    `) : ''}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="info-box no-padding">
+                        <div class="bleh-icon bleh-info-icon"></div>
+                        ${trans[lang].settings.customise.seasonal.info}
+                    </div>
+                    <!--<p>${trans[lang].settings.customise.seasonal.bio}</p>
                     <div class="inner-preview pad click-thru">
                         <div class="current-season-container">
                             <div class="current-season" data-season="${stored_season.id}" id="current_season">
                                 ${(stored_season.id != 'none')
-                                ? trans[lang].settings.customise.seasonal.marker.current.replace('{season}', trans[lang].settings.customise.seasonal.listing[stored_season.id]).replace('{time}', moment(stored_season.end.replace('y0', stored_season.year)).to(stored_season.now, true))
+                                ? trans[lang].settings.customise.seasonal.marker.current.replace('{season}', trans[lang].settings.customise.seasonal.listing[stored_season.id])
                                 : (settings.seasonal) ? trans[lang].settings.customise.seasonal.marker.none : trans[lang].settings.customise.seasonal.marker.disabled}
                             </div>
                             <div class="current-season-started" id="current_season_start">
                                 ${(stored_season.id != 'none')
-                                ? trans[lang].settings.customise.seasonal.marker.started.replace('{time}', moment(stored_season.start.replace('y0', stored_season.year)).from(stored_season.now))
+                                ? trans[lang].settings.customise.seasonal.marker.started
                                 : ''}
                             </div>
                         </div>
-                    </div>
+                    </div>-->
+                    <h4>${trans[lang].settings.configure}</h4>
                     <div class="toggle-container" id="container-seasonal" onclick="_update_item('seasonal')">
                         <button class="btn reset" onclick="_reset_item('seasonal')">${trans[lang].settings.reset}</button>
                         <div class="heading">
@@ -9329,7 +9568,7 @@ let has_prompted_for_update = false;
 
 
                 // re-flow chart
-                if (item == 'chart_view' && page.type == 'user' && page.subpage.startsWith('library'))
+                if ((item == 'chart_view' || item == 'chart_bar_axis') && page.type == 'user' && page.subpage.startsWith('library'))
                     bleh_glacier_date_graph_generate();
             } else {
                 // dont modify, just show
@@ -14179,7 +14418,20 @@ let has_prompted_for_update = false;
 
             page.structure.glacier.selector.after(chart_view_selector);
 
-            refresh_all(chart_view_selector);
+            let chart_axis_selector = document.createElement('div');
+            chart_axis_selector.classList.add('view-buttons', 'chart-axis-selector', 'view-buttons-middle');
+            chart_axis_selector.innerHTML = (`
+                <button class="btn view-item" id="toggle-chart_bar_axis-horizontal" data-toggle="chart_bar_axis" data-toggle-value="horizontal" onclick="_update_item('chart_bar_axis', 'horizontal')">
+                    ${trans[lang].glacier.axis.horizontal}
+                </button>
+                <button class="btn view-item" id="toggle-chart_bar_axis-vertical" data-toggle="chart_bar_axis" data-toggle-value="vertical" onclick="_update_item('chart_bar_axis', 'vertical')">
+                    ${trans[lang].glacier.axis.vertical}
+                </button>
+            `);
+
+            chart_view_selector.after(chart_axis_selector);
+
+            refresh_all(page.structure.glacier.date_panel);
         }
 
 
@@ -15040,7 +15292,7 @@ let has_prompted_for_update = false;
                         borderRadius: 9
                     }]
                 },
-                options: page.state.chart_library_bar_options
+                options: (settings.chart_bar_axis == 'horizontal') ? page.state.chart_library_bar_options : page.state.chart_library_bar_v_options
             });
         }
 
@@ -16099,12 +16351,20 @@ let has_prompted_for_update = false;
                             ${original_chart_settings.style}
                         </div>
                     </div>
-                    <div class="select-container">
+                    <div class="select-container hide-if-artist-list">
                         <div class="heading">
                             <h5>${trans[lang].settings.inbuilt.charts.artists.length.name}</h5>
                         </div>
                         <div class="select-wrap custom-selector" id="id_artists_image_grid_length_select">
                             ${original_chart_settings.length}
+                        </div>
+                    </div>
+                    <div class="select-container hide-if-artist-grid">
+                        <div class="heading">
+                            <h5>${trans[lang].settings.inbuilt.charts.artists.length.name}</h5>
+                        </div>
+                        <div class="select-wrap custom-selector" id="id_artists_chartlist_length_select">
+                            ${original_chart_settings.length_list}
                         </div>
                     </div>
                     <div class="sep"></div>
@@ -16118,6 +16378,7 @@ let has_prompted_for_update = false;
                 custom_select(form.querySelector('#id_chart_range_top_artists'), form.querySelector('#id_chart_range_top_artists_select'));
                 custom_select(form.querySelector('#id_chart_style_top_artists'), form.querySelector('#id_chart_style_top_artists_select'));
                 custom_select(form.querySelector('#id_artists_image_grid_length'), form.querySelector('#id_artists_image_grid_length_select'));
+                custom_select(form.querySelector('#id_artists_chartlist_length'), form.querySelector('#id_artists_chartlist_length_select'));
 
                 let selects = form.querySelectorAll('select');
                 selects.forEach((select) => {
@@ -16132,7 +16393,8 @@ let has_prompted_for_update = false;
         original_chart_settings = {
             timeframe: form.querySelector('#id_chart_range_top_artists').outerHTML,
             style: form.querySelector('#id_chart_style_top_artists').outerHTML,
-            length: form.querySelector('#id_artists_image_grid_length').outerHTML
+            length: form.querySelector('#id_artists_image_grid_length').outerHTML,
+            length_list: form.querySelector('#id_artists_chartlist_length').outerHTML
         }
 
         form.innerHTML = '';
@@ -16212,12 +16474,20 @@ let has_prompted_for_update = false;
                             ${original_chart_settings.style}
                         </div>
                     </div>
-                    <div class="select-container">
+                    <div class="select-container hide-if-album-list">
                         <div class="heading">
                             <h5>${trans[lang].settings.inbuilt.charts.albums.length.name}</h5>
                         </div>
                         <div class="select-wrap custom-selector" id="id_albums_image_grid_length_select">
                             ${original_chart_settings.length}
+                        </div>
+                    </div>
+                    <div class="select-container hide-if-album-grid">
+                        <div class="heading">
+                            <h5>${trans[lang].settings.inbuilt.charts.albums.length.name}</h5>
+                        </div>
+                        <div class="select-wrap custom-selector" id="id_albums_chartlist_length_select">
+                            ${original_chart_settings.length_list}
                         </div>
                     </div>
                     <div class="sep"></div>
@@ -16231,6 +16501,7 @@ let has_prompted_for_update = false;
                 custom_select(form.querySelector('#id_chart_range_top_albums'), form.querySelector('#id_chart_range_top_albums_select'));
                 custom_select(form.querySelector('#id_chart_style_top_albums'), form.querySelector('#id_chart_style_top_albums_select'));
                 custom_select(form.querySelector('#id_albums_image_grid_length'), form.querySelector('#id_albums_image_grid_length_select'));
+                custom_select(form.querySelector('#id_albums_chartlist_length'), form.querySelector('#id_albums_chartlist_length_select'));
 
                 let selects = form.querySelectorAll('select');
                 selects.forEach((select) => {
@@ -16245,7 +16516,8 @@ let has_prompted_for_update = false;
         original_chart_settings = {
             timeframe: form.querySelector('#id_chart_range_top_albums').outerHTML,
             style: form.querySelector('#id_chart_style_top_albums').outerHTML,
-            length: form.querySelector('#id_albums_image_grid_length').outerHTML
+            length: form.querySelector('#id_albums_image_grid_length').outerHTML,
+            length_list: form.querySelector('#id_albums_chartlist_length').outerHTML
         }
 
         form.innerHTML = '';
