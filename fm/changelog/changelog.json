@@ -5,7 +5,7 @@
         "name": "glacier library pt. 2",
         "type": "minor",
         "force": false,
-        "bio": "# Library\n- __Added ability to show library bar view vertically__\n    - This matches default last.fm behaviour if that is what you prefer.\n- Styled grid view page when browsing without Pro\n\n# Profiles\n- Fixed configure menu for Artists and Albums\n    - Now properly supports List and Default view\n\n# Seasonal\n- The current season panel has been refreshed\n\n# Other\n- Fixed some translations causing page failure\n- Updating dialog should be less prone to duplicating"
+        "bio": "# Library\n- __Added ability to show library bar view vertically__\n    - This matches default last.fm behaviour if that is what you prefer.\n\n![New library bar configuration](https://katelyynn.github.io/bleh/fm/changelog/img/bar_v.png)\n\n- Styled grid view page when browsing without Pro\n\n# Profiles\n- Fixed configure menu for Artists and Albums\n    - Now properly supports List and Default view\n\n# Seasonal\n- The current season panel has been refreshed\n\n![New seasonal interface](https://katelyynn.github.io/bleh/fm/changelog/img/seasonal.png)\n\n# Other\n- Fixed some translations causing page failure\n- Updating dialog should be less prone to duplicating"
     },
     "2024.1208": {
         "name": "glacier library ^-^",
