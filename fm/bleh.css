@@ -6,7 +6,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Work+Sans:ital,wght@0,100..900;1,100..900&display=swap');
 
 body {
-    --version-build: '2024.1208';
+    --version-build: '2024.1210';
 
     --hue:  var(--hue-over,
             var(--hue-album,
@@ -301,8 +301,6 @@ a,
     --h4: var(--l4-c);
     --g4: var(--hue), calc(var(--sat) * 40%), calc(clamp(min(0.5), var(--lit), max(1.5)) * 15%);
 
-    --icon: var(--c2);
-
     /* l2-c in dark modes, l4-c in light modes */
     --l2-c-theme-switch: var(--l2-c);
 
@@ -327,8 +325,6 @@ a,
         --h3-lit: calc(clamp(min(0.5), var(--lit), max(1.5)) * 70%);
         --h4: var(--l4-c);
         --g4: var(--hue), calc(var(--sat) * 40%), calc(clamp(min(0.5), var(--lit), max(1.5)) * 10%);
-
-        --icon: var(--c2);
     }
     .preview[data-bleh--theme="light"],
     [data-bleh--theme="light"] &:not(
@@ -532,6 +528,7 @@ body {
     --icon-16-bleh: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyLjUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgY2xhc3M9Imx1Y2lkZSBsdWNpZGUtdGllLWJvdy1yaWJib24iPjxyZWN0IHdpZHRoPSI0IiBoZWlnaHQ9IjQiIHg9IjEwIiB5PSI3Ii8+PHBhdGggZD0iTTggOWgyIi8+PHBhdGggZD0iTTEwIDdDOC44IDUuNSA2LjYgNCA0IDQgMi45IDQgMiA2LjIgMiA5cy45IDUgMiA1YzIuNiAwIDQuOC0xLjUgNi0zIi8+PHBhdGggZD0iTTE0IDloMiIvPjxwYXRoIGQ9Ik0xNCAxMWMxLjIgMS41IDMuNCAzIDYgMyAxLjEgMCAyLTIuMiAyLTVzLS45LTUtMi01Yy0yLjYgMC00LjggMS41LTYgMyIvPjxwYXRoIGQ9Ik01LjUgMTMuODMgNCAyMGwzLTEgMiAyIDIuNS0xMCIvPjxwYXRoIGQ9Ik0xOC41IDEzLjgzIDIwIDIwbC0zLTEtMiAyLTIuNS0xMCIvPjwvc3ZnPg==');
     --icon-16-lotus: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyLjUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgY2xhc3M9Imx1Y2lkZSBsdWNpZGUtZmxvd2VyLWxvdHVzIj48cGF0aCBkPSJNMTIgMjBjMC01LjUtNC41LTEwLTEwLTEwIDAgNS41IDQuNSAxMCAxMCAxMCIvPjxwYXRoIGQ9Ik05LjcgOC4zYy0xLjgtMi0zLjgtMy4xLTMuOC0zLjFzLS44IDIuNS0uNSA1LjQiLz48cGF0aCBkPSJNMTUgMTIuOVYxMmMwLTQuNC0zLTgtMy04cy0zIDMuNi0zIDh2LjkiLz48cGF0aCBkPSJNMTguNiAxMC42Yy4zLTIuOS0uNS01LjQtLjUtNS40cy0yIDEtMy44IDMuMSIvPjxwYXRoIGQ9Ik0xMiAyMGM1LjUgMCAxMC00LjUgMTAtMTAtNS41IDAtMTAgNC41LTEwIDEwIi8+PC9zdmc+');
 
+    --icon-16-placeholder: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyLjUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgY2xhc3M9Imx1Y2lkZSBsdWNpZGUtY2lyY2xlLWhlbHAiPjxjaXJjbGUgY3g9IjEyIiBjeT0iMTIiIHI9IjEwIi8+PHBhdGggZD0iTTkuMDkgOWEzIDMgMCAwIDEgNS44MyAxYzAgMi0zIDMtMyAzIi8+PHBhdGggZD0iTTEyIDE3aC4wMSIvPjwvc3ZnPg==');
     --icon-16-play: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyLjUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgY2xhc3M9Imx1Y2lkZSBsdWNpZGUtcGxheSI+PHBvbHlnb24gcG9pbnRzPSI2IDMgMjAgMTIgNiAyMSA2IDMiLz48L3N2Zz4=');
     --icon-16-pause: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyLjUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgY2xhc3M9Imx1Y2lkZSBsdWNpZGUtcGF1c2UiPjxyZWN0IHg9IjE0IiB5PSI0IiB3aWR0aD0iNCIgaGVpZ2h0PSIxNiIgcng9IjEiLz48cmVjdCB4PSI2IiB5PSI0IiB3aWR0aD0iNCIgaGVpZ2h0PSIxNiIgcng9IjEiLz48L3N2Zz4=');
     --icon-16-dropdown: var(--icon-16-arrow-down);
@@ -582,6 +579,8 @@ body {
     --icon-16-chart-line: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyLjUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgY2xhc3M9Imx1Y2lkZSBsdWNpZGUtY2hhcnQtbGluZSI+PHBhdGggZD0iTTMgM3YxNmEyIDIgMCAwIDAgMiAyaDE2Ii8+PHBhdGggZD0ibTE5IDktNSA1LTQtNC0zIDMiLz48L3N2Zz4=');
     --icon-16-chart-pie: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyLjUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgY2xhc3M9Imx1Y2lkZSBsdWNpZGUtY2hhcnQtcGllIj48cGF0aCBkPSJNMjEgMTJjLjU1MiAwIDEuMDA1LS40NDkuOTUtLjk5OGExMCAxMCAwIDAgMC04Ljk1My04Ljk1MWMtLjU1LS4wNTUtLjk5OC4zOTgtLjk5OC45NXY4YTEgMSAwIDAgMCAxIDF6Ii8+PHBhdGggZD0iTTIxLjIxIDE1Ljg5QTEwIDEwIDAgMSAxIDggMi44MyIvPjwvc3ZnPg==');
     --icon-16-chart-bar: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyLjUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgY2xhc3M9Imx1Y2lkZSBsdWNpZGUtY2hhcnQtY29sdW1uLWJpZyI+PHBhdGggZD0iTTMgM3YxNmEyIDIgMCAwIDAgMiAyaDE2Ii8+PHJlY3QgeD0iMTUiIHk9IjUiIHdpZHRoPSI0IiBoZWlnaHQ9IjEyIiByeD0iMSIvPjxyZWN0IHg9IjciIHk9IjgiIHdpZHRoPSI0IiBoZWlnaHQ9IjkiIHJ4PSIxIi8+PC9zdmc+');
+    --icon-16-chart-axis-x: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyLjUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgY2xhc3M9Imx1Y2lkZSBsdWNpZGUtY2hhcnQtY29sdW1uLWJpZyI+PHBhdGggZD0iTTMgM3YxNmEyIDIgMCAwIDAgMiAyaDE2Ii8+PHJlY3QgeD0iMTUiIHk9IjUiIHdpZHRoPSI0IiBoZWlnaHQ9IjEyIiByeD0iMSIvPjxyZWN0IHg9IjciIHk9IjgiIHdpZHRoPSI0IiBoZWlnaHQ9IjkiIHJ4PSIxIi8+PC9zdmc+');
+    --icon-16-chart-axis-y: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyLjUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgY2xhc3M9Imx1Y2lkZSBsdWNpZGUtY2hhcnQtYmFyLWJpZyI+PHBhdGggZD0iTTMgM3YxNmEyIDIgMCAwIDAgMiAyaDE2Ii8+PHJlY3QgeD0iNyIgeT0iMTMiIHdpZHRoPSI5IiBoZWlnaHQ9IjQiIHJ4PSIxIi8+PHJlY3QgeD0iNyIgeT0iNSIgd2lkdGg9IjEyIiBoZWlnaHQ9IjQiIHJ4PSIxIi8+PC9zdmc+');
     --icon-16-heart: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyLjUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgY2xhc3M9ImZlYXRoZXIgZmVhdGhlci1oZWFydCI+PHBhdGggZD0iTTIwLjg0IDQuNjFhNS41IDUuNSAwIDAgMC03Ljc4IDBMMTIgNS42N2wtMS4wNi0xLjA2YTUuNSA1LjUgMCAwIDAtNy43OCA3Ljc4bDEuMDYgMS4wNkwxMiAyMS4yM2w3Ljc4LTcuNzggMS4wNi0xLjA2YTUuNSA1LjUgMCAwIDAgMC03Ljc4eiI+PC9wYXRoPjwvc3ZnPg==');
     --icon-16-heart-solid: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJjdXJyZW50Q29sb3IiIHN0cm9rZT0iY3VycmVudENvbG9yIiBzdHJva2Utd2lkdGg9IjIuNSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiBjbGFzcz0iZmVhdGhlciBmZWF0aGVyLWhlYXJ0Ij48cGF0aCBkPSJNMjAuODQgNC42MWE1LjUgNS41IDAgMCAwLTcuNzggMEwxMiA1LjY3bC0xLjA2LTEuMDZhNS41IDUuNSAwIDAgMC03Ljc4IDcuNzhsMS4wNiAxLjA2TDEyIDIxLjIzbDcuNzgtNy43OCAxLjA2LTEuMDZhNS41IDUuNSAwIDAgMCAwLTcuNzh6Ij48L3BhdGg+PC9zdmc+');
     --icon-16-home: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyLjUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgY2xhc3M9Imx1Y2lkZSBsdWNpZGUtaG9tZSI+PHBhdGggZD0ibTMgOSA5LTcgOSA3djExYTIgMiAwIDAgMS0yIDJINWEyIDIgMCAwIDEtMi0yeiIvPjwvc3ZnPg==');
@@ -708,9 +707,15 @@ body {
             --cards-overlay-image-subtlest: var(--overlay-ice-subtlest);
             --cards-overlay-image-spikes: var(--overlay-ice-spikes);
         }
-        &[data-bleh--season="christmas"],
-        &[data-bleh--season="new_years"] {
+        &[data-bleh--season="christmas"] {
             --cards-overlay: linear-gradient(180deg, rgba(157, 211, 255, 0.09) 0%, rgba(0,0,0,0) 100%);
+            --cards-overlay-image: var(--overlay-ice);
+            --cards-overlay-image-subtle: var(--overlay-ice-subtle);
+            --cards-overlay-image-subtlest: var(--overlay-ice-subtlest);
+            --cards-overlay-image-spikes: var(--overlay-ice-spikes);
+        }
+        &[data-bleh--season="new_years"] {
+            --cards-overlay: linear-gradient(180deg, rgba(71, 43, 124, 0.2) 0%, rgba(0,0,0,0) 60%);
             --cards-overlay-image: var(--overlay-ice);
             --cards-overlay-image-subtle: var(--overlay-ice-subtle);
             --cards-overlay-image-subtlest: var(--overlay-ice-subtlest);
@@ -725,6 +730,28 @@ body {
     --display-under-reduced-motion: unset;
     &[data-bleh--reduced_motion="true"] {
         --display-under-reduced-motion: none;
+    }
+
+    &[data-bleh--inbuilt-id_chart_style_top_artists="classic"],
+    &[data-bleh--inbuilt-id_chart_style_top_artists="grid"] {
+        --hide-if-artist-grid: none;
+    }
+    &[data-bleh--inbuilt-id_chart_style_top_artists="classic"],
+    &[data-bleh--inbuilt-id_chart_style_top_artists="list"] {
+        --hide-if-artist-list: none;
+    }
+
+    &[data-bleh--inbuilt-id_chart_style_top_albums="classic"],
+    &[data-bleh--inbuilt-id_chart_style_top_albums="grid"] {
+        --hide-if-album-grid: none;
+    }
+    &[data-bleh--inbuilt-id_chart_style_top_albums="classic"],
+    &[data-bleh--inbuilt-id_chart_style_top_albums="list"] {
+        --hide-if-album-list: none;
+    }
+
+    &:not([data-bleh--chart_view="bar"]) {
+        --hide-if-not-bar: none;
     }
 }
 
@@ -968,13 +995,6 @@ last.fm changes as of 2024-05-20 */
 
 .masthead-nav-item, .masthead-search-toggle {
     height: 40px !important;
-}
-.masthead-nav-item .masthead-nav-control {
-    /* if classic-playbar is not present, last.fm uses a new header design,
-    featuring this fancy underline thing */
-    &:after {
-        display: none !important;
-    }
 }
 .masthead-nav-control:before, .masthead-search-toggle:before {
     opacity: 1 !important;
@@ -2750,8 +2770,7 @@ button.navlist-more {
         color: hsl(var(--c1)) !important;
         font-weight: var(--font-weight-bold);
 
-        [data-bleh--season="christmas"] &,
-        [data-bleh--season="new_years"] & {
+        [data-bleh--season="christmas"] & {
             --hue-seasonal: -2;
             --sat-seasonal: 1.3;
             --lit-seasonal: 0.9;
@@ -4576,8 +4595,7 @@ better than the default selector '#app a' i suppose */
         --lit-seasonal: 1;
     }
 
-    [data-bleh--season="christmas"] &,
-    [data-bleh--season="new_years"] & {
+    [data-bleh--season="christmas"] & {
         --hue-seasonal: -2;
         --sat-seasonal: 1.3;
         --lit-seasonal: 0.9;
@@ -5069,8 +5087,7 @@ a.chartlist-love-button:after {
         --lit-seasonal: 1;
     }
 
-    [data-bleh--season="christmas"] &,
-    [data-bleh--season="new_years"] & {
+    [data-bleh--season="christmas"] & {
         --hue-seasonal: 120;
         --sat-seasonal: 1.15;
         --lit-seasonal: 0.95;
@@ -5971,11 +5988,16 @@ button,
             --col: hsl(var(--ov-c1)) !important;
         }
 
-        [data-bleh--season="christmas"] &,
-        [data-bleh--season="new_years"] & {
+        [data-bleh--season="christmas"] & {
             --hue-seasonal: 120;
             --sat-seasonal: 1.15;
             --lit-seasonal: 0.95;
+        }
+
+        [data-bleh--season="new_years"] & {
+            --hue-seasonal: 333;
+            --sat-seasonal: 1.1;
+            --lit-seasonal: 1;
         }
     }
 
@@ -6234,7 +6256,6 @@ button,
 .source-album:before,
 /*     BLEH     */
 .swatch:before,
-.current-season:before,
 .arrow-divider:before,
 .view-item:not(.profile-top-item--taste):before,
 .loading-data-text:before,
@@ -6375,8 +6396,8 @@ span.header-new-gallery-inner a:before,
     background-image: var(--flag-url, unset) !important;
     background-color: currentColor;
     border-radius: unset;
-    mask-image: var(--mask);
-    -webkit-mask-image: var(--mask);
+    mask-image: var(--mask, var(--icon-16-placeholder));
+    -webkit-mask-image: var(--mask, var(--icon-16-placeholder));
     mask-size: var(--mask-size, unset);
     -webkit-mask-size: var(--mask-size, unset);
     transition-property: var(--transition-property, opacity, left, background) !important;
@@ -6397,6 +6418,20 @@ span.header-new-gallery-inner a:before,
 {
     --left: none !important;
     --right: 12px !important;
+}
+
+.bleh-icon {
+    background: var(--icon-colour, currentColor);
+    mask-image: var(--icon, var(--icon-16-placeholder));
+    -webkit-mask-image: var(--icon, var(--icon-16-placeholder));
+    mask-size: var(--icon-size, 16px);
+    -webkit-mask-size: var(--icon-size, 16px);
+    mask-position: center;
+    -webkit-mask-position: center;
+    mask-repeat: no-repeat;
+    -webkit-mask-repeat: no-repeat;
+    width: var(--icon-size, 16px);
+    height: var(--icon-size, 16px);
 }
 
 /* only shows on mobile (currently?) */
@@ -7021,7 +7056,6 @@ very, very, very dated - who looks up a song on ebay? */
     }
 
     .chart-view-selector {
-        justify-content: center;
         margin: var(--card-gap) 0 !important;
 
         .view-item {
@@ -7033,6 +7067,18 @@ very, very, very dated - who looks up a song on ebay? */
             }
             &[data-toggle-value="bar"] {
                 --mask: var(--icon-16-chart-bar);
+            }
+        }
+    }
+    .chart-axis-selector {
+        display: var(--hide-if-not-bar, flex);
+
+        .view-item {
+            &[data-toggle-value="horizontal"] {
+                --mask: var(--icon-16-chart-axis-x);
+            }
+            &[data-toggle-value="vertical"] {
+                --mask: var(--icon-16-chart-axis-y);
             }
         }
     }
@@ -9004,6 +9050,20 @@ text[style^="color: rgb(255, 172, 172)"] {
                     margin-right: var(--card-padding);
                 }
             }
+
+            .hide-if-artist-list {
+                display: var(--hide-if-artist-list, flex);
+            }
+            .hide-if-artist-grid {
+                display: var(--hide-if-artist-grid, flex);
+            }
+
+            .hide-if-album-list {
+                display: var(--hide-if-album-list, flex);
+            }
+            .hide-if-album-grid {
+                display: var(--hide-if-album-grid, flex);
+            }
         }
     }
 
@@ -9383,8 +9443,11 @@ text[style^="color: rgb(255, 172, 172)"] {
 .listening-report-top-item-badge, .top-new-item-type, .top-item-overview__type,
 .listening-report-top-item-heading-name,
 .quick-fact-data-detail,
-.top-item-overview__scrobbles, .quick-fact-data-value, .report-headline-total {
+.top-item-overview__scrobbles, .quick-fact-data-value {
     font-weight: var(--font-weight-medium) !important;
+}
+.report-headline-total {
+    font-weight: var(--font-weight-bold) !important;
 }
 
 .listening-report-row {
@@ -9857,7 +9920,6 @@ text[style^="color: rgb(0, 0, 0)"] {
     --col: hsl(var(--l3));
     --sat: 1;
     --lit: 1;
-    --icon: var(--l3);
 }
 
 .play-this-track-playlink--youtube {
@@ -12932,6 +12994,15 @@ so this is good enough - use the community docs */
     }
 
 
+    h1 {
+        font-size: 24px;
+        line-height: 30px;
+        font-weight: var(--font-weight-bold);
+        letter-spacing: unset;
+        margin: unset;
+        cursor: default;
+        color: hsl(var(--c1));
+    }
     h3 {
         font-size: 24px;
         line-height: 28px;
@@ -14324,11 +14395,16 @@ input[type="range"]::-moz-range-progress {
             box-shadow: 0 0 30px hsl(var(--c1), 30%);
         }*/
 
-        [data-bleh--season="christmas"] &,
-        [data-bleh--season="new_years"] & {
+        [data-bleh--season="christmas"] & {
             --hue-seasonal: -2;
             --sat-seasonal: 1.3;
             --lit-seasonal: 0.9;
+        }
+
+        [data-bleh--season="new_years"] & {
+            --hue-seasonal: 333;
+            --sat-seasonal: 1.1;
+            --lit-seasonal: 1;
         }
     }
 
@@ -15316,6 +15392,10 @@ button.bleh--gallery-bookmark-image-btn {
     background-color: hsl(var(--b6));
     border-radius: calc(var(--item-big-radius) + var(--button-list-gap));
 
+    &.view-buttons-middle {
+        justify-content: center;
+    }
+
     &:not(.profile-top-header, .glacier-library-buttons) {
         margin-bottom: var(--card-gap);
     }
@@ -15768,83 +15848,6 @@ button.bleh--gallery-bookmark-image-btn {
     --hue-over: var(--hue-seasonal);
     --sat-over: var(--sat-seasonal);
     --lit-over: var(--lit-seasonal);
-}
-
-.current-season-container {
-    display: flex;
-    gap: var(--card-padding);
-
-    &.season-column {
-        flex-direction: column;
-        gap: var(--item-list-gap);
-    }
-
-    .current-season {
-        color: hsl(var(--c3));
-        font-weight: var(--font-weight-bold);
-        position: relative;
-        padding-left: calc(16px + 6px);
-
-        &[aria-describedby] {
-            cursor: pointer;
-        }
-
-        --left: 0;
-        --mask: var(--icon-16-season);
-
-        &:not([data-season="none"]) {
-            color: hsl(var(--l3-c));
-            text-shadow: 0 0 20px hsl(var(--h4));
-        }
-
-        &[data-season="easter"] {
-            --mask: var(--icon-16-egg);
-        }
-        &[data-season="pride"] {
-            --mask: var(--icon-16-pride);
-            /* this isnt using https://cesque.com/gaydient/ but shoutout,
-            based on https://codepen.io/charliewilco/pen/BzrJzE */
-            --g-red: hsl(8, 62%, 60%);
-            --g-orange: hsl(24, 86%, 60%);
-            --g-yellow: hsl(44, 100%, 60%);
-            --g-green: hsl(163, 100%, 60%);
-            --g-blue: hsl(199, 79%, 60%);
-            --g-indigo: hsl(254, 46%, 60%);
-            background-image: linear-gradient(90deg,
-            var(--g-red) 16.6666%,
-            var(--g-orange) 33.333%,
-            var(--g-yellow) 50%,
-            var(--g-green) 66.6666%,
-            var(--g-blue) 83.3333%,
-            var(--g-indigo) 100%
-            );
-            background-clip: text;
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-        &[data-season="halloween"] {
-            --mask: var(--icon-16-pumpkin);
-        }
-        &[data-season="pre_fall"] {
-            --mask: var(--icon-16-fall);
-        }
-        &[data-season="fall"] {
-            --mask: var(--icon-16-fall);
-        }
-        &[data-season="christmas"] {
-            --mask: var(--icon-16-snow);
-        }
-        &[data-season="new_years"] {
-            --mask: var(--icon-16-new-years);
-        }
-    }
-    .current-season-started {
-        color: hsl(var(--c3));
-
-        &[aria-describedby] {
-            cursor: pointer;
-        }
-    }
 }
 
 .seasonal-hsl-alert {
@@ -16955,6 +16958,7 @@ h4 {
     line-height: var(--line-height);
     font-weight: var(--font-weight-medium);
     cursor: default;
+    margin-bottom: 2px;
 
     display: flex;
     justify-content: space-between;
@@ -18092,7 +18096,6 @@ section > .section-controls .subpage-title {
         .glacier-library-metadata-item {
             display: flex;
             flex-direction: column;
-            gap: 2px;
 
             .glacier-library-metadata-item-value {
                 font-size: 16px;
@@ -18198,4 +18201,105 @@ section > .section-controls .subpage-title {
 /* vue is duplicating it lol (it sucks) */
 .library-fetch > div > .library-overview-header {
     display: none;
+}
+
+
+
+
+.seasonal-inner {
+    display: flex;
+    flex-direction: column;
+
+    .sub-text {
+        width: fit-content;
+    }
+
+    .sep {
+        width: 48px;
+        margin: var(--card-gap) 0;
+    }
+}
+
+.card-item-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background-color: hsl(var(--h4), 30%);
+    flex-shrink: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    &.medium {
+        width: 40px;
+        height: 40px;
+    }
+    &.small {
+        width: 32px;
+        height: 32px;
+    }
+}
+
+.current-season-box {
+    display: flex;
+    flex-direction: column;
+    gap: var(--card-gap);
+    margin-top: var(--card-gap);
+
+    &.no-margin {
+        margin-top: unset;
+    }
+
+    padding: var(--card-gap);
+    background: linear-gradient(180deg, hsla(var(--h4), 30%), transparent);
+    color: hsl(var(--c2));
+    border-radius: var(--item-big-radius);
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+
+    .current-season-info {
+        display: flex;
+        align-items: center;
+        gap: var(--item-list-gap);
+    }
+}
+
+.bleh-seasonal-icon {
+    --icon: var(--mask, var(--icon-16-season));
+
+    &[data-season="easter"] {
+        --mask: var(--icon-16-egg);
+    }
+    &[data-season="halloween"] {
+        --mask: var(--icon-16-pumpkin);
+    }
+    &[data-season="pre_fall"] {
+        --mask: var(--icon-16-fall);
+    }
+    &[data-season="fall"] {
+        --mask: var(--icon-16-fall);
+    }
+    &[data-season="christmas"] {
+        --mask: var(--icon-16-snow);
+    }
+    &[data-season="new_years"] {
+        --mask: var(--icon-16-new-years);
+    }
+}
+
+
+.info-box {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: hsl(var(--c3));
+    cursor: default;
+
+    .bleh-icon {
+        --icon-size: 14px;
+    }
+}
+
+.bleh-info-icon {
+    --icon: var(--icon-16-info);
 }
