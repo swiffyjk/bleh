@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         bleh
 // @namespace    http://last.fm/
-// @version      2024.1210
+// @version      2024.1211
 // @description  bleh!!! ^-^
 // @author       kate
 // @match        https://www.last.fm/*
@@ -14,14 +14,13 @@
 // @require      https://unpkg.com/@popperjs/core@2
 // @require      https://unpkg.com/tippy.js@6
 // @require      https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.30.1/moment.min.js
-// @require      https://katelyynn.github.io/bleh/fm/js/snow.js?a=b
 // @require      https://katelyynn.github.io/bleh/fm/js/vibrant/Vibrant.min.js
 // @require      https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js
 // @require      https://cdn.jsdelivr.net/npm/chartjs-adapter-moment@^1
 // ==/UserScript==
 
 let version = {
-    build: '2024.1210.1',
+    build: '2024.1211',
     sku: 'glacier',
     feature_flags: {
         bleh_settings_tabs: {
@@ -498,6 +497,10 @@ const trans = {
                     },
                     show_less_particles: {
                         name: 'Display a reduced number of particles'
+                    },
+                    fps_particles: {
+                        name: 'Display particles without fancy effects',
+                        bio: 'This might be more demanding on some systems'
                     },
                     overlays: {
                         name: 'Display additional seasonal effects',
@@ -1250,6 +1253,10 @@ const trans = {
                     },
                     show_less_particles: {
                         name: 'Display a reduced number of particles'
+                    },
+                    fps_particles: {
+                        name: 'Display particles without fancy effects',
+                        bio: 'This might be more demanding on some systems'
                     },
                     overlays: {
                         name: 'Zusätzliche saisonale Effekte anzeigen',
@@ -2021,6 +2028,10 @@ const trans = {
                     show_less_particles: {
                         name: 'Display a reduced number of particles'
                     },
+                    fps_particles: {
+                        name: 'Display particles without fancy effects',
+                        bio: 'This might be more demanding on some systems'
+                    },
                     overlays: {
                         name: 'Display additional seasonal effects',
                         bio: 'During winter seasons this is used for ice effects, otherwise mainly just gradients.'
@@ -2471,7 +2482,7 @@ let seasonal_events = [
 
         snowflakes: {
             state: true,
-            count: 45
+            count: 80
         }
     },
     {
@@ -2508,7 +2519,7 @@ let seasonal_events = [
 
         snowflakes: {
             state: true,
-            count: 4
+            count: 12
         }
     },
     {
@@ -2518,7 +2529,7 @@ let seasonal_events = [
 
         snowflakes: {
             state: true,
-            count: 22
+            count: 40
         }
     },
     {
@@ -2528,7 +2539,7 @@ let seasonal_events = [
 
         snowflakes: {
             state: true,
-            count: 60
+            count: 160
         }
     }
 ];
@@ -2913,6 +2924,7 @@ let settings_template = {
     seasonal: true,
     seasonal_particles: true,
     seasonal_particles_reduced: false,
+    seasonal_particles_fps: false,
     seasonal_overlays: true,
 
     profile_header_own: true,
@@ -3160,6 +3172,13 @@ let settings_base = {
         values: [true, false],
         type: 'toggle',
         require_reload: true
+    },
+    seasonal_particles_fps: {
+        css: 'seasonal_particles_fps',
+        unit: '',
+        value: true,
+        values: [true, false],
+        type: 'toggle'
     },
     seasonal_overlays: {
         css: 'seasonal_overlays',
@@ -4032,13 +4051,13 @@ let has_prompted_for_update = false;
                     log('let the snow start!', 'season');
                     prep_snow();
 
-                    snowflakes_enabled = true;
-                    snowflakes_count = season.snowflakes.count;
+                    let snowflakes_enabled = true;
+                    let snowflakes_count = season.snowflakes.count;
 
                     if (settings.seasonal_particles_reduced && snowflakes_count > 10)
                         snowflakes_count = snowflakes_count * 0.45;
 
-                    begin_snowflakes();
+                    begin_snowflakes(snowflakes_enabled, snowflakes_count);
                 }
 
                 // new season?
@@ -4066,6 +4085,30 @@ let has_prompted_for_update = false;
         `);
 
         document.documentElement.appendChild(container);
+    }
+
+    // based on https://app.embed.im/snow.js
+    function begin_snowflakes(enabled, count) {
+        if (!enabled)
+            return;
+
+        let dynamic_css = '';
+        var snow_html = '';
+
+        for(let i=1; i<count; i++) {
+            snow_html += '<i class="snow"></i>';
+            let rndX = (snow_rand(0, 1000000)*0.0001),
+            rndO = snow_rand(-100000, 100000)*0.0001,
+            rndT = (snow_rand(3, 8)*10).toFixed(2),
+            rndS = (snow_rand(0, 10000)*0.0001).toFixed(2);
+            dynamic_css += '.snow:nth-child('+i+'){'+'opacity:'+(snow_rand(1, 10000)*0.0001).toFixed(2)+';'+'transform:translate('+rndX.toFixed(2)+'vw,-10px) scale('+rndS+');'+'animation:fall-'+i+' '+snow_rand(10, 30)+'s -'+snow_rand(0, 30)+'s linear infinite'+'}'+'@keyframes fall-'+i+'{'+rndT+'%{'+'transform:translate('+(rndX+rndO).toFixed(2)+'vw,'+rndT+'vh) scale('+rndS+')'+'}'+'to{'+'transform:translate('+(rndX+(rndO/2)).toFixed(2)+'vw, 105vh) scale('+rndS+')'+'}'+'}'
+        }
+
+        document.getElementById('snowflakes').innerHTML = '<style>'+dynamic_css+'</style>'+snow_html;
+    }
+
+    function snow_rand(a, b) {
+        return Math.floor(Math.random()*(b-a+1))+a
     }
 
 
@@ -8332,6 +8375,18 @@ let has_prompted_for_update = false;
                         </div>
                         <div class="toggle-wrap">
                             <button class="toggle" id="toggle-seasonal_particles_reduced" aria-checked="true">
+                                <div class="dot"></div>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="toggle-container hide-if-seasonal-disabled" id="container-seasonal_particles_fps" onclick="_update_item('seasonal_particles_fps')">
+                        <button class="btn reset" onclick="_reset_item('seasonal_particles_fps')">${trans[lang].settings.reset}</button>
+                        <div class="heading">
+                            <h5>${trans[lang].settings.customise.seasonal.fps_particles.name}</h5>
+                            <p>${trans[lang].settings.customise.seasonal.fps_particles.bio}</p>
+                        </div>
+                        <div class="toggle-wrap">
+                            <button class="toggle" id="toggle-seasonal_particles_fps" aria-checked="true">
                                 <div class="dot"></div>
                             </button>
                         </div>

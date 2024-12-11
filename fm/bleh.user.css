@@ -1,7 +1,7 @@
 /* ==UserStyle==
 @name           bleh (dev)
 @namespace      github.com/katelyynn/bleh
-@version        2024.1210
+@version        2024.1211
 @license        GPL-3.0
 @author         kate
 @updateURL      https://github.com/katelyynn/bleh/raw/uwu/fm/bleh.user.css
@@ -16,7 +16,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Work+Sans:ital,wght@0,100..900;1,100..900&display=swap');
 
 body {
-    --version-build: '2024.1210.1';
+    --version-build: '2024.1211';
 
     --hue:  var(--hue-over,
             var(--hue-album,
@@ -762,6 +762,10 @@ body {
 
     &:not([data-bleh--chart_view="bar"]) {
         --hide-if-not-bar: none;
+    }
+
+    &[data-bleh--seasonal_particles_fps="true"] {
+        --seasonal-particles-glow: none;
     }
 }
 
@@ -15889,8 +15893,7 @@ button.bleh--gallery-bookmark-image-btn {
     position: fixed;
     left: 0px;
     top: 0px;
-    display: none;
-    /*filter: drop-shadow(0 0 5px white);*/
+    filter: var(--seasonal-particles-glow, drop-shadow(0 0 5px var(--snow)));
     z-index: 900;
     user-select: none;
     pointer-events: none;
@@ -15908,8 +15911,9 @@ button.bleh--gallery-bookmark-image-btn {
     z-index: 1000;
     pointer-events: none;
     border-radius: 50%;
-    width: 7px;
-    height: 7px;
+    width: 8px;
+    height: 8px;
+    margin-top: -8px;
 }
 
 
