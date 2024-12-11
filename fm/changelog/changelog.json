@@ -1,6 +1,12 @@
 {
-    "updated": "2024-12-10",
-    "latest": "2024.1210",
+    "updated": "2024-12-11",
+    "latest": "2024.1211",
+    "2024.1211": {
+        "name": "so chilly...",
+        "type": "minor",
+        "force": false,
+        "bio": "its getting veri veri cold... >w<\n\n# Seasonal\n- __Upgraded seasonal snow effects__\n    - This release comes with improved performance to the snow thanks to completely refactored code. 4 nerds: animations r now handled in css instead of js\n    - There is also now a fancy glow accompanying the 2x amount of snow particles :3\n    - Performance options are still available in the settings as per usual\n\n![Seasonal configuration](https://katelyynn.github.io/bleh/fm/changelog/img/snow.png)\n\n# Other\n- Fixed potential page failures due to shout patching and smart music titles"
+    },
     "2024.1210": {
         "name": "glacier library pt. 2",
         "type": "minor",
