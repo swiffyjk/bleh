@@ -3539,6 +3539,7 @@ let has_prompted_for_update = false;
             if (page.type == 'user' ||
                 page.type == 'artist' ||
                 page.type == 'album' ||
+                page.type == 'track' ||
                 page.type == 'events' ||
                 page.type == 'festival' ||
                 page.type == 'tag'
