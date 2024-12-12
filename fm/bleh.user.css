@@ -10,10 +10,11 @@
 @-moz-document domain("last.fm") {
 @import url('https://fonts.googleapis.com/css2?family=Spline+Sans+Mono:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@100..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@100..900&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Noto+Color+Emoji&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Comfortaa:wght@700&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Ubuntu+Sans:ital,wght@0,100..800;1,100..800&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Work+Sans:ital,wght@0,100..900;1,100..900&display=swap');
 
 body {
     --version-build: '2024.1211';
@@ -123,7 +124,7 @@ body {
     --sat-brand-twt: 1.1;
     --lit-brand-twt: 0.9;
 
-    --font: var(--custom_font, ''), Ubuntu Sans, Spline Sans, Inter, Roboto, Noto Sans, Noto Sans JP, Noto Color Emoji, -apple-system, BlinkMacSystemFont, sans-serif;
+    --font: var(--custom_font, ''), Ubuntu Sans, Spline Sans, Inter, Roboto, Noto Sans, Noto Sans JP, Noto Sans KR, Noto Sans TC, Noto Color Emoji, -apple-system, BlinkMacSystemFont, sans-serif;
     --font-code: Spline Sans Mono, Iosevka, JetBrains Mono, Roboto Mono, monospace;
     --font-brand: Comfortaa, var(--font);
     --font-size: 14px;
