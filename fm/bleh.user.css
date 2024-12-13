@@ -13521,12 +13521,12 @@ code, kbd, samp {
     &:after {
         content: '';
         position: absolute;
-        inset: -4px;
-        border-radius: calc(var(--item-big-radius) + 4px);
+        inset: -2px;
+        border-radius: calc(var(--item-big-radius) + 2px);
         opacity: 0;
 
-        border: 2px solid hsl(var(--c1), 80%);
-        box-shadow: 0 0 30px hsl(var(--c1), 20%);
+        border: 2px solid hsl(var(--h4), 80%);
+        box-shadow: 0 0 30px hsl(var(--h4), 20%);
 
         transition-property: opacity;
         transition-duration: var(--trans);

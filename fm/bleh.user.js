@@ -510,7 +510,8 @@ const trans = {
                     nonsense: 'A Nonsense Christmas',
                     fruitcake: 'fruitcake',
                     mistletoe: 'Mistletoe',
-                    exclusive_for_season: 'Exclusive for <span class="season-name">{season}</span>'
+                    exclusive_for_season: 'Exclusive for <span class="season-name">{season}</span>',
+                    exclusive_for_season_and_more: 'Exclusive for <span class="season-name">{season}</span> and 1 more'
                 },
                 artwork: {
                     name: 'Artwork'
@@ -9200,7 +9201,7 @@ let has_prompted_for_update = false;
                     theme: 'seasonal-swatch',
                     content: (`
                         <span class="season-colour-name">${trans[lang].settings.customise.seasonal.nonsense}</span>
-                        <span class="season-exclusive">${trans[lang].settings.customise.seasonal.exclusive_for_season.replace('{season}', trans[lang].settings.customise.seasonal.listing[stored_season.id])}</span>
+                        <span class="season-exclusive">${trans[lang].settings.customise.seasonal.exclusive_for_season_and_more.replace('{season}', trans[lang].settings.customise.seasonal.listing[stored_season.id])}</span>
                     `),
                     allowHTML: true
                 });
@@ -9208,7 +9209,7 @@ let has_prompted_for_update = false;
                     theme: 'seasonal-swatch',
                     content: (`
                         <span class="season-colour-name">${trans[lang].settings.customise.seasonal.fruitcake}</span>
-                        <span class="season-exclusive">${trans[lang].settings.customise.seasonal.exclusive_for_season.replace('{season}', trans[lang].settings.customise.seasonal.listing[stored_season.id])}</span>
+                        <span class="season-exclusive">${trans[lang].settings.customise.seasonal.exclusive_for_season_and_more.replace('{season}', trans[lang].settings.customise.seasonal.listing[stored_season.id])}</span>
                     `),
                     allowHTML: true
                 });
@@ -9216,7 +9217,7 @@ let has_prompted_for_update = false;
                     theme: 'seasonal-swatch',
                     content: (`
                         <span class="season-colour-name">${trans[lang].settings.customise.seasonal.mistletoe}</span>
-                        <span class="season-exclusive">${trans[lang].settings.customise.seasonal.exclusive_for_season.replace('{season}', trans[lang].settings.customise.seasonal.listing[stored_season.id])}</span>
+                        <span class="season-exclusive">${trans[lang].settings.customise.seasonal.exclusive_for_season_and_more.replace('{season}', trans[lang].settings.customise.seasonal.listing[stored_season.id])}</span>
                     `),
                     allowHTML: true
                 });
