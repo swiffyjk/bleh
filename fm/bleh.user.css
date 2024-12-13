@@ -7791,9 +7791,6 @@ input:is([name="track_name"], [name="artist_name"], [name="album_name"], [name="
 
 .modal-dialog .big-modal-alert.alert-success {
     /*padding-top: calc(20px + var(--card-gap));*/
-    padding: 7px 12px 7px calc(12px + 16px + 6px) !important;
-    background-color: hsla(var(--h4), 20%);
-    color: hsl(var(--l3-c));
     text-align: left;
 }
 .modal-dialog .big-modal-alert.alert-success:before {
@@ -10038,13 +10035,13 @@ text[style^="color: rgb(0, 0, 0)"] {
     font-size: var(--font-size);
     line-height: var(--line-height);
     margin-top: var(--card-gap);
-    padding: 7px 12px 7px calc(12px + 16px + 6px);
-    border-radius: var(--item-big-radius);
-    background-color: hsla(var(--h4), 40%);
-    box-shadow: 0 0 20px hsla(var(--h4), 60%);
-    color: hsl(var(--l2-c-theme-switch));
+    padding: 0 0 0 calc(16px + 6px) !important;
+    background: unset !important;
+    color: hsl(var(--l2-c-theme-switch)) !important;
+    font-weight: var(--font-weight-medium) !important;
     text-align: left;
     position: relative;
+    --left: 0;
 
     &:before {
         color: currentColor;
