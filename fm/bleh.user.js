@@ -227,6 +227,7 @@ const trans = {
                 other_listeners: '{c} others'
             },
             wiki: 'About',
+            refresh: 'Refresh',
             refresh_tracks: 'Refresh tracks',
             menu: 'Extra options',
             obsession: 'Obsess',
@@ -994,11 +995,11 @@ const trans = {
             configure_bleh: 'bleh einstellen',
             library: 'Musiksammlung',
             shouts: 'Shouts',
-            obsessions: 'Obsessions',
-            labs: 'Labs',
-            bookmarks: 'Bookmarks',
-            settings: 'Settings',
-            logout: 'Logout'
+            obsessions: 'Obsessionen',
+            labs: 'Labor',
+            bookmarks: 'Lesezeichen',
+            settings: 'Einstellungen',
+            logout: 'Ausloggen'
         },
         music: {
             submit_lastfm_correction: 'Submit correction to Last.fm',
@@ -1017,6 +1018,7 @@ const trans = {
                 other_listeners: '{c} hörer'
             },
             wiki: 'Über',
+            refresh: 'Neu laden',
             refresh_tracks: 'Titel aktualisieren',
             menu: 'Extra options',
             obsession: 'Obsess',
@@ -1082,7 +1084,7 @@ const trans = {
                 you_share_3: 'Ihr hört {artist1}, {artist2}, und {artist3}'
             },
             open_avatar: 'Open in a new tab',
-            settings: 'Configure',
+            settings: 'Konfigurieren',
             events: 'Events',
             top_badge: 'Top Badge'
         },
@@ -1097,7 +1099,7 @@ const trans = {
             }
         },
         settings: {
-            name: 'Settings',
+            name: 'Einstellungen',
             save: 'Speichern',
             cancel: 'Abbrechen',
             close: 'Schließen',
@@ -1112,7 +1114,7 @@ const trans = {
             reload: 'Klicke zum Neuladen, um deine Einstellungen zu übernehmen.',
             new: 'Neu',
             beta: 'Beta',
-            configure: 'Configure',
+            configure: 'Konfigurieren',
             examples: {
                 button: 'Beispiel-Taste'
             },
@@ -1171,7 +1173,7 @@ const trans = {
             },
             music: {
                 name: 'Musik',
-                header: 'Music configuration',
+                header: 'Musikkonfiguration',
                 bio: 'Konfiguriere deine musikbezogene Einstellungen für Profile, Künstler, Alben und Titel.',
                 profile_shortcut: {
                     name: 'Profilverknüpfung',
@@ -1247,8 +1249,8 @@ const trans = {
                     timeline: 'Seasonal timeline',
                     bio: 'Während saisonaler Ereignisse kann bleh automatisch die Standardakzentfarbe ändern, Partikel hinzufügen und verschiedenen Schnittstellenelementen Overlays hinzufügen.',
                     info: 'Seasonal events are ran in universal time (UTC) for consistency.',
-                    started: 'Started',
-                    ends_in: 'Ends in',
+                    started: 'Gestartet',
+                    ends_in: 'Endet in',
                     listing: {
                         easter: 'Ostern',
                         pride: 'Pride',
@@ -1805,6 +1807,7 @@ const trans = {
                 other_listeners: '{c} others'
             },
             wiki: 'About',
+            refresh: 'Refresh',
             refresh_tracks: 'Refresh tracks',
             menu: 'Extra options',
             obsession: 'Obsess',
@@ -16290,7 +16293,7 @@ let has_prompted_for_update = false;
         // refresh
         let refresh_btn = document.createElement('button');
         refresh_btn.classList.add('btn', 'view-item', 'interact-item', 'refresh-tracklist-btn');
-        refresh_btn.textContent = 'Refresh';
+        refresh_btn.textContent = trans[lang].music.refresh;
         refresh_btn.setAttribute('onclick', '_refresh_tracks(this)');
 
         tippy(refresh_btn, {
