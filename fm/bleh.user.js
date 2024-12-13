@@ -1017,7 +1017,22 @@ const trans = {
                 other_listeners: '{c} hörer'
             },
             wiki: 'Über',
-            refresh_tracks: 'Titel aktualisieren'
+            refresh_tracks: 'Titel aktualisieren',
+            menu: 'Extra options',
+            obsession: 'Obsess',
+            compare: {
+                name: 'Compare',
+                header: 'Compare plays'
+            },
+            about: 'About',
+            about_guests: 'Others featured',
+            view_profile: 'View profile'
+        },
+        error: {
+            name: 'This page is missing...',
+            go_back: 'Go back',
+            visit_profile: 'Visit profile',
+            try_again: 'Try again'
         },
         statistics: {
             scrobbles: {
@@ -1790,7 +1805,16 @@ const trans = {
                 other_listeners: '{c} others'
             },
             wiki: 'About',
-            refresh_tracks: 'Refresh tracks'
+            refresh_tracks: 'Refresh tracks',
+            menu: 'Extra options',
+            obsession: 'Obsess',
+            compare: {
+                name: 'Compare',
+                header: 'Compare plays'
+            },
+            about: 'About',
+            about_guests: 'Others featured',
+            view_profile: 'View profile'
         },
         error: {
             name: 'This page is missing...',
