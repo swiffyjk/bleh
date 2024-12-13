@@ -15876,13 +15876,13 @@ button.bleh--gallery-bookmark-image-btn {
 }
 
 .seasonal-hsl-alert {
-    margin: 0 0 12px 0;
+    margin: 0 0 var(--card-gap) 0;
     transition-property: margin, opacity;
     transition-duration: calc(var(--trans) * 1.7);
     transition-timing-function: var(--trans-function);
 
     [data-bleh--hsl-override="false"] & {
-        margin: 0 0 -36px 0;
+        margin: 0 0 -18px 0;
         opacity: 0;
     }
 }
