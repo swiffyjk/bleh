@@ -10319,7 +10319,7 @@ let has_prompted_for_update = false;
             id: 'reset_settings',
             title: trans[lang].settings.actions.export.modals.initial.name,
             body: (`
-                <p class="alert alert-warning">${trans[lang].settings.actions.reset.modals.initial.alert}</p>
+                <p class="alert alert-error">${trans[lang].settings.actions.reset.modals.initial.alert}</p>
                 <div class="modal-footer">
                     <button class="btn done" onclick="_confirm_reset()">
                         ${trans[lang].settings.actions.reset.modals.initial.confirm}
