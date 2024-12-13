@@ -506,7 +506,11 @@ const trans = {
                         name: 'Display additional seasonal effects',
                         bio: 'During winter seasons this is used for ice effects, otherwise mainly just gradients.'
                     },
-                    announce: 'It is now {s}!'
+                    announce: 'It is now {s}!',
+                    nonsense: 'A Nonsense Christmas',
+                    fruitcake: 'fruitcake',
+                    mistletoe: 'Mistletoe',
+                    exclusive_for_season: 'Exclusive for <span class="season-name">{season}</span>'
                 },
                 artwork: {
                     name: 'Artwork'
@@ -7720,6 +7724,32 @@ let has_prompted_for_update = false;
                             sat: 1,
                             lit: 1
                         })"></button>
+                        ${(stored_season.id == 'christmas' || stored_season.id == 'new_years') ? (`
+                        <button class="swatch btn seasonal-swatch" style="
+                            --hue: 352;
+                            --sat: 1.8;
+                            --lit: 0.925" onclick="_update_params({
+                            hue: 352,
+                            sat: 1.8,
+                            lit: 0.925
+                        })" id="nonsense_christmas" data-season-swatch="christmas"></button>
+                        <button class="swatch btn seasonal-swatch" style="
+                            --hue: 24;
+                            --sat: 0.93;
+                            --lit: 1" onclick="_update_params({
+                            hue: 24,
+                            sat: 0.93,
+                            lit: 1
+                        })" id="fruitcake" data-season-swatch="christmas"></button>
+                        <button class="swatch btn seasonal-swatch" style="
+                            --hue: 130;
+                            --sat: 0.45;
+                            --lit: 0.75" onclick="_update_params({
+                            hue: 130,
+                            sat: 0.45,
+                            lit: 0.75
+                        })" id="mistletoe" data-season-swatch="christmas"></button>
+                        `) : ''}
                         <button class="swatch btn custom" style="
                             --hue: var(--hue-user, 255);
                             --sat: var(--sat-user, 1);
@@ -9164,6 +9194,33 @@ let has_prompted_for_update = false;
             tippy(document.body.querySelector('.swatch.custom'), {
                 content: trans[lang].settings.customise.colours.custom
             });
+
+            if (stored_season.id == 'christmas' || stored_season.id == 'new_years') {
+                tippy(document.body.querySelector('.swatch#nonsense_christmas'), {
+                    theme: 'seasonal-swatch',
+                    content: (`
+                        <span class="season-colour-name">${trans[lang].settings.customise.seasonal.nonsense}</span>
+                        <span class="season-exclusive">${trans[lang].settings.customise.seasonal.exclusive_for_season.replace('{season}', trans[lang].settings.customise.seasonal.listing[stored_season.id])}</span>
+                    `),
+                    allowHTML: true
+                });
+                tippy(document.body.querySelector('.swatch#fruitcake'), {
+                    theme: 'seasonal-swatch',
+                    content: (`
+                        <span class="season-colour-name">${trans[lang].settings.customise.seasonal.fruitcake}</span>
+                        <span class="season-exclusive">${trans[lang].settings.customise.seasonal.exclusive_for_season.replace('{season}', trans[lang].settings.customise.seasonal.listing[stored_season.id])}</span>
+                    `),
+                    allowHTML: true
+                });
+                tippy(document.body.querySelector('.swatch#mistletoe'), {
+                    theme: 'seasonal-swatch',
+                    content: (`
+                        <span class="season-colour-name">${trans[lang].settings.customise.seasonal.mistletoe}</span>
+                        <span class="season-exclusive">${trans[lang].settings.customise.seasonal.exclusive_for_season.replace('{season}', trans[lang].settings.customise.seasonal.listing[stored_season.id])}</span>
+                    `),
+                    allowHTML: true
+                });
+            }
         }
 
         if ((page == 'seasonal' || page == 'home') && settings.seasonal && stored_season.id != 'none') {
