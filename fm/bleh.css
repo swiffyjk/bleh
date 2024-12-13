@@ -7,7 +7,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Ubuntu+Sans:ital,wght@0,100..800;1,100..800&display=swap');
 
 body {
-    --version-build: '2024.1211';
+    --version-build: '2024.1213';
 
     --hue:  var(--hue-over,
             var(--hue-album,
@@ -2776,9 +2776,9 @@ button.navlist-more {
         font-weight: var(--font-weight-bold);
 
         [data-bleh--season="christmas"] & {
-            --hue-seasonal: -2;
-            --sat-seasonal: 1.3;
-            --lit-seasonal: 0.9;
+            --hue-seasonal: 130;
+            --sat-seasonal: 0.45;
+            --lit-seasonal: 0.75;
 
             --candy-cane-0: hsl(-2, var(--h3-sat), var(--h3-lit));
             --candy-cane-1: hsl(-2, var(--h3-sat), 80%);
@@ -4601,9 +4601,9 @@ better than the default selector '#app a' i suppose */
     }
 
     [data-bleh--season="christmas"] & {
-        --hue-seasonal: -2;
-        --sat-seasonal: 1.3;
-        --lit-seasonal: 0.9;
+        --hue-seasonal: 352;
+        --sat-seasonal: 1.8;
+        --lit-seasonal: 0.925;
     }
 
     &:before {
@@ -5093,9 +5093,9 @@ a.chartlist-love-button:after {
     }
 
     [data-bleh--season="christmas"] & {
-        --hue-seasonal: 120;
-        --sat-seasonal: 1.15;
-        --lit-seasonal: 0.95;
+        --hue-seasonal: 130;
+        --sat-seasonal: 0.45;
+        --lit-seasonal: 0.75;
     }
 
     &:before {
@@ -5994,9 +5994,9 @@ button,
         }
 
         [data-bleh--season="christmas"] & {
-            --hue-seasonal: 120;
-            --sat-seasonal: 1.15;
-            --lit-seasonal: 0.95;
+            --hue-seasonal: 130;
+            --sat-seasonal: 0.45;
+            --lit-seasonal: 0.75;
         }
 
         [data-bleh--season="new_years"] & {
@@ -7781,9 +7781,6 @@ input:is([name="track_name"], [name="artist_name"], [name="album_name"], [name="
 
 .modal-dialog .big-modal-alert.alert-success {
     /*padding-top: calc(20px + var(--card-gap));*/
-    padding: 7px 12px 7px calc(12px + 16px + 6px) !important;
-    background-color: hsla(var(--h4), 20%);
-    color: hsl(var(--l3-c));
     text-align: left;
 }
 .modal-dialog .big-modal-alert.alert-success:before {
@@ -8837,6 +8834,7 @@ text[style^="color: rgb(255, 172, 172)"] {
     }
 
     [data-bleh--theme="light"] & {
+        border: 1px solid var(--card-border-base);
         background: hsla(var(--b5), 70%);
     }
 
@@ -9218,6 +9216,25 @@ text[style^="color: rgb(255, 172, 172)"] {
     &[data-state="hidden"] {
         opacity: 0;
         transform: translateY(10px);
+    }
+
+    &[data-theme="seasonal-swatch"] {
+        .tippy-content {
+            display: flex;
+            flex-direction: column;
+
+            .season-colour-name {
+                color: hsl(var(--l3-c));
+                font-weight: var(--font-weight-medium);
+            }
+            .season-exclusive {
+                color: hsl(var(--c3));
+
+                .season-name {
+                    color: hsl(var(--c2));
+                }
+            }
+        }
     }
 }
 .tippy-content {
@@ -10008,13 +10025,13 @@ text[style^="color: rgb(0, 0, 0)"] {
     font-size: var(--font-size);
     line-height: var(--line-height);
     margin-top: var(--card-gap);
-    padding: 7px 12px 7px calc(12px + 16px + 6px);
-    border-radius: var(--item-big-radius);
-    background-color: hsla(var(--h4), 40%);
-    box-shadow: 0 0 20px hsla(var(--h4), 60%);
-    color: hsl(var(--l2-c-theme-switch));
+    padding: 0 0 0 calc(16px + 6px) !important;
+    background: unset !important;
+    color: hsl(var(--l2-c-theme-switch)) !important;
+    font-weight: var(--font-weight-medium) !important;
     text-align: left;
     position: relative;
+    --left: 0;
 
     &:before {
         color: currentColor;
@@ -13473,6 +13490,9 @@ code, kbd, samp {
     &.default {
         --mask: var(--icon-colour-default);
     }
+    &.seasonal-swatch {
+        --mask: var(--icon-season);
+    }
     &.custom {
         --mask: var(--icon-colour-custom);
 
@@ -13481,19 +13501,19 @@ code, kbd, samp {
         }
     }
 
-    &:not(.default, .custom, .selected):before {
+    &:not(.default, .custom, .selected, .seasonal-swatch):before {
         opacity: 0;
     }
 
     &:after {
         content: '';
         position: absolute;
-        inset: -4px;
-        border-radius: calc(var(--item-big-radius) + 4px);
+        inset: -2px;
+        border-radius: calc(var(--item-big-radius) + 2px);
         opacity: 0;
 
-        border: 2px solid hsl(var(--c1), 80%);
-        box-shadow: 0 0 30px hsl(var(--c1), 20%);
+        border: 2px solid hsl(var(--h4), 80%);
+        box-shadow: 0 0 30px hsl(var(--h4), 20%);
 
         transition-property: opacity;
         transition-duration: var(--trans);
@@ -14401,9 +14421,9 @@ input[type="range"]::-moz-range-progress {
         }*/
 
         [data-bleh--season="christmas"] & {
-            --hue-seasonal: -2;
-            --sat-seasonal: 1.3;
-            --lit-seasonal: 0.9;
+            --hue-seasonal: 352;
+            --sat-seasonal: 1.8;
+            --lit-seasonal: 0.925;
         }
 
         [data-bleh--season="new_years"] & {
@@ -14542,9 +14562,9 @@ input[type="range"]::-moz-range-progress {
 
     [data-bleh--season="christmas"] &,
     [data-bleh--season="new_years"] & {
-        --hue-seasonal: -2;
-        --sat-seasonal: 1.3;
-        --lit-seasonal: 0.9;
+        --hue-seasonal: 352;
+        --sat-seasonal: 1.8;
+        --lit-seasonal: 0.925;
 
         --candy-cane-0: hsl(-2, var(--l3-c-sat), var(--l3-c-lit));
         --candy-cane-1: hsl(-2, var(--l3-c-sat), 80%);
