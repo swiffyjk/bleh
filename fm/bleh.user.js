@@ -475,6 +475,7 @@ const trans = {
                     started: 'Started',
                     ends_in: 'Ends in',
                     listing: {
+                        none: 'No active season',
                         easter: 'Easter',
                         pride: 'Pride',
                         halloween: 'Halloween',
@@ -1252,6 +1253,7 @@ const trans = {
                     started: 'Gestartet',
                     ends_in: 'Endet in',
                     listing: {
+                        none: 'No active season',
                         easter: 'Ostern',
                         pride: 'Pride',
                         halloween: 'Halloween',
@@ -2041,6 +2043,7 @@ const trans = {
                     started: 'Started',
                     ends_in: 'Ends in',
                     listing: {
+                        none: 'No active season',
                         easter: 'Easter',
                         pride: 'Pride',
                         halloween: 'Halloween',
