@@ -1,6 +1,12 @@
 {
-    "updated": "2024-12-11",
-    "latest": "2024.1211",
+    "updated": "2024-12-13",
+    "latest": "2024.1213",
+    "2024.1213": {
+        "name": "nonsense",
+        "type": "minor",
+        "force": false,
+        "bio": "# Seasonal\n- __Added seasonal-exclusive colours__\n    - such a nonsense christmas.... @inozom\n\n![fruitcake](https://katelyynn.github.io/bleh/fm/changelog/img/fruitcake.png)\n\n# Fonts\n- Added Noto Sans KR & TC for Korean and Traditional Chinese\n\n# Shouts\n- Fix shouts not being patched on track pages\n\n# Other\n- Changed styling of selection border on appearance page\n    - Will probably be looked at again soon\n- Changed styling of alerts to be less ugly"
+    },
     "2024.1211": {
         "name": "so chilly...",
         "type": "minor",
