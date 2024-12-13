@@ -1267,7 +1267,12 @@ const trans = {
                         name: 'Zusätzliche saisonale Effekte anzeigen',
                         bio: 'During winter seasons this is used for ice effects, otherwise mainly just gradients.'
                     },
-                    announce: 'It is now {s}!'
+                    announce: 'It is now {s}!',
+                    nonsense: 'A Nonsense Christmas',
+                    fruitcake: 'fruitcake',
+                    mistletoe: 'Mistletoe',
+                    exclusive_for_season: 'Exclusive for <span class="season-name">{season}</span>',
+                    exclusive_for_season_and_more: 'Exclusive for <span class="season-name">{season}</span> and 1 more'
                 },
                 artwork: {
                     name: 'Cover'
@@ -2041,7 +2046,12 @@ const trans = {
                         name: 'Display additional seasonal effects',
                         bio: 'During winter seasons this is used for ice effects, otherwise mainly just gradients.'
                     },
-                    announce: 'It is now {s}!'
+                    announce: 'It is now {s}!',
+                    nonsense: 'A Nonsense Christmas',
+                    fruitcake: 'fruitcake',
+                    mistletoe: 'Mistletoe',
+                    exclusive_for_season: 'Exclusive for <span class="season-name">{season}</span>',
+                    exclusive_for_season_and_more: 'Exclusive for <span class="season-name">{season}</span> and 1 more'
                 },
                 artwork: {
                     name: 'Okładka'
