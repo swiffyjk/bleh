@@ -14394,7 +14394,7 @@ input[type="range"]::-moz-range-progress {
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 48px !important;
+    width: 44px !important;
     height: 24px;
     position: relative;
 
@@ -14422,7 +14422,7 @@ input[type="range"]::-moz-range-progress {
         --shadow-hov: var(--interactable-outer), var(--interactable-active-outer);
 
         .dot {
-            left: calc(48px - 7px - 12px);
+            left: calc(44px - 7px - 12px);
         }
 
         /*&:after {
