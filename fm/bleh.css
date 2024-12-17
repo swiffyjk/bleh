@@ -4173,6 +4173,11 @@ better than the default selector '#app a' i suppose */
                 background: hsl(var(--h4), 20%) !important;
             }
         }
+
+        /* gloss */
+        &:after {
+            z-index: 20;
+        }
     }
 
     .grid-items-item-details {
@@ -4210,13 +4215,14 @@ better than the default selector '#app a' i suppose */
 .catalogue-overview-similar-artists-item-image:after,
 .other-obsession-artwork:after,
 .cover-art:after,
-.grid-items-item:after,
+.grid-items-cover-image-image:after,
 .similar-items-sidebar-item-image:after,
 .music-bookmarks-artists-item-image:after,
 .artist-similar-artists-sidebar-item-image:after,
 .column-tracks-item-image:after
 {
-    content: '';
+    content: '' !important;
+    display: block !important;
     position: absolute;
     inset: 0;
     background-image: var(--gloss-image) !important;
@@ -13505,21 +13511,6 @@ code, kbd, samp {
         opacity: 0;
     }
 
-    &:after {
-        content: '';
-        position: absolute;
-        inset: -2px;
-        border-radius: calc(var(--item-big-radius) + 2px);
-        opacity: 0;
-
-        border: 2px solid hsl(var(--h4), 80%);
-        box-shadow: 0 0 30px hsl(var(--h4), 20%);
-
-        transition-property: opacity;
-        transition-duration: var(--trans);
-        transition-timing-function: var(--trans-function);
-    }
-
     &.selected {
         /*outline: 2px solid hsl(var(--c1)) !important;*/
         /*border: 3px solid hsl(var(--b6)) !important;
@@ -13533,6 +13524,23 @@ code, kbd, samp {
 
         &:after {
             opacity: 1;
+        }
+    }
+
+    &:not(.album-cover) {
+        &:after {
+            content: '';
+            position: absolute;
+            inset: -2px;
+            border-radius: calc(var(--item-big-radius) + 2px);
+            opacity: 0;
+
+            border: 2px solid hsl(var(--h4), 80%);
+            box-shadow: 0 0 30px hsl(var(--h4), 20%);
+
+            transition-property: opacity;
+            transition-duration: var(--trans);
+            transition-timing-function: var(--trans-function);
         }
     }
 }
@@ -13746,11 +13754,10 @@ input[type="range"] {
 
 .slider-track {
     display: flex;
-    background: hsla(var(--b6), 20%);
-    box-shadow: 0 0 0 1px var(--card-border-base) inset;
+    background: hsl(var(--b4));
     border-radius: var(--item-big-radius);
     width: calc(100% - (30px + var(--card-gap))); /* 30px = value width */
-    height: 20px;
+    height: 8px;
     position: absolute;
 
     pointer-events: none;
@@ -13760,14 +13767,13 @@ input[type="range"] {
         width: var(--percent);
         background-color: hsl(var(--h3));
         border-radius: var(--item-big-radius);
-        box-shadow: 0 0 0 1px hsla(var(--h2), 40%) inset;
     }
 
     .slider-nub {
         display: flex;
         width: 12px;
         background-color: hsl(var(--h4));
-        border: 2px solid hsl(var(--b5));
+        border: 2px solid hsl(var(--b4));
         border-radius: var(--item-big-radius);
         margin: -5px -5px;
     }
@@ -13850,7 +13856,7 @@ input[type="range"]::-moz-range-progress {
     align-items: center;
     gap: var(--card-gap);
     overflow: hidden;
-    height: 32px;
+    height: 18px;
     border-radius: none;
 
     input {
@@ -13890,6 +13896,7 @@ input[type="range"]::-moz-range-progress {
         color: hsl(var(--c2));
         font-weight: var(--font-weight-medium);
         margin: unset;
+        cursor: default;
     }
 
     p {
@@ -14384,7 +14391,7 @@ input[type="range"]::-moz-range-progress {
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 48px !important;
+    width: 44px !important;
     height: 24px;
     position: relative;
 
@@ -14412,7 +14419,7 @@ input[type="range"]::-moz-range-progress {
         --shadow-hov: var(--interactable-outer), var(--interactable-active-outer);
 
         .dot {
-            left: calc(48px - 7px - 12px);
+            left: calc(44px - 7px - 12px);
         }
 
         /*&:after {
@@ -16598,6 +16605,7 @@ h5 {
     margin: unset;
     color: hsl(var(--c1));
     font-weight: var(--font-weight-medium);
+    cursor: default;
 }
 h4 {
     color: hsl(var(--c1));
