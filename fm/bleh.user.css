@@ -4183,6 +4183,11 @@ better than the default selector '#app a' i suppose */
                 background: hsl(var(--h4), 20%) !important;
             }
         }
+
+        /* gloss */
+        &:after {
+            z-index: 20;
+        }
     }
 
     .grid-items-item-details {
@@ -4220,13 +4225,14 @@ better than the default selector '#app a' i suppose */
 .catalogue-overview-similar-artists-item-image:after,
 .other-obsession-artwork:after,
 .cover-art:after,
-.grid-items-item:after,
+.grid-items-cover-image-image:after,
 .similar-items-sidebar-item-image:after,
 .music-bookmarks-artists-item-image:after,
 .artist-similar-artists-sidebar-item-image:after,
 .column-tracks-item-image:after
 {
-    content: '';
+    content: '' !important;
+    display: block !important;
     position: absolute;
     inset: 0;
     background-image: var(--gloss-image) !important;
