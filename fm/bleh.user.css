@@ -1009,18 +1009,15 @@ last.fm changes as of 2024-05-20 */
 }
 
 .masthead-nav-item, .masthead-search-toggle {
-    height: 40px !important;
+    height: 32px !important;
 }
 .masthead-nav-control:before, .masthead-search-toggle:before {
     opacity: 1 !important;
     margin-right: unset !important;
     right: unset !important;
     background-color: currentColor !important;
-    background-image: unset !important;
-    mask-image: var(--mask);
-    -webkit-mask-image: var(--mask);
 }
-.masthead-search-toggle:before, .masthead-search-submit:before {
+.masthead-search-toggle, .masthead-search-submit {
     --mask: var(--icon-16-search);
 }
 
@@ -1029,21 +1026,22 @@ last.fm changes as of 2024-05-20 */
 .masthead-search-toggle {
     --left: 8px;
     --font-size: 0;
-    --bg: transparent !important;
-    --bg-hov: var(--bg) !important;
-    --bg-atv: var(--bg) !important;
-    --shadow: none !important;
-    --shadow-hov: none !important;
 }
-.masthead-nav .masthead-nav-control {
+.auth-link, .language-nav, .masthead-search-toggle,
+.masthead-nav-control {
     --bg: transparent !important;
-    --bg-hov: var(--bg) !important;
-    --bg-atv: var(--bg) !important;
+    --bg-hov: hsl(var(--b3), 60%) !important;
+    --bg-atv: hsl(var(--b3), 80%) !important;
     --shadow: none !important;
     --shadow-hov: none !important;
-    height: 40px !important;
+    --col: hsl(var(--c2)) !important;
+    height: 32px !important;
     display: flex !important;
     align-items: center;
+
+    &:after {
+        display: none !important;
+    }
 }
 
 
@@ -1061,11 +1059,20 @@ last.fm changes as of 2024-05-20 */
 
 .masthead-nav-wrap {
     display: flex;
-    gap: 24px;
+    gap: var(--button-list-gap);
 
     .site-auth,
     .masthead-nav {
         margin: unset !important;
+    }
+
+    .masthead-nav,
+    .navlist-items {
+        gap: inherit;
+    }
+
+    .navlist-more-wrap {
+        display: none;
     }
 }
 
@@ -1079,8 +1086,8 @@ last.fm changes as of 2024-05-20 */
 .masthead-inner-wrap .visible-xs .masthead-nav-control {
     padding: unset !important;
     font-size: 0 !important;
-    --left: 3px;
-    width: 22px;
+    --left: 8px;
+    width: 32px;
 }
 
 
@@ -1151,14 +1158,9 @@ last.fm changes as of 2024-05-20 */
     }
 }
 .auth-avatar-desktop {
-    width: 24px !important;
-    height: 24px !important;
-    border: 0 solid hsl(var(--b4));
-    box-shadow: var(--card-shadow);
-    transition-property: transform, border-color, box-shadow;
-    transition-duration: calc(var(--trans-short) * 1.5);
-    transition-timing-function: var(--trans-function);
-    --mask-size: 20px;
+    width: 20px !important;
+    height: 20px !important;
+    --mask-size: 16px;
 }
 
 .auth-link {
@@ -1166,40 +1168,12 @@ last.fm changes as of 2024-05-20 */
     display: flex;
     align-items: center;
     gap: 6px;
-    height: 40px !important;
+    height: 32px !important;
     text-decoration: var(--force-underline, none) !important;
-    padding-right: calc(16px + 6px) !important;
     --mask: var(--icon-16-arrow-down);
-    --left: none !important;
-    --right: 0;
-
-    .pro-badge {
-        background-color: hsla(var(--h4), 40%);
-        box-shadow: 0 0 20px hsla(var(--h4), 60%);
-        color: hsl(var(--l2-c-theme-switch));
-        font-size: var(--font-size-sm);
-        font-weight: var(--font-weight-medium);
-        padding: 0 6px;
-        border-radius: var(--item-med-radius);
-
-        --hue-over: var(--hue-pro);
-        --sat-over: 1;
-        --lit-over: 1;
-    }
 
     p {
         margin: unset;
-    }
-}
-
-[aria-expanded="true"] .auth-avatar-desktop {
-    transform: scale(1.1);
-    border-color: hsl(var(--l3-c));
-    border-width: 2px;
-    box-shadow: 0 0 10px hsl(var(--h4)), var(--card-shadow);
-
-    [data-bleh--reduced_motion="true"] & {
-        transform: none !important;
     }
 }
 
@@ -1213,19 +1187,17 @@ last.fm changes as of 2024-05-20 */
     display: flex;
     align-items: center;
     gap: 6px;
-    height: 40px !important;
+    height: 32px !important;
     text-decoration: var(--force-underline, none) !important;
-    padding: 0 calc(16px + 6px) 0 calc(20px) !important;
 
     --font-size: 0;
     --mask: var(--icon-16-arrow-down);
-    --left: none !important;
-    --right: 0;
 
     span {
+        width: 20px;
         position: relative;
         font-size: var(--font-size);
-        --left: calc(-1 * (20px)) !important;
+        --left: none !important;
         --right: none !important;
     }
 }
@@ -2738,11 +2710,9 @@ button.navlist-more {
 /* mobile nav re-purposed as extra nav */
 .visible-xs .masthead-nav {
     display: flex;
-    gap: 10px;
 }
 
-.auth-link, .language-nav,
-.navlist-more, .secondary-nav-item-link, .masthead-nav-control {
+.navlist-more, .secondary-nav-item-link {
     /* left padding for icon, otherwise just 12px 16px */
     --padding: 12px 0 12px calc(16px + 6px) !important;
     --bg: transparent !important;
@@ -2842,11 +2812,6 @@ button.navlist-more {
     position: relative;
 }
 
-.masthead-search-toggle:hover {
-    color: hsl(var(--c1)) !important;
-    transition: none !important;
-    --transition-property: opacity, left;
-}
 .secondary-nav-item-link:before {
     background: currentColor !important;
 }
@@ -5885,7 +5850,7 @@ button,
 .no-data-message-button,
 .playlisting-create-option,
 /* home page welcome close */ .home-welcome-close,
-.masthead-nav-control, .secondary-nav-item-link,
+.masthead-nav-control, .secondary-nav-item-link, .auth-link, .language-nav,
 .dropdown-menu-item-dark,
 .btn-secondary,
 /* go to tag page for a user tag */ .col-main > p > [href^="/tag/"],
@@ -6121,7 +6086,8 @@ button,
 .back-button, .delete-button,
 #manage_data .btn-primary,
 .obsession-history-play-all,
-.done, .cancel, .download, .upload, .save, .btn-secondary.js-close:not(.modal-action-button), .form-group button[type="submit"]
+.done, .cancel, .download, .upload, .save, .btn-secondary.js-close:not(.modal-action-button), .form-group button[type="submit"],
+.masthead-nav .masthead-nav-control
 {
     --btn-left: calc(12px + 16px + 6px) !important;
 
@@ -6143,7 +6109,9 @@ button,
 .header-new-gallery--link .header-new-gallery-inner,
 .date-range-picker-button,
 .source-album, .big-tags-item,
-.select-button
+.select-button,
+.language-nav,
+.auth-link
 {
     --btn-right: calc(12px + 16px + 6px) !important;
 }
@@ -6435,7 +6403,8 @@ span.header-new-gallery-inner a:before,
 .header-new-gallery--link .header-new-gallery-inner:before,
 .form-group-controls:has(select):before,
 .dropdown-menu-list-button::after, .dropdown-menu-clickable-button::after, .dropdown-menu-clickable-button-js-only::after,
-.all-results-list li:before
+.all-results-list li:before,
+.language-nav, .auth-link
 {
     --left: none !important;
     --right: 12px !important;
