@@ -1068,7 +1068,7 @@ last.fm changes as of 2024-05-20 */
 
     .masthead-nav,
     .navlist-items {
-        gap: inherit;
+        gap: var(--button-list-gap);
     }
 
     .navlist-more-wrap {
