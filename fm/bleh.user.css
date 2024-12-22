@@ -922,7 +922,7 @@ last.fm changes as of 2024-05-20 */
 .masthead-inner-wrap {
     width: var(--cards-width) !important;
     max-width: unset !important;
-    padding: 0 var(--card-padding) !important;
+    padding: 0 calc(var(--card-padding) - 12px) !important;
     float: unset !important;
     display: flex;
     gap: var(--button-list-gap);
@@ -2498,7 +2498,7 @@ li.header-metadata-item--event-attendance {
 .bleh--nav-wrap .navlist,
 .secondary-nav, .user-dashboard-controls .secondary-nav {
     box-shadow: unset;
-    margin: 0 var(--card-padding) !important;
+    margin: 0 calc(var(--card-padding) - 12px) !important;
     width: calc(var(--cards-width) - (var(--card-padding) * 2));
 
     /*position: relative;
