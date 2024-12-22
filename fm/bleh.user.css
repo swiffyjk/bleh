@@ -15063,6 +15063,9 @@ trying to list every song ever made by someone identifying as a female, which is
                         height: 32px;
                         display: flex;
                         align-items: center;
+                        color: hsl(var(--c3));
+                        font-weight: var(--font-weight-medium);
+                        cursor: default;
                     }
                     .input {
                         display: flex;
@@ -15106,9 +15109,13 @@ trying to list every song ever made by someone identifying as a female, which is
     }
 
     .header-info {
+        .header {
+            height: unset;
+            margin-bottom: 6px;
+        }
         h1 {
             font-size: 24px !important;
-            line-height: 28px !important;
+            line-height: 30px !important;
             letter-spacing: unset !important;
             font-weight: var(--font-weight-bold) !important;
             margin: 0 6px 0 0 !important;
