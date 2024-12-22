@@ -2858,7 +2858,7 @@ let profile_badges = {
             name: 'cute'
         }
     ],
-    'rainsleep': {
+    'boba2814': {
         type: 'cat',
         name: 'it\'s a kitty!!'
     },
