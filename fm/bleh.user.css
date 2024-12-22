@@ -919,34 +919,35 @@ last.fm changes as of 2024-05-20 */
 .masthead-inner-wrap {
     width: var(--cards-width) !important;
     max-width: unset !important;
-    padding: 0 var(--card-padding) !important;
+    padding: 0 calc(var(--card-padding) - 12px) !important;
     float: unset !important;
     display: flex;
-    justify-content: center;
+    gap: var(--button-list-gap);
     z-index: 20;
 }
 .masthead-logo {
     position: relative !important;
     left: unset !important;
-    flex: 1 !important; /* they rly went out their way to set this to 0 again */
-    background-size: 104px;
-    background-position: left;
+    flex: unset !important;
     margin-left: unset !important;
     /*opacity: 0.7;*/
+    height: unset;
     background: unset;
     font: inherit;
     color: hsl(var(--c3));
 
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: var(--button-list-gap);
     width: fit-content !important;
 
-    a:not(.bleh--version) {
-        width: 55px;
-        position: relative;
-        font: 0/0 a;
+    a {
+        position: static;
+    }
 
+    .bleh-logo {
+        font-size: 24px;
+        font-family: var(--font-brand);
         background-image: linear-gradient(90deg, hsl(var(--c1)) 0%, hsl(var(--l3-c)) 100%);
         background-clip: text;
         -webkit-background-clip: text;
@@ -970,27 +971,18 @@ last.fm changes as of 2024-05-20 */
             var(--g-indigo) 100%
             );
         }
+    }
 
-        /* bleh */
+    a:not(.bleh--version) {
+        width: unset;
+        height: unset;
+
         &:before {
-            all: inherit;
-            content: var(--brand);
-            font-size: 24px;
-            line-height: 30px;
-            width: fit-content;
-            height: fit-content;
-            font-family: var(--font-brand);
-            position: absolute;
-            top: 50%;
-            margin-top: calc(-1 * (30px / 2));
-            left: 0;
-            bottom: 0;
-            font-weight: 700;
+            display: none;
         }
     }
 
     .bleh--version {
-        position: static;
         width: fit-content;
         height: fit-content;
         color: hsl(var(--c3));
@@ -1008,26 +1000,27 @@ last.fm changes as of 2024-05-20 */
     margin-left: 4px !important;
 }
 
-.masthead-nav-item, .masthead-search-toggle {
+.masthead-nav-item {
     height: 32px !important;
 }
-.masthead-nav-control:before, .masthead-search-toggle:before {
+.masthead-nav-control:before {
     opacity: 1 !important;
     margin-right: unset !important;
     right: unset !important;
     background-color: currentColor !important;
 }
-.masthead-search-toggle, .masthead-search-submit {
+.masthead-search-submit {
     --mask: var(--icon-16-search);
 }
 
 
 /* style buttons */
 .masthead-search-toggle {
-    --left: 8px;
-    --font-size: 0;
+    display: none;
 }
-.auth-link, .language-nav, .masthead-search-toggle,
+.masthead-search-form,
+.masthead-logo a,
+.auth-link, .language-nav,
 .masthead-nav-control {
     --bg: transparent !important;
     --bg-hov: hsl(var(--b3), 60%) !important;
@@ -1044,10 +1037,44 @@ last.fm changes as of 2024-05-20 */
     }
 }
 
+.masthead-search-form {
+    display: flex !important;
+    position: relative;
+    inset: unset;
+    font-weight: var(--font-weight);
+    flex: 1;
 
-/* hide irrelevant search icon when search is open */
-.masthead-search-toggle.disclose-active {
-    display: none;
+    .masthead-search-field {
+        font-size: var(--font-size);
+        line-height: var(--line-height);
+        font-weight: var(--font-weight);
+        height: fit-content;
+        padding: 0;
+        color: hsl(var(--c2));
+        flex: 1;
+
+        &::placeholder {
+            color: hsl(var(--c3)) !important;
+        }
+    }
+
+    .masthead-search-inner-wrap {
+        display: flex;
+        flex: 1;
+        padding-right: 40px;
+    }
+    .masthead-search-submit {
+        --bg: transparent !important;
+        --bg-hov: transparent !important;
+        --bg-atv: transparent !important;
+        --shadow: none !important;
+        --shadow-hov: none !important;
+        width: 40px !important;
+        height: 32px !important;
+        opacity: 1 !important;
+        top: 0;
+        right: 0;
+    }
 }
 
 
@@ -1060,6 +1087,7 @@ last.fm changes as of 2024-05-20 */
 .masthead-nav-wrap {
     display: flex;
     gap: var(--button-list-gap);
+    flex: 1;
 
     .site-auth,
     .masthead-nav {
@@ -1101,35 +1129,6 @@ last.fm changes as of 2024-05-20 */
 .masthead-nav .masthead-nav-item .notification-count-badge {
     margin: unset;
     position: absolute;
-    top: 0;
-    right: 0;
-}
-
-
-.masthead-search-field {
-    font-size: var(--font-size);
-    line-height: var(--line-height);
-    height: fit-content;
-    padding: 0;
-    color: hsl(var(--c2));
-
-    &::placeholder {
-        color: hsl(var(--c3)) !important;
-    }
-}
-
-.masthead-search-inner-wrap {
-    padding-right: 40px;
-}
-.masthead-search-submit {
-    --bg: transparent !important;
-    --bg-hov: transparent !important;
-    --bg-atv: transparent !important;
-    --shadow: none !important;
-    --shadow-hov: none !important;
-    width: 40px !important;
-    height: 32px !important;
-    opacity: 1 !important;
     top: 0;
     right: 0;
 }
@@ -5845,7 +5844,7 @@ button,
 .content-top-back-link, .content-top-back-link + .content-top-header,
 .subpage-breadcrumb li, .subpage-breadcrumb + h2.subpage-title,
 .back-button,
-.auth-avatar-mobile, .masthead-search-toggle,
+.auth-avatar-mobile,
 .album-overview-cover-art-action-row a,
 .no-data-message-button,
 .playlisting-create-option,
@@ -5862,7 +5861,8 @@ button,
 .attendee-summary-user,
 .about-guest-feature,
 .weeklychart-item,
-.btn-subscribe
+.btn-subscribe,
+.masthead-logo a, .masthead-search-form
 {
     --bg: var(--cards-overlay-image-subtlest, none), hsl(var(--b4));
     --bg-hov: var(--cards-overlay-image-subtlest, none), hsla(var(--b4), 80%);
@@ -6295,7 +6295,7 @@ button,
 /*     HEADER     */
 .masthead-nav-control:before,
 .masthead-search-submit:before,
-.masthead-hamburger-toggle:before, .masthead-search-toggle:before,
+.masthead-hamburger-toggle:before,
 /*     ALERT/INFO     */
 .alert:before, .event-status:before, .async-content-error-message:before,
 .modal-dialog .big-modal-alert.alert-success::before,
@@ -7196,7 +7196,6 @@ very, very, very dated - who looks up a song on ebay? */
 
 
 /*     INPUT     */
-.masthead-search-form,
 .modal-body textarea, .bleh-modal-body textarea,
 .content-form .form-control, .content-form input[type="date"], .content-form input[type="email"], .content-form input[type="number"], .content-form input[type="password"], .content-form input[type="text"], .content-form input[type="url"], .content-form select, .content-form textarea
 {
@@ -7236,24 +7235,6 @@ very, very, very dated - who looks up a song on ebay? */
 
         &[readonly] {
             --focus-outline: none !important;
-        }
-
-        &.masthead-search-form {
-            --bg: hsl(var(--b6)) !important;
-            --bg-hov: var(--bg) !important;
-            --bg-atv: var(--bg) !important;
-            --shadow: var(--menu-shadow) !important;
-
-            right: 0;
-            top: 50px !important;
-            bottom: unset !important;
-            margin-left: auto;
-            margin-right: auto;
-            width: calc(var(--cards-main-width) + var(--card-gap) + var(--cards-sidebar-width));
-            animation: dropdown calc(var(--trans-short) + 0.02s) var(--trans-function);
-            transform-origin: top;
-
-            z-index: 10000;
         }
     }
 

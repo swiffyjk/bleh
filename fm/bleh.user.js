@@ -20,6 +20,7 @@
 // ==/UserScript==
 
 let version = {
+    brand: 'bleh',
     build: '2024.1213',
     sku: 'nonsense',
     feature_flags: {
@@ -4379,6 +4380,16 @@ let has_prompted_for_update = false;
             }
         });
         site_auth.removeChild(site_auth.querySelector('.auth-dropdown-menu-wrap'));
+
+
+        // bleh
+        let bleh = document.createElement('div');
+        bleh.classList.add('bleh-logo');
+        bleh.textContent = version.brand;
+
+        let logo_a = document.body.querySelector('.masthead-logo a');
+        logo_a.innerHTML = '';
+        logo_a.appendChild(bleh);
 
 
         // language
