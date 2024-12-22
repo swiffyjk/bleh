@@ -1044,6 +1044,10 @@ last.fm changes as of 2024-05-20 */
     font-weight: var(--font-weight);
     flex: 1;
 
+    &:focus-within {
+        background: var(--bg-hov) !important;
+    }
+
     .masthead-search-field {
         font-size: var(--font-size);
         line-height: var(--line-height);
