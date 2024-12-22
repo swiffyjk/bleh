@@ -1127,7 +1127,7 @@ last.fm changes as of 2024-05-20 */
 
 
 /* hide other mobile buttons */
-.masthead-inner-wrap .visible-xs .masthead-nav-item:has([data-analytics-label="home"], [data-analytics-label="music"], [data-analytics-label="charts"], [data-analytics-label="labs"], [data-analytics-label="bookmarks"], [data-analytics-label="logout"]),
+.masthead-inner-wrap .visible-xs .masthead-nav-item:has([data-analytics-label="home"], [data-analytics-label="music"], [data-analytics-label="charts"], [data-analytics-label="labs"], [data-analytics-label="bookmarks"], [data-analytics-label="logout"], [data-analytics-label="settings"]),
 .masthead-hamburger-toggle {
     display: none;
 }
