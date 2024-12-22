@@ -444,6 +444,9 @@ body {
     --card-shadow: hsla(var(--b7), 0.05) 0 2px 4px 0;
     --card-shadow: 0 1.5px 4px 0 hsla(var(--b7), 0.05);
 
+    --card-border: 1px solid hsl(var(--b4)) !important;
+    --card-border-base: hsl(var(--b4)) !important;
+
     --menu-shadow: 2px 2px 24px 0 hsla(var(--b7), 0.15), 3px 6px 48px 16px hsla(var(--b7), 0.03);
     --menu-shadow: 0 12px 36px 0 hsla(var(--b7), 0.15);
     --standout-shadow: 3px 6px 20px 7px hsla(var(--b7), 0.06);
@@ -2735,6 +2738,31 @@ button.navlist-more {
         margin-left: 6px;
     }
 
+    &:after {
+        content: '';
+        position: absolute;
+        inset: -4px !important;
+        border-radius: calc(var(--item-big-radius) + 4px);
+        opacity: 0;
+
+        background: unset !important;
+        height: unset !important;
+
+        border: 2px solid hsl(var(--h4), 30%);
+        box-shadow: 0 0 30px hsl(var(--h4), 10%);
+
+        transition-property: opacity !important;
+        transition-duration: var(--trans) !important;
+        transition-timing-function: var(--trans-function) !important;
+    }
+
+    /*&:hover {
+        &:after {
+            opacity: 1;
+            transition: none !important;
+        }
+    }*/
+
     /*&.masthead-nav-control--active,*/
     [data-bleh--gallery-tab="overview"] .secondary-nav-item--gallery-overview  &,
     [data-bleh--gallery-tab="bookmarks"] .secondary-nav-item--gallery-bookmarks &,
@@ -2744,20 +2772,10 @@ button.navlist-more {
         --bg-hov: hsl(var(--b3), 80%) !important;
         --bg-atv: hsl(var(--b3), 100%) !important;
 
-        [data-bleh--season="christmas"] & {
-            --hue-seasonal: 130;
-            --sat-seasonal: 0.45;
-            --lit-seasonal: 0.75;
-
-            --candy-cane-0: hsl(-2, var(--h3-sat), var(--h3-lit));
-            --candy-cane-1: hsl(-2, var(--h3-sat), 80%);
-
-            --hue-gradient: 0% 0% / 20px auto repeat repeating-linear-gradient(87deg, var(--candy-cane-0) 0% 24.9%, var(--candy-cane-1) 25% 50%, var(--candy-cane-1) 50%);
+        &:after {
+            opacity: 1;
+            transition: none;
         }
-    }
-
-    &:after {
-        display: none !important;
     }
 }
 .navlist-more {
@@ -7180,7 +7198,7 @@ very, very, very dated - who looks up a song on ebay? */
         --bg: hsla(var(--b6), 20%);
         --bg-hov: hsla(var(--b6), 40%);
         --bg-atv: hsla(var(--b6), 40%);
-        border: 1px solid hsl(var(--b4)) !important;
+        border: var(--card-border) !important;
         --shadow: none !important;
         outline: none !important;
 
