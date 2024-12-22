@@ -2748,8 +2748,8 @@ button.navlist-more {
         background: unset !important;
         height: unset !important;
 
-        border: 2px solid hsl(var(--h4), 30%);
-        box-shadow: 0 0 30px hsl(var(--h4), 10%);
+        border: 2px solid hsl(var(--l2-c), 30%);
+        box-shadow: 0 0 30px hsl(var(--l2-c), 10%);
 
         transition-property: opacity !important;
         transition-duration: var(--trans) !important;
