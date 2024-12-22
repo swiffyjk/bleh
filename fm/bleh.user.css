@@ -919,7 +919,7 @@ last.fm changes as of 2024-05-20 */
 .masthead-inner-wrap {
     width: var(--cards-width) !important;
     max-width: unset !important;
-    padding: 0 calc(var(--card-padding) - 12px) !important;
+    padding: 0 var(--card-padding) !important;
     float: unset !important;
     display: flex;
     gap: var(--button-list-gap);
@@ -2495,15 +2495,10 @@ li.header-metadata-item--event-attendance {
 .bleh--nav-wrap .navlist,
 .secondary-nav, .user-dashboard-controls .secondary-nav {
     box-shadow: unset;
-    border-bottom: 2px solid var(--card-border-base) !important;
     margin: 0 var(--card-padding) !important;
     width: calc(var(--cards-width) - (var(--card-padding) * 2));
 
-    [data-bleh--theme="light"] & {
-        border-bottom: 2px solid hsla(var(--c3), 10%) !important;
-    }
-
-    position: relative;
+    /*position: relative;
 
     &:before {
         content: '';
@@ -2519,9 +2514,9 @@ li.header-metadata-item--event-attendance {
         pointer-events: none;
 
         /* fix for no-data-message overriding and stuff */
-        margin: unset;
+        /*margin: unset;
         width: unset;
-    }
+    }*/
 }
 
 
@@ -2545,7 +2540,6 @@ li.header-metadata-item--event-attendance {
 .library-controls .secondary-nav {
     margin-top: var(--card-gap) !important;
     padding: unset !important;
-    border-bottom: 2px solid var(--card-border-base);
 }
 
 
@@ -2557,7 +2551,7 @@ li.header-metadata-item--event-attendance {
     margin-top: unset !important;
     position: absolute;
     /*top: calc(92px + var(--card-gap) + var(--card-padding)); /* 50px */
-    top: 50px; /* revert to above once theres an easy way to detect searchbox presence */
+    top: 46px; /* revert to above once theres an easy way to detect searchbox presence */
     right: var(--card-padding);
     width: calc(var(--cards-sidebar-width) - (var(--card-padding) * 2));
     z-index: 100;
@@ -2675,7 +2669,6 @@ hr + .library-search-results-header {
 }
 .content-top .secondary-nav {
     padding: unset !important;
-    border-bottom: 2px solid var(--card-border-base);
     width: calc(var(--cards-width) - (var(--card-padding) * 2));
     /* ensure tab highlight is visible */
     overflow-y: unset;
@@ -2698,17 +2691,17 @@ hr + .library-search-results-header {
 .secondary-nav-item, .masthead-nav-item {
     margin-left: unset !important;
     color: hsla(var(--c2), 85%);
-    height: 44px;
+    height: 32px;
 }
 
 
 .navlist-items {
     display: flex;
-    gap: 24px;
+    gap: var(--button-list-gap);
 }
 /* navlist-more isnt contained in navlist-items */
 button.navlist-more {
-    margin-left: 24px !important;
+    margin-left: var(--button-list-gap) !important;
 }
 /* mobile nav re-purposed as extra nav */
 .visible-xs .masthead-nav {
@@ -2717,12 +2710,13 @@ button.navlist-more {
 
 .navlist-more, .secondary-nav-item-link {
     /* left padding for icon, otherwise just 12px 16px */
-    --padding: 12px 0 12px calc(16px + 6px) !important;
+    --padding: 7px 12px 7px calc(12px + 16px + 6px) !important;
     --bg: transparent !important;
-    --bg-hov: var(--bg) !important;
-    --bg-atv: var(--bg) !important;
+    --bg-hov: hsl(var(--b3), 60%) !important;
+    --bg-atv: hsl(var(--b3), 80%) !important;
     --shadow: none !important;
     --shadow-hov: none !important;
+    --col: hsl(var(--c2)) !important;
 
     z-index: 1;
     opacity: unset !important;
@@ -2734,17 +2728,8 @@ button.navlist-more {
     transition-duration: var(--trans);
     transition-timing-function: var(--trans-function);
 
-    --left: 0;
-
-    &:hover {
-        color: hsl(var(--c1)) !important;
-        transition: none !important;
-        --transition-property: opacity, left;
-    }
-
-    &:active {
-        transform: scale(0.98);
-    }
+    display: flex;
+    align-items: center;
 
     .new-badge {
         margin-left: 6px;
@@ -2755,8 +2740,9 @@ button.navlist-more {
     [data-bleh--gallery-tab="bookmarks"] .secondary-nav-item--gallery-bookmarks &,
     &.secondary-nav-item-link.active,
     &.secondary-nav-item-link--active {
-        color: hsl(var(--c1)) !important;
-        font-weight: var(--font-weight-bold);
+        --bg: hsl(var(--b3), 60%) !important;
+        --bg-hov: hsl(var(--b3), 80%) !important;
+        --bg-atv: hsl(var(--b3), 100%) !important;
 
         [data-bleh--season="christmas"] & {
             --hue-seasonal: 130;
@@ -2771,47 +2757,14 @@ button.navlist-more {
     }
 
     &:after {
-        left: 0 !important;
-        right: 0 !important;
-        background: var(--hue-gradient, hsl(var(--l3-c))) !important;
-        height: 2px !important;
-        bottom: -4px !important;
-        box-shadow: 0 -2px 20px 2px hsl(var(--l4-c));
-        margin: unset !important;
-        width: unset !important;
-        border-radius: 0 !important;
-        border-top-left-radius: var(--item-small-radius) !important;
-        border-top-right-radius: var(--item-small-radius) !important;
-        content: '' !important;
-        position: absolute !important;
-        z-index: 1 !important;
-        display: block !important;
-
-        transform: scaleY(0);
-        transition-property: transform;
-        transition-duration: var(--trans);
-        transition-timing-function: var(--trans-function);
-    }
-
-    /*&.masthead-nav-control--active,*/
-    &[aria-expanded="true"],
-    &.secondary-nav-item-link.active,
-    [data-bleh--gallery-tab="overview"] .secondary-nav-item--gallery-overview  &,
-    [data-bleh--gallery-tab="bookmarks"] .secondary-nav-item--gallery-bookmarks &,
-    &:hover, &.secondary-nav-item-link--active {
-        &:after {
-            transform: scaleY(1);
-        }
-    }
-    &:hover:after {
-        transition: none;
+        display: none !important;
     }
 }
 .navlist-more {
     --font-size: 0;
-    width: 22px;
+    width: 32px;
     --mask: var(--icon-16-dots);
-    --left: 3px;
+    --left: 8px;
     position: relative;
 }
 
@@ -15403,7 +15356,6 @@ button.bleh--gallery-bookmark-image-btn {
         [data-bleh--theme="oled"] &,
         [data-bleh--theme="light"] & {
             background-color: hsl(var(--b5));
-            box-shadow: 0 0 0 1px var(--card-border-base) inset, var(--card-shadow);
         }
 
         [data-bleh--seasonal_overlays="true"][data-bleh--season="fall"] &,
