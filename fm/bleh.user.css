@@ -5284,7 +5284,7 @@ p + .chartlist {
         margin: unset;
         position: absolute;
         /*top: -14px;*/
-        top: 4px;
+        top: 6px;
         right: 6px;
 
         padding: 4px;
@@ -5296,13 +5296,9 @@ p + .chartlist {
 
         .shout:not(:hover, :focus-within) & {
             opacity: 0.4;
-            top: 4px;
             /*right: calc(6px - 40px);*/
             background-color: transparent;
-
-            .vote-button-toggle {
-                margin-right: -8px;
-            }
+            gap: 0;
 
             .shout-reply, .shout-more-actions {
                 display: none;
