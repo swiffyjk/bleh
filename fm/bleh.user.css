@@ -148,7 +148,8 @@ body, [data-page-resource-type="album"], [data-page-resource-type="track"],
 .obsession-history-item-inner,
 .preview, .preview[data-bleh--theme="dark"],
 .listen-item,
-.lotus.bleh--panel
+.lotus.bleh--panel,
+[data-bleh--label="bleh"]
 {
     /* any additional highlights */
     --b3: var(--hue), calc(var(--sat) * 6% * var(--sat-bg, 1)), 30%;
@@ -1119,10 +1120,12 @@ last.fm changes as of 2024-05-20 */
     order: 1;
 }
 .masthead-inner-wrap .visible-xs .masthead-nav-control {
-    padding: unset !important;
-    font-size: 0 !important;
-    --left: 8px;
-    width: 32px;
+    &:not([data-bleh--label="bleh"][data-season]) {
+        padding: unset !important;
+        font-size: 0 !important;
+        --left: 8px;
+        width: 32px;
+    }
 }
 
 
@@ -2962,7 +2965,7 @@ button.navlist-more {
 }
 
 .secondary-nav-item-link[href*="events/1"], .secondary-nav-item-link[href*="events/2"] {
-    padding-left: unset !important;
+    padding-left: 12px !important;
 }
 .secondary-nav-item-link[href*="events/1"]:before, .secondary-nav-item-link[href*="events/2"]:before {
     display: none !important;
@@ -6959,6 +6962,27 @@ very, very, very dated - who looks up a song on ebay? */
     --mask: var(--icon-16-changelog);
 }
 
+[data-bleh--label="bleh"] {
+    &[data-season="easter"] {
+        --mask: var(--icon-16-egg);
+    }
+    &[data-season="halloween"] {
+        --mask: var(--icon-16-pumpkin);
+    }
+    &[data-season="pre_fall"] {
+        --mask: var(--icon-16-fall);
+    }
+    &[data-season="fall"] {
+        --mask: var(--icon-16-fall);
+    }
+    &[data-season="christmas"] {
+        --mask: var(--icon-16-snow);
+    }
+    &[data-season="new_years"] {
+        --mask: var(--icon-16-new-years);
+    }
+}
+
 
 [data-menu-item="themes"] {
     --mask: var(--icon-16-themes);
@@ -10072,17 +10096,18 @@ text[style^="color: rgb(0, 0, 0)"] {
     margin-bottom: var(--card-gap);
 }
 
-.alert-error:before,
-.async-content-error-message:before {
+.alert-danger,
+.alert-error,
+.async-content-error-message {
     --mask: var(--icon-16-x);
 }
-.alert-warning::before, .alert-info::before {
+.alert-warning, .alert-info {
     --mask: var(--icon-16-info);
 }
-.alert-success::before {
+.alert-success {
     --mask: var(--icon-16-check);
 }
-.event-status--cancelled:before {
+.event-status--cancelled {
     --mask: var(--icon-16-block);
 }
 .alert-update {
@@ -10115,6 +10140,7 @@ text[style^="color: rgb(0, 0, 0)"] {
     --sat-over: 1;
     --lit-over: 1;
 }
+.alert-danger,
 .alert-error,
 .async-content-error-message,
 .event-status--cancelled {
@@ -18397,5 +18423,13 @@ section > .section-controls .subpage-title {
 
 .bleh-info-icon {
     --icon: var(--icon-16-info);
+}
+
+
+
+
+/* fix extra top space - 2024/12 */
+#artist-albums-section {
+    margin-top: unset;
 }
 }

@@ -2522,6 +2522,7 @@ function lookup_lang() {
 }
 
 // seasonal
+let seasonal_timer;
 let stored_season = {
     id: 'none'
 };
@@ -3414,6 +3415,9 @@ let page = {
     requested: {
         tab: null
     },
+    header: {
+
+    },
     state: {
         settings_reload: false,
         glacier: {
@@ -3514,9 +3518,6 @@ let has_prompted_for_update = false;
                 lookup_lang();
                 append_nav(document.body);
                 patch_masthead(document.body);
-
-                // load seasonal data
-                set_season();
 
                 theme_version = getComputedStyle(document.body).getPropertyValue('--version-build').replaceAll("'", ''); // remove quotations
                 if (theme_version != version.build && theme_version != '' && !has_prompted_for_update) {
@@ -3649,14 +3650,14 @@ let has_prompted_for_update = false;
         if (page.structure.wrapper == null)
             page.structure.wrapper = document.body.querySelector('.main-content');
 
-        let main_content = page.structure.wrapper.querySelector(':scope > :last-child:not([data-orchid])');
+        let main_content = page.structure.wrapper.querySelector(':scope > :last-child:not([data-bleh])');
         if (main_content != null) {
             assign_page_type();
             load_page();
+            main_content.setAttribute('data-bleh', 'true');
         } else {
             assign_page_subpage();
         }
-        main_content.setAttribute('data-bleh', 'true');
     }
 
     function assign_page_type() {
@@ -3704,6 +3705,9 @@ let has_prompted_for_update = false;
     }
 
     function load_page() {
+        set_season();
+        seasonal_timer_end();
+
         if (page.type == 'user')
             bleh_profiles();
         else if (page.type == 'artist')
@@ -4061,6 +4065,7 @@ let has_prompted_for_update = false;
         let last_season_seen = localStorage.getItem('bleh_last_season_seen') || '';
 
         let now = new Date();
+        //now.setHours(now.getHours() + 213);
         log(`it is now ${now}`, 'season', 'log');
 
         let current_year = now.getFullYear();
@@ -4074,6 +4079,8 @@ let has_prompted_for_update = false;
             ) {
                 stored_season.now = now;
                 stored_season.year = current_year;
+
+                update_season_nav();
 
                 if (stored_season.id == season.id)
                     return;
@@ -4122,6 +4129,29 @@ let has_prompted_for_update = false;
                 return;
             }
         });
+    }
+    function seasonal_timer_start() {
+        if (seasonal_timer != null)
+            return;
+
+        seasonal_timer = setInterval(set_season, 1000);
+        log('started interval', 'season', 'info');
+    }
+    function seasonal_timer_end() {
+        if (seasonal_timer == null)
+            return;
+
+        clearInterval(seasonal_timer);
+        seasonal_timer = null;
+        log('ended interval', 'season', 'info');
+    }
+
+    function update_season_nav() {
+        if (page.header.season == null)
+            return;
+
+        page.header.season.setAttribute('data-season', stored_season.id);
+        page.header.season.textContent = moment(stored_season.end.replace('y0', stored_season.year)).to(stored_season.now, true);
     }
 
     function prep_snow() {
@@ -4255,19 +4285,6 @@ let has_prompted_for_update = false;
 
         let inbox_container = document.body.querySelector('.masthead-nav-item:has([data-analytics-label="inbox"])');
 
-        // configure bleh
-        let bleh_container = document.createElement('li');
-        bleh_container.classList.add('masthead-nav-item');
-        bleh_container.innerHTML = (`
-            <a class="masthead-nav-control" href="${root}bleh" data-bleh--label="bleh">
-                ${trans[lang].auth_menu.configure_bleh}
-            </a>
-        `);
-        tippy(bleh_container, {
-            content: trans[lang].auth_menu.configure_bleh
-        });
-        inbox_container.after(bleh_container);
-
         // what's new?
         let changelog_container = document.createElement('li');
         changelog_container.classList.add('masthead-nav-item');
@@ -4279,7 +4296,22 @@ let has_prompted_for_update = false;
         tippy(changelog_container, {
             content: trans[lang].changelog.name
         });
-        bleh_container.after(changelog_container);
+        inbox_container.after(changelog_container);
+
+        // configure bleh
+        let bleh_container = document.createElement('li');
+        bleh_container.classList.add('masthead-nav-item');
+        bleh_container.innerHTML = (`
+            <a class="masthead-nav-control" href="${root}bleh${(stored_season.id != 'none') ? '?tab=seasonal' : ''}" data-bleh--label="bleh" data-season="${stored_season.id}">
+                ${(stored_season.id == 'none') ? trans[lang].auth_menu.configure_bleh : moment(stored_season.end.replace('y0', stored_season.year)).to(stored_season.now, true)}
+            </a>
+        `);
+        tippy(bleh_container, {
+            content: trans[lang].auth_menu.configure_bleh
+        });
+        changelog_container.after(bleh_container);
+
+        page.header.season = bleh_container.querySelector('a');
 
 
         // auth menu
@@ -9215,6 +9247,11 @@ let has_prompted_for_update = false;
                 btn.classList.add('active');
             }
         });
+
+        if (page == 'home' || page == 'seasonal')
+            seasonal_timer_start();
+        else
+            seasonal_timer_end();
 
         document.getElementById('bleh--panel-main').innerHTML = render_setting_page(page);
 
