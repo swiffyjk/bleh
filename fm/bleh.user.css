@@ -14167,6 +14167,10 @@ input[type="range"]::-moz-range-progress {
     .toggle-wrap {
         flex-shrink: 0;
     }
+
+    h5 {
+        cursor: pointer !important;
+    }
 }
 
 .select-container {
