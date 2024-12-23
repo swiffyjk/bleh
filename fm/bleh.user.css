@@ -12185,10 +12185,14 @@ hr {
 }
 
 .big-tags {
-    margin: 12px 0 0 0 !important;
+    margin: unset !important;
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
     gap: var(--item-list-gap);
+
+    &:before, &:after {
+        display: none;
+    }
 }
 .big-tags-item-wrap {
     margin: unset !important;
