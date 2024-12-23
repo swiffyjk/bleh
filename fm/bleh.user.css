@@ -5283,7 +5283,8 @@ p + .chartlist {
     [data-ff--shout_popover="true"] & {
         margin: unset;
         position: absolute;
-        top: -14px;
+        /*top: -14px;*/
+        top: 4px;
         right: 6px;
 
         padding: 4px;
@@ -5294,7 +5295,19 @@ p + .chartlist {
         gap: 4px;
 
         .shout:not(:hover, :focus-within) & {
-            opacity: 0;
+            opacity: 0.4;
+            top: 4px;
+            /*right: calc(6px - 40px);*/
+            background-color: transparent;
+
+            .vote-button-toggle {
+                margin-right: -8px;
+            }
+
+            .shout-reply, .shout-more-actions {
+                display: none;
+                margin-right: -40px;
+            }
         }
 
         .shout-action-more,
