@@ -5203,7 +5203,7 @@ let has_prompted_for_update = false;
                 </div>
                 <div class="sep"></div>
                 <div class="settings-footer">
-                    <button type="submit" class="btn-primary">
+                    <button type="submit" class="btn-primary save">
                         ${trans[lang].settings.save}
                     </button>
                     <input type="hidden" value="chart" name="submit">
@@ -5401,7 +5401,7 @@ let has_prompted_for_update = false;
                                     ${trans[lang].settings.inbuilt.profile.toggle_preview.name}
                                 </span>
                                 <div class="form-submit">
-                                    <button type="submit" class="btn-primary" data-form-type="action">
+                                    <button type="submit" class="btn-primary save" data-form-type="action">
                                         ${trans[lang].settings.save}
                                     </button>
                                     <input type="hidden" value="profile" name="submit">
@@ -5707,7 +5707,7 @@ let has_prompted_for_update = false;
                 </div>
                 <div class="sep"></div>
                 <div class="settings-footer">
-                    <button type="submit" class="btn-primary">
+                    <button type="submit" class="btn-primary save">
                         ${trans[lang].settings.save}
                     </button>
                     <input type="hidden" value="privacy" name="submit">

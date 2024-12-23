@@ -5349,6 +5349,10 @@ p + .chartlist {
     margin: -6px;
     border-radius: var(--item-big-radius);
 
+    &.shout--deleted {
+        min-height: 24px;
+    }
+
     &:hover, &:focus-within {
         background: hsl(var(--b4), 20%);
         transition: none;
