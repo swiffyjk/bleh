@@ -212,7 +212,9 @@ const trans = {
             labs: 'Labs',
             bookmarks: 'Bookmarks',
             settings: 'Settings',
-            logout: 'Logout'
+            logout: 'Logout',
+            seasonal_notice: 'To watch the counter update live, click and stay on the tab that opens.',
+            seasonal_live: 'Counter is updating live!'
         },
         music: {
             submit_lastfm_correction: 'Submit correction to Last.fm',
@@ -4141,6 +4143,11 @@ let has_prompted_for_update = false;
 
         seasonal_timer = setInterval(set_season, 1000);
         log('started interval', 'season', 'info');
+
+        page.header.season_tooltip.setContent(`
+            <span class="season-colour-name">${trans[lang].settings.customise.seasonal.listing[stored_season.id]}</span>
+            <span class="season-exclusive">${trans[lang].auth_menu.seasonal_live}</span>
+        `);
     }
     function seasonal_timer_end() {
         if (seasonal_timer == null)
@@ -4149,6 +4156,11 @@ let has_prompted_for_update = false;
         clearInterval(seasonal_timer);
         seasonal_timer = null;
         log('ended interval', 'season', 'info');
+
+        page.header.season_tooltip.setContent(`
+            <span class="season-colour-name">${trans[lang].settings.customise.seasonal.listing[stored_season.id]}</span>
+            <span class="season-exclusive">${trans[lang].auth_menu.seasonal_notice}</span>
+        `);
     }
 
     function update_season_nav() {
@@ -4311,9 +4323,20 @@ let has_prompted_for_update = false;
                 ${(stored_season.id == 'none') ? trans[lang].auth_menu.configure_bleh : moment(stored_season.end.replace('y0', stored_season.year)).to(stored_season.now, true)}
             </a>
         `);
-        tippy(bleh_container, {
-            content: trans[lang].auth_menu.configure_bleh
-        });
+        if (stored_season.id == 'none') {
+            tippy(bleh_container, {
+                content: trans[lang].auth_menu.configure_bleh
+            });
+        } else {
+            page.header.season_tooltip = tippy(bleh_container, {
+                theme: 'seasonal-swatch',
+                content: (`
+                    <span class="season-colour-name">${trans[lang].settings.customise.seasonal.listing[stored_season.id]}</span>
+                    <span class="season-exclusive">${trans[lang].auth_menu.seasonal_notice}</span>
+                `),
+                allowHTML: true
+            });
+        }
         changelog_container.after(bleh_container);
 
         page.header.season = bleh_container.querySelector('a');
