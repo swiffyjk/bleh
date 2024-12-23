@@ -108,6 +108,11 @@ let version = {
             default: true,
             name: 'Glacier library (new library beta)',
             date: '2024-12-04'
+        },
+        shout_popover: {
+            default: true,
+            name: 'Redesigned shout action popover',
+            date: '2024-12-23'
         }
     }
 }

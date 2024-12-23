@@ -5207,6 +5207,10 @@ p + .chartlist {
     /*&:has(> .shout--bleh-redacted) {
         display: none;
     }*/
+
+    [data-ff--shout_popover="true"] & {
+        padding-top: unset;
+    }
 }
 .shout-list-item {
     position: relative;
@@ -5214,6 +5218,11 @@ p + .chartlist {
     /*&:has(> .shout-container > .shout--bleh-redacted) {
         display: none;
     }*/
+
+    [data-ff--shout_popover="true"] & {
+        margin: unset;
+        padding-top: var(--card-padding);
+    }
 }
 
 .shout {
@@ -5242,7 +5251,7 @@ p + .chartlist {
     left: calc(var(--shout-avatar-size) / 2);
     display: block;
     width: 1px;
-    background: hsl(var(--b4));
+    background: var(--card-border-base);
 }
 
 .shout-form {
@@ -5264,6 +5273,50 @@ p + .chartlist {
         transition-duration: var(--trans);
         transition-timing-function: var(--trans-function);
     }
+
+    [data-ff--shout_popover="true"] & {
+        margin: unset;
+        position: absolute;
+        top: 0;
+        right: 0;
+
+        padding: 4px;
+        background-color: hsl(var(--b6));
+        border-radius: var(--item-big-radius);
+
+        display: flex;
+        gap: 4px;
+
+        .shout-action-more,
+        .shout-action {
+            margin: unset;
+
+            .shout-reply,
+            & > div > form button,
+            & > button {
+                --padding: 6px;
+                --left: 8px;
+                height: 32px !important;
+            }
+        }
+
+        & > :nth-child(2) {
+            order: -1;
+        }
+
+        &:before, &:after {
+            display: none;
+        }
+    }
+}
+
+[data-ff--shout_popover="true"] .shout {
+    border: unset;
+    min-height: 52px;
+}
+[data-ff--shout_popover="true"] .shout-body {
+    margin-top: 2px;
+    margin-right: 160px;
 }
 
 .shout-action {
@@ -5530,6 +5583,10 @@ leading to a gap from their own css */
 }
 .shout-list-item .shout-list-item {
     margin-left: var(--shout-inset);
+
+    [data-ff--shout_popover="true"] & {
+        padding-top: var(--card-gap);
+    }
 }
 
 
@@ -6404,6 +6461,13 @@ span.header-new-gallery-inner a:before,
 .shout-reply
 {
     --show-icon: none;
+
+    [data-ff--shout_popover="true"] & {
+        --show-icon: block;
+        --font-size: 0 !important;
+        width: 32px;
+        --mask: var(--icon-16-reply);
+    }
 }
 
 
