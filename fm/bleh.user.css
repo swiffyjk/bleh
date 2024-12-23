@@ -7292,7 +7292,7 @@ very, very, very dated - who looks up a song on ebay? */
     --col: hsl(var(--c2));
     background-color: var(--bg) !important;
     color: var(--col) !important;
-    padding: var(--padding, 7px) !important;
+    padding: var(--padding, 7px 12px) !important;
     line-height: var(--line-height);
     font-size: var(--font-size) !important;
     font-weight: var(--font-weight) !important;
@@ -7305,17 +7305,14 @@ very, very, very dated - who looks up a song on ebay? */
     transition-timing-function: var(--trans-function);
 
     &:not(select) {
-        --bg: hsla(var(--b6), 20%);
-        --bg-hov: hsla(var(--b6), 40%);
-        --bg-atv: hsla(var(--b6), 40%);
-        border: var(--card-border) !important;
+        --bg: hsl(var(--b6), 60%);
+        --bg-hov: hsl(var(--b6), 90%);
+        --bg-atv: hsl(var(--b6), 90%);
         --shadow: none !important;
         outline: none !important;
 
         &:focus-visible:not([readonly]) {
             --focus-outline: none !important;
-            border: 1px solid hsl(var(--l3-c)) !important;
-            --shadow: 0 0 20px hsla(var(--h4), 40%) !important;
         }
 
         &[readonly] {
@@ -7478,7 +7475,7 @@ input:is([name="track_name"], [name="artist_name"], [name="album_name"], [name="
 
 /*     WINDOW     */
 .bleh-modal {
-    background: hsl(var(--b6));
+    background: hsl(var(--b5));
     border-radius: var(--card-radius);
     box-shadow: var(--override-full-shadow, var(--menu-shadow));
     color: hsl(var(--c2));
@@ -17315,7 +17312,7 @@ h4 {
             content: '';
             position: absolute;
             inset: 0;
-            background: linear-gradient(180deg, hsl(var(--b6)) 0%, transparent 20%, transparent 80%, hsl(var(--b6)) 100%);
+            background: linear-gradient(180deg, hsl(var(--b5)) 0%, transparent 20%, transparent 80%, hsl(var(--b5)) 100%);
         }
 
         div {
