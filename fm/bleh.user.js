@@ -11025,7 +11025,6 @@ let has_prompted_for_update = false;
         bookmarks_content.innerHTML = (`
             <section class="bookmarks-panel">
                 <h2>${trans[lang].gallery.bookmarks.name}</h2>
-                <p>${trans[lang].gallery.bookmarks.bio}</p>
                 <ul class="image-list" id="bleh--bookmarked-images" data-kate-processed="true"></ul>
             </section>
         `);
