@@ -17665,7 +17665,7 @@ h4 {
     }
 
     .avatar-side {
-        --avatar-size: 48px;
+        --avatar-size: 50px;
         width: var(--avatar-size);
         height: var(--avatar-size);
         background: var(--avatar-generic-background);
@@ -17680,17 +17680,17 @@ h4 {
         }
 
         .page-content[data-page-subpage="overview"] & {
-            --avatar-size: 127px;
+            --avatar-size: 129px;
             --mask-size: var(--cover-size-200);
         }
         .about-artist-panel & {
-            --avatar-size: 127px !important;
+            --avatar-size: 129px !important;
             --mask-size: var(--cover-size-200) !important;
         }
 
         .redesigned-album-header &,
         .redesigned-track-header & {
-            --avatar-size: 70px !important;
+            --avatar-size: 72px !important;
             --mask-size: var(--cover-size-50) !important;
             border-radius: var(--item-big-radius);
         }
