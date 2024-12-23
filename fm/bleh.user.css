@@ -6768,7 +6768,7 @@ on the bottom of a panel !! */
     .date-range-picker-preset--selected > &,
     &.dropdown-menu-clickable-item--selected,
     &.active {
-        --bg: var(--cards-overlay-image-subtlest, none), hsla(var(--h4), 20%) !important;
+        --bg: hsla(var(--h4), 20%) !important;
         --bg-hov: var(--bg) !important;
         --bg-atv: var(--bg) !important;
     }
@@ -7641,7 +7641,7 @@ input:is([name="track_name"], [name="artist_name"], [name="album_name"], [name="
         [data-bleh--seasonal_overlays="true"][data-bleh--season="fall"] &,
         [data-bleh--seasonal_overlays="true"][data-bleh--season="christmas"] &,
         [data-bleh--seasonal_overlays="true"][data-bleh--season="new_years"] & {
-            background-image: var(--overlay-ice), linear-gradient(180deg, rgba(190,233,250,0.04) 0%, rgba(0,0,0,0) 100%) !important;
+            background-image: var(--overlay-ice-subtle), linear-gradient(180deg, rgba(190,233,250,0.04) 0%, rgba(0,0,0,0) 100%) !important;
             background-repeat: repeat-x !important;
             background-position: unset !important;
         }
@@ -8953,7 +8953,7 @@ text[style^="color: rgb(255, 172, 172)"] {
         [data-bleh--seasonal_overlays="true"][data-bleh--season="fall"] &,
         [data-bleh--seasonal_overlays="true"][data-bleh--season="christmas"] &,
         [data-bleh--seasonal_overlays="true"][data-bleh--season="new_years"] & {
-            background-image: var(--overlay-ice), linear-gradient(180deg, rgba(190,233,250,0.04) 0%, rgba(0,0,0,0) 100%) !important;
+            background-image: var(--overlay-ice-subtle), linear-gradient(180deg, rgba(190,233,250,0.04) 0%, rgba(0,0,0,0) 100%) !important;
             background-repeat: repeat-x !important;
             background-position: unset !important;
         }
@@ -12967,7 +12967,7 @@ so this is good enough - use the community docs */
                 }
 
                 &.active {
-                    --bg: var(--cards-overlay-image-subtlest, none), hsla(var(--h4), 35%);
+                    --bg: hsla(var(--h4), 35%);
                     --bg-hov: var(--bg);
                     --bg-atv: var(--bg);
 
