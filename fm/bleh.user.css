@@ -5304,6 +5304,7 @@ p + .chartlist {
         border-radius: var(--item-big-radius);
 
         display: flex;
+        flex-direction: row-reverse;
         gap: 4px;
 
         .shout:not(:hover, :focus-within) & {
