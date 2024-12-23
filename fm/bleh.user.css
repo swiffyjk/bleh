@@ -5644,8 +5644,17 @@ leading to a gap from their own css */
 
 
 .shout-more-replies-after, .shout-more-replies-before {
-    margin-top: 12px;
+    margin-top: var(--card-gap);
     margin-left: var(--shout-inset);
+
+    [data-ff--shout_popover="true"] & {
+        --bg: transparent !important;
+        --bg-hov: hsl(var(--b4), 40%) !important;
+        --bg-atv: hsl(var(--b4), 60%) !important;
+        --shadow: none !important;
+        --shadow-hov: none !important;
+        --col: hsl(var(--c3)) !important;
+    }
 }
 .shout-list-item .shout-list-item {
     margin-left: var(--shout-inset);
@@ -9852,7 +9861,7 @@ text[style^="color: rgb(0, 0, 0)"] {
 .similar-albums-item-name, .similar-albums-item-name:first-child,
 .music-bookmarks-artists-item-name:first-child, .music-bookmarks-albums-item-name:first-child
 {
-    margin-top: 6px;
+    margin-top: 10px;
 }
 .big-artist-list-title,
 .playlisting-playlists-item-name,
@@ -9867,7 +9876,7 @@ text[style^="color: rgb(0, 0, 0)"] {
     margin: unset;
 
     &.artist-similar-artists-sidebar-item-name {
-        margin-top: 6px;
+        margin-top: 10px;
     }
 }
 .big-artist-list-title,
