@@ -5255,7 +5255,7 @@ p + .chartlist {
 }
 
 .shout-form {
-    padding-top: 12px !important;
+    padding-top: var(--card-gap) !important;
 
     .form-group--submit {
         --override-margin-top: 8px !important;
@@ -5277,7 +5277,7 @@ p + .chartlist {
     [data-ff--shout_popover="true"] & {
         margin: unset;
         position: absolute;
-        top: -16px;
+        top: -14px;
         right: 6px;
 
         padding: 4px;
@@ -5329,6 +5329,10 @@ p + .chartlist {
     transition-property: background;
     transition-duration: var(--trans);
     transition-timing-function: var(--trans-function);
+}
+[data-ff--shout_popover="true"] .shout-form {
+    border: unset;
+    padding-bottom: unset;
 }
 [data-ff--shout_popover="true"] .shout-body {
     margin-top: 2px;
