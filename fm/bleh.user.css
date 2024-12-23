@@ -15239,6 +15239,10 @@ button.bleh--gallery-bookmark-image-btn {
 
     .navlist {
         overflow: visible !important;
+
+        .navlist-items {
+            margin: 0 -12px;
+        }
     }
 
     & + .page-content + .page-content,
