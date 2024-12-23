@@ -3925,6 +3925,7 @@ h2:not(.count, .mask-multi-text, .mask-text, .sr-only, .js-gallery-heading, .top
     text-transform: unset !important;
 
     margin-left: var(--card-padding);
+    cursor: default;
 }
 
 
