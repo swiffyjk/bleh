@@ -13916,9 +13916,6 @@ let has_prompted_for_update = false;
                 let action = btn.getAttribute('data-analytics-action');
 
                 register_activity((action == 'LoveTrack') ? 'love' : 'unlove', [{name: track, type: 'track', sister: artist}], `${root}music/${sanitise(artist)}/_/${sanitise(track)}`);
-
-                if (page.type == 'track')
-                    update_love_btn(btn);
             }, false);
         });
 
@@ -13935,8 +13932,6 @@ let has_prompted_for_update = false;
                 let action = btn.getAttribute('data-analytics-action');
 
                 register_activity((action.startsWith('Bookmark')) ? 'bookmark' : 'unbookmark', [{name: page.name, type: page.type, sister: page.sister}], window.location.href);
-
-                update_bookmark_btn(btn);
             }, false);
         });
 
