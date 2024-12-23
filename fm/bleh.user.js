@@ -9828,6 +9828,7 @@ let has_prompted_for_update = false;
 
         if (item == 'hue' || item == 'sat' || item == 'lit') {
             update_colour_swatches();
+            load_chart_colours();
         }
     }
 

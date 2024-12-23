@@ -197,10 +197,10 @@ body, [data-page-resource-type="album"], [data-page-resource-type="track"],
     .preview[data-bleh--theme="light"],
     [data-bleh--theme="light"] &:not(.preview) {
         /* any additional highlights */
-        --b3: var(--hue), calc(var(--sat) * 6% * var(--sat-bg, 1)), 75%;
+        --b3: var(--hue), calc(var(--sat) * 6% * var(--sat-bg, 1)), 80%;
 
         /* card border */
-        --b4: var(--hue), calc(var(--sat) * 6% * var(--sat-bg, 1)), 90%;
+        --b4: var(--hue), calc(var(--sat) * 6% * var(--sat-bg, 1)), 88%;
 
         /* card */
         --b5: 0, 0%, 100%;
@@ -2787,6 +2787,12 @@ button.navlist-more {
         &:after {
             opacity: 1;
             transition: none;
+        }
+
+        [data-bleh--theme="light"] & {
+            --bg: hsl(var(--b5), 40%) !important;
+            --bg-hov: hsl(var(--b5), 60%) !important;
+            --bg-atv: hsl(var(--b5), 80%) !important;
         }
     }
 }
