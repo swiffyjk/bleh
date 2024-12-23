@@ -4867,6 +4867,8 @@ let has_prompted_for_update = false;
 
     // patch last.fm settings
     function bleh_native_settings() {
+        register_background(my_avi);
+
         if (page.subpage == 'overview') {
             patch_settings_profile_tab();
         } else if (page.subpage == 'privacy') {
