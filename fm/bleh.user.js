@@ -3601,7 +3601,6 @@ let has_prompted_for_update = false;
                 if (shout_parse_queue.length > 0)
                     parse_shout_queue();
             }
-            patch_lastfm_settings(document.body);
             patch_gallery_page();
 
             if (page.type == 'user' && page.subpage.startsWith('library') && (
@@ -3696,6 +3695,7 @@ let has_prompted_for_update = false;
 
         if (last_page_subpage != page.subpage) {
             last_page_subpage = page.subpage;
+            log(`subpage of ${page.subpage}`, 'page');
 
             if (page.state.settings_reload) {
                 load_settings();
@@ -3722,6 +3722,8 @@ let has_prompted_for_update = false;
             bleh_tags();
         else if (page.type == 'search')
             basic_page_structure();
+        else if (page.type == 'settings')
+            bleh_native_settings();
     }
 
     function basic_page_structure() {
@@ -4864,11 +4866,15 @@ let has_prompted_for_update = false;
 
 
     // patch last.fm settings
-    function patch_lastfm_settings(element) {
-        patch_settings_profile_tab();
-        patch_settings_privacy_tab();
+    function bleh_native_settings() {
+        if (page.subpage == 'overview') {
+            patch_settings_profile_tab();
+        } else if (page.subpage == 'privacy') {
+            patch_settings_privacy_tab();
+        } else if (page.subpage.startsWith('subscription_automatic-edits')) {
+            bleh_auto_edits();
+        }
     }
-
 
     function patch_settings_profile_tab() {
         let update_picture = document.getElementById('update-picture');
@@ -17133,5 +17139,45 @@ let has_prompted_for_update = false;
 
         log('status is', 'page', 'info', page);
         update_page();
+    }
+
+
+
+
+    function bleh_auto_edits() {
+        page.structure.container = document.body.querySelector('.page-content');
+        try {
+            page.structure.row = page.structure.container.querySelector('.row');
+            page.structure.main = page.structure.row.querySelector('.col-main');
+            page.structure.side = page.structure.row.querySelector('.col-sidebar');
+        } catch(e) {
+            log('unable to find elements', 'page structure');
+        }
+
+        let content_top = document.body.querySelector('.content-top');
+        let header = content_top.querySelector('.content-top-header');
+
+        checkup_page_structure(false, content_top);
+        log('status is', 'page', 'info', page);
+        update_page();
+
+
+        let corrections_panel = document.body.querySelector('#subscription-corrections');
+        page.structure.main.appendChild(corrections_panel);
+
+
+        let edit_header = document.createElement('section');
+        edit_header.classList.add('redesigned-header', 'edit-header', 'no-background');
+        edit_header.innerHTML = (`
+            <div class="tag-side">
+                <div class="tag-icon cog-icon"></div>
+            </div>
+            <div class="info-side">
+                <div class="sub-text">${trans[lang].settings.name}</div>
+                <h1>${header.textContent.trim()}</h1>
+            </div>
+        `);
+
+        page.structure.container.insertBefore(edit_header, page.structure.container.firstElementChild);
     }
 })();

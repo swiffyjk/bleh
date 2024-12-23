@@ -12025,7 +12025,8 @@ hr {
 .page-content:is(
     [data-page-subpage="following"], [data-page-subpage="followers"], [data-page-subpage="neighbours"],
     [data-page-subpage="obsessions_set"],
-    [data-page-subpage="loved"]
+    [data-page-subpage="loved"],
+    [data-page-subpage="subscription_automatic-edits_tracks"], [data-page-subpage="subscription_automatic-edits_albums"]
     ),
 .namespace--music_bookmarks_overview {
     .col-main {
@@ -13095,7 +13096,6 @@ so this is good enough - use the community docs */
                 --mask-size: 24px;
                 --margin-left: -12px;
                 --margin-top: -12px;
-                --mask: var(--icon-16-dot);
                 color: hsl(var(--c3));
 
                 [data-page="themes"] & {
@@ -17733,6 +17733,10 @@ h4 {
             --margin-top: -12px;
             --mask: var(--icon-tag);
             color: hsl(var(--c3));
+
+            &.cog-icon {
+                --mask: var(--icon-settings);
+            }
         }
     }
 
