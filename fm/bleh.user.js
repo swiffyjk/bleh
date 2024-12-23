@@ -11024,7 +11024,6 @@ let has_prompted_for_update = false;
         bookmarks_content.classList.add('col-main', 'bleh--bookmarks', 'not-a-panel');
         bookmarks_content.innerHTML = (`
             <section class="bookmarks-panel">
-                <h2>${trans[lang].gallery.bookmarks.name}</h2>
                 <ul class="image-list" id="bleh--bookmarked-images" data-kate-processed="true"></ul>
             </section>
         `);
