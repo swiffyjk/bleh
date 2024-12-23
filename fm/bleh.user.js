@@ -6177,10 +6177,10 @@ let has_prompted_for_update = false;
                         id: 'listening_report_v2',
                         title: 'Listening reports v2',
                         body: (`
-                            <div class="alert alert-error">Unfortunately, legacy listening reports are not supported in bleh3.</div>
+                            <div class="alert alert-error">Unfortunately, legacy listening reports are not yet supported in bleh3.</div>
                             <br>
                             <p>To view this page properly it's recommended to temporarily disable bleh :3</p>
-                            <p>Sorry for the inconvenience !!</p>
+                            <p>Don't worry, they will be looked at eventually. Sorry for the inconvenience !!</p>
                         `)
                     });
                     return;
