@@ -7526,7 +7526,7 @@ let has_prompted_for_update = false;
                         </a>
                     </li>
                     <li class="navlist-item secondary-nav-item">
-                        <a class="secondary-nav-item-link bleh--nav" data-bleh-page="seasonal" onclick="_change_settings_page('seasonal')">
+                        <a class="secondary-nav-item-link bleh--nav" data-bleh-page="seasonal" data-season="${stored_season.id}" onclick="_change_settings_page('seasonal')">
                             ${trans[lang].settings.customise.seasonal.name}
                         </a>
                     </li>

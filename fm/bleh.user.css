@@ -149,7 +149,7 @@ body, [data-page-resource-type="album"], [data-page-resource-type="track"],
 .preview, .preview[data-bleh--theme="dark"],
 .listen-item,
 .lotus.bleh--panel,
-[data-bleh--label="bleh"]
+[data-bleh--label="bleh"], [data-bleh-page="seasonal"]
 {
     /* any additional highlights */
     --b3: var(--hue), calc(var(--sat) * 6% * var(--sat-bg, 1)), 30%;
@@ -13027,74 +13027,6 @@ so this is good enough - use the community docs */
                 }
             }
         }
-
-        .secondary-nav-item-link {
-            &[data-bleh-page="home"] {
-                --mask: var(--icon-16-home);
-            }
-            &[data-bleh-page="themes"] {
-                --mask: var(--icon-16-themes);
-            }
-            &[data-bleh-page="customise"] {
-                --mask: var(--icon-16-palette);
-            }
-            &[data-bleh-action="import"] {
-                --mask: var(--icon-16-download);
-            }
-            &[data-bleh-action="export"] {
-                --mask: var(--icon-16-upload);
-            }
-            &[data-bleh-action="reset"] {
-                --mask: var(--icon-16-revert);
-            }
-            &[data-bleh-page="performance"] {
-                --mask: var(--icon-16-settings);
-            }
-            &[data-bleh-page="profiles"] {
-                --mask: var(--icon-16-user);
-            }
-            &[data-bleh-page="redirects"] {
-                --mask: var(--icon-16-redirect);
-            }
-            &[data-bleh-page="corrections"] {
-                --mask: var(--icon-16-correction);
-            }
-            &[data-bleh-page="accessibility"] {
-                --mask: var(--icon-16-accessibility);
-            }
-            &[data-bleh-page="language"] {
-                --mask: var(--icon-16-language);
-            }
-            &[data-bleh-page="text"] {
-                --mask: var(--icon-16-shoutbox);
-            }
-            &[data-bleh-page="seasonal"] {
-                --mask: var(--icon-16-calendar);
-
-                &[data-season="easter"] {
-                    --mask: var(--icon-16-egg);
-                }
-                &[data-season="halloween"] {
-                    --mask: var(--icon-16-pumpkin);
-                }
-                &[data-season="pre_fall"] {
-                    --mask: var(--icon-16-fall);
-                }
-                &[data-season="fall"] {
-                    --mask: var(--icon-16-fall);
-                }
-                &[data-season="christmas"] {
-                    --mask: var(--icon-16-snow);
-                }
-                &[data-season="new_years"] {
-                    --mask: var(--icon-16-new-years);
-                }
-            }
-
-            &[data-bleh-page="sku"]:not(.active) {
-                display: none;
-            }
-        }
     }
 
     .bleh-settings-header {
@@ -13187,6 +13119,84 @@ so this is good enough - use the community docs */
 
         .navlist-items {
             margin: 0 -12px;
+        }
+
+        .secondary-nav-item-link {
+            &[data-bleh-page="home"] {
+                --mask: var(--icon-16-home);
+            }
+            &[data-bleh-page="themes"] {
+                --mask: var(--icon-16-themes);
+            }
+            &[data-bleh-page="music"] {
+                --mask: var(--icon-16-track);
+            }
+            &[data-bleh-page="customise"] {
+                --mask: var(--icon-16-layout-manage);
+            }
+            &[data-bleh-action="import"] {
+                --mask: var(--icon-16-import);
+            }
+            &[data-bleh-action="export"] {
+                --mask: var(--icon-16-external);
+            }
+            &[data-bleh-action="reset"] {
+                --mask: var(--icon-16-revert);
+            }
+            &[data-bleh-page="performance"] {
+                --mask: var(--icon-16-settings);
+            }
+            &[data-bleh-page="profiles"] {
+                --mask: var(--icon-16-user);
+            }
+            &[data-bleh-page="redirects"] {
+                --mask: var(--icon-16-redirect);
+            }
+            &[data-bleh-page="corrections"] {
+                --mask: var(--icon-16-correction);
+            }
+            &[data-bleh-page="accessibility"] {
+                --mask: var(--icon-16-accessibility);
+            }
+            &[data-bleh-page="language"] {
+                --mask: var(--icon-16-language);
+            }
+            &[data-bleh-page="text"] {
+                --mask: var(--icon-16-shoutbox);
+            }
+            &[data-bleh-page="seasonal"] {
+                --mask: var(--icon-16-season);
+
+                &[data-season="easter"] {
+                    --mask: var(--icon-16-egg);
+                }
+                &[data-season="halloween"] {
+                    --mask: var(--icon-16-pumpkin);
+                }
+                &[data-season="pre_fall"] {
+                    --mask: var(--icon-16-fall);
+                }
+                &[data-season="fall"] {
+                    --mask: var(--icon-16-fall);
+                }
+                &[data-season="christmas"] {
+                    --mask: var(--icon-16-snow);
+                }
+                &[data-season="new_years"] {
+                    --mask: var(--icon-16-new-years);
+                }
+            }
+            &[data-bleh-page="activities"] {
+                --mask: var(--icon-16-notifications);
+            }
+            &[data-bleh-page="changelog"] {
+                --mask: var(--icon-16-changelog);
+                --col: hsl(var(--l3-c));
+            }
+
+            &[data-bleh-page="sku"]:not(.active) {
+                display: none;
+            }
         }
     }
 
