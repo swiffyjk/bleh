@@ -518,6 +518,7 @@ const trans = {
                     nonsense: 'A Nonsense Christmas',
                     fruitcake: 'fruitcake',
                     mistletoe: 'Mistletoe',
+                    festival: 'Christmas Eve',
                     exclusive_for_season: 'Exclusive for <span class="season-name">{season}</span>',
                     exclusive_for_season_and_more: 'Exclusive for <span class="season-name">{season}</span> and 1 more'
                 },
@@ -1296,6 +1297,7 @@ const trans = {
                     nonsense: 'A Nonsense Christmas',
                     fruitcake: 'fruitcake',
                     mistletoe: 'Mistletoe',
+                    festival: 'Christmas Eve',
                     exclusive_for_season: 'Exclusive for <span class="season-name">{season}</span>',
                     exclusive_for_season_and_more: 'Exclusive for <span class="season-name">{season}</span> and 1 more'
                 },
@@ -2086,6 +2088,7 @@ const trans = {
                     nonsense: 'A Nonsense Christmas',
                     fruitcake: 'fruitcake',
                     mistletoe: 'Mistletoe',
+                    festival: 'Christmas Eve',
                     exclusive_for_season: 'Exclusive for <span class="season-name">{season}</span>',
                     exclusive_for_season_and_more: 'Exclusive for <span class="season-name">{season}</span> and 1 more'
                 },
@@ -7910,6 +7913,14 @@ let has_prompted_for_update = false;
                             sat: 0.45,
                             lit: 0.75
                         })" id="mistletoe" data-season-swatch="christmas"></button>
+                        <button class="swatch btn seasonal-swatch" style="
+                            --hue: 240;
+                            --sat: 1.4;
+                            --lit: 0.75" onclick="_update_params({
+                            hue: 240,
+                            sat: 1.4,
+                            lit: 0.75
+                        })" id="festival" data-season-swatch="christmas"></button>
                         `) : ''}
                         <button class="swatch btn custom" style="
                             --hue: var(--hue-user, 255);
@@ -9315,6 +9326,14 @@ let has_prompted_for_update = false;
                     theme: 'seasonal-swatch',
                     content: (`
                         <span class="season-colour-name">${trans[lang].settings.customise.seasonal.mistletoe}</span>
+                        <span class="season-exclusive">${trans[lang].settings.customise.seasonal.exclusive_for_season_and_more.replace('{season}', trans[lang].settings.customise.seasonal.listing[stored_season.id])}</span>
+                    `),
+                    allowHTML: true
+                });
+                tippy(document.body.querySelector('.swatch#festival'), {
+                    theme: 'seasonal-swatch',
+                    content: (`
+                        <span class="season-colour-name">${trans[lang].settings.customise.seasonal.festival}</span>
                         <span class="season-exclusive">${trans[lang].settings.customise.seasonal.exclusive_for_season_and_more.replace('{season}', trans[lang].settings.customise.seasonal.listing[stored_season.id])}</span>
                     `),
                     allowHTML: true
