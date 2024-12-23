@@ -836,7 +836,9 @@ b, strong {
 /* replace the very backing layer with b6 */
 html body {
     /* html body is used cus last.fm decided so */
-    background-color: hsl(var(--b6));
+    /* !important fixes bulk edit extension when managing
+    auto edits as of 2024/12 */
+    background-color: hsl(var(--b6)) !important;
 }
 
 
@@ -6293,6 +6295,7 @@ button,
 
 
 /*     ICON MASK     */
+.chart-table--buttons button:before,
 .api-session-connect:before, .api-session-disconnect:before,
 .scrobble-canvas-container:before,
 .grid-item-plays:before,
@@ -18473,5 +18476,122 @@ section > .section-controls .subpage-title {
 /* fix extra top space - 2024/12 */
 #artist-albums-section {
     margin-top: unset;
+}
+
+
+
+
+/*     AUTO EDIT MANAGE     */
+.chart-table {
+    table-layout: fixed !important; /* fix bulk edit extension being broken */
+
+    margin-top: var(--card-gap);
+
+    display: flex;
+    flex-direction: column;
+
+    thead {
+        tr {
+            display: flex;
+        }
+
+        th {
+            font: inherit;
+            font-weight: var(--font-weight-medium);
+            color: hsl(var(--c3));
+
+            a {
+                color: inherit;
+            }
+
+            padding: 7px 12px;
+            flex: 1;
+
+            &:last-child {
+                flex: unset;
+                width: 100px;
+            }
+        }
+    }
+    tbody {
+        display: flex;
+        flex-direction: column;
+        gap: var(--button-list-gap);
+        width: 100%;
+
+        tr {
+            --bg: hsla(var(--b4), 40%);
+            --bg-hov: hsla(var(--b4), 80%);
+
+            border: unset;
+            border-radius: var(--item-big-radius);
+            display: flex;
+            align-items: center;
+
+            td {
+                padding: 7px 12px;
+                flex: 1;
+
+                &.chart-table--buttons {
+                    flex: unset;
+                    width: 100px;
+
+                    display: flex;
+                    justify-content: end;
+                    gap: var(--button-list-gap);
+
+                    form {
+                        margin: unset;
+
+                        button {
+                            width: 32px;
+                            height: 32px;
+                            position: relative;
+                            --mask: var(--icon-16-edit);
+                            --left: 8px;
+
+                            --bg: transparent !important;
+                            --bg-hov: hsla(var(--b3), 30%) !important;
+                            --bg-atv: hsla(var(--b3), 50%) !important;
+                            --shadow: none !important;
+                            --shadow-hov: none !important;
+
+                            img {
+                                display: none;
+                            }
+                        }
+
+                        [value="delete"] ~ button {
+                            --col: hsl(var(--l3-c));
+                            --hue-over: var(--hue-neg);
+                            --sat-over: 1;
+                            --lit-over: 1;
+                            --mask: var(--icon-16-trash);
+                        }
+                    }
+                }
+
+                small {
+                    font-size: var(--font-size-sm);
+                    line-height: var(--line-height) !important;
+                    color: hsl(var(--c3));
+                }
+            }
+
+            background: var(--bg);
+            transition-property: background;
+            transition-duration: var(--trans);
+            transition-timing-function: var(--trans-function);
+
+            &:hover {
+                background: var(--bg-hov);
+                transition: none;
+
+                button {
+                    transition-property: background-color, transform !important;
+                }
+            }
+        }
+    }
 }
 }
