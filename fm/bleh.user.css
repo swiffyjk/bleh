@@ -2745,11 +2745,13 @@ button.navlist-more {
         content: '';
         position: absolute;
         inset: -4px !important;
-        border-radius: calc(var(--item-big-radius) + 4px);
+        border-radius: calc(var(--item-big-radius) + 4px) !important;
         opacity: 0;
 
         background: unset !important;
+        width: unset !important;
         height: unset !important;
+        margin: unset !important;
 
         border: 2px solid hsl(var(--l2-c), 30%);
         box-shadow: 0 0 30px hsl(var(--l2-c), 10%);
@@ -5302,9 +5304,16 @@ p + .chartlist {
             .shout-reply,
             & > div > form button,
             & > button {
-                --padding: 6px;
-                --left: 8px;
+                --padding: 7px 12px !important;
                 height: 32px !important;
+                --force-font-weight: var(--font-weight-medium) !important;
+                width: unset;
+                --left: 12px !important;
+                min-width: 40px !important;
+            }
+
+            .vote-button {
+                --padding: 7px 12px 7px var(--btn-left) !important;
             }
         }
 
@@ -5333,6 +5342,10 @@ p + .chartlist {
     transition-property: background;
     transition-duration: var(--trans);
     transition-timing-function: var(--trans-function);
+
+    .shout-container--active & {
+        background: hsl(var(--h4), 20%);
+    }
 }
 [data-ff--shout_popover="true"] .shout-form {
     border: unset;
@@ -5598,6 +5611,10 @@ leading to a gap from their own css */
     background: linear-gradient(0deg, hsla(var(--h4),20%) 0%, rgba(0,0,0,0) 100%);
     margin: unset;
     padding: unset;
+
+    [data-ff--shout_popover="true"] & {
+        background: unset;
+    }
 }
 
 
