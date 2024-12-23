@@ -14469,16 +14469,22 @@ let has_prompted_for_update = false;
             let api_expire = new Date();
 
             if (xhr.status == 200) {
-                if (open_after)
-                    open_changelog(JSON.parse(this.response));
+                if (open_after) {
+                    try {
+                        open_changelog(JSON.parse(this.response));
 
-                // save to cache for next page load
-                localStorage.setItem('bleh_changelog', this.response);
-                api_expire.setHours(api_expire.getHours() + 2);
-                log(`cached until ${api_expire}`, 'changelog');
+                        // save to cache for next page load
+                        localStorage.setItem('bleh_changelog', this.response);
+                        api_expire.setHours(api_expire.getHours() + 2);
+                        log(`cached until ${api_expire}`, 'changelog');
+
+                        localStorage.setItem('bleh_changelog_expire', api_expire);
+                    } catch(e) {
+                        deliver_notif('The changelog is currently unavailable due to errors, try again later.', true);
+                        console.error(e);
+                    }
+                }
             }
-
-            localStorage.setItem('bleh_changelog_expire', api_expire);
 
             if (button != null)
                 button.removeAttribute('disabled');
