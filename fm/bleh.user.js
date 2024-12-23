@@ -7536,11 +7536,6 @@ let has_prompted_for_update = false;
                         </a>
                     </li>
                     <li class="navlist-item secondary-nav-item">
-                        <a class="secondary-nav-item-link bleh--nav" data-bleh-page="activities" onclick="_change_settings_page('activities')">
-                            ${trans[lang].settings.activities.name}
-                        </a>
-                    </li>
-                    <li class="navlist-item secondary-nav-item">
                         <a class="secondary-nav-item-link bleh--nav" data-bleh-page="profiles" onclick="_change_settings_page('profiles')">
                             ${trans[lang].settings.profiles.name}
                         </a>
@@ -7597,11 +7592,6 @@ let has_prompted_for_update = false;
                         </button>
                         <button class="btn bleh--btn" data-bleh-page="sku" onclick="_change_settings_page('sku')">
                             shhh...
-                        </button>
-                    </div>
-                    <div class="btns sep">
-                        <button class="btn bleh--btn" data-bleh-page="activities" onclick="_change_settings_page('activities')">
-                            ${trans[lang].settings.activities.name}
                         </button>
                     </div>
                     <div class="btns sep">
@@ -8667,18 +8657,7 @@ let has_prompted_for_update = false;
 
             return (`
                 <div class="bleh--panel">
-                    <h4 class="top-header">${trans[lang].settings.profiles.name}</h4>
-                    <p>${trans[lang].settings.profiles.bio}</p>
-                    <h4>${trans[lang].settings.profiles.notes.name}</h4>
-                    <div class="profile-notes" id="profile-notes"></div>
-                </div>
-                `);
-        } else if (page == 'activities') {
-            head.textContent = trans[lang].settings.activities.name;
-
-            return (`
-                <div class="bleh--panel">
-                    <h4 class="top-header">${trans[lang].settings.activities.name}</h4>
+                    <h4>${trans[lang].settings.activities.name}</h4>
                     <p>${trans[lang].settings.activities.bio}</p>
                     <div class="toggle-container" id="container-activities" onclick="_update_item('activities')">
                         <button class="btn reset" onclick="_reset_item('activities')">${trans[lang].settings.reset}</button>
@@ -8692,6 +8671,10 @@ let has_prompted_for_update = false;
                             </button>
                         </div>
                     </div>
+                </div>
+                <div class="bleh--panel">
+                    <h4>${trans[lang].settings.profiles.notes.name}</h4>
+                    <div class="profile-notes" id="profile-notes"></div>
                 </div>
                 `);
         } else if (page == 'accessibility') {
