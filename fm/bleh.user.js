@@ -25,7 +25,7 @@ let version = {
     sku: 'nonsense',
     feature_flags: {
         bleh_settings_tabs: {
-            default: false,
+            default: true,
             name: 'Utilise new bleh settings tabs',
             date: '2024-07-09'
         },
@@ -7495,6 +7495,69 @@ let has_prompted_for_update = false;
                 </div>
             `);
 
+            let nav = document.createElement('nav');
+            nav.classList.add('navlist', 'secondary-nav', 'navlist--more', 'redesigned-navigation', 'bleh-settings-navigation');
+
+            nav.innerHTML = (`
+                <ul class="navlist-items">
+                    <li class="navlist-item secondary-nav-item">
+                        <a class="secondary-nav-item-link bleh--nav" data-bleh-page="home" onclick="_change_settings_page('home')">
+                            ${trans[lang].settings.home.name}
+                        </a>
+                    </li>
+                    <li class="navlist-item secondary-nav-item">
+                        <a class="secondary-nav-item-link bleh--nav" data-bleh-page="themes" onclick="_change_settings_page('themes')">
+                            ${trans[lang].settings.appearance.name}
+                        </a>
+                    </li>
+                    <li class="navlist-item secondary-nav-item">
+                        <a class="secondary-nav-item-link bleh--nav" data-bleh-page="customise" onclick="_change_settings_page('customise')">
+                            ${trans[lang].settings.layout.name}
+                        </a>
+                    </li>
+                    <li class="navlist-item secondary-nav-item">
+                        <a class="secondary-nav-item-link bleh--nav" data-bleh-page="music" onclick="_change_settings_page('music')">
+                            ${trans[lang].settings.music.name}
+                        </a>
+                    </li>
+                    <li class="navlist-item secondary-nav-item">
+                        <a class="secondary-nav-item-link bleh--nav" data-bleh-page="accessibility" onclick="_change_settings_page('accessibility')">
+                            ${trans[lang].settings.accessibility.name}
+                        </a>
+                    </li>
+                    <li class="navlist-item secondary-nav-item">
+                        <a class="secondary-nav-item-link bleh--nav" data-bleh-page="seasonal" onclick="_change_settings_page('seasonal')">
+                            ${trans[lang].settings.customise.seasonal.name}
+                        </a>
+                    </li>
+                    <li class="navlist-item secondary-nav-item">
+                        <a class="secondary-nav-item-link bleh--nav" data-bleh-page="text" onclick="_change_settings_page('text')">
+                            ${trans[lang].settings.text.name}
+                        </a>
+                    </li>
+                    <li class="navlist-item secondary-nav-item">
+                        <a class="secondary-nav-item-link bleh--nav" data-bleh-page="activities" onclick="_change_settings_page('activities')">
+                            ${trans[lang].settings.activities.name}
+                        </a>
+                    </li>
+                    <li class="navlist-item secondary-nav-item">
+                        <a class="secondary-nav-item-link bleh--nav" data-bleh-page="profiles" onclick="_change_settings_page('profiles')">
+                            ${trans[lang].settings.profiles.name}
+                        </a>
+                    </li>
+                    <li class="navlist-item secondary-nav-item">
+                        <a class="secondary-nav-item-link bleh--nav" data-bleh-page="performance" onclick="_change_settings_page('performance')">
+                            ${trans[lang].settings.performance.name}
+                        </a>
+                    </li>
+                    <li class="navlist-item secondary-nav-item">
+                        <a class="secondary-nav-item-link bleh--nav" data-bleh-page="sku" onclick="_change_settings_page('sku')">
+                            shhh...
+                        </a>
+                    </li>
+                </ul>
+            `);
+
             let inner = document.createElement('div');
             inner.classList.add('bleh--page-inner');
 
@@ -7507,6 +7570,7 @@ let has_prompted_for_update = false;
             side.classList.add('bleh--panel-side');
             side.innerHTML = (`
                 <div class="bleh--panel">
+                    ${(!ff('bleh_settings_tabs')) ? (`
                     <div class="btns">
                         <button class="btn bleh--btn" data-bleh-page="home" onclick="_change_settings_page('home')">
                             ${trans[lang].settings.home.name}
@@ -7531,17 +7595,11 @@ let has_prompted_for_update = false;
                         <button class="btn bleh--btn" data-bleh-page="text" onclick="_change_settings_page('text')">
                             ${trans[lang].settings.text.name}
                         </button>
-                        <button class="btn bleh--btn" data-bleh-page="language" onclick="_change_settings_page('language')">
-                            ${trans[lang].settings.language.name}
-                        </button>
                         <button class="btn bleh--btn" data-bleh-page="sku" onclick="_change_settings_page('sku')">
                             shhh...
                         </button>
                     </div>
                     <div class="btns sep">
-                        <button class="btn bleh--btn" data-bleh-page="redirects" onclick="_change_settings_page('redirects')">
-                            ${trans[lang].settings.redirects.name}
-                        </button>
                         <button class="btn bleh--btn" data-bleh-page="activities" onclick="_change_settings_page('activities')">
                             ${trans[lang].settings.activities.name}
                         </button>
@@ -7565,6 +7623,19 @@ let has_prompted_for_update = false;
                             ${trans[lang].settings.actions.reset.name}
                         </button>
                     </div>
+                    `) : (`
+                    <div class="btns">
+                        <button class="btn" data-bleh-action="import" onclick="_import_settings()">
+                            ${trans[lang].settings.actions.import.name}
+                        </button>
+                        <button class="btn" data-bleh-action="export" onclick="_export_settings()">
+                            ${trans[lang].settings.actions.export.name}
+                        </button>
+                        <button class="btn" data-bleh-action="reset" onclick="_reset_settings()">
+                            ${trans[lang].settings.actions.reset.name}
+                        </button>
+                    </div>
+                    `)}
                     ${(settings.feature_flags.changelogs != false) ? (`
                     <div class="btns sep">
                         <button class="btn bleh--btn" data-bleh-page="changelog" onclick="_query_changelog()">
@@ -7581,6 +7652,9 @@ let has_prompted_for_update = false;
             outer.appendChild(header);
             outer.appendChild(inner);
             adaptive_skin_container.appendChild(outer);
+
+            if (ff('bleh_settings_tabs'))
+                header.after(nav);
 
             console.info(page);
 
@@ -8599,45 +8673,6 @@ let has_prompted_for_update = false;
                     <div class="profile-notes" id="profile-notes"></div>
                 </div>
                 `);
-        } else if (page == 'redirects') {
-            head.textContent = trans[lang].settings.redirects.name;
-
-            return (`
-                <div class="bleh--panel">
-                    <h4 class="top-header">${trans[lang].settings.redirects.name}</h4>
-                    <p>${trans[lang].settings.redirects.bio}</p>
-                    <div class="inner-preview">
-                        <div class="nag-bar nag-bar--corrections nag-bar--corrections--artist preview-bar">
-                            <div class="container">
-                                <p class="nag-bar-message">
-                                    Did you mean <strong><a href="/music/Travi$+Scott">Travi$ Scott</a></strong>? <strong><a href="/music/Lil%27+Wayne">Lil' Wayne</a></strong> maybe?
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="toggle-container" id="container-travis" onclick="_update_item('travis')">
-                        <button class="btn reset" onclick="_reset_item('travis')">${trans[lang].settings.reset}</button>
-                        <div class="heading">
-                            <h5>${trans[lang].settings.redirects.travis.name}</h5>
-                            <p>${trans[lang].settings.redirects.travis.bio}</p>
-                        </div>
-                        <div class="toggle-wrap">
-                            <button class="toggle" id="toggle-travis" aria-checked="true">
-                                <div class="dot"></div>
-                            </button>
-                        </div>
-                    </div>
-                    <div class="toggle-container">
-                        <div class="heading">
-                            <h5>${trans[lang].settings.redirects.autocorrect.name}</h5>
-                            <p>${trans[lang].settings.redirects.autocorrect.bio}</p>
-                        </div>
-                        <div class="toggle-wrap">
-                            <a class="btn bleh--btn primary" href="${root}settings/website" target="_blank">${trans[lang].settings.redirects.autocorrect.action}</a>
-                        </div>
-                    </div>
-                </div>
-                `);
         } else if (page == 'activities') {
             head.textContent = trans[lang].settings.activities.name;
 
@@ -8655,30 +8690,6 @@ let has_prompted_for_update = false;
                             <button class="toggle" id="toggle-activities" aria-checked="true">
                                 <div class="dot"></div>
                             </button>
-                        </div>
-                    </div>
-                </div>
-                `);
-        } else if (page == 'language') {
-            head.textContent = trans[lang].settings.language.name;
-
-            return (`
-                <div class="bleh--panel">
-                    <h4 class="top-header">${trans[lang].settings.language.name}</h4>
-                    ${(!valid_langs.includes(document.documentElement.getAttribute('lang'))) ? `
-                    <div class="alert alert-error">Selected language is not currently supported in bleh, sorry for the inconvenience.</div>
-                    ` : ''}
-                    <h4>${trans[lang].settings.language.supported}</h4>
-                    <div class="languages" id="languages"></div>
-                    <div class="sep"></div>
-                    <div class="alert alert-warning">This page is still under construction! A wiki page dedicated to submitting a language is not available currently.</div>
-                    <div class="toggle-container">
-                        <div class="heading">
-                            <h5>${trans[lang].settings.language.submit.name}</h5>
-                            <p>${trans[lang].settings.language.submit.bio}</p>
-                        </div>
-                        <div class="toggle-wrap">
-                            <a class="btn bleh--btn primary" href="https://github.com/katelyynn/bleh/wiki" target="_blank">${trans[lang].settings.language.submit.action}</a>
                         </div>
                     </div>
                 </div>
@@ -8841,6 +8852,25 @@ let has_prompted_for_update = false;
                             <button class="toggle" id="toggle-bio_markdown" aria-checked="false">
                                 <div class="dot"></div>
                             </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="bleh--panel">
+                    <h4 class="top-header">${trans[lang].settings.language.name}</h4>
+                    ${(!valid_langs.includes(document.documentElement.getAttribute('lang'))) ? `
+                    <div class="alert alert-error">Selected language is not currently supported in bleh, sorry for the inconvenience.</div>
+                    ` : ''}
+                    <h4>${trans[lang].settings.language.supported}</h4>
+                    <div class="languages" id="languages"></div>
+                    <div class="sep"></div>
+                    <div class="alert alert-warning">This page is still under construction! A wiki page dedicated to submitting a language is not available currently.</div>
+                    <div class="toggle-container">
+                        <div class="heading">
+                            <h5>${trans[lang].settings.language.submit.name}</h5>
+                            <p>${trans[lang].settings.language.submit.bio}</p>
+                        </div>
+                        <div class="toggle-wrap">
+                            <a class="btn bleh--btn primary" href="https://github.com/katelyynn/bleh/wiki" target="_blank">${trans[lang].settings.language.submit.action}</a>
                         </div>
                     </div>
                 </div>
@@ -9110,6 +9140,40 @@ let has_prompted_for_update = false;
                     </div>
                 </div>
                 <div class="bleh--panel">
+                    <h4>${trans[lang].settings.redirects.name}</h4>
+                    <p>${trans[lang].settings.redirects.bio}</p>
+                    <div class="inner-preview">
+                        <div class="nag-bar nag-bar--corrections nag-bar--corrections--artist preview-bar">
+                            <div class="container">
+                                <p class="nag-bar-message">
+                                    Did you mean <strong><a href="/music/Travi$+Scott">Travi$ Scott</a></strong>? <strong><a href="/music/Lil%27+Wayne">Lil' Wayne</a></strong> maybe?
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="toggle-container" id="container-travis" onclick="_update_item('travis')">
+                        <button class="btn reset" onclick="_reset_item('travis')">${trans[lang].settings.reset}</button>
+                        <div class="heading">
+                            <h5>${trans[lang].settings.redirects.travis.name}</h5>
+                            <p>${trans[lang].settings.redirects.travis.bio}</p>
+                        </div>
+                        <div class="toggle-wrap">
+                            <button class="toggle" id="toggle-travis" aria-checked="true">
+                                <div class="dot"></div>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="toggle-container">
+                        <div class="heading">
+                            <h5>${trans[lang].settings.redirects.autocorrect.name}</h5>
+                            <p>${trans[lang].settings.redirects.autocorrect.bio}</p>
+                        </div>
+                        <div class="toggle-wrap">
+                            <a class="btn bleh--btn primary" href="${root}settings/website" target="_blank">${trans[lang].settings.redirects.autocorrect.action}</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="bleh--panel">
                     <h4>${trans[lang].settings.customise.artwork.name}</h4>
                     <div class="inner-preview pad">
                         <div class="palette albums" style="height: fit-content">
@@ -9181,80 +9245,29 @@ let has_prompted_for_update = false;
     function change_settings_page(page, setting = null) {
         document.getElementById('settings_header').setAttribute('data-page', page);
 
-        if (!ff('bleh_settings_tabs'))
-            document.getElementById('bleh--panel-main').innerHTML = '';
-        else
-            document.getElementById('bleh--panel-main').innerHTML = (`
-                <nav class="navlist secondary-nav navlist--more">
-                    <ul class="navlist-items">
-                        <li class="navlist-item secondary-nav-item">
-                            <a class="secondary-nav-item-link bleh--nav" data-bleh-page="home" onclick="_change_settings_page('home')">
-                                ${trans[lang].settings.home.name}
-                            </a>
-                        </li>
-                        <li class="navlist-item secondary-nav-item">
-                            <a class="secondary-nav-item-link bleh--nav" data-bleh-page="themes" onclick="_change_settings_page('themes')">
-                                ${trans[lang].settings.appearance.name}
-                            </a>
-                        </li>
-                        <li class="navlist-item secondary-nav-item">
-                            <a class="secondary-nav-item-link bleh--nav" data-bleh-page="accessibility" onclick="_change_settings_page('accessibility')">
-                                ${trans[lang].settings.accessibility.name}
-                            </a>
-                        </li>
-                        <li class="navlist-item secondary-nav-item">
-                            <a class="secondary-nav-item-link bleh--nav" data-bleh-page="seasonal" onclick="_change_settings_page('seasonal')">
-                                ${trans[lang].settings.customise.seasonal.name}
-                            </a>
-                        </li>
-                        <li class="navlist-item secondary-nav-item">
-                            <a class="secondary-nav-item-link bleh--nav" data-bleh-page="customise" onclick="_change_settings_page('customise')">
-                                ${trans[lang].settings.layout.name}
-                            </a>
-                        </li>
-                        <li class="navlist-item secondary-nav-item">
-                            <a class="secondary-nav-item-link bleh--nav" data-bleh-page="text" onclick="_change_settings_page('text')">
-                                ${trans[lang].settings.text.name}
-                            </a>
-                        </li>
-                        <li class="navlist-item secondary-nav-item">
-                            <a class="secondary-nav-item-link bleh--nav" data-bleh-page="language" onclick="_change_settings_page('language')">
-                                ${trans[lang].settings.language.name}
-                            </a>
-                        </li>
-                        <li class="navlist-item secondary-nav-item">
-                            <a class="secondary-nav-item-link bleh--nav" data-bleh-page="redirects" onclick="_change_settings_page('redirects')">
-                                ${trans[lang].settings.redirects.name}
-                            </a>
-                        </li>
-                        <li class="navlist-item secondary-nav-item">
-                            <a class="secondary-nav-item-link bleh--nav" data-bleh-page="profiles" onclick="_change_settings_page('profiles')">
-                                ${trans[lang].settings.profiles.name}
-                            </a>
-                        </li>
-                        <li class="navlist-item secondary-nav-item">
-                            <a class="secondary-nav-item-link bleh--nav" data-bleh-page="performance" onclick="_change_settings_page('performance')">
-                                ${trans[lang].settings.performance.name}
-                            </a>
-                        </li>
-                        <li class="navlist-item secondary-nav-item">
-                            <a class="secondary-nav-item-link bleh--nav" data-bleh-page="sku" onclick="_change_settings_page('sku')">
-                                shhh...
-                            </a>
-                        </li>
-                    </ul>
-                </nav>
-            `);
+        document.getElementById('bleh--panel-main').innerHTML = '';
 
-        let btns = document.querySelectorAll('.bleh--btn');
-        btns.forEach((btn) => {
-            console.log(btn.getAttribute('data-bleh-page'),page);
-            if (btn.getAttribute('data-bleh-page') != page) {
-                btn.classList.remove('active');
-            } else {
-                btn.classList.add('active');
-            }
-        });
+        if (ff('bleh_settings_tabs')) {
+            let btns = document.querySelectorAll('.bleh--nav');
+            btns.forEach((btn) => {
+                console.log(btn.getAttribute('data-bleh-page'),page);
+                if (btn.getAttribute('data-bleh-page') != page) {
+                    btn.classList.remove('secondary-nav-item-link--active');
+                } else {
+                    btn.classList.add('secondary-nav-item-link--active');
+                }
+            });
+        } else {
+            let btns = document.querySelectorAll('.bleh--btn');
+            btns.forEach((btn) => {
+                console.log(btn.getAttribute('data-bleh-page'),page);
+                if (btn.getAttribute('data-bleh-page') != page) {
+                    btn.classList.remove('active');
+                } else {
+                    btn.classList.add('active');
+                }
+            });
+        }
 
         if (page == 'home' || page == 'seasonal')
             seasonal_timer_start();
@@ -9266,15 +9279,16 @@ let has_prompted_for_update = false;
         if (page == 'themes') {
             refresh_all();
             show_theme_change_in_settings();
-        } else if (page == 'customise' || page == 'performance' || page == 'redirects' || page == 'accessibility' || page == 'text' || page == 'seasonal' || page == 'music' || page == 'activities') {
+        } else if (page == 'customise' || page == 'performance' || page == 'accessibility' || page == 'text' || page == 'seasonal' || page == 'music' || page == 'activities') {
             refresh_all();
         } else if (page == 'profiles') {
             init_profile_notes();
-        } else if (page == 'language') {
-            prepare_language_page();
         } else if (page == 'sku') {
             bleh_sku_page();
         }
+
+        if (page == 'text')
+            prepare_language_page();
 
         if (page == 'music') {
             tippy(document.getElementById('lotus_hover'), {

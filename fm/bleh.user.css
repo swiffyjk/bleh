@@ -13101,7 +13101,10 @@ so this is good enough - use the community docs */
         width: calc(var(--cards-width) - (var(--card-padding) * 2));
         display: flex;
         gap: var(--card-padding);
-        margin-bottom: var(--card-gap);
+
+        [data-ff--bleh_settings_tabs="false"] & {
+            margin-bottom: var(--card-gap);
+        }
 
         .icon-side {
             display: flex;
@@ -13177,6 +13180,13 @@ so this is good enough - use the community docs */
                     text-shadow: 0 0 15px hsl(var(--b5));
                 }
             }
+        }
+    }
+    .bleh-settings-navigation {
+        margin: var(--card-gap) 0 !important;
+
+        .navlist-items {
+            margin: 0 -12px;
         }
     }
 
@@ -18536,6 +18546,7 @@ section > .section-controls .subpage-title {
             font: inherit;
             font-weight: var(--font-weight-medium);
             color: hsl(var(--c3));
+            cursor: default;
 
             a {
                 color: inherit;
