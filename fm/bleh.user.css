@@ -2754,6 +2754,7 @@ button.navlist-more {
         border-radius: calc(var(--item-big-radius) + 4px) !important;
         opacity: 0;
 
+        display: block !important;
         background: unset !important;
         width: unset !important;
         height: unset !important;
@@ -2795,6 +2796,11 @@ button.navlist-more {
     --mask: var(--icon-16-dots);
     --left: 8px;
     position: relative;
+}
+
+/* create event arrow */
+.secondary-nav-item:before {
+    display: none;
 }
 
 .secondary-nav-item-link:before {
