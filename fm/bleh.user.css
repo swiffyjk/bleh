@@ -9387,6 +9387,21 @@ text[style^="color: rgb(255, 172, 172)"] {
     }
 }
 
+/* new - 2024/12 */
+.mainstream-score--artist {
+    --bg: transparent;
+    --bg-hov: transparent;
+    --bg-atv: transparent;
+    --shadow: none;
+    --shadow-hov: none;
+    width: unset;
+    font-weight: var(--font-weight);
+    --padding: 0;
+
+    display: flex;
+    text-align: left;
+}
+
 
 .report-headline-top {
     height: fit-content;
