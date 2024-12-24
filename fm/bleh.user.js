@@ -13820,11 +13820,11 @@ let has_prompted_for_update = false;
         if (!is_subpage) {
             //
         } else {
-            if (page.subpage == 'tag_wiki_overview')
+            if (page.subpage == 'wiki_overview')
                 bleh_wiki();
-            else if (page.subpage == 'tag_wiki_history')
+            else if (page.subpage == 'wiki_history')
                 bleh_wiki_history();
-            else if (page.subpage == 'tag_wiki_edit')
+            else if (page.subpage == 'wiki_edit')
                 bleh_wiki_editor();
         }
 
