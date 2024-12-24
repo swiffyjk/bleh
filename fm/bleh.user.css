@@ -1069,6 +1069,7 @@ last.fm changes as of 2024-05-20 */
         padding: 0;
         color: hsl(var(--c2));
         flex: 1;
+        outline: none !important;
 
         &::placeholder {
             color: hsl(var(--c3)) !important;
@@ -18682,4 +18683,9 @@ section > .section-controls .subpage-title {
         }
     }
 }
+
+
+
+
+/*     SEARCH     */
 }

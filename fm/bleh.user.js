@@ -3754,7 +3754,7 @@ let has_prompted_for_update = false;
         else if (page.type == 'tag')
             bleh_tags();
         else if (page.type == 'search')
-            basic_page_structure();
+            bleh_search();
         else if (page.type == 'settings')
             bleh_native_settings();
     }
@@ -17351,5 +17351,38 @@ let has_prompted_for_update = false;
         `);
 
         page.structure.container.insertBefore(edit_header, page.structure.container.firstElementChild);
+    }
+
+
+
+
+    function bleh_search() {
+        basic_page_structure();
+
+        let search_form = page.structure.main.querySelector('.search-form');
+        let search = search_form.querySelector('#site-search');
+        let value = search.getAttribute('value');
+
+        let site_search = document.body.querySelector('#masthead-search-field');
+        site_search.setAttribute('value', value);
+        site_search.focus();
+
+        page.structure.main.removeChild(search_form);
+
+        if (page.subpage != 'overview') {
+            let new_panel = document.createElement('section');
+            new_panel.classList.add('search-results-panel');
+
+            let elements = page.structure.main.querySelectorAll(':scope > *:not(form)');
+            elements.forEach((element) => {
+                new_panel.appendChild(element);
+            });
+
+            page.structure.main.appendChild(new_panel);
+        }
+
+        if (page.subpage == 'overview' || page.subpage == 'tracks') {
+            patch_titles();
+        }
     }
 })();
