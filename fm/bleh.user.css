@@ -145,7 +145,6 @@ body {
 body, [data-page-resource-type="album"], [data-page-resource-type="track"],
 .gallery-image-buttons button, .gallery-image-preferred-button,
 .user-dashboard-layout,
-.obsession-history-item-inner,
 .preview, .preview[data-bleh--theme="dark"],
 .listen-item,
 .lotus.bleh--panel,
@@ -242,7 +241,6 @@ body:after,
 .play-this-track-playlink, .resource-external-link,
 .chartlist-row--now-scrobbling,
 a,
-.obsession-history-item-inner,
 .user-dashboard-layout, .user-dashboard-layout .secondary-nav-item-link, .secondary-nav-item--listening-report .secondary-nav-item-link--active, .listening-report-brick-head, .listening-report-top-item-heading,
 .image-list-item-preferred-icon:before,
 .header-metadata-item:after,
@@ -1533,7 +1531,6 @@ last.fm changes as of 2024-05-20 */
 /* home page recommendations */ .homefeed .col-main,
 /* playlist content */ .playlisting-playlist-header + .page-content > .row,
 .playlisting-playlists,
-.obsession-history,
 /* event lineup */ .big-artist-list,
 /* set an obsession */ .obsession-search, .obsession-search-results,
 /* user did not scrobble album in date range */ .library-header + .message,
@@ -3104,6 +3101,7 @@ button.navlist-more {
     }
 }
 
+.obsession-history-play-all,
 .header-new-playlink {
     --mask: var(--icon-16-play) !important;
 }
@@ -5862,8 +5860,7 @@ span.shout-user-avatar:before,
 /* missing track */
 /*[alt*="Now That\'s What I Call Music"],*/
 .missing-track,
-[src$="4128a6eb29f94943c9d206c08e625904.jpg"],
-.obsession-history-item-background[style*="url(https://lastfm.freetls.fastly.net/i/u/arG/4128a6eb29f94943c9d206c08e625904.jpg)"]
+[src$="4128a6eb29f94943c9d206c08e625904.jpg"]
 {
     content: url() !important;
     font-size: 0;
@@ -6308,18 +6305,6 @@ button,
 .section-with-hover-control:not(:hover) .inline-section-control,
 .section-with-hover-control:hover .section-controls h3 {
     opacity: 0 !important;
-}
-
-
-.content-top-header--obsession-history {
-    flex: 1;
-}
-.obsession-history-play-all {
-    --mask: var(--icon-16-play);
-    margin-left: unset;
-}
-.content-top-header--obsession-history ~ div {
-    margin-left: 4px;
 }
 
 
@@ -10783,6 +10768,9 @@ table.table tr:nth-child(2n) td {
         --mask-size: 14px;
         --top: 1px;
     }
+}
+.obsession-history {
+    display: none;
 }
 
 

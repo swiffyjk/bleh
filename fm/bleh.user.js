@@ -249,6 +249,7 @@ const trans = {
             refresh_tracks: 'Refresh tracks',
             menu: 'Extra options',
             obsession: 'Obsess',
+            obsession_first: 'First to claim this obsession!',
             compare: {
                 name: 'Compare',
                 header: 'Compare plays'
@@ -1052,6 +1053,7 @@ const trans = {
             refresh_tracks: 'Titel aktualisieren',
             menu: 'Extra options',
             obsession: 'Obsess',
+            obsession_first: 'First to claim this obsession!',
             compare: {
                 name: 'Compare',
                 header: 'Compare plays'
@@ -1849,6 +1851,7 @@ const trans = {
             refresh_tracks: 'Refresh tracks',
             menu: 'Extra options',
             obsession: 'Obsess',
+            obsession_first: 'First to claim this obsession!',
             compare: {
                 name: 'Compare',
                 header: 'Compare plays'
@@ -6350,6 +6353,12 @@ let has_prompted_for_update = false;
                             <a class="link-block-cover-link" href="${link}" tabindex="-1" aria-hidden="true"></a>
                         </div>
                     `);
+
+                    if (obsession_is_first) {
+                        tippy(grid_item, {
+                            content: trans[lang].music.obsession_first
+                        });
+                    }
 
                     grid.appendChild(grid_item);
                 });
