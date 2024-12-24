@@ -289,6 +289,8 @@ const trans = {
             },
             edit: 'Edit profile',
             message: 'Private message',
+            donate: 'Donate',
+            message_donation: 'Receive donation rewards',
             shortcut: {
                 add: 'Add as shortcut',
                 remove: 'Your profiles are linked!'
@@ -2693,7 +2695,9 @@ let theme_preview = (`
     </div>
 `);
 
-let cute = ['cutensilly', 'inozom'];
+let cute = ['cutensilly', 'inozom', 'kateshapedbox'];
+let donation_account = 'kateshapedbox';
+let donation_link = '';
 
 // require page reload
 let reload_pending = false;
@@ -2892,6 +2896,20 @@ let includes = {
 
 let profile_badges = {
     'cutensilly': [
+        {
+            type: 'contributor',
+            name: 'bleh contributor'
+        },
+        {
+            type: 'queen',
+            name: 'blehhhhhhhhhh!!'
+        },
+        {
+            type: 'cute',
+            name: 'cute'
+        }
+    ],
+    'kateshapedbox': [
         {
             type: 'contributor',
             name: 'bleh contributor'
@@ -5996,10 +6014,18 @@ let has_prompted_for_update = false;
 
         checkup_page_structure(is_subpage, profile_header);
 
+        let new_account = false;
+
         if (ff('refreshed_nav')) {
             let avatar = profile_header.querySelector('.avatar');
             let title_wrap = profile_header.querySelector('.header-title-label-wrap');
             let sub_wrap = profile_header.querySelector('.header-title-secondary');
+
+            // new account
+            if (avatar == null) {
+                avatar = profile_header.querySelector('.header-avatar-add');
+                new_account = true;
+            }
 
             // me :3
             if (cute.includes(page.name)) {
@@ -6045,12 +6071,14 @@ let has_prompted_for_update = false;
             else
                 header_avatar = document.querySelector('.header-avatar .avatar');
 
-            let src = header_avatar.querySelector('img').getAttribute('src');
+            if (!new_account) {
+                let src = header_avatar.querySelector('img').getAttribute('src');
 
-            let avatar_link = document.createElement('a');
-            avatar_link.classList.add('bleh--avatar-clickable-link');
-            avatar_link.setAttribute('onclick', `_expand_avatar('${src.replace('avatar170s', 'ar0')}')`);
-            header_avatar.appendChild(avatar_link);
+                let avatar_link = document.createElement('a');
+                avatar_link.classList.add('bleh--avatar-clickable-link');
+                avatar_link.setAttribute('onclick', `_expand_avatar('${src.replace('avatar170s', 'ar0')}')`);
+                header_avatar.appendChild(avatar_link);
+            }
         }
 
         if (ff('glacier_library')) {
@@ -6161,6 +6189,19 @@ let has_prompted_for_update = false;
                     else
                         page.structure.side.insertBefore(recent_activity_section, page.structure.side.firstElementChild);
                 });
+            }
+
+
+            if (page.name == donation_account && !is_own_profile) {
+                page.structure.container.removeChild(page.structure.nav);
+                page.structure.main.innerHTML = '';
+                page.structure.side.innerHTML = '';
+
+                let alert = document.createElement('div');
+                alert.classList.add('alert', 'alert-info');
+                alert.textContent = 'This is a special bleh account used for managing donations.';
+
+                page.structure.container.appendChild(alert);
             }
 
 
@@ -6545,7 +6586,7 @@ let has_prompted_for_update = false;
         let taste_artists = [];
         let profile_avi = '';
 
-        if (!is_own_profile) {
+        if (!is_own_profile && page.name != donation_account) {
             let taste_meter = base_header.querySelector('.tasteometer');
 
             taste = taste_meter.classList[1].replace('tasteometer-compat-', '');
@@ -6609,21 +6650,38 @@ let has_prompted_for_update = false;
             // message
             let msg_button = document.body.querySelector('.header-message-user');
             if (msg_button != null) {
-                create_profile_top_item(profile_header, {
-                    name: page.name,
-                    type: 'message',
-                    link: msg_button.getAttribute('href')
-                });
+                if (page.name != donation_account) {
+                    create_profile_top_item(profile_header, {
+                        name: page.name,
+                        type: 'message',
+                        link: msg_button.getAttribute('href')
+                    });
+                } else {
+                    create_profile_top_item(profile_header, {
+                        name: page.name,
+                        type: 'donate',
+                        link: donation_link,
+                        full: true
+                    });
+                    create_profile_top_item(profile_header, {
+                        name: page.name,
+                        type: 'message_donation',
+                        link: msg_button.getAttribute('href'),
+                        full: true
+                    });
+                }
             }
 
 
             // shortcut
-            create_profile_top_item(profile_header, {
-                name: page.name,
-                type: 'shortcut',
-                link: `_set_profile_as_shortcut(this, '${page.name}')`,
-                action: 'button'
-            });
+            if (page.name != donation_account) {
+                create_profile_top_item(profile_header, {
+                    name: page.name,
+                    type: 'shortcut',
+                    link: `_set_profile_as_shortcut(this, '${page.name}')`,
+                    action: 'button'
+                });
+            }
         } else {
             // edit
             create_profile_top_item(profile_header, {
@@ -6633,42 +6691,44 @@ let has_prompted_for_update = false;
             });
         }
 
-        let listen_divider = document.createElement('div');
-        listen_divider.classList.add('listen-divider');
+        if (page.name != donation_account) {
+            let listen_divider = document.createElement('div');
+            listen_divider.classList.add('listen-divider');
 
-        profile_header.appendChild(listen_divider);
+            profile_header.appendChild(listen_divider);
 
-        create_profile_top_item(profile_header, {
-            name: page.name,
-            text: scrobbles,
-            type: 'scrobbles',
-            link: `${root}user/${page.name}/library`,
-            tooltip: average
-        });
-        create_profile_top_item(profile_header, {
-            name: page.name,
-            text: artists,
-            type: 'artists',
-            link: `${root}user/${page.name}/library/artists`
-        });
-        create_profile_top_item(profile_header, {
-            name: page.name,
-            text: loved,
-            type: 'loved',
-            link: `${root}user/${page.name}/loved`
-        });
-
-        if (!is_own_profile) {
-            // taste
             create_profile_top_item(profile_header, {
                 name: page.name,
-                type: 'taste',
-                link: `${root}user/${page.name}/library/artists?date_preset=LAST_30_DAYS&page=1`,
-                taste: taste,
-                artists: taste_artists,
-                avi: profile_avi,
-                percent: taste_percentage
+                text: scrobbles,
+                type: 'scrobbles',
+                link: `${root}user/${page.name}/library`,
+                tooltip: average
             });
+            create_profile_top_item(profile_header, {
+                name: page.name,
+                text: artists,
+                type: 'artists',
+                link: `${root}user/${page.name}/library/artists`
+            });
+            create_profile_top_item(profile_header, {
+                name: page.name,
+                text: loved,
+                type: 'loved',
+                link: `${root}user/${page.name}/loved`
+            });
+
+            if (!is_own_profile) {
+                // taste
+                create_profile_top_item(profile_header, {
+                    name: page.name,
+                    type: 'taste',
+                    link: `${root}user/${page.name}/library/artists?date_preset=LAST_30_DAYS&page=1`,
+                    taste: taste,
+                    artists: taste_artists,
+                    avi: profile_avi,
+                    percent: taste_percentage
+                });
+            }
         }
 
         if (ff('refreshed_nav'))
@@ -6677,7 +6737,7 @@ let has_prompted_for_update = false;
             base_header.appendChild(profile_header);
     }
 
-    function create_profile_top_item(parent, {name, link, text='', type, taste='', artists=[], avi='', percent='', action='', tooltip=''}) {
+    function create_profile_top_item(parent, {name, link, text='', type, taste='', artists=[], avi='', percent='', action='', tooltip='', full=false}) {
         log(`creating top item of ${name}, ${link}, ${text}`, 'profile');
 
         let listen_item = document.createElement((action != 'button') ? 'a' : 'button');
@@ -6706,6 +6766,11 @@ let has_prompted_for_update = false;
                 ${(artists.length == 2) ? trans[lang].profile.taste_meter.you_share_2.replace('{artist1}', artists[0]).replace('{artist2}', artists[1]) : ''}
                 ${(artists.length == 3) ? trans[lang].profile.taste_meter.you_share_3.replace('{artist1}', artists[0]).replace('{artist2}', artists[1]).replace('{artist3}', artists[2]) : ''}
             `);
+        }
+
+        if (full) {
+            listen_item.classList.add('profile-top-item-full');
+            listen_item.textContent = trans[lang].profile[type];
         }
 
         parent.appendChild(listen_item);
@@ -7870,7 +7935,7 @@ let has_prompted_for_update = false;
                         </a>
                         `) : '')}
                         ${(ff('donate') ? (`
-                        <a class="btn action highlight bleh--donate" href="#">
+                        <a class="btn action highlight bleh--donate" href="${donation_link}">
                             ${trans[lang].settings.home.donate.name}
                         </a>
                         `) : '')}
@@ -16821,10 +16886,11 @@ let has_prompted_for_update = false;
 
     function profile_artists() {
         let panel = page.structure.main.querySelector('#top-artists');
-        panel.classList.remove('section-with-settings');
 
         if (panel == null)
             return;
+
+        panel.classList.remove('section-with-settings');
 
         let form = panel.querySelector('#artist-chart-settings');
         let link = panel.querySelector('[aria-controls="artist-chart-settings"]');
@@ -16944,10 +17010,11 @@ let has_prompted_for_update = false;
 
     function profile_albums() {
         let panel = page.structure.main.querySelector('#top-albums');
-        panel.classList.remove('section-with-settings');
 
         if (panel == null)
             return;
+
+        panel.classList.remove('section-with-settings');
 
         let form = panel.querySelector('#albums-chart-settings');
         let link = panel.querySelector('[aria-controls="albums-chart-settings"]');
@@ -17067,10 +17134,11 @@ let has_prompted_for_update = false;
 
     function profile_tracks() {
         let panel = page.structure.main.querySelector('#top-tracks');
-        panel.classList.remove('section-with-settings');
 
         if (panel == null)
             return;
+
+        panel.classList.remove('section-with-settings');
 
         let form = panel.querySelector('#track-chart-settings');
         let link = panel.querySelector('[aria-controls="track-chart-settings"]');

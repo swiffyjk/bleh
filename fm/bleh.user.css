@@ -15780,6 +15780,20 @@ button.bleh--gallery-bookmark-image-btn {
             &.profile-top-item--total {
                 --mask: var(--icon-16-event);
             }
+            &.profile-top-item--donate {
+                --bg: hsla(var(--h4), 30%);
+                --bg-hov: hsla(var(--h4), 40%);
+                --bg-atv: hsla(var(--h4), 50%);
+                --col: hsl(var(--c1));
+                --mask: var(--icon-16-heart);
+            }
+            &.profile-top-item--message_donation {
+                --bg: hsla(var(--h4), 30%);
+                --bg-hov: hsla(var(--h4), 40%);
+                --bg-atv: hsla(var(--h4), 50%);
+                --col: hsl(var(--c1));
+                --mask: var(--icon-16-heart-solid);
+            }
 
             [data-toggle-button-current-state="followed"] &,
             &[data-is-shortcut="true"] {
