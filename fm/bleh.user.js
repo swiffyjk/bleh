@@ -16297,7 +16297,7 @@ let has_prompted_for_update = false;
                 patch_avatar(avatar, name, 'event');
             });
         } else {
-            if (page.subpage == 'events_event_attendance_going' || page.subpage == 'events_event_attendance_interested') {
+            if (page.subpage == 'event_attendance_going' || page.subpage == 'event_attendance_interested') {
                 // view-related buttons
                 let view_buttons = document.createElement('div');
                 view_buttons.classList.add('view-buttons-wrapper');
@@ -16313,7 +16313,7 @@ let has_prompted_for_update = false;
                 `);
                 page.structure.row.classList.add('force-col-main-primary');
                 page.structure.main.classList.add('primary-column');
-                page.structure.main.insertBefore(view_buttons, page.structure.main.firstElementChild);
+                page.structure.main.insertBefore(view_buttons, page.structure.main.firstChild);
 
                 refresh_all();
 
