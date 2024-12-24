@@ -455,6 +455,8 @@ body {
 
     color-scheme: light !important;
 
+    --avatar-generic-background: hsl(var(--b4), 80%);
+
 
     .header-new-inner:before {
         opacity: 0.3;
@@ -4109,6 +4111,12 @@ better than the default selector '#app a' i suppose */
         &:after {
             background-image: linear-gradient(180deg,transparent 0,transparent 50%,rgba(0,0,0,.85));
             display: none;
+        }
+
+        &.grid-items-cover-default {
+            img {
+                background-color: hsl(var(--c3), 50%);
+            }
         }
 
         &:not(.grid-items-cover-default) {
