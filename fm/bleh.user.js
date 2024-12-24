@@ -114,9 +114,9 @@ let version = {
             name: 'Redesigned shout action popover',
             date: '2024-12-23'
         },
-        donate: {
-            default: false,
-            name: 'Donate link',
+        sponsor: {
+            default: true,
+            name: 'Sponsor link',
             date: '2024-12-24'
         },
         skip_to_setting: {
@@ -156,6 +156,9 @@ let lang_info = {
 
 const trans = {
     en: {
+        badges: {
+            sponsor: 'Sponsor of bleh and bwaa'
+        },
         lotus: {
             artist: 'Artist corrections have been downloaded!',
             album_track: 'Album and track corrections have been downloaded!',
@@ -289,8 +292,8 @@ const trans = {
             },
             edit: 'Edit profile',
             message: 'Private message',
-            donate: 'Donate',
-            message_donation: 'Receive donation rewards',
+            sponsor: 'Sponsor',
+            message_sponsor: 'Receive sponsor rewards',
             shortcut: {
                 add: 'Add as shortcut',
                 remove: 'Your profiles are linked!'
@@ -390,8 +393,10 @@ const trans = {
                     bio: 'Pick your favourite!'
                 },
                 thanks: 'Welcome {m}, you are running bleh version {v}.',
-                donate: {
-                    name: 'Donate'
+                sponsor: {
+                    name: 'Sponsor',
+                    header: 'Sponsor the development of bleh and bwaa',
+                    bio: 'If you feel my work on these projects is worthy of donations you are welcome to sponsor me on GitHub. This is of course optional and bleh will forever be open-source and free.'
                 }
             },
             appearance: {
@@ -1180,8 +1185,8 @@ const trans = {
                     bio: 'Pick your favourite!'
                 },
                 thanks: 'Willkommen {m}, du verwendest bleh Version {v}.',
-                donate: {
-                    name: 'Donate'
+                sponsor: {
+                    name: 'Sponsor'
                 }
             },
             appearance: {
@@ -1982,8 +1987,8 @@ const trans = {
                     bio: 'Wybierz swój ulubiony!'
                 },
                 thanks: 'Welcome {m}, you are running bleh version {v}.',
-                donate: {
-                    name: 'Donate'
+                sponsor: {
+                    name: 'Sponsor'
                 }
             },
             appearance: {
@@ -2695,9 +2700,115 @@ let theme_preview = (`
     </div>
 `);
 
+
 let cute = ['cutensilly', 'inozom', 'kateshapedbox'];
-let donation_account = 'kateshapedbox';
-let donation_link = '';
+let sponsor_account = 'kateshapedbox';
+let sponsor_link = '';
+
+let profile_badges = {
+    'cutensilly': [
+        {
+            type: 'contributor',
+            name: 'bleh contributor'
+        },
+        {
+            type: 'queen',
+            name: 'blehhhhhhhhhh!!'
+        },
+        {
+            type: 'cute',
+            name: 'cute'
+        }
+    ],
+    'kateshapedbox': [
+        {
+            type: 'contributor',
+            name: 'bleh contributor'
+        },
+        {
+            type: 'queen',
+            name: 'blehhhhhhhhhh!!'
+        },
+        {
+            type: 'cute',
+            name: 'cute'
+        },
+        {
+            type: 'sponsor'
+        }
+    ],
+    'boba2814': {
+        type: 'cat',
+        name: 'it\'s a kitty!!'
+    },
+    'bIeak': [
+        {
+            type: 'cat',
+            name: 'it\'s a kitty!!'
+        },
+        {
+            type: 'glaive',
+            name: '#1 glaive fan'
+        }
+    ],
+    'twolay': [
+        {
+            type: 'cat',
+            name: 'it\'s a kitty!!'
+        },
+        {
+            type: 'translation',
+            name: 'translated bleh into Polski'
+        },
+        {
+            type: 'contributor',
+            name: 'bleh contributor'
+        }
+    ],
+    'aoivee': {
+        type: 'cat',
+        name: 'it\'s a kitty!!'
+    },
+    'Serprety': {
+        type: 'cat',
+        name: 'it\'s a kitty!!'
+    },
+    'RazzBX': {
+        type: 'cat',
+        name: 'it\'s a kitty!!'
+    },
+    'ivyshandle': {
+        type: 'cat',
+        name: 'it\'s a kitty!!'
+    },
+    'KuroinHeroin': {
+        type: 'mask',
+        name: 'kimchi lover'
+    },
+    'u5c': {
+        type: 'paw',
+        name: 'silly creature'
+    },
+    'destons': {
+        type: 'colon-three',
+        name: ':3²'
+    },
+    'inozom': [
+        {
+            type: 'contributor',
+            name: 'bleh contributor'
+        },
+        {
+            type: 'translation',
+            name: 'translated bleh into Deutsch'
+        },
+        {
+            type: 'cute',
+            name: 'cute'
+        }
+    ]
+};
+
 
 // require page reload
 let reload_pending = false;
@@ -2893,107 +3004,6 @@ let includes = {
         '(10th', '(19th', '(20th', '(25th', '(30th', '(35th', '(40th', '(50th', '(60th'
     ]
 }
-
-let profile_badges = {
-    'cutensilly': [
-        {
-            type: 'contributor',
-            name: 'bleh contributor'
-        },
-        {
-            type: 'queen',
-            name: 'blehhhhhhhhhh!!'
-        },
-        {
-            type: 'cute',
-            name: 'cute'
-        }
-    ],
-    'kateshapedbox': [
-        {
-            type: 'contributor',
-            name: 'bleh contributor'
-        },
-        {
-            type: 'queen',
-            name: 'blehhhhhhhhhh!!'
-        },
-        {
-            type: 'cute',
-            name: 'cute'
-        }
-    ],
-    'boba2814': {
-        type: 'cat',
-        name: 'it\'s a kitty!!'
-    },
-    'bIeak': [
-        {
-            type: 'cat',
-            name: 'it\'s a kitty!!'
-        },
-        {
-            type: 'glaive',
-            name: '#1 glaive fan'
-        }
-    ],
-    'twolay': [
-        {
-            type: 'cat',
-            name: 'it\'s a kitty!!'
-        },
-        {
-            type: 'translation',
-            name: 'translated bleh into Polski'
-        },
-        {
-            type: 'contributor',
-            name: 'bleh contributor'
-        }
-    ],
-    'aoivee': {
-        type: 'cat',
-        name: 'it\'s a kitty!!'
-    },
-    'Serprety': {
-        type: 'cat',
-        name: 'it\'s a kitty!!'
-    },
-    'RazzBX': {
-        type: 'cat',
-        name: 'it\'s a kitty!!'
-    },
-    'ivyshandle': {
-        type: 'cat',
-        name: 'it\'s a kitty!!'
-    },
-    'KuroinHeroin': {
-        type: 'mask',
-        name: 'kimchi lover'
-    },
-    'u5c': {
-        type: 'paw',
-        name: 'silly creature'
-    },
-    'destons': {
-        type: 'colon-three',
-        name: ':3²'
-    },
-    'inozom': [
-        {
-            type: 'contributor',
-            name: 'bleh contributor'
-        },
-        {
-            type: 'translation',
-            name: 'translated bleh into Deutsch'
-        },
-        {
-            type: 'cute',
-            name: 'cute'
-        }
-    ]
-};
 
 
 let settings;
@@ -4306,7 +4316,7 @@ let has_prompted_for_update = false;
 
                 let badge = document.createElement('span');
                 badge.classList.add('label', `user-status--bleh-${this_badge.type}`, `user-status--bleh-user-${auth}`, 'auth-badge');
-                badge.textContent = this_badge.name;
+                badge.textContent = (this_badge.name != null) ? this_badge.name : trans[lang].badges[this_badge.type];
                 auth_link.appendChild(badge);
             } else {
                 // multiple
@@ -4317,7 +4327,7 @@ let has_prompted_for_update = false;
 
                 let badge = document.createElement('span');
                 badge.classList.add('label', `user-status--bleh-${this_badge.type}`, `user-status--bleh-user-${auth}`, 'auth-badge');
-                badge.textContent = this_badge.name;
+                badge.textContent = (this_badge.name != null) ? this_badge.name : trans[lang].badges[this_badge.type];
                 auth_link.appendChild(badge);
             }
         } else if (is_pro) {
@@ -6192,14 +6202,14 @@ let has_prompted_for_update = false;
             }
 
 
-            if (page.name == donation_account && !is_own_profile) {
+            if (page.name == sponsor_account && !is_own_profile) {
                 page.structure.container.removeChild(page.structure.nav);
                 page.structure.main.innerHTML = '';
                 page.structure.side.innerHTML = '';
 
                 let alert = document.createElement('div');
                 alert.classList.add('alert', 'alert-info');
-                alert.textContent = 'This is a special bleh account used for managing donations.';
+                alert.textContent = 'This is a special bleh account used for managing sponsors.';
 
                 page.structure.container.appendChild(alert);
             }
@@ -6445,7 +6455,7 @@ let has_prompted_for_update = false;
 
                 let badge = document.createElement('span');
                 badge.classList.add('label',`user-status--bleh-${this_badge.type}`,`user-status--bleh-user-${page.name}`);
-                badge.textContent = this_badge.name;
+                badge.textContent = (this_badge.name != null) ? this_badge.name : trans[lang].badges[this_badge.type];
                 profile_name_obj.appendChild(badge);
             } else {
                 // multiple
@@ -6455,7 +6465,7 @@ let has_prompted_for_update = false;
 
                     let badge = document.createElement('span');
                     badge.classList.add('label',`user-status--bleh-${this_badge.type}`,`user-status--bleh-user-${page.name}`);
-                    badge.textContent = this_badge.name;
+                    badge.textContent = (this_badge.name != null) ? this_badge.name : trans[lang].badges[this_badge.type];
                     profile_name_obj.appendChild(badge);
                 }
             }
@@ -6586,7 +6596,7 @@ let has_prompted_for_update = false;
         let taste_artists = [];
         let profile_avi = '';
 
-        if (!is_own_profile && page.name != donation_account) {
+        if (!is_own_profile && page.name != sponsor_account) {
             let taste_meter = base_header.querySelector('.tasteometer');
 
             taste = taste_meter.classList[1].replace('tasteometer-compat-', '');
@@ -6650,7 +6660,7 @@ let has_prompted_for_update = false;
             // message
             let msg_button = document.body.querySelector('.header-message-user');
             if (msg_button != null) {
-                if (page.name != donation_account) {
+                if (page.name != sponsor_account) {
                     create_profile_top_item(profile_header, {
                         name: page.name,
                         type: 'message',
@@ -6659,13 +6669,14 @@ let has_prompted_for_update = false;
                 } else {
                     create_profile_top_item(profile_header, {
                         name: page.name,
-                        type: 'donate',
-                        link: donation_link,
-                        full: true
+                        type: 'sponsor',
+                        link: '_sponsor()',
+                        full: true,
+                        action: 'button'
                     });
                     create_profile_top_item(profile_header, {
                         name: page.name,
-                        type: 'message_donation',
+                        type: 'message_sponsor',
                         link: msg_button.getAttribute('href'),
                         full: true
                     });
@@ -6674,7 +6685,7 @@ let has_prompted_for_update = false;
 
 
             // shortcut
-            if (page.name != donation_account) {
+            if (page.name != sponsor_account) {
                 create_profile_top_item(profile_header, {
                     name: page.name,
                     type: 'shortcut',
@@ -6691,7 +6702,7 @@ let has_prompted_for_update = false;
             });
         }
 
-        if (page.name != donation_account) {
+        if (page.name != sponsor_account) {
             let listen_divider = document.createElement('div');
             listen_divider.classList.add('listen-divider');
 
@@ -7934,10 +7945,10 @@ let has_prompted_for_update = false;
                             ${trans[lang].settings.home.update.css}
                         </a>
                         `) : '')}
-                        ${(ff('donate') ? (`
-                        <a class="btn action highlight bleh--donate" href="${donation_link}">
-                            ${trans[lang].settings.home.donate.name}
-                        </a>
+                        ${(ff('sponsor') ? (`
+                        <button class="btn action highlight bleh--sponsor" onclick="_sponsor()">
+                            ${trans[lang].settings.home.sponsor.name}
+                        </button>
                         `) : '')}
                         <a class="btn action bleh--issues" href="https://github.com/katelyynn/bleh/issues" target="_blank">
                             ${trans[lang].settings.home.issues.name}
@@ -17661,5 +17672,31 @@ let has_prompted_for_update = false;
         `);
 
         page.structure.container.insertBefore(search_header, page.structure.container.firstElementChild);
+    }
+
+
+
+
+    unsafeWindow._sponsor = function() {
+        sponsor();
+    }
+    function sponsor() {
+        dialog({
+            id: 'sponsor',
+            title: trans[lang].settings.home.sponsor.header,
+            body: (`
+                <div class="support-inner">
+                    <div class="bleh-icon sponsor-heart"></div>
+                    <h1>${trans[lang].settings.home.sponsor.header}</h1>
+                    <p>${trans[lang].settings.home.sponsor.bio}</p>
+                </div>
+                <div class="modal-footer">
+                    <a class="btn primary sponsor" href="${sponsor_link}" target="_blank">
+                        ${trans[lang].settings.home.sponsor.name}
+                    </a>
+                </div>
+            `),
+            type: 'sponsor'
+        });
     }
 })();
