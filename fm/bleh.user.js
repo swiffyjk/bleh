@@ -7846,6 +7846,7 @@ let has_prompted_for_update = false;
                 },
                 {
                     id: 'colourful_counts',
+                    type: 'slider',
                     name: trans[lang].settings.customise.colourful_counts.name
                 }
             ]);
@@ -8410,6 +8411,20 @@ let has_prompted_for_update = false;
                 `);
         } else if (page == 'customise') {
             head.textContent = trans[lang].settings.layout.name;
+            register_skip_to([
+                {
+                    id: 'profile_avi_background',
+                    name: trans[lang].settings.customise.profile_header.see_type
+                },
+                {
+                    id: 'profile_header_own',
+                    name: trans[lang].settings.customise.profile_header.view_on
+                },
+                {
+                    id: 'show_your_progress',
+                    name: trans[lang].settings.customise.show_your_progress.name
+                }
+            ]);
 
             return (`
                 <div class="bleh--panel">
@@ -8560,6 +8575,7 @@ let has_prompted_for_update = false;
                 `);
         } else if (page == 'seasonal') {
             head.textContent = trans[lang].settings.customise.seasonal.name;
+            register_skip_to([]);
 
             return (`
                 <div class="bleh--panel">
@@ -8671,6 +8687,7 @@ let has_prompted_for_update = false;
             `);
         } else if (page == 'performance') {
             head.textContent = trans[lang].settings.performance.name;
+            register_skip_to([]);
 
             return (`
                 <div class="bleh--panel">
@@ -8725,6 +8742,7 @@ let has_prompted_for_update = false;
                 `);
         } else if (page == 'profiles') {
             head.textContent = trans[lang].settings.profiles.name;
+            register_skip_to([]);
 
             return (`
                 <div class="bleh--panel">
@@ -8750,6 +8768,7 @@ let has_prompted_for_update = false;
                 `);
         } else if (page == 'accessibility') {
             head.textContent = trans[lang].settings.accessibility.name;
+            register_skip_to([]);
 
             return (`
                 <div class="bleh--panel">
@@ -8812,6 +8831,7 @@ let has_prompted_for_update = false;
                 `);
         } else if (page == 'text') {
             head.textContent = trans[lang].settings.text.name;
+            register_skip_to([]);
 
             return (`
                 <div class="bleh--panel">
@@ -8931,6 +8951,7 @@ let has_prompted_for_update = false;
                 `);
         } else if (page == 'sku') {
             head.textContent = 'shhhhhhh :3';
+            register_skip_to([]);
 
             return (`
                 <div class="bleh--panel shh">
@@ -8959,6 +8980,38 @@ let has_prompted_for_update = false;
                 `);
         } else if (page == 'music') {
             head.textContent = trans[lang].settings.music.name;
+            register_skip_to([
+                {
+                    id: 'format_guest_features',
+                    name: trans[lang].settings.corrections.format_guest_features.name
+                },
+                {
+                    id: 'corrections',
+                    name: trans[lang].settings.corrections.toggle.name
+                },
+                {
+                    id: 'stacked_chartlist_info',
+                    name: trans[lang].settings.corrections.stacked_chartlist_info.name
+                },
+                {
+                    id: 'profile_shortcut',
+                    type: 'text',
+                    name: trans[lang].settings.music.profile_shortcut.name
+                },
+                {
+                    id: 'travis',
+                    name: trans[lang].settings.redirects.name
+                },
+                {
+                    id: 'gloss',
+                    type: 'slider',
+                    name: trans[lang].settings.customise.gloss.name
+                },
+                {
+                    id: 'gendered_tags',
+                    name: trans[lang].settings.customise.gendered_tags.name
+                }
+            ]);
 
             return (`
                 <div class="bleh--panel">
@@ -9307,6 +9360,9 @@ let has_prompted_for_update = false;
             button.classList.add('skip-to-item');
             button.setAttribute('onclick', `_scroll_to_setting('${item.id}')`);
             button.textContent = item.name;
+
+            if (item.type != null)
+                button.setAttribute('data-type', item.type);
 
             panel.appendChild(button);
         });
