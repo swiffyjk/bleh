@@ -705,7 +705,7 @@ body {
     --snow: snow;
 
     &[data-bleh--theme="light"] {
-        --snow: rgb(109, 173, 199);
+        --snow: rgb(180, 201, 209);
     }
 
     &[data-bleh--seasonal_overlays="true"] {
@@ -13339,6 +13339,7 @@ code, kbd, samp {
             h5 {
                 color: hsl(var(--c2));
                 font-weight: var(--font-weight-medium);
+                cursor: pointer;
             }
             p {
                 color: hsl(var(--c2), 80%);
@@ -13471,6 +13472,7 @@ code, kbd, samp {
         h5 {
             color: hsl(var(--c2));
             font-weight: var(--font-weight-medium);
+            cursor: pointer;
         }
         p {
             color: hsl(var(--c2), 80%);
@@ -14208,6 +14210,7 @@ input[type="range"]::-moz-range-progress {
         }
 
         h5 {
+            cursor: pointer;
             color: inherit;
         }
         p {
