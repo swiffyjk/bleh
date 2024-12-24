@@ -17404,6 +17404,29 @@ let has_prompted_for_update = false;
             patch_titles();
         }
 
+        if (page.subpage == 'albums') {
+            let results = page.structure.main.querySelectorAll('.album-result-inner');
+            results.forEach((result) => {
+                let heading = result.querySelector('.album-result-heading a');
+                let artist_parent = result.querySelector('.album-result-artist');
+                let artist = artist_parent.querySelector('a');
+
+                artist.textContent = correct_artist(artist.textContent);
+
+                heading.textContent = correct_item_by_artist(heading.textContent, artist.textContent);
+
+                // match artists
+                let image = result.querySelector('.album-result-image');
+                let image_parent = document.createElement('span');
+                image_parent.classList.add('avatar', 'album-result-image');
+                image_parent.appendChild(image);
+
+                image.classList = [];
+
+                artist_parent.after(image_parent);
+            });
+        }
+
 
         let search_header = document.createElement('section');
         search_header.classList.add('redesigned-header', 'search-header', 'no-background');
