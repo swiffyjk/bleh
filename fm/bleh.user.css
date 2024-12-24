@@ -1390,23 +1390,11 @@ last.fm changes as of 2024-05-20 */
 }
 
 
-.footer-timezone {
-    padding-left: calc(var(--button-list-gap) + 16px + var(--button-list-gap)) !important;
-    position: relative;
-    --left: var(--button-list-gap) !important;
-}
-.footer .footer-timezone {
-    --mask: var(--icon-16-clock);
-}
-
-.footer-language--active, .footer-legal-item, .footer-heading, .logo p {
+.footer-legal-item, .footer-heading, .logo p {
     cursor: default;
 }
 
-.footer .footer-language {
-    margin-right: unset;
-}
-.footer-language-form .mimic-link, #ot-sdk-btn, .footer-links a, .footer-links button, .footer-timezone a {
+#ot-sdk-btn, .footer-links a, .footer-links button {
     --bg: transparent !important;
     --bg-hov: hsla(var(--b5), 60%) !important;
     --bg-atv: hsla(var(--b5), 80%) !important;
@@ -1415,11 +1403,6 @@ last.fm changes as of 2024-05-20 */
 }
 #ot-sdk-btn:not(:hover) {
     opacity: 0;
-}
-
-.footer-timezone {
-    color: inherit;
-    margin-top: unset;
 }
 
 .footer .footer-legal {
@@ -15912,6 +15895,7 @@ button.bleh--gallery-bookmark-image-btn {
     --profile-header-avatar-size: 104px;
 }
 
+.footer-timezone,
 #language-selector,
 .video-preview-replace,
 .header-new-info-desktop {
