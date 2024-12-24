@@ -5360,6 +5360,11 @@ p + .chartlist {
     }
 }
 
+[data-ff--shout_popover="true"] .shout-list {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+}
 [data-ff--shout_popover="true"] .shout {
     border: unset;
     min-height: 52px;
