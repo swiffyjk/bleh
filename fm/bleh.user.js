@@ -17404,6 +17404,13 @@ let has_prompted_for_update = false;
             patch_titles();
         }
 
+        if (page.subpage == 'artists' && settings.corrections) {
+            let artists = page.structure.main.querySelectorAll('.artist-result-heading a');
+            artists.forEach((artist) => {
+                artist.textContent = correct_artist(artist.textContent);
+            });
+        }
+
         if (page.subpage == 'albums') {
             let results = page.structure.main.querySelectorAll('.album-result-inner');
             results.forEach((result) => {
