@@ -3678,8 +3678,6 @@ let has_prompted_for_update = false;
 
             patch_obsession_view();
 
-            error_page();
-
             subscribe_to_events();
             auto_edit_modal();
         }
@@ -3747,6 +3745,8 @@ let has_prompted_for_update = false;
     function load_page() {
         set_season();
         seasonal_timer_end();
+
+        error_page();
 
         if (page.type == 'user')
             bleh_profiles();
@@ -13300,6 +13300,8 @@ let has_prompted_for_update = false;
             return;
         error_marvin.setAttribute('data-bleh', 'true');
 
+        let error_content = page_content.querySelector('h1');
+
 
         let back_link = page_content.querySelector('a');
 
@@ -13307,6 +13309,7 @@ let has_prompted_for_update = false;
         page_content.innerHTML = (`
             <div class="error-page">
                 <h3>${trans[lang].error.name}</h3>
+                <h4>${error_content.textContent}</h4>
                 <div class="button-footer">
                     <a class="btn back" href="${back_link.getAttribute('href')}">
                         ${trans[lang].error.go_back}
@@ -15029,20 +15032,45 @@ let has_prompted_for_update = false;
         new_wrap.classList.add('date-range-picker-presets-wrap');
 
         let new_presets = document.createElement('ul');
-        new_presets.classList.add('date-range-picker-presets', 'date-range-picker-presets-wide');
+        new_presets.classList.add('date-range-picker-presets');
 
         let current_year = new Date().getFullYear();
+        let previous_year = current_year - 1;
+        if (current_year >= 2025) {
+            new_presets.classList.add('date-range-picker-presets-2');
 
-        let this_year = document.createElement('div');
-        this_year.classList.add('date-range-picker-preset', 'date-range-picker-preset-custom', 'date-range-picker-preset-this-year');
-        this_year.innerHTML = (`
-            <a href="${window.location.href.replace(window.location.search, '')}?from=${current_year}-01-01&rangetype=year">
-                ${current_year}<span class="new-badge">${trans[lang].settings.new}</span>
-            </a>
-        `);
+            let last_year = document.createElement('div');
+            last_year.classList.add('date-range-picker-preset', 'date-range-picker-preset-custom', 'date-range-picker-preset-last-year');
+            last_year.innerHTML = (`
+                <a href="${window.location.href.replace(window.location.search, '')}?from=${previous_year}-01-01&rangetype=year">
+                    ${previous_year}
+                </a>
+            `);
+            new_presets.appendChild(last_year);
+
+            let this_year = document.createElement('div');
+            this_year.classList.add('date-range-picker-preset', 'date-range-picker-preset-custom', 'date-range-picker-preset-this-year');
+            this_year.innerHTML = (`
+                <a href="${window.location.href.replace(window.location.search, '')}?from=${current_year}-01-01&rangetype=year">
+                    ${current_year}
+                </a>
+            `);
+            new_presets.appendChild(this_year);
+        } else {
+            new_presets.classList.add('date-range-picker-presets-wide');
+
+            let this_year = document.createElement('div');
+            this_year.classList.add('date-range-picker-preset', 'date-range-picker-preset-custom', 'date-range-picker-preset-this-year');
+            this_year.innerHTML = (`
+                <a href="${window.location.href.replace(window.location.search, '')}?from=${current_year}-01-01&rangetype=year">
+                    ${current_year}<span class="new-badge">${trans[lang].settings.new}</span>
+                </a>
+            `);
+            new_presets.appendChild(this_year);
+        }
+
         //picker_col_2.appendChild(this_year);
         new_wrap.appendChild(new_presets);
-        new_presets.appendChild(this_year);
         picker_presets.after(new_wrap);
 
         let params = new URLSearchParams(document.location.search);

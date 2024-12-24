@@ -7282,6 +7282,16 @@ very, very, very dated - who looks up a song on ebay? */
         flex: 1;
     }
 
+    .date-range-picker-presets-2 {
+        flex: 1;
+
+        display: flex;
+        gap: var(--item-list-gap);
+
+        .date-range-picker-preset {
+            flex: 1;
+        }
+    }
     .date-range-picker-presets-wide {
         flex: 1;
 
