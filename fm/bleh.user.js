@@ -21,7 +21,7 @@
 
 let version = {
     brand: 'bleh',
-    build: '2024.1224',
+    build: '2024.1224.1',
     sku: 'taiga',
     feature_flags: {
         bleh_settings_tabs: {
@@ -2703,7 +2703,7 @@ let theme_preview = (`
 
 let cute = ['cutensilly', 'inozom', 'kateshapedbox'];
 let sponsor_account = 'kateshapedbox';
-let sponsor_link = '';
+let sponsor_link = 'https://github.com/sponsors/katelyynn';
 
 let profile_badges = {
     'cutensilly': [
