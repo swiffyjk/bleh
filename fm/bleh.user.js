@@ -6316,9 +6316,9 @@ let has_prompted_for_update = false;
 
                     let artist = item.querySelector('.obsession-history-item-artist a');
                     let artist_link = artist.getAttribute('href');
-                    artist = correct_artist(artist.textContent.trim());
+                    artist = artist.textContent.trim();
 
-                    let title = correct_item_by_artist(link.textContent.trim(), artist);
+                    let title = link.textContent.trim();
                     link = link.getAttribute('href');
                     let date = item.querySelector('.obsession-history-item-date').textContent.trim();
 
