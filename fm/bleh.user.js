@@ -118,6 +118,11 @@ let version = {
             default: false,
             name: 'Donate link',
             date: '2024-12-24'
+        },
+        skip_to_setting: {
+            default: true,
+            name: 'Skip to... in settings',
+            date: '2024-12-24'
         }
     }
 }
@@ -350,6 +355,9 @@ const trans = {
             configure: 'Configure',
             examples: {
                 button: 'Example button'
+            },
+            skip_to: {
+                name: 'Skip to'
             },
             home: {
                 name: 'Home',
@@ -1136,6 +1144,9 @@ const trans = {
             examples: {
                 button: 'Beispiel-Taste'
             },
+            skip_to: {
+                name: 'Skip to'
+            },
             home: {
                 name: 'Startseite',
                 brand: 'bleh',
@@ -1160,7 +1171,10 @@ const trans = {
                     name: 'Farbe',
                     bio: 'Pick your favourite!'
                 },
-                thanks: 'Willkommen {m}, du verwendest bleh Version {v}.'
+                thanks: 'Willkommen {m}, du verwendest bleh Version {v}.',
+                donate: {
+                    name: 'Donate'
+                }
             },
             appearance: {
                 name: 'Aussehen'
@@ -1928,6 +1942,9 @@ const trans = {
             examples: {
                 button: 'Przycisk przykładowy'
             },
+            skip_to: {
+                name: 'Skip to'
+            },
             home: {
                 name: 'Strona główna',
                 brand: 'bleh',
@@ -1955,7 +1972,10 @@ const trans = {
                     name: 'Kolory',
                     bio: 'Wybierz swój ulubiony!'
                 },
-                thanks: 'Welcome {m}, you are running bleh version {v}.'
+                thanks: 'Welcome {m}, you are running bleh version {v}.',
+                donate: {
+                    name: 'Donate'
+                }
             },
             appearance: {
                 name: 'Appearance'
@@ -7650,7 +7670,11 @@ let has_prompted_for_update = false;
                         </button>
                     </div>
                     `) : (`
-                    <div class="btns">
+                    ${(ff('skip_to_setting')) ? (`
+                    <h4>${trans[lang].settings.skip_to.name}</h4>
+                    <div class="skip-to-list"></div>
+                    `) : ''}
+                    ${(ff('skip_to_setting')) ? '<div class="btns sep">' : '<div class="btns">'}
                         <button class="btn" data-bleh-action="import" onclick="_import_settings()">
                             ${trans[lang].settings.actions.import.name}
                         </button>
@@ -7690,15 +7714,7 @@ let has_prompted_for_update = false;
                 change_settings_page(page.requested.tab);
 
             if (page.requested.setting != null) {
-                let setting = document.body.querySelector(`#container-${page.requested.setting}`);
-
-                if (setting != null) {
-                    let y = setting.getBoundingClientRect().top + window.scrollY - 300;
-                    window.scroll({
-                        top: y,
-                        behavior: 'smooth'
-                    });
-                }
+                scroll_to_setting(page.requested.setting);
             }
         }
     }
@@ -7709,6 +7725,7 @@ let has_prompted_for_update = false;
         console.info(theme_version != version.build, theme_version, version.build, typeof(theme_version), typeof(version.build));
         if (page == 'home') {
             head.textContent = trans[lang].settings.home.name;
+            register_skip_to([]);
 
             return (`
             <div class="bleh--panel">
@@ -7818,6 +7835,20 @@ let has_prompted_for_update = false;
             `);
         } else if (page == 'themes') {
             head.textContent = trans[lang].settings.appearance.name;
+            register_skip_to([
+                {
+                    id: 'hue_from_album',
+                    name: trans[lang].settings.customise.hue_from_album.name
+                },
+                {
+                    id: 'sat_bg',
+                    name: trans[lang].settings.customise.sat_bg.name
+                },
+                {
+                    id: 'colourful_counts',
+                    name: trans[lang].settings.customise.colourful_counts.name
+                }
+            ]);
 
             let preview_bar = 'background: linear-gradient(90deg';
             let preview_bar_text = '';
@@ -9258,6 +9289,42 @@ let has_prompted_for_update = false;
                     </div>
                 </div>
                 `);
+        }
+    }
+
+    function register_skip_to(list = null) {
+        if (!ff('skip_to_setting'))
+            return;
+
+        if (list == null)
+            return;
+
+        let panel = document.body.querySelector('.skip-to-list');
+        panel.innerHTML = '';
+
+        list.forEach((item) => {
+            let button = document.createElement('button');
+            button.classList.add('skip-to-item');
+            button.setAttribute('onclick', `_scroll_to_setting('${item.id}')`);
+            button.textContent = item.name;
+
+            panel.appendChild(button);
+        });
+    }
+
+    unsafeWindow._scroll_to_setting = function(id) {
+        scroll_to_setting(id);
+    }
+
+    function scroll_to_setting(id) {
+        let setting = document.body.querySelector(`#container-${id}`);
+
+        if (setting != null) {
+            let y = setting.getBoundingClientRect().top + window.scrollY - 300;
+            window.scroll({
+                top: y,
+                behavior: 'smooth'
+            });
         }
     }
 
