@@ -6333,7 +6333,6 @@ let has_prompted_for_update = false;
                         <div class="grid-items-cover-image">
                             <div class="grid-items-cover-image-image ${(cover.endsWith('4128a6eb29f94943c9d206c08e625904.jpg')) ? 'grid-items-cover-default' : ''}">
                                 <img src="${cover}" alt="${title}" loading="lazy">
-                                ${(obsession_is_first) ? `<div class="new-badge first-obsession">#1</div>` : ''}
                             </div>
                             <div class="grid-items-item-details">
                                 <p class="grid-items-item-main-text">
@@ -6352,6 +6351,7 @@ let has_prompted_for_update = false;
                             </div>
                             <a class="link-block-cover-link" href="${link}" tabindex="-1" aria-hidden="true"></a>
                         </div>
+                        ${(obsession_is_first) ? `<div class="new-badge first-obsession">#1</div>` : ''}
                     `);
 
                     if (obsession_is_first) {

@@ -10748,6 +10748,9 @@ table.table tr:nth-child(2n) td {
         position: absolute;
         top: 10px;
         right: 10px;
+        z-index: 20;
+        backdrop-filter: blur(4px);
+        cursor: pointer;
     }
 
     .link-block-cover-link {
