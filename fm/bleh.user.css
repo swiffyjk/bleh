@@ -13296,10 +13296,7 @@ code, kbd, samp {
         gap: 6px;
 
         .action {
-            --btn-top: 9px;
-            --btn-bottom: 9px;
-            --btn-left: calc(16px + 12px + 6px + 4px);
-            --btn-right: calc(16px + 16px + 6px);
+            --btn-left: calc(16px + 12px + 6px);
             gap: 6px;
             text-decoration: none;
             text-align: left;
@@ -13308,6 +13305,7 @@ code, kbd, samp {
                 --mask: var(--icon-16-arrow-right);
                 --left: none;
                 --right: 12px;
+                --show-icon: none;
             }
 
             position: relative;
@@ -13334,6 +13332,9 @@ code, kbd, samp {
             }
             &.bleh--updates {
                 --mask: var(--icon-16-download);
+            }
+            &.bleh--donate {
+                --mask: var(--icon-16-heart);
             }
 
             h5 {

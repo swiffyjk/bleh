@@ -113,6 +113,11 @@ let version = {
             default: true,
             name: 'Redesigned shout action popover',
             date: '2024-12-23'
+        },
+        donate: {
+            default: false,
+            name: 'Donate link',
+            date: '2024-12-24'
         }
     }
 }
@@ -373,7 +378,10 @@ const trans = {
                     name: 'Colours',
                     bio: 'Pick your favourite!'
                 },
-                thanks: 'Welcome {m}, you are running bleh version {v}.'
+                thanks: 'Welcome {m}, you are running bleh version {v}.',
+                donate: {
+                    name: 'Donate'
+                }
             },
             appearance: {
                 name: 'Appearance'
@@ -7716,24 +7724,20 @@ let has_prompted_for_update = false;
                 <div class="screen-row actions-only">
                     <div class="actions">
                         <button class="btn action highlight bleh--updates" onclick="_force_refresh_theme()">
-                            <span class="text">
-                                <h5>${trans[lang].settings.home.update.name}</h5>
-                                <p>${trans[lang].settings.home.update.bio}</p>
-                            </span>
+                            ${trans[lang].settings.home.update.update_now}
                         </button>
                         ${(settings.dev ? (`
                         <a class="btn action highlight bleh--updates" href="https://github.com/katelyynn/bleh/raw/uwu/fm/bleh.user.css">
-                            <span class="text">
-                                <h5>${trans[lang].settings.home.update.css}</h5>
-                                <p>${trans[lang].settings.home.update.bio}</p>
-                            </span>
+                            ${trans[lang].settings.home.update.css}
+                        </a>
+                        `) : '')}
+                        ${(ff('donate') ? (`
+                        <a class="btn action highlight bleh--donate" href="#">
+                            ${trans[lang].settings.home.donate.name}
                         </a>
                         `) : '')}
                         <a class="btn action bleh--issues" href="https://github.com/katelyynn/bleh/issues" target="_blank">
-                            <span class="text">
-                                <h5>${trans[lang].settings.home.issues.name}</h5>
-                                <p>${trans[lang].settings.home.issues.bio}</p>
-                            </span>
+                            ${trans[lang].settings.home.issues.name}
                         </a>
                     </div>
                 </div>
