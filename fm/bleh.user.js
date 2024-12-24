@@ -6364,6 +6364,12 @@ let has_prompted_for_update = false;
                 });
 
                 new_panel.appendChild(grid);
+
+
+                let no_data = page.structure.container.querySelector('.no-data-message--obsession-history');
+                if (no_data != null) {
+                    wrap.after(no_data);
+                }
             }
         }
 

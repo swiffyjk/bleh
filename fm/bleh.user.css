@@ -18651,4 +18651,8 @@ section > .section-controls .subpage-title {
         }
     }
 }
+
+.no-data-message--obsession-history {
+    padding: unset;
+}
 }
