@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         bleh
 // @namespace    http://last.fm/
-// @version      2024.1223
+// @version      2024.1224
 // @description  bleh!!! ^-^
 // @author       kate
 // @match        https://www.last.fm/*
@@ -21,7 +21,7 @@
 
 let version = {
     brand: 'bleh',
-    build: '2024.1223',
+    build: '2024.1224',
     sku: 'taiga',
     feature_flags: {
         bleh_settings_tabs: {
@@ -113,6 +113,16 @@ let version = {
             default: true,
             name: 'Redesigned shout action popover',
             date: '2024-12-23'
+        },
+        donate: {
+            default: false,
+            name: 'Donate link',
+            date: '2024-12-24'
+        },
+        skip_to_setting: {
+            default: true,
+            name: 'Skip to... in settings',
+            date: '2024-12-24'
         }
     }
 }
@@ -239,6 +249,7 @@ const trans = {
             refresh_tracks: 'Refresh tracks',
             menu: 'Extra options',
             obsession: 'Obsess',
+            obsession_first: 'First to claim this obsession!',
             compare: {
                 name: 'Compare',
                 header: 'Compare plays'
@@ -346,6 +357,9 @@ const trans = {
             examples: {
                 button: 'Example button'
             },
+            skip_to: {
+                name: 'Skip to'
+            },
             home: {
                 name: 'Home',
                 brand: 'bleh',
@@ -373,7 +387,10 @@ const trans = {
                     name: 'Colours',
                     bio: 'Pick your favourite!'
                 },
-                thanks: 'Welcome {m}, you are running bleh version {v}.'
+                thanks: 'Welcome {m}, you are running bleh version {v}.',
+                donate: {
+                    name: 'Donate'
+                }
             },
             appearance: {
                 name: 'Appearance'
@@ -940,6 +957,10 @@ const trans = {
         },
         tag: {
             name: 'Tag'
+        },
+        search: {
+            name: 'Search',
+            results_for: 'Results for {v}'
         }
     },
     de: {
@@ -1032,6 +1053,7 @@ const trans = {
             refresh_tracks: 'Titel aktualisieren',
             menu: 'Extra options',
             obsession: 'Obsess',
+            obsession_first: 'First to claim this obsession!',
             compare: {
                 name: 'Compare',
                 header: 'Compare plays'
@@ -1128,6 +1150,9 @@ const trans = {
             examples: {
                 button: 'Beispiel-Taste'
             },
+            skip_to: {
+                name: 'Skip to'
+            },
             home: {
                 name: 'Startseite',
                 brand: 'bleh',
@@ -1152,7 +1177,10 @@ const trans = {
                     name: 'Farbe',
                     bio: 'Pick your favourite!'
                 },
-                thanks: 'Willkommen {m}, du verwendest bleh Version {v}.'
+                thanks: 'Willkommen {m}, du verwendest bleh Version {v}.',
+                donate: {
+                    name: 'Donate'
+                }
             },
             appearance: {
                 name: 'Aussehen'
@@ -1823,6 +1851,7 @@ const trans = {
             refresh_tracks: 'Refresh tracks',
             menu: 'Extra options',
             obsession: 'Obsess',
+            obsession_first: 'First to claim this obsession!',
             compare: {
                 name: 'Compare',
                 header: 'Compare plays'
@@ -1920,6 +1949,9 @@ const trans = {
             examples: {
                 button: 'Przycisk przykładowy'
             },
+            skip_to: {
+                name: 'Skip to'
+            },
             home: {
                 name: 'Strona główna',
                 brand: 'bleh',
@@ -1947,7 +1979,10 @@ const trans = {
                     name: 'Kolory',
                     bio: 'Wybierz swój ulubiony!'
                 },
-                thanks: 'Welcome {m}, you are running bleh version {v}.'
+                thanks: 'Welcome {m}, you are running bleh version {v}.',
+                donate: {
+                    name: 'Donate'
+                }
             },
             appearance: {
                 name: 'Appearance'
@@ -3726,7 +3761,7 @@ let has_prompted_for_update = false;
         else if (page.type == 'tag')
             bleh_tags();
         else if (page.type == 'search')
-            basic_page_structure();
+            bleh_search();
         else if (page.type == 'settings')
             bleh_native_settings();
     }
@@ -5952,7 +5987,7 @@ let has_prompted_for_update = false;
 
         page.structure.container = document.body.querySelector('.page-content:not(.profile-cards-container, .report-box-container .page-content)');
         try {
-            page.structure.row = page.structure.container.querySelector('.row');
+            page.structure.row = page.structure.container.querySelector('.row:not(._buffer)');
             page.structure.main = page.structure.row.querySelector('.col-main');
             page.structure.side = page.structure.row.querySelector('.col-sidebar');
         } catch(e) {
@@ -6221,6 +6256,114 @@ let has_prompted_for_update = false;
                     });
                     return;
                 }
+            } else if (page.subpage == 'obsessions_overview') {
+                let section_controls = page.structure.container.querySelector('.section-controls');
+                let buttons;
+                if (section_controls != null) {
+                    section_controls.classList.add('legacy-section-controls');
+                    buttons = section_controls.querySelectorAll(':is(button, a)');
+
+                    let header = page.structure.container.querySelector('.content-top-header');
+                    page.structure.content_top.innerHTML = (`
+                        <div class="content-top-inner-wrap">
+                            <div class="container content-top-lower">
+                                <h1 class="content-top-header">${header.textContent.trim()}</h1>
+                            </div>
+                        </div>
+                    `);
+                }
+
+                let new_panel = document.createElement('section');
+                new_panel.classList.add('obsessions-panel');
+
+                let wrap = document.createElement('div');
+                wrap.classList.add('view-buttons-wrapper');
+                let button_header = document.createElement('div');
+                button_header.classList.add('view-buttons', 'obsession-buttons');
+
+                buttons.forEach((button) => {
+                    if (button.classList.contains('btn-sm')) {
+                        button.classList = [];
+                        button.classList.add('obsession-btn');
+
+                        tippy(button, {
+                            content: button.textContent
+                        });
+
+                        button.textContent = trans[lang].music.obsession;
+                    }
+
+                    button.classList.add('btn', 'view-item', 'interact-item', 'obsession-top-item');
+
+                    button_header.appendChild(button);
+                });
+                wrap.appendChild(button_header);
+                new_panel.appendChild(wrap);
+
+                page.structure.main.appendChild(new_panel);
+
+
+                //
+
+
+                let grid = document.createElement('ol');
+                grid.classList.add('grid-items', 'grid-items--numbered', 'obsessions-grid');
+
+                let items = page.structure.container.querySelectorAll('.obsession-history-item');
+                items.forEach((item) => {
+                    let bg = item.querySelector('.obsession-history-item-background').style.getPropertyValue('background-image').trim();
+                    let cover_substr = bg.indexOf('url');
+                    let cover = bg.substring(cover_substr).replace('url("', '').replace('")', '').trim();
+
+                    let link = item.querySelector('.obsession-history-item-heading-link');
+
+                    let artist = item.querySelector('.obsession-history-item-artist a');
+                    let artist_link = artist.getAttribute('href');
+                    artist = artist.textContent.trim();
+
+                    let title = link.textContent.trim();
+                    link = link.getAttribute('href');
+                    let date = item.querySelector('.obsession-history-item-date').textContent.trim();
+
+                    let obsession_is_first = (item.querySelector('.obsession-first') != null);
+
+                    let grid_item = document.createElement('li');
+                    grid_item.classList.add('grid-items-item', 'obsessions-item');
+                    grid_item.innerHTML = (`
+                        <div class="grid-items-cover-image">
+                            <div class="grid-items-cover-image-image ${(cover.endsWith('4128a6eb29f94943c9d206c08e625904.jpg')) ? 'grid-items-cover-default' : ''}">
+                                <img src="${cover}" alt="${title}" loading="lazy">
+                            </div>
+                            <div class="grid-items-item-details">
+                                <p class="grid-items-item-main-text">
+                                    <a class="link-block-target" href="${link}" title="${title}">
+                                        ${title}
+                                    </a>
+                                </p>
+                                <p class="grid-items-item-aux-text obsessions-item-aux">
+                                    <a class="grid-items-item-aux-block" href="${artist_link}">
+                                        ${artist}
+                                    </a>
+                                    <a class="obesssions-item-date" href="${link}">
+                                        ${date}
+                                    </a>
+                                </p>
+                            </div>
+                            <a class="link-block-cover-link" href="${link}" tabindex="-1" aria-hidden="true"></a>
+                        </div>
+                        ${(obsession_is_first) ? `<div class="new-badge first-obsession">#1</div>` : ''}
+                    `);
+
+                    if (obsession_is_first) {
+                        tippy(grid_item, {
+                            content: trans[lang].music.obsession_first
+                        });
+                    }
+
+                    grid.appendChild(grid_item);
+                });
+
+                new_panel.appendChild(grid);
             }
         }
 
@@ -7169,7 +7312,7 @@ let has_prompted_for_update = false;
                 plays_elem = grid.querySelector('.grid-items-item-aux-text a:last-child');
             }
 
-            if (plays_elem != null) {
+            if (plays_elem != null && !grid.classList.contains('obsessions-item')) {
                 let plays = clean_number(plays_elem.textContent.trim().replace(` ${trans[lang].statistics.plays.name}`, ''));
                 plays_elem.classList.add('grid-item-plays');
                 if (is_album)
@@ -7642,7 +7785,11 @@ let has_prompted_for_update = false;
                         </button>
                     </div>
                     `) : (`
-                    <div class="btns">
+                    ${(ff('skip_to_setting')) ? (`
+                    <h4>${trans[lang].settings.skip_to.name}</h4>
+                    <div class="skip-to-list"></div>
+                    `) : ''}
+                    ${(ff('skip_to_setting')) ? '<div class="btns sep">' : '<div class="btns">'}
                         <button class="btn" data-bleh-action="import" onclick="_import_settings()">
                             ${trans[lang].settings.actions.import.name}
                         </button>
@@ -7682,15 +7829,7 @@ let has_prompted_for_update = false;
                 change_settings_page(page.requested.tab);
 
             if (page.requested.setting != null) {
-                let setting = document.body.querySelector(`#container-${page.requested.setting}`);
-
-                if (setting != null) {
-                    let y = setting.getBoundingClientRect().top + window.scrollY - 300;
-                    window.scroll({
-                        top: y,
-                        behavior: 'smooth'
-                    });
-                }
+                scroll_to_setting(page.requested.setting);
             }
         }
     }
@@ -7701,6 +7840,7 @@ let has_prompted_for_update = false;
         console.info(theme_version != version.build, theme_version, version.build, typeof(theme_version), typeof(version.build));
         if (page == 'home') {
             head.textContent = trans[lang].settings.home.name;
+            register_skip_to([]);
 
             return (`
             <div class="bleh--panel">
@@ -7716,24 +7856,20 @@ let has_prompted_for_update = false;
                 <div class="screen-row actions-only">
                     <div class="actions">
                         <button class="btn action highlight bleh--updates" onclick="_force_refresh_theme()">
-                            <span class="text">
-                                <h5>${trans[lang].settings.home.update.name}</h5>
-                                <p>${trans[lang].settings.home.update.bio}</p>
-                            </span>
+                            ${trans[lang].settings.home.update.update_now}
                         </button>
                         ${(settings.dev ? (`
                         <a class="btn action highlight bleh--updates" href="https://github.com/katelyynn/bleh/raw/uwu/fm/bleh.user.css">
-                            <span class="text">
-                                <h5>${trans[lang].settings.home.update.css}</h5>
-                                <p>${trans[lang].settings.home.update.bio}</p>
-                            </span>
+                            ${trans[lang].settings.home.update.css}
+                        </a>
+                        `) : '')}
+                        ${(ff('donate') ? (`
+                        <a class="btn action highlight bleh--donate" href="#">
+                            ${trans[lang].settings.home.donate.name}
                         </a>
                         `) : '')}
                         <a class="btn action bleh--issues" href="https://github.com/katelyynn/bleh/issues" target="_blank">
-                            <span class="text">
-                                <h5>${trans[lang].settings.home.issues.name}</h5>
-                                <p>${trans[lang].settings.home.issues.bio}</p>
-                            </span>
+                            ${trans[lang].settings.home.issues.name}
                         </a>
                     </div>
                 </div>
@@ -7814,6 +7950,21 @@ let has_prompted_for_update = false;
             `);
         } else if (page == 'themes') {
             head.textContent = trans[lang].settings.appearance.name;
+            register_skip_to([
+                {
+                    id: 'hue_from_album',
+                    name: trans[lang].settings.customise.hue_from_album.name
+                },
+                {
+                    id: 'sat_bg',
+                    name: trans[lang].settings.customise.sat_bg.name
+                },
+                {
+                    id: 'colourful_counts',
+                    type: 'slider',
+                    name: trans[lang].settings.customise.colourful_counts.name
+                }
+            ]);
 
             let preview_bar = 'background: linear-gradient(90deg';
             let preview_bar_text = '';
@@ -8375,6 +8526,20 @@ let has_prompted_for_update = false;
                 `);
         } else if (page == 'customise') {
             head.textContent = trans[lang].settings.layout.name;
+            register_skip_to([
+                {
+                    id: 'profile_avi_background',
+                    name: trans[lang].settings.customise.profile_header.see_type
+                },
+                {
+                    id: 'profile_header_own',
+                    name: trans[lang].settings.customise.profile_header.view_on
+                },
+                {
+                    id: 'show_your_progress',
+                    name: trans[lang].settings.customise.show_your_progress.name
+                }
+            ]);
 
             return (`
                 <div class="bleh--panel">
@@ -8525,6 +8690,7 @@ let has_prompted_for_update = false;
                 `);
         } else if (page == 'seasonal') {
             head.textContent = trans[lang].settings.customise.seasonal.name;
+            register_skip_to([]);
 
             return (`
                 <div class="bleh--panel">
@@ -8636,6 +8802,7 @@ let has_prompted_for_update = false;
             `);
         } else if (page == 'performance') {
             head.textContent = trans[lang].settings.performance.name;
+            register_skip_to([]);
 
             return (`
                 <div class="bleh--panel">
@@ -8690,6 +8857,7 @@ let has_prompted_for_update = false;
                 `);
         } else if (page == 'profiles') {
             head.textContent = trans[lang].settings.profiles.name;
+            register_skip_to([]);
 
             return (`
                 <div class="bleh--panel">
@@ -8715,6 +8883,7 @@ let has_prompted_for_update = false;
                 `);
         } else if (page == 'accessibility') {
             head.textContent = trans[lang].settings.accessibility.name;
+            register_skip_to([]);
 
             return (`
                 <div class="bleh--panel">
@@ -8777,6 +8946,7 @@ let has_prompted_for_update = false;
                 `);
         } else if (page == 'text') {
             head.textContent = trans[lang].settings.text.name;
+            register_skip_to([]);
 
             return (`
                 <div class="bleh--panel">
@@ -8896,6 +9066,7 @@ let has_prompted_for_update = false;
                 `);
         } else if (page == 'sku') {
             head.textContent = 'shhhhhhh :3';
+            register_skip_to([]);
 
             return (`
                 <div class="bleh--panel shh">
@@ -8924,6 +9095,38 @@ let has_prompted_for_update = false;
                 `);
         } else if (page == 'music') {
             head.textContent = trans[lang].settings.music.name;
+            register_skip_to([
+                {
+                    id: 'format_guest_features',
+                    name: trans[lang].settings.corrections.format_guest_features.name
+                },
+                {
+                    id: 'corrections',
+                    name: trans[lang].settings.corrections.toggle.name
+                },
+                {
+                    id: 'stacked_chartlist_info',
+                    name: trans[lang].settings.corrections.stacked_chartlist_info.name
+                },
+                {
+                    id: 'profile_shortcut',
+                    type: 'text',
+                    name: trans[lang].settings.music.profile_shortcut.name
+                },
+                {
+                    id: 'travis',
+                    name: trans[lang].settings.redirects.name
+                },
+                {
+                    id: 'gloss',
+                    type: 'slider',
+                    name: trans[lang].settings.customise.gloss.name
+                },
+                {
+                    id: 'gendered_tags',
+                    name: trans[lang].settings.customise.gendered_tags.name
+                }
+            ]);
 
             return (`
                 <div class="bleh--panel">
@@ -9254,6 +9457,45 @@ let has_prompted_for_update = false;
                     </div>
                 </div>
                 `);
+        }
+    }
+
+    function register_skip_to(list = null) {
+        if (!ff('skip_to_setting'))
+            return;
+
+        if (list == null)
+            return;
+
+        let panel = document.body.querySelector('.skip-to-list');
+        panel.innerHTML = '';
+
+        list.forEach((item) => {
+            let button = document.createElement('button');
+            button.classList.add('skip-to-item');
+            button.setAttribute('onclick', `_scroll_to_setting('${item.id}')`);
+            button.textContent = item.name;
+
+            if (item.type != null)
+                button.setAttribute('data-type', item.type);
+
+            panel.appendChild(button);
+        });
+    }
+
+    unsafeWindow._scroll_to_setting = function(id) {
+        scroll_to_setting(id);
+    }
+
+    function scroll_to_setting(id) {
+        let setting = document.body.querySelector(`#container-${id}`);
+
+        if (setting != null) {
+            let y = setting.getBoundingClientRect().top + window.scrollY - 300;
+            window.scroll({
+                top: y,
+                behavior: 'smooth'
+            });
         }
     }
 
@@ -13820,11 +14062,11 @@ let has_prompted_for_update = false;
         if (!is_subpage) {
             //
         } else {
-            if (page.subpage == 'tag_wiki_overview')
+            if (page.subpage == 'wiki_overview')
                 bleh_wiki();
-            else if (page.subpage == 'tag_wiki_history')
+            else if (page.subpage == 'wiki_history')
                 bleh_wiki_history();
-            else if (page.subpage == 'tag_wiki_edit')
+            else if (page.subpage == 'wiki_edit')
                 bleh_wiki_editor();
         }
 
@@ -16297,7 +16539,7 @@ let has_prompted_for_update = false;
                 patch_avatar(avatar, name, 'event');
             });
         } else {
-            if (page.subpage == 'events_event_attendance_going' || page.subpage == 'events_event_attendance_interested') {
+            if (page.subpage == 'event_attendance_going' || page.subpage == 'event_attendance_interested') {
                 // view-related buttons
                 let view_buttons = document.createElement('div');
                 view_buttons.classList.add('view-buttons-wrapper');
@@ -16313,7 +16555,7 @@ let has_prompted_for_update = false;
                 `);
                 page.structure.row.classList.add('force-col-main-primary');
                 page.structure.main.classList.add('primary-column');
-                page.structure.main.insertBefore(view_buttons, page.structure.main.firstElementChild);
+                page.structure.main.insertBefore(view_buttons, page.structure.main.firstChild);
 
                 refresh_all();
 
@@ -17224,5 +17466,98 @@ let has_prompted_for_update = false;
         `);
 
         page.structure.container.insertBefore(edit_header, page.structure.container.firstElementChild);
+    }
+
+
+
+
+    function bleh_search() {
+        page.structure.container = document.body.querySelector('.page-content');
+        try {
+            page.structure.row = page.structure.container.querySelector('.row');
+            page.structure.main = page.structure.row.querySelector('.col-main');
+            page.structure.side = page.structure.row.querySelector('.col-sidebar');
+        } catch(e) {
+            log('unable to find elements', 'page structure');
+        }
+
+        let content_top = document.body.querySelector('.content-top');
+        let header = content_top.querySelector('.content-top-header');
+
+        checkup_page_structure(false, content_top);
+        log('status is', 'page', 'info', page);
+        update_page();
+
+
+        let search_form = page.structure.main.querySelector('.search-form');
+        let search = search_form.querySelector('#site-search');
+        let value = search.getAttribute('value');
+
+        let site_search = document.body.querySelector('#masthead-search-field');
+        site_search.setAttribute('value', value);
+        site_search.focus();
+
+        page.structure.main.removeChild(search_form);
+
+        if (page.subpage != 'overview') {
+            let new_panel = document.createElement('section');
+            new_panel.classList.add('search-results-panel');
+
+            let elements = page.structure.main.querySelectorAll(':scope > *:not(form)');
+            elements.forEach((element) => {
+                new_panel.appendChild(element);
+            });
+
+            page.structure.main.appendChild(new_panel);
+        }
+
+        if (page.subpage == 'overview' || page.subpage == 'tracks') {
+            patch_titles();
+        }
+
+        if (page.subpage == 'artists' && settings.corrections) {
+            let artists = page.structure.main.querySelectorAll('.artist-result-heading a');
+            artists.forEach((artist) => {
+                artist.textContent = correct_artist(artist.textContent);
+            });
+        }
+
+        if (page.subpage == 'albums') {
+            let results = page.structure.main.querySelectorAll('.album-result-inner');
+            results.forEach((result) => {
+                let heading = result.querySelector('.album-result-heading a');
+                let artist_parent = result.querySelector('.album-result-artist');
+                let artist = artist_parent.querySelector('a');
+
+                artist.textContent = correct_artist(artist.textContent);
+
+                heading.textContent = correct_item_by_artist(heading.textContent, artist.textContent);
+
+                // match artists
+                let image = result.querySelector('.album-result-image');
+                let image_parent = document.createElement('span');
+                image_parent.classList.add('avatar', 'album-result-image');
+                image_parent.appendChild(image);
+
+                image.classList = [];
+
+                artist_parent.after(image_parent);
+            });
+        }
+
+
+        let search_header = document.createElement('section');
+        search_header.classList.add('redesigned-header', 'search-header', 'no-background');
+        search_header.innerHTML = (`
+            <div class="tag-side">
+                <div class="tag-icon search-icon"></div>
+            </div>
+            <div class="info-side">
+                <div class="sub-text">${trans[lang].search.name}</div>
+                <h1>${value}</h1>
+            </div>
+        `);
+
+        page.structure.container.insertBefore(search_header, page.structure.container.firstElementChild);
     }
 })();
