@@ -3997,6 +3997,13 @@ better than the default selector '#app a' i suppose */
     ". . . ."
     ". . . .";
     gap: var(--item-list-gap);
+
+    &.obsessions-grid {
+        grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
+        grid-template-rows: auto;
+        grid-template-areas:
+        ". . . . . .";
+    }
 }
 .grid-items .grid-items-item {
     width: auto;
@@ -4240,6 +4247,7 @@ better than the default selector '#app a' i suppose */
         -webkit-box-orient: vertical;
     }
 
+    .obesssions-item-date,
     &.grid-item-plays,
     .grid-item-plays {
         position: relative;
@@ -4253,6 +4261,9 @@ better than the default selector '#app a' i suppose */
         &.grid-item-listeners {
             --mask: var(--icon-16-users);
             text-decoration: none !important;
+        }
+        &.obesssions-item-date {
+            --mask: var(--icon-16-calendar);
         }
     }
 }
@@ -6317,7 +6328,7 @@ button,
 .chart-table--buttons button:before,
 .api-session-connect:before, .api-session-disconnect:before,
 .scrobble-canvas-container:before,
-.grid-item-plays:before,
+.grid-item-plays:before, .obesssions-item-date:before,
 .lastfm-bulk-edit-form-group-controls button:before,
 .lastfm-bulk-edit-progress:before,
 .about-guest-feature:before, .about-guest-feature:after,
@@ -10747,116 +10758,30 @@ table.table tr:nth-child(2n) td {
 
 
 /*     OBSESSIONS     */
-.obsession-history {
-    margin-top: var(--card-gap);
-    margin-left: unset;
-    margin-right: unset;
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
-    gap: var(--item-list-gap);
-}
+.obsessions-item {
+    .new-badge {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+    }
 
-.obsession-history-item {
-    padding-left: unset;
-    padding-right: unset;
-    margin-top: unset;
-    width: unset;
-}
-.obsession-history-item-inner {
-    background: var(--avatar-generic-background);
-    border-radius: var(--item-big-radius);
-    box-shadow: var(--card-shadow);
-    overflow: hidden;
-    height: 245px;
-    position: relative;
-}
-
-.obsession-history-item-heading {
-    font-size: var(--font-size);
-    line-height: var(--line-height);
-    font-weight: var(--font-weight-medium);
-    overflow: visible;
-}
-.obsession-history-item-artist {
-    font-size: var(--font-size);
-    line-height: var(--line-height);
-    font-weight: var(--font-weight);
-    overflow: visible;
-    opacity: 0.8;
-}
-.obsession-history-item-date {
-    font-size: calc(var(--font-size) - 1px);
-    line-height: var(--line-height);
-    overflow: visible;
-    margin: unset;
-}
-
-.obsession-first {
-    display: none;
-
-    .obsession-history-item-inner:has(&) {
-        --hue-over: 25;
-        --sat-over: 1;
-        --lit-over: 1;
-        background:
-        var(--avatar-generic-background) padding-box,
-        linear-gradient(0deg, hsla(var(--h3), 80%) 0%, hsl(var(--b5)) 100%) border-box;
-        border: 2px solid transparent;
-        box-shadow: var(--card-shadow), 0 0 20px 2px hsla(var(--h4), 30%);
-        position: relative;
-
-        .obsession-history-item-body {
-            padding: calc(var(--card-gap) - 2px);
-        }
-
-        &:after {
-            content: var(--obsession-claimed-text);
-            position: absolute;
-            background: hsl(var(--b5));
-            color: hsl(var(--l3-c));
-            opacity: unset;
-            mix-blend-mode: unset;
-
-            bottom: unset;
-            top: 0;
-            left: 50%;
-            margin-left: -25px;
-            width: 50px;
-            height: fit-content;
-            padding: 2px 6px;
-
-            border-radius: var(--item-small-radius);
-            border-top-left-radius: 0;
-            border-top-right-radius: 0;
-            font-size: var(--font-size-sm);
-            font-weight: var(--font-weight-bold);
-            line-height: var(--line-height-sm);
-            text-align: center;
-            box-shadow: var(--interact-shadow);
-            text-shadow: none !important;
-            /* */
-            clear: unset !important;
-            display: block !important;
-        }
+    .link-block-cover-link {
+        height: 100%;
+        left: 0;
+        position: absolute;
+        top: 0;
+        width: 100%;
+        z-index: 0;
     }
 }
-.obsession-history-item-body {
-    display: flex;
+.obsessions-item-aux {
     flex-direction: column;
-    justify-content: end;
-    padding: var(--card-gap);
-    overflow: hidden;
-    text-shadow: 0 0 10px rgba(0,0,0,1);
-}
+    gap: 1px;
 
-.obsession-history-item-background {
-    /* i know this looks stupid and horror, but it removes the gradient */
-    height: calc(100% + 100px);
-
-    &[style*="url(https://lastfm.freetls.fastly.net/i/u/arG/4128a6eb29f94943c9d206c08e625904.jpg)"] {
-        background: hsl(var(--c3)) !important;
-        height: 100% !important;
-        --mask-size: var(--cover-size-200);
+    .obesssions-item-date {
+        font-size: var(--font-size-sm);
+        --mask-size: 14px;
+        --top: 1px;
     }
 }
 
@@ -12048,7 +11973,8 @@ hr {
     [data-page-subpage="following"], [data-page-subpage="followers"], [data-page-subpage="neighbours"],
     [data-page-subpage="obsessions_set"],
     [data-page-subpage="loved"],
-    [data-page-subpage="subscription_automatic-edits_tracks"], [data-page-subpage="subscription_automatic-edits_albums"]
+    [data-page-subpage="subscription_automatic-edits_tracks"], [data-page-subpage="subscription_automatic-edits_albums"],
+    [data-page-subpage="obsessions_overview"]
     ),
 .namespace--music_bookmarks_overview {
     .col-main {
@@ -16578,16 +16504,12 @@ h4 {
     display: inline-flex;
     background-color: hsl(var(--h4), 40%);
     box-shadow: 0 0 20px hsl(var(--h4), 40%);
-    color: hsl(var(--l2-c));
+    color: hsl(var(--l2-c-theme-switch));
 
     font-size: var(--font-size-sm);
     font-weight: var(--font-weight-medium);
     padding: 0 6px;
     border-radius: var(--item-med-radius);
-
-    [data-bleh--theme="light"] & {
-        color: hsl(var(--l4-c));
-    }
 }
 
 
@@ -17673,6 +17595,7 @@ h4 {
 
 
 
+.legacy-section-controls,
 .content-top.legacy-content-top,
 .legacy-header {
     display: none;

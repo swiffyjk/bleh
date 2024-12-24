@@ -5984,7 +5984,7 @@ let has_prompted_for_update = false;
 
         page.structure.container = document.body.querySelector('.page-content:not(.profile-cards-container, .report-box-container .page-content)');
         try {
-            page.structure.row = page.structure.container.querySelector('.row');
+            page.structure.row = page.structure.container.querySelector('.row:not(._buffer)');
             page.structure.main = page.structure.row.querySelector('.col-main');
             page.structure.side = page.structure.row.querySelector('.col-sidebar');
         } catch(e) {
@@ -6253,6 +6253,108 @@ let has_prompted_for_update = false;
                     });
                     return;
                 }
+            } else if (page.subpage == 'obsessions_overview') {
+                let section_controls = page.structure.container.querySelector('.section-controls');
+                let buttons;
+                if (section_controls != null) {
+                    section_controls.classList.add('legacy-section-controls');
+                    buttons = section_controls.querySelectorAll(':is(button, a)');
+
+                    let header = page.structure.container.querySelector('.content-top-header');
+                    page.structure.content_top.innerHTML = (`
+                        <div class="content-top-inner-wrap">
+                            <div class="container content-top-lower">
+                                <h1 class="content-top-header">${header.textContent.trim()}</h1>
+                            </div>
+                        </div>
+                    `);
+                }
+
+                let new_panel = document.createElement('section');
+                new_panel.classList.add('obsessions-panel');
+
+                let wrap = document.createElement('div');
+                wrap.classList.add('view-buttons-wrapper');
+                let button_header = document.createElement('div');
+                button_header.classList.add('view-buttons', 'obsession-buttons');
+
+                buttons.forEach((button) => {
+                    if (button.classList.contains('btn-sm')) {
+                        button.classList = [];
+                        button.classList.add('obsession-btn');
+
+                        tippy(button, {
+                            content: button.textContent
+                        });
+
+                        button.textContent = trans[lang].music.obsession;
+                    }
+
+                    button.classList.add('btn', 'view-item', 'interact-item', 'obsession-top-item');
+
+                    button_header.appendChild(button);
+                });
+                wrap.appendChild(button_header);
+                new_panel.appendChild(wrap);
+
+                page.structure.main.appendChild(new_panel);
+
+
+                //
+
+
+                let grid = document.createElement('ol');
+                grid.classList.add('grid-items', 'grid-items--numbered', 'obsessions-grid');
+
+                let items = page.structure.container.querySelectorAll('.obsession-history-item');
+                items.forEach((item) => {
+                    let bg = item.querySelector('.obsession-history-item-background').style.getPropertyValue('background-image').trim();
+                    let cover_substr = bg.indexOf('url');
+                    let cover = bg.substring(cover_substr).replace('url("', '').replace('")', '').trim();
+
+                    let link = item.querySelector('.obsession-history-item-heading-link');
+
+                    let artist = item.querySelector('.obsession-history-item-artist a');
+                    let artist_link = artist.getAttribute('href');
+                    artist = correct_artist(artist.textContent.trim());
+
+                    let title = correct_item_by_artist(link.textContent.trim(), artist);
+                    link = link.getAttribute('href');
+                    let date = item.querySelector('.obsession-history-item-date').textContent.trim();
+
+                    let obsession_is_first = (item.querySelector('.obsession-first') != null);
+
+                    let grid_item = document.createElement('li');
+                    grid_item.classList.add('grid-items-item', 'obsessions-item');
+                    grid_item.innerHTML = (`
+                        <div class="grid-items-cover-image">
+                            <div class="grid-items-cover-image-image ${(cover.endsWith('4128a6eb29f94943c9d206c08e625904.jpg')) ? 'grid-items-cover-default' : ''}">
+                                <img src="${cover}" alt="${title}" loading="lazy">
+                                ${(obsession_is_first) ? `<div class="new-badge first-obsession">#1</div>` : ''}
+                            </div>
+                            <div class="grid-items-item-details">
+                                <p class="grid-items-item-main-text">
+                                    <a class="link-block-target" href="${link}" title="${title}">
+                                        ${title}
+                                    </a>
+                                </p>
+                                <p class="grid-items-item-aux-text obsessions-item-aux">
+                                    <a class="grid-items-item-aux-block" href="${artist_link}">
+                                        ${artist}
+                                    </a>
+                                    <a class="obesssions-item-date" href="${link}">
+                                        ${date}
+                                    </a>
+                                </p>
+                            </div>
+                            <a class="link-block-cover-link" href="${link}" tabindex="-1" aria-hidden="true"></a>
+                        </div>
+                    `);
+
+                    grid.appendChild(grid_item);
+                });
+
+                new_panel.appendChild(grid);
             }
         }
 
@@ -7201,7 +7303,7 @@ let has_prompted_for_update = false;
                 plays_elem = grid.querySelector('.grid-items-item-aux-text a:last-child');
             }
 
-            if (plays_elem != null) {
+            if (plays_elem != null && !grid.classList.contains('obsessions-item')) {
                 let plays = clean_number(plays_elem.textContent.trim().replace(` ${trans[lang].statistics.plays.name}`, ''));
                 plays_elem.classList.add('grid-item-plays');
                 if (is_album)
