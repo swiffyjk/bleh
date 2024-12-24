@@ -13757,7 +13757,6 @@ code, kbd, samp {
     padding: var(--card-gap);
     border-radius: var(--item-big-radius);
 
-    [data-bleh--theme="light"] &,
     [data-bleh--theme="oled"] & {
         box-shadow: 0 0 0 1px var(--card-border-base) inset;
     }
@@ -16425,7 +16424,6 @@ button.bleh--gallery-bookmark-image-btn {
     justify-content: center;
     align-items: center;
 
-    [data-bleh--theme="light"] &,
     [data-bleh--theme="oled"] & {
         box-shadow: 0 0 0 1px var(--card-border-base) inset;
     }
