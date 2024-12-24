@@ -1186,7 +1186,9 @@ const trans = {
                 },
                 thanks: 'Willkommen {m}, du verwendest bleh Version {v}.',
                 sponsor: {
-                    name: 'Sponsor'
+                    name: 'Sponsor',
+                    header: 'Sponsor the development of bleh and bwaa',
+                    bio: 'If you feel my work on these projects is worthy of donations you are welcome to sponsor me on GitHub. This is of course optional and bleh will forever be open-source and free.'
                 }
             },
             appearance: {
@@ -1988,7 +1990,9 @@ const trans = {
                 },
                 thanks: 'Welcome {m}, you are running bleh version {v}.',
                 sponsor: {
-                    name: 'Sponsor'
+                    name: 'Sponsor',
+                    header: 'Sponsor the development of bleh and bwaa',
+                    bio: 'If you feel my work on these projects is worthy of donations you are welcome to sponsor me on GitHub. This is of course optional and bleh will forever be open-source and free.'
                 }
             },
             appearance: {
@@ -7947,7 +7951,7 @@ let has_prompted_for_update = false;
                         `) : '')}
                         ${(ff('sponsor') ? (`
                         <button class="btn action highlight bleh--sponsor" onclick="_sponsor()">
-                            ${trans[lang].settings.home.sponsor.name}
+                            ${trans[lang].settings.home.sponsor.name}<div class="new-badge">${trans[lang].settings.new}</div>
                         </button>
                         `) : '')}
                         <a class="btn action bleh--issues" href="https://github.com/katelyynn/bleh/issues" target="_blank">
