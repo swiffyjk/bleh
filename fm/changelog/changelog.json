@@ -1,6 +1,12 @@
 {
-    "updated": "2024-12-23",
-    "latest": "2024.1223",
+    "updated": "2024-12-24",
+    "latest": "2024.1224",
+    "2024.1224": {
+        "name": "!!!!!!",
+        "type": "major",
+        "force": false,
+        "bio": "surprise present :3\n\n# Obsessions\n- __Profile obsession lists now use grids__\n    - This means good visibility in light theme, capitalisation corrections, random text overflow bugs fixed, etc. etc.\n\n![New obsession page](https://katelyynn.github.io/bleh/fm/changelog/img/obsess.png)\n\n# Search\n- __The search page has been redesigned__\n    - All pages are now finally bleh-themed along with capitalisation corrections being active. The global search bar is now also automatically focused again after a search.\n\n![New search page](https://katelyynn.github.io/bleh/fm/changelog/img/search.png)\n\n# Settings\n- __Added 'skip to' list on some stacked pages__\n    - Easily find what you're looking for with the quick links for available options.\n\n![Skip to setting](https://katelyynn.github.io/bleh/fm/changelog/img/skip_to.png)\n\n# Activities\n- Tag items are now properly supported in activity lists\n\n# Other\n- Fixed event attendance pages\n- Fixed event where changelog fails to load due to parsing errors\n- Fixed some random cursor oddities\n- Removed legacy link to timezone in footer"
+    },
     "2024.1223": {
         "name": "Early presents",
         "type": "major",
