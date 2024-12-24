@@ -6337,7 +6337,7 @@ button,
 .breadcrumb :is(a, .breadcrumb-origin):before, .gallery-image-uploaded-by:before,
 /* v2 */ .form-arrow:before,
 .select-button:before,
-.involved--track:before, .involved--album:before, .involved--artist:before,
+.involved--track:before, .involved--album:before, .involved--artist:before, .involved--tag:before,
 .activity-item:before,
 .lotus-name:before,
 .modal-action-button:before,
@@ -16865,7 +16865,7 @@ h4 {
     .title {
         font-weight: var(--font-weight-medium);
 
-        .involved--track, .involved--album, .involved--artist {
+        .involved--track, .involved--album, .involved--artist, .involved--tag {
             position: relative;
             padding-left: calc(12px + 2px);
             --left: 0;
@@ -16880,6 +16880,9 @@ h4 {
         }
         .involved--artist {
             --mask: var(--icon-16-artist);
+        }
+        .involved--tag {
+            --mask: var(--icon-16-tag);
         }
 
         .involved--user {

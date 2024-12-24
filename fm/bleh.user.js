@@ -6087,13 +6087,15 @@ let has_prompted_for_update = false;
                             involved_link = `${root}music/${sanitise(involved.sister)}/${sanitise(involved.name)}`;
                         else if (involved.type == 'track')
                             involved_link = `${root}music/${sanitise(involved.sister)}/_/${sanitise(involved.name)}`;
+                        else if (involved.type == 'tag')
+                            involved_link = `${root}tag/${sanitise(involved.name)}`;
                         else if (involved.type == 'bwaa')
                             involved_link = `${root}bwaa`;
                         else if (involved.type == 'bleh')
                             involved_link = `${root}bleh`;
 
                         // tooltip
-                        if (involved.type != 'artist' && involved.type != 'user' && involved.type != 'bwaa' && involved.type != 'bleh') {
+                        if (involved.type != 'artist' && involved.type != 'user' && involved.type != 'tag' && involved.type != 'bwaa' && involved.type != 'bleh') {
                             tooltip_name = involved.name;
                             tooltip_sister = involved.sister;
                         }
@@ -13769,7 +13771,7 @@ let has_prompted_for_update = false;
 
         patch_header_title();
 
-        page.name = tag_header.querySelector('.header-title').textContent;
+        page.name = tag_header.querySelector('.header-title').textContent.trim();
 
         let is_subpage = tag_header.classList.contains('header--sub-page');
 
