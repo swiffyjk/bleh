@@ -956,6 +956,10 @@ const trans = {
         },
         tag: {
             name: 'Tag'
+        },
+        search: {
+            name: 'Search',
+            results_for: 'Results for {v}'
         }
     },
     de: {
@@ -17357,7 +17361,22 @@ let has_prompted_for_update = false;
 
 
     function bleh_search() {
-        basic_page_structure();
+        page.structure.container = document.body.querySelector('.page-content');
+        try {
+            page.structure.row = page.structure.container.querySelector('.row');
+            page.structure.main = page.structure.row.querySelector('.col-main');
+            page.structure.side = page.structure.row.querySelector('.col-sidebar');
+        } catch(e) {
+            log('unable to find elements', 'page structure');
+        }
+
+        let content_top = document.body.querySelector('.content-top');
+        let header = content_top.querySelector('.content-top-header');
+
+        checkup_page_structure(false, content_top);
+        log('status is', 'page', 'info', page);
+        update_page();
+
 
         let search_form = page.structure.main.querySelector('.search-form');
         let search = search_form.querySelector('#site-search');
@@ -17384,5 +17403,20 @@ let has_prompted_for_update = false;
         if (page.subpage == 'overview' || page.subpage == 'tracks') {
             patch_titles();
         }
+
+
+        let search_header = document.createElement('section');
+        search_header.classList.add('redesigned-header', 'search-header', 'no-background');
+        search_header.innerHTML = (`
+            <div class="tag-side">
+                <div class="tag-icon search-icon"></div>
+            </div>
+            <div class="info-side">
+                <div class="sub-text">${trans[lang].search.name}</div>
+                <h1>${value}</h1>
+            </div>
+        `);
+
+        page.structure.container.insertBefore(search_header, page.structure.container.firstElementChild);
     }
 })();
