@@ -422,7 +422,7 @@ body {
 
     --obsession-claimed-text: '#1';
 
-    --button-list-gap: 4px;
+    --button-list-gap: 6px;
     --chartlist-inner-gap: 8px;
     --item-list-gap: 8px;
 
@@ -15194,6 +15194,11 @@ trying to list every song ever made by someone identifying as a female, which is
         width: 96px;
         height: 96px;
 
+        &.small {
+            width: 50px;
+            height: 50px;
+        }
+
         cursor: pointer;
 
         .avatar {
@@ -15315,6 +15320,17 @@ trying to list every song ever made by someone identifying as a female, which is
         .header {
             height: unset;
             margin-bottom: 6px;
+
+            &.standalone {
+                margin: unset;
+            }
+
+            &.title-container {
+                display: flex;
+                align-items: center;
+                gap: 6px;
+                cursor: default;
+            }
         }
         h1 {
             font-size: 24px !important;

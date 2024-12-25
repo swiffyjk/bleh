@@ -157,6 +157,7 @@ let lang_info = {
 const trans = {
     en: {
         badges: {
+            pro: 'Last.fm Pro',
             sponsor: 'Sponsor of bleh and bwaa'
         },
         lotus: {
@@ -397,7 +398,12 @@ const trans = {
                     name: 'Sponsor',
                     header: 'Sponsor the development of bleh and bwaa',
                     bio: 'If you feel my work on these projects is worthy of donations you are welcome to sponsor me on GitHub. This is of course optional and bleh will forever be open-source and free.',
-                    thanks: 'Thank you for sponsoring {m}, you are running bleh version {v}.'
+                    thanks: 'Thank you for sponsoring {m}, you are running bleh version {v}.',
+                    status: {
+                        yes: 'You are a sponsor, thank you!',
+                        no: 'You are not a sponsor'
+                    },
+                    manage: 'Manage sponsorship'
                 }
             },
             appearance: {
@@ -593,7 +599,7 @@ const trans = {
             },
             activities: {
                 name: 'Activities',
-                bio: 'Track your most recent activities locally on your profile.',
+                bio: 'Display your most recent activities locally on your profile, only for you to see.',
                 toggle: {
                     name: 'Enable activity tracking',
                     bio: 'Events will only be registered and displayed while enabled.'
@@ -645,7 +651,8 @@ const trans = {
                     edit_user: 'Edit {u}\'s note',
                     delete_user: 'Remove {u}\'s note',
                     view: 'View your profile notes'
-                }
+                },
+                you: 'You'
             },
             redirects: {
                 name: 'Redirects',
@@ -8989,50 +8996,44 @@ let has_prompted_for_update = false;
 
             return (`
                 <div class="bleh--panel sponsor-badge-panel" data-sponsoring="${sponsoring}">
-                    <h4>${trans[lang].lotus.version
-                    .replace('lotus', `<a class="lotus lotus-name" href="https://github.com/katelyynn/lotus" target="_blank" id="lotus_hover">lotus</a>`)
-                    .replace('{v}', `<span class="version-link lotus">${(artist_corrections.version >= album_track_corrections.version) ? artist_corrections.version : album_track_corrections.version}</span>`)}</h4>
-                    <p>${trans[lang].settings.corrections.bio}</p>
-                    <!--<div class="screen-row actions-only">
-                        <div class="actions">
-                            <a class="btn action" href="https://github.com/katelyynn/bleh/issues/new/choose" target="_blank">
-                                <div class="icon bleh--correction"></div>
-                                <span class="text">
-                                    <h5>${trans[lang].settings.corrections.submit.name}</h5>
-                                </span>
-                            </a>
-                            <button class="btn action" onclick="_open_correction_modal()">
-                                <div class="icon bleh--correction_modal"></div>
-                                <span class="text">
-                                    <h5>${trans[lang].settings.corrections.view.name}</h5>
-                                </span>
-                            </button>
+                    <div class="profile-container">
+                        <div class="avatar-side small">
+                            <div class="avatar">
+                                <img src="${my_avi.replace('/avatar42s/', '/avatar170s/')}" alt="Your avatar" loading="lazy">
+                            </div>
                         </div>
-                    </div>-->
+                        <div class="info-side">
+                            <div class="header-info">
+                                <div class="sub-text">${trans[lang].settings.profiles.you}</div>
+                                <div class="header standalone title-container">
+                                    <h1>${auth}</h1>
+                                    ${(is_pro) ? (`
+                                    <span class="label user-status-subscriber">${trans[lang].badges.pro}</span>
+                                    `) : ''}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="sep"></div>
+                    ${(sponsoring) ? (`
+                    <h4>${trans[lang].settings.home.sponsor.status.yes}</h4>
                     <div class="screen-row actions-only">
                         <div class="actions">
-                            <a class="btn primary external lotus" href="https://github.com/katelyynn/lotus/issues/new/choose" target="_blank">
-                                ${trans[lang].settings.corrections.submit.name}
-                            </a>
-                            <button class="btn continue" onclick="_open_correction_modal()">
-                                ${trans[lang].settings.corrections.view.name}
-                            </button>
-                            <button class="btn continue" onclick="_lotus_check()">
-                                ${trans[lang].lotus.check}
+                            <button class="btn action highlight bleh--sponsor bleh--sponsor-manage" onclick="_sponsor_manage()">
+                                ${trans[lang].settings.home.sponsor.manage}<div class="new-badge">${trans[lang].settings.new}</div>
                             </button>
                         </div>
                     </div>
-                    <div class="toggle-container" id="container-corrections" onclick="_update_item('corrections')">
-                        <button class="btn reset" onclick="_reset_item('corrections')">${trans[lang].settings.reset}</button>
-                        <div class="heading">
-                            <h5>${trans[lang].settings.corrections.toggle.name}</h5>
-                        </div>
-                        <div class="toggle-wrap">
-                            <button class="toggle lotus" id="toggle-corrections" aria-checked="true">
-                                <div class="dot"></div>
+                    `) : (`
+                    <h4>${trans[lang].settings.home.sponsor.status.no}</h4>
+                    <div class="screen-row actions-only">
+                        <div class="actions">
+                            <button class="btn action highlight bleh--sponsor" onclick="_sponsor()">
+                                ${trans[lang].settings.home.sponsor.name}<div class="new-badge">${trans[lang].settings.new}</div>
                             </button>
                         </div>
                     </div>
+                    `)}
                 </div>
                 <div class="bleh--panel">
                     <h4>${trans[lang].settings.activities.name}</h4>
