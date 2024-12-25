@@ -7,7 +7,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Ubuntu+Sans:ital,wght@0,100..800;1,100..800&display=swap');
 
 body {
-    --version-build: '2024.1224.1';
+    --version-build: '2024.1225';
 
     --hue:  var(--hue-over,
             var(--hue-album,
@@ -254,7 +254,7 @@ a,
 .action,
 [data-season],
 .small-alert,
-.lotus, [data-theme="lotus-tooltip-corrected"],
+.lotus, [data-theme="lotus-tooltip-corrected"], .sponsor-related,
 .pro-badge, .vote-number,
 .staff-profile .header-title, .staff-shout, .staff-shout a,
 .changelog-version-item,
@@ -412,7 +412,7 @@ body {
 
     --obsession-claimed-text: '#1';
 
-    --button-list-gap: 4px;
+    --button-list-gap: 6px;
     --chartlist-inner-gap: 8px;
     --item-list-gap: 8px;
 
@@ -10172,6 +10172,7 @@ text[style^="color: rgb(0, 0, 0)"] {
     color: hsl(var(--l2-c-theme-switch)) !important;
     font-weight: var(--font-weight-medium) !important;
     text-align: left;
+    cursor: default;
     position: relative;
     --left: 0;
 
@@ -13324,6 +13325,9 @@ code, kbd, samp {
                 --sat-over: 1;
                 --lit-over: 1;
             }
+            &.bleh--sponsor-refresh {
+                --mask: var(--icon-16-refresh);
+            }
 
             h5 {
                 color: hsl(var(--c2));
@@ -15184,6 +15188,11 @@ trying to list every song ever made by someone identifying as a female, which is
         width: 96px;
         height: 96px;
 
+        &.small {
+            width: 50px;
+            height: 50px;
+        }
+
         cursor: pointer;
 
         .avatar {
@@ -15305,6 +15314,21 @@ trying to list every song ever made by someone identifying as a female, which is
         .header {
             height: unset;
             margin-bottom: 6px;
+
+            &.standalone {
+                margin: unset;
+            }
+
+            &.title-container {
+                display: flex;
+                align-items: center;
+                gap: 6px;
+                cursor: default;
+
+                h1 {
+                    margin: unset !important;
+                }
+            }
         }
         h1 {
             font-size: 24px !important;
@@ -18761,6 +18785,11 @@ section > .section-controls .subpage-title {
 .sponsor {
     position: relative;
     --mask: var(--icon-16-heart);
+    --hue-over: 333;
+    --sat-over: 1;
+    --lit-over: 1;
+}
+.sponsor-related {
     --hue-over: 333;
     --sat-over: 1;
     --lit-over: 1;
