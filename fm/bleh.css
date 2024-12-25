@@ -261,7 +261,8 @@ a,
 .version-item-body li u,
 .grid-items-item.grid-items-item-has-colour,
 .toggle /* for toggles that arent buttons */,
-.bleh-icon, .support-inner h1
+.bleh-icon, .support-inner h1,
+.user-top-panel
 {
     --hue:  var(--hue-over,
             var(--hue-album,
@@ -16440,6 +16441,13 @@ button.bleh--gallery-bookmark-image-btn {
 
     [data-bleh--theme="oled"] & {
         box-shadow: 0 0 0 1px var(--card-border-base) inset;
+    }
+
+    &[data-sponsoring="true"] {
+        background-image: linear-gradient(0deg, hsl(var(--h4), 15%), hsl(var(--b6)));
+        --hue-over: 333;
+        --sat-over: 1;
+        --lit-over: 1;
     }
 
     .user-top-avatar {

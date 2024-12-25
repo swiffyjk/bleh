@@ -396,7 +396,8 @@ const trans = {
                 sponsor: {
                     name: 'Sponsor',
                     header: 'Sponsor the development of bleh and bwaa',
-                    bio: 'If you feel my work on these projects is worthy of donations you are welcome to sponsor me on GitHub. This is of course optional and bleh will forever be open-source and free.'
+                    bio: 'If you feel my work on these projects is worthy of donations you are welcome to sponsor me on GitHub. This is of course optional and bleh will forever be open-source and free.',
+                    thanks: 'Thank you for sponsoring {m}, you are running bleh version {v}.'
                 }
             },
             appearance: {
@@ -1188,7 +1189,8 @@ const trans = {
                 sponsor: {
                     name: 'Sponsor',
                     header: 'Sponsor the development of bleh and bwaa',
-                    bio: 'If you feel my work on these projects is worthy of donations you are welcome to sponsor me on GitHub. This is of course optional and bleh will forever be open-source and free.'
+                    bio: 'If you feel my work on these projects is worthy of donations you are welcome to sponsor me on GitHub. This is of course optional and bleh will forever be open-source and free.',
+                    thanks: 'Thank you for sponsoring {m}, you are running bleh version {v}.'
                 }
             },
             appearance: {
@@ -1992,7 +1994,8 @@ const trans = {
                 sponsor: {
                     name: 'Sponsor',
                     header: 'Sponsor the development of bleh and bwaa',
-                    bio: 'If you feel my work on these projects is worthy of donations you are welcome to sponsor me on GitHub. This is of course optional and bleh will forever be open-source and free.'
+                    bio: 'If you feel my work on these projects is worthy of donations you are welcome to sponsor me on GitHub. This is of course optional and bleh will forever be open-source and free.',
+                    thanks: 'Thank you for sponsoring {m}, you are running bleh version {v}.'
                 }
             },
             appearance: {
@@ -2706,6 +2709,10 @@ let theme_preview = (`
 
 
 let cute = ['cutensilly', 'inozom', 'kateshapedbox'];
+let sponsors = [
+    'cutensilly', 'kateshapedbox',
+    'astrablooms'
+];
 let sponsor_account = 'kateshapedbox';
 let sponsor_link = 'https://github.com/sponsors/katelyynn';
 
@@ -6670,6 +6677,17 @@ let has_prompted_for_update = false;
             }
 
 
+            if (page.name == 'cutensilly') {
+                create_profile_top_item(profile_header, {
+                    name: page.name,
+                    type: 'sponsor',
+                    link: '_sponsor()',
+                    full: true,
+                    action: 'button'
+                });
+            }
+
+
             // message
             let msg_button = document.body.querySelector('.header-message-user');
             if (msg_button != null) {
@@ -7937,17 +7955,25 @@ let has_prompted_for_update = false;
             head.textContent = trans[lang].settings.home.name;
             register_skip_to([]);
 
+            let sponsoring = sponsors.includes(auth);
+
             return (`
             <div class="bleh--panel">
                 <h4 class="top-header">${trans[lang].settings.home.name}</h4>
-                <div class="user-top-panel">
+                <div class="user-top-panel" data-sponsoring="${sponsoring}">
                     <div class="user-top-avatar user-top-avatar-side-left"></div>
                     <img class="user-top-avatar user-top-avatar-main" src="${my_avi.replace('avatar42s', 'avatar300s')}" alt="${auth}">
                     <div class="user-top-avatar user-top-avatar-side-right"></div>
                 </div>
+                ${(sponsoring) ? (`
+                <h4>${trans[lang].settings.home.sponsor.thanks
+                .replace('{m}', `<a class="mention" href="${root}user/${auth}">@${auth}</a>`)
+                .replace('{v}', `<span class="version-link" onclick="_change_settings_page('sku')">${version.build}.${version.sku}</span>`)}</h4>
+                `) : (`
                 <h4>${trans[lang].settings.home.thanks
                 .replace('{m}', `<a class="mention" href="${root}user/${auth}">@${auth}</a>`)
                 .replace('{v}', `<span class="version-link" onclick="_change_settings_page('sku')">${version.build}.${version.sku}</span>`)}</h4>
+                `)}
                 <div class="screen-row actions-only">
                     <div class="actions">
                         <button class="btn action highlight bleh--updates" onclick="_force_refresh_theme()">
