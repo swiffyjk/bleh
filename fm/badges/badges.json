@@ -1,0 +1,110 @@
+{
+    "latest": "2024.1225",
+    "sponsors": [
+        "cutensilly", "kateshapedbox",
+        "astrablooms"
+    ],
+    "sponsor_account": "kateshapedbox",
+    "sponsor_link": "https://github.com/sponsors/katelyynn",
+    "badges": {
+        "cutensilly": [
+            {
+                "type": "contributor"
+            },
+            {
+                "type": "queen",
+                "name": "blehhhhhhhhhh!!"
+            },
+            {
+                "type": "cute",
+                "name": "cute"
+            }
+        ],
+        "kateshapedbox": [
+            {
+                "type": "contributor"
+            },
+            {
+                "type": "queen",
+                "name": "blehhhhhhhhhh!!"
+            },
+            {
+                "type": "cute",
+                "name": "cute"
+            },
+            {
+                "type": "sponsor"
+            }
+        ],
+        "boba2814": {
+            "type": "cat"
+        },
+        "bIeak": [
+            {
+                "type": "cat"
+            },
+            {
+                "type": "glaive",
+                "name": "#1 glaive fan"
+            }
+        ],
+        "twolay": [
+            {
+                "type": "cat"
+            },
+            {
+                "type": "translation",
+                "name": "translated bleh into Polski"
+            },
+            {
+                "type": "contributor"
+            }
+        ],
+        "aoivee": {
+            "type": "cat"
+        },
+        "Serprety": {
+            "type": "cat"
+        },
+        "RazzBX": {
+            "type": "cat"
+        },
+        "ivyshandle": {
+            "type": "cat"
+        },
+        "KuroinHeroin": {
+            "type": "mask",
+            "name": "kimchi lover"
+        },
+        "u5c": {
+            "type": "paw",
+            "name": "silly creature"
+        },
+        "destons": {
+            "type": "colon-three",
+            "name": ":3²"
+        },
+        "inozom": [
+            {
+                "type": "contributor"
+            },
+            {
+                "type": "translation",
+                "name": "translated bleh into Deutsch"
+            },
+            {
+                "type": "cute",
+                "name": "cute"
+            }
+        ],
+        "astrablooms": [
+            {
+                "type": "sponsor"
+            },
+            {
+                "type": "cosmic",
+                "name": "cosmic regent"
+            }
+        ]
+    }
+}

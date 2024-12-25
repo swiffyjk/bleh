@@ -159,6 +159,8 @@ const trans = {
         badges: {
             missing: 'No badges',
             pro: 'Last.fm Pro',
+            contributor: 'bleh contributor',
+            cat: 'it\s a kitty!!',
             sponsor: 'Sponsor of bleh and bwaa'
         },
         lotus: {
