@@ -157,6 +157,7 @@ let lang_info = {
 const trans = {
     en: {
         badges: {
+            missing: 'No badges',
             pro: 'Last.fm Pro',
             sponsor: 'Sponsor of bleh and bwaa'
         },
@@ -401,7 +402,7 @@ const trans = {
                     thanks: 'Thank you for sponsoring {m}, you are running bleh version {v}.',
                     status: {
                         yes: 'You are a sponsor, thank you!',
-                        no: 'You are not a sponsor'
+                        no: 'Become a sponsor to get a custom badge'
                     },
                     manage: 'Manage sponsorship'
                 }
@@ -9719,6 +9720,7 @@ let has_prompted_for_update = false;
             refresh_all();
         } else if (page == 'profiles') {
             init_profile_notes();
+            init_profile_page();
         } else if (page == 'sku') {
             bleh_sku_page();
         }
@@ -9898,6 +9900,39 @@ let has_prompted_for_update = false;
         localStorage.setItem('bleh', JSON.stringify(settings));
     }
 
+
+    function init_profile_page() {
+        let profile_name_obj = document.body.querySelector('.title-container');
+
+        if (profile_badges.hasOwnProperty(auth)) {
+            if (!Array.isArray(profile_badges[auth])) {
+                // default
+                log(`1 badge:`, 'profile', 'info', profile_badges[auth]);
+                let this_badge = profile_badges[auth];
+
+                let badge = document.createElement('span');
+                badge.classList.add('label',`user-status--bleh-${this_badge.type}`,`user-status--bleh-user-${auth}`);
+                badge.textContent = (this_badge.name != null) ? this_badge.name : trans[lang].badges[this_badge.type];
+                profile_name_obj.appendChild(badge);
+            } else {
+                // multiple
+                log(`multiple badges:`, 'profile', 'info', profile_badges[auth]);
+                for (let badge_entry in profile_badges[auth]) {
+                    let this_badge = profile_badges[auth][badge_entry];
+
+                    let badge = document.createElement('span');
+                    badge.classList.add('label',`user-status--bleh-${this_badge.type}`,`user-status--bleh-user-${auth}`);
+                    badge.textContent = (this_badge.name != null) ? this_badge.name : trans[lang].badges[this_badge.type];
+                    profile_name_obj.appendChild(badge);
+                }
+            }
+        } else {
+            let badge = document.createElement('span');
+            badge.classList.add('label','user-status--bleh-missing');
+            badge.textContent = trans[lang].badges.missing;
+            profile_name_obj.appendChild(badge);
+        }
+    }
 
     function init_profile_notes() {
         let profile_notes = JSON.parse(localStorage.getItem('bleh_profile_notes')) || {};

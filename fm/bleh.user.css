@@ -15330,6 +15330,10 @@ trying to list every song ever made by someone identifying as a female, which is
                 align-items: center;
                 gap: 6px;
                 cursor: default;
+
+                h1 {
+                    margin: unset !important;
+                }
             }
         }
         h1 {
