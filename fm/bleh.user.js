@@ -6397,7 +6397,7 @@ let has_prompted_for_update = false;
         else
             profile_name_obj = profile_header.querySelector('.header-title-label-wrap');
 
-        if (sponsor_list.badges.hasOwnProperty(page.name)) {
+        if (sponsor_list && sponsor_list.badges.hasOwnProperty(page.name)) {
             if (!Array.isArray(sponsor_list.badges[page.name])) {
                 // default
                 log(`1 badge:`, 'profile', 'info', sponsor_list.badges[page.name]);
@@ -7118,7 +7118,7 @@ let has_prompted_for_update = false;
         // rather than the top
         avatar_img.setAttribute('src', avatar_img.getAttribute('src').replace('/64s/', '/avatar70s/'));
 
-        if (sponsor_list.badges.hasOwnProperty(name)) {
+        if (sponsor_list && sponsor_list.badges.hasOwnProperty(name)) {
             // remove pre-existing badge
             let pre_existing_badge = avatar.querySelector('.avatar-status-dot');
             if (pre_existing_badge !== null)
@@ -9840,7 +9840,7 @@ let has_prompted_for_update = false;
     function init_profile_page() {
         let profile_name_obj = document.body.querySelector('.title-container');
 
-        if (sponsor_list.badges.hasOwnProperty(auth)) {
+        if (sponsor_list && sponsor_list.badges.hasOwnProperty(auth)) {
             if (!Array.isArray(sponsor_list.badges[auth])) {
                 // default
                 log(`1 badge:`, 'profile', 'info', sponsor_list.badges[auth]);
