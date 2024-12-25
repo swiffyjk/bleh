@@ -7154,7 +7154,7 @@ let has_prompted_for_update = false;
                     <div class="info">
                         <h5 class="title ${(cute.includes(name)) ? 'bleh--name-is-cute-less' : ''}">${name}</h5>
                         <p class="descriptor">${trans[lang].profile.top_badge}</p>
-                        <p class="badge user-status--bleh-${this_badge.type} user-status--bleh-user-${name}" data-badge-type="${this_badge.type}" data-badge-user="${name}">${this_badge.name}</p>
+                        <p class="badge user-status--bleh-${this_badge.type} user-status--bleh-user-${name}" data-badge-type="${this_badge.type}" data-badge-user="${name}">${(this_badge.name != null) ? this_badge.name : trans[lang].badges[this_badge.type]}</p>
                     </div>
                 `),
                 allowHTML: true,
