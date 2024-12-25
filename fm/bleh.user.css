@@ -15628,9 +15628,9 @@ button.bleh--gallery-bookmark-image-btn {
     display: flex;
     align-items: center;
     gap: var(--button-list-gap);
-    padding: var(--button-list-gap);
+    padding: 4px;
     background-color: hsl(var(--b6));
-    border-radius: calc(var(--item-big-radius) + var(--button-list-gap));
+    border-radius: calc(var(--item-big-radius) + 4px);
 
     &.view-buttons-middle {
         justify-content: center;
