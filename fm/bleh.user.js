@@ -407,7 +407,9 @@ const trans = {
                         no: 'Become a sponsor to get a custom badge'
                     },
                     manage: 'Manage sponsorship',
-                    download: 'Sponsorship and badge data downloaded!'
+                    check: 'Refresh badges',
+                    download: 'Sponsorship and badge data downloaded!',
+                    version: 'You have version {v} of the sponsorship/badge data downloaded.'
                 }
             },
             appearance: {
@@ -1214,7 +1216,9 @@ const trans = {
                         no: 'Become a sponsor to get a custom badge'
                     },
                     manage: 'Manage sponsorship',
-                    download: 'Sponsorship and badge data downloaded!'
+                    check: 'Refresh badges',
+                    download: 'Sponsorship and badge data downloaded!',
+                    version: 'You have version {v} of the sponsorship/badge data downloaded.'
                 }
             },
             appearance: {
@@ -2032,7 +2036,9 @@ const trans = {
                         no: 'Become a sponsor to get a custom badge'
                     },
                     manage: 'Manage sponsorship',
-                    download: 'Sponsorship and badge data downloaded!'
+                    check: 'Refresh badges',
+                    download: 'Sponsorship and badge data downloaded!',
+                    version: 'You have version {v} of the sponsorship/badge data downloaded.'
                 }
             },
             appearance: {
@@ -8933,19 +8939,29 @@ let has_prompted_for_update = false;
                     <div class="sep"></div>
                     ${(sponsoring) ? (`
                     <h4>${trans[lang].settings.home.sponsor.status.yes}</h4>
+                    <div class="alert alert-info">${trans[lang].settings.home.sponsor.version
+                    .replace('{v}', `<span class="version-link sponsor-related">${sponsor_list.latest}</span>`)}</div>
                     <div class="screen-row actions-only">
                         <div class="actions">
                             <button class="btn action highlight bleh--sponsor bleh--sponsor-manage" onclick="_sponsor_manage()">
                                 ${trans[lang].settings.home.sponsor.manage}<div class="new-badge">${trans[lang].settings.new}</div>
                             </button>
+                            <button class="btn action highlight bleh--sponsor bleh--sponsor-refresh" onclick="_sponsor_check()">
+                                ${trans[lang].settings.home.sponsor.check}
+                            </button>
                         </div>
                     </div>
                     `) : (`
                     <h4>${trans[lang].settings.home.sponsor.status.no}</h4>
+                    <div class="alert alert-info">${trans[lang].settings.home.sponsor.version
+                    .replace('{v}', `<span class="version-link sponsor-related">${sponsor_list.latest}</span>`)}</div>
                     <div class="screen-row actions-only">
                         <div class="actions">
                             <button class="btn action highlight bleh--sponsor" onclick="_sponsor()">
                                 ${trans[lang].settings.home.sponsor.name}<div class="new-badge">${trans[lang].settings.new}</div>
+                            </button>
+                            <button class="btn action highlight bleh--sponsor bleh--sponsor-refresh" onclick="_sponsor_check()">
+                                ${trans[lang].settings.home.sponsor.check}
                             </button>
                         </div>
                     </div>

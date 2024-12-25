@@ -264,7 +264,7 @@ a,
 .action,
 [data-season],
 .small-alert,
-.lotus, [data-theme="lotus-tooltip-corrected"],
+.lotus, [data-theme="lotus-tooltip-corrected"], .sponsor-related,
 .pro-badge, .vote-number,
 .staff-profile .header-title, .staff-shout, .staff-shout a,
 .changelog-version-item,
@@ -10182,6 +10182,7 @@ text[style^="color: rgb(0, 0, 0)"] {
     color: hsl(var(--l2-c-theme-switch)) !important;
     font-weight: var(--font-weight-medium) !important;
     text-align: left;
+    cursor: default;
     position: relative;
     --left: 0;
 
@@ -13333,6 +13334,9 @@ code, kbd, samp {
                 --hue-over: 333;
                 --sat-over: 1;
                 --lit-over: 1;
+            }
+            &.bleh--sponsor-refresh {
+                --mask: var(--icon-16-refresh);
             }
 
             h5 {
@@ -18791,6 +18795,11 @@ section > .section-controls .subpage-title {
 .sponsor {
     position: relative;
     --mask: var(--icon-16-heart);
+    --hue-over: 333;
+    --sat-over: 1;
+    --lit-over: 1;
+}
+.sponsor-related {
     --hue-over: 333;
     --sat-over: 1;
     --lit-over: 1;
