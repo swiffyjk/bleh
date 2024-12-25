@@ -2,7 +2,7 @@
     "latest": "2024.1225",
     "sponsors": [
         "cutensilly", "kateshapedbox",
-        "astrablooms"
+        "astrablooms", "ItsProyal"
     ],
     "sponsor_count_remove": 2,
     "sponsor_account": "kateshapedbox",
@@ -106,6 +106,9 @@
                 "type": "cosmic",
                 "name": "cosmic regent"
             }
-        ]
+        ],
+        "ItsProyal": {
+            "type": "sponsor"
+        }
     }
 }

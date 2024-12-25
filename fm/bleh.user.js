@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         bleh
 // @namespace    http://last.fm/
-// @version      2024.1224
+// @version      2024.1225
 // @description  bleh!!! ^-^
 // @author       kate
 // @match        https://www.last.fm/*
@@ -21,7 +21,7 @@
 
 let version = {
     brand: 'bleh',
-    build: '2024.1224.1',
+    build: '2024.1225',
     sku: 'taiga',
     feature_flags: {
         bleh_settings_tabs: {
@@ -157,6 +157,10 @@ let lang_info = {
 const trans = {
     en: {
         badges: {
+            missing: 'No badges',
+            pro: 'Last.fm Pro',
+            contributor: 'bleh contributor',
+            cat: 'it\s a kitty!!',
             sponsor: 'Sponsor of bleh and bwaa'
         },
         lotus: {
@@ -397,7 +401,16 @@ const trans = {
                     name: 'Sponsor',
                     header: 'Sponsor the development of bleh and bwaa',
                     bio: 'If you feel my work on these projects is worthy of donations you are welcome to sponsor me on GitHub. This is of course optional and bleh will forever be open-source and free.',
-                    thanks: 'Thank you for sponsoring {m}, you are running bleh version {v}.'
+                    thanks: 'Thank you for sponsoring {m}, you are running bleh version {v}.',
+                    status: {
+                        yes: 'You are a sponsor, thank you!',
+                        no: 'Become a sponsor to get a custom badge',
+                        badge: 'To configure your custom badge, get in touch with me.'
+                    },
+                    manage: 'Manage sponsorship',
+                    check: 'Refresh badges',
+                    download: 'Sponsorship and badge data downloaded!',
+                    version: 'You have version {v} of the sponsorship/badge data downloaded.'
                 }
             },
             appearance: {
@@ -593,7 +606,7 @@ const trans = {
             },
             activities: {
                 name: 'Activities',
-                bio: 'Track your most recent activities locally on your profile.',
+                bio: 'Display your most recent activities locally on your profile, only for you to see.',
                 toggle: {
                     name: 'Enable activity tracking',
                     bio: 'Events will only be registered and displayed while enabled.'
@@ -634,7 +647,7 @@ const trans = {
                 }
             },
             profiles: {
-                name: 'Profiles',
+                name: 'Profile',
                 bio: 'Manage your personal data and data stored on other profiles.',
                 notes: {
                     name: 'Notes',
@@ -645,7 +658,8 @@ const trans = {
                     edit_user: 'Edit {u}\'s note',
                     delete_user: 'Remove {u}\'s note',
                     view: 'View your profile notes'
-                }
+                },
+                you: 'You'
             },
             redirects: {
                 name: 'Redirects',
@@ -972,6 +986,13 @@ const trans = {
         }
     },
     de: {
+        badges: {
+            missing: 'No badges',
+            pro: 'Last.fm Pro',
+            contributor: 'bleh contributor',
+            cat: 'it\s a kitty!!',
+            sponsor: 'Sponsor of bleh and bwaa'
+        },
         lotus: {
             artist: 'Artist corrections have been downloaded!',
             album_track: 'Album and track corrections have been downloaded!',
@@ -1190,7 +1211,15 @@ const trans = {
                     name: 'Sponsor',
                     header: 'Sponsor the development of bleh and bwaa',
                     bio: 'If you feel my work on these projects is worthy of donations you are welcome to sponsor me on GitHub. This is of course optional and bleh will forever be open-source and free.',
-                    thanks: 'Thank you for sponsoring {m}, you are running bleh version {v}.'
+                    thanks: 'Thank you for sponsoring {m}, you are running bleh version {v}.',
+                    status: {
+                        yes: 'You are a sponsor, thank you!',
+                        no: 'Become a sponsor to get a custom badge'
+                    },
+                    manage: 'Manage sponsorship',
+                    check: 'Refresh badges',
+                    download: 'Sponsorship and badge data downloaded!',
+                    version: 'You have version {v} of the sponsorship/badge data downloaded.'
                 }
             },
             appearance: {
@@ -1774,6 +1803,13 @@ const trans = {
         }
     },
     pl: {
+        badges: {
+            missing: 'No badges',
+            pro: 'Last.fm Pro',
+            contributor: 'bleh contributor',
+            cat: 'it\s a kitty!!',
+            sponsor: 'Sponsor of bleh and bwaa'
+        },
         lotus: {
             artist: 'Artist corrections have been downloaded!',
             album_track: 'Album and track corrections have been downloaded!',
@@ -1995,7 +2031,15 @@ const trans = {
                     name: 'Sponsor',
                     header: 'Sponsor the development of bleh and bwaa',
                     bio: 'If you feel my work on these projects is worthy of donations you are welcome to sponsor me on GitHub. This is of course optional and bleh will forever be open-source and free.',
-                    thanks: 'Thank you for sponsoring {m}, you are running bleh version {v}.'
+                    thanks: 'Thank you for sponsoring {m}, you are running bleh version {v}.',
+                    status: {
+                        yes: 'You are a sponsor, thank you!',
+                        no: 'Become a sponsor to get a custom badge'
+                    },
+                    manage: 'Manage sponsorship',
+                    check: 'Refresh badges',
+                    download: 'Sponsorship and badge data downloaded!',
+                    version: 'You have version {v} of the sponsorship/badge data downloaded.'
                 }
             },
             appearance: {
@@ -2228,7 +2272,7 @@ const trans = {
                 }
             },
             profiles: {
-                name: 'Profile',
+                name: 'Profil',
                 bio: 'Zarządzaj swoimi danymi i danymi zapisanych na innych profilach.',
                 notes: {
                     name: 'Notatki',
@@ -2678,6 +2722,9 @@ function log(text, system, type = 'info', append={}) {
         case 'settings':
             system_colour = '#6D6977';
             break;
+        case 'sponsor':
+            system_colour = '#CE4E88';
+            break;
         default:
             system_colour = '#C8DD88';
             break;
@@ -2709,125 +2756,7 @@ let theme_preview = (`
 
 
 let cute = ['cutensilly', 'inozom', 'kateshapedbox'];
-let sponsors = [
-    'cutensilly', 'kateshapedbox',
-    'astrablooms'
-];
-let sponsor_account = 'kateshapedbox';
-let sponsor_link = 'https://github.com/sponsors/katelyynn';
-
-let profile_badges = {
-    'cutensilly': [
-        {
-            type: 'contributor',
-            name: 'bleh contributor'
-        },
-        {
-            type: 'queen',
-            name: 'blehhhhhhhhhh!!'
-        },
-        {
-            type: 'cute',
-            name: 'cute'
-        }
-    ],
-    'kateshapedbox': [
-        {
-            type: 'contributor',
-            name: 'bleh contributor'
-        },
-        {
-            type: 'queen',
-            name: 'blehhhhhhhhhh!!'
-        },
-        {
-            type: 'cute',
-            name: 'cute'
-        },
-        {
-            type: 'sponsor'
-        }
-    ],
-    'boba2814': {
-        type: 'cat',
-        name: 'it\'s a kitty!!'
-    },
-    'bIeak': [
-        {
-            type: 'cat',
-            name: 'it\'s a kitty!!'
-        },
-        {
-            type: 'glaive',
-            name: '#1 glaive fan'
-        }
-    ],
-    'twolay': [
-        {
-            type: 'cat',
-            name: 'it\'s a kitty!!'
-        },
-        {
-            type: 'translation',
-            name: 'translated bleh into Polski'
-        },
-        {
-            type: 'contributor',
-            name: 'bleh contributor'
-        }
-    ],
-    'aoivee': {
-        type: 'cat',
-        name: 'it\'s a kitty!!'
-    },
-    'Serprety': {
-        type: 'cat',
-        name: 'it\'s a kitty!!'
-    },
-    'RazzBX': {
-        type: 'cat',
-        name: 'it\'s a kitty!!'
-    },
-    'ivyshandle': {
-        type: 'cat',
-        name: 'it\'s a kitty!!'
-    },
-    'KuroinHeroin': {
-        type: 'mask',
-        name: 'kimchi lover'
-    },
-    'u5c': {
-        type: 'paw',
-        name: 'silly creature'
-    },
-    'destons': {
-        type: 'colon-three',
-        name: ':3²'
-    },
-    'inozom': [
-        {
-            type: 'contributor',
-            name: 'bleh contributor'
-        },
-        {
-            type: 'translation',
-            name: 'translated bleh into Deutsch'
-        },
-        {
-            type: 'cute',
-            name: 'cute'
-        }
-    ],
-    'astrablooms': [
-        {
-            type: 'sponsor'
-        },
-        {
-            type: 'cosmic',
-            name: 'cosmic regent'
-        }
-    ]
-};
+let sponsor_list = null;
 
 
 // require page reload
@@ -3593,9 +3522,10 @@ let has_prompted_for_update = false;
         load_activities();
         notify_if_new_update();
 
-        append_nav();
-
         lotus();
+        sponsors();
+
+        append_nav();
 
         try {
             //throw new Error;
@@ -4328,11 +4258,11 @@ let has_prompted_for_update = false;
             is_pro = false;
         }
 
-        if (profile_badges.hasOwnProperty(auth)) {
-            if (!Array.isArray(profile_badges[auth])) {
+        if (sponsor_list && sponsor_list.badges.hasOwnProperty(auth)) {
+            if (!Array.isArray(sponsor_list.badges[auth])) {
                 // default
-                log(`1 badge:`, 'auth', 'info', profile_badges[auth]);
-                let this_badge = profile_badges[auth];
+                log(`1 badge:`, 'auth', 'info', sponsor_list.badges[auth]);
+                let this_badge = sponsor_list.badges[auth];
 
                 let badge = document.createElement('span');
                 badge.classList.add('label', `user-status--bleh-${this_badge.type}`, `user-status--bleh-user-${auth}`, 'auth-badge');
@@ -4340,9 +4270,9 @@ let has_prompted_for_update = false;
                 auth_link.appendChild(badge);
             } else {
                 // multiple
-                log(`multiple badges:`, 'auth', 'info', profile_badges[auth]);
-                let badges_length = Object.keys(profile_badges[auth]).length - 1;
-                let this_badge = profile_badges[auth][badges_length];
+                log(`multiple badges:`, 'auth', 'info', sponsor_list.badges[auth]);
+                let badges_length = Object.keys(sponsor_list.badges[auth]).length - 1;
+                let this_badge = sponsor_list.badges[auth][badges_length];
                 log(`using badge ${badges_length} as primary`, 'auth', 'info', this_badge);
 
                 let badge = document.createElement('span');
@@ -6222,7 +6152,7 @@ let has_prompted_for_update = false;
             }
 
 
-            if (page.name == sponsor_account && !is_own_profile) {
+            if (page.name == sponsor_list.sponsor_account && !is_own_profile) {
                 page.structure.container.removeChild(page.structure.nav);
                 page.structure.main.innerHTML = '';
                 page.structure.side.innerHTML = '';
@@ -6467,11 +6397,11 @@ let has_prompted_for_update = false;
         else
             profile_name_obj = profile_header.querySelector('.header-title-label-wrap');
 
-        if (profile_badges.hasOwnProperty(page.name)) {
-            if (!Array.isArray(profile_badges[page.name])) {
+        if (sponsor_list.badges.hasOwnProperty(page.name)) {
+            if (!Array.isArray(sponsor_list.badges[page.name])) {
                 // default
-                log(`1 badge:`, 'profile', 'info', profile_badges[page.name]);
-                let this_badge = profile_badges[page.name];
+                log(`1 badge:`, 'profile', 'info', sponsor_list.badges[page.name]);
+                let this_badge = sponsor_list.badges[page.name];
 
                 let badge = document.createElement('span');
                 badge.classList.add('label',`user-status--bleh-${this_badge.type}`,`user-status--bleh-user-${page.name}`);
@@ -6479,9 +6409,9 @@ let has_prompted_for_update = false;
                 profile_name_obj.appendChild(badge);
             } else {
                 // multiple
-                log(`multiple badges:`, 'profile', 'info', profile_badges[page.name]);
-                for (let badge_entry in profile_badges[page.name]) {
-                    let this_badge = profile_badges[page.name][badge_entry];
+                log(`multiple badges:`, 'profile', 'info', sponsor_list.badges[page.name]);
+                for (let badge_entry in sponsor_list.badges[page.name]) {
+                    let this_badge = sponsor_list.badges[page.name][badge_entry];
 
                     let badge = document.createElement('span');
                     badge.classList.add('label',`user-status--bleh-${this_badge.type}`,`user-status--bleh-user-${page.name}`);
@@ -6616,7 +6546,7 @@ let has_prompted_for_update = false;
         let taste_artists = [];
         let profile_avi = '';
 
-        if (!is_own_profile && page.name != sponsor_account) {
+        if (!is_own_profile && page.name != sponsor_list.sponsor_account) {
             let taste_meter = base_header.querySelector('.tasteometer');
 
             taste = taste_meter.classList[1].replace('tasteometer-compat-', '');
@@ -6691,7 +6621,7 @@ let has_prompted_for_update = false;
             // message
             let msg_button = document.body.querySelector('.header-message-user');
             if (msg_button != null) {
-                if (page.name != sponsor_account) {
+                if (page.name != sponsor_list.sponsor_account) {
                     create_profile_top_item(profile_header, {
                         name: page.name,
                         type: 'message',
@@ -6716,7 +6646,7 @@ let has_prompted_for_update = false;
 
 
             // shortcut
-            if (page.name != sponsor_account) {
+            if (page.name != sponsor_list.sponsor_account) {
                 create_profile_top_item(profile_header, {
                     name: page.name,
                     type: 'shortcut',
@@ -6733,7 +6663,7 @@ let has_prompted_for_update = false;
             });
         }
 
-        if (page.name != sponsor_account) {
+        if (page.name != sponsor_list.sponsor_account) {
             let listen_divider = document.createElement('div');
             listen_divider.classList.add('listen-divider');
 
@@ -7188,7 +7118,7 @@ let has_prompted_for_update = false;
         // rather than the top
         avatar_img.setAttribute('src', avatar_img.getAttribute('src').replace('/64s/', '/avatar70s/'));
 
-        if (profile_badges.hasOwnProperty(name)) {
+        if (sponsor_list.badges.hasOwnProperty(name)) {
             // remove pre-existing badge
             let pre_existing_badge = avatar.querySelector('.avatar-status-dot');
             if (pre_existing_badge !== null)
@@ -7196,15 +7126,15 @@ let has_prompted_for_update = false;
 
             avatar.setAttribute('title','');
 
-            let this_badge = profile_badges[name];
-            if (!Array.isArray(profile_badges[name])) {
+            let this_badge = sponsor_list.badges[name];
+            if (!Array.isArray(sponsor_list.badges[name])) {
                 // default
-                log(`@${name} 1 badge:`, 'shout', 'info', profile_badges[name]);
+                log(`@${name} 1 badge:`, 'shout', 'info', sponsor_list.badges[name]);
             } else {
                 // multiple
-                log(`@${name} multiple badges:`, 'shout', 'info', profile_badges[name]);
-                let badges_length = Object.keys(profile_badges[name]).length - 1;
-                this_badge = profile_badges[name][badges_length];
+                log(`@${name} multiple badges:`, 'shout', 'info', sponsor_list.badges[name]);
+                let badges_length = Object.keys(sponsor_list.badges[name]).length - 1;
+                this_badge = sponsor_list.badges[name][badges_length];
                 log(`@${name} using badge ${badges_length} as primary`, 'shout', 'info', this_badge);
             }
 
@@ -7224,7 +7154,7 @@ let has_prompted_for_update = false;
                     <div class="info">
                         <h5 class="title ${(cute.includes(name)) ? 'bleh--name-is-cute-less' : ''}">${name}</h5>
                         <p class="descriptor">${trans[lang].profile.top_badge}</p>
-                        <p class="badge user-status--bleh-${this_badge.type} user-status--bleh-user-${name}" data-badge-type="${this_badge.type}" data-badge-user="${name}">${this_badge.name}</p>
+                        <p class="badge user-status--bleh-${this_badge.type} user-status--bleh-user-${name}" data-badge-type="${this_badge.type}" data-badge-user="${name}">${(this_badge.name != null) ? this_badge.name : trans[lang].badges[this_badge.type]}</p>
                     </div>
                 `),
                 allowHTML: true,
@@ -7805,8 +7735,8 @@ let has_prompted_for_update = false;
                         </a>
                     </li>
                     <li class="navlist-item secondary-nav-item">
-                        <a class="secondary-nav-item-link bleh--nav" data-bleh-page="accessibility" onclick="_change_settings_page('accessibility')">
-                            ${trans[lang].settings.accessibility.name}
+                        <a class="secondary-nav-item-link bleh--nav" data-bleh-page="profiles" onclick="_change_settings_page('profiles')">
+                            ${trans[lang].settings.profiles.name}
                         </a>
                     </li>
                     <li class="navlist-item secondary-nav-item">
@@ -7820,8 +7750,8 @@ let has_prompted_for_update = false;
                         </a>
                     </li>
                     <li class="navlist-item secondary-nav-item">
-                        <a class="secondary-nav-item-link bleh--nav" data-bleh-page="profiles" onclick="_change_settings_page('profiles')">
-                            ${trans[lang].settings.profiles.name}
+                        <a class="secondary-nav-item-link bleh--nav" data-bleh-page="accessibility" onclick="_change_settings_page('accessibility')">
+                            ${trans[lang].settings.accessibility.name}
                         </a>
                     </li>
                     <li class="navlist-item secondary-nav-item">
@@ -7955,7 +7885,9 @@ let has_prompted_for_update = false;
             head.textContent = trans[lang].settings.home.name;
             register_skip_to([]);
 
-            let sponsoring = sponsors.includes(auth);
+            let sponsoring = false;
+            if (sponsor_list)
+                sponsoring = sponsor_list.sponsors.includes(auth);
 
             return (`
             <div class="bleh--panel">
@@ -8978,9 +8910,68 @@ let has_prompted_for_update = false;
                 `);
         } else if (page == 'profiles') {
             head.textContent = trans[lang].settings.profiles.name;
-            register_skip_to([]);
+            register_skip_to([
+                {
+                    id: 'activities',
+                    name: trans[lang].settings.activities.toggle.name
+                }
+            ]);
+
+            let sponsoring = false;
+            if (sponsor_list)
+                sponsoring = sponsor_list.sponsors.includes(auth);
 
             return (`
+                <div class="bleh--panel sponsor-badge-panel" data-sponsoring="${sponsoring}">
+                    <div class="profile-container">
+                        <div class="avatar-side small">
+                            <div class="avatar">
+                                <img src="${my_avi.replace('/avatar42s/', '/avatar170s/')}" alt="Your avatar" loading="lazy">
+                            </div>
+                        </div>
+                        <div class="info-side">
+                            <div class="header-info">
+                                <div class="sub-text">${trans[lang].settings.profiles.you}</div>
+                                <div class="header standalone title-container">
+                                    <h1>${auth}</h1>
+                                    ${(is_pro) ? (`
+                                    <span class="label user-status-subscriber">${trans[lang].badges.pro}</span>
+                                    `) : ''}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="sep"></div>
+                    ${(sponsoring) ? (`
+                    <h4>${trans[lang].settings.home.sponsor.status.yes}</h4>
+                    <div class="alert alert-info">${trans[lang].settings.home.sponsor.version
+                    .replace('{v}', `<span class="version-link sponsor-related">${sponsor_list.latest}</span>`)}</div>
+                    <div class="screen-row actions-only">
+                        <div class="actions">
+                            <button class="btn action highlight bleh--sponsor bleh--sponsor-manage" onclick="_sponsor_manage()">
+                                ${trans[lang].settings.home.sponsor.manage}<div class="new-badge">${trans[lang].settings.new}</div>
+                            </button>
+                            <button class="btn action highlight bleh--sponsor bleh--sponsor-refresh" onclick="_sponsor_check()">
+                                ${trans[lang].settings.home.sponsor.check}
+                            </button>
+                        </div>
+                    </div>
+                    `) : (`
+                    <h4>${trans[lang].settings.home.sponsor.status.no}</h4>
+                    <div class="alert alert-info">${trans[lang].settings.home.sponsor.version
+                    .replace('{v}', `<span class="version-link sponsor-related">${sponsor_list.latest}</span>`)}</div>
+                    <div class="screen-row actions-only">
+                        <div class="actions">
+                            <button class="btn action highlight bleh--sponsor" onclick="_sponsor()">
+                                ${trans[lang].settings.home.sponsor.name}<div class="new-badge">${trans[lang].settings.new}</div>
+                            </button>
+                            <button class="btn action highlight bleh--sponsor bleh--sponsor-refresh" onclick="_sponsor_check()">
+                                ${trans[lang].settings.home.sponsor.check}
+                            </button>
+                        </div>
+                    </div>
+                    `)}
+                </div>
                 <div class="bleh--panel">
                     <h4>${trans[lang].settings.activities.name}</h4>
                     <p>${trans[lang].settings.activities.bio}</p>
@@ -9665,6 +9656,7 @@ let has_prompted_for_update = false;
             refresh_all();
         } else if (page == 'profiles') {
             init_profile_notes();
+            init_profile_page();
         } else if (page == 'sku') {
             bleh_sku_page();
         }
@@ -9844,6 +9836,39 @@ let has_prompted_for_update = false;
         localStorage.setItem('bleh', JSON.stringify(settings));
     }
 
+
+    function init_profile_page() {
+        let profile_name_obj = document.body.querySelector('.title-container');
+
+        if (sponsor_list.badges.hasOwnProperty(auth)) {
+            if (!Array.isArray(sponsor_list.badges[auth])) {
+                // default
+                log(`1 badge:`, 'profile', 'info', sponsor_list.badges[auth]);
+                let this_badge = sponsor_list.badges[auth];
+
+                let badge = document.createElement('span');
+                badge.classList.add('label',`user-status--bleh-${this_badge.type}`,`user-status--bleh-user-${auth}`);
+                badge.textContent = (this_badge.name != null) ? this_badge.name : trans[lang].badges[this_badge.type];
+                profile_name_obj.appendChild(badge);
+            } else {
+                // multiple
+                log(`multiple badges:`, 'profile', 'info', sponsor_list.badges[auth]);
+                for (let badge_entry in sponsor_list.badges[auth]) {
+                    let this_badge = sponsor_list.badges[auth][badge_entry];
+
+                    let badge = document.createElement('span');
+                    badge.classList.add('label',`user-status--bleh-${this_badge.type}`,`user-status--bleh-user-${auth}`);
+                    badge.textContent = (this_badge.name != null) ? this_badge.name : trans[lang].badges[this_badge.type];
+                    profile_name_obj.appendChild(badge);
+                }
+            }
+        } else {
+            let badge = document.createElement('span');
+            badge.classList.add('label','user-status--bleh-missing');
+            badge.textContent = trans[lang].badges.missing;
+            profile_name_obj.appendChild(badge);
+        }
+    }
 
     function init_profile_notes() {
         let profile_notes = JSON.parse(localStorage.getItem('bleh_profile_notes')) || {};
@@ -13552,6 +13577,79 @@ let has_prompted_for_update = false;
         });
 
         prepare_corrections_page();
+    }
+
+
+
+
+    function sponsors(force = false) {
+        if (!ff('sponsor'))
+            return;
+
+        let sponsor_data = localStorage.getItem('kat_sponsors');
+        let sponsor_expire = new Date(localStorage.getItem('kat_sponsors_expire'));
+
+        let current_time = new Date();
+
+        if (sponsor_data == null) {
+            log('not cached, fetching', 'sponsor');
+            sponsor_request(true);
+        } else {
+            // we prefer to load the current cache before waiting for a new response
+            sponsor_list = JSON.parse(sponsor_data);
+
+            // is it valid?
+            if (sponsor_expire < current_time && !force) {
+                sponsor_request();
+            } else if (force) {
+                sponsor_request(true);
+            }
+        }
+    }
+
+    function sponsor_request(notify = false) {
+        let button = document.body.querySelector('[onclick="_sponsor_check()"]');
+        if (button != null)
+            button.setAttribute('disabled', '');
+
+        let xhr = new XMLHttpRequest();
+        let url = `https://katelyynn.github.io/bleh/fm/badges/badges.json?${Math.random()}`;
+        xhr.open('GET',url,true);
+
+        xhr.onload = function() {
+            log(`list responded with ${xhr.status}`, 'sponsor');
+
+            if (xhr.status != 200) {
+                log('request has been cancelled, will request again in 1h', 'sponsor');
+                api_expire.setHours(api_expire.getHours() + 1);
+            }
+
+            // set expire date
+            let api_expire = new Date();
+
+            if (xhr.status == 200) {
+                sponsor_list = JSON.parse(this.response);
+
+                if (notify)
+                    deliver_notif(trans[lang].settings.home.sponsor.download, false, true, 'sponsor');
+
+                // save to cache for next page load
+                localStorage.setItem('kat_sponsors', this.response);
+                api_expire.setHours(api_expire.getHours() + 4);
+                log(`list cached until ${api_expire}`, 'sponsor');
+            }
+
+            localStorage.setItem('kat_sponsors_expire', api_expire);
+
+            if (button != null)
+                button.removeAttribute('disabled');
+        }
+
+        xhr.send();
+    }
+
+    unsafeWindow._sponsor_check = function() {
+        sponsors(true);
     }
 
 
@@ -17730,8 +17828,31 @@ let has_prompted_for_update = false;
                     <p>${trans[lang].settings.home.sponsor.bio}</p>
                 </div>
                 <div class="modal-footer">
-                    <a class="btn primary sponsor" href="${sponsor_link}" target="_blank">
+                    <a class="btn primary sponsor" href="${sponsor_list.sponsor_link}" target="_blank">
                         ${trans[lang].settings.home.sponsor.name}
+                    </a>
+                </div>
+            `),
+            type: 'sponsor'
+        });
+    }
+
+    unsafeWindow._sponsor_manage = function() {
+        sponsor_manage();
+    }
+    function sponsor_manage() {
+        dialog({
+            id: 'sponsor_manage',
+            title: trans[lang].settings.home.sponsor.header,
+            body: (`
+                <div class="support-inner">
+                    <div class="bleh-icon sponsor-heart"></div>
+                    <h1>${trans[lang].settings.home.sponsor.status.yes}</h1>
+                    <p>${trans[lang].settings.home.sponsor.status.badge}</p>
+                </div>
+                <div class="modal-footer">
+                    <a class="btn primary sponsor" href="${root}user/${sponsor_list.sponsor_account}" target="_blank">
+                        ${trans[lang].settings.home.sponsor.manage}
                     </a>
                 </div>
             `),
