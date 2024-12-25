@@ -634,7 +634,7 @@ const trans = {
                 }
             },
             profiles: {
-                name: 'Profiles',
+                name: 'Profile',
                 bio: 'Manage your personal data and data stored on other profiles.',
                 notes: {
                     name: 'Notes',
@@ -2228,7 +2228,7 @@ const trans = {
                 }
             },
             profiles: {
-                name: 'Profile',
+                name: 'Profil',
                 bio: 'Zarządzaj swoimi danymi i danymi zapisanych na innych profilach.',
                 notes: {
                     name: 'Notatki',
@@ -7805,8 +7805,8 @@ let has_prompted_for_update = false;
                         </a>
                     </li>
                     <li class="navlist-item secondary-nav-item">
-                        <a class="secondary-nav-item-link bleh--nav" data-bleh-page="accessibility" onclick="_change_settings_page('accessibility')">
-                            ${trans[lang].settings.accessibility.name}
+                        <a class="secondary-nav-item-link bleh--nav" data-bleh-page="profiles" onclick="_change_settings_page('profiles')">
+                            ${trans[lang].settings.profiles.name}
                         </a>
                     </li>
                     <li class="navlist-item secondary-nav-item">
@@ -7820,8 +7820,8 @@ let has_prompted_for_update = false;
                         </a>
                     </li>
                     <li class="navlist-item secondary-nav-item">
-                        <a class="secondary-nav-item-link bleh--nav" data-bleh-page="profiles" onclick="_change_settings_page('profiles')">
-                            ${trans[lang].settings.profiles.name}
+                        <a class="secondary-nav-item-link bleh--nav" data-bleh-page="accessibility" onclick="_change_settings_page('accessibility')">
+                            ${trans[lang].settings.accessibility.name}
                         </a>
                     </li>
                     <li class="navlist-item secondary-nav-item">
@@ -8978,9 +8978,62 @@ let has_prompted_for_update = false;
                 `);
         } else if (page == 'profiles') {
             head.textContent = trans[lang].settings.profiles.name;
-            register_skip_to([]);
+            register_skip_to([
+                {
+                    id: 'activities',
+                    name: trans[lang].settings.activities.toggle.name
+                }
+            ]);
+
+            let sponsoring = sponsors.includes(auth);
 
             return (`
+                <div class="bleh--panel sponsor-badge-panel" data-sponsoring="${sponsoring}">
+                    <h4>${trans[lang].lotus.version
+                    .replace('lotus', `<a class="lotus lotus-name" href="https://github.com/katelyynn/lotus" target="_blank" id="lotus_hover">lotus</a>`)
+                    .replace('{v}', `<span class="version-link lotus">${(artist_corrections.version >= album_track_corrections.version) ? artist_corrections.version : album_track_corrections.version}</span>`)}</h4>
+                    <p>${trans[lang].settings.corrections.bio}</p>
+                    <!--<div class="screen-row actions-only">
+                        <div class="actions">
+                            <a class="btn action" href="https://github.com/katelyynn/bleh/issues/new/choose" target="_blank">
+                                <div class="icon bleh--correction"></div>
+                                <span class="text">
+                                    <h5>${trans[lang].settings.corrections.submit.name}</h5>
+                                </span>
+                            </a>
+                            <button class="btn action" onclick="_open_correction_modal()">
+                                <div class="icon bleh--correction_modal"></div>
+                                <span class="text">
+                                    <h5>${trans[lang].settings.corrections.view.name}</h5>
+                                </span>
+                            </button>
+                        </div>
+                    </div>-->
+                    <div class="screen-row actions-only">
+                        <div class="actions">
+                            <a class="btn primary external lotus" href="https://github.com/katelyynn/lotus/issues/new/choose" target="_blank">
+                                ${trans[lang].settings.corrections.submit.name}
+                            </a>
+                            <button class="btn continue" onclick="_open_correction_modal()">
+                                ${trans[lang].settings.corrections.view.name}
+                            </button>
+                            <button class="btn continue" onclick="_lotus_check()">
+                                ${trans[lang].lotus.check}
+                            </button>
+                        </div>
+                    </div>
+                    <div class="toggle-container" id="container-corrections" onclick="_update_item('corrections')">
+                        <button class="btn reset" onclick="_reset_item('corrections')">${trans[lang].settings.reset}</button>
+                        <div class="heading">
+                            <h5>${trans[lang].settings.corrections.toggle.name}</h5>
+                        </div>
+                        <div class="toggle-wrap">
+                            <button class="toggle lotus" id="toggle-corrections" aria-checked="true">
+                                <div class="dot"></div>
+                            </button>
+                        </div>
+                    </div>
+                </div>
                 <div class="bleh--panel">
                     <h4>${trans[lang].settings.activities.name}</h4>
                     <p>${trans[lang].settings.activities.bio}</p>
