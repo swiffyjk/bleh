@@ -406,7 +406,8 @@ const trans = {
                         yes: 'You are a sponsor, thank you!',
                         no: 'Become a sponsor to get a custom badge'
                     },
-                    manage: 'Manage sponsorship'
+                    manage: 'Manage sponsorship',
+                    download: 'Sponsorship and badge data downloaded!'
                 }
             },
             appearance: {
@@ -1207,7 +1208,13 @@ const trans = {
                     name: 'Sponsor',
                     header: 'Sponsor the development of bleh and bwaa',
                     bio: 'If you feel my work on these projects is worthy of donations you are welcome to sponsor me on GitHub. This is of course optional and bleh will forever be open-source and free.',
-                    thanks: 'Thank you for sponsoring {m}, you are running bleh version {v}.'
+                    thanks: 'Thank you for sponsoring {m}, you are running bleh version {v}.',
+                    status: {
+                        yes: 'You are a sponsor, thank you!',
+                        no: 'Become a sponsor to get a custom badge'
+                    },
+                    manage: 'Manage sponsorship',
+                    download: 'Sponsorship and badge data downloaded!'
                 }
             },
             appearance: {
@@ -2019,7 +2026,13 @@ const trans = {
                     name: 'Sponsor',
                     header: 'Sponsor the development of bleh and bwaa',
                     bio: 'If you feel my work on these projects is worthy of donations you are welcome to sponsor me on GitHub. This is of course optional and bleh will forever be open-source and free.',
-                    thanks: 'Thank you for sponsoring {m}, you are running bleh version {v}.'
+                    thanks: 'Thank you for sponsoring {m}, you are running bleh version {v}.',
+                    status: {
+                        yes: 'You are a sponsor, thank you!',
+                        no: 'Become a sponsor to get a custom badge'
+                    },
+                    manage: 'Manage sponsorship',
+                    download: 'Sponsorship and badge data downloaded!'
                 }
             },
             appearance: {
@@ -2702,6 +2715,9 @@ function log(text, system, type = 'info', append={}) {
         case 'settings':
             system_colour = '#6D6977';
             break;
+        case 'sponsor':
+            system_colour = '#CE4E88';
+            break;
         default:
             system_colour = '#C8DD88';
             break;
@@ -2733,125 +2749,7 @@ let theme_preview = (`
 
 
 let cute = ['cutensilly', 'inozom', 'kateshapedbox'];
-let sponsors = [
-    'cutensilly', 'kateshapedbox',
-    'astrablooms'
-];
-let sponsor_account = 'kateshapedbox';
-let sponsor_link = 'https://github.com/sponsors/katelyynn';
-
-let profile_badges = {
-    'cutensilly': [
-        {
-            type: 'contributor',
-            name: 'bleh contributor'
-        },
-        {
-            type: 'queen',
-            name: 'blehhhhhhhhhh!!'
-        },
-        {
-            type: 'cute',
-            name: 'cute'
-        }
-    ],
-    'kateshapedbox': [
-        {
-            type: 'contributor',
-            name: 'bleh contributor'
-        },
-        {
-            type: 'queen',
-            name: 'blehhhhhhhhhh!!'
-        },
-        {
-            type: 'cute',
-            name: 'cute'
-        },
-        {
-            type: 'sponsor'
-        }
-    ],
-    'boba2814': {
-        type: 'cat',
-        name: 'it\'s a kitty!!'
-    },
-    'bIeak': [
-        {
-            type: 'cat',
-            name: 'it\'s a kitty!!'
-        },
-        {
-            type: 'glaive',
-            name: '#1 glaive fan'
-        }
-    ],
-    'twolay': [
-        {
-            type: 'cat',
-            name: 'it\'s a kitty!!'
-        },
-        {
-            type: 'translation',
-            name: 'translated bleh into Polski'
-        },
-        {
-            type: 'contributor',
-            name: 'bleh contributor'
-        }
-    ],
-    'aoivee': {
-        type: 'cat',
-        name: 'it\'s a kitty!!'
-    },
-    'Serprety': {
-        type: 'cat',
-        name: 'it\'s a kitty!!'
-    },
-    'RazzBX': {
-        type: 'cat',
-        name: 'it\'s a kitty!!'
-    },
-    'ivyshandle': {
-        type: 'cat',
-        name: 'it\'s a kitty!!'
-    },
-    'KuroinHeroin': {
-        type: 'mask',
-        name: 'kimchi lover'
-    },
-    'u5c': {
-        type: 'paw',
-        name: 'silly creature'
-    },
-    'destons': {
-        type: 'colon-three',
-        name: ':3²'
-    },
-    'inozom': [
-        {
-            type: 'contributor',
-            name: 'bleh contributor'
-        },
-        {
-            type: 'translation',
-            name: 'translated bleh into Deutsch'
-        },
-        {
-            type: 'cute',
-            name: 'cute'
-        }
-    ],
-    'astrablooms': [
-        {
-            type: 'sponsor'
-        },
-        {
-            type: 'cosmic',
-            name: 'cosmic regent'
-        }
-    ]
-};
+let sponsor_list = null;
 
 
 // require page reload
@@ -3617,9 +3515,10 @@ let has_prompted_for_update = false;
         load_activities();
         notify_if_new_update();
 
-        append_nav();
-
         lotus();
+        sponsors();
+
+        append_nav();
 
         try {
             //throw new Error;
@@ -4352,11 +4251,11 @@ let has_prompted_for_update = false;
             is_pro = false;
         }
 
-        if (profile_badges.hasOwnProperty(auth)) {
-            if (!Array.isArray(profile_badges[auth])) {
+        if (sponsor_list && sponsor_list.badges.hasOwnProperty(auth)) {
+            if (!Array.isArray(sponsor_list.badges[auth])) {
                 // default
-                log(`1 badge:`, 'auth', 'info', profile_badges[auth]);
-                let this_badge = profile_badges[auth];
+                log(`1 badge:`, 'auth', 'info', sponsor_list.badges[auth]);
+                let this_badge = sponsor_list.badges[auth];
 
                 let badge = document.createElement('span');
                 badge.classList.add('label', `user-status--bleh-${this_badge.type}`, `user-status--bleh-user-${auth}`, 'auth-badge');
@@ -4364,9 +4263,9 @@ let has_prompted_for_update = false;
                 auth_link.appendChild(badge);
             } else {
                 // multiple
-                log(`multiple badges:`, 'auth', 'info', profile_badges[auth]);
-                let badges_length = Object.keys(profile_badges[auth]).length - 1;
-                let this_badge = profile_badges[auth][badges_length];
+                log(`multiple badges:`, 'auth', 'info', sponsor_list.badges[auth]);
+                let badges_length = Object.keys(sponsor_list.badges[auth]).length - 1;
+                let this_badge = sponsor_list.badges[auth][badges_length];
                 log(`using badge ${badges_length} as primary`, 'auth', 'info', this_badge);
 
                 let badge = document.createElement('span');
@@ -6246,7 +6145,7 @@ let has_prompted_for_update = false;
             }
 
 
-            if (page.name == sponsor_account && !is_own_profile) {
+            if (page.name == sponsor_list.sponsor_account && !is_own_profile) {
                 page.structure.container.removeChild(page.structure.nav);
                 page.structure.main.innerHTML = '';
                 page.structure.side.innerHTML = '';
@@ -6491,11 +6390,11 @@ let has_prompted_for_update = false;
         else
             profile_name_obj = profile_header.querySelector('.header-title-label-wrap');
 
-        if (profile_badges.hasOwnProperty(page.name)) {
-            if (!Array.isArray(profile_badges[page.name])) {
+        if (sponsor_list.badges.hasOwnProperty(page.name)) {
+            if (!Array.isArray(sponsor_list.badges[page.name])) {
                 // default
-                log(`1 badge:`, 'profile', 'info', profile_badges[page.name]);
-                let this_badge = profile_badges[page.name];
+                log(`1 badge:`, 'profile', 'info', sponsor_list.badges[page.name]);
+                let this_badge = sponsor_list.badges[page.name];
 
                 let badge = document.createElement('span');
                 badge.classList.add('label',`user-status--bleh-${this_badge.type}`,`user-status--bleh-user-${page.name}`);
@@ -6503,9 +6402,9 @@ let has_prompted_for_update = false;
                 profile_name_obj.appendChild(badge);
             } else {
                 // multiple
-                log(`multiple badges:`, 'profile', 'info', profile_badges[page.name]);
-                for (let badge_entry in profile_badges[page.name]) {
-                    let this_badge = profile_badges[page.name][badge_entry];
+                log(`multiple badges:`, 'profile', 'info', sponsor_list.badges[page.name]);
+                for (let badge_entry in sponsor_list.badges[page.name]) {
+                    let this_badge = sponsor_list.badges[page.name][badge_entry];
 
                     let badge = document.createElement('span');
                     badge.classList.add('label',`user-status--bleh-${this_badge.type}`,`user-status--bleh-user-${page.name}`);
@@ -6640,7 +6539,7 @@ let has_prompted_for_update = false;
         let taste_artists = [];
         let profile_avi = '';
 
-        if (!is_own_profile && page.name != sponsor_account) {
+        if (!is_own_profile && page.name != sponsor_list.sponsor_account) {
             let taste_meter = base_header.querySelector('.tasteometer');
 
             taste = taste_meter.classList[1].replace('tasteometer-compat-', '');
@@ -6715,7 +6614,7 @@ let has_prompted_for_update = false;
             // message
             let msg_button = document.body.querySelector('.header-message-user');
             if (msg_button != null) {
-                if (page.name != sponsor_account) {
+                if (page.name != sponsor_list.sponsor_account) {
                     create_profile_top_item(profile_header, {
                         name: page.name,
                         type: 'message',
@@ -6740,7 +6639,7 @@ let has_prompted_for_update = false;
 
 
             // shortcut
-            if (page.name != sponsor_account) {
+            if (page.name != sponsor_list.sponsor_account) {
                 create_profile_top_item(profile_header, {
                     name: page.name,
                     type: 'shortcut',
@@ -6757,7 +6656,7 @@ let has_prompted_for_update = false;
             });
         }
 
-        if (page.name != sponsor_account) {
+        if (page.name != sponsor_list.sponsor_account) {
             let listen_divider = document.createElement('div');
             listen_divider.classList.add('listen-divider');
 
@@ -7212,7 +7111,7 @@ let has_prompted_for_update = false;
         // rather than the top
         avatar_img.setAttribute('src', avatar_img.getAttribute('src').replace('/64s/', '/avatar70s/'));
 
-        if (profile_badges.hasOwnProperty(name)) {
+        if (sponsor_list.badges.hasOwnProperty(name)) {
             // remove pre-existing badge
             let pre_existing_badge = avatar.querySelector('.avatar-status-dot');
             if (pre_existing_badge !== null)
@@ -7220,15 +7119,15 @@ let has_prompted_for_update = false;
 
             avatar.setAttribute('title','');
 
-            let this_badge = profile_badges[name];
-            if (!Array.isArray(profile_badges[name])) {
+            let this_badge = sponsor_list.badges[name];
+            if (!Array.isArray(sponsor_list.badges[name])) {
                 // default
-                log(`@${name} 1 badge:`, 'shout', 'info', profile_badges[name]);
+                log(`@${name} 1 badge:`, 'shout', 'info', sponsor_list.badges[name]);
             } else {
                 // multiple
-                log(`@${name} multiple badges:`, 'shout', 'info', profile_badges[name]);
-                let badges_length = Object.keys(profile_badges[name]).length - 1;
-                this_badge = profile_badges[name][badges_length];
+                log(`@${name} multiple badges:`, 'shout', 'info', sponsor_list.badges[name]);
+                let badges_length = Object.keys(sponsor_list.badges[name]).length - 1;
+                this_badge = sponsor_list.badges[name][badges_length];
                 log(`@${name} using badge ${badges_length} as primary`, 'shout', 'info', this_badge);
             }
 
@@ -7979,7 +7878,7 @@ let has_prompted_for_update = false;
             head.textContent = trans[lang].settings.home.name;
             register_skip_to([]);
 
-            let sponsoring = sponsors.includes(auth);
+            let sponsoring = sponsor_list.sponsors.includes(auth);
 
             return (`
             <div class="bleh--panel">
@@ -9009,7 +8908,7 @@ let has_prompted_for_update = false;
                 }
             ]);
 
-            let sponsoring = sponsors.includes(auth);
+            let sponsoring = sponsor_list.sponsors.includes(auth);
 
             return (`
                 <div class="bleh--panel sponsor-badge-panel" data-sponsoring="${sponsoring}">
@@ -9920,11 +9819,11 @@ let has_prompted_for_update = false;
     function init_profile_page() {
         let profile_name_obj = document.body.querySelector('.title-container');
 
-        if (profile_badges.hasOwnProperty(auth)) {
-            if (!Array.isArray(profile_badges[auth])) {
+        if (sponsor_list.badges.hasOwnProperty(auth)) {
+            if (!Array.isArray(sponsor_list.badges[auth])) {
                 // default
-                log(`1 badge:`, 'profile', 'info', profile_badges[auth]);
-                let this_badge = profile_badges[auth];
+                log(`1 badge:`, 'profile', 'info', sponsor_list.badges[auth]);
+                let this_badge = sponsor_list.badges[auth];
 
                 let badge = document.createElement('span');
                 badge.classList.add('label',`user-status--bleh-${this_badge.type}`,`user-status--bleh-user-${auth}`);
@@ -9932,9 +9831,9 @@ let has_prompted_for_update = false;
                 profile_name_obj.appendChild(badge);
             } else {
                 // multiple
-                log(`multiple badges:`, 'profile', 'info', profile_badges[auth]);
-                for (let badge_entry in profile_badges[auth]) {
-                    let this_badge = profile_badges[auth][badge_entry];
+                log(`multiple badges:`, 'profile', 'info', sponsor_list.badges[auth]);
+                for (let badge_entry in sponsor_list.badges[auth]) {
+                    let this_badge = sponsor_list.badges[auth][badge_entry];
 
                     let badge = document.createElement('span');
                     badge.classList.add('label',`user-status--bleh-${this_badge.type}`,`user-status--bleh-user-${auth}`);
@@ -13657,6 +13556,79 @@ let has_prompted_for_update = false;
         });
 
         prepare_corrections_page();
+    }
+
+
+
+
+    function sponsors(force = false) {
+        if (!ff('sponsor'))
+            return;
+
+        let sponsor_data = localStorage.getItem('kat_sponsors');
+        let sponsor_expire = new Date(localStorage.getItem('kat_sponsors_expire'));
+
+        let current_time = new Date();
+
+        if (sponsor_data == null) {
+            log('not cached, fetching', 'sponsor');
+            sponsor_request(true);
+        } else {
+            // we prefer to load the current cache before waiting for a new response
+            sponsor_list = JSON.parse(sponsor_data);
+
+            // is it valid?
+            if (sponsor_expire < current_time && !force) {
+                sponsor_request();
+            } else if (force) {
+                sponsor_request(true);
+            }
+        }
+    }
+
+    function sponsor_request(notify = false) {
+        let button = document.body.querySelector('[onclick="_sponsor_check()"]');
+        if (button != null)
+            button.setAttribute('disabled', '');
+
+        let xhr = new XMLHttpRequest();
+        let url = `https://katelyynn.github.io/bleh/fm/badges/badges.json?${Math.random()}`;
+        xhr.open('GET',url,true);
+
+        xhr.onload = function() {
+            log(`list responded with ${xhr.status}`, 'sponsor');
+
+            if (xhr.status != 200) {
+                log('request has been cancelled, will request again in 1h', 'sponsor');
+                api_expire.setHours(api_expire.getHours() + 1);
+            }
+
+            // set expire date
+            let api_expire = new Date();
+
+            if (xhr.status == 200) {
+                sponsor_list = JSON.parse(this.response);
+
+                if (notify)
+                    deliver_notif(trans[lang].settings.home.sponsor.download, false, true, 'sponsor');
+
+                // save to cache for next page load
+                localStorage.setItem('kat_sponsors', this.response);
+                api_expire.setHours(api_expire.getHours() + 4);
+                log(`list cached until ${api_expire}`, 'sponsor');
+            }
+
+            localStorage.setItem('kat_sponsors_expire', api_expire);
+
+            if (button != null)
+                button.removeAttribute('disabled');
+        }
+
+        xhr.send();
+    }
+
+    unsafeWindow._sponsor_check = function() {
+        sponsors(true);
     }
 
 
@@ -17835,7 +17807,7 @@ let has_prompted_for_update = false;
                     <p>${trans[lang].settings.home.sponsor.bio}</p>
                 </div>
                 <div class="modal-footer">
-                    <a class="btn primary sponsor" href="${sponsor_link}" target="_blank">
+                    <a class="btn primary sponsor" href="${sponsor_list.sponsor_link}" target="_blank">
                         ${trans[lang].settings.home.sponsor.name}
                     </a>
                 </div>
