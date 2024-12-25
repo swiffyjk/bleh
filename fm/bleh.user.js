@@ -2810,6 +2810,15 @@ let profile_badges = {
             type: 'cute',
             name: 'cute'
         }
+    ],
+    'astrablooms': [
+        {
+            type: 'sponsor'
+        },
+        {
+            type: 'cosmic',
+            name: 'cosmic regent'
+        }
     ]
 };
 
