@@ -404,7 +404,8 @@ const trans = {
                     thanks: 'Thank you for sponsoring {m}, you are running bleh version {v}.',
                     status: {
                         yes: 'You are a sponsor, thank you!',
-                        no: 'Become a sponsor to get a custom badge'
+                        no: 'Become a sponsor to get a custom badge',
+                        badge: 'To configure your custom badge, get in touch with me.'
                     },
                     manage: 'Manage sponsorship',
                     check: 'Refresh badges',
@@ -17825,6 +17826,29 @@ let has_prompted_for_update = false;
                 <div class="modal-footer">
                     <a class="btn primary sponsor" href="${sponsor_list.sponsor_link}" target="_blank">
                         ${trans[lang].settings.home.sponsor.name}
+                    </a>
+                </div>
+            `),
+            type: 'sponsor'
+        });
+    }
+
+    unsafeWindow._sponsor_manage = function() {
+        sponsor_manage();
+    }
+    function sponsor_manage() {
+        dialog({
+            id: 'sponsor_manage',
+            title: trans[lang].settings.home.sponsor.header,
+            body: (`
+                <div class="support-inner">
+                    <div class="bleh-icon sponsor-heart"></div>
+                    <h1>${trans[lang].settings.home.sponsor.status.yes}</h1>
+                    <p>${trans[lang].settings.home.sponsor.status.badge}</p>
+                </div>
+                <div class="modal-footer">
+                    <a class="btn primary sponsor" href="${root}user/${sponsor_list.sponsor_account}" target="_blank">
+                        ${trans[lang].settings.home.sponsor.manage}
                     </a>
                 </div>
             `),
