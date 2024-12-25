@@ -982,6 +982,13 @@ const trans = {
         }
     },
     de: {
+        badges: {
+            missing: 'No badges',
+            pro: 'Last.fm Pro',
+            contributor: 'bleh contributor',
+            cat: 'it\s a kitty!!',
+            sponsor: 'Sponsor of bleh and bwaa'
+        },
         lotus: {
             artist: 'Artist corrections have been downloaded!',
             album_track: 'Album and track corrections have been downloaded!',
@@ -1784,6 +1791,13 @@ const trans = {
         }
     },
     pl: {
+        badges: {
+            missing: 'No badges',
+            pro: 'Last.fm Pro',
+            contributor: 'bleh contributor',
+            cat: 'it\s a kitty!!',
+            sponsor: 'Sponsor of bleh and bwaa'
+        },
         lotus: {
             artist: 'Artist corrections have been downloaded!',
             album_track: 'Album and track corrections have been downloaded!',
