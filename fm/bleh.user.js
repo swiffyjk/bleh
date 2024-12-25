@@ -7885,7 +7885,9 @@ let has_prompted_for_update = false;
             head.textContent = trans[lang].settings.home.name;
             register_skip_to([]);
 
-            let sponsoring = sponsor_list.sponsors.includes(auth);
+            let sponsoring = false;
+            if (sponsor_list)
+                sponsoring = sponsor_list.sponsors.includes(auth);
 
             return (`
             <div class="bleh--panel">
@@ -8915,7 +8917,9 @@ let has_prompted_for_update = false;
                 }
             ]);
 
-            let sponsoring = sponsor_list.sponsors.includes(auth);
+            let sponsoring = false;
+            if (sponsor_list)
+                sponsoring = sponsor_list.sponsors.includes(auth);
 
             return (`
                 <div class="bleh--panel sponsor-badge-panel" data-sponsoring="${sponsoring}">
