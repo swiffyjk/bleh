@@ -1,8 +1,11 @@
 {
-    "latest": "2024.1225",
+    "latest": "2024.1226",
     "sponsors": [
         "cutensilly", "kateshapedbox",
-        "astrablooms", "ItsProyal"
+        "astrablooms", "ItsProyal", "vwvwvwvwvwvwv"
+    ],
+    "sponsors_one_time": [
+        "vwvwvwvwvwvwv"
     ],
     "sponsor_count_remove": 2,
     "sponsor_account": "kateshapedbox",
@@ -108,6 +111,9 @@
             }
         ],
         "ItsProyal": {
+            "type": "sponsor"
+        },
+        "vwvwvwvwvwvwv": {
             "type": "sponsor"
         }
     }
