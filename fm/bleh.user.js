@@ -161,6 +161,32 @@ let lang_info = {
 
 const trans = {
     en: {
+        pages: {
+            user: {
+                overview: '{name} · profile',
+                'listening-report_week': '{name} · profile reports',
+                'listening-report_month': '{name} · profile reports',
+                'listening-report_year': '{name} · profile reports',
+                library_overview: '{name} · profile library',
+                library_artists: '{name} · profile library',
+                library_albums: '{name} · profile library',
+                library_tracks: '{name} · profile library',
+                library_artist_overview: '{name} · profile library',
+                library_album_overview: '{name} · profile library',
+                library_track_overview: '{name} · profile library',
+                library_artist_albums: '{name} · profile library',
+                library_artist_tracks: '{name} · profile library',
+                following: '{name} · profile following',
+                followers: '{name} · profile followers',
+                neighbours: '{name} · profile neighbours',
+                shoutbox_overview: '{name} · profile shouts',
+                loved: '{name} · profile loved',
+                obsessions: '{name} · profile obsessions',
+                events: '{name} · profile events',
+                playlists_playlists: '{name} · profile playlists',
+                tags_overview: '{name} · profile tags',
+            }
+        },
         badges: {
             missing: 'No badges',
             pro: 'Last.fm Pro',
@@ -3742,8 +3768,14 @@ let has_prompted_for_update = false;
         else if (page.type == 'settings')
             bleh_native_settings();
 
-        if (ff('page_title'))
-            document.title = `${page.type}_${page.subpage} - bleh ${version.build}.${version.sku}`;
+        if (ff('page_title')) {
+            //document.title = `${page.type}_${page.subpage} (${page.name}, ${page.sister}) - bleh ${version.build}.${version.sku}`;
+            try {
+                document.title = `${trans[lang].pages[page.type][page.subpage].replace('{name}', page.name).replace('{sister}', page.sister)} | ${version.brand} ${version.build}.${version.sku}`
+            } catch(e) {
+                log(`translation key for this page could not be found`, 'page', 'info', page);
+            }
+        }
     }
 
     function basic_page_structure() {
