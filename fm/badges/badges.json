@@ -1,14 +1,14 @@
 {
     "latest": "2024.1226.1",
     "sponsors": [
-        "cutensilly", "kateshapedbox",
+        "cutensilly", "kateshapedbox", "inozom",
         "astrablooms", "ItsProyal", "vwvwvwvwvwvwv", "Orofil"
     ],
     "sponsors_one_time": [
         "kateshapedbox",
         "vwvwvwvwvwvwv"
     ],
-    "sponsor_count_remove": 2,
+    "sponsor_count_remove": 3,
     "sponsor_account": "kateshapedbox",
     "sponsor_link": "https://github.com/sponsors/katelyynn",
     "badges": {
@@ -96,6 +96,9 @@
             {
                 "type": "translation",
                 "name": "translated bleh into Deutsch"
+            },
+            {
+                "type": "sponsor"
             },
             {
                 "type": "cute",
