@@ -162,6 +162,22 @@ let lang_info = {
 const trans = {
     en: {
         pages: {
+            bleh_settings: {
+                '': 'bleh settings'
+            },
+            bleh_setup: {
+                '': 'bleh setup'
+            },
+            settings: {
+                overview: 'settings',
+                privacy: 'privacy · settings',
+                account_overview: 'account · settings',
+                website: 'website · settings',
+                subscription_overview: 'last.fm pro · settings',
+                'subscription_automatic-edits_albums': 'album auto edits · settings',
+                'subscription_automatic-edits_tracks': 'track auto edits · settings',
+                applications_overview: 'applications · settings',
+            },
             user: {
                 overview: '{name} · profile',
                 'listening-report_week': '{name} · profile reports',
