@@ -185,6 +185,43 @@ const trans = {
                 events: '{name} · profile events',
                 playlists_playlists: '{name} · profile playlists',
                 tags_overview: '{name} · profile tags',
+            },
+            artist: {
+                overview: '{name} · artist',
+                tracks: '{name} · artist tracks',
+                albums: '{name} · artist albums',
+                images_overview: '{name} · artist photos',
+                'images_image-upload': '{name} · artist photos',
+                image: '{name} · artist photo',
+                similar: '{name} · artist similar',
+                wiki_overview: '{name} · track wiki',
+                wiki_edit: '{name} · track wiki',
+                wiki_history: '{name} · track wiki',
+                listeners_overview: '{name} · artist top listeners',
+                'listeners_you-know': '{name} · artist listeners you know',
+                shoutbox_overview: '{name} · track shouts',
+                events: '{name} · artist events',
+                tags_overview: '{name} · track tags'
+            },
+            album: {
+                overview: '{name} - {sister} · album',
+                wiki_overview: '{name} - {sister} · album wiki',
+                wiki_edit: '{name} - {sister} · album wiki',
+                wiki_history: '{name} - {sister} · album wiki',
+                images_overview: '{name} - {sister} · album photos',
+                'images_image-upload': '{name} - {sister} · album photos',
+                image: '{name} - {sister} · album photo',
+                shoutbox_overview: '{name} - {sister} · album shouts',
+                tags_overview: '{name} - {sister} · album tags'
+            },
+            track: {
+                overview: '{name} - {sister} · track',
+                albums: '{name} - {sister} · track albums',
+                wiki_overview: '{name} - {sister} · track wiki',
+                wiki_edit: '{name} - {sister} · track wiki',
+                wiki_history: '{name} - {sister} · track wiki',
+                shoutbox_overview: '{name} - {sister} · track shouts',
+                tags_overview: '{name} - {sister} · track tags'
             }
         },
         badges: {
