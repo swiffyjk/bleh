@@ -4843,9 +4843,17 @@ better than the default selector '#app a' i suppose */
                 }
                 .chartlist-artist {
                     position: absolute;
-                    left: calc(84px - 2px - 28px);
+                    left: calc(38px + 2px - 28px);
                     margin-top: 16px;
                     right: 300px;
+                }
+            }
+
+            &.chartlist--with-image {
+                .chartlist-row {
+                    .chartlist-artist {
+                        left: calc(84px - 2px - 28px);
+                    }
                 }
             }
         }
