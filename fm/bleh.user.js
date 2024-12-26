@@ -489,7 +489,8 @@ const trans = {
                     status: {
                         yes: 'You are a sponsor, thank you!',
                         no: 'Become a sponsor to get a custom badge',
-                        badge: 'To configure your custom badge, get in touch with me.'
+                        badge: 'To configure your custom badge, get in touch with me.',
+                        one_time: 'A custom badge is available only when selecting monthly.'
                     },
                     manage: 'Manage sponsorship',
                     check: 'Refresh badges',
@@ -1298,7 +1299,9 @@ const trans = {
                     thanks: 'Thank you for sponsoring {m}, you are running bleh version {v}.',
                     status: {
                         yes: 'You are a sponsor, thank you!',
-                        no: 'Become a sponsor to get a custom badge'
+                        no: 'Become a sponsor to get a custom badge',
+                        badge: 'To configure your custom badge, get in touch with me.',
+                        one_time: 'A custom badge is available only when selecting monthly.'
                     },
                     manage: 'Manage sponsorship',
                     check: 'Refresh badges',
@@ -2118,7 +2121,9 @@ const trans = {
                     thanks: 'Thank you for sponsoring {m}, you are running bleh version {v}.',
                     status: {
                         yes: 'You are a sponsor, thank you!',
-                        no: 'Become a sponsor to get a custom badge'
+                        no: 'Become a sponsor to get a custom badge',
+                        badge: 'To configure your custom badge, get in touch with me.',
+                        one_time: 'A custom badge is available only when selecting monthly.'
                     },
                     manage: 'Manage sponsorship',
                     check: 'Refresh badges',
@@ -17937,22 +17942,37 @@ let has_prompted_for_update = false;
         sponsor_manage();
     }
     function sponsor_manage() {
-        dialog({
-            id: 'sponsor_manage',
-            title: trans[lang].settings.home.sponsor.header,
-            body: (`
-                <div class="support-inner">
-                    <div class="bleh-icon sponsor-heart"></div>
-                    <h1>${trans[lang].settings.home.sponsor.status.yes}</h1>
-                    <p>${trans[lang].settings.home.sponsor.status.badge}</p>
-                </div>
-                <div class="modal-footer">
-                    <a class="btn primary sponsor" href="${root}user/${sponsor_list.sponsor_account}" target="_blank">
-                        ${trans[lang].settings.home.sponsor.manage}
-                    </a>
-                </div>
-            `),
-            type: 'sponsor'
-        });
+        if (sponsor_list.sponsors_one_time && sponsor_list.sponsors_one_time.includes(auth)) {
+            dialog({
+                id: 'sponsor_manage',
+                title: trans[lang].settings.home.sponsor.header,
+                body: (`
+                    <div class="support-inner">
+                        <div class="bleh-icon sponsor-heart"></div>
+                        <h1>${trans[lang].settings.home.sponsor.status.yes}</h1>
+                        <p>${trans[lang].settings.home.sponsor.status.one_time}</p>
+                    </div>
+                `),
+                type: 'sponsor'
+            });
+        } else {
+            dialog({
+                id: 'sponsor_manage',
+                title: trans[lang].settings.home.sponsor.header,
+                body: (`
+                    <div class="support-inner">
+                        <div class="bleh-icon sponsor-heart"></div>
+                        <h1>${trans[lang].settings.home.sponsor.status.yes}</h1>
+                        <p>${trans[lang].settings.home.sponsor.status.badge}</p>
+                    </div>
+                    <div class="modal-footer">
+                        <a class="btn primary sponsor" href="${root}user/${sponsor_list.sponsor_account}" target="_blank">
+                            ${trans[lang].settings.home.sponsor.manage}
+                        </a>
+                    </div>
+                `),
+                type: 'sponsor'
+            });
+        }
     }
 })();
