@@ -15247,6 +15247,11 @@ let has_prompted_for_update = false;
         let new_presets = document.createElement('ul');
         new_presets.classList.add('date-range-picker-presets');
 
+        let params = new URLSearchParams(document.location.search);
+        page.requested.from = params.get('from');
+        page.requested.to = params.get('to');
+        page.requested.rangetype = params.get('rangetype');
+
         let current_year = new Date().getFullYear();
         let previous_year = current_year - 1;
         if (current_year >= 2025) {
@@ -15269,6 +15274,11 @@ let has_prompted_for_update = false;
                 </a>
             `);
             new_presets.appendChild(this_year);
+
+            if (page.requested.from == `${current_year}-01-01` && (page.requested.to == `${current_year}-12-31` || page.requested.rangetype == 'year'))
+                this_year.classList.add('date-range-picker-preset--selected');
+            else if (page.requested.from == `${previous_year}-01-01` && (page.requested.to == `${previous_year}-12-31` || page.requested.rangetype == 'year'))
+                last_year.classList.add('date-range-picker-preset--selected');
         } else {
             new_presets.classList.add('date-range-picker-presets-wide');
 
@@ -15280,19 +15290,14 @@ let has_prompted_for_update = false;
                 </a>
             `);
             new_presets.appendChild(this_year);
+
+            if (page.requested.from == `${current_year}-01-01` && (page.requested.to == `${current_year}-12-31` || page.requested.rangetype == 'year'))
+                this_year.classList.add('date-range-picker-preset--selected');
         }
 
         //picker_col_2.appendChild(this_year);
         new_wrap.appendChild(new_presets);
         picker_presets.after(new_wrap);
-
-        let params = new URLSearchParams(document.location.search);
-        page.requested.from = params.get('from');
-        page.requested.to = params.get('to');
-        page.requested.rangetype = params.get('rangetype');
-
-        if (page.requested.from == `${current_year}-01-01` && (page.requested.to == `${current_year}-12-31` || page.requested.rangetype == 'year'))
-            this_year.classList.add('date-range-picker-preset--selected');
     }
 
     // can update at any time!!
