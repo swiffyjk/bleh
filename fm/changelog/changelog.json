@@ -1,6 +1,12 @@
 {
-    "updated": "2024-12-25",
-    "latest": "2024.1225",
+    "updated": "2024-12-26",
+    "latest": "2024.1226",
+    "2024.1226": {
+        "name": "jollyyyyy",
+        "type": "minor",
+        "force": false,
+        "bio": "happy holidays!\n\n# Sponsors\n- Updated sponsors for @vwvwvwvwvwvwv - thank you!\n- Fixed missing difference between monthly and one-time sponsors in interface\n\n# Library\n- Fixed crash when reloading a 2024 (this year) view due to 2025 preparations"
+    },
     "2024.1225": {
         "name": "jolly :3",
         "type": "minor",
