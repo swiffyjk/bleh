@@ -8816,6 +8816,10 @@ text[style^="color: rgb(255, 172, 172)"] {
         justify-content: space-evenly;
 
         div {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+
             h3 {
                 color: hsl(var(--c3));
                 font-weight: var(--font-weight-medium);
