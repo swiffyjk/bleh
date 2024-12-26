@@ -123,6 +123,11 @@ let version = {
             default: true,
             name: 'Skip to... in settings',
             date: '2024-12-24'
+        },
+        page_title: {
+            default: false,
+            name: 'Dynamic tab title',
+            date: '2024-12-26'
         }
     }
 }
@@ -3585,80 +3590,72 @@ let has_prompted_for_update = false;
     function main_flow() {
         assign_page();
 
-        if (window.location.href.startsWith(setup_url.replace('{root}', root))) {
-            // start bleh setup
-            bleh_setup();
-        } else if (window.location.href.startsWith(bleh_url.replace('{root}', root))) {
-            // start bleh settings
-            bleh_settings();
-        } else {
-            if (page.type == 'artist' || page.type == 'album') {
-                bleh_gallery();
-                bleh_gallery_upload_check();
-            }
-
-            if (page.type == 'charts')
-                bleh_charts();
-
-            if (page.type == 'user' ||
-                page.type == 'search' ||
-                page.type == 'tag'
-            )
-                music_grids();
-
-            if (page.type == 'user' ||
-                page.type == 'artist' ||
-                page.type == 'album' ||
-                page.type == 'track' ||
-                page.type == 'events' ||
-                page.type == 'festival' ||
-                page.type == 'tag'
-            ) {
-                patch_shouts();
-
-                if (shout_parse_queue.length > 0)
-                    parse_shout_queue();
-            }
-            patch_gallery_page();
-
-            if (page.type == 'user' && page.subpage.startsWith('library') && (
-                page.subpage != 'library_overview' && !page.subpage.startsWith('library_artist_') &&
-                !page.subpage.startsWith('library_album_') && !page.subpage.startsWith('library_track_')
-            ))
-                bleh_glacier_library();
-
-            // bulk edit check
-            if (is_pro && page.type == 'user' && page.name == auth && page.subpage == 'library_artist_overview' ||
-                page.subpage == 'library_album_overview' || page.subpage == 'library_track_overview'
-            ) {
-                bleh_glacier_library_bulk_edit();
-            }
-
-            if (page.type == 'user' ||
-                page.type == 'artist' ||
-                page.type == 'album' ||
-                page.type == 'events' ||
-                page.type == 'festival' ||
-                page.type == 'tag'
-            ) {
-                patch_titles();
-            }
-
-            if (settings.corrections) {
-                correct_generic_combo_no_artist('artist-header-featured-items-item');
-                correct_generic_combo_no_artist('artist-top-albums-item');
-                correct_generic_combo('source-album-details');
-                correct_generic_combo('resource-list--release-list-item');
-                correct_generic_combo('similar-albums-item');
-                correct_generic_combo('track-similar-tracks-item');
-                correct_generic_combo('similar-items-sidebar-item');
-            }
-
-            patch_obsession_view();
-
-            subscribe_to_events();
-            auto_edit_modal();
+        if (page.type == 'artist' || page.type == 'album') {
+            bleh_gallery();
+            bleh_gallery_upload_check();
         }
+
+        if (page.type == 'charts')
+            bleh_charts();
+
+        if (page.type == 'user' ||
+            page.type == 'search' ||
+            page.type == 'tag'
+        )
+            music_grids();
+
+        if (page.type == 'user' ||
+            page.type == 'artist' ||
+            page.type == 'album' ||
+            page.type == 'track' ||
+            page.type == 'events' ||
+            page.type == 'festival' ||
+            page.type == 'tag'
+        ) {
+            patch_shouts();
+
+            if (shout_parse_queue.length > 0)
+                parse_shout_queue();
+        }
+        patch_gallery_page();
+
+        if (page.type == 'user' && page.subpage.startsWith('library') && (
+            page.subpage != 'library_overview' && !page.subpage.startsWith('library_artist_') &&
+            !page.subpage.startsWith('library_album_') && !page.subpage.startsWith('library_track_')
+        ))
+            bleh_glacier_library();
+
+        // bulk edit check
+        if (is_pro && page.type == 'user' && page.name == auth && page.subpage == 'library_artist_overview' ||
+            page.subpage == 'library_album_overview' || page.subpage == 'library_track_overview'
+        ) {
+            bleh_glacier_library_bulk_edit();
+        }
+
+        if (page.type == 'user' ||
+            page.type == 'artist' ||
+            page.type == 'album' ||
+            page.type == 'events' ||
+            page.type == 'festival' ||
+            page.type == 'tag'
+        ) {
+            patch_titles();
+        }
+
+        if (settings.corrections) {
+            correct_generic_combo_no_artist('artist-header-featured-items-item');
+            correct_generic_combo_no_artist('artist-top-albums-item');
+            correct_generic_combo('source-album-details');
+            correct_generic_combo('resource-list--release-list-item');
+            correct_generic_combo('similar-albums-item');
+            correct_generic_combo('track-similar-tracks-item');
+            correct_generic_combo('similar-items-sidebar-item');
+        }
+
+        patch_obsession_view();
+
+        subscribe_to_events();
+        auto_edit_modal();
     }
 
     function assign_page() {
@@ -3694,8 +3691,6 @@ let has_prompted_for_update = false;
 
                 console.log(page);
 
-                //document.title = `${page.type}_${page.subpage} - bleh ${version.build}.${version.sku}`;
-
                 assign_page_subpage();
 
                 return;
@@ -3726,7 +3721,11 @@ let has_prompted_for_update = false;
 
         error_page();
 
-        if (page.type == 'user')
+        if (window.location.href.startsWith(setup_url.replace('{root}', root)))
+            bleh_setup();
+        else if (window.location.href.startsWith(bleh_url.replace('{root}', root)))
+            bleh_settings();
+        else if (page.type == 'user')
             bleh_profiles();
         else if (page.type == 'artist')
             bleh_artists();
@@ -3742,6 +3741,9 @@ let has_prompted_for_update = false;
             bleh_search();
         else if (page.type == 'settings')
             bleh_native_settings();
+
+        if (ff('page_title'))
+            document.title = `${page.type}_${page.subpage} - bleh ${version.build}.${version.sku}`;
     }
 
     function basic_page_structure() {
@@ -7678,10 +7680,12 @@ let has_prompted_for_update = false;
 
             // initial
             adaptive_skin_container.innerHTML = '';
-            document.title = 'bleh settings | Last.fm';
+            if (!ff('page_title'))
+                document.title = 'bleh settings | Last.fm';
 
             log('internal bleh settings', 'page');
             page.type = 'bleh_settings';
+            page.subpage = '';
 
             let params = new URLSearchParams(document.location.search);
             page.requested.tab = params.get('tab');
@@ -11953,10 +11957,12 @@ let has_prompted_for_update = false;
 
         // initial
         adaptive_skin_container.innerHTML = '';
-        document.title = 'bleh setup | Last.fm';
+        if (!ff('page_title'))
+            document.title = 'bleh setup | Last.fm';
 
         log('internal bleh setup', 'page');
         page.type = 'bleh_setup';
+        page.subpage = '';
 
 
         // go wild
