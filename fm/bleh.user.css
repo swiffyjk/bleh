@@ -16015,7 +16015,7 @@ button.bleh--gallery-bookmark-image-btn {
     .view-buttons {
         background-color: hsl(var(--b5)) !important;
         box-shadow: var(--card-shadow);
-        margin: unset;
+        margin: unset !important;
         inset: unset;
     }
 }
