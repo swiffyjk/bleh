@@ -192,6 +192,12 @@ const trans = {
                 tracks: 'bookmarks',
                 tags: 'bookmarks'
             },
+            search: {
+                overview: '{name} · search',
+                artists: '{name} · artist search',
+                albums: '{name} · album search',
+                tracks: '{name} · track search'
+            },
             settings: {
                 overview: 'settings',
                 privacy: 'privacy · settings',
@@ -17886,11 +17892,6 @@ let has_prompted_for_update = false;
         }
 
         let content_top = document.body.querySelector('.content-top');
-        let header = content_top.querySelector('.content-top-header');
-
-        checkup_page_structure(false, content_top);
-        log('status is', 'page', 'info', page);
-        update_page();
 
 
         let search_form = page.structure.main.querySelector('.search-form');
@@ -17900,8 +17901,15 @@ let has_prompted_for_update = false;
         let site_search = document.body.querySelector('#masthead-search-field');
         site_search.setAttribute('value', value);
         site_search.focus();
-
         page.structure.main.removeChild(search_form);
+
+        page.name = (value != '') ? value : 'empty..';
+
+
+        checkup_page_structure(false, content_top);
+        log('status is', 'page', 'info', page);
+        update_page();
+
 
         if (page.subpage != 'overview') {
             let new_panel = document.createElement('section');
