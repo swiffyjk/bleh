@@ -4702,6 +4702,11 @@ let has_prompted_for_update = false;
         load_chart_colours();
     }
 
+    function prep_chart_colours() {
+        if (page.state.chart_colours.link_col == 'hsl()')
+            load_chart_colours();
+    }
+
     function load_chart_colours() {
         let link_col = `hsl(${getComputedStyle(document.body).getPropertyValue('--l3-c')})`;
         let link_h_col = getComputedStyle(document.body).getPropertyValue('--h3-s');
@@ -4725,6 +4730,8 @@ let has_prompted_for_update = false;
             root_bg_col: root_bg_col,
             hue: hue
         }
+
+        console.log('chart colours', page.state.chart_colours);
 
         page.state.chart_line_options = {
             maintainAspectRatio: false,
@@ -14445,6 +14452,8 @@ let has_prompted_for_update = false;
         if (trend == null)
             return;
 
+        prep_chart_colours();
+
         // is this a chart reflow due to style loading?
         let previous_chart = panel.querySelector('.scrobble-canvas-container');
         if (previous_chart != null)
@@ -14469,6 +14478,8 @@ let has_prompted_for_update = false;
             labels.push(label);
             values.push(value);
         });
+
+        prep_chart_colours();
 
         let scrobble_canvas_container = document.createElement('div');
         scrobble_canvas_container.classList.add('scrobble-canvas-container');
@@ -16071,6 +16082,8 @@ let has_prompted_for_update = false;
             links: page.state.glacier.links,
             values: page.state.glacier.values
         });
+
+        prep_chart_colours();
 
         let new_run = false;
         let scrobble_canvas_container = page.structure.glacier.date_panel.querySelector('.scrobble-canvas-container');
