@@ -168,6 +168,23 @@ const trans = {
             bleh_setup: {
                 '': 'bleh setup'
             },
+            overview: {
+                music: 'music'
+            },
+            recommended: {
+                artists: 'recommended artists',
+                albums: 'recommended albums',
+                tracks: 'recommended tracks',
+                rediscover: 'blasts from the past',
+                tags: 'recommended tags'
+            },
+            bookmarks: {
+                overview: 'bookmarks',
+                artists: 'bookmarks',
+                albums: 'bookmarks',
+                tracks: 'bookmarks',
+                tags: 'bookmarks'
+            },
             settings: {
                 overview: 'settings',
                 privacy: 'privacy · settings',
@@ -177,6 +194,22 @@ const trans = {
                 'subscription_automatic-edits_albums': 'album auto edits · settings',
                 'subscription_automatic-edits_tracks': 'track auto edits · settings',
                 applications_overview: 'applications · settings',
+            },
+            inbox: {
+                overview: 'incoming inbox',
+                sent_overview: 'outgoing inbox',
+                compose: 'compose message',
+                notifications: 'notifications'
+            },
+            releases: {
+                'out-now_recommended': 'out now',
+                'out-now_popular': 'out now',
+                'coming-soon_recommended': 'coming soon',
+                'coming-soon_popular': 'coming soon'
+            },
+            charts: {
+                overview: 'live charts',
+                weekly: 'weekly charts'
             },
             user: {
                 overview: '{name} · profile',
