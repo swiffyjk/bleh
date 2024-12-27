@@ -198,6 +198,9 @@ const trans = {
                 albums: '{name} · album search',
                 tracks: '{name} · track search'
             },
+            labs: {
+                overview: 'labs'
+            },
             settings: {
                 overview: 'settings',
                 privacy: 'privacy · settings',
