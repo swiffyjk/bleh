@@ -168,6 +168,13 @@ const trans = {
             bleh_setup: {
                 '': 'bleh setup'
             },
+            home: {
+                overview: 'home',
+                artists: 'artists',
+                albums: 'albums',
+                tracks: 'tracks',
+                events: 'events'
+            },
             overview: {
                 music: 'music'
             },
