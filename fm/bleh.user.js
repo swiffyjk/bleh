@@ -4492,28 +4492,13 @@ let has_prompted_for_update = false;
             is_pro = false;
         }
 
-        if (sponsor_list && sponsor_list.badges.hasOwnProperty(auth)) {
-            if (!Array.isArray(sponsor_list.badges[auth])) {
-                // default
-                log(`1 badge:`, 'auth', 'info', sponsor_list.badges[auth]);
-                let this_badge = sponsor_list.badges[auth];
+        let badges = load_badges(auth, true);
 
-                let badge = document.createElement('span');
-                badge.classList.add('label', `user-status--bleh-${this_badge.type}`, `user-status--bleh-user-${auth}`, 'auth-badge');
-                badge.textContent = (this_badge.name != null) ? this_badge.name : trans[lang].badges[this_badge.type];
-                auth_link.appendChild(badge);
-            } else {
-                // multiple
-                log(`multiple badges:`, 'auth', 'info', sponsor_list.badges[auth]);
-                let badges_length = Object.keys(sponsor_list.badges[auth]).length - 1;
-                let this_badge = sponsor_list.badges[auth][badges_length];
-                log(`using badge ${badges_length} as primary`, 'auth', 'info', this_badge);
-
-                let badge = document.createElement('span');
-                badge.classList.add('label', `user-status--bleh-${this_badge.type}`, `user-status--bleh-user-${auth}`, 'auth-badge');
-                badge.textContent = (this_badge.name != null) ? this_badge.name : trans[lang].badges[this_badge.type];
-                auth_link.appendChild(badge);
-            }
+        if (badges) {
+            let badge = document.createElement('span');
+            badge.classList.add('label', `user-status--bleh-${badges[0].type}`, `user-status--bleh-user-${auth}`, 'auth-badge');
+            badge.textContent = badges[0].name;
+            auth_link.appendChild(badge);
         } else if (is_pro) {
             let pro_badge = document.createElement('p');
             pro_badge.classList.add('label', 'user-status-subscriber', 'auth-badge');
@@ -18312,7 +18297,7 @@ let has_prompted_for_update = false;
             log('multiple badges found', 'sponsor', 'info', sponsor_list.badges[user]);
 
             if (solo)
-                badges.push(sponsor_list.badges[user][0])
+                badges.push(sponsor_list.badges[user][Object.keys(sponsor_list.badges[user]).length - 1])
             else
                 badges = sponsor_list.badges[user];
         }
