@@ -7099,6 +7099,11 @@ very, very, very dated - who looks up a song on ebay? */
 }
 
 
+[data-menu-item="remove-bookmark"] {
+    --mask: var(--icon-16-bookmark);
+}
+
+
 /*     DANGEROUS     */
 .dropdown-menu-clickable-item.lotus,
 .more-item--obsession,
@@ -9744,6 +9749,10 @@ text[style^="color: rgb(0, 0, 0)"] {
     padding-right: unset;
     margin-top: unset;
     width: unset;
+
+    &[data-bleh--image-is-bookmarked="false"] {
+        display: none;
+    }
 }
 .other-obsession-artwork,
 .image-list-item, .featured-item-art .cover-art, .globalchart .globalchart-playlink .cover-art {

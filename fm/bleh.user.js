@@ -133,6 +133,11 @@ let version = {
             default: true,
             name: 'Match view button colouring to new nav',
             date: '2024-12-28'
+        },
+        remove_bookmark: {
+            default: true,
+            name: 'Context menu to remove inaccessible artist bookmark',
+            date: '2024-12-28'
         }
     }
 }
@@ -11679,6 +11684,7 @@ let has_prompted_for_update = false;
                 console.info(image);
                 let image_element = document.createElement('li');
                 image_element.classList.add('image-list-item-wrapper');
+                image_element.setAttribute('data-image-id', image);
                 // link has to open in new tab as sometimes last.fm breaks the rendering
                 // of the gallery image, no clue..
                 image_element.innerHTML = (`
@@ -11688,6 +11694,32 @@ let has_prompted_for_update = false;
                 `);
 
                 document.getElementById('bleh--bookmarked-images').appendChild(image_element);
+
+
+                if (ff('remove_bookmark')) {
+                    let menu = tippy(image_element, {
+                        theme: 'context-menu',
+                        content: (`
+                            <button class="dropdown-menu-clickable-item" onclick="_update_image_bookmark(this, '${image}', false)" data-menu-item="remove-bookmark" data-bleh--image-is-bookmarked="true">
+                                ${trans[lang].gallery.bookmarks.button.unbookmark_this_image.name}
+                            </button>
+                        `),
+                        allowHTML: true,
+                        placement: 'right-start',
+                        trigger: 'manual',
+                        interactive: true,
+                        interactiveBorder: 10,
+                        offset: [0, 0],
+
+                        onShow(instance) {
+                            instance.popper.addEventListener('click', event => {
+                                instance.hide();
+                            });
+                        }
+                    });
+
+                    register_menu(image_element, menu);
+                }
             });
 
 
@@ -11760,18 +11792,22 @@ let has_prompted_for_update = false;
         gallery_interactions.appendChild(gallery_bookmark_button);
     }
 
-    unsafeWindow._update_image_bookmark = function(button, id) {
-        update_image_bookmark(button, id);
+    unsafeWindow._update_image_bookmark = function(button, id, tooltip = true) {
+        update_image_bookmark(button, id, tooltip);
     }
-    function update_image_bookmark(button, id) {
+    function update_image_bookmark(button, id, tooltip = true) {
         let bookmarked_images = JSON.parse(localStorage.getItem('bleh_bookmarked_images')) || {};
         let is_bookmarked = (button.getAttribute('data-bleh--image-is-bookmarked') === 'true');
 
-        unsafeWindow.bookmark_tooltip.setContent(
-            (!is_bookmarked)
-            ? trans[lang].gallery.bookmarks.button.unbookmark_this_image.bio
-            : trans[lang].gallery.bookmarks.button.bookmark_this_image.bio
-        );
+        if (tooltip) {
+            unsafeWindow.bookmark_tooltip.setContent(
+                (!is_bookmarked)
+                ? trans[lang].gallery.bookmarks.button.unbookmark_this_image.bio
+                : trans[lang].gallery.bookmarks.button.bookmark_this_image.bio
+            );
+        } else {
+            button = page.structure.container.querySelector(`[data-image-id="${id}"]`);
+        }
 
         if (!bookmarked_images.hasOwnProperty(page.name))
             bookmarked_images[page.name] = [];
