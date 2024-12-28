@@ -183,6 +183,9 @@ const trans = {
             bleh_setup: {
                 '': 'bleh setup'
             },
+            bleh_sponsor: {
+                '': 'sponsor'
+            },
             home: {
                 overview: 'home',
                 artists: 'artists',
@@ -3737,8 +3740,8 @@ let page = {
 let shout_parse_queue = [];
 
 let bleh_url = 'https://www.last.fm{root}bleh';
-
 let setup_url = 'https://www.last.fm{root}bleh/setup';
+let sponsor_url = 'https://www.last.fm{root}bleh/sponsor';
 
 let has_prompted_for_update = false;
 
@@ -3976,6 +3979,8 @@ let has_prompted_for_update = false;
 
         if (window.location.href.startsWith(setup_url.replace('{root}', root)))
             bleh_setup();
+        else if (window.location.href.startsWith(sponsor_url.replace('{root}', root)))
+            bleh_sponsor_page();
         else if (window.location.href.startsWith(bleh_url.replace('{root}', root)))
             bleh_settings();
         else if (page.type == 'user')
@@ -18329,6 +18334,26 @@ let has_prompted_for_update = false;
                 type: 'sponsor'
             });
         }
+    }
+
+    function bleh_sponsor_page() {
+        document.body.style.removeProperty('--hue-album');
+        document.body.style.removeProperty('--sat-album');
+
+        let adaptive_skin_container = document.querySelector('.adaptive-skin-container:not([data-bleh])');
+
+        if (adaptive_skin_container == null)
+            return;
+        adaptive_skin_container.setAttribute('data-bleh','true');
+
+        // initial
+        adaptive_skin_container.innerHTML = '';
+
+        log('internal bleh sponsor', 'page');
+        page.type = 'bleh_sponsor';
+        page.subpage = '';
+
+        sponsor();
     }
 
 
