@@ -756,6 +756,14 @@ const trans = {
                 toggle: {
                     name: 'Enable activity tracking',
                     bio: 'Events will only be registered and displayed while enabled.'
+                },
+                types: {
+                    shout: 'Shouts',
+                    image: 'Image uploads and interactions',
+                    obsess: 'Track obsessions',
+                    love: 'Track love',
+                    install: 'Installing and updating',
+                    wiki: 'Wiki editing'
                 }
             },
             performance: {
@@ -1570,6 +1578,14 @@ const trans = {
                 toggle: {
                     name: 'Enable activity tracking',
                     bio: 'Events will only be registered and displayed while enabled.'
+                },
+                types: {
+                    shout: 'Shouts',
+                    image: 'Image uploads and interactions',
+                    obsess: 'Track obsessions',
+                    love: 'Track love',
+                    install: 'Installing and updating',
+                    wiki: 'Wiki editing'
                 }
             },
             performance: {
@@ -2392,6 +2408,14 @@ const trans = {
                 toggle: {
                     name: 'Enable activity tracking',
                     bio: 'Events will only be registered and displayed while enabled.'
+                },
+                types: {
+                    shout: 'Shouts',
+                    image: 'Image uploads and interactions',
+                    obsess: 'Track obsessions',
+                    love: 'Track love',
+                    install: 'Installing and updating',
+                    wiki: 'Wiki editing'
                 }
             },
             performance: {
@@ -3163,14 +3187,21 @@ let settings_template = {
     font_weight_medium: 650,
     font_weight_bold: 730,
     show_bulk_edit_album: false,
-    activities: true,
 
     auth_menu_obsessions: false,
 
     default_avatar_action: 'expand',
     quick_artist_button: 'gallery',
 
-    glacier_library_graphs: true
+    glacier_library_graphs: true,
+
+    activities: true,
+    activity_shout: true,
+    activity_image: true,
+    activity_obsess: true,
+    activity_love: true,
+    activity_install: true,
+    activity_wiki: true
 };
 let settings_base = {
     high_contrast: {
@@ -3493,6 +3524,48 @@ let settings_base = {
     },
     glacier_library_graphs: {
         css: 'glacier_library_graphs',
+        unit: '',
+        value: true,
+        values: [true, false],
+        type: 'toggle'
+    },
+    activity_shout: {
+        css: 'activity_shout',
+        unit: '',
+        value: true,
+        values: [true, false],
+        type: 'toggle'
+    },
+    activity_image: {
+        css: 'activity_image',
+        unit: '',
+        value: true,
+        values: [true, false],
+        type: 'toggle'
+    },
+    activity_obsess: {
+        css: 'activity_obsess',
+        unit: '',
+        value: true,
+        values: [true, false],
+        type: 'toggle'
+    },
+    activity_love: {
+        css: 'activity_love',
+        unit: '',
+        value: true,
+        values: [true, false],
+        type: 'toggle'
+    },
+    activity_install: {
+        css: 'activity_install',
+        unit: '',
+        value: true,
+        values: [true, false],
+        type: 'toggle'
+    },
+    activity_wiki: {
+        css: 'activity_wiki',
         unit: '',
         value: true,
         values: [true, false],
