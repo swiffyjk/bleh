@@ -125,7 +125,7 @@ let version = {
             date: '2024-12-24'
         },
         page_title: {
-            default: false,
+            default: true,
             name: 'Dynamic tab title',
             date: '2024-12-26'
         },
