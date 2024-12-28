@@ -6115,18 +6115,11 @@ button,
     /*     PRIMARY     */
     &:is(
         .btn-primary:is([type="submit"]), .btn-primary.js-close,
-        .gallery-image-vote-up-on, .gallery-image-vote-down-on, .gallery-image-preferred-on,
         .inbox-delete-button:not([disabled]),
-        .gallery-image-report--reported,
         .attendance-btn--turn-off,
         .player-bar-btn--loved,
-        .love-button--loved,
         #manage_data .btn-primary,
         .primary,
-        [data-bleh--image-is-bookmarked="true"],
-        .btn-primary.profile-header-set-obsession,
-        [data-toggle-button-current-state="loved"] .interact-item,
-        [data-toggle-button-current-state="bookmarked"] .interact-item,
         .btn-subscribe
     ) {
         --bg: var(--cards-overlay-image-subtlest, none), hsl(var(--h3)) !important;
@@ -15659,6 +15652,10 @@ button.bleh--gallery-bookmark-image-btn {
     background-color: hsl(var(--b6));
     border-radius: calc(var(--item-big-radius) + 4px);
 
+    [data-ff--view_button_nav="true"] & {
+        background-color: hsl(var(--b6), 80%);
+    }
+
     &.view-buttons-middle {
         justify-content: center;
     }
@@ -15708,16 +15705,66 @@ button.bleh--gallery-bookmark-image-btn {
         }
     }
 
-    &.gallery-image-buttons :is(button, a),
+    a,
+    button:not(.toggle, .reset) {
+        [data-ff--view_button_nav="true"] & {
+            --bg: hsl(var(--b3), 60%);
+            --bg-hov: hsl(var(--b3), 80%);
+            --bg-atv: hsl(var(--b3), 100%);
+            --shadow: none;
+            --shadow-hov: none;
+            position: relative;
+
+            [data-bleh--theme="light"] & {
+                --bg: hsl(var(--b4), 40%);
+                --bg-hov: hsl(var(--b4), 60%);
+                --bg-atv: hsl(var(--b4), 80%);
+            }
+
+            &:not(.dropdown-menu-clickable-button, .dropdown-menu-clickable-item):after {
+                content: '';
+                position: absolute;
+                inset: -4px !important;
+                border-radius: calc(var(--item-big-radius) + 4px) !important;
+                opacity: 1;
+                transition: none;
+
+                display: block !important;
+                background: unset !important;
+                width: unset !important;
+                height: unset !important;
+                margin: unset !important;
+
+                border: 2px solid hsl(var(--l2-c), 30%);
+                box-shadow: 0 0 30px hsl(var(--l2-c), 10%);
+            }
+        }
+    }
+
+    &.gallery-image-buttons :is(button, a):not(.gallery-image-vote-up-on, .gallery-image-vote-down-on, .gallery-image-preferred-on, .gallery-image-report--reported, [data-bleh--image-is-bookmarked="true"]),
     &.album-overview-cover-art-action-row a,
     &.tab-container button:not(.tab--selected),
     .footer-language .mimic-link,
-    .btn:not(.toggle, [aria-checked="true"]) {
+    .btn:not(.toggle, [aria-checked="true"], .love-button--loved, [data-toggle-button-current-state="loved"] > form > .btn, [data-toggle-button-current-state="bookmarked"] > form > .btn, .btn-primary.profile-header-set-obsession, [data-analytics-action="UnfollowUser"], [data-is-shortcut="true"]) {
         --bg: transparent;
         --bg-hov: hsla(var(--b4), 60%);
         --bg-atv: hsla(var(--b4), 80%);
         --shadow: none;
         --shadow-hov: none;
+
+        [data-ff--view_button_nav="true"] & {
+            --bg: transparent;
+            --bg-hov: hsl(var(--b4), 60%);
+            --bg-atv: hsl(var(--b4), 80%);
+
+            &:after {
+                opacity: 0;
+
+                transition-property: opacity !important;
+                transition-duration: var(--trans) !important;
+                transition-timing-function: var(--trans-function) !important;
+            }
+        }
     }
 
     &.album-overview-cover-art-action-row a,
@@ -15857,9 +15904,9 @@ button.bleh--gallery-bookmark-image-btn {
                 --mask: var(--icon-16-event);
             }
             &.profile-top-item--sponsor {
-                --bg: hsla(var(--h4), 30%);
-                --bg-hov: hsla(var(--h4), 40%);
-                --bg-atv: hsla(var(--h4), 50%);
+                --bg: hsla(var(--h4), 30%) !important;
+                --bg-hov: hsla(var(--h4), 40%) !important;
+                --bg-atv: hsla(var(--h4), 50%) !important;
                 --col: hsl(var(--c1));
                 --mask: var(--icon-16-heart);
                 --hue-over: 333;
@@ -15867,22 +15914,14 @@ button.bleh--gallery-bookmark-image-btn {
                 --lit-over: 1;
             }
             &.profile-top-item--message_sponsor {
-                --bg: hsla(var(--h4), 30%);
-                --bg-hov: hsla(var(--h4), 40%);
-                --bg-atv: hsla(var(--h4), 50%);
+                --bg: hsla(var(--h4), 30%) !important;
+                --bg-hov: hsla(var(--h4), 40%) !important;
+                --bg-atv: hsla(var(--h4), 50%) !important;
                 --col: hsl(var(--c1));
                 --mask: var(--icon-16-heart-solid);
                 --hue-over: 333;
                 --sat-over: 1;
                 --lit-over: 1;
-            }
-
-            [data-toggle-button-current-state="followed"] &,
-            &[data-is-shortcut="true"] {
-                --bg: hsla(var(--h4), 30%);
-                --bg-hov: hsla(var(--h4), 40%);
-                --bg-atv: hsla(var(--h4), 50%);
-                --col: hsl(var(--c1));
             }
 
             &.profile-top-item--taste {
@@ -15915,8 +15954,8 @@ button.bleh--gallery-bookmark-image-btn {
             }
             &.lotus-btn {
                 --mask: var(--icon-16-lotus);
-                --bg-hov: hsla(var(--h4), 10%);
-                --bg-atv: hsla(var(--h4), 20%);
+                --bg-hov: hsla(var(--h4), 10%) !important;
+                --bg-atv: hsla(var(--h4), 20%) !important;
                 --col: hsl(var(--l3-c));
             }
             &.obsession-btn {

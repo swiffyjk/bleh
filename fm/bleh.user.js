@@ -128,6 +128,11 @@ let version = {
             default: false,
             name: 'Dynamic tab title',
             date: '2024-12-26'
+        },
+        view_button_nav: {
+            default: true,
+            name: 'Match view button colouring to new nav',
+            date: '2024-12-28'
         }
     }
 }
