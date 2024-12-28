@@ -7815,6 +7815,10 @@ let has_prompted_for_update = false;
                 album.setAttribute('data-kate-processed','true');
 
                 let album_name = album.querySelector(`.${parent.replace('-details','')}-name a`);
+
+                if (album_name == null)
+                    return;
+
                 let artist_name = album.querySelector(`.${parent.replace('-details','')}-artist a`);
 
                 if (artist_name == undefined)
@@ -7844,6 +7848,10 @@ let has_prompted_for_update = false;
                 album.setAttribute('data-kate-processed','true');
 
                 let album_name = album.querySelector(`.${parent.replace('-details','')}-name a`);
+
+                if (album_name == null)
+                    return;
+
                 let artist_name = return_artist_from_generic(album_name.getAttribute('href'));
 
                 let corrected_album_name = correct_item_by_artist(album_name.textContent, artist_name);
