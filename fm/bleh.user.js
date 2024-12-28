@@ -14926,6 +14926,26 @@ let has_prompted_for_update = false;
         if (!settings.activities)
             return;
 
+        if (type == 'shout') {
+            if (!settings.activity_shout)
+                return;
+        } else if (type == 'image_upload' || type == 'image_star' || type == 'bookmark' || type == 'unbookmark') {
+            if (!settings.activity_image)
+                return;
+        } else if (type == 'obsess' || type == 'unobsess') {
+            if (!settings.activity_obsess)
+                return;
+        } else if (type == 'love' || type == 'unlove') {
+            if (!settings.activity_love)
+                return;
+        } else if (type == 'install_bwaa' || type == 'update_bwaa' || type == 'install_bleh' || type == 'update_bleh') {
+            if (!settings.activity_install)
+                return;
+        } else if (type == 'wiki') {
+            if (!settings.wiki)
+                return;
+        }
+
         recent_activity_list = JSON.parse(localStorage.getItem('bwaa_recent_activity')) || [];
         log('loaded', 'activity', 'info', recent_activity_list);
 
