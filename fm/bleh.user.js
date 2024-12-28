@@ -3860,8 +3860,9 @@ let has_prompted_for_update = false;
             last_page_subpage = page.subpage;
             log(`subpage of ${page.subpage}`, 'page');
 
+            load_settings();
+
             if (page.state.settings_reload) {
-                load_settings();
                 page.state.settings_reload = false;
             }
         }
@@ -6403,6 +6404,8 @@ let has_prompted_for_update = false;
                 page.structure.side.innerHTML = '';
                 page.structure.side.appendChild(value_panel);
             } else if (page.subpage.startsWith('listening-report')) {
+                document.documentElement.setAttribute('data-bleh--theme', 'oled');
+
                 let report_box_container = document.body.querySelector('.report-box-container--overview');
                 if (report_box_container != null) {
                     if (report_box_container != null)
