@@ -215,6 +215,7 @@ const trans = {
                 overview: 'incoming inbox',
                 sent_overview: 'outgoing inbox',
                 compose: 'compose message',
+                message_overview: 'message',
                 notifications: 'notifications'
             },
             releases: {
@@ -303,7 +304,7 @@ const trans = {
             tooltip: 'lotus is the community correction system used in bleh and bwaa',
             check: 'Check for updates',
             correct: {
-                name: 'Correct',
+                name: 'Correct capitalisation',
                 tooltip: 'Submit name correction',
                 tooltip_active: 'Active name correction'
             }
@@ -372,6 +373,7 @@ const trans = {
                 name: 'Search',
                 tooltip: 'Search for variations of this title'
             },
+            search_genius: 'Search lyrics',
             fetch_plays: {
                 name: 'Tracklist',
                 loading: 'Fetching your plays on this album',
@@ -1134,7 +1136,7 @@ const trans = {
             tooltip: 'lotus is the community correction system used in bleh and bwaa',
             check: 'Check for updates',
             correct: {
-                name: 'Correct',
+                name: 'Correct capitalisation',
                 tooltip: 'Submit name correction',
                 tooltip_active: 'Active name correction'
             }
@@ -1197,8 +1199,11 @@ const trans = {
         },
         music: {
             submit_lastfm_correction: 'Submit correction to Last.fm',
-            submit_bleh_correction: 'Submit correction to bleh',
-            search_variations: 'Search for variations of this title',
+            search_variations: {
+                name: 'Search',
+                tooltip: 'Search for variations of this title'
+            },
+            search_genius: 'Search lyrics',
             fetch_plays: {
                 name: 'Titelliste',
                 loading: 'Deine Wiedergaben auf diesem Album werden abgerufen',
@@ -1953,7 +1958,7 @@ const trans = {
             tooltip: 'lotus is the community correction system used in bleh and bwaa',
             check: 'Check for updates',
             correct: {
-                name: 'Correct',
+                name: 'Correct capitalisation',
                 tooltip: 'Submit name correction',
                 tooltip_active: 'Active name correction'
             }
@@ -2016,7 +2021,11 @@ const trans = {
         },
         music: {
             submit_lastfm_correction: 'Submit correction to Last.fm',
-            search_variations: 'Search for variations of this title',
+            search_variations: {
+                name: 'Search',
+                tooltip: 'Search for variations of this title'
+            },
+            search_genius: 'Search lyrics',
             fetch_plays: {
                 name: 'Tracklist',
                 loading: 'Fetching your plays on this album',
@@ -13250,6 +13259,17 @@ let has_prompted_for_update = false;
         interact_container.appendChild(search_btn);
 
 
+        // search lyrics
+        let search_lyrics = null;
+        if (page.type == 'track') {
+            search_lyrics = document.createElement('a');
+            search_lyrics.classList.add('dropdown-menu-clickable-item', 'search-genius-btn');
+            search_lyrics.textContent = trans[lang].music.search_genius;
+            search_lyrics.href = `https://genius.com/search?q=${text}`;
+            search_lyrics.target = '_blank';
+        }
+
+
         // lotus
         let lotus_btn = null;
         if (settings.corrections) {
@@ -13288,8 +13308,9 @@ let has_prompted_for_update = false;
         let music_menu = tippy(menu_btn, {
             theme: 'select-menu',
             content: (`
-                ${(play_btn != null) ? play_btn.outerHTML : ''}
+                ${(search_lyrics != null) ? search_lyrics.outerHTML : ''}
                 ${(lotus_btn != null) ? lotus_btn.outerHTML : ''}
+                ${(play_btn != null) ? play_btn.outerHTML : ''}
             `),
             allowHTML: true,
             placement: 'bottom',

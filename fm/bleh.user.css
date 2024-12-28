@@ -16836,6 +16836,11 @@ h4 {
 }
 
 
+.search-genius-btn {
+    --mask: var(--icon-16-search);
+}
+
+
 .time {
     padding: 0 6px;
     background-color: hsl(var(--b6));
