@@ -6698,6 +6698,9 @@ let has_prompted_for_update = false;
                         allowHTML: true
                     });
                 }
+
+                if (this_badge.type == 'sponsor')
+                    badge.setAttribute('onclick', '_sponsor()');
             });
         }
 

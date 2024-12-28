@@ -3315,6 +3315,8 @@ button.navlist-more {
         padding-left: calc(20px + (4px * 2));
         transition-delay: 0s !important;
 
+        cursor: pointer;
+
         &:hover {
             background-color: hsla(var(--h4), 20%) !important;
             transition-duration: 0s !important;
