@@ -3302,10 +3302,23 @@ button.navlist-more {
         transition-delay: 0.2s;
     }
 
-    &:not(.auth-badge):hover {
+    &:not(.auth-badge, .no-hover):hover {
         max-width: 220px;
         padding-right: 6px;
         background-color: hsla(var(--h4), 20%) !important;
+    }
+
+    &.no-hover {
+        --left: 4px;
+        --top: 2px;
+        height: 24px;
+        padding-left: calc(20px + (4px * 2));
+        transition-delay: 0s !important;
+
+        &:hover {
+            background-color: hsla(var(--h4), 20%) !important;
+            transition-duration: 0s !important;
+        }
     }
 
     &.auth-badge {
@@ -9405,6 +9418,20 @@ text[style^="color: rgb(255, 172, 172)"] {
                 .season-name {
                     color: hsl(var(--c2));
                 }
+            }
+        }
+    }
+
+    &[data-theme="badge"] {
+        .tippy-content {
+            display: flex;
+            flex-direction: column;
+
+            .badge-name {
+                font-weight: var(--font-weight-medium);
+            }
+            .badge-reason {
+                color: hsl(var(--c3));
             }
         }
     }
@@ -15746,7 +15773,7 @@ button.bleh--gallery-bookmark-image-btn {
                 --bg-atv: hsl(var(--b4), 80%);
             }
 
-            &:not(.dropdown-menu-clickable-button, .dropdown-menu-clickable-item):after {
+            &:not(.dropdown-menu-clickable-button, .dropdown-menu-clickable-item, .profile-top-item--taste):after {
                 content: '';
                 position: absolute;
                 inset: -4px !important;
@@ -15954,6 +15981,7 @@ button.bleh--gallery-bookmark-image-btn {
 
                 &:after {
                     content: '';
+                    opacity: 1 !important;
                     position: absolute;
                     left: 12px;
                     right: 12px;

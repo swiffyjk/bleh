@@ -138,6 +138,11 @@ let version = {
             default: true,
             name: 'Context menu to remove inaccessible artist bookmark',
             date: '2024-12-28'
+        },
+        badges: {
+            default: true,
+            name: 'New badge tooltip',
+            date: '2024-12-28'
         }
     }
 }
@@ -301,11 +306,33 @@ const trans = {
             }
         },
         badges: {
-            missing: 'No badges',
-            pro: 'Last.fm Pro',
-            contributor: 'bleh contributor',
-            cat: 'it\s a kitty!!',
-            sponsor: 'Sponsor of bleh and bwaa'
+            missing: {
+                name: 'No badges'
+            },
+            'user-status-subscriber': {
+                name: 'Last.fm Pro',
+                reason: 'Active Pro subscription'
+            },
+            'label--fade': {
+                reason: 'They follow you'
+            },
+            contributor: {
+                name: 'bleh contributor',
+                reason: 'Contributed to bleh via code or translations'
+            },
+            translation: {
+                reason: 'Translated for a supported language'
+            },
+            cat: {
+                name: 'it\'s a kitty!!'
+            },
+            sponsor: {
+                name: 'Sponsoring',
+                reason: 'Sponsored bleh and bwaa :3'
+            },
+            reserved: {
+                reason: 'Reserved for certain users'
+            }
         },
         lotus: {
             artist: 'Artist corrections have been downloaded!',
@@ -2952,8 +2979,8 @@ let notifications = {};
 
 tippy.setDefaultProps({
     arrow: false,
-    duration: [150, 250],
-    delay: [null, 50]
+    duration: [120, 220],
+    delay: [null, 20]
 });
 
 let artist_corrections = {};
@@ -6627,28 +6654,51 @@ let has_prompted_for_update = false;
         else
             profile_name_obj = profile_header.querySelector('.header-title-label-wrap');
 
-        if (sponsor_list && sponsor_list.badges.hasOwnProperty(page.name)) {
-            if (!Array.isArray(sponsor_list.badges[page.name])) {
-                // default
-                log(`1 badge:`, 'profile', 'info', sponsor_list.badges[page.name]);
-                let this_badge = sponsor_list.badges[page.name];
 
+        if (ff('badges')) {
+            let stock_badges = profile_name_obj.querySelectorAll('.label');
+            stock_badges.forEach((badge) => {
+                if (badge.classList[1] == 'user-status-None')
+                    return;
+
+                badge.classList.add('no-hover');
+
+                tippy(badge, {
+                    theme: 'badge',
+                    placement: 'bottom',
+                    content: (`
+                        <div class="badge-name">${badge.textContent}</div>
+                        <div class="badge-reason">${trans[lang].badges[badge.classList[1]].reason}</div>
+                    `),
+                    allowHTML: true
+                });
+            });
+        }
+
+
+        let badges = load_badges(page.name);
+
+        if (badges) {
+            badges.forEach((this_badge) => {
                 let badge = document.createElement('span');
                 badge.classList.add('label',`user-status--bleh-${this_badge.type}`,`user-status--bleh-user-${page.name}`);
-                badge.textContent = (this_badge.name != null) ? this_badge.name : trans[lang].badges[this_badge.type];
+                badge.textContent = this_badge.name;
                 profile_name_obj.appendChild(badge);
-            } else {
-                // multiple
-                log(`multiple badges:`, 'profile', 'info', sponsor_list.badges[page.name]);
-                for (let badge_entry in sponsor_list.badges[page.name]) {
-                    let this_badge = sponsor_list.badges[page.name][badge_entry];
 
-                    let badge = document.createElement('span');
-                    badge.classList.add('label',`user-status--bleh-${this_badge.type}`,`user-status--bleh-user-${page.name}`);
-                    badge.textContent = (this_badge.name != null) ? this_badge.name : trans[lang].badges[this_badge.type];
-                    profile_name_obj.appendChild(badge);
+                if (ff('badges')) {
+                    badge.classList.add('no-hover');
+
+                    tippy(badge, {
+                        theme: 'badge',
+                        placement: 'bottom',
+                        content: (`
+                            <div class="badge-name">${this_badge.name}</div>
+                            <div class="badge-reason">${trans[lang].badges[this_badge.reason].reason}</div>
+                        `),
+                        allowHTML: true
+                    });
                 }
-            }
+            });
         }
 
         // secondary text
@@ -9175,7 +9225,7 @@ let has_prompted_for_update = false;
                                 <div class="header standalone title-container">
                                     <h1>${auth}</h1>
                                     ${(is_pro) ? (`
-                                    <span class="label user-status-subscriber">${trans[lang].badges.pro}</span>
+                                    <span class="label user-status-subscriber">${trans[lang].badges['user-status-subscriber'].name}</span>
                                     `) : ''}
                                 </div>
                             </div>
@@ -10173,7 +10223,7 @@ let has_prompted_for_update = false;
 
                 let badge = document.createElement('span');
                 badge.classList.add('label',`user-status--bleh-${this_badge.type}`,`user-status--bleh-user-${auth}`);
-                badge.textContent = (this_badge.name != null) ? this_badge.name : trans[lang].badges[this_badge.type];
+                badge.textContent = (this_badge.name != null) ? this_badge.name : trans[lang].badges[this_badge.type].name;
                 profile_name_obj.appendChild(badge);
             } else {
                 // multiple
@@ -10183,14 +10233,14 @@ let has_prompted_for_update = false;
 
                     let badge = document.createElement('span');
                     badge.classList.add('label',`user-status--bleh-${this_badge.type}`,`user-status--bleh-user-${auth}`);
-                    badge.textContent = (this_badge.name != null) ? this_badge.name : trans[lang].badges[this_badge.type];
+                    badge.textContent = (this_badge.name != null) ? this_badge.name : trans[lang].badges[this_badge.type].name;
                     profile_name_obj.appendChild(badge);
                 }
             }
         } else {
             let badge = document.createElement('span');
             badge.classList.add('label','user-status--bleh-missing');
-            badge.textContent = trans[lang].badges.missing;
+            badge.textContent = trans[lang].badges.missing.name;
             profile_name_obj.appendChild(badge);
         }
     }
@@ -18305,7 +18355,7 @@ let has_prompted_for_update = false;
         // now we run thru to add missing metadata
         badges.forEach((badge) => {
             if (!badge.name)
-                badge.name = trans[lang].badges[badge.type];
+                badge.name = trans[lang].badges[badge.type].name;
 
             if (badge.reason)
                 return;
