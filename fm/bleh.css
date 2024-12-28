@@ -4061,6 +4061,10 @@ better than the default selector '#app a' i suppose */
     &:active {
         transform: scale(0.98);
     }
+
+    .link-block-cover-link {
+        z-index: 20;
+    }
 }
 
 .grid-items--big-first {
