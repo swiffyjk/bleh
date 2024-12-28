@@ -6203,7 +6203,9 @@ let has_prompted_for_update = false;
             }
         }
 
-        if (ff('glacier_library')) {
+        let current_year = new Date().getFullYear();
+
+        if (current_year < 2025 && ff('glacier_library')) {
             let tab = page.structure.nav.querySelector('.secondary-nav-item--library a');
 
             let beta = document.createElement('span');
