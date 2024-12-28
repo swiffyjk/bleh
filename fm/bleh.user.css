@@ -4186,7 +4186,7 @@ better than the default selector '#app a' i suppose */
     }
 
     .grid-items-item-details {
-        z-index: 11;
+        z-index: 21;
     }
 
     &:hover .grid-items-cover-image-image {
@@ -4267,7 +4267,7 @@ better than the default selector '#app a' i suppose */
 }
 .grid-items-item-aux-text {
     opacity: unset;
-    z-index: 10;
+    z-index: 21;
     position: relative;
     color: hsl(var(--c2));
     overflow: visible;
