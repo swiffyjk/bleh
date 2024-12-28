@@ -14197,6 +14197,12 @@ input[type="range"]::-moz-range-progress {
     h5 {
         cursor: pointer !important;
     }
+
+    .icon {
+        display: flex;
+        align-items: center;
+        margin-right: 6px;
+    }
 }
 
 .select-container {

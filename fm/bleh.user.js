@@ -9234,6 +9234,91 @@ let has_prompted_for_update = false;
                             </button>
                         </div>
                     </div>
+                    <div class="sep"></div>
+                    <div class="toggle-container" id="container-activity_shout" onclick="_update_item('activity_shout')">
+                        <button class="btn reset" onclick="_reset_item('activity_shout')">${trans[lang].settings.reset}</button>
+                        <div class="icon">
+                            <div class="bleh-icon" style="--icon: var(--icon-16-shoutbox)"></div>
+                        </div>
+                        <div class="heading">
+                            <h5>${trans[lang].settings.activities.types.shout}</h5>
+                        </div>
+                        <div class="toggle-wrap">
+                            <button class="toggle" id="toggle-activity_shout" aria-checked="true">
+                                <div class="dot"></div>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="toggle-container" id="container-activity_image" onclick="_update_item('activity_image')">
+                        <button class="btn reset" onclick="_reset_item('activity_image')">${trans[lang].settings.reset}</button>
+                        <div class="icon">
+                            <div class="bleh-icon" style="--icon: var(--icon-16-gallery-vertical)"></div>
+                        </div>
+                        <div class="heading">
+                            <h5>${trans[lang].settings.activities.types.image}</h5>
+                        </div>
+                        <div class="toggle-wrap">
+                            <button class="toggle" id="toggle-activity_image" aria-checked="true">
+                                <div class="dot"></div>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="toggle-container" id="container-activity_obsess" onclick="_update_item('activity_obsess')">
+                        <button class="btn reset" onclick="_reset_item('activity_obsess')">${trans[lang].settings.reset}</button>
+                        <div class="icon">
+                            <div class="bleh-icon" style="--icon: var(--icon-16-obsession)"></div>
+                        </div>
+                        <div class="heading">
+                            <h5>${trans[lang].settings.activities.types.obsess}</h5>
+                        </div>
+                        <div class="toggle-wrap">
+                            <button class="toggle" id="toggle-activity_obsess" aria-checked="true">
+                                <div class="dot"></div>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="toggle-container" id="container-activity_love" onclick="_update_item('activity_love')">
+                        <button class="btn reset" onclick="_reset_item('activity_love')">${trans[lang].settings.reset}</button>
+                        <div class="icon">
+                            <div class="bleh-icon" style="--icon: var(--icon-16-heart)"></div>
+                        </div>
+                        <div class="heading">
+                            <h5>${trans[lang].settings.activities.types.love}</h5>
+                        </div>
+                        <div class="toggle-wrap">
+                            <button class="toggle" id="toggle-activity_love" aria-checked="true">
+                                <div class="dot"></div>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="toggle-container" id="container-activity_wiki" onclick="_update_item('activity_wiki')">
+                        <button class="btn reset" onclick="_reset_item('activity_wiki')">${trans[lang].settings.reset}</button>
+                        <div class="icon">
+                            <div class="bleh-icon" style="--icon: var(--icon-16-bio)"></div>
+                        </div>
+                        <div class="heading">
+                            <h5>${trans[lang].settings.activities.types.wiki}</h5>
+                        </div>
+                        <div class="toggle-wrap">
+                            <button class="toggle" id="toggle-activity_wiki" aria-checked="true">
+                                <div class="dot"></div>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="toggle-container" id="container-activity_install" onclick="_update_item('activity_install')">
+                        <button class="btn reset" onclick="_reset_item('activity_install')">${trans[lang].settings.reset}</button>
+                        <div class="icon">
+                            <div class="bleh-icon" style="--icon: var(--icon-16-download)"></div>
+                        </div>
+                        <div class="heading">
+                            <h5>${trans[lang].settings.activities.types.install}</h5>
+                        </div>
+                        <div class="toggle-wrap">
+                            <button class="toggle" id="toggle-activity_install" aria-checked="true">
+                                <div class="dot"></div>
+                            </button>
+                        </div>
+                    </div>
                 </div>
                 <div class="bleh--panel">
                     <h4>${trans[lang].settings.profiles.notes.name}</h4>
