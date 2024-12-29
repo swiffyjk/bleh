@@ -21,7 +21,7 @@
 
 let version = {
     brand: 'bleh',
-    build: '2024.1229',
+    build: '2024.1229.1',
     sku: 'taiga',
     feature_flags: {
         bleh_settings_tabs: {
@@ -7406,7 +7406,9 @@ let has_prompted_for_update = false;
         // rather than the top
         avatar_img.setAttribute('src', avatar_img.getAttribute('src').replace('/64s/', '/avatar70s/'));
 
-        if (sponsor_list && sponsor_list.badges.hasOwnProperty(name)) {
+        let badges = load_badges(name, true);
+
+        if (badges) {
             // remove pre-existing badge
             let pre_existing_badge = avatar.querySelector('.avatar-status-dot');
             if (pre_existing_badge !== null)
@@ -7442,7 +7444,7 @@ let has_prompted_for_update = false;
                     <div class="info">
                         <h5 class="title ${(cute.includes(name)) ? 'bleh--name-is-cute-less' : ''}">${name}</h5>
                         <p class="descriptor">${trans[lang].profile.top_badge}</p>
-                        <p class="badge user-status--bleh-${this_badge.type} user-status--bleh-user-${name}" data-badge-type="${this_badge.type}" data-badge-user="${name}">${(this_badge.name != null) ? this_badge.name : trans[lang].badges[this_badge.type]}</p>
+                        <p class="badge user-status--bleh-${this_badge.type} user-status--bleh-user-${name}" data-badge-type="${this_badge.type}" data-badge-user="${name}">${this_badge.name}</p>
                     </div>
                 `),
                 allowHTML: true,
