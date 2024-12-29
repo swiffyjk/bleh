@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         bleh
 // @namespace    http://last.fm/
-// @version      2024.1226
+// @version      2024.1229
 // @description  bleh!!! ^-^
 // @author       kate
 // @match        https://www.last.fm/*
@@ -21,7 +21,7 @@
 
 let version = {
     brand: 'bleh',
-    build: '2024.1226',
+    build: '2024.1229',
     sku: 'taiga',
     feature_flags: {
         bleh_settings_tabs: {
@@ -125,7 +125,7 @@ let version = {
             date: '2024-12-24'
         },
         page_title: {
-            default: false,
+            default: true,
             name: 'Dynamic tab title',
             date: '2024-12-26'
         },
@@ -137,6 +137,11 @@ let version = {
         remove_bookmark: {
             default: true,
             name: 'Context menu to remove inaccessible artist bookmark',
+            date: '2024-12-28'
+        },
+        badges: {
+            default: true,
+            name: 'New badge tooltip',
             date: '2024-12-28'
         }
     }
@@ -177,6 +182,9 @@ const trans = {
             },
             bleh_setup: {
                 '': 'bleh setup'
+            },
+            bleh_sponsor: {
+                '': 'sponsor'
             },
             home: {
                 overview: 'home',
@@ -301,11 +309,33 @@ const trans = {
             }
         },
         badges: {
-            missing: 'No badges',
-            pro: 'Last.fm Pro',
-            contributor: 'bleh contributor',
-            cat: 'it\s a kitty!!',
-            sponsor: 'Sponsor of bleh and bwaa'
+            missing: {
+                name: 'No badges'
+            },
+            'user-status-subscriber': {
+                name: 'Last.fm Pro',
+                reason: 'Active Pro subscription'
+            },
+            'label--fade': {
+                reason: 'They follow you'
+            },
+            contributor: {
+                name: 'bleh contributor',
+                reason: 'Contributed to bleh via code or translations'
+            },
+            translation: {
+                reason: 'Translated for a supported language'
+            },
+            cat: {
+                name: 'it\'s a kitty!!'
+            },
+            sponsor: {
+                name: 'Sponsoring',
+                reason: 'Sponsored bleh and bwaa :3'
+            },
+            reserved: {
+                reason: 'Reserved for certain users'
+            }
         },
         lotus: {
             artist: 'Artist corrections have been downloaded!',
@@ -756,6 +786,14 @@ const trans = {
                 toggle: {
                     name: 'Enable activity tracking',
                     bio: 'Events will only be registered and displayed while enabled.'
+                },
+                types: {
+                    shout: 'Shouts',
+                    image: 'Image uploads and interactions',
+                    obsess: 'Track obsessions',
+                    love: 'Track love',
+                    install: 'Installing and updating',
+                    wiki: 'Wiki editing'
                 }
             },
             performance: {
@@ -1570,6 +1608,14 @@ const trans = {
                 toggle: {
                     name: 'Enable activity tracking',
                     bio: 'Events will only be registered and displayed while enabled.'
+                },
+                types: {
+                    shout: 'Shouts',
+                    image: 'Image uploads and interactions',
+                    obsess: 'Track obsessions',
+                    love: 'Track love',
+                    install: 'Installing and updating',
+                    wiki: 'Wiki editing'
                 }
             },
             performance: {
@@ -2392,6 +2438,14 @@ const trans = {
                 toggle: {
                     name: 'Enable activity tracking',
                     bio: 'Events will only be registered and displayed while enabled.'
+                },
+                types: {
+                    shout: 'Shouts',
+                    image: 'Image uploads and interactions',
+                    obsess: 'Track obsessions',
+                    love: 'Track love',
+                    install: 'Installing and updating',
+                    wiki: 'Wiki editing'
                 }
             },
             performance: {
@@ -2928,8 +2982,8 @@ let notifications = {};
 
 tippy.setDefaultProps({
     arrow: false,
-    duration: [150, 250],
-    delay: [null, 50]
+    duration: [120, 220],
+    delay: [null, 20]
 });
 
 let artist_corrections = {};
@@ -3163,14 +3217,21 @@ let settings_template = {
     font_weight_medium: 650,
     font_weight_bold: 730,
     show_bulk_edit_album: false,
-    activities: true,
 
     auth_menu_obsessions: false,
 
     default_avatar_action: 'expand',
     quick_artist_button: 'gallery',
 
-    glacier_library_graphs: true
+    glacier_library_graphs: true,
+
+    activities: true,
+    activity_shout: true,
+    activity_image: true,
+    activity_obsess: true,
+    activity_love: true,
+    activity_install: true,
+    activity_wiki: true
 };
 let settings_base = {
     high_contrast: {
@@ -3497,6 +3558,48 @@ let settings_base = {
         value: true,
         values: [true, false],
         type: 'toggle'
+    },
+    activity_shout: {
+        css: 'activity_shout',
+        unit: '',
+        value: true,
+        values: [true, false],
+        type: 'toggle'
+    },
+    activity_image: {
+        css: 'activity_image',
+        unit: '',
+        value: true,
+        values: [true, false],
+        type: 'toggle'
+    },
+    activity_obsess: {
+        css: 'activity_obsess',
+        unit: '',
+        value: true,
+        values: [true, false],
+        type: 'toggle'
+    },
+    activity_love: {
+        css: 'activity_love',
+        unit: '',
+        value: true,
+        values: [true, false],
+        type: 'toggle'
+    },
+    activity_install: {
+        css: 'activity_install',
+        unit: '',
+        value: true,
+        values: [true, false],
+        type: 'toggle'
+    },
+    activity_wiki: {
+        css: 'activity_wiki',
+        unit: '',
+        value: true,
+        values: [true, false],
+        type: 'toggle'
     }
 };
 let inbuilt_settings = {
@@ -3637,8 +3740,8 @@ let page = {
 let shout_parse_queue = [];
 
 let bleh_url = 'https://www.last.fm{root}bleh';
-
 let setup_url = 'https://www.last.fm{root}bleh/setup';
+let sponsor_url = 'https://www.last.fm{root}bleh/sponsor';
 
 let has_prompted_for_update = false;
 
@@ -3876,6 +3979,8 @@ let has_prompted_for_update = false;
 
         if (window.location.href.startsWith(setup_url.replace('{root}', root)))
             bleh_setup();
+        else if (window.location.href.startsWith(sponsor_url.replace('{root}', root)))
+            bleh_sponsor_page();
         else if (window.location.href.startsWith(bleh_url.replace('{root}', root)))
             bleh_settings();
         else if (page.type == 'user')
@@ -4419,28 +4524,13 @@ let has_prompted_for_update = false;
             is_pro = false;
         }
 
-        if (sponsor_list && sponsor_list.badges.hasOwnProperty(auth)) {
-            if (!Array.isArray(sponsor_list.badges[auth])) {
-                // default
-                log(`1 badge:`, 'auth', 'info', sponsor_list.badges[auth]);
-                let this_badge = sponsor_list.badges[auth];
+        let badges = load_badges(auth, true);
 
-                let badge = document.createElement('span');
-                badge.classList.add('label', `user-status--bleh-${this_badge.type}`, `user-status--bleh-user-${auth}`, 'auth-badge');
-                badge.textContent = (this_badge.name != null) ? this_badge.name : trans[lang].badges[this_badge.type];
-                auth_link.appendChild(badge);
-            } else {
-                // multiple
-                log(`multiple badges:`, 'auth', 'info', sponsor_list.badges[auth]);
-                let badges_length = Object.keys(sponsor_list.badges[auth]).length - 1;
-                let this_badge = sponsor_list.badges[auth][badges_length];
-                log(`using badge ${badges_length} as primary`, 'auth', 'info', this_badge);
-
-                let badge = document.createElement('span');
-                badge.classList.add('label', `user-status--bleh-${this_badge.type}`, `user-status--bleh-user-${auth}`, 'auth-badge');
-                badge.textContent = (this_badge.name != null) ? this_badge.name : trans[lang].badges[this_badge.type];
-                auth_link.appendChild(badge);
-            }
+        if (badges) {
+            let badge = document.createElement('span');
+            badge.classList.add('label', `user-status--bleh-${badges[0].type}`, `user-status--bleh-user-${auth}`, 'auth-badge');
+            badge.textContent = badges[0].name;
+            auth_link.appendChild(badge);
         } else if (is_pro) {
             let pro_badge = document.createElement('p');
             pro_badge.classList.add('label', 'user-status-subscriber', 'auth-badge');
@@ -6569,28 +6659,54 @@ let has_prompted_for_update = false;
         else
             profile_name_obj = profile_header.querySelector('.header-title-label-wrap');
 
-        if (sponsor_list && sponsor_list.badges.hasOwnProperty(page.name)) {
-            if (!Array.isArray(sponsor_list.badges[page.name])) {
-                // default
-                log(`1 badge:`, 'profile', 'info', sponsor_list.badges[page.name]);
-                let this_badge = sponsor_list.badges[page.name];
 
+        if (ff('badges')) {
+            let stock_badges = profile_name_obj.querySelectorAll('.label');
+            stock_badges.forEach((badge) => {
+                if (badge.classList[1] == 'user-status-None')
+                    return;
+
+                badge.classList.add('no-hover');
+
+                tippy(badge, {
+                    theme: 'badge',
+                    placement: 'bottom',
+                    content: (`
+                        <div class="badge-name">${badge.textContent}</div>
+                        <div class="badge-reason">${trans[lang].badges[badge.classList[1]].reason}</div>
+                    `),
+                    allowHTML: true
+                });
+            });
+        }
+
+
+        let badges = load_badges(page.name);
+
+        if (badges) {
+            badges.forEach((this_badge) => {
                 let badge = document.createElement('span');
                 badge.classList.add('label',`user-status--bleh-${this_badge.type}`,`user-status--bleh-user-${page.name}`);
-                badge.textContent = (this_badge.name != null) ? this_badge.name : trans[lang].badges[this_badge.type];
+                badge.textContent = this_badge.name;
                 profile_name_obj.appendChild(badge);
-            } else {
-                // multiple
-                log(`multiple badges:`, 'profile', 'info', sponsor_list.badges[page.name]);
-                for (let badge_entry in sponsor_list.badges[page.name]) {
-                    let this_badge = sponsor_list.badges[page.name][badge_entry];
 
-                    let badge = document.createElement('span');
-                    badge.classList.add('label',`user-status--bleh-${this_badge.type}`,`user-status--bleh-user-${page.name}`);
-                    badge.textContent = (this_badge.name != null) ? this_badge.name : trans[lang].badges[this_badge.type];
-                    profile_name_obj.appendChild(badge);
+                if (ff('badges')) {
+                    badge.classList.add('no-hover');
+
+                    tippy(badge, {
+                        theme: 'badge',
+                        placement: 'bottom',
+                        content: (`
+                            <div class="badge-name">${this_badge.name}</div>
+                            <div class="badge-reason">${trans[lang].badges[this_badge.reason].reason}</div>
+                        `),
+                        allowHTML: true
+                    });
                 }
-            }
+
+                if (this_badge.type == 'sponsor')
+                    badge.setAttribute('onclick', '_sponsor()');
+            });
         }
 
         // secondary text
@@ -7742,6 +7858,10 @@ let has_prompted_for_update = false;
                 album.setAttribute('data-kate-processed','true');
 
                 let album_name = album.querySelector(`.${parent.replace('-details','')}-name a`);
+
+                if (album_name == null)
+                    return;
+
                 let artist_name = album.querySelector(`.${parent.replace('-details','')}-artist a`);
 
                 if (artist_name == undefined)
@@ -7771,6 +7891,10 @@ let has_prompted_for_update = false;
                 album.setAttribute('data-kate-processed','true');
 
                 let album_name = album.querySelector(`.${parent.replace('-details','')}-name a`);
+
+                if (album_name == null)
+                    return;
+
                 let artist_name = return_artist_from_generic(album_name.getAttribute('href'));
 
                 let corrected_album_name = correct_item_by_artist(album_name.textContent, artist_name);
@@ -9109,7 +9233,7 @@ let has_prompted_for_update = false;
                                 <div class="header standalone title-container">
                                     <h1>${auth}</h1>
                                     ${(is_pro) ? (`
-                                    <span class="label user-status-subscriber">${trans[lang].badges.pro}</span>
+                                    <span class="label user-status-subscriber">${trans[lang].badges['user-status-subscriber'].name}</span>
                                     `) : ''}
                                 </div>
                             </div>
@@ -9157,6 +9281,91 @@ let has_prompted_for_update = false;
                         </div>
                         <div class="toggle-wrap">
                             <button class="toggle" id="toggle-activities" aria-checked="true">
+                                <div class="dot"></div>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="sep"></div>
+                    <div class="toggle-container" id="container-activity_shout" onclick="_update_item('activity_shout')">
+                        <button class="btn reset" onclick="_reset_item('activity_shout')">${trans[lang].settings.reset}</button>
+                        <div class="icon">
+                            <div class="bleh-icon" style="--icon: var(--icon-16-shoutbox)"></div>
+                        </div>
+                        <div class="heading">
+                            <h5>${trans[lang].settings.activities.types.shout}</h5>
+                        </div>
+                        <div class="toggle-wrap">
+                            <button class="toggle" id="toggle-activity_shout" aria-checked="true">
+                                <div class="dot"></div>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="toggle-container" id="container-activity_image" onclick="_update_item('activity_image')">
+                        <button class="btn reset" onclick="_reset_item('activity_image')">${trans[lang].settings.reset}</button>
+                        <div class="icon">
+                            <div class="bleh-icon" style="--icon: var(--icon-16-gallery-vertical)"></div>
+                        </div>
+                        <div class="heading">
+                            <h5>${trans[lang].settings.activities.types.image}</h5>
+                        </div>
+                        <div class="toggle-wrap">
+                            <button class="toggle" id="toggle-activity_image" aria-checked="true">
+                                <div class="dot"></div>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="toggle-container" id="container-activity_obsess" onclick="_update_item('activity_obsess')">
+                        <button class="btn reset" onclick="_reset_item('activity_obsess')">${trans[lang].settings.reset}</button>
+                        <div class="icon">
+                            <div class="bleh-icon" style="--icon: var(--icon-16-obsession)"></div>
+                        </div>
+                        <div class="heading">
+                            <h5>${trans[lang].settings.activities.types.obsess}</h5>
+                        </div>
+                        <div class="toggle-wrap">
+                            <button class="toggle" id="toggle-activity_obsess" aria-checked="true">
+                                <div class="dot"></div>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="toggle-container" id="container-activity_love" onclick="_update_item('activity_love')">
+                        <button class="btn reset" onclick="_reset_item('activity_love')">${trans[lang].settings.reset}</button>
+                        <div class="icon">
+                            <div class="bleh-icon" style="--icon: var(--icon-16-heart)"></div>
+                        </div>
+                        <div class="heading">
+                            <h5>${trans[lang].settings.activities.types.love}</h5>
+                        </div>
+                        <div class="toggle-wrap">
+                            <button class="toggle" id="toggle-activity_love" aria-checked="true">
+                                <div class="dot"></div>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="toggle-container" id="container-activity_wiki" onclick="_update_item('activity_wiki')">
+                        <button class="btn reset" onclick="_reset_item('activity_wiki')">${trans[lang].settings.reset}</button>
+                        <div class="icon">
+                            <div class="bleh-icon" style="--icon: var(--icon-16-bio)"></div>
+                        </div>
+                        <div class="heading">
+                            <h5>${trans[lang].settings.activities.types.wiki}</h5>
+                        </div>
+                        <div class="toggle-wrap">
+                            <button class="toggle" id="toggle-activity_wiki" aria-checked="true">
+                                <div class="dot"></div>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="toggle-container" id="container-activity_install" onclick="_update_item('activity_install')">
+                        <button class="btn reset" onclick="_reset_item('activity_install')">${trans[lang].settings.reset}</button>
+                        <div class="icon">
+                            <div class="bleh-icon" style="--icon: var(--icon-16-download)"></div>
+                        </div>
+                        <div class="heading">
+                            <h5>${trans[lang].settings.activities.types.install}</h5>
+                        </div>
+                        <div class="toggle-wrap">
+                            <button class="toggle" id="toggle-activity_install" aria-checked="true">
                                 <div class="dot"></div>
                             </button>
                         </div>
@@ -10022,7 +10231,7 @@ let has_prompted_for_update = false;
 
                 let badge = document.createElement('span');
                 badge.classList.add('label',`user-status--bleh-${this_badge.type}`,`user-status--bleh-user-${auth}`);
-                badge.textContent = (this_badge.name != null) ? this_badge.name : trans[lang].badges[this_badge.type];
+                badge.textContent = (this_badge.name != null) ? this_badge.name : trans[lang].badges[this_badge.type].name;
                 profile_name_obj.appendChild(badge);
             } else {
                 // multiple
@@ -10032,14 +10241,14 @@ let has_prompted_for_update = false;
 
                     let badge = document.createElement('span');
                     badge.classList.add('label',`user-status--bleh-${this_badge.type}`,`user-status--bleh-user-${auth}`);
-                    badge.textContent = (this_badge.name != null) ? this_badge.name : trans[lang].badges[this_badge.type];
+                    badge.textContent = (this_badge.name != null) ? this_badge.name : trans[lang].badges[this_badge.type].name;
                     profile_name_obj.appendChild(badge);
                 }
             }
         } else {
             let badge = document.createElement('span');
             badge.classList.add('label','user-status--bleh-missing');
-            badge.textContent = trans[lang].badges.missing;
+            badge.textContent = trans[lang].badges.missing.name;
             profile_name_obj.appendChild(badge);
         }
     }
@@ -14768,6 +14977,26 @@ let has_prompted_for_update = false;
         if (!settings.activities)
             return;
 
+        if (type == 'shout') {
+            if (!settings.activity_shout)
+                return;
+        } else if (type == 'image_upload' || type == 'image_star' || type == 'bookmark' || type == 'unbookmark') {
+            if (!settings.activity_image)
+                return;
+        } else if (type == 'obsess' || type == 'unobsess') {
+            if (!settings.activity_obsess)
+                return;
+        } else if (type == 'love' || type == 'unlove') {
+            if (!settings.activity_love)
+                return;
+        } else if (type == 'install_bwaa' || type == 'update_bwaa' || type == 'install_bleh' || type == 'update_bleh') {
+            if (!settings.activity_install)
+                return;
+        } else if (type == 'wiki') {
+            if (!settings.wiki)
+                return;
+        }
+
         recent_activity_list = JSON.parse(localStorage.getItem('bwaa_recent_activity')) || [];
         log('loaded', 'activity', 'info', recent_activity_list);
 
@@ -18105,5 +18334,67 @@ let has_prompted_for_update = false;
                 type: 'sponsor'
             });
         }
+    }
+
+    function bleh_sponsor_page() {
+        document.body.style.removeProperty('--hue-album');
+        document.body.style.removeProperty('--sat-album');
+
+        let adaptive_skin_container = document.querySelector('.adaptive-skin-container:not([data-bleh])');
+
+        if (adaptive_skin_container == null)
+            return;
+        adaptive_skin_container.setAttribute('data-bleh','true');
+
+        // initial
+        adaptive_skin_container.innerHTML = '';
+
+        log('internal bleh sponsor', 'page');
+        page.type = 'bleh_sponsor';
+        page.subpage = '';
+
+        sponsor();
+    }
+
+
+
+
+    function load_badges(user, solo = false) {
+        if (sponsor_list == null)
+            return;
+
+        if (!sponsor_list.badges.hasOwnProperty(user))
+            return;
+
+        let badges = [];
+
+        if (!Array.isArray(sponsor_list.badges[user])) {
+            log('1 badge found', 'sponsor', 'info', sponsor_list.badges[user]);
+            badges.push(sponsor_list.badges[user]);
+        } else {
+            log('multiple badges found', 'sponsor', 'info', sponsor_list.badges[user]);
+
+            if (solo)
+                badges.push(sponsor_list.badges[user][Object.keys(sponsor_list.badges[user]).length - 1])
+            else
+                badges = sponsor_list.badges[user];
+        }
+
+        // now we run thru to add missing metadata
+        badges.forEach((badge) => {
+            if (!badge.name)
+                badge.name = trans[lang].badges[badge.type].name;
+
+            if (badge.reason)
+                return;
+
+            if (badge.type == 'sponsor' || badge.type == 'contributor' || badge.type == 'translation')
+                badge.reason = badge.type;
+            else
+                badge.reason = 'reserved';
+        });
+
+        log('final badge list', 'sponsor', 'info', badges);
+        return badges;
     }
 })();

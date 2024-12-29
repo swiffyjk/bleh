@@ -7,7 +7,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Ubuntu+Sans:ital,wght@0,100..800;1,100..800&display=swap');
 
 body {
-    --version-build: '2024.1226';
+    --version-build: '2024.1229';
 
     --hue:  var(--hue-over,
             var(--hue-album,
@@ -3292,10 +3292,25 @@ button.navlist-more {
         transition-delay: 0.2s;
     }
 
-    &:not(.auth-badge):hover {
+    &:not(.auth-badge, .no-hover):hover {
         max-width: 220px;
         padding-right: 6px;
         background-color: hsla(var(--h4), 20%) !important;
+    }
+
+    &.no-hover {
+        --left: 4px;
+        --top: 2px;
+        height: 24px;
+        padding-left: calc(20px + (4px * 2));
+        transition-delay: 0s !important;
+
+        cursor: pointer;
+
+        &:hover {
+            background-color: hsla(var(--h4), 20%) !important;
+            transition-duration: 0s !important;
+        }
     }
 
     &.auth-badge {
@@ -9398,6 +9413,20 @@ text[style^="color: rgb(255, 172, 172)"] {
             }
         }
     }
+
+    &[data-theme="badge"] {
+        .tippy-content {
+            display: flex;
+            flex-direction: column;
+
+            .badge-name {
+                font-weight: var(--font-weight-medium);
+            }
+            .badge-reason {
+                color: hsl(var(--c3));
+            }
+        }
+    }
 }
 .tippy-content {
     padding: unset;
@@ -14187,6 +14216,12 @@ input[type="range"]::-moz-range-progress {
     h5 {
         cursor: pointer !important;
     }
+
+    .icon {
+        display: flex;
+        align-items: center;
+        margin-right: 6px;
+    }
 }
 
 .select-container {
@@ -15715,7 +15750,7 @@ button.bleh--gallery-bookmark-image-btn {
     }
 
     a,
-    button:not(.toggle, .reset) {
+    button:not(.toggle, .reset, .select-button, .btn-primary) {
         [data-ff--view_button_nav="true"] & {
             --bg: hsl(var(--b3), 60%);
             --bg-hov: hsl(var(--b3), 80%);
@@ -15730,7 +15765,7 @@ button.bleh--gallery-bookmark-image-btn {
                 --bg-atv: hsl(var(--b4), 80%);
             }
 
-            &:not(.dropdown-menu-clickable-button, .dropdown-menu-clickable-item):after {
+            &:not(.dropdown-menu-clickable-button, .dropdown-menu-clickable-item, .profile-top-item--taste):after {
                 content: '';
                 position: absolute;
                 inset: -4px !important;
@@ -15938,6 +15973,7 @@ button.bleh--gallery-bookmark-image-btn {
 
                 &:after {
                     content: '';
+                    opacity: 1 !important;
                     position: absolute;
                     left: 12px;
                     right: 12px;
