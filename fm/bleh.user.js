@@ -12142,7 +12142,7 @@ let has_prompted_for_update = false;
         // we need to fetch the tracklist, this function presumes that
         // the user has a tracklist to begin with, as that is the only
         // way to call the function on the frontend
-        fetch(window.location.href)
+        fetch(`${root}user/${page.name}/partial/recenttracks?ajax=1`)
         .then(function(response) {
             console.log('returned', response, response.text);
 
@@ -12155,7 +12155,7 @@ let has_prompted_for_update = false;
             deliver_notif('refreshed tracks');
             panel.classList.add('has-refreshed');
 
-            let tracklist_panel = doc.querySelector('#recent-tracks-section .chartlist');
+            let tracklist_panel = doc.querySelector('.chartlist');
 
             if (tracklist_panel == null) {
                 deliver_notif('recent tracks could not be found ;-;');
