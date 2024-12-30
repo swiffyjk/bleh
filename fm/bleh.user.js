@@ -3874,12 +3874,6 @@ let has_prompted_for_update = false;
         }
         patch_gallery_page();
 
-        if (
-            (page.type == 'artist' || page.type == 'album' || page.type == 'track') &&
-            page.subpage == 'overview'
-        )
-            patch_wiki();
-
         if (page.type == 'user' && page.subpage.startsWith('library') && (
             page.subpage != 'library_overview' && !page.subpage.startsWith('library_artist_') &&
             !page.subpage.startsWith('library_album_') && !page.subpage.startsWith('library_track_')
@@ -4005,6 +3999,12 @@ let has_prompted_for_update = false;
             bleh_search();
         else if (page.type == 'settings')
             bleh_native_settings();
+
+        if (
+            (page.type == 'artist' || page.type == 'album' || page.type == 'track') &&
+            page.subpage == 'overview'
+        )
+            patch_wiki();
 
         if (ff('page_title')) {
             //document.title = `${page.type}_${page.subpage} (${page.name}, ${page.sister}) - bleh ${version.build}.${version.sku}`;
