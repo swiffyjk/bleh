@@ -10083,6 +10083,8 @@ text[style^="color: rgb(0, 0, 0)"] {
     transition-duration: var(--trans);
     transition-timing-function: var(--trans-function);
 
+    line-height: var(--line-height);
+
     &:hover {
         background-color: hsla(var(--h4), 10%);
         padding: 4px;

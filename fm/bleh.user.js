@@ -3874,6 +3874,12 @@ let has_prompted_for_update = false;
         }
         patch_gallery_page();
 
+        if (
+            (page.type == 'artist' || page.type == 'album' || page.type == 'track') &&
+            page.subpage == 'overview'
+        )
+            patch_wiki();
+
         if (page.type == 'user' && page.subpage.startsWith('library') && (
             page.subpage != 'library_overview' && !page.subpage.startsWith('library_artist_') &&
             !page.subpage.startsWith('library_album_') && !page.subpage.startsWith('library_track_')
@@ -18398,5 +18404,24 @@ let has_prompted_for_update = false;
 
         log('final badge list', 'sponsor', 'info', badges);
         return badges;
+    }
+
+
+
+
+    // fix wiki on some devices
+    function patch_wiki() {
+        let wiki_block = page.structure.main.querySelector('.wiki-block.visible-lg .wiki-block-inner-2:not([data-bleh])');
+
+        if (wiki_block == null)
+            return;
+        wiki_block.setAttribute('data-bleh', 'true');
+
+        let read_more = wiki_block.querySelector('a:last-child');
+
+        if (read_more == null)
+            return;
+
+        wiki_block.insertBefore(read_more, wiki_block.firstChild);
     }
 })();
