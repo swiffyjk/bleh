@@ -737,7 +737,6 @@ body {
             --cards-overlay: linear-gradient(180deg, rgba(71, 43, 124, 0.2) 0%, rgba(0,0,0,0) 60%);
             --cards-overlay-image: var(--overlay-ice);
             --cards-overlay-image-subtle: var(--overlay-ice-subtle);
-            --cards-overlay-image-subtlest: var(--overlay-ice-subtlest);
             --cards-overlay-image-spikes: var(--overlay-ice-spikes);
         }
     }
