@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         bleh
 // @namespace    http://last.fm/
-// @version      2024.1229
+// @version      2024.1230
 // @description  bleh!!! ^-^
 // @author       kate
 // @match        https://www.last.fm/*
@@ -21,7 +21,7 @@
 
 let version = {
     brand: 'bleh',
-    build: '2024.1229.1',
+    build: '2024.1230',
     sku: 'taiga',
     feature_flags: {
         bleh_settings_tabs: {
@@ -4482,6 +4482,11 @@ let has_prompted_for_update = false;
             console.info(now, date_to_count);
 
             page.header.season.textContent = countdown_to(time_until);
+
+            page.header.season_tooltip.setContent(`
+                <span class="season-colour-name">${trans[lang].settings.customise.seasonal.listing[stored_season.id]}</span>
+                <span class="season-exclusive">${trans[lang].auth_menu.seasonal_live}</span>
+            `);
         }
     }
 
