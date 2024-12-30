@@ -125,7 +125,7 @@ body {
     --lit-brand-twt: 0.9;
 
     --font: var(--custom_font, ''), Ubuntu Sans, Spline Sans, Inter, Roboto, Noto Sans, Noto Sans JP, Noto Sans KR, Noto Sans TC, Noto Color Emoji, -apple-system, BlinkMacSystemFont, sans-serif;
-    --font-code: Spline Sans Mono, Iosevka, JetBrains Mono, Roboto Mono, monospace;
+    --font-code: Spline Sans Mono, Iosevka, JetBrains Mono, Roboto Mono, monospace, var(--font);
     --font-brand: Comfortaa, var(--font);
     --font-size: 14px;
     --line-height: calc(var(--font-size) + 4px);
@@ -7592,10 +7592,9 @@ very, very, very dated - who looks up a song on ebay? */
     }
 }
 
-input:is([name="track_name"], [name="artist_name"], [name="album_name"], [name="album_artist_name"])
+input:is([name^="track_name"], [name^="artist_name"], [name^="album_name"], [name^="album_artist_name"])
 {
-    /*letter-spacing: 0.7px !important;*/
-    font-family: var(--font-code);
+    letter-spacing: 1px !important;
 }
 
 .content-form .form-horizontal .form-group {
@@ -7747,6 +7746,10 @@ input:is([name="track_name"], [name="artist_name"], [name="album_name"], [name="
         }
     }
 
+    &.modal-body {
+        background: hsl(var(--b5)) !important;
+    }
+
     &:not(
         .modal--avatar
     ) {
@@ -7862,8 +7865,6 @@ input:is([name="track_name"], [name="artist_name"], [name="album_name"], [name="
 }
 /* modal dialog v3 */
 .modal-actions .modal-buttons {
-    background-color: hsl(var(--b6));
-
     width: fit-content;
     margin-right: -16px !important;
     z-index: 100000000000000;
@@ -7883,8 +7884,6 @@ input:is([name="track_name"], [name="artist_name"], [name="album_name"], [name="
     width: 32px !important;
     height: 32px !important;
     margin: unset !important;
-
-    outline: 3px solid hsl(var(--b6)) !important;
 
     &.modal-download {
         --mask: var(--icon-16-download);
@@ -16800,8 +16799,6 @@ h4 {
 
 
 .modal-body {
-    outline: 3px solid hsl(var(--b6)) !important;
-
     .alert + .screen-row {
         margin-top: var(--card-gap);
 
@@ -17451,7 +17448,7 @@ h4 {
 
 /*     TRACK/ALBUM EDITING (V2)     */
 .modal-dialog:has(.automatic-edit-modal-body-v2) {
-    width: 900px;
+    width: 1100px;
     max-width: 95vw;
 }
 .automatic-edit-modal-body-v2 {
