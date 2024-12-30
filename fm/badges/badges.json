@@ -2,11 +2,12 @@
     "latest": "2024.1230",
     "sponsors": [
         "cutensilly", "kateshapedbox", "inozom",
-        "astrablooms", "ItsProyal", "vwvwvwvwvwvwv", "Orofil"
+        "astrablooms", "ItsProyal", "vwvwvwvwvwvwv", "Orofil",
+        "EliteHimself"
     ],
     "sponsors_one_time": [
         "kateshapedbox",
-        "vwvwvwvwvwvwv"
+        "vwvwvwvwvwvwv", "EliteHimself"
     ],
     "sponsor_count_remove": 3,
     "sponsor_account": "kateshapedbox",
@@ -131,6 +132,9 @@
                 "name": "( ᵔ ⩊ ᵔ )",
                 "reason": "sponsor"
             }
-        ]
+        ],
+        "EliteHimself": {
+            "type": "sponsor"
+        }
     }
 }
