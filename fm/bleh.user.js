@@ -2833,7 +2833,8 @@ function lookup_lang() {
 // seasonal
 let seasonal_timer;
 let stored_season = {
-    id: 'none'
+    id: 'none',
+    new_years_eve: false
 };
 let seasonal_events = [
     {
@@ -2843,7 +2844,7 @@ let seasonal_events = [
 
         snowflakes: {
             state: true,
-            count: 80
+            count: 100
         }
     },
     {
@@ -4357,7 +4358,6 @@ let has_prompted_for_update = false;
         let last_season_seen = localStorage.getItem('bleh_last_season_seen') || '';
 
         let now = new Date();
-        //now.setHours(now.getHours() + 213);
         log(`it is now ${now}`, 'season', 'log');
 
         let current_year = now.getFullYear();
@@ -4380,6 +4380,13 @@ let has_prompted_for_update = false;
                 stored_season.start = season.start;
                 stored_season.end = season.end;
                 stored_season.snowflakes = season.snowflakes;
+
+                if (now.getDate() == 31) {
+                    stored_season.new_years_eve = true;
+                    stored_season.seasonal_timer = setInterval(update_season_nav, 1000);
+                } else if (stored_season.seasonal_timer) {
+                    clearInterval(stored_season.seasonal_timer);
+                }
 
                 // whats the next season?
                 if (seasonal_events[index + 1] == null) {
@@ -4422,12 +4429,18 @@ let has_prompted_for_update = false;
             }
         });
     }
-    function seasonal_timer_start() {
+    function seasonal_timer_start(bypass = false) {
+        if (stored_season.new_years_eve && !bypass)
+            return;
+
         if (seasonal_timer != null)
             return;
 
         seasonal_timer = setInterval(set_season, 1000);
         log('started interval', 'season', 'info');
+
+        if (page.header.season_tooltip == null)
+            return;
 
         page.header.season_tooltip.setContent(`
             <span class="season-colour-name">${trans[lang].settings.customise.seasonal.listing[stored_season.id]}</span>
@@ -4435,6 +4448,9 @@ let has_prompted_for_update = false;
         `);
     }
     function seasonal_timer_end() {
+        if (stored_season.new_years_eve)
+            return;
+
         if (seasonal_timer == null)
             return;
 
@@ -4453,7 +4469,47 @@ let has_prompted_for_update = false;
             return;
 
         page.header.season.setAttribute('data-season', stored_season.id);
-        page.header.season.textContent = moment(stored_season.end.replace('y0', stored_season.year)).to(stored_season.now, true);
+
+        if (!stored_season.new_years_eve) {
+            page.header.season.textContent = moment(stored_season.end.replace('y0', stored_season.year)).to(stored_season.now, true);
+        } else {
+            let now = new Date();
+
+            let date_to_count = new Date(`${stored_season.year + 1}-01-01T00:00:00+0000`);
+
+            let time_until = date_to_count - now;
+
+            console.info(now, date_to_count);
+
+            page.header.season.textContent = countdown_to(time_until);
+        }
+    }
+
+    function countdown_to(time_until) {
+        let days = Math.floor(time_until / (1000 * 60 * 60 * 24));
+        let hours = Math.floor((time_until % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        let minutes = Math.floor((time_until % (1000 * 60 * 60)) / (1000 * 60));
+        let seconds = Math.floor((time_until % (1000 * 60)) / 1000);
+
+        console.info(time_until, hours, minutes, seconds);
+
+        if (hours < 10)
+            hours = '0' + hours;
+        if (minutes < 10)
+            minutes = '0' + minutes;
+        if (seconds < 10)
+            seconds = '0' + seconds;
+
+        if (days != 0)
+            return moment(stored_season.end.replace('y0', stored_season.year)).to(stored_season.now, true);
+
+        if (hours == '00' && minutes == '00' && seconds == '00')
+            set_season();
+
+        if (hours == '00')
+            return `${hours}:${minutes}:${seconds}`;
+        else
+            return `${hours}:${minutes}:${seconds}`;
     }
 
     function prep_snow() {
