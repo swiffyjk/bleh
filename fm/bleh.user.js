@@ -278,14 +278,14 @@ const trans = {
                 'images_image-upload': '{name} · artist photos',
                 image: '{name} · artist photo',
                 similar: '{name} · artist similar',
-                wiki_overview: '{name} · track wiki',
-                wiki_edit: '{name} · track wiki',
-                wiki_history: '{name} · track wiki',
+                wiki_overview: '{name} · artist wiki',
+                wiki_edit: '{name} · artist wiki',
+                wiki_history: '{name} · artist wiki',
                 listeners_overview: '{name} · artist top listeners',
                 'listeners_you-know': '{name} · artist listeners you know',
-                shoutbox_overview: '{name} · track shouts',
+                shoutbox_overview: '{name} · artist shouts',
                 events: '{name} · artist events',
-                tags_overview: '{name} · track tags'
+                tags_overview: '{name} · artist tags'
             },
             album: {
                 overview: '{name} - {sister} · album',
