@@ -10088,7 +10088,7 @@ text[style^="color: rgb(0, 0, 0)"] {
     }
 
     /* fully clickable */
-    a:last-child {
+    a:first-child {
         position: absolute;
         inset: 0;
         opacity: 0;
