@@ -19065,7 +19065,6 @@ section > .section-controls .subpage-title {
     .charts-header {
         order: -1;
         margin: unset !important;
-        text-align: center;
     }
     .out-now-btn {
         position: relative;
@@ -19184,5 +19183,16 @@ section > .section-controls .subpage-title {
 }
 .secondary-nav-item--weekly a {
     --mask: var(--icon-16-calendar);
+}
+
+
+.top-header {
+    display: flex;
+    justify-content: space-between;
+    text-align: center;
+
+    .view-buttons {
+        margin: unset !important;
+    }
 }
 }

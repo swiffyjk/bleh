@@ -1176,7 +1176,11 @@ const trans = {
             overview: 'Real time',
             weekly: 'Weekly',
             charts_for: 'Charts for {date}',
-            view: 'View the charts'
+            view: 'View the charts',
+            scroll: {
+                name: 'Simulate horizontal scrolling',
+                bio: 'Disable if you can scroll easily on a laptop for example.'
+            }
         }
     },
     de: {
@@ -3242,7 +3246,9 @@ let settings_template = {
     activity_obsess: true,
     activity_love: true,
     activity_install: true,
-    activity_wiki: true
+    activity_wiki: true,
+
+    simulate_scroll: true
 };
 let settings_base = {
     high_contrast: {
@@ -3611,6 +3617,14 @@ let settings_base = {
         value: true,
         values: [true, false],
         type: 'toggle'
+    },
+    simulate_scroll: {
+        css: 'simulate_scroll',
+        unit: '',
+        value: true,
+        values: [true, false],
+        type: 'toggle',
+        require_reload: true
     }
 };
 let inbuilt_settings = {
@@ -18248,12 +18262,55 @@ let has_prompted_for_update = false;
         }
 
         let header = document.createElement('div');
-        header.classList.add('charts-header');
+        header.classList.add('charts-header', 'top-header');
         header.innerHTML = (`
-            <h2>${trans[lang].charts.charts_for.replace('{date}', moment(new Date()).format('MMMM Do YYYY'))}</h2>
-            ${(out_now != null) ? out_now.outerHTML : ''}
+            <div class="left">
+
+            </div>
+            <div class="middle">
+                <h2>${trans[lang].charts.charts_for.replace('{date}', moment(new Date()).format('MMMM Do YYYY'))}</h2>
+                ${(out_now != null) ? out_now.outerHTML : ''}
+            </div>
+            <div class="right">
+                <div class="view-buttons">
+                    <button class="btn view-item glacier-configure-button panel-settings-button">
+                        ${trans[lang].settings.configure}
+                    </button>
+                </div>
+            </div>
         `);
         new_panel.appendChild(header);
+
+        let settings_btn = header.querySelector('.panel-settings-button');
+
+        tippy(settings_btn, {
+            theme: 'window',
+            content: (`
+                <div class="dialog-settings">
+                    <div class="toggle-container" id="container-simulate_scroll" onclick="_update_item('simulate_scroll')">
+                        <button class="btn reset" onclick="_reset_item('simulate_scroll')">${trans[lang].settings.reset}</button>
+                        <div class="heading">
+                            <h5>${trans[lang].charts.scroll.name}</h5>
+                            <p>${trans[lang].charts.scroll.bio}</p>
+                        </div>
+                        <div class="toggle-wrap">
+                            <button class="toggle" id="toggle-simulate_scroll" aria-checked="true">
+                                <div class="dot"></div>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `),
+            allowHTML: true,
+            placement: 'bottom',
+            interactive: true,
+            interactiveBorder: 10,
+            trigger: 'click',
+
+            onShow(instance) {
+                refresh_all(instance.popper);
+            }
+        });
 
         chart_rows.forEach((row, index) => {
             let chart_row = document.createElement('div');
@@ -18266,23 +18323,25 @@ let has_prompted_for_update = false;
             let list = document.createElement('ol');
             list.classList.add('music-bookmarks-artists', 'charts-list');
 
-            list.addEventListener('wheel', (e) => {
-                e.preventDefault();
+            if (settings.simulate_scroll) {
+                list.addEventListener('wheel', (e) => {
+                    e.preventDefault();
 
-                if (e.deltaY > 0) {
-                    list.scrollBy({
-                        top: 0,
-                        left: +600,
-                        behavior: 'smooth'
-                    });
-                } else {
-                    list.scrollBy({
-                        top: 0,
-                        left: -600,
-                        behavior: 'smooth'
-                    });
-                }
-            });
+                    if (e.deltaY > 0) {
+                        list.scrollBy({
+                            top: 0,
+                            left: +600,
+                            behavior: 'smooth'
+                        });
+                    } else {
+                        list.scrollBy({
+                            top: 0,
+                            left: -600,
+                            behavior: 'smooth'
+                        });
+                    }
+                });
+            }
 
             let items = row.querySelectorAll('.globalchart-item');
             items.forEach((item, item_index) => {
