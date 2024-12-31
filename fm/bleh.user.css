@@ -19056,6 +19056,28 @@ section > .section-controls .subpage-title {
         &[data-index="2"] {
             order: 1;
         }
+
+        .charts-list-item {
+            .charts-list-item-inner {
+                display: flex;
+                flex-direction: column;
+                position: relative;
+
+                .media-item {
+                    order: -1;
+                }
+
+                .link-block-cover-link {
+                    position: absolute;
+                    inset: 0;
+                }
+
+                .charts-list-rank {
+                    margin-top: 10px;
+                    font-weight: var(--font-weight-medium);
+                }
+            }
+        }
     }
 }
 }

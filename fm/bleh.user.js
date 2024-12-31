@@ -18195,6 +18195,65 @@ let has_prompted_for_update = false;
             let header = row.querySelector('h2');
             chart_row.appendChild(header);
 
+            let list = document.createElement('ol');
+            list.classList.add('music-bookmarks-artists', 'charts-list');
+
+            let items = row.querySelectorAll('.globalchart-item');
+            items.forEach((item, item_index) => {
+                let list_item = document.createElement('li');
+
+                let image = item.querySelector('.globalchart-image img');
+                let rank = item.querySelector('.globalchart-rank');
+                let name = item.querySelector('.globalchart-name a');
+
+                let link = name.getAttribute('href');
+
+                image.setAttribute('src', image.getAttribute('src').replace('/avatar70s/', '/avatar300s/'));
+
+                if (index == 1) {
+                    list_item.classList.add('music-bookmarks-artists-item-wrap', 'charts-list-item');
+                    list_item.innerHTML = (`
+                        <div class="music-bookmarks-artists-item charts-list-item-inner">
+                            <div class="charts-list-rank">${rank.textContent}</div>
+                            <h3 class="music-bookmarks-artists-item-name">
+                                ${name.outerHTML}
+                            </h3>
+                            <div class="media-item">
+                                <span class="music-bookmarks-albums-item-image cover-art">
+                                    ${image.outerHTML}
+                                </span>
+                            </div>
+                            <a class="link-block-cover-link" href="${link}"></a>
+                        </div>
+                    `);
+                } else {
+                    let artist = item.querySelector('.globalchart-track-artist-name a');
+
+                    list_item.classList.add('music-bookmarks-albums-item-wrap', 'charts-list-item');
+                    list_item.innerHTML = (`
+                        <div class="music-bookmarks-albums-item charts-list-item-inner">
+                            <div class="charts-list-rank">${rank.textContent}</div>
+                            <h3 class="music-bookmarks-albums-item-name">
+                                ${name.outerHTML}
+                            </h3>
+                            <p class="music-bookmarks-albums-item-artist">
+                                ${artist.outerHTML}
+                            </p>
+                            <div class="media-item">
+                                <span class="music-bookmarks-albums-item-image cover-art">
+                                    ${image.outerHTML}
+                                </span>
+                            </div>
+                            <a class="link-block-cover-link" href="${link}"></a>
+                        </div>
+                    `);
+                }
+
+                list.appendChild(list_item);
+            });
+
+            chart_row.appendChild(list);
+
             new_panel.appendChild(chart_row);
         });
 
