@@ -10125,8 +10125,13 @@ text[style^="color: rgb(0, 0, 0)"] {
         display: none;
     }
 }
-.wiki-block-cta .cta-link-wrap {
-    display: none;
+.wiki-block-cta {
+    color: hsl(var(--c2), 80%);
+    cursor: default;
+
+    .cta-link-wrap {
+        display: none;
+    }
 }
 
 .wiki-legal {
