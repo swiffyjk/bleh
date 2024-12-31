@@ -12063,7 +12063,8 @@ hr {
     [data-page-subpage="obsessions_set"],
     [data-page-subpage="loved"],
     [data-page-subpage="subscription_automatic-edits_tracks"], [data-page-subpage="subscription_automatic-edits_albums"],
-    [data-page-subpage="obsessions_overview"]
+    [data-page-subpage="obsessions_overview"],
+    [data-page-type="charts"][data-page-subpage="overview"]
     ),
 .namespace--music_bookmarks_overview {
     .col-main {
@@ -19057,6 +19058,19 @@ section > .section-controls .subpage-title {
             order: 1;
         }
 
+        .charts-list {
+            overflow-x: scroll;
+            overflow-y: unset;
+            padding: var(--card-gap) var(--card-padding);
+            margin: calc(-1 * var(--card-gap)) calc(-1 * var(--card-padding));
+            grid-template-columns: unset;
+            grid-auto-flow: column;
+
+            .charts-list-item {
+                width: 200px;
+            }
+        }
+
         .charts-list-item {
             .charts-list-item-inner {
                 display: flex;
@@ -19065,6 +19079,10 @@ section > .section-controls .subpage-title {
 
                 .media-item {
                     order: -1;
+
+                    img {
+                        --mask-size: var(--cover-size-200);
+                    }
                 }
 
                 .link-block-cover-link {
@@ -19075,6 +19093,17 @@ section > .section-controls .subpage-title {
                 .charts-list-rank {
                     margin-top: 10px;
                     font-weight: var(--font-weight-medium);
+                }
+
+                .music-bookmarks-albums-item-artist,
+                .music-bookmarks-artists-item-name,
+                .music-bookmarks-albums-item-name {
+                    display: -webkit-box;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                    line-clamp: 1;
+                    -webkit-line-clamp: 1;
+                    -webkit-box-orient: vertical;
                 }
             }
         }

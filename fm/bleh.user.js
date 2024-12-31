@@ -18198,6 +18198,24 @@ let has_prompted_for_update = false;
             let list = document.createElement('ol');
             list.classList.add('music-bookmarks-artists', 'charts-list');
 
+            list.addEventListener('wheel', (e) => {
+                e.preventDefault();
+
+                if (e.deltaY > 0) {
+                    list.scrollBy({
+                        top: 0,
+                        left: +600,
+                        behavior: 'smooth'
+                    });
+                } else {
+                    list.scrollBy({
+                        top: 0,
+                        left: -600,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+
             let items = row.querySelectorAll('.globalchart-item');
             items.forEach((item, item_index) => {
                 let list_item = document.createElement('li');
