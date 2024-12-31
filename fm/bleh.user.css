@@ -1873,6 +1873,7 @@ span.header-new-gallery-inner a,
 /*     TAGS     */
 .tags-list, .catalogue-tags {
     display: flex !important;
+    align-items: center;
     gap: 6px;
     margin: unset;
     /* todo: work on this better, it only occurs if
@@ -1889,7 +1890,7 @@ span.header-new-gallery-inner a,
     position: relative;
 }
 .catalogue-tags:before {
-    --top: 2px;
+    --top: 4px;
     --margin-top: none;
     --left: 0;
     --mask: var(--icon-16-tag);
@@ -1952,6 +1953,20 @@ span.header-new-gallery-inner a,
 }
 .catalogue-tags .tags-view-all {
     margin-bottom: unset;
+    --mask: var(--icon-16-arrow-right);
+    position: relative;
+    --mask-size: 12px;
+    --margin-top: -6px;
+    padding-right: calc(12px + 4px);
+    --left: none;
+    --right: 0;
+    font-weight: var(--font-weight-medium);
+    text-transform: lowercase;
+    height: fit-content;
+
+    &:not(:hover) {
+        color: hsl(var(--c3));
+    }
 }
 
 .col-sm-8:has(.catalogue-tags) {
@@ -1973,7 +1988,7 @@ span.header-new-gallery-inner a,
     margin-right: 10px;
 
     position: relative;
-    top: 3px;
+    top: 1px;
     left: -2px;
 
     & + .tags-list {
@@ -6418,7 +6433,7 @@ button,
 
 
 /*     ICON MASK     */
-.read-more:before, .wiki-edit-small:before,
+.read-more:before, .wiki-edit-small:before, .tags-view-all:before,
 .out-now-btn:before,
 .weeklychart-change:before,
 .weeklychart-listeners:before, .weeklychart-scrobblers:before,
@@ -10109,6 +10124,9 @@ text[style^="color: rgb(0, 0, 0)"] {
     a:last-child {
         display: none;
     }
+}
+.wiki-block-cta .cta-link-wrap {
+    display: none;
 }
 
 .wiki-legal {

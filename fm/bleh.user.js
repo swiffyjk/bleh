@@ -431,6 +431,7 @@ const trans = {
             },
             wiki: 'About',
             wiki_edit: 'edit wiki',
+            wiki_read: 'read more',
             refresh: 'Refresh',
             refresh_tracks: 'Refresh tracks',
             menu: 'Extra options',
@@ -1281,6 +1282,7 @@ const trans = {
             },
             wiki: 'Über',
             wiki_edit: 'wiki editieren',
+            wiki_read: 'mehr erfahren',
             refresh: 'Neu laden',
             refresh_tracks: 'Titel aktualisieren',
             menu: 'Extra options',
@@ -2127,6 +2129,7 @@ const trans = {
             },
             wiki: 'About',
             wiki_edit: 'edit wiki',
+            wiki_read: 'read more',
             refresh: 'Refresh',
             refresh_tracks: 'Refresh tracks',
             menu: 'Extra options',
@@ -18722,14 +18725,20 @@ let has_prompted_for_update = false;
         // add info notes to things
         if (ff('show_wiki_label')) {
             let wiki_col = page.structure.main.querySelector('.wiki-column');
+            let wiki_empty = false;
 
-            let wiki_block = wiki_col.querySelector('.wiki-block.visible-lg .wiki-block-inner-2:not([data-bleh])');
+            let wiki_block = wiki_col.querySelector('.wiki-block.visible-lg .wiki-block-inner-2');
 
-            if (wiki_block == null)
-                return;
+            if (wiki_block == null) {
+                wiki_block = wiki_col.querySelector('.wiki-block-cta');
+                wiki_empty = true;
+            }
 
             let read_more = wiki_block.querySelector('a:last-child');
-            read_more.classList.add('read-more');
+            if (read_more) {
+                read_more.classList.add('read-more');
+                read_more.textContent = trans[lang].music.wiki_read;
+            }
 
             let wiki_header = document.createElement('div');
             wiki_header.classList.add('sub-text');
@@ -18737,7 +18746,7 @@ let has_prompted_for_update = false;
                 <p>${trans[lang].music.wiki.replace('{a}', page.name)}</p>
                 <span class="right-links">
                     <p><a class="wiki-edit-small" href="${document.location.href}/+wiki/edit">${trans[lang].music.wiki_edit}</a></p>
-                    <p>${read_more.outerHTML}</p>
+                    ${(!wiki_empty) ? `<p>${read_more.outerHTML}</p>` : ''}
                 </span>
             `);
 
