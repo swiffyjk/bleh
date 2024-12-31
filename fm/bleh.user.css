@@ -3797,13 +3797,16 @@ button.navlist-more {
     .metadata-column, .wiki-column {
         padding: unset;
         width: unset;
-        max-width: 480px;
     }
 
     .metadata-column {
         padding-left: var(--card-padding);
         border-left: 1px solid var(--card-border-base);
         max-width: 350px;
+    }
+    .wiki-column {
+        width: 100%;
+        max-width: 480px;
     }
 
     .catalogue-metadata {
@@ -10097,6 +10100,10 @@ text[style^="color: rgb(0, 0, 0)"] {
 /*     TRACK FEATURED ON . . .     */
 .source-album, .source-album-nodata {
     margin-top: unset;
+}
+.source-album-nodata {
+    color: hsl(var(--c2), 80%);
+    cursor: default;
 }
 .track-similar-tracks {
     margin-top: 12px;
