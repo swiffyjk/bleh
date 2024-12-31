@@ -18782,7 +18782,7 @@ let has_prompted_for_update = false;
             href = href.replace(root, '').replace('music/', '');
 
             if (href.startsWith('tag/')) {
-                link.setAttribute('data-link-type', 'tag');
+                type = 'tag';
             } else {
                 let split = href.split('/');
                 //console.info(href, split.length);
