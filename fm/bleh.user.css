@@ -16781,7 +16781,6 @@ h4 {
 }
 
 
-.charts-list-rank,
 .taste-badge,
 .new-badge {
     display: inline-flex;
@@ -19118,6 +19117,7 @@ section > .section-controls .subpage-title {
                         position: absolute;
                         inset: 0;
                         overflow: hidden;
+                        display: none;
                     }
 
                     .charts-list-rank-overlay {
@@ -19156,14 +19156,7 @@ section > .section-controls .subpage-title {
 
                 .charts-list-rank {
                     margin-top: 10px;
-                    width: fit-content;
-                    margin-bottom: 4px;
-                    display: none;
-                }
-
-                .music-bookmarks-artists-item-name,
-                .music-bookmarks-albums-item-name {
-                    margin-top: 10px;
+                    font-weight: var(--font-weight-medium);
                 }
 
                 .music-bookmarks-albums-item-artist,
