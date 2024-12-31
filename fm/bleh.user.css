@@ -3938,8 +3938,10 @@ h2:not(.count, .mask-multi-text, .mask-text, .sr-only, .js-gallery-heading, .top
     line-height: 30px !important;*/
 
     &.subtle-header {
+        font-size: var(--font-size);
+        line-height: var(--line-height);
         color: hsl(var(--c3));
-        margin: 0 0 var(--item-list-gap) 0 !important;
+        margin: 0 0 2px 0 !important;
         cursor: default;
     }
 
@@ -4229,28 +4231,30 @@ better than the default selector '#app a' i suppose */
 
 
 /*     COVER ART GLOSS     */
-.glacier-library-metadata-avatar:after,
-.big-artist-list-avatar-desktop:after,
-.catalogue-overview-similar-artists-item-image:after,
-.other-obsession-artwork:after,
-.cover-art:after,
-.grid-items-cover-image-image:after,
-.similar-items-sidebar-item-image:after,
-.music-bookmarks-artists-item-image:after,
-.artist-similar-artists-sidebar-item-image:after,
-.column-tracks-item-image:after
+.glacier-library-metadata-avatar,
+.big-artist-list-avatar-desktop,
+.catalogue-overview-similar-artists-item-image,
+.other-obsession-artwork,
+.cover-art,
+.grid-items-cover-image-image,
+.similar-items-sidebar-item-image,
+.music-bookmarks-artists-item-image,
+.artist-similar-artists-sidebar-item-image,
+.column-tracks-item-image
 {
-    content: '' !important;
-    display: block !important;
-    position: absolute;
-    inset: 0;
-    background-image: var(--gloss-image) !important;
-    background-size: 100% !important;
-    opacity: var(--gloss);
-    pointer-events: none;
-    padding: unset !important;
-    box-shadow: unset !important;
-    border-radius: inherit;
+    &:after {
+        content: '' !important;
+        display: block !important;
+        position: absolute;
+        inset: 0;
+        background-image: var(--gloss-image) !important;
+        background-size: 100% !important;
+        opacity: var(--gloss);
+        pointer-events: none;
+        padding: unset !important;
+        box-shadow: unset !important;
+        border-radius: inherit;
+    }
 }
 .catalogue-overview-similar-artists-item-image img,
 .artist-similar-artists-sidebar-item-image img,
@@ -6383,6 +6387,9 @@ button,
 
 
 /*     ICON MASK     */
+.music-bookmarks-tags-item-toggle:before,
+.music-bookmarks-artists-item-toggle:before,
+.music-bookmarks-albums-item-toggle:before,
 .sponsor:before,
 .skip-to-item:before,
 .chart-table--buttons button:before,
@@ -9908,10 +9915,8 @@ text[style^="color: rgb(0, 0, 0)"] {
 
     &:hover {
         transition: none;
-        opacity: 0.85
     }
     &:active {
-        opacity: 0.75;
         transform: scale(0.98);
     }
 }
@@ -9925,7 +9930,7 @@ text[style^="color: rgb(0, 0, 0)"] {
 .music-bookmarks-artists-item-image, .music-bookmarks-albums-item-image,
 .resource-list--release-list-item-image, .artist-top-albums-item-image, .similar-albums-item-image, .source-album-art .cover-art, .track-similar-tracks-item-image, .similar-items-sidebar-item-image {
     border-radius: var(--item-big-radius);
-    box-shadow: var(--card-shadow);
+    box-shadow: var(--standout-shadow);
     overflow: hidden;
     background: var(--avatar-generic-background);
 }
@@ -10076,31 +10081,7 @@ text[style^="color: rgb(0, 0, 0)"] {
 }
 
 .wiki-block-inner-2 {
-    position: relative;
-    transition-property: background-color, padding, margin, border-radius, transform;
-    transition-duration: var(--trans);
-    transition-timing-function: var(--trans-function);
-
     line-height: var(--line-height);
-
-    &:hover {
-        background-color: hsla(var(--h4), 10%);
-        padding: 4px;
-        margin: -4px;
-        transition: none;
-        border-radius: var(--item-big-radius);
-    }
-
-    &:active {
-        transform: scale(0.98);
-    }
-
-    /* fully clickable */
-    a:first-child {
-        position: absolute;
-        inset: 0;
-        opacity: 0;
-    }
 }
 
 .wiki-legal {
@@ -12111,6 +12092,77 @@ hr {
 
 :is(.music-bookmarks-artists-item-image, .music-bookmarks-albums-item-image) img {
     border-radius: unset;
+}
+.music-bookmarks-albums-item-playlink {
+    display: none;
+}
+
+.artist-top-albums-item-wrap,
+.music-bookmarks-tags-item-wrap,
+.music-bookmarks-artists-item-wrap,
+.music-bookmarks-albums-item-wrap {
+    .music-bookmarks-tags-item-toggle,
+    .music-bookmarks-artists-item-toggle,
+    .music-bookmarks-albums-item-toggle {
+        top: 4px;
+        right: 4px;
+
+        --col: hsl(var(--l3-c));
+        --left: 8px;
+        --mask: var(--icon-16-bookmark-saved);
+
+        --bg: hsla(var(--b4), 40%);
+        --bg-hov: hsla(var(--b4), 60%);
+        --bg-atv: hsla(var(--b4), 80%);
+        --shadow: none;
+        backdrop-filter: blur(6px);
+    }
+
+    .avatar,
+    .cover-art {
+        overflow: unset;
+
+        img {
+            border-radius: inherit;
+        }
+
+        &:before {
+            content: '';
+            position: absolute;
+            inset: -4px;
+            border-radius: calc(var(--item-big-radius) + 4px);
+            opacity: 0;
+
+            border: 2px solid hsl(var(--c2), 30%);
+            box-shadow: 0 0 30px hsl(var(--c2), 10%);
+
+            transition-property: opacity;
+            transition-duration: var(--trans);
+            transition-timing-function: var(--trans-function);
+        }
+    }
+
+    &:hover {
+        .music-bookmarks-tags-item-toggle,
+        .music-bookmarks-artists-item-toggle,
+        .music-bookmarks-albums-item-toggle {
+            transition-property: background, transform !important;
+        }
+
+        .avatar:before,
+        .cover-art:before {
+            opacity: 1;
+            transition: none;
+        }
+
+        h3 a {
+            text-decoration: var(--force-underline, none) !important;
+        }
+    }
+
+    .music-bookmarks-albums-item-artist {
+        color: hsl(var(--c2), 80%);
+    }
 }
 
 .music-bookmarks-albums-item-wrap,
@@ -17363,6 +17415,10 @@ h4 {
 
     .prominent {
         color: hsl(var(--c1));
+    }
+
+    .read-more:not(:hover) {
+        color: inherit;
     }
 
     .breadcrumb {

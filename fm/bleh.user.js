@@ -40,7 +40,7 @@ let version = {
             date: '2024-10-09'
         },
         show_wiki_label: {
-            default: false,
+            default: true,
             name: 'Show \'About\' label above wikis',
             date: '2024-10-11'
         },
@@ -426,7 +426,7 @@ const trans = {
                 loading_listens: 'listens',
                 other_listeners: '{c} others'
             },
-            wiki: 'About',
+            wiki: 'About {a}',
             refresh: 'Refresh',
             refresh_tracks: 'Refresh tracks',
             menu: 'Extra options',
@@ -13908,18 +13908,6 @@ let has_prompted_for_update = false;
                 });
             }
         }
-
-
-        // add info notes to things
-        if (ff('show_wiki_label')) {
-            let wiki_col = page.structure.main.querySelector('.wiki-column');
-
-            let wiki_header = document.createElement('h3');
-            wiki_header.classList.add('text-18', 'subtle-header');
-            wiki_header.textContent = trans[lang].music.wiki;
-
-            wiki_col.insertBefore(wiki_header, wiki_col.firstElementChild);
-        }
     }
 
 
@@ -18472,17 +18460,26 @@ let has_prompted_for_update = false;
 
     // fix wiki on some devices
     function patch_wiki() {
-        let wiki_block = page.structure.main.querySelector('.wiki-block.visible-lg .wiki-block-inner-2:not([data-bleh])');
+        // add info notes to things
+        if (ff('show_wiki_label')) {
+            let wiki_col = page.structure.main.querySelector('.wiki-column');
 
-        if (wiki_block == null)
-            return;
-        wiki_block.setAttribute('data-bleh', 'true');
+            let wiki_block = wiki_col.querySelector('.wiki-block.visible-lg .wiki-block-inner-2:not([data-bleh])');
 
-        let read_more = wiki_block.querySelector('a:last-child');
+            if (wiki_block == null)
+                return;
 
-        if (read_more == null)
-            return;
+            let read_more = wiki_block.querySelector('a:last-child');
+            read_more.classList.add('read-more');
 
-        wiki_block.insertBefore(read_more, wiki_block.firstChild);
+            let wiki_header = document.createElement('div');
+            wiki_header.classList.add('sub-text');
+            wiki_header.innerHTML = (`
+                <p>${trans[lang].music.wiki.replace('{a}', page.name)}</p>
+                <p>${read_more.outerHTML}</p>
+            `);
+
+            wiki_col.insertBefore(wiki_header, wiki_col.firstElementChild);
+        }
     }
 })();
