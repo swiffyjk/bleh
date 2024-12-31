@@ -18364,7 +18364,7 @@ let has_prompted_for_update = false;
                     list_item.classList.add('music-bookmarks-artists-item-wrap', 'charts-list-item');
                     list_item.innerHTML = (`
                         <div class="music-bookmarks-artists-item charts-list-item-inner">
-                            <div class="charts-list-rank">${rank.textContent}</div>
+                            <div class="charts-list-rank">${rank.textContent.trim()}</div>
                             <h3 class="music-bookmarks-artists-item-name">
                                 ${name.outerHTML}
                             </h3>
@@ -18387,7 +18387,7 @@ let has_prompted_for_update = false;
                     list_item.classList.add('music-bookmarks-albums-item-wrap', 'charts-list-item');
                     list_item.innerHTML = (`
                         <div class="music-bookmarks-albums-item charts-list-item-inner">
-                            <div class="charts-list-rank">${rank.textContent}</div>
+                            <div class="charts-list-rank">${rank.textContent.trim()}</div>
                             <h3 class="music-bookmarks-albums-item-name">
                                 ${name.outerHTML}
                             </h3>

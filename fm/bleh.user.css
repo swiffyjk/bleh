@@ -3771,6 +3771,31 @@ button.navlist-more {
     cursor: default;
 }
 
+.metadata-and-wiki-row {
+    gap: var(--card-padding);
+    margin: unset;
+
+    &:before, &:after {
+        display: none;
+    }
+
+    .metadata-column, .wiki-column {
+        padding: unset;
+        width: unset;
+        max-width: 480px;
+    }
+
+    .metadata-column {
+        padding-left: var(--card-padding);
+        border-left: 1px solid var(--card-border-base);
+        max-width: 350px;
+    }
+
+    .catalogue-metadata {
+        padding: unset !important;
+    }
+}
+
 /* empty lyrics container on pro pages */
 .catalogue-metadata-lyrics {
     display: none !important;
@@ -9917,19 +9942,6 @@ text[style^="color: rgb(0, 0, 0)"] {
 }
 
 
-.artist-top-albums-item,
-.resource-list--release-list-item {
-    transition-property: transform, opacity;
-    transition-duration: var(--trans);
-    transition-timing-function: var(--trans-function);
-
-    &:hover {
-        transition: none;
-    }
-    &:active {
-        transform: scale(0.98);
-    }
-}
 
 
 .big-artist-list-avatar-desktop,
@@ -10092,6 +10104,10 @@ text[style^="color: rgb(0, 0, 0)"] {
 
 .wiki-block-inner-2 {
     line-height: var(--line-height);
+
+    a:last-child {
+        display: none;
+    }
 }
 
 .wiki-legal {
@@ -12108,10 +12124,15 @@ hr {
     display: none;
 }
 
+.resource-list--release-list-item-wrap,
 .artist-top-albums-item-wrap,
 .music-bookmarks-tags-item-wrap,
 .music-bookmarks-artists-item-wrap,
 .music-bookmarks-albums-item-wrap {
+    transition-property: transform, opacity;
+    transition-duration: var(--trans);
+    transition-timing-function: var(--trans-function);
+
     .music-bookmarks-tags-item-toggle,
     .music-bookmarks-artists-item-toggle,
     .music-bookmarks-albums-item-toggle {
@@ -12171,6 +12192,11 @@ hr {
         h3 a {
             text-decoration: var(--force-underline, none) !important;
         }
+
+        transition: none;
+    }
+    &:active {
+        transform: scale(0.98);
     }
 
     .music-bookmarks-albums-item-artist {
@@ -17526,12 +17552,22 @@ h4 {
         box-shadow: unset;
         padding: var(--card-gap);
 
+        .edit-scrobble-top-box__track-name,
         .edit-scrobble-top-box__album-name {
             font-weight: var(--font-weight-medium) !important;
+        }
+        .edit-scrobble-top-box__bottom {
+            color: hsl(var(--c2), 80%) !important;
         }
         .scrobble-count {
             color: hsl(var(--c3)) !important;
             font: inherit !important;
+        }
+
+        .timestamp {
+            color: hsl(var(--c3)) !important;
+            font-size: var(--font-size-sm) !important;
+            line-height: var(--line-height-sm) !important;
         }
     }
     .edit-scrobble-form {
@@ -17952,6 +17988,17 @@ h4 {
         overflow: hidden;
         position: relative;
 
+        &:before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background-image: var(--overlay-ice-spikes);
+            background-repeat: repeat-x;
+            background-position: unset;
+            z-index: 30;
+            display: none;
+        }
+
         .about-artist-panel &,
         .redesigned-artist-header & {
             border-radius: var(--item-big-radius);
@@ -18037,6 +18084,10 @@ h4 {
             --margin-top: -12px;
             --mask: var(--icon-tag);
             color: hsl(var(--c3));
+
+            background-image: var(--overlay-ice-subtle);
+            background-repeat: repeat-x;
+            background-position: unset;
 
             &.cog-icon {
                 --mask: var(--icon-settings);
