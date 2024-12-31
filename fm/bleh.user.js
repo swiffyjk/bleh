@@ -18244,6 +18244,9 @@ let has_prompted_for_update = false;
         page.structure.container.insertBefore(charts_header, page.structure.container.firstElementChild);
 
 
+        log('status is', 'page', 'info', page);
+        update_page();
+
         if (page.subpage != 'overview')
             return;
 
@@ -18413,10 +18416,6 @@ let has_prompted_for_update = false;
         });
 
         page.structure.main.insertBefore(new_panel, page.structure.main.firstElementChild);
-
-
-        log('status is', 'page', 'info', page);
-        update_page();
     }
 
 
