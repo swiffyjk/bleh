@@ -14249,9 +14249,12 @@ let has_prompted_for_update = false;
                 `) : ''}
             `);
 
-            tippy(redesigned_artist_header.querySelector('.header-new-chart-position-number'), {
-                content: trans[lang].charts.view
-            });
+            position = redesigned_artist_header.querySelector('.header-new-chart-position-number');
+            if (position != null) {
+                tippy(position, {
+                    content: trans[lang].charts.view
+                });
+            }
 
             if (avatar != null)
                 register_background(avatar.getAttribute('content'));
