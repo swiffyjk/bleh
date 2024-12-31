@@ -19040,4 +19040,22 @@ section > .section-controls .subpage-title {
     --sat-over: 1;
     --lit-over: 1;
 }
+
+
+
+
+.charts-panel {
+    display: flex;
+    flex-direction: column;
+    gap: var(--card-gap);
+
+    .charts-new-row {
+        &[data-index="1"] {
+            order: -1;
+        }
+        &[data-index="2"] {
+            order: 1;
+        }
+    }
+}
 }

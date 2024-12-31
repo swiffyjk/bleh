@@ -3851,9 +3851,6 @@ let has_prompted_for_update = false;
             bleh_gallery_upload_check();
         }
 
-        if (page.type == 'charts')
-            bleh_charts();
-
         if (page.type == 'user' ||
             page.type == 'search' ||
             page.type == 'tag'
@@ -4000,6 +3997,8 @@ let has_prompted_for_update = false;
             bleh_search();
         else if (page.type == 'settings')
             bleh_native_settings();
+        else if (page.type == 'charts')
+            bleh_charts();
 
         if (
             (page.type == 'artist' || page.type == 'album' || page.type == 'track') &&
@@ -18167,18 +18166,6 @@ let has_prompted_for_update = false;
 
 
     function bleh_charts() {
-        let chart_row = document.body.querySelector('.charts-row');
-
-        if (chart_row == null)
-            return;
-
-        if (chart_row.hasAttribute('data-bleh-charts'))
-            return;
-        chart_row.setAttribute('data-bleh-charts', 'true');
-
-        page.name = auth;
-        page.avatar = my_avi;
-
         page.structure.container = document.body.querySelector('.page-content');
         try {
             page.structure.row = page.structure.container.querySelector('.row');
@@ -18189,6 +18176,30 @@ let has_prompted_for_update = false;
         }
 
         checkup_page_structure();
+
+        if (ff('refreshed_nav')) {
+            register_background(my_avi);
+        }
+
+        let chart_rows = page.structure.main.querySelectorAll('.charts-col:not(.charts-col--mobile-ad)');
+
+
+        let new_panel = document.createElement('section');
+        new_panel.classList.add('charts-panel');
+
+        chart_rows.forEach((row, index) => {
+            let chart_row = document.createElement('div');
+            chart_row.classList.add('charts-new-row');
+            chart_row.setAttribute('data-index', index);
+
+            let header = row.querySelector('h2');
+            chart_row.appendChild(header);
+
+            new_panel.appendChild(chart_row);
+        });
+
+        page.structure.main.insertBefore(new_panel, page.structure.main.firstElementChild);
+
 
         log('status is', 'page', 'info', page);
         update_page();
