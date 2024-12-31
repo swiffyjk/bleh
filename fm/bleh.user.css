@@ -6418,6 +6418,7 @@ button,
 
 
 /*     ICON MASK     */
+.read-more:before, .wiki-edit-small:before,
 .out-now-btn:before,
 .weeklychart-change:before,
 .weeklychart-listeners:before, .weeklychart-scrobblers:before,
@@ -17456,8 +17457,34 @@ h4 {
         color: hsl(var(--c1));
     }
 
+    .wiki-edit-small {
+        --mask: var(--icon-16-edit);
+    }
+    .read-more {
+        --mask: var(--icon-16-arrow-right);
+    }
+
+    .wiki-edit-small, .read-more {
+        position: relative;
+        --mask-size: 12px;
+        --margin-top: -6px;
+        padding-right: calc(12px + 4px);
+        --left: none;
+        --right: 0;
+
+        &:not(:hover) {
+            color: inherit;
+        }
+    }
+
+    .wiki-edit-small:not(:hover),
     .read-more:not(:hover) {
         color: inherit;
+    }
+
+    .right-links {
+        display: flex;
+        gap: var(--card-gap);
     }
 
     .breadcrumb {
@@ -19138,6 +19165,8 @@ section > .section-controls .subpage-title {
             margin: -35px calc(-1 * var(--card-padding)) -10px calc(-1 * var(--card-padding));
             grid-template-columns: unset;
             grid-auto-flow: column;
+            /*width: fit-content;
+            max-width: 100%;*/
 
             .charts-list-item {
                 width: 200px;

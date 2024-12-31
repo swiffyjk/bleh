@@ -430,6 +430,7 @@ const trans = {
                 other_listeners: '{c} others'
             },
             wiki: 'About',
+            wiki_edit: 'edit wiki',
             refresh: 'Refresh',
             refresh_tracks: 'Refresh tracks',
             menu: 'Extra options',
@@ -1279,6 +1280,7 @@ const trans = {
                 other_listeners: '{c} hörer'
             },
             wiki: 'Über',
+            wiki_edit: 'wiki editieren',
             refresh: 'Neu laden',
             refresh_tracks: 'Titel aktualisieren',
             menu: 'Extra options',
@@ -2011,6 +2013,21 @@ const trans = {
         },
         tag: {
             name: 'Tag'
+        },
+        search: {
+            name: 'Suche',
+            results_for: 'Results for {v}'
+        },
+        charts: {
+            name: 'Charts',
+            overview: 'Real time',
+            weekly: 'Weekly',
+            charts_for: 'Charts for {date}',
+            view: 'View the charts',
+            scroll: {
+                name: 'Simulate horizontal scrolling',
+                bio: 'Disable if you can scroll easily on a laptop for example.'
+            }
         }
     },
     pl: {
@@ -2109,6 +2126,7 @@ const trans = {
                 other_listeners: '{c} others'
             },
             wiki: 'About',
+            wiki_edit: 'edit wiki',
             refresh: 'Refresh',
             refresh_tracks: 'Refresh tracks',
             menu: 'Extra options',
@@ -2805,6 +2823,21 @@ const trans = {
         },
         tag: {
             name: 'Tag'
+        },
+        search: {
+            name: 'Search',
+            results_for: 'Results for {v}'
+        },
+        charts: {
+            name: 'Charts',
+            overview: 'Real time',
+            weekly: 'Weekly',
+            charts_for: 'Charts for {date}',
+            view: 'View the charts',
+            scroll: {
+                name: 'Simulate horizontal scrolling',
+                bio: 'Disable if you can scroll easily on a laptop for example.'
+            }
         }
     },
 }
@@ -18702,7 +18735,10 @@ let has_prompted_for_update = false;
             wiki_header.classList.add('sub-text');
             wiki_header.innerHTML = (`
                 <p>${trans[lang].music.wiki.replace('{a}', page.name)}</p>
-                <p>${read_more.outerHTML}</p>
+                <span class="right-links">
+                    <p><a class="wiki-edit-small" href="${document.location.href}/+wiki/edit">${trans[lang].music.wiki_edit}</a></p>
+                    <p>${read_more.outerHTML}</p>
+                </span>
             `);
 
             wiki_col.insertBefore(wiki_header, wiki_col.firstElementChild);
