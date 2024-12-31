@@ -1172,7 +1172,8 @@ const trans = {
             name: 'Charts',
             overview: 'Real time',
             weekly: 'Weekly',
-            charts_for: 'Charts for {date}'
+            charts_for: 'Charts for {date}',
+            view: 'View the charts'
         }
     },
     de: {
@@ -14247,6 +14248,10 @@ let has_prompted_for_update = false;
                 </div>
                 `) : ''}
             `);
+
+            tippy(redesigned_artist_header.querySelector('.header-new-chart-position-number'), {
+                content: trans[lang].charts.view
+            });
 
             if (avatar != null)
                 register_background(avatar.getAttribute('content'));
