@@ -19059,7 +19059,7 @@ section > .section-controls .subpage-title {
 .charts-panel {
     display: flex;
     flex-direction: column;
-    gap: var(--card-gap);
+    gap: 50px;
 
     .charts-header {
         order: -1;
