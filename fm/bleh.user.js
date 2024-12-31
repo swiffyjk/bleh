@@ -21,7 +21,7 @@
 
 let version = {
     brand: 'bleh',
-    build: '2024.1231',
+    build: '2024.1231.1',
     sku: 'taiga',
     feature_flags: {
         bleh_settings_tabs: {
@@ -2889,8 +2889,8 @@ let stored_season = {
 let seasonal_events = [
     {
         id: 'new_years',
-        start: 'y0-01-01T00:00:00+0000',
-        end: 'y0-01-14T23:59:59+0000',
+        start: 'y0-01-01T00:00:00{offset}',
+        end: 'y0-01-14T23:59:59{offset}',
 
         snowflakes: {
             state: true,
@@ -2899,8 +2899,8 @@ let seasonal_events = [
     },
     {
         id: 'easter',
-        start: 'y0-04-05T00:00:00+0000',
-        end: 'y0-04-30T23:59:59+0000',
+        start: 'y0-04-05T00:00:00{offset}',
+        end: 'y0-04-30T23:59:59{offset}',
 
         snowflakes: {
             state: false
@@ -2908,8 +2908,8 @@ let seasonal_events = [
     },
     {
         id: 'pride',
-        start: 'y0-05-31T00:00:00+0000',
-        end: 'y0-07-07T23:59:59+0000',
+        start: 'y0-05-31T00:00:00{offset}',
+        end: 'y0-07-07T23:59:59{offset}',
 
         snowflakes: {
             state: false
@@ -2917,8 +2917,8 @@ let seasonal_events = [
     },
     {
         id: 'halloween',
-        start: 'y0-09-22T00:00:00+0000',
-        end: 'y0-11-01T11:59:59+0000',
+        start: 'y0-09-22T00:00:00{offset}',
+        end: 'y0-11-01T11:59:59{offset}',
 
         snowflakes: {
             state: false
@@ -2926,8 +2926,8 @@ let seasonal_events = [
     },
     {
         id: 'pre_fall',
-        start: 'y0-11-01T12:00:00',
-        end: 'y0-11-12T23:59:59+0000',
+        start: 'y0-11-01T12:00:00{offset}',
+        end: 'y0-11-12T23:59:59{offset}',
 
         snowflakes: {
             state: true,
@@ -2936,8 +2936,8 @@ let seasonal_events = [
     },
     {
         id: 'fall',
-        start: 'y0-11-13T00:00:00+0000',
-        end: 'y0-11-22T23:59:59+0000',
+        start: 'y0-11-13T00:00:00{offset}',
+        end: 'y0-11-22T23:59:59{offset}',
 
         snowflakes: {
             state: true,
@@ -2946,8 +2946,8 @@ let seasonal_events = [
     },
     {
         id: 'christmas',
-        start: 'y0-11-23T00:00:00+0000',
-        end: 'y0-12-31T23:59:59+0000',
+        start: 'y0-11-23T00:00:00{offset}',
+        end: 'y0-12-31T23:59:59{offset}',
 
         snowflakes: {
             state: true,
@@ -4419,14 +4419,17 @@ let has_prompted_for_update = false;
         let now = new Date();
         log(`it is now ${now}`, 'season', 'log');
 
+        stored_season.offset = calculate_offset(now);
+        log(`calculated offset as ${stored_season.offset}`, 'season');
+
         let current_year = now.getFullYear();
 
         seasonal_events.forEach((season, index) => {
-            log(`running thru, ${season.id} - ${new Date(season.start.replace('y0', current_year))} ${new Date(season.end.replace('y0', current_year))}`, 'season', 'log');
-            log(`${now >= new Date(season.start.replace('y0', current_year))} ${now <= new Date(season.end.replace('y0', current_year))}`, 'season', 'log');
+            log(`running thru, ${season.id} - ${new Date(season.start.replace('y0', current_year).replace('{offset}', stored_season.offset))} ${new Date(season.end.replace('y0', current_year).replace('{offset}', stored_season.offset))}`, 'season', 'log');
+            log(`${now >= new Date(season.start.replace('y0', current_year).replace('{offset}', stored_season.offset))} ${now <= new Date(season.end.replace('y0', current_year).replace('{offset}', stored_season.offset))}`, 'season', 'log');
             if (
-                now >= new Date(season.start.replace('y0', current_year)) &&
-                now <= new Date(season.end.replace('y0', current_year))
+                now >= new Date(season.start.replace('y0', current_year).replace('{offset}', stored_season.offset)) &&
+                now <= new Date(season.end.replace('y0', current_year).replace('{offset}', stored_season.offset))
             ) {
                 stored_season.now = now;
                 stored_season.year = current_year;
@@ -4488,6 +4491,32 @@ let has_prompted_for_update = false;
             }
         });
     }
+
+    function calculate_offset(now) {
+        let offset = now.getTimezoneOffset();
+
+        if (offset == 0)
+            return '+0000';
+
+        if (offset < 0) {
+            offset = Math.abs(offset);
+            offset /= 60;
+
+            if (offset < 10)
+                offset = `0${offset}`;
+
+            offset = `+${offset}`;
+        } else {
+            offset = -Math.abs(offset);
+            offset /= 60;
+
+            if (offset > -10)
+                offset = `${offset}0`;
+        }
+
+        return `${offset}00`;
+    }
+
     function seasonal_timer_start(bypass = false) {
         if (stored_season.new_years_eve && !bypass)
             return;
@@ -4537,15 +4566,13 @@ let has_prompted_for_update = false;
         page.header.season.setAttribute('data-season', stored_season.id);
 
         if (!stored_season.new_years_eve) {
-            page.header.season.textContent = moment(stored_season.end.replace('y0', stored_season.year)).to(stored_season.now, true);
+            page.header.season.textContent = moment(stored_season.end.replace('y0', stored_season.year).replace('{offset}', stored_season.offset)).to(stored_season.now, true);
         } else {
-            let now = new Date();
+            let next = stored_season.next_start.replace('y0', stored_season.year).replace('{offset}', stored_season.offset);
+            if (stored_season.next_is_new_year)
+                next = stored_season.next_start.replace('y0', stored_season.year + 1).replace('{offset}', stored_season.offset);
 
-            let date_to_count = new Date(`${stored_season.year + 1}-01-01T00:00:00+0000`);
-
-            let time_until = date_to_count - now;
-
-            console.info(now, date_to_count);
+            let time_until = new Date(next) - new Date();
 
             page.header.season.textContent = countdown_to(time_until);
 
@@ -4572,7 +4599,7 @@ let has_prompted_for_update = false;
             seconds = '0' + seconds;
 
         if (days != 0)
-            return moment(stored_season.end.replace('y0', stored_season.year)).to(stored_season.now, true);
+            return moment(stored_season.end.replace('y0', stored_season.year).replace('{offset}', stored_season.offset)).to(stored_season.now, true);
 
         if (hours == '00' && minutes == '00' && seconds == '00')
             set_season();
@@ -4717,7 +4744,7 @@ let has_prompted_for_update = false;
         bleh_container.classList.add('masthead-nav-item');
         bleh_container.innerHTML = (`
             <a class="masthead-nav-control" href="${root}bleh${(stored_season.id != 'none') ? '?tab=seasonal' : ''}" data-bleh--label="bleh" data-season="${stored_season.id}">
-                ${(stored_season.id == 'none') ? trans[lang].auth_menu.configure_bleh : moment(stored_season.end.replace('y0', stored_season.year)).to(stored_season.now, true)}
+                ${(stored_season.id == 'none') ? trans[lang].auth_menu.configure_bleh : moment(stored_season.end.replace('y0', stored_season.year).replace('{offset}', stored_season.offset)).to(stored_season.now, true)}
             </a>
         `);
         if (stored_season.id == 'none') {
@@ -8375,11 +8402,11 @@ let has_prompted_for_update = false;
                             ${(stored_season.id != 'none') ? (`
                             <div class="glacier-library-metadata-item">
                                 <div class="sub-text">${trans[lang].settings.customise.seasonal.started}</div>
-                                <div class="glacier-library-metadata-item-value" id="current_season">${moment(stored_season.start.replace('y0', stored_season.year)).from(stored_season.now)}</div>
+                                <div class="glacier-library-metadata-item-value" id="current_season">${moment(stored_season.start.replace('y0', stored_season.year).replace('{offset}', stored_season.offset)).from(stored_season.now)}</div>
                             </div>
                             <div class="glacier-library-metadata-item">
                                 <div class="sub-text">${trans[lang].settings.customise.seasonal.ends_in}</div>
-                                <div class="glacier-library-metadata-item-value" id="current_season_start">${moment(stored_season.end.replace('y0', stored_season.year)).to(stored_season.now, true)}</div>
+                                <div class="glacier-library-metadata-item-value" id="current_season_start">${moment(stored_season.end.replace('y0', stored_season.year).replace('{offset}', stored_season.offset)).to(stored_season.now, true)}</div>
                             </div>
                             `) : ''}
                         </div>
@@ -9197,11 +9224,11 @@ let has_prompted_for_update = false;
                                     ${(stored_season.id != 'none') ? (`
                                     <div class="glacier-library-metadata-item">
                                         <div class="sub-text">${trans[lang].settings.customise.seasonal.started}</div>
-                                        <div class="glacier-library-metadata-item-value" id="current_season_start">${moment(stored_season.start.replace('y0', stored_season.year)).from(stored_season.now)}</div>
+                                        <div class="glacier-library-metadata-item-value" id="current_season_start">${moment(stored_season.start.replace('y0', stored_season.year).replace('{offset}', stored_season.offset)).from(stored_season.now)}</div>
                                     </div>
                                     <div class="glacier-library-metadata-item">
                                         <div class="sub-text">${trans[lang].settings.customise.seasonal.ends_in}</div>
-                                        <div class="glacier-library-metadata-item-value" id="current_season">${moment(stored_season.end.replace('y0', stored_season.year)).to(stored_season.now, true)}</div>
+                                        <div class="glacier-library-metadata-item-value" id="current_season">${moment(stored_season.end.replace('y0', stored_season.year).replace('{offset}', stored_season.offset)).to(stored_season.now, true)}</div>
                                     </div>
                                     `) : ''}
                                 </div>
@@ -10245,10 +10272,10 @@ let has_prompted_for_update = false;
 
         if ((page == 'seasonal' || page == 'home') && settings.seasonal && stored_season.id != 'none') {
             tippy(document.getElementById('current_season'), {
-                content: new Date(stored_season.end.replace('y0', stored_season.year)).toLocaleString(lang)
+                content: new Date(stored_season.end.replace('y0', stored_season.year).replace('{offset}', stored_season.offset)).toLocaleString(lang)
             });
             tippy(document.getElementById('current_season_start'), {
-                content: new Date(stored_season.start.replace('y0', stored_season.year)).toLocaleString(lang)
+                content: new Date(stored_season.start.replace('y0', stored_season.year).replace('{offset}', stored_season.offset)).toLocaleString(lang)
             });
         }
 
@@ -13275,12 +13302,12 @@ let has_prompted_for_update = false;
                                 <div class="current-season-container season-column">
                                     <div class="current-season" data-season="${stored_season.id}" id="current_season">
                                         ${(stored_season.id != 'none')
-                                        ? trans[lang].settings.customise.seasonal.marker.current.replace('{season}', trans[lang].settings.customise.seasonal.listing[stored_season.id]).replace('{time}', moment(stored_season.end.replace('y0', stored_season.year)).to(stored_season.now, true))
+                                        ? trans[lang].settings.customise.seasonal.marker.current.replace('{season}', trans[lang].settings.customise.seasonal.listing[stored_season.id]).replace('{time}', moment(stored_season.end.replace('y0', stored_season.year).replace('{offset}', stored_season.offset)).to(stored_season.now, true))
                                         : (settings.seasonal) ? trans[lang].settings.customise.seasonal.marker.none : trans[lang].settings.customise.seasonal.marker.disabled}
                                     </div>
                                     <div class="current-season-started" id="current_season_start">
                                         ${(stored_season.id != 'none')
-                                        ? trans[lang].settings.customise.seasonal.marker.started.replace('{time}', moment(stored_season.start.replace('y0', stored_season.year)).from(stored_season.now))
+                                        ? trans[lang].settings.customise.seasonal.marker.started.replace('{time}', moment(stored_season.start.replace('y0', stored_season.year).replace('{offset}', stored_season.offset)).from(stored_season.now))
                                         : ''}
                                     </div>
                                 </div>
