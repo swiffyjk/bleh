@@ -16780,6 +16780,7 @@ h4 {
 }
 
 
+.charts-list-rank,
 .taste-badge,
 .new-badge {
     display: inline-flex;
@@ -19106,9 +19107,31 @@ section > .section-controls .subpage-title {
 
                 .media-item {
                     order: -1;
+                    position: relative;
 
                     img {
                         --mask-size: var(--cover-size-200);
+                    }
+
+                    .charts-list-rank-overlay-wrap {
+                        position: absolute;
+                        inset: 0;
+                        overflow: hidden;
+                    }
+
+                    .charts-list-rank-overlay {
+                        position: absolute;
+                        bottom: 0;
+                        left: 8px;
+                        font-size: 60px;
+                        line-height: 36px;
+                        font-weight: 1000;
+                        letter-spacing: -5px;
+                        text-shadow: 0 0 10px hsl(var(--b6), 60%);
+
+                        color: hsl(var(--b6), 85%);
+                        -webkit-text-stroke-width: 2px;
+                        -webkit-text-stroke-color: hsl(var(--c1), 70%);
                     }
                 }
 
@@ -19121,7 +19144,14 @@ section > .section-controls .subpage-title {
 
                 .charts-list-rank {
                     margin-top: 10px;
-                    font-weight: var(--font-weight-medium);
+                    width: fit-content;
+                    margin-bottom: 4px;
+                    display: none;
+                }
+
+                .music-bookmarks-artists-item-name,
+                .music-bookmarks-albums-item-name {
+                    margin-top: 10px;
                 }
 
                 .music-bookmarks-albums-item-artist,

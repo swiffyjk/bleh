@@ -18293,6 +18293,9 @@ let has_prompted_for_update = false;
                                 <span class="music-bookmarks-albums-item-image cover-art">
                                     ${image.outerHTML}
                                 </span>
+                                <div class="charts-list-rank-overlay-wrap">
+                                    <div class="charts-list-rank-overlay">${rank.textContent}</div>
+                                </div>
                             </div>
                             <a class="link-block-cover-link" href="${link}"></a>
                         </div>
@@ -18316,6 +18319,9 @@ let has_prompted_for_update = false;
                                 <span class="music-bookmarks-albums-item-image cover-art">
                                     ${image.outerHTML}
                                 </span>
+                                <div class="charts-list-rank-overlay-wrap">
+                                    <div class="charts-list-rank-overlay">${rank.textContent}</div>
+                                </div>
                             </div>
                             <a class="link-block-cover-link" href="${link}"></a>
                         </div>
