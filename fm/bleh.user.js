@@ -333,6 +333,9 @@ const trans = {
                 name: 'Sponsoring',
                 reason: 'Sponsored bleh and bwaa :3'
             },
+            cute: {
+                reason: 'Reserved for special users'
+            },
             reserved: {
                 reason: 'Reserved for certain users'
             }
@@ -18610,6 +18613,8 @@ let has_prompted_for_update = false;
 
             if (badge.type == 'sponsor' || badge.type == 'contributor' || badge.type == 'translation')
                 badge.reason = badge.type;
+            else if (badge.type == 'cute' || badge.type == 'queen')
+                badge.reason = 'cute';
             else
                 badge.reason = 'reserved';
         });
