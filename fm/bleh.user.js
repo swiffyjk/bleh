@@ -14926,6 +14926,9 @@ let has_prompted_for_update = false;
             let track = form.querySelector('[name="track"]').getAttribute('value');
             let artist = form.querySelector('[name="artist"]').getAttribute('value');
 
+            artist = correct_artist(artist);
+            track = correct_item_by_artist(track, artist);
+
             let btn = form.querySelector('button');
 
             btn.addEventListener('click', (event) => {
@@ -14960,6 +14963,9 @@ let has_prompted_for_update = false;
 
             let track = form.querySelector('[name="name"]').getAttribute('value');
             let artist = form.querySelector('[name="artist_name"]').getAttribute('value');
+
+            artist = correct_artist(artist);
+            track = correct_item_by_artist(track, artist);
 
             let btn = form.querySelector('button');
 
