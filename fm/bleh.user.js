@@ -18229,6 +18229,8 @@ let has_prompted_for_update = false;
                 image.setAttribute('src', image.getAttribute('src').replace('/avatar70s/', '/avatar300s/'));
 
                 if (index == 1) {
+                    name.textContent = correct_artist(name.textContent);
+
                     list_item.classList.add('music-bookmarks-artists-item-wrap', 'charts-list-item');
                     list_item.innerHTML = (`
                         <div class="music-bookmarks-artists-item charts-list-item-inner">
@@ -18246,6 +18248,8 @@ let has_prompted_for_update = false;
                     `);
                 } else {
                     let artist = item.querySelector('.globalchart-track-artist-name a');
+                    artist.textContent = correct_artist(artist.textContent);
+                    name.textContent = correct_item_by_artist(name.textContent, artist.textContent);
 
                     list_item.classList.add('music-bookmarks-albums-item-wrap', 'charts-list-item');
                     list_item.innerHTML = (`

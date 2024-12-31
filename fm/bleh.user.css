@@ -14934,7 +14934,7 @@ input[type="range"]::-moz-range-progress {
 
 /*     UNDER CONSTRUCTION     */
 .nag-bar--alert,
-body:is(.namespace--user_playlists_create_overview, .music-landing-overview, [class*="namespace--charts"]):after {
+body:is(.namespace--user_playlists_create_overview, .music-landing-overview):after {
     position: fixed;
     padding: 10px var(--card-gap);
     border-radius: var(--item-big-radius);
@@ -19061,8 +19061,8 @@ section > .section-controls .subpage-title {
         .charts-list {
             overflow-x: scroll;
             overflow-y: unset;
-            padding: var(--card-gap) var(--card-padding);
-            margin: calc(-1 * var(--card-gap)) calc(-1 * var(--card-padding));
+            padding: 35px var(--card-padding) 10px var(--card-padding);
+            margin: -35px calc(-1 * var(--card-padding)) -10px calc(-1 * var(--card-padding));
             grid-template-columns: unset;
             grid-auto-flow: column;
 
@@ -19108,5 +19108,10 @@ section > .section-controls .subpage-title {
             }
         }
     }
+}
+
+.charts-nav,
+.charts {
+    display: none;
 }
 }
