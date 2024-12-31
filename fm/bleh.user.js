@@ -4519,6 +4519,9 @@ let has_prompted_for_update = false;
         seasonal_timer = null;
         log('ended interval', 'season', 'info');
 
+        if (page.header.season_tooltip == null)
+            return;
+
         page.header.season_tooltip.setContent(`
             <span class="season-colour-name">${trans[lang].settings.customise.seasonal.listing[stored_season.id]}</span>
             <span class="season-exclusive">${trans[lang].auth_menu.seasonal_notice}</span>
