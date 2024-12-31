@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         bleh
 // @namespace    http://last.fm/
-// @version      2024.1230
+// @version      2024.1231
 // @description  bleh!!! ^-^
 // @author       kate
 // @match        https://www.last.fm/*
@@ -21,7 +21,7 @@
 
 let version = {
     brand: 'bleh',
-    build: '2024.1230',
+    build: '2024.1231',
     sku: 'taiga',
     feature_flags: {
         bleh_settings_tabs: {
@@ -18771,6 +18771,7 @@ let has_prompted_for_update = false;
         links.forEach((link) => {
             let href = link.getAttribute('href');
             let type;
+            let name = link.textContent.trim();
             let sister;
 
             if (!href.startsWith(root))
@@ -18791,16 +18792,18 @@ let has_prompted_for_update = false;
                     type = 'artist';
                 } else if (split.length == 2) {
                     type = 'album';
+                    name = desanitise(split[1]);
                     sister = desanitise(split[0]);
                 } else if (split.length == 3) {
                     type = 'track';
+                    name = desanitise(split[2]);
                     sister = desanitise(split[0]);
                 }
             }
 
             if (sister != undefined)
                 tippy(link, {
-                    content: `${sister} - ${link.textContent.trim()}`
+                    content: `${sister} - ${name}`
                 });
 
             link.setAttribute('data-link-type', type);
