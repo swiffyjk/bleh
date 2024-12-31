@@ -6305,7 +6305,8 @@ button,
 .source-album, .big-tags-item,
 .select-button,
 .language-nav,
-.auth-link
+.auth-link,
+.out-now-btn
 {
     --btn-right: calc(12px + 16px + 6px) !important;
 }
@@ -6393,6 +6394,7 @@ button,
 
 
 /*     ICON MASK     */
+.out-now-btn:before,
 .weeklychart-change:before,
 .weeklychart-listeners:before, .weeklychart-scrobblers:before,
 .music-bookmarks-tags-item-toggle:before,
@@ -6584,6 +6586,7 @@ span.header-new-gallery-inner a:before,
     transition-duration: var(--trans) !important;
     transition-timing-function: var(--trans-function) !important;
 }
+.out-now-btn:before,
 .select-button:before,
 .continue:before, .external:before, .open:before,
 .pagination-next a:before,
@@ -19057,6 +19060,18 @@ section > .section-controls .subpage-title {
     display: flex;
     flex-direction: column;
     gap: var(--card-gap);
+
+    .charts-header {
+        order: -1;
+        margin: unset !important;
+        text-align: center;
+    }
+    .out-now-btn {
+        position: relative;
+        order: -1;
+        width: fit-content;
+        --mask: var(--icon-16-arrow-right);
+    }
 
     .charts-new-row {
         &[data-index="1"] {

@@ -1171,7 +1171,8 @@ const trans = {
         charts: {
             name: 'Charts',
             overview: 'Real time',
-            weekly: 'Weekly'
+            weekly: 'Weekly',
+            charts_for: 'Charts for {date}'
         }
     },
     de: {
@@ -6791,12 +6792,16 @@ let has_prompted_for_update = false;
         else
             profile_sub_text = document.body.querySelector('.header-title-secondary');
 
-        if (profile_sub_text == undefined)
+        if (profile_sub_text == null)
             return;
 
         let display_name = profile_sub_text.querySelector('.header-title-display-name');
         let scrobble_since = profile_sub_text.querySelector('.header-scrobble-since');
         scrobble_since.textContent = scrobble_since.textContent.replace(trans[lang].profile.created.replace,'');
+
+        /*tippy(display_name, {
+            content: display_name.textContent
+        });*/
 
         // pronouns?
         let pronouns = use_pronouns(display_name.textContent);
@@ -18219,6 +18224,19 @@ let has_prompted_for_update = false;
 
         let new_panel = document.createElement('section');
         new_panel.classList.add('charts-panel');
+
+        let out_now = page.structure.side.querySelector('.more-link-fullwidth-right a');
+        if (out_now != null) {
+            out_now.classList.add('btn', 'out-now-btn');
+        }
+
+        let header = document.createElement('div');
+        header.classList.add('charts-header');
+        header.innerHTML = (`
+            <h2>${trans[lang].charts.charts_for.replace('{date}', moment(new Date()).format('MMMM Do YYYY'))}</h2>
+            ${(out_now != null) ? out_now.outerHTML : ''}
+        `);
+        new_panel.appendChild(header);
 
         chart_rows.forEach((row, index) => {
             let chart_row = document.createElement('div');
