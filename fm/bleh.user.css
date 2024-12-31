@@ -12160,10 +12160,12 @@ hr {
             transition-property: background, transform !important;
         }
 
-        .avatar:before,
-        .cover-art:before {
-            opacity: 1;
-            transition: none;
+        .avatar,
+        .cover-art {
+            &:before {
+                opacity: 1;
+                transition: none;
+            }
         }
 
         h3 a {
@@ -19131,6 +19133,17 @@ section > .section-controls .subpage-title {
                         color: hsl(var(--b6), 85%);
                         -webkit-text-stroke-width: 2px;
                         -webkit-text-stroke-color: hsl(var(--c1), 70%);
+
+                        transition-property: transform, opacity;
+                        transition-duration: var(--trans);
+                        transition-timing-function: var(--trans-function);
+                    }
+                }
+
+                &:hover {
+                    .charts-list-rank-overlay {
+                        transform: translateY(20px);
+                        opacity: 0;
                     }
                 }
 
