@@ -16994,6 +16994,8 @@ let has_prompted_for_update = false;
             if (h2 != null)
                 wiki_panel.removeChild(h2);
         }
+
+        patch_wiki_contents(wiki_panel);
     }
 
     function bleh_wiki_history() {
@@ -18751,6 +18753,52 @@ let has_prompted_for_update = false;
             `);
 
             wiki_col.insertBefore(wiki_header, wiki_col.firstElementChild);
+
+
+            if (!wiki_empty) {
+                patch_wiki_contents(wiki_block);
+            }
         }
+    }
+
+    function patch_wiki_contents(wiki_block) {
+        let links = wiki_block.querySelectorAll('a');
+        links.forEach((link) => {
+            let href = link.getAttribute('href');
+            let type;
+            let sister;
+
+            if (!href.startsWith(root))
+                return;
+
+            if (href.endsWith('/+wiki'))
+                return;
+
+            href = href.replace(root, '').replace('music/', '');
+
+            if (href.startsWith('tag/')) {
+                link.setAttribute('data-link-type', 'tag');
+            } else {
+                let split = href.split('/');
+                //console.info(href, split.length);
+
+                if (split.length == 1) {
+                    type = 'artist';
+                } else if (split.length == 2) {
+                    type = 'album';
+                    sister = desanitise(split[0]);
+                } else if (split.length == 3) {
+                    type = 'track';
+                    sister = desanitise(split[0]);
+                }
+            }
+
+            if (sister != undefined)
+                tippy(link, {
+                    content: `${sister} - ${link.textContent.trim()}`
+                });
+
+            link.setAttribute('data-link-type', type);
+        });
     }
 })();
