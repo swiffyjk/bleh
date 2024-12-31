@@ -1,6 +1,12 @@
 {
-    "updated": "2024-12-30",
-    "latest": "2024.1230",
+    "updated": "2024-12-31",
+    "latest": "2024.1231",
+    "2024.1231": {
+        "name": "2024 NO MUSIC",
+        "type": "major",
+        "force": false,
+        "bio": "happy new year :3 #BLEH2025 #2025MUSIC\n\n# Charts\n- __Redesigned charts interface__\n    - Horizontal scrolling is simulated by default but can be disabled if you are on a laptop or Something\n- Chart number on artist and album pages now has a tooltip\n\n![New charts page](https://katelyynn.github.io/bleh/fm/changelog/img/charts.png)\n\n# Wiki\n- __Slight redesign of the small wiki panel__\n- __Links in wikis now show the link type as an icon and a tooltip__\n\n![New charts page](https://katelyynn.github.io/bleh/fm/changelog/img/wiki-small.png)\n\n# Seasonal\n- Changed some minor things related to New Years\n\n# Other\n- Alert colours are now easier to distinguish\n- Fixed activities registered in chartlists (love and obsess) not being lotus corrected\n- Added custom reason for 'cute' badges"
+    },
     "2024.1230": {
         "name": "2024 MUSIC",
         "type": "minor",
