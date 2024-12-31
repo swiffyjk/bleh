@@ -14960,8 +14960,7 @@ input[type="range"]::-moz-range-progress {
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
 
-    [data-bleh--season="christmas"] &,
-    [data-bleh--season="new_years"] & {
+    [data-bleh--season="christmas"] & {
         --hue-seasonal: 352;
         --sat-seasonal: 1.8;
         --lit-seasonal: 0.925;
