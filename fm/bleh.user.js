@@ -426,7 +426,7 @@ const trans = {
                 loading_listens: 'listens',
                 other_listeners: '{c} others'
             },
-            wiki: 'About {a}',
+            wiki: 'About',
             refresh: 'Refresh',
             refresh_tracks: 'Refresh tracks',
             menu: 'Extra options',
@@ -1167,6 +1167,11 @@ const trans = {
         search: {
             name: 'Search',
             results_for: 'Results for {v}'
+        },
+        charts: {
+            name: 'Charts',
+            overview: 'Real time',
+            weekly: 'Weekly'
         }
     },
     de: {
@@ -4445,6 +4450,8 @@ let has_prompted_for_update = false;
             <span class="season-colour-name">${trans[lang].settings.customise.seasonal.listing[stored_season.id]}</span>
             <span class="season-exclusive">${trans[lang].auth_menu.seasonal_live}</span>
         `);
+
+        page.header.season.classList.add('live');
     }
     function seasonal_timer_end() {
         if (stored_season.new_years_eve)
@@ -4461,6 +4468,8 @@ let has_prompted_for_update = false;
             <span class="season-colour-name">${trans[lang].settings.customise.seasonal.listing[stored_season.id]}</span>
             <span class="season-exclusive">${trans[lang].auth_menu.seasonal_notice}</span>
         `);
+
+        page.header.season.classList.remove('live');
     }
 
     function update_season_nav() {
@@ -18175,13 +18184,37 @@ let has_prompted_for_update = false;
             log('unable to find elements', 'page structure');
         }
 
-        checkup_page_structure();
+        let content_top = document.body.querySelector('.content-top');
+
+        checkup_page_structure(false, content_top);
 
         if (ff('refreshed_nav')) {
             register_background(my_avi);
         }
 
-        let chart_rows = page.structure.main.querySelectorAll('.charts-col:not(.charts-col--mobile-ad)');
+
+        let charts_header = document.createElement('section');
+        charts_header.classList.add('redesigned-header', 'charts-header', 'no-background');
+        charts_header.innerHTML = (`
+            <div class="tag-side">
+                <div class="tag-icon charts-icon"></div>
+            </div>
+            <div class="info-side">
+                <div class="sub-text">${trans[lang].charts.name}</div>
+                <h1>${trans[lang].charts[page.subpage]}</h1>
+            </div>
+        `);
+
+        page.structure.container.insertBefore(charts_header, page.structure.container.firstElementChild);
+
+
+        if (page.subpage != 'overview')
+            return;
+
+
+        let charts = page.structure.main.querySelector('.charts');
+        charts.classList.add('legacy-charts');
+        let chart_rows = charts.querySelectorAll('.charts-col:not(.charts-col--mobile-ad)');
 
 
         let new_panel = document.createElement('section');
