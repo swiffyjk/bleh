@@ -272,7 +272,8 @@ a,
 .grid-items-item.grid-items-item-has-colour,
 .toggle /* for toggles that arent buttons */,
 .bleh-icon, .support-inner h1,
-.user-top-panel
+.user-top-panel,
+.weeklychart-change
 {
     --hue:  var(--hue-over,
             var(--hue-album,
@@ -6387,6 +6388,8 @@ button,
 
 
 /*     ICON MASK     */
+.weeklychart-change:before,
+.weeklychart-listeners:before, .weeklychart-scrobblers:before,
 .music-bookmarks-tags-item-toggle:before,
 .music-bookmarks-artists-item-toggle:before,
 .music-bookmarks-albums-item-toggle:before,
@@ -18478,9 +18481,14 @@ section > .section-controls .subpage-title {
 
 
 /*     CHARTS     */
+.charts-row {
+    margin: var(--card-gap) 0 0 0;
+}
 .weeklychart {
     display: flex;
     padding: unset;
+    margin: unset;
+    line-height: var(--line-height);
 
     thead {
         display: none;
@@ -18497,6 +18505,11 @@ section > .section-controls .subpage-title {
     align-items: center;
     gap: var(--item-list-gap);
 
+    --bg: hsla(var(--b4), 40%);
+    --bg-hov: hsla(var(--b4), 80%);
+    --bg-atv: hsl(var(--b4));
+    --shadow: none;
+
     td {
         padding: unset !important;
     }
@@ -18508,6 +18521,7 @@ section > .section-controls .subpage-title {
     .weeklychart-image {
         width: fit-content;
         box-shadow: var(--card-shadow);
+        border-radius: var(--item-big-radius);
 
         .avatar {
             margin: unset;
@@ -18528,6 +18542,46 @@ section > .section-controls .subpage-title {
             text-decoration: none;
             flex: 1;
             font-weight: var(--font-weight-medium);
+        }
+    }
+
+    .weeklychart-listeners {
+        --mask: var(--icon-16-users);
+    }
+    .weeklychart-scrobblers {
+        --mask: var(--icon-16-scrobble);
+    }
+
+    .weeklychart-listeners,
+    .weeklychart-scrobblers {
+        position: relative;
+        min-width: calc(90px + 16px + 6px);
+        padding-right: calc(16px + 6px) !important;
+        text-align: right;
+
+        --left: none;
+        --right: 0;
+    }
+
+    .weeklychart-change {
+        min-width: 16px;
+        --left: 0;
+        color: hsl(var(--c3));
+        position: relative;
+        --mask: var(--icon-16-dot);
+
+        --sat-over: 1;
+        --lit-over: 1;
+
+        &.weeklychart-change--up {
+            --hue-over: var(--hue-pos);
+            --mask: var(--icon-16-arrow-up);
+            color: hsl(var(--l3-c));
+        }
+        &.weeklychart-change--down {
+            --hue-over: var(--hue-neg);
+            --mask: var(--icon-16-arrow-down);
+            color: hsl(var(--l3-c));
         }
     }
 }
