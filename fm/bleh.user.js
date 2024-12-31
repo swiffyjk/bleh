@@ -16995,7 +16995,12 @@ let has_prompted_for_update = false;
                 wiki_panel.removeChild(h2);
         }
 
-        patch_wiki_contents(wiki_panel);
+        let wiki = wiki_panel.querySelector('.wiki');
+
+        if (wiki == null)
+            return;
+
+        patch_wiki_contents(wiki);
     }
 
     function bleh_wiki_history() {
