@@ -2835,9 +2835,9 @@ button.navlist-more {
         }
 
         [data-bleh--theme="light"] & {
-            --bg: hsl(var(--b5), 40%) !important;
-            --bg-hov: hsl(var(--b5), 60%) !important;
-            --bg-atv: hsl(var(--b5), 80%) !important;
+            --bg: hsl(var(--h4), 20%) !important;
+            --bg-hov: hsl(var(--h4), 30%) !important;
+            --bg-atv: hsl(var(--h4), 50%) !important;
         }
     }
 }
@@ -6230,8 +6230,6 @@ button,
     &:is(
         .btn-primary:is([type="submit"]), .btn-primary.js-close,
         .inbox-delete-button:not([disabled]),
-        .attendance-btn--turn-off,
-        .player-bar-btn--loved,
         #manage_data .btn-primary,
         .primary,
         .btn-subscribe
@@ -15968,9 +15966,9 @@ button.bleh--gallery-bookmark-image-btn {
             position: relative;
 
             [data-bleh--theme="light"] & {
-                --bg: hsl(var(--b4), 40%);
-                --bg-hov: hsl(var(--b4), 60%);
-                --bg-atv: hsl(var(--b4), 80%);
+                --bg: hsl(var(--h4), 20%);
+                --bg-hov: hsl(var(--h4), 30%);
+                --bg-atv: hsl(var(--h4), 40%);
             }
 
             &:not(.dropdown-menu-clickable-button, .dropdown-menu-clickable-item, .profile-top-item--taste):after {
@@ -15997,7 +15995,7 @@ button.bleh--gallery-bookmark-image-btn {
     &.album-overview-cover-art-action-row a,
     &.tab-container button:not(.tab--selected),
     .footer-language .mimic-link,
-    .btn:not(.toggle, [aria-checked="true"], .love-button--loved, [data-toggle-button-current-state="loved"] > form > .btn, [data-toggle-button-current-state="bookmarked"] > form > .btn, .btn-primary.profile-header-set-obsession, [data-analytics-action="UnfollowUser"], [data-is-shortcut="true"]) {
+    .btn:not(.toggle, [aria-checked="true"], .love-button--loved, [data-toggle-button-current-state="loved"] > form > .btn, [data-toggle-button-current-state="bookmarked"] > form > .btn, .btn-primary.profile-header-set-obsession, [data-analytics-action="UnfollowUser"], [data-is-shortcut="true"], .attendance-btn--turn-off) {
         --bg: transparent;
         --bg-hov: hsla(var(--b4), 60%);
         --bg-atv: hsla(var(--b4), 80%);
