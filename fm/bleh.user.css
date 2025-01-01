@@ -15751,6 +15751,7 @@ button.bleh--gallery-bookmark-image-btn {
     font-weight: 900;
     color: #fff;
     background: linear-gradient(159deg, rgba(0,0,0,1) 0%, rgba(1,11,70,1) 32%, rgba(1,21,84,1) 50%, rgba(1,29,94,1) 62%, rgba(2,61,95,1) 76%, rgba(2,90,78,1) 88%, rgba(0,119,55,1) 100%);
+    background: linear-gradient(180deg, hsl(var(--b5)), hsl(var(--h4), 40%));
     border: unset;
     padding: var(--card-padding);
     position: relative;

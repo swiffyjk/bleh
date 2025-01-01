@@ -9737,23 +9737,8 @@ let has_prompted_for_update = false;
 
             return (`
                 <div class="bleh--panel shh">
+                    <div class="sub-text">${version.build}.${version.sku}</div>
                     ☆⌒(>w<)
-                    <div class="screen-row">
-                        <div class="actions">
-                            <a class="btn action">
-                                <span class="text">
-                                    <h5>build</h5>
-                                    <p>${version.build}</p>
-                                </span>
-                            </a>
-                            <a class="btn action">
-                                <span class="text">
-                                    <h5>sku</h5>
-                                    <p>${version.sku}</p>
-                                </span>
-                            </a>
-                        </div>
-                    </div>
                 </div>
                 <div class="bleh--panel">
                     <h4>Manage active flags</h4>
