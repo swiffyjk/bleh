@@ -10334,6 +10334,7 @@ text[style^="color: rgb(0, 0, 0)"] {
     cursor: default;
     position: relative;
     --left: 0;
+    --show-icon: block;
 
     &:before {
         color: currentColor;
