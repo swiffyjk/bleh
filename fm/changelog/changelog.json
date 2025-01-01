@@ -1,6 +1,12 @@
 {
     "updated": "2024-12-31",
-    "latest": "2024.1231",
+    "latest": "2024.1231.2",
+    "2024.1231.2": {
+        "name": "Reports",
+        "type": "minor",
+        "force": false,
+        "bio": "i time travelled to release this in 2024\n\n# Reports\n- __New and old reports should now match Last.fm 1:1__\n    - All bugs with the new design have been fixed (there weren't many)."
+    },
     "2024.1231": {
         "name": "2024 NO MUSIC",
         "type": "major",

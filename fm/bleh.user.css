@@ -17,7 +17,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Ubuntu+Sans:ital,wght@0,100..800;1,100..800&display=swap');
 
 body {
-    --version-build: '2024.1231.1';
+    --version-build: '2024.1231.2';
 
     --hue:  var(--hue-over,
             var(--hue-album,
@@ -3709,7 +3709,7 @@ button.navlist-more {
     padding: unset;
     position: unset;
 }
-.header-metadata .header-metadata-display, .metadata-display, .header-metadata-tnew-display {
+.metadata-display, .header-metadata-tnew-display {
     color: hsl(var(--c2));
     font-size: var(--font-size);
     line-height: var(--line-height);
@@ -6160,6 +6160,21 @@ button,
     }
 
 
+    &.mainstream-score--artist,
+    &.report-box-highlight--content,
+    .listening-report-secondary-top-item &, .top-new-item-title &,
+    &.mimic-link {
+        --bg: transparent;
+        --bg-hov: transparent;
+        --bg-atv: transparent;
+        --shadow: none;
+        --padding: 0;
+        width: unset;
+        font: inherit !important;
+        color: inherit !important;
+    }
+
+
     /* breaks bleh settings */
     /*[data-bleh--theme="light"] & {
         --bg: hsla(var(--b4), 70%);
@@ -6580,7 +6595,6 @@ a:has(+ .js-gallery-heading):after,
 .player-bar-btn:before,
 .dropdown-menu-item-dark:before,
 /*     LISTENING REPORTS     */
-.listening-report-brick--combo .tag-label:before,
 .listening-report-promo:before,
 .report-headline-share:before, .user-dashboard-pagination-previous-link:before, .user-dashboard-pagination-next-link:before,
 /*     UPLOAD CTA     */
@@ -9543,11 +9557,33 @@ text[style^="color: rgb(255, 172, 172)"] {
 
 
 
-/*     PLAYBACK 2023 / LISTENING REPORT V3     */
+/*     PLAYBACK 2023-2024 / LISTENING REPORT V3     */
 .report-box-container--overview {
     margin-top: var(--card-gap);
-    margin-left: unset;
-    margin-right: unset;
+    margin-left: calc(((100vw - var(--cards-width)) / 2) * -1);
+    margin-right: calc(((100vw - var(--cards-width)) / 2) * -1);
+
+    .col-sm-12 {
+        width: var(--cards-width);
+    }
+}
+
+
+.top-new-item-title {
+    font-weight: var(--font-weight-medium);
+}
+.did-you-know-header {
+    margin-bottom: 6px;
+}
+
+
+.mainstream-score--artist,
+.report-box-highlight--content,
+.listening-report-row,
+.report-box-container {
+    font-family: Barlow, var(--font) !important;
+    --font-weight: 400 !important;
+    --font-weight-medium: 700 !important;
 }
 
 
@@ -9555,6 +9591,7 @@ text[style^="color: rgb(255, 172, 172)"] {
     --bg: hsl(var(--h3));
     --bg-hov: var(--bg);
     --bg-sat: var(--bg);
+    --radius: 0;
 
     --hue-over: 224;
     --sat-over: 0.85;
@@ -9583,14 +9620,7 @@ text[style^="color: rgb(255, 172, 172)"] {
 
 /* new - 2024/12 */
 .mainstream-score--artist {
-    --bg: transparent;
-    --bg-hov: transparent;
-    --bg-atv: transparent;
-    --shadow: none;
-    --shadow-hov: none;
-    width: unset;
     font-weight: var(--font-weight);
-    --padding: 0;
 
     display: flex;
     text-align: left;
@@ -9627,42 +9657,9 @@ text[style^="color: rgb(255, 172, 172)"] {
 }
 
 
-.top-item-overview, .listening-report-top-item-wrap--version-3, .top-new-item-image img, .report-box-container, .top-new-item-type, .listening-report-top-item-badge, .mainstream-score--artist-thumb img {
-    border-radius: var(--item-big-radius);
-}
-.music-decades-chart-container rect, .highcharts-label-box {
-    rx: var(--item-big-radius) !important;
-    ry: var(--item-big-radius) !important;
-}
-.top-new-item {
-    border-top-left-radius: var(--item-big-radius);
-    border-top-right-radius: var(--item-big-radius);
-}
-.top-new-item--footer {
-    border-bottom-left-radius: var(--item-big-radius);
-    border-bottom-right-radius: var(--item-big-radius);
-}
-
 .report-box-container {
     .listening-report-brick-head {
         min-height: 149px !important;
-    }
-
-    .tag-label {
-        background: hsl(var(--h3));
-        color: hsl(var(--b7));
-        border-radius: var(--item-big-radius);
-        --left: 8px;
-
-        &.tag-label--scrobble {
-            --mask: var(--icon-16-scrobble);
-        }
-        &.tag-label--discovery {
-            --mask: var(--icon-16-globe);
-        }
-        &.tag-label--followers {
-            --mask: var(--icon-16-users);
-        }
     }
 
     .header-metadata {
@@ -9684,9 +9681,7 @@ text[style^="color: rgb(255, 172, 172)"] {
         margin-top: 0;
     }
     .header-metadata-display {
-        color: hsl(var(--c1));
         font-size: 40px;
-        font-weight: var(--font-weight-medium);
         line-height: normal;
     }
 }
@@ -9757,12 +9752,6 @@ text[style^="color: rgb(255, 172, 172)"] {
     width: calc((var(--cards-width) / 2) - 5px) !important;
 }
 
-
-.user-dashboard-layout--version-3 .listening-report-row--category, .report-headline-title {
-    font-family: var(--font);
-    text-transform: unset;
-    font-weight: var(--font-weight-medium);
-}
 
 .report-box-container .user-dashboard-musical-matches .header-metadata-display strong {
     font-size: 18px;
