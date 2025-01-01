@@ -6186,8 +6186,8 @@ button,
         --transition-property: opacity, left;
         /*box-shadow: var(--shadow-hov) !important;*/
 
-    background-repeat: repeat-x !important;
-    background-position: unset !important;
+        background-repeat: repeat-x !important;
+        background-position: unset !important;
     }
 
     &:is(.gallery-next, .gallery-previous):active .arrow,
@@ -6240,7 +6240,7 @@ button,
         --bg-hov: var(--cards-overlay-image-subtlest, none), hsla(var(--h3), 80%) !important;
         --bg-atv: var(--cards-overlay-image-subtlest, none), hsla(var(--h3), 60%) !important;
         --col: hsl(var(--b7)) !important;
-        --shadow: var(--interactable-outer);
+        --shadow: 0 3px 12px hsl(var(--h4), 25%), var(--interactable-outer);
         --shadow-hov: var(--interactable-outer), var(--interactable-active-outer);
 
         [data-bleh--invert_interactable_colour="true"] & {
@@ -14869,7 +14869,7 @@ input[type="range"]::-moz-range-progress {
         --bg-hov: var(--cards-overlay-image-subtlest, none), hsla(var(--h3), 80%) !important;
         --bg-atv: var(--cards-overlay-image-subtlest, none), hsla(var(--h3), 60%) !important;
         --col: hsl(var(--b7)) !important;
-        --shadow: var(--interactable-outer);
+        --shadow: 0 3px 12px hsl(var(--h4), 25%), var(--interactable-outer);
         --shadow-hov: var(--interactable-outer), var(--interactable-active-outer);
 
         .dot {
