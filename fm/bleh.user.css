@@ -4106,10 +4106,10 @@ better than the default selector '#app a' i suppose */
     aspect-ratio: 1 / 1;
     border-radius: var(--item-big-radius);
     /*overflow: hidden;*/
-    box-shadow: 0 30px 15px hsl(var(--h4), 6%), var(--standout-shadow);
+    box-shadow: 0 30px 15px hsl(var(--h4), 8%), var(--standout-shadow);
 
     [data-bleh--theme="light"] & {
-        box-shadow: 0 30px 15px hsl(var(--h4), 14%), var(--standout-shadow);
+        box-shadow: 0 30px 15px hsl(var(--h4), 16%), var(--standout-shadow);
     }
 
     transition-property: transform;
