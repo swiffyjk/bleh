@@ -15,6 +15,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Noto+Color+Emoji&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Comfortaa:wght@700&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Ubuntu+Sans:ital,wght@0,100..800;1,100..800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Work+Sans:ital,wght@0,100..900;1,100..900&display=swap');
 
 body {
     --version-build: '2025.0101';
@@ -137,6 +138,10 @@ body {
     --trans-short: 0.25s;
     --trans: 0.3s;
     --trans-function: cubic-bezier(1.000, 0.000, 0.000, 1.000);
+
+    [data-ff--astra="true"] & {
+        --font: var(--custom_font, ''), Work Sans, Ubuntu Sans, Spline Sans, Inter, Roboto, Noto Sans, Noto Sans JP, Noto Sans KR, Noto Sans TC, Noto Color Emoji, -apple-system, BlinkMacSystemFont, sans-serif;
+    }
 }
 
 /* backgrounds */

@@ -143,6 +143,12 @@ let version = {
             default: true,
             name: 'New badge tooltip',
             date: '2024-12-28'
+        },
+        astra: {
+            default: false,
+            name: 'astrablooms font',
+            date: '2025-01-01',
+            notice: 'This is a test of a new default font for bleh, it most likely will never take effect as changing a font takes a lot of getting used to, but yeah.<br>You should set your text settings to the following: 470, 540, 610'
         }
     }
 }
@@ -10347,6 +10353,7 @@ let has_prompted_for_update = false;
             feature_flag_element.innerHTML = (`
                 <div class="heading">
                     <h5>${version.feature_flags[flag].name}</h5>
+                    ${(version.feature_flags[flag].notice) ? `<p>${version.feature_flags[flag].notice}</p>` : ''}
                     <div class="info-row">
                         <div class="default-flag flag-${version.feature_flags[flag].default}">${version.feature_flags[flag].default}</div><p class="date">${version.feature_flags[flag].date}</p><p>${flag}</p>
                     </div>
