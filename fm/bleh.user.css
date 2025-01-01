@@ -15962,7 +15962,7 @@ button.bleh--gallery-bookmark-image-btn {
             --bg-hov: hsl(var(--b4), 60%);
             --bg-atv: hsl(var(--b4), 80%);
 
-            &:after {
+            &:not(.dropdown-menu-list-button, .dropdown-menu-clickable-button, .dropdown-menu-clickable-button-js-only):after {
                 opacity: 0;
 
                 transition-property: opacity !important;
