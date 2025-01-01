@@ -9377,6 +9377,11 @@ text[style^="color: rgb(255, 172, 172)"] {
                     color: hsl(var(--c3));
                     margin: unset;
                 }
+                .timestamp {
+                    font-size: calc(var(--font-size) - 1px);
+                    color: hsl(var(--c3));
+                    margin: unset;
+                }
             }
         }
 

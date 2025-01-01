@@ -11663,15 +11663,6 @@ let has_prompted_for_update = false;
                     register_menu(track, menu);
                 }
 
-                // duration
-                let track_timestamp = track.querySelector('.chartlist-timestamp span');
-                if (track_timestamp != undefined) {
-                    tippy(track_timestamp, {
-                        content: track_timestamp.getAttribute('title')
-                    });
-                    track_timestamp.setAttribute('title', '');
-                }
-
 
                 let track_title = track.querySelector('.chartlist-name a:not(.offset-section-anchor)');
 
@@ -11796,7 +11787,20 @@ let has_prompted_for_update = false;
                         }
                     }
 
+                    // duration
+                    let track_timestamp = track.querySelector('.chartlist-timestamp span');
+                    let track_timestamp_contents;
+                    if (track_timestamp != null) {
+                        track_timestamp_contents = track_timestamp.getAttribute('title');
+                        track_timestamp.setAttribute('title', '');
+                    }
+
                     let image = track.querySelector('.chartlist-image img');
+
+                    // hacky workaround to chartlists with no image
+                    if (image == null && page.type == 'user')
+                        is_library_track_page = true;
+
                     tippy(track, {
                         theme: 'track',
                         content: (`
@@ -11810,10 +11814,11 @@ let has_prompted_for_update = false;
                                 <p class="artist">${song_artist_element.innerHTML}</p>
                                 <div class="tags">${song_tags_text}</div>
                                 ${(!is_library_track_page) ? (is_album) ? '' : `<p class="album">${trans[lang].music.from_the_album.replace('{album}', (image != null) ? correct_item_by_artist(image.getAttribute('alt'), track_artist) : page.name)}</p>` : ''}
+                                ${(track_timestamp != null && track_timestamp_contents != null) ? `<p class="timestamp">${track_timestamp_contents}</p>` : ''}
                             </div>
                         `),
                         allowHTML: true,
-                        delay: [500, 50],
+                        delay: [200, 50],
                         placement: 'bottom'/*,
                         hideOnClick: false*/
                     });
@@ -11831,6 +11836,18 @@ let has_prompted_for_update = false;
                         let corrected_title = correct_item_by_artist(track_title.textContent, track_artist);
                         track_title.textContent = corrected_title;
                         track_title.setAttribute('title', corrected_title);
+                    }
+
+                    if (track_timestamp != null) {
+                        tippy(track_timestamp, {
+                            content: track_timestamp_contents
+                        });
+                    }
+                } else {
+                    if (track_timestamp != null) {
+                        tippy(track_timestamp, {
+                            content: track_timestamp_contents
+                        });
                     }
                 }
 
