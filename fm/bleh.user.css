@@ -11135,9 +11135,10 @@ table.table tr:nth-child(2n) td {
 }
 .wiki-edit-form textarea {
     height: 500px;
+    min-height: 100px;
+    max-height: 1600px;
     font-size: 16px !important;
     line-height: 24px;
-    margin-bottom: var(--card-gap);
 }
 
 .wiki-style-rules,
@@ -15247,6 +15248,7 @@ trying to list every song ever made by someone identifying as a female, which is
         overflow: visible;
         margin: 0;
         opacity: 0;
+        font-weight: var(--font-weight-medium);
         transition-property: left, opacity;
         transition-duration: var(--trans);
         transition-timing-function: var(--trans-function);
@@ -15258,7 +15260,6 @@ trying to list every song ever made by someone identifying as a female, which is
             --hue-over: var(--hue-neg);
             --sat-over: 1;
             --lit-over: 1;
-            opacity: 0.5;
 
             /*&:after {
                 content: ' (not enough characters)';
@@ -15267,6 +15268,10 @@ trying to list every song ever made by someone identifying as a female, which is
     }
     &:focus-within .form-row-help-text {
         opacity: 1;
+
+        &.shout-form-char-count--limit {
+            opacity: 0.5;
+        }
     }
 }
 
