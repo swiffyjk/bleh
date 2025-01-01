@@ -276,7 +276,8 @@ a,
 .toggle /* for toggles that arent buttons */,
 .bleh-icon, .support-inner h1,
 .user-top-panel,
-.weeklychart-change
+.weeklychart-change,
+.new-badge
 {
     --hue:  var(--hue-over,
             var(--hue-album,
@@ -10339,10 +10340,12 @@ text[style^="color: rgb(0, 0, 0)"] {
     margin-bottom: var(--card-gap);
 }
 
-.alert-danger,
 .alert-error,
 .async-content-error-message {
     --mask: var(--icon-16-x);
+}
+.alert-danger {
+    --mask: var(--icon-16-warning);
 }
 .alert-warning, .alert-info {
     --mask: var(--icon-16-info);
@@ -15815,20 +15818,15 @@ button.bleh--gallery-bookmark-image-btn {
         gap: 10px;
         margin-top: 4px;
 
-        .default-flag {
-            padding: 0 4px;
-            background-color: hsl(var(--b6));
-            border-radius: var(--item-big-radius);
-            font-size: 12px;
-            width: 45px;
-            text-align: center;
-            color: hsl(var(--l3-c));
-            --hue: var(--hue-neg);
-            --sat: 1;
-            --lit: 1;
+        .new-badge {
+            width: 40px;
+            justify-content: center;
+            --hue-over: var(--hue-neg);
+            --sat-over: 1;
+            --lit-over: 1;
 
             &.flag-true {
-                --hue: var(--hue-pos);
+                --hue-over: var(--hue-pos);
             }
         }
 

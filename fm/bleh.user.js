@@ -9756,7 +9756,8 @@ let has_prompted_for_update = false;
                     </div>
                 </div>
                 <div class="bleh--panel">
-                    <h4>Feature Flags</h4>
+                    <h4>Manage active flags</h4>
+                    <div class="alert alert-danger">Be careful! Only manage these if you know what you are doing.</div>
                     <div class="feature-flags" id="feature-flags"></div>
                 </div>
                 `);
@@ -10350,16 +10351,17 @@ let has_prompted_for_update = false;
 
             let feature_flag_element = document.createElement('div');
             feature_flag_element.classList.add('toggle-container');
+            feature_flag_element.setAttribute('onclick', `_update_flag_toggle('${flag}', this)`);
             feature_flag_element.innerHTML = (`
                 <div class="heading">
                     <h5>${version.feature_flags[flag].name}</h5>
                     ${(version.feature_flags[flag].notice) ? `<p>${version.feature_flags[flag].notice}</p>` : ''}
                     <div class="info-row">
-                        <div class="default-flag flag-${version.feature_flags[flag].default}">${version.feature_flags[flag].default}</div><p class="date">${version.feature_flags[flag].date}</p><p>${flag}</p>
+                        <div class="new-badge flag-${version.feature_flags[flag].default}">${version.feature_flags[flag].default}</div><p class="date">${version.feature_flags[flag].date}</p><p>${flag}</p>
                     </div>
                 </div>
                 <div class="toggle-wrap">
-                    <button id="feature-flag-toggle-${flag}" class="toggle" onclick="_update_flag_toggle('${flag}', this)" aria-checked="${current_state}">
+                    <button id="feature-flag-toggle-${flag}" class="toggle" aria-checked="${current_state}">
                         <div class="dot"></div>
                     </button>
                 </div>
@@ -10371,10 +10373,14 @@ let has_prompted_for_update = false;
         }
     }
 
-    unsafeWindow._update_flag_toggle = function(flag, button) {
-        update_flag_toggle(flag, button);
+    unsafeWindow._update_flag_toggle = function(flag, container) {
+        update_flag_toggle(flag, container);
     }
-    function update_flag_toggle(flag, button) {
+    function update_flag_toggle(flag, container) {
+        let button = container.querySelector('.toggle');
+        if (!button)
+            return;
+
         let current_state = version.feature_flags[flag].default;
         if (settings.feature_flags[flag] != undefined) current_state = settings.feature_flags[flag];
 
