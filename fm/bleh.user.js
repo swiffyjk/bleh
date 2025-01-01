@@ -14286,7 +14286,7 @@ let has_prompted_for_update = false;
             // not pro
 
             if (!is_subpage)
-                page.structure.container = document.body.querySelector('.page-content:not(header + .page-content)');
+                page.structure.container = document.body.querySelector('.page-content');
             else
                 page.structure.container = document.body.querySelector('.page-content:not(.visible-xs, :has(.content-top-lower-row, a + .js-gallery-heading))');
         }
@@ -14495,7 +14495,7 @@ let has_prompted_for_update = false;
             // not pro
 
             if (!is_subpage)
-                page.structure.container = document.body.querySelector('.page-content:not(header + .page-content)');
+                page.structure.container = document.body.querySelector('.page-content');
             else
                 page.structure.container = document.body.querySelector('.page-content:not(:has(.content-top-lower-row, a + .js-gallery-heading))');
         }
