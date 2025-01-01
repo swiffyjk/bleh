@@ -11845,13 +11845,23 @@ let has_prompted_for_update = false;
                         track_title.setAttribute('title', corrected_title);
                     }
 
+                    let track_timestamp = track.querySelector('.chartlist-timestamp span');
+                    let track_timestamp_contents;
                     if (track_timestamp != null) {
+                        track_timestamp_contents = track_timestamp.getAttribute('title');
+                        track_timestamp.setAttribute('title', '');
+
                         tippy(track_timestamp, {
                             content: track_timestamp_contents
                         });
                     }
                 } else {
+                    let track_timestamp = track.querySelector('.chartlist-timestamp span');
+                    let track_timestamp_contents;
                     if (track_timestamp != null) {
+                        track_timestamp_contents = track_timestamp.getAttribute('title');
+                        track_timestamp.setAttribute('title', '');
+
                         tippy(track_timestamp, {
                             content: track_timestamp_contents
                         });
@@ -14523,10 +14533,16 @@ let has_prompted_for_update = false;
         } else {
             // not pro
 
-            if (!is_subpage)
-                page.structure.container = document.body.querySelector('.page-content');
-            else
+            if (!is_subpage) {
+                // normal, is there an ad then a container?
+                page.structure.container = document.body.querySelector('.full-bleed-ad-container + .page-content:not(.visible-xs)');
+
+                // death grips for some reason
+                if (!page.structure.container)
+                    page.structure.container = document.body.querySelector('.page-content');
+            } else {
                 page.structure.container = document.body.querySelector('.page-content:not(:has(.content-top-lower-row, a + .js-gallery-heading))');
+            }
         }
         page.structure.row = page.structure.container.querySelector('.row');
         try {
@@ -14733,7 +14749,7 @@ let has_prompted_for_update = false;
                 if (!page.structure.container)
                     page.structure.container = document.body.querySelector('.page-content');
             } else {
-                page.structure.container = document.body.querySelector('.page-content)');
+                page.structure.container = document.body.querySelector('.page-content');
             }
         }
         page.structure.row = page.structure.container.querySelector('.row');
