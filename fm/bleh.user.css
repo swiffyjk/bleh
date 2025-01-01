@@ -7523,6 +7523,13 @@ very, very, very dated - who looks up a song on ebay? */
         &[readonly] {
             --focus-outline: none !important;
         }
+
+        [data-bleh--theme="light"] &,
+        [data-bleh--theme="oled"] & {
+            --bg: hsl(var(--b4), 50%);
+            --bg-hov: hsl(var(--b4), 80%);
+            --bg-atv: hsl(var(--b4), 80%);
+        }
     }
 
     &#id_email:not(:hover, :focus-visible) {
