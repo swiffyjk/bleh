@@ -3896,14 +3896,19 @@ let has_prompted_for_update = false;
             id: 'error',
             title: 'An error has occured',
             body: (`
-                bleh was unable to start correctly, please report this on Github.
-                <p class="subtext">Error information available in console</p>
+                <div class="error-inner">
+                    <div class="bleh-icon" style="--icon: var(--icon-error)"></div>
+                    <h1>This page is broken :(</h1>
+                    <p>An error has prevented bleh from loading correctly, please report this issue on Github.</p>
+                    <p class="error-info">Error information can be accessed by opening the console (try F12).</p>
+                </div>
                 <div class="modal-footer">
                     <a class="btn primary report-bug continue" href="https://github.com/katelyynn/bleh/issues/new/choose" target="_blank">
                         Report bug now
                     </a>
                 </div>
-            `)
+            `),
+            type: 'error'
         });
 
         if (e != null) {
