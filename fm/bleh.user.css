@@ -90,7 +90,7 @@ body {
     }
     [data-season="new_years"],
     [data-bleh--season="new_years"] & {
-        --hue-seasonal: 233;
+        --hue-seasonal: 238;
         --sat-seasonal: 0.925;
         --lit-seasonal: 1.1;
 
@@ -1764,7 +1764,7 @@ article, section, .buffer-standard, .buffer-standard:not(.col-sidebar) .buffer-s
 /* remove lastfm box shadow */
 .album-overview-cover-art {
     border-radius: var(--card-radius) !important;
-    box-shadow: var(--card-shadow) !important;
+    box-shadow: 0 30px 15px 5px hsl(var(--h4), 14%), var(--card-shadow) !important;
 }
 
 /* take up full space */
@@ -3322,7 +3322,7 @@ button.navlist-more {
     &:not(.auth-badge, .no-hover):hover {
         max-width: 220px;
         padding-right: 6px;
-        background-color: hsla(var(--h4), 20%) !important;
+        background-color: hsla(var(--h4), 30%) !important;
     }
 
     &.no-hover {
@@ -3394,8 +3394,8 @@ button.navlist-more {
 .user-status--bleh-cute,
 .label.user-status--bleh-cute {
     --mask: var(--icon-cute);
-    --hue: 260;
-    --sat: 1.1;
+    --hue: 340;
+    --sat: 0.675;
     --lit: 1;
 }
 
@@ -3499,7 +3499,7 @@ button.navlist-more {
     --mask: var(--icon-contributor);
 
     --hue: 255;
-    --sat: 1;
+    --sat: 0.8;
     --lit: 1;
 }
 
@@ -4100,7 +4100,11 @@ better than the default selector '#app a' i suppose */
     aspect-ratio: 1 / 1;
     border-radius: var(--item-big-radius);
     /*overflow: hidden;*/
-    box-shadow: var(--standout-shadow);
+    box-shadow: 0 30px 15px hsl(var(--h4), 6%), var(--standout-shadow);
+
+    [data-bleh--theme="light"] & {
+        box-shadow: 0 30px 15px hsl(var(--h4), 14%), var(--standout-shadow);
+    }
 
     transition-property: transform;
     transition-duration: var(--trans);
@@ -4741,12 +4745,13 @@ better than the default selector '#app a' i suppose */
     --shadow: 0 0 50px 5px hsla(var(--h3), 45%) !important;*/
     --bg: hsla(var(--h4), 35%) !important;
     --bg-hov: hsla(var(--h4), 45%) !important;
-    --shadow: 0 0 50px 5px hsla(var(--h4), 35%) !important;
+    --shadow: 0 10px 50px 5px hsla(var(--h4), 35%) !important;
+    z-index: 20;
 
     [data-bleh--theme="light"] & {
         --bg: hsla(var(--h4), 35%) !important;
         --bg-hov: hsla(var(--h4), 50%) !important;
-        --shadow: 0 0 50px 5px hsla(var(--h4), 35%) !important;
+        --shadow: 0 10px 50px 5px hsla(var(--h4), 35%) !important;
     }
 }
 .chartlist-row--now-scrobbling:before {
