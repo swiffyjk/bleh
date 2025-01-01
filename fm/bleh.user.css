@@ -19245,6 +19245,7 @@ section > .section-controls .subpage-title {
     h1 {
         font-size: 16px;
         line-height: 20px;
+        font-weight: var(--font-weight-medium);
         letter-spacing: unset;
         margin: unset !important;
         cursor: default;
