@@ -6226,8 +6226,10 @@ let has_prompted_for_update = false;
 
             // listening report error
             let container_full_width = document.body.querySelector('.container--full-width');
-
-            container_full_width.insertBefore(page.structure.container, container_full_width.firstElementChild);
+            if (container_full_width)
+                container_full_width.insertBefore(page.structure.container, container_full_width.firstElementChild);
+            else
+                document.body.querySelector('.adaptive-skin-container').appendChild(page.structure.container);
         }
 
         page.structure.container.setAttribute('data-assigned', 'true');
@@ -13996,7 +13998,7 @@ let has_prompted_for_update = false;
 
             let video = video_col.querySelector('.video-preview');
 
-            if (video != null) {
+            if (video) {
                 video_col.classList.remove('col-sidebar');
                 page.structure.side.insertBefore(video_col, page.structure.side.firstElementChild);
 
@@ -14025,6 +14027,22 @@ let has_prompted_for_update = false;
                 tippy(replace, {
                     content: replace.textContent
                 });
+            } else {
+                page.structure.side.removeChild(video_col);
+
+                let video_placeholder = document.createElement('section');
+                video_placeholder.classList.add('video-placeholder');
+                video_placeholder.innerHTML = (`
+                    <div class="bleh-icon" style="--icon: var(--icon-16-video-broken)"></div>
+                    Video removed by Last.fm
+                `);
+
+                page.structure.side.insertBefore(video_placeholder, page.structure.side.firstElementChild);
+
+
+                let links = page.structure.side.querySelector('.external-links-section .play-this-track-playlinks');
+                if (links)
+                    links.classList.add('video-unavailable');
             }
         }
     }
@@ -14285,19 +14303,30 @@ let has_prompted_for_update = false;
         } else {
             // not pro
 
-            if (!is_subpage)
-                page.structure.container = document.body.querySelector('.page-content');
-            else
+            if (!is_subpage) {
+                // normal, is there an ad then a container?
+                page.structure.container = document.body.querySelector('.full-bleed-ad-container + .page-content:not(.visible-xs)');
+
+                // death grips for some reason
+                if (!page.structure.container)
+                    page.structure.container = document.body.querySelector('.page-content');
+            } else {
                 page.structure.container = document.body.querySelector('.page-content:not(.visible-xs, :has(.content-top-lower-row, a + .js-gallery-heading))');
+            }
         }
-        page.structure.row = page.structure.container.querySelector('.row');
         try {
+            page.structure.row = page.structure.container.querySelector('.row');
+
             if (!is_subpage)
                 page.structure.main = page.structure.row.querySelector('.col-main.buffer-standard');
             else
                 page.structure.main = page.structure.row.querySelector('.col-main');
 
-            page.structure.side = page.structure.row.querySelector('.col-sidebar:not(.masonry-right)');
+            if (is_pro) {
+                page.structure.side = page.structure.row.querySelector('.col-sidebar:not(.masonry-right)');
+            } else {
+                page.structure.side = page.structure.row.querySelector('.col-sidebar:not(.section-with-separator--col)');
+            }
         } catch(e) {
             log('unable to find elements', 'page structure');
         }
@@ -14696,18 +14725,24 @@ let has_prompted_for_update = false;
         } else {
             // not pro
 
-            if (!is_subpage)
-                page.structure.container = document.body.querySelector('.page-content:not(header + .page-content)');
-            else
-                page.structure.container = document.body.querySelector('.page-content');
+            if (!is_subpage) {
+                // normal, is there an ad then a container?
+                page.structure.container = document.body.querySelector('.full-bleed-ad-container + .page-content:not(.visible-xs)');
+
+                // death grips for some reason
+                if (!page.structure.container)
+                    page.structure.container = document.body.querySelector('.page-content');
+            } else {
+                page.structure.container = document.body.querySelector('.page-content)');
+            }
         }
         page.structure.row = page.structure.container.querySelector('.row');
         try {
-            if (is_pro) {
-                if (!is_subpage)
-                    page.structure.main = page.structure.row.querySelector('.col-main:not(:first-child)');
-                else
-                    page.structure.main = page.structure.row.querySelector('.col-main');
+            if (!is_subpage) {
+                page.structure.main = page.structure.row.querySelector('.col-main.buffer-standard');
+
+                if (page.structure.main.classList[2])
+                    page.structure.main = page.structure.row.querySelector('.col-main.buffer-standard:not(:first-child)');
             } else {
                 page.structure.main = page.structure.row.querySelector('.col-main');
             }
@@ -14715,6 +14750,8 @@ let has_prompted_for_update = false;
         } catch(e) {
             log('unable to find elements', 'page structure');
         }
+
+        console.info('bleee', page.structure.row, page.structure.main);
 
         checkup_page_structure(is_subpage, track_header);
 
