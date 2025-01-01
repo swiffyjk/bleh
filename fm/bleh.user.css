@@ -511,7 +511,7 @@ body {
     --icon-mask: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyMCIgaGVpZ2h0PSIyMCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyLjI1IiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLXZlbmV0aWFuLW1hc2siPjxwYXRoIGQ9Ik0yIDEyYTUgNSAwIDAgMCA1IDUgOCA4IDAgMCAxIDUgMiA4IDggMCAwIDEgNS0yIDUgNSAwIDAgMCA1LTVWN2gtNWE4IDggMCAwIDAtNSAyIDggOCAwIDAgMC01LTJIMloiLz48cGF0aCBkPSJNNiAxMWMxLjUgMCAzIC41IDMgMi0yIDAtMyAwLTMtMloiLz48cGF0aCBkPSJNMTggMTFjLTEuNSAwLTMgLjUtMyAyIDIgMCAzIDAgMy0yWiIvPjwvc3ZnPg==');
 
     --icon-sponsor: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyMCIgaGVpZ2h0PSIyMCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyLjI1IiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLW1lc3NhZ2UtY2lyY2xlLWhlYXJ0Ij48cGF0aCBkPSJNNy45IDIwQTkgOSAwIDEgMCA0IDE2LjFMMiAyMloiLz48cGF0aCBkPSJNMTUuOCA5LjJhMi41IDIuNSAwIDAgMC0zLjUgMGwtLjMuNC0uMzUtLjNhMi40MiAyLjQyIDAgMSAwLTMuMiAzLjZsMy42IDMuNSAzLjYtMy41YzEuMi0xLjIgMS4xLTIuNy4yLTMuNyIvPjwvc3ZnPg==');
-    --icon-cosmic: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyMCIgaGVpZ2h0PSIyMCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyLjI1IiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWZsb3dlciI+PGNpcmNsZSBjeD0iMTIiIGN5PSIxMiIgcj0iMyIvPjxwYXRoIGQ9Ik0xMiAxNi41QTQuNSA0LjUgMCAxIDEgNy41IDEyIDQuNSA0LjUgMCAxIDEgMTIgNy41YTQuNSA0LjUgMCAxIDEgNC41IDQuNSA0LjUgNC41IDAgMSAxLTQuNSA0LjUiLz48cGF0aCBkPSJNMTIgNy41VjkiLz48cGF0aCBkPSJNNy41IDEySDkiLz48cGF0aCBkPSJNMTYuNSAxMkgxNSIvPjxwYXRoIGQ9Ik0xMiAxNi41VjE1Ii8+PHBhdGggZD0ibTggOCAxLjg4IDEuODgiLz48cGF0aCBkPSJNMTQuMTIgOS44OCAxNiA4Ii8+PHBhdGggZD0ibTggMTYgMS44OC0xLjg4Ii8+PHBhdGggZD0iTTE0LjEyIDE0LjEyIDE2IDE2Ii8+PC9zdmc+');
+    --icon-cosmic: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyMCIgaGVpZ2h0PSIyMCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyLjI1IiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLW1vb24tc3RhciI+PHBhdGggZD0iTTEyIDNhNiA2IDAgMCAwIDkgOSA5IDkgMCAxIDEtOS05Ii8+PHBhdGggZD0iTTIwIDN2NCIvPjxwYXRoIGQ9Ik0yMiA1aC00Ii8+PC9zdmc+');
     --icon-loader: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyMCIgaGVpZ2h0PSIyMCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyLjI1IiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWxvYWRlciI+PHBhdGggZD0iTTEyIDJ2NCIvPjxwYXRoIGQ9Im0xNi4yIDcuOCAyLjktMi45Ii8+PHBhdGggZD0iTTE4IDEyaDQiLz48cGF0aCBkPSJtMTYuMiAxNi4yIDIuOSAyLjkiLz48cGF0aCBkPSJNMTIgMTh2NCIvPjxwYXRoIGQ9Im00LjkgMTkuMSAyLjktMi45Ii8+PHBhdGggZD0iTTIgMTJoNCIvPjxwYXRoIGQ9Im00LjkgNC45IDIuOSAyLjkiLz48L3N2Zz4=');
 
     --icon-48-tag: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0OCIgaGVpZ2h0PSI0OCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLXRhZyI+PHBhdGggZD0iTTEyLjU4NiAyLjU4NkEyIDIgMCAwIDAgMTEuMTcyIDJINGEyIDIgMCAwIDAtMiAydjcuMTcyYTIgMiAwIDAgMCAuNTg2IDEuNDE0bDguNzA0IDguNzA0YTIuNDI2IDIuNDI2IDAgMCAwIDMuNDIgMGw2LjU4LTYuNThhMi40MjYgMi40MjYgMCAwIDAgMC0zLjQyeiIvPjxjaXJjbGUgY3g9IjcuNSIgY3k9IjcuNSIgcj0iLjUiIGZpbGw9ImN1cnJlbnRDb2xvciIvPjwvc3ZnPg==');
@@ -3542,9 +3542,9 @@ button.navlist-more {
 
 .user-status--bleh-cosmic {
     --mask: var(--icon-cosmic);
-    --hue-over: 260;
-    --sat-over: 1.1;
-    --lit-over: 0.95;
+    --hue-over: 46;
+    --sat-over: 1.2;
+    --lit-over: 0.98;
 }
 .user-status--bleh-loader {
     --mask: var(--icon-loader);
@@ -3729,7 +3729,7 @@ button.navlist-more {
     padding: unset;
     position: unset;
 }
-.header-metadata .header-metadata-display, .metadata-display, .header-metadata-tnew-display {
+.metadata-display, .header-metadata-tnew-display {
     color: hsl(var(--c2));
     font-size: var(--font-size);
     line-height: var(--line-height);
@@ -6185,6 +6185,21 @@ button,
     }
 
 
+    &.mainstream-score--artist,
+    &.report-box-highlight--content,
+    .listening-report-secondary-top-item &, .top-new-item-title &,
+    &.mimic-link {
+        --bg: transparent;
+        --bg-hov: transparent;
+        --bg-atv: transparent;
+        --shadow: none;
+        --padding: 0;
+        width: unset;
+        font: inherit !important;
+        color: inherit !important;
+    }
+
+
     /* breaks bleh settings */
     /*[data-bleh--theme="light"] & {
         --bg: hsla(var(--b4), 70%);
@@ -6603,7 +6618,6 @@ a:has(+ .js-gallery-heading):after,
 .player-bar-btn:before,
 .dropdown-menu-item-dark:before,
 /*     LISTENING REPORTS     */
-.listening-report-brick--combo .tag-label:before,
 .listening-report-promo:before,
 .report-headline-share:before, .user-dashboard-pagination-previous-link:before, .user-dashboard-pagination-next-link:before,
 /*     UPLOAD CTA     */
@@ -9584,11 +9598,33 @@ text[style^="color: rgb(255, 172, 172)"] {
 
 
 
-/*     PLAYBACK 2023 / LISTENING REPORT V3     */
+/*     PLAYBACK 2023-2024 / LISTENING REPORT V3     */
 .report-box-container--overview {
     margin-top: var(--card-gap);
-    margin-left: unset;
-    margin-right: unset;
+    margin-left: calc(((100vw - var(--cards-width)) / 2) * -1);
+    margin-right: calc(((100vw - var(--cards-width)) / 2) * -1);
+
+    .col-sm-12 {
+        width: var(--cards-width);
+    }
+}
+
+
+.top-new-item-title {
+    font-weight: var(--font-weight-medium);
+}
+.did-you-know-header {
+    margin-bottom: 6px;
+}
+
+
+.mainstream-score--artist,
+.report-box-highlight--content,
+.listening-report-row,
+.report-box-container {
+    font-family: Barlow, var(--font) !important;
+    --font-weight: 400 !important;
+    --font-weight-medium: 700 !important;
 }
 
 
@@ -9596,6 +9632,7 @@ text[style^="color: rgb(255, 172, 172)"] {
     --bg: hsl(var(--h3));
     --bg-hov: var(--bg);
     --bg-sat: var(--bg);
+    --radius: 0;
 
     --hue-over: 224;
     --sat-over: 0.85;
@@ -9624,14 +9661,7 @@ text[style^="color: rgb(255, 172, 172)"] {
 
 /* new - 2024/12 */
 .mainstream-score--artist {
-    --bg: transparent;
-    --bg-hov: transparent;
-    --bg-atv: transparent;
-    --shadow: none;
-    --shadow-hov: none;
-    width: unset;
     font-weight: var(--font-weight);
-    --padding: 0;
 
     display: flex;
     text-align: left;
@@ -9668,42 +9698,9 @@ text[style^="color: rgb(255, 172, 172)"] {
 }
 
 
-.top-item-overview, .listening-report-top-item-wrap--version-3, .top-new-item-image img, .report-box-container, .top-new-item-type, .listening-report-top-item-badge, .mainstream-score--artist-thumb img {
-    border-radius: var(--item-big-radius);
-}
-.music-decades-chart-container rect, .highcharts-label-box {
-    rx: var(--item-big-radius) !important;
-    ry: var(--item-big-radius) !important;
-}
-.top-new-item {
-    border-top-left-radius: var(--item-big-radius);
-    border-top-right-radius: var(--item-big-radius);
-}
-.top-new-item--footer {
-    border-bottom-left-radius: var(--item-big-radius);
-    border-bottom-right-radius: var(--item-big-radius);
-}
-
 .report-box-container {
     .listening-report-brick-head {
         min-height: 149px !important;
-    }
-
-    .tag-label {
-        background: hsl(var(--h3));
-        color: hsl(var(--b7));
-        border-radius: var(--item-big-radius);
-        --left: 8px;
-
-        &.tag-label--scrobble {
-            --mask: var(--icon-16-scrobble);
-        }
-        &.tag-label--discovery {
-            --mask: var(--icon-16-globe);
-        }
-        &.tag-label--followers {
-            --mask: var(--icon-16-users);
-        }
     }
 
     .header-metadata {
@@ -9725,9 +9722,7 @@ text[style^="color: rgb(255, 172, 172)"] {
         margin-top: 0;
     }
     .header-metadata-display {
-        color: hsl(var(--c1));
         font-size: 40px;
-        font-weight: var(--font-weight-medium);
         line-height: normal;
     }
 }
@@ -9798,12 +9793,6 @@ text[style^="color: rgb(255, 172, 172)"] {
     width: calc((var(--cards-width) / 2) - 5px) !important;
 }
 
-
-.user-dashboard-layout--version-3 .listening-report-row--category, .report-headline-title {
-    font-family: var(--font);
-    text-transform: unset;
-    font-weight: var(--font-weight-medium);
-}
 
 .report-box-container .user-dashboard-musical-matches .header-metadata-display strong {
     font-size: 18px;

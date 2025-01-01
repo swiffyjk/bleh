@@ -3833,11 +3833,14 @@ let has_prompted_for_update = false;
 
         load_settings();
         lookup_lang();
-        append_style();
-        patch_masthead(document.body);
 
         // messaging
         load_dialogs();
+
+        append_style();
+        patch_masthead(document.body);
+
+
         load_notifications();
 
         // load seasonal data
