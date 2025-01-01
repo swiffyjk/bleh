@@ -14038,6 +14038,11 @@ let has_prompted_for_update = false;
                     content: replace.textContent
                 });
             } else {
+                let cta = video_col.querySelector('.video-preview-upload-cta');
+
+                if (cta)
+                    return;
+
                 page.structure.side.removeChild(video_col);
 
                 let video_placeholder = document.createElement('section');
