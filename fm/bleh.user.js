@@ -538,6 +538,7 @@ const trans = {
             cancel: 'Cancel',
             close: 'Close',
             clear: 'Clear',
+            remove: 'Remove',
             done: 'Done',
             finish: 'Finish',
             continue: 'Continue',
@@ -1376,6 +1377,7 @@ const trans = {
             cancel: 'Abbrechen',
             close: 'Schließen',
             clear: 'Leeren',
+            remove: 'Remove',
             done: 'Fertig',
             finish: 'Beenden',
             continue: 'Fortsetzen',
@@ -2224,6 +2226,7 @@ const trans = {
             cancel: 'Anuluj',
             close: 'Zamknij',
             clear: 'Wyczyść',
+            remove: 'Remove',
             done: 'Gotowe',
             finish: 'Finish',
             continue: 'Kontynuuj',
@@ -4712,6 +4715,8 @@ let has_prompted_for_update = false;
             tippy(notif_btn, {
                 content: `${notif_count.textContent} notifications`
             });
+
+            notif_btn.setAttribute('data-count', notif_count.textContent);
         } else {
             tippy(notif_btn, {
                 content: 'No new notifications'
@@ -4724,6 +4729,8 @@ let has_prompted_for_update = false;
             tippy(inbox_btn, {
                 content: `${inbox_count.textContent} messages`
             });
+
+            inbox_btn.setAttribute('data-count', inbox_count.textContent);
         } else {
             tippy(inbox_btn, {
                 content: 'No new messages'
@@ -15712,15 +15719,20 @@ let has_prompted_for_update = false;
             artist_elem.textContent = artist;
         }
 
+        if (form) {
+            let button = form.querySelector('button');
+            button.classList = 'featured-item-manage';
+            button.textContent = trans[lang].settings.remove;
+        }
+
         let panel = document.createElement('section');
         panel.classList.add('featured-item-panel');
         panel.innerHTML = (`
-            <div class="sub-text">${heading_link}</div>
+            <div class="sub-text">${heading_link}${(form != null) ? form.outerHTML : ''}</div>
             <div class="track-template">
                 ${art.outerHTML}
                 ${details.outerHTML}
             </div>
-            ${(form != null) ? form.outerHTML : ''}
         `);
 
         let about_me = page.structure.side.querySelector('.about-me-sidebar');
