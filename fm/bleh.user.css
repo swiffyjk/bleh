@@ -5886,8 +5886,7 @@ leading to a gap from their own css */
 
 
 .shout-user-avatar .avatar-status-dot,
-.inbox-notifications .inbox-notifications__avatar--big-size .avatar-status-dot,
-.obsession-details-intro-avatar-wrap .avatar-status-dot
+.inbox-notifications .inbox-notifications__avatar--big-size .avatar-status-dot
 {
     width: 18px;
     height: 18px;
@@ -11273,6 +11272,7 @@ table.table tr:nth-child(2n) td {
 
     .obsession-details-intro-avatar-wrap {
         .avatar {
+            border-radius: 50%;
             box-shadow: var(--menu-shadow);
         }
     }
