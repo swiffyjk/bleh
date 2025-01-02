@@ -5670,6 +5670,15 @@ the body text becomes bigger by default - this reverts that */
         }
     }
 
+    &[aria-expanded="true"] {
+        transform: scale(0.9);
+        opacity: 0.6;
+    }
+
+    transition-property: transform, opacity;
+    transition-duration: var(--trans);
+    transition-timing-function: var(--trans-function);
+
     .avatar {
         /*background: var(--avatar-generic-background); support for transparent avatars */
         border-radius: var(--avatar-radius);
