@@ -2251,8 +2251,8 @@ li.header-metadata-item--event-attendance {
 
     h2 {
         display: flex;
-        /*justify-content: space-between;*/
-        gap: 8px;
+        align-items: center;
+        gap: var(--item-list-gap);
 
         .bleh--add-note {
             --btn-left: 8px;
