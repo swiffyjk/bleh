@@ -277,7 +277,8 @@ a,
 .bleh-icon, .support-inner h1,
 .user-top-panel,
 .weeklychart-change,
-.new-badge
+.new-badge,
+.shout-user-avatar[data-avatar-themed]
 {
     --hue:  var(--hue-over,
             var(--hue-album,
@@ -3405,16 +3406,16 @@ button.navlist-more {
 .user-status--bleh-queen,
 .label.user-status--bleh-queen {
     --mask: var(--icon-queen);
-    --hue: 20;
-    --sat: 1.2;
-    --lit: 1;
+    --hue-over: 20;
+    --sat-over: 1.2;
+    --lit-over: 1;
 }
 .user-status--bleh-cute,
 .label.user-status--bleh-cute {
     --mask: var(--icon-cute);
-    --hue: 340;
-    --sat: 0.675;
-    --lit: 1;
+    --hue-over: 340;
+    --sat-over: 0.675;
+    --lit-over: 1;
 }
 
 .user-status--bleh-cat,
@@ -5660,6 +5661,26 @@ the body text becomes bigger by default - this reverts that */
     box-shadow: var(--card-shadow);
     border-radius: 50%;
 }
+.shout-user-avatar {
+    &[data-avatar-themed] {
+        box-shadow: 0 4px 10px hsl(var(--h4), 20%), var(--card-shadow);
+
+        [data-bleh--theme="light"] & {
+            box-shadow: 0 4px 10px hsl(var(--h4), 45%), var(--card-shadow);
+        }
+    }
+
+    .avatar {
+        /*background: var(--avatar-generic-background); support for transparent avatars */
+        border-radius: var(--avatar-radius);
+        aspect-ratio: 1 / 1;
+
+        /* weird inner box shadow */
+        &:after {
+            display: none;
+        }
+    }
+}
 
 
 .no-data-message {
@@ -5853,16 +5874,6 @@ leading to a gap from their own css */
         border-radius: 50px;
     }
 }
-.shout-user-avatar, .avatar {
-    /*background: var(--avatar-generic-background); support for transparent avatars */
-    border-radius: var(--avatar-radius);
-    aspect-ratio: 1 / 1;
-
-    /* weird inner box shadow */
-    &:after {
-        display: none;
-    }
-}
 
 
 .shout-user-avatar .avatar-status-dot,
@@ -5909,6 +5920,7 @@ span.shout-user-avatar:before,
     --lit-over: 1;
 }
 
+.user-status--bleh-avatar-status-dot--subscriber,
 .avatar-status-dot--subscriber {
     --mask: var(--icon-pro);
     --hue-over: var(--hue-pro);
@@ -5940,10 +5952,6 @@ span.shout-user-avatar:before,
     --sat-over: 1;
     --lit-over: 1;
     color: hsl(var(--c2));
-
-    .shout-user a {
-        color: hsl(var(--l3-c));
-    }
 
     a {
         --hue-over: var(--hue-neg);

@@ -322,6 +322,10 @@ const trans = {
                 name: 'Last.fm Pro',
                 reason: 'Active Pro subscription'
             },
+            'user-status-staff': {
+                name: 'Staff',
+                reason: 'Staff member of Last.fm'
+            },
             'label--fade': {
                 reason: 'They follow you'
             },
@@ -7485,10 +7489,14 @@ let has_prompted_for_update = false;
 
                 let badge = patch_avatar(shout_avatar, shout_name_text, 'shout');
 
-                if (badge.type == 'avatar-status-dot--staff')
-                    shout.classList.add('staff-shout');
+                if (badge.type) {
+                    if (badge.type == 'avatar-status-dot--staff')
+                        shout.classList.add('staff-shout');
 
-                shout_name.classList.add(`user-status--bleh-${badge.type}`, `user-status--bleh-user-${shout_name_text}`);
+                    shout_avatar.setAttribute('data-avatar-themed', 'true');
+                    shout_avatar.classList.add(`user-status--bleh-${badge.type}`, `user-status--bleh-user-${shout_name_text}`);
+                    shout_name.classList.add(`user-status--bleh-${badge.type}`, `user-status--bleh-user-${shout_name_text}`);
+                }
 
                 if (settings.shout_markdown) {
                     let shout_body = shout.querySelector('.shout-body p');

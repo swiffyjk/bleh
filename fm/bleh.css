@@ -261,7 +261,8 @@ a,
 .toggle /* for toggles that arent buttons */,
 .bleh-icon, .support-inner h1,
 .user-top-panel,
-.weeklychart-change
+.weeklychart-change,
+.shout-user-avatar[data-avatar-themed]
 {
     --hue:  var(--hue-over,
             var(--hue-album,
