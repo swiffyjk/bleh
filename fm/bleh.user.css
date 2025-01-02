@@ -6159,7 +6159,7 @@ button,
     box-shadow: var(--shadow) !important;
     border: unset !important;
     text-decoration: var(--force-underline, none) !important;
-    transition-property: background-color, transform, box-shadow, color, opacity, padding !important;
+    transition-property: background-color, transform, box-shadow, color, opacity, padding, font-size !important;
     transition-duration: var(--trans) !important;
     transition-timing-function: var(--trans-function) !important;
     user-select: none;
@@ -16243,6 +16243,7 @@ button.bleh--gallery-bookmark-image-btn {
 
     &.user-buttons {
         height: 100%;
+        align-items: unset;
         flex-direction: column;
         padding: unset;
         background: unset;
@@ -16251,6 +16252,11 @@ button.bleh--gallery-bookmark-image-btn {
         margin: unset;
 
         .user-button {
+            /*&:not(:hover) {
+                --btn-left: 12px !important;
+                --font-size: 0;
+            }*/
+
             --btn-left: 12px !important;
             --font-size: 0;
 
