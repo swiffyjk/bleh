@@ -1205,10 +1205,16 @@ last.fm changes as of 2024-05-20 */
     gap: 6px;
     height: 32px !important;
     text-decoration: var(--force-underline, none) !important;
-    --mask: var(--icon-16-arrow-down);
+    --mask: var(--icon-16-arrow-down) !important;
 
     p {
         margin: unset;
+    }
+
+    &[data-has-colour="true"] {
+        --bg: transparent !important;
+        --bg-hov: hsl(var(--h4), 20%) !important;
+        --bg-atv: hsl(var(--h4), 40%) !important;
     }
 }
 
@@ -6206,7 +6212,7 @@ button,
     &.mainstream-score--artist,
     &.report-box-highlight--content,
     .listening-report-secondary-top-item &, .top-new-item-title &,
-    &.mimic-link:not(.js-shout-reply-cancel, .dropdown-menu-clickable-item, .btn, [value]) {
+    &.mimic-link:not([type], .dropdown-menu-clickable-item, .btn, [value]) {
         --bg: transparent;
         --bg-hov: transparent;
         --bg-atv: transparent;

@@ -4717,12 +4717,17 @@ let has_prompted_for_update = false;
             badge.classList.add('label', `user-status--bleh-${badges[0].type}`, `user-status--bleh-user-${auth}`, 'auth-badge');
             badge.textContent = badges[0].name;
             auth_link.appendChild(badge);
+
+            auth_link.classList.add(`user-status--bleh-${badges[0].type}`, `user-status--bleh-user-${auth}`);
+            auth_link.setAttribute('data-has-colour', 'true');
         } else if (is_pro) {
             let pro_badge = document.createElement('p');
             pro_badge.classList.add('label', 'user-status-subscriber', 'auth-badge');
             pro_badge.textContent = 'Pro';
-
             auth_link.appendChild(pro_badge);
+
+            auth_link.classList.add(`user-status--bleh-${badges[0].type}`, `user-status--bleh-user-${auth}`);
+            auth_link.setAttribute('data-has-colour', 'true');
         }
 
 
