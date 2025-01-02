@@ -4784,14 +4784,18 @@ better than the default selector '#app a' i suppose */
     filter: brightness(80%) saturate(120%);
 }
 
-.chartlist-now-scrobbling:before {
-    background: currentColor !important;
-    --mask: url('https://katelyynn.github.io/bleh/fm/nowplaying.gif');
-    mask-image: var(--mask);
-    -webkit-mask-image: var(--mask);
-    image-rendering: pixelated;
+.chartlist-now-scrobbling {
+    font-weight: var(--font-weight-medium);
+
+    &:before {
+        --mask: var(--icon-16-spinner);
+        --mask-size: 12px;
+        --margin-top: -6px;
+        --left: 0;
+        animation: spinner 0.8s linear infinite;
+    }
 }
-.chartlist-now-scrobbling::before,
+.chartlist-now-scrobbling:before,
 .chartlist-now-scrobbling a {
     color: hsl(var(--l2-c)) !important;
 }
@@ -6486,6 +6490,7 @@ button,
 
 
 /*     ICON MASK     */
+.chartlist-now-scrobbling:before,
 [data-link-type]:before,
 .read-more:before, .wiki-edit-small:before, .tags-view-all:before, .featured-item-manage:before,
 .out-now-btn:before,
