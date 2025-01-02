@@ -3908,7 +3908,7 @@ let has_prompted_for_update = false;
             id: 'error',
             title: 'An error has occured',
             body: (`
-                <div class="error-inner">
+                <div class="modal-vertical-inner error-inner">
                     <div class="bleh-icon" style="--icon: var(--icon-error)"></div>
                     <h1>This page is broken :(</h1>
                     <p>An error has prevented bleh from loading correctly, please report this issue on Github.</p>
@@ -18765,7 +18765,7 @@ let has_prompted_for_update = false;
             id: 'sponsor',
             title: trans[lang].settings.home.sponsor.header,
             body: (`
-                <div class="support-inner">
+                <div class="modal-vertical-inner support-inner">
                     <div class="bleh-icon sponsor-heart"></div>
                     <h1>${trans[lang].settings.home.sponsor.header}</h1>
                     <p>${trans[lang].settings.home.sponsor.bio}</p>
@@ -18789,7 +18789,7 @@ let has_prompted_for_update = false;
                 id: 'sponsor_manage',
                 title: trans[lang].settings.home.sponsor.header,
                 body: (`
-                    <div class="support-inner">
+                    <div class="modal-vertical-inner support-inner">
                         <div class="bleh-icon sponsor-heart"></div>
                         <h1>${trans[lang].settings.home.sponsor.status.yes}</h1>
                         <p>${trans[lang].settings.home.sponsor.status.one_time}</p>
@@ -18802,7 +18802,7 @@ let has_prompted_for_update = false;
                 id: 'sponsor_manage',
                 title: trans[lang].settings.home.sponsor.header,
                 body: (`
-                    <div class="support-inner">
+                    <div class="modal-vertical-inner support-inner">
                         <div class="bleh-icon sponsor-heart"></div>
                         <h1>${trans[lang].settings.home.sponsor.status.yes}</h1>
                         <p>${trans[lang].settings.home.sponsor.status.badge}</p>

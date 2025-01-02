@@ -2052,63 +2052,6 @@ spacing between is removed and aligned to tag icon */
 }
 
 
-/* subpage */
-.header-new--artist.header-new--subpage + .full-bleed-ad-container + .page-content {
-    margin-top: unset !important; /* ad fixes */
-}
-
-
-/* some pages due to recent changes (see event danger zone in this code) have cards go beneath tabs */
-.content-top:has(.content-top-back-link ~ .navlist) + .page-content {
-    padding-top: calc(46px + (9px + var(--card-gap)) + (var(--card-gap) * 2)) !important;
-}
-
-
-.header, .header--overview .header-inner-wrap, .header--sub-page .header-inner-wrap,
-.header--overview .header-info-primary, .header--sub-page .header-info-primary,
-.header--overview .header-info-primary-col1, .header--sub-page .header-info-primary-col1
-{
-    position: static;
-}
-.header--overview .header-title-column-ellipsis-wrap, .header--sub-page .header-title-column-ellipsis-wrap {
-    width: fit-content;
-    position: relative;
-    z-index: 10;
-}
-
-.header--overview.header--with-avatar .header-info {
-    width: calc(var(--cards-width) - var(--profile-header-avatar-size));
-    padding-left: var(--card-gap);
-    padding-right: unset;
-}
-
-.header--overview .header-info-primary--with-columns, .header--sub-page .header-info-primary--with-columns {
-    width: calc(var(--cards-width) - var(--profile-header-avatar-size) - var(--card-gap)) !important;
-    display: flex !important;
-}
-
-
-/*     WARNING : THIS MAY GIVE YOU A HEADACHE     */
-
-
-/* for some reason has a -24 default */
-/* it breaks the attendance page, making the users go beneath the tabs */
-.content-top-has-nav .content-top .content-top-lower, .two-column-layout .content-top .content-top-lower {
-    padding-bottom: unset;
-}
-.content-top-has-nav .content-top-lower .library-controls, .content-top-has-nav .content-top-lower .secondary-nav, .two-column-layout .content-top-lower .library-controls, .two-column-layout .content-top-lower .secondary-nav {
-    margin-bottom: unset;
-}
-
-
-/*     DANGER ZONE OVER     */
-
-
-li.header-metadata-item--event-attendance {
-    padding: unset !important;
-    background: unset !important;
-    box-shadow: unset !important;
-}
 
 
 /*     FEATURED TRACK     */
@@ -2720,23 +2663,18 @@ hr + .library-search-results-header {
     overflow: visible;
 }
 
-.header--user.header--sub-page .secondary-nav {
-    top: calc(46px + var(--card-gap) + 15px - 19px - 42px);
+
+/* event fixes - 2025 */
+.content-top {
+    .content-top-lower {
+        padding: unset !important;
+    }
 }
-/* this aligns the content on sub pages to be 15px/card-gap below the tabs */
-.header.header--sub-page {
-    /* this has to be !important due to classic-playbar - 2024-06-14 */
-    height: calc(81px + 49px) !important;
-}
-/* this accounts for the tabs originally being next to the avatar */
-.header--user.header--overview .secondary-nav {
-    left: calc((-1 * var(--profile-header-avatar-size)) - 15px) !important;
-}
+
+
 
 .secondary-nav-item, .masthead-nav-item {
     margin-left: unset !important;
-    color: hsla(var(--c2), 85%);
-    height: 32px;
 }
 
 
@@ -19215,10 +19153,6 @@ section > .section-controls .subpage-title {
 
 
 .support-inner {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: var(--item-list-gap);
     padding: var(--card-padding) 0;
 
     .sponsor-heart {
@@ -19266,11 +19200,15 @@ section > .section-controls .subpage-title {
 }
 
 
-.error-inner {
+.modal-vertical-inner {
     display: flex;
     flex-direction: column;
     align-items: center;
     gap: var(--item-list-gap);
+}
+
+
+.error-inner {
     padding: var(--card-padding) 0;
 
     .bleh-icon {
