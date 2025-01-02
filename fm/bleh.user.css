@@ -6188,7 +6188,7 @@ button,
     &.mainstream-score--artist,
     &.report-box-highlight--content,
     .listening-report-secondary-top-item &, .top-new-item-title &,
-    &.mimic-link:not(.js-shout-reply-cancel) {
+    &.mimic-link:not(.js-shout-reply-cancel, .dropdown-menu-clickable-item, .btn) {
         --bg: transparent;
         --bg-hov: transparent;
         --bg-atv: transparent;
@@ -7855,6 +7855,7 @@ input:is([name^="track_name"], [name^="artist_name"], [name^="album_name"], [nam
         }
     }
 
+    &.date-range-picker-content,
     &.modal-body {
         background: hsl(var(--b5)) !important;
     }
