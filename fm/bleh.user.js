@@ -7477,16 +7477,18 @@ let has_prompted_for_update = false;
 
                 let shout_name = shout.querySelector('.shout-user a');
 
-                if (shout_name == null)
+                if (!shout_name)
                     return;
-                shout_name = shout_name.textContent;
+                let shout_name_text = shout_name.textContent;
 
                 let shout_avatar = shout.querySelector('.shout-user-avatar');
 
-                let badge = patch_avatar(shout_avatar, shout_name, 'shout');
+                let badge = patch_avatar(shout_avatar, shout_name_text, 'shout');
 
                 if (badge.type == 'avatar-status-dot--staff')
                     shout.classList.add('staff-shout');
+
+                shout_name.classList.add(`user-status--bleh-${badge.type}`, `user-status--bleh-user-${shout_name_text}`);
 
                 if (settings.shout_markdown) {
                     let shout_body = shout.querySelector('.shout-body p');

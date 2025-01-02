@@ -438,8 +438,6 @@ body {
     --cover-size-100: 40px;
     --cover-size-200: 72px;
     --cover-size-300: 96px;
-
-    --name-colour: hsl(var(--l3-c));
 }
 
 .preview[data-bleh--theme="light"],
@@ -5579,7 +5577,7 @@ p + .chartlist {
     line-height: var(--line-height) !important;
 }
 .shout-user a, .user-list-name, .listeners-section-item-name, .top-listeners-item-name {
-    color: var(--name-colour);
+    color: var(--name-colour, hsl(var(--l3-c)));
     font-weight: var(--font-weight-medium);
 }
 
@@ -5812,7 +5810,6 @@ leading to a gap from their own css */
 
 .bleh--name-is-cute-less,
 .shout-user [href="/user/cutensilly"] {
-    text-shadow: 0 0 5px hsl(var(--h4)) !important;
     &:after {
         content: ' ᨐ';
     }
@@ -6188,7 +6185,7 @@ button,
     &.mainstream-score--artist,
     &.report-box-highlight--content,
     .listening-report-secondary-top-item &, .top-new-item-title &,
-    &.mimic-link:not(.js-shout-reply-cancel, .dropdown-menu-clickable-item, .btn) {
+    &.mimic-link:not(.js-shout-reply-cancel, .dropdown-menu-clickable-item, .btn, [value]) {
         --bg: transparent;
         --bg-hov: transparent;
         --bg-atv: transparent;
