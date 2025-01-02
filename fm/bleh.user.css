@@ -9134,7 +9134,8 @@ text[style^="color: rgb(255, 172, 172)"] {
         color: hsl(var(--c3));
     }
 
-    [data-bleh--theme="light"] & {
+    [data-bleh--theme="light"] &,
+    [data-bleh--theme="oled"] & {
         border: 1px solid var(--card-border-base);
         background: hsla(var(--b5), 70%);
     }
@@ -9455,6 +9456,8 @@ text[style^="color: rgb(255, 172, 172)"] {
         color: hsl(var(--c2));
         max-width: 500px !important;
 
+        --show-icon: block;
+
         text-align: left;
 
         font-size: var(--font-size);
@@ -9463,8 +9466,12 @@ text[style^="color: rgb(255, 172, 172)"] {
             display: flex;
             gap: 10px;
 
-            .image {
-                flex-shrink: 0;
+            .image-info {
+                display: flex;
+                flex-direction: column;
+                gap: 2px;
+                flex: 1;
+                min-width: 100px;
 
                 .inner-image {
                     width: 60px;
@@ -9473,17 +9480,13 @@ text[style^="color: rgb(255, 172, 172)"] {
                     box-shadow: var(--card-shadow);
                     border-radius: 50%;
                     overflow: hidden;
+                    margin-top: -30px;
+                    margin-bottom: 8px;
 
                     img {
                         width: 100%;
                     }
                 }
-            }
-            .info {
-                display: flex;
-                flex-direction: column;
-                gap: 2px;
-                flex: 1;
 
                 .title {
                     font-weight: var(--font-weight-medium);
@@ -16236,6 +16239,31 @@ button.bleh--gallery-bookmark-image-btn {
         width: 1px;
         height: 16px;
         background: var(--card-border-base);
+    }
+
+    &.user-buttons {
+        height: 100%;
+        flex-direction: column;
+        padding: unset;
+        background: unset;
+        box-shadow: unset;
+        border-radius: unset;
+        margin: unset;
+
+        .user-button {
+            --btn-left: 12px !important;
+            --font-size: 0;
+
+            &.view-profile-btn {
+                --mask: var(--icon-16-user);
+            }
+            &.view-library-btn {
+                --mask: var(--icon-16-library);
+            }
+            &.leave-shout-btn {
+                --mask: var(--icon-16-shoutbox);
+            }
+        }
     }
 }
 .button-container-wrapper,

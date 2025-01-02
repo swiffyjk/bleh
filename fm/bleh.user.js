@@ -350,6 +350,11 @@ const trans = {
                 reason: 'Reserved for certain users'
             }
         },
+        actions: {
+            view_profile: 'View profile',
+            view_library: 'Library',
+            leave_a_shout: 'Shouts'
+        },
         lotus: {
             artist: 'Artist corrections have been downloaded!',
             album_track: 'Album and track corrections have been downloaded!',
@@ -7633,20 +7638,24 @@ let has_prompted_for_update = false;
             tippy(avatar, {
                 theme: 'user',
                 content: (`
-                    <div class="image">
+                    <div class="image-info">
                         <div class="inner-image">
                             ${avatar_img.outerHTML}
                         </div>
-                    </div>
-                    <div class="info">
-                        <h5 class="title ${(cute.includes(name)) ? 'bleh--name-is-cute-less' : ''}">${name}</h5>
+                        <h5 class="title">${name}</h5>
                         <p class="descriptor">${trans[lang].profile.top_badge}</p>
                         <p class="badge user-status--bleh-${this_badge.type} user-status--bleh-user-${name}" data-badge-type="${this_badge.type}" data-badge-user="${name}">${this_badge.name}</p>
+                    </div>
+                    <div class="user-buttons view-buttons">
+                        <a class="btn view-item user-button view-profile-btn" href="${root}user/${name}">${trans[lang].actions.view_profile}</a>
+                        <a class="btn view-item user-button view-library-btn" href="${root}user/${name}/library">${trans[lang].actions.view_library}</a>
+                        <a class="btn view-item user-button leave-shout-btn" href="${root}user/${name}/shoutbox">${trans[lang].actions.leave_a_shout}</a>
                     </div>
                 `),
                 allowHTML: true,
                 delay: [100, 50],
-                placement: 'bottom'
+                placement: 'bottom',
+                interactive: true
             });
 
             return this_badge;
@@ -7656,18 +7665,22 @@ let has_prompted_for_update = false;
                 tippy(avatar, {
                     theme: 'user',
                     content: (`
-                        <div class="image">
+                        <div class="image-info">
                             <div class="inner-image">
                                 ${avatar_img.outerHTML}
                             </div>
+                            <h5 class="title">${name}</h5>
                         </div>
-                        <div class="info">
-                            <h5 class="title ${(cute.includes(name)) ? 'bleh--name-is-cute-less' : ''}">${name}</h5>
+                        <div class="user-buttons view-buttons">
+                            <a class="btn view-item user-button view-profile-btn" href="${root}user/${name}">${trans[lang].actions.view_profile}</a>
+                            <a class="btn view-item user-button view-library-btn" href="${root}user/${name}/library">${trans[lang].actions.view_library}</a>
+                            <a class="btn view-item user-button leave-shout-btn" href="${root}user/${name}/shoutbox">${trans[lang].actions.leave_a_shout}</a>
                         </div>
                     `),
                     allowHTML: true,
                     delay: [100, 50],
-                    placement: 'bottom'
+                    placement: 'bottom',
+                    interactive: true
                 });
 
                 return {};
@@ -7675,20 +7688,24 @@ let has_prompted_for_update = false;
                 tippy(avatar, {
                     theme: 'user',
                     content: (`
-                        <div class="image">
+                        <div class="image-info">
                             <div class="inner-image">
                                 ${avatar_img.outerHTML}
                             </div>
-                        </div>
-                        <div class="info">
-                            <h5 class="title ${(cute.includes(name)) ? 'bleh--name-is-cute-less' : ''}">${name}</h5>
+                            <h5 class="title">${name}</h5>
                             <p class="descriptor">${trans[lang].profile.top_badge}</p>
                             <p class="badge ${pre_existing_badge.classList[1]}">${avatar.getAttribute('title')}</p>
+                        </div>
+                        <div class="user-buttons view-buttons">
+                            <a class="btn view-item user-button view-profile-btn" href="${root}user/${name}">${trans[lang].actions.view_profile}</a>
+                            <a class="btn view-item user-button view-library-btn" href="${root}user/${name}/library">${trans[lang].actions.view_library}</a>
+                            <a class="btn view-item user-button leave-shout-btn" href="${root}user/${name}/shoutbox">${trans[lang].actions.leave_a_shout}</a>
                         </div>
                     `),
                     allowHTML: true,
                     delay: [100, 50],
-                    placement: 'bottom'
+                    placement: 'bottom',
+                    interactive: true
                 });
                 avatar.setAttribute('title', '');
 
