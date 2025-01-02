@@ -6874,7 +6874,6 @@ let has_prompted_for_update = false;
 
 
         let badges = load_badges(page.name);
-        badges = badges.reverse();
 
         if (badges) {
             badges.forEach((this_badge) => {
