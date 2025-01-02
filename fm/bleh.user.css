@@ -9497,6 +9497,7 @@ text[style^="color: rgb(255, 172, 172)"] {
                     font-size: var(--font-size-sm);
                     line-height: var(--line-height-sm);
                     margin-top: 4px;
+                    cursor: default;
                 }
                 .badge {
                     position: relative;
@@ -9506,6 +9507,7 @@ text[style^="color: rgb(255, 172, 172)"] {
                     font-weight: var(--font-weight-medium);
                     padding-left: calc(16px + 6px);
                     --left: 0 !important;
+                    cursor: default;
 
                     &:before {
                         --mask-size: 16px !important;
