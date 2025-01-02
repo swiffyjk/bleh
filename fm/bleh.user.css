@@ -3670,37 +3670,6 @@ button.navlist-more {
     }
 }
 
-.grid-items-item-aux-text {
-    [data-bleh--scrobble-milestone] {
-        /*padding: 0 4px;
-        background-color: hsl(var(--h3));
-        border-radius: var(--item-med-radius);
-        color: hsl(var(--b7));
-        text-shadow: none;
-        font-weight: var(--font-weight-medium);
-        font-size: 12px;
-        line-height: 16px;*/
-        position: relative;
-        padding-left: calc(6px + 4px);
-        color: hsl(var(--l2-c)) !important;
-        font-weight: var(--font-weight-medium);
-
-        &:before {
-            content: '';
-            display: block;
-            background-color: hsl(var(--l2-c)) !important;
-            box-shadow: 0 0 30px 2px hsl(var(--h4));
-            width: 6px;
-            height: 6px;
-            border-radius: 50%;
-            position: absolute;
-            left: 0;
-            top: 50%;
-            margin-top: -3px;
-        }
-    }
-}
-
 
 .header-metadata-item, .metadata-item, .header-metadata-tnew-item {
     padding: 7px 12px !important; /* tasteometer overrides with padding-left: 20px */
@@ -5670,7 +5639,7 @@ the body text becomes bigger by default - this reverts that */
     height: var(--shout-avatar-size);
     left: calc(-1 * (var(--shout-avatar-size) + 12px)) !important;
     box-shadow: var(--card-shadow);
-    border-radius: 50%;
+    border-radius: var(--avatar-radius);
 }
 .shout-user-avatar {
     &[data-avatar-themed] {
@@ -5680,15 +5649,6 @@ the body text becomes bigger by default - this reverts that */
             box-shadow: 0 4px 10px hsl(var(--h4), 45%), var(--card-shadow);
         }
     }
-
-    &[aria-expanded="true"] {
-        transform: scale(0.9);
-        opacity: 0.6;
-    }
-
-    transition-property: transform, opacity;
-    transition-duration: var(--trans);
-    transition-timing-function: var(--trans-function);
 
     .avatar {
         /*background: var(--avatar-generic-background); support for transparent avatars */
@@ -5700,6 +5660,16 @@ the body text becomes bigger by default - this reverts that */
             display: none;
         }
     }
+}
+.avatar-can-hoverbox {
+    &[aria-expanded="true"] {
+        transform: scale(0.9);
+        opacity: 0.6;
+    }
+
+    transition-property: transform, opacity;
+    transition-duration: var(--trans);
+    transition-timing-function: var(--trans-function);
 }
 
 
@@ -9013,7 +8983,7 @@ text[style^="color: rgb(255, 172, 172)"] {
                 img {
                     width: 16px;
                     height: 16px;
-                    border-radius: 50%;
+                    border-radius: var(--avatar-radius);
                     display: none;
                 }
 
@@ -9048,7 +9018,7 @@ text[style^="color: rgb(255, 172, 172)"] {
                 img {
                     width: 20px;
                     height: 20px;
-                    border-radius: 50%;
+                    border-radius: var(--avatar-radius);
                 }
 
                 a {
@@ -9262,7 +9232,7 @@ text[style^="color: rgb(255, 172, 172)"] {
                 .view-item-avatar {
                     width: 20px;
                     height: 20px;
-                    border-radius: 50%;
+                    border-radius: var(--avatar-radius);
 
                     --mask-size: var(--cover-size-32);
 
@@ -9498,7 +9468,7 @@ text[style^="color: rgb(255, 172, 172)"] {
                     height: 60px;
                     background: var(--avatar-generic-background);
                     box-shadow: var(--card-shadow);
-                    border-radius: 50%;
+                    border-radius: var(--avatar-radius);
                     overflow: hidden;
                     margin-top: -30px;
                     margin-bottom: 8px;
@@ -9649,6 +9619,8 @@ text[style^="color: rgb(255, 172, 172)"] {
 }
 
 
+.top-item-modal,
+.listening-report-top-item,
 .mainstream-score--artist,
 .report-box-highlight--content,
 .listening-report-row,
@@ -9656,6 +9628,21 @@ text[style^="color: rgb(255, 172, 172)"] {
     font-family: Barlow, var(--font) !important;
     --font-weight: 400 !important;
     --font-weight-medium: 700 !important;
+}
+
+.listening-report-top-item {
+    --bg: transparent;
+    --bg-hov: transparent;
+    --bg-atv: transparent;
+    --shadow: none;
+    --padding: 0;
+    font: inherit !important;
+    color: inherit !important;
+    transform: unset !important;
+}
+
+.listening-report-row--category h2 {
+    margin: unset !important;
 }
 
 
@@ -9799,19 +9786,6 @@ text[style^="color: rgb(255, 172, 172)"] {
 }
 
 
-.top-item-modal-header,
-.quick-fact-title, .listening-report-brick-head .header-metadata-title,
-.report-box-header .report-box-title,
-.mainstream-score--score,
-.listening-report-top-item-badge, .top-new-item-type, .top-item-overview__type,
-.listening-report-top-item-heading-name,
-.quick-fact-data-detail,
-.top-item-overview__scrobbles, .quick-fact-data-value {
-    font-weight: var(--font-weight-medium) !important;
-}
-.report-headline-total {
-    font-weight: var(--font-weight-bold) !important;
-}
 
 .listening-report-row {
     width: var(--cards-width) !important;;
@@ -11284,7 +11258,7 @@ table.table tr:nth-child(2n) td {
 
     .obsession-details-intro-avatar-wrap {
         .avatar {
-            border-radius: 50%;
+            border-radius: var(--avatar-radius);
             box-shadow: var(--menu-shadow);
         }
     }
@@ -12051,6 +12025,10 @@ table.table tr:nth-child(2n) td {
 
     .attendee-summary-user-link {
         text-decoration: var(--force-underline, none) !important;
+    }
+
+    .attendee-summary-user-avatar {
+        border-radius: var(--avatar-radius);
     }
 }
 
@@ -14596,10 +14574,6 @@ input[type="range"]::-moz-range-progress {
                 background-color: hsl(var(--b6));
                 border-radius: var(--item-small-radius);
 
-                .artist & {
-                    border-radius: 50%;
-                }
-
                 html:not([data-bleh--inbuilt-recent_artwork="true"]) .tracks.recent & {
                     display: none;
                 }
@@ -14775,7 +14749,7 @@ input[type="range"]::-moz-range-progress {
                 width: 40px;
                 height: 40px;
                 background-color: hsl(var(--b4));
-                border-radius: 50%;
+                border-radius: var(--avatar-radius);
             }
 
             .info-side {
@@ -15514,7 +15488,7 @@ trying to list every song ever made by someone identifying as a female, which is
             .avatar-overlay {
                 position: absolute;
                 inset: 0;
-                border-radius: 50%;
+                border-radius: var(--avatar-radius);
                 background-color: hsla(var(--b6), 80%);
                 --mask-size: 32px;
                 --left: 50%;
@@ -16053,7 +16027,7 @@ button.bleh--gallery-bookmark-image-btn {
         .view-item-avatar {
             width: 20px;
             height: 20px;
-            border-radius: 50%;
+            border-radius: var(--avatar-radius);
 
             --mask-size: var(--cover-size-32);
 
@@ -16857,7 +16831,7 @@ button.bleh--gallery-bookmark-image-btn {
         width: var(--w);
         height: var(--w);
         background-color: hsla(var(--b4), 60%);
-        border-radius: 50%;
+        border-radius: var(--avatar-radius);
 
         &.user-top-avatar-main {
             --w: 120px;
@@ -16888,7 +16862,7 @@ button.bleh--gallery-bookmark-image-btn {
         .avatar-inner {
             width: 50px;
             height: 50px;
-            border-radius: 50%;
+            border-radius: var(--avatar-radius);
             background: var(--avatar-generic-background);
             box-shadow: var(--card-shadow);
             overflow: hidden;
@@ -18555,7 +18529,7 @@ section > .section-controls .subpage-title {
             width: 40px;
             height: 40px;
             background-color: hsl(var(--b5));
-            border-radius: 50%;
+            border-radius: var(--avatar-radius);
 
             .artist & {
                 border-radius: var(--item-big-radius);

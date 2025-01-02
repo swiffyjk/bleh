@@ -7640,6 +7640,7 @@ let has_prompted_for_update = false;
             badge.classList.add('avatar-status-dot',`user-status--bleh-${this_badge.type}`,`user-status--bleh-user-${name}`);
             avatar.appendChild(badge);
 
+            avatar.classList.add('avatar-can-hoverbox');
             tippy(avatar, {
                 theme: 'user',
                 content: (`
@@ -7667,6 +7668,7 @@ let has_prompted_for_update = false;
         } else {
             let pre_existing_badge = avatar.querySelector('.avatar-status-dot');
             if (pre_existing_badge == null) {
+                avatar.classList.add('avatar-can-hoverbox');
                 tippy(avatar, {
                     theme: 'user',
                     content: (`
@@ -7690,6 +7692,7 @@ let has_prompted_for_update = false;
 
                 return {};
             } else {
+                avatar.classList.add('avatar-can-hoverbox');
                 tippy(avatar, {
                     theme: 'user',
                     content: (`
