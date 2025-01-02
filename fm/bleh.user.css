@@ -4120,10 +4120,10 @@ better than the default selector '#app a' i suppose */
     aspect-ratio: 1 / 1;
     border-radius: var(--item-big-radius);
     /*overflow: hidden;*/
-    box-shadow: 0 30px 15px hsl(var(--h4), 8%), var(--standout-shadow);
+    box-shadow: 0 27px 15px hsl(var(--h4), 10%), var(--standout-shadow);
 
     [data-bleh--theme="light"] & {
-        box-shadow: 0 30px 15px hsl(var(--h4), 16%), var(--standout-shadow);
+        box-shadow: 0 27px 15px hsl(var(--h4), 16%), var(--standout-shadow);
     }
 
     transition-property: transform;
@@ -6188,7 +6188,7 @@ button,
     &.mainstream-score--artist,
     &.report-box-highlight--content,
     .listening-report-secondary-top-item &, .top-new-item-title &,
-    &.mimic-link {
+    &.mimic-link:not(.js-shout-reply-cancel) {
         --bg: transparent;
         --bg-hov: transparent;
         --bg-atv: transparent;
