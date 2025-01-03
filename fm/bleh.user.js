@@ -4039,7 +4039,11 @@ let has_prompted_for_update = false;
                     has_prompted_for_update = true;
                 }
 
-                main_flow();
+                try {
+                    main_flow();
+                } catch(e) {
+                    handle_error(e);
+                }
             });
 
             observer.observe(document.body, {
@@ -4061,9 +4065,10 @@ let has_prompted_for_update = false;
             body: (`
                 <div class="modal-vertical-inner error-inner">
                     <div class="bleh-icon" style="--icon: var(--icon-error)"></div>
-                    <h1>This page is broken :(</h1>
+                    <h1>oops.. something broke</h1>
                     <p>An error has prevented bleh from loading correctly, please report this issue on Github.</p>
-                    <pre class="error-info">${(e) ? e : ''}</pre>
+                    <pre class="error-info">${(e) ? `<span class="error-type">${e.name}</span>: ${e.message}` : ''}<br>on: ${page.type}/${page.subpage}</pre>
+                    <p>Please include this error and the steps you took in the report!</p>
                 </div>
                 <div class="modal-footer">
                     <a class="btn primary report-bug continue" href="https://github.com/katelyynn/bleh/issues/new/choose" target="_blank">
@@ -18597,7 +18602,7 @@ let has_prompted_for_update = false;
                     <span class="avatar user-list-avatar">
                         ${avatar.innerHTML}
                     </span>
-                    ${follow.outerHTML}
+                    ${(follow) ? follow.outerHTML : ''}
                     <div class="user-list-description">
                         <p class="user-list-about-me">
                             ${track_wrap.innerHTML}

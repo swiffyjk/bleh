@@ -283,7 +283,8 @@ a,
 .weeklychart-change,
 .new-badge,
 .shout-user-avatar[data-avatar-themed],
-.notification-user-name
+.notification-user-name,
+.error-info
 {
     --hue:  var(--hue-over,
             var(--hue-album,
@@ -19256,7 +19257,7 @@ section > .section-controls .subpage-title {
     }
 
     p {
-        max-width: 360px;
+        max-width: 410px;
         text-align: center;
         cursor: default;
 
@@ -19264,6 +19265,16 @@ section > .section-controls .subpage-title {
             font-weight: var(--font-weight-medium);
             color: hsl(var(--c3));
         }
+    }
+
+    .error-info {
+        --hue-over: var(--hue-neg);
+        --sat-over: 1;
+        --lit-over: 1;
+    }
+
+    .error-type {
+        color: hsl(var(--l3-c));
     }
 }
 
