@@ -5583,10 +5583,10 @@ the body text becomes bigger by default - this reverts that */
 }
 .shout-user-avatar {
     &[data-avatar-themed] {
-        box-shadow: 0 4px 10px hsl(var(--h4), 20%), var(--card-shadow);
+        box-shadow: 0 4px 10px hsl(var(--h4), 10%), var(--card-shadow);
 
         [data-bleh--theme="light"] & {
-            box-shadow: 0 4px 10px hsl(var(--h4), 45%), var(--card-shadow);
+            box-shadow: 0 4px 10px hsl(var(--h4), 40%), var(--card-shadow);
         }
     }
 
