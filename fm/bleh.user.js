@@ -1211,11 +1211,45 @@ const trans = {
     },
     de: {
         badges: {
-            missing: 'No badges',
-            pro: 'Last.fm Pro',
-            contributor: 'bleh contributor',
-            cat: 'it\s a kitty!!',
-            sponsor: 'Sponsor of bleh and bwaa'
+            missing: {
+                name: 'No badges'
+            },
+            'user-status-subscriber': {
+                name: 'Last.fm Pro',
+                reason: 'Active Pro subscription'
+            },
+            'user-status-staff': {
+                name: 'Staff',
+                reason: 'Staff member of Last.fm'
+            },
+            'label--fade': {
+                reason: 'They follow you'
+            },
+            contributor: {
+                name: 'bleh contributor',
+                reason: 'Contributed to bleh via code or translations'
+            },
+            translation: {
+                reason: 'Translated for a supported language'
+            },
+            cat: {
+                name: 'it\'s a kitty!!'
+            },
+            sponsor: {
+                name: 'Sponsoring',
+                reason: 'Sponsored bleh and bwaa :3'
+            },
+            cute: {
+                reason: 'Reserved for special users'
+            },
+            reserved: {
+                reason: 'Reserved for certain users'
+            }
+        },
+        actions: {
+            view_profile: 'View profile',
+            view_library: 'Library',
+            leave_a_shout: 'Shouts'
         },
         lotus: {
             artist: 'Artist corrections have been downloaded!',
@@ -1425,8 +1459,11 @@ const trans = {
                     name: 'Aktualisierungen',
                     css: 'Stil aktualisieren',
                     bio: 'Jetzt prüfen',
-                    notice: 'bleh is out of date! - use the update buttons below',
-                    ignore: 'Ignore for 1 hour'
+                    notice: 'There are updates available!',
+                    ignore: 'Ignore temporarily',
+
+                    update_now: 'Update now',
+                    update_to_v: 'Update to {v}'
                 },
                 setup: {
                     name: 'Setup',
@@ -1711,7 +1748,8 @@ const trans = {
                     edit_user: 'Edit {u}\'s note',
                     delete_user: 'Remove {u}\'s note',
                     view: 'View your profile notes'
-                }
+                },
+                you: 'You'
             },
             redirects: {
                 name: 'Weiterleitungen',
@@ -2067,11 +2105,45 @@ const trans = {
     },
     pl: {
         badges: {
-            missing: 'No badges',
-            pro: 'Last.fm Pro',
-            contributor: 'bleh contributor',
-            cat: 'it\s a kitty!!',
-            sponsor: 'Sponsor of bleh and bwaa'
+            missing: {
+                name: 'No badges'
+            },
+            'user-status-subscriber': {
+                name: 'Last.fm Pro',
+                reason: 'Active Pro subscription'
+            },
+            'user-status-staff': {
+                name: 'Staff',
+                reason: 'Staff member of Last.fm'
+            },
+            'label--fade': {
+                reason: 'They follow you'
+            },
+            contributor: {
+                name: 'bleh contributor',
+                reason: 'Contributed to bleh via code or translations'
+            },
+            translation: {
+                reason: 'Translated for a supported language'
+            },
+            cat: {
+                name: 'it\'s a kitty!!'
+            },
+            sponsor: {
+                name: 'Sponsoring',
+                reason: 'Sponsored bleh and bwaa :3'
+            },
+            cute: {
+                reason: 'Reserved for special users'
+            },
+            reserved: {
+                reason: 'Reserved for certain users'
+            }
+        },
+        actions: {
+            view_profile: 'View profile',
+            view_library: 'Library',
+            leave_a_shout: 'Shouts'
         },
         lotus: {
             artist: 'Artist corrections have been downloaded!',
@@ -2570,7 +2642,8 @@ const trans = {
                     delete: 'Usuń notatkę',
                     edit_user: 'Edytuj notatkę dla {u}',
                     delete_user: 'Usuń notatkę dla {u}'
-                }
+                },
+                you: 'You'
             },
             redirects: {
                 name: 'Redirects',
@@ -8476,16 +8549,16 @@ let has_prompted_for_update = false;
                 `)}
                 <div class="screen-row actions-only">
                     <div class="actions">
-                        <button class="btn action highlight bleh--updates" onclick="_force_refresh_theme()">
+                        <button class="btn primary update icon" onclick="_force_refresh_theme()">
                             ${trans[lang].settings.home.update.update_now}
                         </button>
                         ${(settings.dev ? (`
-                        <a class="btn action highlight bleh--updates" href="https://github.com/katelyynn/bleh/raw/uwu/fm/bleh.user.css">
+                        <a class="btn primary update icon" href="https://github.com/katelyynn/bleh/raw/uwu/fm/bleh.user.css">
                             ${trans[lang].settings.home.update.css}
                         </a>
                         `) : '')}
                         ${(ff('sponsor') ? (`
-                        <button class="btn action highlight bleh--sponsor" onclick="_sponsor()">
+                        <button class="btn primary sponsor" onclick="_sponsor()">
                             ${trans[lang].settings.home.sponsor.name}<div class="new-badge">${trans[lang].settings.new}</div>
                         </button>
                         `) : '')}
@@ -9521,10 +9594,10 @@ let has_prompted_for_update = false;
                     .replace('{v}', `<span class="version-link sponsor-related">${sponsor_list.latest}</span>`)}</div>
                     <div class="screen-row actions-only">
                         <div class="actions">
-                            <button class="btn action highlight bleh--sponsor bleh--sponsor-manage" onclick="_sponsor_manage()">
+                            <button class="btn primary sponsor" onclick="_sponsor_manage()">
                                 ${trans[lang].settings.home.sponsor.manage}<div class="new-badge">${trans[lang].settings.new}</div>
                             </button>
-                            <button class="btn action highlight bleh--sponsor bleh--sponsor-refresh" onclick="_sponsor_check()">
+                            <button class="btn refresh" onclick="_sponsor_check()">
                                 ${trans[lang].settings.home.sponsor.check}
                             </button>
                         </div>
@@ -9535,10 +9608,10 @@ let has_prompted_for_update = false;
                     .replace('{v}', `<span class="version-link sponsor-related">${sponsor_list.latest}</span>`)}</div>
                     <div class="screen-row actions-only">
                         <div class="actions">
-                            <button class="btn action highlight bleh--sponsor" onclick="_sponsor()">
+                            <button class="btn primary sponsor" onclick="_sponsor()">
                                 ${trans[lang].settings.home.sponsor.name}<div class="new-badge">${trans[lang].settings.new}</div>
                             </button>
-                            <button class="btn action highlight bleh--sponsor bleh--sponsor-refresh" onclick="_sponsor_check()">
+                            <button class="btn refresh" onclick="_sponsor_check()">
                                 ${trans[lang].settings.home.sponsor.check}
                             </button>
                         </div>

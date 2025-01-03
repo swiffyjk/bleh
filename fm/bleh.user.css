@@ -6144,6 +6144,11 @@ button,
     }
 
 
+    .new-badge {
+        margin-left: 6px;
+    }
+
+
     /* breaks bleh settings */
     /*[data-bleh--theme="light"] & {
         --bg: hsla(var(--b4), 70%);
@@ -6199,6 +6204,11 @@ button,
             --hue-seasonal: 333;
             --sat-seasonal: 1.1;
             --lit-seasonal: 1;
+        }
+
+        .new-badge {
+            background: var(--col);
+            color: hsl(var(--h3));
         }
     }
 
@@ -6272,7 +6282,7 @@ button,
 
 
 /*     BUTTON HAS ICON     */
-.sponsor,
+.sponsor, .icon,
 .lastfm-bulk-edit-form-group-controls button,
 .about-guest-feature,
 .search-similar-btn, .obsession-btn, .refresh-tracklist-btn, .panel-settings-button,
@@ -6416,7 +6426,7 @@ button,
 
 
 /*     ICON MASK     */
-.toggle .dot:before,
+.toggle .dot:before, .icon:before,
 .chartlist-now-scrobbling:before,
 [data-link-type]:before,
 .read-more:before, .wiki-edit-small:before, .tags-view-all:before, .featured-item-manage:before,
@@ -13528,28 +13538,10 @@ code, kbd, samp {
                 --bg: hsla(var(--h4), 35%);
                 --bg-hov: hsla(var(--h4), 45%);
                 --bg-atv: hsla(var(--h4), 55%);
-
-                &.bleh--updates {
-                    --hue-over: var(--hue-pos);
-                    --sat-over: 1;
-                    --lit-over: 1;
-                }
             }
 
             &.bleh--issues {
                 --mask: var(--icon-16-issues);
-            }
-            &.bleh--updates {
-                --mask: var(--icon-16-download);
-            }
-            &.bleh--sponsor {
-                --mask: var(--icon-16-heart);
-                --hue-over: 333;
-                --sat-over: 1;
-                --lit-over: 1;
-            }
-            &.bleh--sponsor-refresh {
-                --mask: var(--icon-16-refresh);
             }
 
             h5 {
@@ -14376,6 +14368,7 @@ input[type="range"]::-moz-range-progress {
         display: flex;
         align-items: center;
         margin-right: 6px;
+        --show-icon: none;
     }
 }
 
@@ -16486,6 +16479,9 @@ button.bleh--gallery-bookmark-image-btn {
 }
 
 
+.icon {
+    position: relative;
+}
 .btn.back {
     position: relative;
     --mask: var(--icon-16-arrow-left);
@@ -16503,6 +16499,10 @@ button.bleh--gallery-bookmark-image-btn {
 .done {
     position: relative;
     --mask: var(--icon-16-check);
+}
+.refresh {
+    position: relative;
+    --mask: var(--icon-16-refresh);
 }
 .danger {
     --hue-over: var(--hue-neg);
@@ -16530,6 +16530,12 @@ button.bleh--gallery-bookmark-image-btn {
 .save {
     position: relative;
     --mask: var(--icon-16-check);
+}
+.update {
+    --hue-over: var(--hue-pos);
+    --sat-over: 1;
+    --lit-over: 1;
+    --mask: var(--icon-16-download);
 }
 
 
