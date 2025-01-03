@@ -1203,6 +1203,14 @@ const trans = {
             name: 'Search',
             results_for: 'Results for {v}'
         },
+        inbox: {
+            name: 'Inbox',
+            overview: 'Messages',
+            sent_overview: 'Messages',
+            compose: 'Messages',
+            message_overview: 'Messages',
+            notifications: 'Notifications'
+        },
         charts: {
             name: 'Charts',
             overview: 'Real time',
@@ -2097,6 +2105,14 @@ const trans = {
             name: 'Suche',
             results_for: 'Results for {v}'
         },
+        inbox: {
+            name: 'Inbox',
+            overview: 'Messages',
+            sent_overview: 'Messages',
+            compose: 'Messages',
+            message_overview: 'Messages',
+            notifications: 'Notifications'
+        },
         charts: {
             name: 'Charts',
             overview: 'Real time',
@@ -2955,6 +2971,14 @@ const trans = {
         search: {
             name: 'Search',
             results_for: 'Results for {v}'
+        },
+        inbox: {
+            name: 'Inbox',
+            overview: 'Messages',
+            sent_overview: 'Messages',
+            compose: 'Messages',
+            message_overview: 'Messages',
+            notifications: 'Notifications'
         },
         charts: {
             name: 'Charts',
@@ -4192,36 +4216,40 @@ let has_prompted_for_update = false;
 
         error_page();
 
-        if (window.location.href.startsWith(setup_url.replace('{root}', root)))
+        if (window.location.href.startsWith(setup_url.replace('{root}', root))) {
             bleh_setup();
-        else if (window.location.href.startsWith(sponsor_url.replace('{root}', root)))
+        } else if (window.location.href.startsWith(sponsor_url.replace('{root}', root))) {
             bleh_sponsor_page();
-        else if (window.location.href.startsWith(bleh_url.replace('{root}', root)))
+        } else if (window.location.href.startsWith(bleh_url.replace('{root}', root))) {
             bleh_settings();
-        else if (page.type == 'user')
-            bleh_profiles();
-        else if (page.type == 'artist')
-            bleh_artists();
-        else if (page.type == 'album')
-            bleh_albums();
-        else if (page.type == 'track')
-            bleh_tracks();
-        else if (page.type == 'events' || page.type == 'festival')
-            bleh_events();
-        else if (page.type == 'tag')
-            bleh_tags();
-        else if (page.type == 'search')
-            bleh_search();
-        else if (page.type == 'settings')
-            bleh_native_settings();
-        else if (page.type == 'charts')
-            bleh_charts();
+        } else {
+            if (page.type == 'user')
+                bleh_profiles();
+            else if (page.type == 'artist')
+                bleh_artists();
+            else if (page.type == 'album')
+                bleh_albums();
+            else if (page.type == 'track')
+                bleh_tracks();
+            else if (page.type == 'events' || page.type == 'festival')
+                bleh_events();
+            else if (page.type == 'tag')
+                bleh_tags();
+            else if (page.type == 'search')
+                bleh_search();
+            else if (page.type == 'settings')
+                bleh_native_settings();
+            else if (page.type == 'charts')
+                bleh_charts();
+            else if (page.type == 'inbox')
+                bleh_inbox();
 
-        if (
-            (page.type == 'artist' || page.type == 'album' || page.type == 'track') &&
-            page.subpage == 'overview'
-        )
-            patch_wiki();
+            if (
+                (page.type == 'artist' || page.type == 'album' || page.type == 'track') &&
+                page.subpage == 'overview'
+            )
+                patch_wiki();
+        }
 
         if (ff('page_title')) {
             //document.title = `${page.type}_${page.subpage} (${page.name}, ${page.sister}) - bleh ${version.build}.${version.sku}`;
@@ -18922,6 +18950,82 @@ let has_prompted_for_update = false;
         `);
 
         page.structure.container.insertBefore(search_header, page.structure.container.firstElementChild);
+    }
+
+
+
+
+    function bleh_inbox() {
+        page.structure.container = document.body.querySelector('.page-content');
+        try {
+            page.structure.row = page.structure.container.querySelector('.row');
+            page.structure.main = page.structure.row.querySelector('.col-main');
+            page.structure.side = page.structure.row.querySelector('.col-sidebar');
+        } catch(e) {
+            log('unable to find elements', 'page structure');
+        }
+
+        let content_top = document.body.querySelector('.content-top');
+
+
+        checkup_page_structure(false, content_top);
+        log('status is', 'page', 'info', page);
+        update_page();
+
+
+        let inbox_header = document.createElement('section');
+        inbox_header.classList.add('redesigned-header', 'inbox-header', 'no-background');
+        inbox_header.innerHTML = (`
+            <div class="tag-side">
+                <div class="tag-icon ${(page.subpage == 'notifications') ? 'notifications' : 'inbox'}-icon"></div>
+            </div>
+            <div class="info-side">
+                <div class="sub-text">${trans[lang].inbox.name}</div>
+                <h1>${trans[lang].inbox[page.subpage]}</h1>
+            </div>
+        `);
+
+        page.structure.container.insertBefore(inbox_header, page.structure.container.firstElementChild);
+
+
+        if (page.subpage == 'notifications') {
+            let form = page.structure.container.querySelector('form');
+            let notifications = page.structure.container.querySelector('.inbox-notifications');
+            let pagination = page.structure.container.querySelector('.pagination');
+
+            let panel = document.createElement('section');
+            panel.classList.add('inbox-panel', 'notifications-panel');
+
+            panel.appendChild(form);
+            panel.appendChild(notifications);
+            panel.appendChild(pagination);
+
+            page.structure.main.appendChild(panel);
+
+
+            let notif_links = notifications.querySelectorAll('.inbox-notifications__item-link');
+            notif_links.forEach((notification) => {
+                let avatar = notification.querySelector('.avatar');
+                let name = notification.querySelector('.inbox-notifications__item-description strong');
+
+                if (!name)
+                    return;
+
+                let name_text = name.textContent;
+
+                let badge = patch_avatar(avatar, name_text);
+                name.classList.add('notification-user-name', `user-status--bleh-${badge.type}`, `user-status--bleh-user-${name_text}`);
+            });
+        } else if (page.subpage == 'message_overview') {
+            let inbox = page.structure.container.querySelector('.inbox-message-view');
+            page.structure.main.appendChild(inbox);
+        } else if (page.subpage == 'compose') {
+            let inbox = page.structure.container.querySelector('.inbox-compose-view');
+            page.structure.main.appendChild(inbox);
+        } else {
+            let inbox = page.structure.container.querySelector('.inbox');
+            page.structure.main.appendChild(inbox);
+        }
     }
 
 

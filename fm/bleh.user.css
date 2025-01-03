@@ -282,7 +282,8 @@ a,
 .user-top-panel,
 .weeklychart-change,
 .new-badge,
-.shout-user-avatar[data-avatar-themed]
+.shout-user-avatar[data-avatar-themed],
+.notification-user-name
 {
     --hue:  var(--hue-over,
             var(--hue-album,
@@ -538,6 +539,8 @@ body {
     --icon-language: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWxhbmd1YWdlcyI+PHBhdGggZD0ibTUgOCA2IDYiLz48cGF0aCBkPSJtNCAxNCA2LTYgMi0zIi8+PHBhdGggZD0iTTIgNWgxMiIvPjxwYXRoIGQ9Ik03IDJoMSIvPjxwYXRoIGQ9Im0yMiAyMi01LTEwLTUgMTAiLz48cGF0aCBkPSJNMTQgMThoNiIvPjwvc3ZnPg==');
     --icon-search: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLXNlYXJjaCI+PGNpcmNsZSBjeD0iMTEiIGN5PSIxMSIgcj0iOCIvPjxwYXRoIGQ9Im0yMSAyMS00LjMtNC4zIi8+PC9zdmc+');
     --icon-charts: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyMCIgaGVpZ2h0PSIyMCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyLjI1IiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWNoYXJ0LW5vLWF4ZXMtY29tYmluZWQiPjxwYXRoIGQ9Ik0xMiAxNnY1Ii8+PHBhdGggZD0iTTE2IDE0djciLz48cGF0aCBkPSJNMjAgMTB2MTEiLz48cGF0aCBkPSJtMjIgMy04LjY0NiA4LjY0NmEuNS41IDAgMCAxLS43MDggMEw5LjM1NCA4LjM1NGEuNS41IDAgMCAwLS43MDcgMEwyIDE1Ii8+PHBhdGggZD0iTTQgMTh2MyIvPjxwYXRoIGQ9Ik04IDE0djciLz48L3N2Zz4=');
+    --icon-notifications: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWJlbGwiPjxwYXRoIGQ9Ik0xMC4yNjggMjFhMiAyIDAgMCAwIDMuNDY0IDAiLz48cGF0aCBkPSJNMy4yNjIgMTUuMzI2QTEgMSAwIDAgMCA0IDE3aDE2YTEgMSAwIDAgMCAuNzQtMS42NzNDMTkuNDEgMTMuOTU2IDE4IDEyLjQ5OSAxOCA4QTYgNiAwIDAgMCA2IDhjMCA0LjQ5OS0xLjQxMSA1Ljk1Ni0yLjczOCA3LjMyNiIvPjwvc3ZnPg==');
+    --icon-mail: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLW1haWwiPjxyZWN0IHdpZHRoPSIyMCIgaGVpZ2h0PSIxNiIgeD0iMiIgeT0iNCIgcng9IjIiLz48cGF0aCBkPSJtMjIgNy04Ljk3IDUuN2ExLjk0IDEuOTQgMCAwIDEtMi4wNiAwTDIgNyIvPjwvc3ZnPg==');
 
     --icon-layout: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLXVuZm9sZC1ob3Jpem9udGFsIj48cGF0aCBkPSJNMTYgMTJoNiIvPjxwYXRoIGQ9Ik04IDEySDIiLz48cGF0aCBkPSJNMTIgMnYyIi8+PHBhdGggZD0iTTEyIDh2MiIvPjxwYXRoIGQ9Ik0xMiAxNHYyIi8+PHBhdGggZD0iTTEyIDIwdjIiLz48cGF0aCBkPSJtMTkgMTUgMy0zLTMtMyIvPjxwYXRoIGQ9Im01IDktMyAzIDMgMyIvPjwvc3ZnPg==');
 
@@ -1546,17 +1549,13 @@ last.fm changes as of 2024-05-20 */
     /* gallery pages, col-main on tracks */ div.buffer-standard:not(.col-main) > .lazy-shoutbox
     ),
 /* individual library selection */
-.page-content:has(.inbox-notifications),
 /* listening reports */ .user-dashboard > .user-dashboard-buffer,
 /* katie doesnt have any scrobbles yet */ .profile-mobile-featured-track + .no-data-message,
 /* quick create playlists */ .section-with-separator[action*="/create/from-"],
-/* inbox */ .inbox-compose-view, .inbox-message-view,
 .event-summary-with-poster,
 /* event overview thing */ .event-details:not(.event-summary-with-poster .event-details),
-.inbox,
 .wiki-history,
 /* error 500 */ .container:has(#marvin),
-/* error 404 */ .row:has(.error-page-marvin),
 :is(.namespace--music_track_tags_add, .namespace--music_artist_tags_add, .namespace--music_album_tags_add) .col-main,
 /* make a playlist */ .playlisting-create-options,
 /* home page recommendations */ .homefeed .col-main,
@@ -1650,7 +1649,6 @@ last.fm changes as of 2024-05-20 */
     margin-top: var(--card-gap) !important;
 }
 
-.content-top + .page-content,
 /* no playlists */ .namespace--user_playlists_playlists .page-content,
 .page-content:has(.playlisting-playlists, .gallery-section, .obsession-search),
 /* obsessions */ .namespace--user_obsessions_overview .container.page-content
@@ -6515,9 +6513,6 @@ button,
 .shout-more-replies-before:before,
 .shout .vote-button:before,
 .shout-reply:before,
-/*     INBOX     */
-.inbox-notifications__item-visual-summary:before,
-.inbox-notifications__item-avatar:before, .inbox-message-sender-avatar a:before,
 /* managing an inbox msg */ :is(.back-button, .delete-button):before,
 /*     EVENTS     */
 .event-detail:before, .event-metadata:not(:last-child):before,
@@ -8269,18 +8264,82 @@ a.gallery-image-preferred-off .gallery-image-preferred-states::before {
 
 /*     NOTIFICATIONS     */
 .inbox-notifications {
-    margin-top: var(--card-gap);
     display: flex;
     flex-direction: column;
     gap: var(--button-list-gap);
+
+    .inbox-notifications__item-link {
+        display: flex;
+        gap: 12px;
+
+        --bg: hsl(var(--b4), 40%);
+        --bg-hov: hsl(var(--b4), 80%);
+        --bg-atv: hsl(var(--b4));
+        --shadow: none;
+        --padding: 12px 12px;
+
+        .inbox-notifications__item-visual-summary {
+            display: flex;
+            align-items: center;
+            position: static;
+            margin: -1px 0;
+
+            .inbox-notifications__item-avatar {
+                margin: unset;
+                padding: 0 calc(16px + 6px) 0 0;
+
+                .avatar {
+                    box-shadow: var(--card-shadow);
+                    border-radius: var(--avatar-radius);
+                    width: 20px;
+                    height: 20px;
+                }
+
+                .avatar-status-dot {
+                    width: 16px;
+                    height: 16px;
+                    --mask-size: 16px;
+
+                    top: 50%;
+                    --margin-top: -8px;
+                    left: calc(20px + 6px);
+                    right: unset;
+                    bottom: unset;
+
+                    &:before {
+                        display: none;
+                    }
+                }
+            }
+        }
+
+        .inbox-notifications__item-description {
+            margin: unset;
+            padding: unset;
+            flex: 1;
+
+            strong {
+                color: hsl(var(--l3-c));
+                font-weight: var(--font-weight-medium);
+            }
+        }
+
+        .inbox-notifications__item-timestamp {
+            margin: unset;
+            padding: unset;
+            font-size: calc(var(--font-size) - 1px);
+            color: hsl(var(--c3));
+        }
+    }
 }
 
-form[action="/inbox/notifications"] {
+.notifications-panel {
     .form-group--submit {
-        --override-margin-top: 0;
+        margin-top: unset !important;
+        margin-bottom: var(--card-gap);
 
         .form-submit {
-            justify-content: right;
+            justify-content: end;
         }
     }
 }
@@ -8302,18 +8361,6 @@ form[action="/inbox/notifications"] {
     --lit-over: 1;
 }
 
-.inbox-notifications__item-visual-summary {
-    padding-left: calc(16px + 12px);
-}
-.inbox-notifications__item-visual-summary:before {
-    width: 24px !important;
-    height: 24px !important;
-    --left: 10px;
-    margin-top: -12px !important;
-    mask-size: 100%;
-    -webkit-mask-size: 100%;
-    background-color: hsla(var(--c3), 20%) !important;
-}
 
 .inbox-notifications__item--highlight .inbox-notifications__item-visual-summary:before {
     background-color: hsla(var(--l3-c), 20%) !important;
@@ -8341,53 +8388,8 @@ form[action="/inbox/notifications"] {
 }
 
 
-.inbox-notifications__item-link {
-    --padding: 18px 12px;
-    --bg: hsl(var(--b6));
-    --bg-hov: hsla(var(--b6), 80%);
-    --bg-atv: hsla(var(--b6), 60%);
-    --shadow: none;
-    --shadow-hov: none;
-}
-.inbox-notifications__item--highlight {
-    --bg: hsla(var(--l4), 10%);
-    --bg-hov: hsla(var(--l4), 20%);
-    --bg-atv: hsla(var(--l4), 30%);
-}
-
-.inbox-notifications .inbox-notifications__item-avatar {
-    margin-left: 12px;
-    padding-top: 7px;
-    padding-bottom: 7px;
-    padding-left: unset;
-    --show-icon: none;
-    position: relative;
-}
-.inbox-notifications__item-avatar .avatar {
-    box-shadow: var(--card-shadow);
-    border-radius: var(--avatar-radius);
-    width: 40px;
-    height: 40px;
-}
-
 .inbox-notifications__item-unread-indicator {
     display: none;
-}
-
-.inbox-notifications .inbox-notifications__item-description {
-    padding-top: unset;
-    margin-left: calc(12px + 40px + (16px + 12px));
-}
-.inbox-notifications__item-description strong {
-    color: hsl(var(--l3-c));
-    font-weight: var(--font-weight-medium);
-}
-
-.inbox-notifications .inbox-notifications__item-timestamp {
-    margin-top: unset;
-    padding-top: unset;
-    font-size: calc(var(--font-size) - 1px);
-    color: hsl(var(--c3));
 }
 
 
@@ -12148,7 +12150,8 @@ hr {
     [data-page-subpage="loved"],
     [data-page-subpage="subscription_automatic-edits_tracks"], [data-page-subpage="subscription_automatic-edits_albums"],
     [data-page-subpage="obsessions_overview"],
-    [data-page-type="charts"][data-page-subpage="overview"]
+    [data-page-type="charts"][data-page-subpage="overview"],
+    [data-page-type="inbox"]
     ),
 .namespace--music_bookmarks_overview {
     .col-main {
@@ -18210,6 +18213,12 @@ h4 {
             }
             &.charts-icon {
                 --mask: var(--icon-charts);
+            }
+            &.notifications-icon {
+                --mask: var(--icon-notifications);
+            }
+            &.inbox-icon {
+                --mask: var(--icon-mail);
             }
         }
     }
