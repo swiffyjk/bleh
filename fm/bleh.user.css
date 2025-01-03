@@ -16490,6 +16490,15 @@ button.bleh--gallery-bookmark-image-btn {
     position: relative;
     --mask: var(--icon-16-check);
 }
+.danger {
+    --hue-over: var(--hue-neg);
+    --sat-over: 1;
+    --lit-over: 1;
+
+    &:not(.primary, .btn-primary) {
+        --col: hsl(var(--l3-c));
+    }
+}
 .modal-close-button,
 .btn-secondary.js-close,
 .cancel {

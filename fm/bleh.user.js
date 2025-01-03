@@ -11481,11 +11481,11 @@ let has_prompted_for_update = false;
     unsafeWindow._reset_settings = function() {
         dialog({
             id: 'reset_settings',
-            title: trans[lang].settings.actions.export.modals.initial.name,
+            title: trans[lang].settings.actions.reset.modals.initial.name,
             body: (`
                 <p class="alert alert-error">${trans[lang].settings.actions.reset.modals.initial.alert}</p>
                 <div class="modal-footer">
-                    <button class="btn done" onclick="_confirm_reset()">
+                    <button class="btn done danger" onclick="_confirm_reset()">
                         ${trans[lang].settings.actions.reset.modals.initial.confirm}
                     </button>
                     <button class="btn upload" onclick="_export_first()">
