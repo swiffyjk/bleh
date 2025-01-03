@@ -669,6 +669,10 @@ const trans = {
                 reduced_motion: {
                     name: 'Reduce animations around interfaces',
                     bio: 'Will in most cases either slowly fade or hard-cut, no scaling.'
+                },
+                toggle_icon: {
+                    name: 'Add indicator icon to toggles',
+                    bio: 'Display a checkmark or a cross depending on toggle state.'
                 }
             },
             layout: {
@@ -1509,6 +1513,10 @@ const trans = {
                 reduced_motion: {
                     name: 'Animationen reduzieren',
                     bio: 'Will in most cases either slowly fade or hard-cut, no scaling.'
+                },
+                toggle_icon: {
+                    name: 'Add indicator icon to toggles',
+                    bio: 'Display a checkmark or a cross depending on toggle state.'
                 }
             },
             layout: {
@@ -2361,6 +2369,14 @@ const trans = {
                 underline_links: {
                     name: 'Zawsze podkreślaj linki',
                     bio: 'Podkreślaj linki do elementów interaktywnych.'
+                },
+                reduced_motion: {
+                    name: 'Reduce animations around interfaces',
+                    bio: 'Will in most cases either slowly fade or hard-cut, no scaling.'
+                },
+                toggle_icon: {
+                    name: 'Add indicator icon to toggles',
+                    bio: 'Display a checkmark or a cross depending on toggle state.'
                 }
             },
             layout: {
@@ -3316,7 +3332,9 @@ let settings_template = {
     activity_install: true,
     activity_wiki: true,
 
-    simulate_scroll: true
+    simulate_scroll: true,
+
+    toggle_icon: false
 };
 let settings_base = {
     high_contrast: {
@@ -3700,6 +3718,13 @@ let settings_base = {
         values: [true, false],
         type: 'toggle',
         require_reload: true
+    },
+    toggle_icon: {
+        css: 'toggle_icon',
+        unit: '',
+        value: true,
+        values: [true, false],
+        type: 'toggle'
     }
 };
 let inbuilt_settings = {
@@ -9702,6 +9727,18 @@ let has_prompted_for_update = false;
                         </div>
                         <div class="toggle-wrap">
                             <button class="toggle" id="toggle-underline_links" aria-checked="false">
+                                <div class="dot"></div>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="toggle-container" id="container-toggle_icon" onclick="_update_item('toggle_icon')">
+                        <button class="btn reset" onclick="_reset_item('toggle_icon')">${trans[lang].settings.reset}</button>
+                        <div class="heading">
+                            <h5>${trans[lang].settings.accessibility.toggle_icon.name}</h5>
+                            <p>${trans[lang].settings.accessibility.toggle_icon.bio}</p>
+                        </div>
+                        <div class="toggle-wrap">
+                            <button class="toggle" id="toggle-toggle_icon" aria-checked="false">
                                 <div class="dot"></div>
                             </button>
                         </div>

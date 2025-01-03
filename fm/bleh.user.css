@@ -799,6 +799,10 @@ body {
     &[data-bleh--seasonal_particles_fps="true"] {
         --seasonal-particles-glow: none;
     }
+
+    &[data-bleh--toggle_icon="true"] {
+        --show-toggle-icon: block;
+    }
 }
 
 
@@ -6412,6 +6416,7 @@ button,
 
 
 /*     ICON MASK     */
+.toggle .dot:before,
 .chartlist-now-scrobbling:before,
 [data-link-type]:before,
 .read-more:before, .wiki-edit-small:before, .tags-view-all:before, .featured-item-manage:before,
@@ -14795,6 +14800,13 @@ input[type="range"]::-moz-range-progress {
         transition-property: left, background;
         transition-duration: var(--trans);
         transition-timing-function: var(--trans-function);
+
+        --mask-size: 12px;
+        --margin-top: -6px;
+        --left: 0;
+        color: hsl(var(--b6));
+        --mask: var(--icon-16-x);
+        --show-icon: var(--show-toggle-icon, none);
     }
 
     &[aria-checked="true"] {
@@ -14807,6 +14819,8 @@ input[type="range"]::-moz-range-progress {
 
         .dot {
             left: calc(44px - 7px - 12px);
+            color: hsl(var(--h3));
+            --mask: var(--icon-16-check);
         }
 
         /*&:after {
