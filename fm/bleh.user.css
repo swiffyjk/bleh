@@ -19510,17 +19510,43 @@ pre {
     top: 0;
     left: 0;
     z-index: 10000000000;
-    background: #e5a77d;
-    color: #000;
-    font-family: Lucida Grande, Verdana, Geneva, Tahoma, sans-serif;
-    font-size: 14px;
-    line-height: 18px;
+
+    div {
+        font-family: Lucida Grande, Verdana, Geneva, Tahoma, sans-serif;
+        font-size: 14px;
+        line-height: 18px;
+        background: #000;
+        color: #fff;
+        display: flex;
+        width: fit-content;
+
+        strong {
+            width: 65px;
+            padding: 0 6px;
+        }
+
+        span {
+            background: rgba(255, 255, 255, 0.15);
+            display: flex;
+            padding: 0 6px;
+
+            &:nth-child(3) {
+                background: rgba(255, 255, 255, 0.25);
+            }
+            &:nth-child(4) {
+                background: rgba(255, 255, 255, 0.35);
+            }
+            &:nth-child(5) {
+                background: rgba(255, 255, 255, 0.45);
+            }
+            &:nth-child(6) {
+                background: rgba(255, 255, 255, 0.55);
+            }
+        }
+    }
 
     display: flex;
-
-    .sub {
-        background: #d38754;
-    }
+    flex-direction: column;
 
     &::selection,
     ::selection {

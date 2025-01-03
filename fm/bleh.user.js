@@ -4212,7 +4212,7 @@ let has_prompted_for_update = false;
             }
 
             if (page.structure.indicator)
-                page.structure.indicator.innerHTML = `${page.type}<span class="sub">${page.subpage}</span>`;
+                page_indicator();
         }
     }
 
@@ -4267,7 +4267,7 @@ let has_prompted_for_update = false;
         }
 
         if (page.structure.indicator)
-            page.structure.indicator.innerHTML = `${page.type}<span class="sub">${page.subpage}</span>`;
+            page_indicator();
     }
 
     function basic_page_structure() {
@@ -4281,6 +4281,31 @@ let has_prompted_for_update = false;
         }
 
         checkup_page_structure();
+    }
+
+    function page_indicator() {
+        page.structure.indicator.innerHTML = (`
+            <div class="bleh">
+                <strong>version</strong>
+                <span>${version.brand}</span>
+                <span>${version.build}</span>
+                <span>${version.sku}</span>
+            </div>
+            <div class="page">
+                <strong>auth</strong>
+                <span>${auth}</span>
+            </div>
+            <div class="page">
+                <strong>page</strong>
+                <span>${page.type}</span>
+                <span>${page.subpage}</span>
+            </div>
+            <div class="page">
+                <strong></strong>
+                <span>${page.name}</span>
+                <span>${page.sister}</span>
+            </div>
+        `);
     }
 
     function append_style() {
