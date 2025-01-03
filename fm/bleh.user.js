@@ -149,6 +149,12 @@ let version = {
             name: 'astrablooms font',
             date: '2025-01-01',
             notice: 'This is a test of a new default font for bleh, it most likely will never take effect as changing a font takes a lot of getting used to, but yeah.<br>You should set your text settings to the following: 470, 540, 610'
+        },
+        developer: {
+            default: false,
+            name: 'Developer mode',
+            date: '2025-01-03',
+            notice: 'Enable developer-specific features used for debugging purposes'
         }
     }
 }
@@ -3885,7 +3891,8 @@ let page = {
         content_top: null,
         glacier: {
             refresh: true
-        }
+        },
+        indicator: null
     },
     requested: {
         tab: null
@@ -4171,6 +4178,9 @@ let has_prompted_for_update = false;
             if (page.state.settings_reload) {
                 page.state.settings_reload = false;
             }
+
+            if (page.structure.indicator)
+                page.structure.indicator.innerHTML = `${page.type}<span class="sub">${page.subpage}</span>`;
         }
     }
 
@@ -4813,6 +4823,14 @@ let has_prompted_for_update = false;
     }
 
     function append_nav() {
+        if (ff('developer') && !page.structure.indicator) {
+            let page_indicator = document.createElement('div');
+            page_indicator.classList.add('page-indicator');
+            document.documentElement.appendChild(page_indicator);
+
+            page.structure.indicator = page_indicator;
+        }
+
         let auth_link = document.body.querySelector('.auth-link');
 
         if (auth_link.hasAttribute('data-bleh'))

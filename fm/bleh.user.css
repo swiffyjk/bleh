@@ -19471,4 +19471,34 @@ section > .section-controls .subpage-title {
         --mask: var(--icon-16-arrow-down);
     }
 }
+
+
+
+
+.page-indicator {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 10000000000;
+    background: #e5a77d;
+    color: #000;
+    font-family: Lucida Grande, Verdana, Geneva, Tahoma, sans-serif;
+    font-size: 14px;
+    line-height: 18px;
+
+    display: flex;
+
+    .sub {
+        background: #d38754;
+    }
+
+    &::selection,
+    ::selection {
+        background: red;
+    }
+    &::-moz-selection,
+    ::-moz-selection {
+        background: red;
+    }
+}
 }
