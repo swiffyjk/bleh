@@ -1158,7 +1158,7 @@ last.fm changes as of 2024-05-20 */
     order: 1;
 }
 .masthead-inner-wrap .visible-xs .masthead-nav-control {
-    &:not([data-bleh--label="bleh"][data-season]) {
+    &:not([data-bleh--label="bleh"][data-season-active="true"]) {
         padding: unset !important;
         font-size: 0 !important;
         --left: 8px;

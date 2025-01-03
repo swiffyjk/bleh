@@ -4954,7 +4954,7 @@ let has_prompted_for_update = false;
         let bleh_container = document.createElement('li');
         bleh_container.classList.add('masthead-nav-item');
         bleh_container.innerHTML = (`
-            <a class="masthead-nav-control" href="${root}bleh${(stored_season.id != 'none') ? '?tab=seasonal' : ''}" data-bleh--label="bleh" data-season="${stored_season.id}">
+            <a class="masthead-nav-control" href="${root}bleh${(stored_season.id != 'none') ? '?tab=seasonal' : ''}" data-bleh--label="bleh" data-season="${stored_season.id}" data-season-active="${(stored_season.id != 'none') ? 'true' : 'false'}">
                 ${(stored_season.id == 'none') ? trans[lang].auth_menu.configure_bleh : moment(stored_season.end.replace('y0', stored_season.year).replace('{offset}', stored_season.offset)).to(stored_season.now, true)}
             </a>
         `);
