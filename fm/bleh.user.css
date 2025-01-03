@@ -4300,8 +4300,12 @@ better than the default selector '#app a' i suppose */
             --mask: var(--icon-16-users);
             text-decoration: none !important;
         }
-        &.obesssions-item-date {
+        &.obsessions-item-date {
             --mask: var(--icon-16-calendar);
+        }
+
+        &[data-bleh--scrobble-milestone] {
+            color: hsl(var(--l2-c));
         }
     }
 }

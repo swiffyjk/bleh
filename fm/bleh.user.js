@@ -6804,7 +6804,7 @@ let has_prompted_for_update = false;
                                     <a class="grid-items-item-aux-block" href="${artist_link}">
                                         ${artist}
                                     </a>
-                                    <a class="obesssions-item-date" href="${link}">
+                                    <a class="obsessions-item-date" href="${link}">
                                         ${date}
                                     </a>
                                 </p>
