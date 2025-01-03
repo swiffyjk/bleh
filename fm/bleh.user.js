@@ -1310,7 +1310,7 @@ const trans = {
         },
         auth_menu: {
             dev: 'Toggle dev mode',
-            configure_bleh: 'bleh einstellen',
+            configure_bleh: 'bleh konfigurieren',
             library: 'Musiksammlung',
             shouts: 'Shouts',
             obsessions: 'Obsessionen',
