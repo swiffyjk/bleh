@@ -4260,6 +4260,9 @@ let has_prompted_for_update = false;
                 log(`translation key for this page could not be found`, 'page', 'info', page);
             }
         }
+
+        if (page.structure.indicator)
+            page.structure.indicator.innerHTML = `${page.type}<span class="sub">${page.subpage}</span>`;
     }
 
     function basic_page_structure() {
