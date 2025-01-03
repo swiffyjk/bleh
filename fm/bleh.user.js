@@ -7221,7 +7221,8 @@ let has_prompted_for_update = false;
                     type: 'sponsor',
                     link: '_sponsor()',
                     full: true,
-                    action: 'button'
+                    action: 'button',
+                    primary: true
                 });
             }
 
@@ -7241,13 +7242,15 @@ let has_prompted_for_update = false;
                         type: 'sponsor',
                         link: '_sponsor()',
                         full: true,
-                        action: 'button'
+                        action: 'button',
+                        primary: true
                     });
                     create_profile_top_item(profile_header, {
                         name: page.name,
                         type: 'message_sponsor',
                         link: msg_button.getAttribute('href'),
-                        full: true
+                        full: true,
+                        primary: true
                     });
                 }
             }
@@ -7317,7 +7320,7 @@ let has_prompted_for_update = false;
             base_header.appendChild(profile_header);
     }
 
-    function create_profile_top_item(parent, {name, link, text='', type, taste='', artists=[], avi='', percent='', action='', tooltip='', full=false}) {
+    function create_profile_top_item(parent, {name, link, text='', type, taste='', artists=[], avi='', percent='', action='', tooltip='', full=false, primary=false}) {
         log(`creating top item of ${name}, ${link}, ${text}`, 'profile');
 
         let listen_item = document.createElement((action != 'button') ? 'a' : 'button');
@@ -7329,6 +7332,9 @@ let has_prompted_for_update = false;
         } else if (type != 'going' && type != 'maybe' && type != 'total') {
             listen_item.setAttribute('onclick', link);
         }
+
+        if (primary)
+            listen_item.classList.add('primary');
 
         if (type != 'taste') {
             text = text.toLocaleString(lang);

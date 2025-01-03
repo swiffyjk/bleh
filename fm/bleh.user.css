@@ -16100,20 +16100,12 @@ button.bleh--gallery-bookmark-image-btn {
                 --mask: var(--icon-16-event);
             }
             &.profile-top-item--sponsor {
-                --bg: hsla(var(--h4), 30%) !important;
-                --bg-hov: hsla(var(--h4), 40%) !important;
-                --bg-atv: hsla(var(--h4), 50%) !important;
-                --col: hsl(var(--c1));
                 --mask: var(--icon-16-heart);
                 --hue-over: 333;
                 --sat-over: 1;
                 --lit-over: 1;
             }
             &.profile-top-item--message_sponsor {
-                --bg: hsla(var(--h4), 30%) !important;
-                --bg-hov: hsla(var(--h4), 40%) !important;
-                --bg-atv: hsla(var(--h4), 50%) !important;
-                --col: hsl(var(--c1));
                 --mask: var(--icon-16-heart-solid);
                 --hue-over: 333;
                 --sat-over: 1;
