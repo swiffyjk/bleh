@@ -6071,7 +6071,8 @@ button,
 .about-guest-feature,
 .weeklychart-item,
 .btn-subscribe,
-.masthead-logo a, .masthead-search-form
+.masthead-logo a, .masthead-search-form,
+.show-more a
 {
     --bg: var(--cards-overlay-image-subtlest, none), hsl(var(--b4));
     --bg-hov: var(--cards-overlay-image-subtlest, none), hsla(var(--b4), 80%);
@@ -6338,7 +6339,8 @@ button,
 .select-button,
 .language-nav,
 .auth-link,
-.out-now-btn
+.out-now-btn,
+.show-more a
 {
     --btn-right: calc(12px + 16px + 6px) !important;
 }
@@ -6426,6 +6428,7 @@ button,
 
 
 /*     ICON MASK     */
+.show-more a:before,
 .toggle .dot:before, .icon:before,
 .chartlist-now-scrobbling:before,
 [data-link-type]:before,
@@ -6621,6 +6624,7 @@ span.header-new-gallery-inner a:before,
     transition-duration: var(--trans) !important;
     transition-timing-function: var(--trans-function) !important;
 }
+.show-more a:before,
 .out-now-btn:before,
 .select-button:before,
 .continue:before, .external:before, .open:before,
@@ -10111,10 +10115,6 @@ text[style^="color: rgb(0, 0, 0)"] {
 
 
 /*     BIOGRAPHY     */
-/*.wiki-content {
-    font-size: var(--font-size);
-    line-height: var(--line-height);
-}*/
 .wiki-truncate-4-lines, .wiki-truncate-5-lines, .wiki-truncate-6-lines {
     line-clamp: 4;
     -webkit-line-clamp: 4;
@@ -10213,7 +10213,7 @@ text[style^="color: rgb(0, 0, 0)"] {
 }
 
 .play-this-track-playlink, .resource-external-link:not(.resource-external-link--homepage) {
-    --col: hsl(var(--l3));
+    --col: hsl(var(--l3-c));
     --sat: 1;
     --lit: 1;
 }
@@ -12139,9 +12139,6 @@ hr {
 
 
 /*     BOOKMARKS     */
-.bookmark-section {
-    margin-top: var(--card-gap);
-}
 
 /* no need for a sidebar */
 .row.force-col-main-primary,
@@ -12160,13 +12157,6 @@ hr {
     .col-sidebar {
         display: none !important;
     }
-}
-/* hide neighbours text */
-.bleh--friends-nav + .page-content .col-main > p {
-    display: none;
-}
-.bleh--friends-nav + .page-content .neighbours-items-section {
-    margin-top: unset !important;
 }
 
 .music-bookmarks-albums,
@@ -12741,7 +12731,7 @@ h2.playlisting-create-option-title {
 }
 
 
-/*     DISMISS WELCOME BUTTON     */
+/*     DISMISS WELCOME     */
 .home-welcome-close {
     width: fit-content;
     height: fit-content;
@@ -19463,6 +19453,22 @@ section > .section-controls .subpage-title {
                 margin: unset;
             }
         }
+    }
+}
+
+
+
+
+.show-more {
+    display: flex;
+    justify-content: center;
+    margin-top: var(--card-gap);
+    padding-top: var(--card-gap);
+    border-top: 1px solid var(--card-border-base);
+
+    a {
+        position: relative;
+        --mask: var(--icon-16-arrow-down);
     }
 }
 }
