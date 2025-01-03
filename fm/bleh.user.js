@@ -9434,6 +9434,11 @@ let has_prompted_for_update = false;
             head.textContent = trans[lang].settings.profiles.name;
             register_skip_to([
                 {
+                    id: 'profile_shortcut',
+                    type: 'text',
+                    name: trans[lang].settings.music.profile_shortcut.name
+                },
+                {
                     id: 'activities',
                     name: trans[lang].settings.activities.toggle.name
                 }
@@ -9493,6 +9498,25 @@ let has_prompted_for_update = false;
                         </div>
                     </div>
                     `)}
+                </div>
+                <div class="bleh--panel">
+                    <h4>${trans[lang].settings.music.profile_shortcut.name}</h4>
+                    <p>${trans[lang].settings.music.profile_shortcut.bio}</p>
+                    <div class="text-container" id="container-profile_shortcut">
+                        <button class="btn reset" onclick="_reset_item('profile_shortcut')">${trans[lang].settings.reset}</button>
+                        <div class="avatar-container">
+                            <div class="avatar-inner" id="avatar-profile_shortcut">
+                                <img id="avatar_src-profile_shortcut" src="${localStorage.getItem('bleh_profile_shortcut_avi') || ''}">
+                            </div>
+                        </div>
+                        <div class="heading content-form">
+                            <h5>${trans[lang].settings.music.profile_shortcut.placeholder}</h5>
+                            <div class="input-container">
+                                <input type="text" maxlength="40" id="text-profile_shortcut" value="${settings.profile_shortcut}" placeholder="${trans[lang].settings.music.profile_shortcut.header}">
+                                <button class="bleh--btn primary save" onclick="_save_profile_shortcut()">${trans[lang].settings.save}</button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 <div class="bleh--panel">
                     <h4>${trans[lang].settings.activities.name}</h4>
@@ -9814,11 +9838,6 @@ let has_prompted_for_update = false;
                     name: trans[lang].settings.corrections.stacked_chartlist_info.name
                 },
                 {
-                    id: 'profile_shortcut',
-                    type: 'text',
-                    name: trans[lang].settings.music.profile_shortcut.name
-                },
-                {
                     id: 'travis',
                     name: trans[lang].settings.redirects.name
                 },
@@ -10045,24 +10064,6 @@ let has_prompted_for_update = false;
                             <button class="toggle" id="toggle-glacier_library_graphs" aria-checked="true" type="button">
                                 <div class="dot"></div>
                             </button>
-                        </div>
-                    </div>
-                    <div class="sep"></div>
-                    <h4>${trans[lang].settings.music.profile_shortcut.name}</h4>
-                    <p>${trans[lang].settings.music.profile_shortcut.bio}</p>
-                    <div class="text-container" id="container-profile_shortcut">
-                        <button class="btn reset" onclick="_reset_item('profile_shortcut')">${trans[lang].settings.reset}</button>
-                        <div class="avatar-container">
-                            <div class="avatar-inner" id="avatar-profile_shortcut">
-                                <img id="avatar_src-profile_shortcut" src="${localStorage.getItem('bleh_profile_shortcut_avi') || ''}">
-                            </div>
-                        </div>
-                        <div class="heading content-form">
-                            <h5>${trans[lang].settings.music.profile_shortcut.placeholder}</h5>
-                            <div class="input-container">
-                                <input type="text" maxlength="40" id="text-profile_shortcut" value="${settings.profile_shortcut}" placeholder="${trans[lang].settings.music.profile_shortcut.header}">
-                                <button class="bleh--btn primary save" onclick="_save_profile_shortcut()">${trans[lang].settings.save}</button>
-                            </div>
                         </div>
                     </div>
                 </div>
