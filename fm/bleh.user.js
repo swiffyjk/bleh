@@ -951,7 +951,11 @@ const trans = {
                 },
                 font_weight_bold: {
                     name: 'Bold font weight',
-                    bio: 'Used for header and selected text (eg. current tab)'
+                    bio: 'Used for larger text such as headers'
+                },
+                font_emoji: {
+                    name: 'Use compatibility emoji font',
+                    bio: 'On Windows systems before 11, the emoji font is left outdated by default unless this option is used.'
                 }
             },
             inbuilt: {
@@ -1785,7 +1789,11 @@ const trans = {
                 },
                 font_weight_bold: {
                     name: 'Bold font weight',
-                    bio: 'Used for header and selected text (eg. current tab)'
+                    bio: 'Used for larger text such as headers'
+                },
+                font_emoji: {
+                    name: 'Use compatibility emoji font',
+                    bio: 'On Windows systems before 11, the emoji font is left outdated by default unless this option is used.'
                 }
             },
             inbuilt: {
@@ -2632,7 +2640,11 @@ const trans = {
                 },
                 font_weight_bold: {
                     name: 'Bold font weight',
-                    bio: 'Used for header and selected text (eg. current tab)'
+                    bio: 'Used for larger text such as headers'
+                },
+                font_emoji: {
+                    name: 'Use compatibility emoji font',
+                    bio: 'On Windows systems before 11, the emoji font is left outdated by default unless this option is used.'
                 }
             },
             inbuilt: {
@@ -3285,6 +3297,8 @@ let settings_template = {
     font_weight: 480,
     font_weight_medium: 650,
     font_weight_bold: 730,
+    font_emoji: true,
+
     show_bulk_edit_album: false,
 
     auth_menu_obsessions: false,
@@ -3589,6 +3603,13 @@ let settings_base = {
         unit: '',
         value: 730,
         type: 'slider'
+    },
+    font_emoji: {
+        css: 'font_emoji',
+        unit: '',
+        value: true,
+        values: [true, false],
+        type: 'toggle'
     },
     show_bulk_edit_album: {
         css: 'show_bulk_edit_album',
@@ -9738,6 +9759,18 @@ let has_prompted_for_update = false;
                             <div class="slider-track" id="slider-track-font_weight_bold"><div class="slider-fill"></div><div class="slider-nub"></div></div>
                             <input type="range" min="0" max="900" value="0" step="10" id="slider-font_weight_bold" oninput="_update_item('font_weight_bold', this.value)">
                             <p id="value-font_weight_bold">0</p>
+                        </div>
+                    </div>
+                    <div class="toggle-container" id="container-font_emoji" onclick="_update_item('font_emoji')">
+                        <button class="btn reset" onclick="_reset_item('font_emoji')">${trans[lang].settings.reset}</button>
+                        <div class="heading">
+                            <h5>${trans[lang].settings.text.font_emoji.name}</h5>
+                            <p>${trans[lang].settings.text.font_emoji.bio}</p>
+                        </div>
+                        <div class="toggle-wrap">
+                            <button class="toggle" id="toggle-font_emoji" aria-checked="false">
+                                <div class="dot"></div>
+                            </button>
                         </div>
                     </div>
                     <div class="sep"></div>

@@ -123,7 +123,7 @@ body {
     --sat-brand-twt: 1.1;
     --lit-brand-twt: 0.9;
 
-    --font: var(--custom_font, ''), Ubuntu Sans, Spline Sans, Inter, Roboto, Noto Sans, Noto Sans JP, Noto Sans KR, Noto Sans TC, Noto Color Emoji, -apple-system, BlinkMacSystemFont, sans-serif;
+    --font: var(--custom_font, ''), Ubuntu Sans, Spline Sans, Inter, Roboto, Noto Sans, Noto Sans JP, Noto Sans KR, Noto Sans TC, var(--font_emoji_name, ''), Lucida Grande, Verdana, Tahoma, -apple-system, BlinkMacSystemFont, sans-serif;
     --font-code: Spline Sans Mono, Iosevka, JetBrains Mono, Roboto Mono, monospace, var(--font);
     --font-brand: Comfortaa, var(--font);
     --font-size: 14px;
@@ -140,7 +140,11 @@ body {
     --trans-function: cubic-bezier(1.000, 0.000, 0.000, 1.000);
 
     [data-ff--astra="true"] & {
-        --font: var(--custom_font, ''), Work Sans, Ubuntu Sans, Spline Sans, Inter, Roboto, Noto Sans, Noto Sans JP, Noto Sans KR, Noto Sans TC, Noto Color Emoji, -apple-system, BlinkMacSystemFont, sans-serif;
+        --font: var(--custom_font, ''), Work Sans, Ubuntu Sans, Spline Sans, Inter, Roboto, Noto Sans, Noto Sans JP, Noto Sans KR, Noto Sans TC, var(--font_emoji_name, ''), Lucida Grande, Verdana, Tahoma, -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+
+    [data-bleh--font_emoji="true"] & {
+        --font_emoji_name: Noto Color Emoji;
     }
 }
 
