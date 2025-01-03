@@ -4063,7 +4063,7 @@ let has_prompted_for_update = false;
                     <div class="bleh-icon" style="--icon: var(--icon-error)"></div>
                     <h1>This page is broken :(</h1>
                     <p>An error has prevented bleh from loading correctly, please report this issue on Github.</p>
-                    <p class="error-info">Error information can be accessed by opening the console (try F12).</p>
+                    <pre class="error-info">${(e) ? e : ''}</pre>
                 </div>
                 <div class="modal-footer">
                     <a class="btn primary report-bug continue" href="https://github.com/katelyynn/bleh/issues/new/choose" target="_blank">

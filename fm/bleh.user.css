@@ -19260,11 +19260,18 @@ section > .section-controls .subpage-title {
         text-align: center;
         cursor: default;
 
-        &.error-info {
+        &.error-info-header {
             font-weight: var(--font-weight-medium);
             color: hsl(var(--c3));
         }
     }
+}
+
+pre {
+    font-family: var(--font-code);
+    background-color: hsl(var(--b6));
+    padding: 4px 8px;
+    border-radius: var(--item-big-radius);
 }
 
 
