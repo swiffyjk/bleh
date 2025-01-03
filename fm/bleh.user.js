@@ -4053,6 +4053,8 @@ let has_prompted_for_update = false;
             log('fatal failure', 'load');
             console.error(e);
         }
+
+        log('current page', 'page', 'info', page);
     }
 
     function main_flow() {
