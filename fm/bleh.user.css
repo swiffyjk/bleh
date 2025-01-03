@@ -1640,15 +1640,6 @@ last.fm changes as of 2024-05-20 */
     margin-bottom: 56px;
 }
 
-/* undo the margins, let it figure it out */
-.page-content:has(.inbox-notifications)
-{
-    margin-left: auto;
-    margin-right: auto;
-    --override-padding-top: var(--card-padding);
-    margin-top: var(--card-gap) !important;
-}
-
 /* no playlists */ .namespace--user_playlists_playlists .page-content,
 .page-content:has(.playlisting-playlists, .gallery-section, .obsession-search),
 /* obsessions */ .namespace--user_obsessions_overview .container.page-content
@@ -5814,8 +5805,7 @@ leading to a gap from their own css */
 }
 
 
-.shout-user-avatar .avatar-status-dot,
-.inbox-notifications .inbox-notifications__avatar--big-size .avatar-status-dot
+.shout-user-avatar .avatar-status-dot
 {
     width: 18px;
     height: 18px;
@@ -8277,6 +8267,19 @@ a.gallery-image-preferred-off .gallery-image-preferred-states::before {
         --bg-atv: hsl(var(--b4));
         --shadow: none;
         --padding: 12px 12px;
+
+        &.inbox-notifications__item--highlight {
+            --bg: hsla(var(--h4), 35%);
+            --bg-hov: hsla(var(--h4), 45%);
+            --shadow: 0 10px 50px 5px hsla(var(--h4), 35%);
+            z-index: 20;
+
+            [data-bleh--theme="light"] & {
+                --bg: hsla(var(--h4), 35%);
+                --bg-hov: hsla(var(--h4), 50%);
+                --shadow: 0 10px 50px 5px hsla(var(--h4), 35%);
+            }
+        }
 
         .inbox-notifications__item-visual-summary {
             display: flex;

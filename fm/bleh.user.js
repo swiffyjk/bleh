@@ -356,6 +356,7 @@ const trans = {
                 reason: 'Reserved for certain users'
             }
         },
+        avatar_for_user: 'Avatar for ',
         actions: {
             view_profile: 'View profile',
             view_library: 'Library',
@@ -7895,6 +7896,16 @@ let has_prompted_for_update = false;
                 };
             }
         }
+    }
+
+    function return_name_from_avatar(avatar) {
+        if (!avatar)
+            return;
+
+        if (!avatar.hasAttribute('alt'))
+            return;
+
+        return avatar.getAttribute('alt').replace(trans[lang].avatar_for_user, '');
     }
 
 
@@ -19011,9 +19022,10 @@ let has_prompted_for_update = false;
                 if (!name)
                     return;
 
-                let name_text = name.textContent;
+                let name_text = return_name_from_avatar(avatar.querySelector('img'));
 
                 let badge = patch_avatar(avatar, name_text);
+                notification.classList.add('notification-user-name', `user-status--bleh-${badge.type}`, `user-status--bleh-user-${name_text}`);
                 name.classList.add('notification-user-name', `user-status--bleh-${badge.type}`, `user-status--bleh-user-${name_text}`);
             });
         } else if (page.subpage == 'message_overview') {
