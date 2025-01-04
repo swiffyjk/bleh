@@ -177,7 +177,7 @@ let lang_info = {
     de: {
         name: 'Deutsch',
         by: ['inozom', 'cutensilly'],
-        last_updated:  '2024-10-15'
+        last_updated:  '2025-01-04'
     },
     pl: {
         name: 'Polski',
