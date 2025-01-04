@@ -7423,6 +7423,7 @@ very, very, very dated - who looks up a song on ebay? */
         }
     }
     .date-range-picker-presets-wide {
+        flex-direction: row;
         flex: 1;
 
         a {
@@ -7432,10 +7433,6 @@ very, very, very dated - who looks up a song on ebay? */
                 margin-left: var(--item-list-gap);
             }
         }
-    }
-
-    & + .date-range-picker-presets-wrap {
-        margin-top: var(--item-list-gap);
     }
 }
 

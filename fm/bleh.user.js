@@ -1269,6 +1269,7 @@ const trans = {
                 reason: 'Reserved for certain users'
             }
         },
+        avatar_for_user: 'Avatar für ',
         actions: {
             view_profile: 'View profile',
             view_library: 'Library',
@@ -1288,7 +1289,7 @@ const trans = {
         },
         glacier: {
             name: 'Library refresh',
-            by_artist: ' by {a}',
+            by_artist: ' von {a}',
             meta: {
                 artists: 'Künstler',
                 albums: 'Alben',
@@ -1296,24 +1297,24 @@ const trans = {
                 average: 'Average'
             },
             view: {
-                grid: 'Grid',
-                list: 'List',
-                line: 'Line',
-                pie: 'Pie',
-                bar: 'Bar'
+                grid: 'Gitter',
+                list: 'Liste',
+                line: 'Liniendiagramm',
+                pie: 'Kreis',
+                bar: 'Balken'
             },
             axis: {
                 horizontal: 'Horizontal',
-                vertical: 'Vertical'
+                vertical: 'Vertikal'
             },
             dates: {
-                last_year: 'Last year',
-                this_year: 'This year'
+                last_year: 'Letztes Jahr',
+                this_year: 'Dieses Jahr'
             },
-            edit: 'Edit',
-            delete: 'Delete',
+            edit: 'Editieren',
+            delete: 'Loeschen',
             love: 'Love',
-            bulk_edit: 'Bulk edit',
+            bulk_edit: 'Massenbearbeitung',
             option: {
                 name: 'Use new graphs in library',
                 bio: 'This can add a little amount of slow-down in some cases but with the benefit of awesome graphs.'
@@ -1392,7 +1393,7 @@ const trans = {
             }
         },
         profile: {
-            name: 'Profile',
+            name: 'Profil',
             on_ignore_list: 'Du stehst auf der Ignorierliste dieses Benutzers.',
             friends: {
                 name: 'Freunde'
@@ -1463,6 +1464,14 @@ const trans = {
             new: 'Neu',
             beta: 'Beta',
             configure: 'Konfigurieren',
+            pages: {
+                overview: 'Profil',
+                privacy: 'Datenschutz',
+                account: 'Konto',
+                website: 'Website',
+                subscription_overview: 'Pro',
+                applications_overview: 'Apps'
+            },
             examples: {
                 button: 'Beispiel-Taste'
             },
@@ -2171,6 +2180,7 @@ const trans = {
                 reason: 'Reserved for certain users'
             }
         },
+        avatar_for_user: 'Avatar for ',
         actions: {
             view_profile: 'View profile',
             view_library: 'Library',
@@ -2366,6 +2376,14 @@ const trans = {
             new: 'New',
             beta: 'Beta',
             configure: 'Configure',
+            pages: {
+                overview: 'Profile',
+                privacy: 'Privacy',
+                account: 'Account',
+                website: 'Website',
+                subscription_overview: 'Pro',
+                applications_overview: 'Applications'
+            },
             examples: {
                 button: 'Przycisk przykładowy'
             },
@@ -9782,7 +9800,7 @@ let has_prompted_for_update = false;
                             <button class="btn primary sponsor" onclick="_sponsor_manage()">
                                 ${trans[lang].settings.home.sponsor.manage}<div class="new-badge">${trans[lang].settings.new}</div>
                             </button>
-                            <button class="btn refresh" onclick="_sponsor_check()">
+                            <button class="btn refresh icon" onclick="_sponsor_check()">
                                 ${trans[lang].settings.home.sponsor.check}
                             </button>
                         </div>
@@ -9796,7 +9814,7 @@ let has_prompted_for_update = false;
                             <button class="btn primary sponsor" onclick="_sponsor()">
                                 ${trans[lang].settings.home.sponsor.name}<div class="new-badge">${trans[lang].settings.new}</div>
                             </button>
-                            <button class="btn refresh" onclick="_sponsor_check()">
+                            <button class="btn refresh icon" onclick="_sponsor_check()">
                                 ${trans[lang].settings.home.sponsor.check}
                             </button>
                         </div>
@@ -19113,8 +19131,10 @@ let has_prompted_for_update = false;
                 let name_text = return_name_from_avatar(avatar.querySelector('img'));
 
                 let badge = patch_avatar(avatar, name_text);
-                notification.classList.add('notification-user-name', `user-status--bleh-${badge.type}`, `user-status--bleh-user-${name_text}`);
                 name.classList.add('notification-user-name', `user-status--bleh-${badge.type}`, `user-status--bleh-user-${name_text}`);
+
+                if (notification.classList.contains('inbox-notifications__item--highlight'))
+                    notification.classList.add('notification-user-name', `user-status--bleh-${badge.type}`, `user-status--bleh-user-${name_text}`);
             });
         } else if (page.subpage == 'message_overview') {
             let inbox = page.structure.container.querySelector('.inbox-message-view');
