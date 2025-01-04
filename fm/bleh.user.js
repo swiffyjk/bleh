@@ -4344,6 +4344,12 @@ let has_prompted_for_update = false;
                 <span>${page.name}</span>
                 <span>${page.sister}</span>
             </div>
+            <div class="page">
+                <strong>season</strong>
+                <span>${stored_season.id}</span>
+                <span>${stored_season.year}</span>
+                <span>${stored_season.offset}</span>
+            </div>
         `);
     }
 
@@ -4769,7 +4775,7 @@ let has_prompted_for_update = false;
             offset /= 60;
 
             if (offset > -10)
-                offset = `${offset}0`;
+                offset = offset.toString().replace('-', '-0');
         }
 
         return `${offset}00`;
