@@ -807,6 +807,10 @@ body {
     &[data-bleh--toggle_icon="true"] {
         --show-toggle-icon: block;
     }
+
+    &[data-bleh--log_show_all="true"] {
+        --log-show: block;
+    }
 }
 
 
@@ -19510,6 +19514,7 @@ pre {
     top: 0;
     left: 0;
     z-index: 10000000000;
+    pointer-events: none;
 
     div {
         font-family: Lucida Grande, Verdana, Geneva, Tahoma, sans-serif;
@@ -19519,6 +19524,7 @@ pre {
         color: #fff;
         display: flex;
         width: fit-content;
+        pointer-events: auto;
 
         strong {
             width: 65px;
@@ -19555,6 +19561,48 @@ pre {
     &::-moz-selection,
     ::-moz-selection {
         background: red;
+    }
+}
+.logs {
+    font-family: Lucida Grande, Verdana, Geneva, Tahoma, sans-serif;
+    font-size: 14px;
+    line-height: 18px;
+
+    display: flex;
+    flex-direction: column;
+
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    z-index: 10000000000;
+    max-width: 600px;
+    max-height: 72px;
+    overflow: hidden;
+    opacity: 0.3;
+    transition-property: opacity, max-width, max-height;
+    transition-duration: 0.2s;
+    transition-delay: 0.2s;
+
+    &:hover {
+        overflow-y: scroll;
+        opacity: 1;
+        max-width: 700px;
+        max-height: 700px;
+    }
+
+    .log {
+        background: #000;
+        color: #fff;
+
+        &[data-type="log"] {
+            display: var(--log-show, none);
+        }
+    }
+
+    .toggle-container {
+        position: absolute;
+        bottom: 0;
+        right: 0;
     }
 }
 }

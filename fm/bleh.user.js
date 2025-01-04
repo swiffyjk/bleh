@@ -3107,6 +3107,23 @@ let seasonal_events = [
 ];
 
 function log(text, system, type = 'info', append={}) {
+    if (!page.structure.logs) {
+        let logs = document.createElement('div');
+        logs.classList.add('logs');
+        logs.innerHTML = (`
+            <div class="toggle-container" id="container-log_show_all" onclick="_update_item('log_show_all')">
+                <div class="toggle-wrap">
+                    <button id="toggle-log_show_all">
+                        show all
+                    </button>
+                </div>
+            </div>
+        `);
+
+        document.documentElement.appendChild(logs);
+        page.structure.logs = logs;
+    }
+
     let system_colour;
 
     switch(system) {
@@ -3146,6 +3163,18 @@ function log(text, system, type = 'info', append={}) {
         console[type](`%cbleh~%c${system}%c: ${text}`, 'color: #9F8CD9', `color: ${system_colour}; font-weight: bold`, 'color: unset', append);
     else
         console[type](`%cbleh~%c${system}%c: ${text}`, 'color: #9F8CD9', `color: ${system_colour}; font-weight: bold`, 'color: unset');
+
+    if (settings && settings.feature_flags.developer == true) {
+        let log_e = document.createElement('div');
+        log_e.classList.add('log');
+        log_e.setAttribute('data-type', type);
+        log_e.innerHTML = (`
+            <span class="system" style="color: ${system_colour}">${system}</span>
+            <span class="text">${text}</span>
+        `);
+
+        page.structure.logs.appendChild(log_e);
+    }
 }
 
 let theme_preview = (`
@@ -3438,7 +3467,9 @@ let settings_template = {
 
     simulate_scroll: true,
 
-    toggle_icon: false
+    toggle_icon: false,
+
+    log_show_all: false
 };
 let settings_base = {
     high_contrast: {
@@ -3829,6 +3860,13 @@ let settings_base = {
         value: true,
         values: [true, false],
         type: 'toggle'
+    },
+    log_show_all: {
+        css: 'log_show_all',
+        unit: '',
+        value: false,
+        values: [true, false],
+        type: 'toggle'
     }
 };
 let inbuilt_settings = {
@@ -3917,7 +3955,8 @@ let page = {
         glacier: {
             refresh: true
         },
-        indicator: null
+        indicator: null,
+        logs: null
     },
     requested: {
         tab: null
