@@ -1444,6 +1444,9 @@ const trans = {
             syntax: {
                 name: 'Use fancy syntax when editing',
                 links_to: 'Links to {link}'
+            },
+            presets: {
+                name: 'Symbol presets'
             }
         },
         settings: {
@@ -2356,6 +2359,9 @@ const trans = {
             syntax: {
                 name: 'Use fancy syntax when editing',
                 links_to: 'Links to {link}'
+            },
+            presets: {
+                name: 'Symbol presets'
             }
         },
         settings: {
