@@ -7833,7 +7833,7 @@ let has_prompted_for_update = false;
         .replace(/"/g, '&quot;')
         .replace(/'/g, '&#039;'));
         shout.element.innerHTML = parsed_body;
-        log(`parsed index ${index}`, 'shout');
+        log(`parsed index ${index}`, 'shout', 'log');
 
         shout_parse_queue.splice(index, 1);
         return 1;
