@@ -566,6 +566,14 @@ const trans = {
             new: 'New',
             beta: 'Beta',
             configure: 'Configure',
+            pages: {
+                overview: 'Profile',
+                privacy: 'Privacy',
+                account: 'Account',
+                website: 'Website',
+                subscription_overview: 'Pro',
+                applications_overview: 'Applications'
+            },
             examples: {
                 button: 'Example button'
             },
@@ -4333,6 +4341,7 @@ let has_prompted_for_update = false;
             <div class="page">
                 <strong>auth</strong>
                 <span>${auth}</span>
+                <span>${lang} (${non_override_lang})</span>
             </div>
             <div class="page">
                 <strong>page</strong>
@@ -5607,13 +5616,46 @@ let has_prompted_for_update = false;
     function bleh_native_settings() {
         register_background(my_avi);
 
+        page.structure.container = document.body.querySelector('.page-content');
+        try {
+            page.structure.row = page.structure.container.querySelector('.row');
+            page.structure.main = page.structure.row.querySelector('.col-main');
+            page.structure.side = page.structure.row.querySelector('.col-sidebar');
+        } catch(e) {
+            log('unable to find elements', 'page structure');
+        }
+
+        let content_top = document.body.querySelector('.content-top');
+        let header_text;
+
+        checkup_page_structure(false, content_top);
+        log('status is', 'page', 'info', page);
+        update_page();
+
         if (page.subpage == 'overview') {
             patch_settings_profile_tab();
         } else if (page.subpage == 'privacy') {
             patch_settings_privacy_tab();
         } else if (page.subpage.startsWith('subscription_automatic-edits')) {
             bleh_auto_edits();
+
+            let header = content_top.querySelector('.content-top-header');
+            header_text = header.textContent.trim();
         }
+
+        let edit_header = document.createElement('section');
+        edit_header.classList.add('redesigned-header', 'edit-header', 'no-background');
+        edit_header.innerHTML = (`
+            <div class="tag-side">
+                <div class="tag-icon cog-icon"></div>
+            </div>
+            <div class="info-side">
+                <div class="sub-text">${trans[lang].settings.name}</div>
+                <h1>${trans[lang].settings.pages[page.subpage]}</h1>
+            </div>
+        `);
+
+        page.structure.container.insertBefore(edit_header, page.structure.container.firstElementChild);
     }
 
     function patch_settings_profile_tab() {
@@ -18910,40 +18952,8 @@ let has_prompted_for_update = false;
 
 
     function bleh_auto_edits() {
-        page.structure.container = document.body.querySelector('.page-content');
-        try {
-            page.structure.row = page.structure.container.querySelector('.row');
-            page.structure.main = page.structure.row.querySelector('.col-main');
-            page.structure.side = page.structure.row.querySelector('.col-sidebar');
-        } catch(e) {
-            log('unable to find elements', 'page structure');
-        }
-
-        let content_top = document.body.querySelector('.content-top');
-        let header = content_top.querySelector('.content-top-header');
-
-        checkup_page_structure(false, content_top);
-        log('status is', 'page', 'info', page);
-        update_page();
-
-
         let corrections_panel = document.body.querySelector('#subscription-corrections');
         page.structure.main.appendChild(corrections_panel);
-
-
-        let edit_header = document.createElement('section');
-        edit_header.classList.add('redesigned-header', 'edit-header', 'no-background');
-        edit_header.innerHTML = (`
-            <div class="tag-side">
-                <div class="tag-icon cog-icon"></div>
-            </div>
-            <div class="info-side">
-                <div class="sub-text">${trans[lang].settings.name}</div>
-                <h1>${header.textContent.trim()}</h1>
-            </div>
-        `);
-
-        page.structure.container.insertBefore(edit_header, page.structure.container.firstElementChild);
     }
 
 
