@@ -1242,31 +1242,31 @@ const trans = {
                 reason: 'Aktives Pro Abonnement'
             },
             'user-status-staff': {
-                name: 'Staff',
-                reason: 'Staff member of Last.fm'
+                name: 'Angestellter',
+                reason: 'Angestellter von Last.fm'
             },
             'label--fade': {
-                reason: 'They follow you'
+                reason: '-'
             },
             contributor: {
-                name: 'bleh contributor',
-                reason: 'Contributed to bleh via code or translations'
+                name: 'bleh Mitwirkender',
+                reason: 'Hat bei bleh mitgewirkt über code oder übersetzungen'
             },
             translation: {
-                reason: 'Translated for a supported language'
+                reason: 'Hat für eine unterstützte Sprache übersetzt'
             },
             cat: {
-                name: 'it\'s a kitty!!'
+                name: 'ein Kätzchen!!!'
             },
             sponsor: {
-                name: 'Sponsoring',
-                reason: 'Sponsored bleh and bwaa :3'
+                name: 'Sponsor',
+                reason: 'Hat bleh und bwaa gesponsert :3'
             },
             cute: {
-                reason: 'Reserved for special users'
+                reason: 'Für besondere Nutzer reserviert'
             },
             reserved: {
-                reason: 'Reserved for certain users'
+                reason: 'Für bestimmte Nutzer reserviert'
             }
         },
         avatar_for_user: 'Avatar für ',
