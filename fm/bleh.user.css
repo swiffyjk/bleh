@@ -7169,7 +7169,7 @@ very, very, very dated - who looks up a song on ebay? */
     }
 
     .scrobble-canvas-container {
-        height: 240px;
+        height: 260px;
         margin-top: var(--card-gap);
         position: relative;
 
