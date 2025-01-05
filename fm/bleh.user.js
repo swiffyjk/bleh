@@ -19027,6 +19027,18 @@ let has_prompted_for_update = false;
     function bleh_auto_edits() {
         let corrections_panel = document.body.querySelector('#subscription-corrections');
         page.structure.main.appendChild(corrections_panel);
+
+
+        let nav = page.structure.nav.querySelector('ul');
+        let back_nav = document.createElement('li');
+        back_nav.classList.add('navlist-item', 'secondary-nav-item', 'secondary-nav-item--back');
+        back_nav.innerHTML = (`
+            <a class="secondary-nav-item-link" href="${root}settings/subscription">
+                ${trans[lang].settings.back}
+            </a>
+        `);
+
+        nav.insertBefore(back_nav, nav.firstElementChild);
     }
 
 
