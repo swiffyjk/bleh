@@ -4111,11 +4111,7 @@ let has_prompted_for_update = false;
                     has_prompted_for_update = true;
                 }
 
-                try {
-                    main_flow();
-                } catch(e) {
-                    handle_error(e);
-                }
+                main_flow();
             });
 
             observer.observe(document.body, {
@@ -11912,7 +11908,7 @@ let has_prompted_for_update = false;
                     // featuring ty dolla $ign
                     // skips if this is the first character
                     if (chr < 1)
-                        return;
+                        continue;
 
                     // differentiate 2017 remaster to 20th deluxe
                     console.log(group, group == 'remasters', lowercase_title.includes(' remaster'));
