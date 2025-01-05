@@ -16747,18 +16747,9 @@ let has_prompted_for_update = false;
         bleh_glacier_library_date();
 
         let current_view = page.structure.glacier.date_panel.querySelector('.date-range-picker-button-inner');
-        if (current_view == null)
+
+        if (!current_view)
             return;
-
-        if (current_view.textContent.trim() == new Date().getFullYear()) {
-            current_view.classList.add('date-range-new');
-
-            let new_badge = document.createElement('span');
-            new_badge.classList.add('new-badge');
-            new_badge.textContent = trans[lang].settings.new;
-
-            current_view.appendChild(new_badge);
-        }
 
         current_view = current_view.textContent.trim();
 

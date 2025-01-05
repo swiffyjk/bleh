@@ -7112,7 +7112,6 @@ very, very, very dated - who looks up a song on ebay? */
 
                     &.date-range-new {
                         display: flex;
-                        gap: 6px;
                         overflow: unset;
                     }
                 }
