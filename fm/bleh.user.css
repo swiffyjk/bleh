@@ -250,7 +250,6 @@ body:after,
 a,
 .user-dashboard-layout, .user-dashboard-layout .secondary-nav-item-link, .secondary-nav-item--listening-report .secondary-nav-item-link--active, .listening-report-brick-head, .listening-report-top-item-heading,
 .image-list-item-preferred-icon:before,
-.header-metadata-item:after,
 #current-subscription,
 .header:before,
 #ignorelist > p,
@@ -3519,30 +3518,6 @@ button.navlist-more {
 
 
 /*     FOLLOW     */
-.header-follower-btn {
-    width: 32px !important;
-    height: 32px !important;
-    margin-left: -31px !important;
-    margin-top: -31px !important;
-    --font-size: 0 !important;
-}
-.header-follower-btn:before {
-    width: 16px !important;
-    height: 16px !important;
-    margin: unset !important;
-    position: absolute !important;
-    top: 8px !important;
-    left: 8px !important;
-    background-color: currentColor !important;
-    background-image: unset !important;
-    color: inherit !important;
-    mask-image: var(--mask);
-    -webkit-mask-image: var(--mask);
-    mask-repeat: no-repeat;
-    -webkit-mask-repeat: no-repeat;
-    border-radius: unset !important;
-}
-
 .user-list-follower-btn:before {
     background-image: unset !important;
     background-color: currentColor !important;
@@ -3559,37 +3534,14 @@ button.navlist-more {
 
 
 /*     PROFILE METADATA     */
-.header-info-primary {
-    height: fit-content !important;
-    margin-bottom: -36px;
-}
-.header-metadata {
-    padding-top: unset !important;
-    width: calc(var(--cards-width) - var(--profile-header-avatar-size) - var(--card-gap));
-}
-.personal-stats-inner .header-metadata {
-    width: fit-content;
-}
 .metadata-list {
     margin: unset;
 }
 
 
-.header-metadata, .metadata-list {
+.metadata-list {
     display: flex !important;
     gap: var(--button-list-gap);
-}
-.header-metadata-tnew {
-    gap: var(--button-list-gap);
-    margin-left: var(--card-gap);
-}
-/* last.fm selector, dunno why it cant just use flex */
-.header-new-actions > * {
-    margin-left: var(--button-list-gap);
-}
-/* missing ... button on blocked artist pages */
-.header-new-actions > div:not(:has(button)) {
-    display: none;
 }
 
 
@@ -3612,7 +3564,7 @@ button.navlist-more {
 }
 
 
-.header-metadata-item, .metadata-item, .header-metadata-tnew-item {
+.metadata-item {
     padding: 7px 12px !important; /* tasteometer overrides with padding-left: 20px */
     background-color: hsla(var(--b4), 50%); /* would be b5, but we have a background */
     border-radius: var(--item-med-radius);
@@ -3624,11 +3576,7 @@ button.navlist-more {
     position: relative;
     --show-icon: none;
 }
-.header-metadata-tnew-item {
-    background-color: hsl(var(--b4));
-}
-.header-metadata-item--attendees .sr-only,
-.header-metadata .header-metadata-title, .tasteometer-compat-colour, .metadata-title, .header-metadata-tnew-title {
+.metadata-title {
     color: hsl(var(--c3)) !important;
     font-size: var(--font-size);
     line-height: var(--line-height);
@@ -3645,7 +3593,7 @@ button.navlist-more {
     padding: unset;
     position: unset;
 }
-.metadata-display, .header-metadata-tnew-display {
+.metadata-display {
     color: hsl(var(--c2));
     font-size: var(--font-size);
     line-height: var(--line-height);
@@ -3655,63 +3603,7 @@ button.navlist-more {
 }
 
 
-/*     ONLY AVAILABLE VIA ADDON THAT MAKES USE OF THIS     */
-/*.header-metadata-item:after {
-    content: '';
-    position: absolute;
-    left: 0;
-    right: 0;
-    top: 0;
-    bottom: 0;
-    height: 32px;
-    background-color: hsla(var(--l4-c), 35%);
-    box-shadow: 0 -2px 20px 2px hsla(var(--l4-c), 65%);
-    border-radius: var(--card-radius);
-    width: var(--percent, 0%);
-    /*box-sizing: border-box;
-    border: 2px solid hsla(var(--l3-c), 10%);*/
-    /*transition-property: opacity, width;
-    transition-duration: 1.3s;
-    transition-timing-function: ease;
-}
-.header-metadata-item:not([data-scrobbles]):after {
-    opacity: 0;
-}*/
 
-
-/*[data-scrobbles-milestone="0"] {
-    --hue: 145;
-}
-[data-scrobbles-milestone="1"] {
-    --hue: 165;
-}
-[data-scrobbles-milestone="2"] {
-    --hue: 185;
-}
-[data-scrobbles-milestone="3"] {
-    --hue: 202;
-}
-[data-scrobbles-milestone="4"] {
-    --hue: 230;
-}
-[data-scrobbles-milestone="5"] {
-    --hue: 260;
-}
-[data-scrobbles-milestone="6"] {
-    --hue: 305;
-}
-[data-scrobbles-milestone="7"] {
-    --hue: 340;
-}
-[data-scrobbles-milestone="8"] {
-    --hue: 8;
-}*/
-
-
-/* fixes overlap over dropdown due to link-block-target */
-.header-metadata-display a {
-    z-index: 0;
-}
 
 .playlisting-playlist-stat,
 .metadata-and-wiki-row .catalogue-metadata .catalogue-metadata-heading, .factbox-heading {
@@ -3755,86 +3647,30 @@ button.navlist-more {
 
 
 /*     TASTEOMETER     */
-.header-metadata-item--tasteometer::before {
-    display: none;
-}
-.tasteometer-body {
-    display: flex !important;
-    gap: 10px;
-    color: hsl(var(--c2));
-    overflow: visible !important;
-
-    p {
-        overflow: visible !important;
-    }
-}
-
-.tasteometer-donut-base {
-    fill: hsl(var(--b5));
-}
-
-.tasteometer-compat-description {
-    font-size: 0;
-    margin-top: unset !important;
-}
-.tasteometer-compat-colour:after {
-    content: ' match';
-}
-.tasteometer-compat-colour {
-    fill: hsl(var(--l3-c)) !important;
-    color: hsl(var(--l3-c)) !important;
-    font-weight: var(--font-weight-medium) !important;
-}
-
-.tasteometer-body:not(:has(.tasteometer-compat-description)) {
-    font-size: 0;
-}
-.tasteometer-body:not(:has(.tasteometer-compat-description)):after {
-    content: 'No scrobbles to match';
-    font-size: var(--font-size);
-    margin-left: -10px;
-    color: hsl(var(--c3));
-}
-
-[data-taste="super"],
-.tasteometer-compat-super {
+[data-taste="super"] {
     --hue-over: var(--hue-neg);
     --sat-over: 1.4;
     --lit-over: 0.95;
-
-    .tasteometer-compat-colour, a {
-        text-shadow: 0 0 10px hsl(var(--h4));
-    }
 }
-[data-taste="very_high"],
-.tasteometer-compat-very_high {
+[data-taste="very_high"] {
     --hue-over: 15;
     --sat-over: 1;
     --lit-over: 1;
 }
-[data-taste="high"],
-.tasteometer-compat-high {
+[data-taste="high"] {
     --hue-over: 35;
     --sat-over: 1;
     --lit-over: 1;
 }
-[data-taste="medium"],
-.tasteometer-compat-medium {
+[data-taste="medium"] {
     --hue-over: var(--hue-pos);
     --sat-over: 1;
     --lit-over: 1;
 }
-[data-taste="low"],
-.tasteometer-compat-low {
+[data-taste="low"] {
     --hue-over: 255;
     --sat-over: 1;
     --lit-over: 1;
-}
-.tasteometer-compat-very_low .tasteometer-compat-colour,
-.tasteometer-compat-very_low {
-    fill: hsl(var(--c3)) !important;
-    color: hsl(var(--c3)) !important;
-    font-weight: var(--font-weight) !important;
 }
 [data-taste="very_low"] {
     .taste-badge {
@@ -3849,19 +3685,6 @@ button.navlist-more {
 }
 
 
-.tasteometer-viz {
-    width: 28px;
-    height: 28px;
-    margin: -5px !important;
-}
-.tasteometer-avatar {
-    width: 24px;
-    height: 24px;
-    margin: -3px !important;
-}
-.tasteometer-avatar img {
-    border: 2px solid hsl(var(--b5));
-}
 
 
 /*     SCROBBLE PROGRESS     */
@@ -6478,7 +6301,6 @@ button,
 .btn.reset:before,
 .bleh--add-note:before,
 .profile-note-row .btn:before,
-.header-follower-btn--denied:before,
 .btn--has-icon:before,
 .avatar-overlay:before,
 .grid-item:before,
@@ -6541,7 +6363,6 @@ button,
 .header .header-message-user:before,
 /*     TRACK/ALBUM/ARTIST HEADER     */
 .header-new-love-button:before, .header-new-more-button:before, .header-new-bookmark-button:before,
-.header-metadata-item:before,
 /*     TAGS     */
 .big-tags-item-image:before, .big-tags-item:before,
 .tags-add:before,
@@ -14921,14 +14742,6 @@ input[type="range"]::-moz-range-progress {
     --lit-over: var(--lit-brand-sp);
 }
 
-
-[data-bleh--big_numbers="true"] {
-    .header-metadata-display,
-    .chartlist-count-bar-value {
-        font-family: 'Exo 2', var(--font);
-        font-weight: 600;
-    }
-}
 
 [data-bleh--format_guest_features="true"] {
     .bleh--name-without-features {

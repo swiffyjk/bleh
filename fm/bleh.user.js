@@ -569,7 +569,7 @@ const trans = {
             pages: {
                 overview: 'Profile',
                 privacy: 'Privacy',
-                account: 'Account',
+                account_overview: 'Account',
                 website: 'Website',
                 subscription_overview: 'Pro',
                 applications_overview: 'Applications'
@@ -1478,7 +1478,7 @@ const trans = {
             pages: {
                 overview: 'Profil',
                 privacy: 'Datenschutz',
-                account: 'Konto',
+                account_overview: 'Konto',
                 website: 'Website',
                 subscription_overview: 'Pro',
                 applications_overview: 'Apps'
@@ -2401,7 +2401,7 @@ const trans = {
             pages: {
                 overview: 'Profile',
                 privacy: 'Privacy',
-                account: 'Account',
+                account_overview: 'Account',
                 website: 'Website',
                 subscription_overview: 'Pro',
                 applications_overview: 'Applications'
