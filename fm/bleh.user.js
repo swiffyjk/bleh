@@ -1436,6 +1436,14 @@ const trans = {
             events: 'Events',
             top_badge: 'Top Badge'
         },
+        event: {
+            name: 'Event',
+            going: '{c} going',
+            maybe: '{c} interested',
+            you_know: 'Who you know',
+            all_time: 'All time',
+            total: '{c} total'
+        },
         messaging: {
             update: 'bleh wurde auf Version {v} aktualisiert!'
         },
@@ -2350,6 +2358,14 @@ const trans = {
             settings: 'Configure',
             events: 'Events',
             top_badge: 'Top Badge'
+        },
+        event: {
+            name: 'Event',
+            going: '{c} going',
+            maybe: '{c} interested',
+            you_know: 'Who you know',
+            all_time: 'All time',
+            total: '{c} total'
         },
         messaging: {
             update: 'bleh has updated to version {v}!'
