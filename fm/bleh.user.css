@@ -5995,7 +5995,8 @@ button,
 
     /*     PRIMARY     */
     &:is(
-        .btn-primary:is([type="submit"]), .btn-primary.js-close,
+        .danger,
+        .btn-primary:is([type="submit"], .js-close),
         .inbox-delete-button:not([disabled]),
         #manage_data .btn-primary,
         .primary,
@@ -7033,11 +7034,15 @@ very, very, very dated - who looks up a song on ebay? */
         --lit-over: 1;
     }
 }
+
+#manage_data .btn-primary,
+.danger {
+    --hue-over: var(--hue-neg);
+    --sat-over: 1.1;
+    --lit-over: 0.9;
+}
 #manage_data .btn-primary
 {
-    --hue-over: var(--hue-neg);
-    --sat-over: 1;
-    --lit-over: 1;
     --mask: var(--icon-16-user-remove);
     position: relative;
 }
