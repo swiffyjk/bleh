@@ -7013,7 +7013,8 @@ let has_prompted_for_update = false;
                 }
 
                 let legacy_metadata = page.structure.main.querySelector('.metadata-list');
-                page.structure.main.removeChild(legacy_metadata);
+                if (legacy_metadata)
+                    page.structure.main.removeChild(legacy_metadata);
 
 
                 page.structure.side.innerHTML = '';
