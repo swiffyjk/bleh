@@ -1705,9 +1705,12 @@ last.fm changes as of 2024-05-20 */
 
         /* image shoutbox */
         div.buffer-standard:not(.col-main) & {
-            padding-bottom: unset;
+            padding-bottom: unset !important;
         }
     }
+}
+.col-main > #shoutbox {
+    padding-bottom: var(--card-padding) !important;
 }
 
 
