@@ -926,7 +926,7 @@ last.fm changes as of 2024-05-20 */
     left: 0;
     right: 0;
     top: var(--card-gap) !important;
-    height: fit-content !important;
+    height: 32px !important; /* macOS */
     display: flex !important;
     justify-content: center;
     align-items: center;
