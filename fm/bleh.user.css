@@ -1594,7 +1594,7 @@ last.fm changes as of 2024-05-20 */
 
     position: relative;
 
-    &:not(.featured-item-panel, .shh, .view-all-panel, .metadata-list, .bleh--profile-note-panel) {
+    &:not(#current-subscription, .featured-item-panel, .shh, .view-all-panel, .metadata-list, .bleh--profile-note-panel) {
         background-image: var(--cards-overlay-image, unset) !important;
         background-repeat: repeat-x !important;
         background-position: unset !important;
@@ -7048,15 +7048,6 @@ very, very, very dated - who looks up a song on ebay? */
 }
 
 
-/*     SPECIAL     */
-.more-item--obsession
-{
-    --hue-over: 255;
-    --sat-over: 1;
-    --lit-over: 1;
-}
-
-
 /*     LABS     */
 [data-menu-item="labs"]
 {
@@ -10837,58 +10828,94 @@ table.table tr:nth-child(2n) td {
 
 /*     PRO     */
 #current-subscription {
-    padding: var(--card-padding);
-    border-radius: var(--item-big-radius);
-    background-color: hsl(var(--b5));
-    border: 2px solid transparent;
-    border-left: 2px solid hsl(var(--b4));
     color: hsl(var(--c2));
 
     &:has(.subscription-button-row) {
         --hue-over: var(--hue-pro);
         --sat-over: 1;
         --lit-over: 1;
-        background-color: hsla(var(--h4), 20%);
-        border-left: 2px solid hsl(var(--l3-c));
-        color: hsl(var(--l3-c));
+
+        background: var(--card-specific-background) !important;
+        --card-specific-background:
+        linear-gradient(hsl(var(--b5)), hsl(var(--g4))) padding-box,
+        linear-gradient(0deg, hsla(var(--h3), 80%) 0%, hsl(var(--b5)) 100%) border-box;
+        border: 2px solid transparent !important;
+        padding: calc(var(--card-padding) - 2px) !important;
+
+        .subscription-button {
+            top: calc(var(--card-padding) - 2px);
+            right: calc(var(--card-padding) - 2px);
+        }
+    }
+
+    h2 {
+        font-size: var(--font-size) !important;
+        line-height: var(--line-height) !important;
+        font-weight: var(--font-weight-medium) !important;
+        color: hsl(var(--c3)) !important;
+        margin-bottom: 2px !important;
+    }
+
+    h2 + p b,
+    h3 {
+        margin-top: unset;
+        margin-bottom: var(--card-gap);
+        position: relative;
+        padding-left: calc(16px + 6px);
+        font-size: 16px;
+        line-height: 20px;
+        font-weight: var(--font-weight-bold);
+        cursor: default;
+        --left: 0;
+    }
+
+    h2 + p b {
+        --mask: var(--icon-16-x);
+    }
+
+    h3 {
+        color: hsl(var(--l2-c));
+        --mask: var(--icon-16-pro);
+        background-image: linear-gradient(180deg, hsl(var(--c1)) 0%, hsl(var(--l3-c)) 100%);
+        background-clip: text;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+
+    h2 + p + p {
+        margin-top: var(--card-gap);
+    }
+
+    .subscription-button-row,
+    p:last-child {
+        margin: unset;
+    }
+    .subscription-button {
+        --hue-over: var(--hue-pro);
+        --sat-over: 1;
+        --lit-over: 1;
+
+        position: absolute;
+        top: var(--card-padding);
+        right: var(--card-padding);
+        margin: unset;
+
+        --mask: var(--icon-16-pro);
     }
 }
 
-#current-subscription h2 {
-    display: none;
-}
+#automatic-edits {
+    ul {
+        display: flex;
+        gap: var(--button-list-gap);
 
-#current-subscription h2 + p b,
-#current-subscription h3 {
-    margin-top: unset;
-    margin-bottom: 12px;
-    color: hsl(var(--l2-c));
-    position: relative;
-    padding-left: calc(16px + 6px);
-    font-size: 18px;
-    line-height: 22px;
-    font-weight: 600;
-}
-#current-subscription h2 + p b:before {
-    --left: 0;
-    --mask: var(--icon-16-x);
-}
-#current-subscription h3:before {
-    --left: 0;
-    --mask: var(--icon-16-pro);
-}
-
-
-#automatic-edits + h2 {
-    margin-top: var(--card-gap) !important;
-}
-#mechandise-discount {
-    margin-top: unset !important;
-}
-
-
-#subscription-history {
-    margin-top: unset !important;
+        .edit-album {
+            --mask: var(--icon-16-album);
+        }
+        .edit-track {
+            --mask: var(--icon-16-track);
+        }
+    }
 }
 
 

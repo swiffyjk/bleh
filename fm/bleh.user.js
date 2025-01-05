@@ -5666,7 +5666,7 @@ let has_prompted_for_update = false;
         }
 
         let content_top = document.body.querySelector('.content-top');
-        let header_text;
+        let header_text = trans[lang].settings.pages[page.subpage];
 
         checkup_page_structure(false, content_top);
         log('status is', 'page', 'info', page);
@@ -5676,6 +5676,38 @@ let has_prompted_for_update = false;
             patch_settings_profile_tab();
         } else if (page.subpage == 'privacy') {
             patch_settings_privacy_tab();
+        } else if (page.subpage == 'subscription_overview') {
+            let panel = page.structure.container.querySelector('.row + div');
+
+            let subscription = panel.querySelector('#current-subscription');
+            let edits = panel.querySelector('#automatic-edits');
+            let merch_h = panel.querySelector(':scope > h2');
+            let merch = panel.querySelector('#mechandise-discount');
+            let history = panel.querySelector('#pro-history');
+
+            merch.insertBefore(merch_h, merch.firstElementChild);
+
+            page.structure.main.appendChild(subscription);
+            page.structure.main.appendChild(edits);
+            page.structure.main.appendChild(merch);
+            page.structure.main.appendChild(history);
+
+            let button = subscription.querySelector('.btn-primary');
+            button.classList.add('subscription-button', 'icon', 'primary');
+
+            let more_link_wrap = edits.querySelector('.more-link');
+            if (more_link_wrap) {
+                more_link_wrap.classList = '';
+                let edit_buttons = more_link_wrap.querySelectorAll('a');
+                edit_buttons.forEach((edit_button, index) => {
+                    edit_button.classList.add('btn', 'edit-lead-button', 'icon', 'primary');
+
+                    if (index == 0)
+                        edit_button.classList.add('edit-album');
+                    else
+                        edit_button.classList.add('edit-track');
+                });
+            }
         } else if (page.subpage.startsWith('subscription_automatic-edits')) {
             bleh_auto_edits();
 
@@ -5691,7 +5723,7 @@ let has_prompted_for_update = false;
             </div>
             <div class="info-side">
                 <div class="sub-text">${trans[lang].settings.name}</div>
-                <h1>${trans[lang].settings.pages[page.subpage]}</h1>
+                <h1>${header_text}</h1>
             </div>
         `);
 
