@@ -19137,7 +19137,8 @@ let has_prompted_for_update = false;
 
             panel.appendChild(form);
             panel.appendChild(notifications);
-            panel.appendChild(pagination);
+            if (pagination)
+                panel.appendChild(pagination);
 
             page.structure.main.appendChild(panel);
 
