@@ -1235,11 +1235,11 @@ const trans = {
     de: {
         badges: {
             missing: {
-                name: 'No badges'
+                name: 'Kein Abzeichen'
             },
             'user-status-subscriber': {
                 name: 'Last.fm Pro',
-                reason: 'Active Pro subscription'
+                reason: 'Aktives Pro Abonnement'
             },
             'user-status-staff': {
                 name: 'Staff',
@@ -1431,10 +1431,10 @@ const trans = {
                 you_share_2: 'Ihr hört {artist1} und {artist2}',
                 you_share_3: 'Ihr hört {artist1}, {artist2}, und {artist3}'
             },
-            open_avatar: 'Open in a new tab',
+            open_avatar: 'Im neuen Fenster öffnen',
             settings: 'Konfigurieren',
             events: 'Events',
-            top_badge: 'Top Badge'
+            top_badge: 'Top-Abzeichen'
         },
         event: {
             name: 'Event',
@@ -2044,18 +2044,18 @@ const trans = {
                 name: 'Saved',
                 bio: 'Gallery photos can be saved for future reference.',
                 no_data: 'no images saved (・・ )',
-                link: 'View all saved photos',
+                link: 'Alle favorisierten Bilder ansehen',
                 button: {
                     image_is_bookmarked: {
                         name: 'You have saved this image'
                     },
                     bookmark_this_image: {
-                        name: 'Save',
-                        bio: 'Save this image for later'
+                        name: 'Speichern',
+                        bio: 'Dieses Bild speichern'
                     },
                     unbookmark_this_image: {
                         name: 'Unsave',
-                        bio: 'Unsave this image'
+                        bio: 'Dieses Bild nicht mehr speichern'
                     }
                 }
             },
@@ -2067,34 +2067,17 @@ const trans = {
                 name: 'Star'
             },
             report: {
-                name: 'Report'
+                name: 'Melden'
             },
             open: {
-                name: 'Expand',
-                tooltip: 'Expand image to full resolution'
+                name: 'Vergrößern',
+                tooltip: 'Dieses Bild auf gesamter Auflösung vergrößern'
             },
             up: 'Plusstimmen:',
             down: 'Minusstimmen:',
             vote: 'This is the sum of votes used for ordering.',
-            view: 'View photos'
+            view: 'Fotos anzeigen'
         },
-        empty: {
-            title: 'No title',
-            description: 'No description'
-        },
-        prefer: {
-            name: 'Star'
-        },
-        report: {
-            name: 'Report'
-        },
-        open: {
-            name: 'Expand',
-            tooltip: 'Expand image to full resolution'
-        },
-        up: 'Up votes:',
-        down: 'Down votes:',
-        vote: 'This is the sum of votes used for ordering.',
         activities: {
             name: 'Kürzliche Aktivitäten',
             description: 'Your latest 10 activities are tracked locally on your profile, try leaving a shout and check back here!',
@@ -15882,9 +15865,9 @@ let has_prompted_for_update = false;
             star_button.removeAttribute('title');
             let text = star_button.querySelector('.gallery-image-preferred-states');
 
-            tippy(star_button, {
+            /*tippy(star_button, {
                 content: star_button.textContent
-            });
+            });*/
             text.textContent = trans[lang].gallery.prefer.name;
         });
 
