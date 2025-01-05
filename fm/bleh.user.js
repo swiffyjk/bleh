@@ -19136,12 +19136,16 @@ let has_prompted_for_update = false;
             panel.classList.add('inbox-panel', 'notifications-panel');
 
             panel.appendChild(form);
-            panel.appendChild(notifications);
+            if (notifications)
+                panel.appendChild(notifications);
             if (pagination)
                 panel.appendChild(pagination);
 
             page.structure.main.appendChild(panel);
 
+
+            if (!notifications)
+                return;
 
             let notif_links = notifications.querySelectorAll('.inbox-notifications__item-link');
             notif_links.forEach((notification) => {
