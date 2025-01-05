@@ -1587,6 +1587,7 @@ last.fm changes as of 2024-05-20 */
     margin-left: unset;
     margin-right: unset;
     backdrop-filter: var(--card-filter, unset);
+    -webkit-backdrop-filter: var(--card-filter, unset);
     /* festive */
     /*background-image: var(--overlay-ice)/*, linear-gradient(180deg, rgba(190,233,250,0.04) 0%, rgba(0,0,0,0) 100%);*/
     /*background-repeat: repeat-x;
@@ -9081,6 +9082,7 @@ text[style^="color: rgb(255, 172, 172)"] {
 .user-dashboard-tooltip {
     background: hsla(var(--b6), 80%);
     backdrop-filter: blur(10px) saturate(160%);
+    -webkit-backdrop-filter: blur(10px) saturate(160%);
     border-radius: var(--item-big-radius);
     box-shadow: var(--card-shadow);
     padding: 5px 14px;
@@ -10936,6 +10938,7 @@ table.table tr:nth-child(2n) td {
         right: 10px;
         z-index: 20;
         backdrop-filter: blur(4px);
+        -webkit-backdrop-filter: blur(4px);
         cursor: pointer;
     }
 
@@ -12210,6 +12213,7 @@ hr {
         --bg-atv: hsla(var(--b4), 80%);
         --shadow: none;
         backdrop-filter: blur(6px);
+        -webkit-backdrop-filter: blur(6px);
     }
 
     .avatar,
@@ -15043,6 +15047,7 @@ body:is(.namespace--user_playlists_create_overview, .music-landing-overview):aft
     opacity: 0.5;
     width: fit-content;
     backdrop-filter: blur(20px) saturate(120%);
+    -webkit-backdrop-filter: blur(20px) saturate(120%);
 
     transition-property: max-width, opacity;
     transition-delay: 0.2s;
@@ -15695,6 +15700,7 @@ button.bleh--gallery-bookmark-image-btn {
         --radius: 50px;
 
         backdrop-filter: blur(3px);
+        -webkit-backdrop-filter: blur(3px);
 
         &.btn--has-icon {
             --padding: 7px 14px 7px calc(14px + 16px + 6px);
@@ -16449,6 +16455,7 @@ button.bleh--gallery-bookmark-image-btn {
         position: absolute;
         inset: 0;
         backdrop-filter: blur(60px) saturate(180%);
+        -webkit-backdrop-filter: blur(60px) saturate(180%);
 
         &:after {
             content: '';
