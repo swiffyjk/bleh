@@ -158,7 +158,7 @@ let version = {
         }
     }
 }
-let theme_version = getComputedStyle(document.body).getPropertyValue('--version-build').replaceAll("'", ''); // remove quotations
+let theme_version = getComputedStyle(document.body).getPropertyValue('--version-build').replaceAll("'", '').replaceAll('"', ''); // remove quotations
 
 // loads your selected language in last.fm
 let lang;
@@ -4117,7 +4117,7 @@ let has_prompted_for_update = false;
                 append_nav(document.body);
                 patch_masthead(document.body);
 
-                theme_version = getComputedStyle(document.body).getPropertyValue('--version-build').replaceAll("'", ''); // remove quotations
+                theme_version = getComputedStyle(document.body).getPropertyValue('--version-build').replaceAll("'", '').replaceAll('"', ''); // remove quotations
                 if (theme_version != version.build && theme_version != '' && !has_prompted_for_update) {
                     // script is either out of date, or more in date (not gonna happen)
                     log(`version mismatch! running ${version.build}, downloaded theme ${theme_version}`, 'update');
@@ -4444,7 +4444,7 @@ let has_prompted_for_update = false;
         log('loaded cache', 'style');
         setTimeout(function() {
             document.body.classList.add('bleh');
-            theme_version = getComputedStyle(document.body).getPropertyValue('--version-build').replaceAll("'", ''); // remove quotations
+            theme_version = getComputedStyle(document.body).getPropertyValue('--version-build').replaceAll("'", '').replaceAll('"', ''); // remove quotations
             log(`theme version reporting as ${theme_version}`, 'style');
 
             load_chart_colours();
@@ -4647,7 +4647,7 @@ let has_prompted_for_update = false;
 
             setTimeout(function() {
                 document.body.classList.add('bleh');
-                theme_version = getComputedStyle(document.body).getPropertyValue('--version-build').replaceAll("'", ''); // remove quotations
+                theme_version = getComputedStyle(document.body).getPropertyValue('--version-build').replaceAll("'", '').replaceAll('"', ''); // remove quotations
 
                 load_chart_colours();
 
@@ -4700,7 +4700,7 @@ let has_prompted_for_update = false;
 
             // we will temporarily apply the style just for theme info, then remove it
             setTimeout(function() {
-                theme_version = getComputedStyle(document.body).getPropertyValue('--version-build').replaceAll("'", ''); // remove quotations
+                theme_version = getComputedStyle(document.body).getPropertyValue('--version-build').replaceAll("'", '').replaceAll('"', ''); // remove quotations
 
                 document.documentElement.removeChild(style);
 
