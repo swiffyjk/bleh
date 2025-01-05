@@ -2116,7 +2116,7 @@ const trans = {
             wiki: 'You edited on {i}'
         },
         artist: {
-            name: 'Artist',
+            name: 'Künstler',
             plural: 'Künstler'
         },
         album: {
@@ -2124,7 +2124,7 @@ const trans = {
             plural: 'Alben'
         },
         track: {
-            name: 'Track',
+            name: 'Titel',
             plural: 'Titel'
         },
         tag: {

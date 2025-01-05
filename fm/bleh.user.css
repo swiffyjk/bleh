@@ -8511,10 +8511,26 @@ a.gallery-image-preferred-off .gallery-image-preferred-states::before {
     transition-property: opacity, border, box-shadow, transform;
     transition-duration: var(--trans);
     transition-timing-function: var(--trans-function);
-}
-.gallery-thumbnails li.selected {
-    border: 2px solid hsl(var(--l3));
-    box-shadow: 0 0 10px hsl(var(--l4));
+
+    position: relative;
+
+    a {
+        position: absolute;
+        inset: 0;
+    }
+
+    &:hover {
+        transition-property: border, box-shadow, transform;
+    }
+
+    &.selected {
+        border: 2px solid hsl(var(--l3-c));
+        box-shadow: 0 0 15px hsl(var(--h4));
+    }
+
+    img {
+        display: none;
+    }
 }
 
 /* ensure padding, due to section-with-sep.. */
