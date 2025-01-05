@@ -2037,23 +2037,24 @@ const trans = {
         },
         gallery: {
             tabs: {
-                overview: 'Photos',
+                overview: 'Fotos',
                 bookmarks: 'Saved'
             },
             bookmarks: {
                 name: 'Saved',
                 bio: 'Gallery photos can be saved for future reference.',
                 no_data: 'no images saved (・・ )',
+                link: 'View all saved photos',
                 button: {
                     image_is_bookmarked: {
                         name: 'You have saved this image'
                     },
                     bookmark_this_image: {
-                        name: 'Save this image',
+                        name: 'Save',
                         bio: 'Save this image for later'
                     },
                     unbookmark_this_image: {
-                        name: 'Unsave this image',
+                        name: 'Unsave',
                         bio: 'Unsave this image'
                     }
                 }
@@ -2072,8 +2073,8 @@ const trans = {
                 name: 'Expand',
                 tooltip: 'Expand image to full resolution'
             },
-            up: 'Up votes:',
-            down: 'Down votes:',
+            up: 'Plusstimmen:',
+            down: 'Minusstimmen:',
             vote: 'This is the sum of votes used for ordering.',
             view: 'View photos'
         },
@@ -2095,25 +2096,25 @@ const trans = {
         down: 'Down votes:',
         vote: 'This is the sum of votes used for ordering.',
         activities: {
-            name: 'Recent Activity',
+            name: 'Kürzliche Aktivitäten',
             description: 'Your latest 10 activities are tracked locally on your profile, try leaving a shout and check back here!',
             notifications: 'Read your notifications',
 
             test: 'TEST {involved}',
-            shout: 'You left a shout for {i}',
-            image_upload: 'You uploaded an image for {i}',
-            image_star: 'You starred an image for {i}',
-            obsess: 'You’re obsessed with {i}',
-            unobsess: 'You’re no longer obsessed with {i}',
-            love: 'You love {i}',
-            unlove: 'You no longer love {i}',
-            install_bwaa: 'You installed bwaa',
-            update_bwaa: 'You updated bwaa to {i}',
-            install_bleh: 'You installed bleh',
-            update_bleh: 'You updated bleh to {i}',
-            bookmark: 'You bookmarked {i}',
-            unbookmark: 'You removed {i}’s bookmark',
-            wiki: 'You edited on {i}'
+            shout: 'Du hast ein Shout für {i} hinterlassen',
+            image_upload: 'Du hast ein bild für {i} hochgeladen',
+            image_star: 'Du hast ein bild für {i} favorisiert',
+            obsess: 'Du bist obsessed mit {i}',
+            unobsess: 'Du bist nicht mehr obsessed mit {i}',
+            love: 'Du liebst {i}',
+            unlove: 'Du liebst {i} nicht mehr',
+            install_bwaa: 'Du hast bwaa installiert',
+            update_bwaa: 'Du hast bwaa auf Version {i} aktualisiert',
+            install_bleh: 'Du hast bleh installiert',
+            update_bleh: 'Du hast bleh auf Version {i} aktualisiert',
+            bookmark: 'Du hast ein Lesezeichen für {i} hinterlassen',
+            unbookmark: 'Du hast das Lesezeichen für {i} entfernt',
+            wiki: 'Du hast die Wiki für {i} editiert'
         },
         artist: {
             name: 'Künstler',
@@ -2949,6 +2950,7 @@ const trans = {
                 name: 'Zapisane',
                 bio: 'Zdjęcia galerii można zapisać na przyszłość.',
                 no_data: 'brak zapisanych zdjęć (・・ )',
+                link: 'View all saved photos',
                 button: {
                     image_is_bookmarked: {
                         name: 'Masz to zdjęcie zapisane'

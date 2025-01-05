@@ -399,8 +399,8 @@ body {
     --item-med-radius: 6px;
     --item-big-radius: 9px;
 
-    --profile-header-background-height: 300px;
-    --profile-header-background-offset: 33%;
+    --profile-header-background-height: 470px;
+    --profile-header-background-offset: 27%;
 
     --playlist-cover-size: 230px;
     --playlist-author-avatar-size: 36px;
@@ -18246,7 +18246,7 @@ section > .section-controls .subpage-title {
     z-index: -1;
     background-position: 0 var(--profile-header-background-offset);
     background-size: cover;
-    filter: blur(16px);
+    filter: blur(22px);
 
     height: var(--profile-header-background-height);
 
@@ -18254,7 +18254,7 @@ section > .section-controls .subpage-title {
         content: '';
         position: absolute;
         inset: 0;
-        background-color: hsl(var(--h4));
+        background-color: hsl(var(--h4), 60%);
         mix-blend-mode: overlay;
     }
 
