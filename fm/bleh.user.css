@@ -5952,7 +5952,7 @@ button,
     &.mainstream-score--artist,
     &.report-box-highlight--content,
     .listening-report-secondary-top-item &, .top-new-item-title &,
-    &.mimic-link:not([type], .dropdown-menu-clickable-item, .btn, [value]) {
+    &.mimic-link:not([type], .dropdown-menu-clickable-item, .btn, [value], form button) {
         --bg: transparent;
         --bg-hov: transparent;
         --bg-atv: transparent;
