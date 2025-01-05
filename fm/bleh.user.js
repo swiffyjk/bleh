@@ -12520,6 +12520,18 @@ let has_prompted_for_update = false;
         page.structure.main.after(bookmarks_content);
 
 
+        let sort_button = page.structure.main.querySelector('.dropdown-menu-clickable-button');
+        let sort_menu = page.structure.main.querySelector('.dropdown-menu-clickable');
+
+        let sort_wrap = document.createElement('div');
+        sort_wrap.classList.add('dropdown-top-wrap');
+
+        sort_wrap.appendChild(sort_button);
+        sort_wrap.appendChild(sort_menu);
+
+        page.structure.main.insertBefore(sort_wrap, page.structure.main.firstElementChild);
+
+
         // append images
         if (bookmarked_images.hasOwnProperty(page.name)) {
             bookmarked_images[page.name].forEach((image) => {

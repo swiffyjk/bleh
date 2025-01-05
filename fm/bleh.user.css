@@ -15444,6 +15444,13 @@ button.bleh--gallery-bookmark-image-btn {
 }
 
 
+.dropdown-top-wrap {
+    display: flex;
+    justify-content: end;
+    margin-bottom: var(--card-gap);
+}
+
+
 .bleh--nav-wrap {
     display: flex;
     justify-content: center;
