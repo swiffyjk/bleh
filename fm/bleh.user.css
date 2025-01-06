@@ -936,6 +936,10 @@ last.fm changes as of 2024-05-20 */
         display: none;
     }
 
+    &.in-setup {
+        display: none !important;
+    }
+
     &:before {
         content: '';
         position: fixed;
@@ -10200,10 +10204,13 @@ text[style^="color: rgb(0, 0, 0)"] {
 }
 
 .alert-info {
+    color: hsl(var(--c3)) !important;
+
     [data-bleh--season="halloween"] & {
         --hue-seasonal: 255;
         --sat-seasonal: 1;
         --lit-seasonal: 1;
+        color: hsl(var(--l3-c)) !important;
 
         a {
             --hue-seasonal: 12;
@@ -14328,6 +14335,19 @@ input[type="range"]::-moz-range-progress {
             --mask: var(--icon-16-listener);
         }
 
+        &[data-toggle-value="light"] {
+            --mask: var(--icon-16-sun);
+        }
+        &[data-toggle-value="dark"] {
+            --mask: var(--icon-16-moon);
+        }
+        &[data-toggle-value="darker"] {
+            --mask: var(--icon-16-moon-star);
+        }
+        &[data-toggle-value="oled"] {
+            --mask: var(--icon-16-moon-fill);
+        }
+
         &[aria-checked="true"],
         [data-bleh--inbuilt-id_message_privacy="all"] &#primary-selection-receiving_msgs-everyone,
         [data-bleh--inbuilt-id_message_privacy="n"] &#primary-selection-receiving_msgs-neighbours,
@@ -16420,7 +16440,7 @@ button.bleh--gallery-bookmark-image-btn {
         z-index: 9999;
 
         &[data-modal-type="setup"] {
-            width: 1000px;
+            width: 900px;
             max-width: 80vw;
         }
 
@@ -16461,10 +16481,11 @@ button.bleh--gallery-bookmark-image-btn {
 
     .setup-sides {
         display: flex;
-        min-height: 550px;
+        min-height: 600px;
 
         .setup-preview {
             width: 320px;
+            flex-shrink: 0;
             position: relative;
 
             /*background-color: hsla(var(--b6), 40%);
@@ -16584,20 +16605,39 @@ button.bleh--gallery-bookmark-image-btn {
                 gap: var(--card-gap);
                 flex: 1;
 
-                h1 {
+                & > h1 {
                     font-size: 24px;
                     line-height: 28px;
                     color: hsl(var(--c1));
+                    margin: 20px 0;
+                    letter-spacing: unset;
+                    cursor: default;
+
+                    & + p {
+                        margin-top: -20px;
+                        margin-bottom: unset;
+                    }
                 }
 
-                h4 {
+                & > .alert {
+                    margin: unset;
+                }
+
+                .seasonal-inner h4,
+                & > h4 {
                     font-size: 16px;
                     line-height: 20px;
                     color: hsl(var(--c1));
+                    cursor: default;
+                }
+
+                .current-season-box {
+                    margin: unset;
                 }
 
                 & > p {
                     max-width: 520px;
+                    cursor: default;
                 }
 
                 ul {
