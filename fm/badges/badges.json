@@ -1,9 +1,9 @@
 {
-    "latest": "2024.1230",
+    "latest": "2025.0106",
     "sponsors": [
         "cutensilly", "kateshapedbox", "inozom",
         "astrablooms", "ItsProyal", "vwvwvwvwvwvwv", "Orofil",
-        "EliteHimself"
+        "EliteHimself", "iwas15with100k"
     ],
     "sponsors_one_time": [
         "kateshapedbox",
@@ -64,6 +64,9 @@
             },
             {
                 "type": "contributor"
+            },
+            {
+                "type": "sponsor"
             }
         ],
         "aoivee": {
