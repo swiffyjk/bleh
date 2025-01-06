@@ -12727,7 +12727,10 @@ let has_prompted_for_update = false;
             let doc = new DOMParser().parseFromString(html, 'text/html');
             console.log('DOC', doc);
 
-            deliver_notif('refreshed tracks');
+            notify({
+                title: 'Recent tracks refreshed',
+                icon: 'icon-16-refresh'
+            });
             panel.classList.add('has-refreshed');
 
             let tracklist_panel = doc.querySelector('.chartlist');
@@ -12785,14 +12788,90 @@ let has_prompted_for_update = false;
         }, 3500);
     }
 
-    unsafeWindow._kill_notif = function(notif) {
-        kill_notif(notif);
+    unsafeWindow._notify = function({
+        title = null,
+        body = null,
+        icon = null,
+        classname = null,
+        action = null,
+        persist = false
+    }) {
+        notify({
+            title: title,
+            body: body,
+            icon: icon,
+            classname: classname,
+            action: action,
+            persist: persist
+        });
     }
-    function kill_notif(notif) {
+    function notify({
+        title = null,
+        body = null,
+        icon = null,
+        classname = null,
+        action = null,
+        persist = false
+    }) {
+        log(`creating ${title}`, 'notification', 'info', {
+            title: title,
+            body: body,
+            icon: icon,
+            classname: classname,
+            action: action,
+            persist: persist
+        });
+
+        let notif = document.createElement('button');
+        notif.classList.add('bleh-notification');
+        notif.setAttribute('onclick', '_kill_notif(this)');
+
+        if (!body) {
+            notif.innerHTML = (`
+                <div class="notification-title">${title}</div>
+            `);
+        } else {
+            notif.innerHTML = (`
+                <div class="notification-title">${title}</div>
+                <div class="notification-body">${body}</div>
+            `);
+        }
+
+        page.structure.notifications.appendChild(notif);
+
+        if (icon) {
+            notif.classList.add('icon');
+            notif.style.setProperty('--mask', `var(--${icon})`);
+        }
+
+        if (classname)
+            notif.classList.add(classname);
+
+        if (action)
+            notif.setAttribute('onclick', action);
+
+        if (persist)
+            return;
+
+        setTimeout(function() {
+            notify_rm(notif);
+        }, 5000);
+    }
+    unsafeWindow._notify_rm = function(notif) {
+        notify_rm(notif);
+    }
+    function notify_rm(notif) {
         notif.classList.add('fade-out');
         setTimeout(function() {
             page.structure.notifications.removeChild(notif);
         }, 400);
+    }
+
+    unsafeWindow._kill_notif = function(notif) {
+        kill_notif(notif);
+    }
+    function kill_notif(notif) {
+        notify_rm(notif);
     }
 
 

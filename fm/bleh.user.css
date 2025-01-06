@@ -15539,10 +15539,10 @@ button.bleh--gallery-bookmark-image-btn {
     display: flex;
     flex-direction: column;
     gap: var(--button-list-gap);
-    align-items: center;
+    align-items: end;
     inset: 0;
     pointer-events: none;
-    padding: calc(var(--card-padding) * 3) var(--card-padding);
+    padding: calc(var(--card-gap) * 2 + 32px) calc((100% - var(--cards-width)) / 2 + (var(--card-padding) - 12px));
     z-index: 99999999999;
 
     .bleh-notification {
@@ -15550,20 +15550,13 @@ button.bleh--gallery-bookmark-image-btn {
         pointer-events: auto;
         position: relative;
 
-        --padding: 7px 14px;
         --bg: hsla(var(--h3), 80%);
         --bg-hov: hsla(var(--h3), 70%);
         --bg-atv: hsla(var(--h3), 60%);
         --col: hsl(var(--b7));
-        --radius: 50px;
 
         backdrop-filter: blur(3px);
         -webkit-backdrop-filter: blur(3px);
-
-        &.btn--has-icon {
-            --padding: 7px 14px 7px calc(14px + 16px + 6px);
-            --mask-size: 16px;
-        }
 
         &.fade-out {
             opacity: 0;
