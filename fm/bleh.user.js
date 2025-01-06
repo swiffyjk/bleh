@@ -13927,7 +13927,11 @@ let has_prompted_for_update = false;
 
         // otherwise, it's a usual update
         if (last_version_used != version.build) {
-            deliver_notif(trans[lang].messaging.update.replace('{v}', `${version.build}.${version.sku}`), true);
+            notify({
+                title: trans[lang].messaging.update.replace('{v}', `${version.build}.${version.sku}`),
+                persist: true,
+                icon: 'icon-16-download'
+            });
             register_activity('update_bleh', [{name: version.build, type: 'bleh'}], `${root}bleh`);
             localStorage.setItem('bleh_last_version_used', version.build);
 

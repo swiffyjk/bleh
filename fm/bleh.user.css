@@ -15555,6 +15555,13 @@ button.bleh--gallery-bookmark-image-btn {
         --bg-atv: hsla(var(--h3), 60%);
         --col: hsl(var(--b7));
 
+        text-align: left;
+
+        .notification-body {
+            font-weight: var(--font-weight);
+            opacity: 0.8;
+        }
+
         backdrop-filter: blur(3px);
         -webkit-backdrop-filter: blur(3px);
 
@@ -15567,7 +15574,7 @@ button.bleh--gallery-bookmark-image-btn {
 
 @keyframes notif {
     from {
-        transform: translateY(calc(-1 * var(--card-gap)));
+        transform: translateX(var(--card-gap));
         opacity: 0;
     }
     to {
@@ -15577,7 +15584,7 @@ button.bleh--gallery-bookmark-image-btn {
 }
 @keyframes notif_out {
     to {
-        transform: translateY(calc(-1 * var(--card-gap)));
+        transform: translateX(var(--card-gap));
         opacity: 0;
     }
     from {
