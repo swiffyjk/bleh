@@ -356,6 +356,7 @@ const trans = {
                 reason: 'Reserved for certain users'
             }
         },
+        avatar_for_me: 'Your avatar',
         avatar_for_user: 'Avatar for ',
         actions: {
             view_profile: 'View profile',
@@ -1269,6 +1270,7 @@ const trans = {
                 reason: 'Für bestimmte Nutzer reserviert'
             }
         },
+        avatar_for_me: 'Dein Avatar',
         avatar_for_user: 'Avatar für ',
         actions: {
             view_profile: 'View profile',
@@ -2175,6 +2177,7 @@ const trans = {
                 reason: 'Reserved for certain users'
             }
         },
+        avatar_for_me: 'Your avatar',
         avatar_for_user: 'Avatar for ',
         actions: {
             view_profile: 'View profile',
@@ -8078,6 +8081,9 @@ let has_prompted_for_update = false;
 
         if (!avatar.hasAttribute('alt'))
             return;
+
+        if (avatar.getAttribute('alt') == trans[lang].avatar_for_me)
+            return auth;
 
         return avatar.getAttribute('alt').replace(trans[lang].avatar_for_user, '');
     }
