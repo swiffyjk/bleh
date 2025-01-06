@@ -17897,10 +17897,10 @@ let has_prompted_for_update = false;
 
         checkup_page_structure(is_subpage, event_header);
 
-        if (page.subpage == 'event_edit_overview') {
+        if (page.subpage.startsWith('event_edit')) {
             bleh_events_edit();
             return;
-        } else if (page.subpage == 'add_overview') {
+        } else if (page.subpage.startsWith('add')) {
             bleh_events_create();
             return;
         }
