@@ -17870,26 +17870,7 @@ let has_prompted_for_update = false;
 
 
     function bleh_events() {
-        let event_header = document.body.querySelector('.header-info-primary--with-calendar');
-
-        if (event_header == null) {
-            // new profile pages?
-            if (document.body.classList[2] == null)
-                return;
-
-            // is this an event edit page?
-            if (document.body.classList[2].startsWith('namespace--events'))
-                bleh_events_edit();
-
-            return;
-        }
-
-        if (event_header.hasAttribute('data-bwaa'))
-            return;
-        event_header.setAttribute('data-bwaa', 'true');
-
-        let is_subpage = document.body.querySelector('.header').classList.contains('header--sub-page');
-
+        let is_subpage = (page.subpage != 'event_overview');
 
         // without pro theres two containers
         if (is_pro) {
@@ -17907,12 +17888,22 @@ let has_prompted_for_update = false;
         page.structure.row = page.structure.container.querySelector('.row');
         try {
             page.structure.main = page.structure.row.querySelector('.col-main');
-            page.structure.side = page.structure.row.querySelector('.col-sidebar:not(.track-overview-video-column)');
+            page.structure.side = page.structure.row.querySelector('.col-sidebar');
         } catch(e) {
             log('unable to find elements', 'page structure');
         }
 
+        let event_header = document.body.querySelector('header');
+
         checkup_page_structure(is_subpage, event_header);
+
+        if (page.subpage == 'event_edit_overview') {
+            bleh_events_edit();
+            return;
+        } else if (page.subpage == 'add_overview') {
+            bleh_events_create();
+            return;
+        }
 
         if (!is_subpage) {
             try {
@@ -18081,8 +18072,61 @@ let has_prompted_for_update = false;
         update_page();
     }
 
+    function bleh_events_manage() {
+        register_background(my_avi);
+
+        page.structure.container = document.body.querySelector('.page-content');
+        try {
+            page.structure.row = page.structure.container.querySelector('.row');
+            page.structure.main = page.structure.row.querySelector('.col-main');
+            page.structure.side = page.structure.row.querySelector('.col-sidebar');
+        } catch(e) {
+            log('unable to find elements', 'page structure');
+        }
+
+        let content_top = document.body.querySelector('.content-top');
+        let header_text = content_top.querySelector('.content-top-header').textContent;
+
+        checkup_page_structure(false, content_top);
+        log('status is', 'page', 'info', page);
+        update_page();
+
+        page.structure.nav.classList.add('navlist--more');
+
+        let edit_header = document.createElement('section');
+        edit_header.classList.add('redesigned-header', 'event-manage-header', 'no-background');
+        edit_header.innerHTML = (`
+            <div class="tag-side">
+                <div class="tag-icon event-icon"></div>
+            </div>
+            <div class="info-side">
+                <div class="sub-text">${trans[lang].event.name}</div>
+                <h1>${header_text}</h1>
+            </div>
+        `);
+
+        page.structure.container.insertBefore(edit_header, page.structure.container.firstElementChild);
+    }
+
+    function bleh_events_create() {
+        bleh_events_manage();
+    }
+
     function bleh_events_edit() {
-        return;
+        bleh_events_manage();
+
+        let back = document.body.querySelector('.content-top-back-link a');
+
+        let nav = page.structure.nav.querySelector('ul');
+        let back_nav = document.createElement('li');
+        back_nav.classList.add('navlist-item', 'secondary-nav-item', 'secondary-nav-item--back');
+        back_nav.innerHTML = (`
+            <a class="secondary-nav-item-link" href="${back.getAttribute('href')}">
+                ${trans[lang].settings.back}
+            </a>
+        `);
+
+        nav.insertBefore(back_nav, nav.firstElementChild);
     }
 
 

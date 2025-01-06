@@ -2916,8 +2916,12 @@ button.navlist-more {
         --mask: var(--icon-16-shoutbox);
     }
 }
-.secondary-nav-item--back a {
-    --mask: var(--icon-16-arrow-left);
+.secondary-nav-item--back {
+    order: -5;
+
+    a {
+        --mask: var(--icon-16-arrow-left);
+    }
 }
 .secondary-nav-item--artists a {
     --mask: var(--icon-16-artist);
@@ -18129,6 +18133,9 @@ h4 {
             }
             &.inbox-icon {
                 --mask: var(--icon-mail);
+            }
+            &.event-icon {
+                --mask: var(--icon-event);
             }
         }
     }
