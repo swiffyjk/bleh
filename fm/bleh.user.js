@@ -3068,7 +3068,13 @@ moment.updateLocale('de', {
 
 function lookup_lang() {
     root = document.querySelector('.masthead-logo a').getAttribute('href');
-    if (auth_link != null)
+
+    if (!root) {
+        handle_error_500();
+        return;
+    }
+
+    if (auth_link)
         my_avi = auth_link.querySelector('img').getAttribute('src');
     lang = document.documentElement.getAttribute('lang');
     non_override_lang = lang;
@@ -3079,6 +3085,10 @@ function lookup_lang() {
     }
 
     moment.locale(lang);
+}
+
+function handle_error_500() {
+    log('halted as root is inaccessible', 'load');
 }
 
 // seasonal

@@ -16927,7 +16927,7 @@ h4 {
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 160px 0 20px 0 !important;
+    padding: 240px 0 20px 0 !important;
 
     .error-page {
         background-color: hsl(var(--b5));
@@ -16948,6 +16948,7 @@ h4 {
 
             padding-top: 20px;
             --top: 0;
+            --margin-top: 0;
             --left: 50%;
             --margin-left: -10px;
             --mask: var(--icon-16-x);
