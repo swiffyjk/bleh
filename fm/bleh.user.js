@@ -5343,7 +5343,7 @@ let has_prompted_for_update = false;
         let axis_col = `hsla(${getComputedStyle(document.body).getPropertyValue('--b4')}, 40%)`;
         let text_primary_col = `hsl(${getComputedStyle(document.body).getPropertyValue('--c2')})`;
         let bg_col = `hsl(${getComputedStyle(document.body).getPropertyValue('--b5')})`;
-        let root_bg_col = `hsla(${getComputedStyle(document.body).getPropertyValue('--b6')}, 85%)`;
+        let root_bg_col = `hsla(${getComputedStyle(document.body).getPropertyValue('--b6')}, 92%)`;
         let hue = getComputedStyle(document.body).getPropertyValue('--hue');
         page.state.chart_colours = {
             link_col: link_col,
@@ -5370,8 +5370,10 @@ let has_prompted_for_update = false;
                     backgroundColor: root_bg_col,
                     titleColor: text_primary_col,
                     bodyColor: text_primary_col,
-                    padding: 7,
-                    cornerRadius: 10,
+                    multiKeyBackground: root_bg_col,
+                    boxPadding: 6,
+                    padding: 9,
+                    cornerRadius: 9,
                     caretSize: 0
                 }
             },
@@ -5410,8 +5412,10 @@ let has_prompted_for_update = false;
                     backgroundColor: root_bg_col,
                     titleColor: text_primary_col,
                     bodyColor: text_primary_col,
-                    padding: 7,
-                    cornerRadius: 10,
+                    multiKeyBackground: root_bg_col,
+                    boxPadding: 6,
+                    padding: 9,
+                    cornerRadius: 9,
                     caretSize: 0
                 }
             },
@@ -5444,8 +5448,10 @@ let has_prompted_for_update = false;
                     backgroundColor: root_bg_col,
                     titleColor: text_primary_col,
                     bodyColor: text_primary_col,
-                    padding: 7,
-                    cornerRadius: 10,
+                    multiKeyBackground: root_bg_col,
+                    boxPadding: 6,
+                    padding: 9,
+                    cornerRadius: 9,
                     caretSize: 0
                 }
             },
@@ -5475,8 +5481,10 @@ let has_prompted_for_update = false;
                     backgroundColor: root_bg_col,
                     titleColor: text_primary_col,
                     bodyColor: text_primary_col,
-                    padding: 7,
-                    cornerRadius: 10,
+                    multiKeyBackground: root_bg_col,
+                    boxPadding: 6,
+                    padding: 9,
+                    cornerRadius: 9,
                     caretSize: 0
                 }
             },
@@ -5512,8 +5520,10 @@ let has_prompted_for_update = false;
                     backgroundColor: root_bg_col,
                     titleColor: text_primary_col,
                     bodyColor: text_primary_col,
-                    padding: 7,
-                    cornerRadius: 10,
+                    multiKeyBackground: root_bg_col,
+                    boxPadding: 6,
+                    padding: 9,
+                    cornerRadius: 9,
                     caretSize: 0
                 }
             },
@@ -5533,8 +5543,10 @@ let has_prompted_for_update = false;
                     backgroundColor: root_bg_col,
                     titleColor: text_primary_col,
                     bodyColor: text_primary_col,
-                    padding: 7,
-                    cornerRadius: 10,
+                    multiKeyBackground: root_bg_col,
+                    boxPadding: 6,
+                    padding: 9,
+                    cornerRadius: 9,
                     caretSize: 0
                 }
             },
@@ -5553,8 +5565,10 @@ let has_prompted_for_update = false;
                     backgroundColor: root_bg_col,
                     titleColor: text_primary_col,
                     bodyColor: text_primary_col,
-                    padding: 7,
-                    cornerRadius: 10,
+                    multiKeyBackground: root_bg_col,
+                    boxPadding: 6,
+                    padding: 9,
+                    cornerRadius: 9,
                     caretSize: 0
                 }
             }
