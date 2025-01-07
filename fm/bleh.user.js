@@ -1050,6 +1050,21 @@ const trans = {
                         }
                     }
                 },
+                ignore: {
+                    name: 'Communication',
+                    consider: {
+                        name: 'To consider',
+                        good: [
+                            'You will not see previous or new shouts globally',
+                            'They cannot direct message you',
+                            'They cannot leave a shout on your profile or under your shouts anywhere'
+                        ],
+                        bad: [
+                            'You cannot delete pre-existing shouts from your profile',
+                            'They can still view your profile'
+                        ]
+                    }
+                },
                 privacy: {
                     name: 'Privacy',
                     recent_listening: {
@@ -6443,20 +6458,44 @@ let has_prompted_for_update = false;
     function patch_settings_privacy_tab() {
         let privacy_panel = document.getElementById('privacy');
 
-        if (privacy_panel == undefined)
-            return;
-
         // if we can continue, we are on privacy tab
         let token = document.body.querySelector('[name="csrfmiddlewaretoken"]').getAttribute('value');
 
+        bleh_communication_panel(token);
         patch_settings_privacy_panel(token, privacy_panel);
     }
 
-    function patch_settings_privacy_panel(token, privacy_panel) {
-        if (privacy_panel.hasAttribute('data-kate-processed'))
-            return;
+    function bleh_communication_panel(token) {
+        let panel = page.structure.main.querySelector('#ignorelist');
+        panel.classList.add('bleh--panel');
 
-        privacy_panel.setAttribute('data-kate-processed', 'true');
+        let label = panel.querySelector('.control-label').textContent;
+        let input = panel.querySelector('#id_user').outerHTML;
+        let button_text = panel.querySelector('.btn-primary').textContent;
+
+        let current = panel.querySelector('form + .form-horizontal .control-label').textContent;
+        let list = panel.querySelectorAll('.ignore-list tr');
+
+
+        panel.innerHTML = (`
+            <h4>${trans[lang].settings.inbuilt.ignore.name}</h4>
+            <div class="inner-preview pad"></div>
+            <h5>${trans[lang].settings.inbuilt.ignore.consider.name}</h5>
+            <div class="to-consider">
+                <ul class="to-consider-good">
+                    <li>${trans[lang].settings.inbuilt.ignore.consider.good[0]}</li>
+                    <li>${trans[lang].settings.inbuilt.ignore.consider.good[1]}</li>
+                    <li>${trans[lang].settings.inbuilt.ignore.consider.good[2]}</li>
+                </ul>
+                <ul class="to-consider-bad">
+                    <li>${trans[lang].settings.inbuilt.ignore.consider.bad[0]}</li>
+                    <li>${trans[lang].settings.inbuilt.ignore.consider.bad[1]}</li>
+                </ul>
+            </div>
+        `);
+    }
+
+    function patch_settings_privacy_panel(token, privacy_panel) {
         privacy_panel.classList.add('bleh--panel');
 
         // get info before destroying

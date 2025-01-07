@@ -283,7 +283,8 @@ a,
 .new-badge,
 .shout-user-avatar[data-avatar-themed],
 .notification-user-name,
-.error-info
+.error-info,
+.to-consider li
 {
     --hue:  var(--hue-over,
             var(--hue-album,
@@ -6255,6 +6256,7 @@ button,
 
 
 /*     ICON MASK     */
+.to-consider li:before,
 .show-more a:before,
 .toggle .dot:before, .icon:before,
 .chartlist-now-scrobbling:before,
@@ -19562,6 +19564,44 @@ section > .section-controls .subpage-title {
         position: fixed;
         bottom: 0;
         right: 0;
+    }
+}
+
+
+
+
+.to-consider {
+    display: flex;
+    flex-direction: column;
+    gap: var(--item-list-gap);
+
+    ul {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+        margin: unset;
+
+        --sat-over: 1;
+        --lit-over: 1;
+
+        li {
+            position: relative;
+            --left: 0;
+            padding-left: calc(16px + 6px);
+
+            font-weight: var(--font-weight-medium);
+            color: hsl(var(--l3-c));
+            cursor: default;
+        }
+
+        &.to-consider-good {
+            --hue-over: var(--hue-pos);
+            --mask: var(--icon-16-check);
+        }
+        &.to-consider-bad {
+            --hue-over: var(--hue-neg);
+            --mask: var(--icon-16-x);
+        }
     }
 }
 }
