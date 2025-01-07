@@ -13373,14 +13373,20 @@ h6 {
     font-weight: var(--font-weight-medium);
 }
 
+pre,
 code, kbd, samp {
-    color: hsl(var(--c2));
+    color: hsl(var(--c3));
     background-color: hsl(var(--b6));
     padding: 0 4px;
     font-size: var(--font-size);
     line-height: var(--line-height);
     font-family: var(--font-code);
     border-radius: var(--item-small-radius);
+}
+
+pre {
+    padding: 4px 8px;
+    border-radius: var(--item-big-radius);
 }
 
 
@@ -17712,6 +17718,33 @@ h4 {
             }
         }
 
+        &[data-changelog-version="2025.0107"] {
+            position: relative;
+
+            .version-item-header {
+                h3 {
+                    font-family: Times New Roman, var(--font);
+                    font-size: 30px;
+                    line-height: 54px;
+                    font-weight: 400;
+                    transform: scaleY(2.5) scaleX(.74);
+                    color: hsl(var(--c1), 80%);
+                }
+
+                .header-over {
+                    font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+                    font-size: 24px;
+                    font-weight: 400;
+                    position: absolute;
+                    top: 50%;
+                    left: 50%;
+                    text-align: center;
+                    width: 100px;
+                    margin-left: -50px;
+                }
+            }
+        }
+
         & + .changelog-version-item {
             /*border-top: 1px solid var(--card-border-base);*/
             border-top: 1px solid transparent;
@@ -17823,7 +17856,8 @@ h4 {
 
         ul {
             margin-top: unset;
-            margin-left: var(--card-padding);
+            margin-left: 16px;
+            color: hsl(var(--c2), 80%);
 
             li:first-child {
                 &:before {
@@ -17895,8 +17929,19 @@ h4 {
         margin: var(--card-gap) 0 0 0;
         cursor: default;
 
+        & + p,
         & + ul {
             margin-top: var(--item-list-gap);
+        }
+
+        & + p {
+            &:has(+ ul) {
+                margin-bottom: unset;
+
+                & + ul {
+                    margin-top: var(--item-list-gap);
+                }
+            }
         }
     }
 
@@ -19200,13 +19245,6 @@ section > .section-controls .subpage-title {
     .error-type {
         color: hsl(var(--l3-c));
     }
-}
-
-pre {
-    font-family: var(--font-code);
-    background-color: hsl(var(--b6));
-    padding: 4px 8px;
-    border-radius: var(--item-big-radius);
 }
 
 

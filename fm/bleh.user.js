@@ -16233,6 +16233,7 @@ let has_prompted_for_update = false;
             version_item.classList.add('changelog-version-item');
             version_item.setAttribute('data-changelog-type', changelog[version].type);
             version_item.setAttribute('data-changelog-latest', (index == 0) ? 'true' : 'false');
+            version_item.setAttribute('data-changelog-version', version);
             version_item.innerHTML = (`
                 <div class="version-item-header">
                     <div class="sub-text">
@@ -16251,6 +16252,7 @@ let has_prompted_for_update = false;
                         `) : ''}
                     </div>
                     <h3>${changelog[version].name}</h3>
+                    ${(version == '2025.0107') ? `<h4 class="header-over">${changelog[version].name}</h4>` : ''}
                 </div>
             `);
 
