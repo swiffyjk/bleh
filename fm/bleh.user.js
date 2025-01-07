@@ -737,7 +737,7 @@ const trans = {
                     name: 'Seasonal',
                     timeline: 'Seasonal timeline',
                     bio: 'During seasonal events, bleh can automatically change the default accent colour, add particles, and add overlays to various interface elements.',
-                    info: 'Seasonal events are ran in universal time (UTC) for consistency.',
+                    info: 'Seasonal events try to match your timezone, for reference we calculated {offset}',
                     started: 'Started',
                     ends_in: 'Ends in',
                     listing: {
@@ -780,7 +780,8 @@ const trans = {
                     mistletoe: 'Mistletoe',
                     festival: 'Christmas Eve',
                     exclusive_for_season: 'Exclusive for <span class="season-name">{season}</span>',
-                    exclusive_for_season_and_more: 'Exclusive for <span class="season-name">{season}</span> and 1 more'
+                    exclusive_for_season_and_more: 'Exclusive for <span class="season-name">{season}</span> and 1 more',
+                    view: 'Open seasonal tab'
                 },
                 artwork: {
                     name: 'Artwork'
@@ -1656,7 +1657,7 @@ const trans = {
                     name: 'Saisonal',
                     timeline: 'Seasonal timeline',
                     bio: 'Während saisonaler Ereignisse kann bleh automatisch die Standardakzentfarbe ändern, Partikel hinzufügen und verschiedenen Schnittstellenelementen Overlays hinzufügen.',
-                    info: 'Seasonal events are ran in universal time (UTC) for consistency.',
+                    info: 'Seasonal events try to match your timezone, for reference we calculated {offset}',
                     started: 'Gestartet',
                     ends_in: 'Endet in',
                     listing: {
@@ -1699,7 +1700,8 @@ const trans = {
                     mistletoe: 'Mistletoe',
                     festival: 'Christmas Eve',
                     exclusive_for_season: 'Exclusive for <span class="season-name">{season}</span>',
-                    exclusive_for_season_and_more: 'Exclusive for <span class="season-name">{season}</span> and 1 more'
+                    exclusive_for_season_and_more: 'Exclusive for <span class="season-name">{season}</span> and 1 more',
+                    view: 'Open seasonal tab'
                 },
                 artwork: {
                     name: 'Cover'
@@ -2567,7 +2569,7 @@ const trans = {
                     name: 'Seasonal',
                     timeline: 'Seasonal timeline',
                     bio: 'During seasonal events, bleh can automatically change the default accent colour, add particles, and add overlays to various interface elements.',
-                    info: 'Seasonal events are ran in universal time (UTC) for consistency.',
+                    info: 'Seasonal events try to match your timezone, for reference we calculated {offset}',
                     started: 'Started',
                     ends_in: 'Ends in',
                     listing: {
@@ -2610,7 +2612,8 @@ const trans = {
                     mistletoe: 'Mistletoe',
                     festival: 'Christmas Eve',
                     exclusive_for_season: 'Exclusive for <span class="season-name">{season}</span>',
-                    exclusive_for_season_and_more: 'Exclusive for <span class="season-name">{season}</span> and 1 more'
+                    exclusive_for_season_and_more: 'Exclusive for <span class="season-name">{season}</span> and 1 more',
+                    view: 'Open seasonal tab'
                 },
                 artwork: {
                     name: 'Okładka'
@@ -8865,6 +8868,9 @@ let has_prompted_for_update = false;
                         </div>
                     </div>
                 </div>
+                <button class="btn continue" onclick="_change_settings_page('seasonal')">
+                    ${trans[lang].settings.customise.seasonal.view}
+                </button>
                 <h4>${trans[lang].settings.home.recommended}</h4>
                 <div class="setting-items full">
                     <div class="side-right full">
@@ -9690,7 +9696,7 @@ let has_prompted_for_update = false;
                     </div>
                     <div class="info-box no-padding">
                         <div class="bleh-icon bleh-info-icon"></div>
-                        ${trans[lang].settings.customise.seasonal.info}
+                        ${trans[lang].settings.customise.seasonal.info.replace('{offset}', `<code>${stored_season.offset}</code>`)}
                     </div>
                     <!--<p>${trans[lang].settings.customise.seasonal.bio}</p>
                     <div class="inner-preview pad click-thru">
