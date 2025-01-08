@@ -252,7 +252,6 @@ a,
 .image-list-item-preferred-icon:before,
 #current-subscription,
 .header:before,
-#ignorelist > p,
 .events-list-item-date-icon, .calendar-icon,
 .async-content-error-message,
 .avatar-status-dot, .label, .shout-user-avatar:before, .user-status-None,
@@ -7047,7 +7046,7 @@ very, very, very dated - who looks up a song on ebay? */
 }
 
 #manage_data .btn-primary,
-.danger {
+.danger, .danger-subtle {
     --hue-over: var(--hue-neg);
     --sat-over: 1.1;
     --lit-over: 0.9;
@@ -10687,66 +10686,6 @@ text[style^="color: rgb(0, 0, 0)"] {
     order: -1;
 }
 
-#ignorelist > form {
-    display: flex;
-}
-#ignorelist > form .form-group:last-child {
-    margin: unset;
-}
-#ignorelist > form .form-group:last-child .form-submit {
-    width: fit-content;
-}
-#ignorelist button {
-    --hue-over: var(--hue-neg);
-    --sat-over: 1;
-    --lit-over: 1;
-}
-
-[name="ignorelist"] .form-group {
-    margin-top: unset !important;
-}
-[name="ignorelist"] .alert {
-    display: none;
-}
-
-#ignorelist > div.form-horizontal .form-group-controls {
-    max-height: 32px;
-    opacity: 0;
-    overflow: hidden;
-    transition-property: max-height, opacity;
-    transition-duration: calc(var(--trans) * 8);
-    transition-timing-function: ease 0.3s;
-}
-#ignorelist > div.form-horizontal .form-group-controls:hover {
-    max-height: 6000px;
-    opacity: 1;
-}
-.content-form.ignore-list-form .ignore-list {
-    margin-top: unset !important;
-}
-
-
-[lang="en"] #ignorelist .form-header, [lang="en"] #ignorelist > p {
-    font-size: 0 !important;
-    line-height: 0 !important;
-}
-[lang="en"] #ignorelist .form-header:before, [lang="en"] #ignorelist > p:before {
-    content: '';
-    font-size: var(--font-size) !important;
-    line-height: var(--line-height) !important;
-}
-
-[lang="en"] #ignorelist .form-header:before { content: 'Hide users' }
-[lang="en"] #ignorelist > p:before {
-    content: 'Activity from users on this list across the site will no longer be visible from this account. New shouts and messages are automatically deleted, however existing shouts on your profile or messages will remain, just won\'t be visible to you.' !important;
-}
-
-
-[action="/settings/privacy"] .bulleted-list li:nth-child(2) {
-    font-weight: 600;
-    color: hsl(var(--l3-c)) !important;
-}
-
 
 table.table tr {
     position: relative;
@@ -10757,30 +10696,6 @@ table.table td, table.table th {
 }
 table.table tr:nth-child(2n) td {
     background-color: hsla(var(--b4), 40%);
-}
-
-.content-form .table .delete {
-    width: 32px;
-    height: 32px;
-    position: absolute;
-    top: 0;
-    right: 0;
-    --bg: transparent;
-    --bg-hov: hsla(var(--b4), 50%);
-    --bg-atv: hsla(var(--b4), 70%);
-    --shadow: none !important;
-    --shadow-hov: none !important;
-    --col: hsl(var(--l3-c));
-    --hue-over: var(--hue-neg);
-    --sat-over: 1;
-    --lit-over: 1;
-}
-.content-form .table .delete:before {
-    --mask: var(--icon-16-trash);
-    left: 8px !important;
-}
-.content-form .table .delete:not(:hover):before {
-    opacity: 0.2;
 }
 
 
@@ -12939,30 +12854,6 @@ so this is good enough - use the community docs */
         }
 
 
-        .bleh--panel {
-            display: flex;
-            flex-direction: column;
-            gap: var(--card-gap);
-            flex: 1;
-
-
-            .btn {
-                width: fit-content;
-            }
-
-            .alert {
-                margin: unset;
-            }
-
-            .subtext {
-                color: hsl(var(--c3));
-                font-size: var(--font-size-sm);
-                line-height: var(--line-height-sm);
-                margin-top: -5px;
-            }
-        }
-
-
         .skip-to-list {
             display: flex;
             flex-direction: column;
@@ -13364,6 +13255,29 @@ so this is good enough - use the community docs */
         margin: unset;
         color: hsl(var(--c1));
         font-weight: var(--font-weight-medium);
+    }
+}
+
+.bleh--panel {
+    display: flex;
+    flex-direction: column;
+    gap: var(--card-gap);
+    flex: 1;
+
+
+    .btn {
+        width: fit-content;
+    }
+
+    .alert {
+        margin: unset;
+    }
+
+    .subtext {
+        color: hsl(var(--c3));
+        font-size: var(--font-size-sm);
+        line-height: var(--line-height-sm);
+        margin-top: -5px;
     }
 }
 
@@ -16428,6 +16342,9 @@ button.bleh--gallery-bookmark-image-btn {
 .save {
     position: relative;
     --mask: var(--icon-16-check);
+}
+.add {
+    --mask: var(--icon-16-add);
 }
 .update {
     --hue-over: var(--hue-pos);
@@ -19601,6 +19518,72 @@ section > .section-controls .subpage-title {
         &.to-consider-bad {
             --hue-over: var(--hue-neg);
             --mask: var(--icon-16-x);
+        }
+    }
+}
+
+
+.expand-button {
+    --mask: var(--icon-16-arrow-down);
+}
+
+
+.generic-table-list {
+    display: flex;
+    flex-direction: column;
+    max-width: 400px;
+
+    &.list-is-exceeded {
+        &[data-expanded="false"] {
+            .entry-is-exceeded {
+                display: none;
+            }
+        }
+
+        &[data-expanded="true"] {
+            .expand-button {
+                display: none;
+            }
+        }
+    }
+
+    .expand-button {
+        margin-top: var(--item-list-gap);
+    }
+
+    .generic-table-list-entry {
+        display: flex;
+        align-items: center;
+        padding: 3px 12px;
+        border-radius: var(--item-big-radius);
+
+        transition-property: background;
+        transition-duration: var(--trans);
+        transition-timing-function: var(--trans-function);
+
+        &:hover {
+            background: hsl(var(--b4), 40%);
+            transition: none;
+        }
+
+        .text {
+            flex: 1;
+        }
+        .actions {
+            flex-shrink: 0;
+
+            .delete-user-button {
+                width: 32px;
+                --font-size: 0;
+                --btn-left: 12px !important;
+                --left: 8px;
+                --mask: var(--icon-16-trash);
+                --bg: transparent;
+                --bg-hov: hsl(var(--h4), 20%);
+                --bg-atv: hsl(var(--h4), 40%);
+                --shadow: none;
+                --col: hsl(var(--l3-c));
+            }
         }
     }
 }

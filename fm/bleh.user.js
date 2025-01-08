@@ -555,6 +555,7 @@ const trans = {
             cancel: 'Cancel',
             close: 'Close',
             clear: 'Clear',
+            add: 'Add',
             remove: 'Remove',
             done: 'Done',
             finish: 'Finish',
@@ -1063,7 +1064,9 @@ const trans = {
                             'You cannot delete pre-existing shouts from your profile',
                             'They can still view your profile'
                         ]
-                    }
+                    },
+                    view: 'View {c} more',
+                    count: 'You have {c} users hidden'
                 },
                 privacy: {
                     name: 'Privacy',
@@ -6401,7 +6404,7 @@ let has_prompted_for_update = false;
                         ${trans[lang].settings.inbuilt.profile.avatar.delete}
                     </div>
                     <div class="modal-footer">
-                        <button class="btn cancel" onclick="_kill_window('edit_avatar')">${trans[lang].settings.cancel}</button>
+                        <button class="btn cancel" onclick="_kill_window('edit_avatar')" type="button">${trans[lang].settings.cancel}</button>
                     </div>
                 </form>
             </div>
@@ -6477,6 +6480,58 @@ let has_prompted_for_update = false;
         let list = panel.querySelectorAll('.ignore-list tr');
 
 
+        let new_list = document.createElement('div');
+        new_list.classList.add('generic-table-list', 'user-vertical-list');
+
+        let exceeded = false;
+        let exceed_amount = 25;
+        let amount = 0;
+
+        list.forEach((item, index) => {
+            let entry = document.createElement('div');
+            entry.classList.add('generic-table-list-entry', 'user-vertical-list-item');
+
+            let name = item.querySelector('td').textContent.trim();
+            let form = item.querySelector('form');
+            let button = form.querySelector('button');
+
+            button.classList.add('icon', 'delete-user-button', 'danger-subtle');
+
+            entry.innerHTML = (`
+                <span class="text">
+                    <a class="mention" href="${root}user/${name}" target="_blank">@${name}</a>
+                </span>
+                <span class="actions">
+                    ${form.outerHTML}
+                </span>
+            `);
+
+            if (index > exceed_amount && !exceeded)
+                exceeded = true;
+
+            if (exceeded)
+                entry.classList.add('entry-is-exceeded');
+
+            new_list.appendChild(entry);
+            amount += 1;
+        });
+
+        if (exceeded) {
+            let remainder = amount - exceed_amount;
+
+            new_list.classList.add('list-is-exceeded');
+            new_list.setAttribute('data-expanded', 'false');
+
+            let expand = document.createElement('button');
+            expand.classList.add('expand-button', 'icon');
+            expand.textContent = trans[lang].settings.inbuilt.ignore.view.replace('{c}', remainder);
+            expand.setAttribute('onclick', '_expand_list(this)');
+
+            new_list.appendChild(expand);
+        }
+
+
+
         panel.innerHTML = (`
             <h4>${trans[lang].settings.inbuilt.ignore.name}</h4>
             <div class="inner-preview pad"></div>
@@ -6492,7 +6547,29 @@ let has_prompted_for_update = false;
                     <li>${trans[lang].settings.inbuilt.ignore.consider.bad[1]}</li>
                 </ul>
             </div>
+            <div class="text-container">
+                <div class="heading content-form">
+                    <h5>${trans[lang].settings.music.profile_shortcut.placeholder}</h5>
+                    <div class="input-container">
+                        <input type="text" maxlength="80" id="id_user" name="user" placeholder="${trans[lang].settings.music.profile_shortcut.header}">
+                        <input type="hidden" name="listaction" value="add">
+                        <input type="hidden" name="submit" value="ignorelist">
+                        <button class="bleh--btn primary icon add" type="submit">${trans[lang].settings.add}</button>
+                    </div>
+                </div>
+            </div>
+            <div class="alert alert-info">
+                ${trans[lang].settings.inbuilt.ignore.count.replace('{c}', amount)}
+            </div>
         `);
+
+        panel.appendChild(new_list);
+    }
+
+    unsafeWindow._expand_list = function(button) {
+        let list = button.parentElement;
+
+        list.setAttribute('data-expanded', 'true');
     }
 
     function patch_settings_privacy_panel(token, privacy_panel) {
