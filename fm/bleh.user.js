@@ -6484,7 +6484,7 @@ let has_prompted_for_update = false;
         new_list.classList.add('generic-table-list', 'user-vertical-list');
 
         let exceeded = false;
-        let exceed_amount = 25;
+        let exceed_amount = 10;
         let amount = 0;
 
         list.forEach((item, index) => {
