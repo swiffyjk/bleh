@@ -889,7 +889,10 @@ const trans = {
                     delete_user: 'Remove {u}\'s note',
                     view: 'View your profile notes'
                 },
-                you: 'You'
+                you: 'You',
+                avatar_radius: {
+                    name: 'User avatar shape'
+                }
             },
             redirects: {
                 name: 'Redirects',
@@ -3551,7 +3554,9 @@ let settings_template = {
 
     toggle_icon: false,
 
-    log_show_all: false
+    log_show_all: false,
+
+    avatar_radius: 50
 };
 let settings_base = {
     theme: {
@@ -3955,6 +3960,12 @@ let settings_base = {
         value: false,
         values: [true, false],
         type: 'toggle'
+    },
+    avatar_radius: {
+        css: 'avatar-radius',
+        unit: '%',
+        value: 50,
+        type: 'slider'
     }
 };
 let inbuilt_settings = {
@@ -5326,7 +5337,7 @@ let has_prompted_for_update = false;
             ) continue;
 
             try {
-                document.body.style.setProperty(`--${settings_base[setting].css}`, settings[setting]);
+                document.body.style.setProperty(`--${settings_base[setting].css}`, `${settings[setting]}${settings_base[setting].unit}`);
             } catch(e) {
                 console.log('bleh - setting base entry for', setting, 'is not accessible');
             }
@@ -10031,6 +10042,17 @@ let has_prompted_for_update = false;
                     `)}
                 </div>
                 <div class="bleh--panel">
+                    <div class="slider-container" id="container-avatar_radius">
+                        <button class="btn reset" onclick="_reset_item('avatar_radius')">${trans[lang].settings.reset}</button>
+                        <div class="heading">
+                            <h5>${trans[lang].settings.profiles.avatar_radius.name}</h5>
+                        </div>
+                        <div class="slider">
+                            <div class="slider-track" id="slider-track-avatar_radius"><div class="slider-fill"></div><div class="slider-nub"></div></div>
+                            <input type="range" min="0" max="50" value="0" step="1" id="slider-avatar_radius" oninput="_update_item('avatar_radius', this.value)">
+                            <p id="value-avatar_radius">0</p>
+                        </div>
+                    </div>
                     <h4>${trans[lang].settings.music.profile_shortcut.name}</h4>
                     <p>${trans[lang].settings.music.profile_shortcut.bio}</p>
                     <div class="text-container" id="container-profile_shortcut">
@@ -10806,6 +10828,7 @@ let has_prompted_for_update = false;
         } else if (page == 'profiles') {
             init_profile_notes();
             init_profile_page();
+            refresh_all();
         } else if (page == 'sku') {
             bleh_sku_page();
         }
@@ -11287,7 +11310,7 @@ let has_prompted_for_update = false;
             } catch(e) {}
 
             // save setting into body
-            document.body.style.setProperty(`--${settings_base[item].css}`, value);
+            document.body.style.setProperty(`--${settings_base[item].css}`, `${value}${settings_base[item].unit}`);
             document.documentElement.setAttribute(`data-bleh--${item}`, `${value}`);
 
             document.documentElement.setAttribute('data-bleh--hsl-override', 'false');

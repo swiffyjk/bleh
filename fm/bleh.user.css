@@ -15,7 +15,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Noto+Color+Emoji&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Comfortaa:wght@700&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Ubuntu+Sans:ital,wght@0,100..800;1,100..800&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Work+Sans:ital,wght@0,100..900;1,100..900&display=swap');
 
 body {
     --version-build: '2025.0101';
@@ -410,7 +409,6 @@ body {
 
     /*--avatar-generic-background: hsl(var(--b6));*/
     --avatar-generic-background: linear-gradient(180deg, hsla(var(--h3), 20%) 0%, hsl(var(--b6)) 100%);
-    --avatar-radius: 50%;
 
     --highlight-shadow: hsla(var(--b3), 0.25) 0 0 2px 1px;
     --menu-shadow: 2px 2px 24px 0 hsla(var(--b7), 0.35), 3px 6px 48px 16px hsla(var(--b7), 0.25);
@@ -745,6 +743,7 @@ body {
 
         &[data-bleh--season="halloween"] {
             --cards-overlay: linear-gradient(0deg, rgba(252, 139, 105, 0.04) 0%, rgba(0,0,0,0) 100%);
+            --cards-overlay-height: 100px;
         }
 
         &[data-bleh--season="fall"] {
@@ -752,6 +751,7 @@ body {
             --cards-overlay-image: var(--overlay-ice);
             --cards-overlay-image-subtlest: var(--overlay-ice-subtlest);
             --cards-overlay-image-spikes: var(--overlay-ice-spikes);
+            --cards-overlay-height: 120px;
         }
         &[data-bleh--season="christmas"] {
             --cards-overlay: linear-gradient(180deg, rgba(157, 211, 255, 0.09) 0%, rgba(0,0,0,0) 100%);
@@ -759,12 +759,14 @@ body {
             --cards-overlay-image-subtle: var(--overlay-ice-subtle);
             --cards-overlay-image-subtlest: var(--overlay-ice-subtlest);
             --cards-overlay-image-spikes: var(--overlay-ice-spikes);
+            --cards-overlay-height: 120px;
         }
         &[data-bleh--season="new_years"] {
             --cards-overlay: linear-gradient(180deg, rgba(71, 43, 124, 0.2) 0%, rgba(0,0,0,0) 60%);
-            --cards-overlay-image: var(--overlay-ice);
+            --cards-overlay-image: var(--overlay-ice-subtle);
             --cards-overlay-image-subtle: var(--overlay-ice-subtle);
             --cards-overlay-image-spikes: var(--overlay-ice-spikes);
+            --cards-overlay-height: 70px;
         }
     }
 
@@ -807,6 +809,9 @@ body {
         --show-toggle-icon: block;
     }
 
+    &[data-ff--developer="true"] {
+        --log: flex;
+    }
     &[data-bleh--log_show_all="true"] {
         --log-show: block;
     }
@@ -1215,6 +1220,7 @@ last.fm changes as of 2024-05-20 */
     width: 20px !important;
     height: 20px !important;
     --mask-size: 16px;
+    border-radius: var(--avatar-radius);
 }
 
 .auth-link {
@@ -1609,7 +1615,7 @@ last.fm changes as of 2024-05-20 */
             left: 0;
             top: 0;
             right: 0;
-            height: 150px;
+            height: var(--cards-overlay-height);
             max-height: 100%;
             display: var(--cards-overlay-display);
             background: var(--cards-overlay);
@@ -5409,6 +5415,10 @@ the body text becomes bigger by default - this reverts that */
             transition: none;
         }
     }*/
+}
+
+.avatar img {
+    border-radius: inherit;
 }
 
 .shout-user-avatar, .shout-user-avatar-link {
@@ -10979,6 +10989,7 @@ table.table tr:nth-child(2n) td {
             left: unset;
             right: 0;
             --mask-size: var(--cover-size-32);
+            border-radius: var(--avatar-radius);
         }
     }
 }
@@ -15239,6 +15250,7 @@ trying to list every song ever made by someone identifying as a female, which is
         .avatar {
             aspect-ratio: 1 / 1;
             position: relative;
+            border-radius: var(--avatar-radius);
 
             &:before, &:after {
                 display: none !important;
@@ -19394,6 +19406,15 @@ section > .section-controls .subpage-title {
     z-index: 10000000000;
     pointer-events: none;
 
+    &:not(:hover) {
+        opacity: 0.4;
+
+        & > div:nth-child(2),
+        & > div:nth-child(4), & > div:nth-child(5) {
+            display: none;
+        }
+    }
+
     div {
         font-family: Lucida Grande, Verdana, Geneva, Tahoma, sans-serif;
         font-size: 14px;
@@ -19446,7 +19467,7 @@ section > .section-controls .subpage-title {
     font-size: 14px;
     line-height: 18px;
 
-    display: flex;
+    display: var(--log, none);
     flex-direction: column;
 
     position: fixed;
