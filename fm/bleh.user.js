@@ -4354,8 +4354,6 @@ let has_prompted_for_update = false;
         set_season();
         seasonal_timer_end();
 
-        error_page();
-
         if (window.location.href.startsWith(setup_url.replace('{root}', root))) {
             bleh_setup();
         } else if (window.location.href.startsWith(sponsor_url.replace('{root}', root))) {
@@ -4363,6 +4361,11 @@ let has_prompted_for_update = false;
         } else if (window.location.href.startsWith(bleh_url.replace('{root}', root))) {
             bleh_settings();
         } else {
+            error_page();
+
+            if (page.state.error)
+                return;
+
             if (page.type == 'user')
                 bleh_profiles();
             else if (page.type == 'artist')
@@ -14782,6 +14785,7 @@ let has_prompted_for_update = false;
 
 
     function error_page() {
+        page.state.error = false;
         let page_content = document.body.querySelector('.page-content');
 
         if (page_content == null)
@@ -14791,6 +14795,7 @@ let has_prompted_for_update = false;
 
         if (error_marvin == null)
             return;
+        page.state.error = true;
         error_marvin.setAttribute('data-bleh', 'true');
 
         let error_content = page_content.querySelector('h1');

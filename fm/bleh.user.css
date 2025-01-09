@@ -18295,7 +18295,7 @@ section > .section-controls .subpage-title {
     z-index: -1;
     background-position: 0 var(--profile-header-background-offset);
     background-size: cover;
-    filter: blur(22px);
+    filter: blur(30px) saturate(145%);
 
     height: var(--profile-header-background-height);
 
