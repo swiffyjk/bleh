@@ -8357,8 +8357,8 @@ let has_prompted_for_update = false;
                 grid_colour.classList.add('grid-item-colour-bg');
                 image_wrap.appendChild(grid_colour);
 
+                image.setAttribute('crossorigin', 'anonymous');
                 try {
-                    image.setAttribute('crossorigin', 'anonymous');
                     image.addEventListener('load', function() {
                         let thief = new ColorThief();
                         let colour = thief.getColor(image);
@@ -8373,6 +8373,9 @@ let has_prompted_for_update = false;
                         grid.style.setProperty('--lit-over', 1);
                     });
                 } catch(e) {}
+
+                // TODO: add a timeout to check if the image has had its
+                // colour taken and if not do it manually after a set amount of time
             }
 
             let plays_elem;
