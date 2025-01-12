@@ -108,19 +108,13 @@ body {
     --hue-pro: 174;
 
     --hue-brand-yt: -2;
-    --lit-brand-yt: 0.9;
     --hue-brand-sp: 160;
-    --lit-brand-sp: 0.9;
     --hue-brand-sc: 10;
     --hue-brand-it: 345;
     --hue-brand-am: 345;
     --hue-brand-fb: 215;
-    --sat-brand-fb: 1.15;
-    --lit-brand-fb: 0.95;
     --hue-brand-ig: 300;
     --hue-brand-twt: 202;
-    --sat-brand-twt: 1.1;
-    --lit-brand-twt: 0.9;
 
     --font: var(--custom_font, ''), Ubuntu Sans, Spline Sans, Inter, Roboto, Noto Sans, Noto Sans JP, Noto Sans KR, Noto Sans TC, var(--font_emoji_name, ''), Lucida Grande, Verdana, Tahoma, -apple-system, BlinkMacSystemFont, sans-serif;
     --font-code: Spline Sans Mono, Iosevka, JetBrains Mono, Roboto Mono, monospace, var(--font);
@@ -240,7 +234,6 @@ button, .btn-primary, .gallery-image-report,
 .gallery-image-preferred-states, .image-details .gallery-image-buttons button,
 .masthead-logo a,
 body:after,
-.listening-report-promo--year,
 .highcharts-point, .user-dashboard-legend-item::before, stop,
 .user-dashboard--monthly, .user-dashboard--yearly,
 .alert, .event-status,
@@ -1605,7 +1598,7 @@ last.fm changes as of 2024-05-20 */
 
     position: relative;
 
-    &:not(#current-subscription, .featured-item-panel, .shh, .view-all-panel, .metadata-list, .bleh--profile-note-panel) {
+    &:not(#current-subscription, .featured-item-panel, #current-subscription, .shh, .view-all-panel, .metadata-list, .bleh--profile-note-panel) {
         background-image: var(--cards-overlay-image, unset) !important;
         background-repeat: repeat-x !important;
         background-position: unset !important;
@@ -6020,7 +6013,8 @@ button,
         .inbox-delete-button:not([disabled]),
         #manage_data .btn-primary,
         .primary,
-        .btn-subscribe
+        .btn-subscribe,
+        .listening-report-promo--year
     ) {
         --bg: var(--cards-overlay-image-subtlest, none), hsl(var(--h3)) !important;
         --bg-hov: var(--cards-overlay-image-subtlest, none), hsla(var(--h3), 80%) !important;
@@ -6060,14 +6054,6 @@ button,
         --bg-hov: hsla(var(--b4), 60%);
         --bg-atv: hsla(var(--b4), 80%);
         --shadow: inset 0 0 0 2px hsl(var(--c2), 20%);
-    }
-
-
-    /*     SUBTLE ACCENT     */
-    &.listening-report-promo--year {
-        --bg: hsla(var(--h3), 20%);
-        --bg-hov: hsla(var(--h3), 15%);
-        --bg-atv: hsla(var(--h3), 10%);
     }
 
 
@@ -6664,6 +6650,9 @@ on the bottom of a panel !! */
 }
 
 
+.stationlinks {
+    order: 10;
+}
 .stationlink-list {
     display: flex;
     flex-direction: column;
@@ -6685,22 +6674,23 @@ on the bottom of a panel !! */
     position: relative;
     background-image: unset !important;
     display: flex;
-    gap: 16px;
+    flex-direction: column;
     margin-top: unset;
 }
 .promo-v3 .listening-report-promo-title {
     min-width: 80px;
-    color: hsl(var(--c2));
+    color: inherit;
     font-weight: var(--font-weight-medium) !important;
     order: -1;
 }
 .promo-v3 .listening-report-promo-date {
-    font-size: var(--font-size);
-    line-height: var(--line-height);
+    font-size: var(--font-size-sm);
+    line-height: var(--line-height-sm);
     margin-top: unset;
     padding-right: unset;
     font-weight: var(--font-weight-medium);
-    color: hsl(var(--c3));
+    color: inherit;
+    opacity: 0.6;
 }
 .promo-v3 .listening-report-promo-date:after {
     display: none;
@@ -6714,6 +6704,8 @@ on the bottom of a panel !! */
     height: 32px;
     margin-top: -7px;
     right: 12px;
+
+    display: none;
 }
 
 .listening-report-promo--week {
@@ -6724,9 +6716,6 @@ on the bottom of a panel !! */
 }
 .listening-report-promo--year {
     --mask: var(--icon-16-listening-report-yearly);
-    --hue: 200;
-    --sat: 1;
-    --lit: 0.7;
 }
 
 
@@ -8952,7 +8941,7 @@ text[style^="color: rgb(255, 172, 172)"] {
 
     [data-bleh--theme="light"] &,
     [data-bleh--theme="oled"] & {
-        border: 1px solid var(--card-border-base);
+        box-shadow: 0 0 0 1px var(--card-border-base) inset, var(--card-shadow);
         background: hsla(var(--b5), 70%);
     }
 
@@ -10095,11 +10084,9 @@ text[style^="color: rgb(0, 0, 0)"] {
 
 .play-this-track-playlink--youtube {
     --hue-over: var(--hue-brand-yt);
-    --lit-over: var(--lit-brand-yt) !important;
 }
 .play-this-track-playlink--spotify {
     --hue-over: var(--hue-brand-sp);
-    --lit-over: var(--lit-brand-sp) !important;
 }
 .resource-external-link--soundcloud {
     --hue-over: var(--hue-brand-sc);
@@ -10113,13 +10100,9 @@ text[style^="color: rgb(0, 0, 0)"] {
 }
 .resource-external-link--facebook {
     --hue-over: var(--hue-brand-fb);
-    --sat-over: var(--sat-brand-fb) !important;
-    --lit-over: var(--lit-brand-fb) !important;
 }
 .resource-external-link--twitter {
     --hue-over: var(--hue-brand-twt);
-    --sat-over: var(--sat-brand-twt) !important;
-    --lit-over: var(--lit-brand-twt) !important;
 }
 .resource-external-link--instagram {
     --hue-over: var(--hue-brand-ig);
@@ -10778,6 +10761,7 @@ table.table tr:nth-child(2n) td {
 /*     PRO     */
 #current-subscription {
     color: hsl(var(--c2));
+    box-shadow: var(--card-shadow) !important;
 
     &:has(.subscription-button-row) {
         --hue-over: var(--hue-pro);
@@ -11493,6 +11477,10 @@ table.table tr:nth-child(2n) td {
     font-weight: var(--font-weight-medium);
     margin-top: unset;
     margin-bottom: var(--card-gap);
+
+    .events-list-sidebar + & {
+        margin-top: var(--card-gap);
+    }
 }
 .user-events-sidebar .events-list-sidebar {
     margin-top: unset;
@@ -14153,7 +14141,6 @@ input[type="range"]::-moz-range-progress {
 
 
 .toggle-container {
-    display: flex;
     transition-property: background-color, padding, margin, border-radius;
     transition-duration: var(--trans);
     transition-timing-function: var(--trans-function);
@@ -14186,6 +14173,7 @@ input[type="range"]::-moz-range-progress {
     }
 }
 
+.toggle-container,
 .select-container {
     display: flex;
 }
