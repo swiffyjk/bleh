@@ -450,7 +450,11 @@ const trans = {
             listens: {
                 count_listens: '{c} listens',
                 loading_listens: 'listens',
-                other_listeners: '{c} others'
+                other_listeners: '{c} others',
+                custom: {
+                    tooltip: 'Pick a user',
+                    name: 'View listens from another user'
+                }
             },
             wiki: 'About',
             wiki_edit: 'edit wiki',
@@ -1393,7 +1397,11 @@ const trans = {
             listens: {
                 count_listens: '{c} scrobbels',
                 loading_listens: 'scrobbels',
-                other_listeners: '{c} hörer'
+                other_listeners: '{c} hörer',
+                custom: {
+                    tooltip: 'Pick a user',
+                    name: 'View listens from another user'
+                }
             },
             wiki: 'Über',
             wiki_edit: 'wiki editieren',
@@ -2304,7 +2312,11 @@ const trans = {
             listens: {
                 count_listens: '{c} listens',
                 loading_listens: 'listens',
-                other_listeners: '{c} others'
+                other_listeners: '{c} others',
+                custom: {
+                    tooltip: 'Pick a user',
+                    name: 'View listens from another user'
+                }
             },
             wiki: 'About',
             wiki_edit: 'edit wiki',
@@ -14327,6 +14339,15 @@ let has_prompted_for_update = false;
         }
 
 
+        // other user
+        create_listen_item(listen_container, {
+            name: 'other',
+            listens: -3,
+            link: scrobble_page,
+            button: true
+        }, page.type);
+
+
         // append
         top_container.appendChild(listen_container);
         col_main.insertBefore(top_container, col_main.firstElementChild);
@@ -14521,10 +14542,10 @@ let has_prompted_for_update = false;
         top_container.appendChild(interact_container);
     }
 
-    function create_listen_item(parent, {name, listens, link, avi, count=0}, header_type) {
+    function create_listen_item(parent, {name, listens, link, avi, count=0, button=false}, header_type) {
         log(`creating listen item of ${name}, ${count}, ${listens}`, 'artist', 'info', {avi: avi, link: link});
 
-        let listen_item = document.createElement('a');
+        let listen_item = document.createElement((!button) ? 'a' : 'button');
         listen_item.classList.add('btn', 'listen-item', 'view-item');
         listen_item.setAttribute('href', `${root}user/${name}/library/music/${link}`);
         //listen_item.setAttribute('target', '_blank');
@@ -14591,6 +14612,15 @@ let has_prompted_for_update = false;
             });
 
             register_menu(listen_item, menu);
+        } else if (listens == -3) {
+            listen_item.classList.add('listen-item-other');
+
+            listen_item.removeAttribute('href');
+            listen_item.setAttribute('onclick', `_other_listener('${link}')`);
+
+            tippy(listen_item, {
+                content: trans[lang].music.listens.custom.tooltip
+            });
         } else {
             // other listeners by clicking this link (artist)
             listen_item.innerHTML = (`
@@ -17559,7 +17589,26 @@ let has_prompted_for_update = false;
         let view_buttons = document.createElement('div');
         view_buttons.classList.add('view-buttons', 'glacier-library-buttons');
 
-        let wrappers = legacy_header.querySelectorAll('.library-header-ctas > *');
+        let cta = legacy_header.querySelector('.library-header-ctas');
+
+        let love_form = legacy_header.querySelector('.library-header-love-form:not(:has(button))');
+        if (love_form) {
+            let state = love_form.querySelector(':scope > .love-button-toggle').getAttribute('data-ajax-form-state');
+            if (state == 'loved')
+                state = 0;
+            else
+                state = 1;
+
+            let love_form_items = love_form.querySelectorAll(':scope > div > div');
+            love_form_items.forEach((item, index) => {
+                if (state != index)
+                    item.classList.add('hide');
+
+                cta.appendChild(item);
+            });
+        }
+
+        let wrappers = cta.querySelectorAll(':scope > *');
         wrappers.forEach((wrapper) => {
             let button;
 
@@ -17570,7 +17619,13 @@ let has_prompted_for_update = false;
             else
                 button = wrapper.querySelector('button');
 
-            console.info(wrapper, button);
+            if (!button)
+                button = wrapper.querySelector('span');
+
+            if (!button)
+                return;
+
+            console.info('libraryyy', wrapper, button);
             button.classList.add('btn', 'view-item', 'glacier-library-button');
 
             let tooltips = wrapper.querySelectorAll('.user-library-controls-tooltip');
@@ -18982,6 +19037,37 @@ let has_prompted_for_update = false;
                 </div>
             </div>
         `), true);
+    }
+
+    unsafeWindow._other_listener = function(id) {
+        dialog({
+            id: 'other_listener',
+            title: trans[lang].music.listens.custom.name,
+            body: (`
+            <div class="text-container">
+                <div class="avatar-container">
+                    <div class="avatar-inner avatar--bleh-missing">
+                        <img>
+                    </div>
+                </div>
+                <div class="heading content-form">
+                    <h5>${trans[lang].settings.music.profile_shortcut.placeholder}</h5>
+                    <div class="input-container">
+                        <input type="text" maxlength="40" id="text-profile" placeholder="${trans[lang].settings.music.profile_shortcut.header}">
+                        <button class="bleh--btn primary save" onclick="_send_other_listener('${id}')">${trans[lang].settings.done}</button>
+                    </div>
+                </div>
+            </div>
+            `)
+        });
+    }
+    unsafeWindow._send_other_listener = function(link) {
+        let name = dialogs['other_listener'].instance.querySelector('#text-profile').value;
+
+        dialog_rm({
+            id: 'other_listener'
+        });
+        window.location.href = `${root}user/${name}/library/music/${link}`;
     }
 
 
