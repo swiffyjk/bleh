@@ -15633,6 +15633,13 @@ let has_prompted_for_update = false;
             bleh_music_page_charts();
 
             bleh_about_artist();
+
+
+            let similar_tracks = page.structure.main.querySelector('.track-similar-tracks');
+            if (similar_tracks) {
+                let similar_panel = similar_tracks.parentElement;
+                similar_panel.classList.add('similar-panel');
+            }
         } else {
             let btn_add = page.structure.side.querySelector('.add-button');
             if (btn_add != null)
@@ -18408,6 +18415,9 @@ let has_prompted_for_update = false;
 
         if (panel == null)
             return;
+
+        let more_link = panel.nextElementSibling;
+        panel.appendChild(more_link);
 
         let form = panel.querySelector('#recent-tracks-settings');
         let link = panel.querySelector('[aria-controls="recent-tracks-settings"]');

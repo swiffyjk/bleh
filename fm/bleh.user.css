@@ -393,7 +393,7 @@ body {
     --item-med-radius: 6px;
     --item-big-radius: 9px;
 
-    --profile-header-background-height: 400px;
+    --profile-header-background-height: 350px;
     --profile-header-background-offset: 27%;
 
     --playlist-cover-size: 230px;
@@ -1506,6 +1506,17 @@ last.fm changes as of 2024-05-20 */
     padding: unset;
     float: unset !important;
     margin-top: var(--card-gap) !important;
+
+    &.col-main {
+        display: flex;
+        flex-direction: column;
+        gap: var(--card-gap);
+
+        & > div,
+        & > section {
+            margin-top: unset !important;
+        }
+    }
 
     &.col-sidebar:not(.track-overview-video-column) {
         display: flex;
@@ -4191,21 +4202,24 @@ better than the default selector '#app a' i suppose */
     text-align: left;
 }
 
-.more-link-with-action a {
-    position: relative;
-}
-.more-link-with-action a + a:before {
-    display: none !important;
-}
-.more-link-with-action a + a {
-    margin-left: 10px;
+.more-link-with-action {
+    display: flex;
+    gap: var(--button-list-gap);
+
+    a {
+        position: relative;
+        margin: unset !important;
+
+        & + a {
+            &:before {
+                display: none !important;
+            }
+        }
+    }
 }
 
 
 #recent-tracks-section {
-    /* add space for the button */
-    padding-bottom: calc(var(--card-padding) + 32px + var(--card-gap));
-
     &.has-refreshed {
         animation-name: wash_panel;
         animation-duration: 2.2s;
@@ -4235,12 +4249,6 @@ better than the default selector '#app a' i suppose */
         transition-duration: var(--trans);
         transition-timing-function: var(--trans-function);
     }
-}
-#recent-tracks-section + .more-link {
-    position: relative;
-    top: calc(-1 * (32px + var(--card-gap) + var(--card-padding)));
-    margin-bottom: calc(-1 * (32px + var(--card-gap)));
-    right: var(--card-padding);
 }
 
 @keyframes wash_panel {
@@ -9985,6 +9993,10 @@ text[style^="color: rgb(0, 0, 0)"] {
 .source-album-nodata {
     color: hsl(var(--c2), 80%);
     cursor: default;
+}
+
+.similar-panel {
+    order: 10;
 }
 .track-similar-tracks {
     margin-top: 12px;
