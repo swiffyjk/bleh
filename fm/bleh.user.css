@@ -6690,7 +6690,7 @@ on the bottom of a panel !! */
     padding-right: unset;
     font-weight: var(--font-weight-medium);
     color: inherit;
-    opacity: 0.6;
+    opacity: 0.7;
 }
 .promo-v3 .listening-report-promo-date:after {
     display: none;
