@@ -14,7 +14,7 @@
 // @require      https://unpkg.com/@popperjs/core@2
 // @require      https://unpkg.com/tippy.js@6
 // @require      https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.30.1/moment.min.js
-// @require      https://katelyynn.github.io/bleh/fm/js/vibrant/Vibrant.min.js
+// @require      https://cdnjs.cloudflare.com/ajax/libs/color-thief/2.3.0/color-thief.umd.js
 // @require      https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js
 // @require      https://cdn.jsdelivr.net/npm/chartjs-adapter-moment@^1
 // ==/UserScript==
@@ -8332,8 +8332,6 @@ let has_prompted_for_update = false;
             }
         };
 
-        let developer = ff('developer');
-
         let grids = page.structure.main.querySelectorAll('.grid-items-item:not([data-bleh-music-grids])');
         grids.forEach((grid) => {
             let is_loading = (grid.querySelector('.grid-items-empty-inner') != null);
@@ -8362,57 +8360,17 @@ let has_prompted_for_update = false;
                 try {
                     image.setAttribute('crossorigin', 'anonymous');
                     image.addEventListener('load', function() {
-                        let vibrant = new Vibrant(image);
-                        let swatches = vibrant.swatches();
+                        let thief = new ColorThief();
+                        let colour = thief.getColor(image);
 
-                        console.info('ugh', swatches, Array.from(swatches));
-                        if (developer) {
-                            let swatch_overlay = document.createElement('div');
-                            swatch_overlay.classList.add('dev-swatches');
+                        let hsl = rgb_to_hsl(colour[0], colour[1], colour[2]);
 
-                            grid.appendChild(swatch_overlay);
+                        grid_colour.style.setProperty('background', `rgb(${colour})`);
 
-                            for (let swatch in swatches) {
-                                if (swatches[swatch] == undefined)
-                                    continue;
-
-                                let swatch_elem = document.createElement('div');
-                                swatch_elem.classList.add('dev-swatch', 'colourful');
-                                swatch_elem.textContent = swatch;
-
-                                if (swatch == 'DarkMuted')
-                                    swatch_elem.classList.add('current');
-
-                                let hsl = hex_to_hsl(swatches[swatch].getHex());
-                                swatch_elem.style.setProperty('--hue-over', hsl.h);
-                                swatch_elem.style.setProperty('--sat-over', clamp_sat((hsl.s / 100) * 3));
-                                swatch_elem.style.setProperty('--lit-over', 1);
-
-                                swatch_overlay.appendChild(swatch_elem);
-                            }
-                        }
-
-                        if (swatches.DarkMuted) {
-                            console.log('dark muted', swatches.DarkMuted.getHex());
-                            let hsl = hex_to_hsl(swatches.DarkMuted.getHex());
-
-                            grid_colour.style.setProperty('background', swatches.DarkMuted.getHex());
-
-                            grid.classList.add('grid-items-item-has-colour');
-                            grid.style.setProperty('--hue-over', hsl.h);
-                            grid.style.setProperty('--sat-over', clamp_sat((hsl.s / 100) * 3));
-                            grid.style.setProperty('--lit-over', 1);
-                        } else {
-                            console.log('vibrant', swatches.Vibrant.getHex());
-                            let hsl = hex_to_hsl(swatches.Vibrant.getHex());
-
-                            grid_colour.style.setProperty('background', swatches.Vibrant.getHex());
-
-                            grid.classList.add('grid-items-item-has-colour');
-                            grid.style.setProperty('--hue-over', hsl.h);
-                            grid.style.setProperty('--sat-over', clamp_sat((hsl.s / 100) * 3));
-                            grid.style.setProperty('--lit-over', 1);
-                        }
+                        grid.classList.add('grid-items-item-has-colour');
+                        grid.style.setProperty('--hue-over', hsl.h);
+                        grid.style.setProperty('--sat-over', clamp_sat((hsl.s / 100) * 3));
+                        grid.style.setProperty('--lit-over', 1);
                     });
                 } catch(e) {}
             }
@@ -13123,7 +13081,7 @@ let has_prompted_for_update = false;
 
 
 
-    /* https://stackoverflow.com/questions/46432335/hex-to-hsl-convert-javascript */
+    // https://stackoverflow.com/questions/46432335/hex-to-hsl-convert-javascript
     function hex_to_hsl(hex) {
         let result = new RegExp(/^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i).exec(hex);
 
@@ -13167,6 +13125,20 @@ let has_prompted_for_update = false;
             s: s,
             l: l
         };
+    }
+
+    function rgb_to_hsl(r, g, b) {
+        let hex = rgb_to_hex(r, g, b);
+        return hex_to_hsl(hex);
+    }
+
+    // https://stackoverflow.com/questions/5623838/rgb-to-hex-and-hex-to-rgb#5624139
+    function comp_to_hex(comp) {
+        let hex = comp.toString(16);
+        return (hex.length == 1) ? '0' + hex : hex;
+    }
+    function rgb_to_hex(r, g, b) {
+        return '#' + comp_to_hex(r) + comp_to_hex(g) + comp_to_hex(b);
     }
 
     // saturation should not exceed 2, definitely not
