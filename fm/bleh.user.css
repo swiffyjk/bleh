@@ -3733,7 +3733,7 @@ h2:not(.count, .mask-multi-text, .mask-text, .sr-only, .js-gallery-heading, .top
 {
     color: hsl(var(--c1));
     font-size: 16px;
-    line-height: 20px;
+    line-height: 17px; /* matches button on the right */
     /*margin-bottom: 12px;*/
     font-weight: var(--font-weight-bold);
     letter-spacing: unset;
