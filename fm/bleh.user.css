@@ -276,7 +276,8 @@ a,
 .notification-user-name,
 .error-info,
 .to-consider li,
-.inbox-message-view .inbox-message-sender-avatar
+.inbox-message-view .inbox-message-sender-avatar,
+.colourful
 {
     --hue:  var(--hue-over,
             var(--hue-album,
@@ -3910,6 +3911,23 @@ better than the default selector '#app a' i suppose */
 
     .link-block-cover-link {
         z-index: 20;
+    }
+
+
+    .dev-swatches {
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index: 10000;
+
+        .dev-swatch {
+            background-color: hsl(var(--h3));
+            color: hsl(var(--b7));
+
+            &.current {
+                font-weight: var(--font-weight-medium);
+            }
+        }
     }
 }
 

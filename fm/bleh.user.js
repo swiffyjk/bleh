@@ -8332,6 +8332,8 @@ let has_prompted_for_update = false;
             }
         };
 
+        let developer = ff('developer');
+
         let grids = page.structure.main.querySelectorAll('.grid-items-item:not([data-bleh-music-grids])');
         grids.forEach((grid) => {
             let is_loading = (grid.querySelector('.grid-items-empty-inner') != null);
@@ -8363,7 +8365,34 @@ let has_prompted_for_update = false;
                         let vibrant = new Vibrant(image);
                         let swatches = vibrant.swatches();
 
-                        if (swatches.DarkMuted != null) {
+                        console.info('ugh', swatches, Array.from(swatches));
+                        if (developer) {
+                            let swatch_overlay = document.createElement('div');
+                            swatch_overlay.classList.add('dev-swatches');
+
+                            grid.appendChild(swatch_overlay);
+
+                            for (let swatch in swatches) {
+                                if (swatches[swatch] == undefined)
+                                    continue;
+
+                                let swatch_elem = document.createElement('div');
+                                swatch_elem.classList.add('dev-swatch', 'colourful');
+                                swatch_elem.textContent = swatch;
+
+                                if (swatch == 'DarkMuted')
+                                    swatch_elem.classList.add('current');
+
+                                let hsl = hex_to_hsl(swatches[swatch].getHex());
+                                swatch_elem.style.setProperty('--hue-over', hsl.h);
+                                swatch_elem.style.setProperty('--sat-over', clamp_sat((hsl.s / 100) * 3));
+                                swatch_elem.style.setProperty('--lit-over', 1);
+
+                                swatch_overlay.appendChild(swatch_elem);
+                            }
+                        }
+
+                        if (swatches.DarkMuted) {
                             console.log('dark muted', swatches.DarkMuted.getHex());
                             let hsl = hex_to_hsl(swatches.DarkMuted.getHex());
 
