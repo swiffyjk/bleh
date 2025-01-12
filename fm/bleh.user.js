@@ -3129,7 +3129,7 @@ let seasonal_events = [
 
         snowflakes: {
             state: true,
-            count: 100
+            count: 90
         }
     },
     {
