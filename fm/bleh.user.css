@@ -275,7 +275,8 @@ a,
 .shout-user-avatar[data-avatar-themed],
 .notification-user-name,
 .error-info,
-.to-consider li
+.to-consider li,
+.inbox-message-view .inbox-message-sender-avatar
 {
     --hue:  var(--hue-over,
             var(--hue-album,
@@ -3729,7 +3730,8 @@ h2:not(.count, .mask-multi-text, .mask-text, .sr-only, .js-gallery-heading, .top
 .graph-description h3,
 .event-section-date-heading,
 .bookmarks-header-text,
-.obsession-search-result-header
+.obsession-search-result-header,
+.inbox-message-view .inbox-message-subject
 {
     color: hsl(var(--c1));
     font-size: 16px;
@@ -7496,8 +7498,13 @@ input:is([name^="track_name"], [name^="artist_name"], [name^="album_name"], [nam
     border-radius: var(--card-radius);
     box-shadow: var(--override-full-shadow, var(--menu-shadow));
     color: hsl(var(--c2));
-    padding: var(--card-gap);
+    padding: var(--card-padding);
     position: relative;
+
+    [data-bleh--theme="light"] &,
+    [data-bleh--theme="oled"] & {
+        box-shadow: var(--override-full-shadow, 0 0 0 1px var(--card-border-base) inset, var(--menu-shadow));
+    }
 
     display: flex;
     flex-direction: column;
@@ -7739,8 +7746,11 @@ input:is([name^="track_name"], [name^="artist_name"], [name^="album_name"], [nam
     display: none;
 }
 .date-range-picker-content,
-.dropdown-menu-clickable--padded, .navlist-hidden-list, .modal-body, .library-search-results, .events-filter-location-dropdown {
+.dropdown-menu-clickable--padded, .navlist-hidden-list, .library-search-results, .events-filter-location-dropdown {
     padding: var(--card-gap) !important;
+}
+.modal-body {
+    padding: var(--card-padding) !important;
 }
 
 .modal-dialog:not(:has(.modal-actions-v3)) {
@@ -8331,25 +8341,36 @@ a.gallery-image-preferred-off .gallery-image-preferred-states::before {
     top: var(--card-padding);
     left: var(--card-padding);
     bottom: 0;
-    background: linear-gradient(180deg, hsla(var(--h4),30%) 0%, rgba(0,0,0,0) 100%);
+    background: linear-gradient(180deg, hsl(var(--h4), 30%) 0%, rgba(0,0,0,0) 100%);
     width: 180px;
     min-height: 300px;
+
     display: flex;
-    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--item-list-gap);
+
     padding: var(--card-padding) !important;
     margin: -20px -5px;
     border-radius: var(--card-radius);
+
+    .inbox-message-sender-name {
+        text-align: center;
+        font-size: 16px;
+        line-height: 20px;
+        font-weight: var(--font-weight-bold);
+    }
+    .inbox-message-timestamp {
+        text-align: center;
+        font-size: var(--font-size);
+        line-height: var(--line-height);
+        color: hsl(var(--c3));
+        cursor: default;
+    }
 }
 
 .inbox-message-view .inbox-message {
     height: 100%;
-}
-
-.inbox-message-view .inbox-message-subject {
-    font-size: var(--font-size);
-    font-weight: var(--font-weight-medium);
-    line-height: var(--line-height);
-    margin-bottom: 12px;
 }
 
 .inbox-message-view .inbox-message-preview, .inbox-message-view .inbox-message-info {
@@ -8366,29 +8387,6 @@ a.gallery-image-preferred-off .gallery-image-preferred-states::before {
 .inbox-message-view .inbox-message-message blockquote cite {
     color: hsl(var(--c3));
     display: block;
-}
-
-.inbox-message-sender-name {
-    --hidden-msg: 'Hateful user';
-}
-
-.inbox-message-view .inbox-message-sender-name {
-    position: absolute;
-    top: var(--profile-header-avatar-size);
-    left: -195px;
-    width: 180px;
-    text-align: center;
-    font-size: 16px;
-    font-weight: var(--font-weight-medium);
-}
-.inbox-message-view .inbox-message-timestamp {
-    position: absolute;
-    top: 120px;
-    left: -195px;
-    width: 180px;
-    text-align: center;
-    font-size: 14px;
-    color: hsl(var(--c3));
 }
 
 
@@ -9421,6 +9419,8 @@ text[style^="color: rgb(255, 172, 172)"] {
     .col-sm-12 {
         width: var(--cards-width);
     }
+
+    background: hsl(var(--h2));
 }
 
 
@@ -15719,9 +15719,7 @@ button.bleh--gallery-bookmark-image-btn {
         }
     }
 
-    .btn,
-    a,
-    button:not(.toggle, .reset, .select-button, .btn-primary) {
+    :is(.btn, a, button):not(.toggle, .reset, .select-button, .btn-primary) {
         [data-ff--view_button_nav="true"] & {
             --bg: hsl(var(--b3), 60%);
             --bg-hov: hsl(var(--b3), 80%);
@@ -16031,6 +16029,7 @@ button.bleh--gallery-bookmark-image-btn {
             }*/
 
             --btn-left: 12px !important;
+            --show-icon: block;
             --font-size: 0;
 
             &.view-profile-btn {

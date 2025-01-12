@@ -246,6 +246,7 @@ const trans = {
                 sent_overview: 'outgoing inbox',
                 compose: 'compose message',
                 message_overview: 'message',
+                sent_message: 'message',
                 notifications: 'notifications'
             },
             releases: {
@@ -1254,6 +1255,7 @@ const trans = {
             sent_overview: 'Messages',
             compose: 'Messages',
             message_overview: 'Messages',
+            sent_message: 'Messages',
             notifications: 'Notifications'
         },
         charts: {
@@ -2169,6 +2171,7 @@ const trans = {
             sent_overview: 'Messages',
             compose: 'Messages',
             message_overview: 'Messages',
+            sent_message: 'Messages',
             notifications: 'Notifications'
         },
         charts: {
@@ -3066,6 +3069,7 @@ const trans = {
             sent_overview: 'Messages',
             compose: 'Messages',
             message_overview: 'Messages',
+            sent_message: 'Messages',
             notifications: 'Notifications'
         },
         charts: {
@@ -19607,9 +19611,23 @@ let has_prompted_for_update = false;
                 if (notification.classList.contains('inbox-notifications__item--highlight'))
                     notification.classList.add('notification-user-name', `user-status--bleh-${badge.type}`, `user-status--bleh-user-${name_text}`);
             });
-        } else if (page.subpage == 'message_overview') {
+        } else if (page.subpage == 'message_overview' || page.subpage == 'sent_message') {
             let inbox = page.structure.container.querySelector('.inbox-message-view');
             page.structure.main.appendChild(inbox);
+
+
+            let sender_panel = inbox.querySelector('.inbox-message-sender-avatar');
+            let sender_name = inbox.querySelector('.inbox-message-sender-name');
+            let sender_time = inbox.querySelector('.inbox-message-timestamp');
+
+            sender_panel.appendChild(sender_name);
+            sender_panel.appendChild(sender_time);
+
+            let avatar = sender_panel.querySelector('.avatar');
+            let name_text = sender_name.textContent.trim();
+            let badge = patch_avatar(avatar, name_text);
+
+            sender_panel.classList.add(`user-status--bleh-${badge.type}`, `user-status--bleh-user-${name_text}`);
         } else if (page.subpage == 'compose') {
             let inbox = page.structure.container.querySelector('.inbox-compose-view');
             page.structure.main.appendChild(inbox);
