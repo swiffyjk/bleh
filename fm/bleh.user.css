@@ -6697,7 +6697,7 @@ on the bottom of a panel !! */
 }
 
 .promo-v3 .listening-report-promo + .listening-report-promo {
-    margin-top: 4px;
+    margin-top: var(--button-list-gap);
 }
 
 .listening-report-promo-animation-container {
