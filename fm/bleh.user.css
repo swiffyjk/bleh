@@ -7648,7 +7648,7 @@ input:is([name^="track_name"], [name^="artist_name"], [name^="album_name"], [nam
 .date-range-picker-content,
 .dropdown-menu-clickable, .auth-dropdown-menu, .navlist-hidden-list, .modal-body, .library-search-results, .events-filter-location-dropdown {
     margin: unset !important;
-    background: hsl(var(--b6)) !important;
+    background: hsl(var(--b6), 95%) !important;
     border-radius: var(--card-radius) !important;
     box-shadow: var(--override-full-shadow, var(--menu-shadow)) !important;
     color: hsl(var(--c2));
@@ -7662,26 +7662,30 @@ input:is([name^="track_name"], [name^="artist_name"], [name^="album_name"], [nam
         }
     }
 
+    &:not(
+        .date-range-picker-content,
+        .modal-body
+    ) {
+        backdrop-filter: blur(10px) saturate(160%);
+        -webkit-backdrop-filter: blur(10px) saturate(160%);
+    }
+
+    [data-bleh--theme="light"] &,
+    [data-bleh--theme="oled"] & {
+        background: hsl(var(--b5), 95%) !important;
+        box-shadow: var(--override-full-shadow, 0 0 0 1px var(--card-border-base) inset, var(--menu-shadow)) !important;
+    }
+
+    [data-bleh--seasonal_overlays="true"][data-bleh--season="fall"] &,
+    [data-bleh--seasonal_overlays="true"][data-bleh--season="christmas"] & {
+        background-image: var(--overlay-ice-subtlest), linear-gradient(180deg, rgba(190,233,250,0.04) 0%, rgba(0,0,0,0) 100%) !important;
+        background-repeat: repeat-x !important;
+        background-position: unset !important;
+    }
+
     &.date-range-picker-content,
     &.modal-body {
         background: hsl(var(--b5)) !important;
-    }
-
-    &:not(
-        .modal--avatar
-    ) {
-        [data-bleh--theme="light"] &,
-        [data-bleh--theme="oled"] & {
-            background: hsl(var(--b5)) !important;
-            box-shadow: var(--override-full-shadow, 0 0 0 1px var(--card-border-base) inset, var(--menu-shadow)) !important;
-        }
-
-        [data-bleh--seasonal_overlays="true"][data-bleh--season="fall"] &,
-        [data-bleh--seasonal_overlays="true"][data-bleh--season="christmas"] & {
-            background-image: var(--overlay-ice-subtlest), linear-gradient(180deg, rgba(190,233,250,0.04) 0%, rgba(0,0,0,0) 100%) !important;
-            background-repeat: repeat-x !important;
-            background-position: unset !important;
-        }
     }
 }
 
@@ -8995,7 +8999,7 @@ text[style^="color: rgb(255, 172, 172)"] {
     &[data-theme="language-menu"],
     &[data-theme="menu"] {
         padding: 7px !important;
-        background: hsl(var(--b6)) !important;
+        background: hsl(var(--b6), 95%) !important;
         border-radius: var(--card-radius) !important;
         box-shadow: var(--menu-shadow) !important;
         animation: dropdown_side calc(var(--trans-short) + 0.02s) var(--trans-function);
@@ -9012,7 +9016,7 @@ text[style^="color: rgb(255, 172, 172)"] {
 
         [data-bleh--theme="light"] &,
         [data-bleh--theme="oled"] & {
-            background: hsl(var(--b5)) !important;
+            background: hsl(var(--b5), 95%) !important;
             box-shadow: var(--override-full-shadow, 0 0 0 1px var(--card-border-base) inset, var(--menu-shadow)) !important;
         }
 
