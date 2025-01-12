@@ -11989,6 +11989,7 @@ hr {
 .namespace--music_bookmarks_overview {
     .col-main {
         width: var(--cards-width);
+        display: block;
     }
     .col-sidebar {
         display: none !important;

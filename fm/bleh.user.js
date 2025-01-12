@@ -19590,6 +19590,8 @@ let has_prompted_for_update = false;
 
 
         if (page.subpage == 'notifications') {
+            register_background(my_avi);
+
             let form = page.structure.container.querySelector('form');
             let notifications = page.structure.container.querySelector('.inbox-notifications');
             let pagination = page.structure.container.querySelector('.pagination');
@@ -19642,10 +19644,16 @@ let has_prompted_for_update = false;
             let badge = patch_avatar(avatar, name_text);
 
             sender_panel.classList.add(`user-status--bleh-${badge.type}`, `user-status--bleh-user-${name_text}`);
+
+            register_background(avatar.querySelector('img').getAttribute('src'));
         } else if (page.subpage == 'compose') {
+            register_background(my_avi);
+
             let inbox = page.structure.container.querySelector('.inbox-compose-view');
             page.structure.main.appendChild(inbox);
         } else {
+            register_background(my_avi);
+
             let inbox = page.structure.container.querySelector('.inbox');
             page.structure.main.appendChild(inbox);
         }
