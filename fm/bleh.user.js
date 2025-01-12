@@ -15248,6 +15248,8 @@ let has_prompted_for_update = false;
             show_your_scrobbles();
 
             bleh_music_page_charts();
+
+            bleh_tags_mini();
         } else {
             let btn_add = page.structure.side.querySelector('.add-button');
             if (btn_add != null)
@@ -15427,6 +15429,8 @@ let has_prompted_for_update = false;
             album_missing_a_tracklist();
 
             bleh_about_artist();
+
+            bleh_tags_mini();
 
             // tooltips on album cover
             let button_row = page.structure.side.querySelector('.album-overview-cover-art-action-row');
@@ -15633,6 +15637,8 @@ let has_prompted_for_update = false;
             bleh_music_page_charts();
 
             bleh_about_artist();
+
+            bleh_tags_mini();
 
 
             let similar_tracks = page.structure.main.querySelector('.track-similar-tracks');
@@ -19870,6 +19876,23 @@ let has_prompted_for_update = false;
                 });
 
             link.setAttribute('data-link-type', type);
+        });
+    }
+
+
+
+
+    // style user-created tags
+    function bleh_tags_mini() {
+        let tag_user_avatar = page.structure.main.querySelector('.tags-user-avatar');
+
+        if (!tag_user_avatar)
+            return;
+
+        let tags_list = tag_user_avatar.nextElementSibling;
+        let tags = tags_list.querySelectorAll('.tag a');
+        tags.forEach((tag) => {
+            tag.classList.add('user-created-tag');
         });
     }
 })();

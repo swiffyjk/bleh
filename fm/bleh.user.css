@@ -1945,6 +1945,12 @@ span.header-new-gallery-inner a,
     with the padding in bleh this conflicts with eg.
     the underground hip-hop tag */
     max-width: 180px;
+
+    &.user-created-tag {
+        background: hsl(var(--h4), 30%) !important;
+        color: hsl(var(--l2-c-theme-switch)) !important;
+        /*box-shadow: 0 0 0 2px hsl(var(--h4), 30%) inset, var(--interact-shadow) !important;*/
+    }
 }
 
 
@@ -2009,6 +2015,10 @@ span.header-new-gallery-inner a,
     height: 16px;
     margin-left: calc(-10px - 16px - 4px);
     margin-right: 10px;
+
+    img {
+        border-radius: var(--avatar-radius);
+    }
 
     position: relative;
     top: 1px;
