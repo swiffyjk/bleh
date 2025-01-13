@@ -321,6 +321,8 @@ a,
     /* l2-c in dark modes, l4-c in light modes */
     --l2-c-theme-switch: var(--l2-c);
 
+    --grid-colour-shadow: var(--grid-colour-shadow-override, 0 27px 15px hsl(var(--h4), 10%));
+
     .preview[data-bleh--theme="oled"],
     [data-bleh--theme="oled"] &:not(.preview) {
         --c1: var(--hue), calc(var(--sat) * 40%), 100%;
@@ -371,6 +373,8 @@ a,
 
         /* l2-c in dark modes, l4-c in light modes */
         --l2-c-theme-switch: var(--l4-c);
+
+        --grid-colour-shadow: var(--grid-colour-shadow-override, 0 27px 15px hsl(var(--h4), 16%));
     }
 }
 
@@ -423,8 +427,6 @@ body {
     --active-shadow: var(--interactable-outer), var(--interactable-active-outer);
 
     --chartlist-fill: var(--hue-gradient, hsl(var(--h3)));
-
-    --obsession-claimed-text: '#1';
 
     --button-list-gap: 6px;
     --chartlist-inner-gap: 8px;
@@ -810,6 +812,10 @@ body {
     }
     &[data-bleh--log_show_all="true"] {
         --log-show: block;
+    }
+
+    &[data-bleh--grid_glow="false"] {
+        --grid-colour-shadow-override: none;
     }
 }
 
@@ -3892,11 +3898,7 @@ better than the default selector '#app a' i suppose */
     aspect-ratio: 1 / 1;
     border-radius: var(--item-big-radius);
     /*overflow: hidden;*/
-    box-shadow: 0 27px 15px hsl(var(--h4), 10%), var(--standout-shadow);
-
-    [data-bleh--theme="light"] & {
-        box-shadow: 0 27px 15px hsl(var(--h4), 16%), var(--standout-shadow);
-    }
+    box-shadow: var(--grid-colour-shadow, none), var(--standout-shadow);
 
     transition-property: transform;
     transition-duration: var(--trans);

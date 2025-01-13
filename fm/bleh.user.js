@@ -678,6 +678,9 @@ const trans = {
                     name: 'Show album in chartlists',
                     bio: 'This is disabled by default as hovering over tracks reveals the album title in all areas',
                     require: 'Only applicable with the ‘Last.fm Bulk Edit’ extension'
+                },
+                grid_glow: {
+                    name: 'Show a glow around grid items'
                 }
             },
             accessibility: {
@@ -1623,6 +1626,9 @@ const trans = {
                     name: 'Show album in chartlists',
                     bio: 'This is disabled by default as hovering over tracks reveals the album title in all areas',
                     require: 'Only applicable with the ‘Last.fm Bulk Edit’ extension'
+                },
+                grid_glow: {
+                    name: 'Show a glow around grid items'
                 }
             },
             accessibility: {
@@ -2540,6 +2546,9 @@ const trans = {
                     name: 'Show album in chartlists',
                     bio: 'This is disabled by default as hovering over tracks reveals the album title in all areas',
                     require: 'Only applicable with the ‘Last.fm Bulk Edit’ extension'
+                },
+                grid_glow: {
+                    name: 'Show a glow around grid items'
                 }
             },
             accessibility: {
@@ -3550,6 +3559,7 @@ let settings_template = {
     font_emoji: true,
 
     show_bulk_edit_album: false,
+    grid_glow: true,
 
     auth_menu_obsessions: false,
 
@@ -3877,6 +3887,13 @@ let settings_base = {
         css: 'show_bulk_edit_album',
         unit: '',
         value: true,
+        values: [true, false],
+        type: 'toggle'
+    },
+    grid_glow: {
+        css: 'show_grid_glow',
+        unit: '',
+        value:  true,
         values: [true, false],
         type: 'toggle'
     },
@@ -10433,6 +10450,10 @@ let has_prompted_for_update = false;
                     name: trans[lang].settings.customise.gloss.name
                 },
                 {
+                    id: 'grid_glow',
+                    name: trans[lang].settings.music.grid_glow.name
+                },
+                {
                     id: 'gendered_tags',
                     name: trans[lang].settings.customise.gendered_tags.name
                 }
@@ -10709,6 +10730,17 @@ let has_prompted_for_update = false;
                             <div class="slider-track" id="slider-track-gloss"><div class="slider-fill"></div><div class="slider-nub"></div></div>
                             <input type="range" min="0" max="1" value="0" step="0.05" id="slider-gloss" oninput="_update_item('gloss', this.value)">
                             <p id="value-gloss">0</p>
+                        </div>
+                    </div>
+                    <div class="toggle-container" id="container-grid_glow" onclick="_update_item('grid_glow')">
+                        <button class="btn reset" onclick="_reset_item('grid_glow')">${trans[lang].settings.reset}</button>
+                        <div class="heading">
+                            <h5>${trans[lang].settings.music.grid_glow.name}</h5>
+                        </div>
+                        <div class="toggle-wrap">
+                            <button class="toggle" id="toggle-grid_glow" aria-checked="true" type="button">
+                                <div class="dot"></div>
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -17003,6 +17035,17 @@ let has_prompted_for_update = false;
                         </div>
                     </div>
                     <div class="sep"></div>
+                    <div class="toggle-container" id="container-grid_glow" onclick="_update_item('grid_glow')">
+                        <button class="btn reset" onclick="_reset_item('grid_glow')">${trans[lang].settings.reset}</button>
+                        <div class="heading">
+                            <h5>${trans[lang].settings.music.grid_glow.name}</h5>
+                        </div>
+                        <div class="toggle-wrap">
+                            <button class="toggle" id="toggle-grid_glow" aria-checked="true" type="button">
+                                <div class="dot"></div>
+                            </button>
+                        </div>
+                    </div>
                     <div class="toggle-container" id="container-glacier_library_graphs" onclick="_update_item('glacier_library_graphs')">
                         <button class="btn reset" onclick="_reset_item('glacier_library_graphs')">${trans[lang].settings.reset}</button>
                         <div class="heading">
