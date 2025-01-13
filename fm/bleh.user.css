@@ -12907,8 +12907,6 @@ so this is good enough - use the community docs */
                 --bg: transparent;
                 --bg-hov: hsla(var(--b4), 40%);
                 --bg-atv: hsla(var(--h4), 10%);
-                --btn-top: 9px;
-                --btn-bottom: 9px;
                 --shadow: none;
                 --shadow-hov: none;
                 --btn-left: calc(12px + 16px + 6px);
@@ -12937,8 +12935,6 @@ so this is good enough - use the community docs */
             }
 
             .btn {
-                --btn-top: 9px;
-                --btn-bottom: 9px;
                 --shadow: none;
                 --shadow-hov: none;
                 --btn-left: calc(12px + 16px + 6px);
