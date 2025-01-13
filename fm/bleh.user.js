@@ -569,6 +569,7 @@ const trans = {
             go: 'Go',
             skip: 'Skip',
             back: 'Back',
+            right_click: 'Right-click for more options',
             reload: {
                 name: 'Refresh pending',
                 body: 'A setting you changed requires a page refresh to take effect.'
@@ -1517,6 +1518,7 @@ const trans = {
             go: 'Fortfahren',
             skip: 'Überspringen',
             back: 'Zurück',
+            right_click: 'Right-click for more options',
             reload: {
                 name: 'Refresh pending',
                 body: 'Klicke zum Neuladen, um deine Einstellungen zu übernehmen.'
@@ -2437,6 +2439,7 @@ const trans = {
             go: 'Go',
             skip: 'Skip',
             back: 'Back',
+            right_click: 'Right-click for more options',
             reload: {
                 name: 'Refresh pending',
                 body: 'A setting you changed requires a page refresh to take effect.'
@@ -7750,7 +7753,19 @@ let has_prompted_for_update = false;
                     taste: taste,
                     artists: taste_artists,
                     avi: profile_avi,
-                    percent: taste_percentage
+                    percent: taste_percentage,
+                    tooltip: (`
+                        <span>
+                            ${trans[lang].profile.taste}
+                            <!--<div class="taste-badge spacing">
+                                <span>${trans[lang].profile.taste_meter.level[taste]}</span>
+                                <span>${taste_percentage}</span>
+                            </div>-->
+                        </span>
+                        <div class="hint">${trans[lang].settings.right_click}</div>
+                    `),
+                    allow_html: true,
+                    tooltip_theme: 'stack'
                 });
             }
         }
@@ -7761,7 +7776,7 @@ let has_prompted_for_update = false;
             base_header.appendChild(profile_header);
     }
 
-    function create_profile_top_item(parent, {name, link, text='', type, taste='', artists=[], avi='', percent='', action='', tooltip='', full=false, primary=false}) {
+    function create_profile_top_item(parent, {name, link, text='', type, taste='', artists=[], avi='', percent='', action='', tooltip='', allow_html=false, tooltip_theme='', full=false, primary=false}) {
         log(`creating top item of ${name}, ${link}, ${text}`, 'profile');
 
         let listen_item = document.createElement((action != 'button') ? 'a' : 'button');
@@ -7889,7 +7904,9 @@ let has_prompted_for_update = false;
             });
         else
             tippy(listen_item, {
-                content: tooltip
+                content: tooltip,
+                allowHTML: allow_html,
+                theme: tooltip_theme
             });
     }
 
