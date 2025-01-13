@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         bleh
 // @namespace    http://last.fm/
-// @version      2025.0101
+// @version      2025.0113
 // @description  bleh!!! ^-^
 // @author       kate
 // @match        https://www.last.fm/*
@@ -21,8 +21,8 @@
 
 let version = {
     brand: 'bleh',
-    build: '2025.0101',
-    sku: 'taiga',
+    build: '2025.0113',
+    sku: 'mita',
     feature_flags: {
         bleh_settings_tabs: {
             default: true,
@@ -16477,7 +16477,7 @@ let has_prompted_for_update = false;
                         `) : ''}
                     </div>
                     <h3>${changelog[version].name}</h3>
-                    ${(version == '2025.0107') ? `<h4 class="header-over">${changelog[version].name}</h4>` : ''}
+                    ${(version == '2025.0113') ? `<h4 class="header-over">${changelog[version].name}</h4>` : ''}
                 </div>
             `);
 

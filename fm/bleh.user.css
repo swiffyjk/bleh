@@ -1,7 +1,7 @@
 /* ==UserStyle==
 @name           bleh (dev)
 @namespace      github.com/katelyynn/bleh
-@version        2025.0101
+@version        2025.0113
 @license        GPL-3.0
 @author         kate
 @updateURL      https://github.com/katelyynn/bleh/raw/uwu/fm/bleh.user.css
@@ -17,7 +17,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Ubuntu+Sans:ital,wght@0,100..800;1,100..800&display=swap');
 
 body {
-    --version-build: '2025.0101';
+    --version-build: '2025.0113';
 
     --hue:  var(--hue-over,
             var(--hue-album,
@@ -17030,9 +17030,11 @@ h4 {
 .bleh-modal-body[data-allow-scroll="true"],
 .modal-inner-content.allow-scroll {
     max-height: 80vh;
-    padding: var(--card-gap);
-    margin: calc(-1 * var(--card-gap)) !important;
+    padding: 0 var(--card-padding) var(--card-padding) var(--card-padding);
+    margin: 0 calc(-1 * var(--card-padding)) calc(-1 * var(--card-padding)) calc(-1 * var(--card-padding)) !important;
     overflow-y: hidden;
+
+    border-radius: var(--item-big-radius);
 
     &:hover {
         overflow-y: auto;
@@ -17658,8 +17660,8 @@ h4 {
 
         color: hsl(var(--c2));
 
-        padding: 0 var(--card-gap);
-        margin: 0 calc(-1 * var(--card-gap));
+        padding: 0 var(--card-padding);
+        margin: 0 calc(-1 * var(--card-padding));
 
         &[data-changelog-latest="true"] {
             padding: var(--card-gap);
@@ -17694,7 +17696,7 @@ h4 {
             }
         }
 
-        &[data-changelog-version="2025.0107"] {
+        &[data-changelog-version="2025.0113"] {
             position: relative;
 
             .version-item-header {
@@ -17729,8 +17731,8 @@ h4 {
             &:after {
                 content: '';
                 position: absolute;
-                left: var(--card-gap);
-                right: var(--card-gap);
+                left: var(--card-padding);
+                right: var(--card-padding);
                 top: -1px;
                 height: 1px;
                 display: block;
