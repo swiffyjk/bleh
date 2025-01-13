@@ -21,7 +21,7 @@
 
 let version = {
     brand: 'bleh',
-    build: '2025.0113',
+    build: '2025.0113.1',
     sku: 'mita',
     feature_flags: {
         bleh_settings_tabs: {
@@ -5107,7 +5107,7 @@ let has_prompted_for_update = false;
             pro_badge.textContent = 'Pro';
             auth_link.appendChild(pro_badge);
 
-            auth_link.classList.add(`user-status--bleh-${badges[0].type}`, `user-status--bleh-user-${auth}`);
+            auth_link.classList.add('user-status-subscriber');
             auth_link.setAttribute('data-has-colour', 'true');
         }
 
