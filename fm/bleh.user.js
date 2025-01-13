@@ -6581,7 +6581,11 @@ let has_prompted_for_update = false;
 
         panel.innerHTML = (`
             <h4>${trans[lang].settings.inbuilt.ignore.name}</h4>
-            <div class="inner-preview pad"></div>
+            <div class="user-top-panel">
+                <div class="user-top-avatar user-top-avatar-side-left"><div class="bleh-icon"></div></div>
+                <img class="user-top-avatar user-top-avatar-main" src="${my_avi.replace('avatar42s', 'avatar300s')}" alt="${auth}">
+                <div class="user-top-avatar user-top-avatar-side-right"><div class="bleh-icon"></div></div>
+            </div>
             <h5>${trans[lang].settings.inbuilt.ignore.consider.name}</h5>
             <div class="to-consider">
                 <ul class="to-consider-good">

@@ -323,6 +323,8 @@ a,
 
     --grid-colour-shadow: var(--grid-colour-shadow-override, 0 27px 15px hsl(var(--h4), 10%));
 
+    --opposite-text: var(--b6);
+
     .preview[data-bleh--theme="oled"],
     [data-bleh--theme="oled"] &:not(.preview) {
         --c1: var(--hue), calc(var(--sat) * 40%), 100%;
@@ -375,6 +377,8 @@ a,
         --l2-c-theme-switch: var(--l4-c);
 
         --grid-colour-shadow: var(--grid-colour-shadow-override, 0 27px 15px hsl(var(--h4), 16%));
+
+        --opposite-text: var(--c1);
     }
 }
 
@@ -16697,6 +16701,14 @@ button.bleh--gallery-bookmark-image-btn {
         background-color: hsla(var(--b4), 60%);
         border-radius: var(--avatar-radius);
 
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        color: hsl(var(--opposite-text));
+
+        --icon: var(--icon-16-x);
+        --icon-size: 40px;
+
         &.user-top-avatar-main {
             --w: 120px;
             box-shadow: var(--card-shadow);
@@ -16773,6 +16785,10 @@ button.bleh--gallery-bookmark-image-btn {
         .input-container {
             display: flex;
             gap: var(--button-list-gap);
+
+            input {
+                width: 230px;
+            }
 
             #text-font {
                 width: 400px;
