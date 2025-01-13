@@ -5056,6 +5056,9 @@ let has_prompted_for_update = false;
     function patch_masthead(element) {
         let masthead_logo = element.querySelector('.masthead-logo');
 
+        if (!masthead_logo)
+            return;
+
         if (!masthead_logo.hasAttribute('data-kate-processed')) {
             masthead_logo.setAttribute('data-kate-processed','true');
 
