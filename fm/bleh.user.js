@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         bleh
 // @namespace    http://last.fm/
-// @version      2024.1231
+// @version      2025.0113
 // @description  bleh!!! ^-^
 // @author       kate
 // @match        https://www.last.fm/*
@@ -14,15 +14,15 @@
 // @require      https://unpkg.com/@popperjs/core@2
 // @require      https://unpkg.com/tippy.js@6
 // @require      https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.30.1/moment.min.js
-// @require      https://katelyynn.github.io/bleh/fm/js/vibrant/Vibrant.min.js
+// @require      https://cdnjs.cloudflare.com/ajax/libs/color-thief/2.3.0/color-thief.umd.js
 // @require      https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js
 // @require      https://cdn.jsdelivr.net/npm/chartjs-adapter-moment@^1
 // ==/UserScript==
 
 let version = {
     brand: 'bleh',
-    build: '2024.1231.2',
-    sku: 'taiga',
+    build: '2025.0113',
+    sku: 'mita',
     feature_flags: {
         bleh_settings_tabs: {
             default: true,
@@ -143,10 +143,22 @@ let version = {
             default: true,
             name: 'New badge tooltip',
             date: '2024-12-28'
+        },
+        astra: {
+            default: false,
+            name: 'astrablooms font',
+            date: '2025-01-01',
+            notice: 'This is a test of a new default font for bleh, it most likely will never take effect as changing a font takes a lot of getting used to, but yeah.<br>You should set your text settings to the following: 470, 540, 610'
+        },
+        developer: {
+            default: false,
+            name: 'Developer mode',
+            date: '2025-01-03',
+            notice: 'Enable developer-specific features used for debugging purposes'
         }
     }
 }
-let theme_version = getComputedStyle(document.body).getPropertyValue('--version-build').replaceAll("'", ''); // remove quotations
+let theme_version = getComputedStyle(document.body).getPropertyValue('--version-build').replaceAll("'", '').replaceAll('"', ''); // remove quotations
 
 // loads your selected language in last.fm
 let lang;
@@ -165,7 +177,7 @@ let lang_info = {
     de: {
         name: 'Deutsch',
         by: ['inozom', 'cutensilly'],
-        last_updated:  '2024-10-15'
+        last_updated:  '2025-01-05'
     },
     pl: {
         name: 'Polski',
@@ -234,6 +246,7 @@ const trans = {
                 sent_overview: 'outgoing inbox',
                 compose: 'compose message',
                 message_overview: 'message',
+                sent_message: 'message',
                 notifications: 'notifications'
             },
             releases: {
@@ -316,6 +329,10 @@ const trans = {
                 name: 'Last.fm Pro',
                 reason: 'Active Pro subscription'
             },
+            'user-status-staff': {
+                name: 'Staff',
+                reason: 'Staff member of Last.fm'
+            },
             'label--fade': {
                 reason: 'They follow you'
             },
@@ -339,6 +356,13 @@ const trans = {
             reserved: {
                 reason: 'Reserved for certain users'
             }
+        },
+        avatar_for_me: 'Your avatar',
+        avatar_for_user: 'Avatar for ',
+        actions: {
+            view_profile: 'View profile',
+            view_library: 'Library',
+            leave_a_shout: 'Shouts'
         },
         lotus: {
             artist: 'Artist corrections have been downloaded!',
@@ -427,7 +451,11 @@ const trans = {
             listens: {
                 count_listens: '{c} listens',
                 loading_listens: 'listens',
-                other_listeners: '{c} others'
+                other_listeners: '{c} others',
+                custom: {
+                    tooltip: 'Pick a user',
+                    name: 'View listens from another user'
+                }
             },
             wiki: 'About',
             wiki_edit: 'edit wiki',
@@ -532,6 +560,8 @@ const trans = {
             cancel: 'Cancel',
             close: 'Close',
             clear: 'Clear',
+            add: 'Add',
+            remove: 'Remove',
             done: 'Done',
             finish: 'Finish',
             continue: 'Continue',
@@ -539,10 +569,22 @@ const trans = {
             go: 'Go',
             skip: 'Skip',
             back: 'Back',
-            reload: 'A setting you changed requires a page reload to take effect, click to reload.',
+            right_click: 'Right-click for more options',
+            reload: {
+                name: 'Refresh pending',
+                body: 'A setting you changed requires a page refresh to take effect.'
+            },
             new: 'New',
             beta: 'Beta',
             configure: 'Configure',
+            pages: {
+                overview: 'Profile',
+                privacy: 'Privacy',
+                account_overview: 'Account',
+                website: 'Website',
+                subscription_overview: 'Pro',
+                applications_overview: 'Applications'
+            },
             examples: {
                 button: 'Example button'
             },
@@ -637,6 +679,9 @@ const trans = {
                     name: 'Show album in chartlists',
                     bio: 'This is disabled by default as hovering over tracks reveals the album title in all areas',
                     require: 'Only applicable with the ‘Last.fm Bulk Edit’ extension'
+                },
+                grid_glow: {
+                    name: 'Show a glow around grid items'
                 }
             },
             accessibility: {
@@ -653,6 +698,10 @@ const trans = {
                 reduced_motion: {
                     name: 'Reduce animations around interfaces',
                     bio: 'Will in most cases either slowly fade or hard-cut, no scaling.'
+                },
+                toggle_icon: {
+                    name: 'Add indicator icon to toggles',
+                    bio: 'Display a checkmark or a cross depending on toggle state.'
                 }
             },
             layout: {
@@ -698,7 +747,7 @@ const trans = {
                     name: 'Seasonal',
                     timeline: 'Seasonal timeline',
                     bio: 'During seasonal events, bleh can automatically change the default accent colour, add particles, and add overlays to various interface elements.',
-                    info: 'Seasonal events are ran in universal time (UTC) for consistency.',
+                    info: 'Seasonal events try to match your timezone, for reference we calculated {offset}',
                     started: 'Started',
                     ends_in: 'Ends in',
                     listing: {
@@ -741,7 +790,8 @@ const trans = {
                     mistletoe: 'Mistletoe',
                     festival: 'Christmas Eve',
                     exclusive_for_season: 'Exclusive for <span class="season-name">{season}</span>',
-                    exclusive_for_season_and_more: 'Exclusive for <span class="season-name">{season}</span> and 1 more'
+                    exclusive_for_season_and_more: 'Exclusive for <span class="season-name">{season}</span> and 1 more',
+                    view: 'Open seasonal tab'
                 },
                 artwork: {
                     name: 'Artwork'
@@ -848,7 +898,10 @@ const trans = {
                     delete_user: 'Remove {u}\'s note',
                     view: 'View your profile notes'
                 },
-                you: 'You'
+                you: 'You',
+                avatar_radius: {
+                    name: 'User avatar shape'
+                }
             },
             redirects: {
                 name: 'Redirects',
@@ -935,7 +988,11 @@ const trans = {
                 },
                 font_weight_bold: {
                     name: 'Bold font weight',
-                    bio: 'Used for header and selected text (eg. current tab)'
+                    bio: 'Used for larger text such as headers'
+                },
+                font_emoji: {
+                    name: 'Use compatibility emoji font',
+                    bio: 'On Windows systems before 11, the emoji font is left outdated by default unless this option is used.'
                 }
             },
             inbuilt: {
@@ -1006,6 +1063,23 @@ const trans = {
                         }
                     }
                 },
+                ignore: {
+                    name: 'Communication',
+                    consider: {
+                        name: 'To consider',
+                        good: [
+                            'You will not see previous or new shouts globally',
+                            'They cannot direct message you',
+                            'They cannot leave a shout on your profile or under your shouts anywhere'
+                        ],
+                        bad: [
+                            'You cannot delete pre-existing shouts from your profile',
+                            'They can still view your profile'
+                        ]
+                    },
+                    view: 'View {c} more',
+                    count: 'You have {c} users hidden'
+                },
                 privacy: {
                     name: 'Privacy',
                     recent_listening: {
@@ -1074,8 +1148,8 @@ const trans = {
         },
         setup: {
             start: {
-                name: 'haiii :3 welcome to bleh!!',
-                thanks: 'Thank you for installing, {m}',
+                name: 'hello {m}!!',
+                thanks: 'Thank you for installing',
                 info: [
                     'This is the first-time setup to help you get started with common tasks for new users, which include:',
                     'Manage accessibility, such as reduced motion',
@@ -1083,11 +1157,17 @@ const trans = {
                     'Changing your interface theme',
                     'Adjusting song corrections and tagging',
                     'If you\'re already set, you can skip.'
-                ]
+                ],
+                pick_theme: 'Which theme would you prefer?',
+                change_later: 'You can modify all your settings at any time.'
             },
             appearance: {
+                name: 'Your colour',
                 bio: 'Configure the colour of bleh from one of the available presets, or make your own colour combination!',
                 subtext: 'During seasonal events, the default colour changes automatically.'
+            },
+            music: {
+                change_later: 'More detailed options available in settings.'
             }
         },
         gallery: {
@@ -1173,6 +1253,15 @@ const trans = {
             name: 'Search',
             results_for: 'Results for {v}'
         },
+        inbox: {
+            name: 'Inbox',
+            overview: 'Messages',
+            sent_overview: 'Messages',
+            compose: 'Messages',
+            message_overview: 'Messages',
+            sent_message: 'Messages',
+            notifications: 'Notifications'
+        },
         charts: {
             name: 'Charts',
             overview: 'Real time',
@@ -1187,11 +1276,47 @@ const trans = {
     },
     de: {
         badges: {
-            missing: 'No badges',
-            pro: 'Last.fm Pro',
-            contributor: 'bleh contributor',
-            cat: 'it\s a kitty!!',
-            sponsor: 'Sponsor of bleh and bwaa'
+            missing: {
+                name: 'Kein Abzeichen'
+            },
+            'user-status-subscriber': {
+                name: 'Last.fm Pro',
+                reason: 'Aktives Pro Abonnement'
+            },
+            'user-status-staff': {
+                name: 'Angestellter',
+                reason: 'Angestellter von Last.fm'
+            },
+            'label--fade': {
+                reason: '-'
+            },
+            contributor: {
+                name: 'bleh Mitwirkender',
+                reason: 'Hat bei bleh mitgewirkt über code oder übersetzungen'
+            },
+            translation: {
+                reason: 'Hat für eine unterstützte Sprache übersetzt'
+            },
+            cat: {
+                name: 'ein Kätzchen!!!'
+            },
+            sponsor: {
+                name: 'Sponsor',
+                reason: 'Hat bleh und bwaa gesponsert :3'
+            },
+            cute: {
+                reason: 'Für besondere Nutzer reserviert'
+            },
+            reserved: {
+                reason: 'Für bestimmte Nutzer reserviert'
+            }
+        },
+        avatar_for_me: 'Dein Avatar',
+        avatar_for_user: 'Avatar für ',
+        actions: {
+            view_profile: 'View profile',
+            view_library: 'Library',
+            leave_a_shout: 'Shouts'
         },
         lotus: {
             artist: 'Artist corrections have been downloaded!',
@@ -1207,7 +1332,7 @@ const trans = {
         },
         glacier: {
             name: 'Library refresh',
-            by_artist: ' by {a}',
+            by_artist: ' von {a}',
             meta: {
                 artists: 'Künstler',
                 albums: 'Alben',
@@ -1215,24 +1340,24 @@ const trans = {
                 average: 'Average'
             },
             view: {
-                grid: 'Grid',
-                list: 'List',
-                line: 'Line',
-                pie: 'Pie',
-                bar: 'Bar'
+                grid: 'Gitter',
+                list: 'Liste',
+                line: 'Liniendiagramm',
+                pie: 'Kreis',
+                bar: 'Balken'
             },
             axis: {
                 horizontal: 'Horizontal',
-                vertical: 'Vertical'
+                vertical: 'Vertikal'
             },
             dates: {
-                last_year: 'Last year',
-                this_year: 'This year'
+                last_year: 'Letztes Jahr',
+                this_year: 'Dieses Jahr'
             },
-            edit: 'Edit',
-            delete: 'Delete',
+            edit: 'Editieren',
+            delete: 'Loeschen',
             love: 'Love',
-            bulk_edit: 'Bulk edit',
+            bulk_edit: 'Massenbearbeitung',
             option: {
                 name: 'Use new graphs in library',
                 bio: 'This can add a little amount of slow-down in some cases but with the benefit of awesome graphs.'
@@ -1252,7 +1377,7 @@ const trans = {
         },
         auth_menu: {
             dev: 'Toggle dev mode',
-            configure_bleh: 'bleh einstellen',
+            configure_bleh: 'bleh konfigurieren',
             library: 'Musiksammlung',
             shouts: 'Shouts',
             obsessions: 'Obsessionen',
@@ -1278,7 +1403,11 @@ const trans = {
             listens: {
                 count_listens: '{c} scrobbels',
                 loading_listens: 'scrobbels',
-                other_listeners: '{c} hörer'
+                other_listeners: '{c} hörer',
+                custom: {
+                    tooltip: 'Pick a user',
+                    name: 'View listens from another user'
+                }
             },
             wiki: 'Über',
             wiki_edit: 'wiki editieren',
@@ -1311,7 +1440,7 @@ const trans = {
             }
         },
         profile: {
-            name: 'Profile',
+            name: 'Profil',
             on_ignore_list: 'Du stehst auf der Ignorierliste dieses Benutzers.',
             friends: {
                 name: 'Freunde'
@@ -1349,10 +1478,18 @@ const trans = {
                 you_share_2: 'Ihr hört {artist1} und {artist2}',
                 you_share_3: 'Ihr hört {artist1}, {artist2}, und {artist3}'
             },
-            open_avatar: 'Open in a new tab',
+            open_avatar: 'Im neuen Fenster öffnen',
             settings: 'Konfigurieren',
             events: 'Events',
-            top_badge: 'Top Badge'
+            top_badge: 'Top-Abzeichen'
+        },
+        event: {
+            name: 'Event',
+            going: '{c} going',
+            maybe: '{c} interested',
+            you_know: 'Who you know',
+            all_time: 'All time',
+            total: '{c} total'
         },
         messaging: {
             update: 'bleh wurde auf Version {v} aktualisiert!'
@@ -1362,6 +1499,9 @@ const trans = {
             syntax: {
                 name: 'Use fancy syntax when editing',
                 links_to: 'Links to {link}'
+            },
+            presets: {
+                name: 'Symbol presets'
             }
         },
         settings: {
@@ -1370,6 +1510,7 @@ const trans = {
             cancel: 'Abbrechen',
             close: 'Schließen',
             clear: 'Leeren',
+            remove: 'Remove',
             done: 'Fertig',
             finish: 'Beenden',
             continue: 'Fortsetzen',
@@ -1377,10 +1518,22 @@ const trans = {
             go: 'Fortfahren',
             skip: 'Überspringen',
             back: 'Zurück',
-            reload: 'Klicke zum Neuladen, um deine Einstellungen zu übernehmen.',
+            right_click: 'Right-click for more options',
+            reload: {
+                name: 'Refresh pending',
+                body: 'Klicke zum Neuladen, um deine Einstellungen zu übernehmen.'
+            },
             new: 'Neu',
             beta: 'Beta',
             configure: 'Konfigurieren',
+            pages: {
+                overview: 'Profil',
+                privacy: 'Datenschutz',
+                account_overview: 'Konto',
+                website: 'Website',
+                subscription_overview: 'Pro',
+                applications_overview: 'Apps'
+            },
             examples: {
                 button: 'Beispiel-Taste'
             },
@@ -1400,8 +1553,11 @@ const trans = {
                     name: 'Aktualisierungen',
                     css: 'Stil aktualisieren',
                     bio: 'Jetzt prüfen',
-                    notice: 'bleh is out of date! - use the update buttons below',
-                    ignore: 'Ignore for 1 hour'
+                    notice: 'There are updates available!',
+                    ignore: 'Ignore temporarily',
+
+                    update_now: 'Update now',
+                    update_to_v: 'Update to {v}'
                 },
                 setup: {
                     name: 'Setup',
@@ -1472,6 +1628,9 @@ const trans = {
                     name: 'Show album in chartlists',
                     bio: 'This is disabled by default as hovering over tracks reveals the album title in all areas',
                     require: 'Only applicable with the ‘Last.fm Bulk Edit’ extension'
+                },
+                grid_glow: {
+                    name: 'Show a glow around grid items'
                 }
             },
             accessibility: {
@@ -1488,6 +1647,10 @@ const trans = {
                 reduced_motion: {
                     name: 'Animationen reduzieren',
                     bio: 'Will in most cases either slowly fade or hard-cut, no scaling.'
+                },
+                toggle_icon: {
+                    name: 'Add indicator icon to toggles',
+                    bio: 'Display a checkmark or a cross depending on toggle state.'
                 }
             },
             layout: {
@@ -1533,7 +1696,7 @@ const trans = {
                     name: 'Saisonal',
                     timeline: 'Seasonal timeline',
                     bio: 'Während saisonaler Ereignisse kann bleh automatisch die Standardakzentfarbe ändern, Partikel hinzufügen und verschiedenen Schnittstellenelementen Overlays hinzufügen.',
-                    info: 'Seasonal events are ran in universal time (UTC) for consistency.',
+                    info: 'Seasonal events try to match your timezone, for reference we calculated {offset}',
                     started: 'Gestartet',
                     ends_in: 'Endet in',
                     listing: {
@@ -1576,7 +1739,8 @@ const trans = {
                     mistletoe: 'Mistletoe',
                     festival: 'Christmas Eve',
                     exclusive_for_season: 'Exclusive for <span class="season-name">{season}</span>',
-                    exclusive_for_season_and_more: 'Exclusive for <span class="season-name">{season}</span> and 1 more'
+                    exclusive_for_season_and_more: 'Exclusive for <span class="season-name">{season}</span> and 1 more',
+                    view: 'Open seasonal tab'
                 },
                 artwork: {
                     name: 'Cover'
@@ -1682,7 +1846,8 @@ const trans = {
                     edit_user: 'Edit {u}\'s note',
                     delete_user: 'Remove {u}\'s note',
                     view: 'View your profile notes'
-                }
+                },
+                you: 'You'
             },
             redirects: {
                 name: 'Weiterleitungen',
@@ -1768,7 +1933,11 @@ const trans = {
                 },
                 font_weight_bold: {
                     name: 'Bold font weight',
-                    bio: 'Used for header and selected text (eg. current tab)'
+                    bio: 'Used for larger text such as headers'
+                },
+                font_emoji: {
+                    name: 'Use compatibility emoji font',
+                    bio: 'On Windows systems before 11, the emoji font is left outdated by default unless this option is used.'
                 }
             },
             inbuilt: {
@@ -1923,24 +2092,25 @@ const trans = {
         },
         gallery: {
             tabs: {
-                overview: 'Photos',
+                overview: 'Fotos',
                 bookmarks: 'Saved'
             },
             bookmarks: {
                 name: 'Saved',
                 bio: 'Gallery photos can be saved for future reference.',
                 no_data: 'no images saved (・・ )',
+                link: 'Alle favorisierten Bilder ansehen',
                 button: {
                     image_is_bookmarked: {
                         name: 'You have saved this image'
                     },
                     bookmark_this_image: {
-                        name: 'Save this image',
-                        bio: 'Save this image for later'
+                        name: 'Speichern',
+                        bio: 'Dieses Bild speichern'
                     },
                     unbookmark_this_image: {
-                        name: 'Unsave this image',
-                        bio: 'Unsave this image'
+                        name: 'Unsave',
+                        bio: 'Dieses Bild nicht mehr speichern'
                     }
                 }
             },
@@ -1952,57 +2122,40 @@ const trans = {
                 name: 'Star'
             },
             report: {
-                name: 'Report'
+                name: 'Melden'
             },
             open: {
-                name: 'Expand',
-                tooltip: 'Expand image to full resolution'
+                name: 'Vergrößern',
+                tooltip: 'Dieses Bild auf gesamter Auflösung vergrößern'
             },
-            up: 'Up votes:',
-            down: 'Down votes:',
+            up: 'Plusstimmen:',
+            down: 'Minusstimmen:',
             vote: 'This is the sum of votes used for ordering.',
-            view: 'View photos'
+            view: 'Fotos anzeigen'
         },
-        empty: {
-            title: 'No title',
-            description: 'No description'
-        },
-        prefer: {
-            name: 'Star'
-        },
-        report: {
-            name: 'Report'
-        },
-        open: {
-            name: 'Expand',
-            tooltip: 'Expand image to full resolution'
-        },
-        up: 'Up votes:',
-        down: 'Down votes:',
-        vote: 'This is the sum of votes used for ordering.',
         activities: {
-            name: 'Recent Activity',
+            name: 'Kürzliche Aktivitäten',
             description: 'Your latest 10 activities are tracked locally on your profile, try leaving a shout and check back here!',
             notifications: 'Read your notifications',
 
             test: 'TEST {involved}',
-            shout: 'You left a shout for {i}',
-            image_upload: 'You uploaded an image for {i}',
-            image_star: 'You starred an image for {i}',
-            obsess: 'You’re obsessed with {i}',
-            unobsess: 'You’re no longer obsessed with {i}',
-            love: 'You love {i}',
-            unlove: 'You no longer love {i}',
-            install_bwaa: 'You installed bwaa',
-            update_bwaa: 'You updated bwaa to {i}',
-            install_bleh: 'You installed bleh',
-            update_bleh: 'You updated bleh to {i}',
-            bookmark: 'You bookmarked {i}',
-            unbookmark: 'You removed {i}’s bookmark',
-            wiki: 'You edited on {i}'
+            shout: 'Du hast ein Shout für {i} hinterlassen',
+            image_upload: 'Du hast ein bild für {i} hochgeladen',
+            image_star: 'Du hast ein bild für {i} favorisiert',
+            obsess: 'Du bist obsessed mit {i}',
+            unobsess: 'Du bist nicht mehr obsessed mit {i}',
+            love: 'Du liebst {i}',
+            unlove: 'Du liebst {i} nicht mehr',
+            install_bwaa: 'Du hast bwaa installiert',
+            update_bwaa: 'Du hast bwaa auf Version {i} aktualisiert',
+            install_bleh: 'Du hast bleh installiert',
+            update_bleh: 'Du hast bleh auf Version {i} aktualisiert',
+            bookmark: 'Du hast ein Lesezeichen für {i} hinterlassen',
+            unbookmark: 'Du hast das Lesezeichen für {i} entfernt',
+            wiki: 'Du hast die Wiki für {i} editiert'
         },
         artist: {
-            name: 'Artist',
+            name: 'Künstler',
             plural: 'Künstler'
         },
         album: {
@@ -2010,7 +2163,7 @@ const trans = {
             plural: 'Alben'
         },
         track: {
-            name: 'Track',
+            name: 'Titel',
             plural: 'Titel'
         },
         tag: {
@@ -2019,6 +2172,15 @@ const trans = {
         search: {
             name: 'Suche',
             results_for: 'Results for {v}'
+        },
+        inbox: {
+            name: 'Inbox',
+            overview: 'Messages',
+            sent_overview: 'Messages',
+            compose: 'Messages',
+            message_overview: 'Messages',
+            sent_message: 'Messages',
+            notifications: 'Notifications'
         },
         charts: {
             name: 'Charts',
@@ -2034,11 +2196,47 @@ const trans = {
     },
     pl: {
         badges: {
-            missing: 'No badges',
-            pro: 'Last.fm Pro',
-            contributor: 'bleh contributor',
-            cat: 'it\s a kitty!!',
-            sponsor: 'Sponsor of bleh and bwaa'
+            missing: {
+                name: 'No badges'
+            },
+            'user-status-subscriber': {
+                name: 'Last.fm Pro',
+                reason: 'Active Pro subscription'
+            },
+            'user-status-staff': {
+                name: 'Staff',
+                reason: 'Staff member of Last.fm'
+            },
+            'label--fade': {
+                reason: 'They follow you'
+            },
+            contributor: {
+                name: 'bleh contributor',
+                reason: 'Contributed to bleh via code or translations'
+            },
+            translation: {
+                reason: 'Translated for a supported language'
+            },
+            cat: {
+                name: 'it\'s a kitty!!'
+            },
+            sponsor: {
+                name: 'Sponsoring',
+                reason: 'Sponsored bleh and bwaa :3'
+            },
+            cute: {
+                reason: 'Reserved for special users'
+            },
+            reserved: {
+                reason: 'Reserved for certain users'
+            }
+        },
+        avatar_for_me: 'Your avatar',
+        avatar_for_user: 'Avatar for ',
+        actions: {
+            view_profile: 'View profile',
+            view_library: 'Library',
+            leave_a_shout: 'Shouts'
         },
         lotus: {
             artist: 'Artist corrections have been downloaded!',
@@ -2125,7 +2323,11 @@ const trans = {
             listens: {
                 count_listens: '{c} listens',
                 loading_listens: 'listens',
-                other_listeners: '{c} others'
+                other_listeners: '{c} others',
+                custom: {
+                    tooltip: 'Pick a user',
+                    name: 'View listens from another user'
+                }
             },
             wiki: 'About',
             wiki_edit: 'edit wiki',
@@ -2202,6 +2404,14 @@ const trans = {
             events: 'Events',
             top_badge: 'Top Badge'
         },
+        event: {
+            name: 'Event',
+            going: '{c} going',
+            maybe: '{c} interested',
+            you_know: 'Who you know',
+            all_time: 'All time',
+            total: '{c} total'
+        },
         messaging: {
             update: 'bleh has updated to version {v}!'
         },
@@ -2210,6 +2420,9 @@ const trans = {
             syntax: {
                 name: 'Use fancy syntax when editing',
                 links_to: 'Links to {link}'
+            },
+            presets: {
+                name: 'Symbol presets'
             }
         },
         settings: {
@@ -2218,6 +2431,7 @@ const trans = {
             cancel: 'Anuluj',
             close: 'Zamknij',
             clear: 'Wyczyść',
+            remove: 'Remove',
             done: 'Gotowe',
             finish: 'Finish',
             continue: 'Kontynuuj',
@@ -2225,10 +2439,22 @@ const trans = {
             go: 'Go',
             skip: 'Skip',
             back: 'Back',
-            reload: 'A setting you changed requires a page reload to take effect, click to reload.',
+            right_click: 'Right-click for more options',
+            reload: {
+                name: 'Refresh pending',
+                body: 'A setting you changed requires a page refresh to take effect.'
+            },
             new: 'New',
             beta: 'Beta',
             configure: 'Configure',
+            pages: {
+                overview: 'Profile',
+                privacy: 'Privacy',
+                account_overview: 'Account',
+                website: 'Website',
+                subscription_overview: 'Pro',
+                applications_overview: 'Applications'
+            },
             examples: {
                 button: 'Przycisk przykładowy'
             },
@@ -2323,6 +2549,9 @@ const trans = {
                     name: 'Show album in chartlists',
                     bio: 'This is disabled by default as hovering over tracks reveals the album title in all areas',
                     require: 'Only applicable with the ‘Last.fm Bulk Edit’ extension'
+                },
+                grid_glow: {
+                    name: 'Show a glow around grid items'
                 }
             },
             accessibility: {
@@ -2335,6 +2564,14 @@ const trans = {
                 underline_links: {
                     name: 'Zawsze podkreślaj linki',
                     bio: 'Podkreślaj linki do elementów interaktywnych.'
+                },
+                reduced_motion: {
+                    name: 'Reduce animations around interfaces',
+                    bio: 'Will in most cases either slowly fade or hard-cut, no scaling.'
+                },
+                toggle_icon: {
+                    name: 'Add indicator icon to toggles',
+                    bio: 'Display a checkmark or a cross depending on toggle state.'
                 }
             },
             layout: {
@@ -2380,7 +2617,7 @@ const trans = {
                     name: 'Seasonal',
                     timeline: 'Seasonal timeline',
                     bio: 'During seasonal events, bleh can automatically change the default accent colour, add particles, and add overlays to various interface elements.',
-                    info: 'Seasonal events are ran in universal time (UTC) for consistency.',
+                    info: 'Seasonal events try to match your timezone, for reference we calculated {offset}',
                     started: 'Started',
                     ends_in: 'Ends in',
                     listing: {
@@ -2423,7 +2660,8 @@ const trans = {
                     mistletoe: 'Mistletoe',
                     festival: 'Christmas Eve',
                     exclusive_for_season: 'Exclusive for <span class="season-name">{season}</span>',
-                    exclusive_for_season_and_more: 'Exclusive for <span class="season-name">{season}</span> and 1 more'
+                    exclusive_for_season_and_more: 'Exclusive for <span class="season-name">{season}</span> and 1 more',
+                    view: 'Open seasonal tab'
                 },
                 artwork: {
                     name: 'Okładka'
@@ -2528,7 +2766,8 @@ const trans = {
                     delete: 'Usuń notatkę',
                     edit_user: 'Edytuj notatkę dla {u}',
                     delete_user: 'Usuń notatkę dla {u}'
-                }
+                },
+                you: 'You'
             },
             redirects: {
                 name: 'Redirects',
@@ -2614,7 +2853,11 @@ const trans = {
                 },
                 font_weight_bold: {
                     name: 'Bold font weight',
-                    bio: 'Used for header and selected text (eg. current tab)'
+                    bio: 'Used for larger text such as headers'
+                },
+                font_emoji: {
+                    name: 'Use compatibility emoji font',
+                    bio: 'On Windows systems before 11, the emoji font is left outdated by default unless this option is used.'
                 }
             },
             inbuilt: {
@@ -2759,6 +3002,7 @@ const trans = {
                 name: 'Zapisane',
                 bio: 'Zdjęcia galerii można zapisać na przyszłość.',
                 no_data: 'brak zapisanych zdjęć (・・ )',
+                link: 'View all saved photos',
                 button: {
                     image_is_bookmarked: {
                         name: 'Masz to zdjęcie zapisane'
@@ -2831,6 +3075,15 @@ const trans = {
             name: 'Search',
             results_for: 'Results for {v}'
         },
+        inbox: {
+            name: 'Inbox',
+            overview: 'Messages',
+            sent_overview: 'Messages',
+            compose: 'Messages',
+            message_overview: 'Messages',
+            sent_message: 'Messages',
+            notifications: 'Notifications'
+        },
         charts: {
             name: 'Charts',
             overview: 'Real time',
@@ -2867,7 +3120,13 @@ moment.updateLocale('de', {
 
 function lookup_lang() {
     root = document.querySelector('.masthead-logo a').getAttribute('href');
-    if (auth_link != null)
+
+    if (!root) {
+        handle_error_500();
+        return;
+    }
+
+    if (auth_link)
         my_avi = auth_link.querySelector('img').getAttribute('src');
     lang = document.documentElement.getAttribute('lang');
     non_override_lang = lang;
@@ -2878,6 +3137,10 @@ function lookup_lang() {
     }
 
     moment.locale(lang);
+}
+
+function handle_error_500() {
+    log('halted as root is inaccessible', 'load');
 }
 
 // seasonal
@@ -2894,7 +3157,7 @@ let seasonal_events = [
 
         snowflakes: {
             state: true,
-            count: 100
+            count: 90
         }
     },
     {
@@ -2957,6 +3220,23 @@ let seasonal_events = [
 ];
 
 function log(text, system, type = 'info', append={}) {
+    if (!page.structure.logs) {
+        let logs = document.createElement('div');
+        logs.classList.add('logs');
+        logs.innerHTML = (`
+            <div class="toggle-container" id="container-log_show_all" onclick="_update_item('log_show_all')">
+                <div class="toggle-wrap">
+                    <button id="toggle-log_show_all">
+                        show all
+                    </button>
+                </div>
+            </div>
+        `);
+
+        document.documentElement.appendChild(logs);
+        page.structure.logs = logs;
+    }
+
     let system_colour;
 
     switch(system) {
@@ -2996,6 +3276,18 @@ function log(text, system, type = 'info', append={}) {
         console[type](`%cbleh~%c${system}%c: ${text}`, 'color: #9F8CD9', `color: ${system_colour}; font-weight: bold`, 'color: unset', append);
     else
         console[type](`%cbleh~%c${system}%c: ${text}`, 'color: #9F8CD9', `color: ${system_colour}; font-weight: bold`, 'color: unset');
+
+    if (settings && settings.feature_flags.developer == true) {
+        let log_e = document.createElement('div');
+        log_e.classList.add('log');
+        log_e.setAttribute('data-type', type);
+        log_e.innerHTML = (`
+            <span class="system" style="color: ${system_colour}">${system}</span>
+            <span class="text">${text}</span>
+        `);
+
+        page.structure.logs.appendChild(log_e);
+    }
 }
 
 let theme_preview = (`
@@ -3267,7 +3559,10 @@ let settings_template = {
     font_weight: 480,
     font_weight_medium: 650,
     font_weight_bold: 730,
+    font_emoji: true,
+
     show_bulk_edit_album: false,
+    grid_glow: true,
 
     auth_menu_obsessions: false,
 
@@ -3284,9 +3579,21 @@ let settings_template = {
     activity_install: true,
     activity_wiki: true,
 
-    simulate_scroll: true
+    simulate_scroll: true,
+
+    toggle_icon: false,
+
+    log_show_all: false,
+
+    avatar_radius: 50
 };
 let settings_base = {
+    theme: {
+        css: 'theme',
+        unit: '',
+        value: 'dark',
+        type: 'options'
+    },
     high_contrast: {
         css: 'high_contrast',
         unit: '',
@@ -3572,10 +3879,24 @@ let settings_base = {
         value: 730,
         type: 'slider'
     },
+    font_emoji: {
+        css: 'font_emoji',
+        unit: '',
+        value: true,
+        values: [true, false],
+        type: 'toggle'
+    },
     show_bulk_edit_album: {
         css: 'show_bulk_edit_album',
         unit: '',
         value: true,
+        values: [true, false],
+        type: 'toggle'
+    },
+    grid_glow: {
+        css: 'show_grid_glow',
+        unit: '',
+        value:  true,
         values: [true, false],
         type: 'toggle'
     },
@@ -3661,6 +3982,26 @@ let settings_base = {
         values: [true, false],
         type: 'toggle',
         require_reload: true
+    },
+    toggle_icon: {
+        css: 'toggle_icon',
+        unit: '',
+        value: true,
+        values: [true, false],
+        type: 'toggle'
+    },
+    log_show_all: {
+        css: 'log_show_all',
+        unit: '',
+        value: false,
+        values: [true, false],
+        type: 'toggle'
+    },
+    avatar_radius: {
+        css: 'avatar-radius',
+        unit: '%',
+        value: 50,
+        type: 'slider'
     }
 };
 let inbuilt_settings = {
@@ -3748,7 +4089,9 @@ let page = {
         content_top: null,
         glacier: {
             refresh: true
-        }
+        },
+        indicator: null,
+        logs: null
     },
     requested: {
         tab: null
@@ -3861,7 +4204,7 @@ let has_prompted_for_update = false;
                 append_nav(document.body);
                 patch_masthead(document.body);
 
-                theme_version = getComputedStyle(document.body).getPropertyValue('--version-build').replaceAll("'", ''); // remove quotations
+                theme_version = getComputedStyle(document.body).getPropertyValue('--version-build').replaceAll("'", '').replaceAll('"', ''); // remove quotations
                 if (theme_version != version.build && theme_version != '' && !has_prompted_for_update) {
                     // script is either out of date, or more in date (not gonna happen)
                     log(`version mismatch! running ${version.build}, downloaded theme ${theme_version}`, 'update');
@@ -3890,20 +4233,28 @@ let has_prompted_for_update = false;
             id: 'error',
             title: 'An error has occured',
             body: (`
-                bleh was unable to start correctly, please report this on Github.
-                <p class="subtext">Error information available in console</p>
+                <div class="modal-vertical-inner error-inner">
+                    <div class="bleh-icon" style="--icon: var(--icon-error)"></div>
+                    <h1>oops.. something broke</h1>
+                    <p>An error has prevented bleh from loading correctly, please report this issue on Github.</p>
+                    <pre class="error-info">${(e) ? `<span class="error-type">${e.name}</span>: ${e.message}` : ''}<br>on: ${page.type}/${page.subpage}</pre>
+                    <p>Please include this error and the steps you took in the report!</p>
+                </div>
                 <div class="modal-footer">
                     <a class="btn primary report-bug continue" href="https://github.com/katelyynn/bleh/issues/new/choose" target="_blank">
                         Report bug now
                     </a>
                 </div>
-            `)
+            `),
+            type: 'error'
         });
 
         if (e != null) {
             log('fatal failure', 'load');
             console.error(e);
         }
+
+        log('current page', 'page', 'info', page);
     }
 
     function main_flow() {
@@ -4029,6 +4380,9 @@ let has_prompted_for_update = false;
             if (page.state.settings_reload) {
                 page.state.settings_reload = false;
             }
+
+            if (page.structure.indicator)
+                page_indicator();
         }
     }
 
@@ -4036,38 +4390,45 @@ let has_prompted_for_update = false;
         set_season();
         seasonal_timer_end();
 
-        error_page();
-
-        if (window.location.href.startsWith(setup_url.replace('{root}', root)))
+        if (window.location.href.startsWith(setup_url.replace('{root}', root))) {
             bleh_setup();
-        else if (window.location.href.startsWith(sponsor_url.replace('{root}', root)))
+        } else if (window.location.href.startsWith(sponsor_url.replace('{root}', root))) {
             bleh_sponsor_page();
-        else if (window.location.href.startsWith(bleh_url.replace('{root}', root)))
+        } else if (window.location.href.startsWith(bleh_url.replace('{root}', root))) {
             bleh_settings();
-        else if (page.type == 'user')
-            bleh_profiles();
-        else if (page.type == 'artist')
-            bleh_artists();
-        else if (page.type == 'album')
-            bleh_albums();
-        else if (page.type == 'track')
-            bleh_tracks();
-        else if (page.type == 'events' || page.type == 'festival')
-            bleh_events();
-        else if (page.type == 'tag')
-            bleh_tags();
-        else if (page.type == 'search')
-            bleh_search();
-        else if (page.type == 'settings')
-            bleh_native_settings();
-        else if (page.type == 'charts')
-            bleh_charts();
+        } else {
+            error_page();
 
-        if (
-            (page.type == 'artist' || page.type == 'album' || page.type == 'track') &&
-            page.subpage == 'overview'
-        )
-            patch_wiki();
+            if (page.state.error)
+                return;
+
+            if (page.type == 'user')
+                bleh_profiles();
+            else if (page.type == 'artist')
+                bleh_artists();
+            else if (page.type == 'album')
+                bleh_albums();
+            else if (page.type == 'track')
+                bleh_tracks();
+            else if (page.type == 'events' || page.type == 'festival')
+                bleh_events();
+            else if (page.type == 'tag')
+                bleh_tags();
+            else if (page.type == 'search')
+                bleh_search();
+            else if (page.type == 'settings')
+                bleh_native_settings();
+            else if (page.type == 'charts')
+                bleh_charts();
+            else if (page.type == 'inbox')
+                bleh_inbox();
+
+            if (
+                (page.type == 'artist' || page.type == 'album' || page.type == 'track') &&
+                page.subpage == 'overview'
+            )
+                patch_wiki();
+        }
 
         if (ff('page_title')) {
             //document.title = `${page.type}_${page.subpage} (${page.name}, ${page.sister}) - bleh ${version.build}.${version.sku}`;
@@ -4077,6 +4438,9 @@ let has_prompted_for_update = false;
                 log(`translation key for this page could not be found`, 'page', 'info', page);
             }
         }
+
+        if (page.structure.indicator)
+            page_indicator();
     }
 
     function basic_page_structure() {
@@ -4090,6 +4454,38 @@ let has_prompted_for_update = false;
         }
 
         checkup_page_structure();
+    }
+
+    function page_indicator() {
+        page.structure.indicator.innerHTML = (`
+            <div class="bleh">
+                <strong>version</strong>
+                <span>${version.brand}</span>
+                <span>${version.build}</span>
+                <span>${version.sku}</span>
+            </div>
+            <div class="page">
+                <strong>auth</strong>
+                <span>${auth}</span>
+                <span>${lang} (${non_override_lang})</span>
+            </div>
+            <div class="page">
+                <strong>page</strong>
+                <span>${page.type}</span>
+                <span>${page.subpage}</span>
+            </div>
+            <div class="page">
+                <strong></strong>
+                <span>${page.name}</span>
+                <span>${page.sister}</span>
+            </div>
+            <div class="page">
+                <strong>season</strong>
+                <span>${stored_season.id}</span>
+                <span>${stored_season.year}</span>
+                <span>${stored_season.offset}</span>
+            </div>
+        `);
     }
 
     function append_style() {
@@ -4134,7 +4530,7 @@ let has_prompted_for_update = false;
         log('loaded cache', 'style');
         setTimeout(function() {
             document.body.classList.add('bleh');
-            theme_version = getComputedStyle(document.body).getPropertyValue('--version-build').replaceAll("'", ''); // remove quotations
+            theme_version = getComputedStyle(document.body).getPropertyValue('--version-build').replaceAll("'", '').replaceAll('"', ''); // remove quotations
             log(`theme version reporting as ${theme_version}`, 'style');
 
             load_chart_colours();
@@ -4337,7 +4733,7 @@ let has_prompted_for_update = false;
 
             setTimeout(function() {
                 document.body.classList.add('bleh');
-                theme_version = getComputedStyle(document.body).getPropertyValue('--version-build').replaceAll("'", ''); // remove quotations
+                theme_version = getComputedStyle(document.body).getPropertyValue('--version-build').replaceAll("'", '').replaceAll('"', ''); // remove quotations
 
                 load_chart_colours();
 
@@ -4390,7 +4786,7 @@ let has_prompted_for_update = false;
 
             // we will temporarily apply the style just for theme info, then remove it
             setTimeout(function() {
-                theme_version = getComputedStyle(document.body).getPropertyValue('--version-build').replaceAll("'", ''); // remove quotations
+                theme_version = getComputedStyle(document.body).getPropertyValue('--version-build').replaceAll("'", '').replaceAll('"', ''); // remove quotations
 
                 document.documentElement.removeChild(style);
 
@@ -4514,7 +4910,7 @@ let has_prompted_for_update = false;
             offset /= 60;
 
             if (offset > -10)
-                offset = `${offset}0`;
+                offset = offset.toString().replace('-', '-0');
         }
 
         return `${offset}00`;
@@ -4671,6 +5067,14 @@ let has_prompted_for_update = false;
     }
 
     function append_nav() {
+        if (ff('developer') && !page.structure.indicator) {
+            let page_indicator = document.createElement('div');
+            page_indicator.classList.add('page-indicator');
+            document.documentElement.appendChild(page_indicator);
+
+            page.structure.indicator = page_indicator;
+        }
+
         let auth_link = document.body.querySelector('.auth-link');
 
         if (auth_link.hasAttribute('data-bleh'))
@@ -4694,12 +5098,17 @@ let has_prompted_for_update = false;
             badge.classList.add('label', `user-status--bleh-${badges[0].type}`, `user-status--bleh-user-${auth}`, 'auth-badge');
             badge.textContent = badges[0].name;
             auth_link.appendChild(badge);
+
+            auth_link.classList.add(`user-status--bleh-${badges[0].type}`, `user-status--bleh-user-${auth}`);
+            auth_link.setAttribute('data-has-colour', 'true');
         } else if (is_pro) {
             let pro_badge = document.createElement('p');
             pro_badge.classList.add('label', 'user-status-subscriber', 'auth-badge');
             pro_badge.textContent = 'Pro';
-
             auth_link.appendChild(pro_badge);
+
+            auth_link.classList.add(`user-status--bleh-${badges[0].type}`, `user-status--bleh-user-${auth}`);
+            auth_link.setAttribute('data-has-colour', 'true');
         }
 
 
@@ -4709,6 +5118,8 @@ let has_prompted_for_update = false;
             tippy(notif_btn, {
                 content: `${notif_count.textContent} notifications`
             });
+
+            notif_btn.setAttribute('data-count', notif_count.textContent);
         } else {
             tippy(notif_btn, {
                 content: 'No new notifications'
@@ -4721,6 +5132,8 @@ let has_prompted_for_update = false;
             tippy(inbox_btn, {
                 content: `${inbox_count.textContent} messages`
             });
+
+            inbox_btn.setAttribute('data-count', inbox_count.textContent);
         } else {
             tippy(inbox_btn, {
                 content: 'No new messages'
@@ -4746,7 +5159,7 @@ let has_prompted_for_update = false;
         let bleh_container = document.createElement('li');
         bleh_container.classList.add('masthead-nav-item');
         bleh_container.innerHTML = (`
-            <a class="masthead-nav-control" href="${root}bleh${(stored_season.id != 'none') ? '?tab=seasonal' : ''}" data-bleh--label="bleh" data-season="${stored_season.id}">
+            <a class="masthead-nav-control" href="${root}bleh${(stored_season.id != 'none') ? '?tab=seasonal' : ''}" data-bleh--label="bleh" data-season="${stored_season.id}" data-season-active="${(stored_season.id != 'none') ? 'true' : 'false'}">
                 ${(stored_season.id == 'none') ? trans[lang].auth_menu.configure_bleh : moment(stored_season.end.replace('y0', stored_season.year).replace('{offset}', stored_season.offset)).to(stored_season.now, true)}
             </a>
         `);
@@ -4963,7 +5376,7 @@ let has_prompted_for_update = false;
             ) continue;
 
             try {
-                document.body.style.setProperty(`--${settings_base[setting].css}`, settings[setting]);
+                document.body.style.setProperty(`--${settings_base[setting].css}`, `${settings[setting]}${settings_base[setting].unit}`);
             } catch(e) {
                 console.log('bleh - setting base entry for', setting, 'is not accessible');
             }
@@ -4998,7 +5411,7 @@ let has_prompted_for_update = false;
         let axis_col = `hsla(${getComputedStyle(document.body).getPropertyValue('--b4')}, 40%)`;
         let text_primary_col = `hsl(${getComputedStyle(document.body).getPropertyValue('--c2')})`;
         let bg_col = `hsl(${getComputedStyle(document.body).getPropertyValue('--b5')})`;
-        let root_bg_col = `hsla(${getComputedStyle(document.body).getPropertyValue('--b6')}, 85%)`;
+        let root_bg_col = `hsla(${getComputedStyle(document.body).getPropertyValue('--b6')}, 92%)`;
         let hue = getComputedStyle(document.body).getPropertyValue('--hue');
         page.state.chart_colours = {
             link_col: link_col,
@@ -5025,8 +5438,10 @@ let has_prompted_for_update = false;
                     backgroundColor: root_bg_col,
                     titleColor: text_primary_col,
                     bodyColor: text_primary_col,
-                    padding: 7,
-                    cornerRadius: 10,
+                    multiKeyBackground: root_bg_col,
+                    boxPadding: 6,
+                    padding: 9,
+                    cornerRadius: 9,
                     caretSize: 0
                 }
             },
@@ -5065,8 +5480,10 @@ let has_prompted_for_update = false;
                     backgroundColor: root_bg_col,
                     titleColor: text_primary_col,
                     bodyColor: text_primary_col,
-                    padding: 7,
-                    cornerRadius: 10,
+                    multiKeyBackground: root_bg_col,
+                    boxPadding: 6,
+                    padding: 9,
+                    cornerRadius: 9,
                     caretSize: 0
                 }
             },
@@ -5099,8 +5516,10 @@ let has_prompted_for_update = false;
                     backgroundColor: root_bg_col,
                     titleColor: text_primary_col,
                     bodyColor: text_primary_col,
-                    padding: 7,
-                    cornerRadius: 10,
+                    multiKeyBackground: root_bg_col,
+                    boxPadding: 6,
+                    padding: 9,
+                    cornerRadius: 9,
                     caretSize: 0
                 }
             },
@@ -5130,8 +5549,10 @@ let has_prompted_for_update = false;
                     backgroundColor: root_bg_col,
                     titleColor: text_primary_col,
                     bodyColor: text_primary_col,
-                    padding: 7,
-                    cornerRadius: 10,
+                    multiKeyBackground: root_bg_col,
+                    boxPadding: 6,
+                    padding: 9,
+                    cornerRadius: 9,
                     caretSize: 0
                 }
             },
@@ -5167,8 +5588,10 @@ let has_prompted_for_update = false;
                     backgroundColor: root_bg_col,
                     titleColor: text_primary_col,
                     bodyColor: text_primary_col,
-                    padding: 7,
-                    cornerRadius: 10,
+                    multiKeyBackground: root_bg_col,
+                    boxPadding: 6,
+                    padding: 9,
+                    cornerRadius: 9,
                     caretSize: 0
                 }
             },
@@ -5188,8 +5611,10 @@ let has_prompted_for_update = false;
                     backgroundColor: root_bg_col,
                     titleColor: text_primary_col,
                     bodyColor: text_primary_col,
-                    padding: 7,
-                    cornerRadius: 10,
+                    multiKeyBackground: root_bg_col,
+                    boxPadding: 6,
+                    padding: 9,
+                    cornerRadius: 9,
                     caretSize: 0
                 }
             },
@@ -5208,8 +5633,10 @@ let has_prompted_for_update = false;
                     backgroundColor: root_bg_col,
                     titleColor: text_primary_col,
                     bodyColor: text_primary_col,
-                    padding: 7,
-                    cornerRadius: 10,
+                    multiKeyBackground: root_bg_col,
+                    boxPadding: 6,
+                    padding: 9,
+                    cornerRadius: 9,
                     caretSize: 0
                 }
             }
@@ -5329,13 +5756,78 @@ let has_prompted_for_update = false;
     function bleh_native_settings() {
         register_background(my_avi);
 
+        page.structure.container = document.body.querySelector('.page-content');
+        try {
+            page.structure.row = page.structure.container.querySelector('.row');
+            page.structure.main = page.structure.row.querySelector('.col-main');
+            page.structure.side = page.structure.row.querySelector('.col-sidebar');
+        } catch(e) {
+            log('unable to find elements', 'page structure');
+        }
+
+        let content_top = document.body.querySelector('.content-top');
+        let header_text = trans[lang].settings.pages[page.subpage];
+
+        checkup_page_structure(false, content_top);
+        log('status is', 'page', 'info', page);
+        update_page();
+
         if (page.subpage == 'overview') {
             patch_settings_profile_tab();
         } else if (page.subpage == 'privacy') {
             patch_settings_privacy_tab();
+        } else if (page.subpage == 'subscription_overview') {
+            let panel = page.structure.container.querySelector('.row + div');
+
+            let subscription = panel.querySelector('#current-subscription');
+            let edits = panel.querySelector('#automatic-edits');
+            let merch_h = panel.querySelector(':scope > h2');
+            let merch = panel.querySelector('#mechandise-discount');
+            let history = panel.querySelector('#pro-history');
+
+            merch.insertBefore(merch_h, merch.firstElementChild);
+
+            page.structure.main.appendChild(subscription);
+            page.structure.main.appendChild(edits);
+            page.structure.main.appendChild(merch);
+            page.structure.main.appendChild(history);
+
+            let button = subscription.querySelector('.btn-primary');
+            button.classList.add('subscription-button', 'icon', 'primary');
+
+            let more_link_wrap = edits.querySelector('.more-link');
+            if (more_link_wrap) {
+                more_link_wrap.classList = '';
+                let edit_buttons = more_link_wrap.querySelectorAll('a');
+                edit_buttons.forEach((edit_button, index) => {
+                    edit_button.classList.add('btn', 'edit-lead-button', 'icon', 'primary');
+
+                    if (index == 0)
+                        edit_button.classList.add('edit-album');
+                    else
+                        edit_button.classList.add('edit-track');
+                });
+            }
         } else if (page.subpage.startsWith('subscription_automatic-edits')) {
             bleh_auto_edits();
+
+            let header = content_top.querySelector('.content-top-header');
+            header_text = header.textContent.trim();
         }
+
+        let edit_header = document.createElement('section');
+        edit_header.classList.add('redesigned-header', 'edit-header', 'no-background');
+        edit_header.innerHTML = (`
+            <div class="tag-side">
+                <div class="tag-icon cog-icon"></div>
+            </div>
+            <div class="info-side">
+                <div class="sub-text">${trans[lang].settings.name}</div>
+                <h1>${header_text}</h1>
+            </div>
+        `);
+
+        page.structure.container.insertBefore(edit_header, page.structure.container.firstElementChild);
     }
 
     function patch_settings_profile_tab() {
@@ -5962,7 +6454,7 @@ let has_prompted_for_update = false;
                         ${trans[lang].settings.inbuilt.profile.avatar.delete}
                     </div>
                     <div class="modal-footer">
-                        <button class="btn cancel" onclick="_kill_window('edit_avatar')">${trans[lang].settings.cancel}</button>
+                        <button class="btn cancel" onclick="_kill_window('edit_avatar')" type="button">${trans[lang].settings.cancel}</button>
                     </div>
                 </form>
             </div>
@@ -6019,20 +6511,122 @@ let has_prompted_for_update = false;
     function patch_settings_privacy_tab() {
         let privacy_panel = document.getElementById('privacy');
 
-        if (privacy_panel == undefined)
-            return;
-
         // if we can continue, we are on privacy tab
         let token = document.body.querySelector('[name="csrfmiddlewaretoken"]').getAttribute('value');
 
+        bleh_communication_panel(token);
         patch_settings_privacy_panel(token, privacy_panel);
     }
 
-    function patch_settings_privacy_panel(token, privacy_panel) {
-        if (privacy_panel.hasAttribute('data-kate-processed'))
-            return;
+    function bleh_communication_panel(token) {
+        let panel = page.structure.main.querySelector('#ignorelist');
+        panel.classList.add('bleh--panel');
 
-        privacy_panel.setAttribute('data-kate-processed', 'true');
+        let label = panel.querySelector('.control-label').textContent;
+        let input = panel.querySelector('#id_user').outerHTML;
+        let button_text = panel.querySelector('.btn-primary').textContent;
+
+        let current = panel.querySelector('form + .form-horizontal .control-label').textContent;
+        let list = panel.querySelectorAll('.ignore-list tr');
+
+
+        let new_list = document.createElement('div');
+        new_list.classList.add('generic-table-list', 'user-vertical-list');
+
+        let exceeded = false;
+        let exceed_amount = 10;
+        let amount = 0;
+
+        list.forEach((item, index) => {
+            let entry = document.createElement('div');
+            entry.classList.add('generic-table-list-entry', 'user-vertical-list-item');
+
+            let name = item.querySelector('td').textContent.trim();
+            let form = item.querySelector('form');
+            let button = form.querySelector('button');
+
+            button.classList.add('icon', 'delete-user-button', 'danger-subtle');
+
+            entry.innerHTML = (`
+                <span class="text">
+                    <a class="mention" href="${root}user/${name}" target="_blank">@${name}</a>
+                </span>
+                <span class="actions">
+                    ${form.outerHTML}
+                </span>
+            `);
+
+            if (index > exceed_amount && !exceeded)
+                exceeded = true;
+
+            if (exceeded)
+                entry.classList.add('entry-is-exceeded');
+
+            new_list.appendChild(entry);
+            amount += 1;
+        });
+
+        if (exceeded) {
+            let remainder = amount - exceed_amount;
+
+            new_list.classList.add('list-is-exceeded');
+            new_list.setAttribute('data-expanded', 'false');
+
+            let expand = document.createElement('button');
+            expand.classList.add('expand-button', 'icon');
+            expand.textContent = trans[lang].settings.inbuilt.ignore.view.replace('{c}', remainder);
+            expand.setAttribute('onclick', '_expand_list(this)');
+
+            new_list.appendChild(expand);
+        }
+
+
+
+        panel.innerHTML = (`
+            <h4>${trans[lang].settings.inbuilt.ignore.name}</h4>
+            <div class="user-top-panel">
+                <div class="user-top-avatar user-top-avatar-side-left"><div class="bleh-icon"></div></div>
+                <img class="user-top-avatar user-top-avatar-main" src="${my_avi.replace('avatar42s', 'avatar300s')}" alt="${auth}">
+                <div class="user-top-avatar user-top-avatar-side-right"><div class="bleh-icon"></div></div>
+            </div>
+            <h5>${trans[lang].settings.inbuilt.ignore.consider.name}</h5>
+            <div class="to-consider">
+                <ul class="to-consider-good">
+                    <li>${trans[lang].settings.inbuilt.ignore.consider.good[0]}</li>
+                    <li>${trans[lang].settings.inbuilt.ignore.consider.good[1]}</li>
+                    <li>${trans[lang].settings.inbuilt.ignore.consider.good[2]}</li>
+                </ul>
+                <ul class="to-consider-bad">
+                    <li>${trans[lang].settings.inbuilt.ignore.consider.bad[0]}</li>
+                    <li>${trans[lang].settings.inbuilt.ignore.consider.bad[1]}</li>
+                </ul>
+            </div>
+            <div class="text-container">
+                <div class="heading content-form">
+                    <h5>${trans[lang].settings.music.profile_shortcut.placeholder}</h5>
+                    <div class="input-container">
+                        <input type="text" maxlength="80" id="id_user" name="user" placeholder="${trans[lang].settings.music.profile_shortcut.header}">
+                        <input type="hidden" name="listaction" value="add">
+                        <input type="hidden" name="submit" value="ignorelist">
+                        <button class="bleh--btn primary icon add" type="submit">${trans[lang].settings.add}</button>
+                    </div>
+                </div>
+            </div>
+            <div class="alert alert-info">
+                ${trans[lang].settings.inbuilt.ignore.count.replace('{c}', amount)}
+            </div>
+        `);
+
+        panel.appendChild(new_list);
+    }
+
+    unsafeWindow._expand_list = function(button) {
+        let list = button.parentElement;
+
+        list.setAttribute('data-expanded', 'true');
+    }
+
+    function patch_settings_privacy_panel(token, privacy_panel) {
         privacy_panel.classList.add('bleh--panel');
 
         // get info before destroying
@@ -6216,8 +6810,10 @@ let has_prompted_for_update = false;
 
             // listening report error
             let container_full_width = document.body.querySelector('.container--full-width');
-
-            container_full_width.insertBefore(page.structure.container, container_full_width.firstElementChild);
+            if (container_full_width)
+                container_full_width.insertBefore(page.structure.container, container_full_width.firstElementChild);
+            else
+                document.body.querySelector('.adaptive-skin-container').appendChild(page.structure.container);
         }
 
         page.structure.container.setAttribute('data-assigned', 'true');
@@ -6651,7 +7247,8 @@ let has_prompted_for_update = false;
                 }
 
                 let legacy_metadata = page.structure.main.querySelector('.metadata-list');
-                page.structure.main.removeChild(legacy_metadata);
+                if (legacy_metadata)
+                    page.structure.main.removeChild(legacy_metadata);
 
 
                 page.structure.side.innerHTML = '';
@@ -6770,7 +7367,7 @@ let has_prompted_for_update = false;
                                     <a class="grid-items-item-aux-block" href="${artist_link}">
                                         ${artist}
                                     </a>
-                                    <a class="obesssions-item-date" href="${link}">
+                                    <a class="obsessions-item-date" href="${link}">
                                         ${date}
                                     </a>
                                 </p>
@@ -7068,7 +7665,8 @@ let has_prompted_for_update = false;
                     type: 'sponsor',
                     link: '_sponsor()',
                     full: true,
-                    action: 'button'
+                    action: 'button',
+                    primary: true
                 });
             }
 
@@ -7088,13 +7686,15 @@ let has_prompted_for_update = false;
                         type: 'sponsor',
                         link: '_sponsor()',
                         full: true,
-                        action: 'button'
+                        action: 'button',
+                        primary: true
                     });
                     create_profile_top_item(profile_header, {
                         name: page.name,
                         type: 'message_sponsor',
                         link: msg_button.getAttribute('href'),
-                        full: true
+                        full: true,
+                        primary: true
                     });
                 }
             }
@@ -7153,7 +7753,19 @@ let has_prompted_for_update = false;
                     taste: taste,
                     artists: taste_artists,
                     avi: profile_avi,
-                    percent: taste_percentage
+                    percent: taste_percentage,
+                    tooltip: (`
+                        <span>
+                            ${trans[lang].profile.taste}
+                            <!--<div class="taste-badge spacing">
+                                <span>${trans[lang].profile.taste_meter.level[taste]}</span>
+                                <span>${taste_percentage}</span>
+                            </div>-->
+                        </span>
+                        <div class="hint">${trans[lang].settings.right_click}</div>
+                    `),
+                    allow_html: true,
+                    tooltip_theme: 'stack'
                 });
             }
         }
@@ -7164,7 +7776,7 @@ let has_prompted_for_update = false;
             base_header.appendChild(profile_header);
     }
 
-    function create_profile_top_item(parent, {name, link, text='', type, taste='', artists=[], avi='', percent='', action='', tooltip='', full=false}) {
+    function create_profile_top_item(parent, {name, link, text='', type, taste='', artists=[], avi='', percent='', action='', tooltip='', allow_html=false, tooltip_theme='', full=false, primary=false}) {
         log(`creating top item of ${name}, ${link}, ${text}`, 'profile');
 
         let listen_item = document.createElement((action != 'button') ? 'a' : 'button');
@@ -7176,6 +7788,9 @@ let has_prompted_for_update = false;
         } else if (type != 'going' && type != 'maybe' && type != 'total') {
             listen_item.setAttribute('onclick', link);
         }
+
+        if (primary)
+            listen_item.classList.add('primary');
 
         if (type != 'taste') {
             text = text.toLocaleString(lang);
@@ -7289,7 +7904,9 @@ let has_prompted_for_update = false;
             });
         else
             tippy(listen_item, {
-                content: tooltip
+                content: tooltip,
+                allowHTML: allow_html,
+                theme: tooltip_theme
             });
     }
 
@@ -7457,16 +8074,22 @@ let has_prompted_for_update = false;
 
                 let shout_name = shout.querySelector('.shout-user a');
 
-                if (shout_name == null)
+                if (!shout_name)
                     return;
-                shout_name = shout_name.textContent;
+                let shout_name_text = shout_name.textContent;
 
                 let shout_avatar = shout.querySelector('.shout-user-avatar');
 
-                let badge = patch_avatar(shout_avatar, shout_name, 'shout');
+                let badge = patch_avatar(shout_avatar, shout_name_text, 'shout');
 
-                if (badge.type == 'avatar-status-dot--staff')
-                    shout.classList.add('staff-shout');
+                if (badge.type) {
+                    if (badge.type == 'avatar-status-dot--staff')
+                        shout.classList.add('staff-shout');
+
+                    shout_avatar.setAttribute('data-avatar-themed', 'true');
+                    shout_avatar.classList.add(`user-status--bleh-${badge.type}`, `user-status--bleh-user-${shout_name_text}`);
+                    shout_name.classList.add(`user-status--bleh-${badge.type}`, `user-status--bleh-user-${shout_name_text}`);
+                }
 
                 if (settings.shout_markdown) {
                     let shout_body = shout.querySelector('.shout-body p');
@@ -7547,7 +8170,7 @@ let has_prompted_for_update = false;
         .replace(/"/g, '&quot;')
         .replace(/'/g, '&#039;'));
         shout.element.innerHTML = parsed_body;
-        log(`parsed index ${index}`, 'shout');
+        log(`parsed index ${index}`, 'shout', 'log');
 
         shout_parse_queue.splice(index, 1);
         return 1;
@@ -7600,65 +8223,80 @@ let has_prompted_for_update = false;
             badge.classList.add('avatar-status-dot',`user-status--bleh-${this_badge.type}`,`user-status--bleh-user-${name}`);
             avatar.appendChild(badge);
 
+            avatar.classList.add('avatar-can-hoverbox');
             tippy(avatar, {
                 theme: 'user',
                 content: (`
-                    <div class="image">
+                    <div class="image-info">
                         <div class="inner-image">
                             ${avatar_img.outerHTML}
                         </div>
-                    </div>
-                    <div class="info">
-                        <h5 class="title ${(cute.includes(name)) ? 'bleh--name-is-cute-less' : ''}">${name}</h5>
+                        <h5 class="title">${name}</h5>
                         <p class="descriptor">${trans[lang].profile.top_badge}</p>
                         <p class="badge user-status--bleh-${this_badge.type} user-status--bleh-user-${name}" data-badge-type="${this_badge.type}" data-badge-user="${name}">${this_badge.name}</p>
+                    </div>
+                    <div class="user-buttons view-buttons">
+                        <a class="btn view-item user-button view-profile-btn" href="${root}user/${name}">${trans[lang].actions.view_profile}</a>
+                        <a class="btn view-item user-button view-library-btn" href="${root}user/${name}/library">${trans[lang].actions.view_library}</a>
+                        <a class="btn view-item user-button leave-shout-btn" href="${root}user/${name}/shoutbox">${trans[lang].actions.leave_a_shout}</a>
                     </div>
                 `),
                 allowHTML: true,
                 delay: [100, 50],
-                placement: 'bottom'
+                placement: 'bottom',
+                interactive: true
             });
 
             return this_badge;
         } else {
             let pre_existing_badge = avatar.querySelector('.avatar-status-dot');
             if (pre_existing_badge == null) {
+                avatar.classList.add('avatar-can-hoverbox');
                 tippy(avatar, {
                     theme: 'user',
                     content: (`
-                        <div class="image">
+                        <div class="image-info">
                             <div class="inner-image">
                                 ${avatar_img.outerHTML}
                             </div>
+                            <h5 class="title">${name}</h5>
                         </div>
-                        <div class="info">
-                            <h5 class="title ${(cute.includes(name)) ? 'bleh--name-is-cute-less' : ''}">${name}</h5>
+                        <div class="user-buttons view-buttons">
+                            <a class="btn view-item user-button view-profile-btn" href="${root}user/${name}">${trans[lang].actions.view_profile}</a>
+                            <a class="btn view-item user-button view-library-btn" href="${root}user/${name}/library">${trans[lang].actions.view_library}</a>
+                            <a class="btn view-item user-button leave-shout-btn" href="${root}user/${name}/shoutbox">${trans[lang].actions.leave_a_shout}</a>
                         </div>
                     `),
                     allowHTML: true,
                     delay: [100, 50],
-                    placement: 'bottom'
+                    placement: 'bottom',
+                    interactive: true
                 });
 
                 return {};
             } else {
+                avatar.classList.add('avatar-can-hoverbox');
                 tippy(avatar, {
                     theme: 'user',
                     content: (`
-                        <div class="image">
+                        <div class="image-info">
                             <div class="inner-image">
                                 ${avatar_img.outerHTML}
                             </div>
-                        </div>
-                        <div class="info">
-                            <h5 class="title ${(cute.includes(name)) ? 'bleh--name-is-cute-less' : ''}">${name}</h5>
+                            <h5 class="title">${name}</h5>
                             <p class="descriptor">${trans[lang].profile.top_badge}</p>
                             <p class="badge ${pre_existing_badge.classList[1]}">${avatar.getAttribute('title')}</p>
+                        </div>
+                        <div class="user-buttons view-buttons">
+                            <a class="btn view-item user-button view-profile-btn" href="${root}user/${name}">${trans[lang].actions.view_profile}</a>
+                            <a class="btn view-item user-button view-library-btn" href="${root}user/${name}/library">${trans[lang].actions.view_library}</a>
+                            <a class="btn view-item user-button leave-shout-btn" href="${root}user/${name}/shoutbox">${trans[lang].actions.leave_a_shout}</a>
                         </div>
                     `),
                     allowHTML: true,
                     delay: [100, 50],
-                    placement: 'bottom'
+                    placement: 'bottom',
+                    interactive: true
                 });
                 avatar.setAttribute('title', '');
 
@@ -7667,6 +8305,19 @@ let has_prompted_for_update = false;
                 };
             }
         }
+    }
+
+    function return_name_from_avatar(avatar) {
+        if (!avatar)
+            return;
+
+        if (!avatar.hasAttribute('alt'))
+            return;
+
+        if (avatar.getAttribute('alt') == trans[lang].avatar_for_me)
+            return auth;
+
+        return avatar.getAttribute('alt').replace(trans[lang].avatar_for_user, '');
     }
 
 
@@ -7744,35 +8395,25 @@ let has_prompted_for_update = false;
                 grid_colour.classList.add('grid-item-colour-bg');
                 image_wrap.appendChild(grid_colour);
 
+                image.setAttribute('crossorigin', 'anonymous');
                 try {
-                    image.setAttribute('crossorigin', 'anonymous');
                     image.addEventListener('load', function() {
-                        let vibrant = new Vibrant(image);
-                        let swatches = vibrant.swatches();
+                        let thief = new ColorThief();
+                        let colour = thief.getColor(image);
 
-                        if (swatches.DarkMuted != null) {
-                            console.log('dark muted', swatches.DarkMuted.getHex());
-                            let hsl = hex_to_hsl(swatches.DarkMuted.getHex());
+                        let hsl = rgb_to_hsl(colour[0], colour[1], colour[2]);
 
-                            grid_colour.style.setProperty('background', swatches.DarkMuted.getHex());
+                        grid_colour.style.setProperty('background', `rgb(${colour})`);
 
-                            grid.classList.add('grid-items-item-has-colour');
-                            grid.style.setProperty('--hue-over', hsl.h);
-                            grid.style.setProperty('--sat-over', clamp_sat((hsl.s / 100) * 3));
-                            grid.style.setProperty('--lit-over', 1);
-                        } else {
-                            console.log('vibrant', swatches.Vibrant.getHex());
-                            let hsl = hex_to_hsl(swatches.Vibrant.getHex());
-
-                            grid_colour.style.setProperty('background', swatches.Vibrant.getHex());
-
-                            grid.classList.add('grid-items-item-has-colour');
-                            grid.style.setProperty('--hue-over', hsl.h);
-                            grid.style.setProperty('--sat-over', clamp_sat((hsl.s / 100) * 3));
-                            grid.style.setProperty('--lit-over', 1);
-                        }
+                        grid.classList.add('grid-items-item-has-colour');
+                        grid.style.setProperty('--hue-over', hsl.h);
+                        grid.style.setProperty('--sat-over', clamp_sat((hsl.s / 100) * 3));
+                        grid.style.setProperty('--lit-over', 1);
                     });
                 } catch(e) {}
+
+                // TODO: add a timeout to check if the image has had its
+                // colour taken and if not do it manually after a set amount of time
             }
 
             let plays_elem;
@@ -8375,16 +9016,16 @@ let has_prompted_for_update = false;
                 `)}
                 <div class="screen-row actions-only">
                     <div class="actions">
-                        <button class="btn action highlight bleh--updates" onclick="_force_refresh_theme()">
+                        <button class="btn primary update icon" onclick="_force_refresh_theme()">
                             ${trans[lang].settings.home.update.update_now}
                         </button>
                         ${(settings.dev ? (`
-                        <a class="btn action highlight bleh--updates" href="https://github.com/katelyynn/bleh/raw/uwu/fm/bleh.user.css">
+                        <a class="btn primary update icon" href="https://github.com/katelyynn/bleh/raw/uwu/fm/bleh.user.css">
                             ${trans[lang].settings.home.update.css}
                         </a>
                         `) : '')}
                         ${(ff('sponsor') ? (`
-                        <button class="btn action highlight bleh--sponsor" onclick="_sponsor()">
+                        <button class="btn primary sponsor" onclick="_sponsor()">
                             ${trans[lang].settings.home.sponsor.name}<div class="new-badge">${trans[lang].settings.new}</div>
                         </button>
                         `) : '')}
@@ -8415,6 +9056,9 @@ let has_prompted_for_update = false;
                         </div>
                     </div>
                 </div>
+                <button class="btn continue" onclick="_change_settings_page('seasonal')">
+                    ${trans[lang].settings.customise.seasonal.view}
+                </button>
                 <h4>${trans[lang].settings.home.recommended}</h4>
                 <div class="setting-items full">
                     <div class="side-right full">
@@ -9240,7 +9884,7 @@ let has_prompted_for_update = false;
                     </div>
                     <div class="info-box no-padding">
                         <div class="bleh-icon bleh-info-icon"></div>
-                        ${trans[lang].settings.customise.seasonal.info}
+                        ${trans[lang].settings.customise.seasonal.info.replace('{offset}', `<code>${stored_season.offset}</code>`)}
                     </div>
                     <!--<p>${trans[lang].settings.customise.seasonal.bio}</p>
                     <div class="inner-preview pad click-thru">
@@ -9379,6 +10023,11 @@ let has_prompted_for_update = false;
             head.textContent = trans[lang].settings.profiles.name;
             register_skip_to([
                 {
+                    id: 'profile_shortcut',
+                    type: 'text',
+                    name: trans[lang].settings.music.profile_shortcut.name
+                },
+                {
                     id: 'activities',
                     name: trans[lang].settings.activities.toggle.name
                 }
@@ -9415,10 +10064,10 @@ let has_prompted_for_update = false;
                     .replace('{v}', `<span class="version-link sponsor-related">${sponsor_list.latest}</span>`)}</div>
                     <div class="screen-row actions-only">
                         <div class="actions">
-                            <button class="btn action highlight bleh--sponsor bleh--sponsor-manage" onclick="_sponsor_manage()">
+                            <button class="btn primary sponsor" onclick="_sponsor_manage()">
                                 ${trans[lang].settings.home.sponsor.manage}<div class="new-badge">${trans[lang].settings.new}</div>
                             </button>
-                            <button class="btn action highlight bleh--sponsor bleh--sponsor-refresh" onclick="_sponsor_check()">
+                            <button class="btn refresh icon" onclick="_sponsor_check()">
                                 ${trans[lang].settings.home.sponsor.check}
                             </button>
                         </div>
@@ -9429,15 +10078,45 @@ let has_prompted_for_update = false;
                     .replace('{v}', `<span class="version-link sponsor-related">${sponsor_list.latest}</span>`)}</div>
                     <div class="screen-row actions-only">
                         <div class="actions">
-                            <button class="btn action highlight bleh--sponsor" onclick="_sponsor()">
+                            <button class="btn primary sponsor" onclick="_sponsor()">
                                 ${trans[lang].settings.home.sponsor.name}<div class="new-badge">${trans[lang].settings.new}</div>
                             </button>
-                            <button class="btn action highlight bleh--sponsor bleh--sponsor-refresh" onclick="_sponsor_check()">
+                            <button class="btn refresh icon" onclick="_sponsor_check()">
                                 ${trans[lang].settings.home.sponsor.check}
                             </button>
                         </div>
                     </div>
                     `)}
+                </div>
+                <div class="bleh--panel">
+                    <div class="slider-container" id="container-avatar_radius">
+                        <button class="btn reset" onclick="_reset_item('avatar_radius')">${trans[lang].settings.reset}</button>
+                        <div class="heading">
+                            <h5>${trans[lang].settings.profiles.avatar_radius.name}</h5>
+                        </div>
+                        <div class="slider">
+                            <div class="slider-track" id="slider-track-avatar_radius"><div class="slider-fill"></div><div class="slider-nub"></div></div>
+                            <input type="range" min="0" max="50" value="0" step="1" id="slider-avatar_radius" oninput="_update_item('avatar_radius', this.value)">
+                            <p id="value-avatar_radius">0</p>
+                        </div>
+                    </div>
+                    <h4>${trans[lang].settings.music.profile_shortcut.name}</h4>
+                    <p>${trans[lang].settings.music.profile_shortcut.bio}</p>
+                    <div class="text-container" id="container-profile_shortcut">
+                        <button class="btn reset" onclick="_reset_item('profile_shortcut')">${trans[lang].settings.reset}</button>
+                        <div class="avatar-container">
+                            <div class="avatar-inner" id="avatar-profile_shortcut">
+                                <img id="avatar_src-profile_shortcut" src="${localStorage.getItem('bleh_profile_shortcut_avi') || ''}">
+                            </div>
+                        </div>
+                        <div class="heading content-form">
+                            <h5>${trans[lang].settings.music.profile_shortcut.placeholder}</h5>
+                            <div class="input-container">
+                                <input type="text" maxlength="40" id="text-profile_shortcut" value="${settings.profile_shortcut}" placeholder="${trans[lang].settings.music.profile_shortcut.header}">
+                                <button class="bleh--btn primary save" onclick="_save_profile_shortcut()">${trans[lang].settings.save}</button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 <div class="bleh--panel">
                     <h4>${trans[lang].settings.activities.name}</h4>
@@ -9606,6 +10285,18 @@ let has_prompted_for_update = false;
                             </button>
                         </div>
                     </div>
+                    <div class="toggle-container" id="container-toggle_icon" onclick="_update_item('toggle_icon')">
+                        <button class="btn reset" onclick="_reset_item('toggle_icon')">${trans[lang].settings.reset}</button>
+                        <div class="heading">
+                            <h5>${trans[lang].settings.accessibility.toggle_icon.name}</h5>
+                            <p>${trans[lang].settings.accessibility.toggle_icon.bio}</p>
+                        </div>
+                        <div class="toggle-wrap">
+                            <button class="toggle" id="toggle-toggle_icon" aria-checked="false">
+                                <div class="dot"></div>
+                            </button>
+                        </div>
+                    </div>
                 </div>
                 `);
         } else if (page == 'text') {
@@ -9659,6 +10350,18 @@ let has_prompted_for_update = false;
                             <div class="slider-track" id="slider-track-font_weight_bold"><div class="slider-fill"></div><div class="slider-nub"></div></div>
                             <input type="range" min="0" max="900" value="0" step="10" id="slider-font_weight_bold" oninput="_update_item('font_weight_bold', this.value)">
                             <p id="value-font_weight_bold">0</p>
+                        </div>
+                    </div>
+                    <div class="toggle-container" id="container-font_emoji" onclick="_update_item('font_emoji')">
+                        <button class="btn reset" onclick="_reset_item('font_emoji')">${trans[lang].settings.reset}</button>
+                        <div class="heading">
+                            <h5>${trans[lang].settings.text.font_emoji.name}</h5>
+                            <p>${trans[lang].settings.text.font_emoji.bio}</p>
+                        </div>
+                        <div class="toggle-wrap">
+                            <button class="toggle" id="toggle-font_emoji" aria-checked="false">
+                                <div class="dot"></div>
+                            </button>
                         </div>
                     </div>
                     <div class="sep"></div>
@@ -9734,26 +10437,12 @@ let has_prompted_for_update = false;
 
             return (`
                 <div class="bleh--panel shh">
+                    <div class="sub-text">${version.build}.${version.sku}</div>
                     ☆⌒(>w<)
-                    <div class="screen-row">
-                        <div class="actions">
-                            <a class="btn action">
-                                <span class="text">
-                                    <h5>build</h5>
-                                    <p>${version.build}</p>
-                                </span>
-                            </a>
-                            <a class="btn action">
-                                <span class="text">
-                                    <h5>sku</h5>
-                                    <p>${version.sku}</p>
-                                </span>
-                            </a>
-                        </div>
-                    </div>
                 </div>
                 <div class="bleh--panel">
-                    <h4>Feature Flags</h4>
+                    <h4>Manage active flags</h4>
+                    <div class="alert alert-danger">Be careful! Only manage these if you know what you are doing.</div>
                     <div class="feature-flags" id="feature-flags"></div>
                 </div>
                 `);
@@ -9773,11 +10462,6 @@ let has_prompted_for_update = false;
                     name: trans[lang].settings.corrections.stacked_chartlist_info.name
                 },
                 {
-                    id: 'profile_shortcut',
-                    type: 'text',
-                    name: trans[lang].settings.music.profile_shortcut.name
-                },
-                {
                     id: 'travis',
                     name: trans[lang].settings.redirects.name
                 },
@@ -9785,6 +10469,10 @@ let has_prompted_for_update = false;
                     id: 'gloss',
                     type: 'slider',
                     name: trans[lang].settings.customise.gloss.name
+                },
+                {
+                    id: 'grid_glow',
+                    name: trans[lang].settings.music.grid_glow.name
                 },
                 {
                     id: 'gendered_tags',
@@ -10006,24 +10694,6 @@ let has_prompted_for_update = false;
                             </button>
                         </div>
                     </div>
-                    <div class="sep"></div>
-                    <h4>${trans[lang].settings.music.profile_shortcut.name}</h4>
-                    <p>${trans[lang].settings.music.profile_shortcut.bio}</p>
-                    <div class="text-container" id="container-profile_shortcut">
-                        <button class="btn reset" onclick="_reset_item('profile_shortcut')">${trans[lang].settings.reset}</button>
-                        <div class="avatar-container">
-                            <div class="avatar-inner" id="avatar-profile_shortcut">
-                                <img id="avatar_src-profile_shortcut" src="${localStorage.getItem('bleh_profile_shortcut_avi') || ''}">
-                            </div>
-                        </div>
-                        <div class="heading content-form">
-                            <h5>${trans[lang].settings.music.profile_shortcut.placeholder}</h5>
-                            <div class="input-container">
-                                <input type="text" maxlength="40" id="text-profile_shortcut" value="${settings.profile_shortcut}" placeholder="${trans[lang].settings.music.profile_shortcut.header}">
-                                <button class="bleh--btn primary save" onclick="_save_profile_shortcut()">${trans[lang].settings.save}</button>
-                            </div>
-                        </div>
-                    </div>
                 </div>
                 <div class="bleh--panel">
                     <h4>${trans[lang].settings.redirects.name}</h4>
@@ -10081,6 +10751,17 @@ let has_prompted_for_update = false;
                             <div class="slider-track" id="slider-track-gloss"><div class="slider-fill"></div><div class="slider-nub"></div></div>
                             <input type="range" min="0" max="1" value="0" step="0.05" id="slider-gloss" oninput="_update_item('gloss', this.value)">
                             <p id="value-gloss">0</p>
+                        </div>
+                    </div>
+                    <div class="toggle-container" id="container-grid_glow" onclick="_update_item('grid_glow')">
+                        <button class="btn reset" onclick="_reset_item('grid_glow')">${trans[lang].settings.reset}</button>
+                        <div class="heading">
+                            <h5>${trans[lang].settings.music.grid_glow.name}</h5>
+                        </div>
+                        <div class="toggle-wrap">
+                            <button class="toggle" id="toggle-grid_glow" aria-checked="true" type="button">
+                                <div class="dot"></div>
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -10209,6 +10890,7 @@ let has_prompted_for_update = false;
         } else if (page == 'profiles') {
             init_profile_notes();
             init_profile_page();
+            refresh_all();
         } else if (page == 'sku') {
             bleh_sku_page();
         }
@@ -10347,15 +11029,17 @@ let has_prompted_for_update = false;
 
             let feature_flag_element = document.createElement('div');
             feature_flag_element.classList.add('toggle-container');
+            feature_flag_element.setAttribute('onclick', `_update_flag_toggle('${flag}', this)`);
             feature_flag_element.innerHTML = (`
                 <div class="heading">
                     <h5>${version.feature_flags[flag].name}</h5>
+                    ${(version.feature_flags[flag].notice) ? `<p>${version.feature_flags[flag].notice}</p>` : ''}
                     <div class="info-row">
-                        <div class="default-flag flag-${version.feature_flags[flag].default}">${version.feature_flags[flag].default}</div><p class="date">${version.feature_flags[flag].date}</p><p>${flag}</p>
+                        <div class="new-badge flag-${version.feature_flags[flag].default}">${version.feature_flags[flag].default}</div><p class="date">${version.feature_flags[flag].date}</p><p>${flag}</p>
                     </div>
                 </div>
                 <div class="toggle-wrap">
-                    <button id="feature-flag-toggle-${flag}" class="toggle" onclick="_update_flag_toggle('${flag}', this)" aria-checked="${current_state}">
+                    <button id="feature-flag-toggle-${flag}" class="toggle" aria-checked="${current_state}">
                         <div class="dot"></div>
                     </button>
                 </div>
@@ -10367,10 +11051,14 @@ let has_prompted_for_update = false;
         }
     }
 
-    unsafeWindow._update_flag_toggle = function(flag, button) {
-        update_flag_toggle(flag, button);
+    unsafeWindow._update_flag_toggle = function(flag, container) {
+        update_flag_toggle(flag, container);
     }
-    function update_flag_toggle(flag, button) {
+    function update_flag_toggle(flag, container) {
+        let button = container.querySelector('.toggle');
+        if (!button)
+            return;
+
         let current_state = version.feature_flags[flag].default;
         if (settings.feature_flags[flag] != undefined) current_state = settings.feature_flags[flag];
 
@@ -10684,7 +11372,7 @@ let has_prompted_for_update = false;
             } catch(e) {}
 
             // save setting into body
-            document.body.style.setProperty(`--${settings_base[item].css}`, value);
+            document.body.style.setProperty(`--${settings_base[item].css}`, `${value}${settings_base[item].unit}`);
             document.documentElement.setAttribute(`data-bleh--${item}`, `${value}`);
 
             document.documentElement.setAttribute('data-bleh--hsl-override', 'false');
@@ -10798,9 +11486,18 @@ let has_prompted_for_update = false;
     }
 
     function request_reload() {
+        if (page.type == 'bleh_setup')
+            return;
+
         log('requesting reload', 'settings');
         reload_pending = true;
-        deliver_notif(trans[lang].settings.reload, true, false, '', '_invoke_reload()');
+        notify({
+            title: trans[lang].settings.reload.name,
+            body: trans[lang].settings.reload.body,
+            icon: 'icon-16-refresh',
+            persist: true,
+            action: '_invoke_reload()'
+        });
     }
     unsafeWindow._invoke_reload = function() {
         invoke_reload();
@@ -11400,11 +12097,11 @@ let has_prompted_for_update = false;
     unsafeWindow._reset_settings = function() {
         dialog({
             id: 'reset_settings',
-            title: trans[lang].settings.actions.export.modals.initial.name,
+            title: trans[lang].settings.actions.reset.modals.initial.name,
             body: (`
                 <p class="alert alert-error">${trans[lang].settings.actions.reset.modals.initial.alert}</p>
                 <div class="modal-footer">
-                    <button class="btn done" onclick="_confirm_reset()">
+                    <button class="btn done danger" onclick="_confirm_reset()">
                         ${trans[lang].settings.actions.reset.modals.initial.confirm}
                     </button>
                     <button class="btn upload" onclick="_export_first()">
@@ -11478,7 +12175,7 @@ let has_prompted_for_update = false;
                     // featuring ty dolla $ign
                     // skips if this is the first character
                     if (chr < 1)
-                        return;
+                        continue;
 
                     // differentiate 2017 remaster to 20th deluxe
                     console.log(group, group == 'remasters', lowercase_title.includes(' remaster'));
@@ -11666,15 +12363,6 @@ let has_prompted_for_update = false;
                     register_menu(track, menu);
                 }
 
-                // duration
-                let track_timestamp = track.querySelector('.chartlist-timestamp span');
-                if (track_timestamp != undefined) {
-                    tippy(track_timestamp, {
-                        content: track_timestamp.getAttribute('title')
-                    });
-                    track_timestamp.setAttribute('title', '');
-                }
-
 
                 let track_title = track.querySelector('.chartlist-name a:not(.offset-section-anchor)');
 
@@ -11799,7 +12487,20 @@ let has_prompted_for_update = false;
                         }
                     }
 
+                    // duration
+                    let track_timestamp = track.querySelector('.chartlist-timestamp span');
+                    let track_timestamp_contents;
+                    if (track_timestamp != null) {
+                        track_timestamp_contents = track_timestamp.getAttribute('title');
+                        track_timestamp.setAttribute('title', '');
+                    }
+
                     let image = track.querySelector('.chartlist-image img');
+
+                    // hacky workaround to chartlists with no image
+                    if (image == null && page.type == 'user')
+                        is_library_track_page = true;
+
                     tippy(track, {
                         theme: 'track',
                         content: (`
@@ -11813,10 +12514,11 @@ let has_prompted_for_update = false;
                                 <p class="artist">${song_artist_element.innerHTML}</p>
                                 <div class="tags">${song_tags_text}</div>
                                 ${(!is_library_track_page) ? (is_album) ? '' : `<p class="album">${trans[lang].music.from_the_album.replace('{album}', (image != null) ? correct_item_by_artist(image.getAttribute('alt'), track_artist) : page.name)}</p>` : ''}
+                                ${(track_timestamp != null && track_timestamp_contents != null) ? `<p class="timestamp">${track_timestamp_contents}</p>` : ''}
                             </div>
                         `),
                         allowHTML: true,
-                        delay: [500, 50],
+                        delay: [200, 50],
                         placement: 'bottom'/*,
                         hideOnClick: false*/
                     });
@@ -11834,6 +12536,28 @@ let has_prompted_for_update = false;
                         let corrected_title = correct_item_by_artist(track_title.textContent, track_artist);
                         track_title.textContent = corrected_title;
                         track_title.setAttribute('title', corrected_title);
+                    }
+
+                    let track_timestamp = track.querySelector('.chartlist-timestamp span');
+                    let track_timestamp_contents;
+                    if (track_timestamp != null) {
+                        track_timestamp_contents = track_timestamp.getAttribute('title');
+                        track_timestamp.setAttribute('title', '');
+
+                        tippy(track_timestamp, {
+                            content: track_timestamp_contents
+                        });
+                    }
+                } else {
+                    let track_timestamp = track.querySelector('.chartlist-timestamp span');
+                    let track_timestamp_contents;
+                    if (track_timestamp != null) {
+                        track_timestamp_contents = track_timestamp.getAttribute('title');
+                        track_timestamp.setAttribute('title', '');
+
+                        tippy(track_timestamp, {
+                            content: track_timestamp_contents
+                        });
                     }
                 }
 
@@ -12059,6 +12783,18 @@ let has_prompted_for_update = false;
         page.structure.main.after(bookmarks_content);
 
 
+        let sort_button = page.structure.main.querySelector('.dropdown-menu-clickable-button');
+        let sort_menu = page.structure.main.querySelector('.dropdown-menu-clickable');
+
+        let sort_wrap = document.createElement('div');
+        sort_wrap.classList.add('dropdown-top-wrap');
+
+        sort_wrap.appendChild(sort_button);
+        sort_wrap.appendChild(sort_menu);
+
+        page.structure.main.insertBefore(sort_wrap, page.structure.main.firstElementChild);
+
+
         // append images
         if (bookmarked_images.hasOwnProperty(page.name)) {
             bookmarked_images[page.name].forEach((image) => {
@@ -12252,7 +12988,10 @@ let has_prompted_for_update = false;
             let doc = new DOMParser().parseFromString(html, 'text/html');
             console.log('DOC', doc);
 
-            deliver_notif('refreshed tracks');
+            notify({
+                title: 'Recent tracks refreshed',
+                icon: 'icon-16-refresh'
+            });
             panel.classList.add('has-refreshed');
 
             let tracklist_panel = doc.querySelector('.chartlist');
@@ -12310,19 +13049,95 @@ let has_prompted_for_update = false;
         }, 3500);
     }
 
-    unsafeWindow._kill_notif = function(notif) {
-        kill_notif(notif);
+    unsafeWindow._notify = function({
+        title = null,
+        body = null,
+        icon = null,
+        classname = null,
+        action = null,
+        persist = false
+    }) {
+        notify({
+            title: title,
+            body: body,
+            icon: icon,
+            classname: classname,
+            action: action,
+            persist: persist
+        });
     }
-    function kill_notif(notif) {
+    function notify({
+        title = null,
+        body = null,
+        icon = null,
+        classname = null,
+        action = null,
+        persist = false
+    }) {
+        log(`creating ${title}`, 'notification', 'info', {
+            title: title,
+            body: body,
+            icon: icon,
+            classname: classname,
+            action: action,
+            persist: persist
+        });
+
+        let notif = document.createElement('button');
+        notif.classList.add('bleh-notification');
+        notif.setAttribute('onclick', '_kill_notif(this)');
+
+        if (!body) {
+            notif.innerHTML = (`
+                <div class="notification-title">${title}</div>
+            `);
+        } else {
+            notif.innerHTML = (`
+                <div class="notification-title">${title}</div>
+                <div class="notification-body">${body}</div>
+            `);
+        }
+
+        page.structure.notifications.appendChild(notif);
+
+        if (icon) {
+            notif.classList.add('icon');
+            notif.style.setProperty('--mask', `var(--${icon})`);
+        }
+
+        if (classname)
+            notif.classList.add(classname);
+
+        if (action)
+            notif.setAttribute('onclick', action);
+
+        if (persist)
+            return;
+
+        setTimeout(function() {
+            notify_rm(notif);
+        }, 5000);
+    }
+    unsafeWindow._notify_rm = function(notif) {
+        notify_rm(notif);
+    }
+    function notify_rm(notif) {
         notif.classList.add('fade-out');
         setTimeout(function() {
             page.structure.notifications.removeChild(notif);
         }, 400);
     }
 
+    unsafeWindow._kill_notif = function(notif) {
+        kill_notif(notif);
+    }
+    function kill_notif(notif) {
+        notify_rm(notif);
+    }
 
 
-    /* https://stackoverflow.com/questions/46432335/hex-to-hsl-convert-javascript */
+
+    // https://stackoverflow.com/questions/46432335/hex-to-hsl-convert-javascript
     function hex_to_hsl(hex) {
         let result = new RegExp(/^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i).exec(hex);
 
@@ -12366,6 +13181,20 @@ let has_prompted_for_update = false;
             s: s,
             l: l
         };
+    }
+
+    function rgb_to_hsl(r, g, b) {
+        let hex = rgb_to_hex(r, g, b);
+        return hex_to_hsl(hex);
+    }
+
+    // https://stackoverflow.com/questions/5623838/rgb-to-hex-and-hex-to-rgb#5624139
+    function comp_to_hex(comp) {
+        let hex = comp.toString(16);
+        return (hex.length == 1) ? '0' + hex : hex;
+    }
+    function rgb_to_hex(r, g, b) {
+        return '#' + comp_to_hex(r) + comp_to_hex(g) + comp_to_hex(b);
     }
 
     // saturation should not exceed 2, definitely not
@@ -12553,8 +13382,19 @@ let has_prompted_for_update = false;
 
         document.body.classList.add('bleh-setup');
         document.body.style.setProperty('background-image', `url(${my_avi})`);
+        document.body.style.setProperty('background-size', 'cover');
 
-        dialog({
+        let masthead = document.body.querySelector('.masthead');
+        masthead.classList.add('in-setup');
+
+        bleh_setup_start();
+    }
+
+    unsafeWindow._setup = function() {
+        bleh_setup_start();
+    }
+    function bleh_setup_start() {
+        let modal = dialog({
             id: 'bleh_setup_start',
             body: (`
                 <div class="setup-sides">
@@ -12563,27 +13403,29 @@ let has_prompted_for_update = false;
                     </div>
                     <div class="setup-body">
                         <div class="setup-body-main">
-                            <h1>${trans[lang].setup.start.name}</h1>
-                            <div class="user-top-panel">
-                                <div class="user-top-avatar user-top-avatar-side-left"></div>
-                                <img class="user-top-avatar user-top-avatar-main" src="${my_avi.replace('avatar42s', 'avatar170s')}" alt="${auth}">
-                                <div class="user-top-avatar user-top-avatar-side-right"></div>
+                            <h1>${trans[lang].setup.start.name.replace('{m}', `<a class="mention" href="${root}user/${auth}">@${auth}</a>`)}</h1>
+                            <h4>${trans[lang].setup.start.pick_theme}</h4>
+                            <div class="primary-selections">
+                                <div class="btn primary-selection" id="toggle-theme-light" data-toggle="theme" data-toggle-value="light" onclick="_update_item('theme', 'light')">
+                                    <h5>${trans[lang].settings.themes.light.name}</h5>
+                                </div>
+                                <div class="btn primary-selection" id="toggle-theme-dark" data-toggle="theme" data-toggle-value="dark" onclick="_update_item('theme', 'dark')">
+                                    <h5>${trans[lang].settings.themes.dark.name}</h5>
+                                </div>
+                                <div class="btn primary-selection" id="toggle-theme-darker" data-toggle="theme" data-toggle-value="darker" onclick="_update_item('theme', 'darker')">
+                                    <h5>${trans[lang].settings.themes.darker.name}</h5>
+                                </div>
+                                <div class="btn primary-selection" id="toggle-theme-oled" data-toggle="theme" data-toggle-value="oled" onclick="_update_item('theme', 'oled')">
+                                    <h5>${trans[lang].settings.themes.oled.name}</h5>
+                                </div>
                             </div>
-                            <h4>${trans[lang].setup.start.thanks.replace('{m}', `<a class="mention" href="${root}user/${auth}">@${auth}</a>`)}</h4>
-                            <p>${trans[lang].setup.start.info[0]}</p>
-                            <ul>
-                                <li>${trans[lang].setup.start.info[1]}</li>
-                                <li>${trans[lang].setup.start.info[2]}</li>
-                                <li>${trans[lang].setup.start.info[3]}</li>
-                                <li>${trans[lang].setup.start.info[4]}</li>
-                            </ul>
-                            <p>${trans[lang].setup.start.info[5]}</p>
+                            <div class="alert alert-info">${trans[lang].setup.start.change_later}</div>
                         </div>
                         <div class="modal-footer">
                             <button class="btn skip" onclick="_setup_skip()">
                                 ${trans[lang].settings.skip}
                             </button>
-                            <button class="btn primary continue" onclick="_setup_accessibility()">
+                            <button class="btn primary continue" onclick="_setup_appearance()">
                                 ${trans[lang].settings.continue}
                             </button>
                         </div>
@@ -12591,8 +13433,11 @@ let has_prompted_for_update = false;
                 </div>
             `),
             dismiss: false,
-            type: 'setup'
+            type: 'setup',
+            replace_if_possible: true
         });
+
+        refresh_all(modal);
     }
 
     unsafeWindow._setup_accessibility = function() {
@@ -12666,11 +13511,8 @@ let has_prompted_for_update = false;
                                 ${trans[lang].settings.back}
                             </button>
                             <div class="btn-fill"></div>
-                            <button class="btn skip" onclick="_setup_skip()">
-                                ${trans[lang].settings.skip}
-                            </button>
-                            <button class="btn primary continue" onclick="_setup_appearance()">
-                                ${trans[lang].settings.continue}
+                            <button class="btn primary continue" onclick="_setup_skip()">
+                                ${trans[lang].settings.finish}
                             </button>
                         </div>
                     </div>
@@ -13060,14 +13902,14 @@ let has_prompted_for_update = false;
                             </div>
                         </div>
                         <div class="modal-footer">
-                            <button class="btn back" onclick="_setup_accessibility()">
+                            <button class="btn back" onclick="_setup()">
                                 ${trans[lang].settings.back}
                             </button>
                             <div class="btn-fill"></div>
                             <button class="btn skip" onclick="_setup_skip()">
                                 ${trans[lang].settings.skip}
                             </button>
-                            <button class="btn primary continue" onclick="_setup_theme()">
+                            <button class="btn primary continue" onclick="_setup_corrections()">
                                 ${trans[lang].settings.continue}
                             </button>
                         </div>
@@ -13090,92 +13932,6 @@ let has_prompted_for_update = false;
         });
     }
 
-    unsafeWindow._setup_theme = function() {
-        dialog({
-            id: 'bleh_setup_theme',
-            body: (`
-                <div class="setup-sides">
-                    <div class="setup-preview">
-                        <div class="setup-icon setup-icon-main setup-icon-theme"></div>
-                    </div>
-                    <div class="setup-body">
-                        <div class="setup-body-main">
-                            <h1>${trans[lang].settings.appearance.name}</h1>
-                            <h4>${trans[lang].settings.themes.name}</h4>
-                            <!--<h4>${trans[lang].settings.themes.dark.name}</h4>-->
-                            <div class="setting-items full">
-                                <div class="side-left full even-more">
-                                    <button class="btn theme-item" data-bleh-theme="light" onclick="change_theme_from_settings('light')">
-                                        <div class="preview" data-bleh--theme="light">
-                                            ${theme_preview}
-                                        </div>
-                                        <div class="text">
-                                            <h5>${trans[lang].settings.themes.light.name}</h5>
-                                        </div>
-                                    </button>
-                                    <button class="btn theme-item" data-bleh-theme="dark" onclick="change_theme_from_settings('dark')">
-                                        <div class="preview" data-bleh--theme="dark">
-                                            ${theme_preview}
-                                        </div>
-                                        <div class="text">
-                                            <h5>${trans[lang].settings.themes.dark.name}</h5>
-                                        </div>
-                                    </button>
-                                    <button class="btn theme-item" data-bleh-theme="darker" onclick="change_theme_from_settings('darker')">
-                                        <div class="preview" data-bleh--theme="darker">
-                                            ${theme_preview}
-                                        </div>
-                                        <div class="text">
-                                            <h5>${trans[lang].settings.themes.darker.name}</h5>
-                                        </div>
-                                    </button>
-                                    <button class="btn theme-item" data-bleh-theme="oled" onclick="change_theme_from_settings('oled')">
-                                        <div class="preview" data-bleh--theme="oled">
-                                            ${theme_preview}
-                                        </div>
-                                        <div class="text">
-                                            <h5>${trans[lang].settings.themes.oled.name}</h5>
-                                        </div>
-                                    </button>
-                                </div>
-                            </div>
-                            ${(ff('high_contrast')) ? (`
-                            <div class="toggle-container" id="container-high_contrast">
-                                <button class="btn reset" onclick="_reset_item('high_contrast')">${trans[lang].settings.reset}</button>
-                                <div class="heading">
-                                    <h5>${trans[lang].settings.customise.high_contrast.name}</h5>
-                                </div>
-                                <div class="toggle-wrap">
-                                    <button class="toggle" id="toggle-high_contrast" onclick="_update_item('high_contrast')" aria-checked="true">
-                                        <div class="dot"></div>
-                                    </button>
-                                </div>
-                            </div>
-                            `) : ''}
-                        </div>
-                        <div class="modal-footer">
-                            <button class="btn back" onclick="_setup_appearance()">
-                                ${trans[lang].settings.back}
-                            </button>
-                            <div class="btn-fill"></div>
-                            <button class="btn skip" onclick="_setup_skip()">
-                                ${trans[lang].settings.skip}
-                            </button>
-                            <button class="btn primary continue" onclick="_setup_corrections()">
-                                ${trans[lang].settings.continue}
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            `),
-            dismiss: false,
-            type: 'setup',
-            replace_if_possible: true
-        })
-        refresh_all();
-        show_theme_change_in_settings();
-    }
-
     unsafeWindow._setup_corrections = function() {
         dialog({
             id: 'bleh_setup_corrections',
@@ -13186,89 +13942,73 @@ let has_prompted_for_update = false;
                     </div>
                     <div class="setup-body">
                         <div class="setup-body-main">
-                            <h1>${trans[lang].settings.corrections.name}</h1>
+                            <h1>${trans[lang].settings.music.name}</h1>
                             <p>${trans[lang].settings.corrections.bio}</p>
-                            <div class="inner-preview pad flex">
-                                <table class="chartlist chartlist--with-index chartlist--with-index--length-2 chartlist--with-image chartlist--with-play chartlist--with-artist chartlist--with-bar">
-                                    <tbody>
-                                        <tr class="chartlist-row chartlist-row--with-artist">
-                                            <td class="chartlist-index">
-                                                1
-                                            </td>
-                                            <td class="chartlist-image">
-                                                <span class="cover-art">
-                                                    <img src="https://lastfm.freetls.fastly.net/i/u/64s/c15d3ed1bd8574260f9378e26847501d.jpg" alt="fractions of infinity" loading="lazy">
-                                                </span>
-                                            </td>
-                                            <td class="chartlist-name">
-                                                <a href="/music/Quadeca/_/fractions+of+infinity" title="fractions of infinity" class="bleh--chartlist-name-without-features">fractions of infinity (feat. Sunday Service Choir)</a>
-                                                <a href="/music/Quadeca/_/fractions+of+infinity" title="fractions of infinity" class="bleh--chartlist-name-with-features">
-                                                    <span class="title">fractions of infinity</span>
-                                                    <span class="feat" data-bleh--tag-group="guests">feat. Sunday Serv..</span>
-                                                </a>
-                                            </td>
-                                            <td class="chartlist-artist bleh--chartlist-name-without-features">
-                                                <a href="/music/Quadeca" title="Quadeca">Quadeca</a>
-                                            </td>
-                                            <td class="chartlist-artist bleh--chartlist-name-with-features">
-                                                <a href="/music/Quadeca" title="Quadeca">Quadeca</a>,
-                                                <a href="/music/Quadeca" title="Quadeca">Sunday Service</a>
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                            <div class="toggle-container" id="container-format_guest_features">
+                            <div class="alert alert-info">${trans[lang].setup.music.change_later}</div>
+                            <h4>${trans[lang].settings.corrections.formatting}</h4>
+                            <div class="toggle-container" id="container-format_guest_features" onclick="_update_item('format_guest_features')">
                                 <button class="btn reset" onclick="_reset_item('format_guest_features')">${trans[lang].settings.reset}</button>
                                 <div class="heading">
                                     <h5>${trans[lang].settings.corrections.format_guest_features.name}</h5>
                                     <p>${trans[lang].settings.corrections.format_guest_features.bio}</p>
                                 </div>
                                 <div class="toggle-wrap">
-                                    <button class="toggle" id="toggle-format_guest_features" onclick="_update_item('format_guest_features')" aria-checked="true">
+                                    <button class="toggle" id="toggle-format_guest_features" aria-checked="true">
                                         <div class="dot"></div>
                                     </button>
                                 </div>
                             </div>
-                            <div class="toggle-container" id="container-show_guest_features">
+                            <div class="toggle-container hide-if-format-guest-disabled" id="container-show_guest_features" onclick="_update_item('show_guest_features')">
                                 <button class="btn reset" onclick="_reset_item('show_guest_features')">${trans[lang].settings.reset}</button>
                                 <div class="heading">
                                     <h5>${trans[lang].settings.corrections.show_guest_features.name}</h5>
                                     <p>${trans[lang].settings.corrections.show_guest_features.bio}</p>
                                 </div>
                                 <div class="toggle-wrap">
-                                    <button class="toggle" id="toggle-show_guest_features" onclick="_update_item('show_guest_features')" aria-checked="true">
+                                    <button class="toggle" id="toggle-show_guest_features" aria-checked="true">
                                         <div class="dot"></div>
                                     </button>
                                 </div>
                             </div>
-                            <div class="toggle-container" id="container-show_remaster_tags">
-                                <button class="btn reset" onclick="_reset_item('show_remaster_tags')">${trans[lang].settings.reset}</button>
+                            <div class="toggle-container" id="container-corrections" onclick="_update_item('corrections')">
+                                <button class="btn reset" onclick="_reset_item('corrections')">${trans[lang].settings.reset}</button>
                                 <div class="heading">
-                                    <h5>${trans[lang].settings.corrections.show_remaster_tags.name}</h5>
-                                    <p>${trans[lang].settings.corrections.show_remaster_tags.bio}</p>
+                                    <h5>${trans[lang].settings.corrections.toggle.name}</h5>
                                 </div>
                                 <div class="toggle-wrap">
-                                    <button class="toggle" id="toggle-show_remaster_tags" onclick="_update_item('show_remaster_tags')" aria-checked="true">
+                                    <button class="toggle lotus" id="toggle-corrections" aria-checked="true">
                                         <div class="dot"></div>
                                     </button>
                                 </div>
                             </div>
-                            <div class="toggle-container" id="container-stacked_chartlist_info">
+                            <h4>${trans[lang].settings.music.header}</h4>
+                            <div class="toggle-container" id="container-stacked_chartlist_info" onclick="_update_item('stacked_chartlist_info')">
                                 <button class="btn reset" onclick="_reset_item('stacked_chartlist_info')">${trans[lang].settings.reset}</button>
                                 <div class="heading">
                                     <h5>${trans[lang].settings.corrections.stacked_chartlist_info.name}</h5>
                                     <p>${trans[lang].settings.corrections.stacked_chartlist_info.bio}</p>
                                 </div>
                                 <div class="toggle-wrap">
-                                    <button class="toggle" id="toggle-stacked_chartlist_info" onclick="_update_item('stacked_chartlist_info')" aria-checked="true">
+                                    <button class="toggle" id="toggle-stacked_chartlist_info" aria-checked="true">
+                                        <div class="dot"></div>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="toggle-container hide-if-no-bulk-edit" id="container-show_bulk_edit_album" onclick="_update_item('show_bulk_edit_album')">
+                                <button class="btn reset" onclick="_reset_item('show_bulk_edit_album')">${trans[lang].settings.reset}</button>
+                                <div class="heading">
+                                    <h5>${trans[lang].settings.music.show_bulk_edit_album.name}</h5>
+                                    <p>${trans[lang].settings.music.show_bulk_edit_album.bio}</p>
+                                </div>
+                                <div class="toggle-wrap">
+                                    <button class="toggle" id="toggle-show_bulk_edit_album" aria-checked="false">
                                         <div class="dot"></div>
                                     </button>
                                 </div>
                             </div>
                         </div>
                         <div class="modal-footer">
-                            <button class="btn back" onclick="_setup_theme()">
+                            <button class="btn back" onclick="_setup_appearance()">
                                 ${trans[lang].settings.back}
                             </button>
                             <div class="btn-fill"></div>
@@ -13300,21 +14040,48 @@ let has_prompted_for_update = false;
                     <div class="setup-body">
                         <div class="setup-body-main">
                             <h1>${trans[lang].settings.customise.seasonal.name}</h1>
-                            <p>${trans[lang].settings.customise.seasonal.bio}</p>
+                            <div class="seasonal-inner">
+                                <div class="current-season-box" data-season="${stored_season.id}">
+                                    <div class="current-season-info">
+                                        <div class="bleh-icon bleh-seasonal-icon" data-season="${stored_season.id}"></div>
+                                        <h4>${trans[lang].settings.customise.seasonal.listing[stored_season.id]}</h4>
+                                    </div>
+                                    <div class="glacier-library-top season-top">
+                                        <div class="glacier-library-metadata">
+                                            ${(stored_season.id != 'none') ? (`
+                                            <div class="glacier-library-metadata-item">
+                                                <div class="sub-text">${trans[lang].settings.customise.seasonal.started}</div>
+                                                <div class="glacier-library-metadata-item-value" id="current_season_start">${moment(stored_season.start.replace('y0', stored_season.year).replace('{offset}', stored_season.offset)).from(stored_season.now)}</div>
+                                            </div>
+                                            <div class="glacier-library-metadata-item">
+                                                <div class="sub-text">${trans[lang].settings.customise.seasonal.ends_in}</div>
+                                                <div class="glacier-library-metadata-item-value" id="current_season">${moment(stored_season.end.replace('y0', stored_season.year).replace('{offset}', stored_season.offset)).to(stored_season.now, true)}</div>
+                                            </div>
+                                            `) : ''}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="info-box no-padding">
+                                <div class="bleh-icon bleh-info-icon"></div>
+                                ${trans[lang].settings.customise.seasonal.info}
+                            </div>
+                            <!--<p>${trans[lang].settings.customise.seasonal.bio}</p>
                             <div class="inner-preview pad click-thru">
-                                <div class="current-season-container season-column">
+                                <div class="current-season-container">
                                     <div class="current-season" data-season="${stored_season.id}" id="current_season">
                                         ${(stored_season.id != 'none')
-                                        ? trans[lang].settings.customise.seasonal.marker.current.replace('{season}', trans[lang].settings.customise.seasonal.listing[stored_season.id]).replace('{time}', moment(stored_season.end.replace('y0', stored_season.year).replace('{offset}', stored_season.offset)).to(stored_season.now, true))
+                                        ? trans[lang].settings.customise.seasonal.marker.current.replace('{season}', trans[lang].settings.customise.seasonal.listing[stored_season.id])
                                         : (settings.seasonal) ? trans[lang].settings.customise.seasonal.marker.none : trans[lang].settings.customise.seasonal.marker.disabled}
                                     </div>
                                     <div class="current-season-started" id="current_season_start">
                                         ${(stored_season.id != 'none')
-                                        ? trans[lang].settings.customise.seasonal.marker.started.replace('{time}', moment(stored_season.start.replace('y0', stored_season.year).replace('{offset}', stored_season.offset)).from(stored_season.now))
+                                        ? trans[lang].settings.customise.seasonal.marker.started
                                         : ''}
                                     </div>
                                 </div>
-                            </div>
+                            </div>-->
+                            <h4>${trans[lang].settings.configure}</h4>
                             <div class="toggle-container" id="container-seasonal" onclick="_update_item('seasonal')">
                                 <button class="btn reset" onclick="_reset_item('seasonal')">${trans[lang].settings.reset}</button>
                                 <div class="heading">
@@ -13326,14 +14093,66 @@ let has_prompted_for_update = false;
                                     </button>
                                 </div>
                             </div>
+                            <div class="sep"></div>
+                            <div class="toggle-container hide-if-seasonal-disabled" id="container-seasonal_particles" onclick="_update_item('seasonal_particles')">
+                                <button class="btn reset" onclick="_reset_item('seasonal_particles')">${trans[lang].settings.reset}</button>
+                                <div class="heading">
+                                    <h5>${trans[lang].settings.customise.seasonal.particles.name}</h5>
+                                    <p>${trans[lang].settings.customise.seasonal.particles.bio}</p>
+                                </div>
+                                <div class="toggle-wrap">
+                                    <button class="toggle" id="toggle-seasonal_particles" aria-checked="true">
+                                        <div class="dot"></div>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="toggle-container hide-if-seasonal-disabled" id="container-seasonal_particles_reduced" onclick="_update_item('seasonal_particles_reduced')">
+                                <button class="btn reset" onclick="_reset_item('seasonal_particles_reduced')">${trans[lang].settings.reset}</button>
+                                <div class="heading">
+                                    <h5>${trans[lang].settings.customise.seasonal.show_less_particles.name}</h5>
+                                </div>
+                                <div class="toggle-wrap">
+                                    <button class="toggle" id="toggle-seasonal_particles_reduced" aria-checked="true">
+                                        <div class="dot"></div>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="toggle-container hide-if-seasonal-disabled" id="container-seasonal_particles_fps" onclick="_update_item('seasonal_particles_fps')">
+                                <button class="btn reset" onclick="_reset_item('seasonal_particles_fps')">${trans[lang].settings.reset}</button>
+                                <div class="heading">
+                                    <h5>${trans[lang].settings.customise.seasonal.fps_particles.name}</h5>
+                                    <p>${trans[lang].settings.customise.seasonal.fps_particles.bio}</p>
+                                </div>
+                                <div class="toggle-wrap">
+                                    <button class="toggle" id="toggle-seasonal_particles_fps" aria-checked="true">
+                                        <div class="dot"></div>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="sep"></div>
+                            <div class="toggle-container hide-if-seasonal-disabled" id="container-seasonal_overlays" onclick="_update_item('seasonal_overlays')">
+                                <button class="btn reset" onclick="_reset_item('seasonal_overlays')">${trans[lang].settings.reset}</button>
+                                <div class="heading">
+                                    <h5>${trans[lang].settings.customise.seasonal.overlays.name}</h5>
+                                    <p>${trans[lang].settings.customise.seasonal.overlays.bio}</p>
+                                </div>
+                                <div class="toggle-wrap">
+                                    <button class="toggle" id="toggle-seasonal_overlays" aria-checked="true">
+                                        <div class="dot"></div>
+                                    </button>
+                                </div>
+                            </div>
                         </div>
                         <div class="modal-footer">
                             <button class="btn back" onclick="_setup_corrections()">
                                 ${trans[lang].settings.back}
                             </button>
                             <div class="btn-fill"></div>
-                            <button class="btn primary continue" onclick="_setup_skip()">
-                                ${trans[lang].settings.finish}
+                            <button class="btn skip" onclick="_setup_skip()">
+                                ${trans[lang].settings.skip}
+                            </button>
+                            <button class="btn primary continue" onclick="_setup_accessibility()">
+                                ${trans[lang].settings.continue}
                             </button>
                         </div>
                     </div>
@@ -13373,7 +14192,11 @@ let has_prompted_for_update = false;
 
         // otherwise, it's a usual update
         if (last_version_used != version.build) {
-            deliver_notif(trans[lang].messaging.update.replace('{v}', `${version.build}.${version.sku}`), true);
+            notify({
+                title: trans[lang].messaging.update.replace('{v}', `${version.build}.${version.sku}`),
+                persist: true,
+                icon: 'icon-16-download'
+            });
             register_activity('update_bleh', [{name: version.build, type: 'bleh'}], `${root}bleh`);
             localStorage.setItem('bleh_last_version_used', version.build);
 
@@ -13577,6 +14400,15 @@ let has_prompted_for_update = false;
         }
 
 
+        // other user
+        create_listen_item(listen_container, {
+            name: 'other',
+            listens: -3,
+            link: scrobble_page,
+            button: true
+        }, page.type);
+
+
         // append
         top_container.appendChild(listen_container);
         col_main.insertBefore(top_container, col_main.firstElementChild);
@@ -13771,10 +14603,10 @@ let has_prompted_for_update = false;
         top_container.appendChild(interact_container);
     }
 
-    function create_listen_item(parent, {name, listens, link, avi, count=0}, header_type) {
+    function create_listen_item(parent, {name, listens, link, avi, count=0, button=false}, header_type) {
         log(`creating listen item of ${name}, ${count}, ${listens}`, 'artist', 'info', {avi: avi, link: link});
 
-        let listen_item = document.createElement('a');
+        let listen_item = document.createElement((!button) ? 'a' : 'button');
         listen_item.classList.add('btn', 'listen-item', 'view-item');
         listen_item.setAttribute('href', `${root}user/${name}/library/music/${link}`);
         //listen_item.setAttribute('target', '_blank');
@@ -13841,6 +14673,15 @@ let has_prompted_for_update = false;
             });
 
             register_menu(listen_item, menu);
+        } else if (listens == -3) {
+            listen_item.classList.add('listen-item-other');
+
+            listen_item.removeAttribute('href');
+            listen_item.setAttribute('onclick', `_other_listener('${link}')`);
+
+            tippy(listen_item, {
+                content: trans[lang].music.listens.custom.tooltip
+            });
         } else {
             // other listeners by clicking this link (artist)
             listen_item.innerHTML = (`
@@ -13977,7 +14818,7 @@ let has_prompted_for_update = false;
 
             let video = video_col.querySelector('.video-preview');
 
-            if (video != null) {
+            if (video) {
                 video_col.classList.remove('col-sidebar');
                 page.structure.side.insertBefore(video_col, page.structure.side.firstElementChild);
 
@@ -14006,6 +14847,27 @@ let has_prompted_for_update = false;
                 tippy(replace, {
                     content: replace.textContent
                 });
+            } else {
+                let cta = video_col.querySelector('.video-preview-upload-cta');
+
+                if (cta)
+                    return;
+
+                page.structure.side.removeChild(video_col);
+
+                let video_placeholder = document.createElement('section');
+                video_placeholder.classList.add('video-placeholder');
+                video_placeholder.innerHTML = (`
+                    <div class="bleh-icon" style="--icon: var(--icon-16-video-broken)"></div>
+                    Video removed by Last.fm
+                `);
+
+                page.structure.side.insertBefore(video_placeholder, page.structure.side.firstElementChild);
+
+
+                let links = page.structure.side.querySelector('.external-links-section .play-this-track-playlinks');
+                if (links)
+                    links.classList.add('video-unavailable');
             }
         }
     }
@@ -14014,6 +14876,7 @@ let has_prompted_for_update = false;
 
 
     function error_page() {
+        page.state.error = false;
         let page_content = document.body.querySelector('.page-content');
 
         if (page_content == null)
@@ -14023,6 +14886,7 @@ let has_prompted_for_update = false;
 
         if (error_marvin == null)
             return;
+        page.state.error = true;
         error_marvin.setAttribute('data-bleh', 'true');
 
         let error_content = page_content.querySelector('h1');
@@ -14266,19 +15130,30 @@ let has_prompted_for_update = false;
         } else {
             // not pro
 
-            if (!is_subpage)
-                page.structure.container = document.body.querySelector('.page-content:not(header + .page-content)');
-            else
+            if (!is_subpage) {
+                // normal, is there an ad then a container?
+                page.structure.container = document.body.querySelector('.full-bleed-ad-container + .page-content:not(.visible-xs)');
+
+                // death grips for some reason
+                if (!page.structure.container)
+                    page.structure.container = document.body.querySelector('.page-content');
+            } else {
                 page.structure.container = document.body.querySelector('.page-content:not(.visible-xs, :has(.content-top-lower-row, a + .js-gallery-heading))');
+            }
         }
-        page.structure.row = page.structure.container.querySelector('.row');
         try {
+            page.structure.row = page.structure.container.querySelector('.row');
+
             if (!is_subpage)
                 page.structure.main = page.structure.row.querySelector('.col-main.buffer-standard');
             else
                 page.structure.main = page.structure.row.querySelector('.col-main');
 
-            page.structure.side = page.structure.row.querySelector('.col-sidebar:not(.masonry-right)');
+            if (is_pro) {
+                page.structure.side = page.structure.row.querySelector('.col-sidebar:not(.masonry-right)');
+            } else {
+                page.structure.side = page.structure.row.querySelector('.col-sidebar:not(.section-with-separator--col)');
+            }
         } catch(e) {
             log('unable to find elements', 'page structure');
         }
@@ -14426,6 +15301,8 @@ let has_prompted_for_update = false;
             show_your_scrobbles();
 
             bleh_music_page_charts();
+
+            bleh_tags_mini();
         } else {
             let btn_add = page.structure.side.querySelector('.add-button');
             if (btn_add != null)
@@ -14475,10 +15352,16 @@ let has_prompted_for_update = false;
         } else {
             // not pro
 
-            if (!is_subpage)
-                page.structure.container = document.body.querySelector('.page-content:not(header + .page-content)');
-            else
+            if (!is_subpage) {
+                // normal, is there an ad then a container?
+                page.structure.container = document.body.querySelector('.full-bleed-ad-container + .page-content:not(.visible-xs)');
+
+                // death grips for some reason
+                if (!page.structure.container)
+                    page.structure.container = document.body.querySelector('.page-content');
+            } else {
                 page.structure.container = document.body.querySelector('.page-content:not(:has(.content-top-lower-row, a + .js-gallery-heading))');
+            }
         }
         page.structure.row = page.structure.container.querySelector('.row');
         try {
@@ -14600,6 +15483,8 @@ let has_prompted_for_update = false;
 
             bleh_about_artist();
 
+            bleh_tags_mini();
+
             // tooltips on album cover
             let button_row = page.structure.side.querySelector('.album-overview-cover-art-action-row');
             if (button_row != null) {
@@ -14677,18 +15562,24 @@ let has_prompted_for_update = false;
         } else {
             // not pro
 
-            if (!is_subpage)
-                page.structure.container = document.body.querySelector('.page-content:not(header + .page-content)');
-            else
+            if (!is_subpage) {
+                // normal, is there an ad then a container?
+                page.structure.container = document.body.querySelector('.full-bleed-ad-container + .page-content:not(.visible-xs)');
+
+                // death grips for some reason
+                if (!page.structure.container)
+                    page.structure.container = document.body.querySelector('.page-content');
+            } else {
                 page.structure.container = document.body.querySelector('.page-content');
+            }
         }
         page.structure.row = page.structure.container.querySelector('.row');
         try {
-            if (is_pro) {
-                if (!is_subpage)
-                    page.structure.main = page.structure.row.querySelector('.col-main:not(:first-child)');
-                else
-                    page.structure.main = page.structure.row.querySelector('.col-main');
+            if (!is_subpage) {
+                page.structure.main = page.structure.row.querySelector('.col-main.buffer-standard');
+
+                if (page.structure.main.classList[2])
+                    page.structure.main = page.structure.row.querySelector('.col-main.buffer-standard:not(:first-child)');
             } else {
                 page.structure.main = page.structure.row.querySelector('.col-main');
             }
@@ -14696,6 +15587,8 @@ let has_prompted_for_update = false;
         } catch(e) {
             log('unable to find elements', 'page structure');
         }
+
+        console.info('bleee', page.structure.row, page.structure.main);
 
         checkup_page_structure(is_subpage, track_header);
 
@@ -14797,6 +15690,15 @@ let has_prompted_for_update = false;
             bleh_music_page_charts();
 
             bleh_about_artist();
+
+            bleh_tags_mini();
+
+
+            let similar_tracks = page.structure.main.querySelector('.track-similar-tracks');
+            if (similar_tracks) {
+                let similar_panel = similar_tracks.parentElement;
+                similar_panel.classList.add('similar-panel');
+            }
         } else {
             let btn_add = page.structure.side.querySelector('.add-button');
             if (btn_add != null)
@@ -15358,9 +16260,9 @@ let has_prompted_for_update = false;
             star_button.removeAttribute('title');
             let text = star_button.querySelector('.gallery-image-preferred-states');
 
-            tippy(star_button, {
+            /*tippy(star_button, {
                 content: star_button.textContent
-            });
+            });*/
             text.textContent = trans[lang].gallery.prefer.name;
         });
 
@@ -15609,6 +16511,7 @@ let has_prompted_for_update = false;
             version_item.classList.add('changelog-version-item');
             version_item.setAttribute('data-changelog-type', changelog[version].type);
             version_item.setAttribute('data-changelog-latest', (index == 0) ? 'true' : 'false');
+            version_item.setAttribute('data-changelog-version', version);
             version_item.innerHTML = (`
                 <div class="version-item-header">
                     <div class="sub-text">
@@ -15627,6 +16530,7 @@ let has_prompted_for_update = false;
                         `) : ''}
                     </div>
                     <h3>${changelog[version].name}</h3>
+                    ${(version == '2025.0113') ? `<h4 class="header-over">${changelog[version].name}</h4>` : ''}
                 </div>
             `);
 
@@ -15700,15 +16604,20 @@ let has_prompted_for_update = false;
             artist_elem.textContent = artist;
         }
 
+        if (form) {
+            let button = form.querySelector('button');
+            button.classList = 'featured-item-manage';
+            button.textContent = trans[lang].settings.remove;
+        }
+
         let panel = document.createElement('section');
         panel.classList.add('featured-item-panel');
         panel.innerHTML = (`
-            <div class="sub-text">${heading_link}</div>
+            <div class="sub-text">${heading_link}${(form != null) ? form.outerHTML : ''}</div>
             <div class="track-template">
                 ${art.outerHTML}
                 ${details.outerHTML}
             </div>
-            ${(form != null) ? form.outerHTML : ''}
         `);
 
         let about_me = page.structure.side.querySelector('.about-me-sidebar');
@@ -16147,6 +17056,17 @@ let has_prompted_for_update = false;
                         </div>
                     </div>
                     <div class="sep"></div>
+                    <div class="toggle-container" id="container-grid_glow" onclick="_update_item('grid_glow')">
+                        <button class="btn reset" onclick="_reset_item('grid_glow')">${trans[lang].settings.reset}</button>
+                        <div class="heading">
+                            <h5>${trans[lang].settings.music.grid_glow.name}</h5>
+                        </div>
+                        <div class="toggle-wrap">
+                            <button class="toggle" id="toggle-grid_glow" aria-checked="true" type="button">
+                                <div class="dot"></div>
+                            </button>
+                        </div>
+                    </div>
                     <div class="toggle-container" id="container-glacier_library_graphs" onclick="_update_item('glacier_library_graphs')">
                         <button class="btn reset" onclick="_reset_item('glacier_library_graphs')">${trans[lang].settings.reset}</button>
                         <div class="heading">
@@ -16223,18 +17143,9 @@ let has_prompted_for_update = false;
         bleh_glacier_library_date();
 
         let current_view = page.structure.glacier.date_panel.querySelector('.date-range-picker-button-inner');
-        if (current_view == null)
+
+        if (!current_view)
             return;
-
-        if (current_view.textContent.trim() == new Date().getFullYear()) {
-            current_view.classList.add('date-range-new');
-
-            let new_badge = document.createElement('span');
-            new_badge.classList.add('new-badge');
-            new_badge.textContent = trans[lang].settings.new;
-
-            current_view.appendChild(new_badge);
-        }
 
         current_view = current_view.textContent.trim();
 
@@ -16763,7 +17674,26 @@ let has_prompted_for_update = false;
         let view_buttons = document.createElement('div');
         view_buttons.classList.add('view-buttons', 'glacier-library-buttons');
 
-        let wrappers = legacy_header.querySelectorAll('.library-header-ctas > *');
+        let cta = legacy_header.querySelector('.library-header-ctas');
+
+        let love_form = legacy_header.querySelector('.library-header-love-form:not(:has(button))');
+        if (love_form) {
+            let state = love_form.querySelector(':scope > .love-button-toggle').getAttribute('data-ajax-form-state');
+            if (state == 'loved')
+                state = 0;
+            else
+                state = 1;
+
+            let love_form_items = love_form.querySelectorAll(':scope > div > div');
+            love_form_items.forEach((item, index) => {
+                if (state != index)
+                    item.classList.add('hide');
+
+                cta.appendChild(item);
+            });
+        }
+
+        let wrappers = cta.querySelectorAll(':scope > *');
         wrappers.forEach((wrapper) => {
             let button;
 
@@ -16774,7 +17704,13 @@ let has_prompted_for_update = false;
             else
                 button = wrapper.querySelector('button');
 
-            console.info(wrapper, button);
+            if (!button)
+                button = wrapper.querySelector('span');
+
+            if (!button)
+                return;
+
+            console.info('libraryyy', wrapper, button);
             button.classList.add('btn', 'view-item', 'glacier-library-button');
 
             let tooltips = wrapper.querySelectorAll('.user-library-controls-tooltip');
@@ -17250,26 +18186,7 @@ let has_prompted_for_update = false;
 
 
     function bleh_events() {
-        let event_header = document.body.querySelector('.header-info-primary--with-calendar');
-
-        if (event_header == null) {
-            // new profile pages?
-            if (document.body.classList[2] == null)
-                return;
-
-            // is this an event edit page?
-            if (document.body.classList[2].startsWith('namespace--events'))
-                bleh_events_edit();
-
-            return;
-        }
-
-        if (event_header.hasAttribute('data-bwaa'))
-            return;
-        event_header.setAttribute('data-bwaa', 'true');
-
-        let is_subpage = document.body.querySelector('.header').classList.contains('header--sub-page');
-
+        let is_subpage = (page.subpage != 'event_overview');
 
         // without pro theres two containers
         if (is_pro) {
@@ -17287,12 +18204,22 @@ let has_prompted_for_update = false;
         page.structure.row = page.structure.container.querySelector('.row');
         try {
             page.structure.main = page.structure.row.querySelector('.col-main');
-            page.structure.side = page.structure.row.querySelector('.col-sidebar:not(.track-overview-video-column)');
+            page.structure.side = page.structure.row.querySelector('.col-sidebar');
         } catch(e) {
             log('unable to find elements', 'page structure');
         }
 
+        let event_header = document.body.querySelector('header');
+
         checkup_page_structure(is_subpage, event_header);
+
+        if (page.subpage.startsWith('event_edit')) {
+            bleh_events_edit();
+            return;
+        } else if (page.subpage.startsWith('add')) {
+            bleh_events_create();
+            return;
+        }
 
         if (!is_subpage) {
             try {
@@ -17461,8 +18388,61 @@ let has_prompted_for_update = false;
         update_page();
     }
 
+    function bleh_events_manage() {
+        register_background(my_avi);
+
+        page.structure.container = document.body.querySelector('.page-content');
+        try {
+            page.structure.row = page.structure.container.querySelector('.row');
+            page.structure.main = page.structure.row.querySelector('.col-main');
+            page.structure.side = page.structure.row.querySelector('.col-sidebar');
+        } catch(e) {
+            log('unable to find elements', 'page structure');
+        }
+
+        let content_top = document.body.querySelector('.content-top');
+        let header_text = content_top.querySelector('.content-top-header').textContent;
+
+        checkup_page_structure(false, content_top);
+        log('status is', 'page', 'info', page);
+        update_page();
+
+        page.structure.nav.classList.add('navlist--more');
+
+        let edit_header = document.createElement('section');
+        edit_header.classList.add('redesigned-header', 'event-manage-header', 'no-background');
+        edit_header.innerHTML = (`
+            <div class="tag-side">
+                <div class="tag-icon event-icon"></div>
+            </div>
+            <div class="info-side">
+                <div class="sub-text">${trans[lang].event.name}</div>
+                <h1>${header_text}</h1>
+            </div>
+        `);
+
+        page.structure.container.insertBefore(edit_header, page.structure.container.firstElementChild);
+    }
+
+    function bleh_events_create() {
+        bleh_events_manage();
+    }
+
     function bleh_events_edit() {
-        return;
+        bleh_events_manage();
+
+        let back = document.body.querySelector('.content-top-back-link a');
+
+        let nav = page.structure.nav.querySelector('ul');
+        let back_nav = document.createElement('li');
+        back_nav.classList.add('navlist-item', 'secondary-nav-item', 'secondary-nav-item--back');
+        back_nav.innerHTML = (`
+            <a class="secondary-nav-item-link" href="${back.getAttribute('href')}">
+                ${trans[lang].settings.back}
+            </a>
+        `);
+
+        nav.insertBefore(back_nav, nav.firstElementChild);
     }
 
 
@@ -17505,6 +18485,9 @@ let has_prompted_for_update = false;
 
         if (panel == null)
             return;
+
+        let more_link = panel.nextElementSibling;
+        panel.appendChild(more_link);
 
         let form = panel.querySelector('#recent-tracks-settings');
         let link = panel.querySelector('[aria-controls="recent-tracks-settings"]');
@@ -18144,6 +19127,37 @@ let has_prompted_for_update = false;
         `), true);
     }
 
+    unsafeWindow._other_listener = function(id) {
+        dialog({
+            id: 'other_listener',
+            title: trans[lang].music.listens.custom.name,
+            body: (`
+            <div class="text-container">
+                <div class="avatar-container">
+                    <div class="avatar-inner avatar--bleh-missing">
+                        <img>
+                    </div>
+                </div>
+                <div class="heading content-form">
+                    <h5>${trans[lang].settings.music.profile_shortcut.placeholder}</h5>
+                    <div class="input-container">
+                        <input type="text" maxlength="40" id="text-profile" placeholder="${trans[lang].settings.music.profile_shortcut.header}">
+                        <button class="bleh--btn primary save" onclick="_send_other_listener('${id}')">${trans[lang].settings.done}</button>
+                    </div>
+                </div>
+            </div>
+            `)
+        });
+    }
+    unsafeWindow._send_other_listener = function(link) {
+        let name = dialogs['other_listener'].instance.querySelector('#text-profile').value;
+
+        dialog_rm({
+            id: 'other_listener'
+        });
+        window.location.href = `${root}user/${name}/library/music/${link}`;
+    }
+
 
 
 
@@ -18260,7 +19274,7 @@ let has_prompted_for_update = false;
                     <span class="avatar user-list-avatar">
                         ${avatar.innerHTML}
                     </span>
-                    ${follow.outerHTML}
+                    ${(follow) ? follow.outerHTML : ''}
                     <div class="user-list-description">
                         <p class="user-list-about-me">
                             ${track_wrap.innerHTML}
@@ -18498,40 +19512,20 @@ let has_prompted_for_update = false;
 
 
     function bleh_auto_edits() {
-        page.structure.container = document.body.querySelector('.page-content');
-        try {
-            page.structure.row = page.structure.container.querySelector('.row');
-            page.structure.main = page.structure.row.querySelector('.col-main');
-            page.structure.side = page.structure.row.querySelector('.col-sidebar');
-        } catch(e) {
-            log('unable to find elements', 'page structure');
-        }
-
-        let content_top = document.body.querySelector('.content-top');
-        let header = content_top.querySelector('.content-top-header');
-
-        checkup_page_structure(false, content_top);
-        log('status is', 'page', 'info', page);
-        update_page();
-
-
         let corrections_panel = document.body.querySelector('#subscription-corrections');
         page.structure.main.appendChild(corrections_panel);
 
 
-        let edit_header = document.createElement('section');
-        edit_header.classList.add('redesigned-header', 'edit-header', 'no-background');
-        edit_header.innerHTML = (`
-            <div class="tag-side">
-                <div class="tag-icon cog-icon"></div>
-            </div>
-            <div class="info-side">
-                <div class="sub-text">${trans[lang].settings.name}</div>
-                <h1>${header.textContent.trim()}</h1>
-            </div>
+        let nav = page.structure.nav.querySelector('ul');
+        let back_nav = document.createElement('li');
+        back_nav.classList.add('navlist-item', 'secondary-nav-item', 'secondary-nav-item--back');
+        back_nav.innerHTML = (`
+            <a class="secondary-nav-item-link" href="${root}settings/subscription">
+                ${trans[lang].settings.back}
+            </a>
         `);
 
-        page.structure.container.insertBefore(edit_header, page.structure.container.firstElementChild);
+        nav.insertBefore(back_nav, nav.firstElementChild);
     }
 
 
@@ -18632,6 +19626,112 @@ let has_prompted_for_update = false;
 
 
 
+    function bleh_inbox() {
+        page.structure.container = document.body.querySelector('.page-content');
+        try {
+            page.structure.row = page.structure.container.querySelector('.row');
+            page.structure.main = page.structure.row.querySelector('.col-main');
+            page.structure.side = page.structure.row.querySelector('.col-sidebar');
+        } catch(e) {
+            log('unable to find elements', 'page structure');
+        }
+
+        let content_top = document.body.querySelector('.content-top');
+
+
+        checkup_page_structure(false, content_top);
+        log('status is', 'page', 'info', page);
+        update_page();
+
+
+        let inbox_header = document.createElement('section');
+        inbox_header.classList.add('redesigned-header', 'inbox-header', 'no-background');
+        inbox_header.innerHTML = (`
+            <div class="tag-side">
+                <div class="tag-icon ${(page.subpage == 'notifications') ? 'notifications' : 'inbox'}-icon"></div>
+            </div>
+            <div class="info-side">
+                <div class="sub-text">${trans[lang].inbox.name}</div>
+                <h1>${trans[lang].inbox[page.subpage]}</h1>
+            </div>
+        `);
+
+        page.structure.container.insertBefore(inbox_header, page.structure.container.firstElementChild);
+
+
+        if (page.subpage == 'notifications') {
+            register_background(my_avi);
+
+            let form = page.structure.container.querySelector('form');
+            let notifications = page.structure.container.querySelector('.inbox-notifications');
+            let pagination = page.structure.container.querySelector('.pagination');
+
+            let panel = document.createElement('section');
+            panel.classList.add('inbox-panel', 'notifications-panel');
+
+            panel.appendChild(form);
+            if (notifications)
+                panel.appendChild(notifications);
+            if (pagination)
+                panel.appendChild(pagination);
+
+            page.structure.main.appendChild(panel);
+
+
+            if (!notifications)
+                return;
+
+            let notif_links = notifications.querySelectorAll('.inbox-notifications__item-link');
+            notif_links.forEach((notification) => {
+                let avatar = notification.querySelector('.avatar');
+                let name = notification.querySelector('.inbox-notifications__item-description strong');
+
+                if (!name)
+                    return;
+
+                let name_text = return_name_from_avatar(avatar.querySelector('img'));
+
+                let badge = patch_avatar(avatar, name_text);
+                name.classList.add('notification-user-name', `user-status--bleh-${badge.type}`, `user-status--bleh-user-${name_text}`);
+
+                if (notification.classList.contains('inbox-notifications__item--highlight'))
+                    notification.classList.add('notification-user-name', `user-status--bleh-${badge.type}`, `user-status--bleh-user-${name_text}`);
+            });
+        } else if (page.subpage == 'message_overview' || page.subpage == 'sent_message') {
+            let inbox = page.structure.container.querySelector('.inbox-message-view');
+            page.structure.main.appendChild(inbox);
+
+
+            let sender_panel = inbox.querySelector('.inbox-message-sender-avatar');
+            let sender_name = inbox.querySelector('.inbox-message-sender-name');
+            let sender_time = inbox.querySelector('.inbox-message-timestamp');
+
+            sender_panel.appendChild(sender_name);
+            sender_panel.appendChild(sender_time);
+
+            let avatar = sender_panel.querySelector('.avatar');
+            let name_text = sender_name.textContent.trim();
+            let badge = patch_avatar(avatar, name_text);
+
+            sender_panel.classList.add(`user-status--bleh-${badge.type}`, `user-status--bleh-user-${name_text}`);
+
+            register_background(avatar.querySelector('img').getAttribute('src'));
+        } else if (page.subpage == 'compose') {
+            register_background(my_avi);
+
+            let inbox = page.structure.container.querySelector('.inbox-compose-view');
+            page.structure.main.appendChild(inbox);
+        } else {
+            register_background(my_avi);
+
+            let inbox = page.structure.container.querySelector('.inbox');
+            page.structure.main.appendChild(inbox);
+        }
+    }
+
+
+
+
     unsafeWindow._sponsor = function() {
         sponsor();
     }
@@ -18640,7 +19740,7 @@ let has_prompted_for_update = false;
             id: 'sponsor',
             title: trans[lang].settings.home.sponsor.header,
             body: (`
-                <div class="support-inner">
+                <div class="modal-vertical-inner support-inner">
                     <div class="bleh-icon sponsor-heart"></div>
                     <h1>${trans[lang].settings.home.sponsor.header}</h1>
                     <p>${trans[lang].settings.home.sponsor.bio}</p>
@@ -18664,7 +19764,7 @@ let has_prompted_for_update = false;
                 id: 'sponsor_manage',
                 title: trans[lang].settings.home.sponsor.header,
                 body: (`
-                    <div class="support-inner">
+                    <div class="modal-vertical-inner support-inner">
                         <div class="bleh-icon sponsor-heart"></div>
                         <h1>${trans[lang].settings.home.sponsor.status.yes}</h1>
                         <p>${trans[lang].settings.home.sponsor.status.one_time}</p>
@@ -18677,7 +19777,7 @@ let has_prompted_for_update = false;
                 id: 'sponsor_manage',
                 title: trans[lang].settings.home.sponsor.header,
                 body: (`
-                    <div class="support-inner">
+                    <div class="modal-vertical-inner support-inner">
                         <div class="bleh-icon sponsor-heart"></div>
                         <h1>${trans[lang].settings.home.sponsor.status.yes}</h1>
                         <p>${trans[lang].settings.home.sponsor.status.badge}</p>
@@ -18840,6 +19940,23 @@ let has_prompted_for_update = false;
                 });
 
             link.setAttribute('data-link-type', type);
+        });
+    }
+
+
+
+
+    // style user-created tags
+    function bleh_tags_mini() {
+        let tag_user_avatar = page.structure.main.querySelector('.tags-user-avatar');
+
+        if (!tag_user_avatar)
+            return;
+
+        let tags_list = tag_user_avatar.nextElementSibling;
+        let tags = tags_list.querySelectorAll('.tag a');
+        tags.forEach((tag) => {
+            tag.classList.add('user-created-tag');
         });
     }
 })();
