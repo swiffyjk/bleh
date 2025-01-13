@@ -3119,12 +3119,14 @@ moment.updateLocale('de', {
 });
 
 function lookup_lang() {
-    root = document.querySelector('.masthead-logo a').getAttribute('href');
+    root = document.querySelector('.masthead-logo a');
 
     if (!root) {
         handle_error_500();
         return;
     }
+
+    root = root.getAttribute('href');
 
     if (auth_link)
         my_avi = auth_link.querySelector('img').getAttribute('src');
