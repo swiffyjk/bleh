@@ -4525,7 +4525,7 @@ let has_prompted_for_update = false;
 
         let url = window.location.href;
         let url_split = url.split('/');
-        let url_length = url.length - 1;
+        let url_length = url_split.length - 1;
 
         // style is neither fetched or applied in these interfaces
         if (url_split[url_length] == 'playback' || url_split[url_length - 1] == 'labs')
