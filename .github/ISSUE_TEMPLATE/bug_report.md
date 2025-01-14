@@ -20,6 +20,9 @@ Steps to reproduce the behavior:
 **Expected behavior**
 A clear and concise description of what you expected to happen.
 
+**Error response**
+When bleh usually fails, it will display a window detailing what went wrong. If this isn't visible, try re-opening the page in a new tab to force a reload. If this still doesn't work, you can find the error in your browser console (opened by CTRL + SHIFT + I).
+
 **Screenshots**
 If applicable, add screenshots to help explain your problem.
 
@@ -27,6 +30,5 @@ If applicable, add screenshots to help explain your problem.
  - OS: (eg. Windows)
  - Browser (eg. Chrome, Firefox, Opera)
  - bleh Version (eg. 2024.0614, this can be found in the top left)
-
-**Additional context**
-Add any other context about the problem here.
+ - Last.fm Pro status:
+ - Language selected:
