@@ -18,6 +18,8 @@
 // @require      https://cdn.jsdelivr.net/npm/chartjs-adapter-moment@^1
 // ==/UserScript==
 
+console.info('If you are using ViolentMonkey and the script isn\'t working, please head to ViolentMonkey settings and disable "Alternative page mode in Firefox".');
+
 let version = {
     brand: 'bleh',
     build: '2025.0113.1',
@@ -4161,7 +4163,17 @@ let has_prompted_for_update = false;
     bleh();
 
     function bleh() {
-        append_style();
+        let head_observer = new MutationObserver((mutations) => {
+            if (document.head) {
+                append_style();
+
+                head_observer.disconnect();
+            }
+        });
+
+        head_observer.observe(document.documentElement, {
+            childList: true
+        });
 
         let pre_observer = new MutationObserver((mutations) => {
             if (document.body && document.body.querySelector('.masthead-logo')) {
