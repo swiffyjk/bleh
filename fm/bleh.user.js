@@ -4255,6 +4255,8 @@ let has_prompted_for_update = false;
         } catch(e) {
             handle_error(e);
         }
+
+        document.body.classList.add('bleh-loaded');
     }
 
     function handle_error(e = null) {
