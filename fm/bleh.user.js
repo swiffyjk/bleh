@@ -4538,10 +4538,6 @@ let has_prompted_for_update = false;
             // ensures no flashing missing styles hopefully
             log('requesting cache', 'style');
             load_cached_style(cached_style);
-
-            // now, analyse if we should fetch a new one
-            log('checking timeout', 'style');
-            check_if_style_cache_is_valid();
         }
     }
 
@@ -4567,6 +4563,10 @@ let has_prompted_for_update = false;
                 bleh_glacier_date_graph_generate();
                 bleh_glacier_insights();
             }
+
+            // now, analyse if we should fetch a new one
+            log('checking timeout', 'style');
+            check_if_style_cache_is_valid();
         }, 200);
     }
 
