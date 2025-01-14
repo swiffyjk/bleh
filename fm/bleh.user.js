@@ -18,11 +18,9 @@
 // @require      https://cdn.jsdelivr.net/npm/chartjs-adapter-moment@^1
 // ==/UserScript==
 
-console.info('If you are using ViolentMonkey and the script isn\'t working, please head to ViolentMonkey settings and disable "Alternative page mode in Firefox".');
-
 let version = {
     brand: 'bleh',
-    build: '2025.0113.1',
+    build: '2025.0113.2',
     sku: 'mita',
     feature_flags: {
         bleh_settings_tabs: {
