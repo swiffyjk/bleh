@@ -4255,8 +4255,6 @@ let has_prompted_for_update = false;
         } catch(e) {
             handle_error(e);
         }
-
-        document.body.classList.add('bleh-loaded');
     }
 
     function handle_error(e = null) {
@@ -4368,6 +4366,8 @@ let has_prompted_for_update = false;
         } else {
             assign_page_subpage();
         }
+
+        document.body.classList.add('bleh-loaded');
     }
 
     function assign_page_type() {
