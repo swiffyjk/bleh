@@ -18,6 +18,9 @@
 // @require      https://cdn.jsdelivr.net/npm/chartjs-adapter-moment@^1
 // ==/UserScript==
 
+if (!document.head)
+    document.head = document.documentElement;
+
 let version = {
     brand: 'bleh',
     build: '2025.0113.2',
