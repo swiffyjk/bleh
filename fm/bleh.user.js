@@ -4520,6 +4520,8 @@ let has_prompted_for_update = false;
         if (url_split[url_length] == 'playback' || url_split[url_length - 1] == 'labs')
             return;
 
+        document.documentElement.setAttribute('data-bleh--theme', settings.theme);
+
         // while the style is not to be applied in dev mode,
         // we now fetch it to retrieve current version info
         if (settings.dev) {
