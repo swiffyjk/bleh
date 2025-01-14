@@ -4156,21 +4156,16 @@ let has_prompted_for_update = false;
     'use strict';
 
     // this runs on page load only once!
-    auth_link = document.querySelector('a.auth-link');
-    if (auth_link != null)
-        auth = auth_link.querySelector('img').getAttribute('alt');
 
     log(`starting ${version.build}.${version.sku}`, 'load');
 
     bleh();
 
     function bleh() {
-        let performance_start = performance.now();
-
         append_style();
 
         let pre_observer = new MutationObserver((mutations) => {
-            if (document.body) {
+            if (document.body && document.body.querySelector('.masthead-logo')) {
                 bleh_main();
 
                 pre_observer.disconnect();
@@ -4183,6 +4178,12 @@ let has_prompted_for_update = false;
     }
 
     function bleh_main() {
+        let performance_start = performance.now();
+
+        auth_link = document.querySelector('a.auth-link');
+        if (auth_link)
+            auth = auth_link.querySelector('img').getAttribute('alt');
+
         load_settings();
 
         // messaging
