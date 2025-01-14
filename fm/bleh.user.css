@@ -3893,10 +3893,10 @@ better than the default selector '#app a' i suppose */
     gap: var(--item-list-gap);
 
     &.obsessions-grid {
-        grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
+        grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
         grid-template-rows: auto;
         grid-template-areas:
-        ". . . . . .";
+        ". . . . .";
     }
 }
 .grid-items .grid-items-item {
