@@ -7,7 +7,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Ubuntu+Sans:ital,wght@0,100..800;1,100..800&display=swap');
 
 body {
-    --version-build: '2025.0113.1';
+    --version-build: '2025.0113.2';
 
     --hue:  var(--hue-over,
             var(--hue-album,
@@ -16458,6 +16458,16 @@ button.bleh--gallery-bookmark-image-btn {
             .bleh-modal-title {
                 display: none;
             }
+        }
+
+        img {
+            width: 100%;
+            border-radius: var(--item-big-radius);
+            box-shadow: var(--card-shadow);
+            max-width: 560px;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
         }
     }
 }

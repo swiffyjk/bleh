@@ -21,7 +21,7 @@
 
 let version = {
     brand: 'bleh',
-    build: '2025.0113.1',
+    build: '2025.0113.2',
     sku: 'mita',
     feature_flags: {
         bleh_settings_tabs: {
@@ -4173,6 +4173,9 @@ let has_prompted_for_update = false;
         // messaging
         load_dialogs();
 
+        // TODO: remove when loadfast is merged
+        warn_for_future_version();
+
         append_style();
         patch_masthead(document.body);
 
@@ -4228,6 +4231,59 @@ let has_prompted_for_update = false;
         } catch(e) {
             handle_error(e);
         }
+    }
+
+    function warn_for_future_version() {
+        if (settings.warn_for_20250114)
+            return;
+
+        dialog({
+            id: 'warn',
+            title: 'An error has occured',
+            body: (`
+                <div class="modal-vertical-inner error-inner">
+                    <div class="bleh-icon" style="--icon: var(--icon-16-warning)"></div>
+                    <h1>warning!!</h1>
+                    <p>In a future release, the way bleh loads will change. This will cause issues by default for users running <strong>ViolentMonkey</strong>.</p>
+                    <p>If you installed bleh through the website and don't know what I mean, you can dismiss this safely.</p>
+                    <div class="alert alert-info">This will only display once</div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn done" onclick="_dialog_rm({id: 'warn'})">
+                        ${trans[lang].settings.done}
+                    </button>
+                    <button class="btn continue" onclick="_warn_for_future_version_2()">
+                        This applies to me!
+                    </button>
+                </div>
+            `),
+            type: 'error'
+        });
+
+        settings.warn_for_20250114 = true;
+        localStorage.setItem('bleh', JSON.stringify(settings));
+    }
+    unsafeWindow._warn_for_future_version_2 = function() {
+        dialog({
+            id: 'warn',
+            title: 'An error has occured',
+            body: (`
+                <div class="modal-vertical-inner error-inner">
+                    <div class="bleh-icon" style="--icon: var(--icon-16-warning)"></div>
+                    <h1>this applies to me!!</h1>
+                    <p>Don't worry, in testing, the fix to make this work seems to be simple. In your ViolentMonkey settings page, you need to disable "Alternative <code>page</code> mode in Firefox".</p>
+                    <img src="https://katelyynn.github.io/bleh/fm/changelog/img/violent.png">
+                    <p>Once this is done the future release will work fine (in testing), if it doesn't let me know on Github.</p>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn primary done" onclick="_dialog_rm({id: 'warn'})">
+                        ${trans[lang].settings.done}
+                    </button>
+                </div>
+            `),
+            type: 'error',
+            replace_if_possible: true
+        });
     }
 
     function handle_error(e = null) {
