@@ -9,7 +9,7 @@
 // @grant        GM_addStyle
 // @updateURL    https://github.com/katelyynn/bleh/raw/uwu/fm/bleh.user.js
 // @downloadURL  https://github.com/katelyynn/bleh/raw/uwu/fm/bleh.user.js
-// @run-at       document-end
+// @run-at       document-start
 // @require      https://cdnjs.cloudflare.com/ajax/libs/showdown/2.1.0/showdown.min.js
 // @require      https://unpkg.com/@popperjs/core@2
 // @require      https://unpkg.com/tippy.js@6
@@ -158,7 +158,7 @@ let version = {
         }
     }
 }
-let theme_version = getComputedStyle(document.body).getPropertyValue('--version-build').replaceAll("'", '').replaceAll('"', ''); // remove quotations
+let theme_version;
 
 // loads your selected language in last.fm
 let lang;
@@ -4167,13 +4167,30 @@ let has_prompted_for_update = false;
     function bleh() {
         let performance_start = performance.now();
 
+        append_style();
+
+        let pre_observer = new MutationObserver((mutations) => {
+            if (document.body) {
+                bleh_main();
+
+                pre_observer.disconnect();
+            }
+        });
+
+        pre_observer.observe(document.documentElement, {
+            childList: true
+        });
+    }
+
+    function bleh_main() {
         load_settings();
-        lookup_lang();
 
         // messaging
         load_dialogs();
 
-        append_style();
+        theme_version = getComputedStyle(document.body).getPropertyValue('--version-build').replaceAll("'", '').replaceAll('"', ''); // remove quotations
+
+        lookup_lang();
         patch_masthead(document.body);
 
 
@@ -4491,11 +4508,15 @@ let has_prompted_for_update = false;
     }
 
     function append_style() {
+        settings = JSON.parse(localStorage.getItem('bleh')) || create_settings_template();
         let cached_style = localStorage.getItem('bleh_cached_style') || '';
-        let body = document.body.classList;
+
+        let url = window.location.href;
+        let url_split = url.split('/');
+        let url_length = url.length - 1;
 
         // style is neither fetched or applied in these interfaces
-        if (body.contains('namespace--user_listening-report_playback') || (body.contains('labs-section') && !body.contains('namespace--labs_overview')))
+        if (url_split[url_length] == 'playback' || url_split[url_length - 1] == 'labs')
             return;
 
         // while the style is not to be applied in dev mode,
