@@ -6621,6 +6621,11 @@ let has_prompted_for_update = false;
 
 
 
+        let form = page.structure.main.querySelector('[name="ignorelist"]');
+
+        if (page.token == '')
+            page.token = form.querySelector('[name="csrfmiddlewaretoken"]').getAttribute('value');
+
         panel.innerHTML = (`
             <h4>${trans[lang].settings.inbuilt.ignore.name}</h4>
             <div class="user-top-panel">
@@ -6643,12 +6648,15 @@ let has_prompted_for_update = false;
             <div class="text-container">
                 <div class="heading content-form">
                     <h5>${trans[lang].settings.music.profile_shortcut.placeholder}</h5>
-                    <div class="input-container">
-                        <input type="text" maxlength="80" id="id_user" name="user" placeholder="${trans[lang].settings.music.profile_shortcut.header}">
-                        <input type="hidden" name="listaction" value="add">
-                        <input type="hidden" name="submit" value="ignorelist">
-                        <button class="bleh--btn primary icon add" type="submit">${trans[lang].settings.add}</button>
-                    </div>
+                    <form action="${root}settings/privacy#ignorelist" name="ignorelist" method="post">
+                        <input type="hidden" name="csrfmiddlewaretoken" value="${page.token}">
+                        <div class="input-container">
+                            <input type="text" maxlength="80" id="id_user" name="user" placeholder="${trans[lang].settings.music.profile_shortcut.header}">
+                            <input type="hidden" name="listaction" value="add">
+                            <input type="hidden" name="submit" value="ignorelist">
+                            <button class="bleh--btn primary icon add" type="submit">${trans[lang].settings.add}</button>
+                        </div>
+                    </form>
                 </div>
             </div>
             <div class="alert alert-info">
