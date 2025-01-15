@@ -11,15 +11,12 @@
 // @run-at       document-start
 // @require      https://cdnjs.cloudflare.com/ajax/libs/showdown/2.1.0/showdown.min.js
 // @require      https://unpkg.com/@popperjs/core@2.11.8/dist/umd/popper.min.js
-// @require      https://unpkg.com/tippy.js@6/headless/dist/tippy-headless.umd.min.js
+// @require      https://unpkg.com/tippy.js@6.3.7/dist/tippy.umd.min.js
 // @require      https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.30.1/moment.min.js
 // @require      https://cdnjs.cloudflare.com/ajax/libs/color-thief/2.3.0/color-thief.umd.js
 // @require      https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js
 // @require      https://cdn.jsdelivr.net/npm/chartjs-adapter-moment@^1
 // ==/UserScript==
-
-if (!document.head)
-    document.head = document.documentElement;
 
 let version = {
     brand: 'bleh',
@@ -3329,61 +3326,7 @@ let notifications = {};
 
 tippy.setDefaultProps({
     arrow: false,
-    duration: [120, 220],
-    delay: [null, 20],
-
-    // based on https://atomiks.github.io/tippyjs/v6/headless-tippy/
-    render(instance) {
-        // The recommended structure is to use the popper as an outer wrapper
-        // element, with an inner `box` element
-        const popper = document.createElement('div');
-        const box = document.createElement('div');
-        const content = document.createElement('div');
-
-        box.classList.add('tippy-box');
-        box.setAttribute('data-state', 'visible');
-        content.classList.add('tippy-content');
-        content.setAttribute('data-state', 'visible');
-        box.appendChild(content);
-        popper.appendChild(box);
-
-        if (instance.props.allowHTML)
-            content.innerHTML = instance.props.content;
-        else
-            content.textContent = instance.props.content;
-
-        if (instance.props.theme)
-            box.setAttribute('data-theme', instance.props.theme);
-
-        function onUpdate(prevProps, nextProps) {
-            // DOM diffing
-            if (prevProps.content !== nextProps.content) {
-                if (instance.props.allowHTML)
-                    content.innerHTML = nextProps.content;
-                else
-                    content.textContent = nextProps.content;
-            }
-
-            box.style.maxWidth =
-            typeof nextProps.maxWidth === 'number'
-                ? `${nextProps.maxWidth}px`
-                : nextProps.maxWidth;
-
-            if (typeof nextProps.animation === 'string') {
-                box.setAttribute('data-animation', nextProps.animation);
-            } else {
-                box.removeAttribute('data-animation');
-            }
-        }
-
-        // Return an object with two properties:
-        // - `popper` (the root popper element)
-        // - `onUpdate` callback whenever .setProps() or .setContent() is called
-        return {
-            popper,
-            onUpdate, // optional
-        };
-    },
+    duration: [120, 220]
 });
 
 let artist_corrections = {};
@@ -12614,7 +12557,7 @@ let has_prompted_for_update = false;
                             </div>
                         `),
                         allowHTML: true,
-                        delay: [200, 50],
+                        delay: [150, 50],
                         placement: 'bottom'/*,
                         hideOnClick: false*/
                     });
