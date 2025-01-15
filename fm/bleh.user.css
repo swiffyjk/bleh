@@ -17,7 +17,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Ubuntu+Sans:ital,wght@0,100..800;1,100..800&display=swap');
 
 body {
-    --version-build: '2025.0114';
+    --version-build: '2025.0114.1';
 
     --hue:  var(--hue-over,
             var(--hue-album,
@@ -854,7 +854,7 @@ body {
         pointer-events: none;
     }
 
-    &:not(.bleh-loaded) {
+    .bleh-supports-loading &:not(.bleh-loaded) {
         &:before {
             background-color: hsl(var(--b6));
         }

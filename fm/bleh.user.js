@@ -20,7 +20,7 @@
 
 let version = {
     brand: 'bleh',
-    build: '2025.0114',
+    build: '2025.0114.1',
     sku: 'mita',
     feature_flags: {
         bleh_settings_tabs: {
@@ -4354,6 +4354,7 @@ let has_prompted_for_update = false;
     }
 
     function assign_page() {
+        document.documentElement.classList.add('bleh-supports-loading');
         if (page.structure.wrapper == null)
             page.structure.wrapper = document.body.querySelector('.main-content');
 
@@ -4519,6 +4520,7 @@ let has_prompted_for_update = false;
     }
 
     function append_style() {
+        document.documentElement.classList.add('bleh-supports-loading');
         settings = JSON.parse(localStorage.getItem('bleh')) || create_settings_template();
         let cached_style = localStorage.getItem('bleh_cached_style') || '';
 
