@@ -7,7 +7,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Ubuntu+Sans:ital,wght@0,100..800;1,100..800&display=swap');
 
 body {
-    --version-build: '2025.0113.2';
+    --version-build: '2025.0114';
 
     --hue:  var(--hue-over,
             var(--hue-album,
@@ -837,14 +837,17 @@ body {
 
     &:before {
         content: '';
-        inset: 0;
+        display: block;
         position: fixed;
-        z-index: 100000000000;
-        opacity: 0.3;
+        inset: 0;
+        z-index: 1000000000;
         pointer-events: none;
-        background-image: var(--noise);
+    }
 
-        display: none;
+    &:not(.bleh-loaded) {
+        &:before {
+            background-color: hsl(var(--b6));
+        }
     }
 }
 
@@ -3880,10 +3883,10 @@ better than the default selector '#app a' i suppose */
     gap: var(--item-list-gap);
 
     &.obsessions-grid {
-        grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
+        grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
         grid-template-rows: auto;
         grid-template-areas:
-        ". . . . . .";
+        ". . . . .";
     }
 }
 .grid-items .grid-items-item {
@@ -14931,21 +14934,6 @@ body:is(.namespace--user_playlists_create_overview, .music-landing-overview):aft
 
     --overlay-halloween: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsIAAA7CARUoSoAAAACXSURBVFhHY/Sr0XrKAAQCgoIgiuHDoz9getPEk9IgOq7XGiz/7PpXEMXAxc0OptHlv337AaIY1tSeBYvDQEizMVgeBn79/A6mH158BqaZwOQAAkYoDQdmPipgF5/acgfFJ+hARU8QxWd3Lr3Hqx4GXFIMwPp+czwG8wc8BEbBKBgFo2AUjIJRMApGwSgYBaNgFIx0wMAAAPkHKBsZxMgPAAAAAElFTkSuQmCC');
 }
-
-
-/*body:before {
-    content: '';
-    position: fixed;
-    inset: 0;
-    height: 300px;
-    background-color: hsl(var(--l4));
-    mask-image: url("https://raw.githubusercontent.com/coolesding/shiggycord/v3/img/snow.gif") !important;
-    mask-repeat: repeat;
-    z-index: 10000000;
-    pointer-events: none;
-    opacity: 0.2;
-    /*filter: drop-shadow(0 0 1px white);*/
-/*}*/
 
 
 

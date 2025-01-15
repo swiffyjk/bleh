@@ -1,18 +1,17 @@
 // ==UserScript==
 // @name         bleh
 // @namespace    http://last.fm/
-// @version      2025.0113
+// @version      2025.0114
 // @description  bleh!!! ^-^
 // @author       kate
 // @match        https://www.last.fm/*
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=last.fm
-// @grant        GM_addStyle
 // @updateURL    https://github.com/katelyynn/bleh/raw/uwu/fm/bleh.user.js
 // @downloadURL  https://github.com/katelyynn/bleh/raw/uwu/fm/bleh.user.js
-// @run-at       document-end
+// @run-at       document-start
 // @require      https://cdnjs.cloudflare.com/ajax/libs/showdown/2.1.0/showdown.min.js
-// @require      https://unpkg.com/@popperjs/core@2
-// @require      https://unpkg.com/tippy.js@6
+// @require      https://unpkg.com/@popperjs/core@2.11.8/dist/umd/popper.min.js
+// @require      https://unpkg.com/tippy.js@6.3.7/dist/tippy.umd.min.js
 // @require      https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.30.1/moment.min.js
 // @require      https://cdnjs.cloudflare.com/ajax/libs/color-thief/2.3.0/color-thief.umd.js
 // @require      https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js
@@ -21,7 +20,7 @@
 
 let version = {
     brand: 'bleh',
-    build: '2025.0113.2',
+    build: '2025.0114',
     sku: 'mita',
     feature_flags: {
         bleh_settings_tabs: {
@@ -158,7 +157,7 @@ let version = {
         }
     }
 }
-let theme_version = getComputedStyle(document.body).getPropertyValue('--version-build').replaceAll("'", '').replaceAll('"', ''); // remove quotations
+let theme_version;
 
 // loads your selected language in last.fm
 let lang;
@@ -3327,8 +3326,7 @@ let notifications = {};
 
 tippy.setDefaultProps({
     arrow: false,
-    duration: [120, 220],
-    delay: [null, 20]
+    duration: [120, 220]
 });
 
 let artist_corrections = {};
@@ -4156,27 +4154,52 @@ let has_prompted_for_update = false;
     'use strict';
 
     // this runs on page load only once!
-    auth_link = document.querySelector('a.auth-link');
-    if (auth_link != null)
-        auth = auth_link.querySelector('img').getAttribute('alt');
 
     log(`starting ${version.build}.${version.sku}`, 'load');
 
     bleh();
 
     function bleh() {
+        let head_observer = new MutationObserver((mutations) => {
+            if (document.head) {
+                append_style();
+
+                head_observer.disconnect();
+            }
+        });
+
+        head_observer.observe(document.documentElement, {
+            childList: true
+        });
+
+        let pre_observer = new MutationObserver((mutations) => {
+            if (document.body && document.body.querySelector('.masthead-logo')) {
+                bleh_main();
+
+                pre_observer.disconnect();
+            }
+        });
+
+        pre_observer.observe(document.documentElement, {
+            childList: true
+        });
+    }
+
+    function bleh_main() {
         let performance_start = performance.now();
 
+        auth_link = document.querySelector('a.auth-link');
+        if (auth_link)
+            auth = auth_link.querySelector('img').getAttribute('alt');
+
         load_settings();
-        lookup_lang();
 
         // messaging
         load_dialogs();
 
-        // TODO: remove when loadfast is merged
-        warn_for_future_version();
+        theme_version = getComputedStyle(document.body).getPropertyValue('--version-build').replaceAll("'", '').replaceAll('"', ''); // remove quotations
 
-        append_style();
+        lookup_lang();
         patch_masthead(document.body);
 
 
@@ -4231,59 +4254,6 @@ let has_prompted_for_update = false;
         } catch(e) {
             handle_error(e);
         }
-    }
-
-    function warn_for_future_version() {
-        if (settings.warn_for_20250114)
-            return;
-
-        dialog({
-            id: 'warn',
-            title: 'An error has occured',
-            body: (`
-                <div class="modal-vertical-inner error-inner">
-                    <div class="bleh-icon" style="--icon: var(--icon-16-warning)"></div>
-                    <h1>warning!!</h1>
-                    <p>In a future release, the way bleh loads will change. This will cause issues by default for users running <strong>ViolentMonkey</strong>.</p>
-                    <p>If you installed bleh through the website and don't know what I mean, you can dismiss this safely.</p>
-                    <div class="alert alert-info">This will only display once</div>
-                </div>
-                <div class="modal-footer">
-                    <button class="btn done" onclick="_dialog_rm({id: 'warn'})">
-                        ${trans[lang].settings.done}
-                    </button>
-                    <button class="btn continue" onclick="_warn_for_future_version_2()">
-                        This applies to me!
-                    </button>
-                </div>
-            `),
-            type: 'error'
-        });
-
-        settings.warn_for_20250114 = true;
-        localStorage.setItem('bleh', JSON.stringify(settings));
-    }
-    unsafeWindow._warn_for_future_version_2 = function() {
-        dialog({
-            id: 'warn',
-            title: 'An error has occured',
-            body: (`
-                <div class="modal-vertical-inner error-inner">
-                    <div class="bleh-icon" style="--icon: var(--icon-16-warning)"></div>
-                    <h1>this applies to me!!</h1>
-                    <p>Don't worry, in testing, the fix to make this work seems to be simple. In your ViolentMonkey settings page, you need to disable "Alternative <code>page</code> mode in Firefox".</p>
-                    <img src="https://katelyynn.github.io/bleh/fm/changelog/img/violent.png">
-                    <p>Once this is done the future release will work fine (in testing), if it doesn't let me know on Github.</p>
-                </div>
-                <div class="modal-footer">
-                    <button class="btn primary done" onclick="_dialog_rm({id: 'warn'})">
-                        ${trans[lang].settings.done}
-                    </button>
-                </div>
-            `),
-            type: 'error',
-            replace_if_possible: true
-        });
     }
 
     function handle_error(e = null) {
@@ -4395,6 +4365,8 @@ let has_prompted_for_update = false;
         } else {
             assign_page_subpage();
         }
+
+        document.body.classList.add('bleh-loaded');
     }
 
     function assign_page_type() {
@@ -4547,12 +4519,18 @@ let has_prompted_for_update = false;
     }
 
     function append_style() {
+        settings = JSON.parse(localStorage.getItem('bleh')) || create_settings_template();
         let cached_style = localStorage.getItem('bleh_cached_style') || '';
-        let body = document.body.classList;
+
+        let url = window.location.href;
+        let url_split = url.split('/');
+        let url_length = url_split.length - 1;
 
         // style is neither fetched or applied in these interfaces
-        if (body.contains('namespace--user_listening-report_playback') || (body.contains('labs-section') && !body.contains('namespace--labs_overview')))
+        if (url_split[url_length] == 'playback' || url_split[url_length - 1] == 'labs')
             return;
+
+        document.documentElement.setAttribute('data-bleh--theme', settings.theme);
 
         // while the style is not to be applied in dev mode,
         // we now fetch it to retrieve current version info
@@ -4572,10 +4550,6 @@ let has_prompted_for_update = false;
             // ensures no flashing missing styles hopefully
             log('requesting cache', 'style');
             load_cached_style(cached_style);
-
-            // now, analyse if we should fetch a new one
-            log('checking timeout', 'style');
-            check_if_style_cache_is_valid();
         }
     }
 
@@ -4601,6 +4575,10 @@ let has_prompted_for_update = false;
                 bleh_glacier_date_graph_generate();
                 bleh_glacier_insights();
             }
+
+            // now, analyse if we should fetch a new one
+            log('checking timeout', 'style');
+            check_if_style_cache_is_valid();
         }, 200);
     }
 
@@ -12579,7 +12557,7 @@ let has_prompted_for_update = false;
                             </div>
                         `),
                         allowHTML: true,
-                        delay: [200, 50],
+                        delay: [150, 50],
                         placement: 'bottom'/*,
                         hideOnClick: false*/
                     });
