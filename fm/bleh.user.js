@@ -4186,6 +4186,7 @@ let has_prompted_for_update = false;
     }
 
     function bleh_main() {
+        document.body.classList.add('bleh-supports-loading');
         let performance_start = performance.now();
 
         auth_link = document.querySelector('a.auth-link');
@@ -4354,6 +4355,7 @@ let has_prompted_for_update = false;
     }
 
     function assign_page() {
+        document.body.classList.add('bleh-supports-loading');
         if (page.structure.wrapper == null)
             page.structure.wrapper = document.body.querySelector('.main-content');
 
