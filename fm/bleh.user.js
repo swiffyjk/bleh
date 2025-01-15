@@ -3341,7 +3341,9 @@ tippy.setDefaultProps({
         const content = document.createElement('div');
 
         box.classList.add('tippy-box');
+        box.setAttribute('data-state', 'visible');
         content.classList.add('tippy-content');
+        content.setAttribute('data-state', 'visible');
         box.appendChild(content);
         popper.appendChild(box);
 
