@@ -14236,6 +14236,7 @@ input[type="range"]::-moz-range-progress {
 }
 
 
+.bleh--panel .content-form form,
 .bleh--panel > form {
     display: flex;
     flex-direction: column;
