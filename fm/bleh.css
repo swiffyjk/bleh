@@ -14236,12 +14236,13 @@ input[type="range"]::-moz-range-progress {
 }
 
 
-.bleh--panel .content-form form,
+.bleh--panel form {
+    margin: unset !important;
+}
 .bleh--panel > form {
     display: flex;
     flex-direction: column;
     gap: var(--card-gap);
-    margin: unset !important;
 }
 .settings-footer {
     display: flex;
