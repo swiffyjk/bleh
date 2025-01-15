@@ -6646,7 +6646,7 @@ let has_prompted_for_update = false;
                 </ul>
             </div>
             <div class="text-container">
-                <div class="heading content-form">
+                <div class="heading">
                     <h5>${trans[lang].settings.music.profile_shortcut.placeholder}</h5>
                     <form action="${root}settings/privacy#ignorelist" name="ignorelist" method="post">
                         <input type="hidden" name="csrfmiddlewaretoken" value="${page.token}">
