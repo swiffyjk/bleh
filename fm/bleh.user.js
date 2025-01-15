@@ -10,7 +10,7 @@
 // @downloadURL  https://github.com/katelyynn/bleh/raw/uwu/fm/bleh.user.js
 // @run-at       document-start
 // @require      https://cdnjs.cloudflare.com/ajax/libs/showdown/2.1.0/showdown.min.js
-// @require      https://unpkg.com/@popperjs/core@2
+// @require      https://unpkg.com/@popperjs/core@2.11.8/dist/umd/popper.min.js
 // @require      https://unpkg.com/tippy.js@6/headless/dist/tippy-headless.umd.min.js
 // @require      https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.30.1/moment.min.js
 // @require      https://cdnjs.cloudflare.com/ajax/libs/color-thief/2.3.0/color-thief.umd.js
@@ -3338,26 +3338,39 @@ tippy.setDefaultProps({
         // element, with an inner `box` element
         const popper = document.createElement('div');
         const box = document.createElement('div');
+        const content = document.createElement('div');
 
-        popper.classList.add('tippy-box');
-        box.classList.add('tippy-content');
+        box.classList.add('tippy-box');
+        content.classList.add('tippy-content');
+        box.appendChild(content);
         popper.appendChild(box);
 
         if (instance.props.allowHTML)
-            box.innerHTML = instance.props.content;
+            content.innerHTML = instance.props.content;
         else
-            box.textContent = instance.props.content;
+            content.textContent = instance.props.content;
 
         if (instance.props.theme)
-            popper.setAttribute('data-theme', instance.props.theme);
+            box.setAttribute('data-theme', instance.props.theme);
 
         function onUpdate(prevProps, nextProps) {
             // DOM diffing
             if (prevProps.content !== nextProps.content) {
                 if (instance.props.allowHTML)
-                    box.innerHTML = nextProps.content;
+                    content.innerHTML = nextProps.content;
                 else
-                    box.textContent = nextProps.content;
+                    content.textContent = nextProps.content;
+            }
+
+            box.style.maxWidth =
+            typeof nextProps.maxWidth === 'number'
+                ? `${nextProps.maxWidth}px`
+                : nextProps.maxWidth;
+
+            if (typeof nextProps.animation === 'string') {
+                box.setAttribute('data-animation', nextProps.animation);
+            } else {
+                box.removeAttribute('data-animation');
             }
         }
 
