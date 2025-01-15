@@ -962,7 +962,7 @@ last.fm changes as of 2024-05-20 */
         right: 0;
         height: 80px;
         z-index: 10;
-        background: var(--cards-overlay-image-subtle, unset), var(--page-overlay, unset), linear-gradient(0deg, transparent 0%, hsl(var(--b6)) 100%);
+        background: var(--cards-overlay-image-subtle, none), var(--page-overlay, none), linear-gradient(0deg, transparent 0%, hsl(var(--b6)) 100%);
         pointer-events: none;
         /* festive */
         /*background: var(--overlay-ice), linear-gradient(180deg, rgba(190,233,250,0.11) 0%, rgba(0,0,0,0) 100%), linear-gradient(0deg, transparent 0%, hsl(var(--b6)) 100%);
