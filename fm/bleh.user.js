@@ -15867,9 +15867,19 @@ let has_prompted_for_update = false;
 
         let has_seen_more_than_0 = false;
         days.forEach((day, index) => {
+            if (!day)
+                null;
+
             //let label = day.querySelector('time').textContent.trim();
             let label = moment(day.querySelector('time').getAttribute('datetime'));
-            let value = day.querySelector('.js-value').getAttribute('data-value');
+            let value = day.querySelector('.js-value');
+
+            console.log('day', index, label, day, day.innerHTML);
+
+            if (!value.getAttribute('data-value'))
+                value = 0;
+            else
+                value = value.getAttribute('data-value');
 
             if (value == '0' && index < 120 && !has_seen_more_than_0)
                 return;
