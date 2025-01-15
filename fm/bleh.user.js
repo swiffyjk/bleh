@@ -11,7 +11,7 @@
 // @run-at       document-start
 // @require      https://cdnjs.cloudflare.com/ajax/libs/showdown/2.1.0/showdown.min.js
 // @require      https://unpkg.com/@popperjs/core@2
-// @require      https://unpkg.com/tippy.js@6
+// @require      https://unpkg.com/tippy.js@6/headless/dist/tippy-headless.umd.min.js
 // @require      https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.30.1/moment.min.js
 // @require      https://cdnjs.cloudflare.com/ajax/libs/color-thief/2.3.0/color-thief.umd.js
 // @require      https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js
@@ -3330,7 +3330,45 @@ let notifications = {};
 tippy.setDefaultProps({
     arrow: false,
     duration: [120, 220],
-    delay: [null, 20]
+    delay: [null, 20],
+
+    // based on https://atomiks.github.io/tippyjs/v6/headless-tippy/
+    render(instance) {
+        // The recommended structure is to use the popper as an outer wrapper
+        // element, with an inner `box` element
+        const popper = document.createElement('div');
+        const box = document.createElement('div');
+
+        popper.classList.add('tippy-box');
+        box.classList.add('tippy-content');
+        popper.appendChild(box);
+
+        if (instance.props.allowHTML)
+            box.innerHTML = instance.props.content;
+        else
+            box.textContent = instance.props.content;
+
+        if (instance.props.theme)
+            popper.setAttribute('data-theme', instance.props.theme);
+
+        function onUpdate(prevProps, nextProps) {
+            // DOM diffing
+            if (prevProps.content !== nextProps.content) {
+                if (instance.props.allowHTML)
+                    box.innerHTML = nextProps.content;
+                else
+                    box.textContent = nextProps.content;
+            }
+        }
+
+        // Return an object with two properties:
+        // - `popper` (the root popper element)
+        // - `onUpdate` callback whenever .setProps() or .setContent() is called
+        return {
+            popper,
+            onUpdate, // optional
+        };
+    },
 });
 
 let artist_corrections = {};
