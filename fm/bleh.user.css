@@ -18181,7 +18181,7 @@ h4 {
             --mask: var(--icon-tag);
             color: hsl(var(--c3));
 
-            background-image: var(--overlay-ice-subtle);
+            background-image: var(--cards-overlay-image-subtle);
             background-repeat: repeat-x;
             background-position: unset;
 
