@@ -9192,7 +9192,13 @@ text[style^="color: rgb(255, 172, 172)"] {
             gap: var(--card-gap);
 
             .settings-footer {
+                padding: var(--card-gap);
+                margin: 0 calc(-1 * var(--card-gap)) calc(-1 * var(--card-gap)) calc(-1 * var(--card-gap));
+                background-color: hsl(var(--b4), 20%);
                 gap: var(--button-list-gap);
+
+                border-bottom-left-radius: var(--item-big-radius);
+                border-bottom-right-radius: var(--item-big-radius);
             }
 
             .select-container, .toggle-container {
@@ -13939,9 +13945,13 @@ pre {
     display: flex;
     gap: var(--button-list-gap);
     justify-content: center;
-    margin-top: var(--card-gap);
-    padding-top: var(--card-gap);
-    border-top: var(--card-border);
+    background-color: hsl(var(--b4), 25%);
+    margin: var(--card-gap) calc(-1 * var(--card-padding)) calc(-1 * var(--card-padding)) calc(-1 * var(--card-padding));
+    padding: var(--card-padding);
+
+    border-top: 1px solid var(--card-border-base);
+    border-bottom-left-radius: var(--item-big-radius);
+    border-bottom-right-radius: var(--item-big-radius);
 
     /* native modal footer */
     .modal-button {

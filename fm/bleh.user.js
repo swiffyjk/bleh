@@ -6201,7 +6201,6 @@ let has_prompted_for_update = false;
                         ${original_chart_settings.tracks.count}
                     </div>
                 </div>
-                <div class="sep"></div>
                 <div class="settings-footer">
                     <button type="submit" class="btn-primary save">
                         ${trans[lang].settings.save}
@@ -6812,7 +6811,6 @@ let has_prompted_for_update = false;
                         </span>
                     </div>
                 </div>
-                <div class="sep"></div>
                 <div class="settings-footer">
                     <button type="submit" class="btn-primary save">
                         ${trans[lang].settings.save}
@@ -18675,7 +18673,6 @@ let has_prompted_for_update = false;
                             </button>
                         </div>
                     </div>
-                    <div class="sep"></div>
                     <div class="settings-footer">
                         <button type="submit" class="btn-primary save">
                             ${trans[lang].settings.save}
@@ -18801,7 +18798,6 @@ let has_prompted_for_update = false;
                             ${original_chart_settings.length_list}
                         </div>
                     </div>
-                    <div class="sep"></div>
                     <div class="settings-footer">
                         <button type="submit" class="btn-primary save">
                             ${trans[lang].settings.save}
@@ -18925,7 +18921,6 @@ let has_prompted_for_update = false;
                             ${original_chart_settings.length_list}
                         </div>
                     </div>
-                    <div class="sep"></div>
                     <div class="settings-footer">
                         <button type="submit" class="btn-primary save">
                             ${trans[lang].settings.save}
@@ -19058,7 +19053,6 @@ let has_prompted_for_update = false;
                             </button>
                         </div>
                     </div>
-                    <div class="sep"></div>
                     <div class="settings-footer">
                         <button type="submit" class="btn-primary save">
                             ${trans[lang].settings.save}
