@@ -5085,6 +5085,7 @@ a.chartlist-love-button:after {
     line-height: var(--line-height);
 }
 
+.alert + .chartlist,
 p + .chartlist {
     margin-top: var(--card-gap) !important;
 }

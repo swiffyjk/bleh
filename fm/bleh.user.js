@@ -442,6 +442,7 @@ const trans = {
             search_genius: 'Search lyrics',
             fetch_plays: {
                 name: 'Tracklist',
+                info: 'Sourced from your own plays as an official tracklist is unavailable',
                 loading: 'Fetching your plays on this album',
                 fail: 'You do not have any plays on this album',
                 open_as_track: 'Open album title as a track'
@@ -1394,6 +1395,7 @@ const trans = {
             search_genius: 'Search lyrics',
             fetch_plays: {
                 name: 'Titelliste',
+                info: 'Sourced from your own plays as an official tracklist is unavailable',
                 loading: 'Deine Wiedergaben auf diesem Album werden abgerufen',
                 fail: 'Du hast keine Scrobbel auf diesem Album',
                 open_as_track: 'Albumtitel als Titel öffnen'
@@ -2314,6 +2316,7 @@ const trans = {
             search_genius: 'Search lyrics',
             fetch_plays: {
                 name: 'Tracklist',
+                info: 'Sourced from your own plays as an official tracklist is unavailable',
                 loading: 'Fetching your plays on this album',
                 fail: 'You do not have any plays on this album',
                 open_as_track: 'Open album title as a track'
@@ -3439,7 +3442,8 @@ let includes = {
         'ref.'
     ],
     versions: [
-        '(taylor', '- spotify singles'
+        '(taylor', '- spotify singles',
+        '(spotify'
     ],
     remasters: [
         '- remaster', '(remaster',
@@ -3495,6 +3499,7 @@ let includes = {
         '- digital deluxe', '(digital deluxe', '[digital deluxe',
         '- complete edition', '(complete edition', '[complete edition',
         '- extended', '(extended', '[extended',
+        '- the extended edition', // denzel
         '- expanded', '(expanded', '[expanded',
         '- anniversary', '(anniversary', '[anniversary',
         '- b-side', '- c-side', '(b-side', '(c-side',
@@ -13320,7 +13325,7 @@ let has_prompted_for_update = false;
 
                     tracklist.innerHTML = (`
                         <h3 class="text-18">${trans[lang].music.fetch_plays.name}</h3>
-                        <p>Tracks listed here are based on your album plays as this album does not have a tracklist available.</p>
+                        <div class="alert alert-info">${trans[lang].music.fetch_plays.info}</div>
                         ${inner_tracklist.outerHTML}
                     `);
                 })
