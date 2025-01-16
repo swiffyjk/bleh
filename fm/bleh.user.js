@@ -12648,7 +12648,7 @@ let has_prompted_for_update = false;
 
             title.textContent = correct_artist(title_text, true);
         } else {
-            title_text = title_text.replaceAll(' & ', ';').replaceAll(', ', ';').replace('Tyler;The', 'Tyler, The').replaceAll(';;', ';');
+            title_text = title_text.replaceAll(' & ', ';').replaceAll(', ', ';').replace('Tyler;the', 'Tyler, The').replaceAll(';;', ';');
 
             page.multi = true;
             title.innerHTML = '';

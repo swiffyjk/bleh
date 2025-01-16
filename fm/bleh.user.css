@@ -1897,8 +1897,6 @@ span.header-new-gallery-inner a,
 }
 
 
-/* this makes the video preview have 2 half buttons, one for playing, one for editing */
-/* todo: make these pretty icons, maybe slide from the bottom? */
 .video-preview-replace {
     margin-top: unset;
 }
