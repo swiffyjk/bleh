@@ -16083,6 +16083,7 @@ button.bleh--gallery-bookmark-image-btn {
             --btn-left: 12px !important;
             --show-icon: block;
             --font-size: 0;
+            color: inherit !important;
 
             &.view-profile-btn {
                 --mask: var(--icon-16-user);
