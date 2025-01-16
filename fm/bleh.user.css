@@ -3232,6 +3232,7 @@ button.navlist-more {
     font-size: calc(var(--font-size) - 1px);
     line-height: var(--line-height);
     color: hsla(var(--c2), 80%);
+    cursor: default;
 }
 .artist-header-featured-items-item-header {
     text-transform: initial;
@@ -3240,6 +3241,7 @@ button.navlist-more {
 
     font-size: 12px;
     line-height: 16px;
+    cursor: default;
 }
 
 
@@ -6642,9 +6644,6 @@ on the bottom of a panel !! */
 :is(.section-controls) > :is(h2, h3) {
     height: 32px;
     width: fit-content;
-}
-#top-tracks > .buffer-standard {
-    margin-top: 12px;
 }
 
 section:has(.dropdown-menu-clickable-button.section-control) {
