@@ -19921,6 +19921,9 @@ let has_prompted_for_update = false;
             let wiki_col = page.structure.main.querySelector('.wiki-column');
             let wiki_empty = false;
 
+            if (!wiki_col)
+                return;
+
             let wiki_block = wiki_col.querySelector('.wiki-block.visible-lg .wiki-block-inner-2');
 
             if (wiki_block == null) {
