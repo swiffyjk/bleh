@@ -6647,6 +6647,12 @@ on the bottom of a panel !! */
     margin-top: 12px;
 }
 
+section:has(.dropdown-menu-clickable-button.section-control) {
+    h2 {
+        height: 32px !important;
+    }
+}
+
 .section-controls {
     max-height: 32px;
     display: flex;
