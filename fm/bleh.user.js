@@ -12640,6 +12640,8 @@ let has_prompted_for_update = false;
         if (title_text.includes(', ') || title_text.includes(' & '))
             has_multi = true;
 
+        page.multi = false;
+
         if (!has_multi) {
             if (!settings.corrections)
                 return;
