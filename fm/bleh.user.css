@@ -18215,6 +18215,16 @@ h4 {
     .info-side {
         flex: 1;
 
+        .sub-text {
+            justify-content: unset;
+            align-items: center;
+            gap: 4px;
+
+            .info-tip {
+                --icon-size: 14px;
+            }
+        }
+
         h1 {
             margin: unset;
             font-size: 24px;
@@ -18268,6 +18278,30 @@ h4 {
 
                 [data-bleh--theme="light"] & {
                     text-shadow: 0 0 15px hsl(var(--b5));
+                }
+            }
+
+            &[data-multi="true"] {
+                h1 {
+                    color: hsl(var(--c2), 80%);
+                    gap: unset;
+
+                    a {
+                        color: hsl(var(--c1));
+
+                        transition-property: color;
+                        transition-duration: var(--trans);
+                        transition-timing-function: var(--trans-function);
+
+                        &:hover {
+                            color: hsl(var(--l2-c-theme-switch));
+                            transition: none;
+                        }
+
+                        &:not(:first-child) {
+                            margin-left: var(--item-list-gap);
+                        }
+                    }
                 }
             }
 

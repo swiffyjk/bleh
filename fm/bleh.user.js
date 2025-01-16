@@ -1236,7 +1236,8 @@ const trans = {
         },
         artist: {
             name: 'Artist',
-            plural: 'Artists'
+            plural: 'Artists',
+            tooltip: 'Multiple artists are combined into this profile.'
         },
         album: {
             name: 'Album',
@@ -2157,7 +2158,8 @@ const trans = {
         },
         artist: {
             name: 'Künstler',
-            plural: 'Künstler'
+            plural: 'Künstler',
+            tooltip: 'Multiple artists are combined into this profile.'
         },
         album: {
             name: 'Album',
@@ -3060,7 +3062,8 @@ const trans = {
         },
         artist: {
             name: 'Artist',
-            plural: 'Artists'
+            plural: 'Artists',
+            tooltip: 'Multiple artists are combined into this profile.'
         },
         album: {
             name: 'Album',
@@ -4082,6 +4085,7 @@ let page = {
     sister_others: [],
     subpage: '',
     avatar: '',
+    multi: false,
     corrected: false,
     token: '',
     structure: {
@@ -8795,15 +8799,21 @@ let has_prompted_for_update = false;
      * @param {string} artist artist name (NOT converted to lowercase)
      * @returns corrected artist if applicable or original artist
      */
-    function correct_artist(artist) {
+    function correct_artist(artist, broadcast = false) {
         if (!settings.corrections)
             return artist;
 
         try {
             if (artist_corrections.hasOwnProperty(artist)) {
                 log(`corrected ${artist} as ${artist_corrections[artist]}`, 'lotus');
+                if (broadcast)
+                    page.corrected = true;
+
                 return artist_corrections[artist];
             } else {
+                if (broadcast)
+                    page.corrected = false;
+
                 return artist;
             }
         } catch(e) {
@@ -12622,8 +12632,46 @@ let has_prompted_for_update = false;
             bleh_glacier_insights(insights);
     }
 
+    function artist_title() {
+        let title = document.body.querySelector('.header-new-title');
+        let title_text = title.textContent.trim();
+
+        let has_multi = false;
+        if (title_text.includes(', ') || title_text.includes(' & '))
+            has_multi = true;
+
+        if (!has_multi) {
+            if (!settings.corrections)
+                return;
+
+            title.textContent = correct_artist(title_text, true);
+        } else {
+            title_text = title_text.replaceAll(' & ', ';').replaceAll(', ', ';').replace('Tyler;The', 'Tyler, The').replaceAll(';;', ';');
+
+            page.multi = true;
+            title.innerHTML = '';
+
+            let split = title_text.split(';');
+            split.forEach((artist, index) => {
+                if (index > 0)
+                    title.innerHTML += ',';
+
+                let part = document.createElement('a');
+                part.classList.add('multi-artist-part');
+                part.setAttribute('href',`${root}music/${sanitise(artist)}`);
+
+                if (settings.corrections)
+                    part.textContent = correct_artist(artist);
+                else
+                    part.textContent = artist;
+
+                title.appendChild(part);
+            });
+        }
+    }
+
     function patch_header_title() {
-        if (!settings.corrections && !settings.format_guest_features)
+        if (!settings.corrections && !settings.format_guest_features && !multi)
             return;
 
         page.corrected = false;
@@ -12631,7 +12679,7 @@ let has_prompted_for_update = false;
         let track_title = document.body.querySelector('.header-new-title');
         let track_artist = document.body.querySelector('.header-new-crumb span');
 
-        if (track_title == null)
+        if (!track_title)
             return;
 
         // correct artist
@@ -15161,7 +15209,7 @@ let has_prompted_for_update = false;
             return;
         artist_header.setAttribute('data-bwaa', 'true');
 
-        patch_header_title();
+        artist_title();
 
         page.name = artist_header.querySelector('.header-new-title').textContent;
         page.sister = '';
@@ -15224,8 +15272,12 @@ let has_prompted_for_update = false;
                     `) : '<img class="missing-artist">'}
                 </div>
                 <div class="info-side">
+                    ${(page.multi) ? (`
+                    <div class="sub-text">${trans[lang].artist.plural}<div class="info-tip"><div class="bleh-icon bleh-info-icon"></div></div></div>
+                    `) : (`
                     <div class="sub-text">${trans[lang].artist.name}</div>
-                    <div class="title-container">
+                    `)}
+                    <div class="title-container" data-multi="${page.multi}">
                         <h1>${title.innerHTML}</h1>
                         ${(position != null) ? position.outerHTML : ''}
                         ${(on_tour != null) ? on_tour.outerHTML : ''}
@@ -15256,6 +15308,13 @@ let has_prompted_for_update = false;
                 </div>
                 `) : ''}
             `);
+
+            let multi_info_box = redesigned_artist_header.querySelector('.info-tip');
+            if (multi_info_box) {
+                tippy(multi_info_box, {
+                    content: trans[lang].artist.tooltip
+                });
+            }
 
             position = redesigned_artist_header.querySelector('.header-new-chart-position-number');
             if (position != null) {
