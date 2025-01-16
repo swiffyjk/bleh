@@ -1090,7 +1090,7 @@ const trans = {
                         bio: 'This setting controls who can post shouts and message you privately.',
                         settings: {
                             everyone: {
-                                name: 'Everyone',
+                                name: 'Everyone not hidden',
                                 bio: 'Everyone except who you have ignored'
                             },
                             neighbours: {
@@ -6742,15 +6742,12 @@ let has_prompted_for_update = false;
                     ${original_privacy_settings.receiving_msgs}
                     <div class="btn primary-selection" id="primary-selection-receiving_msgs-everyone" onclick="_update_inbuilt_selection('id_message_privacy', 0)">
                         <h5>${trans[lang].settings.inbuilt.privacy.receiving_msgs.settings.everyone.name}</h5>
-                        <p>${trans[lang].settings.inbuilt.privacy.receiving_msgs.settings.everyone.bio}</p>
                     </div>
                     <div class="btn primary-selection" id="primary-selection-receiving_msgs-neighbours" onclick="_update_inbuilt_selection('id_message_privacy', 1)">
                         <h5>${trans[lang].settings.inbuilt.privacy.receiving_msgs.settings.neighbours.name}</h5>
-                        <p>${trans[lang].settings.inbuilt.privacy.receiving_msgs.settings.neighbours.bio}</p>
                     </div>
                     <div class="btn primary-selection" id="primary-selection-receiving_msgs-follow" onclick="_update_inbuilt_selection('id_message_privacy', 2)">
                         <h5>${trans[lang].settings.inbuilt.privacy.receiving_msgs.settings.follow.name}</h5>
-                        <p>${trans[lang].settings.inbuilt.privacy.receiving_msgs.settings.follow.bio}</p>
                     </div>
                 </div>
                 <div class="sep"></div>

@@ -14273,34 +14273,26 @@ input[type="range"]::-moz-range-progress {
     }
 
     .primary-selection {
-        --btn-top: 16px;
-        --btn-bottom: 16px;
-        --btn-left: calc(16px + 12px + 6px + 4px);
+        --btn-left: calc(12px + 16px + 6px);
         /*--mask: var(--icon-16-dot);*/
         width: 100% !important;
+        min-height: 40px !important;
         position: relative;
 
-        &:before {
-            content: '';
-            position: absolute;
-            left: 0;
-            width: 3px;
-            height: 28px;
-            top: 50%;
-            margin-top: -14px;
-            background-color: hsl(var(--l3-c));
-            box-shadow: 0 0 20px 3px hsl(var(--h4));
-            border-radius: 50px;
-            opacity: 0;
-        }
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+
+        color: inherit !important;
 
         h5 {
             cursor: pointer;
             color: inherit;
         }
         p {
-            font-size: 12px;
-            color: hsl(var(--c3));
+            font-size: var(--font-size-sm);
+            line-height: var(--line-height-sm);
+            opacity: 0.7;
         }
 
         &#primary-selection-receiving_msgs-everyone {
@@ -14355,14 +14347,13 @@ input[type="range"]::-moz-range-progress {
         [data-bleh--inbuilt-id_message_privacy="all"] &#primary-selection-receiving_msgs-everyone,
         [data-bleh--inbuilt-id_message_privacy="n"] &#primary-selection-receiving_msgs-neighbours,
         [data-bleh--inbuilt-id_message_privacy="f"] &#primary-selection-receiving_msgs-follow {
-            --bg: var(--cards-overlay-image-subtlest, none), hsla(var(--h4), 35%);
-            --bg-hov: var(--cards-overlay-image-subtlest, none), hsla(var(--h4), 45%);
-            --bg-atv: var(--cards-overlay-image-subtlest, none), hsla(var(--h4), 55%);
-            /*--mask: var(--icon-16-check);*/
+            --bg: var(--cards-overlay-image-subtlest, none), hsl(var(--h3)) !important;
+            --bg-hov: var(--cards-overlay-image-subtlest, none), hsla(var(--h3), 80%) !important;
+            --bg-atv: var(--cards-overlay-image-subtlest, none), hsla(var(--h3), 60%) !important;
+            --col: hsl(var(--b7)) !important;
+            --shadow: 0 3px 12px hsl(var(--h4), 25%), var(--interactable-outer);
 
-            &:before {
-                opacity: 1;
-            }
+            color: var(--col) !important;
         }
     }
 }
