@@ -8153,12 +8153,14 @@ a.gallery-image-preferred-off .gallery-image-preferred-states::before {
         &.inbox-notifications__item--highlight {
             --bg: hsla(var(--h4), 35%);
             --bg-hov: hsla(var(--h4), 45%);
+            --bg-atv: hsla(var(--h4), 55%);
             --shadow: 0 10px 50px 5px hsla(var(--h4), 35%);
             z-index: 20;
 
             [data-bleh--theme="light"] & {
                 --bg: hsla(var(--h4), 35%);
                 --bg-hov: hsla(var(--h4), 50%);
+                --bg-atv: hsla(var(--h4), 65%);
                 --shadow: 0 10px 50px 5px hsla(var(--h4), 35%);
             }
         }
