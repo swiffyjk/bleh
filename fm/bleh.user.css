@@ -1501,7 +1501,7 @@ last.fm changes as of 2024-05-20 */
     display: flex;
     gap: var(--card-gap);
 }
-.row {
+.row:not(.row--equal-height-cols) {
     display: grid;
     grid-template-columns: auto auto;
     grid-template-areas:
@@ -6261,6 +6261,9 @@ button,
     }
 }
 /* cta's on an artist page */
+.top-container + section + .section {
+    margin: unset !important;
+}
 .row--equal-height-cols:has(.coloured-cta) {
     gap: var(--button-list-gap);
 
@@ -8653,11 +8656,8 @@ a.gallery-image-preferred-off .gallery-image-preferred-states::before {
     --mask: var(--icon-16-trash);
 }
 
-.btn-add:before {
+.btn-add {
     --mask: var(--icon-16-add);
-}
-/*form[action*="+images/upload"] .btn-primary[type="submit"]:before, */.btn-file {
-    --mask: var(--icon-16-upload);
 }
 
 
@@ -10688,6 +10688,11 @@ text[style^="color: rgb(0, 0, 0)"] {
     box-shadow: var(--card-shadow);
 }
 
+
+.btn-file {
+    --mask: var(--icon-16-upload);
+    margin: unset;
+}
 .btn-file-label, .btn-sm {
     min-height: 32px;
     line-height: var(--line-height);
@@ -10695,6 +10700,7 @@ text[style^="color: rgb(0, 0, 0)"] {
 }
 .btn-file-label {
     color: hsl(var(--c3));
+    cursor: default;
 }
 
 .content-form .form-group, .content-form form {
