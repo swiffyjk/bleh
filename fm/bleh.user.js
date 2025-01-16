@@ -7211,11 +7211,9 @@ let has_prompted_for_update = false;
                             content: `${tooltip_sister} - ${tooltip_name}`
                         });
 
-                    let bio = page.structure.side.querySelector('.about-me-sidebar');
-                    if (bio != null)
-                        bio.after(recent_activity_section);
-                    else
-                        page.structure.side.insertBefore(recent_activity_section, page.structure.side.firstElementChild);
+                    let reports = page.structure.side.querySelector('.promo-v3');
+                    if (reports)
+                        reports.after(recent_activity_section);
                 });
             }
 
