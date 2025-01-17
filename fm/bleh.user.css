@@ -732,6 +732,9 @@ body {
 
     &[data-bleh--theme="light"] {
         --snow: rgb(180, 201, 209);
+
+        --hide-light-pointer: none;
+        --hide-light-opacity: 0.4;
     }
 
     &[data-bleh--seasonal_overlays="true"] {
@@ -16255,6 +16258,11 @@ button.bleh--gallery-bookmark-image-btn {
 
 
 
+
+.hide-if-light-theme {
+    pointer-events: var(--hide-light-pointer, auto) !important;
+    opacity: var(--hide-light-opacity, unset) !important;
+}
 
 .hide-if-seasonal-disabled {
     [data-bleh--seasonal="false"] & {

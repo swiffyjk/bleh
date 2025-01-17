@@ -9668,7 +9668,7 @@ let has_prompted_for_update = false;
                         </div>
                     </div>
                     ${(ff('card_saturation')) ? (`
-                    <div class="slider-container" id="container-sat_bg">
+                    <div class="slider-container hide-if-light-theme" id="container-sat_bg">
                         <button class="btn reset" onclick="_reset_item('sat_bg')">${trans[lang].settings.reset}</button>
                         <div class="heading">
                             <h5>${trans[lang].settings.customise.sat_bg.name}</h5>
