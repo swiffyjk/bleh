@@ -13743,7 +13743,8 @@ pre {
 
     position: relative;
     --mask-size: 24px;
-    --left: 13px;
+    --left: 50%;
+    --margin-left: -12px;
     --margin-top: -12px;
 
     &:before {

@@ -12648,12 +12648,27 @@ let has_prompted_for_update = false;
 
             title.textContent = correct_artist(title_text, true);
         } else {
-            title_text = title_text.replaceAll(' & ', ';').replaceAll(', ', ';').replace('Tyler;the', 'Tyler, The').replaceAll(';;', ';');
+            title_text = title_text
+            .replaceAll(' & ', ';').replaceAll(', ', ';')
+            .replace('Tyler;the', 'Tyler, The').replace('Tyler;The', 'Tyler, The')
+            .replaceAll(';;', ';');
 
             page.multi = true;
             title.innerHTML = '';
 
             let split = title_text.split(';');
+
+            if (split.length < 2) {
+                page.multi = false;
+
+                if (!settings.corrections)
+                    return;
+
+                title.textContent = correct_artist(title_text, true);
+
+                return;
+            }
+
             split.forEach((artist, index) => {
                 if (index > 0)
                     title.innerHTML += ',';
