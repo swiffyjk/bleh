@@ -4220,8 +4220,16 @@ let has_prompted_for_update = false;
         start_rain();
 
         // everything past this point requires authorisation
-        if (auth == '')
+        if (auth == '') {
+            notify({
+                title: 'No account added',
+                body: 'Please sign in to an account to access bleh features.',
+                icon: 'icon-16-user',
+                persist: true
+            });
+            document.body.classList.add('bleh-loaded');
             return;
+        }
 
         load_activities();
         notify_if_new_update();
@@ -4364,11 +4372,11 @@ let has_prompted_for_update = false;
 
     function assign_page() {
         document.documentElement.classList.add('bleh-supports-loading');
-        if (page.structure.wrapper == null)
+        if (!page.structure.wrapper)
             page.structure.wrapper = document.body.querySelector('.main-content');
 
         let main_content = page.structure.wrapper.querySelector(':scope > :last-child:not([data-bleh])');
-        if (main_content != null) {
+        if (main_content) {
             assign_page_type();
             load_page();
             main_content.setAttribute('data-bleh', 'true');

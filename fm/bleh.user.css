@@ -1212,6 +1212,7 @@ last.fm changes as of 2024-05-20 */
 
     &.site-auth--anon {
         display: flex;
+        gap: var(--button-list-gap);
         align-items: center;
 
         &:before {
@@ -1221,8 +1222,10 @@ last.fm changes as of 2024-05-20 */
         .site-auth-item {
             margin: unset !important;
 
-            .site-auth-control:not(.btn-secondary) {
-                padding: 0 16px;
+            .site-auth-control {
+                &:after {
+                    display: none;
+                }
             }
         }
     }
@@ -1342,6 +1345,22 @@ last.fm changes as of 2024-05-20 */
     to {
         transform: unset;
         opacity: unset;
+    }
+}
+
+
+
+
+/* sign in / sign up :3 */
+.auth-container {
+    margin-top: var(--card-gap);
+
+    .auth-container-animation {
+        background: unset;
+    }
+
+    .auth-container-signup {
+        padding: var(--card-padding);
     }
 }
 
@@ -1607,7 +1626,8 @@ last.fm changes as of 2024-05-20 */
 .bleh--gallery, [data-page-subpage="images_overview"] .col-main:not(.bleh--bookmarks),
 /* listeners */ .col-main:not(.bleh--gallery) > .buffer-standard,
 /* similar artists */ .similar-artists,
-.no-data-message--gallery:not([data-page-subpage="images_overview"] .no-data-message--gallery), .no-data-message--album
+.no-data-message--gallery:not([data-page-subpage="images_overview"] .no-data-message--gallery), .no-data-message--album,
+.auth-container-signup, .login-form
 {
     content: '';
     --override-background: hsl(var(--card-specific-background, var(--card-background, var(--b5))));
@@ -5948,7 +5968,8 @@ button,
 .weeklychart-item,
 .btn-subscribe,
 .masthead-logo a, .masthead-search-form,
-.show-more a
+.show-more a,
+/* log in */ .site-auth-control
 {
     --bg: var(--cards-overlay-image-subtlest, none), hsl(var(--b4));
     --bg-hov: var(--cards-overlay-image-subtlest, none), hsla(var(--b4), 80%);
@@ -15571,9 +15592,9 @@ button.bleh--gallery-bookmark-image-btn {
         pointer-events: auto;
         position: relative;
 
-        --bg: hsla(var(--h3), 80%);
-        --bg-hov: hsla(var(--h3), 70%);
-        --bg-atv: hsla(var(--h3), 60%);
+        --bg: hsla(var(--h3), 90%);
+        --bg-hov: hsla(var(--h3), 80%);
+        --bg-atv: hsla(var(--h3), 70%);
         --col: hsl(var(--b7));
 
         text-align: left;
