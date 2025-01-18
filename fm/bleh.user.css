@@ -6075,6 +6075,7 @@ button,
 
     /*     PRIMARY     */
     &:is(
+        .pagination-page[aria-current="page"] span,
         .danger,
         .btn-primary:is([type="submit"], .js-close),
         .inbox-delete-button:not([disabled]),
@@ -8698,6 +8699,10 @@ a.gallery-image-preferred-off .gallery-image-preferred-states::before {
 }
 .pagination-list {
     cursor: default;
+
+    display: flex;
+    justify-content: center;
+    gap: var(--button-list-gap);
 }
 
 .pagination-page {
@@ -8712,18 +8717,13 @@ a.gallery-image-preferred-off .gallery-image-preferred-states::before {
     --shadow-hov: none !important;
 }
 .pagination-page[aria-current="page"] span {
-    --bg: hsla(var(--h4), 40%) !important;
-    --bg-hov: hsla(var(--h4), 60%) !important;
-    --bg-atv: hsla(var(--h4), 80%) !important;
-    --shadow: none !important;
-    --shadow-hov: none !important;
     cursor: default;
 }
 
-.pagination-previous a:before {
+.pagination-previous {
     --mask: var(--icon-16-arrow-left);
 }
-.pagination-next a:before {
+.pagination-next {
     --mask: var(--icon-16-arrow-right);
 }
 
