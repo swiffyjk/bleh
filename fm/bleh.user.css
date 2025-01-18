@@ -6813,6 +6813,7 @@ section:has(.dropdown-menu-clickable-button.section-control) {
     --bg-atv: hsla(var(--b4), 80%) !important;
     --shadow: none !important;
     --shadow-hov: none !important;
+    --col: hsl(var(--c2)) !important;
     position: relative !important;
     min-width: 170px !important;
     --show-icon: block;
