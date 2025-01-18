@@ -19808,7 +19808,8 @@ let has_prompted_for_update = false;
             let panel = document.createElement('section');
             panel.classList.add('inbox-panel', 'notifications-panel');
 
-            panel.appendChild(form);
+            if (form)
+                panel.appendChild(form);
             if (notifications)
                 panel.appendChild(notifications);
             if (pagination)
