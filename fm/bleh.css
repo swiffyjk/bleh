@@ -133,7 +133,6 @@ body {
 
 /* backgrounds */
 body, [data-page-resource-type="album"], [data-page-resource-type="track"],
-.gallery-image-buttons button, .gallery-image-preferred-button,
 .user-dashboard-layout,
 .preview, .preview[data-bleh--theme="dark"],
 .listen-item,
@@ -8060,6 +8059,7 @@ that literally is 1 user from 2007 who hasnt even gotten a scrobble */
 .gallery-image-buttons:not(.gallery-image-buttons-extra) :is(.gallery-image-report, .gallery-image-delete button) {
     width: 40px !important;
 }
+.gallery-image-buttons button:not(.image-open-button),
 .gallery-image-delete button,
 .gallery-image-report:not(.gallery-image-report--reported) {
     --col: hsl(var(--l3-c)) !important;
