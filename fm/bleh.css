@@ -7,7 +7,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Ubuntu+Sans:ital,wght@0,100..800;1,100..800&display=swap');
 
 body {
-    --version-build: '2025.0114.1';
+    --version-build: '2025.0118';
 
     --hue:  var(--hue-over,
             var(--hue-album,
@@ -377,8 +377,7 @@ a,
 body {
     --card-padding: 20px;
     --card-radius: var(--item-big-radius);
-    --card-shadow: hsla(var(--b7), 0.25) 0 2px 4px 0;
-    /*--card-shadow: hsla(var(--b7), 0.25) 0 4px 4px 0, hsla(var(--b7), 0.05) 0 0 0 1px;*/
+    --card-shadow: hsla(var(--b7), 0.3) 0 4px 4px 0, hsla(var(--b7), 0.05) 0 0 0 1px;
     --card-gap: 15px;
     --card-border: 1px solid hsla(var(--b4), 0.7);
     --card-border-base: hsla(var(--b4), 0.7);
@@ -722,6 +721,9 @@ body {
 
     &[data-bleh--theme="light"] {
         --snow: rgb(180, 201, 209);
+
+        --hide-light-pointer: none;
+        --hide-light-opacity: 0.4;
     }
 
     &[data-bleh--seasonal_overlays="true"] {
@@ -1200,6 +1202,7 @@ last.fm changes as of 2024-05-20 */
 
     &.site-auth--anon {
         display: flex;
+        gap: var(--button-list-gap);
         align-items: center;
 
         &:before {
@@ -1209,8 +1212,10 @@ last.fm changes as of 2024-05-20 */
         .site-auth-item {
             margin: unset !important;
 
-            .site-auth-control:not(.btn-secondary) {
-                padding: 0 16px;
+            .site-auth-control {
+                &:after {
+                    display: none;
+                }
             }
         }
     }
@@ -1330,6 +1335,22 @@ last.fm changes as of 2024-05-20 */
     to {
         transform: unset;
         opacity: unset;
+    }
+}
+
+
+
+
+/* sign in / sign up :3 */
+.auth-container {
+    margin-top: var(--card-gap);
+
+    .auth-container-animation {
+        background: unset;
+    }
+
+    .auth-container-signup {
+        padding: var(--card-padding);
     }
 }
 
@@ -1491,7 +1512,7 @@ last.fm changes as of 2024-05-20 */
     display: flex;
     gap: var(--card-gap);
 }
-.row {
+.row:not(.row--equal-height-cols) {
     display: grid;
     grid-template-columns: auto auto;
     grid-template-areas:
@@ -1595,7 +1616,8 @@ last.fm changes as of 2024-05-20 */
 .bleh--gallery, [data-page-subpage="images_overview"] .col-main:not(.bleh--bookmarks),
 /* listeners */ .col-main:not(.bleh--gallery) > .buffer-standard,
 /* similar artists */ .similar-artists,
-.no-data-message--gallery:not([data-page-subpage="images_overview"] .no-data-message--gallery), .no-data-message--album
+.no-data-message--gallery:not([data-page-subpage="images_overview"] .no-data-message--gallery), .no-data-message--album,
+.auth-container-signup, .login-form
 {
     content: '';
     --override-background: hsl(var(--card-specific-background, var(--card-background, var(--b5))));
@@ -1887,8 +1909,6 @@ span.header-new-gallery-inner a,
 }
 
 
-/* this makes the video preview have 2 half buttons, one for playing, one for editing */
-/* todo: make these pretty icons, maybe slide from the bottom? */
 .video-preview-replace {
     margin-top: unset;
 }
@@ -2793,19 +2813,15 @@ button.navlist-more {
     [data-bleh--gallery-tab="bookmarks"] .secondary-nav-item--gallery-bookmarks &,
     &.secondary-nav-item-link.active,
     &.secondary-nav-item-link--active {
-        --bg: hsl(var(--b3), 60%) !important;
-        --bg-hov: hsl(var(--b3), 80%) !important;
-        --bg-atv: hsl(var(--b3), 100%) !important;
+        --bg: var(--cards-overlay-image-subtlest, none), hsl(var(--h3)) !important;
+        --bg-hov: var(--cards-overlay-image-subtlest, none), hsla(var(--h3), 80%) !important;
+        --bg-atv: var(--cards-overlay-image-subtlest, none), hsla(var(--h3), 60%) !important;
+        --col: hsl(var(--b7)) !important;
+        --shadow: 0 3px 12px hsl(var(--h4), 25%), var(--interactable-outer);
 
         &:after {
             opacity: 1;
             transition: none;
-        }
-
-        [data-bleh--theme="light"] & {
-            --bg: hsl(var(--h4), 20%) !important;
-            --bg-hov: hsl(var(--h4), 30%) !important;
-            --bg-atv: hsl(var(--h4), 50%) !important;
         }
     }
 }
@@ -3228,6 +3244,7 @@ button.navlist-more {
     font-size: calc(var(--font-size) - 1px);
     line-height: var(--line-height);
     color: hsla(var(--c2), 80%);
+    cursor: default;
 }
 .artist-header-featured-items-item-header {
     text-transform: initial;
@@ -3236,6 +3253,7 @@ button.navlist-more {
 
     font-size: 12px;
     line-height: 16px;
+    cursor: default;
 }
 
 
@@ -5081,6 +5099,7 @@ a.chartlist-love-button:after {
     line-height: var(--line-height);
 }
 
+.alert + .chartlist,
 p + .chartlist {
     margin-top: var(--card-gap) !important;
 }
@@ -5939,7 +5958,8 @@ button,
 .weeklychart-item,
 .btn-subscribe,
 .masthead-logo a, .masthead-search-form,
-.show-more a
+.show-more a,
+/* log in */ .site-auth-control
 {
     --bg: var(--cards-overlay-image-subtlest, none), hsl(var(--b4));
     --bg-hov: var(--cards-overlay-image-subtlest, none), hsla(var(--b4), 80%);
@@ -6045,6 +6065,7 @@ button,
 
     /*     PRIMARY     */
     &:is(
+        .pagination-page[aria-current="page"] span,
         .danger,
         .btn-primary:is([type="submit"], .js-close),
         .inbox-delete-button:not([disabled]),
@@ -6174,7 +6195,7 @@ button,
 .back-button, .delete-button,
 #manage_data .btn-primary,
 .obsession-history-play-all,
-.done, .cancel, .download, .upload, .save, .btn-secondary.js-close:not(.modal-action-button), .form-group button[type="submit"],
+.done, .cancel, .btn-cancel, .download, .upload, .save, .btn-secondary.js-close:not(.modal-action-button), .form-group button[type="submit"], .modal-button button[type="submit"],
 .masthead-nav .masthead-nav-control
 {
     --btn-left: calc(12px + 16px + 6px) !important;
@@ -6256,6 +6277,9 @@ button,
     }
 }
 /* cta's on an artist page */
+.top-container + section + .section {
+    margin: unset !important;
+}
 .row--equal-height-cols:has(.coloured-cta) {
     gap: var(--button-list-gap);
 
@@ -6327,7 +6351,7 @@ button,
 .setup-icon:before, .setup-icon:after,
 .btn.back:before,
 .modal-close-button:before,
-.continue:before, .external:before, .done:before, .cancel:before, .download:before, .upload:before, .save:before, .open:before, .btn-secondary.js-close:not(.modal-action-button):before, .form-group button[type="submit"]:before,
+.continue:before, .external:before, .done:before, .cancel:before, .btn-cancel:before, .download:before, .upload:before, .save:before, .open:before, .btn-secondary.js-close:not(.modal-action-button):before, .form-group button[type="submit"]:before, .modal-button button[type="submit"]:before,
 .badge:before,
 .btn-post-shout:before,
 .auth-link:before, .language-nav:before, .language-nav > span:before,
@@ -6635,8 +6659,11 @@ on the bottom of a panel !! */
     height: 32px;
     width: fit-content;
 }
-#top-tracks > .buffer-standard {
-    margin-top: 12px;
+
+section:has(.dropdown-menu-clickable-button.section-control) {
+    h2 {
+        height: 32px !important;
+    }
 }
 
 .section-controls {
@@ -6777,6 +6804,7 @@ on the bottom of a panel !! */
     --bg-atv: hsla(var(--b4), 80%) !important;
     --shadow: none !important;
     --shadow-hov: none !important;
+    --col: hsl(var(--c2)) !important;
     position: relative !important;
     min-width: 170px !important;
     --show-icon: block;
@@ -8148,12 +8176,14 @@ a.gallery-image-preferred-off .gallery-image-preferred-states::before {
         &.inbox-notifications__item--highlight {
             --bg: hsla(var(--h4), 35%);
             --bg-hov: hsla(var(--h4), 45%);
+            --bg-atv: hsla(var(--h4), 55%);
             --shadow: 0 10px 50px 5px hsla(var(--h4), 35%);
             z-index: 20;
 
             [data-bleh--theme="light"] & {
                 --bg: hsla(var(--h4), 35%);
                 --bg-hov: hsla(var(--h4), 50%);
+                --bg-atv: hsla(var(--h4), 65%);
                 --shadow: 0 10px 50px 5px hsla(var(--h4), 35%);
             }
         }
@@ -8646,11 +8676,8 @@ a.gallery-image-preferred-off .gallery-image-preferred-states::before {
     --mask: var(--icon-16-trash);
 }
 
-.btn-add:before {
+.btn-add {
     --mask: var(--icon-16-add);
-}
-/*form[action*="+images/upload"] .btn-primary[type="submit"]:before, */.btn-file {
-    --mask: var(--icon-16-upload);
 }
 
 
@@ -8662,6 +8689,10 @@ a.gallery-image-preferred-off .gallery-image-preferred-states::before {
 }
 .pagination-list {
     cursor: default;
+
+    display: flex;
+    justify-content: center;
+    gap: var(--button-list-gap);
 }
 
 .pagination-page {
@@ -8676,18 +8707,13 @@ a.gallery-image-preferred-off .gallery-image-preferred-states::before {
     --shadow-hov: none !important;
 }
 .pagination-page[aria-current="page"] span {
-    --bg: hsla(var(--h4), 40%) !important;
-    --bg-hov: hsla(var(--h4), 60%) !important;
-    --bg-atv: hsla(var(--h4), 80%) !important;
-    --shadow: none !important;
-    --shadow-hov: none !important;
     cursor: default;
 }
 
-.pagination-previous a:before {
+.pagination-previous {
     --mask: var(--icon-16-arrow-left);
 }
-.pagination-next a:before {
+.pagination-next {
     --mask: var(--icon-16-arrow-right);
 }
 
@@ -9187,7 +9213,13 @@ text[style^="color: rgb(255, 172, 172)"] {
             gap: var(--card-gap);
 
             .settings-footer {
+                padding: var(--card-gap);
+                margin: 0 calc(-1 * var(--card-gap)) calc(-1 * var(--card-gap)) calc(-1 * var(--card-gap));
+                background-color: hsl(var(--b4), 20%);
                 gap: var(--button-list-gap);
+
+                border-bottom-left-radius: var(--item-big-radius);
+                border-bottom-right-radius: var(--item-big-radius);
             }
 
             .select-container, .toggle-container {
@@ -10675,6 +10707,11 @@ text[style^="color: rgb(0, 0, 0)"] {
     box-shadow: var(--card-shadow);
 }
 
+
+.btn-file {
+    --mask: var(--icon-16-upload);
+    margin: unset;
+}
 .btn-file-label, .btn-sm {
     min-height: 32px;
     line-height: var(--line-height);
@@ -10682,6 +10719,7 @@ text[style^="color: rgb(0, 0, 0)"] {
 }
 .btn-file-label {
     color: hsl(var(--c3));
+    cursor: default;
 }
 
 .content-form .form-group, .content-form form {
@@ -13721,7 +13759,8 @@ pre {
 
     position: relative;
     --mask-size: 24px;
-    --left: 13px;
+    --left: 50%;
+    --margin-left: -12px;
     --margin-top: -12px;
 
     &:before {
@@ -13934,9 +13973,13 @@ pre {
     display: flex;
     gap: var(--button-list-gap);
     justify-content: center;
-    margin-top: var(--card-gap);
-    padding-top: var(--card-gap);
-    border-top: var(--card-border);
+    background-color: hsl(var(--b4), 25%);
+    margin: var(--card-gap) calc(-1 * var(--card-padding)) calc(-1 * var(--card-padding)) calc(-1 * var(--card-padding));
+    padding: var(--card-padding);
+
+    border-top: 1px solid var(--card-border-base);
+    border-bottom-left-radius: var(--item-big-radius);
+    border-bottom-right-radius: var(--item-big-radius);
 
     /* native modal footer */
     .modal-button {
@@ -14263,34 +14306,26 @@ input[type="range"]::-moz-range-progress {
     }
 
     .primary-selection {
-        --btn-top: 16px;
-        --btn-bottom: 16px;
-        --btn-left: calc(16px + 12px + 6px + 4px);
+        --btn-left: calc(12px + 16px + 6px);
         /*--mask: var(--icon-16-dot);*/
         width: 100% !important;
+        min-height: 40px !important;
         position: relative;
 
-        &:before {
-            content: '';
-            position: absolute;
-            left: 0;
-            width: 3px;
-            height: 28px;
-            top: 50%;
-            margin-top: -14px;
-            background-color: hsl(var(--l3-c));
-            box-shadow: 0 0 20px 3px hsl(var(--h4));
-            border-radius: 50px;
-            opacity: 0;
-        }
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+
+        color: inherit !important;
 
         h5 {
             cursor: pointer;
             color: inherit;
         }
         p {
-            font-size: 12px;
-            color: hsl(var(--c3));
+            font-size: var(--font-size-sm);
+            line-height: var(--line-height-sm);
+            opacity: 0.7;
         }
 
         &#primary-selection-receiving_msgs-everyone {
@@ -14345,14 +14380,13 @@ input[type="range"]::-moz-range-progress {
         [data-bleh--inbuilt-id_message_privacy="all"] &#primary-selection-receiving_msgs-everyone,
         [data-bleh--inbuilt-id_message_privacy="n"] &#primary-selection-receiving_msgs-neighbours,
         [data-bleh--inbuilt-id_message_privacy="f"] &#primary-selection-receiving_msgs-follow {
-            --bg: var(--cards-overlay-image-subtlest, none), hsla(var(--h4), 35%);
-            --bg-hov: var(--cards-overlay-image-subtlest, none), hsla(var(--h4), 45%);
-            --bg-atv: var(--cards-overlay-image-subtlest, none), hsla(var(--h4), 55%);
-            /*--mask: var(--icon-16-check);*/
+            --bg: var(--cards-overlay-image-subtlest, none), hsl(var(--h3)) !important;
+            --bg-hov: var(--cards-overlay-image-subtlest, none), hsla(var(--h3), 80%) !important;
+            --bg-atv: var(--cards-overlay-image-subtlest, none), hsla(var(--h3), 60%) !important;
+            --col: hsl(var(--b7)) !important;
+            --shadow: 0 3px 12px hsl(var(--h4), 25%), var(--interactable-outer);
 
-            &:before {
-                opacity: 1;
-            }
+            color: var(--col) !important;
         }
     }
 }
@@ -15549,9 +15583,9 @@ button.bleh--gallery-bookmark-image-btn {
         pointer-events: auto;
         position: relative;
 
-        --bg: hsla(var(--h3), 80%);
-        --bg-hov: hsla(var(--h3), 70%);
-        --bg-atv: hsla(var(--h3), 60%);
+        --bg: hsla(var(--h3), 90%);
+        --bg-hov: hsla(var(--h3), 80%);
+        --bg-atv: hsla(var(--h3), 70%);
         --col: hsl(var(--b7));
 
         text-align: left;
@@ -15765,18 +15799,12 @@ button.bleh--gallery-bookmark-image-btn {
 
     :is(.btn, a, button):not(.toggle, .reset, .select-button, .btn-primary) {
         [data-ff--view_button_nav="true"] & {
-            --bg: hsl(var(--b3), 60%);
-            --bg-hov: hsl(var(--b3), 80%);
-            --bg-atv: hsl(var(--b3), 100%);
-            --shadow: none;
-            --shadow-hov: none;
+            --bg: var(--cards-overlay-image-subtlest, none), hsl(var(--h3));
+            --bg-hov: var(--cards-overlay-image-subtlest, none), hsla(var(--h3), 80%);
+            --bg-atv: var(--cards-overlay-image-subtlest, none), hsla(var(--h3), 60%);
+            --col: hsl(var(--b7));
+            --shadow: 0 3px 12px hsl(var(--h4), 25%), var(--interactable-outer);
             position: relative;
-
-            [data-bleh--theme="light"] & {
-                --bg: hsl(var(--h4), 20%);
-                --bg-hov: hsl(var(--h4), 30%);
-                --bg-atv: hsl(var(--h4), 40%);
-            }
 
             &:not(.dropdown-menu-clickable-button, .dropdown-menu-clickable-item, .profile-top-item--taste):after {
                 content: '';
@@ -15807,12 +15835,13 @@ button.bleh--gallery-bookmark-image-btn {
         --bg-hov: hsla(var(--b4), 60%);
         --bg-atv: hsla(var(--b4), 80%);
         --shadow: none;
-        --shadow-hov: none;
 
         [data-ff--view_button_nav="true"] & {
             --bg: transparent;
             --bg-hov: hsl(var(--b4), 60%);
             --bg-atv: hsl(var(--b4), 80%);
+            --shadow: none;
+            --col: hsl(var(--c2));
 
             &:not(.dropdown-menu-list-button, .dropdown-menu-clickable-button, .dropdown-menu-clickable-button-js-only):after {
                 opacity: 0;
@@ -16075,6 +16104,7 @@ button.bleh--gallery-bookmark-image-btn {
             --btn-left: 12px !important;
             --show-icon: block;
             --font-size: 0;
+            color: inherit !important;
 
             &.view-profile-btn {
                 --mask: var(--icon-16-user);
@@ -16243,6 +16273,11 @@ button.bleh--gallery-bookmark-image-btn {
 
 
 
+.hide-if-light-theme {
+    pointer-events: var(--hide-light-pointer, auto) !important;
+    opacity: var(--hide-light-opacity, unset) !important;
+}
+
 .hide-if-seasonal-disabled {
     [data-bleh--seasonal="false"] & {
         pointer-events: none !important;
@@ -16362,6 +16397,7 @@ button.bleh--gallery-bookmark-image-btn {
     position: relative;
     --mask: var(--icon-16-external);
 }
+.modal-button button[type="submit"],
 .form-group button[type="submit"],
 .done {
     position: relative;
@@ -16380,6 +16416,7 @@ button.bleh--gallery-bookmark-image-btn {
         --col: hsl(var(--l3-c));
     }
 }
+.btn-cancel,
 .modal-close-button,
 .btn-secondary.js-close,
 .cancel {
@@ -18201,6 +18238,16 @@ h4 {
     .info-side {
         flex: 1;
 
+        .sub-text {
+            justify-content: unset;
+            align-items: center;
+            gap: 4px;
+
+            .info-tip {
+                --icon-size: 14px;
+            }
+        }
+
         h1 {
             margin: unset;
             font-size: 24px;
@@ -18254,6 +18301,30 @@ h4 {
 
                 [data-bleh--theme="light"] & {
                     text-shadow: 0 0 15px hsl(var(--b5));
+                }
+            }
+
+            &[data-multi="true"] {
+                h1 {
+                    color: hsl(var(--c2), 80%);
+                    gap: unset;
+
+                    a {
+                        color: hsl(var(--c1));
+
+                        transition-property: color;
+                        transition-duration: var(--trans);
+                        transition-timing-function: var(--trans-function);
+
+                        &:hover {
+                            color: hsl(var(--l2-c-theme-switch));
+                            transition: none;
+                        }
+
+                        &:not(:first-child) {
+                            margin-left: var(--item-list-gap);
+                        }
+                    }
                 }
             }
 
