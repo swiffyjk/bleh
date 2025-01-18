@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         bleh
 // @namespace    http://last.fm/
-// @version      2025.0114
+// @version      2025.0118
 // @description  bleh!!! ^-^
 // @author       kate
 // @match        https://www.last.fm/*
@@ -20,7 +20,7 @@
 
 let version = {
     brand: 'bleh',
-    build: '2025.0114.1',
+    build: '2025.0118',
     sku: 'mita',
     feature_flags: {
         bleh_settings_tabs: {
@@ -442,6 +442,7 @@ const trans = {
             search_genius: 'Search lyrics',
             fetch_plays: {
                 name: 'Tracklist',
+                info: 'Sourced from your own plays as an official tracklist is unavailable',
                 loading: 'Fetching your plays on this album',
                 fail: 'You do not have any plays on this album',
                 open_as_track: 'Open album title as a track'
@@ -1090,7 +1091,7 @@ const trans = {
                         bio: 'This setting controls who can post shouts and message you privately.',
                         settings: {
                             everyone: {
-                                name: 'Everyone',
+                                name: 'Everyone not hidden',
                                 bio: 'Everyone except who you have ignored'
                             },
                             neighbours: {
@@ -1235,7 +1236,8 @@ const trans = {
         },
         artist: {
             name: 'Artist',
-            plural: 'Artists'
+            plural: 'Artists',
+            tooltip: 'Multiple artists are combined into this profile.'
         },
         album: {
             name: 'Album',
@@ -1394,6 +1396,7 @@ const trans = {
             search_genius: 'Search lyrics',
             fetch_plays: {
                 name: 'Titelliste',
+                info: 'Sourced from your own plays as an official tracklist is unavailable',
                 loading: 'Deine Wiedergaben auf diesem Album werden abgerufen',
                 fail: 'Du hast keine Scrobbel auf diesem Album',
                 open_as_track: 'Albumtitel als Titel öffnen'
@@ -2155,7 +2158,8 @@ const trans = {
         },
         artist: {
             name: 'Künstler',
-            plural: 'Künstler'
+            plural: 'Künstler',
+            tooltip: 'Multiple artists are combined into this profile.'
         },
         album: {
             name: 'Album',
@@ -2314,6 +2318,7 @@ const trans = {
             search_genius: 'Search lyrics',
             fetch_plays: {
                 name: 'Tracklist',
+                info: 'Sourced from your own plays as an official tracklist is unavailable',
                 loading: 'Fetching your plays on this album',
                 fail: 'You do not have any plays on this album',
                 open_as_track: 'Open album title as a track'
@@ -3057,7 +3062,8 @@ const trans = {
         },
         artist: {
             name: 'Artist',
-            plural: 'Artists'
+            plural: 'Artists',
+            tooltip: 'Multiple artists are combined into this profile.'
         },
         album: {
             name: 'Album',
@@ -3439,7 +3445,8 @@ let includes = {
         'ref.'
     ],
     versions: [
-        '(taylor', '- spotify singles'
+        '(taylor', '- spotify singles',
+        '(spotify'
     ],
     remasters: [
         '- remaster', '(remaster',
@@ -3495,6 +3502,7 @@ let includes = {
         '- digital deluxe', '(digital deluxe', '[digital deluxe',
         '- complete edition', '(complete edition', '[complete edition',
         '- extended', '(extended', '[extended',
+        '- the extended edition', // denzel
         '- expanded', '(expanded', '[expanded',
         '- anniversary', '(anniversary', '[anniversary',
         '- b-side', '- c-side', '(b-side', '(c-side',
@@ -4077,6 +4085,7 @@ let page = {
     sister_others: [],
     subpage: '',
     avatar: '',
+    multi: false,
     corrected: false,
     token: '',
     structure: {
@@ -4211,8 +4220,16 @@ let has_prompted_for_update = false;
         start_rain();
 
         // everything past this point requires authorisation
-        if (auth == '')
+        if (auth == '') {
+            notify({
+                title: 'No account added',
+                body: 'Please sign in to an account to access bleh features.',
+                icon: 'icon-16-user',
+                persist: true
+            });
+            document.body.classList.add('bleh-loaded');
             return;
+        }
 
         load_activities();
         notify_if_new_update();
@@ -4355,11 +4372,11 @@ let has_prompted_for_update = false;
 
     function assign_page() {
         document.documentElement.classList.add('bleh-supports-loading');
-        if (page.structure.wrapper == null)
+        if (!page.structure.wrapper)
             page.structure.wrapper = document.body.querySelector('.main-content');
 
         let main_content = page.structure.wrapper.querySelector(':scope > :last-child:not([data-bleh])');
-        if (main_content != null) {
+        if (main_content) {
             assign_page_type();
             load_page();
             main_content.setAttribute('data-bleh', 'true');
@@ -6196,7 +6213,6 @@ let has_prompted_for_update = false;
                         ${original_chart_settings.tracks.count}
                     </div>
                 </div>
-                <div class="sep"></div>
                 <div class="settings-footer">
                     <button type="submit" class="btn-primary save">
                         ${trans[lang].settings.save}
@@ -6742,15 +6758,12 @@ let has_prompted_for_update = false;
                     ${original_privacy_settings.receiving_msgs}
                     <div class="btn primary-selection" id="primary-selection-receiving_msgs-everyone" onclick="_update_inbuilt_selection('id_message_privacy', 0)">
                         <h5>${trans[lang].settings.inbuilt.privacy.receiving_msgs.settings.everyone.name}</h5>
-                        <p>${trans[lang].settings.inbuilt.privacy.receiving_msgs.settings.everyone.bio}</p>
                     </div>
                     <div class="btn primary-selection" id="primary-selection-receiving_msgs-neighbours" onclick="_update_inbuilt_selection('id_message_privacy', 1)">
                         <h5>${trans[lang].settings.inbuilt.privacy.receiving_msgs.settings.neighbours.name}</h5>
-                        <p>${trans[lang].settings.inbuilt.privacy.receiving_msgs.settings.neighbours.bio}</p>
                     </div>
                     <div class="btn primary-selection" id="primary-selection-receiving_msgs-follow" onclick="_update_inbuilt_selection('id_message_privacy', 2)">
                         <h5>${trans[lang].settings.inbuilt.privacy.receiving_msgs.settings.follow.name}</h5>
-                        <p>${trans[lang].settings.inbuilt.privacy.receiving_msgs.settings.follow.bio}</p>
                     </div>
                 </div>
                 <div class="sep"></div>
@@ -6810,7 +6823,6 @@ let has_prompted_for_update = false;
                         </span>
                     </div>
                 </div>
-                <div class="sep"></div>
                 <div class="settings-footer">
                     <button type="submit" class="btn-primary save">
                         ${trans[lang].settings.save}
@@ -7211,11 +7223,9 @@ let has_prompted_for_update = false;
                             content: `${tooltip_sister} - ${tooltip_name}`
                         });
 
-                    let bio = page.structure.side.querySelector('.about-me-sidebar');
-                    if (bio != null)
-                        bio.after(recent_activity_section);
-                    else
-                        page.structure.side.insertBefore(recent_activity_section, page.structure.side.firstElementChild);
+                    let reports = page.structure.side.querySelector('.promo-v3');
+                    if (reports)
+                        reports.after(recent_activity_section);
                 });
             }
 
@@ -8797,15 +8807,21 @@ let has_prompted_for_update = false;
      * @param {string} artist artist name (NOT converted to lowercase)
      * @returns corrected artist if applicable or original artist
      */
-    function correct_artist(artist) {
+    function correct_artist(artist, broadcast = false) {
         if (!settings.corrections)
             return artist;
 
         try {
             if (artist_corrections.hasOwnProperty(artist)) {
                 log(`corrected ${artist} as ${artist_corrections[artist]}`, 'lotus');
+                if (broadcast)
+                    page.corrected = true;
+
                 return artist_corrections[artist];
             } else {
+                if (broadcast)
+                    page.corrected = false;
+
                 return artist;
             }
         } catch(e) {
@@ -9660,7 +9676,7 @@ let has_prompted_for_update = false;
                         </div>
                     </div>
                     ${(ff('card_saturation')) ? (`
-                    <div class="slider-container" id="container-sat_bg">
+                    <div class="slider-container hide-if-light-theme" id="container-sat_bg">
                         <button class="btn reset" onclick="_reset_item('sat_bg')">${trans[lang].settings.reset}</button>
                         <div class="heading">
                             <h5>${trans[lang].settings.customise.sat_bg.name}</h5>
@@ -12624,8 +12640,63 @@ let has_prompted_for_update = false;
             bleh_glacier_insights(insights);
     }
 
+    function artist_title() {
+        let title = document.body.querySelector('.header-new-title');
+        let title_text = title.textContent.trim();
+
+        let has_multi = false;
+        if (title_text.includes(', ') || title_text.includes(' & '))
+            has_multi = true;
+
+        page.multi = false;
+
+        if (!has_multi) {
+            if (!settings.corrections)
+                return;
+
+            title.textContent = correct_artist(title_text, true);
+        } else {
+            title_text = title_text
+            .replaceAll(' & ', ';').replaceAll(', ', ';')
+            .replace('Tyler;the', 'Tyler, The').replace('Tyler;The', 'Tyler, The')
+            .replaceAll(';;', ';');
+
+            page.multi = true;
+            title.innerHTML = '';
+
+            let split = title_text.split(';');
+
+            if (split.length < 2) {
+                page.multi = false;
+
+                if (!settings.corrections)
+                    return;
+
+                title.textContent = correct_artist(title_text, true);
+
+                return;
+            }
+
+            split.forEach((artist, index) => {
+                if (index > 0)
+                    title.innerHTML += ',';
+
+                let part = document.createElement('a');
+                part.classList.add('multi-artist-part');
+                part.setAttribute('href',`${root}music/${sanitise(artist)}`);
+
+                if (settings.corrections)
+                    part.textContent = correct_artist(artist);
+                else
+                    part.textContent = artist;
+
+                title.appendChild(part);
+            });
+        }
+    }
+
     function patch_header_title() {
-        if (!settings.corrections && !settings.format_guest_features)
+        if (!settings.corrections && !settings.format_guest_features && !multi)
             return;
 
         page.corrected = false;
@@ -12633,7 +12704,7 @@ let has_prompted_for_update = false;
         let track_title = document.body.querySelector('.header-new-title');
         let track_artist = document.body.querySelector('.header-new-crumb span');
 
-        if (track_title == null)
+        if (!track_title)
             return;
 
         // correct artist
@@ -13325,7 +13396,7 @@ let has_prompted_for_update = false;
 
                     tracklist.innerHTML = (`
                         <h3 class="text-18">${trans[lang].music.fetch_plays.name}</h3>
-                        <p>Tracks listed here are based on your album plays as this album does not have a tracklist available.</p>
+                        <div class="alert alert-info">${trans[lang].music.fetch_plays.info}</div>
                         ${inner_tracklist.outerHTML}
                     `);
                 })
@@ -15163,7 +15234,7 @@ let has_prompted_for_update = false;
             return;
         artist_header.setAttribute('data-bwaa', 'true');
 
-        patch_header_title();
+        artist_title();
 
         page.name = artist_header.querySelector('.header-new-title').textContent;
         page.sister = '';
@@ -15226,8 +15297,12 @@ let has_prompted_for_update = false;
                     `) : '<img class="missing-artist">'}
                 </div>
                 <div class="info-side">
+                    ${(page.multi) ? (`
+                    <div class="sub-text">${trans[lang].artist.plural}<div class="info-tip"><div class="bleh-icon bleh-info-icon"></div></div></div>
+                    `) : (`
                     <div class="sub-text">${trans[lang].artist.name}</div>
-                    <div class="title-container">
+                    `)}
+                    <div class="title-container" data-multi="${page.multi}">
                         <h1>${title.innerHTML}</h1>
                         ${(position != null) ? position.outerHTML : ''}
                         ${(on_tour != null) ? on_tour.outerHTML : ''}
@@ -15258,6 +15333,13 @@ let has_prompted_for_update = false;
                 </div>
                 `) : ''}
             `);
+
+            let multi_info_box = redesigned_artist_header.querySelector('.info-tip');
+            if (multi_info_box) {
+                tippy(multi_info_box, {
+                    content: trans[lang].artist.tooltip
+                });
+            }
 
             position = redesigned_artist_header.querySelector('.header-new-chart-position-number');
             if (position != null) {
@@ -17752,62 +17834,64 @@ let has_prompted_for_update = false;
             });
         }
 
-        let wrappers = cta.querySelectorAll(':scope > *');
-        wrappers.forEach((wrapper) => {
-            let button;
+        if (cta) {
+            let wrappers = cta.querySelectorAll(':scope > *');
+            wrappers.forEach((wrapper) => {
+                let button;
 
-            console.info('wrapper', wrapper);
+                console.info('wrapper', wrapper);
 
-            if (wrapper.classList[0] == 'library-header-cta-item')
-                button = wrapper;
-            else
-                button = wrapper.querySelector('button');
+                if (wrapper.classList[0] == 'library-header-cta-item')
+                    button = wrapper;
+                else
+                    button = wrapper.querySelector('button');
 
-            if (!button)
-                button = wrapper.querySelector('span');
+                if (!button)
+                    button = wrapper.querySelector('span');
 
-            if (!button)
-                return;
+                if (!button)
+                    return;
 
-            console.info('libraryyy', wrapper, button);
-            button.classList.add('btn', 'view-item', 'glacier-library-button');
+                console.info('libraryyy', wrapper, button);
+                button.classList.add('btn', 'view-item', 'glacier-library-button');
 
-            let tooltips = wrapper.querySelectorAll('.user-library-controls-tooltip');
-            tooltips.forEach((tooltip) => {
-                tooltip.parentElement.removeChild(tooltip);
+                let tooltips = wrapper.querySelectorAll('.user-library-controls-tooltip');
+                tooltips.forEach((tooltip) => {
+                    tooltip.parentElement.removeChild(tooltip);
+                });
+
+                view_buttons.appendChild(wrapper);
+
+                let action = button.getAttribute('data-analytics-action');
+                if (action) {
+                    if (action == 'EditScrobbleOpen') {
+                        button.textContent = trans[lang].glacier.edit;
+                    } else if (action == 'UnloveTrack' || action == 'LoveTrack') {
+                        //button.textContent = trans[lang].glacier.love;
+
+                        let listen_divider = document.createElement('div');
+                        listen_divider.classList.add('listen-divider');
+                        view_buttons.appendChild(listen_divider);
+
+
+                        // we need to target the other button too lol
+                        button = wrapper.querySelector('button:not(.btn)');
+                        if (button != null)
+                            button.classList.add('btn', 'view-item', 'glacier-library-button');
+                    }
+                } else {
+                    // have to read classlist
+                    if (button.classList.contains('delete-icon')) {
+                        button.textContent = trans[lang].glacier.delete;
+                    }
+                }
             });
 
-            view_buttons.appendChild(wrapper);
-
-            let action = button.getAttribute('data-analytics-action');
-            if (action) {
-                if (action == 'EditScrobbleOpen') {
-                    button.textContent = trans[lang].glacier.edit;
-                } else if (action == 'UnloveTrack' || action == 'LoveTrack') {
-                    //button.textContent = trans[lang].glacier.love;
-
-                    let listen_divider = document.createElement('div');
-                    listen_divider.classList.add('listen-divider');
-                    view_buttons.appendChild(listen_divider);
-
-
-                    // we need to target the other button too lol
-                    button = wrapper.querySelector('button:not(.btn)');
-                    if (button != null)
-                        button.classList.add('btn', 'view-item', 'glacier-library-button');
-                }
-            } else {
-                // have to read classlist
-                if (button.classList.contains('delete-icon')) {
-                    button.textContent = trans[lang].glacier.delete;
-                }
+            if (wrappers.length > 0) {
+                let listen_divider = document.createElement('div');
+                listen_divider.classList.add('listen-divider');
+                view_buttons.appendChild(listen_divider);
             }
-        });
-
-        if (wrappers.length > 0) {
-            let listen_divider = document.createElement('div');
-            listen_divider.classList.add('listen-divider');
-            view_buttons.appendChild(listen_divider);
         }
 
         let configure_button = document.createElement('button');
@@ -18675,7 +18759,6 @@ let has_prompted_for_update = false;
                             </button>
                         </div>
                     </div>
-                    <div class="sep"></div>
                     <div class="settings-footer">
                         <button type="submit" class="btn-primary save">
                             ${trans[lang].settings.save}
@@ -18801,7 +18884,6 @@ let has_prompted_for_update = false;
                             ${original_chart_settings.length_list}
                         </div>
                     </div>
-                    <div class="sep"></div>
                     <div class="settings-footer">
                         <button type="submit" class="btn-primary save">
                             ${trans[lang].settings.save}
@@ -18925,7 +19007,6 @@ let has_prompted_for_update = false;
                             ${original_chart_settings.length_list}
                         </div>
                     </div>
-                    <div class="sep"></div>
                     <div class="settings-footer">
                         <button type="submit" class="btn-primary save">
                             ${trans[lang].settings.save}
@@ -19058,7 +19139,6 @@ let has_prompted_for_update = false;
                             </button>
                         </div>
                     </div>
-                    <div class="sep"></div>
                     <div class="settings-footer">
                         <button type="submit" class="btn-primary save">
                             ${trans[lang].settings.save}
@@ -19728,7 +19808,8 @@ let has_prompted_for_update = false;
             let panel = document.createElement('section');
             panel.classList.add('inbox-panel', 'notifications-panel');
 
-            panel.appendChild(form);
+            if (form)
+                panel.appendChild(form);
             if (notifications)
                 panel.appendChild(notifications);
             if (pagination)
@@ -19925,6 +20006,9 @@ let has_prompted_for_update = false;
         if (ff('show_wiki_label')) {
             let wiki_col = page.structure.main.querySelector('.wiki-column');
             let wiki_empty = false;
+
+            if (!wiki_col)
+                return;
 
             let wiki_block = wiki_col.querySelector('.wiki-block.visible-lg .wiki-block-inner-2');
 
