@@ -2803,9 +2803,11 @@ button.navlist-more {
     [data-bleh--gallery-tab="bookmarks"] .secondary-nav-item--gallery-bookmarks &,
     &.secondary-nav-item-link.active,
     &.secondary-nav-item-link--active {
-        --bg: hsl(var(--h4), 20%) !important;
-        --bg-hov: hsl(var(--h4), 30%) !important;
-        --bg-atv: hsl(var(--h4), 40%) !important;
+        --bg: var(--cards-overlay-image-subtlest, none), hsl(var(--h3)) !important;
+        --bg-hov: var(--cards-overlay-image-subtlest, none), hsla(var(--h3), 80%) !important;
+        --bg-atv: var(--cards-overlay-image-subtlest, none), hsla(var(--h3), 60%) !important;
+        --col: hsl(var(--b7)) !important;
+        --shadow: 0 3px 12px hsl(var(--h4), 25%), var(--interactable-outer);
 
         &:after {
             opacity: 1;
@@ -15785,11 +15787,11 @@ button.bleh--gallery-bookmark-image-btn {
 
     :is(.btn, a, button):not(.toggle, .reset, .select-button, .btn-primary) {
         [data-ff--view_button_nav="true"] & {
-            --bg: hsl(var(--h4), 20%);
-            --bg-hov: hsl(var(--h4), 30%);
-            --bg-atv: hsl(var(--h4), 40%);
-            --shadow: none;
-            --shadow-hov: none;
+            --bg: var(--cards-overlay-image-subtlest, none), hsl(var(--h3));
+            --bg-hov: var(--cards-overlay-image-subtlest, none), hsla(var(--h3), 80%);
+            --bg-atv: var(--cards-overlay-image-subtlest, none), hsla(var(--h3), 60%);
+            --col: hsl(var(--b7));
+            --shadow: 0 3px 12px hsl(var(--h4), 25%), var(--interactable-outer);
             position: relative;
 
             &:not(.dropdown-menu-clickable-button, .dropdown-menu-clickable-item, .profile-top-item--taste):after {
@@ -15821,12 +15823,13 @@ button.bleh--gallery-bookmark-image-btn {
         --bg-hov: hsla(var(--b4), 60%);
         --bg-atv: hsla(var(--b4), 80%);
         --shadow: none;
-        --shadow-hov: none;
 
         [data-ff--view_button_nav="true"] & {
             --bg: transparent;
             --bg-hov: hsl(var(--b4), 60%);
             --bg-atv: hsl(var(--b4), 80%);
+            --shadow: none;
+            --col: hsl(var(--c2));
 
             &:not(.dropdown-menu-list-button, .dropdown-menu-clickable-button, .dropdown-menu-clickable-button-js-only):after {
                 opacity: 0;
