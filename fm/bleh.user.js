@@ -17826,62 +17826,64 @@ let has_prompted_for_update = false;
             });
         }
 
-        let wrappers = cta.querySelectorAll(':scope > *');
-        wrappers.forEach((wrapper) => {
-            let button;
+        if (cta) {
+            let wrappers = cta.querySelectorAll(':scope > *');
+            wrappers.forEach((wrapper) => {
+                let button;
 
-            console.info('wrapper', wrapper);
+                console.info('wrapper', wrapper);
 
-            if (wrapper.classList[0] == 'library-header-cta-item')
-                button = wrapper;
-            else
-                button = wrapper.querySelector('button');
+                if (wrapper.classList[0] == 'library-header-cta-item')
+                    button = wrapper;
+                else
+                    button = wrapper.querySelector('button');
 
-            if (!button)
-                button = wrapper.querySelector('span');
+                if (!button)
+                    button = wrapper.querySelector('span');
 
-            if (!button)
-                return;
+                if (!button)
+                    return;
 
-            console.info('libraryyy', wrapper, button);
-            button.classList.add('btn', 'view-item', 'glacier-library-button');
+                console.info('libraryyy', wrapper, button);
+                button.classList.add('btn', 'view-item', 'glacier-library-button');
 
-            let tooltips = wrapper.querySelectorAll('.user-library-controls-tooltip');
-            tooltips.forEach((tooltip) => {
-                tooltip.parentElement.removeChild(tooltip);
+                let tooltips = wrapper.querySelectorAll('.user-library-controls-tooltip');
+                tooltips.forEach((tooltip) => {
+                    tooltip.parentElement.removeChild(tooltip);
+                });
+
+                view_buttons.appendChild(wrapper);
+
+                let action = button.getAttribute('data-analytics-action');
+                if (action) {
+                    if (action == 'EditScrobbleOpen') {
+                        button.textContent = trans[lang].glacier.edit;
+                    } else if (action == 'UnloveTrack' || action == 'LoveTrack') {
+                        //button.textContent = trans[lang].glacier.love;
+
+                        let listen_divider = document.createElement('div');
+                        listen_divider.classList.add('listen-divider');
+                        view_buttons.appendChild(listen_divider);
+
+
+                        // we need to target the other button too lol
+                        button = wrapper.querySelector('button:not(.btn)');
+                        if (button != null)
+                            button.classList.add('btn', 'view-item', 'glacier-library-button');
+                    }
+                } else {
+                    // have to read classlist
+                    if (button.classList.contains('delete-icon')) {
+                        button.textContent = trans[lang].glacier.delete;
+                    }
+                }
             });
 
-            view_buttons.appendChild(wrapper);
-
-            let action = button.getAttribute('data-analytics-action');
-            if (action) {
-                if (action == 'EditScrobbleOpen') {
-                    button.textContent = trans[lang].glacier.edit;
-                } else if (action == 'UnloveTrack' || action == 'LoveTrack') {
-                    //button.textContent = trans[lang].glacier.love;
-
-                    let listen_divider = document.createElement('div');
-                    listen_divider.classList.add('listen-divider');
-                    view_buttons.appendChild(listen_divider);
-
-
-                    // we need to target the other button too lol
-                    button = wrapper.querySelector('button:not(.btn)');
-                    if (button != null)
-                        button.classList.add('btn', 'view-item', 'glacier-library-button');
-                }
-            } else {
-                // have to read classlist
-                if (button.classList.contains('delete-icon')) {
-                    button.textContent = trans[lang].glacier.delete;
-                }
+            if (wrappers.length > 0) {
+                let listen_divider = document.createElement('div');
+                listen_divider.classList.add('listen-divider');
+                view_buttons.appendChild(listen_divider);
             }
-        });
-
-        if (wrappers.length > 0) {
-            let listen_divider = document.createElement('div');
-            listen_divider.classList.add('listen-divider');
-            view_buttons.appendChild(listen_divider);
         }
 
         let configure_button = document.createElement('button');
