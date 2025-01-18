@@ -1,6 +1,12 @@
 {
-    "updated": "2025-01-14",
-    "latest": "2025.0114",
+    "updated": "2025-01-18",
+    "latest": "2025.0118",
+    "2025.0118": {
+        "name": "raaah",
+        "type": "minor",
+        "force": false,
+        "bio": "# Music and Library\n- __Artist pages that share multiple artists are now beginning to be detected__\n    - This is very early work-in-progress and only visible at the top of artist pages at the moment. Will be expanded into tracklists and the 'about artist' panel etc. over time.\n- Fixed `cta is null` bug in library pages\n    - randomly encountered it last night\n- Fixed wiki breakage on pages with a wiki button as appose to text\n- When a tracklist is inaccessible, the info box is now translatable\n- More tags are now supported when formatting features\n    - Such as `(Spotify)`\n\n# Navigation\n- Selected tabs now use your primary colour\n\n# Modals\n- Modal footers have been adjusted\n\n# Log in / Sign up\n- You can now access these pages again\n- Made input boxes easier to see on these pages\n- Added notification stating why bleh is not active\n\n# Other\n- Fixed crash when you have no notifications\n- Fixed user buttons when hovering over avatar in wiki history\n- Fixed margin on event select panel\n- Moved activity list below reports\n- Fixed highlight notification active colour\n- The card background saturation slider is no longer accessible in light theme\n    - It had no noticeable effect\n- Pagination buttons now match normal buttons\n- Card shadow in dark themes has been adjusted slightly"
+    },
     "2025.0114": {
         "name": "lotz of efficiency",
         "type": "minor",
