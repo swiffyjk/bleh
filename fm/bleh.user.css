@@ -387,8 +387,7 @@ a,
 body {
     --card-padding: 20px;
     --card-radius: var(--item-big-radius);
-    --card-shadow: hsla(var(--b7), 0.25) 0 2px 4px 0;
-    /*--card-shadow: hsla(var(--b7), 0.25) 0 4px 4px 0, hsla(var(--b7), 0.05) 0 0 0 1px;*/
+    --card-shadow: hsla(var(--b7), 0.3) 0 4px 4px 0, hsla(var(--b7), 0.05) 0 0 0 1px;
     --card-gap: 15px;
     --card-border: 1px solid hsla(var(--b4), 0.7);
     --card-border-base: hsla(var(--b4), 0.7);
