@@ -10146,7 +10146,8 @@ let has_prompted_for_update = false;
                             </div>
                         </div>
                     </div>
-                    <h4>${trans[lang].settings.profiles.api.name}</h4>
+                    ${(ff('api')) ? (`
+                    h4>${trans[lang].settings.profiles.api.name}</h4>
                     <div class="alert alert-info">${trans[lang].settings.profiles.api.bio}</div>
                     <div class="text-container" id="container-api_key">
                         <button class="btn reset" onclick="_reset_item('api_key')">${trans[lang].settings.reset}</button>
@@ -10158,6 +10159,7 @@ let has_prompted_for_update = false;
                             </div>
                         </div>
                     </div>
+                    `) : ''}
                     <div class="sep"></div>
                     ${(sponsoring) ? (`
                     <h4>${trans[lang].settings.home.sponsor.status.yes}</h4>
