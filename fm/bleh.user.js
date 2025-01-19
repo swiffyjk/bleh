@@ -915,7 +915,11 @@ const trans = {
                         {}
                     ],
                     placeholder: 'Enter API key',
-                    saved: 'Saved your API key, enjoy!'
+                    saved: 'Saved your API key, testing..',
+                    confirmed: 'Verified your API key, enjoy!',
+                    inaccessible: 'Last.fm API is inaccessible',
+                    invalid: 'That key seems invalid, are you sure?',
+                    rate_limit: 'Your key is rate-limited for a short time'
                 }
             },
             redirects: {
@@ -13225,6 +13229,7 @@ let has_prompted_for_update = false;
         });
     }
     function notify({
+        id = null,
         title = null,
         body = null,
         icon = null,
@@ -13233,6 +13238,7 @@ let has_prompted_for_update = false;
         persist = false
     }) {
         log(`creating ${title}`, 'notification', 'info', {
+            id: id,
             title: title,
             body: body,
             icon: icon,
@@ -13243,7 +13249,7 @@ let has_prompted_for_update = false;
 
         let notif = document.createElement('button');
         notif.classList.add('bleh-notification');
-        notif.setAttribute('onclick', '_kill_notif(this)');
+        notif.setAttribute('onclick', '_notify_rm(this)');
 
         if (!body) {
             notif.innerHTML = (`
@@ -14443,15 +14449,80 @@ let has_prompted_for_update = false;
     unsafeWindow._save_api_key = function() {
         let key = document.getElementById('text-api_key').value;
 
+        // save to settings
+        settings.api_key = key;
+        localStorage.setItem('bleh', JSON.stringify(settings));
+
         notify({
             title: trans[lang].settings.profiles.api.name,
             body: trans[lang].settings.profiles.api.saved,
             icon: 'icon-16-api'
         });
 
-        // save to settings
-        settings.api_key = key;
-        localStorage.setItem('bleh', JSON.stringify(settings));
+        test_api_key();
+    }
+
+    function test_api_key() {
+        let xhr = api(`user.getTopTags&user=${auth}&limit=1`);
+
+        xhr.onload = function() {
+            let data = JSON.parse(this.response);
+
+            console.info(data, this.response);
+
+            if (!data.error) {
+                notify({
+                    title: trans[lang].settings.profiles.api.name,
+                    body: trans[lang].settings.profiles.api.confirmed,
+                    icon: 'icon-16-api'
+                });
+                return;
+            } else {
+                if (data.error == 8 || data.error == 11 || data.error == 16) {
+                    notify({
+                        title: trans[lang].settings.profiles.api.name,
+                        body: trans[lang].settings.profiles.api.inaccessible,
+                        icon: 'icon-16-api',
+                        persist: true
+                    });
+                    return;
+                } else if (data.error == 10 || data.error == 26) {
+                    notify({
+                        title: trans[lang].settings.profiles.api.name,
+                        body: trans[lang].settings.profiles.api.invalid,
+                        icon: 'icon-16-api',
+                        persist: true
+                    });
+                    return;
+                } else if (data.error == 29) {
+                    notify({
+                        title: trans[lang].settings.profiles.api.name,
+                        body: trans[lang].settings.profiles.api.rate_limit,
+                        icon: 'icon-16-api',
+                        persist: true
+                    });
+                    return;
+                } else {
+                    notify({
+                        title: trans[lang].settings.profiles.api.name,
+                        body: data.error,
+                        icon: 'icon-16-api',
+                        persist: true
+                    });
+                    return;
+                }
+            }
+        }
+
+        xhr.send();
+    }
+
+    function api(endpoint) {
+        let xhr = new XMLHttpRequest();
+        let url = `https://ws.audioscrobbler.com/2.0/?method=${endpoint}&api_key=${settings.api_key}&format=json`;
+        xhr.open('GET', url, true);
+
+        return xhr;
     }
 
 

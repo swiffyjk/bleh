@@ -12887,26 +12887,6 @@ h2.playlisting-create-option-title {
 
 
 /*     API DOCS     */
-/* i dont really want to deal with this code any longer,
-so this is good enough - use the community docs */
-
-#vuepress-container:before {
-    content: 'You should probably look at https://lastfm-docs.github.io/api-docs/ — api docs made by the community. The official Last.fm docs are severely outdated and missing information, with some of the information it includes being outright false.';
-    width: 100%;
-    display: block;
-    text-align: center;
-    padding: 150px 200px;
-    font-size: 22px;
-    line-height: 26px;
-    position: absolute;
-    top: -300px;
-    left: 0;
-    right: 0;
-}
-#vuepress-container {
-    margin-top: 300px;
-}
-
 .sidebar {
     background-color: unset !important;
     border-right: unset !important;
