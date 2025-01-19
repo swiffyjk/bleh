@@ -154,6 +154,11 @@ let version = {
             name: 'Developer mode',
             date: '2025-01-03',
             notice: 'Enable developer-specific features used for debugging purposes'
+        },
+        api: {
+            default: false,
+            name: 'Allow user to enter API key for newer features',
+            date: '2025-01-19'
         }
     }
 }
@@ -560,6 +565,7 @@ const trans = {
             cancel: 'Cancel',
             close: 'Close',
             clear: 'Clear',
+            create: 'Create',
             add: 'Add',
             remove: 'Remove',
             done: 'Done',
@@ -901,14 +907,23 @@ const trans = {
                 you: 'You',
                 avatar_radius: {
                     name: 'User avatar shape'
+                },
+                api: {
+                    name: 'API access',
+                    bio: 'Enter a Last.fm API key to use new features, such as:',
+                    features: [
+                        {}
+                    ],
+                    placeholder: 'Enter API key',
+                    saved: 'Saved your API key, enjoy!'
                 }
             },
             redirects: {
                 name: 'Redirects',
                 bio: 'Manage last.fm\'s (not) handy redirection system as best as possible.',
                 travis: {
-                    name: 'No, I didn\'t mean Travi$ Scott',
-                    bio: 'Hides redirect messages from the top of pages.'
+                    name: 'Hide redirect messages on music pages',
+                    bio: 'No, I didn\'t mean Travi$ Scott'
                 },
                 autocorrect: {
                     name: 'Scrobble auto-correction',
@@ -1855,8 +1870,8 @@ const trans = {
                 name: 'Weiterleitungen',
                 bio: 'Manage last.fm\'s (not) handy redirection system as best as possible.',
                 travis: {
-                    name: 'No, I didn\'t mean Travi$ Scott',
-                    bio: 'Hides redirect messages from the top of pages.'
+                    name: 'Hide redirect messages on music pages',
+                    bio: 'No, I didn\'t mean Travi$ Scott'
                 },
                 autocorrect: {
                     name: 'Scrobble auto-correction',
@@ -2777,8 +2792,8 @@ const trans = {
                 name: 'Redirects',
                 bio: 'Manage last.fm\'s (not) handy redirection system as best as possible.',
                 travis: {
-                    name: 'No, I didn\'t mean Travi$ Scott',
-                    bio: 'Hides redirect messages from the top of pages.'
+                    name: 'Hide redirect messages on music pages',
+                    bio: 'No, I didn\'t mean Travi$ Scott'
                 },
                 autocorrect: {
                     name: 'Scrobble auto-correction',
@@ -3530,6 +3545,9 @@ let settings_template = {
     lit: 1,
     invert_interactable_colour: false,
     dev: false,
+
+    api_key: '',
+
     hide_hateful: true,
     accessible_name_colours: false,
     reduced_motion: false,
@@ -4010,6 +4028,12 @@ let settings_base = {
         unit: '%',
         value: 50,
         type: 'slider'
+    },
+    api_key: {
+        css: 'api_key',
+        unit: '',
+        value: '',
+        type: 'text'
     }
 };
 let inbuilt_settings = {
@@ -10122,6 +10146,18 @@ let has_prompted_for_update = false;
                             </div>
                         </div>
                     </div>
+                    <h4>${trans[lang].settings.profiles.api.name}</h4>
+                    <div class="alert alert-info">${trans[lang].settings.profiles.api.bio}</div>
+                    <div class="text-container" id="container-api_key">
+                        <button class="btn reset" onclick="_reset_item('api_key')">${trans[lang].settings.reset}</button>
+                        <div class="heading content-form">
+                            <div class="input-container">
+                                <input type="password" maxlength="120" id="text-api_key" value="${settings.api_key}" placeholder="${trans[lang].settings.profiles.api.placeholder}">
+                                <button class="btn primary save" onclick="_save_api_key()">${trans[lang].settings.save}</button>
+                                <a class="btn-add" href="${root}api/account/create" target="_blank">${trans[lang].settings.create}</a>
+                            </div>
+                        </div>
+                    </div>
                     <div class="sep"></div>
                     ${(sponsoring) ? (`
                     <h4>${trans[lang].settings.home.sponsor.status.yes}</h4>
@@ -14400,6 +14436,19 @@ let has_prompted_for_update = false;
 
         // save to settings
         settings.font = font;
+        localStorage.setItem('bleh', JSON.stringify(settings));
+    }
+    unsafeWindow._save_api_key = function() {
+        let key = document.getElementById('text-api_key').value;
+
+        notify({
+            title: trans[lang].settings.profiles.api.name,
+            body: trans[lang].settings.profiles.api.saved,
+            icon: 'icon-16-api'
+        });
+
+        // save to settings
+        settings.api_key = key;
         localStorage.setItem('bleh', JSON.stringify(settings));
     }
 
