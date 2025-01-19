@@ -8070,11 +8070,6 @@ that literally is 1 user from 2007 who hasnt even gotten a scrobble */
 .gallery-image-buttons:not(.gallery-image-buttons-extra) :is(.gallery-image-report, .gallery-image-delete button) {
     width: 40px !important;
 }
-.gallery-image-buttons button:not(.image-open-button),
-.gallery-image-delete button,
-.gallery-image-report:not(.gallery-image-report--reported) {
-    --col: hsl(var(--l3-c)) !important;
-}
 .gallery-image-report--reported {
     pointer-events: none;
 }
@@ -15789,31 +15784,29 @@ button.bleh--gallery-bookmark-image-btn {
     }
 
     :is(.btn, a, button):not(.toggle, .reset, .select-button, .btn-primary) {
-        [data-ff--view_button_nav="true"] & {
-            --bg: var(--cards-overlay-image-subtlest, none), hsl(var(--h3));
-            --bg-hov: var(--cards-overlay-image-subtlest, none), hsla(var(--h3), 80%);
-            --bg-atv: var(--cards-overlay-image-subtlest, none), hsla(var(--h3), 60%);
-            --col: hsl(var(--b7));
-            --shadow: 0 3px 12px hsl(var(--h4), 25%), var(--interactable-outer);
-            position: relative;
+        --bg: var(--cards-overlay-image-subtlest, none), hsl(var(--h3));
+        --bg-hov: var(--cards-overlay-image-subtlest, none), hsla(var(--h3), 80%);
+        --bg-atv: var(--cards-overlay-image-subtlest, none), hsla(var(--h3), 60%);
+        --col: hsl(var(--b7));
+        --shadow: 0 3px 12px hsl(var(--h4), 25%), var(--interactable-outer);
+        position: relative;
 
-            &:not(.dropdown-menu-clickable-button, .dropdown-menu-clickable-item, .profile-top-item--taste):after {
-                content: '';
-                position: absolute;
-                inset: -4px !important;
-                border-radius: calc(var(--item-big-radius) + 4px) !important;
-                opacity: 1;
-                transition: none;
+        &:not(.dropdown-menu-clickable-button, .dropdown-menu-clickable-item, .profile-top-item--taste):after {
+            content: '';
+            position: absolute;
+            inset: -4px !important;
+            border-radius: calc(var(--item-big-radius) + 4px) !important;
+            opacity: 1;
+            transition: none;
 
-                display: block !important;
-                background: unset !important;
-                width: unset !important;
-                height: unset !important;
-                margin: unset !important;
+            display: block !important;
+            background: unset !important;
+            width: unset !important;
+            height: unset !important;
+            margin: unset !important;
 
-                border: 2px solid hsl(var(--l2-c), 30%);
-                box-shadow: 0 0 30px hsl(var(--l2-c), 10%);
-            }
+            border: 2px solid hsl(var(--l2-c), 30%);
+            box-shadow: 0 0 30px hsl(var(--l2-c), 10%);
         }
     }
 
@@ -15823,24 +15816,24 @@ button.bleh--gallery-bookmark-image-btn {
     .footer-language .mimic-link,
     .btn:not(.toggle, [aria-checked="true"], .love-button--loved, [data-toggle-button-current-state="loved"] > form > .btn, [data-toggle-button-current-state="bookmarked"] > form > .btn, .btn-primary.profile-header-set-obsession, [data-analytics-action="UnfollowUser"], [data-is-shortcut="true"], .attendance-btn--turn-off) {
         --bg: transparent;
-        --bg-hov: hsla(var(--b4), 60%);
-        --bg-atv: hsla(var(--b4), 80%);
+        --bg-hov: hsl(var(--b4), 60%);
+        --bg-atv: hsl(var(--b4), 80%);
         --shadow: none;
+        --col: hsl(var(--c2));
 
-        [data-ff--view_button_nav="true"] & {
-            --bg: transparent;
-            --bg-hov: hsl(var(--b4), 60%);
-            --bg-atv: hsl(var(--b4), 80%);
-            --shadow: none;
-            --col: hsl(var(--c2));
+        .gallery-image-buttons &:not(.image-open-button),
+        &.delete-icon {
+            --bg-hov: hsla(var(--h4), 10%);
+            --bg-atv: hsla(var(--h4), 20%);
+            --col: hsl(var(--l3-c));
+        }
 
-            &:not(.dropdown-menu-list-button, .dropdown-menu-clickable-button, .dropdown-menu-clickable-button-js-only):after {
-                opacity: 0;
+        &:not(.dropdown-menu-list-button, .dropdown-menu-clickable-button, .dropdown-menu-clickable-button-js-only):after {
+            opacity: 0;
 
-                transition-property: opacity !important;
-                transition-duration: var(--trans) !important;
-                transition-timing-function: var(--trans-function) !important;
-            }
+            transition-property: opacity !important;
+            transition-duration: var(--trans) !important;
+            transition-timing-function: var(--trans-function) !important;
         }
     }
 
@@ -17409,12 +17402,6 @@ h4 {
             button {
                 position: relative;
 
-                &:not(.image-open-button) {
-                    --col: hsl(var(--l3-c));
-                    --sat-over: 1;
-                    --lit-over: 1;
-                }
-
                 .gallery-image-preferred-states:before,
                 &:before {
                     background: currentColor !important;
@@ -18901,7 +18888,6 @@ section > .section-controls .subpage-title {
                 --mask: var(--icon-16-trash);
                 --bg-hov: hsla(var(--h4), 10%);
                 --bg-atv: hsla(var(--h4), 20%);
-                --col: hsl(var(--l3-c));
                 --hue-over: var(--hue-neg);
                 --sat-over: 1;
                 --lit-over: 1;
