@@ -15740,9 +15740,11 @@ let has_prompted_for_update = false;
 
             // tooltips on album cover
             let button_row = page.structure.side.querySelector('.album-overview-cover-art-action-row');
-            if (button_row != null) {
+            if (button_row) {
                 let buttons = button_row.querySelectorAll('a');
                 buttons.forEach((button) => {
+                    button.classList.add('btn');
+
                     tippy(button, {
                         content: button.textContent
                     });
@@ -15752,11 +15754,12 @@ let has_prompted_for_update = false;
             let upload_container = page.structure.side.querySelector('.album-overview-cover-art-upload-action');
             let avatar = album_header.querySelector('.header-new-background-image');
 
-            if (avatar != null) {
+            if (avatar) {
                 let expand_container = document.createElement('span');
                 expand_container.classList.add('album-overview-cover-art-expand-action');
 
                 let expand_link = document.createElement('a');
+                expand_link.classList.add('btn');
                 expand_link.setAttribute('onclick', `_expand_avatar('${avatar.getAttribute('content')}')`);
                 expand_link.textContent = trans[lang].gallery.open.name;
 

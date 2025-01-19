@@ -15809,7 +15809,6 @@ button.bleh--gallery-bookmark-image-btn {
             box-shadow: 0 0 30px hsl(var(--l2-c), 10%);
         }
     }
-
     &.gallery-image-buttons :is(button, a):not(.gallery-image-vote-up-on, .gallery-image-vote-down-on, .gallery-image-preferred-on, .gallery-image-report--reported, [data-bleh--image-is-bookmarked="true"]),
     &.album-overview-cover-art-action-row a,
     &.tab-container button:not(.tab--selected),
