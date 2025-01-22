@@ -8323,9 +8323,9 @@ let has_prompted_for_update = false;
                             <p class="descriptor">${trans[lang].profile.top_badge}</p>
                             <p class="badge user-status--bleh-${this_badge.type} user-status--bleh-user-${name}" data-badge-type="${this_badge.type}" data-badge-user="${name}">${this_badge.name}</p>
                         </div>
+                        <a href="${root}user/${name}" class="link-over"></a>
                     </div>
                     <div class="user-buttons view-buttons">
-                        <a class="btn view-item user-button view-profile-btn" href="${root}user/${name}">${trans[lang].actions.view_profile}</a>
                         <a class="btn view-item user-button view-library-btn" href="${root}user/${name}/library">${trans[lang].actions.view_library}</a>
                         <a class="btn view-item user-button leave-shout-btn" href="${root}user/${name}/shoutbox">${trans[lang].actions.leave_a_shout}</a>
                     </div>
@@ -8348,12 +8348,12 @@ let has_prompted_for_update = false;
                             <div class="inner-image">
                                 ${avatar_img.outerHTML}
                             </div>
-                        <div class="info">
-                            <h5 class="title">${name}</h5>
-                        </div>
+                            <div class="info">
+                                <h5 class="title">${name}</h5>
+                            </div>
+                            <a href="${root}user/${name}" class="link-over"></a>
                         </div>
                         <div class="user-buttons view-buttons">
-                            <a class="btn view-item user-button view-profile-btn" href="${root}user/${name}">${trans[lang].actions.view_profile}</a>
                             <a class="btn view-item user-button view-library-btn" href="${root}user/${name}/library">${trans[lang].actions.view_library}</a>
                             <a class="btn view-item user-button leave-shout-btn" href="${root}user/${name}/shoutbox">${trans[lang].actions.leave_a_shout}</a>
                         </div>
@@ -8379,9 +8379,9 @@ let has_prompted_for_update = false;
                                 <p class="descriptor">${trans[lang].profile.top_badge}</p>
                                 <p class="badge ${pre_existing_badge.classList[1]}">${avatar.getAttribute('title')}</p>
                             </div>
+                            <a href="${root}user/${name}" class="link-over"></a>
                         </div>
                         <div class="user-buttons view-buttons">
-                            <a class="btn view-item user-button view-profile-btn" href="${root}user/${name}">${trans[lang].actions.view_profile}</a>
                             <a class="btn view-item user-button view-library-btn" href="${root}user/${name}/library">${trans[lang].actions.view_library}</a>
                             <a class="btn view-item user-button leave-shout-btn" href="${root}user/${name}/shoutbox">${trans[lang].actions.leave_a_shout}</a>
                         </div>

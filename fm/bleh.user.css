@@ -6975,8 +6975,8 @@ very, very, very dated - who looks up a song on ebay? */
         content: '';
         display: block !important;
 
-        border-top-left-radius: calc(var(--card-radius) + var(--button-list-gap));
-        border-top-right-radius: calc(var(--card-radius) + var(--button-list-gap));
+        border-top-left-radius: calc(var(--item-big-radius) + var(--button-list-gap));
+        border-top-right-radius: calc(var(--item-big-radius) + var(--button-list-gap));
 
         background-image: var(--url) !important;
         position: absolute;
@@ -7715,7 +7715,7 @@ input:is([name^="track_name"], [name^="artist_name"], [name^="album_name"], [nam
 .dropdown-menu-clickable, .auth-dropdown-menu, .navlist-hidden-list, .modal-body, .library-search-results, .events-filter-location-dropdown {
     margin: unset !important;
     background: hsl(var(--b6), 95%) !important;
-    border-radius: calc(var(--card-radius) + var(--button-list-gap)) !important;
+    border-radius: calc(var(--item-big-radius) + var(--button-list-gap)) !important;
     box-shadow: var(--override-full-shadow, 0 0 0 1px var(--card-border-base) inset, var(--menu-shadow)) !important;
     color: hsl(var(--c2));
 
@@ -9059,7 +9059,7 @@ text[style^="color: rgb(255, 172, 172)"] {
     &[data-theme="menu"] {
         padding: var(--button-list-gap) !important;
         background: hsl(var(--b6), 95%) !important;
-        border-radius: calc(var(--card-radius) + var(--button-list-gap)) !important;
+        border-radius: calc(var(--item-big-radius) + var(--button-list-gap)) !important;
         box-shadow: var(--override-full-shadow, 0 0 0 1px var(--card-border-base) inset, var(--menu-shadow)) !important;
         color: hsl(var(--c2));
 
@@ -9352,14 +9352,20 @@ text[style^="color: rgb(255, 172, 172)"] {
 
         .tippy-content {
             display: flex;
-            flex-direction: column;
-            gap: var(--card-gap);
+            gap: var(--card-padding);
 
             .image-info {
                 display: flex;
                 gap: var(--card-gap);
                 flex: 1;
-                min-width: 100px;
+                min-width: 170px;
+
+                position: relative;
+
+                .link-over {
+                    position: absolute;
+                    inset: 0;
+                }
 
                 .inner-image {
                     width: 60px;
@@ -9382,7 +9388,7 @@ text[style^="color: rgb(255, 172, 172)"] {
                     color: hsl(var(--c3));
                     font-size: var(--font-size-sm);
                     line-height: var(--line-height-sm);
-                    margin-top: 4px;
+                    margin-top: var(--card-gap);
                     cursor: default;
                 }
                 .badge {
@@ -16106,6 +16112,7 @@ button.bleh--gallery-bookmark-image-btn {
         box-shadow: unset;
         border-radius: unset;
         margin: unset;
+        flex-direction: column;
 
         .user-button {
             /*&:not(:hover) {
