@@ -3465,7 +3465,7 @@ let includes = {
     ],
     versions: [
         '(taylor', '- spotify singles',
-        '(spotify'
+        '(spotify', '(+'
     ],
     remasters: [
         '- remaster', '(remaster',
@@ -8318,9 +8318,11 @@ let has_prompted_for_update = false;
                         <div class="inner-image">
                             ${avatar_img.outerHTML}
                         </div>
-                        <h5 class="title">${name}</h5>
-                        <p class="descriptor">${trans[lang].profile.top_badge}</p>
-                        <p class="badge user-status--bleh-${this_badge.type} user-status--bleh-user-${name}" data-badge-type="${this_badge.type}" data-badge-user="${name}">${this_badge.name}</p>
+                        <div class="info">
+                            <h5 class="title">${name}</h5>
+                            <p class="descriptor">${trans[lang].profile.top_badge}</p>
+                            <p class="badge user-status--bleh-${this_badge.type} user-status--bleh-user-${name}" data-badge-type="${this_badge.type}" data-badge-user="${name}">${this_badge.name}</p>
+                        </div>
                     </div>
                     <div class="user-buttons view-buttons">
                         <a class="btn view-item user-button view-profile-btn" href="${root}user/${name}">${trans[lang].actions.view_profile}</a>
@@ -8346,7 +8348,9 @@ let has_prompted_for_update = false;
                             <div class="inner-image">
                                 ${avatar_img.outerHTML}
                             </div>
+                        <div class="info">
                             <h5 class="title">${name}</h5>
+                        </div>
                         </div>
                         <div class="user-buttons view-buttons">
                             <a class="btn view-item user-button view-profile-btn" href="${root}user/${name}">${trans[lang].actions.view_profile}</a>
@@ -8370,9 +8374,11 @@ let has_prompted_for_update = false;
                             <div class="inner-image">
                                 ${avatar_img.outerHTML}
                             </div>
-                            <h5 class="title">${name}</h5>
-                            <p class="descriptor">${trans[lang].profile.top_badge}</p>
-                            <p class="badge ${pre_existing_badge.classList[1]}">${avatar.getAttribute('title')}</p>
+                            <div class="info">
+                                <h5 class="title">${name}</h5>
+                                <p class="descriptor">${trans[lang].profile.top_badge}</p>
+                                <p class="badge ${pre_existing_badge.classList[1]}">${avatar.getAttribute('title')}</p>
+                            </div>
                         </div>
                         <div class="user-buttons view-buttons">
                             <a class="btn view-item user-button view-profile-btn" href="${root}user/${name}">${trans[lang].actions.view_profile}</a>

@@ -385,7 +385,7 @@ a,
 .preview,
 body {
     --card-padding: 20px;
-    --card-radius: calc(var(--item-big-radius) + var(--button-list-gap));
+    --card-radius: calc(var(--item-big-radius) + 2px);
     --card-shadow: hsla(var(--b7), 0.3) 0 4px 4px 0, 0 3px 15px 7px hsla(var(--b7), 0.17);
     --card-gap: 15px;
     --card-border: 1px solid hsla(var(--b4), 0.7);
@@ -5999,6 +5999,7 @@ button,
     background-repeat: repeat-x !important;
     background-position: unset !important;
 
+    &[aria-expanded="true"],
     &:is(.gallery-next, .gallery-previous):hover .arrow,
     &:hover {
         background: var(--bg-hov) !important;
@@ -8044,8 +8045,8 @@ that literally is 1 user from 2007 who hasnt even gotten a scrobble */
 
 /* user did not scrobble album in date range */
 .library-header + .message {
-    margin-top: var(--card-gap);
     color: hsl(var(--c3));
+    cursor: default;
 }
 
 
@@ -9333,7 +9334,7 @@ text[style^="color: rgb(255, 172, 172)"] {
     }
 
     &[data-theme="user"] {
-        padding: 10px !important;
+        padding: var(--card-gap) !important;
         border-radius: var(--card-radius) !important;
         animation: dropdown var(--trans-short) var(--trans-function);
         transform-origin: center;
@@ -9348,12 +9349,12 @@ text[style^="color: rgb(255, 172, 172)"] {
 
         .tippy-content {
             display: flex;
-            gap: 10px;
+            flex-direction: column;
+            gap: var(--card-gap);
 
             .image-info {
                 display: flex;
-                flex-direction: column;
-                gap: 2px;
+                gap: var(--card-gap);
                 flex: 1;
                 min-width: 100px;
 
@@ -9364,8 +9365,6 @@ text[style^="color: rgb(255, 172, 172)"] {
                     box-shadow: var(--card-shadow);
                     border-radius: var(--avatar-radius);
                     overflow: hidden;
-                    margin-top: -30px;
-                    margin-bottom: 8px;
 
                     img {
                         width: 100%;
@@ -16086,7 +16085,6 @@ button.bleh--gallery-bookmark-image-btn {
     &.user-buttons {
         height: 100%;
         align-items: unset;
-        flex-direction: column;
         padding: unset;
         background: unset;
         box-shadow: unset;
@@ -16103,6 +16101,9 @@ button.bleh--gallery-bookmark-image-btn {
             --show-icon: block;
             --font-size: 0;
             color: inherit !important;
+            flex: 1;
+            --left: 50%;
+            --margin-left: -8px;
 
             &.view-profile-btn {
                 --mask: var(--icon-16-user);
