@@ -20175,8 +20175,13 @@ let has_prompted_for_update = false;
             let name = link.textContent.trim();
             let sister;
 
-            if (!href.startsWith(root))
+            if (!href.startsWith(root)) {
+                tippy(link, {
+                    content: link.getAttribute('href')
+                });
+
                 return;
+            }
 
             if (href.endsWith('/+wiki'))
                 return;
