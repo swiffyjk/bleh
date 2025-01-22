@@ -9987,7 +9987,7 @@ text[style^="color: rgb(0, 0, 0)"] {
     font-weight: var(--font-weight-medium);
     font-size: var(--font-size);
     line-height: var(--line-height);
-    margin: unset;
+    margin: 0 0 4px 0;
 
     &.artist-similar-artists-sidebar-item-name {
         margin-top: 10px;
