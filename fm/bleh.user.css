@@ -130,7 +130,7 @@ body {
 
     --trans-short: 0.23s;
     --trans: 0.3s;
-    --trans-function: cubic-bezier(1.000, 0.000, 0.000, 1.000);
+    --trans-function: cubic-bezier(1.000, 0.000, 0.000, 0.000);
 
     [data-ff--astra="true"] & {
         --font: var(--custom_font, ''), Work Sans, Ubuntu Sans, Spline Sans, Inter, Roboto, Noto Sans, Noto Sans JP, Noto Sans KR, Noto Sans TC, var(--font_emoji_name, ''), Lucida Grande, Verdana, Tahoma, -apple-system, BlinkMacSystemFont, sans-serif;
@@ -386,7 +386,7 @@ a,
 body {
     --card-padding: 20px;
     --card-radius: var(--item-big-radius);
-    --card-shadow: hsla(var(--b7), 0.3) 0 4px 4px 0, hsla(var(--b7), 0.05) 0 0 0 1px;
+    --card-shadow: hsla(var(--b7), 0.3) 0 4px 4px 0, 0 3px 15px 7px hsla(var(--b7), 0.17);
     --card-gap: 15px;
     --card-border: 1px solid hsla(var(--b4), 0.7);
     --card-border-base: hsla(var(--b4), 0.7);
@@ -5480,15 +5480,15 @@ the body text becomes bigger by default - this reverts that */
     width: var(--shout-avatar-size);
     height: var(--shout-avatar-size);
     left: calc(-1 * (var(--shout-avatar-size) + 12px)) !important;
-    box-shadow: var(--card-shadow);
+    box-shadow: var(--interact-shadow);
     border-radius: var(--avatar-radius);
 }
 .shout-user-avatar {
     &[data-avatar-themed] {
-        box-shadow: 0 4px 10px hsl(var(--h4), 10%), var(--card-shadow);
+        box-shadow: 0 4px 10px hsl(var(--h4), 10%), var(--interact-shadow);
 
         [data-bleh--theme="light"] & {
-            box-shadow: 0 4px 10px hsl(var(--h4), 40%), var(--card-shadow);
+            box-shadow: 0 4px 10px hsl(var(--h4), 40%), var(--interact-shadow);
         }
     }
 
