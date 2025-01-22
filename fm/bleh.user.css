@@ -128,8 +128,8 @@ body {
     --font-weight-medium: var(--custom_font_weight_medium, 650);
     --font-weight-bold: var(--custom_font_weight_bold, 730);
 
-    --trans-short: 0.23s;
-    --trans: 0.3s;
+    --trans-short: 0.2s;
+    --trans: 0.23s;
     --trans-function: cubic-bezier(1.000, 0.000, 0.000, 0.200);
 
     [data-ff--astra="true"] & {
@@ -385,7 +385,7 @@ a,
 .preview,
 body {
     --card-padding: 20px;
-    --card-radius: var(--item-big-radius);
+    --card-radius: calc(var(--item-big-radius) + var(--button-list-gap));
     --card-shadow: hsla(var(--b7), 0.3) 0 4px 4px 0, 0 3px 15px 7px hsla(var(--b7), 0.17);
     --card-gap: 15px;
     --card-border: 1px solid hsla(var(--b4), 0.7);
@@ -408,8 +408,8 @@ body {
     --shout-avatar-size: 48px;
     --shout-inset: 48px;
 
-    /*--avatar-generic-background: hsl(var(--b6));*/
-    --avatar-generic-background: linear-gradient(180deg, hsla(var(--h3), 20%) 0%, hsl(var(--b6)) 100%);
+    --avatar-generic-background: hsl(var(--b6));
+    /*--avatar-generic-background: linear-gradient(180deg, hsla(var(--h3), 20%) 0%, hsl(var(--b6)) 100%);*/
 
     --highlight-shadow: hsla(var(--b3), 0.25) 0 0 2px 1px;
     --menu-shadow: 2px 2px 24px 0 hsla(var(--b7), 0.35), 3px 6px 48px 16px hsla(var(--b7), 0.25);
@@ -6986,6 +6986,24 @@ very, very, very dated - who looks up a song on ebay? */
         -webkit-mask-image: var(--mask);
         opacity: 0.22;
     }
+
+    /*&:after {
+        content: '';
+        display: block !important;
+
+        background-image: var(--url) !important;
+        position: absolute;
+        inset: 0 !important;
+        top: calc(64px + var(--button-list-gap)) !important;
+        width: unset !important;
+        height: calc(64px + var(--button-list-gap) + var(--button-list-gap)) !important;
+        background-size: cover !important;
+        background-position-y: 30% !important;
+        --mask: linear-gradient(0deg, transparent, rgb(0, 0, 0), transparent);
+        mask-image: var(--mask);
+        -webkit-mask-image: var(--mask);
+        opacity: 0.22;
+    }*/
 }
 
 
@@ -7699,6 +7717,9 @@ input:is([name^="track_name"], [name^="artist_name"], [name^="album_name"], [nam
 
     &.modal-body {
         background: hsl(var(--b5)) !important;
+        border-radius: var(--card-radius) !important;
+    }
+    &.date-range-picker-content {
         border-radius: var(--card-radius) !important;
     }
 
