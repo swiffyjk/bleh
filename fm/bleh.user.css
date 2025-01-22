@@ -15763,7 +15763,7 @@ button.bleh--gallery-bookmark-image-btn {
             background-position: unset !important;
         }
 
-        box-shadow: var(--card-shadow);
+        box-shadow: 0 0 0 1px var(--card-border-base) inset, var(--card-shadow) !important;
     }
 
     [data-bleh--theme="oled"] &,

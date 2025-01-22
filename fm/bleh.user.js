@@ -3474,7 +3474,7 @@ let includes = {
     mixes: [
         '- devonshire mix', '(devonshire mix',
         'mike dean master',
-        '- remix', '(remix',
+        '- remix', '(remix', '[remix',
         '- live', '(live',
         '- demo', '(demo',
         '- rehearsal', '(rehearsal',
