@@ -8329,8 +8329,8 @@ let has_prompted_for_update = false;
                     </div>
                 `),
                 allowHTML: true,
-                delay: [100, 50],
-                placement: 'bottom',
+                delay: [50, 100],
+                placement: 'right',
                 interactive: true
             });
 
@@ -8355,8 +8355,8 @@ let has_prompted_for_update = false;
                         </div>
                     `),
                     allowHTML: true,
-                    delay: [100, 50],
-                    placement: 'bottom',
+                    delay: [50, 100],
+                    placement: 'right',
                     interactive: true
                 });
 
@@ -8381,8 +8381,8 @@ let has_prompted_for_update = false;
                         </div>
                     `),
                     allowHTML: true,
-                    delay: [100, 50],
-                    placement: 'bottom',
+                    delay: [50, 100],
+                    placement: 'right',
                     interactive: true
                 });
                 avatar.setAttribute('title', '');

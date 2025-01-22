@@ -128,7 +128,7 @@ body {
     --font-weight-medium: var(--custom_font_weight_medium, 650);
     --font-weight-bold: var(--custom_font_weight_bold, 730);
 
-    --trans-short: 0.25s;
+    --trans-short: 0.23s;
     --trans: 0.3s;
     --trans-function: cubic-bezier(1.000, 0.000, 0.000, 1.000);
 
@@ -7583,11 +7583,11 @@ input:is([name^="track_name"], [name^="artist_name"], [name^="album_name"], [nam
     flex-direction: column;
     gap: var(--card-gap);
 
-    animation: dropdown calc(var(--trans-short) + 0.02s) var(--trans-function);
+    animation: dropdown var(--trans-short) var(--trans-function);
     transform-origin: top;
 
     transition-property: transform, opacity;
-    transition-duration: calc(var(--trans-short) + 0.02s);
+    transition-duration: var(--trans-short);
     transition-timing-function: var(--trans-function);
 
     [data-bleh--reduced_motion="true"] & {
@@ -7701,7 +7701,7 @@ input:is([name^="track_name"], [name^="artist_name"], [name^="album_name"], [nam
     color: hsl(var(--c2));
 
     &:not(.modal-body) {
-        animation: dropdown calc(var(--trans-short) + 0.02s) var(--trans-function);
+        animation: dropdown var(--trans-short) var(--trans-function);
         transform-origin: top;
 
         [data-bleh--reduced_motion="true"] & {
@@ -7745,7 +7745,7 @@ input:is([name^="track_name"], [name^="artist_name"], [name^="album_name"], [nam
     }*/
 
     transition-property: opacity;
-    transition-duration: calc(var(--trans-short) + 0.02s);
+    transition-duration: var(--trans-short);
     transition-timing-function: var(--trans-function);
 
     &[style^="opacity: 0.8;"] {
@@ -7764,7 +7764,7 @@ input:is([name^="track_name"], [name^="artist_name"], [name^="album_name"], [nam
     transform-origin: top;
 
     transition-property: transform, opacity;
-    transition-duration: calc(var(--trans-short) + 0.02s);
+    transition-duration: var(--trans-short);
     transition-timing-function: var(--trans-function);
 
     &.window-removing {
@@ -7899,33 +7899,27 @@ input:is([name^="track_name"], [name^="artist_name"], [name^="album_name"], [nam
 
 @keyframes dropdown {
     from {
-        transform: scale(0.9);
         opacity: 0;
     }
     to {
-        transform: scale(1);
         opacity: 1;
     }
 }
 @keyframes dropdown_reverse {
     to {
         visibility: visible !important;
-        transform: scale(0.9);
         opacity: 0;
     }
     from {
         visibility: visible !important;
-        transform: scale(1);
         opacity: 1;
     }
 }
 @keyframes dropdown_side {
     from {
-        transform: scale(0.9);
         opacity: 0;
     }
     to {
-        transform: scale(1);
         opacity: 1;
     }
 }
@@ -9021,11 +9015,10 @@ text[style^="color: rgb(255, 172, 172)"] {
     &[data-theme="lotus-tooltip"],
     &[data-theme="lotus-tooltip-corrected"],
     &[data-theme="right-tooltip"] {
-        animation: dropdown_side calc(var(--trans-short) + 0.02s) var(--trans-function);
+        animation: dropdown_side var(--trans-short) var(--trans-function);
         transform-origin: left;
 
         &[data-state="hidden"] {
-            transform: scale(0.9);
             opacity: 0;
         }
     }
@@ -9043,7 +9036,7 @@ text[style^="color: rgb(255, 172, 172)"] {
         background: hsl(var(--b6), 95%) !important;
         border-radius: var(--card-radius) !important;
         box-shadow: var(--menu-shadow) !important;
-        animation: dropdown_side calc(var(--trans-short) + 0.02s) var(--trans-function);
+        animation: dropdown_side var(--trans-short) var(--trans-function);
         transform-origin: right;
         color: hsl(var(--c2));
 
@@ -9072,7 +9065,7 @@ text[style^="color: rgb(255, 172, 172)"] {
         &[data-theme="select-menu"],
         &[data-theme="auth-menu"],
         &[data-theme="language-menu"] {
-            animation: dropdown calc(var(--trans-short) + 0.02s) var(--trans-function);
+            animation: dropdown var(--trans-short) var(--trans-function);
             transform-origin: top;
         }
 
@@ -9151,7 +9144,6 @@ text[style^="color: rgb(255, 172, 172)"] {
         }
 
         &[data-state="hidden"] {
-            transform: scale(0.9);
             opacity: 0;
         }
 
@@ -9170,7 +9162,7 @@ text[style^="color: rgb(255, 172, 172)"] {
         background: hsl(var(--b6), 95%) !important;
         border-radius: var(--card-radius) !important;
         box-shadow: var(--menu-shadow) !important;
-        animation: dropdown calc(var(--trans-short) + 0.02s) var(--trans-function);
+        animation: dropdown var(--trans-short) var(--trans-function);
         transform-origin: top;
         color: hsl(var(--c2));
 
@@ -9193,17 +9185,15 @@ text[style^="color: rgb(255, 172, 172)"] {
 
         &[data-theme="select-menu"],
         &[data-theme="language-menu"] {
-            animation: dropdown calc(var(--trans-short) + 0.02s) var(--trans-function);
+            animation: dropdown var(--trans-short) var(--trans-function);
             transform-origin: center;
 
             &[data-state="hidden"] {
-                transform: scale(0.9);
                 opacity: 0;
             }
         }
 
         &[data-state="hidden"] {
-            transform: scale(0.9);
             opacity: 0;
         }
 
@@ -9253,7 +9243,7 @@ text[style^="color: rgb(255, 172, 172)"] {
     &[data-theme="track"] {
         padding: 10px !important;
         border-radius: var(--card-radius) !important;
-        animation: dropdown calc(var(--trans-short) + 0.02s) var(--trans-function);
+        animation: dropdown var(--trans-short) var(--trans-function);
         transform-origin: center;
         color: hsl(var(--c2));
         max-width: 500px !important;
@@ -9321,7 +9311,6 @@ text[style^="color: rgb(255, 172, 172)"] {
         }
 
         &[data-state="hidden"] {
-            transform: scale(0.9);
             opacity: 0;
         }
     }
@@ -9329,7 +9318,7 @@ text[style^="color: rgb(255, 172, 172)"] {
     &[data-theme="user"] {
         padding: 10px !important;
         border-radius: var(--card-radius) !important;
-        animation: dropdown calc(var(--trans-short) + 0.02s) var(--trans-function);
+        animation: dropdown var(--trans-short) var(--trans-function);
         transform-origin: center;
         color: hsl(var(--c2));
         max-width: 500px !important;
@@ -9395,7 +9384,6 @@ text[style^="color: rgb(255, 172, 172)"] {
         }
 
         &[data-state="hidden"] {
-            transform: scale(0.9);
             opacity: 0;
         }
     }
@@ -9404,7 +9392,6 @@ text[style^="color: rgb(255, 172, 172)"] {
 
     &[data-state="hidden"] {
         opacity: 0;
-        transform: translateY(10px);
     }
 
     &[data-theme="stack"] {
@@ -16441,7 +16428,7 @@ button.bleh--gallery-bookmark-image-btn {
     align-items: center;
 
     transition-property: background;
-    transition-duration: calc(var(--trans-short) + 0.02s);
+    transition-duration: var(--trans-short);
     transition-timing-function: var(--trans-function);
 
     &.has-dialog {
