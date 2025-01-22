@@ -130,7 +130,7 @@ body {
 
     --trans-short: 0.23s;
     --trans: 0.3s;
-    --trans-function: cubic-bezier(1.000, 0.000, 0.000, 0.000);
+    --trans-function: cubic-bezier(1.000, 0.000, 0.000, 0.200);
 
     [data-ff--astra="true"] & {
         --font: var(--custom_font, ''), Work Sans, Ubuntu Sans, Spline Sans, Inter, Roboto, Noto Sans, Noto Sans JP, Noto Sans KR, Noto Sans TC, var(--font_emoji_name, ''), Lucida Grande, Verdana, Tahoma, -apple-system, BlinkMacSystemFont, sans-serif;
