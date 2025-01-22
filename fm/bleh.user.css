@@ -4916,8 +4916,11 @@ better than the default selector '#app a' i suppose */
         color: hsl(var(--l3-c));
     }
 }
-[data-toggle-button-current-state=loved] .chartlist-love-button:before
+[data-toggle-button-current-state=loved] .chartlist-love-button
 {
+    --bg: transparent !important;
+    --bg-hov: hsla(var(--h3), 15%) !important;
+    --bg-atv: hsla(var(--h3), 35%) !important;
     --mask: var(--icon-16-heart-solid);
 }
 
