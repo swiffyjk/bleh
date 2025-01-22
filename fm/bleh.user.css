@@ -15211,6 +15211,19 @@ trying to list every song ever made by someone identifying as a female, which is
         flex-direction: column;
         flex: 1;
 
+        &.avatar-upload-form {
+            .modal-footer {
+                margin-right: unset;
+                padding-right: unset;
+            }
+        }
+        &.image-remove-form {
+            .modal-footer {
+                margin-left: unset;
+                padding-left: unset;
+            }
+        }
+
         .form-group {
             display: flex;
             flex-direction: column;
