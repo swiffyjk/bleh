@@ -15861,6 +15861,8 @@ button.bleh--gallery-bookmark-image-btn {
             --bg-hov: hsla(var(--h4), 10%);
             --bg-atv: hsla(var(--h4), 20%);
             --col: hsl(var(--l3-c));
+            --sat-over: 1;
+            --lit-over: 1;
         }
 
         &:not(.dropdown-menu-list-button, .dropdown-menu-clickable-button, .dropdown-menu-clickable-button-js-only):after {
