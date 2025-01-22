@@ -5999,7 +5999,7 @@ button,
     background-repeat: repeat-x !important;
     background-position: unset !important;
 
-    &[aria-expanded="true"],
+    &[aria-expanded="true"]:not(.delete-icon),
     &:is(.gallery-next, .gallery-previous):hover .arrow,
     &:hover {
         background: var(--bg-hov) !important;
