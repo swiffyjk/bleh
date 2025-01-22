@@ -1808,8 +1808,7 @@ article, section, .buffer-standard, .buffer-standard:not(.col-sidebar) .buffer-s
     --bg: hsl(var(--b5)) !important;
     --bg-hov: hsla(var(--b5), 80%) !important;
     --bg-atv: hsla(var(--b5), 60%) !important;
-    --shadow: var(--card-shadow) !important;
-    --shadow-hov: var(--card-shadow) !important;
+    --shadow: 0 0 0 1px var(--card-border-base) inset, var(--card-shadow) !important;
     margin-top: unset;
     border-radius: var(--card-radius) !important;
     overflow: hidden;
