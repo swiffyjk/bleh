@@ -7119,8 +7119,8 @@ very, very, very dated - who looks up a song on ebay? */
 [data-analytics-action="delete"],
 [data-analytics-action="unpublish"], [data-analytics-action="publish"]
 {
-    --bg-hov: hsla(var(--h4), 7%) !important;
-    --bg-atv: hsla(var(--h4), 17%) !important;
+    --bg-hov: hsla(var(--h4), 12%) !important;
+    --bg-atv: hsla(var(--h4), 22%) !important;
     --col: hsl(var(--l3-c)) !important;
 
     [data-bleh--theme="light"] & {
