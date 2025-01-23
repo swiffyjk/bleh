@@ -159,6 +159,11 @@ let version = {
             default: false,
             name: 'Allow user to enter API key for newer features',
             date: '2025-01-19'
+        },
+        colour_based_on_avatar: {
+            default: false,
+            name: 'Set colour based on avatar',
+            date: '2025-01-23'
         }
     }
 }
@@ -9344,7 +9349,8 @@ let has_prompted_for_update = false;
                     `) : ''}
                     <div class="sep"></div>
                     <h4>${trans[lang].settings.customise.colours.name}</h4>
-                    <!--<h5>${trans[lang].settings.customise.colours.presets}</h5>-->
+                    <div class="palette options colours" id="colour_custom"></div>
+                    <div class="palette options colours" id="colour_presets"></div>
                     <div class="palette options colours" id="custom_colours">
                         <button class="swatch btn default" style="
                             --hue: var(--hue-seasonal, 255);
@@ -11037,6 +11043,7 @@ let has_prompted_for_update = false;
         if (page == 'themes') {
             refresh_all();
             show_theme_change_in_settings();
+            display_colour_presets();
         } else if (page == 'customise' || page == 'performance' || page == 'accessibility' || page == 'text' || page == 'seasonal' || page == 'music' || page == 'activities') {
             refresh_all();
         } else if (page == 'profiles') {
@@ -11226,6 +11233,72 @@ let has_prompted_for_update = false;
 
         // save to settings
         localStorage.setItem('bleh', JSON.stringify(settings));
+    }
+
+
+    function display_colour_presets() {
+        let colours = {
+            custom: [
+                {
+                    type: 'default',
+                    sets: {
+                        hue: 255,
+                        sat: 1,
+                        lit: 1
+                    },
+                    displays: {
+                        hue: 'var(--hue-seasonal, 255)',
+                        sat: 'var(--sat-seasonal, 1)',
+                        lit: 'var(--lit-seasonal, 1)'
+                    },
+                    requires_flag: 'colour_based_on_avatar'
+                },
+                {
+                    type: 'avatar',
+                    sets: {
+                        hue: 255,
+                        sat: 1,
+                        lit: 1
+                    },
+                    displays: {
+                        hue: 'var(--hue-seasonal, 255)',
+                        sat: 'var(--sat-seasonal, 1)',
+                        lit: 'var(--lit-seasonal, 1)'
+                    }
+                }
+            ],
+            presets: [
+
+            ]
+        }
+
+        for (let type in colours) {
+            let swatch_group = document.body.querySelector(`#colour_${type}`);
+
+            colours[type].forEach((colour) => {
+                if (colour.requires_flag && version.feature_flags.hasOwnProperty(colour.requires_flag)) {
+                    if (!ff(colour.requires_flag))
+                        return;
+                }
+
+                if (!colour.type)
+                    colour.type = 'colour';
+
+                if (!colour.displays)
+                    colour.displays = colour.sets;
+
+                let swatch = document.createElement('button');
+                swatch.classList.add('swatch', 'btn');
+                swatch.setAttribute('data-swatch-type', colour.type);
+                swatch.setAttribute('onclick', `_update_params(${JSON.stringify(colour.sets)})`);
+
+                swatch.style.setProperty('--hue-over', colour.displays.hue);
+                swatch.style.setProperty('--sat-over', colour.displays.sat);
+                swatch.style.setProperty('--lit-over', colour.displays.lit);
+
+                swatch_group.appendChild(swatch);
+            });
+        }
     }
 
 
@@ -11665,13 +11738,13 @@ let has_prompted_for_update = false;
     function update_colour_swatches() {
         let swatches = document.body.querySelectorAll('.swatch');
         swatches.forEach((swatch) => {
-            let h = swatch.style.getPropertyValue('--hue');
-            let s = swatch.style.getPropertyValue('--sat');
-            let l = swatch.style.getPropertyValue('--lit');
+            let h = swatch.style.getPropertyValue('--hue-over');
+            let s = swatch.style.getPropertyValue('--sat-over');
+            let l = swatch.style.getPropertyValue('--lit-over');
 
             if (
                 (h == settings.hue && s == settings.sat && l == settings.lit) ||
-                (swatch.classList.contains('default') && settings.hue == 255 && settings.sat == 1 && settings.lit == 1) // default
+                (swatch.getAttribute('data-swatch-type') == 'default' && settings.hue == 255 && settings.sat == 1 && settings.lit == 1) // default
             ) {
                 swatch.classList.add('selected');
             } else {

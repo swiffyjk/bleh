@@ -13715,8 +13715,11 @@ pre {
 
     --mask: var(--icon-colour-selected);
 
-    &.default {
+    &[data-swatch-type="default"] {
         --mask: var(--icon-colour-default);
+    }
+    &[data-swatch-type="avatar"] {
+        --mask: var(--icon-user);
     }
     &.seasonal-swatch {
         --mask: var(--icon-season);
@@ -13729,7 +13732,7 @@ pre {
         }
     }
 
-    &:not(.default, .custom, .selected, .seasonal-swatch):before {
+    &:not([data-swatch-type="default"], [data-swatch-type="avatar"], .custom, .selected, .seasonal-swatch):before {
         opacity: 0;
     }
 
