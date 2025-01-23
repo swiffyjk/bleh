@@ -160,6 +160,7 @@ body, [data-page-resource-type="album"], [data-page-resource-type="track"],
 
     /* root */
     --b6: var(--hue), calc(var(--sat) * 14% * var(--sat-bg, 1)), 10%;
+    --b8: var(--hue), calc(var(--sat) * 14% * var(--sat-bg, 1)), 2%;
     --b7: 0, 0%, 0%;
 
     .preview[data-bleh--theme="darker"],
@@ -175,6 +176,7 @@ body, [data-page-resource-type="album"], [data-page-resource-type="track"],
 
         /* root */
         --b6: var(--hue), calc(var(--sat) * 20% * var(--sat-bg, 1)), 4%;
+        --b8: var(--hue), calc(var(--sat) * 14% * var(--sat-bg, 1)), 0%;
         --b7: 0, 0%, 0%;
     }
     .preview[data-bleh--theme="oled"],
@@ -190,6 +192,7 @@ body, [data-page-resource-type="album"], [data-page-resource-type="track"],
 
         /* root */
         --b6: 0, 0%, 0%;
+        --b8: var(--hue), calc(var(--sat) * 14% * var(--sat-bg, 1)), 4%;
         --b7: 0, 0%, 0%;
     }
     .preview[data-bleh--theme="light"],
@@ -205,6 +208,7 @@ body, [data-page-resource-type="album"], [data-page-resource-type="track"],
 
         /* root */
         --b6: 0, 0%, 96%;
+        --b8: 0, 0%, 92%;
         --b7: 0, 0%, 0%;
     }
     [data-bleh--theme="classic"] & {
@@ -324,6 +328,8 @@ a,
 
     --opposite-text: var(--b6);
 
+    --avatar-generic-background: linear-gradient(180deg, hsla(var(--h3), 20%) 0%, hsl(var(--b6)) 100%);
+
     .preview[data-bleh--theme="oled"],
     [data-bleh--theme="oled"] &:not(.preview) {
         --c1: var(--hue), calc(var(--sat) * 40%), 100%;
@@ -407,9 +413,6 @@ body {
 
     --shout-avatar-size: 48px;
     --shout-inset: 48px;
-
-    --avatar-generic-background: hsl(var(--b6));
-    /*--avatar-generic-background: linear-gradient(180deg, hsla(var(--h3), 20%) 0%, hsl(var(--b6)) 100%);*/
 
     --highlight-shadow: hsla(var(--b3), 0.25) 0 0 2px 1px;
     --menu-shadow: 2px 2px 24px 0 hsla(var(--b7), 0.35), 3px 6px 48px 16px hsla(var(--b7), 0.25);
@@ -4329,12 +4332,12 @@ better than the default selector '#app a' i suppose */
     --bg: hsla(var(--b4), 40%);
     --bg-hov: hsla(var(--b4), 80%);
     --shadow: none !important;
-    --shadow-hov: none !important;
+    --shadow-hov: var(--interact-shadow) !important;
     color: hsl(var(--c2));
     background-color: var(--bg);
     padding: 5px 12px;
-    min-height: 36px;
-    max-height: 44px;
+    min-height: 40px;
+    max-height: fit-content;
     border-radius: var(--item-big-radius);
     box-shadow: var(--shadow);
     transition-property: background-color;
@@ -4344,15 +4347,13 @@ better than the default selector '#app a' i suppose */
 
     &:hover {
         background-color: var(--bg-hov);
+        box-shadow: var(--shadow-hov);
         transition: none !important;
     }
 
     .kate-placeholder {
         display: none;
     }
-}
-.chartlist:not(.chartlist--with-image) .chartlist-row {
-    padding: 3px 12px;
 }
 
 .lastfm-bulk-edit-chartlist-scrobbles {
@@ -4550,13 +4551,6 @@ better than the default selector '#app a' i suppose */
 }
 
 
-/* chartlist artist overlaps */
-.chartlist:not(.chartlist--with-bar) :is(.chartlist-more, .chartlist-play) {
-    position: relative;
-    left: 20px;
-}
-
-
 .chartlist__placeholder-bar, .chartlist__placeholder-name {
     background: hsl(var(--b4));
     border-radius: var(--item-small-radius);
@@ -4580,6 +4574,7 @@ better than the default selector '#app a' i suppose */
     --bg: hsla(var(--h4), 35%) !important;
     --bg-hov: hsla(var(--h4), 45%) !important;
     --shadow: 0 10px 50px 5px hsla(var(--h4), 35%) !important;
+    --shadow-hov: var(--shadow), var(--interact-shadow) !important;
     z-index: 20;
 
     [data-bleh--theme="light"] & {
@@ -4833,7 +4828,7 @@ better than the default selector '#app a' i suppose */
     width: 38px;
     height: 38px;
     border-radius: var(--item-small-radius) !important;
-    box-shadow: var(--card-shadow);
+    box-shadow: var(--interact-shadow);
     overflow: hidden;
     background: var(--avatar-generic-background);
 
@@ -7606,7 +7601,6 @@ input:is([name^="track_name"], [name^="artist_name"], [name^="album_name"], [nam
     gap: var(--card-gap);
 
     animation: dropdown var(--trans-short) var(--trans-function);
-    transform-origin: top;
 
     transition-property: transform, opacity;
     transition-duration: var(--trans-short);
@@ -7620,9 +7614,7 @@ input:is([name^="track_name"], [name^="artist_name"], [name^="album_name"], [nam
     }
 
     &.to-remove {
-        transform: scale(0.9);
         opacity: 0;
-        transform-origin: top;
     }
 
     &[data-modal-has-overlays="true"] {
@@ -9013,12 +9005,12 @@ text[style^="color: rgb(255, 172, 172)"] {
 .user-dashboard-controls-tooltip,
 .tooltip-dark,
 .user-dashboard-tooltip {
-    background: hsla(var(--b6), 80%);
+    background: hsla(var(--b8), 80%);
     backdrop-filter: blur(10px) saturate(160%);
     -webkit-backdrop-filter: blur(10px) saturate(160%);
     border-radius: var(--item-big-radius);
-    box-shadow: 0 0 0 1px var(--card-border-base) inset, var(--card-shadow);
-    padding: 5px 14px;
+    box-shadow: var(--card-shadow);
+    padding: 6px 10px;
     font-size: calc(var(--font-size) - 1px);
     font-weight: var(--font-weight);
     line-height: var(--line-height);
@@ -9029,11 +9021,6 @@ text[style^="color: rgb(255, 172, 172)"] {
     .tooltip-sub {
         font-size: 12px;
         color: hsl(var(--c3));
-    }
-
-    [data-bleh--theme="light"] &,
-    [data-bleh--theme="oled"] & {
-        background: hsla(var(--b5), 70%);
     }
 
     [data-bleh--reduced_motion="true"] & {
@@ -9186,8 +9173,7 @@ text[style^="color: rgb(255, 172, 172)"] {
         padding: var(--card-gap) !important;
         background: hsl(var(--b6), 95%) !important;
         border-radius: var(--card-radius) !important;
-        animation: dropdown var(--trans-short) var(--trans-function);
-        transform-origin: top;
+        box-shadow: var(--override-full-shadow, 0 0 0 1px var(--card-border-base) inset, var(--menu-shadow)) !important;
         color: hsl(var(--c2));
 
         text-align: left;
@@ -9267,8 +9253,6 @@ text[style^="color: rgb(255, 172, 172)"] {
     &[data-theme="track"] {
         padding: 10px !important;
         border-radius: var(--card-radius) !important;
-        animation: dropdown var(--trans-short) var(--trans-function);
-        transform-origin: center;
         color: hsl(var(--c2));
         max-width: 500px !important;
 
@@ -14174,11 +14158,11 @@ input[type="range"]::-moz-range-progress {
 .btn.reset {
     width: 14px !important;
     height: 14px !important;
-    --bg: hsl(var(--h3));
-    --bg-hov: hsl(var(--h3), 80%);
-    --bg-atv: hsl(var(--h3), 60%);
-    --col: hsl(var(--b7));
-    --shadow: 0 3px 12px hsl(var(--h4), 25%);
+    --bg: hsl(var(--h3)) !important;
+    --bg-hov: hsl(var(--h3), 80%) !important;
+    --bg-atv: hsl(var(--h3), 60%) !important;
+    --col: hsl(var(--b7)) !important;
+    --shadow: 0 3px 12px hsl(var(--h4), 25%) !important;
     --font-size: 0;
     --padding: 0;
     --radius: 50%;

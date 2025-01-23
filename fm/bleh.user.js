@@ -15764,6 +15764,13 @@ let has_prompted_for_update = false;
 
             bleh_tags_mini();
 
+
+            let similar_albums = page.structure.main.querySelector('.similar-albums');
+            if (similar_albums) {
+                let similar_panel = similar_albums.parentElement;
+                similar_panel.classList.add('similar-panel');
+            }
+
             // tooltips on album cover
             let button_row = page.structure.side.querySelector('.album-overview-cover-art-action-row');
             if (button_row) {
