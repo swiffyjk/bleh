@@ -803,7 +803,7 @@ const trans = {
                     name: 'Artwork'
                 },
                 hue_from_album: {
-                    name: 'Automatically colour album pages',
+                    name: 'Colour album pages based on album art',
                     bio: 'Picks the primary colour from an album cover to paint the page.'
                 },
                 gloss: {
@@ -816,6 +816,10 @@ const trans = {
                 colourful_counts: {
                     name: 'Use a colour gradient for all-time charts',
                     bio: 'Assigns a colour from a gradient based on your position in all-time artist scrobbles.'
+                },
+                colourful_tracks: {
+                    name: 'Colour actively scrobbling tracks based on album art',
+                    bio: 'Picks the primary colour from the associated cover to paint the track.'
                 },
                 gendered_tags: {
                     name: 'Hide gendered tags',
@@ -3566,6 +3570,7 @@ let settings_template = {
     show_remaster_tags: true,
     corrections: true,
     colourful_counts: true,
+    colourful_tracks: true,
     rain: false,
     feature_flags: {},
     show_your_progress: true,
@@ -3763,6 +3768,13 @@ let settings_base = {
     },
     colourful_counts: {
         css: 'colourful_counts',
+        unit: '',
+        value: true,
+        values: [true, false],
+        type: 'toggle'
+    },
+    colourful_tracks: {
+        css: 'colourful_tracks',
         unit: '',
         value: true,
         values: [true, false],
@@ -9230,12 +9242,16 @@ let has_prompted_for_update = false;
                     name: trans[lang].settings.customise.hue_from_album.name
                 },
                 {
+                    id: 'colourful_tracks',
+                    name: trans[lang].settings.customise.colourful_tracks.name
+                },
+                {
                     id: 'sat_bg',
+                    type: 'slider',
                     name: trans[lang].settings.customise.sat_bg.name
                 },
                 {
                     id: 'colourful_counts',
-                    type: 'slider',
                     name: trans[lang].settings.customise.colourful_counts.name
                 }
             ]);
@@ -9716,6 +9732,18 @@ let has_prompted_for_update = false;
                         </div>
                         <div class="toggle-wrap">
                             <button class="toggle" id="toggle-hue_from_album" aria-checked="true">
+                                <div class="dot"></div>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="toggle-container" id="container-colourful_tracks" onclick="_update_item('colourful_tracks')">
+                        <button class="btn reset" onclick="_reset_item('colourful_tracks')">${trans[lang].settings.reset}</button>
+                        <div class="heading">
+                            <h5>${trans[lang].settings.customise.colourful_tracks.name}</h5>
+                            <p>${trans[lang].settings.customise.colourful_tracks.bio}</p>
+                        </div>
+                        <div class="toggle-wrap">
+                            <button class="toggle" id="toggle-colourful_tracks" aria-checked="true">
                                 <div class="dot"></div>
                             </button>
                         </div>
@@ -12695,6 +12723,27 @@ let has_prompted_for_update = false;
                 } else {
                     log(`pushed insight track label of ${track_title.getAttribute('title')}`, 'glacier library', 'log');
                     insights.track.labels.push(track_title.getAttribute('title'));
+                }
+
+                if (!settings.colourful_tracks)
+                    return;
+
+                if (!is_album && track.classList.contains('chartlist-row--now-scrobbling')) {
+                    let image = track.querySelector('.chartlist-image img');
+
+                    image.setAttribute('crossorigin', 'anonymous');
+                    try {
+                        image.addEventListener('load', function() {
+                            let thief = new ColorThief();
+                            let colour = thief.getColor(image);
+
+                            let hsl = rgb_to_hsl(colour[0], colour[1], colour[2]);
+
+                            track.style.setProperty('--hue-over', hsl.h);
+                            track.style.setProperty('--sat-over', clamp_sat((hsl.s / 100) * 3));
+                            track.style.setProperty('--lit-over', 1);
+                        });
+                    } catch(e) {}
                 }
             }));
         });
