@@ -352,18 +352,18 @@ a,
         ){
         --c1: var(--hue), calc(var(--sat) * 6%), 0%;
         --c2: var(--hue), calc(var(--sat) * 4%), 4%;
-        --c3: var(--hue), calc(var(--sat) * 10%), 30%;
+        --c3: var(--hue), calc(var(--sat) * 2%), 30%;
         --ov-c1: var(--hue), calc(var(--sat) * 40%), 100%;
 
         --l2: var(--hue), calc(var(--sat) * 40%), calc(var(--lit) * 63%);
         --l3: var(--hue), calc(var(--sat) * 50%), calc(var(--lit) * 40%);
-        --l4: var(--hue), calc(var(--sat) * 60%), calc(var(--lit) * 25%);
+        --l4: var(--hue), calc(var(--sat) * 60%), calc(var(--lit) * 22%);
 
         --l2-c: var(--hue), calc(var(--sat) * 40%), calc(clamp(min(0.5), var(--lit), max(1.1)) * 63%);
         --l3-c: var(--hue), calc(var(--sat) * 50%), calc(clamp(min(0.5), var(--lit), max(1.1)) * 40%);
         --l3-c-sat: calc(var(--sat) * 50%);
         --l3-c-lit: calc(clamp(min(0.5), var(--lit), max(1.1)) * 40%);
-        --l4-c: var(--hue), calc(var(--sat) * 60%), calc(clamp(min(0.5), var(--lit), max(1.1)) * 25%);
+        --l4-c: var(--hue), calc(var(--sat) * 60%), calc(clamp(min(0.5), var(--lit), max(1.1)) * 22%);
 
         --h3: var(--hue), calc(var(--sat) * 50%), calc(clamp(min(0.5), var(--lit), max(1.1)) * 80%);
         --h3-s: var(--hue), 50%, 80%;
@@ -538,6 +538,9 @@ body {
     --icon-charts: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyMCIgaGVpZ2h0PSIyMCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyLjI1IiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWNoYXJ0LW5vLWF4ZXMtY29tYmluZWQiPjxwYXRoIGQ9Ik0xMiAxNnY1Ii8+PHBhdGggZD0iTTE2IDE0djciLz48cGF0aCBkPSJNMjAgMTB2MTEiLz48cGF0aCBkPSJtMjIgMy04LjY0NiA4LjY0NmEuNS41IDAgMCAxLS43MDggMEw5LjM1NCA4LjM1NGEuNS41IDAgMCAwLS43MDcgMEwyIDE1Ii8+PHBhdGggZD0iTTQgMTh2MyIvPjxwYXRoIGQ9Ik04IDE0djciLz48L3N2Zz4=');
     --icon-notifications: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWJlbGwiPjxwYXRoIGQ9Ik0xMC4yNjggMjFhMiAyIDAgMCAwIDMuNDY0IDAiLz48cGF0aCBkPSJNMy4yNjIgMTUuMzI2QTEgMSAwIDAgMCA0IDE3aDE2YTEgMSAwIDAgMCAuNzQtMS42NzNDMTkuNDEgMTMuOTU2IDE4IDEyLjQ5OSAxOCA4QTYgNiAwIDAgMCA2IDhjMCA0LjQ5OS0xLjQxMSA1Ljk1Ni0yLjczOCA3LjMyNiIvPjwvc3ZnPg==');
     --icon-mail: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLW1haWwiPjxyZWN0IHdpZHRoPSIyMCIgaGVpZ2h0PSIxNiIgeD0iMiIgeT0iNCIgcng9IjIiLz48cGF0aCBkPSJtMjIgNy04Ljk3IDUuN2ExLjk0IDEuOTQgMCAwIDEtMi4wNiAwTDIgNyIvPjwvc3ZnPg==');
+    --icon-event: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWNhbGVuZGFyLTEiPjxwYXRoIGQ9Ik0xMSAxNGgxdjQiLz48cGF0aCBkPSJNMTYgMnY0Ii8+PHBhdGggZD0iTTMgMTBoMTgiLz48cGF0aCBkPSJNOCAydjQiLz48cmVjdCB4PSIzIiB5PSI0IiB3aWR0aD0iMTgiIGhlaWdodD0iMTgiIHJ4PSIyIi8+PC9zdmc+');
+    --icon-bookmark: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWJvb2ttYXJrIj48cGF0aCBkPSJtMTkgMjEtNy00LTcgNFY1YTIgMiAwIDAgMSAyLTJoMTBhMiAyIDAgMCAxIDIgMnYxNnoiLz48L3N2Zz4=');
+    --icon-user: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLXVzZXIiPjxwYXRoIGQ9Ik0xOSAyMXYtMmE0IDQgMCAwIDAtNC00SDlhNCA0IDAgMCAwLTQgNHYyIi8+PGNpcmNsZSBjeD0iMTIiIGN5PSI3IiByPSI0Ii8+PC9zdmc+');
 
     --icon-layout: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLXVuZm9sZC1ob3Jpem9udGFsIj48cGF0aCBkPSJNMTYgMTJoNiIvPjxwYXRoIGQ9Ik04IDEySDIiLz48cGF0aCBkPSJNMTIgMnYyIi8+PHBhdGggZD0iTTEyIDh2MiIvPjxwYXRoIGQ9Ik0xMiAxNHYyIi8+PHBhdGggZD0iTTEyIDIwdjIiLz48cGF0aCBkPSJtMTkgMTUgMy0zLTMtMyIvPjxwYXRoIGQ9Im01IDktMyAzIDMgMyIvPjwvc3ZnPg==');
 
@@ -6083,8 +6086,8 @@ button,
         .listening-report-promo--year
     ) {
         --bg: var(--cards-overlay-image-subtlest, none), hsl(var(--h3)) !important;
-        --bg-hov: var(--cards-overlay-image-subtlest, none), hsla(var(--h3), 80%) !important;
-        --bg-atv: var(--cards-overlay-image-subtlest, none), hsla(var(--h3), 60%) !important;
+        --bg-hov: var(--cards-overlay-image-subtlest, none), hsl(var(--h3), 80%) !important;
+        --bg-atv: var(--cards-overlay-image-subtlest, none), hsl(var(--h3), 60%) !important;
         --col: hsl(var(--b7)) !important;
         --shadow: 0 3px 12px hsl(var(--h4), 25%), var(--interactable-outer);
         --shadow-hov: var(--interactable-outer), var(--interactable-active-outer);
@@ -13107,37 +13110,10 @@ h2.playlisting-create-option-title {
         width: calc(var(--cards-width) - (var(--card-padding) * 2));
         display: flex;
         gap: var(--card-padding);
+        margin-top: unset !important;
 
-        [data-ff--bleh_settings_tabs="false"] & {
-            margin-bottom: var(--card-gap);
-        }
-
-        .icon-side {
-            display: flex;
-            width: fit-content;
-            flex-shrink: 0;
-
-            .setting-icon {
-                display: flex;
-                background-color: hsl(var(--b4));
-                width: 48px;
-                aspect-ratio: 1 / 1;
-                cursor: default;
-
-                justify-content: center;
-                align-items: center;
-                flex-direction: column;
-
-                border-radius: var(--item-big-radius);
-                box-shadow: var(--card-shadow);
-
-                position: relative;
-                --left: 50%;
-                --mask-size: 24px;
-                --margin-left: -12px;
-                --margin-top: -12px;
-                color: hsl(var(--c3));
-
+        .tag-side {
+            .tag-icon {
                 [data-page="themes"] & {
                     --mask: var(--icon-colour-default);
                 }
@@ -13159,8 +13135,11 @@ h2.playlisting-create-option-title {
                 [data-page="text"] & {
                     --mask: var(--icon-text);
                 }
-                [data-page="language"] & {
-                    --mask: var(--icon-language);
+                [data-page="profiles"] & {
+                    --mask: var(--icon-user);
+                }
+                [data-page="performance"] & {
+                    --mask: var(--icon-settings);
                 }
             }
         }
@@ -14049,8 +14028,8 @@ input[type="range"] {
     .slider-nub {
         display: flex;
         width: 12px;
-        background-color: hsl(var(--h4));
-        border: 2px solid hsl(var(--b6));
+        background-color: hsl(var(--b6));
+        border: 2px solid hsl(var(--h3));
         border-radius: var(--item-big-radius);
         margin: -5px -5px;
     }
@@ -14189,41 +14168,35 @@ input[type="range"]::-moz-range-progress {
 
 /* make space for reset button */
 .slider-container, .toggle-container {
-    h5 {
-        transition-property: padding-left;
-        transition-duration: var(--trans);
-        transition-timing-function: var(--trans-function);
-    }
-    &.modified h5 {
-        padding-left: 20px;
-    }
     position: relative;
 }
 
 .btn.reset {
     width: 14px !important;
     height: 14px !important;
-    --bg: hsla(var(--h4), 80%);
-    --bg-hov: hsla(var(--h4), 60%);
-    --bg-atv: hsla(var(--h4), 40%);
-    --shadow: 0 0 10px hsl(var(--h4));
-    --shadow-hov: var(--shadow);
+    --bg: hsl(var(--h3));
+    --bg-hov: hsl(var(--h3), 80%);
+    --bg-atv: hsl(var(--h3), 60%);
+    --col: hsl(var(--b7));
+    --shadow: 0 3px 12px hsl(var(--h4), 25%);
     --font-size: 0;
     --padding: 0;
     --radius: 50%;
-    border: 2px solid hsl(var(--b5));
 
     position: absolute;
     top: 1px;
-    left: -20px;
+    left: -27px;
     opacity: 0;
     transition-property: opacity, left !important;
     transition-duration: var(--trans) !important;
     transition-timing-function: var(--trans-function) !important;
 
     .modified & {
-        left: 0;
-        opacity: 1;
+        opacity: 0.3;
+
+        &:hover {
+            opacity: 1;
+        }
     }
 
     &:before {
@@ -14232,7 +14205,6 @@ input[type="range"]::-moz-range-progress {
         --margin-top: 0;
         --mask-size: 10px;
         --mask: var(--icon-10-revert);
-        color: hsl(var(--c1)) !important;
     }
 }
 
@@ -14598,7 +14570,7 @@ input[type="range"]::-moz-range-progress {
             filter: blur(3px);
         }
 
-        .shout {
+        .shout-preview {
             display: flex;
             gap: 8px;
             height: unset;
@@ -16798,6 +16770,7 @@ button.bleh--gallery-bookmark-image-btn {
 .text-container {
     display: flex;
     gap: var(--card-gap);
+    position: relative;
 
     h4 + & {
         margin-top: -10px;
@@ -18209,7 +18182,6 @@ h4 {
 
         .tag-icon {
             display: flex;
-            background-color: hsl(var(--b4));
             width: 48px;
             aspect-ratio: 1 / 1;
             cursor: default;
@@ -18218,8 +18190,9 @@ h4 {
             align-items: center;
             flex-direction: column;
 
+            background: hsl(var(--b5));
             border-radius: var(--item-big-radius);
-            box-shadow: var(--card-shadow);
+            box-shadow: 0 0 0 1px var(--card-border-base) inset, var(--card-shadow);
 
             position: relative;
             --left: 50%;
@@ -18250,6 +18223,9 @@ h4 {
             }
             &.event-icon {
                 --mask: var(--icon-event);
+            }
+            &.bookmarks-icon {
+                --mask: var(--icon-bookmark);
             }
         }
     }

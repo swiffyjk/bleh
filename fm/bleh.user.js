@@ -1292,6 +1292,9 @@ const trans = {
                 name: 'Simulate horizontal scrolling',
                 bio: 'Disable if you can scroll easily on a laptop for example.'
             }
+        },
+        bookmarks: {
+            name: 'Bookmarks'
         }
     },
     de: {
@@ -3845,7 +3848,7 @@ let settings_base = {
     seasonal_particles_reduced: {
         css: 'seasonal_particles_reduced',
         unit: '',
-        value: true,
+        value: false,
         values: [true, false],
         type: 'toggle',
         require_reload: true
@@ -3853,7 +3856,7 @@ let settings_base = {
     seasonal_particles_fps: {
         css: 'seasonal_particles_fps',
         unit: '',
-        value: true,
+        value: false,
         values: [true, false],
         type: 'toggle'
     },
@@ -3881,7 +3884,7 @@ let settings_base = {
     profile_avi_background: {
         css: 'profile_avi_background',
         unit: '',
-        value: true,
+        value: false,
         values: [true, false],
         type: 'toggle'
     },
@@ -3919,7 +3922,7 @@ let settings_base = {
     show_bulk_edit_album: {
         css: 'show_bulk_edit_album',
         unit: '',
-        value: true,
+        value: false,
         values: [true, false],
         type: 'toggle'
     },
@@ -4032,6 +4035,12 @@ let settings_base = {
         unit: '%',
         value: 50,
         type: 'slider'
+    },
+    profile_shortcut: {
+        css: 'profile_shortcut',
+        unit: '',
+        value: '',
+        type: 'text'
     },
     api_key: {
         css: 'api_key',
@@ -4498,6 +4507,8 @@ let has_prompted_for_update = false;
                 bleh_charts();
             else if (page.type == 'inbox')
                 bleh_inbox();
+            else if (page.type == 'bookmarks')
+                bleh_bookmarks();
 
             if (
                 (page.type == 'artist' || page.type == 'album' || page.type == 'track') &&
@@ -6797,7 +6808,7 @@ let has_prompted_for_update = false;
                 <div class="sep"></div>
                 <div class="inner-preview pad">
                     <div class="shouts">
-                        <div class="shout">
+                        <div class="shout-preview">
                             <div class="avatar-side">
                                 <div class="shout-avatar-placeholder"></div>
                             </div>
@@ -6810,7 +6821,7 @@ let has_prompted_for_update = false;
                                 <div class="shout-contents"></div>
                             </div>
                         </div>
-                        <div class="shout">
+                        <div class="shout-preview">
                             <div class="avatar-side">
                                 <div class="shout-avatar-placeholder"></div>
                             </div>
@@ -6823,7 +6834,7 @@ let has_prompted_for_update = false;
                                 <div class="shout-contents"></div>
                             </div>
                         </div>
-                        <div class="shout">
+                        <div class="shout-preview">
                             <div class="avatar-side">
                                 <div class="shout-avatar-placeholder"></div>
                             </div>
@@ -8903,12 +8914,12 @@ let has_prompted_for_update = false;
             let outer = document.createElement('div');
             outer.classList.add('bleh--page-outer');
 
-            let header = document.createElement('div');
-            header.classList.add('bleh-settings-header');
+            let header = document.createElement('section');
+            header.classList.add('redesigned-header', 'bleh-settings-header', 'no-background');
             header.setAttribute('id', 'settings_header');
             header.innerHTML = (`
-                <div class="icon-side">
-                    <div class="setting-icon"></div>
+                <div class="tag-side">
+                    <div class="tag-icon setting-icon"></div>
                 </div>
                 <div class="info-side">
                     <div class="sub-text">${trans[lang].settings.name}</div>
@@ -11436,6 +11447,8 @@ let has_prompted_for_update = false;
     }
 
     function update_item(item, value, modify=true, search = document) {
+        let container = search.querySelector(`#container-${item}`);
+
         try {
         // is this a new value?
         let new_value = false;
@@ -11477,11 +11490,6 @@ let has_prompted_for_update = false;
                 document.getElementById(`value-${item}`).textContent = `${settings[item]}${settings_base[item].unit}`;
                 slider.value = settings[item];
                 document.getElementById(`slider-track-${item}`).style.setProperty('--percent', `${(settings[item] / (slider.getAttribute('max'))) * 100}%`);
-
-                if (settings[item] != settings_base[item].value)
-                    document.getElementById(`container-${item}`).classList.add('modified');
-                else
-                    document.getElementById(`container-${item}`).classList.remove('modified');
             } catch(e) {}
 
             // save setting into body
@@ -11586,6 +11594,13 @@ let has_prompted_for_update = false;
         // save to settings
         localStorage.setItem('bleh', JSON.stringify(settings));
         } catch(e) {}
+
+        if (container) {
+            if (settings[item] != settings_base[item].value)
+                container.classList.add('modified');
+            else
+                container.classList.remove('modified');
+        }
 
         /*if (item.startsWith('seasonal') && modify) {
             document.getElementById('bleh--panel-main').innerHTML = render_setting_page('customise');
@@ -15206,7 +15221,7 @@ let has_prompted_for_update = false;
         }
     }
 
-    function lotus_request(type = 'artist', notify = false) {
+    function lotus_request(type = 'artist', send_notify = false) {
         let button = document.body.querySelector('[onclick="_lotus_check()"]');
         if (button != null)
             button.setAttribute('disabled', '');
@@ -15232,8 +15247,13 @@ let has_prompted_for_update = false;
                 else
                     album_track_corrections = JSON.parse(this.response);
 
-                if (notify)
-                    deliver_notif(trans[lang].lotus[type], false, true, 'lotus');
+                if (send_notify) {
+                    notify({
+                        title: trans[lang].lotus[type],
+                        icon: 'icon-16-lotus',
+                        classname: 'lotus'
+                    });
+                }
 
                 // save to cache for next page load
                 localStorage.setItem(`lotus_${type}`, this.response);
@@ -20237,5 +20257,30 @@ let has_prompted_for_update = false;
         tags.forEach((tag) => {
             tag.classList.add('user-created-tag');
         });
+    }
+
+
+
+
+    function bleh_bookmarks() {
+        basic_page_structure();
+
+        let header = document.createElement('section');
+        header.classList.add('redesigned-header', 'edit-header', 'no-background');
+        header.innerHTML = (`
+            <div class="tag-side">
+                <div class="tag-icon bookmarks-icon"></div>
+            </div>
+            <div class="info-side">
+                <div class="sub-text">${trans[lang].profile.name}</div>
+                <h1>${trans[lang].bookmarks.name}</h1>
+            </div>
+        `);
+
+        page.structure.container.insertBefore(header, page.structure.container.firstElementChild);
+
+        let content_top = document.body.querySelector('.content-top');
+        if (content_top)
+            content_top.classList.add('legacy-content-top');
     }
 })();
