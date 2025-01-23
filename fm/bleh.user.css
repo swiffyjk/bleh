@@ -7762,10 +7762,6 @@ input:is([name^="track_name"], [name^="artist_name"], [name^="album_name"], [nam
     background: hsl(var(--b6)) !important;
     animation: fade_popup_reduced var(--trans) var(--trans-function);
 
-    /*[data-bleh--reduced_motion="true"] & {
-        animation: fade_popup_reduced var(--trans) var(--trans-function);
-    }*/
-
     transition-property: opacity;
     transition-duration: var(--trans-short);
     transition-timing-function: var(--trans-function);
@@ -7791,18 +7787,6 @@ input:is([name^="track_name"], [name^="artist_name"], [name^="album_name"], [nam
 
     &.window-removing {
         opacity: 0 !important;
-
-        [data-bleh--reduced_motion="false"] & {
-            transform: scale(0.9);
-        }
-    }
-}
-@keyframes fade_popup {
-    from {
-        transform: scaleY(0);
-    }
-    to {
-        transform: scaleY(1);
     }
 }
 @keyframes fade_popup_reduced {
@@ -18094,11 +18078,12 @@ h4 {
             content: '';
             position: absolute;
             inset: 0;
-            background-image: var(--overlay-ice-spikes);
+            background-image: var(--cards-overlay-image-spikes);
             background-repeat: repeat-x;
             background-position: unset;
             z-index: 30;
-            display: none;
+            border-radius: var(--avatar-radius);
+            /*box-shadow: 0 0 0 1px var(--card-border-base) inset;*/
         }
 
         .about-artist-panel &,
@@ -18126,6 +18111,10 @@ h4 {
         .redesigned-album-header &,
         .redesigned-track-header &,
         .about-artist-panel & {
+            &:before {
+                border-radius: var(--item-big-radius);
+            }
+
             &:after {
                 content: '';
                 position: absolute;

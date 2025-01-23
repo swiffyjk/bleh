@@ -13434,8 +13434,8 @@ let has_prompted_for_update = false;
     // saturation should not exceed 2, definitely not
     // reaching 3 or even 4 in some cases
     function clamp_sat(sat) {
-        if (sat > 2)
-            return 2;
+        if (sat > 1.7)
+            return 1.7;
 
         return sat;
     }
