@@ -9455,7 +9455,7 @@ let has_prompted_for_update = false;
                         </div>
                         <table class="chartlist chartlist--with-image chartlist--with-loved chartlist--with-artist" style="margin: var(--card-gap) 0 !important">
                             <tbody>
-                                <tr class="chartlist-row chartlist-row--now-scrobbling chartlist-row--with-artist">
+                                <tr class="chartlist-row chartlist-row--now-scrobbling chartlist-row--with-artist" style="transition: none !important">
                                     <td class="chartlist-image">
                                         <a class="cover-art"><img src="${auth.avatar}" loading="lazy"></a>
                                     </td>
