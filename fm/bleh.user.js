@@ -13919,367 +13919,56 @@ let has_prompted_for_update = false;
                     <div class="setup-body">
                         <div class="setup-body-main">
                             <h1>${trans[lang].settings.appearance.name}</h1>
-                            <p>${trans[lang].setup.appearance.bio}</p>
                             <h4>${trans[lang].settings.customise.colours.name}</h4>
-                            <!--<h5>${trans[lang].settings.customise.colours.presets}</h5>-->
-                            <div class="palette options colours" id="custom_colours">
-                                <button class="swatch btn default" style="
-                                    --hue: var(--hue-seasonal, 255);
-                                    --sat: var(--sat-seasonal, 1);
-                                    --lit: var(--lit-seasonal, 1)" onclick="_update_params({
-                                    hue: 255,
-                                    sat: 1,
-                                    lit: 1
-                                })"></button>
-                                <button class="swatch btn custom" style="
-                                    --hue: var(--hue-user, 255);
-                                    --sat: var(--sat-user, 1);
-                                    --lit: var(--lit-user, 1)" onclick="_create_a_custom_colour()"></button>
-                            </div>
-                            <p class="subtext">${trans[lang].setup.appearance.subtext}</p>
-                            <div class="palette options colours">
-                                <div class="side">
-                                    <button class="swatch btn" style="
-                                        --hue: -2;
-                                        --sat: 1.35;
-                                        --lit: 0.85" onclick="_update_params({
-                                        hue: -2,
-                                        sat: 1.35,
-                                        lit: 0.85
-                                    })"></button>
-                                    <button class="swatch btn" style="
-                                        --hue: -2;
-                                        --sat: 1.25;
-                                        --lit: 0.85" onclick="_update_params({
-                                        hue: -2,
-                                        sat: 1.25,
-                                        lit: 0.85
-                                    })"></button>
-                                    <button class="swatch btn" style="
-                                        --hue: 356;
-                                        --sat: 1.25;
-                                        --lit: 0.9" onclick="_update_params({
-                                        hue: 356,
-                                        sat: 1.25,
-                                        lit: 0.9
-                                    })"></button>
-                                    <button class="swatch btn" style="
-                                        --hue: 351;
-                                        --sat: 1.2;
-                                        --lit: 0.9" onclick="_update_params({
-                                        hue: 351,
-                                        sat: 1.2,
-                                        lit: 0.9
-                                    })"></button>
-                                    <button class="swatch btn" style="
-                                        --hue: 346;
-                                        --sat: 1.3;
-                                        --lit: 0.85" onclick="_update_params({
-                                        hue: 346,
-                                        sat: 1.3,
-                                        lit: 0.85
-                                    })"></button>
-                                    <button class="swatch btn" style="
-                                        --hue: 339;
-                                        --sat: 1.3;
-                                        --lit: 0.85" onclick="_update_params({
-                                        hue: 339,
-                                        sat: 1.3,
-                                        lit: 0.85
-                                    })"></button>
-                                    <button class="swatch btn" style="
-                                        --hue: 331;
-                                        --sat: 1.1;
-                                        --lit: 0.8" onclick="_update_params({
-                                        hue: 331,
-                                        sat: 1.1,
-                                        lit: 0.8
-                                    })"></button>
-                                    <button class="swatch btn" style="
-                                        --hue: 310;
-                                        --sat: 1.2;
-                                        --lit: 0.85" onclick="_update_params({
-                                        hue: 310,
-                                        sat: 1.2,
-                                        lit: 0.85
-                                    })"></button>
-                                    <button class="swatch btn" style="
-                                        --hue: 286;
-                                        --sat: 1.2;
-                                        --lit: 0.9" onclick="_update_params({
-                                        hue: 286,
-                                        sat: 1.2,
-                                        lit: 0.9
-                                    })"></button>
-                                    <button class="swatch btn" style="
-                                        --hue: 274;
-                                        --sat: 1.25;
-                                        --lit: 0.9" onclick="_update_params({
-                                        hue: 274,
-                                        sat: 1.25,
-                                        lit: 0.9
-                                    })"></button>
-                                </div>
-                                <div class="side">
-                                    <button class="swatch btn" style="
-                                        --hue: 7;
-                                        --sat: 1.35;
-                                        --lit: 0.8" onclick="_update_params({
-                                        hue: 7,
-                                        sat: 1.35,
-                                        lit: 0.8
-                                    })"></button>
-                                    <button class="swatch btn" style="
-                                        --hue: 9;
-                                        --sat: 1.25;
-                                        --lit: 0.84" onclick="_update_params({
-                                        hue: 9,
-                                        sat: 1.25,
-                                        lit: 0.84
-                                    })"></button>
-                                    <button class="swatch btn" style="
-                                        --hue: 14;
-                                        --sat: 1.25;
-                                        --lit: 0.88" onclick="_update_params({
-                                        hue: 14,
-                                        sat: 1.25,
-                                        lit: 0.88
-                                    })"></button>
-                                    <button class="swatch btn" style="
-                                        --hue: 18;
-                                        --sat: 1.2;
-                                        --lit: 0.9" onclick="_update_params({
-                                        hue: 18,
-                                        sat: 1.2,
-                                        lit: 0.9
-                                    })"></button>
-                                    <button class="swatch btn" style="
-                                        --hue: 24;
-                                        --sat: 1.2;
-                                        --lit: 0.93" onclick="_update_params({
-                                        hue: 24,
-                                        sat: 1.2,
-                                        lit: 0.93
-                                    })"></button>
-                                    <button class="swatch btn" style="
-                                        --hue: 30;
-                                        --sat: 1.3;
-                                        --lit: 1" onclick="_update_params({
-                                        hue: 30,
-                                        sat: 1.3,
-                                        lit: 1
-                                    })"></button>
-                                    <button class="swatch btn" style="
-                                        --hue: 38;
-                                        --sat: 1.3;
-                                        --lit: 0.98" onclick="_update_params({
-                                        hue: 38,
-                                        sat: 1.3,
-                                        lit: 0.98
-                                    })"></button>
-                                    <button class="swatch btn" style="
-                                        --hue: 49;
-                                        --sat: 1.3;
-                                        --lit: 0.98" onclick="_update_params({
-                                        hue: 49,
-                                        sat: 1.3,
-                                        lit: 0.98
-                                    })"></button>
-                                    <button class="swatch btn" style="
-                                        --hue: 53;
-                                        --sat: 1.3;
-                                        --lit: 0.95" onclick="_update_params({
-                                        hue: 53,
-                                        sat: 1.3,
-                                        lit: 0.95
-                                    })"></button>
-                                    <button class="swatch btn" style="
-                                        --hue: 62;
-                                        --sat: 1.25;
-                                        --lit: 0.95" onclick="_update_params({
-                                        hue: 62,
-                                        sat: 1.25,
-                                        lit: 0.95
-                                    })"></button>
-                                </div>
-                                <div class="side">
-                                    <button class="swatch btn" style="
-                                        --hue: 75;
-                                        --sat: 1.1;
-                                        --lit: 1" onclick="_update_params({
-                                        hue: 75,
-                                        sat: 1.1,
-                                        lit: 1
-                                    })"></button>
-                                    <button class="swatch btn" style="
-                                        --hue: 85;
-                                        --sat: 1;
-                                        --lit: 1" onclick="_update_params({
-                                        hue: 85,
-                                        sat: 1,
-                                        lit: 1
-                                    })"></button>
-                                    <button class="swatch btn" style="
-                                        --hue: 95;
-                                        --sat: 1.1;
-                                        --lit: 1" onclick="_update_params({
-                                        hue: 95,
-                                        sat: 1.1,
-                                        lit: 1
-                                    })"></button>
-                                    <button class="swatch btn" style="
-                                        --hue: 115;
-                                        --sat: 1;
-                                        --lit: 1" onclick="_update_params({
-                                        hue: 115,
-                                        sat: 1,
-                                        lit: 1
-                                    })"></button>
-                                    <button class="swatch btn" style="
-                                        --hue: 130;
-                                        --sat: 1.2;
-                                        --lit: 0.95" onclick="_update_params({
-                                        hue: 130,
-                                        sat: 1.2,
-                                        lit: 0.95
-                                    })"></button>
-                                    <button class="swatch btn" style="
-                                        --hue: 140;
-                                        --sat: 1.2;
-                                        --lit: 0.9" onclick="_update_params({
-                                        hue: 140,
-                                        sat: 1.2,
-                                        lit: 0.9
-                                    })"></button>
-                                    <button class="swatch btn" style="
-                                        --hue: 155;
-                                        --sat: 1.2;
-                                        --lit: 0.85" onclick="_update_params({
-                                        hue: 155,
-                                        sat: 1.2,
-                                        lit: 0.85
-                                    })"></button>
-                                    <button class="swatch btn" style="
-                                        --hue: 165;
-                                        --sat: 1.1;
-                                        --lit: 0.8" onclick="_update_params({
-                                        hue: 165,
-                                        sat: 1.1,
-                                        lit: 0.8
-                                    })"></button>
-                                    <button class="swatch btn" style="
-                                        --hue: 174;
-                                        --sat: 1.1;
-                                        --lit: 0.8" onclick="_update_params({
-                                        hue: 174,
-                                        sat: 1.1,
-                                        lit: 0.8
-                                    })"></button>
-                                    <button class="swatch btn" style="
-                                        --hue: 184;
-                                        --sat: 1.05;
-                                        --lit: 0.75" onclick="_update_params({
-                                        hue: 184,
-                                        sat: 1.05,
-                                        lit: 0.75
-                                    })"></button>
-                                </div>
-                                <div class="side">
-                                    <button class="swatch btn" style="
-                                        --hue: 205;
-                                        --sat: 1;
-                                        --lit: 1" onclick="_update_params({
-                                        hue: 205,
-                                        sat: 1,
-                                        lit: 1
-                                    })"></button>
-                                    <button class="swatch btn" style="
-                                        --hue: 222;
-                                        --sat: 1;
-                                        --lit: 0.9" onclick="_update_params({
-                                        hue: 222,
-                                        sat: 1,
-                                        lit: 0.9
-                                    })"></button>
-                                    <button class="swatch btn" style="
-                                        --hue: 230;
-                                        --sat: 1.3;
-                                        --lit: 0.9" onclick="_update_params({
-                                        hue: 230,
-                                        sat: 1.3,
-                                        lit: 0.9
-                                    })"></button>
-                                    <button class="swatch btn" style="
-                                        --hue: 230;
-                                        --sat: 1.3;
-                                        --lit: 0.825" onclick="_update_params({
-                                        hue: 230,
-                                        sat: 1.3,
-                                        lit: 0.825
-                                    })"></button>
-                                    <button class="swatch btn" style="
-                                        --hue: 243;
-                                        --sat: 1.3;
-                                        --lit: 0.9" onclick="_update_params({
-                                        hue: 243,
-                                        sat: 1.3,
-                                        lit: 0.9
-                                    })"></button>
-                                    <button class="swatch btn" style="
-                                        --hue: 249;
-                                        --sat: 1.3;
-                                        --lit: 0.9" onclick="_update_params({
-                                        hue: 249,
-                                        sat: 1.3,
-                                        lit: 0.9
-                                    })"></button>
-                                    <button class="swatch btn" style="
-                                        --hue: 255;
-                                        --sat: 1.2;
-                                        --lit: 0.9" onclick="_update_params({
-                                        hue: 255,
-                                        sat: 1.2,
-                                        lit: 0.9
-                                    })"></button>
-                                    <button class="swatch btn" style="
-                                        --hue: 263;
-                                        --sat: 1.2;
-                                        --lit: 0.9" onclick="_update_params({
-                                        hue: 263,
-                                        sat: 1.2,
-                                        lit: 0.9
-                                    })"></button>
-                                    <button class="swatch btn" style="
-                                        --hue: 260;
-                                        --sat: 1.1;
-                                        --lit: 0.95" onclick="_update_params({
-                                        hue: 260,
-                                        sat: 1.1,
-                                        lit: 0.95
-                                    })"></button>
-                                    <button class="swatch btn" style="
-                                        --hue: 255;
-                                        --sat: 1;
-                                        --lit: 0.95" onclick="_update_params({
-                                        hue: 255,
-                                        sat: 1,
-                                        lit: 0.95
-                                    })"></button>
+                            <div class="inner-preview pad">
+                                <table class="chartlist chartlist--with-image chartlist--with-loved chartlist--with-artist" style="margin: var(--card-gap) 0 !important">
+                                    <tbody>
+                                        <tr class="chartlist-row chartlist-row--now-scrobbling chartlist-row--with-artist" style="transition: none !important">
+                                            <td class="chartlist-image">
+                                                <a class="cover-art"><img src="${auth.avatar}" loading="lazy"></a>
+                                            </td>
+                                            <td class="chartlist-loved">
+                                                <button class="chartlist-love-button" data-toggle-button-current-state="unloved"></button>
+                                            </td>
+                                            <td class="chartlist-name">
+                                                <a>Song title</a>
+                                            </td>
+                                            <td class="chartlist-artist">
+                                                <a>${auth.name}</a>
+                                            </td>
+                                            <td class="chartlist-timestamp chartlist-timestamp--lang-en">
+                                                <span class="chartlist-now-scrobbling">
+                                                    <a>Scrobbling now</a>
+                                                </span>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <div class="btn-row">
+                                    <button class="btn">${trans[lang].settings.examples.button}</button>
+                                    <button class="btn primary">${trans[lang].settings.examples.button}</button>
+                                    <div class="chartlist-count-bar">
+                                        <a class="chartlist-count-bar-link">
+                                            <span class="chartlist-count-bar-slug" style="width: 60%"></span>
+                                            <span class="chartlist-count-bar-value">44,551</span>
+                                        </a>
+                                    </div>
                                 </div>
                             </div>
-                            <div class="toggle-container" id="container-hue_from_album">
-                                <button class="btn reset" onclick="_reset_item('hue_from_album')">${trans[lang].settings.reset}</button>
-                                <div class="heading">
-                                    <h5>${trans[lang].settings.customise.hue_from_album.name}</h5>
-                                    <p>${trans[lang].settings.customise.hue_from_album.bio}</p>
-                                </div>
-                                <div class="toggle-wrap">
-                                    <button class="toggle" id="toggle-hue_from_album" onclick="_update_item('hue_from_album')" aria-checked="true">
-                                        <div class="dot"></div>
-                                    </button>
-                                </div>
+                            <div class="view-buttons colour-buttons view-buttons-middle" id="colour_custom"></div>
+                            <div class="swatch-group">
+                                <div id="colour_red" class="palette options colours"></div>
+                                <div id="colour_orange" class="palette options colours"></div>
+                                <div id="colour_yellow" class="palette options colours"></div>
+                                <div id="colour_green" class="palette options colours"></div>
+                                <div id="colour_lime" class="palette options colours"></div>
+                                <div id="colour_aqua" class="palette options colours"></div>
+                                <div id="colour_blue" class="palette options colours"></div>
+                                <div id="colour_purple" class="palette options colours"></div>
+                                <div id="colour_pink" class="palette options colours"></div>
                             </div>
                         </div>
+                        <div class="alert alert-info">${trans[lang].setup.music.change_later}</div>
                         <div class="modal-footer">
                             <button class="btn back" onclick="_setup()">
                                 ${trans[lang].settings.back}
@@ -14299,16 +13988,9 @@ let has_prompted_for_update = false;
             type: 'setup',
             replace_if_possible: true
         })
-        refresh_all();
 
-        tippy(document.body.querySelector('.swatch.default'), {
-            content: (stored_season.id != 'none')
-            ? trans[lang].settings.customise.colours.default_with_season.replace('{season}', trans[lang].settings.customise.seasonal.listing[stored_season.id])
-            : trans[lang].settings.customise.colours.default
-        });
-        tippy(document.body.querySelector('.swatch.custom'), {
-            content: trans[lang].settings.customise.colours.custom
-        });
+        display_colour_presets();
+        refresh_all();
     }
 
     unsafeWindow._setup_corrections = function() {

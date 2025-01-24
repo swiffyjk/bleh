@@ -13710,11 +13710,6 @@ pre {
         height: 50px !important;
     }
 }
-.palette .side {
-    width: fit-content;
-    grid-template-columns: 1fr 1fr;
-    height: fit-content;
-}
 .palette .swatch {
     --bg: hsl(var(--h3));
     --bg-hov: hsla(var(--h3), 90%);
@@ -16641,13 +16636,13 @@ button.bleh--gallery-bookmark-image-btn {
                     font-size: 24px;
                     line-height: 28px;
                     color: hsl(var(--c1));
-                    margin: 20px 0;
                     letter-spacing: unset;
                     cursor: default;
+                }
 
-                    & + p {
-                        margin-top: -20px;
-                        margin-bottom: unset;
+                h1, h1 + p {
+                    & + h4 {
+                        margin-top: 20px;
                     }
                 }
 
