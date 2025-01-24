@@ -6819,6 +6819,7 @@ section:has(.dropdown-menu-clickable-button.section-control) {
     --left: 12px;
     --right: none;
 
+    &[aria-checked="true"],
     .date-range-picker-preset--selected > &,
     &.dropdown-menu-clickable-item--selected,
     &.active {
@@ -7111,6 +7112,7 @@ very, very, very dated - who looks up a song on ebay? */
 
 
 /*     DANGEROUS     */
+.dropdown-menu-clickable-item.swatch,
 .dropdown-menu-clickable-item.lotus,
 .more-item--obsession,
 [data-menu-item="labs"],
@@ -7133,7 +7135,7 @@ very, very, very dated - who looks up a song on ebay? */
         [data-menu-item="bleh"],
         [data-menu-item="labs"],
         .more-item--obsession,
-        .lotus
+        .lotus, .swatch
         ) {
         --hue-over: var(--hue-neg);
         --sat-over: 1;
@@ -13679,8 +13681,12 @@ pre {
 
 .swatch-group {
     display: flex;
-    flex-direction: column;
     gap: var(--button-list-gap);
+
+    .palette {
+        display: flex;
+        flex-direction: column;
+    }
 }
 
 .palette.options {

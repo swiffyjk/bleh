@@ -805,8 +805,7 @@ const trans = {
                     fruitcake: 'fruitcake',
                     mistletoe: 'Mistletoe',
                     festival: 'Christmas Eve',
-                    exclusive_for_season: 'Exclusive for <span class="season-name">{season}</span>',
-                    exclusive_for_season_and_more: 'Exclusive for <span class="season-name">{season}</span> and 1 more',
+                    available_in: 'Available in {s}',
                     view: 'Open seasonal tab'
                 },
                 artwork: {
@@ -3763,6 +3762,12 @@ let settings_base = {
         unit: '',
         value: 1,
         type: 'slider'
+    },
+    accent_type: {
+        css: 'accent_type',
+        unit: '',
+        value: 'colour',
+        type: 'options'
     },
     gloss: {
         css: 'gloss',
@@ -9351,11 +9356,6 @@ let has_prompted_for_update = false;
                     name: trans[lang].settings.customise.colourful_tracks.name
                 },
                 {
-                    id: 'sat_bg',
-                    type: 'slider',
-                    name: trans[lang].settings.customise.sat_bg.name
-                },
-                {
                     id: 'colourful_counts',
                     name: trans[lang].settings.customise.colourful_counts.name
                 }
@@ -9471,391 +9471,20 @@ let has_prompted_for_update = false;
                         </div>
                     </div>
                     <div class="view-buttons colour-buttons view-buttons-middle" id="colour_custom"></div>
+                    <div class="swatch-seasons">
+                        <h5>${trans[lang].settings.customise.seasonal.available_in.replace('{s}', trans[lang].settings.customise.seasonal.listing[stored_season.id])}</h5>
+                        <div id="colour_season_${stored_season.id}" class="palette options colours"></div>
+                    </div>
                     <div class="swatch-group">
                         <div id="colour_red" class="palette options colours"></div>
+                        <div id="colour_orange" class="palette options colours"></div>
                         <div id="colour_yellow" class="palette options colours"></div>
                         <div id="colour_green" class="palette options colours"></div>
-                        <div id="colour_orange" class="palette options colours"></div>
-                        <div id="colour_orange" class="palette options colours"></div>
-                    </div>
-                    <div class="palette options colours" id="custom_colours">
-                        <button class="swatch btn default" style="
-                            --hue: var(--hue-seasonal, 255);
-                            --sat: var(--sat-seasonal, 1);
-                            --lit: var(--lit-seasonal, 1)" onclick="_update_params({
-                            hue: 255,
-                            sat: 1,
-                            lit: 1
-                        })"></button>
-                        ${(stored_season.id == 'christmas' || stored_season.id == 'new_years') ? (`
-                        <button class="swatch btn seasonal-swatch" style="
-                            --hue: 352;
-                            --sat: 1.8;
-                            --lit: 0.925" onclick="_update_params({
-                            hue: 352,
-                            sat: 1.8,
-                            lit: 0.925
-                        })" id="nonsense_christmas" data-season-swatch="christmas"></button>
-                        <button class="swatch btn seasonal-swatch" style="
-                            --hue: 24;
-                            --sat: 0.93;
-                            --lit: 1" onclick="_update_params({
-                            hue: 24,
-                            sat: 0.93,
-                            lit: 1
-                        })" id="fruitcake" data-season-swatch="christmas"></button>
-                        <button class="swatch btn seasonal-swatch" style="
-                            --hue: 130;
-                            --sat: 0.45;
-                            --lit: 0.75" onclick="_update_params({
-                            hue: 130,
-                            sat: 0.45,
-                            lit: 0.75
-                        })" id="mistletoe" data-season-swatch="christmas"></button>
-                        <button class="swatch btn seasonal-swatch" style="
-                            --hue: 240;
-                            --sat: 1.4;
-                            --lit: 0.75" onclick="_update_params({
-                            hue: 240,
-                            sat: 1.4,
-                            lit: 0.75
-                        })" id="festival" data-season-swatch="christmas"></button>
-                        `) : ''}
-                        <button class="swatch btn custom" style="
-                            --hue: var(--hue-user, 255);
-                            --sat: var(--sat-user, 1);
-                            --lit: var(--lit-user, 1)" onclick="_create_a_custom_colour()"></button>
-                    </div>
-                    <p class="subtext">${trans[lang].setup.appearance.subtext}</p>
-                    <div class="palette options colours">
-                        <div class="side">
-                            <button class="swatch btn" style="
-                                --hue: -2;
-                                --sat: 1.35;
-                                --lit: 0.85" onclick="_update_params({
-                                hue: -2,
-                                sat: 1.35,
-                                lit: 0.85
-                            })"></button>
-                            <button class="swatch btn" style="
-                                --hue: -2;
-                                --sat: 1.25;
-                                --lit: 0.85" onclick="_update_params({
-                                hue: -2,
-                                sat: 1.25,
-                                lit: 0.85
-                            })"></button>
-                            <button class="swatch btn" style="
-                                --hue: 356;
-                                --sat: 1.25;
-                                --lit: 0.9" onclick="_update_params({
-                                hue: 356,
-                                sat: 1.25,
-                                lit: 0.9
-                            })"></button>
-                            <button class="swatch btn" style="
-                                --hue: 351;
-                                --sat: 1.2;
-                                --lit: 0.9" onclick="_update_params({
-                                hue: 351,
-                                sat: 1.2,
-                                lit: 0.9
-                            })"></button>
-                            <button class="swatch btn" style="
-                                --hue: 346;
-                                --sat: 1.3;
-                                --lit: 0.85" onclick="_update_params({
-                                hue: 346,
-                                sat: 1.3,
-                                lit: 0.85
-                            })"></button>
-                            <button class="swatch btn" style="
-                                --hue: 339;
-                                --sat: 1.3;
-                                --lit: 0.85" onclick="_update_params({
-                                hue: 339,
-                                sat: 1.3,
-                                lit: 0.85
-                            })"></button>
-                            <button class="swatch btn" style="
-                                --hue: 331;
-                                --sat: 1.1;
-                                --lit: 0.8" onclick="_update_params({
-                                hue: 331,
-                                sat: 1.1,
-                                lit: 0.8
-                            })"></button>
-                            <button class="swatch btn" style="
-                                --hue: 310;
-                                --sat: 1.2;
-                                --lit: 0.85" onclick="_update_params({
-                                hue: 310,
-                                sat: 1.2,
-                                lit: 0.85
-                            })"></button>
-                            <button class="swatch btn" style="
-                                --hue: 286;
-                                --sat: 1.2;
-                                --lit: 0.9" onclick="_update_params({
-                                hue: 286,
-                                sat: 1.2,
-                                lit: 0.9
-                            })"></button>
-                            <button class="swatch btn" style="
-                                --hue: 274;
-                                --sat: 1.25;
-                                --lit: 0.9" onclick="_update_params({
-                                hue: 274,
-                                sat: 1.25,
-                                lit: 0.9
-                            })"></button>
-                        </div>
-                        <div class="side">
-                            <button class="swatch btn" style="
-                                --hue: 7;
-                                --sat: 1.35;
-                                --lit: 0.8" onclick="_update_params({
-                                hue: 7,
-                                sat: 1.35,
-                                lit: 0.8
-                            })"></button>
-                            <button class="swatch btn" style="
-                                --hue: 9;
-                                --sat: 1.25;
-                                --lit: 0.84" onclick="_update_params({
-                                hue: 9,
-                                sat: 1.25,
-                                lit: 0.84
-                            })"></button>
-                            <button class="swatch btn" style="
-                                --hue: 14;
-                                --sat: 1.25;
-                                --lit: 0.88" onclick="_update_params({
-                                hue: 14,
-                                sat: 1.25,
-                                lit: 0.88
-                            })"></button>
-                            <button class="swatch btn" style="
-                                --hue: 18;
-                                --sat: 1.2;
-                                --lit: 0.9" onclick="_update_params({
-                                hue: 18,
-                                sat: 1.2,
-                                lit: 0.9
-                            })"></button>
-                            <button class="swatch btn" style="
-                                --hue: 24;
-                                --sat: 1.2;
-                                --lit: 0.93" onclick="_update_params({
-                                hue: 24,
-                                sat: 1.2,
-                                lit: 0.93
-                            })"></button>
-                            <button class="swatch btn" style="
-                                --hue: 30;
-                                --sat: 1.3;
-                                --lit: 1" onclick="_update_params({
-                                hue: 30,
-                                sat: 1.3,
-                                lit: 1
-                            })"></button>
-                            <button class="swatch btn" style="
-                                --hue: 38;
-                                --sat: 1.3;
-                                --lit: 0.98" onclick="_update_params({
-                                hue: 38,
-                                sat: 1.3,
-                                lit: 0.98
-                            })"></button>
-                            <button class="swatch btn" style="
-                                --hue: 49;
-                                --sat: 1.3;
-                                --lit: 0.98" onclick="_update_params({
-                                hue: 49,
-                                sat: 1.3,
-                                lit: 0.98
-                            })"></button>
-                            <button class="swatch btn" style="
-                                --hue: 53;
-                                --sat: 1.3;
-                                --lit: 0.95" onclick="_update_params({
-                                hue: 53,
-                                sat: 1.3,
-                                lit: 0.95
-                            })"></button>
-                            <button class="swatch btn" style="
-                                --hue: 62;
-                                --sat: 1.25;
-                                --lit: 0.95" onclick="_update_params({
-                                hue: 62,
-                                sat: 1.25,
-                                lit: 0.95
-                            })"></button>
-                        </div>
-                        <div class="side">
-                            <button class="swatch btn" style="
-                                --hue: 75;
-                                --sat: 1.1;
-                                --lit: 1" onclick="_update_params({
-                                hue: 75,
-                                sat: 1.1,
-                                lit: 1
-                            })"></button>
-                            <button class="swatch btn" style="
-                                --hue: 85;
-                                --sat: 1;
-                                --lit: 1" onclick="_update_params({
-                                hue: 85,
-                                sat: 1,
-                                lit: 1
-                            })"></button>
-                            <button class="swatch btn" style="
-                                --hue: 95;
-                                --sat: 1.1;
-                                --lit: 1" onclick="_update_params({
-                                hue: 95,
-                                sat: 1.1,
-                                lit: 1
-                            })"></button>
-                            <button class="swatch btn" style="
-                                --hue: 115;
-                                --sat: 1;
-                                --lit: 1" onclick="_update_params({
-                                hue: 115,
-                                sat: 1,
-                                lit: 1
-                            })"></button>
-                            <button class="swatch btn" style="
-                                --hue: 130;
-                                --sat: 1.2;
-                                --lit: 0.95" onclick="_update_params({
-                                hue: 130,
-                                sat: 1.2,
-                                lit: 0.95
-                            })"></button>
-                            <button class="swatch btn" style="
-                                --hue: 140;
-                                --sat: 1.2;
-                                --lit: 0.9" onclick="_update_params({
-                                hue: 140,
-                                sat: 1.2,
-                                lit: 0.9
-                            })"></button>
-                            <button class="swatch btn" style="
-                                --hue: 155;
-                                --sat: 1.2;
-                                --lit: 0.85" onclick="_update_params({
-                                hue: 155,
-                                sat: 1.2,
-                                lit: 0.85
-                            })"></button>
-                            <button class="swatch btn" style="
-                                --hue: 165;
-                                --sat: 1.1;
-                                --lit: 0.8" onclick="_update_params({
-                                hue: 165,
-                                sat: 1.1,
-                                lit: 0.8
-                            })"></button>
-                            <button class="swatch btn" style="
-                                --hue: 174;
-                                --sat: 1.1;
-                                --lit: 0.8" onclick="_update_params({
-                                hue: 174,
-                                sat: 1.1,
-                                lit: 0.8
-                            })"></button>
-                            <button class="swatch btn" style="
-                                --hue: 184;
-                                --sat: 1.05;
-                                --lit: 0.75" onclick="_update_params({
-                                hue: 184,
-                                sat: 1.05,
-                                lit: 0.75
-                            })"></button>
-                        </div>
-                        <div class="side">
-                            <button class="swatch btn" style="
-                                --hue: 205;
-                                --sat: 1;
-                                --lit: 1" onclick="_update_params({
-                                hue: 205,
-                                sat: 1,
-                                lit: 1
-                            })"></button>
-                            <button class="swatch btn" style="
-                                --hue: 222;
-                                --sat: 1;
-                                --lit: 0.9" onclick="_update_params({
-                                hue: 222,
-                                sat: 1,
-                                lit: 0.9
-                            })"></button>
-                            <button class="swatch btn" style="
-                                --hue: 230;
-                                --sat: 1.3;
-                                --lit: 0.9" onclick="_update_params({
-                                hue: 230,
-                                sat: 1.3,
-                                lit: 0.9
-                            })"></button>
-                            <button class="swatch btn" style="
-                                --hue: 230;
-                                --sat: 1.3;
-                                --lit: 0.825" onclick="_update_params({
-                                hue: 230,
-                                sat: 1.3,
-                                lit: 0.825
-                            })"></button>
-                            <button class="swatch btn" style="
-                                --hue: 243;
-                                --sat: 1.3;
-                                --lit: 0.9" onclick="_update_params({
-                                hue: 243,
-                                sat: 1.3,
-                                lit: 0.9
-                            })"></button>
-                            <button class="swatch btn" style="
-                                --hue: 249;
-                                --sat: 1.3;
-                                --lit: 0.9" onclick="_update_params({
-                                hue: 249,
-                                sat: 1.3,
-                                lit: 0.9
-                            })"></button>
-                            <button class="swatch btn" style="
-                                --hue: 255;
-                                --sat: 1.2;
-                                --lit: 0.9" onclick="_update_params({
-                                hue: 255,
-                                sat: 1.2,
-                                lit: 0.9
-                            })"></button>
-                            <button class="swatch btn" style="
-                                --hue: 263;
-                                --sat: 1.2;
-                                --lit: 0.9" onclick="_update_params({
-                                hue: 263,
-                                sat: 1.2,
-                                lit: 0.9
-                            })"></button>
-                            <button class="swatch btn" style="
-                                --hue: 260;
-                                --sat: 1.1;
-                                --lit: 0.95" onclick="_update_params({
-                                hue: 260,
-                                sat: 1.1,
-                                lit: 0.95
-                            })"></button>
-                            <button class="swatch btn" style="
-                                --hue: 255;
-                                --sat: 1;
-                                --lit: 0.95" onclick="_update_params({
-                                hue: 255,
-                                sat: 1,
-                                lit: 0.95
-                            })"></button>
-                        </div>
+                        <div id="colour_lime" class="palette options colours"></div>
+                        <div id="colour_aqua" class="palette options colours"></div>
+                        <div id="colour_blue" class="palette options colours"></div>
+                        <div id="colour_purple" class="palette options colours"></div>
+                        <div id="colour_pink" class="palette options colours"></div>
                     </div>
                     <div class="toggle-container" id="container-hue_from_album" onclick="_update_item('hue_from_album')">
                         <button class="btn reset" onclick="_reset_item('hue_from_album')">${trans[lang].settings.reset}</button>
@@ -9881,20 +9510,6 @@ let has_prompted_for_update = false;
                             </button>
                         </div>
                     </div>
-                    ${(ff('card_saturation')) ? (`
-                    <div class="slider-container hide-if-light-theme" id="container-sat_bg">
-                        <button class="btn reset" onclick="_reset_item('sat_bg')">${trans[lang].settings.reset}</button>
-                        <div class="heading">
-                            <h5>${trans[lang].settings.customise.sat_bg.name}</h5>
-                            <p>${trans[lang].settings.customise.sat_bg.bio}</p>
-                        </div>
-                        <div class="slider">
-                            <div class="slider-track" id="slider-track-sat_bg"><div class="slider-fill"></div><div class="slider-nub"></div></div>
-                            <input type="range" min="0" max="3" value="0" step="0.1" id="slider-sat_bg" oninput="_update_item('sat_bg', this.value)">
-                            <p id="value-sat_bg">0</p>
-                        </div>
-                    </div>
-                    `) : ''}
                     <div class="sep"></div>
                     <div class="inner-preview pad">
                         <div class="personal-stats-preview-bar-container">
@@ -11195,52 +10810,6 @@ let has_prompted_for_update = false;
             });
         }
 
-        if (page == 'themes') {
-            tippy(document.body.querySelector('.swatch.default'), {
-                content: (stored_season.id != 'none')
-                ? trans[lang].settings.customise.colours.default_with_season.replace('{season}', trans[lang].settings.customise.seasonal.listing[stored_season.id])
-                : trans[lang].settings.customise.colours.default
-            });
-            tippy(document.body.querySelector('.swatch.custom'), {
-                content: trans[lang].settings.customise.colours.custom
-            });
-
-            if (stored_season.id == 'christmas' || stored_season.id == 'new_years') {
-                tippy(document.body.querySelector('.swatch#nonsense_christmas'), {
-                    theme: 'seasonal-swatch',
-                    content: (`
-                        <span class="season-colour-name">${trans[lang].settings.customise.seasonal.nonsense}</span>
-                        <span class="season-exclusive">${trans[lang].settings.customise.seasonal.exclusive_for_season_and_more.replace('{season}', trans[lang].settings.customise.seasonal.listing[stored_season.id])}</span>
-                    `),
-                    allowHTML: true
-                });
-                tippy(document.body.querySelector('.swatch#fruitcake'), {
-                    theme: 'seasonal-swatch',
-                    content: (`
-                        <span class="season-colour-name">${trans[lang].settings.customise.seasonal.fruitcake}</span>
-                        <span class="season-exclusive">${trans[lang].settings.customise.seasonal.exclusive_for_season_and_more.replace('{season}', trans[lang].settings.customise.seasonal.listing[stored_season.id])}</span>
-                    `),
-                    allowHTML: true
-                });
-                tippy(document.body.querySelector('.swatch#mistletoe'), {
-                    theme: 'seasonal-swatch',
-                    content: (`
-                        <span class="season-colour-name">${trans[lang].settings.customise.seasonal.mistletoe}</span>
-                        <span class="season-exclusive">${trans[lang].settings.customise.seasonal.exclusive_for_season_and_more.replace('{season}', trans[lang].settings.customise.seasonal.listing[stored_season.id])}</span>
-                    `),
-                    allowHTML: true
-                });
-                tippy(document.body.querySelector('.swatch#festival'), {
-                    theme: 'seasonal-swatch',
-                    content: (`
-                        <span class="season-colour-name">${trans[lang].settings.customise.seasonal.festival}</span>
-                        <span class="season-exclusive">${trans[lang].settings.customise.seasonal.exclusive_for_season_and_more.replace('{season}', trans[lang].settings.customise.seasonal.listing[stored_season.id])}</span>
-                    `),
-                    allowHTML: true
-                });
-            }
-        }
-
         if ((page == 'seasonal' || page == 'home') && settings.seasonal && stored_season.id != 'none') {
             tippy(document.getElementById('current_season'), {
                 content: new Date(stored_season.end.replace('y0', stored_season.year).replace('{offset}', stored_season.offset)).toLocaleString(lang)
@@ -11377,8 +10946,7 @@ let has_prompted_for_update = false;
                         hue: 'var(--hue-seasonal, 255)',
                         sat: 'var(--sat-seasonal, 1)',
                         lit: 'var(--lit-seasonal, 1)'
-                    },
-                    requires_flag: 'colour_based_on_avatar'
+                    }
                 },
                 {
                     type: 'avatar',
@@ -11386,7 +10954,11 @@ let has_prompted_for_update = false;
                         hue: auth.sets.hue,
                         sat: auth.sets.sat,
                         lit: auth.sets.lit
-                    }
+                    },
+                    requires_flag: 'colour_based_on_avatar'
+                },
+                {
+                    type: 'seasonal'
                 },
                 {
                     type: 'custom'
@@ -11396,120 +10968,297 @@ let has_prompted_for_update = false;
                 {sets: {
                     hue: 360,
                     sat: 1.425,
+                    lit: 0.725
+                }},
+                {sets: {
+                    hue: 360,
+                    sat: 1.4,
                     lit: 0.775
                 }},
                 {sets: {
-                    hue: 1,
-                    sat: 1.4,
-                    lit: 0.8
+                    hue: 360,
+                    sat: 1.325,
+                    lit: 0.825
                 }},
                 {sets: {
-                    hue: 1,
-                    sat: 1.3,
+                    hue: 360,
+                    sat: 1.225,
                     lit: 0.875
                 }},
                 {sets: {
-                    hue: 1,
-                    sat: 1.2,
-                    lit: 0.9
-                }},
-                {sets: {
-                    hue: 1,
+                    hue: 360,
                     sat: 1.1,
-                    lit: 0.95
+                    lit: 0.925
                 }},
                 {sets: {
-                    hue: 2,
+                    hue: 360,
                     sat: 1.05,
-                    lit: 1.05
-                }},
-                {sets: {
-                    hue: 4,
-                    sat: 1.15,
                     lit: 1
-                }},
-                {sets: {
-                    hue: 7,
-                    sat: 1.3,
-                    lit: 0.95
-                }},,
+                }}
+            ],
+            orange: [
                 {sets: {
                     hue: 10,
-                    sat: 1.4,
-                    lit: 0.8
+                    sat: 1.425,
+                    lit: 0.725
                 }},
                 {sets: {
-                    hue: 14,
+                    hue: 13,
                     sat: 1.4,
                     lit: 0.775
+                }},
+                {sets: {
+                    hue: 16,
+                    sat: 1.325,
+                    lit: 0.825
                 }},
                 {sets: {
                     hue: 20,
-                    sat: 1.425,
-                    lit: 0.775
+                    sat: 1.225,
+                    lit: 0.825
+                }},
+                {sets: {
+                    hue: 21,
+                    sat: 1.275,
+                    lit: 0.8
+                }},
+                {sets: {
+                    hue: 26,
+                    sat: 1.35,
+                    lit: 0.75
                 }}
             ],
             yellow: [
                 {sets: {
-                    hue: 72,
-                    sat: 1.425,
-                    lit: 0.775
-                }},
-                {sets: {
-                    hue: 63,
-                    sat: 1.4,
+                    hue: 28,
+                    sat: 1.35,
                     lit: 0.8
                 }},
                 {sets: {
-                    hue: 57,
-                    sat: 1.3,
+                    hue: 29,
+                    sat: 1.325,
+                    lit: 0.85
+                }},
+                {sets: {
+                    hue: 30,
+                    sat: 1.325,
+                    lit: 0.825
+                }},
+                {sets: {
+                    hue: 30,
+                    sat: 1.225,
                     lit: 0.875
                 }},
                 {sets: {
-                    hue: 50,
-                    sat: 1.2,
-                    lit: 0.9
-                }},
-                {sets: {
-                    hue: 46,
+                    hue: 30,
                     sat: 1.1,
-                    lit: 0.95
+                    lit: 0.925
                 }},
                 {sets: {
-                    hue: 42,
+                    hue: 30,
                     sat: 1.05,
-                    lit: 1.05
-                }},
-                {sets: {
-                    hue: 38,
-                    sat: 1.15,
                     lit: 1
+                }}
+            ],
+            green: [
+                {sets: {
+                    hue: 77,
+                    sat: 1.425,
+                    lit: 0.725
                 }},
                 {sets: {
-                    hue: 35,
-                    sat: 1.3,
-                    lit: 0.95
-                }},,
-                {sets: {
-                    hue: 32,
+                    hue: 81,
                     sat: 1.4,
+                    lit: 0.775
+                }},
+                {sets: {
+                    hue: 90,
+                    sat: 1.325,
+                    lit: 0.825
+                }},
+                {sets: {
+                    hue: 100,
+                    sat: 1.225,
+                    lit: 0.825
+                }},
+                {sets: {
+                    hue: 105,
+                    sat: 1.275,
                     lit: 0.8
                 }},
                 {sets: {
-                    hue: 28,
+                    hue: 110,
+                    sat: 1.35,
+                    lit: 0.75
+                }}
+            ],
+            lime: [
+                {sets: {
+                    hue: 115,
+                    sat: 1.35,
+                    lit: 0.725
+                }},
+                {sets: {
+                    hue: 121,
+                    sat: 1.32,
+                    lit: 0.775
+                }},
+                {sets: {
+                    hue: 127,
+                    sat: 1.3,
+                    lit: 0.825
+                }},
+                {sets: {
+                    hue: 135,
+                    sat: 1.225,
+                    lit: 0.825
+                }},
+                {sets: {
+                    hue: 141,
+                    sat: 1.275,
+                    lit: 0.8
+                }},
+                {sets: {
+                    hue: 148,
+                    sat: 1.35,
+                    lit: 0.75
+                }}
+            ],
+            aqua: [
+                {sets: {
+                    hue: 165,
+                    sat: 1.425,
+                    lit: 0.725
+                }},
+                {sets: {
+                    hue: 172,
                     sat: 1.4,
                     lit: 0.775
                 }},
                 {sets: {
-                    hue: 25,
+                    hue: 180,
+                    sat: 1.325,
+                    lit: 0.825
+                }},
+                {sets: {
+                    hue: 188,
+                    sat: 1.225,
+                    lit: 0.825
+                }},
+                {sets: {
+                    hue: 194,
+                    sat: 1.275,
+                    lit: 0.8
+                }},
+                {sets: {
+                    hue: 200,
+                    sat: 1.35,
+                    lit: 0.75
+                }}
+            ],
+            blue: [
+                {sets: {
+                    hue: 208,
                     sat: 1.425,
+                    lit: 0.725
+                }},
+                {sets: {
+                    hue: 214,
+                    sat: 1.4,
                     lit: 0.775
+                }},
+                {sets: {
+                    hue: 219,
+                    sat: 1.325,
+                    lit: 0.825
+                }},
+                {sets: {
+                    hue: 225,
+                    sat: 1.225,
+                    lit: 0.825
+                }},
+                {sets: {
+                    hue: 230,
+                    sat: 1.275,
+                    lit: 0.8
+                }},
+                {sets: {
+                    hue: 233,
+                    sat: 1.35,
+                    lit: 0.75
+                }}
+            ],
+            purple: [
+                {sets: {
+                    hue: 242,
+                    sat: 1.45,
+                    lit: 0.8
+                }},
+                {sets: {
+                    hue: 244,
+                    sat: 1.375,
+                    lit: 0.8
+                }},
+                {sets: {
+                    hue: 246,
+                    sat: 1.325,
+                    lit: 0.825
+                }},
+                {sets: {
+                    hue: 248,
+                    sat: 1.225,
+                    lit: 0.855
+                }},
+                {sets: {
+                    hue: 252,
+                    sat: 1.275,
+                    lit: 0.825
+                }},
+                {sets: {
+                    hue: 254,
+                    sat: 1.35,
+                    lit: 0.75
+                }}
+            ],
+            pink: [
+                {sets: {
+                    hue: 286,
+                    sat: 1.1,
+                    lit: 0.8
+                }},
+                {sets: {
+                    hue: 308,
+                    sat: 1.15,
+                    lit: 0.8
+                }},
+                {sets: {
+                    hue: 322,
+                    sat: 1.2,
+                    lit: 0.825
+                }},
+                {sets: {
+                    hue: 333,
+                    sat: 1.225,
+                    lit: 0.855
+                }},
+                {sets: {
+                    hue: 340,
+                    sat: 1.275,
+                    lit: 0.825
+                }},
+                {sets: {
+                    hue: 346,
+                    sat: 1.35,
+                    lit: 0.75
                 }}
             ]
         }
 
         for (let type in colours) {
             let swatch_group = document.body.querySelector(`#colour_${type}`);
+
+            if (!swatch_group)
+                return;
 
             colours[type].forEach((colour) => {
                 if (colour.requires_flag && version.feature_flags.hasOwnProperty(colour.requires_flag)) {
@@ -11523,8 +11272,6 @@ let has_prompted_for_update = false;
                 if (!colour.displays && colour.sets)
                     colour.displays = colour.sets;
 
-                settings.accent_type = colour.type;
-
                 let swatch = document.createElement('button');
                 swatch.classList.add('swatch', 'btn');
                 swatch.setAttribute('data-swatch-type', colour.type);
@@ -11534,6 +11281,29 @@ let has_prompted_for_update = false;
 
                 if (type == 'custom')
                     swatch.textContent = trans[lang].settings.customise.colours.swatches[colour.type];
+
+                if (colour.type == 'seasonal') {
+                    //if (stored_season.id == 'none')
+                    //    return;
+
+                    swatch.classList.add('select-button');
+
+                    tippy(swatch, {
+                        theme: 'menu',
+                        content: '',
+                        allowHTML: true,
+                        placement: 'bottom',
+                        interactive: true,
+                        interactiveBorder: 10,
+                        trigger: 'click',
+
+                        onShow(instance) {
+                            let content = instance.popper.querySelector('.tippy-content');
+
+                            display_seasonal_exclusives(content);
+                        }
+                    });
+                }
 
                 if (colour.type == 'custom') {
                     swatch.classList.add('select-button');
@@ -11593,6 +11363,20 @@ let has_prompted_for_update = false;
                                         <p style="left: 100%">1.5</p>
                                     </div>
                                 </div>
+                                ${(ff('card_saturation')) ? (`
+                                <div class="slider-container hide-if-light-theme" id="container-sat_bg">
+                                    <button class="btn reset" onclick="_reset_item('sat_bg')">${trans[lang].settings.reset}</button>
+                                    <div class="heading">
+                                        <h5>${trans[lang].settings.customise.sat_bg.name}</h5>
+                                        <p>${trans[lang].settings.customise.sat_bg.bio}</p>
+                                    </div>
+                                    <div class="slider">
+                                        <div class="slider-track" id="slider-track-sat_bg"><div class="slider-fill"></div><div class="slider-nub"></div></div>
+                                        <input type="range" min="0" max="3" value="0" step="0.1" id="slider-sat_bg" oninput="_update_item('sat_bg', this.value)">
+                                        <p id="value-sat_bg">0</p>
+                                    </div>
+                                </div>
+                                `) : ''}
                             </div>
                         `),
                         allowHTML: true,
@@ -11608,6 +11392,8 @@ let has_prompted_for_update = false;
                 }
 
                 if (colour.sets) {
+                    colour.sets.accent_type = colour.type;
+
                     swatch.setAttribute('onclick', `_update_params(${JSON.stringify(colour.sets)})`);
 
                     swatch.style.setProperty('--hue-over', colour.displays.hue);
@@ -11634,6 +11420,48 @@ let has_prompted_for_update = false;
             body: 'This dialog is being moved!',
             icon: 'icon-16-x',
             persist: true
+        });
+    }
+
+    function display_seasonal_exclusives(instance) {
+        let exclusives = {
+            none: [
+                {
+                    type: 'season',
+                    name: trans[lang].settings.customise.seasonal.fruitcake,
+                    sets: {
+                        hue: 190,
+                        sat: 1,
+                        lit: 1
+                    }
+                }
+            ]
+        }
+
+        instance.innerHTML = '';
+
+        if (!exclusives.hasOwnProperty(stored_season.id))
+            return;
+
+        exclusives[stored_season.id].forEach((colour) => {
+            colour.sets.accent_type = colour.type;
+            colour.displays = colour.sets;
+
+            let item = document.createElement('button');
+            item.classList.add('dropdown-menu-clickable-item', 'swatch');
+            item.setAttribute('data-swatch-type', colour.type);
+            item.textContent = colour.name;
+
+            item.setAttribute('onclick', `_update_params(${JSON.stringify(colour.sets)})`);
+
+            item.style.setProperty('--hue-over', colour.displays.hue);
+            item.style.setProperty('--sat-over', colour.displays.sat);
+            item.style.setProperty('--lit-over', colour.displays.lit);
+
+            if (colour.displays.hue == settings.hue && colour.displays.sat == settings.sat && colour.displays.lit)
+                item.setAttribute('aria-checked', 'true');
+
+            instance.appendChild(item);
         });
     }
 
@@ -11866,7 +11694,7 @@ let has_prompted_for_update = false;
 
     function update_params(params={}) {
         for (let item in params) {
-            update_item(item, params[item]);
+            update_item(item, params[item], true);
         }
     }
 
@@ -11985,26 +11813,29 @@ let has_prompted_for_update = false;
             }
         } else if (settings_base[item].type == 'options') {
             if (modify) {
-                document.getElementById(`toggle-${item}-${value}`).setAttribute('aria-checked', true);
                 settings[item] = value;
 
-                let other_toggles = document.querySelectorAll(`[data-toggle="${item}"]`);
-                other_toggles.forEach((toggle) => {
-                    let other_value = toggle.getAttribute('data-toggle-value');
-                    if (other_value == value)
-                        return;
-                    else
-                        toggle.setAttribute('aria-checked', false);
-                });
+                if (container) {
+                    document.getElementById(`toggle-${item}-${value}`).setAttribute('aria-checked', true);
 
-                // save setting into body
-                document.body.style.setProperty(`--${item}`, value);
-                document.documentElement.setAttribute(`data-bleh--${item}`, value);
+                    let other_toggles = document.querySelectorAll(`[data-toggle="${item}"]`);
+                    other_toggles.forEach((toggle) => {
+                        let other_value = toggle.getAttribute('data-toggle-value');
+                        if (other_value == value)
+                            return;
+                        else
+                            toggle.setAttribute('aria-checked', false);
+                    });
+
+                    // save setting into body
+                    document.body.style.setProperty(`--${item}`, value);
+                    document.documentElement.setAttribute(`data-bleh--${item}`, value);
 
 
-                // re-flow chart
-                if ((item == 'chart_view' || item == 'chart_bar_axis') && page.type == 'user' && page.subpage.startsWith('library'))
-                    bleh_glacier_date_graph_generate();
+                    // re-flow chart
+                    if ((item == 'chart_view' || item == 'chart_bar_axis') && page.type == 'user' && page.subpage.startsWith('library'))
+                        bleh_glacier_date_graph_generate();
+                }
             } else {
                 // dont modify, just show
                 if (settings[item] == value) {
@@ -12065,7 +11896,7 @@ let has_prompted_for_update = false;
         let found = false;
         let custom = null;
 
-        let swatches = document.body.querySelectorAll('.swatch');
+        let swatches = document.querySelectorAll('.swatch');
         swatches.forEach((swatch) => {
             let h = swatch.style.getPropertyValue('--hue-over');
             let s = swatch.style.getPropertyValue('--sat-over');
