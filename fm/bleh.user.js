@@ -9453,7 +9453,29 @@ let has_prompted_for_update = false;
                             <div class="swatch" style="--col: hsl(var(--l3))"></div>
                             <div class="swatch" style="--col: hsl(var(--l4))"></div>
                         </div>
-                        <div class="sep"></div>
+                        <table class="chartlist chartlist--with-image chartlist--with-loved chartlist--with-artist" style="margin: var(--card-gap) 0 !important">
+                            <tbody>
+                                <tr class="chartlist-row chartlist-row--now-scrobbling chartlist-row--with-artist">
+                                    <td class="chartlist-image">
+                                        <a class="cover-art"><img src="${auth.avatar}" loading="lazy"></a>
+                                    </td>
+                                    <td class="chartlist-loved">
+                                        <button class="chartlist-love-button" data-toggle-button-current-state="unloved"></button>
+                                    </td>
+                                    <td class="chartlist-name">
+                                        <a>Song title</a>
+                                    </td>
+                                    <td class="chartlist-artist">
+                                        <a>${auth.name}</a>
+                                    </td>
+                                    <td class="chartlist-timestamp chartlist-timestamp--lang-en">
+                                        <span class="chartlist-now-scrobbling">
+                                            <a>Scrobbling now</a>
+                                        </span>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
                         <div class="btn-row">
                             <button class="btn">${trans[lang].settings.examples.button}</button>
                             <button class="btn primary">${trans[lang].settings.examples.button}</button>
