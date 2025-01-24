@@ -6369,7 +6369,6 @@ button,
 .nag-bar-message:before,
 .source-album:before,
 /*     BLEH     */
-.swatch:before,
 .arrow-divider:before,
 .view-item:not(.profile-top-item--taste):before,
 .loading-data-text:before,
@@ -9062,12 +9061,8 @@ text[style^="color: rgb(255, 172, 172)"] {
             background-position: unset !important;
         }
 
-        &[data-theme="context-menu"],
-        &[data-theme="select-menu"],
-        &[data-theme="auth-menu"],
-        &[data-theme="language-menu"] {
-            animation: dropdown var(--trans-short) var(--trans-function);
-            transform-origin: top;
+        .alert {
+            margin: 2px 4px !important;
         }
 
         &[data-theme="select-menu"] {
@@ -13716,50 +13711,15 @@ pre {
     width: unset !important;
     height: unset !important;
 
+    position: relative;
+
     min-height: 50px;
 
-    position: relative;
-    --mask-size: 24px;
-    --left: 50%;
-    --margin-left: -12px;
-    --margin-top: -12px;
-
-    &:before {
-        --transition-property: opacity !important;
-    }
-
-    --mask: var(--icon-colour-selected);
-
-    &[data-swatch-type="default"] {
-        --mask: var(--icon-colour-default);
-    }
-    &[data-swatch-type="avatar"] {
-        --mask: var(--icon-user);
-    }
-    &.seasonal-swatch {
-        --mask: var(--icon-season);
-    }
-    &[data-swatch-type="custom"] {
-        --mask: var(--icon-colour-custom);
-    }
-
-    &:not([data-swatch-type="default"], [data-swatch-type="avatar"], [data-swatch-type="custom"], .selected, .seasonal-swatch):before {
-        opacity: 0;
-    }
-
     &[aria-checked="true"] {
-        /*outline: 2px solid hsl(var(--c1)) !important;*/
-        /*border: 3px solid hsl(var(--b6)) !important;
-
-        --left: 10px;*/
         --shadow: 0 0 20px hsl(var(--h4));
 
         [data-bleh--theme="light"] & {
             --shadow: 0 0 20px hsla(var(--h4), 70%);
-        }
-
-        &:after {
-            opacity: 1 !important;
         }
     }
 
@@ -13792,6 +13752,9 @@ pre {
     }
     &[data-swatch-type="avatar"] {
         --mask: var(--icon-16-mention);
+    }
+    &[data-swatch-type="seasonal"] {
+        --mask: var(--icon-16-season);
     }
     &[data-swatch-type="custom"] {
         --mask: var(--icon-16-add);
@@ -14253,6 +14216,12 @@ input[type="range"]::-moz-range-progress {
 .toggle-container,
 .select-container {
     display: flex;
+}
+
+.toggle-container, .select-container, .text-container {
+    .btn.reset {
+        display: none;
+    }
 }
 
 
@@ -15826,7 +15795,7 @@ button.bleh--gallery-bookmark-image-btn {
         --shadow: none;
         --col: hsl(var(--c2));
 
-        &.swatch:not([data-swatch-type="custom"]),
+        &.swatch:not([data-swatch-type="seasonal"], [data-swatch-type="custom"]),
         .gallery-image-buttons &:not(.image-open-button),
         &.delete-icon {
             --bg-hov: hsla(var(--h4), 15%);

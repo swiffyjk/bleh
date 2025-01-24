@@ -161,7 +161,7 @@ let version = {
             date: '2025-01-19'
         },
         colour_based_on_avatar: {
-            default: false,
+            default: true,
             name: 'Set colour based on avatar',
             date: '2025-01-23'
         }
@@ -736,14 +736,8 @@ const trans = {
                 name: 'Customise',
                 colours: {
                     name: 'Colours',
-                    presets: 'Presets',
-                    manual: 'Manual',
-                    custom: 'Create a custom colour',
-                    default_with_season: 'Default colour for {season}',
-                    default: 'Default colour',
                     modals: {
                         custom_colour: {
-                            preface: 'Colours are controlled by three values: hue, saturation, and lightness. Try out the sliders to get a feel.',
                             hue: 'Accent colour',
                             sat: 'Saturation',
                             lit: 'Lightness',
@@ -753,6 +747,7 @@ const trans = {
                     swatches: {
                         default: 'Default',
                         avatar: 'Avatar',
+                        seasonal: 'Seasonal',
                         custom: 'Customise'
                     }
                 },
@@ -805,8 +800,8 @@ const trans = {
                     fruitcake: 'fruitcake',
                     mistletoe: 'Mistletoe',
                     festival: 'Christmas Eve',
-                    available_in: 'Available in {s}',
-                    view: 'Open seasonal tab'
+                    view: 'Open seasonal tab',
+                    none: 'No colours available'
                 },
                 artwork: {
                     name: 'Artwork'
@@ -9471,10 +9466,6 @@ let has_prompted_for_update = false;
                         </div>
                     </div>
                     <div class="view-buttons colour-buttons view-buttons-middle" id="colour_custom"></div>
-                    <div class="swatch-seasons">
-                        <h5>${trans[lang].settings.customise.seasonal.available_in.replace('{s}', trans[lang].settings.customise.seasonal.listing[stored_season.id])}</h5>
-                        <div id="colour_season_${stored_season.id}" class="palette options colours"></div>
-                    </div>
                     <div class="swatch-group">
                         <div id="colour_red" class="palette options colours"></div>
                         <div id="colour_orange" class="palette options colours"></div>
@@ -11283,10 +11274,10 @@ let has_prompted_for_update = false;
                     swatch.textContent = trans[lang].settings.customise.colours.swatches[colour.type];
 
                 if (colour.type == 'seasonal') {
-                    //if (stored_season.id == 'none')
-                    //    return;
+                    if (stored_season.id == 'none')
+                        return;
 
-                    swatch.classList.add('select-button');
+                    //swatch.classList.add('select-button');
 
                     tippy(swatch, {
                         theme: 'menu',
@@ -11306,7 +11297,7 @@ let has_prompted_for_update = false;
                 }
 
                 if (colour.type == 'custom') {
-                    swatch.classList.add('select-button');
+                    //swatch.classList.add('select-button');
 
                     tippy(swatch, {
                         theme: 'window',
@@ -11425,26 +11416,59 @@ let has_prompted_for_update = false;
 
     function display_seasonal_exclusives(instance) {
         let exclusives = {
-            none: [
+            christmas: [
+                {
+                    type: 'season',
+                    name: trans[lang].settings.customise.seasonal.nonsense,
+                    sets: {
+                        hue: 352,
+                        sat: 1.8,
+                        lit: 0.925
+                    }
+                },
                 {
                     type: 'season',
                     name: trans[lang].settings.customise.seasonal.fruitcake,
                     sets: {
-                        hue: 190,
-                        sat: 1,
+                        hue: 24,
+                        sat: 0.93,
                         lit: 1
+                    }
+                },
+                {
+                    type: 'season',
+                    name: trans[lang].settings.customise.seasonal.mistletoe,
+                    sets: {
+                        hue: 130,
+                        sat: 0.45,
+                        lit: 0.75
+                    }
+                },
+                {
+                    type: 'season',
+                    name: trans[lang].settings.customise.seasonal.festival,
+                    sets: {
+                        hue: 240,
+                        sat: 1.4,
+                        lit: 0.875
                     }
                 }
             ]
         }
+        exclusives.new_years = exclusives.christmas;
+
+        if (!exclusives.hasOwnProperty(stored_season.id)) {
+            instance.innerHTML = (`
+                <div class="alert alert-info">${trans[lang].settings.customise.seasonal.none}</div>
+            `);
+
+            return;
+        }
 
         instance.innerHTML = '';
 
-        if (!exclusives.hasOwnProperty(stored_season.id))
-            return;
-
         exclusives[stored_season.id].forEach((colour) => {
-            colour.sets.accent_type = colour.type;
+            colour.sets = {accent_type: colour.type, ...colour.sets};
             colour.displays = colour.sets;
 
             let item = document.createElement('button');
@@ -11694,7 +11718,7 @@ let has_prompted_for_update = false;
 
     function update_params(params={}) {
         for (let item in params) {
-            update_item(item, params[item], true);
+            update_item(item, params[item]);
         }
     }
 
@@ -11718,8 +11742,6 @@ let has_prompted_for_update = false;
             console.info(container);
         else if (settings_base[item].type != 'slider' && settings_base[item].type != 'options')
             return;
-
-        console.info(settings_base[item]);
 
         try {
         // is this a new value?
@@ -11751,19 +11773,19 @@ let has_prompted_for_update = false;
             document.body.style.setProperty(`--${settings_base[item].css}`, `${value}${settings_base[item].unit}`);
             document.documentElement.setAttribute(`data-bleh--${item}`, `${value}`);
 
-            document.documentElement.setAttribute('data-bleh--hsl-override', 'false');
-
-            if (
-                (item == 'hue' || item == 'sat' || item == 'lit') &&
-                settings.hue == settings_base.hue.value &&
-                settings.sat == settings_base.sat.value &&
-                settings.lit == settings_base.lit.value &&
-                settings.seasonal && stored_season.id != 'none'
-            ) {
-                document.body.style.removeProperty(`--${settings_base.hue.css}`);
-                document.body.style.removeProperty(`--${settings_base.sat.css}`);
-                document.body.style.removeProperty(`--${settings_base.lit.css}`);
-                document.documentElement.setAttribute('data-bleh--hsl-override', 'true');
+            if (item == 'hue' || item == 'sat' || item == 'lit') {
+                if (settings.hue == settings_base.hue.value &&
+                    settings.sat == settings_base.sat.value &&
+                    settings.lit == settings_base.lit.value &&
+                    settings.seasonal && stored_season.id != 'none'
+                ) {
+                    document.body.style.removeProperty(`--${settings_base.hue.css}`);
+                    document.body.style.removeProperty(`--${settings_base.sat.css}`);
+                    document.body.style.removeProperty(`--${settings_base.lit.css}`);
+                    document.documentElement.setAttribute('data-bleh--hsl-override', 'true');
+                } else {
+                    document.documentElement.setAttribute('data-bleh--hsl-override', 'false');
+                }
             }
         } else if (settings_base[item].type == 'toggle') {
             if (settings[item] == settings_base[item].values[0] && modify) {
@@ -11895,6 +11917,7 @@ let has_prompted_for_update = false;
     function update_colour_swatches() {
         let found = false;
         let custom = null;
+        let seasonal = null;
 
         let swatches = document.querySelectorAll('.swatch');
         swatches.forEach((swatch) => {
@@ -11907,17 +11930,27 @@ let has_prompted_for_update = false;
                 (swatch.getAttribute('data-swatch-type') == 'default' && settings.hue == 255 && settings.sat == 1 && settings.lit == 1) // default
             ) {
                 swatch.setAttribute('aria-checked', 'true');
-                found = true;
+
+                if (swatch.classList[0] != 'dropdown-menu-clickable-item')
+                    found = true;
             } else {
                 swatch.setAttribute('aria-checked', 'false');
             }
 
             if (!custom && swatch.getAttribute('data-swatch-type') == 'custom')
                 custom = swatch;
+
+            if (!seasonal && swatch.getAttribute('data-swatch-type') == 'seasonal')
+                seasonal = swatch;
         });
 
-        if (!found && custom)
+        if (found)
+            return;
+
+        if (custom && settings.accent_type != 'season')
             custom.setAttribute('aria-checked', 'true');
+        else if (seasonal)
+            seasonal.setAttribute('aria-checked', 'true');
     }
 
 
