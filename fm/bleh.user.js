@@ -21,7 +21,7 @@
 let version = {
     brand: 'bleh',
     build: '2025.0121',
-    sku: 'mita',
+    sku: '4x4',
     feature_flags: {
         bleh_settings_tabs: {
             default: true,
@@ -8336,7 +8336,7 @@ let has_prompted_for_update = false;
             shout_form.setAttribute('data-kate-processed', 'true');
             let shout_avatar = shout_form.querySelector('.shout-user-avatar');
 
-            patch_avatar(shout_avatar, auth);
+            patch_avatar(shout_avatar, auth.name);
         });
     }
 
