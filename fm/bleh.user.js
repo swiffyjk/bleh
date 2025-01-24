@@ -11018,12 +11018,12 @@ let has_prompted_for_update = false;
                 {sets: {
                     hue: 13,
                     sat: 1.4,
-                    lit: 0.775
+                    lit: 0.75
                 }},
                 {sets: {
                     hue: 16,
                     sat: 1.325,
-                    lit: 0.825
+                    lit: 0.8
                 }},
                 {sets: {
                     hue: 20,
@@ -11033,236 +11033,236 @@ let has_prompted_for_update = false;
                 {sets: {
                     hue: 21,
                     sat: 1.275,
-                    lit: 0.8
+                    lit: 0.85
                 }},
                 {sets: {
                     hue: 26,
                     sat: 1.35,
-                    lit: 0.75
+                    lit: 0.9
                 }}
             ],
             yellow: [
                 {sets: {
-                    hue: 28,
-                    sat: 1.35,
-                    lit: 0.8
-                }},
-                {sets: {
-                    hue: 29,
-                    sat: 1.325,
-                    lit: 0.85
-                }},
-                {sets: {
-                    hue: 30,
-                    sat: 1.325,
+                    hue: 32,
+                    sat: 1.25,
                     lit: 0.825
                 }},
                 {sets: {
-                    hue: 30,
-                    sat: 1.225,
+                    hue: 35,
+                    sat: 1.2,
+                    lit: 0.85
+                }},
+                {sets: {
+                    hue: 40,
+                    sat: 1.16,
                     lit: 0.875
                 }},
                 {sets: {
-                    hue: 30,
+                    hue: 43,
                     sat: 1.1,
-                    lit: 0.925
+                    lit: 0.9
                 }},
                 {sets: {
-                    hue: 30,
+                    hue: 44,
+                    sat: 1,
+                    lit: 0.975
+                }},
+                {sets: {
+                    hue: 46,
                     sat: 1.05,
                     lit: 1
                 }}
             ],
             green: [
                 {sets: {
-                    hue: 77,
+                    hue: 85,
                     sat: 1.425,
                     lit: 0.725
                 }},
                 {sets: {
-                    hue: 81,
+                    hue: 90,
                     sat: 1.4,
                     lit: 0.775
                 }},
                 {sets: {
-                    hue: 90,
+                    hue: 94,
                     sat: 1.325,
                     lit: 0.825
                 }},
                 {sets: {
-                    hue: 100,
-                    sat: 1.225,
-                    lit: 0.825
+                    hue: 99,
+                    sat: 1.25,
+                    lit: 0.85
                 }},
                 {sets: {
                     hue: 105,
-                    sat: 1.275,
-                    lit: 0.8
+                    sat: 1.15,
+                    lit: 0.9
                 }},
                 {sets: {
-                    hue: 110,
-                    sat: 1.35,
-                    lit: 0.75
+                    hue: 108,
+                    sat: 1.075,
+                    lit: 0.95
                 }}
             ],
             lime: [
                 {sets: {
                     hue: 115,
-                    sat: 1.35,
+                    sat: 1.15,
                     lit: 0.725
                 }},
                 {sets: {
                     hue: 121,
-                    sat: 1.32,
+                    sat: 1.09,
                     lit: 0.775
                 }},
                 {sets: {
                     hue: 127,
-                    sat: 1.3,
+                    sat: 1.05,
                     lit: 0.825
                 }},
                 {sets: {
                     hue: 135,
-                    sat: 1.225,
-                    lit: 0.825
+                    sat: 1.03,
+                    lit: 0.85
                 }},
                 {sets: {
                     hue: 141,
-                    sat: 1.275,
-                    lit: 0.8
+                    sat: 1,
+                    lit: 0.9
                 }},
                 {sets: {
                     hue: 148,
-                    sat: 1.35,
-                    lit: 0.75
+                    sat: 1,
+                    lit: 0.975
                 }}
             ],
             aqua: [
                 {sets: {
                     hue: 165,
-                    sat: 1.425,
+                    sat: 1.5,
                     lit: 0.725
                 }},
                 {sets: {
                     hue: 172,
-                    sat: 1.4,
+                    sat: 1.425,
                     lit: 0.775
                 }},
                 {sets: {
                     hue: 180,
-                    sat: 1.325,
+                    sat: 1.35,
                     lit: 0.825
                 }},
                 {sets: {
                     hue: 188,
-                    sat: 1.225,
-                    lit: 0.825
+                    sat: 1.275,
+                    lit: 0.875
                 }},
                 {sets: {
                     hue: 194,
-                    sat: 1.275,
-                    lit: 0.8
+                    sat: 1.2,
+                    lit: 0.95
                 }},
                 {sets: {
                     hue: 200,
-                    sat: 1.35,
-                    lit: 0.75
+                    sat: 1.125,
+                    lit: 1
                 }}
             ],
             blue: [
                 {sets: {
-                    hue: 208,
-                    sat: 1.425,
-                    lit: 0.725
-                }},
-                {sets: {
-                    hue: 214,
+                    hue: 233,
                     sat: 1.4,
-                    lit: 0.775
-                }},
-                {sets: {
-                    hue: 219,
-                    sat: 1.325,
-                    lit: 0.825
-                }},
-                {sets: {
-                    hue: 225,
-                    sat: 1.225,
-                    lit: 0.825
+                    lit: 0.75
                 }},
                 {sets: {
                     hue: 230,
-                    sat: 1.275,
+                    sat: 1.3,
                     lit: 0.8
                 }},
                 {sets: {
-                    hue: 233,
-                    sat: 1.35,
-                    lit: 0.75
+                    hue: 225,
+                    sat: 1.25,
+                    lit: 0.825
+                }},
+                {sets: {
+                    hue: 219,
+                    sat: 1.2,
+                    lit: 0.85
+                }},
+                {sets: {
+                    hue: 214,
+                    sat: 1.15,
+                    lit: 0.9
+                }},
+                {sets: {
+                    hue: 208,
+                    sat: 1.025,
+                    lit: 0.95
                 }}
             ],
             purple: [
                 {sets: {
-                    hue: 242,
-                    sat: 1.45,
-                    lit: 0.8
+                    hue: 246,
+                    sat: 1.32,
+                    lit: 0.825
                 }},
                 {sets: {
                     hue: 244,
-                    sat: 1.375,
-                    lit: 0.8
+                    sat: 1.2,
+                    lit: 0.85
                 }},
                 {sets: {
                     hue: 246,
-                    sat: 1.325,
-                    lit: 0.825
+                    sat: 1.12,
+                    lit: 0.875
                 }},
                 {sets: {
-                    hue: 248,
-                    sat: 1.225,
-                    lit: 0.855
+                    hue: 249,
+                    sat: 1.11,
+                    lit: 0.925
                 }},
                 {sets: {
-                    hue: 252,
-                    sat: 1.275,
-                    lit: 0.825
+                    hue: 253,
+                    sat: 1.07,
+                    lit: 0.97
                 }},
                 {sets: {
-                    hue: 254,
-                    sat: 1.35,
-                    lit: 0.75
+                    hue: 255,
+                    sat: 1.01,
+                    lit: 1.01
                 }}
             ],
             pink: [
                 {sets: {
-                    hue: 286,
-                    sat: 1.1,
-                    lit: 0.8
-                }},
-                {sets: {
-                    hue: 308,
-                    sat: 1.15,
-                    lit: 0.8
-                }},
-                {sets: {
-                    hue: 322,
-                    sat: 1.2,
-                    lit: 0.825
-                }},
-                {sets: {
-                    hue: 333,
-                    sat: 1.225,
-                    lit: 0.855
+                    hue: 346,
+                    sat: 1.35,
+                    lit: 0.75
                 }},
                 {sets: {
                     hue: 340,
                     sat: 1.275,
-                    lit: 0.825
+                    lit: 0.8
                 }},
                 {sets: {
-                    hue: 346,
-                    sat: 1.35,
-                    lit: 0.75
+                    hue: 333,
+                    sat: 1.225,
+                    lit: 0.85
+                }},
+                {sets: {
+                    hue: 320,
+                    sat: 1.15,
+                    lit: 0.925
+                }},
+                {sets: {
+                    hue: 312,
+                    sat: 1.05,
+                    lit: 0.975
+                }},
+                {sets: {
+                    hue: 304,
+                    sat: 1,
+                    lit: 1
                 }}
             ]
         }
@@ -11414,12 +11414,14 @@ let has_prompted_for_update = false;
                     swatch.style.setProperty('--lit-over', colour.displays.lit);
 
                     tippy(swatch, {
+                        theme: 'key_value',
                         content: (`
-                            hue: ${colour.sets.hue}<br>
-                            sat: ${colour.sets.sat}<br>
-                            lit: ${colour.sets.lit}
+                            <span class="key">hue<span class="value">${colour.sets.hue}</span></span>
+                            <span class="key">sat<span class="value">${colour.sets.sat}</span></span>
+                            <span class="key">lit<span class="value">${colour.sets.lit}</span></span>
                         `),
-                        allowHTML: true
+                        allowHTML: true,
+                        delay: [250, 0]
                     });
                 }
 

@@ -9439,6 +9439,22 @@ text[style^="color: rgb(255, 172, 172)"] {
             }
         }
     }
+
+    &[data-theme="key_value"] {
+        .tippy-content {
+            display: flex;
+            gap: 10px;
+
+            .key {
+                color: hsl(var(--c3));
+            }
+            .value {
+                margin-left: 4px;
+                font-family: var(--font-code);
+                color: hsl(var(--c2));
+            }
+        }
+    }
 }
 .tippy-content {
     padding: unset;
@@ -16204,6 +16220,7 @@ button.bleh--gallery-bookmark-image-btn {
 
         padding: 0 6px;
         background-color: hsl(var(--b6));
+        border-radius: 50px;
 
         &[style="left: 100%"] {
             left: unset !important;
