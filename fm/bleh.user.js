@@ -9471,7 +9471,13 @@ let has_prompted_for_update = false;
                         </div>
                     </div>
                     <div class="view-buttons colour-buttons view-buttons-middle" id="colour_custom"></div>
-                    <div class="palette options colours" id="colour_presets"></div>
+                    <div class="swatch-group">
+                        <div id="colour_red" class="palette options colours"></div>
+                        <div id="colour_yellow" class="palette options colours"></div>
+                        <div id="colour_green" class="palette options colours"></div>
+                        <div id="colour_orange" class="palette options colours"></div>
+                        <div id="colour_orange" class="palette options colours"></div>
+                    </div>
                     <div class="palette options colours" id="custom_colours">
                         <button class="swatch btn default" style="
                             --hue: var(--hue-seasonal, 255);
@@ -11386,8 +11392,119 @@ let has_prompted_for_update = false;
                     type: 'custom'
                 }
             ],
-            presets: [
-
+            red: [
+                {sets: {
+                    hue: 360,
+                    sat: 1.425,
+                    lit: 0.775
+                }},
+                {sets: {
+                    hue: 1,
+                    sat: 1.4,
+                    lit: 0.8
+                }},
+                {sets: {
+                    hue: 1,
+                    sat: 1.3,
+                    lit: 0.875
+                }},
+                {sets: {
+                    hue: 1,
+                    sat: 1.2,
+                    lit: 0.9
+                }},
+                {sets: {
+                    hue: 1,
+                    sat: 1.1,
+                    lit: 0.95
+                }},
+                {sets: {
+                    hue: 2,
+                    sat: 1.05,
+                    lit: 1.05
+                }},
+                {sets: {
+                    hue: 4,
+                    sat: 1.15,
+                    lit: 1
+                }},
+                {sets: {
+                    hue: 7,
+                    sat: 1.3,
+                    lit: 0.95
+                }},,
+                {sets: {
+                    hue: 10,
+                    sat: 1.4,
+                    lit: 0.8
+                }},
+                {sets: {
+                    hue: 14,
+                    sat: 1.4,
+                    lit: 0.775
+                }},
+                {sets: {
+                    hue: 20,
+                    sat: 1.425,
+                    lit: 0.775
+                }}
+            ],
+            yellow: [
+                {sets: {
+                    hue: 72,
+                    sat: 1.425,
+                    lit: 0.775
+                }},
+                {sets: {
+                    hue: 63,
+                    sat: 1.4,
+                    lit: 0.8
+                }},
+                {sets: {
+                    hue: 57,
+                    sat: 1.3,
+                    lit: 0.875
+                }},
+                {sets: {
+                    hue: 50,
+                    sat: 1.2,
+                    lit: 0.9
+                }},
+                {sets: {
+                    hue: 46,
+                    sat: 1.1,
+                    lit: 0.95
+                }},
+                {sets: {
+                    hue: 42,
+                    sat: 1.05,
+                    lit: 1.05
+                }},
+                {sets: {
+                    hue: 38,
+                    sat: 1.15,
+                    lit: 1
+                }},
+                {sets: {
+                    hue: 35,
+                    sat: 1.3,
+                    lit: 0.95
+                }},,
+                {sets: {
+                    hue: 32,
+                    sat: 1.4,
+                    lit: 0.8
+                }},
+                {sets: {
+                    hue: 28,
+                    sat: 1.4,
+                    lit: 0.775
+                }},
+                {sets: {
+                    hue: 25,
+                    sat: 1.425,
+                    lit: 0.775
+                }}
             ]
         }
 
@@ -11496,6 +11613,15 @@ let has_prompted_for_update = false;
                     swatch.style.setProperty('--hue-over', colour.displays.hue);
                     swatch.style.setProperty('--sat-over', colour.displays.sat);
                     swatch.style.setProperty('--lit-over', colour.displays.lit);
+
+                    tippy(swatch, {
+                        content: (`
+                            hue: ${colour.sets.hue}<br>
+                            sat: ${colour.sets.sat}<br>
+                            lit: ${colour.sets.lit}
+                        `),
+                        allowHTML: true
+                    });
                 }
 
                 swatch_group.appendChild(swatch);

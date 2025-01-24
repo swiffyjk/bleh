@@ -13677,13 +13677,19 @@ pre {
     height: 100%;
 }
 
+.swatch-group {
+    display: flex;
+    flex-direction: column;
+    gap: var(--button-list-gap);
+}
+
 .palette.options {
-    width: fit-content;
-    grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
+    width: 100%;
+    grid-template-columns: repeat(auto-fit, minmax(50px, 1fr));
     height: fit-content;
 
     .swatch {
-        width: 50px !important;
+        width: 100% !important;
         height: 50px !important;
     }
 }
@@ -13735,7 +13741,7 @@ pre {
         opacity: 0;
     }
 
-    &.selected {
+    &[aria-checked="true"] {
         /*outline: 2px solid hsl(var(--c1)) !important;*/
         /*border: 3px solid hsl(var(--b6)) !important;
 
@@ -15731,7 +15737,7 @@ button.bleh--gallery-bookmark-image-btn {
         justify-content: center;
     }
 
-    &:not(.profile-top-header, .glacier-library-buttons) {
+    &:not(.profile-top-header, .glacier-library-buttons, .colour-buttons) {
         margin-bottom: var(--card-gap);
     }
 
