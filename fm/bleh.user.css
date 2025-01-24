@@ -415,7 +415,7 @@ body {
     --shout-inset: 48px;
 
     --highlight-shadow: hsla(var(--b3), 0.25) 0 0 2px 1px;
-    --menu-shadow: 2px 2px 24px 0 hsla(var(--b7), 0.35), 3px 6px 48px 16px hsla(var(--b7), 0.25);
+    --menu-shadow: 2px 2px 24px 0 hsla(var(--b7), 0.35), 0 6px 48px 16px hsla(var(--b7), 0.65);
     --menu-overlay-shadow: 0 -250px 10px 100px hsla(var(--b6), 70%);
     --avatar-shadow: 3px 6px 15px 10px hsla(var(--b7), 0.05);
     --standout-shadow: 3px 6px 20px 7px hsla(var(--b7), 0.2);
@@ -3356,8 +3356,8 @@ button.navlist-more {
 
     &.no-hover {
         --left: 4px;
-        --top: 2px;
-        height: 24px;
+        --top: 4px;
+        height: 28px;
         padding-left: calc(20px + (4px * 2));
         transition-delay: 0s !important;
 
@@ -4345,6 +4345,7 @@ better than the default selector '#app a' i suppose */
     transition-timing-function: var(--trans-function);
     padding-right: 46px !important;
 
+    &[aria-expanded="true"],
     &:hover {
         background-color: var(--bg-hov);
         box-shadow: var(--shadow-hov);
@@ -6344,7 +6345,7 @@ button,
 .image-open-button:before,
 .breadcrumb :is(a, .breadcrumb-origin):before, .gallery-image-uploaded-by:before,
 /* v2 */ .form-arrow:before,
-.select-button:before,
+.select-button:after,
 .involved--track:before, .involved--album:before, .involved--artist:before, .involved--tag:before,
 .activity-item:before,
 .lotus-name:before,
@@ -6513,7 +6514,7 @@ span.header-new-gallery-inner a:before,
 }
 .show-more a:before,
 .out-now-btn:before,
-.select-button:before,
+.select-button:after,
 .continue:before, .external:before, .open:before,
 .pagination-next a:before,
 .more-link a:before, .more-link-fullwidth-right a:before, .more-link-fullwidth-right-flush-top a:before, .more-link-with-action a:not(.inline-add-icon):after,
@@ -6878,12 +6879,12 @@ section:has(.dropdown-menu-clickable-button.section-control) {
 .bleh--configure-menu-item,
 .more-item--edit-old
 {
-    margin-bottom: 7px !important;
+    margin-bottom: var(--button-list-gap) !important;
 }
 .more-item--submit-correction,
 .more-item--delete
 {
-    margin-top: 7px !important;
+    margin-top: var(--button-list-gap) !important;
 }
 .lang-item.active:after,
 .more-item--submit-correction:after,
@@ -7759,23 +7760,24 @@ input:is([name^="track_name"], [name^="artist_name"], [name^="album_name"], [nam
 }
 
 .popup_background {
-    background: hsl(var(--b6)) !important;
+    opacity: 1 !important;
+    background: transparent !important;
     animation: fade_popup_reduced var(--trans) var(--trans-function);
 
-    transition-property: opacity;
+    transition-property: background, backdrop-filter, -webkit-backdrop-filter;
     transition-duration: var(--trans-short);
     transition-timing-function: var(--trans-function);
 
     &[style^="opacity: 0.8;"] {
-        opacity: 0.7 !important;
-
-        [data-bleh--theme="light"] & {
-            opacity: 0.5 !important;
-        }
+        background: hsl(var(--b6), 0.85) !important;
+        backdrop-filter: blur(2px) !important;
+        -webkit-backdrop-filter: blur(2px) !important;
     }
 
     &.window-removing {
-        opacity: 0 !important;
+        background: transparent !important;
+        backdrop-filter: unset !important;
+        -webkit-backdrop-filter: unset !important;
     }
 }
 .popup_wrapper {
@@ -13436,7 +13438,7 @@ pre {
         display: grid;
         grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
         width: 100%;
-        gap: 6px;
+        gap: var(--button-list-gap);
 
         &.more {
             grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
@@ -13670,8 +13672,8 @@ pre {
 .palette .side,
 .palette {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(50px, 1fr));
-    gap: 4px;
+    grid-template-columns: repeat(auto-fit, minmax(70px, 1fr));
+    gap: var(--button-list-gap);
     height: 100%;
 }
 
@@ -13690,18 +13692,19 @@ pre {
     grid-template-columns: 1fr 1fr;
     height: fit-content;
 }
-.swatch {
-    aspect-ratio: 1 / 1;
+.palette .swatch {
     --bg: hsl(var(--h3));
     --bg-hov: hsla(var(--h3), 90%);
     --bg-atv: hsla(var(--h3), 80%);
     --col: hsl(var(--b7));
     --shadow: var(--card-shadow);
     --shadow-hov: var(--shadow);
-    --sat: 1;
-    --lit: 1;
+    --sat-album: 1;
+    --lit-album: 1;
     width: unset !important;
     height: unset !important;
+
+    min-height: 50px;
 
     position: relative;
     --mask-size: 24px;
@@ -13724,15 +13727,11 @@ pre {
     &.seasonal-swatch {
         --mask: var(--icon-season);
     }
-    &.custom {
+    &[data-swatch-type="custom"] {
         --mask: var(--icon-colour-custom);
-
-        [data-bleh--invert_interactable_colour="true"] & {
-            --col: hsl(var(--ov-c1)) !important;
-        }
     }
 
-    &:not([data-swatch-type="default"], [data-swatch-type="avatar"], .custom, .selected, .seasonal-swatch):before {
+    &:not([data-swatch-type="default"], [data-swatch-type="avatar"], [data-swatch-type="custom"], .selected, .seasonal-swatch):before {
         opacity: 0;
     }
 
@@ -13756,12 +13755,12 @@ pre {
         &:after {
             content: '';
             position: absolute;
-            inset: -2px;
-            border-radius: calc(var(--item-big-radius) + 2px);
+            inset: -4px;
+            border-radius: calc(var(--item-big-radius) + 4px);
             opacity: 0;
 
-            border: 2px solid hsl(var(--h4), 80%);
-            box-shadow: 0 0 30px hsl(var(--h4), 20%);
+            border: 2px solid hsl(var(--l2-c), 30%);
+            box-shadow: 0 0 30px hsl(var(--l2-c), 10%);
 
             transition-property: opacity;
             transition-duration: var(--trans);
@@ -13773,6 +13772,18 @@ pre {
 .swatch {
     background-color: var(--col, hsl(var(--b6)));
     border-radius: var(--item-big-radius);
+}
+
+.colour-btn {
+    &[data-swatch-type="default"] {
+        --mask: var(--icon-16-themes);
+    }
+    &[data-swatch-type="avatar"] {
+        --mask: var(--icon-16-mention);
+    }
+    &[data-swatch-type="custom"] {
+        --mask: var(--icon-16-add);
+    }
 }
 
 .palette.albums {
@@ -13808,12 +13819,13 @@ pre {
     text-align: left;
 }
 .inner-preview {
-    background-color: hsl(var(--b6));
+    background: hsl(var(--b6), 30%);
     padding: var(--card-gap);
     border-radius: var(--item-big-radius);
 
+    [data-bleh--theme="light"] &,
     [data-bleh--theme="oled"] & {
-        box-shadow: 0 0 0 1px var(--card-border-base) inset;
+        background: hsl(var(--b4), 40%);
     }
 
     &.gap-top {
@@ -14164,7 +14176,7 @@ input[type="range"]::-moz-range-progress {
     transition-timing-function: var(--trans-function) !important;
 
     .modified & {
-        opacity: 0.3;
+        opacity: 0.6;
 
         &:hover {
             opacity: 1;
@@ -14242,7 +14254,8 @@ input[type="range"]::-moz-range-progress {
 }
 .settings-footer {
     display: flex;
-    justify-content: end;
+    justify-content: center;
+    gap: var(--button-list-gap);
 }
 
 
@@ -15764,7 +15777,7 @@ button.bleh--gallery-bookmark-image-btn {
         }
     }
 
-    :is(.btn, a, button):not(.toggle, .reset, .select-button, .btn-primary) {
+    :is(.btn, a, button):not(.not-a-view-button, .toggle, .reset, .select-button, .btn-primary) {
         --bg: var(--cards-overlay-image-subtlest, none), hsl(var(--h3));
         --bg-hov: var(--cards-overlay-image-subtlest, none), hsla(var(--h3), 80%);
         --bg-atv: var(--cards-overlay-image-subtlest, none), hsla(var(--h3), 60%);
@@ -15772,7 +15785,7 @@ button.bleh--gallery-bookmark-image-btn {
         --shadow: 0 3px 12px hsl(var(--h4), 25%), var(--interactable-outer);
         position: relative;
 
-        &:not(.dropdown-menu-clickable-button, .dropdown-menu-clickable-item, .profile-top-item--taste):after {
+        &:not(.dropdown-menu-clickable-button, .dropdown-menu-clickable-item, .profile-top-item--taste, .select-button):after {
             content: '';
             position: absolute;
             inset: -4px !important;
@@ -15794,23 +15807,24 @@ button.bleh--gallery-bookmark-image-btn {
     &.album-overview-cover-art-action-row a,
     &.tab-container button:not(.tab--selected),
     .footer-language .mimic-link,
-    .btn:not(.toggle, [aria-checked="true"], .love-button--loved, [data-toggle-button-current-state="loved"] > form > .btn, [data-toggle-button-current-state="bookmarked"] > form > .btn, .btn-primary.profile-header-set-obsession, [data-analytics-action="UnfollowUser"], [data-is-shortcut="true"], .attendance-btn--turn-off) {
+    .btn:not(.not-a-view-button, .toggle, [aria-checked="true"], .love-button--loved, [data-toggle-button-current-state="loved"] > form > .btn, [data-toggle-button-current-state="bookmarked"] > form > .btn, .btn-primary.profile-header-set-obsession, [data-analytics-action="UnfollowUser"], [data-is-shortcut="true"], .attendance-btn--turn-off) {
         --bg: transparent;
         --bg-hov: hsl(var(--b4), 60%);
         --bg-atv: hsl(var(--b4), 80%);
         --shadow: none;
         --col: hsl(var(--c2));
 
+        &.swatch:not([data-swatch-type="custom"]),
         .gallery-image-buttons &:not(.image-open-button),
         &.delete-icon {
-            --bg-hov: hsla(var(--h4), 10%);
-            --bg-atv: hsla(var(--h4), 20%);
+            --bg-hov: hsla(var(--h4), 15%);
+            --bg-atv: hsla(var(--h4), 25%);
             --col: hsl(var(--l3-c));
             --sat-over: 1;
             --lit-over: 1;
         }
 
-        &:not(.dropdown-menu-list-button, .dropdown-menu-clickable-button, .dropdown-menu-clickable-button-js-only):after {
+        &:not(.dropdown-menu-list-button, .dropdown-menu-clickable-button, .dropdown-menu-clickable-button-js-only, .select-button):after {
             opacity: 0;
 
             transition-property: opacity !important;
@@ -16267,13 +16281,13 @@ button.bleh--gallery-bookmark-image-btn {
 }
 
 .seasonal-hsl-alert {
-    margin: 0 0 var(--card-gap) 0;
+    margin: unset;
     transition-property: margin, opacity;
     transition-duration: calc(var(--trans) * 1.7);
     transition-timing-function: var(--trans-function);
 
     [data-bleh--hsl-override="false"] & {
-        margin: 0 0 -18px 0;
+        margin: 0 0 calc(-1 * (18px + var(--card-gap))) 0 !important;
         opacity: 0;
     }
 }
@@ -16413,6 +16427,9 @@ button.bleh--gallery-bookmark-image-btn {
     --lit-over: 1;
     --mask: var(--icon-16-download);
 }
+.settings {
+    --mask: var(--icon-16-settings);
+}
 
 
 /* dialogs */
@@ -16426,13 +16443,15 @@ button.bleh--gallery-bookmark-image-btn {
     justify-content: center;
     align-items: center;
 
-    transition-property: background;
+    transition-property: background, backdrop-filter, -webkit-backdrop-filter;
     transition-duration: var(--trans-short);
     transition-timing-function: var(--trans-function);
 
     &.has-dialog {
         pointer-events: auto;
-        background: hsl(var(--b6), 0.7);
+        background: hsl(var(--b6), 0.85);
+        backdrop-filter: blur(2px);
+        -webkit-backdrop-filter: blur(2px);
     }
 
     .bleh-modal {
@@ -17195,16 +17214,17 @@ h4 {
 .select-button {
     width: max-content;
     position: relative;
-    --mask: var(--icon-16-dropdown);
 
-    &:before {
+    &:after {
+        --mask: var(--icon-16-dropdown);
+
         transition-property: transform !important;
         transition-duration: var(--trans) !important;
         transition-timing-function: var(--trans-function) !important;
     }
 
     &[aria-expanded="true"] {
-        &:before {
+        &:after {
             transform: scaleY(-1) !important;
         }
     }

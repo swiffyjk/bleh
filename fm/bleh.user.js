@@ -749,6 +749,11 @@ const trans = {
                             lit: 'Lightness',
                             seasonal_alert: 'The current season is overriding your accent colour, adjust sliders to disable.'
                         }
+                    },
+                    swatches: {
+                        default: 'Default',
+                        avatar: 'Avatar',
+                        custom: 'Customise'
                     }
                 },
                 high_contrast: {
@@ -3164,8 +3169,28 @@ function lookup_lang() {
 
     root = root.getAttribute('href');
 
-    if (auth_link)
-        my_avi = auth_link.querySelector('img').getAttribute('src');
+    let previous_avi = auth.avatar;
+    if (auth_link) {
+        auth.avatar = auth_link.querySelector('img').getAttribute('src');
+
+        if (auth.avatar != previous_avi) {
+            let avatar = auth_link.querySelector('img');
+            avatar.setAttribute('crossorigin', 'anonymous');
+
+            try {
+                avatar.addEventListener('load', function() {
+                    let thief = new ColorThief();
+                    let colour = thief.getColor(avatar);
+
+                    let hsl = rgb_to_hsl(colour[0], colour[1], colour[2]);
+
+                    auth.sets.hue = hsl.h;
+                    auth.sets.sat = clamp_sat((hsl.s / 100) * 3);
+                    auth.sets.lit = 1;
+                });
+            } catch(e) {}
+        }
+    }
     lang = document.documentElement.getAttribute('lang');
     non_override_lang = lang;
 
@@ -3175,6 +3200,75 @@ function lookup_lang() {
     }
 
     moment.locale(lang);
+}
+
+// https://stackoverflow.com/questions/46432335/hex-to-hsl-convert-javascript
+function hex_to_hsl(hex) {
+    let result = new RegExp(/^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i).exec(hex);
+
+    let r = parseInt(result[1], 16);
+    let g = parseInt(result[2], 16);
+    let b = parseInt(result[3], 16);
+
+    r /= 255, g /= 255, b /= 255;
+    let max = Math.max(r, g, b), min = Math.min(r, g, b);
+    let h, s, l = (max + min) / 2;
+
+    if (max == min) {
+        h = s = 0; // achromatic
+    } else {
+        let d = max - min;
+        s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+        switch (max) {
+            case r:
+                h = (g - b) / d + (g < b ? 6 : 0);
+                break;
+            case g:
+                h = (b - r) / d + 2;
+                break;
+            case b:
+                h = (r - g) / d + 4;
+                break;
+        }
+        h /= 6;
+    }
+
+    h = Math.round(h * 360);
+    s = s * 100;
+    s = Math.round(s);
+    l = l * 100;
+    l = Math.round(l);
+
+    console.log('converted', hex, 'to', h, s, l);
+
+    return {
+        h: h,
+        s: s,
+        l: l
+    };
+}
+
+function rgb_to_hsl(r, g, b) {
+    let hex = rgb_to_hex(r, g, b);
+    return hex_to_hsl(hex);
+}
+
+// https://stackoverflow.com/questions/5623838/rgb-to-hex-and-hex-to-rgb#5624139
+function comp_to_hex(comp) {
+    let hex = comp.toString(16);
+    return (hex.length == 1) ? '0' + hex : hex;
+}
+function rgb_to_hex(r, g, b) {
+    return '#' + comp_to_hex(r) + comp_to_hex(g) + comp_to_hex(b);
+}
+
+// saturation should not exceed 2, definitely not
+// reaching 3 or even 4 in some cases
+function clamp_sat(sat) {
+    if (sat > 1.7)
+        return 1.7;
+
+    return sat;
 }
 
 function handle_error_500() {
@@ -3555,11 +3649,13 @@ let settings_template = {
     gloss: 0,
     gendered_tags: true,
     show_extra_nav: true,
+
+    accent_type: 'avatar',
     hue: 255,
     sat: 1,
     sat_bg: 1,
     lit: 1,
-    invert_interactable_colour: false,
+
     dev: false,
 
     api_key: '',
@@ -4112,12 +4208,17 @@ let inbuilt_settings = {
 }
 
 // use the top-right link to determine the current user
-let auth = '';
+let auth = {
+    name: null,
+    pro: false,
+    avatar: null,
+    sets: {
+        hue: 255,
+        sat: 1,
+        lit: 1
+    }
+};
 let auth_link = '';
-let is_pro = false;
-
-// stores ur current authorised avatar
-let my_avi = '';
 
 // stores the current root of the page, most applicable in other languages:
 // en: /
@@ -4253,7 +4354,7 @@ let has_prompted_for_update = false;
 
         auth_link = document.querySelector('a.auth-link');
         if (auth_link)
-            auth = auth_link.querySelector('img').getAttribute('alt');
+            auth.name = auth_link.querySelector('img').getAttribute('alt');
 
         load_settings();
 
@@ -4274,7 +4375,7 @@ let has_prompted_for_update = false;
         start_rain();
 
         // everything past this point requires authorisation
-        if (auth == '') {
+        if (auth.name == '') {
             notify({
                 title: 'No account added',
                 body: 'Please sign in to an account to access bleh features.',
@@ -4392,7 +4493,7 @@ let has_prompted_for_update = false;
             bleh_glacier_library();
 
         // bulk edit check
-        if (is_pro && page.type == 'user' && page.name == auth && page.subpage == 'library_artist_overview' ||
+        if (auth.pro && page.type == 'user' && page.name == auth.name && page.subpage == 'library_artist_overview' ||
             page.subpage == 'library_album_overview' || page.subpage == 'library_track_overview'
         ) {
             bleh_glacier_library_bulk_edit();
@@ -4570,7 +4671,7 @@ let has_prompted_for_update = false;
             </div>
             <div class="page">
                 <strong>auth</strong>
-                <span>${auth}</span>
+                <span>${auth.name}</span>
                 <span>${lang} (${non_override_lang})</span>
             </div>
             <div class="page">
@@ -5196,26 +5297,25 @@ let has_prompted_for_update = false;
         auth_link.setAttribute('data-bleh', 'true');
 
         let text = document.createElement('p');
-        text.textContent = auth;
+        text.textContent = auth.name;
         auth_link.appendChild(text);
 
-        if (document.body.querySelector('.masthead .masthead-pro-wrap') != null) {
-            is_pro = true;
-        } else {
-            is_pro = false;
-        }
+        if (document.body.querySelector('.masthead .masthead-pro-wrap') != null)
+            auth.pro = true;
+        else
+            auth.pro = false;
 
-        let badges = load_badges(auth, true);
+        let badges = load_badges(auth.name, true);
 
         if (badges) {
             let badge = document.createElement('span');
-            badge.classList.add('label', `user-status--bleh-${badges[0].type}`, `user-status--bleh-user-${auth}`, 'auth-badge');
+            badge.classList.add('label', `user-status--bleh-${badges[0].type}`, `user-status--bleh-user-${auth.name}`, 'auth-badge');
             badge.textContent = badges[0].name;
             auth_link.appendChild(badge);
 
-            auth_link.classList.add(`user-status--bleh-${badges[0].type}`, `user-status--bleh-user-${auth}`);
+            auth_link.classList.add(`user-status--bleh-${badges[0].type}`, `user-status--bleh-user-${auth.name}`);
             auth_link.setAttribute('data-has-colour', 'true');
-        } else if (is_pro) {
+        } else if (auth.pro) {
             let pro_badge = document.createElement('p');
             pro_badge.classList.add('label', 'user-status-subscriber', 'auth-badge');
             pro_badge.textContent = 'Pro';
@@ -5303,21 +5403,21 @@ let has_prompted_for_update = false;
         let auth_menu = tippy(auth_link, {
             theme: 'auth-menu',
             content: (`
-                <a class="dropdown-menu-clickable-item" data-menu-item="profile" href="${root}user/${auth}">
-                    ${auth}
+                <a class="dropdown-menu-clickable-item" data-menu-item="profile" href="${root}user/${auth.name}">
+                    ${auth.name}
                 </a>
                 <a class="dropdown-menu-clickable-item" data-menu-item="profile-shortcut" href="${root}user/${settings.profile_shortcut}" data-profile-shortcut="${settings.profile_shortcut}">
                     ${settings.profile_shortcut}
                 </a>
                 <div class="sep"></div>
-                <a class="dropdown-menu-clickable-item" data-menu-item="library" href="${root}user/${auth}/library">
+                <a class="dropdown-menu-clickable-item" data-menu-item="library" href="${root}user/${auth.name}/library">
                     ${trans[lang].auth_menu.library}
                 </a>
-                <a class="dropdown-menu-clickable-item" data-menu-item="shouts" href="${root}user/${auth}/shoutbox">
+                <a class="dropdown-menu-clickable-item" data-menu-item="shouts" href="${root}user/${auth.name}/shoutbox">
                     ${trans[lang].auth_menu.shouts}
                 </a>
                 ${(settings.auth_menu_obsessions) ? (`
-                <a class="dropdown-menu-clickable-item" data-menu-item="obsessions" href="${root}user/${auth}/obsessions">
+                <a class="dropdown-menu-clickable-item" data-menu-item="obsessions" href="${root}user/${auth.name}/obsessions">
                     ${trans[lang].auth_menu.obsessions}
                 </a>
                 `) : ''}
@@ -5358,7 +5458,7 @@ let has_prompted_for_update = false;
             interactiveBorder: 10,
 
             onShow(instance) {
-                instance.popper.style.setProperty('--url', `url(${my_avi.replace('avatar42s', 'avatar170s')})`);
+                instance.popper.style.setProperty('--url', `url(${auth.avatar.replace('avatar42s', 'avatar170s')})`);
 
                 let shortcut_item = instance.popper.querySelector('[data-menu-item="profile-shortcut"]');
                 if (shortcut_item.getAttribute('data-profile-shortcut') != settings.profile_shortcut) {
@@ -5868,7 +5968,7 @@ let has_prompted_for_update = false;
 
     // patch last.fm settings
     function bleh_native_settings() {
-        register_background(my_avi);
+        register_background(auth.avatar);
 
         page.structure.container = document.body.querySelector('.page-content');
         try {
@@ -6416,7 +6516,7 @@ let has_prompted_for_update = false;
                 <div class="info-side">
                     <div class="header-info">
                         <div class="header">
-                            <h1>${auth}</h1>
+                            <h1>${auth.name}</h1>
                         </div>
                         <div class="header-title-secondary">
                             <span class="header-title-secondary--pre" id="header-title-display-name--pre"></span>
@@ -6581,8 +6681,8 @@ let has_prompted_for_update = false;
         setTimeout(function() {
             kill_window('edit_avatar');
 
-            my_avi = auth_link.querySelector('img').getAttribute('src');
-            document.querySelector('.auth-dropdown-menu').style.setProperty('--url', `url(${my_avi.replace('avatar42s', 'avatar170s')})`);
+            auth.avatar = auth_link.querySelector('img').getAttribute('src');
+            document.querySelector('.auth-dropdown-menu').style.setProperty('--url', `url(${auth.avatar.replace('avatar42s', 'avatar170s')})`);
         }, 5000);
     }
 
@@ -6704,7 +6804,7 @@ let has_prompted_for_update = false;
             <h4>${trans[lang].settings.inbuilt.ignore.name}</h4>
             <div class="user-top-panel">
                 <div class="user-top-avatar user-top-avatar-side-left"><div class="bleh-icon"></div></div>
-                <img class="user-top-avatar user-top-avatar-main" src="${my_avi.replace('avatar42s', 'avatar300s')}" alt="${auth}">
+                <img class="user-top-avatar user-top-avatar-main" src="${auth.avatar.replace('avatar42s', 'avatar300s')}" alt="${auth.name}">
                 <div class="user-top-avatar user-top-avatar-side-right"><div class="bleh-icon"></div></div>
             </div>
             <h5>${trans[lang].settings.inbuilt.ignore.consider.name}</h5>
@@ -7188,7 +7288,7 @@ let has_prompted_for_update = false;
         }
 
 
-        let is_own_profile = (page.name == auth);
+        let is_own_profile = (page.name == auth.name);
         if (is_own_profile)
             profile_header.setAttribute('data-is-own-profile', 'true');
 
@@ -7916,7 +8016,7 @@ let has_prompted_for_update = false;
             listen_item.style.setProperty('--data-taste-percent', percent);
             listen_item.innerHTML = (`
                 <img class="view-item-avatar" src="${avi}" alt="${name}">
-                <img class="view-item-avatar" src="${my_avi}" alt="${auth}">
+                <img class="view-item-avatar" src="${auth.avatar}" alt="${auth.name}">
                 <!--<div class="taste-badge">${trans[lang].profile.taste_meter.level[taste]}</div>-->
                 <div class="taste-badge">${percent}</div>
                 ${(artists.length == 1) ? trans[lang].profile.taste_meter.you_share_1.replace('{artist}', artists[0]) : ''}
@@ -7980,16 +8080,16 @@ let has_prompted_for_update = false;
                     <a class="dropdown-menu-clickable-item" href="${root}user/${name}/library/music/${sanitise(artists[0])}" data-menu-item="shared-artist">
                         <img class="view-item-avatar" src="${avi}" alt="${name}">${artists[0]}
                     </a>
-                    <a class="dropdown-menu-clickable-item" href="${root}user/${auth}/library/music/${sanitise(artists[0])}" data-menu-item="shared-artist">
-                        <img class="view-item-avatar" src="${my_avi}" alt="${auth}">${artists[0]}
+                    <a class="dropdown-menu-clickable-item" href="${root}user/${auth.name}/library/music/${sanitise(artists[0])}" data-menu-item="shared-artist">
+                        <img class="view-item-avatar" src="${auth.avatar}" alt="${auth.name}">${artists[0]}
                     </a>
                     ${(artists.length >= 2) ? (`
                     <div class="sep"></div>
                     <a class="dropdown-menu-clickable-item" href="${root}user/${name}/library/music/${sanitise(artists[1])}" data-menu-item="shared-artist">
                         <img class="view-item-avatar" src="${avi}" alt="${name}">${artists[1]}
                     </a>
-                    <a class="dropdown-menu-clickable-item" href="${root}user/${auth}/library/music/${sanitise(artists[1])}" data-menu-item="shared-artist">
-                        <img class="view-item-avatar" src="${my_avi}" alt="${auth}">${artists[1]}
+                    <a class="dropdown-menu-clickable-item" href="${root}user/${auth.name}/library/music/${sanitise(artists[1])}" data-menu-item="shared-artist">
+                        <img class="view-item-avatar" src="${auth.avatar}" alt="${auth.name}">${artists[1]}
                     </a>
                     `) : ''}
                     ${(artists.length >= 3) ? (`
@@ -7997,8 +8097,8 @@ let has_prompted_for_update = false;
                     <a class="dropdown-menu-clickable-item" href="${root}user/${name}/library/music/${sanitise(artists[2])}" data-menu-item="shared-artist">
                         <img class="view-item-avatar" src="${avi}" alt="${name}">${artists[2]}
                     </a>
-                    <a class="dropdown-menu-clickable-item" href="${root}user/${auth}/library/music/${sanitise(artists[2])}" data-menu-item="shared-artist">
-                        <img class="view-item-avatar" src="${my_avi}" alt="${auth}">${artists[2]}
+                    <a class="dropdown-menu-clickable-item" href="${root}user/${auth.name}/library/music/${sanitise(artists[2])}" data-menu-item="shared-artist">
+                        <img class="view-item-avatar" src="${auth.avatar}" alt="${auth.name}">${artists[2]}
                     </a>
                     `) : ''}
                 `),
@@ -8923,7 +9023,7 @@ let has_prompted_for_update = false;
             page.requested.setting = params.get('setting');
 
             if (ff('refreshed_nav')) {
-                register_background(my_avi);
+                register_background(auth.avatar);
             }
 
 
@@ -9122,23 +9222,23 @@ let has_prompted_for_update = false;
 
             let sponsoring = false;
             if (sponsor_list)
-                sponsoring = sponsor_list.sponsors.includes(auth);
+                sponsoring = sponsor_list.sponsors.includes(auth.name);
 
             return (`
             <div class="bleh--panel">
                 <h4 class="top-header">${trans[lang].settings.home.name}</h4>
                 <div class="user-top-panel" data-sponsoring="${sponsoring}">
                     <div class="user-top-avatar user-top-avatar-side-left"></div>
-                    <img class="user-top-avatar user-top-avatar-main" src="${my_avi.replace('avatar42s', 'avatar300s')}" alt="${auth}">
+                    <img class="user-top-avatar user-top-avatar-main" src="${auth.avatar.replace('avatar42s', 'avatar300s')}" alt="${auth.name}">
                     <div class="user-top-avatar user-top-avatar-side-right"></div>
                 </div>
                 ${(sponsoring) ? (`
                 <h4>${trans[lang].settings.home.sponsor.thanks
-                .replace('{m}', `<a class="mention" href="${root}user/${auth}">@${auth}</a>`)
+                .replace('{m}', `<a class="mention" href="${root}user/${auth.name}">@${auth.name}</a>`)
                 .replace('{v}', `<span class="version-link" onclick="_change_settings_page('sku')">${version.build}.${version.sku}</span>`)}</h4>
                 `) : (`
                 <h4>${trans[lang].settings.home.thanks
-                .replace('{m}', `<a class="mention" href="${root}user/${auth}">@${auth}</a>`)
+                .replace('{m}', `<a class="mention" href="${root}user/${auth.name}">@${auth.name}</a>`)
                 .replace('{v}', `<span class="version-link" onclick="_change_settings_page('sku')">${version.build}.${version.sku}</span>`)}</h4>
                 `)}
                 <div class="screen-row actions-only">
@@ -9349,7 +9449,28 @@ let has_prompted_for_update = false;
                     `) : ''}
                     <div class="sep"></div>
                     <h4>${trans[lang].settings.customise.colours.name}</h4>
-                    <div class="palette options colours" id="colour_custom"></div>
+                    <div class="inner-preview pad">
+                        <div class="palette">
+                            <div class="swatch" style="--col: hsl(var(--l2-c))"></div>
+                            <div class="swatch" style="--col: hsl(var(--l3-c))"></div>
+                            <div class="swatch" style="--col: hsl(var(--l4-c))"></div>
+                            <div class="swatch" style="--col: hsl(var(--l2))"></div>
+                            <div class="swatch" style="--col: hsl(var(--l3))"></div>
+                            <div class="swatch" style="--col: hsl(var(--l4))"></div>
+                        </div>
+                        <div class="sep"></div>
+                        <div class="btn-row">
+                            <button class="btn">${trans[lang].settings.examples.button}</button>
+                            <button class="btn primary">${trans[lang].settings.examples.button}</button>
+                            <div class="chartlist-count-bar">
+                                <a class="chartlist-count-bar-link">
+                                    <span class="chartlist-count-bar-slug" style="width: 60%"></span>
+                                    <span class="chartlist-count-bar-value">44,551</span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="view-buttons colour-buttons view-buttons-middle" id="colour_custom"></div>
                     <div class="palette options colours" id="colour_presets"></div>
                     <div class="palette options colours" id="custom_colours">
                         <button class="swatch btn default" style="
@@ -9912,7 +10033,7 @@ let has_prompted_for_update = false;
                     <div class="inner-preview pad">
                         <div class="profile-mockup">
                             <div class="mockup-header">
-                                <img class="mockup-avatar" src="${my_avi}">
+                                <img class="mockup-avatar" src="${auth.avatar}">
                                 <div class="mockup-info">
                                     <div class="mockup-subtext"></div>
                                     <div class="mockup-name"></div>
@@ -9930,7 +10051,7 @@ let has_prompted_for_update = false;
                                     <div class="mockup-panel main"></div>
                                 </div>
                             </div>
-                            <div class="profile-mockup-background from-avatar" style="background-image: url(${my_avi});"></div>
+                            <div class="profile-mockup-background from-avatar" style="background-image: url(${auth.avatar});"></div>
                             <div class="profile-mockup-background from-track" style="background-image: url(https://lastfm.freetls.fastly.net/i/u/avatar170s/90b39fa67cd3ec8159e116385952a05b);"></div>
                         </div>
                     </div>
@@ -10179,22 +10300,22 @@ let has_prompted_for_update = false;
 
             let sponsoring = false;
             if (sponsor_list)
-                sponsoring = sponsor_list.sponsors.includes(auth);
+                sponsoring = sponsor_list.sponsors.includes(auth.name);
 
             return (`
                 <div class="bleh--panel sponsor-badge-panel" data-sponsoring="${sponsoring}">
                     <div class="profile-container">
                         <div class="avatar-side small">
                             <div class="avatar">
-                                <img src="${my_avi.replace('/avatar42s/', '/avatar170s/')}" alt="Your avatar" loading="lazy">
+                                <img src="${auth.avatar.replace('/avatar42s/', '/avatar170s/')}" alt="Your avatar" loading="lazy">
                             </div>
                         </div>
                         <div class="info-side">
                             <div class="header-info">
                                 <div class="sub-text">${trans[lang].settings.profiles.you}</div>
                                 <div class="header standalone title-container">
-                                    <h1>${auth}</h1>
-                                    ${(is_pro) ? (`
+                                    <h1>${auth.name}</h1>
+                                    ${(auth.pro) ? (`
                                     <span class="label user-status-subscriber">${trans[lang].badges['user-status-subscriber'].name}</span>
                                     `) : ''}
                                 </div>
@@ -10404,7 +10525,7 @@ let has_prompted_for_update = false;
                     <div class="inner-preview pad flex">
                         <div class="shout js-shout js-link-block" data-kate-processed="true">
                             <h3 class="shout-user">
-                                <a>${auth}</a>
+                                <a>${auth.name}</a>
                             </h3>
                             <span class="avatar shout-user-avatar avatar--bleh-missing">
                                 <img src="" alt="Your avatar" loading="lazy">
@@ -10526,7 +10647,7 @@ let has_prompted_for_update = false;
                     <div class="inner-preview pad flex">
                         <div class="shout js-shout js-link-block" data-kate-processed="true">
                             <h3 class="shout-user">
-                                <a>${auth}</a>
+                                <a>${auth.name}</a>
                             </h3>
                             <span class="avatar shout-user-avatar avatar--bleh-missing">
                                 <img src="" alt="Your avatar" loading="lazy">
@@ -11041,9 +11162,9 @@ let has_prompted_for_update = false;
         document.getElementById('bleh--panel-main').innerHTML = render_setting_page(page);
 
         if (page == 'themes') {
-            refresh_all();
             show_theme_change_in_settings();
             display_colour_presets();
+            refresh_all();
         } else if (page == 'customise' || page == 'performance' || page == 'accessibility' || page == 'text' || page == 'seasonal' || page == 'music' || page == 'activities') {
             refresh_all();
         } else if (page == 'profiles') {
@@ -11256,15 +11377,13 @@ let has_prompted_for_update = false;
                 {
                     type: 'avatar',
                     sets: {
-                        hue: 255,
-                        sat: 1,
-                        lit: 1
-                    },
-                    displays: {
-                        hue: 'var(--hue-seasonal, 255)',
-                        sat: 'var(--sat-seasonal, 1)',
-                        lit: 'var(--lit-seasonal, 1)'
+                        hue: auth.sets.hue,
+                        sat: auth.sets.sat,
+                        lit: auth.sets.lit
                     }
+                },
+                {
+                    type: 'custom'
                 }
             ],
             presets: [
@@ -11284,45 +11403,136 @@ let has_prompted_for_update = false;
                 if (!colour.type)
                     colour.type = 'colour';
 
-                if (!colour.displays)
+                if (!colour.displays && colour.sets)
                     colour.displays = colour.sets;
+
+                settings.accent_type = colour.type;
 
                 let swatch = document.createElement('button');
                 swatch.classList.add('swatch', 'btn');
                 swatch.setAttribute('data-swatch-type', colour.type);
-                swatch.setAttribute('onclick', `_update_params(${JSON.stringify(colour.sets)})`);
 
-                swatch.style.setProperty('--hue-over', colour.displays.hue);
-                swatch.style.setProperty('--sat-over', colour.displays.sat);
-                swatch.style.setProperty('--lit-over', colour.displays.lit);
+                if (type == 'custom')
+                    swatch.classList.add('view-item', 'colour-btn');
+
+                if (type == 'custom')
+                    swatch.textContent = trans[lang].settings.customise.colours.swatches[colour.type];
+
+                if (colour.type == 'custom') {
+                    swatch.classList.add('select-button');
+
+                    tippy(swatch, {
+                        theme: 'window',
+                        content: (`
+                            <div class="dialog-settings">
+                                <div class="alert alert-info seasonal-hsl-alert">
+                                    ${trans[lang].settings.customise.colours.modals.custom_colour.seasonal_alert}
+                                </div>
+                                <div class="slider-container dim-using-hue-gradient dim-during-seasonal" id="container-hue">
+                                    <button class="btn reset" onclick="_reset_item('hue')">${trans[lang].settings.reset}</button>
+                                    <div class="heading">
+                                        <h5>${trans[lang].settings.customise.colours.modals.custom_colour.hue}</h5>
+                                    </div>
+                                    <div class="slider">
+                                        <div class="slider-track" id="slider-track-hue"><div class="slider-fill"></div><div class="slider-nub"></div></div>
+                                        <input type="range" min="0" max="360" value="${settings.hue}" id="slider-hue" oninput="_update_item('hue', this.value)">
+                                        <p id="value-hue">${settings.hue}${settings_base.hue.unit}</p>
+                                    </div>
+                                    <div class="hint">
+                                        <p style="left: 0">0</p>
+                                        <p style="left: calc((255 / 360) * 100%)">255</p>
+                                        <p style="left: 100%">360</p>
+                                    </div>
+                                </div>
+                                <div class="slider-container dim-using-hue-gradient dim-during-seasonal" id="container-sat">
+                                    <button class="btn reset" onclick="_reset_item('sat')">${trans[lang].settings.reset}</button>
+                                    <div class="heading">
+                                        <h5>${trans[lang].settings.customise.colours.modals.custom_colour.sat}</h5>
+                                    </div>
+                                    <div class="slider">
+                                        <div class="slider-track" id="slider-track-sat"><div class="slider-fill"></div><div class="slider-nub"></div></div>
+                                        <input type="range" min="0" max="1.5" value="${settings.sat}" step="0.025" id="slider-sat" oninput="_update_item('sat', this.value)">
+                                        <p id="value-sat">${settings.sat}${settings_base.sat.unit}</p>
+                                    </div>
+                                    <div class="hint">
+                                        <p style="left: 0">0</p>
+                                        <p style="left: calc((1 / 1.5) * 100%)">1</p>
+                                        <p style="left: 100%">1.5</p>
+                                    </div>
+                                </div>
+                                <div class="slider-container dim-using-hue-gradient dim-during-seasonal" id="container-lit">
+                                    <button class="btn reset" onclick="_reset_item('lit')">${trans[lang].settings.reset}</button>
+                                    <div class="heading">
+                                        <h5>${trans[lang].settings.customise.colours.modals.custom_colour.lit}</h5>
+                                    </div>
+                                    <div class="slider">
+                                        <div class="slider-track" id="slider-track-lit"><div class="slider-fill"></div><div class="slider-nub"></div></div>
+                                        <input type="range" min="0" max="1.5" value="${settings.lit}" step="0.025" id="slider-lit" oninput="_update_item('lit', this.value)">
+                                        <p id="value-lit">${settings.lit}${settings_base.lit.unit}</p>
+                                    </div>
+                                    <div class="hint">
+                                        <p style="left: 0">0</p>
+                                        <p style="left: calc((1 / 1.5) * 100%)">1</p>
+                                        <p style="left: 100%">1.5</p>
+                                    </div>
+                                </div>
+                            </div>
+                        `),
+                        allowHTML: true,
+                        placement: 'bottom',
+                        interactive: true,
+                        interactiveBorder: 10,
+                        trigger: 'click',
+
+                        onShow(instance) {
+                            refresh_all(instance.popper);
+                        }
+                    });
+                }
+
+                if (colour.sets) {
+                    swatch.setAttribute('onclick', `_update_params(${JSON.stringify(colour.sets)})`);
+
+                    swatch.style.setProperty('--hue-over', colour.displays.hue);
+                    swatch.style.setProperty('--sat-over', colour.displays.sat);
+                    swatch.style.setProperty('--lit-over', colour.displays.lit);
+                }
 
                 swatch_group.appendChild(swatch);
             });
         }
+    }
+    unsafeWindow._create_a_custom_colour = function() {
+        notify({
+            title: 'Under construction',
+            body: 'This dialog is being moved!',
+            icon: 'icon-16-x',
+            persist: true
+        });
     }
 
 
     function init_profile_page() {
         let profile_name_obj = document.body.querySelector('.title-container');
 
-        if (sponsor_list && sponsor_list.badges.hasOwnProperty(auth)) {
-            if (!Array.isArray(sponsor_list.badges[auth])) {
+        if (sponsor_list && sponsor_list.badges.hasOwnProperty(auth.name)) {
+            if (!Array.isArray(sponsor_list.badges[auth.name])) {
                 // default
-                log(`1 badge:`, 'profile', 'info', sponsor_list.badges[auth]);
-                let this_badge = sponsor_list.badges[auth];
+                log(`1 badge:`, 'profile', 'info', sponsor_list.badges[auth.name]);
+                let this_badge = sponsor_list.badges[auth.name];
 
                 let badge = document.createElement('span');
-                badge.classList.add('label',`user-status--bleh-${this_badge.type}`,`user-status--bleh-user-${auth}`);
+                badge.classList.add('label',`user-status--bleh-${this_badge.type}`,`user-status--bleh-user-${auth.name}`);
                 badge.textContent = (this_badge.name != null) ? this_badge.name : trans[lang].badges[this_badge.type].name;
                 profile_name_obj.appendChild(badge);
             } else {
                 // multiple
-                log(`multiple badges:`, 'profile', 'info', sponsor_list.badges[auth]);
-                for (let badge_entry in sponsor_list.badges[auth]) {
-                    let this_badge = sponsor_list.badges[auth][badge_entry];
+                log(`multiple badges:`, 'profile', 'info', sponsor_list.badges[auth.name]);
+                for (let badge_entry in sponsor_list.badges[auth.name]) {
+                    let this_badge = sponsor_list.badges[auth.name][badge_entry];
 
                     let badge = document.createElement('span');
-                    badge.classList.add('label',`user-status--bleh-${this_badge.type}`,`user-status--bleh-user-${auth}`);
+                    badge.classList.add('label',`user-status--bleh-${this_badge.type}`,`user-status--bleh-user-${auth.name}`);
                     badge.textContent = (this_badge.name != null) ? this_badge.name : trans[lang].badges[this_badge.type].name;
                     profile_name_obj.appendChild(badge);
                 }
@@ -11550,6 +11760,13 @@ let has_prompted_for_update = false;
     function update_item(item, value, modify=true, search = document) {
         let container = search.querySelector(`#container-${item}`);
 
+        if (container)
+            console.info(container);
+        else if (settings_base[item].type != 'slider' && settings_base[item].type != 'options')
+            return;
+
+        console.info(settings_base[item]);
+
         try {
         // is this a new value?
         let new_value = false;
@@ -11566,31 +11783,14 @@ let has_prompted_for_update = false;
         if (!modify)
             console.info(item, value, modify);
 
-        // determine interactable text colour based on --hue & --lit
-        if (item == 'hue' || item == 'lit') {
-            if (settings.hue > 228 && settings.hue < 252 && settings.lit < 0.75) {
-                settings.invert_interactable_colour = true;
-            } else if (settings.hue > 210 && settings.hue < 280 && settings.lit < 0.425) {
-                settings.invert_interactable_colour = true;
-            } else if (settings.lit < 0.3) {
-                settings.invert_interactable_colour = true;
-            } else {
-                settings.invert_interactable_colour = false;
-            }
-
-            // save setting into body
-            document.body.style.setProperty(`--invert_interactable_colour`,settings.invert_interactable_colour);
-            document.documentElement.setAttribute(`data-bleh--invert_interactable_colour`, `${settings.invert_interactable_colour}`);
-        }
-
         if (settings_base[item].type == 'slider') {
             // text to show current slider value
             try {
-                let slider = document.getElementById(`slider-${item}`);
+                let slider = search.querySelector(`#slider-${item}`);
 
-                document.getElementById(`value-${item}`).textContent = `${settings[item]}${settings_base[item].unit}`;
+                search.querySelector(`#value-${item}`).textContent = `${settings[item]}${settings_base[item].unit}`;
                 slider.value = settings[item];
-                document.getElementById(`slider-track-${item}`).style.setProperty('--percent', `${(settings[item] / (slider.getAttribute('max'))) * 100}%`);
+                search.querySelector(`#slider-track-${item}`).style.setProperty('--percent', `${(settings[item] / (slider.getAttribute('max'))) * 100}%`);
             } catch(e) {}
 
             // save setting into body
@@ -11694,7 +11894,7 @@ let has_prompted_for_update = false;
 
         // save to settings
         localStorage.setItem('bleh', JSON.stringify(settings));
-        } catch(e) {}
+        } catch(e) {console.error(e)}
 
         if (container) {
             if (settings[item] != settings_base[item].value)
@@ -11736,6 +11936,9 @@ let has_prompted_for_update = false;
     }
 
     function update_colour_swatches() {
+        let found = false;
+        let custom = null;
+
         let swatches = document.body.querySelectorAll('.swatch');
         swatches.forEach((swatch) => {
             let h = swatch.style.getPropertyValue('--hue-over');
@@ -11746,11 +11949,18 @@ let has_prompted_for_update = false;
                 (h == settings.hue && s == settings.sat && l == settings.lit) ||
                 (swatch.getAttribute('data-swatch-type') == 'default' && settings.hue == 255 && settings.sat == 1 && settings.lit == 1) // default
             ) {
-                swatch.classList.add('selected');
+                swatch.setAttribute('aria-checked', 'true');
+                found = true;
             } else {
-                swatch.classList.remove('selected');
+                swatch.setAttribute('aria-checked', 'false');
             }
+
+            if (!custom && swatch.getAttribute('data-swatch-type') == 'custom')
+                custom = swatch;
         });
+
+        if (!found && custom)
+            custom.setAttribute('aria-checked', 'true');
     }
 
 
@@ -11842,98 +12052,6 @@ let has_prompted_for_update = false;
                 </button>
             </div>
         `);
-    }
-
-
-    // create a custom colour
-    unsafeWindow._create_a_custom_colour = function() {
-        dialog_legacy('custom_colour',trans[lang].settings.customise.colours.custom,`
-        <p>${trans[lang].settings.customise.colours.modals.custom_colour.preface}</p>
-        <br>
-        <div class="inner-preview pad">
-            <div class="palette">
-                <div class="swatch" style="--col: hsl(var(--l2-c))"></div>
-                <div class="swatch" style="--col: hsl(var(--l3-c))"></div>
-                <div class="swatch" style="--col: hsl(var(--l4-c))"></div>
-                <div class="swatch" style="--col: hsl(var(--l2))"></div>
-                <div class="swatch" style="--col: hsl(var(--l3))"></div>
-                <div class="swatch" style="--col: hsl(var(--l4))"></div>
-            </div>
-            <div class="sep"></div>
-            <div class="btn-row">
-                <button class="btn">${trans[lang].settings.examples.button}</button>
-                <button class="btn primary">${trans[lang].settings.examples.button}</button>
-                <div class="chartlist-count-bar">
-                    <a class="chartlist-count-bar-link">
-                        <span class="chartlist-count-bar-slug" style="width: 60%"></span>
-                        <span class="chartlist-count-bar-value">44,551</span>
-                    </a>
-                </div>
-            </div>
-        </div>
-        <br>
-        <div class="alert alert-info seasonal-hsl-alert">
-            ${trans[lang].settings.customise.colours.modals.custom_colour.seasonal_alert}
-        </div>
-        <div class="slider-container dim-using-hue-gradient dim-during-seasonal" id="container-hue">
-            <button class="btn reset" onclick="_reset_item('hue')">${trans[lang].settings.reset}</button>
-            <div class="heading">
-                <h5>${trans[lang].settings.customise.colours.modals.custom_colour.hue}</h5>
-            </div>
-            <div class="slider">
-                <div class="slider-track" id="slider-track-hue"><div class="slider-fill"></div><div class="slider-nub"></div></div>
-                <input type="range" min="0" max="360" value="${settings.hue}" id="slider-hue" oninput="_update_item('hue', this.value)">
-                <p id="value-hue">${settings.hue}${settings_base.hue.unit}</p>
-            </div>
-            <div class="hint">
-                <p style="left: 0">0</p>
-                <p style="left: calc((255 / 360) * 100%)">255</p>
-                <p style="left: 100%">360</p>
-            </div>
-        </div>
-        <div class="slider-container dim-using-hue-gradient dim-during-seasonal" id="container-sat">
-            <button class="btn reset" onclick="_reset_item('sat')">${trans[lang].settings.reset}</button>
-            <div class="heading">
-                <h5>${trans[lang].settings.customise.colours.modals.custom_colour.sat}</h5>
-            </div>
-            <div class="slider">
-                <div class="slider-track" id="slider-track-sat"><div class="slider-fill"></div><div class="slider-nub"></div></div>
-                <input type="range" min="0" max="1.5" value="${settings.sat}" step="0.025" id="slider-sat" oninput="_update_item('sat', this.value)">
-                <p id="value-sat">${settings.sat}${settings_base.sat.unit}</p>
-            </div>
-            <div class="hint">
-                <p style="left: 0">0</p>
-                <p style="left: calc((1 / 1.5) * 100%)">1</p>
-                <p style="left: 100%">1.5</p>
-            </div>
-        </div>
-        <div class="slider-container dim-using-hue-gradient dim-during-seasonal" id="container-lit">
-            <button class="btn reset" onclick="_reset_item('lit')">${trans[lang].settings.reset}</button>
-            <div class="heading">
-                <h5>${trans[lang].settings.customise.colours.modals.custom_colour.lit}</h5>
-            </div>
-            <div class="slider">
-                <div class="slider-track" id="slider-track-lit"><div class="slider-fill"></div><div class="slider-nub"></div></div>
-                <input type="range" min="0" max="1.5" value="${settings.lit}" step="0.025" id="slider-lit" oninput="_update_item('lit', this.value)">
-                <p id="value-lit">${settings.lit}${settings_base.lit.unit}</p>
-            </div>
-            <div class="hint">
-                <p style="left: 0">0</p>
-                <p style="left: calc((1 / 1.5) * 100%)">1</p>
-                <p style="left: 100%">1.5</p>
-            </div>
-        </div>
-        <div class="modal-footer">
-            <button class="btn primary done" onclick="_kill_window('custom_colour')">
-                ${trans[lang].settings.done}
-            </button>
-        </div>
-        `, true);
-
-        // this displays the "reset to default" button if you are not on the defaults
-        update_item('hue',settings.hue);
-        update_item('sat',settings.sat);
-        update_item('lit',settings.lit);
     }
 
 
@@ -12748,7 +12866,7 @@ let has_prompted_for_update = false;
                         `),
                         allowHTML: true,
                         delay: [150, 50],
-                        placement: 'bottom'/*,
+                        placement: 'top'/*,
                         hideOnClick: false*/
                     });
                 } else if (settings.corrections) {
@@ -13444,74 +13562,6 @@ let has_prompted_for_update = false;
 
 
 
-    // https://stackoverflow.com/questions/46432335/hex-to-hsl-convert-javascript
-    function hex_to_hsl(hex) {
-        let result = new RegExp(/^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i).exec(hex);
-
-        let r = parseInt(result[1], 16);
-        let g = parseInt(result[2], 16);
-        let b = parseInt(result[3], 16);
-
-        r /= 255, g /= 255, b /= 255;
-        let max = Math.max(r, g, b), min = Math.min(r, g, b);
-        let h, s, l = (max + min) / 2;
-
-        if (max == min) {
-            h = s = 0; // achromatic
-        } else {
-            let d = max - min;
-            s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
-            switch (max) {
-                case r:
-                    h = (g - b) / d + (g < b ? 6 : 0);
-                    break;
-                case g:
-                    h = (b - r) / d + 2;
-                    break;
-                case b:
-                    h = (r - g) / d + 4;
-                    break;
-            }
-            h /= 6;
-        }
-
-        h = Math.round(h * 360);
-        s = s * 100;
-        s = Math.round(s);
-        l = l * 100;
-        l = Math.round(l);
-
-        console.log('converted', hex, 'to', h, s, l);
-
-        return {
-            h: h,
-            s: s,
-            l: l
-        };
-    }
-
-    function rgb_to_hsl(r, g, b) {
-        let hex = rgb_to_hex(r, g, b);
-        return hex_to_hsl(hex);
-    }
-
-    // https://stackoverflow.com/questions/5623838/rgb-to-hex-and-hex-to-rgb#5624139
-    function comp_to_hex(comp) {
-        let hex = comp.toString(16);
-        return (hex.length == 1) ? '0' + hex : hex;
-    }
-    function rgb_to_hex(r, g, b) {
-        return '#' + comp_to_hex(r) + comp_to_hex(g) + comp_to_hex(b);
-    }
-
-    // saturation should not exceed 2, definitely not
-    // reaching 3 or even 4 in some cases
-    function clamp_sat(sat) {
-        if (sat > 1.7)
-            return 1.7;
-
-        return sat;
-    }
 
     function album_missing_a_tracklist() {
         // tracklist
@@ -13564,7 +13614,7 @@ let has_prompted_for_update = false;
                 .then(function(html) {
                     let doc = new DOMParser().parseFromString(html, 'text/html');
 
-                    //deliver_notif(`using url ${`/user/${auth}/library/music/${album_url}`}`);
+                    //deliver_notif(`using url ${`/user/${auth.name}/library/music/${album_url}`}`);
                     console.error('DOC', doc);
 
                     let inner_tracklist = doc.querySelector('#top-tracks-section [v-else=""] .chartlist');
@@ -13688,7 +13738,7 @@ let has_prompted_for_update = false;
         `);
 
         document.body.classList.add('bleh-setup');
-        document.body.style.setProperty('background-image', `url(${my_avi})`);
+        document.body.style.setProperty('background-image', `url(${auth.avatar})`);
         document.body.style.setProperty('background-size', 'cover');
 
         let masthead = document.body.querySelector('.masthead');
@@ -13710,7 +13760,7 @@ let has_prompted_for_update = false;
                     </div>
                     <div class="setup-body">
                         <div class="setup-body-main">
-                            <h1>${trans[lang].setup.start.name.replace('{m}', `<a class="mention" href="${root}user/${auth}">@${auth}</a>`)}</h1>
+                            <h1>${trans[lang].setup.start.name.replace('{m}', `<a class="mention" href="${root}user/${auth.name}">@${auth.name}</a>`)}</h1>
                             <h4>${trans[lang].setup.start.pick_theme}</h4>
                             <div class="primary-selections">
                                 <div class="btn primary-selection" id="toggle-theme-light" data-toggle="theme" data-toggle-value="light" onclick="_update_item('theme', 'light')">
@@ -13773,7 +13823,7 @@ let has_prompted_for_update = false;
                             <div class="inner-preview pad flex">
                                 <div class="shout js-shout js-link-block" data-kate-processed="true">
                                     <h3 class="shout-user">
-                                        <a>${auth}</a>
+                                        <a>${auth.name}</a>
                                     </h3>
                                     <span class="avatar shout-user-avatar avatar--bleh-missing">
                                         <img src="" alt="Your avatar" loading="lazy">
@@ -14476,7 +14526,7 @@ let has_prompted_for_update = false;
         dialog_rm({
             all: true
         });
-        document.location.href = `${root}user/${auth}`;
+        document.location.href = `${root}user/${auth.name}`;
     }
 
 
@@ -14534,7 +14584,7 @@ let has_prompted_for_update = false;
         let profile_name = document.getElementById('text-profile_shortcut').value;
         let profile_img = document.getElementById('avatar-profile_shortcut');
 
-        if (profile_name == '' || profile_name == auth) {
+        if (profile_name == '' || profile_name == auth.name) {
             localStorage.removeItem('bleh_profile_shortcut_avi');
             document.getElementById('avatar_src-profile_shortcut').setAttribute('src', '');
 
@@ -14606,7 +14656,7 @@ let has_prompted_for_update = false;
     }
 
     function test_api_key() {
-        let xhr = api(`user.getTopTags&user=${auth}&limit=1`);
+        let xhr = api(`user.getTopTags&user=${auth.name}&limit=1`);
 
         xhr.onload = function() {
             let data = JSON.parse(this.response);
@@ -14719,10 +14769,10 @@ let has_prompted_for_update = false;
 
         // you
         let your_listens = {
-            name: auth,
+            name: auth.name,
             listens: 0,
             link: scrobble_page,
-            avi: my_avi
+            avi: auth.avatar
         };
         // check to see if you have scrobbles
         let scrobble_button = col_main.querySelector('.personal-stats-item--scrobbles .hidden-xs a');
@@ -15288,7 +15338,7 @@ let has_prompted_for_update = false;
                     <a class="btn back" href="${back_link.getAttribute('href')}">
                         ${trans[lang].error.go_back}
                     </a>
-                    <a class="btn continue primary" href="${root}user/${auth}">
+                    <a class="btn continue primary" href="${root}user/${auth.name}">
                         ${trans[lang].error.visit_profile}
                     </a>
                 </div>
@@ -15513,7 +15563,7 @@ let has_prompted_for_update = false;
 
 
         // without pro theres two containers
-        if (is_pro) {
+        if (auth.pro) {
             // pro
 
             page.structure.container = document.body.querySelector('.page-content:not(.visible-xs, :has(.content-top-lower-row, a + .js-gallery-heading))');
@@ -15539,7 +15589,7 @@ let has_prompted_for_update = false;
             else
                 page.structure.main = page.structure.row.querySelector('.col-main');
 
-            if (is_pro) {
+            if (auth.pro) {
                 page.structure.side = page.structure.row.querySelector('.col-sidebar:not(.masonry-right)');
             } else {
                 page.structure.side = page.structure.row.querySelector('.col-sidebar:not(.section-with-separator--col)');
@@ -15746,7 +15796,7 @@ let has_prompted_for_update = false;
 
 
         // without pro theres two containers
-        if (is_pro) {
+        if (auth.pro) {
             // pro
 
             page.structure.container = document.body.querySelector('.page-content:not(:has(.content-top-lower-row, a + .js-gallery-heading))');
@@ -15966,7 +16016,7 @@ let has_prompted_for_update = false;
 
 
         // without pro theres two containers
-        if (is_pro) {
+        if (auth.pro) {
             // pro
 
             page.structure.container = document.body.querySelector('.page-content');
@@ -16328,7 +16378,7 @@ let has_prompted_for_update = false;
         if (!settings.activities)
             return;
 
-        let love_track = document.body.querySelectorAll(`form[action$="${auth}/loved"]:not([data-bleh-subscribed])`);
+        let love_track = document.body.querySelectorAll(`form[action$="${auth.name}/loved"]:not([data-bleh-subscribed])`);
         love_track.forEach((form) => {
             form.setAttribute('data-bleh-subscribed', 'true');
 
@@ -16366,7 +16416,7 @@ let has_prompted_for_update = false;
         });
 
 
-        let obsess = document.body.querySelectorAll(`.modal-body form[action$="${auth}/obsessions"]:not([data-bleh-subscribed])`);
+        let obsess = document.body.querySelectorAll(`.modal-body form[action$="${auth.name}/obsessions"]:not([data-bleh-subscribed])`);
         obsess.forEach((form) => {
             form.setAttribute('data-bleh-subscribed', 'true');
 
@@ -18554,8 +18604,8 @@ let has_prompted_for_update = false;
                     <div class="detail-side">${trans[lang].wiki.syntax.links_to.replace('{link}', `<a href="${root}tag/grunge" target="_blank">grunge</a>`)}</div>
                 </div>
                 <div class="syntax-listing-item">
-                    <div class="code-side">[user]${auth}[/user]</div>
-                    <div class="detail-side">${trans[lang].wiki.syntax.links_to.replace('{link}', `<a class="mention" href="${root}user/${auth}" target="_blank">@${auth}</a>`)}</div>
+                    <div class="code-side">[user]${auth.name}[/user]</div>
+                    <div class="detail-side">${trans[lang].wiki.syntax.links_to.replace('{link}', `<a class="mention" href="${root}user/${auth.name}" target="_blank">@${auth.name}</a>`)}</div>
                 </div>
             </div>
         `);
@@ -18612,7 +18662,7 @@ let has_prompted_for_update = false;
         let is_subpage = (page.subpage != 'event_overview');
 
         // without pro theres two containers
-        if (is_pro) {
+        if (auth.pro) {
             // pro
 
             page.structure.container = document.body.querySelector('.page-content');
@@ -18812,7 +18862,7 @@ let has_prompted_for_update = false;
     }
 
     function bleh_events_manage() {
-        register_background(my_avi);
+        register_background(auth.avatar);
 
         page.structure.container = document.body.querySelector('.page-content');
         try {
@@ -18892,7 +18942,7 @@ let has_prompted_for_update = false;
         background.style.setProperty('background-image', `url(${url})`);
 
         if (page.type == 'user') {
-            if (page.name == auth) {
+            if (page.name == auth.name) {
                 background.setAttribute('data-page-user-is-self', 'true');
             } else {
                 background.setAttribute('data-page-user-is-self', 'false');
@@ -19039,10 +19089,25 @@ let has_prompted_for_update = false;
                             </button>
                         </div>
                     </div>
+                    <div class="toggle-container" id="container-colourful_tracks" onclick="_update_item('colourful_tracks')">
+                        <button class="btn reset" onclick="_reset_item('colourful_tracks')">${trans[lang].settings.reset}</button>
+                        <div class="heading">
+                            <h5>${trans[lang].settings.customise.colourful_tracks.name}</h5>
+                            <p>${trans[lang].settings.customise.colourful_tracks.bio}</p>
+                        </div>
+                        <div class="toggle-wrap">
+                            <button class="toggle" id="toggle-colourful_tracks" aria-checked="true">
+                                <div class="dot"></div>
+                            </button>
+                        </div>
+                    </div>
                     <div class="settings-footer">
                         <button type="submit" class="btn-primary save">
                             ${trans[lang].settings.save}
                         </button>
+                        <a class="btn icon settings not-a-view-button" href="${root}bleh">
+                            ${trans[lang].settings.configure}
+                        </a>
                     </div>
                 `);
 
@@ -19423,6 +19488,9 @@ let has_prompted_for_update = false;
                         <button type="submit" class="btn-primary save">
                             ${trans[lang].settings.save}
                         </button>
+                        <a class="btn icon settings not-a-view-button" href="${root}bleh">
+                            ${trans[lang].settings.configure}
+                        </a>
                     </div>
                 `);
 
@@ -19734,7 +19802,7 @@ let has_prompted_for_update = false;
         checkup_page_structure(false, content_top);
 
         if (ff('refreshed_nav')) {
-            register_background(my_avi);
+            register_background(auth.avatar);
         }
 
 
@@ -20079,7 +20147,7 @@ let has_prompted_for_update = false;
 
 
         if (page.subpage == 'notifications') {
-            register_background(my_avi);
+            register_background(auth.avatar);
 
             let form = page.structure.container.querySelector('form');
             let notifications = page.structure.container.querySelector('.inbox-notifications');
@@ -20137,12 +20205,12 @@ let has_prompted_for_update = false;
 
             register_background(avatar.querySelector('img').getAttribute('src'));
         } else if (page.subpage == 'compose') {
-            register_background(my_avi);
+            register_background(auth.avatar);
 
             let inbox = page.structure.container.querySelector('.inbox-compose-view');
             page.structure.main.appendChild(inbox);
         } else {
-            register_background(my_avi);
+            register_background(auth.avatar);
 
             let inbox = page.structure.container.querySelector('.inbox');
             page.structure.main.appendChild(inbox);
@@ -20179,7 +20247,7 @@ let has_prompted_for_update = false;
         sponsor_manage();
     }
     function sponsor_manage() {
-        if (sponsor_list.sponsors_one_time && sponsor_list.sponsors_one_time.includes(auth)) {
+        if (sponsor_list.sponsors_one_time && sponsor_list.sponsors_one_time.includes(auth.name)) {
             dialog({
                 id: 'sponsor_manage',
                 title: trans[lang].settings.home.sponsor.header,
