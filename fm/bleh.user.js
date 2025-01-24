@@ -12496,7 +12496,7 @@ let has_prompted_for_update = false;
     // feat.
     function name_includes(original_title, original_artist) {
         console.log(original_title, original_artist);
-        let formatted_title = original_title;
+        let formatted_title = sanitise_text(original_title);
 
         let original_title_corrected = false;
 
@@ -12872,7 +12872,7 @@ let has_prompted_for_update = false;
                                 <h5 class="title">${song_title}</h5>
                                 <p class="artist">${song_artist_element.innerHTML}</p>
                                 <div class="tags">${song_tags_text}</div>
-                                ${(!is_library_track_page) ? (is_album) ? '' : `<p class="album">${trans[lang].music.from_the_album.replace('{album}', (image != null) ? correct_item_by_artist(image.getAttribute('alt'), track_artist) : page.name)}</p>` : ''}
+                                ${(!is_library_track_page) ? (is_album) ? '' : `<p class="album">${trans[lang].music.from_the_album.replace('{album}', (image != null) ? correct_item_by_artist(sanitise_text(image.getAttribute('alt')), track_artist) : page.name)}</p>` : ''}
                                 ${(track_timestamp != null && track_timestamp_contents != null) ? `<p class="timestamp">${track_timestamp_contents}</p>` : ''}
                             </div>
                         `),
@@ -13687,6 +13687,14 @@ let has_prompted_for_update = false;
         return encodeURI(text
         .replaceAll(' ', '+')
         .replaceAll('/', '%2F'));
+    }
+    function sanitise_text(text) {
+        return text
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
     }
     function desanitise(text) {
         return decodeURI(text
