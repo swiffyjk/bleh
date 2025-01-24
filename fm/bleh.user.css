@@ -16457,7 +16457,7 @@ button.bleh--gallery-bookmark-image-btn {
         z-index: 9999;
 
         &[data-modal-type="setup"] {
-            width: 900px;
+            width: 1000px;
             max-width: 80vw;
         }
 
