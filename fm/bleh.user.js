@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         bleh
 // @namespace    http://last.fm/
-// @version      2025.0121
+// @version      2025.0125
 // @description  bleh!!! ^-^
 // @author       kate
 // @match        https://www.last.fm/*
@@ -20,7 +20,7 @@
 
 let version = {
     brand: 'bleh',
-    build: '2025.0121',
+    build: '2025.0125',
     sku: '4x4',
     feature_flags: {
         bleh_settings_tabs: {
@@ -11861,27 +11861,27 @@ let has_prompted_for_update = false;
             if (modify) {
                 settings[item] = value;
 
-                if (container) {
-                    document.getElementById(`toggle-${item}-${value}`).setAttribute('aria-checked', true);
+                // save setting into body
+                document.body.style.setProperty(`--${item}`, value);
+                document.documentElement.setAttribute(`data-bleh--${item}`, value);
 
-                    let other_toggles = document.querySelectorAll(`[data-toggle="${item}"]`);
-                    other_toggles.forEach((toggle) => {
-                        let other_value = toggle.getAttribute('data-toggle-value');
-                        if (other_value == value)
-                            return;
-                        else
-                            toggle.setAttribute('aria-checked', false);
-                    });
+                let toggle = document.getElementById(`toggle-${item}-${value}`);
+                if (toggle)
+                    toggle.setAttribute('aria-checked', true);
 
-                    // save setting into body
-                    document.body.style.setProperty(`--${item}`, value);
-                    document.documentElement.setAttribute(`data-bleh--${item}`, value);
+                let other_toggles = search.querySelectorAll(`[data-toggle="${item}"]`);
+                other_toggles.forEach((toggle) => {
+                    let other_value = toggle.getAttribute('data-toggle-value');
+                    if (other_value == value)
+                        return;
+                    else
+                        toggle.setAttribute('aria-checked', false);
+                });
 
 
-                    // re-flow chart
-                    if ((item == 'chart_view' || item == 'chart_bar_axis') && page.type == 'user' && page.subpage.startsWith('library'))
-                        bleh_glacier_date_graph_generate();
-                }
+                // re-flow chart
+                if ((item == 'chart_view' || item == 'chart_bar_axis') && page.type == 'user' && page.subpage.startsWith('library'))
+                    bleh_glacier_date_graph_generate();
             } else {
                 // dont modify, just show
                 if (settings[item] == value) {
@@ -18363,7 +18363,7 @@ let has_prompted_for_update = false;
 
 
     function bleh_events() {
-        let is_subpage = (page.subpage != 'event_overview');
+        let is_subpage = (page.subpage != 'event_overview' && page.subpage != 'festival_overview');
 
         // without pro theres two containers
         if (auth.pro) {
@@ -18480,6 +18480,7 @@ let has_prompted_for_update = false;
                 main_panel = page.structure.main.querySelector('.event-details');
 
             main_panel.insertBefore(event_top_header, main_panel.firstElementChild);
+            console.info('event top header', event_top_header);
 
 
 
