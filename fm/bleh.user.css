@@ -2113,7 +2113,8 @@ spacing between is removed and aligned to tag icon */
         display: none !important;
     }
 
-    [data-ff--katsune="true"] & {
+    /* avoids listening report thing */
+    [data-ff--katsune="true"] &:not([style]) {
         background: hsl(var(--b10)) !important;
         border-radius: var(--card-radius);
         box-shadow: 0 0 0 1px var(--card-border-base) inset, var(--card-shadow);
@@ -18111,7 +18112,7 @@ h4 {
         }
     }
 
-    [data-ff--katsune="true"] & {
+    [data-ff--katsune="true"] &:not(.about-artist-panel) {
         background: hsl(var(--b5)) !important;
         margin: unset !important;
         padding: var(--card-gap) !important;
@@ -18558,7 +18559,7 @@ section > .section-controls .subpage-title {
 
     border-top-left-radius: var(--card-radius);
     border-top-right-radius: var(--card-radius);
-    box-shadow: var(--card-shadow);
+    box-shadow: 0 0 0 1px var(--card-border-base) inset, var(--card-shadow);
     z-index: 2;
 
     .page-header-icon {
