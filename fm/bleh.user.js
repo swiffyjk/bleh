@@ -6062,6 +6062,9 @@ let has_prompted_for_update = false;
             header_text = header.textContent.trim();
         }
 
+        if (ff('katsune'))
+            return;
+
         let edit_header = document.createElement('section');
         edit_header.classList.add('redesigned-header', 'edit-header', 'no-background');
         edit_header.innerHTML = (`

@@ -17255,6 +17255,11 @@ h4 {
 
         position: relative;
 
+        [data-ff--katsune="true"] & {
+            margin-left: var(--card-gap);
+            margin-right: var(--card-gap);
+        }
+
         .gallery-image-container {
             background: unset;
             padding: unset;
@@ -18515,6 +18520,10 @@ section > .section-controls .subpage-title {
             inset: 0;
             border-left: 1px solid var(--card-border-base);
             border-right: 1px solid var(--card-border-base);
+        }
+
+        &[data-page-type="settings"] {
+            display: none;
         }
     }
 }
