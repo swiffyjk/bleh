@@ -8278,6 +8278,18 @@ let has_prompted_for_update = false;
         page.structure.row.classList.add('col-main-is-primary');
 
 
+        if (ff('katsune') && page.subpage != 'neighbours') {
+            let count_text = page.structure.content_top.querySelector('h1').textContent.trim();
+            let chr = count_text.indexOf('(');
+            let count = count_text.substring(chr).replace('(', '').replace(')', '');
+
+            let count_badge = document.createElement('div');
+            count_badge.classList.add('new-badge', 'count-badge');
+            count_badge.textContent = count;
+            follow_nav.querySelector('.secondary-nav-item-link--active').appendChild(count_badge);
+        }
+
+
         // view-related buttons
         let view_buttons = document.createElement('div');
         view_buttons.classList.add('view-buttons-wrapper');

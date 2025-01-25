@@ -2866,6 +2866,11 @@ button.navlist-more {
             opacity: 1;
             transition: none;
         }
+
+        .new-badge {
+            background: var(--col);
+            color: hsl(var(--h3));
+        }
     }
 }
 .navlist-more {
