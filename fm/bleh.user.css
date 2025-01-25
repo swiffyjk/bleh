@@ -18115,7 +18115,7 @@ h4 {
     [data-ff--katsune="true"] &:not(.about-artist-panel) {
         background: hsl(var(--b5)) !important;
         margin: unset !important;
-        padding: var(--card-gap) !important;
+        padding: var(--card-gap) calc(var(--card-gap) + var(--card-padding)) !important;
         box-shadow: 0 0 0 1px var(--card-border-base) inset, var(--card-shadow);
 
         .sub-text {
