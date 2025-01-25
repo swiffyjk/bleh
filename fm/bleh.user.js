@@ -15525,10 +15525,17 @@ let has_prompted_for_update = false;
                 });
             }
 
-            if (avatar != null)
-                register_background(avatar.getAttribute('content'));
+            let bg;
 
-            page.structure.container.insertBefore(redesigned_artist_header, page.structure.container.firstElementChild);
+            if (avatar != null)
+                bg = register_background(avatar.getAttribute('content'));
+
+            if (ff('katsune')) {
+                redesigned_artist_header.setAttribute('data-bleh--theme', 'oled');
+                bg.appendChild(redesigned_artist_header);
+            } else {
+                page.structure.container.insertBefore(redesigned_artist_header, page.structure.container.firstElementChild);
+            }
             artist_header.classList.add('legacy-header');
 
 
@@ -15711,10 +15718,17 @@ let has_prompted_for_update = false;
                 </div>
             `);
 
-            if (avatar != null)
-                register_background(avatar.getAttribute('content'));
+            let bg;
 
-            page.structure.container.insertBefore(redesigned_album_header, page.structure.container.firstElementChild);
+            if (avatar != null)
+                bg = register_background(avatar.getAttribute('content'));
+
+            if (ff('katsune')) {
+                redesigned_album_header.setAttribute('data-bleh--theme', 'oled');
+                bg.appendChild(redesigned_album_header);
+            } else {
+                page.structure.container.insertBefore(redesigned_album_header, page.structure.container.firstElementChild);
+            }
             album_header.classList.add('legacy-header');
 
 
@@ -15944,12 +15958,19 @@ let has_prompted_for_update = false;
                 </div>
             `);
 
-            if (album_avatar != null)
-                register_background(album_avatar.getAttribute('src'));
-            else if (artist_avatar != null)
-                register_background(artist_avatar.getAttribute('content'));
+            let bg;
 
-            page.structure.container.insertBefore(redesigned_track_header, page.structure.container.firstElementChild);
+            if (album_avatar != null)
+                bg = register_background(album_avatar.getAttribute('src'));
+            else if (artist_avatar != null)
+                bg = register_background(artist_avatar.getAttribute('content'));
+
+            if (ff('katsune')) {
+                redesigned_track_header.setAttribute('data-bleh--theme', 'oled');
+                bg.appendChild(redesigned_track_header);
+            } else {
+                page.structure.container.insertBefore(redesigned_track_header, page.structure.container.firstElementChild);
+            }
             track_header.classList.add('legacy-header');
 
 
@@ -18823,6 +18844,8 @@ let has_prompted_for_update = false;
                 background.setAttribute('data-page-user-is-self', 'false');
             }
         }
+
+        return background;
     }
 
 

@@ -144,7 +144,7 @@ body {
 /* backgrounds */
 body, [data-page-resource-type="album"], [data-page-resource-type="track"],
 .user-dashboard-layout,
-.preview, .preview[data-bleh--theme="dark"],
+.preview, .preview[data-bleh--theme="dark"], .redesigned-header[data-bleh--theme="dark"],
 .listen-item,
 .lotus.bleh--panel,
 [data-bleh--label="bleh"], [data-bleh-page="seasonal"]
@@ -164,7 +164,7 @@ body, [data-page-resource-type="album"], [data-page-resource-type="track"],
     --b8: var(--hue), calc(var(--sat) * 14% * var(--sat-bg, 1)), 2%;
     --b7: 0, 0%, 0%;
 
-    .preview[data-bleh--theme="darker"],
+    .preview[data-bleh--theme="darker"], .redesigned-header[data-bleh--theme="darker"],
     [data-bleh--theme="darker"] &:not(.preview) {
         /* any additional highlights */
         --b3: var(--hue), calc(var(--sat) * 8% * var(--sat-bg, 1)), 24%;
@@ -181,7 +181,7 @@ body, [data-page-resource-type="album"], [data-page-resource-type="track"],
         --b8: var(--hue), calc(var(--sat) * 14% * var(--sat-bg, 1)), 0%;
         --b7: 0, 0%, 0%;
     }
-    .preview[data-bleh--theme="oled"],
+    .preview[data-bleh--theme="oled"], .redesigned-header[data-bleh--theme="oled"],
     [data-bleh--theme="oled"] &:not(.preview) {
         /* any additional highlights */
         --b3: var(--hue), calc(var(--sat) * 6% * var(--sat-bg, 1)), 16%;
@@ -198,7 +198,7 @@ body, [data-page-resource-type="album"], [data-page-resource-type="track"],
         --b8: var(--hue), calc(var(--sat) * 14% * var(--sat-bg, 1)), 4%;
         --b7: 0, 0%, 0%;
     }
-    .preview[data-bleh--theme="light"],
+    .preview[data-bleh--theme="light"], .redesigned-header[data-bleh--theme="light"],
     [data-bleh--theme="light"] &:not(.preview) {
         /* any additional highlights */
         --b3: var(--hue), calc(var(--sat) * 6% * var(--sat-bg, 1)), 80%;
@@ -284,7 +284,8 @@ a,
 .error-info,
 .to-consider li,
 .inbox-message-view .inbox-message-sender-avatar,
-.colourful
+.colourful,
+.redesigned-header[data-bleh--theme="dark"]
 {
     --hue:  var(--hue-over,
             var(--hue-album,
@@ -334,7 +335,7 @@ a,
 
     --avatar-generic-background: linear-gradient(180deg, hsla(var(--h3), 20%) 0%, hsl(var(--b6)) 100%);
 
-    .preview[data-bleh--theme="oled"],
+    .preview[data-bleh--theme="oled"], .redesigned-header[data-bleh--theme="oled"],
     [data-bleh--theme="oled"] &:not(.preview) {
         --c1: var(--hue), calc(var(--sat) * 40%), 100%;
         --c2: var(--hue), calc(var(--sat) * 60%), 90%;
@@ -356,7 +357,7 @@ a,
         --h4: var(--l4-c);
         --g4: var(--hue), calc(var(--sat) * 60%), calc(clamp(min(0.5), var(--lit), max(1.5)) * 10%);
     }
-    .preview[data-bleh--theme="light"],
+    .preview[data-bleh--theme="light"], .redesigned-header[data-bleh--theme="light"],
     [data-bleh--theme="light"] &:not(
         .preview, .grid-items-item.grid-items-item-has-colour
         ){
@@ -1830,6 +1831,9 @@ article, section, .buffer-standard, .buffer-standard:not(.col-sidebar) .buffer-s
 .album-overview-cover-art {
     border-radius: var(--card-radius) !important;
     box-shadow: 0 30px 15px 5px hsl(var(--h4), 14%), var(--card-shadow) !important;
+}
+[data-ff--katsune="true"] .artwork-and-metadata-row {
+    display: none;
 }
 
 /* take up full space */
@@ -18602,6 +18606,25 @@ section > .section-controls .subpage-title {
             [data-bleh--profile_header_expand="false"] & {
                 opacity: 0;
                 height: 0;
+            }
+        }
+
+        &[data-page-type="track"],
+        &[data-page-type="album"],
+        &[data-page-type="artist"] {
+            height: 200px;
+        }
+        .redesigned-header {
+            background: unset !important;
+            box-shadow: unset !important;
+            height: 100%;
+            align-items: center;
+            z-index: 5;
+            position: relative;
+
+            .avatar-side {
+                --avatar-size: 150px !important;
+                margin: unset;
             }
         }
     }
