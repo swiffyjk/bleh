@@ -2128,8 +2128,12 @@ spacing between is removed and aligned to tag icon */
         }
 
         .redesigned-navigation {
-            margin-left: calc(var(--card-gap) + 8px) !important;
-            margin-right: calc(var(--card-gap) + 8px) !important;
+            margin-left: calc(var(--card-gap) + var(--card-padding)) !important;
+            margin-right: calc(var(--card-gap) + var(--card-padding)) !important;
+
+            .navlist-items {
+                margin: unset;
+            }
         }
 
         & > .redesigned-content-top {
@@ -18605,7 +18609,7 @@ section > .section-controls .subpage-title {
 
 .katsune-button-row {
     margin: -1px 0 0 0;
-    padding: var(--card-gap) calc(var(--card-gap) + 8px);
+    padding: var(--card-gap) calc(var(--card-gap) + var(--card-padding));
     background: hsl(var(--b5), 50%);
     box-shadow: 0 0 0 1px var(--card-border-base) inset, var(--card-shadow);
 

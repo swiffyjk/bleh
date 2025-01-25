@@ -8366,7 +8366,7 @@ let has_prompted_for_update = false;
         let follow_nav = document.createElement('div');
         follow_nav.classList.add('bleh--nav-wrap', 'bleh--friends-nav');
         follow_nav.innerHTML = (`
-            <nav class="navlist secondary-nav">
+            <nav class="navlist secondary-nav redesigned-navigation">
                 <ul class="navlist-items bleh--navlist-items">
                     ${following_tab_html}
                     ${followers_tab_html}
