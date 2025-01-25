@@ -8281,7 +8281,10 @@ let has_prompted_for_update = false;
         if (ff('katsune') && page.subpage != 'neighbours') {
             let count_text = page.structure.content_top.querySelector('h1').textContent.trim();
             let chr = count_text.indexOf('(');
-            let count = count_text.substring(chr).replace('(', '').replace(')', '');
+
+            let count = 0;
+            if (chr != -1)
+                count = count_text.substring(chr).replace('(', '').replace(')', '');
 
             let count_badge = document.createElement('div');
             count_badge.classList.add('new-badge', 'count-badge');
