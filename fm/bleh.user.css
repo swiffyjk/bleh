@@ -18528,7 +18528,6 @@ section > .section-controls .subpage-title {
     padding: 0 var(--card-padding);
     height: 40px;
     background-color: hsl(var(--b5));
-    color: hsl(var(--c1));
     margin: unset;
 
     border-top-left-radius: var(--card-radius);
@@ -18536,10 +18535,16 @@ section > .section-controls .subpage-title {
     box-shadow: var(--card-shadow);
     z-index: 2;
 
+    .page-header-icon {
+        color: hsl(var(--c2));
+    }
+
     .page-header-title {
+        color: hsl(var(--c1));
         font-size: 16px;
         line-height: 17px;
         font-weight: var(--font-weight-medium);
+        cursor: default;
     }
 
     &[data-page-type="artist"] {
