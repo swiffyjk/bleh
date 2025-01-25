@@ -15922,7 +15922,7 @@ let has_prompted_for_update = false;
             let bg;
 
             if (album_avatar)
-                bg = register_background(album_avatar.getAttribute('src'));
+                bg = register_background(album_avatar.getAttribute('src').replace('/300x300/', '/ar0/'));
             else if (artist_avatar)
                 bg = register_background(artist_avatar.getAttribute('content'));
             else

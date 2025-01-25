@@ -18427,6 +18427,17 @@ section > .section-controls .subpage-title {
                     --mask-size: var(--cover-size-200);
                 }
             }
+
+            .info-side {
+                h1 {
+                    font-size: 34px;
+                    line-height: 40px;
+                }
+                h2 {
+                    font-size: 20px;
+                    line-height: 26px;
+                }
+            }
         }
     }
 }
