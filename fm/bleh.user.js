@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         bleh
 // @namespace    http://last.fm/
-// @version      2025.0121
+// @version      2025.0125
 // @description  bleh!!! ^-^
 // @author       kate
 // @match        https://www.last.fm/*
@@ -20,7 +20,7 @@
 
 let version = {
     brand: 'bleh',
-    build: '2025.0121',
+    build: '2025.0125',
     sku: '4x4',
     feature_flags: {
         bleh_settings_tabs: {
@@ -18363,7 +18363,7 @@ let has_prompted_for_update = false;
 
 
     function bleh_events() {
-        let is_subpage = (page.subpage != 'event_overview');
+        let is_subpage = (page.subpage != 'event_overview' && page.subpage != 'festival_overview');
 
         // without pro theres two containers
         if (auth.pro) {
@@ -18480,6 +18480,7 @@ let has_prompted_for_update = false;
                 main_panel = page.structure.main.querySelector('.event-details');
 
             main_panel.insertBefore(event_top_header, main_panel.firstElementChild);
+            console.info('event top header', event_top_header);
 
 
 

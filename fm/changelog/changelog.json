@@ -1,7 +1,13 @@
 {
-    "updated": "2025-01-21",
-    "latest": "2025.0121",
-    "2025.0121": {
+    "updated": "2025-01-25",
+    "latest": "2025.0125",
+    "2025.0125": {
+        "name": "mouse pt. 2",
+        "type": "major",
+        "force": false,
+        "bio": "# Icons\n- __Replaced (almost every) icon with a new icon library__\n    - These should be cleaner, easier to read, and more awesome :3\n    - They now have a slightly smaller stroke width but went from 16px in size to 18px.\n    - Still a work-in-progress in some areas\n\n# Settings\n- Fixed view selectors not applying until page refresh\n\n# Events\n- Fixed festivals having missing attendance buttons"
+    },
+    "2025.0124": {
         "name": "mouse",
         "type": "major",
         "force": false,
