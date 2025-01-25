@@ -4679,6 +4679,9 @@ let has_prompted_for_update = false;
     }
 
     function page_title() {
+        if (!ff('katsune'))
+            return;
+
         let title = page.structure.container.querySelector('.page-title');
         if (!title) {
             title = document.createElement('section');
@@ -4693,6 +4696,8 @@ let has_prompted_for_update = false;
             name = trans[lang][page.type].name;
         else if (page.type == 'user')
             name = trans[lang].profile.name;
+        else if (page.type == 'bleh_settings')
+            name = trans[lang].settings.name;
 
         title.setAttribute('data-page-type', page.type);
         title.innerHTML = (`
@@ -9152,222 +9157,185 @@ let has_prompted_for_update = false;
     }
 
     function bleh_settings() {
-        document.body.style.removeProperty('--hue-album');
-        document.body.style.removeProperty('--sat-album');
-        let adaptive_skin_container = document.querySelector('.adaptive-skin-container');
+        page.structure.container = document.body.querySelector('.page-content');
+        try {
+            page.structure.row = page.structure.container.querySelector('.row');
+            page.structure.main = page.structure.row.querySelector('.col-main');
+            page.structure.side = page.structure.row.querySelector('.col-sidebar');
+        } catch(e) {
+            log('unable to find elements', 'page structure');
+        }
 
-        if (!adaptive_skin_container.hasAttribute('data-kate-processed')) {
-            adaptive_skin_container.setAttribute('data-kate-processed','true');
+        checkup_page_structure();
+        log('status is', 'page', 'info', page);
 
-            // initial
-            adaptive_skin_container.innerHTML = '';
-            if (!ff('page_title'))
-                document.title = 'bleh settings | Last.fm';
+        log('internal bleh settings', 'page');
+        page.type = 'bleh_settings';
+        page.subpage = '';
 
-            log('internal bleh settings', 'page');
-            page.type = 'bleh_settings';
-            page.subpage = '';
+        update_page();
 
-            let params = new URLSearchParams(document.location.search);
-            page.requested.tab = params.get('tab');
-            page.requested.setting = params.get('setting');
+        // remove error stuff cus we control this page
+        page.structure.row.removeChild(page.structure.row.firstElementChild);
+        page.structure.row.removeChild(page.structure.row.firstElementChild);
 
-            if (ff('refreshed_nav')) {
-                register_background(auth.avatar);
-            }
+        let params = new URLSearchParams(document.location.search);
+        page.requested.tab = params.get('tab');
+        page.requested.setting = params.get('setting');
 
 
-            // go wild
-            let outer = document.createElement('div');
-            outer.classList.add('bleh--page-outer');
+        // go wild
+        let nav = document.createElement('nav');
+        nav.classList.add('navlist', 'secondary-nav', 'navlist--more', 'redesigned-navigation', 'bleh-settings-navigation');
 
-            let header = document.createElement('section');
-            header.classList.add('redesigned-header', 'bleh-settings-header', 'no-background');
-            header.setAttribute('id', 'settings_header');
-            header.innerHTML = (`
-                <div class="tag-side">
-                    <div class="tag-icon setting-icon"></div>
+        nav.innerHTML = (`
+            <ul class="navlist-items">
+                <li class="navlist-item secondary-nav-item">
+                    <a class="secondary-nav-item-link bleh--nav" data-bleh-page="home" onclick="_change_settings_page('home')">
+                        ${trans[lang].settings.home.name}
+                    </a>
+                </li>
+                <li class="navlist-item secondary-nav-item">
+                    <a class="secondary-nav-item-link bleh--nav" data-bleh-page="themes" onclick="_change_settings_page('themes')">
+                        ${trans[lang].settings.appearance.name}
+                    </a>
+                </li>
+                <li class="navlist-item secondary-nav-item">
+                    <a class="secondary-nav-item-link bleh--nav" data-bleh-page="customise" onclick="_change_settings_page('customise')">
+                        ${trans[lang].settings.layout.name}
+                    </a>
+                </li>
+                <li class="navlist-item secondary-nav-item">
+                    <a class="secondary-nav-item-link bleh--nav" data-bleh-page="music" onclick="_change_settings_page('music')">
+                        ${trans[lang].settings.music.name}
+                    </a>
+                </li>
+                <li class="navlist-item secondary-nav-item">
+                    <a class="secondary-nav-item-link bleh--nav" data-bleh-page="profiles" onclick="_change_settings_page('profiles')">
+                        ${trans[lang].settings.profiles.name}
+                    </a>
+                </li>
+                <li class="navlist-item secondary-nav-item">
+                    <a class="secondary-nav-item-link bleh--nav" data-bleh-page="seasonal" data-season="${stored_season.id}" onclick="_change_settings_page('seasonal')">
+                        ${trans[lang].settings.customise.seasonal.name}
+                    </a>
+                </li>
+                <li class="navlist-item secondary-nav-item">
+                    <a class="secondary-nav-item-link bleh--nav" data-bleh-page="text" onclick="_change_settings_page('text')">
+                        ${trans[lang].settings.text.name}
+                    </a>
+                </li>
+                <li class="navlist-item secondary-nav-item">
+                    <a class="secondary-nav-item-link bleh--nav" data-bleh-page="accessibility" onclick="_change_settings_page('accessibility')">
+                        ${trans[lang].settings.accessibility.name}
+                    </a>
+                </li>
+                <li class="navlist-item secondary-nav-item">
+                    <a class="secondary-nav-item-link bleh--nav" data-bleh-page="performance" onclick="_change_settings_page('performance')">
+                        ${trans[lang].settings.performance.name}
+                    </a>
+                </li>
+                <li class="navlist-item secondary-nav-item">
+                    <a class="secondary-nav-item-link bleh--nav" data-bleh-page="sku" onclick="_change_settings_page('sku')">
+                        shhh...
+                    </a>
+                </li>
+            </ul>
+        `);
+
+
+        page.structure.side.innerHTML = (`
+            <div class="bleh--panel">
+                ${(!ff('bleh_settings_tabs')) ? (`
+                <div class="btns">
+                    <button class="btn bleh--btn" data-bleh-page="home" onclick="_change_settings_page('home')">
+                        ${trans[lang].settings.home.name}
+                    </button>
+                    <button class="btn bleh--btn" data-bleh-page="themes" onclick="_change_settings_page('themes')">
+                        ${trans[lang].settings.appearance.name}
+                    </button>
+                    <button class="btn bleh--btn" data-bleh-page="customise" onclick="_change_settings_page('customise')">
+                        ${trans[lang].settings.layout.name}
+                    </button>
+                    <button class="btn bleh--btn" data-bleh-page="music" onclick="_change_settings_page('music')">
+                        ${trans[lang].settings.music.name}
+                    </button>
+                    <button class="btn bleh--btn" data-bleh-page="accessibility" onclick="_change_settings_page('accessibility')">
+                        ${trans[lang].settings.accessibility.name}
+                    </button>
+                    <button class="btn bleh--btn" data-bleh-page="seasonal" data-season="${stored_season.id}" onclick="_change_settings_page('seasonal')">
+                        ${trans[lang].settings.customise.seasonal.name}
+                    </button>
                 </div>
-                <div class="info-side">
-                    <div class="sub-text">${trans[lang].settings.name}</div>
-                    <h1 id="settings_header_name"></h1>
+                <div class="btns sep">
+                    <button class="btn bleh--btn" data-bleh-page="text" onclick="_change_settings_page('text')">
+                        ${trans[lang].settings.text.name}
+                    </button>
+                    <button class="btn bleh--btn" data-bleh-page="sku" onclick="_change_settings_page('sku')">
+                        shhh...
+                    </button>
                 </div>
-            `);
-
-            let nav = document.createElement('nav');
-            nav.classList.add('navlist', 'secondary-nav', 'navlist--more', 'redesigned-navigation', 'bleh-settings-navigation');
-
-            nav.innerHTML = (`
-                <ul class="navlist-items">
-                    <li class="navlist-item secondary-nav-item">
-                        <a class="secondary-nav-item-link bleh--nav" data-bleh-page="home" onclick="_change_settings_page('home')">
-                            ${trans[lang].settings.home.name}
-                        </a>
-                    </li>
-                    <li class="navlist-item secondary-nav-item">
-                        <a class="secondary-nav-item-link bleh--nav" data-bleh-page="themes" onclick="_change_settings_page('themes')">
-                            ${trans[lang].settings.appearance.name}
-                        </a>
-                    </li>
-                    <li class="navlist-item secondary-nav-item">
-                        <a class="secondary-nav-item-link bleh--nav" data-bleh-page="customise" onclick="_change_settings_page('customise')">
-                            ${trans[lang].settings.layout.name}
-                        </a>
-                    </li>
-                    <li class="navlist-item secondary-nav-item">
-                        <a class="secondary-nav-item-link bleh--nav" data-bleh-page="music" onclick="_change_settings_page('music')">
-                            ${trans[lang].settings.music.name}
-                        </a>
-                    </li>
-                    <li class="navlist-item secondary-nav-item">
-                        <a class="secondary-nav-item-link bleh--nav" data-bleh-page="profiles" onclick="_change_settings_page('profiles')">
-                            ${trans[lang].settings.profiles.name}
-                        </a>
-                    </li>
-                    <li class="navlist-item secondary-nav-item">
-                        <a class="secondary-nav-item-link bleh--nav" data-bleh-page="seasonal" data-season="${stored_season.id}" onclick="_change_settings_page('seasonal')">
-                            ${trans[lang].settings.customise.seasonal.name}
-                        </a>
-                    </li>
-                    <li class="navlist-item secondary-nav-item">
-                        <a class="secondary-nav-item-link bleh--nav" data-bleh-page="text" onclick="_change_settings_page('text')">
-                            ${trans[lang].settings.text.name}
-                        </a>
-                    </li>
-                    <li class="navlist-item secondary-nav-item">
-                        <a class="secondary-nav-item-link bleh--nav" data-bleh-page="accessibility" onclick="_change_settings_page('accessibility')">
-                            ${trans[lang].settings.accessibility.name}
-                        </a>
-                    </li>
-                    <li class="navlist-item secondary-nav-item">
-                        <a class="secondary-nav-item-link bleh--nav" data-bleh-page="performance" onclick="_change_settings_page('performance')">
-                            ${trans[lang].settings.performance.name}
-                        </a>
-                    </li>
-                    <li class="navlist-item secondary-nav-item">
-                        <a class="secondary-nav-item-link bleh--nav" data-bleh-page="sku" onclick="_change_settings_page('sku')">
-                            shhh...
-                        </a>
-                    </li>
-                </ul>
-            `);
-
-            let inner = document.createElement('div');
-            inner.classList.add('bleh--page-inner');
-
-
-            let main = document.createElement('div');
-            main.classList.add('bleh--panel-main');
-            main.setAttribute('id','bleh--panel-main');
-
-            let side = document.createElement('div');
-            side.classList.add('bleh--panel-side');
-            side.innerHTML = (`
-                <div class="bleh--panel">
-                    ${(!ff('bleh_settings_tabs')) ? (`
-                    <div class="btns">
-                        <button class="btn bleh--btn" data-bleh-page="home" onclick="_change_settings_page('home')">
-                            ${trans[lang].settings.home.name}
-                        </button>
-                        <button class="btn bleh--btn" data-bleh-page="themes" onclick="_change_settings_page('themes')">
-                            ${trans[lang].settings.appearance.name}
-                        </button>
-                        <button class="btn bleh--btn" data-bleh-page="customise" onclick="_change_settings_page('customise')">
-                            ${trans[lang].settings.layout.name}
-                        </button>
-                        <button class="btn bleh--btn" data-bleh-page="music" onclick="_change_settings_page('music')">
-                            ${trans[lang].settings.music.name}
-                        </button>
-                        <button class="btn bleh--btn" data-bleh-page="accessibility" onclick="_change_settings_page('accessibility')">
-                            ${trans[lang].settings.accessibility.name}
-                        </button>
-                        <button class="btn bleh--btn" data-bleh-page="seasonal" data-season="${stored_season.id}" onclick="_change_settings_page('seasonal')">
-                            ${trans[lang].settings.customise.seasonal.name}
-                        </button>
-                    </div>
-                    <div class="btns sep">
-                        <button class="btn bleh--btn" data-bleh-page="text" onclick="_change_settings_page('text')">
-                            ${trans[lang].settings.text.name}
-                        </button>
-                        <button class="btn bleh--btn" data-bleh-page="sku" onclick="_change_settings_page('sku')">
-                            shhh...
-                        </button>
-                    </div>
-                    <div class="btns sep">
-                        <button class="btn" data-bleh-action="import" onclick="_import_settings()">
-                            ${trans[lang].settings.actions.import.name}
-                        </button>
-                        <button class="btn" data-bleh-action="export" onclick="_export_settings()">
-                            ${trans[lang].settings.actions.export.name}
-                        </button>
-                    </div>
-                    <div class="btns sep">
-                        <button class="btn bleh--btn" data-bleh-page="profiles" onclick="_change_settings_page('profiles')">
-                            ${trans[lang].settings.profiles.name}
-                        </button>
-                        <button class="btn bleh--btn" data-bleh-page="performance" onclick="_change_settings_page('performance')">
-                            ${trans[lang].settings.performance.name}
-                        </button>
-                        <button class="btn" data-bleh-action="reset" onclick="_reset_settings()">
-                            ${trans[lang].settings.actions.reset.name}
-                        </button>
-                    </div>
-                    `) : (`
-                    ${(ff('skip_to_setting')) ? (`
-                    <h4>${trans[lang].settings.skip_to.name}</h4>
-                    <div class="skip-to-list"></div>
-                    `) : ''}
-                    ${(ff('skip_to_setting')) ? '<div class="btns sep">' : '<div class="btns">'}
-                        <button class="btn" data-bleh-action="import" onclick="_import_settings()">
-                            ${trans[lang].settings.actions.import.name}
-                        </button>
-                        <button class="btn" data-bleh-action="export" onclick="_export_settings()">
-                            ${trans[lang].settings.actions.export.name}
-                        </button>
-                        <button class="btn" data-bleh-action="reset" onclick="_reset_settings()">
-                            ${trans[lang].settings.actions.reset.name}
-                        </button>
-                    </div>
-                    `)}
-                    ${(settings.feature_flags.changelogs != false) ? (`
-                    <div class="btns sep">
-                        <button class="btn bleh--btn" data-bleh-page="changelog" onclick="_query_changelog()">
-                            ${trans[lang].changelog.name}
-                        </button>
-                    </div>
-                    `) : ''}
+                <div class="btns sep">
+                    <button class="btn" data-bleh-action="import" onclick="_import_settings()">
+                        ${trans[lang].settings.actions.import.name}
+                    </button>
+                    <button class="btn" data-bleh-action="export" onclick="_export_settings()">
+                        ${trans[lang].settings.actions.export.name}
+                    </button>
                 </div>
-            `);
+                <div class="btns sep">
+                    <button class="btn bleh--btn" data-bleh-page="profiles" onclick="_change_settings_page('profiles')">
+                        ${trans[lang].settings.profiles.name}
+                    </button>
+                    <button class="btn bleh--btn" data-bleh-page="performance" onclick="_change_settings_page('performance')">
+                        ${trans[lang].settings.performance.name}
+                    </button>
+                    <button class="btn" data-bleh-action="reset" onclick="_reset_settings()">
+                        ${trans[lang].settings.actions.reset.name}
+                    </button>
+                </div>
+                `) : (`
+                ${(ff('skip_to_setting')) ? (`
+                <h4>${trans[lang].settings.skip_to.name}</h4>
+                <div class="skip-to-list"></div>
+                `) : ''}
+                ${(ff('skip_to_setting')) ? '<div class="btns sep">' : '<div class="btns">'}
+                    <button class="btn" data-bleh-action="import" onclick="_import_settings()">
+                        ${trans[lang].settings.actions.import.name}
+                    </button>
+                    <button class="btn" data-bleh-action="export" onclick="_export_settings()">
+                        ${trans[lang].settings.actions.export.name}
+                    </button>
+                    <button class="btn" data-bleh-action="reset" onclick="_reset_settings()">
+                        ${trans[lang].settings.actions.reset.name}
+                    </button>
+                </div>
+                `)}
+                ${(settings.feature_flags.changelogs != false) ? (`
+                <div class="btns">
+                    <button class="btn bleh--btn primary" data-bleh-page="changelog" onclick="_query_changelog()">
+                        ${trans[lang].changelog.name}
+                    </button>
+                </div>
+                `) : ''}
+            </div>
+        `);
 
 
-            inner.appendChild(main);
-            inner.appendChild(side);
-            outer.appendChild(header);
-            outer.appendChild(inner);
-            adaptive_skin_container.appendChild(outer);
+        page.structure.container.insertBefore(nav, page.structure.row);
 
-            if (ff('bleh_settings_tabs'))
-                header.after(nav);
+        if (page.requested.tab == null)
+            change_settings_page('home');
+        else
+            change_settings_page(page.requested.tab);
 
-            console.info(page);
-
-            if (page.requested.tab == null)
-                change_settings_page('home');
-            else
-                change_settings_page(page.requested.tab);
-
-            if (page.requested.setting != null) {
-                scroll_to_setting(page.requested.setting);
-            }
+        if (page.requested.setting != null) {
+            scroll_to_setting(page.requested.setting);
         }
     }
 
-    function render_setting_page(page) {
-        let head = document.getElementById('settings_header_name');
-
-        console.info(theme_version != version.build, theme_version, version.build, typeof(theme_version), typeof(version.build));
-        if (page == 'home') {
-            head.textContent = trans[lang].settings.home.name;
+    function render_setting_page(page_id) {
+        if (page_id == 'home') {
             register_skip_to([]);
 
             let sponsoring = false;
@@ -9489,8 +9457,7 @@ let has_prompted_for_update = false;
                 </div>
             </div>
             `);
-        } else if (page == 'themes') {
-            head.textContent = trans[lang].settings.appearance.name;
+        } else if (page_id == 'themes') {
             register_skip_to([
                 {
                     id: 'hue_from_album',
@@ -9737,8 +9704,7 @@ let has_prompted_for_update = false;
                     </div>
                 </div>
                 `);
-        } else if (page == 'customise') {
-            head.textContent = trans[lang].settings.layout.name;
+        } else if (page_id == 'customise') {
             register_skip_to([
                 {
                     id: 'profile_avi_background',
@@ -9901,8 +9867,7 @@ let has_prompted_for_update = false;
                     </div>
                 </div>
                 `);
-        } else if (page == 'seasonal') {
-            head.textContent = trans[lang].settings.customise.seasonal.name;
+        } else if (page_id == 'seasonal') {
             register_skip_to([]);
 
             return (`
@@ -10013,8 +9978,7 @@ let has_prompted_for_update = false;
                     </div>
                 </div>
             `);
-        } else if (page == 'performance') {
-            head.textContent = trans[lang].settings.performance.name;
+        } else if (page_id == 'performance') {
             register_skip_to([]);
 
             return (`
@@ -10068,8 +10032,7 @@ let has_prompted_for_update = false;
                     </ul>
                 </div>
                 `);
-        } else if (page == 'profiles') {
-            head.textContent = trans[lang].settings.profiles.name;
+        } else if (page_id == 'profiles') {
             register_skip_to([
                 {
                     id: 'profile_shortcut',
@@ -10287,8 +10250,7 @@ let has_prompted_for_update = false;
                     <div class="profile-notes" id="profile-notes"></div>
                 </div>
                 `);
-        } else if (page == 'accessibility') {
-            head.textContent = trans[lang].settings.accessibility.name;
+        } else if (page_id == 'accessibility') {
             register_skip_to([]);
 
             return (`
@@ -10362,8 +10324,7 @@ let has_prompted_for_update = false;
                     </div>
                 </div>
                 `);
-        } else if (page == 'text') {
-            head.textContent = trans[lang].settings.text.name;
+        } else if (page_id == 'text') {
             register_skip_to([]);
 
             return (`
@@ -10494,8 +10455,7 @@ let has_prompted_for_update = false;
                     </div>
                 </div>
                 `);
-        } else if (page == 'sku') {
-            head.textContent = 'shhhhhhh :3';
+        } else if (page_id == 'sku') {
             register_skip_to([]);
 
             return (`
@@ -10509,8 +10469,7 @@ let has_prompted_for_update = false;
                     <div class="feature-flags" id="feature-flags"></div>
                 </div>
                 `);
-        } else if (page == 'music') {
-            head.textContent = trans[lang].settings.music.name;
+        } else if (page_id == 'music') {
             register_skip_to([
                 {
                     id: 'format_guest_features',
@@ -10875,7 +10834,7 @@ let has_prompted_for_update = false;
         if (list == null)
             return;
 
-        let panel = document.body.querySelector('.skip-to-list');
+        let panel = page.structure.side.querySelector('.skip-to-list');
         panel.innerHTML = '';
 
         list.forEach((item) => {
@@ -10911,16 +10870,14 @@ let has_prompted_for_update = false;
         change_settings_page(page, setting);
     }
 
-    function change_settings_page(page, setting = null) {
-        document.getElementById('settings_header').setAttribute('data-page', page);
-
-        document.getElementById('bleh--panel-main').innerHTML = '';
+    function change_settings_page(page_id, setting = null) {
+        page.structure.main.innerHTML = '';
 
         if (ff('bleh_settings_tabs')) {
             let btns = document.querySelectorAll('.bleh--nav');
             btns.forEach((btn) => {
-                console.log(btn.getAttribute('data-bleh-page'),page);
-                if (btn.getAttribute('data-bleh-page') != page) {
+                console.log(btn.getAttribute('data-bleh-page'),page_id);
+                if (btn.getAttribute('data-bleh-page') != page_id) {
                     btn.classList.remove('secondary-nav-item-link--active');
                 } else {
                     btn.classList.add('secondary-nav-item-link--active');
@@ -10929,8 +10886,8 @@ let has_prompted_for_update = false;
         } else {
             let btns = document.querySelectorAll('.bleh--btn');
             btns.forEach((btn) => {
-                console.log(btn.getAttribute('data-bleh-page'),page);
-                if (btn.getAttribute('data-bleh-page') != page) {
+                console.log(btn.getAttribute('data-bleh-page'),page_id);
+                if (btn.getAttribute('data-bleh-page') != page_id) {
                     btn.classList.remove('active');
                 } else {
                     btn.classList.add('active');
@@ -10943,19 +10900,19 @@ let has_prompted_for_update = false;
         else
             seasonal_timer_end();
 
-        document.getElementById('bleh--panel-main').innerHTML = render_setting_page(page);
+        page.structure.main.innerHTML = render_setting_page(page_id);
 
-        if (page == 'themes') {
+        if (page_id == 'themes') {
             show_theme_change_in_settings();
             display_colour_presets();
             refresh_all();
-        } else if (page == 'customise' || page == 'performance' || page == 'accessibility' || page == 'text' || page == 'seasonal' || page == 'music' || page == 'activities') {
+        } else if (page_id == 'customise' || page_id == 'performance' || page_id == 'accessibility' || page_id == 'text' || page_id == 'seasonal' || page_id == 'music' || page_id == 'activities') {
             refresh_all();
-        } else if (page == 'profiles') {
+        } else if (page_id == 'profiles') {
             init_profile_notes();
             init_profile_page();
             refresh_all();
-        } else if (page == 'sku') {
+        } else if (page_id == 'sku') {
             bleh_sku_page();
         }
 
@@ -12057,7 +12014,7 @@ let has_prompted_for_update = false;
         }
 
         /*if (item.startsWith('seasonal') && modify) {
-            document.getElementById('bleh--panel-main').innerHTML = render_setting_page('customise');
+            page.structure.main.innerHTML = render_setting_page('customise');
             refresh_all();
         }*/
 
@@ -15527,8 +15484,10 @@ let has_prompted_for_update = false;
 
             let bg;
 
-            if (avatar != null)
+            if (avatar)
                 bg = register_background(avatar.getAttribute('content'));
+            else
+                bg = register_background(null);
 
             if (ff('katsune')) {
                 redesigned_artist_header.setAttribute('data-bleh--theme', 'oled');
@@ -15720,8 +15679,10 @@ let has_prompted_for_update = false;
 
             let bg;
 
-            if (avatar != null)
+            if (avatar)
                 bg = register_background(avatar.getAttribute('content'));
+            else
+                bg = register_background(null);
 
             if (ff('katsune')) {
                 redesigned_album_header.setAttribute('data-bleh--theme', 'oled');
@@ -15952,7 +15913,7 @@ let has_prompted_for_update = false;
                     <div class="sub-text">${trans[lang].track.name}</div>
                     <div class="title-container">
                         <h1>${title.innerHTML}</h1>
-                        ${(position != null) ? position.outerHTML : ''}
+                        ${(position) ? position.outerHTML : ''}
                     </div>
                     <h2>${artist.innerHTML}</h2>
                 </div>
@@ -15960,10 +15921,12 @@ let has_prompted_for_update = false;
 
             let bg;
 
-            if (album_avatar != null)
+            if (album_avatar)
                 bg = register_background(album_avatar.getAttribute('src'));
-            else if (artist_avatar != null)
+            else if (artist_avatar)
                 bg = register_background(artist_avatar.getAttribute('content'));
+            else
+                bg = register_background(null);
 
             if (ff('katsune')) {
                 redesigned_track_header.setAttribute('data-bleh--theme', 'oled');
@@ -15978,9 +15941,9 @@ let has_prompted_for_update = false;
             let avatar_link = avatar_side.querySelector('a');
 
             let expand_link;
-            if (album_avatar != null)
+            if (album_avatar)
                 expand_link = `_expand_avatar('${album_avatar.getAttribute('src').replace('300x300', 'ar0')}')`;
-            else if (artist_avatar != null)
+            else if (artist_avatar)
                 expand_link = `_expand_avatar('${artist_avatar.getAttribute('content')}')`;
 
             if (settings.default_avatar_action == 'expand' && (album_avatar != null || artist_avatar != null))
@@ -18835,7 +18798,11 @@ let has_prompted_for_update = false;
         }
 
         background.setAttribute('data-page-type', page.type);
-        background.style.setProperty('background-image', `url(${url})`);
+
+        if (url)
+            background.style.setProperty('background-image', `url(${url})`);
+        else
+            background.style.removeProperty('background-image');
 
         if (page.type == 'user') {
             if (page.name == auth.name) {

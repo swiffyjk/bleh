@@ -714,9 +714,9 @@ body {
     --icon-16-season: url('data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz48c3ZnIHdpZHRoPSIxOHB4IiBoZWlnaHQ9IjE4cHgiIHZpZXdCb3g9IjAgMCAyNCAyNCIgc3Ryb2tlLXdpZHRoPSIyLjIiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgY29sb3I9IiMwMDAwMDAiPjxwYXRoIGQ9Ik03IDIxQzcgMjEgNy41IDE2LjUgMTEgMTIuNSIgc3Ryb2tlPSIjMDAwMDAwIiBzdHJva2Utd2lkdGg9IjIuMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj48L3BhdGg+PHBhdGggZD0iTTE5LjEyOTcgNC4yNDIyNEwxOS43MjQzIDEwLjQxNjdDMjAuMDk4NCAxNC4zMDI2IDE3LjE4NDkgMTcuNzYyNiAxMy4yOTg5IDE4LjEzNjdDOS40ODYgMTguNTAzOSA2LjAzMTkxIDE1LjcxNjggNS42NjQ3NyAxMS45MDM5QzUuMjk3NjMgOC4wOTA5OSA4LjA5MDk4IDQuNzAyMzcgMTEuOTAzOSA0LjMzNTIzTDE4LjQ3NSAzLjcwMjUxQzE4LjgwNDggMy42NzA3NCAxOS4wOTggMy45MTIzOSAxOS4xMjk3IDQuMjQyMjRaIiBzdHJva2U9IiMwMDAwMDAiIHN0cm9rZS13aWR0aD0iMi4yIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiPjwvcGF0aD48L3N2Zz4=');
     --icon-16-changelog: url('data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz48c3ZnIHdpZHRoPSIxOHB4IiBoZWlnaHQ9IjE4cHgiIHN0cm9rZS13aWR0aD0iMi4yIiB2aWV3Qm94PSIwIDAgMjQgMjQiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgY29sb3I9IiMwMDAwMDAiPjxwYXRoIGQ9Ik0xNCAxNFY2TTE0IDE0TDIwLjEwMjMgMTcuNDg3QzIwLjUwMjMgMTcuNzE1NiAyMSAxNy40MjY4IDIxIDE2Ljk2NjFWMy4wMzM5MUMyMSAyLjU3MzIxIDIwLjUwMjMgMi4yODQzOSAyMC4xMDIzIDIuNTEyOTZMMTQgNk0xNCAxNEg3QzQuNzkwODYgMTQgMyAxMi4yMDkxIDMgMTBWMTBDMyA3Ljc5MDg2IDQuNzkwODYgNiA3IDZIMTQiIHN0cm9rZT0iIzAwMDAwMCIgc3Ryb2tlLXdpZHRoPSIyLjIiPjwvcGF0aD48cGF0aCBkPSJNNy43NTcxNiAxOS4zMDAxTDcgMTRIMTFMMTEuNjc3MiAxOC43NDAxQzExLjg0NzYgMTkuOTMyOSAxMC45MjIgMjEgOS43MTcxNiAyMUM4LjczMTg2IDIxIDcuODk2NSAyMC4yNzU1IDcuNzU3MTYgMTkuMzAwMVoiIHN0cm9rZT0iIzAwMDAwMCIgc3Ryb2tlLXdpZHRoPSIyLjIiPjwvcGF0aD48L3N2Zz4=');
     --icon-16-import: url('data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz48c3ZnIHdpZHRoPSIxOHB4IiBoZWlnaHQ9IjE4cHgiIHN0cm9rZS13aWR0aD0iMi4yIiB2aWV3Qm94PSIwIDAgMjQgMjQiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgY29sb3I9IiMwMDAwMDAiIHN0eWxlPSItLWRhcmtyZWFkZXItaW5saW5lLWNvbG9yOiB2YXIoLS1kYXJrcmVhZGVyLXRleHQtMDAwMDAwLCAjZThlNmUzKTsiIGRhdGEtZGFya3JlYWRlci1pbmxpbmUtY29sb3I9IiI+PHBhdGggZD0iTTQgMTNWMTlDNCAyMC4xMDQ2IDQuODk1NDMgMjEgNiAyMUgxOEMxOS4xMDQ2IDIxIDIwIDIwLjEwNDYgMjAgMTlWMTMiIHN0cm9rZT0iIzAwMDAwMCIgc3Ryb2tlLXdpZHRoPSIyLjIiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgc3R5bGU9Ii0tZGFya3JlYWRlci1pbmxpbmUtc3Ryb2tlOiAjMDAwMDAwOyIgZGF0YS1kYXJrcmVhZGVyLWlubGluZS1zdHJva2U9IiI+PC9wYXRoPjxwYXRoIGQ9Ik0xMiAzTDEyIDE1TTEyIDE1TDguNSAxMS41TTEyIDE1TDE1LjUgMTEuNSIgc3Ryb2tlPSIjMDAwMDAwIiBzdHJva2Utd2lkdGg9IjIuMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiBzdHlsZT0iLS1kYXJrcmVhZGVyLWlubGluZS1zdHJva2U6ICMwMDAwMDA7IiBkYXRhLWRhcmtyZWFkZXItaW5saW5lLXN0cm9rZT0iIj48L3BhdGg+PC9zdmc+');
-    --icon-16-setting-toggle: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyLjUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgY2xhc3M9Imx1Y2lkZSBsdWNpZGUtdG9nZ2xlLXJpZ2h0Ij48cmVjdCB3aWR0aD0iMjAiIGhlaWdodD0iMTIiIHg9IjIiIHk9IjYiIHJ4PSI2IiByeT0iNiIvPjxjaXJjbGUgY3g9IjE2IiBjeT0iMTIiIHI9IjIiLz48L3N2Zz4=');
-    --icon-16-setting-slider: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyLjUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgY2xhc3M9Imx1Y2lkZSBsdWNpZGUtc2V0dGluZ3MtMiI+PHBhdGggZD0iTTIwIDdoLTkiLz48cGF0aCBkPSJNMTQgMTdINSIvPjxjaXJjbGUgY3g9IjE3IiBjeT0iMTciIHI9IjMiLz48Y2lyY2xlIGN4PSI3IiBjeT0iNyIgcj0iMyIvPjwvc3ZnPg==');
-    --icon-16-setting-text: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyLjUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgY2xhc3M9Imx1Y2lkZSBsdWNpZGUtdGV4dC1jdXJzb3ItaW5wdXQiPjxwYXRoIGQ9Ik01IDRoMWEzIDMgMCAwIDEgMyAzIDMgMyAwIDAgMSAzLTNoMSIvPjxwYXRoIGQ9Ik0xMyAyMGgtMWEzIDMgMCAwIDEtMy0zIDMgMyAwIDAgMS0zIDNINSIvPjxwYXRoIGQ9Ik01IDE2SDRhMiAyIDAgMCAxLTItMnYtNGEyIDIgMCAwIDEgMi0yaDEiLz48cGF0aCBkPSJNMTMgOGg3YTIgMiAwIDAgMSAyIDJ2NGEyIDIgMCAwIDEtMiAyaC03Ii8+PHBhdGggZD0iTTkgN3YxMCIvPjwvc3ZnPg==');
+    --icon-16-setting-toggle: url('data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz48c3ZnIHdpZHRoPSIxOHB4IiBoZWlnaHQ9IjE4cHgiIHN0cm9rZS13aWR0aD0iMi4yIiB2aWV3Qm94PSIwIDAgMjQgMjQiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgY29sb3I9IiMwMDAwMDAiPjxwYXRoIGQ9Ik0xNyAxM0MxNy41NTIzIDEzIDE4IDEyLjU1MjMgMTggMTJDMTggMTEuNDQ3NyAxNy41NTIzIDExIDE3IDExQzE2LjQ0NzcgMTEgMTYgMTEuNDQ3NyAxNiAxMkMxNiAxMi41NTIzIDE2LjQ0NzcgMTMgMTcgMTNaIiBmaWxsPSIjMDAwMDAwIiBzdHJva2U9IiMwMDAwMDAiIHN0cm9rZS13aWR0aD0iMi4yIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiPjwvcGF0aD48cGF0aCBkPSJNMTcgMTdIN0M0LjIzODU4IDE3IDIgMTQuNzYxNCAyIDEyQzIgOS4yMzg1OCA0LjIzODU4IDcgNyA3SDE3QzE5Ljc2MTQgNyAyMiA5LjIzODU4IDIyIDEyQzIyIDE0Ljc2MTQgMTkuNzYxNCAxNyAxNyAxN1oiIHN0cm9rZT0iIzAwMDAwMCIgc3Ryb2tlLXdpZHRoPSIyLjIiPjwvcGF0aD48L3N2Zz4=');
+    --icon-16-setting-slider: url('data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz48c3ZnIHdpZHRoPSIxOHB4IiBoZWlnaHQ9IjE4cHgiIHN0cm9rZS13aWR0aD0iMi4yIiB2aWV3Qm94PSIwIDAgMjQgMjQiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgY29sb3I9IiMwMDAwMDAiPjxwYXRoIGQ9Ik02Ljc1NDY5IDE3LjI4MjhMNS4zMjYxMiA3LjI4Mjg0QzUuMTU0IDYuMDc3OTggNi4wODg5MiA1IDcuMzA2MDIgNUgxMC42OTRDMTEuOTExMSA1IDEyLjg0NiA2LjA3Nzk3IDEyLjY3MzkgNy4yODI4NEwxMS4yNDUzIDE3LjI4MjhDMTEuMTA0NiAxOC4yNjgxIDEwLjI2MDcgMTkgOS4yNjU0MSAxOUg4LjczNDU5QzcuNzM5MjkgMTkgNi44OTU0NSAxOC4yNjgxIDYuNzU0NjkgMTcuMjgyOFoiIHN0cm9rZT0iIzAwMDAwMCIgc3Ryb2tlLXdpZHRoPSIyLjIiPjwvcGF0aD48cGF0aCBkPSJNMiAxMkw2IDEyTTIyIDEyTDEyIDEyIiBzdHJva2U9IiMwMDAwMDAiIHN0cm9rZS13aWR0aD0iMi4yIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiPjwvcGF0aD48L3N2Zz4=');
+    --icon-16-setting-text: url('data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz48c3ZnIHdpZHRoPSIxOHB4IiBoZWlnaHQ9IjE4cHgiIHN0cm9rZS13aWR0aD0iMi4yIiB2aWV3Qm94PSIwIDAgMjQgMjQiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgY29sb3I9IiMwMDAwMDAiPjxwYXRoIGQ9Ik00IDZIMjBDMjEuMTA0NiA2IDIyIDYuODk1NDMgMjIgOFYxNkMyMiAxNy4xMDQ2IDIxLjEwNDYgMTggMjAgMThINEMyLjg5NTQzIDE4IDIgMTcuMTA0NiAyIDE2VjhDMiA2Ljg5NTQzIDIuODk1NDMgNiA0IDZaIiBzdHJva2U9IiMwMDAwMDAiIHN0cm9rZS13aWR0aD0iMi4yIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiPjwvcGF0aD48cGF0aCBkPSJNNSA4LjVINi41TTggOC41SDYuNU02LjUgOC41VjE1LjVNNi41IDE1LjVINU02LjUgMTUuNUg4IiBzdHJva2U9IiMwMDAwMDAiIHN0cm9rZS13aWR0aD0iMi4yIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiPjwvcGF0aD48L3N2Zz4=');
     --icon-16-video-broken: url('data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz48c3ZnIHdpZHRoPSIxOHB4IiBoZWlnaHQ9IjE4cHgiIHN0cm9rZS13aWR0aD0iMi4yIiB2aWV3Qm94PSIwIDAgMjQgMjQiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgY29sb3I9IiMwMDAwMDAiPjxwYXRoIGQ9Ik03IDguMDFMNy4wMSA3Ljk5ODg5IiBzdHJva2U9IiMwMDAwMDAiIHN0cm9rZS13aWR0aD0iMi4yIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiPjwvcGF0aD48cGF0aCBkPSJNMTcgOC4wMUwxNy4wMSA3Ljk5ODg5IiBzdHJva2U9IiMwMDAwMDAiIHN0cm9rZS13aWR0aD0iMi4yIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiPjwvcGF0aD48cGF0aCBkPSJNNyAxMi4wMUw3LjAxIDExLjk5ODkiIHN0cm9rZT0iIzAwMDAwMCIgc3Ryb2tlLXdpZHRoPSIyLjIiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCI+PC9wYXRoPjxwYXRoIGQ9Ik0xNyAxMi4wMUwxNy4wMSAxMS45OTg5IiBzdHJva2U9IiMwMDAwMDAiIHN0cm9rZS13aWR0aD0iMi4yIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiPjwvcGF0aD48cGF0aCBkPSJNNyAxNi4wMUw3LjAxIDE1Ljk5ODkiIHN0cm9rZT0iIzAwMDAwMCIgc3Ryb2tlLXdpZHRoPSIyLjIiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCI+PC9wYXRoPjxwYXRoIGQ9Ik0xNyAxNi4wMUwxNy4wMSAxNS45OTg5IiBzdHJva2U9IiMwMDAwMDAiIHN0cm9rZS13aWR0aD0iMi4yIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiPjwvcGF0aD48cGF0aCBkPSJNNyAySDMuNkMzLjI2ODYzIDIgMyAyLjI2ODYzIDMgMi42VjIxLjRDMyAyMS43MzE0IDMuMjY4NjMgMjIgMy42IDIySDdNNyAyVjRNNyAySDE3TTE3IDJIMjAuNEMyMC43MzE0IDIgMjEgMi4yNjg2MyAyMSAyLjZWMjEuNEMyMSAyMS43MzE0IDIwLjczMTQgMjIgMjAuNCAyMkgxN00xNyAyVjRNMTcgMjJWMjBNMTcgMjJIN003IDIyVjIwIiBzdHJva2U9IiMwMDAwMDAiIHN0cm9rZS13aWR0aD0iMi4yIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiPjwvcGF0aD48L3N2Zz4=');
     --icon-16-api: url('data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz48c3ZnIHdpZHRoPSIxOHB4IiBoZWlnaHQ9IjE4cHgiIHN0cm9rZS13aWR0aD0iMi4yIiB2aWV3Qm94PSIwIDAgMjQgMjQiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgY29sb3I9IiMwMDAwMDAiIHN0eWxlPSItLWRhcmtyZWFkZXItaW5saW5lLWNvbG9yOiB2YXIoLS1kYXJrcmVhZGVyLXRleHQtMDAwMDAwLCAjZThlNmUzKTsiIGRhdGEtZGFya3JlYWRlci1pbmxpbmUtY29sb3I9IiI+PHBhdGggZD0iTTEzLjk5MjIgMTdIMTYuOTkyMk0xOS45OTIyIDE3SDE2Ljk5MjJNMTYuOTkyMiAxN1YxNE0xNi45OTIyIDE3VjIwIiBzdHJva2U9IiMwMDAwMDAiIHN0cm9rZS13aWR0aD0iMi4yIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIHN0eWxlPSItLWRhcmtyZWFkZXItaW5saW5lLXN0cm9rZTogIzAwMDAwMDsiIGRhdGEtZGFya3JlYWRlci1pbmxpbmUtc3Ryb2tlPSIiPjwvcGF0aD48cGF0aCBkPSJNNCA5LjRWNC42QzQgNC4yNjg2MyA0LjI2ODYzIDQgNC42IDRIOS40QzkuNzMxMzcgNCAxMCA0LjI2ODYzIDEwIDQuNlY5LjRDMTAgOS43MzEzNyA5LjczMTM3IDEwIDkuNCAxMEg0LjZDNC4yNjg2MyAxMCA0IDkuNzMxMzcgNCA5LjRaIiBzdHJva2U9IiMwMDAwMDAiIHN0cm9rZS13aWR0aD0iMi4yIiBzdHlsZT0iLS1kYXJrcmVhZGVyLWlubGluZS1zdHJva2U6ICMwMDAwMDA7IiBkYXRhLWRhcmtyZWFkZXItaW5saW5lLXN0cm9rZT0iIj48L3BhdGg+PHBhdGggZD0iTTQgMTkuNFYxNC42QzQgMTQuMjY4NiA0LjI2ODYzIDE0IDQuNiAxNEg5LjRDOS43MzEzNyAxNCAxMCAxNC4yNjg2IDEwIDE0LjZWMTkuNEMxMCAxOS43MzE0IDkuNzMxMzcgMjAgOS40IDIwSDQuNkM0LjI2ODYzIDIwIDQgMTkuNzMxNCA0IDE5LjRaIiBzdHJva2U9IiMwMDAwMDAiIHN0cm9rZS13aWR0aD0iMi4yIiBzdHlsZT0iLS1kYXJrcmVhZGVyLWlubGluZS1zdHJva2U6ICMwMDAwMDA7IiBkYXRhLWRhcmtyZWFkZXItaW5saW5lLXN0cm9rZT0iIj48L3BhdGg+PHBhdGggZD0iTTE0IDkuNFY0LjZDMTQgNC4yNjg2MyAxNC4yNjg2IDQgMTQuNiA0SDE5LjRDMTkuNzMxNCA0IDIwIDQuMjY4NjMgMjAgNC42VjkuNEMyMCA5LjczMTM3IDE5LjczMTQgMTAgMTkuNCAxMEgxNC42QzE0LjI2ODYgMTAgMTQgOS43MzEzNyAxNCA5LjRaIiBzdHJva2U9IiMwMDAwMDAiIHN0cm9rZS13aWR0aD0iMi4yIiBzdHlsZT0iLS1kYXJrcmVhZGVyLWlubGluZS1zdHJva2U6ICMwMDAwMDA7IiBkYXRhLWRhcmtyZWFkZXItaW5saW5lLXN0cm9rZT0iIj48L3BhdGg+PC9zdmc+');
 
@@ -12938,330 +12938,153 @@ h2.playlisting-create-option-title {
 
 
 /*     BLEH     */
-.bleh--page-outer {
-    width: 100%;
+.skip-to-list {
     display: flex;
     flex-direction: column;
-    align-items: center;
-    padding-top: var(--card-gap);
+    gap: var(--button-list-gap);
 
-    .bleh--page-inner {
-        width: var(--cards-width);
-        display: flex;
-        align-items: stretch;
-        gap: var(--card-gap);
+    .skip-to-item {
+        --bg: transparent;
+        --bg-hov: hsla(var(--b4), 40%);
+        --bg-atv: hsla(var(--h4), 10%);
+        --shadow: none;
+        --shadow-hov: none;
+        --btn-left: calc(12px + 18px + 6px);
+        text-align: left;
+        position: relative;
+        --mask: var(--icon-16-setting-toggle);
 
-
-        .bleh--panel-side, .bleh--panel-main {
-            display: flex;
-            flex-direction: column;
-            height: fit-content;
-            gap: var(--card-gap);
+        &[data-type="slider"] {
+            --mask: var(--icon-16-setting-slider);
         }
-
-
-        .skip-to-list {
-            display: flex;
-            flex-direction: column;
-            gap: var(--button-list-gap);
-
-            .skip-to-item {
-                --bg: transparent;
-                --bg-hov: hsla(var(--b4), 40%);
-                --bg-atv: hsla(var(--h4), 10%);
-                --shadow: none;
-                --shadow-hov: none;
-                --btn-left: calc(12px + 18px + 6px);
-                text-align: left;
-                position: relative;
-                --mask: var(--icon-16-setting-toggle);
-
-                &[data-type="slider"] {
-                    --mask: var(--icon-16-setting-slider);
-                }
-                &[data-type="text"] {
-                    --mask: var(--icon-16-setting-text);
-                }
-            }
-        }
-
-        .btns {
-            display: flex;
-            flex-direction: column;
-            gap: var(--button-list-gap);
-
-            &.sep {
-                margin-top: unset;
-                padding-top: var(--card-gap);
-                border-top: var(--card-border);
-            }
-
-            .btn {
-                --shadow: none;
-                --shadow-hov: none;
-                --btn-left: calc(12px + 18px + 6px);
-                width: 100%;
-                text-align: left;
-                position: relative;
-
-                /*
-                --btn-left: calc(12px + 20px + 6px);
-                --top: 7px;
-                --margin-top: 0;
-                --mask-size: 20px;
-                height: calc(20px + (7px * 2));*/
-
-                &[data-bleh-page="home"] {
-                    --mask: var(--icon-16-home);
-                }
-                &[data-bleh-page="themes"] {
-                    --mask: var(--icon-16-themes);
-                }
-                &[data-bleh-page="music"] {
-                    --mask: var(--icon-16-track);
-                }
-                &[data-bleh-page="customise"] {
-                    --mask: var(--icon-16-layout-manage);
-                }
-                &[data-bleh-action="import"] {
-                    --mask: var(--icon-16-import);
-                }
-                &[data-bleh-action="export"] {
-                    --mask: var(--icon-16-external);
-                }
-                &[data-bleh-action="reset"] {
-                    --mask: var(--icon-16-revert);
-                }
-                &[data-bleh-page="performance"] {
-                    --mask: var(--icon-16-settings);
-                }
-                &[data-bleh-page="profiles"] {
-                    --mask: var(--icon-16-user);
-                }
-                &[data-bleh-page="redirects"] {
-                    --mask: var(--icon-16-redirect);
-                }
-                &[data-bleh-page="corrections"] {
-                    --mask: var(--icon-16-correction);
-                }
-                &[data-bleh-page="accessibility"] {
-                    --mask: var(--icon-16-accessibility);
-                }
-                &[data-bleh-page="language"] {
-                    --mask: var(--icon-16-language);
-                }
-                &[data-bleh-page="text"] {
-                    --mask: var(--icon-16-shoutbox);
-                }
-                &[data-bleh-page="seasonal"] {
-                    --mask: var(--icon-16-season);
-
-                    &[data-season="easter"] {
-                        --mask: var(--icon-16-egg);
-                    }
-                    &[data-season="halloween"] {
-                        --mask: var(--icon-16-pumpkin);
-                    }
-                    &[data-season="pre_fall"] {
-                        --mask: var(--icon-16-fall);
-                    }
-                    &[data-season="fall"] {
-                        --mask: var(--icon-16-fall);
-                    }
-                    &[data-season="christmas"] {
-                        --mask: var(--icon-16-snow);
-                    }
-                    &[data-season="new_years"] {
-                        --mask: var(--icon-16-new-years);
-                    }
-                }
-                &[data-bleh-page="activities"] {
-                    --mask: var(--icon-16-notifications);
-                }
-                &[data-bleh-page="changelog"] {
-                    --mask: var(--icon-16-changelog);
-                    --col: hsl(var(--l3-c));
-                }
-
-                &:not(.active) {
-                    --bg: transparent;
-                    --bg-hov: hsla(var(--b4), 40%);
-                    --bg-atv: hsla(var(--h4), 10%);
-
-                    &[data-bleh-page="sku"] {
-                        display: none;
-                    }
-                }
-
-                &.active {
-                    --bg: hsla(var(--h4), 35%);
-                    --bg-hov: var(--bg);
-                    --bg-atv: var(--bg);
-
-                    &:after {
-                        content: '';
-                        position: absolute;
-                        width: 3px;
-                        height: 14px;
-                        border-radius: 50px;
-                        background-color: hsl(var(--l3-c));
-                        box-shadow: 0 0 20px 3px hsl(var(--h4));
-                        left: 0;
-                        top: 50%;
-                        margin-top: -7px;
-                    }
-                }
-            }
+        &[data-type="text"] {
+            --mask: var(--icon-16-setting-text);
         }
     }
+}
 
-    .bleh-settings-header {
-        width: calc(var(--cards-width) - (var(--card-padding) * 2));
-        display: flex;
-        gap: var(--card-padding);
-        margin-top: unset !important;
+.btns {
+    display: flex;
+    gap: var(--button-list-gap);
 
-        .tag-side {
-            .tag-icon {
-                [data-page="themes"] & {
-                    --mask: var(--icon-colour-default);
-                }
-                [data-page="customise"] & {
-                    --mask: var(--icon-layout);
-                }
-                [data-page="music"] & {
-                    --mask: var(--icon-track);
-                }
-                [data-page="seasonal"] & {
-                    --mask: var(--icon-season);
-                }
-                [data-page="accessibility"] & {
-                    --mask: var(--icon-accessibility);
-                }
-                [data-page="home"] & {
-                    --mask: var(--icon-home);
-                }
-                [data-page="text"] & {
-                    --mask: var(--icon-text);
-                }
-                [data-page="profiles"] & {
-                    --mask: var(--icon-user);
-                }
-                [data-page="performance"] & {
-                    --mask: var(--icon-settings);
-                }
-            }
-        }
-
-        .info-side {
-            flex: 1;
-
-            h1 {
-                margin: unset;
-                font-size: 24px;
-                line-height: 30px;
-                font-weight: var(--font-weight-bold);
-                letter-spacing: unset;
-                cursor: default;
-
-                color: hsl(var(--c1));
-
-                a {
-                    color: inherit;
-                }
-
-                [data-bleh--theme="light"] & {
-                    text-shadow: 0 0 15px hsl(var(--b5));
-                }
-            }
-        }
-    }
-    .bleh-settings-navigation {
-        margin: var(--card-gap) 0 !important;
-
-        .navlist-items {
-            margin: 0 -12px;
-        }
-
-        .secondary-nav-item-link {
-            &[data-bleh-page="home"] {
-                --mask: var(--icon-16-home);
-            }
-            &[data-bleh-page="themes"] {
-                --mask: var(--icon-16-themes);
-            }
-            &[data-bleh-page="music"] {
-                --mask: var(--icon-16-track);
-            }
-            &[data-bleh-page="customise"] {
-                --mask: var(--icon-16-layout-manage);
-            }
-            &[data-bleh-action="import"] {
-                --mask: var(--icon-16-import);
-            }
-            &[data-bleh-action="export"] {
-                --mask: var(--icon-16-external);
-            }
-            &[data-bleh-action="reset"] {
-                --mask: var(--icon-16-revert);
-            }
-            &[data-bleh-page="performance"] {
-                --mask: var(--icon-16-settings);
-            }
-            &[data-bleh-page="profiles"] {
-                --mask: var(--icon-16-user);
-            }
-            &[data-bleh-page="redirects"] {
-                --mask: var(--icon-16-redirect);
-            }
-            &[data-bleh-page="corrections"] {
-                --mask: var(--icon-16-correction);
-            }
-            &[data-bleh-page="accessibility"] {
-                --mask: var(--icon-16-accessibility);
-            }
-            &[data-bleh-page="language"] {
-                --mask: var(--icon-16-language);
-            }
-            &[data-bleh-page="text"] {
-                --mask: var(--icon-16-shoutbox);
-            }
-            &[data-bleh-page="seasonal"] {
-                --mask: var(--icon-16-season);
-
-                &[data-season="easter"] {
-                    --mask: var(--icon-16-egg);
-                }
-                &[data-season="halloween"] {
-                    --mask: var(--icon-16-pumpkin);
-                }
-                &[data-season="pre_fall"] {
-                    --mask: var(--icon-16-fall);
-                }
-                &[data-season="fall"] {
-                    --mask: var(--icon-16-fall);
-                }
-                &[data-season="christmas"] {
-                    --mask: var(--icon-16-snow);
-                }
-                &[data-season="new_years"] {
-                    --mask: var(--icon-16-new-years);
-                }
-            }
-            &[data-bleh-page="activities"] {
-                --mask: var(--icon-16-notifications);
-            }
-            &[data-bleh-page="changelog"] {
-                --mask: var(--icon-16-changelog);
-                --col: hsl(var(--l3-c));
-            }
-
-            &[data-bleh-page="sku"]:not(.secondary-nav-item-link--active) {
-                display: none;
-            }
-        }
+    &.sep {
+        margin-top: unset;
+        padding-top: var(--card-gap);
+        border-top: var(--card-border);
     }
 
+    .btn {
+        --btn-left: calc(12px + 18px + 6px);
+        width: 100%;
+        text-align: left;
+        position: relative;
+
+        flex: 1;
+
+        &[data-bleh-action="import"] {
+            --mask: var(--icon-16-import);
+        }
+        &[data-bleh-action="export"] {
+            --mask: var(--icon-16-external);
+        }
+        &[data-bleh-action="reset"] {
+            --mask: var(--icon-16-revert);
+        }
+        &[data-bleh-page="changelog"] {
+            --mask: var(--icon-16-changelog);
+        }
+    }
+}
+
+.bleh-settings-navigation {
+    .secondary-nav-item-link {
+        &[data-bleh-page="home"] {
+            --mask: var(--icon-16-home);
+        }
+        &[data-bleh-page="themes"] {
+            --mask: var(--icon-16-themes);
+        }
+        &[data-bleh-page="music"] {
+            --mask: var(--icon-16-track);
+        }
+        &[data-bleh-page="customise"] {
+            --mask: var(--icon-16-layout-manage);
+        }
+        &[data-bleh-action="import"] {
+            --mask: var(--icon-16-import);
+        }
+        &[data-bleh-action="export"] {
+            --mask: var(--icon-16-external);
+        }
+        &[data-bleh-action="reset"] {
+            --mask: var(--icon-16-revert);
+        }
+        &[data-bleh-page="performance"] {
+            --mask: var(--icon-16-settings);
+        }
+        &[data-bleh-page="profiles"] {
+            --mask: var(--icon-16-user);
+        }
+        &[data-bleh-page="redirects"] {
+            --mask: var(--icon-16-redirect);
+        }
+        &[data-bleh-page="corrections"] {
+            --mask: var(--icon-16-correction);
+        }
+        &[data-bleh-page="accessibility"] {
+            --mask: var(--icon-16-accessibility);
+        }
+        &[data-bleh-page="language"] {
+            --mask: var(--icon-16-language);
+        }
+        &[data-bleh-page="text"] {
+            --mask: var(--icon-16-shoutbox);
+        }
+        &[data-bleh-page="seasonal"] {
+            --mask: var(--icon-16-season);
+
+            &[data-season="easter"] {
+                --mask: var(--icon-16-egg);
+            }
+            &[data-season="halloween"] {
+                --mask: var(--icon-16-pumpkin);
+            }
+            &[data-season="pre_fall"] {
+                --mask: var(--icon-16-fall);
+            }
+            &[data-season="fall"] {
+                --mask: var(--icon-16-fall);
+            }
+            &[data-season="christmas"] {
+                --mask: var(--icon-16-snow);
+            }
+            &[data-season="new_years"] {
+                --mask: var(--icon-16-new-years);
+            }
+        }
+        &[data-bleh-page="activities"] {
+            --mask: var(--icon-16-notifications);
+        }
+        &[data-bleh-page="changelog"] {
+            --mask: var(--icon-16-changelog);
+            --col: hsl(var(--l3-c));
+        }
+
+        &[data-bleh-page="sku"]:not(.secondary-nav-item-link--active) {
+            display: none;
+        }
+    }
+}
+
+.bleh--panel:not(.bleh--profile-note-panel) {
+    display: flex;
+    flex-direction: column;
+    gap: var(--card-gap);
+
+
+    .btn {
+        width: fit-content;
+    }
 
     h1 {
         font-size: 24px;
@@ -13276,6 +13099,7 @@ h2.playlisting-create-option-title {
         font-size: 24px;
         line-height: 28px;
         color: hsl(var(--c1));
+        cursor: default;
     }
     h4 {
         font-size: 16px;
@@ -13299,35 +13123,6 @@ h2.playlisting-create-option-title {
                 background-color: var(--card-border-base);
             }
         }
-    }
-    h5 {
-        margin: unset;
-        color: hsl(var(--c1));
-        font-weight: var(--font-weight-medium);
-    }
-}
-
-.bleh--panel:not(.bleh--profile-note-panel) {
-    display: flex;
-    flex-direction: column;
-    gap: var(--card-gap);
-
-
-    .btn {
-        width: fit-content;
-    }
-
-    h3 {
-        font-size: 24px;
-        line-height: 28px;
-        color: hsl(var(--c1));
-        cursor: default;
-    }
-    h4 {
-        font-size: 16px;
-        line-height: 20px;
-        color: hsl(var(--c1));
-        cursor: default;
     }
     h5 {
         margin: unset;
@@ -13707,12 +13502,10 @@ pre {
 }
 
 
-.palette .side,
 .palette {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(70px, 1fr));
     gap: var(--button-list-gap);
-    height: 100%;
 }
 
 .swatch-group {
@@ -18583,7 +18376,7 @@ section > .section-controls .subpage-title {
             content: '';
             position: absolute;
             inset: 0;
-            background-color: rgb(0, 0, 0, 0.3);
+            background-color: rgb(0, 0, 0, 0.25);
             mix-blend-mode: unset;
         }
 
@@ -18613,6 +18406,10 @@ section > .section-controls .subpage-title {
         &[data-page-type="album"],
         &[data-page-type="artist"] {
             height: 200px;
+
+            &:before {
+                background-color: rgb(0, 0, 0, 0.75);
+            }
         }
         .redesigned-header {
             background: unset !important;
@@ -18625,6 +18422,10 @@ section > .section-controls .subpage-title {
             .avatar-side {
                 --avatar-size: 150px !important;
                 margin: unset;
+
+                img {
+                    --mask-size: var(--cover-size-200);
+                }
             }
         }
     }
@@ -18633,7 +18434,7 @@ section > .section-controls .subpage-title {
 .katsune-button-row {
     margin: -1px 0 0 0;
     padding: var(--card-gap) calc(var(--card-gap) + var(--card-padding));
-    background: hsl(var(--b5), 50%);
+    background: hsl(var(--b5), 40%);
     box-shadow: 0 0 0 1px var(--card-border-base) inset, var(--card-shadow);
 
     display: flex;
