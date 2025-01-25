@@ -603,6 +603,7 @@ body {
     --icon-16-arrow-right: url('data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz48c3ZnIHdpZHRoPSIxOHB4IiBoZWlnaHQ9IjE4cHgiIHN0cm9rZS13aWR0aD0iMi4yIiB2aWV3Qm94PSIwIDAgMjQgMjQiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgY29sb3I9IiMwMDAwMDAiIHN0eWxlPSItLWRhcmtyZWFkZXItaW5saW5lLWNvbG9yOiB2YXIoLS1kYXJrcmVhZGVyLXRleHQtMDAwMDAwLCAjZThlNmUzKTsiIGRhdGEtZGFya3JlYWRlci1pbmxpbmUtY29sb3I9IiI+PHBhdGggZD0iTTkgNkwxNSAxMkw5IDE4IiBzdHJva2U9IiMwMDAwMDAiIHN0cm9rZS13aWR0aD0iMi4yIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIHN0eWxlPSItLWRhcmtyZWFkZXItaW5saW5lLXN0cm9rZTogIzAwMDAwMDsiIGRhdGEtZGFya3JlYWRlci1pbmxpbmUtc3Ryb2tlPSIiPjwvcGF0aD48L3N2Zz4=');
     --icon-16-star: url('data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz48c3ZnIHdpZHRoPSIxOHB4IiBoZWlnaHQ9IjE4cHgiIHN0cm9rZS13aWR0aD0iMi4yIiB2aWV3Qm94PSIwIDAgMjQgMjQiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgY29sb3I9IiMwMDAwMDAiPjxwYXRoIGQ9Ik04LjU4NzM3IDguMjM1OTdMMTEuMTg0OSAzLjAwMzc2QzExLjUxODMgMi4zMzIwOCAxMi40ODE3IDIuMzMyMDggMTIuODE1MSAzLjAwMzc2TDE1LjQxMjYgOC4yMzU5N0wyMS4yMjE1IDkuMDgwMTdDMjEuOTY2OCA5LjE4ODQ4IDIyLjI2MzggMTAuMDk5NCAyMS43MjQzIDEwLjYyMTlMMTcuNTIxNyAxNC42OTE4TDE4LjUxMzUgMjAuNDQxNEMxOC42NDA5IDIxLjE3OTggMTcuODYxNCAyMS43NDI4IDE3LjE5NDUgMjEuMzk0MUwxMiAxOC42NzhMNi44MDU0NyAyMS4zOTQxQzYuMTM4NiAyMS43NDI4IDUuMzU5MDkgMjEuMTc5OCA1LjQ4NjQ1IDIwLjQ0MTRMNi40NzgyNSAxNC42OTE4TDIuMjc1NzUgMTAuNjIxOUMxLjczNjE3IDEwLjA5OTQgMi4wMzMyMiA5LjE4ODQ4IDIuNzc4NTIgOS4wODAxN0w4LjU4NzM3IDguMjM1OTdaIiBzdHJva2U9IiMwMDAwMDAiIHN0cm9rZS13aWR0aD0iMi4yIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiPjwvcGF0aD48L3N2Zz4=');
     --icon-16-dots: url('data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz48c3ZnIHdpZHRoPSIxOHB4IiBoZWlnaHQ9IjE4cHgiIHZpZXdCb3g9IjAgMCAyNCAyNCIgc3Ryb2tlLXdpZHRoPSIyLjIiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgY29sb3I9IiMwMDAwMDAiIHN0eWxlPSItLWRhcmtyZWFkZXItaW5saW5lLWNvbG9yOiB2YXIoLS1kYXJrcmVhZGVyLXRleHQtMDAwMDAwLCAjZThlNmUzKTsiIGRhdGEtZGFya3JlYWRlci1pbmxpbmUtY29sb3I9IiI+PHBhdGggZD0iTTIwIDEyLjVDMjAuMjc2MSAxMi41IDIwLjUgMTIuMjc2MSAyMC41IDEyQzIwLjUgMTEuNzIzOSAyMC4yNzYxIDExLjUgMjAgMTEuNUMxOS43MjM5IDExLjUgMTkuNSAxMS43MjM5IDE5LjUgMTJDMTkuNSAxMi4yNzYxIDE5LjcyMzkgMTIuNSAyMCAxMi41WiIgZmlsbD0iIzAwMDAwMCIgc3Ryb2tlPSIjMDAwMDAwIiBzdHJva2Utd2lkdGg9IjIuMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiBzdHlsZT0iLS1kYXJrcmVhZGVyLWlubGluZS1maWxsOiAjMDAwMDAwOyAtLWRhcmtyZWFkZXItaW5saW5lLXN0cm9rZTogIzAwMDAwMDsiIGRhdGEtZGFya3JlYWRlci1pbmxpbmUtZmlsbD0iIiBkYXRhLWRhcmtyZWFkZXItaW5saW5lLXN0cm9rZT0iIj48L3BhdGg+PHBhdGggZD0iTTEyIDEyLjVDMTIuMjc2MSAxMi41IDEyLjUgMTIuMjc2MSAxMi41IDEyQzEyLjUgMTEuNzIzOSAxMi4yNzYxIDExLjUgMTIgMTEuNUMxMS43MjM5IDExLjUgMTEuNSAxMS43MjM5IDExLjUgMTJDMTEuNSAxMi4yNzYxIDExLjcyMzkgMTIuNSAxMiAxMi41WiIgZmlsbD0iIzAwMDAwMCIgc3Ryb2tlPSIjMDAwMDAwIiBzdHJva2Utd2lkdGg9IjIuMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiBzdHlsZT0iLS1kYXJrcmVhZGVyLWlubGluZS1maWxsOiAjMDAwMDAwOyAtLWRhcmtyZWFkZXItaW5saW5lLXN0cm9rZTogIzAwMDAwMDsiIGRhdGEtZGFya3JlYWRlci1pbmxpbmUtZmlsbD0iIiBkYXRhLWRhcmtyZWFkZXItaW5saW5lLXN0cm9rZT0iIj48L3BhdGg+PHBhdGggZD0iTTQgMTIuNUM0LjI3NjE0IDEyLjUgNC41IDEyLjI3NjEgNC41IDEyQzQuNSAxMS43MjM5IDQuMjc2MTQgMTEuNSA0IDExLjVDMy43MjM4NiAxMS41IDMuNSAxMS43MjM5IDMuNSAxMkMzLjUgMTIuMjc2MSAzLjcyMzg2IDEyLjUgNCAxMi41WiIgZmlsbD0iIzAwMDAwMCIgc3Ryb2tlPSIjMDAwMDAwIiBzdHJva2Utd2lkdGg9IjIuMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiBzdHlsZT0iLS1kYXJrcmVhZGVyLWlubGluZS1maWxsOiAjMDAwMDAwOyAtLWRhcmtyZWFkZXItaW5saW5lLXN0cm9rZTogIzAwMDAwMDsiIGRhdGEtZGFya3JlYWRlci1pbmxpbmUtZmlsbD0iIiBkYXRhLWRhcmtyZWFkZXItaW5saW5lLXN0cm9rZT0iIj48L3BhdGg+PC9zdmc+');
+    --icon-16-dots-v: url('data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz48c3ZnIHdpZHRoPSIxOHB4IiBoZWlnaHQ9IjE4cHgiIHZpZXdCb3g9IjAgMCAyNCAyNCIgc3Ryb2tlLXdpZHRoPSIyLjIiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgY29sb3I9IiMwMDAwMDAiPjxwYXRoIGQ9Ik0xMiAxMi41QzEyLjI3NjEgMTIuNSAxMi41IDEyLjI3NjEgMTIuNSAxMkMxMi41IDExLjcyMzkgMTIuMjc2MSAxMS41IDEyIDExLjVDMTEuNzIzOSAxMS41IDExLjUgMTEuNzIzOSAxMS41IDEyQzExLjUgMTIuMjc2MSAxMS43MjM5IDEyLjUgMTIgMTIuNVoiIGZpbGw9IiMwMDAwMDAiIHN0cm9rZT0iIzAwMDAwMCIgc3Ryb2tlLXdpZHRoPSIyLjIiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCI+PC9wYXRoPjxwYXRoIGQ9Ik0xMiAyMC41QzEyLjI3NjEgMjAuNSAxMi41IDIwLjI3NjEgMTIuNSAyMEMxMi41IDE5LjcyMzkgMTIuMjc2MSAxOS41IDEyIDE5LjVDMTEuNzIzOSAxOS41IDExLjUgMTkuNzIzOSAxMS41IDIwQzExLjUgMjAuMjc2MSAxMS43MjM5IDIwLjUgMTIgMjAuNVoiIGZpbGw9IiMwMDAwMDAiIHN0cm9rZT0iIzAwMDAwMCIgc3Ryb2tlLXdpZHRoPSIyLjIiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCI+PC9wYXRoPjxwYXRoIGQ9Ik0xMiA0LjVDMTIuMjc2MSA0LjUgMTIuNSA0LjI3NjE0IDEyLjUgNEMxMi41IDMuNzIzODYgMTIuMjc2MSAzLjUgMTIgMy41QzExLjcyMzkgMy41IDExLjUgMy43MjM4NiAxMS41IDRDMTEuNSA0LjI3NjE0IDExLjcyMzkgNC41IDEyIDQuNVoiIGZpbGw9IiMwMDAwMDAiIHN0cm9rZT0iIzAwMDAwMCIgc3Ryb2tlLXdpZHRoPSIyLjIiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCI+PC9wYXRoPjwvc3ZnPg==');
     --icon-16-mention: url('data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz48c3ZnIHdpZHRoPSIxOHB4IiBoZWlnaHQ9IjE4cHgiIHZpZXdCb3g9IjAgMCAyNCAyNCIgc3Ryb2tlLXdpZHRoPSIyLjIiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgY29sb3I9IiMwMDAwMDAiIHN0eWxlPSItLWRhcmtyZWFkZXItaW5saW5lLWNvbG9yOiB2YXIoLS1kYXJrcmVhZGVyLXRleHQtMDAwMDAwLCAjZThlNmUzKTsiIGRhdGEtZGFya3JlYWRlci1pbmxpbmUtY29sb3I9IiI+PHBhdGggZD0iTTE3LjUgMTkuMTI0NUMxNS45NzkxIDIwLjMwMDMgMTQuMDcxMiAyMSAxMiAyMUM3LjAyOTQ0IDIxIDMgMTYuOTcwNiAzIDEyQzMgNy4wMjk0NCA3LjAyOTQ0IDMgMTIgM0MxNi45NzA2IDMgMjEgNy4wMjk0NCAyMSAxMkMyMSAxNy41IDE1IDE3LjUgMTUgMTRDMTUgMTIgMTUgOCAxNSA4IiBzdHJva2U9IiMwMDAwMDAiIHN0cm9rZS13aWR0aD0iMi4yIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIHN0eWxlPSItLWRhcmtyZWFkZXItaW5saW5lLXN0cm9rZTogIzAwMDAwMDsiIGRhdGEtZGFya3JlYWRlci1pbmxpbmUtc3Ryb2tlPSIiPjwvcGF0aD48cGF0aCBkPSJNMTUgMTJWMTAuNUMxNSA5LjExOTI5IDEzLjY1NjkgOCAxMiA4QzEwLjM0MzEgOCA5IDkuMTE5MjkgOSAxMC41VjEyIiBzdHJva2U9IiMwMDAwMDAiIHN0cm9rZS13aWR0aD0iMi4yIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIHN0eWxlPSItLWRhcmtyZWFkZXItaW5saW5lLXN0cm9rZTogIzAwMDAwMDsiIGRhdGEtZGFya3JlYWRlci1pbmxpbmUtc3Ryb2tlPSIiPjwvcGF0aD48cGF0aCBkPSJNMTUgMTJWMTMuNUMxNSAxNC44ODA3IDEzLjY1NjkgMTYgMTIgMTZDMTAuMzQzMSAxNiA5IDE0Ljg4MDcgOSAxMy41VjEyIiBzdHJva2U9IiMwMDAwMDAiIHN0cm9rZS13aWR0aD0iMi4yIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIHN0eWxlPSItLWRhcmtyZWFkZXItaW5saW5lLXN0cm9rZTogIzAwMDAwMDsiIGRhdGEtZGFya3JlYWRlci1pbmxpbmUtc3Ryb2tlPSIiPjwvcGF0aD48L3N2Zz4=');
     --icon-16-user: url('data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz48c3ZnIHdpZHRoPSIxOHB4IiBoZWlnaHQ9IjE4cHgiIHN0cm9rZS13aWR0aD0iMi4yIiB2aWV3Qm94PSIwIDAgMjQgMjQiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgY29sb3I9IiMwMDAwMDAiIHN0eWxlPSItLWRhcmtyZWFkZXItaW5saW5lLWNvbG9yOiB2YXIoLS1kYXJrcmVhZGVyLXRleHQtMDAwMDAwLCAjZThlNmUzKTsiIGRhdGEtZGFya3JlYWRlci1pbmxpbmUtY29sb3I9IiI+PHBhdGggZD0iTTUgMjBWMTlDNSAxNS4xMzQgOC4xMzQwMSAxMiAxMiAxMlYxMkMxNS44NjYgMTIgMTkgMTUuMTM0IDE5IDE5VjIwIiBzdHJva2U9IiMwMDAwMDAiIHN0cm9rZS13aWR0aD0iMi4yIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIHN0eWxlPSItLWRhcmtyZWFkZXItaW5saW5lLXN0cm9rZTogIzAwMDAwMDsiIGRhdGEtZGFya3JlYWRlci1pbmxpbmUtc3Ryb2tlPSIiPjwvcGF0aD48cGF0aCBkPSJNMTIgMTJDMTQuMjA5MSAxMiAxNiAxMC4yMDkxIDE2IDhDMTYgNS43OTA4NiAxNC4yMDkxIDQgMTIgNEM5Ljc5MDg2IDQgOCA1Ljc5MDg2IDggOEM4IDEwLjIwOTEgOS43OTA4NiAxMiAxMiAxMloiIHN0cm9rZT0iIzAwMDAwMCIgc3Ryb2tlLXdpZHRoPSIyLjIiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgc3R5bGU9Ii0tZGFya3JlYWRlci1pbmxpbmUtc3Ryb2tlOiAjMDAwMDAwOyIgZGF0YS1kYXJrcmVhZGVyLWlubGluZS1zdHJva2U9IiI+PC9wYXRoPjwvc3ZnPg==');
     --icon-16-user-remove: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyLjUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgY2xhc3M9Imx1Y2lkZSBsdWNpZGUtdXNlci14Ij48cGF0aCBkPSJNMTYgMjF2LTJhNCA0IDAgMCAwLTQtNEg2YTQgNCAwIDAgMC00IDR2MiIvPjxjaXJjbGUgY3g9IjkiIGN5PSI3IiByPSI0Ii8+PGxpbmUgeDE9IjE3IiB4Mj0iMjIiIHkxPSI4IiB5Mj0iMTMiLz48bGluZSB4MT0iMjIiIHgyPSIxNyIgeTE9IjgiIHkyPSIxMyIvPjwvc3ZnPg==');
@@ -4525,6 +4526,44 @@ better than the default selector '#app a' i suppose */
     text-align: center !important;
 }
 
+.chartlist-row {
+    --more-gap: calc(32px + var(--chartlist-inner-gap));
+    --more-padding: calc(var(--more-gap) - 12px);
+    padding-left: var(--more-gap) !important;
+
+    &.show-focus-controls {
+        .chartlist-more {
+            opacity: 1 !important;
+        }
+    }
+}
+.chartlist-more {
+    margin: unset !important;
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    opacity: 0.2 !important;
+
+    & > div,
+    .chartlist-more-button {
+        height: 100%;
+    }
+
+    .chartlist-more-button {
+        --left: 7px;
+        --mask: var(--icon-16-dots-v);
+
+        [data-ff--hide_chartlist_more="true"] & {
+            display: none;
+        }
+    }
+
+    .chartlist-more-menu {
+        left: -12px !important;
+    }
+}
+
 
 /*     CHARTLIST TYPE     */
 /* only viewable in a user's tags */
@@ -4806,7 +4845,7 @@ better than the default selector '#app a' i suppose */
                 }
                 .chartlist-artist {
                     position: absolute;
-                    left: calc(38px + 2px - 28px);
+                    left: calc(var(--more-padding) + 38px + 2px - 28px);
                     margin-top: 16px;
                     right: 300px;
                 }
@@ -4815,7 +4854,7 @@ better than the default selector '#app a' i suppose */
             &.chartlist--with-image {
                 .chartlist-row {
                     .chartlist-artist {
-                        left: calc(84px - 2px - 28px);
+                        left: calc(var(--more-padding) + 84px - 2px - 28px);
                     }
                 }
             }
@@ -4827,7 +4866,7 @@ better than the default selector '#app a' i suppose */
                 }
                 .chartlist-artist {
                     position: absolute;
-                    left: calc(84px - 2px - 42px);
+                    left: calc(var(--more-padding) + 84px - 2px - 42px);
                     margin-top: 16px;
                     right: 300px;
                     width: 60%;
@@ -4930,17 +4969,17 @@ better than the default selector '#app a' i suppose */
 
 .chartlist--with-bar.chartlist--with-index.chartlist--with-play.chartlist--with-image .chartlist-row--with-artist .chartlist-artist, .chartlist--with-multi-playlinks.chartlist--with-index.chartlist--with-play.chartlist--with-image .chartlist-row--with-artist .chartlist-artist,
 .chartlist--with-bar.chartlist--with-index.chartlist--with-play.chartlist--with-image.chartlist--with-loved .chartlist-row--with-artist .chartlist-artist, .chartlist--with-multi-playlinks.chartlist--with-index.chartlist--with-play.chartlist--with-image.chartlist--with-loved .chartlist-row--with-artist .chartlist-artist {
-    left: calc(84px - 2px);
+    left: calc(var(--more-padding) + 84px - 2px);
     margin-top: 16px;
 }
 .chartlist--with-bar.chartlist--with-index.chartlist--with-play.chartlist--with-image.chartlist--with-loved.chartlist--with-index--length-3 .chartlist-row--with-artist .chartlist-artist, .chartlist--with-multi-playlinks.chartlist--with-index.chartlist--with-play.chartlist--with-image.chartlist--with-loved.chartlist--with-index--length-3 .chartlist-row--with-artist .chartlist-artist,
 .chartlist--with-bar.chartlist--with-index.chartlist--with-play.chartlist--with-image.chartlist--with-index--length-3 .chartlist-row--with-artist .chartlist-artist, .chartlist--with-multi-playlinks.chartlist--with-index.chartlist--with-play.chartlist--with-image.chartlist--with-index--length-3 .chartlist-row--with-artist .chartlist-artist {
-    left: calc(92px - 2px);
+    left: calc(var(--more-padding) + 92px - 2px);
     margin-top: 16px;
 }
 .chartlist--with-bar.chartlist--with-index.chartlist--with-play.chartlist--with-image.chartlist--with-loved.chartlist--with-index--length-4 .chartlist-row--with-artist .chartlist-artist, .chartlist--with-multi-playlinks.chartlist--with-index.chartlist--with-play.chartlist--with-image.chartlist--with-loved.chartlist--with-index--length-4 .chartlist-row--with-artist .chartlist-artist,
 .chartlist--with-bar.chartlist--with-index.chartlist--with-play.chartlist--with-image.chartlist--with-index--length-4 .chartlist-row--with-artist .chartlist-artist, .chartlist--with-multi-playlinks.chartlist--with-index.chartlist--with-play.chartlist--with-image.chartlist--with-index--length-4 .chartlist-row--with-artist .chartlist-artist {
-    left: calc(103px - 2px);
+    left: calc(var(--more-padding) + 103px - 2px);
 }
 
 .chartlist--with-bar .chartlist-row--with-artist .chartlist-artist {
@@ -4949,7 +4988,7 @@ better than the default selector '#app a' i suppose */
 
 /* playlist */
 .chartlist--with-bar.chartlist--with-play.chartlist--with-image.chartlist--with-loved .chartlist-row--with-artist .chartlist-artist, .chartlist--with-multi-playlinks.chartlist--with-play.chartlist--with-image.chartlist--with-loved .chartlist-row--with-artist .chartlist-artist {
-    left: calc(59px - 2px);
+    left: calc(var(--more-padding) + 59px - 2px);
     margin-top: 16px;
 }
 
@@ -5007,17 +5046,6 @@ a.chartlist-love-button:after {
 /*     BUY     */
 .chartlist-buylinks {
     display: none !important;
-}
-
-
-/*     MORE     */
-.chartlist-more-button {
-    --left: 7px;
-    --mask: var(--icon-16-dots);
-
-    [data-ff--hide_chartlist_more="true"] & {
-        display: none;
-    }
 }
 
 /* show more button no matter what, just no opacity */
