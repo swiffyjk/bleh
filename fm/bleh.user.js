@@ -4678,13 +4678,18 @@ let has_prompted_for_update = false;
             page.structure.container.insertBefore(title, page.structure.container.firstElementChild);
         }
 
+        let name = page.type;
+
+        if (trans[lang].hasOwnProperty(page.type))
+            name = trans[lang][page.type].name;
+        else if (page.type == 'user')
+            name = trans[lang].profile.name;
+
         title.setAttribute('data-page-type', page.type);
         title.innerHTML = (`
-            <div class="page-header-icon">
-
-            </div>
+            <div class="bleh-icon page-header-icon"></div>
             <div class="page-header-title">
-                ${page.type}
+                ${name}
             </div>
         `);
     }

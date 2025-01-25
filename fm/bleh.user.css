@@ -2122,13 +2122,17 @@ spacing between is removed and aligned to tag icon */
         max-width: calc(var(--cards-width) + (var(--card-gap) * 2));
         width: calc(var(--cards-width) + (var(--card-gap) * 2));
 
-        .row {
+        & > .row {
             padding: 0 var(--card-gap);
         }
 
         .redesigned-navigation {
             margin-left: calc(var(--card-gap) + 8px) !important;
             margin-right: calc(var(--card-gap) + 8px) !important;
+        }
+
+        & > .redesigned-content-top {
+            display: none;
         }
     }
 }
@@ -18519,19 +18523,49 @@ section > .section-controls .subpage-title {
     order: -11;
 
     display: flex;
+    gap: var(--card-gap);
     align-items: center;
     padding: 0 var(--card-padding);
     height: 40px;
-    background-color: hsl(var(--h3));
-    color: hsl(var(--b7));
+    background-color: hsl(var(--b5));
+    color: hsl(var(--c1));
+    margin: unset;
 
     border-top-left-radius: var(--card-radius);
     border-top-right-radius: var(--card-radius);
+    box-shadow: var(--card-shadow);
+    z-index: 2;
 
     .page-header-title {
         font-size: 16px;
         line-height: 17px;
         font-weight: var(--font-weight-medium);
+    }
+
+    &[data-page-type="artist"] {
+        --icon: var(--icon-16-artist);
+    }
+    &[data-page-type="album"] {
+        --icon: var(--icon-16-album);
+    }
+    &[data-page-type="track"] {
+        --icon: var(--icon-16-track);
+    }
+    &[data-page-type="user"] {
+        --icon: var(--icon-16-user);
+    }
+    &[data-page-type="bleh_settings"],
+    &[data-page-type="settings"] {
+        --icon: var(--icon-16-settings);
+    }
+    &[data-page-type="home"] {
+        --icon: var(--icon-16-home);
+    }
+    &[data-page-type="charts"] {
+        --icon: var(--icon-16-medal);
+    }
+    &[data-page-type="search"] {
+        --icon: var(--icon-16-search);
     }
 }
 
