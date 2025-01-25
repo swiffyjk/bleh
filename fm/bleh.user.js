@@ -1246,20 +1246,20 @@ const trans = {
             notifications: 'Read your notifications',
 
             test: 'TEST {involved}',
-            shout: 'You left a shout for {i}',
-            image_upload: 'You uploaded an image for {i}',
-            image_star: 'You starred an image for {i}',
-            obsess: 'You’re obsessed with {i}',
-            unobsess: 'You’re no longer obsessed with {i}',
-            love: 'You love {i}',
-            unlove: 'You no longer love {i}',
-            install_bwaa: 'You installed bwaa',
-            update_bwaa: 'You updated bwaa to {i}',
-            install_bleh: 'You installed bleh',
-            update_bleh: 'You updated bleh to {i}',
-            bookmark: 'You bookmarked {i}',
-            unbookmark: 'You removed {i}’s bookmark',
-            wiki: 'You edited on {i}'
+            shout: 'Shout',
+            image_upload: 'Uploaded image',
+            image_star: 'Starred image',
+            obsess: 'Obsessed',
+            unobsess: 'Removed obsession',
+            love: 'Loved',
+            unlove: 'Removed love',
+            install_bwaa: 'Installed bwaa',
+            update_bwaa: 'Updated bwaa',
+            install_bleh: 'Installed bleh',
+            update_bleh: 'Updated bleh',
+            bookmark: 'Saved image',
+            unbookmark: 'Removed saved image',
+            wiki: 'Edited wiki'
         },
         artist: {
             name: 'Artist',
@@ -7365,11 +7365,9 @@ let has_prompted_for_update = false;
                             involved_text = `${involved_text}<a class="involved--${involved.type}" href="${involved_link}">${involved.name}</a>`;
                     });
 
-                    let activity_text = trans[lang].activities[activity.type].replace('{i}', involved_text);
-
                     activity_item.innerHTML = (`
-                        <div class="title">${activity_text}</div>
-                        <div class="date">${moment(activity.date).fromNow(true)}</div>
+                        <div class="type">${trans[lang].activities[activity.type]}<div class="date">${moment(activity.date).fromNow(true)}</div></div>
+                        <div class="title">${involved_text}</div>
                     `);
 
                     recent_activity_section.appendChild(activity_item);
