@@ -164,6 +164,12 @@ let version = {
             default: true,
             name: 'Set colour based on avatar',
             date: '2025-01-23'
+        },
+        katsune: {
+            default: false,
+            name: 'katsune redesign',
+            date: '2025-01-25',
+            notice: 'This is very, very experimental ~w~'
         }
     }
 }
@@ -4644,6 +4650,8 @@ let has_prompted_for_update = false;
             }
         }
 
+        page_title();
+
         if (page.structure.indicator)
             page_indicator();
     }
@@ -4659,6 +4667,26 @@ let has_prompted_for_update = false;
         }
 
         checkup_page_structure();
+    }
+
+    function page_title() {
+        let title = page.structure.container.querySelector('.page-title');
+        if (!title) {
+            title = document.createElement('section');
+            title.classList.add('page-header');
+
+            page.structure.container.insertBefore(title, page.structure.container.firstElementChild);
+        }
+
+        title.setAttribute('data-page-type', page.type);
+        title.innerHTML = (`
+            <div class="page-header-icon">
+
+            </div>
+            <div class="page-header-title">
+                ${page.type}
+            </div>
+        `);
     }
 
     function page_indicator() {
@@ -5968,8 +5996,6 @@ let has_prompted_for_update = false;
 
     // patch last.fm settings
     function bleh_native_settings() {
-        register_background(auth.avatar);
-
         page.structure.container = document.body.querySelector('.page-content');
         try {
             page.structure.row = page.structure.container.querySelector('.row');
@@ -5985,6 +6011,8 @@ let has_prompted_for_update = false;
         checkup_page_structure(false, content_top);
         log('status is', 'page', 'info', page);
         update_page();
+
+        register_background(auth.avatar);
 
         if (page.subpage == 'overview') {
             patch_settings_profile_tab();
@@ -7020,7 +7048,7 @@ let has_prompted_for_update = false;
         page.requested.tab = params.get('tab');
         page.requested.page = params.get('page');
 
-        if (page.structure.container == null || !document.body.contains(page.structure.container)) {
+        if (!page.structure.container || !document.body.contains(page.structure.container)) {
             log('page missing container, creating', 'page structure');
             page.structure.container = document.createElement('div');
             page.structure.container.classList.add('page-content', 'container');
@@ -18633,12 +18661,29 @@ let has_prompted_for_update = false;
 
 
     function register_background(url) {
-        let background = document.body.querySelector('.bleh-background');
-        if (background == null) {
-            background = document.createElement('div');
-            background.classList.add('bleh-background');
+        let flag = ff('katsune');
 
-            document.body.appendChild(background);
+        let background;
+        if (flag) {
+            background = page.structure.container.querySelector('.bleh-background');
+            if (background == null) {
+                background = document.createElement('div');
+                background.classList.add('bleh-background', 'katsune-bleh-background');
+
+                let border = document.createElement('div');
+                border.classList.add('katsune-bleh-background-border');
+                background.appendChild(border);
+
+                page.structure.container.insertBefore(background, page.structure.container.firstElementChild);
+            }
+        } else {
+            background = document.body.querySelector('.bleh-background');
+            if (background == null) {
+                background = document.createElement('div');
+                background.classList.add('bleh-background');
+
+                document.body.appendChild(background);
+            }
         }
 
         background.setAttribute('data-page-type', page.type);
