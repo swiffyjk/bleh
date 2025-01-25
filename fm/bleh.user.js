@@ -528,7 +528,7 @@ const trans = {
             },
             scrobbles: 'Scrobbles',
             artists: 'Artists',
-            loved: 'Loved tracks',
+            loved: 'Loved',
             taste: 'Taste similarity',
             taste_meter: {
                 level: {
@@ -3660,6 +3660,8 @@ let settings_template = {
 
     api_key: '',
 
+    profile_header_expand: true,
+
     hide_hateful: true,
     accessible_name_colours: false,
     reduced_motion: false,
@@ -3775,6 +3777,13 @@ let settings_base = {
         unit: '',
         value: 0,
         type: 'slider'
+    },
+    profile_header_expand: {
+        css: 'profile_header_expand',
+        unit: '',
+        value: true,
+        values: [true, false],
+        type: 'toggle'
     },
     main_width: {
         css: 'main_width',
@@ -7246,6 +7255,8 @@ let has_prompted_for_update = false;
 
         let new_account = false;
 
+        let katsune = ff('katsune');
+
         if (ff('refreshed_nav')) {
             let avatar = profile_header.querySelector('.avatar');
             let title_wrap = profile_header.querySelector('.header-title-label-wrap');
@@ -7262,6 +7273,30 @@ let has_prompted_for_update = false;
                 title_wrap.querySelector('.header-title a').classList.add('bleh--name-is-cute');
             }
 
+
+            // acquire info
+            let scrobbles = 0;
+            let average = 0;
+            let artists = 0;
+            let loved = 0;
+
+            if (katsune) {
+                let metadata = profile_header.querySelectorAll('.header-metadata-display');
+                metadata.forEach((item, index) => {
+                    if (index == 0) {
+                        let para = item.querySelector('p');
+
+                        scrobbles = clean_number(para.textContent.trim());
+                        average = para.getAttribute('title');
+                    } else if (index == 1) {
+                        artists = clean_number(item.textContent.trim());
+                    } else if (index == 2) {
+                        loved = clean_number(item.textContent.trim());
+                    }
+                });
+            }
+
+
             let redesigned_profile_header = document.createElement('section');
             redesigned_profile_header.classList.add('redesigned-header', 'redesigned-profile-header', 'no-background');
             redesigned_profile_header.innerHTML = (`
@@ -7273,6 +7308,29 @@ let has_prompted_for_update = false;
                     ${(title_wrap != null) ? `<div class="title-container">${title_wrap.innerHTML}</div>` : ''}
                     ${(sub_wrap != null) ? sub_wrap.outerHTML : ''}
                 </div>
+                ${(katsune) ? (`
+                ${(!is_subpage) ? (`
+                <div class="stat-side glacier-library-top">
+                    <div class="glacier-library-metadata">
+                        <div class="glacier-library-metadata-item">
+                            <div class="sub-text">${trans[lang].profile.scrobbles}</div>
+                            <div class="glacier-library-metadata-item-value">${scrobbles}</div>
+                        </div>
+                        <div class="glacier-library-metadata-item">
+                            <div class="sub-text">${trans[lang].profile.artists}</div>
+                            <div class="glacier-library-metadata-item-value">${artists}</div>
+                        </div>
+                        <div class="glacier-library-metadata-item">
+                            <div class="sub-text">${trans[lang].profile.loved}</div>
+                            <div class="glacier-library-metadata-item-value">${loved}</div>
+                        </div>
+                    </div>
+                </div>
+                `) : ''}
+                <div class="expand-side">
+                    <button class="header-expand-button icon" onclick="_toggle_profile_header(this)" aria-expanded="${settings.profile_header_expand}">${trans[lang].gallery.open.name}</button>
+                </div>
+                `) : ''}
             `);
 
             // staff
@@ -7810,35 +7868,50 @@ let has_prompted_for_update = false;
         }
     }
 
+    unsafeWindow._toggle_profile_header = function(button) {
+        let current = settings.profile_header_expand;
+
+        settings.profile_header_expand = !current;
+        button.setAttribute('aria-expanded', !current);
+
+        document.documentElement.setAttribute('data-bleh--profile_header_expand', !current);
+
+        // save to settings
+        localStorage.setItem('bleh', JSON.stringify(settings));
+    }
+
     function redesign_profile_header(is_own_profile) {
         let base_header = document.body.querySelector('.header-info-secondary');
 
         if (base_header == null)
             return;
 
+        let katsune = ff('katsune');
+
         let header_meta = base_header.querySelector('.header-metadata');
         header_meta.classList.add('profile-header-metadata-legacy');
 
         // acquire info
-        let metadata = header_meta.querySelectorAll('.header-metadata-display');
-
         let scrobbles = 0;
         let average = 0;
         let artists = 0;
         let loved = 0;
 
-        metadata.forEach((item, index) => {
-            if (index == 0) {
-                let para = item.querySelector('p');
+        if (!katsune) {
+            let metadata = header_meta.querySelectorAll('.header-metadata-display');
+            metadata.forEach((item, index) => {
+                if (index == 0) {
+                    let para = item.querySelector('p');
 
-                scrobbles = clean_number(para.textContent.trim());
-                average = para.getAttribute('title');
-            } else if (index == 1) {
-                artists = clean_number(item.textContent.trim());
-            } else if (index == 2) {
-                loved = clean_number(item.textContent.trim());
-            }
-        });
+                    scrobbles = clean_number(para.textContent.trim());
+                    average = para.getAttribute('title');
+                } else if (index == 1) {
+                    artists = clean_number(item.textContent.trim());
+                } else if (index == 2) {
+                    loved = clean_number(item.textContent.trim());
+                }
+            });
+        }
 
 
         // taste
@@ -7870,8 +7943,15 @@ let has_prompted_for_update = false;
 
 
         // create new
-        let profile_header = document.createElement('div');
-        profile_header.classList.add('profile-top-header', 'view-buttons');
+        let profile_header;
+
+        if (katsune) {
+            profile_header = document.createElement('section');
+            profile_header.classList.add('profile-top-header', 'katsune-button-row');
+        } else {
+            profile_header = document.createElement('div');
+            profile_header.classList.add('profile-top-header', 'view-buttons');
+        }
 
         if (!is_own_profile) {
             // follow
@@ -7879,7 +7959,7 @@ let has_prompted_for_update = false;
 
             if (follow_wrap != null) {
                 let follow_btn = follow_wrap.querySelector('button');
-                follow_btn.classList.add('btn', 'profile-top-item', 'profile-top-item--follow', 'view-item');
+                follow_btn.classList.add('btn', 'profile-top-item', 'profile-top-item--follow', 'view-item', (katsune) ? 'icon' : '');
                 follow_btn.classList.remove('toggle-button', 'header-follower-btn');
                 profile_header.appendChild(follow_wrap);
 
@@ -7895,7 +7975,7 @@ let has_prompted_for_update = false;
             } else {
                 // ignore list
                 let follow_placeholder = document.createElement('button');
-                follow_placeholder.classList.add('btn', 'profile-top-item', 'profile-top-item--follow', 'view-item');
+                follow_placeholder.classList.add('btn', 'profile-top-item', 'profile-top-item--follow', 'view-item', (katsune) ? 'icon' : '');
                 follow_placeholder.textContent = trans[lang].profile.cannot_follow_user;
 
                 follow_placeholder.setAttribute('data-ignored', 'true');
@@ -7915,7 +7995,8 @@ let has_prompted_for_update = false;
                     link: '_sponsor()',
                     full: true,
                     action: 'button',
-                    primary: true
+                    primary: true,
+                    katsune: katsune
                 });
             }
 
@@ -7927,7 +8008,8 @@ let has_prompted_for_update = false;
                     create_profile_top_item(profile_header, {
                         name: page.name,
                         type: 'message',
-                        link: msg_button.getAttribute('href')
+                        link: msg_button.getAttribute('href'),
+                        katsune: katsune
                     });
                 } else {
                     create_profile_top_item(profile_header, {
@@ -7936,14 +8018,16 @@ let has_prompted_for_update = false;
                         link: '_sponsor()',
                         full: true,
                         action: 'button',
-                        primary: true
+                        primary: true,
+                        katsune: katsune
                     });
                     create_profile_top_item(profile_header, {
                         name: page.name,
                         type: 'message_sponsor',
                         link: msg_button.getAttribute('href'),
                         full: true,
-                        primary: true
+                        primary: true,
+                        katsune: katsune
                     });
                 }
             }
@@ -7955,7 +8039,8 @@ let has_prompted_for_update = false;
                     name: page.name,
                     type: 'shortcut',
                     link: `_set_profile_as_shortcut(this, '${page.name}')`,
-                    action: 'button'
+                    action: 'button',
+                    katsune: katsune
                 });
             }
         } else {
@@ -7963,11 +8048,12 @@ let has_prompted_for_update = false;
             create_profile_top_item(profile_header, {
                 name: page.name,
                 type: 'edit',
-                link: `${root}settings`
+                link: `${root}settings`,
+                katsune: katsune
             });
         }
 
-        if (page.name != sponsor_list.sponsor_account) {
+        if (page.name != sponsor_list.sponsor_account && !katsune) {
             let listen_divider = document.createElement('div');
             listen_divider.classList.add('listen-divider');
 
@@ -8019,13 +8105,17 @@ let has_prompted_for_update = false;
             }
         }
 
-        if (ff('refreshed_nav'))
-            page.structure.container.querySelector('.redesigned-profile-header .info-side').appendChild(profile_header);
-        else
-            base_header.appendChild(profile_header);
+        if (katsune) {
+            page.structure.container.querySelector('.redesigned-profile-header').after(profile_header);
+        } else {
+            if (ff('refreshed_nav'))
+                page.structure.container.querySelector('.redesigned-profile-header .info-side').appendChild(profile_header);
+            else
+                base_header.appendChild(profile_header);
+        }
     }
 
-    function create_profile_top_item(parent, {name, link, text='', type, taste='', artists=[], avi='', percent='', action='', tooltip='', allow_html=false, tooltip_theme='', full=false, primary=false}) {
+    function create_profile_top_item(parent, {name, link, text='', type, taste='', artists=[], avi='', percent='', action='', tooltip='', allow_html=false, tooltip_theme='', full=false, primary=false, katsune=false}) {
         log(`creating top item of ${name}, ${link}, ${text}`, 'profile');
 
         let listen_item = document.createElement((action != 'button') ? 'a' : 'button');
@@ -8059,6 +8149,11 @@ let has_prompted_for_update = false;
             `);
         }
 
+        if (katsune) {
+            full = true;
+            listen_item.classList.add('icon');
+        }
+
         if (full) {
             listen_item.classList.add('profile-top-item-full');
             listen_item.textContent = trans[lang].profile[type];
@@ -8073,11 +8168,17 @@ let has_prompted_for_update = false;
                 tippy(listen_item, {
                     content: trans[lang].profile.shortcut.remove
                 });
+
+                if (katsune)
+                    listen_item.textContent = trans[lang].profile.shortcut.remove;
             } else {
                 listen_item.setAttribute('data-is-shortcut', 'false');
                 tippy(listen_item, {
                     content: trans[lang].profile.shortcut.add
                 });
+
+                if (katsune)
+                    listen_item.textContent = trans[lang].profile.shortcut.add;
             }
 
             let menu = tippy(listen_item, {
@@ -14327,6 +14428,9 @@ let has_prompted_for_update = false;
         button.removeAttribute('onclick');
         // this breaks the configure menu
         //button._tippy.setContent(trans[lang].profile.shortcut.remove);
+
+        if (button.classList.contains('icon'))
+            button.textContent = trans[lang].profile.shortcut.remove;
 
         // save to settings
         settings.profile_shortcut = profile_name;

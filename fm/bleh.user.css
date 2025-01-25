@@ -662,8 +662,8 @@ body {
     --icon-16-calendar-add: url('data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz48c3ZnIHdpZHRoPSIxOHB4IiBoZWlnaHQ9IjE4cHgiIHZpZXdCb3g9IjAgMCAyNCAyNCIgc3Ryb2tlLXdpZHRoPSIyLjIiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgY29sb3I9IiMwMDAwMDAiIHN0eWxlPSItLWRhcmtyZWFkZXItaW5saW5lLWNvbG9yOiB2YXIoLS1kYXJrcmVhZGVyLXRleHQtMDAwMDAwLCAjZThlNmUzKTsiIGRhdGEtZGFya3JlYWRlci1pbmxpbmUtY29sb3I9IiI+PHBhdGggZD0iTTEzIDIxSDVDMy44OTU0MyAyMSAzIDIwLjEwNDYgMyAxOVYxMEgyMVYxM00xNSA0VjJNMTUgNFY2TTE1IDRIMTAuNSIgc3Ryb2tlPSIjMDAwMDAwIiBzdHJva2Utd2lkdGg9IjIuMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiBzdHlsZT0iLS1kYXJrcmVhZGVyLWlubGluZS1zdHJva2U6ICMwMDAwMDA7IiBkYXRhLWRhcmtyZWFkZXItaW5saW5lLXN0cm9rZT0iIj48L3BhdGg+PHBhdGggZD0iTTMgMTBWNkMzIDQuODk1NDMgMy44OTU0MyA0IDUgNEg3IiBzdHJva2U9IiMwMDAwMDAiIHN0cm9rZS13aWR0aD0iMi4yIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIHN0eWxlPSItLWRhcmtyZWFkZXItaW5saW5lLXN0cm9rZTogIzAwMDAwMDsiIGRhdGEtZGFya3JlYWRlci1pbmxpbmUtc3Ryb2tlPSIiPjwvcGF0aD48cGF0aCBkPSJNNyAyVjYiIHN0cm9rZT0iIzAwMDAwMCIgc3Ryb2tlLXdpZHRoPSIyLjIiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgc3R5bGU9Ii0tZGFya3JlYWRlci1pbmxpbmUtc3Ryb2tlOiAjMDAwMDAwOyIgZGF0YS1kYXJrcmVhZGVyLWlubGluZS1zdHJva2U9IiI+PC9wYXRoPjxwYXRoIGQ9Ik0yMSAxMFY2QzIxIDQuODk1NDMgMjAuMTA0NiA0IDE5IDRIMTguNSIgc3Ryb2tlPSIjMDAwMDAwIiBzdHJva2Utd2lkdGg9IjIuMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiBzdHlsZT0iLS1kYXJrcmVhZGVyLWlubGluZS1zdHJva2U6ICMwMDAwMDA7IiBkYXRhLWRhcmtyZWFkZXItaW5saW5lLXN0cm9rZT0iIj48L3BhdGg+PHBhdGggZD0iTTE1Ljk5MjIgMTlIMTguOTkyMk0yMiAxOUgxOC45OTIyTTE4Ljk5MjIgMTlWMTZNMTguOTkyMiAxOVYyMiIgc3Ryb2tlPSIjMDAwMDAwIiBzdHJva2Utd2lkdGg9IjIuMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiBzdHlsZT0iLS1kYXJrcmVhZGVyLWlubGluZS1zdHJva2U6ICMwMDAwMDA7IiBkYXRhLWRhcmtyZWFkZXItaW5saW5lLXN0cm9rZT0iIj48L3BhdGg+PC9zdmc+');
     --icon-16-calendar-edit: var(--icon-16-edit);
     --icon-16-listening-report-weekly: var(--icon-16-chart-line);
-    --icon-16-listening-report-monthly: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyLjUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgY2xhc3M9Imx1Y2lkZSBsdWNpZGUtYXJlYS1jaGFydCI+PHBhdGggZD0iTTMgM3YxOGgxOCIvPjxwYXRoIGQ9Ik03IDEydjVoMTJWOGwtNSA1LTQtNFoiLz48L3N2Zz4=');
-    --icon-16-listening-report-yearly: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyLjUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgY2xhc3M9Imx1Y2lkZSBsdWNpZGUtcGllLWNoYXJ0Ij48cGF0aCBkPSJNMjEuMjEgMTUuODlBMTAgMTAgMCAxIDEgOCAyLjgzIi8+PHBhdGggZD0iTTIyIDEyQTEwIDEwIDAgMCAwIDEyIDJ2MTB6Ii8+PC9zdmc+');
+    --icon-16-listening-report-monthly: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxOCIgaGVpZ2h0PSIxOCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyLjUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgY2xhc3M9Imx1Y2lkZSBsdWNpZGUtY2hhcnQtYXJlYSI+PHBhdGggZD0iTTMgM3YxNmEyIDIgMCAwIDAgMiAyaDE2Ii8+PHBhdGggZD0iTTcgMTEuMjA3YS41LjUgMCAwIDEgLjE0Ni0uMzUzbDItMmEuNS41IDAgMCAxIC43MDggMGwzLjI5MiAzLjI5MmEuNS41IDAgMCAwIC43MDggMGw0LjI5Mi00LjI5MmEuNS41IDAgMCAxIC44NTQuMzUzVjE2YTEgMSAwIDAgMS0xIDFIOGExIDEgMCAwIDEtMS0xeiIvPjwvc3ZnPg==');
+    --icon-16-listening-report-yearly: var(--icon-16-chart-pie);
     --icon-16-medal: url('data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz48c3ZnIHdpZHRoPSIxOHB4IiBoZWlnaHQ9IjE4cHgiIHN0cm9rZS13aWR0aD0iMi4yIiB2aWV3Qm94PSIwIDAgMjQgMjQiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgY29sb3I9IiMwMDAwMDAiIHN0eWxlPSItLWRhcmtyZWFkZXItaW5saW5lLWNvbG9yOiB2YXIoLS1kYXJrcmVhZGVyLXRleHQtMDAwMDAwLCAjZThlNmUzKTsiIGRhdGEtZGFya3JlYWRlci1pbmxpbmUtY29sb3I9IiI+PHBhdGggZD0iTTE0LjI3MTggMTAuNDQ1TDE4IDJNOS4zMTYxMiAxMC42MzIzTDUgMk0xMi43NjE1IDEwLjA0NzlMOC44MzUgMk0xNC4zNiAyTDEzLjMyIDQuNU02IDE2QzYgMTkuMzEzNyA4LjY4NjI5IDIyIDEyIDIyQzE1LjMxMzcgMjIgMTggMTkuMzEzNyAxOCAxNkMxOCAxMi42ODYzIDE1LjMxMzcgMTAgMTIgMTBDOC42ODYyOSAxMCA2IDEyLjY4NjMgNiAxNloiIHN0cm9rZT0iIzAwMDAwMCIgc3Ryb2tlLXdpZHRoPSIyLjIiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgc3R5bGU9Ii0tZGFya3JlYWRlci1pbmxpbmUtc3Ryb2tlOiAjMDAwMDAwOyIgZGF0YS1kYXJrcmVhZGVyLWlubGluZS1zdHJva2U9IiI+PC9wYXRoPjwvc3ZnPg==');
     --icon-16-info: url('data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz48c3ZnIHdpZHRoPSIxOHB4IiBoZWlnaHQ9IjE4cHgiIHN0cm9rZS13aWR0aD0iMi4yIiB2aWV3Qm94PSIwIDAgMjQgMjQiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgY29sb3I9IiMwMDAwMDAiIHN0eWxlPSItLWRhcmtyZWFkZXItaW5saW5lLWNvbG9yOiB2YXIoLS1kYXJrcmVhZGVyLXRleHQtMDAwMDAwLCAjZThlNmUzKTsiIGRhdGEtZGFya3JlYWRlci1pbmxpbmUtY29sb3I9IiI+PHBhdGggZD0iTTEyIDExLjVWMTYuNSIgc3Ryb2tlPSIjMDAwMDAwIiBzdHJva2Utd2lkdGg9IjIuMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiBzdHlsZT0iLS1kYXJrcmVhZGVyLWlubGluZS1zdHJva2U6ICMwMDAwMDA7IiBkYXRhLWRhcmtyZWFkZXItaW5saW5lLXN0cm9rZT0iIj48L3BhdGg+PHBhdGggZD0iTTEyIDcuNTFMMTIuMDEgNy40OTg4OSIgc3Ryb2tlPSIjMDAwMDAwIiBzdHJva2Utd2lkdGg9IjIuMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiBzdHlsZT0iLS1kYXJrcmVhZGVyLWlubGluZS1zdHJva2U6ICMwMDAwMDA7IiBkYXRhLWRhcmtyZWFkZXItaW5saW5lLXN0cm9rZT0iIj48L3BhdGg+PHBhdGggZD0iTTEyIDIyQzE3LjUyMjggMjIgMjIgMTcuNTIyOCAyMiAxMkMyMiA2LjQ3NzE1IDE3LjUyMjggMiAxMiAyQzYuNDc3MTUgMiAyIDYuNDc3MTUgMiAxMkMyIDE3LjUyMjggNi40NzcxNSAyMiAxMiAyMloiIHN0cm9rZT0iIzAwMDAwMCIgc3Ryb2tlLXdpZHRoPSIyLjIiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgc3R5bGU9Ii0tZGFya3JlYWRlci1pbmxpbmUtc3Ryb2tlOiAjMDAwMDAwOyIgZGF0YS1kYXJrcmVhZGVyLWlubGluZS1zdHJva2U9IiI+PC9wYXRoPjwvc3ZnPg==');
     --icon-16-revert: var(--icon-16-refresh);
@@ -6042,7 +6042,7 @@ button,
     background-repeat: repeat-x !important;
     background-position: unset !important;
 
-    &[aria-expanded="true"]:not(.delete-icon),
+    &[aria-expanded="true"]:not(.delete-icon, .header-expand-button),
     &:is(.gallery-next, .gallery-previous):hover .arrow,
     &:hover {
         background: var(--bg-hov) !important;
@@ -6120,7 +6120,8 @@ button,
         #manage_data .btn-primary,
         .primary,
         .btn-subscribe,
-        .listening-report-promo--year
+        .listening-report-promo--year,
+        [data-toggle-button-current-state="followed"] &.profile-top-item--follow.icon, .profile-top-item--shortcut.icon&[data-is-shortcut="true"]
     ) {
         --bg: var(--cards-overlay-image-subtlest, none), hsl(var(--h3)) !important;
         --bg-hov: var(--cards-overlay-image-subtlest, none), hsl(var(--h3), 80%) !important;
@@ -18115,10 +18116,10 @@ h4 {
     [data-ff--katsune="true"] &:not(.about-artist-panel) {
         background: hsl(var(--b5)) !important;
         margin: unset !important;
-        padding: var(--card-gap) calc(var(--card-gap) + var(--card-padding)) !important;
+        padding: var(--card-padding) calc(var(--card-gap) + var(--card-padding)) !important;
         box-shadow: 0 0 0 1px var(--card-border-base) inset, var(--card-shadow);
 
-        .sub-text {
+        .info-side .sub-text {
             display: none;
         }
 
@@ -18127,14 +18128,59 @@ h4 {
         }
 
         &.redesigned-profile-header {
+            align-items: center;
+
             .avatar-side {
-                margin-top: -81px;
+                --avatar-size: 129px !important;
+                margin-top: -81px !important;
+
+                transition-property: width, height, margin, transform;
+                transition-duration: 0.45s;
+                transition-timing-function: cubic-bezier(0.165, 0.84, 0.44, 1);
+            }
+
+            [data-bleh--profile_header_expand="false"] & {
+                margin-top: -1px !important;
+                transition: margin 0.45s cubic-bezier(0.165, 0.84, 0.44, 1);
+
+                .avatar-side {
+                    margin: -5px 0 !important;
+                    --avatar-size: 64px !important;
+                }
             }
 
             /* todo: remove */
-            /*.profile-top-header {
+            .profile-top-header {
                 display: none;
-            }*/
+            }
+        }
+
+        .expand-side {
+            .header-expand-button {
+                --font-size: 0;
+                --padding: 7px 12px !important;
+                min-width: 42px !important;
+                height: 40px !important;
+
+                --bg: transparent;
+                --bg-hov: hsl(var(--b4), 60%);
+                --bg-atv: hsl(var(--b4), 80%);
+                --shadow: none;
+
+                --mask: var(--icon-16-arrow-up);
+
+                &:before {
+                    transition-property: transform !important;
+                    transition-duration: var(--trans) !important;
+                    transition-timing-function: var(--trans-function) !important;
+                }
+
+                &[aria-expanded="false"] {
+                    &:before {
+                        transform: scaleY(-1) !important;
+                    }
+                }
+            }
         }
     }
 
@@ -18521,6 +18567,10 @@ section > .section-controls .subpage-title {
         height: 250px;
         background-position: 0 40%;
 
+        transition-property: opacity, height;
+        transition-duration: 0.45s;
+        transition-timing-function: cubic-bezier(0.165, 0.84, 0.44, 1);
+
         &:before {
             content: '';
             position: absolute;
@@ -18543,6 +18593,65 @@ section > .section-controls .subpage-title {
         &[data-page-type="settings"] {
             display: none;
         }
+
+        &[data-page-type="user"] {
+            [data-bleh--profile_header_expand="false"] & {
+                opacity: 0;
+                height: 0;
+            }
+        }
+    }
+}
+
+.katsune-button-row {
+    margin: -1px 0 0 0;
+    padding: var(--card-gap) calc(var(--card-gap) + 8px);
+    background: hsl(var(--b5), 50%);
+    box-shadow: 0 0 0 1px var(--card-border-base) inset, var(--card-shadow);
+
+    display: flex;
+    gap: var(--button-list-gap);
+
+    .profile-top-item--message {
+        --mask: var(--icon-16-mail);
+    }
+    .profile-top-item--shortcut {
+        --mask: var(--icon-16-profile-shortcut);
+
+        &[data-is-shortcut="false"] {
+            --mask: var(--icon-16-unlink);
+        }
+    }
+    .profile-top-item--follow {
+        --mask: var(--icon-16-plus);
+
+        &[data-ignored="true"] {
+            --mask: var(--icon-16-block);
+            --col: hsl(var(--c3)) !important;
+        }
+
+        [data-toggle-button-current-state="followed"] & {
+            --mask: var(--icon-16-check);
+        }
+
+        .header-inner-wrap:has(.header-info .user-follow) [data-toggle-button-current-state="followed"] & {
+            --mask: var(--icon-16-heart-solid) !important;
+        }
+    }
+    .profile-top-item--edit {
+        --mask: var(--icon-16-edit);
+    }
+    .profile-top-item--sponsor {
+        --mask: var(--icon-16-heart);
+        --hue-over: 333;
+        --sat-over: 1;
+        --lit-over: 1;
+    }
+    .profile-top-item--message_sponsor {
+        --mask: var(--icon-16-heart-solid);
+        --hue-over: 333;
+        --sat-over: 1;
+        --lit-over: 1;
     }
 }
 
