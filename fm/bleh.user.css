@@ -2132,7 +2132,11 @@ spacing between is removed and aligned to tag icon */
         }
 
         & > .redesigned-content-top {
-            display: none;
+            margin-top: calc(-1 * var(--card-gap)) !important;
+
+            h1 {
+                display: none;
+            }
         }
     }
 }
@@ -18127,9 +18131,9 @@ h4 {
             }
 
             /* todo: remove */
-            .profile-top-header {
+            /*.profile-top-header {
                 display: none;
-            }
+            }*/
         }
     }
 
