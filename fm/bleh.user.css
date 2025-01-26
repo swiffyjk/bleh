@@ -18454,6 +18454,8 @@ section > .section-controls .subpage-title {
             z-index: 5;
             position: relative;
 
+            gap: calc(var(--card-gap) + var(--card-padding));
+
             .avatar-side {
                 --avatar-size: 150px !important;
                 margin: unset;
