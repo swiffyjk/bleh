@@ -18542,6 +18542,8 @@ section > .section-controls .subpage-title {
                     border-radius: 50px;
                     background-color: hsl(var(--h3));
                     box-shadow: 0 2px 3px 0 hsl(var(--h4), 25%);
+
+                    animation: progress 3s cubic-bezier(0.77, 0.22, 0.18, 1) infinite;
                 }
             }
         }
@@ -18719,6 +18721,15 @@ section > .section-controls .subpage-title {
         --hue-over: 333;
         --sat-over: 1;
         --lit-over: 1;
+    }
+}
+
+@keyframes progress {
+    from, to {
+        filter: brightness(100%);
+    }
+    50% {
+        filter: brightness(132%);
     }
 }
 
