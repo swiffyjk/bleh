@@ -7346,10 +7346,14 @@ let has_prompted_for_update = false;
             if (settings.profile_avi_background) {
                 if (avatar != null)
                     register_background(avatar.querySelector('img').getAttribute('src'));
+                else
+                    register_background(null);
             } else {
                 let background = document.body.querySelector('.header-background--has-image');
                 if (background != null)
                     register_background(background.style.getPropertyValue('background-image').replace('url("', '').replace('")', ''));
+                else
+                    register_background(null);
             }
 
             page.structure.container.insertBefore(redesigned_profile_header, page.structure.container.firstElementChild);
