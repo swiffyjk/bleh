@@ -100,3 +100,5 @@ with open('bleh.user.js', 'w') as file:
 
     # END
     file.write('})();')
+
+print('Built successfully!')
