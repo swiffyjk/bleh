@@ -1,0 +1,469 @@
+// create blank settings
+function create_settings_template() {
+    localStorage.setItem('bleh', JSON.stringify(settings_template));
+    return settings_template;
+}
+
+// load settings
+function load_settings(skip = false) {
+    if (!skip)
+        settings = JSON.parse(localStorage.getItem('bleh')) || create_settings_template();
+
+    // missing? set to default value
+    for (let setting in settings_template)
+        if (settings[setting] == undefined)
+            settings[setting] = settings_template[setting];
+
+    // todo: remove
+    if (settings.dev == 1)
+        settings.dev = true;
+
+    // save setting into body
+    for (let setting in settings) {
+        if (
+            (setting == 'hue' || setting == 'sat' || setting == 'lit') &&
+            settings.hue == settings_base.hue.value &&
+            settings.sat == settings_base.sat.value &&
+            settings.lit == settings_base.lit.value
+        ) continue;
+
+        try {
+            document.body.style.setProperty(`--${settings_base[setting].css}`, `${settings[setting]}${settings_base[setting].unit}`);
+        } catch(e) {
+            console.log('bleh - setting base entry for', setting, 'is not accessible');
+        }
+        document.documentElement.setAttribute(`data-bleh--${setting}`, `${settings[setting]}`);
+    }
+
+    load_skus();
+
+    // save to settings
+    localStorage.setItem('bleh', JSON.stringify(settings));
+
+    // override theme when browsing listening reports
+    if (document.body.classList.contains('user-dashboard-layout')) {
+        document.documentElement.setAttribute('data-bleh--theme', 'oled');
+        page.state.settings_reload = true;
+    }
+
+    load_chart_colours();
+}
+
+// theme
+unsafeWindow.toggle_theme = function() {
+    if (page.subpage.startsWith('listening-report'))
+        return;
+
+    let current_theme = settings.theme;
+
+    if (current_theme == 'dark')
+        current_theme = 'darker';
+    else if (current_theme == 'darker')
+        current_theme = 'oled';
+    else if (current_theme == 'oled' || current_theme == 'classic')
+        current_theme = 'light';
+    else if (current_theme == 'light')
+        current_theme = 'dark';
+
+    show_theme_change_in_menu(current_theme);
+
+    // save value
+    settings.theme = current_theme;
+    document.documentElement.setAttribute(`data-bleh--theme`, `${current_theme}`);
+
+    // save to settings
+    localStorage.setItem('bleh', JSON.stringify(settings));
+
+    load_chart_colours();
+
+    // trigger re-flow of chart
+    if ((page.type == 'artist' || page.type == 'album' || page.type == 'track') && page.subpage == 'overview')
+        bleh_music_page_charts();
+
+    if (page.type == 'user' && page.subpage.startsWith('library')) {
+        bleh_glacier_date_graph_generate();
+        bleh_glacier_insights();
+    }
+}
+
+unsafeWindow.change_theme_from_settings = function(theme) {
+    // save value
+    settings.theme = theme;
+    document.documentElement.setAttribute(`data-bleh--theme`, `${theme}`);
+
+    // show in settings
+    show_theme_change_in_settings(theme);
+    show_theme_change_in_menu(theme);
+
+    // save to settings
+    localStorage.setItem('bleh', JSON.stringify(settings));
+}
+unsafeWindow.change_theme_from_menu = function(theme) {
+    if (page.subpage.startsWith('listening-report'))
+        return;
+
+    // save value
+    settings.theme = theme;
+    document.documentElement.setAttribute(`data-bleh--theme`, `${theme}`);
+
+    // show in settings
+    show_theme_change_in_menu(theme);
+
+    // save to settings
+    localStorage.setItem('bleh', JSON.stringify(settings));
+
+    load_chart_colours();
+
+    // trigger re-flow of chart
+    if ((page.type == 'artist' || page.type == 'album' || page.type == 'track') && page.subpage == 'overview')
+        bleh_music_page_charts();
+
+    if (page.type == 'user' && page.subpage.startsWith('library')) {
+        bleh_glacier_date_graph_generate();
+        bleh_glacier_insights();
+    }
+}
+
+
+// settings-page specific
+function reset_all() {
+    for (let item in settings_base)
+        reset_item(item);
+}
+
+function refresh_all(search = document) {
+    for (let item in settings_base)
+        update_item(item, settings[item], false, search);
+}
+
+function reset_item(item) {
+    update_item(item, settings_base[item].value);
+}
+
+function update_params(params={}) {
+    for (let item in params) {
+        update_item(item, params[item]);
+    }
+}
+
+unsafeWindow._reset_all = function() {
+    reset_all();
+}
+unsafeWindow._reset_item = function(item) {
+    reset_item(item);
+}
+unsafeWindow._update_params = function(params={}) {
+    update_params(params);
+}
+unsafeWindow._update_item = function(item, value) {
+    update_item(item, value);
+}
+
+function update_item(item, value, modify=true, search = document) {
+    let container = search.querySelector(`#container-${item}`);
+
+    if (container)
+        console.info(container);
+    else if (settings_base[item].type != 'slider' && settings_base[item].type != 'options')
+        return;
+
+    try {
+    // is this a new value?
+    let new_value = false;
+    if (value != settings[item])
+        new_value = true;
+
+    if (settings_base[item].require_reload && new_value)
+        request_reload();
+
+
+    if (settings_base[item].type == 'slider' && modify)
+        settings[item] = value;
+
+    if (!modify)
+        console.info(item, value, modify);
+
+    if (settings_base[item].type == 'slider') {
+        // text to show current slider value
+        try {
+            let slider = search.querySelector(`#slider-${item}`);
+
+            search.querySelector(`#value-${item}`).textContent = `${settings[item]}${settings_base[item].unit}`;
+            slider.value = settings[item];
+            search.querySelector(`#slider-track-${item}`).style.setProperty('--percent', `${(settings[item] / (slider.getAttribute('max'))) * 100}%`);
+        } catch(e) {}
+
+        // save setting into body
+        document.body.style.setProperty(`--${settings_base[item].css}`, `${value}${settings_base[item].unit}`);
+        document.documentElement.setAttribute(`data-bleh--${item}`, `${value}`);
+
+        if (item == 'hue' || item == 'sat' || item == 'lit') {
+            if (settings.hue == settings_base.hue.value &&
+                settings.sat == settings_base.sat.value &&
+                settings.lit == settings_base.lit.value &&
+                settings.seasonal && stored_season.id != 'none'
+            ) {
+                document.body.style.removeProperty(`--${settings_base.hue.css}`);
+                document.body.style.removeProperty(`--${settings_base.sat.css}`);
+                document.body.style.removeProperty(`--${settings_base.lit.css}`);
+                document.documentElement.setAttribute('data-bleh--hsl-override', 'true');
+            } else {
+                document.documentElement.setAttribute('data-bleh--hsl-override', 'false');
+            }
+        }
+    } else if (settings_base[item].type == 'toggle') {
+        if (settings[item] == settings_base[item].values[0] && modify) {
+            settings[item] = settings_base[item].values[1];
+            search.querySelector(`#toggle-${item}`).setAttribute('aria-checked',false);
+
+            // save setting into body
+            document.body.style.setProperty(`--${item}`,settings_base[item].values[1]);
+            document.documentElement.setAttribute(`data-bleh--${item}`, `${settings_base[item].values[1]}`);
+        } else if (modify) {
+            settings[item] = settings_base[item].values[0];
+            console.log(`toggle-${item}`);
+            search.querySelector(`#toggle-${item}`).setAttribute('aria-checked',true);
+
+
+            if (item == 'dev') {
+                dialog_legacy('prompt_dev',trans[lang].settings.performance.dev.name,`
+                    <p class="alert alert-info">${trans[lang].settings.performance.dev.modals.prompt.alert}</p>
+                    <br>
+                    ${trans[lang].settings.performance.dev.modals.prompt.stylus}
+                    <br>
+                    <div class="browser-choices">
+                        <button class="btn browser" onclick="_chosen_chrome()">
+                            <img class="browser-icon" src="https://cutensilly.org/img/chrome.png">
+                            <p>${trans[lang].settings.performance.dev.modals.prompt.browsers.chrome.name}</p>
+                            <p class="caption">${trans[lang].settings.performance.dev.modals.prompt.browsers.chrome.bio}</p>
+                        </button>
+                        <button class="btn browser" onclick="_chosen_firefox()">
+                            <img class="browser-icon" src="https://cutensilly.org/img/firefox.png">
+                            <p>${trans[lang].settings.performance.dev.modals.prompt.browsers.firefox.name}</p>
+                            <p class="caption">${trans[lang].settings.performance.dev.modals.prompt.browsers.firefox.bio}</p>
+                        </button>
+                    </div>
+                `, true);
+            }
+
+            // save setting into body
+            document.body.style.setProperty(`--${item}`,settings_base[item].values[0]);
+            document.documentElement.setAttribute(`data-bleh--${item}`, `${settings_base[item].values[0]}`);
+        } else {
+            // dont modify, just show
+            if (settings[item] == settings_base[item].values[0]) {
+                search.querySelector(`#toggle-${item}`).setAttribute('aria-checked',true);
+            } else {
+                search.querySelector(`#toggle-${item}`).setAttribute('aria-checked',false);
+            }
+        }
+    } else if (settings_base[item].type == 'options') {
+        if (modify) {
+            settings[item] = value;
+
+            // save setting into body
+            document.body.style.setProperty(`--${item}`, value);
+            document.documentElement.setAttribute(`data-bleh--${item}`, value);
+
+            let toggle = document.getElementById(`toggle-${item}-${value}`);
+            if (toggle)
+                toggle.setAttribute('aria-checked', true);
+
+            let other_toggles = search.querySelectorAll(`[data-toggle="${item}"]`);
+            other_toggles.forEach((toggle) => {
+                let other_value = toggle.getAttribute('data-toggle-value');
+                if (other_value == value)
+                    return;
+                else
+                    toggle.setAttribute('aria-checked', false);
+            });
+
+
+            // re-flow chart
+            if ((item == 'chart_view' || item == 'chart_bar_axis') && page.type == 'user' && page.subpage.startsWith('library'))
+                bleh_glacier_date_graph_generate();
+        } else {
+            // dont modify, just show
+            if (settings[item] == value) {
+                document.getElementById(`toggle-${item}-${value}`).setAttribute('aria-checked', true);
+            } else {
+                document.getElementById(`toggle-${item}-${value}`).setAttribute('aria-checked', false);
+            }
+        }
+    }
+
+    if (modify)
+        log(`updated ${item} to ${settings[item]}`, 'settings');
+
+    // save to settings
+    localStorage.setItem('bleh', JSON.stringify(settings));
+    } catch(e) {console.error(e)}
+
+    if (container) {
+        if (settings[item] != settings_base[item].value)
+            container.classList.add('modified');
+        else
+            container.classList.remove('modified');
+    }
+
+    /*if (item.startsWith('seasonal') && modify) {
+        page.structure.main.innerHTML = render_setting_page('customise');
+        refresh_all();
+    }*/
+
+    if (item == 'hue' || item == 'sat' || item == 'lit') {
+        update_colour_swatches();
+        load_chart_colours();
+    }
+}
+
+function request_reload() {
+    if (page.type == 'bleh_setup')
+        return;
+
+    log('requesting reload', 'settings');
+    reload_pending = true;
+    notify({
+        title: trans[lang].settings.reload.name,
+        body: trans[lang].settings.reload.body,
+        icon: 'icon-16-refresh',
+        persist: true,
+        action: '_invoke_reload()'
+    });
+}
+unsafeWindow._invoke_reload = function() {
+    invoke_reload();
+}
+function invoke_reload() {
+    window.location.reload();
+}
+
+function update_colour_swatches() {
+    let found = false;
+    let custom = null;
+    let seasonal = null;
+
+    let swatches = document.querySelectorAll('.swatch');
+    swatches.forEach((swatch) => {
+        let h = swatch.style.getPropertyValue('--hue-over');
+        let s = swatch.style.getPropertyValue('--sat-over');
+        let l = swatch.style.getPropertyValue('--lit-over');
+
+        if (
+            (h == settings.hue && s == settings.sat && l == settings.lit) ||
+            (swatch.getAttribute('data-swatch-type') == 'default' && settings.hue == 255 && settings.sat == 1 && settings.lit == 1) // default
+        ) {
+            swatch.setAttribute('aria-checked', 'true');
+
+            if (swatch.classList[0] != 'dropdown-menu-clickable-item')
+                found = true;
+        } else {
+            swatch.setAttribute('aria-checked', 'false');
+        }
+
+        if (!custom && swatch.getAttribute('data-swatch-type') == 'custom')
+            custom = swatch;
+
+        if (!seasonal && swatch.getAttribute('data-swatch-type') == 'seasonal')
+            seasonal = swatch;
+    });
+
+    if (found)
+        return;
+
+    if (custom && settings.accent_type != 'season')
+        custom.setAttribute('aria-checked', 'true');
+    else if (seasonal)
+        seasonal.setAttribute('aria-checked', 'true');
+}
+
+
+unsafeWindow._reset_inbuilt_item = function(item) {
+    reset_inbuilt_item(item);
+}
+unsafeWindow._update_inbuilt_params = function(params={}) {
+    update_inbuilt_params(params);
+}
+unsafeWindow._update_inbuilt_item = function(item, value) {
+    update_inbuilt_item(item, value);
+}
+
+function update_inbuilt_item(item, value, modify=true, element=document.body) {
+    //console.log('update item',item,value);
+    console.warn('update item',item,value, 'modify', modify);
+
+    let test_if_valid = element.querySelector(`#toggle-${item}`);
+    console.warn(test_if_valid, `toggle-${item}`);
+    //console.info(test_if_valid, item, value, inbuilt_settings[item], 'modify', modify);
+    if (test_if_valid == undefined)
+        return;
+
+    if (inbuilt_settings[item].type == 'toggle') {
+        if (modify) {
+            value = (document.getElementById(`toggle-${item}`).getAttribute('aria-checked') === 'true');
+            log(`updated (inbuilt) ${item} to ${!value}`, 'settings');
+        }
+
+        //console.info(value, inbuilt_settings[item].values[0], value == inbuilt_settings[item].values[0], modify);
+
+        if (value == inbuilt_settings[item].values[0] && modify) {
+            element.querySelector(`#inbuilt-companion-checkbox-${item}`).checked = false;
+            element.querySelector(`#toggle-${item}`).setAttribute('aria-checked', false);
+            document.documentElement.setAttribute(`data-bleh--inbuilt-${item}`, inbuilt_settings[item].values[1]);
+        } else if (modify) {
+            element.querySelector(`#inbuilt-companion-checkbox-${item}`).checked = true;
+            element.querySelector(`#toggle-${item}`).setAttribute('aria-checked', true);
+            document.documentElement.setAttribute(`data-bleh--inbuilt-${item}`, inbuilt_settings[item].values[0]);
+        } else {
+            // dont modify, just show
+            console.warn(item, value, value == true, value == false, typeof(value), typeof(true));
+            if (value == true) {
+                console.warn(item, value, 'TRUE');
+                element.querySelector(`#inbuilt-companion-checkbox-${item}`).checked = true;
+                element.querySelector(`#toggle-${item}`).setAttribute('aria-checked', true);
+                document.documentElement.setAttribute(`data-bleh--inbuilt-${item}`, true);
+            } else if (value == false) {
+                console.warn(item, value, 'FALSE');
+                element.querySelector(`#inbuilt-companion-checkbox-${item}`).checked = false;
+                element.querySelector(`#toggle-${item}`).setAttribute('aria-checked', false);
+                document.documentElement.setAttribute(`data-bleh--inbuilt-${item}`, false);
+            }
+        }
+    }
+}
+
+
+unsafeWindow._chosen_chrome = function() {
+    open('https://chromewebstore.google.com/detail/stylus/clngdbkpkpeebahjckkjfobafhncgmne');
+    continue_dev();
+}
+unsafeWindow._chosen_firefox = function() {
+    open('https://addons.mozilla.org/en-US/firefox/addon/styl-us/');
+    continue_dev();
+}
+
+
+function continue_dev() {
+    kill_window('prompt_dev');
+    dialog_legacy('continue_dev',trans[lang].settings.performance.dev.name,`
+        ${trans[lang].settings.performance.dev.modals.continue.next_step}
+        <div class="modal-footer">
+            <button class="btn primary continue" onclick="_finish_dev()">
+                ${trans[lang].settings.continue}
+            </button>
+        </div>
+    `);
+}
+
+unsafeWindow._finish_dev = function() {
+    open('https://github.com/katelyynn/bleh/raw/uwu/fm/bleh.user.css');
+    kill_window('continue_dev');
+    dialog_legacy('finish_dev',trans[lang].settings.performance.dev.name,`
+        <p class="alert alert-success">${trans[lang].settings.performance.dev.modals.finish.alert}</p>
+        <div class="modal-footer">
+            <button class="btn primary done" onclick="_kill_window('finish_dev')">
+                ${trans[lang].settings.done}
+            </button>
+        </div>
+    `);
+}

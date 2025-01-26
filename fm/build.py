@@ -2,6 +2,7 @@
 # it combines all js in the src directory into one file
 # along with reading build.json for build info
 
+import os
 import json
 
 build = {}
@@ -47,5 +48,52 @@ with open('bleh.user.js', 'w') as file:
     file.write(f'let version = {build};\n')
     file.write('let theme_version;\n\n')
 
+    # VARIABLES ETC.
+
     with open('build/trans.js') as trans:
-        file.write(trans.read())
+        file.write('// build/trans.js\n' + trans.read() + '\n')
+
+    with open('build/tools.js') as tools:
+        file.write('\n// build/tools.js\n' + tools.read() + '\n')
+
+    with open('build/log.js') as log:
+        file.write('\n// build/log.js\n' + log.read() + '\n')
+
+    with open('build/config.js') as config:
+        file.write('\n// build/config.js\n' + config.read() + '\n')
+
+    with open('build/page.js') as page:
+        file.write('\n// build/page.js\n' + page.read() + '\n')
+
+    with open('build/music.js') as music:
+        file.write('\n// build/music.js\n' + music.read() + '\n')
+
+    with open('build/seasonal.js') as seasonal:
+        file.write('\n// build/seasonal.js\n' + seasonal.read() + '\n\n\n')
+
+    # LOOP
+    file.write("(function() {\n'use strict';")
+
+    for filename in os.listdir('src'):
+        f = os.path.join('src', filename)
+
+        if (os.path.isfile(f)):
+            with open(f) as file_contents:
+                file.write(f'\n// src/{filename}\n' + file_contents.read() + '\n')
+
+    for filename in os.listdir('src/pages'):
+        f = os.path.join('src/pages', filename)
+
+        if (os.path.isfile(f)):
+            with open(f) as file_contents:
+                file.write(f'\n// [PAGE] src/pages/{filename}\n' + file_contents.read() + '\n')
+
+    for filename in os.listdir('src/components'):
+        f = os.path.join('src/components', filename)
+
+        if (os.path.isfile(f)):
+            with open(f) as file_contents:
+                file.write(f'\n// [COMPONENT] src/components/{filename}\n' + file_contents.read() + '\n')
+
+    # END
+    file.write('})();')
