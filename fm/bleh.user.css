@@ -430,7 +430,7 @@ body {
     --gloss: 0;
 
     --interactable-inset: inset hsl(var(--b3)) 0 -1px 0;
-    --interactable-outer: hsla(var(--b7), 0.3) 0 2px 3px 0;
+    --interactable-outer: hsla(var(--b7), 0.2) 0 4px 4px 0;
     --interactable-active-outer: hsla(var(--c1), 0.03) 0 2px 25px 0;
 
     --interact-shadow: var(--interactable-outer);
@@ -1266,8 +1266,8 @@ last.fm changes as of 2024-05-20 */
 
     &[data-has-colour="true"] {
         --bg: transparent !important;
-        --bg-hov: hsl(var(--h4), 20%) !important;
-        --bg-atv: hsl(var(--h4), 40%) !important;
+        --bg-hov: hsl(var(--h4), 30%) !important;
+        --bg-atv: hsl(var(--h4), 50%) !important;
     }
 }
 
@@ -3490,9 +3490,9 @@ button.navlist-more {
 .user-status--bleh-cute,
 .label.user-status--bleh-cute {
     --mask: var(--icon-cute);
-    --hue-over: 340;
-    --sat-over: 0.675;
-    --lit-over: 1;
+    --hue-over: 220;
+    --sat-over: 1.175;
+    --lit-over: 0.8;
 }
 
 .user-status--bleh-cat,
@@ -6180,7 +6180,7 @@ button,
         --bg-hov: var(--cards-overlay-image-subtlest, none), hsl(var(--h3), 80%) !important;
         --bg-atv: var(--cards-overlay-image-subtlest, none), hsl(var(--h3), 60%) !important;
         --col: hsl(var(--b7)) !important;
-        --shadow: 0 3px 12px hsl(var(--h4), 25%), var(--interactable-outer);
+        --shadow: 0 3px 12px hsl(var(--h4), 32%), var(--interactable-outer);
         --shadow-hov: var(--interactable-outer), var(--interactable-active-outer);
 
         [data-bleh--invert_interactable_colour="true"] & {
@@ -18509,6 +18509,71 @@ section > .section-controls .subpage-title {
         height: 32px !important;
 
         position: relative;
+    }
+
+    .btn-gap {
+        flex: 1;
+    }
+
+    .katsune-scrobble-progress {
+        .progress-info {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+
+            .progress-value {
+                font-weight: var(--font-weight-medium);
+                cursor: default;
+            }
+
+            .progress-bar {
+                display: flex;
+                position: relative;
+                height: 6px;
+                border-radius: 50px;
+                background-color: hsl(var(--b4));
+                width: 250px;
+
+                .progress-bar-fill {
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    bottom: 0;
+                    border-radius: 50px;
+                    background-color: hsl(var(--h3));
+                    box-shadow: 0 2px 3px 0 hsl(var(--h4), 25%);
+                }
+            }
+        }
+
+        .progress-badge {
+            width: 52px;
+            height: 52px;
+            margin: -17px 0;
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+
+            font-size: 16px;
+            color: hsl(var(--l2-c));
+            font-weight: var(--font-weight-medium);
+            cursor: default;
+
+            .progress-icon {
+                position: absolute;
+                inset: 0;
+                pointer-events: none;
+                background: linear-gradient(hsl(var(--h2)), hsl(var(--h3)));
+
+                --mask: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIxLjI1IiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWRpYW1vbmQiPjxwYXRoIGQ9Ik0yLjcgMTAuM2EyLjQxIDIuNDEgMCAwIDAgMCAzLjQxbDcuNTkgNy41OWEyLjQxIDIuNDEgMCAwIDAgMy40MSAwbDcuNTktNy41OWEyLjQxIDIuNDEgMCAwIDAgMC0zLjQxbC03LjU5LTcuNTlhMi40MSAyLjQxIDAgMCAwLTMuNDEgMFoiLz48L3N2Zz4=');
+                mask-image: var(--mask);
+                -webkit-mask-image: var(--mask);
+                mask-size: 100%;
+                -webkit-mask-size: 100%;
+            }
+        }
     }
 
     .listen-divider {

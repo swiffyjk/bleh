@@ -8066,6 +8066,46 @@ let has_prompted_for_update = false;
             });
         }
 
+        if (page.name != sponsor_list.sponsor_account && katsune) {
+            let sep = document.createElement('div');
+            sep.classList.add('btn-gap');
+            profile_header.appendChild(sep);
+
+            let progress = document.createElement('div');
+            progress.classList.add('katsune-scrobble-progress');
+
+            let metadata = header_meta.querySelector('.header-metadata-display');
+            scrobbles = clean_number(metadata.querySelector('p').textContent.trim());
+
+            let milestone = scrobbles;
+            if (scrobbles <= 100_000)
+                milestone = 100_000;
+            else if (scrobbles <= 200_000)
+                milestone = 200_000;
+            else if (scrobbles <= 300_000)
+                milestone = 300_000;
+            else if (scrobbles <= 400_000)
+                milestone = 400_000;
+
+            let left = milestone - scrobbles;
+            let percent = (scrobbles / milestone) * 100;
+
+            progress.innerHTML = (`
+                <div class="progress-info">
+                    <div class="progress-value">${left.toLocaleString(lang)} scrobbles to go</div>
+                    <div class="progress-bar">
+                        <div class="progress-bar-fill" style="width: ${percent}%"></div>
+                    </div>
+                </div>
+                <div class="progress-badge">
+                    <div class="progress-icon"></div>
+                    <div class="progress-percent">${Math.round(percent)}</div>
+                </div>
+            `);
+
+            profile_header.appendChild(progress);
+        }
+
         if (page.name != sponsor_list.sponsor_account && !katsune) {
             let listen_divider = document.createElement('div');
             listen_divider.classList.add('listen-divider');
