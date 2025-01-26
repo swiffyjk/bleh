@@ -15621,7 +15621,7 @@ function bleh_profiles() {
 
         if (settings.profile_avi_background) {
             if (avatar != null)
-                register_background(avatar.querySelector('img').getAttribute('src'));
+                register_background(avatar.querySelector('img').getAttribute('src').replace('/avatar170s/', '/ar0/'));
             else
                 register_background(null);
         } else {
