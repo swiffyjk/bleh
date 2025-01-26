@@ -14536,6 +14536,7 @@ let has_prompted_for_update = false;
 
 
     function show_your_scrobbles() {
+        let katsune = ff('katsune');
         show_numbers_on_side(page.type);
 
         let col_main = page.structure.container.querySelector('.top-overview-panel');
@@ -14562,9 +14563,12 @@ let has_prompted_for_update = false;
         // create container
         let top_container = document.createElement('div');
         top_container.classList.add('top-container');
+        if (katsune)
+            top_container.classList.add('katsune-button-row');
 
         let listen_container = document.createElement('div');
-        listen_container.classList.add('listen-container', 'view-buttons');
+        if (!katsune)
+            listen_container.classList.add('listen-container', 'view-buttons');
 
 
         // page url
@@ -14586,7 +14590,8 @@ let has_prompted_for_update = false;
             name: auth.name,
             listens: 0,
             link: scrobble_page,
-            avi: auth.avatar
+            avi: auth.avatar,
+            katsune: katsune
         };
         // check to see if you have scrobbles
         let scrobble_button = col_main.querySelector('.personal-stats-item--scrobbles .hidden-xs a');
@@ -14603,7 +14608,8 @@ let has_prompted_for_update = false;
                 name: settings.profile_shortcut,
                 listens: -1,
                 link: scrobble_page,
-                avi: localStorage.getItem('bleh_profile_shortcut_avi')
+                avi: localStorage.getItem('bleh_profile_shortcut_avi'),
+                katsune: katsune
             }
             // create child for them
             create_listen_item(listen_container, shortcut_listens);
@@ -14654,13 +14660,17 @@ let has_prompted_for_update = false;
             name: 'other',
             listens: -3,
             link: scrobble_page,
-            button: true
+            button: true,
+            katsune: katsune
         }, page.type);
 
 
         // append
         top_container.appendChild(listen_container);
-        col_main.insertBefore(top_container, col_main.firstElementChild);
+        if (!katsune)
+            col_main.insertBefore(top_container, col_main.firstElementChild);
+        else
+            page.structure.container.querySelector('.bleh-background').after(top_container);
 
 
         // other listeners
@@ -14681,7 +14691,8 @@ let has_prompted_for_update = false;
                     listens: -2,
                     link: scrobble_page,
                     avi: avatars,
-                    count: (count != null) ? clean_number(count.textContent.trim()) : 5
+                    count: (count != null) ? clean_number(count.textContent.trim()) : 5,
+                    katsune: katsune
                 }
                 // create child for them
                 create_listen_item(listen_container, other_listeners, page.type);
@@ -14691,7 +14702,8 @@ let has_prompted_for_update = false;
 
         // interactables on the right
         let interact_container = document.createElement('div');
-        interact_container.classList.add('interact-container', 'view-buttons');
+        if (!katsune)
+            interact_container.classList.add('interact-container', 'view-buttons');
 
 
         let text = document.body.querySelector('.header-new-title').textContent
@@ -14714,7 +14726,7 @@ let has_prompted_for_update = false;
         let buttons = interact_container.querySelectorAll('button');
         buttons.forEach((button) => {
             if (button.classList[0] != 'header-new-playlink')
-                button.classList.add('btn', 'view-item', 'interact-item');
+                button.classList.add('btn', 'view-item', 'interact-item', (katsune) ? 'icon' : '');
             else
                 button.classList.add('dropdown-menu-clickable-item');
 
@@ -14752,7 +14764,7 @@ let has_prompted_for_update = false;
 
         // search similar!
         let search_btn = document.createElement('a');
-        search_btn.classList.add('btn', 'view-item', 'interact-item', 'search-similar-btn');
+        search_btn.classList.add('btn', 'view-item', 'interact-item', 'search-similar-btn', (katsune) ? 'icon' : '');
         search_btn.textContent = trans[lang].music.search_variations.name;
         search_btn.href = `${root}search/${page.type}s?q=${text}`;
         search_btn.target = '_blank';
@@ -14805,7 +14817,7 @@ let has_prompted_for_update = false;
 
         // ...
         let menu_btn = document.createElement('button');
-        menu_btn.classList.add('btn', 'view-item', 'interact-item', 'menu-btn');
+        menu_btn.classList.add('btn', 'view-item', 'interact-item', 'menu-btn', (katsune) ? 'icon' : '');
         menu_btn.textContent = trans[lang].music.menu;
 
         let play_btn = interact_container.querySelector('.header-new-playlink');
@@ -14852,7 +14864,7 @@ let has_prompted_for_update = false;
         top_container.appendChild(interact_container);
     }
 
-    function create_listen_item(parent, {name, listens, link, avi, count=0, button=false}, header_type) {
+    function create_listen_item(parent, {name, listens, link, avi, count=0, button=false, katsune=false}, header_type) {
         log(`creating listen item of ${name}, ${count}, ${listens}`, 'artist', 'info', {avi: avi, link: link});
 
         let listen_item = document.createElement((!button) ? 'a' : 'button');
@@ -14950,6 +14962,10 @@ let has_prompted_for_update = false;
             listen_item.style.setProperty('--hue-user',parsed_scrobble_as_rank.hue);
             listen_item.style.setProperty('--sat-user',parsed_scrobble_as_rank.sat);
             listen_item.style.setProperty('--lit-user',parsed_scrobble_as_rank.lit);
+        }
+
+        if (katsune) {
+            listen_item.classList.add('icon');
         }
 
         parent.appendChild(listen_item);
