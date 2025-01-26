@@ -8081,18 +8081,15 @@ let has_prompted_for_update = false;
             let metadata = header_meta.querySelector('.header-metadata-display');
             scrobbles = clean_number(metadata.querySelector('p').textContent.trim());
 
-            let milestone = scrobbles;
-            if (scrobbles <= 100_000)
-                milestone = 100_000;
-            else if (scrobbles <= 200_000)
-                milestone = 200_000;
-            else if (scrobbles <= 300_000)
-                milestone = 300_000;
-            else if (scrobbles <= 400_000)
-                milestone = 400_000;
+            if (scrobbles > 200_000) {
+                let subtract = (Math.round(scrobbles / 100_000) - 1) * 100_000;
+                scrobbles -= subtract;
+            } else {
+                scrobbles -= 100_000;
+            }
 
-            let left = milestone - scrobbles;
-            let percent = (scrobbles / milestone) * 100;
+            let left = 100_000 - scrobbles;
+            let percent = (scrobbles / 100_000) * 100;
 
             progress.innerHTML = (`
                 <div class="progress-info">

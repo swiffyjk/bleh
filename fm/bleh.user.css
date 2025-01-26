@@ -3365,10 +3365,23 @@ button.navlist-more {
         [data-bleh--profile_header_own="false"] [data-is-own-profile="true"] & {
             background-color: hsla(var(--b4), 50%);
         }
+
+        [data-ff--katsune="true"] & {
+            background: unset !important;
+            padding: unset;
+            border-radius: unset;
+            font-size: var(--font-size);
+            font-weight: var(--font-weight-medium);
+        }
     }
 
     .header-title-display-name, .header-scrobble-since {
         color: hsl(var(--c2));
+
+        [data-ff--katsune="true"] & {
+            padding: unset;
+            margin-right: 6px;
+        }
     }
 }
 
@@ -3496,7 +3509,7 @@ button.navlist-more {
     --mask: var(--icon-cute);
     --hue-over: 220;
     --sat-over: 1.175;
-    --lit-over: 0.8;
+    --lit-over: 0.95;
 }
 
 .user-status--bleh-cat,
