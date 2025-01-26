@@ -18472,10 +18472,13 @@ section > .section-controls .subpage-title {
 }
 
 .katsune-button-row {
-    margin: -1px 0 0 0;
     padding: var(--card-gap) calc(var(--card-gap) + var(--card-padding));
     background: hsl(var(--b5), 40%);
     box-shadow: 0 0 0 1px var(--card-border-base) inset, var(--card-shadow);
+
+    .redesigned-header + & {
+        margin: -1px 0 0 0;
+    }
 
     display: flex;
     align-items: center;
