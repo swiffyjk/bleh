@@ -18542,6 +18542,79 @@ section > .section-controls .subpage-title {
         flex: 1;
     }
 
+    .katsune-taste {
+        margin-right: calc(var(--card-gap) - var(--button-list-gap));
+
+        .taste-info {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+
+            .taste-value {
+                font-weight: var(--font-weight-medium);
+                cursor: default;
+            }
+
+            .taste-bar {
+                display: flex;
+                position: relative;
+                height: 6px;
+                border-radius: 50px;
+                background-color: hsl(var(--b4));
+                width: 250px;
+
+                .taste-bar-fill {
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    bottom: 0;
+                    border-radius: 50px;
+                    background-color: hsl(var(--h3));
+                    box-shadow: 0 2px 3px 0 hsl(var(--h4), 25%);
+
+                    animation: progress 3s cubic-bezier(0.77, 0.22, 0.18, 1) infinite;
+                }
+            }
+        }
+
+        .katsune-taste-badge {
+            width: 52px;
+            height: 52px;
+            margin: -17px 0;
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+
+            font-size: 16px;
+            color: hsl(var(--c1));
+            font-weight: var(--font-weight-medium);
+            cursor: default;
+
+            /*.taste-percent {
+                background-color: hsl(var(--b5));
+                padding: 1px 8px;
+                border-radius: var(--item-big-radius);
+                z-index: 10;
+                position: relative;
+            }*/
+
+            .taste-icon {
+                position: absolute;
+                inset: 0;
+                pointer-events: none;
+                background: linear-gradient(hsl(var(--h2)), hsl(var(--h3)));
+
+                --mask: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIxLjI1IiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWJhZGdlIj48cGF0aCBkPSJNMy44NSA4LjYyYTQgNCAwIDAgMSA0Ljc4LTQuNzcgNCA0IDAgMCAxIDYuNzQgMCA0IDQgMCAwIDEgNC43OCA0Ljc4IDQgNCAwIDAgMSAwIDYuNzQgNCA0IDAgMCAxLTQuNzcgNC43OCA0IDQgMCAwIDEtNi43NSAwIDQgNCAwIDAgMS00Ljc4LTQuNzcgNCA0IDAgMCAxIDAtNi43NloiLz48L3N2Zz4=');
+                mask-image: var(--mask);
+                -webkit-mask-image: var(--mask);
+                mask-size: 100%;
+                -webkit-mask-size: 100%;
+            }
+        }
+    }
+
     .katsune-scrobble-progress {
         .progress-info {
             display: flex;
@@ -18596,7 +18669,7 @@ section > .section-controls .subpage-title {
                 pointer-events: none;
                 background: linear-gradient(hsl(var(--h2)), hsl(var(--h3)));
 
-                --mask: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIxLjI1IiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWRpYW1vbmQiPjxwYXRoIGQ9Ik0yLjcgMTAuM2EyLjQxIDIuNDEgMCAwIDAgMCAzLjQxbDcuNTkgNy41OWEyLjQxIDIuNDEgMCAwIDAgMy40MSAwbDcuNTktNy41OWEyLjQxIDIuNDEgMCAwIDAgMC0zLjQxbC03LjU5LTcuNTlhMi40MSAyLjQxIDAgMCAwLTMuNDEgMFoiLz48L3N2Zz4=');
+                --mask: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIxLjI1IiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWhleGFnb24iPjxwYXRoIGQ9Ik0yMSAxNlY4YTIgMiAwIDAgMC0xLTEuNzNsLTctNGEyIDIgMCAwIDAtMiAwbC03IDRBMiAyIDAgMCAwIDMgOHY4YTIgMiAwIDAgMCAxIDEuNzNsNyA0YTIgMiAwIDAgMCAyIDBsNy00QTIgMiAwIDAgMCAyMSAxNnoiLz48L3N2Zz4=');
                 mask-image: var(--mask);
                 -webkit-mask-image: var(--mask);
                 mask-size: 100%;
