@@ -18,7 +18,7 @@
 // @require      https://cdn.jsdelivr.net/npm/chartjs-adapter-moment@^1
 // ==/UserScript==
 
-let version = {'brand': 'bleh', 'build': '2025.0125', 'sku': '4x4', 'bio': 'bleh!!! ^-^', 'author': 'kate', 'url': 'https://github.com/katelyynn/bleh/raw/uwu/fm/bleh.user.js', 'feature_flags': {'bleh_settings_tabs': {'default': True, 'name': 'Utilise new bleh settings tabs', 'date': '2024-07-09'}, 'high_contrast': {'default': False, 'name': 'Enable visibility of high contrast (experimental)', 'date': '2024-10-04'}, 'redesigned_profile_header': {'default': True, 'name': 'Redesigned profile header info', 'date': '2024-10-09'}, 'show_wiki_label': {'default': True, 'name': "Show 'About' label above wikis", 'date': '2024-10-11'}, 'music_page_charts': {'default': True, 'name': 'Music page charts', 'date': '2024-11-05'}, 'chartlist_highlight_shadow': {'default': False, 'name': 'Chartlist row highlight side shadow', 'date': '2024-11-05'}, 'new_gallery_experience': {'default': True, 'name': 'New gallery experience', 'date': '2024-11-06'}, 'display_album_bookmark': {'default': False, 'name': 'Display album bookmark button in gallery refresh', 'date': '2024-11-06'}, 'changelogs': {'default': True, 'name': 'Enable changelog system', 'date': '2024-11-07'}, 'refreshed_nav': {'default': True, 'name': 'Refreshed nav structure, reducing a lot of jank', 'date': '2024-11-09'}, 'refreshed_music_nav': {'default': True, 'name': 'Refreshed music nav structure', 'date': '2024-11-10'}, 'card_saturation': {'default': True, 'name': 'Enable card saturation slider', 'date': '2024-11-10'}, 'show_album_cover_always': {'default': True, 'name': 'Show album cover in header overview', 'date': '2024-11-11'}, 'new_auth_menu': {'default': True, 'name': 'New custom-built auth menu to reduce lag', 'date': '2024-11-11'}, 'unify_top_listeners': {'default': True, 'name': 'Unify top listeners', 'date': '2024-11-15'}, 'hide_chartlist_more': {'default': False, 'name': 'Hide chartlist more button, accessible the same with right-clicking', 'date': '2024-12-03'}, 'glacier_library': {'default': True, 'name': 'Glacier library (new library beta)', 'date': '2024-12-04'}, 'shout_popover': {'default': True, 'name': 'Redesigned shout action popover', 'date': '2024-12-23'}, 'sponsor': {'default': True, 'name': 'Sponsor link', 'date': '2024-12-24'}, 'skip_to_setting': {'default': True, 'name': 'Skip to... in settings', 'date': '2024-12-24'}, 'page_title': {'default': True, 'name': 'Dynamic tab title', 'date': '2024-12-26'}, 'view_button_nav': {'default': True, 'name': 'Match view button colouring to new nav', 'date': '2024-12-28'}, 'remove_bookmark': {'default': True, 'name': 'Context menu to remove inaccessible artist bookmark', 'date': '2024-12-28'}, 'badges': {'default': True, 'name': 'New badge tooltip', 'date': '2024-12-28'}, 'astra': {'default': False, 'name': 'astrablooms font', 'date': '2025-01-01', 'notice': "This is a test of a new 'default' font for bleh, it most likely will never take effect as changing a font takes a lot of getting used to, but yeah.<br>You should set your text settings to the following: 470, 540, 610"}, 'developer': {'default': False, 'name': 'Developer mode', 'date': '2025-01-03', 'notice': 'Enable developer-specific features used for debugging purposes'}, 'api': {'default': False, 'name': 'Allow user to enter API key for newer features', 'date': '2025-01-19'}, 'colour_based_on_avatar': {'default': True, 'name': 'Set colour based on avatar', 'date': '2025-01-23'}, 'katsune': {'default': True, 'name': 'katsune redesign', 'date': '2025-01-25', 'notice': 'This is very, very experimental ~w~'}}};
+let version = {'brand': 'bleh', 'build': '2025.0125', 'sku': '4x4', 'bio': 'bleh!!! ^-^', 'author': 'kate', 'url': 'https://github.com/katelyynn/bleh/raw/uwu/fm/bleh.user.js', 'feature_flags': {'bleh_settings_tabs': {'default': true, 'name': 'Utilise new bleh settings tabs', 'date': '2024-07-09'}, 'high_contrast': {'default': false, 'name': 'Enable visibility of high contrast (experimental)', 'date': '2024-10-04'}, 'redesigned_profile_header': {'default': true, 'name': 'Redesigned profile header info', 'date': '2024-10-09'}, 'show_wiki_label': {'default': true, 'name': "Show 'About' label above wikis", 'date': '2024-10-11'}, 'music_page_charts': {'default': true, 'name': 'Music page charts', 'date': '2024-11-05'}, 'chartlist_highlight_shadow': {'default': false, 'name': 'Chartlist row highlight side shadow', 'date': '2024-11-05'}, 'new_gallery_experience': {'default': true, 'name': 'New gallery experience', 'date': '2024-11-06'}, 'display_album_bookmark': {'default': false, 'name': 'Display album bookmark button in gallery refresh', 'date': '2024-11-06'}, 'changelogs': {'default': true, 'name': 'Enable changelog system', 'date': '2024-11-07'}, 'refreshed_nav': {'default': true, 'name': 'Refreshed nav structure, reducing a lot of jank', 'date': '2024-11-09'}, 'refreshed_music_nav': {'default': true, 'name': 'Refreshed music nav structure', 'date': '2024-11-10'}, 'card_saturation': {'default': true, 'name': 'Enable card saturation slider', 'date': '2024-11-10'}, 'show_album_cover_always': {'default': true, 'name': 'Show album cover in header overview', 'date': '2024-11-11'}, 'new_auth_menu': {'default': true, 'name': 'New custom-built auth menu to reduce lag', 'date': '2024-11-11'}, 'unify_top_listeners': {'default': true, 'name': 'Unify top listeners', 'date': '2024-11-15'}, 'hide_chartlist_more': {'default': false, 'name': 'Hide chartlist more button, accessible the same with right-clicking', 'date': '2024-12-03'}, 'glacier_library': {'default': true, 'name': 'Glacier library (new library beta)', 'date': '2024-12-04'}, 'shout_popover': {'default': true, 'name': 'Redesigned shout action popover', 'date': '2024-12-23'}, 'sponsor': {'default': true, 'name': 'Sponsor link', 'date': '2024-12-24'}, 'skip_to_setting': {'default': true, 'name': 'Skip to... in settings', 'date': '2024-12-24'}, 'page_title': {'default': true, 'name': 'Dynamic tab title', 'date': '2024-12-26'}, 'view_button_nav': {'default': true, 'name': 'Match view button colouring to new nav', 'date': '2024-12-28'}, 'remove_bookmark': {'default': true, 'name': 'Context menu to remove inaccessible artist bookmark', 'date': '2024-12-28'}, 'badges': {'default': true, 'name': 'New badge tooltip', 'date': '2024-12-28'}, 'astra': {'default': false, 'name': 'astrablooms font', 'date': '2025-01-01', 'notice': "This is a test of a new 'default' font for bleh, it most likely will never take effect as changing a font takes a lot of getting used to, but yeah.<br>You should set your text settings to the following: 470, 540, 610"}, 'developer': {'default': false, 'name': 'Developer mode', 'date': '2025-01-03', 'notice': 'Enable developer-specific features used for debugging purposes'}, 'api': {'default': false, 'name': 'Allow user to enter API key for newer features', 'date': '2025-01-19'}, 'colour_based_on_avatar': {'default': true, 'name': 'Set colour based on avatar', 'date': '2025-01-23'}, 'katsune': {'default': true, 'name': 'katsune redesign', 'date': '2025-01-25', 'notice': 'This is very, very experimental ~w~'}}};
 let theme_version;
 
 // build/trans.js
@@ -4220,6 +4220,9 @@ let seasonal_events = [
 ];
 
 
+// build/sponsor.js
+let cute = ['cutensilly', 'inozom', 'kateshapedbox'];
+let sponsor_list = null;
 (function() {
 'use strict';
 // src/activity.js
@@ -19033,3 +19036,731 @@ function bleh_tracks() {
     log('status is', 'page', 'info', page);
     update_page();
 }
+
+// [PAGE] src/pages/wiki.js
+function bleh_wiki() {
+    // make a new panel
+    let wiki_panel = document.createElement('section');
+    wiki_panel.classList.add('wiki-panel');
+    wiki_panel.innerHTML = page.structure.main.innerHTML;
+
+    page.structure.main.innerHTML = '';
+    page.structure.main.appendChild(wiki_panel);
+    page.structure.main.classList.add('not-a-panel');
+
+    let original_edit_button = page.structure.main.querySelector('.qa-wiki-edit');
+    let original_version_history = page.structure.main.querySelector('.wiki-history-link--desktop a');
+
+    let new_edit_panel;
+    if (original_edit_button != null) {
+        new_edit_panel = document.createElement('section');
+        new_edit_panel.classList.add('view-all-panel');
+        new_edit_panel.innerHTML = (`
+            <a class="btn view-all-button back wiki-edit-button" href="${original_edit_button.getAttribute('href')}">
+                ${original_edit_button.textContent}
+            </a>
+        `);
+
+        page.structure.side.insertBefore(new_edit_panel, page.structure.side.firstElementChild);
+    }
+
+    if (original_version_history != null) {
+        let new_version_panel = document.createElement('section');
+        new_version_panel.classList.add('view-all-panel');
+        new_version_panel.innerHTML = (`
+            <a class="btn view-all-button back wiki-history-button" href="${original_version_history.getAttribute('href')}">
+                ${original_version_history.textContent}
+            </a>
+        `);
+
+        if (original_edit_button != null)
+            new_edit_panel.after(new_version_panel);
+        else
+            page.structure.side.insertBefore(new_version_panel, page.structure.side.firstElementChild);
+    }
+
+
+    // author
+    let wiki_author = wiki_panel.querySelector('.wiki-author');
+    // this cant be null i believe but still
+    if (wiki_author != null) {
+        let h2 = wiki_panel.querySelector('h2.text-18');
+
+        let sub_text = document.createElement('div');
+        sub_text.classList.add('sub-text', 'space-below');
+        sub_text.innerHTML = (`
+            <div class="breadcrumb-origin prominent">
+                ${(h2 != null) ? h2.innerHTML : page.structure.container.querySelector('.content-top-header').textContent}
+            </div>
+            <div class="wiki-author-side">
+                ${wiki_author.innerHTML}
+            </div>
+        `);
+
+        wiki_panel.insertBefore(sub_text, wiki_panel.firstElementChild);
+        if (h2 != null)
+            wiki_panel.removeChild(h2);
+    }
+
+    let wiki = wiki_panel.querySelector('.wiki');
+
+    if (wiki == null)
+        return;
+
+    patch_wiki_contents(wiki);
+}
+
+function bleh_wiki_history() {
+    let breadcrumb_root = page.structure.container.querySelector('.subpage-breadcrumb');
+    let breadcrumb_name = page.structure.container.querySelector('.subpage-title');
+
+    // tags
+    if (breadcrumb_root == null) {
+        breadcrumb_root = page.structure.container.querySelector('.content-top-back-link');
+        breadcrumb_name = page.structure.container.querySelector('.content-top-header');
+    }
+
+    let sub_text = document.createElement('div');
+    sub_text.classList.add('sub-text', 'space-below');
+    sub_text.innerHTML = (`
+        <div class="breadcrumb">
+            ${breadcrumb_root.querySelector('a').outerHTML}
+            <div class="breadcrumb-name prominent">
+                ${breadcrumb_name.textContent}
+            </div>
+        </div>
+    `);
+
+    breadcrumb_root.style.setProperty('display', 'none');
+    breadcrumb_name.style.setProperty('display', 'none');
+
+
+    let buffer_container = page.structure.container.querySelector('.row ~ .buffer-4');
+
+    // tags
+    if (buffer_container == null)
+        buffer_container = page.structure.container.querySelector('.wiki-history');
+
+    let wiki_history_table = buffer_container.querySelector('.wiki-history-table');
+
+    // nav
+    let pagination = buffer_container.querySelector('.pagination');
+
+
+    // put this in col-main
+    let wiki_panel = document.createElement('section');
+    wiki_panel.classList.add('wiki-history-panel');
+
+    wiki_panel.appendChild(sub_text);
+    wiki_panel.appendChild(wiki_history_table);
+
+    page.structure.main.appendChild(wiki_panel);
+    buffer_container.style.setProperty('display', 'none');
+
+    if (pagination != null)
+        wiki_panel.appendChild(pagination);
+
+
+    // latest
+    let latest_version_panel = document.createElement('section');
+    latest_version_panel.classList.add('view-all-panel');
+    latest_version_panel.innerHTML = (`
+        <a class="btn view-all-button back wiki-latest-button" href="${sub_text.querySelector('a').getAttribute('href')}">
+            ${trans[lang].wiki.latest}
+        </a>
+    `);
+
+    page.structure.side.appendChild(latest_version_panel);
+
+
+    // entries
+    let entries = page.structure.main.querySelectorAll('.wiki-history-entry');
+    entries.forEach((entry) => {
+        let author = entry.querySelector('.wiki-history-author');
+        let avatar = author.querySelector('.wiki-history-author-avatar');
+        let name = author.querySelector('.link-block-target');
+
+        if (name != null && avatar != null) {
+            let badge = patch_avatar(avatar, name.textContent, 'wiki');
+
+            if (badge.type == 'avatar-status-dot--staff')
+                entry.classList.add('staff-shout');
+        }
+    });
+}
+
+function bleh_wiki_editor() {
+    // make a new panel
+    let wiki_edit_panel = document.createElement('section');
+    wiki_edit_panel.classList.add('wiki-edit-panel');
+    wiki_edit_panel.innerHTML = page.structure.main.innerHTML;
+
+    page.structure.main.innerHTML = '';
+    page.structure.main.appendChild(wiki_edit_panel);
+    page.structure.main.classList.add('not-a-panel');
+
+    let breadcrumb_root = page.structure.container.querySelector('.subpage-breadcrumb');
+    let breadcrumb_name = page.structure.container.querySelector('.subpage-title');
+
+    // probably moved to a content-top by bleh prior
+    if (breadcrumb_name == null) {
+        breadcrumb_name = page.structure.content_top.querySelector('.content-top-header');
+
+        if (breadcrumb_name != null) {
+            page.structure.content_top.style.setProperty('display', 'none');
+        }
+    }
+
+    // tags
+    if (breadcrumb_root == null) {
+        breadcrumb_root = page.structure.container.querySelector('.content-top-back-link');
+        breadcrumb_name = page.structure.container.querySelector('.content-top-header');
+    }
+
+    let sub_text = document.createElement('div');
+    sub_text.classList.add('sub-text', 'space-below');
+    sub_text.innerHTML = (`
+        <div class="breadcrumb">
+            ${breadcrumb_root.querySelector('a').outerHTML}
+            <div class="breadcrumb-name prominent">
+                ${breadcrumb_name.textContent}
+            </div>
+        </div>
+    `);
+
+    breadcrumb_root.style.setProperty('display', 'none');
+    breadcrumb_name.style.setProperty('display', 'none');
+
+    wiki_edit_panel.insertBefore(sub_text, wiki_edit_panel.firstElementChild);
+
+    let wiki_syntax = document.createElement('section');
+    wiki_syntax.classList.add('bleh--blank-panel', 'wiki-syntax-panel');
+    wiki_syntax.innerHTML = (`
+        <h3 class="text-18">${trans[lang].wiki.syntax.name}</h3>
+        <div class="syntax-listing">
+            <div class="syntax-listing-item">
+                <div class="code-side">[artist]julie[/artist]</div>
+                <div class="detail-side">${trans[lang].wiki.syntax.links_to.replace('{link}', `<a href="${root}music/julie" target="_blank">julie</a>`)}</div>
+            </div>
+            <div class="syntax-listing-item">
+                <div class="code-side">[album artist=julie]pushing daisies[/album]</div>
+                <div class="detail-side">${trans[lang].wiki.syntax.links_to.replace('{link}', `<a href="${root}music/julie/pushing+daisies" target="_blank">pushing daisies</a>`)}</div>
+            </div>
+            <div class="syntax-listing-item">
+                <div class="code-side">[track artist=julie]very little effort[/track]</div>
+                <div class="detail-side">${trans[lang].wiki.syntax.links_to.replace('{link}', `<a href="${root}music/julie/_/very+little+effort" target="_blank">very little effort</a>`)}</div>
+            </div>
+        </div>
+        <div class="sep"></div>
+        <div class="syntax-listing">
+            <div class="syntax-listing-item">
+                <div class="code-side">[url]https://cutensilly.org/bleh/fm[/url]</div>
+                <div class="detail-side">${trans[lang].wiki.syntax.links_to.replace('{link}', `<a href="https://cutensilly.org/bleh/fm" target="_blank">https://cutensilly.org/bleh/fm</a>`)}</div>
+            </div>
+            <div class="syntax-listing-item">
+                <div class="code-side">[url=https://cutensilly.org/bleh/fm]blehhh[/url]</div>
+                <div class="detail-side">${trans[lang].wiki.syntax.links_to.replace('{link}', `<a href="https://cutensilly.org/bleh/fm" target="_blank">blehhh</a>`)}</div>
+            </div>
+        </div>
+        <div class="sep"></div>
+        <div class="syntax-listing">
+            <div class="syntax-listing-item">
+                <div class="code-side">[tag]grunge[/tag]</div>
+                <div class="detail-side">${trans[lang].wiki.syntax.links_to.replace('{link}', `<a href="${root}tag/grunge" target="_blank">grunge</a>`)}</div>
+            </div>
+            <div class="syntax-listing-item">
+                <div class="code-side">[user]${auth.name}[/user]</div>
+                <div class="detail-side">${trans[lang].wiki.syntax.links_to.replace('{link}', `<a class="mention" href="${root}user/${auth.name}" target="_blank">@${auth.name}</a>`)}</div>
+            </div>
+        </div>
+    `);
+
+    page.structure.side.innerHTML = '';
+
+    // latest
+    let latest_version_panel = document.createElement('section');
+    latest_version_panel.classList.add('view-all-panel');
+    latest_version_panel.innerHTML = (`
+        <a class="btn view-all-button back wiki-latest-button" href="${sub_text.querySelector('a').getAttribute('href')}">
+            ${trans[lang].wiki.latest}
+        </a>
+    `);
+
+    page.structure.side.appendChild(latest_version_panel);
+
+
+    // presets
+    let wiki_presets_panel = document.createElement('section');
+    wiki_presets_panel.classList.add('wiki-presets-panel');
+
+    wiki_presets_panel.innerHTML = (`
+        <h3 class="text-18">${trans[lang].wiki.presets.name}</h3>
+        <div class="presets">
+            <div class="preset">“</div>
+            <div class="preset">�</div>
+            <div class="preset">—</div>
+            <div class="preset">‘</div>
+            <div class="preset">’</div>
+            <div class="preset">-</div>
+        </div>
+    `);
+
+    page.structure.side.appendChild(wiki_presets_panel);
+
+    page.structure.side.appendChild(wiki_syntax);
+
+
+    // rules
+    let rules = page.structure.main.querySelector('.wiki-style-rules');
+
+    let rules_panel = document.createElement('section');
+    rules_panel.classList.add('rules-panel');
+    rules_panel.innerHTML = rules.innerHTML;
+
+    page.structure.side.appendChild(rules_panel);
+}
+
+
+// fix wiki on some devices
+function patch_wiki() {
+    // add info notes to things
+    if (ff('show_wiki_label')) {
+        let wiki_col = page.structure.main.querySelector('.wiki-column');
+        let wiki_empty = false;
+
+        if (!wiki_col)
+            return;
+
+        let wiki_block = wiki_col.querySelector('.wiki-block.visible-lg .wiki-block-inner-2');
+
+        if (wiki_block == null) {
+            wiki_block = wiki_col.querySelector('.wiki-block-cta');
+            wiki_empty = true;
+        }
+
+        let read_more = wiki_block.querySelector('a:last-child');
+        if (read_more) {
+            read_more.classList.add('read-more');
+            read_more.textContent = trans[lang].music.wiki_read;
+        }
+
+        let wiki_header = document.createElement('div');
+        wiki_header.classList.add('sub-text');
+        wiki_header.innerHTML = (`
+            <p>${trans[lang].music.wiki.replace('{a}', page.name)}</p>
+            <span class="right-links">
+                <p><a class="wiki-edit-small" href="${document.location.href}/+wiki/edit">${trans[lang].music.wiki_edit}</a></p>
+                ${(!wiki_empty) ? `<p>${read_more.outerHTML}</p>` : ''}
+            </span>
+        `);
+
+        wiki_col.insertBefore(wiki_header, wiki_col.firstElementChild);
+
+
+        if (!wiki_empty) {
+            patch_wiki_contents(wiki_block);
+        }
+    }
+}
+
+function patch_wiki_contents(wiki_block) {
+    let links = wiki_block.querySelectorAll('a');
+    links.forEach((link) => {
+        let href = link.getAttribute('href');
+        let type;
+        let name = link.textContent.trim();
+        let sister;
+
+        if (!href.startsWith(root)) {
+            tippy(link, {
+                content: link.getAttribute('href')
+            });
+
+            return;
+        }
+
+        if (href.endsWith('/+wiki'))
+            return;
+
+        href = href.replace(root, '').replace('music/', '');
+
+        if (href.startsWith('tag/')) {
+            type = 'tag';
+        } else {
+            let split = href.split('/');
+            //console.info(href, split.length);
+
+            if (split.length == 1) {
+                type = 'artist';
+            } else if (split.length == 2) {
+                type = 'album';
+                name = desanitise(split[1]);
+                sister = desanitise(split[0]);
+            } else if (split.length == 3) {
+                type = 'track';
+                name = desanitise(split[2]);
+                sister = desanitise(split[0]);
+            }
+        }
+
+        if (sister != undefined)
+            tippy(link, {
+                content: `${sister} - ${name}`
+            });
+
+        link.setAttribute('data-link-type', type);
+    });
+}
+
+// [COMPONENT] src/components/auto_edit.js
+function bleh_auto_edits() {
+    let corrections_panel = document.body.querySelector('#subscription-corrections');
+    page.structure.main.appendChild(corrections_panel);
+
+
+    let nav = page.structure.nav.querySelector('ul');
+    let back_nav = document.createElement('li');
+    back_nav.classList.add('navlist-item', 'secondary-nav-item', 'secondary-nav-item--back');
+    back_nav.innerHTML = (`
+        <a class="secondary-nav-item-link" href="${root}settings/subscription">
+            ${trans[lang].settings.back}
+        </a>
+    `);
+
+    nav.insertBefore(back_nav, nav.firstElementChild);
+}
+
+function auto_edit_modal() {
+    let modal = document.querySelector('.automatic-edit-modal-body-v2');
+
+    if (modal == null)
+        return;
+
+    if (modal.hasAttribute('data-bwaa-edit'))
+        return;
+    modal.setAttribute('data-bwaa-edit', 'true');
+
+    log('auto edit v2', 'modal');
+
+
+    let checkboxes = modal.querySelectorAll('.checkbox');
+
+    checkboxes.forEach((checkbox) => {
+        let id = checkbox.querySelector('input').getAttribute('name');
+        let text = checkbox.textContent.trim();
+
+        checkbox.classList = 'toggle-container';
+        checkbox.setAttribute('onclick', `_update_inbuilt_item('${id}')`);
+        checkbox.innerHTML = (`
+            <div class="heading">
+                <h5>${text}</h5>
+            </div>
+            <div class="toggle-wrap">
+                <input class="companion-checkbox" type="checkbox" name="${id}" id="inbuilt-companion-checkbox-${id}">
+                <span class="btn toggle" id="toggle-${id}" aria-checked="false">
+                    <div class="dot"></div>
+                </span>
+            </div>
+        `);
+    });
+}
+
+// [COMPONENT] src/components/badge.js
+function load_badges(user, solo = false) {
+    if (sponsor_list == null)
+        return;
+
+    if (!sponsor_list.badges.hasOwnProperty(user))
+        return;
+
+    let badges = [];
+
+    if (!Array.isArray(sponsor_list.badges[user])) {
+        log('1 badge found', 'sponsor', 'info', sponsor_list.badges[user]);
+        badges.push(sponsor_list.badges[user]);
+    } else {
+        log('multiple badges found', 'sponsor', 'info', sponsor_list.badges[user]);
+
+        if (solo)
+            badges.push(sponsor_list.badges[user][Object.keys(sponsor_list.badges[user]).length - 1])
+        else
+            badges = sponsor_list.badges[user];
+    }
+
+    // now we run thru to add missing metadata
+    badges.forEach((badge) => {
+        if (!badge.name)
+            badge.name = trans[lang].badges[badge.type].name;
+
+        if (badge.reason)
+            return;
+
+        if (badge.type == 'sponsor' || badge.type == 'contributor' || badge.type == 'translation')
+            badge.reason = badge.type;
+        else if (badge.type == 'cute' || badge.type == 'queen')
+            badge.reason = 'cute';
+        else
+            badge.reason = 'reserved';
+    });
+
+    log('final badge list', 'sponsor', 'info', badges);
+    return badges;
+}
+
+// [COMPONENT] src/components/menu.js
+function register_menu(element, menu) {
+    element.addEventListener('contextmenu', (e) => {
+        e.preventDefault();
+
+        menu.setProps({
+            getReferenceClientRect: () => ({
+                width: 0,
+                height: 0,
+                top: e.clientY,
+                bottom: e.clientY,
+                left: e.clientX,
+                right: e.clientX,
+            }),
+        });
+
+        menu.show();
+    });
+}
+
+// [COMPONENT] src/components/music_grid.js
+function music_grids() {
+    if (page.structure.main == null)
+        return;
+
+    let insights = {
+        artist: {
+            display: false,
+            values: [],
+            labels: [],
+            highest: {
+                value: 0,
+                label: '',
+                link: '',
+                img: ''
+            }
+        },
+        album: {
+            display: false,
+            values: [],
+            labels: [],
+            highest: {
+                value: 0,
+                label: '',
+                link: '',
+                img: ''
+            }
+        },
+        track: {
+            display: false,
+            values: [],
+            labels: [],
+            highest: {
+                value: 0,
+                label: '',
+                link: '',
+                img: ''
+            }
+        }
+    };
+
+    let grids = page.structure.main.querySelectorAll('.grid-items-item:not([data-bleh-music-grids])');
+    grids.forEach((grid) => {
+        let is_loading = (grid.querySelector('.grid-items-empty-inner') != null);
+
+        if (is_loading)
+            return;
+
+        grid.setAttribute('data-bleh-music-grids', 'true');
+
+        let is_album;
+        if (page.type == 'search') {
+            // search, tag pages
+            is_album = (grid.querySelector('.stat-name') == null);
+        } else {
+            // profiles
+            is_album = (grid.querySelector('.grid-items-item-aux-block') != null);
+        }
+
+        let image_wrap = grid.querySelector('.grid-items-cover-image-image');
+        let image = image_wrap.querySelector('img');
+        if (image != null && !image_wrap.classList.contains('grid-items-cover-default')) {
+            let grid_colour = document.createElement('div');
+            grid_colour.classList.add('grid-item-colour-bg');
+            image_wrap.appendChild(grid_colour);
+
+            image.setAttribute('crossorigin', 'anonymous');
+            try {
+                image.addEventListener('load', function() {
+                    let thief = new ColorThief();
+                    let colour = thief.getColor(image);
+
+                    let hsl = rgb_to_hsl(colour[0], colour[1], colour[2]);
+
+                    grid_colour.style.setProperty('background', `rgb(${colour})`);
+
+                    grid.classList.add('grid-items-item-has-colour');
+                    grid.style.setProperty('--hue-over', hsl.h);
+                    grid.style.setProperty('--sat-over', clamp_sat((hsl.s / 100) * 3));
+                    grid.style.setProperty('--lit-over', 1);
+                });
+            } catch(e) {}
+
+            // TODO: add a timeout to check if the image has had its
+            // colour taken and if not do it manually after a set amount of time
+        }
+
+        let plays_elem;
+        if (page.type == 'search') {
+            if (!is_album) {
+                let aux_text = grid.querySelector('.grid-items-item-aux-text');
+                let stat_name = aux_text.querySelector('.stat-name');
+
+                aux_text.removeChild(stat_name);
+
+                plays_elem = aux_text;
+            }
+        } else if (page.type == 'tag') {
+            let aux_text = grid.querySelector('.grid-items-item-aux-text');
+            let stat_name = aux_text.querySelector('.stat-name');
+            if (stat_name == null)
+                return;
+
+            aux_text.removeChild(stat_name);
+
+            plays_elem = aux_text;
+
+            if (is_album) {
+                let artist = grid.querySelector('.grid-items-item-aux-block');
+
+                aux_text.removeChild(artist);
+
+                plays_elem = document.createElement('a');
+                plays_elem.textContent = aux_text.textContent;
+
+                aux_text.textContent = '';
+
+                aux_text.appendChild(artist);
+                aux_text.appendChild(plays_elem);
+            }
+        } else {
+            plays_elem = grid.querySelector('.grid-items-item-aux-text a:last-child');
+        }
+
+        if (plays_elem != null && !grid.classList.contains('obsessions-item')) {
+            let plays = clean_number(plays_elem.textContent.trim().replace(` ${trans[lang].statistics.plays.name}`, ''));
+            plays_elem.classList.add('grid-item-plays');
+            if (is_album)
+                plays_elem.textContent = plays.toLocaleString(lang);
+
+            if (!is_album) {
+                insights.artist.display = true;
+                insights.artist.values.push(plays);
+
+                if (plays > insights.artist.highest.value)
+                    insights.artist.highest.value = plays;
+            } else {
+                insights.album.display = true;
+                insights.album.values.push(plays);
+
+                if (plays > insights.album.highest.value)
+                    insights.album.highest.value = plays;
+            }
+
+            if (page.type == 'search' || page.type == 'tag')
+                plays_elem.classList.add('grid-item-listeners');
+
+            if (!is_album && settings.colourful_counts && page.type == 'user') {
+                if (
+                    !plays_elem.getAttribute('href')
+                    .includes('?from=') &&
+                    (!plays_elem.getAttribute('href')
+                    .includes('?date_preset=') || plays_elem.getAttribute('href').endsWith('?date_preset=ALL') || plays_elem.getAttribute('href').endsWith('?date_preset=null'))
+                ) {
+                    let parsed_scrobble_as_rank = parse_scrobbles_as_rank(plays);
+
+                    plays_elem.setAttribute('data-bleh--scrobble-milestone', parsed_scrobble_as_rank.milestone);
+                    plays_elem.style.setProperty('--hue-over', parsed_scrobble_as_rank.hue);
+                    plays_elem.style.setProperty('--sat-over', parsed_scrobble_as_rank.sat);
+                    plays_elem.style.setProperty('--lit-over', parsed_scrobble_as_rank.lit);
+                }
+            }
+        }
+
+        let name = grid.querySelector('.grid-items-item-main-text a');
+
+        if (!is_album) {
+            name.textContent = correct_artist(name.textContent.trim());
+            insights.artist.labels.push(name.textContent);
+        } else {
+            let artist = grid.querySelector('.grid-items-item-aux-block');
+            if (artist == null)
+                return;
+
+            artist.textContent = correct_artist(artist.textContent.trim());
+
+            name.textContent = correct_item_by_artist(name.textContent.trim(), artist.textContent.trim());
+            insights.album.labels.push(name.textContent);
+        }
+    });
+
+    if (page.subpage.startsWith('library'))
+        bleh_glacier_insights(insights);
+}
+
+// [COMPONENT] src/components/profile_shortcut.js
+unsafeWindow._open_profile_shortcut_window = function() {
+    dialog_legacy('profile_shortcut',trans[lang].settings.music.profile_shortcut.name,(`
+        <div class="text-container" id="container-profile_shortcut">
+            <button class="btn reset" onclick="_reset_item('profile_shortcut')">${trans[lang].settings.reset}</button>
+            <div class="avatar-container">
+                <div class="avatar-inner" id="avatar-profile_shortcut">
+                    <img id="avatar_src-profile_shortcut" src="${localStorage.getItem('bleh_profile_shortcut_avi') || ''}">
+                </div>
+            </div>
+            <div class="heading content-form">
+                <h5>${trans[lang].settings.music.profile_shortcut.placeholder}</h5>
+                <div class="input-container">
+                    <input type="text" maxlength="40" id="text-profile_shortcut" value="${settings.profile_shortcut}" placeholder="${trans[lang].settings.music.profile_shortcut.header}">
+                    <button class="bleh--btn primary save" onclick="_save_profile_shortcut()">${trans[lang].settings.save}</button>
+                </div>
+            </div>
+        </div>
+    `), true);
+}
+
+unsafeWindow._other_listener = function(id) {
+    dialog({
+        id: 'other_listener',
+        title: trans[lang].music.listens.custom.name,
+        body: (`
+        <div class="text-container">
+            <div class="avatar-container">
+                <div class="avatar-inner avatar--bleh-missing">
+                    <img>
+                </div>
+            </div>
+            <div class="heading content-form">
+                <h5>${trans[lang].settings.music.profile_shortcut.placeholder}</h5>
+                <div class="input-container">
+                    <input type="text" maxlength="40" id="text-profile" placeholder="${trans[lang].settings.music.profile_shortcut.header}">
+                    <button class="bleh--btn primary save" onclick="_send_other_listener('${id}')">${trans[lang].settings.done}</button>
+                </div>
+            </div>
+        </div>
+        `)
+    });
+}
+unsafeWindow._send_other_listener = function(link) {
+    let name = dialogs['other_listener'].instance.querySelector('#text-profile').value;
+
+    dialog_rm({
+        id: 'other_listener'
+    });
+    window.location.href = `${root}user/${name}/library/music/${link}`;
+}
+})();

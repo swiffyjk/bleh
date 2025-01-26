@@ -45,7 +45,7 @@ with open('bleh.user.js', 'w') as file:
 
     file.write('\n')
 
-    file.write(f'let version = {build};\n')
+    file.write(f'let version = {str(build).replace('True', 'true').replace('False', 'false')};\n')
     file.write('let theme_version;\n\n')
 
     # VARIABLES ETC.
@@ -71,6 +71,9 @@ with open('bleh.user.js', 'w') as file:
     with open('build/seasonal.js') as seasonal:
         file.write('\n// build/seasonal.js\n' + seasonal.read() + '\n\n\n')
 
+    with open('build/sponsor.js') as sponsor:
+        file.write('// build/sponsor.js\n' + sponsor.read() + '\n')
+
     # LOOP
     file.write("(function() {\n'use strict';")
 
@@ -85,7 +88,7 @@ with open('bleh.user.js', 'w') as file:
         f = os.path.join('src/pages', filename)
 
         if (os.path.isfile(f)):
-            with open(f) as file_contents:
+            with open(f, errors='ignore') as file_contents:
                 file.write(f'\n// [PAGE] src/pages/{filename}\n' + file_contents.read() + '\n')
 
     for filename in os.listdir('src/components'):
