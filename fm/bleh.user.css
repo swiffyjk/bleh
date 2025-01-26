@@ -2100,7 +2100,6 @@ spacing between is removed and aligned to tag icon */
 .page-content {
     display: flex;
     flex-direction: column;
-    overflow: hidden;
 
     padding-top: unset !important;
     padding-bottom: var(--card-gap) !important;
@@ -2120,6 +2119,7 @@ spacing between is removed and aligned to tag icon */
 
     /* avoids listening report thing */
     [data-ff--katsune="true"] &:not([style]) {
+        overflow: hidden;
         background: hsl(var(--b10)) !important;
         border-radius: var(--card-radius);
         box-shadow: 0 0 0 1px var(--card-border-base) inset, var(--card-shadow);
