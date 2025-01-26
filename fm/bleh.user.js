@@ -19818,7 +19818,7 @@ let has_prompted_for_update = false;
 
 
 
-    function bleh_inbox() {
+    const bleh_inbox = function() {
         page.structure.container = document.body.querySelector('.page-content');
         try {
             page.structure.row = page.structure.container.querySelector('.row');
@@ -19830,26 +19830,23 @@ let has_prompted_for_update = false;
 
         let content_top = document.body.querySelector('.content-top');
 
-
         checkup_page_structure(false, content_top);
         log('status is', 'page', 'info', page);
         update_page();
 
-
         let inbox_header = document.createElement('section');
         inbox_header.classList.add('redesigned-header', 'inbox-header', 'no-background');
         inbox_header.innerHTML = (`
-            <div class="tag-side">
-                <div class="tag-icon ${(page.subpage == 'notifications') ? 'notifications' : 'inbox'}-icon"></div>
-            </div>
-            <div class="info-side">
-                <div class="sub-text">${trans[lang].inbox.name}</div>
-                <h1>${trans[lang].inbox[page.subpage]}</h1>
-            </div>
-        `);
+       <div class="tag-side">
+           <div class="tag-icon ${(page.subpage == 'notifications') ? 'notifications' : 'inbox'}-icon"></div>
+       </div>
+       <div class="info-side">
+           <div class="sub-text">${trans[lang].inbox.name}</div>
+           <h1>${trans[lang].inbox[page.subpage]}</h1>
+       </div>
+   `);
 
         page.structure.container.insertBefore(inbox_header, page.structure.container.firstElementChild);
-
 
         if (page.subpage == 'notifications') {
             register_background(auth.avatar);
@@ -19863,37 +19860,45 @@ let has_prompted_for_update = false;
 
             if (form)
                 panel.appendChild(form);
+
             if (notifications)
                 panel.appendChild(notifications);
+
             if (pagination)
                 panel.appendChild(pagination);
 
             page.structure.main.appendChild(panel);
 
-
             if (!notifications)
                 return;
 
             let notif_links = notifications.querySelectorAll('.inbox-notifications__item-link');
+
             notif_links.forEach((notification) => {
                 let avatar = notification.querySelector('.avatar');
                 let name = notification.querySelector('.inbox-notifications__item-description strong');
 
-                if (!name)
-                    return;
+                if (!name) return;
 
-                let name_text = return_name_from_avatar(avatar.querySelector('img'));
+                let img = avatar.querySelector('img');
+                let originalName = return_name_from_avatar(img);
+                let name_text = typeof originalName === 'string' ? originalName.replace(/[^a-z0-9-]/gi, '_') : '';
 
-                let badge = patch_avatar(avatar, name_text);
-                name.classList.add('notification-user-name', `user-status--bleh-${badge.type}`, `user-status--bleh-user-${name_text}`);
+                let badge = patch_avatar(avatar, originalName);
+                name.classList.add('notification-user-name',
+                    `user-status--bleh-${badge.type}`,
+                    `user-status--bleh-user-${name_text}`);
 
-                if (notification.classList.contains('inbox-notifications__item--highlight'))
-                    notification.classList.add('notification-user-name', `user-status--bleh-${badge.type}`, `user-status--bleh-user-${name_text}`);
+                if (notification.classList.contains('inbox-notifications__item--highlight')) {
+                    notification.classList.add('notification-user-name',
+                        `user-status--bleh-${badge.type}`,
+                        `user-status--bleh-user-${name_text}`);
+                }
             });
+
         } else if (page.subpage == 'message_overview' || page.subpage == 'sent_message') {
             let inbox = page.structure.container.querySelector('.inbox-message-view');
             page.structure.main.appendChild(inbox);
-
 
             let sender_panel = inbox.querySelector('.inbox-message-sender-avatar');
             let sender_name = inbox.querySelector('.inbox-message-sender-name');
@@ -19911,12 +19916,10 @@ let has_prompted_for_update = false;
             register_background(avatar.querySelector('img').getAttribute('src'));
         } else if (page.subpage == 'compose') {
             register_background(auth.avatar);
-
             let inbox = page.structure.container.querySelector('.inbox-compose-view');
             page.structure.main.appendChild(inbox);
         } else {
             register_background(auth.avatar);
-
             let inbox = page.structure.container.querySelector('.inbox');
             page.structure.main.appendChild(inbox);
         }
