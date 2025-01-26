@@ -17960,6 +17960,7 @@ h4 {
 
         .avatar-side {
             margin-top: -20px;
+            box-shadow: var(--card-shadow);
         }
 
         &.redesigned-profile-header {
@@ -18464,12 +18465,12 @@ section > .section-controls .subpage-title {
 
             .info-side {
                 h1 {
-                    font-size: 34px;
-                    line-height: 40px;
+                    font-size: 32px;
+                    line-height: 38px;
                 }
                 h2 {
-                    font-size: 20px;
-                    line-height: 26px;
+                    font-size: 22px;
+                    line-height: 28px;
                 }
             }
         }
