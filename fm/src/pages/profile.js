@@ -111,17 +111,23 @@ function bleh_profiles() {
             redesigned_profile_header.classList.add('staff-profile');
         }
 
-        if (settings.profile_avi_background) {
-            if (avatar != null)
-                register_background(avatar.querySelector('img').getAttribute('src').replace('/avatar170s/', '/ar0/'));
-            else
-                register_background(null);
+        if (page.name == auth.name && !settings.profile_header_own) {
+            register_background(null);
+        } else if (page.name != auth.name && !settings.profile_header_others) {
+            register_background(null);
         } else {
-            let background = document.body.querySelector('.header-background--has-image');
-            if (background != null)
-                register_background(background.style.getPropertyValue('background-image').replace('url("', '').replace('")', ''));
-            else
-                register_background(null);
+            if (settings.profile_avi_background) {
+                if (avatar != null)
+                    register_background(avatar.querySelector('img').getAttribute('src').replace('/avatar170s/', '/ar0/'));
+                else
+                    register_background(null);
+            } else {
+                let background = document.body.querySelector('.header-background--has-image');
+                if (background != null)
+                    register_background(background.style.getPropertyValue('background-image').replace('url("', '').replace('")', ''));
+                else
+                    register_background(null);
+            }
         }
 
         page.structure.container.insertBefore(redesigned_profile_header, page.structure.container.firstElementChild);

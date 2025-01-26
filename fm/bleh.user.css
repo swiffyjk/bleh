@@ -18413,20 +18413,6 @@ section > .section-controls .subpage-title {
         background: linear-gradient(180deg, hsla(var(--b6), 70%) 0%, hsl(var(--b6)) 100%) !important;
     }
 
-    &[data-page-type="user"] {
-        &[data-page-user-is-self="true"] {
-            [data-bleh--profile_header_own="false"] & {
-                display: none;
-            }
-        }
-
-        &[data-page-user-is-self="false"] {
-            [data-bleh--profile_header_others="false"] & {
-                display: none;
-            }
-        }
-    }
-
     &.katsune-bleh-background {
         position: relative;
         order: -10;
