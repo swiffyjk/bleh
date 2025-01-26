@@ -505,7 +505,7 @@ const trans = {
         },
         profile: {
             name: 'Profile',
-            on_ignore_list: 'You are on this user\'s ignore list.',
+            on_ignore_list: 'Ignored',
             friends: {
                 name: 'Friends'
             },
@@ -519,12 +519,12 @@ const trans = {
                 replace: '• scrobbling since '
             },
             edit: 'Edit profile',
-            message: 'Private message',
+            message: 'Message',
             sponsor: 'Sponsor',
             message_sponsor: 'Receive sponsor rewards',
             shortcut: {
-                add: 'Add as shortcut',
-                remove: 'Your profiles are linked!'
+                add: 'Shortcut',
+                remove: 'Shortcut'
             },
             scrobbles: 'Scrobbles',
             artists: 'Artists',
@@ -2401,7 +2401,6 @@ const trans = {
         },
         profile: {
             name: 'Profile',
-            cannot_follow_user: 'Nie możesz zaobserwować tego użytkownika.',
             on_ignore_list: 'Jesteś na liście ignorowanych tego użytkownika.',
             friends: {
                 name: 'Friends'
@@ -7568,6 +7567,8 @@ let has_prompted_for_update = false;
             } else if (page.subpage.startsWith('listening-report')) {
                 document.documentElement.setAttribute('data-bleh--theme', 'oled');
 
+                page.structure.content_top.classList.add('listening-report-navlist');
+
                 let report_box_container = document.body.querySelector('.report-box-container--overview');
                 if (report_box_container != null) {
                     if (report_box_container != null)
@@ -7968,9 +7969,10 @@ let has_prompted_for_update = false;
                 follow_btn.classList.remove('toggle-button', 'header-follower-btn');
                 profile_header.appendChild(follow_wrap);
 
-                tippy(follow_btn, {
-                    content: follow_btn.textContent
-                });
+                if (!katsune)
+                    tippy(follow_btn, {
+                        content: follow_btn.textContent
+                    });
 
                 follow_btn.addEventListener('click', () => {
                     window.setTimeout(() => {
@@ -7981,13 +7983,14 @@ let has_prompted_for_update = false;
                 // ignore list
                 let follow_placeholder = document.createElement('button');
                 follow_placeholder.classList.add('btn', 'profile-top-item', 'profile-top-item--follow', 'view-item', (katsune) ? 'icon' : '');
-                follow_placeholder.textContent = trans[lang].profile.cannot_follow_user;
+                follow_placeholder.textContent = trans[lang].profile.on_ignore_list;
 
                 follow_placeholder.setAttribute('data-ignored', 'true');
 
-                tippy(follow_placeholder, {
-                    content: trans[lang].profile.on_ignore_list
-                });
+                if (!katsune)
+                    tippy(follow_placeholder, {
+                        content: trans[lang].profile.on_ignore_list
+                    });
 
                 profile_header.appendChild(follow_placeholder);
             }
@@ -8170,20 +8173,22 @@ let has_prompted_for_update = false;
             if (name == settings.profile_shortcut) {
                 listen_item.setAttribute('data-is-shortcut', 'true');
                 listen_item.removeAttribute('onclick');
-                tippy(listen_item, {
-                    content: trans[lang].profile.shortcut.remove
-                });
 
                 if (katsune)
                     listen_item.textContent = trans[lang].profile.shortcut.remove;
+                else
+                    tippy(listen_item, {
+                        content: trans[lang].profile.shortcut.remove
+                    });
             } else {
                 listen_item.setAttribute('data-is-shortcut', 'false');
-                tippy(listen_item, {
-                    content: trans[lang].profile.shortcut.add
-                });
 
                 if (katsune)
                     listen_item.textContent = trans[lang].profile.shortcut.add;
+                else
+                    tippy(listen_item, {
+                        content: trans[lang].profile.shortcut.add
+                    });
             }
 
             let menu = tippy(listen_item, {
@@ -8252,6 +8257,9 @@ let has_prompted_for_update = false;
 
             register_menu(listen_item, menu);
         }
+
+        if (katsune)
+            return;
 
         if (tooltip == '')
             tippy(listen_item, {
@@ -20012,24 +20020,7 @@ let has_prompted_for_update = false;
         update_page();
 
 
-        let inbox_header = document.createElement('section');
-        inbox_header.classList.add('redesigned-header', 'inbox-header', 'no-background');
-        inbox_header.innerHTML = (`
-            <div class="tag-side">
-                <div class="tag-icon ${(page.subpage == 'notifications') ? 'notifications' : 'inbox'}-icon"></div>
-            </div>
-            <div class="info-side">
-                <div class="sub-text">${trans[lang].inbox.name}</div>
-                <h1>${trans[lang].inbox[page.subpage]}</h1>
-            </div>
-        `);
-
-        page.structure.container.insertBefore(inbox_header, page.structure.container.firstElementChild);
-
-
         if (page.subpage == 'notifications') {
-            register_background(auth.avatar);
-
             let form = page.structure.container.querySelector('form');
             let notifications = page.structure.container.querySelector('.inbox-notifications');
             let pagination = page.structure.container.querySelector('.pagination');
@@ -20083,16 +20074,10 @@ let has_prompted_for_update = false;
             let badge = patch_avatar(avatar, name_text);
 
             sender_panel.classList.add(`user-status--bleh-${badge.type}`, `user-status--bleh-user-${name_text}`);
-
-            register_background(avatar.querySelector('img').getAttribute('src'));
         } else if (page.subpage == 'compose') {
-            register_background(auth.avatar);
-
             let inbox = page.structure.container.querySelector('.inbox-compose-view');
             page.structure.main.appendChild(inbox);
         } else {
-            register_background(auth.avatar);
-
             let inbox = page.structure.container.querySelector('.inbox');
             page.structure.main.appendChild(inbox);
         }
@@ -20342,20 +20327,6 @@ let has_prompted_for_update = false;
 
     function bleh_bookmarks() {
         basic_page_structure();
-
-        let header = document.createElement('section');
-        header.classList.add('redesigned-header', 'edit-header', 'no-background');
-        header.innerHTML = (`
-            <div class="tag-side">
-                <div class="tag-icon bookmarks-icon"></div>
-            </div>
-            <div class="info-side">
-                <div class="sub-text">${trans[lang].profile.name}</div>
-                <h1>${trans[lang].bookmarks.name}</h1>
-            </div>
-        `);
-
-        page.structure.container.insertBefore(header, page.structure.container.firstElementChild);
 
         let content_top = document.body.querySelector('.content-top');
         if (content_top)
