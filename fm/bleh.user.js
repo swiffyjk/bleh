@@ -8081,11 +8081,9 @@ let has_prompted_for_update = false;
             let metadata = header_meta.querySelector('.header-metadata-display');
             scrobbles = clean_number(metadata.querySelector('p').textContent.trim());
 
-            if (scrobbles > 200_000) {
-                let subtract = (Math.round(scrobbles / 100_000) - 1) * 100_000;
+            if (scrobbles > 100_000) {
+                let subtract = Math.floor(scrobbles / 100_000) * 100_000;
                 scrobbles -= subtract;
-            } else {
-                scrobbles -= 100_000;
             }
 
             let left = 100_000 - scrobbles;
