@@ -19818,7 +19818,7 @@ let has_prompted_for_update = false;
 
 
 
-    const bleh_inbox = function() {
+    function bleh_inbox() {
         page.structure.container = document.body.querySelector('.page-content');
         try {
             page.structure.row = page.structure.container.querySelector('.row');
@@ -19875,25 +19875,28 @@ let has_prompted_for_update = false;
             let notif_links = notifications.querySelectorAll('.inbox-notifications__item-link');
 
             notif_links.forEach((notification) => {
+                let link = notification.getAttribute('href');
+                if (link.endsWith('/obsessions/set') || link.endsWith('/listening-report/month')) return;
+
                 let avatar = notification.querySelector('.avatar');
                 let name = notification.querySelector('.inbox-notifications__item-description strong');
-
                 if (!name) return;
 
-                let img = avatar.querySelector('img');
-                let originalName = return_name_from_avatar(img);
-                let name_text = typeof originalName === 'string' ? originalName.replace(/[^a-z0-9-]/gi, '_') : '';
+                let avatar_img = avatar.querySelector('img');
+                if (!avatar_img) return;
 
-                let badge = patch_avatar(avatar, originalName);
+                let name_text = return_name_from_avatar(avatar_img);
+                let safeClassName = encodeURIComponent(name_text).replace(/%[0-9A-F]{2}/g, '_');
+                let badge = patch_avatar(avatar, name_text);
+
                 name.classList.add('notification-user-name',
                     `user-status--bleh-${badge.type}`,
-                    `user-status--bleh-user-${name_text}`);
+                    `user-status--bleh-user-${safeClassName}`);
 
-                if (notification.classList.contains('inbox-notifications__item--highlight')) {
+                if (notification.classList.contains('inbox-notifications__item--highlight'))
                     notification.classList.add('notification-user-name',
                         `user-status--bleh-${badge.type}`,
-                        `user-status--bleh-user-${name_text}`);
-                }
+                        `user-status--bleh-user-${safeClassName}`);
             });
 
         } else if (page.subpage == 'message_overview' || page.subpage == 'sent_message') {
