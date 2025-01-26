@@ -2121,10 +2121,9 @@ spacing between is removed and aligned to tag icon */
 
     /* avoids listening report thing */
     [data-ff--katsune="true"] &:not([style]) {
-        overflow: hidden;
         background: hsl(var(--b10)) !important;
         border-radius: var(--card-radius);
-        box-shadow: 0 0 0 1px var(--card-border-base) inset, var(--card-shadow);
+        box-shadow: 0 0 0 1px var(--card-border-base) inset;
 
         min-width: calc(var(--cards-width) + (var(--card-gap) * 2));
         max-width: calc(var(--cards-width) + (var(--card-gap) * 2));
@@ -2674,6 +2673,10 @@ spacing between is removed and aligned to tag icon */
         padding-left: unset !important;
         padding-right: unset !important;
         width: 100% !important; /* 220 */
+    }
+
+    [data-ff--katsune="true"] & {
+        top: 15px;
     }
 }
 .library-search-submit {
@@ -17964,7 +17967,7 @@ h4 {
         background: hsl(var(--b5)) !important;
         margin: unset !important;
         padding: var(--card-padding) calc(var(--card-gap) + var(--card-padding)) !important;
-        box-shadow: 0 0 0 1px var(--card-border-base) inset, var(--card-shadow);
+        box-shadow: 0 0 0 1px var(--card-border-base) inset, var(--interact-shadow);
 
         .info-side .sub-text {
             display: none;
@@ -18494,7 +18497,7 @@ section > .section-controls .subpage-title {
 .katsune-button-row {
     padding: var(--card-gap) calc(var(--card-gap) + var(--card-padding));
     background: hsl(var(--b5), 40%);
-    box-shadow: 0 0 0 1px var(--card-border-base) inset, var(--card-shadow);
+    box-shadow: 0 0 0 1px var(--card-border-base) inset;
 
     .redesigned-header + & {
         margin: -1px 0 0 0;
@@ -18560,7 +18563,7 @@ section > .section-controls .subpage-title {
             position: relative;
 
             font-size: 16px;
-            color: hsl(var(--l2-c));
+            color: hsl(var(--c1));
             font-weight: var(--font-weight-medium);
             cursor: default;
 
