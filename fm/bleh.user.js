@@ -166,7 +166,7 @@ let version = {
             date: '2025-01-23'
         },
         katsune: {
-            default: false,
+            default: true,
             name: 'katsune redesign',
             date: '2025-01-25',
             notice: 'This is very, very experimental ~w~'
