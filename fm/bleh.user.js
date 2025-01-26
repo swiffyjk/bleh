@@ -7291,12 +7291,12 @@ let has_prompted_for_update = false;
                     if (index == 0) {
                         let para = item.querySelector('p');
 
-                        scrobbles = clean_number(para.textContent.trim());
+                        scrobbles = clean_number(para.textContent.trim()).toLocaleString(lang);
                         average = para.getAttribute('title');
                     } else if (index == 1) {
-                        artists = clean_number(item.textContent.trim());
+                        artists = clean_number(item.textContent.trim()).toLocaleString(lang);
                     } else if (index == 2) {
-                        loved = clean_number(item.textContent.trim());
+                        loved = clean_number(item.textContent.trim()).toLocaleString(lang);
                     }
                 });
             }
