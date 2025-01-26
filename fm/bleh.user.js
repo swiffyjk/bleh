@@ -7391,8 +7391,12 @@ let has_prompted_for_update = false;
             profile_header.setAttribute('data-is-own-profile', 'true');
 
         if (!is_subpage) {
+            let is_following = false;
+            if (profile_header.querySelector('.label.user-follow'))
+                is_following = true;
+
             if (ff('redesigned_profile_header'))
-                redesign_profile_header(is_own_profile);
+                redesign_profile_header(is_own_profile, is_following);
 
 
             //
@@ -7886,7 +7890,7 @@ let has_prompted_for_update = false;
         localStorage.setItem('bleh', JSON.stringify(settings));
     }
 
-    function redesign_profile_header(is_own_profile) {
+    function redesign_profile_header(is_own_profile, is_following) {
         let base_header = document.body.querySelector('.header-info-secondary');
 
         if (base_header == null)
@@ -7967,6 +7971,7 @@ let has_prompted_for_update = false;
                 let follow_btn = follow_wrap.querySelector('button');
                 follow_btn.classList.add('btn', 'profile-top-item', 'profile-top-item--follow', 'view-item', (katsune) ? 'icon' : '');
                 follow_btn.classList.remove('toggle-button', 'header-follower-btn');
+                follow_btn.setAttribute('data-following', is_following);
                 profile_header.appendChild(follow_wrap);
 
                 if (!katsune)
