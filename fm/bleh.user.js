@@ -20026,21 +20026,6 @@ let has_prompted_for_update = false;
                 artist_parent.after(image_parent);
             });
         }
-
-
-        let search_header = document.createElement('section');
-        search_header.classList.add('redesigned-header', 'search-header', 'no-background');
-        search_header.innerHTML = (`
-            <div class="tag-side">
-                <div class="tag-icon search-icon"></div>
-            </div>
-            <div class="info-side">
-                <div class="sub-text">${trans[lang].search.name}</div>
-                <h1>${value}</h1>
-            </div>
-        `);
-
-        page.structure.container.insertBefore(search_header, page.structure.container.firstElementChild);
     }
 
 

@@ -18502,6 +18502,11 @@ section > .section-controls .subpage-title {
                 h1 {
                     font-size: 30px;
                     line-height: 36px;
+                    gap: var(--card-gap);
+
+                    .feat {
+                        font-size: 22px;
+                    }
                 }
                 h2 {
                     font-size: 22px;
