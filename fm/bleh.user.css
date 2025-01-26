@@ -2645,6 +2645,11 @@ spacing between is removed and aligned to tag icon */
 .library-controls .secondary-nav {
     margin-top: var(--card-gap) !important;
     padding: unset !important;
+
+    [data-ff--katsune="true"] & {
+        margin-left: var(--card-padding) !important;
+        margin-right: var(--card-padding) !important;
+    }
 }
 
 
