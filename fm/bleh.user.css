@@ -6163,7 +6163,7 @@ button,
         .btn-subscribe,
         .listening-report-promo--year,
         [data-toggle-button-current-state="followed"] &.profile-top-item--follow.icon, .profile-top-item--shortcut.icon&[data-is-shortcut="true"],
-        .header-new-love-button.icon[data-analytics-action="UnloveTrack"], .header-new-bookmark-button.icon[data-analytics-action="UnbookmarkTrack"]
+        .header-new-love-button.icon[data-analytics-action="UnloveTrack"], .header-new-bookmark-button.icon[data-analytics-action^="Unbookmark"]
     ) {
         --bg: var(--cards-overlay-image-subtlest, none), hsl(var(--h3)) !important;
         --bg-hov: var(--cards-overlay-image-subtlest, none), hsl(var(--h3), 80%) !important;
@@ -18531,6 +18531,10 @@ section > .section-controls .subpage-title {
             }
         }
 
+        &[data-listens="-2"] {
+            display: flex;
+        }
+
         &[data-listens="-3"] {
             &:before {
                 --mask: var(--icon-16-plus);
@@ -18544,9 +18548,10 @@ section > .section-controls .subpage-title {
         }
 
         &[data-bleh--scrobble-milestone] {
-            --bg: transparent;
-            --bg-hov: hsla(var(--h4), 10%);
-            --bg-atv: hsla(var(--h4), 20%);
+            --bg: hsla(var(--h4), 20%);
+            --bg-hov: hsla(var(--h4), 30%);
+            --bg-atv: hsla(var(--h4), 40%);
+            --shadow: 0 3px 12px hsl(var(--h4), 18%);
             --col: hsl(var(--l2-c));
             text-shadow: 0 0 10px hsla(var(--h4), 90%);
 
@@ -18570,6 +18575,10 @@ section > .section-controls .subpage-title {
 
             position: relative;
             top: -1px;
+
+            & + .view-item-avatar {
+                margin-left: -8px;
+            }
         }
     }
     .search-similar-btn {
