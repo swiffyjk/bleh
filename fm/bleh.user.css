@@ -336,7 +336,7 @@ a,
     --avatar-generic-background: linear-gradient(180deg, hsla(var(--h3), 20%) 0%, hsl(var(--b6)) 100%);
     --avatar-generic-background: hsl(var(--b6));
 
-    .preview[data-bleh--theme="oled"], .redesigned-header[data-bleh--theme="oled"],
+    .preview[data-bleh--theme="oled"], .redesigned-header[data-bleh--theme="oled"], .redesigned-header[data-bleh--theme="oled"] a,
     [data-bleh--theme="oled"] &:not(.preview) {
         --c1: var(--hue), calc(var(--sat) * 40%), 100%;
         --c2: var(--hue), calc(var(--sat) * 60%), 90%;
@@ -360,9 +360,9 @@ a,
 
         --avatar-generic-background: hsl(var(--b6));
     }
-    .preview[data-bleh--theme="light"], .redesigned-header[data-bleh--theme="light"],
+    .preview[data-bleh--theme="light"],
     [data-bleh--theme="light"] &:not(
-        .preview, .grid-items-item.grid-items-item-has-colour
+        .preview, .grid-items-item.grid-items-item-has-colour, .redesigned-header:not(.redesigned-profile-header) a
         ){
         --c1: var(--hue), calc(var(--sat) * 6%), 0%;
         --c2: var(--hue), calc(var(--sat) * 4%), 4%;
@@ -18527,6 +18527,10 @@ section > .section-controls .subpage-title {
                 h2 {
                     font-size: 22px;
                     line-height: 28px;
+                }
+
+                [data-multi="true"] h1 {
+                    gap: unset;
                 }
             }
         }
