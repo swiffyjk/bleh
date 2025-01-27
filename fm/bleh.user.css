@@ -160,7 +160,7 @@ body, [data-page-resource-type="album"], [data-page-resource-type="track"],
     /* root */
     --b6: var(--hue), calc(var(--sat) * 12% * var(--sat-bg, 1)), 6%;
     --b10: var(--hue), calc(var(--sat) * 10% * var(--sat-bg, 1)), 11%;
-    --b8: var(--hue), calc(var(--sat) * 11% * var(--sat-bg, 1)), 18%;
+    --b8: var(--hue), calc(var(--sat) * 11% * var(--sat-bg, 1)), 22%;
     --b7: 0, 0%, 0%;
 
     --card-border: 1px solid hsla(var(--b4), 0.7);
@@ -180,7 +180,7 @@ body, [data-page-resource-type="album"], [data-page-resource-type="track"],
         /* root */
         --b6: var(--hue), calc(var(--sat) * 20% * var(--sat-bg, 1)), 3%;
         --b10: var(--hue), calc(var(--sat) * 10% * var(--sat-bg, 1)), 5%;
-        --b8: var(--hue), calc(var(--sat) * 11% * var(--sat-bg, 1)), 12%;
+        --b8: var(--hue), calc(var(--sat) * 11% * var(--sat-bg, 1)), 13%;
         --b7: 0, 0%, 0%;
     }
     .preview[data-bleh--theme="oled"], .redesigned-header[data-bleh--theme="oled"],
@@ -197,7 +197,7 @@ body, [data-page-resource-type="album"], [data-page-resource-type="track"],
         /* root */
         --b6: 0, 0%, 0%;
         --b10: 0, 0%, 2%;
-        --b8: var(--hue), calc(var(--sat) * 11% * var(--sat-bg, 1)), 6%;
+        --b8: var(--hue), calc(var(--sat) * 11% * var(--sat-bg, 1)), 10%;
         --b7: 0, 0%, 0%;
     }
     .preview[data-bleh--theme="light"], .redesigned-header[data-bleh--theme="light"],
@@ -214,7 +214,7 @@ body, [data-page-resource-type="album"], [data-page-resource-type="track"],
         /* root */
         --b6: 0, 0%, 90%;
         --b10: 0, 0%, 95%;
-        --b8: 0, 0%, 92%;
+        --b8: 0, 0%, 86%;
         --b7: 0, 0%, 0%;
     }
     [data-bleh--theme="classic"] & {

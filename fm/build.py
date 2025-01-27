@@ -102,3 +102,4 @@ with open('bleh.user.js', 'w', encoding='utf-8') as file:
     file.write('})();')
 
 print('Built successfully!')
+os.system('notepad bleh.user.js')
