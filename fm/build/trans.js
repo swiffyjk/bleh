@@ -1631,6 +1631,10 @@ const trans = {
                     name: 'Verwende einen Farbverlauf für die Allzeitdiagramme',
                     bio: 'Weist eine Farbe aus dem Farbverlauf zu, basierend auf der insgesamten Anzahl der Scrobbels für einen Künstler.'
                 },
+                colourful_tracks: {
+                    name: 'Colour actively scrobbling tracks based on album art',
+                    bio: 'Picks the primary colour from the associated cover to paint the track.'
+                },
                 gendered_tags: {
                     name: 'Geschlechtsspezifische Tags ausblenden',
                     bio: 'Geschlechtsspezifische Tags sind normalerweise überflüssig.'
@@ -2557,6 +2561,10 @@ const trans = {
                 colourful_counts: {
                     name: 'Użyj gradientu kolorów dla wszystkich czasów rankingów',
                     bio: 'Kolor jest przypisywany na podstawie twojej pozycji w wszechczasowych statystykach artystów.'
+                },
+                colourful_tracks: {
+                    name: 'Colour actively scrobbling tracks based on album art',
+                    bio: 'Picks the primary colour from the associated cover to paint the track.'
                 },
                 gendered_tags: {
                     name: 'Ukryj tagi związane z płcią',

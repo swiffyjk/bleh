@@ -21,7 +21,7 @@ if (build['feature_flags'] is None):
 
 print (f'Building {build['brand']} with version {build['build']}.{build['sku']}')
 
-with open('bleh.user.js', 'w') as file:
+with open('bleh.user.js', 'w', encoding='utf-8') as file:
     # HEADER
     file.write( '// ==UserScript==\n')
     file.write(f'// @name         {build['brand']}\n')
@@ -81,21 +81,21 @@ with open('bleh.user.js', 'w') as file:
         f = os.path.join('src', filename)
 
         if (os.path.isfile(f)):
-            with open(f) as file_contents:
+            with open(f, encoding='utf-8') as file_contents:
                 file.write(f'\n// src/{filename}\n' + file_contents.read() + '\n')
 
     for filename in os.listdir('src/pages'):
         f = os.path.join('src/pages', filename)
 
         if (os.path.isfile(f)):
-            with open(f, errors='ignore') as file_contents:
+            with open(f, encoding='utf-8') as file_contents:
                 file.write(f'\n// [PAGE] src/pages/{filename}\n' + file_contents.read() + '\n')
 
     for filename in os.listdir('src/components'):
         f = os.path.join('src/components', filename)
 
         if (os.path.isfile(f)):
-            with open(f) as file_contents:
+            with open(f, encoding='utf-8') as file_contents:
                 file.write(f'\n// [COMPONENT] src/components/{filename}\n' + file_contents.read() + '\n')
 
     # END

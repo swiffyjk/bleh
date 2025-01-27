@@ -85,23 +85,23 @@ const trans = {
                 tags: 'bookmarks'
             },
             search: {
-                overview: '{name} · search',
-                artists: '{name} · artist search',
-                albums: '{name} · album search',
-                tracks: '{name} · track search'
+                overview: '{name} Â· search',
+                artists: '{name} Â· artist search',
+                albums: '{name} Â· album search',
+                tracks: '{name} Â· track search'
             },
             labs: {
                 overview: 'labs'
             },
             settings: {
                 overview: 'settings',
-                privacy: 'privacy · settings',
-                account_overview: 'account · settings',
-                website: 'website · settings',
-                subscription_overview: 'last.fm pro · settings',
-                'subscription_automatic-edits_albums': 'album auto edits · settings',
-                'subscription_automatic-edits_tracks': 'track auto edits · settings',
-                applications_overview: 'applications · settings',
+                privacy: 'privacy Â· settings',
+                account_overview: 'account Â· settings',
+                website: 'website Â· settings',
+                subscription_overview: 'last.fm pro Â· settings',
+                'subscription_automatic-edits_albums': 'album auto edits Â· settings',
+                'subscription_automatic-edits_tracks': 'track auto edits Â· settings',
+                applications_overview: 'applications Â· settings',
             },
             inbox: {
                 overview: 'incoming inbox',
@@ -122,65 +122,65 @@ const trans = {
                 weekly: 'weekly charts'
             },
             user: {
-                overview: '{name} · profile',
-                'listening-report_week': '{name} · profile reports',
-                'listening-report_month': '{name} · profile reports',
-                'listening-report_year': '{name} · profile reports',
-                library_overview: '{name} · profile library',
-                library_artists: '{name} · profile library',
-                library_albums: '{name} · profile library',
-                library_tracks: '{name} · profile library',
-                library_artist_overview: '{name} · profile library',
-                library_album_overview: '{name} · profile library',
-                library_track_overview: '{name} · profile library',
-                library_artist_albums: '{name} · profile library',
-                library_artist_tracks: '{name} · profile library',
-                following: '{name} · profile following',
-                followers: '{name} · profile followers',
-                neighbours: '{name} · profile neighbours',
-                shoutbox_overview: '{name} · profile shouts',
-                loved: '{name} · profile loved',
-                obsessions: '{name} · profile obsessions',
-                events: '{name} · profile events',
-                playlists_playlists: '{name} · profile playlists',
-                tags_overview: '{name} · profile tags',
+                overview: '{name} Â· profile',
+                'listening-report_week': '{name} Â· profile reports',
+                'listening-report_month': '{name} Â· profile reports',
+                'listening-report_year': '{name} Â· profile reports',
+                library_overview: '{name} Â· profile library',
+                library_artists: '{name} Â· profile library',
+                library_albums: '{name} Â· profile library',
+                library_tracks: '{name} Â· profile library',
+                library_artist_overview: '{name} Â· profile library',
+                library_album_overview: '{name} Â· profile library',
+                library_track_overview: '{name} Â· profile library',
+                library_artist_albums: '{name} Â· profile library',
+                library_artist_tracks: '{name} Â· profile library',
+                following: '{name} Â· profile following',
+                followers: '{name} Â· profile followers',
+                neighbours: '{name} Â· profile neighbours',
+                shoutbox_overview: '{name} Â· profile shouts',
+                loved: '{name} Â· profile loved',
+                obsessions: '{name} Â· profile obsessions',
+                events: '{name} Â· profile events',
+                playlists_playlists: '{name} Â· profile playlists',
+                tags_overview: '{name} Â· profile tags',
             },
             artist: {
-                overview: '{name} · artist',
-                tracks: '{name} · artist tracks',
-                albums: '{name} · artist albums',
-                images_overview: '{name} · artist photos',
-                'images_image-upload': '{name} · artist photos',
-                image: '{name} · artist photo',
-                similar: '{name} · artist similar',
-                wiki_overview: '{name} · artist wiki',
-                wiki_edit: '{name} · artist wiki',
-                wiki_history: '{name} · artist wiki',
-                listeners_overview: '{name} · artist top listeners',
-                'listeners_you-know': '{name} · artist listeners you know',
-                shoutbox_overview: '{name} · artist shouts',
-                events: '{name} · artist events',
-                tags_overview: '{name} · artist tags'
+                overview: '{name} Â· artist',
+                tracks: '{name} Â· artist tracks',
+                albums: '{name} Â· artist albums',
+                images_overview: '{name} Â· artist photos',
+                'images_image-upload': '{name} Â· artist photos',
+                image: '{name} Â· artist photo',
+                similar: '{name} Â· artist similar',
+                wiki_overview: '{name} Â· artist wiki',
+                wiki_edit: '{name} Â· artist wiki',
+                wiki_history: '{name} Â· artist wiki',
+                listeners_overview: '{name} Â· artist top listeners',
+                'listeners_you-know': '{name} Â· artist listeners you know',
+                shoutbox_overview: '{name} Â· artist shouts',
+                events: '{name} Â· artist events',
+                tags_overview: '{name} Â· artist tags'
             },
             album: {
-                overview: '{name} - {sister} · album',
-                wiki_overview: '{name} - {sister} · album wiki',
-                wiki_edit: '{name} - {sister} · album wiki',
-                wiki_history: '{name} - {sister} · album wiki',
-                images_overview: '{name} - {sister} · album photos',
-                'images_image-upload': '{name} - {sister} · album photos',
-                image: '{name} - {sister} · album photo',
-                shoutbox_overview: '{name} - {sister} · album shouts',
-                tags_overview: '{name} - {sister} · album tags'
+                overview: '{name} - {sister} Â· album',
+                wiki_overview: '{name} - {sister} Â· album wiki',
+                wiki_edit: '{name} - {sister} Â· album wiki',
+                wiki_history: '{name} - {sister} Â· album wiki',
+                images_overview: '{name} - {sister} Â· album photos',
+                'images_image-upload': '{name} - {sister} Â· album photos',
+                image: '{name} - {sister} Â· album photo',
+                shoutbox_overview: '{name} - {sister} Â· album shouts',
+                tags_overview: '{name} - {sister} Â· album tags'
             },
             track: {
-                overview: '{name} - {sister} · track',
-                albums: '{name} - {sister} · track albums',
-                wiki_overview: '{name} - {sister} · track wiki',
-                wiki_edit: '{name} - {sister} · track wiki',
-                wiki_history: '{name} - {sister} · track wiki',
-                shoutbox_overview: '{name} - {sister} · track shouts',
-                tags_overview: '{name} - {sister} · track tags'
+                overview: '{name} - {sister} Â· track',
+                albums: '{name} - {sister} Â· track albums',
+                wiki_overview: '{name} - {sister} Â· track wiki',
+                wiki_edit: '{name} - {sister} Â· track wiki',
+                wiki_history: '{name} - {sister} Â· track wiki',
+                shoutbox_overview: '{name} - {sister} Â· track shouts',
+                tags_overview: '{name} - {sister} Â· track tags'
             }
         },
         badges: {
@@ -272,7 +272,7 @@ const trans = {
             }
         },
         changelog: {
-            name: 'What’s New?',
+            name: 'Whatâ€™s New?',
             subtitle: 'from {u}',
             type: {
                 major: 'Major release',
@@ -363,7 +363,7 @@ const trans = {
             created: {
                 name: 'created',
 
-                replace: '• scrobbling since '
+                replace: 'â€¢ scrobbling since '
             },
             edit: 'Edit profile',
             message: 'Message',
@@ -547,7 +547,7 @@ const trans = {
                 show_bulk_edit_album: {
                     name: 'Show album in chartlists',
                     bio: 'This is disabled by default as hovering over tracks reveals the album title in all areas',
-                    require: 'Only applicable with the ‘Last.fm Bulk Edit’ extension'
+                    require: 'Only applicable with the â€˜Last.fm Bulk Editâ€™ extension'
                 },
                 grid_glow: {
                     name: 'Show a glow around grid items'
@@ -1063,7 +1063,7 @@ const trans = {
             bookmarks: {
                 name: 'Saved',
                 bio: 'Gallery photos can be saved for future reference.',
-                no_data: 'no images saved (・・ )',
+                no_data: 'no images saved (ãƒ»ãƒ» )',
                 link: 'View all saved photos',
                 button: {
                     image_is_bookmarked: {
@@ -1181,27 +1181,27 @@ const trans = {
             },
             contributor: {
                 name: 'bleh Mitwirkender',
-                reason: 'Hat bei bleh mitgewirkt über code oder übersetzungen'
+                reason: 'Hat bei bleh mitgewirkt Ã¼ber code oder Ã¼bersetzungen'
             },
             translation: {
-                reason: 'Hat für eine unterstützte Sprache übersetzt'
+                reason: 'Hat fÃ¼r eine unterstÃ¼tzte Sprache Ã¼bersetzt'
             },
             cat: {
-                name: 'ein Kätzchen!!!'
+                name: 'ein KÃ¤tzchen!!!'
             },
             sponsor: {
                 name: 'Sponsor',
                 reason: 'Hat bleh und bwaa gesponsert :3'
             },
             cute: {
-                reason: 'Für besondere Nutzer reserviert'
+                reason: 'FÃ¼r besondere Nutzer reserviert'
             },
             reserved: {
-                reason: 'Für bestimmte Nutzer reserviert'
+                reason: 'FÃ¼r bestimmte Nutzer reserviert'
             }
         },
         avatar_for_me: 'Dein Avatar',
-        avatar_for_user: 'Avatar für ',
+        avatar_for_user: 'Avatar fÃ¼r ',
         actions: {
             view_profile: 'View profile',
             view_library: 'Library',
@@ -1223,7 +1223,7 @@ const trans = {
             name: 'Library refresh',
             by_artist: ' von {a}',
             meta: {
-                artists: 'Künstler',
+                artists: 'KÃ¼nstler',
                 albums: 'Alben',
                 tracks: 'Titel',
                 average: 'Average'
@@ -1253,7 +1253,7 @@ const trans = {
             }
         },
         changelog: {
-            name: 'What’s New?',
+            name: 'Whatâ€™s New?',
             subtitle: 'from {u}',
             type: {
                 major: 'Major release',
@@ -1287,19 +1287,19 @@ const trans = {
                 info: 'Sourced from your own plays as an official tracklist is unavailable',
                 loading: 'Deine Wiedergaben auf diesem Album werden abgerufen',
                 fail: 'Du hast keine Scrobbel auf diesem Album',
-                open_as_track: 'Albumtitel als Titel öffnen'
+                open_as_track: 'Albumtitel als Titel Ã¶ffnen'
             },
             from_the_album: 'Aus dem Album: {album}',
             listens: {
                 count_listens: '{c} scrobbels',
                 loading_listens: 'scrobbels',
-                other_listeners: '{c} hörer',
+                other_listeners: '{c} hÃ¶rer',
                 custom: {
                     tooltip: 'Pick a user',
                     name: 'View listens from another user'
                 }
             },
-            wiki: 'Über',
+            wiki: 'Ãœber',
             wiki_edit: 'wiki editieren',
             wiki_read: 'mehr erfahren',
             refresh: 'Neu laden',
@@ -1342,16 +1342,16 @@ const trans = {
             created: {
                 name: 'erstellt',
 
-                replace: '• scrobbelt seit '
+                replace: 'â€¢ scrobbelt seit '
             },
             edit: 'Profil bearbeiten',
             message: 'Private message',
             shortcut: {
-                add: 'Als Verknüpfung hinzufügen',
+                add: 'Als VerknÃ¼pfung hinzufÃ¼gen',
                 remove: 'Deine Profile sind verlinkt!'
             },
             scrobbles: 'Scrobbels',
-            artists: 'Künstler',
+            artists: 'KÃ¼nstler',
             loved: 'Lieblingslieder',
             taste: 'Taste similarity',
             taste_meter: {
@@ -1364,11 +1364,11 @@ const trans = {
                     very_low: 'Very Low',
                     unknown: 'Unknown'
                 },
-                you_share_1: 'Ihr hört {artist}',
-                you_share_2: 'Ihr hört {artist1} und {artist2}',
-                you_share_3: 'Ihr hört {artist1}, {artist2}, und {artist3}'
+                you_share_1: 'Ihr hÃ¶rt {artist}',
+                you_share_2: 'Ihr hÃ¶rt {artist1} und {artist2}',
+                you_share_3: 'Ihr hÃ¶rt {artist1}, {artist2}, und {artist3}'
             },
-            open_avatar: 'Im neuen Fenster öffnen',
+            open_avatar: 'Im neuen Fenster Ã¶ffnen',
             settings: 'Konfigurieren',
             events: 'Events',
             top_badge: 'Top-Abzeichen',
@@ -1403,20 +1403,20 @@ const trans = {
             name: 'Einstellungen',
             save: 'Speichern',
             cancel: 'Abbrechen',
-            close: 'Schließen',
+            close: 'SchlieÃŸen',
             clear: 'Leeren',
             remove: 'Remove',
             done: 'Fertig',
             finish: 'Beenden',
             continue: 'Fortsetzen',
-            reset: 'Auf Werkseinstellung Zurücksetzen',
+            reset: 'Auf Werkseinstellung ZurÃ¼cksetzen',
             go: 'Fortfahren',
-            skip: 'Überspringen',
-            back: 'Zurück',
+            skip: 'Ãœberspringen',
+            back: 'ZurÃ¼ck',
             right_click: 'Right-click for more options',
             reload: {
                 name: 'Refresh pending',
-                body: 'Klicke zum Neuladen, um deine Einstellungen zu übernehmen.'
+                body: 'Klicke zum Neuladen, um deine Einstellungen zu Ã¼bernehmen.'
             },
             new: 'Neu',
             beta: 'Beta',
@@ -1447,7 +1447,7 @@ const trans = {
                 update: {
                     name: 'Aktualisierungen',
                     css: 'Stil aktualisieren',
-                    bio: 'Jetzt prüfen',
+                    bio: 'Jetzt prÃ¼fen',
                     notice: 'There are updates available!',
                     ignore: 'Ignore temporarily',
 
@@ -1510,29 +1510,29 @@ const trans = {
             music: {
                 name: 'Musik',
                 header: 'Musikkonfiguration',
-                bio: 'Konfiguriere deine musikbezogene Einstellungen für Profile, Künstler, Alben und Titel.',
+                bio: 'Konfiguriere deine musikbezogene Einstellungen fÃ¼r Profile, KÃ¼nstler, Alben und Titel.',
                 profile_shortcut: {
-                    name: 'Profilverknüpfung',
-                    bio: 'Schnell auf die Wiedergaben eines Benutzers auf einer Künstler-, Album- oder Titelseite zugreifen.',
+                    name: 'ProfilverknÃ¼pfung',
+                    bio: 'Schnell auf die Wiedergaben eines Benutzers auf einer KÃ¼nstler-, Album- oder Titelseite zugreifen.',
                     placeholder: 'Profil',
                     header: 'Benutzernamen eingeben',
-                    saved: 'Die Profilverknüpfung ist gültig',
+                    saved: 'Die ProfilverknÃ¼pfung ist gÃ¼ltig',
                     failed: 'Das Profil existiert nicht oder konnte nicht geladen werden.'
                 },
                 show_bulk_edit_album: {
                     name: 'Show album in chartlists',
                     bio: 'This is disabled by default as hovering over tracks reveals the album title in all areas',
-                    require: 'Only applicable with the ‘Last.fm Bulk Edit’ extension'
+                    require: 'Only applicable with the â€˜Last.fm Bulk Editâ€™ extension'
                 },
                 grid_glow: {
                     name: 'Show a glow around grid items'
                 }
             },
             accessibility: {
-                name: 'Zugänglichkeit',
+                name: 'ZugÃ¤nglichkeit',
                 shout_preview: 'some completely random text that doesn\'t mean <a href="https://cutensilly.org">anything at all</a>',
                 accessible_name_colours: {
-                    name: 'Zugängliche Namensfarben bevorzugen',
+                    name: 'ZugÃ¤ngliche Namensfarben bevorzugen',
                     bio: 'Use the default header text colour over a accented text colour.'
                 },
                 underline_links: {
@@ -1572,15 +1572,15 @@ const trans = {
                     presets: 'Voreinstellungen',
                     manual: 'Anleitung',
                     custom: 'Erstelle eine eigene Farbe',
-                    default_with_season: 'Standardfarbe für {season}',
+                    default_with_season: 'Standardfarbe fÃ¼r {season}',
                     default: 'Standardfarbe',
                     modals: {
                         custom_colour: {
-                            preface: 'Farben werden durch drei Werte gesteuert: Farbton, Sättigung und Helligkeit. Probiere den Schieberegler aus, um ein Gefühl dafür zu bekommen.',
+                            preface: 'Farben werden durch drei Werte gesteuert: Farbton, SÃ¤ttigung und Helligkeit. Probiere den Schieberegler aus, um ein GefÃ¼hl dafÃ¼r zu bekommen.',
                             hue: 'Akzentfarbe',
-                            sat: 'Sättigung',
+                            sat: 'SÃ¤ttigung',
                             lit: 'Helligkeit',
-                            seasonal_alert: 'Die aktuelle Saison überschreibt deine Akzentfarbe. Passe den Schieberegler an, um sie zu deaktivieren.'
+                            seasonal_alert: 'Die aktuelle Saison Ã¼berschreibt deine Akzentfarbe. Passe den Schieberegler an, um sie zu deaktivieren.'
                         }
                     }
                 },
@@ -1590,7 +1590,7 @@ const trans = {
                 seasonal: {
                     name: 'Saisonal',
                     timeline: 'Seasonal timeline',
-                    bio: 'Während saisonaler Ereignisse kann bleh automatisch die Standardakzentfarbe ändern, Partikel hinzufügen und verschiedenen Schnittstellenelementen Overlays hinzufügen.',
+                    bio: 'WÃ¤hrend saisonaler Ereignisse kann bleh automatisch die Standardakzentfarbe Ã¤ndern, Partikel hinzufÃ¼gen und verschiedenen Schnittstellenelementen Overlays hinzufÃ¼gen.',
                     info: 'Seasonal events try to match your timezone, for reference we calculated {offset}',
                     started: 'Gestartet',
                     ends_in: 'Endet in',
@@ -1608,14 +1608,14 @@ const trans = {
                         name: 'Saisonales Eventsystem aktivieren'
                     },
                     marker: {
-                        current: 'Die aktuelle Saison ist {season} für {time}',
+                        current: 'Die aktuelle Saison ist {season} fÃ¼r {time}',
                         started: '{time} angefangen',
                         none: 'Derzeit gibt es keine aktive Saison.',
                         disabled: 'Saisons sind deaktiviert. Aktiviere diese, um die aktuelle Saison anzuzeigen.'
                     },
                     particles: {
-                        name: 'Partikel während bestimmter Jahreszeiten anzeigen',
-                        bio: 'Während der Wintersaison gibt es Schneeflocken!'
+                        name: 'Partikel wÃ¤hrend bestimmter Jahreszeiten anzeigen',
+                        bio: 'WÃ¤hrend der Wintersaison gibt es Schneeflocken!'
                     },
                     show_less_particles: {
                         name: 'Display a reduced number of particles'
@@ -1625,7 +1625,7 @@ const trans = {
                         bio: 'This might be more demanding on some systems'
                     },
                     overlays: {
-                        name: 'Zusätzliche saisonale Effekte anzeigen',
+                        name: 'ZusÃ¤tzliche saisonale Effekte anzeigen',
                         bio: 'During winter seasons this is used for ice effects, otherwise mainly just gradients.'
                     },
                     announce: 'It is now {s}!',
@@ -1641,8 +1641,8 @@ const trans = {
                     name: 'Cover'
                 },
                 hue_from_album: {
-                    name: 'Albumseiten automatisch färben',
-                    bio: 'Wählt die Primärfarbe eines Albumcovers aus, um die Seite zu bemalen.'
+                    name: 'Albumseiten automatisch fÃ¤rben',
+                    bio: 'WÃ¤hlt die PrimÃ¤rfarbe eines Albumcovers aus, um die Seite zu bemalen.'
                 },
                 gloss: {
                     name: 'Gloss overlay',
@@ -1652,12 +1652,16 @@ const trans = {
                     name: 'Anzeigeeinstellungen'
                 },
                 colourful_counts: {
-                    name: 'Verwende einen Farbverlauf für die Allzeitdiagramme',
-                    bio: 'Weist eine Farbe aus dem Farbverlauf zu, basierend auf der insgesamten Anzahl der Scrobbels für einen Künstler.'
+                    name: 'Verwende einen Farbverlauf fÃ¼r die Allzeitdiagramme',
+                    bio: 'Weist eine Farbe aus dem Farbverlauf zu, basierend auf der insgesamten Anzahl der Scrobbels fÃ¼r einen KÃ¼nstler.'
+                },
+                colourful_tracks: {
+                    name: 'Colour actively scrobbling tracks based on album art',
+                    bio: 'Picks the primary colour from the associated cover to paint the track.'
                 },
                 gendered_tags: {
                     name: 'Geschlechtsspezifische Tags ausblenden',
-                    bio: 'Geschlechtsspezifische Tags sind normalerweise überflüssig.'
+                    bio: 'Geschlechtsspezifische Tags sind normalerweise Ã¼berflÃ¼ssig.'
                 },
                 rain: {
                     name: 'Let it rain!',
@@ -1668,7 +1672,7 @@ const trans = {
                     bio: 'too many numbers ~w~'
                 },
                 profile_header: {
-                    name: 'Profilhintergründe anzeigen',
+                    name: 'ProfilhintergrÃ¼nde anzeigen',
                     see_type: 'Source from avatar instead of top artist',
                     view_on: 'View backgrounds on',
                     for_own: 'Auf meinem Profil',
@@ -1759,7 +1763,7 @@ const trans = {
             },
             corrections: {
                 name: 'Korrekturen',
-                bio: 'Verwalte das Korrektursystem von bleh für Künstler-, Album- und Titel.',
+                bio: 'Verwalte das Korrektursystem von bleh fÃ¼r KÃ¼nstler-, Album- und Titel.',
                 toggle: {
                     name: 'Aktiviere das Korrektursystem'
                 },
@@ -1773,12 +1777,12 @@ const trans = {
                     bio: 'Teilt Titel und Albentitel in einzelne Tags auf, beispielsweise Features, Versionen, Remixe.'
                 },
                 show_guest_features: {
-                    name: 'Features im Titel und Künstler anzeigen',
-                    bio: 'Durch deaktivieren werden sie von Titeln entfernt und das Künstlerfeld wird bevorzugt.'
+                    name: 'Features im Titel und KÃ¼nstler anzeigen',
+                    bio: 'Durch deaktivieren werden sie von Titeln entfernt und das KÃ¼nstlerfeld wird bevorzugt.'
                 },
                 stacked_chartlist_info: {
                     name: 'Name und Titel stapeln',
-                    bio: 'Beide passen sich an den Streaming-Diensten an und erhöht die Länge dieser.'
+                    bio: 'Beide passen sich an den Streaming-Diensten an und erhÃ¶ht die LÃ¤nge dieser.'
                 },
                 show_remaster_tags: {
                     name: 'Remaster-Tags anzeigen',
@@ -1790,18 +1794,18 @@ const trans = {
                     action: 'Submit'
                 },
                 listing: {
-                    artists: 'Künstler',
+                    artists: 'KÃ¼nstler',
                     albums_tracks: 'Alben und Titel'
                 }
             },
             language: {
                 name: 'Sprache',
-                supported: 'Unterstützt von bleh',
+                supported: 'UnterstÃ¼tzt von bleh',
                 by: 'von {users}',
                 submit: {
-                    name: 'Sprichst du fließend eine andere Sprache?',
-                    bio: 'Übersetzungen werden ausschließlich von der Community beigesteuert.',
-                    action: 'Übersetzung einreichen'
+                    name: 'Sprichst du flieÃŸend eine andere Sprache?',
+                    bio: 'Ãœbersetzungen werden ausschlieÃŸlich von der Community beigesteuert.',
+                    action: 'Ãœbersetzung einreichen'
                 }
             },
             text: {
@@ -1810,7 +1814,7 @@ const trans = {
                 shout_preview: 'some completely random! text that doesn\'t mean anything at all',
                 markdown: {
                     name: 'Markdown-Formatierung verwenden',
-                    bio: 'Aktiviert Zeilenumbrüche, Fettdruck, Kursivschrift und Links.',
+                    bio: 'Aktiviert ZeilenumbrÃ¼che, Fettdruck, Kursivschrift und Links.',
                     shouts: 'In Shouts',
                     profile: 'In Profilbiografien'
                 },
@@ -1841,19 +1845,19 @@ const trans = {
                     subtitle: {
                         name: 'Untertitel'
                     },
-                    pronoun_tip: 'Wenn Pronomen an den Anfang gestellt werden, ändert sich „aka.“ in „Pronomen“.',
+                    pronoun_tip: 'Wenn Pronomen an den Anfang gestellt werden, Ã¤ndert sich â€žaka.â€œ in â€žPronomenâ€œ.',
                     country: 'Land',
                     website: 'Website',
-                    about: 'Über mich',
+                    about: 'Ãœber mich',
                     toggle_preview: {
                         name: 'Vorschau umschalten',
-                        bio: 'Vorschau deiner biographie für andere',
-                        note: 'Für nicht bleh Benutzer, mehrere Zeilen werden als Leerzeichen und Links angezeigt, Fett- und Kursivschrift wird als einfacher Text angezeigt.'
+                        bio: 'Vorschau deiner biographie fÃ¼r andere',
+                        note: 'FÃ¼r nicht bleh Benutzer, mehrere Zeilen werden als Leerzeichen und Links angezeigt, Fett- und Kursivschrift wird als einfacher Text angezeigt.'
                     },
                     avatar: {
                         name: 'Profilbild bearbeiten',
                         upload: 'Datei hochladen',
-                        delete: 'Profilbild löschen'
+                        delete: 'Profilbild lÃ¶schen'
                     }
                 },
                 charts: {
@@ -1955,7 +1959,7 @@ const trans = {
                     }
                 },
                 reset: {
-                    name: 'Zurücksetzen',
+                    name: 'ZurÃ¼cksetzen',
                     modals: {
                         initial: {
                             name: 'Reset your settings to default',
@@ -1993,7 +1997,7 @@ const trans = {
             bookmarks: {
                 name: 'Saved',
                 bio: 'Gallery photos can be saved for future reference.',
-                no_data: 'no images saved (・・ )',
+                no_data: 'no images saved (ãƒ»ãƒ» )',
                 link: 'Alle favorisierten Bilder ansehen',
                 button: {
                     image_is_bookmarked: {
@@ -2020,8 +2024,8 @@ const trans = {
                 name: 'Melden'
             },
             open: {
-                name: 'Vergrößern',
-                tooltip: 'Dieses Bild auf gesamter Auflösung vergrößern'
+                name: 'VergrÃ¶ÃŸern',
+                tooltip: 'Dieses Bild auf gesamter AuflÃ¶sung vergrÃ¶ÃŸern'
             },
             up: 'Plusstimmen:',
             down: 'Minusstimmen:',
@@ -2029,14 +2033,14 @@ const trans = {
             view: 'Fotos anzeigen'
         },
         activities: {
-            name: 'Kürzliche Aktivitäten',
+            name: 'KÃ¼rzliche AktivitÃ¤ten',
             description: 'Your latest 10 activities are tracked locally on your profile, try leaving a shout and check back here!',
             notifications: 'Read your notifications',
 
             test: 'TEST {involved}',
-            shout: 'Du hast ein Shout für {i} hinterlassen',
-            image_upload: 'Du hast ein bild für {i} hochgeladen',
-            image_star: 'Du hast ein bild für {i} favorisiert',
+            shout: 'Du hast ein Shout fÃ¼r {i} hinterlassen',
+            image_upload: 'Du hast ein bild fÃ¼r {i} hochgeladen',
+            image_star: 'Du hast ein bild fÃ¼r {i} favorisiert',
             obsess: 'Du bist obsessed mit {i}',
             unobsess: 'Du bist nicht mehr obsessed mit {i}',
             love: 'Du liebst {i}',
@@ -2045,13 +2049,13 @@ const trans = {
             update_bwaa: 'Du hast bwaa auf Version {i} aktualisiert',
             install_bleh: 'Du hast bleh installiert',
             update_bleh: 'Du hast bleh auf Version {i} aktualisiert',
-            bookmark: 'Du hast ein Lesezeichen für {i} hinterlassen',
-            unbookmark: 'Du hast das Lesezeichen für {i} entfernt',
-            wiki: 'Du hast die Wiki für {i} editiert'
+            bookmark: 'Du hast ein Lesezeichen fÃ¼r {i} hinterlassen',
+            unbookmark: 'Du hast das Lesezeichen fÃ¼r {i} entfernt',
+            wiki: 'Du hast die Wiki fÃ¼r {i} editiert'
         },
         artist: {
-            name: 'Künstler',
-            plural: 'Künstler',
+            name: 'KÃ¼nstler',
+            plural: 'KÃ¼nstler',
             tooltip: 'Multiple artists are combined into this profile.'
         },
         album: {
@@ -2180,7 +2184,7 @@ const trans = {
             }
         },
         changelog: {
-            name: 'What’s New?',
+            name: 'Whatâ€™s New?',
             subtitle: 'from {u}',
             type: {
                 major: 'Major release',
@@ -2192,10 +2196,10 @@ const trans = {
             view_major: 'View latest major release'
         },
         auth_menu: {
-            dev: 'Przełącz tryb deweloperski',
+            dev: 'PrzeÅ‚Ä…cz tryb deweloperski',
             configure_bleh: 'Skonfiguruj bleh',
             library: 'Library',
-            shouts: 'Wiadomości',
+            shouts: 'WiadomoÅ›ci',
             obsessions: 'Obsessions',
             labs: 'Labs',
             bookmarks: 'Bookmarks',
@@ -2253,12 +2257,12 @@ const trans = {
                 name: 'Twoje scrobble'
             },
             plays: {
-                name: 'odtworzeń'
+                name: 'odtworzeÅ„'
             }
         },
         profile: {
             name: 'Profile',
-            on_ignore_list: 'Jesteś na liście ignorowanych tego użytkownika.',
+            on_ignore_list: 'JesteÅ› na liÅ›cie ignorowanych tego uÅ¼ytkownika.',
             friends: {
                 name: 'Friends'
             },
@@ -2269,7 +2273,7 @@ const trans = {
             created: {
                 name: 'created',
 
-                replace: '• scrobbling since '
+                replace: 'â€¢ scrobbling since '
             },
             edit: 'Edit profile',
             message: 'Private message',
@@ -2331,12 +2335,12 @@ const trans = {
             save: 'Zapisz',
             cancel: 'Anuluj',
             close: 'Zamknij',
-            clear: 'Wyczyść',
+            clear: 'WyczyÅ›Ä‡',
             remove: 'Remove',
             done: 'Gotowe',
             finish: 'Finish',
             continue: 'Kontynuuj',
-            reset: 'Przywróć domyślne',
+            reset: 'PrzywrÃ³Ä‡ domyÅ›lne',
             go: 'Go',
             skip: 'Skip',
             back: 'Back',
@@ -2357,19 +2361,19 @@ const trans = {
                 applications_overview: 'Applications'
             },
             examples: {
-                button: 'Przycisk przykładowy'
+                button: 'Przycisk przykÅ‚adowy'
             },
             skip_to: {
                 name: 'Skip to'
             },
             home: {
-                name: 'Strona główna',
+                name: 'Strona gÅ‚Ã³wna',
                 brand: 'bleh',
                 version: 'Wersja {v}',
                 recommended: 'Zalecane ustawienia',
                 issues: {
                     name: 'Problemy',
-                    bio: 'Zgłoś błędy'
+                    bio: 'ZgÅ‚oÅ› bÅ‚Ä™dy'
                 },
                 update: {
                     name: 'Updates',
@@ -2387,7 +2391,7 @@ const trans = {
                 },
                 colours: {
                     name: 'Kolory',
-                    bio: 'Wybierz swój ulubiony!'
+                    bio: 'Wybierz swÃ³j ulubiony!'
                 },
                 thanks: 'Welcome {m}, you are running bleh version {v}.',
                 sponsor: {
@@ -2415,19 +2419,19 @@ const trans = {
                 bio: 'Wybierz od jasnego do ciemnego.',
                 dark: {
                     name: 'Ciemny',
-                    bio: 'Domyślna wersja bleh'
+                    bio: 'DomyÅ›lna wersja bleh'
                 },
                 darker: {
                     name: 'Ciemniejszy',
-                    bio: 'Coś pomiędzy'
+                    bio: 'CoÅ› pomiÄ™dzy'
                 },
                 oled: {
-                    name: 'Północny',
-                    bio: 'Całkowita ciemność'
+                    name: 'PÃ³Å‚nocny',
+                    bio: 'CaÅ‚kowita ciemnoÅ›Ä‡'
                 },
                 light: {
                     name: 'Jasny',
-                    bio: 'Mało koloru i dużo światła'
+                    bio: 'MaÅ‚o koloru i duÅ¼o Å›wiatÅ‚a'
                 },
                 classic: {
                     name: 'Classic',
@@ -2449,7 +2453,7 @@ const trans = {
                 show_bulk_edit_album: {
                     name: 'Show album in chartlists',
                     bio: 'This is disabled by default as hovering over tracks reveals the album title in all areas',
-                    require: 'Only applicable with the ‘Last.fm Bulk Edit’ extension'
+                    require: 'Only applicable with the â€˜Last.fm Bulk Editâ€™ extension'
                 },
                 grid_glow: {
                     name: 'Show a glow around grid items'
@@ -2457,14 +2461,14 @@ const trans = {
             },
             accessibility: {
                 name: 'Accessibility',
-                shout_preview: 'jakikolwiek losowy tekst, który <a href="https://cutensilly.org">nic nie znaczy</a>',
+                shout_preview: 'jakikolwiek losowy tekst, ktÃ³ry <a href="https://cutensilly.org">nic nie znaczy</a>',
                 accessible_name_colours: {
-                    name: 'Preferowane kolory dostępnej nazwy',
-                    bio: 'Użyj domyślnego koloru tekstu nagłówka zamiast koloru akcentowego.'
+                    name: 'Preferowane kolory dostÄ™pnej nazwy',
+                    bio: 'UÅ¼yj domyÅ›lnego koloru tekstu nagÅ‚Ã³wka zamiast koloru akcentowego.'
                 },
                 underline_links: {
-                    name: 'Zawsze podkreślaj linki',
-                    bio: 'Podkreślaj linki do elementów interaktywnych.'
+                    name: 'Zawsze podkreÅ›laj linki',
+                    bio: 'PodkreÅ›laj linki do elementÃ³w interaktywnych.'
                 },
                 reduced_motion: {
                     name: 'Reduce animations around interfaces',
@@ -2496,17 +2500,17 @@ const trans = {
                 name: 'Dostosuj',
                 colours: {
                     name: 'Kolory',
-                    presets: 'Ustawienia wstępne',
-                    manual: 'Ręcznie',
-                    custom: 'Stwórz niestandardowy kolor',
+                    presets: 'Ustawienia wstÄ™pne',
+                    manual: 'RÄ™cznie',
+                    custom: 'StwÃ³rz niestandardowy kolor',
                     default_with_season: 'Default colour for {season}',
                     default: 'Default colour',
                     modals: {
                         custom_colour: {
-                            preface: 'Kolory są kontrolowane przez trzy wartości: odcień (hue), nasycenie (saturation) i jasność (lightness). Przesuń suwaki, aby dostosować kolor.',
+                            preface: 'Kolory sÄ… kontrolowane przez trzy wartoÅ›ci: odcieÅ„ (hue), nasycenie (saturation) i jasnoÅ›Ä‡ (lightness). PrzesuÅ„ suwaki, aby dostosowaÄ‡ kolor.',
                             hue: 'Kolor akcentu (hue)',
                             sat: 'Nasycenie (saturation)',
-                            lit: 'Jasność (lightness)',
+                            lit: 'JasnoÅ›Ä‡ (lightness)',
                             seasonal_alert: 'The current season is overriding your accent colour, adjust sliders to disable.'
                         }
                     }
@@ -2565,30 +2569,34 @@ const trans = {
                     view: 'Open seasonal tab'
                 },
                 artwork: {
-                    name: 'Okładka'
+                    name: 'OkÅ‚adka'
                 },
                 hue_from_album: {
                     name: 'Automatically colour album pages',
                     bio: 'Picks the primary colour from an album cover to paint the page.'
                 },
                 gloss: {
-                    name: 'Nakładka błyszcząca',
-                    bio: 'Dodaj odblasku do wszystkich okładek.'
+                    name: 'NakÅ‚adka bÅ‚yszczÄ…ca',
+                    bio: 'Dodaj odblasku do wszystkich okÅ‚adek.'
                 },
                 display: {
-                    name: 'Wyświetlacz'
+                    name: 'WyÅ›wietlacz'
                 },
                 colourful_counts: {
-                    name: 'Użyj gradientu kolorów dla wszystkich czasów rankingów',
-                    bio: 'Kolor jest przypisywany na podstawie twojej pozycji w wszechczasowych statystykach artystów.'
+                    name: 'UÅ¼yj gradientu kolorÃ³w dla wszystkich czasÃ³w rankingÃ³w',
+                    bio: 'Kolor jest przypisywany na podstawie twojej pozycji w wszechczasowych statystykach artystÃ³w.'
+                },
+                colourful_tracks: {
+                    name: 'Colour actively scrobbling tracks based on album art',
+                    bio: 'Picks the primary colour from the associated cover to paint the track.'
                 },
                 gendered_tags: {
-                    name: 'Ukryj tagi związane z płcią',
-                    bio: 'Domyślnie tagi związane z płcią są ukryte w bleh ze względu na ich nieuporządkowaną i problematyczną nature.'
+                    name: 'Ukryj tagi zwiÄ…zane z pÅ‚ciÄ…',
+                    bio: 'DomyÅ›lnie tagi zwiÄ…zane z pÅ‚ciÄ… sÄ… ukryte w bleh ze wzglÄ™du na ich nieuporzÄ…dkowanÄ… i problematycznÄ… nature.'
                 },
                 rain: {
                     name: 'Niech pada!',
-                    bio: 'deszcz :3c (może wpływać na wydajność!! może też wyglądać źle!!)'
+                    bio: 'deszcz :3c (moÅ¼e wpÅ‚ywaÄ‡ na wydajnoÅ›Ä‡!! moÅ¼e teÅ¼ wyglÄ…daÄ‡ Åºle!!)'
                 },
                 show_your_progress: {
                     name: 'Show your weekly progress',
@@ -2623,15 +2631,15 @@ const trans = {
                 }
             },
             performance: {
-                name: 'Wydajność',
-                bio: 'Napotykasz problemy z ładowaniem motywu? Wypróbuj te ustawienia.',
+                name: 'WydajnoÅ›Ä‡',
+                bio: 'Napotykasz problemy z Å‚adowaniem motywu? WyprÃ³buj te ustawienia.',
                 dev: {
-                    name: 'Wyłącz wbudowane ładowanie motywu',
-                    bio: 'Pozwala to na ładowanie wbudowanego motywu za pomocą rozszerzenia Stylus, co może być bardziej wydajne.',
+                    name: 'WyÅ‚Ä…cz wbudowane Å‚adowanie motywu',
+                    bio: 'Pozwala to na Å‚adowanie wbudowanego motywu za pomocÄ… rozszerzenia Stylus, co moÅ¼e byÄ‡ bardziej wydajne.',
                     modals: {
                         prompt: {
-                            alert: 'Po odświeżeniu strony wbudowany motyw bleh zostanie wyłączony (chyba że ponownie wyłączysz tę opcję).',
-                            stylus: 'Jeśli nie masz jeszcze rozszerzenia <strong>Stylus</strong>, wybierz swoją przeglądarkę poniżej:',
+                            alert: 'Po odÅ›wieÅ¼eniu strony wbudowany motyw bleh zostanie wyÅ‚Ä…czony (chyba Å¼e ponownie wyÅ‚Ä…czysz tÄ™ opcjÄ™).',
+                            stylus: 'JeÅ›li nie masz jeszcze rozszerzenia <strong>Stylus</strong>, wybierz swojÄ… przeglÄ…darkÄ™ poniÅ¼ej:',
                             browsers: {
                                 chrome: {
                                     name: 'Chrome',
@@ -2644,10 +2652,10 @@ const trans = {
                             }
                         },
                         continue: {
-                            next_step: 'Gdy już zainstalujesz rozszerzenie, kliknij "Zainstaluj styl" na nowej karcie, która się otworzy.'
+                            next_step: 'Gdy juÅ¼ zainstalujesz rozszerzenie, kliknij "Zainstaluj styl" na nowej karcie, ktÃ³ra siÄ™ otworzy.'
                         },
                         finish: {
-                            alert: 'Gotowe! Od teraz motyw będzie obsługiwany za pomocą Stylus.'
+                            alert: 'Gotowe! Od teraz motyw bÄ™dzie obsÅ‚ugiwany za pomocÄ… Stylus.'
                         }
                     }
                 },
@@ -2658,15 +2666,15 @@ const trans = {
             },
             profiles: {
                 name: 'Profil',
-                bio: 'Zarządzaj swoimi danymi i danymi zapisanych na innych profilach.',
+                bio: 'ZarzÄ…dzaj swoimi danymi i danymi zapisanych na innych profilach.',
                 notes: {
                     name: 'Notatki',
                     header: 'Notatka',
-                    placeholder: 'Wprowadź lokalną notatkę dla tego użytkownika',
-                    edit: 'Edytuj notatkę',
-                    delete: 'Usuń notatkę',
-                    edit_user: 'Edytuj notatkę dla {u}',
-                    delete_user: 'Usuń notatkę dla {u}'
+                    placeholder: 'WprowadÅº lokalnÄ… notatkÄ™ dla tego uÅ¼ytkownika',
+                    edit: 'Edytuj notatkÄ™',
+                    delete: 'UsuÅ„ notatkÄ™',
+                    edit_user: 'Edytuj notatkÄ™ dla {u}',
+                    delete_user: 'UsuÅ„ notatkÄ™ dla {u}'
                 },
                 you: 'You'
             },
@@ -2695,8 +2703,8 @@ const trans = {
                 },
                 formatting: 'Smart music titles',
                 format_guest_features: {
-                    name: 'Formatuj występy i tagi utworów',
-                    bio: 'Mniej eksponuje występy i tagi utworów (np. Remix, Deluxe Edition, itp.)'
+                    name: 'Formatuj wystÄ™py i tagi utworÃ³w',
+                    bio: 'Mniej eksponuje wystÄ™py i tagi utworÃ³w (np. Remix, Deluxe Edition, itp.)'
                 },
                 show_guest_features: {
                     name: 'Display guest features in title and artist',
@@ -2732,8 +2740,8 @@ const trans = {
             },
             text: {
                 name: 'Text',
-                shout_preview_md: 'jakikolwiek <strong>losowy</strong> tekst,<br>który <a href="https://cutensilly.org">nic nie znaczy</a>',
-                shout_preview: 'jakikolwiek losowy tekst, który nic nie znaczy',
+                shout_preview_md: 'jakikolwiek <strong>losowy</strong> tekst,<br>ktÃ³ry <a href="https://cutensilly.org">nic nie znaczy</a>',
+                shout_preview: 'jakikolwiek losowy tekst, ktÃ³ry nic nie znaczy',
                 markdown: {
                     name: 'Use markdown formatting',
                     bio: 'Enables line-breaks, bold, italics, and links.',
@@ -2765,33 +2773,33 @@ const trans = {
                 profile: {
                     name: 'Profil',
                     subtitle: {
-                        name: 'Podtytuł',
+                        name: 'PodtytuÅ‚',
                         aka: 'aka.',
                         pronouns: 'zaimki'
                     },
-                    pronoun_tip: 'Jeśli zaimki są umieszczone jako pierwsze, "aka." zmieni się na "zaimki".',
+                    pronoun_tip: 'JeÅ›li zaimki sÄ… umieszczone jako pierwsze, "aka." zmieni siÄ™ na "zaimki".',
                     country: 'Kraj',
                     website: 'Strona internetowa',
                     about: 'O mnie',
                     toggle_preview: {
-                        name: 'Przełącz podgląd',
-                        bio: 'Podgląd, jak twój profil wygląda dla innych',
-                        note: 'Uwaga: Nowe linie, linki itp. są widoczne tylko dla innych użytkowników bleh, zwykli użytkownicy Last.fm widzą nowe linie jako spacje.'
+                        name: 'PrzeÅ‚Ä…cz podglÄ…d',
+                        bio: 'PodglÄ…d, jak twÃ³j profil wyglÄ…da dla innych',
+                        note: 'Uwaga: Nowe linie, linki itp. sÄ… widoczne tylko dla innych uÅ¼ytkownikÃ³w bleh, zwykli uÅ¼ytkownicy Last.fm widzÄ… nowe linie jako spacje.'
                     },
                     avatar: {
                         name: 'Edytuj awatar',
-                        upload: 'Prześlij plik',
-                        delete: 'Usuń awatar'
+                        upload: 'PrzeÅ›lij plik',
+                        delete: 'UsuÅ„ awatar'
                     }
                 },
                 charts: {
                     name: 'Rankingi',
                     recent: {
                         count: {
-                            name: 'Liczba utworów do wyświetlenia'
+                            name: 'Liczba utworÃ³w do wyÅ›wietlenia'
                         },
                         artwork: {
-                            name: 'Wyświetl okładki albumów'
+                            name: 'WyÅ›wietl okÅ‚adki albumÃ³w'
                         },
                         realtime: {
                             name: 'Aktualizuj utwory w czasie rzeczywistym'
@@ -2799,7 +2807,7 @@ const trans = {
                     },
                     artists: {
                         timeframe: {
-                            name: 'Domyślny przedział czasowy'
+                            name: 'DomyÅ›lny przedziaÅ‚ czasowy'
                         },
                         style: {
                             name: 'Styl rankingu'
@@ -2810,7 +2818,7 @@ const trans = {
                     },
                     albums: {
                         timeframe: {
-                            name: 'Domyślny przedział czasowy'
+                            name: 'DomyÅ›lny przedziaÅ‚ czasowy'
                         },
                         style: {
                             name: 'Styl rankingu'
@@ -2821,40 +2829,40 @@ const trans = {
                     },
                     tracks: {
                         count: {
-                            name: 'Liczba utworów do wyświetlenia'
+                            name: 'Liczba utworÃ³w do wyÅ›wietlenia'
                         },
                         timeframe: {
-                            name: 'Domyślny przedział czasowy'
+                            name: 'DomyÅ›lny przedziaÅ‚ czasowy'
                         }
                     }
                 },
                 privacy: {
-                    name: 'Prywatność',
+                    name: 'PrywatnoÅ›Ä‡',
                     recent_listening: {
-                        name: 'Ukryj historię ostatnich odsłuchów',
-                        bio: 'Zachowaj tajemnicę swoich ostatnich odsłuchów o.O'
+                        name: 'Ukryj historiÄ™ ostatnich odsÅ‚uchÃ³w',
+                        bio: 'Zachowaj tajemnicÄ™ swoich ostatnich odsÅ‚uchÃ³w o.O'
                     },
                     receiving_msgs: {
-                        name: 'Kontroluj kto może się z Tobą zkontaktować',
-                        bio: 'To ustawienie kontroluje kto może wysyłać wiadomosci i prywatne wiadomości do ciebie.',
+                        name: 'Kontroluj kto moÅ¼e siÄ™ z TobÄ… zkontaktowaÄ‡',
+                        bio: 'To ustawienie kontroluje kto moÅ¼e wysyÅ‚aÄ‡ wiadomosci i prywatne wiadomoÅ›ci do ciebie.',
                         settings: {
                             everyone: {
-                                name: 'Każdy',
-                                bio: 'Każdy oprócz osób które zostały przez ciebie zignorowane'
+                                name: 'KaÅ¼dy',
+                                bio: 'KaÅ¼dy oprÃ³cz osÃ³b ktÃ³re zostaÅ‚y przez ciebie zignorowane'
                             },
                             neighbours: {
-                                name: 'Osoby których obserwujesz i sąsiadujący',
-                                bio: 'Wszyscy których obserwujesz oraz Twoi sąsiedzi na Last.fm'
+                                name: 'Osoby ktÃ³rych obserwujesz i sÄ…siadujÄ…cy',
+                                bio: 'Wszyscy ktÃ³rych obserwujesz oraz Twoi sÄ…siedzi na Last.fm'
                             },
                             follow: {
-                                name: 'Tylko osoby które obserwujesz',
-                                bio: 'Tylko użytkownicy których obserwujesz'
+                                name: 'Tylko osoby ktÃ³re obserwujesz',
+                                bio: 'Tylko uÅ¼ytkownicy ktÃ³rych obserwujesz'
                             }
                         }
                     },
                     disable_shoutbox: {
-                        name: 'Ukryj swój shoutbox',
-                        bio: 'Twój shoutbox zostanie ukryty dla ciebie i dla innych użytkowników.'
+                        name: 'Ukryj swÃ³j shoutbox',
+                        bio: 'TwÃ³j shoutbox zostanie ukryty dla ciebie i dla innych uÅ¼ytkownikÃ³w.'
                     }
                 }
             },
@@ -2864,11 +2872,11 @@ const trans = {
                     modals: {
                         initial: {
                             name: 'Importuj ustawienia z poprzedniej instalacji',
-                            alert: 'Wszystko co zaimportujesz zastąpi twoje bieżące ustawienia. Importując ustawienia z internetu upewnij się że źródło jest zaufane.'
+                            alert: 'Wszystko co zaimportujesz zastÄ…pi twoje bieÅ¼Ä…ce ustawienia. ImportujÄ…c ustawienia z internetu upewnij siÄ™ Å¼e ÅºrÃ³dÅ‚o jest zaufane.'
                         },
                         failed: {
-                            name: 'Import nie powiódł się',
-                            alert: 'Nie udało się przetworzyć importowanych ustawień. Żadne zmiany nie zostały wprowadzone.'
+                            name: 'Import nie powiÃ³dÅ‚ siÄ™',
+                            alert: 'Nie udaÅ‚o siÄ™ przetworzyÄ‡ importowanych ustawieÅ„. Å»adne zmiany nie zostaÅ‚y wprowadzone.'
                         }
                     }
                 },
@@ -2876,8 +2884,8 @@ const trans = {
                     name: 'Eksportuj',
                     modals: {
                         initial: {
-                            name: 'Eksportuj swoje bieżące ustawienia',
-                            alert: 'Twoje bieżące ustawienia są w polu tekstowym poniżej, gotowe do skopiowania.'
+                            name: 'Eksportuj swoje bieÅ¼Ä…ce ustawienia',
+                            alert: 'Twoje bieÅ¼Ä…ce ustawienia sÄ… w polu tekstowym poniÅ¼ej, gotowe do skopiowania.'
                         }
                     }
                 },
@@ -2885,8 +2893,8 @@ const trans = {
                     name: 'Resetuj',
                     modals: {
                         initial: {
-                            name: 'Resetuj ustawienia do domyślnych',
-                            alert: 'Twoje ustawienia zostaną <strong>zresetowane do domyślnych</strong> bez możliwości cofnięcia. Czy na pewno chcesz kontynuować?',
+                            name: 'Resetuj ustawienia do domyÅ›lnych',
+                            alert: 'Twoje ustawienia zostanÄ… <strong>zresetowane do domyÅ›lnych</strong> bez moÅ¼liwoÅ›ci cofniÄ™cia. Czy na pewno chcesz kontynuowaÄ‡?',
                             confirm: 'Tak, resetuj moje ustawienia',
                             export: 'Eksportuj najpierw'
                         }
@@ -2896,25 +2904,25 @@ const trans = {
         },
         gallery: {
             tabs: {
-                overview: 'Zdjęcia',
+                overview: 'ZdjÄ™cia',
                 bookmarks: 'Zapisane'
             },
             bookmarks: {
                 name: 'Zapisane',
-                bio: 'Zdjęcia galerii można zapisać na przyszłość.',
-                no_data: 'brak zapisanych zdjęć (・・ )',
+                bio: 'ZdjÄ™cia galerii moÅ¼na zapisaÄ‡ na przyszÅ‚oÅ›Ä‡.',
+                no_data: 'brak zapisanych zdjÄ™Ä‡ (ãƒ»ãƒ» )',
                 link: 'View all saved photos',
                 button: {
                     image_is_bookmarked: {
-                        name: 'Masz to zdjęcie zapisane'
+                        name: 'Masz to zdjÄ™cie zapisane'
                     },
                     bookmark_this_image: {
-                        name: 'Zapisz to zdjęcie',
-                        bio: 'Zapisz to zdjęcie na później'
+                        name: 'Zapisz to zdjÄ™cie',
+                        bio: 'Zapisz to zdjÄ™cie na pÃ³Åºniej'
                     },
                     unbookmark_this_image: {
-                        name: 'Usuń zapis tego zdjęcia',
-                        bio: 'Usuń zapis tego zdjęcia'
+                        name: 'UsuÅ„ zapis tego zdjÄ™cia',
+                        bio: 'UsuÅ„ zapis tego zdjÄ™cia'
                     }
                 }
             },
@@ -2945,8 +2953,8 @@ const trans = {
             shout: 'You left a shout for {i}',
             image_upload: 'You uploaded an image for {i}',
             image_star: 'You starred an image for {i}',
-            obsess: 'You’re obsessed with {i}',
-            unobsess: 'You’re no longer obsessed with {i}',
+            obsess: 'Youâ€™re obsessed with {i}',
+            unobsess: 'Youâ€™re no longer obsessed with {i}',
             love: 'You love {i}',
             unlove: 'You no longer love {i}',
             install_bwaa: 'You installed bwaa',
@@ -2954,7 +2962,7 @@ const trans = {
             install_bleh: 'You installed bleh',
             update_bleh: 'You updated bleh to {i}',
             bookmark: 'You bookmarked {i}',
-            unbookmark: 'You removed {i}’s bookmark',
+            unbookmark: 'You removed {i}â€™s bookmark',
             wiki: 'You edited on {i}'
         },
         artist: {
@@ -17609,7 +17617,7 @@ function bleh_wiki_editor() {
         <h3 class="text-18">${trans[lang].wiki.presets.name}</h3>
         <div class="presets">
             <div class="preset">“</div>
-            <div class="preset">�</div>
+            <div class="preset">”</div>
             <div class="preset">—</div>
             <div class="preset">‘</div>
             <div class="preset">’</div>
