@@ -1100,8 +1100,6 @@ const trans = {
         },
         activities: {
             name: 'Recent Activity',
-            description: 'Your latest 10 activities are tracked locally on your profile, try leaving a shout and check back here!',
-            notifications: 'Read your notifications',
 
             test: 'TEST {involved}',
             shout: 'Shout',
@@ -2034,24 +2032,22 @@ const trans = {
         },
         activities: {
             name: 'Kürzliche Aktivitäten',
-            description: 'Your latest 10 activities are tracked locally on your profile, try leaving a shout and check back here!',
-            notifications: 'Read your notifications',
 
             test: 'TEST {involved}',
-            shout: 'Du hast ein Shout für {i} hinterlassen',
-            image_upload: 'Du hast ein bild für {i} hochgeladen',
-            image_star: 'Du hast ein bild für {i} favorisiert',
-            obsess: 'Du bist obsessed mit {i}',
-            unobsess: 'Du bist nicht mehr obsessed mit {i}',
-            love: 'Du liebst {i}',
-            unlove: 'Du liebst {i} nicht mehr',
-            install_bwaa: 'Du hast bwaa installiert',
-            update_bwaa: 'Du hast bwaa auf Version {i} aktualisiert',
-            install_bleh: 'Du hast bleh installiert',
-            update_bleh: 'Du hast bleh auf Version {i} aktualisiert',
-            bookmark: 'Du hast ein Lesezeichen für {i} hinterlassen',
-            unbookmark: 'Du hast das Lesezeichen für {i} entfernt',
-            wiki: 'Du hast die Wiki für {i} editiert'
+            shout: 'Shout hinterlassen',
+            image_upload: 'Bild hochgeladen',
+            image_star: 'Bild favorisiert',
+            obsess: 'Obsessed',
+            unobsess: 'Nicht mehr obsessed',
+            love: 'Liebst',
+            unlove: 'Liebst nicht mehr ',
+            install_bwaa: 'bwaa installiert',
+            update_bwaa: 'bwaa aktualisiert',
+            install_bleh: 'bleh installiert ',
+            update_bleh: 'bleh aktualisiert',
+            bookmark: 'Lesezeichen hinzugefügt',
+            unbookmark: 'Lesezeichen entfernt ',
+            wiki: 'Wiki editiert'
         },
         artist: {
             name: 'Künstler',
@@ -2946,8 +2942,6 @@ const trans = {
         },
         activities: {
             name: 'Recent Activity',
-            description: 'Your latest 10 activities are tracked locally on your profile, try leaving a shout and check back here!',
-            notifications: 'Read your notifications',
 
             test: 'TEST {involved}',
             shout: 'You left a shout for {i}',
