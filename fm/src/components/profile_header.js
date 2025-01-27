@@ -285,6 +285,8 @@ function redesign_profile_header(is_own_profile, is_following) {
             scrobbles -= (tier * 100_000);
         }
 
+        if (tier > 4)
+            tier = 4;
         progress.setAttribute('data-tier', tier);
 
         let left = 100_000 - scrobbles;
@@ -304,6 +306,36 @@ function redesign_profile_header(is_own_profile, is_following) {
         `);
 
         profile_header.appendChild(progress);
+
+        tippy(progress, {
+            theme: 'progress-badges',
+            content: (`
+                <span class="progress-badges-title">For each tier, you unlock a new badge</span>
+                <div class="progress-badges-list">
+                    <div class="progress-badges-item colourful" data-tier="0">
+                        <div class="bleh-icon" style="--icon: var(--icon-16-progress-tier-0)"></div>
+                        <span class="tier-name">Tier 0</span>
+                    </div>
+                    <div class="progress-badges-item colourful" data-tier="1">
+                        <div class="bleh-icon" style="--icon: var(--icon-16-progress-tier-1)"></div>
+                        <span class="tier-name">Tier 1</span>
+                    </div>
+                    <div class="progress-badges-item colourful" data-tier="2">
+                        <div class="bleh-icon" style="--icon: var(--icon-16-progress-tier-2)"></div>
+                        <span class="tier-name">Tier 2</span>
+                    </div>
+                    <div class="progress-badges-item colourful" data-tier="3">
+                        <div class="bleh-icon" style="--icon: var(--icon-16-progress-tier-3)"></div>
+                        <span class="tier-name">Tier 3</span>
+                    </div>
+                    <div class="progress-badges-item colourful" data-tier="4">
+                        <div class="bleh-icon" style="--icon: var(--icon-16-progress-tier-4)"></div>
+                        <span class="tier-name">Tier 4</span>
+                    </div>
+                </div>
+            `),
+            allowHTML: true
+        });
     }
 
     if (page.name != sponsor_list.sponsor_account && !katsune) {
