@@ -9,7 +9,7 @@ build = {}
 
 print('Attempting to read build file to begin')
 
-with open('build/build.json') as file:
+with open('build/build.json', encoding='utf-8') as file:
     build = json.load(file)
 
 if build['brand'] is None or build['build'] is None or build['sku'] is None or build['bio'] is None or build['author'] is None or build['url'] is None:
@@ -50,28 +50,28 @@ with open('bleh.user.js', 'w', encoding='utf-8') as file:
 
     # VARIABLES ETC.
 
-    with open('build/trans.js') as trans:
+    with open('build/trans.js', encoding='utf-8') as trans:
         file.write('// build/trans.js\n' + trans.read() + '\n')
 
-    with open('build/tools.js') as tools:
+    with open('build/tools.js', encoding='utf-8') as tools:
         file.write('\n// build/tools.js\n' + tools.read() + '\n')
 
-    with open('build/log.js') as log:
+    with open('build/log.js', encoding='utf-8') as log:
         file.write('\n// build/log.js\n' + log.read() + '\n')
 
-    with open('build/config.js') as config:
+    with open('build/config.js', encoding='utf-8') as config:
         file.write('\n// build/config.js\n' + config.read() + '\n')
 
-    with open('build/page.js') as page:
+    with open('build/page.js', encoding='utf-8') as page:
         file.write('\n// build/page.js\n' + page.read() + '\n')
 
-    with open('build/music.js') as music:
+    with open('build/music.js', encoding='utf-8') as music:
         file.write('\n// build/music.js\n' + music.read() + '\n')
 
-    with open('build/seasonal.js') as seasonal:
+    with open('build/seasonal.js', encoding='utf-8') as seasonal:
         file.write('\n// build/seasonal.js\n' + seasonal.read() + '\n\n\n')
 
-    with open('build/sponsor.js') as sponsor:
+    with open('build/sponsor.js', encoding='utf-8') as sponsor:
         file.write('// build/sponsor.js\n' + sponsor.read() + '\n')
 
     # LOOP
