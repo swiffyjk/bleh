@@ -9736,10 +9736,10 @@ function change_settings_page(page_id, setting = null) {
         bleh_sku_page();
     }
 
-    if (page == 'text')
+    if (page_id == 'text')
         prepare_language_page();
 
-    if (page == 'music') {
+    if (page_id == 'music') {
         tippy(document.getElementById('lotus_hover'), {
             content: trans[lang].lotus.tooltip.replace('lotus', '<span class="lotus lotus-name lotus-name-small">lotus</span>'),
             allowHTML: true
@@ -9750,7 +9750,7 @@ function change_settings_page(page_id, setting = null) {
         });
     }
 
-    if ((page == 'seasonal' || page == 'home') && settings.seasonal && stored_season.id != 'none') {
+    if ((page_id == 'seasonal' || page_id == 'home') && settings.seasonal && stored_season.id != 'none') {
         tippy(document.getElementById('current_season'), {
             content: new Date(stored_season.end.replace('y0', stored_season.year).replace('{offset}', stored_season.offset)).toLocaleString(lang)
         });
