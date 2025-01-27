@@ -18617,6 +18617,7 @@ section > .section-controls .subpage-title {
             .progress-value {
                 font-weight: var(--font-weight-medium);
                 cursor: default;
+                text-align: right;
             }
 
             .progress-bar {
