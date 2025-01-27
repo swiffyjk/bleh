@@ -189,7 +189,9 @@ function bleh_albums() {
         let upload_container = page.structure.side.querySelector('.album-overview-cover-art-upload-action');
         let avatar = album_header.querySelector('.header-new-background-image');
 
-        if (avatar) {
+        let katsune = ff('katsune');
+
+        if (avatar && !katsune) {
             let expand_container = document.createElement('span');
             expand_container.classList.add('album-overview-cover-art-expand-action');
 
@@ -205,6 +207,13 @@ function bleh_albums() {
             expand_container.appendChild(expand_link);
 
             upload_container.after(expand_container);
+        }
+
+        if (katsune) {
+            let row = page.structure.side.querySelector('.album-overview-cover-art-actions');
+
+            if (row)
+                page.structure.container.querySelector('.avatar-side').appendChild(row);
         }
     } else {
         let btn_add = page.structure.side.querySelector('.add-button');

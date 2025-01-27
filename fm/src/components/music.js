@@ -520,9 +520,8 @@ function show_numbers_on_side(header_type) {
     if (page.type == 'album') {
         let album_artwork = document.body.querySelector('.artwork-and-metadata-row');
 
-        if (album_artwork != null) {
+        if (album_artwork)
             page.structure.side.insertBefore(album_artwork, page.structure.side.firstElementChild);
-        }
     }
 
     if (page.type == 'album' || page.type == 'artist') {
