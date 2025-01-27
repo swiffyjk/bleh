@@ -1737,7 +1737,7 @@ function change_settings_page(page_id, setting = null) {
         });
     }
 
-    if (page == 'home' || page == 'seasonal')
+    if (page_id == 'home' || page_id == 'seasonal')
         seasonal_timer_start();
     else
         seasonal_timer_end();
