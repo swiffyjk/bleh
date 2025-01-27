@@ -18689,6 +18689,10 @@ section > .section-controls .subpage-title {
                 -webkit-mask-image: var(--mask);
                 mask-size: 100%;
                 -webkit-mask-size: 100%;
+
+                [data-bleh--theme="light"] & {
+                    background: linear-gradient(hsl(var(--l4-c)), hsl(var(--h3)));
+                }
             }
         }
 
@@ -18899,10 +18903,10 @@ section > .section-controls .subpage-title {
 
 @keyframes progress {
     from, to {
-        filter: brightness(100%);
+        background-color: hsl(var(--h3));
     }
     50% {
-        filter: brightness(132%);
+        background-color: hsl(var(--h2));
     }
 }
 
@@ -18940,6 +18944,15 @@ section > .section-controls .subpage-title {
                     background-clip: text;
                     -webkit-background-clip: text;
                     -webkit-text-fill-color: transparent;
+
+                    [data-bleh--theme="light"] & {
+                        color: hsl(var(--l4-c));
+
+                        background: unset;
+                        background-clip: unset;
+                        -webkit-background-clip: unset;
+                        -webkit-text-fill-color: unset;
+                    }
                 }
 
                 &[data-tier="0"] {
