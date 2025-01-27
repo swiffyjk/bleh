@@ -18885,6 +18885,7 @@ section > .section-controls .subpage-title {
             display: flex;
             justify-content: space-evenly;
             gap: 20px;
+            padding: 0 4px;
 
             .progress-badges-item {
                 display: flex;
