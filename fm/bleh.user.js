@@ -16991,7 +16991,7 @@ function bleh_about_artist() {
             </div>
             <div class="info-side">
                 <div class="sub-text">${trans[lang].music.about}</div>
-                <h1><a href="${root}music/${sanitise(page.sister)}">${page.sister}</a></h1>
+                <h1><a href="${root}music/${sanitise(page.sister)}">${sanitise_text(page.sister)}</a></h1>
                 ${(listeners != null) ? listeners.outerHTML : ''}
                 ${(tags != null) ? tags.outerHTML : ''}
                 ${(wiki != null) ? wiki.outerHTML : ''}
@@ -17753,7 +17753,7 @@ function correct_artist(artist, broadcast = false) {
 // feat.
 function name_includes(original_title, original_artist) {
     console.log(original_title, original_artist);
-    let formatted_title = sanitise_text(original_title);
+    let formatted_title = original_title;
 
     let original_title_corrected = false;
 
@@ -18011,9 +18011,8 @@ function patch_titles() {
                 if (settings.colourful_counts)
                     patch_artist_ranks_in_list_view(track);
 
-                if (settings.corrections) {
+                if (settings.corrections)
                     track_title.textContent = correct_artist(track_title.getAttribute('title'));
-                }
 
                 insights.artist.display = true;
                 let bar = track.querySelector('.chartlist-count-bar-slug');
@@ -18070,11 +18069,11 @@ function patch_titles() {
                 // parse tags into text
                 let song_tags_text = '';
                 for (let song_tag in song_tags) {
-                    song_tags_text = `${song_tags_text}<div class="feat" data-bleh--tag-type="${song_tags[song_tag].type}" data-bleh--tag-group="${song_tags[song_tag].group}">${song_tags[song_tag].text}</div>`;
+                    song_tags_text = `${song_tags_text}<div class="feat" data-bleh--tag-type="${song_tags[song_tag].type}" data-bleh--tag-group="${song_tags[song_tag].group}">${sanitise_text(song_tags[song_tag].text)}</div>`;
                 }
 
                 // combine
-                track_title.innerHTML = `<div class="title">${song_title}</div>${song_tags_text}`;
+                track_title.innerHTML = `<div class="title">${sanitise_text(song_title)}</div>${song_tags_text}`;
 
                 let song_artist_element = track.querySelector('.chartlist-artist');
                 if (song_artist_element == null && !is_user) {
@@ -18086,7 +18085,7 @@ function patch_titles() {
                 // if artist matches OR artist is blank
                 if (song_artist_element.textContent.replaceAll('+', ' ').trim() == track_artist || song_artist_element.textContent.trim() == '') {
                     // replaces with corrected artist if applicable
-                    song_artist_element.innerHTML = `<a href="${root}music/${sanitise(formatted_title[2])}" title="${formatted_title[2]}">${formatted_title[2]}</a>`;
+                    song_artist_element.innerHTML = `<a href="${root}music/${sanitise(formatted_title[2])}" title="${sanitise_text(formatted_title[2])}">${sanitise_text(formatted_title[2])}</a>`;
 
                     // append guests
                     let song_guests = formatted_title[3];
@@ -18319,7 +18318,7 @@ function patch_header_title() {
             }
 
             // combine
-            track_title.innerHTML = `<div class="title">${song_title}</div>${song_tags_text}`;
+            track_title.innerHTML = `<div class="title">${sanitise_text(song_title)}</div>${song_tags_text}`;
 
             let song_artist_element = document.body.querySelector('span[itemprop="byArtist"]');
             let song_guests = formatted_title[3];
@@ -18330,8 +18329,8 @@ function patch_header_title() {
 
                 let guest_element = document.createElement('a');
                 guest_element.classList.add('header-new-crumb');
-                guest_element.setAttribute('href',`${root}music/${sanitise(song_guests[guest])}`);
-                guest_element.setAttribute('title',song_guests[guest]);
+                guest_element.setAttribute('href', `${root}music/${sanitise(song_guests[guest])}`);
+                guest_element.setAttribute('title', sanitise_text(song_guests[guest]));
                 guest_element.textContent = song_guests[guest];
 
                 song_artist_element.appendChild(guest_element);

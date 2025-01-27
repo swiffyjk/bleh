@@ -22,7 +22,7 @@ function bleh_about_artist() {
             </div>
             <div class="info-side">
                 <div class="sub-text">${trans[lang].music.about}</div>
-                <h1><a href="${root}music/${sanitise(page.sister)}">${page.sister}</a></h1>
+                <h1><a href="${root}music/${sanitise(page.sister)}">${sanitise_text(page.sister)}</a></h1>
                 ${(listeners != null) ? listeners.outerHTML : ''}
                 ${(tags != null) ? tags.outerHTML : ''}
                 ${(wiki != null) ? wiki.outerHTML : ''}
