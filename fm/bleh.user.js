@@ -39,7 +39,7 @@ let lang_info = {
     de: {
         name: 'Deutsch',
         by: ['inozom', 'cutensilly'],
-        last_updated:  '2025-01-05'
+        last_updated:  '2025-01-27'
     },
     pl: {
         name: 'Polski',
