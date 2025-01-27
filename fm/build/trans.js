@@ -1241,7 +1241,7 @@ const trans = {
         auth_menu: {
             dev: 'Toggle dev mode',
             configure_bleh: 'bleh konfigurieren',
-            library: 'Musiksammlung',
+            library: 'Bibliothek',
             shouts: 'Shouts',
             obsessions: 'Obsessionen',
             labs: 'Labor',
@@ -1338,9 +1338,9 @@ const trans = {
                     very_low: 'Very Low',
                     unknown: 'Unknown'
                 },
-                you_share_1: 'Ihr hört {artist}',
-                you_share_2: 'Ihr hört {artist1} und {artist2}',
-                you_share_3: 'Ihr hört {artist1}, {artist2}, und {artist3}'
+                you_share_1: 'Ihr hört beide {artist}',
+                you_share_2: 'Ihr hört beide {artist1} und {artist2}',
+                you_share_3: 'Ihr hört beide {artist1}, {artist2}, und {artist3}'
             },
             open_avatar: 'Im neuen Fenster öffnen',
             settings: 'Konfigurieren',

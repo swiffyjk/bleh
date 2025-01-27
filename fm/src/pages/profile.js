@@ -163,6 +163,9 @@ function bleh_profiles() {
         tab.appendChild(beta);
     }
 
+    let library_tab = page.structure.nav.querySelector('.secondary-nav-item--library a');
+    library_tab.textContent = trans[lang].auth_menu.library;
+
 
     let is_own_profile = (page.name == auth.name);
     if (is_own_profile)
