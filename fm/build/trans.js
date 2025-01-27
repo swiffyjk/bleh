@@ -1319,10 +1319,10 @@ const trans = {
                 replace: '• scrobbelt seit '
             },
             edit: 'Profil bearbeiten',
-            message: 'Private message',
+            message: 'Anschreiben',
             shortcut: {
-                add: 'Als Verknüpfung hinzufügen',
-                remove: 'Deine Profile sind verlinkt!'
+                add: 'Verknüpfung',
+                remove: 'Verknüpfung'
             },
             scrobbles: 'Scrobbels',
             artists: 'Künstler',
@@ -1347,9 +1347,9 @@ const trans = {
             events: 'Events',
             top_badge: 'Top-Abzeichen',
             progress: {
-                to_go: '{s} scrobbles to go',
-                tier: 'Tier {t}',
-                explain: 'For each tier, you unlock a new badge'
+                to_go: 'Noch {s} scrobbels',
+                tier: 'Stufe {t}',
+                explain: 'Für jede Stufe schaltest du ein neues Abzeichen frei'
             }
         },
         event: {
