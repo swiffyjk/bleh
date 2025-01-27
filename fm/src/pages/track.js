@@ -90,7 +90,7 @@ function bleh_tracks() {
 
         let bg;
 
-        if (album_avatar)
+        if (album_avatar && !album_avatar.getAttribute('src').endsWith('c6f59c1e5e7240a4c0d427abd71f3dbb.jpg'))
             bg = register_background(album_avatar.getAttribute('src').replace('/300x300/', '/ar0/'));
         else if (artist_avatar)
             bg = register_background(artist_avatar.getAttribute('content'));
