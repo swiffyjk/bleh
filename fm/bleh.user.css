@@ -149,19 +149,22 @@ body, [data-page-resource-type="album"], [data-page-resource-type="track"],
 [data-bleh--label="bleh"], [data-bleh-page="seasonal"]
 {
     /* any additional highlights */
-    --b3: var(--hue), calc(var(--sat) * 6% * var(--sat-bg, 1)), 30%;
+    --b3: var(--hue), calc(var(--sat) * 6% * var(--sat-bg, 1)), 35%;
 
     /* card border */
-    --b4: var(--hue), calc(var(--sat) * 8% * var(--sat-bg, 1)), 22%;
+    --b4: var(--hue), calc(var(--sat) * 8% * var(--sat-bg, 1)), 25%;
 
     /* card */
-    --b5: var(--hue), calc(var(--sat) * 10% * var(--sat-bg, 1)), 15%;
+    --b5: var(--hue), calc(var(--sat) * 10% * var(--sat-bg, 1)), 17%;
 
     /* root */
     --b6: var(--hue), calc(var(--sat) * 12% * var(--sat-bg, 1)), 6%;
-    --b10: var(--hue), calc(var(--sat) * 10% * var(--sat-bg, 1)), 10%;
+    --b10: var(--hue), calc(var(--sat) * 10% * var(--sat-bg, 1)), 11%;
     --b8: var(--hue), calc(var(--sat) * 11% * var(--sat-bg, 1)), 18%;
     --b7: 0, 0%, 0%;
+
+    --card-border: 1px solid hsla(var(--b4), 0.7);
+    --card-border-base: hsla(var(--b4), 0.7);
 
     .preview[data-bleh--theme="darker"], .redesigned-header[data-bleh--theme="darker"],
     [data-bleh--theme="darker"] &:not(.preview) {
@@ -186,14 +189,14 @@ body, [data-page-resource-type="album"], [data-page-resource-type="track"],
         --b3: var(--hue), calc(var(--sat) * 6% * var(--sat-bg, 1)), 16%;
 
         /* card border */
-        --b4: var(--hue), calc(var(--sat) * 8% * var(--sat-bg, 1)), 9%;
+        --b4: var(--hue), calc(var(--sat) * 8% * var(--sat-bg, 1)), 10%;
 
         /* card */
-        --b5: var(--hue), calc(var(--sat) * 20% * var(--sat-bg, 1)), 4%;
+        --b5: var(--hue), calc(var(--sat) * 20% * var(--sat-bg, 1)), 3%;
 
         /* root */
         --b6: 0, 0%, 0%;
-        --b10: 0, 0%, 1%;
+        --b10: 0, 0%, 2%;
         --b8: var(--hue), calc(var(--sat) * 11% * var(--sat-bg, 1)), 6%;
         --b7: 0, 0%, 0%;
     }
@@ -303,8 +306,8 @@ a,
             1))));
 
     --c1: var(--hue), calc(var(--sat) * 40%), 100%;
-    --c2: var(--hue), calc(var(--sat) * 60%), 90%;
-    --c3: var(--hue), calc(var(--sat) * 10%), 60%;
+    --c2: var(--hue), calc(var(--sat) * 70%), 90%;
+    --c3: var(--hue), calc(var(--sat) * 10%), 56%;
     --ov-c1: var(--c1);
 
     --l2: var(--hue), calc(var(--sat) * 50%), calc(var(--lit) * 83%);
@@ -338,8 +341,8 @@ a,
     .preview[data-bleh--theme="oled"], .redesigned-header[data-bleh--theme="oled"], .redesigned-header[data-bleh--theme="oled"] a,
     [data-bleh--theme="oled"] &:not(.preview) {
         --c1: var(--hue), calc(var(--sat) * 40%), 100%;
-        --c2: var(--hue), calc(var(--sat) * 60%), 90%;
-        --c3: var(--hue), calc(var(--sat) * 10%), 60%;
+        --c2: var(--hue), calc(var(--sat) * 70%), 90%;
+        --c3: var(--hue), calc(var(--sat) * 10%), 50%;
 
         --l3: var(--hue), calc(var(--sat) * 50%), calc(var(--lit) * 75%);
         --l4: var(--hue), calc(var(--sat) * 60%), calc(var(--lit) * 45%);
@@ -401,8 +404,6 @@ body {
     --card-radius: calc(var(--item-big-radius) + 2px);
     --card-shadow: hsla(var(--b7), 0.3) 0 4px 4px 0, 0 3px 15px 7px hsla(var(--b7), 0.17);
     --card-gap: 15px;
-    --card-border: 1px solid hsla(var(--b4), 0.7);
-    --card-border-base: hsla(var(--b4), 0.7);
 
     --cards-main-width: 902px;
     --cards-sidebar-width: 400px;
@@ -15949,10 +15950,10 @@ button.bleh--gallery-bookmark-image-btn {
         --font-size: 0;
 
         &.video-item--play {
-            --mask: var(--icon-16-play);
+            --mask: var(--icon-16-external);
         }
         &.video-item--edit {
-            --mask: var(--icon-16-settings);
+            --mask: var(--icon-16-edit);
         }
     }
 
@@ -16699,7 +16700,8 @@ button.bleh--gallery-bookmark-image-btn {
                 width: 100%;
                 height: 100%;
 
-                --mask-size: var(--cover-size-50);
+                --mask: var(--icon-16-user);
+                --mask-size: 24px;
                 transition-property: opacity;
                 transition-duration: var(--trans);
                 transition-timing-function: var(--trans-function);
@@ -18576,6 +18578,7 @@ section > .section-controls .subpage-title {
     }
 
     .katsune-taste {
+        margin: -17px 0;
         margin-right: calc(var(--card-gap) - var(--button-list-gap));
 
         .taste-info {
@@ -18594,7 +18597,7 @@ section > .section-controls .subpage-title {
                 position: relative;
                 height: 6px;
                 border-radius: 50px;
-                background-color: hsl(var(--b4));
+                background-color: hsl(var(--b6));
                 width: 250px;
 
                 .taste-bar-fill {
@@ -18650,6 +18653,8 @@ section > .section-controls .subpage-title {
     }
 
     .katsune-scrobble-progress {
+        margin: -17px 0;
+
         .progress-info {
             display: flex;
             flex-direction: column;
@@ -18666,7 +18671,7 @@ section > .section-controls .subpage-title {
                 position: relative;
                 height: 6px;
                 border-radius: 50px;
-                background-color: hsl(var(--b4));
+                background-color: hsl(var(--b6));
                 width: 250px;
 
                 .progress-bar-fill {
@@ -18686,7 +18691,6 @@ section > .section-controls .subpage-title {
         .progress-badge {
             width: 52px;
             height: 52px;
-            margin: -17px 0;
 
             display: flex;
             justify-content: center;
@@ -19019,12 +19023,12 @@ section > .section-controls .subpage-title {
     align-items: center;
     padding: 0 calc(var(--card-gap) + var(--card-padding) + 12px);
     height: 48px;
-    background-color: hsl(var(--h4), 20%);
+    background-color: hsl(var(--h3), 20%);
     margin: unset;
 
     border-top-left-radius: var(--card-radius);
     border-top-right-radius: var(--card-radius);
-    box-shadow: 0 0 0 1px var(--card-border-base) inset, var(--card-shadow);
+    box-shadow: 0 0 0 1px var(--card-border-base) inset, var(--interact-shadow);
     z-index: 2;
 
     position: relative;
