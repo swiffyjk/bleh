@@ -274,15 +274,18 @@ function redesign_profile_header(is_own_profile, is_following) {
 
     if (page.name != sponsor_list.sponsor_account && katsune) {
         let progress = document.createElement('div');
-        progress.classList.add('katsune-scrobble-progress');
+        progress.classList.add('katsune-scrobble-progress', 'colourful');
 
         let metadata = header_meta.querySelector('.header-metadata-display');
         scrobbles = clean_number(metadata.querySelector('p').textContent.trim());
 
+        let tier = 0;
         if (scrobbles > 100_000) {
-            let subtract = Math.floor(scrobbles / 100_000) * 100_000;
-            scrobbles -= subtract;
+            tier = Math.floor(scrobbles / 100_000);
+            scrobbles -= (tier * 100_000);
         }
+
+        progress.setAttribute('data-tier', tier);
 
         let left = 100_000 - scrobbles;
         let percent = (scrobbles / 100_000) * 100;
