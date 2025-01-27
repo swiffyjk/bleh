@@ -2040,13 +2040,13 @@ const trans = {
             obsess: 'Obsessed',
             unobsess: 'Nicht mehr obsessed',
             love: 'Liebst',
-            unlove: 'Liebst nicht mehr ',
+            unlove: 'Liebst nicht mehr',
             install_bwaa: 'bwaa installiert',
             update_bwaa: 'bwaa aktualisiert',
-            install_bleh: 'bleh installiert ',
+            install_bleh: 'bleh installiert',
             update_bleh: 'bleh aktualisiert',
             bookmark: 'Lesezeichen hinzugefügt',
-            unbookmark: 'Lesezeichen entfernt ',
+            unbookmark: 'Lesezeichen entfernt',
             wiki: 'Wiki editiert'
         },
         artist: {
