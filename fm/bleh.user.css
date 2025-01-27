@@ -5622,11 +5622,10 @@ the body text becomes bigger by default - this reverts that */
 }
 .avatar-can-hoverbox {
     &[aria-expanded="true"] {
-        transform: scale(0.9);
         opacity: 0.6;
     }
 
-    transition-property: transform, opacity;
+    transition-property: opacity;
     transition-duration: var(--trans);
     transition-timing-function: var(--trans-function);
 }
