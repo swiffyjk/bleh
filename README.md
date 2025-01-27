@@ -18,11 +18,11 @@ In the **Troubleshooting** tab of bleh's settings you can find the toggle "Disab
 
 ![image](https://github.com/user-attachments/assets/fb9fa4da-488d-424c-92c1-a5b9713990f2)
 
-## Working with the script
+### Working with the script
 
 Script files can be found in the `build` and `src` directory. `build` files are used for defining global variables and tools, whereas `src` is used for the majority of bleh functionality.
 
-## Building the script
+### Building the script
 
 To combine all the separate files into a Tampermonkey-compatible file, run the `build.py` script and it will update the `bleh.user.js` file for use.
 
