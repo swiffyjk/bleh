@@ -19758,23 +19758,23 @@ function redesign_profile_header(is_own_profile, is_following) {
             content: (`
                 <span class="progress-badges-title">${trans[lang].profile.progress.explain}</span>
                 <div class="progress-badges-list">
-                    <div class="progress-badges-item colourful" data-tier="0">
+                    <div class="progress-badges-item colourful ${(tier == 0) ? 'active' : ''}" data-tier="0">
                         <div class="bleh-icon" style="--icon: var(--icon-16-progress-tier-0)"></div>
                         <span class="tier-name">${trans[lang].profile.progress.tier.replace('{t}', '0')}</span>
                     </div>
-                    <div class="progress-badges-item colourful" data-tier="1">
+                    <div class="progress-badges-item colourful ${(tier == 1) ? 'active' : ''}" data-tier="1">
                         <div class="bleh-icon" style="--icon: var(--icon-16-progress-tier-1)"></div>
                         <span class="tier-name">${trans[lang].profile.progress.tier.replace('{t}', '1')}</span>
                     </div>
-                    <div class="progress-badges-item colourful" data-tier="2">
+                    <div class="progress-badges-item colourful ${(tier == 2) ? 'active' : ''}" data-tier="2">
                         <div class="bleh-icon" style="--icon: var(--icon-16-progress-tier-2)"></div>
                         <span class="tier-name">${trans[lang].profile.progress.tier.replace('{t}', '2')}</span>
                     </div>
-                    <div class="progress-badges-item colourful" data-tier="3">
+                    <div class="progress-badges-item colourful ${(tier == 3) ? 'active' : ''}" data-tier="3">
                         <div class="bleh-icon" style="--icon: var(--icon-16-progress-tier-3)"></div>
                         <span class="tier-name">${trans[lang].profile.progress.tier.replace('{t}', '3')}</span>
                     </div>
-                    <div class="progress-badges-item colourful" data-tier="4">
+                    <div class="progress-badges-item colourful ${(tier == 4) ? 'active' : ''}" data-tier="4">
                         <div class="bleh-icon" style="--icon: var(--icon-16-progress-tier-4)"></div>
                         <span class="tier-name">${trans[lang].profile.progress.tier.replace('{t}', '4')}</span>
                     </div>
