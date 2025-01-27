@@ -5847,9 +5847,9 @@ leading to a gap from their own css */
 .attendee-summary-user-avatar .avatar-status-dot,
 .playlisting-playlist-author-image .avatar-status-dot,
 .wiki-history-author-avatar .avatar-status-dot {
-    width: 16px;
-    height: 16px;
-    --mask-size: 16px;
+    width: 18px;
+    height: 18px;
+    --mask-size: 18px;
     /* remove the heavy bottom shadow */
     filter: drop-shadow(2px 0px 0 hsl(var(--b5))) drop-shadow(0px 2px 0 hsl(var(--b5))) drop-shadow(-2px -0px 0 hsl(var(--b5))) drop-shadow(-0px -2px 0 hsl(var(--b5)));
 }
@@ -8305,7 +8305,7 @@ a.gallery-image-preferred-off {
 
             .inbox-notifications__item-avatar {
                 margin: unset;
-                padding: 0 calc(16px + 6px) 0 0;
+                padding: 0 calc(18px + 6px) 0 0;
 
                 .avatar {
                     box-shadow: var(--card-shadow);
@@ -8315,9 +8315,9 @@ a.gallery-image-preferred-off {
                 }
 
                 .avatar-status-dot {
-                    width: 16px;
-                    height: 16px;
-                    --mask-size: 16px;
+                    width: 18px;
+                    height: 18px;
+                    --mask-size: 18px;
 
                     top: 50%;
                     --margin-top: -8px;
@@ -10547,9 +10547,9 @@ text[style^="color: rgb(0, 0, 0)"] {
                 --mask-size: var(--cover-size-50);
 
                 .avatar-status-dot {
-                    width: 20px;
-                    height: 20px;
-                    --mask-size: 20px;
+                    width: 18px;
+                    height: 18px;
+                    --mask-size: 18px;
                 }
             }
 
@@ -10654,9 +10654,9 @@ text[style^="color: rgb(0, 0, 0)"] {
     --show-icon: none;
 
     .avatar-status-dot {
-        width: 16px;
-        height: 16px;
-        --mask-size: 16px;
+        width: 18px;
+        height: 18px;
+        --mask-size: 18px;
     }
 }
 
@@ -19019,7 +19019,7 @@ section > .section-controls .subpage-title {
     align-items: center;
     padding: 0 calc(var(--card-gap) + var(--card-padding) + 12px);
     height: 48px;
-    background-color: hsl(var(--b5), 40%);
+    background-color: hsl(var(--h4), 20%);
     margin: unset;
 
     border-top-left-radius: var(--card-radius);
