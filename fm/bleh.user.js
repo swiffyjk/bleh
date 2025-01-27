@@ -394,7 +394,12 @@ const trans = {
             open_avatar: 'Open in a new tab',
             settings: 'Configure',
             events: 'Events',
-            top_badge: 'Top Badge'
+            top_badge: 'Top Badge',
+            progress: {
+                to_go: '{s} scrobbles to go',
+                tier: 'Tier {t}',
+                explain: 'For each tier, you unlock a new badge'
+            }
         },
         event: {
             name: 'Event',
@@ -1366,7 +1371,12 @@ const trans = {
             open_avatar: 'Im neuen Fenster öffnen',
             settings: 'Konfigurieren',
             events: 'Events',
-            top_badge: 'Top-Abzeichen'
+            top_badge: 'Top-Abzeichen',
+            progress: {
+                to_go: '{s} scrobbles to go',
+                tier: 'Tier {t}',
+                explain: 'For each tier, you unlock a new badge'
+            }
         },
         event: {
             name: 'Event',
@@ -2288,7 +2298,12 @@ const trans = {
             open_avatar: 'Open in a new tab',
             settings: 'Configure',
             events: 'Events',
-            top_badge: 'Top Badge'
+            top_badge: 'Top Badge',
+            progress: {
+                to_go: '{s} scrobbles to go',
+                tier: 'Tier {t}',
+                explain: 'For each tier, you unlock a new badge'
+            }
         },
         event: {
             name: 'Event',
@@ -19725,7 +19740,7 @@ function redesign_profile_header(is_own_profile, is_following) {
 
         progress.innerHTML = (`
             <div class="progress-info">
-                <div class="progress-value">${left.toLocaleString(lang)} scrobbles to go</div>
+                <div class="progress-value">${trans[lang].profile.progress.to_go.replace('{s}', left.toLocaleString(lang))}</div>
                 <div class="progress-bar">
                     <div class="progress-bar-fill" style="width: ${percent}%"></div>
                 </div>
@@ -19741,27 +19756,27 @@ function redesign_profile_header(is_own_profile, is_following) {
         tippy(progress, {
             theme: 'progress-badges',
             content: (`
-                <span class="progress-badges-title">For each tier, you unlock a new badge</span>
+                <span class="progress-badges-title">${trans[lang].profile.progress.explain}</span>
                 <div class="progress-badges-list">
                     <div class="progress-badges-item colourful" data-tier="0">
                         <div class="bleh-icon" style="--icon: var(--icon-16-progress-tier-0)"></div>
-                        <span class="tier-name">Tier 0</span>
+                        <span class="tier-name">${trans[lang].profile.progress.tier.replace('{t}', '0')}</span>
                     </div>
                     <div class="progress-badges-item colourful" data-tier="1">
                         <div class="bleh-icon" style="--icon: var(--icon-16-progress-tier-1)"></div>
-                        <span class="tier-name">Tier 1</span>
+                        <span class="tier-name">${trans[lang].profile.progress.tier.replace('{t}', '1')}</span>
                     </div>
                     <div class="progress-badges-item colourful" data-tier="2">
                         <div class="bleh-icon" style="--icon: var(--icon-16-progress-tier-2)"></div>
-                        <span class="tier-name">Tier 2</span>
+                        <span class="tier-name">${trans[lang].profile.progress.tier.replace('{t}', '2')}</span>
                     </div>
                     <div class="progress-badges-item colourful" data-tier="3">
                         <div class="bleh-icon" style="--icon: var(--icon-16-progress-tier-3)"></div>
-                        <span class="tier-name">Tier 3</span>
+                        <span class="tier-name">${trans[lang].profile.progress.tier.replace('{t}', '3')}</span>
                     </div>
                     <div class="progress-badges-item colourful" data-tier="4">
                         <div class="bleh-icon" style="--icon: var(--icon-16-progress-tier-4)"></div>
-                        <span class="tier-name">Tier 4</span>
+                        <span class="tier-name">${trans[lang].profile.progress.tier.replace('{t}', '4')}</span>
                     </div>
                 </div>
             `),

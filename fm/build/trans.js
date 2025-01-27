@@ -370,7 +370,12 @@ const trans = {
             open_avatar: 'Open in a new tab',
             settings: 'Configure',
             events: 'Events',
-            top_badge: 'Top Badge'
+            top_badge: 'Top Badge',
+            progress: {
+                to_go: '{s} scrobbles to go',
+                tier: 'Tier {t}',
+                explain: 'For each tier, you unlock a new badge'
+            }
         },
         event: {
             name: 'Event',
@@ -1342,7 +1347,12 @@ const trans = {
             open_avatar: 'Im neuen Fenster öffnen',
             settings: 'Konfigurieren',
             events: 'Events',
-            top_badge: 'Top-Abzeichen'
+            top_badge: 'Top-Abzeichen',
+            progress: {
+                to_go: '{s} scrobbles to go',
+                tier: 'Tier {t}',
+                explain: 'For each tier, you unlock a new badge'
+            }
         },
         event: {
             name: 'Event',
@@ -2264,7 +2274,12 @@ const trans = {
             open_avatar: 'Open in a new tab',
             settings: 'Configure',
             events: 'Events',
-            top_badge: 'Top Badge'
+            top_badge: 'Top Badge',
+            progress: {
+                to_go: '{s} scrobbles to go',
+                tier: 'Tier {t}',
+                explain: 'For each tier, you unlock a new badge'
+            }
         },
         event: {
             name: 'Event',
