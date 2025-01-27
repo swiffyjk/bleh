@@ -1115,8 +1115,8 @@ const trans = {
             update_bwaa: 'Updated bwaa',
             install_bleh: 'Installed bleh',
             update_bleh: 'Updated bleh',
-            bookmark: 'Saved image',
-            unbookmark: 'Removed saved image',
+            bookmark: 'Bookmarked',
+            unbookmark: 'Removed bookmark',
             wiki: 'Edited wiki'
         },
         artist: {
