@@ -54,11 +54,13 @@ function bleh_artists() {
 
     checkup_page_structure(is_subpage, artist_header);
 
+    let katsune = ff('katsune');
+    let featured_items = artist_header.querySelector('.artist-header-featured-items');
+
     if (ff('refreshed_music_nav')) {
         let avatar = artist_header.querySelector('.header-new-background-image');
         let title = artist_header.querySelector('.header-new-title');
         let on_tour = artist_header.querySelector('.header-new-on-tour');
-        let featured_items = artist_header.querySelector('.artist-header-featured-items');
         let position = artist_header.querySelector('.header-new-chart-position-number');
 
         let redesigned_artist_header = document.createElement('section');
@@ -81,9 +83,9 @@ function bleh_artists() {
                     ${(position != null) ? position.outerHTML : ''}
                     ${(on_tour != null) ? on_tour.outerHTML : ''}
                 </div>
-                ${(featured_items != null) ? featured_items.outerHTML : ''}
+                ${(featured_items != null && !katsune) ? featured_items.outerHTML : ''}
             </div>
-            ${(!is_subpage && !ff('katsune')) ? (`
+            ${(!is_subpage && !katsune) ? (`
             <div class="gallery-side">
                 <section class="view-all-panel">
                     ${(settings.quick_artist_button == 'gallery') ? (`
@@ -220,6 +222,20 @@ function bleh_artists() {
         bleh_music_page_charts();
 
         bleh_tags_mini();
+
+
+        if (katsune) {
+            let featured_panel = document.createElement('section');
+            featured_panel.classList.add('featured-items-panel');
+
+            featured_panel.innerHTML = featured_items.innerHTML;
+
+            let listen_panel = page.structure.side.querySelector('.listen-panel');
+            if (listen_panel)
+                listen_panel.after(featured_panel);
+            else
+                page.structure.side.insertBefore(featured_panel, page.structure.side.firstElementChild);
+        }
     } else {
         let btn_add = page.structure.side.querySelector('.add-button');
         if (btn_add != null)
