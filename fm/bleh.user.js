@@ -7805,7 +7805,7 @@ function bleh_artists() {
                 </div>
                 ${(featured_items != null) ? featured_items.outerHTML : ''}
             </div>
-            ${(!is_subpage) ? (`
+            ${(!is_subpage && !ff('katsune')) ? (`
             <div class="gallery-side">
                 <section class="view-all-panel">
                     ${(settings.quick_artist_button == 'gallery') ? (`
@@ -7908,28 +7908,31 @@ function bleh_artists() {
 
         if (!is_subpage) {
             let view_button = redesigned_artist_header.querySelector('.view-all-button');
-            let view_menu = tippy(view_button, {
-                theme: 'context-menu',
-                content: (`
-                    <a class="dropdown-menu-clickable-item" href="${root}bleh?tab=customise" data-menu-item="settings">
-                        ${trans[lang].settings.configure}
-                    </a>
-                `),
-                allowHTML: true,
-                placement: 'right-start',
-                trigger: 'manual',
-                interactive: true,
-                interactiveBorder: 10,
-                offset: [0, 0],
 
-                onShow(instance) {
-                    instance.popper.addEventListener('click', event => {
-                        instance.hide();
-                    });
-                }
-            });
+            if (view_button) {
+                let view_menu = tippy(view_button, {
+                    theme: 'context-menu',
+                    content: (`
+                        <a class="dropdown-menu-clickable-item" href="${root}bleh?tab=customise" data-menu-item="settings">
+                            ${trans[lang].settings.configure}
+                        </a>
+                    `),
+                    allowHTML: true,
+                    placement: 'right-start',
+                    trigger: 'manual',
+                    interactive: true,
+                    interactiveBorder: 10,
+                    offset: [0, 0],
 
-            register_menu(view_button, view_menu);
+                    onShow(instance) {
+                        instance.popper.addEventListener('click', event => {
+                            instance.hide();
+                        });
+                    }
+                });
+
+                register_menu(view_button, view_menu);
+            }
         }
     }
 
@@ -18595,6 +18598,56 @@ function show_your_scrobbles() {
         obsession_btn.textContent = trans[lang].music.obsession;
 
         interact_container.appendChild(obsession_form);
+    }
+
+
+    // artist btn
+    if (katsune && page.type == 'artist') {
+        let artist_btn = document.createElement('a');
+        artist_btn.classList.add('btn', 'view-item', 'interact-item', 'artist-btn', 'icon');
+
+        if (settings.quick_artist_button == 'gallery') {
+            artist_btn.setAttribute('data-artist-btn-type', 'gallery');
+            artist_btn.setAttribute('href', `${window.location.href}/+images`);
+            artist_btn.textContent = trans[lang].gallery.view;
+        } else if (settings.quick_artist_button == 'shouts') {
+            artist_btn.setAttribute('data-artist-btn-type', 'shouts');
+            artist_btn.setAttribute('href', `${window.location.href}/+shoutbox`);
+            artist_btn.textContent = trans[lang].settings.layout.quick_artist_button.shouts;
+        } else if (settings.quick_artist_button == 'wiki') {
+            artist_btn.setAttribute('data-artist-btn-type', 'wiki');
+            artist_btn.setAttribute('href', `${window.location.href}/+wiki`);
+            artist_btn.textContent = trans[lang].settings.layout.quick_artist_button.wiki;
+        } else if (settings.quick_artist_button == 'listens') {
+            artist_btn.setAttribute('data-artist-btn-type', 'gallery');
+            artist_btn.setAttribute('href', `${window.location.href}/+listeners/you-know`);
+            artist_btn.textContent = trans[lang].settings.layout.quick_artist_button.listens;
+        }
+
+        interact_container.appendChild(artist_btn);
+
+        let view_menu = tippy(artist_btn, {
+            theme: 'context-menu',
+            content: (`
+                <a class="dropdown-menu-clickable-item" href="${root}bleh?tab=customise" data-menu-item="settings">
+                    ${trans[lang].settings.configure}
+                </a>
+            `),
+            allowHTML: true,
+            placement: 'right-start',
+            trigger: 'manual',
+            interactive: true,
+            interactiveBorder: 10,
+            offset: [0, 0],
+
+            onShow(instance) {
+                instance.popper.addEventListener('click', event => {
+                    instance.hide();
+                });
+            }
+        });
+
+        register_menu(artist_btn, view_menu);
     }
 
 

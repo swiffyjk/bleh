@@ -18828,6 +18828,20 @@ section > .section-controls .subpage-title {
         --mask: var(--icon-16-obsession);
     }
 
+    .artist-btn {
+        --mask: var(--icon-16-gallery-vertical);
+
+        &[data-artist-btn-type="shouts"] {
+            --mask: var(--icon-16-shoutbox);
+        }
+        &[data-artist-btn-type="wiki"] {
+            --mask: var(--icon-16-bio);
+        }
+        &[data-artist-btn-type="listens"] {
+            --mask: var(--icon-16-listener);
+        }
+    }
+
     .menu-btn, .header-new-love-button, .header-new-bookmark-button {
         --btn-left: 12px !important;
         --font-size: 0;

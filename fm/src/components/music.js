@@ -225,6 +225,56 @@ function show_your_scrobbles() {
     }
 
 
+    // artist btn
+    if (katsune && page.type == 'artist') {
+        let artist_btn = document.createElement('a');
+        artist_btn.classList.add('btn', 'view-item', 'interact-item', 'artist-btn', 'icon');
+
+        if (settings.quick_artist_button == 'gallery') {
+            artist_btn.setAttribute('data-artist-btn-type', 'gallery');
+            artist_btn.setAttribute('href', `${window.location.href}/+images`);
+            artist_btn.textContent = trans[lang].gallery.view;
+        } else if (settings.quick_artist_button == 'shouts') {
+            artist_btn.setAttribute('data-artist-btn-type', 'shouts');
+            artist_btn.setAttribute('href', `${window.location.href}/+shoutbox`);
+            artist_btn.textContent = trans[lang].settings.layout.quick_artist_button.shouts;
+        } else if (settings.quick_artist_button == 'wiki') {
+            artist_btn.setAttribute('data-artist-btn-type', 'wiki');
+            artist_btn.setAttribute('href', `${window.location.href}/+wiki`);
+            artist_btn.textContent = trans[lang].settings.layout.quick_artist_button.wiki;
+        } else if (settings.quick_artist_button == 'listens') {
+            artist_btn.setAttribute('data-artist-btn-type', 'gallery');
+            artist_btn.setAttribute('href', `${window.location.href}/+listeners/you-know`);
+            artist_btn.textContent = trans[lang].settings.layout.quick_artist_button.listens;
+        }
+
+        interact_container.appendChild(artist_btn);
+
+        let view_menu = tippy(artist_btn, {
+            theme: 'context-menu',
+            content: (`
+                <a class="dropdown-menu-clickable-item" href="${root}bleh?tab=customise" data-menu-item="settings">
+                    ${trans[lang].settings.configure}
+                </a>
+            `),
+            allowHTML: true,
+            placement: 'right-start',
+            trigger: 'manual',
+            interactive: true,
+            interactiveBorder: 10,
+            offset: [0, 0],
+
+            onShow(instance) {
+                instance.popper.addEventListener('click', event => {
+                    instance.hide();
+                });
+            }
+        });
+
+        register_menu(artist_btn, view_menu);
+    }
+
+
     // search similar!
     let search_btn = document.createElement('a');
     search_btn.classList.add('btn', 'view-item', 'interact-item', 'search-similar-btn', (katsune) ? 'icon' : '');

@@ -83,7 +83,7 @@ function bleh_artists() {
                 </div>
                 ${(featured_items != null) ? featured_items.outerHTML : ''}
             </div>
-            ${(!is_subpage) ? (`
+            ${(!is_subpage && !ff('katsune')) ? (`
             <div class="gallery-side">
                 <section class="view-all-panel">
                     ${(settings.quick_artist_button == 'gallery') ? (`
@@ -186,28 +186,31 @@ function bleh_artists() {
 
         if (!is_subpage) {
             let view_button = redesigned_artist_header.querySelector('.view-all-button');
-            let view_menu = tippy(view_button, {
-                theme: 'context-menu',
-                content: (`
-                    <a class="dropdown-menu-clickable-item" href="${root}bleh?tab=customise" data-menu-item="settings">
-                        ${trans[lang].settings.configure}
-                    </a>
-                `),
-                allowHTML: true,
-                placement: 'right-start',
-                trigger: 'manual',
-                interactive: true,
-                interactiveBorder: 10,
-                offset: [0, 0],
 
-                onShow(instance) {
-                    instance.popper.addEventListener('click', event => {
-                        instance.hide();
-                    });
-                }
-            });
+            if (view_button) {
+                let view_menu = tippy(view_button, {
+                    theme: 'context-menu',
+                    content: (`
+                        <a class="dropdown-menu-clickable-item" href="${root}bleh?tab=customise" data-menu-item="settings">
+                            ${trans[lang].settings.configure}
+                        </a>
+                    `),
+                    allowHTML: true,
+                    placement: 'right-start',
+                    trigger: 'manual',
+                    interactive: true,
+                    interactiveBorder: 10,
+                    offset: [0, 0],
 
-            register_menu(view_button, view_menu);
+                    onShow(instance) {
+                        instance.popper.addEventListener('click', event => {
+                            instance.hide();
+                        });
+                    }
+                });
+
+                register_menu(view_button, view_menu);
+            }
         }
     }
 
