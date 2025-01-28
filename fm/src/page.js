@@ -268,6 +268,7 @@ function assign_page_subpage() {
 }
 
 function load_page() {
+    append_nav();
     set_season();
     seasonal_timer_end();
 
