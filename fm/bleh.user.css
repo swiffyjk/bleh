@@ -986,7 +986,7 @@ last.fm changes as of 2024-05-20 */
         left: 0;
         top: 0;
         right: 0;
-        height: 80px;
+        height: calc((var(--card-gap) * 2) + 32px);
         z-index: 10;
         background: var(--cards-overlay-image-subtle, none), var(--page-overlay, none), linear-gradient(0deg, transparent 0%, hsl(var(--b6)) 100%);
         pointer-events: none;
@@ -2328,26 +2328,29 @@ spacing between is removed and aligned to tag icon */
 
         .user-about-buttons {
             display: flex;
-            gap: var(--button-list-gap);
-        }
+            gap: var(--card-gap);
 
-        button {
-            --btn-left: 8px;
-            --btn-right: 8px;
-            height: 18px;
-            --bg: transparent !important;
-            --bg-hov: transparent !important;
-            --bg-atv: transparent !important;
-            --shadow: none !important;
-            --shadow-hov: none !important;
-            --font-size: 0;
-            position: relative;
-            --left: 0;
+            & > button {
+                --btn-left: 9px !important;
+                --btn-right: 9px !important;
+                height: 18px;
+                --bg: transparent !important;
+                --bg-hov: transparent !important;
+                --bg-atv: transparent !important;
+                --shadow: none !important;
+                --shadow-hov: none !important;
+                --font-size: 0;
+                position: relative;
+                --left: 0;
 
-            margin-top: -1px;
+                margin-top: -1px;
 
-            &[data-action-type="note"] {
-                --mask: var(--icon-16-note-add);
+                &[data-action-type="note"] {
+                    --mask: var(--icon-16-note-add);
+                }
+                &[data-action-type="configure"] {
+                    --mask: var(--icon-16-dots);
+                }
             }
         }
     }
@@ -18473,18 +18476,21 @@ section > .section-controls .subpage-title {
 
         filter: none;
         height: 250px;
+        background-color: hsl(var(--b6));
         background-position: 0 40%;
 
         transition-property: opacity, height;
         transition-duration: 0.45s;
         transition-timing-function: cubic-bezier(0.165, 0.84, 0.44, 1);
 
-        &:before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background-color: rgb(0, 0, 0, 0.25);
-            mix-blend-mode: unset;
+        &[style] {
+            &:before {
+                content: '';
+                position: absolute;
+                inset: 0;
+                background-color: rgb(0, 0, 0, 0.25);
+                mix-blend-mode: unset;
+            }
         }
 
         &:after {
@@ -19039,7 +19045,7 @@ section > .section-controls .subpage-title {
     align-items: center;
     padding: 0 calc(var(--card-gap) + var(--card-padding) + 12px);
     height: 48px;
-    background-color: hsl(var(--h3), 20%);
+    background-color: hsl(var(--h3), 30%);
     margin: unset;
 
     border-top-left-radius: var(--card-radius);

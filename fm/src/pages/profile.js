@@ -642,22 +642,66 @@ function bleh_profiles() {
         // add buttons
         let buttons = document.createElement('div');
         buttons.classList.add('user-about-buttons');
+
         if (!profile_has_note) {
             let add_note_button = document.createElement('button');
             add_note_button.classList.add('btn', 'icon');
+            add_note_button.setAttribute('data-action-type', 'note');
             add_note_button.setAttribute('id', 'bleh--add-note');
-            add_note_button.textContent = 'Add note';
+            add_note_button.textContent = trans[lang].settings.profiles.notes.edit_user.replace('{u}', page.name);
             add_note_button.setAttribute('onclick',`_add_profile_note('${page.name}',${profile_has_note})`);
 
             tippy(add_note_button, {
                 content: trans[lang].settings.profiles.notes.edit_user.replace('{u}', page.name)
             });
 
-            let about_me_header = about_me_sidebar.querySelector('h2');
-            about_me_header.appendChild(add_note_button);
+            buttons.appendChild(add_note_button);
         } else {
             create_profile_note_panel(page.name, true);
         }
+
+        let about_more = document.createElement('button');
+        about_more.classList.add('btn', 'icon');
+        about_more.setAttribute('data-action-type', 'configure');
+        about_more.textContent = trans[lang].settings.configure;
+
+        tippy(about_more, {
+            content: trans[lang].settings.configure
+        });
+
+        tippy(about_more, {
+            theme: 'window',
+            content: (`
+                <div class="dialog-settings">
+                    <h4>${trans[lang].settings.text.markdown.name}</h4>
+                    <div class="toggle-container" id="container-bio_markdown" onclick="_update_item('bio_markdown')">
+                        <button class="btn reset" onclick="_reset_item('bio_markdown')">${trans[lang].settings.reset}</button>
+                        <div class="heading">
+                            <h5>${trans[lang].settings.text.markdown.profile}</h5>
+                        </div>
+                        <div class="toggle-wrap">
+                            <button class="toggle" id="toggle-bio_markdown" aria-checked="false">
+                                <div class="dot"></div>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `),
+            allowHTML: true,
+            placement: 'bottom',
+            interactive: true,
+            interactiveBorder: 10,
+            trigger: 'click',
+
+            onShow(instance) {
+                refresh_all(instance.popper);
+            }
+        });
+
+        buttons.appendChild(about_more);
+
+        let about_me_header = about_me_sidebar.querySelector('h2');
+        about_me_header.appendChild(buttons);
     }
 }
 
