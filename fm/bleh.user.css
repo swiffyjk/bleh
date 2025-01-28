@@ -158,8 +158,8 @@ body, [data-page-resource-type="album"], [data-page-resource-type="track"],
     --b5: var(--hue), calc(var(--sat) * 10% * var(--sat-bg, 1)), 17%;
 
     /* root */
-    --b6: var(--hue), calc(var(--sat) * 12% * var(--sat-bg, 1)), 6%;
-    --b10: var(--hue), calc(var(--sat) * 10% * var(--sat-bg, 1)), 11%;
+    --b6: var(--hue), calc(var(--sat) * 12% * var(--sat-bg, 1)), 8%;
+    --b10: var(--hue), calc(var(--sat) * 10% * var(--sat-bg, 1)), 12%;
     --b8: var(--hue), calc(var(--sat) * 11% * var(--sat-bg, 1)), 22%;
     --b7: 0, 0%, 0%;
 
@@ -2324,13 +2324,17 @@ spacing between is removed and aligned to tag icon */
 
     h2 {
         display: flex;
-        align-items: center;
-        gap: var(--item-list-gap);
+        justify-content: space-between;
 
-        .bleh--add-note {
+        .user-about-buttons {
+            display: flex;
+            gap: var(--button-list-gap);
+        }
+
+        button {
             --btn-left: 8px;
             --btn-right: 8px;
-            height: 16px;
+            height: 18px;
             --bg: transparent !important;
             --bg-hov: transparent !important;
             --bg-atv: transparent !important;
@@ -2339,7 +2343,12 @@ spacing between is removed and aligned to tag icon */
             --font-size: 0;
             position: relative;
             --left: 0;
-            --mask: var(--icon-16-note-add);
+
+            margin-top: -1px;
+
+            &[data-action-type="note"] {
+                --mask: var(--icon-16-note-add);
+            }
         }
     }
 }
@@ -4288,7 +4297,7 @@ better than the default selector '#app a' i suppose */
     &.grid-item-plays,
     .grid-item-plays {
         position: relative;
-        padding-left: calc(16px + 4px);
+        padding-left: calc(18px + 4px);
         --top: 0;
         --margin-top: 0;
         --left: 0;
@@ -6500,7 +6509,6 @@ button,
 .loading-data-text:before,
 .btns .btn:before,
 .btn.reset:before,
-.bleh--add-note:before,
 .profile-note-row .btn:before,
 .btn--has-icon:before,
 .avatar-overlay:before,
@@ -18600,6 +18608,10 @@ section > .section-controls .subpage-title {
                 background-color: hsl(var(--b6));
                 width: 250px;
 
+                [data-bleh--theme="oled"] & {
+                    background-color: hsl(var(--b4));
+                }
+
                 .taste-bar-fill {
                     position: absolute;
                     top: 0;
@@ -18673,6 +18685,10 @@ section > .section-controls .subpage-title {
                 border-radius: 50px;
                 background-color: hsl(var(--b6));
                 width: 250px;
+
+                [data-bleh--theme="oled"] & {
+                    background-color: hsl(var(--b4));
+                }
 
                 .progress-bar-fill {
                     position: absolute;

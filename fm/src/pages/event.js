@@ -34,16 +34,7 @@ function bleh_events() {
         return;
     }
 
-    if (!is_subpage) {
-        try {
-            page.name = page.structure.main.querySelector('.grid-items-item-main-text a').textContent;
-        } catch(e) {
-            // if the artist page doesnt.. exist?
-            page.name = event_header.querySelector('.header-title-secondary span').textContent;
-        }
-    } else {
-        page.name = event_header.querySelector('.header-title-secondary a').textContent;
-    }
+    page.name = '';
     page.sister = event_header.querySelector('.header-title').textContent.trim();
 
 

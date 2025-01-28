@@ -639,11 +639,13 @@ function bleh_profiles() {
             about_me_text.innerHTML = parsed_body;
         }
 
-        // add note button
+        // add buttons
+        let buttons = document.createElement('div');
+        buttons.classList.add('user-about-buttons');
         if (!profile_has_note) {
             let add_note_button = document.createElement('button');
-            add_note_button.classList.add('btn','bleh--add-note');
-            add_note_button.setAttribute('id','bleh--add-note');
+            add_note_button.classList.add('btn', 'icon');
+            add_note_button.setAttribute('id', 'bleh--add-note');
             add_note_button.textContent = 'Add note';
             add_note_button.setAttribute('onclick',`_add_profile_note('${page.name}',${profile_has_note})`);
 
