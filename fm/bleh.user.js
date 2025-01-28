@@ -19896,7 +19896,7 @@ let has_prompted_for_update = false;
                 if (notification.classList.contains('inbox-notifications__item--highlight'))
                     notification.classList.add('notification-user-name',
                         `user-status--bleh-${badge.type}`,
-                        `user-status--bleh-user-${safeClassName}`);
+                        `user-status--bleh-user-${name_text}`);
             });
 
         } else if (page.subpage == 'message_overview' || page.subpage == 'sent_message') {
