@@ -80,7 +80,6 @@ function bleh_main() {
         // last.fm is a single page application
         const observer = new MutationObserver((mutations) => {
             lookup_lang();
-            append_nav(document.body);
             patch_masthead(document.body);
 
             theme_version = getComputedStyle(document.body).getPropertyValue('--version-build').replaceAll("'", '').replaceAll('"', ''); // remove quotations

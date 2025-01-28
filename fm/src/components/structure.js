@@ -39,10 +39,10 @@ function checkup_page_structure(is_subpage = false, header = null) {
     page.structure.container.setAttribute('data-assigned', 'true');
 
     let other_container = document.body.querySelector('.page-content.container:not([data-assigned])');
-    if (other_container != null)
+    if (other_container)
         other_container.style.setProperty('display', 'none');
 
-    if (page.structure.row == null || !document.body.contains(page.structure.row)) {
+    if (!page.structure.row || !document.body.contains(page.structure.row)) {
         log('page missing row, creating', 'page structure');
         page.structure.row = document.createElement('div');
         page.structure.row.classList.add('row');
@@ -52,7 +52,7 @@ function checkup_page_structure(is_subpage = false, header = null) {
     if (page.structure.row.classList.contains('buffer-4'))
         page.structure.row.classList = 'row col-main-is-primary';
 
-    if (page.structure.main == null || !document.body.contains(page.structure.main)) {
+    if (!page.structure.main || !document.body.contains(page.structure.main)) {
         log('page missing main, creating', 'page structure');
         page.structure.main = document.createElement('div');
         page.structure.main.classList.add('col-main');
@@ -63,15 +63,15 @@ function checkup_page_structure(is_subpage = false, header = null) {
     page.structure.main.setAttribute('data-assigned', 'true');
 
     let other_main = page.structure.row.querySelector('.col-main.hidden-xs:not([data-assigned])');
-    if (other_main != null)
+    if (other_main)
         other_main.style.setProperty('display', 'none');
 
-    if (page.structure.side == null || !document.body.contains(page.structure.side)) {
+    if (!page.structure.side || !document.body.contains(page.structure.side)) {
         log('page missing side', 'page structure');
         // check first if another sidebar exists
         page.structure.side = page.structure.row.querySelector('.col-sidebar');
 
-        if (page.structure.side == null) {
+        if (!page.structure.side) {
             log('page missing side, creating', 'page structure');
 
             // otherwise, make anew
@@ -84,9 +84,10 @@ function checkup_page_structure(is_subpage = false, header = null) {
 
     log('finished', 'page structure');
 
-    if (ff('refreshed_music_nav') && header != null) {
+    if (ff('refreshed_music_nav') && header) {
         let navlist = header.querySelector('.navlist');
-        if (navlist != null) {
+
+        if (navlist) {
             navlist.classList.add('redesigned-navigation');
             page.structure.container.insertBefore(navlist, page.structure.container.firstElementChild);
             page.structure.nav = navlist;
@@ -95,22 +96,22 @@ function checkup_page_structure(is_subpage = false, header = null) {
         if (is_subpage) {
             let content_top = document.body.querySelector('.content-top');
 
-            if (content_top != null) {
+            if (content_top) {
                 content_top.classList.add('redesigned-content-top');
                 page.structure.content_top = content_top;
                 navlist.after(content_top);
 
                 // should be covered by bleh
-                if (content_top.querySelector('.content-top-back-link') != null)
+                if (content_top.querySelector('.content-top-back-link'))
                     content_top.style.setProperty('display', 'none');
             } else {
                 let subpage_title = page.structure.main.querySelector(':scope > .subpage-title');
-                if (subpage_title == null)
+                if (!subpage_title)
                     subpage_title = page.structure.main.querySelector(':scope > .section-controls > .subpage-title');
-                if (subpage_title == null)
+                if (!subpage_title)
                     subpage_title = page.structure.main.querySelector(':scope > section:first-child .section-controls > .subpage-title');
 
-                if (subpage_title != null) {
+                if (subpage_title) {
                     content_top = document.createElement('div');
                     content_top.classList.add('content-top', 'redesigned-content-top');
 
@@ -133,10 +134,10 @@ function checkup_page_structure(is_subpage = false, header = null) {
                 // is there another navlist?
                 navlist = page.structure.main.querySelector('.navlist');
 
-                if (navlist != null) {
+                if (navlist) {
                     navlist.classList.add('redesigned-navigation');
 
-                    if (page.structure.content_top != null)
+                    if (page.structure.content_top)
                         page.structure.content_top.after(navlist);
                     else
                         page.structure.container.insertBefore(navlist, page.structure.row);
@@ -144,10 +145,9 @@ function checkup_page_structure(is_subpage = false, header = null) {
 
                 // is there a btn-add?
                 let btn_add = page.structure.main.querySelector(':scope > .btn-add');
-                if (btn_add == null)
-                    btn_add = page.structure.main.querySelector(':scope > section:first-child .btn-add');
+                if (!btn_add) btn_add = page.structure.main.querySelector(':scope > section:first-child .btn-add');
 
-                if (btn_add != null) {
+                if (btn_add) {
                     btn_add.classList = 'btn view-all-button back add-button';
 
                     let add_panel = document.createElement('section');
@@ -161,7 +161,7 @@ function checkup_page_structure(is_subpage = false, header = null) {
                 // is there a playlink?
                 let playlink = page.structure.main.querySelector(':scope > .section-controls > .section-playlink');
 
-                if (playlink != null) {
+                if (playlink) {
                     playlink.classList.add('btn', 'view-all-button', 'back', 'play-button');
 
                     let playlink_panel = document.createElement('section');
@@ -174,7 +174,7 @@ function checkup_page_structure(is_subpage = false, header = null) {
         } else {
             let content_top = document.body.querySelector('.content-top');
 
-            if (content_top != null)
+            if (content_top)
                 content_top.classList.add('legacy-content-top');
         }
     }

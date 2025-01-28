@@ -2,17 +2,13 @@ function bleh_profiles() {
     // are we on a profile?
     let profile_header = document.body.querySelector('.header--user');
 
-    if (profile_header == null)
+    if (!profile_header)
         return;
-
-    if (profile_header.hasAttribute('data-bleh'))
-        return;
-    profile_header.setAttribute('data-bleh', 'true');
 
     page.name = profile_header.querySelector('.header-title a').textContent;
 
     // are we on the overview page?
-    let is_subpage = !profile_header.classList.contains('header--overview');
+    let is_subpage = (page.subpage != 'overview');
 
     page.structure.container = document.body.querySelector('.page-content:not(.profile-cards-container, .report-box-container .page-content)');
     try {
