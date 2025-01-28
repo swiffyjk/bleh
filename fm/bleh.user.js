@@ -19897,7 +19897,6 @@ let has_prompted_for_update = false;
                         `user-status--bleh-${badge.type}`,
                         `user-status--bleh-user-${name_text}`);
             });
-
         } else if (page.subpage == 'message_overview' || page.subpage == 'sent_message') {
             let inbox = page.structure.container.querySelector('.inbox-message-view');
             page.structure.main.appendChild(inbox);
