@@ -19885,8 +19885,7 @@ let has_prompted_for_update = false;
                 let avatar_img = avatar.querySelector('img');
                 if (!avatar_img) return;
 
-                let name_text = return_name_from_avatar(avatar_img);
-                let safeClassName = encodeURIComponent(name_text).replace(/%[0-9A-F]{2}/g, '_');
+                let name_text = sanitise(return_name_from_avatar(avatar_img));
                 let badge = patch_avatar(avatar, name_text);
 
                 name.classList.add('notification-user-name',
