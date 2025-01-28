@@ -13558,8 +13558,10 @@ function bleh_inbox() {
 
         if (form)
             panel.appendChild(form);
+
         if (notifications)
             panel.appendChild(notifications);
+
         if (pagination)
             panel.appendChild(pagination);
 
@@ -13570,14 +13572,16 @@ function bleh_inbox() {
             return;
 
         let notif_links = notifications.querySelectorAll('.inbox-notifications__item-link');
+
         notif_links.forEach((notification) => {
+            let link = notification.getAttribute('href');
+            if (link.endsWith('/obsessions/set') || link.endsWith('/listening-report/month')) return;
+
             let avatar = notification.querySelector('.avatar');
             let name = notification.querySelector('.inbox-notifications__item-description strong');
+            if (!name) return;
 
-            if (!name)
-                return;
-
-            let name_text = return_name_from_avatar(avatar.querySelector('img'));
+            let name_text = sanitise(return_name_from_avatar(avatar.querySelector('img')));
 
             let badge = patch_avatar(avatar, name_text);
             name.classList.add('notification-user-name', `user-status--bleh-${badge.type}`, `user-status--bleh-user-${name_text}`);
@@ -13598,7 +13602,7 @@ function bleh_inbox() {
         sender_panel.appendChild(sender_time);
 
         let avatar = sender_panel.querySelector('.avatar');
-        let name_text = sender_name.textContent.trim();
+        let name_text = sanitise(sender_name.textContent.trim());
         let badge = patch_avatar(avatar, name_text);
 
         sender_panel.classList.add(`user-status--bleh-${badge.type}`, `user-status--bleh-user-${name_text}`);
