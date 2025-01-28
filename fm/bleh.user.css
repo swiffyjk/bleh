@@ -2130,7 +2130,7 @@ spacing between is removed and aligned to tag icon */
     }
 
     /* avoids listening report thing */
-    [data-ff--katsune="true"] &:not([style]) {
+    [data-ff--katsune="true"] &:not([style], .ignore-katsune) {
         background: hsl(var(--b10)) !important;
         border-radius: var(--card-radius);
         box-shadow: 0 0 0 1px var(--card-border-base) inset;

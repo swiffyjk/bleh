@@ -197,8 +197,6 @@ function main_flow() {
         correct_generic_combo('similar-items-sidebar-item');
     }
 
-    patch_obsession_view();
-
     subscribe_to_events();
     auto_edit_modal();
 }
@@ -331,6 +329,9 @@ function load_page() {
 
 function page_title() {
     if (!ff('katsune'))
+        return;
+
+    if (!page.structure.container)
         return;
 
     let title = page.structure.container.querySelector('.page-title');

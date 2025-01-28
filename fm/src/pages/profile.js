@@ -1,4 +1,10 @@
 function bleh_profiles() {
+    // the obsessions page is a user subpage but works very differently
+    if (page.subpage == 'obsessions_obsession') {
+        patch_obsession_view();
+        return;
+    }
+
     // are we on a profile?
     let profile_header = document.body.querySelector('.header--user');
 
