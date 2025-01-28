@@ -19333,6 +19333,7 @@ function redesign_profile_header(is_own_profile, is_following) {
             follow_placeholder.classList.add('btn', 'profile-top-item', 'profile-top-item--follow', 'view-item', (katsune) ? 'icon' : '');
             follow_placeholder.textContent = trans[lang].profile.on_ignore_list;
 
+            follow_placeholder.setAttribute('disabled', 'true');
             follow_placeholder.setAttribute('data-ignored', 'true');
 
             if (!katsune)
