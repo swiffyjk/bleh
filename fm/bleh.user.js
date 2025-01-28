@@ -19890,7 +19890,7 @@ let has_prompted_for_update = false;
 
                 name.classList.add('notification-user-name',
                     `user-status--bleh-${badge.type}`,
-                    `user-status--bleh-user-${safeClassName}`);
+                    `user-status--bleh-user-${name_text}`);
 
                 if (notification.classList.contains('inbox-notifications__item--highlight'))
                     notification.classList.add('notification-user-name',
