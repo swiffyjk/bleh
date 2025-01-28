@@ -18520,8 +18520,18 @@ section > .section-controls .subpage-title {
         &[data-page-type="artist"] {
             height: 200px;
 
+            [data-bleh--theme="light"] &:not([style]) {
+                background-color: #000;
+            }
+
             &:before {
-                background-color: rgb(0, 0, 0, 0.75);
+                background-color: unset;
+            }
+
+            &[style] {
+                &:before {
+                    background-color: rgb(0, 0, 0, 0.75);
+                }
             }
         }
         .redesigned-header {
