@@ -19837,14 +19837,14 @@ let has_prompted_for_update = false;
         let inbox_header = document.createElement('section');
         inbox_header.classList.add('redesigned-header', 'inbox-header', 'no-background');
         inbox_header.innerHTML = (`
-       <div class="tag-side">
-           <div class="tag-icon ${(page.subpage == 'notifications') ? 'notifications' : 'inbox'}-icon"></div>
-       </div>
-       <div class="info-side">
-           <div class="sub-text">${trans[lang].inbox.name}</div>
-           <h1>${trans[lang].inbox[page.subpage]}</h1>
-       </div>
-   `);
+            <div class="tag-side">
+                <div class="tag-icon ${(page.subpage == 'notifications') ? 'notifications' : 'inbox'}-icon"></div>
+            </div>
+            <div class="info-side">
+                <div class="sub-text">${trans[lang].inbox.name}</div>
+                <h1>${trans[lang].inbox[page.subpage]}</h1>
+            </div>
+        `);
 
         page.structure.container.insertBefore(inbox_header, page.structure.container.firstElementChild);
 
