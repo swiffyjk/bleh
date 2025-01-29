@@ -19187,12 +19187,28 @@ h4 {
     gap: 10px;
     position: relative;
 
+    .mockup-wrap {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        background: hsl(var(--b10));
+        padding: 0 10px 0 10px;
+        border-radius: 10px 10px 0 0;
+
+        position: relative;
+    }
+
     .mockup-header {
         display: flex;
         gap: 10px;
-        width: 500px;
+        width: 520px;
+        padding: 10px;
+        background: hsl(var(--b5));
         position: relative;
         z-index: 10;
+
+        margin: 100px -10px 0;
+        z-index: 6;
 
         .mockup-avatar {
             display: flex;
@@ -19204,6 +19220,8 @@ h4 {
             .artist & {
                 border-radius: var(--item-big-radius);
             }
+
+            margin-top: -22px;
         }
 
         .mockup-info {
@@ -19336,19 +19354,22 @@ h4 {
         z-index: -1;
         background-position: 0 33%;
         background-size: cover;
-        filter: blur(16px);
         height: 100px;
-        z-index: 8;
+        z-index: 5;
+        border-radius: 10px 10px 0 0;
 
         transition-property: opacity, filter;
         transition-duration: var(--trans);
         transition-timing-function: var(--trans-function);
 
+        overflow: hidden;
+
         &:after {
             content: '';
             position: absolute;
             inset: 0;
-            background: linear-gradient(180deg, hsla(var(--b6), 70%) 0%, hsl(var(--b6)) 100%) !important;
+            background: #000 !important;
+            opacity: 0.4;
         }
 
         [data-bleh--profile_header_own="false"] & {

@@ -6272,7 +6272,8 @@ function register_background(url) {
     let background;
     if (flag) {
         background = page.structure.container.querySelector('.bleh-background');
-        if (background == null) {
+
+        if (!background) {
             background = document.createElement('div');
             background.classList.add('bleh-background', 'katsune-bleh-background');
 
@@ -6284,7 +6285,8 @@ function register_background(url) {
         }
     } else {
         background = document.body.querySelector('.bleh-background');
-        if (background == null) {
+
+        if (!background) {
             background = document.createElement('div');
             background.classList.add('bleh-background');
 
@@ -8422,27 +8424,29 @@ function render_setting_page(page_id) {
                 <h4>${trans[lang].settings.customise.profile_header.name}</h4>
                 <div class="inner-preview pad">
                     <div class="profile-mockup">
-                        <div class="mockup-header">
-                            <img class="mockup-avatar" src="${auth.avatar}">
-                            <div class="mockup-info">
-                                <div class="mockup-subtext"></div>
-                                <div class="mockup-name"></div>
-                            </div>
-                        </div>
-                        <div class="mockup-container">
-                            <div class="mockup-col-main">
-                                <div class="mockup-panel main"></div>
-                            </div>
-                            <div class="mockup-col-sidebar">
-                                <div class="mockup-panel mockup-obsession-panel">
-                                    <img class="mockup-obsession-art" src="https://lastfm.freetls.fastly.net/i/u/64s/e8e5ed62eba543442fe85ac61dead730.jpg">
-                                    <div class="mockup-obsession-name"></div>
+                        <div class="mockup-wrap">
+                            <div class="profile-mockup-background from-avatar" style="background-image: url(${auth.avatar.replace('/avatar42s/', '/avatar170s/')});"></div>
+                            <div class="profile-mockup-background from-track" style="background-image: url(https://lastfm.freetls.fastly.net/i/u/avatar170s/90b39fa67cd3ec8159e116385952a05b);"></div>
+                            <div class="mockup-header">
+                                <img class="mockup-avatar" src="${auth.avatar}">
+                                <div class="mockup-info">
+                                    <div class="mockup-name"></div>
+                                    <div class="mockup-subtext"></div>
                                 </div>
-                                <div class="mockup-panel main"></div>
+                            </div>
+                            <div class="mockup-container">
+                                <div class="mockup-col-main">
+                                    <div class="mockup-panel main"></div>
+                                </div>
+                                <div class="mockup-col-sidebar">
+                                    <div class="mockup-panel mockup-obsession-panel">
+                                        <img class="mockup-obsession-art" src="https://lastfm.freetls.fastly.net/i/u/64s/e8e5ed62eba543442fe85ac61dead730.jpg">
+                                        <div class="mockup-obsession-name"></div>
+                                    </div>
+                                    <div class="mockup-panel main"></div>
+                                </div>
                             </div>
                         </div>
-                        <div class="profile-mockup-background from-avatar" style="background-image: url(${auth.avatar});"></div>
-                        <div class="profile-mockup-background from-track" style="background-image: url(https://lastfm.freetls.fastly.net/i/u/avatar170s/90b39fa67cd3ec8159e116385952a05b);"></div>
                     </div>
                 </div>
                 <div class="toggle-container" id="container-profile_avi_background" onclick="_update_item('profile_avi_background')">
