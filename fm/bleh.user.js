@@ -6216,6 +6216,8 @@ function page_title() {
         name = trans[lang].profile.name;
     else if (page.type == 'bleh_settings')
         name = trans[lang].settings.name;
+    else if (page.type == 'events' || page.type == 'festival')
+        name = trans[lang].event.name;
 
     title.setAttribute('data-page-type', page.type);
     title.innerHTML = (`

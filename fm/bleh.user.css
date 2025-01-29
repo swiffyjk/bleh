@@ -1724,7 +1724,7 @@ last.fm changes as of 2024-05-20 */
     padding-top: var(--override-padding-top, unset) !important;
 }
 
-.subpage-breadcrumb, .subpage-title {
+.subpage-breadcrumb, .subpage-title:not(.section-controls .subpage-title) {
     display: none;
 }
 
@@ -17489,6 +17489,7 @@ h4 {
         --shadow: var(--card-shadow);
         flex: 1;
         --padding: var(--card-gap) var(--card-padding) var(--card-gap) calc(var(--card-padding) + 18px + 6px);
+        --left: var(--card-padding);
         --mask: var(--icon-16-gallery-vertical);
 
         &.upload-button {
@@ -18403,9 +18404,9 @@ h4 {
     margin-top: var(--card-gap) !important;
 }
 
-section > .section-controls .subpage-title {
+/*section > .section-controls .subpage-title {
     visibility: hidden !important;
-}
+}*/
 .col-main > .section-controls {
     display: none;
 }
@@ -19119,11 +19120,11 @@ section > .section-controls .subpage-title {
     &[data-page-type="inbox"] {
         --icon: var(--icon-16-mail);
     }
-    &[data-page-type="home"] {
-        --icon: var(--icon-16-home);
-    }
     &[data-page-type="bookmarks"] {
         --icon: var(--icon-16-bookmark);
+    }
+    &[data-page-type="events"], &[data-page-type="festival"] {
+        --icon: var(--icon-16-event);
     }
 }
 
