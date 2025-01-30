@@ -853,7 +853,7 @@ const trans = {
                 },
                 font_emoji: {
                     name: 'Use compatibility emoji font',
-                    bio: 'On Windows systems before 11, the emoji font is left outdated by default unless this option is used.'
+                    bio: 'On Windows systems prior to 11, the emoji font is majorly outdated unless this option is used. (such as 🏳️‍⚧️)'
                 }
             },
             inbuilt: {
@@ -1810,7 +1810,7 @@ const trans = {
                 },
                 font_emoji: {
                     name: 'Use compatibility emoji font',
-                    bio: 'On Windows systems before 11, the emoji font is left outdated by default unless this option is used.'
+                    bio: 'On Windows systems prior to 11, the emoji font is majorly outdated unless this option is used. (such as 🏳️‍⚧️)'
                 }
             },
             inbuilt: {
@@ -2738,7 +2738,7 @@ const trans = {
                 },
                 font_emoji: {
                     name: 'Use compatibility emoji font',
-                    bio: 'On Windows systems before 11, the emoji font is left outdated by default unless this option is used.'
+                    bio: 'On Windows systems prior to 11, the emoji font is majorly outdated unless this option is used. (such as 🏳️‍⚧️)'
                 }
             },
             inbuilt: {
