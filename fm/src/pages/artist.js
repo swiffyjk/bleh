@@ -224,7 +224,7 @@ function bleh_artists() {
         bleh_tags_mini();
 
 
-        if (katsune) {
+        if (katsune && featured_items) {
             let featured_panel = document.createElement('section');
             featured_panel.classList.add('featured-items-panel');
 
