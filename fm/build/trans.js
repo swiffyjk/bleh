@@ -1379,6 +1379,8 @@ const trans = {
             cancel: 'Abbrechen',
             close: 'Schließen',
             clear: 'Leeren',
+            create: 'Create',
+            add: 'Add',
             remove: 'Remove',
             done: 'Fertig',
             finish: 'Beenden',
@@ -1879,6 +1881,23 @@ const trans = {
                         }
                     }
                 },
+                ignore: {
+                    name: 'Communication',
+                    consider: {
+                        name: 'To consider',
+                        good: [
+                            'You will not see previous or new shouts globally',
+                            'They cannot direct message you',
+                            'They cannot leave a shout on your profile or under your shouts anywhere'
+                        ],
+                        bad: [
+                            'You cannot delete pre-existing shouts from your profile',
+                            'They can still view your profile'
+                        ]
+                    },
+                    view: 'View {c} more',
+                    count: 'You have {c} users hidden'
+                },
                 privacy: {
                     name: 'Datenschutz',
                     recent_listening: {
@@ -2308,6 +2327,8 @@ const trans = {
             cancel: 'Anuluj',
             close: 'Zamknij',
             clear: 'Wyczyść',
+            create: 'Create',
+            add: 'Add',
             remove: 'Remove',
             done: 'Gotowe',
             finish: 'Finish',
@@ -2807,6 +2828,23 @@ const trans = {
                             name: 'Domyślny przedział czasowy'
                         }
                     }
+                },
+                ignore: {
+                    name: 'Communication',
+                    consider: {
+                        name: 'To consider',
+                        good: [
+                            'You will not see previous or new shouts globally',
+                            'They cannot direct message you',
+                            'They cannot leave a shout on your profile or under your shouts anywhere'
+                        ],
+                        bad: [
+                            'You cannot delete pre-existing shouts from your profile',
+                            'They can still view your profile'
+                        ]
+                    },
+                    view: 'View {c} more',
+                    count: 'You have {c} users hidden'
                 },
                 privacy: {
                     name: 'Prywatność',
