@@ -11291,26 +11291,6 @@ function bleh_charts() {
 
     checkup_page_structure(false, content_top);
 
-    if (ff('refreshed_nav')) {
-        register_background(auth.avatar);
-    }
-
-
-    let charts_header = document.createElement('section');
-    charts_header.classList.add('redesigned-header', 'charts-header', 'no-background');
-    charts_header.innerHTML = (`
-        <div class="tag-side">
-            <div class="tag-icon charts-icon"></div>
-        </div>
-        <div class="info-side">
-            <div class="sub-text">${trans[lang].charts.name}</div>
-            <h1>${trans[lang].charts[page.subpage]}</h1>
-        </div>
-    `);
-
-    page.structure.container.insertBefore(charts_header, page.structure.container.firstElementChild);
-
-
     log('status is', 'page', 'info', page);
     update_page();
 
