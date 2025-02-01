@@ -1163,6 +1163,10 @@ const trans = {
         },
         bookmarks: {
             name: 'Bookmarks'
+        },
+        home: {
+            name: 'Home',
+            welcome: 'Welcome back {m}'
         }
     },
     de: {
@@ -2111,6 +2115,13 @@ const trans = {
                 name: 'Simulate horizontal scrolling',
                 bio: 'Disable if you can scroll easily on a laptop for example.'
             }
+        },
+        bookmarks: {
+            name: 'Bookmarks'
+        },
+        home: {
+            name: 'Home',
+            welcome: 'Welcome back {m}'
         }
     },
     pl: {
@@ -3040,6 +3051,13 @@ const trans = {
                 name: 'Simulate horizontal scrolling',
                 bio: 'Disable if you can scroll easily on a laptop for example.'
             }
+        },
+        bookmarks: {
+            name: 'Bookmarks'
+        },
+        home: {
+            name: 'Home',
+            welcome: 'Welcome back {m}'
         }
     },
 }
@@ -13600,6 +13618,19 @@ function bleh_home() {
     checkup_page_structure(false, content_top);
     log('status is', 'page', 'info', page);
     update_page();
+
+
+    let banner = document.createElement('div');
+    banner.classList.add('top-banner', 'home-banner');
+
+    banner.innerHTML = (`
+        <a class="home-avatar" href="${root}user/${auth.name}">
+            <img src="${auth.avatar.replace('/avatar42s/', '/avatar170s/')}">
+        </a>
+        <h1>${trans[lang].home.welcome.replace('{m}', `<a class="mention" href="${root}user/${auth.name}">@${auth.name}</a>`)}</h1>
+    `);
+
+    page.structure.container.insertBefore(banner, page.structure.nav);
 }
 
 // [PAGE] src/pages/inbox.js

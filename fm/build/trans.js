@@ -1135,6 +1135,10 @@ const trans = {
         },
         bookmarks: {
             name: 'Bookmarks'
+        },
+        home: {
+            name: 'Home',
+            welcome: 'Welcome back {m}'
         }
     },
     de: {
@@ -2083,6 +2087,13 @@ const trans = {
                 name: 'Simulate horizontal scrolling',
                 bio: 'Disable if you can scroll easily on a laptop for example.'
             }
+        },
+        bookmarks: {
+            name: 'Bookmarks'
+        },
+        home: {
+            name: 'Home',
+            welcome: 'Welcome back {m}'
         }
     },
     pl: {
@@ -3012,6 +3023,13 @@ const trans = {
                 name: 'Simulate horizontal scrolling',
                 bio: 'Disable if you can scroll easily on a laptop for example.'
             }
+        },
+        bookmarks: {
+            name: 'Bookmarks'
+        },
+        home: {
+            name: 'Home',
+            welcome: 'Welcome back {m}'
         }
     },
 }
