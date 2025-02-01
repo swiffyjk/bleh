@@ -1,6 +1,12 @@
 {
-    "updated": "2025-01-25",
-    "latest": "2025.0125",
+    "updated": "2025-02-01",
+    "latest": "2025.0201",
+    "2025.0201": {
+        "name": "notificationz",
+        "type": "minor",
+        "force": false,
+        "bio": "just a minor bugfix update as monthly listening reports will be rolling out and everyone will see this bug lol. big final bleh redesign soon<3\n\n# Notifications\n- Fixed notifications that don't explicitly mention a user crashing\n    - Contributed by @Poligoner\n\n# Other\n- Updated badges"
+    },
     "2025.0125": {
         "name": "mouse pt. 2",
         "type": "major",
