@@ -364,7 +364,7 @@ a,
     }
     .preview[data-bleh--theme="light"],
     [data-bleh--theme="light"] &:not(
-        .preview, .grid-items-item.grid-items-item-has-colour, .redesigned-header:not(.redesigned-profile-header) a
+        .preview, .grid-items-item.grid-items-item-has-colour, .redesigned-header:not(.redesigned-profile-header) :is(a, .header-new-chart-position-number)
         ){
         --c1: var(--hue), calc(var(--sat) * 6%), 0%;
         --c2: var(--hue), calc(var(--sat) * 4%), 4%;
@@ -18349,9 +18349,8 @@ h4 {
                 color: hsl(var(--l2-c));
                 text-shadow: 0 0 20px hsl(var(--h4));
 
-                [data-bleh--theme="light"] & {
-                    color: hsl(var(--l4-c));
-                }
+                font-size: 16px;
+                line-height: 20px;
             }
         }
 
