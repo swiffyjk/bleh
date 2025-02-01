@@ -135,6 +135,11 @@ function handle_error(e = null) {
     log('current page', 'page', 'info', page);
 }
 
+function handle_error_500() {
+    document.body.classList.add('bleh-loaded');
+    log('halted as root is inaccessible', 'load');
+}
+
 function main_flow() {
     assign_page();
 
@@ -304,6 +309,8 @@ function load_page() {
             bleh_inbox();
         else if (page.type == 'bookmarks')
             bleh_bookmarks();
+        else if (page.type == 'home')
+            bleh_home();
 
         if (
             (page.type == 'artist' || page.type == 'album' || page.type == 'track') &&
