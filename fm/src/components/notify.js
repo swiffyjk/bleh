@@ -78,16 +78,19 @@ function notify({
 
     if (!body) {
         notif.innerHTML = (`
-            <div class="notification-title">${title}</div>
+            <div class="notification-title margin-below">${title}</div>
         `);
     } else {
         notif.innerHTML = (`
             <div class="notification-title">${title}</div>
-            <div class="notification-body">${body}</div>
+            <div class="notification-body margin-below">${body}</div>
         `);
     }
 
     page.structure.notifications.appendChild(notif);
+
+    if (!icon)
+        icon = 'icon-16-info';
 
     if (icon) {
         notif.classList.add('icon');
@@ -103,9 +106,17 @@ function notify({
     if (persist)
         return;
 
+    let bar = document.createElement('div');
+    bar.classList.add('notification-progress');
+    notif.appendChild(bar);
+
+    setTimeout(function() {
+        bar.style.setProperty('left', '100%');
+    }, 1);
+
     setTimeout(function() {
         notify_rm(notif);
-    }, 5000);
+    }, 10000);
 }
 unsafeWindow._notify_rm = function(notif) {
     notify_rm(notif);

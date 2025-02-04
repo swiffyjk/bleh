@@ -15473,11 +15473,9 @@ button.bleh--gallery-bookmark-image-btn {
         pointer-events: auto;
         position: relative;
 
-        --bg: var(--cards-overlay-image-subtlest, none), hsl(var(--h3));
-        --bg-hov: var(--cards-overlay-image-subtlest, none), hsla(var(--h3), 80%);
-        --bg-atv: var(--cards-overlay-image-subtlest, none), hsla(var(--h3), 60%);
-        --shadow: 0 3px 12px hsl(var(--h4), 25%), var(--card-shadow);
-        --col: hsl(var(--b7));
+        overflow: hidden;
+
+        --btn-right: 24px;
 
         text-align: left;
 
@@ -15486,12 +15484,30 @@ button.bleh--gallery-bookmark-image-btn {
             opacity: 0.8;
         }
 
-        backdrop-filter: blur(3px);
-        -webkit-backdrop-filter: blur(3px);
-
         &.fade-out {
             opacity: 0;
             animation: notif_out var(--trans) var(--trans-function);
+        }
+
+        /*.margin-below {
+            margin-bottom: 4px;
+        }*/
+
+        .notification-progress {
+            position: absolute;
+            left: 0;
+            right: 0;
+            bottom: 0;
+
+            background-color: hsl(var(--h3), 30%);
+            box-shadow: 0 0 20px hsl(var(--h4), 30%);
+            /*height: 4px;*/
+
+            height: 100%;
+
+            transition: left 14s; /* 4.999 */
+
+            border-radius: var(--item-big-radius);
         }
     }
 }

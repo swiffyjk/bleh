@@ -874,6 +874,19 @@ function render_setting_page(page_id) {
                     <br>
                     <li>Has the timeout expired? ${new Date(localStorage.getItem('bleh_cached_style_timeout')) < new Date()}</li>
                 </ul>
+                <div class="sep"></div>
+                <h4>Debugging interactions</h4>
+                <button class="continue" onclick="_notify({
+                id: 'test',
+                title: 'testing!',
+                body: 'haaaiaiii test bodyyy.......'
+                })">Deliver notification</button>
+                <button class="continue" onclick="_notify({
+                id: 'test',
+                title: 'testing!',
+                body: 'haaaiaiii test bodyyy.......',
+                persist: true
+                })">Deliver persistent notification</button>
             </div>
             `);
     } else if (page_id == 'profiles') {
