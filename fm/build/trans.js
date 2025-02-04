@@ -414,6 +414,8 @@ const trans = {
             go: 'Go',
             skip: 'Skip',
             back: 'Back',
+            send: 'Send',
+            send_quickly: 'Send quickly with {kbd}',
             right_click: 'Right-click for more options',
             reload: {
                 name: 'Refresh pending',

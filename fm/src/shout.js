@@ -45,6 +45,10 @@ function patch_shouts() {
 
                 shout_timestamp.removeAttribute('title');
             }
+
+
+            let send_button = shout.querySelector('.form-group--submit');
+            shout_send(send_button);
         } catch(e) {
             deliver_notif('a shout on this page failed to be modified :(');
             console.error('bleh - a shout failed to patch', e);
@@ -58,6 +62,27 @@ function patch_shouts() {
         let shout_avatar = shout_form.querySelector('.shout-user-avatar');
 
         patch_avatar(shout_avatar, auth.name);
+
+
+        let send_button = shout_form.querySelector('.form-group--submit');
+        shout_send(send_button);
+    });
+}
+
+function shout_send(send_button) {
+    if (!send_button) return;
+
+    let button = send_button.querySelector('.btn-post-shout');
+    if (!button) return;
+
+    button.classList.add('btn-send-shout-generic');
+    //button.innerHTML = 'Send with Copilot<span class="new-badge">PREMIUM</span>';
+    button.textContent = trans[lang].settings.send;
+
+    tippy(button, {
+        content: trans[lang].settings.send_quickly.replace('{kbd}', '<kbd>ctrl+↵</kbd>'),
+        delay: [500, 0],
+        allowHTML: true
     });
 }
 
