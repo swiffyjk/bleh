@@ -1167,6 +1167,11 @@ const trans = {
         home: {
             name: 'Home',
             welcome: 'Welcome back {m}'
+        },
+        nag_bar: {
+            corrections: {
+                title: 'Redirected from'
+            }
         }
     },
     de: {
@@ -6116,6 +6121,14 @@ function main_flow() {
         page.type == 'tag'
     ) {
         patch_titles();
+    }
+
+    if (page.type == 'user' ||
+        page.type == 'artist' ||
+        page.type == 'album' ||
+        page.type == 'track'
+    ) {
+        nag_bar();
     }
 
     if (settings.corrections) {
@@ -19011,6 +19024,38 @@ function music_grids() {
 
     if (page.subpage.startsWith('library'))
         bleh_glacier_insights(insights);
+}
+
+// [COMPONENT] src/components/nag_bar.js
+function nag_bar() {
+    /*if (!page.structure.nag_bar) {
+        page.structure.nag_bar = document.body.querySelector('#redirect-bar');
+        console.info('nag', page.structure.nag_bar);
+
+        if (!page.structure.nag_bar)
+            return;
+    }*/
+
+    let active_nag = document.body.querySelector('.nag-bar');
+    console.info('active nag', active_nag, page.structure.nag_bar.innerHTML);
+    if (!active_nag)
+        return;
+
+    let type = active_nag.classList[1];
+
+    if (type == 'nag-bar--corrections') {
+        notify({
+            id: 'corrections',
+            title: trans[lang].nag_bar.corrections.title,
+            body: active_nag.querySelector('strong').innerHTML,
+            icon: 'icon-16-refresh'
+        });
+    } else {
+        // TODO
+        return;
+    }
+
+    active_nag.parentElement.removeChild(active_nag);
 }
 
 // [COMPONENT] src/components/notify.js

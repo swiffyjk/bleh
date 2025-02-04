@@ -1139,6 +1139,11 @@ const trans = {
         home: {
             name: 'Home',
             welcome: 'Welcome back {m}'
+        },
+        nag_bar: {
+            corrections: {
+                title: 'Redirected from'
+            }
         }
     },
     de: {

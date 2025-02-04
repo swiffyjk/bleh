@@ -192,6 +192,14 @@ function main_flow() {
         patch_titles();
     }
 
+    if (page.type == 'user' ||
+        page.type == 'artist' ||
+        page.type == 'album' ||
+        page.type == 'track'
+    ) {
+        nag_bar();
+    }
+
     if (settings.corrections) {
         correct_generic_combo_no_artist('artist-header-featured-items-item');
         correct_generic_combo_no_artist('artist-top-albums-item');

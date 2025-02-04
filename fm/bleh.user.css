@@ -15482,6 +15482,10 @@ button.bleh--gallery-bookmark-image-btn {
         .notification-body {
             font-weight: var(--font-weight);
             opacity: 0.8;
+
+            a:not(:hover) {
+                color: inherit;
+            }
         }
 
         &.fade-out {
