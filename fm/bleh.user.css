@@ -9149,6 +9149,12 @@ text[style^="color: rgb(255, 172, 172)"] {
         background-color: hsla(var(--h4), 20%);
     }
 
+    kbd, code {
+        font-size: inherit;
+        line-height: inherit;
+        margin-left: 2px;
+    }
+
     &[data-theme="context-menu"],
     &[data-theme="auth-menu"],
     &[data-theme="select-menu"],
@@ -13269,7 +13275,7 @@ pre,
 code, kbd, samp {
     color: hsl(var(--c3));
     background-color: hsl(var(--b6));
-    padding: 0 4px;
+    padding: 0 6px;
     font-size: var(--font-size);
     line-height: var(--line-height);
     font-family: var(--font-code);
