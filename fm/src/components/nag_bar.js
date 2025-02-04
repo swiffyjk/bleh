@@ -8,7 +8,6 @@ function nag_bar() {
     }*/
 
     let active_nag = document.body.querySelector('.nag-bar');
-    console.info('active nag', active_nag, page.structure.nag_bar.innerHTML);
     if (!active_nag)
         return;
 
