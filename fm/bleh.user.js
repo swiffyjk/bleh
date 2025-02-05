@@ -4649,7 +4649,8 @@ function patch_avatar(avatar, name, type = '') {
             allowHTML: true,
             delay: [50, 100],
             placement: 'right',
-            interactive: true
+            interactive: true,
+            delay: [200, 0]
         });
 
         return this_badge;
@@ -4677,7 +4678,8 @@ function patch_avatar(avatar, name, type = '') {
                 allowHTML: true,
                 delay: [50, 100],
                 placement: 'right',
-                interactive: true
+                interactive: true,
+                delay: [200, 0]
             });
 
             return {};
@@ -4705,7 +4707,8 @@ function patch_avatar(avatar, name, type = '') {
                 allowHTML: true,
                 delay: [50, 100],
                 placement: 'right',
-                interactive: true
+                interactive: true,
+                delay: [200, 0]
             });
             avatar.setAttribute('title', '');
 
