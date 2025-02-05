@@ -415,7 +415,7 @@ function update_page() {
     page.structure.container.setAttribute('data-page-subpage', page.subpage);
 }
 
-function register_background(url) {
+function register_background(url, origin = null) {
     let flag = ff('katsune');
 
     let background;
@@ -443,7 +443,30 @@ function register_background(url) {
         }
     }
 
+    if (page.type == 'user' && origin) {
+        let buttons = background.querySelector('.bleh-background-buttons');
+
+        if (!buttons) {
+            buttons = document.createElement('div');
+            buttons.classList.add('view-buttons', 'bleh-background-buttons');
+        } else {
+            buttons.innerHTML = '';
+        }
+
+        let origin_button = document.createElement('button');
+        origin_button.classList.add('btn', 'view-item', 'origin-button');
+
+        buttons.appendChild(origin_button);
+
+        tippy(origin_button, {
+            content: `origin: ${origin}`
+        });
+
+        background.appendChild(buttons);
+    }
+
     background.setAttribute('data-page-type', page.type);
+    background.setAttribute('data-background-origin', origin);
 
     if (url)
         background.style.setProperty('background-image', `url(${url})`);

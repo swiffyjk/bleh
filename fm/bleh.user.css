@@ -18635,6 +18635,33 @@ h4 {
             }
         }
     }
+
+    .bleh-background-buttons {
+        position: absolute;
+        top: var(--card-gap);
+        right: calc(var(--card-gap) + var(--card-padding));
+
+        background: unset !important;
+        border-radius: unset;
+        padding: unset;
+
+        opacity: 0.1;
+        transition: opacity 0.2s;
+
+        .view-item {
+            --btn-left: 12px !important;
+        }
+
+        .origin-button {
+            --mask: var(--icon-16-info);
+        }
+    }
+
+    &:hover, &:focus-within {
+        .bleh-background-buttons {
+            opacity: 1;
+        }
+    }
 }
 
 .katsune-button-row {

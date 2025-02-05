@@ -6355,7 +6355,7 @@ function update_page() {
     page.structure.container.setAttribute('data-page-subpage', page.subpage);
 }
 
-function register_background(url) {
+function register_background(url, origin = null) {
     let flag = ff('katsune');
 
     let background;
@@ -6383,7 +6383,30 @@ function register_background(url) {
         }
     }
 
+    if (page.type == 'user' && origin) {
+        let buttons = background.querySelector('.bleh-background-buttons');
+
+        if (!buttons) {
+            buttons = document.createElement('div');
+            buttons.classList.add('view-buttons', 'bleh-background-buttons');
+        } else {
+            buttons.innerHTML = '';
+        }
+
+        let origin_button = document.createElement('button');
+        origin_button.classList.add('btn', 'view-item', 'origin-button');
+
+        buttons.appendChild(origin_button);
+
+        tippy(origin_button, {
+            content: `origin: ${origin}`
+        });
+
+        background.appendChild(buttons);
+    }
+
     background.setAttribute('data-page-type', page.type);
+    background.setAttribute('data-background-origin', origin);
 
     if (url)
         background.style.setProperty('background-image', `url(${url})`);
@@ -14800,21 +14823,21 @@ function bleh_profiles() {
         }
 
         if (page.name == auth.name && !settings.profile_header_own) {
-            register_background(null);
+            register_background(null, 'hidden');
         } else if (page.name != auth.name && !settings.profile_header_others) {
-            register_background(null);
+            register_background(null, 'hidden');
         } else {
             if (settings.profile_avi_background) {
                 if (avatar != null)
-                    register_background(avatar.querySelector('img').getAttribute('src').replace('/avatar170s/', '/ar0/'));
+                    register_background(avatar.querySelector('img').getAttribute('src').replace('/avatar170s/', '/ar0/'), 'avatar');
                 else
-                    register_background(null);
+                    register_background(null, 'none');
             } else {
                 let background = document.body.querySelector('.header-background--has-image');
                 if (background != null)
-                    register_background(background.style.getPropertyValue('background-image').replace('url("', '').replace('")', ''));
+                    register_background(background.style.getPropertyValue('background-image').replace('url("', '').replace('")', ''), 'artist');
                 else
-                    register_background(null);
+                    register_background(null, 'none');
             }
         }
 
@@ -16196,8 +16219,7 @@ function bio_parse(text) {
 }
 
 function set_profile_banner(img) {
-    register_background(img.getAttribute('src'));
-    img.style.setProperty('display', 'none');
+    register_background(img.getAttribute('src'), 'bio');
 }
 
 // [PAGE] src/pages/search.js
