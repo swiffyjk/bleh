@@ -5549,12 +5549,17 @@ the body text becomes bigger by default - this reverts that */
     line-height: var(--line-height) !important;
     /* line breaks */
     p {
-        max-height: 300px;
+        max-height: 700px;
         overflow: hidden;
         text-overflow: ellipsis;
 
         em {
             color: hsla(var(--c2), 70%);
+        }
+
+        img {
+            max-height: 320px;
+            border-radius: var(--item-big-radius);
         }
     }
 }
@@ -14690,6 +14695,20 @@ input[type="range"]::-moz-range-progress {
 
 
 /*     MENTION     */
+.about-me-sidebar, .bleh--about-me-preview {
+    img {
+        border-radius: var(--item-big-radius);
+        max-width: 100%;
+
+        &[alt="banner"] {
+            display: none;
+
+            p:has(> &) {
+                display: none;
+            }
+        }
+    }
+}
 :is(.shout-body, .about-me-sidebar, .bleh--about-me-preview) a {
     position: relative;
     --show-icon: none;

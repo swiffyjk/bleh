@@ -611,34 +611,8 @@ function bleh_profiles() {
         if (settings.bio_markdown) {
             // parse body
             let about_me_text = about_me_sidebar.querySelector('p');
-            let converter = new showdown.Converter({
-                emoji: true,
-                excludeTrailingPunctuationFromURLs: true,
-                ghMentions: true,
-                ghMentionsLink: `${root}user/{u}`,
-                headerLevelStart: 5,
-                noHeaderId: true,
-                openLinksInNewWindow: true,
-                requireSpaceBeforeHeadingText: true,
-                simpleLineBreaks: true,
-                simplifiedAutoLink: true,
-                strikethrough: true,
-                underline: true,
-                ghCodeBlocks: false,
-                smartIndentationFix: true
-            });
-            let parsed_body = converter.makeHtml(about_me_text.textContent
-            .replace(/([@])([a-zA-Z0-9_]+)/g, `[$1$2](${root}user/$2)`)
-            .replace(/\[artist\]([a-zA-Z0-9]+)\[\/artist\]/g, `[$1](${root}music/$1)`)
-            .replace(/\[album artist=([a-zA-Z0-9]+)\]([a-zA-Z0-9\s]+)\[\/album\]/g, `[$2](${root}music/$1/$2)`)
-            .replace(/\[track artist=([a-zA-Z0-9]+)\]([a-zA-Z0-9\s]+)\[\/track\]/g, `[$2](${root}music/$1/_/$2)`)
-            .replace(/https:\/\/open\.spotify\.com\/user\/([A-Za-z0-9]+)\?si=([A-Za-z0-9]+)/g, '[@$1](https://open.spotify.com/user/$1)')
-            .replace(/&/g, '&amp;')
-            .replace(/</g, '&lt;')
-            .replace(/>/g, '&gt;')
-            .replace(/"/g, '&quot;')
-            .replace(/'/g, '&#039;'));
-            about_me_text.innerHTML = parsed_body;
+            let result = bio_parse(about_me_text);
+            about_me_text.innerHTML = result;
         }
 
         // add buttons
@@ -1519,4 +1493,22 @@ function profile_tracks() {
     }
 
     form.innerHTML = '';
+}
+
+function bio_parse(text) {
+    let result = markdown(text.textContent);
+
+    let temp = document.createElement('div');
+    temp.innerHTML = result;
+
+    let banner = temp.querySelector('img[alt="banner"]');
+    if (banner) {
+        set_profile_banner(banner);
+    }
+
+    return result;
+}
+
+function set_profile_banner(img) {
+    register_background(img.getAttribute('src'));
 }
