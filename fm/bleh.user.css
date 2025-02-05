@@ -18576,6 +18576,7 @@ h4 {
             [data-bleh--profile_header_expand="false"] & {
                 opacity: 0;
                 height: 0;
+                pointer-events: none;
             }
         }
 
