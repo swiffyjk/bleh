@@ -16241,14 +16241,21 @@ function bio_parse(text, cache = false) {
     let temp = document.createElement('div');
     temp.innerHTML = result;
 
+    use_banner(temp, cache);
+
+    return result;
+}
+
+function use_banner(temp, cache) {
+    if ((page.name == auth.name && !settings.profile_header_own) || (page.name != auth.name && !settings.profile_header_others))
+        return;
+
     let banner = temp.querySelector('img[alt="banner"]');
     if (banner) {
         set_profile_banner(banner, cache);
     } else {
         save_banner_to_cache('none');
     }
-
-    return result;
 }
 
 function set_profile_banner(img, cache) {
