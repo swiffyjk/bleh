@@ -16244,6 +16244,8 @@ function bio_parse(text, cache = false) {
     let banner = temp.querySelector('img[alt="banner"]');
     if (banner) {
         set_profile_banner(banner, cache);
+    } else {
+        save_banner_to_cache('none');
     }
 
     return result;
@@ -16262,6 +16264,9 @@ function load_banner_from_cache() {
     let banners = JSON.parse(localStorage.getItem('bleh_profile_banners')) || {};
 
     if (banners[page.name]) {
+        if (banners[page.name] == 'none')
+            return;
+
         register_background(banners[page.name], 'bio');
     } else {
         request_banner();
@@ -16291,8 +16296,8 @@ function save_banner_to_cache(img) {
     banners[page.name] = img;
 
     let banners_o = Object.keys(banners);
-    if (banners_o.length > 70) {
-        let values = banners_o.splice(70, banners_o.length);
+    if (banners_o.length > 150) {
+        let values = banners_o.splice(150, banners_o.length);
 
         values.forEach((value) => {
             delete banners[value];
