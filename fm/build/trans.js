@@ -375,6 +375,19 @@ const trans = {
                 to_go: '{s} scrobbles to go',
                 tier: 'Tier {t}',
                 explain: 'For each tier, you unlock a new badge'
+            },
+            banner: {
+                name: 'Banner',
+                origin: {
+                    bio: [
+                        'Sourced from this user\'s about me',
+                        'Embed an image with ![banner](url) to achieve the same'
+                    ],
+                    avatar: 'Sourced from this user\'s avatar',
+                    artist: 'Sourced from this user\'s top track',
+                    hidden: 'Hidden based on your preferences',
+                    none: 'Sourced from nowhere...'
+                }
             }
         },
         event: {
