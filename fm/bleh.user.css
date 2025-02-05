@@ -6193,7 +6193,7 @@ button,
 
 
     /*     LOADING     */
-    &.btn--loading {
+    /*&.btn--loading {
         background-image: unset;
         position: relative;
 
@@ -6204,6 +6204,9 @@ button,
             --show-icon: block;
             animation: spinner 1.2s linear infinite;
         }
+    }*/
+    &.btn--loading {
+        background-image: unset;
     }
 
 
@@ -6274,6 +6277,7 @@ button,
     }
 
 
+    &.btn--loading,
     &[disabled] {
         opacity: 0.7 !important;
         --col: hsl(var(--c3)) !important;

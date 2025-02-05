@@ -66,6 +66,23 @@ function patch_shouts() {
 
         let send_button = shout_form.querySelector('.form-group--submit');
         shout_send(send_button);
+
+        shout_form.addEventListener('keydown', (e) => {
+            console.info('key', e, e.keyCode);
+
+            // CTRL + ENTER
+            if (e.ctrlKey && e.keyCode == 13) {
+                e.preventDefault();
+
+                send_button.querySelector('button').click();
+                notify({
+                    id: 'shout',
+                    title: trans[lang].shout.name,
+                    body: trans[lang].shout.sent,
+                    icon: 'icon-16-send'
+                });
+            }
+        });
     });
 }
 

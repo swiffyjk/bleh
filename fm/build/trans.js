@@ -1009,6 +1009,10 @@ const trans = {
                 }
             }
         },
+        shout: {
+            name: 'Shout',
+            sent: 'Sent!'
+        },
         setup: {
             start: {
                 name: 'hello {m}!!',
