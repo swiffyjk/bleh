@@ -67,14 +67,18 @@ function patch_shouts() {
         let send_button = shout_form.querySelector('.form-group--submit');
         shout_send(send_button);
 
+        //let textarea = shout_form.querySelector('textarea');
         shout_form.addEventListener('keydown', (e) => {
-            console.info('key', e, e.keyCode);
+            //console.info('key', e, e.keyCode, e.target, textarea, e.target == textarea);
+
+            /*if (e.target != textarea)
+                return;*/
 
             // CTRL + ENTER
             if (e.ctrlKey && e.keyCode == 13) {
                 e.preventDefault();
 
-                send_button.querySelector('button').click();
+                send_button.querySelector('.btn-post-shout').click();
                 notify({
                     id: 'shout',
                     title: trans[lang].shout.name,
