@@ -467,7 +467,7 @@ function register_background(url, origin = null) {
                 theme: 'badge',
                 content: (`
                     <div class="badge-name">${trans[lang].profile.banner.origin.bio[0]}</div>
-                    <div class="badge-reason">${trans[lang].profile.banner.origin.bio[1]}</div>
+                    <div class="badge-reason">${trans[lang].profile.banner.origin.bio[1].replace('{b}', '<code>![banner](url)</code>')}</div>
                 `),
                 allowHTML: true
             });

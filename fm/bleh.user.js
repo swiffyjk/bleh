@@ -409,7 +409,7 @@ const trans = {
                 origin: {
                     bio: [
                         'Sourced from this user\'s about me',
-                        'Embed an image with ![banner](url) to achieve the same'
+                        'Embed an image with {b} to achieve the same'
                     ],
                     avatar: 'Sourced from this user\'s avatar',
                     artist: 'Sourced from this user\'s top track',
@@ -6420,7 +6420,7 @@ function register_background(url, origin = null) {
                 theme: 'badge',
                 content: (`
                     <div class="badge-name">${trans[lang].profile.banner.origin.bio[0]}</div>
-                    <div class="badge-reason">${trans[lang].profile.banner.origin.bio[1]}</div>
+                    <div class="badge-reason">${trans[lang].profile.banner.origin.bio[1].replace('{b}', '<code>![banner](url)</code>')}</div>
                 `),
                 allowHTML: true
             });
