@@ -13807,7 +13807,7 @@ function bleh_native_settings() {
         page.structure.main.appendChild(history);
 
         let button = subscription.querySelector('.btn-primary');
-        button.classList.add('subscription-button', 'icon', 'primary');
+        if (button) button.classList.add('subscription-button', 'icon', 'primary');
 
         let more_link_wrap = edits.querySelector('.more-link');
         if (more_link_wrap) {
