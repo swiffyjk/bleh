@@ -15024,6 +15024,9 @@ function bleh_profiles() {
         if (featured_track_panel != null)
             bleh_featured_profile_track(featured_track_panel);
     } else {
+        load_banner_from_cache();
+
+
         let btn_add = page.structure.side.querySelector('.add-button');
         if (btn_add != null)
             btn_add.setAttribute('data-page-subpage', page.subpage);
@@ -15348,7 +15351,7 @@ function bleh_profiles() {
         if (settings.bio_markdown) {
             // parse body
             let about_me_text = about_me_sidebar.querySelector('p');
-            let result = bio_parse(about_me_text);
+            let result = bio_parse(about_me_text, true);
             about_me_text.innerHTML = result;
         }
 
@@ -16232,7 +16235,7 @@ function profile_tracks() {
     form.innerHTML = '';
 }
 
-function bio_parse(text) {
+function bio_parse(text, cache = false) {
     let result = markdown(text.textContent);
 
     let temp = document.createElement('div');
@@ -16240,14 +16243,63 @@ function bio_parse(text) {
 
     let banner = temp.querySelector('img[alt="banner"]');
     if (banner) {
-        set_profile_banner(banner);
+        set_profile_banner(banner, cache);
     }
 
     return result;
 }
 
-function set_profile_banner(img) {
-    register_background(img.getAttribute('src'), 'bio');
+function set_profile_banner(img, cache) {
+    let src = img.getAttribute('src');
+    register_background(src, 'bio');
+
+    if (cache)
+        save_banner_to_cache(src);
+}
+
+
+function load_banner_from_cache() {
+    let banners = JSON.parse(localStorage.getItem('bleh_profile_banners')) || {};
+
+    if (banners[page.name]) {
+        register_background(banners[page.name], 'bio');
+    } else {
+        request_banner();
+    }
+}
+
+function request_banner() {
+    fetch(`${root}user/${page.name}`)
+    .then(function(response) {
+        console.log('returned', response, response.text);
+
+        return response.text();
+    })
+    .then(function(html) {
+        let doc = new DOMParser().parseFromString(html, 'text/html');
+        console.log('DOC', doc);
+
+        let about_me_sidebar = doc.querySelector('.about-me-sidebar');
+        let about_me_text = about_me_sidebar.querySelector('p');
+        let result = bio_parse(about_me_text, true);
+    });
+}
+
+function save_banner_to_cache(img) {
+    let banners = JSON.parse(localStorage.getItem('bleh_profile_banners')) || {};
+
+    banners[page.name] = img;
+
+    let banners_o = Object.keys(banners);
+    if (banners_o.length > 70) {
+        let values = banners_o.splice(70, banners_o.length);
+
+        values.forEach((value) => {
+            delete banners[value];
+        });
+    }
+
+    localStorage.setItem('bleh_profile_banners', JSON.stringify(banners));
 }
 
 // [PAGE] src/pages/search.js
