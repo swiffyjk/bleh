@@ -12,12 +12,14 @@ function nag_bar() {
         let type = active_nag.classList[1];
 
         if (type == 'nag-bar--corrections') {
-            notify({
-                id: 'corrections',
-                title: trans[lang].nag_bar.corrections.title,
-                body: active_nag.querySelector('strong').innerHTML,
-                icon: 'icon-16-refresh'
-            });
+            if (!settings.travis) {
+                notify({
+                    id: 'corrections',
+                    title: trans[lang].nag_bar.corrections.title,
+                    body: active_nag.querySelector('strong').innerHTML,
+                    icon: 'icon-16-refresh'
+                });
+            }
         } else {
             // TODO
             return;
