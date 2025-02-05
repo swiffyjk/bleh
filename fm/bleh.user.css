@@ -306,7 +306,7 @@ a,
             1))));
 
     --c1: var(--hue), calc(var(--sat) * 40%), 100%;
-    --c2: var(--hue), calc(var(--sat) * 70%), 90%;
+    --c2: var(--hue), calc(var(--sat) * 50%), 90%;
     --c3: var(--hue), calc(var(--sat) * 10%), 56%;
     --ov-c1: var(--c1);
 
