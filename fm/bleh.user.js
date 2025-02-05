@@ -10734,72 +10734,6 @@ unsafeWindow._export_first = function() {
     export_settings();
 }
 
-
-unsafeWindow._set_profile_as_shortcut = function(button, profile_name) {
-    let avatar_src = document.body.querySelector('.header-avatar-inner-wrap img').getAttribute('src');
-    localStorage.setItem('bleh_profile_shortcut_avi', avatar_src);
-    deliver_notif(trans[lang].settings.music.profile_shortcut.saved);
-
-    // show on button
-    button.setAttribute('data-is-shortcut', 'true');
-    button.removeAttribute('onclick');
-    // this breaks the configure menu
-    //button._tippy.setContent(trans[lang].profile.shortcut.remove);
-
-    if (button.classList.contains('icon'))
-        button.textContent = trans[lang].profile.shortcut.remove;
-
-    // save to settings
-    settings.profile_shortcut = profile_name;
-    localStorage.setItem('bleh', JSON.stringify(settings));
-}
-
-unsafeWindow._save_profile_shortcut = function() {
-    let profile_name = document.getElementById('text-profile_shortcut').value;
-    let profile_img = document.getElementById('avatar-profile_shortcut');
-
-    if (profile_name == '' || profile_name == auth.name) {
-        localStorage.removeItem('bleh_profile_shortcut_avi');
-        document.getElementById('avatar_src-profile_shortcut').setAttribute('src', '');
-
-        // save to settings
-        settings.profile_shortcut = '';
-        localStorage.setItem('bleh', JSON.stringify(settings));
-
-        return;
-    }
-
-    profile_img.classList.add('requesting');
-
-    fetch(`${root}user/${profile_name}/tags`)
-    .then(function(response) {
-        console.log('returned', response, response.text);
-
-        return response.text();
-    })
-    .then(function(html) {
-        let doc = new DOMParser().parseFromString(html, 'text/html');
-        console.log('DOC', doc);
-
-        profile_img.classList.remove('requesting');
-
-        try {
-            let avatar_src = doc.querySelector('.header-avatar-inner-wrap img').getAttribute('src');
-            localStorage.setItem('bleh_profile_shortcut_avi', avatar_src);
-            document.getElementById('avatar_src-profile_shortcut').setAttribute('src', avatar_src);
-            deliver_notif(trans[lang].settings.music.profile_shortcut.saved);
-
-            // save to settings
-            settings.profile_shortcut = profile_name;
-            localStorage.setItem('bleh', JSON.stringify(settings));
-        } catch(e) {
-            deliver_notif(trans[lang].settings.music.profile_shortcut.failed);
-            localStorage.removeItem('bleh_profile_shortcut_avi');
-            document.getElementById('avatar_src-profile_shortcut').setAttribute('src', '');
-        }
-    });
-}
-
 unsafeWindow._save_font = function() {
     let font = document.getElementById('text-font').value;
 
@@ -19154,7 +19088,8 @@ unsafeWindow._notify = function({
     icon = null,
     classname = null,
     action = null,
-    persist = false
+    persist = false,
+    type = type
 }) {
     notify({
         title: title,
@@ -19162,7 +19097,8 @@ unsafeWindow._notify = function({
         icon: icon,
         classname: classname,
         action: action,
-        persist: persist
+        persist: persist,
+        type: type
     });
 }
 function notify({
@@ -19172,7 +19108,8 @@ function notify({
     icon = null,
     classname = null,
     action = null,
-    persist = false
+    persist = false,
+    type = 'generic'
 }) {
     log(`creating ${title}`, 'notification', 'info', {
         id: id,
@@ -19181,11 +19118,13 @@ function notify({
         icon: icon,
         classname: classname,
         action: action,
-        persist: persist
+        persist: persist,
+        type: type
     });
 
     let notif = document.createElement('button');
     notif.classList.add('bleh-notification');
+    notif.setAttribute('data-type', type);
     notif.setAttribute('onclick', '_notify_rm(this)');
 
     if (!body) {
@@ -19200,6 +19139,9 @@ function notify({
     }
 
     page.structure.notifications.appendChild(notif);
+
+    if (type == 'error')
+        icon = 'icon-16-x';
 
     if (!icon)
         icon = 'icon-16-info';
@@ -19851,6 +19793,82 @@ unsafeWindow._send_other_listener = function(link) {
         id: 'other_listener'
     });
     window.location.href = `${root}user/${name}/library/music/${link}`;
+}
+
+
+unsafeWindow._set_profile_as_shortcut = function(button, profile_name) {
+    let avatar_src = document.body.querySelector('.header-avatar-inner-wrap img').getAttribute('src');
+    localStorage.setItem('bleh_profile_shortcut_avi', avatar_src);
+    deliver_notif(trans[lang].settings.music.profile_shortcut.saved);
+
+    // show on button
+    button.setAttribute('data-is-shortcut', 'true');
+    button.removeAttribute('onclick');
+    // this breaks the configure menu
+    //button._tippy.setContent(trans[lang].profile.shortcut.remove);
+
+    if (button.classList.contains('icon'))
+        button.textContent = trans[lang].profile.shortcut.remove;
+
+    // save to settings
+    settings.profile_shortcut = profile_name;
+    localStorage.setItem('bleh', JSON.stringify(settings));
+}
+
+unsafeWindow._save_profile_shortcut = function() {
+    let profile_name = document.getElementById('text-profile_shortcut').value;
+    let profile_img = document.getElementById('avatar-profile_shortcut');
+
+    if (profile_name == '' || profile_name == auth.name) {
+        localStorage.removeItem('bleh_profile_shortcut_avi');
+        document.getElementById('avatar_src-profile_shortcut').setAttribute('src', '');
+
+        // save to settings
+        settings.profile_shortcut = '';
+        localStorage.setItem('bleh', JSON.stringify(settings));
+
+        return;
+    }
+
+    profile_img.classList.add('requesting');
+
+    fetch(`${root}user/${profile_name}/tags`)
+    .then(function(response) {
+        console.log('returned', response, response.text);
+
+        return response.text();
+    })
+    .then(function(html) {
+        let doc = new DOMParser().parseFromString(html, 'text/html');
+        console.log('DOC', doc);
+
+        profile_img.classList.remove('requesting');
+
+        try {
+            let avatar_src = doc.querySelector('.header-avatar-inner-wrap img').getAttribute('src');
+            localStorage.setItem('bleh_profile_shortcut_avi', avatar_src);
+            document.getElementById('avatar_src-profile_shortcut').setAttribute('src', avatar_src);
+            notify({
+                id: 'profile_shortcut_saved',
+                title: trans[lang].settings.music.profile_shortcut.name,
+                body: trans[lang].settings.music.profile_shortcut.saved,
+                icon: 'icon-16-profile-shortcut'
+            });
+
+            // save to settings
+            settings.profile_shortcut = profile_name;
+            localStorage.setItem('bleh', JSON.stringify(settings));
+        } catch(e) {
+            notify({
+                id: 'profile_shortcut_saved',
+                title: trans[lang].settings.music.profile_shortcut.name,
+                body: trans[lang].settings.music.profile_shortcut.failed,
+                type: 'error'
+            });
+            localStorage.removeItem('bleh_profile_shortcut_avi');
+            document.getElementById('avatar_src-profile_shortcut').setAttribute('src', '');
+        }
+    });
 }
 
 // [COMPONENT] src/components/select.js

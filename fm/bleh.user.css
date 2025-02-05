@@ -15513,6 +15513,12 @@ button.bleh--gallery-bookmark-image-btn {
             margin-bottom: 4px;
         }*/
 
+        &[data-type="error"] {
+            --hue-over: var(--hue-neg);
+            --sat-over: 1;
+            --lit-over: 1;
+        }
+
         .notification-progress {
             position: absolute;
             left: 0;

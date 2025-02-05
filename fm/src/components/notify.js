@@ -42,7 +42,8 @@ unsafeWindow._notify = function({
     icon = null,
     classname = null,
     action = null,
-    persist = false
+    persist = false,
+    type = type
 }) {
     notify({
         title: title,
@@ -50,7 +51,8 @@ unsafeWindow._notify = function({
         icon: icon,
         classname: classname,
         action: action,
-        persist: persist
+        persist: persist,
+        type: type
     });
 }
 function notify({
@@ -60,7 +62,8 @@ function notify({
     icon = null,
     classname = null,
     action = null,
-    persist = false
+    persist = false,
+    type = 'generic'
 }) {
     log(`creating ${title}`, 'notification', 'info', {
         id: id,
@@ -69,11 +72,13 @@ function notify({
         icon: icon,
         classname: classname,
         action: action,
-        persist: persist
+        persist: persist,
+        type: type
     });
 
     let notif = document.createElement('button');
     notif.classList.add('bleh-notification');
+    notif.setAttribute('data-type', type);
     notif.setAttribute('onclick', '_notify_rm(this)');
 
     if (!body) {
@@ -88,6 +93,9 @@ function notify({
     }
 
     page.structure.notifications.appendChild(notif);
+
+    if (type == 'error')
+        icon = 'icon-16-x';
 
     if (!icon)
         icon = 'icon-16-info';
