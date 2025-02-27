@@ -69,44 +69,6 @@ function patch_titles() {
             bla.classList.add('kate-placeholder');
             track.appendChild(bla);
 
-            // menu
-            let track_legacy_menu = track.querySelector('.chartlist-more-menu');
-
-            if (track_legacy_menu != null) {
-                let menu = tippy(track, {
-                    theme: 'context-menu',
-                    /*content: (`
-                        <button class="dropdown-menu-clickable-item" onclick="_open_profile_shortcut_window()" data-menu-item="configure">
-                            ${trans[lang].settings.configure}
-                        </button>
-                    `),*/
-                    content: (`
-                        ${track_legacy_menu.innerHTML}
-                    `),
-                    allowHTML: true,
-                    placement: 'right-start',
-                    trigger: 'manual',
-                    interactive: true,
-                    interactiveBorder: 10,
-                    offset: [0, 0],
-
-                    onShow(instance) {
-                        instance.popper.addEventListener('click', event => {
-                            instance.hide();
-                        });
-
-                        /*let menu_items = track_legacy_menu.querySelectorAll('li > *');
-                        let content = instance.popper.querySelector('.tippy-content');
-
-                        menu_items.forEach((item) => {
-                            content.appendChild(item);
-                        });*/
-                    }
-                });
-
-                register_menu(track, menu);
-            }
-
 
             let track_title = track.querySelector('.chartlist-name a:not(.offset-section-anchor)');
 
@@ -164,7 +126,7 @@ function patch_titles() {
             track.classList.add('chartlist-row--with-artist');
 
             let bar = track.querySelector('.chartlist-count-bar-slug');
-            if (bar != null) {
+            if (bar) {
                 let value = parseInt(bar.getAttribute('data-stat-value'));
 
                 if (is_album) {
@@ -181,6 +143,9 @@ function patch_titles() {
                         insights.track.highest.value = value;
                 }
             }
+
+            // menu
+            let track_legacy_menu = track.querySelector('.chartlist-more-menu');
 
             if (settings.format_guest_features) {
                 let formatted_title = name_includes(track_title.getAttribute('title'), track_artist);
@@ -244,27 +209,23 @@ function patch_titles() {
                 if (image == null && page.type == 'user')
                     is_library_track_page = true;
 
-                tippy(track, {
-                    theme: 'track',
-                    content: (`
-                        <div class="image">
-                            <div class="inner-image">
-                                ${(image != null) ? image.outerHTML : '<img class="missing-track">'}
-                            </div>
+                let track_preview = document.createElement('div');
+                track_preview.classList.add('track-preview');
+                track_preview.innerHTML = (`
+                    <div class="image">
+                        <div class="inner-image">
+                            ${(image != null) ? image.outerHTML : '<img class="missing-track">'}
                         </div>
-                        <div class="info">
-                            <h5 class="title">${song_title}</h5>
-                            <p class="artist">${song_artist_element.innerHTML}</p>
-                            <div class="tags">${song_tags_text}</div>
-                            ${(!is_library_track_page) ? (is_album) ? '' : `<p class="album">${trans[lang].music.from_the_album.replace('{album}', (image != null) ? correct_item_by_artist(sanitise_text(image.getAttribute('alt')), track_artist) : page.name)}</p>` : ''}
-                            ${(track_timestamp != null && track_timestamp_contents != null) ? `<p class="timestamp">${track_timestamp_contents}</p>` : ''}
-                        </div>
-                    `),
-                    allowHTML: true,
-                    delay: [600, 50],
-                    placement: 'top'/*,
-                    hideOnClick: false*/
-                });
+                    </div>
+                    <div class="info">
+                        <h5 class="title">${song_title}</h5>
+                        <p class="artist">${song_artist_element.innerHTML}</p>
+                        <div class="tags">${song_tags_text}</div>
+                        ${(!is_library_track_page) ? (is_album) ? '' : `<p class="album">${(image != null) ? correct_item_by_artist(sanitise_text(image.getAttribute('alt')), track_artist) : page.name}</p>` : ''}
+                        ${(track_timestamp != null && track_timestamp_contents != null) ? `<p class="timestamp">${track_timestamp_contents}</p>` : ''}
+                    </div>
+                `);
+                track_legacy_menu.insertBefore(track_preview, track_legacy_menu.firstElementChild);
             } else if (settings.corrections) {
                 let song_artist_element = track.querySelector('.chartlist-artist a');
                 if (song_artist_element != null) {
@@ -302,6 +263,36 @@ function patch_titles() {
                         content: track_timestamp_contents
                     });
                 }
+            }
+
+            if (track_legacy_menu) {
+                let menu = tippy(track, {
+                    theme: 'context-menu',
+                    content: (`
+                        ${track_legacy_menu.innerHTML}
+                    `),
+                    allowHTML: true,
+                    placement: 'right-start',
+                    trigger: 'manual',
+                    interactive: true,
+                    interactiveBorder: 10,
+                    offset: [0, 0],
+
+                    onShow(instance) {
+                        instance.popper.addEventListener('click', event => {
+                            instance.hide();
+                        });
+
+                        /*let menu_items = track_legacy_menu.querySelectorAll('li > *');
+                        let content = instance.popper.querySelector('.tippy-content');
+
+                        menu_items.forEach((item) => {
+                            content.appendChild(item);
+                        });*/
+                    }
+                });
+
+                register_menu(track, menu);
             }
 
             if (is_album) {

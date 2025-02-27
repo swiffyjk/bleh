@@ -306,8 +306,8 @@ a,
             1))));
 
     --c1: var(--hue), calc(var(--sat) * 40%), 100%;
-    --c2: var(--hue), calc(var(--sat) * 50%), 90%;
-    --c3: var(--hue), calc(var(--sat) * 10%), 56%;
+    --c2: var(--hue), calc(var(--sat) * 60%), 90%;
+    --c3: var(--hue), calc(var(--sat) * 10%), 60%;
     --ov-c1: var(--c1);
 
     --l2: var(--hue), calc(var(--sat) * 50%), calc(var(--lit) * 83%);
@@ -9368,79 +9368,6 @@ text[style^="color: rgb(255, 172, 172)"] {
             .hide-if-album-grid {
                 display: var(--hide-if-album-grid, flex);
             }
-        }
-    }
-
-    &[data-theme="track"] {
-        padding: 10px !important;
-        border-radius: var(--card-radius) !important;
-        color: hsl(var(--c2));
-        max-width: 500px !important;
-
-        text-align: left;
-
-        font-size: var(--font-size);
-
-        .tippy-content {
-            display: flex;
-            gap: 10px;
-
-            .image {
-                flex-shrink: 0;
-
-                .inner-image {
-                    width: 60px;
-                    height: 60px;
-                    background: var(--avatar-generic-background);
-                    box-shadow: var(--card-shadow);
-                    border-radius: var(--item-big-radius);
-                    overflow: hidden;
-
-                    img {
-                        width: 100%;
-                    }
-                }
-            }
-            .info {
-                display: flex;
-                flex-direction: column;
-                gap: 2px;
-                flex: 1;
-
-                .title {
-                    font-weight: var(--font-weight-medium);
-                    margin: unset;
-                }
-                .artist {
-                    color: hsla(var(--c2), 80%);
-
-                    a {
-                        color: inherit;
-
-                        & + a {
-                            margin-left: 4px;
-                        }
-                    }
-                }
-                .tags {
-                    color: hsla(var(--c2), 70%);
-                }
-                .album {
-                    display: flex;
-                    font-size: calc(var(--font-size) - 1px);
-                    color: hsl(var(--c3));
-                    margin: unset;
-                }
-                .timestamp {
-                    font-size: calc(var(--font-size) - 1px);
-                    color: hsl(var(--c3));
-                    margin: unset;
-                }
-            }
-        }
-
-        &[data-state="hidden"] {
-            opacity: 0;
         }
     }
 
@@ -18554,6 +18481,8 @@ h4 {
             inset: 0;
             border-left: 1px solid var(--card-border-base);
             border-right: 1px solid var(--card-border-base);
+
+            display: none;
         }
 
         &[data-page-type="settings"] {
@@ -19135,12 +19064,10 @@ h4 {
     align-items: center;
     padding: 0 calc(var(--card-gap) + var(--card-padding) + 12px);
     height: 48px;
-    background-color: hsl(var(--b5), 40%);
     margin: unset;
 
     border-top-left-radius: var(--card-radius);
     border-top-right-radius: var(--card-radius);
-    box-shadow: var(--interact-shadow);
     z-index: 2;
 
     position: relative;
@@ -20544,6 +20471,75 @@ h4 {
         margin: unset;
         cursor: default;
         color: hsl(var(--c1));
+    }
+}
+
+
+
+
+.track-preview {
+    max-width: 500px !important;
+    display: flex;
+    gap: 10px;
+
+    .image {
+        flex-shrink: 0;
+
+        .inner-image {
+            width: 60px;
+            height: 60px;
+            background: var(--avatar-generic-background);
+            box-shadow: var(--card-shadow);
+            border-radius: var(--item-big-radius);
+            overflow: hidden;
+
+            img {
+                width: 100%;
+            }
+        }
+    }
+    .info {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+        flex: 1;
+
+        .title {
+            font-weight: var(--font-weight-medium);
+            margin: unset;
+        }
+        .artist {
+            color: hsla(var(--c2), 80%);
+
+            a {
+                color: inherit;
+
+                & + a {
+                    margin-left: 4px;
+                }
+            }
+        }
+        .tags {
+            color: hsla(var(--c2), 70%);
+        }
+        .album {
+            display: flex;
+            font-size: calc(var(--font-size) - 1px);
+            color: hsl(var(--c3));
+            margin: unset;
+        }
+        .timestamp {
+            font-size: calc(var(--font-size) - 1px);
+            color: hsl(var(--c3));
+            margin: unset;
+        }
+    }
+
+    padding: 6px;
+    margin-bottom: 6px;
+
+    & + .track-preview {
+        display: none;
     }
 }
 }
