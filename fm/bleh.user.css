@@ -18527,7 +18527,7 @@ h4 {
         z-index: unset !important;
 
         filter: none;
-        height: 250px;
+        height: 280px;
         background-color: hsl(var(--b6));
         background-position: 0 40%;
 
@@ -18540,7 +18540,7 @@ h4 {
                 content: '';
                 position: absolute;
                 inset: 0;
-                background: linear-gradient(180deg, rgb(0, 0, 0, 0.15) 60%, rgba(0, 0, 0, 0.3));
+                background: linear-gradient(180deg, rgb(0, 0, 0, 0.12) 60%, rgba(0, 0, 0, 0.25));
                 mix-blend-mode: unset;
             }
         }
