@@ -2641,7 +2641,7 @@ spacing between is removed and aligned to tag icon */
     margin: 0 calc(var(--card-padding) - 12px) !important;
     width: calc(var(--cards-width) - (var(--card-padding) * 2));
 
-    .katsune-button-row + &, .katsune-button-row + .bleh-background + & {
+    .content-top + &, .katsune-button-row + .bleh-background + & {
         margin-top: var(--card-gap) !important;
     }
 
@@ -10383,7 +10383,7 @@ text[style^="color: rgb(0, 0, 0)"] {
     font-size: var(--font-size);
     line-height: var(--line-height);
     margin-top: var(--card-gap);
-    padding: 0 0 0 calc(16px + 6px) !important;
+    padding: 0 0 0 calc(20px + 6px) !important;
     background: unset !important;
     color: hsl(var(--l3-c)) !important;
     font-weight: var(--font-weight-medium) !important;
@@ -13788,13 +13788,10 @@ pre {
     display: flex;
     gap: var(--button-list-gap);
     justify-content: center;
-    background-color: hsl(var(--b4), 25%);
-    margin: var(--card-gap) calc(-1 * var(--card-padding)) calc(-1 * var(--card-padding)) calc(-1 * var(--card-padding));
-    padding: var(--card-padding);
+    margin: var(--card-gap) 0 calc(-1 * var(--card-padding)) 0;
+    padding: var(--card-padding) 0;
 
     border-top: 1px solid var(--card-border-base);
-    border-bottom-left-radius: var(--item-big-radius);
-    border-bottom-right-radius: var(--item-big-radius);
 
     /* native modal footer */
     .modal-button {
