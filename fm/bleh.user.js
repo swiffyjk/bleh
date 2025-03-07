@@ -14817,7 +14817,7 @@ function bleh_profiles() {
                 <div class="glacier-library-metadata">
                     <div class="glacier-library-metadata-item">
                         <div class="sub-text">${trans[lang].profile.scrobbles}</div>
-                        <div class="glacier-library-metadata-item-value">${scrobbles}</div>
+                        <div class="glacier-library-metadata-item-value" id="scrobbles_tooltip">${scrobbles}</div>
                     </div>
                     <div class="glacier-library-metadata-item">
                         <div class="sub-text">${trans[lang].profile.artists}</div>
@@ -14835,6 +14835,10 @@ function bleh_profiles() {
             </div>
             `) : ''}
         `);
+
+        tippy(redesigned_profile_header.querySelector('#scrobbles_tooltip'), {
+            content: average
+        });
 
         // staff
         let is_staff = (title_wrap.querySelector('.user-status-staff') != null);
