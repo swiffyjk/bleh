@@ -11099,7 +11099,7 @@ unsafeWindow._setup_corrections = function() {
                                 <h5>${trans[lang].settings.corrections.toggle.name}</h5>
                             </div>
                             <div class="toggle-wrap">
-                                <button class="toggle lotus" id="toggle-corrections" aria-checked="true">
+                                <button class="toggle" id="toggle-corrections" aria-checked="true">
                                     <div class="dot"></div>
                                 </button>
                             </div>
@@ -15334,8 +15334,12 @@ function bleh_profiles() {
 
     let about_me_sidebar = document.body.querySelector('.about-me-sidebar');
 
-    if (about_me_sidebar == undefined)
+    if (!about_me_sidebar) {
+        if (settings.bio_markdown)
+            save_banner_to_cache('none');
+
         return;
+    }
 
     if (!about_me_sidebar.hasAttribute('data-kate-processed')) {
         about_me_sidebar.setAttribute('data-kate-processed','true');
@@ -16284,8 +16288,12 @@ function request_banner() {
         console.log('DOC', doc);
 
         let about_me_sidebar = doc.querySelector('.about-me-sidebar');
-        let about_me_text = about_me_sidebar.querySelector('p');
-        let result = bio_parse(about_me_text, true);
+        if (about_me_sidebar) {
+            let about_me_text = about_me_sidebar.querySelector('p');
+            let result = bio_parse(about_me_text, true);
+        } else {
+            save_banner_to_cache('none');
+        }
     });
 }
 
@@ -20585,7 +20593,20 @@ function patch_titles() {
                 return;
 
             if (!is_album && track.classList.contains('chartlist-row--now-scrobbling')) {
-                let image = track.querySelector('.chartlist-image img');
+                let image_wrap = track.querySelector('.chartlist-image');
+                let link = image_wrap.querySelector('.cover-art');
+                let image = link.querySelector('img');
+
+                if (!settings.album_text) {
+                    let alt = image.getAttribute('alt');
+
+                    let album_text = document.createElement('td');
+                    album_text.classList.add('chartlist-album', 'custom-album-text');
+                    album_text.innerHTML = (`
+                        <a href="${link.getAttribute('href')}">${alt}</a>
+                    `);
+                    track.appendChild(album_text);
+                }
 
                 image.setAttribute('crossorigin', 'anonymous');
                 try {

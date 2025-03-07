@@ -305,7 +305,7 @@ unsafeWindow._setup_corrections = function() {
                                 <h5>${trans[lang].settings.corrections.toggle.name}</h5>
                             </div>
                             <div class="toggle-wrap">
-                                <button class="toggle lotus" id="toggle-corrections" aria-checked="true">
+                                <button class="toggle" id="toggle-corrections" aria-checked="true">
                                     <div class="dot"></div>
                                 </button>
                             </div>

@@ -605,8 +605,12 @@ function bleh_profiles() {
 
     let about_me_sidebar = document.body.querySelector('.about-me-sidebar');
 
-    if (about_me_sidebar == undefined)
+    if (!about_me_sidebar) {
+        if (settings.bio_markdown)
+            save_banner_to_cache('none');
+
         return;
+    }
 
     if (!about_me_sidebar.hasAttribute('data-kate-processed')) {
         about_me_sidebar.setAttribute('data-kate-processed','true');
@@ -1555,8 +1559,12 @@ function request_banner() {
         console.log('DOC', doc);
 
         let about_me_sidebar = doc.querySelector('.about-me-sidebar');
-        let about_me_text = about_me_sidebar.querySelector('p');
-        let result = bio_parse(about_me_text, true);
+        if (about_me_sidebar) {
+            let about_me_text = about_me_sidebar.querySelector('p');
+            let result = bio_parse(about_me_text, true);
+        } else {
+            save_banner_to_cache('none');
+        }
     });
 }
 
