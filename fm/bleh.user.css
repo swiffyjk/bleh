@@ -18894,6 +18894,9 @@ h4 {
     .profile-top-item--edit {
         --mask: var(--icon-16-edit);
     }
+    .profile-top-item--obsess {
+        --mask: var(--icon-16-obsession);
+    }
     .profile-top-item--sponsor {
         --mask: var(--icon-16-heart);
         --hue-over: 333;

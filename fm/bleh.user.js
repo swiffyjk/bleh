@@ -370,6 +370,7 @@ const trans = {
                 replace: '• scrobbling since '
             },
             edit: 'Edit profile',
+            obsess: 'Obsess',
             message: 'Message',
             sponsor: 'Sponsor',
             message_sponsor: 'Receive sponsor rewards',
@@ -1375,6 +1376,7 @@ const trans = {
                 replace: '• scrobbelt seit '
             },
             edit: 'Profil bearbeiten',
+            obsess: 'Obsess',
             message: 'Anschreiben',
             shortcut: {
                 add: 'Verknüpfung',
@@ -2330,6 +2332,7 @@ const trans = {
                 replace: '• scrobbling since '
             },
             edit: 'Edit profile',
+            obsess: 'Obsess',
             message: 'Private message',
             shortcut: {
                 add: 'Add as shortcut',
@@ -19518,6 +19521,12 @@ function redesign_profile_header(is_own_profile, is_following) {
             name: page.name,
             type: 'edit',
             link: `${root}settings`,
+            katsune: katsune
+        });
+        create_profile_top_item(profile_header, {
+            name: page.name,
+            type: 'obsess',
+            link: `${root}user/${page.name}/obsessions/set`,
             katsune: katsune
         });
     }

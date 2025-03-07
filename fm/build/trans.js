@@ -342,6 +342,7 @@ const trans = {
                 replace: '• scrobbling since '
             },
             edit: 'Edit profile',
+            obsess: 'Obsess',
             message: 'Message',
             sponsor: 'Sponsor',
             message_sponsor: 'Receive sponsor rewards',
@@ -1347,6 +1348,7 @@ const trans = {
                 replace: '• scrobbelt seit '
             },
             edit: 'Profil bearbeiten',
+            obsess: 'Obsess',
             message: 'Anschreiben',
             shortcut: {
                 add: 'Verknüpfung',
@@ -2302,6 +2304,7 @@ const trans = {
                 replace: '• scrobbling since '
             },
             edit: 'Edit profile',
+            obsess: 'Obsess',
             message: 'Private message',
             shortcut: {
                 add: 'Add as shortcut',

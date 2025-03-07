@@ -185,6 +185,12 @@ function redesign_profile_header(is_own_profile, is_following) {
             link: `${root}settings`,
             katsune: katsune
         });
+        create_profile_top_item(profile_header, {
+            name: page.name,
+            type: 'obsess',
+            link: `${root}user/${page.name}/obsessions/set`,
+            katsune: katsune
+        });
     }
 
     if (katsune) {
