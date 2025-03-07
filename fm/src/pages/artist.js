@@ -131,12 +131,7 @@ function bleh_artists() {
         else
             bg = register_background(null);
 
-        if (ff('katsune')) {
-            redesigned_artist_header.setAttribute('data-bleh--theme', 'oled');
-            bg.appendChild(redesigned_artist_header);
-        } else {
-            page.structure.container.insertBefore(redesigned_artist_header, page.structure.container.firstElementChild);
-        }
+        page.structure.container.insertBefore(redesigned_artist_header, page.structure.container.firstElementChild);
         artist_header.classList.add('legacy-header');
 
 

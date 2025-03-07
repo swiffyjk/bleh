@@ -82,12 +82,7 @@ function bleh_albums() {
         else
             bg = register_background(null);
 
-        if (ff('katsune')) {
-            redesigned_album_header.setAttribute('data-bleh--theme', 'oled');
-            bg.appendChild(redesigned_album_header);
-        } else {
-            page.structure.container.insertBefore(redesigned_album_header, page.structure.container.firstElementChild);
-        }
+        page.structure.container.insertBefore(redesigned_album_header, page.structure.container.firstElementChild);
         album_header.classList.add('legacy-header');
 
 

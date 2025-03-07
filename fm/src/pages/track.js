@@ -97,12 +97,7 @@ function bleh_tracks() {
         else
             bg = register_background(null);
 
-        if (ff('katsune')) {
-            redesigned_track_header.setAttribute('data-bleh--theme', 'oled');
-            bg.appendChild(redesigned_track_header);
-        } else {
-            page.structure.container.insertBefore(redesigned_track_header, page.structure.container.firstElementChild);
-        }
+        page.structure.container.insertBefore(redesigned_track_header, page.structure.container.firstElementChild);
         track_header.classList.add('legacy-header');
 
 
