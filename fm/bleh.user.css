@@ -1980,7 +1980,7 @@ span.header-new-gallery-inner a,
     the 11px is the margin offset
     the 1px is the border
     the -2px is to re-align it with how it was before cus it changed somehow */
-    padding-left: calc(20px + 8px + 11px + 1px - 2px);
+    padding-left: calc(20px + 6px + 11px + 1px - 2px);
     position: relative;
 }
 .catalogue-tags:before {
@@ -2871,7 +2871,7 @@ button.navlist-more {
 
 .masthead-nav-control {
     /* left padding for icon, otherwise just 12px 16px */
-    --padding: 7px 12px 7px calc(12px + 16px + 6px) !important;
+    --padding: 7px 12px 7px calc(12px + 20px + 6px) !important;
     --bg: transparent !important;
     --bg-hov: hsl(var(--b3), 60%) !important;
     --bg-atv: hsl(var(--b3), 80%) !important;
@@ -2919,7 +2919,7 @@ button.navlist-more {
 }
 .navlist-more, .secondary-nav-item-link {
     /* left padding for icon, otherwise just 12px 16px */
-    --padding: 12px 12px 12px calc(12px + 20px + 8px) !important;
+    --padding: 12px 12px 12px calc(12px + 20px + 6px) !important;
     --bg: transparent !important;
     --bg-hov: hsl(var(--b3), 60%) !important;
     --bg-atv: hsl(var(--b3), 80%) !important;
@@ -3485,7 +3485,7 @@ button.navlist-more {
     letter-spacing: unset;
     text-transform: unset;
     font-weight: unset;
-    padding-left: calc(20px + 8px);
+    padding-left: calc(20px + 6px);
     box-shadow: unset !important;
     min-height: unset;
     line-height: unset;
@@ -4336,7 +4336,7 @@ better than the default selector '#app a' i suppose */
     .grid-item-plays {
         position: relative;
         padding-left: calc(20px + 4px);
-        --top: 0;
+        --top: -2px;
         --margin-top: 0;
         --left: 0;
         --mask: var(--icon-16-play);
@@ -6423,10 +6423,10 @@ button,
 .done, .cancel, .btn-cancel, .download, .upload, .save, .btn-secondary.js-close:not(.modal-action-button), .form-group button[type="submit"], .modal-button button[type="submit"],
 .masthead-nav .masthead-nav-control
 {
-    --btn-left: calc(12px + 20px + 8px) !important;
+    --btn-left: calc(12px + 20px + 6px) !important;
 
     &.lang-item {
-        --btn-left: calc(12px + 20px + 8px) !important;
+        --btn-left: calc(12px + 20px + 6px) !important;
     }
 }
 .about-guest-feature,
@@ -6449,7 +6449,7 @@ button,
 .out-now-btn,
 .show-more a
 {
-    --btn-right: calc(12px + 20px + 8px) !important;
+    --btn-right: calc(12px + 20px + 6px) !important;
 }
 
 .more-link a, .more-link-fullwidth-right a, .more-link-fullwidth-right-flush-top a, .more-link-with-action a:not(.inline-add-icon):after, .btn-shortcut {
@@ -8308,7 +8308,7 @@ that literally is 1 user from 2007 who hasnt even gotten a scrobble */
     margin: 0 0 0 var(--card-gap) !important;
 }
 .gallery-image-votes {
-    padding-left: calc(20px + 8px) !important;
+    padding-left: calc(20px + 6px) !important;
 }
 
 .js-gallery-image-details > div {
@@ -8404,7 +8404,7 @@ a.gallery-image-preferred-off {
 
             .inbox-notifications__item-avatar {
                 margin: unset;
-                padding: 0 calc(20px + 8px) 0 0;
+                padding: 0 calc(20px + 6px) 0 0;
 
                 .avatar {
                     box-shadow: var(--card-shadow);
@@ -8420,7 +8420,7 @@ a.gallery-image-preferred-off {
 
                     top: 50%;
                     --margin-top: -8px;
-                    left: calc(20px + 8px);
+                    left: calc(20px + 6px);
                     right: unset;
                     bottom: unset;
 
@@ -9502,7 +9502,7 @@ text[style^="color: rgb(255, 172, 172)"] {
                     color: hsl(var(--l3-c));
                     margin: unset;
                     font-weight: var(--font-weight-medium);
-                    padding-left: calc(20px + 8px);
+                    padding-left: calc(20px + 6px);
                     --left: 0 !important;
                     cursor: default;
 
@@ -10363,7 +10363,7 @@ text[style^="color: rgb(0, 0, 0)"] {
     --font-size: 0;
     /* display underneath playlink */
     --overlap-width: 8px;
-    --btn-left: calc(12px + 20px + 8px + var(--overlap-width)) !important;
+    --btn-left: calc(12px + 20px + 6px + var(--overlap-width)) !important;
     --left: calc(12px + var(--overlap-width) + 3px); /* + 2px if font size is 0 */
     margin-left: calc(-1 * var(--overlap-width));
     /* */
@@ -13028,7 +13028,7 @@ h2.playlisting-create-option-title {
         --bg-atv: hsla(var(--h4), 10%);
         --shadow: none;
         --shadow-hov: none;
-        --btn-left: calc(12px + 20px + 8px);
+        --btn-left: calc(12px + 20px + 6px);
         text-align: left;
         position: relative;
         --mask: var(--icon-16-setting-toggle);
@@ -13053,7 +13053,7 @@ h2.playlisting-create-option-title {
     }
 
     .btn {
-        --btn-left: calc(12px + 20px + 8px);
+        --btn-left: calc(12px + 20px + 6px);
         width: 100%;
         text-align: left;
         position: relative;
@@ -14132,7 +14132,7 @@ input[type="range"]::-moz-range-progress {
     }
 
     .primary-selection {
-        --btn-left: calc(12px + 20px + 8px);
+        --btn-left: calc(12px + 20px + 6px);
         /*--mask: var(--icon-16-dot);*/
         width: 100% !important;
         min-height: 40px !important;
@@ -15744,11 +15744,11 @@ button.bleh--gallery-bookmark-image-btn {
 
         &.listen-item {
             /*--left: calc(12px + 2px);*/
-            --left: calc(12px + 20px + 8px);
+            --left: calc(12px + 20px + 6px);
             --mask: var(--icon-16-spinner);
 
             &[data-listens="-1"] {
-                --left: calc(12px + 20px + 8px);
+                --left: calc(12px + 20px + 6px);
 
                 .view-item-avatar {
                     margin-right: calc(6px + 16px + 6px) !important;
@@ -16981,7 +16981,7 @@ h4 {
     text-decoration: var(--force-underline, none) !important;
 
     position: relative;
-    padding-left: calc(20px + 8px);
+    padding-left: calc(20px + 6px);
     --left: 0;
 
     &:before {
@@ -17313,7 +17313,7 @@ h4 {
 
             .gallery-image-preferred-states {
                 color: inherit !important;
-                padding-left: calc(20px + 8px) !important;
+                padding-left: calc(20px + 6px) !important;
             }
 
             .gallery-image-delete {
@@ -17426,7 +17426,7 @@ h4 {
 
     .gallery-image-uploaded-by {
         position: relative;
-        padding-left: calc(20px + 8px);
+        padding-left: calc(20px + 6px);
         --mask: var(--icon-16-upload);
         --left: 0;
         min-width: unset;
@@ -17443,7 +17443,7 @@ h4 {
     .view-all-button {
         --shadow: var(--card-shadow);
         flex: 1;
-        --padding: var(--card-gap) var(--card-padding) var(--card-gap) calc(var(--card-padding) + 20px + 8px);
+        --padding: var(--card-gap) var(--card-padding) var(--card-gap) calc(var(--card-padding) + 20px + 6px);
         --left: var(--card-padding);
         --mask: var(--icon-16-gallery-vertical);
 
@@ -18765,10 +18765,10 @@ h4 {
         --btn-left: 12px !important;
 
         &[data-listens="-1"] {
-            --left: calc(12px + 20px + 8px);
+            --left: calc(12px + 20px + 6px);
 
             .view-item-avatar {
-                margin-right: calc(6px + 20px + 8px) !important;
+                margin-right: calc(6px + 20px + 6px) !important;
             }
 
             &:before {
