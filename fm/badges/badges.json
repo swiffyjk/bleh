@@ -1,9 +1,9 @@
 {
-    "latest": "2025.0129",
+    "latest": "2025.0308",
     "sponsors": [
         "cutensilly", "kateshapedbox", "inozom",
         "astrablooms", "ItsProyal", "vwvwvwvwvwvwv", "Orofil",
-        "EliteHimself", "iwas15with100k"
+        "EliteHimself", "iwas15with100k", "taskinson"
     ],
     "sponsors_one_time": [
         "kateshapedbox",
@@ -141,6 +141,16 @@
         },
         "Poligoner": {
             "type": "contributor"
-        }
+        },
+        "taskinson": [
+            {
+                "type": "sponsor"
+            },
+            {
+                "type": "shell",
+                "name": "mélusine",
+                "reason": "sponsor"
+            }
+        ]
     }
 }
