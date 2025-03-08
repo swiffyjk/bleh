@@ -1130,8 +1130,8 @@ function render_setting_page(page_id) {
                         <h3 class="shout-user">
                             <a>${auth.name}</a>
                         </h3>
-                        <span class="avatar shout-user-avatar avatar--bleh-missing">
-                            <img src="" alt="Your avatar" loading="lazy">
+                        <span class="avatar shout-user-avatar">
+                            <img src="${auth.avatar}" alt="Your avatar" loading="lazy">
                         </span>
                         <a class="shout-permalink shout-timestamp">
                             <time datetime="2024-06-05T02:33:39+01:00" title="Wednesday 5 Jun 2024, 2:33am">
