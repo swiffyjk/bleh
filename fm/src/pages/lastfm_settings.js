@@ -506,6 +506,7 @@ function patch_settings_profile_panel(token, update_picture) {
                             <div class="input about-me" data-bleh--show-preview="false" id="about_me">
                                 <textarea name="about_me" cols="40" rows="10" class="textarea--s" maxlength="500" id="id_about_me" oninput="_update_about_me_preview(this.value)" data-form-type="other">${form_about_me}</textarea>
                                 <span class="bleh--about-me-preview" id="about_me_preview"></span>
+                                <div class="tip">${trans[lang].settings.inbuilt.profile.banner_tip}</div>
                                 <div class="tip bleh--about-me-preview-only">${trans[lang].settings.inbuilt.profile.toggle_preview.note}</div>
                             </div>
                         </div>

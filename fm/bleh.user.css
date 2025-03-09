@@ -13300,7 +13300,7 @@ pre {
         gap: 6px;
 
         .action {
-            --btn-left: calc(16px + 12px + 6px);
+            --btn-left: calc(20px + 12px + 6px);
             gap: 6px;
             text-decoration: none;
             text-align: left;
@@ -20414,9 +20414,6 @@ h4 {
 
     padding: 30px calc(var(--card-padding) * 6);
     background-color: hsl(var(--b6));
-
-    border-left: 1px solid var(--card-border-base);
-    border-right: 1px solid var(--card-border-base);
 
     .home-avatar {
         width: 100px;

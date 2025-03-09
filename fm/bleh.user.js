@@ -43,7 +43,7 @@ let lang_info = {
     de: {
         name: 'Deutsch',
         by: ['inozom', 'cutensilly'],
-        last_updated:  '2025-01-27'
+        last_updated:  '2025-03-09'
     },
     pl: {
         name: 'Polski',
@@ -915,8 +915,9 @@ const trans = {
                     toggle_preview: {
                         name: 'Toggle preview',
                         bio: 'Preview how your bio looks to others',
-                        note: 'For non-bleh users, multiple lines display as spaces and links, bold, italics will be plain text.'
+                        note: 'For non-bleh users, multiple lines display as spaces and links, bold, italics will be plain text. Any images embedded will appear as manic text, so be aware.'
                     },
+                    banner_tip: 'Images can be embedded using ![](link). You can also set a custom profile banner with ![banner](link).',
                     avatar: {
                         name: 'Edit avatar',
                         upload: 'Upload file',
@@ -1886,8 +1887,9 @@ const trans = {
                     toggle_preview: {
                         name: 'Vorschau umschalten',
                         bio: 'Vorschau deiner biographie für andere',
-                        note: 'Für nicht bleh Benutzer, mehrere Zeilen werden als Leerzeichen und Links angezeigt, Fett- und Kursivschrift wird als einfacher Text angezeigt.'
+                        note: 'Für nicht bleh Benutzer, mehrere Zeilen werden als Leerzeichen und Links angezeigt, Fett- und Kursivschrift wird als einfacher Text angezeigt. Jegliche eingelegte Bilder werden als Text angezeigt.'
                     },
+                    banner_tip: 'Bilder können mithilfe von ![](link) eingelegt werden. Du kannst auch ein benutzerdefiniertes Banner mithilfe von ![banner](link) festlegen.',
                     avatar: {
                         name: 'Profilbild bearbeiten',
                         upload: 'Datei hochladen',
@@ -2845,6 +2847,7 @@ const trans = {
                         bio: 'Podgląd, jak twój profil wygląda dla innych',
                         note: 'Uwaga: Nowe linie, linki itp. są widoczne tylko dla innych użytkowników bleh, zwykli użytkownicy Last.fm widzą nowe linie jako spacje.'
                     },
+                    banner_tip: 'Images can be embedded using ![](link). You can also set a custom profile banner with ![banner](link).',
                     avatar: {
                         name: 'Edytuj awatar',
                         upload: 'Prześlij plik',
@@ -14269,6 +14272,7 @@ function patch_settings_profile_panel(token, update_picture) {
                             <div class="input about-me" data-bleh--show-preview="false" id="about_me">
                                 <textarea name="about_me" cols="40" rows="10" class="textarea--s" maxlength="500" id="id_about_me" oninput="_update_about_me_preview(this.value)" data-form-type="other">${form_about_me}</textarea>
                                 <span class="bleh--about-me-preview" id="about_me_preview"></span>
+                                <div class="tip">${trans[lang].settings.inbuilt.profile.banner_tip}</div>
                                 <div class="tip bleh--about-me-preview-only">${trans[lang].settings.inbuilt.profile.toggle_preview.note}</div>
                             </div>
                         </div>
