@@ -166,7 +166,7 @@ body, [data-page-resource-type="album"], [data-page-resource-type="track"],
     /* root */
     --b6: var(--hue), calc(var(--sat) * 14% * var(--sat-bg, 1)), 10%;
     --b10: var(--hue), calc(var(--sat) * 14% * var(--sat-bg, 1)), 16%;
-    --b8: var(--hue), calc(var(--sat) * 11% * var(--sat-bg, 1)), 40%;
+    --b8: var(--hue), calc(var(--sat) * 11% * var(--sat-bg, 1)), 35%;
     --b7: 0, 0%, 0%;
 
     --card-border: 1px solid hsla(var(--b4), 0.7);
@@ -5567,7 +5567,7 @@ p + .chartlist {
 }
 [data-ff--shout_popover="true"] .shout-body {
     margin-top: 2px;
-    margin-right: 160px;
+    margin-right: 180px;
 }
 
 .shout-action {
@@ -20455,7 +20455,7 @@ h4 {
         .inner-image {
             width: 60px;
             height: 60px;
-            background: var(--avatar-generic-background);
+            background: hsl(var(--b5));
             box-shadow: var(--card-shadow);
             border-radius: var(--item-big-radius);
             overflow: hidden;
