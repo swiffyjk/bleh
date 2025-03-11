@@ -9434,14 +9434,10 @@ text[style^="color: rgb(255, 172, 172)"] {
             gap: var(--card-gap);
 
             .settings-footer {
-                padding: var(--card-gap);
-                margin: 0 calc(-1 * var(--card-gap)) calc(-1 * var(--card-gap)) calc(-1 * var(--card-gap));
-                background-color: hsl(var(--b4), 20%);
+                padding: var(--card-gap) 0;
+                margin: 0 0 calc(-1 * var(--card-gap)) 0;
                 gap: var(--button-list-gap);
                 border-top: 1px solid var(--card-border-base);
-
-                border-bottom-left-radius: var(--item-big-radius);
-                border-bottom-right-radius: var(--item-big-radius);
             }
 
             .select-container, .toggle-container {
@@ -15977,7 +15973,7 @@ button.bleh--gallery-bookmark-image-btn {
             color: inherit !important;
             flex: 1;
             --left: 50%;
-            --margin-left: -8px;
+            --margin-left: -10px;
 
             &.view-profile-btn {
                 --mask: var(--icon-16-user);
