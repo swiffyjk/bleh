@@ -1,7 +1,7 @@
 {
-    "latest": "2025.0308",
+    "latest": "2025.0311",
     "sponsors": [
-        "cutensilly", "kateshapedbox", "inozom",
+        "cutensilly", "kateshapedbox", "stellasaur",
         "astrablooms", "ItsProyal", "vwvwvwvwvwvwv", "Orofil",
         "EliteHimself", "iwas15with100k", "taskinson"
     ],
@@ -93,7 +93,7 @@
             "type": "colon-three",
             "name": ":3²"
         },
-        "inozom": [
+        "stellasaur": [
             {
                 "type": "contributor"
             },
