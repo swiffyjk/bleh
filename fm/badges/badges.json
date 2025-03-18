@@ -1,9 +1,9 @@
 {
-    "latest": "2025.0313",
+    "latest": "2025.0318",
     "sponsors": [
         "cutensilly", "kateshapedbox", "stellasaur",
         "astrablooms", "ItsProyal", "vwvwvwvwvwvwv", "Orofil",
-        "EliteHimself", "iwas15with100k", "keepsweet"
+        "EliteHimself", "iwas15with100k", "blacksilkearth"
     ],
     "sponsors_one_time": [
         "kateshapedbox",
@@ -142,7 +142,7 @@
         "Poligoner": {
             "type": "contributor"
         },
-        "keepsweet": [
+        "blacksilkearth": [
             {
                 "type": "sponsor"
             },
