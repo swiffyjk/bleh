@@ -1,0 +1,70 @@
+function log(text, system, type = 'info', append={}) {
+    if (!page.structure.logs) {
+        let logs = document.createElement('div');
+        logs.classList.add('logs');
+        logs.innerHTML = (`
+            <div class="toggle-container" id="container-log_show_all" onclick="_update_item('log_show_all')">
+                <div class="toggle-wrap">
+                    <button id="toggle-log_show_all">
+                        show all
+                    </button>
+                </div>
+            </div>
+        `);
+
+        document.documentElement.appendChild(logs);
+        page.structure.logs = logs;
+    }
+
+    let system_colour;
+
+    switch(system) {
+        case 'load':
+            system_colour = '#8CB9D9';
+            break;
+        case 'lotus':
+            system_colour = '#8CD9A6';
+            break;
+        case 'season':
+            system_colour = '#65B6D8';
+            break;
+        case 'page':
+            system_colour = '#E4B381';
+            break;
+        case 'page structure':
+            system_colour = '#D88A69';
+            break;
+        case 'style':
+            system_colour = '#C9C678';
+            break;
+        case 'profile':
+            system_colour = '#D56854';
+            break;
+        case 'settings':
+            system_colour = '#6D6977';
+            break;
+        case 'sponsor':
+            system_colour = '#CE4E88';
+            break;
+        default:
+            system_colour = '#C8DD88';
+            break;
+    }
+
+    if (Object.keys(append).length > 0)
+        console[type](`%cbleh~%c${system}%c: ${text}`, 'color: #9F8CD9', `color: ${system_colour}; font-weight: bold`, 'color: unset', append);
+    else
+        console[type](`%cbleh~%c${system}%c: ${text}`, 'color: #9F8CD9', `color: ${system_colour}; font-weight: bold`, 'color: unset');
+
+    if (settings && settings.feature_flags.developer == true) {
+        let log_e = document.createElement('div');
+        log_e.classList.add('log');
+        log_e.setAttribute('data-type', type);
+        log_e.innerHTML = (`
+            <span class="system" style="color: ${system_colour}">${system}</span>
+            <span class="text">${text}</span>
+        `);
+
+        page.structure.logs.appendChild(log_e);
+    }
+}
