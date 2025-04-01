@@ -17,7 +17,7 @@ let seasonal_events = [
     },
     {
         id: 'easter',
-        start: 'y0-04-05T00:00:00{offset}',
+        start: 'y0-04-02T00:00:00{offset}',
         end: 'y0-04-30T23:59:59{offset}',
 
         snowflakes: {
