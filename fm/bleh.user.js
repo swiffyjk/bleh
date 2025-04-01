@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         bleh
 // @namespace    http://last.fm/
-// @version      2025.0307
+// @version      2025.0402
 // @description  bleh!!! ^-^
 // @author       kate
 // @match        https://www.last.fm/*
@@ -22,7 +22,7 @@
 //
 // THIS FILE IS GENERATED AUTOMATICALLY, READ THE DOCS IN THE README
 
-let version = {'brand': 'bleh', 'build': '2025.0307', 'sku': 'beret', 'bio': 'bleh!!! ^-^', 'author': 'kate', 'url': 'https://github.com/katelyynn/bleh/raw/uwu/fm/bleh.user.js', 'feature_flags': {'bleh_settings_tabs': {'default': true, 'name': 'Utilise new bleh settings tabs', 'date': '2024-07-09'}, 'high_contrast': {'default': false, 'name': 'Enable visibility of high contrast (experimental)', 'date': '2024-10-04'}, 'redesigned_profile_header': {'default': true, 'name': 'Redesigned profile header info', 'date': '2024-10-09'}, 'show_wiki_label': {'default': true, 'name': "Show 'About' label above wikis", 'date': '2024-10-11'}, 'music_page_charts': {'default': true, 'name': 'Music page charts', 'date': '2024-11-05'}, 'chartlist_highlight_shadow': {'default': false, 'name': 'Chartlist row highlight side shadow', 'date': '2024-11-05'}, 'new_gallery_experience': {'default': true, 'name': 'New gallery experience', 'date': '2024-11-06'}, 'display_album_bookmark': {'default': false, 'name': 'Display album bookmark button in gallery refresh', 'date': '2024-11-06'}, 'changelogs': {'default': true, 'name': 'Enable changelog system', 'date': '2024-11-07'}, 'refreshed_nav': {'default': true, 'name': 'Refreshed nav structure, reducing a lot of jank', 'date': '2024-11-09'}, 'refreshed_music_nav': {'default': true, 'name': 'Refreshed music nav structure', 'date': '2024-11-10'}, 'card_saturation': {'default': true, 'name': 'Enable card saturation slider', 'date': '2024-11-10'}, 'show_album_cover_always': {'default': true, 'name': 'Show album cover in header overview', 'date': '2024-11-11'}, 'new_auth_menu': {'default': true, 'name': 'New custom-built auth menu to reduce lag', 'date': '2024-11-11'}, 'unify_top_listeners': {'default': true, 'name': 'Unify top listeners', 'date': '2024-11-15'}, 'hide_chartlist_more': {'default': false, 'name': 'Hide chartlist more button, accessible the same with right-clicking', 'date': '2024-12-03'}, 'glacier_library': {'default': true, 'name': 'Glacier library (new library beta)', 'date': '2024-12-04'}, 'shout_popover': {'default': true, 'name': 'Redesigned shout action popover', 'date': '2024-12-23'}, 'sponsor': {'default': true, 'name': 'Sponsor link', 'date': '2024-12-24'}, 'skip_to_setting': {'default': true, 'name': 'Skip to... in settings', 'date': '2024-12-24'}, 'page_title': {'default': true, 'name': 'Dynamic tab title', 'date': '2024-12-26'}, 'view_button_nav': {'default': true, 'name': 'Match view button colouring to new nav', 'date': '2024-12-28'}, 'remove_bookmark': {'default': true, 'name': 'Context menu to remove inaccessible artist bookmark', 'date': '2024-12-28'}, 'badges': {'default': true, 'name': 'New badge tooltip', 'date': '2024-12-28'}, 'astra': {'default': false, 'name': 'astrablooms font', 'date': '2025-01-01', 'notice': "This is a test of a new 'default' font for bleh, it most likely will never take effect as changing a font takes a lot of getting used to, but yeah.<br>You should set your text settings to the following: 470, 540, 610"}, 'developer': {'default': false, 'name': 'Developer mode', 'date': '2025-01-03', 'notice': 'Enable developer-specific features used for debugging purposes'}, 'api': {'default': false, 'name': 'Allow user to enter API key for newer features', 'date': '2025-01-19'}, 'colour_based_on_avatar': {'default': true, 'name': 'Set colour based on avatar', 'date': '2025-01-23'}, 'katsune': {'default': true, 'name': 'katsune redesign', 'date': '2025-01-25', 'notice': 'This is very, very experimental ~w~'}}};
+let version = {'brand': 'bleh', 'build': '2025.0402', 'sku': 'beret', 'bio': 'bleh!!! ^-^', 'author': 'kate', 'url': 'https://github.com/katelyynn/bleh/raw/uwu/fm/bleh.user.js', 'feature_flags': {'bleh_settings_tabs': {'default': true, 'name': 'Utilise new bleh settings tabs', 'date': '2024-07-09'}, 'high_contrast': {'default': false, 'name': 'Enable visibility of high contrast (experimental)', 'date': '2024-10-04'}, 'redesigned_profile_header': {'default': true, 'name': 'Redesigned profile header info', 'date': '2024-10-09'}, 'show_wiki_label': {'default': true, 'name': "Show 'About' label above wikis", 'date': '2024-10-11'}, 'music_page_charts': {'default': true, 'name': 'Music page charts', 'date': '2024-11-05'}, 'chartlist_highlight_shadow': {'default': false, 'name': 'Chartlist row highlight side shadow', 'date': '2024-11-05'}, 'new_gallery_experience': {'default': true, 'name': 'New gallery experience', 'date': '2024-11-06'}, 'display_album_bookmark': {'default': false, 'name': 'Display album bookmark button in gallery refresh', 'date': '2024-11-06'}, 'changelogs': {'default': true, 'name': 'Enable changelog system', 'date': '2024-11-07'}, 'refreshed_nav': {'default': true, 'name': 'Refreshed nav structure, reducing a lot of jank', 'date': '2024-11-09'}, 'refreshed_music_nav': {'default': true, 'name': 'Refreshed music nav structure', 'date': '2024-11-10'}, 'card_saturation': {'default': true, 'name': 'Enable card saturation slider', 'date': '2024-11-10'}, 'show_album_cover_always': {'default': true, 'name': 'Show album cover in header overview', 'date': '2024-11-11'}, 'new_auth_menu': {'default': true, 'name': 'New custom-built auth menu to reduce lag', 'date': '2024-11-11'}, 'unify_top_listeners': {'default': true, 'name': 'Unify top listeners', 'date': '2024-11-15'}, 'hide_chartlist_more': {'default': false, 'name': 'Hide chartlist more button, accessible the same with right-clicking', 'date': '2024-12-03'}, 'glacier_library': {'default': true, 'name': 'Glacier library (new library beta)', 'date': '2024-12-04'}, 'shout_popover': {'default': true, 'name': 'Redesigned shout action popover', 'date': '2024-12-23'}, 'sponsor': {'default': true, 'name': 'Sponsor link', 'date': '2024-12-24'}, 'skip_to_setting': {'default': true, 'name': 'Skip to... in settings', 'date': '2024-12-24'}, 'page_title': {'default': true, 'name': 'Dynamic tab title', 'date': '2024-12-26'}, 'view_button_nav': {'default': true, 'name': 'Match view button colouring to new nav', 'date': '2024-12-28'}, 'remove_bookmark': {'default': true, 'name': 'Context menu to remove inaccessible artist bookmark', 'date': '2024-12-28'}, 'badges': {'default': true, 'name': 'New badge tooltip', 'date': '2024-12-28'}, 'astra': {'default': false, 'name': 'astrablooms font', 'date': '2025-01-01', 'notice': "This is a test of a new 'default' font for bleh, it most likely will never take effect as changing a font takes a lot of getting used to, but yeah.<br>You should set your text settings to the following: 470, 540, 610"}, 'developer': {'default': false, 'name': 'Developer mode', 'date': '2025-01-03', 'notice': 'Enable developer-specific features used for debugging purposes'}, 'api': {'default': false, 'name': 'Allow user to enter API key for newer features', 'date': '2025-01-19'}, 'colour_based_on_avatar': {'default': true, 'name': 'Set colour based on avatar', 'date': '2025-01-23'}, 'katsune': {'default': true, 'name': 'katsune redesign', 'date': '2025-01-25', 'notice': 'This is very, very experimental ~w~'}}};
 let theme_version;
 
 // build/trans.js
@@ -4269,7 +4269,7 @@ let seasonal_events = [
     },
     {
         id: 'easter',
-        start: 'y0-04-05T00:00:00{offset}',
+        start: 'y0-04-02T00:00:00{offset}',
         end: 'y0-04-30T23:59:59{offset}',
 
         snowflakes: {
@@ -8214,7 +8214,7 @@ function render_setting_page(page_id) {
                 </div>
                 <div class="glacier-library-top season-top">
                     <div class="glacier-library-metadata">
-                        ${(stored_season.id != 'none') ? (`
+                        ${(stored_season.id != 'none' && stored_season.start && stored_season.end) ? (`
                         <div class="glacier-library-metadata-item">
                             <div class="sub-text">${trans[lang].settings.customise.seasonal.started}</div>
                             <div class="glacier-library-metadata-item-value" id="current_season">${moment(stored_season.start.replace('y0', stored_season.year).replace('{offset}', stored_season.offset)).from(stored_season.now)}</div>
@@ -8547,13 +8547,15 @@ function render_setting_page(page_id) {
         ]);
 
         return (`
-            <div class="bleh--panel">
+            <div class="bleh--panel check-artist-hover">
                 <h4 class="top-header">${trans[lang].settings.layout.name}</h4>
                 <h4>${trans[lang].settings.layout.header}</h4>
                 <div class="inner-preview pad">
                     <div class="profile-mockup artist">
                         <div class="mockup-header">
-                            <img class="mockup-avatar" src="https://lastfm.freetls.fastly.net/i/u/avatar170s/c8f797b26b24f4cf1a4fe93854148951">
+                            <div class="mockup-avatar-wrap">
+                                <img class="mockup-avatar" src="https://lastfm.freetls.fastly.net/i/u/avatar170s/383d6c03304e720075d0050e8a6a4644">
+                            </div>
                             <div class="mockup-info">
                                 <div class="mockup-subtext"></div>
                                 <div class="mockup-name"></div>
@@ -8574,12 +8576,12 @@ function render_setting_page(page_id) {
                                 <div class="mockup-panel main"></div>
                             </div>
                         </div>
-                        <div class="profile-mockup-background" style="background-image: url(https://lastfm.freetls.fastly.net/i/u/avatar170s/c8f797b26b24f4cf1a4fe93854148951);"></div>
+                        <div class="profile-mockup-background" style="background-image: url(https://lastfm.freetls.fastly.net/i/u/avatar170s/383d6c03304e720075d0050e8a6a4644);"></div>
                     </div>
                 </div>
                 <h4>${trans[lang].settings.layout.avatar_action.name}</h4>
                 <p>${trans[lang].settings.layout.avatar_action.bio}</p>
-                <div class="primary-selections">
+                <div class="primary-selections artist-hover-image">
                     <div class="btn primary-selection" id="toggle-default_avatar_action-expand" data-toggle="default_avatar_action" data-toggle-value="expand" onclick="_update_item('default_avatar_action', 'expand')">
                         <h5>${trans[lang].gallery.open.name}</h5>
                     </div>
@@ -8589,7 +8591,7 @@ function render_setting_page(page_id) {
                 </div>
                 <h4>${trans[lang].settings.layout.quick_artist_button.name}</h4>
                 <p>${trans[lang].settings.layout.quick_artist_button.bio}</p>
-                <div class="primary-selections">
+                <div class="primary-selections artist-hover-button">
                     <div class="btn primary-selection" id="toggle-quick_artist_button-gallery" data-toggle="quick_artist_button" data-toggle-value="gallery" onclick="_update_item('quick_artist_button', 'gallery')">
                         <h5>${trans[lang].gallery.view}</h5>
                     </div>
@@ -8608,29 +8610,27 @@ function render_setting_page(page_id) {
                 <h4>${trans[lang].settings.customise.profile_header.name}</h4>
                 <div class="inner-preview pad">
                     <div class="profile-mockup">
-                        <div class="mockup-wrap">
-                            <div class="profile-mockup-background from-avatar" style="background-image: url(${auth.avatar.replace('/avatar42s/', '/avatar170s/')});"></div>
-                            <div class="profile-mockup-background from-track" style="background-image: url(https://lastfm.freetls.fastly.net/i/u/avatar170s/90b39fa67cd3ec8159e116385952a05b);"></div>
-                            <div class="mockup-header">
-                                <img class="mockup-avatar" src="${auth.avatar}">
-                                <div class="mockup-info">
-                                    <div class="mockup-name"></div>
-                                    <div class="mockup-subtext"></div>
-                                </div>
-                            </div>
-                            <div class="mockup-container">
-                                <div class="mockup-col-main">
-                                    <div class="mockup-panel main"></div>
-                                </div>
-                                <div class="mockup-col-sidebar">
-                                    <div class="mockup-panel mockup-obsession-panel">
-                                        <img class="mockup-obsession-art" src="https://lastfm.freetls.fastly.net/i/u/64s/e8e5ed62eba543442fe85ac61dead730.jpg">
-                                        <div class="mockup-obsession-name"></div>
-                                    </div>
-                                    <div class="mockup-panel main"></div>
-                                </div>
+                        <div class="mockup-header">
+                            <img class="mockup-avatar" src="${auth.avatar}">
+                            <div class="mockup-info">
+                                <div class="mockup-subtext"></div>
+                                <div class="mockup-name"></div>
                             </div>
                         </div>
+                        <div class="mockup-container">
+                            <div class="mockup-col-main">
+                                <div class="mockup-panel main"></div>
+                            </div>
+                            <div class="mockup-col-sidebar">
+                                <div class="mockup-panel mockup-obsession-panel">
+                                    <img class="mockup-obsession-art" src="https://lastfm.freetls.fastly.net/i/u/64s/510546e3b6df7504392274c528c77780.jpg">
+                                    <div class="mockup-obsession-name"></div>
+                                </div>
+                                <div class="mockup-panel main"></div>
+                            </div>
+                        </div>
+                        <div class="profile-mockup-background from-avatar" style="background-image: url(${auth.avatar});"></div>
+                        <div class="profile-mockup-background from-track" style="background-image: url(https://lastfm.freetls.fastly.net/i/u/avatar170s/df927f4f88034b7f9a651636b965c9d7);"></div>
                     </div>
                 </div>
                 <div class="toggle-container" id="container-profile_avi_background" onclick="_update_item('profile_avi_background')">
@@ -8710,7 +8710,7 @@ function render_setting_page(page_id) {
                         </div>
                         <div class="glacier-library-top season-top">
                             <div class="glacier-library-metadata">
-                                ${(stored_season.id != 'none') ? (`
+                                ${(stored_season.id != 'none' && stored_season.start && stored_season.end) ? (`
                                 <div class="glacier-library-metadata-item">
                                     <div class="sub-text">${trans[lang].settings.customise.seasonal.started}</div>
                                     <div class="glacier-library-metadata-item-value" id="current_season_start">${moment(stored_season.start.replace('y0', stored_season.year).replace('{offset}', stored_season.offset)).from(stored_season.now)}</div>
@@ -9347,7 +9347,7 @@ function render_setting_page(page_id) {
             <div class="bleh--panel">
                 <h4>${trans[lang].settings.corrections.formatting}</h4>
                 <div class="inner-preview pad flex">
-                    <section class="redesigned-header mockup redesigned-track-header">
+                    <section class="redesigned-header mockup redesigned-track-header no-top-margin">
                         <div class="avatar-side">
                             <img src="https://lastfm.freetls.fastly.net/i/u/avatar170s/8bd696cbd4aa4d4eb6d35393232f55e4.jpg">
                         </div>
@@ -9396,20 +9396,20 @@ function render_setting_page(page_id) {
                     </div>
                 </div>
                 <div class="inner-preview pad flex">
-                    <section class="redesigned-header mockup redesigned-album-header">
+                    <section class="redesigned-header mockup redesigned-album-header no-top-margin">
                         <div class="avatar-side">
-                            <img src="https://lastfm.freetls.fastly.net/i/u/avatar170s/49cc807f69d59746b6b04be3434e6637.jpg">
+                            <img src="https://lastfm.freetls.fastly.net/i/u/avatar170s/def68d94aae8e52ef2d1c0c9d3e16ff4.jpg">
                         </div>
                         <div class="info-side">
                             <div class="sub-text">${trans[lang].album.name}</div>
                             <div class="title-container">
                                 <h1>
-                                    <div class="title">Nevermind</div>
+                                    <div class="title">my anti-aircraft friend</div>
                                     <div class="feat" data-bleh--tag-type="(remaster" data-bleh--tag-group="remasters">Remastered</div>
                                 </h1>
                             </div>
                             <h2>
-                                <a class="header-new-crumb">Nirvana</a>
+                                <a class="header-new-crumb">julie</a>
                             </h2>
                         </div>
                     </section>
@@ -9771,7 +9771,7 @@ function change_settings_page(page_id, setting = null) {
         });
     }
 
-    if ((page_id == 'seasonal' || page_id == 'home') && settings.seasonal && stored_season.id != 'none') {
+    if ((page_id == 'seasonal' || page_id == 'home') && settings.seasonal && stored_season.id != 'none' && stored_season.start && stored_season.end) {
         tippy(document.getElementById('current_season'), {
             content: new Date(stored_season.end.replace('y0', stored_season.year).replace('{offset}', stored_season.offset)).toLocaleString(lang)
         });
@@ -11177,7 +11177,7 @@ unsafeWindow._setup_seasons = function() {
                                 </div>
                                 <div class="glacier-library-top season-top">
                                     <div class="glacier-library-metadata">
-                                        ${(stored_season.id != 'none') ? (`
+                                        ${(stored_season.id != 'none' && stored_season.start && stored_season.end) ? (`
                                         <div class="glacier-library-metadata-item">
                                             <div class="sub-text">${trans[lang].settings.customise.seasonal.started}</div>
                                             <div class="glacier-library-metadata-item-value" id="current_season_start">${moment(stored_season.start.replace('y0', stored_season.year).replace('{offset}', stored_season.offset)).from(stored_season.now)}</div>

@@ -377,7 +377,7 @@ unsafeWindow._setup_seasons = function() {
                                 </div>
                                 <div class="glacier-library-top season-top">
                                     <div class="glacier-library-metadata">
-                                        ${(stored_season.id != 'none') ? (`
+                                        ${(stored_season.id != 'none' && stored_season.start && stored_season.end) ? (`
                                         <div class="glacier-library-metadata-item">
                                             <div class="sub-text">${trans[lang].settings.customise.seasonal.started}</div>
                                             <div class="glacier-library-metadata-item-value" id="current_season_start">${moment(stored_season.start.replace('y0', stored_season.year).replace('{offset}', stored_season.offset)).from(stored_season.now)}</div>
