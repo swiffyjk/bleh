@@ -1,6 +1,12 @@
 {
-    "updated": "2025-02-01",
-    "latest": "2025.0201",
+    "updated": "2025-04-02",
+    "latest": "2025.0402",
+    "2025.0402": {
+        "name": "redesign!! i suppose!!",
+        "type": "major",
+        "force": false,
+        "bio": "its here finally sorry it took so long!! ive been going back and forth in my mind since the start of the year on bleh's design and originally had a much broader redesign planned, which ended up getting scrapped and turned into the hybrid design we have now :3 is it the best? in my opinion, no, but ive spent too much time on it at this point and need to just lift it off my shoulders so i can work on other things 😭\n\nbecause of that this wont be a normal changelog, go look around!!\n\n^~^"
+    },
     "2025.0201": {
         "name": "notificationz",
         "type": "minor",
