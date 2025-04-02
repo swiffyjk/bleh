@@ -1177,7 +1177,7 @@
   // src/build/trans.js
   var lang;
   var non_override_lang;
-  var valid_langs2 = ["en", "de", "pl"];
+  var valid_langs = ["en", "de", "pl"];
   var lang_info = {
     en: {
       name: "English",
@@ -4274,7 +4274,7 @@
     }
     lang = document.documentElement.getAttribute("lang");
     non_override_lang = lang;
-    if (!valid_langs2.includes(lang)) {
+    if (!valid_langs.includes(lang)) {
       log(`language fallback from ${lang} to en - not supported`, "trans");
       lang = "en";
     }
