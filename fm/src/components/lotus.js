@@ -25,7 +25,7 @@ export function lotus(force = false) {
         lotus_request('artist', true);
     } else {
         // we prefer to load the current cache before waiting for a new response
-        Object.assign(artist_corrections, lotus_artist);
+        Object.assign(artist_corrections, JSON.parse(lotus_artist));
 
         // is it valid?
         if (lotus_artist_expire < current_time && !force) {
@@ -40,7 +40,7 @@ export function lotus(force = false) {
         lotus_request('album_track', true);
     } else {
         // we prefer to load the current cache before waiting for a new response
-        Object.assign(album_track_corrections, lotus_album_track);
+        Object.assign(album_track_corrections, JSON.parse(lotus_album_track));
 
         // is it valid?
         if (lotus_album_track_expire < current_time && !force) {

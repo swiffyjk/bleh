@@ -10461,7 +10461,7 @@
       console.info("lotus - artist list is not cached, fetching");
       lotus_request("artist", true);
     } else {
-      Object.assign(artist_corrections, lotus_artist);
+      Object.assign(artist_corrections, JSON.parse(lotus_artist));
       if (lotus_artist_expire < current_time && !force) {
         lotus_request();
       } else if (force) {
@@ -10472,7 +10472,7 @@
       console.info("lotus - album_track list is not cached, fetching");
       lotus_request("album_track", true);
     } else {
-      Object.assign(album_track_corrections, lotus_album_track);
+      Object.assign(album_track_corrections, JSON.parse(lotus_album_track));
       if (lotus_album_track_expire < current_time && !force) {
         lotus_request("album_track");
       } else if (force) {
