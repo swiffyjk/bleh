@@ -1,3 +1,12 @@
+import { settings } from "./build/config";
+import { auth, page, root } from "./build/page";
+import { stored_season } from "./build/seasonal";
+import { lang, non_override_lang, trans } from "./build/trans";
+import { load_badges } from "./components/badge";
+import { version } from "./main";
+import { show_theme_change_in_menu } from "./pages/bleh_config";
+import { ff } from "./sku";
+
 export function patch_masthead(element) {
     let masthead_logo = element.querySelector('.masthead-logo');
 
@@ -26,7 +35,7 @@ export function append_nav() {
     }
 
     let auth_link = document.body.querySelector('.auth-link');
-
+    
     if (auth_link.hasAttribute('data-bleh'))
         return;
     auth_link.setAttribute('data-bleh', 'true');

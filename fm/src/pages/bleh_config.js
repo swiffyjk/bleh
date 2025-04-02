@@ -1,3 +1,4 @@
+import { settings } from "../build/config";
 import { log } from "../build/log";
 import { album_track_corrections, artist_corrections, ranks } from "../build/music";
 import { auth, page, theme_preview } from "../build/page";
@@ -8,8 +9,10 @@ import { dialog_legacy, dialog_rm, kill_window } from "../components/dialog";
 import { notify } from "../components/notify";
 import { checkup_page_structure } from "../components/structure";
 import { create_settings_template, load_settings, refresh_all } from "../config";
+import { version } from "../main";
 import { seasonal_timer_end, seasonal_timer_start } from "../seasonal";
 import { ff } from "../sku";
+
 
 export function bleh_settings() {
     page.structure.container = document.body.querySelector('.page-content');
@@ -2799,7 +2802,8 @@ unsafeWindow._reset_settings = function() {
 }
 
 unsafeWindow._confirm_reset = function() {
-    settings = create_settings_template();
+    for (var member in settings) delete settings[member];
+    Object.assign(settings, create_settings_template());
     load_settings(true);
 
     dialog_rm({

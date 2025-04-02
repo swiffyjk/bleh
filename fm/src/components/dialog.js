@@ -1,4 +1,5 @@
 import { log } from "../build/log";
+import { dialogs, page } from "../build/page";
 import { lang, trans } from "../build/trans";
 
 export function load_dialogs() {

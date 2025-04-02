@@ -1,3 +1,10 @@
+import { log } from "./build/log";
+import { auth, root } from "./build/page";
+import { sponsor_list } from "./build/sponsor";
+import { lang, trans } from "./build/trans";
+import { load_badges } from "./components/badge";
+import { dialog } from "./components/dialog";
+
 export function patch_avatar(avatar, name, type = '') {
     if (avatar.hasAttribute('data-bleh-avatar'))
         return;

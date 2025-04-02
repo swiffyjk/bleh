@@ -1,3 +1,10 @@
+import { patch_avatar } from "./avatar";
+import { settings } from "./build/config";
+import { log } from "./build/log";
+import { page, root, shout_parse_queue } from "./build/page";
+import { lang, trans } from "./build/trans";
+import { deliver_notif, notify } from "./components/notify";
+
 export function patch_shouts() {
     if (page.structure.main == null)
         return;

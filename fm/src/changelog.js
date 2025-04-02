@@ -1,3 +1,10 @@
+import { log } from "./build/log";
+import { root } from "./build/page";
+import { lang, trans } from "./build/trans";
+import { dialog } from "./components/dialog";
+import { deliver_notif } from "./components/notify";
+import { ff } from "./sku";
+
 unsafeWindow._query_changelog = function() {
     if (!ff('changelogs')) {
         deliver_notif('not just yet..');

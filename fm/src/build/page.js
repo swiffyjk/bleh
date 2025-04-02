@@ -1,5 +1,7 @@
 // require page reload
-export let reload_pending = false;
+export let reload_pending = {
+    state: false
+};
 
 // lookup
 export let last_lookup;
@@ -24,7 +26,9 @@ export let auth = {
         lit: 1
     }
 };
-export let auth_link = '';
+export let auth_link = {
+    state: ''
+}
 
 // stores the current root of the page, most applicable in other languages:
 // en: /
@@ -36,7 +40,9 @@ export let root = '';
 export let recent_activity_list;
 
 // page type
-export let last_page_type;
+export let last_page_type = {
+    state: undefined
+};
 export let last_page_subpage;
 export let page = {
     initial: '',
@@ -117,7 +123,9 @@ export let bleh_url = 'https://www.last.fm{root}bleh';
 export let setup_url = 'https://www.last.fm{root}bleh/setup';
 export let sponsor_url = 'https://www.last.fm{root}bleh/sponsor';
 
-export let has_prompted_for_update = false;
+export let has_prompted_for_update = {
+    state: false
+};
 
 export let theme_preview = (`
     <div class="preview-inner">

@@ -1,3 +1,41 @@
+import { load_activities, subscribe_to_events } from "./activity";
+import { log } from "./build/log";
+import { auth, auth_link, bleh_url, has_prompted_for_update, last_page_type, page, setup_url, sponsor_url } from "./build/page";
+import { lang, lookup_lang, trans } from "./build/trans";
+import { auto_edit_modal } from "./components/auto_edit";
+import { dialog, load_dialogs } from "./components/dialog";
+import { correct_generic_combo, correct_generic_combo_no_artist, lotus } from "./components/lotus";
+import { music_grids } from "./components/music_grid";
+import { nag_bar } from "./components/nag_bar";
+import { load_notifications, notify } from "./components/notify";
+import { patch_titles } from "./components/track";
+import { load_settings } from "./config";
+import { version } from "./main";
+import { append_nav, patch_masthead } from "./navigation";
+import { bleh_albums } from "./pages/album";
+import { bleh_artists } from "./pages/artist";
+import { bleh_settings } from "./pages/bleh_config";
+import { bleh_setup, notify_if_new_update } from "./pages/bleh_setup";
+import { bleh_bookmarks } from "./pages/bookmark";
+import { bleh_charts } from "./pages/chart";
+import { bleh_error } from "./pages/error";
+import { bleh_events } from "./pages/event";
+import { bleh_gallery, bleh_gallery_upload_check, patch_gallery_page } from "./pages/gallery";
+import { bleh_glacier_library, bleh_glacier_library_bulk_edit } from "./pages/glacier";
+import { bleh_home } from "./pages/home";
+import { bleh_inbox } from "./pages/inbox";
+import { bleh_native_settings } from "./pages/lastfm_settings";
+import { bleh_profiles } from "./pages/profile";
+import { bleh_search } from "./pages/search";
+import { bleh_tags } from "./pages/tag";
+import { bleh_tracks } from "./pages/track";
+import { patch_wiki } from "./pages/wiki";
+import { start_rain } from "./rain";
+import { set_season } from "./seasonal";
+import { parse_shout_queue, patch_shouts } from "./shout";
+import { ff } from "./sku";
+import { bleh_sponsor_page, sponsors } from "./sponsor";
+import { append_style } from "./style";
 
 export function bleh() {
     let head_observer = new MutationObserver((mutations) => {
@@ -28,9 +66,9 @@ export function bleh() {
 function bleh_main() {
     let performance_start = performance.now();
 
-    auth_link = document.querySelector('a.auth-link');
-    if (auth_link)
-        auth.name = auth_link.querySelector('img').getAttribute('alt');
+    auth_link.state = document.querySelector('a.auth-link');
+    if (auth_link.state)
+        auth.name = auth_link.state.querySelector('img').getAttribute('alt');
 
     load_settings();
 
@@ -80,12 +118,12 @@ function bleh_main() {
             patch_masthead(document.body);
 
             theme_version = getComputedStyle(document.body).getPropertyValue('--version-build').replaceAll("'", '').replaceAll('"', ''); // remove quotations
-            if (theme_version != version.build && theme_version != '' && !has_prompted_for_update) {
+            if (theme_version != version.build && theme_version != '' && !has_prompted_for_update.state) {
                 // script is either out of date, or more in date (not gonna happen)
                 log(`version mismatch! running ${version.build}, downloaded theme ${theme_version}`, 'update');
 
                 prompt_for_update();
-                has_prompted_for_update = true;
+                has_prompted_for_update.state = true;
             }
 
             main_flow();
@@ -240,8 +278,8 @@ function assign_page_type() {
                 page.type = page_split[1];
             }
 
-            if (page.type != last_page_type) {
-                last_page_type = page.type;
+            if (page.type != last_page_type.state) {
+                last_page_type.state = page.type;
                 log(page.type, 'page');
             }
 

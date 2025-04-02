@@ -1,3 +1,5 @@
+import { auth, auth_link } from "./page";
+
 // loads your selected language in last.fm
 export let lang;
 export let non_override_lang;
@@ -3084,7 +3086,7 @@ moment.updateLocale('de', {
     }
 });
 
-function lookup_lang() {
+export function lookup_lang() {
     root = document.querySelector('.masthead-logo a');
 
     if (!root) {
@@ -3095,11 +3097,11 @@ function lookup_lang() {
     root = root.getAttribute('href');
 
     let previous_avi = auth.avatar;
-    if (auth_link) {
-        auth.avatar = auth_link.querySelector('img').getAttribute('src');
+    if (auth_link.state) {
+        auth.avatar = auth_link.state.querySelector('img').getAttribute('src');
 
         if (auth.avatar != previous_avi) {
-            let avatar = auth_link.querySelector('img');
+            let avatar = auth_link.state.querySelector('img');
             avatar.setAttribute('crossorigin', 'anonymous');
 
             try {

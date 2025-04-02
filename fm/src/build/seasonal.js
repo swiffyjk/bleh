@@ -1,5 +1,7 @@
 // seasonal
-export let seasonal_timer;
+export let seasonal_timer = {
+    state: undefined
+};
 export let stored_season = {
     id: 'none',
     new_years_eve: false

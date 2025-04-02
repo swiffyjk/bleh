@@ -6,6 +6,7 @@ import { request_changelog } from "../changelog";
 import { dialog, dialog_rm } from "../components/dialog";
 import { notify } from "../components/notify";
 import { refresh_all } from "../config";
+import { version } from "../main";
 import { ff } from "../sku";
 import { display_colour_presets } from "./bleh_config";
 

@@ -1,3 +1,7 @@
+import { settings } from "./build/config";
+import { log } from "./build/log";
+import { version } from "./main";
+
 export function ff(flag) {
     log(`parsing ${flag}`, 'flag', 'log', {
         setting: settings.feature_flags[flag],

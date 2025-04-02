@@ -1,6 +1,18 @@
+import { settings } from "./build/config";
+import { log } from "./build/log";
+import { page } from "./build/page";
+import { trans } from "./build/trans";
+import { load_chart_colours } from "./chart";
+import { dialog, dialog_rm } from "./components/dialog";
+import { bleh_music_page_charts } from "./components/music";
+import { invoke_reload } from "./config";
+import { version } from "./main";
+import { bleh_glacier_date_graph_generate, bleh_glacier_insights } from "./pages/glacier";
+
 export function append_style() {
     document.documentElement.classList.add('bleh-supports-loading');
-    settings = JSON.parse(localStorage.getItem('bleh')) || create_settings_template();
+    for (var member in settings) delete settings[member];
+    Object.assign(settings, JSON.parse(localStorage.getItem('bleh')) || create_settings_template());
     let cached_style = localStorage.getItem('bleh_cached_style') || '';
 
     let url = window.location.href;

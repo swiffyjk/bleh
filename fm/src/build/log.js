@@ -58,16 +58,17 @@ export function log(text, system, type = 'info', append={}) {
         console[type](`%cbleh~%c${system}%c: ${text}`, 'color: #9F8CD9', `color: ${system_colour}; font-weight: bold`, 'color: unset', append);
     else
         console[type](`%cbleh~%c${system}%c: ${text}`, 'color: #9F8CD9', `color: ${system_colour}; font-weight: bold`, 'color: unset');
+    if(settings && settings.feature_flags) {
+        if (settings.feature_flags.developer == true) {
+            let log_e = document.createElement('div');
+            log_e.classList.add('log');
+            log_e.setAttribute('data-type', type);
+            log_e.innerHTML = (`
+                <span class="system" style="color: ${system_colour}">${system}</span>
+                <span class="text">${text}</span>
+            `);
 
-    if (settings && settings.feature_flags.developer == true) {
-        let log_e = document.createElement('div');
-        log_e.classList.add('log');
-        log_e.setAttribute('data-type', type);
-        log_e.innerHTML = (`
-            <span class="system" style="color: ${system_colour}">${system}</span>
-            <span class="text">${text}</span>
-        `);
-
-        page.structure.logs.appendChild(log_e);
+            page.structure.logs.appendChild(log_e);
+        }
     }
 }

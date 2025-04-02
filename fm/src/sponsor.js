@@ -1,3 +1,11 @@
+import { log } from "./build/log";
+import { auth } from "./build/page";
+import { sponsor_list } from "./build/sponsor";
+import { lang, trans } from "./build/trans";
+import { dialog } from "./components/dialog";
+import { deliver_notif } from "./components/notify";
+import { ff } from "./sku";
+
 export function sponsors(force = false) {
     if (!ff('sponsor'))
         return;
@@ -12,7 +20,8 @@ export function sponsors(force = false) {
         sponsor_request(true);
     } else {
         // we prefer to load the current cache before waiting for a new response
-        sponsor_list = JSON.parse(sponsor_data);
+        for (var member in sponsor_list) delete sponsor_list[member];
+        Object.assign(sponsor_list, JSON.parse(sponsor_data));
 
         // is it valid?
         if (sponsor_expire < current_time && !force) {
@@ -44,8 +53,9 @@ function sponsor_request(notify = false) {
         let api_expire = new Date();
 
         if (xhr.status == 200) {
-            sponsor_list = JSON.parse(this.response);
-
+            for (var member in sponsor_list) delete sponsor_list[member];
+            Object.assign(sponsor_list, JSON.parse(this.response));
+    
             if (notify)
                 deliver_notif(trans[lang].settings.home.sponsor.download, false, true, 'sponsor');
 

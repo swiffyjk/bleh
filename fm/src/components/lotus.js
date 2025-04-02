@@ -25,7 +25,8 @@ export function lotus(force = false) {
         lotus_request('artist', true);
     } else {
         // we prefer to load the current cache before waiting for a new response
-        artist_corrections = JSON.parse(lotus_artist);
+        for (var member in artist_corrections) delete artist_corrections[member];
+        Object.assign(artist_corrections, lotus_artist);
 
         // is it valid?
         if (lotus_artist_expire < current_time && !force) {
@@ -40,7 +41,8 @@ export function lotus(force = false) {
         lotus_request('album_track', true);
     } else {
         // we prefer to load the current cache before waiting for a new response
-        album_track_corrections = JSON.parse(lotus_album_track);
+        for (var member in album_track_corrections) delete album_track_corrections[member];
+        Object.assign(album_track_corrections, lotus_album_track);
 
         // is it valid?
         if (lotus_album_track_expire < current_time && !force) {
@@ -72,10 +74,13 @@ function lotus_request(type = 'artist', send_notify = false) {
         let api_expire = new Date();
 
         if (xhr.status == 200) {
-            if (type == 'artist')
-                artist_corrections = JSON.parse(this.response);
-            else
-                album_track_corrections = JSON.parse(this.response);
+            if (type == 'artist') {
+                for (var member in artist_corrections) delete artist_corrections[member];
+                Object.assign(artist_corrections, JSON.parse(this.response));
+            } else {
+                for (var member in album_track_corrections) delete album_track_corrections[member];
+                Object.assign(album_track_corrections, JSON.parse(this.response));
+            }
 
             if (send_notify) {
                 notify({

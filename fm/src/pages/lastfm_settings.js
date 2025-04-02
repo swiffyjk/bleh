@@ -1,5 +1,5 @@
 import { log } from "../build/log";
-import { auth, page, root } from "../build/page";
+import { auth, auth_link, page, root } from "../build/page";
 import { lang, trans } from "../build/trans";
 import { bleh_auto_edits } from "../components/auto_edit";
 import { dialog_legacy, kill_window } from "../components/dialog";
@@ -639,7 +639,7 @@ unsafeWindow._save_avatar_changer = function() {
     setTimeout(function() {
         kill_window('edit_avatar');
 
-        auth.avatar = auth_link.querySelector('img').getAttribute('src');
+        auth.avatar = auth_link.state.querySelector('img').getAttribute('src');
         document.querySelector('.auth-dropdown-menu').style.setProperty('--url', `url(${auth.avatar.replace('avatar42s', 'avatar170s')})`);
     }, 5000);
 }

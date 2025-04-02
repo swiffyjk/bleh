@@ -1,3 +1,6 @@
+import { page, root } from "./build/page";
+import { bleh_glacier_library_open_index } from "./pages/glacier";
+
 export function prep_chart_colours() {
     if (page.state.chart_colours.link_col == 'hsl()')
         load_chart_colours();

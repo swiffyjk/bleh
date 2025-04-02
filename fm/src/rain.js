@@ -1,3 +1,5 @@
+import { settings } from "./build/config";
+
 export function rain() {
     // clear old
     let rain_container_old = document.getElementById('rain-container');

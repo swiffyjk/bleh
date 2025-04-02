@@ -1,3 +1,9 @@
+import { settings } from "./build/config";
+import { log } from "./build/log";
+import { auth, page, root } from "./build/page";
+import { sanitise } from "./build/tools";
+import { correct_artist, correct_item_by_artist } from "./components/lotus";
+
 export function subscribe_to_events() {
     if (!settings.activities)
         return;

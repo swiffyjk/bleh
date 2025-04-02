@@ -1,5 +1,14 @@
-import { settings, settings_base, settings_template } from "./build/config";
-import { page } from "./build/page";
+import { inbuilt_settings, settings, settings_base, settings_template } from "./build/config";
+import { log } from "./build/log";
+import { page, reload_pending } from "./build/page";
+import { stored_season } from "./build/seasonal";
+import { lang, trans } from "./build/trans";
+import { load_chart_colours } from "./chart";
+import { dialog, dialog_legacy, kill_window } from "./components/dialog";
+import { bleh_music_page_charts } from "./components/music";
+import { notify } from "./components/notify";
+import { load_skus, show_theme_change_in_menu, show_theme_change_in_settings } from "./pages/bleh_config";
+import { bleh_glacier_date_graph_generate, bleh_glacier_insights } from "./pages/glacier";
 
 // create blank settings
 export function create_settings_template() {
@@ -9,8 +18,10 @@ export function create_settings_template() {
 
 // load settings
 export function load_settings(skip = false) {
-    if (!skip)
-        settings = JSON.parse(localStorage.getItem('bleh')) || create_settings_template();
+    if (!skip) {
+        for (var member in settings) delete settings[member];
+        Object.assign(settings, JSON.parse(localStorage.getItem('bleh')) || create_settings_template());
+    }
 
     // missing? set to default value
     for (let setting in settings_template)
@@ -325,7 +336,7 @@ function request_reload() {
         return;
 
     log('requesting reload', 'settings');
-    reload_pending = true;
+    reload_pending.state = true;
     notify({
         title: trans[lang].settings.reload.name,
         body: trans[lang].settings.reload.body,

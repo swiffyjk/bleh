@@ -1,4 +1,4 @@
-export let settings;
+export let settings = {};
 export let settings_template = {
     theme: 'dark',
     high_contrast: false,
