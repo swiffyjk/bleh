@@ -39,7 +39,7 @@ export function setRoot(data) {
     root = data;
 }
 // recent activity
-export let recent_activity_list;
+export let recent_activity_list = [];
 
 // page type
 export let last_page_type = {

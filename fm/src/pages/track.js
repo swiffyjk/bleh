@@ -1,6 +1,6 @@
 import { settings } from "../build/config";
 import { log } from "../build/log";
-import { auth, page } from "../build/page";
+import { auth, page, root } from "../build/page";
 import { lang, trans } from "../build/trans";
 import { bleh_about_artist } from "../components/about_artist";
 import { correct_item_by_artist, patch_header_title } from "../components/lotus";

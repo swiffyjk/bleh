@@ -304,6 +304,10 @@ function album_missing_a_tracklist() {
 
                 let inner_tracklist = doc.querySelector('#top-tracks-section [v-else=""] .chartlist');
                 if (inner_tracklist == null) {
+                    let url_split = window.location.href.split('/');
+                    let album_url = `${url_split[(url_split.length - 2)]}/${url_split[(url_split.length - 1)]}`;
+                    let album_as_track_url = window.location.href.replace(album_url, `${url_split[(url_split.length - 2)]}/_/${url_split[(url_split.length - 1)]}`);
+        
                     tracklist.innerHTML = (`
                         <h3 class="text-18">${trans[lang].music.fetch_plays.name}</h3>
                         <div class="loading-data-container">

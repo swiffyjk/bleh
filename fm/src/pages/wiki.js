@@ -1,5 +1,5 @@
 import { patch_avatar } from "../avatar";
-import { page, root } from "../build/page";
+import { auth, page, root } from "../build/page";
 import { desanitise } from "../build/tools";
 import { lang, trans } from "../build/trans";
 import { ff } from "../sku";

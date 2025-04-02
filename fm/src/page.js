@@ -12,7 +12,7 @@ import { nag_bar } from "./components/nag_bar";
 import { load_notifications, notify } from "./components/notify";
 import { patch_titles } from "./components/track";
 import { load_settings } from "./config";
-import { version } from "./main";
+import { theme_version, version } from "./main";
 import { append_nav, patch_masthead } from "./navigation";
 import { bleh_albums } from "./pages/album";
 import { bleh_artists } from "./pages/artist";
@@ -77,7 +77,7 @@ function bleh_main() {
     // messaging
     load_dialogs();
 
-    theme_version = getComputedStyle(document.body).getPropertyValue('--version-build').replaceAll("'", '').replaceAll('"', ''); // remove quotations
+    theme_version.state = getComputedStyle(document.body).getPropertyValue('--version-build').replaceAll("'", '').replaceAll('"', ''); // remove quotations
 
     lookup_lang();
     patch_masthead(document.body);
@@ -119,10 +119,10 @@ function bleh_main() {
             lookup_lang();
             patch_masthead(document.body);
 
-            theme_version = getComputedStyle(document.body).getPropertyValue('--version-build').replaceAll("'", '').replaceAll('"', ''); // remove quotations
-            if (theme_version != version.build && theme_version != '' && !has_prompted_for_update.state) {
+            theme_version.state = getComputedStyle(document.body).getPropertyValue('--version-build').replaceAll("'", '').replaceAll('"', ''); // remove quotations
+            if (theme_version.state != version.build && theme_version.state != '' && !has_prompted_for_update.state) {
                 // script is either out of date, or more in date (not gonna happen)
-                log(`version mismatch! running ${version.build}, downloaded theme ${theme_version}`, 'update');
+                log(`version mismatch! running ${version.build}, downloaded theme ${theme_version.state}`, 'update');
 
                 prompt_for_update();
                 has_prompted_for_update.state = true;

@@ -1,5 +1,5 @@
 import { log } from "./build/log";
-import { auth } from "./build/page";
+import { auth, page, root } from "./build/page";
 import { sponsor_list } from "./build/sponsor";
 import { lang, trans } from "./build/trans";
 import { dialog } from "./components/dialog";

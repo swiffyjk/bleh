@@ -1,11 +1,11 @@
-import { settings } from "../build/config";
+import { settings, settings_base } from "../build/config";
 import { log } from "../build/log";
 import { album_track_corrections, artist_corrections, ranks } from "../build/music";
-import { auth, page, theme_preview } from "../build/page";
+import { auth, page, root, theme_preview } from "../build/page";
 import { stored_season } from "../build/seasonal";
 import { sponsor_list } from "../build/sponsor";
 import { lang, lang_info, non_override_lang, trans } from "../build/trans";
-import { dialog_legacy, dialog_rm, kill_window } from "../components/dialog";
+import { dialog, dialog_legacy, dialog_rm, kill_window } from "../components/dialog";
 import { notify } from "../components/notify";
 import { checkup_page_structure } from "../components/structure";
 import { create_settings_template, load_settings, refresh_all } from "../config";
@@ -199,7 +199,7 @@ export function render_setting_page(page_id) {
         let sponsoring = false;
         if (sponsor_list)
             sponsoring = sponsor_list.sponsors.includes(auth.name);
-
+    
         return (`
         <div class="bleh--panel">
             <h4 class="top-header">${trans[lang].settings.home.name}</h4>

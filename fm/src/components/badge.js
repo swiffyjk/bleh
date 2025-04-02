@@ -1,3 +1,4 @@
+import { log } from "../build/log";
 import { sponsor_list } from "../build/sponsor";
 import { lang, trans } from "../build/trans";
 

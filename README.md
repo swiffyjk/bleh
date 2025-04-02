@@ -20,11 +20,11 @@ In the **Troubleshooting** tab of bleh's settings you can find the toggle "Disab
 
 ### Working with the script
 
-Script files can be found in the `build` and `src` directory. `build` files are used for defining global variables and tools, whereas `src` is used for the majority of bleh functionality.
+Script files can be found in `src`. `src/pages` are for the different pages found in bleh & last.fm, `src/components` are for page components and other components (reusable code found elsewhere). `src/build` contains globals and such. `src/` itself contains the main logic of the script.
 
 ### Building the script
 
-To combine all the separate files into a Tampermonkey-compatible file, run the `build.py` script and it will update the `bleh.user.js` file for use.
+To combine all the separate files into a Tampermonkey-compatible file, run the `node index.js` script and it will update the `bleh.user.js` file for use.
 
 ---
 

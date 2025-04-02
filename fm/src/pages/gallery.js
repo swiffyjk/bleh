@@ -1,6 +1,6 @@
 import { expand_avatar } from "../avatar";
 import { log } from "../build/log";
-import { page } from "../build/page";
+import { page, root } from "../build/page";
 import { lang, trans } from "../build/trans";
 import { register_menu } from "../components/menu";
 import { ff } from "../sku";

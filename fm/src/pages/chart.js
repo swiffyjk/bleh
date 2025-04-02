@@ -1,3 +1,4 @@
+import { settings } from "../build/config";
 import { log } from "../build/log";
 import { page } from "../build/page";
 import { lang, trans } from "../build/trans";

@@ -1,5 +1,3 @@
-
-
 // ==UserScript==
 // @name         bleh
 // @namespace    http://last.fm/
@@ -18,11 +16,9 @@
 // @require      https://cdnjs.cloudflare.com/ajax/libs/color-thief/2.3.0/color-thief.umd.js
 // @require      https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js
 // @require      https://cdn.jsdelivr.net/npm/chartjs-adapter-moment@^1
-// ==/UserScript==
-
 (() => {
   // src/build/config.js
-  var settings2 = {};
+  var settings = {};
   var settings_template = {
     theme: "dark",
     high_contrast: false,
@@ -92,7 +88,7 @@
     log_show_all: false,
     avatar_radius: 50
   };
-  var settings_base2 = {
+  var settings_base = {
     theme: {
       css: "theme",
       unit: "",
@@ -595,7 +591,7 @@
     arrow: false,
     duration: [120, 220]
   });
-  var auth2 = {
+  var auth = {
     name: null,
     pro: false,
     avatar: null,
@@ -608,17 +604,18 @@
   var auth_link = {
     state: ""
   };
-  var root2 = "";
+  var root = "";
   function setRoot(data) {
-    root2 = data;
+    root = data;
   }
+  var recent_activity_list = [];
   var last_page_type = {
     state: void 0
   };
   var last_page_subpage = {
     state: void 0
   };
-  var page2 = {
+  var page = {
     initial: "",
     type: "",
     name: "",
@@ -714,8 +711,8 @@
 `;
 
   // src/build/log.js
-  function log2(text, system, type = "info", append = {}) {
-    if (!page2.structure.logs) {
+  function log(text, system, type = "info", append = {}) {
+    if (!page.structure.logs) {
       let logs = document.createElement("div");
       logs.classList.add("logs");
       logs.innerHTML = `
@@ -728,7 +725,7 @@
             </div>
         `;
       document.documentElement.appendChild(logs);
-      page2.structure.logs = logs;
+      page.structure.logs = logs;
     }
     let system_colour;
     switch (system) {
@@ -767,8 +764,8 @@
       console[type](`%cbleh~%c${system}%c: ${text}`, "color: #9F8CD9", `color: ${system_colour}; font-weight: bold`, "color: unset", append);
     else
       console[type](`%cbleh~%c${system}%c: ${text}`, "color: #9F8CD9", `color: ${system_colour}; font-weight: bold`, "color: unset");
-    if (settings2 && settings2.feature_flags) {
-      if (settings2.feature_flags.developer == true) {
+    if (settings && settings.feature_flags) {
+      if (settings.feature_flags.developer == true) {
         let log_e = document.createElement("div");
         log_e.classList.add("log");
         log_e.setAttribute("data-type", type);
@@ -776,7 +773,7 @@
                 <span class="system" style="color: ${system_colour}">${system}</span>
                 <span class="text">${text}</span>
             `;
-        page2.structure.logs.appendChild(log_e);
+        page.structure.logs.appendChild(log_e);
       }
     }
   }
@@ -857,6 +854,14 @@
       return desanitise(split[length - 1]);
     else
       return desanitise(split[length - 2]);
+  }
+  function return_artist_from_generic(url) {
+    let split = url.split("/");
+    let length = split.length - 1;
+    if (split[length - 1] != "_")
+      return decodeURI(desanitise(split[length - 1]));
+    else
+      return decodeURI(desanitise(split[length - 2]));
   }
 
   // src/build/music.js
@@ -1169,7 +1174,7 @@
   };
 
   // src/build/trans.js
-  var lang2;
+  var lang;
   var non_override_lang;
   var valid_langs2 = ["en", "de", "pl"];
   var lang_info = {
@@ -4247,10 +4252,10 @@
     }
     console.log(troot.getAttribute("href"));
     setRoot(troot.getAttribute("href"));
-    let previous_avi = auth2.avatar;
+    let previous_avi = auth.avatar;
     if (auth_link.state) {
-      auth2.avatar = auth_link.state.querySelector("img").getAttribute("src");
-      if (auth2.avatar != previous_avi) {
+      auth.avatar = auth_link.state.querySelector("img").getAttribute("src");
+      if (auth.avatar != previous_avi) {
         let avatar = auth_link.state.querySelector("img");
         avatar.setAttribute("crossorigin", "anonymous");
         try {
@@ -4258,21 +4263,21 @@
             let thief = new ColorThief();
             let colour = thief.getColor(avatar);
             let hsl = rgb_to_hsl(colour[0], colour[1], colour[2]);
-            auth2.sets.hue = hsl.h;
-            auth2.sets.sat = clamp_sat(hsl.s / 100 * 3);
-            auth2.sets.lit = 1;
+            auth.sets.hue = hsl.h;
+            auth.sets.sat = clamp_sat(hsl.s / 100 * 3);
+            auth.sets.lit = 1;
           });
         } catch (e) {
         }
       }
     }
-    lang2 = document.documentElement.getAttribute("lang");
-    non_override_lang = lang2;
-    if (!valid_langs2.includes(lang2)) {
-      log2(`language fallback from ${lang2} to en - not supported`, "trans");
-      lang2 = "en";
+    lang = document.documentElement.getAttribute("lang");
+    non_override_lang = lang;
+    if (!valid_langs2.includes(lang)) {
+      log(`language fallback from ${lang} to en - not supported`, "trans");
+      lang = "en";
     }
-    moment.locale(lang2);
+    moment.locale(lang);
   }
 
   // src/build/seasonal.js
@@ -4355,9 +4360,9 @@
     let dialogs2 = document.createElement("div");
     dialogs2.classList.add("bleh-modals");
     document.body.appendChild(dialogs2);
-    page2.structure.dialogs = dialogs2;
+    page.structure.dialogs = dialogs2;
   }
-  function dialog2({
+  function dialog({
     id = "",
     title = null,
     subtitle = null,
@@ -4370,7 +4375,7 @@
     replace_id = "",
     allow_scroll = false
   }) {
-    log2(`creating ${id}`, "window", "info", {
+    log(`creating ${id}`, "window", "info", {
       id,
       title,
       subtitle,
@@ -4385,8 +4390,8 @@
     let modal;
     if (replace_if_possible && Object.keys(dialogs).length > 0) {
       replace = true;
-      for (let dialog3 in dialogs) {
-        replace_id = dialog3;
+      for (let dialog2 in dialogs) {
+        replace_id = dialog2;
         break;
       }
     }
@@ -4394,7 +4399,7 @@
       modal = document.createElement("div");
       modal.classList.add("bleh-modal");
     } else {
-      log2(`window set to replace ${replace_id}`, "window");
+      log(`window set to replace ${replace_id}`, "window");
       modal = dialogs[replace_id].instance;
       delete dialogs[replace_id];
       modal.innerHTML = "";
@@ -4417,9 +4422,9 @@
       modal_close.classList.add("modal-close-button");
       modal_close.setAttribute("onclick", `_dialog_rm({id: "${id}"})`);
       modal.appendChild(modal_close);
-      page2.structure.dialogs.setAttribute("onclick", "_dialog_rm({all: true, modal_bg: true})");
+      page.structure.dialogs.setAttribute("onclick", "_dialog_rm({all: true, modal_bg: true})");
     } else {
-      page2.structure.dialogs.removeAttribute("onclick");
+      page.structure.dialogs.removeAttribute("onclick");
     }
     let modal_body = document.createElement("div");
     modal_body.classList.add("bleh-modal-body");
@@ -4429,8 +4434,8 @@
     dialogs[id] = {
       instance: modal
     };
-    page2.structure.dialogs.appendChild(modal);
-    page2.structure.dialogs.classList.add("has-dialog");
+    page.structure.dialogs.appendChild(modal);
+    page.structure.dialogs.classList.add("has-dialog");
     return modal;
   }
   unsafeWindow._dialog_rm = function({
@@ -4455,36 +4460,36 @@
         if (event.target.classList[0] != "bleh-modals")
           return;
       }
-      log2("requested kill all", "window");
+      log("requested kill all", "window");
       console.info(dialogs);
-      for (let dialog3 in dialogs) {
+      for (let dialog2 in dialogs) {
         dialog_rm({
-          id: dialog3
+          id: dialog2
         });
       }
       return;
     }
     if (id == null)
       return;
-    if (page2.structure.dialogs == null)
+    if (page.structure.dialogs == null)
       return;
     if (dialogs.hasOwnProperty(id)) {
-      let dialog3 = dialogs[id];
-      if (!page2.structure.dialogs.contains(dialog3.instance))
+      let dialog2 = dialogs[id];
+      if (!page.structure.dialogs.contains(dialog2.instance))
         return;
-      log2(`queuing ${id} to kill`, "window");
-      dialog3.instance.classList.add("to-remove");
+      log(`queuing ${id} to kill`, "window");
+      dialog2.instance.classList.add("to-remove");
       setTimeout(function() {
-        page2.structure.dialogs.removeChild(dialog3.instance);
+        page.structure.dialogs.removeChild(dialog2.instance);
       }, 400);
       delete dialogs[id];
       if (JSON.stringify(dialogs) == "{}") {
-        page2.structure.dialogs.classList.remove("has-dialog");
+        page.structure.dialogs.classList.remove("has-dialog");
       }
     }
   }
   function dialog_legacy(id, title, inner_content, dismiss = false, classname = "", allow_scroll = false) {
-    log2(`created ${id} - '${title}'`, "window", "info", { content: [inner_content], dismiss, classname });
+    log(`created ${id} - '${title}'`, "window", "info", { content: [inner_content], dismiss, classname });
     let background = document.createElement("div");
     background.classList.add("popup_background");
     background.setAttribute("id", `bleh--window-${id}--background`);
@@ -4495,13 +4500,13 @@
     wrapper.setAttribute("id", `bleh--window-${id}--wrapper`);
     wrapper.style = "opacity: 1; visibility: visible; position: fixed; overflow: auto; width: 100%; height: 100%; top: 0px; left: 0px; text-align: center;";
     wrapper.setAttribute("data-kate-processed", "true");
-    let dialog3 = document.createElement("div");
-    dialog3.classList.add("modal-dialog");
-    dialog3.setAttribute("id", `bleh--window-${id}--dialog`);
-    dialog3.style = "opacity: 1; visibility: visible; pointer-events: auto; display: inline-block; outline: none; text-align: left; position: relative; vertical-align: middle;";
-    dialog3.setAttribute("data-kate-processed", "true");
+    let dialog2 = document.createElement("div");
+    dialog2.classList.add("modal-dialog");
+    dialog2.setAttribute("id", `bleh--window-${id}--dialog`);
+    dialog2.style = "opacity: 1; visibility: visible; pointer-events: auto; display: inline-block; outline: none; text-align: left; position: relative; vertical-align: middle;";
+    dialog2.setAttribute("data-kate-processed", "true");
     if (classname != "")
-      dialog3.classList.add(`modal-dialog--${classname}`);
+      dialog2.classList.add(`modal-dialog--${classname}`);
     let content = document.createElement("div");
     content.classList.add("modal-content");
     content.setAttribute("id", `bleh--window-${id}--content`);
@@ -4515,7 +4520,7 @@
       actions.innerHTML = `
             <div class="modal-buttons">
                 <button class="modal-action-button modal-dismiss" onclick="_kill_window('${id}')">
-                    ${trans[lang2].settings.close}
+                    ${trans[lang].settings.close}
                 </button>
             </div>
         `;
@@ -4550,8 +4555,8 @@
     body.appendChild(inner_content_em);
     share.appendChild(body);
     content.appendChild(share);
-    dialog3.appendChild(content);
-    wrapper.appendChild(dialog3);
+    dialog2.appendChild(content);
+    wrapper.appendChild(dialog2);
     wrapper.appendChild(align);
     document.body.appendChild(background);
     document.body.appendChild(wrapper);
@@ -4560,11 +4565,11 @@
   function kill_window(id, replacing = false) {
     try {
       if (replacing) {
-        log2(`killed ${id}`, "window");
+        log(`killed ${id}`, "window");
         document.body.removeChild(document.getElementById(`bleh--window-${id}--background`));
         document.body.removeChild(document.getElementById(`bleh--window-${id}--wrapper`));
       } else {
-        log2(`queuing ${id} to kill`, "window");
+        log(`queuing ${id} to kill`, "window");
         let background = document.getElementById(`bleh--window-${id}--background`);
         let window2 = document.getElementById(`bleh--window-${id}--wrapper`);
         background.classList.add("window-removing");
@@ -4575,7 +4580,7 @@
         }, 270);
       }
     } catch (e) {
-      log2(`kill failed, ${id} does not exist`, "window");
+      log(`kill failed, ${id} does not exist`, "window");
     }
   }
   unsafeWindow._kill_window = function(id) {
@@ -4588,7 +4593,7 @@
     if (prev_notif == null) {
       let notifs = document.createElement("div");
       notifs.classList.add("bleh-notifications");
-      page2.structure.notifications = notifs;
+      page.structure.notifications = notifs;
       document.body.appendChild(notifs);
     }
   }
@@ -4597,7 +4602,7 @@
     notif.classList.add("bleh-notification");
     notif.setAttribute("onclick", "_kill_notif(this)");
     notif.textContent = content;
-    page2.structure.notifications.appendChild(notif);
+    page.structure.notifications.appendChild(notif);
     if (has_icon)
       notif.classList.add("btn--has-icon");
     if (append_class != "")
@@ -4619,7 +4624,7 @@
     persist = false,
     type = type
   }) {
-    notify2({
+    notify({
       title,
       body,
       icon,
@@ -4629,7 +4634,7 @@
       type
     });
   };
-  function notify2({
+  function notify({
     id = null,
     title = null,
     body = null,
@@ -4639,7 +4644,7 @@
     persist = false,
     type = "generic"
   }) {
-    log2(`creating ${title}`, "notification", "info", {
+    log(`creating ${title}`, "notification", "info", {
       id,
       title,
       body,
@@ -4663,7 +4668,7 @@
             <div class="notification-body margin-below">${body}</div>
         `;
     }
-    page2.structure.notifications.appendChild(notif);
+    page.structure.notifications.appendChild(notif);
     if (type == "error")
       icon = "icon-16-x";
     if (!icon)
@@ -4694,7 +4699,7 @@
   function notify_rm(notif) {
     notif.classList.add("fade-out");
     setTimeout(function() {
-      page2.structure.notifications.removeChild(notif);
+      page.structure.notifications.removeChild(notif);
     }, 400);
   }
   unsafeWindow._kill_notif = function(notif) {
@@ -4723,7 +4728,7 @@
     }
     badges.forEach((badge) => {
       if (!badge.name)
-        badge.name = trans[lang2].badges[badge.type].name;
+        badge.name = trans[lang].badges[badge.type].name;
       if (badge.reason)
         return;
       if (badge.type == "sponsor" || badge.type == "contributor" || badge.type == "translation")
@@ -4754,12 +4759,12 @@
       avatar.setAttribute("title", "");
       let this_badge = sponsor_list.badges[name];
       if (!Array.isArray(sponsor_list.badges[name])) {
-        log2(`@${name} 1 badge:`, "shout", "info", sponsor_list.badges[name]);
+        log(`@${name} 1 badge:`, "shout", "info", sponsor_list.badges[name]);
       } else {
-        log2(`@${name} multiple badges:`, "shout", "info", sponsor_list.badges[name]);
+        log(`@${name} multiple badges:`, "shout", "info", sponsor_list.badges[name]);
         let badges_length = Object.keys(sponsor_list.badges[name]).length - 1;
         this_badge = sponsor_list.badges[name][badges_length];
-        log2(`@${name} using badge ${badges_length} as primary`, "shout", "info", this_badge);
+        log(`@${name} using badge ${badges_length} as primary`, "shout", "info", this_badge);
       }
       let badge = document.createElement("span");
       badge.classList.add("avatar-status-dot", `user-status--bleh-${this_badge.type}`, `user-status--bleh-user-${name}`);
@@ -4774,14 +4779,14 @@
                     </div>
                     <div class="info">
                         <h5 class="title">${name}</h5>
-                        <p class="descriptor">${trans[lang2].profile.top_badge}</p>
+                        <p class="descriptor">${trans[lang].profile.top_badge}</p>
                         <p class="badge user-status--bleh-${this_badge.type} user-status--bleh-user-${name}" data-badge-type="${this_badge.type}" data-badge-user="${name}">${this_badge.name}</p>
                     </div>
-                    <a href="${root2}user/${name}" class="link-over"></a>
+                    <a href="${root}user/${name}" class="link-over"></a>
                 </div>
                 <div class="user-buttons view-buttons">
-                    <a class="btn view-item user-button view-library-btn" href="${root2}user/${name}/library">${trans[lang2].actions.view_library}</a>
-                    <a class="btn view-item user-button leave-shout-btn" href="${root2}user/${name}/shoutbox">${trans[lang2].actions.leave_a_shout}</a>
+                    <a class="btn view-item user-button view-library-btn" href="${root}user/${name}/library">${trans[lang].actions.view_library}</a>
+                    <a class="btn view-item user-button leave-shout-btn" href="${root}user/${name}/shoutbox">${trans[lang].actions.leave_a_shout}</a>
                 </div>
             `,
         allowHTML: true,
@@ -4805,11 +4810,11 @@
                         <div class="info">
                             <h5 class="title">${name}</h5>
                         </div>
-                        <a href="${root2}user/${name}" class="link-over"></a>
+                        <a href="${root}user/${name}" class="link-over"></a>
                     </div>
                     <div class="user-buttons view-buttons">
-                        <a class="btn view-item user-button view-library-btn" href="${root2}user/${name}/library">${trans[lang2].actions.view_library}</a>
-                        <a class="btn view-item user-button leave-shout-btn" href="${root2}user/${name}/shoutbox">${trans[lang2].actions.leave_a_shout}</a>
+                        <a class="btn view-item user-button view-library-btn" href="${root}user/${name}/library">${trans[lang].actions.view_library}</a>
+                        <a class="btn view-item user-button leave-shout-btn" href="${root}user/${name}/shoutbox">${trans[lang].actions.leave_a_shout}</a>
                     </div>
                 `,
           allowHTML: true,
@@ -4830,14 +4835,14 @@
                         </div>
                         <div class="info">
                             <h5 class="title">${name}</h5>
-                            <p class="descriptor">${trans[lang2].profile.top_badge}</p>
+                            <p class="descriptor">${trans[lang].profile.top_badge}</p>
                             <p class="badge ${pre_existing_badge.classList[1]}">${avatar.getAttribute("title")}</p>
                         </div>
-                        <a href="${root2}user/${name}" class="link-over"></a>
+                        <a href="${root}user/${name}" class="link-over"></a>
                     </div>
                     <div class="user-buttons view-buttons">
-                        <a class="btn view-item user-button view-library-btn" href="${root2}user/${name}/library">${trans[lang2].actions.view_library}</a>
-                        <a class="btn view-item user-button leave-shout-btn" href="${root2}user/${name}/shoutbox">${trans[lang2].actions.leave_a_shout}</a>
+                        <a class="btn view-item user-button view-library-btn" href="${root}user/${name}/library">${trans[lang].actions.view_library}</a>
+                        <a class="btn view-item user-button leave-shout-btn" href="${root}user/${name}/shoutbox">${trans[lang].actions.leave_a_shout}</a>
                     </div>
                 `,
           allowHTML: true,
@@ -4858,15 +4863,15 @@
       return;
     if (!avatar.hasAttribute("alt"))
       return;
-    if (avatar.getAttribute("alt") == trans[lang2].avatar_for_me)
-      return auth2;
-    return avatar.getAttribute("alt").replace(trans[lang2].avatar_for_user, "");
+    if (avatar.getAttribute("alt") == trans[lang].avatar_for_me)
+      return auth;
+    return avatar.getAttribute("alt").replace(trans[lang].avatar_for_user, "");
   }
   unsafeWindow._expand_avatar = function(src) {
     expand_avatar(src);
   };
   function expand_avatar(src) {
-    dialog2({
+    dialog({
       id: "avatar",
       body: `
             <div class="full-avatar-wrapper">
@@ -4875,7 +4880,7 @@
                 </div>
                 <div class="modal-footer">
                     <a class="btn primary open" href="${src}" target="_blank">
-                        ${trans[lang2].profile.open_avatar}
+                        ${trans[lang].profile.open_avatar}
                     </a>
                 </div>
             </div>
@@ -4905,46 +4910,46 @@
 
   // src/sku.js
   function ff(flag) {
-    log2(`parsing ${flag}`, "flag", "log", {
-      setting: settings2.feature_flags[flag],
+    log(`parsing ${flag}`, "flag", "log", {
+      setting: settings.feature_flags[flag],
       sku: version.feature_flags[flag]
     });
-    if (settings2.feature_flags[flag] != null)
-      return settings2.feature_flags[flag];
+    if (settings.feature_flags[flag] != null)
+      return settings.feature_flags[flag];
     if (version.feature_flags[flag] != null)
       return version.feature_flags[flag].default;
   }
 
   // src/pages/gallery.js
   function bleh_gallery() {
-    if (page2.subpage != "image")
+    if (page.subpage != "image")
       return;
-    log2("focusing on image", "gallery");
-    let image_sidebar = page2.structure.side.querySelector(".js-gallery-image-details > div");
+    log("focusing on image", "gallery");
+    let image_sidebar = page.structure.side.querySelector(".js-gallery-image-details > div");
     if (image_sidebar == null)
       return;
     if (image_sidebar.hasAttribute("data-bleh-gallery"))
       return;
     image_sidebar.setAttribute("data-bleh-gallery", "true");
     if (!ff("new_gallery_experience")) {
-      patch_gallery_focused_image(image_sidebar, page2.structure.container.querySelector(".gallery-image-buttons"));
+      patch_gallery_focused_image(image_sidebar, page.structure.container.querySelector(".gallery-image-buttons"));
       return;
     }
     let image_details;
     let gallery_section;
     try {
-      gallery_section = page2.structure.main.querySelector(".gallery-section");
+      gallery_section = page.structure.main.querySelector(".gallery-section");
       if (gallery_section != null) {
-        page2.structure.nav.after(gallery_section);
+        page.structure.nav.after(gallery_section);
         image_details = document.createElement("section");
         image_details.classList.add("image-details");
       } else {
-        image_details = page2.structure.main.querySelector(".image-details");
+        image_details = page.structure.main.querySelector(".image-details");
         image_details.innerHTML = "";
       }
     } catch (e) {
-      gallery_section = page2.structure.container.querySelector(".gallery-section");
-      image_details = page2.structure.main.querySelector(".image-details");
+      gallery_section = page.structure.container.querySelector(".gallery-section");
+      image_details = page.structure.main.querySelector(".image-details");
       image_details.innerHTML = "";
     }
     image_details.appendChild(image_sidebar);
@@ -4952,7 +4957,7 @@
     let image_date = image_details.querySelector(".gallery-image-uploaded-by");
     if (image_title.textContent.trim() == "") {
       image_title.classList.add("gallery-image-title-empty");
-      image_title.textContent = trans[lang2].gallery.empty.title;
+      image_title.textContent = trans[lang].gallery.empty.title;
     }
     let breadcrumbs = document.body.querySelector(".content-top-lower-row");
     let breadcrumb_root = breadcrumbs.querySelector("a");
@@ -4976,12 +4981,12 @@
     `;
     image_details.insertBefore(image_title_container, image_sidebar);
     breadcrumbs.style.setProperty("display", "none");
-    page2.structure.main.insertBefore(image_details, page2.structure.main.firstElementChild);
+    page.structure.main.insertBefore(image_details, page.structure.main.firstElementChild);
     let description = image_details.querySelector(".gallery-image-description");
     if (description == null) {
       description = document.createElement("p");
       description.classList.add("gallery-image-description", "gallery-image-description-empty");
-      description.textContent = trans[lang2].gallery.empty.description;
+      description.textContent = trans[lang].gallery.empty.description;
       image_details.querySelector("[data-image-url]").appendChild(description);
     }
     let buttons = image_details.querySelector(".gallery-image-buttons");
@@ -4992,8 +4997,8 @@
     vote_buttons.after(create_divider());
     let positive_btn = vote_buttons.querySelector(':is([data-ajax-form-state=""] .gallery-image-vote-up-off, [data-ajax-form-state="up-voted"] .gallery-image-vote-up-on, [data-ajax-form-state="down-voted"] .gallery-image-vote-up-off)').cloneNode(true);
     let negative_btn = vote_buttons.querySelector(':is([data-ajax-form-state=""] .gallery-image-vote-down-off, [data-ajax-form-state="up-voted"] .gallery-image-vote-down-off, [data-ajax-form-state="down-voted"] .gallery-image-vote-down-on)').cloneNode(true);
-    let positive = parseInt(positive_btn.textContent.replace(trans[lang2].gallery.up, ""));
-    let negative = parseInt(negative_btn.textContent.replace(trans[lang2].gallery.down, ""));
+    let positive = parseInt(positive_btn.textContent.replace(trans[lang].gallery.up, ""));
+    let negative = parseInt(negative_btn.textContent.replace(trans[lang].gallery.down, ""));
     let number = positive - negative;
     let is_negative = number < 0;
     console.info(positive_btn, positive, negative_btn, negative, number);
@@ -5001,7 +5006,7 @@
     vote_badge.textContent = `${is_negative ? "" : "+"}${number}`;
     vote_badge.setAttribute("data-side", is_negative ? "neg" : "pos");
     tippy(vote_badge, {
-      content: trans[lang2].gallery.vote
+      content: trans[lang].gallery.vote
     });
     let buttons_extra = document.createElement("div");
     buttons_extra.classList.add("gallery-image-buttons", "gallery-image-buttons-extra");
@@ -5010,9 +5015,9 @@
     let open_button = document.createElement("button");
     open_button.classList.add("image-open-button");
     tippy(open_button, {
-      content: trans[lang2].gallery.open.tooltip
+      content: trans[lang].gallery.open.tooltip
     });
-    open_button.textContent = trans[lang2].gallery.open.name;
+    open_button.textContent = trans[lang].gallery.open.name;
     open_button.setAttribute("onclick", `_expand_gallery_image()`);
     buttons_extra.appendChild(open_button);
     open_button.after(create_divider());
@@ -5024,42 +5029,42 @@
     tippy(report_text, {
       content: report_text.textContent
     });
-    report_text.textContent = trans[lang2].gallery.report.name;
+    report_text.textContent = trans[lang].gallery.report.name;
     buttons_extra.appendChild(report_button);
     let star_buttons = image_details.querySelectorAll(".gallery-image-preferred-button :is(button, a)");
     star_buttons.forEach((star_button) => {
       star_button.removeAttribute("title");
       let text = star_button.querySelector(".gallery-image-preferred-states");
-      text.textContent = trans[lang2].gallery.prefer.name;
+      text.textContent = trans[lang].gallery.prefer.name;
     });
-    let view_all_container = page2.structure.main.querySelector(".more-link-fullwidth-right-flush-top");
+    let view_all_container = page.structure.main.querySelector(".more-link-fullwidth-right-flush-top");
     if (view_all_container != null) {
       let view_all = view_all_container.querySelector("a");
       view_all.classList.add("btn", "view-all-button", "back");
       let view_all_panel = document.createElement("section");
       view_all_panel.classList.add("view-all-panel");
       view_all_panel.appendChild(view_all);
-      page2.structure.side.insertBefore(view_all_panel, page2.structure.side.firstElementChild);
-      page2.structure.main.removeChild(view_all_container);
-      if (page2.type == "artist" || ff("display_album_bookmark")) {
+      page.structure.side.insertBefore(view_all_panel, page.structure.side.firstElementChild);
+      page.structure.main.removeChild(view_all_container);
+      if (page.type == "artist" || ff("display_album_bookmark")) {
         let all_saved_panel = document.createElement("section");
         all_saved_panel.classList.add("view-all-panel");
         all_saved_panel.innerHTML = `
                 <a class="btn view-all-button back all-saved-button" href="${view_all.getAttribute("href")}?tab=saved">
-                    ${trans[lang2].gallery.bookmarks.link}
+                    ${trans[lang].gallery.bookmarks.link}
                 </a>
             `;
         view_all_panel.after(all_saved_panel);
       }
     }
-    if (page2.type == "artist" || ff("display_album_bookmark"))
+    if (page.type == "artist" || ff("display_album_bookmark"))
       patch_gallery_focused_image(image_sidebar, buttons);
   }
   unsafeWindow._expand_gallery_image = function() {
     expand_gallery_image();
   };
   function expand_gallery_image() {
-    let image_src = page2.structure.container.querySelector(".active-slide .js-gallery-image").getAttribute("src").replace("770x0", "ar0");
+    let image_src = page.structure.container.querySelector(".active-slide .js-gallery-image").getAttribute("src").replace("770x0", "ar0");
     expand_avatar(image_src);
   }
   function create_divider() {
@@ -5082,36 +5087,36 @@
     slides.appendChild(image);
     image_container.appendChild(slides);
     gallery_section.appendChild(image_container);
-    page2.structure.nav.after(gallery_section);
+    page.structure.nav.after(gallery_section);
     let content_top = document.body.querySelector(".page-content");
     content_top.innerHTML = "";
-    let form = page2.structure.main.querySelector(".form-horizontal");
+    let form = page.structure.main.querySelector(".form-horizontal");
     form.classList.add("panel-form");
     let upload_rules_group = form.querySelector(".form-group--description + .form-group");
     let rules = upload_rules_group.querySelector(".gallery-upload-rules");
     let rules_panel = document.createElement("section");
     rules_panel.classList.add("rules-panel");
     rules_panel.innerHTML = rules.innerHTML;
-    page2.structure.side.appendChild(rules_panel);
+    page.structure.side.appendChild(rules_panel);
     form.removeChild(upload_rules_group);
   }
   function bleh_gallery_upload_check() {
-    if (page2.subpage != "images_image-upload")
+    if (page.subpage != "images_image-upload")
       return;
-    let image_preview = page2.structure.main.querySelector(".form-image-preview");
+    let image_preview = page.structure.main.querySelector(".form-image-preview");
     if (image_preview == null)
       return;
-    let image_preview_container = page2.structure.container.querySelector(".image-preview-hook");
+    let image_preview_container = page.structure.container.querySelector(".image-preview-hook");
     image_preview_container.setAttribute("src", image_preview.getAttribute("src"));
   }
   function bleh_gallery_list() {
-    let upload_btn = page2.structure.main.querySelector(".btn-add");
+    let upload_btn = page.structure.main.querySelector(".btn-add");
     if (upload_btn != null) {
       upload_btn.classList = "btn view-all-button back upload-button";
       let upload_panel = document.createElement("section");
       upload_panel.classList.add("view-all-panel", "upload-panel");
       upload_panel.appendChild(upload_btn);
-      page2.structure.side.insertBefore(upload_panel, page2.structure.side.firstElementChild);
+      page.structure.side.insertBefore(upload_panel, page.structure.side.firstElementChild);
     }
   }
   function patch_gallery_page() {
@@ -5130,10 +5135,10 @@
       return;
     image_list.setAttribute("data-kate-processed", "true");
     let bookmarked_images = JSON.parse(localStorage.getItem("bleh_bookmarked_images")) || {};
-    if (page2.requested.tab != "saved" || page2.requested.page != null)
-      page2.structure.container.setAttribute("data-bleh--gallery-tab", "overview");
+    if (page.requested.tab != "saved" || page.requested.page != null)
+      page.structure.container.setAttribute("data-bleh--gallery-tab", "overview");
     else
-      page2.structure.container.setAttribute("data-bleh--gallery-tab", "bookmarks");
+      page.structure.container.setAttribute("data-bleh--gallery-tab", "bookmarks");
     let bookmark_nav = document.createElement("div");
     bookmark_nav.classList.add("bleh--nav-wrap", "bleh--nav-wrap--bookmarks");
     bookmark_nav.innerHTML = `
@@ -5141,18 +5146,18 @@
             <ul class="navlist-items">
                 <li class="navlist-item secondary-nav-item secondary-nav-item--gallery-overview">
                     <a class="secondary-nav-item-link" onclick="_set_gallery_page('overview')">
-                        ${trans[lang2].gallery.tabs.overview}
+                        ${trans[lang].gallery.tabs.overview}
                     </a>
                 </li>
                 <li class="navlist-item secondary-nav-item secondary-nav-item--gallery-bookmarks">
                     <a class="secondary-nav-item-link" onclick="_set_gallery_page('bookmarks')">
-                        ${trans[lang2].gallery.tabs.bookmarks}
+                        ${trans[lang].gallery.tabs.bookmarks}
                     </a>
                 </li>
             </ul>
         </nav>
     `;
-    page2.structure.content_top.after(bookmark_nav);
+    page.structure.content_top.after(bookmark_nav);
     let bookmarks_content = document.createElement("div");
     bookmarks_content.classList.add("col-main", "bleh--bookmarks", "not-a-panel");
     bookmarks_content.innerHTML = `
@@ -5160,23 +5165,23 @@
             <ul class="image-list" id="bleh--bookmarked-images" data-kate-processed="true"></ul>
         </section>
     `;
-    page2.structure.main.classList.add("bleh--gallery");
-    page2.structure.main.after(bookmarks_content);
-    let sort_button = page2.structure.main.querySelector(".dropdown-menu-clickable-button");
-    let sort_menu = page2.structure.main.querySelector(".dropdown-menu-clickable");
+    page.structure.main.classList.add("bleh--gallery");
+    page.structure.main.after(bookmarks_content);
+    let sort_button = page.structure.main.querySelector(".dropdown-menu-clickable-button");
+    let sort_menu = page.structure.main.querySelector(".dropdown-menu-clickable");
     let sort_wrap = document.createElement("div");
     sort_wrap.classList.add("dropdown-top-wrap");
     sort_wrap.appendChild(sort_button);
     sort_wrap.appendChild(sort_menu);
-    page2.structure.main.insertBefore(sort_wrap, page2.structure.main.firstElementChild);
-    if (bookmarked_images.hasOwnProperty(page2.name)) {
-      bookmarked_images[page2.name].forEach((image) => {
+    page.structure.main.insertBefore(sort_wrap, page.structure.main.firstElementChild);
+    if (bookmarked_images.hasOwnProperty(page.name)) {
+      bookmarked_images[page.name].forEach((image) => {
         console.info(image);
         let image_element = document.createElement("li");
         image_element.classList.add("image-list-item-wrapper");
         image_element.setAttribute("data-image-id", image);
         image_element.innerHTML = `
-                <a class="image-list-item" href="${root}music/+noredirect/${page2.name}/+images/${image}">
+                <a class="image-list-item" href="${root}music/+noredirect/${page.name}/+images/${image}">
                     <img src="https://lastfm.freetls.fastly.net/i/u/avatar170s/${image}" loading="lazy">
                 </a>
             `;
@@ -5186,7 +5191,7 @@
             theme: "context-menu",
             content: `
                         <button class="dropdown-menu-clickable-item" onclick="_update_image_bookmark(this, '${image}', false)" data-menu-item="remove-bookmark" data-bleh--image-is-bookmarked="true">
-                            ${trans[lang2].gallery.bookmarks.button.unbookmark_this_image.name}
+                            ${trans[lang].gallery.bookmarks.button.unbookmark_this_image.name}
                         </button>
                     `,
             allowHTML: true,
@@ -5204,19 +5209,19 @@
           register_menu(image_element, menu);
         }
       });
-      let image_list2 = page2.structure.main.querySelectorAll(".image-list-item");
+      let image_list2 = page.structure.main.querySelectorAll(".image-list-item");
       image_list2.forEach((image_list_item) => {
         let image_id_split = image_list_item.getAttribute("href").split("/");
         let image_id_length = image_id_split.length;
         let image_id = image_id_split[image_id_length - 1];
-        if (bookmarked_images[page2.name].includes(image_id)) {
+        if (bookmarked_images[page.name].includes(image_id)) {
           image_list_item.classList.add("image-list-item-bookmarked");
         }
       });
     } else {
       document.getElementById("bleh--bookmarked-images").outerHTML = `
             <div class="no-data-message bleh--no-image-bookmarks">
-                <p>${trans[lang2].gallery.bookmarks.no_data}</p>
+                <p>${trans[lang].gallery.bookmarks.no_data}</p>
             </div>
         `;
     }
@@ -5225,7 +5230,7 @@
     set_gallery_page(id);
   };
   function set_gallery_page(id) {
-    page2.structure.container.setAttribute("data-bleh--gallery-tab", id);
+    page.structure.container.setAttribute("data-bleh--gallery-tab", id);
   }
   function patch_gallery_focused_image(focused_image_details, gallery_interactions) {
     let focused_image_id_split = focused_image_details.getAttribute("data-image-url").split("/");
@@ -5233,19 +5238,19 @@
     let focused_image_id = focused_image_id_split[focused_image_id_length];
     let bookmarked_images = JSON.parse(localStorage.getItem("bleh_bookmarked_images")) || {};
     let image_is_bookmarked = false;
-    if (bookmarked_images.hasOwnProperty(page2.name)) {
-      if (bookmarked_images[page2.name].includes(focused_image_id)) {
+    if (bookmarked_images.hasOwnProperty(page.name)) {
+      if (bookmarked_images[page.name].includes(focused_image_id)) {
         image_is_bookmarked = true;
-        log2("focused is bookmarked", "gallery");
+        log("focused is bookmarked", "gallery");
       }
     }
     let gallery_bookmark_button = document.createElement("button");
     gallery_bookmark_button.classList.add("bleh--gallery-bookmark-image-btn", "btn--has-icon");
     gallery_bookmark_button.setAttribute("data-bleh--image-is-bookmarked", image_is_bookmarked);
     gallery_bookmark_button.setAttribute("onclick", `_update_image_bookmark(this, '${focused_image_id}')`);
-    gallery_bookmark_button.textContent = trans[lang2].gallery.bookmarks.button.bookmark_this_image.name;
+    gallery_bookmark_button.textContent = trans[lang].gallery.bookmarks.button.bookmark_this_image.name;
     unsafeWindow.bookmark_tooltip = tippy(gallery_bookmark_button, {
-      content: image_is_bookmarked ? trans[lang2].gallery.bookmarks.button.unbookmark_this_image.bio : trans[lang2].gallery.bookmarks.button.bookmark_this_image.bio
+      content: image_is_bookmarked ? trans[lang].gallery.bookmarks.button.unbookmark_this_image.bio : trans[lang].gallery.bookmarks.button.bookmark_this_image.bio
     });
     gallery_interactions.appendChild(gallery_bookmark_button);
   }
@@ -5257,27 +5262,27 @@
     let is_bookmarked = button.getAttribute("data-bleh--image-is-bookmarked") === "true";
     if (tooltip) {
       unsafeWindow.bookmark_tooltip.setContent(
-        !is_bookmarked ? trans[lang2].gallery.bookmarks.button.unbookmark_this_image.bio : trans[lang2].gallery.bookmarks.button.bookmark_this_image.bio
+        !is_bookmarked ? trans[lang].gallery.bookmarks.button.unbookmark_this_image.bio : trans[lang].gallery.bookmarks.button.bookmark_this_image.bio
       );
     } else {
-      button = page2.structure.container.querySelector(`[data-image-id="${id}"]`);
+      button = page.structure.container.querySelector(`[data-image-id="${id}"]`);
     }
-    if (!bookmarked_images.hasOwnProperty(page2.name))
-      bookmarked_images[page2.name] = [];
+    if (!bookmarked_images.hasOwnProperty(page.name))
+      bookmarked_images[page.name] = [];
     if (is_bookmarked) {
       button.setAttribute("data-bleh--image-is-bookmarked", "false");
       let new_artist_bookmarks = [];
-      for (let image in bookmarked_images[page2.name]) {
-        if (bookmarked_images[page2.name][image] != id) {
-          new_artist_bookmarks.push(bookmarked_images[page2.name][image]);
+      for (let image in bookmarked_images[page.name]) {
+        if (bookmarked_images[page.name][image] != id) {
+          new_artist_bookmarks.push(bookmarked_images[page.name][image]);
         }
       }
-      bookmarked_images[page2.name] = new_artist_bookmarks;
-      log2(`image ${id} from ${page2.name} removed from bookmarks`, "gallery");
+      bookmarked_images[page.name] = new_artist_bookmarks;
+      log(`image ${id} from ${page.name} removed from bookmarks`, "gallery");
     } else {
       button.setAttribute("data-bleh--image-is-bookmarked", "true");
-      bookmarked_images[page2.name].push(id);
-      log2(`image ${id} from ${page2.name} added to bookmarks`, "gallery");
+      bookmarked_images[page.name].push(id);
+      log(`image ${id} from ${page.name} added to bookmarks`, "gallery");
     }
     localStorage.setItem("bleh_bookmarked_images", JSON.stringify(bookmarked_images));
   }
@@ -5333,7 +5338,7 @@
       else
         milestone_lit += (next_milestone_lit - milestone_lit) * scrobble_proximity;
     }
-    log2(`milestone for ${scrobbles} is ${scrobble_milestone} within ${scrobble_proximity} proximity`, "colourful counts", "info", { hue: milestone_hue, sat: milestone_sat, lit: milestone_lit });
+    log(`milestone for ${scrobbles} is ${scrobble_milestone} within ${scrobble_proximity} proximity`, "colourful counts", "info", { hue: milestone_hue, sat: milestone_sat, lit: milestone_lit });
     return {
       milestone: scrobble_milestone,
       proximity: scrobble_proximity,
@@ -5346,15 +5351,15 @@
   // src/components/music.js
   function show_your_scrobbles() {
     let katsune = ff("katsune");
-    show_numbers_on_side(page2.type);
-    let col_main = page2.structure.container.querySelector(".top-overview-panel");
+    show_numbers_on_side(page.type);
+    let col_main = page.structure.container.querySelector(".top-overview-panel");
     if (col_main == null)
       col_main = document.body.querySelector(".col-main");
-    if (page2.type == "track") {
+    if (page.type == "track") {
       let new_panel = document.createElement("section");
       new_panel.classList.add("track-info-panel");
       new_panel.innerHTML = col_main.innerHTML;
-      page2.structure.main.insertBefore(new_panel, page2.structure.main.firstElementChild);
+      page.structure.main.insertBefore(new_panel, page.structure.main.firstElementChild);
       col_main.style.setProperty("display", "none");
       console.info(col_main, new_panel);
       col_main = new_panel;
@@ -5370,33 +5375,33 @@
     let page_url_split = page_url.split("/");
     let page_url_length = page_url_split.length - 1;
     let scrobble_page = page_url_split[page_url_length];
-    if (page2.type == "album") {
+    if (page.type == "album") {
       scrobble_page = page_url_split[page_url_length - 1] + "/" + page_url_split[page_url_length];
-    } else if (page2.type == "track") {
+    } else if (page.type == "track") {
       scrobble_page = page_url_split[page_url_length - 2] + "/_/" + page_url_split[page_url_length];
     }
     let your_listens = {
-      name: auth2.name,
+      name: auth.name,
       listens: 0,
       link: scrobble_page,
-      avi: auth2.avatar,
+      avi: auth.avatar,
       katsune
     };
     let scrobble_button = col_main.querySelector(".personal-stats-item--scrobbles .hidden-xs a");
     if (scrobble_button != null) {
       your_listens.listens = clean_number(scrobble_button.textContent.trim());
     }
-    create_listen_item(listen_container, your_listens, page2.type);
-    if (settings2.profile_shortcut != "") {
+    create_listen_item(listen_container, your_listens, page.type);
+    if (settings.profile_shortcut != "") {
       let shortcut_listens = {
-        name: settings2.profile_shortcut,
+        name: settings.profile_shortcut,
         listens: -1,
         link: scrobble_page,
         avi: localStorage.getItem("bleh_profile_shortcut_avi"),
         katsune
       };
       create_listen_item(listen_container, shortcut_listens);
-      fetch(`${root2}user/${shortcut_listens.name}/library/music/${scrobble_page}`).then(function(response) {
+      fetch(`${root}user/${shortcut_listens.name}/library/music/${scrobble_page}`).then(function(response) {
         console.log("returned", response, response.text);
         return response.text();
       }).then(function(html) {
@@ -5409,9 +5414,9 @@
           listens = clean_number(first_metadata_item.textContent.trim());
         listen_item.setAttribute("data-listens", listens);
         listen_item.innerHTML = `
-                <img class="view-item-avatar" src="${shortcut_listens.avi}" alt="${shortcut_listens.name}">${trans[lang2].music.listens.count_listens.replace("{c}", listens.toLocaleString(lang2))}
+                <img class="view-item-avatar" src="${shortcut_listens.avi}" alt="${shortcut_listens.name}">${trans[lang].music.listens.count_listens.replace("{c}", listens.toLocaleString(lang))}
             `;
-        if (settings2.colourful_counts && page2.type == "artist") {
+        if (settings.colourful_counts && page.type == "artist") {
           let parsed_scrobble_as_rank = parse_scrobbles_as_rank(listens);
           listen_item.setAttribute("data-bleh--scrobble-milestone", parsed_scrobble_as_rank.milestone);
           listen_item.style.setProperty("--hue-over", parsed_scrobble_as_rank.hue);
@@ -5426,13 +5431,13 @@
       link: scrobble_page,
       button: true,
       katsune
-    }, page2.type);
+    }, page.type);
     top_container.appendChild(listen_container);
     if (!katsune)
       col_main.insertBefore(top_container, col_main.firstElementChild);
     else
-      page2.structure.container.querySelector(".bleh-background").after(top_container);
-    if (page2.type == "artist") {
+      page.structure.container.querySelector(".bleh-background").after(top_container);
+    if (page.type == "artist") {
       let other_container = col_main.querySelector(".personal-stats-item--listeners");
       if (other_container != null) {
         let listen_divider = document.createElement("div");
@@ -5448,7 +5453,7 @@
           count: count != null ? clean_number(count.textContent.trim()) : 5,
           katsune
         };
-        create_listen_item(listen_container, other_listeners, page2.type);
+        create_listen_item(listen_container, other_listeners, page.type);
       }
     }
     let interact_container = document.createElement("div");
@@ -5485,35 +5490,35 @@
       tippy(obsession_btn, {
         content: obsession_btn.textContent
       });
-      obsession_btn.textContent = trans[lang2].music.obsession;
+      obsession_btn.textContent = trans[lang].music.obsession;
       interact_container.appendChild(obsession_form);
     }
-    if (katsune && page2.type == "artist") {
+    if (katsune && page.type == "artist") {
       let artist_btn = document.createElement("a");
       artist_btn.classList.add("btn", "view-item", "interact-item", "artist-btn", "icon");
-      if (settings2.quick_artist_button == "gallery") {
+      if (settings.quick_artist_button == "gallery") {
         artist_btn.setAttribute("data-artist-btn-type", "gallery");
         artist_btn.setAttribute("href", `${window.location.href}/+images`);
-        artist_btn.textContent = trans[lang2].gallery.view;
-      } else if (settings2.quick_artist_button == "shouts") {
+        artist_btn.textContent = trans[lang].gallery.view;
+      } else if (settings.quick_artist_button == "shouts") {
         artist_btn.setAttribute("data-artist-btn-type", "shouts");
         artist_btn.setAttribute("href", `${window.location.href}/+shoutbox`);
-        artist_btn.textContent = trans[lang2].settings.layout.quick_artist_button.shouts;
-      } else if (settings2.quick_artist_button == "wiki") {
+        artist_btn.textContent = trans[lang].settings.layout.quick_artist_button.shouts;
+      } else if (settings.quick_artist_button == "wiki") {
         artist_btn.setAttribute("data-artist-btn-type", "wiki");
         artist_btn.setAttribute("href", `${window.location.href}/+wiki`);
-        artist_btn.textContent = trans[lang2].settings.layout.quick_artist_button.wiki;
-      } else if (settings2.quick_artist_button == "listens") {
+        artist_btn.textContent = trans[lang].settings.layout.quick_artist_button.wiki;
+      } else if (settings.quick_artist_button == "listens") {
         artist_btn.setAttribute("data-artist-btn-type", "gallery");
         artist_btn.setAttribute("href", `${window.location.href}/+listeners/you-know`);
-        artist_btn.textContent = trans[lang2].settings.layout.quick_artist_button.listens;
+        artist_btn.textContent = trans[lang].settings.layout.quick_artist_button.listens;
       }
       interact_container.appendChild(artist_btn);
       let view_menu = tippy(artist_btn, {
         theme: "context-menu",
         content: `
-                <a class="dropdown-menu-clickable-item" href="${root2}bleh?tab=customise" data-menu-item="settings">
-                    ${trans[lang2].settings.configure}
+                <a class="dropdown-menu-clickable-item" href="${root}bleh?tab=customise" data-menu-item="settings">
+                    ${trans[lang].settings.configure}
                 </a>
             `,
         allowHTML: true,
@@ -5532,34 +5537,34 @@
     }
     let search_btn = document.createElement("a");
     search_btn.classList.add("btn", "view-item", "interact-item", "search-similar-btn", katsune ? "icon" : "");
-    search_btn.textContent = trans[lang2].music.search_variations.name;
-    search_btn.href = `${root2}search/${page2.type}s?q=${text}`;
+    search_btn.textContent = trans[lang].music.search_variations.name;
+    search_btn.href = `${root}search/${page.type}s?q=${text}`;
     search_btn.target = "_blank";
     tippy(search_btn, {
-      content: trans[lang2].music.search_variations.tooltip
+      content: trans[lang].music.search_variations.tooltip
     });
     interact_container.appendChild(search_btn);
     let search_lyrics = null;
-    if (page2.type == "track") {
+    if (page.type == "track") {
       search_lyrics = document.createElement("a");
       search_lyrics.classList.add("dropdown-menu-clickable-item", "search-genius-btn");
-      search_lyrics.textContent = trans[lang2].music.search_genius;
+      search_lyrics.textContent = trans[lang].music.search_genius;
       search_lyrics.href = `https://genius.com/search?q=${text}`;
       search_lyrics.target = "_blank";
     }
     let lotus_btn = null;
-    if (settings2.corrections) {
+    if (settings.corrections) {
       lotus_btn = document.createElement("a");
       lotus_btn.classList.add("dropdown-menu-clickable-item", "lotus", "lotus-btn");
-      lotus_btn.textContent = trans[lang2].lotus.correct.name;
+      lotus_btn.textContent = trans[lang].lotus.correct.name;
       lotus_btn.href = "https://github.com/katelyynn/lotus/issues/new/choose";
       lotus_btn.target = "_blank";
-      if (page2.corrected)
+      if (page.corrected)
         lotus_btn.classList.add("active");
     }
     let menu_btn = document.createElement("button");
     menu_btn.classList.add("btn", "view-item", "interact-item", "menu-btn", katsune ? "icon" : "");
-    menu_btn.textContent = trans[lang2].music.menu;
+    menu_btn.textContent = trans[lang].music.menu;
     let play_btn = interact_container.querySelector(".header-new-playlink");
     let music_menu = tippy(menu_btn, {
       theme: "select-menu",
@@ -5582,21 +5587,21 @@
     top_container.appendChild(interact_container);
   }
   function create_listen_item(parent, { name, listens, link, avi, count = 0, button = false, katsune = false }, header_type) {
-    log2(`creating listen item of ${name}, ${count}, ${listens}`, "artist", "info", { avi, link });
+    log(`creating listen item of ${name}, ${count}, ${listens}`, "artist", "info", { avi, link });
     let listen_item = document.createElement(!button ? "a" : "button");
     listen_item.classList.add("btn", "listen-item", "view-item");
-    listen_item.setAttribute("href", `${root2}user/${name}/library/music/${link}`);
+    listen_item.setAttribute("href", `${root}user/${name}/library/music/${link}`);
     listen_item.setAttribute("data-listens", listens);
     listen_item.setAttribute("id", `listen-item--${name}`);
     if (listens > -1) {
       listen_item.innerHTML = `
-            <img class="view-item-avatar" src="${avi}" alt="${name}">${trans[lang2].music.listens.count_listens.replace("{c}", listens.toLocaleString(lang2))}
+            <img class="view-item-avatar" src="${avi}" alt="${name}">${trans[lang].music.listens.count_listens.replace("{c}", listens.toLocaleString(lang))}
         `;
       let menu = tippy(listen_item, {
         theme: "context-menu",
         content: `
-                <a class="dropdown-menu-clickable-item" href="${root2}user/${name}" data-menu-item="view_profile">
-                    ${trans[lang2].music.view_profile}
+                <a class="dropdown-menu-clickable-item" href="${root}user/${name}" data-menu-item="view_profile">
+                    ${trans[lang].music.view_profile}
                 </a>
             `,
         allowHTML: true,
@@ -5614,17 +5619,17 @@
       register_menu(listen_item, menu);
     } else if (listens > -2) {
       listen_item.innerHTML = `
-            <img class="view-item-avatar" src="${avi}" alt="${name}">${trans[lang2].music.listens.loading_listens}
+            <img class="view-item-avatar" src="${avi}" alt="${name}">${trans[lang].music.listens.loading_listens}
         `;
       let menu = tippy(listen_item, {
         theme: "context-menu",
         content: `
-                <a class="dropdown-menu-clickable-item" href="${root2}user/${name}" data-menu-item="view_profile">
-                    ${trans[lang2].music.view_profile}
+                <a class="dropdown-menu-clickable-item" href="${root}user/${name}" data-menu-item="view_profile">
+                    ${trans[lang].music.view_profile}
                 </a>
                 <div class="sep"></div>
                 <button class="dropdown-menu-clickable-item" onclick="_open_profile_shortcut_window()" data-menu-item="settings">
-                    ${trans[lang2].settings.configure}
+                    ${trans[lang].settings.configure}
                 </button>
             `,
         allowHTML: true,
@@ -5645,18 +5650,18 @@
       listen_item.removeAttribute("href");
       listen_item.setAttribute("onclick", `_other_listener('${link}')`);
       tippy(listen_item, {
-        content: trans[lang2].music.listens.custom.tooltip
+        content: trans[lang].music.listens.custom.tooltip
       });
     } else {
       listen_item.innerHTML = `
             ${avi[0] != null ? `<img class="view-item-avatar" src="${avi[0].getAttribute("src")}">` : ""}
             ${avi[1] != null ? `<img class="view-item-avatar" src="${avi[1].getAttribute("src")}">` : ""}
             ${avi[2] != null ? `<img class="view-item-avatar" src="${avi[2].getAttribute("src")}">` : ""}
-            ${trans[lang2].music.listens.other_listeners.replace("{c}", count)}
+            ${trans[lang].music.listens.other_listeners.replace("{c}", count)}
         `;
       listen_item.setAttribute("href", `${window.location.href}/+listeners/you-know`);
     }
-    if (settings2.colourful_counts && listens > -1 && header_type == "artist") {
+    if (settings.colourful_counts && listens > -1 && header_type == "artist") {
       let parsed_scrobble_as_rank = parse_scrobbles_as_rank(listens);
       listen_item.setAttribute("data-bleh--scrobble-milestone", parsed_scrobble_as_rank.milestone);
       listen_item.style.setProperty("--hue-user", parsed_scrobble_as_rank.hue);
@@ -5698,11 +5703,11 @@
         metascore.link = link.getAttribute("href");
       }
     });
-    let panel = page2.structure.side.querySelector("section.section-with-separator:has(.listener-trend)");
+    let panel = page.structure.side.querySelector("section.section-with-separator:has(.listener-trend)");
     if (panel == null) {
       panel = document.createElement("section");
       panel.classList.add("section-with-separator");
-      page2.structure.side.insertBefore(panel, page2.structure.side.firstElementChild);
+      page.structure.side.insertBefore(panel, page.structure.side.firstElementChild);
     }
     panel.classList.add("listen-panel");
     let row = document.createElement("div");
@@ -5725,33 +5730,33 @@
     `;
     panel.insertBefore(row, panel.firstElementChild);
     tippy(document.getElementById("listeners"), {
-      content: listeners.value.toLocaleString(lang2)
+      content: listeners.value.toLocaleString(lang)
     });
     tippy(document.getElementById("scrobbles"), {
-      content: scrobbles.value.toLocaleString(lang2)
+      content: scrobbles.value.toLocaleString(lang)
     });
-    if (page2.type == "album") {
+    if (page.type == "album") {
       let album_artwork = document.body.querySelector(".artwork-and-metadata-row");
       if (album_artwork)
-        page2.structure.side.insertBefore(album_artwork, page2.structure.side.firstElementChild);
+        page.structure.side.insertBefore(album_artwork, page.structure.side.firstElementChild);
     }
-    if (page2.type == "album" || page2.type == "artist") {
+    if (page.type == "album" || page.type == "artist") {
       let upper = document.body.querySelector(".col-main");
       upper.classList.add("upper-overview-to-hide");
       let new_upper = document.createElement("section");
       new_upper.classList.add("top-overview-panel");
-      new_upper.setAttribute("data-page-type", page2.type);
+      new_upper.setAttribute("data-page-type", page.type);
       new_upper.innerHTML = upper.innerHTML;
-      page2.structure.main.insertBefore(new_upper, page2.structure.main.firstElementChild);
+      page.structure.main.insertBefore(new_upper, page.structure.main.firstElementChild);
     }
-    if (page2.type == "track") {
+    if (page.type == "track") {
       let video_col = document.body.querySelector(".track-overview-video-column.col-sidebar");
       video_col.classList.remove("col-sidebar");
-      page2.structure.side.insertBefore(video_col, page2.structure.side.firstElementChild);
+      page.structure.side.insertBefore(video_col, page.structure.side.firstElementChild);
       let video = video_col.querySelector(".video-preview");
       if (video) {
         video_col.classList.remove("col-sidebar");
-        page2.structure.side.insertBefore(video_col, page2.structure.side.firstElementChild);
+        page.structure.side.insertBefore(video_col, page.structure.side.firstElementChild);
         let container = document.createElement("div");
         container.classList.add("video-overlay-container");
         let view_buttons = document.createElement("div");
@@ -5775,15 +5780,15 @@
         let cta = video_col.querySelector(".video-preview-upload-cta");
         if (cta)
           return;
-        page2.structure.side.removeChild(video_col);
+        page.structure.side.removeChild(video_col);
         let video_placeholder = document.createElement("section");
         video_placeholder.classList.add("video-placeholder");
         video_placeholder.innerHTML = `
                 <div class="bleh-icon" style="--icon: var(--icon-16-video-broken)"></div>
                 Video removed by Last.fm
             `;
-        page2.structure.side.insertBefore(video_placeholder, page2.structure.side.firstElementChild);
-        let links = page2.structure.side.querySelector(".external-links-section .play-this-track-playlinks");
+        page.structure.side.insertBefore(video_placeholder, page.structure.side.firstElementChild);
+        let links = page.structure.side.querySelector(".external-links-section .play-this-track-playlinks");
         if (links)
           links.classList.add("video-unavailable");
       }
@@ -5792,7 +5797,7 @@
   function bleh_music_page_charts() {
     if (!ff("music_page_charts"))
       return;
-    log2("beginning replacement", "music charts");
+    log("beginning replacement", "music charts");
     let panel = document.body.querySelector(".listen-panel");
     let trend = panel.querySelector(".listener-trend");
     if (trend == null)
@@ -5829,12 +5834,12 @@
     scrobble_canvas.classList.add("scrobble-canvas");
     let gradient = scrobble_canvas.getContext("2d").createLinearGradient(0, 0, 0, 160);
     try {
-      gradient.addColorStop(0, page2.state.chart_colours.link_bg_col);
-      gradient.addColorStop(1, page2.state.chart_colours.link_bg_col_2);
+      gradient.addColorStop(0, page.state.chart_colours.link_bg_col);
+      gradient.addColorStop(1, page.state.chart_colours.link_bg_col_2);
     } catch (e) {
-      gradient = page2.state.chart_colours.link_bg_col;
+      gradient = page.state.chart_colours.link_bg_col;
     }
-    Chart.defaults.color = page2.state.chart_colours.text_col;
+    Chart.defaults.color = page.state.chart_colours.text_col;
     Chart.defaults.font.family = "Ubuntu Sans";
     let scrobble_chart = new Chart(scrobble_canvas.getContext("2d"), {
       type: "line",
@@ -5844,33 +5849,33 @@
           data: values,
           borderWidth: 2,
           backgroundColor: gradient,
-          borderColor: page2.state.chart_colours.link_col,
+          borderColor: page.state.chart_colours.link_col,
           fill: true,
           pointRadius: 0,
           pointHitRadius: 20,
           tension: 0.1
         }]
       },
-      options: page2.state.chart_line_options
+      options: page.state.chart_line_options
     });
     scrobble_canvas_container.appendChild(scrobble_canvas);
     panel.appendChild(scrobble_canvas_container);
     trend.style.setProperty("display", "none");
-    log2("finished", "music charts");
+    log("finished", "music charts");
   }
   function bleh_top_listeners() {
     if (!ff("unify_top_listeners"))
       return;
-    let panel = page2.structure.main.querySelector(":scope > .buffer-standard");
+    let panel = page.structure.main.querySelector(":scope > .buffer-standard");
     let view_buttons = document.createElement("div");
     view_buttons.classList.add("view-buttons-wrapper");
     view_buttons.innerHTML = `
         <div class="view-buttons">
             <button class="btn view-item" id="toggle-list_view-1" data-toggle="list_view" data-toggle-value="1" onclick="_update_item('list_view', 1)">
-                ${trans[lang2].glacier.view.grid}
+                ${trans[lang].glacier.view.grid}
             </button>
             <button class="btn view-item" id="toggle-list_view-0" data-toggle="list_view" data-toggle-value="0" onclick="_update_item('list_view', 0)">
-                ${trans[lang2].glacier.view.list}
+                ${trans[lang].glacier.view.list}
             </button>
         </div>
     `;
@@ -5884,8 +5889,8 @@
       let new_listener = document.createElement("li");
       new_listener.classList.add("user-list-item", "listener-list-item");
       let position = index + 1;
-      if (page2.requested.page != null && page2.requested.page != "1") {
-        position += (parseInt(page2.requested.page) - 1) * 30;
+      if (page.requested.page != null && page.requested.page != "1") {
+        position += (parseInt(page.requested.page) - 1) * 30;
       }
       let name_wrap = listener.querySelector(".top-listeners-item-name a");
       let name = name_wrap.textContent;
@@ -5931,35 +5936,35 @@
   }
   function load_settings(skip = false) {
     if (!skip) {
-      for (var member in settings2) delete settings2[member];
-      Object.assign(settings2, JSON.parse(localStorage.getItem("bleh")) || create_settings_template());
+      for (var member in settings) delete settings[member];
+      Object.assign(settings, JSON.parse(localStorage.getItem("bleh")) || create_settings_template());
     }
     for (let setting in settings_template)
-      if (settings2[setting] == void 0)
-        settings2[setting] = settings_template[setting];
-    if (settings2.dev == 1)
-      settings2.dev = true;
-    for (let setting in settings2) {
-      if ((setting == "hue" || setting == "sat" || setting == "lit") && settings2.hue == settings_base2.hue.value && settings2.sat == settings_base2.sat.value && settings2.lit == settings_base2.lit.value) continue;
+      if (settings[setting] == void 0)
+        settings[setting] = settings_template[setting];
+    if (settings.dev == 1)
+      settings.dev = true;
+    for (let setting in settings) {
+      if ((setting == "hue" || setting == "sat" || setting == "lit") && settings.hue == settings_base.hue.value && settings.sat == settings_base.sat.value && settings.lit == settings_base.lit.value) continue;
       try {
-        document.body.style.setProperty(`--${settings_base2[setting].css}`, `${settings2[setting]}${settings_base2[setting].unit}`);
+        document.body.style.setProperty(`--${settings_base[setting].css}`, `${settings[setting]}${settings_base[setting].unit}`);
       } catch (e) {
         console.log("bleh - setting base entry for", setting, "is not accessible");
       }
-      document.documentElement.setAttribute(`data-bleh--${setting}`, `${settings2[setting]}`);
+      document.documentElement.setAttribute(`data-bleh--${setting}`, `${settings[setting]}`);
     }
     load_skus();
-    localStorage.setItem("bleh", JSON.stringify(settings2));
+    localStorage.setItem("bleh", JSON.stringify(settings));
     if (document.body.classList.contains("user-dashboard-layout")) {
       document.documentElement.setAttribute("data-bleh--theme", "oled");
-      page2.state.settings_reload = true;
+      page.state.settings_reload = true;
     }
     load_chart_colours();
   }
   unsafeWindow.toggle_theme = function() {
-    if (page2.subpage.startsWith("listening-report"))
+    if (page.subpage.startsWith("listening-report"))
       return;
-    let current_theme = settings2.theme;
+    let current_theme = settings.theme;
     if (current_theme == "dark")
       current_theme = "darker";
     else if (current_theme == "darker")
@@ -5969,49 +5974,49 @@
     else if (current_theme == "light")
       current_theme = "dark";
     show_theme_change_in_menu(current_theme);
-    settings2.theme = current_theme;
+    settings.theme = current_theme;
     document.documentElement.setAttribute(`data-bleh--theme`, `${current_theme}`);
-    localStorage.setItem("bleh", JSON.stringify(settings2));
+    localStorage.setItem("bleh", JSON.stringify(settings));
     load_chart_colours();
-    if ((page2.type == "artist" || page2.type == "album" || page2.type == "track") && page2.subpage == "overview")
+    if ((page.type == "artist" || page.type == "album" || page.type == "track") && page.subpage == "overview")
       bleh_music_page_charts();
-    if (page2.type == "user" && page2.subpage.startsWith("library")) {
+    if (page.type == "user" && page.subpage.startsWith("library")) {
       bleh_glacier_date_graph_generate();
       bleh_glacier_insights();
     }
   };
   unsafeWindow.change_theme_from_settings = function(theme) {
-    settings2.theme = theme;
+    settings.theme = theme;
     document.documentElement.setAttribute(`data-bleh--theme`, `${theme}`);
     show_theme_change_in_settings(theme);
     show_theme_change_in_menu(theme);
-    localStorage.setItem("bleh", JSON.stringify(settings2));
+    localStorage.setItem("bleh", JSON.stringify(settings));
   };
   unsafeWindow.change_theme_from_menu = function(theme) {
-    if (page2.subpage.startsWith("listening-report"))
+    if (page.subpage.startsWith("listening-report"))
       return;
-    settings2.theme = theme;
+    settings.theme = theme;
     document.documentElement.setAttribute(`data-bleh--theme`, `${theme}`);
     show_theme_change_in_menu(theme);
-    localStorage.setItem("bleh", JSON.stringify(settings2));
+    localStorage.setItem("bleh", JSON.stringify(settings));
     load_chart_colours();
-    if ((page2.type == "artist" || page2.type == "album" || page2.type == "track") && page2.subpage == "overview")
+    if ((page.type == "artist" || page.type == "album" || page.type == "track") && page.subpage == "overview")
       bleh_music_page_charts();
-    if (page2.type == "user" && page2.subpage.startsWith("library")) {
+    if (page.type == "user" && page.subpage.startsWith("library")) {
       bleh_glacier_date_graph_generate();
       bleh_glacier_insights();
     }
   };
   function reset_all() {
-    for (let item in settings_base2)
+    for (let item in settings_base)
       reset_item(item);
   }
   function refresh_all(search = document) {
-    for (let item in settings_base2)
-      update_item(item, settings2[item], false, search);
+    for (let item in settings_base)
+      update_item(item, settings[item], false, search);
   }
   function reset_item(item) {
-    update_item(item, settings_base2[item].value);
+    update_item(item, settings_base[item].value);
   }
   function update_params(params = {}) {
     for (let item in params) {
@@ -6034,80 +6039,80 @@
     let container = search.querySelector(`#container-${item}`);
     if (container)
       console.info(container);
-    else if (settings_base2[item].type != "slider" && settings_base2[item].type != "options")
+    else if (settings_base[item].type != "slider" && settings_base[item].type != "options")
       return;
     try {
       let new_value = false;
-      if (value != settings2[item])
+      if (value != settings[item])
         new_value = true;
-      if (settings_base2[item].require_reload && new_value)
+      if (settings_base[item].require_reload && new_value)
         request_reload();
-      if (settings_base2[item].type == "slider" && modify)
-        settings2[item] = value;
+      if (settings_base[item].type == "slider" && modify)
+        settings[item] = value;
       if (!modify)
         console.info(item, value, modify);
-      if (settings_base2[item].type == "slider") {
+      if (settings_base[item].type == "slider") {
         try {
           let slider = search.querySelector(`#slider-${item}`);
-          search.querySelector(`#value-${item}`).textContent = `${settings2[item]}${settings_base2[item].unit}`;
-          slider.value = settings2[item];
-          search.querySelector(`#slider-track-${item}`).style.setProperty("--percent", `${settings2[item] / slider.getAttribute("max") * 100}%`);
+          search.querySelector(`#value-${item}`).textContent = `${settings[item]}${settings_base[item].unit}`;
+          slider.value = settings[item];
+          search.querySelector(`#slider-track-${item}`).style.setProperty("--percent", `${settings[item] / slider.getAttribute("max") * 100}%`);
         } catch (e) {
         }
-        document.body.style.setProperty(`--${settings_base2[item].css}`, `${value}${settings_base2[item].unit}`);
+        document.body.style.setProperty(`--${settings_base[item].css}`, `${value}${settings_base[item].unit}`);
         document.documentElement.setAttribute(`data-bleh--${item}`, `${value}`);
         if (item == "hue" || item == "sat" || item == "lit") {
-          if (settings2.hue == settings_base2.hue.value && settings2.sat == settings_base2.sat.value && settings2.lit == settings_base2.lit.value && settings2.seasonal && stored_season.id != "none") {
-            document.body.style.removeProperty(`--${settings_base2.hue.css}`);
-            document.body.style.removeProperty(`--${settings_base2.sat.css}`);
-            document.body.style.removeProperty(`--${settings_base2.lit.css}`);
+          if (settings.hue == settings_base.hue.value && settings.sat == settings_base.sat.value && settings.lit == settings_base.lit.value && settings.seasonal && stored_season.id != "none") {
+            document.body.style.removeProperty(`--${settings_base.hue.css}`);
+            document.body.style.removeProperty(`--${settings_base.sat.css}`);
+            document.body.style.removeProperty(`--${settings_base.lit.css}`);
             document.documentElement.setAttribute("data-bleh--hsl-override", "true");
           } else {
             document.documentElement.setAttribute("data-bleh--hsl-override", "false");
           }
         }
-      } else if (settings_base2[item].type == "toggle") {
-        if (settings2[item] == settings_base2[item].values[0] && modify) {
-          settings2[item] = settings_base2[item].values[1];
+      } else if (settings_base[item].type == "toggle") {
+        if (settings[item] == settings_base[item].values[0] && modify) {
+          settings[item] = settings_base[item].values[1];
           search.querySelector(`#toggle-${item}`).setAttribute("aria-checked", false);
-          document.body.style.setProperty(`--${item}`, settings_base2[item].values[1]);
-          document.documentElement.setAttribute(`data-bleh--${item}`, `${settings_base2[item].values[1]}`);
+          document.body.style.setProperty(`--${item}`, settings_base[item].values[1]);
+          document.documentElement.setAttribute(`data-bleh--${item}`, `${settings_base[item].values[1]}`);
         } else if (modify) {
-          settings2[item] = settings_base2[item].values[0];
+          settings[item] = settings_base[item].values[0];
           console.log(`toggle-${item}`);
           search.querySelector(`#toggle-${item}`).setAttribute("aria-checked", true);
           if (item == "dev") {
-            dialog_legacy("prompt_dev", trans[lang2].settings.performance.dev.name, `
-                    <p class="alert alert-info">${trans[lang2].settings.performance.dev.modals.prompt.alert}</p>
+            dialog_legacy("prompt_dev", trans[lang].settings.performance.dev.name, `
+                    <p class="alert alert-info">${trans[lang].settings.performance.dev.modals.prompt.alert}</p>
                     <br>
-                    ${trans[lang2].settings.performance.dev.modals.prompt.stylus}
+                    ${trans[lang].settings.performance.dev.modals.prompt.stylus}
                     <br>
                     <div class="browser-choices">
                         <button class="btn browser" onclick="_chosen_chrome()">
                             <img class="browser-icon" src="https://cutensilly.org/img/chrome.png">
-                            <p>${trans[lang2].settings.performance.dev.modals.prompt.browsers.chrome.name}</p>
-                            <p class="caption">${trans[lang2].settings.performance.dev.modals.prompt.browsers.chrome.bio}</p>
+                            <p>${trans[lang].settings.performance.dev.modals.prompt.browsers.chrome.name}</p>
+                            <p class="caption">${trans[lang].settings.performance.dev.modals.prompt.browsers.chrome.bio}</p>
                         </button>
                         <button class="btn browser" onclick="_chosen_firefox()">
                             <img class="browser-icon" src="https://cutensilly.org/img/firefox.png">
-                            <p>${trans[lang2].settings.performance.dev.modals.prompt.browsers.firefox.name}</p>
-                            <p class="caption">${trans[lang2].settings.performance.dev.modals.prompt.browsers.firefox.bio}</p>
+                            <p>${trans[lang].settings.performance.dev.modals.prompt.browsers.firefox.name}</p>
+                            <p class="caption">${trans[lang].settings.performance.dev.modals.prompt.browsers.firefox.bio}</p>
                         </button>
                     </div>
                 `, true);
           }
-          document.body.style.setProperty(`--${item}`, settings_base2[item].values[0]);
-          document.documentElement.setAttribute(`data-bleh--${item}`, `${settings_base2[item].values[0]}`);
+          document.body.style.setProperty(`--${item}`, settings_base[item].values[0]);
+          document.documentElement.setAttribute(`data-bleh--${item}`, `${settings_base[item].values[0]}`);
         } else {
-          if (settings2[item] == settings_base2[item].values[0]) {
+          if (settings[item] == settings_base[item].values[0]) {
             search.querySelector(`#toggle-${item}`).setAttribute("aria-checked", true);
           } else {
             search.querySelector(`#toggle-${item}`).setAttribute("aria-checked", false);
           }
         }
-      } else if (settings_base2[item].type == "options") {
+      } else if (settings_base[item].type == "options") {
         if (modify) {
-          settings2[item] = value;
+          settings[item] = value;
           document.body.style.setProperty(`--${item}`, value);
           document.documentElement.setAttribute(`data-bleh--${item}`, value);
           let toggle = document.getElementById(`toggle-${item}-${value}`);
@@ -6121,10 +6126,10 @@
             else
               toggle2.setAttribute("aria-checked", false);
           });
-          if ((item == "chart_view" || item == "chart_bar_axis") && page2.type == "user" && page2.subpage.startsWith("library"))
+          if ((item == "chart_view" || item == "chart_bar_axis") && page.type == "user" && page.subpage.startsWith("library"))
             bleh_glacier_date_graph_generate();
         } else {
-          if (settings2[item] == value) {
+          if (settings[item] == value) {
             document.getElementById(`toggle-${item}-${value}`).setAttribute("aria-checked", true);
           } else {
             document.getElementById(`toggle-${item}-${value}`).setAttribute("aria-checked", false);
@@ -6132,13 +6137,13 @@
         }
       }
       if (modify)
-        log2(`updated ${item} to ${settings2[item]}`, "settings");
-      localStorage.setItem("bleh", JSON.stringify(settings2));
+        log(`updated ${item} to ${settings[item]}`, "settings");
+      localStorage.setItem("bleh", JSON.stringify(settings));
     } catch (e) {
       console.error(e);
     }
     if (container) {
-      if (settings2[item] != settings_base2[item].value)
+      if (settings[item] != settings_base[item].value)
         container.classList.add("modified");
       else
         container.classList.remove("modified");
@@ -6149,13 +6154,13 @@
     }
   }
   function request_reload() {
-    if (page2.type == "bleh_setup")
+    if (page.type == "bleh_setup")
       return;
-    log2("requesting reload", "settings");
+    log("requesting reload", "settings");
     reload_pending.state = true;
-    notify2({
-      title: trans[lang2].settings.reload.name,
-      body: trans[lang2].settings.reload.body,
+    notify({
+      title: trans[lang].settings.reload.name,
+      body: trans[lang].settings.reload.body,
       icon: "icon-16-refresh",
       persist: true,
       action: "_invoke_reload()"
@@ -6176,7 +6181,7 @@
       let h = swatch.style.getPropertyValue("--hue-over");
       let s = swatch.style.getPropertyValue("--sat-over");
       let l = swatch.style.getPropertyValue("--lit-over");
-      if (h == settings2.hue && s == settings2.sat && l == settings2.lit || swatch.getAttribute("data-swatch-type") == "default" && settings2.hue == 255 && settings2.sat == 1 && settings2.lit == 1) {
+      if (h == settings.hue && s == settings.sat && l == settings.lit || swatch.getAttribute("data-swatch-type") == "default" && settings.hue == 255 && settings.sat == 1 && settings.lit == 1) {
         swatch.setAttribute("aria-checked", "true");
         if (swatch.classList[0] != "dropdown-menu-clickable-item")
           found = true;
@@ -6190,7 +6195,7 @@
     });
     if (found)
       return;
-    if (custom && settings2.accent_type != "season")
+    if (custom && settings.accent_type != "season")
       custom.setAttribute("aria-checked", "true");
     else if (seasonal)
       seasonal.setAttribute("aria-checked", "true");
@@ -6213,7 +6218,7 @@
     if (inbuilt_settings[item].type == "toggle") {
       if (modify) {
         value = document.getElementById(`toggle-${item}`).getAttribute("aria-checked") === "true";
-        log2(`updated (inbuilt) ${item} to ${!value}`, "settings");
+        log(`updated (inbuilt) ${item} to ${!value}`, "settings");
       }
       if (value == inbuilt_settings[item].values[0] && modify) {
         element.querySelector(`#inbuilt-companion-checkbox-${item}`).checked = false;
@@ -6249,11 +6254,11 @@
   };
   function continue_dev() {
     kill_window("prompt_dev");
-    dialog_legacy("continue_dev", trans[lang2].settings.performance.dev.name, `
-        ${trans[lang2].settings.performance.dev.modals.continue.next_step}
+    dialog_legacy("continue_dev", trans[lang].settings.performance.dev.name, `
+        ${trans[lang].settings.performance.dev.modals.continue.next_step}
         <div class="modal-footer">
             <button class="btn primary continue" onclick="_finish_dev()">
-                ${trans[lang2].settings.continue}
+                ${trans[lang].settings.continue}
             </button>
         </div>
     `);
@@ -6261,11 +6266,11 @@
   unsafeWindow._finish_dev = function() {
     open("https://github.com/katelyynn/bleh/raw/uwu/fm/bleh.user.css");
     kill_window("continue_dev");
-    dialog_legacy("finish_dev", trans[lang2].settings.performance.dev.name, `
-        <p class="alert alert-success">${trans[lang2].settings.performance.dev.modals.finish.alert}</p>
+    dialog_legacy("finish_dev", trans[lang].settings.performance.dev.name, `
+        <p class="alert alert-success">${trans[lang].settings.performance.dev.modals.finish.alert}</p>
         <div class="modal-footer">
             <button class="btn primary done" onclick="_kill_window('finish_dev')">
-                ${trans[lang2].settings.done}
+                ${trans[lang].settings.done}
             </button>
         </div>
     `);
@@ -6273,51 +6278,51 @@
 
   // src/pages/glacier.js
   function bleh_user_library() {
-    let date_items = page2.structure.side.querySelectorAll(":scope > :is(div, figure)");
+    let date_items = page.structure.side.querySelectorAll(":scope > :is(div, figure)");
     let date_panel = document.createElement("section");
     date_panel.classList.add("date-panel");
-    date_panel.setAttribute("data-glacier-graphs", settings2.glacier_library_graphs);
+    date_panel.setAttribute("data-glacier-graphs", settings.glacier_library_graphs);
     date_items.forEach((item, index) => {
       date_panel.appendChild(item);
       if (index == 0)
-        page2.structure.glacier.selector = item;
+        page.structure.glacier.selector = item;
     });
-    page2.structure.side.appendChild(date_panel);
-    page2.structure.glacier.date_panel = date_panel;
+    page.structure.side.appendChild(date_panel);
+    page.structure.glacier.date_panel = date_panel;
     if (!ff("glacier_library"))
       return;
-    if (settings2.glacier_library_graphs) {
+    if (settings.glacier_library_graphs) {
       let chart_view_selector = document.createElement("div");
       chart_view_selector.classList.add("view-buttons", "chart-view-selector", "view-buttons-middle");
       chart_view_selector.innerHTML = `
             <button class="btn view-item" id="toggle-chart_view-line" data-toggle="chart_view" data-toggle-value="line" onclick="_update_item('chart_view', 'line')">
-                ${trans[lang2].glacier.view.line}
+                ${trans[lang].glacier.view.line}
             </button>
             <button class="btn view-item" id="toggle-chart_view-pie" data-toggle="chart_view" data-toggle-value="pie" onclick="_update_item('chart_view', 'pie')">
-                ${trans[lang2].glacier.view.pie}
+                ${trans[lang].glacier.view.pie}
             </button>
             <button class="btn view-item" id="toggle-chart_view-bar" data-toggle="chart_view" data-toggle-value="bar" onclick="_update_item('chart_view', 'bar')">
-                ${trans[lang2].glacier.view.bar}
+                ${trans[lang].glacier.view.bar}
             </button>
         `;
-      page2.structure.glacier.selector.after(chart_view_selector);
+      page.structure.glacier.selector.after(chart_view_selector);
       let chart_axis_selector = document.createElement("div");
       chart_axis_selector.classList.add("view-buttons", "chart-axis-selector", "view-buttons-middle");
       chart_axis_selector.innerHTML = `
             <button class="btn view-item" id="toggle-chart_bar_axis-horizontal" data-toggle="chart_bar_axis" data-toggle-value="horizontal" onclick="_update_item('chart_bar_axis', 'horizontal')">
-                ${trans[lang2].glacier.axis.horizontal}
+                ${trans[lang].glacier.axis.horizontal}
             </button>
             <button class="btn view-item" id="toggle-chart_bar_axis-vertical" data-toggle="chart_bar_axis" data-toggle-value="vertical" onclick="_update_item('chart_bar_axis', 'vertical')">
-                ${trans[lang2].glacier.axis.vertical}
+                ${trans[lang].glacier.axis.vertical}
             </button>
         `;
       chart_view_selector.after(chart_axis_selector);
-      refresh_all(page2.structure.glacier.date_panel);
+      refresh_all(page.structure.glacier.date_panel);
     }
     bleh_glacier_library_date();
-    if (page2.subpage == "library_overview") {
+    if (page.subpage == "library_overview") {
       bleh_glacier_library_top(true);
-      page2.state.glacier.insights = {
+      page.state.glacier.insights = {
         artist: {
           display: false,
           values: [],
@@ -6353,17 +6358,17 @@
         }
       };
     }
-    if (page2.subpage == "library_overview" || page2.subpage.startsWith("library_artist_") || page2.subpage.startsWith("library_album_") || page2.subpage.startsWith("library_track_")) {
-      log2("refresh is now marked true", "glacier library");
-      page2.structure.glacier.refresh = true;
+    if (page.subpage == "library_overview" || page.subpage.startsWith("library_artist_") || page.subpage.startsWith("library_album_") || page.subpage.startsWith("library_track_")) {
+      log("refresh is now marked true", "glacier library");
+      page.structure.glacier.refresh = true;
       bleh_glacier_date_graph(true);
     }
-    if (page2.subpage.startsWith("library_artist_") || page2.subpage.startsWith("library_album_") || page2.subpage.startsWith("library_track_")) {
+    if (page.subpage.startsWith("library_artist_") || page.subpage.startsWith("library_album_") || page.subpage.startsWith("library_track_")) {
       bleh_glacier_library_focused();
     }
   }
   function bleh_glacier_library_date() {
-    let picker_content = page2.structure.glacier.date_panel.querySelector(".date-range-picker-content:not([data-glacier-library-date])");
+    let picker_content = page.structure.glacier.date_panel.querySelector(".date-range-picker-content:not([data-glacier-library-date])");
     if (picker_content == null)
       return;
     picker_content.setAttribute("data-glacier-library-date", "true");
@@ -6374,9 +6379,9 @@
     let new_presets = document.createElement("ul");
     new_presets.classList.add("date-range-picker-presets");
     let params = new URLSearchParams(document.location.search);
-    page2.requested.from = params.get("from");
-    page2.requested.to = params.get("to");
-    page2.requested.rangetype = params.get("rangetype");
+    page.requested.from = params.get("from");
+    page.requested.to = params.get("to");
+    page.requested.rangetype = params.get("rangetype");
     let current_year = (/* @__PURE__ */ new Date()).getFullYear();
     let previous_year = current_year - 1;
     if (current_year >= 2025) {
@@ -6397,9 +6402,9 @@
             </a>
         `;
       new_presets.appendChild(this_year);
-      if (page2.requested.from == `${current_year}-01-01` && (page2.requested.to == `${current_year}-12-31` || page2.requested.rangetype == "year"))
+      if (page.requested.from == `${current_year}-01-01` && (page.requested.to == `${current_year}-12-31` || page.requested.rangetype == "year"))
         this_year.classList.add("date-range-picker-preset--selected");
-      else if (page2.requested.from == `${previous_year}-01-01` && (page2.requested.to == `${previous_year}-12-31` || page2.requested.rangetype == "year"))
+      else if (page.requested.from == `${previous_year}-01-01` && (page.requested.to == `${previous_year}-12-31` || page.requested.rangetype == "year"))
         last_year.classList.add("date-range-picker-preset--selected");
     } else {
       new_presets.classList.add("date-range-picker-presets-wide");
@@ -6407,11 +6412,11 @@
       this_year.classList.add("date-range-picker-preset", "date-range-picker-preset-custom", "date-range-picker-preset-this-year");
       this_year.innerHTML = `
             <a href="${window.location.href.replace(window.location.search, "")}?from=${current_year}-01-01&rangetype=year">
-                ${current_year}<span class="new-badge">${trans[lang2].settings.new}</span>
+                ${current_year}<span class="new-badge">${trans[lang].settings.new}</span>
             </a>
         `;
       new_presets.appendChild(this_year);
-      if (page2.requested.from == `${current_year}-01-01` && (page2.requested.to == `${current_year}-12-31` || page2.requested.rangetype == "year"))
+      if (page.requested.from == `${current_year}-01-01` && (page.requested.to == `${current_year}-12-31` || page.requested.rangetype == "year"))
         this_year.classList.add("date-range-picker-preset--selected");
     }
     new_wrap.appendChild(new_presets);
@@ -6425,36 +6430,36 @@
   function bleh_glacier_library_table() {
     if (!ff("glacier_library"))
       return;
-    let table = page2.structure.glacier.date_panel.querySelector(".highcharts-root");
+    let table = page.structure.glacier.date_panel.querySelector(".highcharts-root");
     if (table == null)
       return;
     console.log("glacier library", table);
-    log2("refresh is now marked false (table log)", "glacier library");
-    page2.structure.glacier.refresh = false;
-    let current_view = page2.structure.glacier.date_panel.querySelector(".date-range-picker-button-inner");
+    log("refresh is now marked false (table log)", "glacier library");
+    page.structure.glacier.refresh = false;
+    let current_view = page.structure.glacier.date_panel.querySelector(".date-range-picker-button-inner");
     if (current_view == null) {
-      console.log("glacier library current view", page2.structure.glacier.date_panel.innerHTML);
-      log2("returned as current view is null", "glacier library");
-      log2("refresh is now marked true", "glacier library");
-      page2.structure.glacier.refresh = true;
+      console.log("glacier library current view", page.structure.glacier.date_panel.innerHTML);
+      log("returned as current view is null", "glacier library");
+      log("refresh is now marked true", "glacier library");
+      page.structure.glacier.refresh = true;
       return;
     }
     if (table.hasAttribute("data-glacier-library-table"))
       return;
     table.setAttribute("data-glacier-library-table", "true");
-    page2.structure.glacier.table = table;
-    log2("refresh is now marked true (table found)", "glacier library");
-    page2.structure.glacier.refresh = true;
-    log2("pending refresh", "glacier library");
+    page.structure.glacier.table = table;
+    log("refresh is now marked true (table found)", "glacier library");
+    page.structure.glacier.refresh = true;
+    log("pending refresh", "glacier library");
   }
   function bleh_glacier_library_top(static_page = false) {
     if (!ff("glacier_library"))
       return;
     let legacy_top_header;
     if (!static_page)
-      legacy_top_header = page2.structure.main.querySelector(".library-top");
+      legacy_top_header = page.structure.main.querySelector(".library-top");
     else
-      legacy_top_header = page2.structure.main.querySelector(".metadata-list");
+      legacy_top_header = page.structure.main.querySelector(".metadata-list");
     if (legacy_top_header == null)
       return;
     legacy_top_header.classList.add("glacier-legacy-top-header");
@@ -6467,11 +6472,11 @@
         return;
       legacy_top_header.setAttribute("data-glacier-library-top", "true");
     }
-    log2("loading top", "glacier library");
+    log("loading top", "glacier library");
     let metadata = legacy_top_header.querySelectorAll(".metadata-item");
     let first_run = false;
-    let glacier_top = page2.structure.glacier.top;
-    if (glacier_top == null || !page2.structure.main.contains(glacier_top))
+    let glacier_top = page.structure.glacier.top;
+    if (glacier_top == null || !page.structure.main.contains(glacier_top))
       first_run = true;
     if (first_run) {
       glacier_top = document.createElement("section");
@@ -6482,20 +6487,20 @@
       glacier_meta = document.createElement("div");
       glacier_meta.classList.add("glacier-library-metadata");
     } else {
-      glacier_meta = page2.structure.glacier.top.querySelector(".glacier-library-metadata");
+      glacier_meta = page.structure.glacier.top.querySelector(".glacier-library-metadata");
       glacier_meta.innerHTML = "";
     }
     metadata.forEach((meta, index) => {
       let text = meta.querySelector(".metadata-title").textContent;
-      if (page2.subpage == "library_overview") {
+      if (page.subpage == "library_overview") {
         if (index == 1)
-          text = trans[lang2].glacier.meta.average;
-      } else if (page2.subpage == "library_artists") {
-        text = trans[lang2].glacier.meta.artists;
-      } else if (page2.subpage == "library_albums") {
-        text = trans[lang2].glacier.meta.albums;
-      } else if (page2.subpage == "library_tracks") {
-        text = trans[lang2].glacier.meta.tracks;
+          text = trans[lang].glacier.meta.average;
+      } else if (page.subpage == "library_artists") {
+        text = trans[lang].glacier.meta.artists;
+      } else if (page.subpage == "library_albums") {
+        text = trans[lang].glacier.meta.albums;
+      } else if (page.subpage == "library_tracks") {
+        text = trans[lang].glacier.meta.tracks;
       }
       let glacier_meta_item = document.createElement("div");
       glacier_meta_item.classList.add("glacier-library-metadata-item");
@@ -6509,7 +6514,7 @@
       glacier_top.appendChild(glacier_meta);
     if (!first_run)
       return;
-    let top_wrap = page2.structure.main.querySelector(".library-top-wrap");
+    let top_wrap = page.structure.main.querySelector(".library-top-wrap");
     let view_buttons = document.createElement("div");
     view_buttons.classList.add("view-buttons", "glacier-library-buttons");
     let add_divider = false;
@@ -6527,18 +6532,18 @@
         }
       }
     }
-    if (!static_page && page2.subpage != "library_tracks") {
+    if (!static_page && page.subpage != "library_tracks") {
       let format_button = document.createElement("button");
       format_button.classList.add("btn", "view-item", "glacier-library-button", "glacier-view-button");
       format_button.setAttribute("onclick", "_update_glacier_view()");
-      page2.structure.glacier.format = format_button;
+      page.structure.glacier.format = format_button;
       add_divider = true;
       if (top_wrap.getAttribute("data-current-format") == "grid") {
         format_button.setAttribute("data-glacier-view", "grid");
-        format_button.textContent = trans[lang2].glacier.view.grid;
+        format_button.textContent = trans[lang].glacier.view.grid;
       } else {
         format_button.setAttribute("data-glacier-view", "list");
-        format_button.textContent = trans[lang2].glacier.view.list;
+        format_button.textContent = trans[lang].glacier.view.list;
       }
       view_buttons.appendChild(format_button);
     }
@@ -6549,19 +6554,19 @@
     }
     let configure_button = document.createElement("button");
     configure_button.classList.add("btn", "view-item", "glacier-library-button", "glacier-configure-button", "panel-settings-button");
-    configure_button.textContent = trans[lang2].settings.configure;
+    configure_button.textContent = trans[lang].settings.configure;
     tippy(configure_button, {
-      content: trans[lang2].settings.configure
+      content: trans[lang].settings.configure
     });
     tippy(configure_button, {
       theme: "window",
       content: `
             <div class="dialog-settings">
                 <div class="toggle-container" id="container-format_guest_features" onclick="_update_item('format_guest_features')">
-                    <button class="btn reset" onclick="_reset_item('format_guest_features')">${trans[lang2].settings.reset}</button>
+                    <button class="btn reset" onclick="_reset_item('format_guest_features')">${trans[lang].settings.reset}</button>
                     <div class="heading">
-                        <h5>${trans[lang2].settings.corrections.format_guest_features.name}</h5>
-                        <p>${trans[lang2].settings.corrections.format_guest_features.bio}</p>
+                        <h5>${trans[lang].settings.corrections.format_guest_features.name}</h5>
+                        <p>${trans[lang].settings.corrections.format_guest_features.bio}</p>
                     </div>
                     <div class="toggle-wrap">
                         <button class="toggle" id="toggle-format_guest_features" aria-checked="true">
@@ -6570,10 +6575,10 @@
                     </div>
                 </div>
                 <div class="toggle-container hide-if-format-guest-disabled" id="container-show_guest_features" onclick="_update_item('show_guest_features')">
-                    <button class="btn reset" onclick="_reset_item('show_guest_features')">${trans[lang2].settings.reset}</button>
+                    <button class="btn reset" onclick="_reset_item('show_guest_features')">${trans[lang].settings.reset}</button>
                     <div class="heading">
-                        <h5>${trans[lang2].settings.corrections.show_guest_features.name}</h5>
-                        <p>${trans[lang2].settings.corrections.show_guest_features.bio}</p>
+                        <h5>${trans[lang].settings.corrections.show_guest_features.name}</h5>
+                        <p>${trans[lang].settings.corrections.show_guest_features.bio}</p>
                     </div>
                     <div class="toggle-wrap">
                         <button class="toggle" id="toggle-show_guest_features" aria-checked="true" type="button">
@@ -6582,10 +6587,10 @@
                     </div>
                 </div>
                 <div class="toggle-container" id="container-stacked_chartlist_info" onclick="_update_item('stacked_chartlist_info')">
-                    <button class="btn reset" onclick="_reset_item('stacked_chartlist_info')">${trans[lang2].settings.reset}</button>
+                    <button class="btn reset" onclick="_reset_item('stacked_chartlist_info')">${trans[lang].settings.reset}</button>
                     <div class="heading">
-                        <h5>${trans[lang2].settings.corrections.stacked_chartlist_info.name}</h5>
-                        <p>${trans[lang2].settings.corrections.stacked_chartlist_info.bio}</p>
+                        <h5>${trans[lang].settings.corrections.stacked_chartlist_info.name}</h5>
+                        <p>${trans[lang].settings.corrections.stacked_chartlist_info.bio}</p>
                     </div>
                     <div class="toggle-wrap">
                         <button class="toggle" id="toggle-stacked_chartlist_info" aria-checked="true" type="button">
@@ -6595,9 +6600,9 @@
                 </div>
                 <div class="sep"></div>
                 <div class="toggle-container" id="container-grid_glow" onclick="_update_item('grid_glow')">
-                    <button class="btn reset" onclick="_reset_item('grid_glow')">${trans[lang2].settings.reset}</button>
+                    <button class="btn reset" onclick="_reset_item('grid_glow')">${trans[lang].settings.reset}</button>
                     <div class="heading">
-                        <h5>${trans[lang2].settings.music.grid_glow.name}</h5>
+                        <h5>${trans[lang].settings.music.grid_glow.name}</h5>
                     </div>
                     <div class="toggle-wrap">
                         <button class="toggle" id="toggle-grid_glow" aria-checked="true" type="button">
@@ -6606,10 +6611,10 @@
                     </div>
                 </div>
                 <div class="toggle-container" id="container-glacier_library_graphs" onclick="_update_item('glacier_library_graphs')">
-                    <button class="btn reset" onclick="_reset_item('glacier_library_graphs')">${trans[lang2].settings.reset}</button>
+                    <button class="btn reset" onclick="_reset_item('glacier_library_graphs')">${trans[lang].settings.reset}</button>
                     <div class="heading">
-                        <h5>${trans[lang2].glacier.option.name}</h5>
-                        <p>${trans[lang2].glacier.option.bio}</p>
+                        <h5>${trans[lang].glacier.option.name}</h5>
+                        <p>${trans[lang].glacier.option.bio}</p>
                     </div>
                     <div class="toggle-wrap">
                         <button class="toggle" id="toggle-glacier_library_graphs" aria-checked="true" type="button">
@@ -6630,57 +6635,57 @@
     });
     view_buttons.appendChild(configure_button);
     glacier_top.appendChild(view_buttons);
-    page2.structure.glacier.top = glacier_top;
-    page2.structure.main.insertBefore(glacier_top, page2.structure.main.firstElementChild);
+    page.structure.glacier.top = glacier_top;
+    page.structure.main.insertBefore(glacier_top, page.structure.main.firstElementChild);
   }
   unsafeWindow._update_glacier_view = function() {
-    let format = page2.structure.main.querySelector(".library-view-button");
+    let format = page.structure.main.querySelector(".library-view-button");
     if (format == null)
       return;
     format.click();
     if (format.getAttribute("href") && format.getAttribute("href").endsWith("reset")) {
-      page2.structure.glacier.format.setAttribute("data-glacier-view", "list");
-      page2.structure.glacier.format.textContent = trans[lang2].glacier.view.list;
+      page.structure.glacier.format.setAttribute("data-glacier-view", "list");
+      page.structure.glacier.format.textContent = trans[lang].glacier.view.list;
     } else {
-      page2.structure.glacier.format.setAttribute("data-glacier-view", "grid");
-      page2.structure.glacier.format.textContent = trans[lang2].glacier.view.grid;
+      page.structure.glacier.format.setAttribute("data-glacier-view", "grid");
+      page.structure.glacier.format.textContent = trans[lang].glacier.view.grid;
     }
   };
   function bleh_glacier_date_graph(static_page = false, own_table = null) {
-    if (!page2.structure.glacier.refresh)
+    if (!page.structure.glacier.refresh)
       return;
-    if (!settings2.glacier_library_graphs)
+    if (!settings.glacier_library_graphs)
       return;
-    log2("reviewing graph situation", "glacier library");
+    log("reviewing graph situation", "glacier library");
     if (own_table != null) {
-      log2("table has been passed to function (from network request presumably?)", "glacier library", "info", own_table);
+      log("table has been passed to function (from network request presumably?)", "glacier library", "info", own_table);
     } else {
-      log2("no table has been passed, must source ourselves", "glacier library");
+      log("no table has been passed, must source ourselves", "glacier library");
     }
     bleh_glacier_library_date();
-    let current_view = page2.structure.glacier.date_panel.querySelector(".date-range-picker-button-inner");
+    let current_view = page.structure.glacier.date_panel.querySelector(".date-range-picker-button-inner");
     if (!current_view)
       return;
     current_view = current_view.textContent.trim();
     let tab_matches;
-    if ((page2.subpage == "library_overview" || page2.subpage == "library_artists" || page2.subpage == "library_albums" || page2.subpage == "library_tracks") && (page2.state.glacier.current_tab == "library_overview" || page2.state.glacier.current_tab == "library_artists" || page2.state.glacier.current_tab == "library_albums" || page2.state.glacier.current_tab == "library_tracks"))
+    if ((page.subpage == "library_overview" || page.subpage == "library_artists" || page.subpage == "library_albums" || page.subpage == "library_tracks") && (page.state.glacier.current_tab == "library_overview" || page.state.glacier.current_tab == "library_artists" || page.state.glacier.current_tab == "library_albums" || page.state.glacier.current_tab == "library_tracks"))
       tab_matches = true;
-    if (page2.state.glacier.current_view == current_view && own_table == null && tab_matches) {
+    if (page.state.glacier.current_view == current_view && own_table == null && tab_matches) {
       bleh_glacier_date_graph_generate();
-      log2("refresh is now marked false", "glacier library");
-      page2.structure.glacier.refresh = false;
-      log2(`returned as view (${current_view}) matches ${page2.state.glacier.current_view}. last tab was ${page2.state.glacier.current_tab} and current tab is ${page2.subpage}`, "glacier library");
+      log("refresh is now marked false", "glacier library");
+      page.structure.glacier.refresh = false;
+      log(`returned as view (${current_view}) matches ${page.state.glacier.current_view}. last tab was ${page.state.glacier.current_tab} and current tab is ${page.subpage}`, "glacier library");
       return;
     }
-    page2.state.glacier.current_view = current_view;
-    let scrobble_chart_content = page2.structure.side.querySelector("#scrobble-chart-content");
+    page.state.glacier.current_view = current_view;
+    let scrobble_chart_content = page.structure.side.querySelector("#scrobble-chart-content");
     if (scrobble_chart_content.getAttribute("data-highcharts-chart") && scrobble_chart_content.getAttribute("data-highcharts-chart") == "0") {
-      log2("highchart registered", "glacier library");
-      log2("refresh is now marked false", "glacier library");
-      page2.structure.glacier.refresh = false;
+      log("highchart registered", "glacier library");
+      log("refresh is now marked false", "glacier library");
+      page.structure.glacier.refresh = false;
       return;
     }
-    let scrobble_chart_wrap = page2.structure.side.querySelector(".scrobble-table");
+    let scrobble_chart_wrap = page.structure.side.querySelector(".scrobble-table");
     if (scrobble_chart_wrap == null)
       return;
     let scrobble_table;
@@ -6699,84 +6704,84 @@
     }
     let chart_type = scrobble_table.getAttribute("data-bucket-size");
     let entries = scrobble_table.querySelectorAll("tbody tr");
-    page2.state.glacier.labels = [];
-    page2.state.glacier.links = [];
-    page2.state.glacier.values = [];
+    page.state.glacier.labels = [];
+    page.state.glacier.links = [];
+    page.state.glacier.values = [];
     let values_not_empty = 0;
     entries.forEach((entry) => {
       let period = entry.querySelector(".js-period a");
       let value = entry.querySelector(".js-scrobbles").textContent.trim();
-      page2.state.glacier.labels.push(period.textContent.trim());
-      page2.state.glacier.links.push(period.getAttribute("href"));
-      page2.state.glacier.values.push(value);
+      page.state.glacier.labels.push(period.textContent.trim());
+      page.state.glacier.links.push(period.getAttribute("href"));
+      page.state.glacier.values.push(value);
       if (value != "0")
         values_not_empty += 1;
     });
     if (values_not_empty == 0) {
-      log2("graph cancelled as all values are 0", "glacier library");
-      page2.structure.glacier.refresh = false;
+      log("graph cancelled as all values are 0", "glacier library");
+      page.structure.glacier.refresh = false;
       return;
     }
     scrobble_table.innerHTML = "";
     bleh_glacier_date_graph_generate();
-    log2("refresh is now marked false (finished generating)", "glacier library");
-    page2.structure.glacier.refresh = false;
+    log("refresh is now marked false (finished generating)", "glacier library");
+    page.structure.glacier.refresh = false;
   }
   function bleh_glacier_insights(insights = null) {
     if (insights != null) {
-      if (page2.subpage == "library_artists") {
-        page2.state.glacier.insights.album.display = false;
-        page2.state.glacier.insights.track.display = false;
+      if (page.subpage == "library_artists") {
+        page.state.glacier.insights.album.display = false;
+        page.state.glacier.insights.track.display = false;
       }
-      if (page2.subpage == "library_albums") {
-        page2.state.glacier.insights.artist.display = false;
-        page2.state.glacier.insights.track.display = false;
+      if (page.subpage == "library_albums") {
+        page.state.glacier.insights.artist.display = false;
+        page.state.glacier.insights.track.display = false;
       }
-      if (page2.subpage == "library_tracks") {
-        page2.state.glacier.insights.artist.display = false;
-        page2.state.glacier.insights.album.display = false;
+      if (page.subpage == "library_tracks") {
+        page.state.glacier.insights.artist.display = false;
+        page.state.glacier.insights.album.display = false;
       }
       for (let item in insights) {
-        log2(`checking insights status of item ${item} - display of ${insights[item].display}`, "glacier library", "info", { checking: insights[item], global: page2.state.glacier.insights[item] });
-        if (insights[item].display && JSON.stringify(insights[item]) != JSON.stringify(page2.state.glacier.insights[item])) {
-          log2(`confirmed insights status of item ${item} - is different`, "glacier library");
-          page2.state.glacier.insights[item] = insights[item];
-          bleh_glacier_insights_generate(item, page2.state.glacier.insights[item]);
+        log(`checking insights status of item ${item} - display of ${insights[item].display}`, "glacier library", "info", { checking: insights[item], global: page.state.glacier.insights[item] });
+        if (insights[item].display && JSON.stringify(insights[item]) != JSON.stringify(page.state.glacier.insights[item])) {
+          log(`confirmed insights status of item ${item} - is different`, "glacier library");
+          page.state.glacier.insights[item] = insights[item];
+          bleh_glacier_insights_generate(item, page.state.glacier.insights[item]);
         }
       }
     } else {
-      for (let item in page2.state.glacier.insights) {
-        if (page2.state.glacier.insights[item].display)
-          bleh_glacier_insights_generate(item, page2.state.glacier.insights[item]);
+      for (let item in page.state.glacier.insights) {
+        if (page.state.glacier.insights[item].display)
+          bleh_glacier_insights_generate(item, page.state.glacier.insights[item]);
       }
     }
   }
   function bleh_glacier_insights_generate(type, item) {
     if (item.highest.value == 0)
       return;
-    log2(`requesting insights generator for ${type}`, "glacier library", "info", item);
+    log(`requesting insights generator for ${type}`, "glacier library", "info", item);
     let new_run = false;
-    let scrobble_insights_panel = page2.structure.side.querySelector(`.scrobble-insights-panel[data-type="${type}"]`);
+    let scrobble_insights_panel = page.structure.side.querySelector(`.scrobble-insights-panel[data-type="${type}"]`);
     if (scrobble_insights_panel == null) {
       scrobble_insights_panel = document.createElement("section");
       scrobble_insights_panel.classList.add("scrobble-insights-panel");
       scrobble_insights_panel.setAttribute("data-type", type);
       new_run = true;
     }
-    scrobble_insights_panel.innerHTML = `<h2>${trans[lang2][type].plural}</h2>`;
+    scrobble_insights_panel.innerHTML = `<h2>${trans[lang][type].plural}</h2>`;
     let scrobble_canvas_container = document.createElement("div");
     scrobble_canvas_container.classList.add("scrobble-insights-canvas-container");
     let scrobble_canvas = document.createElement("canvas");
     scrobble_canvas.classList.add("scrobble-insights-canvas");
-    Chart.defaults.color = page2.state.chart_colours.text_col;
+    Chart.defaults.color = page.state.chart_colours.text_col;
     Chart.defaults.font.family = "Ubuntu Sans";
-    if (settings2.chart_insights_view == "line") {
+    if (settings.chart_insights_view == "line") {
       let gradient = scrobble_canvas.getContext("2d").createLinearGradient(0, 0, 0, 160);
       try {
-        gradient.addColorStop(0, page2.state.chart_colours.link_bg_col);
-        gradient.addColorStop(1, page2.state.chart_colours.link_bg_col_2);
+        gradient.addColorStop(0, page.state.chart_colours.link_bg_col);
+        gradient.addColorStop(1, page.state.chart_colours.link_bg_col_2);
       } catch (e) {
-        gradient = page2.state.chart_colours.link_bg_col;
+        gradient = page.state.chart_colours.link_bg_col;
       }
       let scrobble_chart = new Chart(scrobble_canvas.getContext("2d"), {
         type: "line",
@@ -6786,16 +6791,16 @@
             data: item.values,
             borderWidth: 2,
             backgroundColor: gradient,
-            borderColor: page2.state.chart_colours.link_col,
+            borderColor: page.state.chart_colours.link_col,
             fill: true,
             pointRadius: 0,
             pointHitRadius: 20,
             tension: 0.1
           }]
         },
-        options: page2.state.chart_library_line_options_no_click
+        options: page.state.chart_library_line_options_no_click
       });
-    } else if (settings2.chart_insights_view == "pie") {
+    } else if (settings.chart_insights_view == "pie") {
       let scrobble_chart = new Chart(scrobble_canvas.getContext("2d"), {
         type: "pie",
         data: {
@@ -6804,36 +6809,36 @@
             data: item.values,
             borderWidth: 2,
             backgroundColor: [
-              `hsl(${page2.state.chart_colours.link_h_col.replace(page2.state.chart_colours.hue, "360")})`,
-              `hsl(${page2.state.chart_colours.link_h_col.replace(page2.state.chart_colours.hue, "340")})`,
-              `hsl(${page2.state.chart_colours.link_h_col.replace(page2.state.chart_colours.hue, "320")})`,
-              `hsl(${page2.state.chart_colours.link_h_col.replace(page2.state.chart_colours.hue, "300")})`,
-              `hsl(${page2.state.chart_colours.link_h_col.replace(page2.state.chart_colours.hue, "280")})`,
-              `hsl(${page2.state.chart_colours.link_h_col.replace(page2.state.chart_colours.hue, "270")})`,
-              `hsl(${page2.state.chart_colours.link_h_col.replace(page2.state.chart_colours.hue, "255")})`,
-              `hsl(${page2.state.chart_colours.link_h_col.replace(page2.state.chart_colours.hue, "235")})`,
-              `hsl(${page2.state.chart_colours.link_h_col.replace(page2.state.chart_colours.hue, "220")})`,
-              `hsl(${page2.state.chart_colours.link_h_col.replace(page2.state.chart_colours.hue, "208")})`,
-              `hsl(${page2.state.chart_colours.link_h_col.replace(page2.state.chart_colours.hue, "200")})`,
-              `hsl(${page2.state.chart_colours.link_h_col.replace(page2.state.chart_colours.hue, "180")})`,
-              `hsl(${page2.state.chart_colours.link_h_col.replace(page2.state.chart_colours.hue, "160")})`,
-              `hsl(${page2.state.chart_colours.link_h_col.replace(page2.state.chart_colours.hue, "140")})`,
-              `hsl(${page2.state.chart_colours.link_h_col.replace(page2.state.chart_colours.hue, "120")})`,
-              `hsl(${page2.state.chart_colours.link_h_col.replace(page2.state.chart_colours.hue, "100")})`,
-              `hsl(${page2.state.chart_colours.link_h_col.replace(page2.state.chart_colours.hue, "80")})`,
-              `hsl(${page2.state.chart_colours.link_h_col.replace(page2.state.chart_colours.hue, "60")})`,
-              `hsl(${page2.state.chart_colours.link_h_col.replace(page2.state.chart_colours.hue, "40")})`,
-              `hsl(${page2.state.chart_colours.link_h_col.replace(page2.state.chart_colours.hue, "20")})`
+              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "360")})`,
+              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "340")})`,
+              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "320")})`,
+              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "300")})`,
+              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "280")})`,
+              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "270")})`,
+              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "255")})`,
+              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "235")})`,
+              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "220")})`,
+              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "208")})`,
+              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "200")})`,
+              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "180")})`,
+              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "160")})`,
+              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "140")})`,
+              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "120")})`,
+              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "100")})`,
+              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "80")})`,
+              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "60")})`,
+              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "40")})`,
+              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "20")})`
             ],
-            borderColor: page2.state.chart_colours.bg_col,
+            borderColor: page.state.chart_colours.bg_col,
             pointRadius: 0,
             pointHitRadius: 20,
             tension: 0.1
           }]
         },
-        options: page2.state.chart_library_pie_options_no_click
+        options: page.state.chart_library_pie_options_no_click
       });
-    } else if (settings2.chart_insights_view == "bar") {
+    } else if (settings.chart_insights_view == "bar") {
       let scrobble_chart = new Chart(scrobble_canvas.getContext("2d"), {
         type: "bar",
         data: {
@@ -6842,50 +6847,50 @@
             data: item.values,
             borderWidth: 0,
             backgroundColor: [
-              `hsl(${page2.state.chart_colours.link_h_col.replace(page2.state.chart_colours.hue, "360")})`,
-              `hsl(${page2.state.chart_colours.link_h_col.replace(page2.state.chart_colours.hue, "340")})`,
-              `hsl(${page2.state.chart_colours.link_h_col.replace(page2.state.chart_colours.hue, "320")})`,
-              `hsl(${page2.state.chart_colours.link_h_col.replace(page2.state.chart_colours.hue, "300")})`,
-              `hsl(${page2.state.chart_colours.link_h_col.replace(page2.state.chart_colours.hue, "280")})`,
-              `hsl(${page2.state.chart_colours.link_h_col.replace(page2.state.chart_colours.hue, "270")})`,
-              `hsl(${page2.state.chart_colours.link_h_col.replace(page2.state.chart_colours.hue, "255")})`,
-              `hsl(${page2.state.chart_colours.link_h_col.replace(page2.state.chart_colours.hue, "235")})`,
-              `hsl(${page2.state.chart_colours.link_h_col.replace(page2.state.chart_colours.hue, "220")})`,
-              `hsl(${page2.state.chart_colours.link_h_col.replace(page2.state.chart_colours.hue, "208")})`,
-              `hsl(${page2.state.chart_colours.link_h_col.replace(page2.state.chart_colours.hue, "200")})`,
-              `hsl(${page2.state.chart_colours.link_h_col.replace(page2.state.chart_colours.hue, "180")})`,
-              `hsl(${page2.state.chart_colours.link_h_col.replace(page2.state.chart_colours.hue, "160")})`,
-              `hsl(${page2.state.chart_colours.link_h_col.replace(page2.state.chart_colours.hue, "140")})`,
-              `hsl(${page2.state.chart_colours.link_h_col.replace(page2.state.chart_colours.hue, "120")})`,
-              `hsl(${page2.state.chart_colours.link_h_col.replace(page2.state.chart_colours.hue, "100")})`,
-              `hsl(${page2.state.chart_colours.link_h_col.replace(page2.state.chart_colours.hue, "80")})`,
-              `hsl(${page2.state.chart_colours.link_h_col.replace(page2.state.chart_colours.hue, "60")})`,
-              `hsl(${page2.state.chart_colours.link_h_col.replace(page2.state.chart_colours.hue, "40")})`,
-              `hsl(${page2.state.chart_colours.link_h_col.replace(page2.state.chart_colours.hue, "20")})`
+              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "360")})`,
+              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "340")})`,
+              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "320")})`,
+              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "300")})`,
+              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "280")})`,
+              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "270")})`,
+              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "255")})`,
+              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "235")})`,
+              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "220")})`,
+              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "208")})`,
+              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "200")})`,
+              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "180")})`,
+              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "160")})`,
+              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "140")})`,
+              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "120")})`,
+              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "100")})`,
+              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "80")})`,
+              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "60")})`,
+              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "40")})`,
+              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "20")})`
             ],
-            borderColor: page2.state.chart_colours.bg_col,
+            borderColor: page.state.chart_colours.bg_col,
             pointRadius: 0,
             pointHitRadius: 20,
             tension: 0.1,
             borderRadius: 9
           }]
         },
-        options: page2.state.chart_library_bar_options_no_click
+        options: page.state.chart_library_bar_options_no_click
       });
     }
     scrobble_canvas_container.appendChild(scrobble_canvas);
     scrobble_insights_panel.appendChild(scrobble_canvas_container);
     if (new_run)
-      page2.structure.side.appendChild(scrobble_insights_panel);
+      page.structure.side.appendChild(scrobble_insights_panel);
   }
   function bleh_glacier_library_open_index(index) {
-    window.location.href = page2.state.glacier.links[index];
+    window.location.href = page.state.glacier.links[index];
   }
   function bleh_glacier_library_request(request_url) {
-    log2(`making our own request with ${request_url}`, "glacier library");
-    console.info(page2.structure.glacier.refresh);
-    page2.structure.glacier.refresh = false;
-    page2.structure.glacier.date_panel.classList.add("data-is-loading");
+    log(`making our own request with ${request_url}`, "glacier library");
+    console.info(page.structure.glacier.refresh);
+    page.structure.glacier.refresh = false;
+    page.structure.glacier.date_panel.classList.add("data-is-loading");
     fetch(request_url).then(function(response) {
       console.log("glacier library returned", response, response.text, response.status);
       if (response.status != 200)
@@ -6894,31 +6899,31 @@
     }).then(function(html) {
       let doc = new DOMParser().parseFromString(html, "text/html");
       console.log("glacier library DOC", doc, doc.querySelector(".table"));
-      log2("received response", "glacier library");
-      log2("refresh is now marked true", "glacier library");
-      page2.structure.glacier.refresh = true;
+      log("received response", "glacier library");
+      log("refresh is now marked true", "glacier library");
+      page.structure.glacier.refresh = true;
       let table = doc.querySelector(".table");
       if (table != null) {
         bleh_glacier_date_graph(false, table);
       } else {
-        log2("table is null?", "glacier library", "error");
+        log("table is null?", "glacier library", "error");
         console.info("glacier library", doc.body.innerHTML);
         console.info("glacier library", new DOMParser().parseFromString(doc.body.innerHTML, "text/html"));
         throw new Error();
       }
-      page2.structure.glacier.date_panel.classList.remove("data-is-loading");
+      page.structure.glacier.date_panel.classList.remove("data-is-loading");
     });
   }
   function bleh_glacier_date_graph_generate() {
-    page2.state.glacier.current_tab = page2.subpage;
-    log2("generating", "glacier library", "info", {
-      labels: page2.state.glacier.labels,
-      links: page2.state.glacier.links,
-      values: page2.state.glacier.values
+    page.state.glacier.current_tab = page.subpage;
+    log("generating", "glacier library", "info", {
+      labels: page.state.glacier.labels,
+      links: page.state.glacier.links,
+      values: page.state.glacier.values
     });
     prep_chart_colours();
     let new_run = false;
-    let scrobble_canvas_container = page2.structure.glacier.date_panel.querySelector(".scrobble-canvas-container");
+    let scrobble_canvas_container = page.structure.glacier.date_panel.querySelector(".scrobble-canvas-container");
     if (scrobble_canvas_container == null) {
       scrobble_canvas_container = document.createElement("div");
       scrobble_canvas_container.classList.add("scrobble-canvas-container");
@@ -6928,117 +6933,117 @@
     }
     let scrobble_canvas = document.createElement("canvas");
     scrobble_canvas.classList.add("scrobble-canvas");
-    Chart.defaults.color = page2.state.chart_colours.text_col;
+    Chart.defaults.color = page.state.chart_colours.text_col;
     Chart.defaults.font.family = "Ubuntu Sans";
-    if (settings2.chart_view == "line") {
+    if (settings.chart_view == "line") {
       let gradient = scrobble_canvas.getContext("2d").createLinearGradient(0, 0, 0, 160);
       try {
-        gradient.addColorStop(0, page2.state.chart_colours.link_bg_col);
-        gradient.addColorStop(1, page2.state.chart_colours.link_bg_col_2);
+        gradient.addColorStop(0, page.state.chart_colours.link_bg_col);
+        gradient.addColorStop(1, page.state.chart_colours.link_bg_col_2);
       } catch (e) {
-        gradient = page2.state.chart_colours.link_bg_col;
+        gradient = page.state.chart_colours.link_bg_col;
       }
       let scrobble_chart = new Chart(scrobble_canvas.getContext("2d"), {
         type: "line",
         data: {
-          labels: page2.state.glacier.labels,
+          labels: page.state.glacier.labels,
           datasets: [{
-            data: page2.state.glacier.values,
+            data: page.state.glacier.values,
             borderWidth: 2,
             backgroundColor: gradient,
-            borderColor: page2.state.chart_colours.link_col,
+            borderColor: page.state.chart_colours.link_col,
             fill: true,
             pointRadius: 0,
             pointHitRadius: 20,
             tension: 0.1
           }]
         },
-        options: page2.state.chart_library_line_options
+        options: page.state.chart_library_line_options
       });
-    } else if (settings2.chart_view == "pie") {
+    } else if (settings.chart_view == "pie") {
       let scrobble_chart = new Chart(scrobble_canvas.getContext("2d"), {
         type: "pie",
         data: {
-          labels: page2.state.glacier.labels,
+          labels: page.state.glacier.labels,
           datasets: [{
-            data: page2.state.glacier.values,
+            data: page.state.glacier.values,
             borderWidth: 2,
             backgroundColor: [
-              `hsl(${page2.state.chart_colours.link_h_col.replace(page2.state.chart_colours.hue, "360")})`,
-              `hsl(${page2.state.chart_colours.link_h_col.replace(page2.state.chart_colours.hue, "340")})`,
-              `hsl(${page2.state.chart_colours.link_h_col.replace(page2.state.chart_colours.hue, "320")})`,
-              `hsl(${page2.state.chart_colours.link_h_col.replace(page2.state.chart_colours.hue, "300")})`,
-              `hsl(${page2.state.chart_colours.link_h_col.replace(page2.state.chart_colours.hue, "280")})`,
-              `hsl(${page2.state.chart_colours.link_h_col.replace(page2.state.chart_colours.hue, "270")})`,
-              `hsl(${page2.state.chart_colours.link_h_col.replace(page2.state.chart_colours.hue, "255")})`,
-              `hsl(${page2.state.chart_colours.link_h_col.replace(page2.state.chart_colours.hue, "235")})`,
-              `hsl(${page2.state.chart_colours.link_h_col.replace(page2.state.chart_colours.hue, "220")})`,
-              `hsl(${page2.state.chart_colours.link_h_col.replace(page2.state.chart_colours.hue, "208")})`,
-              `hsl(${page2.state.chart_colours.link_h_col.replace(page2.state.chart_colours.hue, "200")})`,
-              `hsl(${page2.state.chart_colours.link_h_col.replace(page2.state.chart_colours.hue, "180")})`,
-              `hsl(${page2.state.chart_colours.link_h_col.replace(page2.state.chart_colours.hue, "160")})`,
-              `hsl(${page2.state.chart_colours.link_h_col.replace(page2.state.chart_colours.hue, "140")})`,
-              `hsl(${page2.state.chart_colours.link_h_col.replace(page2.state.chart_colours.hue, "120")})`,
-              `hsl(${page2.state.chart_colours.link_h_col.replace(page2.state.chart_colours.hue, "100")})`,
-              `hsl(${page2.state.chart_colours.link_h_col.replace(page2.state.chart_colours.hue, "80")})`,
-              `hsl(${page2.state.chart_colours.link_h_col.replace(page2.state.chart_colours.hue, "60")})`,
-              `hsl(${page2.state.chart_colours.link_h_col.replace(page2.state.chart_colours.hue, "40")})`,
-              `hsl(${page2.state.chart_colours.link_h_col.replace(page2.state.chart_colours.hue, "20")})`
+              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "360")})`,
+              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "340")})`,
+              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "320")})`,
+              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "300")})`,
+              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "280")})`,
+              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "270")})`,
+              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "255")})`,
+              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "235")})`,
+              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "220")})`,
+              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "208")})`,
+              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "200")})`,
+              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "180")})`,
+              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "160")})`,
+              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "140")})`,
+              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "120")})`,
+              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "100")})`,
+              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "80")})`,
+              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "60")})`,
+              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "40")})`,
+              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "20")})`
             ],
-            borderColor: page2.state.chart_colours.bg_col,
+            borderColor: page.state.chart_colours.bg_col,
             pointRadius: 0,
             pointHitRadius: 20,
             tension: 0.1
           }]
         },
-        options: page2.state.chart_library_pie_options
+        options: page.state.chart_library_pie_options
       });
-    } else if (settings2.chart_view == "bar") {
+    } else if (settings.chart_view == "bar") {
       let scrobble_chart = new Chart(scrobble_canvas.getContext("2d"), {
         type: "bar",
         data: {
-          labels: page2.state.glacier.labels,
+          labels: page.state.glacier.labels,
           datasets: [{
-            data: page2.state.glacier.values,
+            data: page.state.glacier.values,
             borderWidth: 0,
             backgroundColor: [
-              `hsl(${page2.state.chart_colours.link_h_col.replace(page2.state.chart_colours.hue, "360")})`,
-              `hsl(${page2.state.chart_colours.link_h_col.replace(page2.state.chart_colours.hue, "340")})`,
-              `hsl(${page2.state.chart_colours.link_h_col.replace(page2.state.chart_colours.hue, "320")})`,
-              `hsl(${page2.state.chart_colours.link_h_col.replace(page2.state.chart_colours.hue, "300")})`,
-              `hsl(${page2.state.chart_colours.link_h_col.replace(page2.state.chart_colours.hue, "280")})`,
-              `hsl(${page2.state.chart_colours.link_h_col.replace(page2.state.chart_colours.hue, "270")})`,
-              `hsl(${page2.state.chart_colours.link_h_col.replace(page2.state.chart_colours.hue, "255")})`,
-              `hsl(${page2.state.chart_colours.link_h_col.replace(page2.state.chart_colours.hue, "235")})`,
-              `hsl(${page2.state.chart_colours.link_h_col.replace(page2.state.chart_colours.hue, "220")})`,
-              `hsl(${page2.state.chart_colours.link_h_col.replace(page2.state.chart_colours.hue, "208")})`,
-              `hsl(${page2.state.chart_colours.link_h_col.replace(page2.state.chart_colours.hue, "200")})`,
-              `hsl(${page2.state.chart_colours.link_h_col.replace(page2.state.chart_colours.hue, "180")})`,
-              `hsl(${page2.state.chart_colours.link_h_col.replace(page2.state.chart_colours.hue, "160")})`,
-              `hsl(${page2.state.chart_colours.link_h_col.replace(page2.state.chart_colours.hue, "140")})`,
-              `hsl(${page2.state.chart_colours.link_h_col.replace(page2.state.chart_colours.hue, "120")})`,
-              `hsl(${page2.state.chart_colours.link_h_col.replace(page2.state.chart_colours.hue, "100")})`,
-              `hsl(${page2.state.chart_colours.link_h_col.replace(page2.state.chart_colours.hue, "80")})`,
-              `hsl(${page2.state.chart_colours.link_h_col.replace(page2.state.chart_colours.hue, "60")})`,
-              `hsl(${page2.state.chart_colours.link_h_col.replace(page2.state.chart_colours.hue, "40")})`,
-              `hsl(${page2.state.chart_colours.link_h_col.replace(page2.state.chart_colours.hue, "20")})`
+              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "360")})`,
+              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "340")})`,
+              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "320")})`,
+              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "300")})`,
+              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "280")})`,
+              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "270")})`,
+              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "255")})`,
+              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "235")})`,
+              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "220")})`,
+              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "208")})`,
+              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "200")})`,
+              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "180")})`,
+              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "160")})`,
+              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "140")})`,
+              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "120")})`,
+              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "100")})`,
+              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "80")})`,
+              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "60")})`,
+              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "40")})`,
+              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "20")})`
             ],
-            borderColor: page2.state.chart_colours.bg_col,
+            borderColor: page.state.chart_colours.bg_col,
             pointRadius: 0,
             pointHitRadius: 20,
             tension: 0.1,
             borderRadius: 9
           }]
         },
-        options: settings2.chart_bar_axis == "horizontal" ? page2.state.chart_library_bar_options : page2.state.chart_library_bar_v_options
+        options: settings.chart_bar_axis == "horizontal" ? page.state.chart_library_bar_options : page.state.chart_library_bar_v_options
       });
     }
     scrobble_canvas_container.appendChild(scrobble_canvas);
     if (new_run)
-      page2.structure.glacier.date_panel.appendChild(scrobble_canvas_container);
+      page.structure.glacier.date_panel.appendChild(scrobble_canvas_container);
   }
   function bleh_glacier_library_focused() {
-    page2.state.glacier.insights.artist = {
+    page.state.glacier.insights.artist = {
       display: false,
       values: [],
       labels: [],
@@ -7049,13 +7054,13 @@
         img: ""
       }
     };
-    let legacy_header = page2.structure.main.querySelector(".library-header");
+    let legacy_header = page.structure.main.querySelector(".library-header");
     let type;
-    if (page2.subpage.startsWith("library_artist"))
+    if (page.subpage.startsWith("library_artist"))
       type = "artist";
-    else if (page2.subpage.startsWith("library_album"))
+    else if (page.subpage.startsWith("library_album"))
       type = "album";
-    else if (page2.subpage.startsWith("library_track"))
+    else if (page.subpage.startsWith("library_track"))
       type = "track";
     let header_title = legacy_header.querySelector(".library-header-crumb");
     if (header_title == null)
@@ -7068,11 +7073,11 @@
     if (artist != null)
       artist = artist.textContent.trim();
     let image = legacy_header.querySelector(".library-header-image img");
-    let link = `${root2}music/${sanitise(header_title)}`;
+    let link = `${root}music/${sanitise(header_title)}`;
     if (type == "album")
-      link = `${root2}music/${sanitise(artist)}/${sanitise(header_title)}`;
+      link = `${root}music/${sanitise(artist)}/${sanitise(header_title)}`;
     else if (type == "track")
-      link = `${root2}music/${sanitise(artist)}/_/${sanitise(header_title)}`;
+      link = `${root}music/${sanitise(artist)}/_/${sanitise(header_title)}`;
     let header = document.createElement("section");
     header.classList.add("glacier-library-top", "glacier-library-focused-header");
     let upper_wrap = document.createElement("div");
@@ -7086,10 +7091,10 @@
         </div>
         <div class="glacier-library-metadata-item">
             <div class="sub-text">
-                ${trans[lang2][type].name}
+                ${trans[lang][type].name}
             </div>
             <div class="glacier-library-metadata-item-value glacier-library-metadata-focus" data-type="${type}">
-                <a href="${link}">${type == "artist" ? correct_artist(header_title) : correct_item_by_artist(header_title, artist)}</a>${duration != null ? ` <span class="glacier-library-track-duration">${duration.textContent}</span>` : ""}${type != "artist" ? trans[lang2].glacier.by_artist.replace("{a}", `<a href="${root2}user/${page2.name}/library/music/+noredirect/${sanitise(artist)}${current_suffix}">${correct_artist(artist)}</a>`) : ""}
+                <a href="${link}">${type == "artist" ? correct_artist(header_title) : correct_item_by_artist(header_title, artist)}</a>${duration != null ? ` <span class="glacier-library-track-duration">${duration.textContent}</span>` : ""}${type != "artist" ? trans[lang].glacier.by_artist.replace("{a}", `<a href="${root}user/${page.name}/library/music/+noredirect/${sanitise(artist)}${current_suffix}">${correct_artist(artist)}</a>`) : ""}
             </div>
         </div>
     `;
@@ -7135,7 +7140,7 @@
         let action = button.getAttribute("data-analytics-action");
         if (action) {
           if (action == "EditScrobbleOpen") {
-            button.textContent = trans[lang2].glacier.edit;
+            button.textContent = trans[lang].glacier.edit;
           } else if (action == "UnloveTrack" || action == "LoveTrack") {
             let listen_divider = document.createElement("div");
             listen_divider.classList.add("listen-divider");
@@ -7146,7 +7151,7 @@
           }
         } else {
           if (button.classList.contains("delete-icon")) {
-            button.textContent = trans[lang2].glacier.delete;
+            button.textContent = trans[lang].glacier.delete;
           }
         }
       });
@@ -7158,19 +7163,19 @@
     }
     let configure_button = document.createElement("button");
     configure_button.classList.add("btn", "view-item", "glacier-library-button", "glacier-configure-button", "panel-settings-button");
-    configure_button.textContent = trans[lang2].settings.configure;
+    configure_button.textContent = trans[lang].settings.configure;
     tippy(configure_button, {
-      content: trans[lang2].settings.configure
+      content: trans[lang].settings.configure
     });
     tippy(configure_button, {
       theme: "window",
       content: `
             <div class="dialog-settings">
                 <div class="toggle-container" id="container-format_guest_features" onclick="_update_item('format_guest_features')">
-                    <button class="btn reset" onclick="_reset_item('format_guest_features')">${trans[lang2].settings.reset}</button>
+                    <button class="btn reset" onclick="_reset_item('format_guest_features')">${trans[lang].settings.reset}</button>
                     <div class="heading">
-                        <h5>${trans[lang2].settings.corrections.format_guest_features.name}</h5>
-                        <p>${trans[lang2].settings.corrections.format_guest_features.bio}</p>
+                        <h5>${trans[lang].settings.corrections.format_guest_features.name}</h5>
+                        <p>${trans[lang].settings.corrections.format_guest_features.bio}</p>
                     </div>
                     <div class="toggle-wrap">
                         <button class="toggle" id="toggle-format_guest_features" aria-checked="true">
@@ -7179,10 +7184,10 @@
                     </div>
                 </div>
                 <div class="toggle-container hide-if-format-guest-disabled" id="container-show_guest_features" onclick="_update_item('show_guest_features')">
-                    <button class="btn reset" onclick="_reset_item('show_guest_features')">${trans[lang2].settings.reset}</button>
+                    <button class="btn reset" onclick="_reset_item('show_guest_features')">${trans[lang].settings.reset}</button>
                     <div class="heading">
-                        <h5>${trans[lang2].settings.corrections.show_guest_features.name}</h5>
-                        <p>${trans[lang2].settings.corrections.show_guest_features.bio}</p>
+                        <h5>${trans[lang].settings.corrections.show_guest_features.name}</h5>
+                        <p>${trans[lang].settings.corrections.show_guest_features.bio}</p>
                     </div>
                     <div class="toggle-wrap">
                         <button class="toggle" id="toggle-show_guest_features" aria-checked="true" type="button">
@@ -7191,10 +7196,10 @@
                     </div>
                 </div>
                 <div class="toggle-container" id="container-stacked_chartlist_info" onclick="_update_item('stacked_chartlist_info')">
-                    <button class="btn reset" onclick="_reset_item('stacked_chartlist_info')">${trans[lang2].settings.reset}</button>
+                    <button class="btn reset" onclick="_reset_item('stacked_chartlist_info')">${trans[lang].settings.reset}</button>
                     <div class="heading">
-                        <h5>${trans[lang2].settings.corrections.stacked_chartlist_info.name}</h5>
-                        <p>${trans[lang2].settings.corrections.stacked_chartlist_info.bio}</p>
+                        <h5>${trans[lang].settings.corrections.stacked_chartlist_info.name}</h5>
+                        <p>${trans[lang].settings.corrections.stacked_chartlist_info.bio}</p>
                     </div>
                     <div class="toggle-wrap">
                         <button class="toggle" id="toggle-stacked_chartlist_info" aria-checked="true" type="button">
@@ -7204,10 +7209,10 @@
                 </div>
                 <div class="sep"></div>
                 <div class="toggle-container" id="container-glacier_library_graphs" onclick="_update_item('glacier_library_graphs')">
-                    <button class="btn reset" onclick="_reset_item('glacier_library_graphs')">${trans[lang2].settings.reset}</button>
+                    <button class="btn reset" onclick="_reset_item('glacier_library_graphs')">${trans[lang].settings.reset}</button>
                     <div class="heading">
-                        <h5>${trans[lang2].glacier.option.name}</h5>
-                        <p>${trans[lang2].glacier.option.bio}</p>
+                        <h5>${trans[lang].glacier.option.name}</h5>
+                        <p>${trans[lang].glacier.option.bio}</p>
                     </div>
                     <div class="toggle-wrap">
                         <button class="toggle" id="toggle-glacier_library_graphs" aria-checked="true" type="button">
@@ -7232,7 +7237,7 @@
     lower_wrap.classList.add("glacier-library-top-lower");
     let lower_metadata = document.createElement("div");
     lower_metadata.classList.add("glacier-library-metadata");
-    let legacy_meta_wrap = page2.structure.main.querySelector(".metadata-list");
+    let legacy_meta_wrap = page.structure.main.querySelector(".metadata-list");
     if (legacy_meta_wrap != null) {
       let metadatas = legacy_meta_wrap.querySelectorAll(".metadata-item:not(.library-header-ctas__wrapper)");
       metadatas.forEach((meta) => {
@@ -7247,18 +7252,18 @@
     }
     lower_wrap.appendChild(lower_metadata);
     header.appendChild(lower_wrap);
-    page2.structure.main.insertBefore(header, page2.structure.main.firstElementChild);
-    let overview_header = page2.structure.main.querySelector(":scope > .library-overview-header");
+    page.structure.main.insertBefore(header, page.structure.main.firstElementChild);
+    let overview_header = page.structure.main.querySelector(":scope > .library-overview-header");
     if (overview_header == null)
       return;
     overview_header.nextElementSibling.insertBefore(overview_header, overview_header.nextElementSibling.firstElementChild);
   }
   function bleh_glacier_library_bulk_edit() {
-    let library_header = page2.structure.main.querySelector(".library-header");
+    let library_header = page.structure.main.querySelector(".library-header");
     let bulk_edit = library_header.querySelector('[href="javascript:void(0)"]');
     if (bulk_edit == null)
       return;
-    let view_buttons = page2.structure.main.querySelector(".glacier-library-buttons");
+    let view_buttons = page.structure.main.querySelector(".glacier-library-buttons");
     if (view_buttons == null)
       return;
     let edit_form = view_buttons.querySelector(":scope > .library-header-edit-form");
@@ -7266,7 +7271,7 @@
     if (delete_button == null)
       return;
     bulk_edit.classList.add("btn", "view-item", "glacier-library-button", "bulk-edit-button");
-    bulk_edit.textContent = trans[lang2].glacier.bulk_edit;
+    bulk_edit.textContent = trans[lang].glacier.bulk_edit;
     if (edit_form == null)
       view_buttons.insertBefore(bulk_edit, delete_button);
     else
@@ -7275,7 +7280,7 @@
 
   // src/chart.js
   function prep_chart_colours() {
-    if (page2.state.chart_colours.link_col == "hsl()")
+    if (page.state.chart_colours.link_col == "hsl()")
       load_chart_colours();
   }
   function load_chart_colours() {
@@ -7289,7 +7294,7 @@
     let bg_col = `hsl(${getComputedStyle(document.body).getPropertyValue("--b5")})`;
     let root_bg_col = `hsla(${getComputedStyle(document.body).getPropertyValue("--b6")}, 92%)`;
     let hue = getComputedStyle(document.body).getPropertyValue("--hue");
-    page2.state.chart_colours = {
+    page.state.chart_colours = {
       link_col,
       link_h_col,
       link_bg_col,
@@ -7301,8 +7306,8 @@
       root_bg_col,
       hue
     };
-    console.log("chart colours", page2.state.chart_colours);
-    page2.state.chart_line_options = {
+    console.log("chart colours", page.state.chart_colours);
+    page.state.chart_line_options = {
       maintainAspectRatio: false,
       plugins: {
         legend: {
@@ -7343,7 +7348,7 @@
         }
       }
     };
-    page2.state.chart_library_line_options = {
+    page.state.chart_library_line_options = {
       maintainAspectRatio: false,
       plugins: {
         legend: {
@@ -7378,7 +7383,7 @@
         bleh_glacier_library_open_index(active[0].index);
       }
     };
-    page2.state.chart_library_line_options_no_click = {
+    page.state.chart_library_line_options_no_click = {
       maintainAspectRatio: false,
       plugins: {
         legend: {
@@ -7410,7 +7415,7 @@
         }
       }
     };
-    page2.state.chart_library_pie_options = {
+    page.state.chart_library_pie_options = {
       maintainAspectRatio: false,
       plugins: {
         legend: {
@@ -7431,7 +7436,7 @@
         bleh_glacier_library_open_index(active[0].index);
       }
     };
-    page2.state.chart_library_pie_options_no_click = {
+    page.state.chart_library_pie_options_no_click = {
       maintainAspectRatio: false,
       plugins: {
         legend: {
@@ -7447,7 +7452,7 @@
         }
       }
     };
-    page2.state.chart_library_bar_options = {
+    page.state.chart_library_bar_options = {
       maintainAspectRatio: false,
       plugins: {
         legend: {
@@ -7468,7 +7473,7 @@
         bleh_glacier_library_open_index(active[0].index);
       }
     };
-    page2.state.chart_library_bar_v_options = {
+    page.state.chart_library_bar_v_options = {
       indexAxis: "y",
       maintainAspectRatio: false,
       plugins: {
@@ -7490,7 +7495,7 @@
         bleh_glacier_library_open_index(active[0].index);
       }
     };
-    page2.state.chart_library_bar_options_no_click = {
+    page.state.chart_library_bar_options_no_click = {
       maintainAspectRatio: false,
       plugins: {
         legend: {
@@ -7512,13 +7517,13 @@
 
   // src/components/structure.js
   function basic_page_structure() {
-    page2.structure.container = document.body.querySelector(".page-content");
+    page.structure.container = document.body.querySelector(".page-content");
     try {
-      page2.structure.row = page2.structure.container.querySelector(".row");
-      page2.structure.main = page2.structure.row.querySelector(".col-main");
-      page2.structure.side = page2.structure.row.querySelector(".col-sidebar");
+      page.structure.row = page.structure.container.querySelector(".row");
+      page.structure.main = page.structure.row.querySelector(".col-main");
+      page.structure.side = page.structure.row.querySelector(".col-sidebar");
     } catch (e) {
-      log2("unable to find elements", "page structure");
+      log("unable to find elements", "page structure");
     }
     checkup_page_structure();
   }
@@ -7529,73 +7534,73 @@
       load_chart_colours();
     }
     let params = new URLSearchParams(document.location.search);
-    page2.requested.tab = params.get("tab");
-    page2.requested.page = params.get("page");
-    if (!page2.structure.container || !document.body.contains(page2.structure.container)) {
-      log2("page missing container, creating", "page structure");
-      page2.structure.container = document.createElement("div");
-      page2.structure.container.classList.add("page-content", "container");
+    page.requested.tab = params.get("tab");
+    page.requested.page = params.get("page");
+    if (!page.structure.container || !document.body.contains(page.structure.container)) {
+      log("page missing container, creating", "page structure");
+      page.structure.container = document.createElement("div");
+      page.structure.container.classList.add("page-content", "container");
       let container_full_width = document.body.querySelector(".container--full-width");
       debugger;
       if (container_full_width)
-        container_full_width.insertBefore(page2.structure.container, container_full_width.firstElementChild);
+        container_full_width.insertBefore(page.structure.container, container_full_width.firstElementChild);
       else
-        document.body.querySelector(".adaptive-skin-container").appendChild(page2.structure.container);
+        document.body.querySelector(".adaptive-skin-container").appendChild(page.structure.container);
     }
-    page2.structure.container.setAttribute("data-assigned", "true");
+    page.structure.container.setAttribute("data-assigned", "true");
     let other_container = document.body.querySelector(".page-content.container:not([data-assigned])");
     if (other_container)
       other_container.style.setProperty("display", "none");
-    if (!page2.structure.row || !document.body.contains(page2.structure.row)) {
-      log2("page missing row, creating", "page structure");
-      page2.structure.row = document.createElement("div");
-      page2.structure.row.classList.add("row");
-      page2.structure.container.insertBefore(page2.structure.row, page2.structure.container.firstElementChild);
+    if (!page.structure.row || !document.body.contains(page.structure.row)) {
+      log("page missing row, creating", "page structure");
+      page.structure.row = document.createElement("div");
+      page.structure.row.classList.add("row");
+      page.structure.container.insertBefore(page.structure.row, page.structure.container.firstElementChild);
     }
-    if (page2.structure.row.classList.contains("buffer-4"))
-      page2.structure.row.classList = "row col-main-is-primary";
-    if (!page2.structure.main || !document.body.contains(page2.structure.main)) {
-      log2("page missing main, creating", "page structure");
-      page2.structure.main = document.createElement("div");
-      page2.structure.main.classList.add("col-main");
-      page2.structure.row.appendChild(page2.structure.main);
+    if (page.structure.row.classList.contains("buffer-4"))
+      page.structure.row.classList = "row col-main-is-primary";
+    if (!page.structure.main || !document.body.contains(page.structure.main)) {
+      log("page missing main, creating", "page structure");
+      page.structure.main = document.createElement("div");
+      page.structure.main.classList.add("col-main");
+      page.structure.row.appendChild(page.structure.main);
     }
-    page2.structure.main.setAttribute("data-assigned", "true");
-    let other_main = page2.structure.row.querySelector(".col-main.hidden-xs:not([data-assigned])");
+    page.structure.main.setAttribute("data-assigned", "true");
+    let other_main = page.structure.row.querySelector(".col-main.hidden-xs:not([data-assigned])");
     if (other_main)
       other_main.style.setProperty("display", "none");
-    if (!page2.structure.side || !document.body.contains(page2.structure.side)) {
-      log2("page missing side", "page structure");
-      page2.structure.side = page2.structure.row.querySelector(".col-sidebar");
-      if (!page2.structure.side) {
-        log2("page missing side, creating", "page structure");
-        page2.structure.side = document.createElement("div");
-        page2.structure.side.classList.add("col-sidebar");
-        page2.structure.row.appendChild(page2.structure.side);
+    if (!page.structure.side || !document.body.contains(page.structure.side)) {
+      log("page missing side", "page structure");
+      page.structure.side = page.structure.row.querySelector(".col-sidebar");
+      if (!page.structure.side) {
+        log("page missing side, creating", "page structure");
+        page.structure.side = document.createElement("div");
+        page.structure.side.classList.add("col-sidebar");
+        page.structure.row.appendChild(page.structure.side);
       }
     }
-    log2("finished", "page structure");
+    log("finished", "page structure");
     if (ff("refreshed_music_nav") && header) {
       let navlist = header.querySelector(".navlist");
       if (navlist) {
         navlist.classList.add("redesigned-navigation");
-        page2.structure.container.insertBefore(navlist, page2.structure.container.firstElementChild);
-        page2.structure.nav = navlist;
+        page.structure.container.insertBefore(navlist, page.structure.container.firstElementChild);
+        page.structure.nav = navlist;
       }
       if (is_subpage) {
         let content_top = document.body.querySelector(".content-top");
         if (content_top) {
           content_top.classList.add("redesigned-content-top");
-          page2.structure.content_top = content_top;
+          page.structure.content_top = content_top;
           navlist.after(content_top);
           if (content_top.querySelector(".content-top-back-link"))
             content_top.style.setProperty("display", "none");
         } else {
-          let subpage_title = page2.structure.main.querySelector(":scope > .subpage-title");
+          let subpage_title = page.structure.main.querySelector(":scope > .subpage-title");
           if (!subpage_title)
-            subpage_title = page2.structure.main.querySelector(":scope > .section-controls > .subpage-title");
+            subpage_title = page.structure.main.querySelector(":scope > .section-controls > .subpage-title");
           if (!subpage_title)
-            subpage_title = page2.structure.main.querySelector(":scope > section:first-child .section-controls > .subpage-title");
+            subpage_title = page.structure.main.querySelector(":scope > section:first-child .section-controls > .subpage-title");
           if (subpage_title) {
             content_top = document.createElement("div");
             content_top.classList.add("content-top", "redesigned-content-top");
@@ -7606,37 +7611,37 @@
                             </div>
                         </div>
                     `;
-            page2.structure.content_top = content_top;
+            page.structure.content_top = content_top;
             navlist.after(content_top);
             try {
-              page2.structure.main.removeChild(subpage_title);
+              page.structure.main.removeChild(subpage_title);
             } catch (e) {
             }
           }
-          navlist = page2.structure.main.querySelector(".navlist");
+          navlist = page.structure.main.querySelector(".navlist");
           if (navlist) {
             navlist.classList.add("redesigned-navigation");
-            if (page2.structure.content_top)
-              page2.structure.content_top.after(navlist);
+            if (page.structure.content_top)
+              page.structure.content_top.after(navlist);
             else
-              page2.structure.container.insertBefore(navlist, page2.structure.row);
+              page.structure.container.insertBefore(navlist, page.structure.row);
           }
-          let btn_add = page2.structure.main.querySelector(":scope > .btn-add");
-          if (!btn_add) btn_add = page2.structure.main.querySelector(":scope > section:first-child .btn-add");
+          let btn_add = page.structure.main.querySelector(":scope > .btn-add");
+          if (!btn_add) btn_add = page.structure.main.querySelector(":scope > section:first-child .btn-add");
           if (btn_add) {
             btn_add.classList = "btn view-all-button back add-button";
             let add_panel = document.createElement("section");
             add_panel.classList.add("view-all-panel");
             add_panel.appendChild(btn_add);
-            page2.structure.side.insertBefore(add_panel, page2.structure.side.firstElementChild);
+            page.structure.side.insertBefore(add_panel, page.structure.side.firstElementChild);
           }
-          let playlink = page2.structure.main.querySelector(":scope > .section-controls > .section-playlink");
+          let playlink = page.structure.main.querySelector(":scope > .section-controls > .section-playlink");
           if (playlink) {
             playlink.classList.add("btn", "view-all-button", "back", "play-button");
             let playlink_panel = document.createElement("section");
             playlink_panel.classList.add("view-all-panel");
             playlink_panel.appendChild(playlink);
-            page2.structure.side.insertBefore(playlink_panel, page2.structure.side.firstElementChild);
+            page.structure.side.insertBefore(playlink_panel, page.structure.side.firstElementChild);
           }
         }
       } else {
@@ -7649,17 +7654,17 @@
 
   // src/seasonal.js
   function set_season() {
-    if (!settings2.seasonal)
+    if (!settings.seasonal)
       return;
     let last_season_seen = localStorage.getItem("bleh_last_season_seen") || "";
     let now = /* @__PURE__ */ new Date();
-    log2(`it is now ${now}`, "season", "log");
+    log(`it is now ${now}`, "season", "log");
     stored_season.offset = calculate_offset(now);
-    log2(`calculated offset as ${stored_season.offset}`, "season");
+    log(`calculated offset as ${stored_season.offset}`, "season");
     let current_year = now.getFullYear();
     seasonal_events.forEach((season, index) => {
-      log2(`running thru, ${season.id} - ${new Date(season.start.replace("y0", current_year).replace("{offset}", stored_season.offset))} ${new Date(season.end.replace("y0", current_year).replace("{offset}", stored_season.offset))}`, "season", "log");
-      log2(`${now >= new Date(season.start.replace("y0", current_year).replace("{offset}", stored_season.offset))} ${now <= new Date(season.end.replace("y0", current_year).replace("{offset}", stored_season.offset))}`, "season", "log");
+      log(`running thru, ${season.id} - ${new Date(season.start.replace("y0", current_year).replace("{offset}", stored_season.offset))} ${new Date(season.end.replace("y0", current_year).replace("{offset}", stored_season.offset))}`, "season", "log");
+      log(`${now >= new Date(season.start.replace("y0", current_year).replace("{offset}", stored_season.offset))} ${now <= new Date(season.end.replace("y0", current_year).replace("{offset}", stored_season.offset))}`, "season", "log");
       if (now >= new Date(season.start.replace("y0", current_year).replace("{offset}", stored_season.offset)) && now <= new Date(season.end.replace("y0", current_year).replace("{offset}", stored_season.offset))) {
         stored_season.now = now;
         stored_season.year = current_year;
@@ -7685,20 +7690,20 @@
           stored_season.next_start = seasonal_events[index + 1].start;
           stored_season.next_is_new_year = false;
         }
-        log2(`${season.id} from ${season.start} to ${season.end}`, "season");
-        log2(`next will be ${stored_season.next_id} from ${stored_season.next_start} (is new year? ${stored_season.next_is_new_year})`, "season");
+        log(`${season.id} from ${season.start} to ${season.end}`, "season");
+        log(`next will be ${stored_season.next_id} from ${stored_season.next_start} (is new year? ${stored_season.next_is_new_year})`, "season");
         document.documentElement.setAttribute("data-bleh--season", season.id);
-        if (season.snowflakes.state && settings2.seasonal_particles) {
-          log2("let the snow start!", "season");
+        if (season.snowflakes.state && settings.seasonal_particles) {
+          log("let the snow start!", "season");
           prep_snow();
           let snowflakes_enabled = true;
           let snowflakes_count = season.snowflakes.count;
-          if (settings2.seasonal_particles_reduced && snowflakes_count > 10)
+          if (settings.seasonal_particles_reduced && snowflakes_count > 10)
             snowflakes_count = snowflakes_count * 0.45;
           begin_snowflakes(snowflakes_enabled, snowflakes_count);
         }
         if (last_season_seen != "" && last_season_seen != season.id)
-          deliver_notif(trans[lang2].settings.customise.seasonal.announce.replace("{s}", trans[lang2].settings.customise.seasonal.listing[stored_season.id]));
+          deliver_notif(trans[lang].settings.customise.seasonal.announce.replace("{s}", trans[lang].settings.customise.seasonal.listing[stored_season.id]));
         localStorage.setItem("bleh_last_season_seen", season.id);
         load_chart_colours();
         return;
@@ -7729,14 +7734,14 @@
     if (seasonal_timer.state != null)
       return;
     seasonal_timer.state = setInterval(set_season, 1e3);
-    log2("started interval", "season", "info");
-    if (page2.header.season_tooltip == null)
+    log("started interval", "season", "info");
+    if (page.header.season_tooltip == null)
       return;
-    page2.header.season_tooltip.setContent(`
-        <span class="season-colour-name">${trans[lang2].settings.customise.seasonal.listing[stored_season.id]}</span>
-        <span class="season-exclusive">${trans[lang2].auth_menu.seasonal_live}</span>
+    page.header.season_tooltip.setContent(`
+        <span class="season-colour-name">${trans[lang].settings.customise.seasonal.listing[stored_season.id]}</span>
+        <span class="season-exclusive">${trans[lang].auth_menu.seasonal_live}</span>
     `);
-    page2.header.season.classList.add("live");
+    page.header.season.classList.add("live");
   }
   function seasonal_timer_end() {
     if (stored_season.new_years_eve)
@@ -7745,30 +7750,30 @@
       return;
     clearInterval(seasonal_timer.state);
     seasonal_timer.state = null;
-    log2("ended interval", "season", "info");
-    if (page2.header.season_tooltip == null)
+    log("ended interval", "season", "info");
+    if (page.header.season_tooltip == null)
       return;
-    page2.header.season_tooltip.setContent(`
-        <span class="season-colour-name">${trans[lang2].settings.customise.seasonal.listing[stored_season.id]}</span>
-        <span class="season-exclusive">${trans[lang2].auth_menu.seasonal_notice}</span>
+    page.header.season_tooltip.setContent(`
+        <span class="season-colour-name">${trans[lang].settings.customise.seasonal.listing[stored_season.id]}</span>
+        <span class="season-exclusive">${trans[lang].auth_menu.seasonal_notice}</span>
     `);
-    page2.header.season.classList.remove("live");
+    page.header.season.classList.remove("live");
   }
   function update_season_nav() {
-    if (page2.header.season == null)
+    if (page.header.season == null)
       return;
-    page2.header.season.setAttribute("data-season", stored_season.id);
+    page.header.season.setAttribute("data-season", stored_season.id);
     if (!stored_season.new_years_eve) {
-      page2.header.season.textContent = moment(stored_season.end.replace("y0", stored_season.year).replace("{offset}", stored_season.offset)).to(stored_season.now, true);
+      page.header.season.textContent = moment(stored_season.end.replace("y0", stored_season.year).replace("{offset}", stored_season.offset)).to(stored_season.now, true);
     } else {
       let next = stored_season.next_start.replace("y0", stored_season.year).replace("{offset}", stored_season.offset);
       if (stored_season.next_is_new_year)
         next = stored_season.next_start.replace("y0", stored_season.year + 1).replace("{offset}", stored_season.offset);
       let time_until = new Date(next) - /* @__PURE__ */ new Date();
-      page2.header.season.textContent = countdown_to(time_until);
-      page2.header.season_tooltip.setContent(`
-            <span class="season-colour-name">${trans[lang2].settings.customise.seasonal.listing[stored_season.id]}</span>
-            <span class="season-exclusive">${trans[lang2].auth_menu.seasonal_live}</span>
+      page.header.season.textContent = countdown_to(time_until);
+      page.header.season_tooltip.setContent(`
+            <span class="season-colour-name">${trans[lang].settings.customise.seasonal.listing[stored_season.id]}</span>
+            <span class="season-exclusive">${trans[lang].auth_menu.seasonal_live}</span>
         `);
     }
   }
@@ -7823,72 +7828,72 @@
 
   // src/pages/bleh_config.js
   function bleh_settings() {
-    page2.structure.container = document.body.querySelector(".page-content");
+    page.structure.container = document.body.querySelector(".page-content");
     try {
-      page2.structure.row = page2.structure.container.querySelector(".row");
-      page2.structure.main = page2.structure.row.querySelector(".col-main");
-      page2.structure.side = page2.structure.row.querySelector(".col-sidebar");
+      page.structure.row = page.structure.container.querySelector(".row");
+      page.structure.main = page.structure.row.querySelector(".col-main");
+      page.structure.side = page.structure.row.querySelector(".col-sidebar");
     } catch (e) {
-      log2("unable to find elements", "page structure");
+      log("unable to find elements", "page structure");
     }
     checkup_page_structure();
-    log2("status is", "page", "info", page2);
-    log2("internal bleh settings", "page");
-    page2.type = "bleh_settings";
-    page2.subpage = "";
+    log("status is", "page", "info", page);
+    log("internal bleh settings", "page");
+    page.type = "bleh_settings";
+    page.subpage = "";
     update_page();
-    page2.structure.row.removeChild(page2.structure.row.firstElementChild);
-    page2.structure.row.removeChild(page2.structure.row.firstElementChild);
+    page.structure.row.removeChild(page.structure.row.firstElementChild);
+    page.structure.row.removeChild(page.structure.row.firstElementChild);
     let params = new URLSearchParams(document.location.search);
-    page2.requested.tab = params.get("tab");
-    page2.requested.setting = params.get("setting");
+    page.requested.tab = params.get("tab");
+    page.requested.setting = params.get("setting");
     let nav = document.createElement("nav");
     nav.classList.add("navlist", "secondary-nav", "navlist--more", "redesigned-navigation", "bleh-settings-navigation");
     nav.innerHTML = `
         <ul class="navlist-items">
             <li class="navlist-item secondary-nav-item">
                 <a class="secondary-nav-item-link bleh--nav" data-bleh-page="home" onclick="_change_settings_page('home')">
-                    ${trans[lang2].settings.home.name}
+                    ${trans[lang].settings.home.name}
                 </a>
             </li>
             <li class="navlist-item secondary-nav-item">
                 <a class="secondary-nav-item-link bleh--nav" data-bleh-page="themes" onclick="_change_settings_page('themes')">
-                    ${trans[lang2].settings.appearance.name}
+                    ${trans[lang].settings.appearance.name}
                 </a>
             </li>
             <li class="navlist-item secondary-nav-item">
                 <a class="secondary-nav-item-link bleh--nav" data-bleh-page="customise" onclick="_change_settings_page('customise')">
-                    ${trans[lang2].settings.layout.name}
+                    ${trans[lang].settings.layout.name}
                 </a>
             </li>
             <li class="navlist-item secondary-nav-item">
                 <a class="secondary-nav-item-link bleh--nav" data-bleh-page="music" onclick="_change_settings_page('music')">
-                    ${trans[lang2].settings.music.name}
+                    ${trans[lang].settings.music.name}
                 </a>
             </li>
             <li class="navlist-item secondary-nav-item">
                 <a class="secondary-nav-item-link bleh--nav" data-bleh-page="profiles" onclick="_change_settings_page('profiles')">
-                    ${trans[lang2].settings.profiles.name}
+                    ${trans[lang].settings.profiles.name}
                 </a>
             </li>
             <li class="navlist-item secondary-nav-item">
                 <a class="secondary-nav-item-link bleh--nav" data-bleh-page="seasonal" data-season="${stored_season.id}" onclick="_change_settings_page('seasonal')">
-                    ${trans[lang2].settings.customise.seasonal.name}
+                    ${trans[lang].settings.customise.seasonal.name}
                 </a>
             </li>
             <li class="navlist-item secondary-nav-item">
                 <a class="secondary-nav-item-link bleh--nav" data-bleh-page="text" onclick="_change_settings_page('text')">
-                    ${trans[lang2].settings.text.name}
+                    ${trans[lang].settings.text.name}
                 </a>
             </li>
             <li class="navlist-item secondary-nav-item">
                 <a class="secondary-nav-item-link bleh--nav" data-bleh-page="accessibility" onclick="_change_settings_page('accessibility')">
-                    ${trans[lang2].settings.accessibility.name}
+                    ${trans[lang].settings.accessibility.name}
                 </a>
             </li>
             <li class="navlist-item secondary-nav-item">
                 <a class="secondary-nav-item-link bleh--nav" data-bleh-page="performance" onclick="_change_settings_page('performance')">
-                    ${trans[lang2].settings.performance.name}
+                    ${trans[lang].settings.performance.name}
                 </a>
             </li>
             <li class="navlist-item secondary-nav-item">
@@ -7898,32 +7903,32 @@
             </li>
         </ul>
     `;
-    page2.structure.side.innerHTML = `
+    page.structure.side.innerHTML = `
         <div class="bleh--panel">
             ${!ff("bleh_settings_tabs") ? `
             <div class="btns">
                 <button class="btn bleh--btn" data-bleh-page="home" onclick="_change_settings_page('home')">
-                    ${trans[lang2].settings.home.name}
+                    ${trans[lang].settings.home.name}
                 </button>
                 <button class="btn bleh--btn" data-bleh-page="themes" onclick="_change_settings_page('themes')">
-                    ${trans[lang2].settings.appearance.name}
+                    ${trans[lang].settings.appearance.name}
                 </button>
                 <button class="btn bleh--btn" data-bleh-page="customise" onclick="_change_settings_page('customise')">
-                    ${trans[lang2].settings.layout.name}
+                    ${trans[lang].settings.layout.name}
                 </button>
                 <button class="btn bleh--btn" data-bleh-page="music" onclick="_change_settings_page('music')">
-                    ${trans[lang2].settings.music.name}
+                    ${trans[lang].settings.music.name}
                 </button>
                 <button class="btn bleh--btn" data-bleh-page="accessibility" onclick="_change_settings_page('accessibility')">
-                    ${trans[lang2].settings.accessibility.name}
+                    ${trans[lang].settings.accessibility.name}
                 </button>
                 <button class="btn bleh--btn" data-bleh-page="seasonal" data-season="${stored_season.id}" onclick="_change_settings_page('seasonal')">
-                    ${trans[lang2].settings.customise.seasonal.name}
+                    ${trans[lang].settings.customise.seasonal.name}
                 </button>
             </div>
             <div class="btns sep">
                 <button class="btn bleh--btn" data-bleh-page="text" onclick="_change_settings_page('text')">
-                    ${trans[lang2].settings.text.name}
+                    ${trans[lang].settings.text.name}
                 </button>
                 <button class="btn bleh--btn" data-bleh-page="sku" onclick="_change_settings_page('sku')">
                     shhh...
@@ -7931,56 +7936,56 @@
             </div>
             <div class="btns sep">
                 <button class="btn" data-bleh-action="import" onclick="_import_settings()">
-                    ${trans[lang2].settings.actions.import.name}
+                    ${trans[lang].settings.actions.import.name}
                 </button>
                 <button class="btn" data-bleh-action="export" onclick="_export_settings()">
-                    ${trans[lang2].settings.actions.export.name}
+                    ${trans[lang].settings.actions.export.name}
                 </button>
             </div>
             <div class="btns sep">
                 <button class="btn bleh--btn" data-bleh-page="profiles" onclick="_change_settings_page('profiles')">
-                    ${trans[lang2].settings.profiles.name}
+                    ${trans[lang].settings.profiles.name}
                 </button>
                 <button class="btn bleh--btn" data-bleh-page="performance" onclick="_change_settings_page('performance')">
-                    ${trans[lang2].settings.performance.name}
+                    ${trans[lang].settings.performance.name}
                 </button>
                 <button class="btn" data-bleh-action="reset" onclick="_reset_settings()">
-                    ${trans[lang2].settings.actions.reset.name}
+                    ${trans[lang].settings.actions.reset.name}
                 </button>
             </div>
             ` : `
             ${ff("skip_to_setting") ? `
-            <h4>${trans[lang2].settings.skip_to.name}</h4>
+            <h4>${trans[lang].settings.skip_to.name}</h4>
             <div class="skip-to-list"></div>
             ` : ""}
             ${ff("skip_to_setting") ? '<div class="btns sep">' : '<div class="btns">'}
                 <button class="btn" data-bleh-action="import" onclick="_import_settings()">
-                    ${trans[lang2].settings.actions.import.name}
+                    ${trans[lang].settings.actions.import.name}
                 </button>
                 <button class="btn" data-bleh-action="export" onclick="_export_settings()">
-                    ${trans[lang2].settings.actions.export.name}
+                    ${trans[lang].settings.actions.export.name}
                 </button>
                 <button class="btn" data-bleh-action="reset" onclick="_reset_settings()">
-                    ${trans[lang2].settings.actions.reset.name}
+                    ${trans[lang].settings.actions.reset.name}
                 </button>
             </div>
             `}
-            ${settings2.feature_flags.changelogs != false ? `
+            ${settings.feature_flags.changelogs != false ? `
             <div class="btns">
                 <button class="btn bleh--btn primary" data-bleh-page="changelog" onclick="_query_changelog()">
-                    ${trans[lang2].changelog.name}
+                    ${trans[lang].changelog.name}
                 </button>
             </div>
             ` : ""}
         </div>
     `;
-    page2.structure.container.insertBefore(nav, page2.structure.row);
-    if (page2.requested.tab == null)
+    page.structure.container.insertBefore(nav, page.structure.row);
+    if (page.requested.tab == null)
       change_settings_page("home");
     else
-      change_settings_page(page2.requested.tab);
-    if (page2.requested.setting != null) {
-      scroll_to_setting(page2.requested.setting);
+      change_settings_page(page.requested.tab);
+    if (page.requested.setting != null) {
+      scroll_to_setting(page.requested.setting);
     }
   }
   function render_setting_page(page_id) {
@@ -7988,56 +7993,56 @@
       register_skip_to([]);
       let sponsoring = false;
       if (sponsor_list)
-        sponsoring = sponsor_list.sponsors.includes(auth2.name);
+        sponsoring = sponsor_list.sponsors.includes(auth.name);
       return `
         <div class="bleh--panel">
-            <h4 class="top-header">${trans[lang2].settings.home.name}</h4>
+            <h4 class="top-header">${trans[lang].settings.home.name}</h4>
             <div class="user-top-panel" data-sponsoring="${sponsoring}">
                 <div class="user-top-avatar user-top-avatar-side-left"></div>
-                <img class="user-top-avatar user-top-avatar-main" src="${auth2.avatar.replace("avatar42s", "avatar300s")}" alt="${auth2.name}">
+                <img class="user-top-avatar user-top-avatar-main" src="${auth.avatar.replace("avatar42s", "avatar300s")}" alt="${auth.name}">
                 <div class="user-top-avatar user-top-avatar-side-right"></div>
             </div>
             ${sponsoring ? `
-            <h4>${trans[lang2].settings.home.sponsor.thanks.replace("{m}", `<a class="mention" href="${root}user/${auth2.name}">@${auth2.name}</a>`).replace("{v}", `<span class="version-link" onclick="_change_settings_page('sku')">${version.build}.${version.sku}</span>`)}</h4>
+            <h4>${trans[lang].settings.home.sponsor.thanks.replace("{m}", `<a class="mention" href="${root}user/${auth.name}">@${auth.name}</a>`).replace("{v}", `<span class="version-link" onclick="_change_settings_page('sku')">${version.build}.${version.sku}</span>`)}</h4>
             ` : `
-            <h4>${trans[lang2].settings.home.thanks.replace("{m}", `<a class="mention" href="${root}user/${auth2.name}">@${auth2.name}</a>`).replace("{v}", `<span class="version-link" onclick="_change_settings_page('sku')">${version.build}.${version.sku}</span>`)}</h4>
+            <h4>${trans[lang].settings.home.thanks.replace("{m}", `<a class="mention" href="${root}user/${auth.name}">@${auth.name}</a>`).replace("{v}", `<span class="version-link" onclick="_change_settings_page('sku')">${version.build}.${version.sku}</span>`)}</h4>
             `}
             <div class="screen-row actions-only">
                 <div class="actions">
                     <button class="btn primary update icon" onclick="_force_refresh_theme()">
-                        ${trans[lang2].settings.home.update.update_now}
+                        ${trans[lang].settings.home.update.update_now}
                     </button>
-                    ${settings2.dev ? `
+                    ${settings.dev ? `
                     <a class="btn primary update icon" href="https://github.com/katelyynn/bleh/raw/uwu/fm/bleh.user.css">
-                        ${trans[lang2].settings.home.update.css}
+                        ${trans[lang].settings.home.update.css}
                     </a>
                     ` : ""}
                     ${ff("sponsor") ? `
                     <button class="btn primary sponsor" onclick="_sponsor()">
-                        ${trans[lang2].settings.home.sponsor.name}<div class="new-badge">${trans[lang2].settings.new}</div>
+                        ${trans[lang].settings.home.sponsor.name}<div class="new-badge">${trans[lang].settings.new}</div>
                     </button>
                     ` : ""}
                     <a class="btn action bleh--issues" href="https://github.com/katelyynn/bleh/issues" target="_blank">
-                        ${trans[lang2].settings.home.issues.name}
+                        ${trans[lang].settings.home.issues.name}
                     </a>
                 </div>
             </div>
             <div class="sep"></div>
-            <h4>${trans[lang2].settings.customise.seasonal.name}</h4>
+            <h4>${trans[lang].settings.customise.seasonal.name}</h4>
             <div class="current-season-box no-margin" data-season="${stored_season.id}">
                 <div class="current-season-info">
                     <div class="bleh-icon bleh-seasonal-icon" data-season="${stored_season.id}"></div>
-                    <h4>${trans[lang2].settings.customise.seasonal.listing[stored_season.id]}</h4>
+                    <h4>${trans[lang].settings.customise.seasonal.listing[stored_season.id]}</h4>
                 </div>
                 <div class="glacier-library-top season-top">
                     <div class="glacier-library-metadata">
                         ${stored_season.id != "none" && stored_season.start && stored_season.end ? `
                         <div class="glacier-library-metadata-item">
-                            <div class="sub-text">${trans[lang2].settings.customise.seasonal.started}</div>
+                            <div class="sub-text">${trans[lang].settings.customise.seasonal.started}</div>
                             <div class="glacier-library-metadata-item-value" id="current_season">${moment(stored_season.start.replace("y0", stored_season.year).replace("{offset}", stored_season.offset)).from(stored_season.now)}</div>
                         </div>
                         <div class="glacier-library-metadata-item">
-                            <div class="sub-text">${trans[lang2].settings.customise.seasonal.ends_in}</div>
+                            <div class="sub-text">${trans[lang].settings.customise.seasonal.ends_in}</div>
                             <div class="glacier-library-metadata-item-value" id="current_season_start">${moment(stored_season.end.replace("y0", stored_season.year).replace("{offset}", stored_season.offset)).to(stored_season.now, true)}</div>
                         </div>
                         ` : ""}
@@ -8045,39 +8050,39 @@
                 </div>
             </div>
             <button class="btn continue" onclick="_change_settings_page('seasonal')">
-                ${trans[lang2].settings.customise.seasonal.view}
+                ${trans[lang].settings.customise.seasonal.view}
             </button>
-            <h4>${trans[lang2].settings.home.recommended}</h4>
+            <h4>${trans[lang].settings.home.recommended}</h4>
             <div class="setting-items full">
                 <div class="side-right full">
                     <button class="btn setting-item bleh--themes" onclick="_change_settings_page('themes')">
                         <div class="text">
-                            <h5>${trans[lang2].settings.themes.name}</h5>
-                            <p>${trans[lang2].settings.themes.bio}</p>
+                            <h5>${trans[lang].settings.themes.name}</h5>
+                            <p>${trans[lang].settings.themes.bio}</p>
                         </div>
                     </button>
                     <button class="btn setting-item bleh--palette" onclick="_change_settings_page('themes')">
                         <div class="text">
-                            <h5>${trans[lang2].settings.home.colours.name}</h5>
-                            <p>${trans[lang2].settings.home.colours.bio}</p>
+                            <h5>${trans[lang].settings.home.colours.name}</h5>
+                            <p>${trans[lang].settings.home.colours.bio}</p>
                         </div>
                     </button>
                     <button class="btn setting-item bleh--corrections" onclick="_change_settings_page('music', 'corrections')">
                         <div class="text">
-                            <h5>${trans[lang2].settings.corrections.name}</h5>
-                            <p>${trans[lang2].settings.corrections.bio}</p>
+                            <h5>${trans[lang].settings.corrections.name}</h5>
+                            <p>${trans[lang].settings.corrections.bio}</p>
                         </div>
                     </button>
                     <button class="btn setting-item bleh--motion" onclick="_change_settings_page('accessibility')">
                         <div class="text">
-                            <h5>${trans[lang2].settings.accessibility.reduced_motion.name}</h5>
-                            <p>${trans[lang2].settings.accessibility.reduced_motion.bio}</p>
+                            <h5>${trans[lang].settings.accessibility.reduced_motion.name}</h5>
+                            <p>${trans[lang].settings.accessibility.reduced_motion.bio}</p>
                         </div>
                     </button>
                     <button class="btn setting-item bleh--link" onclick="_change_settings_page('accessibility')">
                         <div class="text">
-                            <h5>${trans[lang2].settings.accessibility.underline_links.name}</h5>
-                            <p>${trans[lang2].settings.accessibility.underline_links.bio}</p>
+                            <h5>${trans[lang].settings.accessibility.underline_links.name}</h5>
+                            <p>${trans[lang].settings.accessibility.underline_links.bio}</p>
                         </div>
                     </button>
                 </div>
@@ -8104,15 +8109,15 @@
       register_skip_to([
         {
           id: "hue_from_album",
-          name: trans[lang2].settings.customise.hue_from_album.name
+          name: trans[lang].settings.customise.hue_from_album.name
         },
         {
           id: "colourful_tracks",
-          name: trans[lang2].settings.customise.colourful_tracks.name
+          name: trans[lang].settings.customise.colourful_tracks.name
         },
         {
           id: "colourful_counts",
-          name: trans[lang2].settings.customise.colourful_counts.name
+          name: trans[lang].settings.customise.colourful_counts.name
         }
       ]);
       let preview_bar = "background: linear-gradient(90deg";
@@ -8135,9 +8140,9 @@
       preview_bar = `${preview_bar});`;
       return `
             <div class="bleh--panel">
-                <h4 class="top-header">${trans[lang2].settings.appearance.name}</h4>
-                <h4>${trans[lang2].settings.themes.name}</h4>
-                <!--<h4>${trans[lang2].settings.themes.dark.name}</h4>-->
+                <h4 class="top-header">${trans[lang].settings.appearance.name}</h4>
+                <h4>${trans[lang].settings.themes.name}</h4>
+                <!--<h4>${trans[lang].settings.themes.dark.name}</h4>-->
                 <div class="setting-items full">
                     <div class="side-left full even-more">
                         <button class="btn theme-item" data-bleh-theme="light" onclick="change_theme_from_settings('light')">
@@ -8145,7 +8150,7 @@
                                 ${theme_preview}
                             </div>
                             <div class="text">
-                                <h5>${trans[lang2].settings.themes.light.name}</h5>
+                                <h5>${trans[lang].settings.themes.light.name}</h5>
                             </div>
                         </button>
                         <button class="btn theme-item" data-bleh-theme="dark" onclick="change_theme_from_settings('dark')">
@@ -8153,7 +8158,7 @@
                                 ${theme_preview}
                             </div>
                             <div class="text">
-                                <h5>${trans[lang2].settings.themes.dark.name}</h5>
+                                <h5>${trans[lang].settings.themes.dark.name}</h5>
                             </div>
                         </button>
                         <button class="btn theme-item" data-bleh-theme="darker" onclick="change_theme_from_settings('darker')">
@@ -8161,7 +8166,7 @@
                                 ${theme_preview}
                             </div>
                             <div class="text">
-                                <h5>${trans[lang2].settings.themes.darker.name}</h5>
+                                <h5>${trans[lang].settings.themes.darker.name}</h5>
                             </div>
                         </button>
                         <button class="btn theme-item" data-bleh-theme="oled" onclick="change_theme_from_settings('oled')">
@@ -8169,16 +8174,16 @@
                                 ${theme_preview}
                             </div>
                             <div class="text">
-                                <h5>${trans[lang2].settings.themes.oled.name}</h5>
+                                <h5>${trans[lang].settings.themes.oled.name}</h5>
                             </div>
                         </button>
                     </div>
                 </div>
                 ${ff("high_contrast") ? `
                 <div class="toggle-container" id="container-high_contrast" onclick="_update_item('high_contrast')">
-                    <button class="btn reset" onclick="_reset_item('high_contrast')">${trans[lang2].settings.reset}</button>
+                    <button class="btn reset" onclick="_reset_item('high_contrast')">${trans[lang].settings.reset}</button>
                     <div class="heading">
-                        <h5>${trans[lang2].settings.customise.high_contrast.name}</h5>
+                        <h5>${trans[lang].settings.customise.high_contrast.name}</h5>
                     </div>
                     <div class="toggle-wrap">
                         <button class="toggle" id="toggle-high_contrast" aria-checked="true">
@@ -8188,7 +8193,7 @@
                 </div>
                 ` : ""}
                 <div class="sep"></div>
-                <h4>${trans[lang2].settings.customise.colours.name}</h4>
+                <h4>${trans[lang].settings.customise.colours.name}</h4>
                 <div class="inner-preview pad">
                     <div class="palette">
                         <div class="swatch" style="--col: hsl(var(--l2-c))"></div>
@@ -8202,7 +8207,7 @@
                         <tbody>
                             <tr class="chartlist-row chartlist-row--now-scrobbling chartlist-row--with-artist" style="transition: none !important">
                                 <td class="chartlist-image">
-                                    <a class="cover-art"><img src="${auth2.avatar}" loading="lazy"></a>
+                                    <a class="cover-art"><img src="${auth.avatar}" loading="lazy"></a>
                                 </td>
                                 <td class="chartlist-loved">
                                     <button class="chartlist-love-button" data-toggle-button-current-state="unloved"></button>
@@ -8211,7 +8216,7 @@
                                     <a>Song title</a>
                                 </td>
                                 <td class="chartlist-artist">
-                                    <a>${auth2.name}</a>
+                                    <a>${auth.name}</a>
                                 </td>
                                 <td class="chartlist-timestamp chartlist-timestamp--lang-en">
                                     <span class="chartlist-now-scrobbling">
@@ -8222,8 +8227,8 @@
                         </tbody>
                     </table>
                     <div class="btn-row">
-                        <button class="btn">${trans[lang2].settings.examples.button}</button>
-                        <button class="btn primary">${trans[lang2].settings.examples.button}</button>
+                        <button class="btn">${trans[lang].settings.examples.button}</button>
+                        <button class="btn primary">${trans[lang].settings.examples.button}</button>
                         <div class="chartlist-count-bar">
                             <a class="chartlist-count-bar-link">
                                 <span class="chartlist-count-bar-slug" style="width: 60%"></span>
@@ -8245,10 +8250,10 @@
                     <div id="colour_pink" class="palette options colours"></div>
                 </div>
                 <div class="toggle-container" id="container-hue_from_album" onclick="_update_item('hue_from_album')">
-                    <button class="btn reset" onclick="_reset_item('hue_from_album')">${trans[lang2].settings.reset}</button>
+                    <button class="btn reset" onclick="_reset_item('hue_from_album')">${trans[lang].settings.reset}</button>
                     <div class="heading">
-                        <h5>${trans[lang2].settings.customise.hue_from_album.name}</h5>
-                        <p>${trans[lang2].settings.customise.hue_from_album.bio}</p>
+                        <h5>${trans[lang].settings.customise.hue_from_album.name}</h5>
+                        <p>${trans[lang].settings.customise.hue_from_album.bio}</p>
                     </div>
                     <div class="toggle-wrap">
                         <button class="toggle" id="toggle-hue_from_album" aria-checked="true">
@@ -8257,10 +8262,10 @@
                     </div>
                 </div>
                 <div class="toggle-container" id="container-colourful_tracks" onclick="_update_item('colourful_tracks')">
-                    <button class="btn reset" onclick="_reset_item('colourful_tracks')">${trans[lang2].settings.reset}</button>
+                    <button class="btn reset" onclick="_reset_item('colourful_tracks')">${trans[lang].settings.reset}</button>
                     <div class="heading">
-                        <h5>${trans[lang2].settings.customise.colourful_tracks.name}</h5>
-                        <p>${trans[lang2].settings.customise.colourful_tracks.bio}</p>
+                        <h5>${trans[lang].settings.customise.colourful_tracks.name}</h5>
+                        <p>${trans[lang].settings.customise.colourful_tracks.bio}</p>
                     </div>
                     <div class="toggle-wrap">
                         <button class="toggle" id="toggle-colourful_tracks" aria-checked="true">
@@ -8319,10 +8324,10 @@
                     </div>
                 </div>
                 <div class="toggle-container" id="container-colourful_counts" onclick="_update_item('colourful_counts')">
-                    <button class="btn reset" onclick="_reset_item('colourful_counts')">${trans[lang2].settings.reset}</button>
+                    <button class="btn reset" onclick="_reset_item('colourful_counts')">${trans[lang].settings.reset}</button>
                     <div class="heading">
-                        <h5>${trans[lang2].settings.customise.colourful_counts.name}</h5>
-                        <p>${trans[lang2].settings.customise.colourful_counts.bio}</p>
+                        <h5>${trans[lang].settings.customise.colourful_counts.name}</h5>
+                        <p>${trans[lang].settings.customise.colourful_counts.bio}</p>
                     </div>
                     <div class="toggle-wrap">
                         <button class="toggle" id="toggle-colourful_counts" aria-checked="true">
@@ -8336,21 +8341,21 @@
       register_skip_to([
         {
           id: "profile_avi_background",
-          name: trans[lang2].settings.customise.profile_header.see_type
+          name: trans[lang].settings.customise.profile_header.see_type
         },
         {
           id: "profile_header_own",
-          name: trans[lang2].settings.customise.profile_header.view_on
+          name: trans[lang].settings.customise.profile_header.view_on
         },
         {
           id: "show_your_progress",
-          name: trans[lang2].settings.customise.show_your_progress.name
+          name: trans[lang].settings.customise.show_your_progress.name
         }
       ]);
       return `
             <div class="bleh--panel check-artist-hover">
-                <h4 class="top-header">${trans[lang2].settings.layout.name}</h4>
-                <h4>${trans[lang2].settings.layout.header}</h4>
+                <h4 class="top-header">${trans[lang].settings.layout.name}</h4>
+                <h4>${trans[lang].settings.layout.header}</h4>
                 <div class="inner-preview pad">
                     <div class="profile-mockup artist">
                         <div class="mockup-header">
@@ -8380,39 +8385,39 @@
                         <div class="profile-mockup-background" style="background-image: url(https://lastfm.freetls.fastly.net/i/u/avatar170s/383d6c03304e720075d0050e8a6a4644);"></div>
                     </div>
                 </div>
-                <h4>${trans[lang2].settings.layout.avatar_action.name}</h4>
-                <p>${trans[lang2].settings.layout.avatar_action.bio}</p>
+                <h4>${trans[lang].settings.layout.avatar_action.name}</h4>
+                <p>${trans[lang].settings.layout.avatar_action.bio}</p>
                 <div class="primary-selections artist-hover-image">
                     <div class="btn primary-selection" id="toggle-default_avatar_action-expand" data-toggle="default_avatar_action" data-toggle-value="expand" onclick="_update_item('default_avatar_action', 'expand')">
-                        <h5>${trans[lang2].gallery.open.name}</h5>
+                        <h5>${trans[lang].gallery.open.name}</h5>
                     </div>
                     <div class="btn primary-selection" id="toggle-default_avatar_action-gallery" data-toggle="default_avatar_action" data-toggle-value="gallery" onclick="_update_item('default_avatar_action', 'gallery')">
-                        <h5>${trans[lang2].settings.layout.avatar_action.gallery}</h5>
+                        <h5>${trans[lang].settings.layout.avatar_action.gallery}</h5>
                     </div>
                 </div>
-                <h4>${trans[lang2].settings.layout.quick_artist_button.name}</h4>
-                <p>${trans[lang2].settings.layout.quick_artist_button.bio}</p>
+                <h4>${trans[lang].settings.layout.quick_artist_button.name}</h4>
+                <p>${trans[lang].settings.layout.quick_artist_button.bio}</p>
                 <div class="primary-selections artist-hover-button">
                     <div class="btn primary-selection" id="toggle-quick_artist_button-gallery" data-toggle="quick_artist_button" data-toggle-value="gallery" onclick="_update_item('quick_artist_button', 'gallery')">
-                        <h5>${trans[lang2].gallery.view}</h5>
+                        <h5>${trans[lang].gallery.view}</h5>
                     </div>
                     <div class="btn primary-selection" id="toggle-quick_artist_button-shouts" data-toggle="quick_artist_button" data-toggle-value="shouts" onclick="_update_item('quick_artist_button', 'shouts')">
-                        <h5>${trans[lang2].settings.layout.quick_artist_button.shouts}</h5>
+                        <h5>${trans[lang].settings.layout.quick_artist_button.shouts}</h5>
                     </div>
                     <div class="btn primary-selection" id="toggle-quick_artist_button-wiki" data-toggle="quick_artist_button" data-toggle-value="wiki" onclick="_update_item('quick_artist_button', 'wiki')">
-                        <h5>${trans[lang2].settings.layout.quick_artist_button.wiki}</h5>
+                        <h5>${trans[lang].settings.layout.quick_artist_button.wiki}</h5>
                     </div>
                     <div class="btn primary-selection" id="toggle-quick_artist_button-listens" data-toggle="quick_artist_button" data-toggle-value="listens" onclick="_update_item('quick_artist_button', 'listens')">
-                        <h5>${trans[lang2].settings.layout.quick_artist_button.listens}</h5>
+                        <h5>${trans[lang].settings.layout.quick_artist_button.listens}</h5>
                     </div>
                 </div>
             </div>
             <div class="bleh--panel">
-                <h4>${trans[lang2].settings.customise.profile_header.name}</h4>
+                <h4>${trans[lang].settings.customise.profile_header.name}</h4>
                 <div class="inner-preview pad">
                     <div class="profile-mockup">
                         <div class="mockup-header">
-                            <img class="mockup-avatar" src="${auth2.avatar}">
+                            <img class="mockup-avatar" src="${auth.avatar}">
                             <div class="mockup-info">
                                 <div class="mockup-subtext"></div>
                                 <div class="mockup-name"></div>
@@ -8430,14 +8435,14 @@
                                 <div class="mockup-panel main"></div>
                             </div>
                         </div>
-                        <div class="profile-mockup-background from-avatar" style="background-image: url(${auth2.avatar});"></div>
+                        <div class="profile-mockup-background from-avatar" style="background-image: url(${auth.avatar});"></div>
                         <div class="profile-mockup-background from-track" style="background-image: url(https://lastfm.freetls.fastly.net/i/u/avatar170s/df927f4f88034b7f9a651636b965c9d7);"></div>
                     </div>
                 </div>
                 <div class="toggle-container" id="container-profile_avi_background" onclick="_update_item('profile_avi_background')">
-                    <button class="btn reset" onclick="_reset_item('profile_avi_background')">${trans[lang2].settings.reset}</button>
+                    <button class="btn reset" onclick="_reset_item('profile_avi_background')">${trans[lang].settings.reset}</button>
                     <div class="heading">
-                        <h5>${trans[lang2].settings.customise.profile_header.see_type}</h5>
+                        <h5>${trans[lang].settings.customise.profile_header.see_type}</h5>
                     </div>
                     <div class="toggle-wrap">
                         <button class="toggle" id="toggle-profile_avi_background" aria-checked="false">
@@ -8445,11 +8450,11 @@
                         </button>
                     </div>
                 </div>
-                <h4>${trans[lang2].settings.customise.profile_header.view_on}</h4>
+                <h4>${trans[lang].settings.customise.profile_header.view_on}</h4>
                 <div class="toggle-container" id="container-profile_header_own" onclick="_update_item('profile_header_own')">
-                    <button class="btn reset" onclick="_reset_item('profile_header_own')">${trans[lang2].settings.reset}</button>
+                    <button class="btn reset" onclick="_reset_item('profile_header_own')">${trans[lang].settings.reset}</button>
                     <div class="heading">
-                        <h5>${trans[lang2].settings.customise.profile_header.for_own}</h5>
+                        <h5>${trans[lang].settings.customise.profile_header.for_own}</h5>
                     </div>
                     <div class="toggle-wrap">
                         <button class="toggle" id="toggle-profile_header_own" aria-checked="false">
@@ -8458,9 +8463,9 @@
                     </div>
                 </div>
                 <div class="toggle-container" id="container-profile_header_others" onclick="_update_item('profile_header_others')">
-                    <button class="btn reset" onclick="_reset_item('profile_header_others')">${trans[lang2].settings.reset}</button>
+                    <button class="btn reset" onclick="_reset_item('profile_header_others')">${trans[lang].settings.reset}</button>
                     <div class="heading">
-                        <h5>${trans[lang2].settings.customise.profile_header.for_others}</h5>
+                        <h5>${trans[lang].settings.customise.profile_header.for_others}</h5>
                     </div>
                     <div class="toggle-wrap">
                         <button class="toggle" id="toggle-profile_header_others" aria-checked="false">
@@ -8470,10 +8475,10 @@
                 </div>
                 <div class="sep"></div>
                 <div class="toggle-container" id="container-show_your_progress" onclick="_update_item('show_your_progress')">
-                    <button class="btn reset" onclick="_reset_item('show_your_progress')">${trans[lang2].settings.reset}</button>
+                    <button class="btn reset" onclick="_reset_item('show_your_progress')">${trans[lang].settings.reset}</button>
                     <div class="heading">
-                        <h5>${trans[lang2].settings.customise.show_your_progress.name}</h5>
-                        <p>${trans[lang2].settings.customise.show_your_progress.bio}</p>
+                        <h5>${trans[lang].settings.customise.show_your_progress.name}</h5>
+                        <p>${trans[lang].settings.customise.show_your_progress.bio}</p>
                     </div>
                     <div class="toggle-wrap">
                         <button class="toggle" id="toggle-show_your_progress" aria-checked="true">
@@ -8483,10 +8488,10 @@
                 </div>
                 <div class="sep"></div>
                 <div class="toggle-container" id="container-rain" onclick="_update_item('rain')">
-                    <button class="btn reset" onclick="_reset_item('rain')">${trans[lang2].settings.reset}</button>
+                    <button class="btn reset" onclick="_reset_item('rain')">${trans[lang].settings.reset}</button>
                     <div class="heading">
-                        <h5>${trans[lang2].settings.customise.rain.name}</h5>
-                        <p>${trans[lang2].settings.customise.rain.bio}</p>
+                        <h5>${trans[lang].settings.customise.rain.name}</h5>
+                        <p>${trans[lang].settings.customise.rain.bio}</p>
                     </div>
                     <div class="toggle-wrap">
                         <button class="toggle" id="toggle-rain" aria-checked="true">
@@ -8501,22 +8506,22 @@
       return `
             <div class="bleh--panel">
                 <div class="seasonal-inner">
-                    <div class="sub-text">${trans[lang2].settings.customise.seasonal.timeline}</div>
+                    <div class="sub-text">${trans[lang].settings.customise.seasonal.timeline}</div>
                     <h4>${moment(stored_season.now).format("MMMM Do YYYY")}</h4>
                     <div class="current-season-box" data-season="${stored_season.id}">
                         <div class="current-season-info">
                             <div class="bleh-icon bleh-seasonal-icon" data-season="${stored_season.id}"></div>
-                            <h4>${trans[lang2].settings.customise.seasonal.listing[stored_season.id]}</h4>
+                            <h4>${trans[lang].settings.customise.seasonal.listing[stored_season.id]}</h4>
                         </div>
                         <div class="glacier-library-top season-top">
                             <div class="glacier-library-metadata">
                                 ${stored_season.id != "none" && stored_season.start && stored_season.end ? `
                                 <div class="glacier-library-metadata-item">
-                                    <div class="sub-text">${trans[lang2].settings.customise.seasonal.started}</div>
+                                    <div class="sub-text">${trans[lang].settings.customise.seasonal.started}</div>
                                     <div class="glacier-library-metadata-item-value" id="current_season_start">${moment(stored_season.start.replace("y0", stored_season.year).replace("{offset}", stored_season.offset)).from(stored_season.now)}</div>
                                 </div>
                                 <div class="glacier-library-metadata-item">
-                                    <div class="sub-text">${trans[lang2].settings.customise.seasonal.ends_in}</div>
+                                    <div class="sub-text">${trans[lang].settings.customise.seasonal.ends_in}</div>
                                     <div class="glacier-library-metadata-item-value" id="current_season">${moment(stored_season.end.replace("y0", stored_season.year).replace("{offset}", stored_season.offset)).to(stored_season.now, true)}</div>
                                 </div>
                                 ` : ""}
@@ -8526,24 +8531,24 @@
                 </div>
                 <div class="info-box no-padding">
                     <div class="bleh-icon bleh-info-icon"></div>
-                    ${trans[lang2].settings.customise.seasonal.info.replace("{offset}", `<code>${stored_season.offset}</code>`)}
+                    ${trans[lang].settings.customise.seasonal.info.replace("{offset}", `<code>${stored_season.offset}</code>`)}
                 </div>
-                <!--<p>${trans[lang2].settings.customise.seasonal.bio}</p>
+                <!--<p>${trans[lang].settings.customise.seasonal.bio}</p>
                 <div class="inner-preview pad click-thru">
                     <div class="current-season-container">
                         <div class="current-season" data-season="${stored_season.id}" id="current_season">
-                            ${stored_season.id != "none" ? trans[lang2].settings.customise.seasonal.marker.current.replace("{season}", trans[lang2].settings.customise.seasonal.listing[stored_season.id]) : settings2.seasonal ? trans[lang2].settings.customise.seasonal.marker.none : trans[lang2].settings.customise.seasonal.marker.disabled}
+                            ${stored_season.id != "none" ? trans[lang].settings.customise.seasonal.marker.current.replace("{season}", trans[lang].settings.customise.seasonal.listing[stored_season.id]) : settings.seasonal ? trans[lang].settings.customise.seasonal.marker.none : trans[lang].settings.customise.seasonal.marker.disabled}
                         </div>
                         <div class="current-season-started" id="current_season_start">
-                            ${stored_season.id != "none" ? trans[lang2].settings.customise.seasonal.marker.started : ""}
+                            ${stored_season.id != "none" ? trans[lang].settings.customise.seasonal.marker.started : ""}
                         </div>
                     </div>
                 </div>-->
-                <h4>${trans[lang2].settings.configure}</h4>
+                <h4>${trans[lang].settings.configure}</h4>
                 <div class="toggle-container" id="container-seasonal" onclick="_update_item('seasonal')">
-                    <button class="btn reset" onclick="_reset_item('seasonal')">${trans[lang2].settings.reset}</button>
+                    <button class="btn reset" onclick="_reset_item('seasonal')">${trans[lang].settings.reset}</button>
                     <div class="heading">
-                        <h5>${trans[lang2].settings.customise.seasonal.option.name}</h5>
+                        <h5>${trans[lang].settings.customise.seasonal.option.name}</h5>
                     </div>
                     <div class="toggle-wrap">
                         <button class="toggle" id="toggle-seasonal" aria-checked="true">
@@ -8553,10 +8558,10 @@
                 </div>
                 <div class="sep"></div>
                 <div class="toggle-container hide-if-seasonal-disabled" id="container-seasonal_particles" onclick="_update_item('seasonal_particles')">
-                    <button class="btn reset" onclick="_reset_item('seasonal_particles')">${trans[lang2].settings.reset}</button>
+                    <button class="btn reset" onclick="_reset_item('seasonal_particles')">${trans[lang].settings.reset}</button>
                     <div class="heading">
-                        <h5>${trans[lang2].settings.customise.seasonal.particles.name}</h5>
-                        <p>${trans[lang2].settings.customise.seasonal.particles.bio}</p>
+                        <h5>${trans[lang].settings.customise.seasonal.particles.name}</h5>
+                        <p>${trans[lang].settings.customise.seasonal.particles.bio}</p>
                     </div>
                     <div class="toggle-wrap">
                         <button class="toggle" id="toggle-seasonal_particles" aria-checked="true">
@@ -8565,9 +8570,9 @@
                     </div>
                 </div>
                 <div class="toggle-container hide-if-seasonal-disabled" id="container-seasonal_particles_reduced" onclick="_update_item('seasonal_particles_reduced')">
-                    <button class="btn reset" onclick="_reset_item('seasonal_particles_reduced')">${trans[lang2].settings.reset}</button>
+                    <button class="btn reset" onclick="_reset_item('seasonal_particles_reduced')">${trans[lang].settings.reset}</button>
                     <div class="heading">
-                        <h5>${trans[lang2].settings.customise.seasonal.show_less_particles.name}</h5>
+                        <h5>${trans[lang].settings.customise.seasonal.show_less_particles.name}</h5>
                     </div>
                     <div class="toggle-wrap">
                         <button class="toggle" id="toggle-seasonal_particles_reduced" aria-checked="true">
@@ -8576,10 +8581,10 @@
                     </div>
                 </div>
                 <div class="toggle-container hide-if-seasonal-disabled" id="container-seasonal_particles_fps" onclick="_update_item('seasonal_particles_fps')">
-                    <button class="btn reset" onclick="_reset_item('seasonal_particles_fps')">${trans[lang2].settings.reset}</button>
+                    <button class="btn reset" onclick="_reset_item('seasonal_particles_fps')">${trans[lang].settings.reset}</button>
                     <div class="heading">
-                        <h5>${trans[lang2].settings.customise.seasonal.fps_particles.name}</h5>
-                        <p>${trans[lang2].settings.customise.seasonal.fps_particles.bio}</p>
+                        <h5>${trans[lang].settings.customise.seasonal.fps_particles.name}</h5>
+                        <p>${trans[lang].settings.customise.seasonal.fps_particles.bio}</p>
                     </div>
                     <div class="toggle-wrap">
                         <button class="toggle" id="toggle-seasonal_particles_fps" aria-checked="true">
@@ -8589,10 +8594,10 @@
                 </div>
                 <div class="sep"></div>
                 <div class="toggle-container hide-if-seasonal-disabled" id="container-seasonal_overlays" onclick="_update_item('seasonal_overlays')">
-                    <button class="btn reset" onclick="_reset_item('seasonal_overlays')">${trans[lang2].settings.reset}</button>
+                    <button class="btn reset" onclick="_reset_item('seasonal_overlays')">${trans[lang].settings.reset}</button>
                     <div class="heading">
-                        <h5>${trans[lang2].settings.customise.seasonal.overlays.name}</h5>
-                        <p>${trans[lang2].settings.customise.seasonal.overlays.bio}</p>
+                        <h5>${trans[lang].settings.customise.seasonal.overlays.name}</h5>
+                        <p>${trans[lang].settings.customise.seasonal.overlays.bio}</p>
                     </div>
                     <div class="toggle-wrap">
                         <button class="toggle" id="toggle-seasonal_overlays" aria-checked="true">
@@ -8606,8 +8611,8 @@
       register_skip_to([]);
       return `
             <div class="bleh--panel">
-                <h4 class="top-header">${trans[lang2].settings.performance.name}</h4>
-                <p>${trans[lang2].settings.performance.bio}</p>
+                <h4 class="top-header">${trans[lang].settings.performance.name}</h4>
+                <p>${trans[lang].settings.performance.bio}</p>
                 <div class="toggle-container">
                     <div class="heading">
                         <h5>Refresh theme</h5>
@@ -8618,10 +8623,10 @@
                     </div>
                 </div>
                 <div class="toggle-container" id="container-dev" onclick="_update_item('dev')">
-                    <button class="btn reset" onclick="_reset_item('dev')">${trans[lang2].settings.reset}</button>
+                    <button class="btn reset" onclick="_reset_item('dev')">${trans[lang].settings.reset}</button>
                     <div class="heading">
-                        <h5>${trans[lang2].settings.performance.dev.name}</h5>
-                        <p>${trans[lang2].settings.performance.dev.bio}</p>
+                        <h5>${trans[lang].settings.performance.dev.name}</h5>
+                        <p>${trans[lang].settings.performance.dev.bio}</p>
                     </div>
                     <div class="toggle-wrap">
                         <button class="toggle" id="toggle-dev" aria-checked="false">
@@ -8632,18 +8637,18 @@
                 <div class="sep"></div>
                 <div class="toggle-container">
                     <div class="heading">
-                        <h5>${trans[lang2].settings.performance.bug.name}</h5>
-                        <p>${trans[lang2].settings.performance.bug.bio}</p>
+                        <h5>${trans[lang].settings.performance.bug.name}</h5>
+                        <p>${trans[lang].settings.performance.bug.bio}</p>
                     </div>
                     <div class="toggle-wrap">
-                        <a class="btn bleh--btn primary" href="https://github.com/katelyynn/bleh/issues/new/choose" target="_blank">${trans[lang2].settings.go}</a>
+                        <a class="btn bleh--btn primary" href="https://github.com/katelyynn/bleh/issues/new/choose" target="_blank">${trans[lang].settings.go}</a>
                     </div>
                 </div>
                 <div class="sep"></div>
                 <h4>Debug information</h4>
                 <ul>
-                    <li>Theme loading is currently ${!settings2.dev}</li>
-                    <li><span class="lotus lotus-name lotus-name-small">lotus</span> is currently ${settings2.corrections}</li>
+                    <li>Theme loading is currently ${!settings.dev}</li>
+                    <li><span class="lotus lotus-name lotus-name-small">lotus</span> is currently ${settings.corrections}</li>
                     <br>
                     <li>Theme will expire at <span class="time">${moment(localStorage.getItem("bleh_cached_style_timeout")).format("HH:mm:ss Z")}</span></li>
                     <li><span class="lotus lotus-name lotus-name-small">lotus</span> (artist) will expire at <span class="time">${moment(localStorage.getItem("lotus_artist_expire")).format("HH:mm:ss Z")}</span></li>
@@ -8673,74 +8678,74 @@
         {
           id: "profile_shortcut",
           type: "text",
-          name: trans[lang2].settings.music.profile_shortcut.name
+          name: trans[lang].settings.music.profile_shortcut.name
         },
         {
           id: "activities",
-          name: trans[lang2].settings.activities.toggle.name
+          name: trans[lang].settings.activities.toggle.name
         }
       ]);
       let sponsoring = false;
       if (sponsor_list)
-        sponsoring = sponsor_list.sponsors.includes(auth2.name);
+        sponsoring = sponsor_list.sponsors.includes(auth.name);
       return `
             <div class="bleh--panel sponsor-badge-panel" data-sponsoring="${sponsoring}">
                 <div class="profile-container">
                     <div class="avatar-side small">
                         <div class="avatar">
-                            <img src="${auth2.avatar.replace("/avatar42s/", "/avatar170s/")}" alt="Your avatar" loading="lazy">
+                            <img src="${auth.avatar.replace("/avatar42s/", "/avatar170s/")}" alt="Your avatar" loading="lazy">
                         </div>
                     </div>
                     <div class="info-side">
                         <div class="header-info">
-                            <div class="sub-text">${trans[lang2].settings.profiles.you}</div>
+                            <div class="sub-text">${trans[lang].settings.profiles.you}</div>
                             <div class="header standalone title-container">
-                                <h1>${auth2.name}</h1>
-                                ${auth2.pro ? `
-                                <span class="label user-status-subscriber">${trans[lang2].badges["user-status-subscriber"].name}</span>
+                                <h1>${auth.name}</h1>
+                                ${auth.pro ? `
+                                <span class="label user-status-subscriber">${trans[lang].badges["user-status-subscriber"].name}</span>
                                 ` : ""}
                             </div>
                         </div>
                     </div>
                 </div>
                 ${ff("api") ? `
-                <h4>${trans[lang2].settings.profiles.api.name}</h4>
-                <div class="alert alert-info">${trans[lang2].settings.profiles.api.bio}</div>
+                <h4>${trans[lang].settings.profiles.api.name}</h4>
+                <div class="alert alert-info">${trans[lang].settings.profiles.api.bio}</div>
                 <div class="text-container" id="container-api_key">
-                    <button class="btn reset" onclick="_reset_item('api_key')">${trans[lang2].settings.reset}</button>
+                    <button class="btn reset" onclick="_reset_item('api_key')">${trans[lang].settings.reset}</button>
                     <div class="heading content-form">
                         <div class="input-container">
-                            <input type="password" maxlength="120" id="text-api_key" value="${settings2.api_key}" placeholder="${trans[lang2].settings.profiles.api.placeholder}">
-                            <button class="btn primary save" onclick="_save_api_key()">${trans[lang2].settings.save}</button>
-                            <a class="btn-add" href="${root}api/account/create" target="_blank">${trans[lang2].settings.create}</a>
+                            <input type="password" maxlength="120" id="text-api_key" value="${settings.api_key}" placeholder="${trans[lang].settings.profiles.api.placeholder}">
+                            <button class="btn primary save" onclick="_save_api_key()">${trans[lang].settings.save}</button>
+                            <a class="btn-add" href="${root}api/account/create" target="_blank">${trans[lang].settings.create}</a>
                         </div>
                     </div>
                 </div>
                 ` : ""}
                 <div class="sep"></div>
                 ${sponsoring ? `
-                <h4>${trans[lang2].settings.home.sponsor.status.yes}</h4>
-                <div class="alert alert-info">${trans[lang2].settings.home.sponsor.version.replace("{v}", `<span class="version-link sponsor-related">${sponsor_list.latest}</span>`)}</div>
+                <h4>${trans[lang].settings.home.sponsor.status.yes}</h4>
+                <div class="alert alert-info">${trans[lang].settings.home.sponsor.version.replace("{v}", `<span class="version-link sponsor-related">${sponsor_list.latest}</span>`)}</div>
                 <div class="screen-row actions-only">
                     <div class="actions">
                         <button class="btn primary sponsor" onclick="_sponsor_manage()">
-                            ${trans[lang2].settings.home.sponsor.manage}<div class="new-badge">${trans[lang2].settings.new}</div>
+                            ${trans[lang].settings.home.sponsor.manage}<div class="new-badge">${trans[lang].settings.new}</div>
                         </button>
                         <button class="btn refresh icon" onclick="_sponsor_check()">
-                            ${trans[lang2].settings.home.sponsor.check}
+                            ${trans[lang].settings.home.sponsor.check}
                         </button>
                     </div>
                 </div>
                 ` : `
-                <h4>${trans[lang2].settings.home.sponsor.status.no}</h4>
-                <div class="alert alert-info">${trans[lang2].settings.home.sponsor.version.replace("{v}", `<span class="version-link sponsor-related">${sponsor_list.latest}</span>`)}</div>
+                <h4>${trans[lang].settings.home.sponsor.status.no}</h4>
+                <div class="alert alert-info">${trans[lang].settings.home.sponsor.version.replace("{v}", `<span class="version-link sponsor-related">${sponsor_list.latest}</span>`)}</div>
                 <div class="screen-row actions-only">
                     <div class="actions">
                         <button class="btn primary sponsor" onclick="_sponsor()">
-                            ${trans[lang2].settings.home.sponsor.name}<div class="new-badge">${trans[lang2].settings.new}</div>
+                            ${trans[lang].settings.home.sponsor.name}<div class="new-badge">${trans[lang].settings.new}</div>
                         </button>
                         <button class="btn refresh icon" onclick="_sponsor_check()">
-                            ${trans[lang2].settings.home.sponsor.check}
+                            ${trans[lang].settings.home.sponsor.check}
                         </button>
                     </div>
                 </div>
@@ -8748,9 +8753,9 @@
             </div>
             <div class="bleh--panel">
                 <div class="slider-container" id="container-avatar_radius">
-                    <button class="btn reset" onclick="_reset_item('avatar_radius')">${trans[lang2].settings.reset}</button>
+                    <button class="btn reset" onclick="_reset_item('avatar_radius')">${trans[lang].settings.reset}</button>
                     <div class="heading">
-                        <h5>${trans[lang2].settings.profiles.avatar_radius.name}</h5>
+                        <h5>${trans[lang].settings.profiles.avatar_radius.name}</h5>
                     </div>
                     <div class="slider">
                         <div class="slider-track" id="slider-track-avatar_radius"><div class="slider-fill"></div><div class="slider-nub"></div></div>
@@ -8758,32 +8763,32 @@
                         <p id="value-avatar_radius">0</p>
                     </div>
                 </div>
-                <h4>${trans[lang2].settings.music.profile_shortcut.name}</h4>
-                <p>${trans[lang2].settings.music.profile_shortcut.bio}</p>
+                <h4>${trans[lang].settings.music.profile_shortcut.name}</h4>
+                <p>${trans[lang].settings.music.profile_shortcut.bio}</p>
                 <div class="text-container" id="container-profile_shortcut">
-                    <button class="btn reset" onclick="_reset_item('profile_shortcut')">${trans[lang2].settings.reset}</button>
+                    <button class="btn reset" onclick="_reset_item('profile_shortcut')">${trans[lang].settings.reset}</button>
                     <div class="avatar-container">
                         <div class="avatar-inner" id="avatar-profile_shortcut">
                             <img id="avatar_src-profile_shortcut" src="${localStorage.getItem("bleh_profile_shortcut_avi") || ""}">
                         </div>
                     </div>
                     <div class="heading content-form">
-                        <h5>${trans[lang2].settings.music.profile_shortcut.placeholder}</h5>
+                        <h5>${trans[lang].settings.music.profile_shortcut.placeholder}</h5>
                         <div class="input-container">
-                            <input type="text" maxlength="40" id="text-profile_shortcut" value="${settings2.profile_shortcut}" placeholder="${trans[lang2].settings.music.profile_shortcut.header}">
-                            <button class="bleh--btn primary save" onclick="_save_profile_shortcut()">${trans[lang2].settings.save}</button>
+                            <input type="text" maxlength="40" id="text-profile_shortcut" value="${settings.profile_shortcut}" placeholder="${trans[lang].settings.music.profile_shortcut.header}">
+                            <button class="bleh--btn primary save" onclick="_save_profile_shortcut()">${trans[lang].settings.save}</button>
                         </div>
                     </div>
                 </div>
             </div>
             <div class="bleh--panel">
-                <h4>${trans[lang2].settings.activities.name}</h4>
-                <p>${trans[lang2].settings.activities.bio}</p>
+                <h4>${trans[lang].settings.activities.name}</h4>
+                <p>${trans[lang].settings.activities.bio}</p>
                 <div class="toggle-container" id="container-activities" onclick="_update_item('activities')">
-                    <button class="btn reset" onclick="_reset_item('activities')">${trans[lang2].settings.reset}</button>
+                    <button class="btn reset" onclick="_reset_item('activities')">${trans[lang].settings.reset}</button>
                     <div class="heading">
-                        <h5>${trans[lang2].settings.activities.toggle.name}</h5>
-                        <p>${trans[lang2].settings.activities.toggle.bio}</p>
+                        <h5>${trans[lang].settings.activities.toggle.name}</h5>
+                        <p>${trans[lang].settings.activities.toggle.bio}</p>
                     </div>
                     <div class="toggle-wrap">
                         <button class="toggle" id="toggle-activities" aria-checked="true">
@@ -8793,12 +8798,12 @@
                 </div>
                 <div class="sep"></div>
                 <div class="toggle-container" id="container-activity_shout" onclick="_update_item('activity_shout')">
-                    <button class="btn reset" onclick="_reset_item('activity_shout')">${trans[lang2].settings.reset}</button>
+                    <button class="btn reset" onclick="_reset_item('activity_shout')">${trans[lang].settings.reset}</button>
                     <div class="icon">
                         <div class="bleh-icon" style="--icon: var(--icon-16-shoutbox)"></div>
                     </div>
                     <div class="heading">
-                        <h5>${trans[lang2].settings.activities.types.shout}</h5>
+                        <h5>${trans[lang].settings.activities.types.shout}</h5>
                     </div>
                     <div class="toggle-wrap">
                         <button class="toggle" id="toggle-activity_shout" aria-checked="true">
@@ -8807,12 +8812,12 @@
                     </div>
                 </div>
                 <div class="toggle-container" id="container-activity_image" onclick="_update_item('activity_image')">
-                    <button class="btn reset" onclick="_reset_item('activity_image')">${trans[lang2].settings.reset}</button>
+                    <button class="btn reset" onclick="_reset_item('activity_image')">${trans[lang].settings.reset}</button>
                     <div class="icon">
                         <div class="bleh-icon" style="--icon: var(--icon-16-gallery-vertical)"></div>
                     </div>
                     <div class="heading">
-                        <h5>${trans[lang2].settings.activities.types.image}</h5>
+                        <h5>${trans[lang].settings.activities.types.image}</h5>
                     </div>
                     <div class="toggle-wrap">
                         <button class="toggle" id="toggle-activity_image" aria-checked="true">
@@ -8821,12 +8826,12 @@
                     </div>
                 </div>
                 <div class="toggle-container" id="container-activity_obsess" onclick="_update_item('activity_obsess')">
-                    <button class="btn reset" onclick="_reset_item('activity_obsess')">${trans[lang2].settings.reset}</button>
+                    <button class="btn reset" onclick="_reset_item('activity_obsess')">${trans[lang].settings.reset}</button>
                     <div class="icon">
                         <div class="bleh-icon" style="--icon: var(--icon-16-obsession)"></div>
                     </div>
                     <div class="heading">
-                        <h5>${trans[lang2].settings.activities.types.obsess}</h5>
+                        <h5>${trans[lang].settings.activities.types.obsess}</h5>
                     </div>
                     <div class="toggle-wrap">
                         <button class="toggle" id="toggle-activity_obsess" aria-checked="true">
@@ -8835,12 +8840,12 @@
                     </div>
                 </div>
                 <div class="toggle-container" id="container-activity_love" onclick="_update_item('activity_love')">
-                    <button class="btn reset" onclick="_reset_item('activity_love')">${trans[lang2].settings.reset}</button>
+                    <button class="btn reset" onclick="_reset_item('activity_love')">${trans[lang].settings.reset}</button>
                     <div class="icon">
                         <div class="bleh-icon" style="--icon: var(--icon-16-heart)"></div>
                     </div>
                     <div class="heading">
-                        <h5>${trans[lang2].settings.activities.types.love}</h5>
+                        <h5>${trans[lang].settings.activities.types.love}</h5>
                     </div>
                     <div class="toggle-wrap">
                         <button class="toggle" id="toggle-activity_love" aria-checked="true">
@@ -8849,12 +8854,12 @@
                     </div>
                 </div>
                 <div class="toggle-container" id="container-activity_wiki" onclick="_update_item('activity_wiki')">
-                    <button class="btn reset" onclick="_reset_item('activity_wiki')">${trans[lang2].settings.reset}</button>
+                    <button class="btn reset" onclick="_reset_item('activity_wiki')">${trans[lang].settings.reset}</button>
                     <div class="icon">
                         <div class="bleh-icon" style="--icon: var(--icon-16-bio)"></div>
                     </div>
                     <div class="heading">
-                        <h5>${trans[lang2].settings.activities.types.wiki}</h5>
+                        <h5>${trans[lang].settings.activities.types.wiki}</h5>
                     </div>
                     <div class="toggle-wrap">
                         <button class="toggle" id="toggle-activity_wiki" aria-checked="true">
@@ -8863,12 +8868,12 @@
                     </div>
                 </div>
                 <div class="toggle-container" id="container-activity_install" onclick="_update_item('activity_install')">
-                    <button class="btn reset" onclick="_reset_item('activity_install')">${trans[lang2].settings.reset}</button>
+                    <button class="btn reset" onclick="_reset_item('activity_install')">${trans[lang].settings.reset}</button>
                     <div class="icon">
                         <div class="bleh-icon" style="--icon: var(--icon-16-download)"></div>
                     </div>
                     <div class="heading">
-                        <h5>${trans[lang2].settings.activities.types.install}</h5>
+                        <h5>${trans[lang].settings.activities.types.install}</h5>
                     </div>
                     <div class="toggle-wrap">
                         <button class="toggle" id="toggle-activity_install" aria-checked="true">
@@ -8878,7 +8883,7 @@
                 </div>
             </div>
             <div class="bleh--panel">
-                <h4>${trans[lang2].settings.profiles.notes.name}</h4>
+                <h4>${trans[lang].settings.profiles.notes.name}</h4>
                 <div class="profile-notes" id="profile-notes"></div>
             </div>
             `;
@@ -8886,12 +8891,12 @@
       register_skip_to([]);
       return `
             <div class="bleh--panel">
-                <h4 class="top-header">${trans[lang2].settings.accessibility.name}</h4>
+                <h4 class="top-header">${trans[lang].settings.accessibility.name}</h4>
                 <div class="toggle-container" id="container-reduced_motion" onclick="_update_item('reduced_motion')">
-                    <button class="btn reset" onclick="_reset_item('reduced_motion')">${trans[lang2].settings.reset}</button>
+                    <button class="btn reset" onclick="_reset_item('reduced_motion')">${trans[lang].settings.reset}</button>
                     <div class="heading">
-                        <h5>${trans[lang2].settings.accessibility.reduced_motion.name}</h5>
-                        <p>${trans[lang2].settings.accessibility.reduced_motion.bio}</p>
+                        <h5>${trans[lang].settings.accessibility.reduced_motion.name}</h5>
+                        <p>${trans[lang].settings.accessibility.reduced_motion.bio}</p>
                     </div>
                     <div class="toggle-wrap">
                         <button class="toggle" id="toggle-reduced_motion" aria-checked="false">
@@ -8902,10 +8907,10 @@
                 <div class="inner-preview pad flex">
                     <div class="shout js-shout js-link-block" data-kate-processed="true">
                         <h3 class="shout-user">
-                            <a>${auth2.name}</a>
+                            <a>${auth.name}</a>
                         </h3>
                         <span class="avatar shout-user-avatar">
-                            <img src="${auth2.avatar}" alt="Your avatar" loading="lazy">
+                            <img src="${auth.avatar}" alt="Your avatar" loading="lazy">
                         </span>
                         <a class="shout-permalink shout-timestamp">
                             <time datetime="2024-06-05T02:33:39+01:00" title="Wednesday 5 Jun 2024, 2:33am">
@@ -8913,15 +8918,15 @@
                             </time>
                         </a>
                         <div class="shout-body">
-                            <p>${trans[lang2].settings.accessibility.shout_preview}</p>
+                            <p>${trans[lang].settings.accessibility.shout_preview}</p>
                         </div>
                     </div>
                 </div>
                 <div class="toggle-container" id="container-accessible_name_colours" onclick="_update_item('accessible_name_colours')">
-                    <button class="btn reset" onclick="_reset_item('accessible_name_colours')">${trans[lang2].settings.reset}</button>
+                    <button class="btn reset" onclick="_reset_item('accessible_name_colours')">${trans[lang].settings.reset}</button>
                     <div class="heading">
-                        <h5>${trans[lang2].settings.accessibility.accessible_name_colours.name}</h5>
-                        <p>${trans[lang2].settings.accessibility.accessible_name_colours.bio}</p>
+                        <h5>${trans[lang].settings.accessibility.accessible_name_colours.name}</h5>
+                        <p>${trans[lang].settings.accessibility.accessible_name_colours.bio}</p>
                     </div>
                     <div class="toggle-wrap">
                         <button class="toggle" id="toggle-accessible_name_colours" aria-checked="false">
@@ -8930,10 +8935,10 @@
                     </div>
                 </div>
                 <div class="toggle-container" id="container-underline_links" onclick="_update_item('underline_links')">
-                    <button class="btn reset" onclick="_reset_item('underline_links')">${trans[lang2].settings.reset}</button>
+                    <button class="btn reset" onclick="_reset_item('underline_links')">${trans[lang].settings.reset}</button>
                     <div class="heading">
-                        <h5>${trans[lang2].settings.accessibility.underline_links.name}</h5>
-                        <p>${trans[lang2].settings.accessibility.underline_links.bio}</p>
+                        <h5>${trans[lang].settings.accessibility.underline_links.name}</h5>
+                        <p>${trans[lang].settings.accessibility.underline_links.bio}</p>
                     </div>
                     <div class="toggle-wrap">
                         <button class="toggle" id="toggle-underline_links" aria-checked="false">
@@ -8942,10 +8947,10 @@
                     </div>
                 </div>
                 <div class="toggle-container" id="container-toggle_icon" onclick="_update_item('toggle_icon')">
-                    <button class="btn reset" onclick="_reset_item('toggle_icon')">${trans[lang2].settings.reset}</button>
+                    <button class="btn reset" onclick="_reset_item('toggle_icon')">${trans[lang].settings.reset}</button>
                     <div class="heading">
-                        <h5>${trans[lang2].settings.accessibility.toggle_icon.name}</h5>
-                        <p>${trans[lang2].settings.accessibility.toggle_icon.bio}</p>
+                        <h5>${trans[lang].settings.accessibility.toggle_icon.name}</h5>
+                        <p>${trans[lang].settings.accessibility.toggle_icon.bio}</p>
                     </div>
                     <div class="toggle-wrap">
                         <button class="toggle" id="toggle-toggle_icon" aria-checked="false">
@@ -8959,22 +8964,22 @@
       register_skip_to([]);
       return `
             <div class="bleh--panel">
-                <h4 class="top-header">${trans[lang2].settings.text.name}</h4>
-                <h4>${trans[lang2].settings.text.font.name}</h4>
+                <h4 class="top-header">${trans[lang].settings.text.name}</h4>
+                <h4>${trans[lang].settings.text.font.name}</h4>
                 <div class="text-container" id="container-font">
-                    <button class="btn reset" onclick="_reset_item('font')">${trans[lang2].settings.reset}</button>
+                    <button class="btn reset" onclick="_reset_item('font')">${trans[lang].settings.reset}</button>
                     <div class="heading content-form">
                         <div class="input-container">
-                            <input type="text" maxlength="120" id="text-font" value="${settings2.font}" placeholder="${trans[lang2].settings.text.font.placeholder}">
-                            <button class="bleh--btn primary save" onclick="_save_font()">${trans[lang2].settings.save}</button>
+                            <input type="text" maxlength="120" id="text-font" value="${settings.font}" placeholder="${trans[lang].settings.text.font.placeholder}">
+                            <button class="bleh--btn primary save" onclick="_save_font()">${trans[lang].settings.save}</button>
                         </div>
                     </div>
                 </div>
                 <div class="slider-container" id="container-font_weight">
-                    <button class="btn reset" onclick="_reset_item('font_weight')">${trans[lang2].settings.reset}</button>
+                    <button class="btn reset" onclick="_reset_item('font_weight')">${trans[lang].settings.reset}</button>
                     <div class="heading">
-                        <h5>${trans[lang2].settings.text.font_weight.name}</h5>
-                        <p>${trans[lang2].settings.text.font_weight.bio}</p>
+                        <h5>${trans[lang].settings.text.font_weight.name}</h5>
+                        <p>${trans[lang].settings.text.font_weight.bio}</p>
                     </div>
                     <div class="slider">
                         <div class="slider-track" id="slider-track-font_weight"><div class="slider-fill"></div><div class="slider-nub"></div></div>
@@ -8983,10 +8988,10 @@
                     </div>
                 </div>
                 <div class="slider-container" id="container-font_weight_medium">
-                    <button class="btn reset" onclick="_reset_item('font_weight_medium')">${trans[lang2].settings.reset}</button>
+                    <button class="btn reset" onclick="_reset_item('font_weight_medium')">${trans[lang].settings.reset}</button>
                     <div class="heading">
-                        <h5>${trans[lang2].settings.text.font_weight_medium.name}</h5>
-                        <p>${trans[lang2].settings.text.font_weight_medium.bio}</p>
+                        <h5>${trans[lang].settings.text.font_weight_medium.name}</h5>
+                        <p>${trans[lang].settings.text.font_weight_medium.bio}</p>
                     </div>
                     <div class="slider">
                         <div class="slider-track" id="slider-track-font_weight_medium"><div class="slider-fill"></div><div class="slider-nub"></div></div>
@@ -8995,10 +9000,10 @@
                     </div>
                 </div>
                 <div class="slider-container" id="container-font_weight_bold">
-                    <button class="btn reset" onclick="_reset_item('font_weight_bold')">${trans[lang2].settings.reset}</button>
+                    <button class="btn reset" onclick="_reset_item('font_weight_bold')">${trans[lang].settings.reset}</button>
                     <div class="heading">
-                        <h5>${trans[lang2].settings.text.font_weight_bold.name}</h5>
-                        <p>${trans[lang2].settings.text.font_weight_bold.bio}</p>
+                        <h5>${trans[lang].settings.text.font_weight_bold.name}</h5>
+                        <p>${trans[lang].settings.text.font_weight_bold.bio}</p>
                     </div>
                     <div class="slider">
                         <div class="slider-track" id="slider-track-font_weight_bold"><div class="slider-fill"></div><div class="slider-nub"></div></div>
@@ -9007,10 +9012,10 @@
                     </div>
                 </div>
                 <div class="toggle-container" id="container-font_emoji" onclick="_update_item('font_emoji')">
-                    <button class="btn reset" onclick="_reset_item('font_emoji')">${trans[lang2].settings.reset}</button>
+                    <button class="btn reset" onclick="_reset_item('font_emoji')">${trans[lang].settings.reset}</button>
                     <div class="heading">
-                        <h5>${trans[lang2].settings.text.font_emoji.name}</h5>
-                        <p>${trans[lang2].settings.text.font_emoji.bio}</p>
+                        <h5>${trans[lang].settings.text.font_emoji.name}</h5>
+                        <p>${trans[lang].settings.text.font_emoji.bio}</p>
                     </div>
                     <div class="toggle-wrap">
                         <button class="toggle" id="toggle-font_emoji" aria-checked="false">
@@ -9022,7 +9027,7 @@
                 <div class="inner-preview pad flex">
                     <div class="shout js-shout js-link-block" data-kate-processed="true">
                         <h3 class="shout-user">
-                            <a>${auth2.name}</a>
+                            <a>${auth.name}</a>
                         </h3>
                         <span class="avatar shout-user-avatar avatar--bleh-missing">
                             <img src="" alt="Your avatar" loading="lazy">
@@ -9033,19 +9038,19 @@
                             </time>
                         </a>
                         <div class="shout-body if-markdown-on">
-                            <p>${trans[lang2].settings.text.shout_preview_md}</p>
+                            <p>${trans[lang].settings.text.shout_preview_md}</p>
                         </div>
                         <div class="shout-body if-markdown-off">
-                            <p>${trans[lang2].settings.text.shout_preview}</p>
+                            <p>${trans[lang].settings.text.shout_preview}</p>
                         </div>
                     </div>
                 </div>
-                <h4>${trans[lang2].settings.text.markdown.name}</h4>
-                <p>${trans[lang2].settings.text.markdown.bio}</p>
+                <h4>${trans[lang].settings.text.markdown.name}</h4>
+                <p>${trans[lang].settings.text.markdown.bio}</p>
                 <div class="toggle-container" id="container-shout_markdown" onclick="_update_item('shout_markdown')">
-                    <button class="btn reset" onclick="_reset_item('shout_markdown')">${trans[lang2].settings.reset}</button>
+                    <button class="btn reset" onclick="_reset_item('shout_markdown')">${trans[lang].settings.reset}</button>
                     <div class="heading">
-                        <h5>${trans[lang2].settings.text.markdown.shouts}</h5>
+                        <h5>${trans[lang].settings.text.markdown.shouts}</h5>
                     </div>
                     <div class="toggle-wrap">
                         <button class="toggle" id="toggle-shout_markdown" aria-checked="false">
@@ -9054,9 +9059,9 @@
                     </div>
                 </div>
                 <div class="toggle-container" id="container-bio_markdown" onclick="_update_item('bio_markdown')">
-                    <button class="btn reset" onclick="_reset_item('bio_markdown')">${trans[lang2].settings.reset}</button>
+                    <button class="btn reset" onclick="_reset_item('bio_markdown')">${trans[lang].settings.reset}</button>
                     <div class="heading">
-                        <h5>${trans[lang2].settings.text.markdown.profile}</h5>
+                        <h5>${trans[lang].settings.text.markdown.profile}</h5>
                     </div>
                     <div class="toggle-wrap">
                         <button class="toggle" id="toggle-bio_markdown" aria-checked="false">
@@ -9066,21 +9071,21 @@
                 </div>
             </div>
             <div class="bleh--panel">
-                <h4 class="top-header">${trans[lang2].settings.language.name}</h4>
+                <h4 class="top-header">${trans[lang].settings.language.name}</h4>
                 ${!valid_langs.includes(document.documentElement.getAttribute("lang")) ? `
                 <div class="alert alert-error">Selected language is not currently supported in bleh, sorry for the inconvenience.</div>
                 ` : ""}
-                <h4>${trans[lang2].settings.language.supported}</h4>
+                <h4>${trans[lang].settings.language.supported}</h4>
                 <div class="languages" id="languages"></div>
                 <div class="sep"></div>
                 <div class="alert alert-warning">This page is still under construction! A wiki page dedicated to submitting a language is not available currently.</div>
                 <div class="toggle-container">
                     <div class="heading">
-                        <h5>${trans[lang2].settings.language.submit.name}</h5>
-                        <p>${trans[lang2].settings.language.submit.bio}</p>
+                        <h5>${trans[lang].settings.language.submit.name}</h5>
+                        <p>${trans[lang].settings.language.submit.bio}</p>
                     </div>
                     <div class="toggle-wrap">
-                        <a class="btn bleh--btn primary" href="https://github.com/katelyynn/bleh/wiki" target="_blank">${trans[lang2].settings.language.submit.action}</a>
+                        <a class="btn bleh--btn primary" href="https://github.com/katelyynn/bleh/wiki" target="_blank">${trans[lang].settings.language.submit.action}</a>
                     </div>
                 </div>
             </div>
@@ -9102,44 +9107,44 @@
       register_skip_to([
         {
           id: "format_guest_features",
-          name: trans[lang2].settings.corrections.format_guest_features.name
+          name: trans[lang].settings.corrections.format_guest_features.name
         },
         {
           id: "corrections",
-          name: trans[lang2].settings.corrections.toggle.name
+          name: trans[lang].settings.corrections.toggle.name
         },
         {
           id: "stacked_chartlist_info",
-          name: trans[lang2].settings.corrections.stacked_chartlist_info.name
+          name: trans[lang].settings.corrections.stacked_chartlist_info.name
         },
         {
           id: "travis",
-          name: trans[lang2].settings.redirects.name
+          name: trans[lang].settings.redirects.name
         },
         {
           id: "gloss",
           type: "slider",
-          name: trans[lang2].settings.customise.gloss.name
+          name: trans[lang].settings.customise.gloss.name
         },
         {
           id: "grid_glow",
-          name: trans[lang2].settings.music.grid_glow.name
+          name: trans[lang].settings.music.grid_glow.name
         },
         {
           id: "gendered_tags",
-          name: trans[lang2].settings.customise.gendered_tags.name
+          name: trans[lang].settings.customise.gendered_tags.name
         }
       ]);
       return `
             <div class="bleh--panel">
-                <h4>${trans[lang2].settings.corrections.formatting}</h4>
+                <h4>${trans[lang].settings.corrections.formatting}</h4>
                 <div class="inner-preview pad flex">
                     <section class="redesigned-header mockup redesigned-track-header no-top-margin">
                         <div class="avatar-side">
                             <img src="https://lastfm.freetls.fastly.net/i/u/avatar170s/8bd696cbd4aa4d4eb6d35393232f55e4.jpg">
                         </div>
                         <div class="info-side">
-                            <div class="sub-text">${trans[lang2].track.name}</div>
+                            <div class="sub-text">${trans[lang].track.name}</div>
                             <div class="title-container">
                                 <h1 class="bleh--name-with-features">
                                     <div class="title">California Love</div>
@@ -9159,10 +9164,10 @@
                     </section>
                 </div>
                 <div class="toggle-container" id="container-format_guest_features" onclick="_update_item('format_guest_features')">
-                    <button class="btn reset" onclick="_reset_item('format_guest_features')">${trans[lang2].settings.reset}</button>
+                    <button class="btn reset" onclick="_reset_item('format_guest_features')">${trans[lang].settings.reset}</button>
                     <div class="heading">
-                        <h5>${trans[lang2].settings.corrections.format_guest_features.name}</h5>
-                        <p>${trans[lang2].settings.corrections.format_guest_features.bio}</p>
+                        <h5>${trans[lang].settings.corrections.format_guest_features.name}</h5>
+                        <p>${trans[lang].settings.corrections.format_guest_features.bio}</p>
                     </div>
                     <div class="toggle-wrap">
                         <button class="toggle" id="toggle-format_guest_features" aria-checked="true">
@@ -9171,10 +9176,10 @@
                     </div>
                 </div>
                 <div class="toggle-container hide-if-format-guest-disabled" id="container-show_guest_features" onclick="_update_item('show_guest_features')">
-                    <button class="btn reset" onclick="_reset_item('show_guest_features')">${trans[lang2].settings.reset}</button>
+                    <button class="btn reset" onclick="_reset_item('show_guest_features')">${trans[lang].settings.reset}</button>
                     <div class="heading">
-                        <h5>${trans[lang2].settings.corrections.show_guest_features.name}</h5>
-                        <p>${trans[lang2].settings.corrections.show_guest_features.bio}</p>
+                        <h5>${trans[lang].settings.corrections.show_guest_features.name}</h5>
+                        <p>${trans[lang].settings.corrections.show_guest_features.bio}</p>
                     </div>
                     <div class="toggle-wrap">
                         <button class="toggle" id="toggle-show_guest_features" aria-checked="true">
@@ -9188,7 +9193,7 @@
                             <img src="https://lastfm.freetls.fastly.net/i/u/avatar170s/def68d94aae8e52ef2d1c0c9d3e16ff4.jpg">
                         </div>
                         <div class="info-side">
-                            <div class="sub-text">${trans[lang2].album.name}</div>
+                            <div class="sub-text">${trans[lang].album.name}</div>
                             <div class="title-container">
                                 <h1>
                                     <div class="title">my anti-aircraft friend</div>
@@ -9202,9 +9207,9 @@
                     </section>
                 </div>
                 <div class="toggle-container hide-if-format-guest-disabled" id="container-show_remaster_tags" onclick="_update_item('show_remaster_tags')">
-                    <button class="btn reset" onclick="_reset_item('show_remaster_tags')">${trans[lang2].settings.reset}</button>
+                    <button class="btn reset" onclick="_reset_item('show_remaster_tags')">${trans[lang].settings.reset}</button>
                     <div class="heading">
-                        <h5>${trans[lang2].settings.corrections.show_remaster_tags.name} <div class="new-badge">${trans[lang2].settings.beta}</div></h5>
+                        <h5>${trans[lang].settings.corrections.show_remaster_tags.name} <div class="new-badge">${trans[lang].settings.beta}</div></h5>
                     </div>
                     <div class="toggle-wrap">
                         <button class="toggle" id="toggle-show_remaster_tags" aria-checked="true">
@@ -9214,20 +9219,20 @@
                 </div>
             </div>
             <div class="bleh--panel lotus">
-                <h4>${trans[lang2].lotus.version.replace("lotus", `<a class="lotus lotus-name" href="https://github.com/katelyynn/lotus" target="_blank" id="lotus_hover">lotus</a>`).replace("{v}", `<span class="version-link lotus">${artist_corrections.version >= album_track_corrections.version ? artist_corrections.version : album_track_corrections.version}</span>`)}</h4>
-                <p>${trans[lang2].settings.corrections.bio}</p>
+                <h4>${trans[lang].lotus.version.replace("lotus", `<a class="lotus lotus-name" href="https://github.com/katelyynn/lotus" target="_blank" id="lotus_hover">lotus</a>`).replace("{v}", `<span class="version-link lotus">${artist_corrections.version >= album_track_corrections.version ? artist_corrections.version : album_track_corrections.version}</span>`)}</h4>
+                <p>${trans[lang].settings.corrections.bio}</p>
                 <!--<div class="screen-row actions-only">
                     <div class="actions">
                         <a class="btn action" href="https://github.com/katelyynn/bleh/issues/new/choose" target="_blank">
                             <div class="icon bleh--correction"></div>
                             <span class="text">
-                                <h5>${trans[lang2].settings.corrections.submit.name}</h5>
+                                <h5>${trans[lang].settings.corrections.submit.name}</h5>
                             </span>
                         </a>
                         <button class="btn action" onclick="_open_correction_modal()">
                             <div class="icon bleh--correction_modal"></div>
                             <span class="text">
-                                <h5>${trans[lang2].settings.corrections.view.name}</h5>
+                                <h5>${trans[lang].settings.corrections.view.name}</h5>
                             </span>
                         </button>
                     </div>
@@ -9235,20 +9240,20 @@
                 <div class="screen-row actions-only">
                     <div class="actions">
                         <a class="btn primary external lotus" href="https://github.com/katelyynn/lotus/issues/new/choose" target="_blank">
-                            ${trans[lang2].settings.corrections.submit.name}
+                            ${trans[lang].settings.corrections.submit.name}
                         </a>
                         <button class="btn continue" onclick="_open_correction_modal()">
-                            ${trans[lang2].settings.corrections.view.name}
+                            ${trans[lang].settings.corrections.view.name}
                         </button>
                         <button class="btn continue" onclick="_lotus_check()">
-                            ${trans[lang2].lotus.check}
+                            ${trans[lang].lotus.check}
                         </button>
                     </div>
                 </div>
                 <div class="toggle-container" id="container-corrections" onclick="_update_item('corrections')">
-                    <button class="btn reset" onclick="_reset_item('corrections')">${trans[lang2].settings.reset}</button>
+                    <button class="btn reset" onclick="_reset_item('corrections')">${trans[lang].settings.reset}</button>
                     <div class="heading">
-                        <h5>${trans[lang2].settings.corrections.toggle.name}</h5>
+                        <h5>${trans[lang].settings.corrections.toggle.name}</h5>
                     </div>
                     <div class="toggle-wrap">
                         <button class="toggle lotus" id="toggle-corrections" aria-checked="true">
@@ -9258,8 +9263,8 @@
                 </div>
             </div>
             <div class="bleh--panel">
-                <h4 class="top-header">${trans[lang2].settings.music.name}</h4>
-                <h4>${trans[lang2].settings.music.header}</h4>
+                <h4 class="top-header">${trans[lang].settings.music.name}</h4>
+                <h4>${trans[lang].settings.music.header}</h4>
                 <div class="inner-preview pad">
                     <div class="tracks">
                         <div class="track realtime">
@@ -9305,10 +9310,10 @@
                     </div>
                 </div>
                 <div class="toggle-container" id="container-stacked_chartlist_info" onclick="_update_item('stacked_chartlist_info')">
-                    <button class="btn reset" onclick="_reset_item('stacked_chartlist_info')">${trans[lang2].settings.reset}</button>
+                    <button class="btn reset" onclick="_reset_item('stacked_chartlist_info')">${trans[lang].settings.reset}</button>
                     <div class="heading">
-                        <h5>${trans[lang2].settings.corrections.stacked_chartlist_info.name}</h5>
-                        <p>${trans[lang2].settings.corrections.stacked_chartlist_info.bio}</p>
+                        <h5>${trans[lang].settings.corrections.stacked_chartlist_info.name}</h5>
+                        <p>${trans[lang].settings.corrections.stacked_chartlist_info.bio}</p>
                     </div>
                     <div class="toggle-wrap">
                         <button class="toggle" id="toggle-stacked_chartlist_info" aria-checked="true">
@@ -9317,10 +9322,10 @@
                     </div>
                 </div>
                 <div class="toggle-container hide-if-no-bulk-edit" id="container-show_bulk_edit_album" onclick="_update_item('show_bulk_edit_album')">
-                    <button class="btn reset" onclick="_reset_item('show_bulk_edit_album')">${trans[lang2].settings.reset}</button>
+                    <button class="btn reset" onclick="_reset_item('show_bulk_edit_album')">${trans[lang].settings.reset}</button>
                     <div class="heading">
-                        <h5>${trans[lang2].settings.music.show_bulk_edit_album.name}</h5>
-                        <p>${trans[lang2].settings.music.show_bulk_edit_album.bio}</p>
+                        <h5>${trans[lang].settings.music.show_bulk_edit_album.name}</h5>
+                        <p>${trans[lang].settings.music.show_bulk_edit_album.bio}</p>
                     </div>
                     <div class="toggle-wrap">
                         <button class="toggle" id="toggle-show_bulk_edit_album" aria-checked="false">
@@ -9329,12 +9334,12 @@
                     </div>
                 </div>
                 <div class="sep"></div>
-                <h4>${trans[lang2].glacier.name}</h4>
+                <h4>${trans[lang].glacier.name}</h4>
                 <div class="toggle-container" id="container-glacier_library_graphs" onclick="_update_item('glacier_library_graphs')">
-                    <button class="btn reset" onclick="_reset_item('glacier_library_graphs')">${trans[lang2].settings.reset}</button>
+                    <button class="btn reset" onclick="_reset_item('glacier_library_graphs')">${trans[lang].settings.reset}</button>
                     <div class="heading">
-                        <h5>${trans[lang2].glacier.option.name}</h5>
-                        <p>${trans[lang2].glacier.option.bio}</p>
+                        <h5>${trans[lang].glacier.option.name}</h5>
+                        <p>${trans[lang].glacier.option.bio}</p>
                     </div>
                     <div class="toggle-wrap">
                         <button class="toggle" id="toggle-glacier_library_graphs" aria-checked="true" type="button">
@@ -9344,8 +9349,8 @@
                 </div>
             </div>
             <div class="bleh--panel">
-                <h4>${trans[lang2].settings.redirects.name}</h4>
-                <p>${trans[lang2].settings.redirects.bio}</p>
+                <h4>${trans[lang].settings.redirects.name}</h4>
+                <p>${trans[lang].settings.redirects.bio}</p>
                 <div class="inner-preview">
                     <div class="nag-bar nag-bar--corrections nag-bar--corrections--artist preview-bar">
                         <div class="container">
@@ -9356,10 +9361,10 @@
                     </div>
                 </div>
                 <div class="toggle-container" id="container-travis" onclick="_update_item('travis')">
-                    <button class="btn reset" onclick="_reset_item('travis')">${trans[lang2].settings.reset}</button>
+                    <button class="btn reset" onclick="_reset_item('travis')">${trans[lang].settings.reset}</button>
                     <div class="heading">
-                        <h5>${trans[lang2].settings.redirects.travis.name}</h5>
-                        <p>${trans[lang2].settings.redirects.travis.bio}</p>
+                        <h5>${trans[lang].settings.redirects.travis.name}</h5>
+                        <p>${trans[lang].settings.redirects.travis.bio}</p>
                     </div>
                     <div class="toggle-wrap">
                         <button class="toggle" id="toggle-travis" aria-checked="true">
@@ -9369,16 +9374,16 @@
                 </div>
                 <div class="toggle-container">
                     <div class="heading">
-                        <h5>${trans[lang2].settings.redirects.autocorrect.name}</h5>
-                        <p>${trans[lang2].settings.redirects.autocorrect.bio}</p>
+                        <h5>${trans[lang].settings.redirects.autocorrect.name}</h5>
+                        <p>${trans[lang].settings.redirects.autocorrect.bio}</p>
                     </div>
                     <div class="toggle-wrap">
-                        <a class="btn bleh--btn primary" href="${root}settings/website" target="_blank">${trans[lang2].settings.redirects.autocorrect.action}</a>
+                        <a class="btn bleh--btn primary" href="${root}settings/website" target="_blank">${trans[lang].settings.redirects.autocorrect.action}</a>
                     </div>
                 </div>
             </div>
             <div class="bleh--panel">
-                <h4>${trans[lang2].settings.customise.artwork.name}</h4>
+                <h4>${trans[lang].settings.customise.artwork.name}</h4>
                 <div class="inner-preview pad">
                     <div class="palette albums" style="height: fit-content">
                         <div class="album-cover swatch" style="background-image: url('https://lastfm.freetls.fastly.net/i/u/770x0/1569198c4cf0a3b2ff8728975e8359fa.jpg')"></div>
@@ -9390,10 +9395,10 @@
                     </div>
                 </div>
                 <div class="slider-container" id="container-gloss">
-                    <button class="btn reset" onclick="_reset_item('gloss')">${trans[lang2].settings.reset}</button>
+                    <button class="btn reset" onclick="_reset_item('gloss')">${trans[lang].settings.reset}</button>
                     <div class="heading">
-                        <h5>${trans[lang2].settings.customise.gloss.name}</h5>
-                        <p>${trans[lang2].settings.customise.gloss.bio}</p>
+                        <h5>${trans[lang].settings.customise.gloss.name}</h5>
+                        <p>${trans[lang].settings.customise.gloss.bio}</p>
                     </div>
                     <div class="slider">
                         <div class="slider-track" id="slider-track-gloss"><div class="slider-fill"></div><div class="slider-nub"></div></div>
@@ -9402,9 +9407,9 @@
                     </div>
                 </div>
                 <div class="toggle-container" id="container-grid_glow" onclick="_update_item('grid_glow')">
-                    <button class="btn reset" onclick="_reset_item('grid_glow')">${trans[lang2].settings.reset}</button>
+                    <button class="btn reset" onclick="_reset_item('grid_glow')">${trans[lang].settings.reset}</button>
                     <div class="heading">
-                        <h5>${trans[lang2].settings.music.grid_glow.name}</h5>
+                        <h5>${trans[lang].settings.music.grid_glow.name}</h5>
                     </div>
                     <div class="toggle-wrap">
                         <button class="toggle" id="toggle-grid_glow" aria-checked="true" type="button">
@@ -9414,7 +9419,7 @@
                 </div>
             </div>
             <div class="bleh--panel">
-                <h4>${trans[lang2].settings.customise.display.name}</h4>
+                <h4>${trans[lang].settings.customise.display.name}</h4>
                 <div class="inner-preview pad flex">
                     <section class="catalogue-tags">
                         <ul class="tags-list tags-list--global">
@@ -9437,10 +9442,10 @@
                     </section>
                 </div>
                 <div class="toggle-container" id="container-gendered_tags" onclick="_update_item('gendered_tags')">
-                    <button class="btn reset" onclick="_reset_item('gendered_tags')">${trans[lang2].settings.reset}</button>
+                    <button class="btn reset" onclick="_reset_item('gendered_tags')">${trans[lang].settings.reset}</button>
                     <div class="heading">
-                        <h5>${trans[lang2].settings.customise.gendered_tags.name}</h5>
-                        <p>${trans[lang2].settings.customise.gendered_tags.bio}</p>
+                        <h5>${trans[lang].settings.customise.gendered_tags.name}</h5>
+                        <p>${trans[lang].settings.customise.gendered_tags.bio}</p>
                     </div>
                     <div class="toggle-wrap">
                         <button class="toggle" id="toggle-gendered_tags" aria-checked="true">
@@ -9457,7 +9462,7 @@
       return;
     if (list == null)
       return;
-    let panel = page2.structure.side.querySelector(".skip-to-list");
+    let panel = page.structure.side.querySelector(".skip-to-list");
     panel.innerHTML = "";
     list.forEach((item) => {
       let button = document.createElement("button");
@@ -9482,11 +9487,11 @@
       });
     }
   }
-  unsafeWindow._change_settings_page = function(page3, setting = null) {
-    change_settings_page(page3, setting);
+  unsafeWindow._change_settings_page = function(page2, setting = null) {
+    change_settings_page(page2, setting);
   };
   function change_settings_page(page_id, setting = null) {
-    page2.structure.main.innerHTML = "";
+    page.structure.main.innerHTML = "";
     if (ff("bleh_settings_tabs")) {
       let btns = document.querySelectorAll(".bleh--nav");
       btns.forEach((btn) => {
@@ -9512,7 +9517,7 @@
       seasonal_timer_start();
     else
       seasonal_timer_end();
-    page2.structure.main.innerHTML = render_setting_page(page_id);
+    page.structure.main.innerHTML = render_setting_page(page_id);
     if (page_id == "themes") {
       show_theme_change_in_settings();
       display_colour_presets();
@@ -9530,19 +9535,19 @@
       prepare_language_page();
     if (page_id == "music") {
       tippy(document.getElementById("lotus_hover"), {
-        content: trans[lang2].lotus.tooltip.replace("lotus", '<span class="lotus lotus-name lotus-name-small">lotus</span>'),
+        content: trans[lang].lotus.tooltip.replace("lotus", '<span class="lotus lotus-name lotus-name-small">lotus</span>'),
         allowHTML: true
       });
       tippy(document.getElementById("container-show_bulk_edit_album"), {
-        content: trans[lang2].settings.music.show_bulk_edit_album.require
+        content: trans[lang].settings.music.show_bulk_edit_album.require
       });
     }
-    if ((page_id == "seasonal" || page_id == "home") && settings2.seasonal && stored_season.id != "none" && stored_season.start && stored_season.end) {
+    if ((page_id == "seasonal" || page_id == "home") && settings.seasonal && stored_season.id != "none" && stored_season.start && stored_season.end) {
       tippy(document.getElementById("current_season"), {
-        content: new Date(stored_season.end.replace("y0", stored_season.year).replace("{offset}", stored_season.offset)).toLocaleString(lang2)
+        content: new Date(stored_season.end.replace("y0", stored_season.year).replace("{offset}", stored_season.offset)).toLocaleString(lang)
       });
       tippy(document.getElementById("current_season_start"), {
-        content: new Date(stored_season.start.replace("y0", stored_season.year).replace("{offset}", stored_season.offset)).toLocaleString(lang2)
+        content: new Date(stored_season.start.replace("y0", stored_season.year).replace("{offset}", stored_season.offset)).toLocaleString(lang)
       });
     }
     if (setting != null) {
@@ -9558,11 +9563,11 @@
   }
   function show_theme_change_in_settings(theme = "") {
     if (theme != "")
-      settings2.theme = theme;
+      settings.theme = theme;
     let btns = document.querySelectorAll(".theme-item");
     btns.forEach((btn) => {
-      console.log(btn.getAttribute("data-bleh-theme"), settings2.theme);
-      if (btn.getAttribute("data-bleh-theme") != settings2.theme) {
+      console.log(btn.getAttribute("data-bleh-theme"), settings.theme);
+      if (btn.getAttribute("data-bleh-theme") != settings.theme) {
         btn.classList.remove("active");
       } else {
         btn.classList.add("active");
@@ -9571,11 +9576,11 @@
   }
   function show_theme_change_in_menu(theme = "", element = document.body) {
     if (theme != "")
-      settings2.theme = theme;
+      settings.theme = theme;
     let btns = element.querySelectorAll(".theme-item-in-menu");
     btns.forEach((btn) => {
-      console.log(btn.getAttribute("data-bleh-theme"), settings2.theme);
-      if (btn.getAttribute("data-bleh-theme") != settings2.theme) {
+      console.log(btn.getAttribute("data-bleh-theme"), settings.theme);
+      if (btn.getAttribute("data-bleh-theme") != settings.theme) {
         btn.classList.remove("active");
       } else {
         btn.classList.add("active");
@@ -9585,8 +9590,8 @@
   function load_skus() {
     for (let flag in version.feature_flags) {
       let current_state = version.feature_flags[flag].default;
-      if (settings2.feature_flags[flag] != null)
-        current_state = settings2.feature_flags[flag];
+      if (settings.feature_flags[flag] != null)
+        current_state = settings.feature_flags[flag];
       document.documentElement.setAttribute(`data-ff--${flag}`, current_state);
     }
   }
@@ -9594,8 +9599,8 @@
     let flags_container = document.getElementById("feature-flags");
     for (let flag in version.feature_flags) {
       let current_state = version.feature_flags[flag].default;
-      if (settings2.feature_flags[flag] != void 0)
-        current_state = settings2.feature_flags[flag];
+      if (settings.feature_flags[flag] != void 0)
+        current_state = settings.feature_flags[flag];
       let feature_flag_element = document.createElement("div");
       feature_flag_element.classList.add("toggle-container");
       feature_flag_element.setAttribute("onclick", `_update_flag_toggle('${flag}', this)`);
@@ -9625,17 +9630,17 @@
     if (!button)
       return;
     let current_state = version.feature_flags[flag].default;
-    if (settings2.feature_flags[flag] != void 0) current_state = settings2.feature_flags[flag];
+    if (settings.feature_flags[flag] != void 0) current_state = settings.feature_flags[flag];
     if (current_state == true) {
       button.setAttribute("aria-checked", "false");
-      settings2.feature_flags[flag] = false;
+      settings.feature_flags[flag] = false;
       document.documentElement.setAttribute(`data-ff--${flag}`, false);
     } else {
       button.setAttribute("aria-checked", "true");
-      settings2.feature_flags[flag] = true;
+      settings.feature_flags[flag] = true;
       document.documentElement.setAttribute(`data-ff--${flag}`, true);
     }
-    localStorage.setItem("bleh", JSON.stringify(settings2));
+    localStorage.setItem("bleh", JSON.stringify(settings));
   }
   function display_colour_presets() {
     let colours = {
@@ -9656,9 +9661,9 @@
         {
           type: "avatar",
           sets: {
-            hue: auth2.sets.hue,
-            sat: auth2.sets.sat,
-            lit: auth2.sets.lit
+            hue: auth.sets.hue,
+            sat: auth.sets.sat,
+            lit: auth.sets.lit
           },
           requires_flag: "colour_based_on_avatar"
         },
@@ -9977,7 +9982,7 @@
         if (type == "custom")
           swatch.classList.add("view-item", "colour-btn");
         if (type == "custom")
-          swatch.textContent = trans[lang2].settings.customise.colours.swatches[colour.type];
+          swatch.textContent = trans[lang].settings.customise.colours.swatches[colour.type];
         if (colour.type == "seasonal") {
           if (stored_season.id == "none")
             return;
@@ -10001,17 +10006,17 @@
             content: `
                         <div class="dialog-settings">
                             <div class="alert alert-info seasonal-hsl-alert">
-                                ${trans[lang2].settings.customise.colours.modals.custom_colour.seasonal_alert}
+                                ${trans[lang].settings.customise.colours.modals.custom_colour.seasonal_alert}
                             </div>
                             <div class="slider-container dim-using-hue-gradient dim-during-seasonal" id="container-hue">
-                                <button class="btn reset" onclick="_reset_item('hue')">${trans[lang2].settings.reset}</button>
+                                <button class="btn reset" onclick="_reset_item('hue')">${trans[lang].settings.reset}</button>
                                 <div class="heading">
-                                    <h5>${trans[lang2].settings.customise.colours.modals.custom_colour.hue}</h5>
+                                    <h5>${trans[lang].settings.customise.colours.modals.custom_colour.hue}</h5>
                                 </div>
                                 <div class="slider">
                                     <div class="slider-track" id="slider-track-hue"><div class="slider-fill"></div><div class="slider-nub"></div></div>
-                                    <input type="range" min="0" max="360" value="${settings2.hue}" id="slider-hue" oninput="_update_item('hue', this.value)">
-                                    <p id="value-hue">${settings2.hue}${settings_base.hue.unit}</p>
+                                    <input type="range" min="0" max="360" value="${settings.hue}" id="slider-hue" oninput="_update_item('hue', this.value)">
+                                    <p id="value-hue">${settings.hue}${settings_base.hue.unit}</p>
                                 </div>
                                 <div class="hint">
                                     <p style="left: 0">0</p>
@@ -10020,14 +10025,14 @@
                                 </div>
                             </div>
                             <div class="slider-container dim-using-hue-gradient dim-during-seasonal" id="container-sat">
-                                <button class="btn reset" onclick="_reset_item('sat')">${trans[lang2].settings.reset}</button>
+                                <button class="btn reset" onclick="_reset_item('sat')">${trans[lang].settings.reset}</button>
                                 <div class="heading">
-                                    <h5>${trans[lang2].settings.customise.colours.modals.custom_colour.sat}</h5>
+                                    <h5>${trans[lang].settings.customise.colours.modals.custom_colour.sat}</h5>
                                 </div>
                                 <div class="slider">
                                     <div class="slider-track" id="slider-track-sat"><div class="slider-fill"></div><div class="slider-nub"></div></div>
-                                    <input type="range" min="0" max="1.5" value="${settings2.sat}" step="0.025" id="slider-sat" oninput="_update_item('sat', this.value)">
-                                    <p id="value-sat">${settings2.sat}${settings_base.sat.unit}</p>
+                                    <input type="range" min="0" max="1.5" value="${settings.sat}" step="0.025" id="slider-sat" oninput="_update_item('sat', this.value)">
+                                    <p id="value-sat">${settings.sat}${settings_base.sat.unit}</p>
                                 </div>
                                 <div class="hint">
                                     <p style="left: 0">0</p>
@@ -10036,14 +10041,14 @@
                                 </div>
                             </div>
                             <div class="slider-container dim-using-hue-gradient dim-during-seasonal" id="container-lit">
-                                <button class="btn reset" onclick="_reset_item('lit')">${trans[lang2].settings.reset}</button>
+                                <button class="btn reset" onclick="_reset_item('lit')">${trans[lang].settings.reset}</button>
                                 <div class="heading">
-                                    <h5>${trans[lang2].settings.customise.colours.modals.custom_colour.lit}</h5>
+                                    <h5>${trans[lang].settings.customise.colours.modals.custom_colour.lit}</h5>
                                 </div>
                                 <div class="slider">
                                     <div class="slider-track" id="slider-track-lit"><div class="slider-fill"></div><div class="slider-nub"></div></div>
-                                    <input type="range" min="0" max="1.5" value="${settings2.lit}" step="0.025" id="slider-lit" oninput="_update_item('lit', this.value)">
-                                    <p id="value-lit">${settings2.lit}${settings_base.lit.unit}</p>
+                                    <input type="range" min="0" max="1.5" value="${settings.lit}" step="0.025" id="slider-lit" oninput="_update_item('lit', this.value)">
+                                    <p id="value-lit">${settings.lit}${settings_base.lit.unit}</p>
                                 </div>
                                 <div class="hint">
                                     <p style="left: 0">0</p>
@@ -10053,10 +10058,10 @@
                             </div>
                             ${ff("card_saturation") ? `
                             <div class="slider-container hide-if-light-theme" id="container-sat_bg">
-                                <button class="btn reset" onclick="_reset_item('sat_bg')">${trans[lang2].settings.reset}</button>
+                                <button class="btn reset" onclick="_reset_item('sat_bg')">${trans[lang].settings.reset}</button>
                                 <div class="heading">
-                                    <h5>${trans[lang2].settings.customise.sat_bg.name}</h5>
-                                    <p>${trans[lang2].settings.customise.sat_bg.bio}</p>
+                                    <h5>${trans[lang].settings.customise.sat_bg.name}</h5>
+                                    <p>${trans[lang].settings.customise.sat_bg.bio}</p>
                                 </div>
                                 <div class="slider">
                                     <div class="slider-track" id="slider-track-sat_bg"><div class="slider-fill"></div><div class="slider-nub"></div></div>
@@ -10099,7 +10104,7 @@
     }
   }
   unsafeWindow._create_a_custom_colour = function() {
-    notify2({
+    notify({
       title: "Under construction",
       body: "This dialog is being moved!",
       icon: "icon-16-x",
@@ -10111,7 +10116,7 @@
       christmas: [
         {
           type: "season",
-          name: trans[lang2].settings.customise.seasonal.nonsense,
+          name: trans[lang].settings.customise.seasonal.nonsense,
           sets: {
             hue: 352,
             sat: 1.8,
@@ -10120,7 +10125,7 @@
         },
         {
           type: "season",
-          name: trans[lang2].settings.customise.seasonal.fruitcake,
+          name: trans[lang].settings.customise.seasonal.fruitcake,
           sets: {
             hue: 24,
             sat: 0.93,
@@ -10129,7 +10134,7 @@
         },
         {
           type: "season",
-          name: trans[lang2].settings.customise.seasonal.mistletoe,
+          name: trans[lang].settings.customise.seasonal.mistletoe,
           sets: {
             hue: 130,
             sat: 0.45,
@@ -10138,7 +10143,7 @@
         },
         {
           type: "season",
-          name: trans[lang2].settings.customise.seasonal.festival,
+          name: trans[lang].settings.customise.seasonal.festival,
           sets: {
             hue: 240,
             sat: 1.4,
@@ -10150,7 +10155,7 @@
     exclusives.new_years = exclusives.christmas;
     if (!exclusives.hasOwnProperty(stored_season.id)) {
       instance.innerHTML = `
-            <div class="alert alert-info">${trans[lang2].settings.customise.seasonal.none}</div>
+            <div class="alert alert-info">${trans[lang].settings.customise.seasonal.none}</div>
         `;
       return;
     }
@@ -10166,35 +10171,35 @@
       item.style.setProperty("--hue-over", colour.displays.hue);
       item.style.setProperty("--sat-over", colour.displays.sat);
       item.style.setProperty("--lit-over", colour.displays.lit);
-      if (colour.displays.hue == settings2.hue && colour.displays.sat == settings2.sat && colour.displays.lit)
+      if (colour.displays.hue == settings.hue && colour.displays.sat == settings.sat && colour.displays.lit)
         item.setAttribute("aria-checked", "true");
       instance.appendChild(item);
     });
   }
   function init_profile_page() {
     let profile_name_obj = document.body.querySelector(".title-container");
-    if (sponsor_list && sponsor_list.badges.hasOwnProperty(auth2.name)) {
-      if (!Array.isArray(sponsor_list.badges[auth2.name])) {
-        log2(`1 badge:`, "profile", "info", sponsor_list.badges[auth2.name]);
-        let this_badge = sponsor_list.badges[auth2.name];
+    if (sponsor_list && sponsor_list.badges.hasOwnProperty(auth.name)) {
+      if (!Array.isArray(sponsor_list.badges[auth.name])) {
+        log(`1 badge:`, "profile", "info", sponsor_list.badges[auth.name]);
+        let this_badge = sponsor_list.badges[auth.name];
         let badge = document.createElement("span");
-        badge.classList.add("label", `user-status--bleh-${this_badge.type}`, `user-status--bleh-user-${auth2.name}`);
-        badge.textContent = this_badge.name != null ? this_badge.name : trans[lang2].badges[this_badge.type].name;
+        badge.classList.add("label", `user-status--bleh-${this_badge.type}`, `user-status--bleh-user-${auth.name}`);
+        badge.textContent = this_badge.name != null ? this_badge.name : trans[lang].badges[this_badge.type].name;
         profile_name_obj.appendChild(badge);
       } else {
-        log2(`multiple badges:`, "profile", "info", sponsor_list.badges[auth2.name]);
-        for (let badge_entry in sponsor_list.badges[auth2.name]) {
-          let this_badge = sponsor_list.badges[auth2.name][badge_entry];
+        log(`multiple badges:`, "profile", "info", sponsor_list.badges[auth.name]);
+        for (let badge_entry in sponsor_list.badges[auth.name]) {
+          let this_badge = sponsor_list.badges[auth.name][badge_entry];
           let badge = document.createElement("span");
-          badge.classList.add("label", `user-status--bleh-${this_badge.type}`, `user-status--bleh-user-${auth2.name}`);
-          badge.textContent = this_badge.name != null ? this_badge.name : trans[lang2].badges[this_badge.type].name;
+          badge.classList.add("label", `user-status--bleh-${this_badge.type}`, `user-status--bleh-user-${auth.name}`);
+          badge.textContent = this_badge.name != null ? this_badge.name : trans[lang].badges[this_badge.type].name;
           profile_name_obj.appendChild(badge);
         }
       }
     } else {
       let badge = document.createElement("span");
       badge.classList.add("label", "user-status--bleh-missing");
-      badge.textContent = trans[lang2].badges.missing.name;
+      badge.textContent = trans[lang].badges.missing.name;
       profile_name_obj.appendChild(badge);
     }
   }
@@ -10214,19 +10219,19 @@
         </div>
         <div class="actions">
             <button class="btn bleh--edit-note" id="profile-note-row-edit--${user}" onclick="_edit_profile_note('${user}')">
-                ${trans[lang2].settings.profiles.notes.edit}
+                ${trans[lang].settings.profiles.notes.edit}
             </button>
             <button class="btn bleh--delete-note" id="profile-note-row-delete--${user}" onclick="_delete_profile_note('${user}')">
-                ${trans[lang2].settings.profiles.notes.delete}
+                ${trans[lang].settings.profiles.notes.delete}
             </button>
         </div>
         `;
       profile_notes_table.appendChild(profile_note);
       tippy(document.getElementById(`profile-note-row-edit--${user}`), {
-        content: trans[lang2].settings.profiles.notes.edit_user.replace("{u}", user)
+        content: trans[lang].settings.profiles.notes.edit_user.replace("{u}", user)
       });
       tippy(document.getElementById(`profile-note-row-delete--${user}`), {
-        content: trans[lang2].settings.profiles.notes.delete_user.replace("{u}", user)
+        content: trans[lang].settings.profiles.notes.delete_user.replace("{u}", user)
       });
     }
   }
@@ -10238,14 +10243,14 @@
   };
   unsafeWindow._edit_profile_note = function(username) {
     let profile_notes = JSON.parse(localStorage.getItem("bleh_profile_notes")) || {};
-    dialog_legacy("edit_profile_note", trans[lang2].settings.profiles.notes.edit_user.replace("{u}", username), `
+    dialog_legacy("edit_profile_note", trans[lang].settings.profiles.notes.edit_user.replace("{u}", username), `
     <textarea id="bleh--profile-note" placeholder="Enter a local note for this user">${profile_notes[username]}</textarea>
     <div class="modal-footer">
         <button class="btn primary save" onclick="_save_profile_note_in_window('${username}')">
-            ${trans[lang2].settings.save}
+            ${trans[lang].settings.save}
         </button>
         <button class="btn cancel" onclick="_kill_window('edit_profile_note')">
-            ${trans[lang2].settings.cancel}
+            ${trans[lang].settings.cancel}
         </button>
     </div>
     `, true);
@@ -10320,11 +10325,11 @@
         </div>
         <div class="name">
             <h5>${lang_info[language].name}</h5>
-            <p>${trans[lang2].settings.language.by.replace("{users}", users)}</p>
+            <p>${trans[lang].settings.language.by.replace("{users}", users)}</p>
         </div>
         ${lang_info[language].new ? `
         <div class="badges">
-            <div class="new-badge">${trans[lang2].settings.new}</div>
+            <div class="new-badge">${trans[lang].settings.new}</div>
         </div>
         ` : '<div class="badges"></div>'}
         <div class="date">
@@ -10337,17 +10342,17 @@
   unsafeWindow._import_settings = function() {
     dialog({
       id: "import_settings",
-      title: trans[lang2].settings.actions.import.modals.initial.name,
+      title: trans[lang].settings.actions.import.modals.initial.name,
       body: `
-            <p class="alert alert-warning">${trans[lang2].settings.actions.import.modals.initial.alert}</p>
+            <p class="alert alert-warning">${trans[lang].settings.actions.import.modals.initial.alert}</p>
             <br>
             <textarea id="import_area"></textarea>
             <div class="modal-footer">
                 <button class="btn primary download" onclick="_confirm_import()">
-                    ${trans[lang2].settings.actions.import.name}
+                    ${trans[lang].settings.actions.import.name}
                 </button>
                 <button class="btn cancel" onclick="_dialog_rm({id: 'import_settings'})">
-                    ${trans[lang2].settings.cancel}
+                    ${trans[lang].settings.cancel}
                 </button>
             </div>
         `
@@ -10368,12 +10373,12 @@
       });
       dialog({
         id: "import_failed",
-        title: trans[lang2].settings.actions.import.modals.failed.name,
+        title: trans[lang].settings.actions.import.modals.failed.name,
         body: `
-                <p class="alert alert-error">${trans[lang2].settings.actions.import.modals.failed.alert}</p>
+                <p class="alert alert-error">${trans[lang].settings.actions.import.modals.failed.alert}</p>
                 <div class="modal-footer">
                     <button class="btn primary done" onclick="_dialog_rm({id: 'import_failed'})">
-                        ${trans[lang2].settings.done}
+                        ${trans[lang].settings.done}
                     </button>
                 </div>
             `
@@ -10383,14 +10388,14 @@
   function export_settings() {
     dialog({
       id: "export_settings",
-      title: trans[lang2].settings.actions.export.modals.initial.name,
+      title: trans[lang].settings.actions.export.modals.initial.name,
       body: `
-            <p class="alert alert-success">${trans[lang2].settings.actions.export.modals.initial.alert}</p>
+            <p class="alert alert-success">${trans[lang].settings.actions.export.modals.initial.alert}</p>
             <br>
-            <textarea>${JSON.stringify(settings2)}</textarea>
+            <textarea>${JSON.stringify(settings)}</textarea>
             <div class="modal-footer">
                 <button class="btn primary done" onclick="_dialog_rm({id: 'export_settings'})">
-                    ${trans[lang2].settings.done}
+                    ${trans[lang].settings.done}
                 </button>
             </div>
         `
@@ -10402,26 +10407,26 @@
   unsafeWindow._reset_settings = function() {
     dialog({
       id: "reset_settings",
-      title: trans[lang2].settings.actions.reset.modals.initial.name,
+      title: trans[lang].settings.actions.reset.modals.initial.name,
       body: `
-            <p class="alert alert-error">${trans[lang2].settings.actions.reset.modals.initial.alert}</p>
+            <p class="alert alert-error">${trans[lang].settings.actions.reset.modals.initial.alert}</p>
             <div class="modal-footer">
                 <button class="btn done danger" onclick="_confirm_reset()">
-                    ${trans[lang2].settings.actions.reset.modals.initial.confirm}
+                    ${trans[lang].settings.actions.reset.modals.initial.confirm}
                 </button>
                 <button class="btn upload" onclick="_export_first()">
-                    ${trans[lang2].settings.actions.reset.modals.initial.export}
+                    ${trans[lang].settings.actions.reset.modals.initial.export}
                 </button>
                 <button class="btn primary cancel" onclick="_dialog_rm({id: 'reset_settings'})">
-                    ${trans[lang2].settings.cancel}
+                    ${trans[lang].settings.cancel}
                 </button>
             </div>
         `
     });
   };
   unsafeWindow._confirm_reset = function() {
-    for (var member in settings2) delete settings2[member];
-    Object.assign(settings2, create_settings_template());
+    for (var member in settings) delete settings[member];
+    Object.assign(settings, create_settings_template());
     load_settings(true);
     dialog_rm({
       id: "reset_settings"
@@ -10437,13 +10442,13 @@
     let font = document.getElementById("text-font").value;
     document.body.style.setProperty(`--${settings_base.font.css}`, font);
     document.documentElement.setAttribute(`data-bleh--font`, font);
-    settings2.font = font;
-    localStorage.setItem("bleh", JSON.stringify(settings2));
+    settings.font = font;
+    localStorage.setItem("bleh", JSON.stringify(settings));
   };
 
   // src/components/lotus.js
   function lotus(force = false) {
-    if (!settings2.corrections)
+    if (!settings.corrections)
       return;
     let lotus_artist = localStorage.getItem("lotus_artist");
     let lotus_artist_expire = new Date(localStorage.getItem("lotus_artist_expire"));
@@ -10483,9 +10488,9 @@
     let url = `https://katelyynn.github.io/lotus/${type}.json?${Math.random()}`;
     xhr.open("GET", url, true);
     xhr.onload = function() {
-      log2(`${type} list responded with ${xhr.status}`, "lotus");
+      log(`${type} list responded with ${xhr.status}`, "lotus");
       if (xhr.status != 200) {
-        log2("request has been cancelled, will request again in 1h", "lotus");
+        log("request has been cancelled, will request again in 1h", "lotus");
         api_expire.setHours(api_expire.getHours() + 1);
       }
       let api_expire = /* @__PURE__ */ new Date();
@@ -10498,15 +10503,15 @@
           Object.assign(album_track_corrections, JSON.parse(this.response));
         }
         if (send_notify) {
-          notify2({
-            title: trans[lang2].lotus[type],
+          notify({
+            title: trans[lang].lotus[type],
             icon: "icon-16-lotus",
             classname: "lotus"
           });
         }
         localStorage.setItem(`lotus_${type}`, this.response);
         api_expire.setHours(api_expire.getHours() + 4);
-        log2(`${type} list cached until ${api_expire}`, "lotus");
+        log(`${type} list cached until ${api_expire}`, "lotus");
       }
       localStorage.setItem(`lotus_${type}_expire`, api_expire);
       if (button != null)
@@ -10518,13 +10523,13 @@
     lotus(true);
   };
   unsafeWindow._open_correction_modal = function() {
-    dialog2({
+    dialog({
       id: "corrections",
-      title: trans[lang2].settings.corrections.name,
+      title: trans[lang].settings.corrections.name,
       body: `
-            <h4>${trans[lang2].settings.corrections.listing.artists}</h4>
+            <h4>${trans[lang].settings.corrections.listing.artists}</h4>
             <div class="corrections artist" id="corrections-artist"></div>
-            <h4>${trans[lang2].settings.corrections.listing.albums_tracks}</h4>
+            <h4>${trans[lang].settings.corrections.listing.albums_tracks}</h4>
             <div class="corrections album_tracks" id="corrections-albums_tracks"></div>
         `,
       has_close: true,
@@ -10537,7 +10542,7 @@
     let albums = document.body.querySelectorAll(`.${parent}`);
     if (albums == void 0)
       return;
-    if (!settings2.corrections)
+    if (!settings.corrections)
       return;
     albums.forEach((album) => {
       if (!album.hasAttribute("data-kate-processed")) {
@@ -10572,13 +10577,13 @@
     });
   }
   function correct_item_by_artist(item, artist) {
-    if (!settings2.corrections)
+    if (!settings.corrections)
       return item;
     artist = artist.toLowerCase();
     try {
       if (album_track_corrections.hasOwnProperty(artist)) {
         if (album_track_corrections[artist].hasOwnProperty(item)) {
-          log2(`corrected ${item} by ${artist} as ${album_track_corrections[artist][item]}`, "lotus");
+          log(`corrected ${item} by ${artist} as ${album_track_corrections[artist][item]}`, "lotus");
           return album_track_corrections[artist][item];
         } else {
           return item;
@@ -10587,17 +10592,17 @@
         return item;
       }
     } catch (e) {
-      log2(`correcting ${item} by ${artist}`, "lotus");
+      log(`correcting ${item} by ${artist}`, "lotus");
       console.error(e);
       return item;
     }
   }
   function correct_artist(artist, broadcast = false) {
-    if (!settings2.corrections)
+    if (!settings.corrections)
       return artist;
     try {
       if (artist_corrections.hasOwnProperty(artist)) {
-        log2(`corrected ${artist} as ${artist_corrections[artist]}`, "lotus");
+        log(`corrected ${artist} as ${artist_corrections[artist]}`, "lotus");
         if (broadcast)
           page.corrected = true;
         return artist_corrections[artist];
@@ -10607,7 +10612,7 @@
         return artist;
       }
     } catch (e) {
-      log2(`correcting ${artist}`, "lotus");
+      log(`correcting ${artist}`, "lotus");
       console.error(e);
       return artist;
     }
@@ -10616,10 +10621,10 @@
     console.log(original_title, original_artist);
     let formatted_title = original_title;
     let original_title_corrected = false;
-    if (album_track_corrections.hasOwnProperty(original_artist.toLowerCase()) && settings2.corrections) {
+    if (album_track_corrections.hasOwnProperty(original_artist.toLowerCase()) && settings.corrections) {
       if (album_track_corrections[original_artist.toLowerCase()].hasOwnProperty(formatted_title)) {
         formatted_title = album_track_corrections[original_artist.toLowerCase()][formatted_title];
-        log2(`corrected ${original_title} by ${original_artist} as ${formatted_title}`, "lotus");
+        log(`corrected ${original_title} by ${original_artist} as ${formatted_title}`, "lotus");
         original_title_corrected = true;
       }
     }
@@ -10673,10 +10678,10 @@
           song_guests[guest] = correct_artist(song_guests[guest]);
       }
     }
-    if (artist_corrections.hasOwnProperty(original_artist) && settings2.corrections)
+    if (artist_corrections.hasOwnProperty(original_artist) && settings.corrections)
       original_artist = correct_artist(artist_corrections[original_artist]);
     if (extras.length > 0)
-      log2(`parsed ${original_title} as ${formatted_title} by ${original_artist} with`, "guest features", "info", { extras, song_guests });
+      log(`parsed ${original_title} as ${formatted_title} by ${original_artist} with`, "guest features", "info", { extras, song_guests });
     return [formatted_title, extras, original_artist, song_guests, original_title_corrected];
   }
   function artist_title() {
@@ -10687,7 +10692,7 @@
       has_multi = true;
     page.multi = false;
     if (!has_multi) {
-      if (!settings2.corrections)
+      if (!settings.corrections)
         return;
       title.textContent = correct_artist(title_text, true);
     } else {
@@ -10697,7 +10702,7 @@
       let split = title_text.split(";");
       if (split.length < 2) {
         page.multi = false;
-        if (!settings2.corrections)
+        if (!settings.corrections)
           return;
         title.textContent = correct_artist(title_text, true);
         return;
@@ -10707,8 +10712,8 @@
           title.innerHTML += ",";
         let part = document.createElement("a");
         part.classList.add("multi-artist-part");
-        part.setAttribute("href", `${root2}music/${sanitise(artist)}`);
-        if (settings2.corrections)
+        part.setAttribute("href", `${root}music/${sanitise(artist)}`);
+        if (settings.corrections)
           part.textContent = correct_artist(artist);
         else
           part.textContent = artist;
@@ -10717,7 +10722,7 @@
     }
   }
   function patch_header_title() {
-    if (!settings2.corrections && !settings2.format_guest_features && !multi)
+    if (!settings.corrections && !settings.format_guest_features && !multi)
       return;
     page.corrected = false;
     let track_title = document.body.querySelector(".header-new-title");
@@ -10727,20 +10732,20 @@
     if (track_artist == null) {
       if (artist_corrections.hasOwnProperty(track_title.textContent)) {
         let corrected_artist = artist_corrections[track_title.textContent];
-        log2(`corrected ${track_title.textContent} as ${corrected_artist}`, "lotus");
+        log(`corrected ${track_title.textContent} as ${corrected_artist}`, "lotus");
         track_title.textContent = corrected_artist;
         page.corrected = true;
       }
     } else {
       if (artist_corrections.hasOwnProperty(track_artist.textContent)) {
         let corrected_artist = artist_corrections[track_artist.textContent];
-        log2(`corrected ${track_artist.textContent} as ${corrected_artist}`, "lotus");
+        log(`corrected ${track_artist.textContent} as ${corrected_artist}`, "lotus");
         track_artist.textContent = corrected_artist;
       }
     }
     if (track_artist == null)
       return;
-    if (settings2.format_guest_features) {
+    if (settings.format_guest_features) {
       try {
         if (!track_title.hasAttribute("data-kate-processed")) {
           track_title.setAttribute("data-kate-processed", "true");
@@ -10760,7 +10765,7 @@
             song_artist_element.innerHTML = `${song_artist_element.innerHTML},`;
             let guest_element = document.createElement("a");
             guest_element.classList.add("header-new-crumb");
-            guest_element.setAttribute("href", `${root2}music/${sanitise(song_guests[guest])}`);
+            guest_element.setAttribute("href", `${root}music/${sanitise(song_guests[guest])}`);
             guest_element.setAttribute("title", sanitise_text(song_guests[guest]));
             guest_element.textContent = song_guests[guest];
             song_artist_element.appendChild(guest_element);
@@ -10772,7 +10777,7 @@
       if (!track_title.hasAttribute("data-kate-processed")) {
         track_title.setAttribute("data-kate-processed", "true");
         let corrected_title = correct_item_by_artist(track_title.textContent, track_artist.textContent);
-        log2(`corrected ${track_title.textContent} by ${track_artist.textContent} as ${corrected_title}`, "lotus");
+        log(`corrected ${track_title.textContent} by ${track_artist.textContent} as ${corrected_title}`, "lotus");
         if (corrected_title != track_title.textContent)
           page.corrected = true;
         track_title.textContent = corrected_title;
@@ -10782,9 +10787,9 @@
 
   // src/activity.js
   function subscribe_to_events() {
-    if (!settings2.activities)
+    if (!settings.activities)
       return;
-    let love_track = document.body.querySelectorAll(`form[action$="${auth2.name}/loved"]:not([data-bleh-subscribed])`);
+    let love_track = document.body.querySelectorAll(`form[action$="${auth.name}/loved"]:not([data-bleh-subscribed])`);
     love_track.forEach((form) => {
       form.setAttribute("data-bleh-subscribed", "true");
       let track = form.querySelector('[name="track"]').getAttribute("value");
@@ -10793,9 +10798,9 @@
       track = correct_item_by_artist(track, artist);
       let btn = form.querySelector("button");
       btn.addEventListener("click", (event2) => {
-        log2("heard", "event", "info", event2);
+        log("heard", "event", "info", event2);
         let action = btn.getAttribute("data-analytics-action");
-        register_activity(action == "LoveTrack" ? "love" : "unlove", [{ name: track, type: "track", sister: artist }], `${root2}music/${sanitise(artist)}/_/${sanitise(track)}`);
+        register_activity(action == "LoveTrack" ? "love" : "unlove", [{ name: track, type: "track", sister: artist }], `${root}music/${sanitise(artist)}/_/${sanitise(track)}`);
       }, false);
     });
     let bookmark_item = document.body.querySelectorAll(`form[action="/music/+bookmarks"]:not([data-bleh-subscribed])`);
@@ -10803,12 +10808,12 @@
       form.setAttribute("data-bleh-subscribed", "true");
       let btn = form.querySelector("button");
       btn.addEventListener("click", (event2) => {
-        log2("heard", "event", "info", event2);
+        log("heard", "event", "info", event2);
         let action = btn.getAttribute("data-analytics-action");
-        register_activity(action.startsWith("Bookmark") ? "bookmark" : "unbookmark", [{ name: page2.name, type: page2.type, sister: page2.sister }], window.location.href);
+        register_activity(action.startsWith("Bookmark") ? "bookmark" : "unbookmark", [{ name: page.name, type: page.type, sister: page.sister }], window.location.href);
       }, false);
     });
-    let obsess = document.body.querySelectorAll(`.modal-body form[action$="${auth2.name}/obsessions"]:not([data-bleh-subscribed])`);
+    let obsess = document.body.querySelectorAll(`.modal-body form[action$="${auth.name}/obsessions"]:not([data-bleh-subscribed])`);
     obsess.forEach((form) => {
       form.setAttribute("data-bleh-subscribed", "true");
       let track = form.querySelector('[name="name"]').getAttribute("value");
@@ -10817,7 +10822,7 @@
       track = correct_item_by_artist(track, artist);
       let btn = form.querySelector("button");
       btn.addEventListener("click", (event2) => {
-        log2("heard", "event", "info", event2);
+        log("heard", "event", "info", event2);
         register_activity("obsess", [{ name: track, type: "track", sister: artist }], window.location.href);
       }, false);
     });
@@ -10825,14 +10830,14 @@
     if (post_shouts_btn != null) {
       post_shouts_btn.setAttribute("data-bleh-subscribed", "true");
       post_shouts_btn.addEventListener("click", (event2) => {
-        log2("heard", "event", "info", event2);
+        log("heard", "event", "info", event2);
         window.setTimeout(function() {
           let actual_btn = event2.target.parentElement;
           let is_loading = actual_btn.classList.contains("btn--loading");
           console.log("is button loading", is_loading, actual_btn, event2.target);
           if (!is_loading)
             return;
-          register_activity("shout", [{ name: page2.name, type: page2.type, sister: page2.sister }], window.location.href);
+          register_activity("shout", [{ name: page.name, type: page.type, sister: page.sister }], window.location.href);
         }, 150);
       }, false);
     }
@@ -10841,8 +10846,8 @@
       save_wiki_form.setAttribute("data-bleh-subscribed", "true");
       let btn = save_wiki_form.querySelector(".form-submit button");
       btn.addEventListener("click", (event2) => {
-        log2("heard", "event", "info", event2);
-        register_activity("wiki", [{ name: page2.name, type: page2.type, sister: page2.sister }], window.location.href);
+        log("heard", "event", "info", event2);
+        register_activity("wiki", [{ name: page.name, type: page.type, sister: page.sister }], window.location.href);
       }, false);
     }
     let upload_img_form = document.body.querySelector('form[action$="/+images/upload"]:not([data-bleh-subscribed])');
@@ -10850,79 +10855,81 @@
       upload_img_form.setAttribute("data-bleh-subscribed", "true");
       let btn = upload_img_form.querySelector(".form-submit button");
       btn.addEventListener("click", (event2) => {
-        log2("heard", "event", "info", event2);
-        register_activity("image_upload", [{ name: page2.name, type: page2.type, sister: page2.sister }], window.location.href);
+        log("heard", "event", "info", event2);
+        register_activity("image_upload", [{ name: page.name, type: page.type, sister: page.sister }], window.location.href);
       }, false);
     }
   }
   function load_activities() {
-    if (!settings2.activities)
+    if (!settings.activities)
       return;
-    recent_activity_list = JSON.parse(localStorage.getItem("bwaa_recent_activity")) || [];
-    log2("loaded", "activity", "info", recent_activity_list);
+    recent_activity_list.length = 0;
+    recent_activity_list.push(...JSON.parse(localStorage.getItem("bwaa_recent_activity")) || []);
+    log("loaded", "activity", "info", recent_activity_list);
     check_activities_length();
-    log2("saved", "activity", "info", recent_activity_list);
+    log("saved", "activity", "info", recent_activity_list);
     localStorage.setItem("bwaa_recent_activity", JSON.stringify(recent_activity_list));
   }
   function check_activities_length() {
     if (recent_activity_list.length > 10) {
       let to_delete = recent_activity_list.length - 10;
       recent_activity_list.splice(0, to_delete);
-      log2(`reached maximum of 10, removed leftovers`, "activity");
+      log(`reached maximum of 10, removed leftovers`, "activity");
     }
     return recent_activity_list;
   }
   function register_activity(type, involved, context, date = /* @__PURE__ */ new Date()) {
-    if (!settings2.activities)
+    if (!settings.activities)
       return;
     if (type == "shout") {
-      if (!settings2.activity_shout)
+      if (!settings.activity_shout)
         return;
     } else if (type == "image_upload" || type == "image_star" || type == "bookmark" || type == "unbookmark") {
-      if (!settings2.activity_image)
+      if (!settings.activity_image)
         return;
     } else if (type == "obsess" || type == "unobsess") {
-      if (!settings2.activity_obsess)
+      if (!settings.activity_obsess)
         return;
     } else if (type == "love" || type == "unlove") {
-      if (!settings2.activity_love)
+      if (!settings.activity_love)
         return;
     } else if (type == "install_bwaa" || type == "update_bwaa" || type == "install_bleh" || type == "update_bleh") {
-      if (!settings2.activity_install)
+      if (!settings.activity_install)
         return;
     } else if (type == "wiki") {
-      if (!settings2.wiki)
+      if (!settings.wiki)
         return;
     }
-    recent_activity_list = JSON.parse(localStorage.getItem("bwaa_recent_activity")) || [];
-    log2("loaded", "activity", "info", recent_activity_list);
+    recent_activity_list.length = 0;
+    recent_activity_list.push(...JSON.parse(localStorage.getItem("bwaa_recent_activity")) || []);
+    log("loaded", "activity", "info", recent_activity_list);
     recent_activity_list.push({
       type,
       involved,
       context,
       date
     });
-    log2("registered new", "activity", "info", {
+    log("registered new", "activity", "info", {
       type,
       involved,
       context,
       date
     });
     check_activities_length();
-    log2("saved", "activity", "info", recent_activity_list);
+    log("saved", "activity", "info", recent_activity_list);
     localStorage.setItem("bwaa_recent_activity", JSON.stringify(recent_activity_list));
   }
 
   // src/components/auto_edit.js
   function bleh_auto_edits() {
     let corrections_panel = document.body.querySelector("#subscription-corrections");
-    page2.structure.main.appendChild(corrections_panel);
-    let nav = page2.structure.nav.querySelector("ul");
+    page.structure.main.appendChild(corrections_panel);
+    let nav = page.structure.nav.querySelector("ul");
     let back_nav = document.createElement("li");
     back_nav.classList.add("navlist-item", "secondary-nav-item", "secondary-nav-item--back");
     back_nav.innerHTML = `
-        <a class="secondary-nav-item-link" href="${root2}settings/subscription">
-            ${trans[lang2].settings.back}
+        <a class="secondary-nav-item-link" href="${root}settings/subscription">
+            ${trans[lang].settings.back}
         </a>
     `;
     nav.insertBefore(back_nav, nav.firstElementChild);
@@ -10934,7 +10941,7 @@
     if (modal.hasAttribute("data-bwaa-edit"))
       return;
     modal.setAttribute("data-bwaa-edit", "true");
-    log2("auto edit v2", "modal");
+    log("auto edit v2", "modal");
     let checkboxes = modal.querySelectorAll(".checkbox");
     checkboxes.forEach((checkbox) => {
       let id = checkbox.querySelector("input").getAttribute("name");
@@ -10957,7 +10964,7 @@
 
   // src/components/music_grid.js
   function music_grids() {
-    if (page2.structure.main == null)
+    if (page.structure.main == null)
       return;
     let insights = {
       artist: {
@@ -10994,14 +11001,14 @@
         }
       }
     };
-    let grids = page2.structure.main.querySelectorAll(".grid-items-item:not([data-bleh-music-grids])");
+    let grids = page.structure.main.querySelectorAll(".grid-items-item:not([data-bleh-music-grids])");
     grids.forEach((grid) => {
       let is_loading = grid.querySelector(".grid-items-empty-inner") != null;
       if (is_loading)
         return;
       grid.setAttribute("data-bleh-music-grids", "true");
       let is_album;
-      if (page2.type == "search") {
+      if (page.type == "search") {
         is_album = grid.querySelector(".stat-name") == null;
       } else {
         is_album = grid.querySelector(".grid-items-item-aux-block") != null;
@@ -11028,14 +11035,14 @@
         }
       }
       let plays_elem;
-      if (page2.type == "search") {
+      if (page.type == "search") {
         if (!is_album) {
           let aux_text = grid.querySelector(".grid-items-item-aux-text");
           let stat_name = aux_text.querySelector(".stat-name");
           aux_text.removeChild(stat_name);
           plays_elem = aux_text;
         }
-      } else if (page2.type == "tag") {
+      } else if (page.type == "tag") {
         let aux_text = grid.querySelector(".grid-items-item-aux-text");
         let stat_name = aux_text.querySelector(".stat-name");
         if (stat_name == null)
@@ -11055,10 +11062,10 @@
         plays_elem = grid.querySelector(".grid-items-item-aux-text a:last-child");
       }
       if (plays_elem != null && !grid.classList.contains("obsessions-item")) {
-        let plays = clean_number(plays_elem.textContent.trim().replace(` ${trans[lang2].statistics.plays.name}`, ""));
+        let plays = clean_number(plays_elem.textContent.trim().replace(` ${trans[lang].statistics.plays.name}`, ""));
         plays_elem.classList.add("grid-item-plays");
         if (is_album)
-          plays_elem.textContent = plays.toLocaleString(lang2);
+          plays_elem.textContent = plays.toLocaleString(lang);
         if (!is_album) {
           insights.artist.display = true;
           insights.artist.values.push(plays);
@@ -11070,9 +11077,9 @@
           if (plays > insights.album.highest.value)
             insights.album.highest.value = plays;
         }
-        if (page2.type == "search" || page2.type == "tag")
+        if (page.type == "search" || page.type == "tag")
           plays_elem.classList.add("grid-item-listeners");
-        if (!is_album && settings2.colourful_counts && page2.type == "user") {
+        if (!is_album && settings.colourful_counts && page.type == "user") {
           if (!plays_elem.getAttribute("href").includes("?from=") && (!plays_elem.getAttribute("href").includes("?date_preset=") || plays_elem.getAttribute("href").endsWith("?date_preset=ALL") || plays_elem.getAttribute("href").endsWith("?date_preset=null"))) {
             let parsed_scrobble_as_rank = parse_scrobbles_as_rank(plays);
             plays_elem.setAttribute("data-bleh--scrobble-milestone", parsed_scrobble_as_rank.milestone);
@@ -11095,20 +11102,20 @@
         insights.album.labels.push(name.textContent);
       }
     });
-    if (page2.subpage.startsWith("library"))
+    if (page.subpage.startsWith("library"))
       bleh_glacier_insights(insights);
   }
 
   // src/components/nag_bar.js
   function nag_bar() {
-    let nags = page2.structure.wrapper.querySelectorAll(".nag-bar");
+    let nags = page.structure.wrapper.querySelectorAll(".nag-bar");
     nags.forEach((active_nag) => {
       let type = active_nag.classList[1];
       if (type == "nag-bar--corrections") {
-        if (!settings2.travis) {
+        if (!settings.travis) {
           notify({
             id: "corrections",
-            title: trans[lang2].nag_bar.corrections.title,
+            title: trans[lang].nag_bar.corrections.title,
             body: active_nag.querySelector("strong").innerHTML,
             icon: "icon-16-refresh"
           });
@@ -11122,11 +11129,11 @@
 
   // src/components/track.js
   function patch_titles() {
-    if (page2.subpage == "tags_overview")
+    if (page.subpage == "tags_overview")
       return;
-    if (page2.structure.main == null)
+    if (page.structure.main == null)
       return;
-    let tracklists = page2.structure.main.querySelectorAll(".chartlist:not(.chartlist__placeholder)");
+    let tracklists = page.structure.main.querySelectorAll(".chartlist:not(.chartlist__placeholder)");
     let insights = {
       artist: {
         display: false,
@@ -11170,7 +11177,7 @@
         return;
       console.log("tracklist has not been run thru", tracklist);
       let tracks = tracklist.querySelectorAll(".chartlist-row:not(.chartlist__placeholder-row)");
-      let is_library_track_page = page2.subpage == "library_track_overview";
+      let is_library_track_page = page.subpage == "library_track_overview";
       tracks.forEach((track) => {
         console.log("track", track);
         if (track.getAttribute("data-track-type"))
@@ -11185,22 +11192,22 @@
         let is_artist = false;
         if (is_user) {
           let link = track_title.getAttribute("href");
-          if (link.startsWith(`${root2}music/`)) {
+          if (link.startsWith(`${root}music/`)) {
             is_user = false;
             is_artist = true;
           }
         }
         if (is_user) {
           track.setAttribute("data-track-type", "user");
-          if (settings2.colourful_counts)
+          if (settings.colourful_counts)
             patch_artist_ranks_in_list_view(track);
           return;
         }
         if (is_artist) {
           track.setAttribute("data-track-type", "artist");
-          if (settings2.colourful_counts)
+          if (settings.colourful_counts)
             patch_artist_ranks_in_list_view(track);
-          if (settings2.corrections)
+          if (settings.corrections)
             track_title.textContent = correct_artist(track_title.getAttribute("title"));
           insights.artist.display = true;
           let bar2 = track.querySelector(".chartlist-count-bar-slug");
@@ -11208,7 +11215,7 @@
           insights.artist.values.push(value);
           if (value > insights.artist.highest.value)
             insights.artist.highest.value = value;
-          log2(`pushed insight artist label of ${track_title.textContent}`, "glacier library", "log");
+          log(`pushed insight artist label of ${track_title.textContent}`, "glacier library", "log");
           insights.artist.labels.push(track_title.textContent);
           return;
         }
@@ -11233,7 +11240,7 @@
           }
         }
         let track_legacy_menu = track.querySelector(".chartlist-more-menu");
-        if (settings2.format_guest_features) {
+        if (settings.format_guest_features) {
           let formatted_title = name_includes(track_title.getAttribute("title"), track_artist);
           console.log("formatted", formatted_title);
           let song_title = track_title.getAttribute("title");
@@ -11255,12 +11262,12 @@
             track.appendChild(song_artist_element);
           }
           if (song_artist_element.textContent.replaceAll("+", " ").trim() == track_artist || song_artist_element.textContent.trim() == "") {
-            song_artist_element.innerHTML = `<a href="${root2}music/${sanitise(formatted_title[2])}" title="${sanitise_text(formatted_title[2])}">${sanitise_text(formatted_title[2])}</a>`;
+            song_artist_element.innerHTML = `<a href="${root}music/${sanitise(formatted_title[2])}" title="${sanitise_text(formatted_title[2])}">${sanitise_text(formatted_title[2])}</a>`;
             let song_guests = formatted_title[3];
             for (let guest in song_guests) {
               song_artist_element.innerHTML = `${song_artist_element.innerHTML},`;
               let guest_element = document.createElement("a");
-              guest_element.setAttribute("href", `${root2}music/${sanitise(song_guests[guest])}`);
+              guest_element.setAttribute("href", `${root}music/${sanitise(song_guests[guest])}`);
               guest_element.setAttribute("title", song_guests[guest]);
               guest_element.textContent = song_guests[guest];
               song_artist_element.appendChild(guest_element);
@@ -11273,7 +11280,7 @@
             track_timestamp.setAttribute("title", "");
           }
           let image = track.querySelector(".chartlist-image img");
-          if (image == null && page2.type == "user")
+          if (image == null && page.type == "user")
             is_library_track_page = true;
           let track_preview = document.createElement("div");
           track_preview.classList.add("track-preview");
@@ -11287,12 +11294,12 @@
                         <h5 class="title">${song_title}</h5>
                         <p class="artist">${song_artist_element.innerHTML}</p>
                         <div class="tags">${song_tags_text}</div>
-                        ${!is_library_track_page ? is_album ? "" : `<p class="album">${image != null ? correct_item_by_artist(sanitise_text(image.getAttribute("alt")), track_artist) : page2.name}</p>` : ""}
+                        ${!is_library_track_page ? is_album ? "" : `<p class="album">${image != null ? correct_item_by_artist(sanitise_text(image.getAttribute("alt")), track_artist) : page.name}</p>` : ""}
                         ${track_timestamp != null && track_timestamp_contents != null ? `<p class="timestamp">${track_timestamp_contents}</p>` : ""}
                     </div>
                 `;
           track_legacy_menu.insertBefore(track_preview, track_legacy_menu.firstElementChild);
-        } else if (settings2.corrections) {
+        } else if (settings.corrections) {
           let song_artist_element = track.querySelector(".chartlist-artist a");
           if (song_artist_element != null) {
             let corrected_title = correct_item_by_artist(track_title.textContent, song_artist_element.textContent);
@@ -11347,19 +11354,19 @@
           register_menu(track, menu);
         }
         if (is_album) {
-          log2(`pushed insight album label of ${track_title.getAttribute("title")}`, "glacier library", "log");
+          log(`pushed insight album label of ${track_title.getAttribute("title")}`, "glacier library", "log");
           insights.album.labels.push(track_title.getAttribute("title"));
         } else {
-          log2(`pushed insight track label of ${track_title.getAttribute("title")}`, "glacier library", "log");
+          log(`pushed insight track label of ${track_title.getAttribute("title")}`, "glacier library", "log");
           insights.track.labels.push(track_title.getAttribute("title"));
         }
-        if (!settings2.colourful_tracks)
+        if (!settings.colourful_tracks)
           return;
         if (!is_album && track.classList.contains("chartlist-row--now-scrobbling")) {
           let image_wrap = track.querySelector(".chartlist-image");
           let link = image_wrap.querySelector(".cover-art");
           let image = link.querySelector("img");
-          if (!settings2.album_text) {
+          if (!settings.album_text) {
             let alt = image.getAttribute("alt");
             let album_text = document.createElement("td");
             album_text.classList.add("chartlist-album", "custom-album-text");
@@ -11383,7 +11390,7 @@
         }
       });
     });
-    if (page2.subpage.startsWith("library"))
+    if (page.subpage.startsWith("library"))
       bleh_glacier_insights(insights);
   }
 
@@ -11396,38 +11403,38 @@
       masthead_logo.setAttribute("data-kate-processed", "true");
       let version_text = document.createElement("a");
       version_text.classList.add("bleh--version");
-      version_text.setAttribute("href", `${root2}bleh`);
-      version_text.textContent = `${version.build}.${version.sku}${settings2.dev ? ` (dev)` : ""}`;
+      version_text.setAttribute("href", `${root}bleh`);
+      version_text.textContent = `${version.build}.${version.sku}${settings.dev ? ` (dev)` : ""}`;
       masthead_logo.appendChild(version_text);
     }
   }
   function append_nav() {
-    if (ff("developer") && !page2.structure.indicator) {
+    if (ff("developer") && !page.structure.indicator) {
       let page_indicator2 = document.createElement("div");
       page_indicator2.classList.add("page-indicator");
       document.documentElement.appendChild(page_indicator2);
-      page2.structure.indicator = page_indicator2;
+      page.structure.indicator = page_indicator2;
     }
     let auth_link2 = document.body.querySelector(".auth-link");
     if (auth_link2.hasAttribute("data-bleh"))
       return;
     auth_link2.setAttribute("data-bleh", "true");
     let text = document.createElement("p");
-    text.textContent = auth2.name;
+    text.textContent = auth.name;
     auth_link2.appendChild(text);
     if (document.body.querySelector(".masthead .masthead-pro-wrap") != null)
-      auth2.pro = true;
+      auth.pro = true;
     else
-      auth2.pro = false;
-    let badges = load_badges(auth2.name, true);
+      auth.pro = false;
+    let badges = load_badges(auth.name, true);
     if (badges) {
       let badge = document.createElement("span");
-      badge.classList.add("label", `user-status--bleh-${badges[0].type}`, `user-status--bleh-user-${auth2.name}`, "auth-badge");
+      badge.classList.add("label", `user-status--bleh-${badges[0].type}`, `user-status--bleh-user-${auth.name}`, "auth-badge");
       badge.textContent = badges[0].name;
       auth_link2.appendChild(badge);
-      auth_link2.classList.add(`user-status--bleh-${badges[0].type}`, `user-status--bleh-user-${auth2.name}`);
+      auth_link2.classList.add(`user-status--bleh-${badges[0].type}`, `user-status--bleh-user-${auth.name}`);
       auth_link2.setAttribute("data-has-colour", "true");
-    } else if (auth2.pro) {
+    } else if (auth.pro) {
       let pro_badge = document.createElement("p");
       pro_badge.classList.add("label", "user-status-subscriber", "auth-badge");
       pro_badge.textContent = "Pro";
@@ -11464,88 +11471,88 @@
     changelog_container.classList.add("masthead-nav-item");
     changelog_container.innerHTML = `
         <a class="masthead-nav-control" onclick="_query_changelog()" data-bleh--label="changelog">
-            ${trans[lang2].changelog.name}
+            ${trans[lang].changelog.name}
         </a>
     `;
     tippy(changelog_container, {
-      content: trans[lang2].changelog.name
+      content: trans[lang].changelog.name
     });
     inbox_container.after(changelog_container);
     let bleh_container = document.createElement("li");
     bleh_container.classList.add("masthead-nav-item");
     bleh_container.innerHTML = `
-        <a class="masthead-nav-control" href="${root2}bleh${stored_season.id != "none" ? "?tab=seasonal" : ""}" data-bleh--label="bleh" data-season="${stored_season.id}" data-season-active="${stored_season.id != "none" ? "true" : "false"}">
-            ${stored_season.id == "none" ? trans[lang2].auth_menu.configure_bleh : moment(stored_season.end.replace("y0", stored_season.year).replace("{offset}", stored_season.offset)).to(stored_season.now, true)}
+        <a class="masthead-nav-control" href="${root}bleh${stored_season.id != "none" ? "?tab=seasonal" : ""}" data-bleh--label="bleh" data-season="${stored_season.id}" data-season-active="${stored_season.id != "none" ? "true" : "false"}">
+            ${stored_season.id == "none" ? trans[lang].auth_menu.configure_bleh : moment(stored_season.end.replace("y0", stored_season.year).replace("{offset}", stored_season.offset)).to(stored_season.now, true)}
         </a>
     `;
     if (stored_season.id == "none") {
       tippy(bleh_container, {
-        content: trans[lang2].auth_menu.configure_bleh
+        content: trans[lang].auth_menu.configure_bleh
       });
     } else {
-      page2.header.season_tooltip = tippy(bleh_container, {
+      page.header.season_tooltip = tippy(bleh_container, {
         theme: "seasonal-swatch",
         content: `
-                <span class="season-colour-name">${trans[lang2].settings.customise.seasonal.listing[stored_season.id]}</span>
-                <span class="season-exclusive">${trans[lang2].auth_menu.seasonal_notice}</span>
+                <span class="season-colour-name">${trans[lang].settings.customise.seasonal.listing[stored_season.id]}</span>
+                <span class="season-exclusive">${trans[lang].auth_menu.seasonal_notice}</span>
             `,
         allowHTML: true
       });
     }
     changelog_container.after(bleh_container);
-    page2.header.season = bleh_container.querySelector("a");
+    page.header.season = bleh_container.querySelector("a");
     let site_auth = document.body.querySelector(".site-auth");
     let legacy_auth_menu = site_auth.querySelector(".auth-dropdown-menu");
     let token = legacy_auth_menu.querySelector('[name="csrfmiddlewaretoken"]').getAttribute("value");
     let auth_menu = tippy(auth_link2, {
       theme: "auth-menu",
       content: `
-            <a class="dropdown-menu-clickable-item" data-menu-item="profile" href="${root2}user/${auth2.name}">
-                ${auth2.name}
+            <a class="dropdown-menu-clickable-item" data-menu-item="profile" href="${root}user/${auth.name}">
+                ${auth.name}
             </a>
-            <a class="dropdown-menu-clickable-item" data-menu-item="profile-shortcut" href="${root2}user/${settings2.profile_shortcut}" data-profile-shortcut="${settings2.profile_shortcut}">
-                ${settings2.profile_shortcut}
+            <a class="dropdown-menu-clickable-item" data-menu-item="profile-shortcut" href="${root}user/${settings.profile_shortcut}" data-profile-shortcut="${settings.profile_shortcut}">
+                ${settings.profile_shortcut}
             </a>
             <div class="sep"></div>
-            <a class="dropdown-menu-clickable-item" data-menu-item="library" href="${root2}user/${auth2.name}/library">
-                ${trans[lang2].auth_menu.library}
+            <a class="dropdown-menu-clickable-item" data-menu-item="library" href="${root}user/${auth.name}/library">
+                ${trans[lang].auth_menu.library}
             </a>
-            <a class="dropdown-menu-clickable-item" data-menu-item="shouts" href="${root2}user/${auth2.name}/shoutbox">
-                ${trans[lang2].auth_menu.shouts}
+            <a class="dropdown-menu-clickable-item" data-menu-item="shouts" href="${root}user/${auth.name}/shoutbox">
+                ${trans[lang].auth_menu.shouts}
             </a>
-            ${settings2.auth_menu_obsessions ? `
-            <a class="dropdown-menu-clickable-item" data-menu-item="obsessions" href="${root2}user/${auth2.name}/obsessions">
-                ${trans[lang2].auth_menu.obsessions}
+            ${settings.auth_menu_obsessions ? `
+            <a class="dropdown-menu-clickable-item" data-menu-item="obsessions" href="${root}user/${auth.name}/obsessions">
+                ${trans[lang].auth_menu.obsessions}
             </a>
             ` : ""}
             <button class="dropdown-menu-clickable-item" data-menu-item="themes" onclick="toggle_theme()">
                 <span class="auth-dropdown-item-row">
-                    <span class="auth-dropdown-item-left">${trans[lang2].settings.themes.name}</span>
-                    <span class="auth-dropdown-item-right" id="theme-value">${trans[lang2].settings.themes[settings2.theme].name}</span>
+                    <span class="auth-dropdown-item-left">${trans[lang].settings.themes.name}</span>
+                    <span class="auth-dropdown-item-right" id="theme-value">${trans[lang].settings.themes[settings.theme].name}</span>
                 </span>
             </button>
             ${ff("dev") ? `
             <button class="dropdown-menu-clickable-item" data-menu-item="developer" onclick="_update_flag_toggle('dev', this)">
-                ${trans[lang2].auth_menu.dev}
+                ${trans[lang].auth_menu.dev}
             </button>
             ` : ""}
-            <a class="dropdown-menu-clickable-item" data-menu-item="bleh" href="${root2}bleh">
-                ${trans[lang2].auth_menu.configure_bleh}
+            <a class="dropdown-menu-clickable-item" data-menu-item="bleh" href="${root}bleh">
+                ${trans[lang].auth_menu.configure_bleh}
             </a>
             <div class="sep"></div>
-            <a class="dropdown-menu-clickable-item" data-menu-item="labs" href="${root2}labs">
-                ${trans[lang2].auth_menu.labs}
+            <a class="dropdown-menu-clickable-item" data-menu-item="labs" href="${root}labs">
+                ${trans[lang].auth_menu.labs}
             </a>
-            <a class="dropdown-menu-clickable-item" data-menu-item="bookmarks" href="${root2}music/+bookmarks">
-                ${trans[lang2].auth_menu.bookmarks}
+            <a class="dropdown-menu-clickable-item" data-menu-item="bookmarks" href="${root}music/+bookmarks">
+                ${trans[lang].auth_menu.bookmarks}
             </a>
-            <a class="dropdown-menu-clickable-item" data-menu-item="settings" href="${root2}settings">
-                ${trans[lang2].auth_menu.settings}
+            <a class="dropdown-menu-clickable-item" data-menu-item="settings" href="${root}settings">
+                ${trans[lang].auth_menu.settings}
             </a>
             <form>
                 <input type="hidden" name="csrfmiddlewaretoken" value="${token}">
-                <a class="dropdown-menu-clickable-item" data-menu-item="logout" href="${root2}logout">
-                    ${trans[lang2].auth_menu.logout}
+                <a class="dropdown-menu-clickable-item" data-menu-item="logout" href="${root}logout">
+                    ${trans[lang].auth_menu.logout}
                 </a>
             </form>
         `,
@@ -11554,28 +11561,28 @@
       interactive: true,
       interactiveBorder: 10,
       onShow(instance) {
-        instance.popper.style.setProperty("--url", `url(${auth2.avatar.replace("avatar42s", "avatar170s")})`);
+        instance.popper.style.setProperty("--url", `url(${auth.avatar.replace("avatar42s", "avatar170s")})`);
         let shortcut_item = instance.popper.querySelector('[data-menu-item="profile-shortcut"]');
-        if (shortcut_item.getAttribute("data-profile-shortcut") != settings2.profile_shortcut) {
-          shortcut_item.setAttribute("data-profile-shortcut", settings2.profile_shortcut);
-          shortcut_item.setAttribute("href", `${root2}user/${settings2.profile_shortcut}`);
-          shortcut_item.textContent = settings2.profile_shortcut;
+        if (shortcut_item.getAttribute("data-profile-shortcut") != settings.profile_shortcut) {
+          shortcut_item.setAttribute("data-profile-shortcut", settings.profile_shortcut);
+          shortcut_item.setAttribute("href", `${root}user/${settings.profile_shortcut}`);
+          shortcut_item.textContent = settings.profile_shortcut;
         }
-        instance.popper.querySelector("#theme-value").textContent = trans[lang2].settings.themes[settings2.theme].name;
+        instance.popper.querySelector("#theme-value").textContent = trans[lang].settings.themes[settings.theme].name;
         let theme_menu_item = tippy(instance.popper.querySelector('[data-menu-item="themes"]:not([aria-expanded])'), {
           theme: "menu",
           content: `
                     <button class="dropdown-menu-clickable-item theme-item-in-menu" data-bleh-theme="light" onclick="change_theme_from_menu('light')">
-                        ${trans[lang2].settings.themes.light.name}
+                        ${trans[lang].settings.themes.light.name}
                     </button>
                     <button class="dropdown-menu-clickable-item theme-item-in-menu" data-bleh-theme="dark" onclick="change_theme_from_menu('dark')">
-                        ${trans[lang2].settings.themes.dark.name}
+                        ${trans[lang].settings.themes.dark.name}
                     </button>
                     <button class="dropdown-menu-clickable-item theme-item-in-menu" data-bleh-theme="darker" onclick="change_theme_from_menu('darker')">
-                        ${trans[lang2].settings.themes.darker.name}
+                        ${trans[lang].settings.themes.darker.name}
                     </button>
                     <button class="dropdown-menu-clickable-item theme-item-in-menu" data-bleh-theme="oled" onclick="change_theme_from_menu('oled')">
-                        ${trans[lang2].settings.themes.oled.name}
+                        ${trans[lang].settings.themes.oled.name}
                     </button>
                 `,
           allowHTML: true,
@@ -11637,7 +11644,7 @@
 
   // src/components/about_artist.js
   function bleh_about_artist() {
-    let legacy_container = page2.structure.main.querySelector(".about-artist");
+    let legacy_container = page.structure.main.querySelector(".about-artist");
     if (legacy_container == null)
       return;
     let avatar = legacy_container.querySelector(".gallery-preview-image--0 img");
@@ -11654,105 +11661,39 @@
                 ${avatar != null ? `<img src="${avatar.getAttribute("src")}"><a onclick="_expand_avatar('${avatar.getAttribute("src").replace("/300x300/", "/ar0/")}')" class="bleh--avatar-clickable-link"></a>` : '<img class="missing-artist">'}
             </div>
             <div class="info-side">
-                <div class="sub-text">${trans[lang2].music.about}</div>
-                <h1><a href="${root2}music/${sanitise(page2.sister)}">${sanitise_text(page2.sister)}</a></h1>
+                <div class="sub-text">${trans[lang].music.about}</div>
+                <h1><a href="${root}music/${sanitise(page.sister)}">${sanitise_text(page.sister)}</a></h1>
                 ${listeners != null ? listeners.outerHTML : ""}
                 ${tags != null ? tags.outerHTML : ""}
                 ${wiki != null ? wiki.outerHTML : ""}
             </div>
         </div>
-        ${page2.sister_others.length > 0 ? `<div class="sep"></div><div class="sub-text">${trans[lang2].music.about_guests}</div>` : ""}
+        ${page.sister_others.length > 0 ? `<div class="sep"></div><div class="sub-text">${trans[lang].music.about_guests}</div>` : ""}
     `;
-    if (page2.sister_others.length > 0) {
+    if (page.sister_others.length > 0) {
       let guest_feature_panel = document.createElement("div");
       guest_feature_panel.classList.add("about-guest-features-panel");
-      for (let guest in page2.sister_others) {
+      for (let guest in page.sister_others) {
         let guest_element = document.createElement("a");
         guest_element.classList.add("about-guest-feature");
-        guest_element.setAttribute("href", `${root2}music/${sanitise(page2.sister_others[guest])}`);
-        guest_element.textContent = page2.sister_others[guest];
+        guest_element.setAttribute("href", `${root}music/${sanitise(page.sister_others[guest])}`);
+        guest_element.textContent = page.sister_others[guest];
         guest_feature_panel.appendChild(guest_element);
       }
       about_artist_container.appendChild(guest_feature_panel);
     }
   }
 
-  // src/pages/tag.js
-  function bleh_tags() {
-    let tag_header = document.body.querySelector(".header--tag");
-    if (tag_header == void 0)
-      return;
-    if (tag_header.hasAttribute("data-bwaa"))
-      return;
-    tag_header.setAttribute("data-bwaa", "true");
-    patch_header_title();
-    page2.name = tag_header.querySelector(".header-title").textContent.trim();
-    let is_subpage = tag_header.classList.contains("header--sub-page");
-    page2.structure.container = document.body.querySelector(".page-content");
-    page2.structure.row = page2.structure.container.querySelector(".row");
-    try {
-      page2.structure.main = page2.structure.row.querySelector(".col-main");
-      page2.structure.side = page2.structure.row.querySelector(".col-sidebar");
-    } catch (e) {
-      log2("unable to find elements", "page structure");
-    }
-    checkup_page_structure(is_subpage, tag_header);
-    if (ff("refreshed_music_nav")) {
-      let split = window.location.href.split("/");
-      let index = 4;
-      if (split[3] != "tag")
-        index = 5;
-      let title = desanitise(split[index]);
-      let redesigned_tag_header = document.createElement("section");
-      redesigned_tag_header.classList.add("redesigned-header", "redesigned-tag-header", "no-background");
-      redesigned_tag_header.innerHTML = `
-            <div class="tag-side">
-                <div class="tag-icon"></div>
-            </div>
-            <div class="info-side">
-                <div class="sub-text">${trans[lang2].tag.name}</div>
-                <h1>${title}</h1>
-            </div>
-        `;
-      let background = document.body.querySelector(".header-background--has-image");
-      if (background != null)
-        register_background(background.style.getPropertyValue("background-image").replace('url("', "").replace('")', ""));
-      page2.structure.container.insertBefore(redesigned_tag_header, page2.structure.container.firstElementChild);
-      tag_header.classList.add("legacy-header");
-    }
-    if (!is_subpage) {
-    } else {
-      if (page2.subpage == "wiki_overview")
-        bleh_wiki();
-      else if (page2.subpage == "wiki_history")
-        bleh_wiki_history();
-      else if (page2.subpage == "wiki_edit")
-        bleh_wiki_editor();
-    }
-    log2("status is", "page", "info", page2);
-    update_page();
-  }
-  function bleh_tags_mini() {
-    let tag_user_avatar = page2.structure.main.querySelector(".tags-user-avatar");
-    if (!tag_user_avatar)
-      return;
-    let tags_list = tag_user_avatar.nextElementSibling;
-    let tags = tags_list.querySelectorAll(".tag a");
-    tags.forEach((tag) => {
-      tag.classList.add("user-created-tag");
-    });
-  }
-
   // src/pages/wiki.js
-  function bleh_wiki2() {
+  function bleh_wiki() {
     let wiki_panel = document.createElement("section");
     wiki_panel.classList.add("wiki-panel");
-    wiki_panel.innerHTML = page2.structure.main.innerHTML;
-    page2.structure.main.innerHTML = "";
-    page2.structure.main.appendChild(wiki_panel);
-    page2.structure.main.classList.add("not-a-panel");
-    let original_edit_button = page2.structure.main.querySelector(".qa-wiki-edit");
-    let original_version_history = page2.structure.main.querySelector(".wiki-history-link--desktop a");
+    wiki_panel.innerHTML = page.structure.main.innerHTML;
+    page.structure.main.innerHTML = "";
+    page.structure.main.appendChild(wiki_panel);
+    page.structure.main.classList.add("not-a-panel");
+    let original_edit_button = page.structure.main.querySelector(".qa-wiki-edit");
+    let original_version_history = page.structure.main.querySelector(".wiki-history-link--desktop a");
     let new_edit_panel;
     if (original_edit_button != null) {
       new_edit_panel = document.createElement("section");
@@ -11762,7 +11703,7 @@
                 ${original_edit_button.textContent}
             </a>
         `;
-      page2.structure.side.insertBefore(new_edit_panel, page2.structure.side.firstElementChild);
+      page.structure.side.insertBefore(new_edit_panel, page.structure.side.firstElementChild);
     }
     if (original_version_history != null) {
       let new_version_panel = document.createElement("section");
@@ -11775,7 +11716,7 @@
       if (original_edit_button != null)
         new_edit_panel.after(new_version_panel);
       else
-        page2.structure.side.insertBefore(new_version_panel, page2.structure.side.firstElementChild);
+        page.structure.side.insertBefore(new_version_panel, page.structure.side.firstElementChild);
     }
     let wiki_author = wiki_panel.querySelector(".wiki-author");
     if (wiki_author != null) {
@@ -11784,7 +11725,7 @@
       sub_text.classList.add("sub-text", "space-below");
       sub_text.innerHTML = `
             <div class="breadcrumb-origin prominent">
-                ${h2 != null ? h2.innerHTML : page2.structure.container.querySelector(".content-top-header").textContent}
+                ${h2 != null ? h2.innerHTML : page.structure.container.querySelector(".content-top-header").textContent}
             </div>
             <div class="wiki-author-side">
                 ${wiki_author.innerHTML}
@@ -11799,12 +11740,12 @@
       return;
     patch_wiki_contents(wiki);
   }
-  function bleh_wiki_history2() {
-    let breadcrumb_root = page2.structure.container.querySelector(".subpage-breadcrumb");
-    let breadcrumb_name = page2.structure.container.querySelector(".subpage-title");
+  function bleh_wiki_history() {
+    let breadcrumb_root = page.structure.container.querySelector(".subpage-breadcrumb");
+    let breadcrumb_name = page.structure.container.querySelector(".subpage-title");
     if (breadcrumb_root == null) {
-      breadcrumb_root = page2.structure.container.querySelector(".content-top-back-link");
-      breadcrumb_name = page2.structure.container.querySelector(".content-top-header");
+      breadcrumb_root = page.structure.container.querySelector(".content-top-back-link");
+      breadcrumb_name = page.structure.container.querySelector(".content-top-header");
     }
     let sub_text = document.createElement("div");
     sub_text.classList.add("sub-text", "space-below");
@@ -11818,16 +11759,16 @@
     `;
     breadcrumb_root.style.setProperty("display", "none");
     breadcrumb_name.style.setProperty("display", "none");
-    let buffer_container = page2.structure.container.querySelector(".row ~ .buffer-4");
+    let buffer_container = page.structure.container.querySelector(".row ~ .buffer-4");
     if (buffer_container == null)
-      buffer_container = page2.structure.container.querySelector(".wiki-history");
+      buffer_container = page.structure.container.querySelector(".wiki-history");
     let wiki_history_table = buffer_container.querySelector(".wiki-history-table");
     let pagination = buffer_container.querySelector(".pagination");
     let wiki_panel = document.createElement("section");
     wiki_panel.classList.add("wiki-history-panel");
     wiki_panel.appendChild(sub_text);
     wiki_panel.appendChild(wiki_history_table);
-    page2.structure.main.appendChild(wiki_panel);
+    page.structure.main.appendChild(wiki_panel);
     buffer_container.style.setProperty("display", "none");
     if (pagination != null)
       wiki_panel.appendChild(pagination);
@@ -11835,11 +11776,11 @@
     latest_version_panel.classList.add("view-all-panel");
     latest_version_panel.innerHTML = `
         <a class="btn view-all-button back wiki-latest-button" href="${sub_text.querySelector("a").getAttribute("href")}">
-            ${trans[lang2].wiki.latest}
+            ${trans[lang].wiki.latest}
         </a>
     `;
-    page2.structure.side.appendChild(latest_version_panel);
-    let entries = page2.structure.main.querySelectorAll(".wiki-history-entry");
+    page.structure.side.appendChild(latest_version_panel);
+    let entries = page.structure.main.querySelectorAll(".wiki-history-entry");
     entries.forEach((entry) => {
       let author = entry.querySelector(".wiki-history-author");
       let avatar = author.querySelector(".wiki-history-author-avatar");
@@ -11851,24 +11792,24 @@
       }
     });
   }
-  function bleh_wiki_editor2() {
+  function bleh_wiki_editor() {
     let wiki_edit_panel = document.createElement("section");
     wiki_edit_panel.classList.add("wiki-edit-panel");
-    wiki_edit_panel.innerHTML = page2.structure.main.innerHTML;
-    page2.structure.main.innerHTML = "";
-    page2.structure.main.appendChild(wiki_edit_panel);
-    page2.structure.main.classList.add("not-a-panel");
-    let breadcrumb_root = page2.structure.container.querySelector(".subpage-breadcrumb");
-    let breadcrumb_name = page2.structure.container.querySelector(".subpage-title");
+    wiki_edit_panel.innerHTML = page.structure.main.innerHTML;
+    page.structure.main.innerHTML = "";
+    page.structure.main.appendChild(wiki_edit_panel);
+    page.structure.main.classList.add("not-a-panel");
+    let breadcrumb_root = page.structure.container.querySelector(".subpage-breadcrumb");
+    let breadcrumb_name = page.structure.container.querySelector(".subpage-title");
     if (breadcrumb_name == null) {
-      breadcrumb_name = page2.structure.content_top.querySelector(".content-top-header");
+      breadcrumb_name = page.structure.content_top.querySelector(".content-top-header");
       if (breadcrumb_name != null) {
-        page2.structure.content_top.style.setProperty("display", "none");
+        page.structure.content_top.style.setProperty("display", "none");
       }
     }
     if (breadcrumb_root == null) {
-      breadcrumb_root = page2.structure.container.querySelector(".content-top-back-link");
-      breadcrumb_name = page2.structure.container.querySelector(".content-top-header");
+      breadcrumb_root = page.structure.container.querySelector(".content-top-back-link");
+      breadcrumb_name = page.structure.container.querySelector(".content-top-header");
     }
     let sub_text = document.createElement("div");
     sub_text.classList.add("sub-text", "space-below");
@@ -11886,57 +11827,57 @@
     let wiki_syntax = document.createElement("section");
     wiki_syntax.classList.add("bleh--blank-panel", "wiki-syntax-panel");
     wiki_syntax.innerHTML = `
-        <h3 class="text-18">${trans[lang2].wiki.syntax.name}</h3>
+        <h3 class="text-18">${trans[lang].wiki.syntax.name}</h3>
         <div class="syntax-listing">
             <div class="syntax-listing-item">
                 <div class="code-side">[artist]julie[/artist]</div>
-                <div class="detail-side">${trans[lang2].wiki.syntax.links_to.replace("{link}", `<a href="${root2}music/julie" target="_blank">julie</a>`)}</div>
+                <div class="detail-side">${trans[lang].wiki.syntax.links_to.replace("{link}", `<a href="${root}music/julie" target="_blank">julie</a>`)}</div>
             </div>
             <div class="syntax-listing-item">
                 <div class="code-side">[album artist=julie]pushing daisies[/album]</div>
-                <div class="detail-side">${trans[lang2].wiki.syntax.links_to.replace("{link}", `<a href="${root2}music/julie/pushing+daisies" target="_blank">pushing daisies</a>`)}</div>
+                <div class="detail-side">${trans[lang].wiki.syntax.links_to.replace("{link}", `<a href="${root}music/julie/pushing+daisies" target="_blank">pushing daisies</a>`)}</div>
             </div>
             <div class="syntax-listing-item">
                 <div class="code-side">[track artist=julie]very little effort[/track]</div>
-                <div class="detail-side">${trans[lang2].wiki.syntax.links_to.replace("{link}", `<a href="${root2}music/julie/_/very+little+effort" target="_blank">very little effort</a>`)}</div>
+                <div class="detail-side">${trans[lang].wiki.syntax.links_to.replace("{link}", `<a href="${root}music/julie/_/very+little+effort" target="_blank">very little effort</a>`)}</div>
             </div>
         </div>
         <div class="sep"></div>
         <div class="syntax-listing">
             <div class="syntax-listing-item">
                 <div class="code-side">[url]https://cutensilly.org/bleh/fm[/url]</div>
-                <div class="detail-side">${trans[lang2].wiki.syntax.links_to.replace("{link}", `<a href="https://cutensilly.org/bleh/fm" target="_blank">https://cutensilly.org/bleh/fm</a>`)}</div>
+                <div class="detail-side">${trans[lang].wiki.syntax.links_to.replace("{link}", `<a href="https://cutensilly.org/bleh/fm" target="_blank">https://cutensilly.org/bleh/fm</a>`)}</div>
             </div>
             <div class="syntax-listing-item">
                 <div class="code-side">[url=https://cutensilly.org/bleh/fm]blehhh[/url]</div>
-                <div class="detail-side">${trans[lang2].wiki.syntax.links_to.replace("{link}", `<a href="https://cutensilly.org/bleh/fm" target="_blank">blehhh</a>`)}</div>
+                <div class="detail-side">${trans[lang].wiki.syntax.links_to.replace("{link}", `<a href="https://cutensilly.org/bleh/fm" target="_blank">blehhh</a>`)}</div>
             </div>
         </div>
         <div class="sep"></div>
         <div class="syntax-listing">
             <div class="syntax-listing-item">
                 <div class="code-side">[tag]grunge[/tag]</div>
-                <div class="detail-side">${trans[lang2].wiki.syntax.links_to.replace("{link}", `<a href="${root2}tag/grunge" target="_blank">grunge</a>`)}</div>
+                <div class="detail-side">${trans[lang].wiki.syntax.links_to.replace("{link}", `<a href="${root}tag/grunge" target="_blank">grunge</a>`)}</div>
             </div>
             <div class="syntax-listing-item">
                 <div class="code-side">[user]${auth.name}[/user]</div>
-                <div class="detail-side">${trans[lang2].wiki.syntax.links_to.replace("{link}", `<a class="mention" href="${root2}user/${auth.name}" target="_blank">@${auth.name}</a>`)}</div>
+                <div class="detail-side">${trans[lang].wiki.syntax.links_to.replace("{link}", `<a class="mention" href="${root}user/${auth.name}" target="_blank">@${auth.name}</a>`)}</div>
             </div>
         </div>
     `;
-    page2.structure.side.innerHTML = "";
+    page.structure.side.innerHTML = "";
     let latest_version_panel = document.createElement("section");
     latest_version_panel.classList.add("view-all-panel");
     latest_version_panel.innerHTML = `
         <a class="btn view-all-button back wiki-latest-button" href="${sub_text.querySelector("a").getAttribute("href")}">
-            ${trans[lang2].wiki.latest}
+            ${trans[lang].wiki.latest}
         </a>
     `;
-    page2.structure.side.appendChild(latest_version_panel);
+    page.structure.side.appendChild(latest_version_panel);
     let wiki_presets_panel = document.createElement("section");
     wiki_presets_panel.classList.add("wiki-presets-panel");
     wiki_presets_panel.innerHTML = `
-        <h3 class="text-18">${trans[lang2].wiki.presets.name}</h3>
+        <h3 class="text-18">${trans[lang].wiki.presets.name}</h3>
         <div class="presets">
             <div class="preset">\u201C</div>
             <div class="preset">\u201D</div>
@@ -11946,17 +11887,17 @@
             <div class="preset">-</div>
         </div>
     `;
-    page2.structure.side.appendChild(wiki_presets_panel);
-    page2.structure.side.appendChild(wiki_syntax);
-    let rules = page2.structure.main.querySelector(".wiki-style-rules");
+    page.structure.side.appendChild(wiki_presets_panel);
+    page.structure.side.appendChild(wiki_syntax);
+    let rules = page.structure.main.querySelector(".wiki-style-rules");
     let rules_panel = document.createElement("section");
     rules_panel.classList.add("rules-panel");
     rules_panel.innerHTML = rules.innerHTML;
-    page2.structure.side.appendChild(rules_panel);
+    page.structure.side.appendChild(rules_panel);
   }
   function patch_wiki() {
     if (ff("show_wiki_label")) {
-      let wiki_col = page2.structure.main.querySelector(".wiki-column");
+      let wiki_col = page.structure.main.querySelector(".wiki-column");
       let wiki_empty = false;
       if (!wiki_col)
         return;
@@ -11968,14 +11909,14 @@
       let read_more = wiki_block.querySelector("a:last-child");
       if (read_more) {
         read_more.classList.add("read-more");
-        read_more.textContent = trans[lang2].music.wiki_read;
+        read_more.textContent = trans[lang].music.wiki_read;
       }
       let wiki_header = document.createElement("div");
       wiki_header.classList.add("sub-text");
       wiki_header.innerHTML = `
-            <p>${trans[lang2].music.wiki.replace("{a}", page2.name)}</p>
+            <p>${trans[lang].music.wiki.replace("{a}", page.name)}</p>
             <span class="right-links">
-                <p><a class="wiki-edit-small" href="${document.location.href}/+wiki/edit">${trans[lang2].music.wiki_edit}</a></p>
+                <p><a class="wiki-edit-small" href="${document.location.href}/+wiki/edit">${trans[lang].music.wiki_edit}</a></p>
                 ${!wiki_empty ? `<p>${read_more.outerHTML}</p>` : ""}
             </span>
         `;
@@ -11992,7 +11933,7 @@
       let type;
       let name = link.textContent.trim();
       let sister;
-      if (!href.startsWith(root2)) {
+      if (!href.startsWith(root)) {
         tippy(link, {
           content: link.getAttribute("href")
         });
@@ -12000,7 +11941,7 @@
       }
       if (href.endsWith("/+wiki"))
         return;
-      href = href.replace(root2, "").replace("music/", "");
+      href = href.replace(root, "").replace("music/", "");
       if (href.startsWith("tag/")) {
         type = "tag";
       } else {
@@ -12025,6 +11966,72 @@
     });
   }
 
+  // src/pages/tag.js
+  function bleh_tags() {
+    let tag_header = document.body.querySelector(".header--tag");
+    if (tag_header == void 0)
+      return;
+    if (tag_header.hasAttribute("data-bwaa"))
+      return;
+    tag_header.setAttribute("data-bwaa", "true");
+    patch_header_title();
+    page.name = tag_header.querySelector(".header-title").textContent.trim();
+    let is_subpage = tag_header.classList.contains("header--sub-page");
+    page.structure.container = document.body.querySelector(".page-content");
+    page.structure.row = page.structure.container.querySelector(".row");
+    try {
+      page.structure.main = page.structure.row.querySelector(".col-main");
+      page.structure.side = page.structure.row.querySelector(".col-sidebar");
+    } catch (e) {
+      log("unable to find elements", "page structure");
+    }
+    checkup_page_structure(is_subpage, tag_header);
+    if (ff("refreshed_music_nav")) {
+      let split = window.location.href.split("/");
+      let index = 4;
+      if (split[3] != "tag")
+        index = 5;
+      let title = desanitise(split[index]);
+      let redesigned_tag_header = document.createElement("section");
+      redesigned_tag_header.classList.add("redesigned-header", "redesigned-tag-header", "no-background");
+      redesigned_tag_header.innerHTML = `
+            <div class="tag-side">
+                <div class="tag-icon"></div>
+            </div>
+            <div class="info-side">
+                <div class="sub-text">${trans[lang].tag.name}</div>
+                <h1>${title}</h1>
+            </div>
+        `;
+      let background = document.body.querySelector(".header-background--has-image");
+      if (background != null)
+        register_background(background.style.getPropertyValue("background-image").replace('url("', "").replace('")', ""));
+      page.structure.container.insertBefore(redesigned_tag_header, page.structure.container.firstElementChild);
+      tag_header.classList.add("legacy-header");
+    }
+    if (!is_subpage) {
+    } else {
+      if (page.subpage == "wiki_overview")
+        bleh_wiki();
+      else if (page.subpage == "wiki_history")
+        bleh_wiki_history();
+      else if (page.subpage == "wiki_edit")
+        bleh_wiki_editor();
+    }
+    log("status is", "page", "info", page);
+    update_page();
+  }
+  function bleh_tags_mini() {
+    let tag_user_avatar = page.structure.main.querySelector(".tags-user-avatar");
+    if (!tag_user_avatar)
+      return;
+    let tags_list = tag_user_avatar.nextElementSibling;
+    let tags = tags_list.querySelectorAll(".tag a");
+    tags.forEach((tag) => {
+      tag.classList.add("user-created-tag");
+    });
+  }
+
   // src/pages/album.js
   function bleh_albums() {
     let album_header = document.body.querySelector(".header-new--album");
@@ -12034,29 +12041,29 @@
       return;
     album_header.setAttribute("data-bwaa", "true");
     patch_header_title();
-    page2.sister = album_header.querySelector(".header-new-crumb span").textContent;
-    page2.name = correct_item_by_artist(document.body.querySelector("[data-page-resource-name]").getAttribute("data-page-resource-name"), page2.sister);
+    page.sister = album_header.querySelector(".header-new-crumb span").textContent;
+    page.name = correct_item_by_artist(document.body.querySelector("[data-page-resource-name]").getAttribute("data-page-resource-name"), page.sister);
     let is_subpage = album_header.classList.contains("header-new--subpage");
-    if (auth2.pro) {
-      page2.structure.container = document.body.querySelector(".page-content:not(:has(.content-top-lower-row, a + .js-gallery-heading))");
+    if (auth.pro) {
+      page.structure.container = document.body.querySelector(".page-content:not(:has(.content-top-lower-row, a + .js-gallery-heading))");
     } else {
       if (!is_subpage) {
-        page2.structure.container = document.body.querySelector(".full-bleed-ad-container + .page-content:not(.visible-xs)");
-        if (!page2.structure.container)
-          page2.structure.container = document.body.querySelector(".page-content");
+        page.structure.container = document.body.querySelector(".full-bleed-ad-container + .page-content:not(.visible-xs)");
+        if (!page.structure.container)
+          page.structure.container = document.body.querySelector(".page-content");
       } else {
-        page2.structure.container = document.body.querySelector(".page-content:not(:has(.content-top-lower-row, a + .js-gallery-heading))");
+        page.structure.container = document.body.querySelector(".page-content:not(:has(.content-top-lower-row, a + .js-gallery-heading))");
       }
     }
-    page2.structure.row = page2.structure.container.querySelector(".row");
+    page.structure.row = page.structure.container.querySelector(".row");
     try {
-      page2.structure.main = page2.structure.row.querySelector(".col-main:not(.visible-xs, .hidden-xs, .upper-overview)");
+      page.structure.main = page.structure.row.querySelector(".col-main:not(.visible-xs, .hidden-xs, .upper-overview)");
       if (!is_subpage)
-        page2.structure.side = page2.structure.row.querySelector(".col-sidebar.hidden-xs.masonry-right-bottom");
+        page.structure.side = page.structure.row.querySelector(".col-sidebar.hidden-xs.masonry-right-bottom");
       else
-        page2.structure.side = page2.structure.row.querySelector(".col-sidebar.hidden-xs");
+        page.structure.side = page.structure.row.querySelector(".col-sidebar.hidden-xs");
     } catch (e) {
-      log2("unable to find elements", "page structure");
+      log("unable to find elements", "page structure");
     }
     checkup_page_structure(is_subpage, album_header);
     if (ff("refreshed_music_nav")) {
@@ -12076,7 +12083,7 @@
             </div>
             ` : ""}
             <div class="info-side">
-                <div class="sub-text">${trans[lang2].album.name}</div>
+                <div class="sub-text">${trans[lang].album.name}</div>
                 <div class="title-container">
                     <h1>${title.innerHTML}</h1>
                     ${position != null ? position.outerHTML : ""}
@@ -12089,7 +12096,7 @@
         bg = register_background(avatar.getAttribute("content"));
       else
         bg = register_background(null);
-      page2.structure.container.insertBefore(redesigned_album_header, page2.structure.container.firstElementChild);
+      page.structure.container.insertBefore(redesigned_album_header, page.structure.container.firstElementChild);
       album_header.classList.add("legacy-header");
       let avatar_side = redesigned_album_header.querySelector(".avatar-side");
       let avatar_link = avatar_side.querySelector("a");
@@ -12097,24 +12104,24 @@
         let expand_link;
         if (avatar != null)
           expand_link = `_expand_avatar('${avatar.getAttribute("content")}')`;
-        if (settings2.default_avatar_action == "expand" && avatar != null)
+        if (settings.default_avatar_action == "expand" && avatar != null)
           avatar_link.setAttribute("onclick", expand_link);
-        else if (settings2.default_avatar_action == "gallery")
-          avatar_link.href = `${root2}music/${sanitise(page2.sister)}/${sanitise(page2.name)}/+images`;
+        else if (settings.default_avatar_action == "gallery")
+          avatar_link.href = `${root}music/${sanitise(page.sister)}/${sanitise(page.name)}/+images`;
         let menu = tippy(avatar_side, {
           theme: "context-menu",
           content: `
                     ${avatar != null ? `
                     <button class="dropdown-menu-clickable-item" onclick="${expand_link}" data-menu-item="expand">
-                        ${trans[lang2].gallery.open.name}
+                        ${trans[lang].gallery.open.name}
                     </button>
                     ` : ""}
-                    <a class="dropdown-menu-clickable-item" href="${root2}music/${sanitise(page2.sister)}/${sanitise(page2.name)}/+images" data-menu-item="gallery">
-                        ${trans[lang2].gallery.view}
+                    <a class="dropdown-menu-clickable-item" href="${root}music/${sanitise(page.sister)}/${sanitise(page.name)}/+images" data-menu-item="gallery">
+                        ${trans[lang].gallery.view}
                     </a>
                     <div class="sep"></div>
-                    <a class="dropdown-menu-clickable-item" href="${root2}bleh?tab=customise" data-menu-item="settings">
-                        ${trans[lang2].settings.configure}
+                    <a class="dropdown-menu-clickable-item" href="${root}bleh?tab=customise" data-menu-item="settings">
+                        ${trans[lang].settings.configure}
                     </a>
                 `,
           allowHTML: true,
@@ -12132,17 +12139,17 @@
         register_menu(avatar_side, menu);
       }
     }
-    if (settings2.hue_from_album) {
+    if (settings.hue_from_album) {
       let header_inner = album_header.querySelector(".header-new-inner");
       try {
         let bg = header_inner.getAttribute("style").replace("background: #", "");
         let hsl = hex_to_hsl(bg);
         document.body.style.setProperty("--hue-album", hsl.h);
         document.body.style.setProperty("--sat-album", clamp_sat(hsl.s / 100 * 3));
-        log2(`sourced hsl of (${hsl.h}, ${hsl.s}, ${hsl.l}) - using final value of (${hsl.h}, ${clamp_sat(hsl.s / 100 * 3)}, ${hsl.l})`, "hue from album");
+        log(`sourced hsl of (${hsl.h}, ${hsl.s}, ${hsl.l}) - using final value of (${hsl.h}, ${clamp_sat(hsl.s / 100 * 3)}, ${hsl.l})`, "hue from album");
         load_chart_colours();
       } catch (e) {
-        log2("no cover present", "hue from album");
+        log("no cover present", "hue from album");
       }
     }
     if (!is_subpage) {
@@ -12151,12 +12158,12 @@
       album_missing_a_tracklist();
       bleh_about_artist();
       bleh_tags_mini();
-      let similar_albums = page2.structure.main.querySelector(".similar-albums");
+      let similar_albums = page.structure.main.querySelector(".similar-albums");
       if (similar_albums) {
         let similar_panel = similar_albums.parentElement;
         similar_panel.classList.add("similar-panel");
       }
-      let button_row = page2.structure.side.querySelector(".album-overview-cover-art-action-row");
+      let button_row = page.structure.side.querySelector(".album-overview-cover-art-action-row");
       if (button_row) {
         let buttons = button_row.querySelectorAll("a");
         buttons.forEach((button) => {
@@ -12166,7 +12173,7 @@
           });
         });
       }
-      let upload_container = page2.structure.side.querySelector(".album-overview-cover-art-upload-action");
+      let upload_container = page.structure.side.querySelector(".album-overview-cover-art-upload-action");
       let avatar = album_header.querySelector(".header-new-background-image");
       let katsune = ff("katsune");
       if (avatar && !katsune) {
@@ -12175,34 +12182,34 @@
         let expand_link = document.createElement("a");
         expand_link.classList.add("btn");
         expand_link.setAttribute("onclick", `_expand_avatar('${avatar.getAttribute("content")}')`);
-        expand_link.textContent = trans[lang2].gallery.open.name;
+        expand_link.textContent = trans[lang].gallery.open.name;
         tippy(expand_link, {
-          content: trans[lang2].gallery.open.name
+          content: trans[lang].gallery.open.name
         });
         expand_container.appendChild(expand_link);
         upload_container.after(expand_container);
       }
       if (katsune) {
-        let row = page2.structure.side.querySelector(".album-overview-cover-art-actions");
+        let row = page.structure.side.querySelector(".album-overview-cover-art-actions");
         if (row)
-          page2.structure.container.querySelector(".avatar-side").appendChild(row);
+          page.structure.container.querySelector(".avatar-side").appendChild(row);
       }
     } else {
-      let btn_add = page2.structure.side.querySelector(".add-button");
+      let btn_add = page.structure.side.querySelector(".add-button");
       if (btn_add != null)
-        btn_add.setAttribute("data-page-subpage", page2.subpage);
-      if (page2.subpage == "images_image-upload")
+        btn_add.setAttribute("data-page-subpage", page.subpage);
+      if (page.subpage == "images_image-upload")
         bleh_gallery_upload();
-      else if (page2.subpage == "images_overview")
+      else if (page.subpage == "images_overview")
         bleh_gallery_list();
-      else if (page2.subpage == "wiki_overview")
-        bleh_wiki2();
-      else if (page2.subpage == "wiki_history")
-        bleh_wiki_history2();
-      else if (page2.subpage == "wiki_edit")
-        bleh_wiki_editor2();
+      else if (page.subpage == "wiki_overview")
+        bleh_wiki();
+      else if (page.subpage == "wiki_history")
+        bleh_wiki_history();
+      else if (page.subpage == "wiki_edit")
+        bleh_wiki_editor();
     }
-    log2("status is", "page", "info", page2);
+    log("status is", "page", "info", page);
     update_page();
   }
   function album_missing_a_tracklist() {
@@ -12214,9 +12221,9 @@
       }
       tracklist = document.createElement("section");
       tracklist.innerHTML = `
-            <h3 class="text-18">${trans[lang2].music.fetch_plays.name}</h3>
+            <h3 class="text-18">${trans[lang].music.fetch_plays.name}</h3>
             <div class="loading-data-container">
-                <p class="loading-data-text">${trans[lang2].music.fetch_plays.loading}</p>
+                <p class="loading-data-text">${trans[lang].music.fetch_plays.loading}</p>
             </div>
         `;
       top_overview.after(tracklist);
@@ -12224,12 +12231,12 @@
       if (url == void 0) {
         let url_split = window.location.href.split("/");
         let album_url = `${url_split[url_split.length - 2]}/${url_split[url_split.length - 1]}`;
-        let album_as_track_url2 = window.location.href.replace(album_url, `${url_split[url_split.length - 2]}/_/${url_split[url_split.length - 1]}`);
+        let album_as_track_url = window.location.href.replace(album_url, `${url_split[url_split.length - 2]}/_/${url_split[url_split.length - 1]}`);
         tracklist.innerHTML = `
-                <h3 class="text-18">${trans[lang2].music.fetch_plays.name}</h3>
+                <h3 class="text-18">${trans[lang].music.fetch_plays.name}</h3>
                 <div class="loading-data-container">
-                    <p class="loading-data-text failed">${trans[lang2].music.fetch_plays.fail}</p>
-                    <a class="btn" href="${album_as_track_url2}">${trans[lang2].music.fetch_plays.open_as_track}</a>
+                    <p class="loading-data-text failed">${trans[lang].music.fetch_plays.fail}</p>
+                    <a class="btn" href="${album_as_track_url}">${trans[lang].music.fetch_plays.open_as_track}</a>
                 </div>
             `;
         return;
@@ -12243,19 +12250,22 @@
         console.error("DOC", doc);
         let inner_tracklist = doc.querySelector('#top-tracks-section [v-else=""] .chartlist');
         if (inner_tracklist == null) {
+          let url_split = window.location.href.split("/");
+          let album_url = `${url_split[url_split.length - 2]}/${url_split[url_split.length - 1]}`;
+          let album_as_track_url = window.location.href.replace(album_url, `${url_split[url_split.length - 2]}/_/${url_split[url_split.length - 1]}`);
           tracklist.innerHTML = `
-                        <h3 class="text-18">${trans[lang2].music.fetch_plays.name}</h3>
+                        <h3 class="text-18">${trans[lang].music.fetch_plays.name}</h3>
                         <div class="loading-data-container">
-                            <p class="loading-data-text failed">${trans[lang2].music.fetch_plays.fail}</p>
-                            <a class="btn" href="${album_as_track_url}">${trans[lang2].music.fetch_plays.open_as_track}</a>
+                            <p class="loading-data-text failed">${trans[lang].music.fetch_plays.fail}</p>
+                            <a class="btn" href="${album_as_track_url}">${trans[lang].music.fetch_plays.open_as_track}</a>
                         </div>
                     `;
           return;
         }
         inner_tracklist.classList.remove("chartlist--with-image");
         tracklist.innerHTML = `
-                    <h3 class="text-18">${trans[lang2].music.fetch_plays.name}</h3>
-                    <div class="alert alert-info">${trans[lang2].music.fetch_plays.info}</div>
+                    <h3 class="text-18">${trans[lang].music.fetch_plays.name}</h3>
+                    <div class="alert alert-info">${trans[lang].music.fetch_plays.info}</div>
                     ${inner_tracklist.outerHTML}
                 `;
       });
@@ -12271,33 +12281,33 @@
       return;
     artist_header.setAttribute("data-bwaa", "true");
     artist_title();
-    page2.name = artist_header.querySelector(".header-new-title").textContent;
-    page2.sister = "";
+    page.name = artist_header.querySelector(".header-new-title").textContent;
+    page.sister = "";
     let is_subpage = artist_header.classList.contains("header-new--subpage");
-    if (auth2.pro) {
-      page2.structure.container = document.body.querySelector(".page-content:not(.visible-xs, :has(.content-top-lower-row, a + .js-gallery-heading))");
+    if (auth.pro) {
+      page.structure.container = document.body.querySelector(".page-content:not(.visible-xs, :has(.content-top-lower-row, a + .js-gallery-heading))");
     } else {
       if (!is_subpage) {
-        page2.structure.container = document.body.querySelector(".full-bleed-ad-container + .page-content:not(.visible-xs)");
-        if (!page2.structure.container)
-          page2.structure.container = document.body.querySelector(".page-content");
+        page.structure.container = document.body.querySelector(".full-bleed-ad-container + .page-content:not(.visible-xs)");
+        if (!page.structure.container)
+          page.structure.container = document.body.querySelector(".page-content");
       } else {
-        page2.structure.container = document.body.querySelector(".page-content:not(.visible-xs, :has(.content-top-lower-row, a + .js-gallery-heading))");
+        page.structure.container = document.body.querySelector(".page-content:not(.visible-xs, :has(.content-top-lower-row, a + .js-gallery-heading))");
       }
     }
     try {
-      page2.structure.row = page2.structure.container.querySelector(".row");
+      page.structure.row = page.structure.container.querySelector(".row");
       if (!is_subpage)
-        page2.structure.main = page2.structure.row.querySelector(".col-main.buffer-standard");
+        page.structure.main = page.structure.row.querySelector(".col-main.buffer-standard");
       else
-        page2.structure.main = page2.structure.row.querySelector(".col-main");
-      if (auth2.pro) {
-        page2.structure.side = page2.structure.row.querySelector(".col-sidebar:not(.masonry-right)");
+        page.structure.main = page.structure.row.querySelector(".col-main");
+      if (auth.pro) {
+        page.structure.side = page.structure.row.querySelector(".col-sidebar:not(.masonry-right)");
       } else {
-        page2.structure.side = page2.structure.row.querySelector(".col-sidebar:not(.section-with-separator--col)");
+        page.structure.side = page.structure.row.querySelector(".col-sidebar:not(.section-with-separator--col)");
       }
     } catch (e) {
-      log2("unable to find elements", "page structure");
+      log("unable to find elements", "page structure");
     }
     checkup_page_structure(is_subpage, artist_header);
     let katsune = ff("katsune");
@@ -12317,12 +12327,12 @@
                 ` : '<img class="missing-artist">'}
             </div>
             <div class="info-side">
-                ${page2.multi ? `
-                <div class="sub-text">${trans[lang2].artist.plural}<div class="info-tip"><div class="bleh-icon bleh-info-icon"></div></div></div>
+                ${page.multi ? `
+                <div class="sub-text">${trans[lang].artist.plural}<div class="info-tip"><div class="bleh-icon bleh-info-icon"></div></div></div>
                 ` : `
-                <div class="sub-text">${trans[lang2].artist.name}</div>
+                <div class="sub-text">${trans[lang].artist.name}</div>
                 `}
-                <div class="title-container" data-multi="${page2.multi}">
+                <div class="title-container" data-multi="${page.multi}">
                     <h1>${title.innerHTML}</h1>
                     ${position != null ? position.outerHTML : ""}
                     ${on_tour != null ? on_tour.outerHTML : ""}
@@ -12332,21 +12342,21 @@
             ${!is_subpage && !katsune ? `
             <div class="gallery-side">
                 <section class="view-all-panel">
-                    ${settings2.quick_artist_button == "gallery" ? `
+                    ${settings.quick_artist_button == "gallery" ? `
                     <a class="btn view-all-button back top-gallery-button" href="${window.location.href}/+images">
-                        ${trans[lang2].gallery.view}
+                        ${trans[lang].gallery.view}
                     </a>
-                    ` : settings2.quick_artist_button == "shouts" ? `
+                    ` : settings.quick_artist_button == "shouts" ? `
                     <a class="btn view-all-button back top-shout-button" href="${window.location.href}/+shoutbox">
-                        ${trans[lang2].settings.layout.quick_artist_button.shouts}
+                        ${trans[lang].settings.layout.quick_artist_button.shouts}
                     </a>
-                    ` : settings2.quick_artist_button == "wiki" ? `
+                    ` : settings.quick_artist_button == "wiki" ? `
                     <a class="btn view-all-button back top-wiki-button" href="${window.location.href}/+wiki">
-                        ${trans[lang2].settings.layout.quick_artist_button.wiki}
+                        ${trans[lang].settings.layout.quick_artist_button.wiki}
                     </a>
-                    ` : settings2.quick_artist_button == "listens" ? `
+                    ` : settings.quick_artist_button == "listens" ? `
                     <a class="btn view-all-button back top-listens-button" href="${window.location.href}/+listeners/you-know">
-                        ${trans[lang2].settings.layout.quick_artist_button.listens}
+                        ${trans[lang].settings.layout.quick_artist_button.listens}
                     </a>
                     ` : ""}
                 </section>
@@ -12356,13 +12366,13 @@
       let multi_info_box = redesigned_artist_header.querySelector(".info-tip");
       if (multi_info_box) {
         tippy(multi_info_box, {
-          content: trans[lang2].artist.tooltip
+          content: trans[lang].artist.tooltip
         });
       }
       position = redesigned_artist_header.querySelector(".header-new-chart-position-number");
       if (position != null) {
         tippy(position, {
-          content: trans[lang2].charts.view
+          content: trans[lang].charts.view
         });
       }
       let bg;
@@ -12370,7 +12380,7 @@
         bg = register_background(avatar.getAttribute("content"));
       else
         bg = register_background(null);
-      page2.structure.container.insertBefore(redesigned_artist_header, page2.structure.container.firstElementChild);
+      page.structure.container.insertBefore(redesigned_artist_header, page.structure.container.firstElementChild);
       artist_header.classList.add("legacy-header");
       let avatar_side = redesigned_artist_header.querySelector(".avatar-side");
       let avatar_link = avatar_side.querySelector("a");
@@ -12378,24 +12388,24 @@
         let expand_link;
         if (avatar != null)
           expand_link = `_expand_avatar('${avatar.getAttribute("content")}')`;
-        if (settings2.default_avatar_action == "expand" && avatar != null)
+        if (settings.default_avatar_action == "expand" && avatar != null)
           avatar_link.setAttribute("onclick", expand_link);
-        else if (settings2.default_avatar_action == "gallery")
-          avatar_link.href = `${root2}music/${sanitise(page2.name)}/+images`;
+        else if (settings.default_avatar_action == "gallery")
+          avatar_link.href = `${root}music/${sanitise(page.name)}/+images`;
         let menu = tippy(avatar_side, {
           theme: "context-menu",
           content: `
                     ${avatar != null ? `
                     <button class="dropdown-menu-clickable-item" onclick="${expand_link}" data-menu-item="expand">
-                        ${trans[lang2].gallery.open.name}
+                        ${trans[lang].gallery.open.name}
                     </button>
                     ` : ""}
-                    <a class="dropdown-menu-clickable-item" href="${root2}music/${sanitise(page2.name)}/+images" data-menu-item="gallery">
-                        ${trans[lang2].gallery.view}
+                    <a class="dropdown-menu-clickable-item" href="${root}music/${sanitise(page.name)}/+images" data-menu-item="gallery">
+                        ${trans[lang].gallery.view}
                     </a>
                     <div class="sep"></div>
-                    <a class="dropdown-menu-clickable-item" href="${root2}bleh?tab=customise" data-menu-item="settings">
-                        ${trans[lang2].settings.configure}
+                    <a class="dropdown-menu-clickable-item" href="${root}bleh?tab=customise" data-menu-item="settings">
+                        ${trans[lang].settings.configure}
                     </a>
                 `,
           allowHTML: true,
@@ -12418,8 +12428,8 @@
           let view_menu = tippy(view_button, {
             theme: "context-menu",
             content: `
-                        <a class="dropdown-menu-clickable-item" href="${root2}bleh?tab=customise" data-menu-item="settings">
-                            ${trans[lang2].settings.configure}
+                        <a class="dropdown-menu-clickable-item" href="${root}bleh?tab=customise" data-menu-item="settings">
+                            ${trans[lang].settings.configure}
                         </a>
                     `,
             allowHTML: true,
@@ -12446,30 +12456,30 @@
         let featured_panel = document.createElement("section");
         featured_panel.classList.add("featured-items-panel");
         featured_panel.innerHTML = featured_items.innerHTML;
-        let listen_panel = page2.structure.side.querySelector(".listen-panel");
+        let listen_panel = page.structure.side.querySelector(".listen-panel");
         if (listen_panel)
           listen_panel.after(featured_panel);
         else
-          page2.structure.side.insertBefore(featured_panel, page2.structure.side.firstElementChild);
+          page.structure.side.insertBefore(featured_panel, page.structure.side.firstElementChild);
       }
     } else {
-      let btn_add = page2.structure.side.querySelector(".add-button");
+      let btn_add = page.structure.side.querySelector(".add-button");
       if (btn_add != null)
-        btn_add.setAttribute("data-page-subpage", page2.subpage);
-      if (page2.subpage == "images_image-upload")
+        btn_add.setAttribute("data-page-subpage", page.subpage);
+      if (page.subpage == "images_image-upload")
         bleh_gallery_upload();
-      else if (page2.subpage == "images_overview")
+      else if (page.subpage == "images_overview")
         bleh_gallery_list();
-      else if (page2.subpage == "wiki_overview")
-        bleh_wiki2();
-      else if (page2.subpage == "wiki_history")
-        bleh_wiki_history2();
-      else if (page2.subpage == "wiki_edit")
-        bleh_wiki_editor2();
-      else if (page2.subpage == "listeners_overview")
+      else if (page.subpage == "wiki_overview")
+        bleh_wiki();
+      else if (page.subpage == "wiki_history")
+        bleh_wiki_history();
+      else if (page.subpage == "wiki_edit")
+        bleh_wiki_editor();
+      else if (page.subpage == "listeners_overview")
         bleh_top_listeners();
     }
-    log2("status is", "page", "info", page2);
+    log("status is", "page", "info", page);
     update_page();
   }
 
@@ -12483,7 +12493,7 @@
     let changelog_expire = new Date(localStorage.getItem("bleh_changelog_expire"));
     let current_time = /* @__PURE__ */ new Date();
     if (changelog == null) {
-      log2("not cached, fetching", "changelog");
+      log("not cached, fetching", "changelog");
       request_changelog();
     } else {
       if (changelog_expire < current_time)
@@ -12500,9 +12510,9 @@
     let url = `https://katelyynn.github.io/bleh/fm/changelog/changelog.json?${Math.random()}`;
     xhr.open("GET", url, true);
     xhr.onload = function() {
-      log2(`responded with ${xhr.status}`, "changelog");
+      log(`responded with ${xhr.status}`, "changelog");
       if (xhr.status != 200) {
-        log2("request has been cancelled, will request again in 1h", "changelog");
+        log("request has been cancelled, will request again in 1h", "changelog");
         api_expire.setHours(api_expire.getHours() + 1);
       }
       let api_expire = /* @__PURE__ */ new Date();
@@ -12512,7 +12522,7 @@
             open_changelog(JSON.parse(this.response));
             localStorage.setItem("bleh_changelog", this.response);
             api_expire.setHours(api_expire.getHours() + 2);
-            log2(`cached until ${api_expire}`, "changelog");
+            log(`cached until ${api_expire}`, "changelog");
             localStorage.setItem("bleh_changelog_expire", api_expire);
           } catch (e) {
             deliver_notif("The changelog is currently unavailable due to errors, try again later.", true);
@@ -12526,15 +12536,15 @@
     xhr.send();
   }
   function open_changelog(changelog) {
-    let window2 = dialog2({
+    let window2 = dialog({
       id: "changelog",
-      title: trans[lang2].changelog.name,
-      subtitle: trans[lang2].changelog.subtitle.replace("{u}", `<a class="mention" href="${root2}user/cutensilly">@cutensilly</a>`),
+      title: trans[lang].changelog.name,
+      subtitle: trans[lang].changelog.subtitle.replace("{u}", `<a class="mention" href="${root}user/cutensilly">@cutensilly</a>`),
       body: `
             <div class="changelog-list"></div>
             <div class="modal-footer">
                 <a class="btn primary skip" href="#latest_major_release">
-                    ${trans[lang2].changelog.view_major}
+                    ${trans[lang].changelog.view_major}
                 </a>
             </div>
         `,
@@ -12559,12 +12569,12 @@
                             ${version2}
                         </div>
                         <div class="breadcrumb-name">
-                            ${trans[lang2].changelog.type[changelog[version2].type]}
+                            ${trans[lang].changelog.type[changelog[version2].type]}
                         </div>
                     </div>
                     ${index == 0 ? `
                     <!--<div class="latest-line">
-                        <div>${trans[lang2].changelog.latest}</div>
+                        <div>${trans[lang].changelog.latest}</div>
                     </div>-->
                     ` : ""}
                 </div>
@@ -12580,7 +12590,7 @@
         emoji: true,
         excludeTrailingPunctuationFromURLs: true,
         ghMentions: true,
-        ghMentionsLink: `${root2}user/{u}`,
+        ghMentionsLink: `${root}user/{u}`,
         headerLevelStart: 5,
         noHeaderId: true,
         openLinksInNewWindow: true,
@@ -12592,7 +12602,7 @@
         ghCodeBlocks: false,
         smartIndentationFix: true
       });
-      let parsed_text = converter.makeHtml(changelog[version2].bio.replace(/([@])([a-zA-Z0-9_]+)/g, `[$1$2](${root2}user/$2)`).replace(/\[artist\]([a-zA-Z0-9]+)\[\/artist\]/g, `[$1](${root2}music/$1)`).replace(/\[album artist=([a-zA-Z0-9]+)\]([a-zA-Z0-9\s]+)\[\/album\]/g, `[$2](${root2}music/$1/$2)`).replace(/\[track artist=([a-zA-Z0-9]+)\]([a-zA-Z0-9\s]+)\[\/track\]/g, `[$2](${root2}music/$1/_/$2)`).replace(/https:\/\/open\.spotify\.com\/user\/([A-Za-z0-9]+)\?si=([A-Za-z0-9]+)/g, "[@$1](https://open.spotify.com/user/$1)").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;"));
+      let parsed_text = converter.makeHtml(changelog[version2].bio.replace(/([@])([a-zA-Z0-9_]+)/g, `[$1$2](${root}user/$2)`).replace(/\[artist\]([a-zA-Z0-9]+)\[\/artist\]/g, `[$1](${root}music/$1)`).replace(/\[album artist=([a-zA-Z0-9]+)\]([a-zA-Z0-9\s]+)\[\/album\]/g, `[$2](${root}music/$1/$2)`).replace(/\[track artist=([a-zA-Z0-9]+)\]([a-zA-Z0-9\s]+)\[\/track\]/g, `[$2](${root}music/$1/_/$2)`).replace(/https:\/\/open\.spotify\.com\/user\/([A-Za-z0-9]+)\?si=([A-Za-z0-9]+)/g, "[@$1](https://open.spotify.com/user/$1)").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;"));
       body.innerHTML = parsed_text;
       version_item.appendChild(body);
       changelog_list.appendChild(version_item);
@@ -12615,16 +12625,16 @@
     adaptive_skin_container.innerHTML = "";
     if (!ff("page_title"))
       document.title = "bleh setup | Last.fm";
-    log2("internal bleh setup", "page");
-    page2.type = "bleh_setup";
-    page2.subpage = "";
+    log("internal bleh setup", "page");
+    page.type = "bleh_setup";
+    page.subpage = "";
     adaptive_skin_container.innerHTML = `
         <div class="bleh--page-outer">
             <div class="bleh--page-inner bleh-setup-container"></div>
         </div>
     `;
     document.body.classList.add("bleh-setup");
-    document.body.style.setProperty("background-image", `url(${auth2.avatar})`);
+    document.body.style.setProperty("background-image", `url(${auth.avatar})`);
     document.body.style.setProperty("background-size", "cover");
     let masthead = document.body.querySelector(".masthead");
     masthead.classList.add("in-setup");
@@ -12634,7 +12644,7 @@
     bleh_setup_start();
   };
   function bleh_setup_start() {
-    let modal = dialog2({
+    let modal = dialog({
       id: "bleh_setup_start",
       body: `
             <div class="setup-sides">
@@ -12643,30 +12653,30 @@
                 </div>
                 <div class="setup-body">
                     <div class="setup-body-main">
-                        <h1>${trans[lang2].setup.start.name.replace("{m}", `<a class="mention" href="${root2}user/${auth2.name}">@${auth2.name}</a>`)}</h1>
-                        <h4>${trans[lang2].setup.start.pick_theme}</h4>
+                        <h1>${trans[lang].setup.start.name.replace("{m}", `<a class="mention" href="${root}user/${auth.name}">@${auth.name}</a>`)}</h1>
+                        <h4>${trans[lang].setup.start.pick_theme}</h4>
                         <div class="primary-selections">
                             <div class="btn primary-selection" id="toggle-theme-light" data-toggle="theme" data-toggle-value="light" onclick="_update_item('theme', 'light')">
-                                <h5>${trans[lang2].settings.themes.light.name}</h5>
+                                <h5>${trans[lang].settings.themes.light.name}</h5>
                             </div>
                             <div class="btn primary-selection" id="toggle-theme-dark" data-toggle="theme" data-toggle-value="dark" onclick="_update_item('theme', 'dark')">
-                                <h5>${trans[lang2].settings.themes.dark.name}</h5>
+                                <h5>${trans[lang].settings.themes.dark.name}</h5>
                             </div>
                             <div class="btn primary-selection" id="toggle-theme-darker" data-toggle="theme" data-toggle-value="darker" onclick="_update_item('theme', 'darker')">
-                                <h5>${trans[lang2].settings.themes.darker.name}</h5>
+                                <h5>${trans[lang].settings.themes.darker.name}</h5>
                             </div>
                             <div class="btn primary-selection" id="toggle-theme-oled" data-toggle="theme" data-toggle-value="oled" onclick="_update_item('theme', 'oled')">
-                                <h5>${trans[lang2].settings.themes.oled.name}</h5>
+                                <h5>${trans[lang].settings.themes.oled.name}</h5>
                             </div>
                         </div>
-                        <div class="alert alert-info">${trans[lang2].setup.start.change_later}</div>
+                        <div class="alert alert-info">${trans[lang].setup.start.change_later}</div>
                     </div>
                     <div class="modal-footer">
                         <button class="btn skip" onclick="_setup_skip()">
-                            ${trans[lang2].settings.skip}
+                            ${trans[lang].settings.skip}
                         </button>
                         <button class="btn primary continue" onclick="_setup_appearance()">
-                            ${trans[lang2].settings.continue}
+                            ${trans[lang].settings.continue}
                         </button>
                     </div>
                 </div>
@@ -12679,7 +12689,7 @@
     refresh_all(modal);
   }
   unsafeWindow._setup_accessibility = function() {
-    dialog2({
+    dialog({
       id: "bleh_setup_accessibility",
       body: `
             <div class="setup-sides">
@@ -12688,12 +12698,12 @@
                 </div>
                 <div class="setup-body">
                     <div class="setup-body-main">
-                        <h1>${trans[lang2].settings.accessibility.name}</h1>
+                        <h1>${trans[lang].settings.accessibility.name}</h1>
                         <div class="toggle-container" id="container-reduced_motion">
-                            <button class="btn reset" onclick="_reset_item('reduced_motion')">${trans[lang2].settings.reset}</button>
+                            <button class="btn reset" onclick="_reset_item('reduced_motion')">${trans[lang].settings.reset}</button>
                             <div class="heading">
-                                <h5>${trans[lang2].settings.accessibility.reduced_motion.name}</h5>
-                                <p>${trans[lang2].settings.accessibility.reduced_motion.bio}</p>
+                                <h5>${trans[lang].settings.accessibility.reduced_motion.name}</h5>
+                                <p>${trans[lang].settings.accessibility.reduced_motion.bio}</p>
                             </div>
                             <div class="toggle-wrap">
                                 <button class="toggle" id="toggle-reduced_motion" onclick="_update_item('reduced_motion')" aria-checked="false">
@@ -12704,7 +12714,7 @@
                         <div class="inner-preview pad flex">
                             <div class="shout js-shout js-link-block" data-kate-processed="true">
                                 <h3 class="shout-user">
-                                    <a>${auth2.name}</a>
+                                    <a>${auth.name}</a>
                                 </h3>
                                 <span class="avatar shout-user-avatar avatar--bleh-missing">
                                     <img src="" alt="Your avatar" loading="lazy">
@@ -12715,15 +12725,15 @@
                                     </time>
                                 </a>
                                 <div class="shout-body">
-                                    <p>${trans[lang2].settings.accessibility.shout_preview}</p>
+                                    <p>${trans[lang].settings.accessibility.shout_preview}</p>
                                 </div>
                             </div>
                         </div>
                         <div class="toggle-container" id="container-accessible_name_colours">
-                            <button class="btn reset" onclick="_reset_item('accessible_name_colours')">${trans[lang2].settings.reset}</button>
+                            <button class="btn reset" onclick="_reset_item('accessible_name_colours')">${trans[lang].settings.reset}</button>
                             <div class="heading">
-                                <h5>${trans[lang2].settings.accessibility.accessible_name_colours.name}</h5>
-                                <p>${trans[lang2].settings.accessibility.accessible_name_colours.bio}</p>
+                                <h5>${trans[lang].settings.accessibility.accessible_name_colours.name}</h5>
+                                <p>${trans[lang].settings.accessibility.accessible_name_colours.bio}</p>
                             </div>
                             <div class="toggle-wrap">
                                 <button class="toggle" id="toggle-accessible_name_colours" onclick="_update_item('accessible_name_colours')" aria-checked="false">
@@ -12732,10 +12742,10 @@
                             </div>
                         </div>
                         <div class="toggle-container" id="container-underline_links">
-                            <button class="btn reset" onclick="_reset_item('underline_links')">${trans[lang2].settings.reset}</button>
+                            <button class="btn reset" onclick="_reset_item('underline_links')">${trans[lang].settings.reset}</button>
                             <div class="heading">
-                                <h5>${trans[lang2].settings.accessibility.underline_links.name}</h5>
-                                <p>${trans[lang2].settings.accessibility.underline_links.bio}</p>
+                                <h5>${trans[lang].settings.accessibility.underline_links.name}</h5>
+                                <p>${trans[lang].settings.accessibility.underline_links.bio}</p>
                             </div>
                             <div class="toggle-wrap">
                                 <button class="toggle" id="toggle-underline_links" onclick="_update_item('underline_links')" aria-checked="false">
@@ -12746,11 +12756,11 @@
                     </div>
                     <div class="modal-footer">
                         <button class="btn back" disabled>
-                            ${trans[lang2].settings.back}
+                            ${trans[lang].settings.back}
                         </button>
                         <div class="btn-fill"></div>
                         <button class="btn primary continue" onclick="_setup_skip()">
-                            ${trans[lang2].settings.finish}
+                            ${trans[lang].settings.finish}
                         </button>
                     </div>
                 </div>
@@ -12763,7 +12773,7 @@
     refresh_all();
   };
   unsafeWindow._setup_appearance = function() {
-    dialog2({
+    dialog({
       id: "bleh_setup_appearance",
       body: `
             <div class="setup-sides">
@@ -12776,14 +12786,14 @@
                 </div>
                 <div class="setup-body">
                     <div class="setup-body-main">
-                        <h1>${trans[lang2].settings.appearance.name}</h1>
-                        <h4>${trans[lang2].settings.customise.colours.name}</h4>
+                        <h1>${trans[lang].settings.appearance.name}</h1>
+                        <h4>${trans[lang].settings.customise.colours.name}</h4>
                         <div class="inner-preview pad">
                             <table class="chartlist chartlist--with-image chartlist--with-loved chartlist--with-artist" style="margin: var(--card-gap) 0 !important">
                                 <tbody>
                                     <tr class="chartlist-row chartlist-row--now-scrobbling chartlist-row--with-artist" style="transition: none !important">
                                         <td class="chartlist-image">
-                                            <a class="cover-art"><img src="${auth2.avatar}" loading="lazy"></a>
+                                            <a class="cover-art"><img src="${auth.avatar}" loading="lazy"></a>
                                         </td>
                                         <td class="chartlist-loved">
                                             <button class="chartlist-love-button" data-toggle-button-current-state="unloved"></button>
@@ -12792,7 +12802,7 @@
                                             <a>Song title</a>
                                         </td>
                                         <td class="chartlist-artist">
-                                            <a>${auth2.name}</a>
+                                            <a>${auth.name}</a>
                                         </td>
                                         <td class="chartlist-timestamp chartlist-timestamp--lang-en">
                                             <span class="chartlist-now-scrobbling">
@@ -12803,8 +12813,8 @@
                                 </tbody>
                             </table>
                             <div class="btn-row">
-                                <button class="btn">${trans[lang2].settings.examples.button}</button>
-                                <button class="btn primary">${trans[lang2].settings.examples.button}</button>
+                                <button class="btn">${trans[lang].settings.examples.button}</button>
+                                <button class="btn primary">${trans[lang].settings.examples.button}</button>
                                 <div class="chartlist-count-bar">
                                     <a class="chartlist-count-bar-link">
                                         <span class="chartlist-count-bar-slug" style="width: 60%"></span>
@@ -12826,17 +12836,17 @@
                             <div id="colour_pink" class="palette options colours"></div>
                         </div>
                     </div>
-                    <div class="alert alert-info">${trans[lang2].setup.music.change_later}</div>
+                    <div class="alert alert-info">${trans[lang].setup.music.change_later}</div>
                     <div class="modal-footer">
                         <button class="btn back" onclick="_setup()">
-                            ${trans[lang2].settings.back}
+                            ${trans[lang].settings.back}
                         </button>
                         <div class="btn-fill"></div>
                         <button class="btn skip" onclick="_setup_skip()">
-                            ${trans[lang2].settings.skip}
+                            ${trans[lang].settings.skip}
                         </button>
                         <button class="btn primary continue" onclick="_setup_corrections()">
-                            ${trans[lang2].settings.continue}
+                            ${trans[lang].settings.continue}
                         </button>
                     </div>
                 </div>
@@ -12850,7 +12860,7 @@
     refresh_all();
   };
   unsafeWindow._setup_corrections = function() {
-    dialog2({
+    dialog({
       id: "bleh_setup_corrections",
       body: `
             <div class="setup-sides">
@@ -12859,15 +12869,15 @@
                 </div>
                 <div class="setup-body">
                     <div class="setup-body-main">
-                        <h1>${trans[lang2].settings.music.name}</h1>
-                        <p>${trans[lang2].settings.corrections.bio}</p>
-                        <div class="alert alert-info">${trans[lang2].setup.music.change_later}</div>
-                        <h4>${trans[lang2].settings.corrections.formatting}</h4>
+                        <h1>${trans[lang].settings.music.name}</h1>
+                        <p>${trans[lang].settings.corrections.bio}</p>
+                        <div class="alert alert-info">${trans[lang].setup.music.change_later}</div>
+                        <h4>${trans[lang].settings.corrections.formatting}</h4>
                         <div class="toggle-container" id="container-format_guest_features" onclick="_update_item('format_guest_features')">
-                            <button class="btn reset" onclick="_reset_item('format_guest_features')">${trans[lang2].settings.reset}</button>
+                            <button class="btn reset" onclick="_reset_item('format_guest_features')">${trans[lang].settings.reset}</button>
                             <div class="heading">
-                                <h5>${trans[lang2].settings.corrections.format_guest_features.name}</h5>
-                                <p>${trans[lang2].settings.corrections.format_guest_features.bio}</p>
+                                <h5>${trans[lang].settings.corrections.format_guest_features.name}</h5>
+                                <p>${trans[lang].settings.corrections.format_guest_features.bio}</p>
                             </div>
                             <div class="toggle-wrap">
                                 <button class="toggle" id="toggle-format_guest_features" aria-checked="true">
@@ -12876,10 +12886,10 @@
                             </div>
                         </div>
                         <div class="toggle-container hide-if-format-guest-disabled" id="container-show_guest_features" onclick="_update_item('show_guest_features')">
-                            <button class="btn reset" onclick="_reset_item('show_guest_features')">${trans[lang2].settings.reset}</button>
+                            <button class="btn reset" onclick="_reset_item('show_guest_features')">${trans[lang].settings.reset}</button>
                             <div class="heading">
-                                <h5>${trans[lang2].settings.corrections.show_guest_features.name}</h5>
-                                <p>${trans[lang2].settings.corrections.show_guest_features.bio}</p>
+                                <h5>${trans[lang].settings.corrections.show_guest_features.name}</h5>
+                                <p>${trans[lang].settings.corrections.show_guest_features.bio}</p>
                             </div>
                             <div class="toggle-wrap">
                                 <button class="toggle" id="toggle-show_guest_features" aria-checked="true">
@@ -12888,9 +12898,9 @@
                             </div>
                         </div>
                         <div class="toggle-container" id="container-corrections" onclick="_update_item('corrections')">
-                            <button class="btn reset" onclick="_reset_item('corrections')">${trans[lang2].settings.reset}</button>
+                            <button class="btn reset" onclick="_reset_item('corrections')">${trans[lang].settings.reset}</button>
                             <div class="heading">
-                                <h5>${trans[lang2].settings.corrections.toggle.name}</h5>
+                                <h5>${trans[lang].settings.corrections.toggle.name}</h5>
                             </div>
                             <div class="toggle-wrap">
                                 <button class="toggle" id="toggle-corrections" aria-checked="true">
@@ -12898,12 +12908,12 @@
                                 </button>
                             </div>
                         </div>
-                        <h4>${trans[lang2].settings.music.header}</h4>
+                        <h4>${trans[lang].settings.music.header}</h4>
                         <div class="toggle-container" id="container-stacked_chartlist_info" onclick="_update_item('stacked_chartlist_info')">
-                            <button class="btn reset" onclick="_reset_item('stacked_chartlist_info')">${trans[lang2].settings.reset}</button>
+                            <button class="btn reset" onclick="_reset_item('stacked_chartlist_info')">${trans[lang].settings.reset}</button>
                             <div class="heading">
-                                <h5>${trans[lang2].settings.corrections.stacked_chartlist_info.name}</h5>
-                                <p>${trans[lang2].settings.corrections.stacked_chartlist_info.bio}</p>
+                                <h5>${trans[lang].settings.corrections.stacked_chartlist_info.name}</h5>
+                                <p>${trans[lang].settings.corrections.stacked_chartlist_info.bio}</p>
                             </div>
                             <div class="toggle-wrap">
                                 <button class="toggle" id="toggle-stacked_chartlist_info" aria-checked="true">
@@ -12912,10 +12922,10 @@
                             </div>
                         </div>
                         <div class="toggle-container hide-if-no-bulk-edit" id="container-show_bulk_edit_album" onclick="_update_item('show_bulk_edit_album')">
-                            <button class="btn reset" onclick="_reset_item('show_bulk_edit_album')">${trans[lang2].settings.reset}</button>
+                            <button class="btn reset" onclick="_reset_item('show_bulk_edit_album')">${trans[lang].settings.reset}</button>
                             <div class="heading">
-                                <h5>${trans[lang2].settings.music.show_bulk_edit_album.name}</h5>
-                                <p>${trans[lang2].settings.music.show_bulk_edit_album.bio}</p>
+                                <h5>${trans[lang].settings.music.show_bulk_edit_album.name}</h5>
+                                <p>${trans[lang].settings.music.show_bulk_edit_album.bio}</p>
                             </div>
                             <div class="toggle-wrap">
                                 <button class="toggle" id="toggle-show_bulk_edit_album" aria-checked="false">
@@ -12926,14 +12936,14 @@
                     </div>
                     <div class="modal-footer">
                         <button class="btn back" onclick="_setup_appearance()">
-                            ${trans[lang2].settings.back}
+                            ${trans[lang].settings.back}
                         </button>
                         <div class="btn-fill"></div>
                         <button class="btn skip" onclick="_setup_skip()">
-                            ${trans[lang2].settings.skip}
+                            ${trans[lang].settings.skip}
                         </button>
                         <button class="btn primary continue" onclick="_setup_seasons()">
-                            ${trans[lang2].settings.continue}
+                            ${trans[lang].settings.continue}
                         </button>
                     </div>
                 </div>
@@ -12946,7 +12956,7 @@
     refresh_all();
   };
   unsafeWindow._setup_seasons = function() {
-    dialog2({
+    dialog({
       id: "bleh_setup_seasons",
       body: `
             <div class="setup-sides">
@@ -12955,22 +12965,22 @@
                 </div>
                 <div class="setup-body">
                     <div class="setup-body-main">
-                        <h1>${trans[lang2].settings.customise.seasonal.name}</h1>
+                        <h1>${trans[lang].settings.customise.seasonal.name}</h1>
                         <div class="seasonal-inner">
                             <div class="current-season-box" data-season="${stored_season.id}">
                                 <div class="current-season-info">
                                     <div class="bleh-icon bleh-seasonal-icon" data-season="${stored_season.id}"></div>
-                                    <h4>${trans[lang2].settings.customise.seasonal.listing[stored_season.id]}</h4>
+                                    <h4>${trans[lang].settings.customise.seasonal.listing[stored_season.id]}</h4>
                                 </div>
                                 <div class="glacier-library-top season-top">
                                     <div class="glacier-library-metadata">
                                         ${stored_season.id != "none" && stored_season.start && stored_season.end ? `
                                         <div class="glacier-library-metadata-item">
-                                            <div class="sub-text">${trans[lang2].settings.customise.seasonal.started}</div>
+                                            <div class="sub-text">${trans[lang].settings.customise.seasonal.started}</div>
                                             <div class="glacier-library-metadata-item-value" id="current_season_start">${moment(stored_season.start.replace("y0", stored_season.year).replace("{offset}", stored_season.offset)).from(stored_season.now)}</div>
                                         </div>
                                         <div class="glacier-library-metadata-item">
-                                            <div class="sub-text">${trans[lang2].settings.customise.seasonal.ends_in}</div>
+                                            <div class="sub-text">${trans[lang].settings.customise.seasonal.ends_in}</div>
                                             <div class="glacier-library-metadata-item-value" id="current_season">${moment(stored_season.end.replace("y0", stored_season.year).replace("{offset}", stored_season.offset)).to(stored_season.now, true)}</div>
                                         </div>
                                         ` : ""}
@@ -12980,24 +12990,24 @@
                         </div>
                         <div class="info-box no-padding">
                             <div class="bleh-icon bleh-info-icon"></div>
-                            ${trans[lang2].settings.customise.seasonal.info}
+                            ${trans[lang].settings.customise.seasonal.info}
                         </div>
-                        <!--<p>${trans[lang2].settings.customise.seasonal.bio}</p>
+                        <!--<p>${trans[lang].settings.customise.seasonal.bio}</p>
                         <div class="inner-preview pad click-thru">
                             <div class="current-season-container">
                                 <div class="current-season" data-season="${stored_season.id}" id="current_season">
-                                    ${stored_season.id != "none" ? trans[lang2].settings.customise.seasonal.marker.current.replace("{season}", trans[lang2].settings.customise.seasonal.listing[stored_season.id]) : settings.seasonal ? trans[lang2].settings.customise.seasonal.marker.none : trans[lang2].settings.customise.seasonal.marker.disabled}
+                                    ${stored_season.id != "none" ? trans[lang].settings.customise.seasonal.marker.current.replace("{season}", trans[lang].settings.customise.seasonal.listing[stored_season.id]) : settings.seasonal ? trans[lang].settings.customise.seasonal.marker.none : trans[lang].settings.customise.seasonal.marker.disabled}
                                 </div>
                                 <div class="current-season-started" id="current_season_start">
-                                    ${stored_season.id != "none" ? trans[lang2].settings.customise.seasonal.marker.started : ""}
+                                    ${stored_season.id != "none" ? trans[lang].settings.customise.seasonal.marker.started : ""}
                                 </div>
                             </div>
                         </div>-->
-                        <h4>${trans[lang2].settings.configure}</h4>
+                        <h4>${trans[lang].settings.configure}</h4>
                         <div class="toggle-container" id="container-seasonal" onclick="_update_item('seasonal')">
-                            <button class="btn reset" onclick="_reset_item('seasonal')">${trans[lang2].settings.reset}</button>
+                            <button class="btn reset" onclick="_reset_item('seasonal')">${trans[lang].settings.reset}</button>
                             <div class="heading">
-                                <h5>${trans[lang2].settings.customise.seasonal.option.name}</h5>
+                                <h5>${trans[lang].settings.customise.seasonal.option.name}</h5>
                             </div>
                             <div class="toggle-wrap">
                                 <button class="toggle" id="toggle-seasonal" aria-checked="true">
@@ -13007,10 +13017,10 @@
                         </div>
                         <div class="sep"></div>
                         <div class="toggle-container hide-if-seasonal-disabled" id="container-seasonal_particles" onclick="_update_item('seasonal_particles')">
-                            <button class="btn reset" onclick="_reset_item('seasonal_particles')">${trans[lang2].settings.reset}</button>
+                            <button class="btn reset" onclick="_reset_item('seasonal_particles')">${trans[lang].settings.reset}</button>
                             <div class="heading">
-                                <h5>${trans[lang2].settings.customise.seasonal.particles.name}</h5>
-                                <p>${trans[lang2].settings.customise.seasonal.particles.bio}</p>
+                                <h5>${trans[lang].settings.customise.seasonal.particles.name}</h5>
+                                <p>${trans[lang].settings.customise.seasonal.particles.bio}</p>
                             </div>
                             <div class="toggle-wrap">
                                 <button class="toggle" id="toggle-seasonal_particles" aria-checked="true">
@@ -13019,9 +13029,9 @@
                             </div>
                         </div>
                         <div class="toggle-container hide-if-seasonal-disabled" id="container-seasonal_particles_reduced" onclick="_update_item('seasonal_particles_reduced')">
-                            <button class="btn reset" onclick="_reset_item('seasonal_particles_reduced')">${trans[lang2].settings.reset}</button>
+                            <button class="btn reset" onclick="_reset_item('seasonal_particles_reduced')">${trans[lang].settings.reset}</button>
                             <div class="heading">
-                                <h5>${trans[lang2].settings.customise.seasonal.show_less_particles.name}</h5>
+                                <h5>${trans[lang].settings.customise.seasonal.show_less_particles.name}</h5>
                             </div>
                             <div class="toggle-wrap">
                                 <button class="toggle" id="toggle-seasonal_particles_reduced" aria-checked="true">
@@ -13030,10 +13040,10 @@
                             </div>
                         </div>
                         <div class="toggle-container hide-if-seasonal-disabled" id="container-seasonal_particles_fps" onclick="_update_item('seasonal_particles_fps')">
-                            <button class="btn reset" onclick="_reset_item('seasonal_particles_fps')">${trans[lang2].settings.reset}</button>
+                            <button class="btn reset" onclick="_reset_item('seasonal_particles_fps')">${trans[lang].settings.reset}</button>
                             <div class="heading">
-                                <h5>${trans[lang2].settings.customise.seasonal.fps_particles.name}</h5>
-                                <p>${trans[lang2].settings.customise.seasonal.fps_particles.bio}</p>
+                                <h5>${trans[lang].settings.customise.seasonal.fps_particles.name}</h5>
+                                <p>${trans[lang].settings.customise.seasonal.fps_particles.bio}</p>
                             </div>
                             <div class="toggle-wrap">
                                 <button class="toggle" id="toggle-seasonal_particles_fps" aria-checked="true">
@@ -13043,10 +13053,10 @@
                         </div>
                         <div class="sep"></div>
                         <div class="toggle-container hide-if-seasonal-disabled" id="container-seasonal_overlays" onclick="_update_item('seasonal_overlays')">
-                            <button class="btn reset" onclick="_reset_item('seasonal_overlays')">${trans[lang2].settings.reset}</button>
+                            <button class="btn reset" onclick="_reset_item('seasonal_overlays')">${trans[lang].settings.reset}</button>
                             <div class="heading">
-                                <h5>${trans[lang2].settings.customise.seasonal.overlays.name}</h5>
-                                <p>${trans[lang2].settings.customise.seasonal.overlays.bio}</p>
+                                <h5>${trans[lang].settings.customise.seasonal.overlays.name}</h5>
+                                <p>${trans[lang].settings.customise.seasonal.overlays.bio}</p>
                             </div>
                             <div class="toggle-wrap">
                                 <button class="toggle" id="toggle-seasonal_overlays" aria-checked="true">
@@ -13057,14 +13067,14 @@
                     </div>
                     <div class="modal-footer">
                         <button class="btn back" onclick="_setup_corrections()">
-                            ${trans[lang2].settings.back}
+                            ${trans[lang].settings.back}
                         </button>
                         <div class="btn-fill"></div>
                         <button class="btn skip" onclick="_setup_skip()">
-                            ${trans[lang2].settings.skip}
+                            ${trans[lang].settings.skip}
                         </button>
                         <button class="btn primary continue" onclick="_setup_accessibility()">
-                            ${trans[lang2].settings.continue}
+                            ${trans[lang].settings.continue}
                         </button>
                     </div>
                 </div>
@@ -13080,23 +13090,23 @@
     dialog_rm({
       all: true
     });
-    document.location.href = `${root2}user/${auth2.name}`;
+    document.location.href = `${root}user/${auth.name}`;
   };
   function notify_if_new_update() {
     let last_version_used = localStorage.getItem("bleh_last_version_used") || "";
     if (last_version_used == "") {
-      window.location.href = `${root2}bleh/setup`;
+      window.location.href = `${root}bleh/setup`;
       localStorage.setItem("bleh_last_version_used", version.build);
-      register_activity("install_bleh", [], `${root2}bleh`);
+      register_activity("install_bleh", [], `${root}bleh`);
       return;
     }
     if (last_version_used != version.build) {
-      notify2({
-        title: trans[lang2].messaging.update.replace("{v}", `${version.build}.${version.sku}`),
+      notify({
+        title: trans[lang].messaging.update.replace("{v}", `${version.build}.${version.sku}`),
         persist: true,
         icon: "icon-16-download"
       });
-      register_activity("update_bleh", [{ name: version.build, type: "bleh" }], `${root2}bleh`);
+      register_activity("update_bleh", [{ name: version.build, type: "bleh" }], `${root}bleh`);
       localStorage.setItem("bleh_last_version_used", version.build);
       request_changelog();
     }
@@ -13112,26 +13122,26 @@
 
   // src/pages/chart.js
   function bleh_charts() {
-    page2.structure.container = document.body.querySelector(".page-content");
+    page.structure.container = document.body.querySelector(".page-content");
     try {
-      page2.structure.row = page2.structure.container.querySelector(".row");
-      page2.structure.main = page2.structure.row.querySelector(".col-main");
-      page2.structure.side = page2.structure.row.querySelector(".col-sidebar");
+      page.structure.row = page.structure.container.querySelector(".row");
+      page.structure.main = page.structure.row.querySelector(".col-main");
+      page.structure.side = page.structure.row.querySelector(".col-sidebar");
     } catch (e) {
-      log2("unable to find elements", "page structure");
+      log("unable to find elements", "page structure");
     }
     let content_top = document.body.querySelector(".content-top");
     checkup_page_structure(false, content_top);
-    log2("status is", "page", "info", page2);
+    log("status is", "page", "info", page);
     update_page();
-    if (page2.subpage != "overview")
+    if (page.subpage != "overview")
       return;
-    let charts = page2.structure.main.querySelector(".charts");
+    let charts = page.structure.main.querySelector(".charts");
     charts.classList.add("legacy-charts");
     let chart_rows = charts.querySelectorAll(".charts-col:not(.charts-col--mobile-ad)");
     let new_panel = document.createElement("section");
     new_panel.classList.add("charts-panel");
-    let out_now = page2.structure.side.querySelector(".more-link-fullwidth-right a");
+    let out_now = page.structure.side.querySelector(".more-link-fullwidth-right a");
     if (out_now != null) {
       out_now.classList.add("btn", "out-now-btn");
     }
@@ -13142,13 +13152,13 @@
 
         </div>
         <div class="middle">
-            <h2>${trans[lang2].charts.charts_for.replace("{date}", moment(/* @__PURE__ */ new Date()).format("MMMM Do YYYY"))}</h2>
+            <h2>${trans[lang].charts.charts_for.replace("{date}", moment(/* @__PURE__ */ new Date()).format("MMMM Do YYYY"))}</h2>
             ${out_now != null ? out_now.outerHTML : ""}
         </div>
         <div class="right">
             <div class="view-buttons">
                 <button class="btn view-item glacier-configure-button panel-settings-button">
-                    ${trans[lang2].settings.configure}
+                    ${trans[lang].settings.configure}
                 </button>
             </div>
         </div>
@@ -13160,10 +13170,10 @@
       content: `
             <div class="dialog-settings">
                 <div class="toggle-container" id="container-simulate_scroll" onclick="_update_item('simulate_scroll')">
-                    <button class="btn reset" onclick="_reset_item('simulate_scroll')">${trans[lang2].settings.reset}</button>
+                    <button class="btn reset" onclick="_reset_item('simulate_scroll')">${trans[lang].settings.reset}</button>
                     <div class="heading">
-                        <h5>${trans[lang2].charts.scroll.name}</h5>
-                        <p>${trans[lang2].charts.scroll.bio}</p>
+                        <h5>${trans[lang].charts.scroll.name}</h5>
+                        <p>${trans[lang].charts.scroll.bio}</p>
                     </div>
                     <div class="toggle-wrap">
                         <button class="toggle" id="toggle-simulate_scroll" aria-checked="true">
@@ -13267,33 +13277,33 @@
       chart_row.appendChild(list);
       new_panel.appendChild(chart_row);
     });
-    page2.structure.main.insertBefore(new_panel, page2.structure.main.firstElementChild);
+    page.structure.main.insertBefore(new_panel, page.structure.main.firstElementChild);
   }
 
   // src/pages/error.js
   function bleh_error() {
-    page2.state.error = false;
+    page.state.error = false;
     let page_content = document.body.querySelector(".page-content");
     if (page_content == null)
       return;
     let error_marvin = page_content.querySelector(".error-page-marvin:not([data-bleh])");
     if (error_marvin == null)
       return;
-    page2.state.error = true;
+    page.state.error = true;
     error_marvin.setAttribute("data-bleh", "true");
     let error_content = page_content.querySelector("h1");
     let back_link = page_content.querySelector("a");
     page_content.classList.add("has-error");
     page_content.innerHTML = `
         <div class="error-page">
-            <h3>${trans[lang2].error.name}</h3>
+            <h3>${trans[lang].error.name}</h3>
             <h4>${error_content.textContent}</h4>
             <div class="button-footer">
                 <a class="btn back" href="${back_link.getAttribute("href")}">
-                    ${trans[lang2].error.go_back}
+                    ${trans[lang].error.go_back}
                 </a>
-                <a class="btn continue primary" href="${root2}user/${auth2.name}">
-                    ${trans[lang2].error.visit_profile}
+                <a class="btn continue primary" href="${root}user/${auth.name}">
+                    ${trans[lang].error.visit_profile}
                 </a>
             </div>
         </div>
@@ -13302,35 +13312,35 @@
 
   // src/pages/event.js
   function bleh_events() {
-    let is_subpage = page2.subpage != "event_overview" && page2.subpage != "festival_overview";
-    if (auth2.pro) {
-      page2.structure.container = document.body.querySelector(".page-content");
+    let is_subpage = page.subpage != "event_overview" && page.subpage != "festival_overview";
+    if (auth.pro) {
+      page.structure.container = document.body.querySelector(".page-content");
     } else {
       if (!is_subpage)
-        page2.structure.container = document.body.querySelector(".page-content:not(header + .page-content)");
+        page.structure.container = document.body.querySelector(".page-content:not(header + .page-content)");
       else
-        page2.structure.container = document.body.querySelector(".page-content");
+        page.structure.container = document.body.querySelector(".page-content");
     }
-    page2.structure.row = page2.structure.container.querySelector(".row");
+    page.structure.row = page.structure.container.querySelector(".row");
     try {
-      page2.structure.main = page2.structure.row.querySelector(".col-main");
-      page2.structure.side = page2.structure.row.querySelector(".col-sidebar");
+      page.structure.main = page.structure.row.querySelector(".col-main");
+      page.structure.side = page.structure.row.querySelector(".col-sidebar");
     } catch (e) {
-      log2("unable to find elements", "page structure");
+      log("unable to find elements", "page structure");
     }
     let event_header = document.body.querySelector("header");
     checkup_page_structure(is_subpage, event_header);
-    if (page2.subpage.startsWith("event_edit")) {
+    if (page.subpage.startsWith("event_edit")) {
       bleh_events_edit();
       return;
-    } else if (page2.subpage.startsWith("add")) {
+    } else if (page.subpage.startsWith("add")) {
       bleh_events_create();
       return;
     }
-    page2.name = "";
-    page2.sister = event_header.querySelector(".header-title").textContent.trim();
+    page.name = "";
+    page.sister = event_header.querySelector(".header-title").textContent.trim();
     let event_description = event_header.querySelector(".header-title-secondary");
-    if (settings2.corrections) {
+    if (settings.corrections) {
       let links = event_description.querySelectorAll("a");
       links.forEach((link) => {
         link.textContent = correct_artist(link.textContent);
@@ -13345,15 +13355,15 @@
             </div>
         </div>
         <div class="info-side">
-            <div class="sub-text">${trans[lang2].event.name}</div>
-            <h1>${page2.sister}</h1>
+            <div class="sub-text">${trans[lang].event.name}</div>
+            <h1>${page.sister}</h1>
             <p class="sub-info">${event_description.innerHTML}</p>
         </div>
     `;
     let background = document.body.querySelector(".header-background--has-image");
     if (background != null)
       register_background(background.style.getPropertyValue("background-image").replace('url("', "").replace('")', ""));
-    page2.structure.container.insertBefore(redesigned_event_header, page2.structure.container.firstElementChild);
+    page.structure.container.insertBefore(redesigned_event_header, page.structure.container.firstElementChild);
     document.body.querySelector(".header").classList.add("legacy-header");
     if (!is_subpage) {
       let header_meta = document.body.querySelector(".header-metadata");
@@ -13377,9 +13387,9 @@
         button.classList.add("btn", "event-top-item", "view-item");
       });
       event_top_header.appendChild(form);
-      let main_panel = page2.structure.main.querySelector(".event-summary-with-poster");
+      let main_panel = page.structure.main.querySelector(".event-summary-with-poster");
       if (main_panel == null)
-        main_panel = page2.structure.main.querySelector(".event-details");
+        main_panel = page.structure.main.querySelector(".event-details");
       main_panel.insertBefore(event_top_header, main_panel.firstElementChild);
       console.info("event top header", event_top_header);
       let poster = main_panel.querySelector(".event-poster-preview");
@@ -13388,7 +13398,7 @@
         poster_panel = document.createElement("section");
         poster_panel.classList.add("poster-panel", "view-all-panel");
         poster_panel.innerHTML = `${poster.outerHTML}<a onclick="_expand_avatar('${poster.getAttribute("src").replace("/arXL/", "/ar0/")}')" class="bleh--avatar-clickable-link"></a>`;
-        page2.structure.side.insertBefore(poster_panel, page2.structure.side.firstElementChild);
+        page.structure.side.insertBefore(poster_panel, page.structure.side.firstElementChild);
       }
       let edit_button = main_panel.querySelector(".event-metadata + .event-metadata a");
       if (edit_button != null) {
@@ -13399,33 +13409,33 @@
         if (poster != null)
           poster_panel.after(edit_panel);
         else
-          page2.structure.side.insertBefore(edit_panel, page2.structure.side.firstElementChild);
+          page.structure.side.insertBefore(edit_panel, page.structure.side.firstElementChild);
       }
-      let users = page2.structure.main.querySelectorAll(".attendee-summary-user-inner-wrap");
+      let users = page.structure.main.querySelectorAll(".attendee-summary-user-inner-wrap");
       users.forEach((user) => {
         let avatar = user.querySelector(".attendee-summary-user-avatar");
         let name = user.querySelector(".attendee-summary-user-link").textContent;
         patch_avatar(avatar, name, "event");
       });
     } else {
-      if (page2.subpage == "event_attendance_going" || page2.subpage == "event_attendance_interested") {
+      if (page.subpage == "event_attendance_going" || page.subpage == "event_attendance_interested") {
         let view_buttons = document.createElement("div");
         view_buttons.classList.add("view-buttons-wrapper");
         view_buttons.innerHTML = `
                 <div class="view-buttons">
                     <button class="btn view-item" id="toggle-list_view-1" data-toggle="list_view" data-toggle-value="1" onclick="_update_item('list_view', 1)">
-                        ${trans[lang2].glacier.view.grid}
+                        ${trans[lang].glacier.view.grid}
                     </button>
                     <button class="btn view-item" id="toggle-list_view-0" data-toggle="list_view" data-toggle-value="0" onclick="_update_item('list_view', 0)">
-                        ${trans[lang2].glacier.view.list}
+                        ${trans[lang].glacier.view.list}
                     </button>
                 </div>
             `;
-        page2.structure.row.classList.add("force-col-main-primary");
-        page2.structure.main.classList.add("primary-column");
-        page2.structure.main.insertBefore(view_buttons, page2.structure.main.firstChild);
+        page.structure.row.classList.add("force-col-main-primary");
+        page.structure.main.classList.add("primary-column");
+        page.structure.main.insertBefore(view_buttons, page.structure.main.firstChild);
         refresh_all();
-        let users = page2.structure.main.querySelectorAll(".user-list-inner-wrap");
+        let users = page.structure.main.querySelectorAll(".user-list-inner-wrap");
         users.forEach((user) => {
           let avatar = user.querySelector(".user-list-avatar");
           let name = user.querySelector(".user-list-link").textContent;
@@ -13435,25 +13445,25 @@
         });
       }
     }
-    log2("status is", "page", "info", page2);
+    log("status is", "page", "info", page);
     update_page();
   }
   function bleh_events_manage() {
-    register_background(auth2.avatar);
-    page2.structure.container = document.body.querySelector(".page-content");
+    register_background(auth.avatar);
+    page.structure.container = document.body.querySelector(".page-content");
     try {
-      page2.structure.row = page2.structure.container.querySelector(".row");
-      page2.structure.main = page2.structure.row.querySelector(".col-main");
-      page2.structure.side = page2.structure.row.querySelector(".col-sidebar");
+      page.structure.row = page.structure.container.querySelector(".row");
+      page.structure.main = page.structure.row.querySelector(".col-main");
+      page.structure.side = page.structure.row.querySelector(".col-sidebar");
     } catch (e) {
-      log2("unable to find elements", "page structure");
+      log("unable to find elements", "page structure");
     }
     let content_top = document.body.querySelector(".content-top");
     let header_text = content_top.querySelector(".content-top-header").textContent;
     checkup_page_structure(false, content_top);
-    log2("status is", "page", "info", page2);
+    log("status is", "page", "info", page);
     update_page();
-    page2.structure.nav.classList.add("navlist--more");
+    page.structure.nav.classList.add("navlist--more");
     let edit_header = document.createElement("section");
     edit_header.classList.add("redesigned-header", "event-manage-header", "no-background");
     edit_header.innerHTML = `
@@ -13461,11 +13471,11 @@
             <div class="tag-icon event-icon"></div>
         </div>
         <div class="info-side">
-            <div class="sub-text">${trans[lang2].event.name}</div>
+            <div class="sub-text">${trans[lang].event.name}</div>
             <h1>${header_text}</h1>
         </div>
     `;
-    page2.structure.container.insertBefore(edit_header, page2.structure.container.firstElementChild);
+    page.structure.container.insertBefore(edit_header, page.structure.container.firstElementChild);
   }
   function bleh_events_create() {
     bleh_events_manage();
@@ -13473,12 +13483,12 @@
   function bleh_events_edit() {
     bleh_events_manage();
     let back = document.body.querySelector(".content-top-back-link a");
-    let nav = page2.structure.nav.querySelector("ul");
+    let nav = page.structure.nav.querySelector("ul");
     let back_nav = document.createElement("li");
     back_nav.classList.add("navlist-item", "secondary-nav-item", "secondary-nav-item--back");
     back_nav.innerHTML = `
         <a class="secondary-nav-item-link" href="${back.getAttribute("href")}">
-            ${trans[lang2].settings.back}
+            ${trans[lang].settings.back}
         </a>
     `;
     nav.insertBefore(back_nav, nav.firstElementChild);
@@ -13486,47 +13496,47 @@
 
   // src/pages/home.js
   function bleh_home() {
-    page2.structure.container = document.body.querySelector(".page-content");
+    page.structure.container = document.body.querySelector(".page-content");
     try {
-      page2.structure.row = page2.structure.container.querySelector(".row");
-      page2.structure.main = page2.structure.row.querySelector(".col-main");
-      page2.structure.side = page2.structure.row.querySelector(".col-sidebar");
+      page.structure.row = page.structure.container.querySelector(".row");
+      page.structure.main = page.structure.row.querySelector(".col-main");
+      page.structure.side = page.structure.row.querySelector(".col-sidebar");
     } catch (e) {
-      log2("unable to find elements", "page structure");
+      log("unable to find elements", "page structure");
     }
     let content_top = document.body.querySelector(".content-top");
     checkup_page_structure(false, content_top);
-    log2("status is", "page", "info", page2);
+    log("status is", "page", "info", page);
     update_page();
     let banner = document.createElement("div");
     banner.classList.add("top-banner", "home-banner");
     banner.innerHTML = `
-        <a class="home-avatar" href="${root2}user/${auth2.name}">
-            <img src="${auth2.avatar.replace("/avatar42s/", "/avatar170s/")}">
+        <a class="home-avatar" href="${root}user/${auth.name}">
+            <img src="${auth.avatar.replace("/avatar42s/", "/avatar170s/")}">
         </a>
-        <h1>${trans[lang2].home.welcome.replace("{m}", `<a class="mention" href="${root2}user/${auth2.name}">@${auth2.name}</a>`)}</h1>
+        <h1>${trans[lang].home.welcome.replace("{m}", `<a class="mention" href="${root}user/${auth.name}">@${auth.name}</a>`)}</h1>
     `;
-    page2.structure.container.insertBefore(banner, page2.structure.nav);
+    page.structure.container.insertBefore(banner, page.structure.nav);
   }
 
   // src/pages/inbox.js
   function bleh_inbox() {
-    page2.structure.container = document.body.querySelector(".page-content");
+    page.structure.container = document.body.querySelector(".page-content");
     try {
-      page2.structure.row = page2.structure.container.querySelector(".row");
-      page2.structure.main = page2.structure.row.querySelector(".col-main");
-      page2.structure.side = page2.structure.row.querySelector(".col-sidebar");
+      page.structure.row = page.structure.container.querySelector(".row");
+      page.structure.main = page.structure.row.querySelector(".col-main");
+      page.structure.side = page.structure.row.querySelector(".col-sidebar");
     } catch (e) {
-      log2("unable to find elements", "page structure");
+      log("unable to find elements", "page structure");
     }
     let content_top = document.body.querySelector(".content-top");
     checkup_page_structure(false, content_top);
-    log2("status is", "page", "info", page2);
+    log("status is", "page", "info", page);
     update_page();
-    if (page2.subpage == "notifications") {
-      let form = page2.structure.container.querySelector("form");
-      let notifications = page2.structure.container.querySelector(".inbox-notifications");
-      let pagination = page2.structure.container.querySelector(".pagination");
+    if (page.subpage == "notifications") {
+      let form = page.structure.container.querySelector("form");
+      let notifications = page.structure.container.querySelector(".inbox-notifications");
+      let pagination = page.structure.container.querySelector(".pagination");
       let panel = document.createElement("section");
       panel.classList.add("inbox-panel", "notifications-panel");
       if (form)
@@ -13535,7 +13545,7 @@
         panel.appendChild(notifications);
       if (pagination)
         panel.appendChild(pagination);
-      page2.structure.main.appendChild(panel);
+      page.structure.main.appendChild(panel);
       if (!notifications)
         return;
       let notif_links = notifications.querySelectorAll(".inbox-notifications__item-link");
@@ -13551,9 +13561,9 @@
         if (notification.classList.contains("inbox-notifications__item--highlight"))
           notification.classList.add("notification-user-name", `user-status--bleh-${badge.type}`, `user-status--bleh-user-${name_text}`);
       });
-    } else if (page2.subpage == "message_overview" || page2.subpage == "sent_message") {
-      let inbox = page2.structure.container.querySelector(".inbox-message-view");
-      page2.structure.main.appendChild(inbox);
+    } else if (page.subpage == "message_overview" || page.subpage == "sent_message") {
+      let inbox = page.structure.container.querySelector(".inbox-message-view");
+      page.structure.main.appendChild(inbox);
       let sender_panel = inbox.querySelector(".inbox-message-sender-avatar");
       let sender_name = inbox.querySelector(".inbox-message-sender-name");
       let sender_time = inbox.querySelector(".inbox-message-timestamp");
@@ -13563,12 +13573,12 @@
       let name_text = sanitise(sender_name.textContent.trim());
       let badge = patch_avatar(avatar, name_text);
       sender_panel.classList.add(`user-status--bleh-${badge.type}`, `user-status--bleh-user-${name_text}`);
-    } else if (page2.subpage == "compose") {
-      let inbox = page2.structure.container.querySelector(".inbox-compose-view");
-      page2.structure.main.appendChild(inbox);
+    } else if (page.subpage == "compose") {
+      let inbox = page.structure.container.querySelector(".inbox-compose-view");
+      page.structure.main.appendChild(inbox);
     } else {
-      let inbox = page2.structure.container.querySelector(".inbox");
-      page2.structure.main.appendChild(inbox);
+      let inbox = page.structure.container.querySelector(".inbox");
+      page.structure.main.appendChild(inbox);
     }
   }
 
@@ -13642,36 +13652,36 @@
 
   // src/pages/lastfm_settings.js
   function bleh_native_settings() {
-    page2.structure.container = document.body.querySelector(".page-content");
+    page.structure.container = document.body.querySelector(".page-content");
     try {
-      page2.structure.row = page2.structure.container.querySelector(".row");
-      page2.structure.main = page2.structure.row.querySelector(".col-main");
-      page2.structure.side = page2.structure.row.querySelector(".col-sidebar");
+      page.structure.row = page.structure.container.querySelector(".row");
+      page.structure.main = page.structure.row.querySelector(".col-main");
+      page.structure.side = page.structure.row.querySelector(".col-sidebar");
     } catch (e) {
-      log2("unable to find elements", "page structure");
+      log("unable to find elements", "page structure");
     }
     let content_top = document.body.querySelector(".content-top");
-    let header_text = trans[lang2].settings.pages[page2.subpage];
+    let header_text = trans[lang].settings.pages[page.subpage];
     checkup_page_structure(false, content_top);
-    log2("status is", "page", "info", page2);
+    log("status is", "page", "info", page);
     update_page();
-    register_background(auth2.avatar);
-    if (page2.subpage == "overview") {
+    register_background(auth.avatar);
+    if (page.subpage == "overview") {
       patch_settings_profile_tab();
-    } else if (page2.subpage == "privacy") {
+    } else if (page.subpage == "privacy") {
       patch_settings_privacy_tab();
-    } else if (page2.subpage == "subscription_overview") {
-      let panel = page2.structure.container.querySelector(".row + div");
+    } else if (page.subpage == "subscription_overview") {
+      let panel = page.structure.container.querySelector(".row + div");
       let subscription = panel.querySelector("#current-subscription");
       let edits = panel.querySelector("#automatic-edits");
       let merch_h = panel.querySelector(":scope > h2");
       let merch = panel.querySelector("#mechandise-discount");
       let history = panel.querySelector("#pro-history");
       merch.insertBefore(merch_h, merch.firstElementChild);
-      page2.structure.main.appendChild(subscription);
-      page2.structure.main.appendChild(edits);
-      page2.structure.main.appendChild(merch);
-      page2.structure.main.appendChild(history);
+      page.structure.main.appendChild(subscription);
+      page.structure.main.appendChild(edits);
+      page.structure.main.appendChild(merch);
+      page.structure.main.appendChild(history);
       let button = subscription.querySelector(".btn-primary");
       if (button) button.classList.add("subscription-button", "icon", "primary");
       let more_link_wrap = edits.querySelector(".more-link");
@@ -13686,7 +13696,7 @@
             edit_button.classList.add("edit-track");
         });
       }
-    } else if (page2.subpage.startsWith("subscription_automatic-edits")) {
+    } else if (page.subpage.startsWith("subscription_automatic-edits")) {
       bleh_auto_edits();
       let header = content_top.querySelector(".content-top-header");
       header_text = header.textContent.trim();
@@ -13700,11 +13710,11 @@
             <div class="tag-icon cog-icon"></div>
         </div>
         <div class="info-side">
-            <div class="sub-text">${trans[lang2].settings.name}</div>
+            <div class="sub-text">${trans[lang].settings.name}</div>
             <h1>${header_text}</h1>
         </div>
     `;
-    page2.structure.container.insertBefore(edit_header, page2.structure.container.firstElementChild);
+    page.structure.container.insertBefore(edit_header, page.structure.container.firstElementChild);
   }
   function patch_settings_profile_tab() {
     let update_picture = document.getElementById("update-picture");
@@ -13740,8 +13750,8 @@
       }
     };
     charts_panel.innerHTML = `
-        <h4>${trans[lang2].settings.inbuilt.charts.name}</h4>
-        <form action="${root2}settings#update-chart" name="chart-form" method="post">
+        <h4>${trans[lang].settings.inbuilt.charts.name}</h4>
+        <form action="${root}settings#update-chart" name="chart-form" method="post">
             <input type="hidden" name="csrfmiddlewaretoken" value="${token}">
             <div class="inner-preview pad">
                 <div class="tracks recent">
@@ -13779,7 +13789,7 @@
             </div>
             <div class="select-container">
                 <div class="heading">
-                    <h5>${trans[lang2].settings.inbuilt.charts.recent.count.name}</h5>
+                    <h5>${trans[lang].settings.inbuilt.charts.recent.count.name}</h5>
                 </div>
                 <div class="select-wrap custom-selector" id="id_chart_length_recent_tracks_select">
                     ${original_chart_settings.recent.count}
@@ -13788,7 +13798,7 @@
             <div class="toggle-container" id="container-recent_artwork">
                 <button class="btn reset" onclick="_reset_inbuilt_item('recent_artwork')">Reset to default</button>
                 <div class="heading">
-                    <h5>${trans[lang2].settings.inbuilt.charts.recent.artwork.name}</h5>
+                    <h5>${trans[lang].settings.inbuilt.charts.recent.artwork.name}</h5>
                 </div>
                 <div class="toggle-wrap">
                     <input class="companion-checkbox" type="checkbox" name="show_recent_tracks_artwork" id="inbuilt-companion-checkbox-recent_artwork">
@@ -13800,8 +13810,8 @@
             <div class="toggle-container" id="container-recent_realtime">
                 <button class="btn reset" onclick="_reset_inbuilt_item('recent_realtime')">Reset to default</button>
                 <div class="heading">
-                    <h5>${trans[lang2].settings.inbuilt.charts.recent.realtime.name}</h5>
-                    <p>${trans[lang2].settings.inbuilt.charts.recent.realtime.bio}</p>
+                    <h5>${trans[lang].settings.inbuilt.charts.recent.realtime.name}</h5>
+                    <p>${trans[lang].settings.inbuilt.charts.recent.realtime.bio}</p>
                 </div>
                 <div class="toggle-wrap">
                     <input class="companion-checkbox" type="checkbox" name="auto_refresh_recent_tracks" id="inbuilt-companion-checkbox-recent_realtime">
@@ -13871,7 +13881,7 @@
             </div>
             <div class="select-container">
                 <div class="heading">
-                    <h5>${trans[lang2].settings.inbuilt.charts.artists.timeframe.name}</h5>
+                    <h5>${trans[lang].settings.inbuilt.charts.artists.timeframe.name}</h5>
                 </div>
                 <div class="select-wrap custom-selector" id="id_chart_range_top_artists_select">
                     ${original_chart_settings.artists.timeframe}
@@ -13879,7 +13889,7 @@
             </div>
             <div class="select-container">
                 <div class="heading">
-                    <h5>${trans[lang2].settings.inbuilt.charts.artists.style.name}</h5>
+                    <h5>${trans[lang].settings.inbuilt.charts.artists.style.name}</h5>
                 </div>
                 <div class="select-wrap custom-selector" id="id_chart_style_and_length_top_artists_select">
                     ${original_chart_settings.artists.style}
@@ -13946,7 +13956,7 @@
             </div>
             <div class="select-container">
                 <div class="heading">
-                    <h5>${trans[lang2].settings.inbuilt.charts.albums.timeframe.name}</h5>
+                    <h5>${trans[lang].settings.inbuilt.charts.albums.timeframe.name}</h5>
                 </div>
                 <div class="select-wrap custom-selector" id="id_chart_range_top_albums_select">
                     ${original_chart_settings.albums.timeframe}
@@ -13954,7 +13964,7 @@
             </div>
             <div class="select-container">
                 <div class="heading">
-                    <h5>${trans[lang2].settings.inbuilt.charts.albums.style.name}</h5>
+                    <h5>${trans[lang].settings.inbuilt.charts.albums.style.name}</h5>
                 </div>
                 <div class="select-wrap custom-selector" id="id_chart_style_and_length_top_albums_select">
                     ${original_chart_settings.albums.style}
@@ -14007,7 +14017,7 @@
             </div>
             <div class="select-container">
                 <div class="heading">
-                    <h5>${trans[lang2].settings.inbuilt.charts.tracks.timeframe.name}</h5>
+                    <h5>${trans[lang].settings.inbuilt.charts.tracks.timeframe.name}</h5>
                 </div>
                 <div class="select-wrap custom-selector" id="id_chart_range_top_tracks_select">
                     ${original_chart_settings.tracks.timeframe}
@@ -14015,7 +14025,7 @@
             </div>
             <div class="select-container">
                 <div class="heading">
-                    <h5>${trans[lang2].settings.inbuilt.charts.tracks.count.name}</h5>
+                    <h5>${trans[lang].settings.inbuilt.charts.tracks.count.name}</h5>
                 </div>
                 <div class="select-wrap custom-selector" id="id_chart_length_top_tracks_select">
                     ${original_chart_settings.tracks.count}
@@ -14023,7 +14033,7 @@
             </div>
             <div class="settings-footer">
                 <button type="submit" class="btn-primary save">
-                    ${trans[lang2].settings.save}
+                    ${trans[lang].settings.save}
                 </button>
                 <input type="hidden" value="chart" name="submit">
             </div>
@@ -14059,7 +14069,7 @@
     let form_about_me = document.getElementById("id_about_me").textContent;
     document.getElementById("update-profile").outerHTML = "";
     update_picture.innerHTML = `
-        <h4>${trans[lang2].settings.inbuilt.profile.name}</h4>
+        <h4>${trans[lang].settings.inbuilt.profile.name}</h4>
         <div class="profile-container">
             <div class="avatar-side">
                 <div class="avatar image-upload-preview" onclick="_open_avatar_changer('${token}')">
@@ -14070,7 +14080,7 @@
             <div class="info-side">
                 <div class="header-info">
                     <div class="header">
-                        <h1>${auth2.name}</h1>
+                        <h1>${auth.name}</h1>
                     </div>
                     <div class="header-title-secondary">
                         <span class="header-title-secondary--pre" id="header-title-display-name--pre"></span>
@@ -14080,20 +14090,20 @@
                     </div>
                 </div>
                 <div class="sub-info">
-                    <form action="${root2}settings#update-profile" name="profile-form" data-form-type="identity" method="post">
+                    <form action="${root}settings#update-profile" name="profile-form" data-form-type="identity" method="post">
                         <input type="hidden" name="csrfmiddlewaretoken" value="${token}">
                         <div class="info-row">
                             <div class="title">
-                                ${trans[lang2].settings.inbuilt.profile.subtitle.name}
+                                ${trans[lang].settings.inbuilt.profile.subtitle.name}
                             </div>
                             <div class="input">
                                 <input type="text" name="full_name" value="${form_display_name}" maxlength="36" id="id_full_name" oninput="_update_display_name(this.value)" data-form-type="other">
-                                <div class="tip">${trans[lang2].settings.inbuilt.profile.pronoun_tip}</div>
+                                <div class="tip">${trans[lang].settings.inbuilt.profile.pronoun_tip}</div>
                             </div>
                         </div>
                         <div class="info-row">
                             <div class="title">
-                                ${trans[lang2].settings.inbuilt.profile.country}
+                                ${trans[lang].settings.inbuilt.profile.country}
                             </div>
                             <div class="input custom-selector" id="country_select">
                                 ${form_country}
@@ -14101,7 +14111,7 @@
                         </div>
                         <div class="info-row">
                             <div class="title">
-                                ${trans[lang2].settings.inbuilt.profile.website}
+                                ${trans[lang].settings.inbuilt.profile.website}
                             </div>
                             <div class="input">
                                 <input type="url" name="homepage" value="${form_website}" id="id_homepage" data-form-type="website">
@@ -14109,22 +14119,22 @@
                         </div>
                         <div class="info-row">
                             <div class="title">
-                                ${trans[lang2].settings.inbuilt.profile.about}
+                                ${trans[lang].settings.inbuilt.profile.about}
                             </div>
                             <div class="input about-me" data-bleh--show-preview="false" id="about_me">
                                 <textarea name="about_me" cols="40" rows="10" class="textarea--s" maxlength="500" id="id_about_me" oninput="_update_about_me_preview(this.value)" data-form-type="other">${form_about_me}</textarea>
                                 <span class="bleh--about-me-preview" id="about_me_preview"></span>
-                                <div class="tip">${trans[lang2].settings.inbuilt.profile.banner_tip}</div>
-                                <div class="tip bleh--about-me-preview-only">${trans[lang2].settings.inbuilt.profile.toggle_preview.note}</div>
+                                <div class="tip">${trans[lang].settings.inbuilt.profile.banner_tip}</div>
+                                <div class="tip bleh--about-me-preview-only">${trans[lang].settings.inbuilt.profile.toggle_preview.note}</div>
                             </div>
                         </div>
                         <div class="save-row">
                             <span class="btn btn--has-icon btn--has-icon-left btn--toggle-about-me-preview" id="btn--toggle-about-me-preview" onclick="_toggle_about_me_preview()">
-                                ${trans[lang2].settings.inbuilt.profile.toggle_preview.name}
+                                ${trans[lang].settings.inbuilt.profile.toggle_preview.name}
                             </span>
                             <div class="form-submit">
                                 <button type="submit" class="btn-primary save" data-form-type="action">
-                                    ${trans[lang2].settings.save}
+                                    ${trans[lang].settings.save}
                                 </button>
                                 <input type="hidden" value="profile" name="submit">
                             </div>
@@ -14139,7 +14149,7 @@
     update_about_me_preview(about_me_box.value);
     update_display_name(form_display_name);
     tippy(document.getElementById("btn--toggle-about-me-preview"), {
-      content: trans[lang2].settings.inbuilt.profile.toggle_preview.bio
+      content: trans[lang].settings.inbuilt.profile.toggle_preview.bio
     });
   }
   unsafeWindow._toggle_about_me_preview = function() {
@@ -14158,7 +14168,7 @@
   function update_display_name(value) {
     document.getElementById("header-title-display-name").textContent = value;
     let pronouns = use_pronouns(value);
-    document.getElementById("header-title-display-name--pre").textContent = pronouns ? trans[lang2].profile.display_name.pronouns : trans[lang2].profile.display_name.aka;
+    document.getElementById("header-title-display-name--pre").textContent = pronouns ? trans[lang].profile.display_name.pronouns : trans[lang].profile.display_name.aka;
   }
   function use_pronouns(value) {
     value = value.replaceAll(" ", "");
@@ -14169,9 +14179,9 @@
     open_avatar_changer(token);
   };
   function open_avatar_changer(token) {
-    dialog_legacy("edit_avatar", trans[lang2].settings.inbuilt.profile.avatar.name, `
+    dialog_legacy("edit_avatar", trans[lang].settings.inbuilt.profile.avatar.name, `
         <div class="bleh--upload-avatar-container">
-            <form class="avatar-upload-form bleh--upload-avatar-form" action="${root2}settings" name="avatar-form" method="post" enctype="multipart/form-data">
+            <form class="avatar-upload-form bleh--upload-avatar-form" action="${root}settings" name="avatar-form" method="post" enctype="multipart/form-data">
                 <input type="hidden" name="csrfmiddlewaretoken" value="${token}">
                 <div class="form-group form-group--avatar js-form-group">
                     <div class="js-form-group-controls form-group-controls">
@@ -14180,23 +14190,23 @@
                             <input type="file" name="avatar" data-require="components/file-input" data-file-input-copy="Choose file" data-no-file-copy="No file chosen" accept="image/*" required="" id="id_avatar" data-kate-processed="true">
                         </span>
                     </div>
-                    ${trans[lang2].settings.inbuilt.profile.avatar.upload}
+                    ${trans[lang].settings.inbuilt.profile.avatar.upload}
                 </div>
                 <div class="modal-footer">
                     <button type="submit" class="btn-primary save" onclick="_save_avatar_changer()">
-                        ${trans[lang2].settings.save}
+                        ${trans[lang].settings.save}
                     </button>
                     <input type="hidden" value="avatar" name="submit">
                 </div>
             </form>
-            <form class="image-remove-form bleh--upload-avatar-form" action="${root2}settings/avatar/delete" method="post">
+            <form class="image-remove-form bleh--upload-avatar-form" action="${root}settings/avatar/delete" method="post">
                 <input type="hidden" name="csrfmiddlewaretoken" value="${token}">
                 <div class="form-group">
                     <button class="mimic-link image-upload-remove" type="submit" value="delete-avatar" name="delete-avatar">Delete picture</button>
-                    ${trans[lang2].settings.inbuilt.profile.avatar.delete}
+                    ${trans[lang].settings.inbuilt.profile.avatar.delete}
                 </div>
                 <div class="modal-footer">
-                    <button class="btn cancel" onclick="_kill_window('edit_avatar')" type="button">${trans[lang2].settings.cancel}</button>
+                    <button class="btn cancel" onclick="_kill_window('edit_avatar')" type="button">${trans[lang].settings.cancel}</button>
                 </div>
             </form>
         </div>
@@ -14206,8 +14216,8 @@
     document.getElementById("bleh--window-edit_avatar--body").classList.add("modal-processing");
     setTimeout(function() {
       kill_window("edit_avatar");
-      auth2.avatar = auth_link.state.querySelector("img").getAttribute("src");
-      document.querySelector(".auth-dropdown-menu").style.setProperty("--url", `url(${auth2.avatar.replace("avatar42s", "avatar170s")})`);
+      auth.avatar = auth_link.state.querySelector("img").getAttribute("src");
+      document.querySelector(".auth-dropdown-menu").style.setProperty("--url", `url(${auth.avatar.replace("avatar42s", "avatar170s")})`);
     }, 5e3);
   };
   unsafeWindow._update_about_me_preview = function(value) {
@@ -14228,7 +14238,7 @@
       ghCodeBlocks: false,
       smartIndentationFix: true
     });
-    let parsed_body = converter.makeHtml(value.replace(/([@])([a-zA-Z0-9_]+)/g, `[$1$2](${root2}user/$2)`).replace(/\[artist\]([a-zA-Z0-9]+)\[\/artist\]/g, `[$1](${root2}music/$1)`).replace(/\[album artist=([a-zA-Z0-9]+)\]([a-zA-Z0-9\s]+)\[\/album\]/g, `[$2](${root2}music/$1/$2)`).replace(/\[track artist=([a-zA-Z0-9]+)\]([a-zA-Z0-9\s]+)\[\/track\]/g, `[$2](${root2}music/$1/_/$2)`).replace(/https:\/\/open\.spotify\.com\/user\/([A-Za-z0-9]+)\?si=([A-Za-z0-9]+)/g, "[@$1](https://open.spotify.com/user/$1)").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;"));
+    let parsed_body = converter.makeHtml(value.replace(/([@])([a-zA-Z0-9_]+)/g, `[$1$2](${root}user/$2)`).replace(/\[artist\]([a-zA-Z0-9]+)\[\/artist\]/g, `[$1](${root}music/$1)`).replace(/\[album artist=([a-zA-Z0-9]+)\]([a-zA-Z0-9\s]+)\[\/album\]/g, `[$2](${root}music/$1/$2)`).replace(/\[track artist=([a-zA-Z0-9]+)\]([a-zA-Z0-9\s]+)\[\/track\]/g, `[$2](${root}music/$1/_/$2)`).replace(/https:\/\/open\.spotify\.com\/user\/([A-Za-z0-9]+)\?si=([A-Za-z0-9]+)/g, "[@$1](https://open.spotify.com/user/$1)").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;"));
     document.getElementById("about_me_preview").innerHTML = parsed_body;
   }
   function patch_settings_privacy_tab() {
@@ -14238,7 +14248,7 @@
     patch_settings_privacy_panel(token, privacy_panel);
   }
   function bleh_communication_panel(token) {
-    let panel = page2.structure.main.querySelector("#ignorelist");
+    let panel = page.structure.main.querySelector("#ignorelist");
     panel.classList.add("bleh--panel");
     let label = panel.querySelector(".control-label").textContent;
     let input = panel.querySelector("#id_user").outerHTML;
@@ -14259,7 +14269,7 @@
       button.classList.add("icon", "delete-user-button", "danger-subtle");
       entry.innerHTML = `
             <span class="text">
-                <a class="mention" href="${root2}user/${name}" target="_blank">@${name}</a>
+                <a class="mention" href="${root}user/${name}" target="_blank">@${name}</a>
             </span>
             <span class="actions">
                 ${form2.outerHTML}
@@ -14278,48 +14288,48 @@
       new_list.setAttribute("data-expanded", "false");
       let expand = document.createElement("button");
       expand.classList.add("expand-button", "icon");
-      expand.textContent = trans[lang2].settings.inbuilt.ignore.view.replace("{c}", remainder);
+      expand.textContent = trans[lang].settings.inbuilt.ignore.view.replace("{c}", remainder);
       expand.setAttribute("onclick", "_expand_list(this)");
       new_list.appendChild(expand);
     }
-    let form = page2.structure.main.querySelector('[name="ignorelist"]');
-    if (page2.token == "")
-      page2.token = form.querySelector('[name="csrfmiddlewaretoken"]').getAttribute("value");
+    let form = page.structure.main.querySelector('[name="ignorelist"]');
+    if (page.token == "")
+      page.token = form.querySelector('[name="csrfmiddlewaretoken"]').getAttribute("value");
     panel.innerHTML = `
-        <h4>${trans[lang2].settings.inbuilt.ignore.name}</h4>
+        <h4>${trans[lang].settings.inbuilt.ignore.name}</h4>
         <div class="user-top-panel">
             <div class="user-top-avatar user-top-avatar-side-left"><div class="bleh-icon"></div></div>
-            <img class="user-top-avatar user-top-avatar-main" src="${auth2.avatar.replace("avatar42s", "avatar300s")}" alt="${auth2.name}">
+            <img class="user-top-avatar user-top-avatar-main" src="${auth.avatar.replace("avatar42s", "avatar300s")}" alt="${auth.name}">
             <div class="user-top-avatar user-top-avatar-side-right"><div class="bleh-icon"></div></div>
         </div>
-        <h5>${trans[lang2].settings.inbuilt.ignore.consider.name}</h5>
+        <h5>${trans[lang].settings.inbuilt.ignore.consider.name}</h5>
         <div class="to-consider">
             <ul class="to-consider-good">
-                <li>${trans[lang2].settings.inbuilt.ignore.consider.good[0]}</li>
-                <li>${trans[lang2].settings.inbuilt.ignore.consider.good[1]}</li>
-                <li>${trans[lang2].settings.inbuilt.ignore.consider.good[2]}</li>
+                <li>${trans[lang].settings.inbuilt.ignore.consider.good[0]}</li>
+                <li>${trans[lang].settings.inbuilt.ignore.consider.good[1]}</li>
+                <li>${trans[lang].settings.inbuilt.ignore.consider.good[2]}</li>
             </ul>
             <ul class="to-consider-bad">
-                <li>${trans[lang2].settings.inbuilt.ignore.consider.bad[0]}</li>
-                <li>${trans[lang2].settings.inbuilt.ignore.consider.bad[1]}</li>
+                <li>${trans[lang].settings.inbuilt.ignore.consider.bad[0]}</li>
+                <li>${trans[lang].settings.inbuilt.ignore.consider.bad[1]}</li>
             </ul>
         </div>
         <div class="text-container">
             <div class="heading">
-                <h5>${trans[lang2].settings.music.profile_shortcut.placeholder}</h5>
-                <form action="${root2}settings/privacy#ignorelist" name="ignorelist" method="post">
-                    <input type="hidden" name="csrfmiddlewaretoken" value="${page2.token}">
+                <h5>${trans[lang].settings.music.profile_shortcut.placeholder}</h5>
+                <form action="${root}settings/privacy#ignorelist" name="ignorelist" method="post">
+                    <input type="hidden" name="csrfmiddlewaretoken" value="${page.token}">
                     <div class="input-container">
-                        <input type="text" maxlength="80" id="id_user" name="user" placeholder="${trans[lang2].settings.music.profile_shortcut.header}">
+                        <input type="text" maxlength="80" id="id_user" name="user" placeholder="${trans[lang].settings.music.profile_shortcut.header}">
                         <input type="hidden" name="listaction" value="add">
                         <input type="hidden" name="submit" value="ignorelist">
-                        <button class="bleh--btn primary icon add" type="submit">${trans[lang2].settings.add}</button>
+                        <button class="bleh--btn primary icon add" type="submit">${trans[lang].settings.add}</button>
                     </div>
                 </form>
             </div>
         </div>
         <div class="alert alert-info">
-            ${trans[lang2].settings.inbuilt.ignore.count.replace("{c}", amount)}
+            ${trans[lang].settings.inbuilt.ignore.count.replace("{c}", amount)}
         </div>
     `;
     panel.appendChild(new_list);
@@ -14332,8 +14342,8 @@
       disable_shoutbox: document.getElementById("id_shoutbox_disabled").checked
     };
     privacy_panel.innerHTML = `
-        <h4>${trans[lang2].settings.inbuilt.privacy.name}</h4>
-        <form action="${root2}settings/privacy" name="privacy" method="post">
+        <h4>${trans[lang].settings.inbuilt.privacy.name}</h4>
+        <form action="${root}settings/privacy" name="privacy" method="post">
             <input type="hidden" name="csrfmiddlewaretoken" value="${token}">
             <div class="inner-preview pad">
                 <div class="tracks recent_listening">
@@ -14372,8 +14382,8 @@
             <div class="toggle-container" id="container-recent_listening">
                 <button class="btn reset" onclick="_reset_inbuilt_item('recent_listening')">Reset to default</button>
                 <div class="heading">
-                    <h5>${trans[lang2].settings.inbuilt.privacy.recent_listening.name}</h5>
-                    <p>${trans[lang2].settings.inbuilt.privacy.recent_listening.bio}</p>
+                    <h5>${trans[lang].settings.inbuilt.privacy.recent_listening.name}</h5>
+                    <p>${trans[lang].settings.inbuilt.privacy.recent_listening.bio}</p>
                 </div>
                 <div class="toggle-wrap">
                     <input class="companion-checkbox" type="checkbox" name="hide_realtime" id="inbuilt-companion-checkbox-recent_listening">
@@ -14387,13 +14397,13 @@
             <div class="primary-selections">
                 ${original_privacy_settings.receiving_msgs}
                 <div class="btn primary-selection" id="primary-selection-receiving_msgs-everyone" onclick="_update_inbuilt_selection('id_message_privacy', 0)">
-                    <h5>${trans[lang2].settings.inbuilt.privacy.receiving_msgs.settings.everyone.name}</h5>
+                    <h5>${trans[lang].settings.inbuilt.privacy.receiving_msgs.settings.everyone.name}</h5>
                 </div>
                 <div class="btn primary-selection" id="primary-selection-receiving_msgs-neighbours" onclick="_update_inbuilt_selection('id_message_privacy', 1)">
-                    <h5>${trans[lang2].settings.inbuilt.privacy.receiving_msgs.settings.neighbours.name}</h5>
+                    <h5>${trans[lang].settings.inbuilt.privacy.receiving_msgs.settings.neighbours.name}</h5>
                 </div>
                 <div class="btn primary-selection" id="primary-selection-receiving_msgs-follow" onclick="_update_inbuilt_selection('id_message_privacy', 2)">
-                    <h5>${trans[lang2].settings.inbuilt.privacy.receiving_msgs.settings.follow.name}</h5>
+                    <h5>${trans[lang].settings.inbuilt.privacy.receiving_msgs.settings.follow.name}</h5>
                 </div>
             </div>
             <div class="sep"></div>
@@ -14443,8 +14453,8 @@
             <div class="toggle-container" id="container-disable_shoutbox">
                 <button class="btn reset" onclick="_reset_inbuilt_item('disable_shoutbox')">Reset to default</button>
                 <div class="heading">
-                    <h5>${trans[lang2].settings.inbuilt.privacy.disable_shoutbox.name}</h5>
-                    <p>${trans[lang2].settings.inbuilt.privacy.disable_shoutbox.bio}</p>
+                    <h5>${trans[lang].settings.inbuilt.privacy.disable_shoutbox.name}</h5>
+                    <p>${trans[lang].settings.inbuilt.privacy.disable_shoutbox.bio}</p>
                 </div>
                 <div class="toggle-wrap">
                     <input class="companion-checkbox" type="checkbox" name="shoutbox_disabled" id="inbuilt-companion-checkbox-disable_shoutbox">
@@ -14455,7 +14465,7 @@
             </div>
             <div class="settings-footer">
                 <button type="submit" class="btn-primary save">
-                    ${trans[lang2].settings.save}
+                    ${trans[lang].settings.save}
                 </button>
                 <input type="hidden" value="privacy" name="submit">
             </div>
@@ -14477,7 +14487,7 @@
       emoji: true,
       excludeTrailingPunctuationFromURLs: true,
       ghMentions: true,
-      ghMentionsLink: `${root2}user/{u}`,
+      ghMentionsLink: `${root}user/{u}`,
       headerLevelStart: 5,
       noHeaderId: true,
       openLinksInNewWindow: true,
@@ -14489,17 +14499,17 @@
       ghCodeBlocks: false,
       smartIndentationFix: true
     });
-    let parsed_body = converter.makeHtml(text.replace(/([@])([a-zA-Z0-9_]+)/g, `[$1$2](${root2}user/$2)`).replace(/\[artist\]([a-zA-Z0-9]+)\[\/artist\]/g, `[$1](${root2}music/$1)`).replace(/\[album artist=([a-zA-Z0-9]+)\]([a-zA-Z0-9\s]+)\[\/album\]/g, `[$2](${root2}music/$1/$2)`).replace(/\[track artist=([a-zA-Z0-9]+)\]([a-zA-Z0-9\s]+)\[\/track\]/g, `[$2](${root2}music/$1/_/$2)`).replace(/https:\/\/open\.spotify\.com\/user\/([A-Za-z0-9]+)\?si=([A-Za-z0-9]+)/g, "[@$1](https://open.spotify.com/user/$1)").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;"));
+    let parsed_body = converter.makeHtml(text.replace(/([@])([a-zA-Z0-9_]+)/g, `[$1$2](${root}user/$2)`).replace(/\[artist\]([a-zA-Z0-9]+)\[\/artist\]/g, `[$1](${root}music/$1)`).replace(/\[album artist=([a-zA-Z0-9]+)\]([a-zA-Z0-9\s]+)\[\/album\]/g, `[$2](${root}music/$1/$2)`).replace(/\[track artist=([a-zA-Z0-9]+)\]([a-zA-Z0-9\s]+)\[\/track\]/g, `[$2](${root}music/$1/_/$2)`).replace(/https:\/\/open\.spotify\.com\/user\/([A-Za-z0-9]+)\?si=([A-Za-z0-9]+)/g, "[@$1](https://open.spotify.com/user/$1)").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;"));
     return parsed_body;
   }
 
   // src/components/profile_header.js
   unsafeWindow._toggle_profile_header = function(button) {
-    let current = settings2.profile_header_expand;
-    settings2.profile_header_expand = !current;
+    let current = settings.profile_header_expand;
+    settings.profile_header_expand = !current;
     button.setAttribute("aria-expanded", !current);
     document.documentElement.setAttribute("data-bleh--profile_header_expand", !current);
-    localStorage.setItem("bleh", JSON.stringify(settings2));
+    localStorage.setItem("bleh", JSON.stringify(settings));
   };
   function redesign_profile_header(is_own_profile, is_following) {
     let base_header = document.body.querySelector(".header-info-secondary");
@@ -14530,7 +14540,7 @@
     let taste_percentage = "";
     let taste_artists = [];
     let profile_avi = "";
-    if (!is_own_profile && page2.name != sponsor_list.sponsor_account) {
+    if (!is_own_profile && page.name != sponsor_list.sponsor_account) {
       let taste_meter = base_header.querySelector(".tasteometer");
       taste = taste_meter.classList[1].replace("tasteometer-compat-", "");
       let artists2 = taste_meter.querySelectorAll("a");
@@ -14574,18 +14584,18 @@
       } else {
         let follow_placeholder = document.createElement("button");
         follow_placeholder.classList.add("btn", "profile-top-item", "profile-top-item--follow", "view-item", katsune ? "icon" : "");
-        follow_placeholder.textContent = trans[lang2].profile.on_ignore_list;
+        follow_placeholder.textContent = trans[lang].profile.on_ignore_list;
         follow_placeholder.setAttribute("disabled", "true");
         follow_placeholder.setAttribute("data-ignored", "true");
         if (!katsune)
           tippy(follow_placeholder, {
-            content: trans[lang2].profile.on_ignore_list
+            content: trans[lang].profile.on_ignore_list
           });
         profile_header.appendChild(follow_placeholder);
       }
-      if (page2.name == "cutensilly") {
+      if (page.name == "cutensilly") {
         create_profile_top_item(profile_header, {
-          name: page2.name,
+          name: page.name,
           type: "sponsor",
           link: "_sponsor()",
           full: true,
@@ -14596,16 +14606,16 @@
       }
       let msg_button = document.body.querySelector(".header-message-user");
       if (msg_button != null) {
-        if (page2.name != sponsor_list.sponsor_account) {
+        if (page.name != sponsor_list.sponsor_account) {
           create_profile_top_item(profile_header, {
-            name: page2.name,
+            name: page.name,
             type: "message",
             link: msg_button.getAttribute("href"),
             katsune
           });
         } else {
           create_profile_top_item(profile_header, {
-            name: page2.name,
+            name: page.name,
             type: "sponsor",
             link: "_sponsor()",
             full: true,
@@ -14614,7 +14624,7 @@
             katsune
           });
           create_profile_top_item(profile_header, {
-            name: page2.name,
+            name: page.name,
             type: "message_sponsor",
             link: msg_button.getAttribute("href"),
             full: true,
@@ -14623,26 +14633,26 @@
           });
         }
       }
-      if (page2.name != sponsor_list.sponsor_account) {
+      if (page.name != sponsor_list.sponsor_account) {
         create_profile_top_item(profile_header, {
-          name: page2.name,
+          name: page.name,
           type: "shortcut",
-          link: `_set_profile_as_shortcut(this, '${page2.name}')`,
+          link: `_set_profile_as_shortcut(this, '${page.name}')`,
           action: "button",
           katsune
         });
       }
     } else {
       create_profile_top_item(profile_header, {
-        name: page2.name,
+        name: page.name,
         type: "edit",
-        link: `${root2}settings`,
+        link: `${root}settings`,
         katsune
       });
       create_profile_top_item(profile_header, {
-        name: page2.name,
+        name: page.name,
         type: "obsess",
-        link: `${root2}user/${page2.name}/obsessions/set`,
+        link: `${root}user/${page.name}/obsessions/set`,
         katsune
       });
     }
@@ -14651,15 +14661,15 @@
       sep.classList.add("btn-gap");
       profile_header.appendChild(sep);
     }
-    if (!is_own_profile && page2.name != sponsor_list.sponsor_account && katsune) {
+    if (!is_own_profile && page.name != sponsor_list.sponsor_account && katsune) {
       let taste_wrap = document.createElement("div");
       taste_wrap.classList.add("katsune-taste");
       taste_wrap.innerHTML = `
             <div class="taste-info">
                 <div class="taste-value">
-                    ${taste_artists.length == 1 ? trans[lang2].profile.taste_meter.you_share_1.replace("{artist}", taste_artists[0]) : ""}
-                    ${taste_artists.length == 2 ? trans[lang2].profile.taste_meter.you_share_2.replace("{artist1}", taste_artists[0]).replace("{artist2}", taste_artists[1]) : ""}
-                    ${taste_artists.length == 3 ? trans[lang2].profile.taste_meter.you_share_3.replace("{artist1}", taste_artists[0]).replace("{artist2}", taste_artists[1]).replace("{artist3}", taste_artists[2]) : ""}
+                    ${taste_artists.length == 1 ? trans[lang].profile.taste_meter.you_share_1.replace("{artist}", taste_artists[0]) : ""}
+                    ${taste_artists.length == 2 ? trans[lang].profile.taste_meter.you_share_2.replace("{artist1}", taste_artists[0]).replace("{artist2}", taste_artists[1]) : ""}
+                    ${taste_artists.length == 3 ? trans[lang].profile.taste_meter.you_share_3.replace("{artist1}", taste_artists[0]).replace("{artist2}", taste_artists[1]).replace("{artist3}", taste_artists[2]) : ""}
                 </div>
                 <div class="taste-bar colourful" data-taste="${taste}">
                     <div class="taste-bar-fill" style="width: ${taste_percentage}"></div>
@@ -14674,13 +14684,13 @@
         theme: "stack",
         content: `
             <span>
-                ${trans[lang2].profile.taste}
+                ${trans[lang].profile.taste}
                 <!--<div class="taste-badge spacing">
-                    <span>${trans[lang2].profile.taste_meter.level[taste]}</span>
+                    <span>${trans[lang].profile.taste_meter.level[taste]}</span>
                     <span>${taste_percentage}</span>
                 </div>-->
             </span>
-            <div class="hint">${trans[lang2].settings.right_click}</div>
+            <div class="hint">${trans[lang].settings.right_click}</div>
             `,
         allowHTML: true
       });
@@ -14689,29 +14699,29 @@
         let menu = tippy(taste_wrap, {
           theme: "context-menu",
           content: `
-                    <h4 class="menu-header">${trans[lang2].music.compare.header}</h4>
-                    <a class="dropdown-menu-clickable-item" href="${root2}user/${page2.name}/library/music/${sanitise(taste_artists[0])}" data-menu-item="shared-artist">
-                        <img class="view-item-avatar" src="${profile_avi}" alt="${page2.name}">${taste_artists[0]}
+                    <h4 class="menu-header">${trans[lang].music.compare.header}</h4>
+                    <a class="dropdown-menu-clickable-item" href="${root}user/${page.name}/library/music/${sanitise(taste_artists[0])}" data-menu-item="shared-artist">
+                        <img class="view-item-avatar" src="${profile_avi}" alt="${page.name}">${taste_artists[0]}
                     </a>
-                    <a class="dropdown-menu-clickable-item" href="${root2}user/${auth2.name}/library/music/${sanitise(taste_artists[0])}" data-menu-item="shared-artist">
-                        <img class="view-item-avatar" src="${auth2.avatar}" alt="${auth2.name}">${taste_artists[0]}
+                    <a class="dropdown-menu-clickable-item" href="${root}user/${auth.name}/library/music/${sanitise(taste_artists[0])}" data-menu-item="shared-artist">
+                        <img class="view-item-avatar" src="${auth.avatar}" alt="${auth.name}">${taste_artists[0]}
                     </a>
                     ${taste_artists.length >= 2 ? `
                     <div class="sep"></div>
-                    <a class="dropdown-menu-clickable-item" href="${root2}user/${page2.name}/library/music/${sanitise(taste_artists[1])}" data-menu-item="shared-artist">
-                        <img class="view-item-avatar" src="${profile_avi}" alt="${page2.name}">${taste_artists[1]}
+                    <a class="dropdown-menu-clickable-item" href="${root}user/${page.name}/library/music/${sanitise(taste_artists[1])}" data-menu-item="shared-artist">
+                        <img class="view-item-avatar" src="${profile_avi}" alt="${page.name}">${taste_artists[1]}
                     </a>
-                    <a class="dropdown-menu-clickable-item" href="${root2}user/${auth2.name}/library/music/${sanitise(taste_artists[1])}" data-menu-item="shared-artist">
-                        <img class="view-item-avatar" src="${auth2.avatar}" alt="${auth2.name}">${taste_artists[1]}
+                    <a class="dropdown-menu-clickable-item" href="${root}user/${auth.name}/library/music/${sanitise(taste_artists[1])}" data-menu-item="shared-artist">
+                        <img class="view-item-avatar" src="${auth.avatar}" alt="${auth.name}">${taste_artists[1]}
                     </a>
                     ` : ""}
                     ${taste_artists.length >= 3 ? `
                     <div class="sep"></div>
-                    <a class="dropdown-menu-clickable-item" href="${root2}user/${page2.name}/library/music/${sanitise(taste_artists[2])}" data-menu-item="shared-artist">
-                        <img class="view-item-avatar" src="${profile_avi}" alt="${page2.name}">${taste_artists[2]}
+                    <a class="dropdown-menu-clickable-item" href="${root}user/${page.name}/library/music/${sanitise(taste_artists[2])}" data-menu-item="shared-artist">
+                        <img class="view-item-avatar" src="${profile_avi}" alt="${page.name}">${taste_artists[2]}
                     </a>
-                    <a class="dropdown-menu-clickable-item" href="${root2}user/${auth2.name}/library/music/${sanitise(taste_artists[2])}" data-menu-item="shared-artist">
-                        <img class="view-item-avatar" src="${auth2.avatar}" alt="${auth2.name}">${taste_artists[2]}
+                    <a class="dropdown-menu-clickable-item" href="${root}user/${auth.name}/library/music/${sanitise(taste_artists[2])}" data-menu-item="shared-artist">
+                        <img class="view-item-avatar" src="${auth.avatar}" alt="${auth.name}">${taste_artists[2]}
                     </a>
                     ` : ""}
                 `,
@@ -14725,7 +14735,7 @@
         register_menu(taste_wrap, menu);
       }
     }
-    if (page2.name != sponsor_list.sponsor_account && katsune) {
+    if (page.name != sponsor_list.sponsor_account && katsune) {
       let progress = document.createElement("div");
       progress.classList.add("katsune-scrobble-progress", "colourful");
       let metadata = header_meta.querySelector(".header-metadata-display");
@@ -14742,7 +14752,7 @@
       let percent = scrobbles / 1e5 * 100;
       progress.innerHTML = `
             <div class="progress-info">
-                <div class="progress-value">${trans[lang2].profile.progress.to_go.replace("{s}", left.toLocaleString(lang2))}</div>
+                <div class="progress-value">${trans[lang].profile.progress.to_go.replace("{s}", left.toLocaleString(lang))}</div>
                 <div class="progress-bar">
                     <div class="progress-bar-fill" style="width: ${percent}%"></div>
                 </div>
@@ -14756,74 +14766,74 @@
       tippy(progress, {
         theme: "progress-badges",
         content: `
-                <span class="progress-badges-title">${trans[lang2].profile.progress.explain}</span>
+                <span class="progress-badges-title">${trans[lang].profile.progress.explain}</span>
                 <div class="progress-badges-list">
                     <div class="progress-badges-item colourful ${tier == 0 ? "active" : ""}" data-tier="0">
                         <div class="bleh-icon" style="--icon: var(--icon-16-progress-tier-0)"></div>
-                        <span class="tier-name">${trans[lang2].profile.progress.tier.replace("{t}", "0")}</span>
+                        <span class="tier-name">${trans[lang].profile.progress.tier.replace("{t}", "0")}</span>
                     </div>
                     <div class="progress-badges-item colourful ${tier == 1 ? "active" : ""}" data-tier="1">
                         <div class="bleh-icon" style="--icon: var(--icon-16-progress-tier-1)"></div>
-                        <span class="tier-name">${trans[lang2].profile.progress.tier.replace("{t}", "1")}</span>
+                        <span class="tier-name">${trans[lang].profile.progress.tier.replace("{t}", "1")}</span>
                     </div>
                     <div class="progress-badges-item colourful ${tier == 2 ? "active" : ""}" data-tier="2">
                         <div class="bleh-icon" style="--icon: var(--icon-16-progress-tier-2)"></div>
-                        <span class="tier-name">${trans[lang2].profile.progress.tier.replace("{t}", "2")}</span>
+                        <span class="tier-name">${trans[lang].profile.progress.tier.replace("{t}", "2")}</span>
                     </div>
                     <div class="progress-badges-item colourful ${tier == 3 ? "active" : ""}" data-tier="3">
                         <div class="bleh-icon" style="--icon: var(--icon-16-progress-tier-3)"></div>
-                        <span class="tier-name">${trans[lang2].profile.progress.tier.replace("{t}", "3")}</span>
+                        <span class="tier-name">${trans[lang].profile.progress.tier.replace("{t}", "3")}</span>
                     </div>
                     <div class="progress-badges-item colourful ${tier == 4 ? "active" : ""}" data-tier="4">
                         <div class="bleh-icon" style="--icon: var(--icon-16-progress-tier-4)"></div>
-                        <span class="tier-name">${trans[lang2].profile.progress.tier.replace("{t}", "4")}</span>
+                        <span class="tier-name">${trans[lang].profile.progress.tier.replace("{t}", "4")}</span>
                     </div>
                 </div>
             `,
         allowHTML: true
       });
     }
-    if (page2.name != sponsor_list.sponsor_account && !katsune) {
+    if (page.name != sponsor_list.sponsor_account && !katsune) {
       let listen_divider = document.createElement("div");
       listen_divider.classList.add("listen-divider");
       profile_header.appendChild(listen_divider);
       create_profile_top_item(profile_header, {
-        name: page2.name,
+        name: page.name,
         text: scrobbles,
         type: "scrobbles",
-        link: `${root2}user/${page2.name}/library`,
+        link: `${root}user/${page.name}/library`,
         tooltip: average
       });
       create_profile_top_item(profile_header, {
-        name: page2.name,
+        name: page.name,
         text: artists,
         type: "artists",
-        link: `${root2}user/${page2.name}/library/artists`
+        link: `${root}user/${page.name}/library/artists`
       });
       create_profile_top_item(profile_header, {
-        name: page2.name,
+        name: page.name,
         text: loved,
         type: "loved",
-        link: `${root2}user/${page2.name}/loved`
+        link: `${root}user/${page.name}/loved`
       });
       if (!is_own_profile) {
         create_profile_top_item(profile_header, {
-          name: page2.name,
+          name: page.name,
           type: "taste",
-          link: `${root2}user/${page2.name}/library/artists?date_preset=LAST_30_DAYS&page=1`,
+          link: `${root}user/${page.name}/library/artists?date_preset=LAST_30_DAYS&page=1`,
           taste,
           artists: taste_artists,
           avi: profile_avi,
           percent: taste_percentage,
           tooltip: `
                     <span>
-                        ${trans[lang2].profile.taste}
+                        ${trans[lang].profile.taste}
                         <!--<div class="taste-badge spacing">
-                            <span>${trans[lang2].profile.taste_meter.level[taste]}</span>
+                            <span>${trans[lang].profile.taste_meter.level[taste]}</span>
                             <span>${taste_percentage}</span>
                         </div>-->
                     </span>
-                    <div class="hint">${trans[lang2].settings.right_click}</div>
+                    <div class="hint">${trans[lang].settings.right_click}</div>
                 `,
           allow_html: true,
           tooltip_theme: "stack"
@@ -14831,16 +14841,16 @@
       }
     }
     if (katsune) {
-      page2.structure.container.querySelector(".redesigned-profile-header").after(profile_header);
+      page.structure.container.querySelector(".redesigned-profile-header").after(profile_header);
     } else {
       if (ff("refreshed_nav"))
-        page2.structure.container.querySelector(".redesigned-profile-header .info-side").appendChild(profile_header);
+        page.structure.container.querySelector(".redesigned-profile-header .info-side").appendChild(profile_header);
       else
         base_header.appendChild(profile_header);
     }
   }
   function create_profile_top_item(parent, { name, link, text = "", type, taste = "", artists = [], avi = "", percent = "", action = "", tooltip = "", allow_html = false, tooltip_theme = "", full = false, primary = false, katsune = false }) {
-    log2(`creating top item of ${name}, ${link}, ${text}`, "profile");
+    log(`creating top item of ${name}, ${link}, ${text}`, "profile");
     let listen_item = document.createElement(action != "button" ? "a" : "button");
     listen_item.classList.add("btn", "profile-top-item", `profile-top-item--${type}`, "view-item");
     if (action != "button" && type != "going" && type != "maybe" && type != "total") {
@@ -14851,19 +14861,19 @@
     if (primary)
       listen_item.classList.add("primary");
     if (type != "taste") {
-      text = text.toLocaleString(lang2);
+      text = text.toLocaleString(lang);
       listen_item.innerHTML = text;
     } else {
       listen_item.setAttribute("data-taste", taste);
       listen_item.style.setProperty("--data-taste-percent", percent);
       listen_item.innerHTML = `
             <img class="view-item-avatar" src="${avi}" alt="${name}">
-            <img class="view-item-avatar" src="${auth2.avatar}" alt="${auth2.name}">
-            <!--<div class="taste-badge">${trans[lang2].profile.taste_meter.level[taste]}</div>-->
+            <img class="view-item-avatar" src="${auth.avatar}" alt="${auth.name}">
+            <!--<div class="taste-badge">${trans[lang].profile.taste_meter.level[taste]}</div>-->
             <div class="taste-badge">${percent}</div>
-            ${artists.length == 1 ? trans[lang2].profile.taste_meter.you_share_1.replace("{artist}", artists[0]) : ""}
-            ${artists.length == 2 ? trans[lang2].profile.taste_meter.you_share_2.replace("{artist1}", artists[0]).replace("{artist2}", artists[1]) : ""}
-            ${artists.length == 3 ? trans[lang2].profile.taste_meter.you_share_3.replace("{artist1}", artists[0]).replace("{artist2}", artists[1]).replace("{artist3}", artists[2]) : ""}
+            ${artists.length == 1 ? trans[lang].profile.taste_meter.you_share_1.replace("{artist}", artists[0]) : ""}
+            ${artists.length == 2 ? trans[lang].profile.taste_meter.you_share_2.replace("{artist1}", artists[0]).replace("{artist2}", artists[1]) : ""}
+            ${artists.length == 3 ? trans[lang].profile.taste_meter.you_share_3.replace("{artist1}", artists[0]).replace("{artist2}", artists[1]).replace("{artist3}", artists[2]) : ""}
         `;
     }
     if (katsune) {
@@ -14872,33 +14882,33 @@
     }
     if (full) {
       listen_item.classList.add("profile-top-item-full");
-      listen_item.textContent = trans[lang2].profile[type];
+      listen_item.textContent = trans[lang].profile[type];
     }
     parent.appendChild(listen_item);
     if (type == "shortcut") {
-      if (name == settings2.profile_shortcut) {
+      if (name == settings.profile_shortcut) {
         listen_item.setAttribute("data-is-shortcut", "true");
         listen_item.removeAttribute("onclick");
         if (katsune)
-          listen_item.textContent = trans[lang2].profile.shortcut.remove;
+          listen_item.textContent = trans[lang].profile.shortcut.remove;
         else
           tippy(listen_item, {
-            content: trans[lang2].profile.shortcut.remove
+            content: trans[lang].profile.shortcut.remove
           });
       } else {
         listen_item.setAttribute("data-is-shortcut", "false");
         if (katsune)
-          listen_item.textContent = trans[lang2].profile.shortcut.add;
+          listen_item.textContent = trans[lang].profile.shortcut.add;
         else
           tippy(listen_item, {
-            content: trans[lang2].profile.shortcut.add
+            content: trans[lang].profile.shortcut.add
           });
       }
       let menu = tippy(listen_item, {
         theme: "context-menu",
         content: `
                 <button class="dropdown-menu-clickable-item" onclick="_open_profile_shortcut_window()" data-menu-item="settings">
-                    ${trans[lang2].settings.configure}
+                    ${trans[lang].settings.configure}
                 </button>
             `,
         allowHTML: true,
@@ -14920,29 +14930,29 @@
       let menu = tippy(listen_item, {
         theme: "context-menu",
         content: `
-                <h4 class="menu-header">${trans[lang2].music.compare.header}</h4>
-                <a class="dropdown-menu-clickable-item" href="${root2}user/${name}/library/music/${sanitise(artists[0])}" data-menu-item="shared-artist">
+                <h4 class="menu-header">${trans[lang].music.compare.header}</h4>
+                <a class="dropdown-menu-clickable-item" href="${root}user/${name}/library/music/${sanitise(artists[0])}" data-menu-item="shared-artist">
                     <img class="view-item-avatar" src="${avi}" alt="${name}">${artists[0]}
                 </a>
-                <a class="dropdown-menu-clickable-item" href="${root2}user/${auth2.name}/library/music/${sanitise(artists[0])}" data-menu-item="shared-artist">
-                    <img class="view-item-avatar" src="${auth2.avatar}" alt="${auth2.name}">${artists[0]}
+                <a class="dropdown-menu-clickable-item" href="${root}user/${auth.name}/library/music/${sanitise(artists[0])}" data-menu-item="shared-artist">
+                    <img class="view-item-avatar" src="${auth.avatar}" alt="${auth.name}">${artists[0]}
                 </a>
                 ${artists.length >= 2 ? `
                 <div class="sep"></div>
-                <a class="dropdown-menu-clickable-item" href="${root2}user/${name}/library/music/${sanitise(artists[1])}" data-menu-item="shared-artist">
+                <a class="dropdown-menu-clickable-item" href="${root}user/${name}/library/music/${sanitise(artists[1])}" data-menu-item="shared-artist">
                     <img class="view-item-avatar" src="${avi}" alt="${name}">${artists[1]}
                 </a>
-                <a class="dropdown-menu-clickable-item" href="${root2}user/${auth2.name}/library/music/${sanitise(artists[1])}" data-menu-item="shared-artist">
-                    <img class="view-item-avatar" src="${auth2.avatar}" alt="${auth2.name}">${artists[1]}
+                <a class="dropdown-menu-clickable-item" href="${root}user/${auth.name}/library/music/${sanitise(artists[1])}" data-menu-item="shared-artist">
+                    <img class="view-item-avatar" src="${auth.avatar}" alt="${auth.name}">${artists[1]}
                 </a>
                 ` : ""}
                 ${artists.length >= 3 ? `
                 <div class="sep"></div>
-                <a class="dropdown-menu-clickable-item" href="${root2}user/${name}/library/music/${sanitise(artists[2])}" data-menu-item="shared-artist">
+                <a class="dropdown-menu-clickable-item" href="${root}user/${name}/library/music/${sanitise(artists[2])}" data-menu-item="shared-artist">
                     <img class="view-item-avatar" src="${avi}" alt="${name}">${artists[2]}
                 </a>
-                <a class="dropdown-menu-clickable-item" href="${root2}user/${auth2.name}/library/music/${sanitise(artists[2])}" data-menu-item="shared-artist">
-                    <img class="view-item-avatar" src="${auth2.avatar}" alt="${auth2.name}">${artists[2]}
+                <a class="dropdown-menu-clickable-item" href="${root}user/${auth.name}/library/music/${sanitise(artists[2])}" data-menu-item="shared-artist">
+                    <img class="view-item-avatar" src="${auth.avatar}" alt="${auth.name}">${artists[2]}
                 </a>
                 ` : ""}
             `,
@@ -14959,7 +14969,7 @@
       return;
     if (tooltip == "")
       tippy(listen_item, {
-        content: trans[lang2].profile[type]
+        content: trans[lang].profile[type]
       });
     else
       tippy(listen_item, {
@@ -14988,22 +14998,22 @@
 
   // src/pages/profile.js
   function bleh_profiles() {
-    if (page2.subpage == "obsessions_obsession") {
+    if (page.subpage == "obsessions_obsession") {
       patch_obsession_view();
       return;
     }
     let profile_header = document.body.querySelector(".header--user");
     if (!profile_header)
       return;
-    page2.name = profile_header.querySelector(".header-title a").textContent;
-    let is_subpage = page2.subpage != "overview";
-    page2.structure.container = document.body.querySelector(".page-content:not(.profile-cards-container, .report-box-container .page-content)");
+    page.name = profile_header.querySelector(".header-title a").textContent;
+    let is_subpage = page.subpage != "overview";
+    page.structure.container = document.body.querySelector(".page-content:not(.profile-cards-container, .report-box-container .page-content)");
     try {
-      page2.structure.row = page2.structure.container.querySelector(".row:not(._buffer)");
-      page2.structure.main = page2.structure.row.querySelector(".col-main");
-      page2.structure.side = page2.structure.row.querySelector(".col-sidebar");
+      page.structure.row = page.structure.container.querySelector(".row:not(._buffer)");
+      page.structure.main = page.structure.row.querySelector(".col-main");
+      page.structure.side = page.structure.row.querySelector(".col-sidebar");
     } catch (e) {
-      log2("unable to find elements", "page structure");
+      log("unable to find elements", "page structure");
     }
     checkup_page_structure(is_subpage, profile_header);
     let new_account = false;
@@ -15016,7 +15026,7 @@
         avatar = profile_header.querySelector(".header-avatar-add");
         new_account = true;
       }
-      if (cute.includes(page2.name)) {
+      if (cute.includes(page.name)) {
         title_wrap.querySelector(".header-title a").classList.add("bleh--name-is-cute");
       }
       let scrobbles = 0;
@@ -15028,12 +15038,12 @@
         metadata.forEach((item, index) => {
           if (index == 0) {
             let para = item.querySelector("p");
-            scrobbles = clean_number(para.textContent.trim()).toLocaleString(lang2);
+            scrobbles = clean_number(para.textContent.trim()).toLocaleString(lang);
             average = para.getAttribute("title");
           } else if (index == 1) {
-            artists = clean_number(item.textContent.trim()).toLocaleString(lang2);
+            artists = clean_number(item.textContent.trim()).toLocaleString(lang);
           } else if (index == 2) {
-            loved = clean_number(item.textContent.trim()).toLocaleString(lang2);
+            loved = clean_number(item.textContent.trim()).toLocaleString(lang);
           }
         });
       }
@@ -15044,7 +15054,7 @@
                 ${avatar.innerHTML}
             </div>
             <div class="info-side">
-                <div class="sub-text">${trans[lang2].profile.name}</div>
+                <div class="sub-text">${trans[lang].profile.name}</div>
                 ${title_wrap != null ? `<div class="title-container">${title_wrap.innerHTML}</div>` : ""}
                 ${sub_wrap != null ? sub_wrap.outerHTML : ""}
             </div>
@@ -15053,22 +15063,22 @@
             <div class="stat-side glacier-library-top">
                 <div class="glacier-library-metadata">
                     <div class="glacier-library-metadata-item">
-                        <div class="sub-text">${trans[lang2].profile.scrobbles}</div>
+                        <div class="sub-text">${trans[lang].profile.scrobbles}</div>
                         <div class="glacier-library-metadata-item-value" id="scrobbles_tooltip">${scrobbles}</div>
                     </div>
                     <div class="glacier-library-metadata-item">
-                        <div class="sub-text">${trans[lang2].profile.artists}</div>
+                        <div class="sub-text">${trans[lang].profile.artists}</div>
                         <div class="glacier-library-metadata-item-value">${artists}</div>
                     </div>
                     <div class="glacier-library-metadata-item">
-                        <div class="sub-text">${trans[lang2].profile.loved}</div>
+                        <div class="sub-text">${trans[lang].profile.loved}</div>
                         <div class="glacier-library-metadata-item-value">${loved}</div>
                     </div>
                 </div>
             </div>
             ` : ""}
             <div class="expand-side">
-                <button class="header-expand-button icon" onclick="_toggle_profile_header(this)" aria-expanded="${settings2.profile_header_expand}">${trans[lang2].gallery.open.name}</button>
+                <button class="header-expand-button icon" onclick="_toggle_profile_header(this)" aria-expanded="${settings.profile_header_expand}">${trans[lang].gallery.open.name}</button>
             </div>
             ` : ""}
         `;
@@ -15079,12 +15089,12 @@
       if (is_staff) {
         redesigned_profile_header.classList.add("staff-profile");
       }
-      if (page2.name == auth2.name && !settings2.profile_header_own) {
+      if (page.name == auth.name && !settings.profile_header_own) {
         register_background(null, "hidden");
-      } else if (page2.name != auth2.name && !settings2.profile_header_others) {
+      } else if (page.name != auth.name && !settings.profile_header_others) {
         register_background(null, "hidden");
       } else {
-        if (settings2.profile_avi_background) {
+        if (settings.profile_avi_background) {
           if (avatar != null)
             register_background(avatar.querySelector("img").getAttribute("src").replace("/avatar170s/", "/ar0/"), "avatar");
           else
@@ -15097,11 +15107,11 @@
             register_background(null, "none");
         }
       }
-      page2.structure.container.insertBefore(redesigned_profile_header, page2.structure.container.firstElementChild);
+      page.structure.container.insertBefore(redesigned_profile_header, page.structure.container.firstElementChild);
       profile_header.classList.add("legacy-header");
       let header_avatar;
       if (ff("refreshed_nav"))
-        header_avatar = page2.structure.container.querySelector(".redesigned-profile-header .avatar-side");
+        header_avatar = page.structure.container.querySelector(".redesigned-profile-header .avatar-side");
       else
         header_avatar = document.querySelector(".header-avatar .avatar");
       if (!new_account) {
@@ -15114,15 +15124,15 @@
     }
     let current_year = (/* @__PURE__ */ new Date()).getFullYear();
     if (current_year < 2025 && ff("glacier_library")) {
-      let tab = page2.structure.nav.querySelector(".secondary-nav-item--library a");
+      let tab = page.structure.nav.querySelector(".secondary-nav-item--library a");
       let beta = document.createElement("span");
       beta.classList.add("new-badge", "beta-badge");
-      beta.textContent = trans[lang2].settings.new;
+      beta.textContent = trans[lang].settings.new;
       tab.appendChild(beta);
     }
-    let library_tab = page2.structure.nav.querySelector(".secondary-nav-item--library a");
-    library_tab.textContent = trans[lang2].auth_menu.library;
-    let is_own_profile = page2.name == auth2.name;
+    let library_tab = page.structure.nav.querySelector(".secondary-nav-item--library a");
+    library_tab.textContent = trans[lang].auth_menu.library;
+    let is_own_profile = page.name == auth.name;
     if (is_own_profile)
       profile_header.setAttribute("data-is-own-profile", "true");
     if (!is_subpage) {
@@ -15135,11 +15145,11 @@
       profile_artists();
       profile_albums();
       profile_tracks();
-      if (is_own_profile && settings2.activities) {
+      if (is_own_profile && settings.activities) {
         let recent_activity_section = document.createElement("section");
         recent_activity_section.classList.add("recent-activity-section");
         recent_activity_section.innerHTML = `
-                <h2>${trans[lang2].activities.name}</h2>
+                <h2>${trans[lang].activities.name}</h2>
             `;
         load_activities();
         let recent_activity_list_r = recent_activity_list;
@@ -15154,19 +15164,19 @@
           activity.involved.forEach((involved) => {
             let involved_link;
             if (involved.type == "user")
-              involved_link = `${root2}user/${involved.name}`;
+              involved_link = `${root}user/${involved.name}`;
             else if (involved.type == "artist")
-              involved_link = `${root2}music/${sanitise(involved.name)}`;
+              involved_link = `${root}music/${sanitise(involved.name)}`;
             else if (involved.type == "album")
-              involved_link = `${root2}music/${sanitise(involved.sister)}/${sanitise(involved.name)}`;
+              involved_link = `${root}music/${sanitise(involved.sister)}/${sanitise(involved.name)}`;
             else if (involved.type == "track")
-              involved_link = `${root2}music/${sanitise(involved.sister)}/_/${sanitise(involved.name)}`;
+              involved_link = `${root}music/${sanitise(involved.sister)}/_/${sanitise(involved.name)}`;
             else if (involved.type == "tag")
-              involved_link = `${root2}tag/${sanitise(involved.name)}`;
+              involved_link = `${root}tag/${sanitise(involved.name)}`;
             else if (involved.type == "bwaa")
-              involved_link = `${root2}bwaa`;
+              involved_link = `${root}bwaa`;
             else if (involved.type == "bleh")
-              involved_link = `${root2}bleh`;
+              involved_link = `${root}bleh`;
             if (involved.type != "artist" && involved.type != "user" && involved.type != "tag" && involved.type != "bwaa" && involved.type != "bleh") {
               tooltip_name = involved.name;
               tooltip_sister = involved.sister;
@@ -15177,7 +15187,7 @@
               involved_text = `${involved_text}<a class="involved--${involved.type}" href="${involved_link}">${involved.name}</a>`;
           });
           activity_item.innerHTML = `
-                    <div class="type">${trans[lang2].activities[activity.type]}<div class="date">${moment(activity.date).fromNow(true)}</div></div>
+                    <div class="type">${trans[lang].activities[activity.type]}<div class="date">${moment(activity.date).fromNow(true)}</div></div>
                     <div class="title">${involved_text}</div>
                 `;
           recent_activity_section.appendChild(activity_item);
@@ -15185,38 +15195,38 @@
             tippy(activity_item.querySelector(".title a"), {
               content: `${tooltip_sister} - ${tooltip_name}`
             });
-          let reports = page2.structure.side.querySelector(".promo-v3");
+          let reports = page.structure.side.querySelector(".promo-v3");
           if (reports)
             reports.after(recent_activity_section);
         });
       }
-      if (page2.name == sponsor_list.sponsor_account && !is_own_profile) {
-        page2.structure.container.removeChild(page2.structure.nav);
-        page2.structure.main.innerHTML = "";
-        page2.structure.side.innerHTML = "";
+      if (page.name == sponsor_list.sponsor_account && !is_own_profile) {
+        page.structure.container.removeChild(page.structure.nav);
+        page.structure.main.innerHTML = "";
+        page.structure.side.innerHTML = "";
         let alert = document.createElement("div");
         alert.classList.add("alert", "alert-info");
         alert.textContent = "This is a special bleh account used for managing sponsors.";
-        page2.structure.container.appendChild(alert);
+        page.structure.container.appendChild(alert);
       }
       let featured_track_panel = profile_header.querySelector(".header-featured-track");
       if (featured_track_panel != null)
         bleh_featured_profile_track(featured_track_panel);
     } else {
       load_banner_from_cache();
-      let btn_add = page2.structure.side.querySelector(".add-button");
+      let btn_add = page.structure.side.querySelector(".add-button");
       if (btn_add != null)
-        btn_add.setAttribute("data-page-subpage", page2.subpage);
-      if (page2.subpage.startsWith("library")) {
+        btn_add.setAttribute("data-page-subpage", page.subpage);
+      if (page.subpage.startsWith("library")) {
         bleh_user_library();
-      } else if (page2.subpage == "events") {
-        let selected_tab = page2.structure.content_top.querySelector(".secondary-nav-item-link--active");
+      } else if (page.subpage == "events") {
+        let selected_tab = page.structure.content_top.querySelector(".secondary-nav-item-link--active");
         let value_panel = document.createElement("section");
         value_panel.classList.add("value-panel");
         value_panel.innerHTML = `
-                <h2 class="text-18">${selected_tab != null ? selected_tab.textContent : trans[lang2].profile.events}</h2>
+                <h2 class="text-18">${selected_tab != null ? selected_tab.textContent : trans[lang].profile.events}</h2>
             `;
-        let values = page2.structure.main.querySelectorAll(".metadata-display");
+        let values = page.structure.main.querySelectorAll(".metadata-display");
         let value_header = document.createElement("div");
         value_header.classList.add("event-value-top-header", "view-buttons");
         values.forEach((value, index) => {
@@ -15224,46 +15234,46 @@
           if (index == 1)
             type = "maybe";
           create_profile_top_item(value_header, {
-            name: page2.name,
+            name: page.name,
             text: value.textContent,
             type,
-            tooltip: trans[lang2].event[type].replace("{c}", value.textContent)
+            tooltip: trans[lang].event[type].replace("{c}", value.textContent)
           });
         });
         value_panel.appendChild(value_header);
-        let total_value = page2.structure.side.querySelector(".metadata-display");
+        let total_value = page.structure.side.querySelector(".metadata-display");
         if (total_value != null) {
           let total_text = document.createElement("h2");
           total_text.classList.add("text-18");
-          total_text.textContent = trans[lang2].event.all_time;
+          total_text.textContent = trans[lang].event.all_time;
           value_panel.appendChild(total_text);
           let total_header = document.createElement("div");
           total_header.classList.add("event-value-top-header", "view-buttons");
           create_profile_top_item(total_header, {
-            name: page2.name,
+            name: page.name,
             text: total_value.textContent,
             type: "total",
-            tooltip: trans[lang2].event.total.replace("{c}", total_value.textContent)
+            tooltip: trans[lang].event.total.replace("{c}", total_value.textContent)
           });
           value_panel.appendChild(total_header);
         }
-        let legacy_metadata = page2.structure.main.querySelector(".metadata-list");
+        let legacy_metadata = page.structure.main.querySelector(".metadata-list");
         if (legacy_metadata)
-          page2.structure.main.removeChild(legacy_metadata);
-        page2.structure.side.innerHTML = "";
-        page2.structure.side.appendChild(value_panel);
-      } else if (page2.subpage.startsWith("listening-report")) {
+          page.structure.main.removeChild(legacy_metadata);
+        page.structure.side.innerHTML = "";
+        page.structure.side.appendChild(value_panel);
+      } else if (page.subpage.startsWith("listening-report")) {
         document.documentElement.setAttribute("data-bleh--theme", "oled");
-        page2.structure.content_top.classList.add("listening-report-navlist");
+        page.structure.content_top.classList.add("listening-report-navlist");
         let report_box_container = document.body.querySelector(".report-box-container--overview");
         if (report_box_container != null) {
           if (report_box_container != null)
-            page2.structure.content_top.after(report_box_container);
+            page.structure.content_top.after(report_box_container);
         } else {
-          let dashboard = page2.structure.container.querySelector(".user-dashboard");
+          let dashboard = page.structure.container.querySelector(".user-dashboard");
           if (dashboard == null)
             return;
-          dialog2({
+          dialog({
             id: "listening_report_v2",
             title: "Listening reports v2",
             body: `
@@ -15275,14 +15285,14 @@
           });
           return;
         }
-      } else if (page2.subpage == "obsessions_overview") {
-        let section_controls = page2.structure.container.querySelector(".section-controls");
+      } else if (page.subpage == "obsessions_overview") {
+        let section_controls = page.structure.container.querySelector(".section-controls");
         let buttons;
         if (section_controls != null) {
           section_controls.classList.add("legacy-section-controls");
           buttons = section_controls.querySelectorAll(":is(button, a)");
-          let header = page2.structure.container.querySelector(".content-top-header");
-          page2.structure.content_top.innerHTML = `
+          let header = page.structure.container.querySelector(".content-top-header");
+          page.structure.content_top.innerHTML = `
                     <div class="content-top-inner-wrap">
                         <div class="container content-top-lower">
                             <h1 class="content-top-header">${header.textContent.trim()}</h1>
@@ -15303,17 +15313,17 @@
             tippy(button, {
               content: button.textContent
             });
-            button.textContent = trans[lang2].music.obsession;
+            button.textContent = trans[lang].music.obsession;
           }
           button.classList.add("btn", "view-item", "interact-item", "obsession-top-item");
           button_header.appendChild(button);
         });
         wrap.appendChild(button_header);
         new_panel.appendChild(wrap);
-        page2.structure.main.appendChild(new_panel);
+        page.structure.main.appendChild(new_panel);
         let grid = document.createElement("ol");
         grid.classList.add("grid-items", "grid-items--numbered", "obsessions-grid");
-        let items = page2.structure.container.querySelectorAll(".obsession-history-item");
+        let items = page.structure.container.querySelectorAll(".obsession-history-item");
         items.forEach((item) => {
           let bg = item.querySelector(".obsession-history-item-background").style.getPropertyValue("background-image").trim();
           let cover_substr = bg.indexOf("url");
@@ -15354,30 +15364,30 @@
                 `;
           if (obsession_is_first) {
             tippy(grid_item, {
-              content: trans[lang2].music.obsession_first
+              content: trans[lang].music.obsession_first
             });
           }
           grid.appendChild(grid_item);
         });
         new_panel.appendChild(grid);
-        let no_data = page2.structure.container.querySelector(".no-data-message--obsession-history");
+        let no_data = page.structure.container.querySelector(".no-data-message--obsession-history");
         if (no_data != null) {
           wrap.after(no_data);
         }
       }
     }
-    log2("status is", "page", "info", page2);
+    log("status is", "page", "info", page);
     update_page();
     patch_profile_following();
     let profile_notes = JSON.parse(localStorage.getItem("bleh_profile_notes")) || {};
-    let profile_note = profile_notes[page2.name];
+    let profile_note = profile_notes[page.name];
     let profile_has_note = false;
     if (profile_note != void 0)
       profile_has_note = true;
-    log2(`querying badges for ${page2.name}`, "profile");
+    log(`querying badges for ${page.name}`, "profile");
     let profile_name_obj;
     if (ff("refreshed_nav"))
-      profile_name_obj = page2.structure.container.querySelector(".redesigned-profile-header .title-container");
+      profile_name_obj = page.structure.container.querySelector(".redesigned-profile-header .title-container");
     else
       profile_name_obj = profile_header.querySelector(".header-title-label-wrap");
     if (ff("badges")) {
@@ -15391,17 +15401,17 @@
           placement: "bottom",
           content: `
                     <div class="badge-name">${badge.textContent}</div>
-                    <div class="badge-reason">${trans[lang2].badges[badge.classList[1]].reason}</div>
+                    <div class="badge-reason">${trans[lang].badges[badge.classList[1]].reason}</div>
                 `,
           allowHTML: true
         });
       });
     }
-    let badges = load_badges(page2.name);
+    let badges = load_badges(page.name);
     if (badges) {
       badges.forEach((this_badge) => {
         let badge = document.createElement("span");
-        badge.classList.add("label", `user-status--bleh-${this_badge.type}`, `user-status--bleh-user-${page2.name}`);
+        badge.classList.add("label", `user-status--bleh-${this_badge.type}`, `user-status--bleh-user-${page.name}`);
         badge.textContent = this_badge.name;
         profile_name_obj.appendChild(badge);
         if (ff("badges")) {
@@ -15411,7 +15421,7 @@
             placement: "bottom",
             content: `
                         <div class="badge-name">${this_badge.name}</div>
-                        <div class="badge-reason">${trans[lang2].badges[this_badge.reason].reason}</div>
+                        <div class="badge-reason">${trans[lang].badges[this_badge.reason].reason}</div>
                     `,
             allowHTML: true
           });
@@ -15422,32 +15432,32 @@
     }
     let profile_sub_text;
     if (ff("refreshed_nav"))
-      profile_sub_text = page2.structure.container.querySelector(".redesigned-profile-header .header-title-secondary");
+      profile_sub_text = page.structure.container.querySelector(".redesigned-profile-header .header-title-secondary");
     else
       profile_sub_text = document.body.querySelector(".header-title-secondary");
     if (profile_sub_text == null)
       return;
     let display_name = profile_sub_text.querySelector(".header-title-display-name");
     let scrobble_since = profile_sub_text.querySelector(".header-scrobble-since");
-    scrobble_since.textContent = scrobble_since.textContent.replace(trans[lang2].profile.created.replace, "");
+    scrobble_since.textContent = scrobble_since.textContent.replace(trans[lang].profile.created.replace, "");
     let pronouns = use_pronouns(display_name.textContent);
     let display_name_pre = document.createElement("span");
     display_name_pre.classList.add("header-title-secondary--pre");
-    display_name_pre.textContent = pronouns ? trans[lang2].profile.display_name.pronouns : trans[lang2].profile.display_name.aka;
+    display_name_pre.textContent = pronouns ? trans[lang].profile.display_name.pronouns : trans[lang].profile.display_name.aka;
     profile_sub_text.insertBefore(display_name_pre, display_name);
     let scrobble_since_pre = document.createElement("span");
     scrobble_since_pre.classList.add("header-title-secondary--pre");
-    scrobble_since_pre.textContent = trans[lang2].profile.created.name;
+    scrobble_since_pre.textContent = trans[lang].profile.created.name;
     profile_sub_text.insertBefore(scrobble_since_pre, scrobble_since);
     let about_me_sidebar = document.body.querySelector(".about-me-sidebar");
     if (!about_me_sidebar) {
-      if (settings2.bio_markdown)
+      if (settings.bio_markdown)
         save_banner_to_cache("none");
       return;
     }
     if (!about_me_sidebar.hasAttribute("data-kate-processed")) {
       about_me_sidebar.setAttribute("data-kate-processed", "true");
-      if (settings2.bio_markdown) {
+      if (settings.bio_markdown) {
         let about_me_text = about_me_sidebar.querySelector("p");
         let result = bio_parse(about_me_text, true);
         about_me_text.innerHTML = result;
@@ -15459,31 +15469,31 @@
         add_note_button.classList.add("btn", "icon");
         add_note_button.setAttribute("data-action-type", "note");
         add_note_button.setAttribute("id", "bleh--add-note");
-        add_note_button.textContent = trans[lang2].settings.profiles.notes.edit_user.replace("{u}", page2.name);
-        add_note_button.setAttribute("onclick", `_add_profile_note('${page2.name}',${profile_has_note})`);
+        add_note_button.textContent = trans[lang].settings.profiles.notes.edit_user.replace("{u}", page.name);
+        add_note_button.setAttribute("onclick", `_add_profile_note('${page.name}',${profile_has_note})`);
         tippy(add_note_button, {
-          content: trans[lang2].settings.profiles.notes.edit_user.replace("{u}", page2.name)
+          content: trans[lang].settings.profiles.notes.edit_user.replace("{u}", page.name)
         });
         buttons.appendChild(add_note_button);
       } else {
-        create_profile_note_panel(page2.name, true);
+        create_profile_note_panel(page.name, true);
       }
       let about_more = document.createElement("button");
       about_more.classList.add("btn", "icon");
       about_more.setAttribute("data-action-type", "configure");
-      about_more.textContent = trans[lang2].settings.configure;
+      about_more.textContent = trans[lang].settings.configure;
       tippy(about_more, {
-        content: trans[lang2].settings.configure
+        content: trans[lang].settings.configure
       });
       tippy(about_more, {
         theme: "window",
         content: `
                 <div class="dialog-settings">
-                    <h4>${trans[lang2].settings.text.markdown.name}</h4>
+                    <h4>${trans[lang].settings.text.markdown.name}</h4>
                     <div class="toggle-container" id="container-bio_markdown" onclick="_update_item('bio_markdown')">
-                        <button class="btn reset" onclick="_reset_item('bio_markdown')">${trans[lang2].settings.reset}</button>
+                        <button class="btn reset" onclick="_reset_item('bio_markdown')">${trans[lang].settings.reset}</button>
                         <div class="heading">
-                            <h5>${trans[lang2].settings.text.markdown.profile}</h5>
+                            <h5>${trans[lang].settings.text.markdown.profile}</h5>
                         </div>
                         <div class="toggle-wrap">
                             <button class="toggle" id="toggle-bio_markdown" aria-checked="false">
@@ -15519,24 +15529,24 @@
     note_panel.classList.add("bleh--panel", "bleh--profile-note-panel");
     if (has_note) {
       note_panel.innerHTML = `
-        <h2>${trans[lang2].settings.profiles.notes.header}</h2>
+        <h2>${trans[lang].settings.profiles.notes.header}</h2>
         <div class="content-form">
-            <textarea id="bleh--profile-note" placeholder="${trans[lang2].settings.profiles.notes.placeholder}">${JSON.parse(localStorage.getItem("bleh_profile_notes"))[username]}</textarea>
+            <textarea id="bleh--profile-note" placeholder="${trans[lang].settings.profiles.notes.placeholder}">${JSON.parse(localStorage.getItem("bleh_profile_notes"))[username]}</textarea>
         </div>
         <div class="actions">
-            <button class="btn" onclick="_clear_profile_note('${username}')">${trans[lang2].settings.clear}</button>
-            <button class="btn primary" onclick="_save_profile_note('${username}')">${trans[lang2].settings.save}</button>
+            <button class="btn" onclick="_clear_profile_note('${username}')">${trans[lang].settings.clear}</button>
+            <button class="btn primary" onclick="_save_profile_note('${username}')">${trans[lang].settings.save}</button>
         </div>
         `;
     } else {
       note_panel.innerHTML = `
         <h2>Your notes</h2>
         <div class="content-form">
-            <textarea id="bleh--profile-note" placeholder="${trans[lang2].settings.profiles.notes.placeholder}"></textarea>
+            <textarea id="bleh--profile-note" placeholder="${trans[lang].settings.profiles.notes.placeholder}"></textarea>
         </div>
         <div class="actions">
-            <button class="btn" onclick="_clear_profile_note('${username}')">${trans[lang2].settings.clear}</button>
-            <button class="btn primary" onclick="_save_profile_note('${username}')">${trans[lang2].settings.save}</button>
+            <button class="btn" onclick="_clear_profile_note('${username}')">${trans[lang].settings.clear}</button>
+            <button class="btn primary" onclick="_save_profile_note('${username}')">${trans[lang].settings.save}</button>
         </div>
         `;
     }
@@ -15558,28 +15568,28 @@
     localStorage.setItem("bleh_profile_notes", JSON.stringify(profile_notes));
   }
   function patch_profile_following() {
-    let following_tab = page2.structure.nav.querySelector(".secondary-nav-item--following");
+    let following_tab = page.structure.nav.querySelector(".secondary-nav-item--following");
     let following_tab_html = following_tab.outerHTML;
     if (following_tab == void 0)
       return;
     if (following_tab.hasAttribute("data-kate-processed"))
       return;
     following_tab.setAttribute("data-kate-processed", "true");
-    following_tab.querySelector("a").textContent = trans[lang2].profile.friends.name;
-    if (page2.subpage != "following" && page2.subpage != "followers" && page2.subpage != "neighbours")
+    following_tab.querySelector("a").textContent = trans[lang].profile.friends.name;
+    if (page.subpage != "following" && page.subpage != "followers" && page.subpage != "neighbours")
       return;
-    let followers_tab = page2.structure.nav.querySelector(".secondary-nav-item--followers");
+    let followers_tab = page.structure.nav.querySelector(".secondary-nav-item--followers");
     let followers_tab_html = followers_tab.outerHTML;
-    let neighbours_tab = page2.structure.nav.querySelector(".secondary-nav-item--neighbours");
+    let neighbours_tab = page.structure.nav.querySelector(".secondary-nav-item--neighbours");
     let neighbours_tab_html = neighbours_tab.outerHTML;
     let tab = void 0;
-    if (page2.subpage == "followers")
+    if (page.subpage == "followers")
       tab = followers_tab;
-    else if (page2.subpage == "following")
+    else if (page.subpage == "following")
       tab = following_tab;
     else
       tab = neighbours_tab;
-    tab.querySelector("a").textContent = trans[lang2].profile.friends.name;
+    tab.querySelector("a").textContent = trans[lang].profile.friends.name;
     let follow_nav = document.createElement("div");
     follow_nav.classList.add("bleh--nav-wrap", "bleh--friends-nav");
     follow_nav.innerHTML = `
@@ -15591,10 +15601,10 @@
             </ul>
         </nav>
     `;
-    page2.structure.content_top.after(follow_nav);
-    page2.structure.row.classList.add("col-main-is-primary");
-    if (ff("katsune") && page2.subpage != "neighbours") {
-      let count_text = page2.structure.content_top.querySelector("h1").textContent.trim();
+    page.structure.content_top.after(follow_nav);
+    page.structure.row.classList.add("col-main-is-primary");
+    if (ff("katsune") && page.subpage != "neighbours") {
+      let count_text = page.structure.content_top.querySelector("h1").textContent.trim();
       let chr = count_text.indexOf("(");
       let count = 0;
       if (chr != -1)
@@ -15609,16 +15619,16 @@
     view_buttons.innerHTML = `
         <div class="view-buttons">
             <button class="btn view-item" id="toggle-list_view-1" data-toggle="list_view" data-toggle-value="1" onclick="_update_item('list_view', 1)">
-                ${trans[lang2].glacier.view.grid}
+                ${trans[lang].glacier.view.grid}
             </button>
             <button class="btn view-item" id="toggle-list_view-0" data-toggle="list_view" data-toggle-value="0" onclick="_update_item('list_view', 0)">
-                ${trans[lang2].glacier.view.list}
+                ${trans[lang].glacier.view.list}
             </button>
         </div>
     `;
-    page2.structure.main.insertBefore(view_buttons, page2.structure.main.firstElementChild);
+    page.structure.main.insertBefore(view_buttons, page.structure.main.firstElementChild);
     refresh_all();
-    let users = page2.structure.main.querySelectorAll(".user-list-inner-wrap");
+    let users = page.structure.main.querySelectorAll(".user-list-inner-wrap");
     users.forEach((user) => {
       let avatar = user.querySelector(".user-list-avatar");
       let name = user.querySelector(".user-list-link").textContent;
@@ -15631,16 +15641,16 @@
     refresh_tracks(button);
   };
   function refresh_tracks(button) {
-    let panel = page2.structure.main.querySelector("#recent-tracks-section");
+    let panel = page.structure.main.querySelector("#recent-tracks-section");
     panel.classList.remove("has-refreshed");
     button.setAttribute("disabled", "");
-    fetch(`${root2}user/${page2.name}/partial/recenttracks?ajax=1`).then(function(response) {
+    fetch(`${root}user/${page.name}/partial/recenttracks?ajax=1`).then(function(response) {
       console.log("returned", response, response.text);
       return response.text();
     }).then(function(html) {
       let doc = new DOMParser().parseFromString(html, "text/html");
       console.log("DOC", doc);
-      notify2({
+      notify({
         title: "Recent tracks refreshed",
         icon: "icon-16-refresh"
       });
@@ -15650,7 +15660,7 @@
         deliver_notif("recent tracks could not be found ;-;");
         return;
       }
-      page2.structure.main.querySelector("#recent-tracks-section .chartlist").outerHTML = tracklist_panel.outerHTML;
+      page.structure.main.querySelector("#recent-tracks-section .chartlist").outerHTML = tracklist_panel.outerHTML;
       button.removeAttribute("disabled");
     });
   }
@@ -15661,7 +15671,7 @@
     let heading = details.querySelector(".featured-item-heading");
     let heading_link = heading.outerHTML;
     details.removeChild(heading);
-    if (settings2.corrections) {
+    if (settings.corrections) {
       let name_elem = object.querySelector(".featured-item-name");
       let artist_elem = object.querySelector(".featured-item-artist");
       let name = correct_item_by_artist(name_elem.textContent.trim(), artist_elem.textContent.trim());
@@ -15672,7 +15682,7 @@
     if (form) {
       let button = form.querySelector("button");
       button.classList = "featured-item-manage";
-      button.textContent = trans[lang2].settings.remove;
+      button.textContent = trans[lang].settings.remove;
     }
     let panel = document.createElement("section");
     panel.classList.add("featured-item-panel");
@@ -15683,14 +15693,14 @@
             ${details.outerHTML}
         </div>
     `;
-    let about_me = page2.structure.side.querySelector(".about-me-sidebar");
+    let about_me = page.structure.side.querySelector(".about-me-sidebar");
     if (about_me != null)
       about_me.after(panel);
     else
-      page2.structure.side.insertBefore(panel, page2.structure.side.firstElementChild);
+      page.structure.side.insertBefore(panel, page.structure.side.firstElementChild);
   }
   function profile_recents() {
-    let panel = page2.structure.main.querySelector("#recent-tracks-section");
+    let panel = page.structure.main.querySelector("#recent-tracks-section");
     if (panel == null)
       return;
     let more_link = panel.nextElementSibling;
@@ -15706,22 +15716,22 @@
     header.appendChild(header_text);
     let refresh_btn = document.createElement("button");
     refresh_btn.classList.add("btn", "view-item", "interact-item", "refresh-tracklist-btn");
-    refresh_btn.textContent = trans[lang2].music.refresh;
+    refresh_btn.textContent = trans[lang].music.refresh;
     refresh_btn.setAttribute("onclick", "_refresh_tracks(this)");
     tippy(refresh_btn, {
-      content: trans[lang2].music.refresh_tracks
+      content: trans[lang].music.refresh_tracks
     });
     view_buttons.appendChild(refresh_btn);
     header.appendChild(view_buttons);
     panel.insertBefore(header, panel.firstElementChild);
     if (form == null)
       return;
-    if (page2.token == "")
-      page2.token = form.querySelector('[name="csrfmiddlewaretoken"]').getAttribute("value");
+    if (page.token == "")
+      page.token = form.querySelector('[name="csrfmiddlewaretoken"]').getAttribute("value");
     let original_chart_settings = {};
     let new_button = document.createElement("button");
     new_button.classList.add("panel-settings-button", "btn", "view-item", "interact-item");
-    new_button.textContent = trans[lang2].profile.settings;
+    new_button.textContent = trans[lang].profile.settings;
     form.classList = "";
     tooltip = tippy(new_button, {
       theme: "window",
@@ -15734,10 +15744,10 @@
       onShow(instance) {
         let form2 = instance.popper.querySelector("form");
         form2.innerHTML = `
-                <input type="hidden" name="csrfmiddlewaretoken" value="${page2.token}">
+                <input type="hidden" name="csrfmiddlewaretoken" value="${page.token}">
                 <div class="select-container">
                     <div class="heading">
-                        <h5>${trans[lang2].settings.inbuilt.charts.recent.count.name}</h5>
+                        <h5>${trans[lang].settings.inbuilt.charts.recent.count.name}</h5>
                     </div>
                     <div class="select-wrap custom-selector" id="id_chart_length_recent_tracks_select">
                         ${original_chart_settings.count}
@@ -15746,7 +15756,7 @@
                 <div class="toggle-container" id="container-recent_artwork" onclick="_update_inbuilt_item('recent_artwork')">
                     <button class="btn reset" onclick="_reset_inbuilt_item('recent_artwork')">Reset to default</button>
                     <div class="heading">
-                        <h5>${trans[lang2].settings.inbuilt.charts.recent.artwork.name}</h5>
+                        <h5>${trans[lang].settings.inbuilt.charts.recent.artwork.name}</h5>
                     </div>
                     <div class="toggle-wrap">
                         <input class="companion-checkbox" type="checkbox" name="show_recent_tracks_artwork" id="inbuilt-companion-checkbox-recent_artwork">
@@ -15758,8 +15768,8 @@
                 <div class="toggle-container" id="container-recent_realtime" onclick="_update_inbuilt_item('recent_realtime')">
                     <button class="btn reset" onclick="_reset_inbuilt_item('recent_realtime')">Reset to default</button>
                     <div class="heading">
-                        <h5>${trans[lang2].settings.inbuilt.charts.recent.realtime.name}</h5>
-                        <p>${trans[lang2].settings.inbuilt.charts.recent.realtime.bio}</p>
+                        <h5>${trans[lang].settings.inbuilt.charts.recent.realtime.name}</h5>
+                        <p>${trans[lang].settings.inbuilt.charts.recent.realtime.bio}</p>
                     </div>
                     <div class="toggle-wrap">
                         <input class="companion-checkbox" type="checkbox" name="auto_refresh_recent_tracks" id="inbuilt-companion-checkbox-recent_realtime">
@@ -15770,10 +15780,10 @@
                 </div>
                 <div class="sep"></div>
                 <div class="toggle-container" id="container-format_guest_features" onclick="_update_item('format_guest_features')">
-                    <button class="btn reset" onclick="_reset_item('format_guest_features')">${trans[lang2].settings.reset}</button>
+                    <button class="btn reset" onclick="_reset_item('format_guest_features')">${trans[lang].settings.reset}</button>
                     <div class="heading">
-                        <h5>${trans[lang2].settings.corrections.format_guest_features.name}</h5>
-                        <p>${trans[lang2].settings.corrections.format_guest_features.bio}</p>
+                        <h5>${trans[lang].settings.corrections.format_guest_features.name}</h5>
+                        <p>${trans[lang].settings.corrections.format_guest_features.bio}</p>
                     </div>
                     <div class="toggle-wrap">
                         <button class="toggle" id="toggle-format_guest_features" aria-checked="true" type="button">
@@ -15782,10 +15792,10 @@
                     </div>
                 </div>
                 <div class="toggle-container hide-if-format-guest-disabled" id="container-show_guest_features" onclick="_update_item('show_guest_features')">
-                    <button class="btn reset" onclick="_reset_item('show_guest_features')">${trans[lang2].settings.reset}</button>
+                    <button class="btn reset" onclick="_reset_item('show_guest_features')">${trans[lang].settings.reset}</button>
                     <div class="heading">
-                        <h5>${trans[lang2].settings.corrections.show_guest_features.name}</h5>
-                        <p>${trans[lang2].settings.corrections.show_guest_features.bio}</p>
+                        <h5>${trans[lang].settings.corrections.show_guest_features.name}</h5>
+                        <p>${trans[lang].settings.corrections.show_guest_features.bio}</p>
                     </div>
                     <div class="toggle-wrap">
                         <button class="toggle" id="toggle-show_guest_features" aria-checked="true" type="button">
@@ -15794,10 +15804,10 @@
                     </div>
                 </div>
                 <div class="toggle-container" id="container-stacked_chartlist_info" onclick="_update_item('stacked_chartlist_info')">
-                    <button class="btn reset" onclick="_reset_item('stacked_chartlist_info')">${trans[lang2].settings.reset}</button>
+                    <button class="btn reset" onclick="_reset_item('stacked_chartlist_info')">${trans[lang].settings.reset}</button>
                     <div class="heading">
-                        <h5>${trans[lang2].settings.corrections.stacked_chartlist_info.name}</h5>
-                        <p>${trans[lang2].settings.corrections.stacked_chartlist_info.bio}</p>
+                        <h5>${trans[lang].settings.corrections.stacked_chartlist_info.name}</h5>
+                        <p>${trans[lang].settings.corrections.stacked_chartlist_info.bio}</p>
                     </div>
                     <div class="toggle-wrap">
                         <button class="toggle" id="toggle-stacked_chartlist_info" aria-checked="true" type="button">
@@ -15806,10 +15816,10 @@
                     </div>
                 </div>
                 <div class="toggle-container" id="container-colourful_tracks" onclick="_update_item('colourful_tracks')">
-                    <button class="btn reset" onclick="_reset_item('colourful_tracks')">${trans[lang2].settings.reset}</button>
+                    <button class="btn reset" onclick="_reset_item('colourful_tracks')">${trans[lang].settings.reset}</button>
                     <div class="heading">
-                        <h5>${trans[lang2].settings.customise.colourful_tracks.name}</h5>
-                        <p>${trans[lang2].settings.customise.colourful_tracks.bio}</p>
+                        <h5>${trans[lang].settings.customise.colourful_tracks.name}</h5>
+                        <p>${trans[lang].settings.customise.colourful_tracks.bio}</p>
                     </div>
                     <div class="toggle-wrap">
                         <button class="toggle" id="toggle-colourful_tracks" aria-checked="true">
@@ -15819,10 +15829,10 @@
                 </div>
                 <div class="settings-footer">
                     <button type="submit" class="btn-primary save">
-                        ${trans[lang2].settings.save}
+                        ${trans[lang].settings.save}
                     </button>
-                    <a class="btn icon settings not-a-view-button" href="${root2}bleh">
-                        ${trans[lang2].settings.configure}
+                    <a class="btn icon settings not-a-view-button" href="${root}bleh">
+                        ${trans[lang].settings.configure}
                     </a>
                 </div>
             `;
@@ -15847,7 +15857,7 @@
     form.innerHTML = "";
   }
   function profile_artists() {
-    let panel = page2.structure.main.querySelector("#top-artists");
+    let panel = page.structure.main.querySelector("#top-artists");
     if (panel == null)
       return;
     panel.classList.remove("section-with-settings");
@@ -15868,12 +15878,12 @@
     panel.insertBefore(header, panel.firstElementChild);
     if (form == null)
       return;
-    if (page2.token == "")
-      page2.token = form.querySelector('[name="csrfmiddlewaretoken"]').getAttribute("value");
+    if (page.token == "")
+      page.token = form.querySelector('[name="csrfmiddlewaretoken"]').getAttribute("value");
     let original_chart_settings = {};
     let new_button = document.createElement("button");
     new_button.classList.add("panel-settings-button", "btn", "view-item", "interact-item");
-    new_button.textContent = trans[lang2].profile.settings;
+    new_button.textContent = trans[lang].profile.settings;
     form.classList = "";
     tooltip = tippy(new_button, {
       theme: "window",
@@ -15886,10 +15896,10 @@
       onShow(instance) {
         let form2 = instance.popper.querySelector("form");
         form2.innerHTML = `
-                <input type="hidden" name="csrfmiddlewaretoken" value="${page2.token}">
+                <input type="hidden" name="csrfmiddlewaretoken" value="${page.token}">
                 <div class="select-container">
                     <div class="heading">
-                        <h5>${trans[lang2].settings.inbuilt.charts.artists.timeframe.name}</h5>
+                        <h5>${trans[lang].settings.inbuilt.charts.artists.timeframe.name}</h5>
                     </div>
                     <div class="select-wrap custom-selector" id="id_chart_range_top_artists_select">
                         ${original_chart_settings.timeframe}
@@ -15897,7 +15907,7 @@
                 </div>
                 <div class="select-container">
                     <div class="heading">
-                        <h5>${trans[lang2].settings.inbuilt.charts.artists.style.name}</h5>
+                        <h5>${trans[lang].settings.inbuilt.charts.artists.style.name}</h5>
                     </div>
                     <div class="select-wrap custom-selector" id="id_chart_style_top_artists_select">
                         ${original_chart_settings.style}
@@ -15905,7 +15915,7 @@
                 </div>
                 <div class="select-container hide-if-artist-list">
                     <div class="heading">
-                        <h5>${trans[lang2].settings.inbuilt.charts.artists.length.name}</h5>
+                        <h5>${trans[lang].settings.inbuilt.charts.artists.length.name}</h5>
                     </div>
                     <div class="select-wrap custom-selector" id="id_artists_image_grid_length_select">
                         ${original_chart_settings.length}
@@ -15913,7 +15923,7 @@
                 </div>
                 <div class="select-container hide-if-artist-grid">
                     <div class="heading">
-                        <h5>${trans[lang2].settings.inbuilt.charts.artists.length.name}</h5>
+                        <h5>${trans[lang].settings.inbuilt.charts.artists.length.name}</h5>
                     </div>
                     <div class="select-wrap custom-selector" id="id_artists_chartlist_length_select">
                         ${original_chart_settings.length_list}
@@ -15921,7 +15931,7 @@
                 </div>
                 <div class="settings-footer">
                     <button type="submit" class="btn-primary save">
-                        ${trans[lang2].settings.save}
+                        ${trans[lang].settings.save}
                     </button>
                 </div>
             `;
@@ -15946,7 +15956,7 @@
     form.innerHTML = "";
   }
   function profile_albums() {
-    let panel = page2.structure.main.querySelector("#top-albums");
+    let panel = page.structure.main.querySelector("#top-albums");
     if (panel == null)
       return;
     panel.classList.remove("section-with-settings");
@@ -15967,12 +15977,12 @@
     panel.insertBefore(header, panel.firstElementChild);
     if (form == null)
       return;
-    if (page2.token == "")
-      page2.token = form.querySelector('[name="csrfmiddlewaretoken"]').getAttribute("value");
+    if (page.token == "")
+      page.token = form.querySelector('[name="csrfmiddlewaretoken"]').getAttribute("value");
     let original_chart_settings = {};
     let new_button = document.createElement("button");
     new_button.classList.add("panel-settings-button", "btn", "view-item", "interact-item");
-    new_button.textContent = trans[lang2].profile.settings;
+    new_button.textContent = trans[lang].profile.settings;
     form.classList = "";
     tooltip = tippy(new_button, {
       theme: "window",
@@ -15985,10 +15995,10 @@
       onShow(instance) {
         let form2 = instance.popper.querySelector("form");
         form2.innerHTML = `
-                <input type="hidden" name="csrfmiddlewaretoken" value="${page2.token}">
+                <input type="hidden" name="csrfmiddlewaretoken" value="${page.token}">
                 <div class="select-container">
                     <div class="heading">
-                        <h5>${trans[lang2].settings.inbuilt.charts.albums.timeframe.name}</h5>
+                        <h5>${trans[lang].settings.inbuilt.charts.albums.timeframe.name}</h5>
                     </div>
                     <div class="select-wrap custom-selector" id="id_chart_range_top_albums_select">
                         ${original_chart_settings.timeframe}
@@ -15996,7 +16006,7 @@
                 </div>
                 <div class="select-container">
                     <div class="heading">
-                        <h5>${trans[lang2].settings.inbuilt.charts.albums.style.name}</h5>
+                        <h5>${trans[lang].settings.inbuilt.charts.albums.style.name}</h5>
                     </div>
                     <div class="select-wrap custom-selector" id="id_chart_style_top_albums_select">
                         ${original_chart_settings.style}
@@ -16004,7 +16014,7 @@
                 </div>
                 <div class="select-container hide-if-album-list">
                     <div class="heading">
-                        <h5>${trans[lang2].settings.inbuilt.charts.albums.length.name}</h5>
+                        <h5>${trans[lang].settings.inbuilt.charts.albums.length.name}</h5>
                     </div>
                     <div class="select-wrap custom-selector" id="id_albums_image_grid_length_select">
                         ${original_chart_settings.length}
@@ -16012,7 +16022,7 @@
                 </div>
                 <div class="select-container hide-if-album-grid">
                     <div class="heading">
-                        <h5>${trans[lang2].settings.inbuilt.charts.albums.length.name}</h5>
+                        <h5>${trans[lang].settings.inbuilt.charts.albums.length.name}</h5>
                     </div>
                     <div class="select-wrap custom-selector" id="id_albums_chartlist_length_select">
                         ${original_chart_settings.length_list}
@@ -16020,7 +16030,7 @@
                 </div>
                 <div class="settings-footer">
                     <button type="submit" class="btn-primary save">
-                        ${trans[lang2].settings.save}
+                        ${trans[lang].settings.save}
                     </button>
                 </div>
             `;
@@ -16045,7 +16055,7 @@
     form.innerHTML = "";
   }
   function profile_tracks() {
-    let panel = page2.structure.main.querySelector("#top-tracks");
+    let panel = page.structure.main.querySelector("#top-tracks");
     if (panel == null)
       return;
     panel.classList.remove("section-with-settings");
@@ -16066,12 +16076,12 @@
     panel.insertBefore(header, panel.firstElementChild);
     if (form == null)
       return;
-    if (page2.token == "")
-      page2.token = form.querySelector('[name="csrfmiddlewaretoken"]').getAttribute("value");
+    if (page.token == "")
+      page.token = form.querySelector('[name="csrfmiddlewaretoken"]').getAttribute("value");
     let original_chart_settings = {};
     let new_button = document.createElement("button");
     new_button.classList.add("panel-settings-button", "btn", "view-item", "interact-item");
-    new_button.textContent = trans[lang2].profile.settings;
+    new_button.textContent = trans[lang].profile.settings;
     form.classList = "";
     tooltip = tippy(new_button, {
       theme: "window",
@@ -16084,10 +16094,10 @@
       onShow(instance) {
         let form2 = instance.popper.querySelector("form");
         form2.innerHTML = `
-                <input type="hidden" name="csrfmiddlewaretoken" value="${page2.token}">
+                <input type="hidden" name="csrfmiddlewaretoken" value="${page.token}">
                 <div class="select-container">
                     <div class="heading">
-                        <h5>${trans[lang2].settings.inbuilt.charts.tracks.timeframe.name}</h5>
+                        <h5>${trans[lang].settings.inbuilt.charts.tracks.timeframe.name}</h5>
                     </div>
                     <div class="select-wrap custom-selector" id="id_chart_range_top_tracks_select">
                         ${original_chart_settings.timeframe}
@@ -16095,7 +16105,7 @@
                 </div>
                 <div class="select-container">
                     <div class="heading">
-                        <h5>${trans[lang2].settings.inbuilt.charts.tracks.count.name}</h5>
+                        <h5>${trans[lang].settings.inbuilt.charts.tracks.count.name}</h5>
                     </div>
                     <div class="select-wrap custom-selector" id="id_chart_length_top_tracks_select">
                         ${original_chart_settings.count}
@@ -16103,10 +16113,10 @@
                 </div>
                 <div class="sep"></div>
                 <div class="toggle-container" id="container-format_guest_features" onclick="_update_item('format_guest_features')">
-                    <button class="btn reset" onclick="_reset_item('format_guest_features')">${trans[lang2].settings.reset}</button>
+                    <button class="btn reset" onclick="_reset_item('format_guest_features')">${trans[lang].settings.reset}</button>
                     <div class="heading">
-                        <h5>${trans[lang2].settings.corrections.format_guest_features.name}</h5>
-                        <p>${trans[lang2].settings.corrections.format_guest_features.bio}</p>
+                        <h5>${trans[lang].settings.corrections.format_guest_features.name}</h5>
+                        <p>${trans[lang].settings.corrections.format_guest_features.bio}</p>
                     </div>
                     <div class="toggle-wrap">
                         <button class="toggle" id="toggle-format_guest_features" aria-checked="true" type="button">
@@ -16115,10 +16125,10 @@
                     </div>
                 </div>
                 <div class="toggle-container hide-if-format-guest-disabled" id="container-show_guest_features" onclick="_update_item('show_guest_features')">
-                    <button class="btn reset" onclick="_reset_item('show_guest_features')">${trans[lang2].settings.reset}</button>
+                    <button class="btn reset" onclick="_reset_item('show_guest_features')">${trans[lang].settings.reset}</button>
                     <div class="heading">
-                        <h5>${trans[lang2].settings.corrections.show_guest_features.name}</h5>
-                        <p>${trans[lang2].settings.corrections.show_guest_features.bio}</p>
+                        <h5>${trans[lang].settings.corrections.show_guest_features.name}</h5>
+                        <p>${trans[lang].settings.corrections.show_guest_features.bio}</p>
                     </div>
                     <div class="toggle-wrap">
                         <button class="toggle" id="toggle-show_guest_features" aria-checked="true" type="button">
@@ -16128,10 +16138,10 @@
                 </div>
                 <div class="settings-footer">
                     <button type="submit" class="btn-primary save">
-                        ${trans[lang2].settings.save}
+                        ${trans[lang].settings.save}
                     </button>
-                    <a class="btn icon settings not-a-view-button" href="${root2}bleh">
-                        ${trans[lang2].settings.configure}
+                    <a class="btn icon settings not-a-view-button" href="${root}bleh">
+                        ${trans[lang].settings.configure}
                     </a>
                 </div>
             `;
@@ -16160,7 +16170,7 @@
     return result;
   }
   function use_banner(temp, cache) {
-    if (page2.name == auth2.name && !settings2.profile_header_own || page2.name != auth2.name && !settings2.profile_header_others)
+    if (page.name == auth.name && !settings.profile_header_own || page.name != auth.name && !settings.profile_header_others)
       return;
     let banner = temp.querySelector('img[alt="banner"]');
     if (banner) {
@@ -16177,16 +16187,16 @@
   }
   function load_banner_from_cache() {
     let banners = JSON.parse(localStorage.getItem("bleh_profile_banners")) || {};
-    if (banners[page2.name]) {
-      if (banners[page2.name] == "none")
+    if (banners[page.name]) {
+      if (banners[page.name] == "none")
         return;
-      register_background(banners[page2.name], "bio");
+      register_background(banners[page.name], "bio");
     } else {
       request_banner();
     }
   }
   function request_banner() {
-    fetch(`${root2}user/${page2.name}`).then(function(response) {
+    fetch(`${root}user/${page.name}`).then(function(response) {
       console.log("returned", response, response.text);
       return response.text();
     }).then(function(html) {
@@ -16203,7 +16213,7 @@
   }
   function save_banner_to_cache(img) {
     let banners = JSON.parse(localStorage.getItem("bleh_profile_banners")) || {};
-    banners[page2.name] = img;
+    banners[page.name] = img;
     let banners_o = Object.keys(banners);
     if (banners_o.length > 150) {
       let values = banners_o.splice(150, banners_o.length);
@@ -16216,46 +16226,46 @@
 
   // src/pages/search.js
   function bleh_search() {
-    page2.structure.container = document.body.querySelector(".page-content");
+    page.structure.container = document.body.querySelector(".page-content");
     try {
-      page2.structure.row = page2.structure.container.querySelector(".row");
-      page2.structure.main = page2.structure.row.querySelector(".col-main");
-      page2.structure.side = page2.structure.row.querySelector(".col-sidebar");
+      page.structure.row = page.structure.container.querySelector(".row");
+      page.structure.main = page.structure.row.querySelector(".col-main");
+      page.structure.side = page.structure.row.querySelector(".col-sidebar");
     } catch (e) {
-      log2("unable to find elements", "page structure");
+      log("unable to find elements", "page structure");
     }
     let content_top = document.body.querySelector(".content-top");
-    let search_form = page2.structure.main.querySelector(".search-form");
+    let search_form = page.structure.main.querySelector(".search-form");
     let search = search_form.querySelector("#site-search");
     let value = search.getAttribute("value");
     let site_search = document.body.querySelector("#masthead-search-field");
     site_search.setAttribute("value", value);
     site_search.focus();
-    page2.structure.main.removeChild(search_form);
-    page2.name = value != "" ? value : "empty..";
+    page.structure.main.removeChild(search_form);
+    page.name = value != "" ? value : "empty..";
     checkup_page_structure(false, content_top);
-    log2("status is", "page", "info", page2);
+    log("status is", "page", "info", page);
     update_page();
-    if (page2.subpage != "overview") {
+    if (page.subpage != "overview") {
       let new_panel = document.createElement("section");
       new_panel.classList.add("search-results-panel");
-      let elements = page2.structure.main.querySelectorAll(":scope > *:not(form)");
+      let elements = page.structure.main.querySelectorAll(":scope > *:not(form)");
       elements.forEach((element) => {
         new_panel.appendChild(element);
       });
-      page2.structure.main.appendChild(new_panel);
+      page.structure.main.appendChild(new_panel);
     }
-    if (page2.subpage == "overview" || page2.subpage == "tracks") {
+    if (page.subpage == "overview" || page.subpage == "tracks") {
       patch_titles();
     }
-    if (page2.subpage == "artists" && settings.corrections) {
-      let artists = page2.structure.main.querySelectorAll(".artist-result-heading a");
+    if (page.subpage == "artists" && settings.corrections) {
+      let artists = page.structure.main.querySelectorAll(".artist-result-heading a");
       artists.forEach((artist) => {
         artist.textContent = correct_artist(artist.textContent);
       });
     }
-    if (page2.subpage == "albums") {
-      let results = page2.structure.main.querySelectorAll(".album-result-inner");
+    if (page.subpage == "albums") {
+      let results = page.structure.main.querySelectorAll(".album-result-inner");
       results.forEach((result) => {
         let heading = result.querySelector(".album-result-heading a");
         let artist_parent = result.querySelector(".album-result-artist");
@@ -16281,41 +16291,41 @@
       return;
     track_header.setAttribute("data-bwaa", "true");
     patch_header_title();
-    page2.sister = track_header.querySelector(".header-new-crumb span").textContent;
-    page2.name = correct_item_by_artist(document.body.querySelector("[data-page-resource-name]").getAttribute("data-page-resource-name"), page2.sister);
+    page.sister = track_header.querySelector(".header-new-crumb span").textContent;
+    page.name = correct_item_by_artist(document.body.querySelector("[data-page-resource-name]").getAttribute("data-page-resource-name"), page.sister);
     let is_subpage = track_header.classList.contains("header-new--subpage");
-    if (auth2.pro) {
-      page2.structure.container = document.body.querySelector(".page-content");
+    if (auth.pro) {
+      page.structure.container = document.body.querySelector(".page-content");
     } else {
       if (!is_subpage) {
-        page2.structure.container = document.body.querySelector(".full-bleed-ad-container + .page-content:not(.visible-xs)");
-        if (!page2.structure.container)
-          page2.structure.container = document.body.querySelector(".page-content");
+        page.structure.container = document.body.querySelector(".full-bleed-ad-container + .page-content:not(.visible-xs)");
+        if (!page.structure.container)
+          page.structure.container = document.body.querySelector(".page-content");
       } else {
-        page2.structure.container = document.body.querySelector(".page-content");
+        page.structure.container = document.body.querySelector(".page-content");
       }
     }
-    page2.structure.row = page2.structure.container.querySelector(".row");
+    page.structure.row = page.structure.container.querySelector(".row");
     try {
       if (!is_subpage) {
-        page2.structure.main = page2.structure.row.querySelector(".col-main.buffer-standard");
-        if (page2.structure.main.classList[2])
-          page2.structure.main = page2.structure.row.querySelector(".col-main.buffer-standard:not(:first-child)");
+        page.structure.main = page.structure.row.querySelector(".col-main.buffer-standard");
+        if (page.structure.main.classList[2])
+          page.structure.main = page.structure.row.querySelector(".col-main.buffer-standard:not(:first-child)");
       } else {
-        page2.structure.main = page2.structure.row.querySelector(".col-main");
+        page.structure.main = page.structure.row.querySelector(".col-main");
       }
-      page2.structure.side = page2.structure.row.querySelector(".col-sidebar:not(.track-overview-video-column)");
+      page.structure.side = page.structure.row.querySelector(".col-sidebar:not(.track-overview-video-column)");
     } catch (e) {
-      log2("unable to find elements", "page structure");
+      log("unable to find elements", "page structure");
     }
-    console.info("bleee", page2.structure.row, page2.structure.main);
+    console.info("bleee", page.structure.row, page.structure.main);
     checkup_page_structure(is_subpage, track_header);
     if (ff("refreshed_music_nav")) {
       let artist_avatar = track_header.querySelector(".header-new-background-image");
       let title = track_header.querySelector(".header-new-title");
       let artist = track_header.querySelector('[itemprop="byArtist"]');
       let position = track_header.querySelector(".header-new-chart-position-number");
-      let source_album = page2.structure.main.querySelector(".source-album");
+      let source_album = page.structure.main.querySelector(".source-album");
       let album_avatar;
       if (source_album != null)
         album_avatar = source_album.querySelector(".source-album-art img");
@@ -16332,7 +16342,7 @@
                 ` : '<img class="missing-track">'}
             </div>
             <div class="info-side">
-                <div class="sub-text">${trans[lang2].track.name}</div>
+                <div class="sub-text">${trans[lang].track.name}</div>
                 <div class="title-container">
                     <h1>${title.innerHTML}</h1>
                     ${position ? position.outerHTML : ""}
@@ -16347,7 +16357,7 @@
         bg = register_background(artist_avatar.getAttribute("content"));
       else
         bg = register_background(null);
-      page2.structure.container.insertBefore(redesigned_track_header, page2.structure.container.firstElementChild);
+      page.structure.container.insertBefore(redesigned_track_header, page.structure.container.firstElementChild);
       track_header.classList.add("legacy-header");
       let avatar_side = redesigned_track_header.querySelector(".avatar-side");
       let avatar_link = avatar_side.querySelector("a");
@@ -16356,26 +16366,26 @@
         expand_link = `_expand_avatar('${album_avatar.getAttribute("src").replace("300x300", "ar0")}')`;
       else if (artist_avatar)
         expand_link = `_expand_avatar('${artist_avatar.getAttribute("content")}')`;
-      if (settings2.default_avatar_action == "expand" && (album_avatar != null || artist_avatar != null))
+      if (settings.default_avatar_action == "expand" && (album_avatar != null || artist_avatar != null))
         avatar_link.setAttribute("onclick", expand_link);
-      else if (settings2.default_avatar_action == "gallery" && album_avatar != null)
+      else if (settings.default_avatar_action == "gallery" && album_avatar != null)
         avatar_link.href = source_album.querySelector(".link-block-cover-link").getAttribute("href");
       let menu = tippy(avatar_side, {
         theme: "context-menu",
         content: `
                 ${album_avatar != null || artist_avatar != null ? `
                 <button class="dropdown-menu-clickable-item" onclick="${expand_link}" data-menu-item="expand">
-                    ${trans[lang2].gallery.open.name}
+                    ${trans[lang].gallery.open.name}
                 </button>
                 ` : ""}
                 ${album_avatar != null ? `
                 <a class="dropdown-menu-clickable-item" href="${source_album.querySelector(".link-block-cover-link").getAttribute("href")}" data-menu-item="album">
-                    ${trans[lang2].settings.layout.avatar_action.album}
+                    ${trans[lang].settings.layout.avatar_action.album}
                 </a>
                 ` : ""}
                 <div class="sep"></div>
                 <a class="dropdown-menu-clickable-item" href="${root}bleh?tab=customise" data-menu-item="settings">
-                    ${trans[lang2].settings.configure}
+                    ${trans[lang].settings.configure}
                 </a>
             `,
         allowHTML: true,
@@ -16397,23 +16407,23 @@
       bleh_music_page_charts();
       bleh_about_artist();
       bleh_tags_mini();
-      let similar_tracks = page2.structure.main.querySelector(".track-similar-tracks");
+      let similar_tracks = page.structure.main.querySelector(".track-similar-tracks");
       if (similar_tracks) {
         let similar_panel = similar_tracks.parentElement;
         similar_panel.classList.add("similar-panel");
       }
     } else {
-      let btn_add = page2.structure.side.querySelector(".add-button");
+      let btn_add = page.structure.side.querySelector(".add-button");
       if (btn_add != null)
-        btn_add.setAttribute("data-page-subpage", page2.subpage);
-      if (page2.subpage == "wiki_overview")
-        bleh_wiki2();
-      else if (page2.subpage == "wiki_history")
-        bleh_wiki_history2();
-      else if (page2.subpage == "wiki_edit")
-        bleh_wiki_editor2();
+        btn_add.setAttribute("data-page-subpage", page.subpage);
+      if (page.subpage == "wiki_overview")
+        bleh_wiki();
+      else if (page.subpage == "wiki_history")
+        bleh_wiki_history();
+      else if (page.subpage == "wiki_edit")
+        bleh_wiki_editor();
     }
-    log2("status is", "page", "info", page2);
+    log("status is", "page", "info", page);
     update_page();
   }
 
@@ -16448,15 +16458,15 @@
     }
   }
   function start_rain() {
-    if (settings2.rain)
+    if (settings.rain)
       rain();
   }
 
   // src/shout.js
   function patch_shouts() {
-    if (page2.structure.main == null)
+    if (page.structure.main == null)
       return;
-    let shouts = page2.structure.main.querySelectorAll(".shout:not([data-kate-processed])");
+    let shouts = page.structure.main.querySelectorAll(".shout:not([data-kate-processed])");
     shouts.forEach((shout) => {
       try {
         shout.setAttribute("data-kate-processed", "true");
@@ -16473,7 +16483,7 @@
           shout_avatar.classList.add(`user-status--bleh-${badge.type}`, `user-status--bleh-user-${shout_name_text}`);
           shout_name.classList.add(`user-status--bleh-${badge.type}`, `user-status--bleh-user-${shout_name_text}`);
         }
-        if (settings2.shout_markdown) {
+        if (settings.shout_markdown) {
           let shout_body = shout.querySelector(".shout-body p");
           shout_parse_queue.push({
             element: shout_body
@@ -16504,10 +16514,10 @@
         if (e.ctrlKey && e.keyCode == 13) {
           e.preventDefault();
           send_button.querySelector(".btn-post-shout").click();
-          notify2({
+          notify({
             id: "shout",
-            title: trans[lang2].shout.name,
-            body: trans[lang2].shout.sent,
+            title: trans[lang].shout.name,
+            body: trans[lang].shout.sent,
             icon: "icon-16-send"
           });
         }
@@ -16519,9 +16529,9 @@
     let button = send_button.querySelector(".btn-post-shout");
     if (!button) return;
     button.classList.add("btn-send-shout-generic");
-    button.textContent = trans[lang2].settings.send;
+    button.textContent = trans[lang].settings.send;
     tippy(button, {
-      content: trans[lang2].settings.send_quickly.replace("{kbd}", "<kbd>ctrl+\u21B5</kbd>"),
+      content: trans[lang].settings.send_quickly.replace("{kbd}", "<kbd>ctrl+\u21B5</kbd>"),
       delay: [500, 0],
       allowHTML: true
     });
@@ -16553,9 +16563,9 @@
       ghCodeBlocks: false,
       smartIndentationFix: true
     });
-    let parsed_body = converter.makeHtml(shout.element.textContent.replace(/([@])([a-zA-Z0-9_]+)/g, `[$1$2](${root2}user/$2)`).replace(/\[artist\]([a-zA-Z0-9]+)\[\/artist\]/g, `[$1](${root2}music/$1)`).replace(/\[album artist=([a-zA-Z0-9]+)\]([a-zA-Z0-9\s]+)\[\/album\]/g, `[$2](${root2}music/$1/$2)`).replace(/\[track artist=([a-zA-Z0-9]+)\]([a-zA-Z0-9\s]+)\[\/track\]/g, `[$2](${root2}music/$1/_/$2)`).replace(/https:\/\/open\.spotify\.com\/user\/([A-Za-z0-9]+)\?si=([A-Za-z0-9]+)/g, "[@$1](https://open.spotify.com/user/$1)").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;"));
+    let parsed_body = converter.makeHtml(shout.element.textContent.replace(/([@])([a-zA-Z0-9_]+)/g, `[$1$2](${root}user/$2)`).replace(/\[artist\]([a-zA-Z0-9]+)\[\/artist\]/g, `[$1](${root}music/$1)`).replace(/\[album artist=([a-zA-Z0-9]+)\]([a-zA-Z0-9\s]+)\[\/album\]/g, `[$2](${root}music/$1/$2)`).replace(/\[track artist=([a-zA-Z0-9]+)\]([a-zA-Z0-9\s]+)\[\/track\]/g, `[$2](${root}music/$1/_/$2)`).replace(/https:\/\/open\.spotify\.com\/user\/([A-Za-z0-9]+)\?si=([A-Za-z0-9]+)/g, "[@$1](https://open.spotify.com/user/$1)").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;"));
     shout.element.innerHTML = parsed_body;
-    log2(`parsed index ${index}`, "shout", "log");
+    log(`parsed index ${index}`, "shout", "log");
     shout_parse_queue.splice(index, 1);
     return 1;
   }
@@ -16571,7 +16581,7 @@
     let sponsor_expire = new Date(localStorage.getItem("kat_sponsors_expire"));
     let current_time = /* @__PURE__ */ new Date();
     if (sponsor_data == null) {
-      log2("not cached, fetching", "sponsor");
+      log("not cached, fetching", "sponsor");
       sponsor_request(true);
     } else {
       for (var member in sponsor_list) delete sponsor_list[member];
@@ -16583,7 +16593,7 @@
       }
     }
   }
-  function sponsor_request(notify3 = false) {
+  function sponsor_request(notify2 = false) {
     let button = document.body.querySelector('[onclick="_sponsor_check()"]');
     if (button != null)
       button.setAttribute("disabled", "");
@@ -16591,20 +16601,20 @@
     let url = `https://katelyynn.github.io/bleh/fm/badges/badges.json?${Math.random()}`;
     xhr.open("GET", url, true);
     xhr.onload = function() {
-      log2(`list responded with ${xhr.status}`, "sponsor");
+      log(`list responded with ${xhr.status}`, "sponsor");
       if (xhr.status != 200) {
-        log2("request has been cancelled, will request again in 1h", "sponsor");
+        log("request has been cancelled, will request again in 1h", "sponsor");
         api_expire.setHours(api_expire.getHours() + 1);
       }
       let api_expire = /* @__PURE__ */ new Date();
       if (xhr.status == 200) {
         for (var member in sponsor_list) delete sponsor_list[member];
         Object.assign(sponsor_list, JSON.parse(this.response));
-        if (notify3)
-          deliver_notif(trans[lang2].settings.home.sponsor.download, false, true, "sponsor");
+        if (notify2)
+          deliver_notif(trans[lang].settings.home.sponsor.download, false, true, "sponsor");
         localStorage.setItem("kat_sponsors", this.response);
         api_expire.setHours(api_expire.getHours() + 4);
-        log2(`list cached until ${api_expire}`, "sponsor");
+        log(`list cached until ${api_expire}`, "sponsor");
       }
       localStorage.setItem("kat_sponsors_expire", api_expire);
       if (button != null)
@@ -16619,18 +16629,18 @@
     sponsor();
   };
   function sponsor() {
-    dialog2({
+    dialog({
       id: "sponsor",
-      title: trans[lang2].settings.home.sponsor.header,
+      title: trans[lang].settings.home.sponsor.header,
       body: `
             <div class="modal-vertical-inner support-inner">
                 <div class="bleh-icon sponsor-heart"></div>
-                <h1>${trans[lang2].settings.home.sponsor.header}</h1>
-                <p>${trans[lang2].settings.home.sponsor.bio}</p>
+                <h1>${trans[lang].settings.home.sponsor.header}</h1>
+                <p>${trans[lang].settings.home.sponsor.bio}</p>
             </div>
             <div class="modal-footer">
                 <a class="btn primary sponsor" href="${sponsor_list.sponsor_link}" target="_blank">
-                    ${trans[lang2].settings.home.sponsor.name}
+                    ${trans[lang].settings.home.sponsor.name}
                 </a>
             </div>
         `,
@@ -16641,32 +16651,32 @@
     sponsor_manage();
   };
   function sponsor_manage() {
-    if (sponsor_list.sponsors_one_time && sponsor_list.sponsors_one_time.includes(auth2.name)) {
-      dialog2({
+    if (sponsor_list.sponsors_one_time && sponsor_list.sponsors_one_time.includes(auth.name)) {
+      dialog({
         id: "sponsor_manage",
-        title: trans[lang2].settings.home.sponsor.header,
+        title: trans[lang].settings.home.sponsor.header,
         body: `
                 <div class="modal-vertical-inner support-inner">
                     <div class="bleh-icon sponsor-heart"></div>
-                    <h1>${trans[lang2].settings.home.sponsor.status.yes}</h1>
-                    <p>${trans[lang2].settings.home.sponsor.status.one_time}</p>
+                    <h1>${trans[lang].settings.home.sponsor.status.yes}</h1>
+                    <p>${trans[lang].settings.home.sponsor.status.one_time}</p>
                 </div>
             `,
         type: "sponsor"
       });
     } else {
-      dialog2({
+      dialog({
         id: "sponsor_manage",
-        title: trans[lang2].settings.home.sponsor.header,
+        title: trans[lang].settings.home.sponsor.header,
         body: `
                 <div class="modal-vertical-inner support-inner">
                     <div class="bleh-icon sponsor-heart"></div>
-                    <h1>${trans[lang2].settings.home.sponsor.status.yes}</h1>
-                    <p>${trans[lang2].settings.home.sponsor.status.badge}</p>
+                    <h1>${trans[lang].settings.home.sponsor.status.yes}</h1>
+                    <p>${trans[lang].settings.home.sponsor.status.badge}</p>
                 </div>
                 <div class="modal-footer">
                     <a class="btn primary sponsor" href="${root}user/${sponsor_list.sponsor_account}" target="_blank">
-                        ${trans[lang2].settings.home.sponsor.manage}
+                        ${trans[lang].settings.home.sponsor.manage}
                     </a>
                 </div>
             `,
@@ -16682,7 +16692,7 @@
       return;
     adaptive_skin_container.setAttribute("data-bleh", "true");
     adaptive_skin_container.innerHTML = "";
-    log2("internal bleh sponsor", "page");
+    log("internal bleh sponsor", "page");
     page.type = "bleh_sponsor";
     page.subpage = "";
     sponsor();
@@ -16691,25 +16701,25 @@
   // src/style.js
   function append_style() {
     document.documentElement.classList.add("bleh-supports-loading");
-    for (var member in settings2) delete settings2[member];
-    Object.assign(settings2, JSON.parse(localStorage.getItem("bleh")) || create_settings_template());
+    for (var member in settings) delete settings[member];
+    Object.assign(settings, JSON.parse(localStorage.getItem("bleh")) || create_settings_template());
     let cached_style = localStorage.getItem("bleh_cached_style") || "";
     let url = window.location.href;
     let url_split = url.split("/");
     let url_length = url_split.length - 1;
     if (url_split[url_length] == "playback" || url_split[url_length - 1] == "labs")
       return;
-    document.documentElement.setAttribute("data-bleh--theme", settings2.theme);
-    if (settings2.dev) {
-      log2("dev mode is on, will fetch for version only", "style");
+    document.documentElement.setAttribute("data-bleh--theme", settings.theme);
+    if (settings.dev) {
+      log("dev mode is on, will fetch for version only", "style");
       check_style_info();
       return;
     }
     if (cached_style == "") {
-      log2("never cached, fetching", "style");
+      log("never cached, fetching", "style");
       fetch_new_style();
     } else {
-      log2("requesting cache", "style");
+      log("requesting cache", "style");
       load_cached_style(cached_style);
     }
   }
@@ -16718,19 +16728,19 @@
     style_cache.setAttribute("id", "bleh--cached-style");
     style_cache.textContent = cached_style;
     document.documentElement.appendChild(style_cache);
-    log2("loaded cache", "style");
+    log("loaded cache", "style");
     setTimeout(function() {
       document.body.classList.add("bleh");
-      theme_version = getComputedStyle(document.body).getPropertyValue("--version-build").replaceAll("'", "").replaceAll('"', "");
-      log2(`theme version reporting as ${theme_version}`, "style");
+      theme_version.state = getComputedStyle(document.body).getPropertyValue("--version-build").replaceAll("'", "").replaceAll('"', "");
+      log(`theme version reporting as ${theme_version.state}`, "style");
       load_chart_colours();
-      if ((page2.type == "artist" || page2.type == "album" || page2.type == "track") && page2.subpage == "overview")
+      if ((page.type == "artist" || page.type == "album" || page.type == "track") && page.subpage == "overview")
         bleh_music_page_charts();
-      if (page2.type == "user" && page2.subpage.startsWith("library")) {
+      if (page.type == "user" && page.subpage.startsWith("library")) {
         bleh_glacier_date_graph_generate();
         bleh_glacier_insights();
       }
-      log2("checking timeout", "style");
+      log("checking timeout", "style");
       check_if_style_cache_is_valid();
     }, 200);
   }
@@ -16738,15 +16748,15 @@
     let cached_style_timeout = new Date(localStorage.getItem("bleh_cached_style_timeout"));
     let current_time = /* @__PURE__ */ new Date();
     if (cached_style_timeout < current_time) {
-      if (theme_version != version.build && theme_version != "") {
-        log2(`version mismatch! running ${version.build}, downloaded theme ${theme_version}`, "update");
+      if (theme_version.state != version.build && theme_version.state != "") {
+        log(`version mismatch! running ${version.build}, downloaded theme ${theme_version.state}`, "update");
         prompt_for_update2();
         return;
       }
-      log2("fetching new, expired timeout", "style");
+      log("fetching new, expired timeout", "style");
       fetch_new_style();
     } else {
-      log2(`timeout valid until ${cached_style_timeout}`, "style");
+      log(`timeout valid until ${cached_style_timeout}`, "style");
     }
   }
   function check_style_info() {
@@ -16760,9 +16770,9 @@
     prompt_for_update2();
   };
   function prompt_for_update2() {
-    dialog2({
+    dialog({
       id: "bleh_update",
-      title: trans[lang].settings.home.update.update_to_v.replace("{v}", theme_version),
+      title: trans[lang].settings.home.update.update_to_v.replace("{v}", theme_version.state),
       body: `
             <div class="bleh--update-checker-container">
                 <div class="form">
@@ -16776,7 +16786,7 @@
                     <div class="form-group">
                         <button class="big-btn primary update" onclick="_start_update()"></button>
                         ${trans[lang].settings.home.update.update_now}
-                        <div class="small-alert green">${theme_version}</div>
+                        <div class="small-alert green">${theme_version.state}</div>
                     </div>
                 </div>
             </div>
@@ -16794,26 +16804,26 @@
     let api_expire = /* @__PURE__ */ new Date();
     api_expire.setHours(api_expire.getHours() + 1);
     localStorage.setItem("bleh_cached_style_timeout", api_expire);
-    log2(`cached until ${api_expire}`, "style");
+    log(`cached until ${api_expire}`, "style");
   };
   unsafeWindow._start_update = function() {
     open("https://github.com/katelyynn/bleh/raw/uwu/fm/bleh.user.js");
     dialog_rm({
       id: "bleh_update"
     });
-    if (!settings2.dev) {
+    if (!settings.dev) {
       _final_update();
     } else {
-      dialog2({
+      dialog({
         id: "bleh_update",
-        title: trans[lang].settings.home.update.update_to_v.replace("{v}", theme_version),
+        title: trans[lang].settings.home.update.update_to_v.replace("{v}", theme_version.state),
         body: `
                 <div class="bleh--update-checker-container">
                     <div class="form">
                         <div class="form-group">
                             <button class="big-btn primary update" onclick="_start_css_update()"></button>
                             ${trans[lang].settings.home.update.css}
-                            <div class="small-alert green">${theme_version}</div>
+                            <div class="small-alert green">${theme_version.state}</div>
                         </div>
                     </div>
                 </div>
@@ -16831,9 +16841,9 @@
     _final_update();
   };
   unsafeWindow._final_update = function() {
-    dialog2({
+    dialog({
       id: "bleh_update",
-      title: trans[lang].settings.home.update.update_to_v.replace("{v}", theme_version),
+      title: trans[lang].settings.home.update.update_to_v.replace("{v}", theme_version.state),
       body: `
             <div class="bleh--update-checker-container">
                 <div class="form">
@@ -16852,8 +16862,8 @@
     dialog_rm({
       id: "bleh_update"
     });
-    if (!settings2.dev) {
-      dialog2({
+    if (!settings.dev) {
+      dialog({
         id: "bleh_wait",
         title: trans[lang].settings.home.update.name,
         type: "wait",
@@ -16869,7 +16879,7 @@
     let url = `https://katelyynn.github.io/bleh/fm/bleh.css?${Math.random()}`;
     xhr.open("GET", url, true);
     xhr.onload = function() {
-      log2(`style responded ${xhr.status}`, "style");
+      log(`style responded ${xhr.status}`, "style");
       let style = document.createElement("style");
       style.textContent = this.response;
       document.documentElement.appendChild(style);
@@ -16879,21 +16889,21 @@
       let api_expire = /* @__PURE__ */ new Date();
       api_expire.setHours(api_expire.getHours() + 1);
       localStorage.setItem("bleh_cached_style_timeout", api_expire);
-      log2(`cached until ${api_expire}`, "style");
+      log(`cached until ${api_expire}`, "style");
       if (reload_on_finish)
         invoke_reload();
       setTimeout(function() {
         document.body.classList.add("bleh");
-        theme_version = getComputedStyle(document.body).getPropertyValue("--version-build").replaceAll("'", "").replaceAll('"', "");
+        theme_version.state = getComputedStyle(document.body).getPropertyValue("--version-build").replaceAll("'", "").replaceAll('"', "");
         load_chart_colours();
-        if ((page2.type == "artist" || page2.type == "album" || page2.type == "track") && page2.subpage == "overview")
+        if ((page.type == "artist" || page.type == "album" || page.type == "track") && page.subpage == "overview")
           bleh_music_page_charts();
-        if (page2.type == "user" && page2.subpage.startsWith("library")) {
+        if (page.type == "user" && page.subpage.startsWith("library")) {
           bleh_glacier_date_graph_generate();
           bleh_glacier_insights();
         }
-        if (theme_version != version.build && theme_version != "") {
-          log2(`version mismatch! running ${version.build}, downloaded theme ${theme_version}`, "update");
+        if (theme_version.state != version.build && theme_version.state != "") {
+          log(`version mismatch! running ${version.build}, downloaded theme ${theme_version.state}`, "update");
           prompt_for_update2();
           return;
         }
@@ -16906,7 +16916,7 @@
     let url = "https://katelyynn.github.io/bleh/fm/bleh.css";
     xhr.open("GET", url, true);
     xhr.onload = function() {
-      log2(`style responded ${xhr.status}`, "style");
+      log(`style responded ${xhr.status}`, "style");
       let style = document.createElement("style");
       style.textContent = this.response;
       document.documentElement.appendChild(style);
@@ -16914,12 +16924,12 @@
       let api_expire = /* @__PURE__ */ new Date();
       api_expire.setHours(api_expire.getHours() + 1);
       localStorage.setItem("bleh_cached_style_timeout", api_expire);
-      log2(`cached until ${api_expire}`, "style");
+      log(`cached until ${api_expire}`, "style");
       setTimeout(function() {
-        theme_version = getComputedStyle(document.body).getPropertyValue("--version-build").replaceAll("'", "").replaceAll('"', "");
+        theme_version.state = getComputedStyle(document.body).getPropertyValue("--version-build").replaceAll("'", "").replaceAll('"', "");
         document.documentElement.removeChild(style);
-        if (theme_version != version.build && theme_version != "") {
-          log2(`version mismatch! running ${version.build}, downloaded theme ${theme_version}`, "update");
+        if (theme_version.state != version.build && theme_version.state != "") {
+          log(`version mismatch! running ${version.build}, downloaded theme ${theme_version.state}`, "update");
           prompt_for_update2();
           return;
         }
@@ -16958,17 +16968,17 @@
     let performance_start = performance.now();
     auth_link.state = document.querySelector("a.auth-link");
     if (auth_link.state)
-      auth2.name = auth_link.state.querySelector("img").getAttribute("alt");
+      auth.name = auth_link.state.querySelector("img").getAttribute("alt");
     load_settings();
     load_dialogs();
-    theme_version = getComputedStyle(document.body).getPropertyValue("--version-build").replaceAll("'", "").replaceAll('"', "");
+    theme_version.state = getComputedStyle(document.body).getPropertyValue("--version-build").replaceAll("'", "").replaceAll('"', "");
     lookup_lang();
     patch_masthead(document.body);
     load_notifications();
     set_season();
     start_rain();
-    if (!auth2.name) {
-      notify2({
+    if (!auth.name) {
+      notify({
         title: "No account added",
         body: "Please sign in to an account to access bleh features.",
         icon: "icon-16-user",
@@ -16987,9 +16997,9 @@
       const observer = new MutationObserver((mutations) => {
         lookup_lang();
         patch_masthead(document.body);
-        theme_version = getComputedStyle(document.body).getPropertyValue("--version-build").replaceAll("'", "").replaceAll('"', "");
-        if (theme_version != version.build && theme_version != "" && !has_prompted_for_update.state) {
-          log2(`version mismatch! running ${version.build}, downloaded theme ${theme_version}`, "update");
+        theme_version.state = getComputedStyle(document.body).getPropertyValue("--version-build").replaceAll("'", "").replaceAll('"', "");
+        if (theme_version.state != version.build && theme_version.state != "" && !has_prompted_for_update.state) {
+          log(`version mismatch! running ${version.build}, downloaded theme ${theme_version.state}`, "update");
           prompt_for_update();
           has_prompted_for_update.state = true;
         }
@@ -17000,13 +17010,13 @@
         subtree: true
       });
       let performance_end = performance.now();
-      log2(`finished in ${performance_end - performance_start}`, "load");
+      log(`finished in ${performance_end - performance_start}`, "load");
     } catch (e) {
       handle_error(e);
     }
   }
   function handle_error(e = null) {
-    dialog2({
+    dialog({
       id: "error",
       title: "An error has occured",
       body: `
@@ -17014,7 +17024,7 @@
                 <div class="bleh-icon" style="--icon: var(--icon-error)"></div>
                 <h1>oops.. something broke</h1>
                 <p>An error has prevented bleh from loading correctly, please report this issue on Github.</p>
-                <pre class="error-info">${e ? `<span class="error-type">${e.name}</span>: ${e.message}` : ""}<br>on: ${page2.type}/${page2.subpage}</pre>
+                <pre class="error-info">${e ? `<span class="error-type">${e.name}</span>: ${e.message}` : ""}<br>on: ${page.type}/${page.subpage}</pre>
                 <p>Please include this error and the steps you took in the report!</p>
             </div>
             <div class="modal-footer">
@@ -17026,41 +17036,41 @@
       type: "error"
     });
     if (e != null) {
-      log2("fatal failure", "load");
+      log("fatal failure", "load");
       console.error(e);
     }
-    log2("current page", "page", "info", page2);
+    log("current page", "page", "info", page);
   }
   function handle_error_500() {
     document.body.classList.add("bleh-loaded");
-    log2("halted as root is inaccessible", "load");
+    log("halted as root is inaccessible", "load");
   }
   function main_flow() {
     assign_page();
-    if (page2.type == "artist" || page2.type == "album") {
+    if (page.type == "artist" || page.type == "album") {
       bleh_gallery();
       bleh_gallery_upload_check();
     }
-    if (page2.type == "user" || page2.type == "search" || page2.type == "tag")
+    if (page.type == "user" || page.type == "search" || page.type == "tag")
       music_grids();
-    if (page2.type == "user" || page2.type == "artist" || page2.type == "album" || page2.type == "track" || page2.type == "events" || page2.type == "festival" || page2.type == "tag") {
+    if (page.type == "user" || page.type == "artist" || page.type == "album" || page.type == "track" || page.type == "events" || page.type == "festival" || page.type == "tag") {
       patch_shouts();
       if (shout_parse_queue.length > 0)
         parse_shout_queue();
     }
     patch_gallery_page();
-    if (page2.type == "user" && page2.subpage.startsWith("library") && (page2.subpage != "library_overview" && !page2.subpage.startsWith("library_artist_") && !page2.subpage.startsWith("library_album_") && !page2.subpage.startsWith("library_track_")))
+    if (page.type == "user" && page.subpage.startsWith("library") && (page.subpage != "library_overview" && !page.subpage.startsWith("library_artist_") && !page.subpage.startsWith("library_album_") && !page.subpage.startsWith("library_track_")))
       bleh_glacier_library();
-    if (auth2.pro && page2.type == "user" && page2.name == auth2.name && page2.subpage == "library_artist_overview" || page2.subpage == "library_album_overview" || page2.subpage == "library_track_overview") {
+    if (auth.pro && page.type == "user" && page.name == auth.name && page.subpage == "library_artist_overview" || page.subpage == "library_album_overview" || page.subpage == "library_track_overview") {
       bleh_glacier_library_bulk_edit();
     }
-    if (page2.type == "user" || page2.type == "artist" || page2.type == "album" || page2.type == "events" || page2.type == "festival" || page2.type == "tag") {
+    if (page.type == "user" || page.type == "artist" || page.type == "album" || page.type == "events" || page.type == "festival" || page.type == "tag") {
       patch_titles();
     }
-    if (page2.type == "user" || page2.type == "artist" || page2.type == "album" || page2.type == "track") {
+    if (page.type == "user" || page.type == "artist" || page.type == "album" || page.type == "track") {
       nag_bar();
     }
-    if (settings2.corrections) {
+    if (settings.corrections) {
       correct_generic_combo_no_artist("artist-header-featured-items-item");
       correct_generic_combo_no_artist("artist-top-albums-item");
       correct_generic_combo("source-album-details");
@@ -17074,9 +17084,9 @@
   }
   function assign_page() {
     document.documentElement.classList.add("bleh-supports-loading");
-    if (!page2.structure.wrapper)
-      page2.structure.wrapper = document.body.querySelector(".main-content");
-    let main_content = page2.structure.wrapper.querySelector(":scope > :last-child:not([data-bleh])");
+    if (!page.structure.wrapper)
+      page.structure.wrapper = document.body.querySelector(".main-content");
+    let main_content = page.structure.wrapper.querySelector(":scope > :last-child:not([data-bleh])");
     if (main_content) {
       assign_page_type();
       load_page();
@@ -17090,17 +17100,17 @@
     let page_classes = document.body.classList;
     page_classes.forEach((page_class, index) => {
       if (page_class.startsWith("namespace")) {
-        page2.initial = page_class.replace("namespace--", "");
-        let page_split = page2.initial.split("_");
-        page2.type = page_split[0];
-        if (page2.type == "music") {
-          page2.type = page_split[1];
+        page.initial = page_class.replace("namespace--", "");
+        let page_split = page.initial.split("_");
+        page.type = page_split[0];
+        if (page.type == "music") {
+          page.type = page_split[1];
         }
-        if (page2.type != last_page_type.state) {
-          last_page_type.state = page2.type;
-          log2(page2.type, "page");
+        if (page.type != last_page_type.state) {
+          last_page_type.state = page.type;
+          log(page.type, "page");
         }
-        console.log(page2);
+        console.log(page);
         assign_page_subpage();
         return;
       }
@@ -17109,15 +17119,15 @@
     });
   }
   function assign_page_subpage() {
-    page2.subpage = page2.initial.replace(page2.type, "").replace("_", "").replace("music_", "");
-    if (last_page_subpage.state != page2.subpage) {
-      last_page_subpage.state = page2.subpage;
-      log2(`subpage of ${page2.subpage}`, "page");
+    page.subpage = page.initial.replace(page.type, "").replace("_", "").replace("music_", "");
+    if (last_page_subpage.state != page.subpage) {
+      last_page_subpage.state = page.subpage;
+      log(`subpage of ${page.subpage}`, "page");
       load_settings();
-      if (page2.state.settings_reload) {
-        page2.state.settings_reload = false;
+      if (page.state.settings_reload) {
+        page.state.settings_reload = false;
       }
-      if (page2.structure.indicator)
+      if (page.structure.indicator)
         page_indicator();
     }
   }
@@ -17125,75 +17135,75 @@
     append_nav();
     set_season();
     seasonal_timer_end();
-    if (window.location.href.startsWith(setup_url.replace("{root}", root2))) {
+    if (window.location.href.startsWith(setup_url.replace("{root}", root))) {
       bleh_setup();
-    } else if (window.location.href.startsWith(sponsor_url.replace("{root}", root2))) {
+    } else if (window.location.href.startsWith(sponsor_url.replace("{root}", root))) {
       bleh_sponsor_page();
-    } else if (window.location.href.startsWith(bleh_url.replace("{root}", root2))) {
+    } else if (window.location.href.startsWith(bleh_url.replace("{root}", root))) {
       bleh_settings();
     } else {
       bleh_error();
-      if (page2.state.error)
+      if (page.state.error)
         return;
-      if (page2.type == "user")
+      if (page.type == "user")
         bleh_profiles();
-      else if (page2.type == "artist")
+      else if (page.type == "artist")
         bleh_artists();
-      else if (page2.type == "album")
+      else if (page.type == "album")
         bleh_albums();
-      else if (page2.type == "track")
+      else if (page.type == "track")
         bleh_tracks();
-      else if (page2.type == "events" || page2.type == "festival")
+      else if (page.type == "events" || page.type == "festival")
         bleh_events();
-      else if (page2.type == "tag")
+      else if (page.type == "tag")
         bleh_tags();
-      else if (page2.type == "search")
+      else if (page.type == "search")
         bleh_search();
-      else if (page2.type == "settings")
+      else if (page.type == "settings")
         bleh_native_settings();
-      else if (page2.type == "charts")
+      else if (page.type == "charts")
         bleh_charts();
-      else if (page2.type == "inbox")
+      else if (page.type == "inbox")
         bleh_inbox();
-      else if (page2.type == "bookmarks")
+      else if (page.type == "bookmarks")
         bleh_bookmarks();
-      else if (page2.type == "home")
+      else if (page.type == "home")
         bleh_home();
-      if ((page2.type == "artist" || page2.type == "album" || page2.type == "track") && page2.subpage == "overview")
+      if ((page.type == "artist" || page.type == "album" || page.type == "track") && page.subpage == "overview")
         patch_wiki();
     }
     if (ff("page_title")) {
       try {
-        document.title = `${trans[lang2].pages[page2.type][page2.subpage].replace("{name}", page2.name).replace("{sister}", page2.sister)} | ${version.brand} ${version.build}.${version.sku}`;
+        document.title = `${trans[lang].pages[page.type][page.subpage].replace("{name}", page.name).replace("{sister}", page.sister)} | ${version.brand} ${version.build}.${version.sku}`;
       } catch (e) {
-        log2(`translation key for this page could not be found`, "page", "info", page2);
+        log(`translation key for this page could not be found`, "page", "info", page);
       }
     }
     page_title();
-    if (page2.structure.indicator)
+    if (page.structure.indicator)
       page_indicator();
   }
   function page_title() {
     if (!ff("katsune"))
       return;
-    if (!page2.structure.container)
+    if (!page.structure.container)
       return;
-    let title = page2.structure.container.querySelector(".page-title");
+    let title = page.structure.container.querySelector(".page-title");
     if (!title) {
       title = document.createElement("section");
       title.classList.add("page-header");
-      page2.structure.container.insertBefore(title, page2.structure.container.firstElementChild);
+      page.structure.container.insertBefore(title, page.structure.container.firstElementChild);
     }
-    let name = page2.type;
-    if (trans[lang2].hasOwnProperty(page2.type))
-      name = trans[lang2][page2.type].name;
-    else if (page2.type == "user")
-      name = trans[lang2].profile.name;
-    else if (page2.type == "bleh_settings")
-      name = trans[lang2].settings.name;
-    else if (page2.type == "events" || page2.type == "festival")
-      name = trans[lang2].event.name;
-    title.setAttribute("data-page-type", page2.type);
+    let name = page.type;
+    if (trans[lang].hasOwnProperty(page.type))
+      name = trans[lang][page.type].name;
+    else if (page.type == "user")
+      name = trans[lang].profile.name;
+    else if (page.type == "bleh_settings")
+      name = trans[lang].settings.name;
+    else if (page.type == "events" || page.type == "festival")
+      name = trans[lang].event.name;
+    title.setAttribute("data-page-type", page.type);
     title.innerHTML = `
         <div class="bleh-icon page-header-icon"></div>
         <div class="page-header-title">
@@ -17202,7 +17212,7 @@
     `;
   }
   function page_indicator() {
-    page2.structure.indicator.innerHTML = `
+    page.structure.indicator.innerHTML = `
         <div class="bleh">
             <strong>version</strong>
             <span>${version.brand}</span>
@@ -17211,18 +17221,18 @@
         </div>
         <div class="page">
             <strong>auth</strong>
-            <span>${auth2.name}</span>
-            <span>${lang2} (${non_override_lang})</span>
+            <span>${auth.name}</span>
+            <span>${lang} (${non_override_lang})</span>
         </div>
         <div class="page">
             <strong>page</strong>
-            <span>${page2.type}</span>
-            <span>${page2.subpage}</span>
+            <span>${page.type}</span>
+            <span>${page.subpage}</span>
         </div>
         <div class="page">
             <strong></strong>
-            <span>${page2.name}</span>
-            <span>${page2.sister}</span>
+            <span>${page.name}</span>
+            <span>${page.sister}</span>
         </div>
         <div class="page">
             <strong>season</strong>
@@ -17233,21 +17243,21 @@
     `;
   }
   function update_page() {
-    page2.structure.container.setAttribute("data-page-type", page2.type);
-    page2.structure.container.setAttribute("data-page-subpage", page2.subpage);
+    page.structure.container.setAttribute("data-page-type", page.type);
+    page.structure.container.setAttribute("data-page-subpage", page.subpage);
   }
   function register_background(url, origin = null) {
     let flag = ff("katsune");
     let background;
     if (flag) {
-      background = page2.structure.container.querySelector(".bleh-background");
+      background = page.structure.container.querySelector(".bleh-background");
       if (!background) {
         background = document.createElement("div");
         background.classList.add("bleh-background", "katsune-bleh-background");
         let border = document.createElement("div");
         border.classList.add("katsune-bleh-background-border");
         background.appendChild(border);
-        page2.structure.container.insertBefore(background, page2.structure.container.firstElementChild);
+        page.structure.container.insertBefore(background, page.structure.container.firstElementChild);
       }
     } else {
       background = document.body.querySelector(".bleh-background");
@@ -17257,7 +17267,7 @@
         document.body.appendChild(background);
       }
     }
-    if (page2.type == "user" && origin) {
+    if (page.type == "user" && origin) {
       let buttons = background.querySelector(".bleh-background-buttons");
       if (!buttons) {
         buttons = document.createElement("div");
@@ -17272,28 +17282,28 @@
         tippy(origin_button, {
           theme: "badge",
           content: `
-                    <div class="badge-name">${trans[lang2].profile.banner.origin.bio[0]}</div>
-                    <div class="badge-reason">${trans[lang2].profile.banner.origin.bio[1].replace("{b}", "<code>![banner](url)</code>")}</div>
+                    <div class="badge-name">${trans[lang].profile.banner.origin.bio[0]}</div>
+                    <div class="badge-reason">${trans[lang].profile.banner.origin.bio[1].replace("{b}", "<code>![banner](url)</code>")}</div>
                 `,
           allowHTML: true,
           placement: "bottom"
         });
       } else {
         tippy(origin_button, {
-          content: trans[lang2].profile.banner.origin[origin],
+          content: trans[lang].profile.banner.origin[origin],
           placement: "bottom"
         });
       }
       background.appendChild(buttons);
     }
-    background.setAttribute("data-page-type", page2.type);
+    background.setAttribute("data-page-type", page.type);
     background.setAttribute("data-background-origin", origin);
     if (url)
       background.style.setProperty("background-image", `url(${url})`);
     else
       background.style.removeProperty("background-image");
-    if (page2.type == "user") {
-      if (page2.name == auth2.name) {
+    if (page.type == "user") {
+      if (page.name == auth.name) {
         background.setAttribute("data-page-user-is-self", "true");
       } else {
         background.setAttribute("data-page-user-is-self", "false");
@@ -17464,6 +17474,11 @@
 
   // src/main.js
   var version = build_default;
-  log2(`starting ${version.build}.${version.sku}`, "load");
-  bleh();
+  var theme_version = {
+    state: ""
+  };
+  setTimeout(() => {
+    log(`starting ${version.build}.${version.sku}`, "load");
+    bleh();
+  }, 1e3);
 })();

@@ -1,4 +1,5 @@
 import { register_activity } from "../activity";
+import { settings } from "../build/config";
 import { log } from "../build/log";
 import { auth, page, root } from "../build/page";
 import { stored_season } from "../build/seasonal";

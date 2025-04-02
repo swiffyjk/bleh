@@ -1,12 +1,12 @@
 import { settings } from "./build/config";
 import { log } from "./build/log";
 import { page } from "./build/page";
-import { trans } from "./build/trans";
+import { lang, trans } from "./build/trans";
 import { load_chart_colours } from "./chart";
 import { dialog, dialog_rm } from "./components/dialog";
 import { bleh_music_page_charts } from "./components/music";
 import { create_settings_template, invoke_reload } from "./config";
-import { version } from "./main";
+import { theme_version, version } from "./main";
 import { bleh_glacier_date_graph_generate, bleh_glacier_insights } from "./pages/glacier";
 
 export function append_style() {
@@ -55,8 +55,8 @@ function load_cached_style(cached_style) {
     log('loaded cache', 'style');
     setTimeout(function() {
         document.body.classList.add('bleh');
-        theme_version = getComputedStyle(document.body).getPropertyValue('--version-build').replaceAll("'", '').replaceAll('"', ''); // remove quotations
-        log(`theme version reporting as ${theme_version}`, 'style');
+        theme_version.state = getComputedStyle(document.body).getPropertyValue('--version-build').replaceAll("'", '').replaceAll('"', ''); // remove quotations
+        log(`theme version reporting as ${theme_version.state}`, 'style');
 
         load_chart_colours();
 
@@ -84,9 +84,9 @@ function check_if_style_cache_is_valid() {
         // in versions 2024.1019 and onwards, the css stores version itself
         // we can use this to compare if we should fetch a new one
         // as we don't want to fetch a new css while the js is out of date
-        if (theme_version != version.build && theme_version != '') {
+        if (theme_version.state != version.build && theme_version.state != '') {
             // script is either out of date, or more in date (not gonna happen)
-            log(`version mismatch! running ${version.build}, downloaded theme ${theme_version}`, 'update');
+            log(`version mismatch! running ${version.build}, downloaded theme ${theme_version.state}`, 'update');
 
             prompt_for_update();
             return;
@@ -116,7 +116,7 @@ export function prompt_for_update() {
     // prompt the user
     dialog({
         id: 'bleh_update',
-        title: trans[lang].settings.home.update.update_to_v.replace('{v}', theme_version),
+        title: trans[lang].settings.home.update.update_to_v.replace('{v}', theme_version.state),
         body: (`
             <div class="bleh--update-checker-container">
                 <div class="form">
@@ -130,7 +130,7 @@ export function prompt_for_update() {
                     <div class="form-group">
                         <button class="big-btn primary update" onclick="_start_update()"></button>
                         ${trans[lang].settings.home.update.update_now}
-                        <div class="small-alert green">${theme_version}</div>
+                        <div class="small-alert green">${theme_version.state}</div>
                     </div>
                 </div>
             </div>
@@ -166,14 +166,14 @@ unsafeWindow._start_update = function() {
     } else {
         dialog({
             id: 'bleh_update',
-            title: trans[lang].settings.home.update.update_to_v.replace('{v}', theme_version),
+            title: trans[lang].settings.home.update.update_to_v.replace('{v}', theme_version.state),
             body: (`
                 <div class="bleh--update-checker-container">
                     <div class="form">
                         <div class="form-group">
                             <button class="big-btn primary update" onclick="_start_css_update()"></button>
                             ${trans[lang].settings.home.update.css}
-                            <div class="small-alert green">${theme_version}</div>
+                            <div class="small-alert green">${theme_version.state}</div>
                         </div>
                     </div>
                 </div>
@@ -196,7 +196,7 @@ unsafeWindow._start_css_update = function() {
 unsafeWindow._final_update = function() {
     dialog({
         id: 'bleh_update',
-        title: trans[lang].settings.home.update.update_to_v.replace('{v}', theme_version),
+        title: trans[lang].settings.home.update.update_to_v.replace('{v}', theme_version.state),
         body: (`
             <div class="bleh--update-checker-container">
                 <div class="form">
@@ -262,7 +262,7 @@ function fetch_new_style(delete_old_style = false, reload_on_finish = false) {
 
         setTimeout(function() {
             document.body.classList.add('bleh');
-            theme_version = getComputedStyle(document.body).getPropertyValue('--version-build').replaceAll("'", '').replaceAll('"', ''); // remove quotations
+            theme_version.state = getComputedStyle(document.body).getPropertyValue('--version-build').replaceAll("'", '').replaceAll('"', ''); // remove quotations
 
             load_chart_colours();
 
@@ -278,9 +278,9 @@ function fetch_new_style(delete_old_style = false, reload_on_finish = false) {
             // in versions 2024.1019 and onwards, the css stores version itself
             // we can use this to compare if we should fetch a new one
             // as we don't want to fetch a new css while the js is out of date
-            if (theme_version != version.build && theme_version != '') {
+            if (theme_version.state != version.build && theme_version.state != '') {
                 // script is either out of date, or more in date (not gonna happen)
-                log(`version mismatch! running ${version.build}, downloaded theme ${theme_version}`, 'update');
+                log(`version mismatch! running ${version.build}, downloaded theme ${theme_version.state}`, 'update');
 
                 prompt_for_update();
                 return;
@@ -315,16 +315,16 @@ function fetch_style_info(delete_old_style = false, reload_on_finish = false) {
 
         // we will temporarily apply the style just for theme info, then remove it
         setTimeout(function() {
-            theme_version = getComputedStyle(document.body).getPropertyValue('--version-build').replaceAll("'", '').replaceAll('"', ''); // remove quotations
+            theme_version.state = getComputedStyle(document.body).getPropertyValue('--version-build').replaceAll("'", '').replaceAll('"', ''); // remove quotations
 
             document.documentElement.removeChild(style);
 
             // in versions 2024.1019 and onwards, the css stores version itself
             // we can use this to compare if we should fetch a new one
             // as we don't want to fetch a new css while the js is out of date
-            if (theme_version != version.build && theme_version != '') {
+            if (theme_version.state != version.build && theme_version.state != '') {
                 // script is either out of date, or more in date (not gonna happen)
-                log(`version mismatch! running ${version.build}, downloaded theme ${theme_version}`, 'update');
+                log(`version mismatch! running ${version.build}, downloaded theme ${theme_version.state}`, 'update');
 
                 prompt_for_update();
                 return;
