@@ -3652,6 +3652,12 @@ button.navlist-more {
         --sat: 1.15;
         --lit: 0.8;
     }
+
+    &.user-status--bleh-user-yourfriendoss {
+        --hue-over: 346.3;
+        --sat: 100;
+        --lit: 88.8;
+    }
 }
 
 .user-status--bleh-colon-three,
