@@ -16,6 +16,7 @@
 // @require      https://cdnjs.cloudflare.com/ajax/libs/color-thief/2.3.0/color-thief.umd.js
 // @require      https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js
 // @require      https://cdn.jsdelivr.net/npm/chartjs-adapter-moment@^1
+// ==/UserScript==
 (() => {
   // src/build/config.js
   var settings = {};
@@ -9135,6 +9136,7 @@
           name: trans[lang].settings.customise.gendered_tags.name
         }
       ]);
+      console.info(artist_corrections, album_track_corrections);
       return `
             <div class="bleh--panel">
                 <h4>${trans[lang].settings.corrections.formatting}</h4>
@@ -17477,8 +17479,6 @@
   var theme_version = {
     state: ""
   };
-  setTimeout(() => {
-    log(`starting ${version.build}.${version.sku}`, "load");
-    bleh();
-  }, 1e3);
+  log(`starting ${version.build}.${version.sku}`, "load");
+  bleh();
 })();

@@ -7,8 +7,5 @@ export const theme_version = {
     state: ""
 }
 
-// TODO: Hacky, fix asap!
-setTimeout(() => {
-    log(`starting ${version.build}.${version.sku}`, 'load');
-    bleh();
-}, 1000);
+log(`starting ${version.build}.${version.sku}`, 'load');
+bleh();

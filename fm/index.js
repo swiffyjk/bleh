@@ -18,7 +18,8 @@ const banner = `// ==UserScript==
 // @require      https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.30.1/moment.min.js
 // @require      https://cdnjs.cloudflare.com/ajax/libs/color-thief/2.3.0/color-thief.umd.js
 // @require      https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js
-// @require      https://cdn.jsdelivr.net/npm/chartjs-adapter-moment@^1`
+// @require      https://cdn.jsdelivr.net/npm/chartjs-adapter-moment@^1
+// ==/UserScript==`
 
 esbuild.buildSync({
     entryPoints: ["./src/main.js"],

@@ -195,11 +195,11 @@ export function bleh_settings() {
 export function render_setting_page(page_id) {
     if (page_id == 'home') {
         register_skip_to([]);
-        
+
         let sponsoring = false;
         if (sponsor_list)
             sponsoring = sponsor_list.sponsors.includes(auth.name);
-    
+
         return (`
         <div class="bleh--panel">
             <h4 class="top-header">${trans[lang].settings.home.name}</h4>
@@ -1374,6 +1374,8 @@ export function render_setting_page(page_id) {
                 name: trans[lang].settings.customise.gendered_tags.name
             }
         ]);
+
+        console.info(artist_corrections, album_track_corrections);
 
         return (`
             <div class="bleh--panel">
