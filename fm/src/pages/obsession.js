@@ -1,4 +1,4 @@
-function patch_obsession_view() {
+export function patch_obsession_view() {
     let obsession_container = document.querySelector('.obsession-container');
 
     if (!obsession_container)

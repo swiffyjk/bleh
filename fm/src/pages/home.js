@@ -1,4 +1,4 @@
-function bleh_home() {
+export function bleh_home() {
     page.structure.container = document.body.querySelector('.page-content');
     try {
         page.structure.row = page.structure.container.querySelector('.row');

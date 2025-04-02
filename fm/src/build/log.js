@@ -1,4 +1,7 @@
-function log(text, system, type = 'info', append={}) {
+import { settings } from "./config";
+import { page } from "./page";
+
+export function log(text, system, type = 'info', append={}) {
     if (!page.structure.logs) {
         let logs = document.createElement('div');
         logs.classList.add('logs');

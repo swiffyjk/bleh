@@ -1,12 +1,12 @@
 // require page reload
-let reload_pending = false;
+export let reload_pending = false;
 
 // lookup
-let last_lookup;
-let next_lookup;
+export let last_lookup;
+export let next_lookup;
 
-let dialogs = {};
-let notifications = {};
+export let dialogs = {};
+export let notifications = {};
 
 tippy.setDefaultProps({
     arrow: false,
@@ -14,7 +14,7 @@ tippy.setDefaultProps({
 });
 
 // use the top-right link to determine the current user
-let auth = {
+export let auth = {
     name: null,
     pro: false,
     avatar: null,
@@ -24,21 +24,21 @@ let auth = {
         lit: 1
     }
 };
-let auth_link = '';
+export let auth_link = '';
 
 // stores the current root of the page, most applicable in other languages:
 // en: /
 // jp: /jp/
 // etc.
-let root = '';
+export let root = '';
 
 // recent activity
-let recent_activity_list;
+export let recent_activity_list;
 
 // page type
-let last_page_type;
-let last_page_subpage;
-let page = {
+export let last_page_type;
+export let last_page_subpage;
+export let page = {
     initial: '',
     type: '',
     name: '',
@@ -111,15 +111,15 @@ let page = {
     }
 };
 
-let shout_parse_queue = [];
+export let shout_parse_queue = [];
 
-let bleh_url = 'https://www.last.fm{root}bleh';
-let setup_url = 'https://www.last.fm{root}bleh/setup';
-let sponsor_url = 'https://www.last.fm{root}bleh/sponsor';
+export let bleh_url = 'https://www.last.fm{root}bleh';
+export let setup_url = 'https://www.last.fm{root}bleh/setup';
+export let sponsor_url = 'https://www.last.fm{root}bleh/sponsor';
 
-let has_prompted_for_update = false;
+export let has_prompted_for_update = false;
 
-let theme_preview = (`
+export let theme_preview = (`
     <div class="preview-inner">
         <div class="preview-card">
             <div class="preview-header"></div>

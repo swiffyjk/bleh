@@ -1,4 +1,4 @@
-function bleh_about_artist() {
+export function bleh_about_artist() {
     let legacy_container = page.structure.main.querySelector('.about-artist');
 
     if (legacy_container == null)

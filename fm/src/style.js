@@ -1,4 +1,4 @@
-function append_style() {
+export function append_style() {
     document.documentElement.classList.add('bleh-supports-loading');
     settings = JSON.parse(localStorage.getItem('bleh')) || create_settings_template();
     let cached_style = localStorage.getItem('bleh_cached_style') || '';
@@ -100,7 +100,7 @@ function check_style_info() {
 unsafeWindow._prompt_for_update = function() {
     prompt_for_update();
 }
-function prompt_for_update() {
+export function prompt_for_update() {
     // prompt the user
     dialog({
         id: 'bleh_update',

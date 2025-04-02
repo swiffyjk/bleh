@@ -1,8 +1,5 @@
-log(`starting ${version.build}.${version.sku}`, 'load');
 
-bleh();
-
-function bleh() {
+export function bleh() {
     let head_observer = new MutationObserver((mutations) => {
         if (document.head) {
             append_style();
@@ -135,7 +132,7 @@ function handle_error(e = null) {
     log('current page', 'page', 'info', page);
 }
 
-function handle_error_500() {
+export function handle_error_500() {
     document.body.classList.add('bleh-loaded');
     log('halted as root is inaccessible', 'load');
 }
@@ -290,7 +287,7 @@ function load_page() {
     } else if (window.location.href.startsWith(bleh_url.replace('{root}', root))) {
         bleh_settings();
     } else {
-        error_page();
+        bleh_error();
 
         if (page.state.error)
             return;
@@ -410,12 +407,12 @@ function page_indicator() {
 }
 
 
-function update_page() {
+export function update_page() {
     page.structure.container.setAttribute('data-page-type', page.type);
     page.structure.container.setAttribute('data-page-subpage', page.subpage);
 }
 
-function register_background(url, origin = null) {
+export function register_background(url, origin = null) {
     let flag = ff('katsune');
 
     let background;

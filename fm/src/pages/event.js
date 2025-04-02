@@ -1,4 +1,4 @@
-function bleh_events() {
+export function bleh_events() {
     let is_subpage = (page.subpage != 'event_overview' && page.subpage != 'festival_overview');
 
     // without pro theres two containers

@@ -1,4 +1,4 @@
-function set_season() {
+export function set_season() {
     if (!settings.seasonal)
         return;
 
@@ -105,7 +105,7 @@ function calculate_offset(now) {
     return `${offset}00`;
 }
 
-function seasonal_timer_start(bypass = false) {
+export function seasonal_timer_start(bypass = false) {
     if (stored_season.new_years_eve && !bypass)
         return;
 
@@ -125,7 +125,7 @@ function seasonal_timer_start(bypass = false) {
 
     page.header.season.classList.add('live');
 }
-function seasonal_timer_end() {
+export function seasonal_timer_end() {
     if (stored_season.new_years_eve)
         return;
 

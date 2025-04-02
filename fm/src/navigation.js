@@ -1,4 +1,4 @@
-function patch_masthead(element) {
+export function patch_masthead(element) {
     let masthead_logo = element.querySelector('.masthead-logo');
 
     if (!masthead_logo)
@@ -16,7 +16,7 @@ function patch_masthead(element) {
     }
 }
 
-function append_nav() {
+export function append_nav() {
     if (ff('developer') && !page.structure.indicator) {
         let page_indicator = document.createElement('div');
         page_indicator.classList.add('page-indicator');

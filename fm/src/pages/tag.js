@@ -1,4 +1,4 @@
-function bleh_tags() {
+export function bleh_tags() {
     let tag_header = document.body.querySelector('.header--tag');
 
     if (tag_header == undefined)
@@ -72,7 +72,7 @@ function bleh_tags() {
 }
 
 
-function bleh_tags_mini() {
+export function bleh_tags_mini() {
     let tag_user_avatar = page.structure.main.querySelector('.tags-user-avatar');
 
     if (!tag_user_avatar)

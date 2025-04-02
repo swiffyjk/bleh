@@ -1,4 +1,4 @@
-function bleh_settings() {
+export function bleh_settings() {
     page.structure.container = document.body.querySelector('.page-content');
     try {
         page.structure.row = page.structure.container.querySelector('.row');
@@ -176,7 +176,7 @@ function bleh_settings() {
     }
 }
 
-function render_setting_page(page_id) {
+export function render_setting_page(page_id) {
     if (page_id == 'home') {
         register_skip_to([]);
 
@@ -1809,7 +1809,7 @@ function change_settings_page(page_id, setting = null) {
     }
 }
 
-function show_theme_change_in_settings(theme = '') {
+export function show_theme_change_in_settings(theme = '') {
     if (theme != '')
         settings.theme = theme;
 
@@ -1823,7 +1823,7 @@ function show_theme_change_in_settings(theme = '') {
         }
     });
 }
-function show_theme_change_in_menu(theme = '', element = document.body) {
+export function show_theme_change_in_menu(theme = '', element = document.body) {
     if (theme != '')
         settings.theme = theme;
 
@@ -1839,7 +1839,7 @@ function show_theme_change_in_menu(theme = '', element = document.body) {
 }
 
 
-function load_skus() {
+export function load_skus() {
     for (let flag in version.feature_flags) {
         let current_state = version.feature_flags[flag].default;
 
@@ -1909,7 +1909,7 @@ function update_flag_toggle(flag, container) {
 }
 
 
-function display_colour_presets() {
+export function display_colour_presets() {
     let colours = {
         custom: [
             {
@@ -2593,7 +2593,7 @@ unsafeWindow._save_profile_note_in_window = function(username) {
 
 
 
-function prepare_corrections_page() {
+export function prepare_corrections_page() {
     let corrections_table_artist = document.getElementById('corrections-artist');
 
     for (let artist in artist_corrections) {

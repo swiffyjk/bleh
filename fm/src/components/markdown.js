@@ -1,4 +1,4 @@
-function markdown(text) {
+export function markdown(text) {
     let converter = new showdown.Converter({
         emoji: true,
         excludeTrailingPunctuationFromURLs: true,

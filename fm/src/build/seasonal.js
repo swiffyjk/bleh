@@ -1,10 +1,10 @@
 // seasonal
-let seasonal_timer;
-let stored_season = {
+export let seasonal_timer;
+export let stored_season = {
     id: 'none',
     new_years_eve: false
 };
-let seasonal_events = [
+export let seasonal_events = [
     {
         id: 'new_years',
         start: 'y0-01-01T00:00:00{offset}',

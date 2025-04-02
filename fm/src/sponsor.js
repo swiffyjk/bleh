@@ -1,4 +1,4 @@
-function sponsors(force = false) {
+export function sponsors(force = false) {
     if (!ff('sponsor'))
         return;
 
@@ -130,7 +130,7 @@ function sponsor_manage() {
     }
 }
 
-function bleh_sponsor_page() {
+export function bleh_sponsor_page() {
     document.body.style.removeProperty('--hue-album');
     document.body.style.removeProperty('--sat-album');
 

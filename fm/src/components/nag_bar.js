@@ -1,4 +1,4 @@
-function nag_bar() {
+export function nag_bar() {
     /*if (!page.structure.nag_bar) {
         page.structure.nag_bar = document.body.querySelector('#redirect-bar');
         console.info('nag', page.structure.nag_bar);

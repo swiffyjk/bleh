@@ -1,5 +1,5 @@
 // patch last.fm settings
-function bleh_native_settings() {
+export function bleh_native_settings() {
     page.structure.container = document.body.querySelector('.page-content');
     try {
         page.structure.row = page.structure.container.querySelector('.row');
@@ -567,7 +567,7 @@ function update_display_name(value) {
 }
 
 
-function use_pronouns(value) {
+export function use_pronouns(value) {
     // no spaces, easier to detect
     value = value.replaceAll(' ', '');
 

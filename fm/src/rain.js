@@ -1,4 +1,4 @@
-function rain() {
+export function rain() {
     // clear old
     let rain_container_old = document.getElementById('rain-container');
     if (rain_container_old != undefined)
@@ -38,7 +38,7 @@ function rain() {
     }
 }
 
-function start_rain() {
+export function start_rain() {
 
     if (settings.rain)
         rain();

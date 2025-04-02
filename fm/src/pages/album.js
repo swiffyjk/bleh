@@ -1,4 +1,4 @@
-function bleh_albums() {
+export function bleh_albums() {
     let album_header = document.body.querySelector('.header-new--album');
 
     if (album_header == undefined)

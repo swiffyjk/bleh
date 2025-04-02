@@ -1,4 +1,4 @@
-function lotus(force = false) {
+export function lotus(force = false) {
     if (!settings.corrections)
         return;
 
@@ -120,7 +120,7 @@ unsafeWindow._open_correction_modal = function() {
      * @param {string} parent individual css selector for each item wrapper
      * @returns if not found
      */
-function correct_generic_combo(parent) {
+export function correct_generic_combo(parent) {
     let albums = document.body.querySelectorAll(`.${parent}`);
 
     if (albums == undefined)
@@ -156,7 +156,7 @@ function correct_generic_combo(parent) {
  * @param {string} parent individual css selector for each item wrapper
  * @returns if not found
  */
-function correct_generic_combo_no_artist(parent) {
+export function correct_generic_combo_no_artist(parent) {
     let albums = document.body.querySelectorAll(`.${parent}`);
 
     if (albums == null)
@@ -187,7 +187,7 @@ function correct_generic_combo_no_artist(parent) {
  * @param {string} artist artist name (is converted to lowercase)
  * @returns corrected title if applicable or original title
  */
-function correct_item_by_artist(item, artist) {
+export function correct_item_by_artist(item, artist) {
     if (!settings.corrections)
         return item;
     artist = artist.toLowerCase();
@@ -214,7 +214,7 @@ function correct_item_by_artist(item, artist) {
  * @param {string} artist artist name (NOT converted to lowercase)
  * @returns corrected artist if applicable or original artist
  */
-function correct_artist(artist, broadcast = false) {
+export function correct_artist(artist, broadcast = false) {
     if (!settings.corrections)
         return artist;
 
@@ -240,7 +240,7 @@ function correct_artist(artist, broadcast = false) {
 
 
 // feat.
-function name_includes(original_title, original_artist) {
+export function name_includes(original_title, original_artist) {
     console.log(original_title, original_artist);
     let formatted_title = original_title;
 
@@ -359,7 +359,7 @@ function name_includes(original_title, original_artist) {
 }
 
 
-function artist_title() {
+export function artist_title() {
     let title = document.body.querySelector('.header-new-title');
     let title_text = title.textContent.trim();
 
@@ -414,7 +414,7 @@ function artist_title() {
     }
 }
 
-function patch_header_title() {
+export function patch_header_title() {
     if (!settings.corrections && !settings.format_guest_features && !multi)
         return;
 

@@ -1,4 +1,4 @@
-function ff(flag) {
+export function ff(flag) {
     log(`parsing ${flag}`, 'flag', 'log', {
         setting: settings.feature_flags[flag],
         sku: version.feature_flags[flag]

@@ -1,4 +1,4 @@
-function bleh_setup() {
+export function bleh_setup() {
     document.body.style.removeProperty('--hue-album');
     document.body.style.removeProperty('--sat-album');
 
@@ -506,7 +506,7 @@ unsafeWindow._setup_skip = function() {
      * notify user if new update and stores in localStorage for next time
      * @returns if first-time installing, redirect to setup
      */
-function notify_if_new_update() {
+export function notify_if_new_update() {
     let last_version_used = localStorage.getItem('bleh_last_version_used') || '';
 
     // enter first-time setup

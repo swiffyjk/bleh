@@ -20,7 +20,7 @@ unsafeWindow._query_changelog = function() {
     }
 }
 
-function request_changelog(open_after = true) {
+export function request_changelog(open_after = true) {
     let button = document.body.querySelector('[data-bleh-page="changelog"]');
     if (button != null)
         button.setAttribute('disabled', '');

@@ -1,4 +1,4 @@
-function bleh_bookmarks() {
+export function bleh_bookmarks() {
     basic_page_structure();
 
     let content_top = document.body.querySelector('.content-top');

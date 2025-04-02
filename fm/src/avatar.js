@@ -1,4 +1,4 @@
-function patch_avatar(avatar, name, type = '') {
+export function patch_avatar(avatar, name, type = '') {
     if (avatar.hasAttribute('data-bleh-avatar'))
         return;
     avatar.setAttribute('data-bleh-avatar', 'true');
@@ -132,7 +132,7 @@ function patch_avatar(avatar, name, type = '') {
     }
 }
 
-function return_name_from_avatar(avatar) {
+export function return_name_from_avatar(avatar) {
     if (!avatar)
         return;
 
@@ -148,7 +148,7 @@ function return_name_from_avatar(avatar) {
 unsafeWindow._expand_avatar = function(src) {
     expand_avatar(src);
 }
-function expand_avatar(src) {
+export function expand_avatar(src) {
     dialog({
         id: 'avatar',
         body: (`

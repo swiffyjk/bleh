@@ -1,4 +1,4 @@
-function basic_page_structure() {
+export function basic_page_structure() {
     page.structure.container = document.body.querySelector('.page-content');
     try {
         page.structure.row = page.structure.container.querySelector('.row');
@@ -12,7 +12,7 @@ function basic_page_structure() {
 }
 
 // general health
-function checkup_page_structure(is_subpage = false, header = null) {
+export function checkup_page_structure(is_subpage = false, header = null) {
     if (document.body.style.getPropertyValue('--hue-album')) {
         document.body.style.removeProperty('--hue-album');
         document.body.style.removeProperty('--sat-album');

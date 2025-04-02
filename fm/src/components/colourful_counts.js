@@ -1,4 +1,4 @@
-function patch_artist_ranks_in_list_view(track) {
+export function patch_artist_ranks_in_list_view(track) {
     let count_bar = track.querySelector('.chartlist-count-bar');
 
     if (count_bar == undefined)
@@ -25,7 +25,7 @@ function patch_artist_ranks_in_list_view(track) {
     }
 }
 
-function parse_scrobbles_as_rank(scrobbles) {
+export function parse_scrobbles_as_rank(scrobbles) {
     let scrobble_milestone = 0;
     let scrobble_proximity = 1;
     let max_rank = 15;

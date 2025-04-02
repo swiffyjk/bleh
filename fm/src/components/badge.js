@@ -1,4 +1,4 @@
-function load_badges(user, solo = false) {
+export function load_badges(user, solo = false) {
     if (sponsor_list == null)
         return;
 

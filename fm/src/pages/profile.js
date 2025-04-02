@@ -1,4 +1,4 @@
-function bleh_profiles() {
+export function bleh_profiles() {
     // the obsessions page is a user subpage but works very differently
     if (page.subpage == 'obsessions_obsession') {
         patch_obsession_view();

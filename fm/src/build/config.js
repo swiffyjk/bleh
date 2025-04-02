@@ -1,5 +1,5 @@
-let settings;
-let settings_template = {
+export let settings;
+export let settings_template = {
     theme: 'dark',
     high_contrast: false,
     gloss: 0,
@@ -84,7 +84,7 @@ let settings_template = {
 
     avatar_radius: 50
 };
-let settings_base = {
+export let settings_base = {
     theme: {
         css: 'theme',
         unit: '',
@@ -533,7 +533,7 @@ let settings_base = {
         type: 'text'
     }
 };
-let inbuilt_settings = {
+export let inbuilt_settings = {
     recent_artwork: {
         css: 'recent_artwork',
         unit: '',

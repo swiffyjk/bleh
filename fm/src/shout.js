@@ -1,4 +1,4 @@
-function patch_shouts() {
+export function patch_shouts() {
     if (page.structure.main == null)
         return;
 
@@ -107,7 +107,7 @@ function shout_send(send_button) {
     });
 }
 
-function parse_shout_queue() {
+export function parse_shout_queue() {
     let response = parse_shout(0);
 
     if (response == 0)

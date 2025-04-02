@@ -1,3 +1,6 @@
+import { settings, settings_base, settings_template } from "./build/config";
+import { page } from "./build/page";
+
 // create blank settings
 function create_settings_template() {
     localStorage.setItem('bleh', JSON.stringify(settings_template));
@@ -5,7 +8,7 @@ function create_settings_template() {
 }
 
 // load settings
-function load_settings(skip = false) {
+export function load_settings(skip = false) {
     if (!skip)
         settings = JSON.parse(localStorage.getItem('bleh')) || create_settings_template();
 
@@ -131,7 +134,7 @@ function reset_all() {
         reset_item(item);
 }
 
-function refresh_all(search = document) {
+export function refresh_all(search = document) {
     for (let item in settings_base)
         update_item(item, settings[item], false, search);
 }
@@ -334,7 +337,7 @@ function request_reload() {
 unsafeWindow._invoke_reload = function() {
     invoke_reload();
 }
-function invoke_reload() {
+export function invoke_reload() {
     window.location.reload();
 }
 
@@ -388,7 +391,7 @@ unsafeWindow._update_inbuilt_item = function(item, value) {
     update_inbuilt_item(item, value);
 }
 
-function update_inbuilt_item(item, value, modify=true, element=document.body) {
+export function update_inbuilt_item(item, value, modify=true, element=document.body) {
     //console.log('update item',item,value);
     console.warn('update item',item,value, 'modify', modify);
 

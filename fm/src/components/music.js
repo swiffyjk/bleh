@@ -1,4 +1,4 @@
-function show_your_scrobbles() {
+export function show_your_scrobbles() {
     let katsune = ff('katsune');
     show_numbers_on_side(page.type);
 
@@ -649,7 +649,7 @@ function show_numbers_on_side(header_type) {
     }
 }
 
-function bleh_music_page_charts() {
+export function bleh_music_page_charts() {
     if (!ff('music_page_charts'))
         return;
 
@@ -742,7 +742,7 @@ function bleh_music_page_charts() {
     log('finished', 'music charts');
 }
 
-function bleh_top_listeners() {
+export function bleh_top_listeners() {
     if (!ff('unify_top_listeners'))
         return;
 

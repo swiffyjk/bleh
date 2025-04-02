@@ -1,12 +1,12 @@
 // loads your selected language in last.fm
-let lang;
-let non_override_lang;
+export let lang;
+export let non_override_lang;
 // WARN: fill this out if translating
 // lists all languages with valid bleh translations
 // any custom translations will not load if not listed here!!
-let valid_langs = ['en', 'de', 'pl'];
+export let valid_langs = ['en', 'de', 'pl'];
 
-let lang_info = {
+export let lang_info = {
     en: {
         name: 'English',
         by: ['cutensilly'],
@@ -24,7 +24,7 @@ let lang_info = {
     }
 }
 
-const trans = {
+export const trans = {
     en: {
         pages: {
             bleh_settings: {

@@ -1,4 +1,4 @@
-function music_grids() {
+export function music_grids() {
     if (page.structure.main == null)
         return;
 

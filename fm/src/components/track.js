@@ -1,4 +1,4 @@
-function patch_titles() {
+export function patch_titles() {
     if (page.subpage == 'tags_overview')
         return;
 

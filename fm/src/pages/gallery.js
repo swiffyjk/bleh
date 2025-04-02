@@ -1,4 +1,4 @@
-function bleh_gallery() {
+export function bleh_gallery() {
     if (page.subpage != 'image')
         return;
 
@@ -231,7 +231,7 @@ function expand_gallery_image() {
     expand_avatar(image_src);
 }
 
-function create_divider() {
+export function create_divider() {
     let divider = document.createElement('div');
     divider.classList.add('listen-divider');
 
@@ -241,7 +241,7 @@ function create_divider() {
 
 
 
-function bleh_gallery_upload() {
+export function bleh_gallery_upload() {
     let gallery_section = document.createElement('section');
     gallery_section.classList.add('gallery-section', 'gallery--initialised');
 
@@ -287,7 +287,7 @@ function bleh_gallery_upload() {
     form.removeChild(upload_rules_group);
 }
 
-function bleh_gallery_upload_check() {
+export function bleh_gallery_upload_check() {
     if (page.subpage != 'images_image-upload')
         return;
 
@@ -302,7 +302,7 @@ function bleh_gallery_upload_check() {
 }
 
 
-function bleh_gallery_list() {
+export function bleh_gallery_list() {
     let upload_btn = page.structure.main.querySelector('.btn-add');
     if (upload_btn != null) {
         upload_btn.classList = 'btn view-all-button back upload-button';
@@ -315,7 +315,7 @@ function bleh_gallery_list() {
     }
 }
 
-function patch_gallery_page() {
+export function patch_gallery_page() {
     let header = document.body.querySelector('header');
 
     if (header == undefined)

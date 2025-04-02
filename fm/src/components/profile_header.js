@@ -10,7 +10,7 @@ unsafeWindow._toggle_profile_header = function(button) {
     localStorage.setItem('bleh', JSON.stringify(settings));
 }
 
-function redesign_profile_header(is_own_profile, is_following) {
+export function redesign_profile_header(is_own_profile, is_following) {
     let base_header = document.body.querySelector('.header-info-secondary');
 
     if (base_header == null)
@@ -407,7 +407,7 @@ function redesign_profile_header(is_own_profile, is_following) {
     }
 }
 
-function create_profile_top_item(parent, {name, link, text='', type, taste='', artists=[], avi='', percent='', action='', tooltip='', allow_html=false, tooltip_theme='', full=false, primary=false, katsune=false}) {
+export function create_profile_top_item(parent, {name, link, text='', type, taste='', artists=[], avi='', percent='', action='', tooltip='', allow_html=false, tooltip_theme='', full=false, primary=false, katsune=false}) {
     log(`creating top item of ${name}, ${link}, ${text}`, 'profile');
 
     let listen_item = document.createElement((action != 'button') ? 'a' : 'button');

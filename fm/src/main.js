@@ -1,0 +1,165 @@
+import { log } from "./build/log";
+import { bleh } from "./page";
+
+export const version = {
+    "brand": "bleh",
+    "build": "2025.0402",
+    "sku": "beret",
+    "bio": "bleh!!! ^-^",
+    "author": "kate",
+    "url": "https://github.com/katelyynn/bleh/raw/uwu/fm/bleh.user.js",
+    "feature_flags": {
+        "bleh_settings_tabs": {
+            "default": true,
+            "name": "Utilise new bleh settings tabs",
+            "date": "2024-07-09"
+        },
+        "high_contrast": {
+            "default": false,
+            "name": "Enable visibility of high contrast (experimental)",
+            "date": "2024-10-04"
+        },
+        "redesigned_profile_header": {
+            "default": true,
+            "name": "Redesigned profile header info",
+            "date": "2024-10-09"
+        },
+        "show_wiki_label": {
+            "default": true,
+            "name": "Show 'About' label above wikis",
+            "date": "2024-10-11"
+        },
+        "music_page_charts": {
+            "default": true,
+            "name": "Music page charts",
+            "date": "2024-11-05"
+        },
+        "chartlist_highlight_shadow": {
+            "default": false,
+            "name": "Chartlist row highlight side shadow",
+            "date": "2024-11-05"
+        },
+        "new_gallery_experience": {
+            "default": true,
+            "name": "New gallery experience",
+            "date": "2024-11-06"
+        },
+        "display_album_bookmark": {
+            "default": false,
+            "name": "Display album bookmark button in gallery refresh",
+            "date": "2024-11-06"
+        },
+        "changelogs": {
+            "default": true,
+            "name": "Enable changelog system",
+            "date": "2024-11-07"
+        },
+        "refreshed_nav": {
+            "default": true,
+            "name": "Refreshed nav structure, reducing a lot of jank",
+            "date": "2024-11-09"
+        },
+        "refreshed_music_nav": {
+            "default": true,
+            "name": "Refreshed music nav structure",
+            "date": "2024-11-10"
+        },
+        "card_saturation": {
+            "default": true,
+            "name": "Enable card saturation slider",
+            "date": "2024-11-10"
+        },
+        "show_album_cover_always": {
+            "default": true,
+            "name": "Show album cover in header overview",
+            "date": "2024-11-11"
+        },
+        "new_auth_menu": {
+            "default": true,
+            "name": "New custom-built auth menu to reduce lag",
+            "date": "2024-11-11"
+        },
+        "unify_top_listeners": {
+            "default": true,
+            "name": "Unify top listeners",
+            "date": "2024-11-15"
+        },
+        "hide_chartlist_more": {
+            "default": false,
+            "name": "Hide chartlist more button, accessible the same with right-clicking",
+            "date": "2024-12-03"
+        },
+        "glacier_library": {
+            "default": true,
+            "name": "Glacier library (new library beta)",
+            "date": "2024-12-04"
+        },
+        "shout_popover": {
+            "default": true,
+            "name": "Redesigned shout action popover",
+            "date": "2024-12-23"
+        },
+        "sponsor": {
+            "default": true,
+            "name": "Sponsor link",
+            "date": "2024-12-24"
+        },
+        "skip_to_setting": {
+            "default": true,
+            "name": "Skip to... in settings",
+            "date": "2024-12-24"
+        },
+        "page_title": {
+            "default": true,
+            "name": "Dynamic tab title",
+            "date": "2024-12-26"
+        },
+        "view_button_nav": {
+            "default": true,
+            "name": "Match view button colouring to new nav",
+            "date": "2024-12-28"
+        },
+        "remove_bookmark": {
+            "default": true,
+            "name": "Context menu to remove inaccessible artist bookmark",
+            "date": "2024-12-28"
+        },
+        "badges": {
+            "default": true,
+            "name": "New badge tooltip",
+            "date": "2024-12-28"
+        },
+        "astra": {
+            "default": false,
+            "name": "astrablooms font",
+            "date": "2025-01-01",
+            "notice": "This is a test of a new 'default' font for bleh, it most likely will never take effect as changing a font takes a lot of getting used to, but yeah.<br>You should set your text settings to the following: 470, 540, 610"
+        },
+        "developer": {
+            "default": false,
+            "name": "Developer mode",
+            "date": "2025-01-03",
+            "notice": "Enable developer-specific features used for debugging purposes"
+        },
+        "api": {
+            "default": false,
+            "name": "Allow user to enter API key for newer features",
+            "date": "2025-01-19"
+        },
+        "colour_based_on_avatar": {
+            "default": true,
+            "name": "Set colour based on avatar",
+            "date": "2025-01-23"
+        },
+        "katsune": {
+            "default": true,
+            "name": "katsune redesign",
+            "date": "2025-01-25",
+            "notice": "This is very, very experimental ~w~"
+        }
+    }
+};
+
+log(`starting ${version.build}.${version.sku}`, 'load');
+
+bleh();

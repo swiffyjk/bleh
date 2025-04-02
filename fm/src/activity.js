@@ -1,4 +1,4 @@
-function subscribe_to_events() {
+export function subscribe_to_events() {
     if (!settings.activities)
         return;
 
@@ -112,7 +112,7 @@ function subscribe_to_events() {
 }
 
 
-function load_activities() {
+export function load_activities() {
     if (!settings.activities)
         return;
 
@@ -137,10 +137,7 @@ function check_activities_length() {
     return recent_activity_list;
 }
 
-unsafeWindow._register_activity = function(type, involved, context, date=new Date()) {
-    register_activity(type, involved, context, date);
-}
-function register_activity(type, involved, context, date=new Date()) {
+export function register_activity(type, involved, context, date=new Date()) {
     if (!settings.activities)
         return;
 

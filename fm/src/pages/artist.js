@@ -1,4 +1,4 @@
-function bleh_artists() {
+export function bleh_artists() {
     let artist_header = document.body.querySelector('.header-new--artist');
 
     if (artist_header == undefined)

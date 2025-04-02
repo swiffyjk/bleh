@@ -1,4 +1,4 @@
-function bleh_tracks() {
+export function bleh_tracks() {
     let track_header = document.body.querySelector('.header-new--track');
 
     if (track_header == undefined)
