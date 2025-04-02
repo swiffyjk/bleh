@@ -1,3 +1,8 @@
+import { log } from "../build/log";
+import { page } from "../build/page";
+import { load_chart_colours } from "../chart";
+import { ff } from "../sku";
+
 export function basic_page_structure() {
     page.structure.container = document.body.querySelector('.page-content');
     try {

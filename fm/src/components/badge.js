@@ -1,3 +1,6 @@
+import { sponsor_list } from "../build/sponsor";
+import { lang, trans } from "../build/trans";
+
 export function load_badges(user, solo = false) {
     if (sponsor_list == null)
         return;

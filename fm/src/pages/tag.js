@@ -1,3 +1,12 @@
+import { log } from "../build/log";
+import { page } from "../build/page";
+import { desanitise } from "../build/tools";
+import { lang, trans } from "../build/trans";
+import { patch_header_title } from "../components/lotus";
+import { checkup_page_structure } from "../components/structure";
+import { register_background } from "../page";
+import { ff } from "../sku";
+
 export function bleh_tags() {
     let tag_header = document.body.querySelector('.header--tag');
 

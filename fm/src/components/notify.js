@@ -1,3 +1,6 @@
+import { log } from "../build/log";
+import { page } from "../build/page";
+
 export function load_notifications() {
     let prev_notif = document.getElementById('bleh-notifications');
     if (prev_notif == null) {

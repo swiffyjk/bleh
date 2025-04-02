@@ -1,3 +1,12 @@
+import { settings } from "../build/config";
+import { auth, page } from "../build/page";
+import { sponsor_list } from "../build/sponsor";
+import { clean_number, sanitise } from "../build/tools";
+import { lang, trans } from "../build/trans";
+import { ff } from "../sku";
+import { correct_artist } from "./lotus";
+import { register_menu } from "./menu";
+
 unsafeWindow._toggle_profile_header = function(button) {
     let current = settings.profile_header_expand;
 

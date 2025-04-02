@@ -1,3 +1,7 @@
+import { settings } from "../build/config";
+import { page } from "../build/page";
+import { lang, trans } from "../build/trans";
+
 export function nag_bar() {
     /*if (!page.structure.nag_bar) {
         page.structure.nag_bar = document.body.querySelector('#redirect-bar');

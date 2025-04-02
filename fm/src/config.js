@@ -2,7 +2,7 @@ import { settings, settings_base, settings_template } from "./build/config";
 import { page } from "./build/page";
 
 // create blank settings
-function create_settings_template() {
+export function create_settings_template() {
     localStorage.setItem('bleh', JSON.stringify(settings_template));
     return settings_template;
 }

@@ -1,3 +1,13 @@
+import { settings } from "../build/config";
+import { log } from "../build/log";
+import { page, root } from "../build/page";
+import { sanitise } from "../build/tools";
+import { lang, trans } from "../build/trans";
+import { prep_chart_colours } from "../chart";
+import { correct_artist, correct_item_by_artist } from "../components/lotus";
+import { refresh_all } from "../config";
+import { ff } from "../sku";
+
 export function bleh_user_library() {
     // date sidebar into its own panel
     let date_items = page.structure.side.querySelectorAll(':scope > :is(div, figure)');
@@ -1237,7 +1247,7 @@ function bleh_glacier_library_focused() {
     overview_header.nextElementSibling.insertBefore(overview_header, overview_header.nextElementSibling.firstElementChild);
 }
 
-function bleh_glacier_library_bulk_edit() {
+export function bleh_glacier_library_bulk_edit() {
     // quick check to see if bulk edit is present
     let library_header = page.structure.main.querySelector('.library-header');
 

@@ -1,3 +1,5 @@
+import { patch_avatar } from "../avatar";
+
 export function patch_obsession_view() {
     let obsession_container = document.querySelector('.obsession-container');
 

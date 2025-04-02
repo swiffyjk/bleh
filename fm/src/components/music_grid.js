@@ -1,3 +1,11 @@
+import { settings } from "../build/config";
+import { page } from "../build/page";
+import { clamp_sat, clean_number, rgb_to_hsl } from "../build/tools";
+import { lang, trans } from "../build/trans";
+import { bleh_glacier_insights } from "../pages/glacier";
+import { parse_scrobbles_as_rank } from "./colourful_counts";
+import { correct_artist, correct_item_by_artist } from "./lotus";
+
 export function music_grids() {
     if (page.structure.main == null)
         return;

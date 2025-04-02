@@ -1,3 +1,18 @@
+import { settings } from "../build/config";
+import { log } from "../build/log";
+import { auth, page, root } from "../build/page";
+import { sanitise } from "../build/tools";
+import { lang, trans } from "../build/trans";
+import { artist_title } from "../components/lotus";
+import { register_menu } from "../components/menu";
+import { bleh_music_page_charts, bleh_top_listeners, show_your_scrobbles } from "../components/music";
+import { checkup_page_structure } from "../components/structure";
+import { register_background, update_page } from "../page";
+import { ff } from "../sku";
+import { bleh_gallery_list, bleh_gallery_upload } from "./gallery";
+import { bleh_tags_mini } from "./tag";
+import { bleh_wiki, bleh_wiki_editor, bleh_wiki_history } from "./wiki";
+
 export function bleh_artists() {
     let artist_header = document.body.querySelector('.header-new--artist');
 

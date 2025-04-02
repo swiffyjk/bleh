@@ -1,3 +1,12 @@
+import { settings } from "../build/config";
+import { log } from "../build/log";
+import { page, root } from "../build/page";
+import { return_artist_from_track, rgb_to_hsl, sanitise, sanitise_text } from "../build/tools";
+import { bleh_glacier_insights } from "../pages/glacier";
+import { patch_artist_ranks_in_list_view } from "./colourful_counts";
+import { correct_artist, correct_item_by_artist, name_includes } from "./lotus";
+import { register_menu } from "./menu";
+
 export function patch_titles() {
     if (page.subpage == 'tags_overview')
         return;

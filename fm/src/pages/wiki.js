@@ -1,3 +1,9 @@
+import { patch_avatar } from "../avatar";
+import { page, root } from "../build/page";
+import { desanitise } from "../build/tools";
+import { lang, trans } from "../build/trans";
+import { ff } from "../sku";
+
 export function bleh_wiki() {
     // make a new panel
     let wiki_panel = document.createElement('section');

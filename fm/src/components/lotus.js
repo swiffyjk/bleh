@@ -1,3 +1,13 @@
+import { settings } from "../build/config";
+import { log } from "../build/log";
+import { album_track_corrections, artist_corrections, includes } from "../build/music";
+import { root } from "../build/page";
+import { sanitise, sanitise_text } from "../build/tools";
+import { lang, trans } from "../build/trans";
+import { prepare_corrections_page } from "../pages/bleh_config";
+import { dialog } from "./dialog";
+import { notify } from "./notify";
+
 export function lotus(force = false) {
     if (!settings.corrections)
         return;

@@ -1,3 +1,14 @@
+import { log } from "../build/log";
+import { auth, page, root } from "../build/page";
+import { lang, trans } from "../build/trans";
+import { bleh_auto_edits } from "../components/auto_edit";
+import { dialog_legacy, kill_window } from "../components/dialog";
+import { custom_select, update_inbuilt_select } from "../components/select";
+import { checkup_page_structure } from "../components/structure";
+import { update_inbuilt_item } from "../config";
+import { register_background, update_page } from "../page";
+import { ff } from "../sku";
+
 // patch last.fm settings
 export function bleh_native_settings() {
     page.structure.container = document.body.querySelector('.page-content');

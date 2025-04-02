@@ -1,3 +1,11 @@
+import { log } from "../build/log";
+import { page } from "../build/page";
+import { lang, trans } from "../build/trans";
+import { correct_artist, correct_item_by_artist } from "../components/lotus";
+import { checkup_page_structure } from "../components/structure";
+import { refresh_all } from "../config";
+import { update_page } from "../page";
+
 export function bleh_charts() {
     page.structure.container = document.body.querySelector('.page-content');
     try {

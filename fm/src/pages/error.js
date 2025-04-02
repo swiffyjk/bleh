@@ -1,3 +1,6 @@
+import { auth, page, root } from "../build/page";
+import { lang, trans } from "../build/trans";
+
 export function bleh_error() {
     page.state.error = false;
     let page_content = document.body.querySelector('.page-content');

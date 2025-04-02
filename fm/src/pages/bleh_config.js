@@ -1,3 +1,16 @@
+import { log } from "../build/log";
+import { album_track_corrections, artist_corrections, ranks } from "../build/music";
+import { auth, page, theme_preview } from "../build/page";
+import { stored_season } from "../build/seasonal";
+import { sponsor_list } from "../build/sponsor";
+import { lang, lang_info, non_override_lang, trans } from "../build/trans";
+import { dialog_legacy, dialog_rm, kill_window } from "../components/dialog";
+import { notify } from "../components/notify";
+import { checkup_page_structure } from "../components/structure";
+import { create_settings_template, load_settings, refresh_all } from "../config";
+import { seasonal_timer_end, seasonal_timer_start } from "../seasonal";
+import { ff } from "../sku";
+
 export function bleh_settings() {
     page.structure.container = document.body.querySelector('.page-content');
     try {
@@ -84,7 +97,6 @@ export function bleh_settings() {
             </li>
         </ul>
     `);
-
 
     page.structure.side.innerHTML = (`
         <div class="bleh--panel">
@@ -179,7 +191,7 @@ export function bleh_settings() {
 export function render_setting_page(page_id) {
     if (page_id == 'home') {
         register_skip_to([]);
-
+        
         let sponsoring = false;
         if (sponsor_list)
             sponsoring = sponsor_list.sponsors.includes(auth.name);

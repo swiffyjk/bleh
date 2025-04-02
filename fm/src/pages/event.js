@@ -1,3 +1,14 @@
+import { patch_avatar } from "../avatar";
+import { settings } from "../build/config";
+import { log } from "../build/log";
+import { auth, page } from "../build/page";
+import { clean_number } from "../build/tools";
+import { lang, trans } from "../build/trans";
+import { correct_artist } from "../components/lotus";
+import { checkup_page_structure } from "../components/structure";
+import { refresh_all } from "../config";
+import { register_background, update_page } from "../page";
+
 export function bleh_events() {
     let is_subpage = (page.subpage != 'event_overview' && page.subpage != 'festival_overview');
 

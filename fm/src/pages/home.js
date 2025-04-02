@@ -1,3 +1,9 @@
+import { log } from "../build/log";
+import { auth, page, root } from "../build/page";
+import { lang, trans } from "../build/trans";
+import { checkup_page_structure } from "../components/structure";
+import { update_page } from "../page";
+
 export function bleh_home() {
     page.structure.container = document.body.querySelector('.page-content');
     try {

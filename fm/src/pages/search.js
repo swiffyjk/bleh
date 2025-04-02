@@ -1,3 +1,10 @@
+import { log } from "../build/log";
+import { page } from "../build/page";
+import { correct_artist, correct_item_by_artist } from "../components/lotus";
+import { checkup_page_structure } from "../components/structure";
+import { patch_titles } from "../components/track";
+import { update_page } from "../page";
+
 export function bleh_search() {
     page.structure.container = document.body.querySelector('.page-content');
     try {

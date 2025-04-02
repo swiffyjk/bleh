@@ -1,3 +1,7 @@
+import { log } from "../build/log";
+import { ranks } from "../build/music";
+import { clean_number } from "../build/tools";
+
 export function patch_artist_ranks_in_list_view(track) {
     let count_bar = track.querySelector('.chartlist-count-bar');
 

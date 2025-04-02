@@ -1,3 +1,14 @@
+import { register_activity } from "../activity";
+import { log } from "../build/log";
+import { auth, page, root } from "../build/page";
+import { lang, trans } from "../build/trans";
+import { request_changelog } from "../changelog";
+import { dialog, dialog_rm } from "../components/dialog";
+import { notify } from "../components/notify";
+import { refresh_all } from "../config";
+import { ff } from "../sku";
+import { display_colour_presets } from "./bleh_config";
+
 export function bleh_setup() {
     document.body.style.removeProperty('--hue-album');
     document.body.style.removeProperty('--sat-album');

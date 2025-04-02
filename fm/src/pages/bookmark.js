@@ -1,3 +1,5 @@
+import { basic_page_structure } from "../components/structure";
+
 export function bleh_bookmarks() {
     basic_page_structure();
 

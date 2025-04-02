@@ -1,3 +1,7 @@
+import { page, root } from "../build/page";
+import { sanitise, sanitise_text } from "../build/tools";
+import { lang, trans } from "../build/trans";
+
 export function bleh_about_artist() {
     let legacy_container = page.structure.main.querySelector('.about-artist');
 

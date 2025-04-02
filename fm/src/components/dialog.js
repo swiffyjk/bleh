@@ -1,3 +1,6 @@
+import { log } from "../build/log";
+import { lang, trans } from "../build/trans";
+
 export function load_dialogs() {
     let dialogs = document.createElement('div');
     dialogs.classList.add('bleh-modals');

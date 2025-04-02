@@ -1,2 +1,2 @@
-let cute = ['cutensilly', 'inozom', 'kateshapedbox'];
-let sponsor_list = null;
+export let cute = ['cutensilly', 'inozom', 'kateshapedbox'];
+export let sponsor_list = null;
