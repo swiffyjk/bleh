@@ -10,6 +10,7 @@ import { notify } from "../components/notify";
 import { checkup_page_structure } from "../components/structure";
 import { create_settings_template, load_settings, refresh_all } from "../config";
 import { version } from "../main";
+import { update_page } from "../page";
 import { seasonal_timer_end, seasonal_timer_start } from "../seasonal";
 import { ff } from "../sku";
 

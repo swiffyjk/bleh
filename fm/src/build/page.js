@@ -35,7 +35,9 @@ export let auth_link = {
 // jp: /jp/
 // etc.
 export let root = '';
-
+export function setRoot(data) {
+    root = data;
+}
 // recent activity
 export let recent_activity_list;
 
@@ -43,7 +45,9 @@ export let recent_activity_list;
 export let last_page_type = {
     state: undefined
 };
-export let last_page_subpage;
+export let last_page_subpage = {
+    state: undefined
+};
 export let page = {
     initial: '',
     type: '',

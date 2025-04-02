@@ -1,4 +1,5 @@
 
+
 // ==UserScript==
 // @name         bleh
 // @namespace    http://last.fm/
@@ -608,7 +609,13 @@
     state: ""
   };
   var root2 = "";
+  function setRoot(data) {
+    root2 = data;
+  }
   var last_page_type = {
+    state: void 0
+  };
+  var last_page_subpage = {
     state: void 0
   };
   var page2 = {
@@ -681,7 +688,7 @@
       }
     }
   };
-  var shout_parse_queue2 = [];
+  var shout_parse_queue = [];
   var bleh_url = "https://www.last.fm{root}bleh";
   var setup_url = "https://www.last.fm{root}bleh/setup";
   var sponsor_url = "https://www.last.fm{root}bleh/sponsor";
@@ -813,7 +820,7 @@
       l
     };
   }
-  function rgb_to_hsl2(r, g, b) {
+  function rgb_to_hsl(r, g, b) {
     let hex = rgb_to_hex(r, g, b);
     return hex_to_hsl(hex);
   }
@@ -824,7 +831,7 @@
   function rgb_to_hex(r, g, b) {
     return "#" + comp_to_hex(r) + comp_to_hex(g) + comp_to_hex(b);
   }
-  function clamp_sat2(sat) {
+  function clamp_sat(sat) {
     if (sat > 1.7)
       return 1.7;
     return sat;
@@ -1163,7 +1170,7 @@
 
   // src/build/trans.js
   var lang2;
-  var non_override_lang2;
+  var non_override_lang;
   var valid_langs2 = ["en", "de", "pl"];
   var lang_info = {
     en: {
@@ -4232,12 +4239,14 @@
     }
   });
   function lookup_lang() {
-    root = document.querySelector(".masthead-logo a");
-    if (!root) {
+    const troot = document.querySelector(".masthead-logo a");
+    console.log(troot);
+    if (!troot) {
       handle_error_500();
       return;
     }
-    root = root.getAttribute("href");
+    console.log(troot.getAttribute("href"));
+    setRoot(troot.getAttribute("href"));
     let previous_avi = auth2.avatar;
     if (auth_link.state) {
       auth2.avatar = auth_link.state.querySelector("img").getAttribute("src");
@@ -4258,9 +4267,9 @@
       }
     }
     lang2 = document.documentElement.getAttribute("lang");
-    non_override_lang2 = lang2;
+    non_override_lang = lang2;
     if (!valid_langs2.includes(lang2)) {
-      log(`language fallback from ${lang2} to en - not supported`, "trans");
+      log2(`language fallback from ${lang2} to en - not supported`, "trans");
       lang2 = "en";
     }
     moment.locale(lang2);
@@ -4270,7 +4279,7 @@
   var seasonal_timer = {
     state: void 0
   };
-  var stored_season2 = {
+  var stored_season = {
     id: "none",
     new_years_eve: false
   };
@@ -5916,14 +5925,14 @@
   }
 
   // src/config.js
-  function create_settings_template2() {
+  function create_settings_template() {
     localStorage.setItem("bleh", JSON.stringify(settings_template));
     return settings_template;
   }
   function load_settings(skip = false) {
     if (!skip) {
       for (var member in settings2) delete settings2[member];
-      Object.assign(settings2, JSON.parse(localStorage.getItem("bleh")) || create_settings_template2());
+      Object.assign(settings2, JSON.parse(localStorage.getItem("bleh")) || create_settings_template());
     }
     for (let setting in settings_template)
       if (settings2[setting] == void 0)
@@ -6048,7 +6057,7 @@
         document.body.style.setProperty(`--${settings_base2[item].css}`, `${value}${settings_base2[item].unit}`);
         document.documentElement.setAttribute(`data-bleh--${item}`, `${value}`);
         if (item == "hue" || item == "sat" || item == "lit") {
-          if (settings2.hue == settings_base2.hue.value && settings2.sat == settings_base2.sat.value && settings2.lit == settings_base2.lit.value && settings2.seasonal && stored_season2.id != "none") {
+          if (settings2.hue == settings_base2.hue.value && settings2.sat == settings_base2.sat.value && settings2.lit == settings_base2.lit.value && settings2.seasonal && stored_season.id != "none") {
             document.body.style.removeProperty(`--${settings_base2.hue.css}`);
             document.body.style.removeProperty(`--${settings_base2.sat.css}`);
             document.body.style.removeProperty(`--${settings_base2.lit.css}`);
@@ -7527,6 +7536,7 @@
       page2.structure.container = document.createElement("div");
       page2.structure.container.classList.add("page-content", "container");
       let container_full_width = document.body.querySelector(".container--full-width");
+      debugger;
       if (container_full_width)
         container_full_width.insertBefore(page2.structure.container, container_full_width.firstElementChild);
       else
@@ -7644,39 +7654,39 @@
     let last_season_seen = localStorage.getItem("bleh_last_season_seen") || "";
     let now = /* @__PURE__ */ new Date();
     log2(`it is now ${now}`, "season", "log");
-    stored_season2.offset = calculate_offset(now);
-    log2(`calculated offset as ${stored_season2.offset}`, "season");
+    stored_season.offset = calculate_offset(now);
+    log2(`calculated offset as ${stored_season.offset}`, "season");
     let current_year = now.getFullYear();
     seasonal_events.forEach((season, index) => {
-      log2(`running thru, ${season.id} - ${new Date(season.start.replace("y0", current_year).replace("{offset}", stored_season2.offset))} ${new Date(season.end.replace("y0", current_year).replace("{offset}", stored_season2.offset))}`, "season", "log");
-      log2(`${now >= new Date(season.start.replace("y0", current_year).replace("{offset}", stored_season2.offset))} ${now <= new Date(season.end.replace("y0", current_year).replace("{offset}", stored_season2.offset))}`, "season", "log");
-      if (now >= new Date(season.start.replace("y0", current_year).replace("{offset}", stored_season2.offset)) && now <= new Date(season.end.replace("y0", current_year).replace("{offset}", stored_season2.offset))) {
-        stored_season2.now = now;
-        stored_season2.year = current_year;
+      log2(`running thru, ${season.id} - ${new Date(season.start.replace("y0", current_year).replace("{offset}", stored_season.offset))} ${new Date(season.end.replace("y0", current_year).replace("{offset}", stored_season.offset))}`, "season", "log");
+      log2(`${now >= new Date(season.start.replace("y0", current_year).replace("{offset}", stored_season.offset))} ${now <= new Date(season.end.replace("y0", current_year).replace("{offset}", stored_season.offset))}`, "season", "log");
+      if (now >= new Date(season.start.replace("y0", current_year).replace("{offset}", stored_season.offset)) && now <= new Date(season.end.replace("y0", current_year).replace("{offset}", stored_season.offset))) {
+        stored_season.now = now;
+        stored_season.year = current_year;
         update_season_nav();
-        if (stored_season2.id == season.id)
+        if (stored_season.id == season.id)
           return;
-        stored_season2.id = season.id;
-        stored_season2.start = season.start;
-        stored_season2.end = season.end;
-        stored_season2.snowflakes = season.snowflakes;
+        stored_season.id = season.id;
+        stored_season.start = season.start;
+        stored_season.end = season.end;
+        stored_season.snowflakes = season.snowflakes;
         if (now.getDate() == 31) {
-          stored_season2.new_years_eve = true;
-          stored_season2.seasonal_timer = setInterval(update_season_nav, 1e3);
-        } else if (stored_season2.seasonal_timer) {
-          clearInterval(stored_season2.seasonal_timer);
+          stored_season.new_years_eve = true;
+          stored_season.seasonal_timer = setInterval(update_season_nav, 1e3);
+        } else if (stored_season.seasonal_timer) {
+          clearInterval(stored_season.seasonal_timer);
         }
         if (seasonal_events[index + 1] == null) {
-          stored_season2.next_id = seasonal_events[0].id;
-          stored_season2.next_start = seasonal_events[0].start;
-          stored_season2.next_is_new_year = true;
+          stored_season.next_id = seasonal_events[0].id;
+          stored_season.next_start = seasonal_events[0].start;
+          stored_season.next_is_new_year = true;
         } else {
-          stored_season2.next_id = seasonal_events[index + 1].id;
-          stored_season2.next_start = seasonal_events[index + 1].start;
-          stored_season2.next_is_new_year = false;
+          stored_season.next_id = seasonal_events[index + 1].id;
+          stored_season.next_start = seasonal_events[index + 1].start;
+          stored_season.next_is_new_year = false;
         }
         log2(`${season.id} from ${season.start} to ${season.end}`, "season");
-        log2(`next will be ${stored_season2.next_id} from ${stored_season2.next_start} (is new year? ${stored_season2.next_is_new_year})`, "season");
+        log2(`next will be ${stored_season.next_id} from ${stored_season.next_start} (is new year? ${stored_season.next_is_new_year})`, "season");
         document.documentElement.setAttribute("data-bleh--season", season.id);
         if (season.snowflakes.state && settings2.seasonal_particles) {
           log2("let the snow start!", "season");
@@ -7688,7 +7698,7 @@
           begin_snowflakes(snowflakes_enabled, snowflakes_count);
         }
         if (last_season_seen != "" && last_season_seen != season.id)
-          deliver_notif(trans[lang2].settings.customise.seasonal.announce.replace("{s}", trans[lang2].settings.customise.seasonal.listing[stored_season2.id]));
+          deliver_notif(trans[lang2].settings.customise.seasonal.announce.replace("{s}", trans[lang2].settings.customise.seasonal.listing[stored_season.id]));
         localStorage.setItem("bleh_last_season_seen", season.id);
         load_chart_colours();
         return;
@@ -7714,7 +7724,7 @@
     return `${offset}00`;
   }
   function seasonal_timer_start(bypass = false) {
-    if (stored_season2.new_years_eve && !bypass)
+    if (stored_season.new_years_eve && !bypass)
       return;
     if (seasonal_timer.state != null)
       return;
@@ -7723,13 +7733,13 @@
     if (page2.header.season_tooltip == null)
       return;
     page2.header.season_tooltip.setContent(`
-        <span class="season-colour-name">${trans[lang2].settings.customise.seasonal.listing[stored_season2.id]}</span>
+        <span class="season-colour-name">${trans[lang2].settings.customise.seasonal.listing[stored_season.id]}</span>
         <span class="season-exclusive">${trans[lang2].auth_menu.seasonal_live}</span>
     `);
     page2.header.season.classList.add("live");
   }
-  function seasonal_timer_end2() {
-    if (stored_season2.new_years_eve)
+  function seasonal_timer_end() {
+    if (stored_season.new_years_eve)
       return;
     if (seasonal_timer.state == null)
       return;
@@ -7739,7 +7749,7 @@
     if (page2.header.season_tooltip == null)
       return;
     page2.header.season_tooltip.setContent(`
-        <span class="season-colour-name">${trans[lang2].settings.customise.seasonal.listing[stored_season2.id]}</span>
+        <span class="season-colour-name">${trans[lang2].settings.customise.seasonal.listing[stored_season.id]}</span>
         <span class="season-exclusive">${trans[lang2].auth_menu.seasonal_notice}</span>
     `);
     page2.header.season.classList.remove("live");
@@ -7747,17 +7757,17 @@
   function update_season_nav() {
     if (page2.header.season == null)
       return;
-    page2.header.season.setAttribute("data-season", stored_season2.id);
-    if (!stored_season2.new_years_eve) {
-      page2.header.season.textContent = moment(stored_season2.end.replace("y0", stored_season2.year).replace("{offset}", stored_season2.offset)).to(stored_season2.now, true);
+    page2.header.season.setAttribute("data-season", stored_season.id);
+    if (!stored_season.new_years_eve) {
+      page2.header.season.textContent = moment(stored_season.end.replace("y0", stored_season.year).replace("{offset}", stored_season.offset)).to(stored_season.now, true);
     } else {
-      let next = stored_season2.next_start.replace("y0", stored_season2.year).replace("{offset}", stored_season2.offset);
-      if (stored_season2.next_is_new_year)
-        next = stored_season2.next_start.replace("y0", stored_season2.year + 1).replace("{offset}", stored_season2.offset);
+      let next = stored_season.next_start.replace("y0", stored_season.year).replace("{offset}", stored_season.offset);
+      if (stored_season.next_is_new_year)
+        next = stored_season.next_start.replace("y0", stored_season.year + 1).replace("{offset}", stored_season.offset);
       let time_until = new Date(next) - /* @__PURE__ */ new Date();
       page2.header.season.textContent = countdown_to(time_until);
       page2.header.season_tooltip.setContent(`
-            <span class="season-colour-name">${trans[lang2].settings.customise.seasonal.listing[stored_season2.id]}</span>
+            <span class="season-colour-name">${trans[lang2].settings.customise.seasonal.listing[stored_season.id]}</span>
             <span class="season-exclusive">${trans[lang2].auth_menu.seasonal_live}</span>
         `);
     }
@@ -7775,7 +7785,7 @@
     if (seconds < 10)
       seconds = "0" + seconds;
     if (days != 0)
-      return moment(stored_season2.end.replace("y0", stored_season2.year).replace("{offset}", stored_season2.offset)).to(stored_season2.now, true);
+      return moment(stored_season.end.replace("y0", stored_season.year).replace("{offset}", stored_season.offset)).to(stored_season.now, true);
     if (hours == "00" && minutes == "00" && seconds == "00")
       set_season();
     if (hours == "00")
@@ -7862,7 +7872,7 @@
                 </a>
             </li>
             <li class="navlist-item secondary-nav-item">
-                <a class="secondary-nav-item-link bleh--nav" data-bleh-page="seasonal" data-season="${stored_season2.id}" onclick="_change_settings_page('seasonal')">
+                <a class="secondary-nav-item-link bleh--nav" data-bleh-page="seasonal" data-season="${stored_season.id}" onclick="_change_settings_page('seasonal')">
                     ${trans[lang2].settings.customise.seasonal.name}
                 </a>
             </li>
@@ -7907,7 +7917,7 @@
                 <button class="btn bleh--btn" data-bleh-page="accessibility" onclick="_change_settings_page('accessibility')">
                     ${trans[lang2].settings.accessibility.name}
                 </button>
-                <button class="btn bleh--btn" data-bleh-page="seasonal" data-season="${stored_season2.id}" onclick="_change_settings_page('seasonal')">
+                <button class="btn bleh--btn" data-bleh-page="seasonal" data-season="${stored_season.id}" onclick="_change_settings_page('seasonal')">
                     ${trans[lang2].settings.customise.seasonal.name}
                 </button>
             </div>
@@ -8014,21 +8024,21 @@
             </div>
             <div class="sep"></div>
             <h4>${trans[lang2].settings.customise.seasonal.name}</h4>
-            <div class="current-season-box no-margin" data-season="${stored_season2.id}">
+            <div class="current-season-box no-margin" data-season="${stored_season.id}">
                 <div class="current-season-info">
-                    <div class="bleh-icon bleh-seasonal-icon" data-season="${stored_season2.id}"></div>
-                    <h4>${trans[lang2].settings.customise.seasonal.listing[stored_season2.id]}</h4>
+                    <div class="bleh-icon bleh-seasonal-icon" data-season="${stored_season.id}"></div>
+                    <h4>${trans[lang2].settings.customise.seasonal.listing[stored_season.id]}</h4>
                 </div>
                 <div class="glacier-library-top season-top">
                     <div class="glacier-library-metadata">
-                        ${stored_season2.id != "none" && stored_season2.start && stored_season2.end ? `
+                        ${stored_season.id != "none" && stored_season.start && stored_season.end ? `
                         <div class="glacier-library-metadata-item">
                             <div class="sub-text">${trans[lang2].settings.customise.seasonal.started}</div>
-                            <div class="glacier-library-metadata-item-value" id="current_season">${moment(stored_season2.start.replace("y0", stored_season2.year).replace("{offset}", stored_season2.offset)).from(stored_season2.now)}</div>
+                            <div class="glacier-library-metadata-item-value" id="current_season">${moment(stored_season.start.replace("y0", stored_season.year).replace("{offset}", stored_season.offset)).from(stored_season.now)}</div>
                         </div>
                         <div class="glacier-library-metadata-item">
                             <div class="sub-text">${trans[lang2].settings.customise.seasonal.ends_in}</div>
-                            <div class="glacier-library-metadata-item-value" id="current_season_start">${moment(stored_season2.end.replace("y0", stored_season2.year).replace("{offset}", stored_season2.offset)).to(stored_season2.now, true)}</div>
+                            <div class="glacier-library-metadata-item-value" id="current_season_start">${moment(stored_season.end.replace("y0", stored_season.year).replace("{offset}", stored_season.offset)).to(stored_season.now, true)}</div>
                         </div>
                         ` : ""}
                     </div>
@@ -8492,22 +8502,22 @@
             <div class="bleh--panel">
                 <div class="seasonal-inner">
                     <div class="sub-text">${trans[lang2].settings.customise.seasonal.timeline}</div>
-                    <h4>${moment(stored_season2.now).format("MMMM Do YYYY")}</h4>
-                    <div class="current-season-box" data-season="${stored_season2.id}">
+                    <h4>${moment(stored_season.now).format("MMMM Do YYYY")}</h4>
+                    <div class="current-season-box" data-season="${stored_season.id}">
                         <div class="current-season-info">
-                            <div class="bleh-icon bleh-seasonal-icon" data-season="${stored_season2.id}"></div>
-                            <h4>${trans[lang2].settings.customise.seasonal.listing[stored_season2.id]}</h4>
+                            <div class="bleh-icon bleh-seasonal-icon" data-season="${stored_season.id}"></div>
+                            <h4>${trans[lang2].settings.customise.seasonal.listing[stored_season.id]}</h4>
                         </div>
                         <div class="glacier-library-top season-top">
                             <div class="glacier-library-metadata">
-                                ${stored_season2.id != "none" && stored_season2.start && stored_season2.end ? `
+                                ${stored_season.id != "none" && stored_season.start && stored_season.end ? `
                                 <div class="glacier-library-metadata-item">
                                     <div class="sub-text">${trans[lang2].settings.customise.seasonal.started}</div>
-                                    <div class="glacier-library-metadata-item-value" id="current_season_start">${moment(stored_season2.start.replace("y0", stored_season2.year).replace("{offset}", stored_season2.offset)).from(stored_season2.now)}</div>
+                                    <div class="glacier-library-metadata-item-value" id="current_season_start">${moment(stored_season.start.replace("y0", stored_season.year).replace("{offset}", stored_season.offset)).from(stored_season.now)}</div>
                                 </div>
                                 <div class="glacier-library-metadata-item">
                                     <div class="sub-text">${trans[lang2].settings.customise.seasonal.ends_in}</div>
-                                    <div class="glacier-library-metadata-item-value" id="current_season">${moment(stored_season2.end.replace("y0", stored_season2.year).replace("{offset}", stored_season2.offset)).to(stored_season2.now, true)}</div>
+                                    <div class="glacier-library-metadata-item-value" id="current_season">${moment(stored_season.end.replace("y0", stored_season.year).replace("{offset}", stored_season.offset)).to(stored_season.now, true)}</div>
                                 </div>
                                 ` : ""}
                             </div>
@@ -8516,16 +8526,16 @@
                 </div>
                 <div class="info-box no-padding">
                     <div class="bleh-icon bleh-info-icon"></div>
-                    ${trans[lang2].settings.customise.seasonal.info.replace("{offset}", `<code>${stored_season2.offset}</code>`)}
+                    ${trans[lang2].settings.customise.seasonal.info.replace("{offset}", `<code>${stored_season.offset}</code>`)}
                 </div>
                 <!--<p>${trans[lang2].settings.customise.seasonal.bio}</p>
                 <div class="inner-preview pad click-thru">
                     <div class="current-season-container">
-                        <div class="current-season" data-season="${stored_season2.id}" id="current_season">
-                            ${stored_season2.id != "none" ? trans[lang2].settings.customise.seasonal.marker.current.replace("{season}", trans[lang2].settings.customise.seasonal.listing[stored_season2.id]) : settings2.seasonal ? trans[lang2].settings.customise.seasonal.marker.none : trans[lang2].settings.customise.seasonal.marker.disabled}
+                        <div class="current-season" data-season="${stored_season.id}" id="current_season">
+                            ${stored_season.id != "none" ? trans[lang2].settings.customise.seasonal.marker.current.replace("{season}", trans[lang2].settings.customise.seasonal.listing[stored_season.id]) : settings2.seasonal ? trans[lang2].settings.customise.seasonal.marker.none : trans[lang2].settings.customise.seasonal.marker.disabled}
                         </div>
                         <div class="current-season-started" id="current_season_start">
-                            ${stored_season2.id != "none" ? trans[lang2].settings.customise.seasonal.marker.started : ""}
+                            ${stored_season.id != "none" ? trans[lang2].settings.customise.seasonal.marker.started : ""}
                         </div>
                     </div>
                 </div>-->
@@ -9501,7 +9511,7 @@
     if (page_id == "home" || page_id == "seasonal")
       seasonal_timer_start();
     else
-      seasonal_timer_end2();
+      seasonal_timer_end();
     page2.structure.main.innerHTML = render_setting_page(page_id);
     if (page_id == "themes") {
       show_theme_change_in_settings();
@@ -9527,12 +9537,12 @@
         content: trans[lang2].settings.music.show_bulk_edit_album.require
       });
     }
-    if ((page_id == "seasonal" || page_id == "home") && settings2.seasonal && stored_season2.id != "none" && stored_season2.start && stored_season2.end) {
+    if ((page_id == "seasonal" || page_id == "home") && settings2.seasonal && stored_season.id != "none" && stored_season.start && stored_season.end) {
       tippy(document.getElementById("current_season"), {
-        content: new Date(stored_season2.end.replace("y0", stored_season2.year).replace("{offset}", stored_season2.offset)).toLocaleString(lang2)
+        content: new Date(stored_season.end.replace("y0", stored_season.year).replace("{offset}", stored_season.offset)).toLocaleString(lang2)
       });
       tippy(document.getElementById("current_season_start"), {
-        content: new Date(stored_season2.start.replace("y0", stored_season2.year).replace("{offset}", stored_season2.offset)).toLocaleString(lang2)
+        content: new Date(stored_season.start.replace("y0", stored_season.year).replace("{offset}", stored_season.offset)).toLocaleString(lang2)
       });
     }
     if (setting != null) {
@@ -9969,7 +9979,7 @@
         if (type == "custom")
           swatch.textContent = trans[lang2].settings.customise.colours.swatches[colour.type];
         if (colour.type == "seasonal") {
-          if (stored_season2.id == "none")
+          if (stored_season.id == "none")
             return;
           tippy(swatch, {
             theme: "menu",
@@ -10138,14 +10148,14 @@
       ]
     };
     exclusives.new_years = exclusives.christmas;
-    if (!exclusives.hasOwnProperty(stored_season2.id)) {
+    if (!exclusives.hasOwnProperty(stored_season.id)) {
       instance.innerHTML = `
             <div class="alert alert-info">${trans[lang2].settings.customise.seasonal.none}</div>
         `;
       return;
     }
     instance.innerHTML = "";
-    exclusives[stored_season2.id].forEach((colour) => {
+    exclusives[stored_season.id].forEach((colour) => {
       colour.sets = { accent_type: colour.type, ...colour.sets };
       colour.displays = colour.sets;
       let item = document.createElement("button");
@@ -10299,7 +10309,7 @@
     for (let language in lang_info) {
       let lang_row = document.createElement("div");
       lang_row.classList.add("language-row");
-      if (non_override_lang2 == language)
+      if (non_override_lang == language)
         lang_row.classList.add("active");
       let users = "";
       for (let user in lang_info[language].by)
@@ -10411,7 +10421,7 @@
   };
   unsafeWindow._confirm_reset = function() {
     for (var member in settings2) delete settings2[member];
-    Object.assign(settings2, create_settings_template2());
+    Object.assign(settings2, create_settings_template());
     load_settings(true);
     dialog_rm({
       id: "reset_settings"
@@ -11007,11 +11017,11 @@
           image.addEventListener("load", function() {
             let thief = new ColorThief();
             let colour = thief.getColor(image);
-            let hsl = rgb_to_hsl2(colour[0], colour[1], colour[2]);
+            let hsl = rgb_to_hsl(colour[0], colour[1], colour[2]);
             grid_colour.style.setProperty("background", `rgb(${colour})`);
             grid.classList.add("grid-items-item-has-colour");
             grid.style.setProperty("--hue-over", hsl.h);
-            grid.style.setProperty("--sat-over", clamp_sat2(hsl.s / 100 * 3));
+            grid.style.setProperty("--sat-over", clamp_sat(hsl.s / 100 * 3));
             grid.style.setProperty("--lit-over", 1);
           });
         } catch (e) {
@@ -11363,7 +11373,7 @@
             image.addEventListener("load", function() {
               let thief = new ColorThief();
               let colour = thief.getColor(image);
-              let hsl = rgb_to_hsl2(colour[0], colour[1], colour[2]);
+              let hsl = rgb_to_hsl(colour[0], colour[1], colour[2]);
               track.style.setProperty("--hue-over", hsl.h);
               track.style.setProperty("--sat-over", clamp_sat(hsl.s / 100 * 3));
               track.style.setProperty("--lit-over", 1);
@@ -11464,11 +11474,11 @@
     let bleh_container = document.createElement("li");
     bleh_container.classList.add("masthead-nav-item");
     bleh_container.innerHTML = `
-        <a class="masthead-nav-control" href="${root2}bleh${stored_season2.id != "none" ? "?tab=seasonal" : ""}" data-bleh--label="bleh" data-season="${stored_season2.id}" data-season-active="${stored_season2.id != "none" ? "true" : "false"}">
-            ${stored_season2.id == "none" ? trans[lang2].auth_menu.configure_bleh : moment(stored_season2.end.replace("y0", stored_season2.year).replace("{offset}", stored_season2.offset)).to(stored_season2.now, true)}
+        <a class="masthead-nav-control" href="${root2}bleh${stored_season.id != "none" ? "?tab=seasonal" : ""}" data-bleh--label="bleh" data-season="${stored_season.id}" data-season-active="${stored_season.id != "none" ? "true" : "false"}">
+            ${stored_season.id == "none" ? trans[lang2].auth_menu.configure_bleh : moment(stored_season.end.replace("y0", stored_season.year).replace("{offset}", stored_season.offset)).to(stored_season.now, true)}
         </a>
     `;
-    if (stored_season2.id == "none") {
+    if (stored_season.id == "none") {
       tippy(bleh_container, {
         content: trans[lang2].auth_menu.configure_bleh
       });
@@ -11476,7 +11486,7 @@
       page2.header.season_tooltip = tippy(bleh_container, {
         theme: "seasonal-swatch",
         content: `
-                <span class="season-colour-name">${trans[lang2].settings.customise.seasonal.listing[stored_season2.id]}</span>
+                <span class="season-colour-name">${trans[lang2].settings.customise.seasonal.listing[stored_season.id]}</span>
                 <span class="season-exclusive">${trans[lang2].auth_menu.seasonal_notice}</span>
             `,
         allowHTML: true
@@ -11586,14 +11596,14 @@
     let logo_a = document.body.querySelector(".masthead-logo a");
     logo_a.innerHTML = "";
     logo_a.appendChild(bleh2);
-    let selected_language = document.querySelector(".footer-language--active strong").textContent;
+    let selected_language = document.querySelector(".footer-language--active strong")?.textContent;
     let language_options = document.querySelectorAll(".footer-language-form");
     let language_menu = document.createElement("div");
     language_menu.classList.add("language-menu");
     let sel_button = document.createElement("button");
     sel_button.classList.add("dropdown-menu-clickable-item", "lang-item", "active");
-    sel_button.setAttribute("data-lang", non_override_lang2);
-    sel_button.style.setProperty("--flag-url", `url('https://katelyynn.github.io/bleh/fm/flags/${non_override_lang2}.svg')`);
+    sel_button.setAttribute("data-lang", non_override_lang);
+    sel_button.style.setProperty("--flag-url", `url('https://katelyynn.github.io/bleh/fm/flags/${non_override_lang}.svg')`);
     sel_button.textContent = selected_language;
     language_menu.appendChild(sel_button);
     language_options.forEach((language_option) => {
@@ -11607,7 +11617,7 @@
     let language_nav = document.createElement("a");
     language_nav.classList.add("language-nav");
     language_nav.innerHTML = `
-        <span data-lang="${non_override_lang2}" style="--flag-url: url('https://katelyynn.github.io/bleh/fm/flags/${non_override_lang2}.svg');">${selected_language}</span>
+        <span data-lang="${non_override_lang}" style="--flag-url: url('https://katelyynn.github.io/bleh/fm/flags/${non_override_lang}.svg');">${selected_language}</span>
     `;
     tippy(language_nav, {
       theme: "language-menu",
@@ -12128,8 +12138,8 @@
         let bg = header_inner.getAttribute("style").replace("background: #", "");
         let hsl = hex_to_hsl(bg);
         document.body.style.setProperty("--hue-album", hsl.h);
-        document.body.style.setProperty("--sat-album", clamp_sat2(hsl.s / 100 * 3));
-        log2(`sourced hsl of (${hsl.h}, ${hsl.s}, ${hsl.l}) - using final value of (${hsl.h}, ${clamp_sat2(hsl.s / 100 * 3)}, ${hsl.l})`, "hue from album");
+        document.body.style.setProperty("--sat-album", clamp_sat(hsl.s / 100 * 3));
+        log2(`sourced hsl of (${hsl.h}, ${hsl.s}, ${hsl.l}) - using final value of (${hsl.h}, ${clamp_sat(hsl.s / 100 * 3)}, ${hsl.l})`, "hue from album");
         load_chart_colours();
       } catch (e) {
         log2("no cover present", "hue from album");
@@ -12193,7 +12203,7 @@
         bleh_wiki_editor2();
     }
     log2("status is", "page", "info", page2);
-    update_page2();
+    update_page();
   }
   function album_missing_a_tracklist() {
     let tracklist = document.getElementById("tracklist");
@@ -12460,7 +12470,7 @@
         bleh_top_listeners();
     }
     log2("status is", "page", "info", page2);
-    update_page2();
+    update_page();
   }
 
   // src/changelog.js
@@ -13113,7 +13123,7 @@
     let content_top = document.body.querySelector(".content-top");
     checkup_page_structure(false, content_top);
     log2("status is", "page", "info", page2);
-    update_page2();
+    update_page();
     if (page2.subpage != "overview")
       return;
     let charts = page2.structure.main.querySelector(".charts");
@@ -13426,7 +13436,7 @@
       }
     }
     log2("status is", "page", "info", page2);
-    update_page2();
+    update_page();
   }
   function bleh_events_manage() {
     register_background(auth2.avatar);
@@ -13442,7 +13452,7 @@
     let header_text = content_top.querySelector(".content-top-header").textContent;
     checkup_page_structure(false, content_top);
     log2("status is", "page", "info", page2);
-    update_page2();
+    update_page();
     page2.structure.nav.classList.add("navlist--more");
     let edit_header = document.createElement("section");
     edit_header.classList.add("redesigned-header", "event-manage-header", "no-background");
@@ -13487,7 +13497,7 @@
     let content_top = document.body.querySelector(".content-top");
     checkup_page_structure(false, content_top);
     log2("status is", "page", "info", page2);
-    update_page2();
+    update_page();
     let banner = document.createElement("div");
     banner.classList.add("top-banner", "home-banner");
     banner.innerHTML = `
@@ -13512,7 +13522,7 @@
     let content_top = document.body.querySelector(".content-top");
     checkup_page_structure(false, content_top);
     log2("status is", "page", "info", page2);
-    update_page2();
+    update_page();
     if (page2.subpage == "notifications") {
       let form = page2.structure.container.querySelector("form");
       let notifications = page2.structure.container.querySelector(".inbox-notifications");
@@ -13644,7 +13654,7 @@
     let header_text = trans[lang2].settings.pages[page2.subpage];
     checkup_page_structure(false, content_top);
     log2("status is", "page", "info", page2);
-    update_page2();
+    update_page();
     register_background(auth2.avatar);
     if (page2.subpage == "overview") {
       patch_settings_profile_tab();
@@ -14626,13 +14636,13 @@
       create_profile_top_item(profile_header, {
         name: page2.name,
         type: "edit",
-        link: `${root}settings`,
+        link: `${root2}settings`,
         katsune
       });
       create_profile_top_item(profile_header, {
         name: page2.name,
         type: "obsess",
-        link: `${root}user/${page2.name}/obsessions/set`,
+        link: `${root2}user/${page2.name}/obsessions/set`,
         katsune
       });
     }
@@ -14680,27 +14690,27 @@
           theme: "context-menu",
           content: `
                     <h4 class="menu-header">${trans[lang2].music.compare.header}</h4>
-                    <a class="dropdown-menu-clickable-item" href="${root}user/${page2.name}/library/music/${sanitise(taste_artists[0])}" data-menu-item="shared-artist">
+                    <a class="dropdown-menu-clickable-item" href="${root2}user/${page2.name}/library/music/${sanitise(taste_artists[0])}" data-menu-item="shared-artist">
                         <img class="view-item-avatar" src="${profile_avi}" alt="${page2.name}">${taste_artists[0]}
                     </a>
-                    <a class="dropdown-menu-clickable-item" href="${root}user/${auth2.name}/library/music/${sanitise(taste_artists[0])}" data-menu-item="shared-artist">
+                    <a class="dropdown-menu-clickable-item" href="${root2}user/${auth2.name}/library/music/${sanitise(taste_artists[0])}" data-menu-item="shared-artist">
                         <img class="view-item-avatar" src="${auth2.avatar}" alt="${auth2.name}">${taste_artists[0]}
                     </a>
                     ${taste_artists.length >= 2 ? `
                     <div class="sep"></div>
-                    <a class="dropdown-menu-clickable-item" href="${root}user/${page2.name}/library/music/${sanitise(taste_artists[1])}" data-menu-item="shared-artist">
+                    <a class="dropdown-menu-clickable-item" href="${root2}user/${page2.name}/library/music/${sanitise(taste_artists[1])}" data-menu-item="shared-artist">
                         <img class="view-item-avatar" src="${profile_avi}" alt="${page2.name}">${taste_artists[1]}
                     </a>
-                    <a class="dropdown-menu-clickable-item" href="${root}user/${auth2.name}/library/music/${sanitise(taste_artists[1])}" data-menu-item="shared-artist">
+                    <a class="dropdown-menu-clickable-item" href="${root2}user/${auth2.name}/library/music/${sanitise(taste_artists[1])}" data-menu-item="shared-artist">
                         <img class="view-item-avatar" src="${auth2.avatar}" alt="${auth2.name}">${taste_artists[1]}
                     </a>
                     ` : ""}
                     ${taste_artists.length >= 3 ? `
                     <div class="sep"></div>
-                    <a class="dropdown-menu-clickable-item" href="${root}user/${page2.name}/library/music/${sanitise(taste_artists[2])}" data-menu-item="shared-artist">
+                    <a class="dropdown-menu-clickable-item" href="${root2}user/${page2.name}/library/music/${sanitise(taste_artists[2])}" data-menu-item="shared-artist">
                         <img class="view-item-avatar" src="${profile_avi}" alt="${page2.name}">${taste_artists[2]}
                     </a>
-                    <a class="dropdown-menu-clickable-item" href="${root}user/${auth2.name}/library/music/${sanitise(taste_artists[2])}" data-menu-item="shared-artist">
+                    <a class="dropdown-menu-clickable-item" href="${root2}user/${auth2.name}/library/music/${sanitise(taste_artists[2])}" data-menu-item="shared-artist">
                         <img class="view-item-avatar" src="${auth2.avatar}" alt="${auth2.name}">${taste_artists[2]}
                     </a>
                     ` : ""}
@@ -14781,26 +14791,26 @@
         name: page2.name,
         text: scrobbles,
         type: "scrobbles",
-        link: `${root}user/${page2.name}/library`,
+        link: `${root2}user/${page2.name}/library`,
         tooltip: average
       });
       create_profile_top_item(profile_header, {
         name: page2.name,
         text: artists,
         type: "artists",
-        link: `${root}user/${page2.name}/library/artists`
+        link: `${root2}user/${page2.name}/library/artists`
       });
       create_profile_top_item(profile_header, {
         name: page2.name,
         text: loved,
         type: "loved",
-        link: `${root}user/${page2.name}/loved`
+        link: `${root2}user/${page2.name}/loved`
       });
       if (!is_own_profile) {
         create_profile_top_item(profile_header, {
           name: page2.name,
           type: "taste",
-          link: `${root}user/${page2.name}/library/artists?date_preset=LAST_30_DAYS&page=1`,
+          link: `${root2}user/${page2.name}/library/artists?date_preset=LAST_30_DAYS&page=1`,
           taste,
           artists: taste_artists,
           avi: profile_avi,
@@ -14830,7 +14840,7 @@
     }
   }
   function create_profile_top_item(parent, { name, link, text = "", type, taste = "", artists = [], avi = "", percent = "", action = "", tooltip = "", allow_html = false, tooltip_theme = "", full = false, primary = false, katsune = false }) {
-    log(`creating top item of ${name}, ${link}, ${text}`, "profile");
+    log2(`creating top item of ${name}, ${link}, ${text}`, "profile");
     let listen_item = document.createElement(action != "button" ? "a" : "button");
     listen_item.classList.add("btn", "profile-top-item", `profile-top-item--${type}`, "view-item");
     if (action != "button" && type != "going" && type != "maybe" && type != "total") {
@@ -14911,27 +14921,27 @@
         theme: "context-menu",
         content: `
                 <h4 class="menu-header">${trans[lang2].music.compare.header}</h4>
-                <a class="dropdown-menu-clickable-item" href="${root}user/${name}/library/music/${sanitise(artists[0])}" data-menu-item="shared-artist">
+                <a class="dropdown-menu-clickable-item" href="${root2}user/${name}/library/music/${sanitise(artists[0])}" data-menu-item="shared-artist">
                     <img class="view-item-avatar" src="${avi}" alt="${name}">${artists[0]}
                 </a>
-                <a class="dropdown-menu-clickable-item" href="${root}user/${auth2.name}/library/music/${sanitise(artists[0])}" data-menu-item="shared-artist">
+                <a class="dropdown-menu-clickable-item" href="${root2}user/${auth2.name}/library/music/${sanitise(artists[0])}" data-menu-item="shared-artist">
                     <img class="view-item-avatar" src="${auth2.avatar}" alt="${auth2.name}">${artists[0]}
                 </a>
                 ${artists.length >= 2 ? `
                 <div class="sep"></div>
-                <a class="dropdown-menu-clickable-item" href="${root}user/${name}/library/music/${sanitise(artists[1])}" data-menu-item="shared-artist">
+                <a class="dropdown-menu-clickable-item" href="${root2}user/${name}/library/music/${sanitise(artists[1])}" data-menu-item="shared-artist">
                     <img class="view-item-avatar" src="${avi}" alt="${name}">${artists[1]}
                 </a>
-                <a class="dropdown-menu-clickable-item" href="${root}user/${auth2.name}/library/music/${sanitise(artists[1])}" data-menu-item="shared-artist">
+                <a class="dropdown-menu-clickable-item" href="${root2}user/${auth2.name}/library/music/${sanitise(artists[1])}" data-menu-item="shared-artist">
                     <img class="view-item-avatar" src="${auth2.avatar}" alt="${auth2.name}">${artists[1]}
                 </a>
                 ` : ""}
                 ${artists.length >= 3 ? `
                 <div class="sep"></div>
-                <a class="dropdown-menu-clickable-item" href="${root}user/${name}/library/music/${sanitise(artists[2])}" data-menu-item="shared-artist">
+                <a class="dropdown-menu-clickable-item" href="${root2}user/${name}/library/music/${sanitise(artists[2])}" data-menu-item="shared-artist">
                     <img class="view-item-avatar" src="${avi}" alt="${name}">${artists[2]}
                 </a>
-                <a class="dropdown-menu-clickable-item" href="${root}user/${auth2.name}/library/music/${sanitise(artists[2])}" data-menu-item="shared-artist">
+                <a class="dropdown-menu-clickable-item" href="${root2}user/${auth2.name}/library/music/${sanitise(artists[2])}" data-menu-item="shared-artist">
                     <img class="view-item-avatar" src="${auth2.avatar}" alt="${auth2.name}">${artists[2]}
                 </a>
                 ` : ""}
@@ -15357,7 +15367,7 @@
       }
     }
     log2("status is", "page", "info", page2);
-    update_page2();
+    update_page();
     patch_profile_following();
     let profile_notes = JSON.parse(localStorage.getItem("bleh_profile_notes")) || {};
     let profile_note = profile_notes[page2.name];
@@ -16225,7 +16235,7 @@
     page2.name = value != "" ? value : "empty..";
     checkup_page_structure(false, content_top);
     log2("status is", "page", "info", page2);
-    update_page2();
+    update_page();
     if (page2.subpage != "overview") {
       let new_panel = document.createElement("section");
       new_panel.classList.add("search-results-panel");
@@ -16404,7 +16414,7 @@
         bleh_wiki_editor2();
     }
     log2("status is", "page", "info", page2);
-    update_page2();
+    update_page();
   }
 
   // src/rain.js
@@ -16465,7 +16475,7 @@
         }
         if (settings2.shout_markdown) {
           let shout_body = shout.querySelector(".shout-body p");
-          shout_parse_queue2.push({
+          shout_parse_queue.push({
             element: shout_body
           });
         }
@@ -16525,10 +16535,10 @@
     }, 100);
   }
   function parse_shout(index) {
-    if (shout_parse_queue2.length <= 0)
+    if (shout_parse_queue.length <= 0)
       return 0;
-    let shout = shout_parse_queue2[index];
-    console.info(index, shout_parse_queue2, shout);
+    let shout = shout_parse_queue[index];
+    console.info(index, shout_parse_queue, shout);
     let converter = new showdown.Converter({
       emoji: true,
       excludeTrailingPunctuationFromURLs: true,
@@ -16546,7 +16556,7 @@
     let parsed_body = converter.makeHtml(shout.element.textContent.replace(/([@])([a-zA-Z0-9_]+)/g, `[$1$2](${root2}user/$2)`).replace(/\[artist\]([a-zA-Z0-9]+)\[\/artist\]/g, `[$1](${root2}music/$1)`).replace(/\[album artist=([a-zA-Z0-9]+)\]([a-zA-Z0-9\s]+)\[\/album\]/g, `[$2](${root2}music/$1/$2)`).replace(/\[track artist=([a-zA-Z0-9]+)\]([a-zA-Z0-9\s]+)\[\/track\]/g, `[$2](${root2}music/$1/_/$2)`).replace(/https:\/\/open\.spotify\.com\/user\/([A-Za-z0-9]+)\?si=([A-Za-z0-9]+)/g, "[@$1](https://open.spotify.com/user/$1)").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;"));
     shout.element.innerHTML = parsed_body;
     log2(`parsed index ${index}`, "shout", "log");
-    shout_parse_queue2.splice(index, 1);
+    shout_parse_queue.splice(index, 1);
     return 1;
   }
   unsafeWindow._show_hidden_shout = function(shout_id) {
@@ -16681,6 +16691,7 @@
   // src/style.js
   function append_style() {
     document.documentElement.classList.add("bleh-supports-loading");
+    for (var member in settings2) delete settings2[member];
     Object.assign(settings2, JSON.parse(localStorage.getItem("bleh")) || create_settings_template());
     let cached_style = localStorage.getItem("bleh_cached_style") || "";
     let url = window.location.href;
@@ -16956,7 +16967,7 @@
     load_notifications();
     set_season();
     start_rain();
-    if (auth2.name == "") {
+    if (!auth2.name) {
       notify2({
         title: "No account added",
         body: "Please sign in to an account to access bleh features.",
@@ -17020,6 +17031,10 @@
     }
     log2("current page", "page", "info", page2);
   }
+  function handle_error_500() {
+    document.body.classList.add("bleh-loaded");
+    log2("halted as root is inaccessible", "load");
+  }
   function main_flow() {
     assign_page();
     if (page2.type == "artist" || page2.type == "album") {
@@ -17045,7 +17060,7 @@
     if (page2.type == "user" || page2.type == "artist" || page2.type == "album" || page2.type == "track") {
       nag_bar();
     }
-    if (settings.corrections) {
+    if (settings2.corrections) {
       correct_generic_combo_no_artist("artist-header-featured-items-item");
       correct_generic_combo_no_artist("artist-top-albums-item");
       correct_generic_combo("source-album-details");
@@ -17095,8 +17110,8 @@
   }
   function assign_page_subpage() {
     page2.subpage = page2.initial.replace(page2.type, "").replace("_", "").replace("music_", "");
-    if (last_page_subpage != page2.subpage) {
-      last_page_subpage = page2.subpage;
+    if (last_page_subpage.state != page2.subpage) {
+      last_page_subpage.state = page2.subpage;
       log2(`subpage of ${page2.subpage}`, "page");
       load_settings();
       if (page2.state.settings_reload) {
@@ -17110,11 +17125,11 @@
     append_nav();
     set_season();
     seasonal_timer_end();
-    if (window.location.href.startsWith(setup_url.replace("{root}", root))) {
+    if (window.location.href.startsWith(setup_url.replace("{root}", root2))) {
       bleh_setup();
-    } else if (window.location.href.startsWith(sponsor_url.replace("{root}", root))) {
+    } else if (window.location.href.startsWith(sponsor_url.replace("{root}", root2))) {
       bleh_sponsor_page();
-    } else if (window.location.href.startsWith(bleh_url.replace("{root}", root))) {
+    } else if (window.location.href.startsWith(bleh_url.replace("{root}", root2))) {
       bleh_settings();
     } else {
       bleh_error();
@@ -17217,7 +17232,7 @@
         </div>
     `;
   }
-  function update_page2() {
+  function update_page() {
     page2.structure.container.setAttribute("data-page-type", page2.type);
     page2.structure.container.setAttribute("data-page-subpage", page2.subpage);
   }
@@ -17287,165 +17302,168 @@
     return background;
   }
 
-  // src/main.js
-  var version = {
-    "brand": "bleh",
-    "build": "2025.0402",
-    "sku": "beret",
-    "bio": "bleh!!! ^-^",
-    "author": "kate",
-    "url": "https://github.com/katelyynn/bleh/raw/uwu/fm/bleh.user.js",
-    "feature_flags": {
-      "bleh_settings_tabs": {
-        "default": true,
-        "name": "Utilise new bleh settings tabs",
-        "date": "2024-07-09"
+  // src/build/build.json
+  var build_default = {
+    brand: "bleh",
+    build: "2025.0402",
+    sku: "beret",
+    bio: "bleh!!! ^-^",
+    author: "kate",
+    url: "https://github.com/katelyynn/bleh/raw/uwu/fm/bleh.user.js",
+    feature_flags: {
+      bleh_settings_tabs: {
+        default: true,
+        name: "Utilise new bleh settings tabs",
+        date: "2024-07-09"
       },
-      "high_contrast": {
-        "default": false,
-        "name": "Enable visibility of high contrast (experimental)",
-        "date": "2024-10-04"
+      high_contrast: {
+        default: false,
+        name: "Enable visibility of high contrast (experimental)",
+        date: "2024-10-04"
       },
-      "redesigned_profile_header": {
-        "default": true,
-        "name": "Redesigned profile header info",
-        "date": "2024-10-09"
+      redesigned_profile_header: {
+        default: true,
+        name: "Redesigned profile header info",
+        date: "2024-10-09"
       },
-      "show_wiki_label": {
-        "default": true,
-        "name": "Show 'About' label above wikis",
-        "date": "2024-10-11"
+      show_wiki_label: {
+        default: true,
+        name: "Show 'About' label above wikis",
+        date: "2024-10-11"
       },
-      "music_page_charts": {
-        "default": true,
-        "name": "Music page charts",
-        "date": "2024-11-05"
+      music_page_charts: {
+        default: true,
+        name: "Music page charts",
+        date: "2024-11-05"
       },
-      "chartlist_highlight_shadow": {
-        "default": false,
-        "name": "Chartlist row highlight side shadow",
-        "date": "2024-11-05"
+      chartlist_highlight_shadow: {
+        default: false,
+        name: "Chartlist row highlight side shadow",
+        date: "2024-11-05"
       },
-      "new_gallery_experience": {
-        "default": true,
-        "name": "New gallery experience",
-        "date": "2024-11-06"
+      new_gallery_experience: {
+        default: true,
+        name: "New gallery experience",
+        date: "2024-11-06"
       },
-      "display_album_bookmark": {
-        "default": false,
-        "name": "Display album bookmark button in gallery refresh",
-        "date": "2024-11-06"
+      display_album_bookmark: {
+        default: false,
+        name: "Display album bookmark button in gallery refresh",
+        date: "2024-11-06"
       },
-      "changelogs": {
-        "default": true,
-        "name": "Enable changelog system",
-        "date": "2024-11-07"
+      changelogs: {
+        default: true,
+        name: "Enable changelog system",
+        date: "2024-11-07"
       },
-      "refreshed_nav": {
-        "default": true,
-        "name": "Refreshed nav structure, reducing a lot of jank",
-        "date": "2024-11-09"
+      refreshed_nav: {
+        default: true,
+        name: "Refreshed nav structure, reducing a lot of jank",
+        date: "2024-11-09"
       },
-      "refreshed_music_nav": {
-        "default": true,
-        "name": "Refreshed music nav structure",
-        "date": "2024-11-10"
+      refreshed_music_nav: {
+        default: true,
+        name: "Refreshed music nav structure",
+        date: "2024-11-10"
       },
-      "card_saturation": {
-        "default": true,
-        "name": "Enable card saturation slider",
-        "date": "2024-11-10"
+      card_saturation: {
+        default: true,
+        name: "Enable card saturation slider",
+        date: "2024-11-10"
       },
-      "show_album_cover_always": {
-        "default": true,
-        "name": "Show album cover in header overview",
-        "date": "2024-11-11"
+      show_album_cover_always: {
+        default: true,
+        name: "Show album cover in header overview",
+        date: "2024-11-11"
       },
-      "new_auth_menu": {
-        "default": true,
-        "name": "New custom-built auth menu to reduce lag",
-        "date": "2024-11-11"
+      new_auth_menu: {
+        default: true,
+        name: "New custom-built auth menu to reduce lag",
+        date: "2024-11-11"
       },
-      "unify_top_listeners": {
-        "default": true,
-        "name": "Unify top listeners",
-        "date": "2024-11-15"
+      unify_top_listeners: {
+        default: true,
+        name: "Unify top listeners",
+        date: "2024-11-15"
       },
-      "hide_chartlist_more": {
-        "default": false,
-        "name": "Hide chartlist more button, accessible the same with right-clicking",
-        "date": "2024-12-03"
+      hide_chartlist_more: {
+        default: false,
+        name: "Hide chartlist more button, accessible the same with right-clicking",
+        date: "2024-12-03"
       },
-      "glacier_library": {
-        "default": true,
-        "name": "Glacier library (new library beta)",
-        "date": "2024-12-04"
+      glacier_library: {
+        default: true,
+        name: "Glacier library (new library beta)",
+        date: "2024-12-04"
       },
-      "shout_popover": {
-        "default": true,
-        "name": "Redesigned shout action popover",
-        "date": "2024-12-23"
+      shout_popover: {
+        default: true,
+        name: "Redesigned shout action popover",
+        date: "2024-12-23"
       },
-      "sponsor": {
-        "default": true,
-        "name": "Sponsor link",
-        "date": "2024-12-24"
+      sponsor: {
+        default: true,
+        name: "Sponsor link",
+        date: "2024-12-24"
       },
-      "skip_to_setting": {
-        "default": true,
-        "name": "Skip to... in settings",
-        "date": "2024-12-24"
+      skip_to_setting: {
+        default: true,
+        name: "Skip to... in settings",
+        date: "2024-12-24"
       },
-      "page_title": {
-        "default": true,
-        "name": "Dynamic tab title",
-        "date": "2024-12-26"
+      page_title: {
+        default: true,
+        name: "Dynamic tab title",
+        date: "2024-12-26"
       },
-      "view_button_nav": {
-        "default": true,
-        "name": "Match view button colouring to new nav",
-        "date": "2024-12-28"
+      view_button_nav: {
+        default: true,
+        name: "Match view button colouring to new nav",
+        date: "2024-12-28"
       },
-      "remove_bookmark": {
-        "default": true,
-        "name": "Context menu to remove inaccessible artist bookmark",
-        "date": "2024-12-28"
+      remove_bookmark: {
+        default: true,
+        name: "Context menu to remove inaccessible artist bookmark",
+        date: "2024-12-28"
       },
-      "badges": {
-        "default": true,
-        "name": "New badge tooltip",
-        "date": "2024-12-28"
+      badges: {
+        default: true,
+        name: "New badge tooltip",
+        date: "2024-12-28"
       },
-      "astra": {
-        "default": false,
-        "name": "astrablooms font",
-        "date": "2025-01-01",
-        "notice": "This is a test of a new 'default' font for bleh, it most likely will never take effect as changing a font takes a lot of getting used to, but yeah.<br>You should set your text settings to the following: 470, 540, 610"
+      astra: {
+        default: false,
+        name: "astrablooms font",
+        date: "2025-01-01",
+        notice: "This is a test of a new 'default' font for bleh, it most likely will never take effect as changing a font takes a lot of getting used to, but yeah.<br>You should set your text settings to the following: 470, 540, 610"
       },
-      "developer": {
-        "default": false,
-        "name": "Developer mode",
-        "date": "2025-01-03",
-        "notice": "Enable developer-specific features used for debugging purposes"
+      developer: {
+        default: true,
+        name: "Developer mode",
+        date: "2025-01-03",
+        notice: "Enable developer-specific features used for debugging purposes"
       },
-      "api": {
-        "default": false,
-        "name": "Allow user to enter API key for newer features",
-        "date": "2025-01-19"
+      api: {
+        default: false,
+        name: "Allow user to enter API key for newer features",
+        date: "2025-01-19"
       },
-      "colour_based_on_avatar": {
-        "default": true,
-        "name": "Set colour based on avatar",
-        "date": "2025-01-23"
+      colour_based_on_avatar: {
+        default: true,
+        name: "Set colour based on avatar",
+        date: "2025-01-23"
       },
-      "katsune": {
-        "default": true,
-        "name": "katsune redesign",
-        "date": "2025-01-25",
-        "notice": "This is very, very experimental ~w~"
+      katsune: {
+        default: true,
+        name: "katsune redesign",
+        date: "2025-01-25",
+        notice: "This is very, very experimental ~w~"
       }
     }
   };
+
+  // src/main.js
+  var version = build_default;
   log2(`starting ${version.build}.${version.sku}`, "load");
   bleh();
 })();

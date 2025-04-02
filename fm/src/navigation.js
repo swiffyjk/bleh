@@ -254,9 +254,8 @@ export function append_nav() {
     logo_a.innerHTML = '';
     logo_a.appendChild(bleh);
 
-
     // language
-    let selected_language = document.querySelector('.footer-language--active strong').textContent;
+    let selected_language = document.querySelector('.footer-language--active strong')?.textContent;
     let language_options = document.querySelectorAll('.footer-language-form');
 
     let language_menu = document.createElement('div');

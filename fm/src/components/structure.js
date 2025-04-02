@@ -35,6 +35,7 @@ export function checkup_page_structure(is_subpage = false, header = null) {
 
         // listening report error
         let container_full_width = document.body.querySelector('.container--full-width');
+        debugger;
         if (container_full_width)
             container_full_width.insertBefore(page.structure.container, container_full_width.firstElementChild);
         else

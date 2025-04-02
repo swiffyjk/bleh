@@ -1,7 +1,9 @@
 import { load_activities, subscribe_to_events } from "./activity";
+import { settings } from "./build/config";
 import { log } from "./build/log";
-import { auth, auth_link, bleh_url, has_prompted_for_update, last_page_type, page, setup_url, sponsor_url } from "./build/page";
-import { lang, lookup_lang, trans } from "./build/trans";
+import { auth, auth_link, bleh_url, has_prompted_for_update, last_page_subpage, last_page_type, page, root, setup_url, shout_parse_queue, sponsor_url } from "./build/page";
+import { stored_season } from "./build/seasonal";
+import { lang, lookup_lang, non_override_lang, trans } from "./build/trans";
 import { auto_edit_modal } from "./components/auto_edit";
 import { dialog, load_dialogs } from "./components/dialog";
 import { correct_generic_combo, correct_generic_combo_no_artist, lotus } from "./components/lotus";
@@ -31,7 +33,7 @@ import { bleh_tags } from "./pages/tag";
 import { bleh_tracks } from "./pages/track";
 import { patch_wiki } from "./pages/wiki";
 import { start_rain } from "./rain";
-import { set_season } from "./seasonal";
+import { seasonal_timer_end, set_season } from "./seasonal";
 import { parse_shout_queue, patch_shouts } from "./shout";
 import { ff } from "./sku";
 import { bleh_sponsor_page, sponsors } from "./sponsor";
@@ -89,7 +91,7 @@ function bleh_main() {
     start_rain();
 
     // everything past this point requires authorisation
-    if (auth.name == '') {
+    if (!auth.name) {
         notify({
             title: 'No account added',
             body: 'Please sign in to an account to access bleh features.',
@@ -298,8 +300,8 @@ function assign_page_type() {
 function assign_page_subpage() {
     page.subpage = page.initial.replace(page.type, '').replace('_', '').replace('music_', '');
 
-    if (last_page_subpage != page.subpage) {
-        last_page_subpage = page.subpage;
+    if (last_page_subpage.state != page.subpage) {
+        last_page_subpage.state = page.subpage;
         log(`subpage of ${page.subpage}`, 'page');
 
         load_settings();

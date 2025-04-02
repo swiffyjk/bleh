@@ -1,6 +1,7 @@
 import { register_activity } from "../activity";
 import { log } from "../build/log";
 import { auth, page, root } from "../build/page";
+import { stored_season } from "../build/seasonal";
 import { lang, trans } from "../build/trans";
 import { request_changelog } from "../changelog";
 import { dialog, dialog_rm } from "../components/dialog";

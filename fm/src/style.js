@@ -5,7 +5,7 @@ import { trans } from "./build/trans";
 import { load_chart_colours } from "./chart";
 import { dialog, dialog_rm } from "./components/dialog";
 import { bleh_music_page_charts } from "./components/music";
-import { invoke_reload } from "./config";
+import { create_settings_template, invoke_reload } from "./config";
 import { version } from "./main";
 import { bleh_glacier_date_graph_generate, bleh_glacier_insights } from "./pages/glacier";
 
