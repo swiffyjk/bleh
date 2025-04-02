@@ -11277,23 +11277,25 @@
           let image = track.querySelector(".chartlist-image img");
           if (image == null && page.type == "user")
             is_library_track_page = true;
-          let track_preview = document.createElement("div");
-          track_preview.classList.add("track-preview");
-          track_preview.innerHTML = `
-                    <div class="image">
-                        <div class="inner-image">
-                            ${image != null ? image.outerHTML : '<img class="missing-track">'}
+          if (track_legacy_menu) {
+            let track_preview = document.createElement("div");
+            track_preview.classList.add("track-preview");
+            track_preview.innerHTML = `
+                        <div class="image">
+                            <div class="inner-image">
+                                ${image != null ? image.outerHTML : '<img class="missing-track">'}
+                            </div>
                         </div>
-                    </div>
-                    <div class="info">
-                        <h5 class="title">${song_title}</h5>
-                        <p class="artist">${song_artist_element.innerHTML}</p>
-                        <div class="tags">${song_tags_text}</div>
-                        ${!is_library_track_page ? is_album ? "" : `<p class="album">${image != null ? correct_item_by_artist(sanitise_text(image.getAttribute("alt")), track_artist) : page.name}</p>` : ""}
-                        ${track_timestamp != null && track_timestamp_contents != null ? `<p class="timestamp">${track_timestamp_contents}</p>` : ""}
-                    </div>
-                `;
-          track_legacy_menu.insertBefore(track_preview, track_legacy_menu.firstElementChild);
+                        <div class="info">
+                            <h5 class="title">${song_title}</h5>
+                            <p class="artist">${song_artist_element.innerHTML}</p>
+                            <div class="tags">${song_tags_text}</div>
+                            ${!is_library_track_page ? is_album ? "" : `<p class="album">${image != null ? correct_item_by_artist(sanitise_text(image.getAttribute("alt")), track_artist) : page.name}</p>` : ""}
+                            ${track_timestamp != null && track_timestamp_contents != null ? `<p class="timestamp">${track_timestamp_contents}</p>` : ""}
+                        </div>
+                    `;
+            track_legacy_menu.insertBefore(track_preview, track_legacy_menu.firstElementChild);
+          }
         } else if (settings.corrections) {
           let song_artist_element = track.querySelector(".chartlist-artist a");
           if (song_artist_element != null) {
