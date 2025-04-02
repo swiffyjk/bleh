@@ -10461,7 +10461,6 @@
       console.info("lotus - artist list is not cached, fetching");
       lotus_request("artist", true);
     } else {
-      for (var member in artist_corrections) delete artist_corrections[member];
       Object.assign(artist_corrections, lotus_artist);
       if (lotus_artist_expire < current_time && !force) {
         lotus_request();
@@ -10473,7 +10472,6 @@
       console.info("lotus - album_track list is not cached, fetching");
       lotus_request("album_track", true);
     } else {
-      for (var member in album_track_corrections) delete album_track_corrections[member];
       Object.assign(album_track_corrections, lotus_album_track);
       if (lotus_album_track_expire < current_time && !force) {
         lotus_request("album_track");
@@ -10498,10 +10496,8 @@
       let api_expire = /* @__PURE__ */ new Date();
       if (xhr.status == 200) {
         if (type == "artist") {
-          for (var member in artist_corrections) delete artist_corrections[member];
           Object.assign(artist_corrections, JSON.parse(this.response));
         } else {
-          for (var member in album_track_corrections) delete album_track_corrections[member];
           Object.assign(album_track_corrections, JSON.parse(this.response));
         }
         if (send_notify) {
