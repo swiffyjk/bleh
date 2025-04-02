@@ -67,7 +67,6 @@ export function patch_avatar(avatar, name, type = '') {
                 </div>
             `),
             allowHTML: true,
-            delay: [50, 100],
             placement: 'right',
             interactive: true,
             delay: [200, 0]
@@ -96,7 +95,6 @@ export function patch_avatar(avatar, name, type = '') {
                     </div>
                 `),
                 allowHTML: true,
-                delay: [50, 100],
                 placement: 'right',
                 interactive: true,
                 delay: [200, 0]
@@ -125,7 +123,6 @@ export function patch_avatar(avatar, name, type = '') {
                     </div>
                 `),
                 allowHTML: true,
-                delay: [50, 100],
                 placement: 'right',
                 interactive: true,
                 delay: [200, 0]
