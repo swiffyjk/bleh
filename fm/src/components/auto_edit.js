@@ -1,4 +1,8 @@
-function bleh_auto_edits() {
+import { log } from "../build/log";
+import { page, root } from "../build/page";
+import { lang, trans } from "../build/trans";
+
+export function bleh_auto_edits() {
     let corrections_panel = document.body.querySelector('#subscription-corrections');
     page.structure.main.appendChild(corrections_panel);
 
@@ -15,7 +19,7 @@ function bleh_auto_edits() {
     nav.insertBefore(back_nav, nav.firstElementChild);
 }
 
-function auto_edit_modal() {
+export function auto_edit_modal() {
     let modal = document.querySelector('.automatic-edit-modal-body-v2');
 
     if (modal == null)

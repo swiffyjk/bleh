@@ -1,4 +1,21 @@
-function bleh_albums() {
+import { settings } from "../build/config";
+import { log } from "../build/log";
+import { auth, page, root } from "../build/page";
+import { clamp_sat, hex_to_hsl, sanitise } from "../build/tools";
+import { lang, trans } from "../build/trans";
+import { load_chart_colours } from "../chart";
+import { bleh_about_artist } from "../components/about_artist";
+import { correct_item_by_artist, patch_header_title } from "../components/lotus";
+import { register_menu } from "../components/menu";
+import { bleh_music_page_charts, show_your_scrobbles } from "../components/music";
+import { checkup_page_structure } from "../components/structure";
+import { register_background, update_page } from "../page";
+import { ff } from "../sku";
+import { bleh_gallery_list, bleh_gallery_upload } from "./gallery";
+import { bleh_tags_mini } from "./tag";
+import { bleh_wiki, bleh_wiki_editor, bleh_wiki_history } from "./wiki";
+
+export function bleh_albums() {
     let album_header = document.body.querySelector('.header-new--album');
 
     if (album_header == undefined)
@@ -287,6 +304,10 @@ function album_missing_a_tracklist() {
 
                 let inner_tracklist = doc.querySelector('#top-tracks-section [v-else=""] .chartlist');
                 if (inner_tracklist == null) {
+                    let url_split = window.location.href.split('/');
+                    let album_url = `${url_split[(url_split.length - 2)]}/${url_split[(url_split.length - 1)]}`;
+                    let album_as_track_url = window.location.href.replace(album_url, `${url_split[(url_split.length - 2)]}/_/${url_split[(url_split.length - 1)]}`);
+        
                     tracklist.innerHTML = (`
                         <h3 class="text-18">${trans[lang].music.fetch_plays.name}</h3>
                         <div class="loading-data-container">

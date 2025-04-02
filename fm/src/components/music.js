@@ -1,4 +1,18 @@
-function show_your_scrobbles() {
+import { patch_avatar } from "../avatar";
+import { settings } from "../build/config";
+import { log } from "../build/log";
+import { auth, page, root } from "../build/page";
+import { clean_number, return_artist_from_track } from "../build/tools";
+import { lang, trans } from "../build/trans";
+import { prep_chart_colours } from "../chart";
+import { refresh_all } from "../config";
+import { create_divider } from "../pages/gallery";
+import { ff } from "../sku";
+import { parse_scrobbles_as_rank } from "./colourful_counts";
+import { correct_item_by_artist } from "./lotus";
+import { register_menu } from "./menu";
+
+export function show_your_scrobbles() {
     let katsune = ff('katsune');
     show_numbers_on_side(page.type);
 
@@ -649,7 +663,7 @@ function show_numbers_on_side(header_type) {
     }
 }
 
-function bleh_music_page_charts() {
+export function bleh_music_page_charts() {
     if (!ff('music_page_charts'))
         return;
 
@@ -742,7 +756,7 @@ function bleh_music_page_charts() {
     log('finished', 'music charts');
 }
 
-function bleh_top_listeners() {
+export function bleh_top_listeners() {
     if (!ff('unify_top_listeners'))
         return;
 

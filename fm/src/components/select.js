@@ -1,11 +1,11 @@
 unsafeWindow._update_inbuilt_select = function(id, value) {
     update_inbuilt_select(id, value);
 }
-function update_inbuilt_select(id, value) {
+export function update_inbuilt_select(id, value) {
     document.documentElement.setAttribute(`data-bleh--inbuilt-${id}`, value);
 }
 
-function custom_select(select, element_to_append) {
+export function custom_select(select, element_to_append) {
     console.info(select);
     let id = select.getAttribute('id');
     let value = select.value;

@@ -1,4 +1,9 @@
-function nag_bar() {
+import { settings } from "../build/config";
+import { page } from "../build/page";
+import { lang, trans } from "../build/trans";
+import { notify } from "./notify";
+
+export function nag_bar() {
     /*if (!page.structure.nag_bar) {
         page.structure.nag_bar = document.body.querySelector('#redirect-bar');
         console.info('nag', page.structure.nag_bar);

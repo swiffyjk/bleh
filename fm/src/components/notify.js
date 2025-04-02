@@ -1,4 +1,7 @@
-function load_notifications() {
+import { log } from "../build/log";
+import { page } from "../build/page";
+
+export function load_notifications() {
     let prev_notif = document.getElementById('bleh-notifications');
     if (prev_notif == null) {
         let notifs = document.createElement('div');
@@ -8,10 +11,7 @@ function load_notifications() {
     }
 }
 
-unsafeWindow._deliver_notif = function(content, persist=false, has_icon=false, append_class='', action='') {
-    deliver_notif(content, persist, has_icon, append_class, action);
-}
-function deliver_notif(content, persist=false, has_icon=false, append_class='', action='') {
+export function deliver_notif(content, persist=false, has_icon=false, append_class='', action='') {
     let notif = document.createElement('button');
     notif.classList.add('bleh-notification');
     notif.setAttribute('onclick', '_kill_notif(this)');
@@ -55,7 +55,7 @@ unsafeWindow._notify = function({
         type: type
     });
 }
-function notify({
+export function notify({
     id = null,
     title = null,
     body = null,

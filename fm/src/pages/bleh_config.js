@@ -1,4 +1,21 @@
-function bleh_settings() {
+import { settings, settings_base } from "../build/config";
+import { log } from "../build/log";
+import { album_track_corrections, artist_corrections, ranks } from "../build/music";
+import { auth, page, root, theme_preview } from "../build/page";
+import { stored_season } from "../build/seasonal";
+import { sponsor_list } from "../build/sponsor";
+import { lang, lang_info, non_override_lang, trans } from "../build/trans";
+import { dialog, dialog_legacy, dialog_rm, kill_window } from "../components/dialog";
+import { notify } from "../components/notify";
+import { checkup_page_structure } from "../components/structure";
+import { create_settings_template, load_settings, refresh_all } from "../config";
+import { version } from "../main";
+import { update_page } from "../page";
+import { seasonal_timer_end, seasonal_timer_start } from "../seasonal";
+import { ff } from "../sku";
+
+
+export function bleh_settings() {
     page.structure.container = document.body.querySelector('.page-content');
     try {
         page.structure.row = page.structure.container.querySelector('.row');
@@ -84,7 +101,6 @@ function bleh_settings() {
             </li>
         </ul>
     `);
-
 
     page.structure.side.innerHTML = (`
         <div class="bleh--panel">
@@ -176,7 +192,7 @@ function bleh_settings() {
     }
 }
 
-function render_setting_page(page_id) {
+export function render_setting_page(page_id) {
     if (page_id == 'home') {
         register_skip_to([]);
 
@@ -1359,6 +1375,8 @@ function render_setting_page(page_id) {
             }
         ]);
 
+        console.info(artist_corrections, album_track_corrections);
+
         return (`
             <div class="bleh--panel">
                 <h4>${trans[lang].settings.corrections.formatting}</h4>
@@ -1809,7 +1827,7 @@ function change_settings_page(page_id, setting = null) {
     }
 }
 
-function show_theme_change_in_settings(theme = '') {
+export function show_theme_change_in_settings(theme = '') {
     if (theme != '')
         settings.theme = theme;
 
@@ -1823,7 +1841,7 @@ function show_theme_change_in_settings(theme = '') {
         }
     });
 }
-function show_theme_change_in_menu(theme = '', element = document.body) {
+export function show_theme_change_in_menu(theme = '', element = document.body) {
     if (theme != '')
         settings.theme = theme;
 
@@ -1839,7 +1857,7 @@ function show_theme_change_in_menu(theme = '', element = document.body) {
 }
 
 
-function load_skus() {
+export function load_skus() {
     for (let flag in version.feature_flags) {
         let current_state = version.feature_flags[flag].default;
 
@@ -1909,7 +1927,7 @@ function update_flag_toggle(flag, container) {
 }
 
 
-function display_colour_presets() {
+export function display_colour_presets() {
     let colours = {
         custom: [
             {
@@ -2593,7 +2611,7 @@ unsafeWindow._save_profile_note_in_window = function(username) {
 
 
 
-function prepare_corrections_page() {
+export function prepare_corrections_page() {
     let corrections_table_artist = document.getElementById('corrections-artist');
 
     for (let artist in artist_corrections) {
@@ -2787,7 +2805,8 @@ unsafeWindow._reset_settings = function() {
 }
 
 unsafeWindow._confirm_reset = function() {
-    settings = create_settings_template();
+    for (var member in settings) delete settings[member];
+    Object.assign(settings, create_settings_template());
     load_settings(true);
 
     dialog_rm({

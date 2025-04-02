@@ -1,4 +1,27 @@
-function bleh_profiles() {
+import { load_activities } from "../activity"
+import { patch_avatar } from "../avatar"
+import { settings } from "../build/config"
+import { log } from "../build/log"
+import { auth, page, recent_activity_list, root } from "../build/page"
+import { cute, sponsor_list } from "../build/sponsor"
+import { clean_number, sanitise } from "../build/tools"
+import { lang, trans } from "../build/trans"
+import { load_badges } from "../components/badge"
+import { dialog } from "../components/dialog"
+import { correct_artist, correct_item_by_artist } from "../components/lotus"
+import { markdown } from "../components/markdown"
+import { deliver_notif, notify } from "../components/notify"
+import { create_profile_top_item, redesign_profile_header } from "../components/profile_header"
+import { custom_select, update_inbuilt_select } from "../components/select"
+import { checkup_page_structure } from "../components/structure"
+import { refresh_all, update_inbuilt_item } from "../config"
+import { register_background, update_page } from "../page"
+import { ff } from "../sku"
+import { bleh_user_library } from "./glacier"
+import { use_pronouns } from "./lastfm_settings"
+import { patch_obsession_view } from "./obsession"
+
+export function bleh_profiles() {
     // the obsessions page is a user subpage but works very differently
     if (page.subpage == 'obsessions_obsession') {
         patch_obsession_view();

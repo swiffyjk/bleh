@@ -1,4 +1,18 @@
-function bleh_tracks() {
+import { settings } from "../build/config";
+import { log } from "../build/log";
+import { auth, page, root } from "../build/page";
+import { lang, trans } from "../build/trans";
+import { bleh_about_artist } from "../components/about_artist";
+import { correct_item_by_artist, patch_header_title } from "../components/lotus";
+import { register_menu } from "../components/menu";
+import { bleh_music_page_charts, show_your_scrobbles } from "../components/music";
+import { checkup_page_structure } from "../components/structure";
+import { register_background, update_page } from "../page";
+import { ff } from "../sku";
+import { bleh_tags_mini } from "./tag";
+import { bleh_wiki, bleh_wiki_editor, bleh_wiki_history } from "./wiki";
+
+export function bleh_tracks() {
     let track_header = document.body.querySelector('.header-new--track');
 
     if (track_header == undefined)

@@ -1,4 +1,10 @@
-function subscribe_to_events() {
+import { settings } from "./build/config";
+import { log } from "./build/log";
+import { auth, page, recent_activity_list, root } from "./build/page";
+import { sanitise } from "./build/tools";
+import { correct_artist, correct_item_by_artist } from "./components/lotus";
+
+export function subscribe_to_events() {
     if (!settings.activities)
         return;
 
@@ -112,11 +118,11 @@ function subscribe_to_events() {
 }
 
 
-function load_activities() {
+export function load_activities() {
     if (!settings.activities)
         return;
-
-    recent_activity_list = JSON.parse(localStorage.getItem('bwaa_recent_activity')) || [];
+    recent_activity_list.length = 0
+    recent_activity_list.push(...(JSON.parse(localStorage.getItem('bwaa_recent_activity')) || []));
     log('loaded', 'activity', 'info', recent_activity_list);
 
     // check if over 10
@@ -137,10 +143,7 @@ function check_activities_length() {
     return recent_activity_list;
 }
 
-unsafeWindow._register_activity = function(type, involved, context, date=new Date()) {
-    register_activity(type, involved, context, date);
-}
-function register_activity(type, involved, context, date=new Date()) {
+export function register_activity(type, involved, context, date=new Date()) {
     if (!settings.activities)
         return;
 
@@ -164,7 +167,9 @@ function register_activity(type, involved, context, date=new Date()) {
             return;
     }
 
-    recent_activity_list = JSON.parse(localStorage.getItem('bwaa_recent_activity')) || [];
+    recent_activity_list.length = 0
+    recent_activity_list.push(...(JSON.parse(localStorage.getItem('bwaa_recent_activity')) || []));
+
     log('loaded', 'activity', 'info', recent_activity_list);
 
     recent_activity_list.push({

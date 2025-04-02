@@ -1,4 +1,9 @@
-function basic_page_structure() {
+import { log } from "../build/log";
+import { page } from "../build/page";
+import { load_chart_colours } from "../chart";
+import { ff } from "../sku";
+
+export function basic_page_structure() {
     page.structure.container = document.body.querySelector('.page-content');
     try {
         page.structure.row = page.structure.container.querySelector('.row');
@@ -12,7 +17,7 @@ function basic_page_structure() {
 }
 
 // general health
-function checkup_page_structure(is_subpage = false, header = null) {
+export function checkup_page_structure(is_subpage = false, header = null) {
     if (document.body.style.getPropertyValue('--hue-album')) {
         document.body.style.removeProperty('--hue-album');
         document.body.style.removeProperty('--sat-album');
@@ -30,6 +35,7 @@ function checkup_page_structure(is_subpage = false, header = null) {
 
         // listening report error
         let container_full_width = document.body.querySelector('.container--full-width');
+        debugger;
         if (container_full_width)
             container_full_width.insertBefore(page.structure.container, container_full_width.firstElementChild);
         else

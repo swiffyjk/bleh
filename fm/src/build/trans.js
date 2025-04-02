@@ -1,12 +1,17 @@
+import { handle_error_500 } from "../page";
+import { log } from "./log";
+import { auth, auth_link, setRoot } from "./page";
+import { clamp_sat, rgb_to_hsl } from "./tools";
+
 // loads your selected language in last.fm
-let lang;
-let non_override_lang;
+export let lang;
+export let non_override_lang;
 // WARN: fill this out if translating
 // lists all languages with valid bleh translations
 // any custom translations will not load if not listed here!!
-let valid_langs = ['en', 'de', 'pl'];
+export let valid_langs = ['en', 'de', 'pl'];
 
-let lang_info = {
+export let lang_info = {
     en: {
         name: 'English',
         by: ['cutensilly'],
@@ -24,7 +29,7 @@ let lang_info = {
     }
 }
 
-const trans = {
+export const trans = {
     en: {
         pages: {
             bleh_settings: {
@@ -3084,22 +3089,25 @@ moment.updateLocale('de', {
     }
 });
 
-function lookup_lang() {
-    root = document.querySelector('.masthead-logo a');
+export function lookup_lang() {
+    const troot = document.querySelector('.masthead-logo a');
 
-    if (!root) {
+    console.log(troot)
+    if (!troot) {
         handle_error_500();
         return;
     }
+    
+    console.log(troot.getAttribute("href"));
 
-    root = root.getAttribute('href');
+    setRoot(troot.getAttribute('href'));
 
     let previous_avi = auth.avatar;
-    if (auth_link) {
-        auth.avatar = auth_link.querySelector('img').getAttribute('src');
+    if (auth_link.state) {
+        auth.avatar = auth_link.state.querySelector('img').getAttribute('src');
 
         if (auth.avatar != previous_avi) {
-            let avatar = auth_link.querySelector('img');
+            let avatar = auth_link.state.querySelector('img');
             avatar.setAttribute('crossorigin', 'anonymous');
 
             try {

@@ -1,4 +1,11 @@
-function patch_avatar(avatar, name, type = '') {
+import { log } from "./build/log";
+import { auth, root } from "./build/page";
+import { sponsor_list } from "./build/sponsor";
+import { lang, trans } from "./build/trans";
+import { load_badges } from "./components/badge";
+import { dialog } from "./components/dialog";
+
+export function patch_avatar(avatar, name, type = '') {
     if (avatar.hasAttribute('data-bleh-avatar'))
         return;
     avatar.setAttribute('data-bleh-avatar', 'true');
@@ -60,7 +67,6 @@ function patch_avatar(avatar, name, type = '') {
                 </div>
             `),
             allowHTML: true,
-            delay: [50, 100],
             placement: 'right',
             interactive: true,
             delay: [200, 0]
@@ -89,7 +95,6 @@ function patch_avatar(avatar, name, type = '') {
                     </div>
                 `),
                 allowHTML: true,
-                delay: [50, 100],
                 placement: 'right',
                 interactive: true,
                 delay: [200, 0]
@@ -118,7 +123,6 @@ function patch_avatar(avatar, name, type = '') {
                     </div>
                 `),
                 allowHTML: true,
-                delay: [50, 100],
                 placement: 'right',
                 interactive: true,
                 delay: [200, 0]
@@ -132,7 +136,7 @@ function patch_avatar(avatar, name, type = '') {
     }
 }
 
-function return_name_from_avatar(avatar) {
+export function return_name_from_avatar(avatar) {
     if (!avatar)
         return;
 
@@ -148,7 +152,7 @@ function return_name_from_avatar(avatar) {
 unsafeWindow._expand_avatar = function(src) {
     expand_avatar(src);
 }
-function expand_avatar(src) {
+export function expand_avatar(src) {
     dialog({
         id: 'avatar',
         body: (`

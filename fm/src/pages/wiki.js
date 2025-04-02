@@ -1,4 +1,10 @@
-function bleh_wiki() {
+import { patch_avatar } from "../avatar";
+import { auth, page, root } from "../build/page";
+import { desanitise } from "../build/tools";
+import { lang, trans } from "../build/trans";
+import { ff } from "../sku";
+
+export function bleh_wiki() {
     // make a new panel
     let wiki_panel = document.createElement('section');
     wiki_panel.classList.add('wiki-panel');
@@ -70,7 +76,7 @@ function bleh_wiki() {
     patch_wiki_contents(wiki);
 }
 
-function bleh_wiki_history() {
+export function bleh_wiki_history() {
     let breadcrumb_root = page.structure.container.querySelector('.subpage-breadcrumb');
     let breadcrumb_name = page.structure.container.querySelector('.subpage-title');
 
@@ -149,7 +155,7 @@ function bleh_wiki_history() {
     });
 }
 
-function bleh_wiki_editor() {
+export function bleh_wiki_editor() {
     // make a new panel
     let wiki_edit_panel = document.createElement('section');
     wiki_edit_panel.classList.add('wiki-edit-panel');
@@ -282,7 +288,7 @@ function bleh_wiki_editor() {
 
 
 // fix wiki on some devices
-function patch_wiki() {
+export function patch_wiki() {
     // add info notes to things
     if (ff('show_wiki_label')) {
         let wiki_col = page.structure.main.querySelector('.wiki-column');

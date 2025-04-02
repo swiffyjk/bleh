@@ -1,4 +1,14 @@
-function lotus(force = false) {
+import { settings } from "../build/config";
+import { log } from "../build/log";
+import { album_track_corrections, artist_corrections, includes } from "../build/music";
+import { page, root } from "../build/page";
+import { return_artist_from_generic, sanitise, sanitise_text } from "../build/tools";
+import { lang, trans } from "../build/trans";
+import { prepare_corrections_page } from "../pages/bleh_config";
+import { dialog } from "./dialog";
+import { notify } from "./notify";
+
+export function lotus(force = false) {
     if (!settings.corrections)
         return;
 
@@ -15,7 +25,7 @@ function lotus(force = false) {
         lotus_request('artist', true);
     } else {
         // we prefer to load the current cache before waiting for a new response
-        artist_corrections = JSON.parse(lotus_artist);
+        Object.assign(artist_corrections, JSON.parse(lotus_artist));
 
         // is it valid?
         if (lotus_artist_expire < current_time && !force) {
@@ -30,7 +40,7 @@ function lotus(force = false) {
         lotus_request('album_track', true);
     } else {
         // we prefer to load the current cache before waiting for a new response
-        album_track_corrections = JSON.parse(lotus_album_track);
+        Object.assign(album_track_corrections, JSON.parse(lotus_album_track));
 
         // is it valid?
         if (lotus_album_track_expire < current_time && !force) {
@@ -62,10 +72,11 @@ function lotus_request(type = 'artist', send_notify = false) {
         let api_expire = new Date();
 
         if (xhr.status == 200) {
-            if (type == 'artist')
-                artist_corrections = JSON.parse(this.response);
-            else
-                album_track_corrections = JSON.parse(this.response);
+            if (type == 'artist') {
+                Object.assign(artist_corrections, JSON.parse(this.response));
+            } else {
+                Object.assign(album_track_corrections, JSON.parse(this.response));
+            }
 
             if (send_notify) {
                 notify({
@@ -120,7 +131,7 @@ unsafeWindow._open_correction_modal = function() {
      * @param {string} parent individual css selector for each item wrapper
      * @returns if not found
      */
-function correct_generic_combo(parent) {
+export function correct_generic_combo(parent) {
     let albums = document.body.querySelectorAll(`.${parent}`);
 
     if (albums == undefined)
@@ -156,7 +167,7 @@ function correct_generic_combo(parent) {
  * @param {string} parent individual css selector for each item wrapper
  * @returns if not found
  */
-function correct_generic_combo_no_artist(parent) {
+export function correct_generic_combo_no_artist(parent) {
     let albums = document.body.querySelectorAll(`.${parent}`);
 
     if (albums == null)
@@ -187,7 +198,7 @@ function correct_generic_combo_no_artist(parent) {
  * @param {string} artist artist name (is converted to lowercase)
  * @returns corrected title if applicable or original title
  */
-function correct_item_by_artist(item, artist) {
+export function correct_item_by_artist(item, artist) {
     if (!settings.corrections)
         return item;
     artist = artist.toLowerCase();
@@ -214,7 +225,7 @@ function correct_item_by_artist(item, artist) {
  * @param {string} artist artist name (NOT converted to lowercase)
  * @returns corrected artist if applicable or original artist
  */
-function correct_artist(artist, broadcast = false) {
+export function correct_artist(artist, broadcast = false) {
     if (!settings.corrections)
         return artist;
 
@@ -240,7 +251,7 @@ function correct_artist(artist, broadcast = false) {
 
 
 // feat.
-function name_includes(original_title, original_artist) {
+export function name_includes(original_title, original_artist) {
     console.log(original_title, original_artist);
     let formatted_title = original_title;
 
@@ -359,7 +370,7 @@ function name_includes(original_title, original_artist) {
 }
 
 
-function artist_title() {
+export function artist_title() {
     let title = document.body.querySelector('.header-new-title');
     let title_text = title.textContent.trim();
 
@@ -414,7 +425,7 @@ function artist_title() {
     }
 }
 
-function patch_header_title() {
+export function patch_header_title() {
     if (!settings.corrections && !settings.format_guest_features && !multi)
         return;
 

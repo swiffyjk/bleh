@@ -1,4 +1,4 @@
-function register_menu(element, menu) {
+export function register_menu(element, menu) {
     element.addEventListener('contextmenu', (e) => {
         e.preventDefault();
 

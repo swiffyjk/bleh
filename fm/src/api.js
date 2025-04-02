@@ -1,3 +1,8 @@
+import { settings } from "./build/config";
+import { auth } from "./build/page";
+import { lang, trans } from "./build/trans";
+import { notify } from "./components/notify";
+
 unsafeWindow._save_api_key = function() {
     let key = document.getElementById('text-api_key').value;
 

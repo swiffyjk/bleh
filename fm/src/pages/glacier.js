@@ -1,4 +1,14 @@
-function bleh_user_library() {
+import { settings } from "../build/config";
+import { log } from "../build/log";
+import { page, root } from "../build/page";
+import { sanitise } from "../build/tools";
+import { lang, trans } from "../build/trans";
+import { prep_chart_colours } from "../chart";
+import { correct_artist, correct_item_by_artist } from "../components/lotus";
+import { refresh_all } from "../config";
+import { ff } from "../sku";
+
+export function bleh_user_library() {
     // date sidebar into its own panel
     let date_items = page.structure.side.querySelectorAll(':scope > :is(div, figure)');
 
@@ -200,7 +210,7 @@ function bleh_glacier_library_date() {
 }
 
 // can update at any time!!
-function bleh_glacier_library() {
+export function bleh_glacier_library() {
     // table
     bleh_glacier_library_table();
 
@@ -618,7 +628,7 @@ function bleh_glacier_date_graph(static_page = false, own_table = null) {
     page.structure.glacier.refresh = false;
 }
 
-function bleh_glacier_insights(insights = null) {
+export function bleh_glacier_insights(insights = null) {
     if (insights != null) {
         if (page.subpage == 'library_artists') {
             page.state.glacier.insights.album.display = false;
@@ -785,7 +795,7 @@ function bleh_glacier_insights_generate(type, item) {
         page.structure.side.appendChild(scrobble_insights_panel);
 }
 
-function bleh_glacier_library_open_index(index) {
+export function bleh_glacier_library_open_index(index) {
     window.location.href = page.state.glacier.links[index];
 }
 
@@ -829,7 +839,7 @@ function bleh_glacier_library_request(request_url) {
     });
 }
 
-function bleh_glacier_date_graph_generate() {
+export function bleh_glacier_date_graph_generate() {
     page.state.glacier.current_tab = page.subpage;
     log('generating', 'glacier library', 'info', {
         labels: page.state.glacier.labels,
@@ -1237,7 +1247,7 @@ function bleh_glacier_library_focused() {
     overview_header.nextElementSibling.insertBefore(overview_header, overview_header.nextElementSibling.firstElementChild);
 }
 
-function bleh_glacier_library_bulk_edit() {
+export function bleh_glacier_library_bulk_edit() {
     // quick check to see if bulk edit is present
     let library_header = page.structure.main.querySelector('.library-header');
 

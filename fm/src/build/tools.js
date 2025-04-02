@@ -1,5 +1,5 @@
 // https://stackoverflow.com/questions/46432335/hex-to-hsl-convert-javascript
-function hex_to_hsl(hex) {
+export function hex_to_hsl(hex) {
     let result = new RegExp(/^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i).exec(hex);
 
     let r = parseInt(result[1], 16);
@@ -44,42 +44,42 @@ function hex_to_hsl(hex) {
     };
 }
 
-function rgb_to_hsl(r, g, b) {
+export function rgb_to_hsl(r, g, b) {
     let hex = rgb_to_hex(r, g, b);
     return hex_to_hsl(hex);
 }
 
 // https://stackoverflow.com/questions/5623838/rgb-to-hex-and-hex-to-rgb#5624139
-function comp_to_hex(comp) {
+export function comp_to_hex(comp) {
     let hex = comp.toString(16);
     return (hex.length == 1) ? '0' + hex : hex;
 }
-function rgb_to_hex(r, g, b) {
+export function rgb_to_hex(r, g, b) {
     return '#' + comp_to_hex(r) + comp_to_hex(g) + comp_to_hex(b);
 }
 
 // saturation should not exceed 2, definitely not
 // reaching 3 or even 4 in some cases
-function clamp_sat(sat) {
+export function clamp_sat(sat) {
     if (sat > 1.7)
         return 1.7;
 
     return sat;
 }
 
-function clean_number(string) {
+export function clean_number(string) {
     return parseInt(string
     .replaceAll(',','')
     .replaceAll('.','')
     );
 }
 
-function sanitise(text) {
+export function sanitise(text) {
     return encodeURI(text
     .replaceAll(' ', '+')
     .replaceAll('/', '%2F'));
 }
-function sanitise_text(text) {
+export function sanitise_text(text) {
     return text
     .replace(/&/g, '&amp;')
     .replace(/</g, '&lt;')
@@ -87,14 +87,14 @@ function sanitise_text(text) {
     .replace(/"/g, '&quot;')
     .replace(/'/g, '&#039;');
 }
-function desanitise(text) {
+export function desanitise(text) {
     return decodeURI(text
     .replaceAll('+', ' ')
     .replaceAll('%2F', '/'));
 }
 
 
-function return_artist_from_track(url, is_album) {
+export function return_artist_from_track(url, is_album) {
     let split = url.split('/');
     let length = (split.length - 1);
 
@@ -105,7 +105,7 @@ function return_artist_from_track(url, is_album) {
         return desanitise(split[length - 2]);
 }
 
-function return_artist_from_generic(url) {
+export function return_artist_from_generic(url) {
     let split = url.split('/');
     let length = (split.length - 1);
 

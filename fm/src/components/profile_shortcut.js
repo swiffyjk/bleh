@@ -1,3 +1,9 @@
+import { settings } from "../build/config";
+import { auth, dialogs, root } from "../build/page";
+import { lang, trans } from "../build/trans";
+import { dialog, dialog_legacy, dialog_rm } from "./dialog";
+import { deliver_notif, notify } from "./notify";
+
 unsafeWindow._open_profile_shortcut_window = function() {
     dialog_legacy('profile_shortcut',trans[lang].settings.music.profile_shortcut.name,(`
         <div class="text-container" id="container-profile_shortcut">

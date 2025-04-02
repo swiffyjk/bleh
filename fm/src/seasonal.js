@@ -1,4 +1,12 @@
-function set_season() {
+import { settings } from "./build/config";
+import { log } from "./build/log";
+import { page } from "./build/page";
+import { seasonal_events, seasonal_timer, stored_season } from "./build/seasonal";
+import { lang, trans } from "./build/trans";
+import { load_chart_colours } from "./chart";
+import { deliver_notif } from "./components/notify";
+
+export function set_season() {
     if (!settings.seasonal)
         return;
 
@@ -105,14 +113,14 @@ function calculate_offset(now) {
     return `${offset}00`;
 }
 
-function seasonal_timer_start(bypass = false) {
+export function seasonal_timer_start(bypass = false) {
     if (stored_season.new_years_eve && !bypass)
         return;
 
-    if (seasonal_timer != null)
+    if (seasonal_timer.state != null)
         return;
 
-    seasonal_timer = setInterval(set_season, 1000);
+    seasonal_timer.state = setInterval(set_season, 1000);
     log('started interval', 'season', 'info');
 
     if (page.header.season_tooltip == null)
@@ -125,15 +133,15 @@ function seasonal_timer_start(bypass = false) {
 
     page.header.season.classList.add('live');
 }
-function seasonal_timer_end() {
+export function seasonal_timer_end() {
     if (stored_season.new_years_eve)
         return;
 
-    if (seasonal_timer == null)
+    if (seasonal_timer.state == null)
         return;
 
-    clearInterval(seasonal_timer);
-    seasonal_timer = null;
+    clearInterval(seasonal_timer.state);
+    seasonal_timer.state = null;
     log('ended interval', 'season', 'info');
 
     if (page.header.season_tooltip == null)

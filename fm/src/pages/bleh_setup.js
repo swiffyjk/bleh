@@ -1,4 +1,18 @@
-function bleh_setup() {
+import { register_activity } from "../activity";
+import { settings } from "../build/config";
+import { log } from "../build/log";
+import { auth, page, root } from "../build/page";
+import { stored_season } from "../build/seasonal";
+import { lang, trans } from "../build/trans";
+import { request_changelog } from "../changelog";
+import { dialog, dialog_rm } from "../components/dialog";
+import { notify } from "../components/notify";
+import { refresh_all } from "../config";
+import { version } from "../main";
+import { ff } from "../sku";
+import { display_colour_presets } from "./bleh_config";
+
+export function bleh_setup() {
     document.body.style.removeProperty('--hue-album');
     document.body.style.removeProperty('--sat-album');
 
@@ -506,7 +520,7 @@ unsafeWindow._setup_skip = function() {
      * notify user if new update and stores in localStorage for next time
      * @returns if first-time installing, redirect to setup
      */
-function notify_if_new_update() {
+export function notify_if_new_update() {
     let last_version_used = localStorage.getItem('bleh_last_version_used') || '';
 
     // enter first-time setup

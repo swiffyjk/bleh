@@ -1,4 +1,6 @@
-function markdown(text) {
+import { root } from "../build/page";
+
+export function markdown(text) {
     let converter = new showdown.Converter({
         emoji: true,
         excludeTrailingPunctuationFromURLs: true,

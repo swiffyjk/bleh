@@ -1,4 +1,11 @@
-function patch_shouts() {
+import { patch_avatar } from "./avatar";
+import { settings } from "./build/config";
+import { log } from "./build/log";
+import { auth, page, root, shout_parse_queue } from "./build/page";
+import { lang, trans } from "./build/trans";
+import { deliver_notif, notify } from "./components/notify";
+
+export function patch_shouts() {
     if (page.structure.main == null)
         return;
 
@@ -107,7 +114,7 @@ function shout_send(send_button) {
     });
 }
 
-function parse_shout_queue() {
+export function parse_shout_queue() {
     let response = parse_shout(0);
 
     if (response == 0)

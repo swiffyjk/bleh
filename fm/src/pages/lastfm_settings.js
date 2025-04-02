@@ -1,5 +1,16 @@
+import { log } from "../build/log";
+import { auth, auth_link, page, root } from "../build/page";
+import { lang, trans } from "../build/trans";
+import { bleh_auto_edits } from "../components/auto_edit";
+import { dialog_legacy, kill_window } from "../components/dialog";
+import { custom_select, update_inbuilt_select } from "../components/select";
+import { checkup_page_structure } from "../components/structure";
+import { update_inbuilt_item } from "../config";
+import { register_background, update_page } from "../page";
+import { ff } from "../sku";
+
 // patch last.fm settings
-function bleh_native_settings() {
+export function bleh_native_settings() {
     page.structure.container = document.body.querySelector('.page-content');
     try {
         page.structure.row = page.structure.container.querySelector('.row');
@@ -567,7 +578,7 @@ function update_display_name(value) {
 }
 
 
-function use_pronouns(value) {
+export function use_pronouns(value) {
     // no spaces, easier to detect
     value = value.replaceAll(' ', '');
 
@@ -628,7 +639,7 @@ unsafeWindow._save_avatar_changer = function() {
     setTimeout(function() {
         kill_window('edit_avatar');
 
-        auth.avatar = auth_link.querySelector('img').getAttribute('src');
+        auth.avatar = auth_link.state.querySelector('img').getAttribute('src');
         document.querySelector('.auth-dropdown-menu').style.setProperty('--url', `url(${auth.avatar.replace('avatar42s', 'avatar170s')})`);
     }, 5000);
 }
