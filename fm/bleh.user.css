@@ -417,6 +417,10 @@ body {
     --cards-sidebar-width: 400px;
     --cards-width: calc(var(--cards-main-width) + var(--cards-sidebar-width) + var(--card-gap));
 
+    [data-ff--beret="true"] & {
+        --cards-width: calc(var(--cards-main-width) + var(--cards-sidebar-width) + 1px);
+    }
+
     --item-small-radius: 4px;
     --item-med-radius: 6px;
     --item-big-radius: 10px;
@@ -1733,6 +1737,11 @@ last.fm changes as of 2024-05-20 */
         margin-top: unset !important;
         margin-right: unset !important;
     }
+
+    [data-ff--beret="true"] & {
+        --card-background: transparent;
+        box-shadow: unset;
+    }
 }
 .content-top-header,
 .artist-similar-sidebar
@@ -2193,6 +2202,20 @@ spacing between is removed and aligned to tag icon */
 
             h1 {
                 display: none;
+            }
+        }
+    }
+
+    [data-ff--beret="true"] &:not([style], .ignore-katsune) {
+        .row {
+            margin-top: var(--card-gap);
+            background: hsl(var(--b5));
+            border-radius: var(--card-radius);
+            box-shadow: var(--card-shadow);
+            gap: 0 1px !important;
+
+            .col-main, .col-sidebar {
+                margin: unset !important;
             }
         }
     }

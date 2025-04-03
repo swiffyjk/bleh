@@ -17587,6 +17587,12 @@
         name: "katsune redesign",
         date: "2025-01-25",
         notice: "This is very, very experimental ~w~"
+      },
+      beret: {
+        default: false,
+        name: "beret redesign",
+        date: "2025-04-03",
+        notice: "Removes individual card styles and instead styles the entire container, much like old bleh"
       }
     }
   };
