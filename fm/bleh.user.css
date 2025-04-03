@@ -3297,8 +3297,9 @@ button.navlist-more {
     padding-left: calc(12px + 18px) !important;
 }
 
+.dropdown-menu-clickable-item.sponsor,
 .dropdown-menu-clickable-item.update {
-    --col: hsl(var(--l3-c));
+    --col: hsl(var(--l3-c)) !important;
 }
 
 
