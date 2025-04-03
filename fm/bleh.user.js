@@ -14445,6 +14445,74 @@
       trigger: "click"
     });
     if (page.subpage == "music") {
+      let beret = document.createElement("section");
+      beret.classList.add("beret-music", "bleh--panel");
+      beret.innerHTML = `
+            <div class="panel-side panel-side-main">
+                <h4>Recent listening</h4>
+            </div>
+            <div class="panel-side panel-side-alt">
+                <h4>Recent activities</h4>
+            </div>
+        `;
+      let track_list = beret.querySelector(".panel-side-main");
+      fetch(`${root}user/${auth.name}/partial/recenttracks?ajax=1`).then(function(response) {
+        console.log("returned", response, response.text);
+        return response.text();
+      }).then(function(html) {
+        let doc = new DOMParser().parseFromString(html, "text/html");
+        console.log("DOC", doc);
+        let tracklist_panel = doc.querySelector(".chartlist");
+        if (tracklist_panel)
+          track_list.appendChild(tracklist_panel);
+      });
+      let activity_list = beret.querySelector(".panel-side-alt");
+      load_activities();
+      let recent_activity_list_r = recent_activity_list;
+      recent_activity_list_r.reverse();
+      recent_activity_list_r.forEach((activity) => {
+        let activity_item = document.createElement("a");
+        activity_item.classList.add("activity-item", `activity--${activity.type}`);
+        activity_item.setAttribute("href", activity.context);
+        let involved_text = "";
+        let tooltip_name;
+        let tooltip_sister;
+        activity.involved.forEach((involved) => {
+          let involved_link;
+          if (involved.type == "user")
+            involved_link = `${root}user/${involved.name}`;
+          else if (involved.type == "artist")
+            involved_link = `${root}music/${sanitise(involved.name)}`;
+          else if (involved.type == "album")
+            involved_link = `${root}music/${sanitise(involved.sister)}/${sanitise(involved.name)}`;
+          else if (involved.type == "track")
+            involved_link = `${root}music/${sanitise(involved.sister)}/_/${sanitise(involved.name)}`;
+          else if (involved.type == "tag")
+            involved_link = `${root}tag/${sanitise(involved.name)}`;
+          else if (involved.type == "bwaa")
+            involved_link = `${root}bwaa`;
+          else if (involved.type == "bleh")
+            involved_link = `${root}bleh`;
+          if (involved.type != "artist" && involved.type != "user" && involved.type != "tag" && involved.type != "bwaa" && involved.type != "bleh") {
+            tooltip_name = involved.name;
+            tooltip_sister = involved.sister;
+          }
+          if (involved_text != "")
+            involved_text = `${involved_text}, <a class="involved--${involved.type}" href="${involved_link}">${involved.name}</a>`;
+          else
+            involved_text = `${involved_text}<a class="involved--${involved.type}" href="${involved_link}">${involved.name}</a>`;
+        });
+        activity_item.innerHTML = `
+                <div class="type">${trans[lang].activities[activity.type]}<div class="date">${moment(activity.date).fromNow(true)}</div></div>
+                <div class="title">${involved_text}</div>
+            `;
+        activity_list.appendChild(activity_item);
+        if (tooltip_name != void 0)
+          tippy(activity_item.querySelector(".title a"), {
+            content: `${tooltip_sister} - ${tooltip_name}`
+          });
+      });
+      page.structure.main.appendChild(beret);
       let music_sections = document.body.querySelectorAll(".music-section");
       music_sections.forEach((music_section) => {
         page.structure.main.appendChild(music_section);

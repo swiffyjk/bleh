@@ -6626,6 +6626,7 @@ button,
 
 
 /*     ICON MASK     */
+.music-featured-item-background:before,
 .gallery-image-preferred-states:before, .gallery-image-votes:before,
 .user-list-follower-btn:before,
 .to-consider li:before,
@@ -20686,7 +20687,7 @@ h4 {
                 height: fit-content;
 
                 .music-featured-item-background {
-                    position: static;
+                    position: relative;
                     width: var(--size);
                     height: var(--size);
                     background-size: cover !important;
@@ -20696,6 +20697,18 @@ h4 {
 
                     &:after {
                         display: none;
+                    }
+
+                    --show-icon: none;
+                    --mask: var(--icon-artist);
+                    --mask-size: var(--cover-size-300);
+                    --left: 50%;
+                    --margin-left: calc(-1 * (var(--cover-size-300) / 2));
+                    --margin-top: calc(-1 * (var(--cover-size-300) / 2));
+
+                    &[style='background: url("https://lastfm.freetls.fastly.net/i/u/arG/2a96cbd8b46e442fc41c2b86b821562f.jpg");'] {
+                        background: hsl(var(--b4)) !important;
+                        --show-icon: block;
                     }
                 }
 
@@ -20749,6 +20762,27 @@ h4 {
                     }
                 }
             }
+        }
+    }
+}
+
+.beret-music {
+    flex-direction: row !important;
+    gap: calc(var(--card-padding) * 2 + var(--card-gap)) !important;
+
+    .panel-side {
+        display: flex;
+        flex-direction: column;
+
+        h4 {
+            margin-bottom: var(--card-gap);
+        }
+
+        &.panel-side-main {
+            width: calc(var(--cards-main-width) - (var(--card-padding) * 2));
+        }
+        &.panel-side-alt {
+            width: calc(var(--cards-sidebar-width) - (var(--card-padding) * 2));
         }
     }
 }
