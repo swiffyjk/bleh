@@ -11382,6 +11382,8 @@
       page.structure.indicator = page_indicator2;
     }
     let auth_link2 = document.body.querySelector(".auth-link");
+    if (!auth_link2)
+      return;
     if (auth_link2.hasAttribute("data-bleh"))
       return;
     auth_link2.setAttribute("data-bleh", "true");

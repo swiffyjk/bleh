@@ -42,6 +42,9 @@ export function append_nav() {
 
     let auth_link = document.body.querySelector('.auth-link');
 
+    if (!auth_link)
+        return;
+
     if (auth_link.hasAttribute('data-bleh'))
         return;
     auth_link.setAttribute('data-bleh', 'true');
