@@ -418,7 +418,7 @@ export function render_setting_page(page_id) {
                         <tbody>
                             <tr class="chartlist-row chartlist-row--now-scrobbling chartlist-row--with-artist" style="transition: none !important">
                                 <td class="chartlist-image">
-                                    <a class="cover-art"><img src="${auth.avatar}" loading="lazy"></a>
+                                    <a class="cover-art"><img src="${auth.avatar.replace('/avatar42s/', '/avatar170s/')}" loading="lazy"></a>
                                 </td>
                                 <td class="chartlist-loved">
                                     <button class="chartlist-love-button" data-toggle-button-current-state="unloved"></button>
@@ -1136,7 +1136,7 @@ export function render_setting_page(page_id) {
                             <a>${auth.name}</a>
                         </h3>
                         <span class="avatar shout-user-avatar">
-                            <img src="${auth.avatar}" alt="Your avatar" loading="lazy">
+                            <img src="${auth.avatar.replace('/avatar42s/', '/avatar170s/')}" alt="Your avatar" loading="lazy">
                         </span>
                         <a class="shout-permalink shout-timestamp">
                             <time datetime="2024-06-05T02:33:39+01:00" title="Wednesday 5 Jun 2024, 2:33am">

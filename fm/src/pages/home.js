@@ -143,13 +143,18 @@ export function bleh_home() {
         beret.innerHTML = (`
             <div class="panel-side panel-side-main">
                 <h4>Recent listening</h4>
+                <div class="recent-listening-container">
+                    <div class="loading-data-container">
+                        <p class="loading-data-text">Finding your tracks</p>
+                    </div>
+                </div>
             </div>
             <div class="panel-side panel-side-alt">
                 <h4>Recent activities</h4>
             </div>
         `);
 
-        let track_list = beret.querySelector('.panel-side-main');
+        let track_list = beret.querySelector('.recent-listening-container');
 
         fetch(`${root}user/${auth.name}/partial/recenttracks?ajax=1`)
         .then(function(response) {
@@ -164,7 +169,7 @@ export function bleh_home() {
             let tracklist_panel = doc.querySelector('.chartlist');
 
             if (tracklist_panel)
-                track_list.appendChild(tracklist_panel);
+                track_list.outerHTML = tracklist_panel.outerHTML;
         });
 
         let activity_list = beret.querySelector('.panel-side-alt');

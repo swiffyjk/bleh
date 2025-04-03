@@ -8057,7 +8057,7 @@
                         <tbody>
                             <tr class="chartlist-row chartlist-row--now-scrobbling chartlist-row--with-artist" style="transition: none !important">
                                 <td class="chartlist-image">
-                                    <a class="cover-art"><img src="${auth.avatar}" loading="lazy"></a>
+                                    <a class="cover-art"><img src="${auth.avatar.replace("/avatar42s/", "/avatar170s/")}" loading="lazy"></a>
                                 </td>
                                 <td class="chartlist-loved">
                                     <button class="chartlist-love-button" data-toggle-button-current-state="unloved"></button>
@@ -8763,7 +8763,7 @@
                             <a>${auth.name}</a>
                         </h3>
                         <span class="avatar shout-user-avatar">
-                            <img src="${auth.avatar}" alt="Your avatar" loading="lazy">
+                            <img src="${auth.avatar.replace("/avatar42s/", "/avatar170s/")}" alt="Your avatar" loading="lazy">
                         </span>
                         <a class="shout-permalink shout-timestamp">
                             <time datetime="2024-06-05T02:33:39+01:00" title="Wednesday 5 Jun 2024, 2:33am">
@@ -14452,12 +14452,17 @@
       beret.innerHTML = `
             <div class="panel-side panel-side-main">
                 <h4>Recent listening</h4>
+                <div class="recent-listening-container">
+                    <div class="loading-data-container">
+                        <p class="loading-data-text">Finding your tracks</p>
+                    </div>
+                </div>
             </div>
             <div class="panel-side panel-side-alt">
                 <h4>Recent activities</h4>
             </div>
         `;
-      let track_list = beret.querySelector(".panel-side-main");
+      let track_list = beret.querySelector(".recent-listening-container");
       fetch(`${root}user/${auth.name}/partial/recenttracks?ajax=1`).then(function(response) {
         console.log("returned", response, response.text);
         return response.text();
@@ -14466,7 +14471,7 @@
         console.log("DOC", doc);
         let tracklist_panel = doc.querySelector(".chartlist");
         if (tracklist_panel)
-          track_list.appendChild(tracklist_panel);
+          track_list.outerHTML = tracklist_panel.outerHTML;
       });
       let activity_list = beret.querySelector(".panel-side-alt");
       load_activities();
