@@ -7477,7 +7477,7 @@ very, very, very dated - who looks up a song on ebay? */
         .more-item--obsession,
         .lotus, .swatch,
         .dropdown-menu-clickable-item.sponsor,
-        .dropdown-menu-clickable-item.update,
+        .dropdown-menu-clickable-item.update
         ) {
         --hue-over: var(--hue-neg);
         --sat-over: 1;
