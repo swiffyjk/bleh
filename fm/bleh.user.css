@@ -1204,6 +1204,11 @@ last.fm changes as of 2024-05-20 */
         gap: var(--button-list-gap);
     }
 
+    /* refined home experience */
+    .navlist-items {
+        display: none;
+    }
+
     .navlist-more-wrap {
         display: none;
     }
@@ -1995,10 +2000,13 @@ span.header-new-gallery-inner a,
     color: hsl(var(--c3));
 }
 
+.music-featured-artist-tags .tag,
 .catalogue-tags .tag {
     margin: unset;
+    max-width: unset;
 }
 /* apply tag styling to everything tag-related */
+.music-featured-artist-tags .tag a,
 .catalogue-tags .tags-add,
 .catalogue-tags .tag a, .catalogue-tags .tags-add-cta {
     box-shadow: var(--interact-shadow) !important;
@@ -2007,8 +2015,10 @@ span.header-new-gallery-inner a,
     background-color: hsl(var(--b4));
     border-radius: 50px;
     min-height: unset;
+    font-size: var(--font-size);
     line-height: var(--line-height);
     padding: 2px 12px;
+    text-transform: lowercase !important;
     margin-bottom: unset !important;
     letter-spacing: unset !important;
     transition-property: opacity;
@@ -4028,6 +4038,17 @@ h2:not(.count, .mask-multi-text, .mask-text, .sr-only, .js-gallery-heading, .top
 
     &.metadata-title {
         font: inherit;
+    }
+
+    &.music-section-heading {
+        font-size: 24px;
+        line-height: 30px;
+        font-weight: var(--font-weight-bold);
+        margin: var(--card-gap) 0 !important;
+
+        &:after {
+            display: none;
+        }
     }
 }
 .user-sidebar-header
@@ -6230,7 +6251,8 @@ button,
 .btn-subscribe,
 .masthead-logo a, .masthead-search-form,
 .show-more a,
-/* log in */ .site-auth-control
+/* log in */ .site-auth-control,
+.music-more-link a
 {
     --bg: var(--cards-overlay-image-subtlest, none), hsl(var(--b3));
     --bg-hov: var(--cards-overlay-image-subtlest, none), hsla(var(--b3), 80%);
@@ -6512,7 +6534,8 @@ button,
 .language-nav,
 .auth-link,
 .out-now-btn,
-.show-more a
+.show-more a,
+.music-more-link a
 {
     --btn-right: calc(12px + 18px + 6px) !important;
 }
@@ -6768,7 +6791,8 @@ span.header-new-gallery-inner a:before,
 /*     SET AN OBSESSION     */
 .obsession-candidate-inner .btn-sm:before,
 /*     GENERIC     */
-.btn--loading:after
+.btn--loading:after,
+.music-more-link a:before
 {
     content: '';
     display: var(--show-icon, block) !important;
@@ -6808,7 +6832,8 @@ span.header-new-gallery-inner a:before,
 .form-group-controls:has(select):before,
 .dropdown-menu-list-button::after, .dropdown-menu-clickable-button::after, .dropdown-menu-clickable-button-js-only::after,
 .all-results-list li:before,
-.language-nav, .auth-link
+.language-nav, .auth-link,
+.music-more-link a:before
 {
     --left: none !important;
     --right: 12px !important;
@@ -12246,7 +12271,8 @@ hr {
     [data-page-subpage="subscription_automatic-edits_tracks"], [data-page-subpage="subscription_automatic-edits_albums"],
     [data-page-subpage="obsessions_overview"],
     [data-page-type="charts"][data-page-subpage="overview"],
-    [data-page-type="inbox"]
+    [data-page-type="inbox"],
+    [data-page-type="overview"]
     ),
 .namespace--music_bookmarks_overview {
     .col-main {
@@ -20621,5 +20647,117 @@ h4 {
     & + .track-preview {
         display: none;
     }
+}
+
+
+.music-section {
+    display: flex;
+    flex-direction: column;
+    gap: var(--card-gap);
+    margin: unset;
+
+    .music-more-link,
+    .music-more-artists,
+    .music-artists, .music-releases {
+        margin: unset;
+    }
+
+    .music-more-link a {
+        --mask: var(--icon-16-arrow-right);
+    }
+
+    .music-artists {
+        display: flex;
+        justify-content: center;
+        margin-bottom: var(--card-gap);
+
+        .music-artists-featured {
+            padding: unset;
+            width: 400px;
+
+            .music-featured-item {
+                display: flex;
+                align-items: center;
+                flex-direction: column;
+                gap: var(--gap);
+                --size: 300px;
+                --gap: 10px;
+                color: hsl(var(--c2));
+                height: fit-content;
+
+                .music-featured-item-background {
+                    position: static;
+                    width: var(--size);
+                    height: var(--size);
+                    background-size: cover !important;
+                    border-radius: var(--item-big-radius);
+                    box-shadow: var(--card-shadow);
+                    flex-shrink: 0;
+
+                    &:after {
+                        display: none;
+                    }
+                }
+
+                .music-featured-item-heading-link {
+                    flex: unset;
+                    margin-top: calc(-1 * (var(--size) + var(--gap)));
+                    padding: unset;
+                    padding-top: calc(var(--size) + var(--gap));
+                    width: 100%;
+                    text-align: center;
+
+                    h3 {
+                        font-size: 16px;
+                        line-height: 20px;
+                        color: hsl(var(--c1));
+                        font-weight: var(--font-weight-bold);
+                        margin: unset;
+                        letter-spacing: unset;
+                        position: static;
+                    }
+                }
+
+                .music-featured-item-body {
+                    padding: unset;
+                    text-align: center;
+                    display: flex;
+                    align-items: center;
+                    flex-direction: column;
+                    gap: var(--gap);
+
+                    .music-featured-artist-similar {
+                        color: hsl(var(--c3));
+                        margin: unset;
+                        opacity: unset;
+                    }
+
+                    .music-featured-artist-tags {
+                        margin: unset;
+                    }
+
+                    .music-featured-item-wiki {
+                        margin: unset;
+
+                        a {
+                            color: hsl(var(--l3-c));
+                        }
+                    }
+
+                    .artist-featured-items {
+                        display: none;
+                    }
+                }
+            }
+        }
+    }
+}
+
+.page-content:is(
+    [data-page-type="overview"]
+) .col-main {
+    display: flex !important;
+    flex-direction: column;
+    gap: var(--card-gap);
 }
 }
