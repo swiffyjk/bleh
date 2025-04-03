@@ -2036,6 +2036,10 @@ span.header-new-gallery-inner a,
         color: hsl(var(--l2-c-theme-switch)) !important;
         /*box-shadow: 0 0 0 2px hsl(var(--h4), 30%) inset, var(--interact-shadow) !important;*/
     }
+
+    &.tags-add {
+        font-size: 0;
+    }
 }
 
 
