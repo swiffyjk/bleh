@@ -35,7 +35,6 @@ export function checkup_page_structure(is_subpage = false, header = null) {
 
         // listening report error
         let container_full_width = document.body.querySelector('.container--full-width');
-        debugger;
         if (container_full_width)
             container_full_width.insertBefore(page.structure.container, container_full_width.firstElementChild);
         else
@@ -45,8 +44,7 @@ export function checkup_page_structure(is_subpage = false, header = null) {
     page.structure.container.setAttribute('data-assigned', 'true');
 
     let other_container = document.body.querySelector('.page-content.container:not([data-assigned])');
-    if (other_container)
-        other_container.style.setProperty('display', 'none');
+    if (other_container) other_container.style.setProperty('display', 'none');
 
     if (!page.structure.row || !document.body.contains(page.structure.row)) {
         log('page missing row, creating', 'page structure');
@@ -69,8 +67,7 @@ export function checkup_page_structure(is_subpage = false, header = null) {
     page.structure.main.setAttribute('data-assigned', 'true');
 
     let other_main = page.structure.row.querySelector('.col-main.hidden-xs:not([data-assigned])');
-    if (other_main)
-        other_main.style.setProperty('display', 'none');
+    if (other_main) other_main.style.setProperty('display', 'none');
 
     if (!page.structure.side || !document.body.contains(page.structure.side)) {
         log('page missing side', 'page structure');
@@ -180,8 +177,7 @@ export function checkup_page_structure(is_subpage = false, header = null) {
         } else {
             let content_top = document.body.querySelector('.content-top');
 
-            if (content_top)
-                content_top.classList.add('legacy-content-top');
+            if (content_top) content_top.classList.add('legacy-content-top');
         }
     }
 }

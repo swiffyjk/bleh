@@ -4710,202 +4710,6 @@
     notify_rm(notif);
   }
 
-  // src/components/badge.js
-  function load_badges(user, solo = false) {
-    if (sponsor_list == null)
-      return;
-    if (!sponsor_list.badges.hasOwnProperty(user))
-      return;
-    let badges = [];
-    if (!Array.isArray(sponsor_list.badges[user])) {
-      log("1 badge found", "sponsor", "info", sponsor_list.badges[user]);
-      badges.push(sponsor_list.badges[user]);
-    } else {
-      log("multiple badges found", "sponsor", "info", sponsor_list.badges[user]);
-      if (solo)
-        badges.push(sponsor_list.badges[user][Object.keys(sponsor_list.badges[user]).length - 1]);
-      else
-        badges = sponsor_list.badges[user];
-    }
-    badges.forEach((badge) => {
-      if (!badge.name)
-        badge.name = trans[lang].badges[badge.type].name;
-      if (badge.reason)
-        return;
-      if (badge.type == "sponsor" || badge.type == "contributor" || badge.type == "translation")
-        badge.reason = badge.type;
-      else if (badge.type == "cute" || badge.type == "queen")
-        badge.reason = "cute";
-      else
-        badge.reason = "reserved";
-    });
-    log("final badge list", "sponsor", "info", badges);
-    return badges;
-  }
-
-  // src/avatar.js
-  function patch_avatar(avatar, name, type = "") {
-    if (avatar.hasAttribute("data-bleh-avatar"))
-      return;
-    avatar.setAttribute("data-bleh-avatar", "true");
-    let avatar_img = avatar.querySelector("img");
-    if (avatar_img == null)
-      return;
-    avatar_img.setAttribute("src", avatar_img.getAttribute("src").replace("/64s/", "/avatar70s/"));
-    let badges = load_badges(name, true);
-    if (badges) {
-      let pre_existing_badge = avatar.querySelector(".avatar-status-dot");
-      if (pre_existing_badge !== null)
-        avatar.removeChild(pre_existing_badge);
-      avatar.setAttribute("title", "");
-      let this_badge = sponsor_list.badges[name];
-      if (!Array.isArray(sponsor_list.badges[name])) {
-        log(`@${name} 1 badge:`, "shout", "info", sponsor_list.badges[name]);
-      } else {
-        log(`@${name} multiple badges:`, "shout", "info", sponsor_list.badges[name]);
-        let badges_length = Object.keys(sponsor_list.badges[name]).length - 1;
-        this_badge = sponsor_list.badges[name][badges_length];
-        log(`@${name} using badge ${badges_length} as primary`, "shout", "info", this_badge);
-      }
-      let badge = document.createElement("span");
-      badge.classList.add("avatar-status-dot", `user-status--bleh-${this_badge.type}`, `user-status--bleh-user-${name}`);
-      avatar.appendChild(badge);
-      avatar.classList.add("avatar-can-hoverbox");
-      tippy(avatar, {
-        theme: "user",
-        content: `
-                <div class="image-info">
-                    <div class="inner-image">
-                        ${avatar_img.outerHTML}
-                    </div>
-                    <div class="info">
-                        <h5 class="title">${name}</h5>
-                        <p class="descriptor">${trans[lang].profile.top_badge}</p>
-                        <p class="badge user-status--bleh-${this_badge.type} user-status--bleh-user-${name}" data-badge-type="${this_badge.type}" data-badge-user="${name}">${this_badge.name}</p>
-                    </div>
-                    <a href="${root}user/${name}" class="link-over"></a>
-                </div>
-                <div class="user-buttons view-buttons">
-                    <a class="btn view-item user-button view-library-btn" href="${root}user/${name}/library">${trans[lang].actions.view_library}</a>
-                    <a class="btn view-item user-button leave-shout-btn" href="${root}user/${name}/shoutbox">${trans[lang].actions.leave_a_shout}</a>
-                </div>
-            `,
-        allowHTML: true,
-        placement: "right",
-        interactive: true,
-        delay: [200, 0]
-      });
-      return this_badge;
-    } else {
-      let pre_existing_badge = avatar.querySelector(".avatar-status-dot");
-      if (pre_existing_badge == null) {
-        avatar.classList.add("avatar-can-hoverbox");
-        tippy(avatar, {
-          theme: "user",
-          content: `
-                    <div class="image-info">
-                        <div class="inner-image">
-                            ${avatar_img.outerHTML}
-                        </div>
-                        <div class="info">
-                            <h5 class="title">${name}</h5>
-                        </div>
-                        <a href="${root}user/${name}" class="link-over"></a>
-                    </div>
-                    <div class="user-buttons view-buttons">
-                        <a class="btn view-item user-button view-library-btn" href="${root}user/${name}/library">${trans[lang].actions.view_library}</a>
-                        <a class="btn view-item user-button leave-shout-btn" href="${root}user/${name}/shoutbox">${trans[lang].actions.leave_a_shout}</a>
-                    </div>
-                `,
-          allowHTML: true,
-          placement: "right",
-          interactive: true,
-          delay: [200, 0]
-        });
-        return {};
-      } else {
-        avatar.classList.add("avatar-can-hoverbox");
-        tippy(avatar, {
-          theme: "user",
-          content: `
-                    <div class="image-info">
-                        <div class="inner-image">
-                            ${avatar_img.outerHTML}
-                        </div>
-                        <div class="info">
-                            <h5 class="title">${name}</h5>
-                            <p class="descriptor">${trans[lang].profile.top_badge}</p>
-                            <p class="badge ${pre_existing_badge.classList[1]}">${avatar.getAttribute("title")}</p>
-                        </div>
-                        <a href="${root}user/${name}" class="link-over"></a>
-                    </div>
-                    <div class="user-buttons view-buttons">
-                        <a class="btn view-item user-button view-library-btn" href="${root}user/${name}/library">${trans[lang].actions.view_library}</a>
-                        <a class="btn view-item user-button leave-shout-btn" href="${root}user/${name}/shoutbox">${trans[lang].actions.leave_a_shout}</a>
-                    </div>
-                `,
-          allowHTML: true,
-          placement: "right",
-          interactive: true,
-          delay: [200, 0]
-        });
-        avatar.setAttribute("title", "");
-        return {
-          type: pre_existing_badge.classList[1]
-        };
-      }
-    }
-  }
-  function return_name_from_avatar(avatar) {
-    if (!avatar)
-      return;
-    if (!avatar.hasAttribute("alt"))
-      return;
-    if (avatar.getAttribute("alt") == trans[lang].avatar_for_me)
-      return auth;
-    return avatar.getAttribute("alt").replace(trans[lang].avatar_for_user, "");
-  }
-  unsafeWindow._expand_avatar = function(src) {
-    expand_avatar(src);
-  };
-  function expand_avatar(src) {
-    dialog({
-      id: "avatar",
-      body: `
-            <div class="full-avatar-wrapper">
-                <div class="full-avatar">
-                    <img src="${src}">
-                </div>
-                <div class="modal-footer">
-                    <a class="btn primary open" href="${src}" target="_blank">
-                        ${trans[lang].profile.open_avatar}
-                    </a>
-                </div>
-            </div>
-        `,
-      type: "avatar",
-      has_overlays: false
-    });
-  }
-
-  // src/components/menu.js
-  function register_menu(element, menu) {
-    element.addEventListener("contextmenu", (e) => {
-      e.preventDefault();
-      menu.setProps({
-        getReferenceClientRect: () => ({
-          width: 0,
-          height: 0,
-          top: e.clientY,
-          bottom: e.clientY,
-          left: e.clientX,
-          right: e.clientX
-        })
-      });
-      menu.show();
-    });
-  }
-
   // src/sku.js
   function ff(flag) {
     log(`parsing ${flag}`, "flag", "log", {
@@ -4917,1362 +4721,6 @@
     if (version.feature_flags[flag] != null)
       return version.feature_flags[flag].default;
   }
-
-  // src/pages/gallery.js
-  function bleh_gallery() {
-    if (page.subpage != "image")
-      return;
-    log("focusing on image", "gallery");
-    let image_sidebar = page.structure.side.querySelector(".js-gallery-image-details > div");
-    if (image_sidebar == null)
-      return;
-    if (image_sidebar.hasAttribute("data-bleh-gallery"))
-      return;
-    image_sidebar.setAttribute("data-bleh-gallery", "true");
-    if (!ff("new_gallery_experience")) {
-      patch_gallery_focused_image(image_sidebar, page.structure.container.querySelector(".gallery-image-buttons"));
-      return;
-    }
-    let image_details;
-    let gallery_section;
-    try {
-      gallery_section = page.structure.main.querySelector(".gallery-section");
-      if (gallery_section != null) {
-        page.structure.nav.after(gallery_section);
-        image_details = document.createElement("section");
-        image_details.classList.add("image-details");
-      } else {
-        image_details = page.structure.main.querySelector(".image-details");
-        image_details.innerHTML = "";
-      }
-    } catch (e) {
-      gallery_section = page.structure.container.querySelector(".gallery-section");
-      image_details = page.structure.main.querySelector(".image-details");
-      image_details.innerHTML = "";
-    }
-    image_details.appendChild(image_sidebar);
-    let image_title = image_details.querySelector(".gallery-image-title");
-    let image_date = image_details.querySelector(".gallery-image-uploaded-by");
-    if (image_title.textContent.trim() == "") {
-      image_title.classList.add("gallery-image-title-empty");
-      image_title.textContent = trans[lang].gallery.empty.title;
-    }
-    let breadcrumbs = document.body.querySelector(".content-top-lower-row");
-    let breadcrumb_root = breadcrumbs.querySelector("a");
-    let breadcrumb_name = breadcrumbs.querySelector(".subpage-title");
-    let image_title_container = document.createElement("div");
-    image_title_container.classList.add("image-title-container");
-    image_title_container.innerHTML = `
-        <div class="sub-text">
-            <div class="breadcrumb">
-                ${breadcrumb_root.outerHTML}
-                <div class="breadcrumb-name">
-                    ${breadcrumb_name.textContent}
-                </div>
-            </div>
-            ${image_date.outerHTML}
-        </div>
-        <div class="title-layer">
-            ${image_title.outerHTML}
-            <div class="vote-number" data-side="pos">+0</div>
-        </div>
-    `;
-    image_details.insertBefore(image_title_container, image_sidebar);
-    breadcrumbs.style.setProperty("display", "none");
-    page.structure.main.insertBefore(image_details, page.structure.main.firstElementChild);
-    let description = image_details.querySelector(".gallery-image-description");
-    if (description == null) {
-      description = document.createElement("p");
-      description.classList.add("gallery-image-description", "gallery-image-description-empty");
-      description.textContent = trans[lang].gallery.empty.description;
-      image_details.querySelector("[data-image-url]").appendChild(description);
-    }
-    let buttons = image_details.querySelector(".gallery-image-buttons");
-    let button_container = document.createElement("div");
-    button_container.classList.add("button-container-wrapper");
-    button_container.appendChild(buttons);
-    let vote_buttons = buttons.querySelector(".gallery-image-vote-buttons");
-    vote_buttons.after(create_divider());
-    let positive_btn = vote_buttons.querySelector(':is([data-ajax-form-state=""] .gallery-image-vote-up-off, [data-ajax-form-state="up-voted"] .gallery-image-vote-up-on, [data-ajax-form-state="down-voted"] .gallery-image-vote-up-off)').cloneNode(true);
-    let negative_btn = vote_buttons.querySelector(':is([data-ajax-form-state=""] .gallery-image-vote-down-off, [data-ajax-form-state="up-voted"] .gallery-image-vote-down-off, [data-ajax-form-state="down-voted"] .gallery-image-vote-down-on)').cloneNode(true);
-    let positive = parseInt(positive_btn.textContent.replace(trans[lang].gallery.up, ""));
-    let negative = parseInt(negative_btn.textContent.replace(trans[lang].gallery.down, ""));
-    let number = positive - negative;
-    let is_negative = number < 0;
-    console.info(positive_btn, positive, negative_btn, negative, number);
-    let vote_badge = image_title_container.querySelector(".vote-number");
-    vote_badge.textContent = `${is_negative ? "" : "+"}${number}`;
-    vote_badge.setAttribute("data-side", is_negative ? "neg" : "pos");
-    tippy(vote_badge, {
-      content: trans[lang].gallery.vote
-    });
-    let buttons_extra = document.createElement("div");
-    buttons_extra.classList.add("gallery-image-buttons", "gallery-image-buttons-extra");
-    button_container.appendChild(buttons_extra);
-    image_details.appendChild(button_container);
-    let open_button = document.createElement("button");
-    open_button.classList.add("image-open-button");
-    tippy(open_button, {
-      content: trans[lang].gallery.open.tooltip
-    });
-    open_button.textContent = trans[lang].gallery.open.name;
-    open_button.setAttribute("onclick", `_expand_gallery_image()`);
-    buttons_extra.appendChild(open_button);
-    open_button.after(create_divider());
-    let delete_button = image_details.querySelector(".gallery-image-delete");
-    if (delete_button != null)
-      buttons_extra.appendChild(delete_button);
-    let report_button = image_details.querySelector(".gallery-image-report-form");
-    let report_text = report_button.querySelector("button");
-    tippy(report_text, {
-      content: report_text.textContent
-    });
-    report_text.textContent = trans[lang].gallery.report.name;
-    buttons_extra.appendChild(report_button);
-    let star_buttons = image_details.querySelectorAll(".gallery-image-preferred-button :is(button, a)");
-    star_buttons.forEach((star_button) => {
-      star_button.removeAttribute("title");
-      let text = star_button.querySelector(".gallery-image-preferred-states");
-      text.textContent = trans[lang].gallery.prefer.name;
-    });
-    let view_all_container = page.structure.main.querySelector(".more-link-fullwidth-right-flush-top");
-    if (view_all_container != null) {
-      let view_all = view_all_container.querySelector("a");
-      view_all.classList.add("btn", "view-all-button", "back");
-      let view_all_panel = document.createElement("section");
-      view_all_panel.classList.add("view-all-panel");
-      view_all_panel.appendChild(view_all);
-      page.structure.side.insertBefore(view_all_panel, page.structure.side.firstElementChild);
-      page.structure.main.removeChild(view_all_container);
-      if (page.type == "artist" || ff("display_album_bookmark")) {
-        let all_saved_panel = document.createElement("section");
-        all_saved_panel.classList.add("view-all-panel");
-        all_saved_panel.innerHTML = `
-                <a class="btn view-all-button back all-saved-button" href="${view_all.getAttribute("href")}?tab=saved">
-                    ${trans[lang].gallery.bookmarks.link}
-                </a>
-            `;
-        view_all_panel.after(all_saved_panel);
-      }
-    }
-    if (page.type == "artist" || ff("display_album_bookmark"))
-      patch_gallery_focused_image(image_sidebar, buttons);
-  }
-  unsafeWindow._expand_gallery_image = function() {
-    expand_gallery_image();
-  };
-  function expand_gallery_image() {
-    let image_src = page.structure.container.querySelector(".active-slide .js-gallery-image").getAttribute("src").replace("770x0", "ar0");
-    expand_avatar(image_src);
-  }
-  function create_divider() {
-    let divider = document.createElement("div");
-    divider.classList.add("listen-divider");
-    return divider;
-  }
-  function bleh_gallery_upload() {
-    let gallery_section = document.createElement("section");
-    gallery_section.classList.add("gallery-section", "gallery--initialised");
-    let image_container = document.createElement("div");
-    image_container.classList.add("gallery-image-container");
-    let slides = document.createElement("div");
-    slides.classList.add("gallery-slides");
-    let image = document.createElement("div");
-    image.classList.add("gallery-image", "gallery-slide", "image-preview", "active-slide");
-    image.innerHTML = `
-        <img class="image-preview-hook">
-    `;
-    slides.appendChild(image);
-    image_container.appendChild(slides);
-    gallery_section.appendChild(image_container);
-    page.structure.nav.after(gallery_section);
-    let content_top = document.body.querySelector(".page-content");
-    content_top.innerHTML = "";
-    let form = page.structure.main.querySelector(".form-horizontal");
-    form.classList.add("panel-form");
-    let upload_rules_group = form.querySelector(".form-group--description + .form-group");
-    let rules = upload_rules_group.querySelector(".gallery-upload-rules");
-    let rules_panel = document.createElement("section");
-    rules_panel.classList.add("rules-panel");
-    rules_panel.innerHTML = rules.innerHTML;
-    page.structure.side.appendChild(rules_panel);
-    form.removeChild(upload_rules_group);
-  }
-  function bleh_gallery_upload_check() {
-    if (page.subpage != "images_image-upload")
-      return;
-    let image_preview = page.structure.main.querySelector(".form-image-preview");
-    if (image_preview == null)
-      return;
-    let image_preview_container = page.structure.container.querySelector(".image-preview-hook");
-    image_preview_container.setAttribute("src", image_preview.getAttribute("src"));
-  }
-  function bleh_gallery_list() {
-    let upload_btn = page.structure.main.querySelector(".btn-add");
-    if (upload_btn != null) {
-      upload_btn.classList = "btn view-all-button back upload-button";
-      let upload_panel = document.createElement("section");
-      upload_panel.classList.add("view-all-panel", "upload-panel");
-      upload_panel.appendChild(upload_btn);
-      page.structure.side.insertBefore(upload_panel, page.structure.side.firstElementChild);
-    }
-  }
-  function patch_gallery_page() {
-    let header = document.body.querySelector("header");
-    if (header == void 0)
-      return;
-    if (header.classList.contains("header-new--album"))
-      return;
-    let image_list = document.body.querySelector(".image-list");
-    if (image_list != void 0) {
-      patch_gallery_image_listing(image_list);
-    }
-  }
-  function patch_gallery_image_listing(image_list) {
-    if (image_list.hasAttribute("data-kate-processed"))
-      return;
-    image_list.setAttribute("data-kate-processed", "true");
-    let bookmarked_images = JSON.parse(localStorage.getItem("bleh_bookmarked_images")) || {};
-    if (page.requested.tab != "saved" || page.requested.page != null)
-      page.structure.container.setAttribute("data-bleh--gallery-tab", "overview");
-    else
-      page.structure.container.setAttribute("data-bleh--gallery-tab", "bookmarks");
-    let bookmark_nav = document.createElement("div");
-    bookmark_nav.classList.add("bleh--nav-wrap", "bleh--nav-wrap--bookmarks");
-    bookmark_nav.innerHTML = `
-        <nav class="navlist secondary-nav">
-            <ul class="navlist-items">
-                <li class="navlist-item secondary-nav-item secondary-nav-item--gallery-overview">
-                    <a class="secondary-nav-item-link" onclick="_set_gallery_page('overview')">
-                        ${trans[lang].gallery.tabs.overview}
-                    </a>
-                </li>
-                <li class="navlist-item secondary-nav-item secondary-nav-item--gallery-bookmarks">
-                    <a class="secondary-nav-item-link" onclick="_set_gallery_page('bookmarks')">
-                        ${trans[lang].gallery.tabs.bookmarks}
-                    </a>
-                </li>
-            </ul>
-        </nav>
-    `;
-    page.structure.content_top.after(bookmark_nav);
-    let bookmarks_content = document.createElement("div");
-    bookmarks_content.classList.add("col-main", "bleh--bookmarks", "not-a-panel");
-    bookmarks_content.innerHTML = `
-        <section class="bookmarks-panel">
-            <ul class="image-list" id="bleh--bookmarked-images" data-kate-processed="true"></ul>
-        </section>
-    `;
-    page.structure.main.classList.add("bleh--gallery");
-    page.structure.main.after(bookmarks_content);
-    let sort_button = page.structure.main.querySelector(".dropdown-menu-clickable-button");
-    let sort_menu = page.structure.main.querySelector(".dropdown-menu-clickable");
-    let sort_wrap = document.createElement("div");
-    sort_wrap.classList.add("dropdown-top-wrap");
-    sort_wrap.appendChild(sort_button);
-    sort_wrap.appendChild(sort_menu);
-    page.structure.main.insertBefore(sort_wrap, page.structure.main.firstElementChild);
-    if (bookmarked_images.hasOwnProperty(page.name)) {
-      bookmarked_images[page.name].forEach((image) => {
-        console.info(image);
-        let image_element = document.createElement("li");
-        image_element.classList.add("image-list-item-wrapper");
-        image_element.setAttribute("data-image-id", image);
-        image_element.innerHTML = `
-                <a class="image-list-item" href="${root}music/+noredirect/${page.name}/+images/${image}">
-                    <img src="https://lastfm.freetls.fastly.net/i/u/avatar170s/${image}" loading="lazy">
-                </a>
-            `;
-        document.getElementById("bleh--bookmarked-images").appendChild(image_element);
-        if (ff("remove_bookmark")) {
-          let menu = tippy(image_element, {
-            theme: "context-menu",
-            content: `
-                        <button class="dropdown-menu-clickable-item" onclick="_update_image_bookmark(this, '${image}', false)" data-menu-item="remove-bookmark" data-bleh--image-is-bookmarked="true">
-                            ${trans[lang].gallery.bookmarks.button.unbookmark_this_image.name}
-                        </button>
-                    `,
-            allowHTML: true,
-            placement: "right-start",
-            trigger: "manual",
-            interactive: true,
-            interactiveBorder: 10,
-            offset: [0, 0],
-            onShow(instance) {
-              instance.popper.addEventListener("click", (event2) => {
-                instance.hide();
-              });
-            }
-          });
-          register_menu(image_element, menu);
-        }
-      });
-      let image_list2 = page.structure.main.querySelectorAll(".image-list-item");
-      image_list2.forEach((image_list_item) => {
-        let image_id_split = image_list_item.getAttribute("href").split("/");
-        let image_id_length = image_id_split.length;
-        let image_id = image_id_split[image_id_length - 1];
-        if (bookmarked_images[page.name].includes(image_id)) {
-          image_list_item.classList.add("image-list-item-bookmarked");
-        }
-      });
-    } else {
-      document.getElementById("bleh--bookmarked-images").outerHTML = `
-            <div class="no-data-message bleh--no-image-bookmarks">
-                <p>${trans[lang].gallery.bookmarks.no_data}</p>
-            </div>
-        `;
-    }
-  }
-  unsafeWindow._set_gallery_page = function(id) {
-    set_gallery_page(id);
-  };
-  function set_gallery_page(id) {
-    page.structure.container.setAttribute("data-bleh--gallery-tab", id);
-  }
-  function patch_gallery_focused_image(focused_image_details, gallery_interactions) {
-    let focused_image_id_split = focused_image_details.getAttribute("data-image-url").split("/");
-    let focused_image_id_length = focused_image_id_split.length - 1;
-    let focused_image_id = focused_image_id_split[focused_image_id_length];
-    let bookmarked_images = JSON.parse(localStorage.getItem("bleh_bookmarked_images")) || {};
-    let image_is_bookmarked = false;
-    if (bookmarked_images.hasOwnProperty(page.name)) {
-      if (bookmarked_images[page.name].includes(focused_image_id)) {
-        image_is_bookmarked = true;
-        log("focused is bookmarked", "gallery");
-      }
-    }
-    let gallery_bookmark_button = document.createElement("button");
-    gallery_bookmark_button.classList.add("bleh--gallery-bookmark-image-btn", "btn--has-icon");
-    gallery_bookmark_button.setAttribute("data-bleh--image-is-bookmarked", image_is_bookmarked);
-    gallery_bookmark_button.setAttribute("onclick", `_update_image_bookmark(this, '${focused_image_id}')`);
-    gallery_bookmark_button.textContent = trans[lang].gallery.bookmarks.button.bookmark_this_image.name;
-    unsafeWindow.bookmark_tooltip = tippy(gallery_bookmark_button, {
-      content: image_is_bookmarked ? trans[lang].gallery.bookmarks.button.unbookmark_this_image.bio : trans[lang].gallery.bookmarks.button.bookmark_this_image.bio
-    });
-    gallery_interactions.appendChild(gallery_bookmark_button);
-  }
-  unsafeWindow._update_image_bookmark = function(button, id, tooltip = true) {
-    update_image_bookmark(button, id, tooltip);
-  };
-  function update_image_bookmark(button, id, tooltip = true) {
-    let bookmarked_images = JSON.parse(localStorage.getItem("bleh_bookmarked_images")) || {};
-    let is_bookmarked = button.getAttribute("data-bleh--image-is-bookmarked") === "true";
-    if (tooltip) {
-      unsafeWindow.bookmark_tooltip.setContent(
-        !is_bookmarked ? trans[lang].gallery.bookmarks.button.unbookmark_this_image.bio : trans[lang].gallery.bookmarks.button.bookmark_this_image.bio
-      );
-    } else {
-      button = page.structure.container.querySelector(`[data-image-id="${id}"]`);
-    }
-    if (!bookmarked_images.hasOwnProperty(page.name))
-      bookmarked_images[page.name] = [];
-    if (is_bookmarked) {
-      button.setAttribute("data-bleh--image-is-bookmarked", "false");
-      let new_artist_bookmarks = [];
-      for (let image in bookmarked_images[page.name]) {
-        if (bookmarked_images[page.name][image] != id) {
-          new_artist_bookmarks.push(bookmarked_images[page.name][image]);
-        }
-      }
-      bookmarked_images[page.name] = new_artist_bookmarks;
-      log(`image ${id} from ${page.name} removed from bookmarks`, "gallery");
-    } else {
-      button.setAttribute("data-bleh--image-is-bookmarked", "true");
-      bookmarked_images[page.name].push(id);
-      log(`image ${id} from ${page.name} added to bookmarks`, "gallery");
-    }
-    localStorage.setItem("bleh_bookmarked_images", JSON.stringify(bookmarked_images));
-  }
-
-  // src/components/colourful_counts.js
-  function patch_artist_ranks_in_list_view(track) {
-    let count_bar = track.querySelector(".chartlist-count-bar");
-    if (count_bar == void 0)
-      return;
-    let count_bar_link = count_bar.querySelector(".chartlist-count-bar-link");
-    if (count_bar_link.getAttribute("href").includes("?from=") || count_bar_link.getAttribute("href").includes("?date_preset=") && !count_bar_link.getAttribute("href").endsWith("?date_preset=ALL") && !count_bar_link.getAttribute("href").endsWith("?date_preset=null"))
-      return;
-    let count = clean_number(count_bar.querySelector(".chartlist-count-bar-value").textContent.trim().replace(" scrobbles", ""));
-    if (!count_bar.hasAttribute("data-kate-processed")) {
-      count_bar.setAttribute("data-kate-processed", "true");
-      let parsed_scrobble_as_rank = parse_scrobbles_as_rank(count);
-      count_bar.setAttribute("data-bleh--scrobble-milestone", parsed_scrobble_as_rank.milestone);
-      count_bar.style.setProperty("--hue-over", parsed_scrobble_as_rank.hue);
-      count_bar.style.setProperty("--sat-over", parsed_scrobble_as_rank.sat);
-      count_bar.style.setProperty("--lit-over", parsed_scrobble_as_rank.lit);
-    }
-  }
-  function parse_scrobbles_as_rank(scrobbles) {
-    let scrobble_milestone = 0;
-    let scrobble_proximity = 1;
-    let max_rank = 15;
-    for (let rank = max_rank; rank >= 0; rank--) {
-      if (scrobbles > ranks[rank].start) {
-        let this_rank = parseInt(rank);
-        scrobble_milestone = this_rank;
-        let next_rank = this_rank + 1;
-        let prev_rank = this_rank - 1;
-        if (this_rank != max_rank && this_rank != 0)
-          scrobble_proximity = (scrobbles - ranks[prev_rank].start) / ranks[next_rank].start;
-        break;
-      }
-    }
-    let milestone_hue = ranks[scrobble_milestone].hue;
-    let milestone_sat = ranks[scrobble_milestone].sat;
-    let milestone_lit = ranks[scrobble_milestone].lit;
-    if (scrobble_milestone != max_rank) {
-      let next_milestone_hue = ranks[scrobble_milestone + 1].hue;
-      let next_milestone_sat = ranks[scrobble_milestone + 1].sat;
-      let next_milestone_lit = ranks[scrobble_milestone + 1].lit;
-      if (milestone_hue > next_milestone_hue)
-        milestone_hue += (next_milestone_hue - milestone_hue) * scrobble_proximity;
-      if (milestone_sat < next_milestone_sat)
-        milestone_sat += (milestone_sat - next_milestone_sat) * scrobble_proximity;
-      else
-        milestone_sat += (next_milestone_sat - milestone_sat) * scrobble_proximity;
-      if (milestone_lit < next_milestone_lit)
-        milestone_lit += (milestone_lit - next_milestone_lit) * scrobble_proximity;
-      else
-        milestone_lit += (next_milestone_lit - milestone_lit) * scrobble_proximity;
-    }
-    log(`milestone for ${scrobbles} is ${scrobble_milestone} within ${scrobble_proximity} proximity`, "colourful counts", "info", { hue: milestone_hue, sat: milestone_sat, lit: milestone_lit });
-    return {
-      milestone: scrobble_milestone,
-      proximity: scrobble_proximity,
-      hue: milestone_hue,
-      sat: milestone_sat,
-      lit: milestone_lit
-    };
-  }
-
-  // src/components/music.js
-  function show_your_scrobbles() {
-    let katsune = ff("katsune");
-    show_numbers_on_side(page.type);
-    let col_main = page.structure.container.querySelector(".top-overview-panel");
-    if (col_main == null)
-      col_main = document.body.querySelector(".col-main");
-    if (page.type == "track") {
-      let new_panel = document.createElement("section");
-      new_panel.classList.add("track-info-panel");
-      new_panel.innerHTML = col_main.innerHTML;
-      page.structure.main.insertBefore(new_panel, page.structure.main.firstElementChild);
-      col_main.style.setProperty("display", "none");
-      console.info(col_main, new_panel);
-      col_main = new_panel;
-    }
-    let top_container = document.createElement("div");
-    top_container.classList.add("top-container");
-    if (katsune)
-      top_container.classList.add("katsune-button-row");
-    let listen_container = document.createElement("div");
-    if (!katsune)
-      listen_container.classList.add("listen-container", "view-buttons");
-    let page_url = window.location.href;
-    let page_url_split = page_url.split("/");
-    let page_url_length = page_url_split.length - 1;
-    let scrobble_page = page_url_split[page_url_length];
-    if (page.type == "album") {
-      scrobble_page = page_url_split[page_url_length - 1] + "/" + page_url_split[page_url_length];
-    } else if (page.type == "track") {
-      scrobble_page = page_url_split[page_url_length - 2] + "/_/" + page_url_split[page_url_length];
-    }
-    let your_listens = {
-      name: auth.name,
-      listens: 0,
-      link: scrobble_page,
-      avi: auth.avatar,
-      katsune
-    };
-    let scrobble_button = col_main.querySelector(".personal-stats-item--scrobbles .hidden-xs a");
-    if (scrobble_button != null) {
-      your_listens.listens = clean_number(scrobble_button.textContent.trim());
-    }
-    create_listen_item(listen_container, your_listens, page.type);
-    if (settings.profile_shortcut != "") {
-      let shortcut_listens = {
-        name: settings.profile_shortcut,
-        listens: -1,
-        link: scrobble_page,
-        avi: localStorage.getItem("bleh_profile_shortcut_avi"),
-        katsune
-      };
-      create_listen_item(listen_container, shortcut_listens);
-      fetch(`${root}user/${shortcut_listens.name}/library/music/${scrobble_page}`).then(function(response) {
-        console.log("returned", response, response.text);
-        return response.text();
-      }).then(function(html) {
-        let doc = new DOMParser().parseFromString(html, "text/html");
-        console.log("DOC", doc);
-        let first_metadata_item = doc.querySelector(".metadata-item .metadata-display");
-        let listens = 0;
-        let listen_item = document.getElementById(`listen-item--${shortcut_listens.name}`);
-        if (first_metadata_item != null)
-          listens = clean_number(first_metadata_item.textContent.trim());
-        listen_item.setAttribute("data-listens", listens);
-        listen_item.innerHTML = `
-                <img class="view-item-avatar" src="${shortcut_listens.avi}" alt="${shortcut_listens.name}">${trans[lang].music.listens.count_listens.replace("{c}", listens.toLocaleString(lang))}
-            `;
-        if (settings.colourful_counts && page.type == "artist") {
-          let parsed_scrobble_as_rank = parse_scrobbles_as_rank(listens);
-          listen_item.setAttribute("data-bleh--scrobble-milestone", parsed_scrobble_as_rank.milestone);
-          listen_item.style.setProperty("--hue-over", parsed_scrobble_as_rank.hue);
-          listen_item.style.setProperty("--sat-over", parsed_scrobble_as_rank.sat);
-          listen_item.style.setProperty("--lit-over", parsed_scrobble_as_rank.lit);
-        }
-      });
-    }
-    create_listen_item(listen_container, {
-      name: "other",
-      listens: -3,
-      link: scrobble_page,
-      button: true,
-      katsune
-    }, page.type);
-    top_container.appendChild(listen_container);
-    if (!katsune)
-      col_main.insertBefore(top_container, col_main.firstElementChild);
-    else
-      page.structure.container.querySelector(".bleh-background").after(top_container);
-    if (page.type == "artist") {
-      let other_container = col_main.querySelector(".personal-stats-item--listeners");
-      if (other_container != null) {
-        let listen_divider = document.createElement("div");
-        listen_divider.classList.add("listen-divider");
-        listen_container.appendChild(listen_divider);
-        let avatars = other_container.querySelectorAll(".personal-stats-listener-avatar img");
-        let count = other_container.querySelector(".header-metadata-display a");
-        let other_listeners = {
-          name: "others",
-          listens: -2,
-          link: scrobble_page,
-          avi: avatars,
-          count: count != null ? clean_number(count.textContent.trim()) : 5,
-          katsune
-        };
-        create_listen_item(listen_container, other_listeners, page.type);
-      }
-    }
-    let interact_container = document.createElement("div");
-    if (!katsune)
-      interact_container.classList.add("interact-container", "view-buttons");
-    let text = document.body.querySelector(".header-new-title").textContent.replaceAll(" ", "+").replaceAll("&", "%26");
-    let artist = document.body.querySelector(".header-new-crumb");
-    if (artist != void 0)
-      text = `${text}+${artist.textContent.replaceAll(" ", "+").replaceAll("&", "%26")}`;
-    let header_actions = document.body.querySelector(".header-new-actions");
-    interact_container.innerHTML = header_actions.innerHTML;
-    let buttons = interact_container.querySelectorAll("button");
-    buttons.forEach((button) => {
-      if (button.classList[0] != "header-new-playlink")
-        button.classList.add("btn", "view-item", "interact-item", katsune ? "icon" : "");
-      else
-        button.classList.add("dropdown-menu-clickable-item");
-      if (button.classList[0] == "header-new-more-button")
-        interact_container.removeChild(button.parentElement);
-    });
-    let links = interact_container.querySelectorAll("a");
-    links.forEach((button) => {
-      if (button.classList[0] != "header-new-playlink")
-        button.classList.add("btn", "view-item", "interact-item");
-      else
-        button.classList.add("dropdown-menu-clickable-item");
-    });
-    let bookmark_btn = interact_container.querySelector('[data-toggle-button-current-state*="bookmark"]');
-    bookmark_btn.after(create_divider());
-    let obsession_form = header_actions.querySelector('form[action$="obsessions"]');
-    if (obsession_form != null) {
-      let obsession_btn = obsession_form.querySelector("button");
-      obsession_btn.classList = "btn view-item interact-item obsession-btn";
-      tippy(obsession_btn, {
-        content: obsession_btn.textContent
-      });
-      obsession_btn.textContent = trans[lang].music.obsession;
-      interact_container.appendChild(obsession_form);
-    }
-    if (katsune && page.type == "artist") {
-      let artist_btn = document.createElement("a");
-      artist_btn.classList.add("btn", "view-item", "interact-item", "artist-btn", "icon");
-      if (settings.quick_artist_button == "gallery") {
-        artist_btn.setAttribute("data-artist-btn-type", "gallery");
-        artist_btn.setAttribute("href", `${window.location.href}/+images`);
-        artist_btn.textContent = trans[lang].gallery.view;
-      } else if (settings.quick_artist_button == "shouts") {
-        artist_btn.setAttribute("data-artist-btn-type", "shouts");
-        artist_btn.setAttribute("href", `${window.location.href}/+shoutbox`);
-        artist_btn.textContent = trans[lang].settings.layout.quick_artist_button.shouts;
-      } else if (settings.quick_artist_button == "wiki") {
-        artist_btn.setAttribute("data-artist-btn-type", "wiki");
-        artist_btn.setAttribute("href", `${window.location.href}/+wiki`);
-        artist_btn.textContent = trans[lang].settings.layout.quick_artist_button.wiki;
-      } else if (settings.quick_artist_button == "listens") {
-        artist_btn.setAttribute("data-artist-btn-type", "gallery");
-        artist_btn.setAttribute("href", `${window.location.href}/+listeners/you-know`);
-        artist_btn.textContent = trans[lang].settings.layout.quick_artist_button.listens;
-      }
-      interact_container.appendChild(artist_btn);
-      let view_menu = tippy(artist_btn, {
-        theme: "context-menu",
-        content: `
-                <a class="dropdown-menu-clickable-item" href="${root}bleh?tab=customise" data-menu-item="settings">
-                    ${trans[lang].settings.configure}
-                </a>
-            `,
-        allowHTML: true,
-        placement: "right-start",
-        trigger: "manual",
-        interactive: true,
-        interactiveBorder: 10,
-        offset: [0, 0],
-        onShow(instance) {
-          instance.popper.addEventListener("click", (event2) => {
-            instance.hide();
-          });
-        }
-      });
-      register_menu(artist_btn, view_menu);
-    }
-    let search_btn = document.createElement("a");
-    search_btn.classList.add("btn", "view-item", "interact-item", "search-similar-btn", katsune ? "icon" : "");
-    search_btn.textContent = trans[lang].music.search_variations.name;
-    search_btn.href = `${root}search/${page.type}s?q=${text}`;
-    search_btn.target = "_blank";
-    tippy(search_btn, {
-      content: trans[lang].music.search_variations.tooltip
-    });
-    interact_container.appendChild(search_btn);
-    let search_lyrics = null;
-    if (page.type == "track") {
-      search_lyrics = document.createElement("a");
-      search_lyrics.classList.add("dropdown-menu-clickable-item", "search-genius-btn");
-      search_lyrics.textContent = trans[lang].music.search_genius;
-      search_lyrics.href = `https://genius.com/search?q=${text}`;
-      search_lyrics.target = "_blank";
-    }
-    let lotus_btn = null;
-    if (settings.corrections) {
-      lotus_btn = document.createElement("a");
-      lotus_btn.classList.add("dropdown-menu-clickable-item", "lotus", "lotus-btn");
-      lotus_btn.textContent = trans[lang].lotus.correct.name;
-      lotus_btn.href = "https://github.com/katelyynn/lotus/issues/new/choose";
-      lotus_btn.target = "_blank";
-      if (page.corrected)
-        lotus_btn.classList.add("active");
-    }
-    let menu_btn = document.createElement("button");
-    menu_btn.classList.add("btn", "view-item", "interact-item", "menu-btn", katsune ? "icon" : "");
-    menu_btn.textContent = trans[lang].music.menu;
-    let play_btn = interact_container.querySelector(".header-new-playlink");
-    let music_menu = tippy(menu_btn, {
-      theme: "select-menu",
-      content: `
-            ${search_lyrics != null ? search_lyrics.outerHTML : ""}
-            ${lotus_btn != null ? lotus_btn.outerHTML : ""}
-            ${play_btn != null ? play_btn.outerHTML : ""}
-        `,
-      allowHTML: true,
-      placement: "bottom",
-      interactive: true,
-      interactiveBorder: 10,
-      trigger: "click",
-      onShow(instance) {
-      }
-    });
-    if (play_btn != null)
-      interact_container.removeChild(play_btn);
-    interact_container.appendChild(menu_btn);
-    top_container.appendChild(interact_container);
-  }
-  function create_listen_item(parent, { name, listens, link, avi, count = 0, button = false, katsune = false }, header_type) {
-    log(`creating listen item of ${name}, ${count}, ${listens}`, "artist", "info", { avi, link });
-    let listen_item = document.createElement(!button ? "a" : "button");
-    listen_item.classList.add("btn", "listen-item", "view-item");
-    listen_item.setAttribute("href", `${root}user/${name}/library/music/${link}`);
-    listen_item.setAttribute("data-listens", listens);
-    listen_item.setAttribute("id", `listen-item--${name}`);
-    if (listens > -1) {
-      listen_item.innerHTML = `
-            <img class="view-item-avatar" src="${avi}" alt="${name}">${trans[lang].music.listens.count_listens.replace("{c}", listens.toLocaleString(lang))}
-        `;
-      let menu = tippy(listen_item, {
-        theme: "context-menu",
-        content: `
-                <a class="dropdown-menu-clickable-item" href="${root}user/${name}" data-menu-item="view_profile">
-                    ${trans[lang].music.view_profile}
-                </a>
-            `,
-        allowHTML: true,
-        placement: "right-start",
-        trigger: "manual",
-        interactive: true,
-        interactiveBorder: 10,
-        offset: [0, 0],
-        onShow(instance) {
-          instance.popper.addEventListener("click", (event2) => {
-            instance.hide();
-          });
-        }
-      });
-      register_menu(listen_item, menu);
-    } else if (listens > -2) {
-      listen_item.innerHTML = `
-            <img class="view-item-avatar" src="${avi}" alt="${name}">${trans[lang].music.listens.loading_listens}
-        `;
-      let menu = tippy(listen_item, {
-        theme: "context-menu",
-        content: `
-                <a class="dropdown-menu-clickable-item" href="${root}user/${name}" data-menu-item="view_profile">
-                    ${trans[lang].music.view_profile}
-                </a>
-                <div class="sep"></div>
-                <button class="dropdown-menu-clickable-item" onclick="_open_profile_shortcut_window()" data-menu-item="settings">
-                    ${trans[lang].settings.configure}
-                </button>
-            `,
-        allowHTML: true,
-        placement: "right-start",
-        trigger: "manual",
-        interactive: true,
-        interactiveBorder: 10,
-        offset: [0, 0],
-        onShow(instance) {
-          instance.popper.addEventListener("click", (event2) => {
-            instance.hide();
-          });
-        }
-      });
-      register_menu(listen_item, menu);
-    } else if (listens == -3) {
-      listen_item.classList.add("listen-item-other");
-      listen_item.removeAttribute("href");
-      listen_item.setAttribute("onclick", `_other_listener('${link}')`);
-      tippy(listen_item, {
-        content: trans[lang].music.listens.custom.tooltip
-      });
-    } else {
-      listen_item.innerHTML = `
-            ${avi[0] != null ? `<img class="view-item-avatar" src="${avi[0].getAttribute("src")}">` : ""}
-            ${avi[1] != null ? `<img class="view-item-avatar" src="${avi[1].getAttribute("src")}">` : ""}
-            ${avi[2] != null ? `<img class="view-item-avatar" src="${avi[2].getAttribute("src")}">` : ""}
-            ${trans[lang].music.listens.other_listeners.replace("{c}", count)}
-        `;
-      listen_item.setAttribute("href", `${window.location.href}/+listeners/you-know`);
-    }
-    if (settings.colourful_counts && listens > -1 && header_type == "artist") {
-      let parsed_scrobble_as_rank = parse_scrobbles_as_rank(listens);
-      listen_item.setAttribute("data-bleh--scrobble-milestone", parsed_scrobble_as_rank.milestone);
-      listen_item.style.setProperty("--hue-user", parsed_scrobble_as_rank.hue);
-      listen_item.style.setProperty("--sat-user", parsed_scrobble_as_rank.sat);
-      listen_item.style.setProperty("--lit-user", parsed_scrobble_as_rank.lit);
-    }
-    if (katsune) {
-      listen_item.classList.add("icon");
-    }
-    parent.appendChild(listen_item);
-    if (listens < -1)
-      return;
-    tippy(listen_item, {
-      content: name
-    });
-  }
-  function show_numbers_on_side(header_type) {
-    let metadata = document.body.querySelectorAll(".header-metadata-tnew-item");
-    let listeners = {};
-    let scrobbles = {};
-    let metascore = {};
-    metadata.forEach((item, index) => {
-      let text = item.querySelector(".header-metadata-tnew-title").textContent.trim();
-      let value = item.querySelector(".header-metadata-tnew-display abbr");
-      if (index == 0) {
-        listeners.text = text;
-        listeners.value = clean_number(value.getAttribute("title"));
-        listeners.abbr = value.textContent.trim();
-      } else if (index == 1) {
-        scrobbles.text = text;
-        scrobbles.value = clean_number(value.getAttribute("title"));
-        scrobbles.abbr = value.textContent.trim();
-      } else if (index == 2) {
-        let link = item.querySelector("a");
-        if (link == null)
-          return;
-        metascore.text = text;
-        metascore.abbr = value.textContent.trim();
-        metascore.link = link.getAttribute("href");
-      }
-    });
-    let panel = page.structure.side.querySelector("section.section-with-separator:has(.listener-trend)");
-    if (panel == null) {
-      panel = document.createElement("section");
-      panel.classList.add("section-with-separator");
-      page.structure.side.insertBefore(panel, page.structure.side.firstElementChild);
-    }
-    panel.classList.add("listen-panel");
-    let row = document.createElement("div");
-    row.classList.add("listener-row");
-    row.innerHTML = `
-        <div class="listener-side" id="listeners">
-            <h3>${listeners.text}</h3>
-            <p>${listeners.abbr}</p>
-        </div>
-        <div class="scrobble-side" id="scrobbles">
-            <h3>${scrobbles.text}</h3>
-            <p>${scrobbles.abbr}</p>
-        </div>
-        ${metascore.text != void 0 ? `
-        <div class="metascore-side">
-            <h3>${metascore.text}</h3>
-            <p><a href="${metascore.link}" target="_blank">${metascore.abbr}</a></p>
-        </div>
-        ` : ""}
-    `;
-    panel.insertBefore(row, panel.firstElementChild);
-    tippy(document.getElementById("listeners"), {
-      content: listeners.value.toLocaleString(lang)
-    });
-    tippy(document.getElementById("scrobbles"), {
-      content: scrobbles.value.toLocaleString(lang)
-    });
-    if (page.type == "album") {
-      let album_artwork = document.body.querySelector(".artwork-and-metadata-row");
-      if (album_artwork)
-        page.structure.side.insertBefore(album_artwork, page.structure.side.firstElementChild);
-    }
-    if (page.type == "album" || page.type == "artist") {
-      let upper = document.body.querySelector(".col-main");
-      upper.classList.add("upper-overview-to-hide");
-      let new_upper = document.createElement("section");
-      new_upper.classList.add("top-overview-panel");
-      new_upper.setAttribute("data-page-type", page.type);
-      new_upper.innerHTML = upper.innerHTML;
-      page.structure.main.insertBefore(new_upper, page.structure.main.firstElementChild);
-    }
-    if (page.type == "track") {
-      let video_col = document.body.querySelector(".track-overview-video-column.col-sidebar");
-      video_col.classList.remove("col-sidebar");
-      page.structure.side.insertBefore(video_col, page.structure.side.firstElementChild);
-      let video = video_col.querySelector(".video-preview");
-      if (video) {
-        video_col.classList.remove("col-sidebar");
-        page.structure.side.insertBefore(video_col, page.structure.side.firstElementChild);
-        let container = document.createElement("div");
-        container.classList.add("video-overlay-container");
-        let view_buttons = document.createElement("div");
-        view_buttons.classList.add("view-buttons");
-        let playlink = video.querySelector(".video-preview-playlink a");
-        let replace = video_col.querySelector(".video-preview-replace a");
-        playlink.classList = "btn view-item video-item video-item--play";
-        replace.classList = "btn view-item video-item video-item--edit";
-        view_buttons.appendChild(playlink);
-        view_buttons.appendChild(replace);
-        container.appendChild(view_buttons);
-        video.appendChild(container);
-        tippy(playlink, {
-          content: playlink.getAttribute("title")
-        });
-        playlink.removeAttribute("title");
-        tippy(replace, {
-          content: replace.textContent
-        });
-      } else {
-        let cta = video_col.querySelector(".video-preview-upload-cta");
-        if (cta)
-          return;
-        page.structure.side.removeChild(video_col);
-        let video_placeholder = document.createElement("section");
-        video_placeholder.classList.add("video-placeholder");
-        video_placeholder.innerHTML = `
-                <div class="bleh-icon" style="--icon: var(--icon-16-video-broken)"></div>
-                Video removed by Last.fm
-            `;
-        page.structure.side.insertBefore(video_placeholder, page.structure.side.firstElementChild);
-        let links = page.structure.side.querySelector(".external-links-section .play-this-track-playlinks");
-        if (links)
-          links.classList.add("video-unavailable");
-      }
-    }
-  }
-  function bleh_music_page_charts() {
-    if (!ff("music_page_charts"))
-      return;
-    log("beginning replacement", "music charts");
-    let panel = document.body.querySelector(".listen-panel");
-    let trend = panel.querySelector(".listener-trend");
-    if (trend == null)
-      return;
-    prep_chart_colours();
-    let previous_chart = panel.querySelector(".scrobble-canvas-container");
-    if (previous_chart != null)
-      panel.removeChild(previous_chart);
-    let table = trend.querySelector("tbody");
-    let days = table.querySelectorAll("tr");
-    let labels = [];
-    let values = [];
-    let has_seen_more_than_0 = false;
-    days.forEach((day, index) => {
-      if (!day)
-        null;
-      let label = moment(day.querySelector("time").getAttribute("datetime"));
-      let value = day.querySelector(".js-value");
-      console.log("day", index, label, day, day.innerHTML);
-      if (!value.getAttribute("data-value"))
-        value = 0;
-      else
-        value = value.getAttribute("data-value");
-      if (value == "0" && index < 120 && !has_seen_more_than_0)
-        return;
-      has_seen_more_than_0 = true;
-      labels.push(label);
-      values.push(value);
-    });
-    prep_chart_colours();
-    let scrobble_canvas_container = document.createElement("div");
-    scrobble_canvas_container.classList.add("scrobble-canvas-container");
-    let scrobble_canvas = document.createElement("canvas");
-    scrobble_canvas.classList.add("scrobble-canvas");
-    let gradient = scrobble_canvas.getContext("2d").createLinearGradient(0, 0, 0, 160);
-    try {
-      gradient.addColorStop(0, page.state.chart_colours.link_bg_col);
-      gradient.addColorStop(1, page.state.chart_colours.link_bg_col_2);
-    } catch (e) {
-      gradient = page.state.chart_colours.link_bg_col;
-    }
-    Chart.defaults.color = page.state.chart_colours.text_col;
-    Chart.defaults.font.family = "Ubuntu Sans";
-    let scrobble_chart = new Chart(scrobble_canvas.getContext("2d"), {
-      type: "line",
-      data: {
-        labels,
-        datasets: [{
-          data: values,
-          borderWidth: 2,
-          backgroundColor: gradient,
-          borderColor: page.state.chart_colours.link_col,
-          fill: true,
-          pointRadius: 0,
-          pointHitRadius: 20,
-          tension: 0.1
-        }]
-      },
-      options: page.state.chart_line_options
-    });
-    scrobble_canvas_container.appendChild(scrobble_canvas);
-    panel.appendChild(scrobble_canvas_container);
-    trend.style.setProperty("display", "none");
-    log("finished", "music charts");
-  }
-  function bleh_top_listeners() {
-    if (!ff("unify_top_listeners"))
-      return;
-    let panel = page.structure.main.querySelector(":scope > .buffer-standard");
-    let view_buttons = document.createElement("div");
-    view_buttons.classList.add("view-buttons-wrapper");
-    view_buttons.innerHTML = `
-        <div class="view-buttons">
-            <button class="btn view-item" id="toggle-list_view-1" data-toggle="list_view" data-toggle-value="1" onclick="_update_item('list_view', 1)">
-                ${trans[lang].glacier.view.grid}
-            </button>
-            <button class="btn view-item" id="toggle-list_view-0" data-toggle="list_view" data-toggle-value="0" onclick="_update_item('list_view', 0)">
-                ${trans[lang].glacier.view.list}
-            </button>
-        </div>
-    `;
-    panel.insertBefore(view_buttons, panel.firstElementChild);
-    refresh_all();
-    let legacy_top_listeners_container = panel.querySelector(".top-listeners");
-    let legacy_top_listeners = legacy_top_listeners_container.querySelectorAll(".top-listeners-item");
-    let new_container = document.createElement("ul");
-    new_container.classList.add("user-list", "top-listeners-list");
-    legacy_top_listeners.forEach((listener, index) => {
-      let new_listener = document.createElement("li");
-      new_listener.classList.add("user-list-item", "listener-list-item");
-      let position = index + 1;
-      if (page.requested.page != null && page.requested.page != "1") {
-        position += (parseInt(page.requested.page) - 1) * 30;
-      }
-      let name_wrap = listener.querySelector(".top-listeners-item-name a");
-      let name = name_wrap.textContent;
-      let track_wrap = listener.querySelector(".top-listeners-track");
-      let avatar = listener.querySelector(".top-listeners-item-image");
-      let follow = listener.querySelector(".class");
-      new_listener.innerHTML = `
-            <div class="user-list-inner-wrap">
-                <span class="listener-list-position">
-                    ${position}
-                </span>
-                <h4 class="user-list-name">
-                    <a class="user-list-link link-block-target" href="${name_wrap.getAttribute("href")}">
-                        ${name}
-                    </a>
-                </h4>
-                <span class="avatar user-list-avatar">
-                    ${avatar.innerHTML}
-                </span>
-                ${follow ? follow.outerHTML : ""}
-                <div class="user-list-description">
-                    <p class="user-list-about-me">
-                        ${track_wrap.innerHTML}
-                    </p>
-                </div>
-            </div>
-        `;
-      patch_avatar(new_listener.querySelector(".user-list-avatar"), name, "listener");
-      let track_link = new_listener.querySelector(".user-list-about-me a");
-      let artist = return_artist_from_track(track_link.getAttribute("href"), false);
-      let track = correct_item_by_artist(track_link.textContent.trim(), artist);
-      track_link.textContent = track;
-      new_container.appendChild(new_listener);
-    });
-    view_buttons.after(new_container);
-    panel.removeChild(legacy_top_listeners_container);
-  }
-
-  // src/config.js
-  function create_settings_template() {
-    localStorage.setItem("bleh", JSON.stringify(settings_template));
-    return settings_template;
-  }
-  function load_settings(skip = false) {
-    if (!skip) {
-      for (var member in settings) delete settings[member];
-      Object.assign(settings, JSON.parse(localStorage.getItem("bleh")) || create_settings_template());
-    }
-    for (let setting in settings_template)
-      if (settings[setting] == void 0)
-        settings[setting] = settings_template[setting];
-    if (settings.dev == 1)
-      settings.dev = true;
-    for (let setting in settings) {
-      if ((setting == "hue" || setting == "sat" || setting == "lit") && settings.hue == settings_base.hue.value && settings.sat == settings_base.sat.value && settings.lit == settings_base.lit.value) continue;
-      try {
-        document.body.style.setProperty(`--${settings_base[setting].css}`, `${settings[setting]}${settings_base[setting].unit}`);
-      } catch (e) {
-        console.log("bleh - setting base entry for", setting, "is not accessible");
-      }
-      document.documentElement.setAttribute(`data-bleh--${setting}`, `${settings[setting]}`);
-    }
-    load_skus();
-    localStorage.setItem("bleh", JSON.stringify(settings));
-    if (document.body.classList.contains("user-dashboard-layout")) {
-      document.documentElement.setAttribute("data-bleh--theme", "oled");
-      page.state.settings_reload = true;
-    }
-    load_chart_colours();
-  }
-  unsafeWindow.toggle_theme = function() {
-    if (page.subpage.startsWith("listening-report"))
-      return;
-    let current_theme = settings.theme;
-    if (current_theme == "dark")
-      current_theme = "darker";
-    else if (current_theme == "darker")
-      current_theme = "oled";
-    else if (current_theme == "oled" || current_theme == "classic")
-      current_theme = "light";
-    else if (current_theme == "light")
-      current_theme = "dark";
-    show_theme_change_in_menu(current_theme);
-    settings.theme = current_theme;
-    document.documentElement.setAttribute(`data-bleh--theme`, `${current_theme}`);
-    localStorage.setItem("bleh", JSON.stringify(settings));
-    load_chart_colours();
-    if ((page.type == "artist" || page.type == "album" || page.type == "track") && page.subpage == "overview")
-      bleh_music_page_charts();
-    if (page.type == "user" && page.subpage.startsWith("library")) {
-      bleh_glacier_date_graph_generate();
-      bleh_glacier_insights();
-    }
-  };
-  unsafeWindow.change_theme_from_settings = function(theme) {
-    settings.theme = theme;
-    document.documentElement.setAttribute(`data-bleh--theme`, `${theme}`);
-    show_theme_change_in_settings(theme);
-    show_theme_change_in_menu(theme);
-    localStorage.setItem("bleh", JSON.stringify(settings));
-  };
-  unsafeWindow.change_theme_from_menu = function(theme) {
-    if (page.subpage.startsWith("listening-report"))
-      return;
-    settings.theme = theme;
-    document.documentElement.setAttribute(`data-bleh--theme`, `${theme}`);
-    show_theme_change_in_menu(theme);
-    localStorage.setItem("bleh", JSON.stringify(settings));
-    load_chart_colours();
-    if ((page.type == "artist" || page.type == "album" || page.type == "track") && page.subpage == "overview")
-      bleh_music_page_charts();
-    if (page.type == "user" && page.subpage.startsWith("library")) {
-      bleh_glacier_date_graph_generate();
-      bleh_glacier_insights();
-    }
-  };
-  function reset_all() {
-    for (let item in settings_base)
-      reset_item(item);
-  }
-  function refresh_all(search = document) {
-    for (let item in settings_base)
-      update_item(item, settings[item], false, search);
-  }
-  function reset_item(item) {
-    update_item(item, settings_base[item].value);
-  }
-  function update_params(params = {}) {
-    for (let item in params) {
-      update_item(item, params[item]);
-    }
-  }
-  unsafeWindow._reset_all = function() {
-    reset_all();
-  };
-  unsafeWindow._reset_item = function(item) {
-    reset_item(item);
-  };
-  unsafeWindow._update_params = function(params = {}) {
-    update_params(params);
-  };
-  unsafeWindow._update_item = function(item, value) {
-    update_item(item, value);
-  };
-  function update_item(item, value, modify = true, search = document) {
-    let container = search.querySelector(`#container-${item}`);
-    if (container)
-      console.info(container);
-    else if (settings_base[item].type != "slider" && settings_base[item].type != "options")
-      return;
-    try {
-      let new_value = false;
-      if (value != settings[item])
-        new_value = true;
-      if (settings_base[item].require_reload && new_value)
-        request_reload();
-      if (settings_base[item].type == "slider" && modify)
-        settings[item] = value;
-      if (!modify)
-        console.info(item, value, modify);
-      if (settings_base[item].type == "slider") {
-        try {
-          let slider = search.querySelector(`#slider-${item}`);
-          search.querySelector(`#value-${item}`).textContent = `${settings[item]}${settings_base[item].unit}`;
-          slider.value = settings[item];
-          search.querySelector(`#slider-track-${item}`).style.setProperty("--percent", `${settings[item] / slider.getAttribute("max") * 100}%`);
-        } catch (e) {
-        }
-        document.body.style.setProperty(`--${settings_base[item].css}`, `${value}${settings_base[item].unit}`);
-        document.documentElement.setAttribute(`data-bleh--${item}`, `${value}`);
-        if (item == "hue" || item == "sat" || item == "lit") {
-          if (settings.hue == settings_base.hue.value && settings.sat == settings_base.sat.value && settings.lit == settings_base.lit.value && settings.seasonal && stored_season.id != "none") {
-            document.body.style.removeProperty(`--${settings_base.hue.css}`);
-            document.body.style.removeProperty(`--${settings_base.sat.css}`);
-            document.body.style.removeProperty(`--${settings_base.lit.css}`);
-            document.documentElement.setAttribute("data-bleh--hsl-override", "true");
-          } else {
-            document.documentElement.setAttribute("data-bleh--hsl-override", "false");
-          }
-        }
-      } else if (settings_base[item].type == "toggle") {
-        if (settings[item] == settings_base[item].values[0] && modify) {
-          settings[item] = settings_base[item].values[1];
-          search.querySelector(`#toggle-${item}`).setAttribute("aria-checked", false);
-          document.body.style.setProperty(`--${item}`, settings_base[item].values[1]);
-          document.documentElement.setAttribute(`data-bleh--${item}`, `${settings_base[item].values[1]}`);
-        } else if (modify) {
-          settings[item] = settings_base[item].values[0];
-          console.log(`toggle-${item}`);
-          search.querySelector(`#toggle-${item}`).setAttribute("aria-checked", true);
-          if (item == "dev") {
-            dialog_legacy("prompt_dev", trans[lang].settings.performance.dev.name, `
-                    <p class="alert alert-info">${trans[lang].settings.performance.dev.modals.prompt.alert}</p>
-                    <br>
-                    ${trans[lang].settings.performance.dev.modals.prompt.stylus}
-                    <br>
-                    <div class="browser-choices">
-                        <button class="btn browser" onclick="_chosen_chrome()">
-                            <img class="browser-icon" src="https://cutensilly.org/img/chrome.png">
-                            <p>${trans[lang].settings.performance.dev.modals.prompt.browsers.chrome.name}</p>
-                            <p class="caption">${trans[lang].settings.performance.dev.modals.prompt.browsers.chrome.bio}</p>
-                        </button>
-                        <button class="btn browser" onclick="_chosen_firefox()">
-                            <img class="browser-icon" src="https://cutensilly.org/img/firefox.png">
-                            <p>${trans[lang].settings.performance.dev.modals.prompt.browsers.firefox.name}</p>
-                            <p class="caption">${trans[lang].settings.performance.dev.modals.prompt.browsers.firefox.bio}</p>
-                        </button>
-                    </div>
-                `, true);
-          }
-          document.body.style.setProperty(`--${item}`, settings_base[item].values[0]);
-          document.documentElement.setAttribute(`data-bleh--${item}`, `${settings_base[item].values[0]}`);
-        } else {
-          if (settings[item] == settings_base[item].values[0]) {
-            search.querySelector(`#toggle-${item}`).setAttribute("aria-checked", true);
-          } else {
-            search.querySelector(`#toggle-${item}`).setAttribute("aria-checked", false);
-          }
-        }
-      } else if (settings_base[item].type == "options") {
-        if (modify) {
-          settings[item] = value;
-          document.body.style.setProperty(`--${item}`, value);
-          document.documentElement.setAttribute(`data-bleh--${item}`, value);
-          let toggle = document.getElementById(`toggle-${item}-${value}`);
-          if (toggle)
-            toggle.setAttribute("aria-checked", true);
-          let other_toggles = search.querySelectorAll(`[data-toggle="${item}"]`);
-          other_toggles.forEach((toggle2) => {
-            let other_value = toggle2.getAttribute("data-toggle-value");
-            if (other_value == value)
-              return;
-            else
-              toggle2.setAttribute("aria-checked", false);
-          });
-          if ((item == "chart_view" || item == "chart_bar_axis") && page.type == "user" && page.subpage.startsWith("library"))
-            bleh_glacier_date_graph_generate();
-        } else {
-          if (settings[item] == value) {
-            document.getElementById(`toggle-${item}-${value}`).setAttribute("aria-checked", true);
-          } else {
-            document.getElementById(`toggle-${item}-${value}`).setAttribute("aria-checked", false);
-          }
-        }
-      }
-      if (modify)
-        log(`updated ${item} to ${settings[item]}`, "settings");
-      localStorage.setItem("bleh", JSON.stringify(settings));
-    } catch (e) {
-      console.error(e);
-    }
-    if (container) {
-      if (settings[item] != settings_base[item].value)
-        container.classList.add("modified");
-      else
-        container.classList.remove("modified");
-    }
-    if (item == "hue" || item == "sat" || item == "lit") {
-      update_colour_swatches();
-      load_chart_colours();
-    }
-  }
-  function request_reload() {
-    if (page.type == "bleh_setup")
-      return;
-    log("requesting reload", "settings");
-    reload_pending.state = true;
-    notify({
-      title: trans[lang].settings.reload.name,
-      body: trans[lang].settings.reload.body,
-      icon: "icon-16-refresh",
-      persist: true,
-      action: "_invoke_reload()"
-    });
-  }
-  unsafeWindow._invoke_reload = function() {
-    invoke_reload();
-  };
-  function invoke_reload() {
-    window.location.reload();
-  }
-  function update_colour_swatches() {
-    let found = false;
-    let custom = null;
-    let seasonal = null;
-    let swatches = document.querySelectorAll(".swatch");
-    swatches.forEach((swatch) => {
-      let h = swatch.style.getPropertyValue("--hue-over");
-      let s = swatch.style.getPropertyValue("--sat-over");
-      let l = swatch.style.getPropertyValue("--lit-over");
-      if (h == settings.hue && s == settings.sat && l == settings.lit || swatch.getAttribute("data-swatch-type") == "default" && settings.hue == 255 && settings.sat == 1 && settings.lit == 1) {
-        swatch.setAttribute("aria-checked", "true");
-        if (swatch.classList[0] != "dropdown-menu-clickable-item")
-          found = true;
-      } else {
-        swatch.setAttribute("aria-checked", "false");
-      }
-      if (!custom && swatch.getAttribute("data-swatch-type") == "custom")
-        custom = swatch;
-      if (!seasonal && swatch.getAttribute("data-swatch-type") == "seasonal")
-        seasonal = swatch;
-    });
-    if (found)
-      return;
-    if (custom && settings.accent_type != "season")
-      custom.setAttribute("aria-checked", "true");
-    else if (seasonal)
-      seasonal.setAttribute("aria-checked", "true");
-  }
-  unsafeWindow._reset_inbuilt_item = function(item) {
-    reset_inbuilt_item(item);
-  };
-  unsafeWindow._update_inbuilt_params = function(params = {}) {
-    update_inbuilt_params(params);
-  };
-  unsafeWindow._update_inbuilt_item = function(item, value) {
-    update_inbuilt_item(item, value);
-  };
-  function update_inbuilt_item(item, value, modify = true, element = document.body) {
-    console.warn("update item", item, value, "modify", modify);
-    let test_if_valid = element.querySelector(`#toggle-${item}`);
-    console.warn(test_if_valid, `toggle-${item}`);
-    if (test_if_valid == void 0)
-      return;
-    if (inbuilt_settings[item].type == "toggle") {
-      if (modify) {
-        value = document.getElementById(`toggle-${item}`).getAttribute("aria-checked") === "true";
-        log(`updated (inbuilt) ${item} to ${!value}`, "settings");
-      }
-      if (value == inbuilt_settings[item].values[0] && modify) {
-        element.querySelector(`#inbuilt-companion-checkbox-${item}`).checked = false;
-        element.querySelector(`#toggle-${item}`).setAttribute("aria-checked", false);
-        document.documentElement.setAttribute(`data-bleh--inbuilt-${item}`, inbuilt_settings[item].values[1]);
-      } else if (modify) {
-        element.querySelector(`#inbuilt-companion-checkbox-${item}`).checked = true;
-        element.querySelector(`#toggle-${item}`).setAttribute("aria-checked", true);
-        document.documentElement.setAttribute(`data-bleh--inbuilt-${item}`, inbuilt_settings[item].values[0]);
-      } else {
-        console.warn(item, value, value == true, value == false, typeof value, "boolean");
-        if (value == true) {
-          console.warn(item, value, "TRUE");
-          element.querySelector(`#inbuilt-companion-checkbox-${item}`).checked = true;
-          element.querySelector(`#toggle-${item}`).setAttribute("aria-checked", true);
-          document.documentElement.setAttribute(`data-bleh--inbuilt-${item}`, true);
-        } else if (value == false) {
-          console.warn(item, value, "FALSE");
-          element.querySelector(`#inbuilt-companion-checkbox-${item}`).checked = false;
-          element.querySelector(`#toggle-${item}`).setAttribute("aria-checked", false);
-          document.documentElement.setAttribute(`data-bleh--inbuilt-${item}`, false);
-        }
-      }
-    }
-  }
-  unsafeWindow._chosen_chrome = function() {
-    open("https://chromewebstore.google.com/detail/stylus/clngdbkpkpeebahjckkjfobafhncgmne");
-    continue_dev();
-  };
-  unsafeWindow._chosen_firefox = function() {
-    open("https://addons.mozilla.org/en-US/firefox/addon/styl-us/");
-    continue_dev();
-  };
-  function continue_dev() {
-    kill_window("prompt_dev");
-    dialog_legacy("continue_dev", trans[lang].settings.performance.dev.name, `
-        ${trans[lang].settings.performance.dev.modals.continue.next_step}
-        <div class="modal-footer">
-            <button class="btn primary continue" onclick="_finish_dev()">
-                ${trans[lang].settings.continue}
-            </button>
-        </div>
-    `);
-  }
-  unsafeWindow._finish_dev = function() {
-    open("https://github.com/katelyynn/bleh/raw/uwu/fm/bleh.user.css");
-    kill_window("continue_dev");
-    dialog_legacy("finish_dev", trans[lang].settings.performance.dev.name, `
-        <p class="alert alert-success">${trans[lang].settings.performance.dev.modals.finish.alert}</p>
-        <div class="modal-footer">
-            <button class="btn primary done" onclick="_kill_window('finish_dev')">
-                ${trans[lang].settings.done}
-            </button>
-        </div>
-    `);
-  };
 
   // src/pages/glacier.js
   function bleh_user_library() {
@@ -7513,142 +5961,1557 @@
     };
   }
 
-  // src/components/structure.js
-  function basic_page_structure() {
-    page.structure.container = document.body.querySelector(".page-content");
-    try {
-      page.structure.row = page.structure.container.querySelector(".row");
-      page.structure.main = page.structure.row.querySelector(".col-main");
-      page.structure.side = page.structure.row.querySelector(".col-sidebar");
-    } catch (e) {
-      log("unable to find elements", "page structure");
-    }
-    checkup_page_structure();
-  }
-  function checkup_page_structure(is_subpage = false, header = null) {
-    if (document.body.style.getPropertyValue("--hue-album")) {
-      document.body.style.removeProperty("--hue-album");
-      document.body.style.removeProperty("--sat-album");
-      load_chart_colours();
-    }
-    let params = new URLSearchParams(document.location.search);
-    page.requested.tab = params.get("tab");
-    page.requested.page = params.get("page");
-    if (!page.structure.container || !document.body.contains(page.structure.container)) {
-      log("page missing container, creating", "page structure");
-      page.structure.container = document.createElement("div");
-      page.structure.container.classList.add("page-content", "container");
-      let container_full_width = document.body.querySelector(".container--full-width");
-      debugger;
-      if (container_full_width)
-        container_full_width.insertBefore(page.structure.container, container_full_width.firstElementChild);
+  // src/components/badge.js
+  function load_badges(user, solo = false) {
+    if (sponsor_list == null)
+      return;
+    if (!sponsor_list.badges.hasOwnProperty(user))
+      return;
+    let badges = [];
+    if (!Array.isArray(sponsor_list.badges[user])) {
+      log("1 badge found", "sponsor", "info", sponsor_list.badges[user]);
+      badges.push(sponsor_list.badges[user]);
+    } else {
+      log("multiple badges found", "sponsor", "info", sponsor_list.badges[user]);
+      if (solo)
+        badges.push(sponsor_list.badges[user][Object.keys(sponsor_list.badges[user]).length - 1]);
       else
-        document.body.querySelector(".adaptive-skin-container").appendChild(page.structure.container);
+        badges = sponsor_list.badges[user];
     }
-    page.structure.container.setAttribute("data-assigned", "true");
-    let other_container = document.body.querySelector(".page-content.container:not([data-assigned])");
-    if (other_container)
-      other_container.style.setProperty("display", "none");
-    if (!page.structure.row || !document.body.contains(page.structure.row)) {
-      log("page missing row, creating", "page structure");
-      page.structure.row = document.createElement("div");
-      page.structure.row.classList.add("row");
-      page.structure.container.insertBefore(page.structure.row, page.structure.container.firstElementChild);
-    }
-    if (page.structure.row.classList.contains("buffer-4"))
-      page.structure.row.classList = "row col-main-is-primary";
-    if (!page.structure.main || !document.body.contains(page.structure.main)) {
-      log("page missing main, creating", "page structure");
-      page.structure.main = document.createElement("div");
-      page.structure.main.classList.add("col-main");
-      page.structure.row.appendChild(page.structure.main);
-    }
-    page.structure.main.setAttribute("data-assigned", "true");
-    let other_main = page.structure.row.querySelector(".col-main.hidden-xs:not([data-assigned])");
-    if (other_main)
-      other_main.style.setProperty("display", "none");
-    if (!page.structure.side || !document.body.contains(page.structure.side)) {
-      log("page missing side", "page structure");
-      page.structure.side = page.structure.row.querySelector(".col-sidebar");
-      if (!page.structure.side) {
-        log("page missing side, creating", "page structure");
-        page.structure.side = document.createElement("div");
-        page.structure.side.classList.add("col-sidebar");
-        page.structure.row.appendChild(page.structure.side);
+    badges.forEach((badge) => {
+      if (!badge.name)
+        badge.name = trans[lang].badges[badge.type].name;
+      if (badge.reason)
+        return;
+      if (badge.type == "sponsor" || badge.type == "contributor" || badge.type == "translation")
+        badge.reason = badge.type;
+      else if (badge.type == "cute" || badge.type == "queen")
+        badge.reason = "cute";
+      else
+        badge.reason = "reserved";
+    });
+    log("final badge list", "sponsor", "info", badges);
+    return badges;
+  }
+
+  // src/avatar.js
+  function patch_avatar(avatar, name, type = "") {
+    if (avatar.hasAttribute("data-bleh-avatar"))
+      return;
+    avatar.setAttribute("data-bleh-avatar", "true");
+    let avatar_img = avatar.querySelector("img");
+    if (avatar_img == null)
+      return;
+    avatar_img.setAttribute("src", avatar_img.getAttribute("src").replace("/64s/", "/avatar70s/"));
+    let badges = load_badges(name, true);
+    if (badges) {
+      let pre_existing_badge = avatar.querySelector(".avatar-status-dot");
+      if (pre_existing_badge !== null)
+        avatar.removeChild(pre_existing_badge);
+      avatar.setAttribute("title", "");
+      let this_badge = sponsor_list.badges[name];
+      if (!Array.isArray(sponsor_list.badges[name])) {
+        log(`@${name} 1 badge:`, "shout", "info", sponsor_list.badges[name]);
+      } else {
+        log(`@${name} multiple badges:`, "shout", "info", sponsor_list.badges[name]);
+        let badges_length = Object.keys(sponsor_list.badges[name]).length - 1;
+        this_badge = sponsor_list.badges[name][badges_length];
+        log(`@${name} using badge ${badges_length} as primary`, "shout", "info", this_badge);
       }
-    }
-    log("finished", "page structure");
-    if (ff("refreshed_music_nav") && header) {
-      let navlist = header.querySelector(".navlist");
-      if (navlist) {
-        navlist.classList.add("redesigned-navigation");
-        page.structure.container.insertBefore(navlist, page.structure.container.firstElementChild);
-        page.structure.nav = navlist;
-      }
-      if (is_subpage) {
-        let content_top = document.body.querySelector(".content-top");
-        if (content_top) {
-          content_top.classList.add("redesigned-content-top");
-          page.structure.content_top = content_top;
-          navlist.after(content_top);
-          if (content_top.querySelector(".content-top-back-link"))
-            content_top.style.setProperty("display", "none");
-        } else {
-          let subpage_title = page.structure.main.querySelector(":scope > .subpage-title");
-          if (!subpage_title)
-            subpage_title = page.structure.main.querySelector(":scope > .section-controls > .subpage-title");
-          if (!subpage_title)
-            subpage_title = page.structure.main.querySelector(":scope > section:first-child .section-controls > .subpage-title");
-          if (subpage_title) {
-            content_top = document.createElement("div");
-            content_top.classList.add("content-top", "redesigned-content-top");
-            content_top.innerHTML = `
-                        <div class="content-top-inner-wrap">
-                            <div class="container content-top-lower">
-                                <h1 class="content-top-header">${subpage_title.textContent.trim()}</h1>
-                            </div>
+      let badge = document.createElement("span");
+      badge.classList.add("avatar-status-dot", `user-status--bleh-${this_badge.type}`, `user-status--bleh-user-${name}`);
+      avatar.appendChild(badge);
+      avatar.classList.add("avatar-can-hoverbox");
+      tippy(avatar, {
+        theme: "user",
+        content: `
+                <div class="image-info">
+                    <div class="inner-image">
+                        ${avatar_img.outerHTML}
+                    </div>
+                    <div class="info">
+                        <h5 class="title">${name}</h5>
+                        <p class="descriptor">${trans[lang].profile.top_badge}</p>
+                        <p class="badge user-status--bleh-${this_badge.type} user-status--bleh-user-${name}" data-badge-type="${this_badge.type}" data-badge-user="${name}">${this_badge.name}</p>
+                    </div>
+                    <a href="${root}user/${name}" class="link-over"></a>
+                </div>
+                <div class="user-buttons view-buttons">
+                    <a class="btn view-item user-button view-library-btn" href="${root}user/${name}/library">${trans[lang].actions.view_library}</a>
+                    <a class="btn view-item user-button leave-shout-btn" href="${root}user/${name}/shoutbox">${trans[lang].actions.leave_a_shout}</a>
+                </div>
+            `,
+        allowHTML: true,
+        placement: "right",
+        interactive: true,
+        delay: [200, 0]
+      });
+      return this_badge;
+    } else {
+      let pre_existing_badge = avatar.querySelector(".avatar-status-dot");
+      if (pre_existing_badge == null) {
+        avatar.classList.add("avatar-can-hoverbox");
+        tippy(avatar, {
+          theme: "user",
+          content: `
+                    <div class="image-info">
+                        <div class="inner-image">
+                            ${avatar_img.outerHTML}
                         </div>
-                    `;
-            page.structure.content_top = content_top;
-            navlist.after(content_top);
-            try {
-              page.structure.main.removeChild(subpage_title);
-            } catch (e) {
+                        <div class="info">
+                            <h5 class="title">${name}</h5>
+                        </div>
+                        <a href="${root}user/${name}" class="link-over"></a>
+                    </div>
+                    <div class="user-buttons view-buttons">
+                        <a class="btn view-item user-button view-library-btn" href="${root}user/${name}/library">${trans[lang].actions.view_library}</a>
+                        <a class="btn view-item user-button leave-shout-btn" href="${root}user/${name}/shoutbox">${trans[lang].actions.leave_a_shout}</a>
+                    </div>
+                `,
+          allowHTML: true,
+          placement: "right",
+          interactive: true,
+          delay: [200, 0]
+        });
+        return {};
+      } else {
+        avatar.classList.add("avatar-can-hoverbox");
+        tippy(avatar, {
+          theme: "user",
+          content: `
+                    <div class="image-info">
+                        <div class="inner-image">
+                            ${avatar_img.outerHTML}
+                        </div>
+                        <div class="info">
+                            <h5 class="title">${name}</h5>
+                            <p class="descriptor">${trans[lang].profile.top_badge}</p>
+                            <p class="badge ${pre_existing_badge.classList[1]}">${avatar.getAttribute("title")}</p>
+                        </div>
+                        <a href="${root}user/${name}" class="link-over"></a>
+                    </div>
+                    <div class="user-buttons view-buttons">
+                        <a class="btn view-item user-button view-library-btn" href="${root}user/${name}/library">${trans[lang].actions.view_library}</a>
+                        <a class="btn view-item user-button leave-shout-btn" href="${root}user/${name}/shoutbox">${trans[lang].actions.leave_a_shout}</a>
+                    </div>
+                `,
+          allowHTML: true,
+          placement: "right",
+          interactive: true,
+          delay: [200, 0]
+        });
+        avatar.setAttribute("title", "");
+        return {
+          type: pre_existing_badge.classList[1]
+        };
+      }
+    }
+  }
+  function return_name_from_avatar(avatar) {
+    if (!avatar)
+      return;
+    if (!avatar.hasAttribute("alt"))
+      return;
+    if (avatar.getAttribute("alt") == trans[lang].avatar_for_me)
+      return auth;
+    return avatar.getAttribute("alt").replace(trans[lang].avatar_for_user, "");
+  }
+  unsafeWindow._expand_avatar = function(src) {
+    expand_avatar(src);
+  };
+  function expand_avatar(src) {
+    dialog({
+      id: "avatar",
+      body: `
+            <div class="full-avatar-wrapper">
+                <div class="full-avatar">
+                    <img src="${src}">
+                </div>
+                <div class="modal-footer">
+                    <a class="btn primary open" href="${src}" target="_blank">
+                        ${trans[lang].profile.open_avatar}
+                    </a>
+                </div>
+            </div>
+        `,
+      type: "avatar",
+      has_overlays: false
+    });
+  }
+
+  // src/components/menu.js
+  function register_menu(element, menu) {
+    element.addEventListener("contextmenu", (e) => {
+      e.preventDefault();
+      menu.setProps({
+        getReferenceClientRect: () => ({
+          width: 0,
+          height: 0,
+          top: e.clientY,
+          bottom: e.clientY,
+          left: e.clientX,
+          right: e.clientX
+        })
+      });
+      menu.show();
+    });
+  }
+
+  // src/pages/gallery.js
+  function bleh_gallery() {
+    if (page.subpage != "image")
+      return;
+    log("focusing on image", "gallery");
+    let image_sidebar = page.structure.side.querySelector(".js-gallery-image-details > div");
+    if (image_sidebar == null)
+      return;
+    if (image_sidebar.hasAttribute("data-bleh-gallery"))
+      return;
+    image_sidebar.setAttribute("data-bleh-gallery", "true");
+    if (!ff("new_gallery_experience")) {
+      patch_gallery_focused_image(image_sidebar, page.structure.container.querySelector(".gallery-image-buttons"));
+      return;
+    }
+    let image_details;
+    let gallery_section;
+    try {
+      gallery_section = page.structure.main.querySelector(".gallery-section");
+      if (gallery_section != null) {
+        page.structure.nav.after(gallery_section);
+        image_details = document.createElement("section");
+        image_details.classList.add("image-details");
+      } else {
+        image_details = page.structure.main.querySelector(".image-details");
+        image_details.innerHTML = "";
+      }
+    } catch (e) {
+      gallery_section = page.structure.container.querySelector(".gallery-section");
+      image_details = page.structure.main.querySelector(".image-details");
+      image_details.innerHTML = "";
+    }
+    image_details.appendChild(image_sidebar);
+    let image_title = image_details.querySelector(".gallery-image-title");
+    let image_date = image_details.querySelector(".gallery-image-uploaded-by");
+    if (image_title.textContent.trim() == "") {
+      image_title.classList.add("gallery-image-title-empty");
+      image_title.textContent = trans[lang].gallery.empty.title;
+    }
+    let breadcrumbs = document.body.querySelector(".content-top-lower-row");
+    let breadcrumb_root = breadcrumbs.querySelector("a");
+    let breadcrumb_name = breadcrumbs.querySelector(".subpage-title");
+    let image_title_container = document.createElement("div");
+    image_title_container.classList.add("image-title-container");
+    image_title_container.innerHTML = `
+        <div class="sub-text">
+            <div class="breadcrumb">
+                ${breadcrumb_root.outerHTML}
+                <div class="breadcrumb-name">
+                    ${breadcrumb_name.textContent}
+                </div>
+            </div>
+            ${image_date.outerHTML}
+        </div>
+        <div class="title-layer">
+            ${image_title.outerHTML}
+            <div class="vote-number" data-side="pos">+0</div>
+        </div>
+    `;
+    image_details.insertBefore(image_title_container, image_sidebar);
+    breadcrumbs.style.setProperty("display", "none");
+    page.structure.main.insertBefore(image_details, page.structure.main.firstElementChild);
+    let description = image_details.querySelector(".gallery-image-description");
+    if (description == null) {
+      description = document.createElement("p");
+      description.classList.add("gallery-image-description", "gallery-image-description-empty");
+      description.textContent = trans[lang].gallery.empty.description;
+      image_details.querySelector("[data-image-url]").appendChild(description);
+    }
+    let buttons = image_details.querySelector(".gallery-image-buttons");
+    let button_container = document.createElement("div");
+    button_container.classList.add("button-container-wrapper");
+    button_container.appendChild(buttons);
+    let vote_buttons = buttons.querySelector(".gallery-image-vote-buttons");
+    vote_buttons.after(create_divider());
+    let positive_btn = vote_buttons.querySelector(':is([data-ajax-form-state=""] .gallery-image-vote-up-off, [data-ajax-form-state="up-voted"] .gallery-image-vote-up-on, [data-ajax-form-state="down-voted"] .gallery-image-vote-up-off)').cloneNode(true);
+    let negative_btn = vote_buttons.querySelector(':is([data-ajax-form-state=""] .gallery-image-vote-down-off, [data-ajax-form-state="up-voted"] .gallery-image-vote-down-off, [data-ajax-form-state="down-voted"] .gallery-image-vote-down-on)').cloneNode(true);
+    let positive = parseInt(positive_btn.textContent.replace(trans[lang].gallery.up, ""));
+    let negative = parseInt(negative_btn.textContent.replace(trans[lang].gallery.down, ""));
+    let number = positive - negative;
+    let is_negative = number < 0;
+    console.info(positive_btn, positive, negative_btn, negative, number);
+    let vote_badge = image_title_container.querySelector(".vote-number");
+    vote_badge.textContent = `${is_negative ? "" : "+"}${number}`;
+    vote_badge.setAttribute("data-side", is_negative ? "neg" : "pos");
+    tippy(vote_badge, {
+      content: trans[lang].gallery.vote
+    });
+    let buttons_extra = document.createElement("div");
+    buttons_extra.classList.add("gallery-image-buttons", "gallery-image-buttons-extra");
+    button_container.appendChild(buttons_extra);
+    image_details.appendChild(button_container);
+    let open_button = document.createElement("button");
+    open_button.classList.add("image-open-button");
+    tippy(open_button, {
+      content: trans[lang].gallery.open.tooltip
+    });
+    open_button.textContent = trans[lang].gallery.open.name;
+    open_button.setAttribute("onclick", `_expand_gallery_image()`);
+    buttons_extra.appendChild(open_button);
+    open_button.after(create_divider());
+    let delete_button = image_details.querySelector(".gallery-image-delete");
+    if (delete_button != null)
+      buttons_extra.appendChild(delete_button);
+    let report_button = image_details.querySelector(".gallery-image-report-form");
+    let report_text = report_button.querySelector("button");
+    tippy(report_text, {
+      content: report_text.textContent
+    });
+    report_text.textContent = trans[lang].gallery.report.name;
+    buttons_extra.appendChild(report_button);
+    let star_buttons = image_details.querySelectorAll(".gallery-image-preferred-button :is(button, a)");
+    star_buttons.forEach((star_button) => {
+      star_button.removeAttribute("title");
+      let text = star_button.querySelector(".gallery-image-preferred-states");
+      text.textContent = trans[lang].gallery.prefer.name;
+    });
+    let view_all_container = page.structure.main.querySelector(".more-link-fullwidth-right-flush-top");
+    if (view_all_container != null) {
+      let view_all = view_all_container.querySelector("a");
+      view_all.classList.add("btn", "view-all-button", "back");
+      let view_all_panel = document.createElement("section");
+      view_all_panel.classList.add("view-all-panel");
+      view_all_panel.appendChild(view_all);
+      page.structure.side.insertBefore(view_all_panel, page.structure.side.firstElementChild);
+      page.structure.main.removeChild(view_all_container);
+      if (page.type == "artist" || ff("display_album_bookmark")) {
+        let all_saved_panel = document.createElement("section");
+        all_saved_panel.classList.add("view-all-panel");
+        all_saved_panel.innerHTML = `
+                <a class="btn view-all-button back all-saved-button" href="${view_all.getAttribute("href")}?tab=saved">
+                    ${trans[lang].gallery.bookmarks.link}
+                </a>
+            `;
+        view_all_panel.after(all_saved_panel);
+      }
+    }
+    if (page.type == "artist" || ff("display_album_bookmark"))
+      patch_gallery_focused_image(image_sidebar, buttons);
+  }
+  unsafeWindow._expand_gallery_image = function() {
+    expand_gallery_image();
+  };
+  function expand_gallery_image() {
+    let image_src = page.structure.container.querySelector(".active-slide .js-gallery-image").getAttribute("src").replace("770x0", "ar0");
+    expand_avatar(image_src);
+  }
+  function create_divider() {
+    let divider = document.createElement("div");
+    divider.classList.add("listen-divider");
+    return divider;
+  }
+  function bleh_gallery_upload() {
+    let gallery_section = document.createElement("section");
+    gallery_section.classList.add("gallery-section", "gallery--initialised");
+    let image_container = document.createElement("div");
+    image_container.classList.add("gallery-image-container");
+    let slides = document.createElement("div");
+    slides.classList.add("gallery-slides");
+    let image = document.createElement("div");
+    image.classList.add("gallery-image", "gallery-slide", "image-preview", "active-slide");
+    image.innerHTML = `
+        <img class="image-preview-hook">
+    `;
+    slides.appendChild(image);
+    image_container.appendChild(slides);
+    gallery_section.appendChild(image_container);
+    page.structure.nav.after(gallery_section);
+    let content_top2 = document.body.querySelector(".page-content");
+    content_top2.innerHTML = "";
+    let form = page.structure.main.querySelector(".form-horizontal");
+    form.classList.add("panel-form");
+    let upload_rules_group = form.querySelector(".form-group--description + .form-group");
+    let rules = upload_rules_group.querySelector(".gallery-upload-rules");
+    let rules_panel = document.createElement("section");
+    rules_panel.classList.add("rules-panel");
+    rules_panel.innerHTML = rules.innerHTML;
+    page.structure.side.appendChild(rules_panel);
+    form.removeChild(upload_rules_group);
+  }
+  function bleh_gallery_upload_check() {
+    if (page.subpage != "images_image-upload")
+      return;
+    let image_preview = page.structure.main.querySelector(".form-image-preview");
+    if (image_preview == null)
+      return;
+    let image_preview_container = page.structure.container.querySelector(".image-preview-hook");
+    image_preview_container.setAttribute("src", image_preview.getAttribute("src"));
+  }
+  function bleh_gallery_list() {
+    let upload_btn = page.structure.main.querySelector(".btn-add");
+    if (upload_btn != null) {
+      upload_btn.classList = "btn view-all-button back upload-button";
+      let upload_panel = document.createElement("section");
+      upload_panel.classList.add("view-all-panel", "upload-panel");
+      upload_panel.appendChild(upload_btn);
+      page.structure.side.insertBefore(upload_panel, page.structure.side.firstElementChild);
+    }
+  }
+  function patch_gallery_page() {
+    let header = document.body.querySelector("header");
+    if (header == void 0)
+      return;
+    if (header.classList.contains("header-new--album"))
+      return;
+    let image_list = document.body.querySelector(".image-list");
+    if (image_list != void 0) {
+      patch_gallery_image_listing(image_list);
+    }
+  }
+  function patch_gallery_image_listing(image_list) {
+    if (image_list.hasAttribute("data-kate-processed"))
+      return;
+    image_list.setAttribute("data-kate-processed", "true");
+    let bookmarked_images = JSON.parse(localStorage.getItem("bleh_bookmarked_images")) || {};
+    if (page.requested.tab != "saved" || page.requested.page != null)
+      page.structure.container.setAttribute("data-bleh--gallery-tab", "overview");
+    else
+      page.structure.container.setAttribute("data-bleh--gallery-tab", "bookmarks");
+    let bookmark_nav = document.createElement("div");
+    bookmark_nav.classList.add("bleh--nav-wrap", "bleh--nav-wrap--bookmarks");
+    bookmark_nav.innerHTML = `
+        <nav class="navlist secondary-nav">
+            <ul class="navlist-items">
+                <li class="navlist-item secondary-nav-item secondary-nav-item--gallery-overview">
+                    <a class="secondary-nav-item-link" onclick="_set_gallery_page('overview')">
+                        ${trans[lang].gallery.tabs.overview}
+                    </a>
+                </li>
+                <li class="navlist-item secondary-nav-item secondary-nav-item--gallery-bookmarks">
+                    <a class="secondary-nav-item-link" onclick="_set_gallery_page('bookmarks')">
+                        ${trans[lang].gallery.tabs.bookmarks}
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    `;
+    page.structure.content_top.after(bookmark_nav);
+    let bookmarks_content = document.createElement("div");
+    bookmarks_content.classList.add("col-main", "bleh--bookmarks", "not-a-panel");
+    bookmarks_content.innerHTML = `
+        <section class="bookmarks-panel">
+            <ul class="image-list" id="bleh--bookmarked-images" data-kate-processed="true"></ul>
+        </section>
+    `;
+    page.structure.main.classList.add("bleh--gallery");
+    page.structure.main.after(bookmarks_content);
+    let sort_button = page.structure.main.querySelector(".dropdown-menu-clickable-button");
+    let sort_menu = page.structure.main.querySelector(".dropdown-menu-clickable");
+    let sort_wrap = document.createElement("div");
+    sort_wrap.classList.add("dropdown-top-wrap");
+    sort_wrap.appendChild(sort_button);
+    sort_wrap.appendChild(sort_menu);
+    page.structure.main.insertBefore(sort_wrap, page.structure.main.firstElementChild);
+    if (bookmarked_images.hasOwnProperty(page.name)) {
+      bookmarked_images[page.name].forEach((image) => {
+        console.info(image);
+        let image_element = document.createElement("li");
+        image_element.classList.add("image-list-item-wrapper");
+        image_element.setAttribute("data-image-id", image);
+        image_element.innerHTML = `
+                <a class="image-list-item" href="${root}music/+noredirect/${page.name}/+images/${image}">
+                    <img src="https://lastfm.freetls.fastly.net/i/u/avatar170s/${image}" loading="lazy">
+                </a>
+            `;
+        document.getElementById("bleh--bookmarked-images").appendChild(image_element);
+        if (ff("remove_bookmark")) {
+          let menu = tippy(image_element, {
+            theme: "context-menu",
+            content: `
+                        <button class="dropdown-menu-clickable-item" onclick="_update_image_bookmark(this, '${image}', false)" data-menu-item="remove-bookmark" data-bleh--image-is-bookmarked="true">
+                            ${trans[lang].gallery.bookmarks.button.unbookmark_this_image.name}
+                        </button>
+                    `,
+            allowHTML: true,
+            placement: "right-start",
+            trigger: "manual",
+            interactive: true,
+            interactiveBorder: 10,
+            offset: [0, 0],
+            onShow(instance) {
+              instance.popper.addEventListener("click", (event2) => {
+                instance.hide();
+              });
             }
-          }
-          navlist = page.structure.main.querySelector(".navlist");
-          if (navlist) {
-            navlist.classList.add("redesigned-navigation");
-            if (page.structure.content_top)
-              page.structure.content_top.after(navlist);
-            else
-              page.structure.container.insertBefore(navlist, page.structure.row);
-          }
-          let btn_add = page.structure.main.querySelector(":scope > .btn-add");
-          if (!btn_add) btn_add = page.structure.main.querySelector(":scope > section:first-child .btn-add");
-          if (btn_add) {
-            btn_add.classList = "btn view-all-button back add-button";
-            let add_panel = document.createElement("section");
-            add_panel.classList.add("view-all-panel");
-            add_panel.appendChild(btn_add);
-            page.structure.side.insertBefore(add_panel, page.structure.side.firstElementChild);
-          }
-          let playlink = page.structure.main.querySelector(":scope > .section-controls > .section-playlink");
-          if (playlink) {
-            playlink.classList.add("btn", "view-all-button", "back", "play-button");
-            let playlink_panel = document.createElement("section");
-            playlink_panel.classList.add("view-all-panel");
-            playlink_panel.appendChild(playlink);
-            page.structure.side.insertBefore(playlink_panel, page.structure.side.firstElementChild);
+          });
+          register_menu(image_element, menu);
+        }
+      });
+      let image_list2 = page.structure.main.querySelectorAll(".image-list-item");
+      image_list2.forEach((image_list_item) => {
+        let image_id_split = image_list_item.getAttribute("href").split("/");
+        let image_id_length = image_id_split.length;
+        let image_id = image_id_split[image_id_length - 1];
+        if (bookmarked_images[page.name].includes(image_id)) {
+          image_list_item.classList.add("image-list-item-bookmarked");
+        }
+      });
+    } else {
+      document.getElementById("bleh--bookmarked-images").outerHTML = `
+            <div class="no-data-message bleh--no-image-bookmarks">
+                <p>${trans[lang].gallery.bookmarks.no_data}</p>
+            </div>
+        `;
+    }
+  }
+  unsafeWindow._set_gallery_page = function(id) {
+    set_gallery_page(id);
+  };
+  function set_gallery_page(id) {
+    page.structure.container.setAttribute("data-bleh--gallery-tab", id);
+  }
+  function patch_gallery_focused_image(focused_image_details, gallery_interactions) {
+    let focused_image_id_split = focused_image_details.getAttribute("data-image-url").split("/");
+    let focused_image_id_length = focused_image_id_split.length - 1;
+    let focused_image_id = focused_image_id_split[focused_image_id_length];
+    let bookmarked_images = JSON.parse(localStorage.getItem("bleh_bookmarked_images")) || {};
+    let image_is_bookmarked = false;
+    if (bookmarked_images.hasOwnProperty(page.name)) {
+      if (bookmarked_images[page.name].includes(focused_image_id)) {
+        image_is_bookmarked = true;
+        log("focused is bookmarked", "gallery");
+      }
+    }
+    let gallery_bookmark_button = document.createElement("button");
+    gallery_bookmark_button.classList.add("bleh--gallery-bookmark-image-btn", "btn--has-icon");
+    gallery_bookmark_button.setAttribute("data-bleh--image-is-bookmarked", image_is_bookmarked);
+    gallery_bookmark_button.setAttribute("onclick", `_update_image_bookmark(this, '${focused_image_id}')`);
+    gallery_bookmark_button.textContent = trans[lang].gallery.bookmarks.button.bookmark_this_image.name;
+    unsafeWindow.bookmark_tooltip = tippy(gallery_bookmark_button, {
+      content: image_is_bookmarked ? trans[lang].gallery.bookmarks.button.unbookmark_this_image.bio : trans[lang].gallery.bookmarks.button.bookmark_this_image.bio
+    });
+    gallery_interactions.appendChild(gallery_bookmark_button);
+  }
+  unsafeWindow._update_image_bookmark = function(button, id, tooltip = true) {
+    update_image_bookmark(button, id, tooltip);
+  };
+  function update_image_bookmark(button, id, tooltip = true) {
+    let bookmarked_images = JSON.parse(localStorage.getItem("bleh_bookmarked_images")) || {};
+    let is_bookmarked = button.getAttribute("data-bleh--image-is-bookmarked") === "true";
+    if (tooltip) {
+      unsafeWindow.bookmark_tooltip.setContent(
+        !is_bookmarked ? trans[lang].gallery.bookmarks.button.unbookmark_this_image.bio : trans[lang].gallery.bookmarks.button.bookmark_this_image.bio
+      );
+    } else {
+      button = page.structure.container.querySelector(`[data-image-id="${id}"]`);
+    }
+    if (!bookmarked_images.hasOwnProperty(page.name))
+      bookmarked_images[page.name] = [];
+    if (is_bookmarked) {
+      button.setAttribute("data-bleh--image-is-bookmarked", "false");
+      let new_artist_bookmarks = [];
+      for (let image in bookmarked_images[page.name]) {
+        if (bookmarked_images[page.name][image] != id) {
+          new_artist_bookmarks.push(bookmarked_images[page.name][image]);
+        }
+      }
+      bookmarked_images[page.name] = new_artist_bookmarks;
+      log(`image ${id} from ${page.name} removed from bookmarks`, "gallery");
+    } else {
+      button.setAttribute("data-bleh--image-is-bookmarked", "true");
+      bookmarked_images[page.name].push(id);
+      log(`image ${id} from ${page.name} added to bookmarks`, "gallery");
+    }
+    localStorage.setItem("bleh_bookmarked_images", JSON.stringify(bookmarked_images));
+  }
+
+  // src/components/colourful_counts.js
+  function patch_artist_ranks_in_list_view(track) {
+    let count_bar = track.querySelector(".chartlist-count-bar");
+    if (count_bar == void 0)
+      return;
+    let count_bar_link = count_bar.querySelector(".chartlist-count-bar-link");
+    if (count_bar_link.getAttribute("href").includes("?from=") || count_bar_link.getAttribute("href").includes("?date_preset=") && !count_bar_link.getAttribute("href").endsWith("?date_preset=ALL") && !count_bar_link.getAttribute("href").endsWith("?date_preset=null"))
+      return;
+    let count = clean_number(count_bar.querySelector(".chartlist-count-bar-value").textContent.trim().replace(" scrobbles", ""));
+    if (!count_bar.hasAttribute("data-kate-processed")) {
+      count_bar.setAttribute("data-kate-processed", "true");
+      let parsed_scrobble_as_rank = parse_scrobbles_as_rank(count);
+      count_bar.setAttribute("data-bleh--scrobble-milestone", parsed_scrobble_as_rank.milestone);
+      count_bar.style.setProperty("--hue-over", parsed_scrobble_as_rank.hue);
+      count_bar.style.setProperty("--sat-over", parsed_scrobble_as_rank.sat);
+      count_bar.style.setProperty("--lit-over", parsed_scrobble_as_rank.lit);
+    }
+  }
+  function parse_scrobbles_as_rank(scrobbles) {
+    let scrobble_milestone = 0;
+    let scrobble_proximity = 1;
+    let max_rank = 15;
+    for (let rank = max_rank; rank >= 0; rank--) {
+      if (scrobbles > ranks[rank].start) {
+        let this_rank = parseInt(rank);
+        scrobble_milestone = this_rank;
+        let next_rank = this_rank + 1;
+        let prev_rank = this_rank - 1;
+        if (this_rank != max_rank && this_rank != 0)
+          scrobble_proximity = (scrobbles - ranks[prev_rank].start) / ranks[next_rank].start;
+        break;
+      }
+    }
+    let milestone_hue = ranks[scrobble_milestone].hue;
+    let milestone_sat = ranks[scrobble_milestone].sat;
+    let milestone_lit = ranks[scrobble_milestone].lit;
+    if (scrobble_milestone != max_rank) {
+      let next_milestone_hue = ranks[scrobble_milestone + 1].hue;
+      let next_milestone_sat = ranks[scrobble_milestone + 1].sat;
+      let next_milestone_lit = ranks[scrobble_milestone + 1].lit;
+      if (milestone_hue > next_milestone_hue)
+        milestone_hue += (next_milestone_hue - milestone_hue) * scrobble_proximity;
+      if (milestone_sat < next_milestone_sat)
+        milestone_sat += (milestone_sat - next_milestone_sat) * scrobble_proximity;
+      else
+        milestone_sat += (next_milestone_sat - milestone_sat) * scrobble_proximity;
+      if (milestone_lit < next_milestone_lit)
+        milestone_lit += (milestone_lit - next_milestone_lit) * scrobble_proximity;
+      else
+        milestone_lit += (next_milestone_lit - milestone_lit) * scrobble_proximity;
+    }
+    log(`milestone for ${scrobbles} is ${scrobble_milestone} within ${scrobble_proximity} proximity`, "colourful counts", "info", { hue: milestone_hue, sat: milestone_sat, lit: milestone_lit });
+    return {
+      milestone: scrobble_milestone,
+      proximity: scrobble_proximity,
+      hue: milestone_hue,
+      sat: milestone_sat,
+      lit: milestone_lit
+    };
+  }
+
+  // src/components/music.js
+  function show_your_scrobbles() {
+    let katsune = ff("katsune");
+    show_numbers_on_side(page.type);
+    let col_main = page.structure.container.querySelector(".top-overview-panel");
+    if (col_main == null)
+      col_main = document.body.querySelector(".col-main");
+    if (page.type == "track") {
+      let new_panel = document.createElement("section");
+      new_panel.classList.add("track-info-panel");
+      new_panel.innerHTML = col_main.innerHTML;
+      page.structure.main.insertBefore(new_panel, page.structure.main.firstElementChild);
+      col_main.style.setProperty("display", "none");
+      console.info(col_main, new_panel);
+      col_main = new_panel;
+    }
+    let top_container = document.createElement("div");
+    top_container.classList.add("top-container");
+    if (katsune)
+      top_container.classList.add("katsune-button-row");
+    let listen_container = document.createElement("div");
+    if (!katsune)
+      listen_container.classList.add("listen-container", "view-buttons");
+    let page_url = window.location.href;
+    let page_url_split = page_url.split("/");
+    let page_url_length = page_url_split.length - 1;
+    let scrobble_page = page_url_split[page_url_length];
+    if (page.type == "album") {
+      scrobble_page = page_url_split[page_url_length - 1] + "/" + page_url_split[page_url_length];
+    } else if (page.type == "track") {
+      scrobble_page = page_url_split[page_url_length - 2] + "/_/" + page_url_split[page_url_length];
+    }
+    let your_listens = {
+      name: auth.name,
+      listens: 0,
+      link: scrobble_page,
+      avi: auth.avatar,
+      katsune
+    };
+    let scrobble_button = col_main.querySelector(".personal-stats-item--scrobbles .hidden-xs a");
+    if (scrobble_button != null) {
+      your_listens.listens = clean_number(scrobble_button.textContent.trim());
+    }
+    create_listen_item(listen_container, your_listens, page.type);
+    if (settings.profile_shortcut != "") {
+      let shortcut_listens = {
+        name: settings.profile_shortcut,
+        listens: -1,
+        link: scrobble_page,
+        avi: localStorage.getItem("bleh_profile_shortcut_avi"),
+        katsune
+      };
+      create_listen_item(listen_container, shortcut_listens);
+      fetch(`${root}user/${shortcut_listens.name}/library/music/${scrobble_page}`).then(function(response) {
+        console.log("returned", response, response.text);
+        return response.text();
+      }).then(function(html) {
+        let doc = new DOMParser().parseFromString(html, "text/html");
+        console.log("DOC", doc);
+        let first_metadata_item = doc.querySelector(".metadata-item .metadata-display");
+        let listens = 0;
+        let listen_item = document.getElementById(`listen-item--${shortcut_listens.name}`);
+        if (first_metadata_item != null)
+          listens = clean_number(first_metadata_item.textContent.trim());
+        listen_item.setAttribute("data-listens", listens);
+        listen_item.innerHTML = `
+                <img class="view-item-avatar" src="${shortcut_listens.avi}" alt="${shortcut_listens.name}">${trans[lang].music.listens.count_listens.replace("{c}", listens.toLocaleString(lang))}
+            `;
+        if (settings.colourful_counts && page.type == "artist") {
+          let parsed_scrobble_as_rank = parse_scrobbles_as_rank(listens);
+          listen_item.setAttribute("data-bleh--scrobble-milestone", parsed_scrobble_as_rank.milestone);
+          listen_item.style.setProperty("--hue-over", parsed_scrobble_as_rank.hue);
+          listen_item.style.setProperty("--sat-over", parsed_scrobble_as_rank.sat);
+          listen_item.style.setProperty("--lit-over", parsed_scrobble_as_rank.lit);
+        }
+      });
+    }
+    create_listen_item(listen_container, {
+      name: "other",
+      listens: -3,
+      link: scrobble_page,
+      button: true,
+      katsune
+    }, page.type);
+    top_container.appendChild(listen_container);
+    if (!katsune)
+      col_main.insertBefore(top_container, col_main.firstElementChild);
+    else
+      page.structure.container.querySelector(".bleh-background").after(top_container);
+    if (page.type == "artist") {
+      let other_container = col_main.querySelector(".personal-stats-item--listeners");
+      if (other_container != null) {
+        let listen_divider = document.createElement("div");
+        listen_divider.classList.add("listen-divider");
+        listen_container.appendChild(listen_divider);
+        let avatars = other_container.querySelectorAll(".personal-stats-listener-avatar img");
+        let count = other_container.querySelector(".header-metadata-display a");
+        let other_listeners = {
+          name: "others",
+          listens: -2,
+          link: scrobble_page,
+          avi: avatars,
+          count: count != null ? clean_number(count.textContent.trim()) : 5,
+          katsune
+        };
+        create_listen_item(listen_container, other_listeners, page.type);
+      }
+    }
+    let interact_container = document.createElement("div");
+    if (!katsune)
+      interact_container.classList.add("interact-container", "view-buttons");
+    let text = document.body.querySelector(".header-new-title").textContent.replaceAll(" ", "+").replaceAll("&", "%26");
+    let artist = document.body.querySelector(".header-new-crumb");
+    if (artist != void 0)
+      text = `${text}+${artist.textContent.replaceAll(" ", "+").replaceAll("&", "%26")}`;
+    let header_actions = document.body.querySelector(".header-new-actions");
+    interact_container.innerHTML = header_actions.innerHTML;
+    let buttons = interact_container.querySelectorAll("button");
+    buttons.forEach((button) => {
+      if (button.classList[0] != "header-new-playlink")
+        button.classList.add("btn", "view-item", "interact-item", katsune ? "icon" : "");
+      else
+        button.classList.add("dropdown-menu-clickable-item");
+      if (button.classList[0] == "header-new-more-button")
+        interact_container.removeChild(button.parentElement);
+    });
+    let links = interact_container.querySelectorAll("a");
+    links.forEach((button) => {
+      if (button.classList[0] != "header-new-playlink")
+        button.classList.add("btn", "view-item", "interact-item");
+      else
+        button.classList.add("dropdown-menu-clickable-item");
+    });
+    let bookmark_btn = interact_container.querySelector('[data-toggle-button-current-state*="bookmark"]');
+    bookmark_btn.after(create_divider());
+    let obsession_form = header_actions.querySelector('form[action$="obsessions"]');
+    if (obsession_form != null) {
+      let obsession_btn = obsession_form.querySelector("button");
+      obsession_btn.classList = "btn view-item interact-item obsession-btn";
+      tippy(obsession_btn, {
+        content: obsession_btn.textContent
+      });
+      obsession_btn.textContent = trans[lang].music.obsession;
+      interact_container.appendChild(obsession_form);
+    }
+    if (katsune && page.type == "artist") {
+      let artist_btn = document.createElement("a");
+      artist_btn.classList.add("btn", "view-item", "interact-item", "artist-btn", "icon");
+      if (settings.quick_artist_button == "gallery") {
+        artist_btn.setAttribute("data-artist-btn-type", "gallery");
+        artist_btn.setAttribute("href", `${window.location.href}/+images`);
+        artist_btn.textContent = trans[lang].gallery.view;
+      } else if (settings.quick_artist_button == "shouts") {
+        artist_btn.setAttribute("data-artist-btn-type", "shouts");
+        artist_btn.setAttribute("href", `${window.location.href}/+shoutbox`);
+        artist_btn.textContent = trans[lang].settings.layout.quick_artist_button.shouts;
+      } else if (settings.quick_artist_button == "wiki") {
+        artist_btn.setAttribute("data-artist-btn-type", "wiki");
+        artist_btn.setAttribute("href", `${window.location.href}/+wiki`);
+        artist_btn.textContent = trans[lang].settings.layout.quick_artist_button.wiki;
+      } else if (settings.quick_artist_button == "listens") {
+        artist_btn.setAttribute("data-artist-btn-type", "gallery");
+        artist_btn.setAttribute("href", `${window.location.href}/+listeners/you-know`);
+        artist_btn.textContent = trans[lang].settings.layout.quick_artist_button.listens;
+      }
+      interact_container.appendChild(artist_btn);
+      let view_menu = tippy(artist_btn, {
+        theme: "context-menu",
+        content: `
+                <a class="dropdown-menu-clickable-item" href="${root}bleh?tab=customise" data-menu-item="settings">
+                    ${trans[lang].settings.configure}
+                </a>
+            `,
+        allowHTML: true,
+        placement: "right-start",
+        trigger: "manual",
+        interactive: true,
+        interactiveBorder: 10,
+        offset: [0, 0],
+        onShow(instance) {
+          instance.popper.addEventListener("click", (event2) => {
+            instance.hide();
+          });
+        }
+      });
+      register_menu(artist_btn, view_menu);
+    }
+    let search_btn = document.createElement("a");
+    search_btn.classList.add("btn", "view-item", "interact-item", "search-similar-btn", katsune ? "icon" : "");
+    search_btn.textContent = trans[lang].music.search_variations.name;
+    search_btn.href = `${root}search/${page.type}s?q=${text}`;
+    search_btn.target = "_blank";
+    tippy(search_btn, {
+      content: trans[lang].music.search_variations.tooltip
+    });
+    interact_container.appendChild(search_btn);
+    let search_lyrics = null;
+    if (page.type == "track") {
+      search_lyrics = document.createElement("a");
+      search_lyrics.classList.add("dropdown-menu-clickable-item", "search-genius-btn");
+      search_lyrics.textContent = trans[lang].music.search_genius;
+      search_lyrics.href = `https://genius.com/search?q=${text}`;
+      search_lyrics.target = "_blank";
+    }
+    let lotus_btn = null;
+    if (settings.corrections) {
+      lotus_btn = document.createElement("a");
+      lotus_btn.classList.add("dropdown-menu-clickable-item", "lotus", "lotus-btn");
+      lotus_btn.textContent = trans[lang].lotus.correct.name;
+      lotus_btn.href = "https://github.com/katelyynn/lotus/issues/new/choose";
+      lotus_btn.target = "_blank";
+      if (page.corrected)
+        lotus_btn.classList.add("active");
+    }
+    let menu_btn = document.createElement("button");
+    menu_btn.classList.add("btn", "view-item", "interact-item", "menu-btn", katsune ? "icon" : "");
+    menu_btn.textContent = trans[lang].music.menu;
+    let play_btn = interact_container.querySelector(".header-new-playlink");
+    let music_menu = tippy(menu_btn, {
+      theme: "select-menu",
+      content: `
+            ${search_lyrics != null ? search_lyrics.outerHTML : ""}
+            ${lotus_btn != null ? lotus_btn.outerHTML : ""}
+            ${play_btn != null ? play_btn.outerHTML : ""}
+        `,
+      allowHTML: true,
+      placement: "bottom",
+      interactive: true,
+      interactiveBorder: 10,
+      trigger: "click",
+      onShow(instance) {
+      }
+    });
+    if (play_btn != null)
+      interact_container.removeChild(play_btn);
+    interact_container.appendChild(menu_btn);
+    top_container.appendChild(interact_container);
+  }
+  function create_listen_item(parent, { name, listens, link, avi, count = 0, button = false, katsune = false }, header_type) {
+    log(`creating listen item of ${name}, ${count}, ${listens}`, "artist", "info", { avi, link });
+    let listen_item = document.createElement(!button ? "a" : "button");
+    listen_item.classList.add("btn", "listen-item", "view-item");
+    listen_item.setAttribute("href", `${root}user/${name}/library/music/${link}`);
+    listen_item.setAttribute("data-listens", listens);
+    listen_item.setAttribute("id", `listen-item--${name}`);
+    if (listens > -1) {
+      listen_item.innerHTML = `
+            <img class="view-item-avatar" src="${avi}" alt="${name}">${trans[lang].music.listens.count_listens.replace("{c}", listens.toLocaleString(lang))}
+        `;
+      let menu = tippy(listen_item, {
+        theme: "context-menu",
+        content: `
+                <a class="dropdown-menu-clickable-item" href="${root}user/${name}" data-menu-item="view_profile">
+                    ${trans[lang].music.view_profile}
+                </a>
+            `,
+        allowHTML: true,
+        placement: "right-start",
+        trigger: "manual",
+        interactive: true,
+        interactiveBorder: 10,
+        offset: [0, 0],
+        onShow(instance) {
+          instance.popper.addEventListener("click", (event2) => {
+            instance.hide();
+          });
+        }
+      });
+      register_menu(listen_item, menu);
+    } else if (listens > -2) {
+      listen_item.innerHTML = `
+            <img class="view-item-avatar" src="${avi}" alt="${name}">${trans[lang].music.listens.loading_listens}
+        `;
+      let menu = tippy(listen_item, {
+        theme: "context-menu",
+        content: `
+                <a class="dropdown-menu-clickable-item" href="${root}user/${name}" data-menu-item="view_profile">
+                    ${trans[lang].music.view_profile}
+                </a>
+                <div class="sep"></div>
+                <button class="dropdown-menu-clickable-item" onclick="_open_profile_shortcut_window()" data-menu-item="settings">
+                    ${trans[lang].settings.configure}
+                </button>
+            `,
+        allowHTML: true,
+        placement: "right-start",
+        trigger: "manual",
+        interactive: true,
+        interactiveBorder: 10,
+        offset: [0, 0],
+        onShow(instance) {
+          instance.popper.addEventListener("click", (event2) => {
+            instance.hide();
+          });
+        }
+      });
+      register_menu(listen_item, menu);
+    } else if (listens == -3) {
+      listen_item.classList.add("listen-item-other");
+      listen_item.removeAttribute("href");
+      listen_item.setAttribute("onclick", `_other_listener('${link}')`);
+      tippy(listen_item, {
+        content: trans[lang].music.listens.custom.tooltip
+      });
+    } else {
+      listen_item.innerHTML = `
+            ${avi[0] != null ? `<img class="view-item-avatar" src="${avi[0].getAttribute("src")}">` : ""}
+            ${avi[1] != null ? `<img class="view-item-avatar" src="${avi[1].getAttribute("src")}">` : ""}
+            ${avi[2] != null ? `<img class="view-item-avatar" src="${avi[2].getAttribute("src")}">` : ""}
+            ${trans[lang].music.listens.other_listeners.replace("{c}", count)}
+        `;
+      listen_item.setAttribute("href", `${window.location.href}/+listeners/you-know`);
+    }
+    if (settings.colourful_counts && listens > -1 && header_type == "artist") {
+      let parsed_scrobble_as_rank = parse_scrobbles_as_rank(listens);
+      listen_item.setAttribute("data-bleh--scrobble-milestone", parsed_scrobble_as_rank.milestone);
+      listen_item.style.setProperty("--hue-user", parsed_scrobble_as_rank.hue);
+      listen_item.style.setProperty("--sat-user", parsed_scrobble_as_rank.sat);
+      listen_item.style.setProperty("--lit-user", parsed_scrobble_as_rank.lit);
+    }
+    if (katsune) {
+      listen_item.classList.add("icon");
+    }
+    parent.appendChild(listen_item);
+    if (listens < -1)
+      return;
+    tippy(listen_item, {
+      content: name
+    });
+  }
+  function show_numbers_on_side(header_type) {
+    let metadata = document.body.querySelectorAll(".header-metadata-tnew-item");
+    let listeners = {};
+    let scrobbles = {};
+    let metascore = {};
+    metadata.forEach((item, index) => {
+      let text = item.querySelector(".header-metadata-tnew-title").textContent.trim();
+      let value = item.querySelector(".header-metadata-tnew-display abbr");
+      if (index == 0) {
+        listeners.text = text;
+        listeners.value = clean_number(value.getAttribute("title"));
+        listeners.abbr = value.textContent.trim();
+      } else if (index == 1) {
+        scrobbles.text = text;
+        scrobbles.value = clean_number(value.getAttribute("title"));
+        scrobbles.abbr = value.textContent.trim();
+      } else if (index == 2) {
+        let link = item.querySelector("a");
+        if (link == null)
+          return;
+        metascore.text = text;
+        metascore.abbr = value.textContent.trim();
+        metascore.link = link.getAttribute("href");
+      }
+    });
+    let panel = page.structure.side.querySelector("section.section-with-separator:has(.listener-trend)");
+    if (panel == null) {
+      panel = document.createElement("section");
+      panel.classList.add("section-with-separator");
+      page.structure.side.insertBefore(panel, page.structure.side.firstElementChild);
+    }
+    panel.classList.add("listen-panel");
+    let row = document.createElement("div");
+    row.classList.add("listener-row");
+    row.innerHTML = `
+        <div class="listener-side" id="listeners">
+            <h3>${listeners.text}</h3>
+            <p>${listeners.abbr}</p>
+        </div>
+        <div class="scrobble-side" id="scrobbles">
+            <h3>${scrobbles.text}</h3>
+            <p>${scrobbles.abbr}</p>
+        </div>
+        ${metascore.text != void 0 ? `
+        <div class="metascore-side">
+            <h3>${metascore.text}</h3>
+            <p><a href="${metascore.link}" target="_blank">${metascore.abbr}</a></p>
+        </div>
+        ` : ""}
+    `;
+    panel.insertBefore(row, panel.firstElementChild);
+    tippy(document.getElementById("listeners"), {
+      content: listeners.value.toLocaleString(lang)
+    });
+    tippy(document.getElementById("scrobbles"), {
+      content: scrobbles.value.toLocaleString(lang)
+    });
+    if (page.type == "album") {
+      let album_artwork = document.body.querySelector(".artwork-and-metadata-row");
+      if (album_artwork)
+        page.structure.side.insertBefore(album_artwork, page.structure.side.firstElementChild);
+    }
+    if (page.type == "album" || page.type == "artist") {
+      let upper = document.body.querySelector(".col-main");
+      upper.classList.add("upper-overview-to-hide");
+      let new_upper = document.createElement("section");
+      new_upper.classList.add("top-overview-panel");
+      new_upper.setAttribute("data-page-type", page.type);
+      new_upper.innerHTML = upper.innerHTML;
+      page.structure.main.insertBefore(new_upper, page.structure.main.firstElementChild);
+    }
+    if (page.type == "track") {
+      let video_col = document.body.querySelector(".track-overview-video-column.col-sidebar");
+      video_col.classList.remove("col-sidebar");
+      page.structure.side.insertBefore(video_col, page.structure.side.firstElementChild);
+      let video = video_col.querySelector(".video-preview");
+      if (video) {
+        video_col.classList.remove("col-sidebar");
+        page.structure.side.insertBefore(video_col, page.structure.side.firstElementChild);
+        let container = document.createElement("div");
+        container.classList.add("video-overlay-container");
+        let view_buttons = document.createElement("div");
+        view_buttons.classList.add("view-buttons");
+        let playlink = video.querySelector(".video-preview-playlink a");
+        let replace = video_col.querySelector(".video-preview-replace a");
+        playlink.classList = "btn view-item video-item video-item--play";
+        replace.classList = "btn view-item video-item video-item--edit";
+        view_buttons.appendChild(playlink);
+        view_buttons.appendChild(replace);
+        container.appendChild(view_buttons);
+        video.appendChild(container);
+        tippy(playlink, {
+          content: playlink.getAttribute("title")
+        });
+        playlink.removeAttribute("title");
+        tippy(replace, {
+          content: replace.textContent
+        });
+      } else {
+        let cta = video_col.querySelector(".video-preview-upload-cta");
+        if (cta)
+          return;
+        page.structure.side.removeChild(video_col);
+        let video_placeholder = document.createElement("section");
+        video_placeholder.classList.add("video-placeholder");
+        video_placeholder.innerHTML = `
+                <div class="bleh-icon" style="--icon: var(--icon-16-video-broken)"></div>
+                Video removed by Last.fm
+            `;
+        page.structure.side.insertBefore(video_placeholder, page.structure.side.firstElementChild);
+        let links = page.structure.side.querySelector(".external-links-section .play-this-track-playlinks");
+        if (links)
+          links.classList.add("video-unavailable");
+      }
+    }
+  }
+  function bleh_music_page_charts() {
+    if (!ff("music_page_charts"))
+      return;
+    log("beginning replacement", "music charts");
+    let panel = document.body.querySelector(".listen-panel");
+    let trend = panel.querySelector(".listener-trend");
+    if (trend == null)
+      return;
+    prep_chart_colours();
+    let previous_chart = panel.querySelector(".scrobble-canvas-container");
+    if (previous_chart != null)
+      panel.removeChild(previous_chart);
+    let table = trend.querySelector("tbody");
+    let days = table.querySelectorAll("tr");
+    let labels = [];
+    let values = [];
+    let has_seen_more_than_0 = false;
+    days.forEach((day, index) => {
+      if (!day)
+        null;
+      let label = moment(day.querySelector("time").getAttribute("datetime"));
+      let value = day.querySelector(".js-value");
+      console.log("day", index, label, day, day.innerHTML);
+      if (!value.getAttribute("data-value"))
+        value = 0;
+      else
+        value = value.getAttribute("data-value");
+      if (value == "0" && index < 120 && !has_seen_more_than_0)
+        return;
+      has_seen_more_than_0 = true;
+      labels.push(label);
+      values.push(value);
+    });
+    prep_chart_colours();
+    let scrobble_canvas_container = document.createElement("div");
+    scrobble_canvas_container.classList.add("scrobble-canvas-container");
+    let scrobble_canvas = document.createElement("canvas");
+    scrobble_canvas.classList.add("scrobble-canvas");
+    let gradient = scrobble_canvas.getContext("2d").createLinearGradient(0, 0, 0, 160);
+    try {
+      gradient.addColorStop(0, page.state.chart_colours.link_bg_col);
+      gradient.addColorStop(1, page.state.chart_colours.link_bg_col_2);
+    } catch (e) {
+      gradient = page.state.chart_colours.link_bg_col;
+    }
+    Chart.defaults.color = page.state.chart_colours.text_col;
+    Chart.defaults.font.family = "Ubuntu Sans";
+    let scrobble_chart = new Chart(scrobble_canvas.getContext("2d"), {
+      type: "line",
+      data: {
+        labels,
+        datasets: [{
+          data: values,
+          borderWidth: 2,
+          backgroundColor: gradient,
+          borderColor: page.state.chart_colours.link_col,
+          fill: true,
+          pointRadius: 0,
+          pointHitRadius: 20,
+          tension: 0.1
+        }]
+      },
+      options: page.state.chart_line_options
+    });
+    scrobble_canvas_container.appendChild(scrobble_canvas);
+    panel.appendChild(scrobble_canvas_container);
+    trend.style.setProperty("display", "none");
+    log("finished", "music charts");
+  }
+  function bleh_top_listeners() {
+    if (!ff("unify_top_listeners"))
+      return;
+    let panel = page.structure.main.querySelector(":scope > .buffer-standard");
+    let view_buttons = document.createElement("div");
+    view_buttons.classList.add("view-buttons-wrapper");
+    view_buttons.innerHTML = `
+        <div class="view-buttons">
+            <button class="btn view-item" id="toggle-list_view-1" data-toggle="list_view" data-toggle-value="1" onclick="_update_item('list_view', 1)">
+                ${trans[lang].glacier.view.grid}
+            </button>
+            <button class="btn view-item" id="toggle-list_view-0" data-toggle="list_view" data-toggle-value="0" onclick="_update_item('list_view', 0)">
+                ${trans[lang].glacier.view.list}
+            </button>
+        </div>
+    `;
+    panel.insertBefore(view_buttons, panel.firstElementChild);
+    refresh_all();
+    let legacy_top_listeners_container = panel.querySelector(".top-listeners");
+    let legacy_top_listeners = legacy_top_listeners_container.querySelectorAll(".top-listeners-item");
+    let new_container = document.createElement("ul");
+    new_container.classList.add("user-list", "top-listeners-list");
+    legacy_top_listeners.forEach((listener, index) => {
+      let new_listener = document.createElement("li");
+      new_listener.classList.add("user-list-item", "listener-list-item");
+      let position = index + 1;
+      if (page.requested.page != null && page.requested.page != "1") {
+        position += (parseInt(page.requested.page) - 1) * 30;
+      }
+      let name_wrap = listener.querySelector(".top-listeners-item-name a");
+      let name = name_wrap.textContent;
+      let track_wrap = listener.querySelector(".top-listeners-track");
+      let avatar = listener.querySelector(".top-listeners-item-image");
+      let follow = listener.querySelector(".class");
+      new_listener.innerHTML = `
+            <div class="user-list-inner-wrap">
+                <span class="listener-list-position">
+                    ${position}
+                </span>
+                <h4 class="user-list-name">
+                    <a class="user-list-link link-block-target" href="${name_wrap.getAttribute("href")}">
+                        ${name}
+                    </a>
+                </h4>
+                <span class="avatar user-list-avatar">
+                    ${avatar.innerHTML}
+                </span>
+                ${follow ? follow.outerHTML : ""}
+                <div class="user-list-description">
+                    <p class="user-list-about-me">
+                        ${track_wrap.innerHTML}
+                    </p>
+                </div>
+            </div>
+        `;
+      patch_avatar(new_listener.querySelector(".user-list-avatar"), name, "listener");
+      let track_link = new_listener.querySelector(".user-list-about-me a");
+      let artist = return_artist_from_track(track_link.getAttribute("href"), false);
+      let track = correct_item_by_artist(track_link.textContent.trim(), artist);
+      track_link.textContent = track;
+      new_container.appendChild(new_listener);
+    });
+    view_buttons.after(new_container);
+    panel.removeChild(legacy_top_listeners_container);
+  }
+
+  // src/config.js
+  function create_settings_template() {
+    localStorage.setItem("bleh", JSON.stringify(settings_template));
+    return settings_template;
+  }
+  function load_settings(skip = false) {
+    if (!skip) {
+      for (var member in settings) delete settings[member];
+      Object.assign(settings, JSON.parse(localStorage.getItem("bleh")) || create_settings_template());
+    }
+    for (let setting in settings_template)
+      if (settings[setting] == void 0)
+        settings[setting] = settings_template[setting];
+    if (settings.dev == 1)
+      settings.dev = true;
+    for (let setting in settings) {
+      if ((setting == "hue" || setting == "sat" || setting == "lit") && settings.hue == settings_base.hue.value && settings.sat == settings_base.sat.value && settings.lit == settings_base.lit.value) continue;
+      try {
+        document.body.style.setProperty(`--${settings_base[setting].css}`, `${settings[setting]}${settings_base[setting].unit}`);
+      } catch (e) {
+        console.log("bleh - setting base entry for", setting, "is not accessible");
+      }
+      document.documentElement.setAttribute(`data-bleh--${setting}`, `${settings[setting]}`);
+    }
+    load_skus();
+    localStorage.setItem("bleh", JSON.stringify(settings));
+    if (document.body.classList.contains("user-dashboard-layout")) {
+      document.documentElement.setAttribute("data-bleh--theme", "oled");
+      page.state.settings_reload = true;
+    }
+    load_chart_colours();
+  }
+  unsafeWindow.toggle_theme = function() {
+    if (page.subpage.startsWith("listening-report"))
+      return;
+    let current_theme = settings.theme;
+    if (current_theme == "dark")
+      current_theme = "darker";
+    else if (current_theme == "darker")
+      current_theme = "oled";
+    else if (current_theme == "oled" || current_theme == "classic")
+      current_theme = "light";
+    else if (current_theme == "light")
+      current_theme = "dark";
+    show_theme_change_in_menu(current_theme);
+    settings.theme = current_theme;
+    document.documentElement.setAttribute(`data-bleh--theme`, `${current_theme}`);
+    localStorage.setItem("bleh", JSON.stringify(settings));
+    load_chart_colours();
+    if ((page.type == "artist" || page.type == "album" || page.type == "track") && page.subpage == "overview")
+      bleh_music_page_charts();
+    if (page.type == "user" && page.subpage.startsWith("library")) {
+      bleh_glacier_date_graph_generate();
+      bleh_glacier_insights();
+    }
+  };
+  unsafeWindow.change_theme_from_settings = function(theme) {
+    settings.theme = theme;
+    document.documentElement.setAttribute(`data-bleh--theme`, `${theme}`);
+    show_theme_change_in_settings(theme);
+    show_theme_change_in_menu(theme);
+    localStorage.setItem("bleh", JSON.stringify(settings));
+  };
+  unsafeWindow.change_theme_from_menu = function(theme) {
+    if (page.subpage.startsWith("listening-report"))
+      return;
+    settings.theme = theme;
+    document.documentElement.setAttribute(`data-bleh--theme`, `${theme}`);
+    show_theme_change_in_menu(theme);
+    localStorage.setItem("bleh", JSON.stringify(settings));
+    load_chart_colours();
+    if ((page.type == "artist" || page.type == "album" || page.type == "track") && page.subpage == "overview")
+      bleh_music_page_charts();
+    if (page.type == "user" && page.subpage.startsWith("library")) {
+      bleh_glacier_date_graph_generate();
+      bleh_glacier_insights();
+    }
+  };
+  function reset_all() {
+    for (let item in settings_base)
+      reset_item(item);
+  }
+  function refresh_all(search = document) {
+    for (let item in settings_base)
+      update_item(item, settings[item], false, search);
+  }
+  function reset_item(item) {
+    update_item(item, settings_base[item].value);
+  }
+  function update_params(params = {}) {
+    for (let item in params) {
+      update_item(item, params[item]);
+    }
+  }
+  unsafeWindow._reset_all = function() {
+    reset_all();
+  };
+  unsafeWindow._reset_item = function(item) {
+    reset_item(item);
+  };
+  unsafeWindow._update_params = function(params = {}) {
+    update_params(params);
+  };
+  unsafeWindow._update_item = function(item, value) {
+    update_item(item, value);
+  };
+  function update_item(item, value, modify = true, search = document) {
+    let container = search.querySelector(`#container-${item}`);
+    if (container)
+      console.info(container);
+    else if (settings_base[item].type != "slider" && settings_base[item].type != "options")
+      return;
+    try {
+      let new_value = false;
+      if (value != settings[item])
+        new_value = true;
+      if (settings_base[item].require_reload && new_value)
+        request_reload();
+      if (settings_base[item].type == "slider" && modify)
+        settings[item] = value;
+      if (!modify)
+        console.info(item, value, modify);
+      if (settings_base[item].type == "slider") {
+        try {
+          let slider = search.querySelector(`#slider-${item}`);
+          search.querySelector(`#value-${item}`).textContent = `${settings[item]}${settings_base[item].unit}`;
+          slider.value = settings[item];
+          search.querySelector(`#slider-track-${item}`).style.setProperty("--percent", `${settings[item] / slider.getAttribute("max") * 100}%`);
+        } catch (e) {
+        }
+        document.body.style.setProperty(`--${settings_base[item].css}`, `${value}${settings_base[item].unit}`);
+        document.documentElement.setAttribute(`data-bleh--${item}`, `${value}`);
+        if (item == "hue" || item == "sat" || item == "lit") {
+          if (settings.hue == settings_base.hue.value && settings.sat == settings_base.sat.value && settings.lit == settings_base.lit.value && settings.seasonal && stored_season.id != "none") {
+            document.body.style.removeProperty(`--${settings_base.hue.css}`);
+            document.body.style.removeProperty(`--${settings_base.sat.css}`);
+            document.body.style.removeProperty(`--${settings_base.lit.css}`);
+            document.documentElement.setAttribute("data-bleh--hsl-override", "true");
+          } else {
+            document.documentElement.setAttribute("data-bleh--hsl-override", "false");
           }
         }
+      } else if (settings_base[item].type == "toggle") {
+        if (settings[item] == settings_base[item].values[0] && modify) {
+          settings[item] = settings_base[item].values[1];
+          search.querySelector(`#toggle-${item}`).setAttribute("aria-checked", false);
+          document.body.style.setProperty(`--${item}`, settings_base[item].values[1]);
+          document.documentElement.setAttribute(`data-bleh--${item}`, `${settings_base[item].values[1]}`);
+        } else if (modify) {
+          settings[item] = settings_base[item].values[0];
+          console.log(`toggle-${item}`);
+          search.querySelector(`#toggle-${item}`).setAttribute("aria-checked", true);
+          if (item == "dev") {
+            dialog_legacy("prompt_dev", trans[lang].settings.performance.dev.name, `
+                    <p class="alert alert-info">${trans[lang].settings.performance.dev.modals.prompt.alert}</p>
+                    <br>
+                    ${trans[lang].settings.performance.dev.modals.prompt.stylus}
+                    <br>
+                    <div class="browser-choices">
+                        <button class="btn browser" onclick="_chosen_chrome()">
+                            <img class="browser-icon" src="https://cutensilly.org/img/chrome.png">
+                            <p>${trans[lang].settings.performance.dev.modals.prompt.browsers.chrome.name}</p>
+                            <p class="caption">${trans[lang].settings.performance.dev.modals.prompt.browsers.chrome.bio}</p>
+                        </button>
+                        <button class="btn browser" onclick="_chosen_firefox()">
+                            <img class="browser-icon" src="https://cutensilly.org/img/firefox.png">
+                            <p>${trans[lang].settings.performance.dev.modals.prompt.browsers.firefox.name}</p>
+                            <p class="caption">${trans[lang].settings.performance.dev.modals.prompt.browsers.firefox.bio}</p>
+                        </button>
+                    </div>
+                `, true);
+          }
+          document.body.style.setProperty(`--${item}`, settings_base[item].values[0]);
+          document.documentElement.setAttribute(`data-bleh--${item}`, `${settings_base[item].values[0]}`);
+        } else {
+          if (settings[item] == settings_base[item].values[0]) {
+            search.querySelector(`#toggle-${item}`).setAttribute("aria-checked", true);
+          } else {
+            search.querySelector(`#toggle-${item}`).setAttribute("aria-checked", false);
+          }
+        }
+      } else if (settings_base[item].type == "options") {
+        if (modify) {
+          settings[item] = value;
+          document.body.style.setProperty(`--${item}`, value);
+          document.documentElement.setAttribute(`data-bleh--${item}`, value);
+          let toggle = document.getElementById(`toggle-${item}-${value}`);
+          if (toggle)
+            toggle.setAttribute("aria-checked", true);
+          let other_toggles = search.querySelectorAll(`[data-toggle="${item}"]`);
+          other_toggles.forEach((toggle2) => {
+            let other_value = toggle2.getAttribute("data-toggle-value");
+            if (other_value == value)
+              return;
+            else
+              toggle2.setAttribute("aria-checked", false);
+          });
+          if ((item == "chart_view" || item == "chart_bar_axis") && page.type == "user" && page.subpage.startsWith("library"))
+            bleh_glacier_date_graph_generate();
+        } else {
+          if (settings[item] == value) {
+            document.getElementById(`toggle-${item}-${value}`).setAttribute("aria-checked", true);
+          } else {
+            document.getElementById(`toggle-${item}-${value}`).setAttribute("aria-checked", false);
+          }
+        }
+      }
+      if (modify)
+        log(`updated ${item} to ${settings[item]}`, "settings");
+      localStorage.setItem("bleh", JSON.stringify(settings));
+    } catch (e) {
+      console.error(e);
+    }
+    if (container) {
+      if (settings[item] != settings_base[item].value)
+        container.classList.add("modified");
+      else
+        container.classList.remove("modified");
+    }
+    if (item == "hue" || item == "sat" || item == "lit") {
+      update_colour_swatches();
+      load_chart_colours();
+    }
+  }
+  function request_reload() {
+    if (page.type == "bleh_setup")
+      return;
+    log("requesting reload", "settings");
+    reload_pending.state = true;
+    notify({
+      title: trans[lang].settings.reload.name,
+      body: trans[lang].settings.reload.body,
+      icon: "icon-16-refresh",
+      persist: true,
+      action: "_invoke_reload()"
+    });
+  }
+  unsafeWindow._invoke_reload = function() {
+    invoke_reload();
+  };
+  function invoke_reload() {
+    window.location.reload();
+  }
+  function update_colour_swatches() {
+    let found = false;
+    let custom = null;
+    let seasonal = null;
+    let swatches = document.querySelectorAll(".swatch");
+    swatches.forEach((swatch) => {
+      let h = swatch.style.getPropertyValue("--hue-over");
+      let s = swatch.style.getPropertyValue("--sat-over");
+      let l = swatch.style.getPropertyValue("--lit-over");
+      if (h == settings.hue && s == settings.sat && l == settings.lit || swatch.getAttribute("data-swatch-type") == "default" && settings.hue == 255 && settings.sat == 1 && settings.lit == 1) {
+        swatch.setAttribute("aria-checked", "true");
+        if (swatch.classList[0] != "dropdown-menu-clickable-item")
+          found = true;
       } else {
-        let content_top = document.body.querySelector(".content-top");
-        if (content_top)
-          content_top.classList.add("legacy-content-top");
+        swatch.setAttribute("aria-checked", "false");
+      }
+      if (!custom && swatch.getAttribute("data-swatch-type") == "custom")
+        custom = swatch;
+      if (!seasonal && swatch.getAttribute("data-swatch-type") == "seasonal")
+        seasonal = swatch;
+    });
+    if (found)
+      return;
+    if (custom && settings.accent_type != "season")
+      custom.setAttribute("aria-checked", "true");
+    else if (seasonal)
+      seasonal.setAttribute("aria-checked", "true");
+  }
+  unsafeWindow._reset_inbuilt_item = function(item) {
+    reset_inbuilt_item(item);
+  };
+  unsafeWindow._update_inbuilt_params = function(params = {}) {
+    update_inbuilt_params(params);
+  };
+  unsafeWindow._update_inbuilt_item = function(item, value) {
+    update_inbuilt_item(item, value);
+  };
+  function update_inbuilt_item(item, value, modify = true, element = document.body) {
+    console.warn("update item", item, value, "modify", modify);
+    let test_if_valid = element.querySelector(`#toggle-${item}`);
+    console.warn(test_if_valid, `toggle-${item}`);
+    if (test_if_valid == void 0)
+      return;
+    if (inbuilt_settings[item].type == "toggle") {
+      if (modify) {
+        value = document.getElementById(`toggle-${item}`).getAttribute("aria-checked") === "true";
+        log(`updated (inbuilt) ${item} to ${!value}`, "settings");
+      }
+      if (value == inbuilt_settings[item].values[0] && modify) {
+        element.querySelector(`#inbuilt-companion-checkbox-${item}`).checked = false;
+        element.querySelector(`#toggle-${item}`).setAttribute("aria-checked", false);
+        document.documentElement.setAttribute(`data-bleh--inbuilt-${item}`, inbuilt_settings[item].values[1]);
+      } else if (modify) {
+        element.querySelector(`#inbuilt-companion-checkbox-${item}`).checked = true;
+        element.querySelector(`#toggle-${item}`).setAttribute("aria-checked", true);
+        document.documentElement.setAttribute(`data-bleh--inbuilt-${item}`, inbuilt_settings[item].values[0]);
+      } else {
+        console.warn(item, value, value == true, value == false, typeof value, "boolean");
+        if (value == true) {
+          console.warn(item, value, "TRUE");
+          element.querySelector(`#inbuilt-companion-checkbox-${item}`).checked = true;
+          element.querySelector(`#toggle-${item}`).setAttribute("aria-checked", true);
+          document.documentElement.setAttribute(`data-bleh--inbuilt-${item}`, true);
+        } else if (value == false) {
+          console.warn(item, value, "FALSE");
+          element.querySelector(`#inbuilt-companion-checkbox-${item}`).checked = false;
+          element.querySelector(`#toggle-${item}`).setAttribute("aria-checked", false);
+          document.documentElement.setAttribute(`data-bleh--inbuilt-${item}`, false);
+        }
       }
     }
   }
+  unsafeWindow._chosen_chrome = function() {
+    open("https://chromewebstore.google.com/detail/stylus/clngdbkpkpeebahjckkjfobafhncgmne");
+    continue_dev();
+  };
+  unsafeWindow._chosen_firefox = function() {
+    open("https://addons.mozilla.org/en-US/firefox/addon/styl-us/");
+    continue_dev();
+  };
+  function continue_dev() {
+    kill_window("prompt_dev");
+    dialog_legacy("continue_dev", trans[lang].settings.performance.dev.name, `
+        ${trans[lang].settings.performance.dev.modals.continue.next_step}
+        <div class="modal-footer">
+            <button class="btn primary continue" onclick="_finish_dev()">
+                ${trans[lang].settings.continue}
+            </button>
+        </div>
+    `);
+  }
+  unsafeWindow._finish_dev = function() {
+    open("https://github.com/katelyynn/bleh/raw/uwu/fm/bleh.user.css");
+    kill_window("continue_dev");
+    dialog_legacy("finish_dev", trans[lang].settings.performance.dev.name, `
+        <p class="alert alert-success">${trans[lang].settings.performance.dev.modals.finish.alert}</p>
+        <div class="modal-footer">
+            <button class="btn primary done" onclick="_kill_window('finish_dev')">
+                ${trans[lang].settings.done}
+            </button>
+        </div>
+    `);
+  };
 
   // src/seasonal.js
   function set_season() {
@@ -7826,17 +7689,6 @@
 
   // src/pages/bleh_config.js
   function bleh_settings() {
-    page.structure.container = document.body.querySelector(".page-content");
-    try {
-      page.structure.row = page.structure.container.querySelector(".row");
-      page.structure.main = page.structure.row.querySelector(".col-main");
-      page.structure.side = page.structure.row.querySelector(".col-sidebar");
-    } catch (e) {
-      log("unable to find elements", "page structure");
-    }
-    checkup_page_structure();
-    log("status is", "page", "info", page);
-    log("internal bleh settings", "page");
     page.type = "bleh_settings";
     page.subpage = "";
     update_page();
@@ -11681,6 +11533,128 @@
     }
   }
 
+  // src/components/structure.js
+  function checkup_page_structure(is_subpage = false, header = null) {
+    if (document.body.style.getPropertyValue("--hue-album")) {
+      document.body.style.removeProperty("--hue-album");
+      document.body.style.removeProperty("--sat-album");
+      load_chart_colours();
+    }
+    let params = new URLSearchParams(document.location.search);
+    page.requested.tab = params.get("tab");
+    page.requested.page = params.get("page");
+    if (!page.structure.container || !document.body.contains(page.structure.container)) {
+      log("page missing container, creating", "page structure");
+      page.structure.container = document.createElement("div");
+      page.structure.container.classList.add("page-content", "container");
+      let container_full_width = document.body.querySelector(".container--full-width");
+      if (container_full_width)
+        container_full_width.insertBefore(page.structure.container, container_full_width.firstElementChild);
+      else
+        document.body.querySelector(".adaptive-skin-container").appendChild(page.structure.container);
+    }
+    page.structure.container.setAttribute("data-assigned", "true");
+    let other_container = document.body.querySelector(".page-content.container:not([data-assigned])");
+    if (other_container) other_container.style.setProperty("display", "none");
+    if (!page.structure.row || !document.body.contains(page.structure.row)) {
+      log("page missing row, creating", "page structure");
+      page.structure.row = document.createElement("div");
+      page.structure.row.classList.add("row");
+      page.structure.container.insertBefore(page.structure.row, page.structure.container.firstElementChild);
+    }
+    if (page.structure.row.classList.contains("buffer-4"))
+      page.structure.row.classList = "row col-main-is-primary";
+    if (!page.structure.main || !document.body.contains(page.structure.main)) {
+      log("page missing main, creating", "page structure");
+      page.structure.main = document.createElement("div");
+      page.structure.main.classList.add("col-main");
+      page.structure.row.appendChild(page.structure.main);
+    }
+    page.structure.main.setAttribute("data-assigned", "true");
+    let other_main = page.structure.row.querySelector(".col-main.hidden-xs:not([data-assigned])");
+    if (other_main) other_main.style.setProperty("display", "none");
+    if (!page.structure.side || !document.body.contains(page.structure.side)) {
+      log("page missing side", "page structure");
+      page.structure.side = page.structure.row.querySelector(".col-sidebar");
+      if (!page.structure.side) {
+        log("page missing side, creating", "page structure");
+        page.structure.side = document.createElement("div");
+        page.structure.side.classList.add("col-sidebar");
+        page.structure.row.appendChild(page.structure.side);
+      }
+    }
+    log("finished", "page structure");
+    if (ff("refreshed_music_nav") && header) {
+      let navlist = header.querySelector(".navlist");
+      if (navlist) {
+        navlist.classList.add("redesigned-navigation");
+        page.structure.container.insertBefore(navlist, page.structure.container.firstElementChild);
+        page.structure.nav = navlist;
+      }
+      if (is_subpage) {
+        let content_top2 = document.body.querySelector(".content-top");
+        if (content_top2) {
+          content_top2.classList.add("redesigned-content-top");
+          page.structure.content_top = content_top2;
+          navlist.after(content_top2);
+          if (content_top2.querySelector(".content-top-back-link"))
+            content_top2.style.setProperty("display", "none");
+        } else {
+          let subpage_title = page.structure.main.querySelector(":scope > .subpage-title");
+          if (!subpage_title)
+            subpage_title = page.structure.main.querySelector(":scope > .section-controls > .subpage-title");
+          if (!subpage_title)
+            subpage_title = page.structure.main.querySelector(":scope > section:first-child .section-controls > .subpage-title");
+          if (subpage_title) {
+            content_top2 = document.createElement("div");
+            content_top2.classList.add("content-top", "redesigned-content-top");
+            content_top2.innerHTML = `
+                        <div class="content-top-inner-wrap">
+                            <div class="container content-top-lower">
+                                <h1 class="content-top-header">${subpage_title.textContent.trim()}</h1>
+                            </div>
+                        </div>
+                    `;
+            page.structure.content_top = content_top2;
+            navlist.after(content_top2);
+            try {
+              page.structure.main.removeChild(subpage_title);
+            } catch (e) {
+            }
+          }
+          navlist = page.structure.main.querySelector(".navlist");
+          if (navlist) {
+            navlist.classList.add("redesigned-navigation");
+            if (page.structure.content_top)
+              page.structure.content_top.after(navlist);
+            else
+              page.structure.container.insertBefore(navlist, page.structure.row);
+          }
+          let btn_add = page.structure.main.querySelector(":scope > .btn-add");
+          if (!btn_add) btn_add = page.structure.main.querySelector(":scope > section:first-child .btn-add");
+          if (btn_add) {
+            btn_add.classList = "btn view-all-button back add-button";
+            let add_panel = document.createElement("section");
+            add_panel.classList.add("view-all-panel");
+            add_panel.appendChild(btn_add);
+            page.structure.side.insertBefore(add_panel, page.structure.side.firstElementChild);
+          }
+          let playlink = page.structure.main.querySelector(":scope > .section-controls > .section-playlink");
+          if (playlink) {
+            playlink.classList.add("btn", "view-all-button", "back", "play-button");
+            let playlink_panel = document.createElement("section");
+            playlink_panel.classList.add("view-all-panel");
+            playlink_panel.appendChild(playlink);
+            page.structure.side.insertBefore(playlink_panel, page.structure.side.firstElementChild);
+          }
+        }
+      } else {
+        let content_top2 = document.body.querySelector(".content-top");
+        if (content_top2) content_top2.classList.add("legacy-content-top");
+      }
+    }
+  }
+
   // src/pages/wiki.js
   function bleh_wiki() {
     let wiki_panel = document.createElement("section");
@@ -13109,174 +13083,6 @@
     }
   }
 
-  // src/pages/bookmark.js
-  function bleh_bookmarks() {
-    basic_page_structure();
-    let content_top = document.body.querySelector(".content-top");
-    if (content_top)
-      content_top.classList.add("legacy-content-top");
-  }
-
-  // src/pages/chart.js
-  function bleh_charts() {
-    page.structure.container = document.body.querySelector(".page-content");
-    try {
-      page.structure.row = page.structure.container.querySelector(".row");
-      page.structure.main = page.structure.row.querySelector(".col-main");
-      page.structure.side = page.structure.row.querySelector(".col-sidebar");
-    } catch (e) {
-      log("unable to find elements", "page structure");
-    }
-    let content_top = document.body.querySelector(".content-top");
-    checkup_page_structure(false, content_top);
-    log("status is", "page", "info", page);
-    update_page();
-    if (page.subpage != "overview")
-      return;
-    let charts = page.structure.main.querySelector(".charts");
-    charts.classList.add("legacy-charts");
-    let chart_rows = charts.querySelectorAll(".charts-col:not(.charts-col--mobile-ad)");
-    let new_panel = document.createElement("section");
-    new_panel.classList.add("charts-panel");
-    let out_now = page.structure.side.querySelector(".more-link-fullwidth-right a");
-    if (out_now != null) {
-      out_now.classList.add("btn", "out-now-btn");
-    }
-    let header = document.createElement("div");
-    header.classList.add("charts-header", "top-header");
-    header.innerHTML = `
-        <div class="left">
-
-        </div>
-        <div class="middle">
-            <h2>${trans[lang].charts.charts_for.replace("{date}", moment(/* @__PURE__ */ new Date()).format("MMMM Do YYYY"))}</h2>
-            ${out_now != null ? out_now.outerHTML : ""}
-        </div>
-        <div class="right">
-            <div class="view-buttons">
-                <button class="btn view-item glacier-configure-button panel-settings-button">
-                    ${trans[lang].settings.configure}
-                </button>
-            </div>
-        </div>
-    `;
-    new_panel.appendChild(header);
-    let settings_btn = header.querySelector(".panel-settings-button");
-    tippy(settings_btn, {
-      theme: "window",
-      content: `
-            <div class="dialog-settings">
-                <div class="toggle-container" id="container-simulate_scroll" onclick="_update_item('simulate_scroll')">
-                    <button class="btn reset" onclick="_reset_item('simulate_scroll')">${trans[lang].settings.reset}</button>
-                    <div class="heading">
-                        <h5>${trans[lang].charts.scroll.name}</h5>
-                        <p>${trans[lang].charts.scroll.bio}</p>
-                    </div>
-                    <div class="toggle-wrap">
-                        <button class="toggle" id="toggle-simulate_scroll" aria-checked="true">
-                            <div class="dot"></div>
-                        </button>
-                    </div>
-                </div>
-            </div>
-        `,
-      allowHTML: true,
-      placement: "bottom",
-      interactive: true,
-      interactiveBorder: 10,
-      trigger: "click",
-      onShow(instance) {
-        refresh_all(instance.popper);
-      }
-    });
-    chart_rows.forEach((row, index) => {
-      let chart_row = document.createElement("div");
-      chart_row.classList.add("charts-new-row");
-      chart_row.setAttribute("data-index", index);
-      let header2 = row.querySelector("h2");
-      chart_row.appendChild(header2);
-      let list = document.createElement("ol");
-      list.classList.add("music-bookmarks-artists", "charts-list");
-      if (settings.simulate_scroll) {
-        list.addEventListener("wheel", (e) => {
-          e.preventDefault();
-          if (e.deltaY > 0) {
-            list.scrollBy({
-              top: 0,
-              left: 600,
-              behavior: "smooth"
-            });
-          } else {
-            list.scrollBy({
-              top: 0,
-              left: -600,
-              behavior: "smooth"
-            });
-          }
-        });
-      }
-      let items = row.querySelectorAll(".globalchart-item");
-      items.forEach((item, item_index) => {
-        let list_item = document.createElement("li");
-        let image = item.querySelector(".globalchart-image img");
-        let rank = item.querySelector(".globalchart-rank");
-        let name = item.querySelector(".globalchart-name a");
-        let link = name.getAttribute("href");
-        image.setAttribute("src", image.getAttribute("src").replace("/avatar70s/", "/avatar300s/"));
-        if (index == 1) {
-          name.textContent = correct_artist(name.textContent);
-          list_item.classList.add("music-bookmarks-artists-item-wrap", "charts-list-item");
-          list_item.innerHTML = `
-                    <div class="music-bookmarks-artists-item charts-list-item-inner">
-                        <div class="charts-list-rank">${rank.textContent.trim()}</div>
-                        <h3 class="music-bookmarks-artists-item-name">
-                            ${name.outerHTML}
-                        </h3>
-                        <div class="media-item">
-                            <span class="music-bookmarks-albums-item-image cover-art">
-                                ${image.outerHTML}
-                            </span>
-                            <div class="charts-list-rank-overlay-wrap">
-                                <div class="charts-list-rank-overlay">${rank.textContent}</div>
-                            </div>
-                        </div>
-                        <a class="link-block-cover-link" href="${link}"></a>
-                    </div>
-                `;
-        } else {
-          let artist = item.querySelector(".globalchart-track-artist-name a");
-          artist.textContent = correct_artist(artist.textContent);
-          name.textContent = correct_item_by_artist(name.textContent, artist.textContent);
-          list_item.classList.add("music-bookmarks-albums-item-wrap", "charts-list-item");
-          list_item.innerHTML = `
-                    <div class="music-bookmarks-albums-item charts-list-item-inner">
-                        <div class="charts-list-rank">${rank.textContent.trim()}</div>
-                        <h3 class="music-bookmarks-albums-item-name">
-                            ${name.outerHTML}
-                        </h3>
-                        <p class="music-bookmarks-albums-item-artist">
-                            ${artist.outerHTML}
-                        </p>
-                        <div class="media-item">
-                            <span class="music-bookmarks-albums-item-image cover-art">
-                                ${image.outerHTML}
-                            </span>
-                            <div class="charts-list-rank-overlay-wrap">
-                                <div class="charts-list-rank-overlay">${rank.textContent}</div>
-                            </div>
-                        </div>
-                        <a class="link-block-cover-link" href="${link}"></a>
-                    </div>
-                `;
-        }
-        list.appendChild(list_item);
-      });
-      chart_row.appendChild(list);
-      new_panel.appendChild(chart_row);
-    });
-    page.structure.main.insertBefore(new_panel, page.structure.main.firstElementChild);
-  }
-
   // src/pages/error.js
   function bleh_error() {
     page.state.error = false;
@@ -13455,9 +13261,9 @@
     } catch (e) {
       log("unable to find elements", "page structure");
     }
-    let content_top = document.body.querySelector(".content-top");
-    let header_text = content_top.querySelector(".content-top-header").textContent;
-    checkup_page_structure(false, content_top);
+    let content_top2 = document.body.querySelector(".content-top");
+    let header_text2 = content_top2.querySelector(".content-top-header").textContent;
+    checkup_page_structure(false, content_top2);
     log("status is", "page", "info", page);
     update_page();
     page.structure.nav.classList.add("navlist--more");
@@ -13469,7 +13275,7 @@
         </div>
         <div class="info-side">
             <div class="sub-text">${trans[lang].event.name}</div>
-            <h1>${header_text}</h1>
+            <h1>${header_text2}</h1>
         </div>
     `;
     page.structure.container.insertBefore(edit_header, page.structure.container.firstElementChild);
@@ -13491,92 +13297,152 @@
     nav.insertBefore(back_nav, nav.firstElementChild);
   }
 
-  // src/pages/home.js
-  function bleh_home() {
-    page.structure.container = document.body.querySelector(".page-content");
-    try {
-      page.structure.row = page.structure.container.querySelector(".row");
-      page.structure.main = page.structure.row.querySelector(".col-main");
-      page.structure.side = page.structure.row.querySelector(".col-sidebar");
-    } catch (e) {
-      log("unable to find elements", "page structure");
+  // src/pages/chart.js
+  function bleh_charts() {
+    if (page.subpage != "overview")
+      return;
+    let charts = page.structure.main.querySelector(".charts");
+    charts.classList.add("legacy-charts");
+    let chart_rows = charts.querySelectorAll(".charts-col:not(.charts-col--mobile-ad)");
+    let new_panel = document.createElement("section");
+    new_panel.classList.add("charts-panel");
+    let out_now = page.structure.side.querySelector(".more-link-fullwidth-right a");
+    if (out_now != null) {
+      out_now.classList.add("btn", "out-now-btn");
     }
-    let content_top = document.body.querySelector(".content-top");
-    checkup_page_structure(false, content_top);
-    log("status is", "page", "info", page);
-    update_page();
-    let banner = document.createElement("div");
-    banner.classList.add("top-banner", "home-banner");
-    banner.innerHTML = `
-        <a class="home-avatar" href="${root}user/${auth.name}">
-            <img src="${auth.avatar.replace("/avatar42s/", "/avatar170s/")}">
-        </a>
-        <h1>${trans[lang].home.welcome.replace("{m}", `<a class="mention" href="${root}user/${auth.name}">@${auth.name}</a>`)}</h1>
-    `;
-    page.structure.container.insertBefore(banner, page.structure.nav);
-  }
+    let header = document.createElement("div");
+    header.classList.add("charts-header", "top-header");
+    header.innerHTML = `
+        <div class="left">
 
-  // src/pages/inbox.js
-  function bleh_inbox() {
-    page.structure.container = document.body.querySelector(".page-content");
-    try {
-      page.structure.row = page.structure.container.querySelector(".row");
-      page.structure.main = page.structure.row.querySelector(".col-main");
-      page.structure.side = page.structure.row.querySelector(".col-sidebar");
-    } catch (e) {
-      log("unable to find elements", "page structure");
-    }
-    let content_top = document.body.querySelector(".content-top");
-    checkup_page_structure(false, content_top);
-    log("status is", "page", "info", page);
-    update_page();
-    if (page.subpage == "notifications") {
-      let form = page.structure.container.querySelector("form");
-      let notifications = page.structure.container.querySelector(".inbox-notifications");
-      let pagination = page.structure.container.querySelector(".pagination");
-      let panel = document.createElement("section");
-      panel.classList.add("inbox-panel", "notifications-panel");
-      if (form)
-        panel.appendChild(form);
-      if (notifications)
-        panel.appendChild(notifications);
-      if (pagination)
-        panel.appendChild(pagination);
-      page.structure.main.appendChild(panel);
-      if (!notifications)
-        return;
-      let notif_links = notifications.querySelectorAll(".inbox-notifications__item-link");
-      notif_links.forEach((notification) => {
-        let link = notification.getAttribute("href");
-        if (link.endsWith("/obsessions/set") || link.endsWith("/listening-report/month")) return;
-        let avatar = notification.querySelector(".avatar");
-        let name = notification.querySelector(".inbox-notifications__item-description strong");
-        if (!name) return;
-        let name_text = sanitise(return_name_from_avatar(avatar.querySelector("img")));
-        let badge = patch_avatar(avatar, name_text);
-        name.classList.add("notification-user-name", `user-status--bleh-${badge.type}`, `user-status--bleh-user-${name_text}`);
-        if (notification.classList.contains("inbox-notifications__item--highlight"))
-          notification.classList.add("notification-user-name", `user-status--bleh-${badge.type}`, `user-status--bleh-user-${name_text}`);
+        </div>
+        <div class="middle">
+            <h2>${trans[lang].charts.charts_for.replace("{date}", moment(/* @__PURE__ */ new Date()).format("MMMM Do YYYY"))}</h2>
+            ${out_now != null ? out_now.outerHTML : ""}
+        </div>
+        <div class="right">
+            <div class="view-buttons">
+                <button class="btn view-item glacier-configure-button panel-settings-button">
+                    ${trans[lang].settings.configure}
+                </button>
+            </div>
+        </div>
+    `;
+    new_panel.appendChild(header);
+    let settings_btn = header.querySelector(".panel-settings-button");
+    tippy(settings_btn, {
+      theme: "window",
+      content: `
+            <div class="dialog-settings">
+                <div class="toggle-container" id="container-simulate_scroll" onclick="_update_item('simulate_scroll')">
+                    <button class="btn reset" onclick="_reset_item('simulate_scroll')">${trans[lang].settings.reset}</button>
+                    <div class="heading">
+                        <h5>${trans[lang].charts.scroll.name}</h5>
+                        <p>${trans[lang].charts.scroll.bio}</p>
+                    </div>
+                    <div class="toggle-wrap">
+                        <button class="toggle" id="toggle-simulate_scroll" aria-checked="true">
+                            <div class="dot"></div>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        `,
+      allowHTML: true,
+      placement: "bottom",
+      interactive: true,
+      interactiveBorder: 10,
+      trigger: "click",
+      onShow(instance) {
+        refresh_all(instance.popper);
+      }
+    });
+    chart_rows.forEach((row, index) => {
+      let chart_row = document.createElement("div");
+      chart_row.classList.add("charts-new-row");
+      chart_row.setAttribute("data-index", index);
+      let header2 = row.querySelector("h2");
+      chart_row.appendChild(header2);
+      let list = document.createElement("ol");
+      list.classList.add("music-bookmarks-artists", "charts-list");
+      if (settings.simulate_scroll) {
+        list.addEventListener("wheel", (e) => {
+          e.preventDefault();
+          if (e.deltaY > 0) {
+            list.scrollBy({
+              top: 0,
+              left: 600,
+              behavior: "smooth"
+            });
+          } else {
+            list.scrollBy({
+              top: 0,
+              left: -600,
+              behavior: "smooth"
+            });
+          }
+        });
+      }
+      let items = row.querySelectorAll(".globalchart-item");
+      items.forEach((item, item_index) => {
+        let list_item = document.createElement("li");
+        let image = item.querySelector(".globalchart-image img");
+        let rank = item.querySelector(".globalchart-rank");
+        let name = item.querySelector(".globalchart-name a");
+        let link = name.getAttribute("href");
+        image.setAttribute("src", image.getAttribute("src").replace("/avatar70s/", "/avatar300s/"));
+        if (index == 1) {
+          name.textContent = correct_artist(name.textContent);
+          list_item.classList.add("music-bookmarks-artists-item-wrap", "charts-list-item");
+          list_item.innerHTML = `
+                    <div class="music-bookmarks-artists-item charts-list-item-inner">
+                        <div class="charts-list-rank">${rank.textContent.trim()}</div>
+                        <h3 class="music-bookmarks-artists-item-name">
+                            ${name.outerHTML}
+                        </h3>
+                        <div class="media-item">
+                            <span class="music-bookmarks-albums-item-image cover-art">
+                                ${image.outerHTML}
+                            </span>
+                            <div class="charts-list-rank-overlay-wrap">
+                                <div class="charts-list-rank-overlay">${rank.textContent}</div>
+                            </div>
+                        </div>
+                        <a class="link-block-cover-link" href="${link}"></a>
+                    </div>
+                `;
+        } else {
+          let artist = item.querySelector(".globalchart-track-artist-name a");
+          artist.textContent = correct_artist(artist.textContent);
+          name.textContent = correct_item_by_artist(name.textContent, artist.textContent);
+          list_item.classList.add("music-bookmarks-albums-item-wrap", "charts-list-item");
+          list_item.innerHTML = `
+                    <div class="music-bookmarks-albums-item charts-list-item-inner">
+                        <div class="charts-list-rank">${rank.textContent.trim()}</div>
+                        <h3 class="music-bookmarks-albums-item-name">
+                            ${name.outerHTML}
+                        </h3>
+                        <p class="music-bookmarks-albums-item-artist">
+                            ${artist.outerHTML}
+                        </p>
+                        <div class="media-item">
+                            <span class="music-bookmarks-albums-item-image cover-art">
+                                ${image.outerHTML}
+                            </span>
+                            <div class="charts-list-rank-overlay-wrap">
+                                <div class="charts-list-rank-overlay">${rank.textContent}</div>
+                            </div>
+                        </div>
+                        <a class="link-block-cover-link" href="${link}"></a>
+                    </div>
+                `;
+        }
+        list.appendChild(list_item);
       });
-    } else if (page.subpage == "message_overview" || page.subpage == "sent_message") {
-      let inbox = page.structure.container.querySelector(".inbox-message-view");
-      page.structure.main.appendChild(inbox);
-      let sender_panel = inbox.querySelector(".inbox-message-sender-avatar");
-      let sender_name = inbox.querySelector(".inbox-message-sender-name");
-      let sender_time = inbox.querySelector(".inbox-message-timestamp");
-      sender_panel.appendChild(sender_name);
-      sender_panel.appendChild(sender_time);
-      let avatar = sender_panel.querySelector(".avatar");
-      let name_text = sanitise(sender_name.textContent.trim());
-      let badge = patch_avatar(avatar, name_text);
-      sender_panel.classList.add(`user-status--bleh-${badge.type}`, `user-status--bleh-user-${name_text}`);
-    } else if (page.subpage == "compose") {
-      let inbox = page.structure.container.querySelector(".inbox-compose-view");
-      page.structure.main.appendChild(inbox);
-    } else {
-      let inbox = page.structure.container.querySelector(".inbox");
-      page.structure.main.appendChild(inbox);
-    }
+      chart_row.appendChild(list);
+      new_panel.appendChild(chart_row);
+    });
+    page.structure.main.insertBefore(new_panel, page.structure.main.firstElementChild);
   }
 
   // src/components/select.js
@@ -13649,20 +13515,6 @@
 
   // src/pages/lastfm_settings.js
   function bleh_native_settings() {
-    page.structure.container = document.body.querySelector(".page-content");
-    try {
-      page.structure.row = page.structure.container.querySelector(".row");
-      page.structure.main = page.structure.row.querySelector(".col-main");
-      page.structure.side = page.structure.row.querySelector(".col-sidebar");
-    } catch (e) {
-      log("unable to find elements", "page structure");
-    }
-    let content_top = document.body.querySelector(".content-top");
-    let header_text = trans[lang].settings.pages[page.subpage];
-    checkup_page_structure(false, content_top);
-    log("status is", "page", "info", page);
-    update_page();
-    register_background(auth.avatar);
     if (page.subpage == "overview") {
       patch_settings_profile_tab();
     } else if (page.subpage == "privacy") {
@@ -14476,6 +14328,146 @@
       select.setAttribute("onchange", `_update_inbuilt_select('${select.getAttribute("id")}', this.value)`);
       update_inbuilt_select(select.getAttribute("id"), select.value);
     });
+  }
+
+  // src/pages/home.js
+  function bleh_home() {
+    page.structure.container = document.body.querySelector(".page-content");
+    try {
+      page.structure.row = page.structure.container.querySelector(".row");
+      page.structure.main = page.structure.row.querySelector(".col-main");
+      page.structure.side = page.structure.row.querySelector(".col-sidebar");
+    } catch (e) {
+      log("unable to find elements", "page structure");
+    }
+    let content_top2 = document.body.querySelector(".content-top");
+    checkup_page_structure(false, content_top2);
+    log("status is", "page", "info", page);
+    update_page();
+    register_background(auth.avatar.replace("/avatar42s/", "/ar0/"));
+    let banner = document.createElement("div");
+    banner.classList.add("top-banner", "home-banner");
+    banner.innerHTML = `
+        <a class="home-avatar" href="${root}user/${auth.name}">
+            <img src="${auth.avatar.replace("/avatar42s/", "/avatar170s/")}">
+        </a>
+        <h1>${trans[lang].home.welcome.replace("{m}", `<a class="mention" href="${root}user/${auth.name}">@${auth.name}</a>`)}</h1>
+    `;
+    page.structure.container.insertBefore(banner, page.structure.container.firstElementChild);
+    let nav = document.createElement("nav");
+    nav.classList.add("navlist", "secondary-nav", "navlist--more", "redesigned-navigation");
+    nav.innerHTML = `
+        <ul class="navlist-items">
+            <li class="navlist-item secondary-nav-item secondary-nav-item--home">
+                <a href="${root}music" class="secondary-nav-item-link ${page.subpage == "music" ? "secondary-nav-item-link--active" : ""}">
+                    Home
+                </a>
+            </li>
+            <li class="navlist-item secondary-nav-item secondary-nav-item--recommendations">
+                <a href="${root}music/+recommended" class="secondary-nav-item-link ${page.type == "recommended" ? "secondary-nav-item-link--active" : ""}">
+                    Recommendations
+                </a>
+            </li>
+            <li class="navlist-item secondary-nav-item secondary-nav-item--releases">
+                <a href="${root}music/+releases/out-now" class="secondary-nav-item-link ${page.type == "releases" ? "secondary-nav-item-link--active" : ""}">
+                    Releases
+                </a>
+            </li>
+            <li class="navlist-item secondary-nav-item secondary-nav-item--bookmarks">
+                <a href="${root}music/+bookmarks" class="secondary-nav-item-link ${page.type == "bookmarks" ? "secondary-nav-item-link--active" : ""}">
+                    Bookmarks
+                </a>
+            </li>
+            <li class="navlist-item secondary-nav-item secondary-nav-item--charts">
+                <a href="${root}charts" class="secondary-nav-item-link ${page.type == "charts" ? "secondary-nav-item-link--active" : ""}">
+                    Charts
+                </a>
+            </li>
+            <li class="fill"></li>
+            <li class="navlist-item secondary-nav-item secondary-nav-item--settings">
+                <a href="${root}settings" class="secondary-nav-item-link ${page.type == "settings" ? "secondary-nav-item-link--active" : ""}">
+                    Settings
+                </a>
+            </li>
+            <li class="navlist-item secondary-nav-item secondary-nav-item--bleh">
+                <a href="${root}bleh" class="secondary-nav-item-link ${page.type == "error" ? "secondary-nav-item-link--active" : ""}">
+                    bleh
+                </a>
+            </li>
+        </ul>
+    `;
+    page.structure.nav = nav;
+    banner.after(nav);
+    if (page.type == "charts")
+      bleh_charts();
+    if (page.type == "settings")
+      bleh_native_settings();
+  }
+  function bleh_home_legacy() {
+    window.location.href = `${root}music`;
+  }
+
+  // src/pages/inbox.js
+  function bleh_inbox() {
+    page.structure.container = document.body.querySelector(".page-content");
+    try {
+      page.structure.row = page.structure.container.querySelector(".row");
+      page.structure.main = page.structure.row.querySelector(".col-main");
+      page.structure.side = page.structure.row.querySelector(".col-sidebar");
+    } catch (e) {
+      log("unable to find elements", "page structure");
+    }
+    let content_top2 = document.body.querySelector(".content-top");
+    checkup_page_structure(false, content_top2);
+    log("status is", "page", "info", page);
+    update_page();
+    if (page.subpage == "notifications") {
+      let form = page.structure.container.querySelector("form");
+      let notifications = page.structure.container.querySelector(".inbox-notifications");
+      let pagination = page.structure.container.querySelector(".pagination");
+      let panel = document.createElement("section");
+      panel.classList.add("inbox-panel", "notifications-panel");
+      if (form)
+        panel.appendChild(form);
+      if (notifications)
+        panel.appendChild(notifications);
+      if (pagination)
+        panel.appendChild(pagination);
+      page.structure.main.appendChild(panel);
+      if (!notifications)
+        return;
+      let notif_links = notifications.querySelectorAll(".inbox-notifications__item-link");
+      notif_links.forEach((notification) => {
+        let link = notification.getAttribute("href");
+        if (link.endsWith("/obsessions/set") || link.endsWith("/listening-report/month")) return;
+        let avatar = notification.querySelector(".avatar");
+        let name = notification.querySelector(".inbox-notifications__item-description strong");
+        if (!name) return;
+        let name_text = sanitise(return_name_from_avatar(avatar.querySelector("img")));
+        let badge = patch_avatar(avatar, name_text);
+        name.classList.add("notification-user-name", `user-status--bleh-${badge.type}`, `user-status--bleh-user-${name_text}`);
+        if (notification.classList.contains("inbox-notifications__item--highlight"))
+          notification.classList.add("notification-user-name", `user-status--bleh-${badge.type}`, `user-status--bleh-user-${name_text}`);
+      });
+    } else if (page.subpage == "message_overview" || page.subpage == "sent_message") {
+      let inbox = page.structure.container.querySelector(".inbox-message-view");
+      page.structure.main.appendChild(inbox);
+      let sender_panel = inbox.querySelector(".inbox-message-sender-avatar");
+      let sender_name = inbox.querySelector(".inbox-message-sender-name");
+      let sender_time = inbox.querySelector(".inbox-message-timestamp");
+      sender_panel.appendChild(sender_name);
+      sender_panel.appendChild(sender_time);
+      let avatar = sender_panel.querySelector(".avatar");
+      let name_text = sanitise(sender_name.textContent.trim());
+      let badge = patch_avatar(avatar, name_text);
+      sender_panel.classList.add(`user-status--bleh-${badge.type}`, `user-status--bleh-user-${name_text}`);
+    } else if (page.subpage == "compose") {
+      let inbox = page.structure.container.querySelector(".inbox-compose-view");
+      page.structure.main.appendChild(inbox);
+    } else {
+      let inbox = page.structure.container.querySelector(".inbox");
+      page.structure.main.appendChild(inbox);
+    }
   }
 
   // src/components/markdown.js
@@ -15709,8 +15701,8 @@
     view_buttons.classList.add("view-buttons");
     let header = document.createElement("div");
     header.classList.add("top-container");
-    let header_text = panel.querySelector("h2");
-    header.appendChild(header_text);
+    let header_text2 = panel.querySelector("h2");
+    header.appendChild(header_text2);
     let refresh_btn = document.createElement("button");
     refresh_btn.classList.add("btn", "view-item", "interact-item", "refresh-tracklist-btn");
     refresh_btn.textContent = trans[lang].music.refresh;
@@ -15865,8 +15857,8 @@
     view_buttons.classList.add("view-buttons");
     let header = document.createElement("div");
     header.classList.add("top-container");
-    let header_text = panel.querySelector("h2");
-    header.appendChild(header_text);
+    let header_text2 = panel.querySelector("h2");
+    header.appendChild(header_text2);
     let select_btn = panel.querySelector(".dropdown-menu-clickable-button");
     select_btn.classList.add("btn", "view-item", "interact-item");
     select_btn.classList.remove("section-control");
@@ -15964,8 +15956,8 @@
     view_buttons.classList.add("view-buttons");
     let header = document.createElement("div");
     header.classList.add("top-container");
-    let header_text = panel.querySelector("h2");
-    header.appendChild(header_text);
+    let header_text2 = panel.querySelector("h2");
+    header.appendChild(header_text2);
     let select_btn = panel.querySelector(".dropdown-menu-clickable-button");
     select_btn.classList.add("btn", "view-item", "interact-item");
     select_btn.classList.remove("section-control");
@@ -16063,8 +16055,8 @@
     view_buttons.classList.add("view-buttons");
     let header = document.createElement("div");
     header.classList.add("top-container");
-    let header_text = panel.querySelector("h2");
-    header.appendChild(header_text);
+    let header_text2 = panel.querySelector("h2");
+    header.appendChild(header_text2);
     let select_btn = panel.querySelector(".dropdown-menu-clickable-button");
     select_btn.classList.add("btn", "view-item", "interact-item");
     select_btn.classList.remove("section-control");
@@ -16231,7 +16223,7 @@
     } catch (e) {
       log("unable to find elements", "page structure");
     }
-    let content_top = document.body.querySelector(".content-top");
+    let content_top2 = document.body.querySelector(".content-top");
     let search_form = page.structure.main.querySelector(".search-form");
     let search = search_form.querySelector("#site-search");
     let value = search.getAttribute("value");
@@ -16240,7 +16232,7 @@
     site_search.focus();
     page.structure.main.removeChild(search_form);
     page.name = value != "" ? value : "empty..";
-    checkup_page_structure(false, content_top);
+    checkup_page_structure(false, content_top2);
     log("status is", "page", "info", page);
     update_page();
     if (page.subpage != "overview") {
@@ -17137,6 +17129,7 @@
     } else if (window.location.href.startsWith(sponsor_url.replace("{root}", root))) {
       bleh_sponsor_page();
     } else if (window.location.href.startsWith(bleh_url.replace("{root}", root))) {
+      bleh_home();
       bleh_settings();
     } else {
       bleh_error();
@@ -17156,15 +17149,11 @@
         bleh_tags();
       else if (page.type == "search")
         bleh_search();
-      else if (page.type == "settings")
-        bleh_native_settings();
-      else if (page.type == "charts")
-        bleh_charts();
       else if (page.type == "inbox")
         bleh_inbox();
-      else if (page.type == "bookmarks")
-        bleh_bookmarks();
       else if (page.type == "home")
+        bleh_home_legacy();
+      else if (page.type == "overview" || page.type == "recommended" || page.type == "releases" || page.type == "bookmarks" || page.type == "charts" || page.type == "settings")
         bleh_home();
       if ((page.type == "artist" || page.type == "album" || page.type == "track") && page.subpage == "overview")
         patch_wiki();

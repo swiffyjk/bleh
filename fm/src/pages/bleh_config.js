@@ -7,7 +7,6 @@ import { sponsor_list } from "../build/sponsor";
 import { lang, lang_info, non_override_lang, trans, valid_langs } from "../build/trans";
 import { dialog, dialog_legacy, dialog_rm, kill_window } from "../components/dialog";
 import { notify } from "../components/notify";
-import { checkup_page_structure } from "../components/structure";
 import { create_settings_template, load_settings, refresh_all } from "../config";
 import { version } from "../main";
 import { update_page } from "../page";
@@ -16,19 +15,6 @@ import { ff } from "../sku";
 
 
 export function bleh_settings() {
-    page.structure.container = document.body.querySelector('.page-content');
-    try {
-        page.structure.row = page.structure.container.querySelector('.row');
-        page.structure.main = page.structure.row.querySelector('.col-main');
-        page.structure.side = page.structure.row.querySelector('.col-sidebar');
-    } catch(e) {
-        log('unable to find elements', 'page structure');
-    }
-
-    checkup_page_structure();
-    log('status is', 'page', 'info', page);
-
-    log('internal bleh settings', 'page');
     page.type = 'bleh_settings';
     page.subpage = '';
 

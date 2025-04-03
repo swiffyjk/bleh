@@ -730,6 +730,7 @@ body {
     --icon-16-setting-text: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyLjUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgY2xhc3M9Imx1Y2lkZSBsdWNpZGUtdGV4dC1jdXJzb3ItaW5wdXQiPjxwYXRoIGQ9Ik01IDRoMWEzIDMgMCAwIDEgMyAzIDMgMyAwIDAgMSAzLTNoMSIvPjxwYXRoIGQ9Ik0xMyAyMGgtMWEzIDMgMCAwIDEtMy0zIDMgMyAwIDAgMS0zIDNINSIvPjxwYXRoIGQ9Ik01IDE2SDRhMiAyIDAgMCAxLTItMnYtNGEyIDIgMCAwIDEgMi0yaDEiLz48cGF0aCBkPSJNMTMgOGg3YTIgMiAwIDAgMSAyIDJ2NGEyIDIgMCAwIDEtMiAyaC03Ii8+PHBhdGggZD0iTTkgN3YxMCIvPjwvc3ZnPg==');
     --icon-16-video-broken: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxOCIgaGVpZ2h0PSIxOCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyLjI1IiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWZpbG0taWNvbiBsdWNpZGUtZmlsbSI+PHJlY3Qgd2lkdGg9IjE4IiBoZWlnaHQ9IjE4IiB4PSIzIiB5PSIzIiByeD0iMiIvPjxwYXRoIGQ9Ik03IDN2MTgiLz48cGF0aCBkPSJNMyA3LjVoNCIvPjxwYXRoIGQ9Ik0zIDEyaDE4Ii8+PHBhdGggZD0iTTMgMTYuNWg0Ii8+PHBhdGggZD0iTTE3IDN2MTgiLz48cGF0aCBkPSJNMTcgNy41aDQiLz48cGF0aCBkPSJNMTcgMTYuNWg0Ii8+PC9zdmc+');
     --icon-16-api: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyLjUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgY2xhc3M9Imx1Y2lkZSBsdWNpZGUtYmxvY2tzIj48cmVjdCB3aWR0aD0iNyIgaGVpZ2h0PSI3IiB4PSIxNCIgeT0iMyIgcng9IjEiLz48cGF0aCBkPSJNMTAgMjFWOGExIDEgMCAwIDAtMS0xSDRhMSAxIDAgMCAwLTEgMXYxMmExIDEgMCAwIDAgMSAxaDEyYTEgMSAwIDAgMCAxLTF2LTVhMSAxIDAgMCAwLTEtMUgzIi8+PC9zdmc+');
+    --icon-16-rocket: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxOCIgaGVpZ2h0PSIxOCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyLjI1IiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLXJvY2tldC1pY29uIGx1Y2lkZS1yb2NrZXQiPjxwYXRoIGQ9Ik00LjUgMTYuNWMtMS41IDEuMjYtMiA1LTIgNXMzLjc0LS41IDUtMmMuNzEtLjg0LjctMi4xMy0uMDktMi45MWEyLjE4IDIuMTggMCAwIDAtMi45MS0uMDl6Ii8+PHBhdGggZD0ibTEyIDE1LTMtM2EyMiAyMiAwIDAgMSAyLTMuOTVBMTIuODggMTIuODggMCAwIDEgMjIgMmMwIDIuNzItLjc4IDcuNS02IDExYTIyLjM1IDIyLjM1IDAgMCAxLTQgMnoiLz48cGF0aCBkPSJNOSAxMkg0cy41NS0zLjAzIDItNGMxLjYyLTEuMDggNSAwIDUgMCIvPjxwYXRoIGQ9Ik0xMiAxNXY1czMuMDMtLjU1IDQtMmMxLjA4LTEuNjIgMC01IDAtNSIvPjwvc3ZnPg==');
 
     --icon-16-progress-tier-0: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxOCIgaGVpZ2h0PSIxOCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyLjUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgY2xhc3M9Imx1Y2lkZSBsdWNpZGUtY2lyY2xlIj48Y2lyY2xlIGN4PSIxMiIgY3k9IjEyIiByPSIxMCIvPjwvc3ZnPg==');
     --icon-16-progress-tier-1: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxOCIgaGVpZ2h0PSIxOCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyLjUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgY2xhc3M9Imx1Y2lkZSBsdWNpZGUtZGlhbW9uZCI+PHBhdGggZD0iTTIuNyAxMC4zYTIuNDEgMi40MSAwIDAgMCAwIDMuNDFsNy41OSA3LjU5YTIuNDEgMi40MSAwIDAgMCAzLjQxIDBsNy41OS03LjU5YTIuNDEgMi40MSAwIDAgMCAwLTMuNDFsLTcuNTktNy41OWEyLjQxIDIuNDEgMCAwIDAtMy40MSAwWiIvPjwvc3ZnPg==');
@@ -2191,6 +2192,9 @@ spacing between is removed and aligned to tag icon */
         margin-top: var(--card-gap) !important;
     }
 }
+.navlist + .bleh-background + .navlist {
+    margin-top: var(--card-gap) !important;
+}
 
 .section-controls-full-width,
 .section-controls {
@@ -2863,6 +2867,11 @@ hr + .library-search-results-header {
 .navlist-items {
     display: flex;
     gap: var(--button-list-gap);
+    flex: 1;
+
+    .fill {
+        flex: 1;
+    }
 }
 /* navlist-more isnt contained in navlist-items */
 button.navlist-more {
@@ -3003,9 +3012,6 @@ button.navlist-more {
 .navlist--more .navlist-items {
     overflow: visible !important;
 }
-.navlist-items {
-    display: flex;
-}
 
 
 /*     ICON     */
@@ -3144,6 +3150,7 @@ button.navlist-more {
 
 
 /* library scrobbles tab */
+.secondary-nav-item--recommendations a,
 .library-controls .secondary-nav-item--overview:first-child a {
     --mask: var(--icon-16-scrobble);
 }
@@ -3157,6 +3164,7 @@ button.navlist-more {
     --mask: var(--icon-16-users);
 }
 
+.secondary-nav-item--charts a,
 [data-analytics-label="charts"]:before {
     --mask: var(--icon-16-charts);
 }
@@ -3204,6 +3212,7 @@ button.navlist-more {
 .secondary-nav-item--overview a[href*="/settings"]:before {
     --mask: var(--icon-16-mention);
 }
+.secondary-nav-item--settings a,
 [data-menu-item="settings"],
 .secondary-nav-item--website a:before {
     --mask: var(--icon-16-settings);
@@ -3266,6 +3275,21 @@ button.navlist-more {
 }
 .secondary-nav-item--year a:before {
     --mask: var(--icon-16-listening-report-yearly);
+}
+
+
+.secondary-nav-item--home a {
+    --mask: var(--icon-16-home);
+}
+.secondary-nav-item--releases a {
+    --mask: var(--icon-16-rocket);
+}
+.secondary-nav-item--bookmarks a {
+    --mask: var(--icon-16-bookmark);
+}
+.secondary-nav-item--bleh a {
+    --mask: var(--icon-16-settings);
+    --col: hsl(var(--l3-c)) !important;
 }
 
 
@@ -6277,6 +6301,12 @@ button,
 
     kbd {
         font-size: var(--font-size-sm);
+    }
+
+    &.flex-button {
+        display: flex;
+        align-items: center;
+        gap: 6px;
     }
 
 
@@ -18539,10 +18569,6 @@ h4 {
             display: none;
         }
 
-        &[data-page-type="settings"] {
-            display: none;
-        }
-
         &[data-page-type="user"] {
             [data-bleh--profile_header_expand="false"] & {
                 opacity: 0;
@@ -20457,7 +20483,8 @@ h4 {
     gap: var(--card-padding);
 
     padding: 30px calc(var(--card-padding) * 6);
-    background-color: hsl(var(--b6));
+
+    margin-top: -205px;
 
     .home-avatar {
         width: 100px;

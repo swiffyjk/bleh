@@ -18,15 +18,12 @@ import { bleh_albums } from "./pages/album";
 import { bleh_artists } from "./pages/artist";
 import { bleh_settings } from "./pages/bleh_config";
 import { bleh_setup, notify_if_new_update } from "./pages/bleh_setup";
-import { bleh_bookmarks } from "./pages/bookmark";
-import { bleh_charts } from "./pages/chart";
 import { bleh_error } from "./pages/error";
 import { bleh_events } from "./pages/event";
 import { bleh_gallery, bleh_gallery_upload_check, patch_gallery_page } from "./pages/gallery";
 import { bleh_glacier_library, bleh_glacier_library_bulk_edit } from "./pages/glacier";
-import { bleh_home } from "./pages/home";
+import { bleh_home, bleh_home_legacy } from "./pages/home";
 import { bleh_inbox } from "./pages/inbox";
-import { bleh_native_settings } from "./pages/lastfm_settings";
 import { bleh_profiles } from "./pages/profile";
 import { bleh_search } from "./pages/search";
 import { bleh_tags } from "./pages/tag";
@@ -325,6 +322,7 @@ function load_page() {
     } else if (window.location.href.startsWith(sponsor_url.replace('{root}', root))) {
         bleh_sponsor_page();
     } else if (window.location.href.startsWith(bleh_url.replace('{root}', root))) {
+        bleh_home();
         bleh_settings();
     } else {
         bleh_error();
@@ -346,15 +344,11 @@ function load_page() {
             bleh_tags();
         else if (page.type == 'search')
             bleh_search();
-        else if (page.type == 'settings')
-            bleh_native_settings();
-        else if (page.type == 'charts')
-            bleh_charts();
         else if (page.type == 'inbox')
             bleh_inbox();
-        else if (page.type == 'bookmarks')
-            bleh_bookmarks();
         else if (page.type == 'home')
+            bleh_home_legacy();
+        else if (page.type == 'overview' || page.type == 'recommended' || page.type == 'releases' || page.type == 'bookmarks' || page.type == 'charts' || page.type == 'settings')
             bleh_home();
 
         if (

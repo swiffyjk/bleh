@@ -1,34 +1,13 @@
-import { log } from "../build/log";
 import { auth, auth_link, page, root } from "../build/page";
 import { lang, trans } from "../build/trans";
 import { bleh_auto_edits } from "../components/auto_edit";
 import { dialog_legacy, kill_window } from "../components/dialog";
 import { custom_select, update_inbuilt_select } from "../components/select";
-import { checkup_page_structure } from "../components/structure";
 import { update_inbuilt_item } from "../config";
-import { register_background, update_page } from "../page";
 import { ff } from "../sku";
 
 // patch last.fm settings
 export function bleh_native_settings() {
-    page.structure.container = document.body.querySelector('.page-content');
-    try {
-        page.structure.row = page.structure.container.querySelector('.row');
-        page.structure.main = page.structure.row.querySelector('.col-main');
-        page.structure.side = page.structure.row.querySelector('.col-sidebar');
-    } catch(e) {
-        log('unable to find elements', 'page structure');
-    }
-
-    let content_top = document.body.querySelector('.content-top');
-    let header_text = trans[lang].settings.pages[page.subpage];
-
-    checkup_page_structure(false, content_top);
-    log('status is', 'page', 'info', page);
-    update_page();
-
-    register_background(auth.avatar);
-
     if (page.subpage == 'overview') {
         patch_settings_profile_tab();
     } else if (page.subpage == 'privacy') {
