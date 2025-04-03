@@ -169,7 +169,7 @@ export function bleh_settings() {
     page.structure.container.insertBefore(nav, page.structure.row);
 
     if (page.requested.tab == null)
-        change_settings_page('home');
+        change_settings_page('themes');
     else
         change_settings_page(page.requested.tab);
 
@@ -889,6 +889,9 @@ export function render_setting_page(page_id) {
                 body: 'haaaiaiii test bodyyy.......',
                 persist: true
                 })">Deliver persistent notification</button>
+                <div class="sep"></div>
+                <h4>Manage flags</h4>
+                <button class="continue" onclick="_change_settings_page('sku')">Open sku page</button>
             </div>
             `);
     } else if (page_id == 'profiles') {

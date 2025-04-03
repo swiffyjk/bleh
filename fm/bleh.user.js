@@ -7831,7 +7831,7 @@
     `;
     page.structure.container.insertBefore(nav, page.structure.row);
     if (page.requested.tab == null)
-      change_settings_page("home");
+      change_settings_page("themes");
     else
       change_settings_page(page.requested.tab);
     if (page.requested.setting != null) {
@@ -8521,6 +8521,9 @@
                 body: 'haaaiaiii test bodyyy.......',
                 persist: true
                 })">Deliver persistent notification</button>
+                <div class="sep"></div>
+                <h4>Manage flags</h4>
+                <button class="continue" onclick="_change_settings_page('sku')">Open sku page</button>
             </div>
             `;
     } else if (page_id == "profiles") {
@@ -14346,11 +14349,20 @@
     update_page();
     register_background(auth.avatar.replace("/avatar42s/", "/ar0/"));
     let banner = document.createElement("div");
-    banner.classList.add("top-banner", "home-banner");
+    banner.classList.add("top-banner", "home-banner", "colourful");
+    let sponsoring = false;
+    if (sponsor_list)
+      sponsoring = sponsor_list.sponsors.includes(auth.name);
     banner.innerHTML = `
         <a class="home-avatar" href="${root}user/${auth.name}">
             <img src="${auth.avatar.replace("/avatar42s/", "/avatar170s/")}">
         </a>
+        ${sponsoring ? `
+        <div class="subtext sponsor-message colourful">
+            <div class="bleh-icon-container"><div class="bleh-icon" style="--icon: var(--icon-16-heart-solid); --icon-size: 14px"></div></div>
+            Thank you for sponsoring!
+        </div>
+        ` : ""}
         <h1>${trans[lang].home.welcome.replace("{m}", `<a class="mention" href="${root}user/${auth.name}">@${auth.name}</a>`)}</h1>
     `;
     page.structure.container.insertBefore(banner, page.structure.container.firstElementChild);
@@ -14394,6 +14406,11 @@
                     bleh
                 </a>
             </li>
+            <li class="navlist-item secondary-nav-item secondary-nav-item--more">
+                <a class="secondary-nav-item-link no-text">
+                    More
+                </a>
+            </li>
         </ul>
     `;
     page.structure.nav = nav;
@@ -14402,6 +14419,31 @@
       bleh_charts();
     if (page.type == "settings")
       bleh_native_settings();
+    let menu_button = nav.querySelector(".secondary-nav-item--more a");
+    tippy(menu_button, {
+      theme: "menu",
+      content: `
+            <button class="dropdown-menu-clickable-item update" onclick="_force_refresh_theme()">
+                ${trans[lang].settings.home.update.update_now}
+            </button>
+            ${settings.dev ? `
+            <a class="dropdown-menu-clickable-item update" href="https://github.com/katelyynn/bleh/raw/uwu/fm/bleh.user.css">
+                ${trans[lang].settings.home.update.css}
+            </a>
+            ` : ""}
+            <button class="dropdown-menu-clickable-item sponsor" onclick="_sponsor()">
+                ${trans[lang].settings.home.sponsor.name}<div class="new-badge">${trans[lang].settings.new}</div>
+            </button>
+            <a class="dropdown-menu-clickable-item issues" href="https://github.com/katelyynn/bleh/issues" target="_blank">
+                ${trans[lang].settings.home.issues.name}
+            </a>
+        `,
+      allowHTML: true,
+      placement: "bottom",
+      interactive: true,
+      interactiveBorder: 10,
+      trigger: "click"
+    });
   }
   function bleh_home_legacy() {
     window.location.href = `${root}music`;

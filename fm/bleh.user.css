@@ -3291,6 +3291,15 @@ button.navlist-more {
     --mask: var(--icon-16-settings);
     --col: hsl(var(--l3-c)) !important;
 }
+.secondary-nav-item--more > a {
+    --mask: var(--icon-16-dots);
+    --font-size: 0;
+    padding-left: calc(12px + 18px) !important;
+}
+
+.dropdown-menu-clickable-item.update {
+    --col: hsl(var(--l3-c));
+}
 
 
 
@@ -13213,7 +13222,7 @@ h2.playlisting-create-option-title {
             --col: hsl(var(--l3-c));
         }
 
-        &[data-bleh-page="sku"]:not(.secondary-nav-item-link--active) {
+        li:has(&:is([data-bleh-page="sku"], [data-bleh-page="home"]):not(.secondary-nav-item-link--active)) {
             display: none;
         }
     }
@@ -15653,7 +15662,7 @@ button.bleh--gallery-bookmark-image-btn {
         }
 
         .date {
-            width: 62px;
+            width: 67px;
             color: hsla(var(--c3), 80%);
         }
 
@@ -16357,6 +16366,9 @@ button.bleh--gallery-bookmark-image-btn {
 }
 .settings {
     --mask: var(--icon-16-settings);
+}
+.issues {
+    --mask: var(--icon-16-issues);
 }
 
 
@@ -20480,11 +20492,30 @@ h4 {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    gap: var(--card-padding);
 
     padding: 30px calc(var(--card-padding) * 6);
 
     margin-top: -205px;
+
+    .sponsor-message {
+        color: hsl(var(--l3-c));
+        text-shadow: 0 0 20px hsl(var(--l4-c));
+        /* filter: drop-shadow(0 0 20px hsl(var(--l4-c))); */
+        font-weight: var(--font-weight-medium);
+        --hue-over: 333;
+        --sat-over: 1;
+        --lit-over: 1;
+
+        display: flex;
+        align-items: center;
+        gap: 6px;
+
+        margin-bottom: 10px;
+
+        .bleh-icon-container {
+            filter: drop-shadow(0 0 13px hsl(var(--l4-c)));
+        }
+    }
 
     .home-avatar {
         width: 100px;
@@ -20492,9 +20523,22 @@ h4 {
         border-radius: var(--avatar-radius);
         box-shadow: var(--interact-shadow);
         overflow: hidden;
+        position: relative;
+
+        margin-bottom: var(--card-padding);
 
         img {
             width: 100%;
+        }
+
+        &:after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: var(--avatar-radius);
+            background: radial-gradient(transparent 40%, hsl(var(--h4), 50%));
+
+            display: none;
         }
     }
 

@@ -1,3 +1,4 @@
+import { settings } from "../build/config";
 import { log } from "../build/log";
 import { auth, page, root } from "../build/page";
 import { lang, trans } from "../build/trans";
@@ -5,6 +6,7 @@ import { checkup_page_structure } from "../components/structure";
 import { register_background, update_page } from "../page";
 import { bleh_charts } from "./chart";
 import { bleh_native_settings } from './lastfm_settings';
+import { sponsor_list } from "../build/sponsor";
 
 export function bleh_home() {
     page.structure.container = document.body.querySelector('.page-content');
@@ -26,12 +28,22 @@ export function bleh_home() {
 
 
     let banner = document.createElement('div');
-    banner.classList.add('top-banner', 'home-banner');
+    banner.classList.add('top-banner', 'home-banner', 'colourful');
+
+    let sponsoring = false;
+    if (sponsor_list)
+        sponsoring = sponsor_list.sponsors.includes(auth.name);
 
     banner.innerHTML = (`
         <a class="home-avatar" href="${root}user/${auth.name}">
             <img src="${auth.avatar.replace('/avatar42s/', '/avatar170s/')}">
         </a>
+        ${(sponsoring) ? (`
+        <div class="subtext sponsor-message colourful">
+            <div class="bleh-icon-container"><div class="bleh-icon" style="--icon: var(--icon-16-heart-solid); --icon-size: 14px"></div></div>
+            Thank you for sponsoring!
+        </div>
+        `) : ''}
         <h1>${trans[lang].home.welcome.replace('{m}', `<a class="mention" href="${root}user/${auth.name}">@${auth.name}</a>`)}</h1>
     `);
 
@@ -77,6 +89,11 @@ export function bleh_home() {
                     bleh
                 </a>
             </li>
+            <li class="navlist-item secondary-nav-item secondary-nav-item--more">
+                <a class="secondary-nav-item-link no-text">
+                    More
+                </a>
+            </li>
         </ul>
     `);
 
@@ -88,6 +105,32 @@ export function bleh_home() {
 
     if (page.type == 'settings')
         bleh_native_settings();
+
+    let menu_button = nav.querySelector('.secondary-nav-item--more a');
+    tippy(menu_button, {
+        theme: "menu",
+        content: (`
+            <button class="dropdown-menu-clickable-item update" onclick="_force_refresh_theme()">
+                ${trans[lang].settings.home.update.update_now}
+            </button>
+            ${(settings.dev ? (`
+            <a class="dropdown-menu-clickable-item update" href="https://github.com/katelyynn/bleh/raw/uwu/fm/bleh.user.css">
+                ${trans[lang].settings.home.update.css}
+            </a>
+            `) : '')}
+            <button class="dropdown-menu-clickable-item sponsor" onclick="_sponsor()">
+                ${trans[lang].settings.home.sponsor.name}<div class="new-badge">${trans[lang].settings.new}</div>
+            </button>
+            <a class="dropdown-menu-clickable-item issues" href="https://github.com/katelyynn/bleh/issues" target="_blank">
+                ${trans[lang].settings.home.issues.name}
+            </a>
+        `),
+        allowHTML: true,
+        placement: "bottom",
+        interactive: true,
+        interactiveBorder: 10,
+        trigger: "click"
+    });
 }
 
 export function bleh_home_legacy() {
