@@ -11253,6 +11253,8 @@
       return;
     if (!masthead_logo.hasAttribute("data-kate-processed")) {
       masthead_logo.setAttribute("data-kate-processed", "true");
+      let link = masthead_logo.querySelector("a");
+      link.setAttribute("href", `${root}music`);
       let version_text = document.createElement("a");
       version_text.classList.add("bleh--version");
       version_text.setAttribute("href", `${root}bleh`);

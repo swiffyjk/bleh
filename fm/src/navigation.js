@@ -16,6 +16,9 @@ export function patch_masthead(element) {
     if (!masthead_logo.hasAttribute('data-kate-processed')) {
         masthead_logo.setAttribute('data-kate-processed','true');
 
+        let link = masthead_logo.querySelector('a');
+        link.setAttribute('href', `${root}music`);
+
         let version_text = document.createElement('a');
         version_text.classList.add('bleh--version');
         version_text.setAttribute('href', `${root}bleh`);
@@ -35,7 +38,7 @@ export function append_nav() {
     }
 
     let auth_link = document.body.querySelector('.auth-link');
-    
+
     if (auth_link.hasAttribute('data-bleh'))
         return;
     auth_link.setAttribute('data-bleh', 'true');
