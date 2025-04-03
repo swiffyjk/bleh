@@ -221,7 +221,8 @@ function main_flow() {
         page.type == 'album' ||
         page.type == 'events' ||
         page.type == 'festival' ||
-        page.type == 'tag'
+        page.type == 'tag' ||
+        page.type == 'overview'
     ) {
         patch_titles();
     }

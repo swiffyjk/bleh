@@ -17178,7 +17178,7 @@
     if (auth.pro && page.type == "user" && page.name == auth.name && page.subpage == "library_artist_overview" || page.subpage == "library_album_overview" || page.subpage == "library_track_overview") {
       bleh_glacier_library_bulk_edit();
     }
-    if (page.type == "user" || page.type == "artist" || page.type == "album" || page.type == "events" || page.type == "festival" || page.type == "tag") {
+    if (page.type == "user" || page.type == "artist" || page.type == "album" || page.type == "events" || page.type == "festival" || page.type == "tag" || page.type == "overview") {
       patch_titles();
     }
     if (page.type == "user" || page.type == "artist" || page.type == "album" || page.type == "track") {
