@@ -11253,8 +11253,11 @@
       return;
     if (!masthead_logo.hasAttribute("data-kate-processed")) {
       masthead_logo.setAttribute("data-kate-processed", "true");
-      let link = masthead_logo.querySelector("a");
+      let link = document.createElement("a");
+      link.classList.add("home-link");
       link.setAttribute("href", `${root}music`);
+      link.innerHTML = `<div class="bleh-logo">${version.brand}</div>`;
+      masthead_logo.appendChild(link);
       let version_text = document.createElement("a");
       version_text.classList.add("bleh--version");
       version_text.setAttribute("href", `${root}bleh`);
@@ -11451,12 +11454,6 @@
       }
     });
     site_auth.removeChild(site_auth.querySelector(".auth-dropdown-menu-wrap"));
-    let bleh2 = document.createElement("div");
-    bleh2.classList.add("bleh-logo");
-    bleh2.textContent = version.brand;
-    let logo_a = document.body.querySelector(".masthead-logo a");
-    logo_a.innerHTML = "";
-    logo_a.appendChild(bleh2);
     let selected_language = document.querySelector(".footer-language--active strong")?.textContent;
     let language_options = document.querySelectorAll(".footer-language-form");
     let language_menu = document.createElement("div");
@@ -15771,18 +15768,22 @@
     }).then(function(html) {
       let doc = new DOMParser().parseFromString(html, "text/html");
       console.log("DOC", doc);
+      let tracklist_panel = doc.querySelector(".chartlist");
+      button.removeAttribute("disabled");
+      if (!tracklist_panel) {
+        notify({
+          title: "Recent tracks failed to load",
+          icon: "icon-16-refresh",
+          type: "error"
+        });
+        return;
+      }
       notify({
         title: "Recent tracks refreshed",
         icon: "icon-16-refresh"
       });
       panel.classList.add("has-refreshed");
-      let tracklist_panel = doc.querySelector(".chartlist");
-      if (tracklist_panel == null) {
-        deliver_notif("recent tracks could not be found ;-;");
-        return;
-      }
       page.structure.main.querySelector("#recent-tracks-section .chartlist").outerHTML = tracklist_panel.outerHTML;
-      button.removeAttribute("disabled");
     });
   }
   function bleh_featured_profile_track(object) {

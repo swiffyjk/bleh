@@ -16,8 +16,11 @@ export function patch_masthead(element) {
     if (!masthead_logo.hasAttribute('data-kate-processed')) {
         masthead_logo.setAttribute('data-kate-processed','true');
 
-        let link = masthead_logo.querySelector('a');
+        let link = document.createElement('a');
+        link.classList.add('home-link');
         link.setAttribute('href', `${root}music`);
+        link.innerHTML = `<div class="bleh-logo">${version.brand}</div>`;
+        masthead_logo.appendChild(link);
 
         let version_text = document.createElement('a');
         version_text.classList.add('bleh--version');
@@ -247,15 +250,6 @@ export function append_nav() {
     });
     site_auth.removeChild(site_auth.querySelector('.auth-dropdown-menu-wrap'));
 
-
-    // bleh
-    let bleh = document.createElement('div');
-    bleh.classList.add('bleh-logo');
-    bleh.textContent = version.brand;
-
-    let logo_a = document.body.querySelector('.masthead-logo a');
-    logo_a.innerHTML = '';
-    logo_a.appendChild(bleh);
 
     // language
     let selected_language = document.querySelector('.footer-language--active strong')?.textContent;

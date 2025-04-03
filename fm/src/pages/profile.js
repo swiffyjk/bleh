@@ -902,22 +902,26 @@ function refresh_tracks(button) {
         let doc = new DOMParser().parseFromString(html, 'text/html');
         console.log('DOC', doc);
 
+        let tracklist_panel = doc.querySelector('.chartlist');
+
+        button.removeAttribute('disabled');
+
+        if (!tracklist_panel) {
+            notify({
+                title: 'Recent tracks failed to load',
+                icon: 'icon-16-refresh',
+                type: 'error'
+            });
+            return;
+        }
+
         notify({
             title: 'Recent tracks refreshed',
             icon: 'icon-16-refresh'
         });
         panel.classList.add('has-refreshed');
 
-        let tracklist_panel = doc.querySelector('.chartlist');
-
-        if (tracklist_panel == null) {
-            deliver_notif('recent tracks could not be found ;-;');
-            return;
-        }
-
         page.structure.main.querySelector('#recent-tracks-section .chartlist').outerHTML = tracklist_panel.outerHTML;
-
-        button.removeAttribute('disabled');
     });
 }
 
