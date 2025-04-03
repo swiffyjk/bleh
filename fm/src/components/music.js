@@ -11,6 +11,11 @@ import { ff } from "../sku";
 import { parse_scrobbles_as_rank } from "./colourful_counts";
 import { correct_item_by_artist } from "./lotus";
 import { register_menu } from "./menu";
+import { other_listener } from "./profile_shortcut";
+
+unsafeWindow._other_listener = function(id) {
+    other_listener(id);
+}
 
 export function show_your_scrobbles() {
     let katsune = ff('katsune');

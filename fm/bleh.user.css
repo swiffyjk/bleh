@@ -101,7 +101,7 @@ body {
 
     --brand: 'bleh';
 
-    --hue-pos: 130;
+    --hue-pos: 140;
     --hue-neg: -2;
     --hue-fav: 15;
     --hue-pro: 174;
@@ -1232,7 +1232,7 @@ last.fm changes as of 2024-05-20 */
     &:not([data-bleh--label="bleh"][data-season-active="true"]) {
         padding: unset !important;
         font-size: 0 !important;
-        --left: 6px;
+        --left: 7px;
         width: 32px;
     }
 }
@@ -2974,8 +2974,8 @@ button.navlist-more {
     /* left padding for icon, otherwise just 12px 16px */
     --padding: 12px 12px 12px calc(12px + 18px + 6px) !important;
     --bg: transparent !important;
-    --bg-hov: hsl(var(--b3), 60%) !important;
-    --bg-atv: hsl(var(--b3), 80%) !important;
+    --bg-hov: hsl(var(--b3), 40%) !important;
+    --bg-atv: hsl(var(--b3), 60%) !important;
     --shadow: none !important;
     --shadow-hov: none !important;
     --col: hsl(var(--c2)) !important;
@@ -3033,7 +3033,7 @@ button.navlist-more {
     --font-size: 0;
     width: 32px;
     --mask: var(--icon-16-dots);
-    --left: 6px;
+    --left: 7px;
     position: relative;
 }
 
@@ -3335,11 +3335,6 @@ button.navlist-more {
     --mask: var(--icon-16-dots);
     --font-size: 0;
     padding-left: calc(12px + 18px) !important;
-}
-
-.dropdown-menu-clickable-item.sponsor,
-.dropdown-menu-clickable-item.update {
-    --col: hsl(var(--l3-c)) !important;
 }
 
 
@@ -4746,7 +4741,7 @@ better than the default selector '#app a' i suppose */
     }
 
     .chartlist-more-button {
-        --left: 6px;
+        --left: 7px;
         --mask: var(--icon-16-dots-v);
 
         [data-ff--hide_chartlist_more="true"] & {
@@ -5225,7 +5220,7 @@ better than the default selector '#app a' i suppose */
 /*     LOVED - brought over from bleh     */
 .chartlist-love-button {
     position: relative;
-    --left: 6px;
+    --left: 7px;
     --mask: var(--icon-16-heart);
 
     &:before {
@@ -5292,7 +5287,7 @@ a.chartlist-love-button:after {
     order: 1;
 }
 .chartlist-play-button {
-    --left: 6px;
+    --left: 7px;
     --mask: var(--icon-16-play);
 
     &:before {
@@ -5664,7 +5659,7 @@ p + .chartlist {
 .shout-more-actions {
     margin-right: unset !important;
     --mask: var(--icon-16-dots);
-    --left: 6px;
+    --left: 7px;
 }
 
 /* apply some sizing adjustments to all except menu items */
@@ -6947,7 +6942,7 @@ span.header-new-gallery-inner a:before,
     margin-top: unset;
     margin-bottom: unset;
     opacity: 1;
-    --left: 6px;
+    --left: 7px;
     --font-size: 0;
 }
 .section-with-settings .section-control:before,
@@ -7455,6 +7450,8 @@ very, very, very dated - who looks up a song on ebay? */
 
 
 /*     DANGEROUS     */
+.dropdown-menu-clickable-item.sponsor,
+.dropdown-menu-clickable-item.update,
 .dropdown-menu-clickable-item.swatch,
 .dropdown-menu-clickable-item.lotus,
 .more-item--obsession,
@@ -7478,7 +7475,9 @@ very, very, very dated - who looks up a song on ebay? */
         [data-menu-item="bleh"],
         [data-menu-item="labs"],
         .more-item--obsession,
-        .lotus, .swatch
+        .lotus, .swatch,
+        .dropdown-menu-clickable-item.sponsor,
+        .dropdown-menu-clickable-item.update,
         ) {
         --hue-over: var(--hue-neg);
         --sat-over: 1;
@@ -8206,7 +8205,7 @@ input:is([name^="track_name"], [name^="artist_name"], [name^="album_name"], [nam
     margin: unset;
 }
 .modal-action-button {
-    --left: 6px;
+    --left: 7px;
     --font-size: 0;
 
     width: 32px !important;
@@ -8371,7 +8370,7 @@ that literally is 1 user from 2007 who hasnt even gotten a scrobble */
     height: 32px;
     position: relative;
     margin: unset !important;
-    --left: 6px;
+    --left: 7px;
 }
 .view-icon, #list-view-icon {
     display: none;
@@ -9874,7 +9873,7 @@ text[style^="color: rgb(255, 172, 172)"] {
 }
 .report-headline-share {
     position: relative;
-    --left: 6px;
+    --left: 7px;
     --mask: var(--icon-16-share);
     margin: unset;
 
@@ -9883,7 +9882,7 @@ text[style^="color: rgb(255, 172, 172)"] {
     }
 }
 .user-dashboard-pagination-previous-link, .user-dashboard-pagination-next-link {
-    --left: 6px;
+    --left: 7px;
     --mask: var(--icon-16-arrow-left);
     transform: unset !important;
 }
@@ -11554,7 +11553,7 @@ table.table tr:nth-child(2n) td {
 
                 .api-session-connect, .api-session-disconnect {
                     --font-size: 0;
-                    --left: 6px;
+                    --left: 7px;
                     width: 32px;
                     position: relative;
                 }
@@ -12355,7 +12354,7 @@ hr {
         right: 4px;
 
         --col: hsl(var(--l3-c));
-        --left: 6px;
+        --left: 7px;
         --mask: var(--icon-16-bookmark-saved);
 
         --bg: hsla(var(--b4), 40%);
@@ -12651,7 +12650,7 @@ h2.playlisting-create-option-title {
 .playlisting-playlists-item-toggle {
     --font-size: 0;
     --mask: var(--icon-16-dots);
-    --left: 6px;
+    --left: 7px;
     right: 8px;
     top: 8px;
 }
@@ -12754,7 +12753,7 @@ h2.playlisting-create-option-title {
     --font-size: 0;
     width: 32px;
     --mask: var(--icon-16-dots);
-    --left: 6px;
+    --left: 7px;
 }
 .playlisting-playlist-header-actions > * {
     margin-left: unset !important;
@@ -12881,7 +12880,7 @@ h2.playlisting-create-option-title {
     --font-size: 0;
     width: 32px;
     --mask: var(--icon-16-x);
-    --left: 6px;
+    --left: 7px;
 }
 
 
@@ -13083,13 +13082,10 @@ h2.playlisting-create-option-title {
 
     .btn-sm {
         --font-size: 0;
-        --left: 6px;
+        --left: 7px;
         --mask: var(--icon-16-add);
         width: 32px;
         --col: hsl(var(--l3-c));
-        --hue-over: 255;
-        --sat-over: 1;
-        --lit-over: 1;
         margin-left: 4px; /* 12px total */
     }
 }
@@ -19924,7 +19920,7 @@ h4 {
                             height: 32px;
                             position: relative;
                             --mask: var(--icon-16-edit);
-                            --left: 6px;
+                            --left: 7px;
 
                             --bg: transparent !important;
                             --bg-hov: hsla(var(--b3), 30%) !important;
@@ -20532,7 +20528,7 @@ h4 {
                 width: 32px;
                 --font-size: 0;
                 --btn-left: 12px !important;
-                --left: 6px;
+                --left: 7px;
                 --mask: var(--icon-16-trash);
                 --bg: transparent;
                 --bg-hov: hsl(var(--h4), 20%);

@@ -19,12 +19,12 @@ export let lang_info = {
     },
     de: {
         name: 'Deutsch',
-        by: ['inozom', 'cutensilly'],
+        by: ['stellasaur', 'cutensilly'],
         last_updated:  '2025-03-09'
     },
     pl: {
         name: 'Polski',
-        by: ['twolay'],
+        by: ['iwas15with100k'],
         last_updated:  '2024-06-17'
     }
 }
@@ -49,7 +49,7 @@ export const trans = {
                 events: 'events'
             },
             overview: {
-                music: 'music'
+                music: 'home'
             },
             recommended: {
                 artists: 'recommended artists',
@@ -3097,7 +3097,7 @@ export function lookup_lang() {
         handle_error_500();
         return;
     }
-    
+
     console.log(troot.getAttribute("href"));
 
     setRoot(troot.getAttribute('href'));

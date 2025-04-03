@@ -25,6 +25,9 @@ unsafeWindow._open_profile_shortcut_window = function() {
 }
 
 unsafeWindow._other_listener = function(id) {
+    other_listener(id);
+}
+export function other_listener(id) {
     dialog({
         id: 'other_listener',
         title: trans[lang].music.listens.custom.name,
