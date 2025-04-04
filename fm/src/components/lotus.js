@@ -3,7 +3,7 @@ import { log } from "../build/log";
 import { album_track_corrections, artist_corrections, includes } from "../build/music";
 import { page, root } from "../build/page";
 import { return_artist_from_generic, sanitise, sanitise_text } from "../build/tools";
-import { lang, trans } from "../build/trans";
+import { lang, trans_legacy, trans, tl } from "../build/trans";
 import { prepare_corrections_page } from "../pages/bleh_config";
 import { dialog } from "./dialog";
 import { notify } from "./notify";
@@ -80,7 +80,7 @@ function lotus_request(type = 'artist', send_notify = false) {
 
             if (send_notify) {
                 notify({
-                    title: trans[lang].lotus[type],
+                    title: trans_legacy[lang].lotus[type],
                     icon: 'icon-16-lotus',
                     classname: 'lotus'
                 });
@@ -110,11 +110,11 @@ unsafeWindow._lotus_check = function() {
 unsafeWindow._open_correction_modal = function() {
     dialog({
         id: 'corrections',
-        title: trans[lang].settings.corrections.name,
+        title: trans_legacy[lang].settings.corrections.name,
         body: (`
-            <h4>${trans[lang].settings.corrections.listing.artists}</h4>
+            <h4>${trans_legacy[lang].settings.corrections.listing.artists}</h4>
             <div class="corrections artist" id="corrections-artist"></div>
-            <h4>${trans[lang].settings.corrections.listing.albums_tracks}</h4>
+            <h4>${trans_legacy[lang].settings.corrections.listing.albums_tracks}</h4>
             <div class="corrections album_tracks" id="corrections-albums_tracks"></div>
         `),
         has_close: true,

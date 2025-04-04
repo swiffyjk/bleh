@@ -2,7 +2,7 @@ import { load_activities } from "../activity"
 import { settings } from "../build/config";
 import { log } from "../build/log";
 import { auth, page, recent_activity_list, root } from "../build/page";
-import { lang, trans } from "../build/trans";
+import { lang, trans_legacy, trans, tl } from "../build/trans";
 import { checkup_page_structure } from "../components/structure";
 import { register_background, update_page } from "../page";
 import { bleh_charts } from "./chart";
@@ -46,7 +46,7 @@ export function bleh_home() {
             Thank you for sponsoring!
         </div>
         `) : ''}
-        <h1>${trans[lang].home.welcome.replace('{m}', `<a class="mention" href="${root}user/${auth.name}">@${auth.name}</a>`)}</h1>
+        <h1>${trans_legacy[lang].home.welcome.replace('{m}', `<a class="mention" href="${root}user/${auth.name}">@${auth.name}</a>`)}</h1>
     `);
 
     page.structure.container.insertBefore(banner, page.structure.container.firstElementChild);
@@ -113,18 +113,18 @@ export function bleh_home() {
         theme: "menu",
         content: (`
             <button class="dropdown-menu-clickable-item update" onclick="_force_refresh_theme()">
-                ${trans[lang].settings.home.update.update_now}
+                ${trans_legacy[lang].settings.home.update.update_now}
             </button>
             ${(settings.dev ? (`
             <a class="dropdown-menu-clickable-item update" href="https://github.com/katelyynn/bleh/raw/uwu/fm/bleh.user.css">
-                ${trans[lang].settings.home.update.css}
+                ${trans_legacy[lang].settings.home.update.css}
             </a>
             `) : '')}
             <button class="dropdown-menu-clickable-item sponsor" onclick="_sponsor()">
-                ${trans[lang].settings.home.sponsor.name}<div class="new-badge">${trans[lang].settings.new}</div>
+                ${trans_legacy[lang].settings.home.sponsor.name}<div class="new-badge">${trans_legacy[lang].settings.new}</div>
             </button>
             <a class="dropdown-menu-clickable-item issues" href="https://github.com/katelyynn/bleh/issues" target="_blank">
-                ${trans[lang].settings.home.issues.name}
+                ${trans_legacy[lang].settings.home.issues.name}
             </a>
         `),
         allowHTML: true,
@@ -227,7 +227,7 @@ export function bleh_home() {
             });
 
             activity_item.innerHTML = (`
-                <div class="type">${trans[lang].activities[activity.type]}<div class="date">${moment(activity.date).fromNow(true)}</div></div>
+                <div class="type">${trans_legacy[lang].activities[activity.type]}<div class="date">${moment(activity.date).fromNow(true)}</div></div>
                 <div class="title">${involved_text}</div>
             `);
 

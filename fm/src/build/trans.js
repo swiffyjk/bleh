@@ -30,6 +30,262 @@ export let lang_info = {
 }
 
 export const trans = {
+    home: {
+        en: 'Home'
+    },
+    library: {
+        en: 'Library'
+    },
+    view_profile: {
+        en: 'View profile'
+    },
+    shouts: {
+        en: 'Shouts'
+    },
+    about: {
+        en: 'About'
+    },
+    edit_wiki: {
+        en: 'Edit wiki'
+    },
+    read_more: {
+        en: 'Read more'
+    },
+    refresh: {
+        en: 'Refresh'
+    },
+    refresh_tracks: {
+        en: 'Refresh tracks'
+    },
+    from_the_album: {
+        en: 'From the album: {album}'
+    },
+    set_obsession: {
+        en: 'Obsess'
+    },
+    obsession_first: {
+        en: 'First to claim this obsession!'
+    },
+    compare: {
+        en: 'Compare'
+    },
+    compare_plays: {
+        en: 'Compare plays'
+    },
+    others_featured: {
+        en: 'Others featured'
+    },
+    your_scrobbles: {
+        en: 'Your scrobbles'
+    },
+    plays: {
+        en: 'Plays'
+    },
+    try_again: {
+        en: 'Try again'
+    },
+    continue: {
+        en: 'Continue'
+    },
+    back: {
+        en: 'Back'
+    },
+    settings: {
+        en: 'Settings'
+    },
+    done: {
+        en: 'Done'
+    },
+    on_ignore_list: {
+        en: 'Ignored'
+    },
+    friends: {
+        en: 'Friends'
+    },
+    aka: {
+        en: 'aka.'
+    },
+    pronouns: {
+        en: 'pronouns'
+    },
+    account_created: {
+        en: 'created'
+    },
+    account_scrobbling_since_replace: {
+        // copy this from last.fm 1:1 (including the space at the end if there)
+        en: '• scrobbling since '
+    },
+    edit: {
+        en: 'Edit'
+    },
+    edit_profile: {
+        en: 'Edit profile'
+    },
+    scrobbles: {
+        en: 'Scrobbles'
+    },
+    artists: {
+        en: 'Artists'
+    },
+    albums: {
+        en: 'Albums'
+    },
+    tracks: {
+        en: 'Tracks'
+    },
+    appearance: {
+        en: 'Appearance'
+    },
+    themes: {
+        en: 'Themes',
+        light: {
+            en: 'Light'
+        },
+        dark: {
+            en: 'Ash'
+        },
+        darker: {
+            en: 'Dark'
+        },
+        oled: {
+            en: 'Void'
+        }
+    },
+    configure: {
+        en: 'Configure'
+    },
+    events: {
+        en: 'Events'
+    },
+    top_badge: {
+        en: 'Top Badge'
+    },
+    layout: {
+        en: 'Layout'
+    },
+    music: {
+        en: 'Music',
+        de: 'Musik'
+    },
+    profile: {
+        en: 'Profile',
+        de: 'Profil'
+    },
+    seasonal: {
+        en: 'Seasonal',
+        de: 'Saisonal'
+    },
+    text: {
+        en: 'Text'
+    },
+    accessibility: {
+        en: 'Accessibility'
+    },
+    troubleshooting: {
+        en: 'Advanced'
+    },
+    recommendations: {
+        en: 'Recommendations'
+    },
+    releases: {
+        en: 'Releases'
+    },
+    bookmarks: {
+        en: 'Bookmarks'
+    },
+    charts: {
+        en: 'Charts'
+    },
+    welcome_back_user: {
+        en: 'Welcome back {user}'
+    },
+    thank_you_for_sponsoring: {
+        en: 'Thank you for sponsoring!'
+    },
+    configure_bleh: {
+        en: 'bleh Settings'
+    },
+    import: {
+        en: 'Import'
+    },
+    export: {
+        en: 'Export'
+    },
+    reset: {
+        en: 'Reset'
+    },
+    whats_new: {
+        en: 'What\'s New?'
+    },
+    default: {
+        en: 'Default'
+    },
+    avatar: {
+        en: 'Avatar'
+    },
+    customise: {
+        en: 'Customise'
+    },
+    hue: {
+        en: 'Accent colour',
+        de: 'Akzentfarbe'
+    },
+    sat: {
+        en: 'Vibrancy'
+    },
+    lit: {
+        en: 'Lightness',
+        de: 'Helligkeit'
+    },
+    card_background_saturation: {
+        name: {
+            en: 'Card background vibrancy'
+        },
+        body: {
+            en: 'Bring some colour into your world (or reduce it)'
+        }
+    },
+    save: {
+        en: 'Save'
+    },
+    add: {
+        en: 'Add'
+    },
+    remove: {
+        en: 'Remove'
+    },
+    go: {
+        en: 'Go'
+    },
+    skip: {
+        en: 'Skip'
+    },
+    send: {
+        en: 'Send'
+    },
+    send_quickly_with: {
+        en: 'Send quickly with {kbd}'
+    },
+    right_click_for_more_options: {
+        en: 'Right click for more options'
+    },
+    refresh_pending: {
+        name: {
+            en: 'Refresh pending'
+        },
+        body: {
+            en: 'A setting you changed requires a page refresh to take effect.'
+        }
+    },
+    new: {
+        en: 'New'
+    },
+    beta: {
+        en: 'Beta'
+    }
+}
+
+export const trans_legacy = {
     en: {
         pages: {
             bleh_settings: {
@@ -3088,6 +3344,19 @@ moment.updateLocale('de', {
         yy:     '%d Jahre'
     }
 });
+
+export function tl(key) {
+    if (!key) {
+        log('your key is undefined', 'trans');
+        return 'NO_TRANSLATION_FOUND';
+    }
+
+    if (key[lang])
+        return key[lang];
+
+    log(`no translation found for ${JSON.stringify(key)}`, 'trans');
+    return key.en;
+}
 
 export function lookup_lang() {
     const troot = document.querySelector('.masthead-logo a');

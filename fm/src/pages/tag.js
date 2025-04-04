@@ -1,7 +1,7 @@
 import { log } from "../build/log";
 import { page } from "../build/page";
 import { desanitise } from "../build/tools";
-import { lang, trans } from "../build/trans";
+import { lang, trans_legacy, trans, tl } from "../build/trans";
 import { patch_header_title } from "../components/lotus";
 import { checkup_page_structure } from "../components/structure";
 import { register_background, update_page } from "../page";
@@ -53,7 +53,7 @@ export function bleh_tags() {
                 <div class="tag-icon"></div>
             </div>
             <div class="info-side">
-                <div class="sub-text">${trans[lang].tag.name}</div>
+                <div class="sub-text">${trans_legacy[lang].tag.name}</div>
                 <h1>${title}</h1>
             </div>
         `);

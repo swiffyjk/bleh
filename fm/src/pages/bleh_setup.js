@@ -3,7 +3,7 @@ import { settings } from "../build/config";
 import { log } from "../build/log";
 import { auth, page, root } from "../build/page";
 import { stored_season } from "../build/seasonal";
-import { lang, trans } from "../build/trans";
+import { lang, trans_legacy, trans, tl } from "../build/trans";
 import { request_changelog } from "../changelog";
 import { dialog, dialog_rm } from "../components/dialog";
 import { notify } from "../components/notify";
@@ -64,30 +64,30 @@ function bleh_setup_start() {
                 </div>
                 <div class="setup-body">
                     <div class="setup-body-main">
-                        <h1>${trans[lang].setup.start.name.replace('{m}', `<a class="mention" href="${root}user/${auth.name}">@${auth.name}</a>`)}</h1>
-                        <h4>${trans[lang].setup.start.pick_theme}</h4>
+                        <h1>${trans_legacy[lang].setup.start.name.replace('{m}', `<a class="mention" href="${root}user/${auth.name}">@${auth.name}</a>`)}</h1>
+                        <h4>${trans_legacy[lang].setup.start.pick_theme}</h4>
                         <div class="primary-selections">
                             <div class="btn primary-selection" id="toggle-theme-light" data-toggle="theme" data-toggle-value="light" onclick="_update_item('theme', 'light')">
-                                <h5>${trans[lang].settings.themes.light.name}</h5>
+                                <h5>${trans_legacy[lang].settings.themes.light.name}</h5>
                             </div>
                             <div class="btn primary-selection" id="toggle-theme-dark" data-toggle="theme" data-toggle-value="dark" onclick="_update_item('theme', 'dark')">
-                                <h5>${trans[lang].settings.themes.dark.name}</h5>
+                                <h5>${trans_legacy[lang].settings.themes.dark.name}</h5>
                             </div>
                             <div class="btn primary-selection" id="toggle-theme-darker" data-toggle="theme" data-toggle-value="darker" onclick="_update_item('theme', 'darker')">
-                                <h5>${trans[lang].settings.themes.darker.name}</h5>
+                                <h5>${trans_legacy[lang].settings.themes.darker.name}</h5>
                             </div>
                             <div class="btn primary-selection" id="toggle-theme-oled" data-toggle="theme" data-toggle-value="oled" onclick="_update_item('theme', 'oled')">
-                                <h5>${trans[lang].settings.themes.oled.name}</h5>
+                                <h5>${trans_legacy[lang].settings.themes.oled.name}</h5>
                             </div>
                         </div>
-                        <div class="alert alert-info">${trans[lang].setup.start.change_later}</div>
+                        <div class="alert alert-info">${trans_legacy[lang].setup.start.change_later}</div>
                     </div>
                     <div class="modal-footer">
                         <button class="btn skip" onclick="_setup_skip()">
-                            ${trans[lang].settings.skip}
+                            ${trans_legacy[lang].settings.skip}
                         </button>
                         <button class="btn primary continue" onclick="_setup_appearance()">
-                            ${trans[lang].settings.continue}
+                            ${trans_legacy[lang].settings.continue}
                         </button>
                     </div>
                 </div>
@@ -111,12 +111,12 @@ unsafeWindow._setup_accessibility = function() {
                 </div>
                 <div class="setup-body">
                     <div class="setup-body-main">
-                        <h1>${trans[lang].settings.accessibility.name}</h1>
+                        <h1>${trans_legacy[lang].settings.accessibility.name}</h1>
                         <div class="toggle-container" id="container-reduced_motion">
-                            <button class="btn reset" onclick="_reset_item('reduced_motion')">${trans[lang].settings.reset}</button>
+                            <button class="btn reset" onclick="_reset_item('reduced_motion')">${trans_legacy[lang].settings.reset}</button>
                             <div class="heading">
-                                <h5>${trans[lang].settings.accessibility.reduced_motion.name}</h5>
-                                <p>${trans[lang].settings.accessibility.reduced_motion.bio}</p>
+                                <h5>${trans_legacy[lang].settings.accessibility.reduced_motion.name}</h5>
+                                <p>${trans_legacy[lang].settings.accessibility.reduced_motion.bio}</p>
                             </div>
                             <div class="toggle-wrap">
                                 <button class="toggle" id="toggle-reduced_motion" onclick="_update_item('reduced_motion')" aria-checked="false">
@@ -138,15 +138,15 @@ unsafeWindow._setup_accessibility = function() {
                                     </time>
                                 </a>
                                 <div class="shout-body">
-                                    <p>${trans[lang].settings.accessibility.shout_preview}</p>
+                                    <p>${trans_legacy[lang].settings.accessibility.shout_preview}</p>
                                 </div>
                             </div>
                         </div>
                         <div class="toggle-container" id="container-accessible_name_colours">
-                            <button class="btn reset" onclick="_reset_item('accessible_name_colours')">${trans[lang].settings.reset}</button>
+                            <button class="btn reset" onclick="_reset_item('accessible_name_colours')">${trans_legacy[lang].settings.reset}</button>
                             <div class="heading">
-                                <h5>${trans[lang].settings.accessibility.accessible_name_colours.name}</h5>
-                                <p>${trans[lang].settings.accessibility.accessible_name_colours.bio}</p>
+                                <h5>${trans_legacy[lang].settings.accessibility.accessible_name_colours.name}</h5>
+                                <p>${trans_legacy[lang].settings.accessibility.accessible_name_colours.bio}</p>
                             </div>
                             <div class="toggle-wrap">
                                 <button class="toggle" id="toggle-accessible_name_colours" onclick="_update_item('accessible_name_colours')" aria-checked="false">
@@ -155,10 +155,10 @@ unsafeWindow._setup_accessibility = function() {
                             </div>
                         </div>
                         <div class="toggle-container" id="container-underline_links">
-                            <button class="btn reset" onclick="_reset_item('underline_links')">${trans[lang].settings.reset}</button>
+                            <button class="btn reset" onclick="_reset_item('underline_links')">${trans_legacy[lang].settings.reset}</button>
                             <div class="heading">
-                                <h5>${trans[lang].settings.accessibility.underline_links.name}</h5>
-                                <p>${trans[lang].settings.accessibility.underline_links.bio}</p>
+                                <h5>${trans_legacy[lang].settings.accessibility.underline_links.name}</h5>
+                                <p>${trans_legacy[lang].settings.accessibility.underline_links.bio}</p>
                             </div>
                             <div class="toggle-wrap">
                                 <button class="toggle" id="toggle-underline_links" onclick="_update_item('underline_links')" aria-checked="false">
@@ -169,11 +169,11 @@ unsafeWindow._setup_accessibility = function() {
                     </div>
                     <div class="modal-footer">
                         <button class="btn back" disabled>
-                            ${trans[lang].settings.back}
+                            ${trans_legacy[lang].settings.back}
                         </button>
                         <div class="btn-fill"></div>
                         <button class="btn primary continue" onclick="_setup_skip()">
-                            ${trans[lang].settings.finish}
+                            ${trans_legacy[lang].settings.finish}
                         </button>
                     </div>
                 </div>
@@ -200,8 +200,8 @@ unsafeWindow._setup_appearance = function() {
                 </div>
                 <div class="setup-body">
                     <div class="setup-body-main">
-                        <h1>${trans[lang].settings.appearance.name}</h1>
-                        <h4>${trans[lang].settings.customise.colours.name}</h4>
+                        <h1>${trans_legacy[lang].settings.appearance.name}</h1>
+                        <h4>${trans_legacy[lang].settings.customise.colours.name}</h4>
                         <div class="inner-preview pad">
                             <table class="chartlist chartlist--with-image chartlist--with-loved chartlist--with-artist" style="margin: var(--card-gap) 0 !important">
                                 <tbody>
@@ -227,8 +227,8 @@ unsafeWindow._setup_appearance = function() {
                                 </tbody>
                             </table>
                             <div class="btn-row">
-                                <button class="btn">${trans[lang].settings.examples.button}</button>
-                                <button class="btn primary">${trans[lang].settings.examples.button}</button>
+                                <button class="btn">${trans_legacy[lang].settings.examples.button}</button>
+                                <button class="btn primary">${trans_legacy[lang].settings.examples.button}</button>
                                 <div class="chartlist-count-bar">
                                     <a class="chartlist-count-bar-link">
                                         <span class="chartlist-count-bar-slug" style="width: 60%"></span>
@@ -250,17 +250,17 @@ unsafeWindow._setup_appearance = function() {
                             <div id="colour_pink" class="palette options colours"></div>
                         </div>
                     </div>
-                    <div class="alert alert-info">${trans[lang].setup.music.change_later}</div>
+                    <div class="alert alert-info">${trans_legacy[lang].setup.music.change_later}</div>
                     <div class="modal-footer">
                         <button class="btn back" onclick="_setup()">
-                            ${trans[lang].settings.back}
+                            ${trans_legacy[lang].settings.back}
                         </button>
                         <div class="btn-fill"></div>
                         <button class="btn skip" onclick="_setup_skip()">
-                            ${trans[lang].settings.skip}
+                            ${trans_legacy[lang].settings.skip}
                         </button>
                         <button class="btn primary continue" onclick="_setup_corrections()">
-                            ${trans[lang].settings.continue}
+                            ${trans_legacy[lang].settings.continue}
                         </button>
                     </div>
                 </div>
@@ -285,15 +285,15 @@ unsafeWindow._setup_corrections = function() {
                 </div>
                 <div class="setup-body">
                     <div class="setup-body-main">
-                        <h1>${trans[lang].settings.music.name}</h1>
-                        <p>${trans[lang].settings.corrections.bio}</p>
-                        <div class="alert alert-info">${trans[lang].setup.music.change_later}</div>
-                        <h4>${trans[lang].settings.corrections.formatting}</h4>
+                        <h1>${trans_legacy[lang].settings.music.name}</h1>
+                        <p>${trans_legacy[lang].settings.corrections.bio}</p>
+                        <div class="alert alert-info">${trans_legacy[lang].setup.music.change_later}</div>
+                        <h4>${trans_legacy[lang].settings.corrections.formatting}</h4>
                         <div class="toggle-container" id="container-format_guest_features" onclick="_update_item('format_guest_features')">
-                            <button class="btn reset" onclick="_reset_item('format_guest_features')">${trans[lang].settings.reset}</button>
+                            <button class="btn reset" onclick="_reset_item('format_guest_features')">${trans_legacy[lang].settings.reset}</button>
                             <div class="heading">
-                                <h5>${trans[lang].settings.corrections.format_guest_features.name}</h5>
-                                <p>${trans[lang].settings.corrections.format_guest_features.bio}</p>
+                                <h5>${trans_legacy[lang].settings.corrections.format_guest_features.name}</h5>
+                                <p>${trans_legacy[lang].settings.corrections.format_guest_features.bio}</p>
                             </div>
                             <div class="toggle-wrap">
                                 <button class="toggle" id="toggle-format_guest_features" aria-checked="true">
@@ -302,10 +302,10 @@ unsafeWindow._setup_corrections = function() {
                             </div>
                         </div>
                         <div class="toggle-container hide-if-format-guest-disabled" id="container-show_guest_features" onclick="_update_item('show_guest_features')">
-                            <button class="btn reset" onclick="_reset_item('show_guest_features')">${trans[lang].settings.reset}</button>
+                            <button class="btn reset" onclick="_reset_item('show_guest_features')">${trans_legacy[lang].settings.reset}</button>
                             <div class="heading">
-                                <h5>${trans[lang].settings.corrections.show_guest_features.name}</h5>
-                                <p>${trans[lang].settings.corrections.show_guest_features.bio}</p>
+                                <h5>${trans_legacy[lang].settings.corrections.show_guest_features.name}</h5>
+                                <p>${trans_legacy[lang].settings.corrections.show_guest_features.bio}</p>
                             </div>
                             <div class="toggle-wrap">
                                 <button class="toggle" id="toggle-show_guest_features" aria-checked="true">
@@ -314,9 +314,9 @@ unsafeWindow._setup_corrections = function() {
                             </div>
                         </div>
                         <div class="toggle-container" id="container-corrections" onclick="_update_item('corrections')">
-                            <button class="btn reset" onclick="_reset_item('corrections')">${trans[lang].settings.reset}</button>
+                            <button class="btn reset" onclick="_reset_item('corrections')">${trans_legacy[lang].settings.reset}</button>
                             <div class="heading">
-                                <h5>${trans[lang].settings.corrections.toggle.name}</h5>
+                                <h5>${trans_legacy[lang].settings.corrections.toggle.name}</h5>
                             </div>
                             <div class="toggle-wrap">
                                 <button class="toggle" id="toggle-corrections" aria-checked="true">
@@ -324,12 +324,12 @@ unsafeWindow._setup_corrections = function() {
                                 </button>
                             </div>
                         </div>
-                        <h4>${trans[lang].settings.music.header}</h4>
+                        <h4>${trans_legacy[lang].settings.music.header}</h4>
                         <div class="toggle-container" id="container-stacked_chartlist_info" onclick="_update_item('stacked_chartlist_info')">
-                            <button class="btn reset" onclick="_reset_item('stacked_chartlist_info')">${trans[lang].settings.reset}</button>
+                            <button class="btn reset" onclick="_reset_item('stacked_chartlist_info')">${trans_legacy[lang].settings.reset}</button>
                             <div class="heading">
-                                <h5>${trans[lang].settings.corrections.stacked_chartlist_info.name}</h5>
-                                <p>${trans[lang].settings.corrections.stacked_chartlist_info.bio}</p>
+                                <h5>${trans_legacy[lang].settings.corrections.stacked_chartlist_info.name}</h5>
+                                <p>${trans_legacy[lang].settings.corrections.stacked_chartlist_info.bio}</p>
                             </div>
                             <div class="toggle-wrap">
                                 <button class="toggle" id="toggle-stacked_chartlist_info" aria-checked="true">
@@ -338,10 +338,10 @@ unsafeWindow._setup_corrections = function() {
                             </div>
                         </div>
                         <div class="toggle-container hide-if-no-bulk-edit" id="container-show_bulk_edit_album" onclick="_update_item('show_bulk_edit_album')">
-                            <button class="btn reset" onclick="_reset_item('show_bulk_edit_album')">${trans[lang].settings.reset}</button>
+                            <button class="btn reset" onclick="_reset_item('show_bulk_edit_album')">${trans_legacy[lang].settings.reset}</button>
                             <div class="heading">
-                                <h5>${trans[lang].settings.music.show_bulk_edit_album.name}</h5>
-                                <p>${trans[lang].settings.music.show_bulk_edit_album.bio}</p>
+                                <h5>${trans_legacy[lang].settings.music.show_bulk_edit_album.name}</h5>
+                                <p>${trans_legacy[lang].settings.music.show_bulk_edit_album.bio}</p>
                             </div>
                             <div class="toggle-wrap">
                                 <button class="toggle" id="toggle-show_bulk_edit_album" aria-checked="false">
@@ -352,14 +352,14 @@ unsafeWindow._setup_corrections = function() {
                     </div>
                     <div class="modal-footer">
                         <button class="btn back" onclick="_setup_appearance()">
-                            ${trans[lang].settings.back}
+                            ${trans_legacy[lang].settings.back}
                         </button>
                         <div class="btn-fill"></div>
                         <button class="btn skip" onclick="_setup_skip()">
-                            ${trans[lang].settings.skip}
+                            ${trans_legacy[lang].settings.skip}
                         </button>
                         <button class="btn primary continue" onclick="_setup_seasons()">
-                            ${trans[lang].settings.continue}
+                            ${trans_legacy[lang].settings.continue}
                         </button>
                     </div>
                 </div>
@@ -382,22 +382,22 @@ unsafeWindow._setup_seasons = function() {
                 </div>
                 <div class="setup-body">
                     <div class="setup-body-main">
-                        <h1>${trans[lang].settings.customise.seasonal.name}</h1>
+                        <h1>${trans_legacy[lang].settings.customise.seasonal.name}</h1>
                         <div class="seasonal-inner">
                             <div class="current-season-box" data-season="${stored_season.id}">
                                 <div class="current-season-info">
                                     <div class="bleh-icon bleh-seasonal-icon" data-season="${stored_season.id}"></div>
-                                    <h4>${trans[lang].settings.customise.seasonal.listing[stored_season.id]}</h4>
+                                    <h4>${trans_legacy[lang].settings.customise.seasonal.listing[stored_season.id]}</h4>
                                 </div>
                                 <div class="glacier-library-top season-top">
                                     <div class="glacier-library-metadata">
                                         ${(stored_season.id != 'none' && stored_season.start && stored_season.end) ? (`
                                         <div class="glacier-library-metadata-item">
-                                            <div class="sub-text">${trans[lang].settings.customise.seasonal.started}</div>
+                                            <div class="sub-text">${trans_legacy[lang].settings.customise.seasonal.started}</div>
                                             <div class="glacier-library-metadata-item-value" id="current_season_start">${moment(stored_season.start.replace('y0', stored_season.year).replace('{offset}', stored_season.offset)).from(stored_season.now)}</div>
                                         </div>
                                         <div class="glacier-library-metadata-item">
-                                            <div class="sub-text">${trans[lang].settings.customise.seasonal.ends_in}</div>
+                                            <div class="sub-text">${trans_legacy[lang].settings.customise.seasonal.ends_in}</div>
                                             <div class="glacier-library-metadata-item-value" id="current_season">${moment(stored_season.end.replace('y0', stored_season.year).replace('{offset}', stored_season.offset)).to(stored_season.now, true)}</div>
                                         </div>
                                         `) : ''}
@@ -407,28 +407,28 @@ unsafeWindow._setup_seasons = function() {
                         </div>
                         <div class="info-box no-padding">
                             <div class="bleh-icon bleh-info-icon"></div>
-                            ${trans[lang].settings.customise.seasonal.info}
+                            ${trans_legacy[lang].settings.customise.seasonal.info}
                         </div>
-                        <!--<p>${trans[lang].settings.customise.seasonal.bio}</p>
+                        <!--<p>${trans_legacy[lang].settings.customise.seasonal.bio}</p>
                         <div class="inner-preview pad click-thru">
                             <div class="current-season-container">
                                 <div class="current-season" data-season="${stored_season.id}" id="current_season">
                                     ${(stored_season.id != 'none')
-                                    ? trans[lang].settings.customise.seasonal.marker.current.replace('{season}', trans[lang].settings.customise.seasonal.listing[stored_season.id])
-                                    : (settings.seasonal) ? trans[lang].settings.customise.seasonal.marker.none : trans[lang].settings.customise.seasonal.marker.disabled}
+                                    ? trans_legacy[lang].settings.customise.seasonal.marker.current.replace('{season}', trans_legacy[lang].settings.customise.seasonal.listing[stored_season.id])
+                                    : (settings.seasonal) ? trans_legacy[lang].settings.customise.seasonal.marker.none : trans_legacy[lang].settings.customise.seasonal.marker.disabled}
                                 </div>
                                 <div class="current-season-started" id="current_season_start">
                                     ${(stored_season.id != 'none')
-                                    ? trans[lang].settings.customise.seasonal.marker.started
+                                    ? trans_legacy[lang].settings.customise.seasonal.marker.started
                                     : ''}
                                 </div>
                             </div>
                         </div>-->
-                        <h4>${trans[lang].settings.configure}</h4>
+                        <h4>${trans_legacy[lang].settings.configure}</h4>
                         <div class="toggle-container" id="container-seasonal" onclick="_update_item('seasonal')">
-                            <button class="btn reset" onclick="_reset_item('seasonal')">${trans[lang].settings.reset}</button>
+                            <button class="btn reset" onclick="_reset_item('seasonal')">${trans_legacy[lang].settings.reset}</button>
                             <div class="heading">
-                                <h5>${trans[lang].settings.customise.seasonal.option.name}</h5>
+                                <h5>${trans_legacy[lang].settings.customise.seasonal.option.name}</h5>
                             </div>
                             <div class="toggle-wrap">
                                 <button class="toggle" id="toggle-seasonal" aria-checked="true">
@@ -438,10 +438,10 @@ unsafeWindow._setup_seasons = function() {
                         </div>
                         <div class="sep"></div>
                         <div class="toggle-container hide-if-seasonal-disabled" id="container-seasonal_particles" onclick="_update_item('seasonal_particles')">
-                            <button class="btn reset" onclick="_reset_item('seasonal_particles')">${trans[lang].settings.reset}</button>
+                            <button class="btn reset" onclick="_reset_item('seasonal_particles')">${trans_legacy[lang].settings.reset}</button>
                             <div class="heading">
-                                <h5>${trans[lang].settings.customise.seasonal.particles.name}</h5>
-                                <p>${trans[lang].settings.customise.seasonal.particles.bio}</p>
+                                <h5>${trans_legacy[lang].settings.customise.seasonal.particles.name}</h5>
+                                <p>${trans_legacy[lang].settings.customise.seasonal.particles.bio}</p>
                             </div>
                             <div class="toggle-wrap">
                                 <button class="toggle" id="toggle-seasonal_particles" aria-checked="true">
@@ -450,9 +450,9 @@ unsafeWindow._setup_seasons = function() {
                             </div>
                         </div>
                         <div class="toggle-container hide-if-seasonal-disabled" id="container-seasonal_particles_reduced" onclick="_update_item('seasonal_particles_reduced')">
-                            <button class="btn reset" onclick="_reset_item('seasonal_particles_reduced')">${trans[lang].settings.reset}</button>
+                            <button class="btn reset" onclick="_reset_item('seasonal_particles_reduced')">${trans_legacy[lang].settings.reset}</button>
                             <div class="heading">
-                                <h5>${trans[lang].settings.customise.seasonal.show_less_particles.name}</h5>
+                                <h5>${trans_legacy[lang].settings.customise.seasonal.show_less_particles.name}</h5>
                             </div>
                             <div class="toggle-wrap">
                                 <button class="toggle" id="toggle-seasonal_particles_reduced" aria-checked="true">
@@ -461,10 +461,10 @@ unsafeWindow._setup_seasons = function() {
                             </div>
                         </div>
                         <div class="toggle-container hide-if-seasonal-disabled" id="container-seasonal_particles_fps" onclick="_update_item('seasonal_particles_fps')">
-                            <button class="btn reset" onclick="_reset_item('seasonal_particles_fps')">${trans[lang].settings.reset}</button>
+                            <button class="btn reset" onclick="_reset_item('seasonal_particles_fps')">${trans_legacy[lang].settings.reset}</button>
                             <div class="heading">
-                                <h5>${trans[lang].settings.customise.seasonal.fps_particles.name}</h5>
-                                <p>${trans[lang].settings.customise.seasonal.fps_particles.bio}</p>
+                                <h5>${trans_legacy[lang].settings.customise.seasonal.fps_particles.name}</h5>
+                                <p>${trans_legacy[lang].settings.customise.seasonal.fps_particles.bio}</p>
                             </div>
                             <div class="toggle-wrap">
                                 <button class="toggle" id="toggle-seasonal_particles_fps" aria-checked="true">
@@ -474,10 +474,10 @@ unsafeWindow._setup_seasons = function() {
                         </div>
                         <div class="sep"></div>
                         <div class="toggle-container hide-if-seasonal-disabled" id="container-seasonal_overlays" onclick="_update_item('seasonal_overlays')">
-                            <button class="btn reset" onclick="_reset_item('seasonal_overlays')">${trans[lang].settings.reset}</button>
+                            <button class="btn reset" onclick="_reset_item('seasonal_overlays')">${trans_legacy[lang].settings.reset}</button>
                             <div class="heading">
-                                <h5>${trans[lang].settings.customise.seasonal.overlays.name}</h5>
-                                <p>${trans[lang].settings.customise.seasonal.overlays.bio}</p>
+                                <h5>${trans_legacy[lang].settings.customise.seasonal.overlays.name}</h5>
+                                <p>${trans_legacy[lang].settings.customise.seasonal.overlays.bio}</p>
                             </div>
                             <div class="toggle-wrap">
                                 <button class="toggle" id="toggle-seasonal_overlays" aria-checked="true">
@@ -488,14 +488,14 @@ unsafeWindow._setup_seasons = function() {
                     </div>
                     <div class="modal-footer">
                         <button class="btn back" onclick="_setup_corrections()">
-                            ${trans[lang].settings.back}
+                            ${trans_legacy[lang].settings.back}
                         </button>
                         <div class="btn-fill"></div>
                         <button class="btn skip" onclick="_setup_skip()">
-                            ${trans[lang].settings.skip}
+                            ${trans_legacy[lang].settings.skip}
                         </button>
                         <button class="btn primary continue" onclick="_setup_accessibility()">
-                            ${trans[lang].settings.continue}
+                            ${trans_legacy[lang].settings.continue}
                         </button>
                     </div>
                 </div>
@@ -534,7 +534,7 @@ export function notify_if_new_update() {
     // otherwise, it's a usual update
     if (last_version_used != version.build) {
         notify({
-            title: trans[lang].messaging.update.replace('{v}', `${version.build}.${version.sku}`),
+            title: trans_legacy[lang].messaging.update.replace('{v}', `${version.build}.${version.sku}`),
             persist: true,
             icon: 'icon-16-download'
         });

@@ -1,6 +1,6 @@
 import { log } from "../build/log";
 import { dialogs, page } from "../build/page";
-import { lang, trans } from "../build/trans";
+import { lang, trans_legacy, trans, tl } from "../build/trans";
 
 export function load_dialogs() {
     let dialogs = document.createElement('div');
@@ -211,7 +211,7 @@ export function dialog_legacy(id, title, inner_content, dismiss = false, classna
         actions.innerHTML = (`
             <div class="modal-buttons">
                 <button class="modal-action-button modal-dismiss" onclick="_kill_window('${id}')">
-                    ${trans[lang].settings.close}
+                    ${trans_legacy[lang].settings.close}
                 </button>
             </div>
         `);

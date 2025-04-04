@@ -3,7 +3,7 @@ import { settings } from "./build/config";
 import { log } from "./build/log";
 import { auth, auth_link, bleh_url, has_prompted_for_update, last_page_subpage, last_page_type, page, root, setup_url, shout_parse_queue, sponsor_url } from "./build/page";
 import { stored_season } from "./build/seasonal";
-import { lang, lookup_lang, non_override_lang, trans } from "./build/trans";
+import { lang, lookup_lang, non_override_lang, trans_legacy } from "./build/trans";
 import { auto_edit_modal } from "./components/auto_edit";
 import { dialog, load_dialogs } from "./components/dialog";
 import { correct_generic_combo, correct_generic_combo_no_artist, lotus } from "./components/lotus";
@@ -372,7 +372,7 @@ function load_page() {
     if (ff('page_title')) {
         //document.title = `${page.type}_${page.subpage} (${page.name}, ${page.sister}) - bleh ${version.build}.${version.sku}`;
         try {
-            document.title = `${trans[lang].pages[page.type][page.subpage].replace('{name}', page.name).replace('{sister}', page.sister)} | ${version.brand} ${version.build}.${version.sku}`
+            document.title = `${trans_legacy[lang].pages[page.type][page.subpage].replace('{name}', page.name).replace('{sister}', page.sister)} | ${version.brand} ${version.build}.${version.sku}`
         } catch(e) {
             log(`translation key for this page could not be found`, 'page', 'info', page);
         }
@@ -401,14 +401,14 @@ function page_title() {
 
     let name = page.type;
 
-    if (trans[lang].hasOwnProperty(page.type))
-        name = trans[lang][page.type].name;
+    if (trans_legacy[lang].hasOwnProperty(page.type))
+        name = trans_legacy[lang][page.type].name;
     else if (page.type == 'user')
-        name = trans[lang].profile.name;
+        name = trans_legacy[lang].profile.name;
     else if (page.type == 'bleh_settings')
-        name = trans[lang].settings.name;
+        name = trans_legacy[lang].settings.name;
     else if (page.type == 'events' || page.type == 'festival')
-        name = trans[lang].event.name;
+        name = trans_legacy[lang].event.name;
 
     title.setAttribute('data-page-type', page.type);
     title.innerHTML = (`
@@ -508,15 +508,15 @@ export function register_background(url, origin = null) {
             tippy(origin_button, {
                 theme: 'badge',
                 content: (`
-                    <div class="badge-name">${trans[lang].profile.banner.origin.bio[0]}</div>
-                    <div class="badge-reason">${trans[lang].profile.banner.origin.bio[1].replace('{b}', '<code>![banner](url)</code>')}</div>
+                    <div class="badge-name">${trans_legacy[lang].profile.banner.origin.bio[0]}</div>
+                    <div class="badge-reason">${trans_legacy[lang].profile.banner.origin.bio[1].replace('{b}', '<code>![banner](url)</code>')}</div>
                 `),
                 allowHTML: true,
                 placement: 'bottom'
             });
         } else {
             tippy(origin_button, {
-                content: trans[lang].profile.banner.origin[origin],
+                content: trans_legacy[lang].profile.banner.origin[origin],
                 placement: 'bottom'
             });
         }

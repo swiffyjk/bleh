@@ -1,6 +1,6 @@
 import { log } from "../build/log";
 import { sponsor_list } from "../build/sponsor";
-import { lang, trans } from "../build/trans";
+import { lang, trans_legacy, trans, tl } from "../build/trans";
 
 export function load_badges(user, solo = false) {
     if (sponsor_list == null)
@@ -26,7 +26,7 @@ export function load_badges(user, solo = false) {
     // now we run thru to add missing metadata
     badges.forEach((badge) => {
         if (!badge.name)
-            badge.name = trans[lang].badges[badge.type].name;
+            badge.name = trans_legacy[lang].badges[badge.type].name;
 
         if (badge.reason)
             return;

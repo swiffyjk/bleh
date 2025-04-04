@@ -13778,7 +13778,7 @@ pre {
     &[data-swatch-type="seasonal"] {
         --mask: var(--icon-16-season);
     }
-    &[data-swatch-type="custom"] {
+    &[data-swatch-type="customise"] {
         --mask: var(--icon-16-add);
     }
 }

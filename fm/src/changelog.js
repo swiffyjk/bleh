@@ -1,6 +1,6 @@
 import { log } from "./build/log";
 import { root } from "./build/page";
-import { lang, trans } from "./build/trans";
+import { lang, trans_legacy } from "./build/trans";
 import { dialog } from "./components/dialog";
 import { deliver_notif } from "./components/notify";
 import { ff } from "./sku";
@@ -75,13 +75,13 @@ export function request_changelog(open_after = true) {
 function open_changelog(changelog) {
     let window = dialog({
         id: 'changelog',
-        title: trans[lang].changelog.name,
-        subtitle: trans[lang].changelog.subtitle.replace('{u}', `<a class="mention" href="${root}user/cutensilly">@cutensilly</a>`),
+        title: trans_legacy[lang].changelog.name,
+        subtitle: trans_legacy[lang].changelog.subtitle.replace('{u}', `<a class="mention" href="${root}user/cutensilly">@cutensilly</a>`),
         body: (`
             <div class="changelog-list"></div>
             <div class="modal-footer">
                 <a class="btn primary skip" href="#latest_major_release">
-                    ${trans[lang].changelog.view_major}
+                    ${trans_legacy[lang].changelog.view_major}
                 </a>
             </div>
         `),
@@ -109,12 +109,12 @@ function open_changelog(changelog) {
                             ${version}
                         </div>
                         <div class="breadcrumb-name">
-                            ${trans[lang].changelog.type[changelog[version].type]}
+                            ${trans_legacy[lang].changelog.type[changelog[version].type]}
                         </div>
                     </div>
                     ${(index == 0) ? (`
                     <!--<div class="latest-line">
-                        <div>${trans[lang].changelog.latest}</div>
+                        <div>${trans_legacy[lang].changelog.latest}</div>
                     </div>-->
                     `) : ''}
                 </div>

@@ -5,7 +5,7 @@ import { log } from "../build/log"
 import { auth, page, recent_activity_list, root } from "../build/page"
 import { cute, sponsor_list } from "../build/sponsor"
 import { clean_number, sanitise } from "../build/tools"
-import { lang, trans } from "../build/trans"
+import { lang, trans_legacy } from "../build/trans"
 import { load_badges } from "../components/badge"
 import { dialog } from "../components/dialog"
 import { correct_artist, correct_item_by_artist } from "../components/lotus"
@@ -101,7 +101,7 @@ export function bleh_profiles() {
                 ${avatar.innerHTML}
             </div>
             <div class="info-side">
-                <div class="sub-text">${trans[lang].profile.name}</div>
+                <div class="sub-text">${trans_legacy[lang].profile.name}</div>
                 ${(title_wrap != null) ? `<div class="title-container">${title_wrap.innerHTML}</div>` : ''}
                 ${(sub_wrap != null) ? sub_wrap.outerHTML : ''}
             </div>
@@ -110,22 +110,22 @@ export function bleh_profiles() {
             <div class="stat-side glacier-library-top">
                 <div class="glacier-library-metadata">
                     <div class="glacier-library-metadata-item">
-                        <div class="sub-text">${trans[lang].profile.scrobbles}</div>
+                        <div class="sub-text">${trans_legacy[lang].profile.scrobbles}</div>
                         <div class="glacier-library-metadata-item-value" id="scrobbles_tooltip">${scrobbles}</div>
                     </div>
                     <div class="glacier-library-metadata-item">
-                        <div class="sub-text">${trans[lang].profile.artists}</div>
+                        <div class="sub-text">${trans_legacy[lang].profile.artists}</div>
                         <div class="glacier-library-metadata-item-value">${artists}</div>
                     </div>
                     <div class="glacier-library-metadata-item">
-                        <div class="sub-text">${trans[lang].profile.loved}</div>
+                        <div class="sub-text">${trans_legacy[lang].profile.loved}</div>
                         <div class="glacier-library-metadata-item-value">${loved}</div>
                     </div>
                 </div>
             </div>
             `) : ''}
             <div class="expand-side">
-                <button class="header-expand-button icon" onclick="_toggle_profile_header(this)" aria-expanded="${settings.profile_header_expand}">${trans[lang].gallery.open.name}</button>
+                <button class="header-expand-button icon" onclick="_toggle_profile_header(this)" aria-expanded="${settings.profile_header_expand}">${trans_legacy[lang].gallery.open.name}</button>
             </div>
             `) : ''}
         `);
@@ -187,13 +187,13 @@ export function bleh_profiles() {
 
         let beta = document.createElement('span');
         beta.classList.add('new-badge', 'beta-badge');
-        beta.textContent = trans[lang].settings.new;
+        beta.textContent = trans_legacy[lang].settings.new;
 
         tab.appendChild(beta);
     }
 
     let library_tab = page.structure.nav.querySelector('.secondary-nav-item--library a');
-    library_tab.textContent = trans[lang].auth_menu.library;
+    library_tab.textContent = trans_legacy[lang].auth_menu.library;
 
 
     let is_own_profile = (page.name == auth.name);
@@ -222,7 +222,7 @@ export function bleh_profiles() {
             let recent_activity_section = document.createElement('section');
             recent_activity_section.classList.add('recent-activity-section');
             recent_activity_section.innerHTML = (`
-                <h2>${trans[lang].activities.name}</h2>
+                <h2>${trans_legacy[lang].activities.name}</h2>
             `);
 
             load_activities();
@@ -278,7 +278,7 @@ export function bleh_profiles() {
                 });
 
                 activity_item.innerHTML = (`
-                    <div class="type">${trans[lang].activities[activity.type]}<div class="date">${moment(activity.date).fromNow(true)}</div></div>
+                    <div class="type">${trans_legacy[lang].activities[activity.type]}<div class="date">${moment(activity.date).fromNow(true)}</div></div>
                     <div class="title">${involved_text}</div>
                 `);
 
@@ -329,7 +329,7 @@ export function bleh_profiles() {
             let value_panel = document.createElement('section');
             value_panel.classList.add('value-panel');
             value_panel.innerHTML = (`
-                <h2 class="text-18">${(selected_tab != null) ? selected_tab.textContent : trans[lang].profile.events}</h2>
+                <h2 class="text-18">${(selected_tab != null) ? selected_tab.textContent : trans_legacy[lang].profile.events}</h2>
             `);
 
             let values = page.structure.main.querySelectorAll('.metadata-display');
@@ -346,7 +346,7 @@ export function bleh_profiles() {
                     name: page.name,
                     text: value.textContent,
                     type: type,
-                    tooltip:  trans[lang].event[type].replace('{c}', value.textContent)
+                    tooltip:  trans_legacy[lang].event[type].replace('{c}', value.textContent)
                 });
             });
 
@@ -357,7 +357,7 @@ export function bleh_profiles() {
             if (total_value != null) {
                 let total_text = document.createElement('h2');
                 total_text.classList.add('text-18');
-                total_text.textContent = trans[lang].event.all_time;
+                total_text.textContent = trans_legacy[lang].event.all_time;
 
                 value_panel.appendChild(total_text);
 
@@ -368,7 +368,7 @@ export function bleh_profiles() {
                     name: page.name,
                     text: total_value.textContent,
                     type: 'total',
-                    tooltip:  trans[lang].event.total.replace('{c}', total_value.textContent)
+                    tooltip:  trans_legacy[lang].event.total.replace('{c}', total_value.textContent)
                 });
 
                 value_panel.appendChild(total_header);
@@ -443,7 +443,7 @@ export function bleh_profiles() {
                         content: button.textContent
                     });
 
-                    button.textContent = trans[lang].music.obsession;
+                    button.textContent = trans_legacy[lang].music.obsession;
                 }
 
                 button.classList.add('btn', 'view-item', 'interact-item', 'obsession-top-item');
@@ -509,7 +509,7 @@ export function bleh_profiles() {
 
                 if (obsession_is_first) {
                     tippy(grid_item, {
-                        content: trans[lang].music.obsession_first
+                        content: trans_legacy[lang].music.obsession_first
                     });
                 }
 
@@ -563,7 +563,7 @@ export function bleh_profiles() {
                 placement: 'bottom',
                 content: (`
                     <div class="badge-name">${badge.textContent}</div>
-                    <div class="badge-reason">${trans[lang].badges[badge.classList[1]].reason}</div>
+                    <div class="badge-reason">${trans_legacy[lang].badges[badge.classList[1]].reason}</div>
                 `),
                 allowHTML: true
             });
@@ -588,7 +588,7 @@ export function bleh_profiles() {
                     placement: 'bottom',
                     content: (`
                         <div class="badge-name">${this_badge.name}</div>
-                        <div class="badge-reason">${trans[lang].badges[this_badge.reason].reason}</div>
+                        <div class="badge-reason">${trans_legacy[lang].badges[this_badge.reason].reason}</div>
                     `),
                     allowHTML: true
                 });
@@ -611,7 +611,7 @@ export function bleh_profiles() {
 
     let display_name = profile_sub_text.querySelector('.header-title-display-name');
     let scrobble_since = profile_sub_text.querySelector('.header-scrobble-since');
-    scrobble_since.textContent = scrobble_since.textContent.replace(trans[lang].profile.created.replace,'');
+    scrobble_since.textContent = scrobble_since.textContent.replace(trans_legacy[lang].profile.created.replace,'');
 
     /*tippy(display_name, {
         content: display_name.textContent
@@ -622,12 +622,12 @@ export function bleh_profiles() {
 
     let display_name_pre = document.createElement('span');
     display_name_pre.classList.add('header-title-secondary--pre');
-    display_name_pre.textContent = pronouns ? trans[lang].profile.display_name.pronouns : trans[lang].profile.display_name.aka;
+    display_name_pre.textContent = pronouns ? trans_legacy[lang].profile.display_name.pronouns : trans_legacy[lang].profile.display_name.aka;
     profile_sub_text.insertBefore(display_name_pre, display_name);
 
     let scrobble_since_pre = document.createElement('span');
     scrobble_since_pre.classList.add('header-title-secondary--pre');
-    scrobble_since_pre.textContent = trans[lang].profile.created.name;
+    scrobble_since_pre.textContent = trans_legacy[lang].profile.created.name;
     profile_sub_text.insertBefore(scrobble_since_pre, scrobble_since);
 
     let about_me_sidebar = document.body.querySelector('.about-me-sidebar');
@@ -658,11 +658,11 @@ export function bleh_profiles() {
             add_note_button.classList.add('btn', 'icon');
             add_note_button.setAttribute('data-action-type', 'note');
             add_note_button.setAttribute('id', 'bleh--add-note');
-            add_note_button.textContent = trans[lang].settings.profiles.notes.edit_user.replace('{u}', page.name);
+            add_note_button.textContent = trans_legacy[lang].settings.profiles.notes.edit_user.replace('{u}', page.name);
             add_note_button.setAttribute('onclick',`_add_profile_note('${page.name}',${profile_has_note})`);
 
             tippy(add_note_button, {
-                content: trans[lang].settings.profiles.notes.edit_user.replace('{u}', page.name)
+                content: trans_legacy[lang].settings.profiles.notes.edit_user.replace('{u}', page.name)
             });
 
             buttons.appendChild(add_note_button);
@@ -673,21 +673,21 @@ export function bleh_profiles() {
         let about_more = document.createElement('button');
         about_more.classList.add('btn', 'icon');
         about_more.setAttribute('data-action-type', 'configure');
-        about_more.textContent = trans[lang].settings.configure;
+        about_more.textContent = trans_legacy[lang].settings.configure;
 
         tippy(about_more, {
-            content: trans[lang].settings.configure
+            content: trans_legacy[lang].settings.configure
         });
 
         tippy(about_more, {
             theme: 'window',
             content: (`
                 <div class="dialog-settings">
-                    <h4>${trans[lang].settings.text.markdown.name}</h4>
+                    <h4>${trans_legacy[lang].settings.text.markdown.name}</h4>
                     <div class="toggle-container" id="container-bio_markdown" onclick="_update_item('bio_markdown')">
-                        <button class="btn reset" onclick="_reset_item('bio_markdown')">${trans[lang].settings.reset}</button>
+                        <button class="btn reset" onclick="_reset_item('bio_markdown')">${trans_legacy[lang].settings.reset}</button>
                         <div class="heading">
-                            <h5>${trans[lang].settings.text.markdown.profile}</h5>
+                            <h5>${trans_legacy[lang].settings.text.markdown.profile}</h5>
                         </div>
                         <div class="toggle-wrap">
                             <button class="toggle" id="toggle-bio_markdown" aria-checked="false">
@@ -731,24 +731,24 @@ function create_profile_note_panel(username, has_note) {
 
     if (has_note) {
         note_panel.innerHTML = (`
-        <h2>${trans[lang].settings.profiles.notes.header}</h2>
+        <h2>${trans_legacy[lang].settings.profiles.notes.header}</h2>
         <div class="content-form">
-            <textarea id="bleh--profile-note" placeholder="${trans[lang].settings.profiles.notes.placeholder}">${JSON.parse(localStorage.getItem('bleh_profile_notes'))[username]}</textarea>
+            <textarea id="bleh--profile-note" placeholder="${trans_legacy[lang].settings.profiles.notes.placeholder}">${JSON.parse(localStorage.getItem('bleh_profile_notes'))[username]}</textarea>
         </div>
         <div class="actions">
-            <button class="btn" onclick="_clear_profile_note('${username}')">${trans[lang].settings.clear}</button>
-            <button class="btn primary" onclick="_save_profile_note('${username}')">${trans[lang].settings.save}</button>
+            <button class="btn" onclick="_clear_profile_note('${username}')">${trans_legacy[lang].settings.clear}</button>
+            <button class="btn primary" onclick="_save_profile_note('${username}')">${trans_legacy[lang].settings.save}</button>
         </div>
         `);
     } else {
         note_panel.innerHTML = (`
         <h2>Your notes</h2>
         <div class="content-form">
-            <textarea id="bleh--profile-note" placeholder="${trans[lang].settings.profiles.notes.placeholder}"></textarea>
+            <textarea id="bleh--profile-note" placeholder="${trans_legacy[lang].settings.profiles.notes.placeholder}"></textarea>
         </div>
         <div class="actions">
-            <button class="btn" onclick="_clear_profile_note('${username}')">${trans[lang].settings.clear}</button>
-            <button class="btn primary" onclick="_save_profile_note('${username}')">${trans[lang].settings.save}</button>
+            <button class="btn" onclick="_clear_profile_note('${username}')">${trans_legacy[lang].settings.clear}</button>
+            <button class="btn primary" onclick="_save_profile_note('${username}')">${trans_legacy[lang].settings.save}</button>
         </div>
         `);
     }
@@ -793,7 +793,7 @@ function patch_profile_following() {
         return;
 
     following_tab.setAttribute('data-kate-processed', 'true');
-    following_tab.querySelector('a').textContent = trans[lang].profile.friends.name;
+    following_tab.querySelector('a').textContent = trans_legacy[lang].profile.friends.name;
 
 
     // the rest happens on a following/followers page
@@ -814,7 +814,7 @@ function patch_profile_following() {
     else
         tab = neighbours_tab;
 
-    tab.querySelector('a').textContent = trans[lang].profile.friends.name;
+    tab.querySelector('a').textContent = trans_legacy[lang].profile.friends.name;
 
 
     // create nav
@@ -855,10 +855,10 @@ function patch_profile_following() {
     view_buttons.innerHTML = (`
         <div class="view-buttons">
             <button class="btn view-item" id="toggle-list_view-1" data-toggle="list_view" data-toggle-value="1" onclick="_update_item('list_view', 1)">
-                ${trans[lang].glacier.view.grid}
+                ${trans_legacy[lang].glacier.view.grid}
             </button>
             <button class="btn view-item" id="toggle-list_view-0" data-toggle="list_view" data-toggle-value="0" onclick="_update_item('list_view', 0)">
-                ${trans[lang].glacier.view.list}
+                ${trans_legacy[lang].glacier.view.list}
             </button>
         </div>
     `);
@@ -948,7 +948,7 @@ function bleh_featured_profile_track(object) {
     if (form) {
         let button = form.querySelector('button');
         button.classList = 'featured-item-manage';
-        button.textContent = trans[lang].settings.remove;
+        button.textContent = trans_legacy[lang].settings.remove;
     }
 
     let panel = document.createElement('section');
@@ -995,11 +995,11 @@ function profile_recents() {
     // refresh
     let refresh_btn = document.createElement('button');
     refresh_btn.classList.add('btn', 'view-item', 'interact-item', 'refresh-tracklist-btn');
-    refresh_btn.textContent = trans[lang].music.refresh;
+    refresh_btn.textContent = trans_legacy[lang].music.refresh;
     refresh_btn.setAttribute('onclick', '_refresh_tracks(this)');
 
     tippy(refresh_btn, {
-        content: trans[lang].music.refresh_tracks
+        content: trans_legacy[lang].music.refresh_tracks
     });
 
     view_buttons.appendChild(refresh_btn);
@@ -1017,7 +1017,7 @@ function profile_recents() {
 
     let new_button = document.createElement('button');
     new_button.classList.add('panel-settings-button', 'btn', 'view-item', 'interact-item');
-    new_button.textContent = trans[lang].profile.settings;
+    new_button.textContent = trans_legacy[lang].profile.settings;
 
     form.classList = '';
 
@@ -1037,7 +1037,7 @@ function profile_recents() {
                 <input type="hidden" name="csrfmiddlewaretoken" value="${page.token}">
                 <div class="select-container">
                     <div class="heading">
-                        <h5>${trans[lang].settings.inbuilt.charts.recent.count.name}</h5>
+                        <h5>${trans_legacy[lang].settings.inbuilt.charts.recent.count.name}</h5>
                     </div>
                     <div class="select-wrap custom-selector" id="id_chart_length_recent_tracks_select">
                         ${original_chart_settings.count}
@@ -1046,7 +1046,7 @@ function profile_recents() {
                 <div class="toggle-container" id="container-recent_artwork" onclick="_update_inbuilt_item('recent_artwork')">
                     <button class="btn reset" onclick="_reset_inbuilt_item('recent_artwork')">Reset to default</button>
                     <div class="heading">
-                        <h5>${trans[lang].settings.inbuilt.charts.recent.artwork.name}</h5>
+                        <h5>${trans_legacy[lang].settings.inbuilt.charts.recent.artwork.name}</h5>
                     </div>
                     <div class="toggle-wrap">
                         <input class="companion-checkbox" type="checkbox" name="show_recent_tracks_artwork" id="inbuilt-companion-checkbox-recent_artwork">
@@ -1058,8 +1058,8 @@ function profile_recents() {
                 <div class="toggle-container" id="container-recent_realtime" onclick="_update_inbuilt_item('recent_realtime')">
                     <button class="btn reset" onclick="_reset_inbuilt_item('recent_realtime')">Reset to default</button>
                     <div class="heading">
-                        <h5>${trans[lang].settings.inbuilt.charts.recent.realtime.name}</h5>
-                        <p>${trans[lang].settings.inbuilt.charts.recent.realtime.bio}</p>
+                        <h5>${trans_legacy[lang].settings.inbuilt.charts.recent.realtime.name}</h5>
+                        <p>${trans_legacy[lang].settings.inbuilt.charts.recent.realtime.bio}</p>
                     </div>
                     <div class="toggle-wrap">
                         <input class="companion-checkbox" type="checkbox" name="auto_refresh_recent_tracks" id="inbuilt-companion-checkbox-recent_realtime">
@@ -1070,10 +1070,10 @@ function profile_recents() {
                 </div>
                 <div class="sep"></div>
                 <div class="toggle-container" id="container-format_guest_features" onclick="_update_item('format_guest_features')">
-                    <button class="btn reset" onclick="_reset_item('format_guest_features')">${trans[lang].settings.reset}</button>
+                    <button class="btn reset" onclick="_reset_item('format_guest_features')">${trans_legacy[lang].settings.reset}</button>
                     <div class="heading">
-                        <h5>${trans[lang].settings.corrections.format_guest_features.name}</h5>
-                        <p>${trans[lang].settings.corrections.format_guest_features.bio}</p>
+                        <h5>${trans_legacy[lang].settings.corrections.format_guest_features.name}</h5>
+                        <p>${trans_legacy[lang].settings.corrections.format_guest_features.bio}</p>
                     </div>
                     <div class="toggle-wrap">
                         <button class="toggle" id="toggle-format_guest_features" aria-checked="true" type="button">
@@ -1082,10 +1082,10 @@ function profile_recents() {
                     </div>
                 </div>
                 <div class="toggle-container hide-if-format-guest-disabled" id="container-show_guest_features" onclick="_update_item('show_guest_features')">
-                    <button class="btn reset" onclick="_reset_item('show_guest_features')">${trans[lang].settings.reset}</button>
+                    <button class="btn reset" onclick="_reset_item('show_guest_features')">${trans_legacy[lang].settings.reset}</button>
                     <div class="heading">
-                        <h5>${trans[lang].settings.corrections.show_guest_features.name}</h5>
-                        <p>${trans[lang].settings.corrections.show_guest_features.bio}</p>
+                        <h5>${trans_legacy[lang].settings.corrections.show_guest_features.name}</h5>
+                        <p>${trans_legacy[lang].settings.corrections.show_guest_features.bio}</p>
                     </div>
                     <div class="toggle-wrap">
                         <button class="toggle" id="toggle-show_guest_features" aria-checked="true" type="button">
@@ -1094,10 +1094,10 @@ function profile_recents() {
                     </div>
                 </div>
                 <div class="toggle-container" id="container-stacked_chartlist_info" onclick="_update_item('stacked_chartlist_info')">
-                    <button class="btn reset" onclick="_reset_item('stacked_chartlist_info')">${trans[lang].settings.reset}</button>
+                    <button class="btn reset" onclick="_reset_item('stacked_chartlist_info')">${trans_legacy[lang].settings.reset}</button>
                     <div class="heading">
-                        <h5>${trans[lang].settings.corrections.stacked_chartlist_info.name}</h5>
-                        <p>${trans[lang].settings.corrections.stacked_chartlist_info.bio}</p>
+                        <h5>${trans_legacy[lang].settings.corrections.stacked_chartlist_info.name}</h5>
+                        <p>${trans_legacy[lang].settings.corrections.stacked_chartlist_info.bio}</p>
                     </div>
                     <div class="toggle-wrap">
                         <button class="toggle" id="toggle-stacked_chartlist_info" aria-checked="true" type="button">
@@ -1106,10 +1106,10 @@ function profile_recents() {
                     </div>
                 </div>
                 <div class="toggle-container" id="container-colourful_tracks" onclick="_update_item('colourful_tracks')">
-                    <button class="btn reset" onclick="_reset_item('colourful_tracks')">${trans[lang].settings.reset}</button>
+                    <button class="btn reset" onclick="_reset_item('colourful_tracks')">${trans_legacy[lang].settings.reset}</button>
                     <div class="heading">
-                        <h5>${trans[lang].settings.customise.colourful_tracks.name}</h5>
-                        <p>${trans[lang].settings.customise.colourful_tracks.bio}</p>
+                        <h5>${trans_legacy[lang].settings.customise.colourful_tracks.name}</h5>
+                        <p>${trans_legacy[lang].settings.customise.colourful_tracks.bio}</p>
                     </div>
                     <div class="toggle-wrap">
                         <button class="toggle" id="toggle-colourful_tracks" aria-checked="true">
@@ -1119,10 +1119,10 @@ function profile_recents() {
                 </div>
                 <div class="settings-footer">
                     <button type="submit" class="btn-primary save">
-                        ${trans[lang].settings.save}
+                        ${trans_legacy[lang].settings.save}
                     </button>
                     <a class="btn icon settings not-a-view-button" href="${root}bleh">
-                        ${trans[lang].settings.configure}
+                        ${trans_legacy[lang].settings.configure}
                     </a>
                 </div>
             `);
@@ -1195,7 +1195,7 @@ function profile_artists() {
 
     let new_button = document.createElement('button');
     new_button.classList.add('panel-settings-button', 'btn', 'view-item', 'interact-item');
-    new_button.textContent = trans[lang].profile.settings;
+    new_button.textContent = trans_legacy[lang].profile.settings;
 
     form.classList = '';
 
@@ -1215,7 +1215,7 @@ function profile_artists() {
                 <input type="hidden" name="csrfmiddlewaretoken" value="${page.token}">
                 <div class="select-container">
                     <div class="heading">
-                        <h5>${trans[lang].settings.inbuilt.charts.artists.timeframe.name}</h5>
+                        <h5>${trans_legacy[lang].settings.inbuilt.charts.artists.timeframe.name}</h5>
                     </div>
                     <div class="select-wrap custom-selector" id="id_chart_range_top_artists_select">
                         ${original_chart_settings.timeframe}
@@ -1223,7 +1223,7 @@ function profile_artists() {
                 </div>
                 <div class="select-container">
                     <div class="heading">
-                        <h5>${trans[lang].settings.inbuilt.charts.artists.style.name}</h5>
+                        <h5>${trans_legacy[lang].settings.inbuilt.charts.artists.style.name}</h5>
                     </div>
                     <div class="select-wrap custom-selector" id="id_chart_style_top_artists_select">
                         ${original_chart_settings.style}
@@ -1231,7 +1231,7 @@ function profile_artists() {
                 </div>
                 <div class="select-container hide-if-artist-list">
                     <div class="heading">
-                        <h5>${trans[lang].settings.inbuilt.charts.artists.length.name}</h5>
+                        <h5>${trans_legacy[lang].settings.inbuilt.charts.artists.length.name}</h5>
                     </div>
                     <div class="select-wrap custom-selector" id="id_artists_image_grid_length_select">
                         ${original_chart_settings.length}
@@ -1239,7 +1239,7 @@ function profile_artists() {
                 </div>
                 <div class="select-container hide-if-artist-grid">
                     <div class="heading">
-                        <h5>${trans[lang].settings.inbuilt.charts.artists.length.name}</h5>
+                        <h5>${trans_legacy[lang].settings.inbuilt.charts.artists.length.name}</h5>
                     </div>
                     <div class="select-wrap custom-selector" id="id_artists_chartlist_length_select">
                         ${original_chart_settings.length_list}
@@ -1247,7 +1247,7 @@ function profile_artists() {
                 </div>
                 <div class="settings-footer">
                     <button type="submit" class="btn-primary save">
-                        ${trans[lang].settings.save}
+                        ${trans_legacy[lang].settings.save}
                     </button>
                 </div>
             `);
@@ -1318,7 +1318,7 @@ function profile_albums() {
 
     let new_button = document.createElement('button');
     new_button.classList.add('panel-settings-button', 'btn', 'view-item', 'interact-item');
-    new_button.textContent = trans[lang].profile.settings;
+    new_button.textContent = trans_legacy[lang].profile.settings;
 
     form.classList = '';
 
@@ -1338,7 +1338,7 @@ function profile_albums() {
                 <input type="hidden" name="csrfmiddlewaretoken" value="${page.token}">
                 <div class="select-container">
                     <div class="heading">
-                        <h5>${trans[lang].settings.inbuilt.charts.albums.timeframe.name}</h5>
+                        <h5>${trans_legacy[lang].settings.inbuilt.charts.albums.timeframe.name}</h5>
                     </div>
                     <div class="select-wrap custom-selector" id="id_chart_range_top_albums_select">
                         ${original_chart_settings.timeframe}
@@ -1346,7 +1346,7 @@ function profile_albums() {
                 </div>
                 <div class="select-container">
                     <div class="heading">
-                        <h5>${trans[lang].settings.inbuilt.charts.albums.style.name}</h5>
+                        <h5>${trans_legacy[lang].settings.inbuilt.charts.albums.style.name}</h5>
                     </div>
                     <div class="select-wrap custom-selector" id="id_chart_style_top_albums_select">
                         ${original_chart_settings.style}
@@ -1354,7 +1354,7 @@ function profile_albums() {
                 </div>
                 <div class="select-container hide-if-album-list">
                     <div class="heading">
-                        <h5>${trans[lang].settings.inbuilt.charts.albums.length.name}</h5>
+                        <h5>${trans_legacy[lang].settings.inbuilt.charts.albums.length.name}</h5>
                     </div>
                     <div class="select-wrap custom-selector" id="id_albums_image_grid_length_select">
                         ${original_chart_settings.length}
@@ -1362,7 +1362,7 @@ function profile_albums() {
                 </div>
                 <div class="select-container hide-if-album-grid">
                     <div class="heading">
-                        <h5>${trans[lang].settings.inbuilt.charts.albums.length.name}</h5>
+                        <h5>${trans_legacy[lang].settings.inbuilt.charts.albums.length.name}</h5>
                     </div>
                     <div class="select-wrap custom-selector" id="id_albums_chartlist_length_select">
                         ${original_chart_settings.length_list}
@@ -1370,7 +1370,7 @@ function profile_albums() {
                 </div>
                 <div class="settings-footer">
                     <button type="submit" class="btn-primary save">
-                        ${trans[lang].settings.save}
+                        ${trans_legacy[lang].settings.save}
                     </button>
                 </div>
             `);
@@ -1441,7 +1441,7 @@ function profile_tracks() {
 
     let new_button = document.createElement('button');
     new_button.classList.add('panel-settings-button', 'btn', 'view-item', 'interact-item');
-    new_button.textContent = trans[lang].profile.settings;
+    new_button.textContent = trans_legacy[lang].profile.settings;
 
     form.classList = '';
 
@@ -1461,7 +1461,7 @@ function profile_tracks() {
                 <input type="hidden" name="csrfmiddlewaretoken" value="${page.token}">
                 <div class="select-container">
                     <div class="heading">
-                        <h5>${trans[lang].settings.inbuilt.charts.tracks.timeframe.name}</h5>
+                        <h5>${trans_legacy[lang].settings.inbuilt.charts.tracks.timeframe.name}</h5>
                     </div>
                     <div class="select-wrap custom-selector" id="id_chart_range_top_tracks_select">
                         ${original_chart_settings.timeframe}
@@ -1469,7 +1469,7 @@ function profile_tracks() {
                 </div>
                 <div class="select-container">
                     <div class="heading">
-                        <h5>${trans[lang].settings.inbuilt.charts.tracks.count.name}</h5>
+                        <h5>${trans_legacy[lang].settings.inbuilt.charts.tracks.count.name}</h5>
                     </div>
                     <div class="select-wrap custom-selector" id="id_chart_length_top_tracks_select">
                         ${original_chart_settings.count}
@@ -1477,10 +1477,10 @@ function profile_tracks() {
                 </div>
                 <div class="sep"></div>
                 <div class="toggle-container" id="container-format_guest_features" onclick="_update_item('format_guest_features')">
-                    <button class="btn reset" onclick="_reset_item('format_guest_features')">${trans[lang].settings.reset}</button>
+                    <button class="btn reset" onclick="_reset_item('format_guest_features')">${trans_legacy[lang].settings.reset}</button>
                     <div class="heading">
-                        <h5>${trans[lang].settings.corrections.format_guest_features.name}</h5>
-                        <p>${trans[lang].settings.corrections.format_guest_features.bio}</p>
+                        <h5>${trans_legacy[lang].settings.corrections.format_guest_features.name}</h5>
+                        <p>${trans_legacy[lang].settings.corrections.format_guest_features.bio}</p>
                     </div>
                     <div class="toggle-wrap">
                         <button class="toggle" id="toggle-format_guest_features" aria-checked="true" type="button">
@@ -1489,10 +1489,10 @@ function profile_tracks() {
                     </div>
                 </div>
                 <div class="toggle-container hide-if-format-guest-disabled" id="container-show_guest_features" onclick="_update_item('show_guest_features')">
-                    <button class="btn reset" onclick="_reset_item('show_guest_features')">${trans[lang].settings.reset}</button>
+                    <button class="btn reset" onclick="_reset_item('show_guest_features')">${trans_legacy[lang].settings.reset}</button>
                     <div class="heading">
-                        <h5>${trans[lang].settings.corrections.show_guest_features.name}</h5>
-                        <p>${trans[lang].settings.corrections.show_guest_features.bio}</p>
+                        <h5>${trans_legacy[lang].settings.corrections.show_guest_features.name}</h5>
+                        <p>${trans_legacy[lang].settings.corrections.show_guest_features.bio}</p>
                     </div>
                     <div class="toggle-wrap">
                         <button class="toggle" id="toggle-show_guest_features" aria-checked="true" type="button">
@@ -1502,10 +1502,10 @@ function profile_tracks() {
                 </div>
                 <div class="settings-footer">
                     <button type="submit" class="btn-primary save">
-                        ${trans[lang].settings.save}
+                        ${trans_legacy[lang].settings.save}
                     </button>
                     <a class="btn icon settings not-a-view-button" href="${root}bleh">
-                        ${trans[lang].settings.configure}
+                        ${trans_legacy[lang].settings.configure}
                     </a>
                 </div>
             `);

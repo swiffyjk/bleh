@@ -1,7 +1,7 @@
 import { settings } from "./build/config";
 import { auth, page, root } from "./build/page";
 import { stored_season } from "./build/seasonal";
-import { lang, non_override_lang, trans } from "./build/trans";
+import { lang, non_override_lang, trans_legacy } from "./build/trans";
 import { load_badges } from "./components/badge";
 import { version } from "./main";
 import { show_theme_change_in_menu } from "./pages/bleh_config";
@@ -114,11 +114,11 @@ export function append_nav() {
     changelog_container.classList.add('masthead-nav-item');
     changelog_container.innerHTML = (`
         <a class="masthead-nav-control" onclick="_query_changelog()" data-bleh--label="changelog">
-            ${trans[lang].changelog.name}
+            ${trans_legacy[lang].changelog.name}
         </a>
     `);
     tippy(changelog_container, {
-        content: trans[lang].changelog.name
+        content: trans_legacy[lang].changelog.name
     });
     inbox_container.after(changelog_container);
 
@@ -127,19 +127,19 @@ export function append_nav() {
     bleh_container.classList.add('masthead-nav-item');
     bleh_container.innerHTML = (`
         <a class="masthead-nav-control" href="${root}bleh${(stored_season.id != 'none') ? '?tab=seasonal' : ''}" data-bleh--label="bleh" data-season="${stored_season.id}" data-season-active="${(stored_season.id != 'none') ? 'true' : 'false'}">
-            ${(stored_season.id == 'none') ? trans[lang].auth_menu.configure_bleh : moment(stored_season.end.replace('y0', stored_season.year).replace('{offset}', stored_season.offset)).to(stored_season.now, true)}
+            ${(stored_season.id == 'none') ? trans_legacy[lang].auth_menu.configure_bleh : moment(stored_season.end.replace('y0', stored_season.year).replace('{offset}', stored_season.offset)).to(stored_season.now, true)}
         </a>
     `);
     if (stored_season.id == 'none') {
         tippy(bleh_container, {
-            content: trans[lang].auth_menu.configure_bleh
+            content: trans_legacy[lang].auth_menu.configure_bleh
         });
     } else {
         page.header.season_tooltip = tippy(bleh_container, {
             theme: 'seasonal-swatch',
             content: (`
-                <span class="season-colour-name">${trans[lang].settings.customise.seasonal.listing[stored_season.id]}</span>
-                <span class="season-exclusive">${trans[lang].auth_menu.seasonal_notice}</span>
+                <span class="season-colour-name">${trans_legacy[lang].settings.customise.seasonal.listing[stored_season.id]}</span>
+                <span class="season-exclusive">${trans_legacy[lang].auth_menu.seasonal_notice}</span>
             `),
             allowHTML: true
         });
@@ -164,44 +164,44 @@ export function append_nav() {
             </a>
             <div class="sep"></div>
             <a class="dropdown-menu-clickable-item" data-menu-item="library" href="${root}user/${auth.name}/library">
-                ${trans[lang].auth_menu.library}
+                ${trans_legacy[lang].auth_menu.library}
             </a>
             <a class="dropdown-menu-clickable-item" data-menu-item="shouts" href="${root}user/${auth.name}/shoutbox">
-                ${trans[lang].auth_menu.shouts}
+                ${trans_legacy[lang].auth_menu.shouts}
             </a>
             ${(settings.auth_menu_obsessions) ? (`
             <a class="dropdown-menu-clickable-item" data-menu-item="obsessions" href="${root}user/${auth.name}/obsessions">
-                ${trans[lang].auth_menu.obsessions}
+                ${trans_legacy[lang].auth_menu.obsessions}
             </a>
             `) : ''}
             <button class="dropdown-menu-clickable-item" data-menu-item="themes" onclick="toggle_theme()">
                 <span class="auth-dropdown-item-row">
-                    <span class="auth-dropdown-item-left">${trans[lang].settings.themes.name}</span>
-                    <span class="auth-dropdown-item-right" id="theme-value">${trans[lang].settings.themes[settings.theme].name}</span>
+                    <span class="auth-dropdown-item-left">${trans_legacy[lang].settings.themes.name}</span>
+                    <span class="auth-dropdown-item-right" id="theme-value">${trans_legacy[lang].settings.themes[settings.theme].name}</span>
                 </span>
             </button>
             ${(ff('dev')) ? (`
             <button class="dropdown-menu-clickable-item" data-menu-item="developer" onclick="_update_flag_toggle('dev', this)">
-                ${trans[lang].auth_menu.dev}
+                ${trans_legacy[lang].auth_menu.dev}
             </button>
             `) : ''}
             <a class="dropdown-menu-clickable-item" data-menu-item="bleh" href="${root}bleh">
-                ${trans[lang].auth_menu.configure_bleh}
+                ${trans_legacy[lang].auth_menu.configure_bleh}
             </a>
             <div class="sep"></div>
             <a class="dropdown-menu-clickable-item" data-menu-item="labs" href="${root}labs">
-                ${trans[lang].auth_menu.labs}
+                ${trans_legacy[lang].auth_menu.labs}
             </a>
             <a class="dropdown-menu-clickable-item" data-menu-item="bookmarks" href="${root}music/+bookmarks">
-                ${trans[lang].auth_menu.bookmarks}
+                ${trans_legacy[lang].auth_menu.bookmarks}
             </a>
             <a class="dropdown-menu-clickable-item" data-menu-item="settings" href="${root}settings">
-                ${trans[lang].auth_menu.settings}
+                ${trans_legacy[lang].auth_menu.settings}
             </a>
             <form>
                 <input type="hidden" name="csrfmiddlewaretoken" value="${token}">
                 <a class="dropdown-menu-clickable-item" data-menu-item="logout" href="${root}logout">
-                    ${trans[lang].auth_menu.logout}
+                    ${trans_legacy[lang].auth_menu.logout}
                 </a>
             </form>
         `),
@@ -220,23 +220,23 @@ export function append_nav() {
                 shortcut_item.textContent = settings.profile_shortcut;
             }
 
-            instance.popper.querySelector('#theme-value').textContent = trans[lang].settings.themes[settings.theme].name;
+            instance.popper.querySelector('#theme-value').textContent = trans_legacy[lang].settings.themes[settings.theme].name;
 
 
             let theme_menu_item = tippy(instance.popper.querySelector('[data-menu-item="themes"]:not([aria-expanded])'), {
                 theme: 'menu',
                 content: (`
                     <button class="dropdown-menu-clickable-item theme-item-in-menu" data-bleh-theme="light" onclick="change_theme_from_menu('light')">
-                        ${trans[lang].settings.themes.light.name}
+                        ${trans_legacy[lang].settings.themes.light.name}
                     </button>
                     <button class="dropdown-menu-clickable-item theme-item-in-menu" data-bleh-theme="dark" onclick="change_theme_from_menu('dark')">
-                        ${trans[lang].settings.themes.dark.name}
+                        ${trans_legacy[lang].settings.themes.dark.name}
                     </button>
                     <button class="dropdown-menu-clickable-item theme-item-in-menu" data-bleh-theme="darker" onclick="change_theme_from_menu('darker')">
-                        ${trans[lang].settings.themes.darker.name}
+                        ${trans_legacy[lang].settings.themes.darker.name}
                     </button>
                     <button class="dropdown-menu-clickable-item theme-item-in-menu" data-bleh-theme="oled" onclick="change_theme_from_menu('oled')">
-                        ${trans[lang].settings.themes.oled.name}
+                        ${trans_legacy[lang].settings.themes.oled.name}
                     </button>
                 `),
                 allowHTML: true,

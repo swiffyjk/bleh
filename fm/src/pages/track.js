@@ -1,7 +1,7 @@
 import { settings } from "../build/config";
 import { log } from "../build/log";
 import { auth, page, root } from "../build/page";
-import { lang, trans } from "../build/trans";
+import { lang, trans_legacy, trans, tl } from "../build/trans";
 import { bleh_about_artist } from "../components/about_artist";
 import { correct_item_by_artist, patch_header_title } from "../components/lotus";
 import { register_menu } from "../components/menu";
@@ -93,7 +93,7 @@ export function bleh_tracks() {
                 `) : '<img class="missing-track">'}
             </div>
             <div class="info-side">
-                <div class="sub-text">${trans[lang].track.name}</div>
+                <div class="sub-text">${trans_legacy[lang].track.name}</div>
                 <div class="title-container">
                     <h1>${title.innerHTML}</h1>
                     ${(position) ? position.outerHTML : ''}
@@ -134,17 +134,17 @@ export function bleh_tracks() {
             content: (`
                 ${(album_avatar != null || artist_avatar != null) ? (`
                 <button class="dropdown-menu-clickable-item" onclick="${expand_link}" data-menu-item="expand">
-                    ${trans[lang].gallery.open.name}
+                    ${trans_legacy[lang].gallery.open.name}
                 </button>
                 `) : ''}
                 ${(album_avatar != null) ? (`
                 <a class="dropdown-menu-clickable-item" href="${source_album.querySelector('.link-block-cover-link').getAttribute('href')}" data-menu-item="album">
-                    ${trans[lang].settings.layout.avatar_action.album}
+                    ${trans_legacy[lang].settings.layout.avatar_action.album}
                 </a>
                 `) : ''}
                 <div class="sep"></div>
                 <a class="dropdown-menu-clickable-item" href="${root}bleh?tab=customise" data-menu-item="settings">
-                    ${trans[lang].settings.configure}
+                    ${trans_legacy[lang].settings.configure}
                 </a>
             `),
             allowHTML: true,

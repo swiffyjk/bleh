@@ -1,6 +1,6 @@
 import { page, root } from "../build/page";
 import { sanitise, sanitise_text } from "../build/tools";
-import { lang, trans } from "../build/trans";
+import { lang, trans_legacy, trans, tl } from "../build/trans";
 
 export function bleh_about_artist() {
     let legacy_container = page.structure.main.querySelector('.about-artist');
@@ -25,14 +25,14 @@ export function bleh_about_artist() {
                 ${(avatar != null) ? `<img src="${avatar.getAttribute('src')}"><a onclick="_expand_avatar('${avatar.getAttribute('src').replace('/300x300/', '/ar0/')}')" class="bleh--avatar-clickable-link"></a>` : '<img class="missing-artist">'}
             </div>
             <div class="info-side">
-                <div class="sub-text">${trans[lang].music.about}</div>
+                <div class="sub-text">${trans_legacy[lang].music.about}</div>
                 <h1><a href="${root}music/${sanitise(page.sister)}">${sanitise_text(page.sister)}</a></h1>
                 ${(listeners != null) ? listeners.outerHTML : ''}
                 ${(tags != null) ? tags.outerHTML : ''}
                 ${(wiki != null) ? wiki.outerHTML : ''}
             </div>
         </div>
-        ${(page.sister_others.length > 0) ? `<div class="sep"></div><div class="sub-text">${trans[lang].music.about_guests}</div>` : ''}
+        ${(page.sister_others.length > 0) ? `<div class="sep"></div><div class="sub-text">${trans_legacy[lang].music.about_guests}</div>` : ''}
     `);
 
     // there are guest features

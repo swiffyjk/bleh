@@ -1,6 +1,6 @@
 import { log } from "../build/log";
 import { page, root } from "../build/page";
-import { lang, trans } from "../build/trans";
+import { lang, trans_legacy, trans, tl } from "../build/trans";
 
 export function bleh_auto_edits() {
     let corrections_panel = document.body.querySelector('#subscription-corrections');
@@ -12,7 +12,7 @@ export function bleh_auto_edits() {
     back_nav.classList.add('navlist-item', 'secondary-nav-item', 'secondary-nav-item--back');
     back_nav.innerHTML = (`
         <a class="secondary-nav-item-link" href="${root}settings/subscription">
-            ${trans[lang].settings.back}
+            ${trans_legacy[lang].settings.back}
         </a>
     `);
 

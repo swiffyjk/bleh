@@ -1,5 +1,5 @@
 import { auth, page, root } from "../build/page";
-import { lang, trans } from "../build/trans";
+import { lang, trans_legacy, trans, tl } from "../build/trans";
 
 export function bleh_error() {
     page.state.error = false;
@@ -23,14 +23,14 @@ export function bleh_error() {
     page_content.classList.add('has-error');
     page_content.innerHTML = (`
         <div class="error-page">
-            <h3>${trans[lang].error.name}</h3>
+            <h3>${trans_legacy[lang].error.name}</h3>
             <h4>${error_content.textContent}</h4>
             <div class="button-footer">
                 <a class="btn back" href="${back_link.getAttribute('href')}">
-                    ${trans[lang].error.go_back}
+                    ${trans_legacy[lang].error.go_back}
                 </a>
                 <a class="btn continue primary" href="${root}user/${auth.name}">
-                    ${trans[lang].error.visit_profile}
+                    ${trans_legacy[lang].error.visit_profile}
                 </a>
             </div>
         </div>
