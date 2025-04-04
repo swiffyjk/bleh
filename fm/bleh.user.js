@@ -11793,10 +11793,10 @@
             </a>
             <div class="sep"></div>
             <a class="dropdown-menu-clickable-item" data-menu-item="library" href="${root}user/${auth.name}/library">
-                ${trans_legacy[lang].auth_menu.library}
+                ${tl(trans.library)}
             </a>
             <a class="dropdown-menu-clickable-item" data-menu-item="shouts" href="${root}user/${auth.name}/shoutbox">
-                ${trans_legacy[lang].auth_menu.shouts}
+                ${tl(trans.shouts)}
             </a>
             ${settings.auth_menu_obsessions ? `
             <a class="dropdown-menu-clickable-item" data-menu-item="obsessions" href="${root}user/${auth.name}/obsessions">
@@ -11805,8 +11805,8 @@
             ` : ""}
             <button class="dropdown-menu-clickable-item" data-menu-item="themes" onclick="toggle_theme()">
                 <span class="auth-dropdown-item-row">
-                    <span class="auth-dropdown-item-left">${trans_legacy[lang].settings.themes.name}</span>
-                    <span class="auth-dropdown-item-right" id="theme-value">${trans_legacy[lang].settings.themes[settings.theme].name}</span>
+                    <span class="auth-dropdown-item-left">${tl(trans.themes.name)}</span>
+                    <span class="auth-dropdown-item-right" id="theme-value">${tl(trans.themes[settings.theme])}</span>
                 </span>
             </button>
             ${ff("dev") ? `
@@ -11815,17 +11815,17 @@
             </button>
             ` : ""}
             <a class="dropdown-menu-clickable-item" data-menu-item="bleh" href="${root}bleh">
-                ${trans_legacy[lang].auth_menu.configure_bleh}
+                ${tl(trans.configure_bleh)}
             </a>
             <div class="sep"></div>
             <a class="dropdown-menu-clickable-item" data-menu-item="labs" href="${root}labs">
                 ${trans_legacy[lang].auth_menu.labs}
             </a>
             <a class="dropdown-menu-clickable-item" data-menu-item="bookmarks" href="${root}music/+bookmarks">
-                ${trans_legacy[lang].auth_menu.bookmarks}
+                ${tl(trans.bookmarks)}
             </a>
             <a class="dropdown-menu-clickable-item" data-menu-item="settings" href="${root}settings">
-                ${trans_legacy[lang].auth_menu.settings}
+                ${tl(trans.settings)}
             </a>
             <form>
                 <input type="hidden" name="csrfmiddlewaretoken" value="${token}">
@@ -11846,21 +11846,21 @@
           shortcut_item.setAttribute("href", `${root}user/${settings.profile_shortcut}`);
           shortcut_item.textContent = settings.profile_shortcut;
         }
-        instance.popper.querySelector("#theme-value").textContent = trans_legacy[lang].settings.themes[settings.theme].name;
+        instance.popper.querySelector("#theme-value").textContent = tl(trans.themes[settings.theme]);
         let theme_menu_item = tippy(instance.popper.querySelector('[data-menu-item="themes"]:not([aria-expanded])'), {
           theme: "menu",
           content: `
                     <button class="dropdown-menu-clickable-item theme-item-in-menu" data-bleh-theme="light" onclick="change_theme_from_menu('light')">
-                        ${trans_legacy[lang].settings.themes.light.name}
+                        ${tl(trans.themes.light)}
                     </button>
                     <button class="dropdown-menu-clickable-item theme-item-in-menu" data-bleh-theme="dark" onclick="change_theme_from_menu('dark')">
-                        ${trans_legacy[lang].settings.themes.dark.name}
+                        ${tl(trans.themes.dark)}
                     </button>
                     <button class="dropdown-menu-clickable-item theme-item-in-menu" data-bleh-theme="darker" onclick="change_theme_from_menu('darker')">
-                        ${trans_legacy[lang].settings.themes.darker.name}
+                        ${tl(trans.themes.darker)}
                     </button>
                     <button class="dropdown-menu-clickable-item theme-item-in-menu" data-bleh-theme="oled" onclick="change_theme_from_menu('oled')">
-                        ${trans_legacy[lang].settings.themes.oled.name}
+                        ${tl(trans.themes.oled)}
                     </button>
                 `,
           allowHTML: true,
