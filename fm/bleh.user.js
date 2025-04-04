@@ -17368,6 +17368,14 @@
     append_nav();
     set_season();
     seasonal_timer_end();
+    let masthead = document.body.querySelector(".masthead");
+    window.addEventListener("scroll", (e) => {
+      let scroll = window.scrollY;
+      if (scroll > 30)
+        masthead.classList.add("scrolled");
+      else
+        masthead.classList.remove("scrolled");
+    });
     if (window.location.href.startsWith(setup_url.replace("{root}", root))) {
       bleh_setup();
     } else if (window.location.href.startsWith(sponsor_url.replace("{root}", root))) {
