@@ -137,7 +137,9 @@ export const trans = {
         en: 'Appearance'
     },
     themes: {
-        en: 'Themes',
+        name: {
+            en: 'Themes'
+        },
         light: {
             en: 'Light'
         },
