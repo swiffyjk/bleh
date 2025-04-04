@@ -1471,6 +1471,25 @@
     },
     beta: {
       en: "Beta"
+    },
+    more: {
+      en: "More"
+    },
+    notifications: {
+      count: {
+        en: "{count} notifications"
+      },
+      none: {
+        en: "No new notifications"
+      }
+    },
+    inbox: {
+      count: {
+        en: "{count} messages"
+      },
+      none: {
+        en: "No new messages"
+      }
     }
   };
   var trans_legacy = {
@@ -11701,26 +11720,28 @@
     }
     let notif_btn = document.body.querySelector('.masthead-nav-control[data-analytics-label="notifications"]');
     let notif_count = notif_btn.querySelector(".notification-count-badge");
-    if (notif_count != null) {
+    if (notif_count) {
+      notif_count = notif_count.textContent;
       tippy(notif_btn, {
-        content: `${notif_count.textContent} notifications`
+        content: tl(trans.notifications.count).replace("{count}", notif_count)
       });
-      notif_btn.setAttribute("data-count", notif_count.textContent);
+      notif_btn.setAttribute("data-count", notif_count);
     } else {
       tippy(notif_btn, {
-        content: "No new notifications"
+        content: tl(trans.notifications.none)
       });
     }
     let inbox_btn = document.body.querySelector('.masthead-nav-control[data-analytics-label="inbox"]');
     let inbox_count = inbox_btn.querySelector(".notification-count-badge");
-    if (inbox_count != null) {
+    if (inbox_count) {
+      inbox_count = inbox_count.textContent;
       tippy(inbox_btn, {
-        content: `${inbox_count.textContent} messages`
+        content: tl(trans.inbox.count).replace("{count}", inbox_count)
       });
-      inbox_btn.setAttribute("data-count", inbox_count.textContent);
+      inbox_btn.setAttribute("data-count", inbox_count);
     } else {
       tippy(inbox_btn, {
-        content: "No new messages"
+        content: tl(trans.inbox.none)
       });
     }
     let inbox_container = document.body.querySelector('.masthead-nav-item:has([data-analytics-label="inbox"])');
@@ -14771,33 +14792,33 @@
         <ul class="navlist-items">
             <li class="navlist-item secondary-nav-item secondary-nav-item--home">
                 <a href="${root}music" class="secondary-nav-item-link ${page.subpage == "music" ? "secondary-nav-item-link--active" : ""}">
-                    Home
+                    ${tl(trans.home)}
                 </a>
             </li>
             <li class="navlist-item secondary-nav-item secondary-nav-item--recommendations">
                 <a href="${root}music/+recommended" class="secondary-nav-item-link ${page.type == "recommended" ? "secondary-nav-item-link--active" : ""}">
-                    Recommendations
+                    ${tl(trans.recommendations)}
                 </a>
             </li>
             <li class="navlist-item secondary-nav-item secondary-nav-item--releases">
                 <a href="${root}music/+releases/out-now" class="secondary-nav-item-link ${page.type == "releases" ? "secondary-nav-item-link--active" : ""}">
-                    Releases
+                    ${tl(trans.releases)}
                 </a>
             </li>
             <li class="navlist-item secondary-nav-item secondary-nav-item--bookmarks">
                 <a href="${root}music/+bookmarks" class="secondary-nav-item-link ${page.type == "bookmarks" ? "secondary-nav-item-link--active" : ""}">
-                    Bookmarks
+                    ${tl(trans.bookmarks)}
                 </a>
             </li>
             <li class="navlist-item secondary-nav-item secondary-nav-item--charts">
                 <a href="${root}charts" class="secondary-nav-item-link ${page.type == "charts" ? "secondary-nav-item-link--active" : ""}">
-                    Charts
+                    ${tl(trans.charts)}
                 </a>
             </li>
             <li class="fill"></li>
             <li class="navlist-item secondary-nav-item secondary-nav-item--settings">
                 <a href="${root}settings" class="secondary-nav-item-link ${page.type == "settings" ? "secondary-nav-item-link--active" : ""}">
-                    Settings
+                    ${tl(trans.settings)}
                 </a>
             </li>
             <li class="navlist-item secondary-nav-item secondary-nav-item--bleh">
@@ -14807,7 +14828,7 @@
             </li>
             <li class="navlist-item secondary-nav-item secondary-nav-item--more">
                 <a class="secondary-nav-item-link no-text">
-                    More
+                    ${tl(trans.more)}
                 </a>
             </li>
         </ul>

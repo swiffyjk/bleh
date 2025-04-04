@@ -305,6 +305,25 @@ export const trans = {
     },
     beta: {
         en: 'Beta'
+    },
+    more: {
+        en: 'More'
+    },
+    notifications: {
+        count: {
+            en: '{count} notifications'
+        },
+        none: {
+            en: 'No new notifications'
+        }
+    },
+    inbox: {
+        count: {
+            en: '{count} messages'
+        },
+        none: {
+            en: 'No new messages'
+        }
     }
 }
 

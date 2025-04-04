@@ -1,7 +1,7 @@
 import { settings } from "./build/config";
 import { auth, page, root } from "./build/page";
 import { stored_season } from "./build/seasonal";
-import { lang, non_override_lang, trans_legacy } from "./build/trans";
+import { lang, non_override_lang, trans_legacy, tl, trans } from "./build/trans";
 import { load_badges } from "./components/badge";
 import { version } from "./main";
 import { show_theme_change_in_menu } from "./pages/bleh_config";
@@ -81,29 +81,33 @@ export function append_nav() {
 
     let notif_btn = document.body.querySelector('.masthead-nav-control[data-analytics-label="notifications"]');
     let notif_count = notif_btn.querySelector('.notification-count-badge');
-    if (notif_count != null) {
+    if (notif_count) {
+        notif_count = notif_count.textContent;
+
         tippy(notif_btn, {
-            content: `${notif_count.textContent} notifications`
+            content: tl(trans.notifications.count).replace('{count}', notif_count)
         });
 
-        notif_btn.setAttribute('data-count', notif_count.textContent);
+        notif_btn.setAttribute('data-count', notif_count);
     } else {
         tippy(notif_btn, {
-            content: 'No new notifications'
+            content: tl(trans.notifications.none)
         });
     }
 
     let inbox_btn = document.body.querySelector('.masthead-nav-control[data-analytics-label="inbox"]');
     let inbox_count = inbox_btn.querySelector('.notification-count-badge');
-    if (inbox_count != null) {
+    if (inbox_count) {
+        inbox_count = inbox_count.textContent;
+
         tippy(inbox_btn, {
-            content: `${inbox_count.textContent} messages`
+            content: tl(trans.inbox.count).replace('{count}', inbox_count)
         });
 
-        inbox_btn.setAttribute('data-count', inbox_count.textContent);
+        inbox_btn.setAttribute('data-count', inbox_count);
     } else {
         tippy(inbox_btn, {
-            content: 'No new messages'
+            content: tl(trans.inbox.none)
         });
     }
 
