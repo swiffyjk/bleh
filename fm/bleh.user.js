@@ -1218,6 +1218,22 @@
           en: "Official member of Last.fm"
         }
       },
+      "user-status-mod": {
+        name: {
+          en: "Mod"
+        },
+        reason: {
+          en: "Official member of Last.fm"
+        }
+      },
+      "user-status-alum": {
+        name: {
+          en: "Alum"
+        },
+        reason: {
+          en: "Since the beginning"
+        }
+      },
       "label--fade": {
         reason: {
           en: "They follow you!"
