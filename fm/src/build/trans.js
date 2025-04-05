@@ -30,6 +30,70 @@ export let lang_info = {
 }
 
 export const trans = {
+    badges: {
+        missing: {
+            name: {
+                en: 'No badges'
+            }
+        },
+        'user-status-subscriber': {
+            name: {
+                en: 'Last.fm Pro'
+            },
+            reason: {
+                en: 'Active Pro subscription'
+            }
+        },
+        'user-status-staff': {
+            name: {
+                en: 'Staff'
+            },
+            reason: {
+                en: 'Official member of Last.fm'
+            }
+        },
+        'label--fade': {
+            reason: {
+                en: 'They follow you!'
+            }
+        },
+        contributor: {
+            name: {
+                en: 'Contributor'
+            },
+            reason: {
+                en: 'Has worked on bleh or bwaa'
+            }
+        },
+        translation: {
+            reason: {
+                en: 'Translations'
+            }
+        },
+        cat: {
+            name: {
+                en: 'it\s a kitty!!'
+            }
+        },
+        sponsor: {
+            name: {
+                en: 'Sponsor'
+            },
+            reason: {
+                en: 'thank you from kate <3'
+            }
+        },
+        cute: {
+            reason: {
+                en: 'Reserved'
+            }
+        },
+        reserved: {
+            reason: {
+                en: 'Reserved'
+            }
+        }
+    },
     home: {
         en: 'Home'
     },

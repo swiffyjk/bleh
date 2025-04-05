@@ -1196,6 +1196,70 @@
     }
   };
   var trans = {
+    badges: {
+      missing: {
+        name: {
+          en: "No badges"
+        }
+      },
+      "user-status-subscriber": {
+        name: {
+          en: "Last.fm Pro"
+        },
+        reason: {
+          en: "Active Pro subscription"
+        }
+      },
+      "user-status-staff": {
+        name: {
+          en: "Staff"
+        },
+        reason: {
+          en: "Official member of Last.fm"
+        }
+      },
+      "label--fade": {
+        reason: {
+          en: "They follow you!"
+        }
+      },
+      contributor: {
+        name: {
+          en: "Contributor"
+        },
+        reason: {
+          en: "Has worked on bleh or bwaa"
+        }
+      },
+      translation: {
+        reason: {
+          en: "Translations"
+        }
+      },
+      cat: {
+        name: {
+          en: "its a kitty!!"
+        }
+      },
+      sponsor: {
+        name: {
+          en: "Sponsor"
+        },
+        reason: {
+          en: "thank you from kate <3"
+        }
+      },
+      cute: {
+        reason: {
+          en: "Reserved"
+        }
+      },
+      reserved: {
+        reason: {
+          en: "Reserved"
+        }
+      }
+    },
     home: {
       en: "Home"
     },
@@ -6293,7 +6357,7 @@
     }
     badges.forEach((badge) => {
       if (!badge.name)
-        badge.name = trans_legacy[lang].badges[badge.type].name;
+        badge.name = tl(trans.badges[badge.type].name);
       if (badge.reason)
         return;
       if (badge.type == "sponsor" || badge.type == "contributor" || badge.type == "translation")
@@ -8977,7 +9041,7 @@
                             <div class="header standalone title-container">
                                 <h1>${auth.name}</h1>
                                 ${auth.pro ? `
-                                <span class="label user-status-subscriber">${trans_legacy[lang].badges["user-status-subscriber"].name}</span>
+                                <span class="label user-status-subscriber">${tl(trans.badges["user-status-subscriber"].name)}</span>
                                 ` : ""}
                             </div>
                         </div>
@@ -10461,7 +10525,7 @@
         let this_badge = sponsor_list.badges[auth.name];
         let badge = document.createElement("span");
         badge.classList.add("label", `user-status--bleh-${this_badge.type}`, `user-status--bleh-user-${auth.name}`);
-        badge.textContent = this_badge.name != null ? this_badge.name : trans_legacy[lang].badges[this_badge.type].name;
+        badge.textContent = this_badge.name != null ? this_badge.name : tl(trans.badges[this_badge.type].name);
         profile_name_obj.appendChild(badge);
       } else {
         log(`multiple badges:`, "profile", "info", sponsor_list.badges[auth.name]);
@@ -10469,14 +10533,14 @@
           let this_badge = sponsor_list.badges[auth.name][badge_entry];
           let badge = document.createElement("span");
           badge.classList.add("label", `user-status--bleh-${this_badge.type}`, `user-status--bleh-user-${auth.name}`);
-          badge.textContent = this_badge.name != null ? this_badge.name : trans_legacy[lang].badges[this_badge.type].name;
+          badge.textContent = this_badge.name != null ? this_badge.name : tl(trans.badges[this_badge.type].name);
           profile_name_obj.appendChild(badge);
         }
       }
     } else {
       let badge = document.createElement("span");
       badge.classList.add("label", "user-status--bleh-missing");
-      badge.textContent = trans_legacy[lang].badges.missing.name;
+      badge.textContent = tl(trans.badges.missing.name);
       profile_name_obj.appendChild(badge);
     }
   }
@@ -15942,7 +16006,7 @@
           placement: "bottom",
           content: `
                     <div class="badge-name">${badge.textContent}</div>
-                    <div class="badge-reason">${trans_legacy[lang].badges[badge.classList[1]].reason}</div>
+                    <div class="badge-reason">${tl(trans.badges[badge.classList[1]].reason)}</div>
                 `,
           allowHTML: true
         });
@@ -15962,7 +16026,7 @@
             placement: "bottom",
             content: `
                         <div class="badge-name">${this_badge.name}</div>
-                        <div class="badge-reason">${trans_legacy[lang].badges[this_badge.reason].reason}</div>
+                        <div class="badge-reason">${tl(trans.badges[this_badge.reason].reason)}</div>
                     `,
             allowHTML: true
           });
