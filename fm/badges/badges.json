@@ -1,13 +1,13 @@
 {
-    "latest": "2025.0403",
+    "latest": "2025.0405",
     "sponsors": [
         "cutensilly", "kateshapedbox", "stellasaur",
         "astrablooms", "ItsProyal", "vwvwvwvwvwvwv", "Orofil",
-        "EliteHimself", "iwas15with100k", "keepsweet"
+        "EliteHimself", "iwas15with100k", "keepsweet", "yourfriendoss"
     ],
     "sponsors_one_time": [
         "kateshapedbox",
-        "vwvwvwvwvwvwv", "EliteHimself"
+        "vwvwvwvwvwvwv", "EliteHimself", "yourfriendoss"
     ],
     "sponsor_count_remove": 3,
     "sponsor_account": "kateshapedbox",
@@ -155,6 +155,9 @@
         "yourfriendoss": [
             {
                 "type": "contributor"
+            },
+            {
+                "type": "sponsor"
             },
             {
                 "type": "paw",
