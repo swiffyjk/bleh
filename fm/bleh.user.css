@@ -1195,7 +1195,7 @@ last.fm changes as of 2024-05-20 */
         --bg-atv: transparent !important;
         --shadow: none !important;
         --shadow-hov: none !important;
-        width: 40px !important;
+        width: 42px !important;
         height: 32px !important;
         opacity: 1 !important;
         top: 0;
@@ -8459,7 +8459,7 @@ that literally is 1 user from 2007 who hasnt even gotten a scrobble */
 }
 
 .gallery-image-buttons:not(.gallery-image-buttons-extra) :is(.gallery-image-report, .gallery-image-delete button) {
-    width: 40px !important;
+    width: 42px !important;
 }
 .gallery-image-report--reported {
     pointer-events: none;
@@ -13053,7 +13053,7 @@ h2.playlisting-create-option-title {
     --bg-atv: transparent !important;
     --shadow: none !important;
     --shadow-hov: none !important;
-    width: 40px;
+    width: 42px;
     --font-size: 0;
     opacity: unset !important;
 }
@@ -16066,7 +16066,7 @@ button.bleh--gallery-bookmark-image-btn {
 
             &.menu-btn {
                 --font-size: 0;
-                width: 40px;
+                width: 42px;
                 --mask: var(--icon-16-dots);
             }
         }
