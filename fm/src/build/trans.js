@@ -324,6 +324,12 @@ export const trans = {
         none: {
             en: 'No new messages'
         }
+    },
+    about_me_preview: {
+        en: 'About Me (preview)'
+    },
+    markdown_tip: {
+        en: 'This textbox supports markdown such as line breaks, bold text, italics, underlines, and more. You can embed images using ![alt text](link). Beware that to non-bleh users it will not appear fancy.'
     }
 }
 
