@@ -11719,28 +11719,30 @@
           return;
         if (!is_album && track.classList.contains("chartlist-row--now-scrobbling")) {
           let image_wrap = track.querySelector(".chartlist-image");
-          let link = image_wrap.querySelector(".cover-art");
-          let image = link.querySelector("img");
-          if (!settings.album_text) {
-            let alt = image.getAttribute("alt");
-            let album_text = document.createElement("td");
-            album_text.classList.add("chartlist-album", "custom-album-text");
-            album_text.innerHTML = `
-                        <a href="${link.getAttribute("href")}">${alt}</a>
-                    `;
-            track.appendChild(album_text);
-          }
-          image.setAttribute("crossorigin", "anonymous");
-          try {
-            image.addEventListener("load", function() {
-              let thief = new ColorThief();
-              let colour = thief.getColor(image);
-              let hsl = rgb_to_hsl(colour[0], colour[1], colour[2]);
-              track.style.setProperty("--hue-over", hsl.h);
-              track.style.setProperty("--sat-over", clamp_sat(hsl.s / 100 * 3));
-              track.style.setProperty("--lit-over", 1);
-            });
-          } catch (e) {
+          if (image_wrap) {
+            let link = image_wrap.querySelector(".cover-art");
+            let image = link.querySelector("img");
+            if (!settings.album_text) {
+              let alt = image.getAttribute("alt");
+              let album_text = document.createElement("td");
+              album_text.classList.add("chartlist-album", "custom-album-text");
+              album_text.innerHTML = `
+                            <a href="${link.getAttribute("href")}">${alt}</a>
+                        `;
+              track.appendChild(album_text);
+            }
+            image.setAttribute("crossorigin", "anonymous");
+            try {
+              image.addEventListener("load", function() {
+                let thief = new ColorThief();
+                let colour = thief.getColor(image);
+                let hsl = rgb_to_hsl(colour[0], colour[1], colour[2]);
+                track.style.setProperty("--hue-over", hsl.h);
+                track.style.setProperty("--sat-over", clamp_sat(hsl.s / 100 * 3));
+                track.style.setProperty("--lit-over", 1);
+              });
+            } catch (e) {
+            }
           }
         }
       });
@@ -17580,7 +17582,7 @@
       childList: true
     });
     let pre_observer = new MutationObserver((mutations) => {
-      if (document.body && document.body.querySelector(".masthead-logo")) {
+      if (document.body && document.body.querySelector(".adaptive-skin-container")) {
         bleh_main();
         pre_observer.disconnect();
       }

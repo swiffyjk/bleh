@@ -50,7 +50,7 @@ export function bleh() {
     });
 
     let pre_observer = new MutationObserver((mutations) => {
-        if (document.body && document.body.querySelector('.masthead-logo')) {
+        if (document.body && document.body.querySelector('.adaptive-skin-container')) {
             bleh_main();
 
             pre_observer.disconnect();
