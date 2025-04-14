@@ -1,13 +1,27 @@
+import { inbuilt_settings, settings, settings_base, settings_template } from "./build/config";
+import { log } from "./build/log";
+import { page, reload_pending } from "./build/page";
+import { stored_season } from "./build/seasonal";
+import { lang, trans_legacy } from "./build/trans";
+import { load_chart_colours } from "./chart";
+import { dialog, dialog_legacy, kill_window } from "./components/dialog";
+import { bleh_music_page_charts } from "./components/music";
+import { notify } from "./components/notify";
+import { load_skus, show_theme_change_in_menu, show_theme_change_in_settings } from "./pages/bleh_config";
+import { bleh_glacier_date_graph_generate, bleh_glacier_insights } from "./pages/glacier";
+
 // create blank settings
-function create_settings_template() {
+export function create_settings_template() {
     localStorage.setItem('bleh', JSON.stringify(settings_template));
     return settings_template;
 }
 
 // load settings
-function load_settings(skip = false) {
-    if (!skip)
-        settings = JSON.parse(localStorage.getItem('bleh')) || create_settings_template();
+export function load_settings(skip = false) {
+    if (!skip) {
+        for (var member in settings) delete settings[member];
+        Object.assign(settings, JSON.parse(localStorage.getItem('bleh')) || create_settings_template());
+    }
 
     // missing? set to default value
     for (let setting in settings_template)
@@ -131,7 +145,7 @@ function reset_all() {
         reset_item(item);
 }
 
-function refresh_all(search = document) {
+export function refresh_all(search = document) {
     for (let item in settings_base)
         update_item(item, settings[item], false, search);
 }
@@ -226,21 +240,21 @@ function update_item(item, value, modify=true, search = document) {
 
 
             if (item == 'dev') {
-                dialog_legacy('prompt_dev',trans[lang].settings.performance.dev.name,`
-                    <p class="alert alert-info">${trans[lang].settings.performance.dev.modals.prompt.alert}</p>
+                dialog_legacy('prompt_dev',trans_legacy[lang].settings.performance.dev.name,`
+                    <p class="alert alert-info">${trans_legacy[lang].settings.performance.dev.modals.prompt.alert}</p>
                     <br>
-                    ${trans[lang].settings.performance.dev.modals.prompt.stylus}
+                    ${trans_legacy[lang].settings.performance.dev.modals.prompt.stylus}
                     <br>
                     <div class="browser-choices">
                         <button class="btn browser" onclick="_chosen_chrome()">
                             <img class="browser-icon" src="https://cutensilly.org/img/chrome.png">
-                            <p>${trans[lang].settings.performance.dev.modals.prompt.browsers.chrome.name}</p>
-                            <p class="caption">${trans[lang].settings.performance.dev.modals.prompt.browsers.chrome.bio}</p>
+                            <p>${trans_legacy[lang].settings.performance.dev.modals.prompt.browsers.chrome.name}</p>
+                            <p class="caption">${trans_legacy[lang].settings.performance.dev.modals.prompt.browsers.chrome.bio}</p>
                         </button>
                         <button class="btn browser" onclick="_chosen_firefox()">
                             <img class="browser-icon" src="https://cutensilly.org/img/firefox.png">
-                            <p>${trans[lang].settings.performance.dev.modals.prompt.browsers.firefox.name}</p>
-                            <p class="caption">${trans[lang].settings.performance.dev.modals.prompt.browsers.firefox.bio}</p>
+                            <p>${trans_legacy[lang].settings.performance.dev.modals.prompt.browsers.firefox.name}</p>
+                            <p class="caption">${trans_legacy[lang].settings.performance.dev.modals.prompt.browsers.firefox.bio}</p>
                         </button>
                     </div>
                 `, true);
@@ -322,10 +336,10 @@ function request_reload() {
         return;
 
     log('requesting reload', 'settings');
-    reload_pending = true;
+    reload_pending.state = true;
     notify({
-        title: trans[lang].settings.reload.name,
-        body: trans[lang].settings.reload.body,
+        title: trans_legacy[lang].settings.reload.name,
+        body: trans_legacy[lang].settings.reload.body,
         icon: 'icon-16-refresh',
         persist: true,
         action: '_invoke_reload()'
@@ -334,7 +348,7 @@ function request_reload() {
 unsafeWindow._invoke_reload = function() {
     invoke_reload();
 }
-function invoke_reload() {
+export function invoke_reload() {
     window.location.reload();
 }
 
@@ -388,7 +402,7 @@ unsafeWindow._update_inbuilt_item = function(item, value) {
     update_inbuilt_item(item, value);
 }
 
-function update_inbuilt_item(item, value, modify=true, element=document.body) {
+export function update_inbuilt_item(item, value, modify=true, element=document.body) {
     //console.log('update item',item,value);
     console.warn('update item',item,value, 'modify', modify);
 
@@ -445,11 +459,11 @@ unsafeWindow._chosen_firefox = function() {
 
 function continue_dev() {
     kill_window('prompt_dev');
-    dialog_legacy('continue_dev',trans[lang].settings.performance.dev.name,`
-        ${trans[lang].settings.performance.dev.modals.continue.next_step}
+    dialog_legacy('continue_dev',trans_legacy[lang].settings.performance.dev.name,`
+        ${trans_legacy[lang].settings.performance.dev.modals.continue.next_step}
         <div class="modal-footer">
             <button class="btn primary continue" onclick="_finish_dev()">
-                ${trans[lang].settings.continue}
+                ${trans_legacy[lang].settings.continue}
             </button>
         </div>
     `);
@@ -458,11 +472,11 @@ function continue_dev() {
 unsafeWindow._finish_dev = function() {
     open('https://github.com/katelyynn/bleh/raw/uwu/fm/bleh.user.css');
     kill_window('continue_dev');
-    dialog_legacy('finish_dev',trans[lang].settings.performance.dev.name,`
-        <p class="alert alert-success">${trans[lang].settings.performance.dev.modals.finish.alert}</p>
+    dialog_legacy('finish_dev',trans_legacy[lang].settings.performance.dev.name,`
+        <p class="alert alert-success">${trans_legacy[lang].settings.performance.dev.modals.finish.alert}</p>
         <div class="modal-footer">
             <button class="btn primary done" onclick="_kill_window('finish_dev')">
-                ${trans[lang].settings.done}
+                ${trans_legacy[lang].settings.done}
             </button>
         </div>
     `);

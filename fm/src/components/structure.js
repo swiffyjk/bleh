@@ -1,4 +1,9 @@
-function basic_page_structure() {
+import { log } from "../build/log";
+import { page } from "../build/page";
+import { load_chart_colours } from "../chart";
+import { ff } from "../sku";
+
+export function basic_page_structure() {
     page.structure.container = document.body.querySelector('.page-content');
     try {
         page.structure.row = page.structure.container.querySelector('.row');
@@ -12,7 +17,7 @@ function basic_page_structure() {
 }
 
 // general health
-function checkup_page_structure(is_subpage = false, header = null) {
+export function checkup_page_structure(is_subpage = false, header = null) {
     if (document.body.style.getPropertyValue('--hue-album')) {
         document.body.style.removeProperty('--hue-album');
         document.body.style.removeProperty('--sat-album');
@@ -39,8 +44,7 @@ function checkup_page_structure(is_subpage = false, header = null) {
     page.structure.container.setAttribute('data-assigned', 'true');
 
     let other_container = document.body.querySelector('.page-content.container:not([data-assigned])');
-    if (other_container)
-        other_container.style.setProperty('display', 'none');
+    if (other_container) other_container.style.setProperty('display', 'none');
 
     if (!page.structure.row || !document.body.contains(page.structure.row)) {
         log('page missing row, creating', 'page structure');
@@ -63,8 +67,7 @@ function checkup_page_structure(is_subpage = false, header = null) {
     page.structure.main.setAttribute('data-assigned', 'true');
 
     let other_main = page.structure.row.querySelector('.col-main.hidden-xs:not([data-assigned])');
-    if (other_main)
-        other_main.style.setProperty('display', 'none');
+    if (other_main) other_main.style.setProperty('display', 'none');
 
     if (!page.structure.side || !document.body.contains(page.structure.side)) {
         log('page missing side', 'page structure');
@@ -174,8 +177,7 @@ function checkup_page_structure(is_subpage = false, header = null) {
         } else {
             let content_top = document.body.querySelector('.content-top');
 
-            if (content_top)
-                content_top.classList.add('legacy-content-top');
+            if (content_top) content_top.classList.add('legacy-content-top');
         }
     }
 }

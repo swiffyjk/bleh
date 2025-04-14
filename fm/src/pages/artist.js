@@ -1,4 +1,19 @@
-function bleh_artists() {
+import { settings } from "../build/config";
+import { log } from "../build/log";
+import { auth, page, root } from "../build/page";
+import { sanitise } from "../build/tools";
+import { lang, trans_legacy, trans, tl } from "../build/trans";
+import { artist_title } from "../components/lotus";
+import { register_menu } from "../components/menu";
+import { bleh_music_page_charts, bleh_top_listeners, show_your_scrobbles } from "../components/music";
+import { checkup_page_structure } from "../components/structure";
+import { register_background, update_page } from "../page";
+import { ff } from "../sku";
+import { bleh_gallery_list, bleh_gallery_upload } from "./gallery";
+import { bleh_tags_mini } from "./tag";
+import { bleh_wiki, bleh_wiki_editor, bleh_wiki_history } from "./wiki";
+
+export function bleh_artists() {
     let artist_header = document.body.querySelector('.header-new--artist');
 
     if (artist_header == undefined)
@@ -74,9 +89,9 @@ function bleh_artists() {
             </div>
             <div class="info-side">
                 ${(page.multi) ? (`
-                <div class="sub-text">${trans[lang].artist.plural}<div class="info-tip"><div class="bleh-icon bleh-info-icon"></div></div></div>
+                <div class="sub-text">${trans_legacy[lang].artist.plural}<div class="info-tip"><div class="bleh-icon bleh-info-icon"></div></div></div>
                 `) : (`
-                <div class="sub-text">${trans[lang].artist.name}</div>
+                <div class="sub-text">${trans_legacy[lang].artist.name}</div>
                 `)}
                 <div class="title-container" data-multi="${page.multi}">
                     <h1>${title.innerHTML}</h1>
@@ -90,19 +105,19 @@ function bleh_artists() {
                 <section class="view-all-panel">
                     ${(settings.quick_artist_button == 'gallery') ? (`
                     <a class="btn view-all-button back top-gallery-button" href="${window.location.href}/+images">
-                        ${trans[lang].gallery.view}
+                        ${trans_legacy[lang].gallery.view}
                     </a>
                     `) : (settings.quick_artist_button == 'shouts') ? (`
                     <a class="btn view-all-button back top-shout-button" href="${window.location.href}/+shoutbox">
-                        ${trans[lang].settings.layout.quick_artist_button.shouts}
+                        ${trans_legacy[lang].settings.layout.quick_artist_button.shouts}
                     </a>
                     `) : (settings.quick_artist_button == 'wiki') ? (`
                     <a class="btn view-all-button back top-wiki-button" href="${window.location.href}/+wiki">
-                        ${trans[lang].settings.layout.quick_artist_button.wiki}
+                        ${trans_legacy[lang].settings.layout.quick_artist_button.wiki}
                     </a>
                     `) : (settings.quick_artist_button == 'listens') ? (`
                     <a class="btn view-all-button back top-listens-button" href="${window.location.href}/+listeners/you-know">
-                        ${trans[lang].settings.layout.quick_artist_button.listens}
+                        ${trans_legacy[lang].settings.layout.quick_artist_button.listens}
                     </a>
                     `) : ''}
                 </section>
@@ -113,14 +128,14 @@ function bleh_artists() {
         let multi_info_box = redesigned_artist_header.querySelector('.info-tip');
         if (multi_info_box) {
             tippy(multi_info_box, {
-                content: trans[lang].artist.tooltip
+                content: trans_legacy[lang].artist.tooltip
             });
         }
 
         position = redesigned_artist_header.querySelector('.header-new-chart-position-number');
         if (position != null) {
             tippy(position, {
-                content: trans[lang].charts.view
+                content: trans_legacy[lang].charts.view
             });
         }
 
@@ -153,15 +168,15 @@ function bleh_artists() {
                 content: (`
                     ${(avatar != null) ? (`
                     <button class="dropdown-menu-clickable-item" onclick="${expand_link}" data-menu-item="expand">
-                        ${trans[lang].gallery.open.name}
+                        ${trans_legacy[lang].gallery.open.name}
                     </button>
                     `) : ''}
                     <a class="dropdown-menu-clickable-item" href="${root}music/${sanitise(page.name)}/+images" data-menu-item="gallery">
-                        ${trans[lang].gallery.view}
+                        ${trans_legacy[lang].gallery.view}
                     </a>
                     <div class="sep"></div>
                     <a class="dropdown-menu-clickable-item" href="${root}bleh?tab=customise" data-menu-item="settings">
-                        ${trans[lang].settings.configure}
+                        ${trans_legacy[lang].settings.configure}
                     </a>
                 `),
                 allowHTML: true,
@@ -189,7 +204,7 @@ function bleh_artists() {
                     theme: 'context-menu',
                     content: (`
                         <a class="dropdown-menu-clickable-item" href="${root}bleh?tab=customise" data-menu-item="settings">
-                            ${trans[lang].settings.configure}
+                            ${trans_legacy[lang].settings.configure}
                         </a>
                     `),
                     allowHTML: true,

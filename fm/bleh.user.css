@@ -1,7 +1,7 @@
 /* ==UserStyle==
 @name           bleh (dev)
 @namespace      github.com/katelyynn/bleh
-@version        2025.0402
+@version        2025.0414
 @license        GPL-3.0
 @author         kate
 @updateURL      https://github.com/katelyynn/bleh/raw/uwu/fm/bleh.user.css
@@ -13,11 +13,11 @@
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100..900&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@100..900&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Noto+Color+Emoji&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Comfortaa:wght@700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Darumadrop+One&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Ubuntu+Sans:ital,wght@0,100..800;1,100..800&display=swap');
 
 body {
-    --version-build: '2025.0402';
+    --version-build: '2025.0414';
 
     --hue:  var(--hue-over,
             var(--hue-album,
@@ -101,7 +101,7 @@ body {
 
     --brand: 'bleh';
 
-    --hue-pos: 130;
+    --hue-pos: 140;
     --hue-neg: -2;
     --hue-fav: 15;
     --hue-pro: 174;
@@ -117,7 +117,7 @@ body {
 
     --font: var(--custom_font, ''), Ubuntu Sans, Spline Sans, Inter, Roboto, Noto Sans, Noto Sans JP, Noto Sans KR, Noto Sans TC, var(--font_emoji_name, ''), Lucida Grande, Verdana, Tahoma, -apple-system, BlinkMacSystemFont, sans-serif;
     --font-code: Spline Sans Mono, Iosevka, JetBrains Mono, Roboto Mono, monospace, var(--font);
-    --font-brand: Comfortaa, var(--font);
+    --font-brand: Darumadrop One, var(--font);
     --font-size: 14px;
     --line-height: calc(var(--font-size) + 4px);
     --font-size-sm: 12px;
@@ -417,6 +417,10 @@ body {
     --cards-sidebar-width: 400px;
     --cards-width: calc(var(--cards-main-width) + var(--cards-sidebar-width) + var(--card-gap));
 
+    [data-ff--beret="true"] & {
+        --cards-width: calc(var(--cards-main-width) + var(--cards-sidebar-width) + 1px);
+    }
+
     --item-small-radius: 4px;
     --item-med-radius: 6px;
     --item-big-radius: 10px;
@@ -688,7 +692,7 @@ body {
     --icon-16-question: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxOCIgaGVpZ2h0PSIxOCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyLjI1IiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWNpcmNsZS1oZWxwLWljb24gbHVjaWRlLWNpcmNsZS1oZWxwIj48Y2lyY2xlIGN4PSIxMiIgY3k9IjEyIiByPSIxMCIvPjxwYXRoIGQ9Ik05LjA5IDlhMyAzIDAgMCAxIDUuODMgMWMwIDItMyAzLTMgMyIvPjxwYXRoIGQ9Ik0xMiAxN2guMDEiLz48L3N2Zz4=');
     --icon-16-location: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyLjUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgY2xhc3M9Imx1Y2lkZSBsdWNpZGUtbWFwLXBpbiI+PHBhdGggZD0iTTIwIDEwYzAgNi04IDEyLTggMTJzLTgtNi04LTEyYTggOCAwIDAgMSAxNiAwWiIvPjxjaXJjbGUgY3g9IjEyIiBjeT0iMTAiIHI9IjMiLz48L3N2Zz4=');
     --icon-16-link: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxOCIgaGVpZ2h0PSIxOCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyLjI1IiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWxpbmsyLWljb24gbHVjaWRlLWxpbmstMiI+PHBhdGggZD0iTTkgMTdIN0E1IDUgMCAwIDEgNyA3aDIiLz48cGF0aCBkPSJNMTUgN2gyYTUgNSAwIDEgMSAwIDEwaC0yIi8+PGxpbmUgeDE9IjgiIHgyPSIxNiIgeTE9IjEyIiB5Mj0iMTIiLz48L3N2Zz4=');
-    --icon-16-reply: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyLjUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgY2xhc3M9Imx1Y2lkZSBsdWNpZGUtY29ybmVyLXVwLXJpZ2h0Ij48cG9seWxpbmUgcG9pbnRzPSIxNSAxNCAyMCA5IDE1IDQiLz48cGF0aCBkPSJNNCAyMHYtN2E0IDQgMCAwIDEgNC00aDEyIi8+PC9zdmc+');
+    --icon-16-reply: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxOCIgaGVpZ2h0PSIxOCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyLjI1IiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWNvcm5lci11cC1yaWdodC1pY29uIGx1Y2lkZS1jb3JuZXItdXAtcmlnaHQiPjxwb2x5bGluZSBwb2ludHM9IjE1IDE0IDIwIDkgMTUgNCIvPjxwYXRoIGQ9Ik00IDIwdi03YTQgNCAwIDAgMSA0LTRoMTIiLz48L3N2Zz4=');
     --icon-16-send: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxOCIgaGVpZ2h0PSIxOCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyLjI1IiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLXNlbmQtaG9yaXpvbnRhbC1pY29uIGx1Y2lkZS1zZW5kLWhvcml6b250YWwiPjxwYXRoIGQ9Ik0zLjcxNCAzLjA0OGEuNDk4LjQ5OCAwIDAgMC0uNjgzLjYyN2wyLjg0MyA3LjYyN2EyIDIgMCAwIDEgMCAxLjM5NmwtMi44NDIgNy42MjdhLjQ5OC40OTggMCAwIDAgLjY4Mi42MjdsMTgtOC41YS41LjUgMCAwIDAgMC0uOTA0eiIvPjxwYXRoIGQ9Ik02IDEyaDE2Ii8+PC9zdmc+');
     --icon-16-menu: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyLjUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgY2xhc3M9Imx1Y2lkZSBsdWNpZGUtbWVudSI+PGxpbmUgeDE9IjQiIHgyPSIyMCIgeTE9IjEyIiB5Mj0iMTIiLz48bGluZSB4MT0iNCIgeDI9IjIwIiB5MT0iNiIgeTI9IjYiLz48bGluZSB4MT0iNCIgeDI9IjIwIiB5MT0iMTgiIHkyPSIxOCIvPjwvc3ZnPg==');
     --icon-16-bookmark-saved: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJjdXJyZW50Q29sb3IiIHN0cm9rZT0iY3VycmVudENvbG9yIiBzdHJva2Utd2lkdGg9IjIuNSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiBjbGFzcz0ibHVjaWRlIGx1Y2lkZS1ib29rbWFyayI+PHBhdGggZD0ibTE5IDIxLTctNC03IDRWNWEyIDIgMCAwIDEgMi0yaDEwYTIgMiAwIDAgMSAyIDJ2MTZ6Ii8+PC9zdmc+');
@@ -730,6 +734,7 @@ body {
     --icon-16-setting-text: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyLjUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgY2xhc3M9Imx1Y2lkZSBsdWNpZGUtdGV4dC1jdXJzb3ItaW5wdXQiPjxwYXRoIGQ9Ik01IDRoMWEzIDMgMCAwIDEgMyAzIDMgMyAwIDAgMSAzLTNoMSIvPjxwYXRoIGQ9Ik0xMyAyMGgtMWEzIDMgMCAwIDEtMy0zIDMgMyAwIDAgMS0zIDNINSIvPjxwYXRoIGQ9Ik01IDE2SDRhMiAyIDAgMCAxLTItMnYtNGEyIDIgMCAwIDEgMi0yaDEiLz48cGF0aCBkPSJNMTMgOGg3YTIgMiAwIDAgMSAyIDJ2NGEyIDIgMCAwIDEtMiAyaC03Ii8+PHBhdGggZD0iTTkgN3YxMCIvPjwvc3ZnPg==');
     --icon-16-video-broken: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxOCIgaGVpZ2h0PSIxOCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyLjI1IiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWZpbG0taWNvbiBsdWNpZGUtZmlsbSI+PHJlY3Qgd2lkdGg9IjE4IiBoZWlnaHQ9IjE4IiB4PSIzIiB5PSIzIiByeD0iMiIvPjxwYXRoIGQ9Ik03IDN2MTgiLz48cGF0aCBkPSJNMyA3LjVoNCIvPjxwYXRoIGQ9Ik0zIDEyaDE4Ii8+PHBhdGggZD0iTTMgMTYuNWg0Ii8+PHBhdGggZD0iTTE3IDN2MTgiLz48cGF0aCBkPSJNMTcgNy41aDQiLz48cGF0aCBkPSJNMTcgMTYuNWg0Ii8+PC9zdmc+');
     --icon-16-api: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyLjUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgY2xhc3M9Imx1Y2lkZSBsdWNpZGUtYmxvY2tzIj48cmVjdCB3aWR0aD0iNyIgaGVpZ2h0PSI3IiB4PSIxNCIgeT0iMyIgcng9IjEiLz48cGF0aCBkPSJNMTAgMjFWOGExIDEgMCAwIDAtMS0xSDRhMSAxIDAgMCAwLTEgMXYxMmExIDEgMCAwIDAgMSAxaDEyYTEgMSAwIDAgMCAxLTF2LTVhMSAxIDAgMCAwLTEtMUgzIi8+PC9zdmc+');
+    --icon-16-rocket: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxOCIgaGVpZ2h0PSIxOCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyLjI1IiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLXJvY2tldC1pY29uIGx1Y2lkZS1yb2NrZXQiPjxwYXRoIGQ9Ik00LjUgMTYuNWMtMS41IDEuMjYtMiA1LTIgNXMzLjc0LS41IDUtMmMuNzEtLjg0LjctMi4xMy0uMDktMi45MWEyLjE4IDIuMTggMCAwIDAtMi45MS0uMDl6Ii8+PHBhdGggZD0ibTEyIDE1LTMtM2EyMiAyMiAwIDAgMSAyLTMuOTVBMTIuODggMTIuODggMCAwIDEgMjIgMmMwIDIuNzItLjc4IDcuNS02IDExYTIyLjM1IDIyLjM1IDAgMCAxLTQgMnoiLz48cGF0aCBkPSJNOSAxMkg0cy41NS0zLjAzIDItNGMxLjYyLTEuMDggNSAwIDUgMCIvPjxwYXRoIGQ9Ik0xMiAxNXY1czMuMDMtLjU1IDQtMmMxLjA4LTEuNjIgMC01IDAtNSIvPjwvc3ZnPg==');
 
     --icon-16-progress-tier-0: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxOCIgaGVpZ2h0PSIxOCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyLjUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgY2xhc3M9Imx1Y2lkZSBsdWNpZGUtY2lyY2xlIj48Y2lyY2xlIGN4PSIxMiIgY3k9IjEyIiByPSIxMCIvPjwvc3ZnPg==');
     --icon-16-progress-tier-1: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxOCIgaGVpZ2h0PSIxOCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyLjUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgY2xhc3M9Imx1Y2lkZSBsdWNpZGUtZGlhbW9uZCI+PHBhdGggZD0iTTIuNyAxMC4zYTIuNDEgMi40MSAwIDAgMCAwIDMuNDFsNy41OSA3LjU5YTIuNDEgMi40MSAwIDAgMCAzLjQxIDBsNy41OS03LjU5YTIuNDEgMi40MSAwIDAgMCAwLTMuNDFsLTcuNTktNy41OWEyLjQxIDIuNDEgMCAwIDAtMy40MSAwWiIvPjwvc3ZnPg==');
@@ -970,8 +975,8 @@ last.fm changes as of 2024-05-20 */
 .masthead {
     left: 0;
     right: 0;
-    top: var(--card-gap) !important;
-    height: 32px !important; /* macOS */
+    top: 0 !important;
+    height: calc((var(--card-gap) * 2) + 32px) !important; /* macOS */
     display: flex !important;
     justify-content: center;
     align-items: center;
@@ -1008,6 +1013,20 @@ last.fm changes as of 2024-05-20 */
 
         background-repeat: repeat-x;
         background-position: unset !important;
+
+        transition: opacity 0.3s;
+    }
+
+    transition-property: background, background-filter;
+    transition-duration: 0.3s;
+
+    &.scrolled {
+        background: hsl(var(--b6), 85%);
+        backdrop-filter: blur(10px) saturate(120%);
+
+        &:before {
+            opacity: 0;
+        }
     }
 }
 .masthead-inner-wrap {
@@ -1037,15 +1056,18 @@ last.fm changes as of 2024-05-20 */
 
     a {
         position: static;
+
+        &:first-child {
+            display: none !important;
+        }
     }
 
     .bleh-logo {
-        font-size: 24px;
+        font-size: 28px;
+        line-height: 28px;
+        margin-top: -6px;
         font-family: var(--font-brand);
-        background-image: linear-gradient(90deg, hsl(var(--c1)) 0%, hsl(var(--l3-c)) 100%);
-        background-clip: text;
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
+        color: hsl(var(--h3-theme-switch));
 
         [data-bleh--season="pride"] & {
             /* this isnt using https://cesque.com/gaydient/ but shoutout,
@@ -1173,18 +1195,12 @@ last.fm changes as of 2024-05-20 */
         --bg-atv: transparent !important;
         --shadow: none !important;
         --shadow-hov: none !important;
-        width: 40px !important;
+        width: 42px !important;
         height: 32px !important;
         opacity: 1 !important;
         top: 0;
         right: 0;
     }
-}
-
-
-/* hide irrelevant links */
-.masthead-nav-item:has([data-analytics-label="live"], [data-analytics-label="events"], [data-analytics-label="features"]) {
-    display: none !important;
 }
 
 
@@ -1203,32 +1219,24 @@ last.fm changes as of 2024-05-20 */
         gap: var(--button-list-gap);
     }
 
+
     .navlist-more-wrap {
         display: none;
     }
 }
 
 
-/* show mobile buttons for notifications, inbox, and settings */
-.language-nav,
-.masthead-nav-wrap:not(:has(.site-auth--anon)) .visible-xs {
+.language-nav {
     display: flex !important;
     order: 1;
 }
-.masthead-inner-wrap .visible-xs .masthead-nav-control {
-    &:not([data-bleh--label="bleh"][data-season-active="true"]) {
+.masthead-nav .masthead-nav-control {
+    &:not([data-label="bleh"][data-season-active="true"]) {
         padding: unset !important;
         font-size: 0 !important;
-        --left: 6px;
+        --left: 7px;
         width: 32px;
     }
-}
-
-
-/* hide other mobile buttons */
-.masthead-inner-wrap .visible-xs .masthead-nav-item:has([data-analytics-label="home"], [data-analytics-label="music"], [data-analytics-label="charts"], [data-analytics-label="labs"], [data-analytics-label="bookmarks"], [data-analytics-label="logout"], [data-analytics-label="settings"]),
-.masthead-hamburger-toggle {
-    display: none;
 }
 
 
@@ -1724,6 +1732,11 @@ last.fm changes as of 2024-05-20 */
         margin-top: unset !important;
         margin-right: unset !important;
     }
+
+    [data-ff--beret="true"] & {
+        --card-background: transparent;
+        box-shadow: unset;
+    }
 }
 .content-top-header,
 .artist-similar-sidebar
@@ -1994,10 +2007,13 @@ span.header-new-gallery-inner a,
     color: hsl(var(--c3));
 }
 
+.music-featured-artist-tags .tag,
 .catalogue-tags .tag {
     margin: unset;
+    max-width: unset;
 }
 /* apply tag styling to everything tag-related */
+.music-featured-artist-tags .tag a,
 .catalogue-tags .tags-add,
 .catalogue-tags .tag a, .catalogue-tags .tags-add-cta {
     box-shadow: var(--interact-shadow) !important;
@@ -2006,8 +2022,10 @@ span.header-new-gallery-inner a,
     background-color: hsl(var(--b4));
     border-radius: 50px;
     min-height: unset;
+    font-size: var(--font-size);
     line-height: var(--line-height);
     padding: 2px 12px;
+    text-transform: lowercase !important;
     margin-bottom: unset !important;
     letter-spacing: unset !important;
     transition-property: opacity;
@@ -2024,6 +2042,10 @@ span.header-new-gallery-inner a,
         background: hsl(var(--h4), 30%) !important;
         color: hsl(var(--l2-c-theme-switch)) !important;
         /*box-shadow: 0 0 0 2px hsl(var(--h4), 30%) inset, var(--interact-shadow) !important;*/
+    }
+
+    &.tags-add {
+        font-size: 0;
     }
 }
 
@@ -2178,6 +2200,20 @@ spacing between is removed and aligned to tag icon */
             }
         }
     }
+
+    [data-ff--beret="true"] &:not([style], .ignore-katsune) {
+        .row {
+            margin-top: var(--card-gap);
+            background: hsl(var(--b5));
+            border-radius: var(--card-radius);
+            box-shadow: var(--card-shadow);
+            gap: 0 1px !important;
+
+            .col-main, .col-sidebar {
+                margin: unset !important;
+            }
+        }
+    }
 }
 
 /* profile subpages with tabs eg. library */ .content-top-lower,
@@ -2190,6 +2226,9 @@ spacing between is removed and aligned to tag icon */
     & + .navlist {
         margin-top: var(--card-gap) !important;
     }
+}
+.navlist + .bleh-background + .navlist {
+    margin-top: var(--card-gap) !important;
 }
 
 .section-controls-full-width,
@@ -2369,6 +2408,32 @@ spacing between is removed and aligned to tag icon */
                 }
             }
         }
+    }
+}
+.about-me-preview {
+    flex: unset !important;
+}
+
+.banner-preview {
+    width: 100%;
+    height: 180px;
+    background-size: cover;
+    background-position: 0 40%;
+    position: relative;
+
+    &:after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(180deg, hsla(var(--b5), 50%) 0%, hsl(var(--b5)) 100%);
+    }
+
+    border-top-left-radius: var(--card-radius);
+    border-top-right-radius: var(--card-radius);
+    margin-bottom: -100px;
+
+    &:not([style]) {
+        display: none;
     }
 }
 
@@ -2863,6 +2928,11 @@ hr + .library-search-results-header {
 .navlist-items {
     display: flex;
     gap: var(--button-list-gap);
+    flex: 1;
+
+    .fill {
+        flex: 1;
+    }
 }
 /* navlist-more isnt contained in navlist-items */
 button.navlist-more {
@@ -2925,8 +2995,8 @@ button.navlist-more {
     /* left padding for icon, otherwise just 12px 16px */
     --padding: 12px 12px 12px calc(12px + 18px + 6px) !important;
     --bg: transparent !important;
-    --bg-hov: hsl(var(--b3), 60%) !important;
-    --bg-atv: hsl(var(--b3), 80%) !important;
+    --bg-hov: hsl(var(--b3), 40%) !important;
+    --bg-atv: hsl(var(--b3), 60%) !important;
     --shadow: none !important;
     --shadow-hov: none !important;
     --col: hsl(var(--c2)) !important;
@@ -2984,7 +3054,7 @@ button.navlist-more {
     --font-size: 0;
     width: 32px;
     --mask: var(--icon-16-dots);
-    --left: 6px;
+    --left: 7px;
     position: relative;
 }
 
@@ -3002,9 +3072,6 @@ button.navlist-more {
 .navlist--more,
 .navlist--more .navlist-items {
     overflow: visible !important;
-}
-.navlist-items {
-    display: flex;
 }
 
 
@@ -3144,6 +3211,7 @@ button.navlist-more {
 
 
 /* library scrobbles tab */
+.secondary-nav-item--recommendations a,
 .library-controls .secondary-nav-item--overview:first-child a {
     --mask: var(--icon-16-scrobble);
 }
@@ -3157,6 +3225,7 @@ button.navlist-more {
     --mask: var(--icon-16-users);
 }
 
+.secondary-nav-item--charts a,
 [data-analytics-label="charts"]:before {
     --mask: var(--icon-16-charts);
 }
@@ -3204,6 +3273,7 @@ button.navlist-more {
 .secondary-nav-item--overview a[href*="/settings"]:before {
     --mask: var(--icon-16-mention);
 }
+.secondary-nav-item--settings a,
 [data-menu-item="settings"],
 .secondary-nav-item--website a:before {
     --mask: var(--icon-16-settings);
@@ -3266,6 +3336,26 @@ button.navlist-more {
 }
 .secondary-nav-item--year a:before {
     --mask: var(--icon-16-listening-report-yearly);
+}
+
+
+.secondary-nav-item--home a {
+    --mask: var(--icon-16-home);
+}
+.secondary-nav-item--releases a {
+    --mask: var(--icon-16-rocket);
+}
+.secondary-nav-item--bookmarks a {
+    --mask: var(--icon-16-bookmark);
+}
+.secondary-nav-item--bleh a {
+    --mask: var(--icon-16-settings);
+    --col: hsl(var(--l3-c)) !important;
+}
+.secondary-nav-item--more > a {
+    --mask: var(--icon-16-dots);
+    --font-size: 0;
+    padding-left: calc(12px + 18px) !important;
 }
 
 
@@ -4001,6 +4091,17 @@ h2:not(.count, .mask-multi-text, .mask-text, .sr-only, .js-gallery-heading, .top
     &.metadata-title {
         font: inherit;
     }
+
+    &.music-section-heading {
+        font-size: 24px;
+        line-height: 30px;
+        font-weight: var(--font-weight-bold);
+        margin: var(--card-gap) 0 !important;
+
+        &:after {
+            display: none;
+        }
+    }
 }
 .user-sidebar-header
 {
@@ -4667,7 +4768,7 @@ better than the default selector '#app a' i suppose */
     }
 
     .chartlist-more-button {
-        --left: 6px;
+        --left: 7px;
         --mask: var(--icon-16-dots-v);
 
         [data-ff--hide_chartlist_more="true"] & {
@@ -5146,7 +5247,7 @@ better than the default selector '#app a' i suppose */
 /*     LOVED - brought over from bleh     */
 .chartlist-love-button {
     position: relative;
-    --left: 6px;
+    --left: 7px;
     --mask: var(--icon-16-heart);
 
     &:before {
@@ -5213,7 +5314,7 @@ a.chartlist-love-button:after {
     order: 1;
 }
 .chartlist-play-button {
-    --left: 6px;
+    --left: 7px;
     --mask: var(--icon-16-play);
 
     &:before {
@@ -5585,7 +5686,7 @@ p + .chartlist {
 .shout-more-actions {
     margin-right: unset !important;
     --mask: var(--icon-16-dots);
-    --left: 6px;
+    --left: 7px;
 }
 
 /* apply some sizing adjustments to all except menu items */
@@ -6202,7 +6303,8 @@ button,
 .btn-subscribe,
 .masthead-logo a, .masthead-search-form,
 .show-more a,
-/* log in */ .site-auth-control
+/* log in */ .site-auth-control,
+.music-more-link a
 {
     --bg: var(--cards-overlay-image-subtlest, none), hsl(var(--b3));
     --bg-hov: var(--cards-overlay-image-subtlest, none), hsla(var(--b3), 80%);
@@ -6283,6 +6385,12 @@ button,
 
     kbd {
         font-size: var(--font-size-sm);
+    }
+
+    &.flex-button {
+        display: flex;
+        align-items: center;
+        gap: 6px;
     }
 
 
@@ -6478,7 +6586,8 @@ button,
 .language-nav,
 .auth-link,
 .out-now-btn,
-.show-more a
+.show-more a,
+.music-more-link a
 {
     --btn-right: calc(12px + 18px + 6px) !important;
 }
@@ -6569,6 +6678,7 @@ button,
 
 
 /*     ICON MASK     */
+.music-featured-item-background:before,
 .gallery-image-preferred-states:before, .gallery-image-votes:before,
 .user-list-follower-btn:before,
 .to-consider li:before,
@@ -6734,7 +6844,8 @@ span.header-new-gallery-inner a:before,
 /*     SET AN OBSESSION     */
 .obsession-candidate-inner .btn-sm:before,
 /*     GENERIC     */
-.btn--loading:after
+.btn--loading:after,
+.music-more-link a:before
 {
     content: '';
     display: var(--show-icon, block) !important;
@@ -6774,7 +6885,8 @@ span.header-new-gallery-inner a:before,
 .form-group-controls:has(select):before,
 .dropdown-menu-list-button::after, .dropdown-menu-clickable-button::after, .dropdown-menu-clickable-button-js-only::after,
 .all-results-list li:before,
-.language-nav, .auth-link
+.language-nav, .auth-link,
+.music-more-link a:before
 {
     --left: none !important;
     --right: 12px !important;
@@ -6857,7 +6969,7 @@ span.header-new-gallery-inner a:before,
     margin-top: unset;
     margin-bottom: unset;
     opacity: 1;
-    --left: 6px;
+    --left: 7px;
     --font-size: 0;
 }
 .section-with-settings .section-control:before,
@@ -7261,6 +7373,7 @@ very, very, very dated - who looks up a song on ebay? */
 }
 
 
+[data-label="notifications"],
 [data-analytics-label="notifications"] {
     --mask: var(--icon-16-notifications);
 
@@ -7268,6 +7381,7 @@ very, very, very dated - who looks up a song on ebay? */
         --mask: var(--icon-16-notifications-active);
     }*/
 }
+[data-label="inbox"],
 [data-analytics-label="inbox"] {
     --mask: var(--icon-16-mail);
 
@@ -7307,14 +7421,14 @@ very, very, very dated - who looks up a song on ebay? */
 }
 
 [data-menu-item="bleh"],
-[data-bleh--label="bleh"] {
+[data-label="bleh"] {
     --mask: var(--icon-16-settings);
 }
-[data-bleh--label="changelog"] {
+[data-label="changelog"] {
     --mask: var(--icon-16-changelog);
 }
 
-[data-bleh--label="bleh"] {
+[data-label="bleh"] {
     &[data-season="easter"] {
         --mask: var(--icon-16-egg);
     }
@@ -7365,6 +7479,8 @@ very, very, very dated - who looks up a song on ebay? */
 
 
 /*     DANGEROUS     */
+.dropdown-menu-clickable-item.sponsor,
+.dropdown-menu-clickable-item.update,
 .dropdown-menu-clickable-item.swatch,
 .dropdown-menu-clickable-item.lotus,
 .more-item--obsession,
@@ -7388,7 +7504,9 @@ very, very, very dated - who looks up a song on ebay? */
         [data-menu-item="bleh"],
         [data-menu-item="labs"],
         .more-item--obsession,
-        .lotus, .swatch
+        .lotus, .swatch,
+        .dropdown-menu-clickable-item.sponsor,
+        .dropdown-menu-clickable-item.update
         ) {
         --hue-over: var(--hue-neg);
         --sat-over: 1;
@@ -8116,7 +8234,7 @@ input:is([name^="track_name"], [name^="artist_name"], [name^="album_name"], [nam
     margin: unset;
 }
 .modal-action-button {
-    --left: 6px;
+    --left: 7px;
     --font-size: 0;
 
     width: 32px !important;
@@ -8281,7 +8399,7 @@ that literally is 1 user from 2007 who hasnt even gotten a scrobble */
     height: 32px;
     position: relative;
     margin: unset !important;
-    --left: 6px;
+    --left: 7px;
 }
 .view-icon, #list-view-icon {
     display: none;
@@ -8330,7 +8448,7 @@ that literally is 1 user from 2007 who hasnt even gotten a scrobble */
 }
 
 .gallery-image-buttons:not(.gallery-image-buttons-extra) :is(.gallery-image-report, .gallery-image-delete button) {
-    width: 40px !important;
+    width: 42px !important;
 }
 .gallery-image-report--reported {
     pointer-events: none;
@@ -9784,7 +9902,7 @@ text[style^="color: rgb(255, 172, 172)"] {
 }
 .report-headline-share {
     position: relative;
-    --left: 6px;
+    --left: 7px;
     --mask: var(--icon-16-share);
     margin: unset;
 
@@ -9793,7 +9911,7 @@ text[style^="color: rgb(255, 172, 172)"] {
     }
 }
 .user-dashboard-pagination-previous-link, .user-dashboard-pagination-next-link {
-    --left: 6px;
+    --left: 7px;
     --mask: var(--icon-16-arrow-left);
     transform: unset !important;
 }
@@ -11464,7 +11582,7 @@ table.table tr:nth-child(2n) td {
 
                 .api-session-connect, .api-session-disconnect {
                     --font-size: 0;
-                    --left: 6px;
+                    --left: 7px;
                     width: 32px;
                     position: relative;
                 }
@@ -12212,7 +12330,8 @@ hr {
     [data-page-subpage="subscription_automatic-edits_tracks"], [data-page-subpage="subscription_automatic-edits_albums"],
     [data-page-subpage="obsessions_overview"],
     [data-page-type="charts"][data-page-subpage="overview"],
-    [data-page-type="inbox"]
+    [data-page-type="inbox"],
+    [data-page-type="overview"]
     ),
 .namespace--music_bookmarks_overview {
     .col-main {
@@ -12264,7 +12383,7 @@ hr {
         right: 4px;
 
         --col: hsl(var(--l3-c));
-        --left: 6px;
+        --left: 7px;
         --mask: var(--icon-16-bookmark-saved);
 
         --bg: hsla(var(--b4), 40%);
@@ -12560,7 +12679,7 @@ h2.playlisting-create-option-title {
 .playlisting-playlists-item-toggle {
     --font-size: 0;
     --mask: var(--icon-16-dots);
-    --left: 6px;
+    --left: 7px;
     right: 8px;
     top: 8px;
 }
@@ -12663,7 +12782,7 @@ h2.playlisting-create-option-title {
     --font-size: 0;
     width: 32px;
     --mask: var(--icon-16-dots);
-    --left: 6px;
+    --left: 7px;
 }
 .playlisting-playlist-header-actions > * {
     margin-left: unset !important;
@@ -12790,7 +12909,7 @@ h2.playlisting-create-option-title {
     --font-size: 0;
     width: 32px;
     --mask: var(--icon-16-x);
-    --left: 6px;
+    --left: 7px;
 }
 
 
@@ -12923,7 +13042,7 @@ h2.playlisting-create-option-title {
     --bg-atv: transparent !important;
     --shadow: none !important;
     --shadow-hov: none !important;
-    width: 40px;
+    width: 42px;
     --font-size: 0;
     opacity: unset !important;
 }
@@ -12992,13 +13111,10 @@ h2.playlisting-create-option-title {
 
     .btn-sm {
         --font-size: 0;
-        --left: 6px;
+        --left: 7px;
         --mask: var(--icon-16-add);
         width: 32px;
         --col: hsl(var(--l3-c));
-        --hue-over: 255;
-        --sat-over: 1;
-        --lit-over: 1;
         margin-left: 4px; /* 12px total */
     }
 }
@@ -13189,7 +13305,7 @@ h2.playlisting-create-option-title {
             --col: hsl(var(--l3-c));
         }
 
-        &[data-bleh-page="sku"]:not(.secondary-nav-item-link--active) {
+        li:has(&:is([data-bleh-page="sku"], [data-bleh-page="home"]):not(.secondary-nav-item-link--active)) {
             display: none;
         }
     }
@@ -13677,7 +13793,7 @@ pre {
     &[data-swatch-type="seasonal"] {
         --mask: var(--icon-16-season);
     }
-    &[data-swatch-type="custom"] {
+    &[data-swatch-type="customise"] {
         --mask: var(--icon-16-add);
     }
 }
@@ -14018,6 +14134,7 @@ input[type="range"]::-moz-range-progress {
     display: flex;
     flex-direction: column;
     justify-content: center;
+    gap: 2px;
     width: 100%;
 
     h5 {
@@ -14028,8 +14145,8 @@ input[type="range"]::-moz-range-progress {
     }
 
     p {
-        font-size: 12px;
-        color: hsl(var(--c3));
+        font-size: 13px;
+        color: hsl(var(--c2), 70%);
     }
 }
 .toggle-container .heading .btn,
@@ -14718,22 +14835,22 @@ input[type="range"]::-moz-range-progress {
     justify-content: space-evenly;
 }
 [data-bleh--colourful_counts="true"] {
-    .not-colourful {
+    .not-colourful-example {
         display: none !important;
     }
 }
 [data-bleh--colourful_counts="false"] {
-    .colourful {
+    .colourful-example {
         display: none !important;
     }
 }
 
 
 .bleh--name-is-cute {
-    background-image: linear-gradient(90deg, hsl(var(--c1)) 0%, hsl(var(--l3-c)) 100%);
-    background-clip: text;
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
+    font-family: var(--font-brand);
+    font-size: 32px;
+    line-height: 30px;
+    margin-top: -8px;
 
     [data-bleh--season="christmas"] & {
         --hue-seasonal: 352;
@@ -15185,6 +15302,7 @@ trying to list every song ever made by someone identifying as a female, which is
     /*padding: var(--card-gap);
     background-color: hsla(var(--b4), 40%);
     border-radius: var(--card-radius);*/
+    z-index: 2;
 
     .avatar-side {
         display: flex;
@@ -15628,7 +15746,7 @@ button.bleh--gallery-bookmark-image-btn {
         }
 
         .date {
-            width: 62px;
+            width: 67px;
             color: hsla(var(--c3), 80%);
         }
 
@@ -15937,7 +16055,7 @@ button.bleh--gallery-bookmark-image-btn {
 
             &.menu-btn {
                 --font-size: 0;
-                width: 40px;
+                width: 42px;
                 --mask: var(--icon-16-dots);
             }
         }
@@ -16332,6 +16450,9 @@ button.bleh--gallery-bookmark-image-btn {
 }
 .settings {
     --mask: var(--icon-16-settings);
+}
+.issues {
+    --mask: var(--icon-16-issues);
 }
 
 
@@ -18544,10 +18665,6 @@ h4 {
             display: none;
         }
 
-        &[data-page-type="settings"] {
-            display: none;
-        }
-
         &[data-page-type="user"] {
             [data-bleh--profile_header_expand="false"] & {
                 opacity: 0;
@@ -19833,7 +19950,7 @@ h4 {
                             height: 32px;
                             position: relative;
                             --mask: var(--icon-16-edit);
-                            --left: 6px;
+                            --left: 7px;
 
                             --bg: transparent !important;
                             --bg-hov: hsla(var(--b3), 30%) !important;
@@ -20441,7 +20558,7 @@ h4 {
                 width: 32px;
                 --font-size: 0;
                 --btn-left: 12px !important;
-                --left: 6px;
+                --left: 7px;
                 --mask: var(--icon-16-trash);
                 --bg: transparent;
                 --bg-hov: hsl(var(--h4), 20%);
@@ -20459,10 +20576,30 @@ h4 {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    gap: var(--card-padding);
 
     padding: 30px calc(var(--card-padding) * 6);
-    background-color: hsl(var(--b6));
+
+    margin-top: -205px;
+
+    .sponsor-message {
+        color: hsl(var(--l3-c));
+        text-shadow: 0 0 20px hsl(var(--l4-c));
+        /* filter: drop-shadow(0 0 20px hsl(var(--l4-c))); */
+        font-weight: var(--font-weight-medium);
+        --hue-over: 333;
+        --sat-over: 1;
+        --lit-over: 1;
+
+        display: flex;
+        align-items: center;
+        gap: 6px;
+
+        margin-bottom: 10px;
+
+        .bleh-icon-container {
+            filter: drop-shadow(0 0 13px hsl(var(--l4-c)));
+        }
+    }
 
     .home-avatar {
         width: 100px;
@@ -20470,9 +20607,22 @@ h4 {
         border-radius: var(--avatar-radius);
         box-shadow: var(--interact-shadow);
         overflow: hidden;
+        position: relative;
+
+        margin-bottom: var(--card-padding);
 
         img {
             width: 100%;
+        }
+
+        &:after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: var(--avatar-radius);
+            background: radial-gradient(transparent 40%, hsl(var(--h4), 50%));
+
+            display: none;
         }
     }
 
@@ -20554,5 +20704,150 @@ h4 {
     & + .track-preview {
         display: none;
     }
+}
+
+
+.music-section {
+    display: flex;
+    flex-direction: column;
+    gap: var(--card-gap);
+    margin: unset;
+
+    .music-more-link,
+    .music-more-artists,
+    .music-artists, .music-releases {
+        margin: unset;
+    }
+
+    .music-more-link a {
+        --mask: var(--icon-16-arrow-right);
+    }
+
+    .music-artists {
+        display: flex;
+        justify-content: center;
+        margin-bottom: var(--card-gap);
+
+        .music-artists-featured {
+            padding: unset;
+            width: 400px;
+
+            .music-featured-item {
+                display: flex;
+                align-items: center;
+                flex-direction: column;
+                gap: var(--gap);
+                --size: 300px;
+                --gap: 10px;
+                color: hsl(var(--c2));
+                height: fit-content;
+
+                .music-featured-item-background {
+                    position: relative;
+                    width: var(--size);
+                    height: var(--size);
+                    background-size: cover !important;
+                    border-radius: var(--item-big-radius);
+                    box-shadow: var(--card-shadow);
+                    flex-shrink: 0;
+
+                    &:after {
+                        display: none;
+                    }
+
+                    --show-icon: none;
+                    --mask: var(--icon-artist);
+                    --mask-size: var(--cover-size-300);
+                    --left: 50%;
+                    --margin-left: calc(-1 * (var(--cover-size-300) / 2));
+                    --margin-top: calc(-1 * (var(--cover-size-300) / 2));
+
+                    &[style='background: url("https://lastfm.freetls.fastly.net/i/u/arG/2a96cbd8b46e442fc41c2b86b821562f.jpg");'] {
+                        background: hsl(var(--b4)) !important;
+                        --show-icon: block;
+                    }
+                }
+
+                .music-featured-item-heading-link {
+                    flex: unset;
+                    margin-top: calc(-1 * (var(--size) + var(--gap)));
+                    padding: unset;
+                    padding-top: calc(var(--size) + var(--gap));
+                    width: 100%;
+                    text-align: center;
+
+                    h3 {
+                        font-size: 16px;
+                        line-height: 20px;
+                        color: hsl(var(--c1));
+                        font-weight: var(--font-weight-bold);
+                        margin: unset;
+                        letter-spacing: unset;
+                        position: static;
+                    }
+                }
+
+                .music-featured-item-body {
+                    padding: unset;
+                    text-align: center;
+                    display: flex;
+                    align-items: center;
+                    flex-direction: column;
+                    gap: var(--gap);
+
+                    .music-featured-artist-similar {
+                        color: hsl(var(--c3));
+                        margin: unset;
+                        opacity: unset;
+                    }
+
+                    .music-featured-artist-tags {
+                        margin: unset;
+                    }
+
+                    .music-featured-item-wiki {
+                        margin: unset;
+
+                        a {
+                            color: hsl(var(--l3-c));
+                        }
+                    }
+
+                    .artist-featured-items {
+                        display: none;
+                    }
+                }
+            }
+        }
+    }
+}
+
+.beret-music {
+    flex-direction: row !important;
+    gap: calc(var(--card-padding) * 2 + var(--card-gap)) !important;
+
+    .panel-side {
+        display: flex;
+        flex-direction: column;
+
+        h4 {
+            margin-bottom: var(--card-gap);
+        }
+
+        &.panel-side-main {
+            width: calc(var(--cards-main-width) - (var(--card-padding) * 2));
+        }
+        &.panel-side-alt {
+            width: calc(var(--cards-sidebar-width) - (var(--card-padding) * 2));
+        }
+    }
+}
+
+.page-content:is(
+    [data-page-type="overview"]
+) .col-main {
+    display: flex !important;
+    flex-direction: column;
+    gap: var(--card-gap);
 }
 }

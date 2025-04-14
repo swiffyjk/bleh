@@ -1,4 +1,13 @@
-function patch_titles() {
+import { settings } from "../build/config";
+import { log } from "../build/log";
+import { page, root } from "../build/page";
+import { clamp_sat, return_artist_from_track, rgb_to_hsl, sanitise, sanitise_text } from "../build/tools";
+import { bleh_glacier_insights } from "../pages/glacier";
+import { patch_artist_ranks_in_list_view } from "./colourful_counts";
+import { correct_artist, correct_item_by_artist, name_includes } from "./lotus";
+import { register_menu } from "./menu";
+
+export function patch_titles() {
     if (page.subpage == 'tags_overview')
         return;
 
@@ -209,23 +218,25 @@ function patch_titles() {
                 if (image == null && page.type == 'user')
                     is_library_track_page = true;
 
-                let track_preview = document.createElement('div');
-                track_preview.classList.add('track-preview');
-                track_preview.innerHTML = (`
-                    <div class="image">
-                        <div class="inner-image">
-                            ${(image != null) ? image.outerHTML : '<img class="missing-track">'}
+                if (track_legacy_menu) {
+                    let track_preview = document.createElement('div');
+                    track_preview.classList.add('track-preview');
+                    track_preview.innerHTML = (`
+                        <div class="image">
+                            <div class="inner-image">
+                                ${(image != null) ? image.outerHTML : '<img class="missing-track">'}
+                            </div>
                         </div>
-                    </div>
-                    <div class="info">
-                        <h5 class="title">${song_title}</h5>
-                        <p class="artist">${song_artist_element.innerHTML}</p>
-                        <div class="tags">${song_tags_text}</div>
-                        ${(!is_library_track_page) ? (is_album) ? '' : `<p class="album">${(image != null) ? correct_item_by_artist(sanitise_text(image.getAttribute('alt')), track_artist) : page.name}</p>` : ''}
-                        ${(track_timestamp != null && track_timestamp_contents != null) ? `<p class="timestamp">${track_timestamp_contents}</p>` : ''}
-                    </div>
-                `);
-                track_legacy_menu.insertBefore(track_preview, track_legacy_menu.firstElementChild);
+                        <div class="info">
+                            <h5 class="title">${song_title}</h5>
+                            <p class="artist">${song_artist_element.innerHTML}</p>
+                            <div class="tags">${song_tags_text}</div>
+                            ${(!is_library_track_page) ? (is_album) ? '' : `<p class="album">${(image != null) ? correct_item_by_artist(sanitise_text(image.getAttribute('alt')), track_artist) : page.name}</p>` : ''}
+                            ${(track_timestamp != null && track_timestamp_contents != null) ? `<p class="timestamp">${track_timestamp_contents}</p>` : ''}
+                        </div>
+                    `);
+                    track_legacy_menu.insertBefore(track_preview, track_legacy_menu.firstElementChild);
+                }
             } else if (settings.corrections) {
                 let song_artist_element = track.querySelector('.chartlist-artist a');
                 if (song_artist_element != null) {
@@ -308,33 +319,35 @@ function patch_titles() {
 
             if (!is_album && track.classList.contains('chartlist-row--now-scrobbling')) {
                 let image_wrap = track.querySelector('.chartlist-image');
-                let link = image_wrap.querySelector('.cover-art');
-                let image = link.querySelector('img');
+                if (image_wrap) {
+                    let link = image_wrap.querySelector('.cover-art');
+                    let image = link.querySelector('img');
 
-                if (!settings.album_text) {
-                    let alt = image.getAttribute('alt');
+                    if (!settings.album_text) {
+                        let alt = image.getAttribute('alt');
 
-                    let album_text = document.createElement('td');
-                    album_text.classList.add('chartlist-album', 'custom-album-text');
-                    album_text.innerHTML = (`
-                        <a href="${link.getAttribute('href')}">${alt}</a>
-                    `);
-                    track.appendChild(album_text);
+                        let album_text = document.createElement('td');
+                        album_text.classList.add('chartlist-album', 'custom-album-text');
+                        album_text.innerHTML = (`
+                            <a href="${link.getAttribute('href')}">${alt}</a>
+                        `);
+                        track.appendChild(album_text);
+                    }
+
+                    image.setAttribute('crossorigin', 'anonymous');
+                    try {
+                        image.addEventListener('load', function() {
+                            let thief = new ColorThief();
+                            let colour = thief.getColor(image);
+
+                            let hsl = rgb_to_hsl(colour[0], colour[1], colour[2]);
+
+                            track.style.setProperty('--hue-over', hsl.h);
+                            track.style.setProperty('--sat-over', clamp_sat((hsl.s / 100) * 3));
+                            track.style.setProperty('--lit-over', 1);
+                        });
+                    } catch(e) {}
                 }
-
-                image.setAttribute('crossorigin', 'anonymous');
-                try {
-                    image.addEventListener('load', function() {
-                        let thief = new ColorThief();
-                        let colour = thief.getColor(image);
-
-                        let hsl = rgb_to_hsl(colour[0], colour[1], colour[2]);
-
-                        track.style.setProperty('--hue-over', hsl.h);
-                        track.style.setProperty('--sat-over', clamp_sat((hsl.s / 100) * 3));
-                        track.style.setProperty('--lit-over', 1);
-                    });
-                } catch(e) {}
             }
         }));
     });

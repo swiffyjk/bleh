@@ -1,12 +1,17 @@
+import { handle_error_500 } from "../page";
+import { log } from "./log";
+import { auth, auth_link, setRoot } from "./page";
+import { clamp_sat, rgb_to_hsl } from "./tools";
+
 // loads your selected language in last.fm
-let lang;
-let non_override_lang;
+export let lang;
+export let non_override_lang;
 // WARN: fill this out if translating
 // lists all languages with valid bleh translations
 // any custom translations will not load if not listed here!!
-let valid_langs = ['en', 'de', 'pl'];
+export let valid_langs = ['en', 'de', 'pl'];
 
-let lang_info = {
+export let lang_info = {
     en: {
         name: 'English',
         by: ['cutensilly'],
@@ -14,17 +19,407 @@ let lang_info = {
     },
     de: {
         name: 'Deutsch',
-        by: ['inozom', 'cutensilly'],
+        by: ['stellasaur', 'cutensilly'],
         last_updated:  '2025-03-09'
     },
     pl: {
         name: 'Polski',
-        by: ['twolay'],
+        by: ['iwas15with100k'],
         last_updated:  '2024-06-17'
     }
 }
 
-const trans = {
+export const trans = {
+    badges: {
+        missing: {
+            name: {
+                en: 'No badges'
+            }
+        },
+        'user-status-subscriber': {
+            name: {
+                en: 'Last.fm Pro'
+            },
+            reason: {
+                en: 'Active Pro subscription'
+            }
+        },
+        'user-status-staff': {
+            name: {
+                en: 'Staff'
+            },
+            reason: {
+                en: 'Official member of Last.fm'
+            }
+        },
+        'user-status-mod': {
+            name: {
+                en: 'Mod'
+            },
+            reason: {
+                en: 'Official member of Last.fm'
+            }
+        },
+        'user-status-alum': {
+            name: {
+                en: 'Alum'
+            },
+            reason: {
+                en: 'Since the beginning'
+            }
+        },
+        'label--fade': {
+            reason: {
+                en: 'They follow you!'
+            }
+        },
+        contributor: {
+            name: {
+                en: 'Contributor'
+            },
+            reason: {
+                en: 'Has worked on bleh or bwaa'
+            }
+        },
+        translation: {
+            reason: {
+                en: 'Translations'
+            }
+        },
+        cat: {
+            name: {
+                en: 'it\s a kitty!!'
+            }
+        },
+        sponsor: {
+            name: {
+                en: 'Sponsor'
+            },
+            reason: {
+                en: 'thank you from kate <3'
+            }
+        },
+        cute: {
+            reason: {
+                en: 'Reserved'
+            }
+        },
+        reserved: {
+            reason: {
+                en: 'Reserved'
+            }
+        }
+    },
+    home: {
+        en: 'Home'
+    },
+    library: {
+        en: 'Library'
+    },
+    view_profile: {
+        en: 'View profile'
+    },
+    shouts: {
+        en: 'Shouts'
+    },
+    about: {
+        en: 'About'
+    },
+    edit_wiki: {
+        en: 'Edit wiki'
+    },
+    read_more: {
+        en: 'Read more'
+    },
+    refresh: {
+        en: 'Refresh'
+    },
+    refresh_tracks: {
+        en: 'Refresh tracks'
+    },
+    from_the_album: {
+        en: 'From the album: {album}'
+    },
+    set_obsession: {
+        en: 'Obsess'
+    },
+    obsession_first: {
+        en: 'First to claim this obsession!'
+    },
+    compare: {
+        en: 'Compare'
+    },
+    compare_plays: {
+        en: 'Compare plays'
+    },
+    others_featured: {
+        en: 'Others featured'
+    },
+    your_scrobbles: {
+        en: 'Your scrobbles'
+    },
+    plays: {
+        en: 'Plays'
+    },
+    try_again: {
+        en: 'Try again'
+    },
+    continue: {
+        en: 'Continue'
+    },
+    back: {
+        en: 'Back'
+    },
+    settings: {
+        en: 'Settings'
+    },
+    done: {
+        en: 'Done'
+    },
+    on_ignore_list: {
+        en: 'Ignored'
+    },
+    friends: {
+        en: 'Friends'
+    },
+    aka: {
+        en: 'aka.'
+    },
+    pronouns: {
+        en: 'pronouns'
+    },
+    account_created: {
+        en: 'created'
+    },
+    account_scrobbling_since_replace: {
+        // copy this from last.fm 1:1 (including the space at the end if there)
+        en: '• scrobbling since '
+    },
+    edit: {
+        en: 'Edit'
+    },
+    edit_profile: {
+        en: 'Edit profile'
+    },
+    scrobbles: {
+        en: 'Scrobbles'
+    },
+    artists: {
+        en: 'Artists'
+    },
+    albums: {
+        en: 'Albums'
+    },
+    tracks: {
+        en: 'Tracks'
+    },
+    appearance: {
+        en: 'Appearance'
+    },
+    themes: {
+        name: {
+            en: 'Themes'
+        },
+        light: {
+            en: 'Light'
+        },
+        dark: {
+            en: 'Ash'
+        },
+        darker: {
+            en: 'Dark'
+        },
+        oled: {
+            en: 'Void'
+        }
+    },
+    colours: {
+        en: 'Colours'
+    },
+    hue_from_album: {
+        name: {
+            en: 'Colour album pages based on album art'
+        },
+        body: {
+            en: 'Highlights the primary colour from the album art to replace your colour temporarily'
+        }
+    },
+    colourful_tracks: {
+        name: {
+            en: 'Colour active track based on album art'
+        },
+        body: {
+            en: 'Highlights the primary colour from the album art for the individual track'
+        }
+    },
+    configure: {
+        en: 'Configure'
+    },
+    events: {
+        en: 'Events'
+    },
+    top_badge: {
+        en: 'Top Badge'
+    },
+    layout: {
+        en: 'Layout'
+    },
+    music: {
+        en: 'Music',
+        de: 'Musik'
+    },
+    profile: {
+        en: 'Profile',
+        de: 'Profil'
+    },
+    seasonal: {
+        name: {
+            en: 'Seasonal',
+            de: 'Saisonal'
+        }
+    },
+    text: {
+        en: 'Text'
+    },
+    accessibility: {
+        en: 'Accessibility'
+    },
+    troubleshooting: {
+        en: 'Advanced'
+    },
+    recommendations: {
+        en: 'Recommendations'
+    },
+    releases: {
+        en: 'Releases'
+    },
+    bookmarks: {
+        en: 'Bookmarks'
+    },
+    charts: {
+        en: 'Charts'
+    },
+    welcome_back_user: {
+        en: 'Welcome back {user}'
+    },
+    thank_you_for_sponsoring: {
+        en: 'Thank you for sponsoring!'
+    },
+    configure_bleh: {
+        en: 'bleh Settings'
+    },
+    import: {
+        en: 'Import'
+    },
+    export: {
+        en: 'Export'
+    },
+    reset: {
+        en: 'Reset'
+    },
+    changelog: {
+        en: 'What\'s New?'
+    },
+    default: {
+        en: 'Default'
+    },
+    avatar: {
+        en: 'Avatar'
+    },
+    customise: {
+        en: 'Customise'
+    },
+    hue: {
+        en: 'Accent colour',
+        de: 'Akzentfarbe'
+    },
+    sat: {
+        en: 'Vibrancy'
+    },
+    lit: {
+        en: 'Lightness',
+        de: 'Helligkeit'
+    },
+    card_background_saturation: {
+        name: {
+            en: 'Card background vibrancy'
+        },
+        body: {
+            en: 'Bring some colour into your world (or reduce it)'
+        }
+    },
+    save: {
+        en: 'Save'
+    },
+    add: {
+        en: 'Add'
+    },
+    remove: {
+        en: 'Remove'
+    },
+    go: {
+        en: 'Go'
+    },
+    skip: {
+        en: 'Skip'
+    },
+    send: {
+        en: 'Send'
+    },
+    send_quickly_with: {
+        en: 'Send quickly with {kbd}'
+    },
+    right_click_for_more_options: {
+        en: 'Right click for more options'
+    },
+    refresh_pending: {
+        name: {
+            en: 'Refresh pending'
+        },
+        body: {
+            en: 'A setting you changed requires a page refresh to take effect.'
+        }
+    },
+    new: {
+        en: 'New'
+    },
+    beta: {
+        en: 'Beta'
+    },
+    more: {
+        en: 'More'
+    },
+    notifications: {
+        name: {
+            en: 'Notifications'
+        },
+        count: {
+            en: '{count} notifications'
+        },
+        none: {
+            en: 'No new notifications'
+        }
+    },
+    inbox: {
+        name: {
+            en: 'Messages'
+        },
+        count: {
+            en: '{count} messages'
+        },
+        none: {
+            en: 'No new messages'
+        }
+    },
+    about_me_preview: {
+        en: 'About Me (preview)'
+    },
+    markdown_tip: {
+        en: 'This textbox supports markdown such as line breaks, bold text, italics, underlines, and more. You can embed images using ![alt text](link). Beware that to non-bleh users it will not appear fancy.'
+    }
+}
+
+export const trans_legacy = {
     en: {
         pages: {
             bleh_settings: {
@@ -44,7 +439,7 @@ const trans = {
                 events: 'events'
             },
             overview: {
-                music: 'music'
+                music: 'home'
             },
             recommended: {
                 artists: 'recommended artists',
@@ -3084,22 +3479,38 @@ moment.updateLocale('de', {
     }
 });
 
-function lookup_lang() {
-    root = document.querySelector('.masthead-logo a');
+export function tl(key) {
+    if (!key) {
+        log('your key is undefined', 'trans');
+        return 'NO_TRANSLATION_FOUND';
+    }
 
-    if (!root) {
+    if (key[lang])
+        return key[lang];
+
+    log(`no translation found for ${JSON.stringify(key)}`, 'trans');
+    return key.en;
+}
+
+export function lookup_lang() {
+    const troot = document.querySelector('.masthead-logo a');
+
+    console.log(troot)
+    if (!troot) {
         handle_error_500();
         return;
     }
 
-    root = root.getAttribute('href');
+    console.log(troot.getAttribute("href"));
+
+    setRoot(troot.getAttribute('href'));
 
     let previous_avi = auth.avatar;
-    if (auth_link) {
-        auth.avatar = auth_link.querySelector('img').getAttribute('src');
+    if (auth_link.state) {
+        auth.avatar = auth_link.state.querySelector('img').getAttribute('src');
 
         if (auth.avatar != previous_avi) {
-            let avatar = auth_link.querySelector('img');
+            let avatar = auth_link.state.querySelector('img');
             avatar.setAttribute('crossorigin', 'anonymous');
 
             try {

@@ -1,4 +1,11 @@
-function bleh_gallery() {
+import { expand_avatar } from "../avatar";
+import { log } from "../build/log";
+import { page, root } from "../build/page";
+import { lang, trans_legacy, trans, tl } from "../build/trans";
+import { register_menu } from "../components/menu";
+import { ff } from "../sku";
+
+export function bleh_gallery() {
     if (page.subpage != 'image')
         return;
 
@@ -47,7 +54,7 @@ function bleh_gallery() {
 
     if (image_title.textContent.trim() == '') {
         image_title.classList.add('gallery-image-title-empty');
-        image_title.textContent = trans[lang].gallery.empty.title;
+        image_title.textContent = trans_legacy[lang].gallery.empty.title;
     }
 
     let breadcrumbs = document.body.querySelector('.content-top-lower-row');
@@ -81,7 +88,7 @@ function bleh_gallery() {
     if (description == null) {
         description = document.createElement('p');
         description.classList.add('gallery-image-description', 'gallery-image-description-empty');
-        description.textContent = trans[lang].gallery.empty.description;
+        description.textContent = trans_legacy[lang].gallery.empty.description;
 
         image_details.querySelector('[data-image-url]').appendChild(description);
     }
@@ -103,8 +110,8 @@ function bleh_gallery() {
     let positive_btn = vote_buttons.querySelector(':is([data-ajax-form-state=""] .gallery-image-vote-up-off, [data-ajax-form-state="up-voted"] .gallery-image-vote-up-on, [data-ajax-form-state="down-voted"] .gallery-image-vote-up-off)').cloneNode(true);
     let negative_btn = vote_buttons.querySelector(':is([data-ajax-form-state=""] .gallery-image-vote-down-off, [data-ajax-form-state="up-voted"] .gallery-image-vote-down-off, [data-ajax-form-state="down-voted"] .gallery-image-vote-down-on)').cloneNode(true);
 
-    let positive = parseInt(positive_btn.textContent.replace(trans[lang].gallery.up, ''));
-    let negative = parseInt(negative_btn.textContent.replace(trans[lang].gallery.down, ''));
+    let positive = parseInt(positive_btn.textContent.replace(trans_legacy[lang].gallery.up, ''));
+    let negative = parseInt(negative_btn.textContent.replace(trans_legacy[lang].gallery.down, ''));
 
     let number = (positive - negative);
     let is_negative = (number < 0);
@@ -116,7 +123,7 @@ function bleh_gallery() {
     vote_badge.setAttribute('data-side', (is_negative) ? 'neg' : 'pos');
 
     tippy(vote_badge, {
-        content: trans[lang].gallery.vote
+        content: trans_legacy[lang].gallery.vote
     });
 
 
@@ -132,9 +139,9 @@ function bleh_gallery() {
     let open_button = document.createElement('button');
     open_button.classList.add('image-open-button');
     tippy(open_button, {
-        content: trans[lang].gallery.open.tooltip
+        content: trans_legacy[lang].gallery.open.tooltip
     });
-    open_button.textContent = trans[lang].gallery.open.name;
+    open_button.textContent = trans_legacy[lang].gallery.open.name;
 
     open_button.setAttribute('onclick', `_expand_gallery_image()`);
 
@@ -152,7 +159,7 @@ function bleh_gallery() {
     tippy(report_text, {
         content: report_text.textContent
     });
-    report_text.textContent = trans[lang].gallery.report.name;
+    report_text.textContent = trans_legacy[lang].gallery.report.name;
 
     buttons_extra.appendChild(report_button);
 
@@ -165,7 +172,7 @@ function bleh_gallery() {
         /*tippy(star_button, {
             content: star_button.textContent
         });*/
-        text.textContent = trans[lang].gallery.prefer.name;
+        text.textContent = trans_legacy[lang].gallery.prefer.name;
     });
 
 
@@ -191,7 +198,7 @@ function bleh_gallery() {
 
             all_saved_panel.innerHTML = (`
                 <a class="btn view-all-button back all-saved-button" href="${view_all.getAttribute('href')}?tab=saved">
-                    ${trans[lang].gallery.bookmarks.link}
+                    ${trans_legacy[lang].gallery.bookmarks.link}
                 </a>
             `);
 
@@ -231,7 +238,7 @@ function expand_gallery_image() {
     expand_avatar(image_src);
 }
 
-function create_divider() {
+export function create_divider() {
     let divider = document.createElement('div');
     divider.classList.add('listen-divider');
 
@@ -241,7 +248,7 @@ function create_divider() {
 
 
 
-function bleh_gallery_upload() {
+export function bleh_gallery_upload() {
     let gallery_section = document.createElement('section');
     gallery_section.classList.add('gallery-section', 'gallery--initialised');
 
@@ -287,7 +294,7 @@ function bleh_gallery_upload() {
     form.removeChild(upload_rules_group);
 }
 
-function bleh_gallery_upload_check() {
+export function bleh_gallery_upload_check() {
     if (page.subpage != 'images_image-upload')
         return;
 
@@ -302,7 +309,7 @@ function bleh_gallery_upload_check() {
 }
 
 
-function bleh_gallery_list() {
+export function bleh_gallery_list() {
     let upload_btn = page.structure.main.querySelector('.btn-add');
     if (upload_btn != null) {
         upload_btn.classList = 'btn view-all-button back upload-button';
@@ -315,7 +322,7 @@ function bleh_gallery_list() {
     }
 }
 
-function patch_gallery_page() {
+export function patch_gallery_page() {
     let header = document.body.querySelector('header');
 
     if (header == undefined)
@@ -355,12 +362,12 @@ function patch_gallery_image_listing(image_list) {
             <ul class="navlist-items">
                 <li class="navlist-item secondary-nav-item secondary-nav-item--gallery-overview">
                     <a class="secondary-nav-item-link" onclick="_set_gallery_page('overview')">
-                        ${trans[lang].gallery.tabs.overview}
+                        ${trans_legacy[lang].gallery.tabs.overview}
                     </a>
                 </li>
                 <li class="navlist-item secondary-nav-item secondary-nav-item--gallery-bookmarks">
                     <a class="secondary-nav-item-link" onclick="_set_gallery_page('bookmarks')">
-                        ${trans[lang].gallery.tabs.bookmarks}
+                        ${trans_legacy[lang].gallery.tabs.bookmarks}
                     </a>
                 </li>
             </ul>
@@ -418,7 +425,7 @@ function patch_gallery_image_listing(image_list) {
                     theme: 'context-menu',
                     content: (`
                         <button class="dropdown-menu-clickable-item" onclick="_update_image_bookmark(this, '${image}', false)" data-menu-item="remove-bookmark" data-bleh--image-is-bookmarked="true">
-                            ${trans[lang].gallery.bookmarks.button.unbookmark_this_image.name}
+                            ${trans_legacy[lang].gallery.bookmarks.button.unbookmark_this_image.name}
                         </button>
                     `),
                     allowHTML: true,
@@ -454,7 +461,7 @@ function patch_gallery_image_listing(image_list) {
     } else {
         document.getElementById('bleh--bookmarked-images').outerHTML = (`
             <div class="no-data-message bleh--no-image-bookmarks">
-                <p>${trans[lang].gallery.bookmarks.no_data}</p>
+                <p>${trans_legacy[lang].gallery.bookmarks.no_data}</p>
             </div>
         `);
     }
@@ -498,12 +505,12 @@ function patch_gallery_focused_image(focused_image_details, gallery_interactions
     gallery_bookmark_button.setAttribute('data-bleh--image-is-bookmarked', image_is_bookmarked);
     gallery_bookmark_button.setAttribute('onclick', `_update_image_bookmark(this, '${focused_image_id}')`)
     // true / false
-    gallery_bookmark_button.textContent = trans[lang].gallery.bookmarks.button.bookmark_this_image.name;
+    gallery_bookmark_button.textContent = trans_legacy[lang].gallery.bookmarks.button.bookmark_this_image.name;
 
     unsafeWindow.bookmark_tooltip = tippy(gallery_bookmark_button, {
         content: (image_is_bookmarked)
-        ? trans[lang].gallery.bookmarks.button.unbookmark_this_image.bio
-        : trans[lang].gallery.bookmarks.button.bookmark_this_image.bio
+        ? trans_legacy[lang].gallery.bookmarks.button.unbookmark_this_image.bio
+        : trans_legacy[lang].gallery.bookmarks.button.bookmark_this_image.bio
     });
 
     gallery_interactions.appendChild(gallery_bookmark_button);
@@ -519,8 +526,8 @@ function update_image_bookmark(button, id, tooltip = true) {
     if (tooltip) {
         unsafeWindow.bookmark_tooltip.setContent(
             (!is_bookmarked)
-            ? trans[lang].gallery.bookmarks.button.unbookmark_this_image.bio
-            : trans[lang].gallery.bookmarks.button.bookmark_this_image.bio
+            ? trans_legacy[lang].gallery.bookmarks.button.unbookmark_this_image.bio
+            : trans_legacy[lang].gallery.bookmarks.button.bookmark_this_image.bio
         );
     } else {
         button = page.structure.container.querySelector(`[data-image-id="${id}"]`);

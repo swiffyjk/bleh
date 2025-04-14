@@ -1,5 +1,5 @@
-let settings;
-let settings_template = {
+export let settings = {};
+export let settings_template = {
     theme: 'dark',
     high_contrast: false,
     gloss: 0,
@@ -84,7 +84,7 @@ let settings_template = {
 
     avatar_radius: 50
 };
-let settings_base = {
+export let settings_base = {
     theme: {
         css: 'theme',
         unit: '',
@@ -533,7 +533,7 @@ let settings_base = {
         type: 'text'
     }
 };
-let inbuilt_settings = {
+export let inbuilt_settings = {
     recent_artwork: {
         css: 'recent_artwork',
         unit: '',
@@ -575,5 +575,194 @@ let inbuilt_settings = {
         value: true,
         values: [true, false],
         type: 'toggle'
+    }
+}
+
+export let settings_store = {
+    theme: {
+        default: 'dark',
+        type: 'radio'
+    },
+    high_contrast: {
+        default: false
+    },
+    accent_type: {
+        default: 'colour',
+        type: 'radio'
+    },
+    hue: {
+        default: 255,
+        type: 'range'
+    },
+    sat: {
+        default: 1,
+        type: 'range'
+    },
+    sat_bg: {
+        default: 1,
+        type: 'range'
+    },
+    lit: {
+        default: 1,
+        type: 'range'
+    },
+    gloss: {
+        default: 0,
+        type: 'range'
+    },
+    gendered_tags: {
+        default: true
+    },
+    dev: {
+        default: false
+    },
+    api_key: {
+        default: '',
+        type: 'string'
+    },
+    profile_header_expand: {
+        default: true
+    },
+    accessible_name_colours: {
+        default: false
+    },
+    reduced_motion: {
+        default: false
+    },
+    underline_links: {
+        default: false
+    },
+    format_guest_features: {
+        default: true
+    },
+    show_guest_features: {
+        default: false
+    },
+    stacked_chartlist_info: {
+        default: true
+    },
+    show_remaster_tags: {
+        default: true
+    },
+    corrections: {
+        default: true
+    },
+    colourful_counts: {
+        default: true
+    },
+    colourful_tracks: {
+        default: true
+    },
+    feature_flags: {
+        default: {},
+        type: 'other'
+    },
+    show_your_progress: {
+        default: true
+    },
+    travis: {
+        default: false
+    },
+    list_view: {
+        default: 1,
+        type: 'radio'
+    },
+    chart_view: {
+        default: 'line',
+        type: 'radio'
+    },
+    chart_bar_axis: {
+        default: 'horizontal',
+        type: 'radio'
+    },
+    chart_insights_view: {
+        default: 'pie',
+        type: 'radio'
+    },
+    shout_markdown: {
+        default: true
+    },
+    bio_markdown: {
+        default: true
+    },
+    hue_from_album: {
+        default: true
+    },
+    seasonal: {
+        default: true
+    },
+    seasonal_particles: {
+        default: true
+    },
+    seasonal_particles_reduced: {
+        default: false
+    },
+    seasonal_particles_fps: {
+        default: false
+    },
+    seasonal_overlays: {
+        default: true
+    },
+    profile_header_own: {
+        default: true
+    },
+    profile_header_others: {
+        default: true
+    },
+    profile_avi_background: {
+        default: false
+    },
+    profile_shortcut: {
+        default: '',
+        type: 'string'
+    },
+    font: {
+        css: 'custom_font',
+        default: '',
+        type: 'string'
+    },
+    font_weight: {
+        css: 'custom_font_weight',
+        default: 480,
+        min: 0,
+        max: 0,
+        step: 0,
+        type: 'range'
+    },
+    font_weight_medium: {
+        css: 'custom_font_weight_medium',
+        default: 650,
+        min: 0,
+        max: 0,
+        step: 0,
+        type: 'range'
+    },
+    font_weight_bold: {
+        css: 'custom_font_weight_bold',
+        default: 730,
+        min: 0,
+        max: 0,
+        step: 0,
+        type: 'range'
+    },
+    font_emoji: {
+        default: true
+    },
+    show_bulk_edit_album: {
+        default: false
+    },
+    grid_glow: {
+        default: true
+    },
+    auth_menu_obsessions: {
+        deault: false
+    },
+    default_avatar_action: {
+        default: 'expand',
+        type: 'radio'
+    },
+    quick_artist_button: {
+        default: 'gallery',
+        type: 'radio'
     }
 }

@@ -1,4 +1,9 @@
-function nag_bar() {
+import { settings } from "../build/config";
+import { page } from "../build/page";
+import { lang, trans_legacy, trans, tl } from "../build/trans";
+import { notify } from "./notify";
+
+export function nag_bar() {
     /*if (!page.structure.nag_bar) {
         page.structure.nag_bar = document.body.querySelector('#redirect-bar');
         console.info('nag', page.structure.nag_bar);
@@ -15,7 +20,7 @@ function nag_bar() {
             if (!settings.travis) {
                 notify({
                     id: 'corrections',
-                    title: trans[lang].nag_bar.corrections.title,
+                    title: trans_legacy[lang].nag_bar.corrections.title,
                     body: active_nag.querySelector('strong').innerHTML,
                     icon: 'icon-16-refresh'
                 });

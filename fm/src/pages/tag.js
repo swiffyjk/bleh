@@ -1,4 +1,14 @@
-function bleh_tags() {
+import { log } from "../build/log";
+import { page } from "../build/page";
+import { desanitise } from "../build/tools";
+import { lang, trans_legacy, trans, tl } from "../build/trans";
+import { patch_header_title } from "../components/lotus";
+import { checkup_page_structure } from "../components/structure";
+import { register_background, update_page } from "../page";
+import { ff } from "../sku";
+import { bleh_wiki, bleh_wiki_editor, bleh_wiki_history } from "./wiki";
+
+export function bleh_tags() {
     let tag_header = document.body.querySelector('.header--tag');
 
     if (tag_header == undefined)
@@ -43,7 +53,7 @@ function bleh_tags() {
                 <div class="tag-icon"></div>
             </div>
             <div class="info-side">
-                <div class="sub-text">${trans[lang].tag.name}</div>
+                <div class="sub-text">${trans_legacy[lang].tag.name}</div>
                 <h1>${title}</h1>
             </div>
         `);
@@ -72,7 +82,7 @@ function bleh_tags() {
 }
 
 
-function bleh_tags_mini() {
+export function bleh_tags_mini() {
     let tag_user_avatar = page.structure.main.querySelector('.tags-user-avatar');
 
     if (!tag_user_avatar)

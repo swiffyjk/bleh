@@ -1,4 +1,13 @@
-function patch_masthead(element) {
+import { settings } from "./build/config";
+import { auth, page, root } from "./build/page";
+import { stored_season } from "./build/seasonal";
+import { lang, non_override_lang, trans_legacy, tl, trans } from "./build/trans";
+import { load_badges } from "./components/badge";
+import { version } from "./main";
+import { show_theme_change_in_menu } from "./pages/bleh_config";
+import { ff } from "./sku";
+
+export function patch_masthead(element) {
     let masthead_logo = element.querySelector('.masthead-logo');
 
     if (!masthead_logo)
@@ -6,6 +15,12 @@ function patch_masthead(element) {
 
     if (!masthead_logo.hasAttribute('data-kate-processed')) {
         masthead_logo.setAttribute('data-kate-processed','true');
+
+        let link = document.createElement('a');
+        link.classList.add('home-link');
+        link.setAttribute('href', `${root}music`);
+        link.innerHTML = `<div class="bleh-logo">${version.brand}</div>`;
+        masthead_logo.appendChild(link);
 
         let version_text = document.createElement('a');
         version_text.classList.add('bleh--version');
@@ -16,7 +31,7 @@ function patch_masthead(element) {
     }
 }
 
-function append_nav() {
+export function append_nav() {
     if (ff('developer') && !page.structure.indicator) {
         let page_indicator = document.createElement('div');
         page_indicator.classList.add('page-indicator');
@@ -25,7 +40,13 @@ function append_nav() {
         page.structure.indicator = page_indicator;
     }
 
-    let auth_link = document.body.querySelector('.auth-link');
+    // 2025-04-14
+    let masthead = document.body.querySelector('.masthead');
+    let new_auth = masthead.querySelector('.auth-dropdown-menu');
+    let auth_link = masthead.querySelector('.masthead-nav-wrap > .site-auth .auth-link');
+
+    if (!auth_link)
+        return;
 
     if (auth_link.hasAttribute('data-bleh'))
         return;
@@ -35,7 +56,7 @@ function append_nav() {
     text.textContent = auth.name;
     auth_link.appendChild(text);
 
-    if (document.body.querySelector('.masthead .masthead-pro-wrap') != null)
+    if (masthead.querySelector('.masthead-pro-wrap'))
         auth.pro = true;
     else
         auth.pro = false;
@@ -61,80 +82,106 @@ function append_nav() {
     }
 
 
-    let notif_btn = document.body.querySelector('.masthead-nav-control[data-analytics-label="notifications"]');
-    let notif_count = notif_btn.querySelector('.notification-count-badge');
-    if (notif_count != null) {
-        tippy(notif_btn, {
-            content: `${notif_count.textContent} notifications`
+    let notif_count = new_auth.querySelector('[data-analytics-label="notifications"] + .auth-avatar-notification-count-badge');
+    let inbox_count = new_auth.querySelector('[data-analytics-label="inbox"] + .auth-avatar-notification-count-badge');
+
+
+    let links = masthead.querySelector('.masthead-nav .navlist-items');
+    links.innerHTML = '';
+
+    let notif_container = document.createElement('li');
+    notif_container.classList.add('masthead-nav-item');
+    notif_container.innerHTML = (`
+        <a class="masthead-nav-control" href="${root}inbox/notifications" data-label="notifications">
+            ${tl(trans.notifications.name)}
+            ${(notif_count) ? `<div class="notification-count-badge"></div>` : ''}
+        </a>
+    `);
+
+    if (notif_count) {
+        notif_count = notif_count.textContent;
+
+        tippy(notif_container, {
+            content: tl(trans.notifications.count).replace('{count}', notif_count)
         });
 
-        notif_btn.setAttribute('data-count', notif_count.textContent);
+        notif_container.setAttribute('data-count', notif_count);
     } else {
-        tippy(notif_btn, {
-            content: 'No new notifications'
+        tippy(notif_container, {
+            content: tl(trans.notifications.none)
         });
     }
 
-    let inbox_btn = document.body.querySelector('.masthead-nav-control[data-analytics-label="inbox"]');
-    let inbox_count = inbox_btn.querySelector('.notification-count-badge');
-    if (inbox_count != null) {
-        tippy(inbox_btn, {
-            content: `${inbox_count.textContent} messages`
+    links.appendChild(notif_container);
+
+    let inbox_container = document.createElement('li');
+    inbox_container.classList.add('masthead-nav-item');
+    inbox_container.innerHTML = (`
+        <a class="masthead-nav-control" href="${root}inbox" data-label="inbox">
+            ${tl(trans.inbox.name)}
+            ${(inbox_count) ? `<div class="notification-count-badge"></div>` : ''}
+        </a>
+    `);
+
+    if (inbox_count) {
+        inbox_count = inbox_count.textContent;
+
+        tippy(inbox_container, {
+            content: tl(trans.inbox.count).replace('{count}', inbox_count)
         });
 
-        inbox_btn.setAttribute('data-count', inbox_count.textContent);
+        inbox_container.setAttribute('data-count', inbox_count);
     } else {
-        tippy(inbox_btn, {
-            content: 'No new messages'
+        tippy(inbox_container, {
+            content: tl(trans.inbox.none)
         });
     }
 
-    let inbox_container = document.body.querySelector('.masthead-nav-item:has([data-analytics-label="inbox"])');
+    links.appendChild(inbox_container);
 
     // what's new?
     let changelog_container = document.createElement('li');
     changelog_container.classList.add('masthead-nav-item');
     changelog_container.innerHTML = (`
-        <a class="masthead-nav-control" onclick="_query_changelog()" data-bleh--label="changelog">
-            ${trans[lang].changelog.name}
+        <a class="masthead-nav-control" onclick="_query_changelog()" data-label="changelog">
+            ${trans_legacy[lang].changelog.name}
         </a>
     `);
     tippy(changelog_container, {
-        content: trans[lang].changelog.name
+        content: trans_legacy[lang].changelog.name
     });
-    inbox_container.after(changelog_container);
+    links.appendChild(changelog_container);
 
     // configure bleh
     let bleh_container = document.createElement('li');
     bleh_container.classList.add('masthead-nav-item');
     bleh_container.innerHTML = (`
-        <a class="masthead-nav-control" href="${root}bleh${(stored_season.id != 'none') ? '?tab=seasonal' : ''}" data-bleh--label="bleh" data-season="${stored_season.id}" data-season-active="${(stored_season.id != 'none') ? 'true' : 'false'}">
-            ${(stored_season.id == 'none') ? trans[lang].auth_menu.configure_bleh : moment(stored_season.end.replace('y0', stored_season.year).replace('{offset}', stored_season.offset)).to(stored_season.now, true)}
+        <a class="masthead-nav-control" href="${root}bleh${(stored_season.id != 'none') ? '?tab=seasonal' : ''}" data-label="bleh" data-season="${stored_season.id}" data-season-active="${(stored_season.id != 'none') ? 'true' : 'false'}">
+            ${(stored_season.id == 'none') ? trans_legacy[lang].auth_menu.configure_bleh : moment(stored_season.end.replace('y0', stored_season.year).replace('{offset}', stored_season.offset)).to(stored_season.now, true)}
         </a>
     `);
     if (stored_season.id == 'none') {
         tippy(bleh_container, {
-            content: trans[lang].auth_menu.configure_bleh
+            content: trans_legacy[lang].auth_menu.configure_bleh
         });
     } else {
         page.header.season_tooltip = tippy(bleh_container, {
             theme: 'seasonal-swatch',
             content: (`
-                <span class="season-colour-name">${trans[lang].settings.customise.seasonal.listing[stored_season.id]}</span>
-                <span class="season-exclusive">${trans[lang].auth_menu.seasonal_notice}</span>
+                <span class="season-colour-name">${trans_legacy[lang].settings.customise.seasonal.listing[stored_season.id]}</span>
+                <span class="season-exclusive">${trans_legacy[lang].auth_menu.seasonal_notice}</span>
             `),
             allowHTML: true
         });
     }
-    changelog_container.after(bleh_container);
+    links.appendChild(bleh_container);
 
     page.header.season = bleh_container.querySelector('a');
 
 
     // auth menu
     let site_auth = document.body.querySelector('.site-auth');
-    let legacy_auth_menu = site_auth.querySelector('.auth-dropdown-menu');
-    let token = legacy_auth_menu.querySelector('[name="csrfmiddlewaretoken"]').getAttribute('value');
+    let token = new_auth.querySelector('[name="csrfmiddlewaretoken"]').getAttribute('value');
     let auth_menu = tippy(auth_link, {
         theme: 'auth-menu',
         content: (`
@@ -146,44 +193,41 @@ function append_nav() {
             </a>
             <div class="sep"></div>
             <a class="dropdown-menu-clickable-item" data-menu-item="library" href="${root}user/${auth.name}/library">
-                ${trans[lang].auth_menu.library}
+                ${tl(trans.library)}
             </a>
             <a class="dropdown-menu-clickable-item" data-menu-item="shouts" href="${root}user/${auth.name}/shoutbox">
-                ${trans[lang].auth_menu.shouts}
+                ${tl(trans.shouts)}
             </a>
             ${(settings.auth_menu_obsessions) ? (`
             <a class="dropdown-menu-clickable-item" data-menu-item="obsessions" href="${root}user/${auth.name}/obsessions">
-                ${trans[lang].auth_menu.obsessions}
+                ${trans_legacy[lang].auth_menu.obsessions}
             </a>
             `) : ''}
             <button class="dropdown-menu-clickable-item" data-menu-item="themes" onclick="toggle_theme()">
                 <span class="auth-dropdown-item-row">
-                    <span class="auth-dropdown-item-left">${trans[lang].settings.themes.name}</span>
-                    <span class="auth-dropdown-item-right" id="theme-value">${trans[lang].settings.themes[settings.theme].name}</span>
+                    <span class="auth-dropdown-item-left">${tl(trans.themes.name)}</span>
+                    <span class="auth-dropdown-item-right" id="theme-value">${tl(trans.themes[settings.theme])}</span>
                 </span>
             </button>
             ${(ff('dev')) ? (`
             <button class="dropdown-menu-clickable-item" data-menu-item="developer" onclick="_update_flag_toggle('dev', this)">
-                ${trans[lang].auth_menu.dev}
+                ${trans_legacy[lang].auth_menu.dev}
             </button>
             `) : ''}
             <a class="dropdown-menu-clickable-item" data-menu-item="bleh" href="${root}bleh">
-                ${trans[lang].auth_menu.configure_bleh}
+                ${tl(trans.configure_bleh)}
             </a>
             <div class="sep"></div>
-            <a class="dropdown-menu-clickable-item" data-menu-item="labs" href="${root}labs">
-                ${trans[lang].auth_menu.labs}
-            </a>
             <a class="dropdown-menu-clickable-item" data-menu-item="bookmarks" href="${root}music/+bookmarks">
-                ${trans[lang].auth_menu.bookmarks}
+                ${tl(trans.bookmarks)}
             </a>
             <a class="dropdown-menu-clickable-item" data-menu-item="settings" href="${root}settings">
-                ${trans[lang].auth_menu.settings}
+                ${tl(trans.settings)}
             </a>
             <form>
                 <input type="hidden" name="csrfmiddlewaretoken" value="${token}">
                 <a class="dropdown-menu-clickable-item" data-menu-item="logout" href="${root}logout">
-                    ${trans[lang].auth_menu.logout}
+                    ${trans_legacy[lang].auth_menu.logout}
                 </a>
             </form>
         `),
@@ -202,23 +246,23 @@ function append_nav() {
                 shortcut_item.textContent = settings.profile_shortcut;
             }
 
-            instance.popper.querySelector('#theme-value').textContent = trans[lang].settings.themes[settings.theme].name;
+            instance.popper.querySelector('#theme-value').textContent = tl(trans.themes[settings.theme]);
 
 
             let theme_menu_item = tippy(instance.popper.querySelector('[data-menu-item="themes"]:not([aria-expanded])'), {
                 theme: 'menu',
                 content: (`
                     <button class="dropdown-menu-clickable-item theme-item-in-menu" data-bleh-theme="light" onclick="change_theme_from_menu('light')">
-                        ${trans[lang].settings.themes.light.name}
+                        ${tl(trans.themes.light)}
                     </button>
                     <button class="dropdown-menu-clickable-item theme-item-in-menu" data-bleh-theme="dark" onclick="change_theme_from_menu('dark')">
-                        ${trans[lang].settings.themes.dark.name}
+                        ${tl(trans.themes.dark)}
                     </button>
                     <button class="dropdown-menu-clickable-item theme-item-in-menu" data-bleh-theme="darker" onclick="change_theme_from_menu('darker')">
-                        ${trans[lang].settings.themes.darker.name}
+                        ${tl(trans.themes.darker)}
                     </button>
                     <button class="dropdown-menu-clickable-item theme-item-in-menu" data-bleh-theme="oled" onclick="change_theme_from_menu('oled')">
-                        ${trans[lang].settings.themes.oled.name}
+                        ${tl(trans.themes.oled)}
                     </button>
                 `),
                 allowHTML: true,
@@ -233,21 +277,11 @@ function append_nav() {
             });
         }
     });
-    site_auth.removeChild(site_auth.querySelector('.auth-dropdown-menu-wrap'));
-
-
-    // bleh
-    let bleh = document.createElement('div');
-    bleh.classList.add('bleh-logo');
-    bleh.textContent = version.brand;
-
-    let logo_a = document.body.querySelector('.masthead-logo a');
-    logo_a.innerHTML = '';
-    logo_a.appendChild(bleh);
+    new_auth.parentElement.removeChild(new_auth);
 
 
     // language
-    let selected_language = document.querySelector('.footer-language--active strong').textContent;
+    let selected_language = document.querySelector('.footer-language--active strong')?.textContent;
     let language_options = document.querySelectorAll('.footer-language-form');
 
     let language_menu = document.createElement('div');
@@ -290,7 +324,7 @@ function append_nav() {
     });
 
     let inner = document.body.querySelector('.masthead-nav-wrap');
-    let auth_container = inner.querySelector('.site-auth');
+    let auth_container = inner.querySelector(':scope > .site-auth');
 
     inner.insertBefore(language_nav, auth_container);
 }

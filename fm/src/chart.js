@@ -1,9 +1,12 @@
-function prep_chart_colours() {
+import { page, root } from "./build/page";
+import { bleh_glacier_library_open_index } from "./pages/glacier";
+
+export function prep_chart_colours() {
     if (page.state.chart_colours.link_col == 'hsl()')
         load_chart_colours();
 }
 
-function load_chart_colours() {
+export function load_chart_colours() {
     let link_col = `hsl(${getComputedStyle(document.body).getPropertyValue('--l3-c')})`;
     let link_h_col = getComputedStyle(document.body).getPropertyValue('--h3-s');
     let link_bg_col = `hsla(${getComputedStyle(document.body).getPropertyValue('--h4')}, 30%)`;

@@ -1,20 +1,13 @@
-function bleh_charts() {
-    page.structure.container = document.body.querySelector('.page-content');
-    try {
-        page.structure.row = page.structure.container.querySelector('.row');
-        page.structure.main = page.structure.row.querySelector('.col-main');
-        page.structure.side = page.structure.row.querySelector('.col-sidebar');
-    } catch(e) {
-        log('unable to find elements', 'page structure');
-    }
+import { settings } from "../build/config";
+import { log } from "../build/log";
+import { page } from "../build/page";
+import { lang, trans_legacy, trans, tl } from "../build/trans";
+import { correct_artist, correct_item_by_artist } from "../components/lotus";
+import { checkup_page_structure } from "../components/structure";
+import { refresh_all } from "../config";
+import { update_page } from "../page";
 
-    let content_top = document.body.querySelector('.content-top');
-
-    checkup_page_structure(false, content_top);
-
-    log('status is', 'page', 'info', page);
-    update_page();
-
+export function bleh_charts() {
     if (page.subpage != 'overview')
         return;
 
@@ -39,13 +32,13 @@ function bleh_charts() {
 
         </div>
         <div class="middle">
-            <h2>${trans[lang].charts.charts_for.replace('{date}', moment(new Date()).format('MMMM Do YYYY'))}</h2>
+            <h2>${trans_legacy[lang].charts.charts_for.replace('{date}', moment(new Date()).format('MMMM Do YYYY'))}</h2>
             ${(out_now != null) ? out_now.outerHTML : ''}
         </div>
         <div class="right">
             <div class="view-buttons">
                 <button class="btn view-item glacier-configure-button panel-settings-button">
-                    ${trans[lang].settings.configure}
+                    ${trans_legacy[lang].settings.configure}
                 </button>
             </div>
         </div>
@@ -59,10 +52,10 @@ function bleh_charts() {
         content: (`
             <div class="dialog-settings">
                 <div class="toggle-container" id="container-simulate_scroll" onclick="_update_item('simulate_scroll')">
-                    <button class="btn reset" onclick="_reset_item('simulate_scroll')">${trans[lang].settings.reset}</button>
+                    <button class="btn reset" onclick="_reset_item('simulate_scroll')">${trans_legacy[lang].settings.reset}</button>
                     <div class="heading">
-                        <h5>${trans[lang].charts.scroll.name}</h5>
-                        <p>${trans[lang].charts.scroll.bio}</p>
+                        <h5>${trans_legacy[lang].charts.scroll.name}</h5>
+                        <p>${trans_legacy[lang].charts.scroll.bio}</p>
                     </div>
                     <div class="toggle-wrap">
                         <button class="toggle" id="toggle-simulate_scroll" aria-checked="true">

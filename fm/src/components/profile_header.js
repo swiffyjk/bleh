@@ -1,3 +1,13 @@
+import { settings } from "../build/config";
+import { log } from "../build/log";
+import { auth, page, root } from "../build/page";
+import { sponsor_list } from "../build/sponsor";
+import { clean_number, sanitise } from "../build/tools";
+import { lang, trans_legacy, trans, tl } from "../build/trans";
+import { ff } from "../sku";
+import { correct_artist } from "./lotus";
+import { register_menu } from "./menu";
+
 unsafeWindow._toggle_profile_header = function(button) {
     let current = settings.profile_header_expand;
 
@@ -10,7 +20,7 @@ unsafeWindow._toggle_profile_header = function(button) {
     localStorage.setItem('bleh', JSON.stringify(settings));
 }
 
-function redesign_profile_header(is_own_profile, is_following) {
+export function redesign_profile_header(is_own_profile, is_following) {
     let base_header = document.body.querySelector('.header-info-secondary');
 
     if (base_header == null)
@@ -108,14 +118,14 @@ function redesign_profile_header(is_own_profile, is_following) {
             // ignore list
             let follow_placeholder = document.createElement('button');
             follow_placeholder.classList.add('btn', 'profile-top-item', 'profile-top-item--follow', 'view-item', (katsune) ? 'icon' : '');
-            follow_placeholder.textContent = trans[lang].profile.on_ignore_list;
+            follow_placeholder.textContent = trans_legacy[lang].profile.on_ignore_list;
 
             follow_placeholder.setAttribute('disabled', 'true');
             follow_placeholder.setAttribute('data-ignored', 'true');
 
             if (!katsune)
                 tippy(follow_placeholder, {
-                    content: trans[lang].profile.on_ignore_list
+                    content: trans_legacy[lang].profile.on_ignore_list
                 });
 
             profile_header.appendChild(follow_placeholder);
@@ -206,9 +216,9 @@ function redesign_profile_header(is_own_profile, is_following) {
         taste_wrap.innerHTML = (`
             <div class="taste-info">
                 <div class="taste-value">
-                    ${(taste_artists.length == 1) ? trans[lang].profile.taste_meter.you_share_1.replace('{artist}', taste_artists[0]) : ''}
-                    ${(taste_artists.length == 2) ? trans[lang].profile.taste_meter.you_share_2.replace('{artist1}', taste_artists[0]).replace('{artist2}', taste_artists[1]) : ''}
-                    ${(taste_artists.length == 3) ? trans[lang].profile.taste_meter.you_share_3.replace('{artist1}', taste_artists[0]).replace('{artist2}', taste_artists[1]).replace('{artist3}', taste_artists[2]) : ''}
+                    ${(taste_artists.length == 1) ? trans_legacy[lang].profile.taste_meter.you_share_1.replace('{artist}', taste_artists[0]) : ''}
+                    ${(taste_artists.length == 2) ? trans_legacy[lang].profile.taste_meter.you_share_2.replace('{artist1}', taste_artists[0]).replace('{artist2}', taste_artists[1]) : ''}
+                    ${(taste_artists.length == 3) ? trans_legacy[lang].profile.taste_meter.you_share_3.replace('{artist1}', taste_artists[0]).replace('{artist2}', taste_artists[1]).replace('{artist3}', taste_artists[2]) : ''}
                 </div>
                 <div class="taste-bar colourful" data-taste="${taste}">
                     <div class="taste-bar-fill" style="width: ${taste_percentage}"></div>
@@ -224,13 +234,13 @@ function redesign_profile_header(is_own_profile, is_following) {
             theme: 'stack',
             content: (`
             <span>
-                ${trans[lang].profile.taste}
+                ${trans_legacy[lang].profile.taste}
                 <!--<div class="taste-badge spacing">
-                    <span>${trans[lang].profile.taste_meter.level[taste]}</span>
+                    <span>${trans_legacy[lang].profile.taste_meter.level[taste]}</span>
                     <span>${taste_percentage}</span>
                 </div>-->
             </span>
-            <div class="hint">${trans[lang].settings.right_click}</div>
+            <div class="hint">${trans_legacy[lang].settings.right_click}</div>
             `),
             allowHTML: true
         });
@@ -241,7 +251,7 @@ function redesign_profile_header(is_own_profile, is_following) {
             let menu = tippy(taste_wrap, {
                 theme: 'context-menu',
                 content: (`
-                    <h4 class="menu-header">${trans[lang].music.compare.header}</h4>
+                    <h4 class="menu-header">${trans_legacy[lang].music.compare.header}</h4>
                     <a class="dropdown-menu-clickable-item" href="${root}user/${page.name}/library/music/${sanitise(taste_artists[0])}" data-menu-item="shared-artist">
                         <img class="view-item-avatar" src="${profile_avi}" alt="${page.name}">${taste_artists[0]}
                     </a>
@@ -301,7 +311,7 @@ function redesign_profile_header(is_own_profile, is_following) {
 
         progress.innerHTML = (`
             <div class="progress-info">
-                <div class="progress-value">${trans[lang].profile.progress.to_go.replace('{s}', left.toLocaleString(lang))}</div>
+                <div class="progress-value">${trans_legacy[lang].profile.progress.to_go.replace('{s}', left.toLocaleString(lang))}</div>
                 <div class="progress-bar">
                     <div class="progress-bar-fill" style="width: ${percent}%"></div>
                 </div>
@@ -317,27 +327,27 @@ function redesign_profile_header(is_own_profile, is_following) {
         tippy(progress, {
             theme: 'progress-badges',
             content: (`
-                <span class="progress-badges-title">${trans[lang].profile.progress.explain}</span>
+                <span class="progress-badges-title">${trans_legacy[lang].profile.progress.explain}</span>
                 <div class="progress-badges-list">
                     <div class="progress-badges-item colourful ${(tier == 0) ? 'active' : ''}" data-tier="0">
                         <div class="bleh-icon" style="--icon: var(--icon-16-progress-tier-0)"></div>
-                        <span class="tier-name">${trans[lang].profile.progress.tier.replace('{t}', '0')}</span>
+                        <span class="tier-name">${trans_legacy[lang].profile.progress.tier.replace('{t}', '0')}</span>
                     </div>
                     <div class="progress-badges-item colourful ${(tier == 1) ? 'active' : ''}" data-tier="1">
                         <div class="bleh-icon" style="--icon: var(--icon-16-progress-tier-1)"></div>
-                        <span class="tier-name">${trans[lang].profile.progress.tier.replace('{t}', '1')}</span>
+                        <span class="tier-name">${trans_legacy[lang].profile.progress.tier.replace('{t}', '1')}</span>
                     </div>
                     <div class="progress-badges-item colourful ${(tier == 2) ? 'active' : ''}" data-tier="2">
                         <div class="bleh-icon" style="--icon: var(--icon-16-progress-tier-2)"></div>
-                        <span class="tier-name">${trans[lang].profile.progress.tier.replace('{t}', '2')}</span>
+                        <span class="tier-name">${trans_legacy[lang].profile.progress.tier.replace('{t}', '2')}</span>
                     </div>
                     <div class="progress-badges-item colourful ${(tier == 3) ? 'active' : ''}" data-tier="3">
                         <div class="bleh-icon" style="--icon: var(--icon-16-progress-tier-3)"></div>
-                        <span class="tier-name">${trans[lang].profile.progress.tier.replace('{t}', '3')}</span>
+                        <span class="tier-name">${trans_legacy[lang].profile.progress.tier.replace('{t}', '3')}</span>
                     </div>
                     <div class="progress-badges-item colourful ${(tier == 4) ? 'active' : ''}" data-tier="4">
                         <div class="bleh-icon" style="--icon: var(--icon-16-progress-tier-4)"></div>
-                        <span class="tier-name">${trans[lang].profile.progress.tier.replace('{t}', '4')}</span>
+                        <span class="tier-name">${trans_legacy[lang].profile.progress.tier.replace('{t}', '4')}</span>
                     </div>
                 </div>
             `),
@@ -383,13 +393,13 @@ function redesign_profile_header(is_own_profile, is_following) {
                 percent: taste_percentage,
                 tooltip: (`
                     <span>
-                        ${trans[lang].profile.taste}
+                        ${trans_legacy[lang].profile.taste}
                         <!--<div class="taste-badge spacing">
-                            <span>${trans[lang].profile.taste_meter.level[taste]}</span>
+                            <span>${trans_legacy[lang].profile.taste_meter.level[taste]}</span>
                             <span>${taste_percentage}</span>
                         </div>-->
                     </span>
-                    <div class="hint">${trans[lang].settings.right_click}</div>
+                    <div class="hint">${trans_legacy[lang].settings.right_click}</div>
                 `),
                 allow_html: true,
                 tooltip_theme: 'stack'
@@ -407,7 +417,7 @@ function redesign_profile_header(is_own_profile, is_following) {
     }
 }
 
-function create_profile_top_item(parent, {name, link, text='', type, taste='', artists=[], avi='', percent='', action='', tooltip='', allow_html=false, tooltip_theme='', full=false, primary=false, katsune=false}) {
+export function create_profile_top_item(parent, {name, link, text='', type, taste='', artists=[], avi='', percent='', action='', tooltip='', allow_html=false, tooltip_theme='', full=false, primary=false, katsune=false}) {
     log(`creating top item of ${name}, ${link}, ${text}`, 'profile');
 
     let listen_item = document.createElement((action != 'button') ? 'a' : 'button');
@@ -433,11 +443,11 @@ function create_profile_top_item(parent, {name, link, text='', type, taste='', a
         listen_item.innerHTML = (`
             <img class="view-item-avatar" src="${avi}" alt="${name}">
             <img class="view-item-avatar" src="${auth.avatar}" alt="${auth.name}">
-            <!--<div class="taste-badge">${trans[lang].profile.taste_meter.level[taste]}</div>-->
+            <!--<div class="taste-badge">${trans_legacy[lang].profile.taste_meter.level[taste]}</div>-->
             <div class="taste-badge">${percent}</div>
-            ${(artists.length == 1) ? trans[lang].profile.taste_meter.you_share_1.replace('{artist}', artists[0]) : ''}
-            ${(artists.length == 2) ? trans[lang].profile.taste_meter.you_share_2.replace('{artist1}', artists[0]).replace('{artist2}', artists[1]) : ''}
-            ${(artists.length == 3) ? trans[lang].profile.taste_meter.you_share_3.replace('{artist1}', artists[0]).replace('{artist2}', artists[1]).replace('{artist3}', artists[2]) : ''}
+            ${(artists.length == 1) ? trans_legacy[lang].profile.taste_meter.you_share_1.replace('{artist}', artists[0]) : ''}
+            ${(artists.length == 2) ? trans_legacy[lang].profile.taste_meter.you_share_2.replace('{artist1}', artists[0]).replace('{artist2}', artists[1]) : ''}
+            ${(artists.length == 3) ? trans_legacy[lang].profile.taste_meter.you_share_3.replace('{artist1}', artists[0]).replace('{artist2}', artists[1]).replace('{artist3}', artists[2]) : ''}
         `);
     }
 
@@ -448,7 +458,7 @@ function create_profile_top_item(parent, {name, link, text='', type, taste='', a
 
     if (full) {
         listen_item.classList.add('profile-top-item-full');
-        listen_item.textContent = trans[lang].profile[type];
+        listen_item.textContent = trans_legacy[lang].profile[type];
     }
 
     parent.appendChild(listen_item);
@@ -459,19 +469,19 @@ function create_profile_top_item(parent, {name, link, text='', type, taste='', a
             listen_item.removeAttribute('onclick');
 
             if (katsune)
-                listen_item.textContent = trans[lang].profile.shortcut.remove;
+                listen_item.textContent = trans_legacy[lang].profile.shortcut.remove;
             else
                 tippy(listen_item, {
-                    content: trans[lang].profile.shortcut.remove
+                    content: trans_legacy[lang].profile.shortcut.remove
                 });
         } else {
             listen_item.setAttribute('data-is-shortcut', 'false');
 
             if (katsune)
-                listen_item.textContent = trans[lang].profile.shortcut.add;
+                listen_item.textContent = trans_legacy[lang].profile.shortcut.add;
             else
                 tippy(listen_item, {
-                    content: trans[lang].profile.shortcut.add
+                    content: trans_legacy[lang].profile.shortcut.add
                 });
         }
 
@@ -479,7 +489,7 @@ function create_profile_top_item(parent, {name, link, text='', type, taste='', a
             theme: 'context-menu',
             content: (`
                 <button class="dropdown-menu-clickable-item" onclick="_open_profile_shortcut_window()" data-menu-item="settings">
-                    ${trans[lang].settings.configure}
+                    ${trans_legacy[lang].settings.configure}
                 </button>
             `),
             allowHTML: true,
@@ -505,7 +515,7 @@ function create_profile_top_item(parent, {name, link, text='', type, taste='', a
         let menu = tippy(listen_item, {
             theme: 'context-menu',
             content: (`
-                <h4 class="menu-header">${trans[lang].music.compare.header}</h4>
+                <h4 class="menu-header">${trans_legacy[lang].music.compare.header}</h4>
                 <a class="dropdown-menu-clickable-item" href="${root}user/${name}/library/music/${sanitise(artists[0])}" data-menu-item="shared-artist">
                     <img class="view-item-avatar" src="${avi}" alt="${name}">${artists[0]}
                 </a>
@@ -547,7 +557,7 @@ function create_profile_top_item(parent, {name, link, text='', type, taste='', a
 
     if (tooltip == '')
         tippy(listen_item, {
-            content: trans[lang].profile[type]
+            content: trans_legacy[lang].profile[type]
         });
     else
         tippy(listen_item, {

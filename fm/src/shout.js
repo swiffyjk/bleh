@@ -1,4 +1,11 @@
-function patch_shouts() {
+import { patch_avatar } from "./avatar";
+import { settings } from "./build/config";
+import { log } from "./build/log";
+import { auth, page, root, shout_parse_queue } from "./build/page";
+import { lang, trans_legacy } from "./build/trans";
+import { deliver_notif, notify } from "./components/notify";
+
+export function patch_shouts() {
     if (page.structure.main == null)
         return;
 
@@ -81,8 +88,8 @@ function patch_shouts() {
                 send_button.querySelector('.btn-post-shout').click();
                 notify({
                     id: 'shout',
-                    title: trans[lang].shout.name,
-                    body: trans[lang].shout.sent,
+                    title: trans_legacy[lang].shout.name,
+                    body: trans_legacy[lang].shout.sent,
                     icon: 'icon-16-send'
                 });
             }
@@ -98,16 +105,16 @@ function shout_send(send_button) {
 
     button.classList.add('btn-send-shout-generic');
     //button.innerHTML = 'Send with Copilot<span class="new-badge">PREMIUM</span>';
-    button.textContent = trans[lang].settings.send;
+    button.textContent = trans_legacy[lang].settings.send;
 
     tippy(button, {
-        content: trans[lang].settings.send_quickly.replace('{kbd}', '<kbd>ctrl+↵</kbd>'),
+        content: trans_legacy[lang].settings.send_quickly.replace('{kbd}', '<kbd>ctrl+↵</kbd>'),
         delay: [500, 0],
         allowHTML: true
     });
 }
 
-function parse_shout_queue() {
+export function parse_shout_queue() {
     let response = parse_shout(0);
 
     if (response == 0)

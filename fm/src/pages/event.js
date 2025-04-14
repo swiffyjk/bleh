@@ -1,4 +1,15 @@
-function bleh_events() {
+import { patch_avatar } from "../avatar";
+import { settings } from "../build/config";
+import { log } from "../build/log";
+import { auth, page } from "../build/page";
+import { clean_number } from "../build/tools";
+import { lang, trans_legacy, trans, tl } from "../build/trans";
+import { correct_artist } from "../components/lotus";
+import { checkup_page_structure } from "../components/structure";
+import { refresh_all } from "../config";
+import { register_background, update_page } from "../page";
+
+export function bleh_events() {
     let is_subpage = (page.subpage != 'event_overview' && page.subpage != 'festival_overview');
 
     // without pro theres two containers
@@ -55,7 +66,7 @@ function bleh_events() {
             </div>
         </div>
         <div class="info-side">
-            <div class="sub-text">${trans[lang].event.name}</div>
+            <div class="sub-text">${trans_legacy[lang].event.name}</div>
             <h1>${page.sister}</h1>
             <p class="sub-info">${event_description.innerHTML}</p>
         </div>
@@ -161,10 +172,10 @@ function bleh_events() {
             view_buttons.innerHTML = (`
                 <div class="view-buttons">
                     <button class="btn view-item" id="toggle-list_view-1" data-toggle="list_view" data-toggle-value="1" onclick="_update_item('list_view', 1)">
-                        ${trans[lang].glacier.view.grid}
+                        ${trans_legacy[lang].glacier.view.grid}
                     </button>
                     <button class="btn view-item" id="toggle-list_view-0" data-toggle="list_view" data-toggle-value="0" onclick="_update_item('list_view', 0)">
-                        ${trans[lang].glacier.view.list}
+                        ${trans_legacy[lang].glacier.view.list}
                     </button>
                 </div>
             `);
@@ -221,7 +232,7 @@ function bleh_events_manage() {
             <div class="tag-icon event-icon"></div>
         </div>
         <div class="info-side">
-            <div class="sub-text">${trans[lang].event.name}</div>
+            <div class="sub-text">${trans_legacy[lang].event.name}</div>
             <h1>${header_text}</h1>
         </div>
     `);
@@ -243,7 +254,7 @@ function bleh_events_edit() {
     back_nav.classList.add('navlist-item', 'secondary-nav-item', 'secondary-nav-item--back');
     back_nav.innerHTML = (`
         <a class="secondary-nav-item-link" href="${back.getAttribute('href')}">
-            ${trans[lang].settings.back}
+            ${trans_legacy[lang].settings.back}
         </a>
     `);
 

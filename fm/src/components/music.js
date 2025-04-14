@@ -1,4 +1,23 @@
-function show_your_scrobbles() {
+import { patch_avatar } from "../avatar";
+import { settings } from "../build/config";
+import { log } from "../build/log";
+import { auth, page, root } from "../build/page";
+import { clean_number, return_artist_from_track } from "../build/tools";
+import { lang, trans_legacy, trans, tl } from "../build/trans";
+import { prep_chart_colours } from "../chart";
+import { refresh_all } from "../config";
+import { create_divider } from "../pages/gallery";
+import { ff } from "../sku";
+import { parse_scrobbles_as_rank } from "./colourful_counts";
+import { correct_item_by_artist } from "./lotus";
+import { register_menu } from "./menu";
+import { other_listener } from "./profile_shortcut";
+
+unsafeWindow._other_listener = function(id) {
+    other_listener(id);
+}
+
+export function show_your_scrobbles() {
     let katsune = ff('katsune');
     show_numbers_on_side(page.type);
 
@@ -102,7 +121,7 @@ function show_your_scrobbles() {
             listen_item.setAttribute('data-listens', listens);
 
             listen_item.innerHTML = (`
-                <img class="view-item-avatar" src="${shortcut_listens.avi}" alt="${shortcut_listens.name}">${trans[lang].music.listens.count_listens.replace('{c}', listens.toLocaleString(lang))}
+                <img class="view-item-avatar" src="${shortcut_listens.avi}" alt="${shortcut_listens.name}">${trans_legacy[lang].music.listens.count_listens.replace('{c}', listens.toLocaleString(lang))}
             `);
 
             // colourful counts
@@ -219,7 +238,7 @@ function show_your_scrobbles() {
         tippy(obsession_btn, {
             content: obsession_btn.textContent
         });
-        obsession_btn.textContent = trans[lang].music.obsession;
+        obsession_btn.textContent = trans_legacy[lang].music.obsession;
 
         interact_container.appendChild(obsession_form);
     }
@@ -233,19 +252,19 @@ function show_your_scrobbles() {
         if (settings.quick_artist_button == 'gallery') {
             artist_btn.setAttribute('data-artist-btn-type', 'gallery');
             artist_btn.setAttribute('href', `${window.location.href}/+images`);
-            artist_btn.textContent = trans[lang].gallery.view;
+            artist_btn.textContent = trans_legacy[lang].gallery.view;
         } else if (settings.quick_artist_button == 'shouts') {
             artist_btn.setAttribute('data-artist-btn-type', 'shouts');
             artist_btn.setAttribute('href', `${window.location.href}/+shoutbox`);
-            artist_btn.textContent = trans[lang].settings.layout.quick_artist_button.shouts;
+            artist_btn.textContent = trans_legacy[lang].settings.layout.quick_artist_button.shouts;
         } else if (settings.quick_artist_button == 'wiki') {
             artist_btn.setAttribute('data-artist-btn-type', 'wiki');
             artist_btn.setAttribute('href', `${window.location.href}/+wiki`);
-            artist_btn.textContent = trans[lang].settings.layout.quick_artist_button.wiki;
+            artist_btn.textContent = trans_legacy[lang].settings.layout.quick_artist_button.wiki;
         } else if (settings.quick_artist_button == 'listens') {
             artist_btn.setAttribute('data-artist-btn-type', 'gallery');
             artist_btn.setAttribute('href', `${window.location.href}/+listeners/you-know`);
-            artist_btn.textContent = trans[lang].settings.layout.quick_artist_button.listens;
+            artist_btn.textContent = trans_legacy[lang].settings.layout.quick_artist_button.listens;
         }
 
         interact_container.appendChild(artist_btn);
@@ -254,7 +273,7 @@ function show_your_scrobbles() {
             theme: 'context-menu',
             content: (`
                 <a class="dropdown-menu-clickable-item" href="${root}bleh?tab=customise" data-menu-item="settings">
-                    ${trans[lang].settings.configure}
+                    ${trans_legacy[lang].settings.configure}
                 </a>
             `),
             allowHTML: true,
@@ -278,12 +297,12 @@ function show_your_scrobbles() {
     // search similar!
     let search_btn = document.createElement('a');
     search_btn.classList.add('btn', 'view-item', 'interact-item', 'search-similar-btn', (katsune) ? 'icon' : '');
-    search_btn.textContent = trans[lang].music.search_variations.name;
+    search_btn.textContent = trans_legacy[lang].music.search_variations.name;
     search_btn.href = `${root}search/${page.type}s?q=${text}`;
     search_btn.target = '_blank';
 
     tippy(search_btn, {
-        content: trans[lang].music.search_variations.tooltip
+        content: trans_legacy[lang].music.search_variations.tooltip
     });
 
     interact_container.appendChild(search_btn);
@@ -294,7 +313,7 @@ function show_your_scrobbles() {
     if (page.type == 'track') {
         search_lyrics = document.createElement('a');
         search_lyrics.classList.add('dropdown-menu-clickable-item', 'search-genius-btn');
-        search_lyrics.textContent = trans[lang].music.search_genius;
+        search_lyrics.textContent = trans_legacy[lang].music.search_genius;
         search_lyrics.href = `https://genius.com/search?q=${text}`;
         search_lyrics.target = '_blank';
     }
@@ -306,7 +325,7 @@ function show_your_scrobbles() {
         lotus_btn = document.createElement('a');
         /*lotus_btn.classList.add('btn', 'view-item', 'interact-item', 'lotus', 'lotus-btn');*/
         lotus_btn.classList.add('dropdown-menu-clickable-item', 'lotus', 'lotus-btn');
-        lotus_btn.textContent = trans[lang].lotus.correct.name;
+        lotus_btn.textContent = trans_legacy[lang].lotus.correct.name;
         lotus_btn.href = 'https://github.com/katelyynn/lotus/issues/new/choose';
         lotus_btn.target = '_blank';
 
@@ -315,12 +334,12 @@ function show_your_scrobbles() {
 
         /*if (page.corrected)
             tippy(lotus_btn, {
-                content: (`<span class="lotus-active">${trans[lang].lotus.correct.tooltip_active}</span><br><div class="tooltip-sub">${document.body.querySelector('.main-content > [itemscope]').getAttribute('data-page-resource-name')}</div>`),
+                content: (`<span class="lotus-active">${trans_legacy[lang].lotus.correct.tooltip_active}</span><br><div class="tooltip-sub">${document.body.querySelector('.main-content > [itemscope]').getAttribute('data-page-resource-name')}</div>`),
                 allowHTML: true
             });
         else
             tippy(lotus_btn, {
-                content: (`${trans[lang].lotus.correct.tooltip}<br><div class="tooltip-sub">${document.body.querySelector('.main-content > [itemscope]').getAttribute('data-page-resource-name')}</div>`),
+                content: (`${trans_legacy[lang].lotus.correct.tooltip}<br><div class="tooltip-sub">${document.body.querySelector('.main-content > [itemscope]').getAttribute('data-page-resource-name')}</div>`),
                 allowHTML: true
             });
 
@@ -331,7 +350,7 @@ function show_your_scrobbles() {
     // ...
     let menu_btn = document.createElement('button');
     menu_btn.classList.add('btn', 'view-item', 'interact-item', 'menu-btn', (katsune) ? 'icon' : '');
-    menu_btn.textContent = trans[lang].music.menu;
+    menu_btn.textContent = trans_legacy[lang].music.menu;
 
     let play_btn = interact_container.querySelector('.header-new-playlink');
 
@@ -354,14 +373,14 @@ function show_your_scrobbles() {
             if (page.corrected)
                 tippy(lotus_item, {
                     theme: 'lotus-tooltip-corrected',
-                    content: (`<span class="lotus-active">${trans[lang].lotus.correct.tooltip_active}</span><br><div class="tooltip-sub">${document.body.querySelector('.main-content > [itemscope]').getAttribute('data-page-resource-name')}</div>`),
+                    content: (`<span class="lotus-active">${trans_legacy[lang].lotus.correct.tooltip_active}</span><br><div class="tooltip-sub">${document.body.querySelector('.main-content > [itemscope]').getAttribute('data-page-resource-name')}</div>`),
                     allowHTML: true,
                     placement: 'right'
                 });
             else
                 tippy(lotus_item, {
                     theme: 'lotus-tooltip',
-                    content: (`${trans[lang].lotus.correct.tooltip}<br><div class="tooltip-sub">${document.body.querySelector('.main-content > [itemscope]').getAttribute('data-page-resource-name')}</div>`),
+                    content: (`${trans_legacy[lang].lotus.correct.tooltip}<br><div class="tooltip-sub">${document.body.querySelector('.main-content > [itemscope]').getAttribute('data-page-resource-name')}</div>`),
                     allowHTML: true,
                     placement: 'right'
                 });*/
@@ -390,14 +409,14 @@ function create_listen_item(parent, {name, listens, link, avi, count=0, button=f
     if (listens > -1) {
         // 0 listens
         listen_item.innerHTML = (`
-            <img class="view-item-avatar" src="${avi}" alt="${name}">${trans[lang].music.listens.count_listens.replace('{c}', listens.toLocaleString(lang))}
+            <img class="view-item-avatar" src="${avi}" alt="${name}">${trans_legacy[lang].music.listens.count_listens.replace('{c}', listens.toLocaleString(lang))}
         `);
 
         let menu = tippy(listen_item, {
             theme: 'context-menu',
             content: (`
                 <a class="dropdown-menu-clickable-item" href="${root}user/${name}" data-menu-item="view_profile">
-                    ${trans[lang].music.view_profile}
+                    ${trans_legacy[lang].music.view_profile}
                 </a>
             `),
             allowHTML: true,
@@ -418,18 +437,18 @@ function create_listen_item(parent, {name, listens, link, avi, count=0, button=f
     } else if (listens > -2) {
         // loading listens
         listen_item.innerHTML = (`
-            <img class="view-item-avatar" src="${avi}" alt="${name}">${trans[lang].music.listens.loading_listens}
+            <img class="view-item-avatar" src="${avi}" alt="${name}">${trans_legacy[lang].music.listens.loading_listens}
         `);
 
         let menu = tippy(listen_item, {
             theme: 'context-menu',
             content: (`
                 <a class="dropdown-menu-clickable-item" href="${root}user/${name}" data-menu-item="view_profile">
-                    ${trans[lang].music.view_profile}
+                    ${trans_legacy[lang].music.view_profile}
                 </a>
                 <div class="sep"></div>
                 <button class="dropdown-menu-clickable-item" onclick="_open_profile_shortcut_window()" data-menu-item="settings">
-                    ${trans[lang].settings.configure}
+                    ${trans_legacy[lang].settings.configure}
                 </button>
             `),
             allowHTML: true,
@@ -454,7 +473,7 @@ function create_listen_item(parent, {name, listens, link, avi, count=0, button=f
         listen_item.setAttribute('onclick', `_other_listener('${link}')`);
 
         tippy(listen_item, {
-            content: trans[lang].music.listens.custom.tooltip
+            content: trans_legacy[lang].music.listens.custom.tooltip
         });
     } else {
         // other listeners by clicking this link (artist)
@@ -462,7 +481,7 @@ function create_listen_item(parent, {name, listens, link, avi, count=0, button=f
             ${(avi[0] != null) ? `<img class="view-item-avatar" src="${avi[0].getAttribute('src')}">` : ''}
             ${(avi[1] != null) ? `<img class="view-item-avatar" src="${avi[1].getAttribute('src')}">` : ''}
             ${(avi[2] != null) ? `<img class="view-item-avatar" src="${avi[2].getAttribute('src')}">` : ''}
-            ${trans[lang].music.listens.other_listeners.replace('{c}', count)}
+            ${trans_legacy[lang].music.listens.other_listeners.replace('{c}', count)}
         `);
         listen_item.setAttribute('href', `${window.location.href}/+listeners/you-know`);
     }
@@ -649,7 +668,7 @@ function show_numbers_on_side(header_type) {
     }
 }
 
-function bleh_music_page_charts() {
+export function bleh_music_page_charts() {
     if (!ff('music_page_charts'))
         return;
 
@@ -742,7 +761,7 @@ function bleh_music_page_charts() {
     log('finished', 'music charts');
 }
 
-function bleh_top_listeners() {
+export function bleh_top_listeners() {
     if (!ff('unify_top_listeners'))
         return;
 
@@ -754,10 +773,10 @@ function bleh_top_listeners() {
     view_buttons.innerHTML = (`
         <div class="view-buttons">
             <button class="btn view-item" id="toggle-list_view-1" data-toggle="list_view" data-toggle-value="1" onclick="_update_item('list_view', 1)">
-                ${trans[lang].glacier.view.grid}
+                ${trans_legacy[lang].glacier.view.grid}
             </button>
             <button class="btn view-item" id="toggle-list_view-0" data-toggle="list_view" data-toggle-value="0" onclick="_update_item('list_view', 0)">
-                ${trans[lang].glacier.view.list}
+                ${trans_legacy[lang].glacier.view.list}
             </button>
         </div>
     `);

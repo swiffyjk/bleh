@@ -1,4 +1,8 @@
-function load_dialogs() {
+import { log } from "../build/log";
+import { dialogs, page } from "../build/page";
+import { lang, trans_legacy, trans, tl } from "../build/trans";
+
+export function load_dialogs() {
     let dialogs = document.createElement('div');
     dialogs.classList.add('bleh-modals');
 
@@ -6,7 +10,7 @@ function load_dialogs() {
 
     page.structure.dialogs = dialogs;
 }
-function dialog({
+export function dialog({
     id = '',
     title = null,
     subtitle = null,
@@ -112,7 +116,7 @@ unsafeWindow._dialog_rm = function({
         modal_bg: modal_bg
     });
 }
-function dialog_rm({
+export function dialog_rm({
     id = null,
     all = false,
     modal_bg = false
@@ -164,7 +168,7 @@ function dialog_rm({
     }
 }
 
-function dialog_legacy(id, title, inner_content, dismiss = false, classname='', allow_scroll = false) {
+export function dialog_legacy(id, title, inner_content, dismiss = false, classname='', allow_scroll = false) {
     log(`created ${id} - '${title}'`, 'window', 'info', {content: [inner_content], dismiss: dismiss, classname: classname});
 
     let background = document.createElement('div');
@@ -207,7 +211,7 @@ function dialog_legacy(id, title, inner_content, dismiss = false, classname='', 
         actions.innerHTML = (`
             <div class="modal-buttons">
                 <button class="modal-action-button modal-dismiss" onclick="_kill_window('${id}')">
-                    ${trans[lang].settings.close}
+                    ${trans_legacy[lang].settings.close}
                 </button>
             </div>
         `);
@@ -269,7 +273,7 @@ function dialog_legacy(id, title, inner_content, dismiss = false, classname='', 
 }
 
 // kill a window
-function kill_window(id, replacing = false) {
+export function kill_window(id, replacing = false) {
     try {
         if (replacing) {
             log(`killed ${id}`, 'window');

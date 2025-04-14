@@ -1,7 +1,7 @@
-let artist_corrections = {};
-let album_track_corrections = {};
+export let artist_corrections = {};
+export let album_track_corrections = {};
 
-let ranks = {
+export let ranks = {
     15: {
         start: 62_000,
         hue: -135,
@@ -100,7 +100,7 @@ let ranks = {
     }
 }
 
-let includes = {
+export let includes = {
     guests: [
         'feat.', 'featuring',
         '- with', '(with', '[with', 'w/ ',

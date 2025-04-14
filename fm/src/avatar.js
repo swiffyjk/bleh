@@ -1,4 +1,11 @@
-function patch_avatar(avatar, name, type = '') {
+import { log } from "./build/log";
+import { auth, root } from "./build/page";
+import { sponsor_list } from "./build/sponsor";
+import { lang, trans_legacy } from "./build/trans";
+import { load_badges } from "./components/badge";
+import { dialog } from "./components/dialog";
+
+export function patch_avatar(avatar, name, type = '') {
     if (avatar.hasAttribute('data-bleh-avatar'))
         return;
     avatar.setAttribute('data-bleh-avatar', 'true');
@@ -49,18 +56,17 @@ function patch_avatar(avatar, name, type = '') {
                     </div>
                     <div class="info">
                         <h5 class="title">${name}</h5>
-                        <p class="descriptor">${trans[lang].profile.top_badge}</p>
+                        <p class="descriptor">${trans_legacy[lang].profile.top_badge}</p>
                         <p class="badge user-status--bleh-${this_badge.type} user-status--bleh-user-${name}" data-badge-type="${this_badge.type}" data-badge-user="${name}">${this_badge.name}</p>
                     </div>
                     <a href="${root}user/${name}" class="link-over"></a>
                 </div>
                 <div class="user-buttons view-buttons">
-                    <a class="btn view-item user-button view-library-btn" href="${root}user/${name}/library">${trans[lang].actions.view_library}</a>
-                    <a class="btn view-item user-button leave-shout-btn" href="${root}user/${name}/shoutbox">${trans[lang].actions.leave_a_shout}</a>
+                    <a class="btn view-item user-button view-library-btn" href="${root}user/${name}/library">${trans_legacy[lang].actions.view_library}</a>
+                    <a class="btn view-item user-button leave-shout-btn" href="${root}user/${name}/shoutbox">${trans_legacy[lang].actions.leave_a_shout}</a>
                 </div>
             `),
             allowHTML: true,
-            delay: [50, 100],
             placement: 'right',
             interactive: true,
             delay: [200, 0]
@@ -84,12 +90,11 @@ function patch_avatar(avatar, name, type = '') {
                         <a href="${root}user/${name}" class="link-over"></a>
                     </div>
                     <div class="user-buttons view-buttons">
-                        <a class="btn view-item user-button view-library-btn" href="${root}user/${name}/library">${trans[lang].actions.view_library}</a>
-                        <a class="btn view-item user-button leave-shout-btn" href="${root}user/${name}/shoutbox">${trans[lang].actions.leave_a_shout}</a>
+                        <a class="btn view-item user-button view-library-btn" href="${root}user/${name}/library">${trans_legacy[lang].actions.view_library}</a>
+                        <a class="btn view-item user-button leave-shout-btn" href="${root}user/${name}/shoutbox">${trans_legacy[lang].actions.leave_a_shout}</a>
                     </div>
                 `),
                 allowHTML: true,
-                delay: [50, 100],
                 placement: 'right',
                 interactive: true,
                 delay: [200, 0]
@@ -107,18 +112,17 @@ function patch_avatar(avatar, name, type = '') {
                         </div>
                         <div class="info">
                             <h5 class="title">${name}</h5>
-                            <p class="descriptor">${trans[lang].profile.top_badge}</p>
+                            <p class="descriptor">${trans_legacy[lang].profile.top_badge}</p>
                             <p class="badge ${pre_existing_badge.classList[1]}">${avatar.getAttribute('title')}</p>
                         </div>
                         <a href="${root}user/${name}" class="link-over"></a>
                     </div>
                     <div class="user-buttons view-buttons">
-                        <a class="btn view-item user-button view-library-btn" href="${root}user/${name}/library">${trans[lang].actions.view_library}</a>
-                        <a class="btn view-item user-button leave-shout-btn" href="${root}user/${name}/shoutbox">${trans[lang].actions.leave_a_shout}</a>
+                        <a class="btn view-item user-button view-library-btn" href="${root}user/${name}/library">${trans_legacy[lang].actions.view_library}</a>
+                        <a class="btn view-item user-button leave-shout-btn" href="${root}user/${name}/shoutbox">${trans_legacy[lang].actions.leave_a_shout}</a>
                     </div>
                 `),
                 allowHTML: true,
-                delay: [50, 100],
                 placement: 'right',
                 interactive: true,
                 delay: [200, 0]
@@ -132,23 +136,23 @@ function patch_avatar(avatar, name, type = '') {
     }
 }
 
-function return_name_from_avatar(avatar) {
+export function return_name_from_avatar(avatar) {
     if (!avatar)
         return;
 
     if (!avatar.hasAttribute('alt'))
         return;
 
-    if (avatar.getAttribute('alt') == trans[lang].avatar_for_me)
+    if (avatar.getAttribute('alt') == trans_legacy[lang].avatar_for_me)
         return auth;
 
-    return avatar.getAttribute('alt').replace(trans[lang].avatar_for_user, '');
+    return avatar.getAttribute('alt').replace(trans_legacy[lang].avatar_for_user, '');
 }
 
 unsafeWindow._expand_avatar = function(src) {
     expand_avatar(src);
 }
-function expand_avatar(src) {
+export function expand_avatar(src) {
     dialog({
         id: 'avatar',
         body: (`
@@ -158,7 +162,7 @@ function expand_avatar(src) {
                 </div>
                 <div class="modal-footer">
                     <a class="btn primary open" href="${src}" target="_blank">
-                        ${trans[lang].profile.open_avatar}
+                        ${trans_legacy[lang].profile.open_avatar}
                     </a>
                 </div>
             </div>

@@ -1,4 +1,11 @@
-function bleh_inbox() {
+import { patch_avatar, return_name_from_avatar } from "../avatar";
+import { log } from "../build/log";
+import { page } from "../build/page";
+import { sanitise } from "../build/tools";
+import { checkup_page_structure } from "../components/structure";
+import { update_page } from "../page";
+
+export function bleh_inbox() {
     page.structure.container = document.body.querySelector('.page-content');
     try {
         page.structure.row = page.structure.container.querySelector('.row');
