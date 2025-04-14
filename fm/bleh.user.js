@@ -1556,6 +1556,9 @@
       en: "More"
     },
     notifications: {
+      name: {
+        en: "Notifications"
+      },
       count: {
         en: "{count} notifications"
       },
@@ -1564,6 +1567,9 @@
       }
     },
     inbox: {
+      name: {
+        en: "Messages"
+      },
       count: {
         en: "{count} messages"
       },
@@ -11777,7 +11783,9 @@
       document.documentElement.appendChild(page_indicator2);
       page.structure.indicator = page_indicator2;
     }
-    let auth_link2 = document.body.querySelector(".auth-link");
+    let masthead = document.body.querySelector(".masthead");
+    let new_auth = masthead.querySelector(".auth-dropdown-menu");
+    let auth_link2 = masthead.querySelector(".masthead-nav-wrap > .site-auth .auth-link");
     if (!auth_link2)
       return;
     if (auth_link2.hasAttribute("data-bleh"))
@@ -11786,7 +11794,7 @@
     let text = document.createElement("p");
     text.textContent = auth.name;
     auth_link2.appendChild(text);
-    if (document.body.querySelector(".masthead .masthead-pro-wrap") != null)
+    if (masthead.querySelector(".masthead-pro-wrap"))
       auth.pro = true;
     else
       auth.pro = false;
@@ -11806,48 +11814,65 @@
       auth_link2.classList.add("user-status-subscriber");
       auth_link2.setAttribute("data-has-colour", "true");
     }
-    let notif_btn = document.body.querySelector('.masthead-nav-control[data-analytics-label="notifications"]');
-    let notif_count = notif_btn.querySelector(".notification-count-badge");
+    let notif_count = new_auth.querySelector('[data-analytics-label="notifications"] + .auth-avatar-notification-count-badge');
+    let inbox_count = new_auth.querySelector('[data-analytics-label="inbox"] + .auth-avatar-notification-count-badge');
+    let links = masthead.querySelector(".masthead-nav .navlist-items");
+    links.innerHTML = "";
+    let notif_container = document.createElement("li");
+    notif_container.classList.add("masthead-nav-item");
+    notif_container.innerHTML = `
+        <a class="masthead-nav-control" href="${root}inbox/notifications" data-label="notifications">
+            ${tl(trans.notifications.name)}
+            ${notif_count ? `<div class="notification-count-badge"></div>` : ""}
+        </a>
+    `;
     if (notif_count) {
       notif_count = notif_count.textContent;
-      tippy(notif_btn, {
+      tippy(notif_container, {
         content: tl(trans.notifications.count).replace("{count}", notif_count)
       });
-      notif_btn.setAttribute("data-count", notif_count);
+      notif_container.setAttribute("data-count", notif_count);
     } else {
-      tippy(notif_btn, {
+      tippy(notif_container, {
         content: tl(trans.notifications.none)
       });
     }
-    let inbox_btn = document.body.querySelector('.masthead-nav-control[data-analytics-label="inbox"]');
-    let inbox_count = inbox_btn.querySelector(".notification-count-badge");
+    links.appendChild(notif_container);
+    let inbox_container = document.createElement("li");
+    inbox_container.classList.add("masthead-nav-item");
+    inbox_container.innerHTML = `
+        <a class="masthead-nav-control" href="${root}inbox" data-label="inbox">
+            ${tl(trans.inbox.name)}
+            ${inbox_count ? `<div class="notification-count-badge"></div>` : ""}
+        </a>
+    `;
     if (inbox_count) {
       inbox_count = inbox_count.textContent;
-      tippy(inbox_btn, {
+      tippy(inbox_container, {
         content: tl(trans.inbox.count).replace("{count}", inbox_count)
       });
-      inbox_btn.setAttribute("data-count", inbox_count);
+      inbox_container.setAttribute("data-count", inbox_count);
     } else {
-      tippy(inbox_btn, {
+      tippy(inbox_container, {
         content: tl(trans.inbox.none)
       });
     }
-    let inbox_container = document.body.querySelector('.masthead-nav-item:has([data-analytics-label="inbox"])');
+    links.appendChild(inbox_container);
     let changelog_container = document.createElement("li");
     changelog_container.classList.add("masthead-nav-item");
     changelog_container.innerHTML = `
-        <a class="masthead-nav-control" onclick="_query_changelog()" data-bleh--label="changelog">
+        <a class="masthead-nav-control" onclick="_query_changelog()" data-label="changelog">
             ${trans_legacy[lang].changelog.name}
         </a>
     `;
     tippy(changelog_container, {
       content: trans_legacy[lang].changelog.name
     });
-    inbox_container.after(changelog_container);
+    links.appendChild(changelog_container);
     let bleh_container = document.createElement("li");
     bleh_container.classList.add("masthead-nav-item");
     bleh_container.innerHTML = `
-        <a class="masthead-nav-control" href="${root}bleh${stored_season.id != "none" ? "?tab=seasonal" : ""}" data-bleh--label="bleh" data-season="${stored_season.id}" data-season-active="${stored_season.id != "none" ? "true" : "false"}">
+        <a class="masthead-nav-control" href="${root}bleh${stored_season.id != "none" ? "?tab=seasonal" : ""}" data-label="bleh" data-season="${stored_season.id}" data-season-active="${stored_season.id != "none" ? "true" : "false"}">
             ${stored_season.id == "none" ? trans_legacy[lang].auth_menu.configure_bleh : moment(stored_season.end.replace("y0", stored_season.year).replace("{offset}", stored_season.offset)).to(stored_season.now, true)}
         </a>
     `;
@@ -11865,11 +11890,10 @@
         allowHTML: true
       });
     }
-    changelog_container.after(bleh_container);
+    links.appendChild(bleh_container);
     page.header.season = bleh_container.querySelector("a");
     let site_auth = document.body.querySelector(".site-auth");
-    let legacy_auth_menu = site_auth.querySelector(".auth-dropdown-menu");
-    let token = legacy_auth_menu.querySelector('[name="csrfmiddlewaretoken"]').getAttribute("value");
+    let token = new_auth.querySelector('[name="csrfmiddlewaretoken"]').getAttribute("value");
     let auth_menu = tippy(auth_link2, {
       theme: "auth-menu",
       content: `
@@ -11906,9 +11930,6 @@
                 ${tl(trans.configure_bleh)}
             </a>
             <div class="sep"></div>
-            <a class="dropdown-menu-clickable-item" data-menu-item="labs" href="${root}labs">
-                ${trans_legacy[lang].auth_menu.labs}
-            </a>
             <a class="dropdown-menu-clickable-item" data-menu-item="bookmarks" href="${root}music/+bookmarks">
                 ${tl(trans.bookmarks)}
             </a>
@@ -11962,7 +11983,7 @@
         });
       }
     });
-    site_auth.removeChild(site_auth.querySelector(".auth-dropdown-menu-wrap"));
+    new_auth.parentElement.removeChild(new_auth);
     let selected_language = document.querySelector(".footer-language--active strong")?.textContent;
     let language_options = document.querySelectorAll(".footer-language-form");
     let language_menu = document.createElement("div");
@@ -11998,7 +12019,7 @@
       interactive: true
     });
     let inner = document.body.querySelector(".masthead-nav-wrap");
-    let auth_container = inner.querySelector(".site-auth");
+    let auth_container = inner.querySelector(":scope > .site-auth");
     inner.insertBefore(language_nav, auth_container);
   }
 

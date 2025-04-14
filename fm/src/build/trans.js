@@ -390,6 +390,9 @@ export const trans = {
         en: 'More'
     },
     notifications: {
+        name: {
+            en: 'Notifications'
+        },
         count: {
             en: '{count} notifications'
         },
@@ -398,6 +401,9 @@ export const trans = {
         }
     },
     inbox: {
+        name: {
+            en: 'Messages'
+        },
         count: {
             en: '{count} messages'
         },

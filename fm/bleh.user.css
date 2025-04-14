@@ -1204,12 +1204,6 @@ last.fm changes as of 2024-05-20 */
 }
 
 
-/* hide irrelevant links */
-.masthead-nav-item:has([data-analytics-label="live"], [data-analytics-label="events"], [data-analytics-label="features"]) {
-    display: none !important;
-}
-
-
 .masthead-nav-wrap {
     display: flex;
     gap: var(--button-list-gap);
@@ -1225,10 +1219,6 @@ last.fm changes as of 2024-05-20 */
         gap: var(--button-list-gap);
     }
 
-    /* refined home experience */
-    & > .masthead-nav {
-        display: none !important;
-    }
 
     .navlist-more-wrap {
         display: none;
@@ -1236,26 +1226,17 @@ last.fm changes as of 2024-05-20 */
 }
 
 
-/* show mobile buttons for notifications, inbox, and settings */
-.language-nav,
-.masthead-nav-wrap:not(:has(.site-auth--anon)) .visible-xs {
+.language-nav {
     display: flex !important;
     order: 1;
 }
-.masthead-inner-wrap .visible-xs .masthead-nav-control {
-    &:not([data-bleh--label="bleh"][data-season-active="true"]) {
+.masthead-nav .masthead-nav-control {
+    &:not([data-label="bleh"][data-season-active="true"]) {
         padding: unset !important;
         font-size: 0 !important;
         --left: 7px;
         width: 32px;
     }
-}
-
-
-/* hide other mobile buttons */
-.masthead-inner-wrap .visible-xs .masthead-nav-item:has([data-analytics-label="home"], [data-analytics-label="music"], [data-analytics-label="charts"], [data-analytics-label="labs"], [data-analytics-label="bookmarks"], [data-analytics-label="logout"], [data-analytics-label="settings"]),
-.masthead-hamburger-toggle {
-    display: none;
 }
 
 
@@ -7386,6 +7367,7 @@ very, very, very dated - who looks up a song on ebay? */
 }
 
 
+[data-label="notifications"],
 [data-analytics-label="notifications"] {
     --mask: var(--icon-16-notifications);
 
@@ -7393,6 +7375,7 @@ very, very, very dated - who looks up a song on ebay? */
         --mask: var(--icon-16-notifications-active);
     }*/
 }
+[data-label="inbox"],
 [data-analytics-label="inbox"] {
     --mask: var(--icon-16-mail);
 
@@ -7432,14 +7415,14 @@ very, very, very dated - who looks up a song on ebay? */
 }
 
 [data-menu-item="bleh"],
-[data-bleh--label="bleh"] {
+[data-label="bleh"] {
     --mask: var(--icon-16-settings);
 }
-[data-bleh--label="changelog"] {
+[data-label="changelog"] {
     --mask: var(--icon-16-changelog);
 }
 
-[data-bleh--label="bleh"] {
+[data-label="bleh"] {
     &[data-season="easter"] {
         --mask: var(--icon-16-egg);
     }
