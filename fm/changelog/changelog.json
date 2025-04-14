@@ -1,6 +1,12 @@
 {
-    "updated": "2025-04-02",
-    "latest": "2025.0402",
+    "updated": "2025-04-14",
+    "latest": "2025.0414",
+    "2025.0414": {
+        "name": "arf arf",
+        "type": "major",
+        "force": false,
+        "bio": "# Home\n- __Refined home experience__\n    - The Home tab has been merged with related pages to bring a unified experience or something like that. This is still a **work in progress** and was originally going to release at a later date but is bundled in this major update.\n\n# Navigation\n- __Fixed recent Last.fm change__\n    - It will look basically identical to before except 'Music' and 'Charts' tabs are now gone as they are accessible by clicking the cute *bleh* logo. In the future, this button may have an option to change it's default destination.\n\n# Branding\n- __Changed the bleh logo to be cuter__\n\n# Build\n- __bleh now uses ESMBuild__\n    - Thanks to the lovely work by @yourfriendoss. If you encounter any issues please report on GitHub.\n\n# Other\n- __Redesigned the profile settings a bit__\n    - Now with a banner and about me live preview!\n- Begun work on changing the translation system\n    - This will result in translation keys also being modernised."
+    },
     "2025.0402": {
         "name": "redesign!! i suppose!!",
         "type": "major",
