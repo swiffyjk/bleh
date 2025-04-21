@@ -7933,7 +7933,7 @@
       } else {
         swatch.setAttribute("aria-checked", "false");
       }
-      if (!custom && swatch.getAttribute("data-swatch-type") == "custom")
+      if (!custom && swatch.getAttribute("data-swatch-type") == "customise")
         custom = swatch;
       if (!seasonal && swatch.getAttribute("data-swatch-type") == "seasonal")
         seasonal = swatch;
@@ -10349,6 +10349,7 @@
           swatch.textContent = tl(trans.seasonal.name);
           if (stored_season.id == "none")
             return;
+          swatch.classList.add("select-button");
           tippy(swatch, {
             theme: "menu",
             content: "",
@@ -10364,6 +10365,7 @@
           });
         }
         if (colour.type == "customise") {
+          swatch.classList.add("select-button");
           tippy(swatch, {
             theme: "window",
             content: `
@@ -10466,14 +10468,6 @@
       });
     }
   }
-  unsafeWindow._create_a_custom_colour = function() {
-    notify({
-      title: "Under construction",
-      body: "This dialog is being moved!",
-      icon: "icon-16-x",
-      persist: true
-    });
-  };
   function display_seasonal_exclusives(instance) {
     let exclusives = {
       christmas: [
@@ -17968,7 +17962,7 @@
   // src/build/build.json
   var build_default = {
     brand: "bleh",
-    build: "2025.0414",
+    build: "2025.0421",
     sku: "beret",
     bio: "bleh!!! ^-^",
     author: "kate",

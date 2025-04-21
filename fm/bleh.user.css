@@ -1,7 +1,7 @@
 /* ==UserStyle==
 @name           bleh (dev)
 @namespace      github.com/katelyynn/bleh
-@version        2025.0414
+@version        2025.0421
 @license        GPL-3.0
 @author         kate
 @updateURL      https://github.com/katelyynn/bleh/raw/uwu/fm/bleh.user.css
@@ -17,7 +17,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Ubuntu+Sans:ital,wght@0,100..800;1,100..800&display=swap');
 
 body {
-    --version-build: '2025.0414';
+    --version-build: '2025.0421';
 
     --hue:  var(--hue-over,
             var(--hue-album,
@@ -1072,12 +1072,12 @@ last.fm changes as of 2024-05-20 */
         [data-bleh--season="pride"] & {
             /* this isnt using https://cesque.com/gaydient/ but shoutout,
             based on https://codepen.io/charliewilco/pen/BzrJzE */
-            --g-red: hsl(8, 62%, 60%);
-            --g-orange: hsl(24, 86%, 60%);
-            --g-yellow: hsl(44, 100%, 60%);
-            --g-green: hsl(163, 100%, 60%);
-            --g-blue: hsl(199, 79%, 60%);
-            --g-indigo: hsl(254, 46%, 60%);
+            --g-red: hsl(8, 62%, 80%);
+            --g-orange: hsl(24, 86%, 80%);
+            --g-yellow: hsl(44, 100%, 80%);
+            --g-green: hsl(163, 100%, 80%);
+            --g-blue: hsl(199, 79%, 80%);
+            --g-indigo: hsl(254, 46%, 80%);
             background-image: linear-gradient(90deg,
             var(--g-red) 16.6666%,
             var(--g-orange) 33.333%,
@@ -1086,6 +1086,19 @@ last.fm changes as of 2024-05-20 */
             var(--g-blue) 83.3333%,
             var(--g-indigo) 100%
             );
+
+            [data-bleh--theme="light"] & {
+                --g-red: hsl(8, 42%, 50%);
+                --g-orange: hsl(24, 66%, 50%);
+                --g-yellow: hsl(44, 80%, 50%);
+                --g-green: hsl(163, 50%, 50%);
+                --g-blue: hsl(199, 69%, 50%);
+                --g-indigo: hsl(254, 26%, 50%);
+            }
+
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
     }
 
@@ -6434,7 +6447,8 @@ button,
         .btn-subscribe,
         .listening-report-promo--year,
         [data-toggle-button-current-state="followed"] &.profile-top-item--follow.icon, .profile-top-item--shortcut.icon&[data-is-shortcut="true"],
-        .header-new-love-button.icon[data-analytics-action="UnloveTrack"], .header-new-bookmark-button.icon[data-analytics-action^="Unbookmark"]
+        .header-new-love-button.icon[data-analytics-action="UnloveTrack"], .header-new-bookmark-button.icon[data-analytics-action^="Unbookmark"],
+        .view-item[aria-checked="true"]
     ) {
         --bg: var(--cards-overlay-image-subtlest, none), hsl(var(--h3)) !important;
         --bg-hov: var(--cards-overlay-image-subtlest, none), hsl(var(--h3), 80%) !important;
@@ -6462,6 +6476,11 @@ button,
         .new-badge {
             background: var(--col);
             color: hsl(var(--h3));
+        }
+
+        &.select-button:after {
+            color: inherit;
+            opacity: 0.6;
         }
     }
 

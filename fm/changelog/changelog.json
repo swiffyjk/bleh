@@ -1,6 +1,12 @@
 {
-    "updated": "2025-04-14",
-    "latest": "2025.0414",
+    "updated": "2025-04-21",
+    "latest": "2025.0421",
+    "2025.0421": {
+        "name": "easter!!",
+        "type": "minor",
+        "force": false,
+        "bio": "happy easter :3\n\n# Colours\n- Fixed 'Seasonal' button being selected when picking a custom colour\n- Added back the select arrows for 'Seasonal' and 'Customise' dropdowns\n\n# Seasonal\n- Fixed wordmark for pride month"
+    },
     "2025.0414": {
         "name": "arf arf",
         "type": "major",

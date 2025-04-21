@@ -2271,7 +2271,7 @@ export function display_colour_presets() {
                 if (stored_season.id == 'none')
                     return;
 
-                //swatch.classList.add('select-button');
+                swatch.classList.add('select-button');
 
                 tippy(swatch, {
                     theme: 'menu',
@@ -2291,7 +2291,7 @@ export function display_colour_presets() {
             }
 
             if (colour.type == 'customise') {
-                //swatch.classList.add('select-button');
+                swatch.classList.add('select-button');
 
                 tippy(swatch, {
                     theme: 'window',
@@ -2400,14 +2400,6 @@ export function display_colour_presets() {
             swatch_group.appendChild(swatch);
         });
     }
-}
-unsafeWindow._create_a_custom_colour = function() {
-    notify({
-        title: 'Under construction',
-        body: 'This dialog is being moved!',
-        icon: 'icon-16-x',
-        persist: true
-    });
 }
 
 function display_seasonal_exclusives(instance) {
