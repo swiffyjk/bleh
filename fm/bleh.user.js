@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         bleh
 // @namespace    http://last.fm/
-// @version      2025.0414
+// @version      2025.0421
 // @description  bleh!!! ^-^
 // @author       kate
 // @match        https://www.last.fm/*
@@ -17392,7 +17392,7 @@
     if (cached_style_timeout < current_time) {
       if (theme_version.state != version.build && theme_version.state != "") {
         log(`version mismatch! running ${version.build}, downloaded theme ${theme_version.state}`, "update");
-        prompt_for_update2();
+        prompt_for_update();
         return;
       }
       log("fetching new, expired timeout", "style");
@@ -17409,9 +17409,9 @@
     }
   }
   unsafeWindow._prompt_for_update = function() {
-    prompt_for_update2();
+    prompt_for_update();
   };
-  function prompt_for_update2() {
+  function prompt_for_update() {
     dialog({
       id: "bleh_update",
       title: trans_legacy[lang].settings.home.update.update_to_v.replace("{v}", theme_version.state),
@@ -17546,7 +17546,7 @@
         }
         if (theme_version.state != version.build && theme_version.state != "") {
           log(`version mismatch! running ${version.build}, downloaded theme ${theme_version.state}`, "update");
-          prompt_for_update2();
+          prompt_for_update();
           return;
         }
       }, 200);
@@ -17572,7 +17572,7 @@
         document.documentElement.removeChild(style);
         if (theme_version.state != version.build && theme_version.state != "") {
           log(`version mismatch! running ${version.build}, downloaded theme ${theme_version.state}`, "update");
-          prompt_for_update2();
+          prompt_for_update();
           return;
         }
       }, 200);

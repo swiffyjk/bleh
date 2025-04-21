@@ -34,7 +34,7 @@ import { seasonal_timer_end, set_season } from "./seasonal";
 import { parse_shout_queue, patch_shouts } from "./shout";
 import { ff } from "./sku";
 import { bleh_sponsor_page, sponsors } from "./sponsor";
-import { append_style } from "./style";
+import { append_style, prompt_for_update } from "./style";
 
 export function bleh() {
     let head_observer = new MutationObserver((mutations) => {
