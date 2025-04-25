@@ -13727,6 +13727,7 @@ pre {
 
 .swatch-group {
     display: flex;
+    justify-content: center;
     gap: var(--button-list-gap);
 
     .palette {
@@ -13736,12 +13737,11 @@ pre {
 }
 
 .palette.options {
-    width: 100%;
-    grid-template-columns: repeat(auto-fit, minmax(50px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(40px, 1fr));
     height: fit-content;
 
     .swatch {
-        width: 100% !important;
+        width: 64px !important;
         height: 50px !important;
     }
 }
@@ -13750,8 +13750,7 @@ pre {
     --bg-hov: hsla(var(--h3), 90%);
     --bg-atv: hsla(var(--h3), 80%);
     --col: hsl(var(--b7));
-    --shadow: var(--card-shadow);
-    --shadow-hov: var(--shadow);
+    --shadow: var(--interact-shadow);
     --sat-album: 1;
     --lit-album: 1;
     width: unset !important;
@@ -15778,6 +15777,10 @@ button.bleh--gallery-bookmark-image-btn {
 
     &:not(.profile-top-header, .glacier-library-buttons, .colour-buttons) {
         margin-bottom: var(--card-gap);
+    }
+    &.colour-buttons {
+        width: fit-content;
+        margin: 0 auto;
     }
 
     &.profile-top-header {

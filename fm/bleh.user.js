@@ -8498,9 +8498,7 @@
       preview_bar = `${preview_bar});`;
       return `
             <div class="bleh--panel">
-                <h4 class="top-header">${tl(trans.appearance)}</h4>
                 <h4>${tl(trans.themes.name)}</h4>
-                <!--<h4>${trans_legacy[lang].settings.themes.dark.name}</h4>-->
                 <div class="setting-items full">
                     <div class="side-left full even-more">
                         <button class="btn theme-item" data-bleh-theme="light" onclick="change_theme_from_settings('light')">
@@ -8550,7 +8548,6 @@
                     </div>
                 </div>
                 ` : ""}
-                <div class="sep"></div>
                 <h4>${tl(trans.colours)}</h4>
                 <div class="inner-preview pad">
                     <div class="palette">
@@ -10039,28 +10036,28 @@
       red: [
         { sets: {
           hue: 360,
-          sat: 1.425,
-          lit: 0.725
-        } },
-        { sets: {
-          hue: 360,
           sat: 1.4,
           lit: 0.775
         } },
         { sets: {
           hue: 360,
+          sat: 1.4,
+          lit: 0.8
+        } },
+        { sets: {
+          hue: 360,
           sat: 1.325,
-          lit: 0.825
+          lit: 0.85
         } },
         { sets: {
           hue: 360,
           sat: 1.225,
-          lit: 0.875
+          lit: 0.9
         } },
         { sets: {
           hue: 360,
           sat: 1.1,
-          lit: 0.925
+          lit: 0.95
         } },
         { sets: {
           hue: 360,
@@ -10072,62 +10069,62 @@
         { sets: {
           hue: 10,
           sat: 1.425,
-          lit: 0.725
+          lit: 0.775
         } },
         { sets: {
           hue: 13,
           sat: 1.4,
-          lit: 0.75
+          lit: 0.8
         } },
         { sets: {
           hue: 16,
           sat: 1.325,
-          lit: 0.8
+          lit: 0.825
         } },
         { sets: {
           hue: 20,
           sat: 1.225,
-          lit: 0.825
+          lit: 0.875
         } },
         { sets: {
           hue: 21,
           sat: 1.275,
-          lit: 0.85
+          lit: 0.95
         } },
         { sets: {
           hue: 26,
           sat: 1.35,
-          lit: 0.9
+          lit: 1
         } }
       ],
       yellow: [
         { sets: {
-          hue: 32,
-          sat: 1.25,
+          hue: 22,
+          sat: 1.3,
           lit: 0.825
         } },
         { sets: {
-          hue: 35,
+          hue: 24,
           sat: 1.2,
           lit: 0.85
         } },
         { sets: {
-          hue: 40,
+          hue: 27,
           sat: 1.16,
           lit: 0.875
         } },
         { sets: {
-          hue: 43,
+          hue: 32,
           sat: 1.1,
           lit: 0.9
         } },
         { sets: {
-          hue: 44,
+          hue: 36,
           sat: 1,
           lit: 0.975
         } },
         { sets: {
-          hue: 46,
+          hue: 41,
           sat: 1.05,
           lit: 1
         } }
@@ -10135,45 +10132,45 @@
       green: [
         { sets: {
           hue: 85,
-          sat: 1.425,
-          lit: 0.725
-        } },
-        { sets: {
-          hue: 90,
           sat: 1.4,
           lit: 0.775
         } },
         { sets: {
-          hue: 94,
-          sat: 1.325,
-          lit: 0.825
+          hue: 90,
+          sat: 1.3,
+          lit: 0.8
         } },
         { sets: {
-          hue: 99,
-          sat: 1.25,
+          hue: 94,
+          sat: 1.2,
           lit: 0.85
         } },
         { sets: {
-          hue: 105,
-          sat: 1.15,
+          hue: 99,
+          sat: 1.1,
           lit: 0.9
         } },
         { sets: {
+          hue: 105,
+          sat: 1.025,
+          lit: 0.975
+        } },
+        { sets: {
           hue: 108,
-          sat: 1.075,
-          lit: 0.95
+          sat: 1,
+          lit: 1.05
         } }
       ],
       lime: [
         { sets: {
           hue: 115,
           sat: 1.15,
-          lit: 0.725
+          lit: 0.75
         } },
         { sets: {
           hue: 121,
           sat: 1.09,
-          lit: 0.775
+          lit: 0.8
         } },
         { sets: {
           hue: 127,
@@ -10183,48 +10180,48 @@
         { sets: {
           hue: 135,
           sat: 1.03,
-          lit: 0.85
+          lit: 0.875
         } },
         { sets: {
           hue: 141,
           sat: 1,
-          lit: 0.9
+          lit: 0.95
         } },
         { sets: {
           hue: 148,
           sat: 1,
-          lit: 0.975
+          lit: 1
         } }
       ],
       aqua: [
         { sets: {
-          hue: 165,
-          sat: 1.5,
-          lit: 0.725
-        } },
-        { sets: {
-          hue: 172,
-          sat: 1.425,
+          hue: 171,
+          sat: 1.45,
           lit: 0.775
         } },
         { sets: {
-          hue: 180,
-          sat: 1.35,
-          lit: 0.825
+          hue: 178,
+          sat: 1.375,
+          lit: 0.8
         } },
         { sets: {
-          hue: 188,
-          sat: 1.275,
+          hue: 185,
+          sat: 1.3,
+          lit: 0.85
+        } },
+        { sets: {
+          hue: 190,
+          sat: 1.25,
           lit: 0.875
         } },
         { sets: {
-          hue: 194,
+          hue: 196,
           sat: 1.2,
           lit: 0.95
         } },
         { sets: {
           hue: 200,
-          sat: 1.125,
+          sat: 1.1,
           lit: 1
         } }
       ],
@@ -10232,32 +10229,32 @@
         { sets: {
           hue: 233,
           sat: 1.4,
-          lit: 0.75
+          lit: 0.8
         } },
         { sets: {
           hue: 230,
           sat: 1.3,
-          lit: 0.8
+          lit: 0.825
         } },
         { sets: {
           hue: 225,
           sat: 1.25,
-          lit: 0.825
+          lit: 0.875
         } },
         { sets: {
           hue: 219,
           sat: 1.2,
-          lit: 0.85
+          lit: 0.925
         } },
         { sets: {
           hue: 214,
           sat: 1.15,
-          lit: 0.9
+          lit: 0.975
         } },
         { sets: {
           hue: 208,
           sat: 1.025,
-          lit: 0.95
+          lit: 1
         } }
       ],
       purple: [
@@ -10287,7 +10284,7 @@
           lit: 0.97
         } },
         { sets: {
-          hue: 255,
+          hue: 256,
           sat: 1.01,
           lit: 1.01
         } }
@@ -10295,22 +10292,22 @@
       pink: [
         { sets: {
           hue: 346,
-          sat: 1.35,
-          lit: 0.75
-        } },
-        { sets: {
-          hue: 340,
-          sat: 1.275,
+          sat: 1.3,
           lit: 0.8
         } },
         { sets: {
-          hue: 333,
+          hue: 340,
           sat: 1.225,
-          lit: 0.85
+          lit: 0.825
+        } },
+        { sets: {
+          hue: 333,
+          sat: 1.175,
+          lit: 0.875
         } },
         { sets: {
           hue: 320,
-          sat: 1.15,
+          sat: 1.12,
           lit: 0.925
         } },
         { sets: {
@@ -10329,6 +10326,8 @@
       let swatch_group = document.body.querySelector(`#colour_${type}`);
       if (!swatch_group)
         return;
+      if (type != "custom")
+        colours[type].reverse();
       colours[type].forEach((colour) => {
         if (colour.requires_flag && version.feature_flags.hasOwnProperty(colour.requires_flag)) {
           if (!ff(colour.requires_flag))
