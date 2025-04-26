@@ -436,6 +436,7 @@ body {
 
     --highlight-shadow: hsla(var(--b3), 0.25) 0 0 2px 1px;
     --menu-shadow: 2px 2px 24px 0 hsla(var(--b7), 0.35), 0 6px 48px 16px hsla(var(--b7), 0.65);
+    --overlay-shadow: 0 4px 16px 3px hsla(var(--b7), 0.5);
     --menu-overlay-shadow: 0 -250px 10px 100px hsla(var(--b6), 70%);
     --avatar-shadow: 3px 6px 15px 10px hsla(var(--b7), 0.05);
     --standout-shadow: 3px 6px 20px 7px hsla(var(--b7), 0.2);
@@ -478,6 +479,7 @@ body {
     --card-border-base: hsl(var(--b4)) !important;
 
     --menu-shadow: 2px 2px 24px 0 hsla(var(--b7), 0.15), 3px 6px 48px 16px hsla(var(--b7), 0.03);
+    --overlay-shadow: 2px 2px 24px 0 hsla(var(--b7), 0.15), 3px 6px 48px 16px hsla(var(--b7), 0.03);
     --menu-shadow: 0 12px 36px 0 hsla(var(--b7), 0.15);
     --standout-shadow: 3px 6px 20px 7px hsla(var(--b7), 0.06);
 
@@ -8102,8 +8104,8 @@ input:is([name^="track_name"], [name^="artist_name"], [name^="album_name"], [nam
         .date-range-picker-content,
         .modal-body
     ) {
-        backdrop-filter: blur(10px) saturate(160%);
-        -webkit-backdrop-filter: blur(10px) saturate(160%);
+        backdrop-filter: blur(20px) saturate(160%);
+        -webkit-backdrop-filter: blur(20px) saturate(160%);
     }
 
     [data-bleh--theme="light"] &,
@@ -9336,8 +9338,8 @@ text[style^="color: rgb(255, 172, 172)"] {
 .tooltip-dark,
 .user-dashboard-tooltip {
     background: hsla(var(--b8), 80%);
-    backdrop-filter: blur(10px) saturate(160%);
-    -webkit-backdrop-filter: blur(10px) saturate(160%);
+    backdrop-filter: blur(20px) saturate(160%);
+    -webkit-backdrop-filter: blur(20px) saturate(160%);
     border-radius: var(--item-big-radius);
     box-shadow: var(--card-shadow);
     padding: 6px 10px;
@@ -9388,7 +9390,7 @@ text[style^="color: rgb(255, 172, 172)"] {
         padding: var(--button-list-gap) !important;
         background: hsl(var(--b6), 95%) !important;
         border-radius: calc(var(--item-big-radius) + var(--button-list-gap)) !important;
-        box-shadow: var(--override-full-shadow, var(--menu-shadow)) !important;
+        box-shadow: var(--override-full-shadow, var(--overlay-shadow)) !important;
         color: hsl(var(--c2));
 
         /*[data-theme="window"] & {
@@ -9507,7 +9509,7 @@ text[style^="color: rgb(255, 172, 172)"] {
         padding: var(--card-gap) !important;
         background: hsl(var(--b6), 95%) !important;
         border-radius: var(--card-radius) !important;
-        box-shadow: var(--override-full-shadow, var(--menu-shadow)) !important;
+        box-shadow: var(--override-full-shadow, var(--overlay-shadow)) !important;
         color: hsl(var(--c2));
 
         text-align: left;
