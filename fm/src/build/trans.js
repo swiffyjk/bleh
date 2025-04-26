@@ -459,28 +459,21 @@ export const trans = {
     tags: {
         en: 'Tags'
     },
+    artist_lower: {
+        en: 'artist'
+    },
+    album_lower: {
+        en: 'album'
+    },
+    track_lower: {
+        en: 'track'
+    },
     lotus_cta: {
         true: {
-            artist: {
-                en: 'This artist is being re-capitalised, is it correct?'
-            },
-            album: {
-                en: 'This album is being re-capitalised, is it correct?'
-            },
-            track: {
-                en: 'This track is being re-capitalised, is it correct?'
-            }
+            en: 'This {t} is being re-capitalised, is it correct?'
         },
         false: {
-            artist: {
-                en: 'Is this artist capitalised correctly?'
-            },
-            album: {
-                en: 'Is this album capitalised correctly?'
-            },
-            track: {
-                en: 'Is this track capitalised correctly?'
-            }
+            en: 'Is this {t} capitalised correctly?'
         }
     },
     suggest_correction: {
