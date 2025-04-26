@@ -20840,7 +20840,7 @@ h4 {
 }
 .catalogue-tags .tags-view-all {
     --font-size: 0;
-    --mask: var(--icon-16-arrow-right);
+    --mask: var(--icon-16-dots);
 }
 
 .col-sm-8:has(.catalogue-tags) {
