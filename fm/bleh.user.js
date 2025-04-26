@@ -7369,13 +7369,13 @@
       metadata.classList.add("no-scroll-simulation");
     }
     let groups = [];
-    let headers = metadata.querySelectorAll(".catalogue-metadata-heading");
+    let headers = metadata.querySelectorAll(".catalogue-metadata-heading:not(.visible-xs)");
     headers.forEach((item, index) => {
       groups[index] = {
         header: item
       };
     });
-    let values = metadata.querySelectorAll(".catalogue-metadata-description");
+    let values = metadata.querySelectorAll(".catalogue-metadata-description:not(.visible-xs)");
     values.forEach((item, index) => {
       groups[index].value = item;
     });
