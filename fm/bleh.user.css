@@ -13499,7 +13499,7 @@ pre {
         display: grid;
         grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
         width: 100%;
-        gap: var(--button-list-gap);
+        gap: calc(var(--button-list-gap) * 2);
 
         &.more {
             grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
@@ -13625,34 +13625,44 @@ pre {
 
 
 .theme-item {
-    --padding: 7px;
-    --radius: var(--card-radius);
+    --bg: transparent;
+    --bg-hov: transparent;
+    --bg-atv: transparent;
+    --shadow: unset;
+    --padding: 0;
+    --radius: 0;
     text-align: left;
 
     width: 100% !important;
-    height: 140px;
-    display: flex;
-    gap: 7px;
-    flex-direction: column;
-
-    &.active {
-        --bg: var(--cards-overlay-image-subtlest, none), hsl(var(--h3));
-        --bg-hov: var(--cards-overlay-image-subtlest, none), hsla(var(--h3), 80%);
-        --bg-atv: var(--cards-overlay-image-subtlest, none), hsla(var(--h3), 60%);
-        --col: hsl(var(--b7));
-        --shadow: var(--interactable-outer);
-    }
+    height: 100%;
+    text-align: center;
 
     h5 {
         color: inherit !important;
         font-weight: var(--font-weight-medium);
     }
 
+    .preview-container {
+        border-radius: var(--item-big-radius);
+        margin-bottom: 10px;
+        box-shadow: var(--interact-shadow);
+    }
+
+    &.active {
+        --col: hsl(var(--c1));
+
+        .preview-container {
+            border-color: hsl(var(--h3));
+            outline: 2px solid hsl(var(--h3));
+            box-shadow: 0 0 20px hsl(var(--h3), 50%);
+        }
+    }
+
     .preview {
         display: flex;
         width: 100%;
         flex: 1;
-        max-height: 101px;
+        height: 130px;
         background-color: hsl(var(--b6));
         position: relative;
         border-radius: var(--item-big-radius);
@@ -13662,24 +13672,25 @@ pre {
             display: block;
             width: 100%;
             padding: 20px 0 0 20px;
+            text-align: left;
 
             .preview-card {
                 display: flex;
                 flex-direction: column;
-                gap: 10px;
+                gap: 13px;
                 height: 100%;
                 background-color: hsl(var(--b5));
                 box-shadow: var(--card-shadow);
                 border-top-left-radius: var(--card-radius);
 
-                padding: 10px;
+                padding: 13px;
 
                 .preview-header {
                     display: block;
-                    width: 50px;
-                    height: 6px;
-                    background-color: hsl(var(--c1));
-                    border-radius: var(--item-big-radius);
+                    color: hsl(var(--c1));
+                    font-size: 20px;
+                    line-height: 20px;
+                    font-weight: var(--font-weight-bold);
                 }
 
                 .preview-text {
@@ -13700,14 +13711,14 @@ pre {
 
                 .preview-buttons {
                     display: flex;
-                    gap: 6px;
+                    gap: 8px;
 
                     .preview-button {
                         display: flex;
                         width: 40px;
-                        height: 12px;
+                        height: 14px;
                         background-color: hsl(var(--b4));
-                        border-radius: var(--item-small-radius);
+                        border-radius: var(--item-med-radius);
 
                         &.preview-button-primary {
                             background-color: hsl(var(--h3));

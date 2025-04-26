@@ -355,32 +355,40 @@ export function render_setting_page(page_id) {
                 <div class="setting-items full">
                     <div class="side-left full even-more">
                         <button class="btn theme-item" data-bleh-theme="light" onclick="change_theme_from_settings('light')">
+                            <div class="preview-container">
                             <div class="preview" data-bleh--theme="light">
                                 ${theme_preview}
+                            </div>
                             </div>
                             <div class="text">
                                 <h5>${tl(trans.themes.light)}</h5>
                             </div>
                         </button>
                         <button class="btn theme-item" data-bleh-theme="dark" onclick="change_theme_from_settings('dark')">
+                            <div class="preview-container">
                             <div class="preview" data-bleh--theme="dark">
                                 ${theme_preview}
+                            </div>
                             </div>
                             <div class="text">
                                 <h5>${tl(trans.themes.dark)}</h5>
                             </div>
                         </button>
                         <button class="btn theme-item" data-bleh-theme="darker" onclick="change_theme_from_settings('darker')">
+                            <div class="preview-container">
                             <div class="preview" data-bleh--theme="darker">
                                 ${theme_preview}
+                            </div>
                             </div>
                             <div class="text">
                                 <h5>${tl(trans.themes.darker)}</h5>
                             </div>
                         </button>
                         <button class="btn theme-item" data-bleh-theme="oled" onclick="change_theme_from_settings('oled')">
+                            <div class="preview-container">
                             <div class="preview" data-bleh--theme="oled">
                                 ${theme_preview}
+                            </div>
                             </div>
                             <div class="text">
                                 <h5>${tl(trans.themes.oled)}</h5>
