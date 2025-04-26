@@ -12879,7 +12879,8 @@
         let hsl = hex_to_hsl(bg);
         document.body.style.setProperty("--hue-album", hsl.h);
         document.body.style.setProperty("--sat-album", clamp_sat(hsl.s / 100 * 3));
-        log(`sourced hsl of (${hsl.h}, ${hsl.s}, ${hsl.l}) - using final value of (${hsl.h}, ${clamp_sat(hsl.s / 100 * 3)}, ${hsl.l})`, "hue from album");
+        document.body.style.setProperty("--lit-album", hsl.l / 100 + 0.35);
+        log(`sourced hsl of (${hsl.h}, ${hsl.s}, ${hsl.l}) - using final value of (${hsl.h}, ${clamp_sat(hsl.s / 100 * 3)}, ${hsl.l / 100 + 0.35})`, "hue from album");
         load_chart_colours();
       } catch (e) {
         log("no cover present", "hue from album");
