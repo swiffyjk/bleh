@@ -7126,8 +7126,7 @@
     if (katsune)
       top_container.classList.add("katsune-button-row");
     let listen_container = document.createElement("div");
-    if (!katsune)
-      listen_container.classList.add("listen-container", "view-buttons");
+    listen_container.classList.add("listen-container");
     let page_url = window.location.href;
     let page_url_split = page_url.split("/");
     let page_url_length = page_url_split.length - 1;
@@ -7145,7 +7144,7 @@
       katsune
     };
     let scrobble_button = col_main.querySelector(".personal-stats-item--scrobbles .hidden-xs a");
-    if (scrobble_button != null) {
+    if (scrobble_button) {
       your_listens.listens = clean_number(scrobble_button.textContent.trim());
     }
     create_listen_item(listen_container, your_listens, page.type);
@@ -7171,7 +7170,11 @@
           listens = clean_number(first_metadata_item.textContent.trim());
         listen_item.setAttribute("data-listens", listens);
         listen_item.innerHTML = `
-                <img class="view-item-avatar" src="${shortcut_listens.avi}" alt="${shortcut_listens.name}">${trans_legacy[lang].music.listens.count_listens.replace("{c}", listens.toLocaleString(lang))}
+                <img class="view-item-avatar" src="${shortcut_listens.avi}" alt="${shortcut_listens.name}">
+                <div class="info">
+                    <h3>${shortcut_listens.name}</h3>
+                    <p>${trans_legacy[lang].music.listens.count_listens.replace("{c}", listens.toLocaleString(lang))}</p>
+                </div>
             `;
         if (settings.colourful_counts && page.type == "artist") {
           let parsed_scrobble_as_rank = parse_scrobbles_as_rank(listens);
@@ -7182,6 +7185,8 @@
         }
       });
     }
+    if (page.type != "artist")
+      listen_container.appendChild(create_divider());
     create_listen_item(listen_container, {
       name: "other",
       listens: -3,
@@ -7189,7 +7194,7 @@
       button: true,
       katsune
     }, page.type);
-    top_container.appendChild(listen_container);
+    col_main.insertBefore(listen_container, col_main.firstElementChild);
     if (!katsune)
       col_main.insertBefore(top_container, col_main.firstElementChild);
     else
@@ -7343,6 +7348,45 @@
     interact_container.appendChild(menu_btn);
     top_container.appendChild(interact_container);
     let metadata = col_main.querySelector(".metadata-column");
+    if (settings.simulate_scroll) {
+      metadata.addEventListener("wheel", (e) => {
+        e.preventDefault();
+        if (e.deltaY > 0) {
+          metadata.scrollBy({
+            top: 0,
+            left: 200,
+            behavior: "smooth"
+          });
+        } else {
+          metadata.scrollBy({
+            top: 0,
+            left: -200,
+            behavior: "smooth"
+          });
+        }
+      });
+    } else {
+      metadata.classList.add("no-scroll-simulation");
+    }
+    let groups = [];
+    let headers = metadata.querySelectorAll(".catalogue-metadata-heading");
+    headers.forEach((item, index) => {
+      groups[index] = {
+        header: item
+      };
+    });
+    let values = metadata.querySelectorAll(".catalogue-metadata-description");
+    values.forEach((item, index) => {
+      groups[index].value = item;
+    });
+    metadata.innerHTML = "";
+    groups.forEach((group) => {
+      let group_wrap = document.createElement("div");
+      group_wrap.classList.add("metadata-group");
+      group_wrap.appendChild(group.header);
+      group_wrap.appendChild(group.value);
+      metadata.appendChild(group_wrap);
+    });
     let tags = col_main.querySelector(".catalogue-tags");
     let wiki = col_main.querySelector(".wiki-column");
     let play_on;
@@ -7423,13 +7467,17 @@
   function create_listen_item(parent, { name, listens, link, avi, count = 0, button = false, katsune = false }, header_type) {
     log(`creating listen item of ${name}, ${count}, ${listens}`, "artist", "info", { avi, link });
     let listen_item = document.createElement(!button ? "a" : "button");
-    listen_item.classList.add("btn", "listen-item", "view-item");
+    listen_item.classList.add("btn", "listen-item");
     listen_item.setAttribute("href", `${root}user/${name}/library/music/${link}`);
     listen_item.setAttribute("data-listens", listens);
     listen_item.setAttribute("id", `listen-item--${name}`);
     if (listens > -1) {
       listen_item.innerHTML = `
-            <img class="view-item-avatar" src="${avi}" alt="${name}">${trans_legacy[lang].music.listens.count_listens.replace("{c}", listens.toLocaleString(lang))}
+            <img class="view-item-avatar" src="${avi}" alt="${name}">
+            <div class="info">
+                <h3>${name}</h3>
+                <p>${trans_legacy[lang].music.listens.count_listens.replace("{c}", listens.toLocaleString(lang))}</p>
+            </div>
         `;
       let menu = tippy(listen_item, {
         theme: "context-menu",
@@ -7453,7 +7501,11 @@
       register_menu(listen_item, menu);
     } else if (listens > -2) {
       listen_item.innerHTML = `
-            <img class="view-item-avatar" src="${avi}" alt="${name}">${trans_legacy[lang].music.listens.loading_listens}
+            <img class="view-item-avatar" src="${avi}" alt="${name}">
+            <div class="info">
+                <h3>${name}</h3>
+                <p>${trans_legacy[lang].music.listens.loading_listens}</p>
+            </div>
         `;
       let menu = tippy(listen_item, {
         theme: "context-menu",
@@ -7491,7 +7543,10 @@
             ${avi[0] != null ? `<img class="view-item-avatar" src="${avi[0].getAttribute("src")}">` : ""}
             ${avi[1] != null ? `<img class="view-item-avatar" src="${avi[1].getAttribute("src")}">` : ""}
             ${avi[2] != null ? `<img class="view-item-avatar" src="${avi[2].getAttribute("src")}">` : ""}
-            ${trans_legacy[lang].music.listens.other_listeners.replace("{c}", count)}
+            <div class="info">
+                <h3>Mutuals</h3>
+                <p>${trans_legacy[lang].music.listens.other_listeners.replace("{c}", count)}</p>
+            </div>
         `;
       listen_item.setAttribute("href", `${window.location.href}/+listeners/you-know`);
     }
@@ -7530,7 +7585,7 @@
         scrobbles.abbr = value.textContent.trim();
       } else if (index == 2) {
         let link = item.querySelector("a");
-        if (link == null)
+        if (!link)
           return;
         metascore.text = text;
         metascore.abbr = value.textContent.trim();
@@ -7538,7 +7593,7 @@
       }
     });
     let panel = page.structure.side.querySelector("section.section-with-separator:has(.listener-trend)");
-    if (panel == null) {
+    if (!panel) {
       panel = document.createElement("section");
       panel.classList.add("section-with-separator");
       page.structure.side.insertBefore(panel, page.structure.side.firstElementChild);
@@ -13862,9 +13917,8 @@
     let new_panel = document.createElement("section");
     new_panel.classList.add("charts-panel");
     let out_now = page.structure.side.querySelector(".more-link-fullwidth-right a");
-    if (out_now != null) {
+    if (out_now)
       out_now.classList.add("btn", "out-now-btn");
-    }
     let header = document.createElement("div");
     header.classList.add("charts-header", "top-header");
     header.innerHTML = `

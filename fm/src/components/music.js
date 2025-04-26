@@ -49,8 +49,7 @@ export function show_your_scrobbles() {
         top_container.classList.add('katsune-button-row');
 
     let listen_container = document.createElement('div');
-    if (!katsune)
-        listen_container.classList.add('listen-container', 'view-buttons');
+    listen_container.classList.add('listen-container');
 
 
     // page url
@@ -77,7 +76,7 @@ export function show_your_scrobbles() {
     };
     // check to see if you have scrobbles
     let scrobble_button = col_main.querySelector('.personal-stats-item--scrobbles .hidden-xs a');
-    if (scrobble_button != null) {
+    if (scrobble_button) {
         your_listens.listens = clean_number(scrobble_button.textContent.trim());
     }
     // create child for u
@@ -121,7 +120,11 @@ export function show_your_scrobbles() {
             listen_item.setAttribute('data-listens', listens);
 
             listen_item.innerHTML = (`
-                <img class="view-item-avatar" src="${shortcut_listens.avi}" alt="${shortcut_listens.name}">${trans_legacy[lang].music.listens.count_listens.replace('{c}', listens.toLocaleString(lang))}
+                <img class="view-item-avatar" src="${shortcut_listens.avi}" alt="${shortcut_listens.name}">
+                <div class="info">
+                    <h3>${shortcut_listens.name}</h3>
+                    <p>${trans_legacy[lang].music.listens.count_listens.replace('{c}', listens.toLocaleString(lang))}</p>
+                </div>
             `);
 
             // colourful counts
@@ -138,6 +141,8 @@ export function show_your_scrobbles() {
 
 
     // other user
+    if (page.type != 'artist')
+        listen_container.appendChild(create_divider());
     create_listen_item(listen_container, {
         name: 'other',
         listens: -3,
@@ -148,7 +153,8 @@ export function show_your_scrobbles() {
 
 
     // append
-    top_container.appendChild(listen_container);
+    col_main.insertBefore(listen_container, col_main.firstElementChild);
+
     if (!katsune)
         col_main.insertBefore(top_container, col_main.firstElementChild);
     else
@@ -399,6 +405,50 @@ export function show_your_scrobbles() {
 
 
     let metadata = col_main.querySelector('.metadata-column');
+    if (settings.simulate_scroll) {
+        metadata.addEventListener('wheel', (e) => {
+            e.preventDefault();
+
+            if (e.deltaY > 0) {
+                metadata.scrollBy({
+                    top: 0,
+                    left: +200,
+                    behavior: 'smooth'
+                });
+            } else {
+                metadata.scrollBy({
+                    top: 0,
+                    left: -200,
+                    behavior: 'smooth'
+                });
+            }
+        });
+    } else {
+        metadata.classList.add('no-scroll-simulation');
+    }
+
+    let groups = [];
+
+    let headers = metadata.querySelectorAll('.catalogue-metadata-heading');
+    headers.forEach((item, index) => {
+        groups[index] = {
+            header: item
+        };
+    });
+    let values = metadata.querySelectorAll('.catalogue-metadata-description');
+    values.forEach((item, index) => {
+        groups[index].value = item;
+    });
+
+    metadata.innerHTML = '';
+    groups.forEach((group) => {
+        let group_wrap = document.createElement('div');
+        group_wrap.classList.add('metadata-group');
+        group_wrap.appendChild(group.header);
+        group_wrap.appendChild(group.value);
+        metadata.appendChild(group_wrap);
+    });
+
     let tags = col_main.querySelector('.catalogue-tags');
 
     let wiki = col_main.querySelector('.wiki-column');
@@ -497,7 +547,7 @@ function create_listen_item(parent, {name, listens, link, avi, count=0, button=f
     log(`creating listen item of ${name}, ${count}, ${listens}`, 'artist', 'info', {avi: avi, link: link});
 
     let listen_item = document.createElement((!button) ? 'a' : 'button');
-    listen_item.classList.add('btn', 'listen-item', 'view-item');
+    listen_item.classList.add('btn', 'listen-item');
     listen_item.setAttribute('href', `${root}user/${name}/library/music/${link}`);
     //listen_item.setAttribute('target', '_blank');
     listen_item.setAttribute('data-listens', listens);
@@ -506,7 +556,11 @@ function create_listen_item(parent, {name, listens, link, avi, count=0, button=f
     if (listens > -1) {
         // 0 listens
         listen_item.innerHTML = (`
-            <img class="view-item-avatar" src="${avi}" alt="${name}">${trans_legacy[lang].music.listens.count_listens.replace('{c}', listens.toLocaleString(lang))}
+            <img class="view-item-avatar" src="${avi}" alt="${name}">
+            <div class="info">
+                <h3>${name}</h3>
+                <p>${trans_legacy[lang].music.listens.count_listens.replace('{c}', listens.toLocaleString(lang))}</p>
+            </div>
         `);
 
         let menu = tippy(listen_item, {
@@ -534,7 +588,11 @@ function create_listen_item(parent, {name, listens, link, avi, count=0, button=f
     } else if (listens > -2) {
         // loading listens
         listen_item.innerHTML = (`
-            <img class="view-item-avatar" src="${avi}" alt="${name}">${trans_legacy[lang].music.listens.loading_listens}
+            <img class="view-item-avatar" src="${avi}" alt="${name}">
+            <div class="info">
+                <h3>${name}</h3>
+                <p>${trans_legacy[lang].music.listens.loading_listens}</p>
+            </div>
         `);
 
         let menu = tippy(listen_item, {
@@ -578,7 +636,10 @@ function create_listen_item(parent, {name, listens, link, avi, count=0, button=f
             ${(avi[0] != null) ? `<img class="view-item-avatar" src="${avi[0].getAttribute('src')}">` : ''}
             ${(avi[1] != null) ? `<img class="view-item-avatar" src="${avi[1].getAttribute('src')}">` : ''}
             ${(avi[2] != null) ? `<img class="view-item-avatar" src="${avi[2].getAttribute('src')}">` : ''}
-            ${trans_legacy[lang].music.listens.other_listeners.replace('{c}', count)}
+            <div class="info">
+                <h3>Mutuals</h3>
+                <p>${trans_legacy[lang].music.listens.other_listeners.replace('{c}', count)}</p>
+            </div>
         `);
         listen_item.setAttribute('href', `${window.location.href}/+listeners/you-know`);
     }
@@ -630,7 +691,7 @@ function show_numbers_on_side(header_type) {
             scrobbles.abbr = value.textContent.trim();
         } else if (index == 2) {
             let link = item.querySelector('a');
-            if (link == null)
+            if (!link)
                 return;
 
             metascore.text = text;
@@ -643,7 +704,7 @@ function show_numbers_on_side(header_type) {
     // get panel
     let panel = page.structure.side.querySelector('section.section-with-separator:has(.listener-trend)');
 
-    if (panel == null) {
+    if (!panel) {
         panel = document.createElement('section');
         panel.classList.add('section-with-separator');
 

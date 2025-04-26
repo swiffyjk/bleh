@@ -3760,6 +3760,7 @@ button.navlist-more {
 
 
 
+.catalogue-metadata-heading,
 .playlisting-playlist-stat,
 .metadata-and-wiki-row .catalogue-metadata .catalogue-metadata-heading, .factbox-heading {
     font-weight: var(--font-weight-medium);
@@ -3767,33 +3768,11 @@ button.navlist-more {
     cursor: default;
 }
 
-.catalogue-metadata-heading {
-    grid-area: h;
-
-    &:nth-child(3) {
-        grid-area: h1;
-    }
-}
 .catalogue-metadata-description {
     font-size: 16px;
-    line-height: 17px;
-    font-weight: var(--font-weight-bold);
-    grid-area: d;
-
-    &:nth-child(4) {
-        grid-area: d1;
-    }
-}
-
-.catalogue-metadata {
-    grid-template-columns: auto !important;
-    grid-template-areas:
-    "h h1"
-    "d d1";
-    gap: 2px var(--card-gap) !important;
-}
-.catalogue-metadata-heading, .catalogue-metadata-description {
-    display: block;
+    line-height: 20px;
+    font-weight: var(--font-weight-medium);
+    margin-top: 2px;
 }
 
 .metadata-and-wiki-row {
@@ -3809,13 +3788,45 @@ button.navlist-more {
         width: unset;
     }
 
+    .wiki-column {
+        position: relative;
+
+        &:after {
+            content: '';
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            width: var(--card-padding);
+        }
+
+        &:after {
+            background: linear-gradient(90deg, hsl(var(--b5)), transparent);
+            right: calc(-1 * var(--card-padding));
+            z-index: 10;
+        }
+    }
+
     .metadata-column {
         max-width: unset;
         flex: 1;
 
-        display: flex;
-        flex-direction: column;
+        padding: 0 var(--card-padding);
+        margin: 0 calc(-1 * var(--card-padding));
+
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+        grid-auto-flow: column;
+        width: max-content;
         gap: var(--card-gap);
+        overflow-x: hidden;
+
+        &.no-scroll-simulation:hover {
+            overflow-x: scroll;
+        }
+
+        .metadata-group {
+            min-width: 170px;
+        }
     }
     .wiki-column {
         width: 100%;
@@ -18860,73 +18871,6 @@ h4 {
         gap: var(--button-list-gap);
     }
 
-    .listen-item {
-        --mask: var(--icon-16-spinner);
-        --show-icon: none;
-        --btn-left: 12px !important;
-
-        &[data-listens="-1"] {
-            --left: calc(12px + 18px + 6px);
-
-            .view-item-avatar {
-                margin-right: calc(6px + 18px + 6px) !important;
-            }
-
-            &:before {
-                --show-icon: block;
-                opacity: 1;
-            }
-        }
-
-        &[data-listens="-2"] {
-            display: flex;
-        }
-
-        &[data-listens="-3"] {
-            &:before {
-                --mask: var(--icon-16-plus);
-                --left: 12px;
-
-                --show-icon: block;
-                opacity: 1;
-                animation: unset;
-                background-color: currentColor !important;
-            }
-        }
-
-        &[data-bleh--scrobble-milestone] {
-            --bg: hsla(var(--h4), 20%);
-            --bg-hov: hsla(var(--h4), 30%);
-            --bg-atv: hsla(var(--h4), 40%);
-            --shadow: 0 3px 12px hsl(var(--h4), 18%);
-            --col: hsl(var(--l2-c));
-            text-shadow: 0 0 10px hsla(var(--h4), 90%);
-
-            [data-bleh--theme="light"] & {
-                --col: hsl(var(--l3-c));
-                text-shadow: 0 0 10px hsla(var(--h4), 45%);
-            }
-        }
-
-        &:before {
-            animation: spinner 1.2s linear infinite;
-            --show-icon: none;
-            background-color: hsl(var(--c3)) !important;
-        }
-
-        .view-item-avatar {
-            width: 18px;
-            height: 18px;
-            margin-right: 6px;
-            border-radius: var(--avatar-radius);
-
-            --mask-size: 18px;
-
-            & + .view-item-avatar {
-                margin-left: -8px;
-            }
-        }
-    }
     .search-similar-btn {
         --mask: var(--icon-16-search);
     }
@@ -20883,5 +20827,99 @@ h4 {
     --mask: var(--icon-16-plus);
     width: unset !important;
     height: unset !important;
+}
+
+.listen-container {
+    display: flex;
+    align-items: center;
+    gap: var(--card-padding);
+    padding-bottom: var(--card-gap);
+    border-bottom: 1px solid var(--card-border-base);
+    margin-bottom: var(--card-gap);
+
+    .listen-divider {
+        flex: 1;
+    }
+}
+.listen-item {
+    --mask: var(--icon-16-spinner);
+    --show-icon: none;
+
+    display: flex;
+    align-items: center;
+    min-width: 32px !important;
+
+    &:not([data-listens="-3"]) {
+        --bg: transparent;
+        --bg-hov: transparent;
+        --bg-atv: transparent;
+        --shadow: none;
+        --padding: 0;
+    }
+
+    .info {
+        h3 {
+            color: hsl(var(--c3));
+            font-weight: var(--font-weight-medium);
+            margin-bottom: 2px;
+        }
+        p {
+            font-size: 16px;
+            line-height: 20px;
+            font-weight: var(--font-weight-medium);
+        }
+    }
+
+    &[data-listens="-1"] {
+        --left: calc(12px + 18px + 6px);
+
+        .view-item-avatar {
+            margin-right: calc(6px + 18px + 6px) !important;
+        }
+
+        &:before {
+            --show-icon: block;
+            opacity: 1;
+        }
+    }
+
+    &[data-listens="-3"] {
+        --btn-left: 12px !important;
+        height: 32px;
+
+        &:before {
+            --mask: var(--icon-16-plus);
+            --left: 7px;
+
+            --show-icon: block;
+            opacity: 1;
+            animation: unset;
+            background-color: currentColor !important;
+        }
+    }
+
+    &[data-bleh--scrobble-milestone] p {
+        --col: hsl(var(--l2-c-theme-switch));
+        text-shadow: 0 0 10px hsla(var(--h4), 90%);
+    }
+
+    &:before {
+        animation: spinner 1.2s linear infinite;
+        --show-icon: none;
+        background-color: hsl(var(--c3)) !important;
+    }
+
+    .view-item-avatar {
+        width: 32px;
+        height: 32px;
+        margin-right: 10px;
+        border-radius: var(--avatar-radius);
+
+        --mask-size: 18px;
+
+        & + .view-item-avatar {
+            margin-left: -8px;
+        }
+    }
 }
 }
