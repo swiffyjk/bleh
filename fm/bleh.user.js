@@ -1627,6 +1627,33 @@
     },
     tags: {
       en: "Tags"
+    },
+    lotus_cta: {
+      true: {
+        artist: {
+          en: "This artist is being re-capitalised, is it correct?"
+        },
+        album: {
+          en: "This album is being re-capitalised, is it correct?"
+        },
+        track: {
+          en: "This track is being re-capitalised, is it correct?"
+        }
+      },
+      false: {
+        artist: {
+          en: "Is this artist capitalised correctly?"
+        },
+        album: {
+          en: "Is this album capitalised correctly?"
+        },
+        track: {
+          en: "Is this track capitalised correctly?"
+        }
+      }
+    },
+    suggest_correction: {
+      en: "Suggest a correction"
     }
   };
   var trans_legacy = {
@@ -7585,6 +7612,15 @@
     header_tags.textContent = "Tags";
     col_main.appendChild(header_tags);
     col_main.appendChild(tags);
+    if (!settings.corrections)
+      return;
+    let lotus_handler = document.createElement("section");
+    lotus_handler.classList.add("lotus", "lotus-cta");
+    lotus_handler.innerHTML = `
+        <strong>${tl(trans.lotus_cta[page.corrected][page.type])}</strong>
+        <a class="see-more" href="https://github.com/katelyynn/lotus/issues/new/choose">${tl(trans.suggest_correction)}</a>
+    `;
+    page.structure.side.appendChild(lotus_handler);
   }
   function create_listen_item(parent, { name, listens, link, avi, count = 0, button = false, katsune = false }, header_type) {
     log(`creating listen item of ${name}, ${count}, ${listens}`, "artist", "info", { avi, link });

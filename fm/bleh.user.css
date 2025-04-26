@@ -6558,6 +6558,7 @@ button,
 
 
 /*     ICON MASK     */
+.see-more:before,
 .view-all-button:before,
 .music-featured-item-background:before,
 .gallery-image-preferred-states:before, .gallery-image-votes:before,
@@ -20956,5 +20957,38 @@ h4 {
             margin-left: -8px;
         }
     }
+}
+
+
+.lotus-cta {
+    --card-specific-background: hsl(var(--h4), 4%);
+    padding: 12px var(--card-padding) !important;
+    box-shadow: unset !important;
+    color: hsl(var(--c2));
+    order: 10;
+
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+
+    strong {
+        color: hsl(var(--c3));
+    }
+
+    a {
+        font-weight: var(--font-weight-medium);
+    }
+}
+
+.see-more {
+    --mask: var(--icon-16-arrow-right);
+    position: relative;
+    --mask-size: 12px;
+    --margin-top: -6px;
+    padding-right: calc(12px + 4px);
+    --left: none;
+    --right: 0;
+
+    width: fit-content;
 }
 }

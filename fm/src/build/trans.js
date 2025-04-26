@@ -458,6 +458,33 @@ export const trans = {
     },
     tags: {
         en: 'Tags'
+    },
+    lotus_cta: {
+        true: {
+            artist: {
+                en: 'This artist is being re-capitalised, is it correct?'
+            },
+            album: {
+                en: 'This album is being re-capitalised, is it correct?'
+            },
+            track: {
+                en: 'This track is being re-capitalised, is it correct?'
+            }
+        },
+        false: {
+            artist: {
+                en: 'Is this artist capitalised correctly?'
+            },
+            album: {
+                en: 'Is this album capitalised correctly?'
+            },
+            track: {
+                en: 'Is this track capitalised correctly?'
+            }
+        }
+    },
+    suggest_correction: {
+        en: 'Suggest a correction'
     }
 }
 
