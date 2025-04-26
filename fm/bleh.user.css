@@ -14130,6 +14130,7 @@ input[type="range"]::-moz-range-progress {
     color: hsl(var(--l3-c));
     font-weight: var(--font-weight-medium);
     width: 30px;
+    text-align: right;
     flex-shrink: 0;
 }
 
