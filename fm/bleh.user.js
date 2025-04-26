@@ -1594,6 +1594,15 @@
     },
     markdown_tip: {
       en: "This textbox supports markdown such as line breaks, bold text, italics, underlines, and more. You can embed images using ![alt text](link). Beware that to non-bleh users it will not appear fancy."
+    },
+    find_on: {
+      en: "Find on"
+    },
+    following: {
+      en: "Following"
+    },
+    website: {
+      en: "Website"
     }
   };
   var trans_legacy = {
@@ -7020,7 +7029,7 @@
     other_listener(id);
   };
   function other_listener(id) {
-    dialog({
+    let modal = dialog({
       id: "other_listener",
       title: trans_legacy[lang].music.listens.custom.name,
       body: `
@@ -7040,6 +7049,7 @@
         </div>
         `
     });
+    modal.querySelector("#text-profile").focus();
   }
   unsafeWindow._send_other_listener = function(link) {
     let name = dialogs["other_listener"].instance.querySelector("#text-profile").value;
@@ -7306,14 +7316,6 @@
       content: trans_legacy[lang].music.search_variations.tooltip
     });
     interact_container.appendChild(search_btn);
-    let search_lyrics = null;
-    if (page.type == "track") {
-      search_lyrics = document.createElement("a");
-      search_lyrics.classList.add("dropdown-menu-clickable-item", "search-genius-btn");
-      search_lyrics.textContent = trans_legacy[lang].music.search_genius;
-      search_lyrics.href = `https://genius.com/search?q=${text}`;
-      search_lyrics.target = "_blank";
-    }
     let lotus_btn = null;
     if (settings.corrections) {
       lotus_btn = document.createElement("a");
@@ -7331,7 +7333,6 @@
     let music_menu = tippy(menu_btn, {
       theme: "select-menu",
       content: `
-            ${search_lyrics != null ? search_lyrics.outerHTML : ""}
             ${lotus_btn != null ? lotus_btn.outerHTML : ""}
             ${play_btn != null ? play_btn.outerHTML : ""}
         `,
@@ -7398,9 +7399,10 @@
     if (page.type == "track") {
       let header = document.createElement("div");
       header.classList.add("sub-text", "music-small-header");
-      header.textContent = "Play on";
+      header.textContent = tl(trans.find_on);
       link_group.appendChild(header);
       play_on = page.structure.side.querySelector(".play-this-track-playlinks");
+      page.structure.side.removeChild(play_on.parentElement);
       play_links = play_on.querySelectorAll("li");
       play_links.forEach((item) => {
         let link = item.querySelector(".play-this-track-playlink:not(.visible-xs)");
@@ -7430,31 +7432,75 @@
         }
         link_container.appendChild(item);
       });
-    } else {
-      let header = document.createElement("div");
-      header.classList.add("sub-text", "music-small-header");
-      header.textContent = "Find on";
-      link_group.appendChild(header);
-      link_container.innerHTML = `
-            <a class="play-this-track-playlink music-link play-this-track-playlink--spotify" href="https://open.spotify.com/search/${sanitise(page.sister)}%20${sanitise(page.name)}" target="_blank">
-                Spotify
-            </a>
-            <a class="play-this-track-playlink music-link play-this-track-playlink--itunes" href="https://music.apple.com/gb/search?term=${sanitise(page.sister)}%20${sanitise(page.name)}" target="_blank">
-                Apple Music
-            </a>
-            <a class="play-this-track-playlink music-link play-this-track-playlink--youtube-music" href="https://music.youtube.com/search?q=${sanitise(page.sister)}+${sanitise(page.name)}" target="_blank">
-                YouTube Music
-            </a>
-            <a class="play-this-track-playlink music-link play-this-track-playlink--aoty" href="https://www.albumoftheyear.org/search/?q=${sanitise(page.sister)}+${sanitise(page.name)}" target="_blank">
-                AOTY
-            </a>
-            <a class="play-this-track-playlink music-link play-this-track-playlink--rym" href="https://rateyourmusic.com/search?searchterm=${sanitise(page.sister)}%20${sanitise(page.name)}" target="_blank">
-                RYM
-            </a>
+      let genius = document.createElement("li");
+      genius.innerHTML = `
             <a class="play-this-track-playlink music-link play-this-track-playlink--genius" href="https://genius.com/search?q=${sanitise(page.sister)}+${sanitise(page.name)}" target="_blank">
                 Genius
             </a>
         `;
+      link_container.appendChild(genius);
+    } else {
+      let header = document.createElement("div");
+      header.classList.add("sub-text", "music-small-header");
+      header.textContent = tl(trans.find_on);
+      link_group.appendChild(header);
+      if (page.type == "album") {
+        link_container.innerHTML = `
+                <a class="play-this-track-playlink music-link play-this-track-playlink--spotify" href="https://open.spotify.com/search/${sanitise(page.sister)}%20${sanitise(page.name)}" target="_blank">
+                    Spotify
+                </a>
+                <a class="play-this-track-playlink music-link play-this-track-playlink--itunes" href="https://music.apple.com/gb/search?term=${sanitise(page.sister)}%20${sanitise(page.name)}" target="_blank">
+                    Apple Music
+                </a>
+                <a class="play-this-track-playlink music-link play-this-track-playlink--youtube-music" href="https://music.youtube.com/search?q=${sanitise(page.sister)}+${sanitise(page.name)}" target="_blank">
+                    YouTube Music
+                </a>
+                <a class="play-this-track-playlink music-link play-this-track-playlink--aoty" href="https://www.albumoftheyear.org/search/?q=${sanitise(page.sister)}+${sanitise(page.name)}" target="_blank">
+                    AOTY
+                </a>
+                <a class="play-this-track-playlink music-link play-this-track-playlink--rym" href="https://rateyourmusic.com/search?searchterm=${sanitise(page.sister)}%20${sanitise(page.name)}" target="_blank">
+                    RYM
+                </a>
+                <a class="play-this-track-playlink music-link play-this-track-playlink--genius" href="https://genius.com/search?q=${sanitise(page.sister)}+${sanitise(page.name)}" target="_blank">
+                    Genius
+                </a>
+            `;
+      } else {
+        link_container.innerHTML = `
+                <a class="play-this-track-playlink music-link play-this-track-playlink--spotify" href="https://open.spotify.com/search/${sanitise(page.name)}" target="_blank">
+                    Spotify
+                </a>
+                <a class="play-this-track-playlink music-link play-this-track-playlink--itunes" href="https://music.apple.com/gb/search?term=${sanitise(page.name)}" target="_blank">
+                    Apple Music
+                </a>
+                <a class="play-this-track-playlink music-link play-this-track-playlink--youtube-music" href="https://music.youtube.com/search?q=${sanitise(page.name)}" target="_blank">
+                    YouTube Music
+                </a>
+                <a class="play-this-track-playlink music-link play-this-track-playlink--aoty" href="https://www.albumoftheyear.org/search/?q=${sanitise(page.name)}" target="_blank">
+                    AOTY
+                </a>
+                <a class="play-this-track-playlink music-link play-this-track-playlink--rym" href="https://rateyourmusic.com/search?searchterm=${sanitise(page.name)}" target="_blank">
+                    RYM
+                </a>
+                <a class="play-this-track-playlink music-link play-this-track-playlink--genius" href="https://genius.com/search?q=${sanitise(page.name)}" target="_blank">
+                    Genius
+                </a>
+            `;
+        let externals = page.structure.side.querySelector(".resource-external-links");
+        page.structure.side.removeChild(externals.parentElement);
+        let externals_links = externals.querySelectorAll(".resource-external-link");
+        externals_links.forEach((link) => {
+          link.classList.add("music-link");
+          let type = link.classList[1];
+          if (type == "resource-external-link--homepage")
+            link.textContent = tl(trans.website);
+          else if (type == "resource-external-link--twitter")
+            link.textContent = "Twitter";
+          else if (type == "resource-external-link--facebook")
+            link.textContent = "Facebook";
+          link_container.appendChild(link);
+        });
+      }
     }
     link_group.appendChild(link_container);
     col_main.appendChild(link_group);
@@ -7544,7 +7590,7 @@
             ${avi[1] != null ? `<img class="view-item-avatar" src="${avi[1].getAttribute("src")}">` : ""}
             ${avi[2] != null ? `<img class="view-item-avatar" src="${avi[2].getAttribute("src")}">` : ""}
             <div class="info">
-                <h3>Mutuals</h3>
+                <h3>${tl(trans.following)}</h3>
                 <p>${trans_legacy[lang].music.listens.other_listeners.replace("{c}", count)}</p>
             </div>
         `;
@@ -12101,7 +12147,7 @@
   // src/components/about_artist.js
   function bleh_about_artist() {
     let legacy_container = page.structure.main.querySelector(".about-artist");
-    if (legacy_container == null)
+    if (!legacy_container)
       return;
     let avatar = legacy_container.querySelector(".gallery-preview-image--0 img");
     let listeners = legacy_container.querySelector(".about-artist-listeners");
@@ -12138,6 +12184,7 @@
       }
       about_artist_container.appendChild(guest_feature_panel);
     }
+    page.structure.side.appendChild(about_artist_container);
   }
 
   // src/components/structure.js

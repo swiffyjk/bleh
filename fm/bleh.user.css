@@ -6413,7 +6413,6 @@ button,
 /*     BUTTON HAS ICON     */
 .sponsor, .icon,
 .lastfm-bulk-edit-form-group-controls button,
-.about-guest-feature,
 .search-similar-btn, .obsession-btn, .refresh-tracklist-btn, .panel-settings-button,
 .image-open-button,
 .image-details :is(.bleh--gallery-bookmark-image-btn, .gallery-image-report, .gallery-image-delete button),
@@ -6450,7 +6449,6 @@ button,
         --btn-left: calc(12px + 18px + 6px) !important;
     }
 }
-.about-guest-feature,
 .side-right .setting-item,
 .continue, .external, .open,
 .btn--has-icon-right,
@@ -6584,7 +6582,6 @@ button,
 .grid-item-plays:before, .obesssions-item-date:before,
 .lastfm-bulk-edit-form-group-controls button:before,
 .lastfm-bulk-edit-progress:before,
-.about-guest-feature:before, .about-guest-feature:after,
 .tag-icon:before, .setting-icon:before,
 .image-open-button:before,
 .breadcrumb :is(a, .breadcrumb-origin):before, .gallery-image-uploaded-by:before,
@@ -10288,11 +10285,8 @@ text[style^="color: rgb(0, 0, 0)"] {
 
 
 /*     LINKS     */
-.resource-external-links {
-    display: flex;
-    flex-direction: column;
-    gap: var(--button-list-gap);
-    margin: unset !important;
+.resource-external-link {
+    width: fit-content;
 }
 .resource-external-link:after {
     display: none;
@@ -18014,10 +18008,34 @@ h4 {
     margin-top: var(--card-gap) !important;
 
     &.about-artist-panel {
+        flex-direction: column;
         margin: unset !important;
+        padding-top: calc(var(--card-padding) + 150px);
+
+        .avatar-side {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            width: unset !important;
+            height: 250px;
+            box-shadow: unset;
+            transform: unset !important;
+            border-radius: unset !important;
+
+            --mask: linear-gradient(0deg, transparent 0%, rgb(0, 0, 0) 100%);
+            mask-image: var(--mask);
+            -webkit-mask-image: var(--mask);
+            opacity: 0.4;
+
+            img {
+                object-fit: cover;
+                border-radius: unset !important;
+            }
+        }
 
         .wiki-block {
-            width: 470px;
+            width: 100%;
         }
     }
 
@@ -18521,26 +18539,26 @@ h4 {
 
 
 .about-artist-container {
+    overflow: hidden;
+
     .sep {
         margin: var(--card-gap) 0;
     }
     .about-guest-features-panel {
-        margin-top: var(--card-gap);
+        margin-top: 2px;
         display: flex;
         gap: var(--item-list-gap);
         flex-wrap: wrap;
 
         .about-guest-feature {
-            position: relative;
-
-            &:before {
-                --mask: var(--icon-16-artist);
-            }
-            &:after {
-                --left: none;
-                --right: 12px;
-                --mask: var(--icon-16-arrow-right);
-            }
+            --bg: unset;
+            --bg-hov: unset;
+            --bg-atv: unset;
+            --shadow: unset;
+            --font-size: 16px;
+            --line-height: 20px;
+            --font-weight: var(--font-weight-medium);
+            --padding: 0;
         }
     }
 }
@@ -20724,6 +20742,7 @@ h4 {
     display: flex;
     gap: 4px;
     flex-wrap: wrap;
+    max-width: 700px;
 
     li {
         display: flex;
@@ -20740,6 +20759,10 @@ h4 {
 }
 .music-small-header {
     margin-top: var(--card-gap);
+}
+
+.external-links-section {
+    display: none;
 }
 
 
@@ -20833,9 +20856,9 @@ h4 {
     display: flex;
     align-items: center;
     gap: var(--card-padding);
-    padding-bottom: var(--card-gap);
+    padding-bottom: var(--card-padding);
     border-bottom: 1px solid var(--card-border-base);
-    margin-bottom: var(--card-gap);
+    margin-bottom: var(--card-padding);
 
     .listen-divider {
         flex: 1;

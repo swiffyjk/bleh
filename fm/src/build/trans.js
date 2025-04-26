@@ -425,6 +425,15 @@ export const trans = {
     },
     markdown_tip: {
         en: 'This textbox supports markdown such as line breaks, bold text, italics, underlines, and more. You can embed images using ![alt text](link). Beware that to non-bleh users it will not appear fancy.'
+    },
+    find_on: {
+        en: 'Find on'
+    },
+    following: {
+        en: 'Following'
+    },
+    website: {
+        en: 'Website'
     }
 }
 

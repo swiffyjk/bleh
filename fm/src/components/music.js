@@ -314,17 +314,6 @@ export function show_your_scrobbles() {
     interact_container.appendChild(search_btn);
 
 
-    // search lyrics
-    let search_lyrics = null;
-    if (page.type == 'track') {
-        search_lyrics = document.createElement('a');
-        search_lyrics.classList.add('dropdown-menu-clickable-item', 'search-genius-btn');
-        search_lyrics.textContent = trans_legacy[lang].music.search_genius;
-        search_lyrics.href = `https://genius.com/search?q=${text}`;
-        search_lyrics.target = '_blank';
-    }
-
-
     // lotus
     let lotus_btn = null;
     if (settings.corrections) {
@@ -363,7 +352,6 @@ export function show_your_scrobbles() {
     let music_menu = tippy(menu_btn, {
         theme: 'select-menu',
         content: (`
-            ${(search_lyrics != null) ? search_lyrics.outerHTML : ''}
             ${(lotus_btn != null) ? lotus_btn.outerHTML : ''}
             ${(play_btn != null) ? play_btn.outerHTML : ''}
         `),
@@ -465,10 +453,11 @@ export function show_your_scrobbles() {
     if (page.type == 'track') {
         let header = document.createElement('div');
         header.classList.add('sub-text', 'music-small-header');
-        header.textContent = 'Play on';
+        header.textContent = tl(trans.find_on);
         link_group.appendChild(header);
 
         play_on = page.structure.side.querySelector('.play-this-track-playlinks');
+        page.structure.side.removeChild(play_on.parentElement);
         play_links = play_on.querySelectorAll('li');
 
         play_links.forEach((item) => {
@@ -504,32 +493,80 @@ export function show_your_scrobbles() {
 
             link_container.appendChild(item);
         });
-    } else {
-        let header = document.createElement('div');
-        header.classList.add('sub-text', 'music-small-header');
-        header.textContent = 'Find on';
-        link_group.appendChild(header);
 
-        link_container.innerHTML = (`
-            <a class="play-this-track-playlink music-link play-this-track-playlink--spotify" href="https://open.spotify.com/search/${sanitise(page.sister)}%20${sanitise(page.name)}" target="_blank">
-                Spotify
-            </a>
-            <a class="play-this-track-playlink music-link play-this-track-playlink--itunes" href="https://music.apple.com/gb/search?term=${sanitise(page.sister)}%20${sanitise(page.name)}" target="_blank">
-                Apple Music
-            </a>
-            <a class="play-this-track-playlink music-link play-this-track-playlink--youtube-music" href="https://music.youtube.com/search?q=${sanitise(page.sister)}+${sanitise(page.name)}" target="_blank">
-                YouTube Music
-            </a>
-            <a class="play-this-track-playlink music-link play-this-track-playlink--aoty" href="https://www.albumoftheyear.org/search/?q=${sanitise(page.sister)}+${sanitise(page.name)}" target="_blank">
-                AOTY
-            </a>
-            <a class="play-this-track-playlink music-link play-this-track-playlink--rym" href="https://rateyourmusic.com/search?searchterm=${sanitise(page.sister)}%20${sanitise(page.name)}" target="_blank">
-                RYM
-            </a>
+        let genius = document.createElement('li');
+        genius.innerHTML = (`
             <a class="play-this-track-playlink music-link play-this-track-playlink--genius" href="https://genius.com/search?q=${sanitise(page.sister)}+${sanitise(page.name)}" target="_blank">
                 Genius
             </a>
         `);
+        link_container.appendChild(genius);
+    } else {
+        let header = document.createElement('div');
+        header.classList.add('sub-text', 'music-small-header');
+        header.textContent = tl(trans.find_on);
+        link_group.appendChild(header);
+
+        if (page.type == 'album') {
+            link_container.innerHTML = (`
+                <a class="play-this-track-playlink music-link play-this-track-playlink--spotify" href="https://open.spotify.com/search/${sanitise(page.sister)}%20${sanitise(page.name)}" target="_blank">
+                    Spotify
+                </a>
+                <a class="play-this-track-playlink music-link play-this-track-playlink--itunes" href="https://music.apple.com/gb/search?term=${sanitise(page.sister)}%20${sanitise(page.name)}" target="_blank">
+                    Apple Music
+                </a>
+                <a class="play-this-track-playlink music-link play-this-track-playlink--youtube-music" href="https://music.youtube.com/search?q=${sanitise(page.sister)}+${sanitise(page.name)}" target="_blank">
+                    YouTube Music
+                </a>
+                <a class="play-this-track-playlink music-link play-this-track-playlink--aoty" href="https://www.albumoftheyear.org/search/?q=${sanitise(page.sister)}+${sanitise(page.name)}" target="_blank">
+                    AOTY
+                </a>
+                <a class="play-this-track-playlink music-link play-this-track-playlink--rym" href="https://rateyourmusic.com/search?searchterm=${sanitise(page.sister)}%20${sanitise(page.name)}" target="_blank">
+                    RYM
+                </a>
+                <a class="play-this-track-playlink music-link play-this-track-playlink--genius" href="https://genius.com/search?q=${sanitise(page.sister)}+${sanitise(page.name)}" target="_blank">
+                    Genius
+                </a>
+            `);
+        } else {
+            link_container.innerHTML = (`
+                <a class="play-this-track-playlink music-link play-this-track-playlink--spotify" href="https://open.spotify.com/search/${sanitise(page.name)}" target="_blank">
+                    Spotify
+                </a>
+                <a class="play-this-track-playlink music-link play-this-track-playlink--itunes" href="https://music.apple.com/gb/search?term=${sanitise(page.name)}" target="_blank">
+                    Apple Music
+                </a>
+                <a class="play-this-track-playlink music-link play-this-track-playlink--youtube-music" href="https://music.youtube.com/search?q=${sanitise(page.name)}" target="_blank">
+                    YouTube Music
+                </a>
+                <a class="play-this-track-playlink music-link play-this-track-playlink--aoty" href="https://www.albumoftheyear.org/search/?q=${sanitise(page.name)}" target="_blank">
+                    AOTY
+                </a>
+                <a class="play-this-track-playlink music-link play-this-track-playlink--rym" href="https://rateyourmusic.com/search?searchterm=${sanitise(page.name)}" target="_blank">
+                    RYM
+                </a>
+                <a class="play-this-track-playlink music-link play-this-track-playlink--genius" href="https://genius.com/search?q=${sanitise(page.name)}" target="_blank">
+                    Genius
+                </a>
+            `);
+
+            let externals = page.structure.side.querySelector('.resource-external-links');
+            page.structure.side.removeChild(externals.parentElement);
+            let externals_links = externals.querySelectorAll('.resource-external-link');
+            externals_links.forEach((link) => {
+                link.classList.add('music-link');
+
+                let type = link.classList[1];
+                if (type == 'resource-external-link--homepage')
+                    link.textContent = tl(trans.website);
+                else if (type == 'resource-external-link--twitter')
+                    link.textContent = 'Twitter';
+                else if (type == 'resource-external-link--facebook')
+                    link.textContent = 'Facebook';
+
+                link_container.appendChild(link);
+            });
+        }
     }
 
     link_group.appendChild(link_container);
@@ -637,7 +674,7 @@ function create_listen_item(parent, {name, listens, link, avi, count=0, button=f
             ${(avi[1] != null) ? `<img class="view-item-avatar" src="${avi[1].getAttribute('src')}">` : ''}
             ${(avi[2] != null) ? `<img class="view-item-avatar" src="${avi[2].getAttribute('src')}">` : ''}
             <div class="info">
-                <h3>Mutuals</h3>
+                <h3>${tl(trans.following)}</h3>
                 <p>${trans_legacy[lang].music.listens.other_listeners.replace('{c}', count)}</p>
             </div>
         `);
