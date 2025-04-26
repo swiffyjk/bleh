@@ -6461,7 +6461,7 @@ button,
 .gallery-next .arrow,
 .header-new-gallery--link .header-new-gallery-inner,
 .date-range-picker-button,
-.source-album, .big-tags-item,
+.source-album,
 .select-button,
 .language-nav,
 .auth-link,
@@ -6680,7 +6680,6 @@ button,
 /*     TRACK/ALBUM/ARTIST HEADER     */
 .header-new-love-button:before, .header-new-more-button:before, .header-new-bookmark-button:before,
 /*     TAGS     */
-.big-tags-item-image:before, .big-tags-item:before,
 .tags-add:before,
 /*     CHARTLIST     */
 .chartlist-love-button:before,
@@ -10073,7 +10072,6 @@ text[style^="color: rgb(0, 0, 0)"] {
 .big-artist-list-avatar-desktop,
 .playlist-image,
 .catalogue-overview-similar-artists-item-image,
-.big-tags-item-image,
 .artist-similar-artists-sidebar-item-image,
 .music-bookmarks-artists-item-image, .music-bookmarks-albums-item-image,
 .resource-list--release-list-item-image, .artist-top-albums-item-image, .similar-albums-item-image, .source-album-art .cover-art, .track-similar-tracks-item-image, .similar-items-sidebar-item-image {
@@ -12374,41 +12372,18 @@ hr {
 
 /*     BIG TAGS     */
 .big-tags-item {
-    position: relative;
-    --left: none;
-    --right: 12px;
-    --mask: var(--icon-16-arrow-right);
+    --bg: transparent;
+    --bg-hov: hsl(var(--b3), 40%);
+    --bg-atv: hsl(var(--b3), 60%);
+    --col: hsl(var(--c3));
+    --shadow: inset 0 0 0 1px var(--card-border-base);
+    --padding: 7px 20px;
 
     display: flex;
     flex-direction: row;
-    align-items: center;
-    gap: 12px;
 
-    .big-tags-item-image {
-        flex-shrink: 0;
-        width: 48px;
-
-        color: hsl(var(--b7));
-        --mask: var(--icon-tag);
-        --mask-size: 24px;
-        --left: 50%;
-        --margin-left: -12px;
-        --margin-top: -12px;
-
-        img {
-            --mask-size: var(--cover-size-50);
-            position: static;
-            filter: blur(7px) saturate(20%) brightness(130%);
-            opacity: 0.5;
-        }
-
-        &:before {
-            z-index: 6;
-        }
-
-        &:after {
-            display: none;
-        }
+    .media-item {
+        display: none;
     }
 
     .big-tags-item-name {
@@ -12416,21 +12391,20 @@ hr {
         color: inherit;
         font: inherit;
         width: unset;
-        height: 48px;
+        height: 32px;
         -webkit-line-clamp: 1;
-
-        display: flex;
 
         a {
             display: block;
-            --left: 0;
             font: inherit;
             text-decoration: var(--force-underline, none) !important;
 
             -webkit-line-clamp: 1;
             letter-spacing: unset;
             padding: unset;
-            text-align: unset;
+
+            font-size: 16px;
+            line-height: 20px;
         }
     }
 }
