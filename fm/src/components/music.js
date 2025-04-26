@@ -2,7 +2,7 @@ import { patch_avatar } from "../avatar";
 import { settings } from "../build/config";
 import { log } from "../build/log";
 import { auth, page, root } from "../build/page";
-import { clean_number, return_artist_from_track } from "../build/tools";
+import { clean_number, return_artist_from_track, sanitise } from "../build/tools";
 import { lang, trans_legacy, trans, tl } from "../build/trans";
 import { prep_chart_colours } from "../chart";
 import { refresh_all } from "../config";
@@ -455,8 +455,31 @@ export function show_your_scrobbles() {
             link_container.appendChild(item);
         });
     } else {
-        play_on = page.structure.side.querySelector('.resource-external-links');
-        play_links = play_on.querySelectorAll('.resource-external-link');
+        let header = document.createElement('div');
+        header.classList.add('sub-text', 'music-small-header');
+        header.textContent = 'Find on';
+        link_group.appendChild(header);
+
+        link_container.innerHTML = (`
+            <a class="play-this-track-playlink music-link play-this-track-playlink--spotify" href="https://open.spotify.com/search/${sanitise(page.sister)}%20${sanitise(page.name)}" target="_blank">
+                Spotify
+            </a>
+            <a class="play-this-track-playlink music-link play-this-track-playlink--itunes" href="https://music.apple.com/gb/search?term=${sanitise(page.sister)}%20${sanitise(page.name)}" target="_blank">
+                Apple Music
+            </a>
+            <a class="play-this-track-playlink music-link play-this-track-playlink--youtube-music" href="https://music.youtube.com/search?q=${sanitise(page.sister)}+${sanitise(page.name)}" target="_blank">
+                YouTube Music
+            </a>
+            <a class="play-this-track-playlink music-link play-this-track-playlink--aoty" href="https://www.albumoftheyear.org/search/?q=${sanitise(page.sister)}+${sanitise(page.name)}" target="_blank">
+                AOTY
+            </a>
+            <a class="play-this-track-playlink music-link play-this-track-playlink--rym" href="https://rateyourmusic.com/search?searchterm=${sanitise(page.sister)}%20${sanitise(page.name)}" target="_blank">
+                RYM
+            </a>
+            <a class="play-this-track-playlink music-link play-this-track-playlink--genius" href="https://genius.com/search?q=${sanitise(page.sister)}+${sanitise(page.name)}" target="_blank">
+                Genius
+            </a>
+        `);
     }
 
     link_group.appendChild(link_container);
