@@ -159,6 +159,11 @@
             "name": "beret redesign",
             "date": "2025-04-03",
             "notice": "Removes individual card styles and instead styles the entire container, much like old bleh"
+        },
+        "colour_based_on_hex": {
+            "default": true,
+            "name": "Set colour based on hex",
+            "date": "2025-04-26"
         }
     }
 }

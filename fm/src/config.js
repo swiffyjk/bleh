@@ -378,7 +378,7 @@ function update_colour_swatches() {
         if (!custom && swatch.getAttribute('data-swatch-type') == 'customise')
             custom = swatch;
 
-        if (!seasonal && swatch.getAttribute('data-swatch-type') == 'seasonal')
+        if (!seasonal && swatch.getAttribute('data-swatch-type') == 'default')
             seasonal = swatch;
     });
 

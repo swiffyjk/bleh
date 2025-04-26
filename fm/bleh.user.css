@@ -7185,6 +7185,7 @@ section:has(.dropdown-menu-clickable-button.section-control) {
     }
 }
 
+.dropdown-menu-clickable-item[aria-checked="true"],
 .dropdown-menu-clickable-item--selected {
     --mask: var(--icon-16-check) !important;
 }

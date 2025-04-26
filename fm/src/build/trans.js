@@ -329,6 +329,9 @@ export const trans = {
     customise: {
         en: 'Customise'
     },
+    convert: {
+        en: 'Convert'
+    },
     hue: {
         en: 'Accent colour',
         de: 'Akzentfarbe'
