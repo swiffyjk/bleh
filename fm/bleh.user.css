@@ -13915,6 +13915,8 @@ pre {
 
 .sep:not(.btns) {
     width: 100%;
+    height: 1px;
+    background: var(--card-border-base);
 }
 
 .preview-img {
@@ -14215,6 +14217,10 @@ input[type="range"]::-moz-range-progress {
         background-color: hsla(var(--b4), 40%);
         transition: none;
     }*/
+
+    align-items: center;
+    min-height: 28px;
+    gap: var(--card-gap);
 
     &:active {
         .toggle {
