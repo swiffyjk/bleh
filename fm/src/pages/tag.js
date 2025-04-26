@@ -92,5 +92,9 @@ export function bleh_tags_mini() {
     let tags = tags_list.querySelectorAll('.tag a');
     tags.forEach((tag) => {
         tag.classList.add('user-created-tag');
+
+        tippy(tag, {
+            content: 'Personal tag'
+        });
     });
 }

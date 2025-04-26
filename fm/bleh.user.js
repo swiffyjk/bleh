@@ -7342,6 +7342,61 @@
       interact_container.removeChild(play_btn);
     interact_container.appendChild(menu_btn);
     top_container.appendChild(interact_container);
+    let metadata = col_main.querySelector(".metadata-column");
+    let tags = col_main.querySelector(".catalogue-tags");
+    let wiki = col_main.querySelector(".wiki-column");
+    let play_on;
+    let play_links;
+    let link_group = document.createElement("div");
+    link_group.classList.add("metadata-group");
+    let link_container = document.createElement("div");
+    link_container.classList.add("music-links");
+    if (page.type == "track") {
+      let header = document.createElement("div");
+      header.classList.add("sub-text", "music-small-header");
+      header.textContent = "Play on";
+      link_group.appendChild(header);
+      play_on = page.structure.side.querySelector(".play-this-track-playlinks");
+      play_links = play_on.querySelectorAll("li");
+      play_links.forEach((item) => {
+        let link = item.querySelector(".play-this-track-playlink:not(.visible-xs)");
+        link.classList.add("music-link");
+        let replace = item.querySelector(".replace-playlink");
+        if (replace) {
+          replace.classList.add("dropdown-menu-clickable-item");
+          item.removeChild(replace);
+          let menu = tippy(link, {
+            theme: "context-menu",
+            content: `
+                        ${replace.outerHTML}
+                    `,
+            allowHTML: true,
+            placement: "right-start",
+            trigger: "manual",
+            interactive: true,
+            interactiveBorder: 10,
+            offset: [0, 0],
+            onShow(instance) {
+              instance.popper.addEventListener("click", (event2) => {
+                instance.hide();
+              });
+            }
+          });
+          register_menu(link, menu);
+        }
+        link_container.appendChild(item);
+      });
+    } else {
+      play_on = page.structure.side.querySelector(".resource-external-links");
+      play_links = play_on.querySelectorAll(".resource-external-link");
+    }
+    link_group.appendChild(link_container);
+    col_main.appendChild(link_group);
+    let header_tags = document.createElement("div");
+    header_tags.classList.add("sub-text", "music-small-header");
+    header_tags.textContent = "Tags";
+    col_main.appendChild(header_tags);
+    col_main.appendChild(tags);
   }
   function create_listen_item(parent, { name, listens, link, avi, count = 0, button = false, katsune = false }, header_type) {
     log(`creating listen item of ${name}, ${count}, ${listens}`, "artist", "info", { avi, link });
@@ -12475,6 +12530,9 @@
     let tags = tags_list.querySelectorAll(".tag a");
     tags.forEach((tag) => {
       tag.classList.add("user-created-tag");
+      tippy(tag, {
+        content: "Personal tag"
+      });
     });
   }
 

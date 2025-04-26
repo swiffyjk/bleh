@@ -1994,172 +1994,6 @@ span.header-new-gallery-inner a,
 
 
 
-/*     TAGS     */
-.tags-list, .catalogue-tags {
-    display: flex !important;
-    align-items: center;
-    gap: 6px;
-    margin: unset;
-    /* todo: work on this better, it only occurs if
-    user tags are too long next to global tags */
-    flex-wrap: wrap;
-}
-
-.catalogue-tags {
-    /* without any margin stuff its just 16px + 6px
-    the 11px is the margin offset
-    the 1px is the border
-    the -2px is to re-align it with how it was before cus it changed somehow */
-    padding-left: calc(18px + 6px + 11px + 1px - 2px);
-    position: relative;
-}
-.catalogue-tags:before {
-    --top: 2px;
-    --margin-top: none;
-    --left: 0;
-    --mask: var(--icon-16-tag);
-    color: hsl(var(--c3));
-}
-
-.music-featured-artist-tags .tag,
-.catalogue-tags .tag {
-    margin: unset;
-    max-width: unset;
-}
-/* apply tag styling to everything tag-related */
-.music-featured-artist-tags .tag a,
-.catalogue-tags .tags-add,
-.catalogue-tags .tag a, .catalogue-tags .tags-add-cta {
-    box-shadow: var(--interact-shadow) !important;
-    color: hsl(var(--c3)) !important;
-    font-weight: var(--font-weight);
-    background-color: hsl(var(--b4));
-    border-radius: 50px;
-    min-height: unset;
-    font-size: var(--font-size);
-    line-height: var(--line-height);
-    padding: 2px 12px;
-    text-transform: lowercase !important;
-    margin-bottom: unset !important;
-    letter-spacing: unset !important;
-    transition-property: opacity;
-    transition-duration: var(--trans);
-    transition-timing-function: var(--trans-function);
-    /* -10 to overlap spacing, -1 for the border */
-    margin-left: -10px;
-    /* last.fm by default sets this to 150px,
-    with the padding in bleh this conflicts with eg.
-    the underground hip-hop tag */
-    max-width: 180px;
-
-    &.user-created-tag {
-        background: hsl(var(--h4), 30%) !important;
-        color: hsl(var(--l2-c-theme-switch)) !important;
-        /*box-shadow: 0 0 0 2px hsl(var(--h4), 30%) inset, var(--interact-shadow) !important;*/
-    }
-
-    &.tags-add {
-        font-size: 0;
-    }
-}
-
-
-/*     HOVER EFFECTS     */
-
-
-/*:is(.catalogue-tags .tags-add,
-.catalogue-tags .tag a, .catalogue-tags .tags-add-cta):hover {
-    background-color: hsla(var(--b4), 80%);
-    transition: none;
-}
-:is(.catalogue-tags .tags-add,
-.catalogue-tags .tag a, .catalogue-tags .tags-add-cta):active {
-    background-color: hsla(var(--b4), 60%);
-}*/
-
-.tags-list:has(.tag a:hover) .tag a:not(:hover) {
-    opacity: 0.6;
-}
-.tag a:hover {
-    transition: none;
-    z-index: 5;
-    position: relative;
-}
-
-
-.tags-add-cta:before {
-    display: none;
-}
-.catalogue-tags .tags-view-all {
-    margin-bottom: unset;
-    --mask: var(--icon-16-arrow-right);
-    position: relative;
-    --mask-size: 12px;
-    --margin-top: -6px;
-    padding-right: calc(12px + 4px);
-    --left: none;
-    --right: 0;
-    font-weight: var(--font-weight-medium);
-    text-transform: lowercase;
-    height: fit-content;
-
-    &:not(:hover) {
-        color: hsl(var(--c3));
-    }
-}
-
-.col-sm-8:has(.catalogue-tags) {
-    padding: unset !important;
-}
-
-
-/* user personal tags */
-.catalogue-tags .tags-separator {
-    display: block;
-    width: 100%;
-    margin: unset;
-}
-/* scuffed but it works */
-.catalogue-tags .tags-user-avatar {
-    width: 16px;
-    height: 16px;
-    margin-left: calc(-10px - 16px - 4px);
-    margin-right: 10px;
-
-    img {
-        border-radius: var(--avatar-radius);
-    }
-
-    position: relative;
-    top: 1px;
-    left: -2px;
-
-    & + .tags-list {
-        margin-left: -2px;
-    }
-}
-
-
-/* no song tags, only user's personal tags, therefore
-spacing between is removed and aligned to tag icon */
-.tags-user-avatar:nth-child(3) {
-    margin-left: -10px;
-}
-
-
-/* add a tag */
-.catalogue-tags .tags-add {
-    width: calc(16px + (10px * 2));
-    height: 22px;
-}
-.tags-add:before {
-    --mask: var(--icon-16-plus);
-    --left: 9px;
-}
-
-
-
-
 /*     TABS     */
 
 
@@ -3947,9 +3781,12 @@ button.navlist-more {
     }
 
     .metadata-column {
-        padding-left: var(--card-padding);
-        border-left: 1px solid var(--card-border-base);
-        max-width: 350px;
+        max-width: unset;
+        flex: 1;
+
+        display: flex;
+        flex-direction: column;
+        gap: var(--card-gap);
     }
     .wiki-column {
         width: 100%;
@@ -3958,6 +3795,12 @@ button.navlist-more {
 
     .catalogue-metadata {
         padding: unset !important;
+    }
+}
+/* old tags */
+.track-info-panel {
+    & > .row {
+        display: none;
     }
 }
 
@@ -6053,9 +5896,6 @@ leading to a gap from their own css */
     filter: drop-shadow(2px 0px 0 hsl(var(--b5))) drop-shadow(0px 2px 0 hsl(var(--b5))) drop-shadow(-2px -0px 0 hsl(var(--b5))) drop-shadow(-0px -2px 0 hsl(var(--b5)));
 }
 
-.catalogue-tags .tags-user-avatar .avatar-status-dot {
-    display: none;
-}
 .obsession-details-intro-avatar-wrap .avatar-status-dot {
     /* remove the heavy bottom shadow */
     filter: drop-shadow(2px 0px 0 hsl(var(--b5))) drop-shadow(0px 2px 0 hsl(var(--b5))) drop-shadow(-2px -0px 0 hsl(var(--b5))) drop-shadow(-0px -2px 0 hsl(var(--b5)));
@@ -6255,7 +6095,7 @@ button,
 #ot-sdk-btn,
 .footer-links a, .footer-timezone strong,
 .library-search-results li,
-.resource-external-link, .play-this-track-playlink, .replace-playlink,
+.resource-external-link, .play-this-track-playlink,
 .shout-more-replies-before,
 .coloured-cta,
 .gallery-image-preferred-off,
@@ -6286,7 +6126,8 @@ button,
 .masthead-logo a, .masthead-search-form,
 .show-more a,
 /* log in */ .site-auth-control,
-.music-more-link a
+.music-more-link a,
+.tag a, .tags-add-cta, .tags-add, .tags-view-all
 {
     --bg: var(--cards-overlay-image-subtlest, none), hsl(var(--b3));
     --bg-hov: var(--cards-overlay-image-subtlest, none), hsla(var(--b3), 80%);
@@ -6790,7 +6631,6 @@ button,
 /*     TAGS     */
 .big-tags-item-image:before, .big-tags-item:before,
 .tags-add:before,
-.catalogue-tags:before,
 /*     CHARTLIST     */
 .chartlist-love-button:before,
 .chartlist-type:before,
@@ -10499,21 +10339,10 @@ text[style^="color: rgb(0, 0, 0)"] {
 }
 
 .replace-playlink {
-    --bg: hsla(var(--b4), 40%);
-    --bg-hov: hsla(var(--b4), 60%);
-    --bg-atv: hsla(var(--b4), 80%);
-    --mask: var(--icon-16-dots);
-    --font-size: 0;
-    /* display underneath playlink */
-    --overlap-width: 8px;
-    --btn-left: calc(12px + 18px + 6px + var(--overlap-width)) !important;
-    --left: calc(12px + var(--overlap-width) + 3px); /* + 2px if font size is 0 */
-    margin-left: calc(-1 * var(--overlap-width));
-    /* */
-    top: 0;
-    position: relative;
+    --mask: var(--icon-16-edit);
     opacity: unset;
-    z-index: 1;
+    margin: unset;
+    inset: unset;
 }
 
 
@@ -20868,5 +20697,116 @@ h4 {
     display: flex !important;
     flex-direction: column;
     gap: var(--card-gap);
+}
+
+
+
+
+.music-links {
+    display: flex;
+    gap: 4px;
+    flex-wrap: wrap;
+
+    li {
+        display: flex;
+
+        .music-link {
+            --bg: hsl(var(--h3), 10%);
+            --bg-hov: hsl(var(--h3), 20%);
+            --bg-atv: hsl(var(--h3), 30%);
+            --col: hsl(var(--l3-c));
+            --shadow: inset 0 0 0 1px hsl(var(--l3-c), 50%);
+        }
+    }
+}
+.music-small-header {
+    margin-top: var(--card-gap);
+}
+
+
+
+
+/*     TAGS     */
+.tags-list, .catalogue-tags {
+    display: flex !important;
+    align-items: center;
+    gap: 4px;
+    margin: unset;
+    /* todo: work on this better, it only occurs if
+    user tags are too long next to global tags */
+    flex-wrap: wrap;
+
+    .avatar {
+        display: none;
+    }
+}
+
+.music-featured-artist-tags .tag,
+.catalogue-tags .tag {
+    margin: unset;
+    max-width: unset;
+}
+/* apply tag styling to everything tag-related */
+.tag a, .tags-add-cta, .tags-add, .tags-view-all {
+    --bg: transparent;
+    --bg-hov: hsl(var(--b3), 40%);
+    --bg-atv: hsl(var(--b3), 60%);
+    --col: hsl(var(--c3));
+    --shadow: inset 0 0 0 1px var(--card-border-base);
+    --padding: 5px 10px;
+    min-width: 28px !important;
+    width: fit-content;
+
+    --left: 5px;
+
+    min-height: unset;
+    text-transform: lowercase !important;
+    margin-bottom: unset !important;
+    letter-spacing: unset !important;
+    margin: unset !important;
+    position: relative;
+    /* last.fm by default sets this to 150px,
+    with the padding in bleh this conflicts with eg.
+    the underground hip-hop tag */
+    max-width: 180px;
+
+    &.user-created-tag {
+        --bg: hsl(var(--h3), 10%);
+        --bg-hov: hsl(var(--h3), 20%);
+        --bg-atv: hsl(var(--h3), 30%);
+        color: hsl(var(--l2-c-theme-switch)) !important;
+        /*box-shadow: 0 0 0 2px hsl(var(--h4), 30%) inset, var(--interact-shadow) !important;*/
+    }
+}
+
+
+.tags-add-cta:before {
+    display: none;
+}
+.catalogue-tags .tags-view-all {
+    --font-size: 0;
+    --mask: var(--icon-16-arrow-right);
+}
+
+.col-sm-8:has(.catalogue-tags) {
+    padding: unset !important;
+}
+
+
+/* user personal tags */
+.catalogue-tags .tags-separator {
+    display: block;
+    width: 100%;
+    margin: unset;
+    display: none;
+}
+
+
+/* add a tag */
+.tags-add {
+    --font-size: 0;
+    --mask: var(--icon-16-plus);
+    width: unset !important;
+    height: unset !important;
 }
 }
