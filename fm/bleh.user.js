@@ -706,6 +706,9 @@
                 <div class="preview-button">
 
                 </div>
+                <div class="preview-button preview-track">
+
+                </div>
             </div>
         </div>
     </div>
@@ -1497,6 +1500,12 @@
     },
     convert: {
       en: "Convert"
+    },
+    convert_from_hex: {
+      en: "Convert colour"
+    },
+    fonts: {
+      en: "Fonts"
     },
     hue: {
       en: "Accent colour",
@@ -8481,24 +8490,6 @@
           name: trans_legacy[lang].settings.customise.colourful_counts.name
         }
       ]);
-      let preview_bar = "background: linear-gradient(90deg";
-      let preview_bar_text = "";
-      let global_sat = getComputedStyle(document.body).getPropertyValue("--sat");
-      let global_lit = getComputedStyle(document.body).getPropertyValue("--lit");
-      let h3_sat = getComputedStyle(document.body).getPropertyValue("--h3-sat");
-      let h3_lit = getComputedStyle(document.body).getPropertyValue("--h3-lit");
-      let maximum = 16e3;
-      let max_rank = 11;
-      for (let rank = 0; rank <= max_rank; rank++) {
-        let this_rank = ranks[parseInt(rank)];
-        let percent = this_rank.start / maximum * 100;
-        preview_bar = `${preview_bar}, hsl(${this_rank.hue}, ${h3_sat.replace(global_sat, this_rank.sat)}, ${h3_lit.replace(global_lit, this_rank.lit)}) ${percent}%`;
-        if ((this_rank.start > 500 || this_rank.start == 0) && this_rank.start != 1500) {
-          let text = `${this_rank.start}`;
-          preview_bar_text = `${preview_bar_text}<div class="preview-bar-text-entry" style="left: ${percent}%">${text.replaceAll("_", ",")}</div>`;
-        }
-      }
-      preview_bar = `${preview_bar});`;
       return `
             <div class="bleh--panel">
                 <h4>${tl(trans.themes.name)}</h4>
@@ -8560,49 +8551,6 @@
                 </div>
                 ` : ""}
                 <h4>${tl(trans.colours)}</h4>
-                <div class="inner-preview pad">
-                    <div class="palette">
-                        <div class="swatch" style="--col: hsl(var(--l2-c))"></div>
-                        <div class="swatch" style="--col: hsl(var(--l3-c))"></div>
-                        <div class="swatch" style="--col: hsl(var(--l4-c))"></div>
-                        <div class="swatch" style="--col: hsl(var(--l2))"></div>
-                        <div class="swatch" style="--col: hsl(var(--l3))"></div>
-                        <div class="swatch" style="--col: hsl(var(--l4))"></div>
-                    </div>
-                    <table class="chartlist chartlist--with-image chartlist--with-loved chartlist--with-artist" style="margin: var(--card-gap) 0 !important">
-                        <tbody>
-                            <tr class="chartlist-row chartlist-row--now-scrobbling chartlist-row--with-artist" style="transition: none !important">
-                                <td class="chartlist-image">
-                                    <a class="cover-art"><img src="${auth.avatar.replace("/avatar42s/", "/avatar170s/")}" loading="lazy"></a>
-                                </td>
-                                <td class="chartlist-loved">
-                                    <button class="chartlist-love-button" data-toggle-button-current-state="unloved"></button>
-                                </td>
-                                <td class="chartlist-name">
-                                    <a>Song title</a>
-                                </td>
-                                <td class="chartlist-artist">
-                                    <a>${auth.name}</a>
-                                </td>
-                                <td class="chartlist-timestamp chartlist-timestamp--lang-en">
-                                    <span class="chartlist-now-scrobbling">
-                                        <a>Scrobbling now</a>
-                                    </span>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    <div class="btn-row">
-                        <button class="btn">${trans_legacy[lang].settings.examples.button}</button>
-                        <button class="btn primary">${trans_legacy[lang].settings.examples.button}</button>
-                        <div class="chartlist-count-bar">
-                            <a class="chartlist-count-bar-link">
-                                <span class="chartlist-count-bar-slug" style="width: 60%"></span>
-                                <span class="chartlist-count-bar-value">44,551</span>
-                            </a>
-                        </div>
-                    </div>
-                </div>
                 <div class="view-buttons colour-buttons view-buttons-middle" id="colour_custom"></div>
                 <div class="swatch-group">
                     <div id="colour_red" class="palette options colours"></div>
@@ -8639,64 +8587,75 @@
                         </button>
                     </div>
                 </div>
-                <div class="sep"></div>
-                <div class="inner-preview pad">
-                    <div class="personal-stats-preview-bar-container">
-                        <div class="personal-stats-preview-bar" style="${preview_bar}"></div>
-                        <div class="personal-stats-preview-text">${preview_bar_text}</div>
+                ${ff("card_saturation") ? `
+                <div class="slider-container hide-if-light-theme" id="container-sat_bg">
+                    <button class="btn reset" onclick="_reset_item('sat_bg')">${tl(trans.reset)}</button>
+                    <div class="heading">
+                        <h5>${tl(trans.card_background_saturation.name)}</h5>
+                        <p>${tl(trans.card_background_saturation.body)}</p>
                     </div>
-                    <div class="sep"></div>
-                    <div class="tracks">
-                        <div class="track">
-                            <div class="cover"></div>
-                            <div class="title"></div>
-                            <div class="bar">
-                                <div class="fill not-colourful-example" style="width: 100%"></div>
-                                <div class="fill colourful-example" style="width: 100%; --hue: -16.888749999999998; --sat: 1.5; --lit: 0.875"></div>
-                            </div>
-                        </div>
-                        <div class="track">
-                            <div class="cover"></div>
-                            <div class="title"></div>
-                            <div class="bar">
-                                <div class="fill not-colourful-example" style="width: 85%"></div>
-                                <div class="fill colourful-example" style="width: 85%; --hue: 0.21863999999999972; --sat: 1.399218; --lit: 0.891406"></div>
-                            </div>
-                        </div>
-                        <div class="track">
-                            <div class="cover"></div>
-                            <div class="title"></div>
-                            <div class="bar">
-                                <div class="fill not-colourful-example" style="width: 60%"></div>
-                                <div class="fill colourful-example" style="width: 60%; --hue: 18.77; --sat: 1.425; --lit: 0.9175833333333334"></div>
-                            </div>
-                        </div>
-                        <div class="track">
-                            <div class="cover"></div>
-                            <div class="title"></div>
-                            <div class="bar">
-                                <div class="fill not-colourful-example" style="width: 30%"></div>
-                                <div class="fill colourful-example" style="width: 30%; --hue: 50.769767441860466; --sat: 1.361813953488372; --lit: 0.943406976744186"></div>
-                            </div>
-                        </div>
-                        <div class="track">
-                            <div class="cover"></div>
-                            <div class="title"></div>
-                            <div class="bar">
-                                <div class="fill not-colourful-example" style="width: 5%"></div>
-                                <div class="fill colourful-example" style="width: 5%; --hue: 92.42; --sat: 1.35; --lit: 0.925"></div>
-                            </div>
+                    <div class="slider">
+                        <div class="slider-track" id="slider-track-sat_bg"><div class="slider-fill"></div><div class="slider-nub"></div></div>
+                        <input type="range" min="0" max="3" value="0" step="0.1" id="slider-sat_bg" oninput="_update_item('sat_bg', this.value)">
+                        <p id="value-sat_bg">0</p>
+                    </div>
+                </div>
+                ` : ""}
+                <div class="sep"></div>
+                <h4>${tl(trans.fonts)}</h4>
+                <div class="text-container" id="container-font">
+                    <button class="btn reset" onclick="_reset_item('font')">${tl(trans.reset)}</button>
+                    <div class="heading content-form">
+                        <div class="input-container">
+                            <input type="text" maxlength="120" id="text-font" value="${settings.font}" placeholder="${trans_legacy[lang].settings.text.font.placeholder}">
+                            <button class="bleh--btn primary save" onclick="_save_font()">${trans_legacy[lang].settings.save}</button>
                         </div>
                     </div>
                 </div>
-                <div class="toggle-container" id="container-colourful_counts" onclick="_update_item('colourful_counts')">
-                    <button class="btn reset" onclick="_reset_item('colourful_counts')">${tl(trans.reset)}</button>
+                <div class="slider-container" id="container-font_weight">
+                    <button class="btn reset" onclick="_reset_item('font_weight')">${tl(trans.reset)}</button>
                     <div class="heading">
-                        <h5>${trans_legacy[lang].settings.customise.colourful_counts.name}</h5>
-                        <p>${trans_legacy[lang].settings.customise.colourful_counts.bio}</p>
+                        <h5>${trans_legacy[lang].settings.text.font_weight.name}</h5>
+                        <p>${trans_legacy[lang].settings.text.font_weight.bio}</p>
+                    </div>
+                    <div class="slider">
+                        <div class="slider-track" id="slider-track-font_weight"><div class="slider-fill"></div><div class="slider-nub"></div></div>
+                        <input type="range" min="0" max="900" value="0" step="10" id="slider-font_weight" oninput="_update_item('font_weight', this.value)">
+                        <p id="value-font_weight">0</p>
+                    </div>
+                </div>
+                <div class="slider-container" id="container-font_weight_medium">
+                    <button class="btn reset" onclick="_reset_item('font_weight_medium')">${tl(trans.reset)}</button>
+                    <div class="heading">
+                        <h5>${trans_legacy[lang].settings.text.font_weight_medium.name}</h5>
+                        <p>${trans_legacy[lang].settings.text.font_weight_medium.bio}</p>
+                    </div>
+                    <div class="slider">
+                        <div class="slider-track" id="slider-track-font_weight_medium"><div class="slider-fill"></div><div class="slider-nub"></div></div>
+                        <input type="range" min="0" max="900" value="0" step="10" id="slider-font_weight_medium" oninput="_update_item('font_weight_medium', this.value)">
+                        <p id="value-font_weight_medium">0</p>
+                    </div>
+                </div>
+                <div class="slider-container" id="container-font_weight_bold">
+                    <button class="btn reset" onclick="_reset_item('font_weight_bold')">${tl(trans.reset)}</button>
+                    <div class="heading">
+                        <h5>${trans_legacy[lang].settings.text.font_weight_bold.name}</h5>
+                        <p>${trans_legacy[lang].settings.text.font_weight_bold.bio}</p>
+                    </div>
+                    <div class="slider">
+                        <div class="slider-track" id="slider-track-font_weight_bold"><div class="slider-fill"></div><div class="slider-nub"></div></div>
+                        <input type="range" min="0" max="900" value="0" step="10" id="slider-font_weight_bold" oninput="_update_item('font_weight_bold', this.value)">
+                        <p id="value-font_weight_bold">0</p>
+                    </div>
+                </div>
+                <div class="toggle-container" id="container-font_emoji" onclick="_update_item('font_emoji')">
+                    <button class="btn reset" onclick="_reset_item('font_emoji')">${tl(trans.reset)}</button>
+                    <div class="heading">
+                        <h5>${trans_legacy[lang].settings.text.font_emoji.name}</h5>
+                        <p>${trans_legacy[lang].settings.text.font_emoji.bio}</p>
                     </div>
                     <div class="toggle-wrap">
-                        <button class="toggle" id="toggle-colourful_counts" aria-checked="true">
+                        <button class="toggle" id="toggle-font_emoji" aria-checked="false">
                             <div class="dot"></div>
                         </button>
                     </div>
@@ -9334,65 +9293,6 @@
       return `
             <div class="bleh--panel">
                 <h4 class="top-header">${trans_legacy[lang].settings.text.name}</h4>
-                <h4>${trans_legacy[lang].settings.text.font.name}</h4>
-                <div class="text-container" id="container-font">
-                    <button class="btn reset" onclick="_reset_item('font')">${tl(trans.reset)}</button>
-                    <div class="heading content-form">
-                        <div class="input-container">
-                            <input type="text" maxlength="120" id="text-font" value="${settings.font}" placeholder="${trans_legacy[lang].settings.text.font.placeholder}">
-                            <button class="bleh--btn primary save" onclick="_save_font()">${trans_legacy[lang].settings.save}</button>
-                        </div>
-                    </div>
-                </div>
-                <div class="slider-container" id="container-font_weight">
-                    <button class="btn reset" onclick="_reset_item('font_weight')">${tl(trans.reset)}</button>
-                    <div class="heading">
-                        <h5>${trans_legacy[lang].settings.text.font_weight.name}</h5>
-                        <p>${trans_legacy[lang].settings.text.font_weight.bio}</p>
-                    </div>
-                    <div class="slider">
-                        <div class="slider-track" id="slider-track-font_weight"><div class="slider-fill"></div><div class="slider-nub"></div></div>
-                        <input type="range" min="0" max="900" value="0" step="10" id="slider-font_weight" oninput="_update_item('font_weight', this.value)">
-                        <p id="value-font_weight">0</p>
-                    </div>
-                </div>
-                <div class="slider-container" id="container-font_weight_medium">
-                    <button class="btn reset" onclick="_reset_item('font_weight_medium')">${tl(trans.reset)}</button>
-                    <div class="heading">
-                        <h5>${trans_legacy[lang].settings.text.font_weight_medium.name}</h5>
-                        <p>${trans_legacy[lang].settings.text.font_weight_medium.bio}</p>
-                    </div>
-                    <div class="slider">
-                        <div class="slider-track" id="slider-track-font_weight_medium"><div class="slider-fill"></div><div class="slider-nub"></div></div>
-                        <input type="range" min="0" max="900" value="0" step="10" id="slider-font_weight_medium" oninput="_update_item('font_weight_medium', this.value)">
-                        <p id="value-font_weight_medium">0</p>
-                    </div>
-                </div>
-                <div class="slider-container" id="container-font_weight_bold">
-                    <button class="btn reset" onclick="_reset_item('font_weight_bold')">${tl(trans.reset)}</button>
-                    <div class="heading">
-                        <h5>${trans_legacy[lang].settings.text.font_weight_bold.name}</h5>
-                        <p>${trans_legacy[lang].settings.text.font_weight_bold.bio}</p>
-                    </div>
-                    <div class="slider">
-                        <div class="slider-track" id="slider-track-font_weight_bold"><div class="slider-fill"></div><div class="slider-nub"></div></div>
-                        <input type="range" min="0" max="900" value="0" step="10" id="slider-font_weight_bold" oninput="_update_item('font_weight_bold', this.value)">
-                        <p id="value-font_weight_bold">0</p>
-                    </div>
-                </div>
-                <div class="toggle-container" id="container-font_emoji" onclick="_update_item('font_emoji')">
-                    <button class="btn reset" onclick="_reset_item('font_emoji')">${tl(trans.reset)}</button>
-                    <div class="heading">
-                        <h5>${trans_legacy[lang].settings.text.font_emoji.name}</h5>
-                        <p>${trans_legacy[lang].settings.text.font_emoji.bio}</p>
-                    </div>
-                    <div class="toggle-wrap">
-                        <button class="toggle" id="toggle-font_emoji" aria-checked="false">
-                            <div class="dot"></div>
-                        </button>
-                    </div>
-                </div>
-                <div class="sep"></div>
                 <div class="inner-preview pad flex">
                     <div class="shout js-shout js-link-block" data-kate-processed="true">
                         <h3 class="shout-user">
@@ -9505,6 +9405,24 @@
         }
       ]);
       console.info(artist_corrections, album_track_corrections);
+      let preview_bar = "background: linear-gradient(90deg";
+      let preview_bar_text = "";
+      let global_sat = getComputedStyle(document.body).getPropertyValue("--sat");
+      let global_lit = getComputedStyle(document.body).getPropertyValue("--lit");
+      let h3_sat = getComputedStyle(document.body).getPropertyValue("--h3-sat");
+      let h3_lit = getComputedStyle(document.body).getPropertyValue("--h3-lit");
+      let maximum = 16e3;
+      let max_rank = 11;
+      for (let rank = 0; rank <= max_rank; rank++) {
+        let this_rank = ranks[parseInt(rank)];
+        let percent = this_rank.start / maximum * 100;
+        preview_bar = `${preview_bar}, hsl(${this_rank.hue}, ${h3_sat.replace(global_sat, this_rank.sat)}, ${h3_lit.replace(global_lit, this_rank.lit)}) ${percent}%`;
+        if ((this_rank.start > 500 || this_rank.start == 0) && this_rank.start != 1500) {
+          let text = `${this_rank.start}`;
+          preview_bar_text = `${preview_bar_text}<div class="preview-bar-text-entry" style="left: ${percent}%">${text.replaceAll("_", ",")}</div>`;
+        }
+      }
+      preview_bar = `${preview_bar});`;
       return `
             <div class="bleh--panel">
                 <h4>${trans_legacy[lang].settings.corrections.formatting}</h4>
@@ -9703,8 +9621,6 @@
                         </button>
                     </div>
                 </div>
-                <div class="sep"></div>
-                <h4>${trans_legacy[lang].glacier.name}</h4>
                 <div class="toggle-container" id="container-glacier_library_graphs" onclick="_update_item('glacier_library_graphs')">
                     <button class="btn reset" onclick="_reset_item('glacier_library_graphs')">${tl(trans.reset)}</button>
                     <div class="heading">
@@ -9713,6 +9629,67 @@
                     </div>
                     <div class="toggle-wrap">
                         <button class="toggle" id="toggle-glacier_library_graphs" aria-checked="true" type="button">
+                            <div class="dot"></div>
+                        </button>
+                    </div>
+                </div>
+                <div class="inner-preview pad">
+                    <div class="personal-stats-preview-bar-container">
+                        <div class="personal-stats-preview-bar" style="${preview_bar}"></div>
+                        <div class="personal-stats-preview-text">${preview_bar_text}</div>
+                    </div>
+                    <div class="sep"></div>
+                    <div class="tracks">
+                        <div class="track">
+                            <div class="cover"></div>
+                            <div class="title"></div>
+                            <div class="bar">
+                                <div class="fill not-colourful-example" style="width: 100%"></div>
+                                <div class="fill colourful-example" style="width: 100%; --hue: -16.888749999999998; --sat: 1.5; --lit: 0.875"></div>
+                            </div>
+                        </div>
+                        <div class="track">
+                            <div class="cover"></div>
+                            <div class="title"></div>
+                            <div class="bar">
+                                <div class="fill not-colourful-example" style="width: 85%"></div>
+                                <div class="fill colourful-example" style="width: 85%; --hue: 0.21863999999999972; --sat: 1.399218; --lit: 0.891406"></div>
+                            </div>
+                        </div>
+                        <div class="track">
+                            <div class="cover"></div>
+                            <div class="title"></div>
+                            <div class="bar">
+                                <div class="fill not-colourful-example" style="width: 60%"></div>
+                                <div class="fill colourful-example" style="width: 60%; --hue: 18.77; --sat: 1.425; --lit: 0.9175833333333334"></div>
+                            </div>
+                        </div>
+                        <div class="track">
+                            <div class="cover"></div>
+                            <div class="title"></div>
+                            <div class="bar">
+                                <div class="fill not-colourful-example" style="width: 30%"></div>
+                                <div class="fill colourful-example" style="width: 30%; --hue: 50.769767441860466; --sat: 1.361813953488372; --lit: 0.943406976744186"></div>
+                            </div>
+                        </div>
+                        <div class="track">
+                            <div class="cover"></div>
+                            <div class="title"></div>
+                            <div class="bar">
+                                <div class="fill not-colourful-example" style="width: 5%"></div>
+                                <div class="fill colourful-example" style="width: 5%; --hue: 92.42; --sat: 1.35; --lit: 0.925"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="toggle-container" id="container-colourful_counts" onclick="_update_item('colourful_counts')">
+                    <button class="btn reset" onclick="_reset_item('colourful_counts')">${tl(trans.reset)}</button>
+                    <div class="heading">
+                        <h5>${trans_legacy[lang].settings.customise.colourful_counts.name}</h5>
+                        <p>${trans_legacy[lang].settings.customise.colourful_counts.bio}</p>
+                    </div>
+                    <div class="toggle-wrap">
+                        <button class="toggle" id="toggle-colourful_counts" aria-checked="true">
                             <div class="dot"></div>
                         </button>
                     </div>
@@ -10036,10 +10013,6 @@
             lit: auth.sets.lit
           },
           requires_flag: "colour_based_on_avatar"
-        },
-        {
-          type: "convert",
-          requires_flag: "colour_based_on_hex"
         },
         {
           type: "customise"
@@ -10426,6 +10399,17 @@
                             <div class="alert alert-info seasonal-hsl-alert">
                                 ${trans_legacy[lang].settings.customise.colours.modals.custom_colour.seasonal_alert}
                             </div>
+                            ${ff("colour_based_on_hex") ? `
+                            <strong>${tl(trans.convert_from_hex)}</strong>
+                            <div class="text-container">
+                                <div class="heading content-form">
+                                    <div class="input-container">
+                                        <input type="color" maxlength="7" id="text-hex" placeholder="#ffffff">
+                                        <button class="btn primary icon convert" onclick="_convert_hex()">${tl(trans.convert)}</button>
+                                    </div>
+                                </div>
+                            </div>
+                            ` : ""}
                             <div class="slider-container dim-using-hue-gradient dim-during-seasonal" id="container-hue">
                                 <button class="btn reset" onclick="_reset_item('hue')">${tl(trans.reset)}</button>
                                 <div class="heading">
@@ -10474,20 +10458,6 @@
                                     <p style="left: 100%">1.5</p>
                                 </div>
                             </div>
-                            ${ff("card_saturation") ? `
-                            <div class="slider-container hide-if-light-theme" id="container-sat_bg">
-                                <button class="btn reset" onclick="_reset_item('sat_bg')">${tl(trans.reset)}</button>
-                                <div class="heading">
-                                    <h5>${tl(trans.card_background_saturation.name)}</h5>
-                                    <p>${tl(trans.card_background_saturation.body)}</p>
-                                </div>
-                                <div class="slider">
-                                    <div class="slider-track" id="slider-track-sat_bg"><div class="slider-fill"></div><div class="slider-nub"></div></div>
-                                    <input type="range" min="0" max="3" value="0" step="0.1" id="slider-sat_bg" oninput="_update_item('sat_bg', this.value)">
-                                    <p id="value-sat_bg">0</p>
-                                </div>
-                            </div>
-                            ` : ""}
                         </div>
                     `,
             allowHTML: true,
@@ -10824,6 +10794,15 @@
     document.documentElement.setAttribute(`data-bleh--font`, font);
     settings.font = font;
     localStorage.setItem("bleh", JSON.stringify(settings));
+  };
+  unsafeWindow._convert_hex = function() {
+    let value = page.structure.main.querySelector("#text-hex").value;
+    let hsl = hex_to_hsl(value);
+    update_params({
+      hue: hsl.h,
+      sat: clamp_sat(hsl.s / 100 * 3),
+      lit: hsl.l / 100 + 0.35
+    });
   };
 
   // src/components/lotus.js

@@ -154,7 +154,7 @@ function reset_item(item) {
     update_item(item, settings_base[item].value);
 }
 
-function update_params(params={}) {
+export function update_params(params={}) {
     for (let item in params) {
         update_item(item, params[item]);
     }

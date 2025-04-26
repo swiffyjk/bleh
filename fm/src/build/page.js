@@ -144,6 +144,9 @@ export let theme_preview = (`
                 <div class="preview-button">
 
                 </div>
+                <div class="preview-button preview-track">
+
+                </div>
             </div>
         </div>
     </div>

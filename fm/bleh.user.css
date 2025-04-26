@@ -155,18 +155,18 @@ body, [data-page-resource-type="album"], [data-page-resource-type="track"],
 [data-bleh--label="bleh"], [data-bleh-page="seasonal"]
 {
     /* any additional highlights */
-    --b3: var(--hue), calc(var(--sat) * 9% * var(--sat-bg, 1)), 30%;
+    --b3: var(--hue), calc(var(--sat) * 4% * var(--sat-bg, 1)), 30%;
 
     /* card border */
-    --b4: var(--hue), calc(var(--sat) * 10% * var(--sat-bg, 1)), 26%;
+    --b4: var(--hue), calc(var(--sat) * 5% * var(--sat-bg, 1)), 26%;
 
     /* card */
-    --b5: var(--hue), calc(var(--sat) * 10% * var(--sat-bg, 1)), 18%;
+    --b5: var(--hue), calc(var(--sat) * 5% * var(--sat-bg, 1)), 18%;
 
     /* root */
-    --b6: var(--hue), calc(var(--sat) * 12% * var(--sat-bg, 1)), 10%;
-    --b10: var(--hue), calc(var(--sat) * 12% * var(--sat-bg, 1)), 16%;
-    --b8: var(--hue), calc(var(--sat) * 9% * var(--sat-bg, 1)), 35%;
+    --b6: var(--hue), calc(var(--sat) * 7% * var(--sat-bg, 1)), 10%;
+    --b10: var(--hue), calc(var(--sat) * 7% * var(--sat-bg, 1)), 16%;
+    --b8: var(--hue), calc(var(--sat) * 4% * var(--sat-bg, 1)), 35%;
     --b7: 0, 0%, 0%;
 
     --card-border: 1px solid hsla(var(--b4), 0.7);
@@ -175,44 +175,44 @@ body, [data-page-resource-type="album"], [data-page-resource-type="track"],
     .preview[data-bleh--theme="darker"], .redesigned-header[data-bleh--theme="darker"],
     [data-bleh--theme="darker"] &:not(.preview) {
         /* any additional highlights */
-        --b3: var(--hue), calc(var(--sat) * 9% * var(--sat-bg, 1)), 23%;
+        --b3: var(--hue), calc(var(--sat) * 5% * var(--sat-bg, 1)), 23%;
 
         /* card border */
-        --b4: var(--hue), calc(var(--sat) * 10% * var(--sat-bg, 1)), 18%;
+        --b4: var(--hue), calc(var(--sat) * 6% * var(--sat-bg, 1)), 18%;
 
         /* card */
-        --b5: var(--hue), calc(var(--sat) * 10% * var(--sat-bg, 1)), 12%;
+        --b5: var(--hue), calc(var(--sat) * 6% * var(--sat-bg, 1)), 12%;
 
         /* root */
-        --b6: var(--hue), calc(var(--sat) * 12% * var(--sat-bg, 1)), 7%;
-        --b10: var(--hue), calc(var(--sat) * 12% * var(--sat-bg, 1)), 5%;
-        --b8: var(--hue), calc(var(--sat) * 9% * var(--sat-bg, 1)), 33%;
+        --b6: var(--hue), calc(var(--sat) * 8% * var(--sat-bg, 1)), 7%;
+        --b10: var(--hue), calc(var(--sat) * 8% * var(--sat-bg, 1)), 5%;
+        --b8: var(--hue), calc(var(--sat) * 5% * var(--sat-bg, 1)), 33%;
         --b7: 0, 0%, 0%;
     }
     .preview[data-bleh--theme="oled"], .redesigned-header[data-bleh--theme="oled"],
     [data-bleh--theme="oled"] &:not(.preview) {
         /* any additional highlights */
-        --b3: var(--hue), calc(var(--sat) * 8% * var(--sat-bg, 1)), 14%;
+        --b3: var(--hue), calc(var(--sat) * 2% * var(--sat-bg, 1)), 14%;
 
         /* card border */
-        --b4: var(--hue), calc(var(--sat) * 8% * var(--sat-bg, 1)), 9%;
+        --b4: var(--hue), calc(var(--sat) * 2% * var(--sat-bg, 1)), 9%;
 
         /* card */
-        --b5: var(--hue), calc(var(--sat) * 8% * var(--sat-bg, 1)), 4%;
+        --b5: var(--hue), calc(var(--sat) * 2% * var(--sat-bg, 1)), 4%;
 
         /* root */
         --b6: 0, 0%, 0%;
         --b10: 0, 0%, 0%;
-        --b8: var(--hue), calc(var(--sat) * 6% * var(--sat-bg, 1)), 24%;
+        --b8: var(--hue), calc(var(--sat) * 0% * var(--sat-bg, 1)), 24%;
         --b7: 0, 0%, 0%;
     }
     .preview[data-bleh--theme="light"], .redesigned-header[data-bleh--theme="light"],
     [data-bleh--theme="light"] &:not(.preview) {
         /* any additional highlights */
-        --b3: var(--hue), calc(var(--sat) * 3% * var(--sat-bg, 1)), 94%;
+        --b3: 0, 0%, 94%;
 
         /* card border */
-        --b4: var(--hue), calc(var(--sat) * 6% * var(--sat-bg, 1)), 84%;
+        --b4: 0, 0%, 84%;
 
         /* card */
         --b5: 0, 0%, 100%;
@@ -4868,12 +4868,6 @@ better than the default selector '#app a' i suppose */
     --shadow: 0 10px 50px 5px hsla(var(--h4), 35%) !important;
     --shadow-hov: var(--shadow), var(--interact-shadow) !important;
     z-index: 20;
-
-    [data-bleh--theme="light"] & {
-        --bg: hsla(var(--h4), 35%) !important;
-        --bg-hov: hsla(var(--h4), 50%) !important;
-        --shadow: 0 10px 50px 5px hsla(var(--h4), 35%) !important;
-    }
 }
 .chartlist-row--now-scrobbling:before {
     content: '';
@@ -13715,13 +13709,18 @@ pre {
 
                     .preview-button {
                         display: flex;
-                        width: 40px;
+                        width: 36px;
                         height: 14px;
                         background-color: hsl(var(--b4));
                         border-radius: var(--item-med-radius);
 
                         &.preview-button-primary {
                             background-color: hsl(var(--h3));
+                        }
+
+                        &.preview-track {
+                            background-color: hsla(var(--h4), 35%);
+                            width: 60px;
                         }
                     }
                 }
@@ -13837,6 +13836,7 @@ pre {
     background: hsl(var(--b6));
     padding: var(--card-gap);
     border-radius: var(--item-big-radius);
+    overflow: hidden;
 
     &.gap-top {
         margin-top: var(--card-gap);
@@ -13913,8 +13913,6 @@ pre {
 
 .sep:not(.btns) {
     width: 100%;
-    height: 1px;
-    background-color: var(--card-border-base);
 }
 
 .preview-img {
@@ -16853,6 +16851,13 @@ button.bleh--gallery-bookmark-image-btn {
 
             input {
                 width: 230px;
+
+                &[type="color"] {
+                    width: 100px;
+                    appearance: none;
+                    padding: unset;
+                    border: unset;
+                }
             }
 
             #text-font {

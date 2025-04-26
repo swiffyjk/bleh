@@ -332,6 +332,12 @@ export const trans = {
     convert: {
         en: 'Convert'
     },
+    convert_from_hex: {
+        en: 'Convert colour'
+    },
+    fonts: {
+        en: 'Fonts'
+    },
     hue: {
         en: 'Accent colour',
         de: 'Akzentfarbe'
