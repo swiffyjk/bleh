@@ -696,7 +696,7 @@ body {
     --icon-16-reply: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxOCIgaGVpZ2h0PSIxOCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyLjI1IiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWNvcm5lci11cC1yaWdodC1pY29uIGx1Y2lkZS1jb3JuZXItdXAtcmlnaHQiPjxwb2x5bGluZSBwb2ludHM9IjE1IDE0IDIwIDkgMTUgNCIvPjxwYXRoIGQ9Ik00IDIwdi03YTQgNCAwIDAgMSA0LTRoMTIiLz48L3N2Zz4=');
     --icon-16-send: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxOCIgaGVpZ2h0PSIxOCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyLjI1IiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLXNlbmQtaG9yaXpvbnRhbC1pY29uIGx1Y2lkZS1zZW5kLWhvcml6b250YWwiPjxwYXRoIGQ9Ik0zLjcxNCAzLjA0OGEuNDk4LjQ5OCAwIDAgMC0uNjgzLjYyN2wyLjg0MyA3LjYyN2EyIDIgMCAwIDEgMCAxLjM5NmwtMi44NDIgNy42MjdhLjQ5OC40OTggMCAwIDAgLjY4Mi42MjdsMTgtOC41YS41LjUgMCAwIDAgMC0uOTA0eiIvPjxwYXRoIGQ9Ik02IDEyaDE2Ii8+PC9zdmc+');
     --icon-16-menu: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyLjUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgY2xhc3M9Imx1Y2lkZSBsdWNpZGUtbWVudSI+PGxpbmUgeDE9IjQiIHgyPSIyMCIgeTE9IjEyIiB5Mj0iMTIiLz48bGluZSB4MT0iNCIgeDI9IjIwIiB5MT0iNiIgeTI9IjYiLz48bGluZSB4MT0iNCIgeDI9IjIwIiB5MT0iMTgiIHkyPSIxOCIvPjwvc3ZnPg==');
-    --icon-16-bookmark-saved: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJjdXJyZW50Q29sb3IiIHN0cm9rZT0iY3VycmVudENvbG9yIiBzdHJva2Utd2lkdGg9IjIuNSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiBjbGFzcz0ibHVjaWRlIGx1Y2lkZS1ib29rbWFyayI+PHBhdGggZD0ibTE5IDIxLTctNC03IDRWNWEyIDIgMCAwIDEgMi0yaDEwYTIgMiAwIDAgMSAyIDJ2MTZ6Ii8+PC9zdmc+');
+    --icon-16-bookmark-saved: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxOCIgaGVpZ2h0PSIxOCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJjdXJyZW50Q29sb3IiIHN0cm9rZT0iY3VycmVudENvbG9yIiBzdHJva2Utd2lkdGg9IjIuMjUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgY2xhc3M9Imx1Y2lkZSBsdWNpZGUtYm9va21hcmstaWNvbiBsdWNpZGUtYm9va21hcmsiPjxwYXRoIGQ9Im0xOSAyMS03LTQtNyA0VjVhMiAyIDAgMCAxIDItMmgxMGEyIDIgMCAwIDEgMiAydjE2eiIvPjwvc3ZnPg==');
     --icon-16-view: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyLjUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgY2xhc3M9Imx1Y2lkZSBsdWNpZGUtdmlldyI+PHBhdGggZD0iTTUgMTJzMi41NDUtNSA3LTVjNC40NTQgMCA3IDUgNyA1cy0yLjU0NiA1LTcgNWMtNC40NTUgMC03LTUtNy01eiIvPjxwYXRoIGQ9Ik0xMiAxM2ExIDEgMCAxIDAgMC0yIDEgMSAwIDAgMCAwIDJ6Ii8+PHBhdGggZD0iTTIxIDE3djJhMiAyIDAgMCAxLTIgMkg1YTIgMiAwIDAgMS0yLTJ2LTIiLz48cGF0aCBkPSJNMjEgN1Y1YTIgMiAwIDAgMC0yLTJINWEyIDIgMCAwIDAtMiAydjIiLz48L3N2Zz4=');
     --icon-16-spinner: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxOCIgaGVpZ2h0PSIxOCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyLjI1IiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWxvYWRlci1jaXJjbGUtaWNvbiBsdWNpZGUtbG9hZGVyLWNpcmNsZSI+PHBhdGggZD0iTTIxIDEyYTkgOSAwIDEgMS02LjIxOS04LjU2Ii8+PC9zdmc+');
     --icon-16-refresh: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxOCIgaGVpZ2h0PSIxOCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyLjI1IiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLXJvdGF0ZS1jdy1pY29uIGx1Y2lkZS1yb3RhdGUtY3ciPjxwYXRoIGQ9Ik0yMSAxMmE5IDkgMCAxIDEtOS05YzIuNTIgMCA0LjkzIDEgNi43NCAyLjc0TDIxIDgiLz48cGF0aCBkPSJNMjEgM3Y1aC01Ii8+PC9zdmc+');
@@ -3241,15 +3241,15 @@ button.navlist-more {
     --mask: var(--icon-16-play) !important;
 }
 .header-new-bookmark-button {
-    --mask: var(--icon-16-bookmark);
+    --mask: var(--icon-16-bookmark) !important;
 
     [data-toggle-button-current-state="bookmarked"] & {
-        --mask: var(--icon-16-bookmark-saved);
+        --mask: var(--icon-16-bookmark-saved) !important;
     }
 }
 
 .header-new-love-button {
-    --mask: var(--icon-16-heart);
+    --mask: var(--icon-16-heart) !important;
 
     [data-toggle-button-current-state="loved"] & {
         --mask: var(--icon-16-heart-solid) !important;
@@ -6819,7 +6819,7 @@ span.header-new-gallery-inner a:before,
 .chartlist-love-button, .chartlist-more-button, .chartlist-play-button,
 .share-button-profile,
 .shout-more-actions,
-.toggle-button:not(.dropdown-menu-clickable-item), .header-new-more-button,
+.header-new-more-button,
 .gallery-image-buttons:not(.gallery-image-buttons-extra) :is(.gallery-image-report, .gallery-image-delete button),
 .modal-dismiss,
 .content-form .table .delete,
@@ -17505,73 +17505,102 @@ h4 {
     padding: unset !important;
     box-shadow: unset !important;
 
-    .view-all-button {
-        --shadow: var(--card-shadow);
+    & > div, & > form {
+        display: flex;
         flex: 1;
-        --padding: var(--card-gap) var(--card-padding) var(--card-gap) calc(var(--card-padding) + 18px + 6px);
-        --left: var(--card-padding);
-        --mask: var(--icon-16-gallery-vertical);
-        text-align: left;
-        position: relative;
 
-        [data-bleh--theme="light"] & {
-            --bg: var(--cards-overlay-image-subtlest, none), hsl(var(--b5));
-            --bg-hov: var(--cards-overlay-image-subtlest, none), hsla(var(--b5), 80%);
-            --bg-atv: var(--cards-overlay-image-subtlest, none), hsla(var(--b5), 60%);
-        }
-
-        &.upload-button {
-            --mask: var(--icon-16-upload);
-        }
-        &.all-saved-button {
-            --mask: var(--icon-16-bookmark);
-        }
-        &.wiki-edit-button {
-            --mask: var(--icon-16-bio-edit);
-        }
-        &.wiki-history-button {
-            --mask: var(--icon-16-bio-history);
-        }
-        &.wiki-latest-button {
-            --mask: var(--icon-16-bio);
-        }
-        &.play-button {
-            --mask: var(--icon-16-track);
-        }
-        &.edit-event-button {
-            --mask: var(--icon-16-calendar-edit);
-        }
-        &.top-shout-button {
-            --mask: var(--icon-16-shoutbox);
-        }
-        &.top-wiki-button {
-            --mask: var(--icon-16-bio);
-        }
-        &.top-listens-button {
-            --mask: var(--icon-16-listener);
-        }
-
-        &.add-button {
-            --mask: var(--icon-16-plus);
-
-            &[data-page-subpage="events"] {
-                --mask: var(--icon-16-calendar-add);
-            }
-        }
-
-        &.import {
-            --mask: var(--icon-16-import);
-        }
-        &.export {
-            --mask: var(--icon-16-export);
-        }
-        &.reset-settings {
-            --mask: var(--icon-16-revert);
-        }
-        &.changelog {
-            --mask: var(--icon-16-changelog);
+        form {
+            display: flex;
+            flex: 1;
         }
     }
+
+    a, button,
+    .view-all-button {
+        &:not(.dropdown-menu-clickable-item) {
+            --shadow: var(--card-shadow);
+            flex: 1;
+            height: 48px;
+            --padding: var(--card-gap) var(--card-padding) var(--card-gap) calc(var(--card-padding) + 18px + 6px);
+            --left: var(--card-padding);
+            --mask: var(--icon-16-gallery-vertical);
+            text-align: left;
+            position: relative;
+
+            [data-bleh--theme="light"] & {
+                --bg: var(--cards-overlay-image-subtlest, none), hsl(var(--b5));
+                --bg-hov: var(--cards-overlay-image-subtlest, none), hsla(var(--b5), 80%);
+                --bg-atv: var(--cards-overlay-image-subtlest, none), hsla(var(--b5), 60%);
+            }
+
+            &.upload-button {
+                --mask: var(--icon-16-upload);
+            }
+            &.all-saved-button {
+                --mask: var(--icon-16-bookmark);
+            }
+            &.wiki-edit-button {
+                --mask: var(--icon-16-bio-edit);
+            }
+            &.wiki-history-button {
+                --mask: var(--icon-16-bio-history);
+            }
+            &.wiki-latest-button {
+                --mask: var(--icon-16-bio);
+            }
+            &.play-button {
+                --mask: var(--icon-16-track);
+            }
+            &.edit-event-button {
+                --mask: var(--icon-16-calendar-edit);
+            }
+            &.top-shout-button {
+                --mask: var(--icon-16-shoutbox);
+            }
+            &.top-wiki-button {
+                --mask: var(--icon-16-bio);
+            }
+            &.top-listens-button {
+                --mask: var(--icon-16-listener);
+            }
+
+            &.add-button {
+                --mask: var(--icon-16-plus);
+
+                &[data-page-subpage="events"] {
+                    --mask: var(--icon-16-calendar-add);
+                }
+            }
+
+            &.import {
+                --mask: var(--icon-16-import);
+            }
+            &.export {
+                --mask: var(--icon-16-export);
+            }
+            &.reset-settings {
+                --mask: var(--icon-16-revert);
+            }
+            &.changelog {
+                --mask: var(--icon-16-changelog);
+            }
+        }
+    }
+
+    &.mini-interactions {
+        a, button {
+            &:not(.dropdown-menu-clickable-item) {
+                --font-size: 0;
+                --padding: var(--card-gap) var(--card-padding) !important;
+                --left: 50%;
+                --margin-left: -9px;
+            }
+        }
+    }
+}
+
+.obsession-btn {
+    --mask: var(--icon-16-obsession) !important;
 }
 
 
@@ -18894,23 +18923,6 @@ h4 {
     }
     .menu-btn {
         --mask: var(--icon-16-dots);
-    }
-    .obsession-btn {
-        --mask: var(--icon-16-obsession);
-    }
-
-    .artist-btn {
-        --mask: var(--icon-16-gallery-vertical);
-
-        &[data-artist-btn-type="shouts"] {
-            --mask: var(--icon-16-shoutbox);
-        }
-        &[data-artist-btn-type="wiki"] {
-            --mask: var(--icon-16-bio);
-        }
-        &[data-artist-btn-type="listens"] {
-            --mask: var(--icon-16-listener);
-        }
     }
 
     .menu-btn, .header-new-love-button, .header-new-bookmark-button {

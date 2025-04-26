@@ -190,8 +190,9 @@ export function show_your_scrobbles() {
 
     // interactables on the right
     let interact_container = document.createElement('div');
-    if (!katsune)
-        interact_container.classList.add('interact-container', 'view-buttons');
+    interact_container.classList.add('view-all-panel');
+    if (page.type == 'track')
+        interact_container.classList.add('mini-interactions');
 
 
     let text = document.body.querySelector('.header-new-title').textContent
@@ -230,11 +231,6 @@ export function show_your_scrobbles() {
     });
 
 
-    // bookmark
-    let bookmark_btn = interact_container.querySelector('[data-toggle-button-current-state*="bookmark"]');
-    bookmark_btn.after(create_divider());
-
-
     // obsession
     let obsession_form = header_actions.querySelector('form[action$="obsessions"]');
     if (obsession_form != null) {
@@ -250,58 +246,8 @@ export function show_your_scrobbles() {
     }
 
 
-    // artist btn
-    if (katsune && page.type == 'artist') {
-        let artist_btn = document.createElement('a');
-        artist_btn.classList.add('btn', 'view-item', 'interact-item', 'artist-btn', 'icon');
-
-        if (settings.quick_artist_button == 'gallery') {
-            artist_btn.setAttribute('data-artist-btn-type', 'gallery');
-            artist_btn.setAttribute('href', `${window.location.href}/+images`);
-            artist_btn.textContent = trans_legacy[lang].gallery.view;
-        } else if (settings.quick_artist_button == 'shouts') {
-            artist_btn.setAttribute('data-artist-btn-type', 'shouts');
-            artist_btn.setAttribute('href', `${window.location.href}/+shoutbox`);
-            artist_btn.textContent = trans_legacy[lang].settings.layout.quick_artist_button.shouts;
-        } else if (settings.quick_artist_button == 'wiki') {
-            artist_btn.setAttribute('data-artist-btn-type', 'wiki');
-            artist_btn.setAttribute('href', `${window.location.href}/+wiki`);
-            artist_btn.textContent = trans_legacy[lang].settings.layout.quick_artist_button.wiki;
-        } else if (settings.quick_artist_button == 'listens') {
-            artist_btn.setAttribute('data-artist-btn-type', 'gallery');
-            artist_btn.setAttribute('href', `${window.location.href}/+listeners/you-know`);
-            artist_btn.textContent = trans_legacy[lang].settings.layout.quick_artist_button.listens;
-        }
-
-        interact_container.appendChild(artist_btn);
-
-        let view_menu = tippy(artist_btn, {
-            theme: 'context-menu',
-            content: (`
-                <a class="dropdown-menu-clickable-item" href="${root}bleh?tab=customise" data-menu-item="settings">
-                    ${trans_legacy[lang].settings.configure}
-                </a>
-            `),
-            allowHTML: true,
-            placement: 'right-start',
-            trigger: 'manual',
-            interactive: true,
-            interactiveBorder: 10,
-            offset: [0, 0],
-
-            onShow(instance) {
-                instance.popper.addEventListener('click', event => {
-                    instance.hide();
-                });
-            }
-        });
-
-        register_menu(artist_btn, view_menu);
-    }
-
-
     // search similar!
-    let search_btn = document.createElement('a');
+    /*let search_btn = document.createElement('a');
     search_btn.classList.add('btn', 'view-item', 'interact-item', 'search-similar-btn', (katsune) ? 'icon' : '');
     search_btn.textContent = trans_legacy[lang].music.search_variations.name;
     search_btn.href = `${root}search/${page.type}s?q=${text}`;
@@ -311,7 +257,7 @@ export function show_your_scrobbles() {
         content: trans_legacy[lang].music.search_variations.tooltip
     });
 
-    interact_container.appendChild(search_btn);
+    interact_container.appendChild(search_btn);*/
 
 
     // lotus
@@ -341,53 +287,11 @@ export function show_your_scrobbles() {
         interact_container.appendChild(lotus_btn);*/
     }
 
-
-    // ...
-    let menu_btn = document.createElement('button');
-    menu_btn.classList.add('btn', 'view-item', 'interact-item', 'menu-btn', (katsune) ? 'icon' : '');
-    menu_btn.textContent = trans_legacy[lang].music.menu;
-
     let play_btn = interact_container.querySelector('.header-new-playlink');
-
-    let music_menu = tippy(menu_btn, {
-        theme: 'select-menu',
-        content: (`
-            ${(lotus_btn != null) ? lotus_btn.outerHTML : ''}
-            ${(play_btn != null) ? play_btn.outerHTML : ''}
-        `),
-        allowHTML: true,
-        placement: 'bottom',
-        interactive: true,
-        interactiveBorder: 10,
-        trigger: 'click',
-
-        onShow(instance) {
-            /*let lotus_item = instance.popper.querySelector('.lotus-btn:not([aria-describedby])');
-
-            if (page.corrected)
-                tippy(lotus_item, {
-                    theme: 'lotus-tooltip-corrected',
-                    content: (`<span class="lotus-active">${trans_legacy[lang].lotus.correct.tooltip_active}</span><br><div class="tooltip-sub">${document.body.querySelector('.main-content > [itemscope]').getAttribute('data-page-resource-name')}</div>`),
-                    allowHTML: true,
-                    placement: 'right'
-                });
-            else
-                tippy(lotus_item, {
-                    theme: 'lotus-tooltip',
-                    content: (`${trans_legacy[lang].lotus.correct.tooltip}<br><div class="tooltip-sub">${document.body.querySelector('.main-content > [itemscope]').getAttribute('data-page-resource-name')}</div>`),
-                    allowHTML: true,
-                    placement: 'right'
-                });*/
-        }
-    });
-
-    if (play_btn != null)
+    if (play_btn)
         interact_container.removeChild(play_btn);
 
-    interact_container.appendChild(menu_btn);
-
-
-    top_container.appendChild(interact_container);
+    page.structure.side.insertBefore(interact_container, page.structure.side.firstElementChild);
 
 
 
