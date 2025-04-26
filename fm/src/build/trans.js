@@ -434,6 +434,30 @@ export const trans = {
     },
     website: {
         en: 'Website'
+    },
+    overview: {
+        en: 'Overview'
+    },
+    photos: {
+        en: 'Photos'
+    },
+    artwork: {
+        en: 'Artwork'
+    },
+    similar_artists: {
+        en: 'Similar Artists'
+    },
+    biography: {
+        en: 'Biography'
+    },
+    wiki: {
+        en: 'Wiki'
+    },
+    listeners: {
+        en: 'Listeners'
+    },
+    tags: {
+        en: 'Tags'
     }
 }
 

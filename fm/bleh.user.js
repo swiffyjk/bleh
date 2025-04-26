@@ -1603,6 +1603,30 @@
     },
     website: {
       en: "Website"
+    },
+    overview: {
+      en: "Overview"
+    },
+    photos: {
+      en: "Photos"
+    },
+    artwork: {
+      en: "Artwork"
+    },
+    similar_artists: {
+      en: "Similar Artists"
+    },
+    biography: {
+      en: "Biography"
+    },
+    wiki: {
+      en: "Wiki"
+    },
+    listeners: {
+      en: "Listeners"
+    },
+    tags: {
+      en: "Tags"
     }
   };
   var trans_legacy = {
@@ -7119,8 +7143,130 @@
   function show_your_scrobbles() {
     let katsune = ff("katsune");
     show_numbers_on_side(page.type);
+    if (page.subpage == "overview") {
+      let tabs = document.createElement("nav");
+      tabs.classList.add("navlist", "secondary-nav", "navlist--more", "redesigned-navigation");
+      if (page.type == "artist") {
+        tabs.innerHTML = `
+                <ul class="navlist-items">
+                    <li class="navlist-item secondary-nav-item secondary-nav-item--overview">
+                        <a class="secondary-nav-item-link secondary-nav-item-link--active" href="${window.location.href}">
+                            ${tl(trans.overview)}
+                        </a>
+                    </li>
+                    <li class="navlist-item secondary-nav-item secondary-nav-item--tracks">
+                        <a class="secondary-nav-item-link" href="${window.location.href}/+tracks">
+                            ${tl(trans.tracks)}
+                        </a>
+                    </li>
+                    <li class="navlist-item secondary-nav-item secondary-nav-item--albums">
+                        <a class="secondary-nav-item-link" href="${window.location.href}/+albums">
+                            ${tl(trans.albums)}
+                        </a>
+                    </li>
+                    <li class="navlist-item secondary-nav-item secondary-nav-item--images">
+                        <a class="secondary-nav-item-link" href="${window.location.href}/+images">
+                            ${tl(trans.photos)}
+                        </a>
+                    </li>
+                    <li class="navlist-item secondary-nav-item secondary-nav-item--similar">
+                        <a class="secondary-nav-item-link" href="${window.location.href}/+similar">
+                            ${tl(trans.similar_artists)}
+                        </a>
+                    </li>
+                    <li class="navlist-item secondary-nav-item secondary-nav-item--wiki">
+                        <a class="secondary-nav-item-link" href="${window.location.href}/+wiki">
+                            ${tl(trans.biography)}
+                        </a>
+                    </li>
+                    <li class="navlist-item secondary-nav-item secondary-nav-item--listeners">
+                        <a class="secondary-nav-item-link" href="${window.location.href}/+listeners">
+                            ${tl(trans.listeners)}
+                        </a>
+                    </li>
+                    <li class="navlist-item secondary-nav-item secondary-nav-item--shoutbox">
+                        <a class="secondary-nav-item-link" href="${window.location.href}/+shoutbox">
+                            ${tl(trans.shouts)}
+                        </a>
+                    </li>
+                    <li class="navlist-item secondary-nav-item secondary-nav-item--events">
+                        <a class="secondary-nav-item-link" href="${window.location.href}/+events">
+                            ${tl(trans.events)}
+                        </a>
+                    </li>
+                    <li class="navlist-item secondary-nav-item secondary-nav-item--tags">
+                        <a class="secondary-nav-item-link" href="${window.location.href}/+tags">
+                            ${tl(trans.tags)}
+                        </a>
+                    </li>
+                </ul>
+            `;
+      } else if (page.type == "album") {
+        tabs.innerHTML = `
+                <ul class="navlist-items">
+                    <li class="navlist-item secondary-nav-item secondary-nav-item--overview">
+                        <a class="secondary-nav-item-link secondary-nav-item-link--active" href="${window.location.href}">
+                            ${tl(trans.overview)}
+                        </a>
+                    </li>
+                    <li class="navlist-item secondary-nav-item secondary-nav-item--wiki">
+                        <a class="secondary-nav-item-link" href="${window.location.href}/+wiki">
+                            ${tl(trans.wiki)}
+                        </a>
+                    </li>
+                    <li class="navlist-item secondary-nav-item secondary-nav-item--images">
+                        <a class="secondary-nav-item-link" href="${window.location.href}/+images">
+                            ${tl(trans.artwork)}
+                        </a>
+                    </li>
+                    <li class="navlist-item secondary-nav-item secondary-nav-item--shoutbox">
+                        <a class="secondary-nav-item-link" href="${window.location.href}/+shoutbox">
+                            ${tl(trans.shouts)}
+                        </a>
+                    </li>
+                    <li class="navlist-item secondary-nav-item secondary-nav-item--tags">
+                        <a class="secondary-nav-item-link" href="${window.location.href}/+tags">
+                            ${tl(trans.tags)}
+                        </a>
+                    </li>
+                </ul>
+            `;
+      } else if (page.type == "track") {
+        tabs.innerHTML = `
+                <ul class="navlist-items">
+                    <li class="navlist-item secondary-nav-item secondary-nav-item--overview">
+                        <a class="secondary-nav-item-link secondary-nav-item-link--active" href="${window.location.href}">
+                            ${tl(trans.overview)}
+                        </a>
+                    </li>
+                    <li class="navlist-item secondary-nav-item secondary-nav-item--albums">
+                        <a class="secondary-nav-item-link" href="${window.location.href}/+albums">
+                            ${tl(trans.albums)}
+                        </a>
+                    </li>
+                    <li class="navlist-item secondary-nav-item secondary-nav-item--wiki">
+                        <a class="secondary-nav-item-link" href="${window.location.href}/+wiki">
+                            ${tl(trans.wiki)}
+                        </a>
+                    </li>
+                    <li class="navlist-item secondary-nav-item secondary-nav-item--shoutbox">
+                        <a class="secondary-nav-item-link" href="${window.location.href}/+shoutbox">
+                            ${tl(trans.shouts)}
+                        </a>
+                    </li>
+                    <li class="navlist-item secondary-nav-item secondary-nav-item--tags">
+                        <a class="secondary-nav-item-link" href="${window.location.href}/+tags">
+                            ${tl(trans.tags)}
+                        </a>
+                    </li>
+                </ul>
+            `;
+      }
+      page.structure.container.insertBefore(tabs, page.structure.row);
+      page.structure.tabs = tabs;
+    }
     let col_main = page.structure.container.querySelector(".top-overview-panel");
-    if (col_main == null)
+    if (!col_main)
       col_main = document.body.querySelector(".col-main");
     if (page.type == "track") {
       let new_panel = document.createElement("section");
