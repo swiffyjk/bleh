@@ -209,7 +209,7 @@ body, [data-page-resource-type="album"], [data-page-resource-type="track"],
     .preview[data-bleh--theme="light"], .redesigned-header[data-bleh--theme="light"],
     [data-bleh--theme="light"] &:not(.preview) {
         /* any additional highlights */
-        --b3: 0, 0%, 94%;
+        --b3: 0, 0%, 90%;
 
         /* card border */
         --b4: 0, 0%, 84%;
@@ -17605,6 +17605,12 @@ h4 {
         --mask: var(--icon-16-gallery-vertical);
         text-align: left;
         position: relative;
+
+        [data-bleh--theme="light"] & {
+            --bg: var(--cards-overlay-image-subtlest, none), hsl(var(--b5));
+            --bg-hov: var(--cards-overlay-image-subtlest, none), hsla(var(--b5), 80%);
+            --bg-atv: var(--cards-overlay-image-subtlest, none), hsla(var(--b5), 60%);
+        }
 
         &.upload-button {
             --mask: var(--icon-16-upload);
