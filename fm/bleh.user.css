@@ -6666,6 +6666,7 @@ button,
 
 
 /*     ICON MASK     */
+.view-all-button:before,
 .music-featured-item-background:before,
 .gallery-image-preferred-states:before, .gallery-image-votes:before,
 .user-list-follower-btn:before,
@@ -13201,19 +13202,6 @@ h2.playlisting-create-option-title {
         position: relative;
 
         flex: 1;
-
-        &[data-bleh-action="import"] {
-            --mask: var(--icon-16-import);
-        }
-        &[data-bleh-action="export"] {
-            --mask: var(--icon-16-export);
-        }
-        &[data-bleh-action="reset"] {
-            --mask: var(--icon-16-revert);
-        }
-        &[data-bleh-page="changelog"] {
-            --mask: var(--icon-16-changelog);
-        }
     }
 }
 
@@ -13304,7 +13292,7 @@ h2.playlisting-create-option-title {
     display: flex;
     flex-direction: column;
     gap: var(--card-gap);
-
+    flex: unset;
 
     .btn {
         width: fit-content;
@@ -13352,18 +13340,6 @@ h2.playlisting-create-option-title {
         margin: unset;
         color: hsl(var(--c1));
         font-weight: var(--font-weight-medium);
-    }
-}
-
-.bleh--panel:not(.bleh--profile-note-panel) {
-    display: flex;
-    flex-direction: column;
-    gap: var(--card-gap);
-    flex: 1;
-
-
-    .btn {
-        width: fit-content;
     }
 
     .alert {
@@ -17616,6 +17592,7 @@ h4 {
 
 .view-all-panel {
     display: flex;
+    gap: var(--card-gap);
     background: unset !important;
     padding: unset !important;
     box-shadow: unset !important;
@@ -17626,6 +17603,8 @@ h4 {
         --padding: var(--card-gap) var(--card-padding) var(--card-gap) calc(var(--card-padding) + 18px + 6px);
         --left: var(--card-padding);
         --mask: var(--icon-16-gallery-vertical);
+        text-align: left;
+        position: relative;
 
         &.upload-button {
             --mask: var(--icon-16-upload);
@@ -17664,6 +17643,19 @@ h4 {
             &[data-page-subpage="events"] {
                 --mask: var(--icon-16-calendar-add);
             }
+        }
+
+        &.import {
+            --mask: var(--icon-16-import);
+        }
+        &.export {
+            --mask: var(--icon-16-export);
+        }
+        &.reset-settings {
+            --mask: var(--icon-16-revert);
+        }
+        &.changelog {
+            --mask: var(--icon-16-changelog);
         }
     }
 }

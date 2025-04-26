@@ -8274,87 +8274,34 @@
         </ul>
     `;
     page.structure.side.innerHTML = `
+        <section class="view-all-panel">
+            <button class="btn view-all-button import" onclick="_import_settings()">
+                ${tl(trans.import)}
+            </button>
+        </section>
+        <section class="view-all-panel">
+            <button class="btn view-all-button export" onclick="_export_settings()">
+                ${tl(trans.export)}
+            </button>
+        </section>
+        <section class="view-all-panel">
+            <button class="btn view-all-button reset-settings" onclick="_reset_settings()">
+                ${tl(trans.reset)}
+            </button>
+        </section>
         <div class="bleh--panel">
-            ${!ff("bleh_settings_tabs") ? `
-            <div class="btns">
-                <button class="btn bleh--btn" data-bleh-page="home" onclick="_change_settings_page('home')">
-                    ${tl(trans.home)}
-                </button>
-                <button class="btn bleh--btn" data-bleh-page="themes" onclick="_change_settings_page('themes')">
-                    ${tl(trans.appearance)}
-                </button>
-                <button class="btn bleh--btn" data-bleh-page="customise" onclick="_change_settings_page('customise')">
-                    ${tl(trans.layout)}
-                </button>
-                <button class="btn bleh--btn" data-bleh-page="music" onclick="_change_settings_page('music')">
-                    ${tl(trans.music)}
-                </button>
-                <button class="btn bleh--btn" data-bleh-page="accessibility" onclick="_change_settings_page('accessibility')">
-                    ${tl(trans.accessibility)}
-                </button>
-                <button class="btn bleh--btn" data-bleh-page="seasonal" data-season="${stored_season.id}" onclick="_change_settings_page('seasonal')">
-                    ${tl(trans.seasonal.name)}
-                </button>
-            </div>
-            <div class="btns sep">
-                <button class="btn bleh--btn" data-bleh-page="text" onclick="_change_settings_page('text')">
-                    ${trans_legacy[lang].settings.text.name}
-                </button>
-                <button class="btn bleh--btn" data-bleh-page="sku" onclick="_change_settings_page('sku')">
-                    shhh...
-                </button>
-            </div>
-            <div class="btns sep">
-                <button class="btn" data-bleh-action="import" onclick="_import_settings()">
-                    ${tl(trans.import)}
-                </button>
-                <button class="btn" data-bleh-action="export" onclick="_export_settings()">
-                    ${tl(trans.export)}
-                </button>
-            </div>
-            <div class="btns sep">
-                <button class="btn bleh--btn" data-bleh-page="profiles" onclick="_change_settings_page('profiles')">
-                    ${trans_legacy[lang].settings.profiles.name}
-                </button>
-                <button class="btn bleh--btn" data-bleh-page="performance" onclick="_change_settings_page('performance')">
-                    ${tl(trans.troubleshooting)}
-                </button>
-                <button class="btn" data-bleh-action="reset" onclick="_reset_settings()">
-                    ${tl(trans.reset)}
-                </button>
-            </div>
-            ` : `
             ${ff("skip_to_setting") ? `
             <h4>${trans_legacy[lang].settings.skip_to.name}</h4>
             <div class="skip-to-list"></div>
             ` : ""}
-            ${ff("skip_to_setting") ? '<div class="btns sep">' : '<div class="btns">'}
-                <button class="btn" data-bleh-action="import" onclick="_import_settings()">
-                    ${tl(trans.import)}
-                </button>
-                <button class="btn" data-bleh-action="export" onclick="_export_settings()">
-                    ${tl(trans.export)}
-                </button>
-                <button class="btn" data-bleh-action="reset" onclick="_reset_settings()">
-                    ${tl(trans.reset)}
-                </button>
-            </div>
-            `}
-            ${settings.feature_flags.changelogs != false ? `
-            <div class="btns">
-                <button class="btn bleh--btn primary" data-bleh-page="changelog" onclick="_query_changelog()">
-                    ${tl(trans.changelog)}
-                </button>
-            </div>
-            ` : ""}
         </div>
     `;
     page.structure.container.insertBefore(nav, page.structure.row);
-    if (page.requested.tab == null)
+    if (!page.requested.tab)
       change_settings_page("themes");
     else
       change_settings_page(page.requested.tab);
-    if (page.requested.setting != null) {
+    if (page.requested.setting) {
       scroll_to_setting(page.requested.setting);
     }
   }
