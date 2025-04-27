@@ -8382,7 +8382,7 @@
       if (name == settings.profile_shortcut) {
         listen_item.setAttribute("data-is-shortcut", "true");
         listen_item.removeAttribute("onclick");
-        if (katsune)
+        if (katsune && !mini)
           listen_item.textContent = trans_legacy[lang].profile.shortcut.remove;
         else
           tippy(listen_item, {
@@ -8390,7 +8390,7 @@
           });
       } else {
         listen_item.setAttribute("data-is-shortcut", "false");
-        if (katsune)
+        if (katsune && !mini)
           listen_item.textContent = trans_legacy[lang].profile.shortcut.add;
         else
           tippy(listen_item, {
@@ -8458,7 +8458,7 @@
       });
       register_menu(listen_item, menu);
     }
-    if (katsune)
+    if (katsune && !mini)
       return;
     if (tooltip == "")
       tippy(listen_item, {

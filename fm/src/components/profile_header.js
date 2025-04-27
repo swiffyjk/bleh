@@ -460,7 +460,7 @@ export function create_profile_top_item(parent, {name, link, text='', type, tast
             listen_item.setAttribute('data-is-shortcut', 'true');
             listen_item.removeAttribute('onclick');
 
-            if (katsune)
+            if (katsune && !mini)
                 listen_item.textContent = trans_legacy[lang].profile.shortcut.remove;
             else
                 tippy(listen_item, {
@@ -469,7 +469,7 @@ export function create_profile_top_item(parent, {name, link, text='', type, tast
         } else {
             listen_item.setAttribute('data-is-shortcut', 'false');
 
-            if (katsune)
+            if (katsune && !mini)
                 listen_item.textContent = trans_legacy[lang].profile.shortcut.add;
             else
                 tippy(listen_item, {
@@ -544,7 +544,7 @@ export function create_profile_top_item(parent, {name, link, text='', type, tast
         register_menu(listen_item, menu);
     }
 
-    if (katsune)
+    if (katsune && !mini)
         return;
 
     if (tooltip == '')
