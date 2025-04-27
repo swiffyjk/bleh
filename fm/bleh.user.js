@@ -75,7 +75,6 @@
     grid_glow: true,
     auth_menu_obsessions: false,
     default_avatar_action: "expand",
-    quick_artist_button: "gallery",
     glacier_library_graphs: true,
     activities: true,
     activity_shout: true,
@@ -440,12 +439,6 @@
       css: "default_avatar_action",
       unit: "",
       value: "expand",
-      type: "options"
-    },
-    quick_artist_button: {
-      css: "quick_artist_button",
-      unit: "",
-      value: "gallery",
       type: "options"
     },
     glacier_library_graphs: {
@@ -2256,13 +2249,6 @@
             bio: "What do you want to happen when you click avatars?",
             gallery: "View photos (or featured album for tracks)",
             album: "View featured album"
-          },
-          quick_artist_button: {
-            name: "Quick artist button",
-            bio: "Control the right-side button on artist profiles.",
-            shouts: "View shouts",
-            wiki: "View biography",
-            listens: "View listeners"
           }
         },
         customise: {
@@ -3242,13 +3228,6 @@
             bio: "What do you want to happen when you click avatars?",
             gallery: "View photos (or featured album for tracks)",
             album: "View featured album"
-          },
-          quick_artist_button: {
-            name: "Quick artist button",
-            bio: "Control the right-side button on artist profiles.",
-            shouts: "View shouts",
-            wiki: "View biography",
-            listens: "View listeners"
           }
         },
         customise: {
@@ -4196,13 +4175,6 @@
             bio: "What do you want to happen when you click avatars?",
             gallery: "View photos (or featured album for tracks)",
             album: "View featured album"
-          },
-          quick_artist_button: {
-            name: "Quick artist button",
-            bio: "Control the right-side button on artist profiles.",
-            shouts: "View shouts",
-            wiki: "View biography",
-            listens: "View listeners"
           }
         },
         customise: {
@@ -11925,22 +11897,6 @@
                         <h5>${trans_legacy[lang].settings.layout.avatar_action.gallery}</h5>
                     </div>
                 </div>
-                <h4>${trans_legacy[lang].settings.layout.quick_artist_button.name}</h4>
-                <p>${trans_legacy[lang].settings.layout.quick_artist_button.bio}</p>
-                <div class="primary-selections artist-hover-button">
-                    <div class="btn primary-selection" id="toggle-quick_artist_button-gallery" data-toggle="quick_artist_button" data-toggle-value="gallery" onclick="_update_item('quick_artist_button', 'gallery')">
-                        <h5>${trans_legacy[lang].gallery.view}</h5>
-                    </div>
-                    <div class="btn primary-selection" id="toggle-quick_artist_button-shouts" data-toggle="quick_artist_button" data-toggle-value="shouts" onclick="_update_item('quick_artist_button', 'shouts')">
-                        <h5>${trans_legacy[lang].settings.layout.quick_artist_button.shouts}</h5>
-                    </div>
-                    <div class="btn primary-selection" id="toggle-quick_artist_button-wiki" data-toggle="quick_artist_button" data-toggle-value="wiki" onclick="_update_item('quick_artist_button', 'wiki')">
-                        <h5>${trans_legacy[lang].settings.layout.quick_artist_button.wiki}</h5>
-                    </div>
-                    <div class="btn primary-selection" id="toggle-quick_artist_button-listens" data-toggle="quick_artist_button" data-toggle-value="listens" onclick="_update_item('quick_artist_button', 'listens')">
-                        <h5>${trans_legacy[lang].settings.layout.quick_artist_button.listens}</h5>
-                    </div>
-                </div>
             </div>
             <div class="bleh--panel">
                 <h4>${trans_legacy[lang].settings.customise.profile_header.name}</h4>
@@ -15882,29 +15838,6 @@
                 </div>
                 ${featured_items != null && !katsune ? featured_items.outerHTML : ""}
             </div>
-            ${!is_subpage && !katsune ? `
-            <div class="gallery-side">
-                <section class="view-all-panel">
-                    ${settings.quick_artist_button == "gallery" ? `
-                    <a class="btn view-all-button back top-gallery-button" href="${window.location.href}/+images">
-                        ${trans_legacy[lang].gallery.view}
-                    </a>
-                    ` : settings.quick_artist_button == "shouts" ? `
-                    <a class="btn view-all-button back top-shout-button" href="${window.location.href}/+shoutbox">
-                        ${trans_legacy[lang].settings.layout.quick_artist_button.shouts}
-                    </a>
-                    ` : settings.quick_artist_button == "wiki" ? `
-                    <a class="btn view-all-button back top-wiki-button" href="${window.location.href}/+wiki">
-                        ${trans_legacy[lang].settings.layout.quick_artist_button.wiki}
-                    </a>
-                    ` : settings.quick_artist_button == "listens" ? `
-                    <a class="btn view-all-button back top-listens-button" href="${window.location.href}/+listeners/you-know">
-                        ${trans_legacy[lang].settings.layout.quick_artist_button.listens}
-                    </a>
-                    ` : ""}
-                </section>
-            </div>
-            ` : ""}
         `;
       let multi_info_box = redesigned_artist_header.querySelector(".info-tip");
       if (multi_info_box) {
@@ -18354,7 +18287,7 @@
   // src/build/build.json
   var build_default = {
     brand: "bleh",
-    build: "2025.0421",
+    build: "2025.0427",
     sku: "beret",
     bio: "bleh!!! ^-^",
     author: "kate",

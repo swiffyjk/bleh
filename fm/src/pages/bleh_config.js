@@ -496,22 +496,6 @@ export function render_setting_page(page_id) {
                         <h5>${trans_legacy[lang].settings.layout.avatar_action.gallery}</h5>
                     </div>
                 </div>
-                <h4>${trans_legacy[lang].settings.layout.quick_artist_button.name}</h4>
-                <p>${trans_legacy[lang].settings.layout.quick_artist_button.bio}</p>
-                <div class="primary-selections artist-hover-button">
-                    <div class="btn primary-selection" id="toggle-quick_artist_button-gallery" data-toggle="quick_artist_button" data-toggle-value="gallery" onclick="_update_item('quick_artist_button', 'gallery')">
-                        <h5>${trans_legacy[lang].gallery.view}</h5>
-                    </div>
-                    <div class="btn primary-selection" id="toggle-quick_artist_button-shouts" data-toggle="quick_artist_button" data-toggle-value="shouts" onclick="_update_item('quick_artist_button', 'shouts')">
-                        <h5>${trans_legacy[lang].settings.layout.quick_artist_button.shouts}</h5>
-                    </div>
-                    <div class="btn primary-selection" id="toggle-quick_artist_button-wiki" data-toggle="quick_artist_button" data-toggle-value="wiki" onclick="_update_item('quick_artist_button', 'wiki')">
-                        <h5>${trans_legacy[lang].settings.layout.quick_artist_button.wiki}</h5>
-                    </div>
-                    <div class="btn primary-selection" id="toggle-quick_artist_button-listens" data-toggle="quick_artist_button" data-toggle-value="listens" onclick="_update_item('quick_artist_button', 'listens')">
-                        <h5>${trans_legacy[lang].settings.layout.quick_artist_button.listens}</h5>
-                    </div>
-                </div>
             </div>
             <div class="bleh--panel">
                 <h4>${trans_legacy[lang].settings.customise.profile_header.name}</h4>

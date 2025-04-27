@@ -100,29 +100,6 @@ export function bleh_artists() {
                 </div>
                 ${(featured_items != null && !katsune) ? featured_items.outerHTML : ''}
             </div>
-            ${(!is_subpage && !katsune) ? (`
-            <div class="gallery-side">
-                <section class="view-all-panel">
-                    ${(settings.quick_artist_button == 'gallery') ? (`
-                    <a class="btn view-all-button back top-gallery-button" href="${window.location.href}/+images">
-                        ${trans_legacy[lang].gallery.view}
-                    </a>
-                    `) : (settings.quick_artist_button == 'shouts') ? (`
-                    <a class="btn view-all-button back top-shout-button" href="${window.location.href}/+shoutbox">
-                        ${trans_legacy[lang].settings.layout.quick_artist_button.shouts}
-                    </a>
-                    `) : (settings.quick_artist_button == 'wiki') ? (`
-                    <a class="btn view-all-button back top-wiki-button" href="${window.location.href}/+wiki">
-                        ${trans_legacy[lang].settings.layout.quick_artist_button.wiki}
-                    </a>
-                    `) : (settings.quick_artist_button == 'listens') ? (`
-                    <a class="btn view-all-button back top-listens-button" href="${window.location.href}/+listeners/you-know">
-                        ${trans_legacy[lang].settings.layout.quick_artist_button.listens}
-                    </a>
-                    `) : ''}
-                </section>
-            </div>
-            `) : ''}
         `);
 
         let multi_info_box = redesigned_artist_header.querySelector('.info-tip');

@@ -1090,13 +1090,6 @@ export const trans_legacy = {
                     bio: 'What do you want to happen when you click avatars?',
                     gallery: 'View photos (or featured album for tracks)',
                     album: 'View featured album'
-                },
-                quick_artist_button: {
-                    name: 'Quick artist button',
-                    bio: 'Control the right-side button on artist profiles.',
-                    shouts: 'View shouts',
-                    wiki: 'View biography',
-                    listens: 'View listeners'
                 }
             },
             customise: {
@@ -2080,13 +2073,6 @@ export const trans_legacy = {
                     bio: 'What do you want to happen when you click avatars?',
                     gallery: 'View photos (or featured album for tracks)',
                     album: 'View featured album'
-                },
-                quick_artist_button: {
-                    name: 'Quick artist button',
-                    bio: 'Control the right-side button on artist profiles.',
-                    shouts: 'View shouts',
-                    wiki: 'View biography',
-                    listens: 'View listeners'
                 }
             },
             customise: {
@@ -3037,13 +3023,6 @@ export const trans_legacy = {
                     bio: 'What do you want to happen when you click avatars?',
                     gallery: 'View photos (or featured album for tracks)',
                     album: 'View featured album'
-                },
-                quick_artist_button: {
-                    name: 'Quick artist button',
-                    bio: 'Control the right-side button on artist profiles.',
-                    shouts: 'View shouts',
-                    wiki: 'View biography',
-                    listens: 'View listeners'
                 }
             },
             customise: {
