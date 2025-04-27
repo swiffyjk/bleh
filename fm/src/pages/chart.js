@@ -21,9 +21,8 @@ export function bleh_charts() {
     new_panel.classList.add('charts-panel');
 
     let out_now = page.structure.side.querySelector('.more-link-fullwidth-right a');
-    if (out_now != null) {
+    if (out_now)
         out_now.classList.add('btn', 'out-now-btn');
-    }
 
     let header = document.createElement('div');
     header.classList.add('charts-header', 'top-header');

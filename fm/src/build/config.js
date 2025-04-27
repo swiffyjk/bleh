@@ -64,7 +64,6 @@ export let settings_template = {
     auth_menu_obsessions: false,
 
     default_avatar_action: 'expand',
-    quick_artist_button: 'gallery',
 
     glacier_library_graphs: true,
 
@@ -437,12 +436,6 @@ export let settings_base = {
         value: 'expand',
         type: 'options'
     },
-    quick_artist_button: {
-        css: 'quick_artist_button',
-        unit: '',
-        value: 'gallery',
-        type: 'options'
-    },
     glacier_library_graphs: {
         css: 'glacier_library_graphs',
         unit: '',
@@ -759,10 +752,6 @@ export let settings_store = {
     },
     default_avatar_action: {
         default: 'expand',
-        type: 'radio'
-    },
-    quick_artist_button: {
-        default: 'gallery',
         type: 'radio'
     }
 }

@@ -2,7 +2,7 @@ import { patch_avatar } from "../avatar";
 import { settings } from "../build/config";
 import { log } from "../build/log";
 import { auth, page, root } from "../build/page";
-import { clean_number, return_artist_from_track } from "../build/tools";
+import { clean_number, return_artist_from_track, sanitise } from "../build/tools";
 import { lang, trans_legacy, trans, tl } from "../build/trans";
 import { prep_chart_colours } from "../chart";
 import { refresh_all } from "../config";
@@ -21,8 +21,133 @@ export function show_your_scrobbles() {
     let katsune = ff('katsune');
     show_numbers_on_side(page.type);
 
+    if (page.subpage == 'overview') {
+        let tabs = document.createElement('nav');
+        tabs.classList.add('navlist', 'secondary-nav', 'navlist--more', 'redesigned-navigation');
+
+        if (page.type == 'artist') {
+            tabs.innerHTML = (`
+                <ul class="navlist-items">
+                    <li class="navlist-item secondary-nav-item secondary-nav-item--overview">
+                        <a class="secondary-nav-item-link secondary-nav-item-link--active" href="${window.location.href}">
+                            ${tl(trans.overview)}
+                        </a>
+                    </li>
+                    <li class="navlist-item secondary-nav-item secondary-nav-item--tracks">
+                        <a class="secondary-nav-item-link" href="${window.location.href}/+tracks">
+                            ${tl(trans.tracks)}
+                        </a>
+                    </li>
+                    <li class="navlist-item secondary-nav-item secondary-nav-item--albums">
+                        <a class="secondary-nav-item-link" href="${window.location.href}/+albums">
+                            ${tl(trans.albums)}
+                        </a>
+                    </li>
+                    <li class="navlist-item secondary-nav-item secondary-nav-item--images">
+                        <a class="secondary-nav-item-link" href="${window.location.href}/+images">
+                            ${tl(trans.photos)}
+                        </a>
+                    </li>
+                    <li class="navlist-item secondary-nav-item secondary-nav-item--similar">
+                        <a class="secondary-nav-item-link" href="${window.location.href}/+similar">
+                            ${tl(trans.similar_artists)}
+                        </a>
+                    </li>
+                    <li class="navlist-item secondary-nav-item secondary-nav-item--wiki">
+                        <a class="secondary-nav-item-link" href="${window.location.href}/+wiki">
+                            ${tl(trans.biography)}
+                        </a>
+                    </li>
+                    <li class="navlist-item secondary-nav-item secondary-nav-item--listeners">
+                        <a class="secondary-nav-item-link" href="${window.location.href}/+listeners">
+                            ${tl(trans.listeners)}
+                        </a>
+                    </li>
+                    <li class="navlist-item secondary-nav-item secondary-nav-item--shoutbox">
+                        <a class="secondary-nav-item-link" href="${window.location.href}/+shoutbox">
+                            ${tl(trans.shouts)}
+                        </a>
+                    </li>
+                    <li class="navlist-item secondary-nav-item secondary-nav-item--events">
+                        <a class="secondary-nav-item-link" href="${window.location.href}/+events">
+                            ${tl(trans.events)}
+                        </a>
+                    </li>
+                    <li class="navlist-item secondary-nav-item secondary-nav-item--tags">
+                        <a class="secondary-nav-item-link" href="${window.location.href}/+tags">
+                            ${tl(trans.tags)}
+                        </a>
+                    </li>
+                </ul>
+            `);
+        } else if (page.type == 'album') {
+            tabs.innerHTML = (`
+                <ul class="navlist-items">
+                    <li class="navlist-item secondary-nav-item secondary-nav-item--overview">
+                        <a class="secondary-nav-item-link secondary-nav-item-link--active" href="${window.location.href}">
+                            ${tl(trans.overview)}
+                        </a>
+                    </li>
+                    <li class="navlist-item secondary-nav-item secondary-nav-item--wiki">
+                        <a class="secondary-nav-item-link" href="${window.location.href}/+wiki">
+                            ${tl(trans.wiki)}
+                        </a>
+                    </li>
+                    <li class="navlist-item secondary-nav-item secondary-nav-item--images">
+                        <a class="secondary-nav-item-link" href="${window.location.href}/+images">
+                            ${tl(trans.artwork)}
+                        </a>
+                    </li>
+                    <li class="navlist-item secondary-nav-item secondary-nav-item--shoutbox">
+                        <a class="secondary-nav-item-link" href="${window.location.href}/+shoutbox">
+                            ${tl(trans.shouts)}
+                        </a>
+                    </li>
+                    <li class="navlist-item secondary-nav-item secondary-nav-item--tags">
+                        <a class="secondary-nav-item-link" href="${window.location.href}/+tags">
+                            ${tl(trans.tags)}
+                        </a>
+                    </li>
+                </ul>
+            `);
+        } else if (page.type == 'track') {
+            tabs.innerHTML = (`
+                <ul class="navlist-items">
+                    <li class="navlist-item secondary-nav-item secondary-nav-item--overview">
+                        <a class="secondary-nav-item-link secondary-nav-item-link--active" href="${window.location.href}">
+                            ${tl(trans.overview)}
+                        </a>
+                    </li>
+                    <li class="navlist-item secondary-nav-item secondary-nav-item--albums">
+                        <a class="secondary-nav-item-link" href="${window.location.href}/+albums">
+                            ${tl(trans.albums)}
+                        </a>
+                    </li>
+                    <li class="navlist-item secondary-nav-item secondary-nav-item--wiki">
+                        <a class="secondary-nav-item-link" href="${window.location.href}/+wiki">
+                            ${tl(trans.wiki)}
+                        </a>
+                    </li>
+                    <li class="navlist-item secondary-nav-item secondary-nav-item--shoutbox">
+                        <a class="secondary-nav-item-link" href="${window.location.href}/+shoutbox">
+                            ${tl(trans.shouts)}
+                        </a>
+                    </li>
+                    <li class="navlist-item secondary-nav-item secondary-nav-item--tags">
+                        <a class="secondary-nav-item-link" href="${window.location.href}/+tags">
+                            ${tl(trans.tags)}
+                        </a>
+                    </li>
+                </ul>
+            `);
+        }
+
+        page.structure.container.insertBefore(tabs, page.structure.row);
+        page.structure.tabs = tabs;
+    }
+
     let col_main = page.structure.container.querySelector('.top-overview-panel');
-    if (col_main == null)
+    if (!col_main)
         col_main = document.body.querySelector('.col-main');
 
 
@@ -49,8 +174,7 @@ export function show_your_scrobbles() {
         top_container.classList.add('katsune-button-row');
 
     let listen_container = document.createElement('div');
-    if (!katsune)
-        listen_container.classList.add('listen-container', 'view-buttons');
+    listen_container.classList.add('listen-container');
 
 
     // page url
@@ -77,7 +201,7 @@ export function show_your_scrobbles() {
     };
     // check to see if you have scrobbles
     let scrobble_button = col_main.querySelector('.personal-stats-item--scrobbles .hidden-xs a');
-    if (scrobble_button != null) {
+    if (scrobble_button) {
         your_listens.listens = clean_number(scrobble_button.textContent.trim());
     }
     // create child for u
@@ -112,6 +236,13 @@ export function show_your_scrobbles() {
 
             let listen_item = document.getElementById(`listen-item--${shortcut_listens.name}`);
 
+            let no_data = doc.querySelector('.message');
+            if (no_data) {
+                listen_item.setAttribute('data-listens', '-4');
+
+                return;
+            }
+
             // sometimes this fails even thou they do have plays, this is just a last.fm bug
             // i dont feel comfortable displaying 0 here as it may not be true
             // but i guess i should?
@@ -121,7 +252,11 @@ export function show_your_scrobbles() {
             listen_item.setAttribute('data-listens', listens);
 
             listen_item.innerHTML = (`
-                <img class="view-item-avatar" src="${shortcut_listens.avi}" alt="${shortcut_listens.name}">${trans_legacy[lang].music.listens.count_listens.replace('{c}', listens.toLocaleString(lang))}
+                <img class="view-item-avatar" src="${shortcut_listens.avi}" alt="${shortcut_listens.name}">
+                <div class="info">
+                    <h3>${shortcut_listens.name}</h3>
+                    <p>${trans_legacy[lang].music.listens.count_listens.replace('{c}', listens.toLocaleString(lang))}</p>
+                </div>
             `);
 
             // colourful counts
@@ -138,6 +273,8 @@ export function show_your_scrobbles() {
 
 
     // other user
+    if (page.type != 'artist')
+        listen_container.appendChild(create_divider());
     create_listen_item(listen_container, {
         name: 'other',
         listens: -3,
@@ -148,7 +285,8 @@ export function show_your_scrobbles() {
 
 
     // append
-    top_container.appendChild(listen_container);
+    col_main.insertBefore(listen_container, col_main.firstElementChild);
+
     if (!katsune)
         col_main.insertBefore(top_container, col_main.firstElementChild);
     else
@@ -184,8 +322,9 @@ export function show_your_scrobbles() {
 
     // interactables on the right
     let interact_container = document.createElement('div');
-    if (!katsune)
-        interact_container.classList.add('interact-container', 'view-buttons');
+    interact_container.classList.add('view-all-panel');
+    if (page.type == 'track')
+        interact_container.classList.add('mini-interactions');
 
 
     let text = document.body.querySelector('.header-new-title').textContent
@@ -224,11 +363,6 @@ export function show_your_scrobbles() {
     });
 
 
-    // bookmark
-    let bookmark_btn = interact_container.querySelector('[data-toggle-button-current-state*="bookmark"]');
-    bookmark_btn.after(create_divider());
-
-
     // obsession
     let obsession_form = header_actions.querySelector('form[action$="obsessions"]');
     if (obsession_form != null) {
@@ -244,58 +378,8 @@ export function show_your_scrobbles() {
     }
 
 
-    // artist btn
-    if (katsune && page.type == 'artist') {
-        let artist_btn = document.createElement('a');
-        artist_btn.classList.add('btn', 'view-item', 'interact-item', 'artist-btn', 'icon');
-
-        if (settings.quick_artist_button == 'gallery') {
-            artist_btn.setAttribute('data-artist-btn-type', 'gallery');
-            artist_btn.setAttribute('href', `${window.location.href}/+images`);
-            artist_btn.textContent = trans_legacy[lang].gallery.view;
-        } else if (settings.quick_artist_button == 'shouts') {
-            artist_btn.setAttribute('data-artist-btn-type', 'shouts');
-            artist_btn.setAttribute('href', `${window.location.href}/+shoutbox`);
-            artist_btn.textContent = trans_legacy[lang].settings.layout.quick_artist_button.shouts;
-        } else if (settings.quick_artist_button == 'wiki') {
-            artist_btn.setAttribute('data-artist-btn-type', 'wiki');
-            artist_btn.setAttribute('href', `${window.location.href}/+wiki`);
-            artist_btn.textContent = trans_legacy[lang].settings.layout.quick_artist_button.wiki;
-        } else if (settings.quick_artist_button == 'listens') {
-            artist_btn.setAttribute('data-artist-btn-type', 'gallery');
-            artist_btn.setAttribute('href', `${window.location.href}/+listeners/you-know`);
-            artist_btn.textContent = trans_legacy[lang].settings.layout.quick_artist_button.listens;
-        }
-
-        interact_container.appendChild(artist_btn);
-
-        let view_menu = tippy(artist_btn, {
-            theme: 'context-menu',
-            content: (`
-                <a class="dropdown-menu-clickable-item" href="${root}bleh?tab=customise" data-menu-item="settings">
-                    ${trans_legacy[lang].settings.configure}
-                </a>
-            `),
-            allowHTML: true,
-            placement: 'right-start',
-            trigger: 'manual',
-            interactive: true,
-            interactiveBorder: 10,
-            offset: [0, 0],
-
-            onShow(instance) {
-                instance.popper.addEventListener('click', event => {
-                    instance.hide();
-                });
-            }
-        });
-
-        register_menu(artist_btn, view_menu);
-    }
-
-
     // search similar!
-    let search_btn = document.createElement('a');
+    /*let search_btn = document.createElement('a');
     search_btn.classList.add('btn', 'view-item', 'interact-item', 'search-similar-btn', (katsune) ? 'icon' : '');
     search_btn.textContent = trans_legacy[lang].music.search_variations.name;
     search_btn.href = `${root}search/${page.type}s?q=${text}`;
@@ -305,18 +389,7 @@ export function show_your_scrobbles() {
         content: trans_legacy[lang].music.search_variations.tooltip
     });
 
-    interact_container.appendChild(search_btn);
-
-
-    // search lyrics
-    let search_lyrics = null;
-    if (page.type == 'track') {
-        search_lyrics = document.createElement('a');
-        search_lyrics.classList.add('dropdown-menu-clickable-item', 'search-genius-btn');
-        search_lyrics.textContent = trans_legacy[lang].music.search_genius;
-        search_lyrics.href = `https://genius.com/search?q=${text}`;
-        search_lyrics.target = '_blank';
-    }
+    interact_container.appendChild(search_btn);*/
 
 
     // lotus
@@ -346,61 +419,227 @@ export function show_your_scrobbles() {
         interact_container.appendChild(lotus_btn);*/
     }
 
-
-    // ...
-    let menu_btn = document.createElement('button');
-    menu_btn.classList.add('btn', 'view-item', 'interact-item', 'menu-btn', (katsune) ? 'icon' : '');
-    menu_btn.textContent = trans_legacy[lang].music.menu;
-
     let play_btn = interact_container.querySelector('.header-new-playlink');
-
-    let music_menu = tippy(menu_btn, {
-        theme: 'select-menu',
-        content: (`
-            ${(search_lyrics != null) ? search_lyrics.outerHTML : ''}
-            ${(lotus_btn != null) ? lotus_btn.outerHTML : ''}
-            ${(play_btn != null) ? play_btn.outerHTML : ''}
-        `),
-        allowHTML: true,
-        placement: 'bottom',
-        interactive: true,
-        interactiveBorder: 10,
-        trigger: 'click',
-
-        onShow(instance) {
-            /*let lotus_item = instance.popper.querySelector('.lotus-btn:not([aria-describedby])');
-
-            if (page.corrected)
-                tippy(lotus_item, {
-                    theme: 'lotus-tooltip-corrected',
-                    content: (`<span class="lotus-active">${trans_legacy[lang].lotus.correct.tooltip_active}</span><br><div class="tooltip-sub">${document.body.querySelector('.main-content > [itemscope]').getAttribute('data-page-resource-name')}</div>`),
-                    allowHTML: true,
-                    placement: 'right'
-                });
-            else
-                tippy(lotus_item, {
-                    theme: 'lotus-tooltip',
-                    content: (`${trans_legacy[lang].lotus.correct.tooltip}<br><div class="tooltip-sub">${document.body.querySelector('.main-content > [itemscope]').getAttribute('data-page-resource-name')}</div>`),
-                    allowHTML: true,
-                    placement: 'right'
-                });*/
-        }
-    });
-
-    if (play_btn != null)
+    if (play_btn)
         interact_container.removeChild(play_btn);
 
-    interact_container.appendChild(menu_btn);
+    page.structure.side.insertBefore(interact_container, page.structure.side.firstElementChild);
 
 
-    top_container.appendChild(interact_container);
+
+
+    let metadata = col_main.querySelector('.metadata-column');
+    if (metadata) {
+        if (settings.simulate_scroll) {
+            metadata.addEventListener('wheel', (e) => {
+                e.preventDefault();
+
+                if (e.deltaY > 0) {
+                    metadata.scrollBy({
+                        top: 0,
+                        left: +200,
+                        behavior: 'smooth'
+                    });
+                } else {
+                    metadata.scrollBy({
+                        top: 0,
+                        left: -200,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        } else {
+            metadata.classList.add('no-scroll-simulation');
+        }
+
+        let groups = [];
+
+        let headers = metadata.querySelectorAll('.catalogue-metadata-heading:not(.visible-xs)');
+        headers.forEach((item, index) => {
+            groups[index] = {
+                header: item
+            };
+        });
+        let values = metadata.querySelectorAll('.catalogue-metadata-description:not(.visible-xs)');
+        values.forEach((item, index) => {
+            groups[index].value = item;
+        });
+
+        metadata.innerHTML = '';
+        groups.forEach((group) => {
+            let group_wrap = document.createElement('div');
+            group_wrap.classList.add('metadata-group');
+            group_wrap.appendChild(group.header);
+            group_wrap.appendChild(group.value);
+            metadata.appendChild(group_wrap);
+        });
+    }
+
+    let play_on;
+    let play_links;
+
+    let link_group = document.createElement('div');
+    link_group.classList.add('metadata-group');
+
+    let link_container = document.createElement('div');
+    link_container.classList.add('music-links');
+
+    if (page.type == 'track') {
+        let header = document.createElement('div');
+        header.classList.add('sub-text', 'music-small-header');
+        header.textContent = tl(trans.find_on);
+        link_group.appendChild(header);
+
+        play_on = page.structure.side.querySelector('.play-this-track-playlinks');
+        page.structure.side.removeChild(play_on.parentElement);
+        play_links = play_on.querySelectorAll('li');
+
+        play_links.forEach((item) => {
+            let link = item.querySelector('.play-this-track-playlink:not(.visible-xs)');
+            link.classList.add('music-link');
+            let replace = item.querySelector('.replace-playlink');
+
+            if (replace) {
+                replace.classList.add('dropdown-menu-clickable-item');
+                item.removeChild(replace);
+
+                let menu = tippy(link, {
+                    theme: 'context-menu',
+                    content: (`
+                        ${replace.outerHTML}
+                    `),
+                    allowHTML: true,
+                    placement: 'right-start',
+                    trigger: 'manual',
+                    interactive: true,
+                    interactiveBorder: 10,
+                    offset: [0, 0],
+
+                    onShow(instance) {
+                        instance.popper.addEventListener('click', event => {
+                            instance.hide();
+                        });
+                    }
+                });
+
+                register_menu(link, menu);
+            }
+
+            link_container.appendChild(item);
+        });
+
+        let genius = document.createElement('li');
+        genius.innerHTML = (`
+            <a class="play-this-track-playlink music-link play-this-track-playlink--genius" href="https://genius.com/search?q=${sanitise(page.sister)}+${sanitise(page.name)}" target="_blank">
+                Genius
+            </a>
+        `);
+        link_container.appendChild(genius);
+    } else {
+        let header = document.createElement('div');
+        header.classList.add('sub-text', 'music-small-header');
+        header.textContent = tl(trans.find_on);
+        link_group.appendChild(header);
+
+        if (page.type == 'album') {
+            link_container.innerHTML = (`
+                <a class="play-this-track-playlink music-link play-this-track-playlink--spotify" href="https://open.spotify.com/search/${sanitise(page.sister)}%20${sanitise(page.name, '%20')}" target="_blank">
+                    Spotify
+                </a>
+                <a class="play-this-track-playlink music-link play-this-track-playlink--itunes" href="https://music.apple.com/gb/search?term=${sanitise(page.sister)}%20${sanitise(page.name, '%20')}" target="_blank">
+                    Apple Music
+                </a>
+                <a class="play-this-track-playlink music-link play-this-track-playlink--youtube-music" href="https://music.youtube.com/search?q=${sanitise(page.sister)}+${sanitise(page.name)}" target="_blank">
+                    YT Music
+                </a>
+                <a class="play-this-track-playlink music-link play-this-track-playlink--aoty" href="https://www.albumoftheyear.org/search/?q=${sanitise(page.sister)}+${sanitise(page.name)}" target="_blank">
+                    AOTY
+                </a>
+                <a class="play-this-track-playlink music-link play-this-track-playlink--rym" href="https://rateyourmusic.com/search?searchterm=${sanitise(page.sister)}%20${sanitise(page.name, '%20')}" target="_blank">
+                    RYM
+                </a>
+                <a class="play-this-track-playlink music-link play-this-track-playlink--genius" href="https://genius.com/search?q=${sanitise(page.sister)}+${sanitise(page.name)}" target="_blank">
+                    Genius
+                </a>
+            `);
+        } else {
+            link_container.innerHTML = (`
+                <a class="play-this-track-playlink music-link play-this-track-playlink--spotify" href="https://open.spotify.com/search/${sanitise(page.name, '%20')}" target="_blank">
+                    Spotify
+                </a>
+                <a class="play-this-track-playlink music-link play-this-track-playlink--itunes" href="https://music.apple.com/gb/search?term=${sanitise(page.name, '%20')}" target="_blank">
+                    Apple Music
+                </a>
+                <a class="play-this-track-playlink music-link play-this-track-playlink--youtube-music" href="https://music.youtube.com/search?q=${sanitise(page.name)}" target="_blank">
+                    YT Music
+                </a>
+                <a class="play-this-track-playlink music-link play-this-track-playlink--aoty" href="https://www.albumoftheyear.org/search/?q=${sanitise(page.name)}" target="_blank">
+                    AOTY
+                </a>
+                <a class="play-this-track-playlink music-link play-this-track-playlink--rym" href="https://rateyourmusic.com/search?searchterm=${sanitise(page.name, '%20')}" target="_blank">
+                    RYM
+                </a>
+                <a class="play-this-track-playlink music-link play-this-track-playlink--genius" href="https://genius.com/search?q=${sanitise(page.name)}" target="_blank">
+                    Genius
+                </a>
+            `);
+
+            let externals = page.structure.side.querySelector('.resource-external-links');
+            if (externals) {
+                page.structure.side.removeChild(externals.parentElement);
+                let externals_links = externals.querySelectorAll('.resource-external-link');
+                externals_links.forEach((link) => {
+                    link.classList.add('music-link');
+
+                    let type = link.classList[1];
+                    if (type == 'resource-external-link--homepage')
+                        link.textContent = tl(trans.website);
+                    else if (type == 'resource-external-link--twitter')
+                        link.textContent = 'Twitter';
+                    else if (type == 'resource-external-link--facebook')
+                        link.textContent = 'Facebook';
+
+                    link_container.appendChild(link);
+                });
+            }
+        }
+    }
+
+    link_group.appendChild(link_container);
+    col_main.appendChild(link_group);
+
+    let tags = col_main.querySelector('.catalogue-tags');
+
+    if (tags) {
+        let header_tags = document.createElement('div');
+        header_tags.classList.add('sub-text', 'music-small-header');
+        header_tags.textContent = tl(trans.tags);
+        col_main.appendChild(header_tags);
+
+        col_main.appendChild(tags);
+    }
+
+
+    // lotus
+    if (!settings.corrections)
+        return;
+
+    let lotus_handler = document.createElement('section');
+    lotus_handler.classList.add('lotus', 'cta');
+
+    lotus_handler.innerHTML = (`
+        <strong>${tl(trans.lotus_cta[page.corrected]).replace('{t}', tl(trans[`${page.type}_lower`]))}</strong>
+        <a class="see-more" href="https://github.com/katelyynn/lotus/issues/new/choose">${tl(trans.suggest_correction)}</a>
+    `);
+
+    page.structure.side.appendChild(lotus_handler);
 }
 
 function create_listen_item(parent, {name, listens, link, avi, count=0, button=false, katsune=false}, header_type) {
     log(`creating listen item of ${name}, ${count}, ${listens}`, 'artist', 'info', {avi: avi, link: link});
 
     let listen_item = document.createElement((!button) ? 'a' : 'button');
-    listen_item.classList.add('btn', 'listen-item', 'view-item');
+    listen_item.classList.add('btn', 'listen-item');
     listen_item.setAttribute('href', `${root}user/${name}/library/music/${link}`);
     //listen_item.setAttribute('target', '_blank');
     listen_item.setAttribute('data-listens', listens);
@@ -409,7 +648,11 @@ function create_listen_item(parent, {name, listens, link, avi, count=0, button=f
     if (listens > -1) {
         // 0 listens
         listen_item.innerHTML = (`
-            <img class="view-item-avatar" src="${avi}" alt="${name}">${trans_legacy[lang].music.listens.count_listens.replace('{c}', listens.toLocaleString(lang))}
+            <img class="view-item-avatar" src="${avi}" alt="${name}">
+            <div class="info">
+                <h3>${name}</h3>
+                <p>${trans_legacy[lang].music.listens.count_listens.replace('{c}', listens.toLocaleString(lang))}</p>
+            </div>
         `);
 
         let menu = tippy(listen_item, {
@@ -437,7 +680,11 @@ function create_listen_item(parent, {name, listens, link, avi, count=0, button=f
     } else if (listens > -2) {
         // loading listens
         listen_item.innerHTML = (`
-            <img class="view-item-avatar" src="${avi}" alt="${name}">${trans_legacy[lang].music.listens.loading_listens}
+            <img class="view-item-avatar" src="${avi}" alt="${name}">
+            <div class="info">
+                <h3>${name}</h3>
+                <p>${trans_legacy[lang].music.listens.loading_listens}</p>
+            </div>
         `);
 
         let menu = tippy(listen_item, {
@@ -478,10 +725,13 @@ function create_listen_item(parent, {name, listens, link, avi, count=0, button=f
     } else {
         // other listeners by clicking this link (artist)
         listen_item.innerHTML = (`
-            ${(avi[0] != null) ? `<img class="view-item-avatar" src="${avi[0].getAttribute('src')}">` : ''}
-            ${(avi[1] != null) ? `<img class="view-item-avatar" src="${avi[1].getAttribute('src')}">` : ''}
-            ${(avi[2] != null) ? `<img class="view-item-avatar" src="${avi[2].getAttribute('src')}">` : ''}
-            ${trans_legacy[lang].music.listens.other_listeners.replace('{c}', count)}
+            ${avi[0] ? `<img class="view-item-avatar" src="${avi[0].getAttribute('src')}">` : ''}
+            ${avi[1] ? `<img class="view-item-avatar" src="${avi[1].getAttribute('src')}">` : ''}
+            ${avi[2] ? `<img class="view-item-avatar" src="${avi[2].getAttribute('src')}">` : ''}
+            <div class="info">
+                <h3>${tl(trans.following)}</h3>
+                <p>${trans_legacy[lang].music.listens.other_listeners.replace('{c}', count)}</p>
+            </div>
         `);
         listen_item.setAttribute('href', `${window.location.href}/+listeners/you-know`);
     }
@@ -496,9 +746,8 @@ function create_listen_item(parent, {name, listens, link, avi, count=0, button=f
         listen_item.style.setProperty('--lit-user',parsed_scrobble_as_rank.lit);
     }
 
-    if (katsune) {
+    if (katsune)
         listen_item.classList.add('icon');
-    }
 
     parent.appendChild(listen_item);
 
@@ -533,7 +782,7 @@ function show_numbers_on_side(header_type) {
             scrobbles.abbr = value.textContent.trim();
         } else if (index == 2) {
             let link = item.querySelector('a');
-            if (link == null)
+            if (!link)
                 return;
 
             metascore.text = text;
@@ -546,7 +795,7 @@ function show_numbers_on_side(header_type) {
     // get panel
     let panel = page.structure.side.querySelector('section.section-with-separator:has(.listener-trend)');
 
-    if (panel == null) {
+    if (!panel) {
         panel = document.createElement('section');
         panel.classList.add('section-with-separator');
 
@@ -679,8 +928,6 @@ export function bleh_music_page_charts() {
 
     if (trend == null)
         return;
-
-    prep_chart_colours();
 
     // is this a chart reflow due to style loading?
     let previous_chart = panel.querySelector('.scrobble-canvas-container');
@@ -820,21 +1067,25 @@ export function bleh_top_listeners() {
                 <span class="avatar user-list-avatar">
                     ${avatar.innerHTML}
                 </span>
-                ${(follow) ? follow.outerHTML : ''}
+                ${follow ? follow.outerHTML : ''}
+                ${track_wrap ? (`
                 <div class="user-list-description">
                     <p class="user-list-about-me">
                         ${track_wrap.innerHTML}
                     </p>
                 </div>
+                `) : ''}
             </div>
         `);
 
         patch_avatar(new_listener.querySelector('.user-list-avatar'), name, 'listener');
 
-        let track_link = new_listener.querySelector('.user-list-about-me a');
-        let artist = return_artist_from_track(track_link.getAttribute('href'), false);
-        let track = correct_item_by_artist(track_link.textContent.trim(), artist);
-        track_link.textContent = track;
+        if (track_wrap) {
+            let track_link = new_listener.querySelector('.user-list-about-me a');
+            let artist = return_artist_from_track(track_link.getAttribute('href'), false);
+            let track = correct_item_by_artist(track_link.textContent.trim(), artist);
+            track_link.textContent = track;
+        }
 
         new_container.appendChild(new_listener);
     });

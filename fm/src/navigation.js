@@ -179,6 +179,32 @@ export function append_nav() {
     page.header.season = bleh_container.querySelector('a');
 
 
+    // language
+    let selected_language = document.querySelector('.footer-language--active strong')?.textContent;
+    let language_options = document.querySelectorAll('.footer-language-form');
+
+    let language_menu = document.createElement('div');
+    language_menu.classList.add('language-menu');
+
+    let sel_button = document.createElement('button');
+    sel_button.classList.add('dropdown-menu-clickable-item', 'lang-item', 'active');
+    sel_button.setAttribute('data-lang', non_override_lang);
+    sel_button.style.setProperty('--flag-url', `url('https://katelyynn.github.io/bleh/fm/flags/${non_override_lang}.svg')`);
+    sel_button.textContent = selected_language;
+
+    language_menu.appendChild(sel_button);
+
+    language_options.forEach((language_option) => {
+        let button = language_option.querySelector('button');
+        button.classList.remove('mimic-link');
+        button.classList.add('dropdown-menu-clickable-item', 'lang-item');
+        button.setAttribute('data-lang', button.getAttribute('name'));
+        button.style.setProperty('--flag-url', `url('https://katelyynn.github.io/bleh/fm/flags/${button.getAttribute('name')}.svg')`);
+
+        language_menu.appendChild(language_option);
+    });
+
+
     // auth menu
     let site_auth = document.body.querySelector('.site-auth');
     let token = new_auth.querySelector('[name="csrfmiddlewaretoken"]').getAttribute('value');
@@ -214,6 +240,12 @@ export function append_nav() {
                 ${trans_legacy[lang].auth_menu.dev}
             </button>
             `) : ''}
+            <button class="dropdown-menu-clickable-item" data-menu-item="language">
+                <span class="auth-dropdown-item-row">
+                    <span class="auth-dropdown-item-left">${tl(trans.language)}</span>
+                    <span class="auth-dropdown-item-right" id="theme-value">${selected_language}</span>
+                </span>
+            </button>
             <a class="dropdown-menu-clickable-item" data-menu-item="bleh" href="${root}bleh">
                 ${tl(trans.configure_bleh)}
             </a>
@@ -248,6 +280,17 @@ export function append_nav() {
 
             instance.popper.querySelector('#theme-value').textContent = tl(trans.themes[settings.theme]);
 
+            tippy(instance.popper.querySelector('[data-menu-item="language"]:not([aria-expanded])'), {
+                theme: 'language-menu',
+                content: (`
+                    ${language_menu.innerHTML}
+                `),
+                allowHTML: true,
+                placement: 'left',
+                hideOnClick: false,
+                interactive: true,
+                interactiveBorder: 10
+            });
 
             let theme_menu_item = tippy(instance.popper.querySelector('[data-menu-item="themes"]:not([aria-expanded])'), {
                 theme: 'menu',
@@ -278,53 +321,4 @@ export function append_nav() {
         }
     });
     new_auth.parentElement.removeChild(new_auth);
-
-
-    // language
-    let selected_language = document.querySelector('.footer-language--active strong')?.textContent;
-    let language_options = document.querySelectorAll('.footer-language-form');
-
-    let language_menu = document.createElement('div');
-    language_menu.classList.add('language-menu');
-
-    let sel_button = document.createElement('button');
-    sel_button.classList.add('dropdown-menu-clickable-item', 'lang-item', 'active');
-    sel_button.setAttribute('data-lang', non_override_lang);
-    sel_button.style.setProperty('--flag-url', `url('https://katelyynn.github.io/bleh/fm/flags/${non_override_lang}.svg')`);
-    sel_button.textContent = selected_language;
-
-    language_menu.appendChild(sel_button);
-
-    language_options.forEach((language_option) => {
-        let button = language_option.querySelector('button');
-        button.classList.remove('mimic-link');
-        button.classList.add('dropdown-menu-clickable-item', 'lang-item');
-        button.setAttribute('data-lang', button.getAttribute('name'));
-        button.style.setProperty('--flag-url', `url('https://katelyynn.github.io/bleh/fm/flags/${button.getAttribute('name')}.svg')`);
-
-        language_menu.appendChild(language_option);
-    });
-
-    let language_nav = document.createElement('a');
-    language_nav.classList.add('language-nav');
-    language_nav.innerHTML = (`
-        <span data-lang="${non_override_lang}" style="--flag-url: url('https://katelyynn.github.io/bleh/fm/flags/${non_override_lang}.svg');">${selected_language}</span>
-    `);
-
-    tippy(language_nav, {
-        theme: 'language-menu',
-        content: (`
-            ${language_menu.innerHTML}
-        `),
-        allowHTML: true,
-        delay: [100, 50],
-        placement: 'bottom',
-        //trigger: 'click',
-        interactive: true
-    });
-
-    let inner = document.body.querySelector('.masthead-nav-wrap');
-    let auth_container = inner.querySelector(':scope > .site-auth');
-
-    inner.insertBefore(language_nav, auth_container);
 }

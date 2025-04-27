@@ -1,7 +1,7 @@
 {
     "brand": "bleh",
-    "build": "2025.0421",
-    "sku": "beret",
+    "build": "2025.0427",
+    "sku": "wakaba",
     "bio": "bleh!!! ^-^",
     "author": "kate",
     "url": "https://github.com/katelyynn/bleh/raw/uwu/fm/bleh.user.js",
@@ -159,6 +159,11 @@
             "name": "beret redesign",
             "date": "2025-04-03",
             "notice": "Removes individual card styles and instead styles the entire container, much like old bleh"
+        },
+        "colour_based_on_hex": {
+            "default": true,
+            "name": "Set colour based on hex",
+            "date": "2025-04-26"
         }
     }
 }

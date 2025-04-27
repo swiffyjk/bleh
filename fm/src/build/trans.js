@@ -20,7 +20,7 @@ export let lang_info = {
     de: {
         name: 'Deutsch',
         by: ['stellasaur', 'cutensilly'],
-        last_updated:  '2025-03-09'
+        last_updated:  '2025-04-27'
     },
     pl: {
         name: 'Polski',
@@ -214,20 +214,25 @@ export const trans = {
         en: 'Tracks'
     },
     appearance: {
-        en: 'Appearance'
+        en: 'Appearance',
+        de: 'Aussehen'
     },
     themes: {
         name: {
-            en: 'Themes'
+            en: 'Themes',
+            de: 'Farbschema'
         },
         light: {
-            en: 'Light'
+            en: 'Light',
+            de: 'Hell'
         },
         dark: {
-            en: 'Ash'
+            en: 'Ash',
+            de: 'Asche'
         },
         darker: {
-            en: 'Dark'
+            en: 'Dark',
+            de: 'Dunkel'
         },
         oled: {
             en: 'Void'
@@ -253,7 +258,8 @@ export const trans = {
         }
     },
     configure: {
-        en: 'Configure'
+        en: 'Configure',
+        de: 'Konfigurieren'
     },
     events: {
         en: 'Events'
@@ -329,6 +335,15 @@ export const trans = {
     customise: {
         en: 'Customise'
     },
+    convert: {
+        en: 'Convert'
+    },
+    convert_from_hex: {
+        en: 'Convert colour'
+    },
+    fonts: {
+        en: 'Fonts'
+    },
     hue: {
         en: 'Accent colour',
         de: 'Akzentfarbe'
@@ -349,13 +364,21 @@ export const trans = {
         }
     },
     save: {
-        en: 'Save'
+        en: 'Save',
+        de: 'Speichern'
     },
     add: {
         en: 'Add'
     },
     remove: {
         en: 'Remove'
+    },
+    clear: {
+        en: 'Clear'
+    },
+    close: {
+        en: 'Close',
+        de: 'Schließen'
     },
     go: {
         en: 'Go'
@@ -369,6 +392,18 @@ export const trans = {
     send_quickly_with: {
         en: 'Send quickly with {kbd}'
     },
+    done: {
+        en: 'Done',
+        de: 'Fertig'
+    },
+    finish: {
+        en: 'Finish',
+        de: 'Beenden'
+    },
+    continue: {
+        en: 'Continue',
+        de: 'Fortsetzen'
+    },
     right_click_for_more_options: {
         en: 'Right click for more options'
     },
@@ -381,7 +416,8 @@ export const trans = {
         }
     },
     new: {
-        en: 'New'
+        en: 'New',
+        de: 'Neu'
     },
     beta: {
         en: 'Beta'
@@ -416,6 +452,105 @@ export const trans = {
     },
     markdown_tip: {
         en: 'This textbox supports markdown such as line breaks, bold text, italics, underlines, and more. You can embed images using ![alt text](link). Beware that to non-bleh users it will not appear fancy.'
+    },
+    find_on: {
+        en: 'Find on'
+    },
+    following: {
+        en: 'Following'
+    },
+    website: {
+        en: 'Website'
+    },
+    overview: {
+        en: 'Overview'
+    },
+    photos: {
+        en: 'Photos'
+    },
+    artwork: {
+        en: 'Artwork'
+    },
+    similar_artists: {
+        en: 'Similar Artists'
+    },
+    biography: {
+        en: 'Biography'
+    },
+    wiki: {
+        en: 'Wiki'
+    },
+    listeners: {
+        en: 'Listeners'
+    },
+    tags: {
+        en: 'Tags'
+    },
+    artist_lower: {
+        en: 'artist'
+    },
+    album_lower: {
+        en: 'album'
+    },
+    track_lower: {
+        en: 'track'
+    },
+    lotus_cta: {
+        true: {
+            en: 'This {t} is being re-capitalised, is it correct?'
+        },
+        false: {
+            en: 'Is this {t} capitalised correctly?'
+        }
+    },
+    suggest_correction: {
+        en: 'Suggest a correction'
+    },
+    recent_tracks: {
+        en: 'Recent Tracks',
+        de: 'Kürzlich gespielte Titel'
+    },
+    you_share_count_with: {
+        en: 'You share {c} with'
+    },
+    message: {
+        en: 'Message',
+        de: 'Anschreiben'
+    },
+    sponsor: {
+        en: 'Become a sponsor'
+    },
+    message_sponsor: {
+        en: 'Receive sponsor rewards'
+    },
+    obsess: {
+        en: 'Obsess'
+    },
+    labs: {
+        en: 'Labs'
+    },
+    labs_by_last: {
+        en: 'Labs by Last.fm',
+        de: 'Labs vom Last.fm',
+        tagline: {
+            en: 'Interactive tools, toys and infographics',
+            de: 'Interaktiven Tools, Spielen und Infografiken'
+        }
+    },
+    sponsor_info: {
+        en: 'This is a special bleh-managed account to handle sponsors.'
+    },
+    loading: {
+        en: 'Loading'
+    },
+    loading_90_days: {
+        en: 'Collecting the last 90 days'
+    },
+    following_mutuals: {
+        en: '(mutually)'
+    },
+    language: {
+        en: 'Language'
     }
 }
 
@@ -759,9 +894,9 @@ export const trans_legacy = {
                     very_low: 'Very Low',
                     unknown: 'Unknown'
                 },
-                you_share_1: 'You share {artist}',
-                you_share_2: 'You share {artist1} and {artist2}',
-                you_share_3: 'You share {artist1}, {artist2}, and {artist3}'
+                you_share_1: '{artist}',
+                you_share_2: '{artist1}, {artist2}',
+                you_share_3: '{artist1}, {artist2}, {artist3}'
             },
             open_avatar: 'Open in a new tab',
             settings: 'Configure',
@@ -771,19 +906,6 @@ export const trans_legacy = {
                 to_go: '{s} scrobbles to go',
                 tier: 'Tier {t}',
                 explain: 'For each tier, you unlock a new badge'
-            },
-            banner: {
-                name: 'Banner',
-                origin: {
-                    bio: [
-                        'Sourced from this user\'s about me',
-                        'Embed an image with {b} to achieve the same'
-                    ],
-                    avatar: 'Sourced from this user\'s avatar',
-                    artist: 'Sourced from this user\'s top track',
-                    hidden: 'Hidden based on your preferences',
-                    none: 'Sourced from nowhere...'
-                }
             }
         },
         event: {
@@ -968,13 +1090,6 @@ export const trans_legacy = {
                     bio: 'What do you want to happen when you click avatars?',
                     gallery: 'View photos (or featured album for tracks)',
                     album: 'View featured album'
-                },
-                quick_artist_button: {
-                    name: 'Quick artist button',
-                    bio: 'Control the right-side button on artist profiles.',
-                    shouts: 'View shouts',
-                    wiki: 'View biography',
-                    listens: 'View listeners'
                 }
             },
             customise: {
@@ -1765,8 +1880,8 @@ export const trans_legacy = {
                     unknown: 'Unknown'
                 },
                 you_share_1: 'Ihr hört beide {artist}',
-                you_share_2: 'Ihr hört beide {artist1} und {artist2}',
-                you_share_3: 'Ihr hört beide {artist1}, {artist2}, und {artist3}'
+                you_share_2: 'Ihr hört beide {artist1}, {artist2}',
+                you_share_3: 'Ihr hört beide {artist1}, {artist2}, {artist3}'
             },
             open_avatar: 'Im neuen Fenster öffnen',
             settings: 'Konfigurieren',
@@ -1958,13 +2073,6 @@ export const trans_legacy = {
                     bio: 'What do you want to happen when you click avatars?',
                     gallery: 'View photos (or featured album for tracks)',
                     album: 'View featured album'
-                },
-                quick_artist_button: {
-                    name: 'Quick artist button',
-                    bio: 'Control the right-side button on artist profiles.',
-                    shouts: 'View shouts',
-                    wiki: 'View biography',
-                    listens: 'View listeners'
                 }
             },
             customise: {
@@ -2915,13 +3023,6 @@ export const trans_legacy = {
                     bio: 'What do you want to happen when you click avatars?',
                     gallery: 'View photos (or featured album for tracks)',
                     album: 'View featured album'
-                },
-                quick_artist_button: {
-                    name: 'Quick artist button',
-                    bio: 'Control the right-side button on artist profiles.',
-                    shouts: 'View shouts',
-                    wiki: 'View biography',
-                    listens: 'View listeners'
                 }
             },
             customise: {

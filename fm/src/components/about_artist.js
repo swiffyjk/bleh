@@ -5,7 +5,7 @@ import { lang, trans_legacy, trans, tl } from "../build/trans";
 export function bleh_about_artist() {
     let legacy_container = page.structure.main.querySelector('.about-artist');
 
-    if (legacy_container == null)
+    if (!legacy_container)
         return;
 
     let avatar = legacy_container.querySelector('.gallery-preview-image--0 img');
@@ -51,4 +51,6 @@ export function bleh_about_artist() {
 
         about_artist_container.appendChild(guest_feature_panel);
     }
+
+    page.structure.side.appendChild(about_artist_container);
 }

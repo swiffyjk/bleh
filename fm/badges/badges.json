@@ -1,9 +1,10 @@
 {
-    "latest": "2025.0421",
+    "latest": "2025.0427",
     "sponsors": [
         "cutensilly", "kateshapedbox", "stellasaur",
         "astrablooms", "ItsProyal", "vwvwvwvwvwvwv", "Orofil",
-        "EliteHimself", "iwas15with100k", "keepsweet", "yourfriendoss"
+        "EliteHimself", "iwas15with100k", "keepsweet", "yourfriendoss",
+        "softmancy"
     ],
     "sponsors_one_time": [
         "kateshapedbox",
@@ -153,6 +154,15 @@
             {
                 "type": "paw",
                 "name": "Kitty :3 meowmeowmeow"
+            }
+        ],
+        "softmancy": [
+            {
+                "type": "sponsor"
+            },
+            {
+                "type": "altar",
+                "name": "the fleshpoet"
             }
         ]
     }

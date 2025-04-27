@@ -83,17 +83,10 @@ export function redesign_profile_header(is_own_profile, is_following) {
 
 
     // create new
-    let profile_header;
+    let profile_header = document.createElement('section');
+    profile_header.classList.add('view-all-panel', 'medium-interactions');
 
-    if (katsune) {
-        profile_header = document.createElement('section');
-        profile_header.classList.add('profile-top-header', 'katsune-button-row');
-    } else {
-        profile_header = document.createElement('div');
-        profile_header.classList.add('profile-top-header', 'view-buttons');
-    }
-
-    if (!is_own_profile) {
+    if (!is_own_profile && page.name != sponsor_list.sponsor_account) {
         // follow
         let follow_wrap = document.body.querySelector('.header-avatar .class > div');
 
@@ -101,8 +94,12 @@ export function redesign_profile_header(is_own_profile, is_following) {
             let follow_btn = follow_wrap.querySelector('button');
             follow_btn.classList.add('btn', 'profile-top-item', 'profile-top-item--follow', 'view-item', (katsune) ? 'icon' : '');
             follow_btn.classList.remove('toggle-button', 'header-follower-btn');
-            follow_btn.setAttribute('data-following', is_following);
             profile_header.appendChild(follow_wrap);
+
+            if (is_following && follow_wrap.getAttribute('data-toggle-button-current-state') == 'followed') {
+                follow_btn.setAttribute('data-mutuals', 'true');
+                follow_btn.setAttribute('data-mutuals-text', tl(trans.following_mutuals));
+            }
 
             if (!katsune)
                 tippy(follow_btn, {
@@ -130,8 +127,9 @@ export function redesign_profile_header(is_own_profile, is_following) {
 
             profile_header.appendChild(follow_placeholder);
         }
+    }
 
-
+    if (!is_own_profile) {
         if (page.name == 'cutensilly') {
             create_profile_top_item(profile_header, {
                 name: page.name,
@@ -140,20 +138,22 @@ export function redesign_profile_header(is_own_profile, is_following) {
                 full: true,
                 action: 'button',
                 primary: true,
-                katsune: katsune
+                katsune: katsune,
+                mini: true
             });
         }
 
 
         // message
         let msg_button = document.body.querySelector('.header-message-user');
-        if (msg_button != null) {
+        if (msg_button) {
             if (page.name != sponsor_list.sponsor_account) {
                 create_profile_top_item(profile_header, {
                     name: page.name,
                     type: 'message',
                     link: msg_button.getAttribute('href'),
-                    katsune: katsune
+                    katsune: katsune,
+                    mini: true
                 });
             } else {
                 create_profile_top_item(profile_header, {
@@ -171,7 +171,8 @@ export function redesign_profile_header(is_own_profile, is_following) {
                     link: msg_button.getAttribute('href'),
                     full: true,
                     primary: true,
-                    katsune: katsune
+                    katsune: katsune,
+                    mini: true
                 });
             }
         }
@@ -184,7 +185,8 @@ export function redesign_profile_header(is_own_profile, is_following) {
                 type: 'shortcut',
                 link: `_set_profile_as_shortcut(this, '${page.name}')`,
                 action: 'button',
-                katsune: katsune
+                katsune: katsune,
+                mini: true
             });
         }
     } else {
@@ -197,36 +199,47 @@ export function redesign_profile_header(is_own_profile, is_following) {
         });
         create_profile_top_item(profile_header, {
             name: page.name,
+            type: 'labs',
+            link: `${root}labs`,
+            katsune: katsune,
+            mini: true,
+            tooltip: (`
+                <strong>${tl(trans.labs_by_last)}</strong>
+                <p>${tl(trans.labs_by_last.tagline)}</p>
+            `),
+            tooltip_style: 'stack',
+            allow_html: true
+        });
+        create_profile_top_item(profile_header, {
+            name: page.name,
             type: 'obsess',
             link: `${root}user/${page.name}/obsessions/set`,
-            katsune: katsune
+            katsune: katsune,
+            mini: true
         });
     }
 
-    if (katsune) {
-        let sep = document.createElement('div');
-        sep.classList.add('btn-gap');
-        profile_header.appendChild(sep);
-    }
+    let listen_container = page.structure.side.querySelector('.listen-panel');
 
     if (!is_own_profile && page.name != sponsor_list.sponsor_account && katsune) {
         let taste_wrap = document.createElement('div');
-        taste_wrap.classList.add('katsune-taste');
+        taste_wrap.classList.add('btn', 'listen-item', 'icon');
 
         taste_wrap.innerHTML = (`
-            <div class="taste-info">
-                <div class="taste-value">
-                    ${(taste_artists.length == 1) ? trans_legacy[lang].profile.taste_meter.you_share_1.replace('{artist}', taste_artists[0]) : ''}
-                    ${(taste_artists.length == 2) ? trans_legacy[lang].profile.taste_meter.you_share_2.replace('{artist1}', taste_artists[0]).replace('{artist2}', taste_artists[1]) : ''}
-                    ${(taste_artists.length == 3) ? trans_legacy[lang].profile.taste_meter.you_share_3.replace('{artist1}', taste_artists[0]).replace('{artist2}', taste_artists[1]).replace('{artist3}', taste_artists[2]) : ''}
-                </div>
-                <div class="taste-bar colourful" data-taste="${taste}">
-                    <div class="taste-bar-fill" style="width: ${taste_percentage}"></div>
+            <div class="span">
+                <img class="view-item-avatar" src="${auth.avatar}">
+                <img class="view-item-avatar" src="${profile_avi}">
+                <div class="info">
+                    <h3>${tl(trans.you_share_count_with).replace('{c}', `<span class="colourful" data-taste="${taste}">${taste_percentage}</span>`)}</h3>
+                    <p>
+                        ${(taste_artists.length == 1) ? trans_legacy[lang].profile.taste_meter.you_share_1.replace('{artist}', taste_artists[0]) : ''}
+                        ${(taste_artists.length == 2) ? trans_legacy[lang].profile.taste_meter.you_share_2.replace('{artist1}', taste_artists[0]).replace('{artist2}', taste_artists[1]) : ''}
+                        ${(taste_artists.length == 3) ? trans_legacy[lang].profile.taste_meter.you_share_3.replace('{artist1}', taste_artists[0]).replace('{artist2}', taste_artists[1]).replace('{artist3}', taste_artists[2]) : ''}
+                    </p>
                 </div>
             </div>
-            <div class="katsune-taste-badge">
-                <div class="taste-icon colourful" data-taste="${taste}"></div>
-                <div class="taste-percent">${taste_percentage.replace('%', '')}</div>
+            <div class="taste-bar colourful" data-taste="${taste}">
+                <div class="taste-bar-fill" style="width: ${taste_percentage}"></div>
             </div>
         `);
 
@@ -245,7 +258,7 @@ export function redesign_profile_header(is_own_profile, is_following) {
             allowHTML: true
         });
 
-        profile_header.appendChild(taste_wrap);
+        listen_container.appendChild(taste_wrap);
 
         if (taste_artists.length > 1) {
             let menu = tippy(taste_wrap, {
@@ -322,7 +335,7 @@ export function redesign_profile_header(is_own_profile, is_following) {
             </div>
         `);
 
-        profile_header.appendChild(progress);
+        listen_container.appendChild(progress);
 
         tippy(progress, {
             theme: 'progress-badges',
@@ -407,21 +420,17 @@ export function redesign_profile_header(is_own_profile, is_following) {
         }
     }
 
-    if (katsune) {
-        page.structure.container.querySelector('.redesigned-profile-header').after(profile_header);
-    } else {
-        if (ff('refreshed_nav'))
-            page.structure.container.querySelector('.redesigned-profile-header .info-side').appendChild(profile_header);
-        else
-            base_header.appendChild(profile_header);
-    }
+    page.structure.side.insertBefore(profile_header, page.structure.side.firstElementChild);
 }
 
-export function create_profile_top_item(parent, {name, link, text='', type, taste='', artists=[], avi='', percent='', action='', tooltip='', allow_html=false, tooltip_theme='', full=false, primary=false, katsune=false}) {
+export function create_profile_top_item(parent, {name, link, text='', type, taste='', artists=[], avi='', percent='', action='', tooltip='', allow_html=false, tooltip_theme='', full=false, primary=false, katsune=false, mini=false}) {
     log(`creating top item of ${name}, ${link}, ${text}`, 'profile');
 
     let listen_item = document.createElement((action != 'button') ? 'a' : 'button');
     listen_item.classList.add('btn', 'profile-top-item', `profile-top-item--${type}`, 'view-item');
+
+    if (mini)
+        listen_item.classList.add('mini');
 
     if (action != 'button' && type != 'going' && type != 'maybe' && type != 'total') {
         listen_item.setAttribute('href', link);
@@ -468,7 +477,7 @@ export function create_profile_top_item(parent, {name, link, text='', type, tast
             listen_item.setAttribute('data-is-shortcut', 'true');
             listen_item.removeAttribute('onclick');
 
-            if (katsune)
+            if (katsune && !mini)
                 listen_item.textContent = trans_legacy[lang].profile.shortcut.remove;
             else
                 tippy(listen_item, {
@@ -477,7 +486,7 @@ export function create_profile_top_item(parent, {name, link, text='', type, tast
         } else {
             listen_item.setAttribute('data-is-shortcut', 'false');
 
-            if (katsune)
+            if (katsune && !mini)
                 listen_item.textContent = trans_legacy[lang].profile.shortcut.add;
             else
                 tippy(listen_item, {
@@ -489,7 +498,7 @@ export function create_profile_top_item(parent, {name, link, text='', type, tast
             theme: 'context-menu',
             content: (`
                 <button class="dropdown-menu-clickable-item" onclick="_open_profile_shortcut_window()" data-menu-item="settings">
-                    ${trans_legacy[lang].settings.configure}
+                    ${tl(trans.configure)}
                 </button>
             `),
             allowHTML: true,
@@ -552,12 +561,12 @@ export function create_profile_top_item(parent, {name, link, text='', type, tast
         register_menu(listen_item, menu);
     }
 
-    if (katsune)
+    if (katsune && !mini)
         return;
 
     if (tooltip == '')
         tippy(listen_item, {
-            content: trans_legacy[lang].profile[type]
+            content: tl(trans[type])
         });
     else
         tippy(listen_item, {

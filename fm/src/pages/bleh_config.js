@@ -4,10 +4,11 @@ import { album_track_corrections, artist_corrections, ranks } from "../build/mus
 import { auth, page, root, theme_preview } from "../build/page";
 import { stored_season } from "../build/seasonal";
 import { sponsor_list } from "../build/sponsor";
+import { hex_to_hsl, clamp_sat } from '../build/tools';
 import { lang, lang_info, non_override_lang, trans_legacy, valid_langs, trans, tl } from "../build/trans";
 import { dialog, dialog_legacy, dialog_rm, kill_window } from "../components/dialog";
 import { notify } from "../components/notify";
-import { create_settings_template, load_settings, refresh_all } from "../config";
+import { create_settings_template, load_settings, refresh_all, update_params } from "../config";
 import { version } from "../main";
 import { update_page } from "../page";
 import { seasonal_timer_end, seasonal_timer_start } from "../seasonal";
@@ -89,78 +90,25 @@ export function bleh_settings() {
     `);
 
     page.structure.side.innerHTML = (`
+        <section class="view-all-panel">
+            <button class="btn view-all-button import" onclick="_import_settings()">
+                ${tl(trans.import)}
+            </button>
+        </section>
+        <section class="view-all-panel">
+            <button class="btn view-all-button export" onclick="_export_settings()">
+                ${tl(trans.export)}
+            </button>
+        </section>
+        <section class="view-all-panel">
+            <button class="btn view-all-button reset-settings" onclick="_reset_settings()">
+                ${tl(trans.reset)}
+            </button>
+        </section>
         <div class="bleh--panel">
-            ${(!ff('bleh_settings_tabs')) ? (`
-            <div class="btns">
-                <button class="btn bleh--btn" data-bleh-page="home" onclick="_change_settings_page('home')">
-                    ${tl(trans.home)}
-                </button>
-                <button class="btn bleh--btn" data-bleh-page="themes" onclick="_change_settings_page('themes')">
-                    ${tl(trans.appearance)}
-                </button>
-                <button class="btn bleh--btn" data-bleh-page="customise" onclick="_change_settings_page('customise')">
-                    ${tl(trans.layout)}
-                </button>
-                <button class="btn bleh--btn" data-bleh-page="music" onclick="_change_settings_page('music')">
-                    ${tl(trans.music)}
-                </button>
-                <button class="btn bleh--btn" data-bleh-page="accessibility" onclick="_change_settings_page('accessibility')">
-                    ${tl(trans.accessibility)}
-                </button>
-                <button class="btn bleh--btn" data-bleh-page="seasonal" data-season="${stored_season.id}" onclick="_change_settings_page('seasonal')">
-                    ${tl(trans.seasonal.name)}
-                </button>
-            </div>
-            <div class="btns sep">
-                <button class="btn bleh--btn" data-bleh-page="text" onclick="_change_settings_page('text')">
-                    ${trans_legacy[lang].settings.text.name}
-                </button>
-                <button class="btn bleh--btn" data-bleh-page="sku" onclick="_change_settings_page('sku')">
-                    shhh...
-                </button>
-            </div>
-            <div class="btns sep">
-                <button class="btn" data-bleh-action="import" onclick="_import_settings()">
-                    ${tl(trans.import)}
-                </button>
-                <button class="btn" data-bleh-action="export" onclick="_export_settings()">
-                    ${tl(trans.export)}
-                </button>
-            </div>
-            <div class="btns sep">
-                <button class="btn bleh--btn" data-bleh-page="profiles" onclick="_change_settings_page('profiles')">
-                    ${trans_legacy[lang].settings.profiles.name}
-                </button>
-                <button class="btn bleh--btn" data-bleh-page="performance" onclick="_change_settings_page('performance')">
-                    ${tl(trans.troubleshooting)}
-                </button>
-                <button class="btn" data-bleh-action="reset" onclick="_reset_settings()">
-                    ${tl(trans.reset)}
-                </button>
-            </div>
-            `) : (`
             ${(ff('skip_to_setting')) ? (`
             <h4>${trans_legacy[lang].settings.skip_to.name}</h4>
             <div class="skip-to-list"></div>
-            `) : ''}
-            ${(ff('skip_to_setting')) ? '<div class="btns sep">' : '<div class="btns">'}
-                <button class="btn" data-bleh-action="import" onclick="_import_settings()">
-                    ${tl(trans.import)}
-                </button>
-                <button class="btn" data-bleh-action="export" onclick="_export_settings()">
-                    ${tl(trans.export)}
-                </button>
-                <button class="btn" data-bleh-action="reset" onclick="_reset_settings()">
-                    ${tl(trans.reset)}
-                </button>
-            </div>
-            `)}
-            ${(settings.feature_flags.changelogs != false) ? (`
-            <div class="btns">
-                <button class="btn bleh--btn primary" data-bleh-page="changelog" onclick="_query_changelog()">
-                    ${tl(trans.changelog)}
-                </button>
-            </div>
             `) : ''}
         </div>
     `);
@@ -168,12 +116,12 @@ export function bleh_settings() {
 
     page.structure.container.insertBefore(nav, page.structure.row);
 
-    if (page.requested.tab == null)
+    if (!page.requested.tab)
         change_settings_page('themes');
     else
         change_settings_page(page.requested.tab);
 
-    if (page.requested.setting != null) {
+    if (page.requested.setting) {
         scroll_to_setting(page.requested.setting);
     }
 }
@@ -317,72 +265,46 @@ export function render_setting_page(page_id) {
             }
         ]);
 
-        let preview_bar = 'background: linear-gradient(90deg';
-        let preview_bar_text = '';
-
-        // global sat/lit is used to substitute the values computed in h3 sat/lit
-        // as they return eg. calc(0.85 * 50%), so we use global_sat to get 0.85
-        // which can then be used in a .replace(global_sat, 'whatever we want')
-        let global_sat = getComputedStyle(document.body).getPropertyValue('--sat');
-        let global_lit = getComputedStyle(document.body).getPropertyValue('--lit');
-        let h3_sat = getComputedStyle(document.body).getPropertyValue('--h3-sat');
-        let h3_lit = getComputedStyle(document.body).getPropertyValue('--h3-lit');
-
-        let maximum = 16_000;
-        let max_rank = 11;
-
-        //console.info(maximum, max_rank);
-        for (let rank = 0; rank <= max_rank; rank++) {
-            let this_rank = ranks[parseInt(rank)];
-            //console.info(this_rank);
-
-            let percent = ((this_rank.start / maximum) * 100);
-            preview_bar = `${preview_bar}, hsl(${this_rank.hue}, ${h3_sat.replace(global_sat, this_rank.sat)}, ${h3_lit.replace(global_lit, this_rank.lit)}) ${percent}%`;
-
-            if ((this_rank.start > 500 || this_rank.start == 0) && this_rank.start != 1500) {
-                let text = `${this_rank.start}`;
-
-                preview_bar_text = `${preview_bar_text}<div class="preview-bar-text-entry" style="left: ${percent}%">${text.replaceAll('_', ',')}</div>`;
-            }
-        }
-
-        preview_bar = `${preview_bar});`;
-        //console.info('preview bar', preview_bar, global_sat, h3_sat, global_lit, h3_lit);
-
         return (`
             <div class="bleh--panel">
-                <h4 class="top-header">${tl(trans.appearance)}</h4>
                 <h4>${tl(trans.themes.name)}</h4>
-                <!--<h4>${trans_legacy[lang].settings.themes.dark.name}</h4>-->
                 <div class="setting-items full">
                     <div class="side-left full even-more">
                         <button class="btn theme-item" data-bleh-theme="light" onclick="change_theme_from_settings('light')">
+                            <div class="preview-container">
                             <div class="preview" data-bleh--theme="light">
                                 ${theme_preview}
+                            </div>
                             </div>
                             <div class="text">
                                 <h5>${tl(trans.themes.light)}</h5>
                             </div>
                         </button>
                         <button class="btn theme-item" data-bleh-theme="dark" onclick="change_theme_from_settings('dark')">
+                            <div class="preview-container">
                             <div class="preview" data-bleh--theme="dark">
                                 ${theme_preview}
+                            </div>
                             </div>
                             <div class="text">
                                 <h5>${tl(trans.themes.dark)}</h5>
                             </div>
                         </button>
                         <button class="btn theme-item" data-bleh-theme="darker" onclick="change_theme_from_settings('darker')">
+                            <div class="preview-container">
                             <div class="preview" data-bleh--theme="darker">
                                 ${theme_preview}
+                            </div>
                             </div>
                             <div class="text">
                                 <h5>${tl(trans.themes.darker)}</h5>
                             </div>
                         </button>
                         <button class="btn theme-item" data-bleh-theme="oled" onclick="change_theme_from_settings('oled')">
+                            <div class="preview-container">
                             <div class="preview" data-bleh--theme="oled">
                                 ${theme_preview}
+                            </div>
                             </div>
                             <div class="text">
                                 <h5>${tl(trans.themes.oled)}</h5>
@@ -403,51 +325,7 @@ export function render_setting_page(page_id) {
                     </div>
                 </div>
                 `) : ''}
-                <div class="sep"></div>
                 <h4>${tl(trans.colours)}</h4>
-                <div class="inner-preview pad">
-                    <div class="palette">
-                        <div class="swatch" style="--col: hsl(var(--l2-c))"></div>
-                        <div class="swatch" style="--col: hsl(var(--l3-c))"></div>
-                        <div class="swatch" style="--col: hsl(var(--l4-c))"></div>
-                        <div class="swatch" style="--col: hsl(var(--l2))"></div>
-                        <div class="swatch" style="--col: hsl(var(--l3))"></div>
-                        <div class="swatch" style="--col: hsl(var(--l4))"></div>
-                    </div>
-                    <table class="chartlist chartlist--with-image chartlist--with-loved chartlist--with-artist" style="margin: var(--card-gap) 0 !important">
-                        <tbody>
-                            <tr class="chartlist-row chartlist-row--now-scrobbling chartlist-row--with-artist" style="transition: none !important">
-                                <td class="chartlist-image">
-                                    <a class="cover-art"><img src="${auth.avatar.replace('/avatar42s/', '/avatar170s/')}" loading="lazy"></a>
-                                </td>
-                                <td class="chartlist-loved">
-                                    <button class="chartlist-love-button" data-toggle-button-current-state="unloved"></button>
-                                </td>
-                                <td class="chartlist-name">
-                                    <a>Song title</a>
-                                </td>
-                                <td class="chartlist-artist">
-                                    <a>${auth.name}</a>
-                                </td>
-                                <td class="chartlist-timestamp chartlist-timestamp--lang-en">
-                                    <span class="chartlist-now-scrobbling">
-                                        <a>Scrobbling now</a>
-                                    </span>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    <div class="btn-row">
-                        <button class="btn">${trans_legacy[lang].settings.examples.button}</button>
-                        <button class="btn primary">${trans_legacy[lang].settings.examples.button}</button>
-                        <div class="chartlist-count-bar">
-                            <a class="chartlist-count-bar-link">
-                                <span class="chartlist-count-bar-slug" style="width: 60%"></span>
-                                <span class="chartlist-count-bar-value">44,551</span>
-                            </a>
-                        </div>
-                    </div>
-                </div>
                 <div class="view-buttons colour-buttons view-buttons-middle" id="colour_custom"></div>
                 <div class="swatch-group">
                     <div id="colour_red" class="palette options colours"></div>
@@ -484,64 +362,75 @@ export function render_setting_page(page_id) {
                         </button>
                     </div>
                 </div>
-                <div class="sep"></div>
-                <div class="inner-preview pad">
-                    <div class="personal-stats-preview-bar-container">
-                        <div class="personal-stats-preview-bar" style="${preview_bar}"></div>
-                        <div class="personal-stats-preview-text">${preview_bar_text}</div>
+                ${(ff('card_saturation')) ? (`
+                <div class="slider-container hide-if-light-theme" id="container-sat_bg">
+                    <button class="btn reset" onclick="_reset_item('sat_bg')">${tl(trans.reset)}</button>
+                    <div class="heading">
+                        <h5>${tl(trans.card_background_saturation.name)}</h5>
+                        <p>${tl(trans.card_background_saturation.body)}</p>
                     </div>
-                    <div class="sep"></div>
-                    <div class="tracks">
-                        <div class="track">
-                            <div class="cover"></div>
-                            <div class="title"></div>
-                            <div class="bar">
-                                <div class="fill not-colourful-example" style="width: 100%"></div>
-                                <div class="fill colourful-example" style="width: 100%; --hue: -16.888749999999998; --sat: 1.5; --lit: 0.875"></div>
-                            </div>
-                        </div>
-                        <div class="track">
-                            <div class="cover"></div>
-                            <div class="title"></div>
-                            <div class="bar">
-                                <div class="fill not-colourful-example" style="width: 85%"></div>
-                                <div class="fill colourful-example" style="width: 85%; --hue: 0.21863999999999972; --sat: 1.399218; --lit: 0.891406"></div>
-                            </div>
-                        </div>
-                        <div class="track">
-                            <div class="cover"></div>
-                            <div class="title"></div>
-                            <div class="bar">
-                                <div class="fill not-colourful-example" style="width: 60%"></div>
-                                <div class="fill colourful-example" style="width: 60%; --hue: 18.77; --sat: 1.425; --lit: 0.9175833333333334"></div>
-                            </div>
-                        </div>
-                        <div class="track">
-                            <div class="cover"></div>
-                            <div class="title"></div>
-                            <div class="bar">
-                                <div class="fill not-colourful-example" style="width: 30%"></div>
-                                <div class="fill colourful-example" style="width: 30%; --hue: 50.769767441860466; --sat: 1.361813953488372; --lit: 0.943406976744186"></div>
-                            </div>
-                        </div>
-                        <div class="track">
-                            <div class="cover"></div>
-                            <div class="title"></div>
-                            <div class="bar">
-                                <div class="fill not-colourful-example" style="width: 5%"></div>
-                                <div class="fill colourful-example" style="width: 5%; --hue: 92.42; --sat: 1.35; --lit: 0.925"></div>
-                            </div>
+                    <div class="slider">
+                        <div class="slider-track" id="slider-track-sat_bg"><div class="slider-fill"></div><div class="slider-nub"></div></div>
+                        <input type="range" min="0" max="3" value="0" step="0.1" id="slider-sat_bg" oninput="_update_item('sat_bg', this.value)">
+                        <p id="value-sat_bg">0</p>
+                    </div>
+                </div>
+                `) : ''}
+                <div class="sep"></div>
+                <h4>${tl(trans.fonts)}</h4>
+                <div class="text-container" id="container-font">
+                    <button class="btn reset" onclick="_reset_item('font')">${tl(trans.reset)}</button>
+                    <div class="heading content-form">
+                        <div class="input-container">
+                            <input type="text" maxlength="120" id="text-font" value="${settings.font}" placeholder="${trans_legacy[lang].settings.text.font.placeholder}">
+                            <button class="bleh--btn primary save" onclick="_save_font()">${trans_legacy[lang].settings.save}</button>
                         </div>
                     </div>
                 </div>
-                <div class="toggle-container" id="container-colourful_counts" onclick="_update_item('colourful_counts')">
-                    <button class="btn reset" onclick="_reset_item('colourful_counts')">${tl(trans.reset)}</button>
+                <div class="slider-container" id="container-font_weight">
+                    <button class="btn reset" onclick="_reset_item('font_weight')">${tl(trans.reset)}</button>
                     <div class="heading">
-                        <h5>${trans_legacy[lang].settings.customise.colourful_counts.name}</h5>
-                        <p>${trans_legacy[lang].settings.customise.colourful_counts.bio}</p>
+                        <h5>${trans_legacy[lang].settings.text.font_weight.name}</h5>
+                        <p>${trans_legacy[lang].settings.text.font_weight.bio}</p>
+                    </div>
+                    <div class="slider">
+                        <div class="slider-track" id="slider-track-font_weight"><div class="slider-fill"></div><div class="slider-nub"></div></div>
+                        <input type="range" min="0" max="900" value="0" step="10" id="slider-font_weight" oninput="_update_item('font_weight', this.value)">
+                        <p id="value-font_weight">0</p>
+                    </div>
+                </div>
+                <div class="slider-container" id="container-font_weight_medium">
+                    <button class="btn reset" onclick="_reset_item('font_weight_medium')">${tl(trans.reset)}</button>
+                    <div class="heading">
+                        <h5>${trans_legacy[lang].settings.text.font_weight_medium.name}</h5>
+                        <p>${trans_legacy[lang].settings.text.font_weight_medium.bio}</p>
+                    </div>
+                    <div class="slider">
+                        <div class="slider-track" id="slider-track-font_weight_medium"><div class="slider-fill"></div><div class="slider-nub"></div></div>
+                        <input type="range" min="0" max="900" value="0" step="10" id="slider-font_weight_medium" oninput="_update_item('font_weight_medium', this.value)">
+                        <p id="value-font_weight_medium">0</p>
+                    </div>
+                </div>
+                <div class="slider-container" id="container-font_weight_bold">
+                    <button class="btn reset" onclick="_reset_item('font_weight_bold')">${tl(trans.reset)}</button>
+                    <div class="heading">
+                        <h5>${trans_legacy[lang].settings.text.font_weight_bold.name}</h5>
+                        <p>${trans_legacy[lang].settings.text.font_weight_bold.bio}</p>
+                    </div>
+                    <div class="slider">
+                        <div class="slider-track" id="slider-track-font_weight_bold"><div class="slider-fill"></div><div class="slider-nub"></div></div>
+                        <input type="range" min="0" max="900" value="0" step="10" id="slider-font_weight_bold" oninput="_update_item('font_weight_bold', this.value)">
+                        <p id="value-font_weight_bold">0</p>
+                    </div>
+                </div>
+                <div class="toggle-container" id="container-font_emoji" onclick="_update_item('font_emoji')">
+                    <button class="btn reset" onclick="_reset_item('font_emoji')">${tl(trans.reset)}</button>
+                    <div class="heading">
+                        <h5>${trans_legacy[lang].settings.text.font_emoji.name}</h5>
+                        <p>${trans_legacy[lang].settings.text.font_emoji.bio}</p>
                     </div>
                     <div class="toggle-wrap">
-                        <button class="toggle" id="toggle-colourful_counts" aria-checked="true">
+                        <button class="toggle" id="toggle-font_emoji" aria-checked="false">
                             <div class="dot"></div>
                         </button>
                     </div>
@@ -605,22 +494,6 @@ export function render_setting_page(page_id) {
                     </div>
                     <div class="btn primary-selection" id="toggle-default_avatar_action-gallery" data-toggle="default_avatar_action" data-toggle-value="gallery" onclick="_update_item('default_avatar_action', 'gallery')">
                         <h5>${trans_legacy[lang].settings.layout.avatar_action.gallery}</h5>
-                    </div>
-                </div>
-                <h4>${trans_legacy[lang].settings.layout.quick_artist_button.name}</h4>
-                <p>${trans_legacy[lang].settings.layout.quick_artist_button.bio}</p>
-                <div class="primary-selections artist-hover-button">
-                    <div class="btn primary-selection" id="toggle-quick_artist_button-gallery" data-toggle="quick_artist_button" data-toggle-value="gallery" onclick="_update_item('quick_artist_button', 'gallery')">
-                        <h5>${trans_legacy[lang].gallery.view}</h5>
-                    </div>
-                    <div class="btn primary-selection" id="toggle-quick_artist_button-shouts" data-toggle="quick_artist_button" data-toggle-value="shouts" onclick="_update_item('quick_artist_button', 'shouts')">
-                        <h5>${trans_legacy[lang].settings.layout.quick_artist_button.shouts}</h5>
-                    </div>
-                    <div class="btn primary-selection" id="toggle-quick_artist_button-wiki" data-toggle="quick_artist_button" data-toggle-value="wiki" onclick="_update_item('quick_artist_button', 'wiki')">
-                        <h5>${trans_legacy[lang].settings.layout.quick_artist_button.wiki}</h5>
-                    </div>
-                    <div class="btn primary-selection" id="toggle-quick_artist_button-listens" data-toggle="quick_artist_button" data-toggle-value="listens" onclick="_update_item('quick_artist_button', 'listens')">
-                        <h5>${trans_legacy[lang].settings.layout.quick_artist_button.listens}</h5>
                     </div>
                 </div>
             </div>
@@ -1192,65 +1065,6 @@ export function render_setting_page(page_id) {
         return (`
             <div class="bleh--panel">
                 <h4 class="top-header">${trans_legacy[lang].settings.text.name}</h4>
-                <h4>${trans_legacy[lang].settings.text.font.name}</h4>
-                <div class="text-container" id="container-font">
-                    <button class="btn reset" onclick="_reset_item('font')">${tl(trans.reset)}</button>
-                    <div class="heading content-form">
-                        <div class="input-container">
-                            <input type="text" maxlength="120" id="text-font" value="${settings.font}" placeholder="${trans_legacy[lang].settings.text.font.placeholder}">
-                            <button class="bleh--btn primary save" onclick="_save_font()">${trans_legacy[lang].settings.save}</button>
-                        </div>
-                    </div>
-                </div>
-                <div class="slider-container" id="container-font_weight">
-                    <button class="btn reset" onclick="_reset_item('font_weight')">${tl(trans.reset)}</button>
-                    <div class="heading">
-                        <h5>${trans_legacy[lang].settings.text.font_weight.name}</h5>
-                        <p>${trans_legacy[lang].settings.text.font_weight.bio}</p>
-                    </div>
-                    <div class="slider">
-                        <div class="slider-track" id="slider-track-font_weight"><div class="slider-fill"></div><div class="slider-nub"></div></div>
-                        <input type="range" min="0" max="900" value="0" step="10" id="slider-font_weight" oninput="_update_item('font_weight', this.value)">
-                        <p id="value-font_weight">0</p>
-                    </div>
-                </div>
-                <div class="slider-container" id="container-font_weight_medium">
-                    <button class="btn reset" onclick="_reset_item('font_weight_medium')">${tl(trans.reset)}</button>
-                    <div class="heading">
-                        <h5>${trans_legacy[lang].settings.text.font_weight_medium.name}</h5>
-                        <p>${trans_legacy[lang].settings.text.font_weight_medium.bio}</p>
-                    </div>
-                    <div class="slider">
-                        <div class="slider-track" id="slider-track-font_weight_medium"><div class="slider-fill"></div><div class="slider-nub"></div></div>
-                        <input type="range" min="0" max="900" value="0" step="10" id="slider-font_weight_medium" oninput="_update_item('font_weight_medium', this.value)">
-                        <p id="value-font_weight_medium">0</p>
-                    </div>
-                </div>
-                <div class="slider-container" id="container-font_weight_bold">
-                    <button class="btn reset" onclick="_reset_item('font_weight_bold')">${tl(trans.reset)}</button>
-                    <div class="heading">
-                        <h5>${trans_legacy[lang].settings.text.font_weight_bold.name}</h5>
-                        <p>${trans_legacy[lang].settings.text.font_weight_bold.bio}</p>
-                    </div>
-                    <div class="slider">
-                        <div class="slider-track" id="slider-track-font_weight_bold"><div class="slider-fill"></div><div class="slider-nub"></div></div>
-                        <input type="range" min="0" max="900" value="0" step="10" id="slider-font_weight_bold" oninput="_update_item('font_weight_bold', this.value)">
-                        <p id="value-font_weight_bold">0</p>
-                    </div>
-                </div>
-                <div class="toggle-container" id="container-font_emoji" onclick="_update_item('font_emoji')">
-                    <button class="btn reset" onclick="_reset_item('font_emoji')">${tl(trans.reset)}</button>
-                    <div class="heading">
-                        <h5>${trans_legacy[lang].settings.text.font_emoji.name}</h5>
-                        <p>${trans_legacy[lang].settings.text.font_emoji.bio}</p>
-                    </div>
-                    <div class="toggle-wrap">
-                        <button class="toggle" id="toggle-font_emoji" aria-checked="false">
-                            <div class="dot"></div>
-                        </button>
-                    </div>
-                </div>
-                <div class="sep"></div>
                 <div class="inner-preview pad flex">
                     <div class="shout js-shout js-link-block" data-kate-processed="true">
                         <h3 class="shout-user">
@@ -1365,6 +1179,38 @@ export function render_setting_page(page_id) {
         ]);
 
         console.info(artist_corrections, album_track_corrections);
+
+        let preview_bar = 'background: linear-gradient(90deg';
+        let preview_bar_text = '';
+
+        // global sat/lit is used to substitute the values computed in h3 sat/lit
+        // as they return eg. calc(0.85 * 50%), so we use global_sat to get 0.85
+        // which can then be used in a .replace(global_sat, 'whatever we want')
+        let global_sat = getComputedStyle(document.body).getPropertyValue('--sat');
+        let global_lit = getComputedStyle(document.body).getPropertyValue('--lit');
+        let h3_sat = getComputedStyle(document.body).getPropertyValue('--h3-sat');
+        let h3_lit = getComputedStyle(document.body).getPropertyValue('--h3-lit');
+
+        let maximum = 16_000;
+        let max_rank = 11;
+
+        //console.info(maximum, max_rank);
+        for (let rank = 0; rank <= max_rank; rank++) {
+            let this_rank = ranks[parseInt(rank)];
+            //console.info(this_rank);
+
+            let percent = ((this_rank.start / maximum) * 100);
+            preview_bar = `${preview_bar}, hsl(${this_rank.hue}, ${h3_sat.replace(global_sat, this_rank.sat)}, ${h3_lit.replace(global_lit, this_rank.lit)}) ${percent}%`;
+
+            if ((this_rank.start > 500 || this_rank.start == 0) && this_rank.start != 1500) {
+                let text = `${this_rank.start}`;
+
+                preview_bar_text = `${preview_bar_text}<div class="preview-bar-text-entry" style="left: ${percent}%">${text.replaceAll('_', ',')}</div>`;
+            }
+        }
+
+        preview_bar = `${preview_bar});`;
+        //console.info('preview bar', preview_bar, global_sat, h3_sat, global_lit, h3_lit);
 
         return (`
             <div class="bleh--panel">
@@ -1566,8 +1412,6 @@ export function render_setting_page(page_id) {
                         </button>
                     </div>
                 </div>
-                <div class="sep"></div>
-                <h4>${trans_legacy[lang].glacier.name}</h4>
                 <div class="toggle-container" id="container-glacier_library_graphs" onclick="_update_item('glacier_library_graphs')">
                     <button class="btn reset" onclick="_reset_item('glacier_library_graphs')">${tl(trans.reset)}</button>
                     <div class="heading">
@@ -1576,6 +1420,67 @@ export function render_setting_page(page_id) {
                     </div>
                     <div class="toggle-wrap">
                         <button class="toggle" id="toggle-glacier_library_graphs" aria-checked="true" type="button">
+                            <div class="dot"></div>
+                        </button>
+                    </div>
+                </div>
+                <div class="inner-preview pad">
+                    <div class="personal-stats-preview-bar-container">
+                        <div class="personal-stats-preview-bar" style="${preview_bar}"></div>
+                        <div class="personal-stats-preview-text">${preview_bar_text}</div>
+                    </div>
+                    <div class="sep"></div>
+                    <div class="tracks">
+                        <div class="track">
+                            <div class="cover"></div>
+                            <div class="title"></div>
+                            <div class="bar">
+                                <div class="fill not-colourful-example" style="width: 100%"></div>
+                                <div class="fill colourful-example" style="width: 100%; --hue: -16.888749999999998; --sat: 1.5; --lit: 0.875"></div>
+                            </div>
+                        </div>
+                        <div class="track">
+                            <div class="cover"></div>
+                            <div class="title"></div>
+                            <div class="bar">
+                                <div class="fill not-colourful-example" style="width: 85%"></div>
+                                <div class="fill colourful-example" style="width: 85%; --hue: 0.21863999999999972; --sat: 1.399218; --lit: 0.891406"></div>
+                            </div>
+                        </div>
+                        <div class="track">
+                            <div class="cover"></div>
+                            <div class="title"></div>
+                            <div class="bar">
+                                <div class="fill not-colourful-example" style="width: 60%"></div>
+                                <div class="fill colourful-example" style="width: 60%; --hue: 18.77; --sat: 1.425; --lit: 0.9175833333333334"></div>
+                            </div>
+                        </div>
+                        <div class="track">
+                            <div class="cover"></div>
+                            <div class="title"></div>
+                            <div class="bar">
+                                <div class="fill not-colourful-example" style="width: 30%"></div>
+                                <div class="fill colourful-example" style="width: 30%; --hue: 50.769767441860466; --sat: 1.361813953488372; --lit: 0.943406976744186"></div>
+                            </div>
+                        </div>
+                        <div class="track">
+                            <div class="cover"></div>
+                            <div class="title"></div>
+                            <div class="bar">
+                                <div class="fill not-colourful-example" style="width: 5%"></div>
+                                <div class="fill colourful-example" style="width: 5%; --hue: 92.42; --sat: 1.35; --lit: 0.925"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="toggle-container" id="container-colourful_counts" onclick="_update_item('colourful_counts')">
+                    <button class="btn reset" onclick="_reset_item('colourful_counts')">${tl(trans.reset)}</button>
+                    <div class="heading">
+                        <h5>${trans_legacy[lang].settings.customise.colourful_counts.name}</h5>
+                        <p>${trans_legacy[lang].settings.customise.colourful_counts.bio}</p>
+                    </div>
+                    <div class="toggle-wrap">
+                        <button class="toggle" id="toggle-colourful_counts" aria-checked="true">
                             <div class="dot"></div>
                         </button>
                     </div>
@@ -1942,18 +1847,10 @@ export function display_colour_presets() {
                 requires_flag: 'colour_based_on_avatar'
             },
             {
-                type: 'seasonal'
-            },
-            {
                 type: 'customise'
             }
         ],
         red: [
-            {sets: {
-                hue: 360,
-                sat: 1.425,
-                lit: 0.725
-            }},
             {sets: {
                 hue: 360,
                 sat: 1.4,
@@ -1961,18 +1858,23 @@ export function display_colour_presets() {
             }},
             {sets: {
                 hue: 360,
+                sat: 1.4,
+                lit: 0.8
+            }},
+            {sets: {
+                hue: 360,
                 sat: 1.325,
-                lit: 0.825
+                lit: 0.85
             }},
             {sets: {
                 hue: 360,
                 sat: 1.225,
-                lit: 0.875
+                lit: 0.9
             }},
             {sets: {
                 hue: 360,
                 sat: 1.1,
-                lit: 0.925
+                lit: 0.95
             }},
             {sets: {
                 hue: 360,
@@ -1984,62 +1886,62 @@ export function display_colour_presets() {
             {sets: {
                 hue: 10,
                 sat: 1.425,
-                lit: 0.725
+                lit: 0.775
             }},
             {sets: {
                 hue: 13,
                 sat: 1.4,
-                lit: 0.75
+                lit: 0.8
             }},
             {sets: {
                 hue: 16,
                 sat: 1.325,
-                lit: 0.8
+                lit: 0.825
             }},
             {sets: {
                 hue: 20,
                 sat: 1.225,
-                lit: 0.825
+                lit: 0.875
             }},
             {sets: {
                 hue: 21,
                 sat: 1.275,
-                lit: 0.85
+                lit: 0.95
             }},
             {sets: {
                 hue: 26,
                 sat: 1.35,
-                lit: 0.9
+                lit: 1
             }}
         ],
         yellow: [
             {sets: {
-                hue: 32,
-                sat: 1.25,
+                hue: 22,
+                sat: 1.3,
                 lit: 0.825
             }},
             {sets: {
-                hue: 35,
+                hue: 24,
                 sat: 1.2,
                 lit: 0.85
             }},
             {sets: {
-                hue: 40,
+                hue: 27,
                 sat: 1.16,
                 lit: 0.875
             }},
             {sets: {
-                hue: 43,
+                hue: 32,
                 sat: 1.1,
                 lit: 0.9
             }},
             {sets: {
-                hue: 44,
+                hue: 36,
                 sat: 1,
                 lit: 0.975
             }},
             {sets: {
-                hue: 46,
+                hue: 41,
                 sat: 1.05,
                 lit: 1
             }}
@@ -2047,45 +1949,45 @@ export function display_colour_presets() {
         green: [
             {sets: {
                 hue: 85,
-                sat: 1.425,
-                lit: 0.725
-            }},
-            {sets: {
-                hue: 90,
                 sat: 1.4,
                 lit: 0.775
             }},
             {sets: {
-                hue: 94,
-                sat: 1.325,
-                lit: 0.825
+                hue: 90,
+                sat: 1.3,
+                lit: 0.8
             }},
             {sets: {
-                hue: 99,
-                sat: 1.25,
+                hue: 94,
+                sat: 1.2,
                 lit: 0.85
             }},
             {sets: {
-                hue: 105,
-                sat: 1.15,
+                hue: 99,
+                sat: 1.1,
                 lit: 0.9
             }},
             {sets: {
+                hue: 105,
+                sat: 1.025,
+                lit: 0.975
+            }},
+            {sets: {
                 hue: 108,
-                sat: 1.075,
-                lit: 0.95
+                sat: 1,
+                lit: 1.05
             }}
         ],
         lime: [
             {sets: {
                 hue: 115,
                 sat: 1.15,
-                lit: 0.725
+                lit: 0.75
             }},
             {sets: {
                 hue: 121,
                 sat: 1.09,
-                lit: 0.775
+                lit: 0.8
             }},
             {sets: {
                 hue: 127,
@@ -2095,48 +1997,48 @@ export function display_colour_presets() {
             {sets: {
                 hue: 135,
                 sat: 1.03,
-                lit: 0.85
+                lit: 0.875
             }},
             {sets: {
                 hue: 141,
                 sat: 1,
-                lit: 0.9
+                lit: 0.95
             }},
             {sets: {
                 hue: 148,
                 sat: 1,
-                lit: 0.975
+                lit: 1
             }}
         ],
         aqua: [
             {sets: {
-                hue: 165,
-                sat: 1.5,
-                lit: 0.725
-            }},
-            {sets: {
-                hue: 172,
-                sat: 1.425,
+                hue: 171,
+                sat: 1.45,
                 lit: 0.775
             }},
             {sets: {
-                hue: 180,
-                sat: 1.35,
-                lit: 0.825
+                hue: 178,
+                sat: 1.375,
+                lit: 0.8
             }},
             {sets: {
-                hue: 188,
-                sat: 1.275,
+                hue: 185,
+                sat: 1.3,
+                lit: 0.85
+            }},
+            {sets: {
+                hue: 190,
+                sat: 1.25,
                 lit: 0.875
             }},
             {sets: {
-                hue: 194,
+                hue: 196,
                 sat: 1.2,
                 lit: 0.95
             }},
             {sets: {
                 hue: 200,
-                sat: 1.125,
+                sat: 1.1,
                 lit: 1
             }}
         ],
@@ -2144,32 +2046,32 @@ export function display_colour_presets() {
             {sets: {
                 hue: 233,
                 sat: 1.4,
-                lit: 0.75
+                lit: 0.8
             }},
             {sets: {
                 hue: 230,
                 sat: 1.3,
-                lit: 0.8
+                lit: 0.825
             }},
             {sets: {
                 hue: 225,
                 sat: 1.25,
-                lit: 0.825
+                lit: 0.875
             }},
             {sets: {
                 hue: 219,
                 sat: 1.2,
-                lit: 0.85
+                lit: 0.925
             }},
             {sets: {
                 hue: 214,
                 sat: 1.15,
-                lit: 0.9
+                lit: 0.975
             }},
             {sets: {
                 hue: 208,
                 sat: 1.025,
-                lit: 0.95
+                lit: 1
             }}
         ],
         purple: [
@@ -2199,7 +2101,7 @@ export function display_colour_presets() {
                 lit: 0.97
             }},
             {sets: {
-                hue: 255,
+                hue: 256,
                 sat: 1.01,
                 lit: 1.01
             }}
@@ -2207,22 +2109,22 @@ export function display_colour_presets() {
         pink: [
             {sets: {
                 hue: 346,
-                sat: 1.35,
-                lit: 0.75
-            }},
-            {sets: {
-                hue: 340,
-                sat: 1.275,
+                sat: 1.3,
                 lit: 0.8
             }},
             {sets: {
-                hue: 333,
+                hue: 340,
                 sat: 1.225,
-                lit: 0.85
+                lit: 0.825
+            }},
+            {sets: {
+                hue: 333,
+                sat: 1.175,
+                lit: 0.875
             }},
             {sets: {
                 hue: 320,
-                sat: 1.15,
+                sat: 1.12,
                 lit: 0.925
             }},
             {sets: {
@@ -2237,12 +2139,56 @@ export function display_colour_presets() {
             }}
         ]
     }
+    let exclusives = {
+        christmas: [
+            {
+                type: 'season',
+                name: trans_legacy[lang].settings.customise.seasonal.nonsense,
+                sets: {
+                    hue: 352,
+                    sat: 1.8,
+                    lit: 0.925
+                }
+            },
+            {
+                type: 'season',
+                name: trans_legacy[lang].settings.customise.seasonal.fruitcake,
+                sets: {
+                    hue: 24,
+                    sat: 0.93,
+                    lit: 1
+                }
+            },
+            {
+                type: 'season',
+                name: trans_legacy[lang].settings.customise.seasonal.mistletoe,
+                sets: {
+                    hue: 130,
+                    sat: 0.45,
+                    lit: 0.75
+                }
+            },
+            {
+                type: 'season',
+                name: trans_legacy[lang].settings.customise.seasonal.festival,
+                sets: {
+                    hue: 240,
+                    sat: 1.4,
+                    lit: 0.875
+                }
+            }
+        ]
+    }
+    exclusives.new_years = exclusives.christmas;
 
     for (let type in colours) {
         let swatch_group = document.body.querySelector(`#colour_${type}`);
 
         if (!swatch_group)
             return;
+
+        if (type != 'custom')
+            colours[type].reverse();
 
         colours[type].forEach((colour) => {
             if (colour.requires_flag && version.feature_flags.hasOwnProperty(colour.requires_flag)) {
@@ -2266,28 +2212,29 @@ export function display_colour_presets() {
             if (type == 'custom')
                 swatch.textContent = tl(trans[colour.type]);
 
-            if (colour.type == 'seasonal') {
+            if (colour.type == 'default' && stored_season.id != 'none') {
                 swatch.textContent = tl(trans.seasonal.name);
-                if (stored_season.id == 'none')
-                    return;
 
-                swatch.classList.add('select-button');
+                if (exclusives.hasOwnProperty(stored_season.id)) {
+                    swatch.setAttribute('onclick', '');
+                    swatch.classList.add('select-button');
 
-                tippy(swatch, {
-                    theme: 'menu',
-                    content: '',
-                    allowHTML: true,
-                    placement: 'bottom',
-                    interactive: true,
-                    interactiveBorder: 10,
-                    trigger: 'click',
+                    tippy(swatch, {
+                        theme: 'menu',
+                        content: '',
+                        allowHTML: true,
+                        placement: 'bottom',
+                        interactive: true,
+                        interactiveBorder: 10,
+                        trigger: 'click',
 
-                    onShow(instance) {
-                        let content = instance.popper.querySelector('.tippy-content');
+                        onShow(instance) {
+                            let content = instance.popper.querySelector('.tippy-content');
 
-                        display_seasonal_exclusives(content);
-                    }
-                });
+                            display_seasonal_exclusives(content, colours, exclusives);
+                        }
+                    });
+                }
             }
 
             if (colour.type == 'customise') {
@@ -2300,6 +2247,17 @@ export function display_colour_presets() {
                             <div class="alert alert-info seasonal-hsl-alert">
                                 ${trans_legacy[lang].settings.customise.colours.modals.custom_colour.seasonal_alert}
                             </div>
+                            ${(ff('colour_based_on_hex')) ? (`
+                            <strong>${tl(trans.convert_from_hex)}</strong>
+                            <div class="text-container">
+                                <div class="heading content-form">
+                                    <div class="input-container">
+                                        <input type="color" maxlength="7" id="text-hex" placeholder="#ffffff">
+                                        <button class="btn primary icon convert" onclick="_convert_hex()">${tl(trans.convert)}</button>
+                                    </div>
+                                </div>
+                            </div>
+                            `) : ''}
                             <div class="slider-container dim-using-hue-gradient dim-during-seasonal" id="container-hue">
                                 <button class="btn reset" onclick="_reset_item('hue')">${tl(trans.reset)}</button>
                                 <div class="heading">
@@ -2348,20 +2306,6 @@ export function display_colour_presets() {
                                     <p style="left: 100%">1.5</p>
                                 </div>
                             </div>
-                            ${(ff('card_saturation')) ? (`
-                            <div class="slider-container hide-if-light-theme" id="container-sat_bg">
-                                <button class="btn reset" onclick="_reset_item('sat_bg')">${tl(trans.reset)}</button>
-                                <div class="heading">
-                                    <h5>${tl(trans.card_background_saturation.name)}</h5>
-                                    <p>${tl(trans.card_background_saturation.body)}</p>
-                                </div>
-                                <div class="slider">
-                                    <div class="slider-track" id="slider-track-sat_bg"><div class="slider-fill"></div><div class="slider-nub"></div></div>
-                                    <input type="range" min="0" max="3" value="0" step="0.1" id="slider-sat_bg" oninput="_update_item('sat_bg', this.value)">
-                                    <p id="value-sat_bg">0</p>
-                                </div>
-                            </div>
-                            `) : ''}
                         </div>
                     `),
                     allowHTML: true,
@@ -2402,58 +2346,26 @@ export function display_colour_presets() {
     }
 }
 
-function display_seasonal_exclusives(instance) {
-    let exclusives = {
-        christmas: [
-            {
-                type: 'season',
-                name: trans_legacy[lang].settings.customise.seasonal.nonsense,
-                sets: {
-                    hue: 352,
-                    sat: 1.8,
-                    lit: 0.925
-                }
-            },
-            {
-                type: 'season',
-                name: trans_legacy[lang].settings.customise.seasonal.fruitcake,
-                sets: {
-                    hue: 24,
-                    sat: 0.93,
-                    lit: 1
-                }
-            },
-            {
-                type: 'season',
-                name: trans_legacy[lang].settings.customise.seasonal.mistletoe,
-                sets: {
-                    hue: 130,
-                    sat: 0.45,
-                    lit: 0.75
-                }
-            },
-            {
-                type: 'season',
-                name: trans_legacy[lang].settings.customise.seasonal.festival,
-                sets: {
-                    hue: 240,
-                    sat: 1.4,
-                    lit: 0.875
-                }
-            }
-        ]
-    }
-    exclusives.new_years = exclusives.christmas;
-
-    if (!exclusives.hasOwnProperty(stored_season.id)) {
-        instance.innerHTML = (`
-            <div class="alert alert-info">${trans_legacy[lang].settings.customise.seasonal.none}</div>
-        `);
-
-        return;
-    }
-
+function display_seasonal_exclusives(instance, colours, exclusives) {
     instance.innerHTML = '';
+
+    exclusives[stored_season.id] = [
+        {
+            type: 'default',
+            name: tl(trans.default),
+            sets: {
+                hue: 255,
+                sat: 1,
+                lit: 1
+            },
+            displays: {
+                hue: 'var(--hue-seasonal, 255)',
+                sat: 'var(--sat-seasonal, 1)',
+                lit: 'var(--lit-seasonal, 1)'
+            }
+        },
+        ...exclusives[stored_season.id]
+    ];
 
     exclusives[stored_season.id].forEach((colour) => {
         colour.sets = {accent_type: colour.type, ...colour.sets};
@@ -2812,4 +2724,15 @@ unsafeWindow._save_font = function() {
     // save to settings
     settings.font = font;
     localStorage.setItem('bleh', JSON.stringify(settings));
+}
+
+unsafeWindow._convert_hex = function() {
+    let value = page.structure.main.querySelector('#text-hex').value;
+    let hsl = hex_to_hsl(value);
+
+    update_params({
+        hue: hsl.h,
+        sat: clamp_sat((hsl.s / 100) * 3),
+        lit: (hsl.l / 100) + 0.35
+    });
 }

@@ -6,6 +6,7 @@ import { auth, page, recent_activity_list, root } from "../build/page"
 import { cute, sponsor_list } from "../build/sponsor"
 import { clean_number, sanitise } from "../build/tools"
 import { lang, trans_legacy, trans, tl } from "../build/trans"
+import { prep_chart_colours } from '../chart'
 import { load_badges } from "../components/badge"
 import { dialog } from "../components/dialog"
 import { correct_artist, correct_item_by_artist } from "../components/lotus"
@@ -71,29 +72,6 @@ export function bleh_profiles() {
         }
 
 
-        // acquire info
-        let scrobbles = 0;
-        let average = 0;
-        let artists = 0;
-        let loved = 0;
-
-        if (katsune) {
-            let metadata = profile_header.querySelectorAll('.header-metadata-display');
-            metadata.forEach((item, index) => {
-                if (index == 0) {
-                    let para = item.querySelector('p');
-
-                    scrobbles = clean_number(para.textContent.trim()).toLocaleString(lang);
-                    average = para.getAttribute('title');
-                } else if (index == 1) {
-                    artists = clean_number(item.textContent.trim()).toLocaleString(lang);
-                } else if (index == 2) {
-                    loved = clean_number(item.textContent.trim()).toLocaleString(lang);
-                }
-            });
-        }
-
-
         let redesigned_profile_header = document.createElement('section');
         redesigned_profile_header.classList.add('redesigned-header', 'redesigned-profile-header', 'no-background');
         redesigned_profile_header.innerHTML = (`
@@ -105,34 +83,10 @@ export function bleh_profiles() {
                 ${(title_wrap != null) ? `<div class="title-container">${title_wrap.innerHTML}</div>` : ''}
                 ${(sub_wrap != null) ? sub_wrap.outerHTML : ''}
             </div>
-            ${(katsune) ? (`
-            ${(!is_subpage) ? (`
-            <div class="stat-side glacier-library-top">
-                <div class="glacier-library-metadata">
-                    <div class="glacier-library-metadata-item">
-                        <div class="sub-text">${trans_legacy[lang].profile.scrobbles}</div>
-                        <div class="glacier-library-metadata-item-value" id="scrobbles_tooltip">${scrobbles}</div>
-                    </div>
-                    <div class="glacier-library-metadata-item">
-                        <div class="sub-text">${trans_legacy[lang].profile.artists}</div>
-                        <div class="glacier-library-metadata-item-value">${artists}</div>
-                    </div>
-                    <div class="glacier-library-metadata-item">
-                        <div class="sub-text">${trans_legacy[lang].profile.loved}</div>
-                        <div class="glacier-library-metadata-item-value">${loved}</div>
-                    </div>
-                </div>
-            </div>
-            `) : ''}
             <div class="expand-side">
                 <button class="header-expand-button icon" onclick="_toggle_profile_header(this)" aria-expanded="${settings.profile_header_expand}">${trans_legacy[lang].gallery.open.name}</button>
             </div>
-            `) : ''}
         `);
-
-        tippy(redesigned_profile_header.querySelector('#scrobbles_tooltip'), {
-            content: average
-        });
 
         // staff
         let is_staff = (title_wrap.querySelector('.user-status-staff') != null);
@@ -204,9 +158,6 @@ export function bleh_profiles() {
         let is_following = false;
         if (profile_header.querySelector('.label.user-follow'))
             is_following = true;
-
-        if (ff('redesigned_profile_header'))
-            redesign_profile_header(is_own_profile, is_following);
 
 
         //
@@ -301,18 +252,95 @@ export function bleh_profiles() {
             page.structure.main.innerHTML = '';
             page.structure.side.innerHTML = '';
 
-            let alert = document.createElement('div');
-            alert.classList.add('alert', 'alert-info');
-            alert.textContent = 'This is a special bleh account used for managing sponsors.';
+            let alert = document.createElement('section');
+            alert.classList.add('cta', 'colourful', 'sponsor');
+            alert.innerHTML = `<strong>${tl(trans.sponsor_info)}</strong>`;
 
-            page.structure.container.appendChild(alert);
+            page.structure.main.appendChild(alert);
         }
 
 
         // featured track
         let featured_track_panel = profile_header.querySelector('.header-featured-track');
-        if (featured_track_panel != null)
+        if (featured_track_panel)
             bleh_featured_profile_track(featured_track_panel);
+
+
+        // recent tracks
+        let recent_tracks = page.structure.main.querySelector('#recent-tracks-section');
+        if (!recent_tracks) {
+            recent_tracks = page.structure.main.querySelector('.no-data-message');
+            if (recent_tracks) {
+                recent_tracks.classList = 'recent-tracks-section';
+                recent_tracks.innerHTML = (`
+                    <h2>
+                        <a class="text-colour-link" href="${window.location.href}/library">${tl(trans.recent_tracks)}</a>
+                    </h2>
+                    <div class="loading-data-container">
+                        <div class="loading-data-text private">
+                            ${recent_tracks.textContent}
+                        </div>
+                    </div>
+                `);
+            }
+        }
+
+        let listen_container = document.createElement('section');
+        listen_container.classList.add('listen-panel', 'listen-profile-panel');
+
+        // acquire info
+        let scrobbles = 0;
+        let average = 0;
+        let artists = 0;
+        let loved = 0;
+
+        let metadata = profile_header.querySelectorAll('.header-metadata-display');
+        metadata.forEach((item, index) => {
+            if (index == 0) {
+                let para = item.querySelector('p');
+
+                scrobbles = clean_number(para.textContent.trim()).toLocaleString(lang);
+                average = para.getAttribute('title');
+            } else if (index == 1) {
+                artists = clean_number(item.textContent.trim()).toLocaleString(lang);
+            } else if (index == 2) {
+                loved = clean_number(item.textContent.trim()).toLocaleString(lang);
+            }
+        });
+
+        listen_container.innerHTML = (`
+            <div class="listener-row">
+                <div class="scrobble-side" id="scrobbles_tooltip">
+                    <h3>${trans_legacy[lang].profile.scrobbles}</h3>
+                    <p>${scrobbles}</p>
+                </div>
+                <div>
+                    <h3>${trans_legacy[lang].profile.artists}</h3>
+                    <p>${artists}</p>
+                </div>
+                <div>
+                    <h3>${trans_legacy[lang].profile.loved}</h3>
+                    <p>${loved}</p>
+                </div>
+            </div>
+            <a class="scrobble-canvas-container mini" href="${root}user/${page.name}/library/artists?date_preset=LAST_90_DAYS&page=1">
+                <div class="loading-data-container">
+                    <div class="loading-data-text">${tl(trans.loading_90_days)}</div>
+                </div>
+            </a>
+        `);
+
+        tippy(listen_container.querySelector('#scrobbles_tooltip'), {
+            content: average
+        });
+
+        if (page.name != sponsor_list.sponsor_account) {
+            page.structure.side.insertBefore(listen_container, page.structure.firstChild);
+            bleh_profile_chart();
+        }
+
+        if (ff('redesigned_profile_header'))
+            redesign_profile_header(is_own_profile, is_following);
     } else {
         load_banner_from_cache();
 
@@ -606,7 +634,7 @@ export function bleh_profiles() {
     else
         profile_sub_text = document.body.querySelector('.header-title-secondary');
 
-    if (profile_sub_text == null)
+    if (!profile_sub_text)
         return;
 
     let display_name = profile_sub_text.querySelector('.header-title-display-name');
@@ -954,7 +982,7 @@ function bleh_featured_profile_track(object) {
     let panel = document.createElement('section');
     panel.classList.add('featured-item-panel');
     panel.innerHTML = (`
-        <div class="sub-text">${heading_link}${(form != null) ? form.outerHTML : ''}</div>
+        <div class="sub-text">${heading_link}${(form) ? form.outerHTML : ''}</div>
         <div class="track-template">
             ${art.outerHTML}
             ${details.outerHTML}
@@ -962,7 +990,7 @@ function bleh_featured_profile_track(object) {
     `);
 
     let about_me = page.structure.side.querySelector('.about-me-sidebar');
-    if (about_me != null)
+    if (about_me)
         about_me.after(panel);
     else
         page.structure.side.insertBefore(panel, page.structure.side.firstElementChild);
@@ -972,7 +1000,7 @@ function bleh_featured_profile_track(object) {
 function profile_recents() {
     let panel = page.structure.main.querySelector('#recent-tracks-section');
 
-    if (panel == null)
+    if (!panel)
         return;
 
     let more_link = panel.nextElementSibling;
@@ -1403,7 +1431,7 @@ function profile_albums() {
 function profile_tracks() {
     let panel = page.structure.main.querySelector('#top-tracks');
 
-    if (panel == null)
+    if (!panel)
         return;
 
     panel.classList.remove('section-with-settings');
@@ -1614,4 +1642,101 @@ function save_banner_to_cache(img) {
     }
 
     localStorage.setItem('bleh_profile_banners', JSON.stringify(banners));
+}
+
+
+function bleh_profile_chart() {
+    let panel = page.structure.side.querySelector('.listen-panel');
+    let table = panel.querySelector('table');
+
+    if (table) {
+        bleh_profile_chart_render(panel, table);
+        return;
+    } else {
+        fetch(`${root}user/${page.name}/library/artists/chart?date_preset=LAST_90_DAYS&page=1&ajax=1`)
+        .then(function(response) {
+            console.log('glacier library returned', response, response.text, response.status);
+
+            if (response.status != 200)
+                throw new Error;
+
+            return response.text();
+        })
+        .then(function(html) {
+            let doc = new DOMParser().parseFromString(html, 'text/html');
+            console.log('glacier library DOC', doc, doc.querySelector('.table'));
+
+            log('received response', 'glacier library');
+
+            table = doc.querySelector('.table');
+
+            if (table) {
+                panel.appendChild(table);
+                bleh_profile_chart_render(panel, table);
+            } else {
+                log('table is null?', 'glacier library', 'error');
+                console.info('glacier library', doc.body.innerHTML);
+                console.info('glacier library', new DOMParser().parseFromString(doc.body.innerHTML, 'text/html'));
+                throw new Error;
+            }
+        });
+    }
+}
+
+export function bleh_profile_chart_render(panel=page.structure.side.querySelector('.listen-profile-panel'), table=null) {
+    if (!table)
+        table = panel.querySelector('table');
+
+    let entries = table.querySelectorAll('tbody tr');
+
+    let labels = [];
+    let links = [];
+    let values = [];
+
+    entries.forEach((entry) => {
+        let period = entry.querySelector('.js-period a');
+        let value = entry.querySelector('.js-scrobbles').textContent.trim();
+
+        labels.push(period.textContent.trim());
+        links.push(period.getAttribute('href'));
+        values.push(value);
+    });
+
+    prep_chart_colours();
+
+    let scrobble_canvas_container = panel.querySelector('.scrobble-canvas-container');
+    scrobble_canvas_container.innerHTML = '';
+
+    let scrobble_canvas = document.createElement('canvas');
+    scrobble_canvas.classList.add('scrobble-canvas');
+
+    let gradient = scrobble_canvas.getContext('2d').createLinearGradient(0, 0, 0, 160);
+    try {
+        gradient.addColorStop(0, page.state.chart_colours.link_bg_col);
+        gradient.addColorStop(1, page.state.chart_colours.link_bg_col_2);
+    } catch(e) {
+        gradient = page.state.chart_colours.link_bg_col;
+    }
+
+    Chart.defaults.color = page.state.chart_colours.text_col;
+    Chart.defaults.font.family = 'Ubuntu Sans';
+    let scrobble_chart = new Chart(scrobble_canvas.getContext('2d'), {
+        type: 'line',
+        data: {
+            labels: labels,
+            datasets: [{
+                data: values,
+                borderWidth: 2,
+                backgroundColor: gradient,
+                borderColor: page.state.chart_colours.link_col,
+                fill: true,
+                pointRadius: 0,
+                pointHitRadius: 20,
+                tension: 0.1
+            }]
+        },
+        options: page.state.chart_library_line_options
+    });
+
+    scrobble_canvas_container.appendChild(scrobble_canvas);
 }

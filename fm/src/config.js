@@ -9,6 +9,7 @@ import { bleh_music_page_charts } from "./components/music";
 import { notify } from "./components/notify";
 import { load_skus, show_theme_change_in_menu, show_theme_change_in_settings } from "./pages/bleh_config";
 import { bleh_glacier_date_graph_generate, bleh_glacier_insights } from "./pages/glacier";
+import { bleh_profile_chart_render } from './pages/profile';
 
 // create blank settings
 export function create_settings_template() {
@@ -94,6 +95,9 @@ unsafeWindow.toggle_theme = function() {
     if ((page.type == 'artist' || page.type == 'album' || page.type == 'track') && page.subpage == 'overview')
         bleh_music_page_charts();
 
+    if (page.type == 'user' && page.subpage == 'overview')
+        bleh_profile_chart_render();
+
     if (page.type == 'user' && page.subpage.startsWith('library')) {
         bleh_glacier_date_graph_generate();
         bleh_glacier_insights();
@@ -132,6 +136,9 @@ unsafeWindow.change_theme_from_menu = function(theme) {
     if ((page.type == 'artist' || page.type == 'album' || page.type == 'track') && page.subpage == 'overview')
         bleh_music_page_charts();
 
+    if (page.type == 'user' && page.subpage == 'overview')
+        bleh_profile_chart_render();
+
     if (page.type == 'user' && page.subpage.startsWith('library')) {
         bleh_glacier_date_graph_generate();
         bleh_glacier_insights();
@@ -154,7 +161,7 @@ function reset_item(item) {
     update_item(item, settings_base[item].value);
 }
 
-function update_params(params={}) {
+export function update_params(params={}) {
     for (let item in params) {
         update_item(item, params[item]);
     }
@@ -378,7 +385,7 @@ function update_colour_swatches() {
         if (!custom && swatch.getAttribute('data-swatch-type') == 'customise')
             custom = swatch;
 
-        if (!seasonal && swatch.getAttribute('data-swatch-type') == 'seasonal')
+        if (!seasonal && swatch.getAttribute('data-swatch-type') == 'default')
             seasonal = swatch;
     });
 

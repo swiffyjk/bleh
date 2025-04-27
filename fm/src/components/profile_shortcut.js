@@ -28,7 +28,7 @@ unsafeWindow._other_listener = function(id) {
     other_listener(id);
 }
 export function other_listener(id) {
-    dialog({
+    let modal = dialog({
         id: 'other_listener',
         title: trans_legacy[lang].music.listens.custom.name,
         body: (`
@@ -48,6 +48,8 @@ export function other_listener(id) {
         </div>
         `)
     });
+
+    modal.querySelector('#text-profile').focus();
 }
 unsafeWindow._send_other_listener = function(link) {
     let name = dialogs['other_listener'].instance.querySelector('#text-profile').value;

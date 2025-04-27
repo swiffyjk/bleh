@@ -485,45 +485,6 @@ export function register_background(url, origin = null) {
         }
     }
 
-    if (page.type == 'user' && origin) {
-        let buttons = background.querySelector('.bleh-background-buttons');
-
-        if (!buttons) {
-            buttons = document.createElement('div');
-            buttons.classList.add('view-buttons', 'bleh-background-buttons');
-        } else {
-            buttons.innerHTML = '';
-        }
-
-        let origin_button = document.createElement('button');
-        origin_button.classList.add('btn', 'view-item', 'origin-button');
-
-        buttons.appendChild(origin_button);
-
-        /*tippy(origin_button, {
-            content: `origin: ${origin}`
-        });*/
-
-        if (origin == 'bio') {
-            tippy(origin_button, {
-                theme: 'badge',
-                content: (`
-                    <div class="badge-name">${trans_legacy[lang].profile.banner.origin.bio[0]}</div>
-                    <div class="badge-reason">${trans_legacy[lang].profile.banner.origin.bio[1].replace('{b}', '<code>![banner](url)</code>')}</div>
-                `),
-                allowHTML: true,
-                placement: 'bottom'
-            });
-        } else {
-            tippy(origin_button, {
-                content: trans_legacy[lang].profile.banner.origin[origin],
-                placement: 'bottom'
-            });
-        }
-
-        background.appendChild(buttons);
-    }
-
     background.setAttribute('data-page-type', page.type);
     background.setAttribute('data-background-origin', origin);
 

@@ -74,9 +74,9 @@ export function clean_number(string) {
     );
 }
 
-export function sanitise(text) {
+export function sanitise(text, method='+') {
     return encodeURI(text
-    .replaceAll(' ', '+')
+    .replaceAll(' ', method)
     .replaceAll('/', '%2F'));
 }
 export function sanitise_text(text) {
