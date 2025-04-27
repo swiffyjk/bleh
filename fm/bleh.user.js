@@ -1683,6 +1683,9 @@
     },
     loading_90_days: {
       en: "Collecting the last 90 days"
+    },
+    following_mutuals: {
+      en: "(mutually)"
     }
   };
   var trans_legacy = {
@@ -8095,8 +8098,11 @@
         let follow_btn = follow_wrap.querySelector("button");
         follow_btn.classList.add("btn", "profile-top-item", "profile-top-item--follow", "view-item", katsune ? "icon" : "");
         follow_btn.classList.remove("toggle-button", "header-follower-btn");
-        follow_btn.setAttribute("data-following", is_following);
         profile_header.appendChild(follow_wrap);
+        if (is_following && follow_wrap.getAttribute("data-toggle-button-current-state") == "followed") {
+          follow_btn.setAttribute("data-mutuals", "true");
+          follow_btn.setAttribute("data-mutuals-text", tl(trans.following_mutuals));
+        }
         if (!katsune)
           tippy(follow_btn, {
             content: follow_btn.textContent

@@ -94,8 +94,12 @@ export function redesign_profile_header(is_own_profile, is_following) {
             let follow_btn = follow_wrap.querySelector('button');
             follow_btn.classList.add('btn', 'profile-top-item', 'profile-top-item--follow', 'view-item', (katsune) ? 'icon' : '');
             follow_btn.classList.remove('toggle-button', 'header-follower-btn');
-            follow_btn.setAttribute('data-following', is_following);
             profile_header.appendChild(follow_wrap);
+
+            if (is_following && follow_wrap.getAttribute('data-toggle-button-current-state') == 'followed') {
+                follow_btn.setAttribute('data-mutuals', 'true');
+                follow_btn.setAttribute('data-mutuals-text', tl(trans.following_mutuals));
+            }
 
             if (!katsune)
                 tippy(follow_btn, {

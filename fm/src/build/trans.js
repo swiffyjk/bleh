@@ -514,6 +514,9 @@ export const trans = {
     },
     loading_90_days: {
         en: 'Collecting the last 90 days'
+    },
+    following_mutuals: {
+        en: '(mutually)'
     }
 }
 

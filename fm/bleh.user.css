@@ -17567,8 +17567,14 @@ h4 {
                     --mask: var(--icon-16-check);
                 }
 
-                .header-inner-wrap:has(.header-info .user-follow) [data-toggle-button-current-state="followed"] & {
+                &[data-mutuals="true"] {
                     --mask: var(--icon-16-heart-solid) !important;
+
+                    &:after {
+                        content: attr(data-mutuals-text);
+                        font-size: var(--font-size-sm);
+                        opacity: 0.6;
+                    }
                 }
             }
             &.profile-top-item--edit {
