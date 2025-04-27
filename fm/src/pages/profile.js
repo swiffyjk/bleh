@@ -71,29 +71,6 @@ export function bleh_profiles() {
         }
 
 
-        // acquire info
-        let scrobbles = 0;
-        let average = 0;
-        let artists = 0;
-        let loved = 0;
-
-        if (katsune) {
-            let metadata = profile_header.querySelectorAll('.header-metadata-display');
-            metadata.forEach((item, index) => {
-                if (index == 0) {
-                    let para = item.querySelector('p');
-
-                    scrobbles = clean_number(para.textContent.trim()).toLocaleString(lang);
-                    average = para.getAttribute('title');
-                } else if (index == 1) {
-                    artists = clean_number(item.textContent.trim()).toLocaleString(lang);
-                } else if (index == 2) {
-                    loved = clean_number(item.textContent.trim()).toLocaleString(lang);
-                }
-            });
-        }
-
-
         let redesigned_profile_header = document.createElement('section');
         redesigned_profile_header.classList.add('redesigned-header', 'redesigned-profile-header', 'no-background');
         redesigned_profile_header.innerHTML = (`
@@ -105,34 +82,10 @@ export function bleh_profiles() {
                 ${(title_wrap != null) ? `<div class="title-container">${title_wrap.innerHTML}</div>` : ''}
                 ${(sub_wrap != null) ? sub_wrap.outerHTML : ''}
             </div>
-            ${(katsune) ? (`
-            ${(!is_subpage) ? (`
-            <div class="stat-side glacier-library-top">
-                <div class="glacier-library-metadata">
-                    <div class="glacier-library-metadata-item">
-                        <div class="sub-text">${trans_legacy[lang].profile.scrobbles}</div>
-                        <div class="glacier-library-metadata-item-value" id="scrobbles_tooltip">${scrobbles}</div>
-                    </div>
-                    <div class="glacier-library-metadata-item">
-                        <div class="sub-text">${trans_legacy[lang].profile.artists}</div>
-                        <div class="glacier-library-metadata-item-value">${artists}</div>
-                    </div>
-                    <div class="glacier-library-metadata-item">
-                        <div class="sub-text">${trans_legacy[lang].profile.loved}</div>
-                        <div class="glacier-library-metadata-item-value">${loved}</div>
-                    </div>
-                </div>
-            </div>
-            `) : ''}
             <div class="expand-side">
                 <button class="header-expand-button icon" onclick="_toggle_profile_header(this)" aria-expanded="${settings.profile_header_expand}">${trans_legacy[lang].gallery.open.name}</button>
             </div>
-            `) : ''}
         `);
-
-        tippy(redesigned_profile_header.querySelector('#scrobbles_tooltip'), {
-            content: average
-        });
 
         // staff
         let is_staff = (title_wrap.querySelector('.user-status-staff') != null);
@@ -204,9 +157,6 @@ export function bleh_profiles() {
         let is_following = false;
         if (profile_header.querySelector('.label.user-follow'))
             is_following = true;
-
-        if (ff('redesigned_profile_header'))
-            redesign_profile_header(is_own_profile, is_following);
 
 
         //
@@ -311,8 +261,75 @@ export function bleh_profiles() {
 
         // featured track
         let featured_track_panel = profile_header.querySelector('.header-featured-track');
-        if (featured_track_panel != null)
+        if (featured_track_panel)
             bleh_featured_profile_track(featured_track_panel);
+
+
+        // recent tracks
+        let recent_tracks = page.structure.main.querySelector('#recent-tracks-section');
+        if (!recent_tracks) {
+            recent_tracks = page.structure.main.querySelector('.no-data-message');
+            recent_tracks.classList = 'recent-tracks-section';
+            recent_tracks.innerHTML = (`
+                <div class="loading-data-container">
+                    <div class="loading-data-text private">
+                        ${recent_tracks.textContent}
+                    </div>
+                </div>
+            `);
+        }
+
+        let listen_container = document.createElement('div');
+        listen_container.classList.add('listen-container');
+
+        // acquire info
+        let scrobbles = 0;
+        let average = 0;
+        let artists = 0;
+        let loved = 0;
+
+        let metadata = profile_header.querySelectorAll('.header-metadata-display');
+        metadata.forEach((item, index) => {
+            if (index == 0) {
+                let para = item.querySelector('p');
+
+                scrobbles = clean_number(para.textContent.trim()).toLocaleString(lang);
+                average = para.getAttribute('title');
+            } else if (index == 1) {
+                artists = clean_number(item.textContent.trim()).toLocaleString(lang);
+            } else if (index == 2) {
+                loved = clean_number(item.textContent.trim()).toLocaleString(lang);
+            }
+        });
+
+        listen_container.innerHTML = (`
+            <div class="glacier-library-top">
+                <div class="glacier-library-metadata">
+                    <div class="glacier-library-metadata-item">
+                        <div class="sub-text">${trans_legacy[lang].profile.scrobbles}</div>
+                        <div class="glacier-library-metadata-item-value" id="scrobbles_tooltip">${scrobbles}</div>
+                    </div>
+                    <div class="glacier-library-metadata-item">
+                        <div class="sub-text">${trans_legacy[lang].profile.artists}</div>
+                        <div class="glacier-library-metadata-item-value">${artists}</div>
+                    </div>
+                    <div class="glacier-library-metadata-item">
+                        <div class="sub-text">${trans_legacy[lang].profile.loved}</div>
+                        <div class="glacier-library-metadata-item-value">${loved}</div>
+                    </div>
+                </div>
+            </div>
+            <div class="listen-divider"></div>
+        `);
+
+        tippy(listen_container.querySelector('#scrobbles_tooltip'), {
+            content: average
+        });
+
+        recent_tracks.insertBefore(listen_container, recent_tracks.firstChild);
+
+        if (ff('redesigned_profile_header'))
+            redesign_profile_header(is_own_profile, is_following);
     } else {
         load_banner_from_cache();
 
@@ -606,7 +623,7 @@ export function bleh_profiles() {
     else
         profile_sub_text = document.body.querySelector('.header-title-secondary');
 
-    if (profile_sub_text == null)
+    if (!profile_sub_text)
         return;
 
     let display_name = profile_sub_text.querySelector('.header-title-display-name');
@@ -954,7 +971,7 @@ function bleh_featured_profile_track(object) {
     let panel = document.createElement('section');
     panel.classList.add('featured-item-panel');
     panel.innerHTML = (`
-        <div class="sub-text">${heading_link}${(form != null) ? form.outerHTML : ''}</div>
+        <div class="sub-text">${heading_link}${(form) ? form.outerHTML : ''}</div>
         <div class="track-template">
             ${art.outerHTML}
             ${details.outerHTML}
@@ -962,7 +979,7 @@ function bleh_featured_profile_track(object) {
     `);
 
     let about_me = page.structure.side.querySelector('.about-me-sidebar');
-    if (about_me != null)
+    if (about_me)
         about_me.after(panel);
     else
         page.structure.side.insertBefore(panel, page.structure.side.firstElementChild);
@@ -972,7 +989,7 @@ function bleh_featured_profile_track(object) {
 function profile_recents() {
     let panel = page.structure.main.querySelector('#recent-tracks-section');
 
-    if (panel == null)
+    if (!panel)
         return;
 
     let more_link = panel.nextElementSibling;
@@ -1403,7 +1420,7 @@ function profile_albums() {
 function profile_tracks() {
     let panel = page.structure.main.querySelector('#top-tracks');
 
-    if (panel == null)
+    if (!panel)
         return;
 
     panel.classList.remove('section-with-settings');

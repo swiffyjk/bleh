@@ -1671,7 +1671,7 @@ last.fm changes as of 2024-05-20 */
     ),
 /* individual library selection */
 /* listening reports */ .user-dashboard > .user-dashboard-buffer,
-/* katie doesnt have any scrobbles yet */ .profile-mobile-featured-track + .no-data-message,
+/* katie doesnt have any scrobbles yet */ .profile-mobile-featured-track + .no-data-message, .recent-tracks-section,
 /* quick create playlists */ .section-with-separator[action*="/create/from-"],
 .event-summary-with-poster,
 /* event overview thing */ .event-details:not(.event-summary-with-poster .event-details),
@@ -5769,7 +5769,7 @@ the body text becomes bigger by default - this reverts that */
         font-weight: var(--font-weight-medium);
         color: hsl(var(--c3));
         position: relative;
-        padding-left: calc(16px + 6px);
+        padding-left: calc(18px + 6px);
         --left: 0;
         --mask: var(--icon-16-spinner);
         user-select: none;
@@ -5781,6 +5781,14 @@ the body text becomes bigger by default - this reverts that */
 
         &.failed {
             --mask: var(--icon-16-info);
+
+            &:before {
+                animation: none;
+            }
+        }
+
+        &.private {
+            --mask: var(--icon-16-lock);
 
             &:before {
                 animation: none;
@@ -20868,6 +20876,8 @@ h4 {
 
     .info {
         h3 {
+            font-size: var(--font-size);
+            line-height: var(--line-height);
             color: hsl(var(--c3));
             font-weight: var(--font-weight-medium);
             margin-bottom: 2px;

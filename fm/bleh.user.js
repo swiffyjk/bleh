@@ -1988,9 +1988,9 @@
             very_low: "Very Low",
             unknown: "Unknown"
           },
-          you_share_1: "You share {artist}",
-          you_share_2: "You share {artist1} and {artist2}",
-          you_share_3: "You share {artist1}, {artist2}, and {artist3}"
+          you_share_1: "{artist}",
+          you_share_2: "{artist1}, {artist2}",
+          you_share_3: "{artist1}, {artist2}, {artist3}"
         },
         open_avatar: "Open in a new tab",
         settings: "Configure",
@@ -15438,14 +15438,8 @@
       if (taste_percentage == "99%")
         taste_percentage = "100%";
     }
-    let profile_header;
-    if (katsune) {
-      profile_header = document.createElement("section");
-      profile_header.classList.add("profile-top-header", "katsune-button-row");
-    } else {
-      profile_header = document.createElement("div");
-      profile_header.classList.add("profile-top-header", "view-buttons");
-    }
+    let profile_header = document.createElement("section");
+    profile_header.classList.add("view-all-panel", "mini-interactions");
     if (!is_own_profile) {
       let follow_wrap = document.body.querySelector(".header-avatar .class > div");
       if (follow_wrap != null) {
@@ -15487,7 +15481,7 @@
         });
       }
       let msg_button = document.body.querySelector(".header-message-user");
-      if (msg_button != null) {
+      if (msg_button) {
         if (page.name != sponsor_list.sponsor_account) {
           create_profile_top_item(profile_header, {
             name: page.name,
@@ -15538,28 +15532,20 @@
         katsune
       });
     }
-    if (katsune) {
-      let sep = document.createElement("div");
-      sep.classList.add("btn-gap");
-      profile_header.appendChild(sep);
-    }
+    let listen_container = page.structure.main.querySelector(".listen-container");
     if (!is_own_profile && page.name != sponsor_list.sponsor_account && katsune) {
       let taste_wrap = document.createElement("div");
-      taste_wrap.classList.add("katsune-taste");
+      taste_wrap.classList.add("btn", "listen-item", "icon");
       taste_wrap.innerHTML = `
-            <div class="taste-info">
-                <div class="taste-value">
+            <img class="view-item-avatar" src="${auth.avatar}">
+            <img class="view-item-avatar" src="${profile_avi}">
+            <div class="info">
+                <h3>You share ${taste_percentage} with</h3>
+                <p>
                     ${taste_artists.length == 1 ? trans_legacy[lang].profile.taste_meter.you_share_1.replace("{artist}", taste_artists[0]) : ""}
                     ${taste_artists.length == 2 ? trans_legacy[lang].profile.taste_meter.you_share_2.replace("{artist1}", taste_artists[0]).replace("{artist2}", taste_artists[1]) : ""}
                     ${taste_artists.length == 3 ? trans_legacy[lang].profile.taste_meter.you_share_3.replace("{artist1}", taste_artists[0]).replace("{artist2}", taste_artists[1]).replace("{artist3}", taste_artists[2]) : ""}
-                </div>
-                <div class="taste-bar colourful" data-taste="${taste}">
-                    <div class="taste-bar-fill" style="width: ${taste_percentage}"></div>
-                </div>
-            </div>
-            <div class="katsune-taste-badge">
-                <div class="taste-icon colourful" data-taste="${taste}"></div>
-                <div class="taste-percent">${taste_percentage.replace("%", "")}</div>
+                </p>
             </div>
         `;
       tippy(taste_wrap, {
@@ -15576,7 +15562,7 @@
             `,
         allowHTML: true
       });
-      profile_header.appendChild(taste_wrap);
+      listen_container.appendChild(taste_wrap);
       if (taste_artists.length > 1) {
         let menu = tippy(taste_wrap, {
           theme: "context-menu",
@@ -15644,7 +15630,7 @@
                 <div class="progress-percent">${Math.round(percent)}</div>
             </div>
         `;
-      profile_header.appendChild(progress);
+      listen_container.appendChild(progress);
       tippy(progress, {
         theme: "progress-badges",
         content: `
@@ -15722,14 +15708,7 @@
         });
       }
     }
-    if (katsune) {
-      page.structure.container.querySelector(".redesigned-profile-header").after(profile_header);
-    } else {
-      if (ff("refreshed_nav"))
-        page.structure.container.querySelector(".redesigned-profile-header .info-side").appendChild(profile_header);
-      else
-        base_header.appendChild(profile_header);
-    }
+    page.structure.side.insertBefore(profile_header, page.structure.side.firstElementChild);
   }
   function create_profile_top_item(parent, { name, link, text = "", type, taste = "", artists = [], avi = "", percent = "", action = "", tooltip = "", allow_html = false, tooltip_theme = "", full = false, primary = false, katsune = false }) {
     log(`creating top item of ${name}, ${link}, ${text}`, "profile");
@@ -15911,24 +15890,6 @@
       if (cute.includes(page.name)) {
         title_wrap.querySelector(".header-title a").classList.add("bleh--name-is-cute");
       }
-      let scrobbles = 0;
-      let average = 0;
-      let artists = 0;
-      let loved = 0;
-      if (katsune) {
-        let metadata = profile_header.querySelectorAll(".header-metadata-display");
-        metadata.forEach((item, index) => {
-          if (index == 0) {
-            let para = item.querySelector("p");
-            scrobbles = clean_number(para.textContent.trim()).toLocaleString(lang);
-            average = para.getAttribute("title");
-          } else if (index == 1) {
-            artists = clean_number(item.textContent.trim()).toLocaleString(lang);
-          } else if (index == 2) {
-            loved = clean_number(item.textContent.trim()).toLocaleString(lang);
-          }
-        });
-      }
       let redesigned_profile_header = document.createElement("section");
       redesigned_profile_header.classList.add("redesigned-header", "redesigned-profile-header", "no-background");
       redesigned_profile_header.innerHTML = `
@@ -15940,33 +15901,10 @@
                 ${title_wrap != null ? `<div class="title-container">${title_wrap.innerHTML}</div>` : ""}
                 ${sub_wrap != null ? sub_wrap.outerHTML : ""}
             </div>
-            ${katsune ? `
-            ${!is_subpage ? `
-            <div class="stat-side glacier-library-top">
-                <div class="glacier-library-metadata">
-                    <div class="glacier-library-metadata-item">
-                        <div class="sub-text">${trans_legacy[lang].profile.scrobbles}</div>
-                        <div class="glacier-library-metadata-item-value" id="scrobbles_tooltip">${scrobbles}</div>
-                    </div>
-                    <div class="glacier-library-metadata-item">
-                        <div class="sub-text">${trans_legacy[lang].profile.artists}</div>
-                        <div class="glacier-library-metadata-item-value">${artists}</div>
-                    </div>
-                    <div class="glacier-library-metadata-item">
-                        <div class="sub-text">${trans_legacy[lang].profile.loved}</div>
-                        <div class="glacier-library-metadata-item-value">${loved}</div>
-                    </div>
-                </div>
-            </div>
-            ` : ""}
             <div class="expand-side">
                 <button class="header-expand-button icon" onclick="_toggle_profile_header(this)" aria-expanded="${settings.profile_header_expand}">${trans_legacy[lang].gallery.open.name}</button>
             </div>
-            ` : ""}
         `;
-      tippy(redesigned_profile_header.querySelector("#scrobbles_tooltip"), {
-        content: average
-      });
       let is_staff = title_wrap.querySelector(".user-status-staff") != null;
       if (is_staff) {
         redesigned_profile_header.classList.add("staff-profile");
@@ -16021,8 +15959,6 @@
       let is_following = false;
       if (profile_header.querySelector(".label.user-follow"))
         is_following = true;
-      if (ff("redesigned_profile_header"))
-        redesign_profile_header(is_own_profile, is_following);
       profile_recents();
       profile_artists();
       profile_albums();
@@ -16092,8 +16028,63 @@
         page.structure.container.appendChild(alert);
       }
       let featured_track_panel = profile_header.querySelector(".header-featured-track");
-      if (featured_track_panel != null)
+      if (featured_track_panel)
         bleh_featured_profile_track(featured_track_panel);
+      let recent_tracks = page.structure.main.querySelector("#recent-tracks-section");
+      if (!recent_tracks) {
+        recent_tracks = page.structure.main.querySelector(".no-data-message");
+        recent_tracks.classList = "recent-tracks-section";
+        recent_tracks.innerHTML = `
+                <div class="loading-data-container">
+                    <div class="loading-data-text private">
+                        ${recent_tracks.textContent}
+                    </div>
+                </div>
+            `;
+      }
+      let listen_container = document.createElement("div");
+      listen_container.classList.add("listen-container");
+      let scrobbles = 0;
+      let average = 0;
+      let artists = 0;
+      let loved = 0;
+      let metadata = profile_header.querySelectorAll(".header-metadata-display");
+      metadata.forEach((item, index) => {
+        if (index == 0) {
+          let para = item.querySelector("p");
+          scrobbles = clean_number(para.textContent.trim()).toLocaleString(lang);
+          average = para.getAttribute("title");
+        } else if (index == 1) {
+          artists = clean_number(item.textContent.trim()).toLocaleString(lang);
+        } else if (index == 2) {
+          loved = clean_number(item.textContent.trim()).toLocaleString(lang);
+        }
+      });
+      listen_container.innerHTML = `
+            <div class="glacier-library-top">
+                <div class="glacier-library-metadata">
+                    <div class="glacier-library-metadata-item">
+                        <div class="sub-text">${trans_legacy[lang].profile.scrobbles}</div>
+                        <div class="glacier-library-metadata-item-value" id="scrobbles_tooltip">${scrobbles}</div>
+                    </div>
+                    <div class="glacier-library-metadata-item">
+                        <div class="sub-text">${trans_legacy[lang].profile.artists}</div>
+                        <div class="glacier-library-metadata-item-value">${artists}</div>
+                    </div>
+                    <div class="glacier-library-metadata-item">
+                        <div class="sub-text">${trans_legacy[lang].profile.loved}</div>
+                        <div class="glacier-library-metadata-item-value">${loved}</div>
+                    </div>
+                </div>
+            </div>
+            <div class="listen-divider"></div>
+        `;
+      tippy(listen_container.querySelector("#scrobbles_tooltip"), {
+        content: average
+      });
+      recent_tracks.insertBefore(listen_container, recent_tracks.firstChild);
+      if (ff("redesigned_profile_header"))
+        redesign_profile_header(is_own_profile, is_following);
     } else {
       load_banner_from_cache();
       let btn_add = page.structure.side.querySelector(".add-button");
@@ -16317,7 +16308,7 @@
       profile_sub_text = page.structure.container.querySelector(".redesigned-profile-header .header-title-secondary");
     else
       profile_sub_text = document.body.querySelector(".header-title-secondary");
-    if (profile_sub_text == null)
+    if (!profile_sub_text)
       return;
     let display_name = profile_sub_text.querySelector(".header-title-display-name");
     let scrobble_since = profile_sub_text.querySelector(".header-scrobble-since");
@@ -16573,21 +16564,21 @@
     let panel = document.createElement("section");
     panel.classList.add("featured-item-panel");
     panel.innerHTML = `
-        <div class="sub-text">${heading_link}${form != null ? form.outerHTML : ""}</div>
+        <div class="sub-text">${heading_link}${form ? form.outerHTML : ""}</div>
         <div class="track-template">
             ${art.outerHTML}
             ${details.outerHTML}
         </div>
     `;
     let about_me = page.structure.side.querySelector(".about-me-sidebar");
-    if (about_me != null)
+    if (about_me)
       about_me.after(panel);
     else
       page.structure.side.insertBefore(panel, page.structure.side.firstElementChild);
   }
   function profile_recents() {
     let panel = page.structure.main.querySelector("#recent-tracks-section");
-    if (panel == null)
+    if (!panel)
       return;
     let more_link = panel.nextElementSibling;
     panel.appendChild(more_link);
@@ -16942,7 +16933,7 @@
   }
   function profile_tracks() {
     let panel = page.structure.main.querySelector("#top-tracks");
-    if (panel == null)
+    if (!panel)
       return;
     panel.classList.remove("section-with-settings");
     let form = panel.querySelector("#track-chart-settings");

@@ -821,9 +821,9 @@ export const trans_legacy = {
                     very_low: 'Very Low',
                     unknown: 'Unknown'
                 },
-                you_share_1: 'You share {artist}',
-                you_share_2: 'You share {artist1} and {artist2}',
-                you_share_3: 'You share {artist1}, {artist2}, and {artist3}'
+                you_share_1: '{artist}',
+                you_share_2: '{artist1}, {artist2}',
+                you_share_3: '{artist1}, {artist2}, {artist3}'
             },
             open_avatar: 'Open in a new tab',
             settings: 'Configure',
