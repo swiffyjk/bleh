@@ -17589,6 +17589,9 @@ h4 {
             &.profile-top-item--obsess {
                 --mask: var(--icon-16-obsession);
             }
+            &.profile-top-item--labs {
+                --mask: var(--icon-16-labs);
+            }
         }
     }
 

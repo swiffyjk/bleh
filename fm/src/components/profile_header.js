@@ -198,7 +198,13 @@ export function redesign_profile_header(is_own_profile, is_following) {
             type: 'labs',
             link: `${root}labs`,
             katsune: katsune,
-            mini: true
+            mini: true,
+            tooltip: (`
+                <strong>${tl(trans.labs_by_last)}</strong>
+                <p>${tl(trans.labs_by_last.tagline)}</p>
+            `),
+            tooltip_style: 'stack',
+            allow_html: true
         });
         create_profile_top_item(profile_header, {
             name: page.name,

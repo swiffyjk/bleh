@@ -500,6 +500,12 @@ export const trans = {
     labs: {
         en: 'Labs'
     },
+    labs_by_last: {
+        en: 'Labs by Last.fm',
+        tagline: {
+            en: 'Interactive tools, toys and infographics'
+        }
+    },
     sponsor_info: {
         en: 'This is a special bleh-managed account to handle sponsors.'
     }

@@ -1669,6 +1669,12 @@
     labs: {
       en: "Labs"
     },
+    labs_by_last: {
+      en: "Labs by Last.fm",
+      tagline: {
+        en: "Interactive tools, toys and infographics"
+      }
+    },
     sponsor_info: {
       en: "This is a special bleh-managed account to handle sponsors."
     }
@@ -8173,7 +8179,13 @@
         type: "labs",
         link: `${root}labs`,
         katsune,
-        mini: true
+        mini: true,
+        tooltip: `
+                <strong>${tl(trans.labs_by_last)}</strong>
+                <p>${tl(trans.labs_by_last.tagline)}</p>
+            `,
+        tooltip_style: "stack",
+        allow_html: true
       });
       create_profile_top_item(profile_header, {
         name: page.name,
