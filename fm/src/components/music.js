@@ -236,6 +236,13 @@ export function show_your_scrobbles() {
 
             let listen_item = document.getElementById(`listen-item--${shortcut_listens.name}`);
 
+            let no_data = doc.querySelector('.message');
+            if (no_data) {
+                listen_item.setAttribute('data-listens', '-4');
+
+                return;
+            }
+
             // sometimes this fails even thou they do have plays, this is just a last.fm bug
             // i dont feel comfortable displaying 0 here as it may not be true
             // but i guess i should?

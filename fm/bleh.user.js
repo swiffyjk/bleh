@@ -7402,6 +7402,11 @@
         let first_metadata_item = doc.querySelector(".metadata-item .metadata-display");
         let listens = 0;
         let listen_item = document.getElementById(`listen-item--${shortcut_listens.name}`);
+        let no_data = doc.querySelector(".message");
+        if (no_data) {
+          listen_item.setAttribute("data-listens", "-4");
+          return;
+        }
         if (first_metadata_item != null)
           listens = clean_number(first_metadata_item.textContent.trim());
         listen_item.setAttribute("data-listens", listens);
