@@ -9,6 +9,7 @@ import { bleh_music_page_charts } from "./components/music";
 import { notify } from "./components/notify";
 import { load_skus, show_theme_change_in_menu, show_theme_change_in_settings } from "./pages/bleh_config";
 import { bleh_glacier_date_graph_generate, bleh_glacier_insights } from "./pages/glacier";
+import { bleh_profile_chart_render } from './pages/profile';
 
 // create blank settings
 export function create_settings_template() {
@@ -94,6 +95,9 @@ unsafeWindow.toggle_theme = function() {
     if ((page.type == 'artist' || page.type == 'album' || page.type == 'track') && page.subpage == 'overview')
         bleh_music_page_charts();
 
+    if (page.type == 'user' && page.subpage == 'overview')
+        bleh_profile_chart_render();
+
     if (page.type == 'user' && page.subpage.startsWith('library')) {
         bleh_glacier_date_graph_generate();
         bleh_glacier_insights();
@@ -131,6 +135,9 @@ unsafeWindow.change_theme_from_menu = function(theme) {
     // trigger re-flow of chart
     if ((page.type == 'artist' || page.type == 'album' || page.type == 'track') && page.subpage == 'overview')
         bleh_music_page_charts();
+
+    if (page.type == 'user' && page.subpage == 'overview')
+        bleh_profile_chart_render();
 
     if (page.type == 'user' && page.subpage.startsWith('library')) {
         bleh_glacier_date_graph_generate();

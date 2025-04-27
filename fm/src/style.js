@@ -64,6 +64,9 @@ function load_cached_style(cached_style) {
         if ((page.type == 'artist' || page.type == 'album' || page.type == 'track') && page.subpage == 'overview')
             bleh_music_page_charts();
 
+        if (page.type == 'user' && page.subpage == 'overview')
+            bleh_profile_chart_render();
+
         if (page.type == 'user' && page.subpage.startsWith('library')) {
             bleh_glacier_date_graph_generate();
             bleh_glacier_insights();
@@ -269,6 +272,9 @@ function fetch_new_style(delete_old_style = false, reload_on_finish = false) {
             // trigger re-flow of chart
             if ((page.type == 'artist' || page.type == 'album' || page.type == 'track') && page.subpage == 'overview')
                 bleh_music_page_charts();
+
+            if (page.type == 'user' && page.subpage == 'overview')
+                bleh_profile_chart_render();
 
             if (page.type == 'user' && page.subpage.startsWith('library')) {
                 bleh_glacier_date_graph_generate();

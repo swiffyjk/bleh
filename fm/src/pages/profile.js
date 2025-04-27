@@ -321,6 +321,7 @@ export function bleh_profiles() {
                     <p>${loved}</p>
                 </div>
             </div>
+            <div class="scrobble-canvas-container"></div>
         `);
 
         tippy(listen_container.querySelector('#scrobbles_tooltip'), {
@@ -1642,7 +1643,7 @@ function bleh_profile_chart() {
     let table = panel.querySelector('table');
 
     if (table) {
-        bleh_profile_chart_render(table, panel);
+        bleh_profile_chart_render(panel, table);
         return;
     } else {
         fetch(`${root}user/${page.name}/library/artists/chart?date_preset=LAST_90_DAYS&page=1&ajax=1`)
@@ -1664,7 +1665,7 @@ function bleh_profile_chart() {
 
             if (table) {
                 panel.appendChild(table);
-                bleh_profile_chart_render(table, panel);
+                bleh_profile_chart_render(panel, table);
             } else {
                 log('table is null?', 'glacier library', 'error');
                 console.info('glacier library', doc.body.innerHTML);
@@ -1675,11 +1676,9 @@ function bleh_profile_chart() {
     }
 }
 
-function bleh_profile_chart_render(table, panel) {
-    // is this a chart reflow due to style loading?
-    let previous_chart = panel.querySelector('.scrobble-canvas-container');
-    if (previous_chart)
-        panel.removeChild(previous_chart);
+export function bleh_profile_chart_render(panel=page.structure.side.querySelector('.listen-profile-panel'), table=null) {
+    if (!table)
+        table = panel.querySelector('table');
 
     let entries = table.querySelectorAll('tbody tr');
 
@@ -1698,8 +1697,8 @@ function bleh_profile_chart_render(table, panel) {
 
     prep_chart_colours();
 
-    let scrobble_canvas_container = document.createElement('div');
-    scrobble_canvas_container.classList.add('scrobble-canvas-container');
+    let scrobble_canvas_container = panel.querySelector('.scrobble-canvas-container');
+    scrobble_canvas_container.innerHTML = '';
 
     let scrobble_canvas = document.createElement('canvas');
     scrobble_canvas.classList.add('scrobble-canvas');
@@ -1733,5 +1732,4 @@ function bleh_profile_chart_render(table, panel) {
     });
 
     scrobble_canvas_container.appendChild(scrobble_canvas);
-    panel.appendChild(scrobble_canvas_container);
 }
