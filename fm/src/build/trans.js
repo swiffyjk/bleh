@@ -20,7 +20,7 @@ export let lang_info = {
     de: {
         name: 'Deutsch',
         by: ['stellasaur', 'cutensilly'],
-        last_updated:  '2025-03-09'
+        last_updated:  '2025-04-27'
     },
     pl: {
         name: 'Polski',
@@ -214,20 +214,25 @@ export const trans = {
         en: 'Tracks'
     },
     appearance: {
-        en: 'Appearance'
+        en: 'Appearance',
+        de: 'Aussehen'
     },
     themes: {
         name: {
-            en: 'Themes'
+            en: 'Themes',
+            de: 'Farbschema'
         },
         light: {
-            en: 'Light'
+            en: 'Light',
+            de: 'Hell'
         },
         dark: {
-            en: 'Ash'
+            en: 'Ash',
+            de: 'Asche'
         },
         darker: {
-            en: 'Dark'
+            en: 'Dark',
+            de: 'Dunkel'
         },
         oled: {
             en: 'Void'
@@ -253,7 +258,8 @@ export const trans = {
         }
     },
     configure: {
-        en: 'Configure'
+        en: 'Configure',
+        de: 'Konfigurieren'
     },
     events: {
         en: 'Events'
@@ -358,13 +364,21 @@ export const trans = {
         }
     },
     save: {
-        en: 'Save'
+        en: 'Save',
+        de: 'Speichern'
     },
     add: {
         en: 'Add'
     },
     remove: {
         en: 'Remove'
+    },
+    clear: {
+        en: 'Clear'
+    },
+    close: {
+        en: 'Close',
+        de: 'Schließen'
     },
     go: {
         en: 'Go'
@@ -378,6 +392,18 @@ export const trans = {
     send_quickly_with: {
         en: 'Send quickly with {kbd}'
     },
+    done: {
+        en: 'Done',
+        de: 'Fertig'
+    },
+    finish: {
+        en: 'Finish',
+        de: 'Beenden'
+    },
+    continue: {
+        en: 'Continue',
+        de: 'Fortsetzen'
+    },
     right_click_for_more_options: {
         en: 'Right click for more options'
     },
@@ -390,7 +416,8 @@ export const trans = {
         }
     },
     new: {
-        en: 'New'
+        en: 'New',
+        de: 'Neu'
     },
     beta: {
         en: 'Beta'
@@ -480,13 +507,15 @@ export const trans = {
         en: 'Suggest a correction'
     },
     recent_tracks: {
-        en: 'Recent Tracks'
+        en: 'Recent Tracks',
+        de: 'Kürzlich gespielte Titel'
     },
     you_share_count_with: {
         en: 'You share {c} with'
     },
     message: {
-        en: 'Message'
+        en: 'Message',
+        de: 'Anschreiben'
     },
     sponsor: {
         en: 'Become a sponsor'
@@ -502,8 +531,10 @@ export const trans = {
     },
     labs_by_last: {
         en: 'Labs by Last.fm',
+        de: 'Labs vom Last.fm',
         tagline: {
-            en: 'Interactive tools, toys and infographics'
+            en: 'Interactive tools, toys and infographics',
+            de: 'Interaktiven Tools, Spielen und Infografiken'
         }
     },
     sponsor_info: {
@@ -517,6 +548,9 @@ export const trans = {
     },
     following_mutuals: {
         en: '(mutually)'
+    },
+    language: {
+        en: 'Language'
     }
 }
 
@@ -872,19 +906,6 @@ export const trans_legacy = {
                 to_go: '{s} scrobbles to go',
                 tier: 'Tier {t}',
                 explain: 'For each tier, you unlock a new badge'
-            },
-            banner: {
-                name: 'Banner',
-                origin: {
-                    bio: [
-                        'Sourced from this user\'s about me',
-                        'Embed an image with {b} to achieve the same'
-                    ],
-                    avatar: 'Sourced from this user\'s avatar',
-                    artist: 'Sourced from this user\'s top track',
-                    hidden: 'Hidden based on your preferences',
-                    none: 'Sourced from nowhere...'
-                }
             }
         },
         event: {
@@ -1866,8 +1887,8 @@ export const trans_legacy = {
                     unknown: 'Unknown'
                 },
                 you_share_1: 'Ihr hört beide {artist}',
-                you_share_2: 'Ihr hört beide {artist1} und {artist2}',
-                you_share_3: 'Ihr hört beide {artist1}, {artist2}, und {artist3}'
+                you_share_2: 'Ihr hört beide {artist1}, {artist2}',
+                you_share_3: 'Ihr hört beide {artist1}, {artist2}, {artist3}'
             },
             open_avatar: 'Im neuen Fenster öffnen',
             settings: 'Konfigurieren',

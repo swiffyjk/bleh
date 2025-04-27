@@ -1190,7 +1190,7 @@
     de: {
       name: "Deutsch",
       by: ["stellasaur", "cutensilly"],
-      last_updated: "2025-03-09"
+      last_updated: "2025-04-27"
     },
     pl: {
       name: "Polski",
@@ -1383,20 +1383,25 @@
       en: "Tracks"
     },
     appearance: {
-      en: "Appearance"
+      en: "Appearance",
+      de: "Aussehen"
     },
     themes: {
       name: {
-        en: "Themes"
+        en: "Themes",
+        de: "Farbschema"
       },
       light: {
-        en: "Light"
+        en: "Light",
+        de: "Hell"
       },
       dark: {
-        en: "Ash"
+        en: "Ash",
+        de: "Asche"
       },
       darker: {
-        en: "Dark"
+        en: "Dark",
+        de: "Dunkel"
       },
       oled: {
         en: "Void"
@@ -1422,7 +1427,8 @@
       }
     },
     configure: {
-      en: "Configure"
+      en: "Configure",
+      de: "Konfigurieren"
     },
     events: {
       en: "Events"
@@ -1527,13 +1533,21 @@
       }
     },
     save: {
-      en: "Save"
+      en: "Save",
+      de: "Speichern"
     },
     add: {
       en: "Add"
     },
     remove: {
       en: "Remove"
+    },
+    clear: {
+      en: "Clear"
+    },
+    close: {
+      en: "Close",
+      de: "Schlie\xDFen"
     },
     go: {
       en: "Go"
@@ -1547,6 +1561,18 @@
     send_quickly_with: {
       en: "Send quickly with {kbd}"
     },
+    done: {
+      en: "Done",
+      de: "Fertig"
+    },
+    finish: {
+      en: "Finish",
+      de: "Beenden"
+    },
+    continue: {
+      en: "Continue",
+      de: "Fortsetzen"
+    },
     right_click_for_more_options: {
       en: "Right click for more options"
     },
@@ -1559,7 +1585,8 @@
       }
     },
     new: {
-      en: "New"
+      en: "New",
+      de: "Neu"
     },
     beta: {
       en: "Beta"
@@ -1649,13 +1676,15 @@
       en: "Suggest a correction"
     },
     recent_tracks: {
-      en: "Recent Tracks"
+      en: "Recent Tracks",
+      de: "K\xFCrzlich gespielte Titel"
     },
     you_share_count_with: {
       en: "You share {c} with"
     },
     message: {
-      en: "Message"
+      en: "Message",
+      de: "Anschreiben"
     },
     sponsor: {
       en: "Become a sponsor"
@@ -1671,8 +1700,10 @@
     },
     labs_by_last: {
       en: "Labs by Last.fm",
+      de: "Labs vom Last.fm",
       tagline: {
-        en: "Interactive tools, toys and infographics"
+        en: "Interactive tools, toys and infographics",
+        de: "Interaktiven Tools, Spielen und Infografiken"
       }
     },
     sponsor_info: {
@@ -1686,6 +1717,9 @@
     },
     following_mutuals: {
       en: "(mutually)"
+    },
+    language: {
+      en: "Language"
     }
   };
   var trans_legacy = {
@@ -2039,19 +2073,6 @@
           to_go: "{s} scrobbles to go",
           tier: "Tier {t}",
           explain: "For each tier, you unlock a new badge"
-        },
-        banner: {
-          name: "Banner",
-          origin: {
-            bio: [
-              "Sourced from this user's about me",
-              "Embed an image with {b} to achieve the same"
-            ],
-            avatar: "Sourced from this user's avatar",
-            artist: "Sourced from this user's top track",
-            hidden: "Hidden based on your preferences",
-            none: "Sourced from nowhere..."
-          }
         }
       },
       event: {
@@ -3029,8 +3050,8 @@
             unknown: "Unknown"
           },
           you_share_1: "Ihr h\xF6rt beide {artist}",
-          you_share_2: "Ihr h\xF6rt beide {artist1} und {artist2}",
-          you_share_3: "Ihr h\xF6rt beide {artist1}, {artist2}, und {artist3}"
+          you_share_2: "Ihr h\xF6rt beide {artist1}, {artist2}",
+          you_share_3: "Ihr h\xF6rt beide {artist1}, {artist2}, {artist3}"
         },
         open_avatar: "Im neuen Fenster \xF6ffnen",
         settings: "Konfigurieren",
@@ -15025,6 +15046,24 @@
     }
     links.appendChild(bleh_container);
     page.header.season = bleh_container.querySelector("a");
+    let selected_language = document.querySelector(".footer-language--active strong")?.textContent;
+    let language_options = document.querySelectorAll(".footer-language-form");
+    let language_menu = document.createElement("div");
+    language_menu.classList.add("language-menu");
+    let sel_button = document.createElement("button");
+    sel_button.classList.add("dropdown-menu-clickable-item", "lang-item", "active");
+    sel_button.setAttribute("data-lang", non_override_lang);
+    sel_button.style.setProperty("--flag-url", `url('https://katelyynn.github.io/bleh/fm/flags/${non_override_lang}.svg')`);
+    sel_button.textContent = selected_language;
+    language_menu.appendChild(sel_button);
+    language_options.forEach((language_option) => {
+      let button = language_option.querySelector("button");
+      button.classList.remove("mimic-link");
+      button.classList.add("dropdown-menu-clickable-item", "lang-item");
+      button.setAttribute("data-lang", button.getAttribute("name"));
+      button.style.setProperty("--flag-url", `url('https://katelyynn.github.io/bleh/fm/flags/${button.getAttribute("name")}.svg')`);
+      language_menu.appendChild(language_option);
+    });
     let site_auth = document.body.querySelector(".site-auth");
     let token = new_auth.querySelector('[name="csrfmiddlewaretoken"]').getAttribute("value");
     let auth_menu = tippy(auth_link2, {
@@ -15059,6 +15098,12 @@
                 ${trans_legacy[lang].auth_menu.dev}
             </button>
             ` : ""}
+            <button class="dropdown-menu-clickable-item" data-menu-item="language">
+                <span class="auth-dropdown-item-row">
+                    <span class="auth-dropdown-item-left">${tl(trans.language)}</span>
+                    <span class="auth-dropdown-item-right" id="theme-value">${selected_language}</span>
+                </span>
+            </button>
             <a class="dropdown-menu-clickable-item" data-menu-item="bleh" href="${root}bleh">
                 ${tl(trans.configure_bleh)}
             </a>
@@ -15089,6 +15134,17 @@
           shortcut_item.textContent = settings.profile_shortcut;
         }
         instance.popper.querySelector("#theme-value").textContent = tl(trans.themes[settings.theme]);
+        tippy(instance.popper.querySelector('[data-menu-item="language"]:not([aria-expanded])'), {
+          theme: "language-menu",
+          content: `
+                    ${language_menu.innerHTML}
+                `,
+          allowHTML: true,
+          placement: "left",
+          hideOnClick: false,
+          interactive: true,
+          interactiveBorder: 10
+        });
         let theme_menu_item = tippy(instance.popper.querySelector('[data-menu-item="themes"]:not([aria-expanded])'), {
           theme: "menu",
           content: `
@@ -15117,43 +15173,6 @@
       }
     });
     new_auth.parentElement.removeChild(new_auth);
-    let selected_language = document.querySelector(".footer-language--active strong")?.textContent;
-    let language_options = document.querySelectorAll(".footer-language-form");
-    let language_menu = document.createElement("div");
-    language_menu.classList.add("language-menu");
-    let sel_button = document.createElement("button");
-    sel_button.classList.add("dropdown-menu-clickable-item", "lang-item", "active");
-    sel_button.setAttribute("data-lang", non_override_lang);
-    sel_button.style.setProperty("--flag-url", `url('https://katelyynn.github.io/bleh/fm/flags/${non_override_lang}.svg')`);
-    sel_button.textContent = selected_language;
-    language_menu.appendChild(sel_button);
-    language_options.forEach((language_option) => {
-      let button = language_option.querySelector("button");
-      button.classList.remove("mimic-link");
-      button.classList.add("dropdown-menu-clickable-item", "lang-item");
-      button.setAttribute("data-lang", button.getAttribute("name"));
-      button.style.setProperty("--flag-url", `url('https://katelyynn.github.io/bleh/fm/flags/${button.getAttribute("name")}.svg')`);
-      language_menu.appendChild(language_option);
-    });
-    let language_nav = document.createElement("a");
-    language_nav.classList.add("language-nav");
-    language_nav.innerHTML = `
-        <span data-lang="${non_override_lang}" style="--flag-url: url('https://katelyynn.github.io/bleh/fm/flags/${non_override_lang}.svg');">${selected_language}</span>
-    `;
-    tippy(language_nav, {
-      theme: "language-menu",
-      content: `
-            ${language_menu.innerHTML}
-        `,
-      allowHTML: true,
-      delay: [100, 50],
-      placement: "bottom",
-      //trigger: 'click',
-      interactive: true
-    });
-    let inner = document.body.querySelector(".masthead-nav-wrap");
-    let auth_container = inner.querySelector(":scope > .site-auth");
-    inner.insertBefore(language_nav, auth_container);
   }
 
   // src/components/about_artist.js
@@ -18310,35 +18329,6 @@
         background.classList.add("bleh-background");
         document.body.appendChild(background);
       }
-    }
-    if (page.type == "user" && origin) {
-      let buttons = background.querySelector(".bleh-background-buttons");
-      if (!buttons) {
-        buttons = document.createElement("div");
-        buttons.classList.add("view-buttons", "bleh-background-buttons");
-      } else {
-        buttons.innerHTML = "";
-      }
-      let origin_button = document.createElement("button");
-      origin_button.classList.add("btn", "view-item", "origin-button");
-      buttons.appendChild(origin_button);
-      if (origin == "bio") {
-        tippy(origin_button, {
-          theme: "badge",
-          content: `
-                    <div class="badge-name">${trans_legacy[lang].profile.banner.origin.bio[0]}</div>
-                    <div class="badge-reason">${trans_legacy[lang].profile.banner.origin.bio[1].replace("{b}", "<code>![banner](url)</code>")}</div>
-                `,
-          allowHTML: true,
-          placement: "bottom"
-        });
-      } else {
-        tippy(origin_button, {
-          content: trans_legacy[lang].profile.banner.origin[origin],
-          placement: "bottom"
-        });
-      }
-      background.appendChild(buttons);
     }
     background.setAttribute("data-page-type", page.type);
     background.setAttribute("data-background-origin", origin);

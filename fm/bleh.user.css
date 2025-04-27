@@ -7342,6 +7342,9 @@ very, very, very dated - who looks up a song on ebay? */
 [data-menu-item="themes"] {
     --mask: var(--icon-16-themes);
 }
+[data-menu-item="language"] {
+    --mask: var(--icon-16-language);
+}
 [data-menu-item="bleh"] {
     --mask: var(--icon-16-settings);
 }
