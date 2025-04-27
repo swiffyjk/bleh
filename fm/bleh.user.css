@@ -3777,7 +3777,6 @@ button.navlist-more {
     .cta-link {
         margin: unset;
         text-align: left !important;
-        width: fit-content;
     }
 }
 
@@ -4046,23 +4045,14 @@ better than the default selector '#app a' i suppose */
     text-decoration: underline !important;
 }
 
-.external-link-cta .cta-link-wrap a, .lyrics-snippet-more-link a, .wiki-block-cta .cta-link-wrap a {
-    padding-right: calc(16px + 8px);
-}
-.external-link-cta .cta-link-wrap a::before, .external-link::after, .wiki-block-cta .cta-link-wrap a::before, .lyrics-snippet-more-link a::before {
-    background-color: currentColor;
-    background-image: unset;
+.cta-link-wrap a, .lyrics-snippet-more-link a {
+    position: relative;
+    padding-right: calc(12px + 4px);
+    --left: none;
+    --right: 0;
     --mask: var(--icon-16-external);
-    mask-image: var(--mask);
-    -webkit-mask-image: var(--mask);
-    width: 16px;
-    height: 16px;
-    margin-top: -8px;
-    right: 0;
-    opacity: unset;
-}
-.wiki-block-cta .cta-link-wrap a::before, .lyrics-snippet-more-link a::before {
-    --mask: var(--icon-16-arrow-right);
+    --mask-size: 12px;
+    --margin-top: -7px;
 }
 
 
@@ -6564,6 +6554,7 @@ button,
 
 
 /*     ICON MASK     */
+.cta-link-wrap a:before, .lyrics-snippet-more-link a:before,
 .see-more:before,
 .view-all-button:before,
 .music-featured-item-background:before,
