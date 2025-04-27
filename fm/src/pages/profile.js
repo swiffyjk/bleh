@@ -252,11 +252,11 @@ export function bleh_profiles() {
             page.structure.main.innerHTML = '';
             page.structure.side.innerHTML = '';
 
-            let alert = document.createElement('div');
-            alert.classList.add('alert', 'alert-info');
-            alert.textContent = 'This is a special bleh account used for managing sponsors.';
+            let alert = document.createElement('section');
+            alert.classList.add('cta', 'colourful', 'sponsor');
+            alert.innerHTML = `<strong>${tl(trans.sponsor_info)}</strong>`;
 
-            page.structure.container.appendChild(alert);
+            page.structure.main.appendChild(alert);
         }
 
 
@@ -270,17 +270,19 @@ export function bleh_profiles() {
         let recent_tracks = page.structure.main.querySelector('#recent-tracks-section');
         if (!recent_tracks) {
             recent_tracks = page.structure.main.querySelector('.no-data-message');
-            recent_tracks.classList = 'recent-tracks-section';
-            recent_tracks.innerHTML = (`
-                <h2>
-                    <a class="text-colour-link" href="${window.location.href}/library">${tl(trans.recent_tracks)}</a>
-                </h2>
-                <div class="loading-data-container">
-                    <div class="loading-data-text private">
-                        ${recent_tracks.textContent}
+            if (recent_tracks) {
+                recent_tracks.classList = 'recent-tracks-section';
+                recent_tracks.innerHTML = (`
+                    <h2>
+                        <a class="text-colour-link" href="${window.location.href}/library">${tl(trans.recent_tracks)}</a>
+                    </h2>
+                    <div class="loading-data-container">
+                        <div class="loading-data-text private">
+                            ${recent_tracks.textContent}
+                        </div>
                     </div>
-                </div>
-            `);
+                `);
+            }
         }
 
         let listen_container = document.createElement('section');
@@ -328,9 +330,10 @@ export function bleh_profiles() {
             content: average
         });
 
-        page.structure.side.insertBefore(listen_container, page.structure.firstChild);
-
-        bleh_profile_chart();
+        if (page.name != sponsor_list.sponsor_account) {
+            page.structure.side.insertBefore(listen_container, page.structure.firstChild);
+            bleh_profile_chart();
+        }
 
         if (ff('redesigned_profile_header'))
             redesign_profile_header(is_own_profile, is_following);

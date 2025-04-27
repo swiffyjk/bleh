@@ -484,6 +484,24 @@ export const trans = {
     },
     you_share_count_with: {
         en: 'You share {c} with'
+    },
+    message: {
+        en: 'Message'
+    },
+    sponsor: {
+        en: 'Become a sponsor'
+    },
+    message_sponsor: {
+        en: 'Receive sponsor rewards'
+    },
+    obsess: {
+        en: 'Obsess'
+    },
+    labs: {
+        en: 'Labs'
+    },
+    sponsor_info: {
+        en: 'This is a special bleh-managed account to handle sponsors.'
     }
 }
 

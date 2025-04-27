@@ -86,7 +86,7 @@ export function redesign_profile_header(is_own_profile, is_following) {
     let profile_header = document.createElement('section');
     profile_header.classList.add('view-all-panel', 'medium-interactions');
 
-    if (!is_own_profile) {
+    if (!is_own_profile && page.name != sponsor_list.sponsor_account) {
         // follow
         let follow_wrap = document.body.querySelector('.header-avatar .class > div');
 
@@ -123,8 +123,9 @@ export function redesign_profile_header(is_own_profile, is_following) {
 
             profile_header.appendChild(follow_placeholder);
         }
+    }
 
-
+    if (!is_own_profile) {
         if (page.name == 'cutensilly') {
             create_profile_top_item(profile_header, {
                 name: page.name,
@@ -158,8 +159,7 @@ export function redesign_profile_header(is_own_profile, is_following) {
                     full: true,
                     action: 'button',
                     primary: true,
-                    katsune: katsune,
-                    mini: true
+                    katsune: katsune
                 });
                 create_profile_top_item(profile_header, {
                     name: page.name,
@@ -192,6 +192,13 @@ export function redesign_profile_header(is_own_profile, is_following) {
             type: 'edit',
             link: `${root}settings`,
             katsune: katsune
+        });
+        create_profile_top_item(profile_header, {
+            name: page.name,
+            type: 'labs',
+            link: `${root}labs`,
+            katsune: katsune,
+            mini: true
         });
         create_profile_top_item(profile_header, {
             name: page.name,
@@ -481,7 +488,7 @@ export function create_profile_top_item(parent, {name, link, text='', type, tast
             theme: 'context-menu',
             content: (`
                 <button class="dropdown-menu-clickable-item" onclick="_open_profile_shortcut_window()" data-menu-item="settings">
-                    ${trans_legacy[lang].settings.configure}
+                    ${tl(trans.configure)}
                 </button>
             `),
             allowHTML: true,
@@ -549,7 +556,7 @@ export function create_profile_top_item(parent, {name, link, text='', type, tast
 
     if (tooltip == '')
         tippy(listen_item, {
-            content: trans_legacy[lang].profile[type]
+            content: tl(trans[type])
         });
     else
         tippy(listen_item, {

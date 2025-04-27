@@ -1653,6 +1653,24 @@
     },
     you_share_count_with: {
       en: "You share {c} with"
+    },
+    message: {
+      en: "Message"
+    },
+    sponsor: {
+      en: "Become a sponsor"
+    },
+    message_sponsor: {
+      en: "Receive sponsor rewards"
+    },
+    obsess: {
+      en: "Obsess"
+    },
+    labs: {
+      en: "Labs"
+    },
+    sponsor_info: {
+      en: "This is a special bleh-managed account to handle sponsors."
     }
   };
   var trans_legacy = {
@@ -8059,7 +8077,7 @@
     }
     let profile_header = document.createElement("section");
     profile_header.classList.add("view-all-panel", "medium-interactions");
-    if (!is_own_profile) {
+    if (!is_own_profile && page.name != sponsor_list.sponsor_account) {
       let follow_wrap = document.body.querySelector(".header-avatar .class > div");
       if (follow_wrap != null) {
         let follow_btn = follow_wrap.querySelector("button");
@@ -8088,6 +8106,8 @@
           });
         profile_header.appendChild(follow_placeholder);
       }
+    }
+    if (!is_own_profile) {
       if (page.name == "cutensilly") {
         create_profile_top_item(profile_header, {
           name: page.name,
@@ -8118,8 +8138,7 @@
             full: true,
             action: "button",
             primary: true,
-            katsune,
-            mini: true
+            katsune
           });
           create_profile_top_item(profile_header, {
             name: page.name,
@@ -8148,6 +8167,13 @@
         type: "edit",
         link: `${root}settings`,
         katsune
+      });
+      create_profile_top_item(profile_header, {
+        name: page.name,
+        type: "labs",
+        link: `${root}labs`,
+        katsune,
+        mini: true
       });
       create_profile_top_item(profile_header, {
         name: page.name,
@@ -8401,7 +8427,7 @@
         theme: "context-menu",
         content: `
                 <button class="dropdown-menu-clickable-item" onclick="_open_profile_shortcut_window()" data-menu-item="settings">
-                    ${trans_legacy[lang].settings.configure}
+                    ${tl(trans.configure)}
                 </button>
             `,
         allowHTML: true,
@@ -8462,7 +8488,7 @@
       return;
     if (tooltip == "")
       tippy(listen_item, {
-        content: trans_legacy[lang].profile[type]
+        content: tl(trans[type])
       });
     else
       tippy(listen_item, {
@@ -9699,10 +9725,10 @@
         page.structure.container.removeChild(page.structure.nav);
         page.structure.main.innerHTML = "";
         page.structure.side.innerHTML = "";
-        let alert = document.createElement("div");
-        alert.classList.add("alert", "alert-info");
-        alert.textContent = "This is a special bleh account used for managing sponsors.";
-        page.structure.container.appendChild(alert);
+        let alert = document.createElement("section");
+        alert.classList.add("cta", "colourful", "sponsor");
+        alert.innerHTML = `<strong>${tl(trans.sponsor_info)}</strong>`;
+        page.structure.main.appendChild(alert);
       }
       let featured_track_panel = profile_header.querySelector(".header-featured-track");
       if (featured_track_panel)
@@ -9710,17 +9736,19 @@
       let recent_tracks = page.structure.main.querySelector("#recent-tracks-section");
       if (!recent_tracks) {
         recent_tracks = page.structure.main.querySelector(".no-data-message");
-        recent_tracks.classList = "recent-tracks-section";
-        recent_tracks.innerHTML = `
-                <h2>
-                    <a class="text-colour-link" href="${window.location.href}/library">${tl(trans.recent_tracks)}</a>
-                </h2>
-                <div class="loading-data-container">
-                    <div class="loading-data-text private">
-                        ${recent_tracks.textContent}
+        if (recent_tracks) {
+          recent_tracks.classList = "recent-tracks-section";
+          recent_tracks.innerHTML = `
+                    <h2>
+                        <a class="text-colour-link" href="${window.location.href}/library">${tl(trans.recent_tracks)}</a>
+                    </h2>
+                    <div class="loading-data-container">
+                        <div class="loading-data-text private">
+                            ${recent_tracks.textContent}
+                        </div>
                     </div>
-                </div>
-            `;
+                `;
+        }
       }
       let listen_container = document.createElement("section");
       listen_container.classList.add("listen-panel", "listen-profile-panel");
@@ -9760,8 +9788,10 @@
       tippy(listen_container.querySelector("#scrobbles_tooltip"), {
         content: average
       });
-      page.structure.side.insertBefore(listen_container, page.structure.firstChild);
-      bleh_profile_chart();
+      if (page.name != sponsor_list.sponsor_account) {
+        page.structure.side.insertBefore(listen_container, page.structure.firstChild);
+        bleh_profile_chart();
+      }
       if (ff("redesigned_profile_header"))
         redesign_profile_header(is_own_profile, is_following);
     } else {
