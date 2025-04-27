@@ -18288,7 +18288,7 @@
   var build_default = {
     brand: "bleh",
     build: "2025.0427",
-    sku: "beret",
+    sku: "wakaba",
     bio: "bleh!!! ^-^",
     author: "kate",
     url: "https://github.com/katelyynn/bleh/raw/uwu/fm/bleh.user.js",
