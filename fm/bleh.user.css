@@ -129,7 +129,7 @@ body {
 
     --trans-short: 0.2s;
     --trans: 0.23s;
-    --trans-function: cubic-bezier(1.000, 0.000, 0.000, 0.200);
+    --trans-function: cubic-bezier(0.785, 0.135, 0.15, 0.86);
 
     [data-ff--astra="true"] & {
         --font: var(--custom_font, ''), Work Sans, Ubuntu Sans, Spline Sans, Inter, Roboto, Noto Sans, Noto Sans JP, Noto Sans KR, Noto Sans TC, var(--font_emoji_name, ''), Lucida Grande, Verdana, Tahoma, -apple-system, BlinkMacSystemFont, sans-serif;
@@ -8753,13 +8753,13 @@ a.gallery-image-preferred-off {
     transition: left var(--trans) var(--trans-function);
 
     [data-ff--new_gallery_experience="true"] & {
-        transition-property: left, opacity;
-        transition-duration: var(--trans);
+        transition-property: left, opacity, transform;
+        transition-duration: 0.5s;
         transition-timing-function: var(--trans-function);
 
         &:not(.active-slide) {
             opacity: 0;
-            /*transform: scale(0.3);*/
+            transform: scale(0.6);
         }
     }
 }
@@ -18224,7 +18224,7 @@ h4 {
             background-position: unset !important;
 
             align-items: end;
-            transition: margin-top 0.45s cubic-bezier(0.165, 0.84, 0.44, 1);
+            transition: margin-top 0.45s var(--trans-function);
 
             .avatar-side {
                 --mask-size: var(--cover-size-200) !important;
@@ -18232,8 +18232,8 @@ h4 {
                 margin-top: -81px !important;
 
                 transition-property: width, height, margin, transform;
-                transition-duration: 0.45s;
-                transition-timing-function: cubic-bezier(0.165, 0.84, 0.44, 1);
+                transition-duration: var(--trans);
+                transition-timing-function: var(--trans-function);
             }
 
             [data-bleh--profile_header_expand="false"] & {
@@ -18650,8 +18650,8 @@ h4 {
         background-position: 0 40%;
 
         transition-property: opacity, height;
-        transition-duration: 0.45s;
-        transition-timing-function: cubic-bezier(0.165, 0.84, 0.44, 1);
+        transition-duration: var(--trans);
+        transition-timing-function: var(--trans-function);
 
         &:after {
             background: linear-gradient(180deg, hsla(var(--b6), 50%) 0%, hsl(var(--b6)) 100%) !important;
