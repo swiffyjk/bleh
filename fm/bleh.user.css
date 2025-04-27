@@ -20652,6 +20652,7 @@ h4 {
     .music-artists {
         display: flex;
         justify-content: center;
+        gap: var(--card-padding);
         margin-bottom: var(--card-gap);
 
         .music-artists-featured {
@@ -20720,6 +20721,7 @@ h4 {
                     align-items: center;
                     flex-direction: column;
                     gap: var(--gap);
+                    width: 300px;
 
                     .music-featured-artist-similar {
                         color: hsl(var(--c3));
@@ -20743,6 +20745,55 @@ h4 {
                         display: none;
                     }
                 }
+            }
+        }
+    }
+    .music-releases,
+    .music-more-artists {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        gap: var(--card-padding) var(--card-gap);
+
+        .music-releases-item-wrap,
+        .music-more-artists-item-wrap {
+            padding: unset;
+            margin: unset;
+            width: unset;
+
+            .cover-art,
+            .avatar {
+                background: var(--avatar-generic-background);
+                border-radius: var(--item-big-radius);
+                box-shadow: var(--interact-shadow);
+                aspect-ratio: 1 / 1;
+                --mask-size: var(--cover-size-200);
+                overflow: hidden;
+
+                &:after {
+                    display: none;
+                }
+            }
+
+            .music-releases-item-name,
+            .music-more-artists-item-name {
+                font: inherit;
+                font-weight: var(--font-weight-medium);
+                margin-top: var(--card-gap);
+
+                a {
+                    text-decoration: none !important;
+                }
+            }
+            .music-releases-item-artist {
+                color: hsl(var(--c2), 80%);
+                margin-top: 2px;
+            }
+            .music-releases-item-aux-text,
+            .music-more-artists-item-aux-text {
+                font-size: 13px;
+                line-height: var(--line-height);
+                color: hsl(var(--c3));
+                margin-top: 4px;
             }
         }
     }
