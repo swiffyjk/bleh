@@ -3773,6 +3773,12 @@ button.navlist-more {
     line-height: 20px;
     font-weight: var(--font-weight-medium);
     margin-top: 2px;
+
+    .cta-link {
+        margin: unset;
+        text-align: left !important;
+        width: fit-content;
+    }
 }
 
 .metadata-and-wiki-row {
