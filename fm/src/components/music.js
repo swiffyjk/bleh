@@ -618,7 +618,7 @@ export function show_your_scrobbles() {
         return;
 
     let lotus_handler = document.createElement('section');
-    lotus_handler.classList.add('lotus', 'lotus-cta');
+    lotus_handler.classList.add('lotus', 'cta');
 
     lotus_handler.innerHTML = (`
         <strong>${tl(trans.lotus_cta[page.corrected]).replace('{t}', tl(trans[`${page.type}_lower`]))}</strong>

@@ -7652,7 +7652,7 @@
     if (!settings.corrections)
       return;
     let lotus_handler = document.createElement("section");
-    lotus_handler.classList.add("lotus", "lotus-cta");
+    lotus_handler.classList.add("lotus", "cta");
     lotus_handler.innerHTML = `
         <strong>${tl(trans.lotus_cta[page.corrected]).replace("{t}", tl(trans[`${page.type}_lower`]))}</strong>
         <a class="see-more" href="https://github.com/katelyynn/lotus/issues/new/choose">${tl(trans.suggest_correction)}</a>
