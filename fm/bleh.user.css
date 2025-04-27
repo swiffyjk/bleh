@@ -10272,7 +10272,7 @@ text[style^="color: rgb(0, 0, 0)"] {
     padding-left: calc(12px + 4px);
     --left: 0;
     --mask-size: 12px;
-    --margin-top: -7px;
+    --margin-top: -6px;
 
     &[data-link-type="tag"] {
         --mask: var(--icon-16-tag);
