@@ -8096,7 +8096,8 @@
           full: true,
           action: "button",
           primary: true,
-          katsune
+          katsune,
+          mini: true
         });
       }
       let msg_button = document.body.querySelector(".header-message-user");
@@ -8106,7 +8107,8 @@
             name: page.name,
             type: "message",
             link: msg_button.getAttribute("href"),
-            katsune
+            katsune,
+            mini: true
           });
         } else {
           create_profile_top_item(profile_header, {
@@ -8116,7 +8118,8 @@
             full: true,
             action: "button",
             primary: true,
-            katsune
+            katsune,
+            mini: true
           });
           create_profile_top_item(profile_header, {
             name: page.name,
@@ -8124,7 +8127,8 @@
             link: msg_button.getAttribute("href"),
             full: true,
             primary: true,
-            katsune
+            katsune,
+            mini: true
           });
         }
       }
@@ -8134,7 +8138,8 @@
           type: "shortcut",
           link: `_set_profile_as_shortcut(this, '${page.name}')`,
           action: "button",
-          katsune
+          katsune,
+          mini: true
         });
       }
     } else {
@@ -8148,7 +8153,8 @@
         name: page.name,
         type: "obsess",
         link: `${root}user/${page.name}/obsessions/set`,
-        katsune
+        katsune,
+        mini: true
       });
     }
     let listen_container = page.structure.side.querySelector(".listen-panel");
@@ -8334,10 +8340,12 @@
     }
     page.structure.side.insertBefore(profile_header, page.structure.side.firstElementChild);
   }
-  function create_profile_top_item(parent, { name, link, text = "", type, taste = "", artists = [], avi = "", percent = "", action = "", tooltip = "", allow_html = false, tooltip_theme = "", full = false, primary = false, katsune = false }) {
+  function create_profile_top_item(parent, { name, link, text = "", type, taste = "", artists = [], avi = "", percent = "", action = "", tooltip = "", allow_html = false, tooltip_theme = "", full = false, primary = false, katsune = false, mini = false }) {
     log(`creating top item of ${name}, ${link}, ${text}`, "profile");
     let listen_item = document.createElement(action != "button" ? "a" : "button");
     listen_item.classList.add("btn", "profile-top-item", `profile-top-item--${type}`, "view-item");
+    if (mini)
+      listen_item.classList.add("mini");
     if (action != "button" && type != "going" && type != "maybe" && type != "total") {
       listen_item.setAttribute("href", link);
     } else if (type != "going" && type != "maybe" && type != "total") {

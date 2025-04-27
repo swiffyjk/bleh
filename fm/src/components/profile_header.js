@@ -133,7 +133,8 @@ export function redesign_profile_header(is_own_profile, is_following) {
                 full: true,
                 action: 'button',
                 primary: true,
-                katsune: katsune
+                katsune: katsune,
+                mini: true
             });
         }
 
@@ -146,7 +147,8 @@ export function redesign_profile_header(is_own_profile, is_following) {
                     name: page.name,
                     type: 'message',
                     link: msg_button.getAttribute('href'),
-                    katsune: katsune
+                    katsune: katsune,
+                    mini: true
                 });
             } else {
                 create_profile_top_item(profile_header, {
@@ -156,7 +158,8 @@ export function redesign_profile_header(is_own_profile, is_following) {
                     full: true,
                     action: 'button',
                     primary: true,
-                    katsune: katsune
+                    katsune: katsune,
+                    mini: true
                 });
                 create_profile_top_item(profile_header, {
                     name: page.name,
@@ -164,7 +167,8 @@ export function redesign_profile_header(is_own_profile, is_following) {
                     link: msg_button.getAttribute('href'),
                     full: true,
                     primary: true,
-                    katsune: katsune
+                    katsune: katsune,
+                    mini: true
                 });
             }
         }
@@ -177,7 +181,8 @@ export function redesign_profile_header(is_own_profile, is_following) {
                 type: 'shortcut',
                 link: `_set_profile_as_shortcut(this, '${page.name}')`,
                 action: 'button',
-                katsune: katsune
+                katsune: katsune,
+                mini: true
             });
         }
     } else {
@@ -192,7 +197,8 @@ export function redesign_profile_header(is_own_profile, is_following) {
             name: page.name,
             type: 'obsess',
             link: `${root}user/${page.name}/obsessions/set`,
-            katsune: katsune
+            katsune: katsune,
+            mini: true
         });
     }
 
@@ -400,11 +406,14 @@ export function redesign_profile_header(is_own_profile, is_following) {
     page.structure.side.insertBefore(profile_header, page.structure.side.firstElementChild);
 }
 
-export function create_profile_top_item(parent, {name, link, text='', type, taste='', artists=[], avi='', percent='', action='', tooltip='', allow_html=false, tooltip_theme='', full=false, primary=false, katsune=false}) {
+export function create_profile_top_item(parent, {name, link, text='', type, taste='', artists=[], avi='', percent='', action='', tooltip='', allow_html=false, tooltip_theme='', full=false, primary=false, katsune=false, mini=false}) {
     log(`creating top item of ${name}, ${link}, ${text}`, 'profile');
 
     let listen_item = document.createElement((action != 'button') ? 'a' : 'button');
     listen_item.classList.add('btn', 'profile-top-item', `profile-top-item--${type}`, 'view-item');
+
+    if (mini)
+        listen_item.classList.add('mini');
 
     if (action != 'button' && type != 'going' && type != 'maybe' && type != 'total') {
         listen_item.setAttribute('href', link);

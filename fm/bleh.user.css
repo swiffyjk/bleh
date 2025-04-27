@@ -17451,13 +17451,16 @@ h4 {
     padding: unset !important;
     box-shadow: unset !important;
 
-    & > div, & > form {
-        display: flex;
+    &.mini-interactions {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+    }
+
+    &:not(.mini-interactions) > div {
         flex: 1;
 
-        form {
-            display: flex;
-            flex: 1;
+        a, button {
+            width: 100%;
         }
     }
 
@@ -17465,13 +17468,24 @@ h4 {
     .view-all-button {
         &:not(.dropdown-menu-clickable-item) {
             --shadow: var(--card-shadow);
-            flex: 1;
+            min-width: 48px;
             height: 48px;
             --padding: var(--card-gap) var(--card-padding) var(--card-gap) calc(var(--card-padding) + 18px + 6px);
             --left: var(--card-padding);
             --mask: var(--icon-16-gallery-vertical);
             text-align: left;
             position: relative;
+
+            &:not(.mini) {
+                flex: 1;
+            }
+
+            &.mini {
+                --font-size: 0;
+                --padding: var(--card-gap) var(--card-padding);
+                width: 48px;
+                --left: 15px;
+            }
 
             [data-bleh--theme="light"] & {
                 --bg: var(--cards-overlay-image-subtlest, none), hsl(var(--b5));
