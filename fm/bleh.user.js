@@ -1647,6 +1647,12 @@
     },
     suggest_correction: {
       en: "Suggest a correction"
+    },
+    recent_tracks: {
+      en: "Recent Tracks"
+    },
+    you_share_count_with: {
+      en: "You share {c} with"
     }
   };
   var trans_legacy = {
@@ -7846,7 +7852,6 @@
     let trend = panel.querySelector(".listener-trend");
     if (trend == null)
       return;
-    prep_chart_colours();
     let previous_chart = panel.querySelector(".scrobble-canvas-container");
     if (previous_chart != null)
       panel.removeChild(previous_chart);
@@ -15439,7 +15444,7 @@
         taste_percentage = "100%";
     }
     let profile_header = document.createElement("section");
-    profile_header.classList.add("view-all-panel", "mini-interactions");
+    profile_header.classList.add("view-all-panel", "medium-interactions");
     if (!is_own_profile) {
       let follow_wrap = document.body.querySelector(".header-avatar .class > div");
       if (follow_wrap != null) {
@@ -15532,20 +15537,25 @@
         katsune
       });
     }
-    let listen_container = page.structure.main.querySelector(".listen-container");
+    let listen_container = page.structure.side.querySelector(".listen-panel");
     if (!is_own_profile && page.name != sponsor_list.sponsor_account && katsune) {
       let taste_wrap = document.createElement("div");
       taste_wrap.classList.add("btn", "listen-item", "icon");
       taste_wrap.innerHTML = `
-            <img class="view-item-avatar" src="${auth.avatar}">
-            <img class="view-item-avatar" src="${profile_avi}">
-            <div class="info">
-                <h3>You share ${taste_percentage} with</h3>
-                <p>
-                    ${taste_artists.length == 1 ? trans_legacy[lang].profile.taste_meter.you_share_1.replace("{artist}", taste_artists[0]) : ""}
-                    ${taste_artists.length == 2 ? trans_legacy[lang].profile.taste_meter.you_share_2.replace("{artist1}", taste_artists[0]).replace("{artist2}", taste_artists[1]) : ""}
-                    ${taste_artists.length == 3 ? trans_legacy[lang].profile.taste_meter.you_share_3.replace("{artist1}", taste_artists[0]).replace("{artist2}", taste_artists[1]).replace("{artist3}", taste_artists[2]) : ""}
-                </p>
+            <div class="span">
+                <img class="view-item-avatar" src="${auth.avatar}">
+                <img class="view-item-avatar" src="${profile_avi}">
+                <div class="info">
+                    <h3>${tl(trans.you_share_count_with).replace("{c}", `<span class="colourful" data-taste="${taste}">${taste_percentage}</span>`)}</h3>
+                    <p>
+                        ${taste_artists.length == 1 ? trans_legacy[lang].profile.taste_meter.you_share_1.replace("{artist}", taste_artists[0]) : ""}
+                        ${taste_artists.length == 2 ? trans_legacy[lang].profile.taste_meter.you_share_2.replace("{artist1}", taste_artists[0]).replace("{artist2}", taste_artists[1]) : ""}
+                        ${taste_artists.length == 3 ? trans_legacy[lang].profile.taste_meter.you_share_3.replace("{artist1}", taste_artists[0]).replace("{artist2}", taste_artists[1]).replace("{artist3}", taste_artists[2]) : ""}
+                    </p>
+                </div>
+            </div>
+            <div class="taste-bar colourful" data-taste="${taste}">
+                <div class="taste-bar-fill" style="width: ${taste_percentage}"></div>
             </div>
         `;
       tippy(taste_wrap, {
@@ -16035,6 +16045,9 @@
         recent_tracks = page.structure.main.querySelector(".no-data-message");
         recent_tracks.classList = "recent-tracks-section";
         recent_tracks.innerHTML = `
+                <h2>
+                    <a class="text-colour-link" href="${window.location.href}/library">${tl(trans.recent_tracks)}</a>
+                </h2>
                 <div class="loading-data-container">
                     <div class="loading-data-text private">
                         ${recent_tracks.textContent}
@@ -16042,8 +16055,8 @@
                 </div>
             `;
       }
-      let listen_container = document.createElement("div");
-      listen_container.classList.add("listen-container");
+      let listen_container = document.createElement("section");
+      listen_container.classList.add("listen-panel", "listen-profile-panel");
       let scrobbles = 0;
       let average = 0;
       let artists = 0;
@@ -16061,28 +16074,26 @@
         }
       });
       listen_container.innerHTML = `
-            <div class="glacier-library-top">
-                <div class="glacier-library-metadata">
-                    <div class="glacier-library-metadata-item">
-                        <div class="sub-text">${trans_legacy[lang].profile.scrobbles}</div>
-                        <div class="glacier-library-metadata-item-value" id="scrobbles_tooltip">${scrobbles}</div>
-                    </div>
-                    <div class="glacier-library-metadata-item">
-                        <div class="sub-text">${trans_legacy[lang].profile.artists}</div>
-                        <div class="glacier-library-metadata-item-value">${artists}</div>
-                    </div>
-                    <div class="glacier-library-metadata-item">
-                        <div class="sub-text">${trans_legacy[lang].profile.loved}</div>
-                        <div class="glacier-library-metadata-item-value">${loved}</div>
-                    </div>
+            <div class="listener-row">
+                <div class="scrobble-side" id="scrobbles_tooltip">
+                    <h3>${trans_legacy[lang].profile.scrobbles}</h3>
+                    <p>${scrobbles}</p>
+                </div>
+                <div>
+                    <h3>${trans_legacy[lang].profile.artists}</h3>
+                    <p>${artists}</p>
+                </div>
+                <div>
+                    <h3>${trans_legacy[lang].profile.loved}</h3>
+                    <p>${loved}</p>
                 </div>
             </div>
-            <div class="listen-divider"></div>
         `;
       tippy(listen_container.querySelector("#scrobbles_tooltip"), {
         content: average
       });
-      recent_tracks.insertBefore(listen_container, recent_tracks.firstChild);
+      page.structure.side.insertBefore(listen_container, page.structure.firstChild);
+      bleh_profile_chart();
       if (ff("redesigned_profile_header"))
         redesign_profile_header(is_own_profile, is_following);
     } else {
@@ -17099,6 +17110,84 @@
       });
     }
     localStorage.setItem("bleh_profile_banners", JSON.stringify(banners));
+  }
+  function bleh_profile_chart() {
+    let panel = page.structure.side.querySelector(".listen-panel");
+    let table = panel.querySelector("table");
+    if (table) {
+      bleh_profile_chart_render(table, panel);
+      return;
+    } else {
+      fetch(`${root}user/${page.name}/library/artists/chart?date_preset=LAST_90_DAYS&page=1&ajax=1`).then(function(response) {
+        console.log("glacier library returned", response, response.text, response.status);
+        if (response.status != 200)
+          throw new Error();
+        return response.text();
+      }).then(function(html) {
+        let doc = new DOMParser().parseFromString(html, "text/html");
+        console.log("glacier library DOC", doc, doc.querySelector(".table"));
+        log("received response", "glacier library");
+        table = doc.querySelector(".table");
+        if (table) {
+          panel.appendChild(table);
+          bleh_profile_chart_render(table, panel);
+        } else {
+          log("table is null?", "glacier library", "error");
+          console.info("glacier library", doc.body.innerHTML);
+          console.info("glacier library", new DOMParser().parseFromString(doc.body.innerHTML, "text/html"));
+          throw new Error();
+        }
+      });
+    }
+  }
+  function bleh_profile_chart_render(table, panel) {
+    let previous_chart = panel.querySelector(".scrobble-canvas-container");
+    if (previous_chart)
+      panel.removeChild(previous_chart);
+    let entries = table.querySelectorAll("tbody tr");
+    let labels = [];
+    let links = [];
+    let values = [];
+    entries.forEach((entry) => {
+      let period = entry.querySelector(".js-period a");
+      let value = entry.querySelector(".js-scrobbles").textContent.trim();
+      labels.push(period.textContent.trim());
+      links.push(period.getAttribute("href"));
+      values.push(value);
+    });
+    prep_chart_colours();
+    let scrobble_canvas_container = document.createElement("div");
+    scrobble_canvas_container.classList.add("scrobble-canvas-container");
+    let scrobble_canvas = document.createElement("canvas");
+    scrobble_canvas.classList.add("scrobble-canvas");
+    let gradient = scrobble_canvas.getContext("2d").createLinearGradient(0, 0, 0, 160);
+    try {
+      gradient.addColorStop(0, page.state.chart_colours.link_bg_col);
+      gradient.addColorStop(1, page.state.chart_colours.link_bg_col_2);
+    } catch (e) {
+      gradient = page.state.chart_colours.link_bg_col;
+    }
+    Chart.defaults.color = page.state.chart_colours.text_col;
+    Chart.defaults.font.family = "Ubuntu Sans";
+    let scrobble_chart = new Chart(scrobble_canvas.getContext("2d"), {
+      type: "line",
+      data: {
+        labels,
+        datasets: [{
+          data: values,
+          borderWidth: 2,
+          backgroundColor: gradient,
+          borderColor: page.state.chart_colours.link_col,
+          fill: true,
+          pointRadius: 0,
+          pointHitRadius: 20,
+          tension: 0.1
+        }]
+      },
+      options: page.state.chart_library_line_options
+    });
+    scrobble_canvas_container.appendChild(scrobble_canvas);
+    panel.appendChild(scrobble_canvas_container);
   }
 
   // src/pages/search.js

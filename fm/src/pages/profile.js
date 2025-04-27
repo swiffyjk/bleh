@@ -6,6 +6,7 @@ import { auth, page, recent_activity_list, root } from "../build/page"
 import { cute, sponsor_list } from "../build/sponsor"
 import { clean_number, sanitise } from "../build/tools"
 import { lang, trans_legacy, trans, tl } from "../build/trans"
+import { prep_chart_colours } from '../chart'
 import { load_badges } from "../components/badge"
 import { dialog } from "../components/dialog"
 import { correct_artist, correct_item_by_artist } from "../components/lotus"
@@ -271,6 +272,9 @@ export function bleh_profiles() {
             recent_tracks = page.structure.main.querySelector('.no-data-message');
             recent_tracks.classList = 'recent-tracks-section';
             recent_tracks.innerHTML = (`
+                <h2>
+                    <a class="text-colour-link" href="${window.location.href}/library">${tl(trans.recent_tracks)}</a>
+                </h2>
                 <div class="loading-data-container">
                     <div class="loading-data-text private">
                         ${recent_tracks.textContent}
@@ -279,8 +283,8 @@ export function bleh_profiles() {
             `);
         }
 
-        let listen_container = document.createElement('div');
-        listen_container.classList.add('listen-container');
+        let listen_container = document.createElement('section');
+        listen_container.classList.add('listen-panel', 'listen-profile-panel');
 
         // acquire info
         let scrobbles = 0;
@@ -303,30 +307,29 @@ export function bleh_profiles() {
         });
 
         listen_container.innerHTML = (`
-            <div class="glacier-library-top">
-                <div class="glacier-library-metadata">
-                    <div class="glacier-library-metadata-item">
-                        <div class="sub-text">${trans_legacy[lang].profile.scrobbles}</div>
-                        <div class="glacier-library-metadata-item-value" id="scrobbles_tooltip">${scrobbles}</div>
-                    </div>
-                    <div class="glacier-library-metadata-item">
-                        <div class="sub-text">${trans_legacy[lang].profile.artists}</div>
-                        <div class="glacier-library-metadata-item-value">${artists}</div>
-                    </div>
-                    <div class="glacier-library-metadata-item">
-                        <div class="sub-text">${trans_legacy[lang].profile.loved}</div>
-                        <div class="glacier-library-metadata-item-value">${loved}</div>
-                    </div>
+            <div class="listener-row">
+                <div class="scrobble-side" id="scrobbles_tooltip">
+                    <h3>${trans_legacy[lang].profile.scrobbles}</h3>
+                    <p>${scrobbles}</p>
+                </div>
+                <div>
+                    <h3>${trans_legacy[lang].profile.artists}</h3>
+                    <p>${artists}</p>
+                </div>
+                <div>
+                    <h3>${trans_legacy[lang].profile.loved}</h3>
+                    <p>${loved}</p>
                 </div>
             </div>
-            <div class="listen-divider"></div>
         `);
 
         tippy(listen_container.querySelector('#scrobbles_tooltip'), {
             content: average
         });
 
-        recent_tracks.insertBefore(listen_container, recent_tracks.firstChild);
+        page.structure.side.insertBefore(listen_container, page.structure.firstChild);
+
+        bleh_profile_chart();
 
         if (ff('redesigned_profile_header'))
             redesign_profile_header(is_own_profile, is_following);
@@ -1631,4 +1634,104 @@ function save_banner_to_cache(img) {
     }
 
     localStorage.setItem('bleh_profile_banners', JSON.stringify(banners));
+}
+
+
+function bleh_profile_chart() {
+    let panel = page.structure.side.querySelector('.listen-panel');
+    let table = panel.querySelector('table');
+
+    if (table) {
+        bleh_profile_chart_render(table, panel);
+        return;
+    } else {
+        fetch(`${root}user/${page.name}/library/artists/chart?date_preset=LAST_90_DAYS&page=1&ajax=1`)
+        .then(function(response) {
+            console.log('glacier library returned', response, response.text, response.status);
+
+            if (response.status != 200)
+                throw new Error;
+
+            return response.text();
+        })
+        .then(function(html) {
+            let doc = new DOMParser().parseFromString(html, 'text/html');
+            console.log('glacier library DOC', doc, doc.querySelector('.table'));
+
+            log('received response', 'glacier library');
+
+            table = doc.querySelector('.table');
+
+            if (table) {
+                panel.appendChild(table);
+                bleh_profile_chart_render(table, panel);
+            } else {
+                log('table is null?', 'glacier library', 'error');
+                console.info('glacier library', doc.body.innerHTML);
+                console.info('glacier library', new DOMParser().parseFromString(doc.body.innerHTML, 'text/html'));
+                throw new Error;
+            }
+        });
+    }
+}
+
+function bleh_profile_chart_render(table, panel) {
+    // is this a chart reflow due to style loading?
+    let previous_chart = panel.querySelector('.scrobble-canvas-container');
+    if (previous_chart)
+        panel.removeChild(previous_chart);
+
+    let entries = table.querySelectorAll('tbody tr');
+
+    let labels = [];
+    let links = [];
+    let values = [];
+
+    entries.forEach((entry) => {
+        let period = entry.querySelector('.js-period a');
+        let value = entry.querySelector('.js-scrobbles').textContent.trim();
+
+        labels.push(period.textContent.trim());
+        links.push(period.getAttribute('href'));
+        values.push(value);
+    });
+
+    prep_chart_colours();
+
+    let scrobble_canvas_container = document.createElement('div');
+    scrobble_canvas_container.classList.add('scrobble-canvas-container');
+
+    let scrobble_canvas = document.createElement('canvas');
+    scrobble_canvas.classList.add('scrobble-canvas');
+
+    let gradient = scrobble_canvas.getContext('2d').createLinearGradient(0, 0, 0, 160);
+    try {
+        gradient.addColorStop(0, page.state.chart_colours.link_bg_col);
+        gradient.addColorStop(1, page.state.chart_colours.link_bg_col_2);
+    } catch(e) {
+        gradient = page.state.chart_colours.link_bg_col;
+    }
+
+    Chart.defaults.color = page.state.chart_colours.text_col;
+    Chart.defaults.font.family = 'Ubuntu Sans';
+    let scrobble_chart = new Chart(scrobble_canvas.getContext('2d'), {
+        type: 'line',
+        data: {
+            labels: labels,
+            datasets: [{
+                data: values,
+                borderWidth: 2,
+                backgroundColor: gradient,
+                borderColor: page.state.chart_colours.link_col,
+                fill: true,
+                pointRadius: 0,
+                pointHitRadius: 20,
+                tension: 0.1
+            }]
+        },
+        options: page.state.chart_library_line_options
+    });
+
+    scrobble_canvas_container.appendChild(scrobble_canvas);
+    panel.appendChild(scrobble_canvas_container);
 }

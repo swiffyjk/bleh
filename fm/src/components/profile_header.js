@@ -84,7 +84,7 @@ export function redesign_profile_header(is_own_profile, is_following) {
 
     // create new
     let profile_header = document.createElement('section');
-    profile_header.classList.add('view-all-panel', 'mini-interactions');
+    profile_header.classList.add('view-all-panel', 'medium-interactions');
 
     if (!is_own_profile) {
         // follow
@@ -196,22 +196,27 @@ export function redesign_profile_header(is_own_profile, is_following) {
         });
     }
 
-    let listen_container = page.structure.main.querySelector('.listen-container');
+    let listen_container = page.structure.side.querySelector('.listen-panel');
 
     if (!is_own_profile && page.name != sponsor_list.sponsor_account && katsune) {
         let taste_wrap = document.createElement('div');
         taste_wrap.classList.add('btn', 'listen-item', 'icon');
 
         taste_wrap.innerHTML = (`
-            <img class="view-item-avatar" src="${auth.avatar}">
-            <img class="view-item-avatar" src="${profile_avi}">
-            <div class="info">
-                <h3>You share ${taste_percentage} with</h3>
-                <p>
-                    ${(taste_artists.length == 1) ? trans_legacy[lang].profile.taste_meter.you_share_1.replace('{artist}', taste_artists[0]) : ''}
-                    ${(taste_artists.length == 2) ? trans_legacy[lang].profile.taste_meter.you_share_2.replace('{artist1}', taste_artists[0]).replace('{artist2}', taste_artists[1]) : ''}
-                    ${(taste_artists.length == 3) ? trans_legacy[lang].profile.taste_meter.you_share_3.replace('{artist1}', taste_artists[0]).replace('{artist2}', taste_artists[1]).replace('{artist3}', taste_artists[2]) : ''}
-                </p>
+            <div class="span">
+                <img class="view-item-avatar" src="${auth.avatar}">
+                <img class="view-item-avatar" src="${profile_avi}">
+                <div class="info">
+                    <h3>${tl(trans.you_share_count_with).replace('{c}', `<span class="colourful" data-taste="${taste}">${taste_percentage}</span>`)}</h3>
+                    <p>
+                        ${(taste_artists.length == 1) ? trans_legacy[lang].profile.taste_meter.you_share_1.replace('{artist}', taste_artists[0]) : ''}
+                        ${(taste_artists.length == 2) ? trans_legacy[lang].profile.taste_meter.you_share_2.replace('{artist1}', taste_artists[0]).replace('{artist2}', taste_artists[1]) : ''}
+                        ${(taste_artists.length == 3) ? trans_legacy[lang].profile.taste_meter.you_share_3.replace('{artist1}', taste_artists[0]).replace('{artist2}', taste_artists[1]).replace('{artist3}', taste_artists[2]) : ''}
+                    </p>
+                </div>
+            </div>
+            <div class="taste-bar colourful" data-taste="${taste}">
+                <div class="taste-bar-fill" style="width: ${taste_percentage}"></div>
             </div>
         `);
 

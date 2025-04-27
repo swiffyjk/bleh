@@ -922,8 +922,6 @@ export function bleh_music_page_charts() {
     if (trend == null)
         return;
 
-    prep_chart_colours();
-
     // is this a chart reflow due to style loading?
     let previous_chart = panel.querySelector('.scrobble-canvas-container');
     if (previous_chart != null)

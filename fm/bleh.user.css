@@ -9098,6 +9098,8 @@ text[style^="color: rgb(255, 172, 172)"] {
             gap: 2px;
 
             h3 {
+                font-size: var(--font-size);
+                line-height: var(--line-height);
                 color: hsl(var(--c3));
                 font-weight: var(--font-weight-medium);
                 cursor: default;
@@ -9161,6 +9163,10 @@ text[style^="color: rgb(255, 172, 172)"] {
         &:before {
             opacity: 0;
         }
+    }
+
+    table {
+        display: none;
     }
 }
 .listener-trend {
@@ -15842,35 +15848,6 @@ button.bleh--gallery-bookmark-image-btn {
                     color: hsl(var(--l3-c));
                 }*/
             }
-            &.profile-top-item--message {
-                --mask: var(--icon-16-mail);
-            }
-            &.profile-top-item--shortcut {
-                --mask: var(--icon-16-profile-shortcut);
-
-                &[data-is-shortcut="false"] {
-                    --mask: var(--icon-16-unlink);
-                }
-            }
-            &.profile-top-item--follow {
-                --mask: var(--icon-16-plus);
-                --font-size: 0 !important;
-
-                &[data-ignored="true"] {
-                    --mask: var(--icon-16-block);
-                }
-
-                [data-toggle-button-current-state="followed"] & {
-                    --mask: var(--icon-16-check);
-                }
-
-                .header-inner-wrap:has(.header-info .user-follow) [data-toggle-button-current-state="followed"] & {
-                    --mask: var(--icon-16-heart-solid) !important;
-                }
-            }
-            &.profile-top-item--edit {
-                --mask: var(--icon-16-settings);
-            }
             &.profile-top-item--going {
                 --mask: var(--icon-16-check);
             }
@@ -15879,18 +15856,6 @@ button.bleh--gallery-bookmark-image-btn {
             }
             &.profile-top-item--total {
                 --mask: var(--icon-16-event);
-            }
-            &.profile-top-item--sponsor {
-                --mask: var(--icon-16-heart);
-                --hue-over: 333;
-                --sat-over: 1;
-                --lit-over: 1;
-            }
-            &.profile-top-item--message_sponsor {
-                --mask: var(--icon-16-heart-solid);
-                --hue-over: 333;
-                --sat-over: 1;
-                --lit-over: 1;
             }
 
             &.profile-top-item--taste {
@@ -17565,6 +17530,50 @@ h4 {
             &.changelog {
                 --mask: var(--icon-16-changelog);
             }
+            &.profile-top-item--message {
+                --mask: var(--icon-16-mail);
+            }
+            &.profile-top-item--shortcut {
+                --mask: var(--icon-16-profile-shortcut);
+
+                &[data-is-shortcut="false"] {
+                    --mask: var(--icon-16-unlink);
+                }
+            }
+
+            &.profile-top-item--follow {
+                --mask: var(--icon-16-plus);
+
+                &[data-ignored="true"] {
+                    --mask: var(--icon-16-block);
+                }
+
+                [data-toggle-button-current-state="followed"] & {
+                    --mask: var(--icon-16-check);
+                }
+
+                .header-inner-wrap:has(.header-info .user-follow) [data-toggle-button-current-state="followed"] & {
+                    --mask: var(--icon-16-heart-solid) !important;
+                }
+            }
+            &.profile-top-item--edit {
+                --mask: var(--icon-16-settings);
+            }
+            &.profile-top-item--sponsor {
+                --mask: var(--icon-16-heart);
+                --hue-over: 333;
+                --sat-over: 1;
+                --lit-over: 1;
+            }
+            &.profile-top-item--message_sponsor {
+                --mask: var(--icon-16-heart-solid);
+                --hue-over: 333;
+                --sat-over: 1;
+                --lit-over: 1;
+            }
+            &.profile-top-item--obsess {
+                --mask: var(--icon-16-obsession);
+            }
         }
     }
 
@@ -18766,127 +18775,6 @@ h4 {
         }
     }
 
-    .katsune-scrobble-progress {
-        margin: -17px 0;
-
-        .progress-info {
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
-
-            .progress-value {
-                font-weight: var(--font-weight-medium);
-                cursor: default;
-                text-align: right;
-            }
-
-            .progress-bar {
-                display: flex;
-                position: relative;
-                height: 6px;
-                border-radius: 50px;
-                background-color: hsl(var(--b4));
-                width: 250px;
-
-                [data-bleh--theme="light"] & {
-                    background-color: hsl(var(--b5));
-                }
-
-                .progress-bar-fill {
-                    position: absolute;
-                    top: 0;
-                    left: 0;
-                    bottom: 0;
-                    border-radius: 50px;
-                    background-color: hsl(var(--h3));
-                    box-shadow: 0 2px 8px 1px hsl(var(--h4), 45%);
-
-                    animation: progress 3s cubic-bezier(0.77, 0.22, 0.18, 1) infinite;
-                }
-            }
-        }
-
-        .progress-badge {
-            width: 52px;
-            height: 52px;
-
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            position: relative;
-
-            font-size: 16px;
-            color: hsl(var(--c1));
-            font-weight: var(--font-weight-medium);
-            cursor: default;
-
-            .progress-percent {
-                text-shadow: 0 0 15px hsl(var(--h4)), 0 0 15px hsl(var(--h4));
-            }
-
-            .progress-icon {
-                position: absolute;
-                inset: 0;
-                pointer-events: none;
-                background: linear-gradient(hsl(var(--c1)), hsl(var(--h3)));
-
-                --mask: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIxLjI1IiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWNpcmNsZSI+PGNpcmNsZSBjeD0iMTIiIGN5PSIxMiIgcj0iMTAiLz48L3N2Zz4=');
-                mask-image: var(--mask);
-                -webkit-mask-image: var(--mask);
-                mask-size: 100%;
-                -webkit-mask-size: 100%;
-
-                [data-bleh--theme="light"] & {
-                    background: linear-gradient(hsl(var(--l4-c)), hsl(var(--h3)));
-                }
-            }
-        }
-
-        &[data-tier="0"] {
-            --hue-over: 25;
-            --sat-over: 0.3;
-            --lit-over: 1;
-        }
-        &[data-tier="1"] {
-            --hue-over: 30;
-            --sat-over: 1.5;
-            --lit-over: 0.875;
-
-            .progress-icon {
-                --mask: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIxLjI1IiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWRpYW1vbmQiPjxwYXRoIGQ9Ik0yLjcgMTAuM2EyLjQxIDIuNDEgMCAwIDAgMCAzLjQxbDcuNTkgNy41OWEyLjQxIDIuNDEgMCAwIDAgMy40MSAwbDcuNTktNy41OWEyLjQxIDIuNDEgMCAwIDAgMC0zLjQxbC03LjU5LTcuNTlhMi40MSAyLjQxIDAgMCAwLTMuNDEgMFoiLz48L3N2Zz4=');
-            }
-        }
-        &[data-tier="2"] {
-            --hue-over: 174;
-            --sat-over: 1.5;
-            --lit-over: 1;
-
-            .progress-icon {
-                --mask: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIxLjI1IiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWhleGFnb24iPjxwYXRoIGQ9Ik0yMSAxNlY4YTIgMiAwIDAgMC0xLTEuNzNsLTctNGEyIDIgMCAwIDAtMiAwbC03IDRBMiAyIDAgMCAwIDMgOHY4YTIgMiAwIDAgMCAxIDEuNzNsNyA0YTIgMiAwIDAgMCAyIDBsNy00QTIgMiAwIDAgMCAyMSAxNnoiLz48L3N2Zz4=');
-            }
-        }
-        &[data-tier="3"] {
-            --hue-over: 220;
-            --sat-over: 1.85;
-            --lit-over: 0.95;
-
-
-            .progress-icon {
-                --mask: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIxLjI1IiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLXBlbnRhZ29uIj48cGF0aCBkPSJNMTAuODMgMi4zOGEyIDIgMCAwIDEgMi4zNCAwbDggNS43NGEyIDIgMCAwIDEgLjczIDIuMjVsLTMuMDQgOS4yNmEyIDIgMCAwIDEtMS45IDEuMzdINy4wNGEyIDIgMCAwIDEtMS45LTEuMzdMMi4xIDEwLjM3YTIgMiAwIDAgMSAuNzMtMi4yNXoiLz48L3N2Zz4=');
-            }
-        }
-        &[data-tier="4"] {
-            --hue-over: 255;
-            --sat-over: 1.7;
-            --lit-over: 0.95;
-
-
-            .progress-icon {
-                --mask: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIxLjI1IiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLW9jdGFnb24iPjxwYXRoIGQ9Ik0yLjU4NiAxNi43MjZBMiAyIDAgMCAxIDIgMTUuMzEyVjguNjg4YTIgMiAwIDAgMSAuNTg2LTEuNDE0bDQuNjg4LTQuNjg4QTIgMiAwIDAgMSA4LjY4OCAyaDYuNjI0YTIgMiAwIDAgMSAxLjQxNC41ODZsNC42ODggNC42ODhBMiAyIDAgMCAxIDIyIDguNjg4djYuNjI0YTIgMiAwIDAgMS0uNTg2IDEuNDE0bC00LjY4OCA0LjY4OGEyIDIgMCAwIDEtMS40MTQuNTg2SDguNjg4YTIgMiAwIDAgMS0xLjQxNC0uNTg2eiIvPjwvc3ZnPg==');
-            }
-        }
-    }
-
     .listen-divider {
         display: block;
         width: 1px;
@@ -18962,6 +18850,124 @@ h4 {
         --hue-over: 333;
         --sat-over: 1;
         --lit-over: 1;
+    }
+}
+
+.katsune-scrobble-progress {
+    display: flex;
+    align-items: center;
+    gap: var(--button-list-gap);
+    margin: -17px 0;
+
+    .progress-info {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+
+        .progress-value {
+            font-weight: var(--font-weight-medium);
+            cursor: default;
+            text-align: right;
+        }
+
+        .progress-bar {
+            display: flex;
+            position: relative;
+            height: 6px;
+            border-radius: 50px;
+            background-color: var(--card-border-base);
+            width: 250px;
+
+            .progress-bar-fill {
+                position: absolute;
+                top: 0;
+                left: 0;
+                bottom: 0;
+                border-radius: 50px;
+                background-color: hsl(var(--h3));
+                box-shadow: 0 2px 8px 1px hsl(var(--h4), 45%);
+            }
+        }
+    }
+
+    .progress-badge {
+        width: 52px;
+        height: 52px;
+
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        position: relative;
+
+        font-size: 16px;
+        color: hsl(var(--c1));
+        font-weight: var(--font-weight-medium);
+        cursor: default;
+
+        .progress-percent {
+            text-shadow: 0 0 15px hsl(var(--h4)), 0 0 15px hsl(var(--h4));
+        }
+
+        .progress-icon {
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            background: linear-gradient(hsl(var(--c1)), hsl(var(--h3)));
+
+            --mask: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIxLjI1IiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWNpcmNsZSI+PGNpcmNsZSBjeD0iMTIiIGN5PSIxMiIgcj0iMTAiLz48L3N2Zz4=');
+            mask-image: var(--mask);
+            -webkit-mask-image: var(--mask);
+            mask-size: 100%;
+            -webkit-mask-size: 100%;
+
+            [data-bleh--theme="light"] & {
+                background: linear-gradient(hsl(var(--l4-c)), hsl(var(--h3)));
+            }
+        }
+    }
+
+    &[data-tier="0"] {
+        --hue-over: 25;
+        --sat-over: 0.3;
+        --lit-over: 1;
+    }
+    &[data-tier="1"] {
+        --hue-over: 30;
+        --sat-over: 1.5;
+        --lit-over: 0.875;
+
+        .progress-icon {
+            --mask: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIxLjI1IiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWRpYW1vbmQiPjxwYXRoIGQ9Ik0yLjcgMTAuM2EyLjQxIDIuNDEgMCAwIDAgMCAzLjQxbDcuNTkgNy41OWEyLjQxIDIuNDEgMCAwIDAgMy40MSAwbDcuNTktNy41OWEyLjQxIDIuNDEgMCAwIDAgMC0zLjQxbC03LjU5LTcuNTlhMi40MSAyLjQxIDAgMCAwLTMuNDEgMFoiLz48L3N2Zz4=');
+        }
+    }
+    &[data-tier="2"] {
+        --hue-over: 174;
+        --sat-over: 1.5;
+        --lit-over: 1;
+
+        .progress-icon {
+            --mask: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIxLjI1IiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWhleGFnb24iPjxwYXRoIGQ9Ik0yMSAxNlY4YTIgMiAwIDAgMC0xLTEuNzNsLTctNGEyIDIgMCAwIDAtMiAwbC03IDRBMiAyIDAgMCAwIDMgOHY4YTIgMiAwIDAgMCAxIDEuNzNsNyA0YTIgMiAwIDAgMCAyIDBsNy00QTIgMiAwIDAgMCAyMSAxNnoiLz48L3N2Zz4=');
+        }
+    }
+    &[data-tier="3"] {
+        --hue-over: 220;
+        --sat-over: 1.85;
+        --lit-over: 0.95;
+
+
+        .progress-icon {
+            --mask: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIxLjI1IiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLXBlbnRhZ29uIj48cGF0aCBkPSJNMTAuODMgMi4zOGEyIDIgMCAwIDEgMi4zNCAwbDggNS43NGEyIDIgMCAwIDEgLjczIDIuMjVsLTMuMDQgOS4yNmEyIDIgMCAwIDEtMS45IDEuMzdINy4wNGEyIDIgMCAwIDEtMS45LTEuMzdMMi4xIDEwLjM3YTIgMiAwIDAgMSAuNzMtMi4yNXoiLz48L3N2Zz4=');
+        }
+    }
+    &[data-tier="4"] {
+        --hue-over: 255;
+        --sat-over: 1.7;
+        --lit-over: 0.95;
+
+
+        .progress-icon {
+            --mask: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIxLjI1IiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLW9jdGFnb24iPjxwYXRoIGQ9Ik0yLjU4NiAxNi43MjZBMiAyIDAgMCAxIDIgMTUuMzEyVjguNjg4YTIgMiAwIDAgMSAuNTg2LTEuNDE0bDQuNjg4LTQuNjg4QTIgMiAwIDAgMSA4LjY4OCAyaDYuNjI0YTIgMiAwIDAgMSAxLjQxNC41ODZsNC42ODggNC42ODhBMiAyIDAgMCAxIDIyIDguNjg4djYuNjI0YTIgMiAwIDAgMS0uNTg2IDEuNDE0bC00LjY4OCA0LjY4OGEyIDIgMCAwIDEtMS40MTQuNTg2SDguNjg4YTIgMiAwIDAgMS0xLjQxNC0uNTg2eiIvPjwvc3ZnPg==');
+        }
     }
 }
 
@@ -20856,6 +20862,73 @@ h4 {
 
     .listen-divider {
         flex: 1;
+    }
+}
+.medium-interactions,
+.mini-interactions {
+    order: -10;
+}
+.bleh--profile-note-panel,
+.about-me-sidebar {
+    order: -9;
+}
+.listen-profile-panel {
+    display: flex;
+    flex-direction: column;
+    order: -4;
+
+    .glacier-library-top {
+        justify-content: center;
+        padding-bottom: var(--card-padding);
+        border-bottom: 1px solid var(--card-border-base);
+        margin-bottom: var(--card-padding);
+    }
+
+    .katsune-scrobble-progress {
+        justify-content: center;
+        margin: unset;
+        display: none;
+    }
+
+    .scrobble-canvas-container {
+        height: 260px;
+    }
+
+    .listen-item {
+        order: 3;
+        margin-top: var(--card-padding);
+        border-radius: unset !important;
+
+        align-items: unset;
+        flex-direction: column;
+        gap: var(--item-list-gap);
+
+        .span {
+            display: flex;
+            align-items: center;
+        }
+
+        .colourful {
+            color: hsl(var(--l3-c));
+        }
+
+        .taste-bar {
+            display: flex;
+            position: relative;
+            height: 6px;
+            border-radius: 50px;
+            background-color: var(--card-border-base);
+
+            .taste-bar-fill {
+                position: absolute;
+                top: 0;
+                left: 0;
+                bottom: 0;
+                border-radius: 50px;
+                background-color: hsl(var(--h3));
+                box-shadow: 0 2px 3px 0 hsl(var(--h4), 25%);
+            }
+        }
     }
 }
 .listen-item {

@@ -478,6 +478,12 @@ export const trans = {
     },
     suggest_correction: {
         en: 'Suggest a correction'
+    },
+    recent_tracks: {
+        en: 'Recent Tracks'
+    },
+    you_share_count_with: {
+        en: 'You share {c} with'
     }
 }
 
