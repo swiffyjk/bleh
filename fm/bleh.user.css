@@ -18102,6 +18102,7 @@ h4 {
         }
 
         .avatar-side {
+            background: hsl(var(--b5));
             margin-top: -20px;
             box-shadow: var(--card-shadow);
 
