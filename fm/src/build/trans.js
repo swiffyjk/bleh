@@ -508,6 +508,12 @@ export const trans = {
     },
     sponsor_info: {
         en: 'This is a special bleh-managed account to handle sponsors.'
+    },
+    loading: {
+        en: 'Loading'
+    },
+    loading_90_days: {
+        en: 'Loading your last 90 days'
     }
 }
 

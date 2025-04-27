@@ -1677,6 +1677,12 @@
     },
     sponsor_info: {
       en: "This is a special bleh-managed account to handle sponsors."
+    },
+    loading: {
+      en: "Loading"
+    },
+    loading_90_days: {
+      en: "Loading your last 90 days"
     }
   };
   var trans_legacy = {
@@ -9795,7 +9801,11 @@
                     <p>${loved}</p>
                 </div>
             </div>
-            <div class="scrobble-canvas-container"></div>
+            <a class="scrobble-canvas-container mini" href="${root}user/${page.name}/library/artists?date_preset=LAST_90_DAYS&page=1">
+                <div class="loading-data-container">
+                    <div class="loading-data-text">${tl(trans.loading_90_days)}</div>
+                </div>
+            </a>
         `;
       tippy(listen_container.querySelector("#scrobbles_tooltip"), {
         content: average

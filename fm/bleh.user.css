@@ -8763,7 +8763,7 @@ a.gallery-image-preferred-off {
         }
     }
 }
-.scrobble-canvas-container,
+.scrobble-canvas-container:not(.mini),
 #bleh--window-bleh_wait--body,
 .modal-processing,
 .gallery-placeholder {
@@ -20909,6 +20909,9 @@ h4 {
     }
 
     .scrobble-canvas-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
         height: 260px;
     }
 
