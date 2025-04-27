@@ -422,53 +422,51 @@ export function show_your_scrobbles() {
 
 
     let metadata = col_main.querySelector('.metadata-column');
-    if (settings.simulate_scroll) {
-        metadata.addEventListener('wheel', (e) => {
-            e.preventDefault();
+    if (metadata) {
+        if (settings.simulate_scroll) {
+            metadata.addEventListener('wheel', (e) => {
+                e.preventDefault();
 
-            if (e.deltaY > 0) {
-                metadata.scrollBy({
-                    top: 0,
-                    left: +200,
-                    behavior: 'smooth'
-                });
-            } else {
-                metadata.scrollBy({
-                    top: 0,
-                    left: -200,
-                    behavior: 'smooth'
-                });
-            }
+                if (e.deltaY > 0) {
+                    metadata.scrollBy({
+                        top: 0,
+                        left: +200,
+                        behavior: 'smooth'
+                    });
+                } else {
+                    metadata.scrollBy({
+                        top: 0,
+                        left: -200,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        } else {
+            metadata.classList.add('no-scroll-simulation');
+        }
+
+        let groups = [];
+
+        let headers = metadata.querySelectorAll('.catalogue-metadata-heading:not(.visible-xs)');
+        headers.forEach((item, index) => {
+            groups[index] = {
+                header: item
+            };
         });
-    } else {
-        metadata.classList.add('no-scroll-simulation');
+        let values = metadata.querySelectorAll('.catalogue-metadata-description:not(.visible-xs)');
+        values.forEach((item, index) => {
+            groups[index].value = item;
+        });
+
+        metadata.innerHTML = '';
+        groups.forEach((group) => {
+            let group_wrap = document.createElement('div');
+            group_wrap.classList.add('metadata-group');
+            group_wrap.appendChild(group.header);
+            group_wrap.appendChild(group.value);
+            metadata.appendChild(group_wrap);
+        });
     }
-
-    let groups = [];
-
-    let headers = metadata.querySelectorAll('.catalogue-metadata-heading:not(.visible-xs)');
-    headers.forEach((item, index) => {
-        groups[index] = {
-            header: item
-        };
-    });
-    let values = metadata.querySelectorAll('.catalogue-metadata-description:not(.visible-xs)');
-    values.forEach((item, index) => {
-        groups[index].value = item;
-    });
-
-    metadata.innerHTML = '';
-    groups.forEach((group) => {
-        let group_wrap = document.createElement('div');
-        group_wrap.classList.add('metadata-group');
-        group_wrap.appendChild(group.header);
-        group_wrap.appendChild(group.value);
-        metadata.appendChild(group_wrap);
-    });
-
-    let tags = col_main.querySelector('.catalogue-tags');
-
-    let wiki = col_main.querySelector('.wiki-column');
 
     let play_on;
     let play_links;
@@ -545,7 +543,7 @@ export function show_your_scrobbles() {
                     Apple Music
                 </a>
                 <a class="play-this-track-playlink music-link play-this-track-playlink--youtube-music" href="https://music.youtube.com/search?q=${sanitise(page.sister)}+${sanitise(page.name)}" target="_blank">
-                    YouTube Music
+                    YT Music
                 </a>
                 <a class="play-this-track-playlink music-link play-this-track-playlink--aoty" href="https://www.albumoftheyear.org/search/?q=${sanitise(page.sister)}+${sanitise(page.name)}" target="_blank">
                     AOTY
@@ -566,7 +564,7 @@ export function show_your_scrobbles() {
                     Apple Music
                 </a>
                 <a class="play-this-track-playlink music-link play-this-track-playlink--youtube-music" href="https://music.youtube.com/search?q=${sanitise(page.name)}" target="_blank">
-                    YouTube Music
+                    YT Music
                 </a>
                 <a class="play-this-track-playlink music-link play-this-track-playlink--aoty" href="https://www.albumoftheyear.org/search/?q=${sanitise(page.name)}" target="_blank">
                     AOTY
@@ -580,33 +578,39 @@ export function show_your_scrobbles() {
             `);
 
             let externals = page.structure.side.querySelector('.resource-external-links');
-            page.structure.side.removeChild(externals.parentElement);
-            let externals_links = externals.querySelectorAll('.resource-external-link');
-            externals_links.forEach((link) => {
-                link.classList.add('music-link');
+            if (externals) {
+                page.structure.side.removeChild(externals.parentElement);
+                let externals_links = externals.querySelectorAll('.resource-external-link');
+                externals_links.forEach((link) => {
+                    link.classList.add('music-link');
 
-                let type = link.classList[1];
-                if (type == 'resource-external-link--homepage')
-                    link.textContent = tl(trans.website);
-                else if (type == 'resource-external-link--twitter')
-                    link.textContent = 'Twitter';
-                else if (type == 'resource-external-link--facebook')
-                    link.textContent = 'Facebook';
+                    let type = link.classList[1];
+                    if (type == 'resource-external-link--homepage')
+                        link.textContent = tl(trans.website);
+                    else if (type == 'resource-external-link--twitter')
+                        link.textContent = 'Twitter';
+                    else if (type == 'resource-external-link--facebook')
+                        link.textContent = 'Facebook';
 
-                link_container.appendChild(link);
-            });
+                    link_container.appendChild(link);
+                });
+            }
         }
     }
 
     link_group.appendChild(link_container);
     col_main.appendChild(link_group);
 
-    let header_tags = document.createElement('div');
-    header_tags.classList.add('sub-text', 'music-small-header');
-    header_tags.textContent = 'Tags';
-    col_main.appendChild(header_tags);
+    let tags = col_main.querySelector('.catalogue-tags');
 
-    col_main.appendChild(tags);
+    if (tags) {
+        let header_tags = document.createElement('div');
+        header_tags.classList.add('sub-text', 'music-small-header');
+        header_tags.textContent = tl(trans.tags);
+        col_main.appendChild(header_tags);
+
+        col_main.appendChild(tags);
+    }
 
 
     // lotus
@@ -714,9 +718,9 @@ function create_listen_item(parent, {name, listens, link, avi, count=0, button=f
     } else {
         // other listeners by clicking this link (artist)
         listen_item.innerHTML = (`
-            ${(avi[0] != null) ? `<img class="view-item-avatar" src="${avi[0].getAttribute('src')}">` : ''}
-            ${(avi[1] != null) ? `<img class="view-item-avatar" src="${avi[1].getAttribute('src')}">` : ''}
-            ${(avi[2] != null) ? `<img class="view-item-avatar" src="${avi[2].getAttribute('src')}">` : ''}
+            ${avi[0] ? `<img class="view-item-avatar" src="${avi[0].getAttribute('src')}">` : ''}
+            ${avi[1] ? `<img class="view-item-avatar" src="${avi[1].getAttribute('src')}">` : ''}
+            ${avi[2] ? `<img class="view-item-avatar" src="${avi[2].getAttribute('src')}">` : ''}
             <div class="info">
                 <h3>${tl(trans.following)}</h3>
                 <p>${trans_legacy[lang].music.listens.other_listeners.replace('{c}', count)}</p>
@@ -735,9 +739,8 @@ function create_listen_item(parent, {name, listens, link, avi, count=0, button=f
         listen_item.style.setProperty('--lit-user',parsed_scrobble_as_rank.lit);
     }
 
-    if (katsune) {
+    if (katsune)
         listen_item.classList.add('icon');
-    }
 
     parent.appendChild(listen_item);
 
@@ -1059,21 +1062,25 @@ export function bleh_top_listeners() {
                 <span class="avatar user-list-avatar">
                     ${avatar.innerHTML}
                 </span>
-                ${(follow) ? follow.outerHTML : ''}
+                ${follow ? follow.outerHTML : ''}
+                ${track_wrap ? (`
                 <div class="user-list-description">
                     <p class="user-list-about-me">
                         ${track_wrap.innerHTML}
                     </p>
                 </div>
+                `) : ''}
             </div>
         `);
 
         patch_avatar(new_listener.querySelector('.user-list-avatar'), name, 'listener');
 
-        let track_link = new_listener.querySelector('.user-list-about-me a');
-        let artist = return_artist_from_track(track_link.getAttribute('href'), false);
-        let track = correct_item_by_artist(track_link.textContent.trim(), artist);
-        track_link.textContent = track;
+        if (track_wrap) {
+            let track_link = new_listener.querySelector('.user-list-about-me a');
+            let artist = return_artist_from_track(track_link.getAttribute('href'), false);
+            let track = correct_item_by_artist(track_link.textContent.trim(), artist);
+            track_link.textContent = track;
+        }
 
         new_container.appendChild(new_listener);
     });
