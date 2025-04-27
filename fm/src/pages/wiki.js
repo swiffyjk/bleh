@@ -53,7 +53,7 @@ export function bleh_wiki() {
         let h2 = wiki_panel.querySelector('h2.text-18');
 
         let sub_text = document.createElement('div');
-        sub_text.classList.add('sub-text', 'space-below');
+        sub_text.classList.add('sub-text', 'space-below', 'header-style');
         sub_text.innerHTML = (`
             <div class="breadcrumb-origin prominent">
                 ${(h2 != null) ? h2.innerHTML : page.structure.container.querySelector('.content-top-header').textContent}
@@ -87,7 +87,7 @@ export function bleh_wiki_history() {
     }
 
     let sub_text = document.createElement('div');
-    sub_text.classList.add('sub-text', 'space-below');
+    sub_text.classList.add('sub-text', 'space-below', 'header-style');
     sub_text.innerHTML = (`
         <div class="breadcrumb">
             ${breadcrumb_root.querySelector('a').outerHTML}
@@ -184,7 +184,7 @@ export function bleh_wiki_editor() {
     }
 
     let sub_text = document.createElement('div');
-    sub_text.classList.add('sub-text', 'space-below');
+    sub_text.classList.add('sub-text', 'space-below', 'header-style');
     sub_text.innerHTML = (`
         <div class="breadcrumb">
             ${breadcrumb_root.querySelector('a').outerHTML}

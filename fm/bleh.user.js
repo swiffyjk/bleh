@@ -15223,7 +15223,7 @@
     if (wiki_author != null) {
       let h2 = wiki_panel.querySelector("h2.text-18");
       let sub_text = document.createElement("div");
-      sub_text.classList.add("sub-text", "space-below");
+      sub_text.classList.add("sub-text", "space-below", "header-style");
       sub_text.innerHTML = `
             <div class="breadcrumb-origin prominent">
                 ${h2 != null ? h2.innerHTML : page.structure.container.querySelector(".content-top-header").textContent}
@@ -15249,7 +15249,7 @@
       breadcrumb_name = page.structure.container.querySelector(".content-top-header");
     }
     let sub_text = document.createElement("div");
-    sub_text.classList.add("sub-text", "space-below");
+    sub_text.classList.add("sub-text", "space-below", "header-style");
     sub_text.innerHTML = `
         <div class="breadcrumb">
             ${breadcrumb_root.querySelector("a").outerHTML}
@@ -15313,7 +15313,7 @@
       breadcrumb_name = page.structure.container.querySelector(".content-top-header");
     }
     let sub_text = document.createElement("div");
-    sub_text.classList.add("sub-text", "space-below");
+    sub_text.classList.add("sub-text", "space-below", "header-style");
     sub_text.innerHTML = `
         <div class="breadcrumb">
             ${breadcrumb_root.querySelector("a").outerHTML}

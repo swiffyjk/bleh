@@ -17392,6 +17392,9 @@ h4 {
 
     .prominent {
         color: hsl(var(--c1));
+        font-size: 16px;
+        line-height: 17px;
+        font-weight: var(--font-weight-bold);
     }
 
     .wiki-edit-small {
@@ -17444,6 +17447,19 @@ h4 {
         --mask: var(--icon-16-upload);
         --left: 0;
         min-width: unset;
+    }
+
+    &.header-style {
+        .breadcrumb {
+            flex-direction: column;
+            gap: 2px;
+
+            a {
+                &:before {
+                    display: none !important;
+                }
+            }
+        }
     }
 }
 
