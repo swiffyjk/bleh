@@ -1682,7 +1682,7 @@
       en: "Loading"
     },
     loading_90_days: {
-      en: "Loading your last 90 days"
+      en: "Collecting the last 90 days"
     }
   };
   var trans_legacy = {
