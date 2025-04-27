@@ -5214,7 +5214,7 @@ a.chartlist-love-button:after {
     /*margin: -6px 0;*/
 }
 .chartlist-count-bar {
-    line-height: 21px; /* 22 */
+    line-height: 22px; /* 22 */
     background: linear-gradient(90deg, hsl(var(--b3)), hsl(var(--c3), 40%));
     width: 180px;
     display: flex;
@@ -5265,8 +5265,7 @@ a.chartlist-love-button:after {
 }
 .chartlist-count-bar-link {
     text-decoration: var(--force-underline, none) !important;
-    padding: 0 11px !important; /* 14 */
-    font-size: 13px;
+    padding: 0 9px !important; /* 14 */
     font-weight: var(--font-weight-medium);
     flex: 1;
     text-align: right;
