@@ -17457,7 +17457,8 @@ h4 {
         grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
     }
 
-    &:not(.mini-interactions) > div {
+    & > form,
+    & > div {
         flex: 1;
 
         a, button {
