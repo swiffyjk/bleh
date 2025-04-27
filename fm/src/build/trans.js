@@ -164,17 +164,11 @@ export const trans = {
     try_again: {
         en: 'Try again'
     },
-    continue: {
-        en: 'Continue'
-    },
     back: {
         en: 'Back'
     },
     settings: {
         en: 'Settings'
-    },
-    done: {
-        en: 'Done'
     },
     on_ignore_list: {
         en: 'Ignored'

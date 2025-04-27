@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         bleh
 // @namespace    http://last.fm/
-// @version      2025.0421
+// @version      2025.0427
 // @description  bleh!!! ^-^
 // @author       kate
 // @match        https://www.last.fm/*
@@ -1326,17 +1326,11 @@
     try_again: {
       en: "Try again"
     },
-    continue: {
-      en: "Continue"
-    },
     back: {
       en: "Back"
     },
     settings: {
       en: "Settings"
-    },
-    done: {
-      en: "Done"
     },
     on_ignore_list: {
       en: "Ignored"
