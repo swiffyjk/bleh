@@ -545,6 +545,18 @@ export const trans = {
     },
     language: {
         en: 'Language'
+    },
+    symbol_presets: {
+        en: 'Symbol presets'
+    },
+    fancy_syntax: {
+        en: 'Hyperlink guide'
+    },
+    links_to: {
+        en: 'Links to {link}'
+    },
+    view_latest_version: {
+        en: 'View latest version'
     }
 }
 

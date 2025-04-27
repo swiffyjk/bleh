@@ -1707,6 +1707,18 @@
     },
     language: {
       en: "Language"
+    },
+    symbol_presets: {
+      en: "Symbol presets"
+    },
+    fancy_syntax: {
+      en: "Hyperlink guide"
+    },
+    links_to: {
+      en: "Links to {link}"
+    },
+    view_latest_version: {
+      en: "View latest version"
     }
   };
   var trans_legacy = {
@@ -15316,41 +15328,41 @@
     let wiki_syntax = document.createElement("section");
     wiki_syntax.classList.add("bleh--blank-panel", "wiki-syntax-panel");
     wiki_syntax.innerHTML = `
-        <h3 class="text-18">${trans_legacy[lang].wiki.syntax.name}</h3>
+        <h3 class="text-18">${tl(trans.fancy_syntax)}</h3>
         <div class="syntax-listing">
             <div class="syntax-listing-item">
                 <div class="code-side">[artist]julie[/artist]</div>
-                <div class="detail-side">${trans_legacy[lang].wiki.syntax.links_to.replace("{link}", `<a href="${root}music/julie" target="_blank">julie</a>`)}</div>
+                <div class="detail-side">${tl(trans.links_to).replace("{link}", `<a href="${root}music/julie" data-link-type="artist" target="_blank">julie</a>`)}</div>
             </div>
             <div class="syntax-listing-item">
                 <div class="code-side">[album artist=julie]pushing daisies[/album]</div>
-                <div class="detail-side">${trans_legacy[lang].wiki.syntax.links_to.replace("{link}", `<a href="${root}music/julie/pushing+daisies" target="_blank">pushing daisies</a>`)}</div>
+                <div class="detail-side">${tl(trans.links_to).replace("{link}", `<a href="${root}music/julie/pushing+daisies" data-link-type="album" target="_blank">pushing daisies</a>`)}</div>
             </div>
             <div class="syntax-listing-item">
                 <div class="code-side">[track artist=julie]very little effort[/track]</div>
-                <div class="detail-side">${trans_legacy[lang].wiki.syntax.links_to.replace("{link}", `<a href="${root}music/julie/_/very+little+effort" target="_blank">very little effort</a>`)}</div>
+                <div class="detail-side">${tl(trans.links_to).replace("{link}", `<a href="${root}music/julie/_/very+little+effort" data-link-type="track" target="_blank">very little effort</a>`)}</div>
             </div>
         </div>
         <div class="sep"></div>
         <div class="syntax-listing">
             <div class="syntax-listing-item">
                 <div class="code-side">[url]https://cutensilly.org/bleh/fm[/url]</div>
-                <div class="detail-side">${trans_legacy[lang].wiki.syntax.links_to.replace("{link}", `<a href="https://cutensilly.org/bleh/fm" target="_blank">https://cutensilly.org/bleh/fm</a>`)}</div>
+                <div class="detail-side">${tl(trans.links_to).replace("{link}", `<a href="https://cutensilly.org/bleh/fm" target="_blank">https://cutensilly.org/bleh/fm</a>`)}</div>
             </div>
             <div class="syntax-listing-item">
                 <div class="code-side">[url=https://cutensilly.org/bleh/fm]blehhh[/url]</div>
-                <div class="detail-side">${trans_legacy[lang].wiki.syntax.links_to.replace("{link}", `<a href="https://cutensilly.org/bleh/fm" target="_blank">blehhh</a>`)}</div>
+                <div class="detail-side">${tl(trans.links_to).replace("{link}", `<a href="https://cutensilly.org/bleh/fm" target="_blank">blehhh</a>`)}</div>
             </div>
         </div>
         <div class="sep"></div>
         <div class="syntax-listing">
             <div class="syntax-listing-item">
                 <div class="code-side">[tag]grunge[/tag]</div>
-                <div class="detail-side">${trans_legacy[lang].wiki.syntax.links_to.replace("{link}", `<a href="${root}tag/grunge" target="_blank">grunge</a>`)}</div>
+                <div class="detail-side">${tl(trans.links_to).replace("{link}", `<a href="${root}tag/grunge" data-link-type="tag" target="_blank">grunge</a>`)}</div>
             </div>
             <div class="syntax-listing-item">
                 <div class="code-side">[user]${auth.name}[/user]</div>
-                <div class="detail-side">${trans_legacy[lang].wiki.syntax.links_to.replace("{link}", `<a class="mention" href="${root}user/${auth.name}" target="_blank">@${auth.name}</a>`)}</div>
+                <div class="detail-side">${tl(trans.links_to).replace("{link}", `<a class="mention" href="${root}user/${auth.name}" target="_blank">@${auth.name}</a>`)}</div>
             </div>
         </div>
     `;
@@ -15359,14 +15371,14 @@
     latest_version_panel.classList.add("view-all-panel");
     latest_version_panel.innerHTML = `
         <a class="btn view-all-button back wiki-latest-button" href="${sub_text.querySelector("a").getAttribute("href")}">
-            ${trans_legacy[lang].wiki.latest}
+            ${tl(trans.view_latest_version)}
         </a>
     `;
     page.structure.side.appendChild(latest_version_panel);
     let wiki_presets_panel = document.createElement("section");
     wiki_presets_panel.classList.add("wiki-presets-panel");
     wiki_presets_panel.innerHTML = `
-        <h3 class="text-18">${trans_legacy[lang].wiki.presets.name}</h3>
+        <h3 class="text-18">${tl(trans.symbol_presets)}</h3>
         <div class="presets">
             <div class="preset">\u201C</div>
             <div class="preset">\u201D</div>
