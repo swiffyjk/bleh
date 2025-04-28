@@ -557,6 +557,12 @@ export const trans = {
     },
     view_latest_version: {
         en: 'View latest version'
+    },
+    explore_in_library: {
+        en: 'Explore in library'
+    },
+    add_note: {
+        en: 'Add note'
     }
 }
 

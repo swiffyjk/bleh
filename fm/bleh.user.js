@@ -1719,6 +1719,12 @@
     },
     view_latest_version: {
       en: "View latest version"
+    },
+    explore_in_library: {
+      en: "Explore in library"
+    },
+    add_note: {
+      en: "Add note"
     }
   };
   var trans_legacy = {
@@ -9812,6 +9818,11 @@
                     <div class="loading-data-text">${tl(trans.loading_90_days)}</div>
                 </div>
             </a>
+            <div class="more-link">
+                <a href="${root}user/${page.name}/library/artists?date_preset=LAST_90_DAYS&page=1">
+                    ${tl(trans.explore_in_library)}
+                </a>
+            </div>
         `;
       tippy(listen_container.querySelector("#scrobbles_tooltip"), {
         content: average
@@ -10074,20 +10085,6 @@
       }
       let buttons = document.createElement("div");
       buttons.classList.add("user-about-buttons");
-      if (!profile_has_note) {
-        let add_note_button = document.createElement("button");
-        add_note_button.classList.add("btn", "icon");
-        add_note_button.setAttribute("data-action-type", "note");
-        add_note_button.setAttribute("id", "bleh--add-note");
-        add_note_button.textContent = trans_legacy[lang].settings.profiles.notes.edit_user.replace("{u}", page.name);
-        add_note_button.setAttribute("onclick", `_add_profile_note('${page.name}',${profile_has_note})`);
-        tippy(add_note_button, {
-          content: trans_legacy[lang].settings.profiles.notes.edit_user.replace("{u}", page.name)
-        });
-        buttons.appendChild(add_note_button);
-      } else {
-        create_profile_note_panel(page.name, true);
-      }
       let about_more = document.createElement("button");
       about_more.classList.add("btn", "icon");
       about_more.setAttribute("data-action-type", "configure");
@@ -10125,6 +10122,23 @@
       buttons.appendChild(about_more);
       let about_me_header = about_me_sidebar.querySelector("h2");
       about_me_header.appendChild(buttons);
+      let edit = document.createElement("div");
+      edit.classList.add("more-link");
+      if (is_own_profile) {
+        edit.innerHTML = `
+                <a href="${root}settings">${tl(trans.edit)}</a>
+            `;
+        about_me_sidebar.appendChild(edit);
+        return;
+      }
+      if (!profile_has_note) {
+        edit.innerHTML = `
+                <a class="inline-add-icon" onclick="_add_profile_note('${page.name}',${profile_has_note})">${tl(trans.add_note)}</a>
+            `;
+        about_me_sidebar.appendChild(edit);
+      } else {
+        create_profile_note_panel(page.name, true);
+      }
     }
   }
   unsafeWindow._add_profile_note = function(username, has_note) {

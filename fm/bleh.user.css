@@ -2121,25 +2121,13 @@ span.header-new-gallery-inner a,
         justify-content: end;
 
         .featured-item-manage {
-            --bg: transparent;
-            --bg-hov: transparent;
-            --bg-atv: transparent;
-            --shadow: none;
-            --padding: 0 calc(12px + 4px) 0 0;
-            transition: none !important;
             color: hsl(var(--c3)) !important;
             text-transform: lowercase !important;
 
-            position: relative;
             --mask: var(--icon-16-trash);
-            --mask-size: 12px;
-            --margin-top: -6px;
-            --left: none;
-            --right: 0;
 
             &:hover {
                 color: hsl(var(--l3-c)) !important;
-                text-decoration: underline !important;
 
                 --hue-over: var(--hue-neg);
                 --sat-over: 1;
@@ -21227,6 +21215,7 @@ h4 {
     }
 }
 
+.featured-item-manage,
 .more-items,
 .more-link-with-action a,
 .more-link-fullwidth-right a, .more-link-fullwidth-right-flush-top a,
@@ -21247,11 +21236,17 @@ h4 {
     padding-right: calc(12px + 4px) !important;
     --left: none;
     --right: 0;
+    --show-icon: block;
+    cursor: pointer;
+
+    transition-property: transform, color;
+    transition-duration: var(--trans);
+    transition-timing-function: var(--trans-function);
 
     &.inline-add-icon {
         --left: 0;
         --right: none;
-        padding-right: unset;
+        padding-right: unset !important;
         padding-left: calc(12px + 4px) !important;
         --mask: var(--icon-16-plus);
     }
@@ -21261,6 +21256,13 @@ h4 {
 
     &:hover {
         text-decoration: underline !important;
+
+        transition-property: transform;
+        transition-duration: 0.1s;
+    }
+
+    &:active {
+        transform: scale(0.98);
     }
 
     width: fit-content;
