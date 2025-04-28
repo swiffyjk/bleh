@@ -143,6 +143,7 @@ function sponsor_manage() {
 export function bleh_sponsor_page() {
     document.body.style.removeProperty('--hue-album');
     document.body.style.removeProperty('--sat-album');
+    document.body.style.removeProperty('--lit-album');
 
     let adaptive_skin_container = document.querySelector('.adaptive-skin-container:not([data-bleh])');
 

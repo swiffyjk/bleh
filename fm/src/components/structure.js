@@ -21,6 +21,7 @@ export function checkup_page_structure(is_subpage = false, header = null) {
     if (document.body.style.getPropertyValue('--hue-album')) {
         document.body.style.removeProperty('--hue-album');
         document.body.style.removeProperty('--sat-album');
+        document.body.style.removeProperty('--lit-album');
         load_chart_colours();
     }
 

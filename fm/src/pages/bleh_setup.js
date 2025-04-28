@@ -15,6 +15,7 @@ import { display_colour_presets } from "./bleh_config";
 export function bleh_setup() {
     document.body.style.removeProperty('--hue-album');
     document.body.style.removeProperty('--sat-album');
+    document.body.style.removeProperty('--lit-album');
 
     console.info('bleh - loading first-time setup');
 
