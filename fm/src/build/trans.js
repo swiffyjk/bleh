@@ -164,17 +164,11 @@ export const trans = {
     try_again: {
         en: 'Try again'
     },
-    continue: {
-        en: 'Continue'
-    },
     back: {
         en: 'Back'
     },
     settings: {
         en: 'Settings'
-    },
-    done: {
-        en: 'Done'
     },
     on_ignore_list: {
         en: 'Ignored'
@@ -551,6 +545,18 @@ export const trans = {
     },
     language: {
         en: 'Language'
+    },
+    symbol_presets: {
+        en: 'Symbol presets'
+    },
+    fancy_syntax: {
+        en: 'Hyperlink guide'
+    },
+    links_to: {
+        en: 'Links to {link}'
+    },
+    view_latest_version: {
+        en: 'View latest version'
     }
 }
 

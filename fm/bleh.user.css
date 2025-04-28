@@ -1,7 +1,7 @@
 /* ==UserStyle==
 @name           bleh (dev)
 @namespace      github.com/katelyynn/bleh
-@version        2025.0427
+@version        2025.0428
 @license        GPL-3.0
 @author         kate
 @updateURL      https://github.com/katelyynn/bleh/raw/uwu/fm/bleh.user.css
@@ -17,7 +17,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Ubuntu+Sans:ital,wght@0,100..800;1,100..800&display=swap');
 
 body {
-    --version-build: '2025.0427';
+    --version-build: '2025.0428';
 
     --hue:  var(--hue-over,
             var(--hue-album,
@@ -271,7 +271,6 @@ a,
 .chartlist-loved,
 .preview, .preview[data-bleh--theme="dark"],
 .badge,
-.track .bar .colourful,
 .setup-colour-behind,
 .action,
 [data-season],
@@ -293,7 +292,8 @@ a,
 .to-consider li,
 .inbox-message-view .inbox-message-sender-avatar,
 .colourful,
-.redesigned-header[data-bleh--theme="dark"]
+.redesigned-header[data-bleh--theme="dark"],
+.events-list-item-attendees
 {
     --hue:  var(--hue-over,
             var(--hue-album,
@@ -456,7 +456,7 @@ body {
 
     --button-list-gap: 6px;
     --chartlist-inner-gap: 8px;
-    --item-list-gap: 8px;
+    --item-list-gap: 10px;
 
     /* cover masks */
     --cover-size-20: 14px;
@@ -4276,7 +4276,6 @@ better than the default selector '#app a' i suppose */
 .cover-art,
 .grid-items-cover-image-image,
 .similar-items-sidebar-item-image,
-.music-bookmarks-artists-item-image,
 .artist-similar-artists-sidebar-item-image,
 .column-tracks-item-image
 {
@@ -4380,7 +4379,7 @@ better than the default selector '#app a' i suppose */
 .more-link,
 .anhv1 .more-link, .more-link-fullwidth-right, .more-link-fullwidth-right-flush-top, .more-link-with-action {
     margin-top: var(--card-gap) !important;
-    height: 32px;
+    height: fit-content;
     text-align: right;
 }
 .anhv1 .more-link a {
@@ -4394,7 +4393,7 @@ better than the default selector '#app a' i suppose */
 
 .more-link-with-action {
     display: flex;
-    gap: var(--button-list-gap);
+    gap: var(--card-gap);
 
     a {
         position: relative;
@@ -4889,7 +4888,7 @@ better than the default selector '#app a' i suppose */
     position: relative;
 }
 .obsession-candidate-artist,
-.chartlist-name .feat, .chartlist-artist a, .featured-item-artist, .artist-top-albums-item-artist, .similar-albums-item-artist, .track-similar-tracks-item-artist {
+.chartlist-name .feat, .chartlist-artist a, .featured-item-artist, .similar-albums-item-artist, .track-similar-tracks-item-artist {
     color: hsla(var(--c2), 80%) !important;
     font-weight: var(--font-weight);
 }
@@ -5215,7 +5214,7 @@ a.chartlist-love-button:after {
     /*margin: -6px 0;*/
 }
 .chartlist-count-bar {
-    line-height: 21px; /* 22 */
+    line-height: 22px; /* 22 */
     background: linear-gradient(90deg, hsl(var(--b3)), hsl(var(--c3), 40%));
     width: 180px;
     display: flex;
@@ -5266,8 +5265,7 @@ a.chartlist-love-button:after {
 }
 .chartlist-count-bar-link {
     text-decoration: var(--force-underline, none) !important;
-    padding: 0 11px !important; /* 14 */
-    font-size: 13px;
+    padding: 0 9px !important; /* 14 */
     font-weight: var(--font-weight-medium);
     flex: 1;
     text-align: right;
@@ -6152,7 +6150,6 @@ button,
 .header-message-user,
 .panel-settings-button,
 .pagination-next a, .pagination-previous a, .pagination-page a, .pagination-page span,
-.more-link a, .more-link-fullwidth-right a, .more-link-fullwidth-right-flush-top a, .inline-add-icon, .more-link-with-action a,
 .video-preview-upload-cta, .album-artwork-upload-cta,
 .gallery-image-report--reported,
 .listening-report-library-link, .listening-report-promo,
@@ -6228,7 +6225,7 @@ button,
     background-repeat: repeat-x !important;
     background-position: unset !important;
 
-    &[aria-expanded="true"]:not(.delete-icon, .header-expand-button),
+    &[aria-expanded="true"]:not(.delete-icon, .header-expand-button, .glacier-library-button),
     &:is(.gallery-next, .gallery-previous):hover .arrow,
     &:hover {
         background: var(--bg-hov) !important;
@@ -6440,7 +6437,6 @@ button,
 .header-message-user,
 .pagination-previous a,
 .listening-report-promo,
-.more-link-with-action .inline-add-icon,
 .resource-external-link, .play-this-track-playlink, .replace-playlink,
 .shout-more-replies-before,
 .coloured-cta,
@@ -6466,9 +6462,6 @@ button,
 .btn--has-icon-right,
 .dropdown-menu-clickable-button, .dropdown-menu-clickable-button-js-only,
 .pagination-next a,
-.more-link a, .more-link-fullwidth-right a, .more-link-fullwidth-right-flush-top a,
-.more-items,
-.more-link-with-action a:not(.inline-add-icon),
 .btn-shortcut,
 .gallery-next .arrow,
 .header-new-gallery--link .header-new-gallery-inner,
@@ -6484,11 +6477,8 @@ button,
     --btn-right: calc(12px + 18px + 6px) !important;
 }
 
-.more-link a, .more-link-fullwidth-right a, .more-link-fullwidth-right-flush-top a, .more-link-with-action a:not(.inline-add-icon):after, .btn-shortcut {
+.btn-shortcut {
     --mask: var(--icon-16-arrow-right);
-}
-.more-items {
-    --mask: var(--icon-16-arrow-down);
 }
 .shout-more-replies-before {
     --mask: var(--icon-16-arrow-up);
@@ -6572,7 +6562,7 @@ button,
 /*     ICON MASK     */
 .listen-item p:before,
 .metadata-column .cta-link-wrap a:before, .lyrics-snippet-more-link a:before,
-.see-more:before,
+.see-more:before, #events-section > p > a:before,
 .view-all-button:before,
 .music-featured-item-background:before,
 .gallery-image-preferred-states:before, .gallery-image-votes:before,
@@ -6770,8 +6760,6 @@ span.header-new-gallery-inner a:before,
 .select-button:after,
 .continue:before, .external:before, .open:before,
 .pagination-next a:before,
-.more-link a:before, .more-link-fullwidth-right a:before, .more-link-fullwidth-right-flush-top a:before, .more-link-with-action a:not(.inline-add-icon):after,
-.more-items:before,
 .btn-shortcut:before,
 .gallery-next .arrow,
 .header-new-gallery--link .header-new-gallery-inner:before,
@@ -10098,7 +10086,7 @@ text[style^="color: rgb(0, 0, 0)"] {
 .catalogue-overview-similar-artists-item-image,
 .artist-similar-artists-sidebar-item-image,
 .music-bookmarks-artists-item-image, .music-bookmarks-albums-item-image,
-.resource-list--release-list-item-image, .artist-top-albums-item-image, .similar-albums-item-image, .source-album-art .cover-art, .track-similar-tracks-item-image, .similar-items-sidebar-item-image {
+.similar-albums-item-image, .source-album-art .cover-art, .track-similar-tracks-item-image, .similar-items-sidebar-item-image {
     border-radius: var(--item-big-radius);
     box-shadow: var(--standout-shadow);
     overflow: hidden;
@@ -10113,19 +10101,19 @@ text[style^="color: rgb(0, 0, 0)"] {
     --mask-size: var(--cover-size-100);
 }
 
-:is(.resource-list--release-list-item-image, .artist-top-albums-item-image, .similar-albums-item-image, .catalogue-overview-similar-artists-item-image, .playlist-image) img {
+:is(.resource-list--release-list-item-image, .similar-albums-item-image, .catalogue-overview-similar-artists-item-image, .playlist-image) img {
     --mask-size: var(--cover-size-200);
 }
 
 .catalogue-overview-similar-artists-item-wrap,
 .artist-similar-artists-sidebar-item-wrap,
-.resource-list--release-list-item-wrap, .artist-top-albums-item-wrap, .similar-albums-item-wrap {
+.similar-albums-item-wrap {
     padding-left: 4px;
     padding-right: 4px;
 }
 .catalogue-overview-similar-artists,
 .artist-similar-artists-sidebar,
-.resource-list--release-list, .artist-top-albums, .similar-albums {
+.similar-albums {
     margin-left: -4px;
     margin-right: -4px;
 }
@@ -10134,8 +10122,6 @@ text[style^="color: rgb(0, 0, 0)"] {
 .playlisting-playlists-item-name, .playlisting-playlists-item-name:first-child,
 .catalogue-overview-similar-artists-item-name, .catalogue-overview-similar-artists-item-name:first-child,
 .artist-similar-artists-sidebar-item-name, .artist-similar-artists-sidebar-item-name:first-child,
-.resource-list--release-list-item-name, .resource-list--release-list-item-name:first-child,
-.artist-top-albums-item-name, .artist-top-albums-item-name:first-child,
 .similar-albums-item-name, .similar-albums-item-name:first-child,
 .music-bookmarks-artists-item-name:first-child, .music-bookmarks-albums-item-name:first-child
 {
@@ -10145,8 +10131,7 @@ text[style^="color: rgb(0, 0, 0)"] {
 .playlisting-playlists-item-name,
 .catalogue-overview-similar-artists-item-name,
 .artist-similar-artists-sidebar-item-name, .artist-similar-artists-sidebar-item-name:first-child,
-.music-bookmarks-artists-item-name, .music-bookmarks-albums-item-name,
-.resource-list--release-list-item-name, .artist-top-albums-item-name, .similar-albums-item-name, .source-album-name, .track-similar-tracks-item-name, .similar-items-sidebar-item-name {
+.similar-albums-item-name, .source-album-name, .track-similar-tracks-item-name, .similar-items-sidebar-item-name {
     color: hsl(var(--c2));
     font-weight: var(--font-weight-medium);
     font-size: var(--font-size);
@@ -10163,24 +10148,21 @@ text[style^="color: rgb(0, 0, 0)"] {
 }
 .big-artist-list-title,
 .playlisting-playlists-item-name,
-.catalogue-overview-similar-artists-item-name,
-.music-bookmarks-artists-item-name, .music-bookmarks-albums-item-name,
-.artist-top-albums-item-name {
+.catalogue-overview-similar-artists-item-name {
     max-height: 36px;
 }
-.resource-list--release-list-item-artist + .resource-list--release-list-item-aux-text, .resource-list--release-list-item-artist + .resource-list--release-list-item-regular-tags,
+.resource-list--release-list-item-artist + .resource-list--release-list-item-regular-tags,
 .big-artist-list-listeners, .big-artist-list-bio,
 .playlisting-playlists-item-aux-text, .playlisting-playlists-item-regular-tags,
 .playlisting-playlists-item-description,
 .catalogue-overview-similar-artists-item-aux-text, .catalogue-overview-similar-artists-item-regular-tags,
-.resource-list--release-list-item-aux-text, .resource-list--release-list-item-regular-tags,
-.artist-top-albums-item-aux-text, .artist-top-albums-item-regular-tags,
+.resource-list--release-list-item-regular-tags,
+.artist-top-albums-item-regular-tags,
 .similar-albums-item-aux-text, .similar-albums-item-regular-tags,
 .source-album-stats,
 .similar-albums-item-artist + .similar-albums-item-aux-text, .similar-albums-item-artist + .similar-albums-item-regular-tags,
 .similar-items-sidebar-item-artist + .similar-items-sidebar-item-aux-text, .similar-items-sidebar-item-artist + .similar-items-sidebar-item-regular-tags,
-.similar-items-sidebar-item-aux-text, .similar-items-sidebar-item-regular-tags,
-.music-bookmarks-artists-item-aux-text, .music-bookmarks-albums-item-artist + .music-bookmarks-albums-item-aux-text
+.similar-items-sidebar-item-aux-text, .similar-items-sidebar-item-regular-tags
 {
     font-size: var(--font-size-sm);
     line-height: var(--line-height-sm);
@@ -11742,24 +11724,21 @@ table.table tr:nth-child(2n) td {
 .calendar-icon-month, .calendar-icon-day {
     font-size: var(--font-size) !important;
     line-height: var(--line-height) !important;
-    font-weight: var(--font-weight) !important;
+    font-weight: var(--font-weight-medium) !important;
     text-transform: initial !important;
     width: fit-content !important;
-    color: hsl(var(--c2)) !important;
+    color: hsl(var(--c3)) !important;
     margin: unset !important;
 
     /* calendar-icon specific */
     background: unset !important;
 
-    &.calendar-icon-day {
-        font-size: 24px !important;
-        line-height: 28px !important;
-        font-weight: var(--font-weight-medium) !important;
-    }
+    &.calendar-icon-day,
     &.events-list-item-date-icon-day {
-        font-size: 20px !important;
-        line-height: 24px !important;
-        font-weight: var(--font-weight-medium) !important;
+        font-size: 16px !important;
+        line-height: 20px !important;
+        font-weight: var(--font-weight-bold) !important;
+        color: hsl(var(--c2)) !important;
     }
 }
 
@@ -11809,7 +11788,7 @@ table.table tr:nth-child(2n) td {
 
     .events-list-item-date-icon, .calendar-icon {
         display: flex;
-        background: hsl(var(--b4)) !important;
+        background: hsl(var(--b6)) !important;
         box-shadow: unset !important;
         color: hsl(var(--c2));
         width: 52px;
@@ -11908,6 +11887,7 @@ table.table tr:nth-child(2n) td {
 
 /* profile page events specifically */
 .events-list-cover-link {
+    position: absolute !important;
     inset: 0 !important;
     width: 100% !important;
     height: 100% !important;
@@ -11925,6 +11905,7 @@ table.table tr:nth-child(2n) td {
 :is(.events-list, .events-list-anhv1) td, :is(.events-list, .events-list-anhv1) th {
     display: flex;
     flex-direction: column;
+    justify-content: center;
 }
 .events-list-sidebar .events-list-item--with-followed-attendees, :is(.events-list, .events-list-anhv1) .events-list-item--with-followed-attendees {
     padding-right: unset;
@@ -11936,6 +11917,10 @@ table.table tr:nth-child(2n) td {
     line-height: var(--line-height) !important;
     font-weight: var(--font-weight-medium) !important;
     text-decoration: var(--force-underline, none) !important;
+
+    a {
+        text-decoration: inherit !important;
+    }
 }
 .events-list-item-venue {
     color: hsla(var(--c2), 80%);
@@ -11953,6 +11938,27 @@ table.table tr:nth-child(2n) td {
     margin-top: unset;
     display: none;
 }
+.events-list-item-attendees {
+    color: hsl(var(--l2-c-theme-switch));
+    --hue-over: var(--hue-pos);
+    --sat-over: 1;
+    --lit-over: 1;
+}
+.attendees-you-know-list {
+    display: flex;
+    flex-wrap: wrap;
+    margin-top: 10px;
+
+    .attendee-you-know {
+        margin: 0 -6px 0 0 !important;
+
+        .attendee-you-know-avatar {
+            background: var(--avatar-generic-background);
+            border-radius: var(--avatar-radius);
+            font-size: 0 !important;
+        }
+    }
+}
 /* maybe ill work on this more sometime */
 .users-you-know-anchor {
     display: none;
@@ -11960,15 +11966,15 @@ table.table tr:nth-child(2n) td {
 
 
 /* for link block */
-.events-list-item-event {
-    position: static !important;
-}
 .events-list-item-event .link-block-cover-link {
     z-index: 2;
 }
 
 
 /*     EVENTS LIST VIEW     */
+.events-list-anhv1 {
+    font: inherit;
+}
 #events-section {
     margin-top: unset;
 }
@@ -12011,6 +12017,10 @@ table.table tr:nth-child(2n) td {
     font-size: var(--font-size) !important;
     line-height: var(--line-height) !important;
     margin: unset !important;
+}
+.events-list-item-attendees,
+.events-list-item-venue--title {
+    font-weight: var(--font-weight-medium) !important;
 }
 .events-list-item-event--lineup,
 .events-list-item-venue--address,
@@ -12269,13 +12279,6 @@ hr {
     margin-top: var(--card-gap) !important;
 }
 
-.music-bookmarks-albums,
-.music-bookmarks-artists {
-    margin: unset;
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
-    gap: var(--card-gap) 8px;
-}
 .music-bookmarks-albums:before, .music-bookmarks-albums:after,
 .music-bookmarks-artists:before, .music-bookmarks-artists:after {
     display: none !important;
@@ -17406,6 +17409,9 @@ h4 {
 
     .prominent {
         color: hsl(var(--c1));
+        font-size: 16px;
+        line-height: 17px;
+        font-weight: var(--font-weight-bold);
     }
 
     .wiki-edit-small {
@@ -17458,6 +17464,19 @@ h4 {
         --mask: var(--icon-16-upload);
         --left: 0;
         min-width: unset;
+    }
+
+    &.header-style {
+        .breadcrumb {
+            flex-direction: column;
+            gap: 2px;
+
+            a {
+                &:before {
+                    display: none !important;
+                }
+            }
+        }
     }
 }
 
@@ -20171,17 +20190,6 @@ h4 {
                     margin-top: 10px;
                     font-weight: var(--font-weight-medium);
                 }
-
-                .music-bookmarks-albums-item-artist,
-                .music-bookmarks-artists-item-name,
-                .music-bookmarks-albums-item-name {
-                    display: -webkit-box;
-                    overflow: hidden;
-                    text-overflow: ellipsis;
-                    line-clamp: 1;
-                    -webkit-line-clamp: 1;
-                    -webkit-box-orient: vertical;
-                }
             }
         }
     }
@@ -20652,6 +20660,7 @@ h4 {
     .music-artists {
         display: flex;
         justify-content: center;
+        gap: var(--card-padding);
         margin-bottom: var(--card-gap);
 
         .music-artists-featured {
@@ -20720,6 +20729,7 @@ h4 {
                     align-items: center;
                     flex-direction: column;
                     gap: var(--gap);
+                    width: 300px;
 
                     .music-featured-artist-similar {
                         color: hsl(var(--c3));
@@ -20744,6 +20754,113 @@ h4 {
                     }
                 }
             }
+        }
+    }
+}
+
+.resource-list--release-list,
+.artist-top-albums,
+.music-bookmarks-albums,
+.music-bookmarks-artists,
+.music-bookmarks-tags,
+.music-releases,
+.music-more-artists {
+    margin-left: unset;
+    margin-right: unset;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: var(--card-padding) var(--card-gap);
+
+    &.resource-list--release-list,
+    &.artist-top-albums {
+        gap: var(--card-padding) var(--item-list-gap);
+    }
+
+    .resource-list--release-list-item-wrap,
+    .artist-top-albums-item-wrap,
+    .music-bookmarks-albums-item-wrap,
+    .music-bookmarks-artists-item-wrap,
+    .music-releases-item-wrap,
+    .music-more-artists-item-wrap {
+        padding: unset;
+        margin: unset;
+        width: unset;
+
+        .cover-art,
+        .avatar {
+            background: var(--avatar-generic-background);
+            border-radius: var(--item-big-radius);
+            box-shadow: var(--interact-shadow);
+            aspect-ratio: 1 / 1;
+            --mask-size: var(--cover-size-200);
+            overflow: hidden;
+
+            &:after {
+                content: '' !important;
+                display: block !important;
+                position: absolute;
+                inset: 0;
+                background-image: var(--gloss-image) !important;
+                background-size: 100% !important;
+                opacity: var(--gloss);
+                pointer-events: none;
+                padding: unset !important;
+                box-shadow: unset !important;
+                border-radius: inherit;
+            }
+        }
+
+        .music-releases-item-playlink {
+            display: none;
+        }
+
+        .resource-list--release-list-item-name,
+        .artist-top-albums-item-name,
+        .music-bookmarks-artists-item-name,
+        .music-bookmarks-albums-item-name,
+        .music-releases-item-name,
+        .music-more-artists-item-name {
+            font: inherit;
+            font-weight: var(--font-weight-medium);
+            margin-top: 10px;
+            max-height: 36px;
+
+            a {
+                text-decoration: none !important;
+            }
+        }
+        .artist-top-albums-item-artist,
+        .music-bookmarks-albums-item-artist,
+        .music-releases-item-artist {
+            color: hsl(var(--c2), 80%);
+            margin-top: 2px;
+        }
+        .resource-list--release-list-item-aux-text,
+        .artist-top-albums-item-aux-text,
+        .music-bookmarks-albums-item-aux-text,
+        .music-bookmarks-artists-item-aux-text,
+        .music-releases-item-aux-text,
+        .music-more-artists-item-aux-text {
+            font-size: 13px;
+            line-height: var(--line-height);
+            color: hsl(var(--c3));
+            margin-top: 4px;
+
+            & + .resource-list--release-list-item-aux-text,
+            & + .artist-top-albums-item-aux-text {
+                margin-top: unset;
+            }
+        }
+
+        .music-bookmarks-albums-item-artist,
+        .music-bookmarks-artists-item-name,
+        .music-bookmarks-albums-item-name {
+            display: -webkit-box;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            line-clamp: 1;
+            -webkit-line-clamp: 1;
+            -webkit-box-orient: vertical;
         }
     }
 }
@@ -21110,14 +21227,41 @@ h4 {
     }
 }
 
+.more-items,
+.more-link-with-action a,
+.more-link-fullwidth-right a, .more-link-fullwidth-right-flush-top a,
+.more-link a,
+#events-section > p > a,
 .see-more {
+    --bg: transparent;
+    --bg-hov: transparent;
+    --bg-atv: transparent;
+    --padding: 0;
+    --shadow: none;
+    --col: hsl(var(--l3-c));
+    font-weight: var(--font-weight-medium);
     --mask: var(--icon-16-arrow-right);
     position: relative;
     --mask-size: 12px;
     --margin-top: -6px;
-    padding-right: calc(12px + 4px);
+    padding-right: calc(12px + 4px) !important;
     --left: none;
     --right: 0;
+
+    &.inline-add-icon {
+        --left: 0;
+        --right: none;
+        padding-right: unset;
+        padding-left: calc(12px + 4px) !important;
+        --mask: var(--icon-16-plus);
+    }
+    &.more-items {
+        --mask: var(--icon-16-arrow-down);
+    }
+
+    &:hover {
+        text-decoration: underline !important;
+    }
 
     width: fit-content;
 }

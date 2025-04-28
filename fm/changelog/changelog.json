@@ -1,6 +1,12 @@
 {
-    "updated": "2025-04-27",
-    "latest": "2025.0427",
+    "updated": "2025-04-28",
+    "latest": "2025.0428",
+    "2025.0428": {
+        "name": "wakaba!",
+        "type": "minor",
+        "force": false,
+        "bio": "Improved look of links, event previews, fixed album lightness leaving behind and more."
+    },
     "2025.0427": {
         "name": "wakaba",
         "type": "major",
