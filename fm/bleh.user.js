@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         bleh
 // @namespace    http://last.fm/
-// @version      2025.0427
+// @version      2025.0428
 // @description  bleh!!! ^-^
 // @author       kate
 // @match        https://www.last.fm/*
@@ -7380,11 +7380,6 @@
         let first_metadata_item = doc.querySelector(".metadata-item .metadata-display");
         let listens = 0;
         let listen_item = document.getElementById(`listen-item--${shortcut_listens.name}`);
-        let no_data = doc.querySelector(".message");
-        if (no_data) {
-          listen_item.setAttribute("data-listens", "-4");
-          return;
-        }
         if (first_metadata_item != null)
           listens = clean_number(first_metadata_item.textContent.trim());
         listen_item.setAttribute("data-listens", listens);
@@ -8599,6 +8594,7 @@
     if (document.body.style.getPropertyValue("--hue-album")) {
       document.body.style.removeProperty("--hue-album");
       document.body.style.removeProperty("--sat-album");
+      document.body.style.removeProperty("--lit-album");
       load_chart_colours();
     }
     let params = new URLSearchParams(document.location.search);
@@ -16099,6 +16095,7 @@
   function bleh_setup() {
     document.body.style.removeProperty("--hue-album");
     document.body.style.removeProperty("--sat-album");
+    document.body.style.removeProperty("--lit-album");
     console.info("bleh - loading first-time setup");
     let adaptive_skin_container = document.querySelector(".adaptive-skin-container:not([data-bleh])");
     if (adaptive_skin_container == null)
@@ -17685,6 +17682,7 @@
   function bleh_sponsor_page() {
     document.body.style.removeProperty("--hue-album");
     document.body.style.removeProperty("--sat-album");
+    document.body.style.removeProperty("--lit-album");
     let adaptive_skin_container = document.querySelector(".adaptive-skin-container:not([data-bleh])");
     if (adaptive_skin_container == null)
       return;
@@ -18293,7 +18291,7 @@
   // src/build/build.json
   var build_default = {
     brand: "bleh",
-    build: "2025.0427",
+    build: "2025.0428",
     sku: "wakaba",
     bio: "bleh!!! ^-^",
     author: "kate",
