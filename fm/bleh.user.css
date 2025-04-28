@@ -271,7 +271,6 @@ a,
 .chartlist-loved,
 .preview, .preview[data-bleh--theme="dark"],
 .badge,
-.track .bar .colourful,
 .setup-colour-behind,
 .action,
 [data-season],
@@ -293,7 +292,8 @@ a,
 .to-consider li,
 .inbox-message-view .inbox-message-sender-avatar,
 .colourful,
-.redesigned-header[data-bleh--theme="dark"]
+.redesigned-header[data-bleh--theme="dark"],
+.events-list-item-attendees
 {
     --hue:  var(--hue-over,
             var(--hue-album,
@@ -4379,7 +4379,7 @@ better than the default selector '#app a' i suppose */
 .more-link,
 .anhv1 .more-link, .more-link-fullwidth-right, .more-link-fullwidth-right-flush-top, .more-link-with-action {
     margin-top: var(--card-gap) !important;
-    height: 32px;
+    height: fit-content;
     text-align: right;
 }
 .anhv1 .more-link a {
@@ -4393,7 +4393,7 @@ better than the default selector '#app a' i suppose */
 
 .more-link-with-action {
     display: flex;
-    gap: var(--button-list-gap);
+    gap: var(--card-gap);
 
     a {
         position: relative;
@@ -6150,7 +6150,6 @@ button,
 .header-message-user,
 .panel-settings-button,
 .pagination-next a, .pagination-previous a, .pagination-page a, .pagination-page span,
-.more-link a, .more-link-fullwidth-right a, .more-link-fullwidth-right-flush-top a, .inline-add-icon, .more-link-with-action a,
 .video-preview-upload-cta, .album-artwork-upload-cta,
 .gallery-image-report--reported,
 .listening-report-library-link, .listening-report-promo,
@@ -6438,7 +6437,6 @@ button,
 .header-message-user,
 .pagination-previous a,
 .listening-report-promo,
-.more-link-with-action .inline-add-icon,
 .resource-external-link, .play-this-track-playlink, .replace-playlink,
 .shout-more-replies-before,
 .coloured-cta,
@@ -6464,9 +6462,6 @@ button,
 .btn--has-icon-right,
 .dropdown-menu-clickable-button, .dropdown-menu-clickable-button-js-only,
 .pagination-next a,
-.more-link a, .more-link-fullwidth-right a, .more-link-fullwidth-right-flush-top a,
-.more-items,
-.more-link-with-action a:not(.inline-add-icon),
 .btn-shortcut,
 .gallery-next .arrow,
 .header-new-gallery--link .header-new-gallery-inner,
@@ -6482,11 +6477,8 @@ button,
     --btn-right: calc(12px + 18px + 6px) !important;
 }
 
-.more-link a, .more-link-fullwidth-right a, .more-link-fullwidth-right-flush-top a, .more-link-with-action a:not(.inline-add-icon):after, .btn-shortcut {
+.btn-shortcut {
     --mask: var(--icon-16-arrow-right);
-}
-.more-items {
-    --mask: var(--icon-16-arrow-down);
 }
 .shout-more-replies-before {
     --mask: var(--icon-16-arrow-up);
@@ -6570,7 +6562,7 @@ button,
 /*     ICON MASK     */
 .listen-item p:before,
 .metadata-column .cta-link-wrap a:before, .lyrics-snippet-more-link a:before,
-.see-more:before,
+.see-more:before, #events-section > p > a:before,
 .view-all-button:before,
 .music-featured-item-background:before,
 .gallery-image-preferred-states:before, .gallery-image-votes:before,
@@ -6768,8 +6760,6 @@ span.header-new-gallery-inner a:before,
 .select-button:after,
 .continue:before, .external:before, .open:before,
 .pagination-next a:before,
-.more-link a:before, .more-link-fullwidth-right a:before, .more-link-fullwidth-right-flush-top a:before, .more-link-with-action a:not(.inline-add-icon):after,
-.more-items:before,
 .btn-shortcut:before,
 .gallery-next .arrow,
 .header-new-gallery--link .header-new-gallery-inner:before,
@@ -11734,24 +11724,21 @@ table.table tr:nth-child(2n) td {
 .calendar-icon-month, .calendar-icon-day {
     font-size: var(--font-size) !important;
     line-height: var(--line-height) !important;
-    font-weight: var(--font-weight) !important;
+    font-weight: var(--font-weight-medium) !important;
     text-transform: initial !important;
     width: fit-content !important;
-    color: hsl(var(--c2)) !important;
+    color: hsl(var(--c3)) !important;
     margin: unset !important;
 
     /* calendar-icon specific */
     background: unset !important;
 
-    &.calendar-icon-day {
-        font-size: 24px !important;
-        line-height: 28px !important;
-        font-weight: var(--font-weight-medium) !important;
-    }
+    &.calendar-icon-day,
     &.events-list-item-date-icon-day {
-        font-size: 20px !important;
-        line-height: 24px !important;
-        font-weight: var(--font-weight-medium) !important;
+        font-size: 16px !important;
+        line-height: 20px !important;
+        font-weight: var(--font-weight-bold) !important;
+        color: hsl(var(--c2)) !important;
     }
 }
 
@@ -11801,7 +11788,7 @@ table.table tr:nth-child(2n) td {
 
     .events-list-item-date-icon, .calendar-icon {
         display: flex;
-        background: hsl(var(--b4)) !important;
+        background: hsl(var(--b6)) !important;
         box-shadow: unset !important;
         color: hsl(var(--c2));
         width: 52px;
@@ -11900,6 +11887,7 @@ table.table tr:nth-child(2n) td {
 
 /* profile page events specifically */
 .events-list-cover-link {
+    position: absolute !important;
     inset: 0 !important;
     width: 100% !important;
     height: 100% !important;
@@ -11917,6 +11905,7 @@ table.table tr:nth-child(2n) td {
 :is(.events-list, .events-list-anhv1) td, :is(.events-list, .events-list-anhv1) th {
     display: flex;
     flex-direction: column;
+    justify-content: center;
 }
 .events-list-sidebar .events-list-item--with-followed-attendees, :is(.events-list, .events-list-anhv1) .events-list-item--with-followed-attendees {
     padding-right: unset;
@@ -11928,6 +11917,10 @@ table.table tr:nth-child(2n) td {
     line-height: var(--line-height) !important;
     font-weight: var(--font-weight-medium) !important;
     text-decoration: var(--force-underline, none) !important;
+
+    a {
+        text-decoration: inherit !important;
+    }
 }
 .events-list-item-venue {
     color: hsla(var(--c2), 80%);
@@ -11945,6 +11938,27 @@ table.table tr:nth-child(2n) td {
     margin-top: unset;
     display: none;
 }
+.events-list-item-attendees {
+    color: hsl(var(--l2-c-theme-switch));
+    --hue-over: var(--hue-pos);
+    --sat-over: 1;
+    --lit-over: 1;
+}
+.attendees-you-know-list {
+    display: flex;
+    flex-wrap: wrap;
+    margin-top: 10px;
+
+    .attendee-you-know {
+        margin: 0 -6px 0 0 !important;
+
+        .attendee-you-know-avatar {
+            background: var(--avatar-generic-background);
+            border-radius: var(--avatar-radius);
+            font-size: 0 !important;
+        }
+    }
+}
 /* maybe ill work on this more sometime */
 .users-you-know-anchor {
     display: none;
@@ -11952,15 +11966,15 @@ table.table tr:nth-child(2n) td {
 
 
 /* for link block */
-.events-list-item-event {
-    position: static !important;
-}
 .events-list-item-event .link-block-cover-link {
     z-index: 2;
 }
 
 
 /*     EVENTS LIST VIEW     */
+.events-list-anhv1 {
+    font: inherit;
+}
 #events-section {
     margin-top: unset;
 }
@@ -12003,6 +12017,10 @@ table.table tr:nth-child(2n) td {
     font-size: var(--font-size) !important;
     line-height: var(--line-height) !important;
     margin: unset !important;
+}
+.events-list-item-attendees,
+.events-list-item-venue--title {
+    font-weight: var(--font-weight-medium) !important;
 }
 .events-list-item-event--lineup,
 .events-list-item-venue--address,
@@ -21209,14 +21227,41 @@ h4 {
     }
 }
 
+.more-items,
+.more-link-with-action a,
+.more-link-fullwidth-right a, .more-link-fullwidth-right-flush-top a,
+.more-link a,
+#events-section > p > a,
 .see-more {
+    --bg: transparent;
+    --bg-hov: transparent;
+    --bg-atv: transparent;
+    --padding: 0;
+    --shadow: none;
+    --col: hsl(var(--l3-c));
+    font-weight: var(--font-weight-medium);
     --mask: var(--icon-16-arrow-right);
     position: relative;
     --mask-size: 12px;
     --margin-top: -6px;
-    padding-right: calc(12px + 4px);
+    padding-right: calc(12px + 4px) !important;
     --left: none;
     --right: 0;
+
+    &.inline-add-icon {
+        --left: 0;
+        --right: none;
+        padding-right: unset;
+        padding-left: calc(12px + 4px) !important;
+        --mask: var(--icon-16-plus);
+    }
+    &.more-items {
+        --mask: var(--icon-16-arrow-down);
+    }
+
+    &:hover {
+        text-decoration: underline !important;
+    }
 
     width: fit-content;
 }
