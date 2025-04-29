@@ -14732,7 +14732,7 @@ input[type="range"]::-moz-range-progress {
 
 .bleh--name-is-cute {
     font-family: var(--font-brand);
-    font-size: 32px;
+    font-size: 30px;
     line-height: 30px;
     margin-top: -8px;
 
@@ -18677,8 +18677,14 @@ h4 {
         transition-duration: var(--trans);
         transition-timing-function: var(--trans-function);
 
+        /*&:before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(90deg, hsl(var(--b6)) 0%, transparent 3%, transparent 97%, hsl(var(--b6)) 100%);
+        }*/
         &:after {
-            background: linear-gradient(180deg, hsla(var(--b6), 50%) 0%, hsl(var(--b6)) 100%) !important;
+            background: linear-gradient(180deg, hsl(var(--b6), 50%) 0%, hsl(var(--b6)) 100%) !important;
         }
 
         .katsune-bleh-background-border {
