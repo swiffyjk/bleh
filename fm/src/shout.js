@@ -4,6 +4,7 @@ import { log } from "./build/log";
 import { auth, page, root, shout_parse_queue } from "./build/page";
 import { lang, trans_legacy } from "./build/trans";
 import { deliver_notif, notify } from "./components/notify";
+import { trans, tl } from "./build/trans";
 
 export function patch_shouts() {
     if (page.structure.main == null)
@@ -105,10 +106,10 @@ function shout_send(send_button) {
 
     button.classList.add('btn-send-shout-generic');
     //button.innerHTML = 'Send with Copilot<span class="new-badge">PREMIUM</span>';
-    button.textContent = trans_legacy[lang].settings.send;
+    button.textContent = tl(trans.send);
 
     tippy(button, {
-        content: trans_legacy[lang].settings.send_quickly.replace('{kbd}', '<kbd>ctrl+↵</kbd>'),
+        content: tl(trans.send_quickly_with).replace('{kbd}', '<kbd>ctrl+↵</kbd>'),
         delay: [500, 0],
         allowHTML: true
     });
