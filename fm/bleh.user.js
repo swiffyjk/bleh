@@ -15498,7 +15498,6 @@
       return;
     tag_header.setAttribute("data-bwaa", "true");
     patch_header_title();
-    page.name = tag_header.querySelector(".header-title").textContent.trim();
     let is_subpage = tag_header.classList.contains("header--sub-page");
     page.structure.container = document.body.querySelector(".page-content");
     page.structure.row = page.structure.container.querySelector(".row");
@@ -15515,6 +15514,7 @@
       if (split[3] != "tag")
         index = 5;
       let title = desanitise(split[index]);
+      page.name = title;
       let redesigned_tag_header = document.createElement("section");
       redesigned_tag_header.classList.add("redesigned-header", "redesigned-tag-header", "no-background");
       redesigned_tag_header.innerHTML = `
@@ -15553,7 +15553,7 @@
     tags.forEach((tag) => {
       tag.classList.add("user-created-tag");
       tippy(tag, {
-        content: "Personal tag"
+        content: tl(trans.personal_tag)
       });
     });
   }
@@ -17977,7 +17977,7 @@
       radio.classList.add("radio-button");
       radio.innerHTML = `
             <h3 class="sub-text">${tl(trans.radio)}</h3>
-            <h4>${tl(trans[type])}</h4>
+            <h4>${type == "tag" ? page.name : tl(trans[type])}</h4>
         `;
       radio.removeAttribute("title");
     });
@@ -18236,7 +18236,7 @@
         bleh_home();
       if ((page.type == "artist" || page.type == "album" || page.type == "track") && page.subpage == "overview")
         patch_wiki();
-      if (page.type == "user" && page.subpage == "overview")
+      if ((page.type == "user" || page.type == "tag") && page.subpage == "overview")
         bleh_radio();
     }
     if (ff("page_title")) {

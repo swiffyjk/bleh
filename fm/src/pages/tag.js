@@ -20,8 +20,6 @@ export function bleh_tags() {
 
     patch_header_title();
 
-    page.name = tag_header.querySelector('.header-title').textContent.trim();
-
     let is_subpage = tag_header.classList.contains('header--sub-page');
 
 
@@ -45,6 +43,7 @@ export function bleh_tags() {
             index = 5;
 
         let title = desanitise(split[index]);
+        page.name = title;
 
         let redesigned_tag_header = document.createElement('section');
         redesigned_tag_header.classList.add('redesigned-header', 'redesigned-tag-header', 'no-background');
@@ -94,7 +93,7 @@ export function bleh_tags_mini() {
         tag.classList.add('user-created-tag');
 
         tippy(tag, {
-            content: 'Personal tag'
+            content: tl(trans.personal_tag)
         });
     });
 }

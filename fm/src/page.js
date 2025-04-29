@@ -369,7 +369,7 @@ function load_page() {
         )
             patch_wiki();
 
-        if (page.type == 'user' && page.subpage == 'overview')
+        if ((page.type == 'user' || page.type == 'tag') && page.subpage == 'overview')
             bleh_radio();
     }
 

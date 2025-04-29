@@ -9,7 +9,7 @@ export function bleh_radio() {
 
         radio.innerHTML = (`
             <h3 class="sub-text">${tl(trans.radio)}</h3>
-            <h4>${tl(trans[type])}</h4>
+            <h4>${type == 'tag' ? page.name : tl(trans[type])}</h4>
         `);
 
         radio.removeAttribute('title');
