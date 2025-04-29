@@ -644,6 +644,9 @@ export const trans = {
     },
     list: {
         en: 'List'
+    },
+    loved: {
+        en: 'Loved'
     }
 }
 

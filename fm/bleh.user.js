@@ -1806,6 +1806,9 @@
     },
     list: {
       en: "List"
+    },
+    loved: {
+      en: "Loved"
     }
   };
   var trans_legacy = {
