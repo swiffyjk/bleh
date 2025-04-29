@@ -79,12 +79,12 @@ export function bleh_profiles() {
                 ${avatar.innerHTML}
             </div>
             <div class="info-side">
-                <div class="sub-text">${trans_legacy[lang].profile.name}</div>
+                <div class="sub-text">${tl(trans.profile)}</div>
                 ${(title_wrap != null) ? `<div class="title-container">${title_wrap.innerHTML}</div>` : ''}
                 ${(sub_wrap != null) ? sub_wrap.outerHTML : ''}
             </div>
             <div class="expand-side">
-                <button class="header-expand-button icon" onclick="_toggle_profile_header(this)" aria-expanded="${settings.profile_header_expand}">${trans_legacy[lang].gallery.open.name}</button>
+                <button class="header-expand-button icon" onclick="_toggle_profile_header(this)" aria-expanded="${settings.profile_header_expand}">${tl(trans.expand)}</button>
             </div>
         `);
 
@@ -141,13 +141,13 @@ export function bleh_profiles() {
 
         let beta = document.createElement('span');
         beta.classList.add('new-badge', 'beta-badge');
-        beta.textContent = trans_legacy[lang].settings.new;
+        beta.textContent = tl(trans.new);
 
         tab.appendChild(beta);
     }
 
     let library_tab = page.structure.nav.querySelector('.secondary-nav-item--library a');
-    library_tab.textContent = trans_legacy[lang].auth_menu.library;
+    library_tab.textContent = tl(trans.library);
 
 
     let is_own_profile = (page.name == auth.name);
@@ -173,7 +173,7 @@ export function bleh_profiles() {
             let recent_activity_section = document.createElement('section');
             recent_activity_section.classList.add('recent-activity-section');
             recent_activity_section.innerHTML = (`
-                <h2>${trans_legacy[lang].activities.name}</h2>
+                <h2>${tl(trans.activity)}</h2>
             `);
 
             load_activities();
@@ -311,15 +311,15 @@ export function bleh_profiles() {
         listen_container.innerHTML = (`
             <div class="listener-row">
                 <div class="scrobble-side" id="scrobbles_tooltip">
-                    <h3>${trans_legacy[lang].profile.scrobbles}</h3>
+                    <h3>${tl(trans.scrobbles)}</h3>
                     <p>${scrobbles}</p>
                 </div>
                 <div>
-                    <h3>${trans_legacy[lang].profile.artists}</h3>
+                    <h3>${tl(trans.artists)}</h3>
                     <p>${artists}</p>
                 </div>
                 <div>
-                    <h3>${trans_legacy[lang].profile.loved}</h3>
+                    <h3>${tl(trans.loved)}</h3>
                     <p>${loved}</p>
                 </div>
             </div>
@@ -362,7 +362,7 @@ export function bleh_profiles() {
             let value_panel = document.createElement('section');
             value_panel.classList.add('value-panel');
             value_panel.innerHTML = (`
-                <h2 class="text-18">${(selected_tab != null) ? selected_tab.textContent : trans_legacy[lang].profile.events}</h2>
+                <h2 class="text-18">${(selected_tab != null) ? selected_tab.textContent : tl(trans.events)}</h2>
             `);
 
             let values = page.structure.main.querySelectorAll('.metadata-display');
@@ -390,7 +390,7 @@ export function bleh_profiles() {
             if (total_value != null) {
                 let total_text = document.createElement('h2');
                 total_text.classList.add('text-18');
-                total_text.textContent = trans_legacy[lang].event.all_time;
+                total_text.textContent = tl(trans.all_time);
 
                 value_panel.appendChild(total_text);
 
@@ -476,7 +476,7 @@ export function bleh_profiles() {
                         content: button.textContent
                     });
 
-                    button.textContent = trans_legacy[lang].music.obsession;
+                    button.textContent = tl(trans.obsess);
                 }
 
                 button.classList.add('btn', 'view-item', 'interact-item', 'obsession-top-item');
@@ -542,7 +542,7 @@ export function bleh_profiles() {
 
                 if (obsession_is_first) {
                     tippy(grid_item, {
-                        content: trans_legacy[lang].music.obsession_first
+                        content: tl(trans.obsession_first)
                     });
                 }
 
@@ -644,7 +644,7 @@ export function bleh_profiles() {
 
     let display_name = profile_sub_text.querySelector('.header-title-display-name');
     let scrobble_since = profile_sub_text.querySelector('.header-scrobble-since');
-    scrobble_since.textContent = scrobble_since.textContent.replace(trans_legacy[lang].profile.created.replace,'');
+    scrobble_since.textContent = scrobble_since.textContent.replace(tl(trans.account_scrobbling_since_replace),'');
 
     /*tippy(display_name, {
         content: display_name.textContent
@@ -655,12 +655,12 @@ export function bleh_profiles() {
 
     let display_name_pre = document.createElement('span');
     display_name_pre.classList.add('header-title-secondary--pre');
-    display_name_pre.textContent = pronouns ? trans_legacy[lang].profile.display_name.pronouns : trans_legacy[lang].profile.display_name.aka;
+    display_name_pre.textContent = pronouns ? tl(trans.account_pronouns) : tl(trans.aka);
     profile_sub_text.insertBefore(display_name_pre, display_name);
 
     let scrobble_since_pre = document.createElement('span');
     scrobble_since_pre.classList.add('header-title-secondary--pre');
-    scrobble_since_pre.textContent = trans_legacy[lang].profile.created.name;
+    scrobble_since_pre.textContent = tl(trans.account_created);
     profile_sub_text.insertBefore(scrobble_since_pre, scrobble_since);
 
     let about_me_sidebar = document.body.querySelector('.about-me-sidebar');
@@ -689,10 +689,10 @@ export function bleh_profiles() {
         let about_more = document.createElement('button');
         about_more.classList.add('btn', 'icon');
         about_more.setAttribute('data-action-type', 'configure');
-        about_more.textContent = trans_legacy[lang].settings.configure;
+        about_more.textContent = tl(trans.settings);
 
         tippy(about_more, {
-            content: trans_legacy[lang].settings.configure
+            content: tl(trans.settings)
         });
 
         tippy(about_more, {
@@ -831,7 +831,7 @@ function patch_profile_following() {
         return;
 
     following_tab.setAttribute('data-kate-processed', 'true');
-    following_tab.querySelector('a').textContent = trans_legacy[lang].profile.friends.name;
+    following_tab.querySelector('a').textContent = tl(trans.friends);
 
 
     // the rest happens on a following/followers page
@@ -852,7 +852,7 @@ function patch_profile_following() {
     else
         tab = neighbours_tab;
 
-    tab.querySelector('a').textContent = trans_legacy[lang].profile.friends.name;
+    tab.querySelector('a').textContent = tl(trans.friends);
 
 
     // create nav
@@ -893,10 +893,10 @@ function patch_profile_following() {
     view_buttons.innerHTML = (`
         <div class="view-buttons">
             <button class="btn view-item" id="toggle-list_view-1" data-toggle="list_view" data-toggle-value="1" onclick="_update_item('list_view', 1)">
-                ${trans_legacy[lang].glacier.view.grid}
+                ${tl(trans.grid)}
             </button>
             <button class="btn view-item" id="toggle-list_view-0" data-toggle="list_view" data-toggle-value="0" onclick="_update_item('list_view', 0)">
-                ${trans_legacy[lang].glacier.view.list}
+                ${tl(trans.list)}
             </button>
         </div>
     `);
@@ -1033,12 +1033,8 @@ function profile_recents() {
     // refresh
     let refresh_btn = document.createElement('button');
     refresh_btn.classList.add('btn', 'view-item', 'interact-item', 'refresh-tracklist-btn');
-    refresh_btn.textContent = trans_legacy[lang].music.refresh;
+    refresh_btn.textContent = tl(trans.refresh);
     refresh_btn.setAttribute('onclick', '_refresh_tracks(this)');
-
-    tippy(refresh_btn, {
-        content: trans_legacy[lang].music.refresh_tracks
-    });
 
     view_buttons.appendChild(refresh_btn);
 
@@ -1055,7 +1051,7 @@ function profile_recents() {
 
     let new_button = document.createElement('button');
     new_button.classList.add('panel-settings-button', 'btn', 'view-item', 'interact-item');
-    new_button.textContent = trans_legacy[lang].profile.settings;
+    new_button.textContent = tl(trans.settings);
 
     form.classList = '';
 
@@ -1233,7 +1229,7 @@ function profile_artists() {
 
     let new_button = document.createElement('button');
     new_button.classList.add('panel-settings-button', 'btn', 'view-item', 'interact-item');
-    new_button.textContent = trans_legacy[lang].profile.settings;
+    new_button.textContent = tl(trans.settings);
 
     form.classList = '';
 
@@ -1356,7 +1352,7 @@ function profile_albums() {
 
     let new_button = document.createElement('button');
     new_button.classList.add('panel-settings-button', 'btn', 'view-item', 'interact-item');
-    new_button.textContent = trans_legacy[lang].profile.settings;
+    new_button.textContent = tl(trans.settings);
 
     form.classList = '';
 
@@ -1479,7 +1475,7 @@ function profile_tracks() {
 
     let new_button = document.createElement('button');
     new_button.classList.add('panel-settings-button', 'btn', 'view-item', 'interact-item');
-    new_button.textContent = trans_legacy[lang].profile.settings;
+    new_button.textContent = tl(trans.settings);
 
     form.classList = '';
 

@@ -7035,18 +7035,6 @@ section:has(.dropdown-menu-clickable-button.section-control) {
             }
         }
 
-        &:hover {
-            &:before {
-                background: hsl(var(--h3)) !important;
-                transition: none;
-            }
-
-            &:after {
-                background: hsl(var(--b7)) !important;
-                transition: none;
-            }
-        }
-
         .listening-report-promo-date,
         h4 {
             width: fit-content;
@@ -7062,6 +7050,18 @@ section:has(.dropdown-menu-clickable-button.section-control) {
                 transform: unset !important;
                 filter: unset !important;
                 transition: unset !important;
+            }
+        }
+
+        &:hover {
+            &:before {
+                background: hsl(var(--h3)) !important;
+                transition: none;
+            }
+
+            &:after {
+                background: hsl(var(--b7)) !important;
+                transition: none;
             }
         }
     }

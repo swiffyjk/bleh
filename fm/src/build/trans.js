@@ -33,7 +33,8 @@ export const trans = {
     badges: {
         missing: {
             name: {
-                en: 'No badges'
+                en: 'No badges',
+                de: 'Kein Abzeichen'
             }
         },
         'user-status-subscriber': {
@@ -46,7 +47,8 @@ export const trans = {
         },
         'user-status-staff': {
             name: {
-                en: 'Staff'
+                en: 'Staff',
+                de: 'Angestellter'
             },
             reason: {
                 en: 'Official member of Last.fm'
@@ -75,7 +77,8 @@ export const trans = {
         },
         contributor: {
             name: {
-                en: 'Contributor'
+                en: 'Contributor',
+                de: 'Mitwirkender'
             },
             reason: {
                 en: 'Has worked on bleh or bwaa'
@@ -88,7 +91,8 @@ export const trans = {
         },
         cat: {
             name: {
-                en: 'it\s a kitty!!'
+                en: 'it\s a kitty!!',
+                de: 'ein Kätzchen!!!'
             }
         },
         sponsor: {
@@ -101,17 +105,20 @@ export const trans = {
         },
         cute: {
             reason: {
-                en: 'Reserved'
+                en: 'Reserved',
+                de: 'Reserviert'
             }
         },
         reserved: {
             reason: {
-                en: 'Reserved'
+                en: 'Reserved',
+                de: 'Reserviert'
             }
         }
     },
     home: {
-        en: 'Home'
+        en: 'Home',
+        de: 'Startseite'
     },
     library: {
         en: 'Library'
@@ -179,7 +186,7 @@ export const trans = {
     aka: {
         en: 'aka.'
     },
-    pronouns: {
+    account_pronouns: {
         en: 'pronouns'
     },
     account_created: {
@@ -276,7 +283,48 @@ export const trans = {
         name: {
             en: 'Seasonal',
             de: 'Saisonal'
+        },
+        listing: {
+            none: {
+                en: 'None active'
+            },
+            easter: {
+                en: 'Easter',
+                de: 'Ostern'
+            },
+            pride: {
+                en: 'Pride'
+            },
+            halloween: {
+                en: 'Halloween'
+            },
+            pre_fall: {
+                en: 'Early autumn'
+            },
+            fall: {
+                en: 'Autumn'
+            },
+            christmas: {
+                en: 'Christmas',
+                de: 'Weihnachten'
+            },
+            new_years: {
+                en: 'New Years',
+                de: 'Silvester'
+            }
         }
+    },
+    seasonal_timeline: {
+        en: 'Seasonal timeline'
+    },
+    seasonal_offset: {
+        en: 'Seasonal events are ran in your current timezone, which we calculated as {offset}'
+    },
+    started: {
+        en: 'Started'
+    },
+    ends_in: {
+        en: 'Ends in'
     },
     text: {
         en: 'Text'
@@ -348,6 +396,9 @@ export const trans = {
     lit: {
         en: 'Lightness',
         de: 'Helligkeit'
+    },
+    seasonal_warning: {
+        en: 'This season has a custom default accent colour!'
     },
     card_background_saturation: {
         name: {
@@ -575,6 +626,24 @@ export const trans = {
     },
     listening: {
         en: 'Listening'
+    },
+    you: {
+        en: 'You'
+    },
+    open: {
+        en: 'Open'
+    },
+    expand: {
+        en: 'Expand'
+    },
+    activity: {
+        en: 'Activity'
+    },
+    grid: {
+        en: 'Grid'
+    },
+    list: {
+        en: 'List'
     }
 }
 

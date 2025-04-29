@@ -592,22 +592,22 @@ export function render_setting_page(page_id) {
         return (`
             <div class="bleh--panel">
                 <div class="seasonal-inner">
-                    <div class="sub-text">${trans_legacy[lang].settings.customise.seasonal.timeline}</div>
+                    <div class="sub-text">${tl(trans.seasonal_timeline)}</div>
                     <h4>${moment(stored_season.now).format('MMMM Do YYYY')}</h4>
                     <div class="current-season-box" data-season="${stored_season.id}">
                         <div class="current-season-info">
                             <div class="bleh-icon bleh-seasonal-icon" data-season="${stored_season.id}"></div>
-                            <h4>${trans_legacy[lang].settings.customise.seasonal.listing[stored_season.id]}</h4>
+                            <h4>${tl(trans.seasonal.listing[stored_season.id])}</h4>
                         </div>
                         <div class="glacier-library-top season-top">
                             <div class="glacier-library-metadata">
                                 ${(stored_season.id != 'none' && stored_season.start && stored_season.end) ? (`
                                 <div class="glacier-library-metadata-item">
-                                    <div class="sub-text">${trans_legacy[lang].settings.customise.seasonal.started}</div>
+                                    <div class="sub-text">${tl(trans.started)}</div>
                                     <div class="glacier-library-metadata-item-value" id="current_season_start">${moment(stored_season.start.replace('y0', stored_season.year).replace('{offset}', stored_season.offset)).from(stored_season.now)}</div>
                                 </div>
                                 <div class="glacier-library-metadata-item">
-                                    <div class="sub-text">${trans_legacy[lang].settings.customise.seasonal.ends_in}</div>
+                                    <div class="sub-text">${tl(trans.ends_in)}</div>
                                     <div class="glacier-library-metadata-item-value" id="current_season">${moment(stored_season.end.replace('y0', stored_season.year).replace('{offset}', stored_season.offset)).to(stored_season.now, true)}</div>
                                 </div>
                                 `) : ''}
@@ -615,26 +615,12 @@ export function render_setting_page(page_id) {
                         </div>
                     </div>
                 </div>
-                <div class="info-box no-padding">
-                    <div class="bleh-icon bleh-info-icon"></div>
-                    ${trans_legacy[lang].settings.customise.seasonal.info.replace('{offset}', `<code>${stored_season.offset}</code>`)}
+                ${(stored_season.id != 'none' && stored_season.start && stored_season.end) ? (`
+                <div class="alert alert-info">
+                    ${tl(trans.seasonal_offset).replace('{offset}', `<strong>${stored_season.offset}</strong>`)}
                 </div>
-                <!--<p>${trans_legacy[lang].settings.customise.seasonal.bio}</p>
-                <div class="inner-preview pad click-thru">
-                    <div class="current-season-container">
-                        <div class="current-season" data-season="${stored_season.id}" id="current_season">
-                            ${(stored_season.id != 'none')
-                            ? trans_legacy[lang].settings.customise.seasonal.marker.current.replace('{season}', trans_legacy[lang].settings.customise.seasonal.listing[stored_season.id])
-                            : (settings.seasonal) ? trans_legacy[lang].settings.customise.seasonal.marker.none : trans_legacy[lang].settings.customise.seasonal.marker.disabled}
-                        </div>
-                        <div class="current-season-started" id="current_season_start">
-                            ${(stored_season.id != 'none')
-                            ? trans_legacy[lang].settings.customise.seasonal.marker.started
-                            : ''}
-                        </div>
-                    </div>
-                </div>-->
-                <h4>${trans_legacy[lang].settings.configure}</h4>
+                `) : ''}
+                <h4>${tl(trans.settings)}</h4>
                 <div class="toggle-container" id="container-seasonal" onclick="_update_item('seasonal')">
                     <button class="btn reset" onclick="_reset_item('seasonal')">${tl(trans.reset)}</button>
                     <div class="heading">
@@ -794,7 +780,7 @@ export function render_setting_page(page_id) {
                     </div>
                     <div class="info-side">
                         <div class="header-info">
-                            <div class="sub-text">${trans_legacy[lang].settings.profiles.you}</div>
+                            <div class="sub-text">${tl(trans.you)}</div>
                             <div class="header standalone title-container">
                                 <h1>${auth.name}</h1>
                                 ${(auth.pro) ? (`
@@ -826,7 +812,7 @@ export function render_setting_page(page_id) {
                 <div class="screen-row actions-only">
                     <div class="actions">
                         <button class="btn primary sponsor" onclick="_sponsor_manage()">
-                            ${trans_legacy[lang].settings.home.sponsor.manage}<div class="new-badge">${trans_legacy[lang].settings.new}</div>
+                            ${trans_legacy[lang].settings.home.sponsor.manage}
                         </button>
                         <button class="btn refresh icon" onclick="_sponsor_check()">
                             ${trans_legacy[lang].settings.home.sponsor.check}
@@ -840,7 +826,7 @@ export function render_setting_page(page_id) {
                 <div class="screen-row actions-only">
                     <div class="actions">
                         <button class="btn primary sponsor" onclick="_sponsor()">
-                            ${trans_legacy[lang].settings.home.sponsor.name}<div class="new-badge">${trans_legacy[lang].settings.new}</div>
+                            ${trans_legacy[lang].settings.home.sponsor.name}
                         </button>
                         <button class="btn refresh icon" onclick="_sponsor_check()">
                             ${trans_legacy[lang].settings.home.sponsor.check}
@@ -2245,7 +2231,7 @@ export function display_colour_presets() {
                     content: (`
                         <div class="dialog-settings">
                             <div class="alert alert-info seasonal-hsl-alert">
-                                ${trans_legacy[lang].settings.customise.colours.modals.custom_colour.seasonal_alert}
+                                ${tl(trans.seasonal_warning)}
                             </div>
                             ${(ff('colour_based_on_hex')) ? (`
                             <strong>${tl(trans.convert_from_hex)}</strong>
@@ -2476,7 +2462,7 @@ unsafeWindow._edit_profile_note = function(username) {
             ${trans_legacy[lang].settings.save}
         </button>
         <button class="btn cancel" onclick="_kill_window('edit_profile_note')">
-            ${trans_legacy[lang].settings.cancel}
+            ${tl(trans.cancel)}
         </button>
     </div>
     `, true);
@@ -2612,7 +2598,7 @@ unsafeWindow._import_settings = function() {
                     ${tl(trans.import)}
                 </button>
                 <button class="btn cancel" onclick="_dialog_rm({id: 'import_settings'})">
-                    ${trans_legacy[lang].settings.cancel}
+                    ${tl(trans.cancel)}
                 </button>
             </div>
         `)
@@ -2691,7 +2677,7 @@ unsafeWindow._reset_settings = function() {
                     ${trans_legacy[lang].settings.actions.reset.modals.initial.export}
                 </button>
                 <button class="btn primary cancel" onclick="_dialog_rm({id: 'reset_settings'})">
-                    ${trans_legacy[lang].settings.cancel}
+                    ${tl(trans.cancel)}
                 </button>
             </div>
         `)
