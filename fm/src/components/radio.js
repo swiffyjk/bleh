@@ -2,7 +2,7 @@ import { page } from '../build/page';
 import { tl, trans } from '../build/trans';
 
 export function bleh_radio() {
-    let radios = page.structure.container.querySelectorAll('.stationlink');
+    let radios = page.structure.side.querySelectorAll('.stationlink');
     radios.forEach((radio) => {
         let type = radio.getAttribute('data-analytics-label');
         radio.classList.add('radio-button');
@@ -38,5 +38,8 @@ export function bleh_radio() {
         let list = page.structure.side.querySelector('.stationlink-list');
         page.structure.side.removeChild(list.parentElement);
         promo_v3.appendChild(list);
+    } else {
+        let header = page.structure.side.querySelector('.stationlinks-header');
+        header.textContent = tl(trans.listening);
     }
 }
