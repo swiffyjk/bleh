@@ -1321,7 +1321,7 @@
     },
     set_obsession: {
       en: "Obsess",
-      de: "obsessen"
+      de: "Obsessen"
     },
     obsession_first: {
       en: "First to claim this obsession!"
@@ -1338,7 +1338,7 @@
     },
     your_scrobbles: {
       en: "Your scrobbles",
-      de: "Deine Scrobbles"
+      de: "Deine Scrobbels"
     },
     plays: {
       en: "Plays"
@@ -1362,32 +1362,40 @@
       en: "aka."
     },
     account_pronouns: {
-      en: "pronouns"
+      en: "pronouns",
+      de: "pronomen"
     },
     account_created: {
       en: "created"
     },
     account_scrobbling_since_replace: {
       // copy this from last.fm 1:1 (including the space at the end if there)
-      en: "\u2022 scrobbling since "
+      en: "\u2022 scrobbling since ",
+      de: "\u2022 scrobbelt seit "
     },
     edit: {
-      en: "Edit"
+      en: "Edit",
+      de: "Editieren"
     },
     edit_profile: {
-      en: "Edit profile"
+      en: "Edit profile",
+      de: "Profil editieren"
     },
     scrobbles: {
-      en: "Scrobbles"
+      en: "Scrobbles",
+      de: "Scrobbels"
     },
     artists: {
-      en: "Artists"
+      en: "Artists",
+      de: "K\xFCnstler"
     },
     albums: {
-      en: "Albums"
+      en: "Albums",
+      de: "Alben"
     },
     tracks: {
-      en: "Tracks"
+      en: "Tracks",
+      de: "Titel"
     },
     appearance: {
       en: "Appearance",
