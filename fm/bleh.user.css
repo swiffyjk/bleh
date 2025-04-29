@@ -895,7 +895,7 @@ body {
         pointer-events: none;
     }
 
-    .bleh-supports-loading &:not(.bleh-loaded) {
+    .bleh-supports-loading &:not(.bleh-loaded, .labs-section) {
         &:before {
             background-color: hsl(var(--b6));
         }
@@ -3046,6 +3046,9 @@ button.navlist-more {
 }
 .secondary-nav-item--wiki a {
     --mask: var(--icon-16-bio);
+}
+.secondary-nav-item--velocity {
+    --mask: var(--icon-16-labs);
 }
 
 

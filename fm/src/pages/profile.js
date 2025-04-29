@@ -155,9 +155,7 @@ export function bleh_profiles() {
         profile_header.setAttribute('data-is-own-profile', 'true');
 
     if (!is_subpage) {
-        let is_following = false;
-        if (profile_header.querySelector('.label.user-follow'))
-            is_following = true;
+        let is_following = profile_header.querySelector('.label.user-follow');
 
 
         //

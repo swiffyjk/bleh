@@ -647,6 +647,9 @@ export const trans = {
     },
     loved: {
         en: 'Loved'
+    },
+    velocity: {
+        en: 'Velocity'
     }
 }
 

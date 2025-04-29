@@ -1809,6 +1809,9 @@
     },
     loved: {
       en: "Loved"
+    },
+    velocity: {
+      en: "Velocity"
     }
   };
   var trans_legacy = {
@@ -5327,6 +5330,15 @@
     });
     page.structure.side.appendChild(date_panel);
     page.structure.glacier.date_panel = date_panel;
+    let tabs = page.structure.container.querySelector(".library-controls .navlist-items");
+    let velocity_tab = document.createElement("li");
+    velocity_tab.classList.add("navlist-item", "secondary-nav-item", "secondary-nav-item--velocity");
+    velocity_tab.innerHTML = `
+        <a class="secondary-nav-item-link" href="${root}labs/artist-velocity" target="_blank">
+            ${tl(trans.velocity)}
+        </a>
+    `;
+    tabs.appendChild(velocity_tab);
     if (!ff("glacier_library"))
       return;
     if (settings.glacier_library_graphs) {
@@ -9773,9 +9785,7 @@
     if (is_own_profile)
       profile_header.setAttribute("data-is-own-profile", "true");
     if (!is_subpage) {
-      let is_following = false;
-      if (profile_header.querySelector(".label.user-follow"))
-        is_following = true;
+      let is_following = profile_header.querySelector(".label.user-follow");
       profile_recents();
       profile_artists();
       profile_albums();

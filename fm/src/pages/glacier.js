@@ -36,6 +36,18 @@ export function bleh_user_library() {
     page.structure.glacier.date_panel = date_panel;
 
 
+    // tabs
+    let tabs = page.structure.container.querySelector('.library-controls .navlist-items');
+    let velocity_tab = document.createElement('li');
+    velocity_tab.classList.add('navlist-item', 'secondary-nav-item', 'secondary-nav-item--velocity');
+    velocity_tab.innerHTML = (`
+        <a class="secondary-nav-item-link" href="${root}labs/artist-velocity" target="_blank">
+            ${tl(trans.velocity)}
+        </a>
+    `);
+    tabs.appendChild(velocity_tab);
+
+
     if (!ff('glacier_library'))
         return;
 
