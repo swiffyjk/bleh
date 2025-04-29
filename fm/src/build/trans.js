@@ -563,6 +563,15 @@ export const trans = {
     },
     add_note: {
         en: 'Add note'
+    },
+    radio: {
+        en: 'Radio'
+    },
+    mix: {
+        en: 'Mix'
+    },
+    recommended: {
+        en: 'Recommended'
     }
 }
 

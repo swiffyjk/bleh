@@ -596,6 +596,7 @@ body {
     --icon-16-play: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxOCIgaGVpZ2h0PSIxOCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyLjI1IiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLXBsYXktaWNvbiBsdWNpZGUtcGxheSI+PHBvbHlnb24gcG9pbnRzPSI2IDMgMjAgMTIgNiAyMSA2IDMiLz48L3N2Zz4=');
     --icon-16-dropdown: var(--icon-16-arrow-down);
     --icon-16-music-list: var(--icon-16-playlist);
+    --icon-16-radio: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJjdXJyZW50Q29sb3IiIHN0cm9rZT0iY3VycmVudENvbG9yIiBzdHJva2Utd2lkdGg9IjIuMjUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgY2xhc3M9Imx1Y2lkZSBsdWNpZGUtcGxheS1pY29uIGx1Y2lkZS1wbGF5Ij48cG9seWdvbiBwb2ludHM9IjYgMyAyMCAxMiA2IDIxIDYgMyIvPjwvc3ZnPg==');
     --icon-16-edit: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxOCIgaGVpZ2h0PSIxOCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyLjI1IiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLXBlbi1saW5lLWljb24gbHVjaWRlLXBlbi1saW5lIj48cGF0aCBkPSJNMTIgMjBoOSIvPjxwYXRoIGQ9Ik0xNi4zNzYgMy42MjJhMSAxIDAgMCAxIDMuMDAyIDMuMDAyTDcuMzY4IDE4LjYzNWEyIDIgMCAwIDEtLjg1NS41MDZsLTIuODcyLjgzOGEuNS41IDAgMCAxLS42Mi0uNjJsLjgzOC0yLjg3MmEyIDIgMCAwIDEgLjUwNi0uODU0eiIvPjwvc3ZnPg==');
     --icon-16-edit-bulk: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxOCIgaGVpZ2h0PSIxOCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyLjI1IiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLXNxdWFyZS1zdGFjay1pY29uIGx1Y2lkZS1zcXVhcmUtc3RhY2siPjxwYXRoIGQ9Ik00IDEwYy0xLjEgMC0yLS45LTItMlY0YzAtMS4xLjktMiAyLTJoNGMxLjEgMCAyIC45IDIgMiIvPjxwYXRoIGQ9Ik0xMCAxNmMtMS4xIDAtMi0uOS0yLTJ2LTRjMC0xLjEuOS0yIDItMmg0YzEuMSAwIDIgLjkgMiAyIi8+PHJlY3Qgd2lkdGg9IjgiIGhlaWdodD0iOCIgeD0iMTQiIHk9IjE0IiByeD0iMiIvPjwvc3ZnPg==');
     --icon-16-track: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxOCIgaGVpZ2h0PSIxOCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyLjI1IiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLW11c2ljLWljb24gbHVjaWRlLW11c2ljIj48cGF0aCBkPSJNOSAxOFY1bDEyLTJ2MTMiLz48Y2lyY2xlIGN4PSI2IiBjeT0iMTgiIHI9IjMiLz48Y2lyY2xlIGN4PSIxOCIgY3k9IjE2IiByPSIzIi8+PC9zdmc+');
@@ -6213,6 +6214,22 @@ button,
     background-repeat: repeat-x !important;
     background-position: unset !important;
 
+    h1, h2, h3, h4, h5, p {
+        cursor: pointer;
+    }
+
+    .sub-text {
+        font-size: var(--font-size-sm);
+        line-height: var(--line-height-sm);
+        color: inherit;
+        opacity: 0.7;
+        margin: unset;
+    }
+    h4 {
+        font: inherit;
+        color: inherit;
+    }
+
     &[aria-expanded="true"]:not(.delete-icon, .header-expand-button, .glacier-library-button),
     &:is(.gallery-next, .gallery-previous):hover .arrow,
     &:hover {
@@ -6417,7 +6434,6 @@ button,
 .btn-post-shout,
 .view-item:not(.video-item, .listen-item, .profile-top-item--taste, .interact-item, .profile-top-item--shortcut, .profile-top-item--follow, .profile-top-item--message, .profile-top-item--edit, .dropdown-menu-clickable-button),
 .btn--has-icon-left,
-.stationlink,
 .dropdown-menu-clickable-item, .auth-dropdown-menu-item,
 .shout .vote-button,
 .header-new-playlink,
@@ -6548,6 +6564,7 @@ button,
 
 
 /*     ICON MASK     */
+.radio-button:after, .radio-button h4:after,
 .listen-item p:before,
 .metadata-column .cta-link-wrap a:before, .lyrics-snippet-more-link a:before,
 .see-more:before, #events-section > p > a:before,
@@ -6667,7 +6684,7 @@ button,
 /*     PROFILE     */
 .profile-header-set-obsession:before,
 .share-button-profile:before, .panel-settings-button:before,
-.stationlink-list .stationlink:before, .inline-section-control:before,
+.inline-section-control:before,
 .header .header-message-user:before,
 /*     TRACK/ALBUM/ARTIST HEADER     */
 .header-new-love-button:before, .header-new-more-button:before, .header-new-bookmark-button:before,
@@ -6841,8 +6858,7 @@ span.header-new-gallery-inner a:before,
     --left: 7px;
     --font-size: 0;
 }
-.section-with-settings .section-control:before,
-.stationlink-list .stationlink:after
+.section-with-settings .section-control:before
 {
     display: none;
 }
@@ -6958,15 +6974,70 @@ section:has(.dropdown-menu-clickable-button.section-control) {
 .stationlink-list {
     display: flex;
     flex-direction: column;
-    gap: var(--button-list-gap);
+    gap: var(--card-gap);
 
     .stationlink {
+        --bg: transparent;
+        --bg-hov: transparent;
+        --bg-atv: transparent;
+        --shadow: none;
         overflow: hidden;
         text-overflow: ellipsis;
-        --mask: var(--icon-16-music-list);
+        --mask: var(--icon-16-radio);
+        --mask-size: 12px;
+        --btn-top: 0;
+        --btn-bottom: 0;
+        --btn-right: 0;
+        --btn-left: calc(24px + 12px);
+        --radius: 0;
 
         &:before {
-            background: currentColor !important; /* keep */
+            content: '';
+            background: hsl(var(--b6)) !important;
+            box-shadow: unset !important;
+            width: 24px !important;
+            height: 24px !important;
+            left: 0;
+            top: 50%;
+            margin-top: -12px;
+            right: unset;
+            transition-property: background;
+            transition-duration: var(--trans);
+            transition-timing-function: var(--trans-function);
+        }
+
+        &:after {
+            --left: 6px;
+            --margin-top: -6px;
+            background: hsl(var(--c2)) !important;
+            border: unset;
+            bottom: unset;
+            transition-property: background;
+            transition-duration: var(--trans);
+            transition-timing-function: var(--trans-function);
+        }
+
+        &:hover {
+            &:before {
+                background: hsl(var(--h3)) !important;
+                transition: none;
+            }
+
+            &:after {
+                background: hsl(var(--b7)) !important;
+                transition: none;
+            }
+        }
+
+        h4 {
+            width: fit-content;
+            --mask: var(--icon-16-arrow-right);
+            position: relative;
+            --mask-size: 12px;
+            --margin-top: -6px;
+            --left: none;
+            --right: 0;
+            padding-right: calc(12px + 4px) !important;
         }
     }
 }

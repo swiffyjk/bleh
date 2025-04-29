@@ -35,6 +35,7 @@ import { parse_shout_queue, patch_shouts } from "./shout";
 import { ff } from "./sku";
 import { bleh_sponsor_page, sponsors } from "./sponsor";
 import { append_style, prompt_for_update } from "./style";
+import { bleh_radio } from "./components/radio";
 
 export function bleh() {
     let head_observer = new MutationObserver((mutations) => {
@@ -367,6 +368,9 @@ function load_page() {
             page.subpage == 'overview'
         )
             patch_wiki();
+
+        if (page.type == 'user')
+            bleh_radio();
     }
 
     if (ff('page_title')) {

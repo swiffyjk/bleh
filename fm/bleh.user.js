@@ -1725,6 +1725,15 @@
     },
     add_note: {
       en: "Add note"
+    },
+    radio: {
+      en: "Radio"
+    },
+    mix: {
+      en: "Mix"
+    },
+    recommended: {
+      en: "Recommended"
     }
   };
   var trans_legacy = {
@@ -17957,6 +17966,20 @@
     window.setTimeout(invoke_reload, 400);
   };
 
+  // src/components/radio.js
+  function bleh_radio() {
+    let radios = page.structure.container.querySelectorAll(".stationlink");
+    radios.forEach((radio) => {
+      let type = radio.getAttribute("data-analytics-label");
+      radio.classList.add("radio-button");
+      radio.innerHTML = `
+            <h3 class="sub-text">${tl(trans.radio)}</h3>
+            <h4>${tl(trans[type])}</h4>
+        `;
+      radio.removeAttribute("title");
+    });
+  }
+
   // src/page.js
   function bleh() {
     let head_observer = new MutationObserver((mutations) => {
@@ -18190,6 +18213,8 @@
         bleh_home();
       if ((page.type == "artist" || page.type == "album" || page.type == "track") && page.subpage == "overview")
         patch_wiki();
+      if (page.type == "user")
+        bleh_radio();
     }
     if (ff("page_title")) {
       try {
