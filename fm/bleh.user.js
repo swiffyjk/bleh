@@ -1734,6 +1734,9 @@
     },
     recommended: {
       en: "Recommended"
+    },
+    listening: {
+      en: "Listening"
     }
   };
   var trans_legacy = {
@@ -17978,6 +17981,26 @@
         `;
       radio.removeAttribute("title");
     });
+    if (page.type == "user") {
+      let promo_v3 = page.structure.side.querySelector(".promo-v3");
+      let header = promo_v3.querySelector("h2");
+      header.textContent = tl(trans.listening);
+      let promos = promo_v3.querySelectorAll(".listening-report-promo");
+      let container = document.createElement("div");
+      container.classList.add("listening-report-promos");
+      promos.forEach((promo) => {
+        container.appendChild(promo);
+      });
+      promo_v3.appendChild(container);
+      if (!radios)
+        return;
+      let sep = document.createElement("div");
+      sep.classList.add("sep");
+      promo_v3.appendChild(sep);
+      let list = page.structure.side.querySelector(".stationlink-list");
+      page.structure.side.removeChild(list.parentElement);
+      promo_v3.appendChild(list);
+    }
   }
 
   // src/page.js
@@ -18213,7 +18236,7 @@
         bleh_home();
       if ((page.type == "artist" || page.type == "album" || page.type == "track") && page.subpage == "overview")
         patch_wiki();
-      if (page.type == "user")
+      if (page.type == "user" && page.subpage == "overview")
         bleh_radio();
     }
     if (ff("page_title")) {

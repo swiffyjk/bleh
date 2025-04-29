@@ -572,6 +572,9 @@ export const trans = {
     },
     recommended: {
         en: 'Recommended'
+    },
+    listening: {
+        en: 'Listening'
     }
 }
 

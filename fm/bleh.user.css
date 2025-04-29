@@ -6218,6 +6218,7 @@ button,
         cursor: pointer;
     }
 
+    .listening-report-promo-title,
     .sub-text {
         font-size: var(--font-size-sm);
         line-height: var(--line-height-sm);
@@ -6225,6 +6226,7 @@ button,
         opacity: 0.7;
         margin: unset;
     }
+    .listening-report-promo-date,
     h4 {
         font: inherit;
         color: inherit;
@@ -6322,7 +6324,6 @@ button,
         #manage_data .btn-primary,
         .primary,
         .btn-subscribe,
-        .listening-report-promo--year,
         [data-toggle-button-current-state="followed"] &.profile-top-item--follow.icon, .profile-top-item--shortcut.icon&[data-is-shortcut="true"],
         .header-new-love-button.icon[data-analytics-action="UnloveTrack"], .header-new-bookmark-button.icon[data-analytics-action^="Unbookmark"],
         .view-item[aria-checked="true"]
@@ -6440,7 +6441,6 @@ button,
 .btn-add, /*form[action*="+images/upload"] .btn-primary[type="submit"],*/ .btn-file,
 .header-message-user,
 .pagination-previous a,
-.listening-report-promo,
 .resource-external-link, .play-this-track-playlink, .replace-playlink,
 .shout-more-replies-before,
 .coloured-cta,
@@ -6565,6 +6565,7 @@ button,
 
 /*     ICON MASK     */
 .radio-button:after, .radio-button h4:after,
+.listening-report-promo:after, .listening-report-promo .listening-report-promo-date:after,
 .listen-item p:before,
 .metadata-column .cta-link-wrap a:before, .lyrics-snippet-more-link a:before,
 .see-more:before, #events-section > p > a:before,
@@ -6712,7 +6713,6 @@ a:has(+ .js-gallery-heading):after,
 .player-bar-btn:before,
 .dropdown-menu-item-dark:before,
 /*     LISTENING REPORTS     */
-.listening-report-promo:before,
 .report-headline-share:before, .user-dashboard-pagination-previous-link:before, .user-dashboard-pagination-next-link:before,
 /*     UPLOAD CTA     */
 .video-preview-upload-cta .cta-link:before, .gallery-preview-cta .cta-link:before, .album-artwork-upload-cta .cta-link:before,
@@ -6971,11 +6971,14 @@ section:has(.dropdown-menu-clickable-button.section-control) {
 .stationlinks {
     order: 10;
 }
+.listening-report-promos,
 .stationlink-list {
     display: flex;
     flex-direction: column;
     gap: var(--card-gap);
+    margin-top: var(--card-gap);
 
+    .listening-report-promo,
     .stationlink {
         --bg: transparent;
         --bg-hov: transparent;
@@ -6990,9 +6993,11 @@ section:has(.dropdown-menu-clickable-button.section-control) {
         --btn-right: 0;
         --btn-left: calc(24px + 12px);
         --radius: 0;
+        margin: unset !important;
 
         &:before {
             content: '';
+            position: absolute;
             background: hsl(var(--b6)) !important;
             box-shadow: unset !important;
             width: 24px !important;
@@ -7004,6 +7009,7 @@ section:has(.dropdown-menu-clickable-button.section-control) {
             transition-property: background;
             transition-duration: var(--trans);
             transition-timing-function: var(--trans-function);
+            border-radius: 50px;
         }
 
         &:after {
@@ -7015,6 +7021,18 @@ section:has(.dropdown-menu-clickable-button.section-control) {
             transition-property: background;
             transition-duration: var(--trans);
             transition-timing-function: var(--trans-function);
+        }
+
+        &.listening-report-promo {
+            &:before {
+                border-radius: 3px;
+            }
+
+            &:after {
+                --mask-size: 18px;
+                --left: 3px;
+                --margin-top: -9px;
+            }
         }
 
         &:hover {
@@ -7029,6 +7047,7 @@ section:has(.dropdown-menu-clickable-button.section-control) {
             }
         }
 
+        .listening-report-promo-date,
         h4 {
             width: fit-content;
             --mask: var(--icon-16-arrow-right);
@@ -7038,11 +7057,24 @@ section:has(.dropdown-menu-clickable-button.section-control) {
             --left: none;
             --right: 0;
             padding-right: calc(12px + 4px) !important;
+
+            &:after {
+                transform: unset !important;
+                filter: unset !important;
+                transition: unset !important;
+            }
         }
     }
 }
 
 
+.listening-report-promos {
+    margin-bottom: var(--card-gap);
+
+    &:last-child {
+        margin: unset;
+    }
+}
 .promo-v3 .listening-report-promo {
     position: relative;
     background-image: unset !important;
@@ -7057,20 +7089,11 @@ section:has(.dropdown-menu-clickable-button.section-control) {
     order: -1;
 }
 .promo-v3 .listening-report-promo-date {
-    font-size: var(--font-size-sm);
-    line-height: var(--line-height-sm);
     margin-top: unset;
     padding-right: unset;
-    font-weight: var(--font-weight-medium);
-    color: inherit;
-    opacity: 0.7;
 }
 .promo-v3 .listening-report-promo-date:after {
     display: none;
-}
-
-.promo-v3 .listening-report-promo + .listening-report-promo {
-    margin-top: var(--button-list-gap);
 }
 
 .listening-report-promo-animation-container {
@@ -7082,13 +7105,13 @@ section:has(.dropdown-menu-clickable-button.section-control) {
 }
 
 .listening-report-promo--week {
-    --mask: var(--icon-16-listening-report-weekly);
+    --mask: var(--icon-16-listening-report-weekly) !important;
 }
 .listening-report-promo--month {
-    --mask: var(--icon-16-listening-report-monthly);
+    --mask: var(--icon-16-listening-report-monthly) !important;
 }
 .listening-report-promo--year {
-    --mask: var(--icon-16-listening-report-yearly);
+    --mask: var(--icon-16-listening-report-yearly) !important;
 }
 
 
@@ -17071,7 +17094,7 @@ h4 {
     text-decoration: var(--force-underline, none) !important;
 
     position: relative;
-    padding-left: calc(18px + 6px);
+    padding-left: calc(18px + 12px);
     --left: 0;
 
     &:before {
