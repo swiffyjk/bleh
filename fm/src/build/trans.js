@@ -86,7 +86,8 @@ export const trans = {
         },
         translation: {
             reason: {
-                en: 'Translations'
+                en: 'Translations',
+                de: 'Übersetzungen'
             }
         },
         cat: {
@@ -100,19 +101,20 @@ export const trans = {
                 en: 'Sponsor'
             },
             reason: {
-                en: 'thank you from kate <3'
+                en: 'thank you from kate <3',
+                de: 'danke von kate <3'
             }
         },
         cute: {
             reason: {
                 en: 'Reserved',
-                de: 'Reserviert'
+                de: 'Exklusiv'
             }
         },
         reserved: {
             reason: {
                 en: 'Reserved',
-                de: 'Reserviert'
+                de: 'Exklusiv'
             }
         }
     },
@@ -240,7 +242,8 @@ export const trans = {
         }
     },
     colours: {
-        en: 'Colours'
+        en: 'Colours',
+        de: 'Farben'
     },
     hue_from_album: {
         name: {
@@ -302,7 +305,8 @@ export const trans = {
                 en: 'Early autumn'
             },
             fall: {
-                en: 'Autumn'
+                en: 'Autumn',
+                de: 'Herbst'
             },
             christmas: {
                 en: 'Christmas',
@@ -336,7 +340,8 @@ export const trans = {
         en: 'Advanced'
     },
     recommendations: {
-        en: 'Recommendations'
+        en: 'Recommendations',
+        de: 'Empfelungen'
     },
     releases: {
         en: 'Releases'
@@ -348,7 +353,8 @@ export const trans = {
         en: 'Charts'
     },
     welcome_back_user: {
-        en: 'Welcome back {user}'
+        en: 'Welcome back {user}!',
+        de: 'Willkommen züruck {user}!'
     },
     thank_you_for_sponsoring: {
         en: 'Thank you for sponsoring!'
@@ -357,13 +363,16 @@ export const trans = {
         en: 'bleh Settings'
     },
     import: {
-        en: 'Import'
+        en: 'Import',
+        de: 'Importieren'
     },
     export: {
-        en: 'Export'
+        en: 'Export',
+        de: 'Exportieren'
     },
     reset: {
-        en: 'Reset'
+        en: 'Reset',
+        de: 'Zurücksetzen'
     },
     changelog: {
         en: 'What\'s New?'
@@ -532,13 +541,16 @@ export const trans = {
         en: 'Tags'
     },
     artist_lower: {
-        en: 'artist'
+        en: 'artist',
+        de: 'Künstler'
     },
     album_lower: {
-        en: 'album'
+        en: 'album',
+        de: 'Album'
     },
     track_lower: {
-        en: 'track'
+        en: 'track',
+        de: 'Titel'
     },
     lotus_cta: {
         true: {
@@ -563,7 +575,8 @@ export const trans = {
         de: 'Anschreiben'
     },
     sponsor: {
-        en: 'Become a sponsor'
+        en: 'Become a sponsor',
+        de: 'Werde sponsor'
     },
     message_sponsor: {
         en: 'Receive sponsor rewards'
@@ -578,8 +591,8 @@ export const trans = {
         en: 'Labs by Last.fm',
         de: 'Labs vom Last.fm',
         tagline: {
-            en: 'Interactive tools, toys and infographics',
-            de: 'Interaktiven Tools, Spielen und Infografiken'
+            en: 'Interactive tools and infographics',
+            de: 'Interaktiven Tools und Infografiken'
         }
     },
     sponsor_info: {
