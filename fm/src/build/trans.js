@@ -123,40 +123,50 @@ export const trans = {
         de: 'Startseite'
     },
     library: {
-        en: 'Library'
+        en: 'Library',
+        de: 'Bibliothek'
     },
     view_profile: {
-        en: 'View profile'
+        en: 'View profile',
+        de: 'Profil anzeigen'
     },
     shouts: {
         en: 'Shouts'
     },
     about: {
-        en: 'About'
+        en: 'About',
+        de: 'Über'
     },
     edit_wiki: {
-        en: 'Edit wiki'
+        en: 'Edit wiki',
+        de: 'Wiki editieren'
     },
     read_more: {
-        en: 'Read more'
+        en: 'Read more',
+        de: 'Mehr anzeigen'
     },
     refresh: {
-        en: 'Refresh'
+        en: 'Refresh',
+        de: 'Aktualisieren'
     },
     refresh_tracks: {
-        en: 'Refresh tracks'
+        en: 'Refresh tracks',
+        de: 'Titel aktualisieren'
     },
     from_the_album: {
-        en: 'From the album: {album}'
+        en: 'From the album: {album}',
+        de: 'Aus dem Album {album}'
     },
     set_obsession: {
-        en: 'Obsess'
+        en: 'Obsess',
+        de: 'obsessen'
     },
     obsession_first: {
         en: 'First to claim this obsession!'
     },
     compare: {
-        en: 'Compare'
+        en: 'Compare',
+        de: 'Vergleichen'
     },
     compare_plays: {
         en: 'Compare plays'
@@ -165,7 +175,8 @@ export const trans = {
         en: 'Others featured'
     },
     your_scrobbles: {
-        en: 'Your scrobbles'
+        en: 'Your scrobbles',
+        de: 'Deine Scrobbles'
     },
     plays: {
         en: 'Plays'
