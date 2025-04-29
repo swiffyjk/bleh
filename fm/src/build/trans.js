@@ -194,7 +194,8 @@ export const trans = {
         en: 'Ignored'
     },
     friends: {
-        en: 'Friends'
+        en: 'Friends',
+        de: 'Freunde'
     },
     aka: {
         en: 'aka.'
