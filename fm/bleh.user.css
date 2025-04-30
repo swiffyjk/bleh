@@ -2619,6 +2619,7 @@ span.header-new-gallery-inner a,
 }
 .library-search {
     margin-top: unset !important;
+    margin-bottom: unset !important;
     position: absolute;
     /*top: calc(92px + var(--card-gap) + var(--card-padding)); /* 50px */
     top: 46px; /* revert to above once theres an easy way to detect searchbox presence */
@@ -2630,6 +2631,8 @@ span.header-new-gallery-inner a,
         padding-left: unset !important;
         padding-right: unset !important;
         width: 100% !important; /* 220 */
+        border: unset !important;
+        box-shadow: unset !important;
     }
 
     [data-ff--katsune="true"] & {
@@ -2643,11 +2646,17 @@ span.header-new-gallery-inner a,
 .library-search-form .search-field[type="text"] {
     width: 100%;
     caret-color: hsl(var(--l3-c)) !important;
-    padding-left: calc(16px + 6px + 7px) !important;
+    --padding: 12px 12px 12px calc(12px + 18px + 6px) !important;
+    --bg: transparent !important;
+    --bg-hov: hsl(var(--b3), 40%) !important;
+    --bg-atv: hsl(var(--b3), 60%) !important;
+    --shadow: none !important;
+    --shadow-hov: none !important;
+    --col: hsl(var(--c2)) !important;
+    height: 42px;
 }
 .library-search-form .library-search-submit::before {
     --mask: var(--icon-16-search);
-    left: 7px !important;
     background-color: hsl(var(--c3));
 }
 input::placeholder {
@@ -2662,6 +2671,33 @@ input::placeholder {
 
 
 /*     LIBRARY SEARCH RESULTS     */
+.library-search-results {
+    width: 360px !important;
+    top: 42px;
+    min-height: 100px;
+    font: inherit;
+
+    &.async-content-loading {
+        top: 0;
+    }
+
+    &:before {
+        display: none !important;
+    }
+
+    &[style="display: block;"] {
+        display: flex !important;
+    }
+
+    flex-direction: column;
+    justify-content: center;
+
+    & > [data-state="no-results"] {
+        color: hsl(var(--c3));
+        font-weight: var(--font-weight-medium);
+        cursor: default;
+    }
+}
 .library-search-results .all-results-list li {
     height: 32px;
 }
@@ -2670,7 +2706,16 @@ input::placeholder {
     color: hsl(var(--c3));
     padding: 0 12px;
     font-weight: var(--font-weight-medium);
-    margin-bottom: 12px !important;
+    margin-bottom: var(--button-list-gap) !important;
+    cursor: default;
+
+    &:first-child {
+        margin-top: calc(var(--card-gap) - var(--button-list-gap));
+    }
+
+    hr + & {
+        margin-top: var(--card-gap);
+    }
 }
 
 
@@ -2680,12 +2725,6 @@ input::placeholder {
     padding: unset !important;
 }
 
-hr + .library-search-results-header {
-    margin-top: 12px !important;
-    padding-top: 12px !important;
-    border-top: 1px solid hsl(var(--b4));
-}
-
 
 .all-results-list li:before {
     margin-right: unset !important;
@@ -2693,11 +2732,10 @@ hr + .library-search-results-header {
 }
 
 
-/* 38px is the size of the cover art (from chartlists),
-8px is based on the sizing of chartlist row inner gaps */
+/* 38px is the size of the cover art (from chartlists) */
 .column-tracks-item {
     height: 38px !important;
-    padding-left: calc(38px + 8px) !important;
+    padding-left: calc(38px + 12px) !important;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -2729,8 +2767,8 @@ hr + .library-search-results-header {
     height: fit-content !important;
 }
 .column-tracks-item-image {
-    /* override artist border radius */
-    border-radius: var(--item-small-radius) !important;
+    background: hsl(var(--b4)) !important;
+    box-shadow: unset !important;
 
     img {
         border-radius: unset;
@@ -6567,6 +6605,7 @@ button,
 
 
 /*     ICON MASK     */
+.library-search-results.async-content-loading:after,
 .radio-button:after, .radio-button h4:after,
 .listening-report-promo:after, .listening-report-promo .listening-report-promo-date:after,
 .listen-item p:before,
@@ -7125,6 +7164,7 @@ section:has(.dropdown-menu-clickable-button.section-control) {
 
 
 /*     DROPDOWN     */
+.library-search-results,
 .player-bar-playback-options-wrap,
 .dropdown-menu-clickable, .auth-dropdown-menu, .navlist-hidden-list-wrap .navlist-hidden-list {
     padding: var(--button-list-gap) !important;
@@ -8179,7 +8219,7 @@ input:is([name^="track_name"], [name^="artist_name"], [name^="album_name"], [nam
     display: none;
 }
 .date-range-picker-content,
-.dropdown-menu-clickable--padded, .navlist-hidden-list, .library-search-results, .events-filter-location-dropdown {
+.dropdown-menu-clickable--padded, .navlist-hidden-list, .events-filter-location-dropdown {
     padding: var(--card-gap) !important;
 }
 .modal-body {
@@ -12237,6 +12277,7 @@ table.table tr:nth-child(2n) td {
     min-height: 200px !important;
 }
 
+.library-search-results.async-content-loading,
 .data-loading,
 .loading:not(.library-fetch, .library-date-picker),
 .lazy-shoutbox.async-content-loading {
@@ -13027,7 +13068,7 @@ h2.playlisting-create-option-title {
     --bg-atv: transparent !important;
     --shadow: none !important;
     --shadow-hov: none !important;
-    width: 42px;
+    width: 42px !important;
     --font-size: 0;
     opacity: unset !important;
 }
