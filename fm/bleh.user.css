@@ -621,6 +621,7 @@ body {
     --icon-16-dots-v: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxOCIgaGVpZ2h0PSIxOCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyLjI1IiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWVsbGlwc2lzLXZlcnRpY2FsLWljb24gbHVjaWRlLWVsbGlwc2lzLXZlcnRpY2FsIj48Y2lyY2xlIGN4PSIxMiIgY3k9IjEyIiByPSIxIi8+PGNpcmNsZSBjeD0iMTIiIGN5PSI1IiByPSIxIi8+PGNpcmNsZSBjeD0iMTIiIGN5PSIxOSIgcj0iMSIvPjwvc3ZnPg==');
     --icon-16-mention: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxOCIgaGVpZ2h0PSIxOCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyLjI1IiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWF0LXNpZ24taWNvbiBsdWNpZGUtYXQtc2lnbiI+PGNpcmNsZSBjeD0iMTIiIGN5PSIxMiIgcj0iNCIvPjxwYXRoIGQ9Ik0xNiA4djVhMyAzIDAgMCAwIDYgMHYtMWExMCAxMCAwIDEgMC00IDgiLz48L3N2Zz4=');
     --icon-16-user: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxOCIgaGVpZ2h0PSIxOCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyLjI1IiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLXVzZXItcm91bmQtaWNvbiBsdWNpZGUtdXNlci1yb3VuZCI+PGNpcmNsZSBjeD0iMTIiIGN5PSI4IiByPSI1Ii8+PHBhdGggZD0iTTIwIDIxYTggOCAwIDAgMC0xNiAwIi8+PC9zdmc+');
+    --icon-16-user-plus: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxOCIgaGVpZ2h0PSIxOCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyLjI1IiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLXVzZXItcm91bmQtcGx1cy1pY29uIGx1Y2lkZS11c2VyLXJvdW5kLXBsdXMiPjxwYXRoIGQ9Ik0yIDIxYTggOCAwIDAgMSAxMy4yOTItNiIvPjxjaXJjbGUgY3g9IjEwIiBjeT0iOCIgcj0iNSIvPjxwYXRoIGQ9Ik0xOSAxNnY2Ii8+PHBhdGggZD0iTTIyIDE5aC02Ii8+PC9zdmc+');
     --icon-16-user-remove: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxOCIgaGVpZ2h0PSIxOCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyLjI1IiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLXVzZXItcm91bmQteC1pY29uIGx1Y2lkZS11c2VyLXJvdW5kLXgiPjxwYXRoIGQ9Ik0yIDIxYTggOCAwIDAgMSAxMS44NzMtNyIvPjxjaXJjbGUgY3g9IjEwIiBjeT0iOCIgcj0iNSIvPjxwYXRoIGQ9Im0xNyAxNyA1IDUiLz48cGF0aCBkPSJtMjIgMTctNSA1Ii8+PC9zdmc+');
     --icon-16-follow: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxOCIgaGVpZ2h0PSIxOCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyLjI1IiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLXVzZXItcm91bmQtcGx1cy1pY29uIGx1Y2lkZS11c2VyLXJvdW5kLXBsdXMiPjxwYXRoIGQ9Ik0yIDIxYTggOCAwIDAgMSAxMy4yOTItNiIvPjxjaXJjbGUgY3g9IjEwIiBjeT0iOCIgcj0iNSIvPjxwYXRoIGQ9Ik0xOSAxNnY2Ii8+PHBhdGggZD0iTTIyIDE5aC02Ii8+PC9zdmc+');
     --icon-16-upload: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxOCIgaGVpZ2h0PSIxOCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyLjI1IiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWFycm93LXVwLXRvLWxpbmUtaWNvbiBsdWNpZGUtYXJyb3ctdXAtdG8tbGluZSI+PHBhdGggZD0iTTUgM2gxNCIvPjxwYXRoIGQ9Im0xOCAxMy02LTYtNiA2Ii8+PHBhdGggZD0iTTEyIDd2MTQiLz48L3N2Zz4=');
@@ -17720,18 +17721,18 @@ h4 {
             }
 
             &.profile-top-item--follow {
-                --mask: var(--icon-16-plus);
+                --mask: var(--icon-16-user-plus);
 
                 &[data-ignored="true"] {
                     --mask: var(--icon-16-block);
                 }
 
                 [data-toggle-button-current-state="followed"] & {
-                    --mask: var(--icon-16-check);
+                    --mask: var(--icon-16-user);
                 }
 
                 &[data-mutuals="true"] {
-                    --mask: var(--icon-16-heart-solid) !important;
+                    --mask: var(--icon-16-users) !important;
 
                     &:after {
                         content: attr(data-mutuals-text);
