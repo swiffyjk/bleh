@@ -1283,7 +1283,8 @@
       de: "Startseite"
     },
     library: {
-      en: "Library"
+      en: "Library",
+      de: "Bibliothek"
     },
     view_profile: {
       en: "View profile"
@@ -1305,9 +1306,6 @@
     },
     refresh_tracks: {
       en: "Refresh tracks"
-    },
-    from_the_album: {
-      en: "From the album: {album}"
     },
     set_obsession: {
       en: "Obsess"
@@ -1367,11 +1365,23 @@
     scrobbles: {
       en: "Scrobbles"
     },
+    artist: {
+      en: "Artist"
+    },
     artists: {
       en: "Artists"
     },
+    artists_tooltip: {
+      en: "Multiple artists are grouped into this profile"
+    },
+    album: {
+      en: "Album"
+    },
     albums: {
       en: "Albums"
+    },
+    track: {
+      en: "Track"
     },
     tracks: {
       en: "Tracks"
@@ -1812,6 +1822,45 @@
     },
     velocity: {
       en: "Velocity"
+    },
+    logout: {
+      en: "Logout",
+      de: "Ausloggen"
+    },
+    tracklist: {
+      en: "Tracklist",
+      de: "Titelliste"
+    },
+    tracklist_from_plays_info: {
+      en: "Retrieved own plays as official tracklist is unavailable"
+    },
+    from_the_album: {
+      en: "From {album}"
+    },
+    listens: {
+      en: "listens",
+      de: "scrobbels",
+      count: {
+        en: "{c} listens",
+        de: "{c} scrobbels"
+      }
+    },
+    others_count: {
+      en: "{c} others",
+      de: "{c} h\xF6rer"
+    },
+    loading_album_plays: {
+      en: "Collecting your album plays"
+    },
+    fail_album_plays: {
+      en: "You do not have any plays here"
+    },
+    open_album_as_track: {
+      en: "Open album title as track",
+      de: "Albumtitel als Titel \xF6ffnen"
+    },
+    ignored: {
+      en: "Ignored"
     }
   };
   var trans_legacy = {
@@ -15074,29 +15123,29 @@
     changelog_container.classList.add("masthead-nav-item");
     changelog_container.innerHTML = `
         <a class="masthead-nav-control" onclick="_query_changelog()" data-label="changelog">
-            ${trans_legacy[lang].changelog.name}
+            ${tl(trans.changelog)}
         </a>
     `;
     tippy(changelog_container, {
-      content: trans_legacy[lang].changelog.name
+      content: tl(trans.changelog)
     });
     links.appendChild(changelog_container);
     let bleh_container = document.createElement("li");
     bleh_container.classList.add("masthead-nav-item");
     bleh_container.innerHTML = `
         <a class="masthead-nav-control" href="${root}bleh${stored_season.id != "none" ? "?tab=seasonal" : ""}" data-label="bleh" data-season="${stored_season.id}" data-season-active="${stored_season.id != "none" ? "true" : "false"}">
-            ${stored_season.id == "none" ? trans_legacy[lang].auth_menu.configure_bleh : moment(stored_season.end.replace("y0", stored_season.year).replace("{offset}", stored_season.offset)).to(stored_season.now, true)}
+            ${stored_season.id == "none" ? tl(trans.configure_bleh) : moment(stored_season.end.replace("y0", stored_season.year).replace("{offset}", stored_season.offset)).to(stored_season.now, true)}
         </a>
     `;
     if (stored_season.id == "none") {
       tippy(bleh_container, {
-        content: trans_legacy[lang].auth_menu.configure_bleh
+        content: tl(trans.configure_bleh)
       });
     } else {
       page.header.season_tooltip = tippy(bleh_container, {
         theme: "seasonal-swatch",
         content: `
-                <span class="season-colour-name">${trans_legacy[lang].settings.customise.seasonal.listing[stored_season.id]}</span>
+                <span class="season-colour-name">${tl(trans.seasonal.listing[stored_season.id])}</span>
                 <span class="season-exclusive">${trans_legacy[lang].auth_menu.seasonal_notice}</span>
             `,
         allowHTML: true
@@ -15151,11 +15200,6 @@
                     <span class="auth-dropdown-item-right" id="theme-value">${tl(trans.themes[settings.theme])}</span>
                 </span>
             </button>
-            ${ff("dev") ? `
-            <button class="dropdown-menu-clickable-item" data-menu-item="developer" onclick="_update_flag_toggle('dev', this)">
-                ${trans_legacy[lang].auth_menu.dev}
-            </button>
-            ` : ""}
             <button class="dropdown-menu-clickable-item" data-menu-item="language">
                 <span class="auth-dropdown-item-row">
                     <span class="auth-dropdown-item-left">${tl(trans.language)}</span>
@@ -15175,7 +15219,7 @@
             <form>
                 <input type="hidden" name="csrfmiddlewaretoken" value="${token}">
                 <a class="dropdown-menu-clickable-item" data-menu-item="logout" href="${root}logout">
-                    ${trans_legacy[lang].auth_menu.logout}
+                    ${tl(trans.logout)}
                 </a>
             </form>
         `,
@@ -15671,17 +15715,17 @@
       redesigned_album_header.innerHTML = `
             ${is_subpage || ff("show_album_cover_always") ? `
             <div class="avatar-side">
-                ${avatar != null ? `
+                ${avatar ? `
                 <img src="${avatar.getAttribute("content").replace("/ar0/", "/avatar170s/")}">
                 <a class="bleh--avatar-clickable-link"></a>
                 ` : '<img class="missing-album">'}
             </div>
             ` : ""}
             <div class="info-side">
-                <div class="sub-text">${trans_legacy[lang].album.name}</div>
+                <div class="sub-text">${tl(trans.album)}</div>
                 <div class="title-container">
                     <h1>${title.innerHTML}</h1>
-                    ${position != null ? position.outerHTML : ""}
+                    ${position ? position.outerHTML : ""}
                 </div>
                 <h2>${artist.innerHTML}</h2>
             </div>
@@ -15695,9 +15739,9 @@
       album_header.classList.add("legacy-header");
       let avatar_side = redesigned_album_header.querySelector(".avatar-side");
       let avatar_link = avatar_side.querySelector("a");
-      if (avatar != null && avatar_link != null) {
+      if (avatar && avatar_link) {
         let expand_link;
-        if (avatar != null)
+        if (avatar)
           expand_link = `_expand_avatar('${avatar.getAttribute("content")}')`;
         if (settings.default_avatar_action == "expand" && avatar != null)
           avatar_link.setAttribute("onclick", expand_link);
@@ -15716,7 +15760,7 @@
                     </a>
                     <div class="sep"></div>
                     <a class="dropdown-menu-clickable-item" href="${root}bleh?tab=customise" data-menu-item="settings">
-                        ${trans_legacy[lang].settings.configure}
+                        ${tl(trans.settings)}
                     </a>
                 `,
           allowHTML: true,
@@ -15917,33 +15961,38 @@
       redesigned_artist_header.classList.add("redesigned-header", "redesigned-artist-header", "no-background");
       redesigned_artist_header.innerHTML = `
             <div class="avatar-side">
-                ${avatar != null ? `
+                ${avatar ? `
                 <img src="${avatar.getAttribute("content").replace("/ar0/", "/avatar300s/")}">
                 <a class="bleh--avatar-clickable-link"></a>
                 ` : '<img class="missing-artist">'}
             </div>
             <div class="info-side">
                 ${page.multi ? `
-                <div class="sub-text">${trans_legacy[lang].artist.plural}<div class="info-tip"><div class="bleh-icon bleh-info-icon"></div></div></div>
+                <div class="sub-text">
+                    ${tl(trans.artists)}
+                    <div class="info-tip">
+                        <div class="bleh-icon bleh-info-icon"></div>
+                    </div>
+                </div>
                 ` : `
-                <div class="sub-text">${trans_legacy[lang].artist.name}</div>
+                <div class="sub-text">${tl(trans.artist)}</div>
                 `}
                 <div class="title-container" data-multi="${page.multi}">
                     <h1>${title.innerHTML}</h1>
-                    ${position != null ? position.outerHTML : ""}
-                    ${on_tour != null ? on_tour.outerHTML : ""}
+                    ${position ? position.outerHTML : ""}
+                    ${on_tour ? on_tour.outerHTML : ""}
                 </div>
-                ${featured_items != null && !katsune ? featured_items.outerHTML : ""}
+                ${featured_items && !katsune ? featured_items.outerHTML : ""}
             </div>
         `;
       let multi_info_box = redesigned_artist_header.querySelector(".info-tip");
       if (multi_info_box) {
         tippy(multi_info_box, {
-          content: trans_legacy[lang].artist.tooltip
+          content: tl(trans.artists_tooltip)
         });
       }
       position = redesigned_artist_header.querySelector(".header-new-chart-position-number");
-      if (position != null) {
+      if (position) {
         tippy(position, {
           content: trans_legacy[lang].charts.view
         });
@@ -15978,7 +16027,7 @@
                     </a>
                     <div class="sep"></div>
                     <a class="dropdown-menu-clickable-item" href="${root}bleh?tab=customise" data-menu-item="settings">
-                        ${trans_legacy[lang].settings.configure}
+                        ${tl(trans.settings)}
                     </a>
                 `,
           allowHTML: true,
@@ -16002,7 +16051,7 @@
             theme: "context-menu",
             content: `
                         <a class="dropdown-menu-clickable-item" href="${root}bleh?tab=customise" data-menu-item="settings">
-                            ${trans_legacy[lang].settings.configure}
+                            ${tl(trans.settings)}
                         </a>
                     `,
             allowHTML: true,

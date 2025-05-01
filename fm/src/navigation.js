@@ -144,11 +144,11 @@ export function append_nav() {
     changelog_container.classList.add('masthead-nav-item');
     changelog_container.innerHTML = (`
         <a class="masthead-nav-control" onclick="_query_changelog()" data-label="changelog">
-            ${trans_legacy[lang].changelog.name}
+            ${tl(trans.changelog)}
         </a>
     `);
     tippy(changelog_container, {
-        content: trans_legacy[lang].changelog.name
+        content: tl(trans.changelog)
     });
     links.appendChild(changelog_container);
 
@@ -157,18 +157,18 @@ export function append_nav() {
     bleh_container.classList.add('masthead-nav-item');
     bleh_container.innerHTML = (`
         <a class="masthead-nav-control" href="${root}bleh${(stored_season.id != 'none') ? '?tab=seasonal' : ''}" data-label="bleh" data-season="${stored_season.id}" data-season-active="${(stored_season.id != 'none') ? 'true' : 'false'}">
-            ${(stored_season.id == 'none') ? trans_legacy[lang].auth_menu.configure_bleh : moment(stored_season.end.replace('y0', stored_season.year).replace('{offset}', stored_season.offset)).to(stored_season.now, true)}
+            ${(stored_season.id == 'none') ? tl(trans.configure_bleh) : moment(stored_season.end.replace('y0', stored_season.year).replace('{offset}', stored_season.offset)).to(stored_season.now, true)}
         </a>
     `);
     if (stored_season.id == 'none') {
         tippy(bleh_container, {
-            content: trans_legacy[lang].auth_menu.configure_bleh
+            content: tl(trans.configure_bleh)
         });
     } else {
         page.header.season_tooltip = tippy(bleh_container, {
             theme: 'seasonal-swatch',
             content: (`
-                <span class="season-colour-name">${trans_legacy[lang].settings.customise.seasonal.listing[stored_season.id]}</span>
+                <span class="season-colour-name">${tl(trans.seasonal.listing[stored_season.id])}</span>
                 <span class="season-exclusive">${trans_legacy[lang].auth_menu.seasonal_notice}</span>
             `),
             allowHTML: true
@@ -235,11 +235,6 @@ export function append_nav() {
                     <span class="auth-dropdown-item-right" id="theme-value">${tl(trans.themes[settings.theme])}</span>
                 </span>
             </button>
-            ${(ff('dev')) ? (`
-            <button class="dropdown-menu-clickable-item" data-menu-item="developer" onclick="_update_flag_toggle('dev', this)">
-                ${trans_legacy[lang].auth_menu.dev}
-            </button>
-            `) : ''}
             <button class="dropdown-menu-clickable-item" data-menu-item="language">
                 <span class="auth-dropdown-item-row">
                     <span class="auth-dropdown-item-left">${tl(trans.language)}</span>
@@ -259,7 +254,7 @@ export function append_nav() {
             <form>
                 <input type="hidden" name="csrfmiddlewaretoken" value="${token}">
                 <a class="dropdown-menu-clickable-item" data-menu-item="logout" href="${root}logout">
-                    ${trans_legacy[lang].auth_menu.logout}
+                    ${tl(trans.logout)}
                 </a>
             </form>
         `),

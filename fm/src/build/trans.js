@@ -121,7 +121,8 @@ export const trans = {
         de: 'Startseite'
     },
     library: {
-        en: 'Library'
+        en: 'Library',
+        de: 'Bibliothek'
     },
     view_profile: {
         en: 'View profile'
@@ -143,9 +144,6 @@ export const trans = {
     },
     refresh_tracks: {
         en: 'Refresh tracks'
-    },
-    from_the_album: {
-        en: 'From the album: {album}'
     },
     set_obsession: {
         en: 'Obsess'
@@ -205,11 +203,23 @@ export const trans = {
     scrobbles: {
         en: 'Scrobbles'
     },
+    artist: {
+        en: 'Artist'
+    },
     artists: {
         en: 'Artists'
     },
+    artists_tooltip: {
+        en: 'Multiple artists are grouped into this profile'
+    },
+    album: {
+        en: 'Album'
+    },
     albums: {
         en: 'Albums'
+    },
+    track: {
+        en: 'Track'
     },
     tracks: {
         en: 'Tracks'
@@ -650,6 +660,45 @@ export const trans = {
     },
     velocity: {
         en: 'Velocity'
+    },
+    logout: {
+        en: 'Logout',
+        de: 'Ausloggen'
+    },
+    tracklist: {
+        en: 'Tracklist',
+        de: 'Titelliste'
+    },
+    tracklist_from_plays_info: {
+        en: 'Retrieved own plays as official tracklist is unavailable'
+    },
+    from_the_album: {
+        en: 'From {album}'
+    },
+    listens: {
+        en: 'listens',
+        de: 'scrobbels',
+        count: {
+            en: '{c} listens',
+            de: '{c} scrobbels'
+        }
+    },
+    others_count: {
+        en: '{c} others',
+        de: '{c} hörer'
+    },
+    loading_album_plays: {
+        en: 'Collecting your album plays'
+    },
+    fail_album_plays: {
+        en: 'You do not have any plays here'
+    },
+    open_album_as_track: {
+        en: 'Open album title as track',
+        de: 'Albumtitel als Titel öffnen'
+    },
+    ignored: {
+        en: 'Ignored'
     }
 }
 

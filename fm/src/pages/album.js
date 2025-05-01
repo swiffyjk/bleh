@@ -76,17 +76,17 @@ export function bleh_albums() {
         redesigned_album_header.innerHTML = (`
             ${(is_subpage || ff('show_album_cover_always')) ? (`
             <div class="avatar-side">
-                ${(avatar != null) ? (`
+                ${(avatar) ? (`
                 <img src="${avatar.getAttribute('content').replace('/ar0/', '/avatar170s/')}">
                 <a class="bleh--avatar-clickable-link"></a>
                 `) : '<img class="missing-album">'}
             </div>
             `) : ''}
             <div class="info-side">
-                <div class="sub-text">${trans_legacy[lang].album.name}</div>
+                <div class="sub-text">${tl(trans.album)}</div>
                 <div class="title-container">
                     <h1>${title.innerHTML}</h1>
-                    ${(position != null) ? position.outerHTML : ''}
+                    ${(position) ? position.outerHTML : ''}
                 </div>
                 <h2>${artist.innerHTML}</h2>
             </div>
@@ -106,9 +106,9 @@ export function bleh_albums() {
         let avatar_side = redesigned_album_header.querySelector('.avatar-side');
         let avatar_link = avatar_side.querySelector('a');
 
-        if (avatar != null && avatar_link != null) {
+        if (avatar && avatar_link) {
             let expand_link;
-            if (avatar != null)
+            if (avatar)
                 expand_link = `_expand_avatar('${avatar.getAttribute('content')}')`;
 
             if (settings.default_avatar_action == 'expand' && avatar != null)
@@ -129,7 +129,7 @@ export function bleh_albums() {
                     </a>
                     <div class="sep"></div>
                     <a class="dropdown-menu-clickable-item" href="${root}bleh?tab=customise" data-menu-item="settings">
-                        ${trans_legacy[lang].settings.configure}
+                        ${tl(trans.settings)}
                     </a>
                 `),
                 allowHTML: true,
