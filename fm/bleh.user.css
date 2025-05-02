@@ -7151,7 +7151,7 @@ section:has(.dropdown-menu-clickable-button.section-control) {
 .library-search-results,
 .player-bar-playback-options-wrap,
 .dropdown-menu-clickable, .auth-dropdown-menu, .navlist-hidden-list-wrap .navlist-hidden-list {
-    padding: var(--button-list-gap) !important;
+    padding: 0 !important;
 }
 .dropdown-menu-item-dark,
 .dropdown-menu-clickable-item, .auth-dropdown-menu-item, .navlist-hidden-list a,
@@ -7164,6 +7164,7 @@ section:has(.dropdown-menu-clickable-button.section-control) {
     --shadow: none !important;
     --shadow-hov: none !important;
     --col: hsl(var(--c2)) !important;
+    --radius: 0;
     position: relative !important;
     min-width: 170px !important;
     --show-icon: block;
@@ -7328,8 +7329,8 @@ very, very, very dated - who looks up a song on ebay? */
         content: '';
         display: block !important;
 
-        border-top-left-radius: calc(var(--item-big-radius) + var(--button-list-gap));
-        border-top-right-radius: calc(var(--item-big-radius) + var(--button-list-gap));
+        border-top-left-radius: var(--item-big-radius);
+        border-top-right-radius: var(--item-big-radius);
 
         background-image: var(--url) !important;
         position: absolute;
@@ -8084,7 +8085,7 @@ input:is([name^="track_name"], [name^="artist_name"], [name^="album_name"], [nam
 .dropdown-menu-clickable, .auth-dropdown-menu, .navlist-hidden-list, .modal-body, .library-search-results, .events-filter-location-dropdown {
     margin: unset !important;
     background: hsl(var(--b6), 95%) !important;
-    border-radius: calc(var(--item-big-radius) + var(--button-list-gap)) !important;
+    border-radius: var(--item-big-radius) !important;
     box-shadow: var(--override-full-shadow, var(--menu-shadow)) !important;
     color: hsl(var(--c2));
 
@@ -9399,11 +9400,24 @@ text[style^="color: rgb(255, 172, 172)"] {
     &[data-theme="select-menu"],
     &[data-theme="language-menu"],
     &[data-theme="menu"] {
-        padding: var(--button-list-gap) !important;
+        padding: 0 !important;
         background: hsl(var(--b6), 95%) !important;
-        border-radius: calc(var(--item-big-radius) + var(--button-list-gap)) !important;
+        border-radius: var(--item-big-radius) !important;
         box-shadow: var(--override-full-shadow, var(--overlay-shadow)) !important;
         color: hsl(var(--c2));
+
+        :first-child {
+            border-top-left-radius: var(--item-big-radius) !important;
+            border-top-right-radius: var(--item-big-radius) !important;
+        }
+        :last-child {
+            border-bottom-left-radius: var(--item-big-radius) !important;
+            border-bottom-right-radius: var(--item-big-radius) !important;
+
+            &form {
+                overflow: hidden;
+            }
+        }
 
         /*[data-theme="window"] & {
             box-shadow: var(--highlight-shadow), var(--menu-shadow) !important;
