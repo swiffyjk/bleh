@@ -128,7 +128,7 @@ body {
     --font-weight-bold: var(--custom_font_weight_bold, 730);
 
     --trans-short: 0.2s;
-    --trans: 0.23s;
+    --trans: 0.1s;
     --trans-function: cubic-bezier(0.785, 0.135, 0.15, 0.86);
 
     [data-ff--astra="true"] & {
