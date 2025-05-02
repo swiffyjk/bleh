@@ -1545,6 +1545,18 @@ last.fm changes as of 2024-05-20 */
             }
 
             width: fit-content;
+
+            &[href$="/pro"] {
+                --hue-over: var(--hue-pro);
+                --sat-over: 1;
+                --lit-over: 1;
+            }
+        }
+
+        & > [data-require="components/logout-form"] > button {
+            --hue-over: var(--hue-neg);
+            --sat-over: 1;
+            --lit-over: 1;
         }
     }
 }
