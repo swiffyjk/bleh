@@ -1502,15 +1502,51 @@ last.fm changes as of 2024-05-20 */
     text-transform: initial;
     font-weight: var(--font-weight-medium);
     color: hsl(var(--c3));
-    padding-left: 12px !important; /* match links */
 }
 
-.footer-links li, .footer-links a {
-    height: 28px;
-}
-.footer-links a, .footer-links button {
-    display: inline-block;
-    --padding: 5px 12px;
+.footer-links {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+
+    li {
+        height: fit-content;
+
+        a, button {
+            --bg: transparent !important;
+            --bg-hov: transparent !important;
+            --bg-atv: transparent !important;
+            --padding: 6px 0;
+            margin: -6px 0 !important;
+            --shadow: none !important;
+            --mask: var(--icon-16-arrow-right);
+            position: relative;
+            --mask-size: 12px;
+            --margin-top: -6px;
+            padding-right: calc(12px + 4px) !important;
+            --left: none;
+            --right: 0;
+            --show-icon: block;
+
+            &:before {
+                opacity: 0;
+            }
+
+            &:hover {
+                --col: hsl(var(--l3-c));
+                text-decoration: underline !important;
+
+                transition-property: transform;
+                transition-duration: 0.1s;
+
+                &:before {
+                    opacity: 1;
+                }
+            }
+
+            width: fit-content;
+        }
+    }
 }
 
 .footer .footer-top-row,
@@ -6600,6 +6636,7 @@ button,
 
 
 /*     ICON MASK     */
+.footer-links :is(a, button):before,
 .library-search-results.async-content-loading:after,
 .radio-button:after, .radio-button h4:after,
 .listening-report-promo:after, .listening-report-promo .listening-report-promo-date:after,
