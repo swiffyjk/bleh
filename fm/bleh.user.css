@@ -7328,10 +7328,6 @@ very, very, very dated - who looks up a song on ebay? */
     --margin-top: 0;
     --btn-left: 12px !important;
 
-    --bg: transparent !important;
-    --bg-hov: transparent !important;
-    --bg-atv: transparent !important;
-
     &[data-menu-item="profile-shortcut"] {
         --mask: var(--icon-16-profile-shortcut);
 
