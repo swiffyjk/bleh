@@ -4514,24 +4514,24 @@ better than the default selector '#app a' i suppose */
 .chartlist tbody {
     display: flex;
     flex-direction: column;
-    gap: 4px;
 }
 .obsession-candidate,
 .chartlist-row {
-    --bg: hsl(var(--b4), 40%);
-    --bg-hov: hsl(var(--b4), 60%);
+    --bg: transparent;
+    --bg-hov: transparent;
     --shadow: none !important;
     color: hsl(var(--c2));
     background-color: var(--bg);
-    padding: 7px 12px;
+    padding: 9px 0;
     min-height: 40px;
     max-height: fit-content;
-    border-radius: var(--item-big-radius);
+    border-radius: unset;
     box-shadow: var(--shadow);
     transition-property: background-color;
     transition-duration: var(--trans);
     transition-timing-function: var(--trans-function);
-    padding-right: 46px !important;
+    padding-right: 42px !important;
+    border-top: 1px solid var(--card-border-base);
 
     &[aria-expanded="true"],
     &:hover {
@@ -4664,40 +4664,22 @@ better than the default selector '#app a' i suppose */
 }
 
 .chartlist-row {
-    --more-gap: calc(32px + var(--chartlist-inner-gap));
-    --more-padding: calc(var(--more-gap) - 12px);
-    padding-left: var(--more-gap) !important;
-
     &.show-focus-controls {
         .chartlist-more {
             opacity: 1 !important;
         }
     }
-}
-.chartlist-more {
-    margin: unset !important;
-    position: absolute;
-    top: 0;
-    left: 0;
-    bottom: 0;
-    opacity: 0.2 !important;
 
-    & > div,
-    .chartlist-more-button {
-        height: 100%;
-    }
-
-    .chartlist-more-button {
-        --left: 7px;
-        --mask: var(--icon-16-dots-v);
-
-        [data-ff--hide_chartlist_more="true"] & {
-            display: none;
+    &:hover {
+        .chartlist-play, .chartlist-more {
+            display: block !important;
         }
     }
-
-    .chartlist-more-menu {
-        left: -12px !important;
+}
+.chartlist-more {
+    .chartlist-more-button {
+        --left: 7px;
+        --mask: var(--icon-16-dots);
     }
 }
 
@@ -4731,7 +4713,7 @@ better than the default selector '#app a' i suppose */
     top: 0;
     right: 0;
     bottom: 0;
-    padding: 0 7px 0 30px;
+    padding: 0 5px 0 30px;
     width: fit-content;
     height: 100%;
     margin: unset !important;
@@ -4753,16 +4735,17 @@ better than the default selector '#app a' i suppose */
     &:before {
         content: '';
         position: absolute;
-        inset: 0;
-        background: linear-gradient(90deg, transparent 0%, hsla(var(--h3), 20%) 100%);
-        border-radius: var(--item-big-radius);
+        width: 12px;
+        height: 12px;
+        top: 50%;
+        right: 15px;
+        margin-top: -6px;
+        background: hsl(var(--h3), 50%);
+        border-radius: 50px;
+        box-shadow: 0 0 20px 1px hsl(var(--h3));
         transition-property: opacity;
         transition-duration: var(--trans);
         transition-timing-function: var(--trans-function);
-    }
-
-    [data-bleh--theme="light"] &:before {
-        background: linear-gradient(90deg, transparent 0%, hsla(var(--h4), 25%) 100%);
     }
 }
 .chartlist-loved:has([data-toggle-button-current-state="unloved"]):before {
@@ -4977,13 +4960,13 @@ better than the default selector '#app a' i suppose */
                 }
                 .chartlist-artist {
                     position: absolute;
-                    left: calc(var(--more-padding) + 38px + 2px - 28px);
+                    left: calc(38px + 2px - 28px);
                     margin-top: 16px;
                     right: 300px;
                 }
                 .chartlist-album.custom-album-text {
                     position: absolute;
-                    left: calc(var(--more-padding) + 38px + 2px - 28px);
+                    left: calc(38px + 2px - 28px);
                     margin-top: 32px;
                     margin-left: calc(var(--chartlist-inner-gap) / 2) !important;
                     margin-right: unset !important;
@@ -4993,11 +4976,11 @@ better than the default selector '#app a' i suppose */
             &.chartlist--with-image {
                 .chartlist-row {
                     .chartlist-artist {
-                        left: calc(var(--more-padding) + 84px - 2px - 28px);
+                        left: calc(84px - 2px - 28px);
                     }
                     .chartlist-album.custom-album-text {
                         position: absolute;
-                        left: calc(var(--more-padding) + 84px - 2px - 28px);
+                        left: calc(84px - 2px - 28px);
                     }
 
                     &.chartlist-row--now-scrobbling {
@@ -5006,11 +4989,11 @@ better than the default selector '#app a' i suppose */
                             margin-bottom: 32px;
                         }
                         .chartlist-artist {
-                            left: calc(var(--more-padding) + 18px + 84px - 2px - 28px);
+                            left: calc(18px + 84px - 2px - 28px);
                             margin-top: unset;
                         }
                         .chartlist-album.custom-album-text {
-                            left: calc(var(--more-padding) + 18px + 84px - 2px - 28px);
+                            left: calc(18px + 84px - 2px - 28px);
                             margin-top: 32px;
 
                             font-size: var(--font-size-sm);
@@ -5027,10 +5010,10 @@ better than the default selector '#app a' i suppose */
                 }
                 .chartlist-artist {
                     position: absolute;
-                    left: calc(var(--more-padding) + 84px - 2px - 42px);
+                    left: calc(84px - 2px - 42px);
                     margin-top: 16px;
                     right: 300px;
-                    width: 60%;
+                    width: 50%;
                 }
             }
         }
@@ -5134,17 +5117,17 @@ better than the default selector '#app a' i suppose */
 
 .chartlist--with-bar.chartlist--with-index.chartlist--with-play.chartlist--with-image .chartlist-row--with-artist .chartlist-artist, .chartlist--with-multi-playlinks.chartlist--with-index.chartlist--with-play.chartlist--with-image .chartlist-row--with-artist .chartlist-artist,
 .chartlist--with-bar.chartlist--with-index.chartlist--with-play.chartlist--with-image.chartlist--with-loved .chartlist-row--with-artist .chartlist-artist, .chartlist--with-multi-playlinks.chartlist--with-index.chartlist--with-play.chartlist--with-image.chartlist--with-loved .chartlist-row--with-artist .chartlist-artist {
-    left: calc(var(--more-padding) + 84px - 2px);
+    left: calc(84px - 2px);
     margin-top: 16px;
 }
 .chartlist--with-bar.chartlist--with-index.chartlist--with-play.chartlist--with-image.chartlist--with-loved.chartlist--with-index--length-3 .chartlist-row--with-artist .chartlist-artist, .chartlist--with-multi-playlinks.chartlist--with-index.chartlist--with-play.chartlist--with-image.chartlist--with-loved.chartlist--with-index--length-3 .chartlist-row--with-artist .chartlist-artist,
 .chartlist--with-bar.chartlist--with-index.chartlist--with-play.chartlist--with-image.chartlist--with-index--length-3 .chartlist-row--with-artist .chartlist-artist, .chartlist--with-multi-playlinks.chartlist--with-index.chartlist--with-play.chartlist--with-image.chartlist--with-index--length-3 .chartlist-row--with-artist .chartlist-artist {
-    left: calc(var(--more-padding) + 92px - 2px);
+    left: calc(92px - 2px);
     margin-top: 16px;
 }
 .chartlist--with-bar.chartlist--with-index.chartlist--with-play.chartlist--with-image.chartlist--with-loved.chartlist--with-index--length-4 .chartlist-row--with-artist .chartlist-artist, .chartlist--with-multi-playlinks.chartlist--with-index.chartlist--with-play.chartlist--with-image.chartlist--with-loved.chartlist--with-index--length-4 .chartlist-row--with-artist .chartlist-artist,
 .chartlist--with-bar.chartlist--with-index.chartlist--with-play.chartlist--with-image.chartlist--with-index--length-4 .chartlist-row--with-artist .chartlist-artist, .chartlist--with-multi-playlinks.chartlist--with-index.chartlist--with-play.chartlist--with-image.chartlist--with-index--length-4 .chartlist-row--with-artist .chartlist-artist {
-    left: calc(var(--more-padding) + 103px - 2px);
+    left: calc(103px - 2px);
 }
 
 .chartlist--with-bar .chartlist-row--with-artist .chartlist-artist {
@@ -5153,31 +5136,29 @@ better than the default selector '#app a' i suppose */
 
 /* playlist */
 .chartlist--with-bar.chartlist--with-play.chartlist--with-image.chartlist--with-loved .chartlist-row--with-artist .chartlist-artist, .chartlist--with-multi-playlinks.chartlist--with-play.chartlist--with-image.chartlist--with-loved .chartlist-row--with-artist .chartlist-artist {
-    left: calc(var(--more-padding) + 59px - 2px);
+    left: calc(59px - 2px);
     margin-top: 16px;
 }
 
 
 /*     LOVED - brought over from bleh     */
 .chartlist-love-button {
+    --bg: transparent !important;
+    --bg-hov: transparent !important;
+    --bg-atv: transparent !important;
+    --shadow: none !important;
     position: relative;
     --left: 7px;
     --mask: var(--icon-16-heart);
-
-    &:before {
-        color: hsl(var(--l3-c));
-    }
+    --col: hsl(var(--l3-c));
+    color: var(--col);
 }
-[data-toggle-button-current-state=loved] .chartlist-love-button
-{
-    --bg: transparent !important;
-    --bg-hov: hsla(var(--h3), 15%) !important;
-    --bg-atv: hsla(var(--h3), 35%) !important;
+[data-toggle-button-current-state=loved] .chartlist-love-button {
     --mask: var(--icon-16-heart-solid);
 }
 
-[data-toggle-button-current-state="unloved"] button.chartlist-love-button:not(:hover):before {
-    color: hsl(var(--c3), 40%) !important;
+[data-toggle-button-current-state="unloved"] button.chartlist-love-button:not(:hover) {
+    --col: hsl(var(--c3), 40%) !important;
 }
 /*[data-toggle-button-current-state="loved"] .chartlist-love-button:after,
 a.chartlist-love-button:after {
@@ -5196,8 +5177,8 @@ a.chartlist-love-button:after {
 
 
 /*     OTHER USER PROFILE     */
-[data-toggle-button-current-state="unloved"] span.chartlist-love-button:before {
-    color: hsla(var(--c3), 20%) !important;
+[data-toggle-button-current-state="unloved"] span.chartlist-love-button {
+    --col: hsla(var(--c3), 20%) !important;
 }
 
 
@@ -6884,7 +6865,7 @@ span.header-new-gallery-inner a:before,
 }
 
 .obsession-candidate-inner .btn-sm,
-.chartlist-love-button, .chartlist-more-button, .chartlist-play-button {
+.chartlist-more-button, .chartlist-play-button {
     --bg: transparent !important;
     --bg-hov: hsla(var(--b3), 30%) !important;
     --bg-atv: hsla(var(--b3), 50%) !important;
