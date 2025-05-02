@@ -9450,15 +9450,15 @@ text[style^="color: rgb(255, 172, 172)"] {
         box-shadow: var(--override-full-shadow, var(--overlay-shadow)) !important;
         color: hsl(var(--c2));
 
-        :first-child {
+        & > .tippy-content > :first-child {
             border-top-left-radius: var(--item-big-radius) !important;
             border-top-right-radius: var(--item-big-radius) !important;
         }
-        :last-child {
+        & > .tippy-content > :last-child {
             border-bottom-left-radius: var(--item-big-radius) !important;
             border-bottom-right-radius: var(--item-big-radius) !important;
 
-            &form {
+            &:is(form) {
                 overflow: hidden;
             }
         }
