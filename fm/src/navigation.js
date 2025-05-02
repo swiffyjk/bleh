@@ -68,17 +68,11 @@ export function append_nav() {
         badge.classList.add('label', `user-status--bleh-${badges[0].type}`, `user-status--bleh-user-${auth.name}`, 'auth-badge');
         badge.textContent = badges[0].name;
         auth_link.appendChild(badge);
-
-        auth_link.classList.add(`user-status--bleh-${badges[0].type}`, `user-status--bleh-user-${auth.name}`);
-        auth_link.setAttribute('data-has-colour', 'true');
     } else if (auth.pro) {
         let pro_badge = document.createElement('p');
         pro_badge.classList.add('label', 'user-status-subscriber', 'auth-badge');
         pro_badge.textContent = 'Pro';
         auth_link.appendChild(pro_badge);
-
-        auth_link.classList.add('user-status-subscriber');
-        auth_link.setAttribute('data-has-colour', 'true');
     }
 
 
@@ -262,6 +256,7 @@ export function append_nav() {
         placement: 'top',
         interactive: true,
         interactiveBorder: 10,
+        trigger: 'click',
 
         onShow(instance) {
             instance.popper.style.setProperty('--url', `url(${auth.avatar.replace('avatar42s', 'avatar170s')})`);
@@ -315,5 +310,10 @@ export function append_nav() {
             });
         }
     });
-    new_auth.parentElement.removeChild(new_auth);
+    let container = new_auth.parentElement;
+    container.parentElement.removeChild(container);
+    auth_link.removeAttribute('aria-controls');
+    auth_link.removeAttribute('data-disclose-hover');
+    auth_link.removeAttribute('data-disclose-hover--allow-enter-open');
+    auth_link.removeAttribute('href');
 }

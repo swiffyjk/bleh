@@ -939,7 +939,7 @@ html body {
 
 
 .main-content {
-    padding-top: calc(var(--card-gap) + 32px) !important;
+    padding-top: calc(5px + 32px) !important;
 
     /* overflow on library page for some rsn 2024-11-10 */
     overflow-x: hidden;
@@ -983,7 +983,7 @@ last.fm changes as of 2024-05-20 */
     left: 0;
     right: 0;
     top: 0 !important;
-    height: calc((var(--card-gap) * 2) + 32px) !important; /* macOS */
+    height: calc(20px + 32px) !important; /* macOS */
     display: flex !important;
     justify-content: center;
     align-items: center;
@@ -1004,7 +1004,7 @@ last.fm changes as of 2024-05-20 */
         left: 0;
         top: 0;
         right: 0;
-        height: calc((var(--card-gap) * 2) + 32px);
+        height: calc(20px + 32px);
         z-index: 10;
         background: var(--cards-overlay-image-subtle, none), var(--page-overlay, none), linear-gradient(0deg, transparent 0%, hsl(var(--b6)) 100%);
         pointer-events: none;
@@ -1319,8 +1319,22 @@ last.fm changes as of 2024-05-20 */
         --bg-atv: hsl(var(--h4), 50%) !important;
     }
 
+    --btn-right: calc(12px + 12px + 4px) !important;
+    --mask-size: 12px;
+    --margin-top: -6px;
+    --right: 12px;
     &:before {
         color: hsl(var(--c3));
+
+        transition-property: transform !important;
+        transition-duration: var(--trans) !important;
+        transition-timing-function: var(--trans-function) !important;
+    }
+
+    &[aria-expanded="true"] {
+        &:before {
+            transform: scaleY(-1) !important;
+        }
     }
 }
 
@@ -6496,9 +6510,7 @@ button,
 .header-new-gallery--link .header-new-gallery-inner,
 .date-range-picker-button,
 .source-album,
-.select-button,
 .language-nav,
-.auth-link,
 .out-now-btn,
 .show-more a,
 .music-more-link a
@@ -6957,6 +6969,11 @@ section:has(.dropdown-menu-clickable-button.section-control) {
 
 
 .dropdown-menu-list-button, .dropdown-menu-clickable-button, .dropdown-menu-clickable-button-js-only {
+    --btn-right: calc(12px + 12px + 4px) !important;
+    --mask-size: 12px;
+    --margin-top: -6px;
+    --right: 12px;
+
     &:after {
         color: hsl(var(--c3));
         transition-property: transform !important;
@@ -8088,6 +8105,7 @@ input:is([name^="track_name"], [name^="artist_name"], [name^="album_name"], [nam
     border-radius: var(--item-big-radius) !important;
     box-shadow: var(--override-full-shadow, var(--menu-shadow)) !important;
     color: hsl(var(--c2));
+    overflow: hidden;
 
     &.modal-body {
         background: hsl(var(--b5)) !important;
@@ -17243,6 +17261,11 @@ h4 {
     width: max-content;
     position: relative;
 
+    --btn-right: calc(12px + 12px + 4px) !important;
+    --mask-size: 12px;
+    --margin-top: -6px;
+    --right: 12px;
+
     &:after {
         --mask: var(--icon-16-dropdown);
 
@@ -18800,7 +18823,7 @@ h4 {
         position: relative;
         order: -10;
 
-        margin-top: calc(-1 * ((var(--card-gap) * 2) + 32px));
+        margin-top: calc(-1 * (20px + 32px));
         margin-left: calc(-1 * ((100vw - (var(--cards-width) + (var(--card-gap) * 2))) / 2));
         margin-right: calc(-1 * ((100vw - (var(--cards-width) + (var(--card-gap) * 2))) / 2));
 
@@ -18837,7 +18860,7 @@ h4 {
 
     .bleh-background-buttons {
         position: absolute;
-        top: calc((var(--card-gap) * 2) + 32px + var(--card-gap));
+        top: calc(20px + 32px + var(--card-gap));
         right: calc(var(--card-gap) + var(--card-padding));
 
         background: unset !important;

@@ -15065,15 +15065,11 @@
       badge.classList.add("label", `user-status--bleh-${badges[0].type}`, `user-status--bleh-user-${auth.name}`, "auth-badge");
       badge.textContent = badges[0].name;
       auth_link2.appendChild(badge);
-      auth_link2.classList.add(`user-status--bleh-${badges[0].type}`, `user-status--bleh-user-${auth.name}`);
-      auth_link2.setAttribute("data-has-colour", "true");
     } else if (auth.pro) {
       let pro_badge = document.createElement("p");
       pro_badge.classList.add("label", "user-status-subscriber", "auth-badge");
       pro_badge.textContent = "Pro";
       auth_link2.appendChild(pro_badge);
-      auth_link2.classList.add("user-status-subscriber");
-      auth_link2.setAttribute("data-has-colour", "true");
     }
     let notif_count = new_auth.querySelector('[data-analytics-label="notifications"] + .auth-avatar-notification-count-badge');
     let inbox_count = new_auth.querySelector('[data-analytics-label="inbox"] + .auth-avatar-notification-count-badge');
@@ -15227,6 +15223,7 @@
       placement: "top",
       interactive: true,
       interactiveBorder: 10,
+      trigger: "click",
       onShow(instance) {
         instance.popper.style.setProperty("--url", `url(${auth.avatar.replace("avatar42s", "avatar170s")})`);
         let shortcut_item = instance.popper.querySelector('[data-menu-item="profile-shortcut"]');
@@ -15274,7 +15271,12 @@
         });
       }
     });
-    new_auth.parentElement.removeChild(new_auth);
+    let container = new_auth.parentElement;
+    container.parentElement.removeChild(container);
+    auth_link2.removeAttribute("aria-controls");
+    auth_link2.removeAttribute("data-disclose-hover");
+    auth_link2.removeAttribute("data-disclose-hover--allow-enter-open");
+    auth_link2.removeAttribute("href");
   }
 
   // src/components/about_artist.js
