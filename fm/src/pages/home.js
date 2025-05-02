@@ -88,7 +88,7 @@ export function bleh_home() {
             </li>
             <li class="navlist-item secondary-nav-item secondary-nav-item--bleh">
                 <a href="${root}bleh" class="secondary-nav-item-link ${(page.type == 'error') ? 'secondary-nav-item-link--active' : ''}">
-                    bleh
+                    ${tl(trans.settings)}
                 </a>
             </li>
             <li class="navlist-item secondary-nav-item secondary-nav-item--more">

@@ -15203,7 +15203,7 @@
                 </span>
             </button>
             <a class="dropdown-menu-clickable-item" data-menu-item="bleh" href="${root}bleh">
-                ${tl(trans.configure_bleh)}
+                ${tl(trans.settings)}
             </a>
             <div class="sep"></div>
             <a class="dropdown-menu-clickable-item" data-menu-item="bookmarks" href="${root}music/+bookmarks">
@@ -17168,7 +17168,7 @@
             </li>
             <li class="navlist-item secondary-nav-item secondary-nav-item--bleh">
                 <a href="${root}bleh" class="secondary-nav-item-link ${page.type == "error" ? "secondary-nav-item-link--active" : ""}">
-                    bleh
+                    ${tl(trans.settings)}
                 </a>
             </li>
             <li class="navlist-item secondary-nav-item secondary-nav-item--more">
