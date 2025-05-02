@@ -20308,9 +20308,11 @@ h4 {
                 width: 200px;
             }
 
-            &:hover {
-                overflow-x: scroll;
-                overflow-y: unset;
+            [data-bleh--simulate_scroll="false"] & {
+                &:hover {
+                    overflow-x: scroll;
+                    overflow-y: unset;
+                }
             }
         }
 
