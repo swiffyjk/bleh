@@ -1024,12 +1024,13 @@ last.fm changes as of 2024-05-20 */
         transition: opacity 0.3s;
     }
 
-    transition-property: background, background-filter;
+    transition-property: background, background-filter, box-shadow;
     transition-duration: 0.3s;
 
     &.scrolled {
-        background: hsl(var(--b6), 85%);
+        background: hsl(var(--b5), 85%);
         backdrop-filter: blur(10px) saturate(120%);
+        box-shadow: var(--interact-shadow);
 
         &:before {
             opacity: 0;
@@ -5248,7 +5249,7 @@ a.chartlist-love-button:after {
     display: flex;
 
     [data-bleh--theme="light"] & {
-        background: hsl(var(--b5));
+        background: hsl(var(--b4));
         /*box-shadow: inset 0 0 0 1px hsl(var(--c3), 10%);*/
     }
     [data-bleh--season="halloween"] & {
@@ -9106,12 +9107,11 @@ a.gallery-image-preferred-off {
     display: flex;
     align-items: center;
     gap: 12px;
-    --padding: 7px;
-    margin: -7px !important;
+    --padding: 0;
 
     --bg: transparent;
-    --bg-hov: hsl(var(--b4), 60%);
-    --bg-atv: hsl(var(--b4), 80%);
+    --bg-hov: transparent;
+    --bg-atv: transparent;
     --shadow: none;
 
     .link-block-cover-link {
@@ -12265,7 +12265,7 @@ table.table tr:nth-child(2n) td {
 .album-and-lyrics-row {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
-    gap: calc(var(--card-gap) + 7px);
+    gap: var(--card-gap);
     margin-top: var(--card-gap);
 
     &:before, &:after {
