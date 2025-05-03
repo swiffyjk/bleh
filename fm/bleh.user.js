@@ -13329,123 +13329,123 @@
         { sets: {
           hue: 360,
           sat: 1.4,
-          lit: 0.775
-        } },
-        { sets: {
-          hue: 360,
-          sat: 1.4,
-          lit: 0.8
-        } },
-        { sets: {
-          hue: 360,
-          sat: 1.325,
-          lit: 0.85
-        } },
-        { sets: {
-          hue: 360,
-          sat: 1.225,
           lit: 0.9
         } },
         { sets: {
           hue: 360,
-          sat: 1.1,
+          sat: 1.4,
           lit: 0.95
         } },
         { sets: {
           hue: 360,
-          sat: 1.05,
+          sat: 1.325,
           lit: 1
+        } },
+        { sets: {
+          hue: 360,
+          sat: 1.225,
+          lit: 1
+        } },
+        { sets: {
+          hue: 360,
+          sat: 1.1,
+          lit: 1
+        } },
+        { sets: {
+          hue: 360,
+          sat: 1.05,
+          lit: 1.05
         } }
       ],
       orange: [
         { sets: {
           hue: 10,
           sat: 1.425,
-          lit: 0.775
+          lit: 0.9
         } },
         { sets: {
           hue: 13,
           sat: 1.4,
-          lit: 0.8
+          lit: 0.95
         } },
         { sets: {
           hue: 16,
           sat: 1.325,
-          lit: 0.825
+          lit: 1
         } },
         { sets: {
           hue: 20,
           sat: 1.225,
-          lit: 0.875
+          lit: 1
         } },
         { sets: {
           hue: 21,
           sat: 1.275,
-          lit: 0.95
+          lit: 1
         } },
         { sets: {
           hue: 26,
           sat: 1.35,
-          lit: 1
+          lit: 1.05
         } }
       ],
       yellow: [
         { sets: {
           hue: 22,
           sat: 1.3,
-          lit: 0.825
+          lit: 0.9
         } },
         { sets: {
           hue: 24,
           sat: 1.2,
-          lit: 0.85
+          lit: 0.95
         } },
         { sets: {
           hue: 27,
           sat: 1.16,
-          lit: 0.875
+          lit: 1
         } },
         { sets: {
           hue: 32,
           sat: 1.1,
-          lit: 0.9
+          lit: 1
         } },
         { sets: {
           hue: 36,
           sat: 1,
-          lit: 0.975
+          lit: 1
         } },
         { sets: {
           hue: 41,
           sat: 1.05,
-          lit: 1
+          lit: 1.05
         } }
       ],
       green: [
         { sets: {
           hue: 85,
           sat: 1.4,
-          lit: 0.775
+          lit: 0.9
         } },
         { sets: {
           hue: 90,
           sat: 1.3,
-          lit: 0.8
+          lit: 0.95
         } },
         { sets: {
           hue: 94,
           sat: 1.2,
-          lit: 0.85
+          lit: 1
         } },
         { sets: {
           hue: 99,
           sat: 1.1,
-          lit: 0.9
+          lit: 1
         } },
         { sets: {
           hue: 105,
           sat: 1.025,
-          lit: 0.975
+          lit: 1
         } },
         { sets: {
           hue: 108,
@@ -13457,160 +13457,160 @@
         { sets: {
           hue: 115,
           sat: 1.15,
-          lit: 0.75
+          lit: 0.9
         } },
         { sets: {
           hue: 121,
           sat: 1.09,
-          lit: 0.8
+          lit: 0.95
         } },
         { sets: {
           hue: 127,
           sat: 1.05,
-          lit: 0.825
+          lit: 1
         } },
         { sets: {
           hue: 135,
           sat: 1.03,
-          lit: 0.875
+          lit: 1
         } },
         { sets: {
           hue: 141,
           sat: 1,
-          lit: 0.95
+          lit: 1
         } },
         { sets: {
           hue: 148,
           sat: 1,
-          lit: 1
+          lit: 1.05
         } }
       ],
       aqua: [
         { sets: {
-          hue: 171,
+          hue: 212,
           sat: 1.45,
-          lit: 0.775
+          lit: 0.9
         } },
         { sets: {
-          hue: 178,
+          hue: 207,
           sat: 1.375,
-          lit: 0.8
-        } },
-        { sets: {
-          hue: 185,
-          sat: 1.3,
-          lit: 0.85
-        } },
-        { sets: {
-          hue: 190,
-          sat: 1.25,
-          lit: 0.875
-        } },
-        { sets: {
-          hue: 196,
-          sat: 1.2,
           lit: 0.95
         } },
         { sets: {
           hue: 200,
-          sat: 1.1,
+          sat: 1.3,
           lit: 1
+        } },
+        { sets: {
+          hue: 195,
+          sat: 1.25,
+          lit: 1
+        } },
+        { sets: {
+          hue: 190,
+          sat: 1.2,
+          lit: 1
+        } },
+        { sets: {
+          hue: 185,
+          sat: 1.1,
+          lit: 1.05
         } }
       ],
       blue: [
         { sets: {
           hue: 233,
           sat: 1.4,
-          lit: 0.8
+          lit: 0.9
         } },
         { sets: {
           hue: 230,
           sat: 1.3,
-          lit: 0.825
+          lit: 0.95
         } },
         { sets: {
-          hue: 225,
+          hue: 226,
           sat: 1.25,
-          lit: 0.875
-        } },
-        { sets: {
-          hue: 219,
-          sat: 1.2,
-          lit: 0.925
-        } },
-        { sets: {
-          hue: 214,
-          sat: 1.15,
-          lit: 0.975
-        } },
-        { sets: {
-          hue: 208,
-          sat: 1.025,
           lit: 1
+        } },
+        { sets: {
+          hue: 220,
+          sat: 1.2,
+          lit: 1
+        } },
+        { sets: {
+          hue: 217,
+          sat: 1.15,
+          lit: 1
+        } },
+        { sets: {
+          hue: 212,
+          sat: 1.025,
+          lit: 1.05
         } }
       ],
       purple: [
         { sets: {
           hue: 246,
           sat: 1.32,
-          lit: 0.825
+          lit: 0.9
         } },
         { sets: {
           hue: 244,
           sat: 1.2,
-          lit: 0.85
+          lit: 0.95
         } },
         { sets: {
           hue: 246,
           sat: 1.12,
-          lit: 0.875
+          lit: 1
         } },
         { sets: {
           hue: 249,
           sat: 1.11,
-          lit: 0.925
+          lit: 1
         } },
         { sets: {
           hue: 253,
           sat: 1.07,
-          lit: 0.97
+          lit: 1
         } },
         { sets: {
           hue: 256,
           sat: 1.01,
-          lit: 1.01
+          lit: 1.03
         } }
       ],
       pink: [
         { sets: {
           hue: 346,
           sat: 1.3,
-          lit: 0.8
+          lit: 0.9
         } },
         { sets: {
           hue: 340,
           sat: 1.225,
-          lit: 0.825
+          lit: 0.95
         } },
         { sets: {
-          hue: 333,
+          hue: 335,
           sat: 1.175,
-          lit: 0.875
-        } },
-        { sets: {
-          hue: 320,
-          sat: 1.12,
-          lit: 0.925
-        } },
-        { sets: {
-          hue: 312,
-          sat: 1.05,
-          lit: 0.975
-        } },
-        { sets: {
-          hue: 304,
-          sat: 1,
           lit: 1
+        } },
+        { sets: {
+          hue: 325,
+          sat: 1.12,
+          lit: 1
+        } },
+        { sets: {
+          hue: 317,
+          sat: 1.05,
+          lit: 1
+        } },
+        { sets: {
+          hue: 309,
+          sat: 1,
+          lit: 1.05
         } }
       ]
     };
