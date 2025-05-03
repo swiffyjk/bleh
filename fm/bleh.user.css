@@ -14441,9 +14441,9 @@ input[type="range"]::-moz-range-progress {
 
 .inner-preview {
     .tracks {
+        background-color: hsl(var(--b5));
         display: flex;
         flex-direction: column;
-        gap: 2px;
 
         [data-bleh--inbuilt-id_chart_style_and_length_top_albums^="classic"] &.album,
         [data-bleh--inbuilt-id_chart_style_and_length_top_albums^="grid"] &.album,
@@ -14457,10 +14457,9 @@ input[type="range"]::-moz-range-progress {
         }
 
         .track {
-            background-color: hsla(var(--b4), 40%);
-            padding: 6px 12px;
+            padding: 7px 12px;
             min-height: 24px;
-            border-radius: var(--item-big-radius);
+            border-top: 1px solid var(--card-border-base);
             display: flex;
             align-items: center;
             gap: 12px;
@@ -14470,7 +14469,7 @@ input[type="range"]::-moz-range-progress {
             .cover {
                 width: 20px;
                 height: 20px;
-                background-color: hsl(var(--b6));
+                background-color: var(--avatar-generic-background);
                 border-radius: var(--item-small-radius);
 
                 html:not([data-bleh--inbuilt-recent_artwork="true"]) .tracks.recent & {
@@ -14492,6 +14491,9 @@ input[type="range"]::-moz-range-progress {
                         margin-top: 4px;
                         width: 70px;
                     }
+                    .album {
+                        margin-top: 4px;
+                    }
                 }
             }
             .title {
@@ -14503,8 +14505,15 @@ input[type="range"]::-moz-range-progress {
             .artist {
                 width: 150px;
                 height: 6px;
-                background-color: hsla(var(--c2), 80%);
+                background-color: hsl(var(--c2), 80%);
                 border-radius: 50px;
+            }
+            .album {
+                width: 40px;
+                height: 4px;
+                background-color: hsl(var(--c3));
+                border-radius: 50px;
+                display: none;
             }
             .time {
                 width: 60px;
@@ -14528,14 +14537,17 @@ input[type="range"]::-moz-range-progress {
             }
 
             &.realtime {
-                background-color: hsla(var(--h4), 35%);
+                background-color: hsla(var(--h4), 10%);
 
-                [data-bleh--theme="light"] & {
-                    background-color: hsla(var(--h4), 35%);
+                .cover {
+                    width: 34px;
+                    height: 34px;
                 }
 
-                .title {
-                    background-color: hsl(var(--l2-c));
+                [data-bleh--stacked_chartlist_info="true"] & {
+                    .album {
+                        display: block;
+                    }
                 }
             }
         }

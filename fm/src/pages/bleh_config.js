@@ -1337,6 +1337,7 @@ export function render_setting_page(page_id) {
                             <div class="info">
                                 <div class="title"></div>
                                 <div class="artist"></div>
+                                <div class="album"></div>
                             </div>
                             <div class="time"></div>
                         </div>

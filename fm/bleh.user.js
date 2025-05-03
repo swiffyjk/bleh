@@ -12873,6 +12873,7 @@
                             <div class="info">
                                 <div class="title"></div>
                                 <div class="artist"></div>
+                                <div class="album"></div>
                             </div>
                             <div class="time"></div>
                         </div>
@@ -14757,7 +14758,7 @@
   function patch_titles() {
     if (page.subpage == "tags_overview")
       return;
-    if (page.structure.main == null)
+    if (!page.structure.main)
       return;
     let tracklists = page.structure.main.querySelectorAll(".chartlist:not(.chartlist__placeholder)");
     let insights = {
@@ -14996,7 +14997,7 @@
             let link = image_wrap.querySelector(".cover-art");
             let image = link.querySelector("img");
             if (!settings.album_text) {
-              let alt = image.getAttribute("alt");
+              let alt = correct_item_by_artist(image.getAttribute("alt"), track_artist);
               let album_text = document.createElement("td");
               album_text.classList.add("chartlist-album", "custom-album-text");
               album_text.innerHTML = `
