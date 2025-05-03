@@ -826,8 +826,8 @@
     return "#" + comp_to_hex(r) + comp_to_hex(g) + comp_to_hex(b);
   }
   function clamp_sat(sat) {
-    if (sat > 1.7)
-      return 1.7;
+    if (sat > 1.5)
+      return 1.5;
     return sat;
   }
   function clean_number(string) {

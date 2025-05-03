@@ -61,8 +61,8 @@ export function rgb_to_hex(r, g, b) {
 // saturation should not exceed 2, definitely not
 // reaching 3 or even 4 in some cases
 export function clamp_sat(sat) {
-    if (sat > 1.7)
-        return 1.7;
+    if (sat > 1.5)
+        return 1.5;
 
     return sat;
 }
