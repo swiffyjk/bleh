@@ -140,9 +140,9 @@ body {
     }
 
     [data-bleh--theme="light"] & {
-        --font-weight: calc(var(--custom_font_weight, 480) + 70);
-        --font-weight-medium: calc(var(--custom_font_weight_medium, 650) + 70);
-        --font-weight-bold: calc(var(--custom_font_weight_bold, 730) + 70);
+        --font-weight: calc(var(--custom_font_weight, 480) + 120);
+        --font-weight-medium: calc(var(--custom_font_weight_medium, 650) + 90);
+        --font-weight-bold: calc(var(--custom_font_weight_bold, 730) + 90);
     }
 }
 
@@ -9566,7 +9566,8 @@ text[style^="color: rgb(255, 172, 172)"] {
         }
 
         .sep {
-            margin: var(--button-list-gap) 0;
+            border-bottom: 1px solid var(--card-border-base);
+            margin: 4px 0;
             height: 0;
 
             &:first-child {
