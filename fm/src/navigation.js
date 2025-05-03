@@ -288,6 +288,9 @@ export function append_nav() {
                     <button class="dropdown-menu-clickable-item theme-item-in-menu" data-bleh-theme="light" onclick="change_theme_from_menu('light')">
                         ${tl(trans.themes.light)}
                     </button>
+                    <button class="dropdown-menu-clickable-item theme-item-in-menu" data-bleh-theme="ink" onclick="change_theme_from_menu('ink')">
+                        ${tl(trans.themes.ink)}
+                    </button>
                     <button class="dropdown-menu-clickable-item theme-item-in-menu" data-bleh-theme="dark" onclick="change_theme_from_menu('dark')">
                         ${tl(trans.themes.dark)}
                     </button>

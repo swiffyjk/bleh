@@ -139,7 +139,7 @@ body {
         --font_emoji_name: Noto Color Emoji;
     }
 
-    [data-bleh--theme="light"] & {
+    [data-bleh--theme_type="light"] & {
         --font-weight: calc(var(--custom_font_weight, 480) + 120);
         --font-weight-medium: calc(var(--custom_font_weight_medium, 650) + 90);
         --font-weight-bold: calc(var(--custom_font_weight_bold, 730) + 90);
@@ -223,18 +223,21 @@ body, [data-page-resource-type="album"], [data-page-resource-type="track"],
         --b8: 0, 0%, 80%;
         --b7: 0, 0%, 0%;
     }
-    [data-bleh--theme="classic"] & {
+    .preview[data-bleh--theme="ink"], .redesigned-header[data-bleh--theme="ink"],
+    [data-bleh--theme="ink"] &:not(.preview) {
         /* any additional highlights */
-        --b3: var(--hue), calc(var(--sat) * 6%), 75%;
+        --b3: var(--hue), calc(var(--sat) * 4% * var(--sat-bg, 1)), 76%;
 
         /* card border */
-        --b4: 45, 4%, 89%;
+        --b4: var(--hue), calc(var(--sat) * 8% * var(--sat-bg, 1)), 75%;
 
         /* card */
-        --b5: 0, 0%, 100%;
+        --b5: var(--hue), calc(var(--sat) * 2% * var(--sat-bg, 1)), 88%;
 
         /* root */
-        --b6: 39, 11%, 87%;
+        --b6: var(--hue), calc(var(--sat) * 7% * var(--sat-bg, 1)), 78%;
+        --b10: var(--hue), calc(var(--sat) * 7% * var(--sat-bg, 1)), 16%;
+        --b8: var(--hue), calc(var(--sat) * 4% * var(--sat-bg, 1)), 95%;
         --b7: 0, 0%, 0%;
     }
 }
@@ -405,6 +408,41 @@ a,
 
         --opposite-text: var(--c1);
     }
+    .preview[data-bleh--theme="ink"],
+    [data-bleh--theme="ink"] &:not(
+        .preview, .grid-items-item.grid-items-item-has-colour
+        ){
+        --c1: var(--hue), calc(var(--sat) * 25%), 13%;
+        --c2: var(--hue), calc(var(--sat) * 25%), 16%;
+        --c3: var(--hue), calc(var(--sat) * 10%), 40%;
+        --ov-c1: var(--hue), calc(var(--sat) * 40%), 100%;
+
+        --l2: var(--hue), calc(var(--sat) * 40%), calc(var(--lit) * 63%);
+        --l3: var(--hue), calc(var(--sat) * 50%), calc(var(--lit) * 40%);
+        --l4: var(--hue), calc(var(--sat) * 60%), calc(var(--lit) * 22%);
+
+        --l2-c: var(--hue), calc(clamp(min(0.5), var(--sat), max(1.5)) * 40%), calc(clamp(min(0.7), var(--lit), max(1.1)) * 63%);
+        --l3-c: var(--hue), calc(clamp(min(0.5), var(--sat), max(1.5)) * 50%), calc(clamp(min(0.7), var(--lit), max(1.1)) * 30%);
+        --l3-c-sat: calc(clamp(min(0.5), var(--sat), max(1.5)) * 50%);
+        --l3-c-lit: calc(clamp(min(0.5), var(--lit), max(1.1)) * 40%);
+        --l4-c: var(--hue), calc(clamp(min(0.5), var(--sat), max(1.5)) * 60%), calc(clamp(min(0.7), var(--lit), max(1.1)) * 22%);
+
+        --h3: var(--hue), calc(clamp(min(0.5), var(--sat), max(1.5)) * 37%), calc(clamp(min(0.7), var(--lit), max(1.1)) * 66%);
+        --h3-s: var(--hue), 50%, 80%;
+        --h3-sat: calc(clamp(min(0.5), var(--sat), max(1.5)) * 50%);
+        --h3-lit: calc(clamp(min(0.5), var(--lit), max(1.1)) * 80%);
+        --h4: var(--hue), calc(clamp(min(0.5), var(--sat), max(1.5)) * 30%), calc(clamp(min(0.7), var(--lit), max(1.1)) * 55%);
+        --g4: var(--hue), calc(clamp(min(0.5), var(--sat), max(1.5)) * 70%), 92%;
+
+        /* l2-c in dark modes, l4-c in light modes */
+        --l2-c-theme-switch: var(--l4-c);
+        --l3-c-theme-switch: var(--l3-c);
+        --h3-theme-switch: var(--h4);
+
+        --grid-colour-shadow: var(--grid-colour-shadow-override, 0 27px 15px hsl(var(--h4), 16%));
+
+        --opposite-text: var(--c1);
+    }
 }
 
 /* attributes */
@@ -469,9 +507,8 @@ body {
     --cover-size-300: 96px;
 }
 
-.preview[data-bleh--theme="light"],
-[data-bleh--theme="classic"] body,
-[data-bleh--theme="light"] body {
+.preview[data-bleh--theme_type="light"],
+[data-bleh--theme_type="light"] body {
     --card-border: 1px solid hsl(var(--b4));
     --card-border-base: hsl(var(--b4));
     --card-shadow: hsla(var(--b7), 0.05) 0 2px 4px 0;
@@ -493,25 +530,10 @@ body {
     --avatar-generic-background: hsl(var(--b4));
 
 
-    .header-new-inner:before {
-        opacity: 0.3;
-        filter: brightness(50%);
-    }
-
     .bleh--name-is-cute-less,
     .shout-user [href="/user/cutensilly"] {
         text-shadow: 0 0 5px hsla(var(--l4-c), 20%) !important;
     }
-}
-[data-bleh--theme="classic"] body {
-    --card-shadow: unset;
-    --card-radius: 0;
-    --item-small-radius: 0;
-    --item-med-radius: 0;
-    --item-big-radius: 0;
-
-    --card-border: 1px solid hsl(0, 0%, 75%);
-    --card-border-base: hsl(0, 0%, 75%);
 }
 
 .preview[data-bleh--theme="oled"],
@@ -712,6 +734,7 @@ body {
     --icon-16-moon-star: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxOCIgaGVpZ2h0PSIxOCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyLjI1IiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLW1vb24tc3Rhci1pY29uIGx1Y2lkZS1tb29uLXN0YXIiPjxwYXRoIGQ9Ik0xMiAzYTYgNiAwIDAgMCA5IDkgOSA5IDAgMSAxLTktOSIvPjxwYXRoIGQ9Ik0yMCAzdjQiLz48cGF0aCBkPSJNMjIgNWgtNCIvPjwvc3ZnPg==');
     --icon-16-moon-fill: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxOCIgaGVpZ2h0PSIxOCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyLjI1IiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWVjbGlwc2UtaWNvbiBsdWNpZGUtZWNsaXBzZSI+PGNpcmNsZSBjeD0iMTIiIGN5PSIxMiIgcj0iMTAiLz48cGF0aCBkPSJNMTIgMmE3IDcgMCAxIDAgMTAgMTAiLz48L3N2Zz4=');
     --icon-16-sun: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxOCIgaGVpZ2h0PSIxOCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyLjI1IiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLXN1bi1pY29uIGx1Y2lkZS1zdW4iPjxjaXJjbGUgY3g9IjEyIiBjeT0iMTIiIHI9IjQiLz48cGF0aCBkPSJNMTIgMnYyIi8+PHBhdGggZD0iTTEyIDIwdjIiLz48cGF0aCBkPSJtNC45MyA0LjkzIDEuNDEgMS40MSIvPjxwYXRoIGQ9Im0xNy42NiAxNy42NiAxLjQxIDEuNDEiLz48cGF0aCBkPSJNMiAxMmgyIi8+PHBhdGggZD0iTTIwIDEyaDIiLz48cGF0aCBkPSJtNi4zNCAxNy42Ni0xLjQxIDEuNDEiLz48cGF0aCBkPSJtMTkuMDcgNC45My0xLjQxIDEuNDEiLz48L3N2Zz4=');
+    --icon-16-pen: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxOCIgaGVpZ2h0PSIxOCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyLjI1IiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLXBlbi10b29sLWljb24gbHVjaWRlLXBlbi10b29sIj48cGF0aCBkPSJNMTUuNzA3IDIxLjI5M2ExIDEgMCAwIDEtMS40MTQgMGwtMS41ODYtMS41ODZhMSAxIDAgMCAxIDAtMS40MTRsNS41ODYtNS41ODZhMSAxIDAgMCAxIDEuNDE0IDBsMS41ODYgMS41ODZhMSAxIDAgMCAxIDAgMS40MTR6Ii8+PHBhdGggZD0ibTE4IDEzLTEuMzc1LTYuODc0YTEgMSAwIDAgMC0uNzQ2LS43NzZMMy4yMzUgMi4wMjhhMSAxIDAgMCAwLTEuMjA3IDEuMjA3TDUuMzUgMTUuODc5YTEgMSAwIDAgMCAuNzc2Ljc0NkwxMyAxOCIvPjxwYXRoIGQ9Im0yLjMgMi4zIDcuMjg2IDcuMjg2Ii8+PGNpcmNsZSBjeD0iMTEiIGN5PSIxMSIgcj0iMiIvPjwvc3ZnPg==');
     --icon-16-issues: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxOCIgaGVpZ2h0PSIxOCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyLjI1IiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWNpcmNsZS1kb3QtZGFzaGVkLWljb24gbHVjaWRlLWNpcmNsZS1kb3QtZGFzaGVkIj48cGF0aCBkPSJNMTAuMSAyLjE4YTkuOTMgOS45MyAwIDAgMSAzLjggMCIvPjxwYXRoIGQ9Ik0xNy42IDMuNzFhOS45NSA5Ljk1IDAgMCAxIDIuNjkgMi43Ii8+PHBhdGggZD0iTTIxLjgyIDEwLjFhOS45MyA5LjkzIDAgMCAxIDAgMy44Ii8+PHBhdGggZD0iTTIwLjI5IDE3LjZhOS45NSA5Ljk1IDAgMCAxLTIuNyAyLjY5Ii8+PHBhdGggZD0iTTEzLjkgMjEuODJhOS45NCA5Ljk0IDAgMCAxLTMuOCAwIi8+PHBhdGggZD0iTTYuNCAyMC4yOWE5Ljk1IDkuOTUgMCAwIDEtMi42OS0yLjciLz48cGF0aCBkPSJNMi4xOCAxMy45YTkuOTMgOS45MyAwIDAgMSAwLTMuOCIvPjxwYXRoIGQ9Ik0zLjcxIDYuNGE5Ljk1IDkuOTUgMCAwIDEgMi43LTIuNjkiLz48Y2lyY2xlIGN4PSIxMiIgY3k9IjEyIiByPSIxIi8+PC9zdmc+');
     --icon-16-note-add: var(--icon-16-plus);
     --icon-16-sparkles: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyLjUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgY2xhc3M9Imx1Y2lkZSBsdWNpZGUtc3BhcmtsZXMiPjxwYXRoIGQ9Ik05LjkzNyAxNS41QTIgMiAwIDAgMCA4LjUgMTQuMDYzbC02LjEzNS0xLjU4MmEuNS41IDAgMCAxIDAtLjk2Mkw4LjUgOS45MzZBMiAyIDAgMCAwIDkuOTM3IDguNWwxLjU4Mi02LjEzNWEuNS41IDAgMCAxIC45NjMgMEwxNC4wNjMgOC41QTIgMiAwIDAgMCAxNS41IDkuOTM3bDYuMTM1IDEuNTgxYS41LjUgMCAwIDEgMCAuOTY0TDE1LjUgMTQuMDYzYTIgMiAwIDAgMC0xLjQzNyAxLjQzN2wtMS41ODIgNi4xMzVhLjUuNSAwIDAgMS0uOTYzIDB6Ii8+PHBhdGggZD0iTTIwIDN2NCIvPjxwYXRoIGQ9Ik0yMiA1aC00Ii8+PHBhdGggZD0iTTQgMTd2MiIvPjxwYXRoIGQ9Ik01IDE4SDMiLz48L3N2Zz4=');
@@ -1099,7 +1122,7 @@ last.fm changes as of 2024-05-20 */
             var(--g-indigo) 100%
             );
 
-            [data-bleh--theme="light"] & {
+            [data-bleh--theme_type="light"] & {
                 --g-red: hsl(8, 42%, 50%);
                 --g-orange: hsl(24, 66%, 50%);
                 --g-yellow: hsl(44, 80%, 50%);
@@ -1401,7 +1424,7 @@ last.fm changes as of 2024-05-20 */
     height: 18px;
     padding: 0 4px;
 
-    [data-bleh--theme="light"] & {
+    [data-bleh--theme_type="light"] & {
         background-color: hsl(var(--h4));
         box-shadow: 0px 0 60px 20px hsla(var(--h4), 45%) !important;
     }
@@ -2534,7 +2557,7 @@ span.header-new-gallery-inner a,
             background-color: hsla(var(--h4), 20%);
             border-radius: var(--item-big-radius);
 
-            [data-bleh--theme="light"] & {
+            [data-bleh--theme_type="light"] & {
                 background-color: hsla(var(--h4), 10%);
             }
 
@@ -2996,7 +3019,7 @@ button.navlist-more {
         }
     }
 
-    [data-bleh--theme="light"] & {
+    [data-bleh--theme_type="light"] & {
         --bg-hov: hsl(var(--b5), 60%) !important;
         --bg-atv: hsl(var(--b5), 80%) !important;
     }
@@ -4879,7 +4902,7 @@ better than the default selector '#app a' i suppose */
 }
 .chartlist-now-scrobbling:before,
 .chartlist-now-scrobbling a {
-    color: hsl(var(--l2-c)) !important;
+    color: hsl(var(--l2-c-theme-switch)) !important;
 }
 
 
@@ -4890,7 +4913,7 @@ better than the default selector '#app a' i suppose */
     --shadow: 0 0 50px 5px hsla(var(--h4), 35%) !important;
     --shadow-hov: var(--shadow), var(--interact-shadow) !important;
 
-    [data-bleh--theme="light"] & {
+    [data-bleh--theme_type="light"] & {
         --bg: hsla(var(--h4), 35%) !important;
         --bg-hov: hsla(var(--h4), 50%) !important;
         --shadow: 0 0 50px 5px hsla(var(--h4), 35%) !important;
@@ -5309,7 +5332,7 @@ a.chartlist-love-button:after {
     width: 180px;
     display: flex;
 
-    [data-bleh--theme="light"] & {
+    [data-bleh--theme_type="light"] & {
         background: hsl(var(--b4));
         /*box-shadow: inset 0 0 0 1px hsl(var(--c3), 10%);*/
     }
@@ -5558,7 +5581,7 @@ p + .chartlist {
         background-color: hsl(var(--b6));
         border-radius: var(--item-big-radius);
 
-        [data-bleh--theme="light"] & {
+        [data-bleh--theme_type="light"] & {
             background-color: hsl(var(--b5));
             box-shadow: inset 0 0 0 1px var(--card-border-base);
         }
@@ -5791,7 +5814,7 @@ the body text becomes bigger by default - this reverts that */
     &[data-avatar-themed] {
         box-shadow: 0 4px 10px hsl(var(--h4), 10%), var(--interact-shadow);
 
-        [data-bleh--theme="light"] & {
+        [data-bleh--theme_type="light"] & {
             box-shadow: 0 4px 10px hsl(var(--h4), 40%), var(--interact-shadow);
         }
     }
@@ -6055,7 +6078,7 @@ span.shout-user-avatar:before,
     color: hsl(var(--l3-c));
     --override-bg: currentColor !important;
 }
-[data-bleh--theme="light"] .user-status--bleh-user-bIeak:after {
+[data-bleh--theme_type="light"] .user-status--bleh-user-bIeak:after {
     color: hsl(var(--c1)) !important;
     --lit-over: 1;
 }
@@ -6384,7 +6407,7 @@ button,
 
 
     /* breaks bleh settings */
-    /*[data-bleh--theme="light"] & {
+    /*[data-bleh--theme_type="light"] & {
         --bg: hsla(var(--b4), 70%);
         --bg-hov: hsla(var(--b4), 50%);
         --bg-atv: hsla(var(--b4), 30%);
@@ -7563,7 +7586,7 @@ very, very, very dated - who looks up a song on ebay? */
     --bg-atv: hsla(var(--h4), 22%) !important;
     --col: hsl(var(--l3-c)) !important;
 
-    [data-bleh--theme="light"] & {
+    [data-bleh--theme_type="light"] & {
         --bg-hov: hsla(var(--h4), 15%) !important;
         --bg-atv: hsla(var(--h4), 25%) !important;
     }
@@ -7872,7 +7895,7 @@ very, very, very dated - who looks up a song on ebay? */
         }
 
         [data-bleh--theme="oled"] &,
-        [data-bleh--theme="light"] & {
+        [data-bleh--theme_type="light"] & {
             --bg: hsl(var(--b5));
             --bg-hov: hsl(var(--b4), 20%);
             --bg-atv: hsl(var(--b4), 20%);
@@ -8179,7 +8202,7 @@ input:is([name^="track_name"], [name^="artist_name"], [name^="album_name"], [nam
         -webkit-backdrop-filter: blur(20px) saturate(160%);
     }
 
-    [data-bleh--theme="light"] &,
+    [data-bleh--theme_type="light"] &,
     [data-bleh--theme="oled"] & {
         background: hsl(var(--b5), 95%) !important;
     }
@@ -8598,7 +8621,7 @@ a.gallery-image-preferred-off {
             --shadow: 0 10px 50px 5px hsla(var(--h4), 35%);
             z-index: 20;
 
-            [data-bleh--theme="light"] & {
+            [data-bleh--theme_type="light"] & {
                 --bg: hsla(var(--h4), 35%);
                 --bg-hov: hsla(var(--h4), 50%);
                 --bg-atv: hsla(var(--h4), 65%);
@@ -9487,7 +9510,7 @@ text[style^="color: rgb(255, 172, 172)"] {
 
         font-size: var(--font-size);
 
-        [data-bleh--theme="light"] &,
+        [data-bleh--theme_type="light"] &,
         [data-bleh--theme="oled"] & {
             background: hsl(var(--b5), 95%) !important;
         }
@@ -9603,7 +9626,7 @@ text[style^="color: rgb(255, 172, 172)"] {
 
         font-size: var(--font-size);
 
-        [data-bleh--theme="light"] &,
+        [data-bleh--theme_type="light"] &,
         [data-bleh--theme="oled"] & {
             background: hsl(var(--b5), 95%) !important;
         }
@@ -9830,6 +9853,9 @@ text[style^="color: rgb(255, 172, 172)"] {
 
 [data-bleh-theme="light"] {
     --mask: var(--icon-16-sun);
+}
+[data-bleh-theme="ink"] {
+    --mask: var(--icon-16-pen);
 }
 [data-bleh-theme="dark"] {
     --mask: var(--icon-16-moon);
@@ -13846,7 +13872,7 @@ pre {
     &[aria-checked="true"] {
         --shadow: 0 0 20px hsl(var(--h4));
 
-        [data-bleh--theme="light"] & {
+        [data-bleh--theme_type="light"] & {
             --shadow: 0 0 20px hsla(var(--h4), 70%);
         }
     }
@@ -14962,7 +14988,7 @@ input[type="range"]::-moz-range-progress {
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
 
-        [data-bleh--theme="light"] & {
+        [data-bleh--theme_type="light"] & {
             --candy-cane-1: hsl(-2, var(--l3-c-sat), 60%);
         }
     }
@@ -15465,7 +15491,7 @@ trying to list every song ever made by someone identifying as a female, which is
             border-radius: var(--card-radius);
 
             [data-bleh--theme="oled"] &,
-            [data-bleh--theme="light"] & {
+            [data-bleh--theme_type="light"] & {
                 background-color: transparent;
                 border: var(--card-border);
             }
@@ -15872,7 +15898,7 @@ button.bleh--gallery-bookmark-image-btn {
     background-color: hsl(var(--b6));
     border-radius: calc(var(--item-big-radius) + 4px);
 
-    [data-bleh--theme="light"] & {
+    [data-bleh--theme_type="light"] & {
         background-color: hsl(var(--b5));
         box-shadow: inset 0 0 0 1px var(--card-border-base);
     }
@@ -16045,7 +16071,7 @@ button.bleh--gallery-bookmark-image-btn {
                 --col: hsl(var(--l2-c));
                 text-shadow: 0 0 10px hsla(var(--h4), 90%);
 
-                [data-bleh--theme="light"] & {
+                [data-bleh--theme_type="light"] & {
                     --col: hsl(var(--l3-c));
                     text-shadow: 0 0 10px hsla(var(--h4), 45%);
                 }
@@ -16437,7 +16463,7 @@ button.bleh--gallery-bookmark-image-btn {
             opacity: 0.5; /* 0.9 */
         }
 
-        [data-bleh--theme="light"] &:after {
+        [data-bleh--theme_type="light"] &:after {
             opacity: 0.3; /* 0.7 */
         }
     }
@@ -17060,7 +17086,7 @@ h4 {
         box-shadow: var(--card-shadow);
         text-align: center;
 
-        [data-bleh--theme="light"] &,
+        [data-bleh--theme_type="light"] &,
         [data-bleh--theme="oled"] & {
             box-shadow: var(--card-shadow);
         }
@@ -17492,7 +17518,7 @@ h4 {
                     --sat-over: 1;
                     --lit-over: 1;
 
-                    [data-bleh--theme="light"] & {
+                    [data-bleh--theme_type="light"] & {
                         color: hsl(var(--l4-c));
                     }
 
@@ -17731,7 +17757,7 @@ h4 {
                 --left: 15px;
             }
 
-            [data-bleh--theme="light"] & {
+            [data-bleh--theme_type="light"] & {
                 --bg: var(--cards-overlay-image-subtlest, none), hsl(var(--b5));
                 --bg-hov: var(--cards-overlay-image-subtlest, none), hsla(var(--b5), 80%);
                 --bg-atv: var(--cards-overlay-image-subtlest, none), hsla(var(--b5), 60%);
@@ -17973,7 +17999,7 @@ h4 {
                 display: none;
             }
 
-            [data-bleh--theme="light"] & {
+            [data-bleh--theme_type="light"] & {
                 background-color: hsla(var(--h4), 35%);
                 box-shadow: 0 0 20px hsla(var(--h4), 35%);
             }
@@ -18075,7 +18101,7 @@ h4 {
                 background: linear-gradient(180deg, hsla(var(--h4), 15%), transparent);
             }
 
-            [data-bleh--theme="light"] & {
+            [data-bleh--theme_type="light"] & {
                 &[data-changelog-latest="false"] {
                     background: linear-gradient(180deg, hsla(var(--h4), 40%), transparent);
                 }
@@ -18171,7 +18197,7 @@ h4 {
                 --sat-over: 1;
                 --lit-over: 1.1;
 
-                [data-bleh--theme="light"] & {
+                [data-bleh--theme_type="light"] & {
                     --hue-over: var(--hue-fav);
                     --lit-over: 1;
                 }
@@ -18689,7 +18715,7 @@ h4 {
                 color: inherit;
             }
 
-            [data-bleh--theme="light"] & {
+            [data-bleh--theme_type="light"] & {
                 text-shadow: 0 0 15px hsl(var(--b5));
             }
         }
@@ -18726,7 +18752,7 @@ h4 {
                     color: hsl(var(--c3));
                 }
 
-                [data-bleh--theme="light"] & {
+                [data-bleh--theme_type="light"] & {
                     text-shadow: 0 0 15px hsl(var(--b5));
                 }
             }
@@ -18777,7 +18803,7 @@ h4 {
                 line-height: inherit;
             }
 
-            [data-bleh--theme="light"] & {
+            [data-bleh--theme_type="light"] & {
                 text-shadow: 0 0 15px hsl(var(--b5));
             }
         }
@@ -18997,7 +19023,7 @@ h4 {
                 background-color: hsl(var(--b4));
                 width: 250px;
 
-                [data-bleh--theme="light"] & {
+                [data-bleh--theme_type="light"] & {
                     background-color: hsl(var(--b5));
                 }
 
@@ -19198,7 +19224,7 @@ h4 {
             mask-size: 100%;
             -webkit-mask-size: 100%;
 
-            [data-bleh--theme="light"] & {
+            [data-bleh--theme_type="light"] & {
                 background: linear-gradient(hsl(var(--l4-c)), hsl(var(--h3)));
             }
         }
@@ -19293,7 +19319,7 @@ h4 {
                     -webkit-background-clip: text;
                     -webkit-text-fill-color: transparent;
 
-                    [data-bleh--theme="light"] & {
+                    [data-bleh--theme_type="light"] & {
                         color: hsl(var(--l4-c));
 
                         background: unset;
@@ -19461,7 +19487,7 @@ h4 {
     overflow: hidden;
     border-radius: 10px;
 
-    /*[data-bleh--theme="light"] & {
+    /*[data-bleh--theme_type="light"] & {
         background-color: hsl(var(--h4), 10%);
     }*/
 
@@ -21399,7 +21425,7 @@ h4 {
 
     &[data-bleh--scrobble-milestone] p {
         --col: hsl(var(--l2-c-theme-switch));
-        text-shadow: 0 0 10px hsla(var(--h4), 90%);
+        text-shadow: 0 0 10px hsla(var(--h4), 40%);
     }
 
     &:before {
@@ -21442,7 +21468,7 @@ h4 {
         font-weight: var(--font-weight-medium);
     }
 
-    [data-bleh--theme="light"] & {
+    [data-bleh--theme_type="light"] & {
         --card-specific-background: hsl(var(--h4), 15%);
     }
 

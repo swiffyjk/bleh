@@ -1399,6 +1399,9 @@
         en: "Light",
         de: "Hell"
       },
+      ink: {
+        en: "Ink"
+      },
       dark: {
         en: "Ash",
         de: "Asche"
@@ -11112,6 +11115,12 @@
       for (var member in settings) delete settings[member];
       Object.assign(settings, JSON.parse(localStorage.getItem("bleh")) || create_settings_template());
     }
+    if (!settings.theme_type) {
+      if (settings.theme == "light" || settings.theme == "ink")
+        settings.theme_type = "light";
+      else
+        settings.theme_type = "dark";
+    }
     for (let setting in settings_template)
       if (settings[setting] == void 0)
         settings[setting] = settings_template[setting];
@@ -11145,10 +11154,17 @@
     else if (current_theme == "oled" || current_theme == "classic")
       current_theme = "light";
     else if (current_theme == "light")
+      current_theme = "ink";
+    else if (current_theme == "ink")
       current_theme = "dark";
     show_theme_change_in_menu(current_theme);
     settings.theme = current_theme;
+    if (current_theme == "light" || current_theme == "ink")
+      settings.theme_type = "light";
+    else
+      settings.theme_type = "dark";
     document.documentElement.setAttribute(`data-bleh--theme`, `${current_theme}`);
+    document.documentElement.setAttribute(`data-bleh--theme_type`, `${settings.theme_type}`);
     localStorage.setItem("bleh", JSON.stringify(settings));
     load_chart_colours();
     if ((page.type == "artist" || page.type == "album" || page.type == "track") && page.subpage == "overview")
@@ -11162,7 +11178,12 @@
   };
   unsafeWindow.change_theme_from_settings = function(theme) {
     settings.theme = theme;
+    if (theme == "light" || theme == "ink")
+      settings.theme_type = "light";
+    else
+      settings.theme_type = "dark";
     document.documentElement.setAttribute(`data-bleh--theme`, `${theme}`);
+    document.documentElement.setAttribute(`data-bleh--theme_type`, `${settings.theme_type}`);
     show_theme_change_in_settings(theme);
     show_theme_change_in_menu(theme);
     localStorage.setItem("bleh", JSON.stringify(settings));
@@ -11171,7 +11192,12 @@
     if (page.subpage.startsWith("listening-report"))
       return;
     settings.theme = theme;
+    if (theme == "light" || theme == "ink")
+      settings.theme_type = "light";
+    else
+      settings.theme_type = "dark";
     document.documentElement.setAttribute(`data-bleh--theme`, `${theme}`);
+    document.documentElement.setAttribute(`data-bleh--theme_type`, `${settings.theme_type}`);
     show_theme_change_in_menu(theme);
     localStorage.setItem("bleh", JSON.stringify(settings));
     load_chart_colours();
@@ -11862,9 +11888,9 @@
                 <h4>${tl(trans.themes.name)}</h4>
                 <div class="setting-items full">
                     <div class="side-left full even-more">
-                        <button class="btn theme-item" data-bleh-theme="light" onclick="change_theme_from_settings('light')">
+                        <button class="btn theme-item" data-bleh-theme="light" data-bleh--theme_type="light" onclick="change_theme_from_settings('light')">
                             <div class="preview-container">
-                            <div class="preview" data-bleh--theme="light">
+                            <div class="preview" data-bleh--theme="light" data-bleh--theme_type="light">
                                 ${theme_preview}
                             </div>
                             </div>
@@ -11872,6 +11898,20 @@
                                 <h5>${tl(trans.themes.light)}</h5>
                             </div>
                         </button>
+                        <button class="btn theme-item" data-bleh-theme="ink" data-bleh--theme_type="light" onclick="change_theme_from_settings('ink')">
+                            <div class="preview-container">
+                            <div class="preview" data-bleh--theme="ink" data-bleh--theme_type="light">
+                                ${theme_preview}
+                            </div>
+                            </div>
+                            <div class="text">
+                                <h5>${tl(trans.themes.ink)}</h5>
+                            </div>
+                        </button>
+                    </div>
+                </div>
+                <div class="setting-items full">
+                    <div class="side-left full even-more">
                         <button class="btn theme-item" data-bleh-theme="dark" onclick="change_theme_from_settings('dark')">
                             <div class="preview-container">
                             <div class="preview" data-bleh--theme="dark">
@@ -15284,6 +15324,9 @@
           content: `
                     <button class="dropdown-menu-clickable-item theme-item-in-menu" data-bleh-theme="light" onclick="change_theme_from_menu('light')">
                         ${tl(trans.themes.light)}
+                    </button>
+                    <button class="dropdown-menu-clickable-item theme-item-in-menu" data-bleh-theme="ink" onclick="change_theme_from_menu('ink')">
+                        ${tl(trans.themes.ink)}
                     </button>
                     <button class="dropdown-menu-clickable-item theme-item-in-menu" data-bleh-theme="dark" onclick="change_theme_from_menu('dark')">
                         ${tl(trans.themes.dark)}

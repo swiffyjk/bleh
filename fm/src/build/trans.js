@@ -237,6 +237,9 @@ export const trans = {
             en: 'Light',
             de: 'Hell'
         },
+        ink: {
+            en: 'Ink'
+        },
         dark: {
             en: 'Ash',
             de: 'Asche'

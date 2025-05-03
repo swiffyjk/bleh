@@ -24,6 +24,13 @@ export function load_settings(skip = false) {
         Object.assign(settings, JSON.parse(localStorage.getItem('bleh')) || create_settings_template());
     }
 
+    if (!settings.theme_type) {
+        if (settings.theme == 'light' || settings.theme == 'ink')
+            settings.theme_type = 'light';
+        else
+            settings.theme_type = 'dark';
+    }
+
     // missing? set to default value
     for (let setting in settings_template)
         if (settings[setting] == undefined)
@@ -78,13 +85,20 @@ unsafeWindow.toggle_theme = function() {
     else if (current_theme == 'oled' || current_theme == 'classic')
         current_theme = 'light';
     else if (current_theme == 'light')
+        current_theme = 'ink';
+    else if (current_theme == 'ink')
         current_theme = 'dark';
 
     show_theme_change_in_menu(current_theme);
 
     // save value
     settings.theme = current_theme;
+    if (current_theme == 'light' || current_theme == 'ink')
+        settings.theme_type = 'light';
+    else
+        settings.theme_type = 'dark';
     document.documentElement.setAttribute(`data-bleh--theme`, `${current_theme}`);
+    document.documentElement.setAttribute(`data-bleh--theme_type`, `${settings.theme_type}`);
 
     // save to settings
     localStorage.setItem('bleh', JSON.stringify(settings));
@@ -107,7 +121,12 @@ unsafeWindow.toggle_theme = function() {
 unsafeWindow.change_theme_from_settings = function(theme) {
     // save value
     settings.theme = theme;
+    if (theme == 'light' || theme == 'ink')
+        settings.theme_type = 'light';
+    else
+        settings.theme_type = 'dark';
     document.documentElement.setAttribute(`data-bleh--theme`, `${theme}`);
+    document.documentElement.setAttribute(`data-bleh--theme_type`, `${settings.theme_type}`);
 
     // show in settings
     show_theme_change_in_settings(theme);
@@ -122,7 +141,12 @@ unsafeWindow.change_theme_from_menu = function(theme) {
 
     // save value
     settings.theme = theme;
+    if (theme == 'light' || theme == 'ink')
+        settings.theme_type = 'light';
+    else
+        settings.theme_type = 'dark';
     document.documentElement.setAttribute(`data-bleh--theme`, `${theme}`);
+    document.documentElement.setAttribute(`data-bleh--theme_type`, `${settings.theme_type}`);
 
     // show in settings
     show_theme_change_in_menu(theme);

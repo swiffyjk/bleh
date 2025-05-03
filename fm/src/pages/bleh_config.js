@@ -270,9 +270,9 @@ export function render_setting_page(page_id) {
                 <h4>${tl(trans.themes.name)}</h4>
                 <div class="setting-items full">
                     <div class="side-left full even-more">
-                        <button class="btn theme-item" data-bleh-theme="light" onclick="change_theme_from_settings('light')">
+                        <button class="btn theme-item" data-bleh-theme="light" data-bleh--theme_type="light" onclick="change_theme_from_settings('light')">
                             <div class="preview-container">
-                            <div class="preview" data-bleh--theme="light">
+                            <div class="preview" data-bleh--theme="light" data-bleh--theme_type="light">
                                 ${theme_preview}
                             </div>
                             </div>
@@ -280,6 +280,20 @@ export function render_setting_page(page_id) {
                                 <h5>${tl(trans.themes.light)}</h5>
                             </div>
                         </button>
+                        <button class="btn theme-item" data-bleh-theme="ink" data-bleh--theme_type="light" onclick="change_theme_from_settings('ink')">
+                            <div class="preview-container">
+                            <div class="preview" data-bleh--theme="ink" data-bleh--theme_type="light">
+                                ${theme_preview}
+                            </div>
+                            </div>
+                            <div class="text">
+                                <h5>${tl(trans.themes.ink)}</h5>
+                            </div>
+                        </button>
+                    </div>
+                </div>
+                <div class="setting-items full">
+                    <div class="side-left full even-more">
                         <button class="btn theme-item" data-bleh-theme="dark" onclick="change_theme_from_settings('dark')">
                             <div class="preview-container">
                             <div class="preview" data-bleh--theme="dark">
