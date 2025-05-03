@@ -15679,6 +15679,8 @@
       let background = document.body.querySelector(".header-background--has-image");
       if (background != null)
         register_background(background.style.getPropertyValue("background-image").replace('url("', "").replace('")', ""));
+      else
+        register_background();
       page.structure.container.insertBefore(redesigned_tag_header, page.structure.container.firstElementChild);
       tag_header.classList.add("legacy-header");
     }

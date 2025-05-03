@@ -5176,19 +5176,24 @@ better than the default selector '#app a' i suppose */
     margin-bottom: 16px;
 }
 
-.chartlist--with-bar.chartlist--with-index.chartlist--with-play.chartlist--with-image .chartlist-row--with-artist .chartlist-artist, .chartlist--with-multi-playlinks.chartlist--with-index.chartlist--with-play.chartlist--with-image .chartlist-row--with-artist .chartlist-artist,
-.chartlist--with-bar.chartlist--with-index.chartlist--with-play.chartlist--with-image.chartlist--with-loved .chartlist-row--with-artist .chartlist-artist, .chartlist--with-multi-playlinks.chartlist--with-index.chartlist--with-play.chartlist--with-image.chartlist--with-loved .chartlist-row--with-artist .chartlist-artist {
-    left: calc(84px - 2px);
+.chartlist {
+    --side-left: 12px;
+    --image-offset: 0px;
+
+    &.chartlist--with-image {
+        --image-offset: 44px;
+    }
+}
+.chartlist--with-index--length-2 .chartlist-artist {
+    left: calc(var(--side-left) + 30px + var(--image-offset) - 2px) !important;
     margin-top: 16px;
 }
-.chartlist--with-bar.chartlist--with-index.chartlist--with-play.chartlist--with-image.chartlist--with-loved.chartlist--with-index--length-3 .chartlist-row--with-artist .chartlist-artist, .chartlist--with-multi-playlinks.chartlist--with-index.chartlist--with-play.chartlist--with-image.chartlist--with-loved.chartlist--with-index--length-3 .chartlist-row--with-artist .chartlist-artist,
-.chartlist--with-bar.chartlist--with-index.chartlist--with-play.chartlist--with-image.chartlist--with-index--length-3 .chartlist-row--with-artist .chartlist-artist, .chartlist--with-multi-playlinks.chartlist--with-index.chartlist--with-play.chartlist--with-image.chartlist--with-index--length-3 .chartlist-row--with-artist .chartlist-artist {
-    left: calc(92px - 2px);
+.chartlist--with-index--length-3 .chartlist-artist {
+    left: calc(var(--side-left) + 36px + var(--image-offset) - 2px) !important;
     margin-top: 16px;
 }
-.chartlist--with-bar.chartlist--with-index.chartlist--with-play.chartlist--with-image.chartlist--with-loved.chartlist--with-index--length-4 .chartlist-row--with-artist .chartlist-artist, .chartlist--with-multi-playlinks.chartlist--with-index.chartlist--with-play.chartlist--with-image.chartlist--with-loved.chartlist--with-index--length-4 .chartlist-row--with-artist .chartlist-artist,
-.chartlist--with-bar.chartlist--with-index.chartlist--with-play.chartlist--with-image.chartlist--with-index--length-4 .chartlist-row--with-artist .chartlist-artist, .chartlist--with-multi-playlinks.chartlist--with-index.chartlist--with-play.chartlist--with-image.chartlist--with-index--length-4 .chartlist-row--with-artist .chartlist-artist {
-    left: calc(103px - 2px);
+.chartlist--with-index--length-4 .chartlist-artist {
+    left: calc(var(--side-left) + 47px + var(--image-offset) - 2px) !important;
 }
 
 .chartlist--with-bar .chartlist-row--with-artist .chartlist-artist {
