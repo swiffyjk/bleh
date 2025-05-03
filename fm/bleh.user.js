@@ -1350,7 +1350,8 @@
       en: "Back"
     },
     settings: {
-      en: "Settings"
+      en: "Settings",
+      de: "Einstellungen"
     },
     on_ignore_list: {
       en: "Ignored"
@@ -1449,7 +1450,8 @@
       de: "Konfigurieren"
     },
     events: {
-      en: "Events"
+      en: "Events",
+      de: "Veranstaltungen"
     },
     top_badge: {
       en: "Top Badge",
@@ -1567,7 +1569,8 @@
       en: "What's New?"
     },
     default: {
-      en: "Default"
+      en: "Default",
+      de: "Standard"
     },
     avatar: {
       en: "Avatar"
@@ -1616,7 +1619,8 @@
       de: "Speichern"
     },
     add: {
-      en: "Add"
+      en: "Add",
+      de: "Hinzuf\xFCgen"
     },
     remove: {
       en: "Remove",
@@ -1677,7 +1681,8 @@
       en: "Beta"
     },
     more: {
-      en: "More"
+      en: "More",
+      de: "Weiter"
     },
     notifications: {
       name: {
@@ -1808,7 +1813,8 @@
       en: "(mutually)"
     },
     language: {
-      en: "Language"
+      en: "Language",
+      de: "Sprache"
     },
     symbol_presets: {
       en: "Symbol presets"
@@ -1823,7 +1829,8 @@
       en: "View latest version"
     },
     explore_in_library: {
-      en: "Explore in library"
+      en: "Explore in library",
+      de: "In der Bibliothek anzeigen"
     },
     add_note: {
       en: "Add note"

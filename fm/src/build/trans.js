@@ -188,7 +188,8 @@ export const trans = {
         en: 'Back'
     },
     settings: {
-        en: 'Settings'
+        en: 'Settings',
+        de: 'Einstellungen'
     },
     on_ignore_list: {
         en: 'Ignored'
@@ -287,7 +288,8 @@ export const trans = {
         de: 'Konfigurieren'
     },
     events: {
-        en: 'Events'
+        en: 'Events',
+        de: 'Veranstaltungen'
     },
     top_badge: {
         en: 'Top Badge',
@@ -405,7 +407,8 @@ export const trans = {
         en: 'What\'s New?'
     },
     default: {
-        en: 'Default'
+        en: 'Default',
+        de: 'Standard'
     },
     avatar: {
         en: 'Avatar'
@@ -454,7 +457,8 @@ export const trans = {
         de: 'Speichern'
     },
     add: {
-        en: 'Add'
+        en: 'Add',
+        de: 'Hinzufügen'
     },
     remove: {
         en: 'Remove',
@@ -515,7 +519,8 @@ export const trans = {
         en: 'Beta'
     },
     more: {
-        en: 'More'
+        en: 'More',
+        de: 'Weiter'
     },
     notifications: {
         name: {
@@ -646,7 +651,8 @@ export const trans = {
         en: '(mutually)'
     },
     language: {
-        en: 'Language'
+        en: 'Language',
+        de: 'Sprache'
     },
     symbol_presets: {
         en: 'Symbol presets'
@@ -661,7 +667,8 @@ export const trans = {
         en: 'View latest version'
     },
     explore_in_library: {
-        en: 'Explore in library'
+        en: 'Explore in library',
+        de: 'In der Bibliothek anzeigen'
     },
     add_note: {
         en: 'Add note'
