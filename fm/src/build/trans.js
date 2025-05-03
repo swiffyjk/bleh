@@ -258,7 +258,8 @@ export const trans = {
             de: 'Dunkel'
         },
         oled: {
-            en: 'Void'
+            en: 'Void',
+            de: 'Leere'
         }
     },
     colours: {
@@ -289,7 +290,8 @@ export const trans = {
         en: 'Events'
     },
     top_badge: {
-        en: 'Top Badge'
+        en: 'Top Badge',
+        de: 'Top-Abzeichen'
     },
     layout: {
         en: 'Layout'
@@ -348,13 +350,15 @@ export const trans = {
         en: 'Started'
     },
     ends_in: {
-        en: 'Ends in'
+        en: 'Ends in',
+        de: 'Endet in'
     },
     text: {
         en: 'Text'
     },
     accessibility: {
-        en: 'Accessibility'
+        en: 'Accessibility',
+        de: 'Barrierefreiheit'
     },
     troubleshooting: {
         en: 'Advanced'
@@ -367,7 +371,8 @@ export const trans = {
         en: 'Releases'
     },
     bookmarks: {
-        en: 'Bookmarks'
+        en: 'Bookmarks',
+        de: 'Lesezeichen'
     },
     charts: {
         en: 'Charts'
@@ -420,7 +425,8 @@ export const trans = {
         de: 'Akzentfarbe'
     },
     sat: {
-        en: 'Vibrancy'
+        en: 'Vibrancy',
+        de: ':Lebendigkeit'
     },
     lit: {
         en: 'Lightness',
