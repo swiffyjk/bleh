@@ -7294,12 +7294,12 @@ section:has(.dropdown-menu-clickable-button.section-control) {
 .bleh--configure-menu-item,
 .more-item--edit-old
 {
-    margin-bottom: var(--button-list-gap) !important;
+    margin-bottom: 4px !important;
 }
 .more-item--submit-correction,
 .more-item--delete
 {
-    margin-top: var(--button-list-gap) !important;
+    margin-top: 4px !important;
 }
 .lang-item.active:after,
 .more-item--submit-correction:after,
