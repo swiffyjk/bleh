@@ -18095,9 +18095,14 @@
     radios.forEach((radio) => {
       let type = radio.getAttribute("data-analytics-label");
       radio.classList.add("radio-button");
+      let text = tl(trans[type]);
+      if (type == "tag")
+        text = page.name;
+      else if (type == "event")
+        text = tl(trans.artists);
       radio.innerHTML = `
             <h3 class="sub-text">${tl(trans.radio)}</h3>
-            <h4>${type == "tag" ? page.name : tl(trans[type])}</h4>
+            <h4>${text}</h4>
         `;
       radio.removeAttribute("title");
     });
@@ -18359,7 +18364,7 @@
         bleh_home();
       if ((page.type == "artist" || page.type == "album" || page.type == "track") && page.subpage == "overview")
         patch_wiki();
-      if ((page.type == "user" || page.type == "tag") && page.subpage == "overview")
+      if ((page.type == "user" || page.type == "tag" || page.type == "events") && (page.subpage == "overview" || page.subpage == "festival_overview"))
         bleh_radio();
     }
     if (ff("page_title")) {

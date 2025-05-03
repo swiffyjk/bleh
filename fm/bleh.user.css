@@ -1709,8 +1709,7 @@ last.fm changes as of 2024-05-20 */
 }
 
 .bleh--panel-main,
-.col-main,
-/* katie doesnt have any scrobbles yet */ .profile-mobile-featured-track + .no-data-message
+.col-main
 {
     width: var(--cards-main-width);
     min-width: var(--cards-main-width);
@@ -1740,7 +1739,7 @@ last.fm changes as of 2024-05-20 */
     ),
 /* individual library selection */
 /* listening reports */ .user-dashboard > .user-dashboard-buffer,
-/* katie doesnt have any scrobbles yet */ .profile-mobile-featured-track + .no-data-message, .recent-tracks-section,
+.recent-tracks-section,
 /* quick create playlists */ .section-with-separator[action*="/create/from-"],
 .event-summary-with-poster,
 /* event overview thing */ .event-details:not(.event-summary-with-poster .event-details),
@@ -5806,6 +5805,8 @@ the body text becomes bigger by default - this reverts that */
 
 .no-data-message {
     color: hsl(var(--c3));
+    font-weight: var(--font-weight-medium);
+    cursor: default;
     width: unset !important;
     margin-top: unset !important;
 

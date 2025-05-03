@@ -369,7 +369,7 @@ function load_page() {
         )
             patch_wiki();
 
-        if ((page.type == 'user' || page.type == 'tag') && page.subpage == 'overview')
+        if ((page.type == 'user' || page.type == 'tag' || page.type == 'events') && (page.subpage == 'overview' || page.subpage == 'festival_overview'))
             bleh_radio();
     }
 
