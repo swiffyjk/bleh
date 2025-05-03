@@ -1861,6 +1861,12 @@
     },
     ignored: {
       en: "Ignored"
+    },
+    all_time: {
+      en: "All time"
+    },
+    count_total: {
+      en: "{c} total"
     }
   };
   var trans_legacy = {
@@ -9988,7 +9994,7 @@
         let value_panel = document.createElement("section");
         value_panel.classList.add("value-panel");
         value_panel.innerHTML = `
-                <h2 class="text-18">${selected_tab != null ? selected_tab.textContent : tl(trans.events)}</h2>
+                <h2 class="text-18">${selected_tab ? selected_tab.firstChild.textContent : tl(trans.events)}</h2>
             `;
         let values = page.structure.main.querySelectorAll(".metadata-display");
         let value_header = document.createElement("div");
@@ -10017,7 +10023,7 @@
             name: page.name,
             text: total_value.textContent,
             type: "total",
-            tooltip: trans_legacy[lang].event.total.replace("{c}", total_value.textContent)
+            tooltip: tl(trans.count_total).replace("{c}", total_value.textContent)
           });
           value_panel.appendChild(total_header);
         }
@@ -10035,7 +10041,7 @@
             page.structure.content_top.after(report_box_container);
         } else {
           let dashboard = page.structure.container.querySelector(".user-dashboard");
-          if (dashboard == null)
+          if (!dashboard)
             return;
           dialog({
             id: "listening_report_v2",
@@ -18239,7 +18245,7 @@
       bleh_gallery();
       bleh_gallery_upload_check();
     }
-    if (page.type == "user" || page.type == "search" || page.type == "tag")
+    if (page.type == "user" || page.type == "search" || page.type == "tag" || page.type == "events")
       music_grids();
     if (page.type == "user" || page.type == "artist" || page.type == "album" || page.type == "track" || page.type == "events" || page.type == "festival" || page.type == "tag") {
       patch_shouts();

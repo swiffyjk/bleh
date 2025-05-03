@@ -360,7 +360,7 @@ export function bleh_profiles() {
             let value_panel = document.createElement('section');
             value_panel.classList.add('value-panel');
             value_panel.innerHTML = (`
-                <h2 class="text-18">${(selected_tab != null) ? selected_tab.textContent : tl(trans.events)}</h2>
+                <h2 class="text-18">${(selected_tab) ? selected_tab.firstChild.textContent : tl(trans.events)}</h2>
             `);
 
             let values = page.structure.main.querySelectorAll('.metadata-display');
@@ -399,7 +399,7 @@ export function bleh_profiles() {
                     name: page.name,
                     text: total_value.textContent,
                     type: 'total',
-                    tooltip:  trans_legacy[lang].event.total.replace('{c}', total_value.textContent)
+                    tooltip:  tl(trans.count_total).replace('{c}', total_value.textContent)
                 });
 
                 value_panel.appendChild(total_header);
@@ -424,7 +424,7 @@ export function bleh_profiles() {
             } else {
                 let dashboard = page.structure.container.querySelector('.user-dashboard');
 
-                if (dashboard == null)
+                if (!dashboard)
                     return;
 
                 // v2

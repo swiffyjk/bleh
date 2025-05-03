@@ -185,7 +185,8 @@ function main_flow() {
 
     if (page.type == 'user' ||
         page.type == 'search' ||
-        page.type == 'tag'
+        page.type == 'tag' ||
+        page.type == 'events'
     )
         music_grids();
 

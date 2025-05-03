@@ -18819,6 +18819,11 @@ h4 {
             --line-height: 20px;
             --font-weight: var(--font-weight-medium);
             --padding: 0;
+
+            &:hover {
+                text-decoration: underline !important;
+                --col: hsl(var(--l3-c));
+            }
         }
     }
 }
@@ -21421,6 +21426,7 @@ h4 {
 .more-link a,
 #events-section > p > a,
 .see-more {
+    display: inline-flex;
     --bg: transparent;
     --bg-hov: transparent;
     --bg-atv: transparent;

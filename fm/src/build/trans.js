@@ -699,6 +699,12 @@ export const trans = {
     },
     ignored: {
         en: 'Ignored'
+    },
+    all_time: {
+        en: 'All time'
+    },
+    count_total: {
+        en: '{c} total'
     }
 }
 
