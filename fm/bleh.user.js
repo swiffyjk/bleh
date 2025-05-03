@@ -1544,10 +1544,12 @@
       de: "Willkommen z\xFCruck {user}!"
     },
     thank_you_for_sponsoring: {
-      en: "Thank you for sponsoring!"
+      en: "Thank you for sponsoring!",
+      de: "Danke f\xFCrs sponsoren!"
     },
     configure_bleh: {
-      en: "bleh Settings"
+      en: "bleh Settings",
+      de: "bleh Einstellungen"
     },
     import: {
       en: "Import",
@@ -1571,16 +1573,20 @@
       en: "Avatar"
     },
     customise: {
-      en: "Customise"
+      en: "Customise",
+      de: "Anpassen"
     },
     convert: {
-      en: "Convert"
+      en: "Convert",
+      de: "Umwandeln"
     },
     convert_from_hex: {
-      en: "Convert colour"
+      en: "Convert colour",
+      de: "Farbe umwandeln"
     },
     fonts: {
-      en: "Fonts"
+      en: "Fonts",
+      de: "Schriftart"
     },
     hue: {
       en: "Accent colour",
@@ -1588,7 +1594,7 @@
     },
     sat: {
       en: "Vibrancy",
-      de: ":Lebendigkeit"
+      de: "Lebendigkeit"
     },
     lit: {
       en: "Lightness",
@@ -1613,26 +1619,32 @@
       en: "Add"
     },
     remove: {
-      en: "Remove"
+      en: "Remove",
+      de: "Entfernen"
     },
     clear: {
-      en: "Clear"
+      en: "Clear",
+      de: "L\xF6schen"
     },
     close: {
       en: "Close",
       de: "Schlie\xDFen"
     },
     go: {
-      en: "Go"
+      en: "Go",
+      de: "Los"
     },
     skip: {
-      en: "Skip"
+      en: "Skip",
+      de: "\xDCberspringen"
     },
     send: {
-      en: "Send"
+      en: "Send",
+      de: "Senden"
     },
     send_quickly_with: {
-      en: "Send quickly with {kbd}"
+      en: "Send quickly with {kbd}",
+      de: "Schnell senden mit {kbd}"
     },
     done: {
       en: "Done",

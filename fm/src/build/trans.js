@@ -382,10 +382,12 @@ export const trans = {
         de: 'Willkommen züruck {user}!'
     },
     thank_you_for_sponsoring: {
-        en: 'Thank you for sponsoring!'
+        en: 'Thank you for sponsoring!',
+        de: 'Danke fürs sponsoren!'
     },
     configure_bleh: {
-        en: 'bleh Settings'
+        en: 'bleh Settings',
+        de: 'bleh Einstellungen'
     },
     import: {
         en: 'Import',
@@ -409,16 +411,20 @@ export const trans = {
         en: 'Avatar'
     },
     customise: {
-        en: 'Customise'
+        en: 'Customise',
+        de: 'Anpassen'
     },
     convert: {
-        en: 'Convert'
+        en: 'Convert',
+        de: 'Umwandeln'
     },
     convert_from_hex: {
-        en: 'Convert colour'
+        en: 'Convert colour',
+        de: 'Farbe umwandeln'
     },
     fonts: {
-        en: 'Fonts'
+        en: 'Fonts',
+        de: 'Schriftart'
     },
     hue: {
         en: 'Accent colour',
@@ -426,7 +432,7 @@ export const trans = {
     },
     sat: {
         en: 'Vibrancy',
-        de: ':Lebendigkeit'
+        de: 'Lebendigkeit'
     },
     lit: {
         en: 'Lightness',
@@ -451,26 +457,32 @@ export const trans = {
         en: 'Add'
     },
     remove: {
-        en: 'Remove'
+        en: 'Remove',
+        de: 'Entfernen'
     },
     clear: {
-        en: 'Clear'
+        en: 'Clear',
+        de: 'Löschen'
     },
     close: {
         en: 'Close',
         de: 'Schließen'
     },
     go: {
-        en: 'Go'
+        en: 'Go',
+        de: 'Los'
     },
     skip: {
-        en: 'Skip'
+        en: 'Skip',
+        de: 'Überspringen'
     },
     send: {
-        en: 'Send'
+        en: 'Send',
+        de: 'Senden'
     },
     send_quickly_with: {
-        en: 'Send quickly with {kbd}'
+        en: 'Send quickly with {kbd}',
+        de: 'Schnell senden mit {kbd}'
     },
     done: {
         en: 'Done',
