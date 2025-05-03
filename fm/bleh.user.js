@@ -1867,6 +1867,12 @@
     },
     count_total: {
       en: "{c} total"
+    },
+    video_removed: {
+      en: "Video removed by Last.fm"
+    },
+    blocked_page: {
+      en: "This page has been limited by Last.fm"
     }
   };
   var trans_legacy = {
@@ -7358,6 +7364,7 @@
   function show_your_scrobbles() {
     let katsune = ff("katsune");
     show_numbers_on_side(page.type);
+    let page_is_blocked = !page.structure.main.querySelector("#shoutbox");
     if (page.subpage == "overview") {
       let tabs = document.createElement("nav");
       tabs.classList.add("navlist", "secondary-nav", "navlist--more", "redesigned-navigation");
@@ -7379,6 +7386,7 @@
                             ${tl(trans.albums)}
                         </a>
                     </li>
+                    ${!page_is_blocked ? `
                     <li class="navlist-item secondary-nav-item secondary-nav-item--images">
                         <a class="secondary-nav-item-link" href="${window.location.href}/+images">
                             ${tl(trans.photos)}
@@ -7414,6 +7422,7 @@
                             ${tl(trans.tags)}
                         </a>
                     </li>
+                    ` : ""}
                 </ul>
             `;
       } else if (page.type == "album") {
@@ -7424,6 +7433,7 @@
                             ${tl(trans.overview)}
                         </a>
                     </li>
+                    ${!page_is_blocked ? `
                     <li class="navlist-item secondary-nav-item secondary-nav-item--wiki">
                         <a class="secondary-nav-item-link" href="${window.location.href}/+wiki">
                             ${tl(trans.wiki)}
@@ -7444,6 +7454,7 @@
                             ${tl(trans.tags)}
                         </a>
                     </li>
+                    ` : ""}
                 </ul>
             `;
       } else if (page.type == "track") {
@@ -7459,6 +7470,7 @@
                             ${tl(trans.albums)}
                         </a>
                     </li>
+                    ${!page_is_blocked ? `
                     <li class="navlist-item secondary-nav-item secondary-nav-item--wiki">
                         <a class="secondary-nav-item-link" href="${window.location.href}/+wiki">
                             ${tl(trans.wiki)}
@@ -7474,6 +7486,7 @@
                             ${tl(trans.tags)}
                         </a>
                     </li>
+                    ` : ""}
                 </ul>
             `;
       }
@@ -7680,6 +7693,13 @@
         group_wrap.appendChild(group.value);
         metadata.appendChild(group_wrap);
       });
+    }
+    if (page_is_blocked) {
+      let alert = document.createElement("section");
+      alert.classList.add("cta", "blocked-cta");
+      alert.innerHTML = `<strong>${tl(trans.blocked_page)}</strong>`;
+      page.structure.main.insertBefore(alert, page.structure.main.firstElementChild);
+      return;
     }
     let play_on;
     let play_links;
@@ -7990,48 +8010,56 @@
     }
     if (page.type == "track") {
       let video_col = document.body.querySelector(".track-overview-video-column.col-sidebar");
+      if (!video_col) {
+        video_unavailable(video_col);
+        return;
+      }
       video_col.classList.remove("col-sidebar");
       page.structure.side.insertBefore(video_col, page.structure.side.firstElementChild);
       let video = video_col.querySelector(".video-preview");
-      if (video) {
-        video_col.classList.remove("col-sidebar");
-        page.structure.side.insertBefore(video_col, page.structure.side.firstElementChild);
-        let container = document.createElement("div");
-        container.classList.add("video-overlay-container");
-        let view_buttons = document.createElement("div");
-        view_buttons.classList.add("view-buttons");
-        let playlink = video.querySelector(".video-preview-playlink a");
-        let replace = video_col.querySelector(".video-preview-replace a");
-        playlink.classList = "btn view-item video-item video-item--play";
-        replace.classList = "btn view-item video-item video-item--edit";
-        view_buttons.appendChild(playlink);
-        view_buttons.appendChild(replace);
-        container.appendChild(view_buttons);
-        video.appendChild(container);
-        tippy(playlink, {
-          content: playlink.getAttribute("title")
-        });
-        playlink.removeAttribute("title");
-        tippy(replace, {
-          content: replace.textContent
-        });
-      } else {
-        let cta = video_col.querySelector(".video-preview-upload-cta");
-        if (cta)
-          return;
-        page.structure.side.removeChild(video_col);
-        let video_placeholder = document.createElement("section");
-        video_placeholder.classList.add("video-placeholder");
-        video_placeholder.innerHTML = `
-                <div class="bleh-icon" style="--icon: var(--icon-16-video-broken)"></div>
-                Video removed by Last.fm
-            `;
-        page.structure.side.insertBefore(video_placeholder, page.structure.side.firstElementChild);
-        let links = page.structure.side.querySelector(".external-links-section .play-this-track-playlinks");
-        if (links)
-          links.classList.add("video-unavailable");
+      if (!video) {
+        video_unavailable(video_col);
+        return;
       }
+      video_col.classList.remove("col-sidebar");
+      page.structure.side.insertBefore(video_col, page.structure.side.firstElementChild);
+      let container = document.createElement("div");
+      container.classList.add("video-overlay-container");
+      let view_buttons = document.createElement("div");
+      view_buttons.classList.add("view-buttons");
+      let playlink = video.querySelector(".video-preview-playlink a");
+      let replace = video_col.querySelector(".video-preview-replace a");
+      playlink.classList = "btn view-item video-item video-item--play";
+      replace.classList = "btn view-item video-item video-item--edit";
+      view_buttons.appendChild(playlink);
+      view_buttons.appendChild(replace);
+      container.appendChild(view_buttons);
+      video.appendChild(container);
+      tippy(playlink, {
+        content: playlink.getAttribute("title")
+      });
+      playlink.removeAttribute("title");
+      tippy(replace, {
+        content: replace.textContent
+      });
     }
+  }
+  function video_unavailable(video_col = null) {
+    let cta = page.structure.side.querySelector(".video-preview-upload-cta");
+    if (cta)
+      return;
+    if (video_col)
+      page.structure.side.removeChild(video_col);
+    let video_placeholder = document.createElement("section");
+    video_placeholder.classList.add("video-placeholder");
+    video_placeholder.innerHTML = `
+        <div class="bleh-icon" style="--icon: var(--icon-16-video-broken)"></div>
+        ${tl(trans.video_removed)}
+    `;
+    page.structure.side.insertBefore(video_placeholder, page.structure.side.firstElementChild);
+    let links = page.structure.side.querySelector(".external-links-section .play-this-track-playlinks");
+    if (links)
+      links.classList.add("video-unavailable");
   }
   function bleh_music_page_charts() {
     if (!ff("music_page_charts"))

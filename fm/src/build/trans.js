@@ -705,6 +705,12 @@ export const trans = {
     },
     count_total: {
         en: '{c} total'
+    },
+    video_removed: {
+        en: 'Video removed by Last.fm'
+    },
+    blocked_page: {
+        en: 'This page has been limited by Last.fm'
     }
 }
 
