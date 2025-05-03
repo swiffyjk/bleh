@@ -5185,15 +5185,15 @@ better than the default selector '#app a' i suppose */
     }
 }
 .chartlist--with-index--length-2 .chartlist-artist {
-    left: calc(var(--side-left) + 30px + var(--image-offset) - 2px) !important;
+    left: calc(var(--side-left) + 27px + var(--image-offset)) !important;
     margin-top: 16px;
 }
 .chartlist--with-index--length-3 .chartlist-artist {
-    left: calc(var(--side-left) + 36px + var(--image-offset) - 2px) !important;
+    left: calc(var(--side-left) + 34px + var(--image-offset)) !important;
     margin-top: 16px;
 }
 .chartlist--with-index--length-4 .chartlist-artist {
-    left: calc(var(--side-left) + 47px + var(--image-offset) - 2px) !important;
+    left: calc(var(--side-left) + 45px + var(--image-offset)) !important;
 }
 
 .chartlist--with-bar .chartlist-row--with-artist .chartlist-artist {
