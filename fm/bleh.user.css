@@ -5184,6 +5184,7 @@ better than the default selector '#app a' i suppose */
         --image-offset: 44px;
     }
 }
+.chartlist--with-index--length-1 .chartlist-artist,
 .chartlist--with-index--length-2 .chartlist-artist {
     left: calc(var(--side-left) + 27px + var(--image-offset)) !important;
     margin-top: 16px;
