@@ -1876,6 +1876,10 @@
     },
     blocked_page: {
       en: "This page has been limited by Last.fm"
+    },
+    cancel: {
+      en: "Cancel",
+      de: "Abbrechen"
     }
   };
   var trans_legacy = {
