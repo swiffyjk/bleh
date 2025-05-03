@@ -389,6 +389,7 @@ export function artist_title() {
         title_text = title_text
         .replaceAll(' & ', ';').replaceAll(', ', ';')
         .replace('Tyler;the', 'Tyler, The').replace('Tyler;The', 'Tyler, The')
+        .replace('Marina;the Diamonds', 'Marina and The Diamonds')
         .replaceAll(';;', ';');
 
         page.multi = true;
