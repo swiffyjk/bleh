@@ -479,7 +479,7 @@ export function patch_header_title() {
             }
 
             // combine
-            track_title.innerHTML = `<div class="title">${sanitise_text(song_title)}</div>${song_tags_text}`;
+            track_title.innerHTML = `<div class="title">${sanitise_text(song_title).trim()}</div>${song_tags_text}`;
 
             let song_artist_element = document.body.querySelector('span[itemprop="byArtist"]');
             let song_guests = formatted_title[3];

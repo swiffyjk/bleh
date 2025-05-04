@@ -175,7 +175,7 @@ export function patch_titles() {
                 }
 
                 // combine
-                track_title.innerHTML = `<div class="title">${sanitise_text(song_title)}</div>${song_tags_text}`;
+                track_title.innerHTML = `<div class="title">${sanitise_text(song_title).trim()}</div>${song_tags_text}`;
 
                 let song_artist_element = track.querySelector('.chartlist-artist');
                 if (song_artist_element == null && !is_user) {

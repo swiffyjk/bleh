@@ -4994,29 +4994,47 @@ better than the default selector '#app a' i suppose */
     text-decoration: var(--force-underline, none) !important;
 }
 
+.grid-items-item-main-text,
+.featured-item-name,
+.chartlist-name {
+    .feat {
+        font-size: var(--font-size-sm);
+        line-height: var(--line-height-sm);
+        height: fit-content;
+        padding: 0 4px;
+        margin: auto 0;
+        background-color: hsl(var(--b3), 40%);
+        border-radius: var(--item-med-radius);
+        color: hsla(var(--c2), 80%) !important;
+        font-weight: var(--font-weight-medium);
+
+        &:is(
+            [data-bleh--tag-group="mixes"], [data-bleh--tag-group="mixes_numbers"],
+            [data-bleh--tag-group="stems"],
+            [data-bleh--tag-group="bonus"]
+        ) {
+            color: hsl(var(--c3)) !important;
+        }
+
+        &[data-bleh--tag-group="mixes_numbers"] {
+            text-transform: uppercase;
+            order: 10;
+            font-size: var(--font-size-sm);
+        }
+        &[data-bleh--tag-type="(session"] {
+            text-transform: capitalize;
+        }
+    }
+}
+
 .chartlist-name, .chartlist-artist {
     z-index: 5;
     position: relative;
 }
 .obsession-candidate-artist,
-.chartlist-name .feat, .chartlist-artist a, .featured-item-artist, .similar-albums-item-artist, .track-similar-tracks-item-artist {
+.chartlist-artist a, .featured-item-artist, .similar-albums-item-artist, .track-similar-tracks-item-artist {
     color: hsla(var(--c2), 80%) !important;
     font-weight: var(--font-weight);
-}
-.chartlist-name .feat:is(
-    [data-bleh--tag-group="mixes"], [data-bleh--tag-group="mixes_numbers"],
-    [data-bleh--tag-group="stems"],
-    [data-bleh--tag-group="bonus"]
-) {
-    color: hsl(var(--c3)) !important;
-}
-[data-bleh--tag-group="mixes_numbers"] {
-    text-transform: uppercase;
-    order: 10;
-    font-size: var(--font-size-sm);
-}
-[data-bleh--tag-type="(session"] {
-    text-transform: capitalize;
 }
 
 [data-bleh--show_guest_features="false"] {
@@ -18474,12 +18492,22 @@ h4 {
 
                 .info-side {
                     h1 {
+                        display: block;
                         font-size: 30px;
                         line-height: 36px;
-                        gap: var(--card-gap);
 
                         .feat {
+                            padding: 0 6px;
+                            background-color: hsl(var(--b5), 40%);
+                            border-radius: var(--item-big-radius);
                             font-size: 22px;
+                            line-height: 31px;
+                            display: inline-flex;
+                        }
+
+                        div {
+                            display: inline;
+                            margin-right: var(--card-gap);
                         }
                     }
                     h2 {
@@ -18757,7 +18785,7 @@ h4 {
 
                 .feat {
                     font-size: 18px;
-                    color: hsl(var(--c3));
+                    color: hsl(var(--c2), 70%);
                 }
 
                 [data-bleh--theme_type="light"] & {
