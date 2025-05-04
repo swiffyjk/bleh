@@ -14430,7 +14430,7 @@
         extras[extra].text = original_title.slice(chr).replaceAll("(", "").replaceAll(")", "").replaceAll("[", "").replaceAll("]", "").replaceAll("- ", "");
       }
       let field_group = extras[extra].group;
-      let field_text = extras[extra].text.replace(" feat. ", "").replace("feat. ", "").replace("featuring ", "").replace("Feat. ", "").replace("ft. ", "").replace("FEAT. ", "").replace("Ft. ", "").replace("WITH", "with").replace("w/ ", "").replace("with ", "").replace("With ", "").replaceAll(" & ", ";").replaceAll(", ", ";").replaceAll(" and ", ";").replaceAll(" with ", ";").replaceAll("- ", "").replaceAll(",; ", ";").replaceAll("Tyler;the", "Tyler, the").replaceAll("Tyler;The", "Tyler, The");
+      let field_text = extras[extra].text.replace(" feat. ", "").replace("feat. ", "").replace("featuring ", "").replace("Feat. ", "").replace("ft. ", "").replace("FEAT. ", "").replace("Ft. ", "").replace("WITH", "with").replace("w/ ", "").replace("with ", "").replace("With ", "").replaceAll(" & ", ";").replaceAll(", ", ";").replaceAll(" and ", ";").replaceAll(" with ", ";").replaceAll("- ", "").replaceAll(",; ", ";").replaceAll("Tyler;the", "Tyler, the").replaceAll("Tyler;The", "Tyler, The").replaceAll(" of BTS", ";BTS");
       console.log("pre-split", field_text);
       if (field_group == "guests") {
         song_guests = field_text.split(";");

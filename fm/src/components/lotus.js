@@ -346,7 +346,8 @@ export function name_includes(original_title, original_artist) {
         .replaceAll(' with ', ';')
         .replaceAll('- ', '')
         .replaceAll(',; ', ';')
-        .replaceAll('Tyler;the', 'Tyler, the').replaceAll('Tyler;The', 'Tyler, The');
+        .replaceAll('Tyler;the', 'Tyler, the').replaceAll('Tyler;The', 'Tyler, The')
+        .replaceAll(' of BTS', ';BTS');
 
         console.log('pre-split', field_text);
 

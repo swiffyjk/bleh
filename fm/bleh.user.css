@@ -21080,12 +21080,14 @@ h4 {
         .music-bookmarks-albums-item-name,
         .music-releases-item-name,
         .music-more-artists-item-name {
+            color: hsl(var(--c2));
             font: inherit;
             font-weight: var(--font-weight-medium);
             margin-top: 10px;
             max-height: 36px;
 
             a {
+                color: inherit;
                 text-decoration: none !important;
             }
         }
