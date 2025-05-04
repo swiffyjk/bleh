@@ -5581,7 +5581,7 @@ p + .chartlist {
 
         padding: 4px;
         background-color: hsl(var(--b6));
-        border-radius: var(--item-big-radius);
+        border-radius: calc(var(--item-big-radius) + 4px);
 
         [data-bleh--theme_type="light"] & {
             background-color: hsl(var(--b5));
