@@ -131,7 +131,13 @@ export function bleh_home() {
         placement: "bottom",
         interactive: true,
         interactiveBorder: 10,
-        trigger: "click"
+        trigger: "click",
+
+        onShow(instance) {
+            instance.popper.addEventListener('click', event => {
+                instance.hide();
+            });
+        }
     });
 
 

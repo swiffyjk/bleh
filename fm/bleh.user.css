@@ -388,7 +388,7 @@ a,
         --l4-c: var(--hue), calc(clamp(min(0.5), var(--sat), max(1.5)) * 60%), calc(clamp(min(0.7), var(--lit), max(1.1)) * 22%);
 
         --h3: var(--hue), calc(clamp(min(0.5), var(--sat), max(1.5)) * 50%), calc(clamp(min(0.7), var(--lit), max(1.1)) * 80%);
-        --h3-s: var(--hue), 50%, 80%;
+        --h3-s: var(--hue), 50%, 70%;
         --h3-sat: calc(clamp(min(0.5), var(--sat), max(1.5)) * 50%);
         --h3-lit: calc(clamp(min(0.5), var(--lit), max(1.1)) * 80%);
         --h4: var(--hue), calc(clamp(min(0.5), var(--sat), max(1.5)) * 60%), calc(clamp(min(0.7), var(--lit), max(1.1)) * 65%);
@@ -423,7 +423,7 @@ a,
         --l4-c: var(--hue), calc(clamp(min(0.5), var(--sat), max(1.5)) * 60%), calc(clamp(min(0.7), var(--lit), max(1.1)) * 22%);
 
         --h3: var(--hue), calc(clamp(min(0.5), var(--sat), max(1.5)) * 37%), calc(clamp(min(0.7), var(--lit), max(1.1)) * 66%);
-        --h3-s: var(--hue), 50%, 80%;
+        --h3-s: var(--hue), 50%, 70%;
         --h3-sat: calc(clamp(min(0.5), var(--sat), max(1.5)) * 50%);
         --h3-lit: calc(clamp(min(0.5), var(--lit), max(1.1)) * 80%);
         --h4: var(--hue), calc(clamp(min(0.5), var(--sat), max(1.5)) * 30%), calc(clamp(min(0.7), var(--lit), max(1.1)) * 55%);
@@ -9130,6 +9130,10 @@ a.gallery-image-preferred-off {
 /*     NAV     */
 .pagination {
     margin-top: var(--card-gap);
+
+    .col-main > & {
+        margin: unset;
+    }
 }
 .pagination-list {
     cursor: default;

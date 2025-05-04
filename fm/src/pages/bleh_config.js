@@ -1437,7 +1437,7 @@ export function render_setting_page(page_id) {
                             <div class="title"></div>
                             <div class="bar">
                                 <div class="fill not-colourful-example" style="width: 100%"></div>
-                                <div class="fill colourful-example" style="width: 100%; --hue: -16.888749999999998; --sat: 1.5; --lit: 0.875"></div>
+                                <div class="fill colourful colourful-example" style="width: 100%; --hue: -16.888749999999998; --sat: 1.5; --lit: 0.875"></div>
                             </div>
                         </div>
                         <div class="track">
@@ -1445,7 +1445,7 @@ export function render_setting_page(page_id) {
                             <div class="title"></div>
                             <div class="bar">
                                 <div class="fill not-colourful-example" style="width: 85%"></div>
-                                <div class="fill colourful-example" style="width: 85%; --hue: 0.21863999999999972; --sat: 1.399218; --lit: 0.891406"></div>
+                                <div class="fill colourful colourful-example" style="width: 85%; --hue: 0.21863999999999972; --sat: 1.399218; --lit: 0.891406"></div>
                             </div>
                         </div>
                         <div class="track">
@@ -1453,7 +1453,7 @@ export function render_setting_page(page_id) {
                             <div class="title"></div>
                             <div class="bar">
                                 <div class="fill not-colourful-example" style="width: 60%"></div>
-                                <div class="fill colourful-example" style="width: 60%; --hue: 18.77; --sat: 1.425; --lit: 0.9175833333333334"></div>
+                                <div class="fill colourful colourful-example" style="width: 60%; --hue: 18.77; --sat: 1.425; --lit: 0.9175833333333334"></div>
                             </div>
                         </div>
                         <div class="track">
@@ -1461,7 +1461,7 @@ export function render_setting_page(page_id) {
                             <div class="title"></div>
                             <div class="bar">
                                 <div class="fill not-colourful-example" style="width: 30%"></div>
-                                <div class="fill colourful-example" style="width: 30%; --hue: 50.769767441860466; --sat: 1.361813953488372; --lit: 0.943406976744186"></div>
+                                <div class="fill colourful colourful-example" style="width: 30%; --hue: 50.769767441860466; --sat: 1.361813953488372; --lit: 0.943406976744186"></div>
                             </div>
                         </div>
                         <div class="track">
@@ -1469,7 +1469,7 @@ export function render_setting_page(page_id) {
                             <div class="title"></div>
                             <div class="bar">
                                 <div class="fill not-colourful-example" style="width: 5%"></div>
-                                <div class="fill colourful-example" style="width: 5%; --hue: 92.42; --sat: 1.35; --lit: 0.925"></div>
+                                <div class="fill colourful colourful-example" style="width: 5%; --hue: 92.42; --sat: 1.35; --lit: 0.925"></div>
                             </div>
                         </div>
                     </div>
