@@ -718,6 +718,9 @@ export const trans = {
     cancel: {
         en: 'Cancel',
         de: 'Abbrechen'
+    },
+    results_for: {
+        en: 'Results for'
     }
 }
 

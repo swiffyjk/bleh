@@ -1882,6 +1882,9 @@
     cancel: {
       en: "Cancel",
       de: "Abbrechen"
+    },
+    results_for: {
+      en: "Results for"
     }
   };
   var trans_legacy = {
@@ -5442,7 +5445,7 @@
     }
     if (date_items.length > 0)
       bleh_glacier_library_date();
-    if (page.subpage == "library_overview") {
+    if (page.subpage == "library_overview" || page.subpage.endsWith("-search")) {
       bleh_glacier_library_top(true);
       page.state.glacier.insights = {
         artist: {
@@ -5614,24 +5617,31 @@
     }
     metadata.forEach((meta, index) => {
       let text = meta.querySelector(".metadata-title");
-      if (!text)
-        return;
-      text = text.textContent;
-      if (page.subpage == "library_overview") {
-        if (index == 1)
-          text = trans_legacy[lang].glacier.meta.average;
-      } else if (page.subpage == "library_artists") {
-        text = trans_legacy[lang].glacier.meta.artists;
-      } else if (page.subpage == "library_albums") {
-        text = trans_legacy[lang].glacier.meta.albums;
-      } else if (page.subpage == "library_tracks") {
-        text = trans_legacy[lang].glacier.meta.tracks;
+      let value = meta.querySelector(".metadata-display").textContent;
+      if (text) {
+        text = text.textContent;
+        if (page.subpage == "library_overview") {
+          if (index == 1)
+            text = trans_legacy[lang].glacier.meta.average;
+        } else if (page.subpage == "library_artists") {
+          text = tl(trans.artists);
+        } else if (page.subpage == "library_albums") {
+          text = trans_legacy[lang].glacier.meta.albums;
+        } else if (page.subpage == "library_tracks") {
+          text = trans_legacy[lang].glacier.meta.tracks;
+        }
+      } else {
+        text = tl(trans.results_for);
+        value = meta.querySelector(".metadata-display").textContent;
+        let start = value.indexOf("\u201C") + 1;
+        let end = value.indexOf("\u201D");
+        value = value.substring(start, end);
       }
       let glacier_meta_item = document.createElement("div");
       glacier_meta_item.classList.add("glacier-library-metadata-item");
       glacier_meta_item.innerHTML = `
             <div class="sub-text">${text}</div>
-            <div class="glacier-library-metadata-item-value">${meta.querySelector(".metadata-display").textContent}</div>
+            <div class="glacier-library-metadata-item-value">${value}</div>
         `;
       glacier_meta.appendChild(glacier_meta_item);
     });
