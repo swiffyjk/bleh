@@ -4359,7 +4359,7 @@ better than the default selector '#app a' i suppose */
             transition-timing-function: var(--trans-function);
 
             &[style] {
-                background: hsl(var(--h4), 20%) !important;
+                background: hsl(var(--h4), 30%) !important;
             }
         }
 
@@ -11221,6 +11221,7 @@ table.table tr:nth-child(2n) td {
         --top: 1px;
     }
 }
+.obsession-history + .row,
 .obsession-history {
     display: none;
 }

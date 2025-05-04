@@ -10193,9 +10193,11 @@
         });
         new_panel.appendChild(grid);
         let no_data = page.structure.container.querySelector(".no-data-message--obsession-history");
-        if (no_data != null) {
+        if (no_data) {
           wrap.after(no_data);
         }
+        let pagination = page.structure.container.querySelector(".pagination");
+        new_panel.appendChild(pagination);
       }
     }
     log("status is", "page", "info", page);
