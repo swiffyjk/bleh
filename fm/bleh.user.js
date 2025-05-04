@@ -16872,7 +16872,7 @@
 
   // src/pages/event.js
   function bleh_events() {
-    let is_subpage = page.subpage != "event_overview" && page.subpage != "festival_overview";
+    let is_subpage = page.subpage != "overview";
     if (auth.pro) {
       page.structure.container = document.body.querySelector(".page-content");
     } else {
@@ -16890,7 +16890,7 @@
     }
     let event_header = document.body.querySelector("header");
     checkup_page_structure(is_subpage, event_header);
-    if (page.subpage.startsWith("event_edit")) {
+    if (page.subpage.startsWith("edit")) {
       bleh_events_edit();
       return;
     } else if (page.subpage.startsWith("add")) {
@@ -16978,7 +16978,7 @@
         patch_avatar(avatar, name, "event");
       });
     } else {
-      if (page.subpage == "event_attendance_going" || page.subpage == "event_attendance_interested") {
+      if (page.subpage == "attendance_going" || page.subpage == "attendance_interested") {
         let view_buttons = document.createElement("div");
         view_buttons.classList.add("view-buttons-wrapper");
         view_buttons.innerHTML = `
@@ -18415,7 +18415,7 @@
     });
   }
   function assign_page_subpage() {
-    page.subpage = page.initial.replace(page.type, "").replace("_", "").replace("music_", "");
+    page.subpage = page.initial.replace(page.type, "").replace("_", "").replace("music_", "").replace("event_", "").replace("festival_", "");
     if (last_page_subpage.state != page.subpage) {
       last_page_subpage.state = page.subpage;
       log(`subpage of ${page.subpage}`, "page");
@@ -18472,7 +18472,7 @@
         bleh_home();
       if ((page.type == "artist" || page.type == "album" || page.type == "track") && page.subpage == "overview")
         patch_wiki();
-      if ((page.type == "user" || page.type == "tag" || page.type == "events") && (page.subpage == "overview" || page.subpage == "festival_overview"))
+      if ((page.type == "user" || page.type == "tag" || page.type == "events") && page.subpage == "overview")
         bleh_radio();
     }
     if (ff("page_title")) {

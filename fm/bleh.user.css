@@ -222,17 +222,17 @@ body, [data-page-resource-type="album"], [data-page-resource-type="track"],
     .preview[data-bleh--theme="ink"], .redesigned-header[data-bleh--theme="ink"],
     [data-bleh--theme="ink"] &:not(.preview) {
         /* any additional highlights */
-        --b3: var(--hue), calc(var(--sat) * 12% * var(--sat-bg, 1)), 74%;
+        --b3: var(--hue), calc(var(--sat) * 14% * var(--sat-bg, 1)), 73%;
 
         /* card border */
-        --b4: var(--hue), calc(var(--sat) * 10% * var(--sat-bg, 1)), 67%;
+        --b4: var(--hue), calc(var(--sat) * 12% * var(--sat-bg, 1)), 66%;
 
         /* card */
-        --b5: var(--hue), calc(var(--sat) * 14% * var(--sat-bg, 1)), 80%;
+        --b5: var(--hue), calc(var(--sat) * 14% * var(--sat-bg, 1)), 81%;
 
         /* root */
-        --b6: var(--hue), calc(var(--sat) * 9% * var(--sat-bg, 1)), 70%;
-        --b8: var(--hue), calc(var(--sat) * 20% * var(--sat-bg, 1)), 87%;
+        --b6: var(--hue), calc(var(--sat) * 9% * var(--sat-bg, 1)), 69%;
+        --b8: var(--hue), calc(var(--sat) * 20% * var(--sat-bg, 1)), 86%;
         --b7: var(--c1);
     }
 }
@@ -407,8 +407,8 @@ a,
     [data-bleh--theme="ink"] &:not(
         .preview, .grid-items-item.grid-items-item-has-colour
         ){
-        --c1: var(--hue), calc(var(--sat) * 30%), 13%;
-        --c2: var(--hue), calc(var(--sat) * 30%), 16%;
+        --c1: var(--hue), calc(var(--sat) * 60%), 13%;
+        --c2: var(--hue), calc(var(--sat) * 40%), 18%;
         --c3: var(--hue), calc(var(--sat) * 10%), 40%;
         --ov-c1: var(--hue), calc(var(--sat) * 40%), 100%;
 
@@ -5336,7 +5336,7 @@ a.chartlist-love-button:after {
     display: flex;
 
     [data-bleh--theme_type="light"] & {
-        background: hsl(var(--b4));
+        background: hsl(var(--b3));
         /*box-shadow: inset 0 0 0 1px hsl(var(--c3), 10%);*/
     }
     [data-bleh--season="halloween"] & {
@@ -6964,8 +6964,8 @@ span.header-new-gallery-inner a:before,
 .obsession-candidate-inner .btn-sm,
 .chartlist-more-button, .chartlist-play-button {
     --bg: transparent !important;
-    --bg-hov: hsla(var(--b3), 30%) !important;
-    --bg-atv: hsla(var(--b3), 50%) !important;
+    --bg-hov: hsla(var(--b4), 60%) !important;
+    --bg-atv: hsla(var(--b4), 80%) !important;
     --shadow: none !important;
     --shadow-hov: none !important;
 }

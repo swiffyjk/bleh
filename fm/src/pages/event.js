@@ -10,7 +10,7 @@ import { refresh_all } from "../config";
 import { register_background, update_page } from "../page";
 
 export function bleh_events() {
-    let is_subpage = (page.subpage != 'event_overview' && page.subpage != 'festival_overview');
+    let is_subpage = page.subpage != 'overview';
 
     // without pro theres two containers
     if (auth.pro) {
@@ -37,7 +37,7 @@ export function bleh_events() {
 
     checkup_page_structure(is_subpage, event_header);
 
-    if (page.subpage.startsWith('event_edit')) {
+    if (page.subpage.startsWith('edit')) {
         bleh_events_edit();
         return;
     } else if (page.subpage.startsWith('add')) {
@@ -165,7 +165,7 @@ export function bleh_events() {
             patch_avatar(avatar, name, 'event');
         });
     } else {
-        if (page.subpage == 'event_attendance_going' || page.subpage == 'event_attendance_interested') {
+        if (page.subpage == 'attendance_going' || page.subpage == 'attendance_interested') {
             // view-related buttons
             let view_buttons = document.createElement('div');
             view_buttons.classList.add('view-buttons-wrapper');
