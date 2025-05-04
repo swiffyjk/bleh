@@ -1725,22 +1725,27 @@
       en: "Overview"
     },
     photos: {
-      en: "Photos"
+      en: "Photos",
+      de: "Fotos"
     },
     artwork: {
-      en: "Artwork"
+      en: "Artwork",
+      de: "Cover"
     },
     similar_artists: {
-      en: "Similar Artists"
+      en: "Similar Artists",
+      de: "\xC4hnliche K\xFCnstler*innen"
     },
     biography: {
-      en: "Biography"
+      en: "Biography",
+      de: "Biographie"
     },
     wiki: {
       en: "Wiki"
     },
     listeners: {
-      en: "Listeners"
+      en: "Listeners",
+      de: "Zuh\xF6rer*innen"
     },
     tags: {
       en: "Tags"
@@ -1759,21 +1764,25 @@
     },
     lotus_cta: {
       true: {
-        en: "This {t} is being re-capitalised, is it correct?"
+        en: "This {t} is being re-capitalised, is it correct?",
+        de: "{t} wird neu gro\xDFgeschrieben, ist das richtig?"
       },
       false: {
-        en: "Is this {t} capitalised correctly?"
+        en: "Is this {t} capitalised correctly?",
+        de: "Ist {t} richtig gro\xDFgeschrieben?"
       }
     },
     suggest_correction: {
-      en: "Suggest a correction"
+      en: "Suggest a correction",
+      de: "eine Korrektur vorschlagen"
     },
     recent_tracks: {
       en: "Recent Tracks",
       de: "K\xFCrzlich gespielte Titel"
     },
     you_share_count_with: {
-      en: "You share {c} with"
+      en: "You share {c} with",
+      de: "Du teilst {c} mit"
     },
     message: {
       en: "Message",
@@ -1784,7 +1793,8 @@
       de: "Werde sponsor"
     },
     message_sponsor: {
-      en: "Receive sponsor rewards"
+      en: "Receive sponsor rewards",
+      de: "Sponsorenpr\xE4mien erhalten"
     },
     obsess: {
       en: "Obsess"
@@ -1801,39 +1811,48 @@
       }
     },
     sponsor_info: {
-      en: "This is a special bleh-managed account to handle sponsors."
+      en: "This is a special bleh-managed account to handle sponsors.",
+      de: "Dies ist ein bleh verwaltetes Konto zur Verwaltung von Sponsoren"
     },
     loading: {
-      en: "Loading"
+      en: "Loading",
+      de: "Laden"
     },
     loading_90_days: {
-      en: "Collecting the last 90 days"
+      en: "Collecting the last 90 days",
+      de: "Sammeln der letzten 90 Tage"
     },
     following_mutuals: {
-      en: "(mutually)"
+      en: "(mutually)",
+      de: "(gegenseitig)"
     },
     language: {
       en: "Language",
       de: "Sprache"
     },
     symbol_presets: {
-      en: "Symbol presets"
+      en: "Symbol presets",
+      de: "Symbol Voreinstellungen"
     },
     fancy_syntax: {
-      en: "Hyperlink guide"
+      en: "Hyperlink guide",
+      de: "Hyperlink Leitfaden"
     },
     links_to: {
-      en: "Links to {link}"
+      en: "Links to {link}",
+      de: "Verlinkt auf {link}"
     },
     view_latest_version: {
-      en: "View latest version"
+      en: "View latest version",
+      de: "Neueste Version anzeigen"
     },
     explore_in_library: {
       en: "Explore in library",
       de: "In der Bibliothek anzeigen"
     },
     add_note: {
-      en: "Add note"
+      en: "Add note",
+      de: "Notiz hinzuf\xFCgen"
     },
     radio: {
       en: "Radio"
@@ -1842,31 +1861,39 @@
       en: "Mix"
     },
     recommended: {
-      en: "Recommended"
+      en: "Recommended",
+      de: "Empfohlen"
     },
     listening: {
-      en: "Listening"
+      en: "Listening",
+      de: "H\xF6rverlauf"
     },
     you: {
       en: "You"
     },
     open: {
-      en: "Open"
+      en: "Open",
+      de: "\xD6ffnen"
     },
     expand: {
-      en: "Expand"
+      en: "Expand",
+      de: "Erweitern"
     },
     activity: {
-      en: "Activity"
+      en: "Activity",
+      de: "Aktivit\xE4t"
     },
     grid: {
-      en: "Grid"
+      en: "Grid",
+      de: "Raster"
     },
     list: {
-      en: "List"
+      en: "List",
+      de: "Liste"
     },
     loved: {
-      en: "Loved"
+      en: "Loved",
+      de: "Lieblingslieder"
     }
   };
   var trans_legacy = {
