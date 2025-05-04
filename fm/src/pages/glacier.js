@@ -31,7 +31,8 @@ export function bleh_user_library() {
     });
 
     //page.structure.side.appendChild(date_button_panel);
-    page.structure.side.appendChild(date_panel);
+    if (date_items.length > 0)
+        page.structure.side.appendChild(date_panel);
 
     page.structure.glacier.date_panel = date_panel;
 
@@ -52,7 +53,7 @@ export function bleh_user_library() {
         return;
 
 
-    if (settings.glacier_library_graphs) {
+    if (settings.glacier_library_graphs && date_items.length > 0) {
         let chart_view_selector = document.createElement('div');
         chart_view_selector.classList.add('view-buttons', 'chart-view-selector', 'view-buttons-middle');
         chart_view_selector.innerHTML = (`
@@ -87,7 +88,8 @@ export function bleh_user_library() {
 
 
     //let picker_content = date_button_panel.querySelector('.date-range-picker-content');
-    bleh_glacier_library_date();
+    if (date_items.length > 0)
+        bleh_glacier_library_date();
 
 
     if (page.subpage == 'library_overview') {
@@ -131,8 +133,9 @@ export function bleh_user_library() {
         };
     }
 
-    if (page.subpage == 'library_overview' || page.subpage.startsWith('library_artist_') ||
-    page.subpage.startsWith('library_album_') || page.subpage.startsWith('library_track_')) {
+    if (date_items.length > 0 && (
+        page.subpage == 'library_overview' || page.subpage.startsWith('library_artist_') ||
+    page.subpage.startsWith('library_album_') || page.subpage.startsWith('library_track_'))) {
         // new graph
         log('refresh is now marked true', 'glacier library');
         page.structure.glacier.refresh = true;
@@ -318,7 +321,12 @@ function bleh_glacier_library_top(static_page = false) {
     }
 
     metadata.forEach((meta, index) => {
-        let text = meta.querySelector('.metadata-title').textContent;
+        let text = meta.querySelector('.metadata-title');
+
+        if (!text)
+            return;
+
+        text = text.textContent;
 
         if (page.subpage == 'library_overview') {
             if (index == 1)

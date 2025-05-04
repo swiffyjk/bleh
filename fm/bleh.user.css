@@ -5219,14 +5219,15 @@ better than the default selector '#app a' i suppose */
 .chartlist--with-index--length-1 .chartlist-artist,
 .chartlist--with-index--length-2 .chartlist-artist {
     left: calc(var(--side-left) + 27px + var(--image-offset)) !important;
-    margin-top: 16px;
+    margin-top: 16px !important;
 }
 .chartlist--with-index--length-3 .chartlist-artist {
     left: calc(var(--side-left) + 34px + var(--image-offset)) !important;
-    margin-top: 16px;
+    margin-top: 16px !important;
 }
 .chartlist--with-index--length-4 .chartlist-artist {
     left: calc(var(--side-left) + 45px + var(--image-offset)) !important;
+    margin-top: 16px !important;
 }
 
 .chartlist--with-bar .chartlist-row--with-artist .chartlist-artist {
@@ -19945,6 +19946,10 @@ h4 {
         display: flex;
         justify-content: space-between;
     }
+}
+
+.user-library-search-back-link {
+    display: none;
 }
 
 .library-overview-header {

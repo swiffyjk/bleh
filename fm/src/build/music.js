@@ -134,7 +134,8 @@ export let includes = {
         '(agressive', '(aggressive', 'brazilian phonk', // lol
         '- sped up', '(sped up', '- slow', '(slow',
         'a. g. cook remix',
-        '- offline', '- og mix'
+        '- offline', '- og mix',
+        '- club edit', '(club edit'
     ],
     mixes_numbers: [
         '(v1', '(v2', '(v3', '(v4', '(v5', '(v6', '(v7', '(v8', '(v9',

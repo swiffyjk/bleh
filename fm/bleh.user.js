@@ -1035,7 +1035,9 @@
       "(slow",
       "a. g. cook remix",
       "- offline",
-      "- og mix"
+      "- og mix",
+      "- club edit",
+      "(club edit"
     ],
     mixes_numbers: [
       "(v1",
@@ -5396,7 +5398,8 @@
       if (index == 0)
         page.structure.glacier.selector = item;
     });
-    page.structure.side.appendChild(date_panel);
+    if (date_items.length > 0)
+      page.structure.side.appendChild(date_panel);
     page.structure.glacier.date_panel = date_panel;
     let tabs = page.structure.container.querySelector(".library-controls .navlist-items");
     let velocity_tab = document.createElement("li");
@@ -5409,7 +5412,7 @@
     tabs.appendChild(velocity_tab);
     if (!ff("glacier_library"))
       return;
-    if (settings.glacier_library_graphs) {
+    if (settings.glacier_library_graphs && date_items.length > 0) {
       let chart_view_selector = document.createElement("div");
       chart_view_selector.classList.add("view-buttons", "chart-view-selector", "view-buttons-middle");
       chart_view_selector.innerHTML = `
@@ -5437,7 +5440,8 @@
       chart_view_selector.after(chart_axis_selector);
       refresh_all(page.structure.glacier.date_panel);
     }
-    bleh_glacier_library_date();
+    if (date_items.length > 0)
+      bleh_glacier_library_date();
     if (page.subpage == "library_overview") {
       bleh_glacier_library_top(true);
       page.state.glacier.insights = {
@@ -5476,7 +5480,7 @@
         }
       };
     }
-    if (page.subpage == "library_overview" || page.subpage.startsWith("library_artist_") || page.subpage.startsWith("library_album_") || page.subpage.startsWith("library_track_")) {
+    if (date_items.length > 0 && (page.subpage == "library_overview" || page.subpage.startsWith("library_artist_") || page.subpage.startsWith("library_album_") || page.subpage.startsWith("library_track_"))) {
       log("refresh is now marked true", "glacier library");
       page.structure.glacier.refresh = true;
       bleh_glacier_date_graph(true);
@@ -5609,7 +5613,10 @@
       glacier_meta.innerHTML = "";
     }
     metadata.forEach((meta, index) => {
-      let text = meta.querySelector(".metadata-title").textContent;
+      let text = meta.querySelector(".metadata-title");
+      if (!text)
+        return;
+      text = text.textContent;
       if (page.subpage == "library_overview") {
         if (index == 1)
           text = trans_legacy[lang].glacier.meta.average;
