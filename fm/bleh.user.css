@@ -4332,6 +4332,9 @@ better than the default selector '#app a' i suppose */
 
 
 .grid-items-item {
+    --extra-trans: 0%;
+    --extra-white: 0%;
+
     .grid-items-cover-image-image {
         height: 100%;
         background: var(--avatar-generic-background);
@@ -4366,7 +4369,7 @@ better than the default selector '#app a' i suppose */
                 position: relative;
                 z-index: 10;
 
-                --mask: linear-gradient(0deg, transparent 0%, white 60%);
+                --mask: linear-gradient(0deg, transparent calc(0% + var(--extra-trans)), white calc(60% + var(--extra-white)));
                 mask-image: var(--mask);
                 -webkit-mask-image: var(--mask);
             }
@@ -4398,9 +4401,30 @@ better than the default selector '#app a' i suppose */
         z-index: 21;
     }
 
-    &:hover .grid-items-cover-image-image {
-        filter: brightness(115%);
-        transition: none;
+    &:has(.grid-items-item-details:hover) {
+        /*--extra-trans: 10%;
+        --extra-white: 20%;*/
+        /*--extra-trans: 0%;
+        --extra-white: 0%;*/
+
+        .grid-items-item-details {
+            /*background: hsl(var(--h4), 10%);
+            backdrop-filter: blur(20px);
+            transition: none;*/
+
+            .grid-items-item-main-text {
+                span {
+                    -webkit-line-clamp: 3;
+                }
+            }
+        }
+    }
+
+    &:hover .grid-items-cover-image {
+        .grid-items-cover-image-image {
+            filter: brightness(115%);
+            transition: none;
+        }
     }
 }
 
@@ -4476,7 +4500,7 @@ better than the default selector '#app a' i suppose */
         width: 100%;
         text-decoration: var(--force-underline, none) !important;
 
-        div {
+        span {
             overflow: hidden;
             text-overflow: ellipsis;
             -webkit-box-orient: vertical;
@@ -4487,13 +4511,6 @@ better than the default selector '#app a' i suppose */
         .feat {
             color: inherit !important;
             opacity: 0.6;
-        }
-    }
-}
-.grid-items-item:hover {
-    .grid-items-item-main-text {
-        div {
-            -webkit-line-clamp: 2;
         }
     }
 }
@@ -4550,6 +4567,11 @@ better than the default selector '#app a' i suppose */
     left: 0;
     bottom: 0;
     right: 0;
+    /*border-radius: var(--item-big-radius);
+
+    transition-property: background, backdrop-filter;
+    transition-duration: var(--trans);
+    transition-timing-function: var(--trans-function);*/
 }
 
 

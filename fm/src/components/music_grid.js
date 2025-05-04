@@ -179,7 +179,7 @@ export function music_grids() {
                 let name_elem = name;
                 let artist_elem = artist;
 
-                let song_title = name_elem.textContent;
+                let song_title = name_elem.getAttribute('title');
 
                 let formatted_title = name_includes(song_title, artist_elem.textContent);
                 let song_tags = {};
@@ -193,11 +193,11 @@ export function music_grids() {
                 // parse tags into text
                 let song_tags_text = '';
                 for (let song_tag in song_tags) {
-                    song_tags_text = `${song_tags_text}<div class="feat" data-bleh--tag-type="${song_tags[song_tag].type}" data-bleh--tag-group="${song_tags[song_tag].group}">${sanitise_text(song_tags[song_tag].text)}</div>`;
+                    song_tags_text = `${song_tags_text}<span class="feat" data-bleh--tag-type="${song_tags[song_tag].type}" data-bleh--tag-group="${song_tags[song_tag].group}">${sanitise_text(song_tags[song_tag].text)}</span>`;
                 }
 
                 // combine
-                name_elem.innerHTML = `<div class="title">${sanitise_text(song_title).trim()}</div>${song_tags_text}`;
+                name_elem.innerHTML = `<span class="title">${sanitise_text(song_title).trim()}</span>${song_tags_text}`;
             } else {
                 artist.textContent = correct_artist(artist.textContent.trim());
 
