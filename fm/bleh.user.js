@@ -1037,7 +1037,9 @@
       "- offline",
       "- og mix",
       "- club edit",
-      "(club edit"
+      "(club edit",
+      "- radio",
+      "(radio"
     ],
     mixes_numbers: [
       "(v1",
@@ -10502,9 +10504,37 @@
     let heading = details.querySelector(".featured-item-heading");
     let heading_link = heading.outerHTML;
     details.removeChild(heading);
-    if (settings.corrections) {
-      let name_elem = object.querySelector(".featured-item-name");
-      let artist_elem = object.querySelector(".featured-item-artist");
+    if (settings.format_guest_features) {
+      let name_elem = details.querySelector(".featured-item-name");
+      let artist_elem = details.querySelector(".featured-item-artist");
+      let song_title = name_elem.textContent;
+      let formatted_title = name_includes(song_title, artist_elem.textContent);
+      let song_tags = {};
+      if (formatted_title) {
+        song_title = formatted_title[0];
+        song_tags = formatted_title[1];
+      }
+      let song_tags_text = "";
+      for (let song_tag in song_tags) {
+        song_tags_text = `${song_tags_text}<div class="feat" data-bleh--tag-type="${song_tags[song_tag].type}" data-bleh--tag-group="${song_tags[song_tag].group}">${sanitise_text(song_tags[song_tag].text)}</div>`;
+      }
+      name_elem.innerHTML = `<div class="title">${sanitise_text(song_title).trim()}</div>${song_tags_text}`;
+      let song_artist_element = document.createElement("div");
+      song_artist_element.classList.add("featured-item-artist");
+      song_artist_element.innerHTML = `<a href="${root}music/${sanitise(formatted_title[2])}">${sanitise_text(formatted_title[2])}</a>`;
+      let song_guests = formatted_title[3];
+      for (let guest in song_guests) {
+        song_artist_element.innerHTML = `${song_artist_element.innerHTML},`;
+        let guest_element = document.createElement("a");
+        guest_element.setAttribute("href", `${root}music/${sanitise(song_guests[guest])}`);
+        guest_element.textContent = song_guests[guest];
+        song_artist_element.appendChild(guest_element);
+      }
+      details.removeChild(artist_elem);
+      details.appendChild(song_artist_element);
+    } else if (settings.corrections) {
+      let name_elem = details.querySelector(".featured-item-name");
+      let artist_elem = details.querySelector(".featured-item-artist");
       let name = correct_item_by_artist(name_elem.textContent.trim(), artist_elem.textContent.trim());
       let artist = correct_artist(artist_elem.textContent.trim());
       name_elem.textContent = name;
@@ -14963,7 +14993,7 @@
           console.log("formatted", formatted_title);
           let song_title = track_title.getAttribute("title");
           let song_tags = {};
-          if (formatted_title != void 0) {
+          if (formatted_title) {
             song_title = formatted_title[0];
             song_tags = formatted_title[1];
           }

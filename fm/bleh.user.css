@@ -2253,14 +2253,39 @@ span.header-new-gallery-inner a,
     gap: 3px;
     height: 52px;
     overflow: hidden;
+    flex: 1;
 }
 .featured-item-name, .featured-item-artist {
     font-size: var(--font-size);
     line-height: var(--line-height);
     margin: unset;
+    overflow: hidden;
+
+    a {
+        color: inherit;
+    }
+
+    a,
+    div {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        -webkit-box-orient: vertical;
+        display: -webkit-box;
+        -webkit-line-clamp: 1;
+    }
 }
 .featured-item-name {
     font-weight: var(--font-weight-medium);
+    text-decoration: var(--force-underline, none) !important;
+    display: flex;
+    gap: 6px;
+}
+.featured-item-artist {
+    display: flex;
+
+    a + a {
+        margin-left: 4px;
+    }
 }
 
 
@@ -5000,6 +5025,7 @@ better than the default selector '#app a' i suppose */
     .feat {
         font-size: var(--font-size-sm);
         line-height: var(--line-height-sm);
+        width: fit-content;
         height: fit-content;
         padding: 0 4px;
         margin: auto 0;

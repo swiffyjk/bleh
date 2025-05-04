@@ -161,7 +161,8 @@ export function patch_titles() {
                 console.log('formatted', formatted_title);
                 let song_title = track_title.getAttribute('title');
                 let song_tags = {};
-                if (formatted_title != undefined) {
+
+                if (formatted_title) {
                     song_title = formatted_title[0];
                     song_tags = formatted_title[1];
                 }
