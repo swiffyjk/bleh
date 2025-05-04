@@ -237,7 +237,7 @@ body, [data-page-resource-type="album"], [data-page-resource-type="track"],
         /* root */
         --b6: var(--hue), calc(var(--sat) * 9% * var(--sat-bg, 1)), 70%;
         --b10: var(--hue), calc(var(--sat) * 7% * var(--sat-bg, 1)), 16%;
-        --b8: var(--hue), calc(var(--sat) * 6% * var(--sat-bg, 1)), 87%;
+        --b8: var(--hue), calc(var(--sat) * 20% * var(--sat-bg, 1)), 87%;
         --b7: var(--c1);
     }
 }
@@ -4877,7 +4877,7 @@ better than the default selector '#app a' i suppose */
     --bg-hov: hsla(var(--h3), 60%) !important;
     --shadow: 0 0 50px 5px hsla(var(--h3), 45%) !important;*/
     --bg: hsla(var(--h4), 10%) !important;
-    --bg-hov: hsla(var(--h4), 20%) !important;
+    --bg-hov: hsla(var(--h4), 17%) !important;
     z-index: 20;
 }
 .chartlist-row--now-scrobbling:before {
