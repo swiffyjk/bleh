@@ -4470,9 +4470,31 @@ better than the default selector '#app a' i suppose */
     color: hsl(var(--c1));
 
     a {
-        display: inline-block;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 2px 6px;
         width: 100%;
         text-decoration: var(--force-underline, none) !important;
+
+        div {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            -webkit-box-orient: vertical;
+            display: -webkit-box;
+            -webkit-line-clamp: 1;
+        }
+
+        .feat {
+            color: inherit !important;
+            opacity: 0.6;
+        }
+    }
+}
+.grid-items-item:hover {
+    .grid-items-item-main-text {
+        div {
+            -webkit-line-clamp: 2;
+        }
     }
 }
 .grid-items-item-aux-text {
@@ -5031,7 +5053,7 @@ better than the default selector '#app a' i suppose */
         margin: auto 0;
         background-color: hsl(var(--b3), 40%);
         border-radius: var(--item-med-radius);
-        color: hsla(var(--c2), 80%) !important;
+        color: hsla(var(--c2), 80%);
         font-weight: var(--font-weight-medium);
 
         &:is(
@@ -5039,7 +5061,7 @@ better than the default selector '#app a' i suppose */
             [data-bleh--tag-group="stems"],
             [data-bleh--tag-group="bonus"]
         ) {
-            color: hsl(var(--c3)) !important;
+            color: hsl(var(--c3));
         }
 
         &[data-bleh--tag-group="mixes_numbers"] {

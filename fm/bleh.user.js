@@ -1146,6 +1146,8 @@
       "(ep",
       "- single",
       "(single",
+      "- mixtape",
+      "(mixtape",
       "- box set",
       "(box set",
       //,
@@ -14752,8 +14754,7 @@
     let grids = page.structure.main.querySelectorAll(".grid-items-item:not([data-bleh-music-grids])");
     grids.forEach((grid) => {
       let is_loading = grid.querySelector(".grid-items-empty-inner") != null;
-      if (is_loading)
-        return;
+      if (is_loading) return;
       grid.setAttribute("data-bleh-music-grids", "true");
       let is_album;
       if (page.type == "search") {
@@ -14763,7 +14764,7 @@
       }
       let image_wrap = grid.querySelector(".grid-items-cover-image-image");
       let image = image_wrap.querySelector("img");
-      if (image != null && !image_wrap.classList.contains("grid-items-cover-default")) {
+      if (image && !image_wrap.classList.contains("grid-items-cover-default")) {
         let grid_colour = document.createElement("div");
         grid_colour.classList.add("grid-item-colour-bg");
         image_wrap.appendChild(grid_colour);
@@ -14793,8 +14794,7 @@
       } else if (page.type == "tag") {
         let aux_text = grid.querySelector(".grid-items-item-aux-text");
         let stat_name = aux_text.querySelector(".stat-name");
-        if (stat_name == null)
-          return;
+        if (!stat_name) return;
         aux_text.removeChild(stat_name);
         plays_elem = aux_text;
         if (is_album) {
@@ -14843,11 +14843,27 @@
         insights.artist.labels.push(name.textContent);
       } else {
         let artist = grid.querySelector(".grid-items-item-aux-block");
-        if (artist == null)
-          return;
-        artist.textContent = correct_artist(artist.textContent.trim());
-        name.textContent = correct_item_by_artist(name.textContent.trim(), artist.textContent.trim());
-        insights.album.labels.push(name.textContent);
+        if (!artist) return;
+        if (settings.format_guest_features) {
+          let name_elem = name;
+          let artist_elem = artist;
+          let song_title = name_elem.textContent;
+          let formatted_title = name_includes(song_title, artist_elem.textContent);
+          let song_tags = {};
+          if (formatted_title) {
+            song_title = formatted_title[0];
+            insights.album.labels.push(song_title);
+            song_tags = formatted_title[1];
+          }
+          let song_tags_text = "";
+          for (let song_tag in song_tags) {
+            song_tags_text = `${song_tags_text}<div class="feat" data-bleh--tag-type="${song_tags[song_tag].type}" data-bleh--tag-group="${song_tags[song_tag].group}">${sanitise_text(song_tags[song_tag].text)}</div>`;
+          }
+          name_elem.innerHTML = `<div class="title">${sanitise_text(song_title).trim()}</div>${song_tags_text}`;
+        } else {
+          artist.textContent = correct_artist(artist.textContent.trim());
+          name.textContent = correct_item_by_artist(name.textContent.trim(), artist.textContent.trim());
+        }
       }
     });
     if (page.subpage.startsWith("library"))

@@ -173,6 +173,7 @@ export let includes = {
         '- b-side', '- c-side', '(b-side', '(c-side',
         '- lp', '- ep', '(lp', '(ep',
         '- single', '(single',
+        '- mixtape', '(mixtape',
         '- box set', '(box set',
         //,
         '- 19', '- 20', '(19', '(20',
