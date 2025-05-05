@@ -1978,6 +1978,9 @@
     },
     create_new_event: {
       en: "Create new event"
+    },
+    related_to: {
+      en: "Related to"
     }
   };
   var trans_legacy = {
@@ -15776,9 +15779,10 @@
       let wiki_col = page.structure.main.querySelector(".wiki-column");
       let wiki_empty = false;
       if (!wiki_col)
-        return;
+        wiki_col = page.structure.main.querySelector(".wiki-section");
+      if (!wiki_col) return;
       let wiki_block = wiki_col.querySelector(".wiki-block.visible-lg .wiki-block-inner-2");
-      if (wiki_block == null) {
+      if (!wiki_block) {
         wiki_block = wiki_col.querySelector(".wiki-block-cta");
         wiki_empty = true;
       }
@@ -15898,6 +15902,26 @@
     }
     log("status is", "page", "info", page);
     update_page();
+    let col_main = page.structure.main.querySelector(".wiki-section");
+    let tags = document.createElement("div");
+    tags.classList.add("catalogue-tags");
+    let related = page.structure.main.querySelector(".tags-list");
+    if (related) {
+      page.structure.main.removeChild(related.parentElement);
+      tags.appendChild(related);
+      let header_tags = document.createElement("div");
+      header_tags.classList.add("sub-text", "music-small-header");
+      header_tags.textContent = tl(trans.related_to);
+      col_main.appendChild(header_tags);
+      col_main.appendChild(tags);
+    }
+    let bookmark_form = page.structure.side.querySelector(":scope > div");
+    let view_all_panel = document.createElement("section");
+    view_all_panel.classList.add("view-all-panel");
+    let button = bookmark_form.querySelector("button");
+    button.classList = "toggle-button header-new-bookmark-button btn view-item interact-item icon";
+    view_all_panel.appendChild(bookmark_form);
+    page.structure.side.appendChild(view_all_panel);
   }
   function bleh_tags_mini() {
     let tag_user_avatar = page.structure.main.querySelector(".tags-user-avatar");
@@ -18529,7 +18553,7 @@
     if (auth.pro && page.type == "user" && page.name == auth.name && page.subpage == "library_artist_overview" || page.subpage == "library_album_overview" || page.subpage == "library_track_overview") {
       bleh_glacier_library_bulk_edit();
     }
-    if (page.type == "user" || page.type == "artist" || page.type == "album" || page.type == "events" || page.type == "festival" || page.type == "tag" || page.type == "overview") {
+    if (page.type == "user" || page.type == "artist" || page.type == "album" || page.type == "events" || page.type == "festival" || page.type == "tag" || page.type == "overview" || page.type == "bookmarks") {
       patch_titles();
     }
     if (page.type == "user" || page.type == "artist" || page.type == "album" || page.type == "track") {
@@ -18639,7 +18663,7 @@
         bleh_home_legacy();
       else if (page.type == "overview" || page.type == "recommended" || page.type == "releases" || page.type == "bookmarks" || page.type == "charts" || page.type == "settings")
         bleh_home();
-      if ((page.type == "artist" || page.type == "album" || page.type == "track") && page.subpage == "overview")
+      if ((page.type == "artist" || page.type == "album" || page.type == "track" || page.type == "tag") && page.subpage == "overview")
         patch_wiki();
       if ((page.type == "user" || page.type == "tag" || page.type == "events") && (page.subpage == "overview" || page.subpage == "event_overview"))
         bleh_radio();

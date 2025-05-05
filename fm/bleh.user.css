@@ -4013,6 +4013,12 @@ button.navlist-more {
         display: none;
     }
 }
+.wiki-section {
+    .wiki-block {
+        font-size: 16px;
+        line-height: 22px;
+    }
+}
 .wiki-content {
     font-size: 16px;
     line-height: 22px;
@@ -7495,6 +7501,9 @@ very, very, very dated - who looks up a song on ebay? */
 }
 .more-item--obsession {
     --mask: var(--icon-16-obsession);
+}
+.more-item--bookmark {
+    --mask: var(--icon-16-bookmark-saved);
 }
 .more-item--play {
     --mask: var(--icon-16-track);
@@ -17796,6 +17805,10 @@ h4 {
         gap: var(--card-gap);
     }
 
+    p {
+        margin: unset;
+    }
+
     .breadcrumb {
         display: flex;
         gap: 16px;
@@ -21214,19 +21227,16 @@ h4 {
                 border-radius: inherit;
             }
 
-            img {
-                transition-property: filter;
-                transition-duration: var(--trans);
-                transition-timing-function: var(--trans-function);
-            }
+            transition-property: opacity, filter;
+            transition-duration: 0.2s;
+            transition-timing-function: var(--trans-function);
         }
 
-        &:hover {
+        .link-block--hover {
             .cover-art, .avatar {
-                img {
-                    filter: brightness(115%);
-                    transition: none;
-                }
+                opacity: 0.8;
+                filter: brightness(90%);
+                transition: none;
             }
         }
 
@@ -21268,6 +21278,7 @@ h4 {
             line-height: var(--line-height);
             color: hsl(var(--c3));
             margin-top: 4px;
+            cursor: default;
 
             & + .resource-list--release-list-item-aux-text,
             & + .artist-top-albums-item-aux-text {

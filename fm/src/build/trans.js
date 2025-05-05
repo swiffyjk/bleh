@@ -808,6 +808,9 @@ export const trans = {
     },
     create_new_event: {
         en: 'Create new event'
+    },
+    related_to: {
+        en: 'Related to'
     }
 }
 

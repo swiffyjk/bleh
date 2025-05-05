@@ -224,7 +224,8 @@ function main_flow() {
         page.type == 'events' ||
         page.type == 'festival' ||
         page.type == 'tag' ||
-        page.type == 'overview'
+        page.type == 'overview' ||
+        page.type == 'bookmarks'
     ) {
         patch_titles();
     }
@@ -365,7 +366,7 @@ function load_page() {
             bleh_home();
 
         if (
-            (page.type == 'artist' || page.type == 'album' || page.type == 'track') &&
+            (page.type == 'artist' || page.type == 'album' || page.type == 'track' || page.type == 'tag') &&
             page.subpage == 'overview'
         )
             patch_wiki();

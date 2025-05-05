@@ -296,11 +296,13 @@ export function patch_wiki() {
         let wiki_empty = false;
 
         if (!wiki_col)
-            return;
+            wiki_col = page.structure.main.querySelector('.wiki-section');
+
+        if (!wiki_col) return;
 
         let wiki_block = wiki_col.querySelector('.wiki-block.visible-lg .wiki-block-inner-2');
 
-        if (wiki_block == null) {
+        if (!wiki_block) {
             wiki_block = wiki_col.querySelector('.wiki-block-cta');
             wiki_empty = true;
         }
