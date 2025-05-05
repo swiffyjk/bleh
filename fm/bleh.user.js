@@ -15569,7 +15569,7 @@
     let original_edit_button = page.structure.main.querySelector(".qa-wiki-edit");
     let original_version_history = page.structure.main.querySelector(".wiki-history-link--desktop a");
     let new_edit_panel;
-    if (original_edit_button != null) {
+    if (original_edit_button) {
       new_edit_panel = document.createElement("section");
       new_edit_panel.classList.add("view-all-panel");
       new_edit_panel.innerHTML = `
@@ -15579,7 +15579,7 @@
         `;
       page.structure.side.insertBefore(new_edit_panel, page.structure.side.firstElementChild);
     }
-    if (original_version_history != null) {
+    if (original_version_history) {
       let new_version_panel = document.createElement("section");
       new_version_panel.classList.add("view-all-panel");
       new_version_panel.innerHTML = `
@@ -15587,37 +15587,36 @@
                 ${original_version_history.textContent}
             </a>
         `;
-      if (original_edit_button != null)
+      if (original_edit_button)
         new_edit_panel.after(new_version_panel);
       else
         page.structure.side.insertBefore(new_version_panel, page.structure.side.firstElementChild);
     }
     let wiki_author = wiki_panel.querySelector(".wiki-author");
-    if (wiki_author != null) {
+    if (wiki_author) {
       let h2 = wiki_panel.querySelector("h2.text-18");
       let sub_text = document.createElement("div");
       sub_text.classList.add("sub-text", "space-below", "header-style");
       sub_text.innerHTML = `
             <div class="breadcrumb-origin prominent">
-                ${h2 != null ? h2.innerHTML : page.structure.container.querySelector(".content-top-header").textContent}
+                ${h2 ? h2.innerHTML : page.structure.container.querySelector(".content-top-header").textContent}
             </div>
             <div class="wiki-author-side">
                 ${wiki_author.innerHTML}
             </div>
         `;
       wiki_panel.insertBefore(sub_text, wiki_panel.firstElementChild);
-      if (h2 != null)
+      if (h2)
         wiki_panel.removeChild(h2);
     }
     let wiki = wiki_panel.querySelector(".wiki");
-    if (wiki == null)
-      return;
+    if (!wiki) return;
     patch_wiki_contents(wiki);
   }
   function bleh_wiki_history() {
     let breadcrumb_root = page.structure.container.querySelector(".subpage-breadcrumb");
     let breadcrumb_name = page.structure.container.querySelector(".subpage-title");
-    if (breadcrumb_root == null) {
+    if (!breadcrumb_root) {
       breadcrumb_root = page.structure.container.querySelector(".content-top-back-link");
       breadcrumb_name = page.structure.container.querySelector(".content-top-header");
     }
@@ -15634,7 +15633,7 @@
     breadcrumb_root.style.setProperty("display", "none");
     breadcrumb_name.style.setProperty("display", "none");
     let buffer_container = page.structure.container.querySelector(".row ~ .buffer-4");
-    if (buffer_container == null)
+    if (!buffer_container)
       buffer_container = page.structure.container.querySelector(".wiki-history");
     let wiki_history_table = buffer_container.querySelector(".wiki-history-table");
     let pagination = buffer_container.querySelector(".pagination");
@@ -15644,7 +15643,7 @@
     wiki_panel.appendChild(wiki_history_table);
     page.structure.main.appendChild(wiki_panel);
     buffer_container.style.setProperty("display", "none");
-    if (pagination != null)
+    if (pagination)
       wiki_panel.appendChild(pagination);
     let latest_version_panel = document.createElement("section");
     latest_version_panel.classList.add("view-all-panel");
@@ -15659,7 +15658,7 @@
       let author = entry.querySelector(".wiki-history-author");
       let avatar = author.querySelector(".wiki-history-author-avatar");
       let name = author.querySelector(".link-block-target");
-      if (name != null && avatar != null) {
+      if (name && avatar) {
         let badge = patch_avatar(avatar, name.textContent, "wiki");
         if (badge.type == "avatar-status-dot--staff")
           entry.classList.add("staff-shout");
@@ -15675,13 +15674,12 @@
     page.structure.main.classList.add("not-a-panel");
     let breadcrumb_root = page.structure.container.querySelector(".subpage-breadcrumb");
     let breadcrumb_name = page.structure.container.querySelector(".subpage-title");
-    if (breadcrumb_name == null) {
+    if (!breadcrumb_name) {
       breadcrumb_name = page.structure.content_top.querySelector(".content-top-header");
-      if (breadcrumb_name != null) {
+      if (breadcrumb_name)
         page.structure.content_top.style.setProperty("display", "none");
-      }
     }
-    if (breadcrumb_root == null) {
+    if (!breadcrumb_root) {
       breadcrumb_root = page.structure.container.querySelector(".content-top-back-link");
       breadcrumb_name = page.structure.container.querySelector(".content-top-header");
     }
@@ -15760,6 +15758,10 @@
             <div class="preset">\u2019</div>
             <div class="preset">-</div>
         </div>
+        <ul class="wiki-standards generic-list">
+            <li>Tracks should be contained in \u201C\u201D, while albums and artists are left without.</li>
+            <li>A pair of \u2018 \u2019 are usually used for quotations.</li>
+        </ul>
     `;
     page.structure.side.appendChild(wiki_presets_panel);
     page.structure.side.appendChild(wiki_syntax);

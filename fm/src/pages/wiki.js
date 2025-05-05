@@ -18,7 +18,7 @@ export function bleh_wiki() {
     let original_version_history = page.structure.main.querySelector('.wiki-history-link--desktop a');
 
     let new_edit_panel;
-    if (original_edit_button != null) {
+    if (original_edit_button) {
         new_edit_panel = document.createElement('section');
         new_edit_panel.classList.add('view-all-panel');
         new_edit_panel.innerHTML = (`
@@ -30,7 +30,7 @@ export function bleh_wiki() {
         page.structure.side.insertBefore(new_edit_panel, page.structure.side.firstElementChild);
     }
 
-    if (original_version_history != null) {
+    if (original_version_history) {
         let new_version_panel = document.createElement('section');
         new_version_panel.classList.add('view-all-panel');
         new_version_panel.innerHTML = (`
@@ -39,7 +39,7 @@ export function bleh_wiki() {
             </a>
         `);
 
-        if (original_edit_button != null)
+        if (original_edit_button)
             new_edit_panel.after(new_version_panel);
         else
             page.structure.side.insertBefore(new_version_panel, page.structure.side.firstElementChild);
@@ -49,14 +49,14 @@ export function bleh_wiki() {
     // author
     let wiki_author = wiki_panel.querySelector('.wiki-author');
     // this cant be null i believe but still
-    if (wiki_author != null) {
+    if (wiki_author) {
         let h2 = wiki_panel.querySelector('h2.text-18');
 
         let sub_text = document.createElement('div');
         sub_text.classList.add('sub-text', 'space-below', 'header-style');
         sub_text.innerHTML = (`
             <div class="breadcrumb-origin prominent">
-                ${(h2 != null) ? h2.innerHTML : page.structure.container.querySelector('.content-top-header').textContent}
+                ${(h2) ? h2.innerHTML : page.structure.container.querySelector('.content-top-header').textContent}
             </div>
             <div class="wiki-author-side">
                 ${wiki_author.innerHTML}
@@ -64,14 +64,12 @@ export function bleh_wiki() {
         `);
 
         wiki_panel.insertBefore(sub_text, wiki_panel.firstElementChild);
-        if (h2 != null)
+        if (h2)
             wiki_panel.removeChild(h2);
     }
 
     let wiki = wiki_panel.querySelector('.wiki');
-
-    if (wiki == null)
-        return;
+    if (!wiki) return;
 
     patch_wiki_contents(wiki);
 }
@@ -81,7 +79,7 @@ export function bleh_wiki_history() {
     let breadcrumb_name = page.structure.container.querySelector('.subpage-title');
 
     // tags
-    if (breadcrumb_root == null) {
+    if (!breadcrumb_root) {
         breadcrumb_root = page.structure.container.querySelector('.content-top-back-link');
         breadcrumb_name = page.structure.container.querySelector('.content-top-header');
     }
@@ -104,7 +102,7 @@ export function bleh_wiki_history() {
     let buffer_container = page.structure.container.querySelector('.row ~ .buffer-4');
 
     // tags
-    if (buffer_container == null)
+    if (!buffer_container)
         buffer_container = page.structure.container.querySelector('.wiki-history');
 
     let wiki_history_table = buffer_container.querySelector('.wiki-history-table');
@@ -123,7 +121,7 @@ export function bleh_wiki_history() {
     page.structure.main.appendChild(wiki_panel);
     buffer_container.style.setProperty('display', 'none');
 
-    if (pagination != null)
+    if (pagination)
         wiki_panel.appendChild(pagination);
 
 
@@ -146,7 +144,7 @@ export function bleh_wiki_history() {
         let avatar = author.querySelector('.wiki-history-author-avatar');
         let name = author.querySelector('.link-block-target');
 
-        if (name != null && avatar != null) {
+        if (name && avatar) {
             let badge = patch_avatar(avatar, name.textContent, 'wiki');
 
             if (badge.type == 'avatar-status-dot--staff')
@@ -169,16 +167,15 @@ export function bleh_wiki_editor() {
     let breadcrumb_name = page.structure.container.querySelector('.subpage-title');
 
     // probably moved to a content-top by bleh prior
-    if (breadcrumb_name == null) {
+    if (!breadcrumb_name) {
         breadcrumb_name = page.structure.content_top.querySelector('.content-top-header');
 
-        if (breadcrumb_name != null) {
+        if (breadcrumb_name)
             page.structure.content_top.style.setProperty('display', 'none');
-        }
     }
 
     // tags
-    if (breadcrumb_root == null) {
+    if (!breadcrumb_root) {
         breadcrumb_root = page.structure.container.querySelector('.content-top-back-link');
         breadcrumb_name = page.structure.container.querySelector('.content-top-header');
     }
@@ -269,6 +266,10 @@ export function bleh_wiki_editor() {
             <div class="preset">’</div>
             <div class="preset">-</div>
         </div>
+        <ul class="wiki-standards generic-list">
+            <li>Tracks should be contained in “”, while albums and artists are left without.</li>
+            <li>A pair of ‘ ’ are usually used for quotations.</li>
+        </ul>
     `);
 
     page.structure.side.appendChild(wiki_presets_panel);
