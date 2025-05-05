@@ -123,10 +123,6 @@ body {
     --font-size-sm: 12px;
     --line-height-sm: calc(var(--font-size-sm) + 4px);
 
-    --font-weight: var(--custom_font_weight, 480);
-    --font-weight-medium: var(--custom_font_weight_medium, 650);
-    --font-weight-bold: var(--custom_font_weight_bold, 730);
-
     --trans-short: 0.2s;
     --trans: 0.1s;
     --trans-function: cubic-bezier(0.785, 0.135, 0.15, 0.86);
@@ -144,6 +140,13 @@ body {
         --font-weight-medium: calc(var(--custom_font_weight_medium, 650) + 90);
         --font-weight-bold: calc(var(--custom_font_weight_bold, 730) + 90);
     }
+}
+
+.music-more-tags-tag-inner-wrap, .music-featured-item-heading-link, .music-featured-item-body,
+body {
+    --font-weight: var(--custom_font_weight, 480);
+    --font-weight-medium: var(--custom_font_weight_medium, 650);
+    --font-weight-bold: var(--custom_font_weight_bold, 730);
 }
 
 /* backgrounds */
@@ -5155,6 +5158,15 @@ better than the default selector '#app a' i suppose */
                     margin-top: 32px;
                     margin-left: calc(var(--chartlist-inner-gap) / 2) !important;
                     margin-right: unset !important;
+                }
+
+                &:not(:has(.chartlist-timestamp)) {
+                    .chartlist-name {
+                        width: 30%;
+                    }
+                    .chartlist-artist {
+                        width: 80%;
+                    }
                 }
             }
 
@@ -21183,6 +21195,21 @@ h4 {
                 box-shadow: unset !important;
                 border-radius: inherit;
             }
+
+            img {
+                transition-property: filter;
+                transition-duration: var(--trans);
+                transition-timing-function: var(--trans-function);
+            }
+        }
+
+        &:hover {
+            .cover-art, .avatar {
+                img {
+                    filter: brightness(115%);
+                    transition: none;
+                }
+            }
         }
 
         .music-releases-item-playlink {
@@ -21212,6 +21239,7 @@ h4 {
             color: hsl(var(--c2), 80%);
             margin-top: 2px;
         }
+        .music-more-artists-last-scrobble,
         .resource-list--release-list-item-aux-text,
         .artist-top-albums-item-aux-text,
         .music-bookmarks-albums-item-aux-text,
@@ -21693,6 +21721,7 @@ h4 {
         height: 627px;
         border-radius: var(--item-big-radius);
         box-shadow: var(--interact-shadow);
+        text-shadow: 0 0 12px rgba(0, 0, 0, 0.4);
         overflow: hidden;
 
         .music-featured-item-background {
@@ -21721,10 +21750,63 @@ h4 {
         .music-featured-item-heading {
             text-transform: lowercase;
             /*font-family: var(--font-brand);*/
-            font-size: 40px;
-            line-height: 34px;
+            font-size: 34px;
+            line-height: 20px;
             font-weight: var(--font-weight-bold);
             letter-spacing: unset;
+        }
+
+        .music-featured-item-body {
+            & > p {
+                font-weight: var(--font-weight-medium);
+
+                span, a {
+                    opacity: 0.6;
+                }
+
+                a:hover {
+                    opacity: 1;
+                }
+            }
+
+            .music-featured-item-wiki {
+                margin-top: 10px;
+                max-width: 500px;
+
+                a:last-child:not(:hover) {
+                    opacity: 0.6;
+                }
+            }
+
+            .music-featured-tag-items {
+                margin-top: 10px;
+
+                .music-featured-tag-item-wrap {
+                    .music-featured-tag-item {
+                        --size: 36px;
+                        padding-left: calc(var(--size) + 10px);
+                        min-height: var(--size);
+
+                        .avatar {
+                            width: var(--size);
+                            height: var(--size);
+                            border-radius: var(--item-big-radius);
+
+                            &:after {
+                                display: none;
+                            }
+                        }
+
+                        .music-featured-tag-item-name {
+                            color: inherit;
+                            opacity: 0.8;
+                            font-weight: var(--font-weight-medium);
+                            line-height: var(--line-height);
+                            -webkit-line-clamp: 1;
+                        }
+                    }
+                }
+            }
         }
     }
 }
@@ -21740,6 +21822,7 @@ h4 {
     .music-more-tags-tag {
         border-radius: var(--item-big-radius);
         box-shadow: var(--interact-shadow);
+        text-shadow: 0 0 12px rgba(0, 0, 0, 0.3);
         overflow: hidden;
     }
 }
