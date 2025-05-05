@@ -826,8 +826,8 @@
     return "#" + comp_to_hex(r) + comp_to_hex(g) + comp_to_hex(b);
   }
   function clamp_sat(sat) {
-    if (sat > 1.7)
-      return 1.7;
+    if (sat > 1.5)
+      return 1.5;
     return sat;
   }
   function clean_number(string) {
@@ -1035,7 +1035,11 @@
       "(slow",
       "a. g. cook remix",
       "- offline",
-      "- og mix"
+      "- og mix",
+      "- club edit",
+      "(club edit",
+      "- radio",
+      "(radio"
     ],
     mixes_numbers: [
       "(v1",
@@ -1142,6 +1146,8 @@
       "(ep",
       "- single",
       "(single",
+      "- mixtape",
+      "(mixtape",
       "- box set",
       "(box set",
       //,
@@ -1316,8 +1322,8 @@
       de: "Titel aktualisieren"
     },
     from_the_album: {
-      en: "From the album: {album}",
-      de: "Aus dem Album {album}"
+      en: "From {album}",
+      de: "Aus {album}"
     },
     set_obsession: {
       en: "Obsess",
@@ -1387,13 +1393,25 @@
       en: "Scrobbles",
       de: "Scrobbels"
     },
+    artist: {
+      en: "Artist"
+    },
     artists: {
       en: "Artists",
       de: "K\xFCnstler"
     },
+    artists_tooltip: {
+      en: "Multiple artists are grouped into this profile"
+    },
+    album: {
+      en: "Album"
+    },
     albums: {
       en: "Albums",
       de: "Alben"
+    },
+    track: {
+      en: "Track"
     },
     tracks: {
       en: "Tracks",
@@ -1411,6 +1429,9 @@
       light: {
         en: "Light",
         de: "Hell"
+      },
+      ink: {
+        en: "Ink"
       },
       dark: {
         en: "Ash",
@@ -1894,6 +1915,67 @@
     loved: {
       en: "Loved",
       de: "Lieblingslieder"
+    },
+    velocity: {
+      en: "Velocity"
+    },
+    logout: {
+      en: "Logout",
+      de: "Ausloggen"
+    },
+    tracklist: {
+      en: "Tracklist",
+      de: "Titelliste"
+    },
+    tracklist_from_plays_info: {
+      en: "Retrieved own plays as official tracklist is unavailable"
+    },
+    from_the_album: {
+      en: "From {album}"
+    },
+    listens: {
+      en: "listens",
+      de: "scrobbels",
+      count: {
+        en: "{c} listens",
+        de: "{c} scrobbels"
+      }
+    },
+    others_count: {
+      en: "{c} others",
+      de: "{c} h\xF6rer"
+    },
+    loading_album_plays: {
+      en: "Collecting your album plays"
+    },
+    fail_album_plays: {
+      en: "You do not have any plays here"
+    },
+    open_album_as_track: {
+      en: "Open album title as track",
+      de: "Albumtitel als Titel \xF6ffnen"
+    },
+    ignored: {
+      en: "Ignored"
+    },
+    all_time: {
+      en: "All time"
+    },
+    count_total: {
+      en: "{c} total"
+    },
+    video_removed: {
+      en: "Video removed by Last.fm"
+    },
+    blocked_page: {
+      en: "This page has been limited by Last.fm"
+    },
+    cancel: {
+      en: "Cancel",
+      de: "Abbrechen"
+    },
+    results_for: {
+      en: "Results for"
     }
   };
   var trans_legacy = {
@@ -5410,11 +5492,21 @@
       if (index == 0)
         page.structure.glacier.selector = item;
     });
-    page.structure.side.appendChild(date_panel);
+    if (date_items.length > 0)
+      page.structure.side.appendChild(date_panel);
     page.structure.glacier.date_panel = date_panel;
+    let tabs = page.structure.container.querySelector(".library-controls .navlist-items");
+    let velocity_tab = document.createElement("li");
+    velocity_tab.classList.add("navlist-item", "secondary-nav-item", "secondary-nav-item--velocity");
+    velocity_tab.innerHTML = `
+        <a class="secondary-nav-item-link" href="${root}labs/artist-velocity" target="_blank">
+            ${tl(trans.velocity)}
+        </a>
+    `;
+    tabs.appendChild(velocity_tab);
     if (!ff("glacier_library"))
       return;
-    if (settings.glacier_library_graphs) {
+    if (settings.glacier_library_graphs && date_items.length > 0) {
       let chart_view_selector = document.createElement("div");
       chart_view_selector.classList.add("view-buttons", "chart-view-selector", "view-buttons-middle");
       chart_view_selector.innerHTML = `
@@ -5442,8 +5534,9 @@
       chart_view_selector.after(chart_axis_selector);
       refresh_all(page.structure.glacier.date_panel);
     }
-    bleh_glacier_library_date();
-    if (page.subpage == "library_overview") {
+    if (date_items.length > 0)
+      bleh_glacier_library_date();
+    if (page.subpage == "library_overview" || page.subpage.endsWith("-search")) {
       bleh_glacier_library_top(true);
       page.state.glacier.insights = {
         artist: {
@@ -5481,7 +5574,7 @@
         }
       };
     }
-    if (page.subpage == "library_overview" || page.subpage.startsWith("library_artist_") || page.subpage.startsWith("library_album_") || page.subpage.startsWith("library_track_")) {
+    if (date_items.length > 0 && (page.subpage == "library_overview" || page.subpage.startsWith("library_artist_") || page.subpage.startsWith("library_album_") || page.subpage.startsWith("library_track_"))) {
       log("refresh is now marked true", "glacier library");
       page.structure.glacier.refresh = true;
       bleh_glacier_date_graph(true);
@@ -5614,22 +5707,32 @@
       glacier_meta.innerHTML = "";
     }
     metadata.forEach((meta, index) => {
-      let text = meta.querySelector(".metadata-title").textContent;
-      if (page.subpage == "library_overview") {
-        if (index == 1)
-          text = trans_legacy[lang].glacier.meta.average;
-      } else if (page.subpage == "library_artists") {
-        text = trans_legacy[lang].glacier.meta.artists;
-      } else if (page.subpage == "library_albums") {
-        text = trans_legacy[lang].glacier.meta.albums;
-      } else if (page.subpage == "library_tracks") {
-        text = trans_legacy[lang].glacier.meta.tracks;
+      let text = meta.querySelector(".metadata-title");
+      let value = meta.querySelector(".metadata-display").textContent;
+      if (text) {
+        text = text.textContent;
+        if (page.subpage == "library_overview") {
+          if (index == 1)
+            text = trans_legacy[lang].glacier.meta.average;
+        } else if (page.subpage == "library_artists") {
+          text = tl(trans.artists);
+        } else if (page.subpage == "library_albums") {
+          text = trans_legacy[lang].glacier.meta.albums;
+        } else if (page.subpage == "library_tracks") {
+          text = trans_legacy[lang].glacier.meta.tracks;
+        }
+      } else {
+        text = tl(trans.results_for);
+        value = meta.querySelector(".metadata-display").textContent;
+        let start = value.indexOf("\u201C") + 1;
+        let end = value.indexOf("\u201D");
+        value = value.substring(start, end);
       }
       let glacier_meta_item = document.createElement("div");
       glacier_meta_item.classList.add("glacier-library-metadata-item");
       glacier_meta_item.innerHTML = `
             <div class="sub-text">${text}</div>
-            <div class="glacier-library-metadata-item-value">${meta.querySelector(".metadata-display").textContent}</div>
+            <div class="glacier-library-metadata-item-value">${value}</div>
         `;
       glacier_meta.appendChild(glacier_meta_item);
     });
@@ -7376,6 +7479,7 @@
   function show_your_scrobbles() {
     let katsune = ff("katsune");
     show_numbers_on_side(page.type);
+    let page_is_blocked = !page.structure.main.querySelector("#shoutbox");
     if (page.subpage == "overview") {
       let tabs = document.createElement("nav");
       tabs.classList.add("navlist", "secondary-nav", "navlist--more", "redesigned-navigation");
@@ -7397,6 +7501,7 @@
                             ${tl(trans.albums)}
                         </a>
                     </li>
+                    ${!page_is_blocked ? `
                     <li class="navlist-item secondary-nav-item secondary-nav-item--images">
                         <a class="secondary-nav-item-link" href="${window.location.href}/+images">
                             ${tl(trans.photos)}
@@ -7432,6 +7537,7 @@
                             ${tl(trans.tags)}
                         </a>
                     </li>
+                    ` : ""}
                 </ul>
             `;
       } else if (page.type == "album") {
@@ -7442,6 +7548,7 @@
                             ${tl(trans.overview)}
                         </a>
                     </li>
+                    ${!page_is_blocked ? `
                     <li class="navlist-item secondary-nav-item secondary-nav-item--wiki">
                         <a class="secondary-nav-item-link" href="${window.location.href}/+wiki">
                             ${tl(trans.wiki)}
@@ -7462,6 +7569,7 @@
                             ${tl(trans.tags)}
                         </a>
                     </li>
+                    ` : ""}
                 </ul>
             `;
       } else if (page.type == "track") {
@@ -7477,6 +7585,7 @@
                             ${tl(trans.albums)}
                         </a>
                     </li>
+                    ${!page_is_blocked ? `
                     <li class="navlist-item secondary-nav-item secondary-nav-item--wiki">
                         <a class="secondary-nav-item-link" href="${window.location.href}/+wiki">
                             ${tl(trans.wiki)}
@@ -7492,6 +7601,7 @@
                             ${tl(trans.tags)}
                         </a>
                     </li>
+                    ` : ""}
                 </ul>
             `;
       }
@@ -7698,6 +7808,13 @@
         group_wrap.appendChild(group.value);
         metadata.appendChild(group_wrap);
       });
+    }
+    if (page_is_blocked) {
+      let alert = document.createElement("section");
+      alert.classList.add("cta", "blocked-cta");
+      alert.innerHTML = `<strong>${tl(trans.blocked_page)}</strong>`;
+      page.structure.main.insertBefore(alert, page.structure.main.firstElementChild);
+      return;
     }
     let play_on;
     let play_links;
@@ -8008,48 +8125,56 @@
     }
     if (page.type == "track") {
       let video_col = document.body.querySelector(".track-overview-video-column.col-sidebar");
+      if (!video_col) {
+        video_unavailable(video_col);
+        return;
+      }
       video_col.classList.remove("col-sidebar");
       page.structure.side.insertBefore(video_col, page.structure.side.firstElementChild);
       let video = video_col.querySelector(".video-preview");
-      if (video) {
-        video_col.classList.remove("col-sidebar");
-        page.structure.side.insertBefore(video_col, page.structure.side.firstElementChild);
-        let container = document.createElement("div");
-        container.classList.add("video-overlay-container");
-        let view_buttons = document.createElement("div");
-        view_buttons.classList.add("view-buttons");
-        let playlink = video.querySelector(".video-preview-playlink a");
-        let replace = video_col.querySelector(".video-preview-replace a");
-        playlink.classList = "btn view-item video-item video-item--play";
-        replace.classList = "btn view-item video-item video-item--edit";
-        view_buttons.appendChild(playlink);
-        view_buttons.appendChild(replace);
-        container.appendChild(view_buttons);
-        video.appendChild(container);
-        tippy(playlink, {
-          content: playlink.getAttribute("title")
-        });
-        playlink.removeAttribute("title");
-        tippy(replace, {
-          content: replace.textContent
-        });
-      } else {
-        let cta = video_col.querySelector(".video-preview-upload-cta");
-        if (cta)
-          return;
-        page.structure.side.removeChild(video_col);
-        let video_placeholder = document.createElement("section");
-        video_placeholder.classList.add("video-placeholder");
-        video_placeholder.innerHTML = `
-                <div class="bleh-icon" style="--icon: var(--icon-16-video-broken)"></div>
-                Video removed by Last.fm
-            `;
-        page.structure.side.insertBefore(video_placeholder, page.structure.side.firstElementChild);
-        let links = page.structure.side.querySelector(".external-links-section .play-this-track-playlinks");
-        if (links)
-          links.classList.add("video-unavailable");
+      if (!video) {
+        video_unavailable(video_col);
+        return;
       }
+      video_col.classList.remove("col-sidebar");
+      page.structure.side.insertBefore(video_col, page.structure.side.firstElementChild);
+      let container = document.createElement("div");
+      container.classList.add("video-overlay-container");
+      let view_buttons = document.createElement("div");
+      view_buttons.classList.add("view-buttons");
+      let playlink = video.querySelector(".video-preview-playlink a");
+      let replace = video_col.querySelector(".video-preview-replace a");
+      playlink.classList = "btn view-item video-item video-item--play";
+      replace.classList = "btn view-item video-item video-item--edit";
+      view_buttons.appendChild(playlink);
+      view_buttons.appendChild(replace);
+      container.appendChild(view_buttons);
+      video.appendChild(container);
+      tippy(playlink, {
+        content: playlink.getAttribute("title")
+      });
+      playlink.removeAttribute("title");
+      tippy(replace, {
+        content: replace.textContent
+      });
     }
+  }
+  function video_unavailable(video_col = null) {
+    let cta = page.structure.side.querySelector(".video-preview-upload-cta");
+    if (cta)
+      return;
+    if (video_col)
+      page.structure.side.removeChild(video_col);
+    let video_placeholder = document.createElement("section");
+    video_placeholder.classList.add("video-placeholder");
+    video_placeholder.innerHTML = `
+        <div class="bleh-icon" style="--icon: var(--icon-16-video-broken)"></div>
+        ${tl(trans.video_removed)}
+    `;
+    page.structure.side.insertBefore(video_placeholder, page.structure.side.firstElementChild);
+    let links = page.structure.side.querySelector(".external-links-section .play-this-track-playlinks");
+    if (links)
+      links.classList.add("video-unavailable");
   }
   function bleh_music_page_charts() {
     if (!ff("music_page_charts"))
@@ -9858,9 +9983,7 @@
     if (is_own_profile)
       profile_header.setAttribute("data-is-own-profile", "true");
     if (!is_subpage) {
-      let is_following = false;
-      if (profile_header.querySelector(".label.user-follow"))
-        is_following = true;
+      let is_following = profile_header.querySelector(".label.user-follow");
       profile_recents();
       profile_artists();
       profile_albums();
@@ -10014,7 +10137,7 @@
         let value_panel = document.createElement("section");
         value_panel.classList.add("value-panel");
         value_panel.innerHTML = `
-                <h2 class="text-18">${selected_tab != null ? selected_tab.textContent : tl(trans.events)}</h2>
+                <h2 class="text-18">${selected_tab ? selected_tab.firstChild.textContent : tl(trans.events)}</h2>
             `;
         let values = page.structure.main.querySelectorAll(".metadata-display");
         let value_header = document.createElement("div");
@@ -10043,7 +10166,7 @@
             name: page.name,
             text: total_value.textContent,
             type: "total",
-            tooltip: trans_legacy[lang].event.total.replace("{c}", total_value.textContent)
+            tooltip: tl(trans.count_total).replace("{c}", total_value.textContent)
           });
           value_panel.appendChild(total_header);
         }
@@ -10061,7 +10184,7 @@
             page.structure.content_top.after(report_box_container);
         } else {
           let dashboard = page.structure.container.querySelector(".user-dashboard");
-          if (dashboard == null)
+          if (!dashboard)
             return;
           dialog({
             id: "listening_report_v2",
@@ -10161,9 +10284,11 @@
         });
         new_panel.appendChild(grid);
         let no_data = page.structure.container.querySelector(".no-data-message--obsession-history");
-        if (no_data != null) {
+        if (no_data) {
           wrap.after(no_data);
         }
+        let pagination = page.structure.container.querySelector(".pagination");
+        new_panel.appendChild(pagination);
       }
     }
     log("status is", "page", "info", page);
@@ -10468,9 +10593,37 @@
     let heading = details.querySelector(".featured-item-heading");
     let heading_link = heading.outerHTML;
     details.removeChild(heading);
-    if (settings.corrections) {
-      let name_elem = object.querySelector(".featured-item-name");
-      let artist_elem = object.querySelector(".featured-item-artist");
+    if (settings.format_guest_features) {
+      let name_elem = details.querySelector(".featured-item-name");
+      let artist_elem = details.querySelector(".featured-item-artist");
+      let song_title = name_elem.textContent;
+      let formatted_title = name_includes(song_title, artist_elem.textContent);
+      let song_tags = {};
+      if (formatted_title) {
+        song_title = formatted_title[0];
+        song_tags = formatted_title[1];
+      }
+      let song_tags_text = "";
+      for (let song_tag in song_tags) {
+        song_tags_text = `${song_tags_text}<div class="feat" data-bleh--tag-type="${song_tags[song_tag].type}" data-bleh--tag-group="${song_tags[song_tag].group}">${sanitise_text(song_tags[song_tag].text)}</div>`;
+      }
+      name_elem.innerHTML = `<div class="title">${sanitise_text(song_title).trim()}</div>${song_tags_text}`;
+      let song_artist_element = document.createElement("div");
+      song_artist_element.classList.add("featured-item-artist");
+      song_artist_element.innerHTML = `<a href="${root}music/${sanitise(formatted_title[2])}">${sanitise_text(formatted_title[2])}</a>`;
+      let song_guests = formatted_title[3];
+      for (let guest in song_guests) {
+        song_artist_element.innerHTML = `${song_artist_element.innerHTML},`;
+        let guest_element = document.createElement("a");
+        guest_element.setAttribute("href", `${root}music/${sanitise(song_guests[guest])}`);
+        guest_element.textContent = song_guests[guest];
+        song_artist_element.appendChild(guest_element);
+      }
+      details.removeChild(artist_elem);
+      details.appendChild(song_artist_element);
+    } else if (settings.corrections) {
+      let name_elem = details.querySelector(".featured-item-name");
+      let artist_elem = details.querySelector(".featured-item-artist");
       let name = correct_item_by_artist(name_elem.textContent.trim(), artist_elem.textContent.trim());
       let artist = correct_artist(artist_elem.textContent.trim());
       name_elem.textContent = name;
@@ -11104,6 +11257,12 @@
       for (var member in settings) delete settings[member];
       Object.assign(settings, JSON.parse(localStorage.getItem("bleh")) || create_settings_template());
     }
+    if (!settings.theme_type) {
+      if (settings.theme == "light" || settings.theme == "ink")
+        settings.theme_type = "light";
+      else
+        settings.theme_type = "dark";
+    }
     for (let setting in settings_template)
       if (settings[setting] == void 0)
         settings[setting] = settings_template[setting];
@@ -11137,10 +11296,17 @@
     else if (current_theme == "oled" || current_theme == "classic")
       current_theme = "light";
     else if (current_theme == "light")
+      current_theme = "ink";
+    else if (current_theme == "ink")
       current_theme = "dark";
     show_theme_change_in_menu(current_theme);
     settings.theme = current_theme;
+    if (current_theme == "light" || current_theme == "ink")
+      settings.theme_type = "light";
+    else
+      settings.theme_type = "dark";
     document.documentElement.setAttribute(`data-bleh--theme`, `${current_theme}`);
+    document.documentElement.setAttribute(`data-bleh--theme_type`, `${settings.theme_type}`);
     localStorage.setItem("bleh", JSON.stringify(settings));
     load_chart_colours();
     if ((page.type == "artist" || page.type == "album" || page.type == "track") && page.subpage == "overview")
@@ -11154,7 +11320,12 @@
   };
   unsafeWindow.change_theme_from_settings = function(theme) {
     settings.theme = theme;
+    if (theme == "light" || theme == "ink")
+      settings.theme_type = "light";
+    else
+      settings.theme_type = "dark";
     document.documentElement.setAttribute(`data-bleh--theme`, `${theme}`);
+    document.documentElement.setAttribute(`data-bleh--theme_type`, `${settings.theme_type}`);
     show_theme_change_in_settings(theme);
     show_theme_change_in_menu(theme);
     localStorage.setItem("bleh", JSON.stringify(settings));
@@ -11163,7 +11334,12 @@
     if (page.subpage.startsWith("listening-report"))
       return;
     settings.theme = theme;
+    if (theme == "light" || theme == "ink")
+      settings.theme_type = "light";
+    else
+      settings.theme_type = "dark";
     document.documentElement.setAttribute(`data-bleh--theme`, `${theme}`);
+    document.documentElement.setAttribute(`data-bleh--theme_type`, `${settings.theme_type}`);
     show_theme_change_in_menu(theme);
     localStorage.setItem("bleh", JSON.stringify(settings));
     load_chart_colours();
@@ -11854,9 +12030,9 @@
                 <h4>${tl(trans.themes.name)}</h4>
                 <div class="setting-items full">
                     <div class="side-left full even-more">
-                        <button class="btn theme-item" data-bleh-theme="light" onclick="change_theme_from_settings('light')">
+                        <button class="btn theme-item" data-bleh-theme="light" data-bleh--theme_type="light" onclick="change_theme_from_settings('light')">
                             <div class="preview-container">
-                            <div class="preview" data-bleh--theme="light">
+                            <div class="preview" data-bleh--theme="light" data-bleh--theme_type="light">
                                 ${theme_preview}
                             </div>
                             </div>
@@ -11864,6 +12040,20 @@
                                 <h5>${tl(trans.themes.light)}</h5>
                             </div>
                         </button>
+                        <button class="btn theme-item" data-bleh-theme="ink" data-bleh--theme_type="light" onclick="change_theme_from_settings('ink')">
+                            <div class="preview-container">
+                            <div class="preview" data-bleh--theme="ink" data-bleh--theme_type="light">
+                                ${theme_preview}
+                            </div>
+                            </div>
+                            <div class="text">
+                                <h5>${tl(trans.themes.ink)}</h5>
+                            </div>
+                        </button>
+                    </div>
+                </div>
+                <div class="setting-items full">
+                    <div class="side-left full even-more">
                         <button class="btn theme-item" data-bleh-theme="dark" onclick="change_theme_from_settings('dark')">
                             <div class="preview-container">
                             <div class="preview" data-bleh--theme="dark">
@@ -12893,6 +13083,7 @@
                             <div class="info">
                                 <div class="title"></div>
                                 <div class="artist"></div>
+                                <div class="album"></div>
                             </div>
                             <div class="time"></div>
                         </div>
@@ -12978,7 +13169,7 @@
                             <div class="title"></div>
                             <div class="bar">
                                 <div class="fill not-colourful-example" style="width: 100%"></div>
-                                <div class="fill colourful-example" style="width: 100%; --hue: -16.888749999999998; --sat: 1.5; --lit: 0.875"></div>
+                                <div class="fill colourful colourful-example" style="width: 100%; --hue: -16.888749999999998; --sat: 1.5; --lit: 0.875"></div>
                             </div>
                         </div>
                         <div class="track">
@@ -12986,7 +13177,7 @@
                             <div class="title"></div>
                             <div class="bar">
                                 <div class="fill not-colourful-example" style="width: 85%"></div>
-                                <div class="fill colourful-example" style="width: 85%; --hue: 0.21863999999999972; --sat: 1.399218; --lit: 0.891406"></div>
+                                <div class="fill colourful colourful-example" style="width: 85%; --hue: 0.21863999999999972; --sat: 1.399218; --lit: 0.891406"></div>
                             </div>
                         </div>
                         <div class="track">
@@ -12994,7 +13185,7 @@
                             <div class="title"></div>
                             <div class="bar">
                                 <div class="fill not-colourful-example" style="width: 60%"></div>
-                                <div class="fill colourful-example" style="width: 60%; --hue: 18.77; --sat: 1.425; --lit: 0.9175833333333334"></div>
+                                <div class="fill colourful colourful-example" style="width: 60%; --hue: 18.77; --sat: 1.425; --lit: 0.9175833333333334"></div>
                             </div>
                         </div>
                         <div class="track">
@@ -13002,7 +13193,7 @@
                             <div class="title"></div>
                             <div class="bar">
                                 <div class="fill not-colourful-example" style="width: 30%"></div>
-                                <div class="fill colourful-example" style="width: 30%; --hue: 50.769767441860466; --sat: 1.361813953488372; --lit: 0.943406976744186"></div>
+                                <div class="fill colourful colourful-example" style="width: 30%; --hue: 50.769767441860466; --sat: 1.361813953488372; --lit: 0.943406976744186"></div>
                             </div>
                         </div>
                         <div class="track">
@@ -13010,7 +13201,7 @@
                             <div class="title"></div>
                             <div class="bar">
                                 <div class="fill not-colourful-example" style="width: 5%"></div>
-                                <div class="fill colourful-example" style="width: 5%; --hue: 92.42; --sat: 1.35; --lit: 0.925"></div>
+                                <div class="fill colourful colourful-example" style="width: 5%; --hue: 92.42; --sat: 1.35; --lit: 0.925"></div>
                             </div>
                         </div>
                     </div>
@@ -13355,123 +13546,123 @@
         { sets: {
           hue: 360,
           sat: 1.4,
-          lit: 0.775
-        } },
-        { sets: {
-          hue: 360,
-          sat: 1.4,
-          lit: 0.8
-        } },
-        { sets: {
-          hue: 360,
-          sat: 1.325,
-          lit: 0.85
-        } },
-        { sets: {
-          hue: 360,
-          sat: 1.225,
           lit: 0.9
         } },
         { sets: {
           hue: 360,
-          sat: 1.1,
+          sat: 1.4,
           lit: 0.95
         } },
         { sets: {
           hue: 360,
-          sat: 1.05,
+          sat: 1.325,
           lit: 1
+        } },
+        { sets: {
+          hue: 360,
+          sat: 1.225,
+          lit: 1
+        } },
+        { sets: {
+          hue: 360,
+          sat: 1.1,
+          lit: 1
+        } },
+        { sets: {
+          hue: 360,
+          sat: 1.05,
+          lit: 1.05
         } }
       ],
       orange: [
         { sets: {
           hue: 10,
           sat: 1.425,
-          lit: 0.775
+          lit: 0.9
         } },
         { sets: {
           hue: 13,
           sat: 1.4,
-          lit: 0.8
+          lit: 0.95
         } },
         { sets: {
           hue: 16,
           sat: 1.325,
-          lit: 0.825
+          lit: 1
         } },
         { sets: {
           hue: 20,
           sat: 1.225,
-          lit: 0.875
+          lit: 1
         } },
         { sets: {
           hue: 21,
           sat: 1.275,
-          lit: 0.95
+          lit: 1
         } },
         { sets: {
           hue: 26,
           sat: 1.35,
-          lit: 1
+          lit: 1.05
         } }
       ],
       yellow: [
         { sets: {
           hue: 22,
           sat: 1.3,
-          lit: 0.825
+          lit: 0.9
         } },
         { sets: {
           hue: 24,
           sat: 1.2,
-          lit: 0.85
+          lit: 0.95
         } },
         { sets: {
           hue: 27,
           sat: 1.16,
-          lit: 0.875
+          lit: 1
         } },
         { sets: {
           hue: 32,
           sat: 1.1,
-          lit: 0.9
+          lit: 1
         } },
         { sets: {
           hue: 36,
           sat: 1,
-          lit: 0.975
+          lit: 1
         } },
         { sets: {
           hue: 41,
           sat: 1.05,
-          lit: 1
+          lit: 1.05
         } }
       ],
       green: [
         { sets: {
           hue: 85,
           sat: 1.4,
-          lit: 0.775
+          lit: 0.9
         } },
         { sets: {
           hue: 90,
           sat: 1.3,
-          lit: 0.8
+          lit: 0.95
         } },
         { sets: {
           hue: 94,
           sat: 1.2,
-          lit: 0.85
+          lit: 1
         } },
         { sets: {
           hue: 99,
           sat: 1.1,
-          lit: 0.9
+          lit: 1
         } },
         { sets: {
           hue: 105,
           sat: 1.025,
-          lit: 0.975
+          lit: 1
         } },
         { sets: {
           hue: 108,
@@ -13483,160 +13674,160 @@
         { sets: {
           hue: 115,
           sat: 1.15,
-          lit: 0.75
+          lit: 0.9
         } },
         { sets: {
           hue: 121,
           sat: 1.09,
-          lit: 0.8
+          lit: 0.95
         } },
         { sets: {
           hue: 127,
           sat: 1.05,
-          lit: 0.825
+          lit: 1
         } },
         { sets: {
           hue: 135,
           sat: 1.03,
-          lit: 0.875
+          lit: 1
         } },
         { sets: {
           hue: 141,
           sat: 1,
-          lit: 0.95
+          lit: 1
         } },
         { sets: {
           hue: 148,
           sat: 1,
-          lit: 1
+          lit: 1.05
         } }
       ],
       aqua: [
         { sets: {
-          hue: 171,
+          hue: 212,
           sat: 1.45,
-          lit: 0.775
+          lit: 0.9
         } },
         { sets: {
-          hue: 178,
+          hue: 207,
           sat: 1.375,
-          lit: 0.8
-        } },
-        { sets: {
-          hue: 185,
-          sat: 1.3,
-          lit: 0.85
-        } },
-        { sets: {
-          hue: 190,
-          sat: 1.25,
-          lit: 0.875
-        } },
-        { sets: {
-          hue: 196,
-          sat: 1.2,
           lit: 0.95
         } },
         { sets: {
           hue: 200,
-          sat: 1.1,
+          sat: 1.3,
           lit: 1
+        } },
+        { sets: {
+          hue: 195,
+          sat: 1.25,
+          lit: 1
+        } },
+        { sets: {
+          hue: 190,
+          sat: 1.2,
+          lit: 1
+        } },
+        { sets: {
+          hue: 185,
+          sat: 1.1,
+          lit: 1.05
         } }
       ],
       blue: [
         { sets: {
           hue: 233,
           sat: 1.4,
-          lit: 0.8
+          lit: 0.9
         } },
         { sets: {
           hue: 230,
           sat: 1.3,
-          lit: 0.825
+          lit: 0.95
         } },
         { sets: {
-          hue: 225,
+          hue: 226,
           sat: 1.25,
-          lit: 0.875
-        } },
-        { sets: {
-          hue: 219,
-          sat: 1.2,
-          lit: 0.925
-        } },
-        { sets: {
-          hue: 214,
-          sat: 1.15,
-          lit: 0.975
-        } },
-        { sets: {
-          hue: 208,
-          sat: 1.025,
           lit: 1
+        } },
+        { sets: {
+          hue: 220,
+          sat: 1.2,
+          lit: 1
+        } },
+        { sets: {
+          hue: 217,
+          sat: 1.15,
+          lit: 1
+        } },
+        { sets: {
+          hue: 212,
+          sat: 1.025,
+          lit: 1.05
         } }
       ],
       purple: [
         { sets: {
           hue: 246,
           sat: 1.32,
-          lit: 0.825
+          lit: 0.9
         } },
         { sets: {
           hue: 244,
           sat: 1.2,
-          lit: 0.85
+          lit: 0.95
         } },
         { sets: {
           hue: 246,
           sat: 1.12,
-          lit: 0.875
+          lit: 1
         } },
         { sets: {
           hue: 249,
           sat: 1.11,
-          lit: 0.925
+          lit: 1
         } },
         { sets: {
           hue: 253,
           sat: 1.07,
-          lit: 0.97
+          lit: 1
         } },
         { sets: {
           hue: 256,
           sat: 1.01,
-          lit: 1.01
+          lit: 1.03
         } }
       ],
       pink: [
         { sets: {
           hue: 346,
           sat: 1.3,
-          lit: 0.8
+          lit: 0.9
         } },
         { sets: {
           hue: 340,
           sat: 1.225,
-          lit: 0.825
+          lit: 0.95
         } },
         { sets: {
-          hue: 333,
+          hue: 335,
           sat: 1.175,
-          lit: 0.875
-        } },
-        { sets: {
-          hue: 320,
-          sat: 1.12,
-          lit: 0.925
-        } },
-        { sets: {
-          hue: 312,
-          sat: 1.05,
-          lit: 0.975
-        } },
-        { sets: {
-          hue: 304,
-          sat: 1,
           lit: 1
+        } },
+        { sets: {
+          hue: 325,
+          sat: 1.12,
+          lit: 1
+        } },
+        { sets: {
+          hue: 317,
+          sat: 1.05,
+          lit: 1
+        } },
+        { sets: {
+          hue: 309,
+          sat: 1,
+          lit: 1.05
         } }
       ]
     };
@@ -14358,7 +14549,7 @@
         extras[extra].text = original_title.slice(chr).replaceAll("(", "").replaceAll(")", "").replaceAll("[", "").replaceAll("]", "").replaceAll("- ", "");
       }
       let field_group = extras[extra].group;
-      let field_text = extras[extra].text.replace(" feat. ", "").replace("feat. ", "").replace("featuring ", "").replace("Feat. ", "").replace("ft. ", "").replace("FEAT. ", "").replace("Ft. ", "").replace("WITH", "with").replace("w/ ", "").replace("with ", "").replace("With ", "").replaceAll(" & ", ";").replaceAll(", ", ";").replaceAll(" and ", ";").replaceAll(" with ", ";").replaceAll("- ", "").replaceAll(",; ", ";").replaceAll("Tyler;the", "Tyler, the").replaceAll("Tyler;The", "Tyler, The");
+      let field_text = extras[extra].text.replace(" feat. ", "").replace("feat. ", "").replace("featuring ", "").replace("Feat. ", "").replace("ft. ", "").replace("FEAT. ", "").replace("Ft. ", "").replace("WITH", "with").replace("w/ ", "").replace("with ", "").replace("With ", "").replaceAll(" & ", ";").replaceAll(", ", ";").replaceAll(" and ", ";").replaceAll(" with ", ";").replaceAll("- ", "").replaceAll(",; ", ";").replaceAll("Tyler;the", "Tyler, the").replaceAll("Tyler;The", "Tyler, The").replaceAll(" of BTS", ";BTS");
       console.log("pre-split", field_text);
       if (field_group == "guests") {
         song_guests = field_text.split(";");
@@ -14384,7 +14575,7 @@
         return;
       title.textContent = correct_artist(title_text, true);
     } else {
-      title_text = title_text.replaceAll(" & ", ";").replaceAll(", ", ";").replace("Tyler;the", "Tyler, The").replace("Tyler;The", "Tyler, The").replaceAll(";;", ";");
+      title_text = title_text.replaceAll(" & ", ";").replaceAll(", ", ";").replace("Tyler;the", "Tyler, The").replace("Tyler;The", "Tyler, The").replace("Marina;the Diamonds", "Marina and The Diamonds").replaceAll(";;", ";");
       page.multi = true;
       title.innerHTML = "";
       let split = title_text.split(";");
@@ -14445,7 +14636,7 @@
           for (let song_tag in song_tags) {
             song_tags_text = `${song_tags_text}<div class="feat" data-bleh--tag-type="${song_tags[song_tag].type}" data-bleh--tag-group="${song_tags[song_tag].group}">${song_tags[song_tag].text}</div>`;
           }
-          track_title.innerHTML = `<div class="title">${sanitise_text(song_title)}</div>${song_tags_text}`;
+          track_title.innerHTML = `<div class="title">${sanitise_text(song_title).trim()}</div>${song_tags_text}`;
           let song_artist_element = document.body.querySelector('span[itemprop="byArtist"]');
           let song_guests = formatted_title[3];
           page.sister_others = formatted_title[3];
@@ -14650,8 +14841,7 @@
     let grids = page.structure.main.querySelectorAll(".grid-items-item:not([data-bleh-music-grids])");
     grids.forEach((grid) => {
       let is_loading = grid.querySelector(".grid-items-empty-inner") != null;
-      if (is_loading)
-        return;
+      if (is_loading) return;
       grid.setAttribute("data-bleh-music-grids", "true");
       let is_album;
       if (page.type == "search") {
@@ -14661,7 +14851,7 @@
       }
       let image_wrap = grid.querySelector(".grid-items-cover-image-image");
       let image = image_wrap.querySelector("img");
-      if (image != null && !image_wrap.classList.contains("grid-items-cover-default")) {
+      if (image && !image_wrap.classList.contains("grid-items-cover-default")) {
         let grid_colour = document.createElement("div");
         grid_colour.classList.add("grid-item-colour-bg");
         image_wrap.appendChild(grid_colour);
@@ -14691,8 +14881,7 @@
       } else if (page.type == "tag") {
         let aux_text = grid.querySelector(".grid-items-item-aux-text");
         let stat_name = aux_text.querySelector(".stat-name");
-        if (stat_name == null)
-          return;
+        if (!stat_name) return;
         aux_text.removeChild(stat_name);
         plays_elem = aux_text;
         if (is_album) {
@@ -14741,11 +14930,27 @@
         insights.artist.labels.push(name.textContent);
       } else {
         let artist = grid.querySelector(".grid-items-item-aux-block");
-        if (artist == null)
-          return;
-        artist.textContent = correct_artist(artist.textContent.trim());
-        name.textContent = correct_item_by_artist(name.textContent.trim(), artist.textContent.trim());
-        insights.album.labels.push(name.textContent);
+        if (!artist) return;
+        if (settings.format_guest_features) {
+          let name_elem = name;
+          let artist_elem = artist;
+          let song_title = name_elem.textContent;
+          let formatted_title = name_includes(song_title, artist_elem.textContent);
+          let song_tags = {};
+          if (formatted_title) {
+            song_title = formatted_title[0];
+            insights.album.labels.push(song_title);
+            song_tags = formatted_title[1];
+          }
+          let song_tags_text = "";
+          for (let song_tag in song_tags) {
+            song_tags_text = `${song_tags_text}<div class="feat" data-bleh--tag-type="${song_tags[song_tag].type}" data-bleh--tag-group="${song_tags[song_tag].group}">${sanitise_text(song_tags[song_tag].text)}</div>`;
+          }
+          name_elem.innerHTML = `<div class="title">${sanitise_text(song_title).trim()}</div>${song_tags_text}`;
+        } else {
+          artist.textContent = correct_artist(artist.textContent.trim());
+          name.textContent = correct_item_by_artist(name.textContent.trim(), artist.textContent.trim());
+        }
       }
     });
     if (page.subpage.startsWith("library"))
@@ -14777,7 +14982,7 @@
   function patch_titles() {
     if (page.subpage == "tags_overview")
       return;
-    if (page.structure.main == null)
+    if (!page.structure.main)
       return;
     let tracklists = page.structure.main.querySelectorAll(".chartlist:not(.chartlist__placeholder)");
     let insights = {
@@ -14891,7 +15096,7 @@
           console.log("formatted", formatted_title);
           let song_title = track_title.getAttribute("title");
           let song_tags = {};
-          if (formatted_title != void 0) {
+          if (formatted_title) {
             song_title = formatted_title[0];
             song_tags = formatted_title[1];
           }
@@ -14900,7 +15105,7 @@
           for (let song_tag in song_tags) {
             song_tags_text = `${song_tags_text}<div class="feat" data-bleh--tag-type="${song_tags[song_tag].type}" data-bleh--tag-group="${song_tags[song_tag].group}">${sanitise_text(song_tags[song_tag].text)}</div>`;
           }
-          track_title.innerHTML = `<div class="title">${sanitise_text(song_title)}</div>${song_tags_text}`;
+          track_title.innerHTML = `<div class="title">${sanitise_text(song_title).trim()}</div>${song_tags_text}`;
           let song_artist_element = track.querySelector(".chartlist-artist");
           if (song_artist_element == null && !is_user) {
             song_artist_element = document.createElement("td");
@@ -15016,7 +15221,7 @@
             let link = image_wrap.querySelector(".cover-art");
             let image = link.querySelector("img");
             if (!settings.album_text) {
-              let alt = image.getAttribute("alt");
+              let alt = correct_item_by_artist(image.getAttribute("alt"), track_artist);
               let album_text = document.createElement("td");
               album_text.classList.add("chartlist-album", "custom-album-text");
               album_text.innerHTML = `
@@ -15091,15 +15296,11 @@
       badge.classList.add("label", `user-status--bleh-${badges[0].type}`, `user-status--bleh-user-${auth.name}`, "auth-badge");
       badge.textContent = badges[0].name;
       auth_link2.appendChild(badge);
-      auth_link2.classList.add(`user-status--bleh-${badges[0].type}`, `user-status--bleh-user-${auth.name}`);
-      auth_link2.setAttribute("data-has-colour", "true");
     } else if (auth.pro) {
       let pro_badge = document.createElement("p");
       pro_badge.classList.add("label", "user-status-subscriber", "auth-badge");
       pro_badge.textContent = "Pro";
       auth_link2.appendChild(pro_badge);
-      auth_link2.classList.add("user-status-subscriber");
-      auth_link2.setAttribute("data-has-colour", "true");
     }
     let notif_count = new_auth.querySelector('[data-analytics-label="notifications"] + .auth-avatar-notification-count-badge');
     let inbox_count = new_auth.querySelector('[data-analytics-label="inbox"] + .auth-avatar-notification-count-badge');
@@ -15149,29 +15350,29 @@
     changelog_container.classList.add("masthead-nav-item");
     changelog_container.innerHTML = `
         <a class="masthead-nav-control" onclick="_query_changelog()" data-label="changelog">
-            ${trans_legacy[lang].changelog.name}
+            ${tl(trans.changelog)}
         </a>
     `;
     tippy(changelog_container, {
-      content: trans_legacy[lang].changelog.name
+      content: tl(trans.changelog)
     });
     links.appendChild(changelog_container);
     let bleh_container = document.createElement("li");
     bleh_container.classList.add("masthead-nav-item");
     bleh_container.innerHTML = `
         <a class="masthead-nav-control" href="${root}bleh${stored_season.id != "none" ? "?tab=seasonal" : ""}" data-label="bleh" data-season="${stored_season.id}" data-season-active="${stored_season.id != "none" ? "true" : "false"}">
-            ${stored_season.id == "none" ? trans_legacy[lang].auth_menu.configure_bleh : moment(stored_season.end.replace("y0", stored_season.year).replace("{offset}", stored_season.offset)).to(stored_season.now, true)}
+            ${stored_season.id == "none" ? tl(trans.configure_bleh) : moment(stored_season.end.replace("y0", stored_season.year).replace("{offset}", stored_season.offset)).to(stored_season.now, true)}
         </a>
     `;
     if (stored_season.id == "none") {
       tippy(bleh_container, {
-        content: trans_legacy[lang].auth_menu.configure_bleh
+        content: tl(trans.configure_bleh)
       });
     } else {
       page.header.season_tooltip = tippy(bleh_container, {
         theme: "seasonal-swatch",
         content: `
-                <span class="season-colour-name">${trans_legacy[lang].settings.customise.seasonal.listing[stored_season.id]}</span>
+                <span class="season-colour-name">${tl(trans.seasonal.listing[stored_season.id])}</span>
                 <span class="season-exclusive">${trans_legacy[lang].auth_menu.seasonal_notice}</span>
             `,
         allowHTML: true
@@ -15226,11 +15427,6 @@
                     <span class="auth-dropdown-item-right" id="theme-value">${tl(trans.themes[settings.theme])}</span>
                 </span>
             </button>
-            ${ff("dev") ? `
-            <button class="dropdown-menu-clickable-item" data-menu-item="developer" onclick="_update_flag_toggle('dev', this)">
-                ${trans_legacy[lang].auth_menu.dev}
-            </button>
-            ` : ""}
             <button class="dropdown-menu-clickable-item" data-menu-item="language">
                 <span class="auth-dropdown-item-row">
                     <span class="auth-dropdown-item-left">${tl(trans.language)}</span>
@@ -15238,7 +15434,7 @@
                 </span>
             </button>
             <a class="dropdown-menu-clickable-item" data-menu-item="bleh" href="${root}bleh">
-                ${tl(trans.configure_bleh)}
+                ${tl(trans.settings)}
             </a>
             <div class="sep"></div>
             <a class="dropdown-menu-clickable-item" data-menu-item="bookmarks" href="${root}music/+bookmarks">
@@ -15250,7 +15446,7 @@
             <form>
                 <input type="hidden" name="csrfmiddlewaretoken" value="${token}">
                 <a class="dropdown-menu-clickable-item" data-menu-item="logout" href="${root}logout">
-                    ${trans_legacy[lang].auth_menu.logout}
+                    ${tl(trans.logout)}
                 </a>
             </form>
         `,
@@ -15258,6 +15454,7 @@
       placement: "top",
       interactive: true,
       interactiveBorder: 10,
+      trigger: "click",
       onShow(instance) {
         instance.popper.style.setProperty("--url", `url(${auth.avatar.replace("avatar42s", "avatar170s")})`);
         let shortcut_item = instance.popper.querySelector('[data-menu-item="profile-shortcut"]');
@@ -15284,6 +15481,9 @@
                     <button class="dropdown-menu-clickable-item theme-item-in-menu" data-bleh-theme="light" onclick="change_theme_from_menu('light')">
                         ${tl(trans.themes.light)}
                     </button>
+                    <button class="dropdown-menu-clickable-item theme-item-in-menu" data-bleh-theme="ink" onclick="change_theme_from_menu('ink')">
+                        ${tl(trans.themes.ink)}
+                    </button>
                     <button class="dropdown-menu-clickable-item theme-item-in-menu" data-bleh-theme="dark" onclick="change_theme_from_menu('dark')">
                         ${tl(trans.themes.dark)}
                     </button>
@@ -15305,7 +15505,12 @@
         });
       }
     });
-    new_auth.parentElement.removeChild(new_auth);
+    let container = new_auth.parentElement;
+    container.parentElement.removeChild(container);
+    auth_link2.removeAttribute("aria-controls");
+    auth_link2.removeAttribute("data-disclose-hover");
+    auth_link2.removeAttribute("data-disclose-hover--allow-enter-open");
+    auth_link2.removeAttribute("href");
   }
 
   // src/components/about_artist.js
@@ -15673,6 +15878,8 @@
       let background = document.body.querySelector(".header-background--has-image");
       if (background != null)
         register_background(background.style.getPropertyValue("background-image").replace('url("', "").replace('")', ""));
+      else
+        register_background();
       page.structure.container.insertBefore(redesigned_tag_header, page.structure.container.firstElementChild);
       tag_header.classList.add("legacy-header");
     }
@@ -15746,17 +15953,17 @@
       redesigned_album_header.innerHTML = `
             ${is_subpage || ff("show_album_cover_always") ? `
             <div class="avatar-side">
-                ${avatar != null ? `
+                ${avatar ? `
                 <img src="${avatar.getAttribute("content").replace("/ar0/", "/avatar170s/")}">
                 <a class="bleh--avatar-clickable-link"></a>
                 ` : '<img class="missing-album">'}
             </div>
             ` : ""}
             <div class="info-side">
-                <div class="sub-text">${trans_legacy[lang].album.name}</div>
+                <div class="sub-text">${tl(trans.album)}</div>
                 <div class="title-container">
                     <h1>${title.innerHTML}</h1>
-                    ${position != null ? position.outerHTML : ""}
+                    ${position ? position.outerHTML : ""}
                 </div>
                 <h2>${artist.innerHTML}</h2>
             </div>
@@ -15770,9 +15977,9 @@
       album_header.classList.add("legacy-header");
       let avatar_side = redesigned_album_header.querySelector(".avatar-side");
       let avatar_link = avatar_side.querySelector("a");
-      if (avatar != null && avatar_link != null) {
+      if (avatar && avatar_link) {
         let expand_link;
-        if (avatar != null)
+        if (avatar)
           expand_link = `_expand_avatar('${avatar.getAttribute("content")}')`;
         if (settings.default_avatar_action == "expand" && avatar != null)
           avatar_link.setAttribute("onclick", expand_link);
@@ -15791,7 +15998,7 @@
                     </a>
                     <div class="sep"></div>
                     <a class="dropdown-menu-clickable-item" href="${root}bleh?tab=customise" data-menu-item="settings">
-                        ${trans_legacy[lang].settings.configure}
+                        ${tl(trans.settings)}
                     </a>
                 `,
           allowHTML: true,
@@ -15992,33 +16199,38 @@
       redesigned_artist_header.classList.add("redesigned-header", "redesigned-artist-header", "no-background");
       redesigned_artist_header.innerHTML = `
             <div class="avatar-side">
-                ${avatar != null ? `
+                ${avatar ? `
                 <img src="${avatar.getAttribute("content").replace("/ar0/", "/avatar300s/")}">
                 <a class="bleh--avatar-clickable-link"></a>
                 ` : '<img class="missing-artist">'}
             </div>
             <div class="info-side">
                 ${page.multi ? `
-                <div class="sub-text">${trans_legacy[lang].artist.plural}<div class="info-tip"><div class="bleh-icon bleh-info-icon"></div></div></div>
+                <div class="sub-text">
+                    ${tl(trans.artists)}
+                    <div class="info-tip">
+                        <div class="bleh-icon bleh-info-icon"></div>
+                    </div>
+                </div>
                 ` : `
-                <div class="sub-text">${trans_legacy[lang].artist.name}</div>
+                <div class="sub-text">${tl(trans.artist)}</div>
                 `}
                 <div class="title-container" data-multi="${page.multi}">
                     <h1>${title.innerHTML}</h1>
-                    ${position != null ? position.outerHTML : ""}
-                    ${on_tour != null ? on_tour.outerHTML : ""}
+                    ${position ? position.outerHTML : ""}
+                    ${on_tour ? on_tour.outerHTML : ""}
                 </div>
-                ${featured_items != null && !katsune ? featured_items.outerHTML : ""}
+                ${featured_items && !katsune ? featured_items.outerHTML : ""}
             </div>
         `;
       let multi_info_box = redesigned_artist_header.querySelector(".info-tip");
       if (multi_info_box) {
         tippy(multi_info_box, {
-          content: trans_legacy[lang].artist.tooltip
+          content: tl(trans.artists_tooltip)
         });
       }
       position = redesigned_artist_header.querySelector(".header-new-chart-position-number");
-      if (position != null) {
+      if (position) {
         tippy(position, {
           content: trans_legacy[lang].charts.view
         });
@@ -16053,7 +16265,7 @@
                     </a>
                     <div class="sep"></div>
                     <a class="dropdown-menu-clickable-item" href="${root}bleh?tab=customise" data-menu-item="settings">
-                        ${trans_legacy[lang].settings.configure}
+                        ${tl(trans.settings)}
                     </a>
                 `,
           allowHTML: true,
@@ -16077,7 +16289,7 @@
             theme: "context-menu",
             content: `
                         <a class="dropdown-menu-clickable-item" href="${root}bleh?tab=customise" data-menu-item="settings">
-                            ${trans_legacy[lang].settings.configure}
+                            ${tl(trans.settings)}
                         </a>
                     `,
             allowHTML: true,
@@ -16793,7 +17005,7 @@
 
   // src/pages/event.js
   function bleh_events() {
-    let is_subpage = page.subpage != "event_overview" && page.subpage != "festival_overview";
+    let is_subpage = page.subpage != "overview";
     if (auth.pro) {
       page.structure.container = document.body.querySelector(".page-content");
     } else {
@@ -16811,7 +17023,7 @@
     }
     let event_header = document.body.querySelector("header");
     checkup_page_structure(is_subpage, event_header);
-    if (page.subpage.startsWith("event_edit")) {
+    if (page.subpage.startsWith("edit")) {
       bleh_events_edit();
       return;
     } else if (page.subpage.startsWith("add")) {
@@ -16899,7 +17111,7 @@
         patch_avatar(avatar, name, "event");
       });
     } else {
-      if (page.subpage == "event_attendance_going" || page.subpage == "event_attendance_interested") {
+      if (page.subpage == "attendance_going" || page.subpage == "attendance_interested") {
         let view_buttons = document.createElement("div");
         view_buttons.classList.add("view-buttons-wrapper");
         view_buttons.innerHTML = `
@@ -17149,10 +17361,10 @@
         ${sponsoring ? `
         <div class="subtext sponsor-message colourful">
             <div class="bleh-icon-container"><div class="bleh-icon" style="--icon: var(--icon-16-heart-solid); --icon-size: 14px"></div></div>
-            Thank you for sponsoring!
+            ${tl(trans.thank_you_for_sponsoring)}
         </div>
         ` : ""}
-        <h1>${trans_legacy[lang].home.welcome.replace("{m}", `<a class="mention" href="${root}user/${auth.name}">@${auth.name}</a>`)}</h1>
+        <h1>${tl(trans.welcome_back_user).replace("{user}", `<a class="mention" href="${root}user/${auth.name}">@${auth.name}</a>`)}</h1>
     `;
     page.structure.container.insertBefore(banner, page.structure.container.firstElementChild);
     let nav = document.createElement("nav");
@@ -17192,7 +17404,7 @@
             </li>
             <li class="navlist-item secondary-nav-item secondary-nav-item--bleh">
                 <a href="${root}bleh" class="secondary-nav-item-link ${page.type == "error" ? "secondary-nav-item-link--active" : ""}">
-                    bleh
+                    ${tl(trans.settings)}
                 </a>
             </li>
             <li class="navlist-item secondary-nav-item secondary-nav-item--more">
@@ -17231,7 +17443,12 @@
       placement: "bottom",
       interactive: true,
       interactiveBorder: 10,
-      trigger: "click"
+      trigger: "click",
+      onShow(instance) {
+        instance.popper.addEventListener("click", (event2) => {
+          instance.hide();
+        });
+      }
     });
     if (page.subpage == "music") {
       let beret = document.createElement("section");
@@ -17694,9 +17911,9 @@
     let button = send_button.querySelector(".btn-post-shout");
     if (!button) return;
     button.classList.add("btn-send-shout-generic");
-    button.textContent = trans_legacy[lang].settings.send;
+    button.textContent = tl(trans.send);
     tippy(button, {
-      content: trans_legacy[lang].settings.send_quickly.replace("{kbd}", "<kbd>ctrl+\u21B5</kbd>"),
+      content: tl(trans.send_quickly_with).replace("{kbd}", "<kbd>ctrl+\u21B5</kbd>"),
       delay: [500, 0],
       allowHTML: true
     });
@@ -18119,9 +18336,14 @@
     radios.forEach((radio) => {
       let type = radio.getAttribute("data-analytics-label");
       radio.classList.add("radio-button");
+      let text = tl(trans[type]);
+      if (type == "tag")
+        text = page.name;
+      else if (type == "event")
+        text = tl(trans.artists);
       radio.innerHTML = `
             <h3 class="sub-text">${tl(trans.radio)}</h3>
-            <h4>${type == "tag" ? page.name : tl(trans[type])}</h4>
+            <h4>${text}</h4>
         `;
       radio.removeAttribute("title");
     });
@@ -18258,7 +18480,7 @@
       bleh_gallery();
       bleh_gallery_upload_check();
     }
-    if (page.type == "user" || page.type == "search" || page.type == "tag")
+    if (page.type == "user" || page.type == "search" || page.type == "tag" || page.type == "events")
       music_grids();
     if (page.type == "user" || page.type == "artist" || page.type == "album" || page.type == "track" || page.type == "events" || page.type == "festival" || page.type == "tag") {
       patch_shouts();
@@ -18326,7 +18548,7 @@
     });
   }
   function assign_page_subpage() {
-    page.subpage = page.initial.replace(page.type, "").replace("_", "").replace("music_", "");
+    page.subpage = page.initial.replace(page.type, "").replace("_", "").replace("music_", "").replace("event_", "").replace("festival_", "");
     if (last_page_subpage.state != page.subpage) {
       last_page_subpage.state = page.subpage;
       log(`subpage of ${page.subpage}`, "page");
@@ -18383,7 +18605,7 @@
         bleh_home();
       if ((page.type == "artist" || page.type == "album" || page.type == "track") && page.subpage == "overview")
         patch_wiki();
-      if ((page.type == "user" || page.type == "tag") && page.subpage == "overview")
+      if ((page.type == "user" || page.type == "tag" || page.type == "events") && page.subpage == "overview")
         bleh_radio();
     }
     if (ff("page_title")) {

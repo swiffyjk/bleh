@@ -82,35 +82,40 @@ export function bleh_artists() {
         redesigned_artist_header.classList.add('redesigned-header', 'redesigned-artist-header', 'no-background');
         redesigned_artist_header.innerHTML = (`
             <div class="avatar-side">
-                ${(avatar != null) ? (`
+                ${(avatar) ? (`
                 <img src="${avatar.getAttribute('content').replace('/ar0/', '/avatar300s/')}">
                 <a class="bleh--avatar-clickable-link"></a>
                 `) : '<img class="missing-artist">'}
             </div>
             <div class="info-side">
                 ${(page.multi) ? (`
-                <div class="sub-text">${trans_legacy[lang].artist.plural}<div class="info-tip"><div class="bleh-icon bleh-info-icon"></div></div></div>
+                <div class="sub-text">
+                    ${tl(trans.artists)}
+                    <div class="info-tip">
+                        <div class="bleh-icon bleh-info-icon"></div>
+                    </div>
+                </div>
                 `) : (`
-                <div class="sub-text">${trans_legacy[lang].artist.name}</div>
+                <div class="sub-text">${tl(trans.artist)}</div>
                 `)}
                 <div class="title-container" data-multi="${page.multi}">
                     <h1>${title.innerHTML}</h1>
-                    ${(position != null) ? position.outerHTML : ''}
-                    ${(on_tour != null) ? on_tour.outerHTML : ''}
+                    ${(position) ? position.outerHTML : ''}
+                    ${(on_tour) ? on_tour.outerHTML : ''}
                 </div>
-                ${(featured_items != null && !katsune) ? featured_items.outerHTML : ''}
+                ${(featured_items && !katsune) ? featured_items.outerHTML : ''}
             </div>
         `);
 
         let multi_info_box = redesigned_artist_header.querySelector('.info-tip');
         if (multi_info_box) {
             tippy(multi_info_box, {
-                content: trans_legacy[lang].artist.tooltip
+                content: tl(trans.artists_tooltip)
             });
         }
 
         position = redesigned_artist_header.querySelector('.header-new-chart-position-number');
-        if (position != null) {
+        if (position) {
             tippy(position, {
                 content: trans_legacy[lang].charts.view
             });
@@ -153,7 +158,7 @@ export function bleh_artists() {
                     </a>
                     <div class="sep"></div>
                     <a class="dropdown-menu-clickable-item" href="${root}bleh?tab=customise" data-menu-item="settings">
-                        ${trans_legacy[lang].settings.configure}
+                        ${tl(trans.settings)}
                     </a>
                 `),
                 allowHTML: true,
@@ -181,7 +186,7 @@ export function bleh_artists() {
                     theme: 'context-menu',
                     content: (`
                         <a class="dropdown-menu-clickable-item" href="${root}bleh?tab=customise" data-menu-item="settings">
-                            ${trans_legacy[lang].settings.configure}
+                            ${tl(trans.settings)}
                         </a>
                     `),
                     allowHTML: true,

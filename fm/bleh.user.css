@@ -128,7 +128,7 @@ body {
     --font-weight-bold: var(--custom_font_weight_bold, 730);
 
     --trans-short: 0.2s;
-    --trans: 0.23s;
+    --trans: 0.1s;
     --trans-function: cubic-bezier(0.785, 0.135, 0.15, 0.86);
 
     [data-ff--astra="true"] & {
@@ -139,10 +139,10 @@ body {
         --font_emoji_name: Noto Color Emoji;
     }
 
-    [data-bleh--theme="light"] & {
-        --font-weight: calc(var(--custom_font_weight, 480) + 70);
-        --font-weight-medium: calc(var(--custom_font_weight_medium, 650) + 70);
-        --font-weight-bold: calc(var(--custom_font_weight_bold, 730) + 70);
+    [data-bleh--theme_type="light"] & {
+        --font-weight: calc(var(--custom_font_weight, 480) + 120);
+        --font-weight-medium: calc(var(--custom_font_weight_medium, 650) + 90);
+        --font-weight-bold: calc(var(--custom_font_weight_bold, 730) + 90);
     }
 }
 
@@ -165,7 +165,6 @@ body, [data-page-resource-type="album"], [data-page-resource-type="track"],
 
     /* root */
     --b6: var(--hue), calc(var(--sat) * 7% * var(--sat-bg, 1)), 10%;
-    --b10: var(--hue), calc(var(--sat) * 7% * var(--sat-bg, 1)), 16%;
     --b8: var(--hue), calc(var(--sat) * 4% * var(--sat-bg, 1)), 35%;
     --b7: 0, 0%, 0%;
 
@@ -185,7 +184,6 @@ body, [data-page-resource-type="album"], [data-page-resource-type="track"],
 
         /* root */
         --b6: var(--hue), calc(var(--sat) * 8% * var(--sat-bg, 1)), 7%;
-        --b10: var(--hue), calc(var(--sat) * 8% * var(--sat-bg, 1)), 5%;
         --b8: var(--hue), calc(var(--sat) * 5% * var(--sat-bg, 1)), 33%;
         --b7: 0, 0%, 0%;
     }
@@ -202,7 +200,6 @@ body, [data-page-resource-type="album"], [data-page-resource-type="track"],
 
         /* root */
         --b6: 0, 0%, 0%;
-        --b10: 0, 0%, 0%;
         --b8: var(--hue), calc(var(--sat) * 0% * var(--sat-bg, 1)), 24%;
         --b7: 0, 0%, 0%;
     }
@@ -219,23 +216,24 @@ body, [data-page-resource-type="album"], [data-page-resource-type="track"],
 
         /* root */
         --b6: 0, 0%, 90%;
-        --b10: 0, 0%, 95%;
         --b8: 0, 0%, 80%;
         --b7: 0, 0%, 0%;
     }
-    [data-bleh--theme="classic"] & {
+    .preview[data-bleh--theme="ink"], .redesigned-header[data-bleh--theme="ink"],
+    [data-bleh--theme="ink"] &:not(.preview) {
         /* any additional highlights */
-        --b3: var(--hue), calc(var(--sat) * 6%), 75%;
+        --b3: var(--hue), calc(var(--sat) * 14% * var(--sat-bg, 1)), 73%;
 
         /* card border */
-        --b4: 45, 4%, 89%;
+        --b4: var(--hue), calc(var(--sat) * 12% * var(--sat-bg, 1)), 66%;
 
         /* card */
-        --b5: 0, 0%, 100%;
+        --b5: var(--hue), calc(var(--sat) * 14% * var(--sat-bg, 1)), 81%;
 
         /* root */
-        --b6: 39, 11%, 87%;
-        --b7: 0, 0%, 0%;
+        --b6: var(--hue), calc(var(--sat) * 9% * var(--sat-bg, 1)), 69%;
+        --b8: var(--hue), calc(var(--sat) * 20% * var(--sat-bg, 1)), 86%;
+        --b7: var(--c1);
     }
 }
 
@@ -320,22 +318,23 @@ a,
     --l3: var(--hue), calc(var(--sat) * 60%), calc(var(--lit) * 70%);
     --l4: var(--hue), calc(var(--sat) * 70%), calc(var(--lit) * 50%);
 
-    --l2-c: var(--hue), calc(var(--sat) * 40%), calc(clamp(min(0.5), var(--lit), max(1.5)) * 83%);
-    --l3-c: var(--hue), calc(var(--sat) * 50%), calc(clamp(min(0.5), var(--lit), max(1.5)) * 70%);
-    --l3-c-sat: calc(var(--sat) * 50%);
+    --l2-c: var(--hue), calc(clamp(min(0.5), var(--sat), max(1.5)) * 40%), calc(clamp(min(0.5), var(--lit), max(1.5)) * 83%);
+    --l3-c: var(--hue), calc(clamp(min(0.5), var(--sat), max(1.5)) * 50%), calc(clamp(min(0.5), var(--lit), max(1.5)) * 70%);
+    --l3-c-sat: calc(clamp(min(0.5), var(--sat), max(1.5)) * 50%);
     --l3-c-lit: calc(clamp(min(0.5), var(--lit), max(1.5)) * 70%);
-    --l4-c: var(--hue), calc(var(--sat) * 60%), calc(clamp(min(0.5), var(--lit), max(1.5)) * 50%);
+    --l4-c: var(--hue), calc(clamp(min(0.5), var(--sat), max(1.5)) * 60%), calc(clamp(min(0.5), var(--lit), max(1.5)) * 50%);
 
     --h2: var(--l2-c);
     --h3: var(--l3-c);
     --h3-s: var(--hue), 50%, 70%;
-    --h3-sat: calc(var(--sat) * 60%);
+    --h3-sat: calc(clamp(min(0.5), var(--sat), max(1.5)) * 60%);
     --h3-lit: calc(clamp(min(0.5), var(--lit), max(1.5)) * 70%);
     --h4: var(--l4-c);
-    --g4: var(--hue), calc(var(--sat) * 60%), calc(clamp(min(0.5), var(--lit), max(1.5)) * 15%);
+    --g4: var(--hue), calc(clamp(min(0.5), var(--sat), max(1.5)) * 60%), calc(clamp(min(0.5), var(--lit), max(1.5)) * 15%);
 
     /* l2-c in dark modes, l4-c in light modes */
     --l2-c-theme-switch: var(--l2-c);
+    --l3-c-theme-switch: var(--l3-c);
     --h3-theme-switch: var(--h3);
 
     --grid-colour-shadow: var(--grid-colour-shadow-override, 0 27px 15px hsl(var(--h4), 10%));
@@ -354,18 +353,18 @@ a,
         --l3: var(--hue), calc(var(--sat) * 50%), calc(var(--lit) * 75%);
         --l4: var(--hue), calc(var(--sat) * 60%), calc(var(--lit) * 45%);
 
-        --l3-c: var(--hue), calc(var(--sat) * 50%), calc(clamp(min(0.5), var(--lit), max(1.5)) * 70%);
-        --l3-c-sat: calc(var(--sat) * 50%);
+        --l3-c: var(--hue), calc(clamp(min(0.5), var(--sat), max(1.5)) * 50%), calc(clamp(min(0.5), var(--lit), max(1.5)) * 70%);
+        --l3-c-sat: calc(clamp(min(0.5), var(--sat), max(1.5)) * 50%);
         --l3-c-lit: calc(clamp(min(0.5), var(--lit), max(1.5)) * 70%);
-        --l4-c: var(--hue), calc(var(--sat) * 60%), calc(clamp(min(0.5), var(--lit), max(1.5)) * 45%);
+        --l4-c: var(--hue), calc(clamp(min(0.5), var(--sat), max(1.5)) * 60%), calc(clamp(min(0.5), var(--lit), max(1.5)) * 45%);
 
         --h2: var(--l2-c);
         --h3: var(--l3-c);
         --h3-s: var(--hue), 50%, 70%;
-        --h3-sat: calc(var(--sat) * 50%);
+        --h3-sat: calc(clamp(min(0.5), var(--sat), max(1.5)) * 50%);
         --h3-lit: calc(clamp(min(0.5), var(--lit), max(1.5)) * 70%);
         --h4: var(--l4-c);
-        --g4: var(--hue), calc(var(--sat) * 60%), calc(clamp(min(0.5), var(--lit), max(1.5)) * 10%);
+        --g4: var(--hue), calc(clamp(min(0.5), var(--sat), max(1.5)) * 60%), calc(clamp(min(0.5), var(--lit), max(1.5)) * 10%);
 
         --avatar-generic-background: hsl(var(--b6));
     }
@@ -382,21 +381,57 @@ a,
         --l3: var(--hue), calc(var(--sat) * 50%), calc(var(--lit) * 40%);
         --l4: var(--hue), calc(var(--sat) * 60%), calc(var(--lit) * 22%);
 
-        --l2-c: var(--hue), calc(var(--sat) * 40%), calc(clamp(min(0.5), var(--lit), max(1.1)) * 63%);
-        --l3-c: var(--hue), calc(var(--sat) * 50%), calc(clamp(min(0.5), var(--lit), max(1.1)) * 40%);
-        --l3-c-sat: calc(var(--sat) * 50%);
+        --l2-c: var(--hue), calc(clamp(min(0.5), var(--sat), max(1.5)) * 40%), calc(clamp(min(0.7), var(--lit), max(1.1)) * 63%);
+        --l3-c: var(--hue), calc(clamp(min(0.5), var(--sat), max(1.5)) * 50%), calc(clamp(min(0.7), var(--lit), max(1.1)) * 30%);
+        --l3-c-sat: calc(clamp(min(0.5), var(--sat), max(1.5)) * 50%);
         --l3-c-lit: calc(clamp(min(0.5), var(--lit), max(1.1)) * 40%);
-        --l4-c: var(--hue), calc(var(--sat) * 60%), calc(clamp(min(0.5), var(--lit), max(1.1)) * 22%);
+        --l4-c: var(--hue), calc(clamp(min(0.5), var(--sat), max(1.5)) * 60%), calc(clamp(min(0.7), var(--lit), max(1.1)) * 22%);
 
-        --h3: var(--hue), calc(var(--sat) * 50%), calc(clamp(min(0.5), var(--lit), max(1.1)) * 80%);
-        --h3-s: var(--hue), 50%, 80%;
-        --h3-sat: calc(var(--sat) * 50%);
+        --h3: var(--hue), calc(clamp(min(0.5), var(--sat), max(1.5)) * 50%), calc(clamp(min(0.7), var(--lit), max(1.1)) * 80%);
+        --h3-s: var(--hue), 50%, 70%;
+        --h3-sat: calc(clamp(min(0.5), var(--sat), max(1.5)) * 50%);
         --h3-lit: calc(clamp(min(0.5), var(--lit), max(1.1)) * 80%);
-        --h4: var(--hue), calc(var(--sat) * 60%), calc(clamp(min(0.5), var(--lit), max(1.1)) * 65%);
-        --g4: var(--hue), calc(var(--sat) * 70%), 92%;
+        --h4: var(--hue), calc(clamp(min(0.5), var(--sat), max(1.5)) * 60%), calc(clamp(min(0.7), var(--lit), max(1.1)) * 65%);
+        --g4: var(--hue), calc(clamp(min(0.5), var(--sat), max(1.5)) * 70%), 92%;
 
         /* l2-c in dark modes, l4-c in light modes */
         --l2-c-theme-switch: var(--l4-c);
+        --l3-c-theme-switch: var(--l3-c);
+        --h3-theme-switch: var(--h4);
+
+        --grid-colour-shadow: var(--grid-colour-shadow-override, 0 27px 15px hsl(var(--h4), 16%));
+
+        --opposite-text: var(--c1);
+    }
+    .preview[data-bleh--theme="ink"],
+    [data-bleh--theme="ink"] &:not(
+        .preview, .grid-items-item.grid-items-item-has-colour
+        ){
+        --c1: var(--hue), calc(var(--sat) * 60%), 13%;
+        --c2: var(--hue), calc(var(--sat) * 40%), 18%;
+        --c3: var(--hue), calc(var(--sat) * 10%), 40%;
+        --ov-c1: var(--hue), calc(var(--sat) * 40%), 100%;
+
+        --l2: var(--hue), calc(var(--sat) * 40%), calc(var(--lit) * 63%);
+        --l3: var(--hue), calc(var(--sat) * 50%), calc(var(--lit) * 40%);
+        --l4: var(--hue), calc(var(--sat) * 60%), calc(var(--lit) * 22%);
+
+        --l2-c: var(--hue), calc(clamp(min(0.5), var(--sat), max(1.5)) * 40%), calc(clamp(min(0.7), var(--lit), max(1.1)) * 63%);
+        --l3-c: var(--hue), calc(clamp(min(0.5), var(--sat), max(1.5)) * 50%), calc(clamp(min(0.7), var(--lit), max(1.1)) * 30%);
+        --l3-c-sat: calc(clamp(min(0.5), var(--sat), max(1.5)) * 50%);
+        --l3-c-lit: calc(clamp(min(0.5), var(--lit), max(1.1)) * 40%);
+        --l4-c: var(--hue), calc(clamp(min(0.5), var(--sat), max(1.5)) * 60%), calc(clamp(min(0.7), var(--lit), max(1.1)) * 22%);
+
+        --h3: var(--hue), calc(clamp(min(0.5), var(--sat), max(1.5)) * 37%), calc(clamp(min(0.7), var(--lit), max(1.1)) * 66%);
+        --h3-s: var(--hue), 50%, 70%;
+        --h3-sat: calc(clamp(min(0.5), var(--sat), max(1.5)) * 50%);
+        --h3-lit: calc(clamp(min(0.5), var(--lit), max(1.1)) * 80%);
+        --h4: var(--hue), calc(clamp(min(0.5), var(--sat), max(1.5)) * 30%), calc(clamp(min(0.7), var(--lit), max(1.1)) * 55%);
+        --g4: var(--hue), calc(clamp(min(0.5), var(--sat), max(1.5)) * 25%), 75%;
+
+        /* l2-c in dark modes, l4-c in light modes */
+        --l2-c-theme-switch: var(--l4-c);
+        --l3-c-theme-switch: var(--l3-c);
         --h3-theme-switch: var(--h4);
 
         --grid-colour-shadow: var(--grid-colour-shadow-override, 0 27px 15px hsl(var(--h4), 16%));
@@ -467,9 +502,8 @@ body {
     --cover-size-300: 96px;
 }
 
-.preview[data-bleh--theme="light"],
-[data-bleh--theme="classic"] body,
-[data-bleh--theme="light"] body {
+.preview[data-bleh--theme_type="light"],
+[data-bleh--theme_type="light"] body {
     --card-border: 1px solid hsl(var(--b4));
     --card-border-base: hsl(var(--b4));
     --card-shadow: hsla(var(--b7), 0.05) 0 2px 4px 0;
@@ -491,25 +525,10 @@ body {
     --avatar-generic-background: hsl(var(--b4));
 
 
-    .header-new-inner:before {
-        opacity: 0.3;
-        filter: brightness(50%);
-    }
-
     .bleh--name-is-cute-less,
     .shout-user [href="/user/cutensilly"] {
         text-shadow: 0 0 5px hsla(var(--l4-c), 20%) !important;
     }
-}
-[data-bleh--theme="classic"] body {
-    --card-shadow: unset;
-    --card-radius: 0;
-    --item-small-radius: 0;
-    --item-med-radius: 0;
-    --item-big-radius: 0;
-
-    --card-border: 1px solid hsl(0, 0%, 75%);
-    --card-border-base: hsl(0, 0%, 75%);
 }
 
 .preview[data-bleh--theme="oled"],
@@ -519,24 +538,24 @@ body {
 
 /* icons (from lucide.dev <3) */
 :root {
-    --icon-pro: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyMCIgaGVpZ2h0PSIyMCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyLjI1IiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWhhbmQtaGVhcnQiPjxwYXRoIGQ9Ik0xMSAxNGgyYTIgMiAwIDEgMCAwLTRoLTNjLS42IDAtMS4xLjItMS40LjZMMyAxNiIvPjxwYXRoIGQ9Im03IDIwIDEuNi0xLjRjLjMtLjQuOC0uNiAxLjQtLjZoNGMxLjEgMCAyLjEtLjQgMi44LTEuMmw0LjYtNC40YTIgMiAwIDAgMC0yLjc1LTIuOTFsLTQuMiAzLjkiLz48cGF0aCBkPSJtMiAxNSA2IDYiLz48cGF0aCBkPSJNMTkuNSA4LjVjLjctLjcgMS41LTEuNiAxLjUtMi43QTIuNzMgMi43MyAwIDAgMCAxNiA0YTIuNzggMi43OCAwIDAgMC01IDEuOGMwIDEuMi44IDIgMS41IDIuOEwxNiAxMloiLz48L3N2Zz4=');
+    --icon-pro: var(--icon-16-pro);
     --icon-follow: var(--icon-16-users);
     --icon-tour: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyMCIgaGVpZ2h0PSIyMCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyLjI1IiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLXRpY2tldCI+PHBhdGggZD0iTTIgOWEzIDMgMCAwIDEgMCA2djJhMiAyIDAgMCAwIDIgMmgxNmEyIDIgMCAwIDAgMi0ydi0yYTMgMyAwIDAgMSAwLTZWN2EyIDIgMCAwIDAtMi0ySDRhMiAyIDAgMCAwLTIgMloiLz48cGF0aCBkPSJNMTMgNXYyIi8+PHBhdGggZD0iTTEzIDE3djIiLz48cGF0aCBkPSJNMTMgMTF2MiIvPjwvc3ZnPg==');
     --icon-staff: url('data:image/svg+xml;base64,PHN2ZyByb2xlPSJpbWciIHZpZXdCb3g9IjAgMCAyNCAyNCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48dGl0bGU+TGFzdC5mbTwvdGl0bGU+PHBhdGggZD0iTTEwLjU4NCAxNy4yMWwtLjg4LTIuMzkycy0xLjQzIDEuNTk0LTMuNTczIDEuNTk0Yy0xLjg5NyAwLTMuMjQ0LTEuNjQ5LTMuMjQ0LTQuMjg4IDAtMy4zODIgMS43MDQtNC41OTEgMy4zODEtNC41OTEgMi40MiAwIDMuMTg5IDEuNTY3IDMuODQ5IDMuNTc0bC44OCAyLjc0OWMuODggMi42NjYgMi41MjkgNC44MSA3LjI4NSA0LjgxIDMuNDA5IDAgNS43MTgtMS4wNDQgNS43MTgtMy43OTMgMC0yLjIyNy0xLjI2NS0zLjM4MS0zLjYzLTMuOTMxbC0xLjc1OC0uMzg1Yy0xLjIxLS4yNzUtMS41NjctLjc3LTEuNTY3LTEuNTk1IDAtLjkzNC43NDItMS40ODQgMS45NTItMS40ODQgMS4zMiAwIDIuMDM0LjQ5NSAyLjE0NCAxLjY3N2wyLjc0OS0uMzNjLS4yMi0yLjQ3NC0xLjkyNC0zLjQ5Mi00LjcyOS0zLjQ5Mi0yLjQ3NCAwLTQuODkzLjkzNS00Ljg5MyAzLjkzMiAwIDEuODcuOTA3IDMuMDUxIDMuMTg5IDMuNjAxbDEuODcuNDRjMS40MDIuMzMgMS44NjkuOTA3IDEuODY5IDEuNzA0IDAgMS4wMTctLjk5IDEuNDMtMi44NiAxLjQzLTIuNzc2IDAtMy45My0xLjQ1Ny00LjU5LTMuNDY0bC0uOTA3LTIuNzVjLTEuMTU1LTMuNTczLTIuOTk3LTQuODkzLTYuNjUzLTQuODkzQzIuMTQ0IDUuMzMzIDAgNy44OSAwIDEyLjIzM2MwIDQuMTggMi4xNDQgNi40MzQgNS45OTMgNi40MzQgMy4xMDYgMCA0LjU5MS0xLjQ1NyA0LjU5MS0xLjQ1N3oiLz48L3N2Zz4=');
     --icon-mod: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyMCIgaGVpZ2h0PSIyMCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyLjI1IiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWNvbXBvbmVudCI+PHBhdGggZD0iTTUuNSA4LjUgOSAxMmwtMy41IDMuNUwyIDEybDMuNS0zLjVaIi8+PHBhdGggZD0ibTEyIDIgMy41IDMuNUwxMiA5IDguNSA1LjUgMTIgMloiLz48cGF0aCBkPSJNMTguNSA4LjUgMjIgMTJsLTMuNSAzLjVMMTUgMTJsMy41LTMuNVoiLz48cGF0aCBkPSJtMTIgMTUgMy41IDMuNUwxMiAyMmwtMy41LTMuNUwxMiAxNVoiLz48L3N2Zz4=');
     --icon-alum: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyMCIgaGVpZ2h0PSIyMCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyLjI1IiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWhpc3RvcnkiPjxwYXRoIGQ9Ik0zIDEyYTkgOSAwIDEgMCA5LTkgOS43NSA5Ljc1IDAgMCAwLTYuNzQgMi43NEwzIDgiLz48cGF0aCBkPSJNMyAzdjVoNSIvPjxwYXRoIGQ9Ik0xMiA3djVsNCAyIi8+PC9zdmc+');
 
-    --icon-queen: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyMCIgaGVpZ2h0PSIyMCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyLjI1IiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWNyb3duIj48cGF0aCBkPSJNMTEuNTYyIDMuMjY2YS41LjUgMCAwIDEgLjg3NiAwTDE1LjM5IDguODdhMSAxIDAgMCAwIDEuNTE2LjI5NEwyMS4xODMgNS41YS41LjUgMCAwIDEgLjc5OC41MTlsLTIuODM0IDEwLjI0NmExIDEgMCAwIDEtLjk1Ni43MzRINS44MWExIDEgMCAwIDEtLjk1Ny0uNzM0TDIuMDIgNi4wMmEuNS41IDAgMCAxIC43OTgtLjUxOWw0LjI3NiAzLjY2NGExIDEgMCAwIDAgMS41MTYtLjI5NHoiLz48cGF0aCBkPSJNNSAyMWgxNCIvPjwvc3ZnPg==');
+    --icon-queen: var(--icon-16-umbrella);
     --icon-cute: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyMCIgaGVpZ2h0PSIyMCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyLjI1IiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLXRpZS1ib3ctcmliYm9uIj48cmVjdCB3aWR0aD0iNCIgaGVpZ2h0PSI0IiB4PSIxMCIgeT0iNyIvPjxwYXRoIGQ9Ik04IDloMiIvPjxwYXRoIGQ9Ik0xMCA3QzguOCA1LjUgNi42IDQgNCA0IDIuOSA0IDIgNi4yIDIgOXMuOSA1IDIgNWMyLjYgMCA0LjgtMS41IDYtMyIvPjxwYXRoIGQ9Ik0xNCA5aDIiLz48cGF0aCBkPSJNMTQgMTFjMS4yIDEuNSAzLjQgMyA2IDMgMS4xIDAgMi0yLjIgMi01cy0uOS01LTItNWMtMi42IDAtNC44IDEuNS02IDMiLz48cGF0aCBkPSJNNS41IDEzLjgzIDQgMjBsMy0xIDIgMiAyLjUtMTAiLz48cGF0aCBkPSJNMTguNSAxMy44MyAyMCAyMGwtMy0xLTIgMi0yLjUtMTAiLz48L3N2Zz4=');
     --icon-cat: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyMCIgaGVpZ2h0PSIyMCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyLjI1IiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWNhdCI+PHBhdGggZD0iTTEyIDVjLjY3IDAgMS4zNS4wOSAyIC4yNiAxLjc4LTIgNS4wMy0yLjg0IDYuNDItMi4yNiAxLjQuNTgtLjQyIDctLjQyIDcgLjU3IDEuMDcgMSAyLjI0IDEgMy40NEMyMSAxNy45IDE2Ljk3IDIxIDEyIDIxcy05LTMtOS03LjU2YzAtMS4yNS41LTIuNCAxLTMuNDQgMCAwLTEuODktNi40Mi0uNS03IDEuMzktLjU4IDQuNzIuMjMgNi41IDIuMjNBOS4wNCA5LjA0IDAgMCAxIDEyIDVaIi8+PHBhdGggZD0iTTggMTR2LjUiLz48cGF0aCBkPSJNMTYgMTR2LjUiLz48cGF0aCBkPSJNMTEuMjUgMTYuMjVoMS41TDEyIDE3bC0uNzUtLjc1WiIvPjwvc3ZnPg==');
     --icon-colon-three: url('data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBzdGFuZGFsb25lPSJubyI/Pgo8IURPQ1RZUEUgc3ZnIFBVQkxJQyAiLS8vVzNDLy9EVEQgU1ZHIDIwMDEwOTA0Ly9FTiIKICJodHRwOi8vd3d3LnczLm9yZy9UUi8yMDAxL1JFQy1TVkctMjAwMTA5MDQvRFREL3N2ZzEwLmR0ZCI+CjxzdmcgdmVyc2lvbj0iMS4wIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciCiB3aWR0aD0iMjU2LjAwMDAwMHB0IiBoZWlnaHQ9IjI1Ni4wMDAwMDBwdCIgdmlld0JveD0iMCAwIDI1Ni4wMDAwMDAgMjU2LjAwMDAwMCIKIHByZXNlcnZlQXNwZWN0UmF0aW89InhNaWRZTWlkIG1lZXQiPgoKPGcgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMC4wMDAwMDAsMjU2LjAwMDAwMCkgc2NhbGUoMC4xMDAwMDAsLTAuMTAwMDAwKSIKZmlsbD0iY3VycmVudENvbG9yIiBzdHJva2U9Im5vbmUiPgo8cGF0aCBkPSJNMTQxMyAyMTIxIGMtODUgLTIzIC0xMTggLTM5IC0xOTkgLTk3IC03MSAtNTAgLTEzNyAtMTIxIC0xNjYgLTE3OAotNDAgLTc3IC0xOSAtMTgyIDQ2IC0yMzEgMzEgLTIzIDEwNyAtNDcgMTMwIC00MCA2IDIgMjQgNiA0MCAxMCAxOCA0IDYyIDM3CjExMCA4NCA5OCA5NSAxMTUgMTA0IDE4NyAxMDQgOTkgMCAxNTkgLTUzIDE2NiAtMTQ1IDMgLTQxIC0xIC02MCAtMTYgLTg1IC0zMAotNDggLTYzIC02NCAtMTQ3IC03NCAtMTMwIC0xNCAtMTc4IC02MSAtMTc4IC0xNzYgMCAtNjggMTUgLTk4IDY4IC0xMzcgMjIKLTE3IDQ4IC0yMiAxMjUgLTI3IDExOSAtNyAxNTYgLTI0IDE4OSAtODkgMjkgLTU1IDI2IC0xMzYgLTUgLTE3OCAtODAgLTEwOAotMzE2IC0xMDEgLTQ1MSAxMyAtNzEgNjAgLTE0MCA2OSAtMjIwIDI5IC02OSAtMzQgLTEwMiAtODggLTEwMiAtMTY1IDAgLTk4CjcwIC0xNzggMjEyIC0yNDMgMTIyIC01NiAxOTQgLTcwIDM2MyAtNzAgMTY5IC0xIDI1NyAxOCAzNzAgNzcgNzMgMzggMTcxIDEzNQoyMDQgMjAxIDcwIDE0MyA2OCAzMjIgLTcgNDU5IC0yNyA1MSAtOTggMTMxIC0xNDEgMTYwIGwtMjUgMTYgNTMgNTYgYzI5IDMwCjY0IDgxIDc5IDExMiAyNCA1MiAyNyA3MCAyNyAxNjMgMCA5NyAtMiAxMTAgLTMyIDE3MyAtNTYgMTE5IC0xNjUgMjE0IC0zMDEKMjY1IC05NCAzNSAtMjc1IDQxIC0zNzkgMTN6Ii8+CjxwYXRoIGQ9Ik01NDEgMTc3OCBjLTExNiAtMjAgLTE5NiAtMTQxIC0xNzAgLTI1OCAxMyAtNTcgNDAgLTk4IDkyIC0xMzUgMzQKLTI0IDU0IC0zMCAxMDggLTMzIDk2IC02IDE2NiAzNSAyMTEgMTIyIDMwIDU4IDIzIDE2MCAtMTUgMjA5IC02MSA4MCAtMTM1CjExMSAtMjI2IDk1eiIvPgo8cGF0aCBkPSJNNTI1IDExMTEgYy04MCAtMzcgLTEyNSAtMTExIC0xMjUgLTIwMyAxIC0yMjMgMjcwIC0yOTcgMzk5IC0xMTAgMjIKMzIgMjYgNDggMjYgMTEyIDAgNjQgLTQgODAgLTI2IDExMiAtNjcgOTcgLTE3OCAxMzMgLTI3NCA4OXoiLz4KPC9nPgo8L3N2Zz4K');
     --icon-paw: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyMCIgaGVpZ2h0PSIyMCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyLjI1IiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLXBhdy1wcmludCI+PGNpcmNsZSBjeD0iMTEiIGN5PSI0IiByPSIyIi8+PGNpcmNsZSBjeD0iMTgiIGN5PSI4IiByPSIyIi8+PGNpcmNsZSBjeD0iMjAiIGN5PSIxNiIgcj0iMiIvPjxwYXRoIGQ9Ik05IDEwYTUgNSAwIDAgMSA1IDV2My41YTMuNSAzLjUgMCAwIDEtNi44NCAxLjA0NVE2LjUyIDE3LjQ4IDQuNDYgMTYuODRBMy41IDMuNSAwIDAgMSA1LjUgMTBaIi8+PC9zdmc+');
-    --icon-contributor: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyMCIgaGVpZ2h0PSIyMCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyLjI1IiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWNpcmNsZS1wbHVzIj48Y2lyY2xlIGN4PSIxMiIgY3k9IjEyIiByPSIxMCIvPjxwYXRoIGQ9Ik04IDEyaDgiLz48cGF0aCBkPSJNMTIgOHY4Ii8+PC9zdmc+');
-    --icon-translation: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyMCIgaGVpZ2h0PSIyMCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyLjI1IiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWxhbmd1YWdlcyI+PHBhdGggZD0ibTUgOCA2IDYiLz48cGF0aCBkPSJtNCAxNCA2LTYgMi0zIi8+PHBhdGggZD0iTTIgNWgxMiIvPjxwYXRoIGQ9Ik03IDJoMSIvPjxwYXRoIGQ9Im0yMiAyMi01LTEwLTUgMTAiLz48cGF0aCBkPSJNMTQgMThoNiIvPjwvc3ZnPg==');
+    --icon-contributor: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxOCIgaGVpZ2h0PSIxOCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyLjI1IiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLXNxdWFyZS1kYXNoZWQtYm90dG9tLWNvZGUtaWNvbiBsdWNpZGUtc3F1YXJlLWRhc2hlZC1ib3R0b20tY29kZSI+PHBhdGggZD0iTTEwIDkuNSA4IDEybDIgMi41Ii8+PHBhdGggZD0iTTE0IDIxaDEiLz48cGF0aCBkPSJtMTQgOS41IDIgMi41LTIgMi41Ii8+PHBhdGggZD0iTTUgMjFhMiAyIDAgMCAxLTItMlY1YTIgMiAwIDAgMSAyLTJoMTRhMiAyIDAgMCAxIDIgMnYxNGEyIDIgMCAwIDEtMiAyIi8+PHBhdGggZD0iTTkgMjFoMSIvPjwvc3ZnPg==');
+    --icon-translation: var(--icon-16-language);
     --icon-mask: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyMCIgaGVpZ2h0PSIyMCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyLjI1IiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLXZlbmV0aWFuLW1hc2siPjxwYXRoIGQ9Ik0yIDEyYTUgNSAwIDAgMCA1IDUgOCA4IDAgMCAxIDUgMiA4IDggMCAwIDEgNS0yIDUgNSAwIDAgMCA1LTVWN2gtNWE4IDggMCAwIDAtNSAyIDggOCAwIDAgMC01LTJIMloiLz48cGF0aCBkPSJNNiAxMWMxLjUgMCAzIC41IDMgMi0yIDAtMyAwLTMtMloiLz48cGF0aCBkPSJNMTggMTFjLTEuNSAwLTMgLjUtMyAyIDIgMCAzIDAgMy0yWiIvPjwvc3ZnPg==');
     --icon-scroll: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxOCIgaGVpZ2h0PSIxOCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyLjI1IiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLXNjcm9sbC1pY29uIGx1Y2lkZS1zY3JvbGwiPjxwYXRoIGQ9Ik0xOSAxN1Y1YTIgMiAwIDAgMC0yLTJINCIvPjxwYXRoIGQ9Ik04IDIxaDEyYTIgMiAwIDAgMCAyLTJ2LTFhMSAxIDAgMCAwLTEtMUgxMWExIDEgMCAwIDAtMSAxdjFhMiAyIDAgMSAxLTQgMFY1YTIgMiAwIDEgMC00IDB2MmExIDEgMCAwIDAgMSAxaDMiLz48L3N2Zz4=');
 
-    --icon-sponsor: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyMCIgaGVpZ2h0PSIyMCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyLjI1IiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLW1lc3NhZ2UtY2lyY2xlLWhlYXJ0Ij48cGF0aCBkPSJNNy45IDIwQTkgOSAwIDEgMCA0IDE2LjFMMiAyMloiLz48cGF0aCBkPSJNMTUuOCA5LjJhMi41IDIuNSAwIDAgMC0zLjUgMGwtLjMuNC0uMzUtLjNhMi40MiAyLjQyIDAgMSAwLTMuMiAzLjZsMy42IDMuNSAzLjYtMy41YzEuMi0xLjIgMS4xLTIuNy4yLTMuNyIvPjwvc3ZnPg==');
+    --icon-sponsor: var(--icon-16-heart-solid);
     --icon-cosmic: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyMCIgaGVpZ2h0PSIyMCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyLjI1IiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLW1vb24tc3RhciI+PHBhdGggZD0iTTEyIDNhNiA2IDAgMCAwIDkgOSA5IDkgMCAxIDEtOS05Ii8+PHBhdGggZD0iTTIwIDN2NCIvPjxwYXRoIGQ9Ik0yMiA1aC00Ii8+PC9zdmc+');
     --icon-loader: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyMCIgaGVpZ2h0PSIyMCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyLjI1IiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWxvYWRlciI+PHBhdGggZD0iTTEyIDJ2NCIvPjxwYXRoIGQ9Im0xNi4yIDcuOCAyLjktMi45Ii8+PHBhdGggZD0iTTE4IDEyaDQiLz48cGF0aCBkPSJtMTYuMiAxNi4yIDIuOSAyLjkiLz48cGF0aCBkPSJNMTIgMTh2NCIvPjxwYXRoIGQ9Im00LjkgMTkuMSAyLjktMi45Ii8+PHBhdGggZD0iTTIgMTJoNCIvPjxwYXRoIGQ9Im00LjkgNC45IDIuOSAyLjkiLz48L3N2Zz4=');
     --icon-grapes: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyMCIgaGVpZ2h0PSIyMCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyLjI1IiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWdyYXBlLWljb24gbHVjaWRlLWdyYXBlIj48cGF0aCBkPSJNMjIgNVYybC01Ljg5IDUuODkiLz48Y2lyY2xlIGN4PSIxNi42IiBjeT0iMTUuODkiIHI9IjMiLz48Y2lyY2xlIGN4PSI4LjExIiBjeT0iNy40IiByPSIzIi8+PGNpcmNsZSBjeD0iMTIuMzUiIGN5PSIxMS42NSIgcj0iMyIvPjxjaXJjbGUgY3g9IjEzLjkxIiBjeT0iNS44NSIgcj0iMyIvPjxjaXJjbGUgY3g9IjE4LjE1IiBjeT0iMTAuMDkiIHI9IjMiLz48Y2lyY2xlIGN4PSI2LjU2IiBjeT0iMTMuMiIgcj0iMyIvPjxjaXJjbGUgY3g9IjEwLjgiIGN5PSIxNy40NCIgcj0iMyIvPjxjaXJjbGUgY3g9IjUiIGN5PSIxOSIgcj0iMyIvPjwvc3ZnPg==');
@@ -589,9 +608,10 @@ body {
     --icon-20-listening-report-monthly: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyMCIgaGVpZ2h0PSIyMCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyLjI1IiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWFyZWEtY2hhcnQiPjxwYXRoIGQ9Ik0zIDN2MThoMTgiLz48cGF0aCBkPSJNNyAxMnY1aDEyVjhsLTUgNS00LTRaIi8+PC9zdmc+');
     --icon-20-listening-report-yearly: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyMCIgaGVpZ2h0PSIyMCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyLjI1IiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLXBpZS1jaGFydCI+PHBhdGggZD0iTTIxLjIxIDE1Ljg5QTEwIDEwIDAgMSAxIDggMi44MyIvPjxwYXRoIGQ9Ik0yMiAxMkExMCAxMCAwIDAgMCAxMiAydjEweiIvPjwvc3ZnPg==');
 
-    --icon-16-bleh: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyLjUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgY2xhc3M9Imx1Y2lkZSBsdWNpZGUtdGllLWJvdy1yaWJib24iPjxyZWN0IHdpZHRoPSI0IiBoZWlnaHQ9IjQiIHg9IjEwIiB5PSI3Ii8+PHBhdGggZD0iTTggOWgyIi8+PHBhdGggZD0iTTEwIDdDOC44IDUuNSA2LjYgNCA0IDQgMi45IDQgMiA2LjIgMiA5cy45IDUgMiA1YzIuNiAwIDQuOC0xLjUgNi0zIi8+PHBhdGggZD0iTTE0IDloMiIvPjxwYXRoIGQ9Ik0xNCAxMWMxLjIgMS41IDMuNCAzIDYgMyAxLjEgMCAyLTIuMiAyLTVzLS45LTUtMi01Yy0yLjYgMC00LjggMS41LTYgMyIvPjxwYXRoIGQ9Ik01LjUgMTMuODMgNCAyMGwzLTEgMiAyIDIuNS0xMCIvPjxwYXRoIGQ9Ik0xOC41IDEzLjgzIDIwIDIwbC0zLTEtMiAyLTIuNS0xMCIvPjwvc3ZnPg==');
+    --icon-16-bleh: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyMDAiIGhlaWdodD0iMjAwIiB2aWV3Qm94PSIwIDAgMjAwIDIwMCIgdmVyc2lvbj0iMS4xIj4KCTxwYXRoIGQ9Ik0gNjMuMzkwIDE0LjcyMCBDIDU4LjI1MSAxNS4wMzAsIDU3LjEyMyAxNS40MzgsIDU2LjI4NiAxNy4yOTQgQyA1NS4zNzIgMTkuMzIyLCA1Mi4xMDEgMzAuNTY2LCA0OS45NzEgMzkgQyA0Ny4yNzEgNDkuNjk0LCA0Ni4zMjcgNzAuMTEzLCA0Ni4xMzIgMTIyIEMgNDYuMDYxIDE0MC44ODMsIDQ2LjEzNCAxNDEuNjkzLCA0OC4yODQgMTQ1LjcwMCBDIDQ5LjIyOCAxNDcuNDYxLCA1MCAxNDkuNDQyLCA1MCAxNTAuMTA0IEMgNTAgMTU0LjU1NCwgNjAuOTM2IDE3Mi4zNzYsIDY1LjMxNiAxNzUuMDYyIEMgNjkuMjEzIDE3Ny40NTMsIDc4LjYwMyAxODEuMDg1LCA4MiAxODEuNTE2IEMgODMuMzc1IDE4MS42OTAsIDg2LjMwMCAxODIuMzQwLCA4OC41MDAgMTgyLjk1OSBDIDkwLjcwMCAxODMuNTc4LCA5NC44NzYgMTg0LjIyOSwgOTcuNzgwIDE4NC40MDYgQyAxMDAuNjg0IDE4NC41ODIsIDEwMy4zMjggMTg0Ljk5NCwgMTAzLjY1NCAxODUuMzIxIEMgMTA0LjMzOSAxODYuMDA2LCAxMTEuNjc3IDE4Mi40OTAsIDExNC4yMTMgMTgwLjI2MiBDIDExNS4xNjMgMTc5LjQyNywgMTE2LjY3NiAxNzkuMDQ1LCAxMTcuNjEyIDE3OS40MDUgQyAxMTkuNDc3IDE4MC4xMjAsIDEyOCAxNzcuMjI2LCAxMjggMTc1Ljg3NyBDIDEyOCAxNzQuNzI3LCAxMzYuNzE2IDE2Ni4wNDMsIDE0MC43NDggMTYzLjE3NiBDIDE0Mi41MzQgMTYxLjkwNiwgMTQ0LjI3MyAxNTkuNzYyLCAxNDQuNjEyIDE1OC40MTAgQyAxNDQuOTUxIDE1Ny4wNTksIDE0Ni4xNjYgMTU1LjI5NiwgMTQ3LjMxMyAxNTQuNDkzIEMgMTUwLjU2MiAxNTIuMjE4LCAxNTIuMTcxIDE0NC43MTEsIDE1Mi42NDkgMTI5LjYwMiBDIDE1Mi44OTAgMTIxLjk1OCwgMTUzLjUwMyAxMTQuOTI4LCAxNTQuMDExIDExMy45ODAgQyAxNTYuMjY4IDEwOS43NjMsIDE1MS43OTAgMTAxLjY3NywgMTQxLjk2MCA5Mi4yMTYgQyAxMzQuODk4IDg1LjQxOSwgMTMzLjE0MiA4NC4yODcsIDEyNS4yNTMgODEuNDM0IEMgMTEyLjQyNSA3Ni43OTcsIDEwNS42OTkgNzYuMjMyLCA5OC4xNjUgNzkuMTYyIEMgOTQuMTQxIDgwLjcyNywgOTEuNjA5IDgyLjQxNywgOTAuNTA3IDg0LjI3MyBDIDg4LjkyMyA4Ni45NDAsIDg0LjMxMCA5MC42ODIsIDgzLjU4OCA4OS44ODUgQyA4Mi45OTMgODkuMjMwLCA4NS41ODQgNzQuNjE3LCA4Ni42NzAgNzIuNTAwIEMgODguMDgxIDY5Ljc0OSwgODguNDY0IDYyLjE1MSwgODguNDgzIDM2LjUwMCBMIDg4LjUwMCAxNC41MDAgNzkgMTQuNDI2IEMgNzMuNzc1IDE0LjM4NSwgNjYuNzUxIDE0LjUxOCwgNjMuMzkwIDE0LjcyMCBNIDk0LjM1MiAxMTguMDkyIEMgOTIuNjIwIDExOC41OTQsIDg5LjgwNyAxMjAuNTk0LCA4OC4xMDIgMTIyLjUzNyBDIDgzLjYwOCAxMjcuNjU1LCA4My43MzggMTMzLjYyOSwgODguNTAwIDE0MC44NjAgQyA5MC40MjUgMTQzLjc4MywgOTIgMTQ2Ljc0MSwgOTIgMTQ3LjQzMiBDIDkyIDE0OC4xMjQsIDkyLjg1OCAxNDkuNDY2LCA5My45MDYgMTUwLjQxNSBDIDk1LjcxNiAxNTIuMDUzLCA5Ni4xMjggMTUyLjAxNiwgMTAyLjE1NiAxNDkuNjc0IEMgMTA1LjY0NSAxNDguMzE4LCAxMDkuNzM3IDE0Ni45MjgsIDExMS4yNDggMTQ2LjU4NiBDIDExNS4zNjQgMTQ1LjY1MywgMTE4LjY1MiAxMzkuNzg5LCAxMTkuMzkyIDEzMi4wNjAgQyAxMTkuOTQ5IDEyNi4yNDUsIDExOS43NjIgMTI1LjI2NCwgMTE3LjQ2NCAxMjEuOTQ5IEMgMTE1LjEyOSAxMTguNTc4LCAxMTQuNDE4IDExOC4yMjQsIDEwOC44MTMgMTE3LjYzOCBDIDEwMS4yMTQgMTE2Ljg0NCwgOTguMzUxIDExNi45MzQsIDk0LjM1MiAxMTguMDkyIiBzdHJva2U9Im5vbmUiIGZpbGw9IiNmZmZmZmYiIGZpbGwtcnVsZT0iZXZlbm9kZCIvPgo8L3N2Zz4=');
     --icon-16-lotus: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxOCIgaGVpZ2h0PSIxOCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyLjI1IiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWZsb3dlci1sb3R1cy1pY29uIGx1Y2lkZS1mbG93ZXItbG90dXMiPjxwYXRoIGQ9Ik0xMiAyMGMwLTUuNS00LjUtMTAtMTAtMTAgMCA1LjUgNC41IDEwIDEwIDEwIi8+PHBhdGggZD0iTTkuNyA4LjNjLTEuOC0yLTMuOC0zLjEtMy44LTMuMXMtLjggMi41LS41IDUuNCIvPjxwYXRoIGQ9Ik0xNSAxMi45VjEyYzAtNC40LTMtOC0zLThzLTMgMy42LTMgOHYuOSIvPjxwYXRoIGQ9Ik0xOC42IDEwLjZjLjMtMi45LS41LTUuNC0uNS01LjRzLTIgMS0zLjggMy4xIi8+PHBhdGggZD0iTTEyIDIwYzUuNSAwIDEwLTQuNSAxMC0xMC01LjUgMC0xMCA0LjUtMTAgMTAiLz48L3N2Zz4=');
 
+    --icon-16-umbrella: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxOCIgaGVpZ2h0PSIxOCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyLjI1IiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLXVtYnJlbGxhLWljb24gbHVjaWRlLXVtYnJlbGxhIj48cGF0aCBkPSJNMjIgMTJhMTAuMDYgMTAuMDYgMSAwIDAtMjAgMFoiLz48cGF0aCBkPSJNMTIgMTJ2OGEyIDIgMCAwIDAgNCAwIi8+PHBhdGggZD0iTTEyIDJ2MSIvPjwvc3ZnPg==');
     --icon-16-placeholder: var(--icon-16-question);
     --icon-16-play: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxOCIgaGVpZ2h0PSIxOCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyLjI1IiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLXBsYXktaWNvbiBsdWNpZGUtcGxheSI+PHBvbHlnb24gcG9pbnRzPSI2IDMgMjAgMTIgNiAyMSA2IDMiLz48L3N2Zz4=');
     --icon-16-dropdown: var(--icon-16-arrow-down);
@@ -603,7 +623,7 @@ body {
     --icon-16-album: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxOCIgaGVpZ2h0PSIxOCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyLjI1IiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWRpc2MtaWNvbiBsdWNpZGUtZGlzYyI+PGNpcmNsZSBjeD0iMTIiIGN5PSIxMiIgcj0iMTAiLz48Y2lyY2xlIGN4PSIxMiIgY3k9IjEyIiByPSIyIi8+PC9zdmc+');
     --icon-16-artist: var(--icon-16-star);
     --icon-16-share: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyLjUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgY2xhc3M9Imx1Y2lkZSBsdWNpZGUtc2hhcmUiPjxwYXRoIGQ9Ik00IDEydjhhMiAyIDAgMCAwIDIgMmgxMmEyIDIgMCAwIDAgMi0ydi04Ii8+PHBvbHlsaW5lIHBvaW50cz0iMTYgNiAxMiAyIDggNiIvPjxsaW5lIHgxPSIxMiIgeDI9IjEyIiB5MT0iMiIgeTI9IjE1Ii8+PC9zdmc+');
-    --icon-16-settings: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxOCIgaGVpZ2h0PSIxOCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyLjI1IiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLXNldHRpbmdzMi1pY29uIGx1Y2lkZS1zZXR0aW5ncy0yIj48cGF0aCBkPSJNMjAgN2gtOSIvPjxwYXRoIGQ9Ik0xNCAxN0g1Ii8+PGNpcmNsZSBjeD0iMTciIGN5PSIxNyIgcj0iMyIvPjxjaXJjbGUgY3g9IjciIGN5PSI3IiByPSIzIi8+PC9zdmc+');
+    --icon-16-settings: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxOCIgaGVpZ2h0PSIxOCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyLjI1IiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLXNldHRpbmdzLWljb24gbHVjaWRlLXNldHRpbmdzIj48cGF0aCBkPSJNMTIuMjIgMmgtLjQ0YTIgMiAwIDAgMC0yIDJ2LjE4YTIgMiAwIDAgMS0xIDEuNzNsLS40My4yNWEyIDIgMCAwIDEtMiAwbC0uMTUtLjA4YTIgMiAwIDAgMC0yLjczLjczbC0uMjIuMzhhMiAyIDAgMCAwIC43MyAyLjczbC4xNS4xYTIgMiAwIDAgMSAxIDEuNzJ2LjUxYTIgMiAwIDAgMS0xIDEuNzRsLS4xNS4wOWEyIDIgMCAwIDAtLjczIDIuNzNsLjIyLjM4YTIgMiAwIDAgMCAyLjczLjczbC4xNS0uMDhhMiAyIDAgMCAxIDIgMGwuNDMuMjVhMiAyIDAgMCAxIDEgMS43M1YyMGEyIDIgMCAwIDAgMiAyaC40NGEyIDIgMCAwIDAgMi0ydi0uMThhMiAyIDAgMCAxIDEtMS43M2wuNDMtLjI1YTIgMiAwIDAgMSAyIDBsLjE1LjA4YTIgMiAwIDAgMCAyLjczLS43M2wuMjItLjM5YTIgMiAwIDAgMC0uNzMtMi43M2wtLjE1LS4wOGEyIDIgMCAwIDEtMS0xLjc0di0uNWEyIDIgMCAwIDEgMS0xLjc0bC4xNS0uMDlhMiAyIDAgMCAwIC43My0yLjczbC0uMjItLjM4YTIgMiAwIDAgMC0yLjczLS43M2wtLjE1LjA4YTIgMiAwIDAgMS0yIDBsLS40My0uMjVhMiAyIDAgMCAxLTEtMS43M1Y0YTIgMiAwIDAgMC0yLTJ6Ii8+PGNpcmNsZSBjeD0iMTIiIGN5PSIxMiIgcj0iMyIvPjwvc3ZnPg==');
     --icon-16-notifications: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxOCIgaGVpZ2h0PSIxOCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyLjI1IiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWJlbGwtaWNvbiBsdWNpZGUtYmVsbCI+PHBhdGggZD0iTTEwLjI2OCAyMWEyIDIgMCAwIDAgMy40NjQgMCIvPjxwYXRoIGQ9Ik0zLjI2MiAxNS4zMjZBMSAxIDAgMCAwIDQgMTdoMTZhMSAxIDAgMCAwIC43NC0xLjY3M0MxOS40MSAxMy45NTYgMTggMTIuNDk5IDE4IDhBNiA2IDAgMCAwIDYgOGMwIDQuNDk5LTEuNDExIDUuOTU2LTIuNzM4IDcuMzI2Ii8+PC9zdmc+');
     --icon-16-notifications-active: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJjdXJyZW50Q29sb3IiIHN0cm9rZT0iY3VycmVudENvbG9yIiBzdHJva2Utd2lkdGg9IjIuNSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiBjbGFzcz0ibHVjaWRlIGx1Y2lkZS1iZWxsIj48cGF0aCBkPSJNMTAuMjY4IDIxYTIgMiAwIDAgMCAzLjQ2NCAwIi8+PHBhdGggZD0iTTMuMjYyIDE1LjMyNkExIDEgMCAwIDAgNCAxN2gxNmExIDEgMCAwIDAgLjc0LTEuNjczQzE5LjQxIDEzLjk1NiAxOCAxMi40OTkgMTggOEE2IDYgMCAwIDAgNiA4YzAgNC40OTktMS40MTEgNS45NTYtMi43MzggNy4zMjYiLz48L3N2Zz4=');
     --icon-16-mail: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxOCIgaGVpZ2h0PSIxOCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyLjI1IiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLW1haWwtaWNvbiBsdWNpZGUtbWFpbCI+PHJlY3Qgd2lkdGg9IjIwIiBoZWlnaHQ9IjE2IiB4PSIyIiB5PSI0IiByeD0iMiIvPjxwYXRoIGQ9Im0yMiA3LTguOTcgNS43YTEuOTQgMS45NCAwIDAgMS0yLjA2IDBMMiA3Ii8+PC9zdmc+');
@@ -621,6 +641,7 @@ body {
     --icon-16-dots-v: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxOCIgaGVpZ2h0PSIxOCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyLjI1IiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWVsbGlwc2lzLXZlcnRpY2FsLWljb24gbHVjaWRlLWVsbGlwc2lzLXZlcnRpY2FsIj48Y2lyY2xlIGN4PSIxMiIgY3k9IjEyIiByPSIxIi8+PGNpcmNsZSBjeD0iMTIiIGN5PSI1IiByPSIxIi8+PGNpcmNsZSBjeD0iMTIiIGN5PSIxOSIgcj0iMSIvPjwvc3ZnPg==');
     --icon-16-mention: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxOCIgaGVpZ2h0PSIxOCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyLjI1IiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWF0LXNpZ24taWNvbiBsdWNpZGUtYXQtc2lnbiI+PGNpcmNsZSBjeD0iMTIiIGN5PSIxMiIgcj0iNCIvPjxwYXRoIGQ9Ik0xNiA4djVhMyAzIDAgMCAwIDYgMHYtMWExMCAxMCAwIDEgMC00IDgiLz48L3N2Zz4=');
     --icon-16-user: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxOCIgaGVpZ2h0PSIxOCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyLjI1IiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLXVzZXItcm91bmQtaWNvbiBsdWNpZGUtdXNlci1yb3VuZCI+PGNpcmNsZSBjeD0iMTIiIGN5PSI4IiByPSI1Ii8+PHBhdGggZD0iTTIwIDIxYTggOCAwIDAgMC0xNiAwIi8+PC9zdmc+');
+    --icon-16-user-plus: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxOCIgaGVpZ2h0PSIxOCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyLjI1IiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLXVzZXItcm91bmQtcGx1cy1pY29uIGx1Y2lkZS11c2VyLXJvdW5kLXBsdXMiPjxwYXRoIGQ9Ik0yIDIxYTggOCAwIDAgMSAxMy4yOTItNiIvPjxjaXJjbGUgY3g9IjEwIiBjeT0iOCIgcj0iNSIvPjxwYXRoIGQ9Ik0xOSAxNnY2Ii8+PHBhdGggZD0iTTIyIDE5aC02Ii8+PC9zdmc+');
     --icon-16-user-remove: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxOCIgaGVpZ2h0PSIxOCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyLjI1IiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLXVzZXItcm91bmQteC1pY29uIGx1Y2lkZS11c2VyLXJvdW5kLXgiPjxwYXRoIGQ9Ik0yIDIxYTggOCAwIDAgMSAxMS44NzMtNyIvPjxjaXJjbGUgY3g9IjEwIiBjeT0iOCIgcj0iNSIvPjxwYXRoIGQ9Im0xNyAxNyA1IDUiLz48cGF0aCBkPSJtMjIgMTctNSA1Ii8+PC9zdmc+');
     --icon-16-follow: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxOCIgaGVpZ2h0PSIxOCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyLjI1IiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLXVzZXItcm91bmQtcGx1cy1pY29uIGx1Y2lkZS11c2VyLXJvdW5kLXBsdXMiPjxwYXRoIGQ9Ik0yIDIxYTggOCAwIDAgMSAxMy4yOTItNiIvPjxjaXJjbGUgY3g9IjEwIiBjeT0iOCIgcj0iNSIvPjxwYXRoIGQ9Ik0xOSAxNnY2Ii8+PHBhdGggZD0iTTIyIDE5aC02Ii8+PC9zdmc+');
     --icon-16-upload: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxOCIgaGVpZ2h0PSIxOCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyLjI1IiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWFycm93LXVwLXRvLWxpbmUtaWNvbiBsdWNpZGUtYXJyb3ctdXAtdG8tbGluZSI+PHBhdGggZD0iTTUgM2gxNCIvPjxwYXRoIGQ9Im0xOCAxMy02LTYtNiA2Ii8+PHBhdGggZD0iTTEyIDd2MTQiLz48L3N2Zz4=');
@@ -654,7 +675,7 @@ body {
     --icon-16-sponsor-rewards: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxOCIgaGVpZ2h0PSIxOCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyLjI1IiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLXNob3BwaW5nLWJhZy1pY29uIGx1Y2lkZS1zaG9wcGluZy1iYWciPjxwYXRoIGQ9Ik02IDIgMyA2djE0YTIgMiAwIDAgMCAyIDJoMTRhMiAyIDAgMCAwIDItMlY2bC0zLTRaIi8+PHBhdGggZD0iTTMgNmgxOCIvPjxwYXRoIGQ9Ik0xNiAxMGE0IDQgMCAwIDEtOCAwIi8+PC9zdmc+');
     --icon-16-home: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxOCIgaGVpZ2h0PSIxOCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyLjI1IiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWhvdXNlLWljb24gbHVjaWRlLWhvdXNlIj48cGF0aCBkPSJNMTUgMjF2LThhMSAxIDAgMCAwLTEtMWgtNGExIDEgMCAwIDAtMSAxdjgiLz48cGF0aCBkPSJNMyAxMGEyIDIgMCAwIDEgLjcwOS0xLjUyOGw3LTUuOTk5YTIgMiAwIDAgMSAyLjU4MiAwbDcgNS45OTlBMiAyIDAgMCAxIDIxIDEwdjlhMiAyIDAgMCAxLTIgMkg1YTIgMiAwIDAgMS0yLTJ6Ii8+PC9zdmc+');
     --icon-16-users: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxOCIgaGVpZ2h0PSIxOCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyLjI1IiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLXVzZXJzLXJvdW5kLWljb24gbHVjaWRlLXVzZXJzLXJvdW5kIj48cGF0aCBkPSJNMTggMjFhOCA4IDAgMCAwLTE2IDAiLz48Y2lyY2xlIGN4PSIxMCIgY3k9IjgiIHI9IjUiLz48cGF0aCBkPSJNMjIgMjBjMC0zLjM3LTItNi41LTQtOGE1IDUgMCAwIDAtLjQ1LTguMyIvPjwvc3ZnPg==');
-    --icon-16-event: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxOCIgaGVpZ2h0PSIxOCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyLjI1IiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLW1pYy12b2NhbC1pY29uIGx1Y2lkZS1taWMtdm9jYWwiPjxwYXRoIGQ9Im0xMSA3LjYwMS01Ljk5NCA4LjE5YTEgMSAwIDAgMCAuMSAxLjI5OGwuODE3LjgxOGExIDEgMCAwIDAgMS4zMTQuMDg3TDE1LjA5IDEyIi8+PHBhdGggZD0iTTE2LjUgMjEuMTc0QzE1LjUgMjAuNSAxNC4zNzIgMjAgMTMgMjBjLTIuMDU4IDAtMy45MjggMi4zNTYtNiAyLTIuMDcyLS4zNTYtMi43NzUtMy4zNjktMS41LTQuNSIvPjxjaXJjbGUgY3g9IjE2IiBjeT0iNyIgcj0iNSIvPjwvc3ZnPg==');
+    --icon-16-event: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxOCIgaGVpZ2h0PSIxOCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyLjI1IiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLXRpY2tldHMtaWNvbiBsdWNpZGUtdGlja2V0cyI+PHBhdGggZD0ibTQuNSA4IDEwLjU4LTUuMDZhMSAxIDAgMCAxIDEuMzQyLjQ4OEwxOC41IDgiLz48cGF0aCBkPSJNNiAxMFY4Ii8+PHBhdGggZD0iTTYgMTR2MSIvPjxwYXRoIGQ9Ik02IDE5djIiLz48cmVjdCB4PSIyIiB5PSI4IiB3aWR0aD0iMjAiIGhlaWdodD0iMTMiIHJ4PSIyIi8+PC9zdmc+');
     --icon-16-tag: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxOCIgaGVpZ2h0PSIxOCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyLjI1IiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLXRhZy1pY29uIGx1Y2lkZS10YWciPjxwYXRoIGQ9Ik0xMi41ODYgMi41ODZBMiAyIDAgMCAwIDExLjE3MiAySDRhMiAyIDAgMCAwLTIgMnY3LjE3MmEyIDIgMCAwIDAgLjU4NiAxLjQxNGw4LjcwNCA4LjcwNGEyLjQyNiAyLjQyNiAwIDAgMCAzLjQyIDBsNi41OC02LjU4YTIuNDI2IDIuNDI2IDAgMCAwIDAtMy40MnoiLz48Y2lyY2xlIGN4PSI3LjUiIGN5PSI3LjUiIHI9Ii41IiBmaWxsPSJjdXJyZW50Q29sb3IiLz48L3N2Zz4=');
     --icon-16-listener: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxOCIgaGVpZ2h0PSIxOCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyLjI1IiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWhlYWRwaG9uZXMtaWNvbiBsdWNpZGUtaGVhZHBob25lcyI+PHBhdGggZD0iTTMgMTRoM2EyIDIgMCAwIDEgMiAydjNhMiAyIDAgMCAxLTIgMkg1YTIgMiAwIDAgMS0yLTJ2LTdhOSA5IDAgMCAxIDE4IDB2N2EyIDIgMCAwIDEtMiAyaC0xYTIgMiAwIDAgMS0yLTJ2LTNhMiAyIDAgMCAxIDItMmgzIi8+PC9zdmc+');
     --icon-16-arrows: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxOCIgaGVpZ2h0PSIxOCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyLjI1IiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWFycm93LWRvd24tdXAtaWNvbiBsdWNpZGUtYXJyb3ctZG93bi11cCI+PHBhdGggZD0ibTMgMTYgNCA0IDQtNCIvPjxwYXRoIGQ9Ik03IDIwVjQiLz48cGF0aCBkPSJtMjEgOC00LTQtNCA0Ii8+PHBhdGggZD0iTTE3IDR2MTYiLz48L3N2Zz4=');
@@ -709,6 +730,7 @@ body {
     --icon-16-moon-star: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxOCIgaGVpZ2h0PSIxOCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyLjI1IiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLW1vb24tc3Rhci1pY29uIGx1Y2lkZS1tb29uLXN0YXIiPjxwYXRoIGQ9Ik0xMiAzYTYgNiAwIDAgMCA5IDkgOSA5IDAgMSAxLTktOSIvPjxwYXRoIGQ9Ik0yMCAzdjQiLz48cGF0aCBkPSJNMjIgNWgtNCIvPjwvc3ZnPg==');
     --icon-16-moon-fill: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxOCIgaGVpZ2h0PSIxOCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyLjI1IiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWVjbGlwc2UtaWNvbiBsdWNpZGUtZWNsaXBzZSI+PGNpcmNsZSBjeD0iMTIiIGN5PSIxMiIgcj0iMTAiLz48cGF0aCBkPSJNMTIgMmE3IDcgMCAxIDAgMTAgMTAiLz48L3N2Zz4=');
     --icon-16-sun: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxOCIgaGVpZ2h0PSIxOCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyLjI1IiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLXN1bi1pY29uIGx1Y2lkZS1zdW4iPjxjaXJjbGUgY3g9IjEyIiBjeT0iMTIiIHI9IjQiLz48cGF0aCBkPSJNMTIgMnYyIi8+PHBhdGggZD0iTTEyIDIwdjIiLz48cGF0aCBkPSJtNC45MyA0LjkzIDEuNDEgMS40MSIvPjxwYXRoIGQ9Im0xNy42NiAxNy42NiAxLjQxIDEuNDEiLz48cGF0aCBkPSJNMiAxMmgyIi8+PHBhdGggZD0iTTIwIDEyaDIiLz48cGF0aCBkPSJtNi4zNCAxNy42Ni0xLjQxIDEuNDEiLz48cGF0aCBkPSJtMTkuMDcgNC45My0xLjQxIDEuNDEiLz48L3N2Zz4=');
+    --icon-16-pen: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxOCIgaGVpZ2h0PSIxOCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyLjI1IiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLXBlbi10b29sLWljb24gbHVjaWRlLXBlbi10b29sIj48cGF0aCBkPSJNMTUuNzA3IDIxLjI5M2ExIDEgMCAwIDEtMS40MTQgMGwtMS41ODYtMS41ODZhMSAxIDAgMCAxIDAtMS40MTRsNS41ODYtNS41ODZhMSAxIDAgMCAxIDEuNDE0IDBsMS41ODYgMS41ODZhMSAxIDAgMCAxIDAgMS40MTR6Ii8+PHBhdGggZD0ibTE4IDEzLTEuMzc1LTYuODc0YTEgMSAwIDAgMC0uNzQ2LS43NzZMMy4yMzUgMi4wMjhhMSAxIDAgMCAwLTEuMjA3IDEuMjA3TDUuMzUgMTUuODc5YTEgMSAwIDAgMCAuNzc2Ljc0NkwxMyAxOCIvPjxwYXRoIGQ9Im0yLjMgMi4zIDcuMjg2IDcuMjg2Ii8+PGNpcmNsZSBjeD0iMTEiIGN5PSIxMSIgcj0iMiIvPjwvc3ZnPg==');
     --icon-16-issues: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxOCIgaGVpZ2h0PSIxOCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyLjI1IiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWNpcmNsZS1kb3QtZGFzaGVkLWljb24gbHVjaWRlLWNpcmNsZS1kb3QtZGFzaGVkIj48cGF0aCBkPSJNMTAuMSAyLjE4YTkuOTMgOS45MyAwIDAgMSAzLjggMCIvPjxwYXRoIGQ9Ik0xNy42IDMuNzFhOS45NSA5Ljk1IDAgMCAxIDIuNjkgMi43Ii8+PHBhdGggZD0iTTIxLjgyIDEwLjFhOS45MyA5LjkzIDAgMCAxIDAgMy44Ii8+PHBhdGggZD0iTTIwLjI5IDE3LjZhOS45NSA5Ljk1IDAgMCAxLTIuNyAyLjY5Ii8+PHBhdGggZD0iTTEzLjkgMjEuODJhOS45NCA5Ljk0IDAgMCAxLTMuOCAwIi8+PHBhdGggZD0iTTYuNCAyMC4yOWE5Ljk1IDkuOTUgMCAwIDEtMi42OS0yLjciLz48cGF0aCBkPSJNMi4xOCAxMy45YTkuOTMgOS45MyAwIDAgMSAwLTMuOCIvPjxwYXRoIGQ9Ik0zLjcxIDYuNGE5Ljk1IDkuOTUgMCAwIDEgMi43LTIuNjkiLz48Y2lyY2xlIGN4PSIxMiIgY3k9IjEyIiByPSIxIi8+PC9zdmc+');
     --icon-16-note-add: var(--icon-16-plus);
     --icon-16-sparkles: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyLjUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgY2xhc3M9Imx1Y2lkZSBsdWNpZGUtc3BhcmtsZXMiPjxwYXRoIGQ9Ik05LjkzNyAxNS41QTIgMiAwIDAgMCA4LjUgMTQuMDYzbC02LjEzNS0xLjU4MmEuNS41IDAgMCAxIDAtLjk2Mkw4LjUgOS45MzZBMiAyIDAgMCAwIDkuOTM3IDguNWwxLjU4Mi02LjEzNWEuNS41IDAgMCAxIC45NjMgMEwxNC4wNjMgOC41QTIgMiAwIDAgMCAxNS41IDkuOTM3bDYuMTM1IDEuNTgxYS41LjUgMCAwIDEgMCAuOTY0TDE1LjUgMTQuMDYzYTIgMiAwIDAgMC0xLjQzNyAxLjQzN2wtMS41ODIgNi4xMzVhLjUuNSAwIDAgMS0uOTYzIDB6Ii8+PHBhdGggZD0iTTIwIDN2NCIvPjxwYXRoIGQ9Ik0yMiA1aC00Ii8+PHBhdGggZD0iTTQgMTd2MiIvPjxwYXRoIGQ9Ik01IDE4SDMiLz48L3N2Zz4=');
@@ -895,7 +917,7 @@ body {
         pointer-events: none;
     }
 
-    .bleh-supports-loading &:not(.bleh-loaded) {
+    .bleh-supports-loading &:not(.bleh-loaded, .labs-section) {
         &:before {
             background-color: hsl(var(--b6));
         }
@@ -936,7 +958,7 @@ html body {
 
 
 .main-content {
-    padding-top: calc(var(--card-gap) + 32px) !important;
+    padding-top: calc(5px + 32px) !important;
 
     /* overflow on library page for some rsn 2024-11-10 */
     overflow-x: hidden;
@@ -980,7 +1002,7 @@ last.fm changes as of 2024-05-20 */
     left: 0;
     right: 0;
     top: 0 !important;
-    height: calc((var(--card-gap) * 2) + 32px) !important; /* macOS */
+    height: calc(20px + 32px) !important; /* macOS */
     display: flex !important;
     justify-content: center;
     align-items: center;
@@ -1001,7 +1023,7 @@ last.fm changes as of 2024-05-20 */
         left: 0;
         top: 0;
         right: 0;
-        height: calc((var(--card-gap) * 2) + 32px);
+        height: calc(20px + 32px);
         z-index: 10;
         background: var(--cards-overlay-image-subtle, none), var(--page-overlay, none), linear-gradient(0deg, transparent 0%, hsl(var(--b6)) 100%);
         pointer-events: none;
@@ -1021,16 +1043,21 @@ last.fm changes as of 2024-05-20 */
         transition: opacity 0.3s;
     }
 
-    transition-property: background, background-filter;
+    transition-property: background, background-filter, box-shadow;
     transition-duration: 0.3s;
 
     &.scrolled {
-        background: hsl(var(--b6), 85%);
+        background: hsl(var(--b5), 85%);
         backdrop-filter: blur(10px) saturate(120%);
+        box-shadow: var(--interact-shadow);
 
         &:before {
             opacity: 0;
         }
+    }
+
+    &:not(.scrolled) {
+        --b3: var(--b5);
     }
 }
 .masthead-inner-wrap {
@@ -1071,7 +1098,7 @@ last.fm changes as of 2024-05-20 */
         line-height: 28px;
         margin-top: -6px;
         font-family: var(--font-brand);
-        color: hsl(var(--h3-theme-switch));
+        color: hsl(var(--l3-c-theme-switch));
 
         [data-bleh--season="pride"] & {
             /* this isnt using https://cesque.com/gaydient/ but shoutout,
@@ -1091,7 +1118,7 @@ last.fm changes as of 2024-05-20 */
             var(--g-indigo) 100%
             );
 
-            [data-bleh--theme="light"] & {
+            [data-bleh--theme_type="light"] & {
                 --g-red: hsl(8, 42%, 50%);
                 --g-orange: hsl(24, 66%, 50%);
                 --g-yellow: hsl(44, 80%, 50%);
@@ -1316,8 +1343,22 @@ last.fm changes as of 2024-05-20 */
         --bg-atv: hsl(var(--h4), 50%) !important;
     }
 
+    --btn-right: calc(12px + 12px + 4px) !important;
+    --mask-size: 12px;
+    --margin-top: -6px;
+    --right: 12px;
     &:before {
         color: hsl(var(--c3));
+
+        transition-property: transform !important;
+        transition-duration: var(--trans) !important;
+        transition-timing-function: var(--trans-function) !important;
+    }
+
+    &[aria-expanded="true"] {
+        &:before {
+            transform: scaleY(-1) !important;
+        }
     }
 }
 
@@ -1379,7 +1420,7 @@ last.fm changes as of 2024-05-20 */
     height: 18px;
     padding: 0 4px;
 
-    [data-bleh--theme="light"] & {
+    [data-bleh--theme_type="light"] & {
         background-color: hsl(var(--h4));
         box-shadow: 0px 0 60px 20px hsla(var(--h4), 45%) !important;
     }
@@ -1484,15 +1525,63 @@ last.fm changes as of 2024-05-20 */
     text-transform: initial;
     font-weight: var(--font-weight-medium);
     color: hsl(var(--c3));
-    padding-left: 12px !important; /* match links */
 }
 
-.footer-links li, .footer-links a {
-    height: 28px;
-}
-.footer-links a, .footer-links button {
-    display: inline-block;
-    --padding: 5px 12px;
+.footer-links {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+
+    li {
+        height: fit-content;
+
+        a, button {
+            --bg: transparent !important;
+            --bg-hov: transparent !important;
+            --bg-atv: transparent !important;
+            --padding: 6px 0;
+            margin: -6px 0 !important;
+            --shadow: none !important;
+            --mask: var(--icon-16-arrow-right);
+            position: relative;
+            --mask-size: 12px;
+            --margin-top: -6px;
+            padding-right: calc(12px + 4px) !important;
+            --left: none;
+            --right: 0;
+            --show-icon: block;
+
+            &:before {
+                opacity: 0;
+            }
+
+            &:hover {
+                --col: hsl(var(--l3-c));
+                text-decoration: underline !important;
+
+                transition-property: transform;
+                transition-duration: 0.1s;
+
+                &:before {
+                    opacity: 1;
+                }
+            }
+
+            width: fit-content;
+
+            &[href$="/pro"] {
+                --hue-over: var(--hue-pro);
+                --sat-over: 1;
+                --lit-over: 1;
+            }
+        }
+
+        & > [data-require="components/logout-form"] > button {
+            --hue-over: var(--hue-neg);
+            --sat-over: 1;
+            --lit-over: 1;
+        }
+    }
 }
 
 .footer .footer-top-row,
@@ -1643,8 +1732,7 @@ last.fm changes as of 2024-05-20 */
 }
 
 .bleh--panel-main,
-.col-main,
-/* katie doesnt have any scrobbles yet */ .profile-mobile-featured-track + .no-data-message
+.col-main
 {
     width: var(--cards-main-width);
     min-width: var(--cards-main-width);
@@ -1674,7 +1762,7 @@ last.fm changes as of 2024-05-20 */
     ),
 /* individual library selection */
 /* listening reports */ .user-dashboard > .user-dashboard-buffer,
-/* katie doesnt have any scrobbles yet */ .profile-mobile-featured-track + .no-data-message, .recent-tracks-section,
+.recent-tracks-section,
 /* quick create playlists */ .section-with-separator[action*="/create/from-"],
 .event-summary-with-poster,
 /* event overview thing */ .event-details:not(.event-summary-with-poster .event-details),
@@ -2099,7 +2187,7 @@ span.header-new-gallery-inner a,
     background: var(--card-specific-background) !important;
     --card-specific-background:
     linear-gradient(hsl(var(--b5)), hsl(var(--g4))) padding-box,
-    linear-gradient(0deg, hsla(var(--h3), 80%) 0%, hsl(var(--b5)) 100%) border-box;
+    linear-gradient(0deg, hsla(var(--l3-c), 80%) 0%, hsl(var(--b5)) 100%) border-box;
     border: 2px solid transparent !important;
     padding: calc(var(--card-padding) - 2px) !important;
     box-shadow: var(--card-shadow) !important;
@@ -2165,14 +2253,39 @@ span.header-new-gallery-inner a,
     gap: 3px;
     height: 52px;
     overflow: hidden;
+    flex: 1;
 }
 .featured-item-name, .featured-item-artist {
     font-size: var(--font-size);
     line-height: var(--line-height);
     margin: unset;
+    overflow: hidden;
+
+    a {
+        color: inherit;
+    }
+
+    a,
+    div {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        -webkit-box-orient: vertical;
+        display: -webkit-box;
+        -webkit-line-clamp: 1;
+    }
 }
 .featured-item-name {
     font-weight: var(--font-weight-medium);
+    text-decoration: var(--force-underline, none) !important;
+    display: flex;
+    gap: 6px;
+}
+.featured-item-artist {
+    display: flex;
+
+    a + a {
+        margin-left: 4px;
+    }
 }
 
 
@@ -2465,7 +2578,7 @@ span.header-new-gallery-inner a,
             background-color: hsla(var(--h4), 20%);
             border-radius: var(--item-big-radius);
 
-            [data-bleh--theme="light"] & {
+            [data-bleh--theme_type="light"] & {
                 background-color: hsla(var(--h4), 10%);
             }
 
@@ -2546,7 +2659,7 @@ span.header-new-gallery-inner a,
 .secondary-nav, .user-dashboard-controls .secondary-nav {
     box-shadow: unset;
     padding-bottom: 1px;
-    margin: 0 calc(var(--card-padding) - 12px) !important;
+    margin: 0 var(--card-padding) !important;
     width: calc(var(--cards-width) - (var(--card-padding) * 2));
 
     .content-top + &, .katsune-button-row + .bleh-background + & {
@@ -2619,6 +2732,7 @@ span.header-new-gallery-inner a,
 }
 .library-search {
     margin-top: unset !important;
+    margin-bottom: unset !important;
     position: absolute;
     /*top: calc(92px + var(--card-gap) + var(--card-padding)); /* 50px */
     top: 46px; /* revert to above once theres an easy way to detect searchbox presence */
@@ -2630,6 +2744,8 @@ span.header-new-gallery-inner a,
         padding-left: unset !important;
         padding-right: unset !important;
         width: 100% !important; /* 220 */
+        border: unset !important;
+        box-shadow: unset !important;
     }
 
     [data-ff--katsune="true"] & {
@@ -2643,11 +2759,17 @@ span.header-new-gallery-inner a,
 .library-search-form .search-field[type="text"] {
     width: 100%;
     caret-color: hsl(var(--l3-c)) !important;
-    padding-left: calc(16px + 6px + 7px) !important;
+    --padding: 12px 12px 12px calc(12px + 18px + 6px) !important;
+    --bg: transparent !important;
+    --bg-hov: hsl(var(--b3), 40%) !important;
+    --bg-atv: hsl(var(--b3), 60%) !important;
+    --shadow: none !important;
+    --shadow-hov: none !important;
+    --col: hsl(var(--c2)) !important;
+    height: 42px;
 }
 .library-search-form .library-search-submit::before {
     --mask: var(--icon-16-search);
-    left: 7px !important;
     background-color: hsl(var(--c3));
 }
 input::placeholder {
@@ -2662,6 +2784,33 @@ input::placeholder {
 
 
 /*     LIBRARY SEARCH RESULTS     */
+.library-search-results {
+    width: 360px !important;
+    top: 42px;
+    min-height: 100px;
+    font: inherit;
+
+    &.async-content-loading {
+        top: 0;
+    }
+
+    &:before {
+        display: none !important;
+    }
+
+    &[style="display: block;"] {
+        display: flex !important;
+    }
+
+    flex-direction: column;
+    justify-content: center;
+
+    & > [data-state="no-results"] {
+        color: hsl(var(--c3));
+        font-weight: var(--font-weight-medium);
+        cursor: default;
+    }
+}
 .library-search-results .all-results-list li {
     height: 32px;
 }
@@ -2670,7 +2819,16 @@ input::placeholder {
     color: hsl(var(--c3));
     padding: 0 12px;
     font-weight: var(--font-weight-medium);
-    margin-bottom: 12px !important;
+    margin-bottom: var(--button-list-gap) !important;
+    cursor: default;
+
+    &:first-child {
+        margin-top: calc(var(--card-gap) - var(--button-list-gap));
+    }
+
+    hr + & {
+        margin-top: var(--card-gap);
+    }
 }
 
 
@@ -2680,12 +2838,6 @@ input::placeholder {
     padding: unset !important;
 }
 
-hr + .library-search-results-header {
-    margin-top: 12px !important;
-    padding-top: 12px !important;
-    border-top: 1px solid hsl(var(--b4));
-}
-
 
 .all-results-list li:before {
     margin-right: unset !important;
@@ -2693,11 +2845,10 @@ hr + .library-search-results-header {
 }
 
 
-/* 38px is the size of the cover art (from chartlists),
-8px is based on the sizing of chartlist row inner gaps */
+/* 38px is the size of the cover art (from chartlists) */
 .column-tracks-item {
     height: 38px !important;
-    padding-left: calc(38px + 8px) !important;
+    padding-left: calc(38px + 12px) !important;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -2729,8 +2880,8 @@ hr + .library-search-results-header {
     height: fit-content !important;
 }
 .column-tracks-item-image {
-    /* override artist border radius */
-    border-radius: var(--item-small-radius) !important;
+    background: hsl(var(--b4)) !important;
+    box-shadow: unset !important;
 
     img {
         border-radius: unset;
@@ -2872,7 +3023,7 @@ button.navlist-more {
         height: 3px !important;
         margin: unset !important;
 
-        background: hsl(var(--h3-theme-switch)) !important;
+        background: hsl(var(--l3-c-theme-switch)) !important;
 
         transition-property: opacity !important;
         transition-duration: var(--trans) !important;
@@ -2887,6 +3038,11 @@ button.navlist-more {
             opacity: 1;
             transition: none;
         }
+    }
+
+    [data-bleh--theme_type="light"] & {
+        --bg-hov: hsl(var(--b5), 60%) !important;
+        --bg-atv: hsl(var(--b5), 80%) !important;
     }
 }
 .navlist-more {
@@ -3047,6 +3203,9 @@ button.navlist-more {
 .secondary-nav-item--wiki a {
     --mask: var(--icon-16-bio);
 }
+.secondary-nav-item--velocity {
+    --mask: var(--icon-16-labs);
+}
 
 
 /* library scrobbles tab */
@@ -3188,7 +3347,8 @@ button.navlist-more {
     --mask: var(--icon-16-bookmark);
 }
 .secondary-nav-item--bleh a {
-    --mask: var(--icon-16-settings);
+    --mask: var(--icon-16-bleh);
+    --mask-size: 18px;
     --col: hsl(var(--l3-c)) !important;
 }
 .secondary-nav-item--more > a {
@@ -3513,16 +3673,16 @@ button.navlist-more {
 .user-status--bleh-queen,
 .label.user-status--bleh-queen {
     --mask: var(--icon-queen);
-    --hue-over: 20;
-    --sat-over: 1.2;
+    --hue-over: 210;
+    --sat-over: 1.3;
     --lit-over: 1;
 }
 .user-status--bleh-cute,
 .label.user-status--bleh-cute {
-    --mask: var(--icon-cute);
-    --hue-over: 220;
-    --sat-over: 1.175;
-    --lit-over: 0.95;
+    --mask: var(--icon-16-bleh);
+    --hue-over: 330;
+    --sat-over: 1;
+    --lit-over: 1.1;
 }
 
 .user-status--bleh-cat,
@@ -3605,15 +3765,15 @@ button.navlist-more {
     --mask: var(--icon-contributor);
 
     --hue: 255;
-    --sat: 0.8;
-    --lit: 1;
+    --sat: 1;
+    --lit: 1.1;
 }
 
 .user-status--bleh-translation,
 .label.user-status--bleh-translation {
     --mask: var(--icon-translation);
 
-    --hue: 190;
+    --hue: 160;
     --sat: 1;
     --lit: 1;
 }
@@ -4173,6 +4333,7 @@ better than the default selector '#app a' i suppose */
 
 .grid-items-item {
     .grid-items-cover-image-image {
+        height: 100%;
         background: var(--avatar-generic-background);
         transition-property: filter;
         transition-duration: var(--trans);
@@ -4181,6 +4342,11 @@ better than the default selector '#app a' i suppose */
         overflow: hidden;
 
         position: relative;
+
+        img {
+            height: 100%;
+            object-fit: cover;
+        }
 
         &:after {
             background-image: linear-gradient(180deg,transparent 0,transparent 50%,rgba(0,0,0,.85));
@@ -4218,7 +4384,7 @@ better than the default selector '#app a' i suppose */
             transition-timing-function: var(--trans-function);
 
             &[style] {
-                background: hsl(var(--h4), 20%) !important;
+                background: hsl(var(--h4), 30%) !important;
             }
         }
 
@@ -4304,9 +4470,31 @@ better than the default selector '#app a' i suppose */
     color: hsl(var(--c1));
 
     a {
-        display: inline-block;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 2px 6px;
         width: 100%;
         text-decoration: var(--force-underline, none) !important;
+
+        div {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            -webkit-box-orient: vertical;
+            display: -webkit-box;
+            -webkit-line-clamp: 1;
+        }
+
+        .feat {
+            color: inherit !important;
+            opacity: 0.6;
+        }
+    }
+}
+.grid-items-item:hover {
+    .grid-items-item-main-text {
+        div {
+            -webkit-line-clamp: 2;
+        }
     }
 }
 .grid-items-item-aux-text {
@@ -4470,24 +4658,24 @@ better than the default selector '#app a' i suppose */
 .chartlist tbody {
     display: flex;
     flex-direction: column;
-    gap: 4px;
 }
 .obsession-candidate,
 .chartlist-row {
-    --bg: hsl(var(--b4), 40%);
-    --bg-hov: hsl(var(--b4), 60%);
+    --bg: transparent;
+    --bg-hov: transparent;
     --shadow: none !important;
     color: hsl(var(--c2));
     background-color: var(--bg);
-    padding: 7px 12px;
+    padding: 8px 0;
     min-height: 40px;
     max-height: fit-content;
-    border-radius: var(--item-big-radius);
+    border-radius: unset;
     box-shadow: var(--shadow);
     transition-property: background-color;
     transition-duration: var(--trans);
     transition-timing-function: var(--trans-function);
-    padding-right: 46px !important;
+    padding-right: 42px !important;
+    border-top: 1px solid var(--card-border-base);
 
     &[aria-expanded="true"],
     &:hover {
@@ -4620,40 +4808,22 @@ better than the default selector '#app a' i suppose */
 }
 
 .chartlist-row {
-    --more-gap: calc(32px + var(--chartlist-inner-gap));
-    --more-padding: calc(var(--more-gap) - 12px);
-    padding-left: var(--more-gap) !important;
-
     &.show-focus-controls {
         .chartlist-more {
             opacity: 1 !important;
         }
     }
-}
-.chartlist-more {
-    margin: unset !important;
-    position: absolute;
-    top: 0;
-    left: 0;
-    bottom: 0;
-    opacity: 0.2 !important;
 
-    & > div,
-    .chartlist-more-button {
-        height: 100%;
-    }
-
-    .chartlist-more-button {
-        --left: 7px;
-        --mask: var(--icon-16-dots-v);
-
-        [data-ff--hide_chartlist_more="true"] & {
-            display: none;
+    &:hover {
+        .chartlist-play, .chartlist-more {
+            display: block !important;
         }
     }
-
-    .chartlist-more-menu {
-        left: -12px !important;
+}
+.chartlist-more {
+    .chartlist-more-button {
+        --left: 7px;
+        --mask: var(--icon-16-dots);
     }
 }
 
@@ -4687,7 +4857,7 @@ better than the default selector '#app a' i suppose */
     top: 0;
     right: 0;
     bottom: 0;
-    padding: 0 7px 0 30px;
+    padding: 0 5px 0 30px;
     width: fit-content;
     height: 100%;
     margin: unset !important;
@@ -4709,16 +4879,17 @@ better than the default selector '#app a' i suppose */
     &:before {
         content: '';
         position: absolute;
-        inset: 0;
-        background: linear-gradient(90deg, transparent 0%, hsla(var(--h3), 20%) 100%);
-        border-radius: var(--item-big-radius);
+        width: 12px;
+        height: 12px;
+        top: 50%;
+        right: 15px;
+        margin-top: -6px;
+        background: hsl(var(--h3), 50%);
+        border-radius: 50px;
+        box-shadow: 0 0 20px 1px hsl(var(--h3));
         transition-property: opacity;
         transition-duration: var(--trans);
         transition-timing-function: var(--trans-function);
-    }
-
-    [data-bleh--theme="light"] &:before {
-        background: linear-gradient(90deg, transparent 0%, hsla(var(--h4), 25%) 100%);
     }
 }
 .chartlist-loved:has([data-toggle-button-current-state="unloved"]):before {
@@ -4753,10 +4924,8 @@ better than the default selector '#app a' i suppose */
     /*--bg: hsla(var(--h3), 45%) !important;
     --bg-hov: hsla(var(--h3), 60%) !important;
     --shadow: 0 0 50px 5px hsla(var(--h3), 45%) !important;*/
-    --bg: hsla(var(--h4), 35%) !important;
-    --bg-hov: hsla(var(--h4), 45%) !important;
-    --shadow: 0 10px 50px 5px hsla(var(--h4), 35%) !important;
-    --shadow-hov: var(--shadow), var(--interact-shadow) !important;
+    --bg: hsla(var(--h4), 10%) !important;
+    --bg-hov: hsla(var(--h4), 17%) !important;
     z-index: 20;
 }
 .chartlist-row--now-scrobbling:before {
@@ -4782,7 +4951,7 @@ better than the default selector '#app a' i suppose */
 }
 .chartlist-now-scrobbling:before,
 .chartlist-now-scrobbling a {
-    color: hsl(var(--l2-c)) !important;
+    color: hsl(var(--l2-c-theme-switch)) !important;
 }
 
 
@@ -4793,7 +4962,7 @@ better than the default selector '#app a' i suppose */
     --shadow: 0 0 50px 5px hsla(var(--h4), 35%) !important;
     --shadow-hov: var(--shadow), var(--interact-shadow) !important;
 
-    [data-bleh--theme="light"] & {
+    [data-bleh--theme_type="light"] & {
         --bg: hsla(var(--h4), 35%) !important;
         --bg-hov: hsla(var(--h4), 50%) !important;
         --shadow: 0 0 50px 5px hsla(var(--h4), 35%) !important;
@@ -4872,29 +5041,48 @@ better than the default selector '#app a' i suppose */
     text-decoration: var(--force-underline, none) !important;
 }
 
+.grid-items-item-main-text,
+.featured-item-name,
+.chartlist-name {
+    .feat {
+        font-size: var(--font-size-sm);
+        line-height: var(--line-height-sm);
+        width: fit-content;
+        height: fit-content;
+        padding: 0 4px;
+        margin: auto 0;
+        background-color: hsl(var(--b3), 40%);
+        border-radius: var(--item-med-radius);
+        color: hsla(var(--c2), 80%);
+        font-weight: var(--font-weight-medium);
+
+        &:is(
+            [data-bleh--tag-group="mixes"], [data-bleh--tag-group="mixes_numbers"],
+            [data-bleh--tag-group="stems"],
+            [data-bleh--tag-group="bonus"]
+        ) {
+            color: hsl(var(--c3));
+        }
+
+        &[data-bleh--tag-group="mixes_numbers"] {
+            text-transform: uppercase;
+            order: 10;
+            font-size: var(--font-size-sm);
+        }
+        &[data-bleh--tag-type="(session"] {
+            text-transform: capitalize;
+        }
+    }
+}
+
 .chartlist-name, .chartlist-artist {
     z-index: 5;
     position: relative;
 }
 .obsession-candidate-artist,
-.chartlist-name .feat, .chartlist-artist a, .featured-item-artist, .similar-albums-item-artist, .track-similar-tracks-item-artist {
+.chartlist-artist a, .featured-item-artist, .similar-albums-item-artist, .track-similar-tracks-item-artist {
     color: hsla(var(--c2), 80%) !important;
     font-weight: var(--font-weight);
-}
-.chartlist-name .feat:is(
-    [data-bleh--tag-group="mixes"], [data-bleh--tag-group="mixes_numbers"],
-    [data-bleh--tag-group="stems"],
-    [data-bleh--tag-group="bonus"]
-) {
-    color: hsl(var(--c3)) !important;
-}
-[data-bleh--tag-group="mixes_numbers"] {
-    text-transform: uppercase;
-    order: 10;
-    font-size: var(--font-size-sm);
-}
-[data-bleh--tag-type="(session"] {
-    text-transform: capitalize;
 }
 
 [data-bleh--show_guest_features="false"] {
@@ -4933,13 +5121,13 @@ better than the default selector '#app a' i suppose */
                 }
                 .chartlist-artist {
                     position: absolute;
-                    left: calc(var(--more-padding) + 38px + 2px - 28px);
+                    left: calc(38px + 2px - 28px);
                     margin-top: 16px;
                     right: 300px;
                 }
                 .chartlist-album.custom-album-text {
                     position: absolute;
-                    left: calc(var(--more-padding) + 38px + 2px - 28px);
+                    left: calc(38px + 2px - 28px);
                     margin-top: 32px;
                     margin-left: calc(var(--chartlist-inner-gap) / 2) !important;
                     margin-right: unset !important;
@@ -4949,11 +5137,11 @@ better than the default selector '#app a' i suppose */
             &.chartlist--with-image {
                 .chartlist-row {
                     .chartlist-artist {
-                        left: calc(var(--more-padding) + 84px - 2px - 28px);
+                        left: calc(84px - 2px - 28px);
                     }
                     .chartlist-album.custom-album-text {
                         position: absolute;
-                        left: calc(var(--more-padding) + 84px - 2px - 28px);
+                        left: calc(84px - 2px - 28px);
                     }
 
                     &.chartlist-row--now-scrobbling {
@@ -4962,11 +5150,11 @@ better than the default selector '#app a' i suppose */
                             margin-bottom: 32px;
                         }
                         .chartlist-artist {
-                            left: calc(var(--more-padding) + 18px + 84px - 2px - 28px);
+                            left: calc(18px + 84px - 2px - 28px);
                             margin-top: unset;
                         }
                         .chartlist-album.custom-album-text {
-                            left: calc(var(--more-padding) + 18px + 84px - 2px - 28px);
+                            left: calc(18px + 84px - 2px - 28px);
                             margin-top: 32px;
 
                             font-size: var(--font-size-sm);
@@ -4983,10 +5171,10 @@ better than the default selector '#app a' i suppose */
                 }
                 .chartlist-artist {
                     position: absolute;
-                    left: calc(var(--more-padding) + 84px - 2px - 42px);
+                    left: calc(84px - 2px - 42px);
                     margin-top: 16px;
                     right: 300px;
-                    width: 60%;
+                    width: 50%;
                 }
             }
         }
@@ -5088,19 +5276,26 @@ better than the default selector '#app a' i suppose */
     margin-bottom: 16px;
 }
 
-.chartlist--with-bar.chartlist--with-index.chartlist--with-play.chartlist--with-image .chartlist-row--with-artist .chartlist-artist, .chartlist--with-multi-playlinks.chartlist--with-index.chartlist--with-play.chartlist--with-image .chartlist-row--with-artist .chartlist-artist,
-.chartlist--with-bar.chartlist--with-index.chartlist--with-play.chartlist--with-image.chartlist--with-loved .chartlist-row--with-artist .chartlist-artist, .chartlist--with-multi-playlinks.chartlist--with-index.chartlist--with-play.chartlist--with-image.chartlist--with-loved .chartlist-row--with-artist .chartlist-artist {
-    left: calc(var(--more-padding) + 84px - 2px);
-    margin-top: 16px;
+.chartlist {
+    --side-left: 12px;
+    --image-offset: 0px;
+
+    &.chartlist--with-image {
+        --image-offset: 44px;
+    }
 }
-.chartlist--with-bar.chartlist--with-index.chartlist--with-play.chartlist--with-image.chartlist--with-loved.chartlist--with-index--length-3 .chartlist-row--with-artist .chartlist-artist, .chartlist--with-multi-playlinks.chartlist--with-index.chartlist--with-play.chartlist--with-image.chartlist--with-loved.chartlist--with-index--length-3 .chartlist-row--with-artist .chartlist-artist,
-.chartlist--with-bar.chartlist--with-index.chartlist--with-play.chartlist--with-image.chartlist--with-index--length-3 .chartlist-row--with-artist .chartlist-artist, .chartlist--with-multi-playlinks.chartlist--with-index.chartlist--with-play.chartlist--with-image.chartlist--with-index--length-3 .chartlist-row--with-artist .chartlist-artist {
-    left: calc(var(--more-padding) + 92px - 2px);
-    margin-top: 16px;
+.chartlist--with-index--length-1 .chartlist-artist,
+.chartlist--with-index--length-2 .chartlist-artist {
+    left: calc(var(--side-left) + 27px + var(--image-offset)) !important;
+    margin-top: 16px !important;
 }
-.chartlist--with-bar.chartlist--with-index.chartlist--with-play.chartlist--with-image.chartlist--with-loved.chartlist--with-index--length-4 .chartlist-row--with-artist .chartlist-artist, .chartlist--with-multi-playlinks.chartlist--with-index.chartlist--with-play.chartlist--with-image.chartlist--with-loved.chartlist--with-index--length-4 .chartlist-row--with-artist .chartlist-artist,
-.chartlist--with-bar.chartlist--with-index.chartlist--with-play.chartlist--with-image.chartlist--with-index--length-4 .chartlist-row--with-artist .chartlist-artist, .chartlist--with-multi-playlinks.chartlist--with-index.chartlist--with-play.chartlist--with-image.chartlist--with-index--length-4 .chartlist-row--with-artist .chartlist-artist {
-    left: calc(var(--more-padding) + 103px - 2px);
+.chartlist--with-index--length-3 .chartlist-artist {
+    left: calc(var(--side-left) + 34px + var(--image-offset)) !important;
+    margin-top: 16px !important;
+}
+.chartlist--with-index--length-4 .chartlist-artist {
+    left: calc(var(--side-left) + 45px + var(--image-offset)) !important;
+    margin-top: 16px !important;
 }
 
 .chartlist--with-bar .chartlist-row--with-artist .chartlist-artist {
@@ -5109,31 +5304,29 @@ better than the default selector '#app a' i suppose */
 
 /* playlist */
 .chartlist--with-bar.chartlist--with-play.chartlist--with-image.chartlist--with-loved .chartlist-row--with-artist .chartlist-artist, .chartlist--with-multi-playlinks.chartlist--with-play.chartlist--with-image.chartlist--with-loved .chartlist-row--with-artist .chartlist-artist {
-    left: calc(var(--more-padding) + 59px - 2px);
+    left: calc(59px - 2px);
     margin-top: 16px;
 }
 
 
 /*     LOVED - brought over from bleh     */
 .chartlist-love-button {
+    --bg: transparent !important;
+    --bg-hov: transparent !important;
+    --bg-atv: transparent !important;
+    --shadow: none !important;
     position: relative;
     --left: 7px;
     --mask: var(--icon-16-heart);
-
-    &:before {
-        color: hsl(var(--l3-c));
-    }
+    --col: hsl(var(--l3-c));
+    color: var(--col);
 }
-[data-toggle-button-current-state=loved] .chartlist-love-button
-{
-    --bg: transparent !important;
-    --bg-hov: hsla(var(--h3), 15%) !important;
-    --bg-atv: hsla(var(--h3), 35%) !important;
+[data-toggle-button-current-state=loved] .chartlist-love-button {
     --mask: var(--icon-16-heart-solid);
 }
 
-[data-toggle-button-current-state="unloved"] button.chartlist-love-button:not(:hover):before {
-    color: hsl(var(--c3), 40%) !important;
+[data-toggle-button-current-state="unloved"] button.chartlist-love-button:not(:hover) {
+    --col: hsl(var(--c3), 40%) !important;
 }
 /*[data-toggle-button-current-state="loved"] .chartlist-love-button:after,
 a.chartlist-love-button:after {
@@ -5152,8 +5345,8 @@ a.chartlist-love-button:after {
 
 
 /*     OTHER USER PROFILE     */
-[data-toggle-button-current-state="unloved"] span.chartlist-love-button:before {
-    color: hsla(var(--c3), 20%) !important;
+[data-toggle-button-current-state="unloved"] span.chartlist-love-button {
+    --col: hsla(var(--c3), 20%) !important;
 }
 
 
@@ -5208,8 +5401,8 @@ a.chartlist-love-button:after {
     width: 180px;
     display: flex;
 
-    [data-bleh--theme="light"] & {
-        background: hsl(var(--b5));
+    [data-bleh--theme_type="light"] & {
+        background: hsl(var(--b3));
         /*box-shadow: inset 0 0 0 1px hsl(var(--c3), 10%);*/
     }
     [data-bleh--season="halloween"] & {
@@ -5455,9 +5648,9 @@ p + .chartlist {
 
         padding: 4px;
         background-color: hsl(var(--b6));
-        border-radius: var(--item-big-radius);
+        border-radius: calc(var(--item-big-radius) + 4px);
 
-        [data-bleh--theme="light"] & {
+        [data-bleh--theme_type="light"] & {
             background-color: hsl(var(--b5));
             box-shadow: inset 0 0 0 1px var(--card-border-base);
         }
@@ -5486,16 +5679,19 @@ p + .chartlist {
             .shout-reply,
             & > div > form button,
             & > button {
-                --padding: 7px 12px !important;
+                --padding: 7px !important;
                 height: 32px !important;
                 --force-font-weight: var(--font-weight-medium) !important;
                 width: unset;
-                --left: 12px !important;
-                min-width: 42px !important;
+                --left: 7px !important;
+                min-width: 32px !important;
             }
 
             .vote-button {
-                --padding: 7px 12px 7px var(--btn-left) !important;
+                --padding: 7px 12px 7px calc(12px + 14px + 4px) !important;
+                --left: 12px !important;
+                --mask-size: 14px;
+                --margin-top: -7px;
             }
         }
 
@@ -5524,15 +5720,6 @@ p + .chartlist {
     &.shout--deleted {
         min-height: 24px;
     }
-
-    &:hover, &:focus-within {
-        background: hsl(var(--b4), 20%);
-        transition: none;
-    }
-
-    transition-property: background;
-    transition-duration: var(--trans);
-    transition-timing-function: var(--trans-function);
 
     .shout-container--active & {
         background: hsl(var(--h4), 20%);
@@ -5696,7 +5883,7 @@ the body text becomes bigger by default - this reverts that */
     &[data-avatar-themed] {
         box-shadow: 0 4px 10px hsl(var(--h4), 10%), var(--interact-shadow);
 
-        [data-bleh--theme="light"] & {
+        [data-bleh--theme_type="light"] & {
             box-shadow: 0 4px 10px hsl(var(--h4), 40%), var(--interact-shadow);
         }
     }
@@ -5725,6 +5912,8 @@ the body text becomes bigger by default - this reverts that */
 
 .no-data-message {
     color: hsl(var(--c3));
+    font-weight: var(--font-weight-medium);
+    cursor: default;
     width: unset !important;
     margin-top: unset !important;
 
@@ -5958,7 +6147,7 @@ span.shout-user-avatar:before,
     color: hsl(var(--l3-c));
     --override-bg: currentColor !important;
 }
-[data-bleh--theme="light"] .user-status--bleh-user-bIeak:after {
+[data-bleh--theme_type="light"] .user-status--bleh-user-bIeak:after {
     color: hsl(var(--c1)) !important;
     --lit-over: 1;
 }
@@ -6287,7 +6476,7 @@ button,
 
 
     /* breaks bleh settings */
-    /*[data-bleh--theme="light"] & {
+    /*[data-bleh--theme_type="light"] & {
         --bg: hsla(var(--b4), 70%);
         --bg-hov: hsla(var(--b4), 50%);
         --bg-atv: hsla(var(--b4), 30%);
@@ -6471,9 +6660,7 @@ button,
 .header-new-gallery--link .header-new-gallery-inner,
 .date-range-picker-button,
 .source-album,
-.select-button,
 .language-nav,
-.auth-link,
 .out-now-btn,
 .show-more a,
 .music-more-link a
@@ -6564,6 +6751,8 @@ button,
 
 
 /*     ICON MASK     */
+.footer-links :is(a, button):before,
+.library-search-results.async-content-loading:after,
 .radio-button:after, .radio-button h4:after,
 .listening-report-promo:after, .listening-report-promo .listening-report-promo-date:after,
 .listen-item p:before,
@@ -6839,10 +7028,10 @@ span.header-new-gallery-inner a:before,
 }
 
 .obsession-candidate-inner .btn-sm,
-.chartlist-love-button, .chartlist-more-button, .chartlist-play-button {
+.chartlist-more-button, .chartlist-play-button {
     --bg: transparent !important;
-    --bg-hov: hsla(var(--b3), 30%) !important;
-    --bg-atv: hsla(var(--b3), 50%) !important;
+    --bg-hov: hsla(var(--b4), 60%) !important;
+    --bg-atv: hsla(var(--b4), 80%) !important;
     --shadow: none !important;
     --shadow-hov: none !important;
 }
@@ -6931,6 +7120,11 @@ section:has(.dropdown-menu-clickable-button.section-control) {
 
 
 .dropdown-menu-list-button, .dropdown-menu-clickable-button, .dropdown-menu-clickable-button-js-only {
+    --btn-right: calc(12px + 12px + 4px) !important;
+    --mask-size: 12px;
+    --margin-top: -6px;
+    --right: 12px;
+
     &:after {
         color: hsl(var(--c3));
         transition-property: transform !important;
@@ -7122,9 +7316,10 @@ section:has(.dropdown-menu-clickable-button.section-control) {
 
 
 /*     DROPDOWN     */
+.library-search-results,
 .player-bar-playback-options-wrap,
 .dropdown-menu-clickable, .auth-dropdown-menu, .navlist-hidden-list-wrap .navlist-hidden-list {
-    padding: var(--button-list-gap) !important;
+    padding: 0 !important;
 }
 .dropdown-menu-item-dark,
 .dropdown-menu-clickable-item, .auth-dropdown-menu-item, .navlist-hidden-list a,
@@ -7137,6 +7332,7 @@ section:has(.dropdown-menu-clickable-button.section-control) {
     --shadow: none !important;
     --shadow-hov: none !important;
     --col: hsl(var(--c2)) !important;
+    --radius: 0;
     position: relative !important;
     min-width: 170px !important;
     --show-icon: block;
@@ -7206,12 +7402,12 @@ section:has(.dropdown-menu-clickable-button.section-control) {
 .bleh--configure-menu-item,
 .more-item--edit-old
 {
-    margin-bottom: var(--button-list-gap) !important;
+    margin-bottom: 4px !important;
 }
 .more-item--submit-correction,
 .more-item--delete
 {
-    margin-top: var(--button-list-gap) !important;
+    margin-top: 4px !important;
 }
 .lang-item.active:after,
 .more-item--submit-correction:after,
@@ -7282,10 +7478,6 @@ very, very, very dated - who looks up a song on ebay? */
     --margin-top: 0;
     --btn-left: 12px !important;
 
-    --bg: transparent !important;
-    --bg-hov: transparent !important;
-    --bg-atv: transparent !important;
-
     &[data-menu-item="profile-shortcut"] {
         --mask: var(--icon-16-profile-shortcut);
 
@@ -7301,8 +7493,8 @@ very, very, very dated - who looks up a song on ebay? */
         content: '';
         display: block !important;
 
-        border-top-left-radius: calc(var(--item-big-radius) + var(--button-list-gap));
-        border-top-right-radius: calc(var(--item-big-radius) + var(--button-list-gap));
+        border-top-left-radius: var(--item-big-radius);
+        border-top-right-radius: var(--item-big-radius);
 
         background-image: var(--url) !important;
         position: absolute;
@@ -7424,7 +7616,8 @@ very, very, very dated - who looks up a song on ebay? */
     --mask: var(--icon-16-language);
 }
 [data-menu-item="bleh"] {
-    --mask: var(--icon-16-settings);
+    --mask: var(--icon-16-bleh);
+    --mask-size: 18px;
 }
 [data-menu-item="developer"] {
     --mask: var(--icon-16-dev);
@@ -7462,7 +7655,7 @@ very, very, very dated - who looks up a song on ebay? */
     --bg-atv: hsla(var(--h4), 22%) !important;
     --col: hsl(var(--l3-c)) !important;
 
-    [data-bleh--theme="light"] & {
+    [data-bleh--theme_type="light"] & {
         --bg-hov: hsla(var(--h4), 15%) !important;
         --bg-atv: hsla(var(--h4), 25%) !important;
     }
@@ -7771,7 +7964,7 @@ very, very, very dated - who looks up a song on ebay? */
         }
 
         [data-bleh--theme="oled"] &,
-        [data-bleh--theme="light"] & {
+        [data-bleh--theme_type="light"] & {
             --bg: hsl(var(--b5));
             --bg-hov: hsl(var(--b4), 20%);
             --bg-atv: hsl(var(--b4), 20%);
@@ -8057,9 +8250,10 @@ input:is([name^="track_name"], [name^="artist_name"], [name^="album_name"], [nam
 .dropdown-menu-clickable, .auth-dropdown-menu, .navlist-hidden-list, .modal-body, .library-search-results, .events-filter-location-dropdown {
     margin: unset !important;
     background: hsl(var(--b6), 95%) !important;
-    border-radius: calc(var(--item-big-radius) + var(--button-list-gap)) !important;
+    border-radius: var(--item-big-radius) !important;
     box-shadow: var(--override-full-shadow, var(--menu-shadow)) !important;
     color: hsl(var(--c2));
+    overflow: hidden;
 
     &.modal-body {
         background: hsl(var(--b5)) !important;
@@ -8067,15 +8261,6 @@ input:is([name^="track_name"], [name^="artist_name"], [name^="album_name"], [nam
     }
     &.date-range-picker-content {
         border-radius: var(--card-radius) !important;
-    }
-
-    &:not(.modal-body) {
-        animation: dropdown var(--trans-short) var(--trans-function);
-        transform-origin: top;
-
-        [data-bleh--reduced_motion="true"] & {
-            animation: fade_popup_reduced var(--trans) var(--trans-function) !important;
-        }
     }
 
     &:not(
@@ -8086,7 +8271,7 @@ input:is([name^="track_name"], [name^="artist_name"], [name^="album_name"], [nam
         -webkit-backdrop-filter: blur(20px) saturate(160%);
     }
 
-    [data-bleh--theme="light"] &,
+    [data-bleh--theme_type="light"] &,
     [data-bleh--theme="oled"] & {
         background: hsl(var(--b5), 95%) !important;
     }
@@ -8176,7 +8361,7 @@ input:is([name^="track_name"], [name^="artist_name"], [name^="album_name"], [nam
     display: none;
 }
 .date-range-picker-content,
-.dropdown-menu-clickable--padded, .navlist-hidden-list, .library-search-results, .events-filter-location-dropdown {
+.dropdown-menu-clickable--padded, .navlist-hidden-list, .events-filter-location-dropdown {
     padding: var(--card-gap) !important;
 }
 .modal-body {
@@ -8505,7 +8690,7 @@ a.gallery-image-preferred-off {
             --shadow: 0 10px 50px 5px hsla(var(--h4), 35%);
             z-index: 20;
 
-            [data-bleh--theme="light"] & {
+            [data-bleh--theme_type="light"] & {
                 --bg: hsla(var(--h4), 35%);
                 --bg-hov: hsla(var(--h4), 50%);
                 --bg-atv: hsla(var(--h4), 65%);
@@ -9011,6 +9196,10 @@ a.gallery-image-preferred-off {
 /*     NAV     */
 .pagination {
     margin-top: var(--card-gap);
+
+    .col-main > & {
+        margin: unset;
+    }
 }
 .pagination-list {
     cursor: default;
@@ -9054,18 +9243,17 @@ a.gallery-image-preferred-off {
 .source-album {
     position: relative;
     --left: none;
-    --right: 12px;
+    --right: 0;
     --mask: var(--icon-16-arrow-right);
 
     display: flex;
     align-items: center;
     gap: 12px;
-    --padding: 7px;
-    margin: -7px !important;
+    --padding: 0;
 
     --bg: transparent;
-    --bg-hov: hsl(var(--b4), 60%);
-    --bg-atv: hsl(var(--b4), 80%);
+    --bg-hov: transparent;
+    --bg-atv: transparent;
     --shadow: none;
 
     .link-block-cover-link {
@@ -9342,10 +9530,6 @@ text[style^="color: rgb(255, 172, 172)"] {
         color: hsl(var(--c3));
     }
 
-    [data-bleh--reduced_motion="true"] & {
-        transform: none !important;
-    }
-
     &[data-theme="lotus-tooltip"],
     &[data-theme="lotus-tooltip-corrected"],
     &[data-theme="right-tooltip"] {
@@ -9372,11 +9556,24 @@ text[style^="color: rgb(255, 172, 172)"] {
     &[data-theme="select-menu"],
     &[data-theme="language-menu"],
     &[data-theme="menu"] {
-        padding: var(--button-list-gap) !important;
+        padding: 0 !important;
         background: hsl(var(--b6), 95%) !important;
-        border-radius: calc(var(--item-big-radius) + var(--button-list-gap)) !important;
+        border-radius: var(--item-big-radius) !important;
         box-shadow: var(--override-full-shadow, var(--overlay-shadow)) !important;
         color: hsl(var(--c2));
+
+        & > .tippy-content > :first-child {
+            border-top-left-radius: var(--item-big-radius) !important;
+            border-top-right-radius: var(--item-big-radius) !important;
+        }
+        & > .tippy-content > :last-child {
+            border-bottom-left-radius: var(--item-big-radius) !important;
+            border-bottom-right-radius: var(--item-big-radius) !important;
+
+            &:is(form) {
+                overflow: hidden;
+            }
+        }
 
         /*[data-theme="window"] & {
             box-shadow: var(--highlight-shadow), var(--menu-shadow) !important;
@@ -9386,7 +9583,7 @@ text[style^="color: rgb(255, 172, 172)"] {
 
         font-size: var(--font-size);
 
-        [data-bleh--theme="light"] &,
+        [data-bleh--theme_type="light"] &,
         [data-bleh--theme="oled"] & {
             background: hsl(var(--b5), 95%) !important;
         }
@@ -9481,7 +9678,8 @@ text[style^="color: rgb(255, 172, 172)"] {
         }
 
         .sep {
-            margin: var(--button-list-gap) 0;
+            border-bottom: 1px solid var(--card-border-base);
+            margin: 4px 0;
             height: 0;
 
             &:first-child {
@@ -9501,7 +9699,7 @@ text[style^="color: rgb(255, 172, 172)"] {
 
         font-size: var(--font-size);
 
-        [data-bleh--theme="light"] &,
+        [data-bleh--theme_type="light"] &,
         [data-bleh--theme="oled"] & {
             background: hsl(var(--b5), 95%) !important;
         }
@@ -9515,9 +9713,6 @@ text[style^="color: rgb(255, 172, 172)"] {
 
         &[data-theme="select-menu"],
         &[data-theme="language-menu"] {
-            animation: dropdown var(--trans-short) var(--trans-function);
-            transform-origin: center;
-
             &[data-state="hidden"] {
                 opacity: 0;
             }
@@ -9570,7 +9765,6 @@ text[style^="color: rgb(255, 172, 172)"] {
     &[data-theme="user"] {
         padding: var(--card-gap) !important;
         border-radius: var(--card-radius) !important;
-        animation: dropdown var(--trans-short) var(--trans-function);
         transform-origin: center;
         color: hsl(var(--c2));
         max-width: 500px !important;
@@ -9644,7 +9838,9 @@ text[style^="color: rgb(255, 172, 172)"] {
         }
     }
 
-    transition-timing-function: var(--trans-function);
+    &:not([data-state="hidden"]) {
+        transition: none !important;
+    }
 
     &[data-state="hidden"] {
         opacity: 0;
@@ -9730,6 +9926,9 @@ text[style^="color: rgb(255, 172, 172)"] {
 
 [data-bleh-theme="light"] {
     --mask: var(--icon-16-sun);
+}
+[data-bleh-theme="ink"] {
+    --mask: var(--icon-16-pen);
 }
 [data-bleh-theme="dark"] {
     --mask: var(--icon-16-moon);
@@ -11092,6 +11291,7 @@ table.table tr:nth-child(2n) td {
         --top: 1px;
     }
 }
+.obsession-history + .row,
 .obsession-history {
     display: none;
 }
@@ -11282,7 +11482,8 @@ table.table tr:nth-child(2n) td {
 .wiki-history-table tbody {
     display: flex;
     flex-direction: column;
-    gap: 4px;animation: slide_down var(--trans) var(--trans-function);
+    gap: 4px;
+    animation: slide_down var(--trans) var(--trans-function);
     transform-origin: top;
 
     [data-bleh--reduced_motion="true"] & {
@@ -12206,7 +12407,7 @@ table.table tr:nth-child(2n) td {
 .album-and-lyrics-row {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
-    gap: calc(var(--card-gap) + 7px);
+    gap: var(--card-gap);
     margin-top: var(--card-gap);
 
     &:before, &:after {
@@ -12234,6 +12435,7 @@ table.table tr:nth-child(2n) td {
     min-height: 200px !important;
 }
 
+.library-search-results.async-content-loading,
 .data-loading,
 .loading:not(.library-fetch, .library-date-picker),
 .lazy-shoutbox.async-content-loading {
@@ -13024,7 +13226,7 @@ h2.playlisting-create-option-title {
     --bg-atv: transparent !important;
     --shadow: none !important;
     --shadow-hov: none !important;
-    width: 42px;
+    width: 42px !important;
     --font-size: 0;
     opacity: unset !important;
 }
@@ -13616,9 +13818,9 @@ pre {
         --col: hsl(var(--c1));
 
         .preview-container {
-            border-color: hsl(var(--h3));
-            outline: 2px solid hsl(var(--h3));
-            box-shadow: 0 0 20px hsl(var(--h3), 50%);
+            border-color: hsl(var(--l3-c));
+            outline: 2px solid hsl(var(--l3-c));
+            box-shadow: 0 0 20px hsl(var(--l3-c), 50%);
         }
     }
 
@@ -13744,7 +13946,7 @@ pre {
     &[aria-checked="true"] {
         --shadow: 0 0 20px hsl(var(--h4));
 
-        [data-bleh--theme="light"] & {
+        [data-bleh--theme_type="light"] & {
             --shadow: 0 0 20px hsla(var(--h4), 70%);
         }
     }
@@ -13767,6 +13969,11 @@ pre {
     }
     &[data-swatch-type="customise"] {
         --mask: var(--icon-16-add);
+    }
+
+    &:before {
+        --mask-size: 18px;
+        --margin-top: -9px;
     }
 }
 
@@ -14349,9 +14556,9 @@ input[type="range"]::-moz-range-progress {
 
 .inner-preview {
     .tracks {
+        background-color: hsl(var(--b5));
         display: flex;
         flex-direction: column;
-        gap: 2px;
 
         [data-bleh--inbuilt-id_chart_style_and_length_top_albums^="classic"] &.album,
         [data-bleh--inbuilt-id_chart_style_and_length_top_albums^="grid"] &.album,
@@ -14365,10 +14572,9 @@ input[type="range"]::-moz-range-progress {
         }
 
         .track {
-            background-color: hsla(var(--b4), 40%);
-            padding: 6px 12px;
+            padding: 7px 12px;
             min-height: 24px;
-            border-radius: var(--item-big-radius);
+            border-top: 1px solid var(--card-border-base);
             display: flex;
             align-items: center;
             gap: 12px;
@@ -14378,7 +14584,7 @@ input[type="range"]::-moz-range-progress {
             .cover {
                 width: 20px;
                 height: 20px;
-                background-color: hsl(var(--b6));
+                background-color: var(--avatar-generic-background);
                 border-radius: var(--item-small-radius);
 
                 html:not([data-bleh--inbuilt-recent_artwork="true"]) .tracks.recent & {
@@ -14400,6 +14606,9 @@ input[type="range"]::-moz-range-progress {
                         margin-top: 4px;
                         width: 70px;
                     }
+                    .album {
+                        margin-top: 4px;
+                    }
                 }
             }
             .title {
@@ -14411,8 +14620,15 @@ input[type="range"]::-moz-range-progress {
             .artist {
                 width: 150px;
                 height: 6px;
-                background-color: hsla(var(--c2), 80%);
+                background-color: hsl(var(--c2), 80%);
                 border-radius: 50px;
+            }
+            .album {
+                width: 40px;
+                height: 4px;
+                background-color: hsl(var(--c3));
+                border-radius: 50px;
+                display: none;
             }
             .time {
                 width: 60px;
@@ -14436,14 +14652,17 @@ input[type="range"]::-moz-range-progress {
             }
 
             &.realtime {
-                background-color: hsla(var(--h4), 35%);
+                background-color: hsla(var(--h4), 10%);
 
-                [data-bleh--theme="light"] & {
-                    background-color: hsla(var(--h4), 35%);
+                .cover {
+                    width: 34px;
+                    height: 34px;
                 }
 
-                .title {
-                    background-color: hsl(var(--l2-c));
+                [data-bleh--stacked_chartlist_info="true"] & {
+                    .album {
+                        display: block;
+                    }
                 }
             }
         }
@@ -14843,7 +15062,7 @@ input[type="range"]::-moz-range-progress {
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
 
-        [data-bleh--theme="light"] & {
+        [data-bleh--theme_type="light"] & {
             --candy-cane-1: hsl(-2, var(--l3-c-sat), 60%);
         }
     }
@@ -15346,7 +15565,7 @@ trying to list every song ever made by someone identifying as a female, which is
             border-radius: var(--card-radius);
 
             [data-bleh--theme="oled"] &,
-            [data-bleh--theme="light"] & {
+            [data-bleh--theme_type="light"] & {
                 background-color: transparent;
                 border: var(--card-border);
             }
@@ -15753,7 +15972,7 @@ button.bleh--gallery-bookmark-image-btn {
     background-color: hsl(var(--b6));
     border-radius: calc(var(--item-big-radius) + 4px);
 
-    [data-bleh--theme="light"] & {
+    [data-bleh--theme_type="light"] & {
         background-color: hsl(var(--b5));
         box-shadow: inset 0 0 0 1px var(--card-border-base);
     }
@@ -15926,7 +16145,7 @@ button.bleh--gallery-bookmark-image-btn {
                 --col: hsl(var(--l2-c));
                 text-shadow: 0 0 10px hsla(var(--h4), 90%);
 
-                [data-bleh--theme="light"] & {
+                [data-bleh--theme_type="light"] & {
                     --col: hsl(var(--l3-c));
                     text-shadow: 0 0 10px hsla(var(--h4), 45%);
                 }
@@ -16318,7 +16537,7 @@ button.bleh--gallery-bookmark-image-btn {
             opacity: 0.5; /* 0.9 */
         }
 
-        [data-bleh--theme="light"] &:after {
+        [data-bleh--theme_type="light"] &:after {
             opacity: 0.3; /* 0.7 */
         }
     }
@@ -16941,7 +17160,7 @@ h4 {
         box-shadow: var(--card-shadow);
         text-align: center;
 
-        [data-bleh--theme="light"] &,
+        [data-bleh--theme_type="light"] &,
         [data-bleh--theme="oled"] & {
             box-shadow: var(--card-shadow);
         }
@@ -17201,6 +17420,11 @@ h4 {
     width: max-content;
     position: relative;
 
+    --btn-right: calc(12px + 12px + 4px) !important;
+    --mask-size: 12px;
+    --margin-top: -6px;
+    --right: 12px;
+
     &:after {
         --mask: var(--icon-16-dropdown);
 
@@ -17368,7 +17592,7 @@ h4 {
                     --sat-over: 1;
                     --lit-over: 1;
 
-                    [data-bleh--theme="light"] & {
+                    [data-bleh--theme_type="light"] & {
                         color: hsl(var(--l4-c));
                     }
 
@@ -17607,7 +17831,7 @@ h4 {
                 --left: 15px;
             }
 
-            [data-bleh--theme="light"] & {
+            [data-bleh--theme_type="light"] & {
                 --bg: var(--cards-overlay-image-subtlest, none), hsl(var(--b5));
                 --bg-hov: var(--cards-overlay-image-subtlest, none), hsla(var(--b5), 80%);
                 --bg-atv: var(--cards-overlay-image-subtlest, none), hsla(var(--b5), 60%);
@@ -17676,18 +17900,18 @@ h4 {
             }
 
             &.profile-top-item--follow {
-                --mask: var(--icon-16-plus);
+                --mask: var(--icon-16-user-plus);
 
                 &[data-ignored="true"] {
                     --mask: var(--icon-16-block);
                 }
 
                 [data-toggle-button-current-state="followed"] & {
-                    --mask: var(--icon-16-check);
+                    --mask: var(--icon-16-user);
                 }
 
                 &[data-mutuals="true"] {
-                    --mask: var(--icon-16-heart-solid) !important;
+                    --mask: var(--icon-16-users) !important;
 
                     &:after {
                         content: attr(data-mutuals-text);
@@ -17849,7 +18073,7 @@ h4 {
                 display: none;
             }
 
-            [data-bleh--theme="light"] & {
+            [data-bleh--theme_type="light"] & {
                 background-color: hsla(var(--h4), 35%);
                 box-shadow: 0 0 20px hsla(var(--h4), 35%);
             }
@@ -17951,7 +18175,7 @@ h4 {
                 background: linear-gradient(180deg, hsla(var(--h4), 15%), transparent);
             }
 
-            [data-bleh--theme="light"] & {
+            [data-bleh--theme_type="light"] & {
                 &[data-changelog-latest="false"] {
                     background: linear-gradient(180deg, hsla(var(--h4), 40%), transparent);
                 }
@@ -18047,7 +18271,7 @@ h4 {
                 --sat-over: 1;
                 --lit-over: 1.1;
 
-                [data-bleh--theme="light"] & {
+                [data-bleh--theme_type="light"] & {
                     --hue-over: var(--hue-fav);
                     --lit-over: 1;
                 }
@@ -18316,12 +18540,22 @@ h4 {
 
                 .info-side {
                     h1 {
+                        display: block;
                         font-size: 30px;
                         line-height: 36px;
-                        gap: var(--card-gap);
 
                         .feat {
+                            padding: 0 6px;
+                            background-color: hsl(var(--b5), 40%);
+                            border-radius: var(--item-big-radius);
                             font-size: 22px;
+                            line-height: 31px;
+                            display: inline-flex;
+                        }
+
+                        div {
+                            display: inline;
+                            margin-right: var(--card-gap);
                         }
                     }
                     h2 {
@@ -18565,7 +18799,7 @@ h4 {
                 color: inherit;
             }
 
-            [data-bleh--theme="light"] & {
+            [data-bleh--theme_type="light"] & {
                 text-shadow: 0 0 15px hsl(var(--b5));
             }
         }
@@ -18599,10 +18833,10 @@ h4 {
 
                 .feat {
                     font-size: 18px;
-                    color: hsl(var(--c3));
+                    color: hsl(var(--c2), 70%);
                 }
 
-                [data-bleh--theme="light"] & {
+                [data-bleh--theme_type="light"] & {
                     text-shadow: 0 0 15px hsl(var(--b5));
                 }
             }
@@ -18653,7 +18887,7 @@ h4 {
                 line-height: inherit;
             }
 
-            [data-bleh--theme="light"] & {
+            [data-bleh--theme_type="light"] & {
                 text-shadow: 0 0 15px hsl(var(--b5));
             }
         }
@@ -18722,6 +18956,11 @@ h4 {
             --line-height: 20px;
             --font-weight: var(--font-weight-medium);
             --padding: 0;
+
+            &:hover {
+                text-decoration: underline !important;
+                --col: hsl(var(--l3-c));
+            }
         }
     }
 }
@@ -18758,7 +18997,7 @@ h4 {
         position: relative;
         order: -10;
 
-        margin-top: calc(-1 * ((var(--card-gap) * 2) + 32px));
+        margin-top: calc(-1 * (20px + 32px));
         margin-left: calc(-1 * ((100vw - (var(--cards-width) + (var(--card-gap) * 2))) / 2));
         margin-right: calc(-1 * ((100vw - (var(--cards-width) + (var(--card-gap) * 2))) / 2));
 
@@ -18795,7 +19034,7 @@ h4 {
 
     .bleh-background-buttons {
         position: absolute;
-        top: calc((var(--card-gap) * 2) + 32px + var(--card-gap));
+        top: calc(20px + 32px + var(--card-gap));
         right: calc(var(--card-gap) + var(--card-padding));
 
         background: unset !important;
@@ -18868,7 +19107,7 @@ h4 {
                 background-color: hsl(var(--b4));
                 width: 250px;
 
-                [data-bleh--theme="light"] & {
+                [data-bleh--theme_type="light"] & {
                     background-color: hsl(var(--b5));
                 }
 
@@ -19069,7 +19308,7 @@ h4 {
             mask-size: 100%;
             -webkit-mask-size: 100%;
 
-            [data-bleh--theme="light"] & {
+            [data-bleh--theme_type="light"] & {
                 background: linear-gradient(hsl(var(--l4-c)), hsl(var(--h3)));
             }
         }
@@ -19164,7 +19403,7 @@ h4 {
                     -webkit-background-clip: text;
                     -webkit-text-fill-color: transparent;
 
-                    [data-bleh--theme="light"] & {
+                    [data-bleh--theme_type="light"] & {
                         color: hsl(var(--l4-c));
 
                         background: unset;
@@ -19332,7 +19571,7 @@ h4 {
     overflow: hidden;
     border-radius: 10px;
 
-    /*[data-bleh--theme="light"] & {
+    /*[data-bleh--theme_type="light"] & {
         background-color: hsl(var(--h4), 10%);
     }*/
 
@@ -19792,6 +20031,10 @@ h4 {
     }
 }
 
+.user-library-search-back-link {
+    display: none;
+}
+
 .library-overview-header {
     margin: 0 0 var(--card-gap) 0;
 }
@@ -20213,9 +20456,11 @@ h4 {
                 width: 200px;
             }
 
-            &:hover {
-                overflow-x: scroll;
-                overflow-y: unset;
+            [data-bleh--simulate_scroll="false"] & {
+                &:hover {
+                    overflow-x: scroll;
+                    overflow-y: unset;
+                }
             }
         }
 
@@ -20333,6 +20578,7 @@ h4 {
 
     font-weight: var(--font-weight-medium);
     color: hsl(var(--c3));
+    padding: calc(var(--card-padding) * 2) var(--card-padding) !important;
 }
 
 
@@ -20688,6 +20934,7 @@ h4 {
         flex-direction: column;
         gap: 2px;
         flex: 1;
+        line-height: var(--line-height);
 
         .title {
             font-weight: var(--font-weight-medium);
@@ -20720,8 +20967,9 @@ h4 {
         }
     }
 
-    padding: 6px;
-    margin-bottom: 6px;
+    padding: 12px 12px 16px;
+    border-bottom: 1px solid var(--card-border-base);
+    margin-bottom: 4px;
 
     & + .track-preview {
         display: none;
@@ -20908,12 +21156,14 @@ h4 {
         .music-bookmarks-albums-item-name,
         .music-releases-item-name,
         .music-more-artists-item-name {
+            color: hsl(var(--c2));
             font: inherit;
             font-weight: var(--font-weight-medium);
             margin-top: 10px;
             max-height: 36px;
 
             a {
+                color: inherit;
                 text-decoration: none !important;
             }
         }
@@ -21267,7 +21517,7 @@ h4 {
 
     &[data-bleh--scrobble-milestone] p {
         --col: hsl(var(--l2-c-theme-switch));
-        text-shadow: 0 0 10px hsla(var(--h4), 90%);
+        text-shadow: 0 0 10px hsla(var(--h4), 40%);
     }
 
     &:before {
@@ -21310,8 +21560,12 @@ h4 {
         font-weight: var(--font-weight-medium);
     }
 
-    [data-bleh--theme="light"] & {
+    [data-bleh--theme_type="light"] & {
         --card-specific-background: hsl(var(--h4), 15%);
+    }
+
+    &.blocked-cta {
+        order: -1;
     }
 }
 
@@ -21322,6 +21576,7 @@ h4 {
 .more-link a,
 #events-section > p > a,
 .see-more {
+    display: inline-flex;
     --bg: transparent;
     --bg-hov: transparent;
     --bg-atv: transparent;

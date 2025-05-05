@@ -154,8 +154,8 @@ export const trans = {
         de: 'Titel aktualisieren'
     },
     from_the_album: {
-        en: 'From the album: {album}',
-        de: 'Aus dem Album {album}'
+        en: 'From {album}',
+        de: 'Aus {album}'
     },
     set_obsession: {
         en: 'Obsess',
@@ -225,13 +225,25 @@ export const trans = {
         en: 'Scrobbles',
         de: 'Scrobbels'
     },
+    artist: {
+        en: 'Artist'
+    },
     artists: {
         en: 'Artists',
         de: 'Künstler'
     },
+    artists_tooltip: {
+        en: 'Multiple artists are grouped into this profile'
+    },
+    album: {
+        en: 'Album'
+    },
     albums: {
         en: 'Albums',
         de: 'Alben'
+    },
+    track: {
+        en: 'Track'
     },
     tracks: {
         en: 'Tracks',
@@ -249,6 +261,9 @@ export const trans = {
         light: {
             en: 'Light',
             de: 'Hell'
+        },
+        ink: {
+            en: 'Ink'
         },
         dark: {
             en: 'Ash',
@@ -732,6 +747,67 @@ export const trans = {
     loved: {
         en: 'Loved',
         de: 'Lieblingslieder'
+    },
+    velocity: {
+        en: 'Velocity'
+    },
+    logout: {
+        en: 'Logout',
+        de: 'Ausloggen'
+    },
+    tracklist: {
+        en: 'Tracklist',
+        de: 'Titelliste'
+    },
+    tracklist_from_plays_info: {
+        en: 'Retrieved own plays as official tracklist is unavailable'
+    },
+    from_the_album: {
+        en: 'From {album}'
+    },
+    listens: {
+        en: 'listens',
+        de: 'scrobbels',
+        count: {
+            en: '{c} listens',
+            de: '{c} scrobbels'
+        }
+    },
+    others_count: {
+        en: '{c} others',
+        de: '{c} hörer'
+    },
+    loading_album_plays: {
+        en: 'Collecting your album plays'
+    },
+    fail_album_plays: {
+        en: 'You do not have any plays here'
+    },
+    open_album_as_track: {
+        en: 'Open album title as track',
+        de: 'Albumtitel als Titel öffnen'
+    },
+    ignored: {
+        en: 'Ignored'
+    },
+    all_time: {
+        en: 'All time'
+    },
+    count_total: {
+        en: '{c} total'
+    },
+    video_removed: {
+        en: 'Video removed by Last.fm'
+    },
+    blocked_page: {
+        en: 'This page has been limited by Last.fm'
+    },
+    cancel: {
+        en: 'Cancel',
+        de: 'Abbrechen'
+    },
+    results_for: {
+        en: 'Results for'
     }
 }
 

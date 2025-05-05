@@ -31,16 +31,29 @@ export function bleh_user_library() {
     });
 
     //page.structure.side.appendChild(date_button_panel);
-    page.structure.side.appendChild(date_panel);
+    if (date_items.length > 0)
+        page.structure.side.appendChild(date_panel);
 
     page.structure.glacier.date_panel = date_panel;
+
+
+    // tabs
+    let tabs = page.structure.container.querySelector('.library-controls .navlist-items');
+    let velocity_tab = document.createElement('li');
+    velocity_tab.classList.add('navlist-item', 'secondary-nav-item', 'secondary-nav-item--velocity');
+    velocity_tab.innerHTML = (`
+        <a class="secondary-nav-item-link" href="${root}labs/artist-velocity" target="_blank">
+            ${tl(trans.velocity)}
+        </a>
+    `);
+    tabs.appendChild(velocity_tab);
 
 
     if (!ff('glacier_library'))
         return;
 
 
-    if (settings.glacier_library_graphs) {
+    if (settings.glacier_library_graphs && date_items.length > 0) {
         let chart_view_selector = document.createElement('div');
         chart_view_selector.classList.add('view-buttons', 'chart-view-selector', 'view-buttons-middle');
         chart_view_selector.innerHTML = (`
@@ -75,10 +88,11 @@ export function bleh_user_library() {
 
 
     //let picker_content = date_button_panel.querySelector('.date-range-picker-content');
-    bleh_glacier_library_date();
+    if (date_items.length > 0)
+        bleh_glacier_library_date();
 
 
-    if (page.subpage == 'library_overview') {
+    if (page.subpage == 'library_overview' || page.subpage.endsWith('-search')) {
         // scrobbles tab
         bleh_glacier_library_top(true);
 
@@ -119,8 +133,9 @@ export function bleh_user_library() {
         };
     }
 
-    if (page.subpage == 'library_overview' || page.subpage.startsWith('library_artist_') ||
-    page.subpage.startsWith('library_album_') || page.subpage.startsWith('library_track_')) {
+    if (date_items.length > 0 && (
+        page.subpage == 'library_overview' || page.subpage.startsWith('library_artist_') ||
+    page.subpage.startsWith('library_album_') || page.subpage.startsWith('library_track_'))) {
         // new graph
         log('refresh is now marked true', 'glacier library');
         page.structure.glacier.refresh = true;
@@ -306,24 +321,37 @@ function bleh_glacier_library_top(static_page = false) {
     }
 
     metadata.forEach((meta, index) => {
-        let text = meta.querySelector('.metadata-title').textContent;
+        let text = meta.querySelector('.metadata-title');
+        let value = meta.querySelector('.metadata-display').textContent;
 
-        if (page.subpage == 'library_overview') {
-            if (index == 1)
-                text = trans_legacy[lang].glacier.meta.average;
-        } else if (page.subpage == 'library_artists') {
-            text = trans_legacy[lang].glacier.meta.artists;
-        } else if (page.subpage == 'library_albums') {
-            text = trans_legacy[lang].glacier.meta.albums;
-        } else if (page.subpage == 'library_tracks') {
-            text = trans_legacy[lang].glacier.meta.tracks;
+        if (text) {
+            text = text.textContent;
+
+            if (page.subpage == 'library_overview') {
+                if (index == 1)
+                    text = trans_legacy[lang].glacier.meta.average;
+            } else if (page.subpage == 'library_artists') {
+                text = tl(trans.artists);
+            } else if (page.subpage == 'library_albums') {
+                text = trans_legacy[lang].glacier.meta.albums;
+            } else if (page.subpage == 'library_tracks') {
+                text = trans_legacy[lang].glacier.meta.tracks;
+            }
+        } else {
+            // search results
+            text = tl(trans.results_for);
+            value = meta.querySelector('.metadata-display').textContent;
+
+            let start = value.indexOf('“') + 1;
+            let end = value.indexOf('”');
+            value = value.substring(start, end);
         }
 
         let glacier_meta_item = document.createElement('div');
         glacier_meta_item.classList.add('glacier-library-metadata-item');
         glacier_meta_item.innerHTML = (`
             <div class="sub-text">${text}</div>
-            <div class="glacier-library-metadata-item-value">${meta.querySelector('.metadata-display').textContent}</div>
+            <div class="glacier-library-metadata-item-value">${value}</div>
         `);
 
         glacier_meta.appendChild(glacier_meta_item);

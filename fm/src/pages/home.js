@@ -43,10 +43,10 @@ export function bleh_home() {
         ${(sponsoring) ? (`
         <div class="subtext sponsor-message colourful">
             <div class="bleh-icon-container"><div class="bleh-icon" style="--icon: var(--icon-16-heart-solid); --icon-size: 14px"></div></div>
-            Thank you for sponsoring!
+            ${tl(trans.thank_you_for_sponsoring)}
         </div>
         `) : ''}
-        <h1>${trans_legacy[lang].home.welcome.replace('{m}', `<a class="mention" href="${root}user/${auth.name}">@${auth.name}</a>`)}</h1>
+        <h1>${tl(trans.welcome_back_user).replace('{user}', `<a class="mention" href="${root}user/${auth.name}">@${auth.name}</a>`)}</h1>
     `);
 
     page.structure.container.insertBefore(banner, page.structure.container.firstElementChild);
@@ -88,7 +88,7 @@ export function bleh_home() {
             </li>
             <li class="navlist-item secondary-nav-item secondary-nav-item--bleh">
                 <a href="${root}bleh" class="secondary-nav-item-link ${(page.type == 'error') ? 'secondary-nav-item-link--active' : ''}">
-                    bleh
+                    ${tl(trans.settings)}
                 </a>
             </li>
             <li class="navlist-item secondary-nav-item secondary-nav-item--more">
@@ -131,7 +131,13 @@ export function bleh_home() {
         placement: "bottom",
         interactive: true,
         interactiveBorder: 10,
-        trigger: "click"
+        trigger: "click",
+
+        onShow(instance) {
+            instance.popper.addEventListener('click', event => {
+                instance.hide();
+            });
+        }
     });
 
 

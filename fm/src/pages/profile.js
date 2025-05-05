@@ -4,12 +4,12 @@ import { settings } from "../build/config"
 import { log } from "../build/log"
 import { auth, page, recent_activity_list, root } from "../build/page"
 import { cute, sponsor_list } from "../build/sponsor"
-import { clean_number, sanitise } from "../build/tools"
+import { clean_number, sanitise, sanitise_text } from "../build/tools"
 import { lang, trans_legacy, trans, tl } from "../build/trans"
 import { prep_chart_colours } from '../chart'
 import { load_badges } from "../components/badge"
 import { dialog } from "../components/dialog"
-import { correct_artist, correct_item_by_artist } from "../components/lotus"
+import { correct_artist, correct_item_by_artist, name_includes } from "../components/lotus"
 import { markdown } from "../components/markdown"
 import { deliver_notif, notify } from "../components/notify"
 import { create_profile_top_item, redesign_profile_header } from "../components/profile_header"
@@ -155,9 +155,7 @@ export function bleh_profiles() {
         profile_header.setAttribute('data-is-own-profile', 'true');
 
     if (!is_subpage) {
-        let is_following = false;
-        if (profile_header.querySelector('.label.user-follow'))
-            is_following = true;
+        let is_following = profile_header.querySelector('.label.user-follow');
 
 
         //
@@ -362,7 +360,7 @@ export function bleh_profiles() {
             let value_panel = document.createElement('section');
             value_panel.classList.add('value-panel');
             value_panel.innerHTML = (`
-                <h2 class="text-18">${(selected_tab != null) ? selected_tab.textContent : tl(trans.events)}</h2>
+                <h2 class="text-18">${(selected_tab) ? selected_tab.firstChild.textContent : tl(trans.events)}</h2>
             `);
 
             let values = page.structure.main.querySelectorAll('.metadata-display');
@@ -401,7 +399,7 @@ export function bleh_profiles() {
                     name: page.name,
                     text: total_value.textContent,
                     type: 'total',
-                    tooltip:  trans_legacy[lang].event.total.replace('{c}', total_value.textContent)
+                    tooltip:  tl(trans.count_total).replace('{c}', total_value.textContent)
                 });
 
                 value_panel.appendChild(total_header);
@@ -426,7 +424,7 @@ export function bleh_profiles() {
             } else {
                 let dashboard = page.structure.container.querySelector('.user-dashboard');
 
-                if (dashboard == null)
+                if (!dashboard)
                     return;
 
                 // v2
@@ -553,9 +551,13 @@ export function bleh_profiles() {
 
 
             let no_data = page.structure.container.querySelector('.no-data-message--obsession-history');
-            if (no_data != null) {
+            if (no_data) {
                 wrap.after(no_data);
             }
+
+
+            let pagination = page.structure.container.querySelector('.pagination');
+            new_panel.appendChild(pagination);
         }
     }
 
@@ -972,9 +974,51 @@ function bleh_featured_profile_track(object) {
     let heading_link = heading.outerHTML;
     details.removeChild(heading);
 
-    if (settings.corrections) {
-        let name_elem = object.querySelector('.featured-item-name');
-        let artist_elem = object.querySelector('.featured-item-artist');
+    if (settings.format_guest_features) {
+        let name_elem = details.querySelector('.featured-item-name');
+        let artist_elem = details.querySelector('.featured-item-artist');
+
+        let song_title = name_elem.textContent;
+
+        let formatted_title = name_includes(song_title, artist_elem.textContent);
+        let song_tags = {};
+
+        if (formatted_title) {
+            song_title = formatted_title[0];
+            song_tags = formatted_title[1];
+        }
+
+        // parse tags into text
+        let song_tags_text = '';
+        for (let song_tag in song_tags) {
+            song_tags_text = `${song_tags_text}<div class="feat" data-bleh--tag-type="${song_tags[song_tag].type}" data-bleh--tag-group="${song_tags[song_tag].group}">${sanitise_text(song_tags[song_tag].text)}</div>`;
+        }
+
+        // combine
+        name_elem.innerHTML = `<div class="title">${sanitise_text(song_title).trim()}</div>${song_tags_text}`;
+
+        let song_artist_element = document.createElement('div');
+        song_artist_element.classList.add('featured-item-artist');
+        song_artist_element.innerHTML = `<a href="${root}music/${sanitise(formatted_title[2])}">${sanitise_text(formatted_title[2])}</a>`;
+
+        // append guests
+        let song_guests = formatted_title[3];
+        for (let guest in song_guests) {
+            // &
+            song_artist_element.innerHTML = `${song_artist_element.innerHTML},`;
+
+            let guest_element = document.createElement('a');
+            guest_element.setAttribute('href', `${root}music/${sanitise(song_guests[guest])}`);
+            guest_element.textContent = song_guests[guest];
+
+            song_artist_element.appendChild(guest_element);
+        }
+
+        details.removeChild(artist_elem);
+        details.appendChild(song_artist_element);
+    } else if (settings.corrections) {
+        let name_elem = details.querySelector('.featured-item-name');
+        let artist_elem = details.querySelector('.featured-item-artist');
 
         let name = correct_item_by_artist(name_elem.textContent.trim(), artist_elem.textContent.trim());
         let artist = correct_artist(artist_elem.textContent.trim());

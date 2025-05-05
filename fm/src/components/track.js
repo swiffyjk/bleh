@@ -11,7 +11,7 @@ export function patch_titles() {
     if (page.subpage == 'tags_overview')
         return;
 
-    if (page.structure.main == null)
+    if (!page.structure.main)
         return;
 
     let tracklists = page.structure.main.querySelectorAll('.chartlist:not(.chartlist__placeholder)');
@@ -161,7 +161,8 @@ export function patch_titles() {
                 console.log('formatted', formatted_title);
                 let song_title = track_title.getAttribute('title');
                 let song_tags = {};
-                if (formatted_title != undefined) {
+
+                if (formatted_title) {
                     song_title = formatted_title[0];
                     song_tags = formatted_title[1];
                 }
@@ -175,7 +176,7 @@ export function patch_titles() {
                 }
 
                 // combine
-                track_title.innerHTML = `<div class="title">${sanitise_text(song_title)}</div>${song_tags_text}`;
+                track_title.innerHTML = `<div class="title">${sanitise_text(song_title).trim()}</div>${song_tags_text}`;
 
                 let song_artist_element = track.querySelector('.chartlist-artist');
                 if (song_artist_element == null && !is_user) {
@@ -324,7 +325,7 @@ export function patch_titles() {
                     let image = link.querySelector('img');
 
                     if (!settings.album_text) {
-                        let alt = image.getAttribute('alt');
+                        let alt = correct_item_by_artist(image.getAttribute('alt'), track_artist);
 
                         let album_text = document.createElement('td');
                         album_text.classList.add('chartlist-album', 'custom-album-text');

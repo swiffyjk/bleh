@@ -185,7 +185,8 @@ function main_flow() {
 
     if (page.type == 'user' ||
         page.type == 'search' ||
-        page.type == 'tag'
+        page.type == 'tag' ||
+        page.type == 'events'
     )
         music_grids();
 
@@ -297,7 +298,7 @@ function assign_page_type() {
 }
 
 function assign_page_subpage() {
-    page.subpage = page.initial.replace(page.type, '').replace('_', '').replace('music_', '');
+    page.subpage = page.initial.replace(page.type, '').replace('_', '').replace('music_', '').replace('event_', '').replace('festival_', '');
 
     if (last_page_subpage.state != page.subpage) {
         last_page_subpage.state = page.subpage;
@@ -369,7 +370,7 @@ function load_page() {
         )
             patch_wiki();
 
-        if ((page.type == 'user' || page.type == 'tag') && page.subpage == 'overview')
+        if ((page.type == 'user' || page.type == 'tag' || page.type == 'events') && page.subpage == 'overview')
             bleh_radio();
     }
 

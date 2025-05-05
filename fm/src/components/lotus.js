@@ -346,7 +346,8 @@ export function name_includes(original_title, original_artist) {
         .replaceAll(' with ', ';')
         .replaceAll('- ', '')
         .replaceAll(',; ', ';')
-        .replaceAll('Tyler;the', 'Tyler, the').replaceAll('Tyler;The', 'Tyler, The');
+        .replaceAll('Tyler;the', 'Tyler, the').replaceAll('Tyler;The', 'Tyler, The')
+        .replaceAll(' of BTS', ';BTS');
 
         console.log('pre-split', field_text);
 
@@ -389,6 +390,7 @@ export function artist_title() {
         title_text = title_text
         .replaceAll(' & ', ';').replaceAll(', ', ';')
         .replace('Tyler;the', 'Tyler, The').replace('Tyler;The', 'Tyler, The')
+        .replace('Marina;the Diamonds', 'Marina and The Diamonds')
         .replaceAll(';;', ';');
 
         page.multi = true;
@@ -477,7 +479,7 @@ export function patch_header_title() {
             }
 
             // combine
-            track_title.innerHTML = `<div class="title">${sanitise_text(song_title)}</div>${song_tags_text}`;
+            track_title.innerHTML = `<div class="title">${sanitise_text(song_title).trim()}</div>${song_tags_text}`;
 
             let song_artist_element = document.body.querySelector('span[itemprop="byArtist"]');
             let song_guests = formatted_title[3];

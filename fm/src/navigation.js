@@ -68,17 +68,11 @@ export function append_nav() {
         badge.classList.add('label', `user-status--bleh-${badges[0].type}`, `user-status--bleh-user-${auth.name}`, 'auth-badge');
         badge.textContent = badges[0].name;
         auth_link.appendChild(badge);
-
-        auth_link.classList.add(`user-status--bleh-${badges[0].type}`, `user-status--bleh-user-${auth.name}`);
-        auth_link.setAttribute('data-has-colour', 'true');
     } else if (auth.pro) {
         let pro_badge = document.createElement('p');
         pro_badge.classList.add('label', 'user-status-subscriber', 'auth-badge');
         pro_badge.textContent = 'Pro';
         auth_link.appendChild(pro_badge);
-
-        auth_link.classList.add('user-status-subscriber');
-        auth_link.setAttribute('data-has-colour', 'true');
     }
 
 
@@ -144,11 +138,11 @@ export function append_nav() {
     changelog_container.classList.add('masthead-nav-item');
     changelog_container.innerHTML = (`
         <a class="masthead-nav-control" onclick="_query_changelog()" data-label="changelog">
-            ${trans_legacy[lang].changelog.name}
+            ${tl(trans.changelog)}
         </a>
     `);
     tippy(changelog_container, {
-        content: trans_legacy[lang].changelog.name
+        content: tl(trans.changelog)
     });
     links.appendChild(changelog_container);
 
@@ -157,18 +151,18 @@ export function append_nav() {
     bleh_container.classList.add('masthead-nav-item');
     bleh_container.innerHTML = (`
         <a class="masthead-nav-control" href="${root}bleh${(stored_season.id != 'none') ? '?tab=seasonal' : ''}" data-label="bleh" data-season="${stored_season.id}" data-season-active="${(stored_season.id != 'none') ? 'true' : 'false'}">
-            ${(stored_season.id == 'none') ? trans_legacy[lang].auth_menu.configure_bleh : moment(stored_season.end.replace('y0', stored_season.year).replace('{offset}', stored_season.offset)).to(stored_season.now, true)}
+            ${(stored_season.id == 'none') ? tl(trans.configure_bleh) : moment(stored_season.end.replace('y0', stored_season.year).replace('{offset}', stored_season.offset)).to(stored_season.now, true)}
         </a>
     `);
     if (stored_season.id == 'none') {
         tippy(bleh_container, {
-            content: trans_legacy[lang].auth_menu.configure_bleh
+            content: tl(trans.configure_bleh)
         });
     } else {
         page.header.season_tooltip = tippy(bleh_container, {
             theme: 'seasonal-swatch',
             content: (`
-                <span class="season-colour-name">${trans_legacy[lang].settings.customise.seasonal.listing[stored_season.id]}</span>
+                <span class="season-colour-name">${tl(trans.seasonal.listing[stored_season.id])}</span>
                 <span class="season-exclusive">${trans_legacy[lang].auth_menu.seasonal_notice}</span>
             `),
             allowHTML: true
@@ -235,11 +229,6 @@ export function append_nav() {
                     <span class="auth-dropdown-item-right" id="theme-value">${tl(trans.themes[settings.theme])}</span>
                 </span>
             </button>
-            ${(ff('dev')) ? (`
-            <button class="dropdown-menu-clickable-item" data-menu-item="developer" onclick="_update_flag_toggle('dev', this)">
-                ${trans_legacy[lang].auth_menu.dev}
-            </button>
-            `) : ''}
             <button class="dropdown-menu-clickable-item" data-menu-item="language">
                 <span class="auth-dropdown-item-row">
                     <span class="auth-dropdown-item-left">${tl(trans.language)}</span>
@@ -247,7 +236,7 @@ export function append_nav() {
                 </span>
             </button>
             <a class="dropdown-menu-clickable-item" data-menu-item="bleh" href="${root}bleh">
-                ${tl(trans.configure_bleh)}
+                ${tl(trans.settings)}
             </a>
             <div class="sep"></div>
             <a class="dropdown-menu-clickable-item" data-menu-item="bookmarks" href="${root}music/+bookmarks">
@@ -259,7 +248,7 @@ export function append_nav() {
             <form>
                 <input type="hidden" name="csrfmiddlewaretoken" value="${token}">
                 <a class="dropdown-menu-clickable-item" data-menu-item="logout" href="${root}logout">
-                    ${trans_legacy[lang].auth_menu.logout}
+                    ${tl(trans.logout)}
                 </a>
             </form>
         `),
@@ -267,6 +256,7 @@ export function append_nav() {
         placement: 'top',
         interactive: true,
         interactiveBorder: 10,
+        trigger: 'click',
 
         onShow(instance) {
             instance.popper.style.setProperty('--url', `url(${auth.avatar.replace('avatar42s', 'avatar170s')})`);
@@ -298,6 +288,9 @@ export function append_nav() {
                     <button class="dropdown-menu-clickable-item theme-item-in-menu" data-bleh-theme="light" onclick="change_theme_from_menu('light')">
                         ${tl(trans.themes.light)}
                     </button>
+                    <button class="dropdown-menu-clickable-item theme-item-in-menu" data-bleh-theme="ink" onclick="change_theme_from_menu('ink')">
+                        ${tl(trans.themes.ink)}
+                    </button>
                     <button class="dropdown-menu-clickable-item theme-item-in-menu" data-bleh-theme="dark" onclick="change_theme_from_menu('dark')">
                         ${tl(trans.themes.dark)}
                     </button>
@@ -320,5 +313,10 @@ export function append_nav() {
             });
         }
     });
-    new_auth.parentElement.removeChild(new_auth);
+    let container = new_auth.parentElement;
+    container.parentElement.removeChild(container);
+    auth_link.removeAttribute('aria-controls');
+    auth_link.removeAttribute('data-disclose-hover');
+    auth_link.removeAttribute('data-disclose-hover--allow-enter-open');
+    auth_link.removeAttribute('href');
 }
