@@ -153,10 +153,6 @@ export const trans = {
         en: 'Refresh tracks',
         de: 'Titel aktualisieren'
     },
-    from_the_album: {
-        en: 'From {album}',
-        de: 'Aus {album}'
-    },
     set_obsession: {
         en: 'Obsess',
         de: 'Obsessen'
@@ -763,7 +759,8 @@ export const trans = {
         en: 'Retrieved own plays as official tracklist is unavailable'
     },
     from_the_album: {
-        en: 'From {album}'
+        en: 'From {album}',
+        de: 'Aus {album}'
     },
     listens: {
         en: 'listens',
@@ -808,6 +805,9 @@ export const trans = {
     },
     results_for: {
         en: 'Results for'
+    },
+    create_new_event: {
+        en: 'Create new event'
     }
 }
 

@@ -57,17 +57,22 @@ export function bleh_home() {
         <ul class="navlist-items">
             <li class="navlist-item secondary-nav-item secondary-nav-item--home">
                 <a href="${root}music" class="secondary-nav-item-link ${(page.subpage == 'music') ? 'secondary-nav-item-link--active' : ''}">
-                    ${tl(trans.home)}
+                    ${tl(trans.home)}<div class="new-badge">${tl(trans.beta)}</div>
                 </a>
             </li>
             <li class="navlist-item secondary-nav-item secondary-nav-item--recommendations">
                 <a href="${root}music/+recommended" class="secondary-nav-item-link ${(page.type == 'recommended') ? 'secondary-nav-item-link--active' : ''}">
-                    ${tl(trans.recommendations)}
+                    ${tl(trans.recommendations)}<div class="new-badge">${tl(trans.beta)}</div>
                 </a>
             </li>
             <li class="navlist-item secondary-nav-item secondary-nav-item--releases">
                 <a href="${root}music/+releases/out-now" class="secondary-nav-item-link ${(page.type == 'releases') ? 'secondary-nav-item-link--active' : ''}">
                     ${tl(trans.releases)}
+                </a>
+            </li>
+            <li class="navlist-item secondary-nav-item secondary-nav-item--events dont-rearrange">
+                <a href="${root}events" class="secondary-nav-item-link ${(page.type == 'events') ? 'secondary-nav-item-link--active' : ''}">
+                    ${tl(trans.events)}<div class="new-badge">${tl(trans.beta)}</div>
                 </a>
             </li>
             <li class="navlist-item secondary-nav-item secondary-nav-item--bookmarks">

@@ -1,16 +1,23 @@
 import { patch_avatar } from "../avatar";
 import { settings } from "../build/config";
 import { log } from "../build/log";
-import { auth, page } from "../build/page";
+import { auth, page, root } from "../build/page";
 import { clean_number } from "../build/tools";
 import { lang, trans_legacy, trans, tl } from "../build/trans";
 import { correct_artist } from "../components/lotus";
 import { checkup_page_structure } from "../components/structure";
 import { refresh_all } from "../config";
 import { register_background, update_page } from "../page";
+import { bleh_home } from './home';
 
 export function bleh_events() {
-    let is_subpage = page.subpage != 'overview';
+    if (page.subpage == 'overview') {
+        // not an individual event
+        bleh_events_home();
+        return;
+    }
+
+    let is_subpage = page.subpage != 'event_overview';
 
     // without pro theres two containers
     if (auth.pro) {
@@ -37,7 +44,7 @@ export function bleh_events() {
 
     checkup_page_structure(is_subpage, event_header);
 
-    if (page.subpage.startsWith('edit')) {
+    if (page.subpage.startsWith('event_edit')) {
         bleh_events_edit();
         return;
     } else if (page.subpage.startsWith('add')) {
@@ -165,7 +172,7 @@ export function bleh_events() {
             patch_avatar(avatar, name, 'event');
         });
     } else {
-        if (page.subpage == 'attendance_going' || page.subpage == 'attendance_interested') {
+        if (page.subpage == 'event_attendance_going' || page.subpage == 'event_attendance_interested') {
             // view-related buttons
             let view_buttons = document.createElement('div');
             view_buttons.classList.add('view-buttons-wrapper');
@@ -205,8 +212,6 @@ export function bleh_events() {
 }
 
 function bleh_events_manage() {
-    register_background(auth.avatar);
-
     page.structure.container = document.body.querySelector('.page-content');
     try {
         page.structure.row = page.structure.container.querySelector('.row');
@@ -222,6 +227,8 @@ function bleh_events_manage() {
     checkup_page_structure(false, content_top);
     log('status is', 'page', 'info', page);
     update_page();
+
+    register_background(auth.avatar);
 
     page.structure.nav.classList.add('navlist--more');
 
@@ -259,4 +266,35 @@ function bleh_events_edit() {
     `);
 
     nav.insertBefore(back_nav, nav.firstElementChild);
+}
+
+function bleh_events_home() {
+    page.subpage = 'home';
+
+    bleh_home();
+
+    let filters = page.structure.container.querySelector('.events-filters');
+    let panel = page.structure.main.querySelector('section');
+
+    filters.classList = 'view-buttons';
+
+    let buttons = filters.querySelectorAll('.events-filter > button');
+    buttons.forEach((button) => {
+        button.classList.add('btn', 'view-item');
+
+        if (button.classList.contains('disclose-trigger')) {
+            button.classList.remove('disclose-trigger');
+            button.classList.add('select-button');
+        }
+    });
+
+    panel.insertBefore(filters, panel.firstElementChild);
+
+    page.structure.side.innerHTML = (`
+        <section class="view-all-panel">
+            <a class="btn view-all-button add-button" href="${root}events/add?reset=true">
+                ${tl(trans.create_new_event)}
+            </a>
+        </section>
+    `);
 }
