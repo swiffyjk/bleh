@@ -21023,7 +21023,12 @@ h4 {
         margin: unset;
     }
 
+    .music-more-link {
+        display: flex;
+        justify-content: center;
+    }
     .music-more-link a {
+        display: flex;
         --mask: var(--icon-16-arrow-right);
     }
 
@@ -21671,6 +21676,71 @@ h4 {
         &.events-filter-location {
             --mask: var(--icon-16-location);
         }
+    }
+}
+
+
+
+
+.music-tags {
+    grid-template-columns: repeat(2, 627px);
+    grid-template-rows: repeat(2, 627px);
+    gap: var(--card-gap);
+    width: 1269px;
+    margin: 0 auto;
+
+    .music-featured-item {
+        height: 627px;
+        border-radius: var(--item-big-radius);
+        box-shadow: var(--interact-shadow);
+        overflow: hidden;
+
+        .music-featured-item-background {
+            width: 100%;
+            height: 100%;
+            background-size: cover !important;
+            flex-shrink: 0;
+
+            &:after {
+                display: none;
+            }
+
+            --show-icon: none;
+            --mask: var(--icon-tag);
+            --mask-size: var(--cover-size-300);
+            --left: 50%;
+            --margin-left: calc(-1 * (var(--cover-size-300) / 2));
+            --margin-top: calc(-1 * (var(--cover-size-300) / 2));
+
+            &[style='background: url("https://lastfm.freetls.fastly.net/i/u/arG/2a96cbd8b46e442fc41c2b86b821562f.jpg");'] {
+                background: hsl(var(--b4)) !important;
+                --show-icon: block;
+            }
+        }
+
+        .music-featured-item-heading {
+            text-transform: lowercase;
+            /*font-family: var(--font-brand);*/
+            font-size: 40px;
+            line-height: 34px;
+            font-weight: var(--font-weight-bold);
+            letter-spacing: unset;
+        }
+    }
+}
+.music-more-tags {
+    grid-template-columns: repeat(3, 199px);
+    grid-template-rows: repeat(6, 199px);
+    gap: var(--card-gap);
+
+    .music-more-tags-tag-wrap:nth-child(n+11) {
+        left: calc(-627px - var(--card-gap));
+    }
+
+    .music-more-tags-tag {
+        border-radius: var(--item-big-radius);
+        box-shadow: var(--interact-shadow);
+        overflow: hidden;
     }
 }
 }
