@@ -2,7 +2,7 @@ import { patch_avatar } from "../avatar";
 import { settings } from '../build/config';
 import { log } from '../build/log';
 import { artist_corrections } from '../build/music';
-import { page, root } from '../build/page';
+import { auth, page, root } from '../build/page';
 import { clamp_sat, rgb_to_hsl, sanitise, sanitise_text } from '../build/tools';
 import { lang, tl, trans, trans_legacy } from '../build/trans';
 import { correct_item_by_artist, name_includes } from '../components/lotus';
@@ -66,7 +66,7 @@ export function patch_obsession_view() {
     artist_name.classList.add('header-new-crumb');
 
     if (settings.format_guest_features) {
-        let formatted_title = name_includes(track_title.textContent, track_artist.textContent);
+        let formatted_title = name_includes(track_title.textContent.trim(), artist_name.textContent);
         let song_title = formatted_title[0];
         let song_tags = formatted_title[1];
 
@@ -98,8 +98,8 @@ export function patch_obsession_view() {
         if (!track_title.hasAttribute('data-kate-processed')) {
             track_title.setAttribute('data-kate-processed','true');
 
-            let corrected_title = correct_item_by_artist(track_title.textContent, track_artist.textContent);
-            log(`corrected ${track_title.textContent} by ${track_artist.textContent} as ${corrected_title}`, 'lotus');
+            let corrected_title = correct_item_by_artist(track_title.textContent.trim(), artist_name.textContent);
+            log(`corrected ${track_title.textContent} by ${artist_name.textContent} as ${corrected_title}`, 'lotus');
 
             if (corrected_title != track_title.textContent)
                 page.corrected = true;
@@ -109,14 +109,14 @@ export function patch_obsession_view() {
     }
 
     let redesigned_track_header = document.createElement('section');
-    redesigned_track_header.classList.add('redesigned-header', 'redesigned-track-header', 'no-background');
+    redesigned_track_header.classList.add('redesigned-header', 'redesigned-track-header', 'no-background', 'obsession-track-header');
     redesigned_track_header.innerHTML = (`
         <div class="avatar-side">
             <img src="${background.replace('/ar0/', '/avatar170s/')}">
             <a class="bleh--avatar-clickable-link"></a>
         </div>
         <div class="info-side">
-            <div class="sub-text">${tl(trans.track)}</div>
+            <div class="sub-text">${tl(trans.obsession)}</div>
             <div class="title-container">
                 <h1>${track_title.innerHTML}</h1>
             </div>
@@ -161,20 +161,95 @@ export function patch_obsession_view() {
     register_menu(avatar_side, menu);
 
 
-
-
-    let obsession_author = document.querySelector('.obsession-details-intro a').textContent;
-    let obsession_avatar = document.querySelector('.obsession-details-intro-avatar-wrap .avatar');
-
-    patch_avatar(obsession_avatar, obsession_author);
-
+    let quote = document.createElement('section');
+    quote.classList.add('obsession-quote');
 
     // remove quotations
-    let obsession_reason = document.querySelector('.obsession-reason');
+    let obsession_reason = obsession_container.querySelector('.obsession-reason');
+    if (obsession_reason) {
+        let obsession_reason_text = obsession_reason.textContent;
+        obsession_reason.textContent = obsession_reason_text.trim().substr(1).slice(0, -1);
+    }
 
-    if (!obsession_reason) return;
+    let obsession_author = document.querySelector('.obsession-details-intro a').textContent;
+    let obsession_avatar = document.querySelector('.obsession-details-intro-avatar-wrap .avatar img');
 
-    let obsession_reason_text = obsession_reason.textContent;
+    let date = obsession_container.querySelector('.obsession-details-date-short')
 
-    obsession_reason.textContent = obsession_reason_text.trim().substr(1).slice(0, -1);
+    quote.innerHTML = (`
+        <div class="quote">
+            ${(obsession_reason) ? obsession_reason.textContent : tl(trans.no_quote)}
+        </div>
+        <div class="sub-text">
+            <div class="obsession-author">
+                <div class="avatar">
+                    ${obsession_avatar.outerHTML}
+                </div>
+                <strong class="name">${obsession_author}</strong>
+                <a class="link-block-cover-link" href="${root}user/${obsession_author}"></a>
+            </div>
+            <div class="obsession-date">
+                ${date.textContent}
+            </div>
+        </div>
+    `);
+
+    page.structure.main.insertBefore(quote, page.structure.main.firstElementChild);
+
+    let author = quote.querySelector('.obsession-author');
+    let badge = patch_avatar(quote.querySelector('.avatar'), obsession_author, '', author, 'bottom');
+
+    if (badge.type) {
+        author.classList.add('colourful');
+        if (badge.type == 'avatar-status-dot--staff')
+            author.classList.add('staff-user');
+
+        author.classList.add(`user-status--bleh-${badge.type}`, `user-status--bleh-user-${obsession_author}`);
+    }
+
+    let related = document.createElement('section');
+    related.classList.add('obsession-related');
+
+    let shared_users = document.body.querySelector('.fellow-obsessors');
+
+    if (shared_users) {
+        let header = document.createElement('h2');
+        header.textContent = tl(trans.shared_with_others);
+        related.appendChild(header);
+
+        let users = shared_users.querySelectorAll('.avatar');
+        users.forEach((user) => {
+            let name = user.querySelector('img').getAttribute('alt');
+            patch_avatar(user, name);
+        });
+
+        related.appendChild(shared_users);
+    }
+
+    let other_tracks = document.body.querySelector('.other-obsessions');
+
+    if (other_tracks) {
+        if (shared_users) {
+            let sep = document.createElement('div');
+            sep.classList.add('sep');
+            related.appendChild(sep);
+        }
+
+        let header = document.createElement('h2');
+        header.textContent = tl(trans.others_from_profile).replace('{user}', obsession_author);
+        related.appendChild(header);
+
+        let see_more = other_tracks.nextElementSibling;
+
+        related.appendChild(other_tracks);
+
+        if (see_more) {
+            let more = document.createElement('div');
+            more.classList.add('more-link-fullwidth-right');
+            more.appendChild(see_more.querySelector('a'));
+            related.appendChild(more);
+        }
+    }
+
+    quote.after(related);
 }

@@ -2196,6 +2196,18 @@
     },
     blocked_user_view_profile: {
       en: "They can still view your profile"
+    },
+    no_quote: {
+      en: "No quote"
+    },
+    shared_with_others: {
+      en: "Shared with others"
+    },
+    others_from_profile: {
+      en: "More from {user}"
+    },
+    obsession: {
+      en: "Obsession"
     }
   };
   var trans_legacy = {
@@ -6993,13 +7005,12 @@
   }
 
   // src/avatar.js
-  function patch_avatar(avatar, name, type = "") {
+  function patch_avatar(avatar, name, type = "", parent = null, side = "right") {
     if (avatar.hasAttribute("data-bleh-avatar"))
       return;
     avatar.setAttribute("data-bleh-avatar", "true");
     let avatar_img = avatar.querySelector("img");
-    if (avatar_img == null)
-      return;
+    if (!avatar_img) return;
     avatar_img.setAttribute("src", avatar_img.getAttribute("src").replace("/64s/", "/avatar70s/"));
     let badges = load_badges(name, true);
     if (badges) {
@@ -7019,8 +7030,11 @@
       let badge = document.createElement("span");
       badge.classList.add("avatar-status-dot", `user-status--bleh-${this_badge.type}`, `user-status--bleh-user-${name}`);
       avatar.appendChild(badge);
-      avatar.classList.add("avatar-can-hoverbox");
-      tippy(avatar, {
+      if (!parent)
+        avatar.classList.add("avatar-can-hoverbox");
+      else
+        parent.classList.add("parent-can-hoverbox");
+      tippy(parent ? parent : avatar, {
         theme: "user",
         content: `
                 <div class="image-info">
@@ -7040,7 +7054,7 @@
                 </div>
             `,
         allowHTML: true,
-        placement: "right",
+        placement: side,
         interactive: true,
         delay: [200, 0]
       });
@@ -7048,8 +7062,11 @@
     } else {
       let pre_existing_badge = avatar.querySelector(".avatar-status-dot");
       if (pre_existing_badge == null) {
-        avatar.classList.add("avatar-can-hoverbox");
-        tippy(avatar, {
+        if (!parent)
+          avatar.classList.add("avatar-can-hoverbox");
+        else
+          parent.classList.add("parent-can-hoverbox");
+        tippy(parent ? parent : avatar, {
           theme: "user",
           content: `
                     <div class="image-info">
@@ -7067,14 +7084,17 @@
                     </div>
                 `,
           allowHTML: true,
-          placement: "right",
+          placement: side,
           interactive: true,
           delay: [200, 0]
         });
         return {};
       } else {
-        avatar.classList.add("avatar-can-hoverbox");
-        tippy(avatar, {
+        if (!parent)
+          avatar.classList.add("avatar-can-hoverbox");
+        else
+          parent.classList.add("parent-can-hoverbox");
+        tippy(parent ? parent : avatar, {
           theme: "user",
           content: `
                     <div class="image-info">
@@ -7094,7 +7114,7 @@
                     </div>
                 `,
           allowHTML: true,
-          placement: "right",
+          placement: side,
           interactive: true,
           delay: [200, 0]
         });
@@ -10133,7 +10153,7 @@
     }
     artist_name.classList.add("header-new-crumb");
     if (settings.format_guest_features) {
-      let formatted_title = name_includes(track_title.textContent, track_artist.textContent);
+      let formatted_title = name_includes(track_title.textContent.trim(), artist_name.textContent);
       let song_title = formatted_title[0];
       let song_tags = formatted_title[1];
       page.corrected = formatted_title[4];
@@ -10155,22 +10175,22 @@
     } else {
       if (!track_title.hasAttribute("data-kate-processed")) {
         track_title.setAttribute("data-kate-processed", "true");
-        let corrected_title = correct_item_by_artist(track_title.textContent, track_artist.textContent);
-        log(`corrected ${track_title.textContent} by ${track_artist.textContent} as ${corrected_title}`, "lotus");
+        let corrected_title = correct_item_by_artist(track_title.textContent.trim(), artist_name.textContent);
+        log(`corrected ${track_title.textContent} by ${artist_name.textContent} as ${corrected_title}`, "lotus");
         if (corrected_title != track_title.textContent)
           page.corrected = true;
         track_title.textContent = corrected_title;
       }
     }
     let redesigned_track_header = document.createElement("section");
-    redesigned_track_header.classList.add("redesigned-header", "redesigned-track-header", "no-background");
+    redesigned_track_header.classList.add("redesigned-header", "redesigned-track-header", "no-background", "obsession-track-header");
     redesigned_track_header.innerHTML = `
         <div class="avatar-side">
             <img src="${background.replace("/ar0/", "/avatar170s/")}">
             <a class="bleh--avatar-clickable-link"></a>
         </div>
         <div class="info-side">
-            <div class="sub-text">${tl2(trans2.track)}</div>
+            <div class="sub-text">${tl2(trans2.obsession)}</div>
             <div class="title-container">
                 <h1>${track_title.innerHTML}</h1>
             </div>
@@ -10206,13 +10226,76 @@
       }
     });
     register_menu(avatar_side, menu);
+    let quote = document.createElement("section");
+    quote.classList.add("obsession-quote");
+    let obsession_reason = obsession_container.querySelector(".obsession-reason");
+    if (obsession_reason) {
+      let obsession_reason_text = obsession_reason.textContent;
+      obsession_reason.textContent = obsession_reason_text.trim().substr(1).slice(0, -1);
+    }
     let obsession_author = document.querySelector(".obsession-details-intro a").textContent;
-    let obsession_avatar = document.querySelector(".obsession-details-intro-avatar-wrap .avatar");
-    patch_avatar(obsession_avatar, obsession_author);
-    let obsession_reason = document.querySelector(".obsession-reason");
-    if (!obsession_reason) return;
-    let obsession_reason_text = obsession_reason.textContent;
-    obsession_reason.textContent = obsession_reason_text.trim().substr(1).slice(0, -1);
+    let obsession_avatar = document.querySelector(".obsession-details-intro-avatar-wrap .avatar img");
+    let date = obsession_container.querySelector(".obsession-details-date-short");
+    quote.innerHTML = `
+        <div class="quote">
+            ${obsession_reason ? obsession_reason.textContent : tl2(trans2.no_quote)}
+        </div>
+        <div class="sub-text">
+            <div class="obsession-author">
+                <div class="avatar">
+                    ${obsession_avatar.outerHTML}
+                </div>
+                <strong class="name">${obsession_author}</strong>
+                <a class="link-block-cover-link" href="${root}user/${obsession_author}"></a>
+            </div>
+            <div class="obsession-date">
+                ${date.textContent}
+            </div>
+        </div>
+    `;
+    page.structure.main.insertBefore(quote, page.structure.main.firstElementChild);
+    let author = quote.querySelector(".obsession-author");
+    let badge = patch_avatar(quote.querySelector(".avatar"), obsession_author, "", author, "bottom");
+    if (badge.type) {
+      author.classList.add("colourful");
+      if (badge.type == "avatar-status-dot--staff")
+        author.classList.add("staff-user");
+      author.classList.add(`user-status--bleh-${badge.type}`, `user-status--bleh-user-${obsession_author}`);
+    }
+    let related = document.createElement("section");
+    related.classList.add("obsession-related");
+    let shared_users = document.body.querySelector(".fellow-obsessors");
+    if (shared_users) {
+      let header = document.createElement("h2");
+      header.textContent = tl2(trans2.shared_with_others);
+      related.appendChild(header);
+      let users = shared_users.querySelectorAll(".avatar");
+      users.forEach((user) => {
+        let name = user.querySelector("img").getAttribute("alt");
+        patch_avatar(user, name);
+      });
+      related.appendChild(shared_users);
+    }
+    let other_tracks = document.body.querySelector(".other-obsessions");
+    if (other_tracks) {
+      if (shared_users) {
+        let sep = document.createElement("div");
+        sep.classList.add("sep");
+        related.appendChild(sep);
+      }
+      let header = document.createElement("h2");
+      header.textContent = tl2(trans2.others_from_profile).replace("{user}", obsession_author);
+      related.appendChild(header);
+      let see_more = other_tracks.nextElementSibling;
+      related.appendChild(other_tracks);
+      if (see_more) {
+        let more = document.createElement("div");
+        more.classList.add("more-link-fullwidth-right");
+        more.appendChild(see_more.querySelector("a"));
+        related.appendChild(more);
+      }
+    }
+    quote.after(related);
   }
 
   // src/pages/profile.js

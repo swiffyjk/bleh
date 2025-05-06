@@ -5,14 +5,13 @@ import { lang, tl, trans, trans_legacy } from "./build/trans";
 import { load_badges } from "./components/badge";
 import { dialog } from "./components/dialog";
 
-export function patch_avatar(avatar, name, type = '') {
+export function patch_avatar(avatar, name, type = '', parent=null, side='right') {
     if (avatar.hasAttribute('data-bleh-avatar'))
         return;
     avatar.setAttribute('data-bleh-avatar', 'true');
 
     let avatar_img = avatar.querySelector('img');
-    if (avatar_img == null)
-        return;
+    if (!avatar_img) return;
 
     // last.fm bug: it uses 64s instead of avatar70s for
     // event attendees - this causes it to center in the middle of the image
@@ -46,8 +45,11 @@ export function patch_avatar(avatar, name, type = '') {
         badge.classList.add('avatar-status-dot',`user-status--bleh-${this_badge.type}`,`user-status--bleh-user-${name}`);
         avatar.appendChild(badge);
 
-        avatar.classList.add('avatar-can-hoverbox');
-        tippy(avatar, {
+        if (!parent)
+            avatar.classList.add('avatar-can-hoverbox');
+        else
+            parent.classList.add('parent-can-hoverbox');
+        tippy((parent) ? parent : avatar, {
             theme: 'user',
             content: (`
                 <div class="image-info">
@@ -67,7 +69,7 @@ export function patch_avatar(avatar, name, type = '') {
                 </div>
             `),
             allowHTML: true,
-            placement: 'right',
+            placement: side,
             interactive: true,
             delay: [200, 0]
         });
@@ -76,8 +78,11 @@ export function patch_avatar(avatar, name, type = '') {
     } else {
         let pre_existing_badge = avatar.querySelector('.avatar-status-dot');
         if (pre_existing_badge == null) {
-            avatar.classList.add('avatar-can-hoverbox');
-            tippy(avatar, {
+            if (!parent)
+                avatar.classList.add('avatar-can-hoverbox');
+            else
+                parent.classList.add('parent-can-hoverbox');
+            tippy((parent) ? parent : avatar, {
                 theme: 'user',
                 content: (`
                     <div class="image-info">
@@ -95,15 +100,18 @@ export function patch_avatar(avatar, name, type = '') {
                     </div>
                 `),
                 allowHTML: true,
-                placement: 'right',
+                placement: side,
                 interactive: true,
                 delay: [200, 0]
             });
 
             return {};
         } else {
-            avatar.classList.add('avatar-can-hoverbox');
-            tippy(avatar, {
+            if (!parent)
+                avatar.classList.add('avatar-can-hoverbox');
+            else
+                parent.classList.add('parent-can-hoverbox');
+            tippy((parent) ? parent : avatar, {
                 theme: 'user',
                 content: (`
                     <div class="image-info">
@@ -123,7 +131,7 @@ export function patch_avatar(avatar, name, type = '') {
                     </div>
                 `),
                 allowHTML: true,
-                placement: 'right',
+                placement: side,
                 interactive: true,
                 delay: [200, 0]
             });

@@ -654,7 +654,7 @@ body {
     --icon-16-checks: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxOCIgaGVpZ2h0PSIxOCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyLjI1IiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWNoZWNrLWNoZWNrLWljb24gbHVjaWRlLWNoZWNrLWNoZWNrIj48cGF0aCBkPSJNMTggNiA3IDE3bC01LTUiLz48cGF0aCBkPSJtMjIgMTAtNy41IDcuNUwxMyAxNiIvPjwvc3ZnPg==');
     --icon-16-add: var(--icon-16-plus);
     --icon-16-x: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxOCIgaGVpZ2h0PSIxOCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyLjI1IiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLXgtaWNvbiBsdWNpZGUteCI+PHBhdGggZD0iTTE4IDYgNiAxOCIvPjxwYXRoIGQ9Im02IDYgMTIgMTIiLz48L3N2Zz4=');
-    --icon-16-dot: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImhzbCgyNTUsMjAlLDkwJSkiIHN0cm9rZS13aWR0aD0iMi41IiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWRvdCI+PGNpcmNsZSBjeD0iMTIuMSIgY3k9IjEyLjEiIHI9IjEiLz48L3N2Zz4=');
+    --icon-16-dot: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxOCIgaGVpZ2h0PSIxOCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyLjI1IiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWRvdC1pY29uIGx1Y2lkZS1kb3QiPjxjaXJjbGUgY3g9IjEyLjEiIGN5PSIxMi4xIiByPSIxIi8+PC9zdmc+');
     --icon-16-trash: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxOCIgaGVpZ2h0PSIxOCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyLjI1IiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLXRyYXNoLWljb24gbHVjaWRlLXRyYXNoIj48cGF0aCBkPSJNMyA2aDE4Ii8+PHBhdGggZD0iTTE5IDZ2MTRjMCAxLTEgMi0yIDJIN2MtMSAwLTItMS0yLTJWNiIvPjxwYXRoIGQ9Ik04IDZWNGMwLTEgMS0yIDItMmg0YzEgMCAyIDEgMiAydjIiLz48L3N2Zz4=');
     --icon-16-report: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxOCIgaGVpZ2h0PSIxOCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyLjI1IiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLW9jdGFnb24tYWxlcnQtaWNvbiBsdWNpZGUtb2N0YWdvbi1hbGVydCI+PHBhdGggZD0iTTEyIDE2aC4wMSIvPjxwYXRoIGQ9Ik0xMiA4djQiLz48cGF0aCBkPSJNMTUuMzEyIDJhMiAyIDAgMCAxIDEuNDE0LjU4Nmw0LjY4OCA0LjY4OEEyIDIgMCAwIDEgMjIgOC42ODh2Ni42MjRhMiAyIDAgMCAxLS41ODYgMS40MTRsLTQuNjg4IDQuNjg4YTIgMiAwIDAgMS0xLjQxNC41ODZIOC42ODhhMiAyIDAgMCAxLTEuNDE0LS41ODZsLTQuNjg4LTQuNjg4QTIgMiAwIDAgMSAyIDE1LjMxMlY4LjY4OGEyIDIgMCAwIDEgLjU4Ni0xLjQxNGw0LjY4OC00LjY4OEEyIDIgMCAwIDEgOC42ODggMnoiLz48L3N2Zz4=');
     --icon-16-obsession: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxOCIgaGVpZ2h0PSIxOCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyLjI1IiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWl0ZXJhdGlvbi1jY3ctaWNvbiBsdWNpZGUtaXRlcmF0aW9uLWNjdyI+PHBhdGggZD0iTTIwIDEwYzAtNC40LTMuNi04LTgtOHMtOCAzLjYtOCA4IDMuNiA4IDggOGg4Ii8+PHBvbHlsaW5lIHBvaW50cz0iMTYgMTQgMjAgMTggMTYgMjIiLz48L3N2Zz4=');
@@ -1806,7 +1806,7 @@ last.fm changes as of 2024-05-20 */
 
     position: relative;
 
-    &:not(#current-subscription, .featured-item-panel, #current-subscription, .shh, .view-all-panel, .metadata-list, .bleh--profile-note-panel) {
+    &:not(#current-subscription, .featured-item-panel, .obsession-quote, #current-subscription, .shh, .view-all-panel, .metadata-list, .bleh--profile-note-panel) {
         background-image: var(--cards-overlay-image, unset) !important;
         background-repeat: repeat-x !important;
         background-position: unset !important;
@@ -6790,6 +6790,7 @@ button,
 
 
 /*     ICON MASK     */
+.obsession-date:before,
 .footer-links :is(a, button):before,
 .library-search-results.async-content-loading:after,
 .radio-button:after, .radio-button h4:after,
@@ -9841,6 +9842,7 @@ text[style^="color: rgb(255, 172, 172)"] {
                     box-shadow: var(--card-shadow);
                     border-radius: var(--avatar-radius);
                     overflow: hidden;
+                    flex-shrink: 0;
 
                     img {
                         width: 100%;
@@ -11611,7 +11613,155 @@ table.table tr:nth-child(2n) td {
 
 /*     OBSESSION     */
 [data-page-subpage="obsessions_obsession"] {
+    & + .page-content,
+    .row > .col-sm-6 {
+        display: none;
+    }
 
+    .col-main {
+        display: flex !important;
+        align-items: center;
+    }
+
+    .obsession-quote {
+        /*--card-specific-background: hsl(var(--h3), 20%);
+        --card-filter: blur(20px) saturate(160%);*/
+        background: var(--card-specific-background) !important;
+        --card-specific-background: linear-gradient(hsl(var(--b5)), hsl(var(--g4)));
+        width: 700px;
+
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: var(--card-gap);
+
+        .quote {
+            color: hsl(var(--c1));
+            font-size: 20px;
+            line-height: 24px;
+            font-weight: var(--font-weight-bold);
+
+            position: relative;
+            margin-top: var(--card-padding);
+
+            &:before {
+                content: '❝';
+                font-size: 110px;
+                line-height: 60px;
+                color: hsl(var(--c3), 10%);
+
+                position: absolute;
+                left: -24px;
+                top: 0;
+                pointer-events: none;
+            }
+        }
+
+        .sub-text {
+            justify-content: center;
+            gap: 16px;
+            margin: 0 0 var(--card-padding) 0;
+
+            .obsession-author {
+                position: relative;
+                display: flex;
+                gap: 6px;
+
+                .avatar {
+                    width: 18px;
+                    height: 18px;
+                    border-radius: var(--avatar-radius);
+
+                    .avatar-status-dot {
+                        display: none;
+                    }
+                }
+
+                .link-block-cover-link {
+                    position: absolute;
+                    inset: 0;
+                }
+
+                &:hover {
+                    text-decoration: underline;
+                }
+
+                &.colourful {
+                    color: hsl(var(--l3-c));
+                }
+            }
+
+            .obsession-date {
+                position: relative;
+                --left: -16px;
+                --mask: var(--icon-16-dot);
+                --mask-size: 16px;
+            }
+        }
+
+        z-index: 20;
+    }
+
+    .obsession-related {
+        width: 700px;
+
+        .other-obsessions,
+        .fellow-obsessors {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            gap: var(--item-list-gap);
+            margin: unset;
+
+            &:before, &:after {
+                display: none;
+            }
+
+            .fellow-obsessor-avatar-wrap,
+            .other-obsession-artwork-wrap {
+                padding: unset;
+                margin: unset;
+                width: unset;
+            }
+
+            .fellow-obsessor-avatar {
+                &:has(.avatar[aria-expanded="true"]) {
+                    z-index: 10;
+                }
+
+                .obsession-first {
+                    background: hsl(var(--h3));
+                    color: hsl(var(--b7));
+                    font-weight: var(--font-weight-bold);
+                }
+            }
+
+            .fellow-obsessor-avatar .avatar {
+                background: var(--avatar-generic-background);
+                border-radius: var(--avatar-radius);
+                box-shadow: var(--interact-shadow);
+                aspect-ratio: 1 / 1;
+                z-index: -1;
+
+                .avatar-status-dot {
+                    width: 24px;
+                    height: 24px;
+                    --mask-size: 24px;
+                }
+
+                &:after {
+                    display: none;
+                }
+            }
+        }
+
+        .sep {
+            margin: var(--card-gap) 0;
+        }
+
+        .see-more {
+            margin-top: var(--card-gap);
+        }
+    }
 }
 .obsession-container {
     display: none !important;
@@ -11644,20 +11794,9 @@ table.table tr:nth-child(2n) td {
     }
 
     .obsession-extra {
-        padding-left: 24px;
+
         position: relative;
         margin-top: calc(var(--card-gap) * 2);
-
-        &:before {
-            content: '❝';
-            font-size: 110px;
-            line-height: 60px;
-            color: rgba(255, 255, 255, 15%);
-
-            position: absolute;
-            left: 0;
-            top: 0;
-        }
 
         .obsession-reason {
             font-size: 20px;
@@ -12599,7 +12738,8 @@ hr {
     [data-page-subpage="obsessions_overview"],
     [data-page-type="charts"][data-page-subpage="overview"],
     [data-page-type="inbox"],
-    [data-page-type="overview"]
+    [data-page-type="overview"],
+    [data-page-subpage="obsessions_obsession"]
     ),
 .namespace--music_bookmarks_overview {
     .col-main {
@@ -17827,6 +17967,7 @@ h4 {
             --left: none;
             --right: -16px;
             --mask: var(--icon-16-dot);
+            --mask-size: 16px;
             color: inherit;
         }
     }
@@ -18654,6 +18795,20 @@ h4 {
                     [data-multi="true"] h1 {
                         gap: unset;
                     }
+                }
+            }
+
+            &.obsession-track-header {
+                justify-content: center;
+                /*margin: -630px 0 0 0 !important;*/
+                margin: -500px 0 50px 0 !important;
+
+                .avatar-side {
+                    --avatar-size: 110px !important;
+                }
+
+                .info-side {
+                    flex: unset;
                 }
             }
         }

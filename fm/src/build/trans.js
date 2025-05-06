@@ -1026,6 +1026,18 @@ export const trans = {
     },
     blocked_user_view_profile: {
         en: 'They can still view your profile'
+    },
+    no_quote: {
+        en: 'No quote'
+    },
+    shared_with_others: {
+        en: 'Shared with others'
+    },
+    others_from_profile: {
+        en: 'More from {user}'
+    },
+    obsession: {
+        en: 'Obsession'
     }
 }
 
