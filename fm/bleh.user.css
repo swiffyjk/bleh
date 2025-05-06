@@ -6798,6 +6798,7 @@ button,
 
 
 /*     ICON MASK     */
+.obsession-pagination a:before,
 .obsession-date:before, .obsession-delete-button:before,
 .footer-links :is(a, button):before,
 .library-search-results.async-content-loading:after,
@@ -11923,6 +11924,8 @@ table.table tr:nth-child(2n) td {
     position: absolute;
     inset: 0;
     pointer-events: none;
+    top: 68px;
+    max-height: 638px;
 }
 .obsession-pagination-next, .obsession-pagination-previous {
     top: 0;
@@ -11931,9 +11934,11 @@ table.table tr:nth-child(2n) td {
     pointer-events: auto;
 }
 .obsession-pagination-next {
+    --mask: var(--icon-16-arrow-left);
     left: 0;
 }
 .obsession-pagination-previous {
+    --mask: var(--icon-16-arrow-right);
     right: 0;
 }
 
@@ -11941,6 +11946,25 @@ table.table tr:nth-child(2n) td {
     margin: unset;
     width: 100%;
     height: 100%;
+    opacity: 0.4;
+    color: hsl(var(--c1)) !important;
+
+    --left: 50%;
+    --margin-left: -12px;
+    --margin-top: -12px;
+    --mask-size: 24px;
+
+    &:before {
+        color: currentColor !important;
+    }
+
+    &:hover {
+        transition: none;
+    }
+
+    transition-property: opacity;
+    transition-duration: var(--trans);
+    transition-timing-function: var(--trans-function);
 }
 
 

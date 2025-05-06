@@ -265,4 +265,9 @@ export function patch_obsession_view() {
     }
 
     quote.after(related);
+
+
+    let pages = obsession_container.querySelector('.obsession-pagination');
+    if (pages)
+        page.structure.container.appendChild(pages);
 }

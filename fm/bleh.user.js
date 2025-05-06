@@ -10278,6 +10278,9 @@
       related.appendChild(shared_users);
     }
     quote.after(related);
+    let pages = obsession_container.querySelector(".obsession-pagination");
+    if (pages)
+      page.structure.container.appendChild(pages);
   }
 
   // src/pages/profile.js
