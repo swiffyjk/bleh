@@ -11646,8 +11646,8 @@ table.table tr:nth-child(2n) td {
         &:before {
             content: '';
             position: absolute;
-            inset: -450px -300px;
-            background: radial-gradient(circle, hsla(var(--h4), 10%) 0%, transparent 65%);
+            inset: -400px -250px;
+            background: radial-gradient(circle, hsla(var(--h4), 6%) 0%, transparent 65%);
             pointer-events: none;
         }
 
@@ -11670,7 +11670,7 @@ table.table tr:nth-child(2n) td {
                 content: '❝';
                 font-size: 110px;
                 line-height: 60px;
-                color: hsl(var(--c3), 10%);
+                color: hsl(var(--c3), 20%);
 
                 position: absolute;
                 left: -24px;
@@ -11736,7 +11736,7 @@ table.table tr:nth-child(2n) td {
     }
 
     .obsession-video-container {
-        margin: 0 auto;
+        margin: -300px auto 0;
         border-radius: var(--item-big-radius);
         box-shadow: var(--card-shadow);
         overflow: hidden;
@@ -18864,7 +18864,7 @@ h4 {
             &.obsession-track-header {
                 justify-content: center;
                 /*margin: -630px 0 0 0 !important;*/
-                margin: -580px 0 0 0 !important;
+                margin: -580px 0 300px 0 !important;
 
                 .avatar-side {
                     --avatar-size: 110px !important;
