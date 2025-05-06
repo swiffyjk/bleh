@@ -18845,6 +18845,8 @@ h4 {
                             font-size: 22px;
                             line-height: 31px;
                             display: inline-flex;
+                            position: relative;
+                            bottom: 3px;
                         }
 
                         div {
@@ -18867,6 +18869,7 @@ h4 {
             }
 
             &.obsession-track-header {
+                text-shadow: 0 0 14px hsl(var(--b5));
                 justify-content: center;
                 /*margin: -630px 0 0 0 !important;*/
                 margin: -580px 0 300px 0 !important;
