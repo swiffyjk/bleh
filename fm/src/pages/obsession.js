@@ -186,9 +186,15 @@ export function patch_obsession_view() {
     let date = obsession_container.querySelector('.obsession-details-date-short')
 
     quote.innerHTML = (`
+        ${(obsession_reason) ? (`
         <div class="quote">
-            ${(obsession_reason) ? obsession_reason.textContent : tl(trans.no_quote)}
+            ${obsession_reason.textContent}
         </div>
+        `) : (`
+        <div class="quote no-quote">
+            ${tl(trans.no_quote)}
+        </div>
+        `)}
         <div class="sub-text">
             <div class="obsession-author">
                 <div class="avatar">

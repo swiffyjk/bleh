@@ -2198,7 +2198,7 @@
       en: "They can still view your profile"
     },
     no_quote: {
-      en: "No quote"
+      en: "..."
     },
     shared_with_others: {
       en: "Shared with others"
@@ -10216,9 +10216,15 @@
     let obsession_avatar = document.querySelector(".obsession-details-intro-avatar-wrap .avatar img");
     let date = obsession_container.querySelector(".obsession-details-date-short");
     quote.innerHTML = `
+        ${obsession_reason ? `
         <div class="quote">
-            ${obsession_reason ? obsession_reason.textContent : tl2(trans2.no_quote)}
+            ${obsession_reason.textContent}
         </div>
+        ` : `
+        <div class="quote no-quote">
+            ${tl2(trans2.no_quote)}
+        </div>
+        `}
         <div class="sub-text">
             <div class="obsession-author">
                 <div class="avatar">

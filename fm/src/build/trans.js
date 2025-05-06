@@ -1028,7 +1028,7 @@ export const trans = {
         en: 'They can still view your profile'
     },
     no_quote: {
-        en: 'No quote'
+        en: '...'
     },
     shared_with_others: {
         en: 'Shared with others'

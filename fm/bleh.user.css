@@ -11677,6 +11677,11 @@ table.table tr:nth-child(2n) td {
                 top: 0;
                 pointer-events: none;
             }
+
+            &.no-quote {
+                color: hsl(var(--c3));
+                cursor: default;
+            }
         }
 
         .sub-text {
