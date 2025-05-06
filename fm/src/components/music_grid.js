@@ -181,13 +181,14 @@ export function music_grids() {
 
                 let song_title = name_elem.getAttribute('title');
 
-                let formatted_title = name_includes(song_title, artist_elem.textContent);
+                let formatted_title = name_includes(song_title, artist_elem.textContent.trim());
                 let song_tags = {};
 
                 if (formatted_title) {
                     song_title = formatted_title[0];
                     insights.album.labels.push(song_title);
                     song_tags = formatted_title[1];
+                    artist.textContent = formatted_title[2];
                 }
 
                 // parse tags into text

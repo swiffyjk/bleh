@@ -15319,12 +15319,13 @@
           let name_elem = name;
           let artist_elem = artist;
           let song_title = name_elem.getAttribute("title");
-          let formatted_title = name_includes(song_title, artist_elem.textContent);
+          let formatted_title = name_includes(song_title, artist_elem.textContent.trim());
           let song_tags = {};
           if (formatted_title) {
             song_title = formatted_title[0];
             insights.album.labels.push(song_title);
             song_tags = formatted_title[1];
+            artist.textContent = formatted_title[2];
           }
           let song_tags_text = "";
           for (let song_tag in song_tags) {
