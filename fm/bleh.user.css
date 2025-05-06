@@ -6419,7 +6419,8 @@ button,
 .show-more a,
 /* log in */ .site-auth-control,
 .music-more-link a,
-.tag a, .tags-add-cta, .tags-add, .tags-view-all
+.tag a, .tags-add-cta, .tags-add, .tags-view-all,
+.masthead-popup-close
 {
     --bg: var(--cards-overlay-image-subtlest, none), hsl(var(--b3));
     --bg-hov: var(--cards-overlay-image-subtlest, none), hsla(var(--b3), 80%);
@@ -6803,6 +6804,7 @@ button,
 
 
 /*     ICON MASK     */
+.masthead-popup-text .btn-primary:before,
 .obsession-pagination a:before,
 .obsession-date:before, .obsession-delete-button:before,
 .footer-links :is(a, button):before,
@@ -6852,7 +6854,7 @@ button,
 .side-right .setting-item:before, .side-right .setting-item:after, .action:before, .action:after,
 .setup-icon:before, .setup-icon:after,
 .btn.back:before,
-.modal-close-button:before,
+.modal-close-button:before, .masthead-popup-close:before,
 .continue:before, .external:before, .done:before, .cancel:before, .btn-cancel:before, .download:before, .upload:before, .save:before, .open:before, .btn-secondary.js-close:not(.modal-action-button):before, .form-group button[type="submit"]:before, .modal-button button[type="submit"]:before,
 .badge:before,
 .btn-post-shout:before,
@@ -16048,7 +16050,7 @@ button.bleh--gallery-bookmark-image-btn {
     align-items: end;
     inset: 0;
     pointer-events: none;
-    padding: calc(var(--card-gap) * 2 + 32px) var(--card-gap);
+    padding: calc(52px + var(--card-gap)) var(--card-gap);
     z-index: 99999999999;
 
     .bleh-notification {
@@ -16062,9 +16064,11 @@ button.bleh--gallery-bookmark-image-btn {
 
         text-align: left;
 
+        .notification-title {
+            color: hsl(var(--c1));
+        }
         .notification-body {
             font-weight: var(--font-weight);
-            opacity: 0.8;
 
             a:not(:hover) {
                 color: inherit;
@@ -16102,6 +16106,45 @@ button.bleh--gallery-bookmark-image-btn {
             transition: left 14s; /* 4.999 */
 
             border-radius: var(--item-big-radius);
+        }
+    }
+}
+.masthead-popup {
+    top: calc(52px + var(--card-gap));
+    right: var(--card-gap);
+
+    .masthead-popup-inner {
+        animation: notif var(--trans) var(--trans-function);
+        background: hsl(var(--b5));
+        border-radius: var(--item-big-radius);
+        box-shadow: var(--menu-shadow);
+        padding: var(--card-gap);
+        color: hsl(var(--c2));
+
+        &:before {
+            display: none;
+        }
+
+        .masthead-popup-title {
+            font: inherit;
+            font-weight: var(--font-weight-medium);
+            color: hsl(var(--c1));
+        }
+
+        .masthead-popup-text + .masthead-popup-text {
+            margin-top: var(--card-gap);
+        }
+
+        .masthead-popup-close {
+            --bg: transparent;
+            --bg-hov: hsl(var(--b3), 40%);
+            --bg-hov: hsl(var(--b3), 60%);
+            --left: 7px;
+            --font-size: 0;
+            --mask: var(--icon-16-x);
+            opacity: unset !important;
+            top: calc(var(--card-gap) - 7px);
+            right: calc(var(--card-gap) - 7px);
         }
     }
 }
@@ -21935,6 +21978,7 @@ h4 {
 }
 
 
+.masthead-popup-text .btn-primary,
 .obsession-delete-button,
 .featured-item-manage,
 .more-items,

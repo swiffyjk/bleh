@@ -43,7 +43,7 @@ unsafeWindow._notify = function({
     classname = null,
     action = null,
     persist = false,
-    type = type
+    type = null
 }) {
     notify({
         title: title,

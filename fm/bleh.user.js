@@ -5614,7 +5614,7 @@
     classname = null,
     action = null,
     persist = false,
-    type = type
+    type = null
   }) {
     notify({
       title,
