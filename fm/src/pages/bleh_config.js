@@ -163,7 +163,7 @@ export function render_setting_page(page_id) {
                     `) : '')}
                     ${(ff('sponsor') ? (`
                     <button class="btn primary sponsor" onclick="_sponsor()">
-                        ${trans_legacy[lang].settings.home.sponsor.name}<div class="new-badge">${trans_legacy[lang].settings.new}</div>
+                        ${trans_legacy[lang].settings.home.sponsor.name}<div class="new-badge">${tl(trans.new)}</div>
                     </button>
                     `) : '')}
                     <a class="btn action bleh--issues" href="https://github.com/katelyynn/bleh/issues" target="_blank">
@@ -2586,7 +2586,7 @@ function prepare_language_page() {
         </div>
         ${(lang_info[language].new ? (`
         <div class="badges">
-            <div class="new-badge">${trans_legacy[lang].settings.new}</div>
+            <div class="new-badge">${tl(trans.new)}</div>
         </div>
         `): '<div class="badges"></div>')}
         <div class="date">

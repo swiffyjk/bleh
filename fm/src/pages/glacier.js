@@ -58,13 +58,13 @@ export function bleh_user_library() {
         chart_view_selector.classList.add('view-buttons', 'chart-view-selector', 'view-buttons-middle');
         chart_view_selector.innerHTML = (`
             <button class="btn view-item" id="toggle-chart_view-line" data-toggle="chart_view" data-toggle-value="line" onclick="_update_item('chart_view', 'line')">
-                ${trans_legacy[lang].glacier.view.line}
+                ${tl(trans.line)}
             </button>
             <button class="btn view-item" id="toggle-chart_view-pie" data-toggle="chart_view" data-toggle-value="pie" onclick="_update_item('chart_view', 'pie')">
-                ${trans_legacy[lang].glacier.view.pie}
+                ${tl(trans.pie)}
             </button>
             <button class="btn view-item" id="toggle-chart_view-bar" data-toggle="chart_view" data-toggle-value="bar" onclick="_update_item('chart_view', 'bar')">
-                ${trans_legacy[lang].glacier.view.bar}
+                ${tl(trans.bar)}
             </button>
         `);
 
@@ -74,10 +74,10 @@ export function bleh_user_library() {
         chart_axis_selector.classList.add('view-buttons', 'chart-axis-selector', 'view-buttons-middle');
         chart_axis_selector.innerHTML = (`
             <button class="btn view-item" id="toggle-chart_bar_axis-horizontal" data-toggle="chart_bar_axis" data-toggle-value="horizontal" onclick="_update_item('chart_bar_axis', 'horizontal')">
-                ${trans_legacy[lang].glacier.axis.horizontal}
+                ${tl(trans.horizontal)}
             </button>
             <button class="btn view-item" id="toggle-chart_bar_axis-vertical" data-toggle="chart_bar_axis" data-toggle-value="vertical" onclick="_update_item('chart_bar_axis', 'vertical')">
-                ${trans_legacy[lang].glacier.axis.vertical}
+                ${tl(trans.vertical)}
             </button>
         `);
 
@@ -210,7 +210,7 @@ function bleh_glacier_library_date() {
         this_year.classList.add('date-range-picker-preset', 'date-range-picker-preset-custom', 'date-range-picker-preset-this-year');
         this_year.innerHTML = (`
             <a href="${window.location.href.replace(window.location.search, '')}?from=${current_year}-01-01&rangetype=year">
-                ${current_year}<span class="new-badge">${trans_legacy[lang].settings.new}</span>
+                ${current_year}<span class="new-badge">${tl(trans.new)}</span>
             </a>
         `);
         new_presets.appendChild(this_year);

@@ -126,7 +126,7 @@ export function bleh_home() {
             </a>
             `) : '')}
             <button class="dropdown-menu-clickable-item sponsor" onclick="_sponsor()">
-                ${trans_legacy[lang].settings.home.sponsor.name}<div class="new-badge">${trans_legacy[lang].settings.new}</div>
+                ${trans_legacy[lang].settings.home.sponsor.name}<div class="new-badge">${tl(trans.new)}</div>
             </button>
             <a class="dropdown-menu-clickable-item issues" href="https://github.com/katelyynn/bleh/issues" target="_blank">
                 ${trans_legacy[lang].settings.home.issues.name}

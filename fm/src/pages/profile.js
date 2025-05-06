@@ -551,13 +551,13 @@ export function bleh_profiles() {
 
 
             let no_data = page.structure.container.querySelector('.no-data-message--obsession-history');
-            if (no_data) {
+            if (no_data)
                 wrap.after(no_data);
-            }
 
 
             let pagination = page.structure.container.querySelector('.pagination');
-            new_panel.appendChild(pagination);
+            if (pagination)
+                new_panel.appendChild(pagination);
         }
     }
 

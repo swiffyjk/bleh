@@ -213,6 +213,11 @@ export const trans = {
         en: 'Edit',
         de: 'Editieren'
     },
+    bulk_edit: {
+        // as in the last.fm 'Bulk Edit' open-source extension
+        en: 'Bulk edit',
+        de: 'Massenbearbeitung'
+    },
     edit_profile: {
         en: 'Edit profile',
         de: 'Profil editieren'
@@ -221,8 +226,10 @@ export const trans = {
         en: 'Scrobbles',
         de: 'Scrobbels'
     },
+    // TODO(stel): are all these correct (singular/plural)?
     artist: {
-        en: 'Artist'
+        en: 'Artist',
+        de: 'Künstler'
     },
     artists: {
         en: 'Artists',
@@ -395,6 +402,7 @@ export const trans = {
         en: 'Welcome back {user}!',
         de: 'Willkommen züruck {user}!'
     },
+    // TODO(stel): is my capitalisation correct here at all lol
     good_morning_user: {
         en: 'Good morning, {user}',
         de: 'Guten Morgen {user}'
@@ -791,6 +799,36 @@ export const trans = {
         // as in the view mode
         en: 'List',
         de: 'Liste'
+    },
+    line: {
+        // as in the type of chart (a line graph)
+        en: 'Line',
+        de: 'Liniendiagramm'
+    },
+    pie: {
+        // as in the type of chart (a pie chart)
+        en: 'Pie',
+        de: 'Kreis'
+    },
+    bar: {
+        // as in the type of chart (a bar chart)
+        en: 'Bar',
+        de: 'Balken'
+    },
+    horizontal: {
+        en: 'Horizontal'
+    },
+    vertical: {
+        en: 'Vertical',
+        de: 'Vertikal'
+    },
+    this_year: {
+        en: 'This year',
+        de: 'Dieses Jahr'
+    },
+    last_year: {
+        en: 'Last year',
+        de: 'Letztes Jahr'
     },
     loved: {
         // as in loved tracks, this can be seen

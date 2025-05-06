@@ -1383,6 +1383,11 @@
       en: "Edit",
       de: "Editieren"
     },
+    bulk_edit: {
+      // as in the last.fm 'Bulk Edit' open-source extension
+      en: "Bulk edit",
+      de: "Massenbearbeitung"
+    },
     edit_profile: {
       en: "Edit profile",
       de: "Profil editieren"
@@ -1391,8 +1396,10 @@
       en: "Scrobbles",
       de: "Scrobbels"
     },
+    // TODO(stel): are all these correct (singular/plural)?
     artist: {
-      en: "Artist"
+      en: "Artist",
+      de: "K\xFCnstler"
     },
     artists: {
       en: "Artists",
@@ -1565,6 +1572,7 @@
       en: "Welcome back {user}!",
       de: "Willkommen z\xFCruck {user}!"
     },
+    // TODO(stel): is my capitalisation correct here at all lol
     good_morning_user: {
       en: "Good morning, {user}",
       de: "Guten Morgen {user}"
@@ -1961,6 +1969,36 @@
       // as in the view mode
       en: "List",
       de: "Liste"
+    },
+    line: {
+      // as in the type of chart (a line graph)
+      en: "Line",
+      de: "Liniendiagramm"
+    },
+    pie: {
+      // as in the type of chart (a pie chart)
+      en: "Pie",
+      de: "Kreis"
+    },
+    bar: {
+      // as in the type of chart (a bar chart)
+      en: "Bar",
+      de: "Balken"
+    },
+    horizontal: {
+      en: "Horizontal"
+    },
+    vertical: {
+      en: "Vertical",
+      de: "Vertikal"
+    },
+    this_year: {
+      en: "This year",
+      de: "Dieses Jahr"
+    },
+    last_year: {
+      en: "Last year",
+      de: "Letztes Jahr"
     },
     loved: {
       // as in loved tracks, this can be seen
@@ -5693,13 +5731,13 @@
       chart_view_selector.classList.add("view-buttons", "chart-view-selector", "view-buttons-middle");
       chart_view_selector.innerHTML = `
             <button class="btn view-item" id="toggle-chart_view-line" data-toggle="chart_view" data-toggle-value="line" onclick="_update_item('chart_view', 'line')">
-                ${trans_legacy[lang].glacier.view.line}
+                ${tl2(trans2.line)}
             </button>
             <button class="btn view-item" id="toggle-chart_view-pie" data-toggle="chart_view" data-toggle-value="pie" onclick="_update_item('chart_view', 'pie')">
-                ${trans_legacy[lang].glacier.view.pie}
+                ${tl2(trans2.pie)}
             </button>
             <button class="btn view-item" id="toggle-chart_view-bar" data-toggle="chart_view" data-toggle-value="bar" onclick="_update_item('chart_view', 'bar')">
-                ${trans_legacy[lang].glacier.view.bar}
+                ${tl2(trans2.bar)}
             </button>
         `;
       page.structure.glacier.selector.after(chart_view_selector);
@@ -5707,10 +5745,10 @@
       chart_axis_selector.classList.add("view-buttons", "chart-axis-selector", "view-buttons-middle");
       chart_axis_selector.innerHTML = `
             <button class="btn view-item" id="toggle-chart_bar_axis-horizontal" data-toggle="chart_bar_axis" data-toggle-value="horizontal" onclick="_update_item('chart_bar_axis', 'horizontal')">
-                ${trans_legacy[lang].glacier.axis.horizontal}
+                ${tl2(trans2.horizontal)}
             </button>
             <button class="btn view-item" id="toggle-chart_bar_axis-vertical" data-toggle="chart_bar_axis" data-toggle-value="vertical" onclick="_update_item('chart_bar_axis', 'vertical')">
-                ${trans_legacy[lang].glacier.axis.vertical}
+                ${tl2(trans2.vertical)}
             </button>
         `;
       chart_view_selector.after(chart_axis_selector);
@@ -5810,7 +5848,7 @@
       this_year.classList.add("date-range-picker-preset", "date-range-picker-preset-custom", "date-range-picker-preset-this-year");
       this_year.innerHTML = `
             <a href="${window.location.href.replace(window.location.search, "")}?from=${current_year}-01-01&rangetype=year">
-                ${current_year}<span class="new-badge">${trans_legacy[lang].settings.new}</span>
+                ${current_year}<span class="new-badge">${tl2(trans2.new)}</span>
             </a>
         `;
       new_presets.appendChild(this_year);
@@ -10469,11 +10507,11 @@
         });
         new_panel.appendChild(grid);
         let no_data = page.structure.container.querySelector(".no-data-message--obsession-history");
-        if (no_data) {
+        if (no_data)
           wrap.after(no_data);
-        }
         let pagination = page.structure.container.querySelector(".pagination");
-        new_panel.appendChild(pagination);
+        if (pagination)
+          new_panel.appendChild(pagination);
       }
     }
     log("status is", "page", "info", page);
@@ -12096,7 +12134,7 @@
                     ` : ""}
                     ${ff("sponsor") ? `
                     <button class="btn primary sponsor" onclick="_sponsor()">
-                        ${trans_legacy[lang].settings.home.sponsor.name}<div class="new-badge">${trans_legacy[lang].settings.new}</div>
+                        ${trans_legacy[lang].settings.home.sponsor.name}<div class="new-badge">${tl2(trans2.new)}</div>
                     </button>
                     ` : ""}
                     <a class="btn action bleh--issues" href="https://github.com/katelyynn/bleh/issues" target="_blank">
@@ -14374,7 +14412,7 @@
         </div>
         ${lang_info[language].new ? `
         <div class="badges">
-            <div class="new-badge">${trans_legacy[lang].settings.new}</div>
+            <div class="new-badge">${tl2(trans2.new)}</div>
         </div>
         ` : '<div class="badges"></div>'}
         <div class="date">
@@ -17446,7 +17484,7 @@
             </a>
             ` : ""}
             <button class="dropdown-menu-clickable-item sponsor" onclick="_sponsor()">
-                ${trans_legacy[lang].settings.home.sponsor.name}<div class="new-badge">${trans_legacy[lang].settings.new}</div>
+                ${trans_legacy[lang].settings.home.sponsor.name}<div class="new-badge">${tl2(trans2.new)}</div>
             </button>
             <a class="dropdown-menu-clickable-item issues" href="https://github.com/katelyynn/bleh/issues" target="_blank">
                 ${trans_legacy[lang].settings.home.issues.name}
