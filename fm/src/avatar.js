@@ -1,7 +1,7 @@
 import { log } from "./build/log";
 import { auth, root } from "./build/page";
 import { sponsor_list } from "./build/sponsor";
-import { lang, trans_legacy } from "./build/trans";
+import { lang, tl, trans, trans_legacy } from "./build/trans";
 import { load_badges } from "./components/badge";
 import { dialog } from "./components/dialog";
 
@@ -143,10 +143,10 @@ export function return_name_from_avatar(avatar) {
     if (!avatar.hasAttribute('alt'))
         return;
 
-    if (avatar.getAttribute('alt') == trans_legacy[lang].avatar_for_me)
+    if (avatar.getAttribute('alt') == tl(trans.your_avatar))
         return auth;
 
-    return avatar.getAttribute('alt').replace(trans_legacy[lang].avatar_for_user, '');
+    return avatar.getAttribute('alt').replace(tl(trans.avatar_for_user), '');
 }
 
 unsafeWindow._expand_avatar = function(src) {

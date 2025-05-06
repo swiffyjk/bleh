@@ -440,7 +440,7 @@ export function patch_header_title() {
         return;
 
     // correct artist
-    if (track_artist == null) {
+    if (!track_artist) {
         // must be on artist page
         if (artist_corrections.hasOwnProperty(track_title.textContent)) {
             let corrected_artist = artist_corrections[track_title.textContent];
@@ -449,6 +449,8 @@ export function patch_header_title() {
 
             page.corrected = true;
         }
+
+        return;
     } else {
         // album/track page
         if (artist_corrections.hasOwnProperty(track_artist.textContent)) {
@@ -457,9 +459,6 @@ export function patch_header_title() {
             track_artist.textContent = corrected_artist;
         }
     }
-
-    if (track_artist == null)
-        return;
 
     if (settings.format_guest_features) {
         try {

@@ -703,7 +703,7 @@ export function bleh_profiles() {
                 <div class="dialog-settings">
                     <h4>${trans_legacy[lang].settings.text.markdown.name}</h4>
                     <div class="toggle-container" id="container-bio_markdown" onclick="_update_item('bio_markdown')">
-                        <button class="btn reset" onclick="_reset_item('bio_markdown')">${trans_legacy[lang].settings.reset}</button>
+                        <button class="btn reset" onclick="_reset_item('bio_markdown')">${tl(trans.reset)}</button>
                         <div class="heading">
                             <h5>${trans_legacy[lang].settings.text.markdown.profile}</h5>
                         </div>
@@ -1148,10 +1148,10 @@ function profile_recents() {
                 </div>
                 <div class="sep"></div>
                 <div class="toggle-container" id="container-format_guest_features" onclick="_update_item('format_guest_features')">
-                    <button class="btn reset" onclick="_reset_item('format_guest_features')">${trans_legacy[lang].settings.reset}</button>
+                    <button class="btn reset" onclick="_reset_item('format_guest_features')">${tl(trans.reset)}</button>
                     <div class="heading">
-                        <h5>${trans_legacy[lang].settings.corrections.format_guest_features.name}</h5>
-                        <p>${trans_legacy[lang].settings.corrections.format_guest_features.bio}</p>
+                        <h5>${tl(trans.format_guest_features.name)}</h5>
+                        <p>${tl(trans.format_guest_features.body)}</p>
                     </div>
                     <div class="toggle-wrap">
                         <button class="toggle" id="toggle-format_guest_features" aria-checked="true" type="button">
@@ -1159,23 +1159,10 @@ function profile_recents() {
                         </button>
                     </div>
                 </div>
-                <div class="toggle-container hide-if-format-guest-disabled" id="container-show_guest_features" onclick="_update_item('show_guest_features')">
-                    <button class="btn reset" onclick="_reset_item('show_guest_features')">${trans_legacy[lang].settings.reset}</button>
-                    <div class="heading">
-                        <h5>${trans_legacy[lang].settings.corrections.show_guest_features.name}</h5>
-                        <p>${trans_legacy[lang].settings.corrections.show_guest_features.bio}</p>
-                    </div>
-                    <div class="toggle-wrap">
-                        <button class="toggle" id="toggle-show_guest_features" aria-checked="true" type="button">
-                            <div class="dot"></div>
-                        </button>
-                    </div>
-                </div>
                 <div class="toggle-container" id="container-stacked_chartlist_info" onclick="_update_item('stacked_chartlist_info')">
-                    <button class="btn reset" onclick="_reset_item('stacked_chartlist_info')">${trans_legacy[lang].settings.reset}</button>
+                    <button class="btn reset" onclick="_reset_item('stacked_chartlist_info')">${tl(trans.reset)}</button>
                     <div class="heading">
-                        <h5>${trans_legacy[lang].settings.corrections.stacked_chartlist_info.name}</h5>
-                        <p>${trans_legacy[lang].settings.corrections.stacked_chartlist_info.bio}</p>
+                        <h5>${tl(trans.track_column_view)}</h5>
                     </div>
                     <div class="toggle-wrap">
                         <button class="toggle" id="toggle-stacked_chartlist_info" aria-checked="true" type="button">
@@ -1184,7 +1171,7 @@ function profile_recents() {
                     </div>
                 </div>
                 <div class="toggle-container" id="container-colourful_tracks" onclick="_update_item('colourful_tracks')">
-                    <button class="btn reset" onclick="_reset_item('colourful_tracks')">${trans_legacy[lang].settings.reset}</button>
+                    <button class="btn reset" onclick="_reset_item('colourful_tracks')">${tl(trans.reset)}</button>
                     <div class="heading">
                         <h5>${trans_legacy[lang].settings.customise.colourful_tracks.name}</h5>
                         <p>${trans_legacy[lang].settings.customise.colourful_tracks.bio}</p>
@@ -1555,10 +1542,10 @@ function profile_tracks() {
                 </div>
                 <div class="sep"></div>
                 <div class="toggle-container" id="container-format_guest_features" onclick="_update_item('format_guest_features')">
-                    <button class="btn reset" onclick="_reset_item('format_guest_features')">${trans_legacy[lang].settings.reset}</button>
+                    <button class="btn reset" onclick="_reset_item('format_guest_features')">${tl(trans.reset)}</button>
                     <div class="heading">
-                        <h5>${trans_legacy[lang].settings.corrections.format_guest_features.name}</h5>
-                        <p>${trans_legacy[lang].settings.corrections.format_guest_features.bio}</p>
+                        <h5>${tl(trans.format_guest_features.name)}</h5>
+                        <p>${tl(trans.format_guest_features.body)}</p>
                     </div>
                     <div class="toggle-wrap">
                         <button class="toggle" id="toggle-format_guest_features" aria-checked="true" type="button">
@@ -1567,10 +1554,10 @@ function profile_tracks() {
                     </div>
                 </div>
                 <div class="toggle-container hide-if-format-guest-disabled" id="container-show_guest_features" onclick="_update_item('show_guest_features')">
-                    <button class="btn reset" onclick="_reset_item('show_guest_features')">${trans_legacy[lang].settings.reset}</button>
+                    <button class="btn reset" onclick="_reset_item('show_guest_features')">${tl(trans.reset)}</button>
                     <div class="heading">
-                        <h5>${trans_legacy[lang].settings.corrections.show_guest_features.name}</h5>
-                        <p>${trans_legacy[lang].settings.corrections.show_guest_features.bio}</p>
+                        <h5>${tl(trans.show_guest_features.name)}</h5>
+                        <p>${tl(trans.show_guest_features.body)}</p>
                     </div>
                     <div class="toggle-wrap">
                         <button class="toggle" id="toggle-show_guest_features" aria-checked="true" type="button">

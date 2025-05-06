@@ -1149,7 +1149,7 @@ export function render_setting_page(page_id) {
         register_skip_to([
             {
                 id: 'format_guest_features',
-                name: trans_legacy[lang].settings.corrections.format_guest_features.name
+                name: tl(trans.format_guest_features.name)
             },
             {
                 id: 'corrections',
@@ -1157,7 +1157,7 @@ export function render_setting_page(page_id) {
             },
             {
                 id: 'stacked_chartlist_info',
-                name: trans_legacy[lang].settings.corrections.stacked_chartlist_info.name
+                name: tl(trans.track_column_view)
             },
             {
                 id: 'travis',
@@ -1243,8 +1243,8 @@ export function render_setting_page(page_id) {
                 <div class="toggle-container" id="container-format_guest_features" onclick="_update_item('format_guest_features')">
                     <button class="btn reset" onclick="_reset_item('format_guest_features')">${tl(trans.reset)}</button>
                     <div class="heading">
-                        <h5>${trans_legacy[lang].settings.corrections.format_guest_features.name}</h5>
-                        <p>${trans_legacy[lang].settings.corrections.format_guest_features.bio}</p>
+                        <h5>${tl(trans.format_guest_features.name)}</h5>
+                        <p>${tl(trans.format_guest_features.body)}</p>
                     </div>
                     <div class="toggle-wrap">
                         <button class="toggle" id="toggle-format_guest_features" aria-checked="true">
@@ -1255,8 +1255,8 @@ export function render_setting_page(page_id) {
                 <div class="toggle-container hide-if-format-guest-disabled" id="container-show_guest_features" onclick="_update_item('show_guest_features')">
                     <button class="btn reset" onclick="_reset_item('show_guest_features')">${tl(trans.reset)}</button>
                     <div class="heading">
-                        <h5>${trans_legacy[lang].settings.corrections.show_guest_features.name}</h5>
-                        <p>${trans_legacy[lang].settings.corrections.show_guest_features.bio}</p>
+                        <h5>${tl(trans.show_guest_features.name)}</h5>
+                        <p>${tl(trans.show_guest_features.body)}</p>
                     </div>
                     <div class="toggle-wrap">
                         <button class="toggle" id="toggle-show_guest_features" aria-checked="true">
@@ -1270,7 +1270,7 @@ export function render_setting_page(page_id) {
                             <img src="https://lastfm.freetls.fastly.net/i/u/avatar170s/def68d94aae8e52ef2d1c0c9d3e16ff4.jpg">
                         </div>
                         <div class="info-side">
-                            <div class="sub-text">${trans_legacy[lang].album.name}</div>
+                            <div class="sub-text">${tl(trans.album)}</div>
                             <div class="title-container">
                                 <h1>
                                     <div class="title">my anti-aircraft friend</div>
@@ -1286,7 +1286,7 @@ export function render_setting_page(page_id) {
                 <div class="toggle-container hide-if-format-guest-disabled" id="container-show_remaster_tags" onclick="_update_item('show_remaster_tags')">
                     <button class="btn reset" onclick="_reset_item('show_remaster_tags')">${tl(trans.reset)}</button>
                     <div class="heading">
-                        <h5>${trans_legacy[lang].settings.corrections.show_remaster_tags.name} <div class="new-badge">${trans_legacy[lang].settings.beta}</div></h5>
+                        <h5>${tl(trans.show_remaster_tags)} <div class="new-badge">${tl(trans.beta)}</div></h5>
                     </div>
                     <div class="toggle-wrap">
                         <button class="toggle" id="toggle-show_remaster_tags" aria-checked="true">
@@ -1392,8 +1392,7 @@ export function render_setting_page(page_id) {
                 <div class="toggle-container" id="container-stacked_chartlist_info" onclick="_update_item('stacked_chartlist_info')">
                     <button class="btn reset" onclick="_reset_item('stacked_chartlist_info')">${tl(trans.reset)}</button>
                     <div class="heading">
-                        <h5>${trans_legacy[lang].settings.corrections.stacked_chartlist_info.name}</h5>
-                        <p>${trans_legacy[lang].settings.corrections.stacked_chartlist_info.bio}</p>
+                        <h5>${tl(trans.track_column_view)}</h5>
                     </div>
                     <div class="toggle-wrap">
                         <button class="toggle" id="toggle-stacked_chartlist_info" aria-checked="true">

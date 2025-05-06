@@ -121,7 +121,7 @@ export function bleh_events() {
 
 
         let main_panel = page.structure.main.querySelector('.event-summary-with-poster');
-        if (main_panel == null)
+        if (!main_panel)
             main_panel = page.structure.main.querySelector('.event-details');
 
         main_panel.insertBefore(event_top_header, main_panel.firstElementChild);
@@ -133,7 +133,7 @@ export function bleh_events() {
         // move poster
         let poster = main_panel.querySelector('.event-poster-preview');
         let poster_panel;
-        if (poster != null) {
+        if (poster) {
             poster_panel = document.createElement('section');
             poster_panel.classList.add('poster-panel', 'view-all-panel');
 
@@ -147,14 +147,14 @@ export function bleh_events() {
 
         // edit button
         let edit_button = main_panel.querySelector('.event-metadata + .event-metadata a');
-        if (edit_button != null) {
+        if (edit_button) {
             edit_button.classList.add('btn', 'view-all-button', 'back', 'edit-event-button');
 
             let edit_panel = document.createElement('section');
             edit_panel.classList.add('view-all-panel');
 
             edit_panel.appendChild(edit_button);
-            if (poster != null)
+            if (poster)
                 poster_panel.after(edit_panel);
             else
                 page.structure.side.insertBefore(edit_panel, page.structure.side.firstElementChild);
@@ -171,6 +171,19 @@ export function bleh_events() {
 
             patch_avatar(avatar, name, 'event');
         });
+
+
+        // cancelled
+        let cancelled = page.structure.main.querySelector('.event-status--cancelled');
+        if (cancelled) {
+            page.structure.main.removeChild(cancelled);
+
+            let alert = document.createElement('section');
+            alert.classList.add('cta', 'first', 'colourful', 'error');
+            alert.innerHTML = `<strong>${tl(trans.event_cancelled)}</strong>`;
+
+            page.structure.main.insertBefore(alert, page.structure.main.firstElementChild);
+        }
     } else {
         if (page.subpage == 'event_attendance_going' || page.subpage == 'event_attendance_interested') {
             // view-related buttons

@@ -1915,6 +1915,8 @@ last.fm changes as of 2024-05-20 */
     &.lazy-shoutbox {
         padding-bottom: var(--card-padding);
 
+        /* event shoutbox */
+        section > &,
         /* image shoutbox */
         div.buffer-standard:not(.col-main) & {
             padding-bottom: unset !important;
@@ -9556,8 +9558,8 @@ text[style^="color: rgb(255, 172, 172)"] {
 .tooltip-dark,
 .user-dashboard-tooltip {
     background: hsla(var(--b8), 80%);
-    backdrop-filter: blur(20px) saturate(160%);
-    -webkit-backdrop-filter: blur(20px) saturate(160%);
+    backdrop-filter: blur(20px) saturate(220%);
+    -webkit-backdrop-filter: blur(20px) saturate(220%);
     border-radius: var(--item-big-radius);
     box-shadow: var(--card-shadow);
     padding: 6px 10px;
@@ -14381,8 +14383,9 @@ input[type="range"]::-moz-range-progress {
     }
 
     p {
-        font-size: 13px;
-        color: hsl(var(--c2), 70%);
+        color: hsl(var(--c2), 60%);
+        font-size: var(--font-size-sm);
+        line-height: var(--line-height-sm);
     }
 }
 .toggle-container .heading .btn,
@@ -14449,8 +14452,13 @@ input[type="range"]::-moz-range-progress {
         transition: none;
     }*/
 
-    align-items: center;
-    min-height: 28px;
+    h5, .toggle-wrap {
+        display: flex;
+        align-items: center;
+        gap: var(--item-list-gap);
+        height: 28px;
+    }
+
     gap: var(--card-gap);
 
     &:active {
@@ -18632,7 +18640,10 @@ h4 {
 
                         div {
                             display: inline;
-                            margin-right: var(--card-gap);
+
+                            &:not(:last-child) {
+                                margin-right: var(--card-gap);
+                            }
                         }
                     }
                     h2 {
@@ -21660,8 +21671,19 @@ h4 {
         --card-specific-background: hsl(var(--h4), 15%);
     }
 
+    &.first,
     &.blocked-cta {
         order: -1;
+    }
+
+    &.error {
+        --hue-over: var(--hue-neg);
+        --sat-over: 1;
+        --lit-over: 1;
+
+        strong {
+            color: hsl(var(--l3-c));
+        }
     }
 }
 

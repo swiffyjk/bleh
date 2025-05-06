@@ -51,7 +51,7 @@ export function bleh_charts() {
         content: (`
             <div class="dialog-settings">
                 <div class="toggle-container" id="container-simulate_scroll" onclick="_update_item('simulate_scroll')">
-                    <button class="btn reset" onclick="_reset_item('simulate_scroll')">${trans_legacy[lang].settings.reset}</button>
+                    <button class="btn reset" onclick="_reset_item('simulate_scroll')">${tl(trans.reset)}</button>
                     <div class="heading">
                         <h5>${trans_legacy[lang].charts.scroll.name}</h5>
                         <p>${trans_legacy[lang].charts.scroll.bio}</p>

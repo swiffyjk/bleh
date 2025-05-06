@@ -114,7 +114,7 @@ unsafeWindow._setup_accessibility = function() {
                     <div class="setup-body-main">
                         <h1>${trans_legacy[lang].settings.accessibility.name}</h1>
                         <div class="toggle-container" id="container-reduced_motion">
-                            <button class="btn reset" onclick="_reset_item('reduced_motion')">${trans_legacy[lang].settings.reset}</button>
+                            <button class="btn reset" onclick="_reset_item('reduced_motion')">${tl(trans.reset)}</button>
                             <div class="heading">
                                 <h5>${trans_legacy[lang].settings.accessibility.reduced_motion.name}</h5>
                                 <p>${trans_legacy[lang].settings.accessibility.reduced_motion.bio}</p>
@@ -144,7 +144,7 @@ unsafeWindow._setup_accessibility = function() {
                             </div>
                         </div>
                         <div class="toggle-container" id="container-accessible_name_colours">
-                            <button class="btn reset" onclick="_reset_item('accessible_name_colours')">${trans_legacy[lang].settings.reset}</button>
+                            <button class="btn reset" onclick="_reset_item('accessible_name_colours')">${tl(trans.reset)}</button>
                             <div class="heading">
                                 <h5>${trans_legacy[lang].settings.accessibility.accessible_name_colours.name}</h5>
                                 <p>${trans_legacy[lang].settings.accessibility.accessible_name_colours.bio}</p>
@@ -156,7 +156,7 @@ unsafeWindow._setup_accessibility = function() {
                             </div>
                         </div>
                         <div class="toggle-container" id="container-underline_links">
-                            <button class="btn reset" onclick="_reset_item('underline_links')">${trans_legacy[lang].settings.reset}</button>
+                            <button class="btn reset" onclick="_reset_item('underline_links')">${tl(trans.reset)}</button>
                             <div class="heading">
                                 <h5>${trans_legacy[lang].settings.accessibility.underline_links.name}</h5>
                                 <p>${trans_legacy[lang].settings.accessibility.underline_links.bio}</p>
@@ -291,10 +291,10 @@ unsafeWindow._setup_corrections = function() {
                         <div class="alert alert-info">${trans_legacy[lang].setup.music.change_later}</div>
                         <h4>${trans_legacy[lang].settings.corrections.formatting}</h4>
                         <div class="toggle-container" id="container-format_guest_features" onclick="_update_item('format_guest_features')">
-                            <button class="btn reset" onclick="_reset_item('format_guest_features')">${trans_legacy[lang].settings.reset}</button>
+                            <button class="btn reset" onclick="_reset_item('format_guest_features')">${tl(trans.reset)}</button>
                             <div class="heading">
-                                <h5>${trans_legacy[lang].settings.corrections.format_guest_features.name}</h5>
-                                <p>${trans_legacy[lang].settings.corrections.format_guest_features.bio}</p>
+                                <h5>${tl(trans.format_guest_features.name)}</h5>
+                                <p>${tl(trans.format_guest_features.body)}</p>
                             </div>
                             <div class="toggle-wrap">
                                 <button class="toggle" id="toggle-format_guest_features" aria-checked="true">
@@ -303,10 +303,10 @@ unsafeWindow._setup_corrections = function() {
                             </div>
                         </div>
                         <div class="toggle-container hide-if-format-guest-disabled" id="container-show_guest_features" onclick="_update_item('show_guest_features')">
-                            <button class="btn reset" onclick="_reset_item('show_guest_features')">${trans_legacy[lang].settings.reset}</button>
+                            <button class="btn reset" onclick="_reset_item('show_guest_features')">${tl(trans.reset)}</button>
                             <div class="heading">
-                                <h5>${trans_legacy[lang].settings.corrections.show_guest_features.name}</h5>
-                                <p>${trans_legacy[lang].settings.corrections.show_guest_features.bio}</p>
+                                <h5>${tl(trans.show_guest_features.name)}</h5>
+                                <p>${tl(trans.show_guest_features.body)}</p>
                             </div>
                             <div class="toggle-wrap">
                                 <button class="toggle" id="toggle-show_guest_features" aria-checked="true">
@@ -315,7 +315,7 @@ unsafeWindow._setup_corrections = function() {
                             </div>
                         </div>
                         <div class="toggle-container" id="container-corrections" onclick="_update_item('corrections')">
-                            <button class="btn reset" onclick="_reset_item('corrections')">${trans_legacy[lang].settings.reset}</button>
+                            <button class="btn reset" onclick="_reset_item('corrections')">${tl(trans.reset)}</button>
                             <div class="heading">
                                 <h5>${trans_legacy[lang].settings.corrections.toggle.name}</h5>
                             </div>
@@ -327,9 +327,9 @@ unsafeWindow._setup_corrections = function() {
                         </div>
                         <h4>${trans_legacy[lang].settings.music.header}</h4>
                         <div class="toggle-container" id="container-stacked_chartlist_info" onclick="_update_item('stacked_chartlist_info')">
-                            <button class="btn reset" onclick="_reset_item('stacked_chartlist_info')">${trans_legacy[lang].settings.reset}</button>
+                            <button class="btn reset" onclick="_reset_item('stacked_chartlist_info')">${tl(trans.reset)}</button>
                             <div class="heading">
-                                <h5>${trans_legacy[lang].settings.corrections.stacked_chartlist_info.name}</h5>
+                                <h5>${tl(trans.track_column_view)}</h5>
                                 <p>${trans_legacy[lang].settings.corrections.stacked_chartlist_info.bio}</p>
                             </div>
                             <div class="toggle-wrap">
@@ -339,7 +339,7 @@ unsafeWindow._setup_corrections = function() {
                             </div>
                         </div>
                         <div class="toggle-container hide-if-no-bulk-edit" id="container-show_bulk_edit_album" onclick="_update_item('show_bulk_edit_album')">
-                            <button class="btn reset" onclick="_reset_item('show_bulk_edit_album')">${trans_legacy[lang].settings.reset}</button>
+                            <button class="btn reset" onclick="_reset_item('show_bulk_edit_album')">${tl(trans.reset)}</button>
                             <div class="heading">
                                 <h5>${trans_legacy[lang].settings.music.show_bulk_edit_album.name}</h5>
                                 <p>${trans_legacy[lang].settings.music.show_bulk_edit_album.bio}</p>
@@ -427,7 +427,7 @@ unsafeWindow._setup_seasons = function() {
                         </div>-->
                         <h4>${trans_legacy[lang].settings.configure}</h4>
                         <div class="toggle-container" id="container-seasonal" onclick="_update_item('seasonal')">
-                            <button class="btn reset" onclick="_reset_item('seasonal')">${trans_legacy[lang].settings.reset}</button>
+                            <button class="btn reset" onclick="_reset_item('seasonal')">${tl(trans.reset)}</button>
                             <div class="heading">
                                 <h5>${trans_legacy[lang].settings.customise.seasonal.option.name}</h5>
                             </div>
@@ -439,7 +439,7 @@ unsafeWindow._setup_seasons = function() {
                         </div>
                         <div class="sep"></div>
                         <div class="toggle-container hide-if-seasonal-disabled" id="container-seasonal_particles" onclick="_update_item('seasonal_particles')">
-                            <button class="btn reset" onclick="_reset_item('seasonal_particles')">${trans_legacy[lang].settings.reset}</button>
+                            <button class="btn reset" onclick="_reset_item('seasonal_particles')">${tl(trans.reset)}</button>
                             <div class="heading">
                                 <h5>${trans_legacy[lang].settings.customise.seasonal.particles.name}</h5>
                                 <p>${trans_legacy[lang].settings.customise.seasonal.particles.bio}</p>
@@ -451,7 +451,7 @@ unsafeWindow._setup_seasons = function() {
                             </div>
                         </div>
                         <div class="toggle-container hide-if-seasonal-disabled" id="container-seasonal_particles_reduced" onclick="_update_item('seasonal_particles_reduced')">
-                            <button class="btn reset" onclick="_reset_item('seasonal_particles_reduced')">${trans_legacy[lang].settings.reset}</button>
+                            <button class="btn reset" onclick="_reset_item('seasonal_particles_reduced')">${tl(trans.reset)}</button>
                             <div class="heading">
                                 <h5>${trans_legacy[lang].settings.customise.seasonal.show_less_particles.name}</h5>
                             </div>
@@ -462,7 +462,7 @@ unsafeWindow._setup_seasons = function() {
                             </div>
                         </div>
                         <div class="toggle-container hide-if-seasonal-disabled" id="container-seasonal_particles_fps" onclick="_update_item('seasonal_particles_fps')">
-                            <button class="btn reset" onclick="_reset_item('seasonal_particles_fps')">${trans_legacy[lang].settings.reset}</button>
+                            <button class="btn reset" onclick="_reset_item('seasonal_particles_fps')">${tl(trans.reset)}</button>
                             <div class="heading">
                                 <h5>${trans_legacy[lang].settings.customise.seasonal.fps_particles.name}</h5>
                                 <p>${trans_legacy[lang].settings.customise.seasonal.fps_particles.bio}</p>
@@ -475,7 +475,7 @@ unsafeWindow._setup_seasons = function() {
                         </div>
                         <div class="sep"></div>
                         <div class="toggle-container hide-if-seasonal-disabled" id="container-seasonal_overlays" onclick="_update_item('seasonal_overlays')">
-                            <button class="btn reset" onclick="_reset_item('seasonal_overlays')">${trans_legacy[lang].settings.reset}</button>
+                            <button class="btn reset" onclick="_reset_item('seasonal_overlays')">${tl(trans.reset)}</button>
                             <div class="heading">
                                 <h5>${trans_legacy[lang].settings.customise.seasonal.overlays.name}</h5>
                                 <p>${trans_legacy[lang].settings.customise.seasonal.overlays.bio}</p>

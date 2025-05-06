@@ -68,7 +68,34 @@ export function bleh_tags() {
     }
 
     if (!is_subpage) {
-        //
+        let col_main = page.structure.main.querySelector('.wiki-section');
+
+        let tags = document.createElement('div');
+        tags.classList.add('catalogue-tags');
+        let related = page.structure.main.querySelector('.tags-list');
+
+        if (related) {
+            page.structure.main.removeChild(related.parentElement);
+            tags.appendChild(related);
+
+            let header_tags = document.createElement('div');
+            header_tags.classList.add('sub-text', 'music-small-header');
+            header_tags.textContent = tl(trans.related_to);
+            col_main.appendChild(header_tags);
+
+            col_main.appendChild(tags);
+        }
+
+
+        let bookmark_form = page.structure.side.querySelector(':scope > div');
+        let view_all_panel = document.createElement('section');
+        view_all_panel.classList.add('view-all-panel');
+
+        let button = bookmark_form.querySelector('button');
+        button.classList = 'toggle-button header-new-bookmark-button btn view-item interact-item icon';
+
+        view_all_panel.appendChild(bookmark_form);
+        page.structure.side.appendChild(view_all_panel);
     } else {
         if (page.subpage == 'wiki_overview')
             bleh_wiki();
@@ -80,44 +107,12 @@ export function bleh_tags() {
 
     log('status is', 'page', 'info', page);
     update_page();
-
-
-    let col_main = page.structure.main.querySelector('.wiki-section');
-
-    let tags = document.createElement('div');
-    tags.classList.add('catalogue-tags');
-    let related = page.structure.main.querySelector('.tags-list');
-
-    if (related) {
-        page.structure.main.removeChild(related.parentElement);
-        tags.appendChild(related);
-
-        let header_tags = document.createElement('div');
-        header_tags.classList.add('sub-text', 'music-small-header');
-        header_tags.textContent = tl(trans.related_to);
-        col_main.appendChild(header_tags);
-
-        col_main.appendChild(tags);
-    }
-
-
-    let bookmark_form = page.structure.side.querySelector(':scope > div');
-    let view_all_panel = document.createElement('section');
-    view_all_panel.classList.add('view-all-panel');
-
-    let button = bookmark_form.querySelector('button');
-    button.classList = 'toggle-button header-new-bookmark-button btn view-item interact-item icon';
-
-    view_all_panel.appendChild(bookmark_form);
-    page.structure.side.appendChild(view_all_panel);
 }
 
 
 export function bleh_tags_mini() {
     let tag_user_avatar = page.structure.main.querySelector('.tags-user-avatar');
-
-    if (!tag_user_avatar)
-        return;
+    if (!tag_user_avatar) return;
 
     let tags_list = tag_user_avatar.nextElementSibling;
     let tags = tags_list.querySelectorAll('.tag a');

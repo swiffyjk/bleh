@@ -951,8 +951,7 @@ export function bleh_music_page_charts() {
     let panel = document.body.querySelector('.listen-panel'); // page.structure.side fails without pro
     let trend = panel.querySelector('.listener-trend');
 
-    if (trend == null)
-        return;
+    if (!trend) return;
 
     // is this a chart reflow due to style loading?
     let previous_chart = panel.querySelector('.scrobble-canvas-container');

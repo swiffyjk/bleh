@@ -130,7 +130,7 @@ export function bleh_wiki_history() {
     latest_version_panel.classList.add('view-all-panel');
     latest_version_panel.innerHTML = (`
         <a class="btn view-all-button back wiki-latest-button" href="${sub_text.querySelector('a').getAttribute('href')}">
-            ${trans_legacy[lang].wiki.latest}
+            ${tl(trans.view_latest_version)}
         </a>
     `);
 
@@ -310,15 +310,15 @@ export function patch_wiki() {
         let read_more = wiki_block.querySelector('a:last-child');
         if (read_more) {
             read_more.classList.add('read-more');
-            read_more.textContent = trans_legacy[lang].music.wiki_read;
+            read_more.textContent = tl(trans.read_more).toLowerCase();
         }
 
         let wiki_header = document.createElement('div');
         wiki_header.classList.add('sub-text');
         wiki_header.innerHTML = (`
-            <p>${trans_legacy[lang].music.wiki.replace('{a}', page.name)}</p>
+            <p>${tl(trans.about)}</p>
             <span class="right-links">
-                <p><a class="wiki-edit-small" href="${document.location.href}/+wiki/edit">${trans_legacy[lang].music.wiki_edit}</a></p>
+                <p><a class="wiki-edit-small" href="${document.location.href}/+wiki/edit">${tl(trans.edit_wiki).toLowerCase()}</a></p>
                 ${(!wiki_empty) ? `<p>${read_more.outerHTML}</p>` : ''}
             </span>
         `);

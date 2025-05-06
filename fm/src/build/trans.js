@@ -319,6 +319,7 @@ export const trans = {
     },
     seasonal: {
         name: {
+            // translate to 'Seasons' if it reads better
             en: 'Seasonal',
             de: 'Saisonal'
         },
@@ -394,6 +395,20 @@ export const trans = {
         en: 'Welcome back {user}!',
         de: 'Willkommen züruck {user}!'
     },
+    good_morning_user: {
+        en: 'Good morning, {user}',
+        de: 'Guten Morgen {user}'
+    },
+    good_afternoon_user: {
+        en: 'Good afternoon, {user}'
+    },
+    good_evening_user: {
+        en: 'Good evening, {user}'
+    },
+    goodnight_user: {
+        en: 'Goodnight, {user}',
+        de: 'Gute Nacht {user}'
+    },
     thank_you_for_sponsoring: {
         en: 'Thank you for sponsoring!',
         de: 'Danke fürs sponsoren!'
@@ -415,7 +430,7 @@ export const trans = {
         de: 'Zurücksetzen'
     },
     changelog: {
-        en: 'What\'s New?'
+        en: 'News'
     },
     default: {
         en: 'Default',
@@ -556,7 +571,8 @@ export const trans = {
         }
     },
     about_me_preview: {
-        en: 'About Me (preview)'
+        en: 'About Me (preview)',
+        de: 'Über mich (preview)'
     },
     markdown_tip: {
         en: 'This textbox supports markdown such as line breaks, bold text, italics, underlines, and more. You can embed images using ![alt text](link). Beware that to non-bleh users it will not appear fancy.'
@@ -571,7 +587,8 @@ export const trans = {
         en: 'Website'
     },
     overview: {
-        en: 'Overview'
+        en: 'Overview',
+        de: 'Übersicht'
     },
     photos: {
         en: 'Photos',
@@ -600,18 +617,25 @@ export const trans = {
         en: 'Tags'
     },
     artist_lower: {
+        // used inside a sentence not on its own,
+        // make lowercase if thats how the language works
         en: 'artist',
         de: 'Künstler'
     },
     album_lower: {
+        // used inside a sentence not on its own,
+        // make lowercase if thats how the language works
         en: 'album',
         de: 'Album'
     },
     track_lower: {
+        // used inside a sentence not on its own,
+        // make lowercase if thats how the language works
         en: 'track',
         de: 'Titel'
     },
     lotus_cta: {
+        // {t} is replaced by one of the 3 above
         true: {
             en: 'This {t} is being re-capitalised, is it correct?',
             de: '{t} wird neu großgeschrieben, ist das richtig?'
@@ -660,7 +684,7 @@ export const trans = {
         }
     },
     sponsor_info: {
-        en: 'This is a special bleh-managed account to handle sponsors.',
+        en: 'This is a special bleh-managed account to handle sponsors',
         de: 'Dies ist ein bleh verwaltetes Konto zur Verwaltung von Sponsoren'
     },
     loading: {
@@ -688,6 +712,7 @@ export const trans = {
         de: 'Hyperlink Leitfaden'
     },
     links_to: {
+        // used in wiki editing, {this example} links to {link}
         en: 'Links to {link}',
         de: 'Verlinkt auf {link}'
     },
@@ -700,6 +725,7 @@ export const trans = {
         de: 'In der Bibliothek anzeigen'
     },
     add_note: {
+        // as in a profile note
         en: 'Add note',
         de: 'Notiz hinzufügen'
     },
@@ -707,6 +733,7 @@ export const trans = {
         en: 'Radio'
     },
     mix: {
+        // as in a playlist mix of music
         en: 'Mix'
     },
     recommended: {
@@ -745,6 +772,7 @@ export const trans = {
         de: 'Lieblingslieder'
     },
     velocity: {
+        // as in the last.fm labs 'Velocity' tool
         en: 'Velocity'
     },
     logout: {
@@ -811,6 +839,58 @@ export const trans = {
     },
     related_to: {
         en: 'Related to'
+    },
+    personal_tag: {
+        en: 'Personal tag'
+    },
+    your_avatar: {
+        en: 'Your avatar',
+        de: 'Dein Avatar'
+    },
+    avatar_for_user: {
+        // this is used to replace the text and extract the
+        // username, so make this text everything BUT where
+        // the username goes (including spaces)
+        en: 'Avatar for ',
+        de: 'Avatar für '
+    },
+    by_artist: {
+        // {name} by {artist} - hence the space in english
+        en: ' by {a}'
+    },
+    average: {
+        en: 'Average'
+    },
+    from_user: {
+        en: 'from {u}'
+    },
+    open_new_tab: {
+        en: 'Open in a new tab'
+    },
+    event_cancelled: {
+        en: 'This event has been cancelled (╥﹏╥)'
+    },
+    format_guest_features: {
+        name: {
+            en: 'Smart credited artists and song tags'
+        },
+        body: {
+            en: 'Analyses album and track titles into their individual elements of artists, versions, remixes, etc.'
+        }
+    },
+    show_guest_features: {
+        name: {
+            en: 'Duplicate credited artists in title'
+        },
+        body: {
+            en: 'Any artists found are moved to the artist field only by default unless this option is enabled'
+        }
+    },
+    track_column_view: {
+        en: 'Use column view for tracklist information'
+    },
+    show_remaster_tags: {
+        en: 'Show remaster tags'
     }
 }
 

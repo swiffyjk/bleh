@@ -7,7 +7,7 @@ import { deliver_notif, notify } from "./notify";
 unsafeWindow._open_profile_shortcut_window = function() {
     dialog_legacy('profile_shortcut',trans_legacy[lang].settings.music.profile_shortcut.name,(`
         <div class="text-container" id="container-profile_shortcut">
-            <button class="btn reset" onclick="_reset_item('profile_shortcut')">${trans_legacy[lang].settings.reset}</button>
+            <button class="btn reset" onclick="_reset_item('profile_shortcut')">${tl(trans.reset)}</button>
             <div class="avatar-container">
                 <div class="avatar-inner" id="avatar-profile_shortcut">
                     <img id="avatar_src-profile_shortcut" src="${localStorage.getItem('bleh_profile_shortcut_avi') || ''}">

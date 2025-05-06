@@ -426,10 +426,10 @@ function bleh_glacier_library_top(static_page = false) {
         content: (`
             <div class="dialog-settings">
                 <div class="toggle-container" id="container-format_guest_features" onclick="_update_item('format_guest_features')">
-                    <button class="btn reset" onclick="_reset_item('format_guest_features')">${trans_legacy[lang].settings.reset}</button>
+                    <button class="btn reset" onclick="_reset_item('format_guest_features')">${tl(trans.reset)}</button>
                     <div class="heading">
-                        <h5>${trans_legacy[lang].settings.corrections.format_guest_features.name}</h5>
-                        <p>${trans_legacy[lang].settings.corrections.format_guest_features.bio}</p>
+                        <h5>${tl(trans.format_guest_features.name)}</h5>
+                        <p>${tl(trans.format_guest_features.body)}</p>
                     </div>
                     <div class="toggle-wrap">
                         <button class="toggle" id="toggle-format_guest_features" aria-checked="true">
@@ -438,10 +438,10 @@ function bleh_glacier_library_top(static_page = false) {
                     </div>
                 </div>
                 <div class="toggle-container hide-if-format-guest-disabled" id="container-show_guest_features" onclick="_update_item('show_guest_features')">
-                    <button class="btn reset" onclick="_reset_item('show_guest_features')">${trans_legacy[lang].settings.reset}</button>
+                    <button class="btn reset" onclick="_reset_item('show_guest_features')">${tl(trans.reset)}</button>
                     <div class="heading">
-                        <h5>${trans_legacy[lang].settings.corrections.show_guest_features.name}</h5>
-                        <p>${trans_legacy[lang].settings.corrections.show_guest_features.bio}</p>
+                        <h5>${tl(trans.show_guest_features.name)}</h5>
+                        <p>${tl(trans.show_guest_features.body)}</p>
                     </div>
                     <div class="toggle-wrap">
                         <button class="toggle" id="toggle-show_guest_features" aria-checked="true" type="button">
@@ -450,10 +450,9 @@ function bleh_glacier_library_top(static_page = false) {
                     </div>
                 </div>
                 <div class="toggle-container" id="container-stacked_chartlist_info" onclick="_update_item('stacked_chartlist_info')">
-                    <button class="btn reset" onclick="_reset_item('stacked_chartlist_info')">${trans_legacy[lang].settings.reset}</button>
+                    <button class="btn reset" onclick="_reset_item('stacked_chartlist_info')">${tl(trans.reset)}</button>
                     <div class="heading">
-                        <h5>${trans_legacy[lang].settings.corrections.stacked_chartlist_info.name}</h5>
-                        <p>${trans_legacy[lang].settings.corrections.stacked_chartlist_info.bio}</p>
+                        <h5>${tl(trans.track_column_view)}</h5>
                     </div>
                     <div class="toggle-wrap">
                         <button class="toggle" id="toggle-stacked_chartlist_info" aria-checked="true" type="button">
@@ -463,7 +462,7 @@ function bleh_glacier_library_top(static_page = false) {
                 </div>
                 <div class="sep"></div>
                 <div class="toggle-container" id="container-grid_glow" onclick="_update_item('grid_glow')">
-                    <button class="btn reset" onclick="_reset_item('grid_glow')">${trans_legacy[lang].settings.reset}</button>
+                    <button class="btn reset" onclick="_reset_item('grid_glow')">${tl(trans.reset)}</button>
                     <div class="heading">
                         <h5>${trans_legacy[lang].settings.music.grid_glow.name}</h5>
                     </div>
@@ -474,7 +473,7 @@ function bleh_glacier_library_top(static_page = false) {
                     </div>
                 </div>
                 <div class="toggle-container" id="container-glacier_library_graphs" onclick="_update_item('glacier_library_graphs')">
-                    <button class="btn reset" onclick="_reset_item('glacier_library_graphs')">${trans_legacy[lang].settings.reset}</button>
+                    <button class="btn reset" onclick="_reset_item('glacier_library_graphs')">${tl(trans.reset)}</button>
                     <div class="heading">
                         <h5>${trans_legacy[lang].glacier.option.name}</h5>
                         <p>${trans_legacy[lang].glacier.option.bio}</p>
@@ -1172,10 +1171,10 @@ function bleh_glacier_library_focused() {
         content: (`
             <div class="dialog-settings">
                 <div class="toggle-container" id="container-format_guest_features" onclick="_update_item('format_guest_features')">
-                    <button class="btn reset" onclick="_reset_item('format_guest_features')">${trans_legacy[lang].settings.reset}</button>
+                    <button class="btn reset" onclick="_reset_item('format_guest_features')">${tl(trans.reset)}</button>
                     <div class="heading">
-                        <h5>${trans_legacy[lang].settings.corrections.format_guest_features.name}</h5>
-                        <p>${trans_legacy[lang].settings.corrections.format_guest_features.bio}</p>
+                        <h5>${tl(trans.format_guest_features.name)}</h5>
+                        <p>${tl(trans.format_guest_features.body)}</p>
                     </div>
                     <div class="toggle-wrap">
                         <button class="toggle" id="toggle-format_guest_features" aria-checked="true">
@@ -1184,10 +1183,10 @@ function bleh_glacier_library_focused() {
                     </div>
                 </div>
                 <div class="toggle-container hide-if-format-guest-disabled" id="container-show_guest_features" onclick="_update_item('show_guest_features')">
-                    <button class="btn reset" onclick="_reset_item('show_guest_features')">${trans_legacy[lang].settings.reset}</button>
+                    <button class="btn reset" onclick="_reset_item('show_guest_features')">${tl(trans.reset)}</button>
                     <div class="heading">
-                        <h5>${trans_legacy[lang].settings.corrections.show_guest_features.name}</h5>
-                        <p>${trans_legacy[lang].settings.corrections.show_guest_features.bio}</p>
+                        <h5>${tl(trans.show_guest_features.name)}</h5>
+                        <p>${tl(trans.show_guest_features.body)}</p>
                     </div>
                     <div class="toggle-wrap">
                         <button class="toggle" id="toggle-show_guest_features" aria-checked="true" type="button">
@@ -1196,10 +1195,9 @@ function bleh_glacier_library_focused() {
                     </div>
                 </div>
                 <div class="toggle-container" id="container-stacked_chartlist_info" onclick="_update_item('stacked_chartlist_info')">
-                    <button class="btn reset" onclick="_reset_item('stacked_chartlist_info')">${trans_legacy[lang].settings.reset}</button>
+                    <button class="btn reset" onclick="_reset_item('stacked_chartlist_info')">${tl(trans.reset)}</button>
                     <div class="heading">
-                        <h5>${trans_legacy[lang].settings.corrections.stacked_chartlist_info.name}</h5>
-                        <p>${trans_legacy[lang].settings.corrections.stacked_chartlist_info.bio}</p>
+                        <h5>${tl(trans.track_column_view)}</h5>
                     </div>
                     <div class="toggle-wrap">
                         <button class="toggle" id="toggle-stacked_chartlist_info" aria-checked="true" type="button">
@@ -1209,7 +1207,7 @@ function bleh_glacier_library_focused() {
                 </div>
                 <div class="sep"></div>
                 <div class="toggle-container" id="container-glacier_library_graphs" onclick="_update_item('glacier_library_graphs')">
-                    <button class="btn reset" onclick="_reset_item('glacier_library_graphs')">${trans_legacy[lang].settings.reset}</button>
+                    <button class="btn reset" onclick="_reset_item('glacier_library_graphs')">${tl(trans.reset)}</button>
                     <div class="heading">
                         <h5>${trans_legacy[lang].glacier.option.name}</h5>
                         <p>${trans_legacy[lang].glacier.option.bio}</p>
