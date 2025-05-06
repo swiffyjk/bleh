@@ -3,7 +3,7 @@ import { settings } from "./build/config";
 import { log } from "./build/log";
 import { auth, auth_link, bleh_url, has_prompted_for_update, last_page_subpage, last_page_type, page, root, setup_url, shout_parse_queue, sponsor_url } from "./build/page";
 import { stored_season } from "./build/seasonal";
-import { lang, lookup_lang, non_override_lang, trans_legacy } from "./build/trans";
+import { lang, lookup_lang, non_override_lang, tl, trans, trans_legacy } from "./build/trans";
 import { auto_edit_modal } from "./components/auto_edit";
 import { dialog, load_dialogs } from "./components/dialog";
 import { correct_generic_combo, correct_generic_combo_no_artist, lotus } from "./components/lotus";
@@ -408,13 +408,13 @@ function page_title() {
     let name = page.type;
 
     if (trans_legacy[lang].hasOwnProperty(page.type))
-        name = trans_legacy[lang][page.type].name;
+        name = tl(trans[page.type]);
     else if (page.type == 'user')
-        name = trans_legacy[lang].profile.name;
+        name = tl(trans.profile);
     else if (page.type == 'bleh_settings')
         name = tl(trans.settings);
     else if (page.type == 'events' || page.type == 'festival')
-        name = trans_legacy[lang].event.name;
+        name = tl(trans.event);
 
     title.setAttribute('data-page-type', page.type);
     title.innerHTML = (`
@@ -428,7 +428,7 @@ function page_title() {
 function page_indicator() {
     page.structure.indicator.innerHTML = (`
         <div class="bleh">
-            <strong>version</strong>
+            <strong>ver</strong>
             <span>${version.brand}</span>
             <span>${version.build}</span>
             <span>${version.sku}</span>
