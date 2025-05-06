@@ -492,6 +492,7 @@ export function register_background(url, origin = null) {
     }
 
     background.setAttribute('data-page-type', page.type);
+    background.setAttribute('data-page-subpage', page.subpage);
     background.setAttribute('data-background-origin', origin);
 
     if (url)

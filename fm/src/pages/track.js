@@ -93,7 +93,7 @@ export function bleh_tracks() {
                 `) : '<img class="missing-track">'}
             </div>
             <div class="info-side">
-                <div class="sub-text">${trans_legacy[lang].track.name}</div>
+                <div class="sub-text">${tl(trans.track)}</div>
                 <div class="title-container">
                     <h1>${title.innerHTML}</h1>
                     ${(position) ? position.outerHTML : ''}

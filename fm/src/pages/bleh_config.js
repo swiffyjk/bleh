@@ -1221,7 +1221,7 @@ export function render_setting_page(page_id) {
                             <img src="https://lastfm.freetls.fastly.net/i/u/avatar170s/8bd696cbd4aa4d4eb6d35393232f55e4.jpg">
                         </div>
                         <div class="info-side">
-                            <div class="sub-text">${trans_legacy[lang].track.name}</div>
+                            <div class="sub-text">${tl(trans.track)}</div>
                             <div class="title-container">
                                 <h1 class="bleh--name-with-features">
                                     <div class="title">California Love</div>

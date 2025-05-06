@@ -10093,16 +10093,124 @@
   // src/pages/obsession.js
   function patch_obsession_view() {
     let obsession_container = document.querySelector(".obsession-container");
-    if (!obsession_container)
-      return;
-    let page_content = obsession_container.querySelector(".page-content");
-    page_content.classList.add("obsession-content", "ignore-katsune");
+    if (!obsession_container) return;
+    page.structure.container = document.body.querySelector(".page-content:not(.obsession-container .page-content)");
+    try {
+      page.structure.row = page.structure.container.querySelector(".row");
+      page.structure.main = page.structure.row.querySelector(".col-main");
+      page.structure.side = page.structure.row.querySelector(".col-sidebar");
+    } catch (e) {
+      log("unable to find elements", "page structure");
+    }
+    let content_top2 = document.body.querySelector(".content-top");
+    checkup_page_structure(false, content_top2);
+    log("status is", "page", "info", page);
+    update_page();
+    let background = obsession_container.querySelector(".obsession-background-inner");
+    background = background.style.getPropertyValue("background-image").replace('url("', "").replace('")', "");
+    register_background(background);
+    try {
+      let bg = obsession_container.style.getPropertyValue("background").replace("rgb(", "").replace(")", "").split(", ");
+      let hsl = rgb_to_hsl(parseInt(bg[0]), parseInt(bg[1]), parseInt(bg[2]));
+      document.body.style.setProperty("--hue-album", hsl.h);
+      document.body.style.setProperty("--sat-album", clamp_sat(hsl.s / 100 * 3));
+      document.body.style.setProperty("--lit-album", hsl.l / 100 + 0.35);
+      log(`sourced hsl of (${hsl.h}, ${hsl.s}, ${hsl.l}) - using final value of (${hsl.h}, ${clamp_sat(hsl.s / 100 * 3)}, ${hsl.l / 100 + 0.35})`, "hue from album");
+    } catch (e) {
+      console.error(e);
+      log("no cover present", "hue from album");
+    }
+    let track_title = obsession_container.querySelector(".obsession-meta-track");
+    let track_artist = obsession_container.querySelector(".obsession-meta-artist");
+    let scrobbles = obsession_container.querySelector(".obsession-meta-scrobbles");
+    let by = track_artist.querySelector(".obsession-meta-artist-by");
+    track_artist.removeChild(by);
+    let artist_name = track_artist.querySelector("a");
+    if (artist_corrections.hasOwnProperty(artist_name.textContent)) {
+      let corrected_artist = artist_corrections[artist_name.textContent];
+      log(`corrected ${artist_name.textContent} as ${corrected_artist}`, "lotus");
+      artist_name.textContent = corrected_artist;
+    }
+    artist_name.classList.add("header-new-crumb");
+    if (settings.format_guest_features) {
+      let formatted_title = name_includes(track_title.textContent, track_artist.textContent);
+      let song_title = formatted_title[0];
+      let song_tags = formatted_title[1];
+      page.corrected = formatted_title[4];
+      let song_tags_text = "";
+      for (let song_tag in song_tags) {
+        song_tags_text = `${song_tags_text}<div class="feat" data-bleh--tag-type="${song_tags[song_tag].type}" data-bleh--tag-group="${song_tags[song_tag].group}">${song_tags[song_tag].text}</div>`;
+      }
+      track_title.innerHTML = `<div class="title">${sanitise_text(song_title).trim()}</div>${song_tags_text}`;
+      let song_guests = formatted_title[3];
+      page.sister_others = formatted_title[3];
+      for (let guest in song_guests) {
+        track_artist.innerHTML = `${track_artist.innerHTML},`;
+        let guest_element = document.createElement("a");
+        guest_element.classList.add("header-new-crumb");
+        guest_element.setAttribute("href", `${root}music/${sanitise(song_guests[guest])}`);
+        guest_element.textContent = song_guests[guest];
+        track_artist.appendChild(guest_element);
+      }
+    } else {
+      if (!track_title.hasAttribute("data-kate-processed")) {
+        track_title.setAttribute("data-kate-processed", "true");
+        let corrected_title = correct_item_by_artist(track_title.textContent, track_artist.textContent);
+        log(`corrected ${track_title.textContent} by ${track_artist.textContent} as ${corrected_title}`, "lotus");
+        if (corrected_title != track_title.textContent)
+          page.corrected = true;
+        track_title.textContent = corrected_title;
+      }
+    }
+    let redesigned_track_header = document.createElement("section");
+    redesigned_track_header.classList.add("redesigned-header", "redesigned-track-header", "no-background");
+    redesigned_track_header.innerHTML = `
+        <div class="avatar-side">
+            <img src="${background.replace("/ar0/", "/avatar170s/")}">
+            <a class="bleh--avatar-clickable-link"></a>
+        </div>
+        <div class="info-side">
+            <div class="sub-text">${tl2(trans2.track)}</div>
+            <div class="title-container">
+                <h1>${track_title.innerHTML}</h1>
+            </div>
+            <h2>${track_artist.innerHTML}</h2>
+        </div>
+    `;
+    page.structure.container.insertBefore(redesigned_track_header, page.structure.container.firstElementChild);
+    let avatar_side = redesigned_track_header.querySelector(".avatar-side");
+    let avatar_link = avatar_side.querySelector("a");
+    let expand_link = `_expand_avatar('${background}')`;
+    avatar_link.setAttribute("onclick", expand_link);
+    let menu = tippy(avatar_side, {
+      theme: "context-menu",
+      content: `
+            <button class="dropdown-menu-clickable-item" onclick="${expand_link}" data-menu-item="expand">
+                ${trans_legacy[lang].gallery.open.name}
+            </button>
+            <div class="sep"></div>
+            <a class="dropdown-menu-clickable-item" href="${root}bleh?tab=customise" data-menu-item="settings">
+                ${trans_legacy[lang].settings.configure}
+            </a>
+        `,
+      allowHTML: true,
+      placement: "right-start",
+      trigger: "manual",
+      interactive: true,
+      interactiveBorder: 10,
+      offset: [0, 0],
+      onShow(instance) {
+        instance.popper.addEventListener("click", (event2) => {
+          instance.hide();
+        });
+      }
+    });
+    register_menu(avatar_side, menu);
     let obsession_author = document.querySelector(".obsession-details-intro a").textContent;
     let obsession_avatar = document.querySelector(".obsession-details-intro-avatar-wrap .avatar");
     patch_avatar(obsession_avatar, obsession_author);
     let obsession_reason = document.querySelector(".obsession-reason");
-    if (!obsession_reason)
-      return;
+    if (!obsession_reason) return;
     let obsession_reason_text = obsession_reason.textContent;
     obsession_reason.textContent = obsession_reason_text.trim().substr(1).slice(0, -1);
   }
@@ -13165,7 +13273,7 @@
                             <img src="https://lastfm.freetls.fastly.net/i/u/avatar170s/8bd696cbd4aa4d4eb6d35393232f55e4.jpg">
                         </div>
                         <div class="info-side">
-                            <div class="sub-text">${trans_legacy[lang].track.name}</div>
+                            <div class="sub-text">${tl2(trans2.track)}</div>
                             <div class="title-container">
                                 <h1 class="bleh--name-with-features">
                                     <div class="title">California Love</div>
@@ -17994,7 +18102,7 @@
                 ` : '<img class="missing-track">'}
             </div>
             <div class="info-side">
-                <div class="sub-text">${trans_legacy[lang].track.name}</div>
+                <div class="sub-text">${tl2(trans2.track)}</div>
                 <div class="title-container">
                     <h1>${title.innerHTML}</h1>
                     ${position ? position.outerHTML : ""}
@@ -18974,6 +19082,7 @@
       }
     }
     background.setAttribute("data-page-type", page.type);
+    background.setAttribute("data-page-subpage", page.subpage);
     background.setAttribute("data-background-origin", origin);
     if (url)
       background.style.setProperty("background-image", `url(${url})`);

@@ -1851,11 +1851,6 @@ last.fm changes as of 2024-05-20 */
 {
     margin-top: var(--force-margin-top, unset) !important;
 }
-.namespace--user_library_overview .col-sidebar, .namespace--user_library_artists .col-sidebar, .namespace--user_library_albums .col-sidebar, .namespace--user_library_tracks .col-sidebar
-{
-    margin-top: calc(15px + 6px);
-    margin-bottom: 56px;
-}
 
 /* no playlists */ .namespace--user_playlists_playlists .page-content,
 .page-content:has(.playlisting-playlists, .gallery-section, .obsession-search),
@@ -11615,7 +11610,11 @@ table.table tr:nth-child(2n) td {
 
 
 /*     OBSESSION     */
+[data-page-subpage="obsessions_obsession"] {
+
+}
 .obsession-container {
+    display: none !important;
     height: 100vh;
     margin-top: calc(-55px - var(--card-gap));
     display: flex;
@@ -11633,10 +11632,7 @@ table.table tr:nth-child(2n) td {
     }
 
     .obsession-background-inner {
-        mix-blend-mode: multiply;
-        /*filter: blur(50px) saturate(1.5);*/
-        filter: blur(50px);
-        opacity: 0.7;
+        display: none;
     }
     .obsession-video-container,
     .obsession-hero-artwork .cover-art {
@@ -19120,6 +19116,14 @@ h4 {
             [data-bleh--profile_header_expand="false"] & {
                 opacity: 0;
                 pointer-events: none;
+            }
+
+            &[data-page-subpage="obsessions_obsession"] {
+                height: 700px;
+
+                /*&:after {
+                    background: linear-gradient(180deg, hsl(var(--b6), 20%) 0%, hsl(var(--b6)) 100%) !important;
+                }*/
             }
         }
     }
