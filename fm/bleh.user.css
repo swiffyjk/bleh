@@ -1479,12 +1479,10 @@ last.fm changes as of 2024-05-20 */
 
 
 
-/*     REMOVE PROMO     */
-.subscribe-cta,
+/*     randomness     */
 .profile-cards-container, .profile-cards-container + .content-top-lower,
-/* don't want to see ads? upgrade now */ .mpu-subscription-upsell,
-/* this isn't an ad but it fits here */ .scrobble-stats-info-toggle, #explain-scrobblingdesktop + h4,
-/* neither is this but */ .share-desktop
+.scrobble-stats-info-toggle, #explain-scrobblingdesktop + h4,
+.share-desktop
 {
     display: none !important;
 }
@@ -1496,7 +1494,15 @@ last.fm changes as of 2024-05-20 */
 
 /* still theme ads a little */
 .full-bleed-ad-container, .sidebar-ad-container {
-    background: unset;
+    background: unset !important;
+}
+.sidebar-ad-container {
+    padding: unset !important;
+}
+.mpu-subscription-upsell {
+    margin: unset !important;
+    color: hsl(var(--c3));
+    line-height: 16px;
 }
 
 
@@ -4101,7 +4107,7 @@ h2:not(.count, .mask-multi-text, .mask-text, .sr-only, .js-gallery-heading, .top
 .library-artist-section-header,
 .date-heading, .user-sidebar-header,
 .gallery-image-title,
-.your-progress h4,
+.your-progress h4, .your-progress h3,
 .user-dashboard-section-header, .user-dashboard-module-title,
 .graph-description h3,
 .event-section-date-heading,
@@ -9407,6 +9413,15 @@ text[style^="color: rgb(255, 172, 172)"] {
             fill: hsl(var(--l4-c)) !important;
             stroke: hsl(var(--b5)) !important;
             width: 7px !important;
+        }
+    }
+
+    [data-analytics-label="UpsellCTA"] {
+        display: flex;
+        text-decoration: none !important;
+
+        .btn-subscribe {
+            margin-top: var(--card-gap);
         }
     }
 }
