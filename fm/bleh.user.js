@@ -1199,7 +1199,7 @@
       last_updated: "2024-06-17"
     }
   };
-  var trans = {
+  var trans2 = {
     badges: {
       missing: {
         name: {
@@ -1826,6 +1826,15 @@
       en: "Recent Tracks",
       de: "K\xFCrzlich gespielte Titel"
     },
+    top_artists: {
+      en: "Top Artists"
+    },
+    top_albums: {
+      en: "Top Albums"
+    },
+    top_tracks: {
+      en: "Top Tracks"
+    },
     you_share_count_with: {
       // as in your musical taste between you and someone else
       // you share {percentage%} (in taste) with: {list of artists}
@@ -2090,6 +2099,35 @@
     },
     show_remaster_tags: {
       en: "Show remaster tags"
+    },
+    recent_realtime: {
+      name: {
+        en: "Refresh tracks automatically"
+      },
+      body: {
+        en: "View your listening history in realtime"
+      }
+    },
+    amount_to_display: {
+      en: "Amount to display"
+    },
+    recent_artwork: {
+      en: "Accompany tracks with artwork"
+    },
+    default_timeframe: {
+      en: "Default timeframe"
+    },
+    chart_style: {
+      en: "Chart style"
+    },
+    country: {
+      en: "Country"
+    },
+    subtitle: {
+      en: "Subtitle"
+    },
+    pronoun_tip: {
+      en: 'When pronouns are placed first, "aka." will change to "pronouns".'
     }
   };
   var trans_legacy = {
@@ -5107,7 +5145,7 @@
       yy: "%d Jahre"
     }
   });
-  function tl(key) {
+  function tl2(key) {
     if (!key) {
       log("your key is undefined", "trans");
       return "NO_TRANSLATION_FOUND";
@@ -5614,7 +5652,7 @@
     velocity_tab.classList.add("navlist-item", "secondary-nav-item", "secondary-nav-item--velocity");
     velocity_tab.innerHTML = `
         <a class="secondary-nav-item-link" href="${root}labs/artist-velocity" target="_blank">
-            ${tl(trans.velocity)}
+            ${tl2(trans2.velocity)}
         </a>
     `;
     tabs.appendChild(velocity_tab);
@@ -5829,14 +5867,14 @@
           if (index == 1)
             text = trans_legacy[lang].glacier.meta.average;
         } else if (page.subpage == "library_artists") {
-          text = tl(trans.artists);
+          text = tl2(trans2.artists);
         } else if (page.subpage == "library_albums") {
           text = trans_legacy[lang].glacier.meta.albums;
         } else if (page.subpage == "library_tracks") {
           text = trans_legacy[lang].glacier.meta.tracks;
         }
       } else {
-        text = tl(trans.results_for);
+        text = tl2(trans2.results_for);
         value = meta.querySelector(".metadata-display").textContent;
         let start = value.indexOf("\u201C") + 1;
         let end = value.indexOf("\u201D");
@@ -5903,10 +5941,10 @@
       content: `
             <div class="dialog-settings">
                 <div class="toggle-container" id="container-format_guest_features" onclick="_update_item('format_guest_features')">
-                    <button class="btn reset" onclick="_reset_item('format_guest_features')">${tl(trans.reset)}</button>
+                    <button class="btn reset" onclick="_reset_item('format_guest_features')">${tl2(trans2.reset)}</button>
                     <div class="heading">
-                        <h5>${tl(trans.format_guest_features.name)}</h5>
-                        <p>${tl(trans.format_guest_features.body)}</p>
+                        <h5>${tl2(trans2.format_guest_features.name)}</h5>
+                        <p>${tl2(trans2.format_guest_features.body)}</p>
                     </div>
                     <div class="toggle-wrap">
                         <button class="toggle" id="toggle-format_guest_features" aria-checked="true">
@@ -5915,10 +5953,10 @@
                     </div>
                 </div>
                 <div class="toggle-container hide-if-format-guest-disabled" id="container-show_guest_features" onclick="_update_item('show_guest_features')">
-                    <button class="btn reset" onclick="_reset_item('show_guest_features')">${tl(trans.reset)}</button>
+                    <button class="btn reset" onclick="_reset_item('show_guest_features')">${tl2(trans2.reset)}</button>
                     <div class="heading">
-                        <h5>${tl(trans.show_guest_features.name)}</h5>
-                        <p>${tl(trans.show_guest_features.body)}</p>
+                        <h5>${tl2(trans2.show_guest_features.name)}</h5>
+                        <p>${tl2(trans2.show_guest_features.body)}</p>
                     </div>
                     <div class="toggle-wrap">
                         <button class="toggle" id="toggle-show_guest_features" aria-checked="true" type="button">
@@ -5927,9 +5965,9 @@
                     </div>
                 </div>
                 <div class="toggle-container" id="container-stacked_chartlist_info" onclick="_update_item('stacked_chartlist_info')">
-                    <button class="btn reset" onclick="_reset_item('stacked_chartlist_info')">${tl(trans.reset)}</button>
+                    <button class="btn reset" onclick="_reset_item('stacked_chartlist_info')">${tl2(trans2.reset)}</button>
                     <div class="heading">
-                        <h5>${tl(trans.track_column_view)}</h5>
+                        <h5>${tl2(trans2.track_column_view)}</h5>
                     </div>
                     <div class="toggle-wrap">
                         <button class="toggle" id="toggle-stacked_chartlist_info" aria-checked="true" type="button">
@@ -5939,7 +5977,7 @@
                 </div>
                 <div class="sep"></div>
                 <div class="toggle-container" id="container-grid_glow" onclick="_update_item('grid_glow')">
-                    <button class="btn reset" onclick="_reset_item('grid_glow')">${tl(trans.reset)}</button>
+                    <button class="btn reset" onclick="_reset_item('grid_glow')">${tl2(trans2.reset)}</button>
                     <div class="heading">
                         <h5>${trans_legacy[lang].settings.music.grid_glow.name}</h5>
                     </div>
@@ -5950,7 +5988,7 @@
                     </div>
                 </div>
                 <div class="toggle-container" id="container-glacier_library_graphs" onclick="_update_item('glacier_library_graphs')">
-                    <button class="btn reset" onclick="_reset_item('glacier_library_graphs')">${tl(trans.reset)}</button>
+                    <button class="btn reset" onclick="_reset_item('glacier_library_graphs')">${tl2(trans2.reset)}</button>
                     <div class="heading">
                         <h5>${trans_legacy[lang].glacier.option.name}</h5>
                         <p>${trans_legacy[lang].glacier.option.bio}</p>
@@ -6511,10 +6549,10 @@
       content: `
             <div class="dialog-settings">
                 <div class="toggle-container" id="container-format_guest_features" onclick="_update_item('format_guest_features')">
-                    <button class="btn reset" onclick="_reset_item('format_guest_features')">${tl(trans.reset)}</button>
+                    <button class="btn reset" onclick="_reset_item('format_guest_features')">${tl2(trans2.reset)}</button>
                     <div class="heading">
-                        <h5>${tl(trans.format_guest_features.name)}</h5>
-                        <p>${tl(trans.format_guest_features.body)}</p>
+                        <h5>${tl2(trans2.format_guest_features.name)}</h5>
+                        <p>${tl2(trans2.format_guest_features.body)}</p>
                     </div>
                     <div class="toggle-wrap">
                         <button class="toggle" id="toggle-format_guest_features" aria-checked="true">
@@ -6523,10 +6561,10 @@
                     </div>
                 </div>
                 <div class="toggle-container hide-if-format-guest-disabled" id="container-show_guest_features" onclick="_update_item('show_guest_features')">
-                    <button class="btn reset" onclick="_reset_item('show_guest_features')">${tl(trans.reset)}</button>
+                    <button class="btn reset" onclick="_reset_item('show_guest_features')">${tl2(trans2.reset)}</button>
                     <div class="heading">
-                        <h5>${tl(trans.show_guest_features.name)}</h5>
-                        <p>${tl(trans.show_guest_features.body)}</p>
+                        <h5>${tl2(trans2.show_guest_features.name)}</h5>
+                        <p>${tl2(trans2.show_guest_features.body)}</p>
                     </div>
                     <div class="toggle-wrap">
                         <button class="toggle" id="toggle-show_guest_features" aria-checked="true" type="button">
@@ -6535,9 +6573,9 @@
                     </div>
                 </div>
                 <div class="toggle-container" id="container-stacked_chartlist_info" onclick="_update_item('stacked_chartlist_info')">
-                    <button class="btn reset" onclick="_reset_item('stacked_chartlist_info')">${tl(trans.reset)}</button>
+                    <button class="btn reset" onclick="_reset_item('stacked_chartlist_info')">${tl2(trans2.reset)}</button>
                     <div class="heading">
-                        <h5>${tl(trans.track_column_view)}</h5>
+                        <h5>${tl2(trans2.track_column_view)}</h5>
                     </div>
                     <div class="toggle-wrap">
                         <button class="toggle" id="toggle-stacked_chartlist_info" aria-checked="true" type="button">
@@ -6547,7 +6585,7 @@
                 </div>
                 <div class="sep"></div>
                 <div class="toggle-container" id="container-glacier_library_graphs" onclick="_update_item('glacier_library_graphs')">
-                    <button class="btn reset" onclick="_reset_item('glacier_library_graphs')">${tl(trans.reset)}</button>
+                    <button class="btn reset" onclick="_reset_item('glacier_library_graphs')">${tl2(trans2.reset)}</button>
                     <div class="heading">
                         <h5>${trans_legacy[lang].glacier.option.name}</h5>
                         <p>${trans_legacy[lang].glacier.option.bio}</p>
@@ -6872,7 +6910,7 @@
     }
     badges.forEach((badge) => {
       if (!badge.name)
-        badge.name = tl(trans.badges[badge.type].name);
+        badge.name = tl2(trans2.badges[badge.type].name);
       if (badge.reason)
         return;
       if (badge.type == "sponsor" || badge.type == "contributor" || badge.type == "translation")
@@ -7004,9 +7042,9 @@
       return;
     if (!avatar.hasAttribute("alt"))
       return;
-    if (avatar.getAttribute("alt") == tl(trans.your_avatar))
+    if (avatar.getAttribute("alt") == tl2(trans2.your_avatar))
       return auth;
-    return avatar.getAttribute("alt").replace(tl(trans.avatar_for_user), "");
+    return avatar.getAttribute("alt").replace(tl2(trans2.avatar_for_user), "");
   }
   unsafeWindow._expand_avatar = function(src) {
     expand_avatar(src);
@@ -7481,7 +7519,7 @@
   unsafeWindow._open_profile_shortcut_window = function() {
     dialog_legacy("profile_shortcut", trans_legacy[lang].settings.music.profile_shortcut.name, `
         <div class="text-container" id="container-profile_shortcut">
-            <button class="btn reset" onclick="_reset_item('profile_shortcut')">${tl(trans.reset)}</button>
+            <button class="btn reset" onclick="_reset_item('profile_shortcut')">${tl2(trans2.reset)}</button>
             <div class="avatar-container">
                 <div class="avatar-inner" id="avatar-profile_shortcut">
                     <img id="avatar_src-profile_shortcut" src="${localStorage.getItem("bleh_profile_shortcut_avi") || ""}">
@@ -7491,7 +7529,7 @@
                 <h5>${trans_legacy[lang].settings.music.profile_shortcut.placeholder}</h5>
                 <div class="input-container">
                     <input type="text" maxlength="40" id="text-profile_shortcut" value="${settings.profile_shortcut}" placeholder="${trans_legacy[lang].settings.music.profile_shortcut.header}">
-                    <button class="bleh--btn primary save" onclick="_save_profile_shortcut()">${trans_legacy[lang].settings.save}</button>
+                    <button class="bleh--btn primary save" onclick="_save_profile_shortcut()">${tl2(trans2.save)}</button>
                 </div>
             </div>
         </div>
@@ -7600,53 +7638,53 @@
                 <ul class="navlist-items">
                     <li class="navlist-item secondary-nav-item secondary-nav-item--overview">
                         <a class="secondary-nav-item-link secondary-nav-item-link--active" href="${window.location.href}">
-                            ${tl(trans.overview)}
+                            ${tl2(trans2.overview)}
                         </a>
                     </li>
                     <li class="navlist-item secondary-nav-item secondary-nav-item--tracks">
                         <a class="secondary-nav-item-link" href="${window.location.href}/+tracks">
-                            ${tl(trans.tracks)}
+                            ${tl2(trans2.tracks)}
                         </a>
                     </li>
                     <li class="navlist-item secondary-nav-item secondary-nav-item--albums">
                         <a class="secondary-nav-item-link" href="${window.location.href}/+albums">
-                            ${tl(trans.albums)}
+                            ${tl2(trans2.albums)}
                         </a>
                     </li>
                     ${!page_is_blocked ? `
                     <li class="navlist-item secondary-nav-item secondary-nav-item--images">
                         <a class="secondary-nav-item-link" href="${window.location.href}/+images">
-                            ${tl(trans.photos)}
+                            ${tl2(trans2.photos)}
                         </a>
                     </li>
                     <li class="navlist-item secondary-nav-item secondary-nav-item--similar">
                         <a class="secondary-nav-item-link" href="${window.location.href}/+similar">
-                            ${tl(trans.similar_artists)}
+                            ${tl2(trans2.similar_artists)}
                         </a>
                     </li>
                     <li class="navlist-item secondary-nav-item secondary-nav-item--wiki">
                         <a class="secondary-nav-item-link" href="${window.location.href}/+wiki">
-                            ${tl(trans.biography)}
+                            ${tl2(trans2.biography)}
                         </a>
                     </li>
                     <li class="navlist-item secondary-nav-item secondary-nav-item--listeners">
                         <a class="secondary-nav-item-link" href="${window.location.href}/+listeners">
-                            ${tl(trans.listeners)}
+                            ${tl2(trans2.listeners)}
                         </a>
                     </li>
                     <li class="navlist-item secondary-nav-item secondary-nav-item--shoutbox">
                         <a class="secondary-nav-item-link" href="${window.location.href}/+shoutbox">
-                            ${tl(trans.shouts)}
+                            ${tl2(trans2.shouts)}
                         </a>
                     </li>
                     <li class="navlist-item secondary-nav-item secondary-nav-item--events">
                         <a class="secondary-nav-item-link" href="${window.location.href}/+events">
-                            ${tl(trans.events)}
+                            ${tl2(trans2.events)}
                         </a>
                     </li>
                     <li class="navlist-item secondary-nav-item secondary-nav-item--tags">
                         <a class="secondary-nav-item-link" href="${window.location.href}/+tags">
-                            ${tl(trans.tags)}
+                            ${tl2(trans2.tags)}
                         </a>
                     </li>
                     ` : ""}
@@ -7657,28 +7695,28 @@
                 <ul class="navlist-items">
                     <li class="navlist-item secondary-nav-item secondary-nav-item--overview">
                         <a class="secondary-nav-item-link secondary-nav-item-link--active" href="${window.location.href}">
-                            ${tl(trans.overview)}
+                            ${tl2(trans2.overview)}
                         </a>
                     </li>
                     ${!page_is_blocked ? `
                     <li class="navlist-item secondary-nav-item secondary-nav-item--wiki">
                         <a class="secondary-nav-item-link" href="${window.location.href}/+wiki">
-                            ${tl(trans.wiki)}
+                            ${tl2(trans2.wiki)}
                         </a>
                     </li>
                     <li class="navlist-item secondary-nav-item secondary-nav-item--images">
                         <a class="secondary-nav-item-link" href="${window.location.href}/+images">
-                            ${tl(trans.artwork)}
+                            ${tl2(trans2.artwork)}
                         </a>
                     </li>
                     <li class="navlist-item secondary-nav-item secondary-nav-item--shoutbox">
                         <a class="secondary-nav-item-link" href="${window.location.href}/+shoutbox">
-                            ${tl(trans.shouts)}
+                            ${tl2(trans2.shouts)}
                         </a>
                     </li>
                     <li class="navlist-item secondary-nav-item secondary-nav-item--tags">
                         <a class="secondary-nav-item-link" href="${window.location.href}/+tags">
-                            ${tl(trans.tags)}
+                            ${tl2(trans2.tags)}
                         </a>
                     </li>
                     ` : ""}
@@ -7689,28 +7727,28 @@
                 <ul class="navlist-items">
                     <li class="navlist-item secondary-nav-item secondary-nav-item--overview">
                         <a class="secondary-nav-item-link secondary-nav-item-link--active" href="${window.location.href}">
-                            ${tl(trans.overview)}
+                            ${tl2(trans2.overview)}
                         </a>
                     </li>
                     <li class="navlist-item secondary-nav-item secondary-nav-item--albums">
                         <a class="secondary-nav-item-link" href="${window.location.href}/+albums">
-                            ${tl(trans.albums)}
+                            ${tl2(trans2.albums)}
                         </a>
                     </li>
                     ${!page_is_blocked ? `
                     <li class="navlist-item secondary-nav-item secondary-nav-item--wiki">
                         <a class="secondary-nav-item-link" href="${window.location.href}/+wiki">
-                            ${tl(trans.wiki)}
+                            ${tl2(trans2.wiki)}
                         </a>
                     </li>
                     <li class="navlist-item secondary-nav-item secondary-nav-item--shoutbox">
                         <a class="secondary-nav-item-link" href="${window.location.href}/+shoutbox">
-                            ${tl(trans.shouts)}
+                            ${tl2(trans2.shouts)}
                         </a>
                     </li>
                     <li class="navlist-item secondary-nav-item secondary-nav-item--tags">
                         <a class="secondary-nav-item-link" href="${window.location.href}/+tags">
-                            ${tl(trans.tags)}
+                            ${tl2(trans2.tags)}
                         </a>
                     </li>
                     ` : ""}
@@ -7924,7 +7962,7 @@
     if (page_is_blocked) {
       let alert = document.createElement("section");
       alert.classList.add("cta", "blocked-cta");
-      alert.innerHTML = `<strong>${tl(trans.blocked_page)}</strong>`;
+      alert.innerHTML = `<strong>${tl2(trans2.blocked_page)}</strong>`;
       page.structure.main.insertBefore(alert, page.structure.main.firstElementChild);
       return;
     }
@@ -7937,7 +7975,7 @@
     if (page.type == "track") {
       let header = document.createElement("div");
       header.classList.add("sub-text", "music-small-header");
-      header.textContent = tl(trans.find_on);
+      header.textContent = tl2(trans2.find_on);
       link_group.appendChild(header);
       play_on = page.structure.side.querySelector(".play-this-track-playlinks");
       page.structure.side.removeChild(play_on.parentElement);
@@ -7980,7 +8018,7 @@
     } else {
       let header = document.createElement("div");
       header.classList.add("sub-text", "music-small-header");
-      header.textContent = tl(trans.find_on);
+      header.textContent = tl2(trans2.find_on);
       link_group.appendChild(header);
       if (page.type == "album") {
         link_container.innerHTML = `
@@ -8032,7 +8070,7 @@
             link.classList.add("music-link");
             let type = link.classList[1];
             if (type == "resource-external-link--homepage")
-              link.textContent = tl(trans.website);
+              link.textContent = tl2(trans2.website);
             else if (type == "resource-external-link--twitter")
               link.textContent = "Twitter";
             else if (type == "resource-external-link--facebook")
@@ -8048,7 +8086,7 @@
     if (tags) {
       let header_tags = document.createElement("div");
       header_tags.classList.add("sub-text", "music-small-header");
-      header_tags.textContent = tl(trans.tags);
+      header_tags.textContent = tl2(trans2.tags);
       col_main.appendChild(header_tags);
       col_main.appendChild(tags);
     }
@@ -8057,8 +8095,8 @@
     let lotus_handler = document.createElement("section");
     lotus_handler.classList.add("lotus", "cta");
     lotus_handler.innerHTML = `
-        <strong>${tl(trans.lotus_cta[page.corrected]).replace("{t}", tl(trans[`${page.type}_lower`]))}</strong>
-        <a class="see-more" href="https://github.com/katelyynn/lotus/issues/new/choose">${tl(trans.suggest_correction)}</a>
+        <strong>${tl2(trans2.lotus_cta[page.corrected]).replace("{t}", tl2(trans2[`${page.type}_lower`]))}</strong>
+        <a class="see-more" href="https://github.com/katelyynn/lotus/issues/new/choose">${tl2(trans2.suggest_correction)}</a>
     `;
     page.structure.side.appendChild(lotus_handler);
   }
@@ -8142,7 +8180,7 @@
             ${avi[1] ? `<img class="view-item-avatar" src="${avi[1].getAttribute("src")}">` : ""}
             ${avi[2] ? `<img class="view-item-avatar" src="${avi[2].getAttribute("src")}">` : ""}
             <div class="info">
-                <h3>${tl(trans.following)}</h3>
+                <h3>${tl2(trans2.following)}</h3>
                 <p>${trans_legacy[lang].music.listens.other_listeners.replace("{c}", count)}</p>
             </div>
         `;
@@ -8281,7 +8319,7 @@
     video_placeholder.classList.add("video-placeholder");
     video_placeholder.innerHTML = `
         <div class="bleh-icon" style="--icon: var(--icon-16-video-broken)"></div>
-        ${tl(trans.video_removed)}
+        ${tl2(trans2.video_removed)}
     `;
     page.structure.side.insertBefore(video_placeholder, page.structure.side.firstElementChild);
     let links = page.structure.side.querySelector(".external-links-section .play-this-track-playlinks");
@@ -8511,7 +8549,7 @@
         profile_header.appendChild(follow_wrap);
         if (is_following && follow_wrap.getAttribute("data-toggle-button-current-state") == "followed") {
           follow_btn.setAttribute("data-mutuals", "true");
-          follow_btn.setAttribute("data-mutuals-text", tl(trans.following_mutuals));
+          follow_btn.setAttribute("data-mutuals-text", tl2(trans2.following_mutuals));
         }
         if (!katsune)
           tippy(follow_btn, {
@@ -8603,8 +8641,8 @@
         katsune,
         mini: true,
         tooltip: `
-                <strong>${tl(trans.labs_by_last)}</strong>
-                <p>${tl(trans.labs_by_last.tagline)}</p>
+                <strong>${tl2(trans2.labs_by_last)}</strong>
+                <p>${tl2(trans2.labs_by_last.tagline)}</p>
             `,
         tooltip_style: "stack",
         allow_html: true
@@ -8626,7 +8664,7 @@
                 <img class="view-item-avatar" src="${auth.avatar}">
                 <img class="view-item-avatar" src="${profile_avi}">
                 <div class="info">
-                    <h3>${tl(trans.you_share_count_with).replace("{c}", `<span class="colourful" data-taste="${taste}">${taste_percentage}</span>`)}</h3>
+                    <h3>${tl2(trans2.you_share_count_with).replace("{c}", `<span class="colourful" data-taste="${taste}">${taste_percentage}</span>`)}</h3>
                     <p>
                         ${taste_artists.length == 1 ? trans_legacy[lang].profile.taste_meter.you_share_1.replace("{artist}", taste_artists[0]) : ""}
                         ${taste_artists.length == 2 ? trans_legacy[lang].profile.taste_meter.you_share_2.replace("{artist1}", taste_artists[0]).replace("{artist2}", taste_artists[1]) : ""}
@@ -8861,7 +8899,7 @@
         theme: "context-menu",
         content: `
                 <button class="dropdown-menu-clickable-item" onclick="_open_profile_shortcut_window()" data-menu-item="settings">
-                    ${tl(trans.configure)}
+                    ${tl2(trans2.configure)}
                 </button>
             `,
         allowHTML: true,
@@ -8922,7 +8960,7 @@
       return;
     if (tooltip == "")
       tippy(listen_item, {
-        content: tl(trans[type])
+        content: tl2(trans2[type])
       });
     else
       tippy(listen_item, {
@@ -9132,7 +9170,7 @@
     back_nav.classList.add("navlist-item", "secondary-nav-item", "secondary-nav-item--back");
     back_nav.innerHTML = `
         <a class="secondary-nav-item-link" href="${root}settings/subscription">
-            ${tl(trans.back)}
+            ${tl2(trans2.back)}
         </a>
     `;
     nav.insertBefore(back_nav, nav.firstElementChild);
@@ -9201,8 +9239,7 @@
       let header = content_top.querySelector(".content-top-header");
       header_text = header.textContent.trim();
     }
-    if (ff("katsune"))
-      return;
+    if (ff("katsune")) return;
     let edit_header = document.createElement("section");
     edit_header.classList.add("redesigned-header", "edit-header", "no-background");
     edit_header.innerHTML = `
@@ -9210,7 +9247,7 @@
             <div class="tag-icon cog-icon"></div>
         </div>
         <div class="info-side">
-            <div class="sub-text">${trans_legacy[lang].settings.name}</div>
+            <div class="sub-text">${tl2(trans2.settings)}</div>
             <h1>${header_text}</h1>
         </div>
     `;
@@ -9218,8 +9255,7 @@
   }
   function patch_settings_profile_tab() {
     let update_picture = document.getElementById("update-picture");
-    if (update_picture == void 0)
-      return;
+    if (!update_picture) return;
     let token = document.body.querySelector('[name="csrfmiddlewaretoken"]').getAttribute("value");
     patch_settings_profile_panel(token, update_picture);
     patch_settings_charts_panel(token);
@@ -9250,7 +9286,7 @@
       }
     };
     charts_panel.innerHTML = `
-        <h4>${trans_legacy[lang].settings.inbuilt.charts.name}</h4>
+        <h4>${tl2(trans2.recent_tracks)}</h4>
         <form action="${root}settings#update-chart" name="chart-form" method="post">
             <input type="hidden" name="csrfmiddlewaretoken" value="${token}">
             <div class="inner-preview pad">
@@ -9289,7 +9325,7 @@
             </div>
             <div class="select-container">
                 <div class="heading">
-                    <h5>${trans_legacy[lang].settings.inbuilt.charts.recent.count.name}</h5>
+                    <h5>${tl2(trans2.amount_to_display)}</h5>
                 </div>
                 <div class="select-wrap custom-selector" id="id_chart_length_recent_tracks_select">
                     ${original_chart_settings.recent.count}
@@ -9298,7 +9334,7 @@
             <div class="toggle-container" id="container-recent_artwork">
                 <button class="btn reset" onclick="_reset_inbuilt_item('recent_artwork')">Reset to default</button>
                 <div class="heading">
-                    <h5>${trans_legacy[lang].settings.inbuilt.charts.recent.artwork.name}</h5>
+                    <h5>${tl2(trans2.recent_artwork)}</h5>
                 </div>
                 <div class="toggle-wrap">
                     <input class="companion-checkbox" type="checkbox" name="show_recent_tracks_artwork" id="inbuilt-companion-checkbox-recent_artwork">
@@ -9310,8 +9346,8 @@
             <div class="toggle-container" id="container-recent_realtime">
                 <button class="btn reset" onclick="_reset_inbuilt_item('recent_realtime')">Reset to default</button>
                 <div class="heading">
-                    <h5>${trans_legacy[lang].settings.inbuilt.charts.recent.realtime.name}</h5>
-                    <p>${trans_legacy[lang].settings.inbuilt.charts.recent.realtime.bio}</p>
+                    <h5>${tl2(trans2.recent_realtime.name)}</h5>
+                    <p>${tl2(trans2.recent_realtime.body)}</p>
                 </div>
                 <div class="toggle-wrap">
                     <input class="companion-checkbox" type="checkbox" name="auto_refresh_recent_tracks" id="inbuilt-companion-checkbox-recent_realtime">
@@ -9321,6 +9357,7 @@
                 </div>
             </div>
             <div class="sep"></div>
+            <h4>${tl2(trans2.top_artists)}</h4>
             <div class="inner-preview pad">
                 <div class="item-grid artist">
                     <div class="grid-primary artist">
@@ -9381,7 +9418,7 @@
             </div>
             <div class="select-container">
                 <div class="heading">
-                    <h5>${trans_legacy[lang].settings.inbuilt.charts.artists.timeframe.name}</h5>
+                    <h5>${tl2(trans2.default_timeframe)}</h5>
                 </div>
                 <div class="select-wrap custom-selector" id="id_chart_range_top_artists_select">
                     ${original_chart_settings.artists.timeframe}
@@ -9389,13 +9426,14 @@
             </div>
             <div class="select-container">
                 <div class="heading">
-                    <h5>${trans_legacy[lang].settings.inbuilt.charts.artists.style.name}</h5>
+                    <h5>${tl2(trans2.chart_style)}</h5>
                 </div>
                 <div class="select-wrap custom-selector" id="id_chart_style_and_length_top_artists_select">
                     ${original_chart_settings.artists.style}
                 </div>
             </div>
             <div class="sep"></div>
+            <h4>${tl2(trans2.top_albums)}</h4>
             <div class="inner-preview pad">
                 <div class="item-grid album">
                     <div class="grid-primary album">
@@ -9471,6 +9509,7 @@
                 </div>
             </div>
             <div class="sep"></div>
+            <h4>${tl2(trans2.top_tracks)}</h4>
             <div class="inner-preview pad">
                 <div class="tracks">
                     <div class="track">
@@ -9525,7 +9564,7 @@
             </div>
             <div class="select-container">
                 <div class="heading">
-                    <h5>${trans_legacy[lang].settings.inbuilt.charts.tracks.count.name}</h5>
+                    <h5>${tl2(trans2.amount_to_display)}</h5>
                 </div>
                 <div class="select-wrap custom-selector" id="id_chart_length_top_tracks_select">
                     ${original_chart_settings.tracks.count}
@@ -9533,7 +9572,7 @@
             </div>
             <div class="settings-footer">
                 <button type="submit" class="btn-primary save">
-                    ${trans_legacy[lang].settings.save}
+                    ${tl2(trans2.save)}
                 </button>
                 <input type="hidden" value="chart" name="submit">
             </div>
@@ -9571,17 +9610,17 @@
     let new_sidebar = document.createElement("section");
     new_sidebar.classList.add("bleh--panel", "about-me-preview");
     new_sidebar.innerHTML = `
-        <h4>${tl(trans.about_me_preview)}</h4>
+        <h4>${tl2(trans2.about_me_preview)}</h4>
         <span class="bleh--about-me-preview" id="about_me_preview"></span>
     `;
     page.structure.side.appendChild(new_sidebar);
     update_picture.innerHTML = `
-        <h4>${trans_legacy[lang].settings.inbuilt.profile.name}</h4>
+        <h4>${tl2(trans2.profile)}</h4>
         <div class="banner-preview"></div>
         <div class="profile-container">
             <div class="avatar-side">
                 <div class="avatar image-upload-preview" onclick="_open_avatar_changer('${token}')">
-                    <img src="${avatar_url}" alt="Your avatar" loading="lazy">
+                    <img src="${avatar_url}" alt="${tl2(trans2.your_avatar)}" loading="lazy">
                     <div class="avatar-overlay"></div>
                 </div>
             </div>
@@ -9602,16 +9641,16 @@
                         <input type="hidden" name="csrfmiddlewaretoken" value="${token}">
                         <div class="info-row">
                             <div class="title">
-                                ${trans_legacy[lang].settings.inbuilt.profile.subtitle.name}
+                                ${tl2(trans2.subtitle)}
                             </div>
                             <div class="input">
                                 <input type="text" name="full_name" value="${form_display_name}" maxlength="36" id="id_full_name" oninput="_update_display_name(this.value)" data-form-type="other">
-                                <div class="tip">${trans_legacy[lang].settings.inbuilt.profile.pronoun_tip}</div>
+                                <div class="tip">${tl2(trans2.pronoun_tip)}</div>
                             </div>
                         </div>
                         <div class="info-row">
                             <div class="title">
-                                ${trans_legacy[lang].settings.inbuilt.profile.country}
+                                ${tl2(trans2.country)}
                             </div>
                             <div class="input custom-selector" id="country_select">
                                 ${form_country}
@@ -9619,7 +9658,7 @@
                         </div>
                         <div class="info-row">
                             <div class="title">
-                                ${trans_legacy[lang].settings.inbuilt.profile.website}
+                                ${tl2(trans2.website)}
                             </div>
                             <div class="input">
                                 <input type="url" name="homepage" value="${form_website}" id="id_homepage" data-form-type="website">
@@ -9627,17 +9666,17 @@
                         </div>
                         <div class="info-row">
                             <div class="title">
-                                ${trans_legacy[lang].settings.inbuilt.profile.about}
+                                ${tl2(trans2.about)}
                             </div>
                             <div class="input about-me" data-bleh--show-preview="false" id="about_me">
                                 <textarea name="about_me" cols="40" rows="10" class="textarea--s" maxlength="500" id="id_about_me" oninput="_update_about_me_preview(this.value)" data-form-type="other">${form_about_me}</textarea>
-                                <div class="tip">${tl(trans.markdown_tip)}</div>
+                                <div class="tip">${tl2(trans2.markdown_tip)}</div>
                             </div>
                         </div>
                         <div class="save-row">
                             <div class="form-submit">
                                 <button type="submit" class="btn-primary save" data-form-type="action">
-                                    ${trans_legacy[lang].settings.save}
+                                    ${tl2(trans2.save)}
                                 </button>
                                 <input type="hidden" value="profile" name="submit">
                             </div>
@@ -9697,7 +9736,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="submit" class="btn-primary save" onclick="_save_avatar_changer()">
-                        ${trans_legacy[lang].settings.save}
+                        ${tl2(trans2.save)}
                     </button>
                     <input type="hidden" value="avatar" name="submit">
                 </div>
@@ -9961,7 +10000,7 @@
             </div>
             <div class="settings-footer">
                 <button type="submit" class="btn-primary save">
-                    ${trans_legacy[lang].settings.save}
+                    ${tl2(trans2.save)}
                 </button>
                 <input type="hidden" value="privacy" name="submit">
             </div>
@@ -10034,12 +10073,12 @@
                 ${avatar.innerHTML}
             </div>
             <div class="info-side">
-                <div class="sub-text">${tl(trans.profile)}</div>
+                <div class="sub-text">${tl2(trans2.profile)}</div>
                 ${title_wrap != null ? `<div class="title-container">${title_wrap.innerHTML}</div>` : ""}
                 ${sub_wrap != null ? sub_wrap.outerHTML : ""}
             </div>
             <div class="expand-side">
-                <button class="header-expand-button icon" onclick="_toggle_profile_header(this)" aria-expanded="${settings.profile_header_expand}">${tl(trans.expand)}</button>
+                <button class="header-expand-button icon" onclick="_toggle_profile_header(this)" aria-expanded="${settings.profile_header_expand}">${tl2(trans2.expand)}</button>
             </div>
         `;
       let is_staff = title_wrap.querySelector(".user-status-staff") != null;
@@ -10084,11 +10123,11 @@
       let tab = page.structure.nav.querySelector(".secondary-nav-item--library a");
       let beta = document.createElement("span");
       beta.classList.add("new-badge", "beta-badge");
-      beta.textContent = tl(trans.new);
+      beta.textContent = tl2(trans2.new);
       tab.appendChild(beta);
     }
     let library_tab = page.structure.nav.querySelector(".secondary-nav-item--library a");
-    library_tab.textContent = tl(trans.library);
+    library_tab.textContent = tl2(trans2.library);
     let is_own_profile = page.name == auth.name;
     if (is_own_profile)
       profile_header.setAttribute("data-is-own-profile", "true");
@@ -10102,7 +10141,7 @@
         let recent_activity_section = document.createElement("section");
         recent_activity_section.classList.add("recent-activity-section");
         recent_activity_section.innerHTML = `
-                <h2>${tl(trans.activity)}</h2>
+                <h2>${tl2(trans2.activity)}</h2>
             `;
         load_activities();
         let recent_activity_list_r = recent_activity_list;
@@ -10159,7 +10198,7 @@
         page.structure.side.innerHTML = "";
         let alert = document.createElement("section");
         alert.classList.add("cta", "colourful", "sponsor");
-        alert.innerHTML = `<strong>${tl(trans.sponsor_info)}</strong>`;
+        alert.innerHTML = `<strong>${tl2(trans2.sponsor_info)}</strong>`;
         page.structure.main.appendChild(alert);
       }
       let featured_track_panel = profile_header.querySelector(".header-featured-track");
@@ -10172,7 +10211,7 @@
           recent_tracks.classList = "recent-tracks-section";
           recent_tracks.innerHTML = `
                     <h2>
-                        <a class="text-colour-link" href="${window.location.href}/library">${tl(trans.recent_tracks)}</a>
+                        <a class="text-colour-link" href="${window.location.href}/library">${tl2(trans2.recent_tracks)}</a>
                     </h2>
                     <div class="loading-data-container">
                         <div class="loading-data-text private">
@@ -10203,26 +10242,26 @@
       listen_container.innerHTML = `
             <div class="listener-row">
                 <div class="scrobble-side" id="scrobbles_tooltip">
-                    <h3>${tl(trans.scrobbles)}</h3>
+                    <h3>${tl2(trans2.scrobbles)}</h3>
                     <p>${scrobbles}</p>
                 </div>
                 <div>
-                    <h3>${tl(trans.artists)}</h3>
+                    <h3>${tl2(trans2.artists)}</h3>
                     <p>${artists}</p>
                 </div>
                 <div>
-                    <h3>${tl(trans.loved)}</h3>
+                    <h3>${tl2(trans2.loved)}</h3>
                     <p>${loved}</p>
                 </div>
             </div>
             <a class="scrobble-canvas-container mini" href="${root}user/${page.name}/library/artists?date_preset=LAST_90_DAYS&page=1">
                 <div class="loading-data-container">
-                    <div class="loading-data-text">${tl(trans.loading_90_days)}</div>
+                    <div class="loading-data-text">${tl2(trans2.loading_90_days)}</div>
                 </div>
             </a>
             <div class="more-link">
                 <a href="${root}user/${page.name}/library/artists?date_preset=LAST_90_DAYS&page=1">
-                    ${tl(trans.explore_in_library)}
+                    ${tl2(trans2.explore_in_library)}
                 </a>
             </div>
         `;
@@ -10247,7 +10286,7 @@
         let value_panel = document.createElement("section");
         value_panel.classList.add("value-panel");
         value_panel.innerHTML = `
-                <h2 class="text-18">${selected_tab ? selected_tab.firstChild.textContent : tl(trans.events)}</h2>
+                <h2 class="text-18">${selected_tab ? selected_tab.firstChild.textContent : tl2(trans2.events)}</h2>
             `;
         let values = page.structure.main.querySelectorAll(".metadata-display");
         let value_header = document.createElement("div");
@@ -10268,7 +10307,7 @@
         if (total_value != null) {
           let total_text = document.createElement("h2");
           total_text.classList.add("text-18");
-          total_text.textContent = tl(trans.all_time);
+          total_text.textContent = tl2(trans2.all_time);
           value_panel.appendChild(total_text);
           let total_header = document.createElement("div");
           total_header.classList.add("event-value-top-header", "view-buttons");
@@ -10276,7 +10315,7 @@
             name: page.name,
             text: total_value.textContent,
             type: "total",
-            tooltip: tl(trans.count_total).replace("{c}", total_value.textContent)
+            tooltip: tl2(trans2.count_total).replace("{c}", total_value.textContent)
           });
           value_panel.appendChild(total_header);
         }
@@ -10336,7 +10375,7 @@
             tippy(button, {
               content: button.textContent
             });
-            button.textContent = tl(trans.obsess);
+            button.textContent = tl2(trans2.obsess);
           }
           button.classList.add("btn", "view-item", "interact-item", "obsession-top-item");
           button_header.appendChild(button);
@@ -10387,7 +10426,7 @@
                 `;
           if (obsession_is_first) {
             tippy(grid_item, {
-              content: tl(trans.obsession_first)
+              content: tl2(trans2.obsession_first)
             });
           }
           grid.appendChild(grid_item);
@@ -10426,7 +10465,7 @@
           placement: "bottom",
           content: `
                     <div class="badge-name">${badge.textContent}</div>
-                    <div class="badge-reason">${tl(trans.badges[badge.classList[1]].reason)}</div>
+                    <div class="badge-reason">${tl2(trans2.badges[badge.classList[1]].reason)}</div>
                 `,
           allowHTML: true
         });
@@ -10446,7 +10485,7 @@
             placement: "bottom",
             content: `
                         <div class="badge-name">${this_badge.name}</div>
-                        <div class="badge-reason">${tl(trans.badges[this_badge.reason].reason)}</div>
+                        <div class="badge-reason">${tl2(trans2.badges[this_badge.reason].reason)}</div>
                     `,
             allowHTML: true
           });
@@ -10464,15 +10503,15 @@
       return;
     let display_name = profile_sub_text.querySelector(".header-title-display-name");
     let scrobble_since = profile_sub_text.querySelector(".header-scrobble-since");
-    scrobble_since.textContent = scrobble_since.textContent.replace(tl(trans.account_scrobbling_since_replace), "");
+    scrobble_since.textContent = scrobble_since.textContent.replace(tl2(trans2.account_scrobbling_since_replace), "");
     let pronouns = use_pronouns(display_name.textContent);
     let display_name_pre = document.createElement("span");
     display_name_pre.classList.add("header-title-secondary--pre");
-    display_name_pre.textContent = pronouns ? tl(trans.account_pronouns) : tl(trans.aka);
+    display_name_pre.textContent = pronouns ? tl2(trans2.account_pronouns) : tl2(trans2.aka);
     profile_sub_text.insertBefore(display_name_pre, display_name);
     let scrobble_since_pre = document.createElement("span");
     scrobble_since_pre.classList.add("header-title-secondary--pre");
-    scrobble_since_pre.textContent = tl(trans.account_created);
+    scrobble_since_pre.textContent = tl2(trans2.account_created);
     profile_sub_text.insertBefore(scrobble_since_pre, scrobble_since);
     let about_me_sidebar = document.body.querySelector(".about-me-sidebar");
     if (!about_me_sidebar) {
@@ -10492,9 +10531,9 @@
       let about_more = document.createElement("button");
       about_more.classList.add("btn", "icon");
       about_more.setAttribute("data-action-type", "configure");
-      about_more.textContent = tl(trans.settings);
+      about_more.textContent = tl2(trans2.settings);
       tippy(about_more, {
-        content: tl(trans.settings)
+        content: tl2(trans2.settings)
       });
       tippy(about_more, {
         theme: "window",
@@ -10502,7 +10541,7 @@
                 <div class="dialog-settings">
                     <h4>${trans_legacy[lang].settings.text.markdown.name}</h4>
                     <div class="toggle-container" id="container-bio_markdown" onclick="_update_item('bio_markdown')">
-                        <button class="btn reset" onclick="_reset_item('bio_markdown')">${tl(trans.reset)}</button>
+                        <button class="btn reset" onclick="_reset_item('bio_markdown')">${tl2(trans2.reset)}</button>
                         <div class="heading">
                             <h5>${trans_legacy[lang].settings.text.markdown.profile}</h5>
                         </div>
@@ -10530,14 +10569,14 @@
       edit.classList.add("more-link");
       if (is_own_profile) {
         edit.innerHTML = `
-                <a href="${root}settings">${tl(trans.edit)}</a>
+                <a href="${root}settings">${tl2(trans2.edit)}</a>
             `;
         about_me_sidebar.appendChild(edit);
         return;
       }
       if (!profile_has_note) {
         edit.innerHTML = `
-                <a class="inline-add-icon" onclick="_add_profile_note('${page.name}',${profile_has_note})">${tl(trans.add_note)}</a>
+                <a class="inline-add-icon" onclick="_add_profile_note('${page.name}',${profile_has_note})">${tl2(trans2.add_note)}</a>
             `;
         about_me_sidebar.appendChild(edit);
       } else {
@@ -10563,7 +10602,7 @@
         </div>
         <div class="actions">
             <button class="btn" onclick="_clear_profile_note('${username}')">${trans_legacy[lang].settings.clear}</button>
-            <button class="btn primary" onclick="_save_profile_note('${username}')">${trans_legacy[lang].settings.save}</button>
+            <button class="btn primary" onclick="_save_profile_note('${username}')">${tl2(trans2.save)}</button>
         </div>
         `;
     } else {
@@ -10574,7 +10613,7 @@
         </div>
         <div class="actions">
             <button class="btn" onclick="_clear_profile_note('${username}')">${trans_legacy[lang].settings.clear}</button>
-            <button class="btn primary" onclick="_save_profile_note('${username}')">${trans_legacy[lang].settings.save}</button>
+            <button class="btn primary" onclick="_save_profile_note('${username}')">${tl2(trans2.save)}</button>
         </div>
         `;
     }
@@ -10603,7 +10642,7 @@
     if (following_tab.hasAttribute("data-kate-processed"))
       return;
     following_tab.setAttribute("data-kate-processed", "true");
-    following_tab.querySelector("a").textContent = tl(trans.friends);
+    following_tab.querySelector("a").textContent = tl2(trans2.friends);
     if (page.subpage != "following" && page.subpage != "followers" && page.subpage != "neighbours")
       return;
     let followers_tab = page.structure.nav.querySelector(".secondary-nav-item--followers");
@@ -10617,7 +10656,7 @@
       tab = following_tab;
     else
       tab = neighbours_tab;
-    tab.querySelector("a").textContent = tl(trans.friends);
+    tab.querySelector("a").textContent = tl2(trans2.friends);
     let follow_nav = document.createElement("div");
     follow_nav.classList.add("bleh--nav-wrap", "bleh--friends-nav");
     follow_nav.innerHTML = `
@@ -10647,10 +10686,10 @@
     view_buttons.innerHTML = `
         <div class="view-buttons">
             <button class="btn view-item" id="toggle-list_view-1" data-toggle="list_view" data-toggle-value="1" onclick="_update_item('list_view', 1)">
-                ${tl(trans.grid)}
+                ${tl2(trans2.grid)}
             </button>
             <button class="btn view-item" id="toggle-list_view-0" data-toggle="list_view" data-toggle-value="0" onclick="_update_item('list_view', 0)">
-                ${tl(trans.list)}
+                ${tl2(trans2.list)}
             </button>
         </div>
     `;
@@ -10776,7 +10815,7 @@
     header.appendChild(header_text2);
     let refresh_btn = document.createElement("button");
     refresh_btn.classList.add("btn", "view-item", "interact-item", "refresh-tracklist-btn");
-    refresh_btn.textContent = tl(trans.refresh);
+    refresh_btn.textContent = tl2(trans2.refresh);
     refresh_btn.setAttribute("onclick", "_refresh_tracks(this)");
     view_buttons.appendChild(refresh_btn);
     header.appendChild(view_buttons);
@@ -10788,7 +10827,7 @@
     let original_chart_settings = {};
     let new_button = document.createElement("button");
     new_button.classList.add("panel-settings-button", "btn", "view-item", "interact-item");
-    new_button.textContent = tl(trans.settings);
+    new_button.textContent = tl2(trans2.settings);
     form.classList = "";
     tooltip = tippy(new_button, {
       theme: "window",
@@ -10804,7 +10843,7 @@
                 <input type="hidden" name="csrfmiddlewaretoken" value="${page.token}">
                 <div class="select-container">
                     <div class="heading">
-                        <h5>${trans_legacy[lang].settings.inbuilt.charts.recent.count.name}</h5>
+                        <h5>${tl2(trans2.amount_to_display)}</h5>
                     </div>
                     <div class="select-wrap custom-selector" id="id_chart_length_recent_tracks_select">
                         ${original_chart_settings.count}
@@ -10813,7 +10852,7 @@
                 <div class="toggle-container" id="container-recent_artwork" onclick="_update_inbuilt_item('recent_artwork')">
                     <button class="btn reset" onclick="_reset_inbuilt_item('recent_artwork')">Reset to default</button>
                     <div class="heading">
-                        <h5>${trans_legacy[lang].settings.inbuilt.charts.recent.artwork.name}</h5>
+                        <h5>${tl2(trans2.recent_artwork)}</h5>
                     </div>
                     <div class="toggle-wrap">
                         <input class="companion-checkbox" type="checkbox" name="show_recent_tracks_artwork" id="inbuilt-companion-checkbox-recent_artwork">
@@ -10825,8 +10864,8 @@
                 <div class="toggle-container" id="container-recent_realtime" onclick="_update_inbuilt_item('recent_realtime')">
                     <button class="btn reset" onclick="_reset_inbuilt_item('recent_realtime')">Reset to default</button>
                     <div class="heading">
-                        <h5>${trans_legacy[lang].settings.inbuilt.charts.recent.realtime.name}</h5>
-                        <p>${trans_legacy[lang].settings.inbuilt.charts.recent.realtime.bio}</p>
+                        <h5>${tl2(trans2.recent_realtime.name)}</h5>
+                        <p>${tl2(trans2.recent_realtime.body)}</p>
                     </div>
                     <div class="toggle-wrap">
                         <input class="companion-checkbox" type="checkbox" name="auto_refresh_recent_tracks" id="inbuilt-companion-checkbox-recent_realtime">
@@ -10837,10 +10876,10 @@
                 </div>
                 <div class="sep"></div>
                 <div class="toggle-container" id="container-format_guest_features" onclick="_update_item('format_guest_features')">
-                    <button class="btn reset" onclick="_reset_item('format_guest_features')">${tl(trans.reset)}</button>
+                    <button class="btn reset" onclick="_reset_item('format_guest_features')">${tl2(trans2.reset)}</button>
                     <div class="heading">
-                        <h5>${tl(trans.format_guest_features.name)}</h5>
-                        <p>${tl(trans.format_guest_features.body)}</p>
+                        <h5>${tl2(trans2.format_guest_features.name)}</h5>
+                        <p>${tl2(trans2.format_guest_features.body)}</p>
                     </div>
                     <div class="toggle-wrap">
                         <button class="toggle" id="toggle-format_guest_features" aria-checked="true" type="button">
@@ -10849,9 +10888,9 @@
                     </div>
                 </div>
                 <div class="toggle-container" id="container-stacked_chartlist_info" onclick="_update_item('stacked_chartlist_info')">
-                    <button class="btn reset" onclick="_reset_item('stacked_chartlist_info')">${tl(trans.reset)}</button>
+                    <button class="btn reset" onclick="_reset_item('stacked_chartlist_info')">${tl2(trans2.reset)}</button>
                     <div class="heading">
-                        <h5>${tl(trans.track_column_view)}</h5>
+                        <h5>${tl2(trans2.track_column_view)}</h5>
                     </div>
                     <div class="toggle-wrap">
                         <button class="toggle" id="toggle-stacked_chartlist_info" aria-checked="true" type="button">
@@ -10860,10 +10899,10 @@
                     </div>
                 </div>
                 <div class="toggle-container" id="container-colourful_tracks" onclick="_update_item('colourful_tracks')">
-                    <button class="btn reset" onclick="_reset_item('colourful_tracks')">${tl(trans.reset)}</button>
+                    <button class="btn reset" onclick="_reset_item('colourful_tracks')">${tl2(trans2.reset)}</button>
                     <div class="heading">
-                        <h5>${trans_legacy[lang].settings.customise.colourful_tracks.name}</h5>
-                        <p>${trans_legacy[lang].settings.customise.colourful_tracks.bio}</p>
+                        <h5>${tl2(trans2.colourful_tracks.name)}</h5>
+                        <p>${tl2(trans2.colourful_tracks.body)}</p>
                     </div>
                     <div class="toggle-wrap">
                         <button class="toggle" id="toggle-colourful_tracks" aria-checked="true">
@@ -10873,10 +10912,10 @@
                 </div>
                 <div class="settings-footer">
                     <button type="submit" class="btn-primary save">
-                        ${trans_legacy[lang].settings.save}
+                        ${tl2(trans2.save)}
                     </button>
                     <a class="btn icon settings not-a-view-button" href="${root}bleh">
-                        ${trans_legacy[lang].settings.configure}
+                        ${tl2(trans2.settings)}
                     </a>
                 </div>
             `;
@@ -10927,7 +10966,7 @@
     let original_chart_settings = {};
     let new_button = document.createElement("button");
     new_button.classList.add("panel-settings-button", "btn", "view-item", "interact-item");
-    new_button.textContent = tl(trans.settings);
+    new_button.textContent = tl2(trans2.settings);
     form.classList = "";
     tooltip = tippy(new_button, {
       theme: "window",
@@ -10943,7 +10982,7 @@
                 <input type="hidden" name="csrfmiddlewaretoken" value="${page.token}">
                 <div class="select-container">
                     <div class="heading">
-                        <h5>${trans_legacy[lang].settings.inbuilt.charts.artists.timeframe.name}</h5>
+                        <h5>${tl2(trans2.default_timeframe)}</h5>
                     </div>
                     <div class="select-wrap custom-selector" id="id_chart_range_top_artists_select">
                         ${original_chart_settings.timeframe}
@@ -10951,7 +10990,7 @@
                 </div>
                 <div class="select-container">
                     <div class="heading">
-                        <h5>${trans_legacy[lang].settings.inbuilt.charts.artists.style.name}</h5>
+                        <h5>${tl2(trans2.chart_style)}</h5>
                     </div>
                     <div class="select-wrap custom-selector" id="id_chart_style_top_artists_select">
                         ${original_chart_settings.style}
@@ -10975,7 +11014,7 @@
                 </div>
                 <div class="settings-footer">
                     <button type="submit" class="btn-primary save">
-                        ${trans_legacy[lang].settings.save}
+                        ${tl2(trans2.save)}
                     </button>
                 </div>
             `;
@@ -11026,7 +11065,7 @@
     let original_chart_settings = {};
     let new_button = document.createElement("button");
     new_button.classList.add("panel-settings-button", "btn", "view-item", "interact-item");
-    new_button.textContent = tl(trans.settings);
+    new_button.textContent = tl2(trans2.settings);
     form.classList = "";
     tooltip = tippy(new_button, {
       theme: "window",
@@ -11074,7 +11113,7 @@
                 </div>
                 <div class="settings-footer">
                     <button type="submit" class="btn-primary save">
-                        ${trans_legacy[lang].settings.save}
+                        ${tl2(trans2.save)}
                     </button>
                 </div>
             `;
@@ -11125,7 +11164,7 @@
     let original_chart_settings = {};
     let new_button = document.createElement("button");
     new_button.classList.add("panel-settings-button", "btn", "view-item", "interact-item");
-    new_button.textContent = tl(trans.settings);
+    new_button.textContent = tl2(trans2.settings);
     form.classList = "";
     tooltip = tippy(new_button, {
       theme: "window",
@@ -11149,7 +11188,7 @@
                 </div>
                 <div class="select-container">
                     <div class="heading">
-                        <h5>${trans_legacy[lang].settings.inbuilt.charts.tracks.count.name}</h5>
+                        <h5>${tl2(trans2.amount_to_display)}</h5>
                     </div>
                     <div class="select-wrap custom-selector" id="id_chart_length_top_tracks_select">
                         ${original_chart_settings.count}
@@ -11157,10 +11196,10 @@
                 </div>
                 <div class="sep"></div>
                 <div class="toggle-container" id="container-format_guest_features" onclick="_update_item('format_guest_features')">
-                    <button class="btn reset" onclick="_reset_item('format_guest_features')">${tl(trans.reset)}</button>
+                    <button class="btn reset" onclick="_reset_item('format_guest_features')">${tl2(trans2.reset)}</button>
                     <div class="heading">
-                        <h5>${tl(trans.format_guest_features.name)}</h5>
-                        <p>${tl(trans.format_guest_features.body)}</p>
+                        <h5>${tl2(trans2.format_guest_features.name)}</h5>
+                        <p>${tl2(trans2.format_guest_features.body)}</p>
                     </div>
                     <div class="toggle-wrap">
                         <button class="toggle" id="toggle-format_guest_features" aria-checked="true" type="button">
@@ -11169,10 +11208,10 @@
                     </div>
                 </div>
                 <div class="toggle-container hide-if-format-guest-disabled" id="container-show_guest_features" onclick="_update_item('show_guest_features')">
-                    <button class="btn reset" onclick="_reset_item('show_guest_features')">${tl(trans.reset)}</button>
+                    <button class="btn reset" onclick="_reset_item('show_guest_features')">${tl2(trans2.reset)}</button>
                     <div class="heading">
-                        <h5>${tl(trans.show_guest_features.name)}</h5>
-                        <p>${tl(trans.show_guest_features.body)}</p>
+                        <h5>${tl2(trans2.show_guest_features.name)}</h5>
+                        <p>${tl2(trans2.show_guest_features.body)}</p>
                     </div>
                     <div class="toggle-wrap">
                         <button class="toggle" id="toggle-show_guest_features" aria-checked="true" type="button">
@@ -11182,7 +11221,7 @@
                 </div>
                 <div class="settings-footer">
                     <button type="submit" class="btn-primary save">
-                        ${trans_legacy[lang].settings.save}
+                        ${tl2(trans2.save)}
                     </button>
                     <a class="btn icon settings not-a-view-button" href="${root}bleh">
                         ${trans_legacy[lang].settings.configure}
@@ -11908,22 +11947,22 @@
         <ul class="navlist-items">
             <li class="navlist-item secondary-nav-item">
                 <a class="secondary-nav-item-link bleh--nav" data-bleh-page="home" onclick="_change_settings_page('home')">
-                    ${tl(trans.home)}
+                    ${tl2(trans2.home)}
                 </a>
             </li>
             <li class="navlist-item secondary-nav-item">
                 <a class="secondary-nav-item-link bleh--nav" data-bleh-page="themes" onclick="_change_settings_page('themes')">
-                    ${tl(trans.appearance)}
+                    ${tl2(trans2.appearance)}
                 </a>
             </li>
             <li class="navlist-item secondary-nav-item">
                 <a class="secondary-nav-item-link bleh--nav" data-bleh-page="customise" onclick="_change_settings_page('customise')">
-                    ${tl(trans.layout)}
+                    ${tl2(trans2.layout)}
                 </a>
             </li>
             <li class="navlist-item secondary-nav-item">
                 <a class="secondary-nav-item-link bleh--nav" data-bleh-page="music" onclick="_change_settings_page('music')">
-                    ${tl(trans.music)}
+                    ${tl2(trans2.music)}
                 </a>
             </li>
             <li class="navlist-item secondary-nav-item">
@@ -11933,7 +11972,7 @@
             </li>
             <li class="navlist-item secondary-nav-item">
                 <a class="secondary-nav-item-link bleh--nav" data-bleh-page="seasonal" data-season="${stored_season.id}" onclick="_change_settings_page('seasonal')">
-                    ${tl(trans.seasonal.name)}
+                    ${tl2(trans2.seasonal.name)}
                 </a>
             </li>
             <li class="navlist-item secondary-nav-item">
@@ -11943,12 +11982,12 @@
             </li>
             <li class="navlist-item secondary-nav-item">
                 <a class="secondary-nav-item-link bleh--nav" data-bleh-page="accessibility" onclick="_change_settings_page('accessibility')">
-                    ${tl(trans.accessibility)}
+                    ${tl2(trans2.accessibility)}
                 </a>
             </li>
             <li class="navlist-item secondary-nav-item">
                 <a class="secondary-nav-item-link bleh--nav" data-bleh-page="performance" onclick="_change_settings_page('performance')">
-                    ${tl(trans.troubleshooting)}
+                    ${tl2(trans2.troubleshooting)}
                 </a>
             </li>
             <li class="navlist-item secondary-nav-item">
@@ -11961,17 +12000,17 @@
     page.structure.side.innerHTML = `
         <section class="view-all-panel">
             <button class="btn view-all-button import" onclick="_import_settings()">
-                ${tl(trans.import)}
+                ${tl2(trans2.import)}
             </button>
         </section>
         <section class="view-all-panel">
             <button class="btn view-all-button export" onclick="_export_settings()">
-                ${tl(trans.export)}
+                ${tl2(trans2.export)}
             </button>
         </section>
         <section class="view-all-panel">
             <button class="btn view-all-button reset-settings" onclick="_reset_settings()">
-                ${tl(trans.reset)}
+                ${tl2(trans2.reset)}
             </button>
         </section>
         <div class="bleh--panel">
@@ -11998,7 +12037,7 @@
         sponsoring = sponsor_list.sponsors.includes(auth.name);
       return `
         <div class="bleh--panel">
-            <h4 class="top-header">${tl(trans.home)}</h4>
+            <h4 class="top-header">${tl2(trans2.home)}</h4>
             <div class="user-top-panel" data-sponsoring="${sponsoring}">
                 <div class="user-top-avatar user-top-avatar-side-left"></div>
                 <img class="user-top-avatar user-top-avatar-main" src="${auth.avatar.replace("avatar42s", "avatar300s")}" alt="${auth.name}">
@@ -12030,7 +12069,7 @@
                 </div>
             </div>
             <div class="sep"></div>
-            <h4>${tl(trans.seasonal.name)}</h4>
+            <h4>${tl2(trans2.seasonal.name)}</h4>
             <div class="current-season-box no-margin" data-season="${stored_season.id}">
                 <div class="current-season-info">
                     <div class="bleh-icon bleh-seasonal-icon" data-season="${stored_season.id}"></div>
@@ -12059,7 +12098,7 @@
                 <div class="side-right full">
                     <button class="btn setting-item bleh--themes" onclick="_change_settings_page('themes')">
                         <div class="text">
-                            <h5>${tl(trans.themes.name)}</h5>
+                            <h5>${tl2(trans2.themes.name)}</h5>
                             <p>${trans_legacy[lang].settings.themes.bio}</p>
                         </div>
                     </button>
@@ -12111,11 +12150,11 @@
       register_skip_to([
         {
           id: "hue_from_album",
-          name: tl(trans.hue_from_album.name)
+          name: tl2(trans2.hue_from_album.name)
         },
         {
           id: "colourful_tracks",
-          name: tl(trans.colourful_tracks.name)
+          name: tl2(trans2.colourful_tracks.name)
         },
         {
           id: "colourful_counts",
@@ -12124,7 +12163,7 @@
       ]);
       return `
             <div class="bleh--panel">
-                <h4>${tl(trans.themes.name)}</h4>
+                <h4>${tl2(trans2.themes.name)}</h4>
                 <div class="setting-items full">
                     <div class="side-left full even-more">
                         <button class="btn theme-item" data-bleh-theme="light" data-bleh--theme_type="light" onclick="change_theme_from_settings('light')">
@@ -12134,7 +12173,7 @@
                             </div>
                             </div>
                             <div class="text">
-                                <h5>${tl(trans.themes.light)}</h5>
+                                <h5>${tl2(trans2.themes.light)}</h5>
                             </div>
                         </button>
                         <button class="btn theme-item" data-bleh-theme="ink" data-bleh--theme_type="light" onclick="change_theme_from_settings('ink')">
@@ -12144,7 +12183,7 @@
                             </div>
                             </div>
                             <div class="text">
-                                <h5>${tl(trans.themes.ink)}</h5>
+                                <h5>${tl2(trans2.themes.ink)}</h5>
                             </div>
                         </button>
                     </div>
@@ -12158,7 +12197,7 @@
                             </div>
                             </div>
                             <div class="text">
-                                <h5>${tl(trans.themes.dark)}</h5>
+                                <h5>${tl2(trans2.themes.dark)}</h5>
                             </div>
                         </button>
                         <button class="btn theme-item" data-bleh-theme="darker" onclick="change_theme_from_settings('darker')">
@@ -12168,7 +12207,7 @@
                             </div>
                             </div>
                             <div class="text">
-                                <h5>${tl(trans.themes.darker)}</h5>
+                                <h5>${tl2(trans2.themes.darker)}</h5>
                             </div>
                         </button>
                         <button class="btn theme-item" data-bleh-theme="oled" onclick="change_theme_from_settings('oled')">
@@ -12178,14 +12217,14 @@
                             </div>
                             </div>
                             <div class="text">
-                                <h5>${tl(trans.themes.oled)}</h5>
+                                <h5>${tl2(trans2.themes.oled)}</h5>
                             </div>
                         </button>
                     </div>
                 </div>
                 ${ff("high_contrast") ? `
                 <div class="toggle-container" id="container-high_contrast" onclick="_update_item('high_contrast')">
-                    <button class="btn reset" onclick="_reset_item('high_contrast')">${tl(trans.reset)}</button>
+                    <button class="btn reset" onclick="_reset_item('high_contrast')">${tl2(trans2.reset)}</button>
                     <div class="heading">
                         <h5>${trans_legacy[lang].settings.customise.high_contrast.name}</h5>
                     </div>
@@ -12196,7 +12235,7 @@
                     </div>
                 </div>
                 ` : ""}
-                <h4>${tl(trans.colours)}</h4>
+                <h4>${tl2(trans2.colours)}</h4>
                 <div class="view-buttons colour-buttons view-buttons-middle" id="colour_custom"></div>
                 <div class="swatch-group">
                     <div id="colour_red" class="palette options colours"></div>
@@ -12210,10 +12249,10 @@
                     <div id="colour_pink" class="palette options colours"></div>
                 </div>
                 <div class="toggle-container" id="container-hue_from_album" onclick="_update_item('hue_from_album')">
-                    <button class="btn reset" onclick="_reset_item('hue_from_album')">${tl(trans.reset)}</button>
+                    <button class="btn reset" onclick="_reset_item('hue_from_album')">${tl2(trans2.reset)}</button>
                     <div class="heading">
-                        <h5>${tl(trans.hue_from_album.name)}</h5>
-                        <p>${tl(trans.hue_from_album.body)}</p>
+                        <h5>${tl2(trans2.hue_from_album.name)}</h5>
+                        <p>${tl2(trans2.hue_from_album.body)}</p>
                     </div>
                     <div class="toggle-wrap">
                         <button class="toggle" id="toggle-hue_from_album" aria-checked="true">
@@ -12222,10 +12261,10 @@
                     </div>
                 </div>
                 <div class="toggle-container" id="container-colourful_tracks" onclick="_update_item('colourful_tracks')">
-                    <button class="btn reset" onclick="_reset_item('colourful_tracks')">${tl(trans.reset)}</button>
+                    <button class="btn reset" onclick="_reset_item('colourful_tracks')">${tl2(trans2.reset)}</button>
                     <div class="heading">
-                        <h5>${tl(trans.colourful_tracks.name)}</h5>
-                        <p>${tl(trans.colourful_tracks.body)}</p>
+                        <h5>${tl2(trans2.colourful_tracks.name)}</h5>
+                        <p>${tl2(trans2.colourful_tracks.body)}</p>
                     </div>
                     <div class="toggle-wrap">
                         <button class="toggle" id="toggle-colourful_tracks" aria-checked="true">
@@ -12235,10 +12274,10 @@
                 </div>
                 ${ff("card_saturation") ? `
                 <div class="slider-container hide-if-light-theme" id="container-sat_bg">
-                    <button class="btn reset" onclick="_reset_item('sat_bg')">${tl(trans.reset)}</button>
+                    <button class="btn reset" onclick="_reset_item('sat_bg')">${tl2(trans2.reset)}</button>
                     <div class="heading">
-                        <h5>${tl(trans.card_background_saturation.name)}</h5>
-                        <p>${tl(trans.card_background_saturation.body)}</p>
+                        <h5>${tl2(trans2.card_background_saturation.name)}</h5>
+                        <p>${tl2(trans2.card_background_saturation.body)}</p>
                     </div>
                     <div class="slider">
                         <div class="slider-track" id="slider-track-sat_bg"><div class="slider-fill"></div><div class="slider-nub"></div></div>
@@ -12248,18 +12287,18 @@
                 </div>
                 ` : ""}
                 <div class="sep"></div>
-                <h4>${tl(trans.fonts)}</h4>
+                <h4>${tl2(trans2.fonts)}</h4>
                 <div class="text-container" id="container-font">
-                    <button class="btn reset" onclick="_reset_item('font')">${tl(trans.reset)}</button>
+                    <button class="btn reset" onclick="_reset_item('font')">${tl2(trans2.reset)}</button>
                     <div class="heading content-form">
                         <div class="input-container">
                             <input type="text" maxlength="120" id="text-font" value="${settings.font}" placeholder="${trans_legacy[lang].settings.text.font.placeholder}">
-                            <button class="bleh--btn primary save" onclick="_save_font()">${trans_legacy[lang].settings.save}</button>
+                            <button class="bleh--btn primary save" onclick="_save_font()">${tl2(trans2.save)}</button>
                         </div>
                     </div>
                 </div>
                 <div class="slider-container" id="container-font_weight">
-                    <button class="btn reset" onclick="_reset_item('font_weight')">${tl(trans.reset)}</button>
+                    <button class="btn reset" onclick="_reset_item('font_weight')">${tl2(trans2.reset)}</button>
                     <div class="heading">
                         <h5>${trans_legacy[lang].settings.text.font_weight.name}</h5>
                         <p>${trans_legacy[lang].settings.text.font_weight.bio}</p>
@@ -12271,7 +12310,7 @@
                     </div>
                 </div>
                 <div class="slider-container" id="container-font_weight_medium">
-                    <button class="btn reset" onclick="_reset_item('font_weight_medium')">${tl(trans.reset)}</button>
+                    <button class="btn reset" onclick="_reset_item('font_weight_medium')">${tl2(trans2.reset)}</button>
                     <div class="heading">
                         <h5>${trans_legacy[lang].settings.text.font_weight_medium.name}</h5>
                         <p>${trans_legacy[lang].settings.text.font_weight_medium.bio}</p>
@@ -12283,7 +12322,7 @@
                     </div>
                 </div>
                 <div class="slider-container" id="container-font_weight_bold">
-                    <button class="btn reset" onclick="_reset_item('font_weight_bold')">${tl(trans.reset)}</button>
+                    <button class="btn reset" onclick="_reset_item('font_weight_bold')">${tl2(trans2.reset)}</button>
                     <div class="heading">
                         <h5>${trans_legacy[lang].settings.text.font_weight_bold.name}</h5>
                         <p>${trans_legacy[lang].settings.text.font_weight_bold.bio}</p>
@@ -12295,7 +12334,7 @@
                     </div>
                 </div>
                 <div class="toggle-container" id="container-font_emoji" onclick="_update_item('font_emoji')">
-                    <button class="btn reset" onclick="_reset_item('font_emoji')">${tl(trans.reset)}</button>
+                    <button class="btn reset" onclick="_reset_item('font_emoji')">${tl2(trans2.reset)}</button>
                     <div class="heading">
                         <h5>${trans_legacy[lang].settings.text.font_emoji.name}</h5>
                         <p>${trans_legacy[lang].settings.text.font_emoji.bio}</p>
@@ -12325,7 +12364,7 @@
       ]);
       return `
             <div class="bleh--panel check-artist-hover">
-                <h4 class="top-header">${tl(trans.layout)}</h4>
+                <h4 class="top-header">${tl2(trans2.layout)}</h4>
                 <h4>${trans_legacy[lang].settings.layout.header}</h4>
                 <div class="inner-preview pad">
                     <div class="profile-mockup artist">
@@ -12395,7 +12434,7 @@
                     </div>
                 </div>
                 <div class="toggle-container" id="container-profile_avi_background" onclick="_update_item('profile_avi_background')">
-                    <button class="btn reset" onclick="_reset_item('profile_avi_background')">${tl(trans.reset)}</button>
+                    <button class="btn reset" onclick="_reset_item('profile_avi_background')">${tl2(trans2.reset)}</button>
                     <div class="heading">
                         <h5>${trans_legacy[lang].settings.customise.profile_header.see_type}</h5>
                     </div>
@@ -12407,7 +12446,7 @@
                 </div>
                 <h4>${trans_legacy[lang].settings.customise.profile_header.view_on}</h4>
                 <div class="toggle-container" id="container-profile_header_own" onclick="_update_item('profile_header_own')">
-                    <button class="btn reset" onclick="_reset_item('profile_header_own')">${tl(trans.reset)}</button>
+                    <button class="btn reset" onclick="_reset_item('profile_header_own')">${tl2(trans2.reset)}</button>
                     <div class="heading">
                         <h5>${trans_legacy[lang].settings.customise.profile_header.for_own}</h5>
                     </div>
@@ -12418,7 +12457,7 @@
                     </div>
                 </div>
                 <div class="toggle-container" id="container-profile_header_others" onclick="_update_item('profile_header_others')">
-                    <button class="btn reset" onclick="_reset_item('profile_header_others')">${tl(trans.reset)}</button>
+                    <button class="btn reset" onclick="_reset_item('profile_header_others')">${tl2(trans2.reset)}</button>
                     <div class="heading">
                         <h5>${trans_legacy[lang].settings.customise.profile_header.for_others}</h5>
                     </div>
@@ -12430,7 +12469,7 @@
                 </div>
                 <div class="sep"></div>
                 <div class="toggle-container" id="container-show_your_progress" onclick="_update_item('show_your_progress')">
-                    <button class="btn reset" onclick="_reset_item('show_your_progress')">${tl(trans.reset)}</button>
+                    <button class="btn reset" onclick="_reset_item('show_your_progress')">${tl2(trans2.reset)}</button>
                     <div class="heading">
                         <h5>${trans_legacy[lang].settings.customise.show_your_progress.name}</h5>
                         <p>${trans_legacy[lang].settings.customise.show_your_progress.bio}</p>
@@ -12443,7 +12482,7 @@
                 </div>
                 <div class="sep"></div>
                 <div class="toggle-container" id="container-rain" onclick="_update_item('rain')">
-                    <button class="btn reset" onclick="_reset_item('rain')">${tl(trans.reset)}</button>
+                    <button class="btn reset" onclick="_reset_item('rain')">${tl2(trans2.reset)}</button>
                     <div class="heading">
                         <h5>${trans_legacy[lang].settings.customise.rain.name}</h5>
                         <p>${trans_legacy[lang].settings.customise.rain.bio}</p>
@@ -12461,22 +12500,22 @@
       return `
             <div class="bleh--panel">
                 <div class="seasonal-inner">
-                    <div class="sub-text">${tl(trans.seasonal_timeline)}</div>
+                    <div class="sub-text">${tl2(trans2.seasonal_timeline)}</div>
                     <h4>${moment(stored_season.now).format("MMMM Do YYYY")}</h4>
                     <div class="current-season-box" data-season="${stored_season.id}">
                         <div class="current-season-info">
                             <div class="bleh-icon bleh-seasonal-icon" data-season="${stored_season.id}"></div>
-                            <h4>${tl(trans.seasonal.listing[stored_season.id])}</h4>
+                            <h4>${tl2(trans2.seasonal.listing[stored_season.id])}</h4>
                         </div>
                         <div class="glacier-library-top season-top">
                             <div class="glacier-library-metadata">
                                 ${stored_season.id != "none" && stored_season.start && stored_season.end ? `
                                 <div class="glacier-library-metadata-item">
-                                    <div class="sub-text">${tl(trans.started)}</div>
+                                    <div class="sub-text">${tl2(trans2.started)}</div>
                                     <div class="glacier-library-metadata-item-value" id="current_season_start">${moment(stored_season.start.replace("y0", stored_season.year).replace("{offset}", stored_season.offset)).from(stored_season.now)}</div>
                                 </div>
                                 <div class="glacier-library-metadata-item">
-                                    <div class="sub-text">${tl(trans.ends_in)}</div>
+                                    <div class="sub-text">${tl2(trans2.ends_in)}</div>
                                     <div class="glacier-library-metadata-item-value" id="current_season">${moment(stored_season.end.replace("y0", stored_season.year).replace("{offset}", stored_season.offset)).to(stored_season.now, true)}</div>
                                 </div>
                                 ` : ""}
@@ -12486,12 +12525,12 @@
                 </div>
                 ${stored_season.id != "none" && stored_season.start && stored_season.end ? `
                 <div class="alert alert-info">
-                    ${tl(trans.seasonal_offset).replace("{offset}", `<strong>${stored_season.offset}</strong>`)}
+                    ${tl2(trans2.seasonal_offset).replace("{offset}", `<strong>${stored_season.offset}</strong>`)}
                 </div>
                 ` : ""}
-                <h4>${tl(trans.settings)}</h4>
+                <h4>${tl2(trans2.settings)}</h4>
                 <div class="toggle-container" id="container-seasonal" onclick="_update_item('seasonal')">
-                    <button class="btn reset" onclick="_reset_item('seasonal')">${tl(trans.reset)}</button>
+                    <button class="btn reset" onclick="_reset_item('seasonal')">${tl2(trans2.reset)}</button>
                     <div class="heading">
                         <h5>${trans_legacy[lang].settings.customise.seasonal.option.name}</h5>
                     </div>
@@ -12503,7 +12542,7 @@
                 </div>
                 <div class="sep"></div>
                 <div class="toggle-container hide-if-seasonal-disabled" id="container-seasonal_particles" onclick="_update_item('seasonal_particles')">
-                    <button class="btn reset" onclick="_reset_item('seasonal_particles')">${tl(trans.reset)}</button>
+                    <button class="btn reset" onclick="_reset_item('seasonal_particles')">${tl2(trans2.reset)}</button>
                     <div class="heading">
                         <h5>${trans_legacy[lang].settings.customise.seasonal.particles.name}</h5>
                         <p>${trans_legacy[lang].settings.customise.seasonal.particles.bio}</p>
@@ -12515,7 +12554,7 @@
                     </div>
                 </div>
                 <div class="toggle-container hide-if-seasonal-disabled" id="container-seasonal_particles_reduced" onclick="_update_item('seasonal_particles_reduced')">
-                    <button class="btn reset" onclick="_reset_item('seasonal_particles_reduced')">${tl(trans.reset)}</button>
+                    <button class="btn reset" onclick="_reset_item('seasonal_particles_reduced')">${tl2(trans2.reset)}</button>
                     <div class="heading">
                         <h5>${trans_legacy[lang].settings.customise.seasonal.show_less_particles.name}</h5>
                     </div>
@@ -12526,7 +12565,7 @@
                     </div>
                 </div>
                 <div class="toggle-container hide-if-seasonal-disabled" id="container-seasonal_particles_fps" onclick="_update_item('seasonal_particles_fps')">
-                    <button class="btn reset" onclick="_reset_item('seasonal_particles_fps')">${tl(trans.reset)}</button>
+                    <button class="btn reset" onclick="_reset_item('seasonal_particles_fps')">${tl2(trans2.reset)}</button>
                     <div class="heading">
                         <h5>${trans_legacy[lang].settings.customise.seasonal.fps_particles.name}</h5>
                         <p>${trans_legacy[lang].settings.customise.seasonal.fps_particles.bio}</p>
@@ -12539,7 +12578,7 @@
                 </div>
                 <div class="sep"></div>
                 <div class="toggle-container hide-if-seasonal-disabled" id="container-seasonal_overlays" onclick="_update_item('seasonal_overlays')">
-                    <button class="btn reset" onclick="_reset_item('seasonal_overlays')">${tl(trans.reset)}</button>
+                    <button class="btn reset" onclick="_reset_item('seasonal_overlays')">${tl2(trans2.reset)}</button>
                     <div class="heading">
                         <h5>${trans_legacy[lang].settings.customise.seasonal.overlays.name}</h5>
                         <p>${trans_legacy[lang].settings.customise.seasonal.overlays.bio}</p>
@@ -12556,7 +12595,7 @@
       register_skip_to([]);
       return `
             <div class="bleh--panel">
-                <h4 class="top-header">${tl(trans.troubleshooting)}</h4>
+                <h4 class="top-header">${tl2(trans2.troubleshooting)}</h4>
                 <p>${trans_legacy[lang].settings.performance.bio}</p>
                 <div class="toggle-container">
                     <div class="heading">
@@ -12568,7 +12607,7 @@
                     </div>
                 </div>
                 <div class="toggle-container" id="container-dev" onclick="_update_item('dev')">
-                    <button class="btn reset" onclick="_reset_item('dev')">${tl(trans.reset)}</button>
+                    <button class="btn reset" onclick="_reset_item('dev')">${tl2(trans2.reset)}</button>
                     <div class="heading">
                         <h5>${trans_legacy[lang].settings.performance.dev.name}</h5>
                         <p>${trans_legacy[lang].settings.performance.dev.bio}</p>
@@ -12641,16 +12680,16 @@
                 <div class="profile-container">
                     <div class="avatar-side small">
                         <div class="avatar">
-                            <img src="${auth.avatar.replace("/avatar42s/", "/avatar170s/")}" alt="Your avatar" loading="lazy">
+                            <img src="${auth.avatar.replace("/avatar42s/", "/avatar170s/")}" alt="${tl2(trans2.your_avatar)}" loading="lazy">
                         </div>
                     </div>
                     <div class="info-side">
                         <div class="header-info">
-                            <div class="sub-text">${tl(trans.you)}</div>
+                            <div class="sub-text">${tl2(trans2.you)}</div>
                             <div class="header standalone title-container">
                                 <h1>${auth.name}</h1>
                                 ${auth.pro ? `
-                                <span class="label user-status-subscriber">${tl(trans.badges["user-status-subscriber"].name)}</span>
+                                <span class="label user-status-subscriber">${tl2(trans2.badges["user-status-subscriber"].name)}</span>
                                 ` : ""}
                             </div>
                         </div>
@@ -12660,11 +12699,11 @@
                 <h4>${trans_legacy[lang].settings.profiles.api.name}</h4>
                 <div class="alert alert-info">${trans_legacy[lang].settings.profiles.api.bio}</div>
                 <div class="text-container" id="container-api_key">
-                    <button class="btn reset" onclick="_reset_item('api_key')">${tl(trans.reset)}</button>
+                    <button class="btn reset" onclick="_reset_item('api_key')">${tl2(trans2.reset)}</button>
                     <div class="heading content-form">
                         <div class="input-container">
                             <input type="password" maxlength="120" id="text-api_key" value="${settings.api_key}" placeholder="${trans_legacy[lang].settings.profiles.api.placeholder}">
-                            <button class="btn primary save" onclick="_save_api_key()">${trans_legacy[lang].settings.save}</button>
+                            <button class="btn primary save" onclick="_save_api_key()">${tl2(trans2.save)}</button>
                             <a class="btn-add" href="${root}api/account/create" target="_blank">${trans_legacy[lang].settings.create}</a>
                         </div>
                     </div>
@@ -12701,7 +12740,7 @@
             </div>
             <div class="bleh--panel">
                 <div class="slider-container" id="container-avatar_radius">
-                    <button class="btn reset" onclick="_reset_item('avatar_radius')">${tl(trans.reset)}</button>
+                    <button class="btn reset" onclick="_reset_item('avatar_radius')">${tl2(trans2.reset)}</button>
                     <div class="heading">
                         <h5>${trans_legacy[lang].settings.profiles.avatar_radius.name}</h5>
                     </div>
@@ -12714,7 +12753,7 @@
                 <h4>${trans_legacy[lang].settings.music.profile_shortcut.name}</h4>
                 <p>${trans_legacy[lang].settings.music.profile_shortcut.bio}</p>
                 <div class="text-container" id="container-profile_shortcut">
-                    <button class="btn reset" onclick="_reset_item('profile_shortcut')">${tl(trans.reset)}</button>
+                    <button class="btn reset" onclick="_reset_item('profile_shortcut')">${tl2(trans2.reset)}</button>
                     <div class="avatar-container">
                         <div class="avatar-inner" id="avatar-profile_shortcut">
                             <img id="avatar_src-profile_shortcut" src="${localStorage.getItem("bleh_profile_shortcut_avi") || ""}">
@@ -12724,7 +12763,7 @@
                         <h5>${trans_legacy[lang].settings.music.profile_shortcut.placeholder}</h5>
                         <div class="input-container">
                             <input type="text" maxlength="40" id="text-profile_shortcut" value="${settings.profile_shortcut}" placeholder="${trans_legacy[lang].settings.music.profile_shortcut.header}">
-                            <button class="bleh--btn primary save" onclick="_save_profile_shortcut()">${trans_legacy[lang].settings.save}</button>
+                            <button class="bleh--btn primary save" onclick="_save_profile_shortcut()">${tl2(trans2.save)}</button>
                         </div>
                     </div>
                 </div>
@@ -12733,7 +12772,7 @@
                 <h4>${trans_legacy[lang].settings.activities.name}</h4>
                 <p>${trans_legacy[lang].settings.activities.bio}</p>
                 <div class="toggle-container" id="container-activities" onclick="_update_item('activities')">
-                    <button class="btn reset" onclick="_reset_item('activities')">${tl(trans.reset)}</button>
+                    <button class="btn reset" onclick="_reset_item('activities')">${tl2(trans2.reset)}</button>
                     <div class="heading">
                         <h5>${trans_legacy[lang].settings.activities.toggle.name}</h5>
                         <p>${trans_legacy[lang].settings.activities.toggle.bio}</p>
@@ -12746,7 +12785,7 @@
                 </div>
                 <div class="sep"></div>
                 <div class="toggle-container" id="container-activity_shout" onclick="_update_item('activity_shout')">
-                    <button class="btn reset" onclick="_reset_item('activity_shout')">${tl(trans.reset)}</button>
+                    <button class="btn reset" onclick="_reset_item('activity_shout')">${tl2(trans2.reset)}</button>
                     <div class="icon">
                         <div class="bleh-icon" style="--icon: var(--icon-16-shoutbox)"></div>
                     </div>
@@ -12760,7 +12799,7 @@
                     </div>
                 </div>
                 <div class="toggle-container" id="container-activity_image" onclick="_update_item('activity_image')">
-                    <button class="btn reset" onclick="_reset_item('activity_image')">${tl(trans.reset)}</button>
+                    <button class="btn reset" onclick="_reset_item('activity_image')">${tl2(trans2.reset)}</button>
                     <div class="icon">
                         <div class="bleh-icon" style="--icon: var(--icon-16-gallery-vertical)"></div>
                     </div>
@@ -12774,7 +12813,7 @@
                     </div>
                 </div>
                 <div class="toggle-container" id="container-activity_obsess" onclick="_update_item('activity_obsess')">
-                    <button class="btn reset" onclick="_reset_item('activity_obsess')">${tl(trans.reset)}</button>
+                    <button class="btn reset" onclick="_reset_item('activity_obsess')">${tl2(trans2.reset)}</button>
                     <div class="icon">
                         <div class="bleh-icon" style="--icon: var(--icon-16-obsession)"></div>
                     </div>
@@ -12788,7 +12827,7 @@
                     </div>
                 </div>
                 <div class="toggle-container" id="container-activity_love" onclick="_update_item('activity_love')">
-                    <button class="btn reset" onclick="_reset_item('activity_love')">${tl(trans.reset)}</button>
+                    <button class="btn reset" onclick="_reset_item('activity_love')">${tl2(trans2.reset)}</button>
                     <div class="icon">
                         <div class="bleh-icon" style="--icon: var(--icon-16-heart)"></div>
                     </div>
@@ -12802,7 +12841,7 @@
                     </div>
                 </div>
                 <div class="toggle-container" id="container-activity_wiki" onclick="_update_item('activity_wiki')">
-                    <button class="btn reset" onclick="_reset_item('activity_wiki')">${tl(trans.reset)}</button>
+                    <button class="btn reset" onclick="_reset_item('activity_wiki')">${tl2(trans2.reset)}</button>
                     <div class="icon">
                         <div class="bleh-icon" style="--icon: var(--icon-16-bio)"></div>
                     </div>
@@ -12816,7 +12855,7 @@
                     </div>
                 </div>
                 <div class="toggle-container" id="container-activity_install" onclick="_update_item('activity_install')">
-                    <button class="btn reset" onclick="_reset_item('activity_install')">${tl(trans.reset)}</button>
+                    <button class="btn reset" onclick="_reset_item('activity_install')">${tl2(trans2.reset)}</button>
                     <div class="icon">
                         <div class="bleh-icon" style="--icon: var(--icon-16-download)"></div>
                     </div>
@@ -12839,9 +12878,9 @@
       register_skip_to([]);
       return `
             <div class="bleh--panel">
-                <h4 class="top-header">${tl(trans.accessibility)}</h4>
+                <h4 class="top-header">${tl2(trans2.accessibility)}</h4>
                 <div class="toggle-container" id="container-reduced_motion" onclick="_update_item('reduced_motion')">
-                    <button class="btn reset" onclick="_reset_item('reduced_motion')">${tl(trans.reset)}</button>
+                    <button class="btn reset" onclick="_reset_item('reduced_motion')">${tl2(trans2.reset)}</button>
                     <div class="heading">
                         <h5>${trans_legacy[lang].settings.accessibility.reduced_motion.name}</h5>
                         <p>${trans_legacy[lang].settings.accessibility.reduced_motion.bio}</p>
@@ -12858,7 +12897,7 @@
                             <a>${auth.name}</a>
                         </h3>
                         <span class="avatar shout-user-avatar">
-                            <img src="${auth.avatar.replace("/avatar42s/", "/avatar170s/")}" alt="Your avatar" loading="lazy">
+                            <img src="${auth.avatar.replace("/avatar42s/", "/avatar170s/")}" alt="${tl2(trans2.your_avatar)}" loading="lazy">
                         </span>
                         <a class="shout-permalink shout-timestamp">
                             <time datetime="2024-06-05T02:33:39+01:00" title="Wednesday 5 Jun 2024, 2:33am">
@@ -12871,7 +12910,7 @@
                     </div>
                 </div>
                 <div class="toggle-container" id="container-accessible_name_colours" onclick="_update_item('accessible_name_colours')">
-                    <button class="btn reset" onclick="_reset_item('accessible_name_colours')">${tl(trans.reset)}</button>
+                    <button class="btn reset" onclick="_reset_item('accessible_name_colours')">${tl2(trans2.reset)}</button>
                     <div class="heading">
                         <h5>${trans_legacy[lang].settings.accessibility.accessible_name_colours.name}</h5>
                         <p>${trans_legacy[lang].settings.accessibility.accessible_name_colours.bio}</p>
@@ -12883,7 +12922,7 @@
                     </div>
                 </div>
                 <div class="toggle-container" id="container-underline_links" onclick="_update_item('underline_links')">
-                    <button class="btn reset" onclick="_reset_item('underline_links')">${tl(trans.reset)}</button>
+                    <button class="btn reset" onclick="_reset_item('underline_links')">${tl2(trans2.reset)}</button>
                     <div class="heading">
                         <h5>${trans_legacy[lang].settings.accessibility.underline_links.name}</h5>
                         <p>${trans_legacy[lang].settings.accessibility.underline_links.bio}</p>
@@ -12895,7 +12934,7 @@
                     </div>
                 </div>
                 <div class="toggle-container" id="container-toggle_icon" onclick="_update_item('toggle_icon')">
-                    <button class="btn reset" onclick="_reset_item('toggle_icon')">${tl(trans.reset)}</button>
+                    <button class="btn reset" onclick="_reset_item('toggle_icon')">${tl2(trans2.reset)}</button>
                     <div class="heading">
                         <h5>${trans_legacy[lang].settings.accessibility.toggle_icon.name}</h5>
                         <p>${trans_legacy[lang].settings.accessibility.toggle_icon.bio}</p>
@@ -12919,7 +12958,7 @@
                             <a>${auth.name}</a>
                         </h3>
                         <span class="avatar shout-user-avatar avatar--bleh-missing">
-                            <img src="" alt="Your avatar" loading="lazy">
+                            <img src="" alt="${tl2(trans2.your_avatar)}" loading="lazy">
                         </span>
                         <a class="shout-permalink shout-timestamp">
                             <time datetime="2024-06-05T02:33:39+01:00" title="Wednesday 5 Jun 2024, 2:33am">
@@ -12937,7 +12976,7 @@
                 <h4>${trans_legacy[lang].settings.text.markdown.name}</h4>
                 <p>${trans_legacy[lang].settings.text.markdown.bio}</p>
                 <div class="toggle-container" id="container-shout_markdown" onclick="_update_item('shout_markdown')">
-                    <button class="btn reset" onclick="_reset_item('shout_markdown')">${tl(trans.reset)}</button>
+                    <button class="btn reset" onclick="_reset_item('shout_markdown')">${tl2(trans2.reset)}</button>
                     <div class="heading">
                         <h5>${trans_legacy[lang].settings.text.markdown.shouts}</h5>
                     </div>
@@ -12948,7 +12987,7 @@
                     </div>
                 </div>
                 <div class="toggle-container" id="container-bio_markdown" onclick="_update_item('bio_markdown')">
-                    <button class="btn reset" onclick="_reset_item('bio_markdown')">${tl(trans.reset)}</button>
+                    <button class="btn reset" onclick="_reset_item('bio_markdown')">${tl2(trans2.reset)}</button>
                     <div class="heading">
                         <h5>${trans_legacy[lang].settings.text.markdown.profile}</h5>
                     </div>
@@ -12996,7 +13035,7 @@
       register_skip_to([
         {
           id: "format_guest_features",
-          name: tl(trans.format_guest_features.name)
+          name: tl2(trans2.format_guest_features.name)
         },
         {
           id: "corrections",
@@ -13004,7 +13043,7 @@
         },
         {
           id: "stacked_chartlist_info",
-          name: tl(trans.track_column_view)
+          name: tl2(trans2.track_column_view)
         },
         {
           id: "travis",
@@ -13072,10 +13111,10 @@
                     </section>
                 </div>
                 <div class="toggle-container" id="container-format_guest_features" onclick="_update_item('format_guest_features')">
-                    <button class="btn reset" onclick="_reset_item('format_guest_features')">${tl(trans.reset)}</button>
+                    <button class="btn reset" onclick="_reset_item('format_guest_features')">${tl2(trans2.reset)}</button>
                     <div class="heading">
-                        <h5>${tl(trans.format_guest_features.name)}</h5>
-                        <p>${tl(trans.format_guest_features.body)}</p>
+                        <h5>${tl2(trans2.format_guest_features.name)}</h5>
+                        <p>${tl2(trans2.format_guest_features.body)}</p>
                     </div>
                     <div class="toggle-wrap">
                         <button class="toggle" id="toggle-format_guest_features" aria-checked="true">
@@ -13084,10 +13123,10 @@
                     </div>
                 </div>
                 <div class="toggle-container hide-if-format-guest-disabled" id="container-show_guest_features" onclick="_update_item('show_guest_features')">
-                    <button class="btn reset" onclick="_reset_item('show_guest_features')">${tl(trans.reset)}</button>
+                    <button class="btn reset" onclick="_reset_item('show_guest_features')">${tl2(trans2.reset)}</button>
                     <div class="heading">
-                        <h5>${tl(trans.show_guest_features.name)}</h5>
-                        <p>${tl(trans.show_guest_features.body)}</p>
+                        <h5>${tl2(trans2.show_guest_features.name)}</h5>
+                        <p>${tl2(trans2.show_guest_features.body)}</p>
                     </div>
                     <div class="toggle-wrap">
                         <button class="toggle" id="toggle-show_guest_features" aria-checked="true">
@@ -13101,7 +13140,7 @@
                             <img src="https://lastfm.freetls.fastly.net/i/u/avatar170s/def68d94aae8e52ef2d1c0c9d3e16ff4.jpg">
                         </div>
                         <div class="info-side">
-                            <div class="sub-text">${tl(trans.album)}</div>
+                            <div class="sub-text">${tl2(trans2.album)}</div>
                             <div class="title-container">
                                 <h1>
                                     <div class="title">my anti-aircraft friend</div>
@@ -13115,9 +13154,9 @@
                     </section>
                 </div>
                 <div class="toggle-container hide-if-format-guest-disabled" id="container-show_remaster_tags" onclick="_update_item('show_remaster_tags')">
-                    <button class="btn reset" onclick="_reset_item('show_remaster_tags')">${tl(trans.reset)}</button>
+                    <button class="btn reset" onclick="_reset_item('show_remaster_tags')">${tl2(trans2.reset)}</button>
                     <div class="heading">
-                        <h5>${tl(trans.show_remaster_tags)} <div class="new-badge">${tl(trans.beta)}</div></h5>
+                        <h5>${tl2(trans2.show_remaster_tags)} <div class="new-badge">${tl2(trans2.beta)}</div></h5>
                     </div>
                     <div class="toggle-wrap">
                         <button class="toggle" id="toggle-show_remaster_tags" aria-checked="true">
@@ -13159,7 +13198,7 @@
                     </div>
                 </div>
                 <div class="toggle-container" id="container-corrections" onclick="_update_item('corrections')">
-                    <button class="btn reset" onclick="_reset_item('corrections')">${tl(trans.reset)}</button>
+                    <button class="btn reset" onclick="_reset_item('corrections')">${tl2(trans2.reset)}</button>
                     <div class="heading">
                         <h5>${trans_legacy[lang].settings.corrections.toggle.name}</h5>
                     </div>
@@ -13171,7 +13210,7 @@
                 </div>
             </div>
             <div class="bleh--panel">
-                <h4 class="top-header">${tl(trans.music)}</h4>
+                <h4 class="top-header">${tl2(trans2.music)}</h4>
                 <h4>${trans_legacy[lang].settings.music.header}</h4>
                 <div class="inner-preview pad">
                     <div class="tracks">
@@ -13219,9 +13258,9 @@
                     </div>
                 </div>
                 <div class="toggle-container" id="container-stacked_chartlist_info" onclick="_update_item('stacked_chartlist_info')">
-                    <button class="btn reset" onclick="_reset_item('stacked_chartlist_info')">${tl(trans.reset)}</button>
+                    <button class="btn reset" onclick="_reset_item('stacked_chartlist_info')">${tl2(trans2.reset)}</button>
                     <div class="heading">
-                        <h5>${tl(trans.track_column_view)}</h5>
+                        <h5>${tl2(trans2.track_column_view)}</h5>
                     </div>
                     <div class="toggle-wrap">
                         <button class="toggle" id="toggle-stacked_chartlist_info" aria-checked="true">
@@ -13230,7 +13269,7 @@
                     </div>
                 </div>
                 <div class="toggle-container hide-if-no-bulk-edit" id="container-show_bulk_edit_album" onclick="_update_item('show_bulk_edit_album')">
-                    <button class="btn reset" onclick="_reset_item('show_bulk_edit_album')">${tl(trans.reset)}</button>
+                    <button class="btn reset" onclick="_reset_item('show_bulk_edit_album')">${tl2(trans2.reset)}</button>
                     <div class="heading">
                         <h5>${trans_legacy[lang].settings.music.show_bulk_edit_album.name}</h5>
                         <p>${trans_legacy[lang].settings.music.show_bulk_edit_album.bio}</p>
@@ -13242,7 +13281,7 @@
                     </div>
                 </div>
                 <div class="toggle-container" id="container-glacier_library_graphs" onclick="_update_item('glacier_library_graphs')">
-                    <button class="btn reset" onclick="_reset_item('glacier_library_graphs')">${tl(trans.reset)}</button>
+                    <button class="btn reset" onclick="_reset_item('glacier_library_graphs')">${tl2(trans2.reset)}</button>
                     <div class="heading">
                         <h5>${trans_legacy[lang].glacier.option.name}</h5>
                         <p>${trans_legacy[lang].glacier.option.bio}</p>
@@ -13303,7 +13342,7 @@
                     </div>
                 </div>
                 <div class="toggle-container" id="container-colourful_counts" onclick="_update_item('colourful_counts')">
-                    <button class="btn reset" onclick="_reset_item('colourful_counts')">${tl(trans.reset)}</button>
+                    <button class="btn reset" onclick="_reset_item('colourful_counts')">${tl2(trans2.reset)}</button>
                     <div class="heading">
                         <h5>${trans_legacy[lang].settings.customise.colourful_counts.name}</h5>
                         <p>${trans_legacy[lang].settings.customise.colourful_counts.bio}</p>
@@ -13328,7 +13367,7 @@
                     </div>
                 </div>
                 <div class="toggle-container" id="container-travis" onclick="_update_item('travis')">
-                    <button class="btn reset" onclick="_reset_item('travis')">${tl(trans.reset)}</button>
+                    <button class="btn reset" onclick="_reset_item('travis')">${tl2(trans2.reset)}</button>
                     <div class="heading">
                         <h5>${trans_legacy[lang].settings.redirects.travis.name}</h5>
                         <p>${trans_legacy[lang].settings.redirects.travis.bio}</p>
@@ -13362,7 +13401,7 @@
                     </div>
                 </div>
                 <div class="slider-container" id="container-gloss">
-                    <button class="btn reset" onclick="_reset_item('gloss')">${tl(trans.reset)}</button>
+                    <button class="btn reset" onclick="_reset_item('gloss')">${tl2(trans2.reset)}</button>
                     <div class="heading">
                         <h5>${trans_legacy[lang].settings.customise.gloss.name}</h5>
                         <p>${trans_legacy[lang].settings.customise.gloss.bio}</p>
@@ -13374,7 +13413,7 @@
                     </div>
                 </div>
                 <div class="toggle-container" id="container-grid_glow" onclick="_update_item('grid_glow')">
-                    <button class="btn reset" onclick="_reset_item('grid_glow')">${tl(trans.reset)}</button>
+                    <button class="btn reset" onclick="_reset_item('grid_glow')">${tl2(trans2.reset)}</button>
                     <div class="heading">
                         <h5>${trans_legacy[lang].settings.music.grid_glow.name}</h5>
                     </div>
@@ -13409,7 +13448,7 @@
                     </section>
                 </div>
                 <div class="toggle-container" id="container-gendered_tags" onclick="_update_item('gendered_tags')">
-                    <button class="btn reset" onclick="_reset_item('gendered_tags')">${tl(trans.reset)}</button>
+                    <button class="btn reset" onclick="_reset_item('gendered_tags')">${tl2(trans2.reset)}</button>
                     <div class="heading">
                         <h5>${trans_legacy[lang].settings.customise.gendered_tags.name}</h5>
                         <p>${trans_legacy[lang].settings.customise.gendered_tags.bio}</p>
@@ -13989,9 +14028,9 @@
         if (type == "custom")
           swatch.classList.add("view-item", "colour-btn");
         if (type == "custom")
-          swatch.textContent = tl(trans[colour.type]);
+          swatch.textContent = tl2(trans2[colour.type]);
         if (colour.type == "default" && stored_season.id != "none") {
-          swatch.textContent = tl(trans.seasonal.name);
+          swatch.textContent = tl2(trans2.seasonal.name);
           if (exclusives.hasOwnProperty(stored_season.id)) {
             swatch.setAttribute("onclick", "");
             swatch.classList.add("select-button");
@@ -14017,23 +14056,23 @@
             content: `
                         <div class="dialog-settings">
                             <div class="alert alert-info seasonal-hsl-alert">
-                                ${tl(trans.seasonal_warning)}
+                                ${tl2(trans2.seasonal_warning)}
                             </div>
                             ${ff("colour_based_on_hex") ? `
-                            <strong>${tl(trans.convert_from_hex)}</strong>
+                            <strong>${tl2(trans2.convert_from_hex)}</strong>
                             <div class="text-container">
                                 <div class="heading content-form">
                                     <div class="input-container">
                                         <input type="color" maxlength="7" id="text-hex" placeholder="#ffffff">
-                                        <button class="btn primary icon convert" onclick="_convert_hex()">${tl(trans.convert)}</button>
+                                        <button class="btn primary icon convert" onclick="_convert_hex()">${tl2(trans2.convert)}</button>
                                     </div>
                                 </div>
                             </div>
                             ` : ""}
                             <div class="slider-container dim-using-hue-gradient dim-during-seasonal" id="container-hue">
-                                <button class="btn reset" onclick="_reset_item('hue')">${tl(trans.reset)}</button>
+                                <button class="btn reset" onclick="_reset_item('hue')">${tl2(trans2.reset)}</button>
                                 <div class="heading">
-                                    <h5>${tl(trans.hue)}</h5>
+                                    <h5>${tl2(trans2.hue)}</h5>
                                 </div>
                                 <div class="slider">
                                     <div class="slider-track" id="slider-track-hue"><div class="slider-fill"></div><div class="slider-nub"></div></div>
@@ -14047,9 +14086,9 @@
                                 </div>
                             </div>
                             <div class="slider-container dim-using-hue-gradient dim-during-seasonal" id="container-sat">
-                                <button class="btn reset" onclick="_reset_item('sat')">${tl(trans.reset)}</button>
+                                <button class="btn reset" onclick="_reset_item('sat')">${tl2(trans2.reset)}</button>
                                 <div class="heading">
-                                    <h5>${tl(trans.sat)}</h5>
+                                    <h5>${tl2(trans2.sat)}</h5>
                                 </div>
                                 <div class="slider">
                                     <div class="slider-track" id="slider-track-sat"><div class="slider-fill"></div><div class="slider-nub"></div></div>
@@ -14063,9 +14102,9 @@
                                 </div>
                             </div>
                             <div class="slider-container dim-using-hue-gradient dim-during-seasonal" id="container-lit">
-                                <button class="btn reset" onclick="_reset_item('lit')">${tl(trans.reset)}</button>
+                                <button class="btn reset" onclick="_reset_item('lit')">${tl2(trans2.reset)}</button>
                                 <div class="heading">
-                                    <h5>${tl(trans.lit)}</h5>
+                                    <h5>${tl2(trans2.lit)}</h5>
                                 </div>
                                 <div class="slider">
                                     <div class="slider-track" id="slider-track-lit"><div class="slider-fill"></div><div class="slider-nub"></div></div>
@@ -14116,7 +14155,7 @@
     exclusives[stored_season.id] = [
       {
         type: "default",
-        name: tl(trans.default),
+        name: tl2(trans2.default),
         sets: {
           hue: 255,
           sat: 1,
@@ -14154,7 +14193,7 @@
         let this_badge = sponsor_list.badges[auth.name];
         let badge = document.createElement("span");
         badge.classList.add("label", `user-status--bleh-${this_badge.type}`, `user-status--bleh-user-${auth.name}`);
-        badge.textContent = this_badge.name != null ? this_badge.name : tl(trans.badges[this_badge.type].name);
+        badge.textContent = this_badge.name != null ? this_badge.name : tl2(trans2.badges[this_badge.type].name);
         profile_name_obj.appendChild(badge);
       } else {
         log(`multiple badges:`, "profile", "info", sponsor_list.badges[auth.name]);
@@ -14162,14 +14201,14 @@
           let this_badge = sponsor_list.badges[auth.name][badge_entry];
           let badge = document.createElement("span");
           badge.classList.add("label", `user-status--bleh-${this_badge.type}`, `user-status--bleh-user-${auth.name}`);
-          badge.textContent = this_badge.name != null ? this_badge.name : tl(trans.badges[this_badge.type].name);
+          badge.textContent = this_badge.name != null ? this_badge.name : tl2(trans2.badges[this_badge.type].name);
           profile_name_obj.appendChild(badge);
         }
       }
     } else {
       let badge = document.createElement("span");
       badge.classList.add("label", "user-status--bleh-missing");
-      badge.textContent = tl(trans.badges.missing.name);
+      badge.textContent = tl2(trans2.badges.missing.name);
       profile_name_obj.appendChild(badge);
     }
   }
@@ -14217,10 +14256,10 @@
     <textarea id="bleh--profile-note" placeholder="Enter a local note for this user">${profile_notes[username]}</textarea>
     <div class="modal-footer">
         <button class="btn primary save" onclick="_save_profile_note_in_window('${username}')">
-            ${trans_legacy[lang].settings.save}
+            ${tl2(trans2.save)}
         </button>
         <button class="btn cancel" onclick="_kill_window('edit_profile_note')">
-            ${tl(trans.cancel)}
+            ${tl2(trans2.cancel)}
         </button>
     </div>
     `, true);
@@ -14319,10 +14358,10 @@
             <textarea id="import_area"></textarea>
             <div class="modal-footer">
                 <button class="btn primary download" onclick="_confirm_import()">
-                    ${tl(trans.import)}
+                    ${tl2(trans2.import)}
                 </button>
                 <button class="btn cancel" onclick="_dialog_rm({id: 'import_settings'})">
-                    ${tl(trans.cancel)}
+                    ${tl2(trans2.cancel)}
                 </button>
             </div>
         `
@@ -14388,7 +14427,7 @@
                     ${trans_legacy[lang].settings.actions.reset.modals.initial.export}
                 </button>
                 <button class="btn primary cancel" onclick="_dialog_rm({id: 'reset_settings'})">
-                    ${tl(trans.cancel)}
+                    ${tl2(trans2.cancel)}
                 </button>
             </div>
         `
@@ -15405,19 +15444,19 @@
     notif_container.classList.add("masthead-nav-item");
     notif_container.innerHTML = `
         <a class="masthead-nav-control" href="${root}inbox/notifications" data-label="notifications">
-            ${tl(trans.notifications.name)}
+            ${tl2(trans2.notifications.name)}
             ${notif_count ? `<div class="notification-count-badge"></div>` : ""}
         </a>
     `;
     if (notif_count) {
       notif_count = notif_count.textContent;
       tippy(notif_container, {
-        content: tl(trans.notifications.count).replace("{count}", notif_count)
+        content: tl2(trans2.notifications.count).replace("{count}", notif_count)
       });
       notif_container.setAttribute("data-count", notif_count);
     } else {
       tippy(notif_container, {
-        content: tl(trans.notifications.none)
+        content: tl2(trans2.notifications.none)
       });
     }
     links.appendChild(notif_container);
@@ -15425,19 +15464,19 @@
     inbox_container.classList.add("masthead-nav-item");
     inbox_container.innerHTML = `
         <a class="masthead-nav-control" href="${root}inbox" data-label="inbox">
-            ${tl(trans.inbox.name)}
+            ${tl2(trans2.inbox.name)}
             ${inbox_count ? `<div class="notification-count-badge"></div>` : ""}
         </a>
     `;
     if (inbox_count) {
       inbox_count = inbox_count.textContent;
       tippy(inbox_container, {
-        content: tl(trans.inbox.count).replace("{count}", inbox_count)
+        content: tl2(trans2.inbox.count).replace("{count}", inbox_count)
       });
       inbox_container.setAttribute("data-count", inbox_count);
     } else {
       tippy(inbox_container, {
-        content: tl(trans.inbox.none)
+        content: tl2(trans2.inbox.none)
       });
     }
     links.appendChild(inbox_container);
@@ -15445,29 +15484,29 @@
     changelog_container.classList.add("masthead-nav-item");
     changelog_container.innerHTML = `
         <a class="masthead-nav-control" onclick="_query_changelog()" data-label="changelog">
-            ${tl(trans.changelog)}
+            ${tl2(trans2.changelog)}
         </a>
     `;
     tippy(changelog_container, {
-      content: tl(trans.changelog)
+      content: tl2(trans2.changelog)
     });
     links.appendChild(changelog_container);
     let bleh_container = document.createElement("li");
     bleh_container.classList.add("masthead-nav-item");
     bleh_container.innerHTML = `
         <a class="masthead-nav-control" href="${root}bleh${stored_season.id != "none" ? "?tab=seasonal" : ""}" data-label="bleh" data-season="${stored_season.id}" data-season-active="${stored_season.id != "none" ? "true" : "false"}">
-            ${stored_season.id == "none" ? tl(trans.configure_bleh) : moment(stored_season.end.replace("y0", stored_season.year).replace("{offset}", stored_season.offset)).to(stored_season.now, true)}
+            ${stored_season.id == "none" ? tl2(trans2.configure_bleh) : moment(stored_season.end.replace("y0", stored_season.year).replace("{offset}", stored_season.offset)).to(stored_season.now, true)}
         </a>
     `;
     if (stored_season.id == "none") {
       tippy(bleh_container, {
-        content: tl(trans.configure_bleh)
+        content: tl2(trans2.configure_bleh)
       });
     } else {
       page.header.season_tooltip = tippy(bleh_container, {
         theme: "seasonal-swatch",
         content: `
-                <span class="season-colour-name">${tl(trans.seasonal.listing[stored_season.id])}</span>
+                <span class="season-colour-name">${tl2(trans2.seasonal.listing[stored_season.id])}</span>
                 <span class="season-exclusive">${trans_legacy[lang].auth_menu.seasonal_notice}</span>
             `,
         allowHTML: true
@@ -15506,10 +15545,10 @@
             </a>
             <div class="sep"></div>
             <a class="dropdown-menu-clickable-item" data-menu-item="library" href="${root}user/${auth.name}/library">
-                ${tl(trans.library)}
+                ${tl2(trans2.library)}
             </a>
             <a class="dropdown-menu-clickable-item" data-menu-item="shouts" href="${root}user/${auth.name}/shoutbox">
-                ${tl(trans.shouts)}
+                ${tl2(trans2.shouts)}
             </a>
             ${settings.auth_menu_obsessions ? `
             <a class="dropdown-menu-clickable-item" data-menu-item="obsessions" href="${root}user/${auth.name}/obsessions">
@@ -15518,30 +15557,30 @@
             ` : ""}
             <button class="dropdown-menu-clickable-item" data-menu-item="themes" onclick="toggle_theme()">
                 <span class="auth-dropdown-item-row">
-                    <span class="auth-dropdown-item-left">${tl(trans.themes.name)}</span>
-                    <span class="auth-dropdown-item-right" id="theme-value">${tl(trans.themes[settings.theme])}</span>
+                    <span class="auth-dropdown-item-left">${tl2(trans2.themes.name)}</span>
+                    <span class="auth-dropdown-item-right" id="theme-value">${tl2(trans2.themes[settings.theme])}</span>
                 </span>
             </button>
             <button class="dropdown-menu-clickable-item" data-menu-item="language">
                 <span class="auth-dropdown-item-row">
-                    <span class="auth-dropdown-item-left">${tl(trans.language)}</span>
+                    <span class="auth-dropdown-item-left">${tl2(trans2.language)}</span>
                     <span class="auth-dropdown-item-right" id="theme-value">${selected_language}</span>
                 </span>
             </button>
             <a class="dropdown-menu-clickable-item" data-menu-item="bleh" href="${root}bleh">
-                ${tl(trans.settings)}
+                ${tl2(trans2.settings)}
             </a>
             <div class="sep"></div>
             <a class="dropdown-menu-clickable-item" data-menu-item="bookmarks" href="${root}music/+bookmarks">
-                ${tl(trans.bookmarks)}
+                ${tl2(trans2.bookmarks)}
             </a>
             <a class="dropdown-menu-clickable-item" data-menu-item="settings" href="${root}settings">
-                ${tl(trans.settings)}
+                ${tl2(trans2.settings)}
             </a>
             <form>
                 <input type="hidden" name="csrfmiddlewaretoken" value="${token}">
                 <a class="dropdown-menu-clickable-item" data-menu-item="logout" href="${root}logout">
-                    ${tl(trans.logout)}
+                    ${tl2(trans2.logout)}
                 </a>
             </form>
         `,
@@ -15558,7 +15597,7 @@
           shortcut_item.setAttribute("href", `${root}user/${settings.profile_shortcut}`);
           shortcut_item.textContent = settings.profile_shortcut;
         }
-        instance.popper.querySelector("#theme-value").textContent = tl(trans.themes[settings.theme]);
+        instance.popper.querySelector("#theme-value").textContent = tl2(trans2.themes[settings.theme]);
         tippy(instance.popper.querySelector('[data-menu-item="language"]:not([aria-expanded])'), {
           theme: "language-menu",
           content: `
@@ -15574,19 +15613,19 @@
           theme: "menu",
           content: `
                     <button class="dropdown-menu-clickable-item theme-item-in-menu" data-bleh-theme="light" onclick="change_theme_from_menu('light')">
-                        ${tl(trans.themes.light)}
+                        ${tl2(trans2.themes.light)}
                     </button>
                     <button class="dropdown-menu-clickable-item theme-item-in-menu" data-bleh-theme="ink" onclick="change_theme_from_menu('ink')">
-                        ${tl(trans.themes.ink)}
+                        ${tl2(trans2.themes.ink)}
                     </button>
                     <button class="dropdown-menu-clickable-item theme-item-in-menu" data-bleh-theme="dark" onclick="change_theme_from_menu('dark')">
-                        ${tl(trans.themes.dark)}
+                        ${tl2(trans2.themes.dark)}
                     </button>
                     <button class="dropdown-menu-clickable-item theme-item-in-menu" data-bleh-theme="darker" onclick="change_theme_from_menu('darker')">
-                        ${tl(trans.themes.darker)}
+                        ${tl2(trans2.themes.darker)}
                     </button>
                     <button class="dropdown-menu-clickable-item theme-item-in-menu" data-bleh-theme="oled" onclick="change_theme_from_menu('oled')">
-                        ${tl(trans.themes.oled)}
+                        ${tl2(trans2.themes.oled)}
                     </button>
                 `,
           allowHTML: true,
@@ -15742,7 +15781,7 @@
     latest_version_panel.classList.add("view-all-panel");
     latest_version_panel.innerHTML = `
         <a class="btn view-all-button back wiki-latest-button" href="${sub_text.querySelector("a").getAttribute("href")}">
-            ${tl(trans.view_latest_version)}
+            ${tl2(trans2.view_latest_version)}
         </a>
     `;
     page.structure.side.appendChild(latest_version_panel);
@@ -15792,41 +15831,41 @@
     let wiki_syntax = document.createElement("section");
     wiki_syntax.classList.add("bleh--blank-panel", "wiki-syntax-panel");
     wiki_syntax.innerHTML = `
-        <h3 class="text-18">${tl(trans.fancy_syntax)}</h3>
+        <h3 class="text-18">${tl2(trans2.fancy_syntax)}</h3>
         <div class="syntax-listing">
             <div class="syntax-listing-item">
                 <div class="code-side">[artist]julie[/artist]</div>
-                <div class="detail-side">${tl(trans.links_to).replace("{link}", `<a href="${root}music/julie" data-link-type="artist" target="_blank">julie</a>`)}</div>
+                <div class="detail-side">${tl2(trans2.links_to).replace("{link}", `<a href="${root}music/julie" data-link-type="artist" target="_blank">julie</a>`)}</div>
             </div>
             <div class="syntax-listing-item">
                 <div class="code-side">[album artist=julie]pushing daisies[/album]</div>
-                <div class="detail-side">${tl(trans.links_to).replace("{link}", `<a href="${root}music/julie/pushing+daisies" data-link-type="album" target="_blank">pushing daisies</a>`)}</div>
+                <div class="detail-side">${tl2(trans2.links_to).replace("{link}", `<a href="${root}music/julie/pushing+daisies" data-link-type="album" target="_blank">pushing daisies</a>`)}</div>
             </div>
             <div class="syntax-listing-item">
                 <div class="code-side">[track artist=julie]very little effort[/track]</div>
-                <div class="detail-side">${tl(trans.links_to).replace("{link}", `<a href="${root}music/julie/_/very+little+effort" data-link-type="track" target="_blank">very little effort</a>`)}</div>
+                <div class="detail-side">${tl2(trans2.links_to).replace("{link}", `<a href="${root}music/julie/_/very+little+effort" data-link-type="track" target="_blank">very little effort</a>`)}</div>
             </div>
         </div>
         <div class="sep"></div>
         <div class="syntax-listing">
             <div class="syntax-listing-item">
                 <div class="code-side">[url]https://cutensilly.org/bleh/fm[/url]</div>
-                <div class="detail-side">${tl(trans.links_to).replace("{link}", `<a href="https://cutensilly.org/bleh/fm" target="_blank">https://cutensilly.org/bleh/fm</a>`)}</div>
+                <div class="detail-side">${tl2(trans2.links_to).replace("{link}", `<a href="https://cutensilly.org/bleh/fm" target="_blank">https://cutensilly.org/bleh/fm</a>`)}</div>
             </div>
             <div class="syntax-listing-item">
                 <div class="code-side">[url=https://cutensilly.org/bleh/fm]blehhh[/url]</div>
-                <div class="detail-side">${tl(trans.links_to).replace("{link}", `<a href="https://cutensilly.org/bleh/fm" target="_blank">blehhh</a>`)}</div>
+                <div class="detail-side">${tl2(trans2.links_to).replace("{link}", `<a href="https://cutensilly.org/bleh/fm" target="_blank">blehhh</a>`)}</div>
             </div>
         </div>
         <div class="sep"></div>
         <div class="syntax-listing">
             <div class="syntax-listing-item">
                 <div class="code-side">[tag]grunge[/tag]</div>
-                <div class="detail-side">${tl(trans.links_to).replace("{link}", `<a href="${root}tag/grunge" data-link-type="tag" target="_blank">grunge</a>`)}</div>
+                <div class="detail-side">${tl2(trans2.links_to).replace("{link}", `<a href="${root}tag/grunge" data-link-type="tag" target="_blank">grunge</a>`)}</div>
             </div>
             <div class="syntax-listing-item">
                 <div class="code-side">[user]${auth.name}[/user]</div>
-                <div class="detail-side">${tl(trans.links_to).replace("{link}", `<a class="mention" href="${root}user/${auth.name}" target="_blank">@${auth.name}</a>`)}</div>
+                <div class="detail-side">${tl2(trans2.links_to).replace("{link}", `<a class="mention" href="${root}user/${auth.name}" target="_blank">@${auth.name}</a>`)}</div>
             </div>
         </div>
     `;
@@ -15835,14 +15874,14 @@
     latest_version_panel.classList.add("view-all-panel");
     latest_version_panel.innerHTML = `
         <a class="btn view-all-button back wiki-latest-button" href="${sub_text.querySelector("a").getAttribute("href")}">
-            ${tl(trans.view_latest_version)}
+            ${tl2(trans2.view_latest_version)}
         </a>
     `;
     page.structure.side.appendChild(latest_version_panel);
     let wiki_presets_panel = document.createElement("section");
     wiki_presets_panel.classList.add("wiki-presets-panel");
     wiki_presets_panel.innerHTML = `
-        <h3 class="text-18">${tl(trans.symbol_presets)}</h3>
+        <h3 class="text-18">${tl2(trans2.symbol_presets)}</h3>
         <div class="presets">
             <div class="preset">\u201C</div>
             <div class="preset">\u201D</div>
@@ -15879,14 +15918,14 @@
       let read_more = wiki_block.querySelector("a:last-child");
       if (read_more) {
         read_more.classList.add("read-more");
-        read_more.textContent = tl(trans.read_more).toLowerCase();
+        read_more.textContent = tl2(trans2.read_more).toLowerCase();
       }
       let wiki_header = document.createElement("div");
       wiki_header.classList.add("sub-text");
       wiki_header.innerHTML = `
-            <p>${tl(trans.about)}</p>
+            <p>${tl2(trans2.about)}</p>
             <span class="right-links">
-                <p><a class="wiki-edit-small" href="${document.location.href}/+wiki/edit">${tl(trans.edit_wiki).toLowerCase()}</a></p>
+                <p><a class="wiki-edit-small" href="${document.location.href}/+wiki/edit">${tl2(trans2.edit_wiki).toLowerCase()}</a></p>
                 ${!wiki_empty ? `<p>${read_more.outerHTML}</p>` : ""}
             </span>
         `;
@@ -15991,7 +16030,7 @@
         tags.appendChild(related);
         let header_tags = document.createElement("div");
         header_tags.classList.add("sub-text", "music-small-header");
-        header_tags.textContent = tl(trans.related_to);
+        header_tags.textContent = tl2(trans2.related_to);
         col_main.appendChild(header_tags);
         col_main.appendChild(tags);
       }
@@ -16021,7 +16060,7 @@
     tags.forEach((tag) => {
       tag.classList.add("user-created-tag");
       tippy(tag, {
-        content: tl(trans.personal_tag)
+        content: tl2(trans2.personal_tag)
       });
     });
   }
@@ -16077,7 +16116,7 @@
             </div>
             ` : ""}
             <div class="info-side">
-                <div class="sub-text">${tl(trans.album)}</div>
+                <div class="sub-text">${tl2(trans2.album)}</div>
                 <div class="title-container">
                     <h1>${title.innerHTML}</h1>
                     ${position ? position.outerHTML : ""}
@@ -16115,7 +16154,7 @@
                     </a>
                     <div class="sep"></div>
                     <a class="dropdown-menu-clickable-item" href="${root}bleh?tab=customise" data-menu-item="settings">
-                        ${tl(trans.settings)}
+                        ${tl2(trans2.settings)}
                     </a>
                 `,
           allowHTML: true,
@@ -16324,13 +16363,13 @@
             <div class="info-side">
                 ${page.multi ? `
                 <div class="sub-text">
-                    ${tl(trans.artists)}
+                    ${tl2(trans2.artists)}
                     <div class="info-tip">
                         <div class="bleh-icon bleh-info-icon"></div>
                     </div>
                 </div>
                 ` : `
-                <div class="sub-text">${tl(trans.artist)}</div>
+                <div class="sub-text">${tl2(trans2.artist)}</div>
                 `}
                 <div class="title-container" data-multi="${page.multi}">
                     <h1>${title.innerHTML}</h1>
@@ -16343,7 +16382,7 @@
       let multi_info_box = redesigned_artist_header.querySelector(".info-tip");
       if (multi_info_box) {
         tippy(multi_info_box, {
-          content: tl(trans.artists_tooltip)
+          content: tl2(trans2.artists_tooltip)
         });
       }
       position = redesigned_artist_header.querySelector(".header-new-chart-position-number");
@@ -16382,7 +16421,7 @@
                     </a>
                     <div class="sep"></div>
                     <a class="dropdown-menu-clickable-item" href="${root}bleh?tab=customise" data-menu-item="settings">
-                        ${tl(trans.settings)}
+                        ${tl2(trans2.settings)}
                     </a>
                 `,
           allowHTML: true,
@@ -16406,7 +16445,7 @@
             theme: "context-menu",
             content: `
                         <a class="dropdown-menu-clickable-item" href="${root}bleh?tab=customise" data-menu-item="settings">
-                            ${tl(trans.settings)}
+                            ${tl2(trans2.settings)}
                         </a>
                     `,
             allowHTML: true,
@@ -16678,7 +16717,7 @@
                     <div class="setup-body-main">
                         <h1>${trans_legacy[lang].settings.accessibility.name}</h1>
                         <div class="toggle-container" id="container-reduced_motion">
-                            <button class="btn reset" onclick="_reset_item('reduced_motion')">${tl(trans.reset)}</button>
+                            <button class="btn reset" onclick="_reset_item('reduced_motion')">${tl2(trans2.reset)}</button>
                             <div class="heading">
                                 <h5>${trans_legacy[lang].settings.accessibility.reduced_motion.name}</h5>
                                 <p>${trans_legacy[lang].settings.accessibility.reduced_motion.bio}</p>
@@ -16695,7 +16734,7 @@
                                     <a>${auth.name}</a>
                                 </h3>
                                 <span class="avatar shout-user-avatar avatar--bleh-missing">
-                                    <img src="" alt="Your avatar" loading="lazy">
+                                    <img src="" alt="${tl2(trans2.your_avatar)}" loading="lazy">
                                 </span>
                                 <a class="shout-permalink shout-timestamp">
                                     <time datetime="2024-06-05T02:33:39+01:00" title="Wednesday 5 Jun 2024, 2:33am">
@@ -16708,7 +16747,7 @@
                             </div>
                         </div>
                         <div class="toggle-container" id="container-accessible_name_colours">
-                            <button class="btn reset" onclick="_reset_item('accessible_name_colours')">${tl(trans.reset)}</button>
+                            <button class="btn reset" onclick="_reset_item('accessible_name_colours')">${tl2(trans2.reset)}</button>
                             <div class="heading">
                                 <h5>${trans_legacy[lang].settings.accessibility.accessible_name_colours.name}</h5>
                                 <p>${trans_legacy[lang].settings.accessibility.accessible_name_colours.bio}</p>
@@ -16720,7 +16759,7 @@
                             </div>
                         </div>
                         <div class="toggle-container" id="container-underline_links">
-                            <button class="btn reset" onclick="_reset_item('underline_links')">${tl(trans.reset)}</button>
+                            <button class="btn reset" onclick="_reset_item('underline_links')">${tl2(trans2.reset)}</button>
                             <div class="heading">
                                 <h5>${trans_legacy[lang].settings.accessibility.underline_links.name}</h5>
                                 <p>${trans_legacy[lang].settings.accessibility.underline_links.bio}</p>
@@ -16852,10 +16891,10 @@
                         <div class="alert alert-info">${trans_legacy[lang].setup.music.change_later}</div>
                         <h4>${trans_legacy[lang].settings.corrections.formatting}</h4>
                         <div class="toggle-container" id="container-format_guest_features" onclick="_update_item('format_guest_features')">
-                            <button class="btn reset" onclick="_reset_item('format_guest_features')">${tl(trans.reset)}</button>
+                            <button class="btn reset" onclick="_reset_item('format_guest_features')">${tl2(trans2.reset)}</button>
                             <div class="heading">
-                                <h5>${tl(trans.format_guest_features.name)}</h5>
-                                <p>${tl(trans.format_guest_features.body)}</p>
+                                <h5>${tl2(trans2.format_guest_features.name)}</h5>
+                                <p>${tl2(trans2.format_guest_features.body)}</p>
                             </div>
                             <div class="toggle-wrap">
                                 <button class="toggle" id="toggle-format_guest_features" aria-checked="true">
@@ -16864,10 +16903,10 @@
                             </div>
                         </div>
                         <div class="toggle-container hide-if-format-guest-disabled" id="container-show_guest_features" onclick="_update_item('show_guest_features')">
-                            <button class="btn reset" onclick="_reset_item('show_guest_features')">${tl(trans.reset)}</button>
+                            <button class="btn reset" onclick="_reset_item('show_guest_features')">${tl2(trans2.reset)}</button>
                             <div class="heading">
-                                <h5>${tl(trans.show_guest_features.name)}</h5>
-                                <p>${tl(trans.show_guest_features.body)}</p>
+                                <h5>${tl2(trans2.show_guest_features.name)}</h5>
+                                <p>${tl2(trans2.show_guest_features.body)}</p>
                             </div>
                             <div class="toggle-wrap">
                                 <button class="toggle" id="toggle-show_guest_features" aria-checked="true">
@@ -16876,7 +16915,7 @@
                             </div>
                         </div>
                         <div class="toggle-container" id="container-corrections" onclick="_update_item('corrections')">
-                            <button class="btn reset" onclick="_reset_item('corrections')">${tl(trans.reset)}</button>
+                            <button class="btn reset" onclick="_reset_item('corrections')">${tl2(trans2.reset)}</button>
                             <div class="heading">
                                 <h5>${trans_legacy[lang].settings.corrections.toggle.name}</h5>
                             </div>
@@ -16888,9 +16927,9 @@
                         </div>
                         <h4>${trans_legacy[lang].settings.music.header}</h4>
                         <div class="toggle-container" id="container-stacked_chartlist_info" onclick="_update_item('stacked_chartlist_info')">
-                            <button class="btn reset" onclick="_reset_item('stacked_chartlist_info')">${tl(trans.reset)}</button>
+                            <button class="btn reset" onclick="_reset_item('stacked_chartlist_info')">${tl2(trans2.reset)}</button>
                             <div class="heading">
-                                <h5>${tl(trans.track_column_view)}</h5>
+                                <h5>${tl2(trans2.track_column_view)}</h5>
                                 <p>${trans_legacy[lang].settings.corrections.stacked_chartlist_info.bio}</p>
                             </div>
                             <div class="toggle-wrap">
@@ -16900,7 +16939,7 @@
                             </div>
                         </div>
                         <div class="toggle-container hide-if-no-bulk-edit" id="container-show_bulk_edit_album" onclick="_update_item('show_bulk_edit_album')">
-                            <button class="btn reset" onclick="_reset_item('show_bulk_edit_album')">${tl(trans.reset)}</button>
+                            <button class="btn reset" onclick="_reset_item('show_bulk_edit_album')">${tl2(trans2.reset)}</button>
                             <div class="heading">
                                 <h5>${trans_legacy[lang].settings.music.show_bulk_edit_album.name}</h5>
                                 <p>${trans_legacy[lang].settings.music.show_bulk_edit_album.bio}</p>
@@ -16983,7 +17022,7 @@
                         </div>-->
                         <h4>${trans_legacy[lang].settings.configure}</h4>
                         <div class="toggle-container" id="container-seasonal" onclick="_update_item('seasonal')">
-                            <button class="btn reset" onclick="_reset_item('seasonal')">${tl(trans.reset)}</button>
+                            <button class="btn reset" onclick="_reset_item('seasonal')">${tl2(trans2.reset)}</button>
                             <div class="heading">
                                 <h5>${trans_legacy[lang].settings.customise.seasonal.option.name}</h5>
                             </div>
@@ -16995,7 +17034,7 @@
                         </div>
                         <div class="sep"></div>
                         <div class="toggle-container hide-if-seasonal-disabled" id="container-seasonal_particles" onclick="_update_item('seasonal_particles')">
-                            <button class="btn reset" onclick="_reset_item('seasonal_particles')">${tl(trans.reset)}</button>
+                            <button class="btn reset" onclick="_reset_item('seasonal_particles')">${tl2(trans2.reset)}</button>
                             <div class="heading">
                                 <h5>${trans_legacy[lang].settings.customise.seasonal.particles.name}</h5>
                                 <p>${trans_legacy[lang].settings.customise.seasonal.particles.bio}</p>
@@ -17007,7 +17046,7 @@
                             </div>
                         </div>
                         <div class="toggle-container hide-if-seasonal-disabled" id="container-seasonal_particles_reduced" onclick="_update_item('seasonal_particles_reduced')">
-                            <button class="btn reset" onclick="_reset_item('seasonal_particles_reduced')">${tl(trans.reset)}</button>
+                            <button class="btn reset" onclick="_reset_item('seasonal_particles_reduced')">${tl2(trans2.reset)}</button>
                             <div class="heading">
                                 <h5>${trans_legacy[lang].settings.customise.seasonal.show_less_particles.name}</h5>
                             </div>
@@ -17018,7 +17057,7 @@
                             </div>
                         </div>
                         <div class="toggle-container hide-if-seasonal-disabled" id="container-seasonal_particles_fps" onclick="_update_item('seasonal_particles_fps')">
-                            <button class="btn reset" onclick="_reset_item('seasonal_particles_fps')">${tl(trans.reset)}</button>
+                            <button class="btn reset" onclick="_reset_item('seasonal_particles_fps')">${tl2(trans2.reset)}</button>
                             <div class="heading">
                                 <h5>${trans_legacy[lang].settings.customise.seasonal.fps_particles.name}</h5>
                                 <p>${trans_legacy[lang].settings.customise.seasonal.fps_particles.bio}</p>
@@ -17031,7 +17070,7 @@
                         </div>
                         <div class="sep"></div>
                         <div class="toggle-container hide-if-seasonal-disabled" id="container-seasonal_overlays" onclick="_update_item('seasonal_overlays')">
-                            <button class="btn reset" onclick="_reset_item('seasonal_overlays')">${tl(trans.reset)}</button>
+                            <button class="btn reset" onclick="_reset_item('seasonal_overlays')">${tl2(trans2.reset)}</button>
                             <div class="heading">
                                 <h5>${trans_legacy[lang].settings.customise.seasonal.overlays.name}</h5>
                                 <p>${trans_legacy[lang].settings.customise.seasonal.overlays.bio}</p>
@@ -17157,7 +17196,7 @@
       content: `
             <div class="dialog-settings">
                 <div class="toggle-container" id="container-simulate_scroll" onclick="_update_item('simulate_scroll')">
-                    <button class="btn reset" onclick="_reset_item('simulate_scroll')">${tl(trans.reset)}</button>
+                    <button class="btn reset" onclick="_reset_item('simulate_scroll')">${tl2(trans2.reset)}</button>
                     <div class="heading">
                         <h5>${trans_legacy[lang].charts.scroll.name}</h5>
                         <p>${trans_legacy[lang].charts.scroll.bio}</p>
@@ -17294,10 +17333,10 @@
         ${sponsoring ? `
         <div class="subtext sponsor-message colourful">
             <div class="bleh-icon-container"><div class="bleh-icon" style="--icon: var(--icon-16-heart-solid); --icon-size: 14px"></div></div>
-            ${tl(trans.thank_you_for_sponsoring)}
+            ${tl2(trans2.thank_you_for_sponsoring)}
         </div>
         ` : ""}
-        <h1>${tl(trans.welcome_back_user).replace("{user}", `<a class="mention" href="${root}user/${auth.name}">@${auth.name}</a>`)}</h1>
+        <h1>${tl2(trans2.welcome_back_user).replace("{user}", `<a class="mention" href="${root}user/${auth.name}">@${auth.name}</a>`)}</h1>
     `;
     page.structure.container.insertBefore(banner, page.structure.container.firstElementChild);
     let nav = document.createElement("nav");
@@ -17306,48 +17345,48 @@
         <ul class="navlist-items">
             <li class="navlist-item secondary-nav-item secondary-nav-item--home">
                 <a href="${root}music" class="secondary-nav-item-link ${page.subpage == "music" ? "secondary-nav-item-link--active" : ""}">
-                    ${tl(trans.home)}<div class="new-badge">${tl(trans.beta)}</div>
+                    ${tl2(trans2.home)}<div class="new-badge">${tl2(trans2.beta)}</div>
                 </a>
             </li>
             <li class="navlist-item secondary-nav-item secondary-nav-item--recommendations">
                 <a href="${root}music/+recommended" class="secondary-nav-item-link ${page.type == "recommended" ? "secondary-nav-item-link--active" : ""}">
-                    ${tl(trans.recommendations)}<div class="new-badge">${tl(trans.beta)}</div>
+                    ${tl2(trans2.recommendations)}<div class="new-badge">${tl2(trans2.beta)}</div>
                 </a>
             </li>
             <li class="navlist-item secondary-nav-item secondary-nav-item--releases">
                 <a href="${root}music/+releases/out-now" class="secondary-nav-item-link ${page.type == "releases" ? "secondary-nav-item-link--active" : ""}">
-                    ${tl(trans.releases)}
+                    ${tl2(trans2.releases)}
                 </a>
             </li>
             <li class="navlist-item secondary-nav-item secondary-nav-item--events dont-rearrange">
                 <a href="${root}events" class="secondary-nav-item-link ${page.type == "events" ? "secondary-nav-item-link--active" : ""}">
-                    ${tl(trans.events)}<div class="new-badge">${tl(trans.beta)}</div>
+                    ${tl2(trans2.events)}<div class="new-badge">${tl2(trans2.beta)}</div>
                 </a>
             </li>
             <li class="navlist-item secondary-nav-item secondary-nav-item--bookmarks">
                 <a href="${root}music/+bookmarks" class="secondary-nav-item-link ${page.type == "bookmarks" ? "secondary-nav-item-link--active" : ""}">
-                    ${tl(trans.bookmarks)}
+                    ${tl2(trans2.bookmarks)}
                 </a>
             </li>
             <li class="navlist-item secondary-nav-item secondary-nav-item--charts">
                 <a href="${root}charts" class="secondary-nav-item-link ${page.type == "charts" ? "secondary-nav-item-link--active" : ""}">
-                    ${tl(trans.charts)}
+                    ${tl2(trans2.charts)}
                 </a>
             </li>
             <li class="fill"></li>
             <li class="navlist-item secondary-nav-item secondary-nav-item--settings">
                 <a href="${root}settings" class="secondary-nav-item-link ${page.type == "settings" ? "secondary-nav-item-link--active" : ""}">
-                    ${tl(trans.settings)}
+                    ${tl2(trans2.settings)}
                 </a>
             </li>
             <li class="navlist-item secondary-nav-item secondary-nav-item--bleh">
                 <a href="${root}bleh" class="secondary-nav-item-link ${page.type == "error" ? "secondary-nav-item-link--active" : ""}">
-                    ${tl(trans.settings)}
+                    ${tl2(trans2.settings)}
                 </a>
             </li>
             <li class="navlist-item secondary-nav-item secondary-nav-item--more">
                 <a class="secondary-nav-item-link no-text">
-                    ${tl(trans.more)}
+                    ${tl2(trans2.more)}
                 </a>
             </li>
         </ul>
@@ -17597,7 +17636,7 @@
         page.structure.main.removeChild(cancelled);
         let alert = document.createElement("section");
         alert.classList.add("cta", "first", "colourful", "error");
-        alert.innerHTML = `<strong>${tl(trans.event_cancelled)}</strong>`;
+        alert.innerHTML = `<strong>${tl2(trans2.event_cancelled)}</strong>`;
         page.structure.main.insertBefore(alert, page.structure.main.firstElementChild);
       }
     } else {
@@ -17694,7 +17733,7 @@
     page.structure.side.innerHTML = `
         <section class="view-all-panel">
             <a class="btn view-all-button add-button" href="${root}events/add?reset=true">
-                ${tl(trans.create_new_event)}
+                ${tl2(trans2.create_new_event)}
             </a>
         </section>
     `;
@@ -18068,9 +18107,9 @@
     let button = send_button.querySelector(".btn-post-shout");
     if (!button) return;
     button.classList.add("btn-send-shout-generic");
-    button.textContent = tl(trans.send);
+    button.textContent = tl2(trans2.send);
     tippy(button, {
-      content: tl(trans.send_quickly_with).replace("{kbd}", "<kbd>ctrl+\u21B5</kbd>"),
+      content: tl2(trans2.send_quickly_with).replace("{kbd}", "<kbd>ctrl+\u21B5</kbd>"),
       delay: [500, 0],
       allowHTML: true
     });
@@ -18493,13 +18532,13 @@
     radios.forEach((radio) => {
       let type = radio.getAttribute("data-analytics-label");
       radio.classList.add("radio-button");
-      let text = tl(trans[type]);
+      let text = tl2(trans2[type]);
       if (type == "tag")
         text = page.name;
       else if (type == "event")
-        text = tl(trans.artists);
+        text = tl2(trans2.artists);
       radio.innerHTML = `
-            <h3 class="sub-text">${tl(trans.radio)}</h3>
+            <h3 class="sub-text">${tl2(trans2.radio)}</h3>
             <h4>${text}</h4>
         `;
       radio.removeAttribute("title");
@@ -18507,7 +18546,7 @@
     if (page.type == "user") {
       let promo_v3 = page.structure.side.querySelector(".promo-v3");
       let header = promo_v3.querySelector("h2");
-      header.textContent = tl(trans.listening);
+      header.textContent = tl2(trans2.listening);
       let promos = promo_v3.querySelectorAll(".listening-report-promo");
       let container = document.createElement("div");
       container.classList.add("listening-report-promos");
@@ -18525,7 +18564,7 @@
       promo_v3.appendChild(list);
     } else {
       let header = page.structure.side.querySelector(".stationlinks-header");
-      header.textContent = tl(trans.listening);
+      header.textContent = tl2(trans2.listening);
     }
   }
 
@@ -18793,7 +18832,7 @@
     else if (page.type == "user")
       name = trans_legacy[lang].profile.name;
     else if (page.type == "bleh_settings")
-      name = trans_legacy[lang].settings.name;
+      name = tl(trans.settings);
     else if (page.type == "events" || page.type == "festival")
       name = trans_legacy[lang].event.name;
     title.setAttribute("data-page-type", page.type);

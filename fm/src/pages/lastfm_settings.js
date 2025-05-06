@@ -52,8 +52,7 @@ export function bleh_native_settings() {
         header_text = header.textContent.trim();
     }
 
-    if (ff('katsune'))
-        return;
+    if (ff('katsune')) return;
 
     let edit_header = document.createElement('section');
     edit_header.classList.add('redesigned-header', 'edit-header', 'no-background');
@@ -62,7 +61,7 @@ export function bleh_native_settings() {
             <div class="tag-icon cog-icon"></div>
         </div>
         <div class="info-side">
-            <div class="sub-text">${trans_legacy[lang].settings.name}</div>
+            <div class="sub-text">${tl(trans.settings)}</div>
             <h1>${header_text}</h1>
         </div>
     `);
@@ -73,8 +72,7 @@ export function bleh_native_settings() {
 function patch_settings_profile_tab() {
     let update_picture = document.getElementById('update-picture');
 
-    if (update_picture == undefined)
-        return;
+    if (!update_picture) return;
 
     // if we can continue, we are on profile tab
     let token = document.body.querySelector('[name="csrfmiddlewaretoken"]').getAttribute('value');
@@ -114,7 +112,7 @@ function patch_settings_charts_panel(token) {
     };
 
     charts_panel.innerHTML = (`
-        <h4>${trans_legacy[lang].settings.inbuilt.charts.name}</h4>
+        <h4>${tl(trans.recent_tracks)}</h4>
         <form action="${root}settings#update-chart" name="chart-form" method="post">
             <input type="hidden" name="csrfmiddlewaretoken" value="${token}">
             <div class="inner-preview pad">
@@ -153,7 +151,7 @@ function patch_settings_charts_panel(token) {
             </div>
             <div class="select-container">
                 <div class="heading">
-                    <h5>${trans_legacy[lang].settings.inbuilt.charts.recent.count.name}</h5>
+                    <h5>${tl(trans.amount_to_display)}</h5>
                 </div>
                 <div class="select-wrap custom-selector" id="id_chart_length_recent_tracks_select">
                     ${original_chart_settings.recent.count}
@@ -162,7 +160,7 @@ function patch_settings_charts_panel(token) {
             <div class="toggle-container" id="container-recent_artwork">
                 <button class="btn reset" onclick="_reset_inbuilt_item('recent_artwork')">Reset to default</button>
                 <div class="heading">
-                    <h5>${trans_legacy[lang].settings.inbuilt.charts.recent.artwork.name}</h5>
+                    <h5>${tl(trans.recent_artwork)}</h5>
                 </div>
                 <div class="toggle-wrap">
                     <input class="companion-checkbox" type="checkbox" name="show_recent_tracks_artwork" id="inbuilt-companion-checkbox-recent_artwork">
@@ -174,8 +172,8 @@ function patch_settings_charts_panel(token) {
             <div class="toggle-container" id="container-recent_realtime">
                 <button class="btn reset" onclick="_reset_inbuilt_item('recent_realtime')">Reset to default</button>
                 <div class="heading">
-                    <h5>${trans_legacy[lang].settings.inbuilt.charts.recent.realtime.name}</h5>
-                    <p>${trans_legacy[lang].settings.inbuilt.charts.recent.realtime.bio}</p>
+                    <h5>${tl(trans.recent_realtime.name)}</h5>
+                    <p>${tl(trans.recent_realtime.body)}</p>
                 </div>
                 <div class="toggle-wrap">
                     <input class="companion-checkbox" type="checkbox" name="auto_refresh_recent_tracks" id="inbuilt-companion-checkbox-recent_realtime">
@@ -185,6 +183,7 @@ function patch_settings_charts_panel(token) {
                 </div>
             </div>
             <div class="sep"></div>
+            <h4>${tl(trans.top_artists)}</h4>
             <div class="inner-preview pad">
                 <div class="item-grid artist">
                     <div class="grid-primary artist">
@@ -245,7 +244,7 @@ function patch_settings_charts_panel(token) {
             </div>
             <div class="select-container">
                 <div class="heading">
-                    <h5>${trans_legacy[lang].settings.inbuilt.charts.artists.timeframe.name}</h5>
+                    <h5>${tl(trans.default_timeframe)}</h5>
                 </div>
                 <div class="select-wrap custom-selector" id="id_chart_range_top_artists_select">
                     ${original_chart_settings.artists.timeframe}
@@ -253,13 +252,14 @@ function patch_settings_charts_panel(token) {
             </div>
             <div class="select-container">
                 <div class="heading">
-                    <h5>${trans_legacy[lang].settings.inbuilt.charts.artists.style.name}</h5>
+                    <h5>${tl(trans.chart_style)}</h5>
                 </div>
                 <div class="select-wrap custom-selector" id="id_chart_style_and_length_top_artists_select">
                     ${original_chart_settings.artists.style}
                 </div>
             </div>
             <div class="sep"></div>
+            <h4>${tl(trans.top_albums)}</h4>
             <div class="inner-preview pad">
                 <div class="item-grid album">
                     <div class="grid-primary album">
@@ -335,6 +335,7 @@ function patch_settings_charts_panel(token) {
                 </div>
             </div>
             <div class="sep"></div>
+            <h4>${tl(trans.top_tracks)}</h4>
             <div class="inner-preview pad">
                 <div class="tracks">
                     <div class="track">
@@ -389,7 +390,7 @@ function patch_settings_charts_panel(token) {
             </div>
             <div class="select-container">
                 <div class="heading">
-                    <h5>${trans_legacy[lang].settings.inbuilt.charts.tracks.count.name}</h5>
+                    <h5>${tl(trans.amount_to_display)}</h5>
                 </div>
                 <div class="select-wrap custom-selector" id="id_chart_length_top_tracks_select">
                     ${original_chart_settings.tracks.count}
@@ -397,7 +398,7 @@ function patch_settings_charts_panel(token) {
             </div>
             <div class="settings-footer">
                 <button type="submit" class="btn-primary save">
-                    ${trans_legacy[lang].settings.save}
+                    ${tl(trans.save)}
                 </button>
                 <input type="hidden" value="chart" name="submit">
             </div>
@@ -451,12 +452,12 @@ function patch_settings_profile_panel(token, update_picture) {
     page.structure.side.appendChild(new_sidebar);
 
     update_picture.innerHTML = (`
-        <h4>${trans_legacy[lang].settings.inbuilt.profile.name}</h4>
+        <h4>${tl(trans.profile)}</h4>
         <div class="banner-preview"></div>
         <div class="profile-container">
             <div class="avatar-side">
                 <div class="avatar image-upload-preview" onclick="_open_avatar_changer('${token}')">
-                    <img src="${avatar_url}" alt="Your avatar" loading="lazy">
+                    <img src="${avatar_url}" alt="${tl(trans.your_avatar)}" loading="lazy">
                     <div class="avatar-overlay"></div>
                 </div>
             </div>
@@ -477,16 +478,16 @@ function patch_settings_profile_panel(token, update_picture) {
                         <input type="hidden" name="csrfmiddlewaretoken" value="${token}">
                         <div class="info-row">
                             <div class="title">
-                                ${trans_legacy[lang].settings.inbuilt.profile.subtitle.name}
+                                ${tl(trans.subtitle)}
                             </div>
                             <div class="input">
                                 <input type="text" name="full_name" value="${form_display_name}" maxlength="36" id="id_full_name" oninput="_update_display_name(this.value)" data-form-type="other">
-                                <div class="tip">${trans_legacy[lang].settings.inbuilt.profile.pronoun_tip}</div>
+                                <div class="tip">${tl(trans.pronoun_tip)}</div>
                             </div>
                         </div>
                         <div class="info-row">
                             <div class="title">
-                                ${trans_legacy[lang].settings.inbuilt.profile.country}
+                                ${tl(trans.country)}
                             </div>
                             <div class="input custom-selector" id="country_select">
                                 ${form_country}
@@ -494,7 +495,7 @@ function patch_settings_profile_panel(token, update_picture) {
                         </div>
                         <div class="info-row">
                             <div class="title">
-                                ${trans_legacy[lang].settings.inbuilt.profile.website}
+                                ${tl(trans.website)}
                             </div>
                             <div class="input">
                                 <input type="url" name="homepage" value="${form_website}" id="id_homepage" data-form-type="website">
@@ -502,7 +503,7 @@ function patch_settings_profile_panel(token, update_picture) {
                         </div>
                         <div class="info-row">
                             <div class="title">
-                                ${trans_legacy[lang].settings.inbuilt.profile.about}
+                                ${tl(trans.about)}
                             </div>
                             <div class="input about-me" data-bleh--show-preview="false" id="about_me">
                                 <textarea name="about_me" cols="40" rows="10" class="textarea--s" maxlength="500" id="id_about_me" oninput="_update_about_me_preview(this.value)" data-form-type="other">${form_about_me}</textarea>
@@ -512,7 +513,7 @@ function patch_settings_profile_panel(token, update_picture) {
                         <div class="save-row">
                             <div class="form-submit">
                                 <button type="submit" class="btn-primary save" data-form-type="action">
-                                    ${trans_legacy[lang].settings.save}
+                                    ${tl(trans.save)}
                                 </button>
                                 <input type="hidden" value="profile" name="submit">
                             </div>
@@ -598,7 +599,7 @@ function open_avatar_changer(token) {
                 </div>
                 <div class="modal-footer">
                     <button type="submit" class="btn-primary save" onclick="_save_avatar_changer()">
-                        ${trans_legacy[lang].settings.save}
+                        ${tl(trans.save)}
                     </button>
                     <input type="hidden" value="avatar" name="submit">
                 </div>
@@ -903,7 +904,7 @@ function patch_settings_privacy_panel(token, privacy_panel) {
             </div>
             <div class="settings-footer">
                 <button type="submit" class="btn-primary save">
-                    ${trans_legacy[lang].settings.save}
+                    ${tl(trans.save)}
                 </button>
                 <input type="hidden" value="privacy" name="submit">
             </div>

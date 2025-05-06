@@ -412,7 +412,7 @@ function page_title() {
     else if (page.type == 'user')
         name = trans_legacy[lang].profile.name;
     else if (page.type == 'bleh_settings')
-        name = trans_legacy[lang].settings.name;
+        name = tl(trans.settings);
     else if (page.type == 'events' || page.type == 'festival')
         name = trans_legacy[lang].event.name;
 

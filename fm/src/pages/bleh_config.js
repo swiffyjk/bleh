@@ -397,7 +397,7 @@ export function render_setting_page(page_id) {
                     <div class="heading content-form">
                         <div class="input-container">
                             <input type="text" maxlength="120" id="text-font" value="${settings.font}" placeholder="${trans_legacy[lang].settings.text.font.placeholder}">
-                            <button class="bleh--btn primary save" onclick="_save_font()">${trans_legacy[lang].settings.save}</button>
+                            <button class="bleh--btn primary save" onclick="_save_font()">${tl(trans.save)}</button>
                         </div>
                     </div>
                 </div>
@@ -789,7 +789,7 @@ export function render_setting_page(page_id) {
                 <div class="profile-container">
                     <div class="avatar-side small">
                         <div class="avatar">
-                            <img src="${auth.avatar.replace('/avatar42s/', '/avatar170s/')}" alt="Your avatar" loading="lazy">
+                            <img src="${auth.avatar.replace('/avatar42s/', '/avatar170s/')}" alt="${tl(trans.your_avatar)}" loading="lazy">
                         </div>
                     </div>
                     <div class="info-side">
@@ -812,7 +812,7 @@ export function render_setting_page(page_id) {
                     <div class="heading content-form">
                         <div class="input-container">
                             <input type="password" maxlength="120" id="text-api_key" value="${settings.api_key}" placeholder="${trans_legacy[lang].settings.profiles.api.placeholder}">
-                            <button class="btn primary save" onclick="_save_api_key()">${trans_legacy[lang].settings.save}</button>
+                            <button class="btn primary save" onclick="_save_api_key()">${tl(trans.save)}</button>
                             <a class="btn-add" href="${root}api/account/create" target="_blank">${trans_legacy[lang].settings.create}</a>
                         </div>
                     </div>
@@ -874,7 +874,7 @@ export function render_setting_page(page_id) {
                         <h5>${trans_legacy[lang].settings.music.profile_shortcut.placeholder}</h5>
                         <div class="input-container">
                             <input type="text" maxlength="40" id="text-profile_shortcut" value="${settings.profile_shortcut}" placeholder="${trans_legacy[lang].settings.music.profile_shortcut.header}">
-                            <button class="bleh--btn primary save" onclick="_save_profile_shortcut()">${trans_legacy[lang].settings.save}</button>
+                            <button class="bleh--btn primary save" onclick="_save_profile_shortcut()">${tl(trans.save)}</button>
                         </div>
                     </div>
                 </div>
@@ -1009,7 +1009,7 @@ export function render_setting_page(page_id) {
                             <a>${auth.name}</a>
                         </h3>
                         <span class="avatar shout-user-avatar">
-                            <img src="${auth.avatar.replace('/avatar42s/', '/avatar170s/')}" alt="Your avatar" loading="lazy">
+                            <img src="${auth.avatar.replace('/avatar42s/', '/avatar170s/')}" alt="${tl(trans.your_avatar)}" loading="lazy">
                         </span>
                         <a class="shout-permalink shout-timestamp">
                             <time datetime="2024-06-05T02:33:39+01:00" title="Wednesday 5 Jun 2024, 2:33am">
@@ -1071,7 +1071,7 @@ export function render_setting_page(page_id) {
                             <a>${auth.name}</a>
                         </h3>
                         <span class="avatar shout-user-avatar avatar--bleh-missing">
-                            <img src="" alt="Your avatar" loading="lazy">
+                            <img src="" alt="${tl(trans.your_avatar)}" loading="lazy">
                         </span>
                         <a class="shout-permalink shout-timestamp">
                             <time datetime="2024-06-05T02:33:39+01:00" title="Wednesday 5 Jun 2024, 2:33am">
@@ -2473,7 +2473,7 @@ unsafeWindow._edit_profile_note = function(username) {
     <textarea id="bleh--profile-note" placeholder="Enter a local note for this user">${profile_notes[username]}</textarea>
     <div class="modal-footer">
         <button class="btn primary save" onclick="_save_profile_note_in_window('${username}')">
-            ${trans_legacy[lang].settings.save}
+            ${tl(trans.save)}
         </button>
         <button class="btn cancel" onclick="_kill_window('edit_profile_note')">
             ${tl(trans.cancel)}

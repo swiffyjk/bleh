@@ -656,6 +656,15 @@ export const trans = {
         en: 'Recent Tracks',
         de: 'Kürzlich gespielte Titel'
     },
+    top_artists: {
+        en: 'Top Artists'
+    },
+    top_albums: {
+        en: 'Top Albums'
+    },
+    top_tracks: {
+        en: 'Top Tracks'
+    },
     you_share_count_with: {
         // as in your musical taste between you and someone else
         // you share {percentage%} (in taste) with: {list of artists}
@@ -920,6 +929,35 @@ export const trans = {
     },
     show_remaster_tags: {
         en: 'Show remaster tags'
+    },
+    recent_realtime: {
+        name: {
+            en: 'Refresh tracks automatically'
+        },
+        body: {
+            en: 'View your listening history in realtime'
+        }
+    },
+    amount_to_display: {
+        en: 'Amount to display'
+    },
+    recent_artwork: {
+        en: 'Accompany tracks with artwork'
+    },
+    default_timeframe: {
+        en: 'Default timeframe'
+    },
+    chart_style: {
+        en: 'Chart style'
+    },
+    country: {
+        en: 'Country'
+    },
+    subtitle: {
+        en: 'Subtitle'
+    },
+    pronoun_tip: {
+        en: 'When pronouns are placed first, "aka." will change to "pronouns".'
     }
 }
 

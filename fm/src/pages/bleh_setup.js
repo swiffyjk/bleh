@@ -131,7 +131,7 @@ unsafeWindow._setup_accessibility = function() {
                                     <a>${auth.name}</a>
                                 </h3>
                                 <span class="avatar shout-user-avatar avatar--bleh-missing">
-                                    <img src="" alt="Your avatar" loading="lazy">
+                                    <img src="" alt="${tl(trans.your_avatar)}" loading="lazy">
                                 </span>
                                 <a class="shout-permalink shout-timestamp">
                                     <time datetime="2024-06-05T02:33:39+01:00" title="Wednesday 5 Jun 2024, 2:33am">

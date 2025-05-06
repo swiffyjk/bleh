@@ -17,7 +17,7 @@ unsafeWindow._open_profile_shortcut_window = function() {
                 <h5>${trans_legacy[lang].settings.music.profile_shortcut.placeholder}</h5>
                 <div class="input-container">
                     <input type="text" maxlength="40" id="text-profile_shortcut" value="${settings.profile_shortcut}" placeholder="${trans_legacy[lang].settings.music.profile_shortcut.header}">
-                    <button class="bleh--btn primary save" onclick="_save_profile_shortcut()">${trans_legacy[lang].settings.save}</button>
+                    <button class="bleh--btn primary save" onclick="_save_profile_shortcut()">${tl(trans.save)}</button>
                 </div>
             </div>
         </div>

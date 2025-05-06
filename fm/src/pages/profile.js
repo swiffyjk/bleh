@@ -777,7 +777,7 @@ function create_profile_note_panel(username, has_note) {
         </div>
         <div class="actions">
             <button class="btn" onclick="_clear_profile_note('${username}')">${trans_legacy[lang].settings.clear}</button>
-            <button class="btn primary" onclick="_save_profile_note('${username}')">${trans_legacy[lang].settings.save}</button>
+            <button class="btn primary" onclick="_save_profile_note('${username}')">${tl(trans.save)}</button>
         </div>
         `);
     } else {
@@ -788,7 +788,7 @@ function create_profile_note_panel(username, has_note) {
         </div>
         <div class="actions">
             <button class="btn" onclick="_clear_profile_note('${username}')">${trans_legacy[lang].settings.clear}</button>
-            <button class="btn primary" onclick="_save_profile_note('${username}')">${trans_legacy[lang].settings.save}</button>
+            <button class="btn primary" onclick="_save_profile_note('${username}')">${tl(trans.save)}</button>
         </div>
         `);
     }
@@ -1115,7 +1115,7 @@ function profile_recents() {
                 <input type="hidden" name="csrfmiddlewaretoken" value="${page.token}">
                 <div class="select-container">
                     <div class="heading">
-                        <h5>${trans_legacy[lang].settings.inbuilt.charts.recent.count.name}</h5>
+                        <h5>${tl(trans.amount_to_display)}</h5>
                     </div>
                     <div class="select-wrap custom-selector" id="id_chart_length_recent_tracks_select">
                         ${original_chart_settings.count}
@@ -1124,7 +1124,7 @@ function profile_recents() {
                 <div class="toggle-container" id="container-recent_artwork" onclick="_update_inbuilt_item('recent_artwork')">
                     <button class="btn reset" onclick="_reset_inbuilt_item('recent_artwork')">Reset to default</button>
                     <div class="heading">
-                        <h5>${trans_legacy[lang].settings.inbuilt.charts.recent.artwork.name}</h5>
+                        <h5>${tl(trans.recent_artwork)}</h5>
                     </div>
                     <div class="toggle-wrap">
                         <input class="companion-checkbox" type="checkbox" name="show_recent_tracks_artwork" id="inbuilt-companion-checkbox-recent_artwork">
@@ -1136,8 +1136,8 @@ function profile_recents() {
                 <div class="toggle-container" id="container-recent_realtime" onclick="_update_inbuilt_item('recent_realtime')">
                     <button class="btn reset" onclick="_reset_inbuilt_item('recent_realtime')">Reset to default</button>
                     <div class="heading">
-                        <h5>${trans_legacy[lang].settings.inbuilt.charts.recent.realtime.name}</h5>
-                        <p>${trans_legacy[lang].settings.inbuilt.charts.recent.realtime.bio}</p>
+                        <h5>${tl(trans.recent_realtime.name)}</h5>
+                        <p>${tl(trans.recent_realtime.body)}</p>
                     </div>
                     <div class="toggle-wrap">
                         <input class="companion-checkbox" type="checkbox" name="auto_refresh_recent_tracks" id="inbuilt-companion-checkbox-recent_realtime">
@@ -1173,8 +1173,8 @@ function profile_recents() {
                 <div class="toggle-container" id="container-colourful_tracks" onclick="_update_item('colourful_tracks')">
                     <button class="btn reset" onclick="_reset_item('colourful_tracks')">${tl(trans.reset)}</button>
                     <div class="heading">
-                        <h5>${trans_legacy[lang].settings.customise.colourful_tracks.name}</h5>
-                        <p>${trans_legacy[lang].settings.customise.colourful_tracks.bio}</p>
+                        <h5>${tl(trans.colourful_tracks.name)}</h5>
+                        <p>${tl(trans.colourful_tracks.body)}</p>
                     </div>
                     <div class="toggle-wrap">
                         <button class="toggle" id="toggle-colourful_tracks" aria-checked="true">
@@ -1184,10 +1184,10 @@ function profile_recents() {
                 </div>
                 <div class="settings-footer">
                     <button type="submit" class="btn-primary save">
-                        ${trans_legacy[lang].settings.save}
+                        ${tl(trans.save)}
                     </button>
                     <a class="btn icon settings not-a-view-button" href="${root}bleh">
-                        ${trans_legacy[lang].settings.configure}
+                        ${tl(trans.settings)}
                     </a>
                 </div>
             `);
@@ -1280,7 +1280,7 @@ function profile_artists() {
                 <input type="hidden" name="csrfmiddlewaretoken" value="${page.token}">
                 <div class="select-container">
                     <div class="heading">
-                        <h5>${trans_legacy[lang].settings.inbuilt.charts.artists.timeframe.name}</h5>
+                        <h5>${tl(trans.default_timeframe)}</h5>
                     </div>
                     <div class="select-wrap custom-selector" id="id_chart_range_top_artists_select">
                         ${original_chart_settings.timeframe}
@@ -1288,7 +1288,7 @@ function profile_artists() {
                 </div>
                 <div class="select-container">
                     <div class="heading">
-                        <h5>${trans_legacy[lang].settings.inbuilt.charts.artists.style.name}</h5>
+                        <h5>${tl(trans.chart_style)}</h5>
                     </div>
                     <div class="select-wrap custom-selector" id="id_chart_style_top_artists_select">
                         ${original_chart_settings.style}
@@ -1312,7 +1312,7 @@ function profile_artists() {
                 </div>
                 <div class="settings-footer">
                     <button type="submit" class="btn-primary save">
-                        ${trans_legacy[lang].settings.save}
+                        ${tl(trans.save)}
                     </button>
                 </div>
             `);
@@ -1435,7 +1435,7 @@ function profile_albums() {
                 </div>
                 <div class="settings-footer">
                     <button type="submit" class="btn-primary save">
-                        ${trans_legacy[lang].settings.save}
+                        ${tl(trans.save)}
                     </button>
                 </div>
             `);
@@ -1534,7 +1534,7 @@ function profile_tracks() {
                 </div>
                 <div class="select-container">
                     <div class="heading">
-                        <h5>${trans_legacy[lang].settings.inbuilt.charts.tracks.count.name}</h5>
+                        <h5>${tl(trans.amount_to_display)}</h5>
                     </div>
                     <div class="select-wrap custom-selector" id="id_chart_length_top_tracks_select">
                         ${original_chart_settings.count}
@@ -1567,7 +1567,7 @@ function profile_tracks() {
                 </div>
                 <div class="settings-footer">
                     <button type="submit" class="btn-primary save">
-                        ${trans_legacy[lang].settings.save}
+                        ${tl(trans.save)}
                     </button>
                     <a class="btn icon settings not-a-view-button" href="${root}bleh">
                         ${trans_legacy[lang].settings.configure}
