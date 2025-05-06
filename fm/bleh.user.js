@@ -10128,17 +10128,21 @@
     update_page();
     let background = obsession_container.querySelector(".obsession-background-inner");
     background = background.style.getPropertyValue("background-image").replace('url("', "").replace('")', "");
-    register_background(background);
-    try {
-      let bg = obsession_container.style.getPropertyValue("background").replace("rgb(", "").replace(")", "").split(", ");
-      let hsl = rgb_to_hsl(parseInt(bg[0]), parseInt(bg[1]), parseInt(bg[2]));
-      document.body.style.setProperty("--hue-album", hsl.h);
-      document.body.style.setProperty("--sat-album", clamp_sat(hsl.s / 100 * 3));
-      document.body.style.setProperty("--lit-album", hsl.l / 100 + 0.35);
-      log(`sourced hsl of (${hsl.h}, ${hsl.s}, ${hsl.l}) - using final value of (${hsl.h}, ${clamp_sat(hsl.s / 100 * 3)}, ${hsl.l / 100 + 0.35})`, "hue from album");
-    } catch (e) {
-      console.error(e);
-      log("no cover present", "hue from album");
+    if (!background.endsWith("/4128a6eb29f94943c9d206c08e625904.jpg")) {
+      register_background(background);
+      try {
+        let bg = obsession_container.style.getPropertyValue("background").replace("rgb(", "").replace(")", "").split(", ");
+        let hsl = rgb_to_hsl(parseInt(bg[0]), parseInt(bg[1]), parseInt(bg[2]));
+        document.body.style.setProperty("--hue-album", hsl.h);
+        document.body.style.setProperty("--sat-album", clamp_sat(hsl.s / 100 * 3));
+        document.body.style.setProperty("--lit-album", hsl.l / 100 + 0.35);
+        log(`sourced hsl of (${hsl.h}, ${hsl.s}, ${hsl.l}) - using final value of (${hsl.h}, ${clamp_sat(hsl.s / 100 * 3)}, ${hsl.l / 100 + 0.35})`, "hue from album");
+      } catch (e) {
+        console.error(e);
+        log("no cover present", "hue from album");
+      }
+    } else {
+      register_background("");
     }
     let track_title = obsession_container.querySelector(".obsession-meta-track");
     let track_artist = obsession_container.querySelector(".obsession-meta-artist");
@@ -10198,6 +10202,9 @@
         </div>
     `;
     page.structure.container.insertBefore(redesigned_track_header, page.structure.container.firstElementChild);
+    let video = obsession_container.querySelector(".obsession-video-container");
+    if (video)
+      redesigned_track_header.after(video);
     let quote = document.createElement("section");
     quote.classList.add("obsession-quote");
     let obsession_reason = obsession_container.querySelector(".obsession-reason");
@@ -10225,6 +10232,9 @@
             </div>
         </div>
     `;
+    let manage = obsession_container.querySelector("form");
+    if (manage)
+      quote.appendChild(manage);
     page.structure.main.insertBefore(quote, page.structure.main.firstElementChild);
     let author = quote.querySelector(".obsession-author");
     let badge = patch_avatar(quote.querySelector(".avatar"), obsession_author, "", author, "bottom");
@@ -10236,25 +10246,8 @@
     }
     let related = document.createElement("section");
     related.classList.add("obsession-related");
-    let shared_users = document.body.querySelector(".fellow-obsessors");
-    if (shared_users) {
-      let header = document.createElement("h2");
-      header.textContent = tl2(trans2.shared_with_others);
-      related.appendChild(header);
-      let users = shared_users.querySelectorAll(".avatar");
-      users.forEach((user) => {
-        let name = user.querySelector("img").getAttribute("alt");
-        patch_avatar(user, name);
-      });
-      related.appendChild(shared_users);
-    }
     let other_tracks = document.body.querySelector(".other-obsessions");
     if (other_tracks) {
-      if (shared_users) {
-        let sep = document.createElement("div");
-        sep.classList.add("sep");
-        related.appendChild(sep);
-      }
       let header = document.createElement("h2");
       header.textContent = tl2(trans2.others_from_profile).replace("{user}", obsession_author);
       related.appendChild(header);
@@ -10266,6 +10259,23 @@
         more.appendChild(see_more.querySelector("a"));
         related.appendChild(more);
       }
+    }
+    let shared_users = document.body.querySelector(".fellow-obsessors");
+    if (shared_users) {
+      if (other_tracks) {
+        let sep = document.createElement("div");
+        sep.classList.add("sep");
+        related.appendChild(sep);
+      }
+      let header = document.createElement("h2");
+      header.textContent = tl2(trans2.shared_with_others);
+      related.appendChild(header);
+      let users = shared_users.querySelectorAll(".avatar");
+      users.forEach((user) => {
+        let name = user.querySelector("img").getAttribute("alt");
+        patch_avatar(user, name);
+      });
+      related.appendChild(shared_users);
     }
     quote.after(related);
   }

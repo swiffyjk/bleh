@@ -5122,6 +5122,14 @@ better than the default selector '#app a' i suppose */
         }
     }
 
+    .title-container h1:has(
+        .title + [data-bleh--tag-group="guests"]
+    ) {
+        .title {
+            margin: unset !important;
+        }
+    }
+
     .chartlist-row {
         &.chartlist-row--with-artist {
             .chartlist-name {
@@ -6790,7 +6798,7 @@ button,
 
 
 /*     ICON MASK     */
-.obsession-date:before,
+.obsession-date:before, .obsession-delete-button:before,
 .footer-links :is(a, button):before,
 .library-search-results.async-content-loading:after,
 .radio-button:after, .radio-button h4:after,
@@ -10552,7 +10560,7 @@ text[style^="color: rgb(0, 0, 0)"] {
 .track-similar-tracks {
     margin-top: 12px;
 }
-.image-overlay-playlink-link:not(#track-page-video-playlink) {
+.image-overlay-playlink-link:not(#track-page-video-playlink, .obsession-video-container .image-overlay-playlink-link) {
     display: none !important;
 }
 
@@ -11626,9 +11634,21 @@ table.table tr:nth-child(2n) td {
     .obsession-quote {
         /*--card-specific-background: hsl(var(--h3), 20%);
         --card-filter: blur(20px) saturate(160%);*/
-        background: var(--card-specific-background) !important;
-        --card-specific-background: linear-gradient(hsl(var(--b5)), hsl(var(--g4)));
-        width: 700px;
+        /*background: var(--card-specific-background) !important;
+        --card-specific-background: linear-gradient(hsl(var(--b5)), hsl(var(--g4)));*/
+        --card-specific-background: transparent;
+        box-shadow: none !important;
+        width: 600px;
+
+        position: relative;
+
+        &:before {
+            content: '';
+            position: absolute;
+            inset: -450px -300px;
+            background: radial-gradient(circle, hsla(var(--h4), 10%) 0%, transparent 65%);
+            pointer-events: none;
+        }
 
         display: flex;
         flex-direction: column;
@@ -11640,6 +11660,7 @@ table.table tr:nth-child(2n) td {
             font-size: 20px;
             line-height: 24px;
             font-weight: var(--font-weight-bold);
+            text-align: center;
 
             position: relative;
             margin-top: var(--card-padding);
@@ -11699,7 +11720,25 @@ table.table tr:nth-child(2n) td {
             }
         }
 
+        form {
+            margin: unset;
+
+            .obsession-delete-button {
+                --hue-over: var(--hue-neg);
+                --sat-over: 1;
+                --lit-over: 1;
+                --mask: var(--icon-16-trash) !important;
+            }
+        }
+
         z-index: 20;
+    }
+
+    .obsession-video-container {
+        margin: 0 auto;
+        border-radius: var(--item-big-radius);
+        box-shadow: var(--card-shadow);
+        overflow: hidden;
     }
 
     .obsession-related {
@@ -18801,7 +18840,7 @@ h4 {
             &.obsession-track-header {
                 justify-content: center;
                 /*margin: -630px 0 0 0 !important;*/
-                margin: -500px 0 50px 0 !important;
+                margin: -580px 0 0 0 !important;
 
                 .avatar-side {
                     --avatar-size: 110px !important;
@@ -21858,6 +21897,8 @@ h4 {
     }
 }
 
+
+.obsession-delete-button,
 .featured-item-manage,
 .more-items,
 .more-link-with-action a,
@@ -21887,6 +21928,7 @@ h4 {
     transition-duration: var(--trans);
     transition-timing-function: var(--trans-function);
 
+    &.obsession-delete-button,
     &.inline-add-icon {
         --left: 0;
         --right: none;
