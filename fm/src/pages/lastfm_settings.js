@@ -730,44 +730,50 @@ function bleh_communication_panel(token) {
         page.token = form.querySelector('[name="csrfmiddlewaretoken"]').getAttribute('value');
 
     panel.innerHTML = (`
-        <h4>${trans_legacy[lang].settings.inbuilt.ignore.name}</h4>
+        <h4>${tl(trans.block_list)}</h4>
         <div class="user-top-panel">
             <div class="user-top-avatar user-top-avatar-side-left"><div class="bleh-icon"></div></div>
             <img class="user-top-avatar user-top-avatar-main" src="${auth.avatar.replace('avatar42s', 'avatar300s')}" alt="${auth.name}">
             <div class="user-top-avatar user-top-avatar-side-right"><div class="bleh-icon"></div></div>
         </div>
-        <h5>${trans_legacy[lang].settings.inbuilt.ignore.consider.name}</h5>
-        <div class="to-consider">
-            <ul class="to-consider-good">
-                <li>${trans_legacy[lang].settings.inbuilt.ignore.consider.good[0]}</li>
-                <li>${trans_legacy[lang].settings.inbuilt.ignore.consider.good[1]}</li>
-                <li>${trans_legacy[lang].settings.inbuilt.ignore.consider.good[2]}</li>
-            </ul>
-            <ul class="to-consider-bad">
-                <li>${trans_legacy[lang].settings.inbuilt.ignore.consider.bad[0]}</li>
-                <li>${trans_legacy[lang].settings.inbuilt.ignore.consider.bad[1]}</li>
-            </ul>
-        </div>
-        <div class="text-container">
-            <div class="heading">
-                <h5>${trans_legacy[lang].settings.music.profile_shortcut.placeholder}</h5>
-                <form action="${root}settings/privacy#ignorelist" name="ignorelist" method="post">
-                    <input type="hidden" name="csrfmiddlewaretoken" value="${page.token}">
-                    <div class="input-container">
-                        <input type="text" maxlength="80" id="id_user" name="user" placeholder="${trans_legacy[lang].settings.music.profile_shortcut.header}">
-                        <input type="hidden" name="listaction" value="add">
-                        <input type="hidden" name="submit" value="ignorelist">
-                        <button class="bleh--btn primary icon add" type="submit">${trans_legacy[lang].settings.add}</button>
+        <div class="sides">
+            <div class="left main">
+                <div class="text-container">
+                    <div class="heading">
+                        <h5>${trans_legacy[lang].settings.music.profile_shortcut.placeholder}</h5>
+                        <form action="${root}settings/privacy#ignorelist" name="ignorelist" method="post">
+                            <input type="hidden" name="csrfmiddlewaretoken" value="${page.token}">
+                            <div class="input-container">
+                                <input type="text" maxlength="80" id="id_user" name="user" placeholder="${tl(trans.enter_username)}">
+                                <input type="hidden" name="listaction" value="add">
+                                <input type="hidden" name="submit" value="ignorelist">
+                                <button class="bleh--btn primary icon block" type="submit">${tl(trans.block)}</button>
+                            </div>
+                        </form>
                     </div>
-                </form>
+                </div>
+                <div class="alert alert-info">
+                    ${tl(trans.blocked_count).replace('{c}', amount)}
+                </div>
             </div>
-        </div>
-        <div class="alert alert-info">
-            ${trans_legacy[lang].settings.inbuilt.ignore.count.replace('{c}', amount)}
+            <div class="right">
+                <h5>${tl(trans.when_blocked)}</h5>
+                <div class="to-consider">
+                    <ul class="to-consider-good">
+                        <li>${tl(trans.blocked_user_public)}</li>
+                        <li>${tl(trans.blocked_user_message)}</li>
+                        <li>${tl(trans.blocked_user_new_shouts)}</li>
+                    </ul>
+                    <ul class="to-consider-bad">
+                        <li>${tl(trans.blocked_user_old_shouts)}</li>
+                        <li>${tl(trans.blocked_user_view_profile)}</li>
+                    </ul>
+                </div>
+            </div>
         </div>
     `);
 
-    panel.appendChild(new_list);
+    panel.querySelector('.left').appendChild(new_list);
 }
 
 function patch_settings_privacy_panel(token, privacy_panel) {

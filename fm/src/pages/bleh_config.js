@@ -873,7 +873,7 @@ export function render_setting_page(page_id) {
                     <div class="heading content-form">
                         <h5>${trans_legacy[lang].settings.music.profile_shortcut.placeholder}</h5>
                         <div class="input-container">
-                            <input type="text" maxlength="40" id="text-profile_shortcut" value="${settings.profile_shortcut}" placeholder="${trans_legacy[lang].settings.music.profile_shortcut.header}">
+                            <input type="text" maxlength="40" id="text-profile_shortcut" value="${settings.profile_shortcut}" placeholder="${tl(trans.enter_username)}">
                             <button class="bleh--btn primary save" onclick="_save_profile_shortcut()">${tl(trans.save)}</button>
                         </div>
                     </div>

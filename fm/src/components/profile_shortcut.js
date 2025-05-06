@@ -16,7 +16,7 @@ unsafeWindow._open_profile_shortcut_window = function() {
             <div class="heading content-form">
                 <h5>${trans_legacy[lang].settings.music.profile_shortcut.placeholder}</h5>
                 <div class="input-container">
-                    <input type="text" maxlength="40" id="text-profile_shortcut" value="${settings.profile_shortcut}" placeholder="${trans_legacy[lang].settings.music.profile_shortcut.header}">
+                    <input type="text" maxlength="40" id="text-profile_shortcut" value="${settings.profile_shortcut}" placeholder="${tl(trans.enter_username)}">
                     <button class="bleh--btn primary save" onclick="_save_profile_shortcut()">${tl(trans.save)}</button>
                 </div>
             </div>
@@ -41,7 +41,7 @@ export function other_listener(id) {
             <div class="heading content-form">
                 <h5>${trans_legacy[lang].settings.music.profile_shortcut.placeholder}</h5>
                 <div class="input-container">
-                    <input type="text" maxlength="40" id="text-profile" placeholder="${trans_legacy[lang].settings.music.profile_shortcut.header}">
+                    <input type="text" maxlength="40" id="text-profile" placeholder="${tl(trans.enter_username)}">
                     <button class="bleh--btn primary save" onclick="_send_other_listener('${id}')">${trans_legacy[lang].settings.done}</button>
                 </div>
             </div>

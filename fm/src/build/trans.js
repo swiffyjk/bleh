@@ -958,6 +958,36 @@ export const trans = {
     },
     pronoun_tip: {
         en: 'When pronouns are placed first, "aka." will change to "pronouns".'
+    },
+    block_list: {
+        en: 'Block list'
+    },
+    when_blocked: {
+        en: 'What happens with blocked users?'
+    },
+    blocked_count: {
+        en: 'You have blocked {c} profiles'
+    },
+    enter_username: {
+        en: 'Enter username'
+    },
+    block: {
+        en: 'Block'
+    },
+    blocked_user_public: {
+        en: 'Can leave shouts but not viewable to you'
+    },
+    blocked_user_message: {
+        en: 'Cannot direct message you'
+    },
+    blocked_user_new_shouts: {
+        en: 'Cannot leave shouts or reply to you'
+    },
+    blocked_user_old_shouts: {
+        en: 'You cannot delete pre-existing shouts on your profile'
+    },
+    blocked_user_view_profile: {
+        en: 'They can still view your profile'
     }
 }
 
