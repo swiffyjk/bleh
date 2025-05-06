@@ -636,6 +636,8 @@ export const trans = {
     },
     lotus_cta: {
         // {t} is replaced by one of the 3 above
+        // capitalisation here refers to the lotus system, which corrects
+        // titles that are capitalised wrongly eg. 'eSpReSsO' -> 'Espresso'
         true: {
             en: 'This {t} is being re-capitalised, is it correct?',
             de: '{t} wird neu großgeschrieben, ist das richtig?'
@@ -646,6 +648,7 @@ export const trans = {
         }
     },
     suggest_correction: {
+        // suggest a correction for the above system
         en: 'Suggest a correction',
         de: 'eine Korrektur vorschlagen'
     },
@@ -654,10 +657,13 @@ export const trans = {
         de: 'Kürzlich gespielte Titel'
     },
     you_share_count_with: {
+        // as in your musical taste between you and someone else
+        // you share {percentage%} (in taste) with: {list of artists}
         en: 'You share {c} with',
         de: 'Du teilst {c} mit'
     },
     message: {
+        // as in a direct message
         en: 'Message',
         de: 'Anschreiben'
     },
@@ -666,6 +672,7 @@ export const trans = {
         de: 'Werde sponsor'
     },
     message_sponsor: {
+        // rewards meaning a badge for example
         en: 'Receive sponsor rewards',
         de: 'Sponsorenprämien erhalten'
     },
@@ -684,7 +691,8 @@ export const trans = {
         }
     },
     sponsor_info: {
-        en: 'This is a special bleh-managed account to handle sponsors',
+        en: 'This is a special bleh-managed profile to handle sponsors',
+        // TODO(stel): change account (Konto) to profile
         de: 'Dies ist ein bleh verwaltetes Konto zur Verwaltung von Sponsoren'
     },
     loading: {
@@ -704,10 +712,14 @@ export const trans = {
         de: 'Sprache'
     },
     symbol_presets: {
+        // as in a selection of characters (symbols, text) that can
+        // be used when editing wikis
         en: 'Symbol presets',
         de: 'Symbol Voreinstellungen'
     },
     fancy_syntax: {
+        // hyperlink as in a link to a website or something,
+        // common internet word not sure if it translates?
         en: 'Hyperlink guide',
         de: 'Hyperlink Leitfaden'
     },
@@ -737,10 +749,12 @@ export const trans = {
         en: 'Mix'
     },
     recommended: {
+        // recommended music
         en: 'Recommended',
         de: 'Empfohlen'
     },
     listening: {
+        // used as the card header for radios and listening reports
         en: 'Listening',
         de: 'Hörverlauf'
     },
@@ -760,14 +774,18 @@ export const trans = {
         de: 'Aktivität'
     },
     grid: {
+        // as in the view mode
         en: 'Grid',
         de: 'Raster'
     },
     list: {
+        // as in the view mode
         en: 'List',
         de: 'Liste'
     },
     loved: {
+        // as in loved tracks, this can be seen
+        // in the native last.fm ui
         en: 'Loved',
         de: 'Lieblingslieder'
     },
@@ -780,6 +798,7 @@ export const trans = {
         de: 'Ausloggen'
     },
     tracklist: {
+        // please copy from native last.fm ui
         en: 'Tracklist',
         de: 'Titelliste'
     },
@@ -791,6 +810,7 @@ export const trans = {
         de: 'Aus {album}'
     },
     listens: {
+        // base on native last.fm ui
         en: 'listens',
         de: 'scrobbels',
         count: {
@@ -799,6 +819,7 @@ export const trans = {
         }
     },
     others_count: {
+        // the amount of other users
         en: '{c} others',
         de: '{c} hörer'
     },
@@ -806,7 +827,7 @@ export const trans = {
         en: 'Collecting your album plays'
     },
     fail_album_plays: {
-        en: 'You do not have any plays here'
+        en: 'No plays could be found'
     },
     open_album_as_track: {
         en: 'Open album title as track',
@@ -832,6 +853,9 @@ export const trans = {
         de: 'Abbrechen'
     },
     results_for: {
+        // used as a header above the actual search eg.
+        // Results for
+        // "random search text"
         en: 'Results for'
     },
     create_new_event: {
@@ -851,6 +875,8 @@ export const trans = {
         // this is used to replace the text and extract the
         // username, so make this text everything BUT where
         // the username goes (including spaces)
+        // you can find this text in the last.fm ui as every
+        // avatar's (except your own) alt text
         en: 'Avatar for ',
         de: 'Avatar für '
     },
@@ -859,6 +885,7 @@ export const trans = {
         en: ' by {a}'
     },
     average: {
+        // scrobble average
         en: 'Average'
     },
     from_user: {
@@ -868,6 +895,8 @@ export const trans = {
         en: 'Open in a new tab'
     },
     event_cancelled: {
+        // obviously remove the emoji or replace it as
+        // you see fit if desired
         en: 'This event has been cancelled (╥﹏╥)'
     },
     format_guest_features: {
@@ -875,7 +904,7 @@ export const trans = {
             en: 'Smart credited artists and song tags'
         },
         body: {
-            en: 'Analyses album and track titles into their individual elements of artists, versions, remixes, etc.'
+            en: 'Analyses album and track titles into their guests, versions, remixes, etc.'
         }
     },
     show_guest_features: {
@@ -883,7 +912,7 @@ export const trans = {
             en: 'Duplicate credited artists in title'
         },
         body: {
-            en: 'Any artists found are moved to the artist field only by default unless this option is enabled'
+            en: 'Otherwise guests are neatly placed next to the primary artist'
         }
     },
     track_column_view: {
