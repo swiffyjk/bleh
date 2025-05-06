@@ -10213,7 +10213,7 @@
       obsession_reason.textContent = obsession_reason_text.trim().substr(1).slice(0, -1);
     }
     let obsession_author = document.querySelector(".obsession-details-intro a").textContent;
-    let obsession_avatar = document.querySelector(".obsession-details-intro-avatar-wrap .avatar img");
+    let obsession_avatar = document.querySelector(".obsession-details-intro-avatar-wrap .avatar");
     let date = obsession_container.querySelector(".obsession-details-date-short");
     quote.innerHTML = `
         ${obsession_reason ? `
@@ -10227,9 +10227,7 @@
         `}
         <div class="sub-text">
             <div class="obsession-author">
-                <div class="avatar">
-                    ${obsession_avatar.outerHTML}
-                </div>
+                ${obsession_avatar.outerHTML}
                 <strong class="name">${obsession_author}</strong>
                 <a class="link-block-cover-link" href="${root}user/${obsession_author}"></a>
             </div>
@@ -10243,11 +10241,9 @@
       quote.appendChild(manage);
     page.structure.main.insertBefore(quote, page.structure.main.firstElementChild);
     let author = quote.querySelector(".obsession-author");
-    let badge = patch_avatar(quote.querySelector(".avatar"), obsession_author, "", author, "bottom");
+    let badge = patch_avatar(obsession_avatar, obsession_author, "", author, "bottom");
     if (badge.type) {
       author.classList.add("colourful");
-      if (badge.type == "avatar-status-dot--staff")
-        author.classList.add("staff-user");
       author.classList.add(`user-status--bleh-${badge.type}`, `user-status--bleh-user-${obsession_author}`);
     }
     let related = document.createElement("section");
