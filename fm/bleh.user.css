@@ -18809,6 +18809,12 @@ h4 {
 
                 .info-side {
                     flex: unset;
+
+                    h2,
+                    .sub-text,
+                    .title-container {
+                        justify-content: center;
+                    }
                 }
             }
         }

@@ -111,10 +111,10 @@ export function patch_obsession_view() {
     let redesigned_track_header = document.createElement('section');
     redesigned_track_header.classList.add('redesigned-header', 'redesigned-track-header', 'no-background', 'obsession-track-header');
     redesigned_track_header.innerHTML = (`
-        <div class="avatar-side">
+        <!--<div class="avatar-side">
             <img src="${background.replace('/ar0/', '/avatar170s/')}">
             <a class="bleh--avatar-clickable-link"></a>
-        </div>
+        </div>-->
         <div class="info-side">
             <div class="sub-text">${tl(trans.obsession)}</div>
             <div class="title-container">
@@ -127,7 +127,7 @@ export function patch_obsession_view() {
     page.structure.container.insertBefore(redesigned_track_header, page.structure.container.firstElementChild);
 
 
-    let avatar_side = redesigned_track_header.querySelector('.avatar-side');
+    /*let avatar_side = redesigned_track_header.querySelector('.avatar-side');
     let avatar_link = avatar_side.querySelector('a');
 
     let expand_link = `_expand_avatar('${background}')`;
@@ -158,7 +158,7 @@ export function patch_obsession_view() {
         }
     });
 
-    register_menu(avatar_side, menu);
+    register_menu(avatar_side, menu);*/
 
 
     let quote = document.createElement('section');

@@ -10185,10 +10185,10 @@
     let redesigned_track_header = document.createElement("section");
     redesigned_track_header.classList.add("redesigned-header", "redesigned-track-header", "no-background", "obsession-track-header");
     redesigned_track_header.innerHTML = `
-        <div class="avatar-side">
+        <!--<div class="avatar-side">
             <img src="${background.replace("/ar0/", "/avatar170s/")}">
             <a class="bleh--avatar-clickable-link"></a>
-        </div>
+        </div>-->
         <div class="info-side">
             <div class="sub-text">${tl2(trans2.obsession)}</div>
             <div class="title-container">
@@ -10198,34 +10198,6 @@
         </div>
     `;
     page.structure.container.insertBefore(redesigned_track_header, page.structure.container.firstElementChild);
-    let avatar_side = redesigned_track_header.querySelector(".avatar-side");
-    let avatar_link = avatar_side.querySelector("a");
-    let expand_link = `_expand_avatar('${background}')`;
-    avatar_link.setAttribute("onclick", expand_link);
-    let menu = tippy(avatar_side, {
-      theme: "context-menu",
-      content: `
-            <button class="dropdown-menu-clickable-item" onclick="${expand_link}" data-menu-item="expand">
-                ${trans_legacy[lang].gallery.open.name}
-            </button>
-            <div class="sep"></div>
-            <a class="dropdown-menu-clickable-item" href="${root}bleh?tab=customise" data-menu-item="settings">
-                ${trans_legacy[lang].settings.configure}
-            </a>
-        `,
-      allowHTML: true,
-      placement: "right-start",
-      trigger: "manual",
-      interactive: true,
-      interactiveBorder: 10,
-      offset: [0, 0],
-      onShow(instance) {
-        instance.popper.addEventListener("click", (event2) => {
-          instance.hide();
-        });
-      }
-    });
-    register_menu(avatar_side, menu);
     let quote = document.createElement("section");
     quote.classList.add("obsession-quote");
     let obsession_reason = obsession_container.querySelector(".obsession-reason");
