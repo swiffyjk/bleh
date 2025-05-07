@@ -21963,6 +21963,8 @@ h4 {
 
 
 .cta {
+    background: var(--card-specific-background);
+    border-radius: var(--card-radius);
     --card-specific-background: hsl(var(--h4), 8%);
     padding: 15px var(--card-padding) !important;
     box-shadow: unset !important;
@@ -21990,6 +21992,10 @@ h4 {
         order: -1;
     }
 
+    &.margin-bottom {
+        margin-bottom: var(--card-gap);
+    }
+
     &.error {
         --hue-over: var(--hue-neg);
         --sat-over: 1;
@@ -21998,6 +22004,11 @@ h4 {
         strong {
             color: hsl(var(--l3-c));
         }
+    }
+
+    &.sponsor {
+        padding-left: calc(var(--card-padding) + 18px + var(--card-gap)) !important;
+        --left: var(--card-padding);
     }
 }
 

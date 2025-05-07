@@ -693,6 +693,9 @@ export const trans = {
         en: 'Receive sponsor rewards',
         de: 'Sponsorenprämien erhalten'
     },
+    news_sponsor_cta: {
+        en: 'Want to support future development of bleh?'
+    },
     obsess: {
         en: 'Obsess'
     },
@@ -1041,6 +1044,9 @@ export const trans = {
     },
     finding_your_tracks: {
         en: 'Finding your tracks'
+    },
+    news_from_user: {
+        en: 'News from {user}'
     }
 }
 

@@ -1865,6 +1865,9 @@
       en: "Receive sponsor rewards",
       de: "Sponsorenpr\xE4mien erhalten"
     },
+    news_sponsor_cta: {
+      en: "Want to support future development of bleh?"
+    },
     obsess: {
       en: "Obsess"
     },
@@ -2213,6 +2216,9 @@
     },
     finding_your_tracks: {
       en: "Finding your tracks"
+    },
+    news_from_user: {
+      en: "News from {user}"
     }
   };
   var trans_legacy = {
@@ -12288,6 +12294,10 @@
         </ul>
     `;
     page.structure.side.innerHTML = `
+        <div class="cta first sponsor">
+            <strong>${tl(trans.news_sponsor_cta)}</strong>
+            <a class="see-more" onclick="_sponsor()">${tl(trans.sponsor)}</a>
+        </div>
         <section class="view-all-panel">
             <button class="btn view-all-button import" onclick="_import_settings()">
                 ${tl(trans.import)}
@@ -16845,9 +16855,12 @@
   function open_changelog(changelog) {
     let window2 = dialog({
       id: "changelog",
-      title: trans_legacy[lang].changelog.name,
-      subtitle: trans_legacy[lang].changelog.subtitle.replace("{u}", `<a class="mention" href="${root}user/cutensilly">@cutensilly</a>`),
+      title: tl(trans.news_from_user).replace("{user}", `<a class="mention" href="${root}user/cutensilly">@cutensilly</a>`),
       body: `
+            <div class="cta first sponsor margin-bottom">
+                <strong>${tl(trans.news_sponsor_cta)}</strong>
+                <a class="see-more" onclick="_sponsor()">${tl(trans.sponsor)}</a>
+            </div>
             <div class="changelog-list"></div>
             <div class="modal-footer">
                 <a class="btn primary skip" href="#latest_major_release">
@@ -17701,7 +17714,7 @@
             </a>
             ` : ""}
             <button class="dropdown-menu-clickable-item sponsor" onclick="_sponsor()">
-                ${trans_legacy[lang].settings.home.sponsor.name}<div class="new-badge">${tl(trans.new)}</div>
+                ${trans_legacy[lang].settings.home.sponsor.name}
             </button>
             <a class="dropdown-menu-clickable-item issues" href="https://github.com/katelyynn/bleh/issues" target="_blank">
                 ${trans_legacy[lang].settings.home.issues.name}

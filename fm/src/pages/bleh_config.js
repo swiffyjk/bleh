@@ -90,6 +90,10 @@ export function bleh_settings() {
     `);
 
     page.structure.side.innerHTML = (`
+        <div class="cta first sponsor">
+            <strong>${tl(trans.news_sponsor_cta)}</strong>
+            <a class="see-more" onclick="_sponsor()">${tl(trans.sponsor)}</a>
+        </div>
         <section class="view-all-panel">
             <button class="btn view-all-button import" onclick="_import_settings()">
                 ${tl(trans.import)}
