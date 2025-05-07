@@ -15912,9 +15912,7 @@ trying to list every song ever made by someone identifying as a female, which is
 
             .save-row {
                 display: flex;
-                padding-top: var(--card-gap);
-                border-top: var(--card-border);
-                justify-content: end;
+                justify-content: start;
                 gap: var(--button-list-gap);
             }
         }
