@@ -321,19 +321,19 @@ a,
     --l3: var(--hue), calc(var(--sat) * 60%), calc(var(--lit) * 70%);
     --l4: var(--hue), calc(var(--sat) * 70%), calc(var(--lit) * 50%);
 
-    --l2-c: var(--hue), calc(clamp(min(0.5), var(--sat), max(1.5)) * 40%), calc(clamp(min(0.5), var(--lit), max(1.5)) * 83%);
-    --l3-c: var(--hue), calc(clamp(min(0.5), var(--sat), max(1.5)) * 50%), calc(clamp(min(0.5), var(--lit), max(1.5)) * 70%);
-    --l3-c-sat: calc(clamp(min(0.5), var(--sat), max(1.5)) * 50%);
+    --l2-c: var(--hue), calc(clamp(min(0), var(--sat), max(1.5)) * 40%), calc(clamp(min(0.5), var(--lit), max(1.5)) * 83%);
+    --l3-c: var(--hue), calc(clamp(min(0), var(--sat), max(1.5)) * 50%), calc(clamp(min(0.5), var(--lit), max(1.5)) * 70%);
+    --l3-c-sat: calc(clamp(min(0), var(--sat), max(1.5)) * 50%);
     --l3-c-lit: calc(clamp(min(0.5), var(--lit), max(1.5)) * 70%);
-    --l4-c: var(--hue), calc(clamp(min(0.5), var(--sat), max(1.5)) * 60%), calc(clamp(min(0.5), var(--lit), max(1.5)) * 50%);
+    --l4-c: var(--hue), calc(clamp(min(0), var(--sat), max(1.5)) * 60%), calc(clamp(min(0.5), var(--lit), max(1.5)) * 50%);
 
     --h2: var(--l2-c);
     --h3: var(--l3-c);
     --h3-s: var(--hue), 50%, 70%;
-    --h3-sat: calc(clamp(min(0.5), var(--sat), max(1.5)) * 60%);
+    --h3-sat: calc(clamp(min(0), var(--sat), max(1.5)) * 60%);
     --h3-lit: calc(clamp(min(0.5), var(--lit), max(1.5)) * 70%);
     --h4: var(--l4-c);
-    --g4: var(--hue), calc(clamp(min(0.5), var(--sat), max(1.5)) * 60%), calc(clamp(min(0.5), var(--lit), max(1.5)) * 15%);
+    --g4: var(--hue), calc(clamp(min(0), var(--sat), max(1.5)) * 60%), calc(clamp(min(0.5), var(--lit), max(1.5)) * 15%);
 
     /* l2-c in dark modes, l4-c in light modes */
     --l2-c-theme-switch: var(--l2-c);
@@ -356,18 +356,18 @@ a,
         --l3: var(--hue), calc(var(--sat) * 50%), calc(var(--lit) * 75%);
         --l4: var(--hue), calc(var(--sat) * 60%), calc(var(--lit) * 45%);
 
-        --l3-c: var(--hue), calc(clamp(min(0.5), var(--sat), max(1.5)) * 50%), calc(clamp(min(0.5), var(--lit), max(1.5)) * 70%);
-        --l3-c-sat: calc(clamp(min(0.5), var(--sat), max(1.5)) * 50%);
+        --l3-c: var(--hue), calc(clamp(min(0), var(--sat), max(1.5)) * 50%), calc(clamp(min(0.5), var(--lit), max(1.5)) * 70%);
+        --l3-c-sat: calc(clamp(min(0), var(--sat), max(1.5)) * 50%);
         --l3-c-lit: calc(clamp(min(0.5), var(--lit), max(1.5)) * 70%);
-        --l4-c: var(--hue), calc(clamp(min(0.5), var(--sat), max(1.5)) * 60%), calc(clamp(min(0.5), var(--lit), max(1.5)) * 45%);
+        --l4-c: var(--hue), calc(clamp(min(0), var(--sat), max(1.5)) * 60%), calc(clamp(min(0.5), var(--lit), max(1.5)) * 45%);
 
         --h2: var(--l2-c);
         --h3: var(--l3-c);
         --h3-s: var(--hue), 50%, 70%;
-        --h3-sat: calc(clamp(min(0.5), var(--sat), max(1.5)) * 50%);
+        --h3-sat: calc(clamp(min(0), var(--sat), max(1.5)) * 50%);
         --h3-lit: calc(clamp(min(0.5), var(--lit), max(1.5)) * 70%);
         --h4: var(--l4-c);
-        --g4: var(--hue), calc(clamp(min(0.5), var(--sat), max(1.5)) * 60%), calc(clamp(min(0.5), var(--lit), max(1.5)) * 10%);
+        --g4: var(--hue), calc(clamp(min(0), var(--sat), max(1.5)) * 60%), calc(clamp(min(0.5), var(--lit), max(1.5)) * 10%);
 
         --avatar-generic-background: hsl(var(--b6));
     }
@@ -384,18 +384,18 @@ a,
         --l3: var(--hue), calc(var(--sat) * 50%), calc(var(--lit) * 40%);
         --l4: var(--hue), calc(var(--sat) * 60%), calc(var(--lit) * 22%);
 
-        --l2-c: var(--hue), calc(clamp(min(0.5), var(--sat), max(1.5)) * 40%), calc(clamp(min(0.7), var(--lit), max(1.1)) * 63%);
-        --l3-c: var(--hue), calc(clamp(min(0.5), var(--sat), max(1.5)) * 50%), calc(clamp(min(0.7), var(--lit), max(1.1)) * 30%);
-        --l3-c-sat: calc(clamp(min(0.5), var(--sat), max(1.5)) * 50%);
+        --l2-c: var(--hue), calc(clamp(min(0), var(--sat), max(1.5)) * 40%), calc(clamp(min(0.7), var(--lit), max(1.1)) * 63%);
+        --l3-c: var(--hue), calc(clamp(min(0), var(--sat), max(1.5)) * 50%), calc(clamp(min(0.7), var(--lit), max(1.1)) * 30%);
+        --l3-c-sat: calc(clamp(min(0), var(--sat), max(1.5)) * 50%);
         --l3-c-lit: calc(clamp(min(0.5), var(--lit), max(1.1)) * 40%);
-        --l4-c: var(--hue), calc(clamp(min(0.5), var(--sat), max(1.5)) * 60%), calc(clamp(min(0.7), var(--lit), max(1.1)) * 22%);
+        --l4-c: var(--hue), calc(clamp(min(0), var(--sat), max(1.5)) * 60%), calc(clamp(min(0.7), var(--lit), max(1.1)) * 22%);
 
-        --h3: var(--hue), calc(clamp(min(0.5), var(--sat), max(1.5)) * 50%), calc(clamp(min(0.7), var(--lit), max(1.1)) * 80%);
+        --h3: var(--hue), calc(clamp(min(0), var(--sat), max(1.5)) * 50%), calc(clamp(min(0.7), var(--lit), max(1.1)) * 80%);
         --h3-s: var(--hue), 50%, 70%;
-        --h3-sat: calc(clamp(min(0.5), var(--sat), max(1.5)) * 50%);
+        --h3-sat: calc(clamp(min(0), var(--sat), max(1.5)) * 50%);
         --h3-lit: calc(clamp(min(0.5), var(--lit), max(1.1)) * 80%);
-        --h4: var(--hue), calc(clamp(min(0.5), var(--sat), max(1.5)) * 60%), calc(clamp(min(0.7), var(--lit), max(1.1)) * 65%);
-        --g4: var(--hue), calc(clamp(min(0.5), var(--sat), max(1.5)) * 70%), 92%;
+        --h4: var(--hue), calc(clamp(min(0), var(--sat), max(1.5)) * 60%), calc(clamp(min(0.7), var(--lit), max(1.1)) * 65%);
+        --g4: var(--hue), calc(clamp(min(0), var(--sat), max(1.5)) * 70%), 92%;
 
         /* l2-c in dark modes, l4-c in light modes */
         --l2-c-theme-switch: var(--l4-c);
@@ -419,18 +419,18 @@ a,
         --l3: var(--hue), calc(var(--sat) * 50%), calc(var(--lit) * 40%);
         --l4: var(--hue), calc(var(--sat) * 60%), calc(var(--lit) * 22%);
 
-        --l2-c: var(--hue), calc(clamp(min(0.5), var(--sat), max(1.5)) * 40%), calc(clamp(min(0.7), var(--lit), max(1.1)) * 63%);
-        --l3-c: var(--hue), calc(clamp(min(0.5), var(--sat), max(1.5)) * 50%), calc(clamp(min(0.7), var(--lit), max(1.1)) * 30%);
-        --l3-c-sat: calc(clamp(min(0.5), var(--sat), max(1.5)) * 50%);
+        --l2-c: var(--hue), calc(clamp(min(0), var(--sat), max(1.5)) * 40%), calc(clamp(min(0.7), var(--lit), max(1.1)) * 63%);
+        --l3-c: var(--hue), calc(clamp(min(0), var(--sat), max(1.5)) * 50%), calc(clamp(min(0.7), var(--lit), max(1.1)) * 30%);
+        --l3-c-sat: calc(clamp(min(0), var(--sat), max(1.5)) * 50%);
         --l3-c-lit: calc(clamp(min(0.5), var(--lit), max(1.1)) * 40%);
-        --l4-c: var(--hue), calc(clamp(min(0.5), var(--sat), max(1.5)) * 60%), calc(clamp(min(0.7), var(--lit), max(1.1)) * 22%);
+        --l4-c: var(--hue), calc(clamp(min(0), var(--sat), max(1.5)) * 60%), calc(clamp(min(0.7), var(--lit), max(1.1)) * 22%);
 
-        --h3: var(--hue), calc(clamp(min(0.5), var(--sat), max(1.5)) * 37%), calc(clamp(min(0.7), var(--lit), max(1.1)) * 66%);
+        --h3: var(--hue), calc(clamp(min(0), var(--sat), max(1.5)) * 37%), calc(clamp(min(0.7), var(--lit), max(1.1)) * 66%);
         --h3-s: var(--hue), 50%, 70%;
-        --h3-sat: calc(clamp(min(0.5), var(--sat), max(1.5)) * 50%);
+        --h3-sat: calc(clamp(min(0), var(--sat), max(1.5)) * 50%);
         --h3-lit: calc(clamp(min(0.5), var(--lit), max(1.1)) * 80%);
-        --h4: var(--hue), calc(clamp(min(0.5), var(--sat), max(1.5)) * 30%), calc(clamp(min(0.7), var(--lit), max(1.1)) * 55%);
-        --g4: var(--hue), calc(clamp(min(0.5), var(--sat), max(1.5)) * 25%), 75%;
+        --h4: var(--hue), calc(clamp(min(0), var(--sat), max(1.5)) * 30%), calc(clamp(min(0.7), var(--lit), max(1.1)) * 55%);
+        --g4: var(--hue), calc(clamp(min(0), var(--sat), max(1.5)) * 25%), 75%;
 
         /* l2-c in dark modes, l4-c in light modes */
         --l2-c-theme-switch: var(--l4-c);
