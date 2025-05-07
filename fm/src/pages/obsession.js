@@ -203,9 +203,11 @@ export function patch_obsession_view() {
                 <strong class="name">${obsession_author}</strong>
                 <a class="link-block-cover-link" href="${root}user/${obsession_author}"></a>
             </div>
+            ${(scrobbles) ? (`
             <div class="obsession-listens">
                 ${scrobbles.innerHTML}
             </div>
+            `) : ''}
             <div class="obsession-date">
                 ${date.textContent}
             </div>
