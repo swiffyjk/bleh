@@ -15901,6 +15901,8 @@ trying to list every song ever made by someone identifying as a female, which is
                         .tip {
                             color: hsl(var(--c3));
                             font-size: 13px;
+                            width: fit-content;
+                            cursor: default;
                         }
 
                         &.about-me {
