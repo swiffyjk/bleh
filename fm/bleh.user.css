@@ -18148,7 +18148,7 @@ h4 {
             --shadow: var(--card-shadow);
             min-width: 48px;
             height: 48px;
-            --padding: var(--card-gap) var(--card-padding) var(--card-gap) calc(var(--card-padding) + 18px + 6px);
+            --padding: var(--card-gap) var(--card-padding) var(--card-gap) calc(var(--card-padding) + 18px + var(--card-gap));
             --left: var(--card-padding);
             --mask: var(--icon-16-gallery-vertical);
             text-align: left;
