@@ -99,6 +99,9 @@ function open_changelog(changelog) {
         if (version == 'updated' || version == 'latest')
             continue;
 
+        if (index > 10)
+            continue;
+
         let version_item = document.createElement('div');
         version_item.classList.add('changelog-version-item');
         version_item.setAttribute('data-changelog-type', changelog[version].type);

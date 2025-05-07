@@ -1811,7 +1811,7 @@ last.fm changes as of 2024-05-20 */
 
     position: relative;
 
-    &:not(#current-subscription, .featured-item-panel, .obsession-quote, #current-subscription, .shh, .view-all-panel, .metadata-list, .bleh--profile-note-panel) {
+    &:not(#current-subscription, .featured-item-panel, .bleh--panel.lotus, .obsession-quote, #current-subscription, .shh, .view-all-panel, .metadata-list, .bleh--profile-note-panel) {
         background-image: var(--cards-overlay-image, unset) !important;
         background-repeat: repeat-x !important;
         background-position: unset !important;
@@ -4097,6 +4097,7 @@ h4,
 h3 {
     font-weight: var(--font-weight-bold);
     margin: unset;
+    cursor: default;
 }
 
 
@@ -6815,6 +6816,7 @@ button,
 
 
 /*     ICON MASK     */
+.lotus-preview .before:before,
 .masthead-popup-text .btn-primary:before,
 .obsession-pagination a:before,
 .obsession-date:before, .obsession-delete-button:before,
@@ -13660,6 +13662,10 @@ h2.playlisting-create-option-title {
         &[data-type="text"] {
             --mask: var(--icon-16-setting-text);
         }
+
+        &:hover {
+            text-decoration: underline !important;
+        }
     }
 }
 
@@ -13868,7 +13874,12 @@ pre {
     .actions {
         display: flex;
         align-items: center;
+        width: 100%;
         gap: 6px;
+
+        .fill {
+            flex: 1;
+        }
 
         .action {
             --btn-left: calc(18px + 12px + 6px);
@@ -22055,6 +22066,7 @@ h4 {
     transition-duration: var(--trans);
     transition-timing-function: var(--trans-function);
 
+    &.update-check,
     &.obsession-delete-button,
     &.inline-add-icon {
         --left: 0;
@@ -22065,6 +22077,9 @@ h4 {
     }
     &.more-items {
         --mask: var(--icon-16-arrow-down);
+    }
+    &.update-check {
+        --mask: var(--icon-16-refresh);
     }
 
     &:hover {
@@ -22232,6 +22247,42 @@ h4 {
         &.main {
             width: 400px;
             flex-shrink: 0;
+        }
+    }
+}
+
+
+.bleh--panel.lotus {
+    background: var(--card-specific-background) !important;
+    --card-specific-background:
+    linear-gradient(hsl(var(--b5)), hsl(var(--g4))) padding-box,
+    linear-gradient(0deg, hsla(var(--l3-c), 80%) 0%, hsl(var(--b5)) 100%) border-box;
+    border: 2px solid transparent !important;
+    padding: calc(var(--card-padding) - 2px) !important;
+}
+.lotus-preview {
+    display: flex;
+    gap: calc(20px + 24px);
+    justify-content: center;
+
+    .before {
+        position: relative;
+        --left: none;
+        --right: -34px;
+        --margin-top: -12px;
+        --mask-size: 24px;
+        --mask: var(--icon-16-arrow-right);
+    }
+
+    div {
+        h2 {
+            margin: unset !important;
+        }
+
+        &.before {
+            h1, h2 {
+                opacity: 0.8;
+            }
         }
     }
 }

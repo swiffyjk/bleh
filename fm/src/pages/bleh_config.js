@@ -1300,37 +1300,27 @@ export function render_setting_page(page_id) {
                 </div>
             </div>
             <div class="bleh--panel lotus">
-                <h4>${trans_legacy[lang].lotus.version
-                .replace('lotus', `<a class="lotus lotus-name" href="https://github.com/katelyynn/lotus" target="_blank" id="lotus_hover">lotus</a>`)
-                .replace('{v}', `<span class="version-link lotus">${(artist_corrections.version >= album_track_corrections.version) ? artist_corrections.version : album_track_corrections.version}</span>`)}</h4>
-                <p>${trans_legacy[lang].settings.corrections.bio}</p>
-                <!--<div class="screen-row actions-only">
-                    <div class="actions">
-                        <a class="btn action" href="https://github.com/katelyynn/bleh/issues/new/choose" target="_blank">
-                            <div class="icon bleh--correction"></div>
-                            <span class="text">
-                                <h5>${trans_legacy[lang].settings.corrections.submit.name}</h5>
-                            </span>
-                        </a>
-                        <button class="btn action" onclick="_open_correction_modal()">
-                            <div class="icon bleh--correction_modal"></div>
-                            <span class="text">
-                                <h5>${trans_legacy[lang].settings.corrections.view.name}</h5>
-                            </span>
-                        </button>
+                <h4>${tl(trans.brand_version_number)
+                .replace('{brand}', `<a class="lotus lotus-name" href="https://github.com/katelyynn/lotus" target="_blank">lotus</a>`)
+                .replace('{number}', `<span class="version-link lotus">${(artist_corrections.version >= album_track_corrections.version) ? artist_corrections.version : album_track_corrections.version}</span>`)}</h4>
+                <p>${tl(trans.what_is_lotus)}</p>
+                <div class="inner-preview pad">
+                    <div class="lotus-preview">
+                        <div class="before">
+                            <h1>mY aNtI-aIrCrAfT fRiEnD</h1>
+                            <h2>jUlIe</h2>
+                        </div>
+                        <div class="after">
+                            <h1>my anti-aircraft friend</h1>
+                            <h2>julie</h2>
+                        </div>
                     </div>
-                </div>-->
+                </div>
                 <div class="screen-row actions-only">
                     <div class="actions">
-                        <a class="btn primary external lotus" href="https://github.com/katelyynn/lotus/issues/new/choose" target="_blank">
-                            ${trans_legacy[lang].settings.corrections.submit.name}
-                        </a>
-                        <button class="btn continue" onclick="_open_correction_modal()">
-                            ${trans_legacy[lang].settings.corrections.view.name}
-                        </button>
-                        <button class="btn continue" onclick="_lotus_check()">
-                            ${trans_legacy[lang].lotus.check}
-                        </button>
+                        <button class="see-more update-check" onclick="_lotus_check()">${tl(trans.update_check)}</button>
+                        <div class="fill"></div>
+                        <button class="see-more" onclick="_open_correction_modal()">${tl(trans.view_all)}</button>
                     </div>
                 </div>
                 <div class="toggle-container" id="container-corrections" onclick="_update_item('corrections')">
@@ -1342,6 +1332,16 @@ export function render_setting_page(page_id) {
                         <button class="toggle lotus" id="toggle-corrections" aria-checked="true">
                             <div class="dot"></div>
                         </button>
+                    </div>
+                </div>
+                <div class="toggle-container">
+                    <div class="heading">
+                        <h5>${tl(trans.help_contribute)}</h5>
+                    </div>
+                    <div class="toggle-wrap">
+                        <a class="see-more" href="https://github.com/katelyynn/lotus/issues/new/choose" target="_blank">
+                            ${tl(trans.suggest_correction)}
+                        </a>
                     </div>
                 </div>
             </div>
@@ -1693,11 +1693,6 @@ function change_settings_page(page_id, setting = null) {
         prepare_language_page();
 
     if (page_id == 'music') {
-        tippy(document.getElementById('lotus_hover'), {
-            content: trans_legacy[lang].lotus.tooltip.replace('lotus', '<span class="lotus lotus-name lotus-name-small">lotus</span>'),
-            allowHTML: true
-        });
-
         tippy(document.getElementById('container-show_bulk_edit_album'), {
             content: trans_legacy[lang].settings.music.show_bulk_edit_album.require
         });

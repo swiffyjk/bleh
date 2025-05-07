@@ -1054,6 +1054,25 @@ export const trans = {
     },
     news_from_user: {
         en: 'News from {user}'
+    },
+    update_check: {
+        en: 'Check for updates'
+    },
+    brand_version_number: {
+        // used for the lotus header where:
+        // brand = "lotus"
+        // number = "2025.0507"
+        // making: 'lotus version 2025.0507'
+        en: '{brand} version {number}'
+    },
+    what_is_lotus: {
+        en: 'A capitalisation correction system for artists, albums, and tracks - all powered by community contributions.'
+    },
+    view_all: {
+        en: 'View all'
+    },
+    help_contribute: {
+        en: 'Help contribute'
     }
 }
 
