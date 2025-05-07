@@ -6816,6 +6816,7 @@ button,
 
 
 /*     ICON MASK     */
+.markdown-enabled:before,
 .lotus-preview .before:before,
 .masthead-popup-text .btn-primary:before,
 .obsession-pagination a:before,
@@ -11326,6 +11327,9 @@ table.table tr:nth-child(2n) td {
 .bleh--about-me-preview {
     width: 358px;
 }
+#id_about_me {
+    height: 230px;
+}
 
 
 
@@ -14608,7 +14612,7 @@ input[type="range"]::-moz-range-progress {
     }
 
     p {
-        color: hsl(var(--c2), 60%);
+        color: hsl(var(--c3));
         font-size: 13px;
     }
 }
@@ -15864,31 +15868,26 @@ trying to list every song ever made by someone identifying as a female, which is
         gap: var(--card-gap);
 
         .sub-info {
-            padding: var(--card-gap);
-            background-color: hsla(var(--b6), 60%);
-            border-radius: var(--card-radius);
-
-            [data-bleh--theme="oled"] &,
-            [data-bleh--theme_type="light"] & {
-                background-color: transparent;
-                border: var(--card-border);
-            }
-
             form {
                 display: flex;
                 flex-direction: column;
                 gap: var(--card-gap);
+            }
+
+            .info-grid {
+                display: grid;
+                grid-template-columns: repeat(auto-fill, minmax(358px, 1fr));
+                gap: var(--card-gap);
 
                 .info-row {
                     display: flex;
-                    gap: var(--card-gap);
+                    flex-direction: column;
+                    gap: 6px;
 
                     .title {
-                        width: 120px;
-                        height: 32px;
                         display: flex;
                         align-items: center;
-                        color: hsl(var(--c3));
+                        color: hsl(var(--c2));
                         font-weight: var(--font-weight-medium);
                         cursor: default;
                     }
@@ -15897,38 +15896,26 @@ trying to list every song ever made by someone identifying as a female, which is
                         flex-direction: column;
                         gap: var(--button-list-gap);
                         flex: 1;
+                        width: 358px;
 
                         .tip {
                             color: hsl(var(--c3));
-                            font-size: var(--font-size-sm);
-                            line-height: var(--line-height-sm);
+                            font-size: 13px;
                         }
 
                         &.about-me {
                             display: flex;
-
-                            &[data-bleh--show-preview="false"] {
-                                .bleh--about-me-preview-only,
-                                span {
-                                    display: none;
-                                }
-                            }
-                            &[data-bleh--show-preview="true"] {
-                                textarea {
-                                    display: none;
-                                }
-                            }
                         }
                     }
                 }
+            }
 
-                .save-row {
-                    display: flex;
-                    padding-top: var(--card-gap);
-                    border-top: var(--card-border);
-                    justify-content: end;
-                    gap: var(--button-list-gap)
-                }
+            .save-row {
+                display: flex;
+                padding-top: var(--card-gap);
+                border-top: var(--card-border);
+                justify-content: end;
+                gap: var(--button-list-gap);
             }
         }
     }
@@ -17406,9 +17393,9 @@ h4 {
 .taste-badge,
 .new-badge {
     display: inline-flex;
-    background-color: hsl(var(--h4), 40%);
-    box-shadow: 0 0 20px hsl(var(--h4), 40%);
-    color: hsl(var(--l2-c-theme-switch));
+    background-color: hsl(var(--h3));
+    box-shadow: 0 3px 12px hsl(var(--h4), 32%);
+    color: hsl(var(--b7));
 
     font-size: var(--font-size-sm);
     font-weight: var(--font-weight-medium);
@@ -22304,5 +22291,15 @@ h4 {
             }
         }
     }
+}
+
+
+.markdown-enabled {
+    position: relative;
+    padding-left: calc(12px + 4px);
+    --mask-size: 12px;
+    --left: 0;
+    --margin-top: -6px;
+    --mask: var(--icon-16-setting-text);
 }
 }

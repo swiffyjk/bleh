@@ -1755,7 +1755,7 @@
       de: "\xDCber mich (preview)"
     },
     markdown_tip: {
-      en: "This textbox supports markdown such as line breaks, bold text, italics, underlines, and more. You can embed images using ![alt text](link). Beware that to non-bleh users it will not appear fancy."
+      en: 'You can use line breaks, bold text, italics, underlines, images, and headers visible to other bleh users. Images are created via ![alt text](link), make the alt text "banner" to apply a profile banner.'
     },
     find_on: {
       en: "Find on"
@@ -2177,7 +2177,7 @@
       en: "Subtitle"
     },
     pronoun_tip: {
-      en: 'When pronouns are placed first, "aka." will change to "pronouns".'
+      en: "Pronouns are specially supported if placed first"
     },
     block_list: {
       en: "Block list"
@@ -2254,6 +2254,14 @@
     },
     search_guest: {
       en: "Search guest appearances"
+    },
+    anything_you_can_imagine: {
+      // placeholder for your about me
+      en: "Anything you can imagine..."
+    },
+    supports_markdown: {
+      // markdown: https://www.markdownguide.org/cheat-sheet/
+      en: "Supports Markdown"
     }
   };
   var trans_legacy = {
@@ -9750,13 +9758,6 @@
     let form_country = document.getElementById("id_country").outerHTML;
     let form_about_me = document.getElementById("id_about_me").textContent;
     document.getElementById("update-profile").outerHTML = "";
-    let new_sidebar = document.createElement("section");
-    new_sidebar.classList.add("bleh--panel", "about-me-preview");
-    new_sidebar.innerHTML = `
-        <h4>${tl(trans.about_me_preview)}</h4>
-        <span class="bleh--about-me-preview" id="about_me_preview"></span>
-    `;
-    page.structure.side.appendChild(new_sidebar);
     update_picture.innerHTML = `
         <h4>${tl(trans.profile)}</h4>
         <div class="banner-preview"></div>
@@ -9782,38 +9783,46 @@
                 <div class="sub-info">
                     <form action="${root}settings#update-profile" name="profile-form" data-form-type="identity" method="post">
                         <input type="hidden" name="csrfmiddlewaretoken" value="${token}">
-                        <div class="info-row">
-                            <div class="title">
-                                ${tl(trans.subtitle)}
+                        <div class="info-grid">
+                            <div class="info-row">
+                                <div class="title">
+                                    ${tl(trans.subtitle)}
+                                </div>
+                                <div class="input">
+                                    <input type="text" name="full_name" value="${form_display_name}" maxlength="36" id="id_full_name" oninput="_update_display_name(this.value)" data-form-type="other">
+                                    <div class="tip">${tl(trans.pronoun_tip)}</div>
+                                </div>
                             </div>
-                            <div class="input">
-                                <input type="text" name="full_name" value="${form_display_name}" maxlength="36" id="id_full_name" oninput="_update_display_name(this.value)" data-form-type="other">
-                                <div class="tip">${tl(trans.pronoun_tip)}</div>
+                            <div class="info-row">
+                                <div class="title">
+                                    ${tl(trans.country)}
+                                </div>
+                                <div class="input custom-selector" id="country_select">
+                                    ${form_country}
+                                </div>
                             </div>
-                        </div>
-                        <div class="info-row">
-                            <div class="title">
-                                ${tl(trans.country)}
+                            <div class="info-row">
+                                <div class="title">
+                                    ${tl(trans.about)}
+                                </div>
+                                <div class="input about-me" id="about_me">
+                                    <textarea name="about_me" placeholder="${tl(trans.anything_you_can_imagine)}" cols="40" rows="10" class="textarea--s" maxlength="500" id="id_about_me" oninput="_update_about_me_preview(this.value)" data-form-type="other">${form_about_me}</textarea>
+                                    <div class="tip markdown-enabled">${tl(trans.supports_markdown)}</div>
+                                </div>
                             </div>
-                            <div class="input custom-selector" id="country_select">
-                                ${form_country}
+                            <div class="info-row">
+                                <div class="title">
+                                    ${tl(trans.about_me_preview)}
+                                </div>
+                                <span class="bleh--about-me-preview" id="about_me_preview"></span>
                             </div>
-                        </div>
-                        <div class="info-row">
-                            <div class="title">
-                                ${tl(trans.website)}
-                            </div>
-                            <div class="input">
-                                <input type="url" name="homepage" value="${form_website}" id="id_homepage" data-form-type="website">
-                            </div>
-                        </div>
-                        <div class="info-row">
-                            <div class="title">
-                                ${tl(trans.about)}
-                            </div>
-                            <div class="input about-me" data-bleh--show-preview="false" id="about_me">
-                                <textarea name="about_me" cols="40" rows="10" class="textarea--s" maxlength="500" id="id_about_me" oninput="_update_about_me_preview(this.value)" data-form-type="other">${form_about_me}</textarea>
-                                <div class="tip">${tl(trans.markdown_tip)}</div>
+                            <div class="info-row" style="display: none">
+                                <div class="title">
+                                    ${tl(trans.website)}
+                                </div>
+                                <div class="input">
+                                    <input type="url" name="homepage" value="${form_website}" id="id_homepage" data-form-type="website">
+                                </div>
                             </div>
                         </div>
                         <div class="save-row">
@@ -9829,6 +9838,9 @@
             </div>
         </div>
     `;
+    tippy(update_picture.querySelector(".markdown-enabled"), {
+      content: tl(trans.markdown_tip)
+    });
     custom_select(update_picture.querySelector("#id_country"), update_picture.querySelector("#country_select"));
     let about_me_box = document.getElementById("id_about_me");
     update_about_me_preview(about_me_box.value);
@@ -9836,16 +9848,6 @@
     tippy(document.getElementById("btn--toggle-about-me-preview"), {
       content: trans_legacy[lang].settings.inbuilt.profile.toggle_preview.bio
     });
-  }
-  unsafeWindow._toggle_about_me_preview = function() {
-    toggle_about_me_preview();
-  };
-  function toggle_about_me_preview() {
-    let about_me = document.getElementById("about_me");
-    if (about_me.getAttribute("data-bleh--show-preview") == "false")
-      about_me.setAttribute("data-bleh--show-preview", "true");
-    else
-      about_me.setAttribute("data-bleh--show-preview", "false");
   }
   unsafeWindow._update_display_name = function(value) {
     update_display_name(value);
@@ -9912,7 +9914,7 @@
     let result = markdown(value, {
       allow_headers: true
     });
-    let about_me = page.structure.side.querySelector("#about_me_preview");
+    let about_me = page.structure.main.querySelector("#about_me_preview");
     about_me.innerHTML = result;
     let banner = about_me.querySelector('img[alt="banner"]');
     let banner_img = page.structure.main.querySelector(".banner-preview");

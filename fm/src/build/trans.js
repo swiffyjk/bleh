@@ -583,7 +583,7 @@ export const trans = {
         de: 'Über mich (preview)'
     },
     markdown_tip: {
-        en: 'This textbox supports markdown such as line breaks, bold text, italics, underlines, and more. You can embed images using ![alt text](link). Beware that to non-bleh users it will not appear fancy.'
+        en: 'You can use line breaks, bold text, italics, underlines, images, and headers visible to other bleh users. Images are created via ![alt text](link), make the alt text "banner" to apply a profile banner.'
     },
     find_on: {
         en: 'Find on'
@@ -1005,7 +1005,7 @@ export const trans = {
         en: 'Subtitle'
     },
     pronoun_tip: {
-        en: 'When pronouns are placed first, "aka." will change to "pronouns".'
+        en: 'Pronouns are specially supported if placed first'
     },
     block_list: {
         en: 'Block list'
@@ -1082,6 +1082,14 @@ export const trans = {
     },
     search_guest: {
         en: 'Search guest appearances'
+    },
+    anything_you_can_imagine: {
+        // placeholder for your about me
+        en: 'Anything you can imagine...'
+    },
+    supports_markdown: {
+        // markdown: https://www.markdownguide.org/cheat-sheet/
+        en: 'Supports Markdown'
     }
 }
 
