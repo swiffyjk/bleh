@@ -15479,8 +15479,7 @@
         bla.classList.add("kate-placeholder");
         track.appendChild(bla);
         let track_title = track.querySelector(".chartlist-name a:not(.offset-section-anchor)");
-        if (track_title == null)
-          return;
+        if (!track_title) return;
         let is_user = track.querySelector(".chartlist-image .avatar") != null;
         let is_artist = false;
         if (is_user) {
@@ -15533,6 +15532,15 @@
           }
         }
         let track_legacy_menu = track.querySelector(".chartlist-more-menu");
+        let track_timestamp = track.querySelector(".chartlist-timestamp span");
+        let track_timestamp_contents;
+        if (track_timestamp != null) {
+          track_timestamp_contents = track_timestamp.getAttribute("title");
+          track_timestamp.setAttribute("title", "");
+          tippy(track_timestamp, {
+            content: track_timestamp_contents
+          });
+        }
         if (settings.format_guest_features) {
           let formatted_title = name_includes(track_title.getAttribute("title"), track_artist);
           console.log("formatted", formatted_title);
@@ -15566,12 +15574,6 @@
               song_artist_element.appendChild(guest_element);
             }
           }
-          let track_timestamp = track.querySelector(".chartlist-timestamp span");
-          let track_timestamp_contents;
-          if (track_timestamp != null) {
-            track_timestamp_contents = track_timestamp.getAttribute("title");
-            track_timestamp.setAttribute("title", "");
-          }
           let image = track.querySelector(".chartlist-image img");
           if (image == null && page.type == "user")
             is_library_track_page = true;
@@ -15581,15 +15583,15 @@
             track_preview.innerHTML = `
                         <div class="image">
                             <div class="inner-image">
-                                ${image != null ? image.outerHTML : '<img class="missing-track">'}
+                                ${image ? image.outerHTML : '<img class="missing-track">'}
                             </div>
                         </div>
                         <div class="info">
                             <h5 class="title">${song_title}</h5>
                             <p class="artist">${song_artist_element.innerHTML}</p>
                             <div class="tags">${song_tags_text}</div>
-                            ${!is_library_track_page ? is_album ? "" : `<p class="album">${image != null ? correct_item_by_artist(sanitise_text(image.getAttribute("alt")), track_artist) : page.name}</p>` : ""}
-                            ${track_timestamp != null && track_timestamp_contents != null ? `<p class="timestamp">${track_timestamp_contents}</p>` : ""}
+                            ${!is_library_track_page ? is_album ? "" : `<p class="album">${image ? correct_item_by_artist(sanitise_text(image.getAttribute("alt")), track_artist) : page.name}</p>` : ""}
+                            ${track_timestamp && track_timestamp_contents ? `<p class="timestamp">${track_timestamp_contents}</p>` : ""}
                         </div>
                     `;
             track_legacy_menu.insertBefore(track_preview, track_legacy_menu.firstElementChild);
@@ -15607,25 +15609,6 @@
             let corrected_title = correct_item_by_artist(track_title.textContent, track_artist);
             track_title.textContent = corrected_title;
             track_title.setAttribute("title", corrected_title);
-          }
-          let track_timestamp = track.querySelector(".chartlist-timestamp span");
-          let track_timestamp_contents;
-          if (track_timestamp != null) {
-            track_timestamp_contents = track_timestamp.getAttribute("title");
-            track_timestamp.setAttribute("title", "");
-            tippy(track_timestamp, {
-              content: track_timestamp_contents
-            });
-          }
-        } else {
-          let track_timestamp = track.querySelector(".chartlist-timestamp span");
-          let track_timestamp_contents;
-          if (track_timestamp != null) {
-            track_timestamp_contents = track_timestamp.getAttribute("title");
-            track_timestamp.setAttribute("title", "");
-            tippy(track_timestamp, {
-              content: track_timestamp_contents
-            });
           }
         }
         if (track_legacy_menu) {
