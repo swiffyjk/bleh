@@ -11020,6 +11020,15 @@
     link.textContent = tl(trans.friends);
     page.structure.content_top.after(friends_nav);
     page.structure.row.classList.add("col-main-is-primary");
+    following_tab = friends_nav.querySelector(".secondary-nav-item--following a");
+    let highlighted_tab = following_tab;
+    if (page.subpage == "followers")
+      highlighted_tab = friends_nav.querySelector(".secondary-nav-item--followers a");
+    else if (page.subpage == "neighbours")
+      highlighted_tab = friends_nav.querySelector(".secondary-nav-item--neighbours a");
+    if (page.subpage != "following") {
+      following_tab.classList.remove("secondary-nav-item-link--active");
+    }
     if (ff("katsune") && page.subpage != "neighbours") {
       let count_text = page.structure.content_top.querySelector("h1").textContent.trim();
       let chr = count_text.indexOf("(");
@@ -11029,7 +11038,7 @@
       let count_badge = document.createElement("div");
       count_badge.classList.add("new-badge", "count-badge");
       count_badge.textContent = count;
-      friends_nav.querySelector(".secondary-nav-item-link--active").appendChild(count_badge);
+      highlighted_tab.appendChild(count_badge);
     }
     let view_buttons = document.createElement("div");
     view_buttons.classList.add("view-buttons-wrapper");
