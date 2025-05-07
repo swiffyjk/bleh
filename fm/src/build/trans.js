@@ -696,6 +696,13 @@ export const trans = {
     news_sponsor_cta: {
         en: 'Want to support future development of bleh?'
     },
+    support_future_development: {
+        // in the context of sponsoring
+        en: 'Support future development'
+    },
+    why_sponsor: {
+        en: 'Receive an accompanying badge on your profile and a big thank you from katelyn for supporting <3'
+    },
     obsess: {
         en: 'Obsess'
     },

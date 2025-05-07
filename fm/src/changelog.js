@@ -79,7 +79,7 @@ function open_changelog(changelog) {
         body: (`
             <div class="cta first sponsor margin-bottom">
                 <strong>${tl(trans.news_sponsor_cta)}</strong>
-                <a class="see-more" onclick="_sponsor()">${tl(trans.sponsor)}</a>
+                <a class="see-more" onclick="_sponsor(true)">${tl(trans.sponsor)}</a>
             </div>
             <div class="changelog-list"></div>
             <div class="modal-footer">

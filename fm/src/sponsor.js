@@ -1,7 +1,7 @@
 import { log } from "./build/log";
 import { auth, page, root } from "./build/page";
 import { sponsor_list } from "./build/sponsor";
-import { lang, trans_legacy } from "./build/trans";
+import { lang, tl, trans, trans_legacy } from "./build/trans";
 import { dialog } from "./components/dialog";
 import { deliver_notif } from "./components/notify";
 import { ff } from "./sku";
@@ -79,26 +79,27 @@ unsafeWindow._sponsor_check = function() {
 }
 
 
-unsafeWindow._sponsor = function() {
-    sponsor();
+unsafeWindow._sponsor = function(replace=false) {
+    sponsor(replace);
 }
-function sponsor() {
+function sponsor(replace=false) {
     dialog({
         id: 'sponsor',
-        title: trans_legacy[lang].settings.home.sponsor.header,
+        title: tl(trans.support_future_development),
         body: (`
             <div class="modal-vertical-inner support-inner">
                 <div class="bleh-icon sponsor-heart"></div>
-                <h1>${trans_legacy[lang].settings.home.sponsor.header}</h1>
-                <p>${trans_legacy[lang].settings.home.sponsor.bio}</p>
+                <h1>${tl(trans.support_future_development)}</h1>
+                <p>${tl(trans.why_sponsor)}</p>
             </div>
             <div class="modal-footer">
                 <a class="btn primary sponsor" href="${sponsor_list.sponsor_link}" target="_blank">
-                    ${trans_legacy[lang].settings.home.sponsor.name}
+                    ${tl(trans.sponsor)}
                 </a>
             </div>
         `),
-        type: 'sponsor'
+        type: 'sponsor',
+        replace_if_possible: replace
     });
 }
 

@@ -1868,6 +1868,13 @@
     news_sponsor_cta: {
       en: "Want to support future development of bleh?"
     },
+    support_future_development: {
+      // in the context of sponsoring
+      en: "Support future development"
+    },
+    why_sponsor: {
+      en: "Receive an accompanying badge on your profile and a big thank you from katelyn for supporting <3"
+    },
     obsess: {
       en: "Obsess"
     },
@@ -16859,7 +16866,7 @@
       body: `
             <div class="cta first sponsor margin-bottom">
                 <strong>${tl(trans.news_sponsor_cta)}</strong>
-                <a class="see-more" onclick="_sponsor()">${tl(trans.sponsor)}</a>
+                <a class="see-more" onclick="_sponsor(true)">${tl(trans.sponsor)}</a>
             </div>
             <div class="changelog-list"></div>
             <div class="modal-footer">
@@ -18507,26 +18514,27 @@
   unsafeWindow._sponsor_check = function() {
     sponsors(true);
   };
-  unsafeWindow._sponsor = function() {
-    sponsor();
+  unsafeWindow._sponsor = function(replace = false) {
+    sponsor(replace);
   };
-  function sponsor() {
+  function sponsor(replace = false) {
     dialog({
       id: "sponsor",
-      title: trans_legacy[lang].settings.home.sponsor.header,
+      title: tl(trans.support_future_development),
       body: `
             <div class="modal-vertical-inner support-inner">
                 <div class="bleh-icon sponsor-heart"></div>
-                <h1>${trans_legacy[lang].settings.home.sponsor.header}</h1>
-                <p>${trans_legacy[lang].settings.home.sponsor.bio}</p>
+                <h1>${tl(trans.support_future_development)}</h1>
+                <p>${tl(trans.why_sponsor)}</p>
             </div>
             <div class="modal-footer">
                 <a class="btn primary sponsor" href="${sponsor_list.sponsor_link}" target="_blank">
-                    ${trans_legacy[lang].settings.home.sponsor.name}
+                    ${tl(trans.sponsor)}
                 </a>
             </div>
         `,
-      type: "sponsor"
+      type: "sponsor",
+      replace_if_possible: replace
     });
   }
   unsafeWindow._sponsor_manage = function() {
