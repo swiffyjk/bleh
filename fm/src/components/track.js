@@ -152,19 +152,21 @@ export function patch_titles() {
                 }
             }
 
+            let is_active = track.classList.contains('chartlist-row--now-scrobbling');
+
             // menu
             let track_legacy_menu = track.querySelector('.chartlist-more-menu');
 
             let track_timestamp = track.querySelector('.chartlist-timestamp span');
-                let track_timestamp_contents;
-                if (track_timestamp != null) {
-                    track_timestamp_contents = track_timestamp.getAttribute('title');
-                    track_timestamp.setAttribute('title', '');
+            let track_timestamp_contents;
+            if (track_timestamp && !is_active) {
+                track_timestamp_contents = track_timestamp.getAttribute('title');
+                track_timestamp.setAttribute('title', '');
 
-                    tippy(track_timestamp, {
-                        content: track_timestamp_contents
-                    });
-                }
+                tippy(track_timestamp, {
+                    content: track_timestamp_contents
+                });
+            }
 
             if (settings.format_guest_features) {
                 let formatted_title = name_includes(track_title.getAttribute('title'), track_artist);
@@ -189,7 +191,7 @@ export function patch_titles() {
                 track_title.innerHTML = `<div class="title">${sanitise_text(song_title).trim()}</div>${song_tags_text}`;
 
                 let song_artist_element = track.querySelector('.chartlist-artist');
-                if (song_artist_element == null && !is_user) {
+                if (!song_artist_element && !is_user) {
                     song_artist_element = document.createElement('td');
                     song_artist_element.classList.add('chartlist-artist');
                     track.appendChild(song_artist_element);
@@ -218,7 +220,7 @@ export function patch_titles() {
                 let image = track.querySelector('.chartlist-image img');
 
                 // hacky workaround to chartlists with no image
-                if (image == null && page.type == 'user')
+                if (!image && page.type == 'user')
                     is_library_track_page = true;
 
                 if (track_legacy_menu) {
@@ -242,7 +244,7 @@ export function patch_titles() {
                 }
             } else if (settings.corrections) {
                 let song_artist_element = track.querySelector('.chartlist-artist a');
-                if (song_artist_element != null) {
+                if (song_artist_element) {
                     let corrected_title = correct_item_by_artist(track_title.textContent, song_artist_element.textContent);
                     track_title.textContent = corrected_title;
                     track_title.setAttribute('title', corrected_title);
@@ -298,7 +300,7 @@ export function patch_titles() {
             if (!settings.colourful_tracks)
                 return;
 
-            if (!is_album && track.classList.contains('chartlist-row--now-scrobbling')) {
+            if (!is_album && is_active) {
                 let image_wrap = track.querySelector('.chartlist-image');
                 if (image_wrap) {
                     let link = image_wrap.querySelector('.cover-art');
