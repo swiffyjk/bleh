@@ -215,8 +215,10 @@ export function patch_obsession_view() {
     `);
 
     let manage = obsession_container.querySelector('form');
-    if (manage)
+    if (manage) {
         quote.appendChild(manage);
+        quote.querySelector('button').textContent = tl(trans.delete);
+    }
 
     page.structure.main.insertBefore(quote, page.structure.main.firstElementChild);
 

@@ -583,7 +583,8 @@ export const trans = {
         de: 'Über mich (preview)'
     },
     markdown_tip: {
-        en: 'You can use line breaks, bold text, italics, underlines, images, and headers visible to other bleh users. Images are created via ![alt text](link), make the alt text "banner" to apply a profile banner.'
+        // use <br><br> to add a space between the first sentence and the next
+        en: 'You can use line breaks, bold text, italics, underlines, images, and headers visible to other bleh users.<br><br>Images are created via ![alt text](link). Changing the alt text to "banner" applies a profile banner.'
     },
     find_on: {
         en: 'Find on'

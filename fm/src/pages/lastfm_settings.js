@@ -524,7 +524,8 @@ function patch_settings_profile_panel(token, update_picture) {
     `);
 
     tippy(update_picture.querySelector('.markdown-enabled'), {
-        content: tl(trans.markdown_tip)
+        content: tl(trans.markdown_tip),
+        allowHTML: true
     });
 
     custom_select(update_picture.querySelector('#id_country'), update_picture.querySelector('#country_select'));

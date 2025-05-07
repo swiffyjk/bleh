@@ -1755,7 +1755,8 @@
       de: "\xDCber mich (preview)"
     },
     markdown_tip: {
-      en: 'You can use line breaks, bold text, italics, underlines, images, and headers visible to other bleh users. Images are created via ![alt text](link), make the alt text "banner" to apply a profile banner.'
+      // use <br><br> to add a space between the first sentence and the next
+      en: 'You can use line breaks, bold text, italics, underlines, images, and headers visible to other bleh users.<br><br>Images are created via ![alt text](link). Changing the alt text to "banner" applies a profile banner.'
     },
     find_on: {
       en: "Find on"
@@ -9839,7 +9840,8 @@
         </div>
     `;
     tippy(update_picture.querySelector(".markdown-enabled"), {
-      content: tl(trans.markdown_tip)
+      content: tl(trans.markdown_tip),
+      allowHTML: true
     });
     custom_select(update_picture.querySelector("#id_country"), update_picture.querySelector("#country_select"));
     let about_me_box = document.getElementById("id_about_me");
@@ -10302,8 +10304,10 @@
         </div>
     `;
     let manage = obsession_container.querySelector("form");
-    if (manage)
+    if (manage) {
       quote.appendChild(manage);
+      quote.querySelector("button").textContent = tl(trans.delete);
+    }
     page.structure.main.insertBefore(quote, page.structure.main.firstElementChild);
     let author = quote.querySelector(".obsession-author");
     let badge = patch_avatar(obsession_avatar, obsession_author, "", author, "bottom");
