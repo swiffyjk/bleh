@@ -10694,6 +10694,48 @@
         let pagination = page.structure.container.querySelector(".pagination");
         if (pagination)
           new_panel.appendChild(pagination);
+      } else if (page.subpage == "playlists_playlists") {
+        let section_controls = page.structure.container.querySelector(".section-controls-full-width");
+        let buttons;
+        if (section_controls) {
+          section_controls.classList.add("legacy-section-controls");
+          buttons = section_controls.querySelectorAll(":is(button, a)");
+          let header = page.structure.container.querySelector(".content-top-header");
+          page.structure.content_top.innerHTML = `
+                    <div class="content-top-inner-wrap">
+                        <div class="container content-top-lower">
+                            <h1 class="content-top-header">${header.textContent.trim()}</h1>
+                        </div>
+                    </div>
+                `;
+        }
+        let new_panel = document.createElement("section");
+        new_panel.classList.add("obsessions-panel");
+        page.structure.main.appendChild(new_panel);
+        if (buttons.length > 0) {
+          let wrap = document.createElement("div");
+          wrap.classList.add("view-buttons-wrapper");
+          wrap.innerHTML = `<div class="info"><div class="alert alert-info">Playlists are a work in progress</div></div>`;
+          let button_header = document.createElement("div");
+          button_header.classList.add("view-buttons", "playlist-home-buttons");
+          buttons.forEach((button) => {
+            if (button.getAttribute("data-analytics-action") == "create")
+              button.innerHTML = `${tl(trans.new)} <div class="new-badge">${tl(trans.beta)}</div>`;
+            button.classList.add("btn", "view-item", "interact-item", "playlist-home-top-item");
+            button_header.appendChild(button);
+          });
+          wrap.appendChild(button_header);
+          new_panel.appendChild(wrap);
+        }
+        let playlists = page.structure.container.querySelector(".playlisting-playlists");
+        if (playlists) {
+          page.structure.container.removeChild(playlists.parentElement);
+          new_panel.appendChild(playlists);
+        } else {
+          let no_data = page.structure.container.querySelector(".no-data-message--playlists");
+          page.structure.container.removeChild(no_data.parentElement);
+          new_panel.appendChild(no_data);
+        }
       }
     }
     log("status is", "page", "info", page);

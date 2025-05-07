@@ -1782,12 +1782,10 @@ last.fm changes as of 2024-05-20 */
 /* make a playlist */ .playlisting-create-options,
 /* home page recommendations */ .homefeed .col-main,
 /* playlist content */ .playlisting-playlist-header + .page-content > .row,
-.playlisting-playlists,
 /* event lineup */ .big-artist-list,
 /* set an obsession */ .obsession-search, .obsession-search-results,
 /* user did not scrobble album in date range */ .library-header + .message,
 /* no loved tracks */ .namespace--user_loved .no-data-message,
-/* no playlists */ .no-data-message--playlists,
 /* neighbours */ .friends-col-main,
 .panel-form,
 .bleh--gallery, [data-page-subpage="images_overview"] .col-main:not(.bleh--bookmarks),
@@ -1860,7 +1858,7 @@ last.fm changes as of 2024-05-20 */
 }
 
 /* no playlists */ .namespace--user_playlists_playlists .page-content,
-.page-content:has(.playlisting-playlists, .gallery-section, .obsession-search),
+.page-content:has(.gallery-section, .obsession-search),
 /* obsessions */ .namespace--user_obsessions_overview .container.page-content
 {
     padding-top: var(--override-padding-top, unset) !important;
@@ -5975,6 +5973,7 @@ the body text becomes bigger by default - this reverts that */
     cursor: default;
     width: unset !important;
     margin-top: unset !important;
+    padding: unset;
 
     /* any icons or whatever */
     &:before {
@@ -6682,7 +6681,7 @@ button,
 /*     BUTTON HAS ICON     */
 .sponsor, .icon,
 .lastfm-bulk-edit-form-group-controls button,
-.search-similar-btn, .obsession-btn, .refresh-tracklist-btn, .panel-settings-button,
+.search-similar-btn, .obsession-btn, .refresh-tracklist-btn, .panel-settings-button, .playlist-home-top-item,
 .image-open-button,
 .image-details :is(.bleh--gallery-bookmark-image-btn, .gallery-image-report, .gallery-image-delete button),
 .btn.back,
@@ -10444,10 +10443,8 @@ text[style^="color: rgb(0, 0, 0)"] {
 
 
 .big-artist-list-avatar-desktop,
-.playlist-image,
 .catalogue-overview-similar-artists-item-image,
 .artist-similar-artists-sidebar-item-image,
-.music-bookmarks-artists-item-image, .music-bookmarks-albums-item-image,
 .similar-albums-item-image, .source-album-art .cover-art, .track-similar-tracks-item-image, .similar-items-sidebar-item-image {
     border-radius: var(--item-big-radius);
     box-shadow: var(--standout-shadow);
@@ -10463,7 +10460,7 @@ text[style^="color: rgb(0, 0, 0)"] {
     --mask-size: var(--cover-size-100);
 }
 
-:is(.resource-list--release-list-item-image, .similar-albums-item-image, .catalogue-overview-similar-artists-item-image, .playlist-image) img {
+:is(.resource-list--release-list-item-image, .similar-albums-item-image, .catalogue-overview-similar-artists-item-image) img {
     --mask-size: var(--cover-size-200);
 }
 
@@ -10481,7 +10478,6 @@ text[style^="color: rgb(0, 0, 0)"] {
 }
 
 .big-artist-list-title:first-child,
-.playlisting-playlists-item-name, .playlisting-playlists-item-name:first-child,
 .catalogue-overview-similar-artists-item-name, .catalogue-overview-similar-artists-item-name:first-child,
 .artist-similar-artists-sidebar-item-name, .artist-similar-artists-sidebar-item-name:first-child,
 .similar-albums-item-name, .similar-albums-item-name:first-child,
@@ -10490,7 +10486,6 @@ text[style^="color: rgb(0, 0, 0)"] {
     margin-top: 10px;
 }
 .big-artist-list-title,
-.playlisting-playlists-item-name,
 .catalogue-overview-similar-artists-item-name,
 .artist-similar-artists-sidebar-item-name, .artist-similar-artists-sidebar-item-name:first-child,
 .similar-albums-item-name, .source-album-name, .track-similar-tracks-item-name, .similar-items-sidebar-item-name {
@@ -10509,7 +10504,6 @@ text[style^="color: rgb(0, 0, 0)"] {
     }
 }
 .big-artist-list-title,
-.playlisting-playlists-item-name,
 .catalogue-overview-similar-artists-item-name {
     max-height: 36px;
 }
@@ -12835,7 +12829,8 @@ hr {
     [data-page-type="charts"][data-page-subpage="overview"],
     [data-page-type="inbox"],
     [data-page-type="overview"],
-    [data-page-subpage="obsessions_obsession"]
+    [data-page-subpage="obsessions_obsession"],
+    [data-page-subpage="playlists_playlists"]
     ),
 .namespace--music_bookmarks_overview {
     .col-main {
@@ -13129,26 +13124,6 @@ h2.playlisting-create-option-title {
 
 
 /*     PLAYLISTS     */
-.playlisting-playlists {
-    margin: unset;
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-    gap: var(--card-gap) 8px;
-}
-.playlisting-playlists-item-wrap {
-    padding: unset;
-    margin: unset;
-    width: unset;
-}
-
-/* consistency */
-.playlisting-playlists-item-description {
-    margin-top: 3px;
-}
-.playlisting-playlists-item-aux-text {
-    margin-top: unset;
-}
-
 .playlisting-playlists-item-toggle {
     --font-size: 0;
     --mask: var(--icon-16-dots);
@@ -13166,12 +13141,19 @@ h2.playlisting-create-option-title {
 .playlisting-playlists-item-name {
     --show-icon: none;
     --mask: var(--icon-16-lock);
-    --left: 0;
+    --mask-size: 12px;
+    --top: 10px;
+    --left: none;
+    --right: 0;
     position: relative;
+
+    &:before {
+        color: hsl(var(--c3));
+    }
 }
 .playlisting-playlists-item-badge--view-only ~ .playlisting-playlists-item-copy .playlisting-playlists-item-name,
 .playlisting-playlists-item-badge--publish[data-toggle-button-current-state="unpublished"] + .playlisting-playlists-item-copy .playlisting-playlists-item-name {
-    padding-left: calc(16px + 6px);
+    padding-right: calc(12px + 4px);
     --show-icon: block;
 }
 .playlisting-playlists-item-badge--view-only ~ .playlisting-playlists-item-copy .playlisting-playlists-item-name {
@@ -16295,6 +16277,13 @@ button.bleh--gallery-bookmark-image-btn {
 .view-buttons-wrapper {
     display: flex;
     justify-content: end;
+
+    .info {
+        flex: 1;
+        height: 40px;
+        display: flex;
+        align-items: center;
+    }
 }
 .image-details .gallery-image-buttons,
 .album-overview-cover-art-action-row,
@@ -18303,6 +18292,14 @@ h4 {
 
 .obsession-btn {
     --mask: var(--icon-16-obsession) !important;
+}
+.playlist-home-top-item {
+    &[data-analytics-action="import"] {
+        --mask: var(--icon-16-import);
+    }
+    &[data-analytics-action="create"] {
+        --mask: var(--icon-16-add);
+    }
 }
 
 
@@ -21498,6 +21495,7 @@ h4 {
     }
 }
 
+.playlisting-playlists,
 .resource-list--release-list,
 .artist-top-albums,
 .music-bookmarks-albums,
@@ -21516,6 +21514,7 @@ h4 {
         gap: var(--card-padding) var(--item-list-gap);
     }
 
+    .playlisting-playlists-item-wrap,
     .resource-list--release-list-item-wrap,
     .artist-top-albums-item-wrap,
     .music-bookmarks-albums-item-wrap,
@@ -21526,6 +21525,7 @@ h4 {
         margin: unset;
         width: unset;
 
+        .playlist-image,
         .cover-art,
         .avatar {
             background: var(--avatar-generic-background);
@@ -21555,6 +21555,7 @@ h4 {
         }
 
         .link-block--hover {
+            .playlist-image,
             .cover-art, .avatar {
                 opacity: 0.8;
                 filter: brightness(90%);
@@ -21566,6 +21567,7 @@ h4 {
             display: none;
         }
 
+        .playlisting-playlists-item-name,
         .resource-list--release-list-item-name,
         .artist-top-albums-item-name,
         .music-bookmarks-artists-item-name,
@@ -21589,6 +21591,7 @@ h4 {
             color: hsl(var(--c2), 80%);
             margin-top: 2px;
         }
+        .playlisting-playlists-item-description, .playlisting-playlists-item-aux-text,
         .music-more-artists-last-scrobble,
         .resource-list--release-list-item-aux-text,
         .artist-top-albums-item-aux-text,
