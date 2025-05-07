@@ -5106,13 +5106,16 @@ better than the default selector '#app a' i suppose */
         }
 
         &[data-bleh--tag-group="mixes_numbers"] {
-            text-transform: uppercase;
             order: 10;
-            font-size: var(--font-size-sm);
         }
-        &[data-bleh--tag-type="(session"] {
-            text-transform: capitalize;
-        }
+    }
+}
+.feat {
+    &[data-bleh--tag-group="mixes_numbers"] {
+        text-transform: uppercase;
+    }
+    &[data-bleh--tag-type="(session"] {
+        text-transform: capitalize;
     }
 }
 
@@ -11341,8 +11344,6 @@ table.table tr:nth-child(2n) td {
         top: 10px;
         right: 10px;
         z-index: 20;
-        backdrop-filter: blur(4px);
-        -webkit-backdrop-filter: blur(4px);
         cursor: pointer;
     }
 
