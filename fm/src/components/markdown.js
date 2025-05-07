@@ -1,17 +1,20 @@
 import { root } from "../build/page";
 
-export function markdown(text) {
+export function markdown(text, {
+    allow_headers = false,
+    allow_links = true
+}) {
     let converter = new showdown.Converter({
         emoji: true,
         excludeTrailingPunctuationFromURLs: true,
         ghMentions: true,
         ghMentionsLink: `${root}user/{u}`,
-        headerLevelStart: 5,
+        headerLevelStart: (allow_headers) ? 3 : 5,
         noHeaderId: true,
         openLinksInNewWindow: true,
         requireSpaceBeforeHeadingText: true,
         simpleLineBreaks: true,
-        simplifiedAutoLink: true,
+        simplifiedAutoLink: allow_links,
         strikethrough: true,
         underline: true,
         ghCodeBlocks: false,

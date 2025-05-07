@@ -8589,18 +8589,21 @@
   }
 
   // src/components/markdown.js
-  function markdown(text) {
+  function markdown(text, {
+    allow_headers = false,
+    allow_links = true
+  }) {
     let converter = new showdown.Converter({
       emoji: true,
       excludeTrailingPunctuationFromURLs: true,
       ghMentions: true,
       ghMentionsLink: `${root}user/{u}`,
-      headerLevelStart: 5,
+      headerLevelStart: allow_headers ? 3 : 5,
       noHeaderId: true,
       openLinksInNewWindow: true,
       requireSpaceBeforeHeadingText: true,
       simpleLineBreaks: true,
-      simplifiedAutoLink: true,
+      simplifiedAutoLink: allow_links,
       strikethrough: true,
       underline: true,
       ghCodeBlocks: false,
@@ -10184,6 +10187,7 @@
     let track_title = obsession_container.querySelector(".obsession-meta-track");
     let track_artist = obsession_container.querySelector(".obsession-meta-artist");
     let scrobbles = obsession_container.querySelector(".obsession-meta-scrobbles");
+    let link = track_title.querySelector("a").getAttribute("href");
     let by = track_artist.querySelector(".obsession-meta-artist-by");
     track_artist.removeChild(by);
     let artist_name = track_artist.querySelector("a");
@@ -10233,7 +10237,7 @@
         <div class="info-side">
             <div class="sub-text">${tl(trans.obsession)}</div>
             <div class="title-container">
-                <h1>${track_title.innerHTML}</h1>
+                <h1><a href="${link}">${track_title.innerHTML}</a></h1>
             </div>
             <h2>${track_artist.innerHTML}</h2>
         </div>
@@ -10267,6 +10271,9 @@
                 ${obsession_avatar.outerHTML}
                 <strong class="name">${obsession_author}</strong>
                 <a class="link-block-cover-link" href="${root}user/${obsession_author}"></a>
+            </div>
+            <div class="obsession-listens">
+                ${scrobbles.innerHTML}
             </div>
             <div class="obsession-date">
                 ${date.textContent}

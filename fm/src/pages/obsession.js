@@ -57,6 +57,8 @@ export function patch_obsession_view() {
     let track_artist = obsession_container.querySelector('.obsession-meta-artist');
     let scrobbles = obsession_container.querySelector('.obsession-meta-scrobbles');
 
+    let link = track_title.querySelector('a').getAttribute('href');
+
     let by = track_artist.querySelector('.obsession-meta-artist-by');
     track_artist.removeChild(by);
 
@@ -123,7 +125,7 @@ export function patch_obsession_view() {
         <div class="info-side">
             <div class="sub-text">${tl(trans.obsession)}</div>
             <div class="title-container">
-                <h1>${track_title.innerHTML}</h1>
+                <h1><a href="${link}">${track_title.innerHTML}</a></h1>
             </div>
             <h2>${track_artist.innerHTML}</h2>
         </div>
@@ -200,6 +202,9 @@ export function patch_obsession_view() {
                 ${obsession_avatar.outerHTML}
                 <strong class="name">${obsession_author}</strong>
                 <a class="link-block-cover-link" href="${root}user/${obsession_author}"></a>
+            </div>
+            <div class="obsession-listens">
+                ${scrobbles.innerHTML}
             </div>
             <div class="obsession-date">
                 ${date.textContent}

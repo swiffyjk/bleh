@@ -6819,7 +6819,7 @@ button,
 .lotus-preview .before:before,
 .masthead-popup-text .btn-primary:before,
 .obsession-pagination a:before,
-.obsession-date:before, .obsession-delete-button:before,
+.obsession-date:before, .obsession-delete-button:before, .obsession-listens:before,
 .footer-links :is(a, button):before,
 .library-search-results.async-content-loading:after,
 .radio-button:after, .radio-button h4:after,
@@ -6827,6 +6827,7 @@ button,
 .listen-item p:before,
 .metadata-column .cta-link-wrap a:before, .lyrics-snippet-more-link a:before,
 .see-more:before, #events-section > p > a:before,
+.modal-body .js-close:before,
 .view-all-button:before,
 .music-featured-item-background:before,
 .gallery-image-preferred-states:before, .gallery-image-votes:before,
@@ -6926,8 +6927,7 @@ button,
 .masthead-search-submit:before,
 .masthead-hamburger-toggle:before,
 /*     ALERT/INFO     */
-.alert:before, .event-status:before, .async-content-error-message:before,
-.modal-dialog .big-modal-alert.alert-success::before,
+.alert:not(.big-modal-alert):before, .event-status:before, .async-content-error-message:before,
 /*     USER NAME LABELS     */
 :is(.title-container .label, .header-new-on-tour):before,
 /*     CUSTOM AVATAR ICONS WITHOUT PRO     */
@@ -8535,24 +8535,8 @@ input:is([name^="track_name"], [name^="artist_name"], [name^="album_name"], [nam
 }
 
 
-.modal-dialog .big-modal-alert.alert-success {
-    /*padding-top: calc(20px + var(--card-gap));*/
+.big-modal-alert {
     text-align: left;
-}
-.modal-dialog .big-modal-alert.alert-success:before {
-    /*--left: 50%;
-    --margin-left: -10px;
-    --top: 0;
-    --margin-top: 0;
-    width: 20px;
-    height: 20px;
-    --mask-size: 20px;*/
-    --mask: var(--icon-16-check);
-}
-/* technically if a user is called "obsessions" this will flag but ummm
-that literally is 1 user from 2007 who hasnt even gotten a scrobble */
-.modal-dialog:has(.js-close[href*="/obsessions/"]) .big-modal-alert.alert-success:before {
-    --mask: var(--icon-16-obsession);
 }
 
 
@@ -10804,7 +10788,7 @@ text[style^="color: rgb(0, 0, 0)"] {
 /*     ALERT     */
 .async-content-error-message,
 .event-status,
-.alert {
+.alert:not(.big-modal-alert) {
     font-size: var(--font-size);
     line-height: var(--line-height);
     margin-top: var(--card-gap);
@@ -10842,6 +10826,9 @@ text[style^="color: rgb(0, 0, 0)"] {
 }
 .alert-success {
     --mask: var(--icon-16-check);
+    --hue-over: var(--hue-pos);
+    --sat-over: 1;
+    --lit-over: 1;
 }
 .event-status--cancelled {
     --mask: var(--icon-16-block);
@@ -10871,11 +10858,6 @@ text[style^="color: rgb(0, 0, 0)"] {
 }
 .alert-warning {
     --hue-over: 25;
-    --sat-over: 1;
-    --lit-over: 1;
-}
-.alert-success {
-    --hue-over: var(--hue-pos);
     --sat-over: 1;
     --lit-over: 1;
 }
@@ -11753,11 +11735,16 @@ table.table tr:nth-child(2n) td {
                 }
             }
 
+            .obsession-listens,
             .obsession-date {
                 position: relative;
                 --left: -16px;
                 --mask: var(--icon-16-dot);
                 --mask-size: 16px;
+            }
+
+            .obsession-listens a {
+                color: inherit;
             }
         }
 
@@ -15272,6 +15259,23 @@ input[type="range"]::-moz-range-progress {
 
 /*     MENTION     */
 .about-me-sidebar, .bleh--about-me-preview {
+    h5 {
+        margin: unset;
+        color: hsl(var(--c1));
+        font-weight: var(--font-weight-medium);
+    }
+    h4 {
+        font-size: 16px;
+        line-height: 20px;
+        color: hsl(var(--c1));
+    }
+    h3 {
+        font-size: 24px;
+        line-height: 28px;
+        color: hsl(var(--c1));
+        cursor: default;
+    }
+
     img {
         border-radius: var(--item-big-radius);
         max-width: 100%;
@@ -21984,18 +21988,24 @@ h4 {
 }
 
 
+.big-modal-alert,
 .cta {
-    background: var(--card-specific-background);
+    background: var(--card-specific-background) !important;
     border-radius: var(--card-radius);
     --card-specific-background: hsl(var(--h4), 8%);
     padding: 15px var(--card-padding) !important;
     box-shadow: unset !important;
-    color: hsl(var(--c2));
+    color: hsl(var(--c2)) !important;
     order: 10;
+    cursor: default;
 
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
+    font-weight: var(--font-weight-medium);
+
+    &.cta {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+    }
 
     strong {
         color: hsl(var(--c3));
@@ -22033,8 +22043,14 @@ h4 {
         --left: var(--card-padding);
     }
 }
+.big-modal-alert {
+    &:before {
+        display: none;
+    }
+}
 
 
+.modal-body .js-close,
 .masthead-popup-text .btn-primary,
 .obsession-delete-button,
 .featured-item-manage,
