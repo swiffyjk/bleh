@@ -20437,6 +20437,9 @@ h4 {
                 --font-size: 0;
                 --btn-left: 12px !important;
             }
+            &.glacier-search-button {
+                --mask: var(--icon-16-search);
+            }
         }
     }
 }

@@ -1073,6 +1073,15 @@ export const trans = {
     },
     help_contribute: {
         en: 'Help contribute'
+    },
+    delete: {
+        en: 'Delete'
+    },
+    search: {
+        en: 'Search'
+    },
+    search_guest: {
+        en: 'Search guest appearances'
     }
 }
 

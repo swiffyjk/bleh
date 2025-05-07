@@ -1,6 +1,6 @@
 import { settings } from "../build/config";
 import { log } from "../build/log";
-import { page, root } from "../build/page";
+import { auth, page, root } from "../build/page";
 import { sanitise } from "../build/tools";
 import { lang, trans_legacy, trans, tl } from "../build/trans";
 import { prep_chart_colours } from "../chart";
@@ -279,8 +279,7 @@ function bleh_glacier_library_top(static_page = false) {
     else
         legacy_top_header = page.structure.main.querySelector('.metadata-list');
 
-    if (legacy_top_header == null)
-        return;
+    if (!legacy_top_header) return;
 
     legacy_top_header.classList.add('glacier-legacy-top-header');
 
@@ -301,7 +300,7 @@ function bleh_glacier_library_top(static_page = false) {
 
     let first_run = false;
     let glacier_top = page.structure.glacier.top;
-    if (glacier_top == null || !page.structure.main.contains(glacier_top))
+    if (!glacier_top || !page.structure.main.contains(glacier_top))
         first_run = true;
 
     if (first_run) {
@@ -375,11 +374,11 @@ function bleh_glacier_library_top(static_page = false) {
     let sort = legacy_top_header.querySelector('.library-sort');
     if (!static_page) {
         let sort_button;
-        if (sort != null) {
+        if (sort) {
             sort_button = sort.querySelector('.dropdown-menu-clickable-button');
             add_divider = true;
 
-            if (sort_button != null) {
+            if (sort_button) {
                 sort_button.classList.add('btn', 'view-item', 'glacier-library-button');
                 let sort_menu = sort.querySelector('.dropdown-menu-clickable');
 
@@ -415,10 +414,10 @@ function bleh_glacier_library_top(static_page = false) {
 
     let configure_button = document.createElement('button');
     configure_button.classList.add('btn', 'view-item', 'glacier-library-button', 'glacier-configure-button', 'panel-settings-button');
-    configure_button.textContent = trans_legacy[lang].settings.configure;
+    configure_button.textContent = tl(trans.settings);
 
     tippy(configure_button, {
-        content: trans_legacy[lang].settings.configure
+        content: tl(trans.settings)
     });
 
     tippy(configure_button, {
@@ -1027,17 +1026,17 @@ function bleh_glacier_library_focused() {
 
 
     let header_title = legacy_header.querySelector('.library-header-crumb'); // subpage
-    if (header_title == null)
+    if (!header_title)
         header_title = legacy_header.querySelector('.library-header-title'); // main
 
     let duration = header_title.querySelector('.library-header-title-duration');
-    if (duration != null)
+    if (duration)
         header_title.removeChild(duration);
 
     header_title = header_title.textContent.trim();
 
     let artist = legacy_header.querySelector('.text-colour-link');
-    if (artist != null)
+    if (artist)
         artist = artist.textContent.trim();
 
     let image = legacy_header.querySelector('.library-header-image img');
@@ -1068,7 +1067,7 @@ function bleh_glacier_library_focused() {
                 ${trans_legacy[lang][type].name}
             </div>
             <div class="glacier-library-metadata-item-value glacier-library-metadata-focus" data-type="${type}">
-                <a href="${link}">${(type == 'artist') ? correct_artist(header_title) : correct_item_by_artist(header_title, artist)}</a>${(duration != null) ? ` <span class="glacier-library-track-duration">${duration.textContent}</span>` : ''}${(type != 'artist') ? trans_legacy[lang].glacier.by_artist.replace('{a}', `<a href="${root}user/${page.name}/library/music/+noredirect/${sanitise(artist)}${current_suffix}">${correct_artist(artist)}</a>`) : ''}
+                <a href="${link}">${(type == 'artist') ? correct_artist(header_title) : correct_item_by_artist(header_title, artist)}</a>${(duration) ? ` <span class="glacier-library-track-duration">${duration.textContent}</span>` : ''}${(type != 'artist') ? trans_legacy[lang].glacier.by_artist.replace('{a}', `<a href="${root}user/${page.name}/library/music/+noredirect/${sanitise(artist)}${current_suffix}">${correct_artist(artist)}</a>`) : ''}
             </div>
         </div>
     `);
@@ -1113,8 +1112,7 @@ function bleh_glacier_library_focused() {
             if (!button)
                 button = wrapper.querySelector('span');
 
-            if (!button)
-                return;
+            if (!button) return;
 
             console.info('libraryyy', wrapper, button);
             button.classList.add('btn', 'view-item', 'glacier-library-button');
@@ -1140,13 +1138,13 @@ function bleh_glacier_library_focused() {
 
                     // we need to target the other button too lol
                     button = wrapper.querySelector('button:not(.btn)');
-                    if (button != null)
+                    if (button)
                         button.classList.add('btn', 'view-item', 'glacier-library-button');
                 }
             } else {
                 // have to read classlist
                 if (button.classList.contains('delete-icon')) {
-                    button.textContent = trans_legacy[lang].glacier.delete;
+                    button.textContent = tl(trans.delete);
                 }
             }
         });
@@ -1158,12 +1156,29 @@ function bleh_glacier_library_focused() {
         }
     }
 
+
+
+    if (page.subpage == 'library_artist_overview' && auth.pro) {
+        let search = document.createElement('a');
+        search.classList.add('btn', 'view-item', 'glacier-library-button', 'glacier-search-button');
+        search.textContent = tl(trans.search);
+        search.setAttribute('href', `${root}user/${page.name}/library/tracks/search?query=${sanitise(correct_artist(header_title))}`);
+
+        tippy(search, {
+            content: tl(trans.search_guest)
+        });
+
+        let divider = view_buttons.querySelector('.listen-divider');
+        if (divider)
+            view_buttons.insertBefore(search, divider);
+    }
+
     let configure_button = document.createElement('button');
     configure_button.classList.add('btn', 'view-item', 'glacier-library-button', 'glacier-configure-button', 'panel-settings-button');
-    configure_button.textContent = trans_legacy[lang].settings.configure;
+    configure_button.textContent = tl(trans.settings);
 
     tippy(configure_button, {
-        content: trans_legacy[lang].settings.configure
+        content: tl(trans.settings)
     });
 
     tippy(configure_button, {
@@ -1242,7 +1257,7 @@ function bleh_glacier_library_focused() {
     lower_metadata.classList.add('glacier-library-metadata');
 
     let legacy_meta_wrap = page.structure.main.querySelector('.metadata-list');
-    if (legacy_meta_wrap != null) {
+    if (legacy_meta_wrap) {
         let metadatas = legacy_meta_wrap.querySelectorAll('.metadata-item:not(.library-header-ctas__wrapper)');
 
         metadatas.forEach((meta) => {
@@ -1266,9 +1281,7 @@ function bleh_glacier_library_focused() {
 
     // move random overview header into their section below
     let overview_header = page.structure.main.querySelector(':scope > .library-overview-header');
-
-    if (overview_header == null)
-        return;
+    if (!overview_header) return;
 
     overview_header.nextElementSibling.insertBefore(overview_header, overview_header.nextElementSibling.firstElementChild);
 }
@@ -1278,26 +1291,20 @@ export function bleh_glacier_library_bulk_edit() {
     let library_header = page.structure.main.querySelector('.library-header');
 
     let bulk_edit = library_header.querySelector('[href="javascript:void(0)"]');
-
-    if (bulk_edit == null)
-        return;
+    if (!bulk_edit) return;
 
     // move to new area
     let view_buttons = page.structure.main.querySelector('.glacier-library-buttons');
-
-    if (view_buttons == null)
-        return;
+    if (!view_buttons) return;
 
     let edit_form = view_buttons.querySelector(':scope > .library-header-edit-form');
     let delete_button = view_buttons.querySelector(':scope > .delete-icon');
-
-    if (delete_button == null)
-        return;
+    if (!delete_button) return;
 
     bulk_edit.classList.add('btn', 'view-item', 'glacier-library-button', 'bulk-edit-button');
     bulk_edit.textContent = trans_legacy[lang].glacier.bulk_edit;
 
-    if (edit_form == null)
+    if (!edit_form)
         view_buttons.insertBefore(bulk_edit, delete_button);
     else
         view_buttons.insertBefore(bulk_edit, edit_form);
