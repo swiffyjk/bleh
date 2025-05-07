@@ -1038,6 +1038,9 @@ export const trans = {
     },
     obsession: {
         en: 'Obsession'
+    },
+    finding_your_tracks: {
+        en: 'Finding your tracks'
     }
 }
 

@@ -1031,8 +1031,10 @@
       // lol
       "- sped up",
       "(sped up",
+      "[sped up",
       "- slow",
       "(slow",
+      "[slow",
       "a. g. cook remix",
       "- offline",
       "- og mix",
@@ -2208,6 +2210,9 @@
     },
     obsession: {
       en: "Obsession"
+    },
+    finding_your_tracks: {
+      en: "Finding your tracks"
     }
   };
   var trans_legacy = {
@@ -10589,12 +10594,11 @@
             return;
           dialog({
             id: "listening_report_v2",
-            title: "Listening reports v2",
+            title: "oh no :c",
             body: `
-                        <div class="alert alert-error">Unfortunately, legacy listening reports are not yet supported in bleh3.</div>
+                        <div class="alert alert-error">This listening report is too old</div>
                         <br>
-                        <p>To view this page properly it's recommended to temporarily disable bleh :3</p>
-                        <p>Don't worry, they will be looked at eventually. Sorry for the inconvenience !!</p>
+                        <p>Legacy listening reports are not properly viewable yet in bleh for now. Sorry for the inconvenience.</p>
                     `
           });
           return;
@@ -10887,40 +10891,32 @@
     localStorage.setItem("bleh_profile_notes", JSON.stringify(profile_notes));
   }
   function patch_profile_following() {
-    let following_tab = page.structure.nav.querySelector(".secondary-nav-item--following");
-    let following_tab_html = following_tab.outerHTML;
-    if (following_tab == void 0)
+    let navlist = page.structure.nav.querySelector(".navlist-items");
+    let following_tab = navlist.querySelector(".secondary-nav-item--following");
+    let link = following_tab.querySelector("a");
+    if (page.subpage != "following" && page.subpage != "followers" && page.subpage != "neighbours") {
+      link.textContent = tl(trans.friends);
       return;
-    if (following_tab.hasAttribute("data-kate-processed"))
-      return;
-    following_tab.setAttribute("data-kate-processed", "true");
-    following_tab.querySelector("a").textContent = tl(trans.friends);
-    if (page.subpage != "following" && page.subpage != "followers" && page.subpage != "neighbours")
-      return;
-    let followers_tab = page.structure.nav.querySelector(".secondary-nav-item--followers");
-    let followers_tab_html = followers_tab.outerHTML;
-    let neighbours_tab = page.structure.nav.querySelector(".secondary-nav-item--neighbours");
-    let neighbours_tab_html = neighbours_tab.outerHTML;
-    let tab = void 0;
-    if (page.subpage == "followers")
-      tab = followers_tab;
-    else if (page.subpage == "following")
-      tab = following_tab;
-    else
-      tab = neighbours_tab;
-    tab.querySelector("a").textContent = tl(trans.friends);
-    let follow_nav = document.createElement("div");
-    follow_nav.classList.add("bleh--nav-wrap", "bleh--friends-nav");
-    follow_nav.innerHTML = `
+    }
+    if (page.subpage != "following")
+      link.classList.add("secondary-nav-item-link--active");
+    let followers_tab = navlist.querySelector(".secondary-nav-item--followers");
+    let neighbours_tab = navlist.querySelector(".secondary-nav-item--neighbours");
+    navlist.removeChild(followers_tab);
+    navlist.removeChild(neighbours_tab);
+    let friends_nav = document.createElement("div");
+    friends_nav.classList.add("bleh--nav-wrap", "bleh--friends-nav");
+    friends_nav.innerHTML = `
         <nav class="navlist secondary-nav redesigned-navigation">
             <ul class="navlist-items bleh--navlist-items">
-                ${following_tab_html}
-                ${followers_tab_html}
-                ${neighbours_tab_html}
+                ${following_tab.outerHTML}
+                ${followers_tab.outerHTML}
+                ${neighbours_tab.outerHTML}
             </ul>
         </nav>
     `;
-    page.structure.content_top.after(follow_nav);
+    link.textContent = tl(trans.friends);
+    page.structure.content_top.after(friends_nav);
     page.structure.row.classList.add("col-main-is-primary");
     if (ff("katsune") && page.subpage != "neighbours") {
       let count_text = page.structure.content_top.querySelector("h1").textContent.trim();
@@ -10931,7 +10927,7 @@
       let count_badge = document.createElement("div");
       count_badge.classList.add("new-badge", "count-badge");
       count_badge.textContent = count;
-      follow_nav.querySelector(".secondary-nav-item-link--active").appendChild(count_badge);
+      friends_nav.querySelector(".secondary-nav-item-link--active").appendChild(count_badge);
     }
     let view_buttons = document.createElement("div");
     view_buttons.classList.add("view-buttons-wrapper");
@@ -17685,15 +17681,15 @@
       beret.classList.add("beret-music", "bleh--panel");
       beret.innerHTML = `
             <div class="panel-side panel-side-main">
-                <h4>Recent listening</h4>
+                <h4>${tl(trans.recent_tracks)}</h4>
                 <div class="recent-listening-container">
                     <div class="loading-data-container">
-                        <p class="loading-data-text">Finding your tracks</p>
+                        <p class="loading-data-text">${tl(trans.finding_your_tracks)}</p>
                     </div>
                 </div>
             </div>
             <div class="panel-side panel-side-alt">
-                <h4>Recent activities</h4>
+                <h4>${tl(trans.activity)}</h4>
             </div>
         `;
       let track_list = beret.querySelector(".recent-listening-container");

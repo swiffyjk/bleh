@@ -5135,7 +5135,7 @@ better than the default selector '#app a' i suppose */
     }
 
     .title-container h1:has(
-        .title + [data-bleh--tag-group="guests"]
+        .title + [data-bleh--tag-group="guests"]:last-child
     ) {
         .title {
             margin: unset !important;
@@ -5998,6 +5998,11 @@ the body text becomes bigger by default - this reverts that */
     leading to a gap from their own css */
     & + p:empty {
         display: none;
+    }
+
+    .no-data-message-heading {
+        font: inherit;
+        color: inherit;
     }
 }
 .loading-data-container {

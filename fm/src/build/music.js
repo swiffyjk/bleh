@@ -132,7 +132,7 @@ export let includes = {
         '(kate',
         '(asmr',
         '(agressive', '(aggressive', 'brazilian phonk', // lol
-        '- sped up', '(sped up', '- slow', '(slow',
+        '- sped up', '(sped up', '[sped up', '- slow', '(slow', '[slow',
         'a. g. cook remix',
         '- offline', '- og mix',
         '- club edit', '(club edit',

@@ -153,15 +153,15 @@ export function bleh_home() {
 
         beret.innerHTML = (`
             <div class="panel-side panel-side-main">
-                <h4>Recent listening</h4>
+                <h4>${tl(trans.recent_tracks)}</h4>
                 <div class="recent-listening-container">
                     <div class="loading-data-container">
-                        <p class="loading-data-text">Finding your tracks</p>
+                        <p class="loading-data-text">${tl(trans.finding_your_tracks)}</p>
                     </div>
                 </div>
             </div>
             <div class="panel-side panel-side-alt">
-                <h4>Recent activities</h4>
+                <h4>${tl(trans.activity)}</h4>
             </div>
         `);
 
