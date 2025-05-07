@@ -3,7 +3,7 @@ import { root } from "../build/page";
 export function markdown(text, {
     allow_headers = false,
     allow_links = true
-}) {
+}={}) {
     let converter = new showdown.Converter({
         emoji: true,
         excludeTrailingPunctuationFromURLs: true,

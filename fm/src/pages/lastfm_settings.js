@@ -635,7 +635,9 @@ unsafeWindow._update_about_me_preview = function(value) {
     update_about_me_preview(value);
 }
 function update_about_me_preview(value) {
-    let result = markdown(value);
+    let result = markdown(value, {
+        allow_headers: true
+    });
     let about_me = page.structure.side.querySelector('#about_me_preview');
 
     about_me.innerHTML = result;

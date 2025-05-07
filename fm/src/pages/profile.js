@@ -1643,7 +1643,9 @@ function profile_tracks() {
 }
 
 function bio_parse(text, cache = false) {
-    let result = markdown(text.textContent);
+    let result = markdown(text.textContent, {
+        allow_headers: true
+    });
 
     let temp = document.createElement('div');
     temp.innerHTML = result;

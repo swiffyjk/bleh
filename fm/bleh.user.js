@@ -8607,7 +8607,7 @@
   function markdown(text, {
     allow_headers = false,
     allow_links = true
-  }) {
+  } = {}) {
     let converter = new showdown.Converter({
       emoji: true,
       excludeTrailingPunctuationFromURLs: true,
@@ -9909,7 +9909,9 @@
     update_about_me_preview(value);
   };
   function update_about_me_preview(value) {
-    let result = markdown(value);
+    let result = markdown(value, {
+      allow_headers: true
+    });
     let about_me = page.structure.side.querySelector("#about_me_preview");
     about_me.innerHTML = result;
     let banner = about_me.querySelector('img[alt="banner"]');
@@ -11592,7 +11594,9 @@
     form.innerHTML = "";
   }
   function bio_parse(text, cache = false) {
-    let result = markdown(text.textContent);
+    let result = markdown(text.textContent, {
+      allow_headers: true
+    });
     let temp = document.createElement("div");
     temp.innerHTML = result;
     use_banner(temp, cache);
