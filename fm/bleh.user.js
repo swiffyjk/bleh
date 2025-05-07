@@ -10467,7 +10467,7 @@
         page.structure.main.innerHTML = "";
         page.structure.side.innerHTML = "";
         let alert = document.createElement("section");
-        alert.classList.add("cta", "colourful", "sponsor");
+        alert.classList.add("cta");
         alert.innerHTML = `<strong>${tl(trans.sponsor_info)}</strong>`;
         page.structure.main.appendChild(alert);
       }
@@ -12301,7 +12301,7 @@
         </ul>
     `;
     page.structure.side.innerHTML = `
-        <div class="cta first sponsor">
+        <div class="cta first sponsor colourful">
             <strong>${tl(trans.news_sponsor_cta)}</strong>
             <a class="see-more" onclick="_sponsor()">${tl(trans.sponsor)}</a>
         </div>
@@ -16864,7 +16864,7 @@
       id: "changelog",
       title: tl(trans.news_from_user).replace("{user}", `<a class="mention" href="${root}user/cutensilly">@cutensilly</a>`),
       body: `
-            <div class="cta first sponsor margin-bottom">
+            <div class="cta first sponsor colourful margin-bottom">
                 <strong>${tl(trans.news_sponsor_cta)}</strong>
                 <a class="see-more" onclick="_sponsor(true)">${tl(trans.sponsor)}</a>
             </div>
@@ -18857,6 +18857,7 @@
     });
     if (page.type == "user") {
       let promo_v3 = page.structure.side.querySelector(".promo-v3");
+      if (!promo_v3) return;
       let header = promo_v3.querySelector("h2");
       header.textContent = tl(trans.listening);
       let promos = promo_v3.querySelectorAll(".listening-report-promo");
@@ -18866,8 +18867,7 @@
         container.appendChild(promo);
       });
       promo_v3.appendChild(container);
-      if (!radios)
-        return;
+      if (!radios) return;
       let sep = document.createElement("div");
       sep.classList.add("sep");
       promo_v3.appendChild(sep);

@@ -77,7 +77,7 @@ function open_changelog(changelog) {
         id: 'changelog',
         title: tl(trans.news_from_user).replace('{user}', `<a class="mention" href="${root}user/cutensilly">@cutensilly</a>`),
         body: (`
-            <div class="cta first sponsor margin-bottom">
+            <div class="cta first sponsor colourful margin-bottom">
                 <strong>${tl(trans.news_sponsor_cta)}</strong>
                 <a class="see-more" onclick="_sponsor(true)">${tl(trans.sponsor)}</a>
             </div>

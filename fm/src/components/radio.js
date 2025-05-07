@@ -24,6 +24,8 @@ export function bleh_radio() {
 
     if (page.type == 'user') {
         let promo_v3 = page.structure.side.querySelector('.promo-v3');
+        if (!promo_v3) return;
+
         let header = promo_v3.querySelector('h2');
         header.textContent = tl(trans.listening);
 
@@ -35,8 +37,7 @@ export function bleh_radio() {
         });
         promo_v3.appendChild(container);
 
-        if (!radios)
-            return;
+        if (!radios) return;
 
         let sep = document.createElement('div');
         sep.classList.add('sep');

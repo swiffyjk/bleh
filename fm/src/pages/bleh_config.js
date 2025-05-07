@@ -90,7 +90,7 @@ export function bleh_settings() {
     `);
 
     page.structure.side.innerHTML = (`
-        <div class="cta first sponsor">
+        <div class="cta first sponsor colourful">
             <strong>${tl(trans.news_sponsor_cta)}</strong>
             <a class="see-more" onclick="_sponsor()">${tl(trans.sponsor)}</a>
         </div>

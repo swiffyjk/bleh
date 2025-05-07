@@ -251,7 +251,7 @@ export function bleh_profiles() {
             page.structure.side.innerHTML = '';
 
             let alert = document.createElement('section');
-            alert.classList.add('cta', 'colourful', 'sponsor');
+            alert.classList.add('cta');
             alert.innerHTML = `<strong>${tl(trans.sponsor_info)}</strong>`;
 
             page.structure.main.appendChild(alert);
