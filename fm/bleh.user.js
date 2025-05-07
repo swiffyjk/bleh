@@ -7033,7 +7033,7 @@
     let badges = load_badges(name, true);
     if (badges) {
       let pre_existing_badge = avatar.querySelector(".avatar-status-dot");
-      if (pre_existing_badge !== null)
+      if (pre_existing_badge)
         avatar.removeChild(pre_existing_badge);
       avatar.setAttribute("title", "");
       let this_badge = sponsor_list.badges[name];

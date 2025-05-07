@@ -23,7 +23,7 @@ export function patch_avatar(avatar, name, type = '', parent=null, side='right')
     if (badges) {
         // remove pre-existing badge
         let pre_existing_badge = avatar.querySelector('.avatar-status-dot');
-        if (pre_existing_badge !== null)
+        if (pre_existing_badge)
             avatar.removeChild(pre_existing_badge);
 
         avatar.setAttribute('title','');

@@ -235,7 +235,7 @@ body, [data-page-resource-type="album"], [data-page-resource-type="track"],
 
         /* root */
         --b6: var(--hue), calc(var(--sat) * 9% * var(--sat-bg, 1)), 69%;
-        --b8: var(--hue), calc(var(--sat) * 20% * var(--sat-bg, 1)), 86%;
+        --b8: var(--hue), calc(var(--sat) * 12% * var(--sat-bg, 1)), 88%;
         --b7: var(--c1);
     }
 }
@@ -9842,7 +9842,7 @@ text[style^="color: rgb(255, 172, 172)"] {
     }
 
     &[data-theme="user"] {
-        padding: var(--card-gap) !important;
+        padding: var(--card-gap) 30px !important;
         border-radius: var(--card-radius) !important;
         transform-origin: center;
         color: hsl(var(--c2));
@@ -9856,13 +9856,16 @@ text[style^="color: rgb(255, 172, 172)"] {
 
         .tippy-content {
             display: flex;
-            gap: var(--card-padding);
+            flex-direction: column;
+            gap: 10px;
 
             .image-info {
                 display: flex;
-                gap: var(--card-gap);
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+                gap: 10px;
                 flex: 1;
-                min-width: 170px;
 
                 position: relative;
 
@@ -9885,6 +9888,12 @@ text[style^="color: rgb(255, 172, 172)"] {
                     }
                 }
 
+                .info {
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                }
+
                 .title {
                     font-weight: var(--font-weight-medium);
                     margin: unset;
@@ -9895,6 +9904,7 @@ text[style^="color: rgb(255, 172, 172)"] {
                     line-height: var(--line-height-sm);
                     margin-top: var(--card-gap);
                     cursor: default;
+                    display: none;
                 }
                 .badge {
                     position: relative;
@@ -9903,6 +9913,7 @@ text[style^="color: rgb(255, 172, 172)"] {
                     margin: unset;
                     font-weight: var(--font-weight-medium);
                     padding-left: calc(18px + 6px);
+                    width: fit-content;
                     --left: 0 !important;
                     cursor: default;
 
@@ -14600,8 +14611,7 @@ input[type="range"]::-moz-range-progress {
 
     p {
         color: hsl(var(--c2), 60%);
-        font-size: var(--font-size-sm);
-        line-height: var(--line-height-sm);
+        font-size: 13px;
     }
 }
 .toggle-container .heading .btn,
@@ -16577,13 +16587,13 @@ button.bleh--gallery-bookmark-image-btn {
 
     &.user-buttons {
         height: 100%;
+        justify-content: center;
         align-items: unset;
         padding: unset;
         background: unset;
         box-shadow: unset;
         border-radius: unset;
         margin: unset;
-        flex-direction: column;
 
         .user-button {
             /*&:not(:hover) {
@@ -16595,7 +16605,6 @@ button.bleh--gallery-bookmark-image-btn {
             --show-icon: block;
             --font-size: 0;
             color: inherit !important;
-            flex: 1;
             --left: 50%;
             --margin-left: -10px;
 
