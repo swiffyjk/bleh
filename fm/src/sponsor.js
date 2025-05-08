@@ -15,13 +15,16 @@ export function sponsors(force = false) {
 
     let current_time = new Date();
 
-    if (sponsor_data == null) {
+    if (!sponsor_data) {
         log('not cached, fetching', 'sponsor');
         sponsor_request(true);
     } else {
         // we prefer to load the current cache before waiting for a new response
         for (var member in sponsor_list) delete sponsor_list[member];
         Object.assign(sponsor_list, JSON.parse(sponsor_data));
+
+        if (sponsor_list)
+            auth.sponsor = sponsor_list.sponsors.includes(auth.name);
 
         // is it valid?
         if (sponsor_expire < current_time && !force) {
@@ -56,6 +59,9 @@ function sponsor_request(notify = false) {
             for (var member in sponsor_list) delete sponsor_list[member];
             Object.assign(sponsor_list, JSON.parse(this.response));
 
+            if (sponsor_list)
+                auth.sponsor = sponsor_list.sponsors.includes(auth.name);
+
             if (notify)
                 deliver_notif(trans_legacy[lang].settings.home.sponsor.download, false, true, 'sponsor');
 
@@ -88,9 +94,12 @@ function sponsor(replace=false) {
         title: tl(trans.support_future_development),
         body: (`
             <div class="modal-vertical-inner support-inner">
-                <div class="bleh-icon sponsor-heart"></div>
+                <div class="avatar">
+                    <img src="${auth.avatar.replace('/avatar42s/', '/avatar170s/')}" alt="${tl(trans.your_avatar)}">
+                    <span class="avatar-status-dot user-status--bleh-sponsor"></span>
+                </div>
                 <h1>${tl(trans.support_future_development)}</h1>
-                <p>${tl(trans.why_sponsor)}</p>
+                <p>${tl(trans.why_sponsor).replace('katelyn', `<a class="mention" href="${root}user/cutensilly">@cutensilly</a>`)}</p>
             </div>
             <div class="modal-footer">
                 <a class="btn primary sponsor" href="${sponsor_list.sponsor_link}" target="_blank">
@@ -113,9 +122,12 @@ function sponsor_manage() {
             title: trans_legacy[lang].settings.home.sponsor.header,
             body: (`
                 <div class="modal-vertical-inner support-inner">
-                    <div class="bleh-icon sponsor-heart"></div>
-                    <h1>${trans_legacy[lang].settings.home.sponsor.status.yes}</h1>
-                    <p>${trans_legacy[lang].settings.home.sponsor.status.one_time}</p>
+                    <div class="avatar">
+                        <img src="${auth.avatar.replace('/avatar42s/', '/avatar170s/')}" alt="${tl(trans.your_avatar)}">
+                        <span class="avatar-status-dot user-status--bleh-sponsor"></span>
+                    </div>
+                    <h1>${tl(trans.you_are_a_sponsor)}</h1>
+                    <p>${tl(trans.sponsor_no_badge)}</p>
                 </div>
             `),
             type: 'sponsor'
@@ -126,13 +138,16 @@ function sponsor_manage() {
             title: trans_legacy[lang].settings.home.sponsor.header,
             body: (`
                 <div class="modal-vertical-inner support-inner">
-                    <div class="bleh-icon sponsor-heart"></div>
-                    <h1>${trans_legacy[lang].settings.home.sponsor.status.yes}</h1>
-                    <p>${trans_legacy[lang].settings.home.sponsor.status.badge}</p>
+                    <div class="avatar">
+                        <img src="${auth.avatar.replace('/avatar42s/', '/avatar170s/')}" alt="${tl(trans.your_avatar)}">
+                        <span class="avatar-status-dot user-status--bleh-sponsor"></span>
+                    </div>
+                    <h1>${tl(trans.you_are_a_sponsor)}</h1>
+                    <p>${tl(trans.sponsor_get_badge).replace('{account}', `<a class="mention" href="${root}user/${sponsor_list.sponsor_account}">@${sponsor_list.sponsor_account}</a>`)}</p>
                 </div>
                 <div class="modal-footer">
                     <a class="btn primary sponsor" href="${root}user/${sponsor_list.sponsor_account}" target="_blank">
-                        ${trans_legacy[lang].settings.home.sponsor.manage}
+                        ${tl(trans.manage_sponsor)}
                     </a>
                 </div>
             `),

@@ -665,7 +665,7 @@ export function bleh_profiles() {
     if (badges) {
         badges.forEach((this_badge) => {
             let badge = document.createElement('span');
-            badge.classList.add('label',`user-status--bleh-${this_badge.type}`,`user-status--bleh-user-${page.name}`);
+            badge.classList.add('label', `user-status--bleh-${this_badge.type}`, `user-status--bleh-user-${page.name}`);
             badge.textContent = this_badge.name;
             profile_name_obj.appendChild(badge);
 

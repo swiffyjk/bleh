@@ -35,6 +35,9 @@ export const trans = {
             name: {
                 en: 'No badges',
                 de: 'Kein Abzeichen'
+            },
+            reason: {
+                en: 'Become a sponsor to get a badge!'
             }
         },
         'user-status-subscriber': {
@@ -704,6 +707,18 @@ export const trans = {
     why_sponsor: {
         en: 'Receive an accompanying badge on your profile and a big thank you from katelyn for supporting <3'
     },
+    you_are_a_sponsor: {
+        en: 'You are a sponsor, thank you!'
+    },
+    sponsor_get_badge: {
+        en: 'A monthly sponsorship grants you a custom badge, to obtain or edit this message {account}.'
+    },
+    sponsor_no_badge: {
+        en: 'A custom badge is only available with a monthly sponsorship.'
+    },
+    manage_sponsor: {
+        en: 'Manage sponsorship'
+    },
     obsess: {
         en: 'Obsess'
     },
@@ -1069,6 +1084,12 @@ export const trans = {
     what_is_lotus: {
         en: 'A capitalisation correction system for artists, albums, and tracks - all powered by community contributions.'
     },
+    correct_titles_with_lotus: {
+        en: 'Correct titles with lotus'
+    },
+    sponsor_data: {
+        en: 'Sponsor and badge data version {v}'
+    },
     view_all: {
         en: 'View all'
     },
@@ -1091,6 +1112,23 @@ export const trans = {
     supports_markdown: {
         // markdown: https://www.markdownguide.org/cheat-sheet/
         en: 'Supports Markdown'
+    },
+    profile_shortcut: {
+        name: {
+            en: 'Profile shortcut'
+        },
+        body: {
+            en: 'View their scrobbles alongside yours at all times'
+        }
+    },
+    avatar_radius: {
+        en: 'Profile avatar shape'
+    },
+    notes: {
+        en: 'Notes'
+    },
+    no_notes: {
+        en: 'No profiles here... (｡•́︿•̀｡)'
     }
 }
 

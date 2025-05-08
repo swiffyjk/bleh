@@ -588,6 +588,7 @@
   var auth = {
     name: null,
     pro: false,
+    sponsor: false,
     avatar: null,
     sets: {
       hue: 255,
@@ -1207,6 +1208,9 @@
         name: {
           en: "No badges",
           de: "Kein Abzeichen"
+        },
+        reason: {
+          en: "Become a sponsor to get a badge!"
         }
       },
       "user-status-subscriber": {
@@ -1876,6 +1880,18 @@
     why_sponsor: {
       en: "Receive an accompanying badge on your profile and a big thank you from katelyn for supporting <3"
     },
+    you_are_a_sponsor: {
+      en: "You are a sponsor, thank you!"
+    },
+    sponsor_get_badge: {
+      en: "A monthly sponsorship grants you a custom badge, to obtain or edit this message {account}."
+    },
+    sponsor_no_badge: {
+      en: "A custom badge is only available with a monthly sponsorship."
+    },
+    manage_sponsor: {
+      en: "Manage sponsorship"
+    },
     obsess: {
       en: "Obsess"
     },
@@ -2241,6 +2257,12 @@
     what_is_lotus: {
       en: "A capitalisation correction system for artists, albums, and tracks - all powered by community contributions."
     },
+    correct_titles_with_lotus: {
+      en: "Correct titles with lotus"
+    },
+    sponsor_data: {
+      en: "Sponsor and badge data version {v}"
+    },
     view_all: {
       en: "View all"
     },
@@ -2263,6 +2285,23 @@
     supports_markdown: {
       // markdown: https://www.markdownguide.org/cheat-sheet/
       en: "Supports Markdown"
+    },
+    profile_shortcut: {
+      name: {
+        en: "Profile shortcut"
+      },
+      body: {
+        en: "View their scrobbles alongside yours at all times"
+      }
+    },
+    avatar_radius: {
+      en: "Profile avatar shape"
+    },
+    notes: {
+      en: "Notes"
+    },
+    no_notes: {
+      en: "No profiles here... (\uFF61\u2022\u0301\uFE3F\u2022\u0300\uFF61)"
     }
   };
   var trans_legacy = {
@@ -5402,6 +5441,39 @@
   var cute = ["cutensilly", "stellasaur", "kateshapedbox"];
   var sponsor_list = {};
 
+  // src/components/badge.js
+  function load_badges(user, solo = false) {
+    if (sponsor_list == null)
+      return;
+    if (!sponsor_list.badges.hasOwnProperty(user))
+      return;
+    let badges = [];
+    if (!Array.isArray(sponsor_list.badges[user])) {
+      log("1 badge found", "sponsor", "info", sponsor_list.badges[user]);
+      badges.push(sponsor_list.badges[user]);
+    } else {
+      log("multiple badges found", "sponsor", "info", sponsor_list.badges[user]);
+      if (solo)
+        badges.push(sponsor_list.badges[user][Object.keys(sponsor_list.badges[user]).length - 1]);
+      else
+        badges = sponsor_list.badges[user];
+    }
+    badges.forEach((badge) => {
+      if (!badge.name)
+        badge.name = tl(trans.badges[badge.type].name);
+      if (badge.reason)
+        return;
+      if (badge.type == "sponsor" || badge.type == "contributor" || badge.type == "translation")
+        badge.reason = badge.type;
+      else if (badge.type == "cute" || badge.type == "queen")
+        badge.reason = "cute";
+      else
+        badge.reason = "reserved";
+    });
+    log("final badge list", "sponsor", "info", badges);
+    return badges;
+  }
+
   // src/components/dialog.js
   function load_dialogs() {
     let dialogs2 = document.createElement("div");
@@ -7030,39 +7102,6 @@
         }
       }
     };
-  }
-
-  // src/components/badge.js
-  function load_badges(user, solo = false) {
-    if (sponsor_list == null)
-      return;
-    if (!sponsor_list.badges.hasOwnProperty(user))
-      return;
-    let badges = [];
-    if (!Array.isArray(sponsor_list.badges[user])) {
-      log("1 badge found", "sponsor", "info", sponsor_list.badges[user]);
-      badges.push(sponsor_list.badges[user]);
-    } else {
-      log("multiple badges found", "sponsor", "info", sponsor_list.badges[user]);
-      if (solo)
-        badges.push(sponsor_list.badges[user][Object.keys(sponsor_list.badges[user]).length - 1]);
-      else
-        badges = sponsor_list.badges[user];
-    }
-    badges.forEach((badge) => {
-      if (!badge.name)
-        badge.name = tl(trans.badges[badge.type].name);
-      if (badge.reason)
-        return;
-      if (badge.type == "sponsor" || badge.type == "contributor" || badge.type == "translation")
-        badge.reason = badge.type;
-      else if (badge.type == "cute" || badge.type == "queen")
-        badge.reason = "cute";
-      else
-        badge.reason = "reserved";
-    });
-    log("final badge list", "sponsor", "info", badges);
-    return badges;
   }
 
   // src/avatar.js
@@ -12364,8 +12403,13 @@
     `;
     page.structure.side.innerHTML = `
         <div class="cta first sponsor colourful">
+            ${auth.sponsor ? `
+            <strong>${tl(trans.you_are_a_sponsor)}</strong>
+            <a class="see-more" onclick="_sponsor_manage()">${tl(trans.manage_sponsor)}</a>
+            ` : `
             <strong>${tl(trans.news_sponsor_cta)}</strong>
             <a class="see-more" onclick="_sponsor()">${tl(trans.sponsor)}</a>
+            `}
         </div>
         <section class="view-all-panel">
             <button class="btn view-all-button import" onclick="_import_settings()">
@@ -12524,10 +12568,6 @@
         {
           id: "colourful_tracks",
           name: tl(trans.colourful_tracks.name)
-        },
-        {
-          id: "colourful_counts",
-          name: trans_legacy[lang].settings.customise.colourful_counts.name
         }
       ]);
       return `
@@ -13041,11 +13081,8 @@
           name: trans_legacy[lang].settings.activities.toggle.name
         }
       ]);
-      let sponsoring = false;
-      if (sponsor_list)
-        sponsoring = sponsor_list.sponsors.includes(auth.name);
       return `
-            <div class="bleh--panel sponsor-badge-panel" data-sponsoring="${sponsoring}">
+            <div class="bleh--panel sponsor-badge-panel" data-sponsoring="${auth.sponsor}">
                 <div class="profile-container">
                     <div class="avatar-side small">
                         <div class="avatar">
@@ -13079,39 +13116,33 @@
                 </div>
                 ` : ""}
                 <div class="sep"></div>
-                ${sponsoring ? `
-                <h4>${trans_legacy[lang].settings.home.sponsor.status.yes}</h4>
-                <div class="alert alert-info">${trans_legacy[lang].settings.home.sponsor.version.replace("{v}", `<span class="version-link sponsor-related">${sponsor_list.latest}</span>`)}</div>
-                <div class="screen-row actions-only">
-                    <div class="actions">
-                        <button class="btn primary sponsor" onclick="_sponsor_manage()">
-                            ${trans_legacy[lang].settings.home.sponsor.manage}
-                        </button>
-                        <button class="btn refresh icon" onclick="_sponsor_check()">
-                            ${trans_legacy[lang].settings.home.sponsor.check}
-                        </button>
+                <div class="toggle-container">
+                    <div class="heading">
+                        <h5>${tl(trans.sponsor_data).replace("{v}", `<span class="version-link sponsor-related">${sponsor_list.latest}</span>`)}</h5>
+                    </div>
+                    <div class="toggle-wrap">
+                        <button class="see-more update-check sponsor-related" onclick="_sponsor_check()">${tl(trans.update_check)}</button>
                     </div>
                 </div>
-                ` : `
-                <h4>${trans_legacy[lang].settings.home.sponsor.status.no}</h4>
-                <div class="alert alert-info">${trans_legacy[lang].settings.home.sponsor.version.replace("{v}", `<span class="version-link sponsor-related">${sponsor_list.latest}</span>`)}</div>
-                <div class="screen-row actions-only">
-                    <div class="actions">
-                        <button class="btn primary sponsor" onclick="_sponsor()">
-                            ${trans_legacy[lang].settings.home.sponsor.name}
-                        </button>
-                        <button class="btn refresh icon" onclick="_sponsor_check()">
-                            ${trans_legacy[lang].settings.home.sponsor.check}
-                        </button>
+                <div class="text-container" id="container-profile_shortcut">
+                    <div class="heading content-form">
+                        <h5>${tl(trans.profile_shortcut.name)}</h5>
+                        <p>${tl(trans.profile_shortcut.body)}</p>
+                    </div>
+                    <div class="avatar-container">
+                        <div class="avatar-inner" id="avatar-profile_shortcut">
+                            <img id="avatar_src-profile_shortcut" src="${localStorage.getItem("bleh_profile_shortcut_avi") || ""}">
+                        </div>
+                    </div>
+                    <div class="input-container content-form">
+                        <input type="text" maxlength="40" id="text-profile_shortcut" value="${settings.profile_shortcut}" placeholder="${tl(trans.enter_username)}">
+                        <button class="btn chibi icon primary submit" onclick="_save_profile_shortcut()">${tl(trans.save)}</button>
                     </div>
                 </div>
-                `}
-            </div>
-            <div class="bleh--panel">
                 <div class="slider-container" id="container-avatar_radius">
                     <button class="btn reset" onclick="_reset_item('avatar_radius')">${tl(trans.reset)}</button>
                     <div class="heading">
-                        <h5>${trans_legacy[lang].settings.profiles.avatar_radius.name}</h5>
+                        <h5>${tl(trans.avatar_radius)}</h5>
                     </div>
                     <div class="slider">
                         <div class="slider-track" id="slider-track-avatar_radius"><div class="slider-fill"></div><div class="slider-nub"></div></div>
@@ -13119,21 +13150,12 @@
                         <p id="value-avatar_radius">0</p>
                     </div>
                 </div>
-                <h4>${trans_legacy[lang].settings.music.profile_shortcut.name}</h4>
-                <p>${trans_legacy[lang].settings.music.profile_shortcut.bio}</p>
-                <div class="text-container" id="container-profile_shortcut">
-                    <button class="btn reset" onclick="_reset_item('profile_shortcut')">${tl(trans.reset)}</button>
-                    <div class="avatar-container">
-                        <div class="avatar-inner" id="avatar-profile_shortcut">
-                            <img id="avatar_src-profile_shortcut" src="${localStorage.getItem("bleh_profile_shortcut_avi") || ""}">
-                        </div>
-                    </div>
-                    <div class="heading content-form">
-                        <h5>${trans_legacy[lang].settings.music.profile_shortcut.placeholder}</h5>
-                        <div class="input-container">
-                            <input type="text" maxlength="40" id="text-profile_shortcut" value="${settings.profile_shortcut}" placeholder="${tl(trans.enter_username)}">
-                            <button class="bleh--btn primary save" onclick="_save_profile_shortcut()">${tl(trans.save)}</button>
-                        </div>
+            </div>
+            <div class="bleh--panel">
+                <h4>${tl(trans.notes)}</h4>
+                <div class="profile-notes">
+                    <div class="loading-data-container">
+                        <div class="loading-data-text failed">${tl(trans.no_notes)}</div>
                     </div>
                 </div>
             </div>
@@ -13237,10 +13259,6 @@
                         </button>
                     </div>
                 </div>
-            </div>
-            <div class="bleh--panel">
-                <h4>${trans_legacy[lang].settings.profiles.notes.name}</h4>
-                <div class="profile-notes" id="profile-notes"></div>
             </div>
             `;
     } else if (page_id == "accessibility") {
@@ -13403,16 +13421,20 @@
     } else if (page_id == "music") {
       register_skip_to([
         {
+          id: "corrections",
+          name: tl(trans.correct_titles_with_lotus)
+        },
+        {
           id: "format_guest_features",
           name: tl(trans.format_guest_features.name)
         },
         {
-          id: "corrections",
-          name: trans_legacy[lang].settings.corrections.toggle.name
-        },
-        {
           id: "stacked_chartlist_info",
           name: tl(trans.track_column_view)
+        },
+        {
+          id: "colourful_counts",
+          name: trans_legacy[lang].settings.customise.colourful_counts.name
         },
         {
           id: "travis",
@@ -13452,6 +13474,50 @@
       }
       preview_bar = `${preview_bar});`;
       return `
+            <div class="bleh--panel lotus">
+                <h4>${tl(trans.brand_version_number).replace("{brand}", `<a class="lotus lotus-name" href="https://github.com/katelyynn/lotus" target="_blank">lotus</a>`).replace("{number}", `<span class="version-link lotus">${artist_corrections.version >= album_track_corrections.version ? artist_corrections.version : album_track_corrections.version}</span>`)}</h4>
+                <p>${tl(trans.what_is_lotus)}</p>
+                <div class="inner-preview pad">
+                    <div class="lotus-preview">
+                        <div class="before">
+                            <h1>mY aNtI-aIrCrAfT fRiEnD</h1>
+                            <h2>jUlIe</h2>
+                        </div>
+                        <div class="after">
+                            <h1>my anti-aircraft friend</h1>
+                            <h2>julie</h2>
+                        </div>
+                    </div>
+                </div>
+                <div class="screen-row actions-only">
+                    <div class="actions">
+                        <button class="see-more update-check" onclick="_lotus_check()">${tl(trans.update_check)}</button>
+                        <div class="fill"></div>
+                        <button class="see-more expand" onclick="_open_correction_modal()">${tl(trans.view_all)}</button>
+                    </div>
+                </div>
+                <div class="toggle-container" id="container-corrections" onclick="_update_item('corrections')">
+                    <button class="btn reset" onclick="_reset_item('corrections')">${tl(trans.reset)}</button>
+                    <div class="heading">
+                        <h5>${tl(trans.correct_titles_with_lotus)}</h5>
+                    </div>
+                    <div class="toggle-wrap">
+                        <button class="toggle lotus" id="toggle-corrections" aria-checked="true">
+                            <div class="dot"></div>
+                        </button>
+                    </div>
+                </div>
+                <div class="toggle-container">
+                    <div class="heading">
+                        <h5>${tl(trans.help_contribute)}</h5>
+                    </div>
+                    <div class="toggle-wrap">
+                        <a class="see-more" href="https://github.com/katelyynn/lotus/issues/new/choose" target="_blank">
+                            ${tl(trans.suggest_correction)}
+                        </a>
+                    </div>
+                </div>
+            </div>
             <div class="bleh--panel">
                 <h4>${trans_legacy[lang].settings.corrections.formatting}</h4>
                 <div class="inner-preview pad flex">
@@ -13534,53 +13600,9 @@
                     </div>
                 </div>
             </div>
-            <div class="bleh--panel lotus">
-                <h4>${tl(trans.brand_version_number).replace("{brand}", `<a class="lotus lotus-name" href="https://github.com/katelyynn/lotus" target="_blank">lotus</a>`).replace("{number}", `<span class="version-link lotus">${artist_corrections.version >= album_track_corrections.version ? artist_corrections.version : album_track_corrections.version}</span>`)}</h4>
-                <p>${tl(trans.what_is_lotus)}</p>
-                <div class="inner-preview pad">
-                    <div class="lotus-preview">
-                        <div class="before">
-                            <h1>mY aNtI-aIrCrAfT fRiEnD</h1>
-                            <h2>jUlIe</h2>
-                        </div>
-                        <div class="after">
-                            <h1>my anti-aircraft friend</h1>
-                            <h2>julie</h2>
-                        </div>
-                    </div>
-                </div>
-                <div class="screen-row actions-only">
-                    <div class="actions">
-                        <button class="see-more update-check" onclick="_lotus_check()">${tl(trans.update_check)}</button>
-                        <div class="fill"></div>
-                        <button class="see-more" onclick="_open_correction_modal()">${tl(trans.view_all)}</button>
-                    </div>
-                </div>
-                <div class="toggle-container" id="container-corrections" onclick="_update_item('corrections')">
-                    <button class="btn reset" onclick="_reset_item('corrections')">${tl(trans.reset)}</button>
-                    <div class="heading">
-                        <h5>${trans_legacy[lang].settings.corrections.toggle.name}</h5>
-                    </div>
-                    <div class="toggle-wrap">
-                        <button class="toggle lotus" id="toggle-corrections" aria-checked="true">
-                            <div class="dot"></div>
-                        </button>
-                    </div>
-                </div>
-                <div class="toggle-container">
-                    <div class="heading">
-                        <h5>${tl(trans.help_contribute)}</h5>
-                    </div>
-                    <div class="toggle-wrap">
-                        <a class="see-more" href="https://github.com/katelyynn/lotus/issues/new/choose" target="_blank">
-                            ${tl(trans.suggest_correction)}
-                        </a>
-                    </div>
-                </div>
-            </div>
             <div class="bleh--panel">
                 <h4 class="top-header">${tl(trans.music)}</h4>
-                <h4>${trans_legacy[lang].settings.music.header}</h4>
+                <h4>${tl(trans.tracklist)}</h4>
                 <div class="inner-preview pad">
                     <div class="tracks">
                         <div class="track realtime">
@@ -14552,61 +14574,92 @@
   }
   function init_profile_page() {
     let profile_name_obj = document.body.querySelector(".title-container");
-    if (sponsor_list && sponsor_list.badges.hasOwnProperty(auth.name)) {
-      if (!Array.isArray(sponsor_list.badges[auth.name])) {
-        log(`1 badge:`, "profile", "info", sponsor_list.badges[auth.name]);
-        let this_badge = sponsor_list.badges[auth.name];
+    if (ff("badges")) {
+      let stock_badges = profile_name_obj.querySelectorAll(".label");
+      stock_badges.forEach((badge) => {
+        if (badge.classList[1] == "user-status-None")
+          return;
+        badge.classList.add("no-hover");
+        tippy(badge, {
+          theme: "badge",
+          placement: "bottom",
+          content: `
+                    <div class="badge-name">${badge.textContent}</div>
+                    <div class="badge-reason">${tl(trans.badges[badge.classList[1]].reason)}</div>
+                `,
+          allowHTML: true
+        });
+      });
+    }
+    let badges = load_badges(auth.name);
+    if (badges) {
+      badges.forEach((this_badge) => {
         let badge = document.createElement("span");
-        badge.classList.add("label", `user-status--bleh-${this_badge.type}`, `user-status--bleh-user-${auth.name}`);
-        badge.textContent = this_badge.name != null ? this_badge.name : tl(trans.badges[this_badge.type].name);
+        badge.classList.add("label", `user-status--bleh-${this_badge.type}`, `user-status--bleh-user-${page.name}`);
+        badge.textContent = this_badge.name;
         profile_name_obj.appendChild(badge);
-      } else {
-        log(`multiple badges:`, "profile", "info", sponsor_list.badges[auth.name]);
-        for (let badge_entry in sponsor_list.badges[auth.name]) {
-          let this_badge = sponsor_list.badges[auth.name][badge_entry];
-          let badge = document.createElement("span");
-          badge.classList.add("label", `user-status--bleh-${this_badge.type}`, `user-status--bleh-user-${auth.name}`);
-          badge.textContent = this_badge.name != null ? this_badge.name : tl(trans.badges[this_badge.type].name);
-          profile_name_obj.appendChild(badge);
+        if (ff("badges")) {
+          badge.classList.add("no-hover");
+          tippy(badge, {
+            theme: "badge",
+            placement: "bottom",
+            content: `
+                        <div class="badge-name">${this_badge.name}</div>
+                        <div class="badge-reason">${tl(trans.badges[this_badge.reason].reason)}</div>
+                    `,
+            allowHTML: true
+          });
         }
-      }
+        if (this_badge.type == "sponsor")
+          badge.setAttribute("onclick", "_sponsor()");
+      });
     } else {
       let badge = document.createElement("span");
       badge.classList.add("label", "user-status--bleh-missing");
       badge.textContent = tl(trans.badges.missing.name);
       profile_name_obj.appendChild(badge);
+      if (ff("badges")) {
+        badge.classList.add("no-hover");
+        tippy(badge, {
+          theme: "badge",
+          placement: "bottom",
+          content: `
+                    <div class="badge-name">${tl(trans.badges.missing.name)}</div>
+                    <div class="badge-reason">${tl(trans.badges.missing.reason)}</div>
+                `,
+          allowHTML: true
+        });
+      }
     }
   }
   function init_profile_notes() {
     let profile_notes = JSON.parse(localStorage.getItem("bleh_profile_notes")) || {};
-    let profile_notes_table = document.getElementById("profile-notes");
+    let profile_notes_table = page.structure.main.querySelector(".profile-notes");
+    if (Object.keys(profile_notes).length == 0)
+      return;
+    profile_notes_table.classList = "generic-table-list user-vertical-list take-space profile-notes";
+    profile_notes_table.innerHTML = "";
     for (let user in profile_notes) {
       let profile_note = document.createElement("div");
-      profile_note.classList.add("profile-note-row");
+      profile_note.classList.add("generic-table-list-entry", "user-vertical-list-item");
       profile_note.setAttribute("id", `profile-note-row--${user}`);
       profile_note.innerHTML = `
         <div class="name">
-            <h5><a class="mention" href="${root}user/${user}">@${user}</a></h5>
+            <a class="mention" href="${root}user/${user}">@${user}</a>
         </div>
-        <div class="note-preview">
+        <div class="text preview">
             <p id="profile-note-row-preview--${user}">${profile_notes[user]}</p>
         </div>
         <div class="actions">
-            <button class="btn bleh--edit-note" id="profile-note-row-edit--${user}" onclick="_edit_profile_note('${user}')">
-                ${trans_legacy[lang].settings.profiles.notes.edit}
+            <button class="icon chibi edit" onclick="_edit_profile_note('${user}')">
+                ${tl(trans.delete)}
             </button>
-            <button class="btn bleh--delete-note" id="profile-note-row-delete--${user}" onclick="_delete_profile_note('${user}')">
-                ${trans_legacy[lang].settings.profiles.notes.delete}
+            <button class="delete icon delete-user-button danger-subtle" onclick="_delete_profile_note('${user}')">
+                ${tl(trans.delete)}
             </button>
         </div>
         `;
       profile_notes_table.appendChild(profile_note);
-      tippy(document.getElementById(`profile-note-row-edit--${user}`), {
-        content: trans_legacy[lang].settings.profiles.notes.edit_user.replace("{u}", user)
-      });
-      tippy(document.getElementById(`profile-note-row-delete--${user}`), {
-        content: trans_legacy[lang].settings.profiles.notes.delete_user.replace("{u}", user)
-      });
     }
   }
   unsafeWindow._delete_profile_note = function(username) {
@@ -18513,12 +18566,14 @@
     let sponsor_data = localStorage.getItem("kat_sponsors");
     let sponsor_expire = new Date(localStorage.getItem("kat_sponsors_expire"));
     let current_time = /* @__PURE__ */ new Date();
-    if (sponsor_data == null) {
+    if (!sponsor_data) {
       log("not cached, fetching", "sponsor");
       sponsor_request(true);
     } else {
       for (var member in sponsor_list) delete sponsor_list[member];
       Object.assign(sponsor_list, JSON.parse(sponsor_data));
+      if (sponsor_list)
+        auth.sponsor = sponsor_list.sponsors.includes(auth.name);
       if (sponsor_expire < current_time && !force) {
         sponsor_request();
       } else if (force) {
@@ -18543,6 +18598,8 @@
       if (xhr.status == 200) {
         for (var member in sponsor_list) delete sponsor_list[member];
         Object.assign(sponsor_list, JSON.parse(this.response));
+        if (sponsor_list)
+          auth.sponsor = sponsor_list.sponsors.includes(auth.name);
         if (notify2)
           deliver_notif(trans_legacy[lang].settings.home.sponsor.download, false, true, "sponsor");
         localStorage.setItem("kat_sponsors", this.response);
@@ -18567,9 +18624,12 @@
       title: tl(trans.support_future_development),
       body: `
             <div class="modal-vertical-inner support-inner">
-                <div class="bleh-icon sponsor-heart"></div>
+                <div class="avatar">
+                    <img src="${auth.avatar.replace("/avatar42s/", "/avatar170s/")}" alt="${tl(trans.your_avatar)}">
+                    <span class="avatar-status-dot user-status--bleh-sponsor"></span>
+                </div>
                 <h1>${tl(trans.support_future_development)}</h1>
-                <p>${tl(trans.why_sponsor)}</p>
+                <p>${tl(trans.why_sponsor).replace("katelyn", `<a class="mention" href="${root}user/cutensilly">@cutensilly</a>`)}</p>
             </div>
             <div class="modal-footer">
                 <a class="btn primary sponsor" href="${sponsor_list.sponsor_link}" target="_blank">
@@ -18591,9 +18651,12 @@
         title: trans_legacy[lang].settings.home.sponsor.header,
         body: `
                 <div class="modal-vertical-inner support-inner">
-                    <div class="bleh-icon sponsor-heart"></div>
-                    <h1>${trans_legacy[lang].settings.home.sponsor.status.yes}</h1>
-                    <p>${trans_legacy[lang].settings.home.sponsor.status.one_time}</p>
+                    <div class="avatar">
+                        <img src="${auth.avatar.replace("/avatar42s/", "/avatar170s/")}" alt="${tl(trans.your_avatar)}">
+                        <span class="avatar-status-dot user-status--bleh-sponsor"></span>
+                    </div>
+                    <h1>${tl(trans.you_are_a_sponsor)}</h1>
+                    <p>${tl(trans.sponsor_no_badge)}</p>
                 </div>
             `,
         type: "sponsor"
@@ -18604,13 +18667,16 @@
         title: trans_legacy[lang].settings.home.sponsor.header,
         body: `
                 <div class="modal-vertical-inner support-inner">
-                    <div class="bleh-icon sponsor-heart"></div>
-                    <h1>${trans_legacy[lang].settings.home.sponsor.status.yes}</h1>
-                    <p>${trans_legacy[lang].settings.home.sponsor.status.badge}</p>
+                    <div class="avatar">
+                        <img src="${auth.avatar.replace("/avatar42s/", "/avatar170s/")}" alt="${tl(trans.your_avatar)}">
+                        <span class="avatar-status-dot user-status--bleh-sponsor"></span>
+                    </div>
+                    <h1>${tl(trans.you_are_a_sponsor)}</h1>
+                    <p>${tl(trans.sponsor_get_badge).replace("{account}", `<a class="mention" href="${root}user/${sponsor_list.sponsor_account}">@${sponsor_list.sponsor_account}</a>`)}</p>
                 </div>
                 <div class="modal-footer">
                     <a class="btn primary sponsor" href="${root}user/${sponsor_list.sponsor_account}" target="_blank">
-                        ${trans_legacy[lang].settings.home.sponsor.manage}
+                        ${tl(trans.manage_sponsor)}
                     </a>
                 </div>
             `,
