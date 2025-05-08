@@ -19493,7 +19493,7 @@
         container.appendChild(promo);
       });
       promo_v3.appendChild(container);
-      if (!radios) return;
+      if (radios.length == 0) return;
       let sep = document.createElement("div");
       sep.classList.add("sep");
       promo_v3.appendChild(sep);
@@ -19579,6 +19579,7 @@
     }
   }
   function handle_error(e = null) {
+    document.body.classList.add("bleh-loaded");
     dialog({
       id: "error",
       title: "An error has occured",
@@ -19586,12 +19587,12 @@
             <div class="modal-vertical-inner error-inner">
                 <div class="bleh-icon" style="--icon: var(--icon-error)"></div>
                 <h1>oops.. something broke</h1>
-                <p>An error has prevented bleh from loading correctly, please report this issue on Github.</p>
-                <pre class="error-info">${e ? `<span class="error-type">${e.name}</span>: ${e.message}` : ""}<br>on: ${page.type}/${page.subpage}</pre>
-                <p>Please include this error and the steps you took in the report!</p>
+                <p>An error prevented bleh from finishing loading, it's recommended to leave the page and refresh.</p>
+                <pre class="error-info">${e ? `<span class="error-type">${e.name}</span>: ${e.message}` : ""}<br>on: ${page.type}/${page.subpage}<br>    ${window.location.pathname}</pre>
+                <p>It would be helpful if you could report this bug on Github, including the error message above and a screenshot of your browser console (the error is highlighted).</p>
             </div>
             <div class="modal-footer">
-                <a class="btn primary report-bug continue" href="https://github.com/katelyynn/bleh/issues/new/choose" target="_blank">
+                <a class="see-more" href="https://github.com/katelyynn/bleh/issues/new/choose" target="_blank">
                     Report bug now
                 </a>
             </div>
@@ -19600,7 +19601,7 @@
     });
     if (e != null) {
       log("fatal failure", "load");
-      console.error(e);
+      console.error("\n\n%cBLEH ERROR", "font-size: 30px; color: aqua; text-shadow: 0 0 20px white", e, "BLEH ERROR ABOVE\n^\n^\n^\n^\n^\n^\n^");
     }
     log("current page", "page", "info", page);
   }

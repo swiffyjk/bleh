@@ -37,7 +37,7 @@ export function bleh_radio() {
         });
         promo_v3.appendChild(container);
 
-        if (!radios) return;
+        if (radios.length == 0) return;
 
         let sep = document.createElement('div');
         sep.classList.add('sep');
