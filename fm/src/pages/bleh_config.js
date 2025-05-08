@@ -117,7 +117,7 @@ export function bleh_settings() {
         </section>
         <div class="bleh--panel">
             ${(ff('skip_to_setting')) ? (`
-            <h4>${trans_legacy[lang].settings.skip_to.name}</h4>
+            <h4>${tl(trans.skip_to)}</h4>
             <div class="skip-to-list"></div>
             `) : ''}
         </div>
@@ -778,7 +778,7 @@ export function render_setting_page(page_id) {
             {
                 id: 'profile_shortcut',
                 type: 'text',
-                name: trans_legacy[lang].settings.music.profile_shortcut.name
+                name: tl(trans.profile_shortcut.name)
             },
             {
                 id: 'activities',
@@ -865,17 +865,32 @@ export function render_setting_page(page_id) {
                 </div>
             </div>
             <div class="bleh--panel">
-                <h4>${trans_legacy[lang].settings.activities.name}</h4>
-                <p>${trans_legacy[lang].settings.activities.bio}</p>
+                <h4>${tl(trans.activity)}</h4>
+                <p>${tl(trans.what_are_activities)}</p>
+                <div class="inner-preview pad">
+                    <div class="preview-card activity-preview">
+
+                    </div>
+                </div>
                 <div class="toggle-container" id="container-activities" onclick="_update_item('activities')">
                     <button class="btn reset" onclick="_reset_item('activities')">${tl(trans.reset)}</button>
                     <div class="heading">
-                        <h5>${trans_legacy[lang].settings.activities.toggle.name}</h5>
-                        <p>${trans_legacy[lang].settings.activities.toggle.bio}</p>
+                        <h5>${tl(trans.activity_tracking.name)}</h5>
+                        <p>${tl(trans.activity_tracking.body)}</p>
                     </div>
                     <div class="toggle-wrap">
                         <button class="toggle" id="toggle-activities" aria-checked="true">
                             <div class="dot"></div>
+                        </button>
+                    </div>
+                </div>
+                <div class="toggle-container">
+                    <div class="heading">
+                        <h5>${tl(trans.clear_history)}</h5>
+                    </div>
+                    <div class="toggle-wrap">
+                        <button class="see-more" onclick="_clear_activity_history()">
+                            ${tl(trans.clear)}
                         </button>
                     </div>
                 </div>
@@ -1656,6 +1671,7 @@ function change_settings_page(page_id, setting = null) {
     } else if (page_id == 'profiles') {
         init_profile_notes();
         init_profile_page();
+        activity_preview();
         refresh_all();
     } else if (page_id == 'sku') {
         bleh_sku_page();
@@ -2744,4 +2760,231 @@ unsafeWindow._convert_hex = function() {
         sat: clamp_sat((hsl.s / 100) * 3),
         lit: (hsl.l / 100) + 0.35
     });
+}
+
+function activity_preview() {
+    let preview = page.structure.main.querySelector('.activity-preview');
+
+    let random_types = [
+        'love', 'love', 'love',
+        'unlove',
+        'bookmark',
+        'unbookmark',
+        'obsess',
+        'image_upload',
+        'shout', 'shout',
+        'wiki'
+    ];
+    let random_involved = [
+        {
+            name: 'Espresso',
+            type: 'track',
+            sister: 'Sabrina Carpenter'
+        },
+        {
+            name: 'Busy Woman',
+            type: 'track',
+            sister: 'Sabrina Carpenter'
+        },
+        {
+            name: 'I might say something stupid',
+            type: 'track',
+            sister: 'Charli xcx'
+        },
+        {
+            name: 'Seigfried',
+            type: 'track',
+            sister: 'Frank Ocean'
+        },
+        {
+            name: 'OLYMPIAN',
+            type: 'track',
+            sister: 'Playboi Carti'
+        },
+        {
+            name: 'GODSTAINED',
+            type: 'track',
+            sister: 'Quadeca'
+        },
+        {
+            name: 'hypochondriac',
+            type: 'album',
+            sister: 'brakence'
+        },
+        {
+            name: 'my anti-aircraft friend',
+            type: 'album',
+            sister: 'julie'
+        },
+        {
+            name: 'In Utero',
+            type: 'album',
+            sister: 'Nirvana'
+        },
+        {
+            name: 'channel ORANGE',
+            type: 'album',
+            sister: 'Frank Ocean'
+        },
+        {
+            name: 'Future',
+            type: 'artist'
+        },
+        {
+            name: 'Billie Eilish',
+            type: 'artist'
+        },
+        {
+            name: 'Swirlies',
+            type: 'artist'
+        },
+        {
+            name: 'Lucy Bedroque',
+            type: 'artist'
+        },
+        {
+            name: 'underscores',
+            type: 'artist'
+        },
+        {
+            name: 'Bladee',
+            type: 'artist'
+        },
+        {
+            name: 'Charli xcx',
+            type: 'artist'
+        },
+        {
+            name: 'Dawn FM',
+            type: 'album',
+            sister: 'The Weeknd'
+        },
+        {
+            name: 'Random Access Memories',
+            type: 'album',
+            sister: 'Daft Punk'
+        },
+        {
+            name: 'how i\'m feeling now',
+            type: 'album',
+            sister: 'Charli xcx'
+        },
+        {
+            name: 'White Pony',
+            type: 'album',
+            sister: 'Deftones'
+        },
+        {
+            name: 'Exmilitary',
+            type: 'album',
+            sister: 'Death Grips'
+        },
+        {
+            name: 'Hotline Bling',
+            type: 'track',
+            sister: 'Drake'
+        },
+        {
+            name: 'All Eyez On Me',
+            type: 'track',
+            sister: '2Pac'
+        },
+        {
+            name: 'DOGTOOTH',
+            type: 'track',
+            sister: 'Tyler, The Creator'
+        },
+        {
+            name: 'so american',
+            type: 'track',
+            sister: 'Olivia Rodrigo'
+        },
+        {
+            name: 'I KNOW ?',
+            type: 'track',
+            sister: 'Travis Scott'
+        },
+        {
+            name: 'Apple Pie',
+            type: 'track',
+            sister: 'Travis Scott'
+        },
+        {
+            name: '34+35',
+            type: 'track',
+            sister: 'Ariana Grande'
+        },
+        {
+            name: 'New Again',
+            type: 'track',
+            sister: 'Kanye West'
+        },
+        {
+            name: 'Radio Friendly Unit Shifter',
+            type: 'track',
+            sister: 'Nirvana'
+        },
+        {
+            name: 'Empty Out Your Pockets',
+            type: 'track',
+            sister: 'Juice WRLD'
+        },
+        {
+            name: 'Party By Myself',
+            type: 'track',
+            sister: 'Juice WRLD'
+        },
+        {
+            name: 'Death Race For Love',
+            type: 'album',
+            sister: 'Juice WRLD'
+        }
+    ]
+
+    make_random_activity(preview, random_types, random_involved);
+    make_random_activity(preview, random_types, random_involved);
+    make_random_activity(preview, random_types, random_involved);
+
+    let timer = setInterval(function() {
+        if (!preview) {
+            clearInterval(timer);
+            return;
+        }
+
+        make_random_activity(preview, random_types, random_involved);
+    }, 2300);
+}
+
+function make_random_activity(preview, random_types, random_involved) {
+    activity_preview_new(preview, {
+        type: random_types[Math.floor(Math.random() * random_types.length)],
+        date: new Date(),
+        involved: [
+            random_involved[Math.floor(Math.random() * random_involved.length)]
+        ]
+    });
+}
+
+function activity_preview_new(parent, activity) {
+    let activity_item = document.createElement('a');
+    activity_item.classList.add('activity-item', `activity--${activity.type}`);
+
+    let involved_text = '';
+
+    activity.involved.forEach((involved) => {
+        if (involved_text != '')
+            involved_text = `${involved_text}, <a class="involved--${involved.type}">${involved.name}</a>`;
+        else
+            involved_text = `${involved_text}<a class="involved--${involved.type}">${involved.name}</a>`;
+    });
+
+    activity_item.innerHTML = (`
+        <div class="type">${trans_legacy[lang].activities[activity.type]}<div class="date">${moment(activity.date).fromNow(true)}</div></div>
+        <div class="title">${involved_text}</div>
+    `);
+
+    parent.insertBefore(activity_item, parent.firstElementChild);
+
+    if (parent.childElementCount > 3)
+        parent.removeChild(parent.lastElementChild);
 }

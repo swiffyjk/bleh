@@ -823,6 +823,23 @@ export const trans = {
         en: 'Activity',
         de: 'Aktivität'
     },
+    what_are_activities: {
+        en: 'Keep track of your most recent activity locally on your profile'
+    },
+    activity_tracking: {
+        name: {
+            en: 'Track my activities'
+        },
+        body: {
+            en: 'Activities will only be registered while enabled'
+        }
+    },
+    clear_history: {
+        en: 'Clear history'
+    },
+    activity_settings: {
+        en: 'Activity settings'
+    },
     grid: {
         // as in the view mode
         en: 'Grid',
@@ -1122,7 +1139,8 @@ export const trans = {
     },
     profile_shortcut: {
         name: {
-            en: 'Profile shortcut'
+            en: 'Profile shortcut',
+            de: 'Profilverknüpfung'
         },
         body: {
             en: 'View their scrobbles alongside yours at all times'
@@ -1258,6 +1276,9 @@ export const trans = {
         body: {
             en: 'Glows in the colour of said album cover'
         }
+    },
+    skip_to: {
+        en: 'Skip to'
     }
 }
 

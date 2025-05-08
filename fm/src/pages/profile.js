@@ -237,11 +237,17 @@ export function bleh_profiles() {
                     tippy(activity_item.querySelector('.title a'), {
                         content: `${tooltip_sister} - ${tooltip_name}`
                     });
-
-                let reports = page.structure.side.querySelector('.promo-v3');
-                if (reports)
-                    reports.after(recent_activity_section);
             });
+
+            let edit = document.createElement('div');
+            edit.classList.add('more-link');
+
+            edit.innerHTML = (`
+                <a href="${root}bleh?tab=profiles&setting=activities">${tl(trans.activity_settings)}</a>
+            `);
+            recent_activity_section.appendChild(edit);
+
+            page.structure.side.appendChild(recent_activity_section);
         }
 
 

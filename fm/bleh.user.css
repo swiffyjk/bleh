@@ -9738,7 +9738,6 @@ text[style^="color: rgb(255, 172, 172)"] {
         }
 
 
-        min-width: 630px !important;
         max-width: 630px !important;
         & > .tippy-content {
             display: flex;
@@ -9749,6 +9748,10 @@ text[style^="color: rgb(255, 172, 172)"] {
             flex-direction: column;
             gap: var(--card-gap);
             width: 100%;
+
+            &.full-width {
+                width: 630px;
+            }
 
             .settings-footer {
                 padding: var(--card-gap) 0;
@@ -17651,6 +17654,8 @@ h4 {
         color: hsl(var(--c3));
     }
 
+    animation: activity 0.35s var(--trans-function);
+
     &.activity--shout {
         --mask: var(--icon-16-shoutbox);
     }
@@ -17738,6 +17743,17 @@ h4 {
 
     & + .activity-item {
         margin-top: 10px;
+    }
+}
+
+@keyframes activity {
+    from {
+        transform: translateY(-5px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
     }
 }
 
