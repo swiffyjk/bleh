@@ -9738,6 +9738,7 @@ text[style^="color: rgb(255, 172, 172)"] {
         }
 
 
+        min-width: 630px !important;
         max-width: 630px !important;
         & > .tippy-content {
             display: flex;
@@ -9747,6 +9748,7 @@ text[style^="color: rgb(255, 172, 172)"] {
             display: flex !important;
             flex-direction: column;
             gap: var(--card-gap);
+            width: 100%;
 
             .settings-footer {
                 padding: var(--card-gap) 0;
@@ -14409,6 +14411,11 @@ input[type="range"] {
     overflow: hidden;
 }
 
+.slider {
+    &:not(:hover, :focus-within) .slider-fill {
+        transition: width 0.3s var(--trans-function);
+    }
+}
 .slider-track {
     display: flex;
     background: hsl(var(--b4));
@@ -14491,8 +14498,6 @@ input[type="range"]::-moz-range-progress {
 
 .slider-container {
     display: flex;
-    flex-direction: column;
-    gap: 6px;
 
     h5 {
         margin: unset;
@@ -14513,8 +14518,16 @@ input[type="range"]::-moz-range-progress {
     align-items: center;
     gap: var(--card-gap);
     overflow: hidden;
-    height: 18px;
+    height: 28px;
     border-radius: none;
+    position: relative;
+    min-width: 400px;
+    width: 100%;
+    max-width: 1000px;
+
+    padding-left: 12px;
+    margin-left: -12px;
+    margin-right: 7px;
 
     input {
         padding: unset;
@@ -14523,9 +14536,12 @@ input[type="range"]::-moz-range-progress {
 .slider-container .hint {
     color: hsl(var(--c3));
     font-size: 12px;
-    position: relative;
-    width: calc(100% - (36px + 26px));
+    position: absolute;
+    top: 18px;
+    left: 0;
+    right: calc(36px + 26px);
     height: 18px;
+    display: none;
 
     p {
         position: absolute;
@@ -14672,6 +14688,17 @@ input[type="range"]::-moz-range-progress {
         margin-right: 6px;
         --show-icon: none;
     }
+}
+.slider-container {
+    h5 {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        min-height: 28px;
+        max-height: 32px;
+    }
+
+    gap: var(--card-gap);
 }
 
 .toggle-container,
@@ -17294,6 +17321,13 @@ button.bleh--gallery-bookmark-image-btn {
 
     .heading {
         margin: unset;
+
+        h5 {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            height: 32px;
+        }
     }
 
     .input-container {

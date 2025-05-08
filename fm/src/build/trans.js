@@ -1129,6 +1129,17 @@ export const trans = {
     },
     no_notes: {
         en: 'No profiles here... (｡•́︿•̀｡)'
+    },
+    font: {
+        name: {
+            en: 'Font choice'
+        },
+        body: {
+            en: 'Choose a custom selection of fonts that suit you'
+        }
+    },
+    enter_font_names: {
+        en: 'Enter installed font name(s), separated by commas'
     }
 }
 

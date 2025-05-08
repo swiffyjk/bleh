@@ -2302,6 +2302,17 @@
     },
     no_notes: {
       en: "No profiles here... (\uFF61\u2022\u0301\uFE3F\u2022\u0300\uFF61)"
+    },
+    font: {
+      name: {
+        en: "Font choice"
+      },
+      body: {
+        en: "Choose a custom selection of fonts that suit you"
+      }
+    },
+    enter_font_names: {
+      en: "Enter installed font name(s), separated by commas"
     }
   };
   var trans_legacy = {
@@ -12696,14 +12707,14 @@
                 </div>
                 ` : ""}
                 <div class="sep"></div>
-                <h4>${tl(trans.fonts)}</h4>
                 <div class="text-container" id="container-font">
-                    <button class="btn reset" onclick="_reset_item('font')">${tl(trans.reset)}</button>
-                    <div class="heading content-form">
-                        <div class="input-container">
-                            <input type="text" maxlength="120" id="text-font" value="${settings.font}" placeholder="${trans_legacy[lang].settings.text.font.placeholder}">
-                            <button class="bleh--btn primary save" onclick="_save_font()">${tl(trans.save)}</button>
-                        </div>
+                    <div class="heading">
+                        <h5>${tl(trans.font.name)}</h5>
+                        <p>${tl(trans.font.body)}</p>
+                    </div>
+                    <div class="input-container content-form">
+                        <input type="text" maxlength="120" id="text-font" value="${settings.font}" placeholder="${tl(trans.enter_font_names)}">
+                        <button class="bbtn chibi icon primary submit" onclick="_save_font()">${tl(trans.save)}</button>
                     </div>
                 </div>
                 <div class="slider-container" id="container-font_weight">
@@ -14446,13 +14457,13 @@
                                 ${tl(trans.seasonal_warning)}
                             </div>
                             ${ff("colour_based_on_hex") ? `
-                            <strong>${tl(trans.convert_from_hex)}</strong>
                             <div class="text-container">
-                                <div class="heading content-form">
-                                    <div class="input-container">
-                                        <input type="color" maxlength="7" id="text-hex" placeholder="#ffffff">
-                                        <button class="btn primary icon convert" onclick="_convert_hex()">${tl(trans.convert)}</button>
-                                    </div>
+                                <div class="heading">
+                                    <h5>${tl(trans.convert_from_hex)}</h5>
+                                </div>
+                                <div class="input-container content-form">
+                                    <input type="color" maxlength="7" id="text-hex" placeholder="#ffffff">
+                                    <button class="btn primary icon convert" onclick="_convert_hex()">${tl(trans.convert)}</button>
                                 </div>
                             </div>
                             ` : ""}
@@ -14465,11 +14476,11 @@
                                     <div class="slider-track" id="slider-track-hue"><div class="slider-fill"></div><div class="slider-nub"></div></div>
                                     <input type="range" min="0" max="360" value="${settings.hue}" id="slider-hue" oninput="_update_item('hue', this.value)">
                                     <p id="value-hue">${settings.hue}${settings_base.hue.unit}</p>
-                                </div>
-                                <div class="hint">
-                                    <p style="left: 0">0</p>
-                                    <p style="left: calc((255 / 360) * 100%)">255</p>
-                                    <p style="left: 100%">360</p>
+                                    <div class="hint">
+                                        <p style="left: 0">0</p>
+                                        <p style="left: calc((255 / 360) * 100%)">255</p>
+                                        <p style="left: 100%">360</p>
+                                    </div>
                                 </div>
                             </div>
                             <div class="slider-container dim-using-hue-gradient dim-during-seasonal" id="container-sat">
@@ -14481,11 +14492,11 @@
                                     <div class="slider-track" id="slider-track-sat"><div class="slider-fill"></div><div class="slider-nub"></div></div>
                                     <input type="range" min="0" max="1.5" value="${settings.sat}" step="0.025" id="slider-sat" oninput="_update_item('sat', this.value)">
                                     <p id="value-sat">${settings.sat}${settings_base.sat.unit}</p>
-                                </div>
-                                <div class="hint">
-                                    <p style="left: 0">0</p>
-                                    <p style="left: calc((1 / 1.5) * 100%)">1</p>
-                                    <p style="left: 100%">1.5</p>
+                                    <div class="hint">
+                                        <p style="left: 0">0</p>
+                                        <p style="left: calc((1 / 1.5) * 100%)">1</p>
+                                        <p style="left: 100%">1.5</p>
+                                    </div>
                                 </div>
                             </div>
                             <div class="slider-container dim-using-hue-gradient dim-during-seasonal" id="container-lit">
@@ -14497,11 +14508,11 @@
                                     <div class="slider-track" id="slider-track-lit"><div class="slider-fill"></div><div class="slider-nub"></div></div>
                                     <input type="range" min="0" max="1.5" value="${settings.lit}" step="0.025" id="slider-lit" oninput="_update_item('lit', this.value)">
                                     <p id="value-lit">${settings.lit}${settings_base.lit.unit}</p>
-                                </div>
-                                <div class="hint">
-                                    <p style="left: 0">0</p>
-                                    <p style="left: calc((1 / 1.5) * 100%)">1</p>
-                                    <p style="left: 100%">1.5</p>
+                                    <div class="hint">
+                                        <p style="left: 0">0</p>
+                                        <p style="left: calc((1 / 1.5) * 100%)">1</p>
+                                        <p style="left: 100%">1.5</p>
+                                    </div>
                                 </div>
                             </div>
                         </div>
