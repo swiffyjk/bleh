@@ -15,17 +15,10 @@ import { bleh_wiki, bleh_wiki_editor, bleh_wiki_history } from "./wiki";
 export function bleh_tracks() {
     let track_header = document.body.querySelector('.header-new--track');
 
-    if (track_header == undefined)
-        return;
-
-    if (track_header.hasAttribute('data-bwaa'))
-        return;
-    track_header.setAttribute('data-bwaa', 'true');
+    page.sister = track_header.querySelector('.header-new-crumb span').textContent;
+    page.name = document.body.querySelector('[data-page-resource-name]').getAttribute('data-page-resource-name');
 
     patch_header_title();
-
-    page.sister = track_header.querySelector('.header-new-crumb span').textContent;
-    page.name = correct_item_by_artist(document.body.querySelector('[data-page-resource-name]').getAttribute('data-page-resource-name'), page.sister);
 
     let is_subpage = track_header.classList.contains('header-new--subpage');
 

@@ -4,10 +4,11 @@ import { album_track_corrections, artist_corrections, ranks } from "../build/mus
 import { auth, page, root, theme_preview } from "../build/page";
 import { stored_season } from "../build/seasonal";
 import { sponsor_list } from "../build/sponsor";
-import { hex_to_hsl, clamp_sat } from '../build/tools';
+import { hex_to_hsl, clamp_sat, sanitise_text } from '../build/tools';
 import { lang, lang_info, non_override_lang, trans_legacy, valid_langs, trans, tl } from "../build/trans";
 import { load_badges } from '../components/badge';
 import { dialog, dialog_legacy, dialog_rm, kill_window } from "../components/dialog";
+import { correct_artist, correct_item_by_artist, name_includes } from '../components/lotus';
 import { notify } from "../components/notify";
 import { create_settings_template, load_settings, refresh_all, update_params } from "../config";
 import { version } from "../main";
@@ -2870,7 +2871,12 @@ function activity_preview() {
             sister: 'Charli xcx'
         },
         {
-            name: 'White Pony',
+            name: 'Revengeseekerz',
+            type: 'album',
+            sister: 'Jane Remover'
+        },
+        {
+            name: 'Around The Fur',
             type: 'album',
             sister: 'Deftones'
         },
@@ -2878,6 +2884,16 @@ function activity_preview() {
             name: 'Exmilitary',
             type: 'album',
             sister: 'Death Grips'
+        },
+        {
+            name: 'OFFLINE!',
+            type: 'album',
+            sister: 'JPEGMAFIA'
+        },
+        {
+            name: 'TRUST! - OFFLINE',
+            type: 'track',
+            sister: 'JPEGMAFIA'
         },
         {
             name: 'Hotline Bling',
@@ -2972,6 +2988,32 @@ function activity_preview_new(parent, activity) {
     let involved_text = '';
 
     activity.involved.forEach((involved) => {
+        if (involved.type == 'track' && settings.format_guest_features) {
+            let formatted_title = name_includes(involved.name, involved.sister);
+
+            let song_title;
+            let song_tags;
+            if (formatted_title) {
+                song_title = formatted_title[0];
+                song_tags = formatted_title[1];
+                involved.sister = formatted_title[2];
+            }
+
+            // parse tags into text
+            let song_tags_text = '';
+            for (let song_tag in song_tags) {
+                song_tags_text = `${song_tags_text}<div class="feat" data-bleh--tag-type="${song_tags[song_tag].type}" data-bleh--tag-group="${song_tags[song_tag].group}">${sanitise_text(song_tags[song_tag].text)}</div>`;
+            }
+
+            // combine
+            involved.name = `<div class="title">${sanitise_text(song_title).trim()}</div>${song_tags_text}`;
+        } else if ((involved.type == 'album' || involved.type == 'track') && settings.corrections) {
+            involved.name = correct_item_by_artist(involved.name, involved.sister);
+            involved.sister = correct_artist(involved.sister);
+        }  else if (involved.type == 'artist' && settings.corrections) {
+            involved.sister = correct_artist(involved.sister);
+        }
+
         if (involved_text != '')
             involved_text = `${involved_text}, <a class="involved--${involved.type}">${involved.name}</a>`;
         else
@@ -2980,7 +3022,7 @@ function activity_preview_new(parent, activity) {
 
     activity_item.innerHTML = (`
         <div class="type">${trans_legacy[lang].activities[activity.type]}<div class="date">${moment(activity.date).fromNow(true)}</div></div>
-        <div class="title">${involved_text}</div>
+        <div class="name">${involved_text}</div>
     `);
 
     parent.insertBefore(activity_item, parent.firstElementChild);

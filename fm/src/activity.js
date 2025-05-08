@@ -80,8 +80,7 @@ export function subscribe_to_events() {
                 let is_loading = actual_btn.classList.contains('btn--loading');
                 console.log('is button loading', is_loading, actual_btn, event.target);
 
-                if (!is_loading)
-                    return;
+                if (!is_loading) return;
 
                 register_activity('shout', [{name: page.name, type: page.type, sister: page.sister}], window.location.href);
             }, 150);

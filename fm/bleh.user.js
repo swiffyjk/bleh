@@ -1038,7 +1038,8 @@
       "- club edit",
       "(club edit",
       "- radio",
-      "(radio"
+      "(radio",
+      "- offline"
     ],
     mixes_numbers: [
       "(v1",
@@ -10643,6 +10644,26 @@
               tooltip_name = involved.name;
               tooltip_sister = involved.sister;
             }
+            if (involved.type == "track" && settings.format_guest_features) {
+              let formatted_title = name_includes(involved.name, involved.sister);
+              let song_title;
+              let song_tags;
+              if (formatted_title) {
+                song_title = formatted_title[0];
+                song_tags = formatted_title[1];
+                involved.sister = formatted_title[2];
+              }
+              let song_tags_text = "";
+              for (let song_tag in song_tags) {
+                song_tags_text = `${song_tags_text}<div class="feat" data-bleh--tag-type="${song_tags[song_tag].type}" data-bleh--tag-group="${song_tags[song_tag].group}">${sanitise_text(song_tags[song_tag].text)}</div>`;
+              }
+              involved.name = `<div class="title">${sanitise_text(song_title).trim()}</div>${song_tags_text}`;
+            } else if (involved.type == "album" && settings.corrections) {
+              involved.name = correct_item_by_artist(involved.name, involved.sister);
+              involved.sister = correct_artist(involved.sister);
+            } else if (involved.type == "artist" && settings.corrections) {
+              involved.sister = correct_artist(involved.sister);
+            }
             if (involved_text != "")
               involved_text = `${involved_text}, <a class="involved--${involved.type}" href="${involved_link}">${involved.name}</a>`;
             else
@@ -10650,7 +10671,7 @@
           });
           activity_item.innerHTML = `
                     <div class="type">${trans_legacy[lang].activities[activity.type]}<div class="date">${moment(activity.date).fromNow(true)}</div></div>
-                    <div class="title">${involved_text}</div>
+                    <div class="name">${involved_text}</div>
                 `;
           recent_activity_section.appendChild(activity_item);
           if (tooltip_name != void 0)
@@ -15128,7 +15149,12 @@
         sister: "Charli xcx"
       },
       {
-        name: "White Pony",
+        name: "Revengeseekerz",
+        type: "album",
+        sister: "Jane Remover"
+      },
+      {
+        name: "Around The Fur",
         type: "album",
         sister: "Deftones"
       },
@@ -15136,6 +15162,16 @@
         name: "Exmilitary",
         type: "album",
         sister: "Death Grips"
+      },
+      {
+        name: "OFFLINE!",
+        type: "album",
+        sister: "JPEGMAFIA"
+      },
+      {
+        name: "TRUST! - OFFLINE",
+        type: "track",
+        sister: "JPEGMAFIA"
       },
       {
         name: "Hotline Bling",
@@ -15223,6 +15259,26 @@
     activity_item.classList.add("activity-item", `activity--${activity.type}`);
     let involved_text = "";
     activity.involved.forEach((involved) => {
+      if (involved.type == "track" && settings.format_guest_features) {
+        let formatted_title = name_includes(involved.name, involved.sister);
+        let song_title;
+        let song_tags;
+        if (formatted_title) {
+          song_title = formatted_title[0];
+          song_tags = formatted_title[1];
+          involved.sister = formatted_title[2];
+        }
+        let song_tags_text = "";
+        for (let song_tag in song_tags) {
+          song_tags_text = `${song_tags_text}<div class="feat" data-bleh--tag-type="${song_tags[song_tag].type}" data-bleh--tag-group="${song_tags[song_tag].group}">${sanitise_text(song_tags[song_tag].text)}</div>`;
+        }
+        involved.name = `<div class="title">${sanitise_text(song_title).trim()}</div>${song_tags_text}`;
+      } else if ((involved.type == "album" || involved.type == "track") && settings.corrections) {
+        involved.name = correct_item_by_artist(involved.name, involved.sister);
+        involved.sister = correct_artist(involved.sister);
+      } else if (involved.type == "artist" && settings.corrections) {
+        involved.sister = correct_artist(involved.sister);
+      }
       if (involved_text != "")
         involved_text = `${involved_text}, <a class="involved--${involved.type}">${involved.name}</a>`;
       else
@@ -15230,7 +15286,7 @@
     });
     activity_item.innerHTML = `
         <div class="type">${trans_legacy[lang].activities[activity.type]}<div class="date">${moment(activity.date).fromNow(true)}</div></div>
-        <div class="title">${involved_text}</div>
+        <div class="name">${involved_text}</div>
     `;
     parent.insertBefore(activity_item, parent.firstElementChild);
     if (parent.childElementCount > 3)
@@ -15621,8 +15677,7 @@
           let actual_btn = event2.target.parentElement;
           let is_loading = actual_btn.classList.contains("btn--loading");
           console.log("is button loading", is_loading, actual_btn, event2.target);
-          if (!is_loading)
-            return;
+          if (!is_loading) return;
           register_activity("shout", [{ name: page.name, type: page.type, sister: page.sister }], window.location.href);
         }, 150);
       }, false);
@@ -16826,14 +16881,9 @@
   // src/pages/album.js
   function bleh_albums() {
     let album_header = document.body.querySelector(".header-new--album");
-    if (album_header == void 0)
-      return;
-    if (album_header.hasAttribute("data-bwaa"))
-      return;
-    album_header.setAttribute("data-bwaa", "true");
-    patch_header_title();
     page.sister = album_header.querySelector(".header-new-crumb span").textContent;
-    page.name = correct_item_by_artist(document.body.querySelector("[data-page-resource-name]").getAttribute("data-page-resource-name"), page.sister);
+    page.name = document.body.querySelector("[data-page-resource-name]").getAttribute("data-page-resource-name");
+    patch_header_title();
     let is_subpage = album_header.classList.contains("header-new--subpage");
     if (auth.pro) {
       page.structure.container = document.body.querySelector(".page-content:not(:has(.content-top-lower-row, a + .js-gallery-heading))");
@@ -17067,14 +17117,9 @@
   // src/pages/artist.js
   function bleh_artists() {
     let artist_header = document.body.querySelector(".header-new--artist");
-    if (artist_header == void 0)
-      return;
-    if (artist_header.hasAttribute("data-bwaa"))
-      return;
-    artist_header.setAttribute("data-bwaa", "true");
-    artist_title();
     page.name = artist_header.querySelector(".header-new-title").textContent;
     page.sister = "";
+    artist_title();
     let is_subpage = artist_header.classList.contains("header-new--subpage");
     if (auth.pro) {
       page.structure.container = document.body.querySelector(".page-content:not(.visible-xs, :has(.content-top-lower-row, a + .js-gallery-heading))");
@@ -18623,14 +18668,9 @@
   // src/pages/track.js
   function bleh_tracks() {
     let track_header = document.body.querySelector(".header-new--track");
-    if (track_header == void 0)
-      return;
-    if (track_header.hasAttribute("data-bwaa"))
-      return;
-    track_header.setAttribute("data-bwaa", "true");
-    patch_header_title();
     page.sister = track_header.querySelector(".header-new-crumb span").textContent;
-    page.name = correct_item_by_artist(document.body.querySelector("[data-page-resource-name]").getAttribute("data-page-resource-name"), page.sister);
+    page.name = document.body.querySelector("[data-page-resource-name]").getAttribute("data-page-resource-name");
+    patch_header_title();
     let is_subpage = track_header.classList.contains("header-new--subpage");
     if (auth.pro) {
       page.structure.container = document.body.querySelector(".page-content");

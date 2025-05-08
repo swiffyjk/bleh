@@ -16,17 +16,10 @@ import { bleh_wiki, bleh_wiki_editor, bleh_wiki_history } from "./wiki";
 export function bleh_artists() {
     let artist_header = document.body.querySelector('.header-new--artist');
 
-    if (artist_header == undefined)
-        return;
-
-    if (artist_header.hasAttribute('data-bwaa'))
-        return;
-    artist_header.setAttribute('data-bwaa', 'true');
-
-    artist_title();
-
     page.name = artist_header.querySelector('.header-new-title').textContent;
     page.sister = '';
+
+    artist_title();
 
     let is_subpage = artist_header.classList.contains('header-new--subpage');
 

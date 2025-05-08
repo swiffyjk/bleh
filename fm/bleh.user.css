@@ -5015,6 +5015,7 @@ better than the default selector '#app a' i suppose */
     text-decoration: var(--force-underline, none) !important;
 }
 
+.activity-item .name a,
 .grid-items-item-main-text,
 .featured-item-name,
 .chartlist-name {
@@ -17705,7 +17706,7 @@ h4 {
         font-weight: var(--font-weight-medium);
     }
 
-    .title {
+    .name {
         font-weight: var(--font-weight-medium);
 
         .involved--track, .involved--album, .involved--artist, .involved--tag {
@@ -17732,6 +17733,11 @@ h4 {
             &:before {
                 content: '@';
             }
+        }
+
+        a {
+            display: flex;
+            gap: 6px;
         }
     }
 
