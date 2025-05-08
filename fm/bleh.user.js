@@ -2321,6 +2321,38 @@
         en: "Choose a custom selection of fonts that suit you"
       }
     },
+    font_weight: {
+      name: {
+        en: "Font weight"
+      },
+      body: {
+        en: "Used for regular text paragraphs"
+      }
+    },
+    font_weight_medium: {
+      name: {
+        en: "Medium font weight"
+      },
+      body: {
+        en: "Used for button text and small headers"
+      }
+    },
+    font_weight_bold: {
+      name: {
+        en: "Bold font weight"
+      },
+      body: {
+        en: "Used for large headers"
+      }
+    },
+    font_emoji: {
+      name: {
+        en: "Emoji compatibility"
+      },
+      body: {
+        en: "Required to render emoji properly before Windows 11 \u{1F3F3}\uFE0F\u200D\u26A7\uFE0F"
+      }
+    },
     enter_font_names: {
       en: "Enter installed font name(s), separated by commas"
     },
@@ -12441,13 +12473,13 @@
                 </a>
             </li>
             <li class="navlist-item secondary-nav-item">
-                <a class="secondary-nav-item-link bleh--nav" data-bleh-page="customise" onclick="_change_settings_page('customise')">
-                    ${tl(trans.layout)}
+                <a class="secondary-nav-item-link bleh--nav" data-bleh-page="music" onclick="_change_settings_page('music')">
+                    ${tl(trans.music)}
                 </a>
             </li>
             <li class="navlist-item secondary-nav-item">
-                <a class="secondary-nav-item-link bleh--nav" data-bleh-page="music" onclick="_change_settings_page('music')">
-                    ${tl(trans.music)}
+                <a class="secondary-nav-item-link bleh--nav" data-bleh-page="customise" onclick="_change_settings_page('customise')">
+                    ${tl(trans.layout)}
                 </a>
             </li>
             <li class="navlist-item secondary-nav-item">
@@ -12790,8 +12822,8 @@
                 <div class="slider-container" id="container-font_weight">
                     <button class="btn reset" onclick="_reset_item('font_weight')">${tl(trans.reset)}</button>
                     <div class="heading">
-                        <h5>${trans_legacy[lang].settings.text.font_weight.name}</h5>
-                        <p>${trans_legacy[lang].settings.text.font_weight.bio}</p>
+                        <h5>${tl(trans.font_weight.name)}</h5>
+                        <p>${tl(trans.font_weight.body)}</p>
                     </div>
                     <div class="slider">
                         <div class="slider-track" id="slider-track-font_weight"><div class="slider-fill"></div><div class="slider-nub"></div></div>
@@ -12802,8 +12834,8 @@
                 <div class="slider-container" id="container-font_weight_medium">
                     <button class="btn reset" onclick="_reset_item('font_weight_medium')">${tl(trans.reset)}</button>
                     <div class="heading">
-                        <h5>${trans_legacy[lang].settings.text.font_weight_medium.name}</h5>
-                        <p>${trans_legacy[lang].settings.text.font_weight_medium.bio}</p>
+                        <h5>${tl(trans.font_weight_medium.name)}</h5>
+                        <p>${tl(trans.font_weight_medium.body)}</p>
                     </div>
                     <div class="slider">
                         <div class="slider-track" id="slider-track-font_weight_medium"><div class="slider-fill"></div><div class="slider-nub"></div></div>
@@ -12814,8 +12846,8 @@
                 <div class="slider-container" id="container-font_weight_bold">
                     <button class="btn reset" onclick="_reset_item('font_weight_bold')">${tl(trans.reset)}</button>
                     <div class="heading">
-                        <h5>${trans_legacy[lang].settings.text.font_weight_bold.name}</h5>
-                        <p>${trans_legacy[lang].settings.text.font_weight_bold.bio}</p>
+                        <h5>${tl(trans.font_weight_bold.name)}</h5>
+                        <p>${tl(trans.font_weight_bold.body)}</p>
                     </div>
                     <div class="slider">
                         <div class="slider-track" id="slider-track-font_weight_bold"><div class="slider-fill"></div><div class="slider-nub"></div></div>
@@ -12826,8 +12858,8 @@
                 <div class="toggle-container" id="container-font_emoji" onclick="_update_item('font_emoji')">
                     <button class="btn reset" onclick="_reset_item('font_emoji')">${tl(trans.reset)}</button>
                     <div class="heading">
-                        <h5>${trans_legacy[lang].settings.text.font_emoji.name}</h5>
-                        <p>${trans_legacy[lang].settings.text.font_emoji.bio}</p>
+                        <h5>${tl(trans.font_emoji.name)}</h5>
+                        <p>${tl(trans.font_emoji.body)}</p>
                     </div>
                     <div class="toggle-wrap">
                         <button class="toggle" id="toggle-font_emoji" aria-checked="false">

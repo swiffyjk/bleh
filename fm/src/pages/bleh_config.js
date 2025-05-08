@@ -48,13 +48,13 @@ export function bleh_settings() {
                 </a>
             </li>
             <li class="navlist-item secondary-nav-item">
-                <a class="secondary-nav-item-link bleh--nav" data-bleh-page="customise" onclick="_change_settings_page('customise')">
-                    ${tl(trans.layout)}
+                <a class="secondary-nav-item-link bleh--nav" data-bleh-page="music" onclick="_change_settings_page('music')">
+                    ${tl(trans.music)}
                 </a>
             </li>
             <li class="navlist-item secondary-nav-item">
-                <a class="secondary-nav-item-link bleh--nav" data-bleh-page="music" onclick="_change_settings_page('music')">
-                    ${tl(trans.music)}
+                <a class="secondary-nav-item-link bleh--nav" data-bleh-page="customise" onclick="_change_settings_page('customise')">
+                    ${tl(trans.layout)}
                 </a>
             </li>
             <li class="navlist-item secondary-nav-item">
@@ -410,8 +410,8 @@ export function render_setting_page(page_id) {
                 <div class="slider-container" id="container-font_weight">
                     <button class="btn reset" onclick="_reset_item('font_weight')">${tl(trans.reset)}</button>
                     <div class="heading">
-                        <h5>${trans_legacy[lang].settings.text.font_weight.name}</h5>
-                        <p>${trans_legacy[lang].settings.text.font_weight.bio}</p>
+                        <h5>${tl(trans.font_weight.name)}</h5>
+                        <p>${tl(trans.font_weight.body)}</p>
                     </div>
                     <div class="slider">
                         <div class="slider-track" id="slider-track-font_weight"><div class="slider-fill"></div><div class="slider-nub"></div></div>
@@ -422,8 +422,8 @@ export function render_setting_page(page_id) {
                 <div class="slider-container" id="container-font_weight_medium">
                     <button class="btn reset" onclick="_reset_item('font_weight_medium')">${tl(trans.reset)}</button>
                     <div class="heading">
-                        <h5>${trans_legacy[lang].settings.text.font_weight_medium.name}</h5>
-                        <p>${trans_legacy[lang].settings.text.font_weight_medium.bio}</p>
+                        <h5>${tl(trans.font_weight_medium.name)}</h5>
+                        <p>${tl(trans.font_weight_medium.body)}</p>
                     </div>
                     <div class="slider">
                         <div class="slider-track" id="slider-track-font_weight_medium"><div class="slider-fill"></div><div class="slider-nub"></div></div>
@@ -434,8 +434,8 @@ export function render_setting_page(page_id) {
                 <div class="slider-container" id="container-font_weight_bold">
                     <button class="btn reset" onclick="_reset_item('font_weight_bold')">${tl(trans.reset)}</button>
                     <div class="heading">
-                        <h5>${trans_legacy[lang].settings.text.font_weight_bold.name}</h5>
-                        <p>${trans_legacy[lang].settings.text.font_weight_bold.bio}</p>
+                        <h5>${tl(trans.font_weight_bold.name)}</h5>
+                        <p>${tl(trans.font_weight_bold.body)}</p>
                     </div>
                     <div class="slider">
                         <div class="slider-track" id="slider-track-font_weight_bold"><div class="slider-fill"></div><div class="slider-nub"></div></div>
@@ -446,8 +446,8 @@ export function render_setting_page(page_id) {
                 <div class="toggle-container" id="container-font_emoji" onclick="_update_item('font_emoji')">
                     <button class="btn reset" onclick="_reset_item('font_emoji')">${tl(trans.reset)}</button>
                     <div class="heading">
-                        <h5>${trans_legacy[lang].settings.text.font_emoji.name}</h5>
-                        <p>${trans_legacy[lang].settings.text.font_emoji.bio}</p>
+                        <h5>${tl(trans.font_emoji.name)}</h5>
+                        <p>${tl(trans.font_emoji.body)}</p>
                     </div>
                     <div class="toggle-wrap">
                         <button class="toggle" id="toggle-font_emoji" aria-checked="false">

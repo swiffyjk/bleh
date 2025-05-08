@@ -1148,6 +1148,38 @@ export const trans = {
             en: 'Choose a custom selection of fonts that suit you'
         }
     },
+    font_weight: {
+        name: {
+            en: 'Font weight'
+        },
+        body: {
+            en: 'Used for regular text paragraphs'
+        }
+    },
+    font_weight_medium: {
+        name: {
+            en: 'Medium font weight'
+        },
+        body: {
+            en: 'Used for button text and small headers'
+        }
+    },
+    font_weight_bold: {
+        name: {
+            en: 'Bold font weight'
+        },
+        body: {
+            en: 'Used for large headers'
+        }
+    },
+    font_emoji: {
+        name: {
+            en: 'Emoji compatibility'
+        },
+        body: {
+            en: 'Required to render emoji properly before Windows 11 🏳️‍⚧️'
+        }
+    },
     enter_font_names: {
         en: 'Enter installed font name(s), separated by commas'
     },
