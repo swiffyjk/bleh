@@ -214,21 +214,18 @@ export function bleh_profiles() {
                     else if (involved.type == 'bleh')
                         involved_link = `${root}bleh`;
 
-                    // tooltip
-                    if (involved.type != 'artist' && involved.type != 'user' && involved.type != 'tag' && involved.type != 'bwaa' && involved.type != 'bleh') {
-                        tooltip_name = involved.name;
-                        tooltip_sister = involved.sister;
-                    }
+                    let name = involved.name;
+                    let sister = involved.sister;
 
                     if (involved.type == 'track' && settings.format_guest_features) {
-                        let formatted_title = name_includes(involved.name, involved.sister);
+                        let formatted_title = name_includes(name, sister);
 
                         let song_title;
                         let song_tags;
                         if (formatted_title) {
                             song_title = formatted_title[0];
                             song_tags = formatted_title[1];
-                            involved.sister = formatted_title[2];
+                            sister = formatted_title[2];
                         }
 
                         // parse tags into text
@@ -238,18 +235,24 @@ export function bleh_profiles() {
                         }
 
                         // combine
-                        involved.name = `<div class="title">${sanitise_text(song_title).trim()}</div>${song_tags_text}`;
-                    } else if (involved.type == 'album' && settings.corrections) {
-                        involved.name = correct_item_by_artist(involved.name, involved.sister);
-                        involved.sister = correct_artist(involved.sister);
+                        name = `<div class="title">${sanitise_text(song_title).trim()}</div>${song_tags_text}`;
+                    } else if ((involved.type == 'album' || involved.type == 'track') && settings.corrections) {
+                        name = correct_item_by_artist(name, sister);
+                        sister = correct_artist(sister);
                     }  else if (involved.type == 'artist' && settings.corrections) {
-                        involved.sister = correct_artist(involved.sister);
+                        sister = correct_artist(sister);
+                    }
+
+                    // tooltip
+                    if (involved.type != 'artist' && involved.type != 'user' && involved.type != 'tag' && involved.type != 'bwaa' && involved.type != 'bleh') {
+                        tooltip_name = name;
+                        tooltip_sister = sister;
                     }
 
                     if (involved_text != '')
-                        involved_text = `${involved_text}, <a class="involved--${involved.type}" href="${involved_link}">${involved.name}</a>`;
+                        involved_text = `${involved_text}, <a class="involved--${involved.type}" href="${involved_link}">${name}</a>`;
                     else
-                        involved_text = `${involved_text}<a class="involved--${involved.type}" href="${involved_link}">${involved.name}</a>`;
+                        involved_text = `${involved_text}<a class="involved--${involved.type}" href="${involved_link}">${name}</a>`;
                 });
 
                 activity_item.innerHTML = (`

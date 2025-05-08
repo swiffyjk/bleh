@@ -2988,15 +2988,18 @@ function activity_preview_new(parent, activity) {
     let involved_text = '';
 
     activity.involved.forEach((involved) => {
+        let name = involved.name;
+        let sister = involved.sister;
+
         if (involved.type == 'track' && settings.format_guest_features) {
-            let formatted_title = name_includes(involved.name, involved.sister);
+            let formatted_title = name_includes(name, sister);
 
             let song_title;
             let song_tags;
             if (formatted_title) {
                 song_title = formatted_title[0];
                 song_tags = formatted_title[1];
-                involved.sister = formatted_title[2];
+                sister = formatted_title[2];
             }
 
             // parse tags into text
@@ -3006,18 +3009,18 @@ function activity_preview_new(parent, activity) {
             }
 
             // combine
-            involved.name = `<div class="title">${sanitise_text(song_title).trim()}</div>${song_tags_text}`;
+            name = `<div class="title">${sanitise_text(song_title).trim()}</div>${song_tags_text}`;
         } else if ((involved.type == 'album' || involved.type == 'track') && settings.corrections) {
-            involved.name = correct_item_by_artist(involved.name, involved.sister);
-            involved.sister = correct_artist(involved.sister);
+            name = correct_item_by_artist(name, sister);
+            sister = correct_artist(sister);
         }  else if (involved.type == 'artist' && settings.corrections) {
-            involved.sister = correct_artist(involved.sister);
+            sister = correct_artist(sister);
         }
 
         if (involved_text != '')
-            involved_text = `${involved_text}, <a class="involved--${involved.type}">${involved.name}</a>`;
+            involved_text = `${involved_text}, <a class="involved--${involved.type}">${name}</a>`;
         else
-            involved_text = `${involved_text}<a class="involved--${involved.type}">${involved.name}</a>`;
+            involved_text = `${involved_text}<a class="involved--${involved.type}">${name}</a>`;
     });
 
     activity_item.innerHTML = (`

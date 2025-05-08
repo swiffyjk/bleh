@@ -1038,8 +1038,7 @@
       "- club edit",
       "(club edit",
       "- radio",
-      "(radio",
-      "- offline"
+      "(radio"
     ],
     mixes_numbers: [
       "(v1",
@@ -10640,34 +10639,36 @@
               involved_link = `${root}bwaa`;
             else if (involved.type == "bleh")
               involved_link = `${root}bleh`;
-            if (involved.type != "artist" && involved.type != "user" && involved.type != "tag" && involved.type != "bwaa" && involved.type != "bleh") {
-              tooltip_name = involved.name;
-              tooltip_sister = involved.sister;
-            }
+            let name = involved.name;
+            let sister = involved.sister;
             if (involved.type == "track" && settings.format_guest_features) {
-              let formatted_title = name_includes(involved.name, involved.sister);
+              let formatted_title = name_includes(name, sister);
               let song_title;
               let song_tags;
               if (formatted_title) {
                 song_title = formatted_title[0];
                 song_tags = formatted_title[1];
-                involved.sister = formatted_title[2];
+                sister = formatted_title[2];
               }
               let song_tags_text = "";
               for (let song_tag in song_tags) {
                 song_tags_text = `${song_tags_text}<div class="feat" data-bleh--tag-type="${song_tags[song_tag].type}" data-bleh--tag-group="${song_tags[song_tag].group}">${sanitise_text(song_tags[song_tag].text)}</div>`;
               }
-              involved.name = `<div class="title">${sanitise_text(song_title).trim()}</div>${song_tags_text}`;
-            } else if (involved.type == "album" && settings.corrections) {
-              involved.name = correct_item_by_artist(involved.name, involved.sister);
-              involved.sister = correct_artist(involved.sister);
+              name = `<div class="title">${sanitise_text(song_title).trim()}</div>${song_tags_text}`;
+            } else if ((involved.type == "album" || involved.type == "track") && settings.corrections) {
+              name = correct_item_by_artist(name, sister);
+              sister = correct_artist(sister);
             } else if (involved.type == "artist" && settings.corrections) {
-              involved.sister = correct_artist(involved.sister);
+              sister = correct_artist(sister);
+            }
+            if (involved.type != "artist" && involved.type != "user" && involved.type != "tag" && involved.type != "bwaa" && involved.type != "bleh") {
+              tooltip_name = name;
+              tooltip_sister = sister;
             }
             if (involved_text != "")
-              involved_text = `${involved_text}, <a class="involved--${involved.type}" href="${involved_link}">${involved.name}</a>`;
+              involved_text = `${involved_text}, <a class="involved--${involved.type}" href="${involved_link}">${name}</a>`;
             else
-              involved_text = `${involved_text}<a class="involved--${involved.type}" href="${involved_link}">${involved.name}</a>`;
+              involved_text = `${involved_text}<a class="involved--${involved.type}" href="${involved_link}">${name}</a>`;
           });
           activity_item.innerHTML = `
                     <div class="type">${trans_legacy[lang].activities[activity.type]}<div class="date">${moment(activity.date).fromNow(true)}</div></div>
@@ -15259,30 +15260,32 @@
     activity_item.classList.add("activity-item", `activity--${activity.type}`);
     let involved_text = "";
     activity.involved.forEach((involved) => {
+      let name = involved.name;
+      let sister = involved.sister;
       if (involved.type == "track" && settings.format_guest_features) {
-        let formatted_title = name_includes(involved.name, involved.sister);
+        let formatted_title = name_includes(name, sister);
         let song_title;
         let song_tags;
         if (formatted_title) {
           song_title = formatted_title[0];
           song_tags = formatted_title[1];
-          involved.sister = formatted_title[2];
+          sister = formatted_title[2];
         }
         let song_tags_text = "";
         for (let song_tag in song_tags) {
           song_tags_text = `${song_tags_text}<div class="feat" data-bleh--tag-type="${song_tags[song_tag].type}" data-bleh--tag-group="${song_tags[song_tag].group}">${sanitise_text(song_tags[song_tag].text)}</div>`;
         }
-        involved.name = `<div class="title">${sanitise_text(song_title).trim()}</div>${song_tags_text}`;
+        name = `<div class="title">${sanitise_text(song_title).trim()}</div>${song_tags_text}`;
       } else if ((involved.type == "album" || involved.type == "track") && settings.corrections) {
-        involved.name = correct_item_by_artist(involved.name, involved.sister);
-        involved.sister = correct_artist(involved.sister);
+        name = correct_item_by_artist(name, sister);
+        sister = correct_artist(sister);
       } else if (involved.type == "artist" && settings.corrections) {
-        involved.sister = correct_artist(involved.sister);
+        sister = correct_artist(sister);
       }
       if (involved_text != "")
-        involved_text = `${involved_text}, <a class="involved--${involved.type}">${involved.name}</a>`;
+        involved_text = `${involved_text}, <a class="involved--${involved.type}">${name}</a>`;
       else
-        involved_text = `${involved_text}<a class="involved--${involved.type}">${involved.name}</a>`;
+        involved_text = `${involved_text}<a class="involved--${involved.type}">${name}</a>`;
     });
     activity_item.innerHTML = `
         <div class="type">${trans_legacy[lang].activities[activity.type]}<div class="date">${moment(activity.date).fromNow(true)}</div></div>
