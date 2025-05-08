@@ -6342,13 +6342,13 @@
       return;
     current_view = current_view.textContent.trim();
     let tab_matches;
-    if ((page.subpage == "library_overview" || page.subpage == "library_artists" || page.subpage == "library_albums" || page.subpage == "library_tracks") && (page.state.glacier.current_tab == "library_overview" || page.state.glacier.current_tab == "library_artists" || page.state.glacier.current_tab == "library_albums" || page.state.glacier.current_tab == "library_tracks"))
+    if (page.name == page.state.glacier.name && (page.subpage == "library_overview" || page.subpage == "library_artists" || page.subpage == "library_albums" || page.subpage == "library_tracks") && (page.state.glacier.current_tab == "library_overview" || page.state.glacier.current_tab == "library_artists" || page.state.glacier.current_tab == "library_albums" || page.state.glacier.current_tab == "library_tracks"))
       tab_matches = true;
-    if (page.state.glacier.current_view == current_view && own_table == null && tab_matches) {
+    if (page.state.glacier.current_view == current_view && !own_table && tab_matches) {
       bleh_glacier_date_graph_generate();
       log("refresh is now marked false", "glacier library");
       page.structure.glacier.refresh = false;
-      log(`returned as view (${current_view}) matches ${page.state.glacier.current_view}. last tab was ${page.state.glacier.current_tab} and current tab is ${page.subpage}`, "glacier library");
+      log(`returned as view (${current_view}) matches ${page.state.glacier.current_view}. last tab was ${page.state.glacier.current_tab} (${page.state.glacier.name}) and current tab is ${page.subpage} (${page.name})`, "glacier library");
       return;
     }
     page.state.glacier.current_view = current_view;
@@ -6360,14 +6360,14 @@
       return;
     }
     let scrobble_chart_wrap = page.structure.side.querySelector(".scrobble-table");
-    if (scrobble_chart_wrap == null)
+    if (!scrobble_chart_wrap)
       return;
     let scrobble_table;
-    if (own_table != null)
+    if (own_table)
       scrobble_table = own_table;
     else
       scrobble_table = scrobble_chart_wrap.querySelector(".table");
-    if (scrobble_table == null) {
+    if (!scrobble_table) {
       let request_url;
       if (window.location.search == "")
         request_url = `${window.location.href}/chart?ajax=1`;
@@ -6402,7 +6402,7 @@
     page.structure.glacier.refresh = false;
   }
   function bleh_glacier_insights(insights = null) {
-    if (insights != null) {
+    if (insights) {
       if (page.subpage == "library_artists") {
         page.state.glacier.insights.album.display = false;
         page.state.glacier.insights.track.display = false;
@@ -6436,7 +6436,7 @@
     log(`requesting insights generator for ${type}`, "glacier library", "info", item);
     let new_run = false;
     let scrobble_insights_panel = page.structure.side.querySelector(`.scrobble-insights-panel[data-type="${type}"]`);
-    if (scrobble_insights_panel == null) {
+    if (!scrobble_insights_panel) {
       scrobble_insights_panel = document.createElement("section");
       scrobble_insights_panel.classList.add("scrobble-insights-panel");
       scrobble_insights_panel.setAttribute("data-type", type);
@@ -6590,6 +6590,7 @@
   }
   function bleh_glacier_date_graph_generate() {
     page.state.glacier.current_tab = page.subpage;
+    page.state.glacier.name = page.name;
     log("generating", "glacier library", "info", {
       labels: page.state.glacier.labels,
       links: page.state.glacier.links,
