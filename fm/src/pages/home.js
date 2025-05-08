@@ -7,7 +7,6 @@ import { checkup_page_structure } from "../components/structure";
 import { register_background, update_page } from "../page";
 import { bleh_charts } from "./chart";
 import { bleh_native_settings } from './lastfm_settings';
-import { sponsor_list } from "../build/sponsor";
 import { sanitise } from "../build/tools"
 
 export function bleh_home() {
@@ -32,18 +31,14 @@ export function bleh_home() {
     let banner = document.createElement('div');
     banner.classList.add('top-banner', 'home-banner', 'colourful');
 
-    let sponsoring = false;
-    if (sponsor_list)
-        sponsoring = sponsor_list.sponsors.includes(auth.name);
-
     banner.innerHTML = (`
         <a class="home-avatar" href="${root}user/${auth.name}">
             <img src="${auth.avatar.replace('/avatar42s/', '/avatar170s/')}">
         </a>
-        ${(sponsoring) ? (`
+        ${(auth.sponsor) ? (`
         <div class="subtext sponsor-message colourful">
             <div class="bleh-icon-container"><div class="bleh-icon" style="--icon: var(--icon-16-heart-solid); --icon-size: 14px"></div></div>
-            ${tl(trans.thank_you_for_sponsoring)}
+            ${tl(trans.you_are_a_sponsor)}
         </div>
         `) : ''}
         <h1>${tl(trans.welcome_back_user).replace('{user}', `<a class="mention" href="${root}user/${auth.name}">@${auth.name}</a>`)}</h1>

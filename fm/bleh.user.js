@@ -1593,10 +1593,6 @@
       en: "Goodnight, {user}",
       de: "Gute Nacht {user}"
     },
-    thank_you_for_sponsoring: {
-      en: "Thank you for sponsoring!",
-      de: "Danke f\xFCrs sponsoren!"
-    },
     configure_bleh: {
       en: "bleh Settings",
       de: "bleh Einstellungen"
@@ -17807,17 +17803,14 @@
     register_background(auth.avatar.replace("/avatar42s/", "/ar0/"));
     let banner = document.createElement("div");
     banner.classList.add("top-banner", "home-banner", "colourful");
-    let sponsoring = false;
-    if (sponsor_list)
-      sponsoring = sponsor_list.sponsors.includes(auth.name);
     banner.innerHTML = `
         <a class="home-avatar" href="${root}user/${auth.name}">
             <img src="${auth.avatar.replace("/avatar42s/", "/avatar170s/")}">
         </a>
-        ${sponsoring ? `
+        ${auth.sponsor ? `
         <div class="subtext sponsor-message colourful">
             <div class="bleh-icon-container"><div class="bleh-icon" style="--icon: var(--icon-16-heart-solid); --icon-size: 14px"></div></div>
-            ${tl(trans.thank_you_for_sponsoring)}
+            ${tl(trans.you_are_a_sponsor)}
         </div>
         ` : ""}
         <h1>${tl(trans.welcome_back_user).replace("{user}", `<a class="mention" href="${root}user/${auth.name}">@${auth.name}</a>`)}</h1>

@@ -420,10 +420,6 @@ export const trans = {
         en: 'Goodnight, {user}',
         de: 'Gute Nacht {user}'
     },
-    thank_you_for_sponsoring: {
-        en: 'Thank you for sponsoring!',
-        de: 'Danke fürs sponsoren!'
-    },
     configure_bleh: {
         en: 'bleh Settings',
         de: 'bleh Einstellungen'
