@@ -6271,22 +6271,12 @@
                         </button>
                     </div>
                 </div>
-                <div class="toggle-container" id="container-stacked_chartlist_info" onclick="_update_item('stacked_chartlist_info')">
-                    <button class="btn reset" onclick="_reset_item('stacked_chartlist_info')">${tl(trans.reset)}</button>
-                    <div class="heading">
-                        <h5>${tl(trans.track_column_view)}</h5>
-                    </div>
-                    <div class="toggle-wrap">
-                        <button class="toggle" id="toggle-stacked_chartlist_info" aria-checked="true" type="button">
-                            <div class="dot"></div>
-                        </button>
-                    </div>
-                </div>
                 <div class="sep"></div>
                 <div class="toggle-container" id="container-grid_glow" onclick="_update_item('grid_glow')">
                     <button class="btn reset" onclick="_reset_item('grid_glow')">${tl(trans.reset)}</button>
                     <div class="heading">
-                        <h5>${trans_legacy[lang].settings.music.grid_glow.name}</h5>
+                        <h5>${tl(trans.grid_glow.name)}</h5>
+                        <p>${tl(trans.grid_glow.body)}</p>
                     </div>
                     <div class="toggle-wrap">
                         <button class="toggle" id="toggle-grid_glow" aria-checked="true" type="button">
@@ -6886,17 +6876,6 @@
                     </div>
                     <div class="toggle-wrap">
                         <button class="toggle" id="toggle-show_guest_features" aria-checked="true" type="button">
-                            <div class="dot"></div>
-                        </button>
-                    </div>
-                </div>
-                <div class="toggle-container" id="container-stacked_chartlist_info" onclick="_update_item('stacked_chartlist_info')">
-                    <button class="btn reset" onclick="_reset_item('stacked_chartlist_info')">${tl(trans.reset)}</button>
-                    <div class="heading">
-                        <h5>${tl(trans.track_column_view)}</h5>
-                    </div>
-                    <div class="toggle-wrap">
-                        <button class="toggle" id="toggle-stacked_chartlist_info" aria-checked="true" type="button">
                             <div class="dot"></div>
                         </button>
                     </div>
@@ -10984,6 +10963,7 @@
           badge.setAttribute("onclick", "_sponsor()");
       });
     }
+    if (page.subpage != "overview") return;
     if (page.name == "cutensilly") {
       let sponsor_cta = document.createElement("div");
       sponsor_cta.classList.add("cta", "first", "sponsor", "colourful");
@@ -11005,8 +10985,7 @@
       profile_sub_text = page.structure.container.querySelector(".redesigned-profile-header .header-title-secondary");
     else
       profile_sub_text = document.body.querySelector(".header-title-secondary");
-    if (!profile_sub_text)
-      return;
+    if (!profile_sub_text) return;
     let display_name = profile_sub_text.querySelector(".header-title-display-name");
     let scrobble_since = profile_sub_text.querySelector(".header-scrobble-since");
     scrobble_since.textContent = scrobble_since.textContent.replace(tl(trans.account_scrobbling_since_replace), "");

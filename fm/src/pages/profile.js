@@ -688,6 +688,8 @@ export function bleh_profiles() {
         });
     }
 
+    if (page.subpage != 'overview') return;
+
     if (page.name == 'cutensilly') {
         let sponsor_cta = document.createElement('div');
         sponsor_cta.classList.add('cta', 'first', 'sponsor', 'colourful');
@@ -714,8 +716,7 @@ export function bleh_profiles() {
     else
         profile_sub_text = document.body.querySelector('.header-title-secondary');
 
-    if (!profile_sub_text)
-        return;
+    if (!profile_sub_text) return;
 
     let display_name = profile_sub_text.querySelector('.header-title-display-name');
     let scrobble_since = profile_sub_text.querySelector('.header-scrobble-since');
