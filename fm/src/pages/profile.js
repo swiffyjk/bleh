@@ -688,6 +688,25 @@ export function bleh_profiles() {
         });
     }
 
+    if (page.name == 'cutensilly') {
+        let sponsor_cta = document.createElement('div');
+        sponsor_cta.classList.add('cta', 'first', 'sponsor', 'colourful');
+
+        if (auth.sponsor) {
+            sponsor_cta.innerHTML = (`
+                <strong>${tl(trans.you_are_a_sponsor)}</strong>
+                <a class="see-more" onclick="_sponsor_manage()">${tl(trans.manage_sponsor)}</a>
+            `);
+        } else {
+            sponsor_cta.innerHTML = (`
+                <strong>${tl(trans.news_sponsor_cta)}</strong>
+                <a class="see-more" onclick="_sponsor()">${tl(trans.sponsor)}</a>
+            `);
+        }
+
+        page.structure.side.insertBefore(sponsor_cta, page.structure.side.firstElementChild);
+    }
+
     // secondary text
     let profile_sub_text;
     if (ff('refreshed_nav'))

@@ -59,7 +59,7 @@ export function bleh_settings() {
             </li>
             <li class="navlist-item secondary-nav-item">
                 <a class="secondary-nav-item-link bleh--nav" data-bleh-page="profiles" onclick="_change_settings_page('profiles')">
-                    ${trans_legacy[lang].settings.profiles.name}
+                    ${tl(trans.profiles)}
                 </a>
             </li>
             <li class="navlist-item secondary-nav-item">
@@ -69,7 +69,7 @@ export function bleh_settings() {
             </li>
             <li class="navlist-item secondary-nav-item">
                 <a class="secondary-nav-item-link bleh--nav" data-bleh-page="text" onclick="_change_settings_page('text')">
-                    ${trans_legacy[lang].settings.text.name}
+                    ${tl(trans.text)}
                 </a>
             </li>
             <li class="navlist-item secondary-nav-item">
@@ -1142,24 +1142,24 @@ export function render_setting_page(page_id) {
             },
             {
                 id: 'colourful_counts',
-                name: trans_legacy[lang].settings.customise.colourful_counts.name
+                name: tl(trans.colourful_counts.name)
             },
             {
                 id: 'travis',
-                name: trans_legacy[lang].settings.redirects.name
+                name: tl(trans.redirect_messages.name)
             },
             {
                 id: 'gloss',
                 type: 'slider',
-                name: trans_legacy[lang].settings.customise.gloss.name
+                name: tl(trans.gloss.name)
             },
             {
                 id: 'grid_glow',
-                name: trans_legacy[lang].settings.music.grid_glow.name
+                name: tl(trans.grid_glow.name)
             },
             {
                 id: 'gendered_tags',
-                name: trans_legacy[lang].settings.customise.gendered_tags.name
+                name: tl(trans.gendered_tags.name)
             }
         ]);
 
@@ -1388,8 +1388,8 @@ export function render_setting_page(page_id) {
                 <div class="toggle-container hide-if-no-bulk-edit" id="container-show_bulk_edit_album" onclick="_update_item('show_bulk_edit_album')">
                     <button class="btn reset" onclick="_reset_item('show_bulk_edit_album')">${tl(trans.reset)}</button>
                     <div class="heading">
-                        <h5>${trans_legacy[lang].settings.music.show_bulk_edit_album.name}</h5>
-                        <p>${trans_legacy[lang].settings.music.show_bulk_edit_album.bio}</p>
+                        <h5>${tl(trans.show_bulk_edit_album.name)}</h5>
+                        <p>${tl(trans.show_bulk_edit_album.body)}</p>
                     </div>
                     <div class="toggle-wrap">
                         <button class="toggle" id="toggle-show_bulk_edit_album" aria-checked="false">
@@ -1400,8 +1400,8 @@ export function render_setting_page(page_id) {
                 <div class="toggle-container" id="container-glacier_library_graphs" onclick="_update_item('glacier_library_graphs')">
                     <button class="btn reset" onclick="_reset_item('glacier_library_graphs')">${tl(trans.reset)}</button>
                     <div class="heading">
-                        <h5>${trans_legacy[lang].glacier.option.name}</h5>
-                        <p>${trans_legacy[lang].glacier.option.bio}</p>
+                        <h5>${tl(trans.glacier_graphs.name)}</h5>
+                        <p>${tl(trans.glacier_graphs.body)}</p>
                     </div>
                     <div class="toggle-wrap">
                         <button class="toggle" id="toggle-glacier_library_graphs" aria-checked="true" type="button">
@@ -1459,10 +1459,9 @@ export function render_setting_page(page_id) {
                     </div>
                 </div>
                 <div class="toggle-container" id="container-colourful_counts" onclick="_update_item('colourful_counts')">
-                    <button class="btn reset" onclick="_reset_item('colourful_counts')">${tl(trans.reset)}</button>
                     <div class="heading">
-                        <h5>${trans_legacy[lang].settings.customise.colourful_counts.name}</h5>
-                        <p>${trans_legacy[lang].settings.customise.colourful_counts.bio}</p>
+                        <h5>${tl(trans.colourful_counts.name)}</h5>
+                        <p>${tl(trans.colourful_counts.body)}</p>
                     </div>
                     <div class="toggle-wrap">
                         <button class="toggle" id="toggle-colourful_counts" aria-checked="true">
@@ -1472,22 +1471,11 @@ export function render_setting_page(page_id) {
                 </div>
             </div>
             <div class="bleh--panel">
-                <h4>${trans_legacy[lang].settings.redirects.name}</h4>
-                <p>${trans_legacy[lang].settings.redirects.bio}</p>
-                <div class="inner-preview">
-                    <div class="nag-bar nag-bar--corrections nag-bar--corrections--artist preview-bar">
-                        <div class="container">
-                            <p class="nag-bar-message">
-                                Did you mean <strong><a href="/music/Travi$+Scott">Travi$ Scott</a></strong>? <strong><a href="/music/Lil%27+Wayne">Lil' Wayne</a></strong> maybe?
-                            </p>
-                        </div>
-                    </div>
-                </div>
+                <h4>${tl(trans.redirections)}</h4>
                 <div class="toggle-container" id="container-travis" onclick="_update_item('travis')">
-                    <button class="btn reset" onclick="_reset_item('travis')">${tl(trans.reset)}</button>
                     <div class="heading">
-                        <h5>${trans_legacy[lang].settings.redirects.travis.name}</h5>
-                        <p>${trans_legacy[lang].settings.redirects.travis.bio}</p>
+                        <h5>${tl(trans.redirect_messages.name)}</h5>
+                        <p>${tl(trans.redirect_messages.body)}</p>
                     </div>
                     <div class="toggle-wrap">
                         <button class="toggle" id="toggle-travis" aria-checked="true">
@@ -1497,16 +1485,18 @@ export function render_setting_page(page_id) {
                 </div>
                 <div class="toggle-container">
                     <div class="heading">
-                        <h5>${trans_legacy[lang].settings.redirects.autocorrect.name}</h5>
-                        <p>${trans_legacy[lang].settings.redirects.autocorrect.bio}</p>
+                        <h5>${tl(trans.legacy_redirects.name)}</h5>
+                        <p>${tl(trans.legacy_redirects.body)}</p>
                     </div>
                     <div class="toggle-wrap">
-                        <a class="btn bleh--btn primary" href="${root}settings/website" target="_blank">${trans_legacy[lang].settings.redirects.autocorrect.action}</a>
+                        <a class="see-more" href="${root}settings/website" target="_blank">
+                            ${tl(trans.change_now)}
+                        </a>
                     </div>
                 </div>
             </div>
             <div class="bleh--panel">
-                <h4>${trans_legacy[lang].settings.customise.artwork.name}</h4>
+                <h4>${tl(trans.artwork)}</h4>
                 <div class="inner-preview pad">
                     <div class="palette albums" style="height: fit-content">
                         <div class="album-cover swatch" style="background-image: url('https://lastfm.freetls.fastly.net/i/u/770x0/1569198c4cf0a3b2ff8728975e8359fa.jpg')"></div>
@@ -1520,8 +1510,8 @@ export function render_setting_page(page_id) {
                 <div class="slider-container" id="container-gloss">
                     <button class="btn reset" onclick="_reset_item('gloss')">${tl(trans.reset)}</button>
                     <div class="heading">
-                        <h5>${trans_legacy[lang].settings.customise.gloss.name}</h5>
-                        <p>${trans_legacy[lang].settings.customise.gloss.bio}</p>
+                        <h5>${tl(trans.gloss.name)}</h5>
+                        <p>${tl(trans.gloss.body)}</p>
                     </div>
                     <div class="slider">
                         <div class="slider-track" id="slider-track-gloss"><div class="slider-fill"></div><div class="slider-nub"></div></div>
@@ -1532,7 +1522,8 @@ export function render_setting_page(page_id) {
                 <div class="toggle-container" id="container-grid_glow" onclick="_update_item('grid_glow')">
                     <button class="btn reset" onclick="_reset_item('grid_glow')">${tl(trans.reset)}</button>
                     <div class="heading">
-                        <h5>${trans_legacy[lang].settings.music.grid_glow.name}</h5>
+                        <h5>${tl(trans.grid_glow.name)}</h5>
+                        <p>${tl(trans.grid_glow.body)}</p>
                     </div>
                     <div class="toggle-wrap">
                         <button class="toggle" id="toggle-grid_glow" aria-checked="true" type="button">
@@ -1567,8 +1558,8 @@ export function render_setting_page(page_id) {
                 <div class="toggle-container" id="container-gendered_tags" onclick="_update_item('gendered_tags')">
                     <button class="btn reset" onclick="_reset_item('gendered_tags')">${tl(trans.reset)}</button>
                     <div class="heading">
-                        <h5>${trans_legacy[lang].settings.customise.gendered_tags.name}</h5>
-                        <p>${trans_legacy[lang].settings.customise.gendered_tags.bio}</p>
+                        <h5>${tl(trans.gendered_tags.name)}</h5>
+                        <p>${tl(trans.gendered_tags.body)}</p>
                     </div>
                     <div class="toggle-wrap">
                         <button class="toggle" id="toggle-gendered_tags" aria-checked="true">

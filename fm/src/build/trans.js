@@ -681,12 +681,24 @@ export const trans = {
         // as in your musical taste between you and someone else
         // you share {percentage%} (in taste) with: {list of artists}
         en: 'You share {c} with',
-        de: 'Du teilst {c} mit'
+        de: 'Du teilst {c} mit',
+        one: {
+            en: '{artist}'
+        },
+        two: {
+            en: '{artist1}, {artist2}'
+        },
+        three: {
+            en: '{artist1}, {artist2}, {artist3}'
+        }
     },
     message: {
         // as in a direct message
         en: 'Message',
         de: 'Anschreiben'
+    },
+    sponsor_data: {
+        en: 'Sponsor and badge data version {v}'
     },
     sponsor: {
         en: 'Become a sponsor',
@@ -711,16 +723,13 @@ export const trans = {
         en: 'You are a sponsor, thank you!'
     },
     sponsor_get_badge: {
-        en: 'A monthly sponsorship grants you a custom badge, to obtain or edit this message {account}.'
+        en: 'A monthly sponsorship grants you a custom badge of your choosing.'
     },
     sponsor_no_badge: {
         en: 'A custom badge is only available with a monthly sponsorship.'
     },
     manage_sponsor: {
         en: 'Manage sponsorship'
-    },
-    obsess: {
-        en: 'Obsess'
     },
     labs: {
         en: 'Labs'
@@ -747,6 +756,8 @@ export const trans = {
         de: 'Sammeln der letzten 90 Tage'
     },
     following_mutuals: {
+        // this is appended after the following button text if mutuals
+        // eg. Following (mutually)
         en: '(mutually)',
         de: '(gegenseitig)'
     },
@@ -1062,6 +1073,9 @@ export const trans = {
     others_from_profile: {
         en: 'More from {user}'
     },
+    obsess: {
+        en: 'Obsess'
+    },
     obsession: {
         en: 'Obsession'
     },
@@ -1086,9 +1100,6 @@ export const trans = {
     },
     correct_titles_with_lotus: {
         en: 'Correct titles with lotus'
-    },
-    sponsor_data: {
-        en: 'Sponsor and badge data version {v}'
     },
     view_all: {
         en: 'View all'
@@ -1119,6 +1130,9 @@ export const trans = {
         },
         body: {
             en: 'View their scrobbles alongside yours at all times'
+        },
+        linked: {
+            en: 'Profile shortcut linked!'
         }
     },
     avatar_radius: {
@@ -1140,6 +1154,82 @@ export const trans = {
     },
     enter_font_names: {
         en: 'Enter installed font name(s), separated by commas'
+    },
+    change_now: {
+        en: 'Change now'
+    },
+    profiles: {
+        en: 'Profiles'
+    },
+    redirections: {
+        en: 'Redirections'
+    },
+    legacy_redirects: {
+        name: {
+            en: 'Legacy scrobble redirection'
+        },
+        body: {
+            en: 'By default, Last.fm will "auto-correct" some of your scrobbles to (mostly) faulty redirections. By disabling this it does not fully fix the system but keeps artist names in your library intact.'
+        }
+    },
+    redirect_messages: {
+        name: {
+            en: 'Remove page redirection notifications'
+        },
+        body: {
+            en: 'These notifications can let you undo redirections Last.fm forced upon you, but can also be annoying'
+        }
+    },
+    colourful_counts: {
+        name: {
+            en: 'Rank-based colours for artist charts'
+        },
+        body: {
+            en: 'Assigns a colour based on an artist\'s all-time ranking in your library'
+        }
+    },
+    glacier_graphs: {
+        name: {
+            en: 'Visualise scrobble graphs better'
+        },
+        body: {
+            en: 'Choose between a tiny delay for a wide range of graph options or legacy Last.fm graphs'
+        }
+    },
+    show_bulk_edit_album: {
+        name: {
+            en: 'Show "Bulk Edit" powered album name in tracklists'
+        },
+        body: {
+            en: 'With this extension the album name is displayed on all tracks by default, whereas with bleh the album name is only displayed on active tracks'
+        }
+    },
+    gendered_tags: {
+        name: {
+            en: 'Hide gender-based tags'
+        },
+        body: {
+            en: 'These tags are often redundant and can never apply to the full range of what they\'re intending'
+        }
+    },
+    artwork_and_grids: {
+        en: 'Artwork and grids'
+    },
+    gloss: {
+        name: {
+            en: 'Gloss overlay'
+        },
+        body: {
+            en: 'Very shiny'
+        }
+    },
+    grid_glow: {
+        name: {
+            en: 'Reflect colour below grid items'
+        },
+        body: {
+            en: 'Glows in the colour of said album cover'
+        }
     }
 }
 

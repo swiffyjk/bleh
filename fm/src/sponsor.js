@@ -143,7 +143,7 @@ function sponsor_manage() {
                         <span class="avatar-status-dot user-status--bleh-sponsor"></span>
                     </div>
                     <h1>${tl(trans.you_are_a_sponsor)}</h1>
-                    <p>${tl(trans.sponsor_get_badge).replace('{account}', `<a class="mention" href="${root}user/${sponsor_list.sponsor_account}">@${sponsor_list.sponsor_account}</a>`)}</p>
+                    <p>${tl(trans.sponsor_get_badge)}</p>
                 </div>
                 <div class="modal-footer">
                     <a class="btn primary sponsor" href="${root}user/${sponsor_list.sponsor_account}" target="_blank">

@@ -474,8 +474,8 @@ function bleh_glacier_library_top(static_page = false) {
                 <div class="toggle-container" id="container-glacier_library_graphs" onclick="_update_item('glacier_library_graphs')">
                     <button class="btn reset" onclick="_reset_item('glacier_library_graphs')">${tl(trans.reset)}</button>
                     <div class="heading">
-                        <h5>${trans_legacy[lang].glacier.option.name}</h5>
-                        <p>${trans_legacy[lang].glacier.option.bio}</p>
+                        <h5>${tl(trans.glacier_graphs.name)}</h5>
+                        <p>${tl(trans.glacier_graphs.body)}</p>
                     </div>
                     <div class="toggle-wrap">
                         <button class="toggle" id="toggle-glacier_library_graphs" aria-checked="true" type="button">
@@ -1224,8 +1224,8 @@ function bleh_glacier_library_focused() {
                 <div class="toggle-container" id="container-glacier_library_graphs" onclick="_update_item('glacier_library_graphs')">
                     <button class="btn reset" onclick="_reset_item('glacier_library_graphs')">${tl(trans.reset)}</button>
                     <div class="heading">
-                        <h5>${trans_legacy[lang].glacier.option.name}</h5>
-                        <p>${trans_legacy[lang].glacier.option.bio}</p>
+                        <h5>${tl(trans.glacier_graphs.name)}</h5>
+                        <p>${tl(trans.glacier_graphs.body)}</p>
                     </div>
                     <div class="toggle-wrap">
                         <button class="toggle" id="toggle-glacier_library_graphs" aria-checked="true" type="button">

@@ -1854,12 +1854,24 @@
       // as in your musical taste between you and someone else
       // you share {percentage%} (in taste) with: {list of artists}
       en: "You share {c} with",
-      de: "Du teilst {c} mit"
+      de: "Du teilst {c} mit",
+      one: {
+        en: "{artist}"
+      },
+      two: {
+        en: "{artist1}, {artist2}"
+      },
+      three: {
+        en: "{artist1}, {artist2}, {artist3}"
+      }
     },
     message: {
       // as in a direct message
       en: "Message",
       de: "Anschreiben"
+    },
+    sponsor_data: {
+      en: "Sponsor and badge data version {v}"
     },
     sponsor: {
       en: "Become a sponsor",
@@ -1884,16 +1896,13 @@
       en: "You are a sponsor, thank you!"
     },
     sponsor_get_badge: {
-      en: "A monthly sponsorship grants you a custom badge, to obtain or edit this message {account}."
+      en: "A monthly sponsorship grants you a custom badge of your choosing."
     },
     sponsor_no_badge: {
       en: "A custom badge is only available with a monthly sponsorship."
     },
     manage_sponsor: {
       en: "Manage sponsorship"
-    },
-    obsess: {
-      en: "Obsess"
     },
     labs: {
       en: "Labs"
@@ -1920,6 +1929,8 @@
       de: "Sammeln der letzten 90 Tage"
     },
     following_mutuals: {
+      // this is appended after the following button text if mutuals
+      // eg. Following (mutually)
       en: "(mutually)",
       de: "(gegenseitig)"
     },
@@ -2235,6 +2246,9 @@
     others_from_profile: {
       en: "More from {user}"
     },
+    obsess: {
+      en: "Obsess"
+    },
     obsession: {
       en: "Obsession"
     },
@@ -2259,9 +2273,6 @@
     },
     correct_titles_with_lotus: {
       en: "Correct titles with lotus"
-    },
-    sponsor_data: {
-      en: "Sponsor and badge data version {v}"
     },
     view_all: {
       en: "View all"
@@ -2292,6 +2303,9 @@
       },
       body: {
         en: "View their scrobbles alongside yours at all times"
+      },
+      linked: {
+        en: "Profile shortcut linked!"
       }
     },
     avatar_radius: {
@@ -2313,6 +2327,82 @@
     },
     enter_font_names: {
       en: "Enter installed font name(s), separated by commas"
+    },
+    change_now: {
+      en: "Change now"
+    },
+    profiles: {
+      en: "Profiles"
+    },
+    redirections: {
+      en: "Redirections"
+    },
+    legacy_redirects: {
+      name: {
+        en: "Legacy scrobble redirection"
+      },
+      body: {
+        en: 'By default, Last.fm will "auto-correct" some of your scrobbles to (mostly) faulty redirections. By disabling this it does not fully fix the system but keeps artist names in your library intact.'
+      }
+    },
+    redirect_messages: {
+      name: {
+        en: "Remove page redirection notifications"
+      },
+      body: {
+        en: "These notifications can let you undo redirections Last.fm forced upon you, but can also be annoying"
+      }
+    },
+    colourful_counts: {
+      name: {
+        en: "Rank-based colours for artist charts"
+      },
+      body: {
+        en: "Assigns a colour based on an artist's all-time ranking in your library"
+      }
+    },
+    glacier_graphs: {
+      name: {
+        en: "Visualise scrobble graphs better"
+      },
+      body: {
+        en: "Choose between a tiny delay for a wide range of graph options or legacy Last.fm graphs"
+      }
+    },
+    show_bulk_edit_album: {
+      name: {
+        en: 'Show "Bulk Edit" powered album name in tracklists'
+      },
+      body: {
+        en: "With this extension the album name is displayed on all tracks by default, whereas with bleh the album name is only displayed on active tracks"
+      }
+    },
+    gendered_tags: {
+      name: {
+        en: "Hide gender-based tags"
+      },
+      body: {
+        en: "These tags are often redundant and can never apply to the full range of what they're intending"
+      }
+    },
+    artwork_and_grids: {
+      en: "Artwork and grids"
+    },
+    gloss: {
+      name: {
+        en: "Gloss overlay"
+      },
+      body: {
+        en: "Very shiny"
+      }
+    },
+    grid_glow: {
+      name: {
+        en: "Reflect colour below grid items"
+      },
+      body: {
+        en: "Glows in the colour of said album cover"
+      }
     }
   };
   var trans_legacy = {
@@ -6207,8 +6297,8 @@
                 <div class="toggle-container" id="container-glacier_library_graphs" onclick="_update_item('glacier_library_graphs')">
                     <button class="btn reset" onclick="_reset_item('glacier_library_graphs')">${tl(trans.reset)}</button>
                     <div class="heading">
-                        <h5>${trans_legacy[lang].glacier.option.name}</h5>
-                        <p>${trans_legacy[lang].glacier.option.bio}</p>
+                        <h5>${tl(trans.glacier_graphs.name)}</h5>
+                        <p>${tl(trans.glacier_graphs.body)}</p>
                     </div>
                     <div class="toggle-wrap">
                         <button class="toggle" id="toggle-glacier_library_graphs" aria-checked="true" type="button">
@@ -6815,8 +6905,8 @@
                 <div class="toggle-container" id="container-glacier_library_graphs" onclick="_update_item('glacier_library_graphs')">
                     <button class="btn reset" onclick="_reset_item('glacier_library_graphs')">${tl(trans.reset)}</button>
                     <div class="heading">
-                        <h5>${trans_legacy[lang].glacier.option.name}</h5>
-                        <p>${trans_legacy[lang].glacier.option.bio}</p>
+                        <h5>${tl(trans.glacier_graphs.name)}</h5>
+                        <p>${tl(trans.glacier_graphs.body)}</p>
                     </div>
                     <div class="toggle-wrap">
                         <button class="toggle" id="toggle-glacier_library_graphs" aria-checked="true" type="button">
@@ -8776,18 +8866,6 @@
       }
     }
     if (!is_own_profile) {
-      if (page.name == "cutensilly") {
-        create_profile_top_item(profile_header, {
-          name: page.name,
-          type: "sponsor",
-          link: "_sponsor()",
-          full: true,
-          action: "button",
-          primary: true,
-          katsune,
-          mini: true
-        });
-      }
       let msg_button = document.body.querySelector(".header-message-user");
       if (msg_button) {
         if (page.name != sponsor_list.sponsor_account) {
@@ -8832,7 +8910,7 @@
     } else {
       create_profile_top_item(profile_header, {
         name: page.name,
-        type: "edit",
+        type: "edit_profile",
         link: `${root}settings`,
         katsune
       });
@@ -8868,9 +8946,9 @@
                 <div class="info">
                     <h3>${tl(trans.you_share_count_with).replace("{c}", `<span class="colourful" data-taste="${taste}">${taste_percentage}</span>`)}</h3>
                     <p>
-                        ${taste_artists.length == 1 ? trans_legacy[lang].profile.taste_meter.you_share_1.replace("{artist}", taste_artists[0]) : ""}
-                        ${taste_artists.length == 2 ? trans_legacy[lang].profile.taste_meter.you_share_2.replace("{artist1}", taste_artists[0]).replace("{artist2}", taste_artists[1]) : ""}
-                        ${taste_artists.length == 3 ? trans_legacy[lang].profile.taste_meter.you_share_3.replace("{artist1}", taste_artists[0]).replace("{artist2}", taste_artists[1]).replace("{artist3}", taste_artists[2]) : ""}
+                        ${taste_artists.length == 1 ? tl(trans.you_share_count_with.one).replace("{artist}", taste_artists[0]) : ""}
+                        ${taste_artists.length == 2 ? tl(trans.you_share_count_with.two).replace("{artist1}", taste_artists[0]).replace("{artist2}", taste_artists[1]) : ""}
+                        ${taste_artists.length == 3 ? tl(trans.you_share_count_with.three).replace("{artist1}", taste_artists[0]).replace("{artist2}", taste_artists[1]).replace("{artist3}", taste_artists[2]) : ""}
                     </p>
                 </div>
             </div>
@@ -9064,9 +9142,9 @@
             <img class="view-item-avatar" src="${auth.avatar}" alt="${auth.name}">
             <!--<div class="taste-badge">${trans_legacy[lang].profile.taste_meter.level[taste]}</div>-->
             <div class="taste-badge">${percent}</div>
-            ${artists.length == 1 ? trans_legacy[lang].profile.taste_meter.you_share_1.replace("{artist}", artists[0]) : ""}
-            ${artists.length == 2 ? trans_legacy[lang].profile.taste_meter.you_share_2.replace("{artist1}", artists[0]).replace("{artist2}", artists[1]) : ""}
-            ${artists.length == 3 ? trans_legacy[lang].profile.taste_meter.you_share_3.replace("{artist1}", artists[0]).replace("{artist2}", artists[1]).replace("{artist3}", artists[2]) : ""}
+            ${artists.length == 1 ? tl(trans.you_share_count_with.one).replace("{artist}", artists[0]) : ""}
+            ${artists.length == 2 ? tl(trans.you_share_count_with.two).replace("{artist1}", artists[0]).replace("{artist2}", artists[1]) : ""}
+            ${artists.length == 3 ? tl(trans.you_share_count_with.three).replace("{artist1}", artists[0]).replace("{artist2}", artists[1]).replace("{artist3}", artists[2]) : ""}
         `;
     }
     if (katsune) {
@@ -9075,7 +9153,7 @@
     }
     if (full) {
       listen_item.classList.add("profile-top-item-full");
-      listen_item.textContent = trans_legacy[lang].profile[type];
+      listen_item.textContent = tl(trans[type]);
     }
     parent.appendChild(listen_item);
     if (type == "shortcut") {
@@ -9083,18 +9161,18 @@
         listen_item.setAttribute("data-is-shortcut", "true");
         listen_item.removeAttribute("onclick");
         if (katsune && !mini)
-          listen_item.textContent = trans_legacy[lang].profile.shortcut.remove;
+          listen_item.textContent = tl(trans.profile_shortcut.linked);
         else
           tippy(listen_item, {
-            content: trans_legacy[lang].profile.shortcut.remove
+            content: tl(trans.profile_shortcut.linked)
           });
       } else {
         listen_item.setAttribute("data-is-shortcut", "false");
         if (katsune && !mini)
-          listen_item.textContent = trans_legacy[lang].profile.shortcut.add;
+          listen_item.textContent = tl(trans.profile_shortcut.name);
         else
           tippy(listen_item, {
-            content: trans_legacy[lang].profile.shortcut.add
+            content: tl(trans.profile_shortcut.name)
           });
       }
       let menu = tippy(listen_item, {
@@ -10906,6 +10984,22 @@
           badge.setAttribute("onclick", "_sponsor()");
       });
     }
+    if (page.name == "cutensilly") {
+      let sponsor_cta = document.createElement("div");
+      sponsor_cta.classList.add("cta", "first", "sponsor", "colourful");
+      if (auth.sponsor) {
+        sponsor_cta.innerHTML = `
+                <strong>${tl(trans.you_are_a_sponsor)}</strong>
+                <a class="see-more" onclick="_sponsor_manage()">${tl(trans.manage_sponsor)}</a>
+            `;
+      } else {
+        sponsor_cta.innerHTML = `
+                <strong>${tl(trans.news_sponsor_cta)}</strong>
+                <a class="see-more" onclick="_sponsor()">${tl(trans.sponsor)}</a>
+            `;
+      }
+      page.structure.side.insertBefore(sponsor_cta, page.structure.side.firstElementChild);
+    }
     let profile_sub_text;
     if (ff("refreshed_nav"))
       profile_sub_text = page.structure.container.querySelector(".redesigned-profile-header .header-title-secondary");
@@ -12382,7 +12476,7 @@
             </li>
             <li class="navlist-item secondary-nav-item">
                 <a class="secondary-nav-item-link bleh--nav" data-bleh-page="profiles" onclick="_change_settings_page('profiles')">
-                    ${trans_legacy[lang].settings.profiles.name}
+                    ${tl(trans.profiles)}
                 </a>
             </li>
             <li class="navlist-item secondary-nav-item">
@@ -12392,7 +12486,7 @@
             </li>
             <li class="navlist-item secondary-nav-item">
                 <a class="secondary-nav-item-link bleh--nav" data-bleh-page="text" onclick="_change_settings_page('text')">
-                    ${trans_legacy[lang].settings.text.name}
+                    ${tl(trans.text)}
                 </a>
             </li>
             <li class="navlist-item secondary-nav-item">
@@ -13445,24 +13539,24 @@
         },
         {
           id: "colourful_counts",
-          name: trans_legacy[lang].settings.customise.colourful_counts.name
+          name: tl(trans.colourful_counts.name)
         },
         {
           id: "travis",
-          name: trans_legacy[lang].settings.redirects.name
+          name: tl(trans.redirect_messages.name)
         },
         {
           id: "gloss",
           type: "slider",
-          name: trans_legacy[lang].settings.customise.gloss.name
+          name: tl(trans.gloss.name)
         },
         {
           id: "grid_glow",
-          name: trans_legacy[lang].settings.music.grid_glow.name
+          name: tl(trans.grid_glow.name)
         },
         {
           id: "gendered_tags",
-          name: trans_legacy[lang].settings.customise.gendered_tags.name
+          name: tl(trans.gendered_tags.name)
         }
       ]);
       console.info(artist_corrections, album_track_corrections);
@@ -13673,8 +13767,8 @@
                 <div class="toggle-container hide-if-no-bulk-edit" id="container-show_bulk_edit_album" onclick="_update_item('show_bulk_edit_album')">
                     <button class="btn reset" onclick="_reset_item('show_bulk_edit_album')">${tl(trans.reset)}</button>
                     <div class="heading">
-                        <h5>${trans_legacy[lang].settings.music.show_bulk_edit_album.name}</h5>
-                        <p>${trans_legacy[lang].settings.music.show_bulk_edit_album.bio}</p>
+                        <h5>${tl(trans.show_bulk_edit_album.name)}</h5>
+                        <p>${tl(trans.show_bulk_edit_album.body)}</p>
                     </div>
                     <div class="toggle-wrap">
                         <button class="toggle" id="toggle-show_bulk_edit_album" aria-checked="false">
@@ -13685,8 +13779,8 @@
                 <div class="toggle-container" id="container-glacier_library_graphs" onclick="_update_item('glacier_library_graphs')">
                     <button class="btn reset" onclick="_reset_item('glacier_library_graphs')">${tl(trans.reset)}</button>
                     <div class="heading">
-                        <h5>${trans_legacy[lang].glacier.option.name}</h5>
-                        <p>${trans_legacy[lang].glacier.option.bio}</p>
+                        <h5>${tl(trans.glacier_graphs.name)}</h5>
+                        <p>${tl(trans.glacier_graphs.body)}</p>
                     </div>
                     <div class="toggle-wrap">
                         <button class="toggle" id="toggle-glacier_library_graphs" aria-checked="true" type="button">
@@ -13744,10 +13838,9 @@
                     </div>
                 </div>
                 <div class="toggle-container" id="container-colourful_counts" onclick="_update_item('colourful_counts')">
-                    <button class="btn reset" onclick="_reset_item('colourful_counts')">${tl(trans.reset)}</button>
                     <div class="heading">
-                        <h5>${trans_legacy[lang].settings.customise.colourful_counts.name}</h5>
-                        <p>${trans_legacy[lang].settings.customise.colourful_counts.bio}</p>
+                        <h5>${tl(trans.colourful_counts.name)}</h5>
+                        <p>${tl(trans.colourful_counts.body)}</p>
                     </div>
                     <div class="toggle-wrap">
                         <button class="toggle" id="toggle-colourful_counts" aria-checked="true">
@@ -13757,22 +13850,11 @@
                 </div>
             </div>
             <div class="bleh--panel">
-                <h4>${trans_legacy[lang].settings.redirects.name}</h4>
-                <p>${trans_legacy[lang].settings.redirects.bio}</p>
-                <div class="inner-preview">
-                    <div class="nag-bar nag-bar--corrections nag-bar--corrections--artist preview-bar">
-                        <div class="container">
-                            <p class="nag-bar-message">
-                                Did you mean <strong><a href="/music/Travi$+Scott">Travi$ Scott</a></strong>? <strong><a href="/music/Lil%27+Wayne">Lil' Wayne</a></strong> maybe?
-                            </p>
-                        </div>
-                    </div>
-                </div>
+                <h4>${tl(trans.redirections)}</h4>
                 <div class="toggle-container" id="container-travis" onclick="_update_item('travis')">
-                    <button class="btn reset" onclick="_reset_item('travis')">${tl(trans.reset)}</button>
                     <div class="heading">
-                        <h5>${trans_legacy[lang].settings.redirects.travis.name}</h5>
-                        <p>${trans_legacy[lang].settings.redirects.travis.bio}</p>
+                        <h5>${tl(trans.redirect_messages.name)}</h5>
+                        <p>${tl(trans.redirect_messages.body)}</p>
                     </div>
                     <div class="toggle-wrap">
                         <button class="toggle" id="toggle-travis" aria-checked="true">
@@ -13782,16 +13864,18 @@
                 </div>
                 <div class="toggle-container">
                     <div class="heading">
-                        <h5>${trans_legacy[lang].settings.redirects.autocorrect.name}</h5>
-                        <p>${trans_legacy[lang].settings.redirects.autocorrect.bio}</p>
+                        <h5>${tl(trans.legacy_redirects.name)}</h5>
+                        <p>${tl(trans.legacy_redirects.body)}</p>
                     </div>
                     <div class="toggle-wrap">
-                        <a class="btn bleh--btn primary" href="${root}settings/website" target="_blank">${trans_legacy[lang].settings.redirects.autocorrect.action}</a>
+                        <a class="see-more" href="${root}settings/website" target="_blank">
+                            ${tl(trans.change_now)}
+                        </a>
                     </div>
                 </div>
             </div>
             <div class="bleh--panel">
-                <h4>${trans_legacy[lang].settings.customise.artwork.name}</h4>
+                <h4>${tl(trans.artwork)}</h4>
                 <div class="inner-preview pad">
                     <div class="palette albums" style="height: fit-content">
                         <div class="album-cover swatch" style="background-image: url('https://lastfm.freetls.fastly.net/i/u/770x0/1569198c4cf0a3b2ff8728975e8359fa.jpg')"></div>
@@ -13805,8 +13889,8 @@
                 <div class="slider-container" id="container-gloss">
                     <button class="btn reset" onclick="_reset_item('gloss')">${tl(trans.reset)}</button>
                     <div class="heading">
-                        <h5>${trans_legacy[lang].settings.customise.gloss.name}</h5>
-                        <p>${trans_legacy[lang].settings.customise.gloss.bio}</p>
+                        <h5>${tl(trans.gloss.name)}</h5>
+                        <p>${tl(trans.gloss.body)}</p>
                     </div>
                     <div class="slider">
                         <div class="slider-track" id="slider-track-gloss"><div class="slider-fill"></div><div class="slider-nub"></div></div>
@@ -13817,7 +13901,8 @@
                 <div class="toggle-container" id="container-grid_glow" onclick="_update_item('grid_glow')">
                     <button class="btn reset" onclick="_reset_item('grid_glow')">${tl(trans.reset)}</button>
                     <div class="heading">
-                        <h5>${trans_legacy[lang].settings.music.grid_glow.name}</h5>
+                        <h5>${tl(trans.grid_glow.name)}</h5>
+                        <p>${tl(trans.grid_glow.body)}</p>
                     </div>
                     <div class="toggle-wrap">
                         <button class="toggle" id="toggle-grid_glow" aria-checked="true" type="button">
@@ -13852,8 +13937,8 @@
                 <div class="toggle-container" id="container-gendered_tags" onclick="_update_item('gendered_tags')">
                     <button class="btn reset" onclick="_reset_item('gendered_tags')">${tl(trans.reset)}</button>
                     <div class="heading">
-                        <h5>${trans_legacy[lang].settings.customise.gendered_tags.name}</h5>
-                        <p>${trans_legacy[lang].settings.customise.gendered_tags.bio}</p>
+                        <h5>${tl(trans.gendered_tags.name)}</h5>
+                        <p>${tl(trans.gendered_tags.body)}</p>
                     </div>
                     <div class="toggle-wrap">
                         <button class="toggle" id="toggle-gendered_tags" aria-checked="true">
@@ -18683,7 +18768,7 @@
                         <span class="avatar-status-dot user-status--bleh-sponsor"></span>
                     </div>
                     <h1>${tl(trans.you_are_a_sponsor)}</h1>
-                    <p>${tl(trans.sponsor_get_badge).replace("{account}", `<a class="mention" href="${root}user/${sponsor_list.sponsor_account}">@${sponsor_list.sponsor_account}</a>`)}</p>
+                    <p>${tl(trans.sponsor_get_badge)}</p>
                 </div>
                 <div class="modal-footer">
                     <a class="btn primary sponsor" href="${root}user/${sponsor_list.sponsor_account}" target="_blank">
