@@ -217,6 +217,12 @@ export function bleh_profiles() {
                     let name = involved.name;
                     let sister = involved.sister;
 
+                    // tooltip
+                    if (involved.type != 'artist' && involved.type != 'user' && involved.type != 'tag' && involved.type != 'bwaa' && involved.type != 'bleh') {
+                        tooltip_name = name;
+                        tooltip_sister = sister;
+                    }
+
                     if (involved.type == 'track' && settings.format_guest_features) {
                         let formatted_title = name_includes(name, sister);
 
@@ -226,6 +232,8 @@ export function bleh_profiles() {
                             song_title = formatted_title[0];
                             song_tags = formatted_title[1];
                             sister = formatted_title[2];
+                            tooltip_name = song_title;
+                            tooltip_sister = sister;
                         }
 
                         // parse tags into text
@@ -238,15 +246,12 @@ export function bleh_profiles() {
                         name = `<div class="title">${sanitise_text(song_title).trim()}</div>${song_tags_text}`;
                     } else if ((involved.type == 'album' || involved.type == 'track') && settings.corrections) {
                         name = correct_item_by_artist(name, sister);
-                        sister = correct_artist(sister);
-                    }  else if (involved.type == 'artist' && settings.corrections) {
-                        sister = correct_artist(sister);
-                    }
-
-                    // tooltip
-                    if (involved.type != 'artist' && involved.type != 'user' && involved.type != 'tag' && involved.type != 'bwaa' && involved.type != 'bleh') {
                         tooltip_name = name;
+                        sister = correct_artist(sister);
                         tooltip_sister = sister;
+                    }  else if (involved.type == 'artist' && settings.corrections) {
+                        name = correct_artist(name);
+                        tooltip_name = name;
                     }
 
                     if (involved_text != '')
@@ -262,8 +267,8 @@ export function bleh_profiles() {
 
                 recent_activity_section.appendChild(activity_item);
 
-                if (tooltip_name != undefined)
-                    tippy(activity_item.querySelector('.title a'), {
+                if (tooltip_name)
+                    tippy(activity_item.querySelector('.name a'), {
                         content: `${tooltip_sister} - ${tooltip_name}`
                     });
             });
@@ -846,7 +851,7 @@ export function bleh_profiles() {
 
         if (is_own_profile) {
             edit.innerHTML = (`
-                <a href="${root}settings">${tl(trans.edit)}</a>
+                <a href="${root}settings#id_about_me">${tl(trans.edit)}</a>
             `);
             about_me_sidebar.appendChild(edit);
 

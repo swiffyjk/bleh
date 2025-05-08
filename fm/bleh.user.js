@@ -767,9 +767,9 @@
         break;
     }
     if (Object.keys(append).length > 0)
-      console[type](`%cbleh~%c${system}%c: ${text}`, "color: #9F8CD9", `color: ${system_colour}; font-weight: bold`, "color: unset", append);
+      console[type](`%c${system}%c ${text}`, `background: ${system_colour}; display: block; width: fit-content; font-weight: bold; color: #000; padding: 0 4px; border-radius: 4px`, "color: unset", append);
     else
-      console[type](`%cbleh~%c${system}%c: ${text}`, "color: #9F8CD9", `color: ${system_colour}; font-weight: bold`, "color: unset");
+      console[type](`%c${system}%c ${text}`, `background: ${system_colour}; display: block; width: fit-content; font-weight: bold; color: #000; padding: 0 4px; border-radius: 4px`, "color: unset");
     if (settings && settings.feature_flags) {
       if (settings.feature_flags.developer == true) {
         let log_e = document.createElement("div");
@@ -10744,6 +10744,10 @@
               involved_link = `${root}bleh`;
             let name = involved.name;
             let sister = involved.sister;
+            if (involved.type != "artist" && involved.type != "user" && involved.type != "tag" && involved.type != "bwaa" && involved.type != "bleh") {
+              tooltip_name = name;
+              tooltip_sister = sister;
+            }
             if (involved.type == "track" && settings.format_guest_features) {
               let formatted_title = name_includes(name, sister);
               let song_title;
@@ -10752,6 +10756,8 @@
                 song_title = formatted_title[0];
                 song_tags = formatted_title[1];
                 sister = formatted_title[2];
+                tooltip_name = song_title;
+                tooltip_sister = sister;
               }
               let song_tags_text = "";
               for (let song_tag in song_tags) {
@@ -10760,13 +10766,12 @@
               name = `<div class="title">${sanitise_text(song_title).trim()}</div>${song_tags_text}`;
             } else if ((involved.type == "album" || involved.type == "track") && settings.corrections) {
               name = correct_item_by_artist(name, sister);
-              sister = correct_artist(sister);
-            } else if (involved.type == "artist" && settings.corrections) {
-              sister = correct_artist(sister);
-            }
-            if (involved.type != "artist" && involved.type != "user" && involved.type != "tag" && involved.type != "bwaa" && involved.type != "bleh") {
               tooltip_name = name;
+              sister = correct_artist(sister);
               tooltip_sister = sister;
+            } else if (involved.type == "artist" && settings.corrections) {
+              name = correct_artist(name);
+              tooltip_name = name;
             }
             if (involved_text != "")
               involved_text = `${involved_text}, <a class="involved--${involved.type}" href="${involved_link}">${name}</a>`;
@@ -10778,8 +10783,8 @@
                     <div class="name">${involved_text}</div>
                 `;
           recent_activity_section.appendChild(activity_item);
-          if (tooltip_name != void 0)
-            tippy(activity_item.querySelector(".title a"), {
+          if (tooltip_name)
+            tippy(activity_item.querySelector(".name a"), {
               content: `${tooltip_sister} - ${tooltip_name}`
             });
         });
@@ -11225,7 +11230,7 @@
       edit.classList.add("more-link");
       if (is_own_profile) {
         edit.innerHTML = `
-                <a href="${root}settings">${tl(trans.edit)}</a>
+                <a href="${root}settings#id_about_me">${tl(trans.edit)}</a>
             `;
         about_me_sidebar.appendChild(edit);
         return;
@@ -18973,8 +18978,7 @@
       try {
         shout.setAttribute("data-kate-processed", "true");
         let shout_name = shout.querySelector(".shout-user a");
-        if (!shout_name)
-          return;
+        if (!shout_name) return;
         let shout_name_text = shout_name.textContent;
         let shout_avatar = shout.querySelector(".shout-user-avatar");
         let badge = patch_avatar(shout_avatar, shout_name_text, "shout");
@@ -18992,7 +18996,7 @@
           });
         }
         let shout_timestamp = shout.querySelector(".shout-timestamp time");
-        if (shout_timestamp != null) {
+        if (shout_timestamp) {
           tippy(shout_timestamp, {
             content: shout_timestamp.getAttribute("title")
           });
@@ -19040,8 +19044,7 @@
   }
   function parse_shout_queue() {
     let response = parse_shout(0);
-    if (response == 0)
-      return;
+    if (response == 0) return;
     setTimeout(function() {
       parse_shout(0);
     }, 100);
@@ -19050,7 +19053,7 @@
     if (shout_parse_queue.length <= 0)
       return 0;
     let shout = shout_parse_queue[index];
-    console.info(index, shout_parse_queue, shout);
+    console.log(index, shout_parse_queue, shout);
     let converter = new showdown.Converter({
       emoji: true,
       excludeTrailingPunctuationFromURLs: true,

@@ -55,9 +55,9 @@ export function log(text, system, type = 'info', append={}) {
     }
 
     if (Object.keys(append).length > 0)
-        console[type](`%cbleh~%c${system}%c: ${text}`, 'color: #9F8CD9', `color: ${system_colour}; font-weight: bold`, 'color: unset', append);
+        console[type](`%c${system}%c ${text}`, `background: ${system_colour}; display: block; width: fit-content; font-weight: bold; color: #000; padding: 0 4px; border-radius: 4px`, 'color: unset', append);
     else
-        console[type](`%cbleh~%c${system}%c: ${text}`, 'color: #9F8CD9', `color: ${system_colour}; font-weight: bold`, 'color: unset');
+        console[type](`%c${system}%c ${text}`, `background: ${system_colour}; display: block; width: fit-content; font-weight: bold; color: #000; padding: 0 4px; border-radius: 4px`, 'color: unset');
     if(settings && settings.feature_flags) {
         if (settings.feature_flags.developer == true) {
             let log_e = document.createElement('div');
