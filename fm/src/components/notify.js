@@ -97,6 +97,9 @@ export function notify({
     if (type == 'error')
         icon = 'icon-16-x';
 
+    if (type == 'success')
+        icon = 'icon-16-check';
+
     if (!icon)
         icon = 'icon-16-info';
 

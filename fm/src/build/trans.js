@@ -821,7 +821,87 @@ export const trans = {
     },
     activity: {
         en: 'Activity',
-        de: 'Aktivität'
+        de: 'Aktivität',
+        listing: {
+            shout: {
+                en: 'Shout',
+                de: 'Shout hinterlassen'
+            },
+            image_upload: {
+                en: 'Uploaded image',
+                de: 'Bild hochgeladen'
+            },
+            image_star: {
+                en: 'Starred image',
+                de: 'Bild favorisiert'
+            },
+            obsess: {
+                en: 'Obsessed'
+            },
+            unobsess: {
+                en: 'Removed obsession',
+                de: 'Nicht mehr obsessed'
+            },
+            love: {
+                en: 'Loved',
+                de: 'Liebst'
+            },
+            unlove: {
+                en: 'Removed love',
+                de: 'Liebst nicht mehr'
+            },
+            install_bwaa: {
+                en: 'Installed bwaa',
+                de: 'bwaa installiert'
+            },
+            update_bwaa: {
+                en: 'Updated bwaa',
+                de: 'bwaa aktualisiert'
+            },
+            install_bleh: {
+                en: 'Installed bleh',
+                de: 'bleh installiert'
+            },
+            update_bleh: {
+                en: 'Updated bleh',
+                de: 'bleh aktualisiert'
+            },
+            bookmark: {
+                en: 'Bookmarked',
+                de: 'Lesezeichen hinzugefügt'
+            },
+            unbookmark: {
+                en: 'Removed bookmark',
+                de: 'Lesezeichen entfernt'
+            },
+            wiki: {
+                en: 'Edited',
+                de: 'Editiert'
+            }
+        },
+        types: {
+            shout: {
+                en: 'Comments and replies from you across the site'
+            },
+            image: {
+                en: 'Uploading images and starring for your layout'
+            },
+            obsess: {
+                en: 'Tracks you have on loop'
+            },
+            love: {
+                en: 'Tracks you love'
+            },
+            bookmark: {
+                en: 'Music you want to check out'
+            },
+            wiki: {
+                en: 'Editing of any wiki'
+            },
+            install: {
+                en: 'First installations and updating'
+            }
+        }
     },
     what_are_activities: {
         en: 'Keep track of your most recent activity locally on your profile'
@@ -837,8 +917,14 @@ export const trans = {
     clear_history: {
         en: 'Clear history'
     },
+    cleared_activity_history: {
+        en: 'Cleared your activity history'
+    },
     activity_settings: {
         en: 'Activity settings'
+    },
+    installation: {
+        en: 'Installation'
     },
     grid: {
         // as in the view mode
@@ -879,6 +965,10 @@ export const trans = {
     last_year: {
         en: 'Last year',
         de: 'Letztes Jahr'
+    },
+    love: {
+        // as in loving tracks as a concept
+        en: 'Love'
     },
     loved: {
         // as in loved tracks, this can be seen
@@ -1091,6 +1181,9 @@ export const trans = {
     },
     obsession: {
         en: 'Obsession'
+    },
+    obsessions: {
+        en: 'Obsessions'
     },
     finding_your_tracks: {
         en: 'Finding your tracks'

@@ -897,12 +897,12 @@ export function render_setting_page(page_id) {
                 </div>
                 <div class="sep"></div>
                 <div class="toggle-container" id="container-activity_shout" onclick="_update_item('activity_shout')">
-                    <button class="btn reset" onclick="_reset_item('activity_shout')">${tl(trans.reset)}</button>
                     <div class="icon">
                         <div class="bleh-icon" style="--icon: var(--icon-16-shoutbox)"></div>
                     </div>
                     <div class="heading">
-                        <h5>${trans_legacy[lang].settings.activities.types.shout}</h5>
+                        <h5>${tl(trans.shouts)}</h5>
+                        <p>${tl(trans.activity.types.shout)}</p>
                     </div>
                     <div class="toggle-wrap">
                         <button class="toggle" id="toggle-activity_shout" aria-checked="true">
@@ -911,12 +911,12 @@ export function render_setting_page(page_id) {
                     </div>
                 </div>
                 <div class="toggle-container" id="container-activity_image" onclick="_update_item('activity_image')">
-                    <button class="btn reset" onclick="_reset_item('activity_image')">${tl(trans.reset)}</button>
                     <div class="icon">
                         <div class="bleh-icon" style="--icon: var(--icon-16-gallery-vertical)"></div>
                     </div>
                     <div class="heading">
-                        <h5>${trans_legacy[lang].settings.activities.types.image}</h5>
+                        <h5>${tl(trans.photos)}</h5>
+                        <p>${tl(trans.activity.types.image)}</p>
                     </div>
                     <div class="toggle-wrap">
                         <button class="toggle" id="toggle-activity_image" aria-checked="true">
@@ -925,12 +925,12 @@ export function render_setting_page(page_id) {
                     </div>
                 </div>
                 <div class="toggle-container" id="container-activity_obsess" onclick="_update_item('activity_obsess')">
-                    <button class="btn reset" onclick="_reset_item('activity_obsess')">${tl(trans.reset)}</button>
                     <div class="icon">
                         <div class="bleh-icon" style="--icon: var(--icon-16-obsession)"></div>
                     </div>
                     <div class="heading">
-                        <h5>${trans_legacy[lang].settings.activities.types.obsess}</h5>
+                        <h5>${tl(trans.obsessions)}</h5>
+                        <p>${tl(trans.activity.types.obsess)}</p>
                     </div>
                     <div class="toggle-wrap">
                         <button class="toggle" id="toggle-activity_obsess" aria-checked="true">
@@ -939,12 +939,12 @@ export function render_setting_page(page_id) {
                     </div>
                 </div>
                 <div class="toggle-container" id="container-activity_love" onclick="_update_item('activity_love')">
-                    <button class="btn reset" onclick="_reset_item('activity_love')">${tl(trans.reset)}</button>
                     <div class="icon">
                         <div class="bleh-icon" style="--icon: var(--icon-16-heart)"></div>
                     </div>
                     <div class="heading">
-                        <h5>${trans_legacy[lang].settings.activities.types.love}</h5>
+                        <h5>${tl(trans.love)}</h5>
+                        <p>${tl(trans.activity.types.love)}</p>
                     </div>
                     <div class="toggle-wrap">
                         <button class="toggle" id="toggle-activity_love" aria-checked="true">
@@ -952,13 +952,27 @@ export function render_setting_page(page_id) {
                         </button>
                     </div>
                 </div>
+                <div class="toggle-container" id="container-activity_bookmark" onclick="_update_item('activity_bookmark')">
+                    <div class="icon">
+                        <div class="bleh-icon" style="--icon: var(--icon-16-bookmark)"></div>
+                    </div>
+                    <div class="heading">
+                        <h5>${tl(trans.bookmarks)}</h5>
+                        <p>${tl(trans.activity.types.bookmark)}</p>
+                    </div>
+                    <div class="toggle-wrap">
+                        <button class="toggle" id="toggle-activity_bookmark" aria-checked="true">
+                            <div class="dot"></div>
+                        </button>
+                    </div>
+                </div>
                 <div class="toggle-container" id="container-activity_wiki" onclick="_update_item('activity_wiki')">
-                    <button class="btn reset" onclick="_reset_item('activity_wiki')">${tl(trans.reset)}</button>
                     <div class="icon">
                         <div class="bleh-icon" style="--icon: var(--icon-16-bio)"></div>
                     </div>
                     <div class="heading">
-                        <h5>${trans_legacy[lang].settings.activities.types.wiki}</h5>
+                        <h5>${tl(trans.wiki)}</h5>
+                        <p>${tl(trans.activity.types.wiki)}</p>
                     </div>
                     <div class="toggle-wrap">
                         <button class="toggle" id="toggle-activity_wiki" aria-checked="true">
@@ -967,12 +981,12 @@ export function render_setting_page(page_id) {
                     </div>
                 </div>
                 <div class="toggle-container" id="container-activity_install" onclick="_update_item('activity_install')">
-                    <button class="btn reset" onclick="_reset_item('activity_install')">${tl(trans.reset)}</button>
                     <div class="icon">
                         <div class="bleh-icon" style="--icon: var(--icon-16-download)"></div>
                     </div>
                     <div class="heading">
-                        <h5>${trans_legacy[lang].settings.activities.types.install}</h5>
+                        <h5>${tl(trans.installation)}</h5>
+                        <p>${tl(trans.activity.types.install)}</p>
                     </div>
                     <div class="toggle-wrap">
                         <button class="toggle" id="toggle-activity_install" aria-checked="true">

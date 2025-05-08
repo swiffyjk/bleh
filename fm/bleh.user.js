@@ -81,6 +81,7 @@
     activity_image: true,
     activity_obsess: true,
     activity_love: true,
+    activity_bookmark: true,
     activity_install: true,
     activity_wiki: true,
     simulate_scroll: true,
@@ -476,6 +477,13 @@
       values: [true, false],
       type: "toggle"
     },
+    activity_bookmark: {
+      css: "activity_bookmark",
+      unit: "",
+      value: true,
+      values: [true, false],
+      type: "toggle"
+    },
     activity_install: {
       css: "activity_install",
       unit: "",
@@ -861,317 +869,6 @@
     else
       return decodeURI(desanitise(split[length - 2]));
   }
-
-  // src/build/music.js
-  var artist_corrections = {};
-  var album_track_corrections = {};
-  var ranks = {
-    15: {
-      start: 62e3,
-      hue: -135,
-      sat: 1.5,
-      lit: 0.35
-    },
-    14: {
-      start: 5e4,
-      hue: -105,
-      sat: 1,
-      lit: 0.85
-    },
-    13: {
-      start: 38e3,
-      hue: -85,
-      sat: 1.2,
-      lit: 0.95
-    },
-    12: {
-      start: 24e3,
-      hue: -55,
-      sat: 0.875,
-      lit: 0.85
-    },
-    11: {
-      start: 16e3,
-      hue: -25,
-      sat: 1.5,
-      lit: 0.875
-    },
-    10: {
-      start: 12500,
-      hue: -7,
-      sat: 1.5,
-      lit: 0.875
-    },
-    9: {
-      start: 6e3,
-      hue: 4,
-      sat: 1.425,
-      lit: 0.9
-    },
-    8: {
-      start: 4300,
-      hue: 25,
-      sat: 1.425,
-      lit: 0.925
-    },
-    7: {
-      start: 3200,
-      hue: 60,
-      sat: 1.375,
-      lit: 0.95
-    },
-    6: {
-      start: 2250,
-      hue: 80,
-      sat: 1.35,
-      lit: 0.925
-    },
-    5: {
-      start: 1500,
-      hue: 103,
-      sat: 1.35,
-      lit: 0.925
-    },
-    4: {
-      start: 1e3,
-      hue: 130,
-      sat: 1.35,
-      lit: 0.925
-    },
-    3: {
-      start: 500,
-      hue: 148,
-      sat: 1.35,
-      lit: 0.925
-    },
-    2: {
-      start: 300,
-      hue: 160,
-      sat: 1.5,
-      lit: 0.925
-    },
-    1: {
-      start: 100,
-      hue: 180,
-      sat: 1.5,
-      lit: 0.875
-    },
-    0: {
-      start: 0,
-      hue: 200,
-      sat: 1.5,
-      lit: 0.925
-    }
-  };
-  var includes = {
-    guests: [
-      "feat.",
-      "featuring",
-      "- with",
-      "(with",
-      "[with",
-      "w/ ",
-      "ft.",
-      "ref."
-    ],
-    versions: [
-      "(taylor",
-      "- spotify singles",
-      "(spotify",
-      "(+"
-    ],
-    remasters: [
-      "- remaster",
-      "(remaster"
-    ],
-    mixes: [
-      "- devonshire mix",
-      "(devonshire mix",
-      "mike dean master",
-      "- remix",
-      "(remix",
-      "[remix",
-      "- live",
-      "(live",
-      "- demo",
-      "(demo",
-      "- rehearsal",
-      "(rehearsal",
-      "- sample clearance",
-      "(sample clearance",
-      "[sample clearance",
-      "- home demo",
-      "(home demo",
-      "- solo acoustic",
-      "(solo acoustic",
-      "- acoustic",
-      "(acoustic",
-      "- alternative",
-      "(alternative",
-      "(mix 1",
-      "(mix 2",
-      "(mix 3",
-      "(mix 4",
-      "(mix 5",
-      "(mix 6",
-      "(mix 7",
-      "(mix 8",
-      "(mix 9",
-      "- chopped",
-      "(chopped",
-      "[chopped",
-      "(kate",
-      "(asmr",
-      "(agressive",
-      "(aggressive",
-      "brazilian phonk",
-      // lol
-      "- sped up",
-      "(sped up",
-      "[sped up",
-      "- slow",
-      "(slow",
-      "[slow",
-      "a. g. cook remix",
-      "- offline",
-      "- og mix",
-      "- club edit",
-      "(club edit",
-      "- radio",
-      "(radio"
-    ],
-    mixes_numbers: [
-      "(v1",
-      "(v2",
-      "(v3",
-      "(v4",
-      "(v5",
-      "(v6",
-      "(v7",
-      "(v8",
-      "(v9",
-      "[v1",
-      "[v2",
-      "[v3",
-      "[v4",
-      "[v5",
-      "[v6",
-      "[v7",
-      "[v8",
-      "[v9"
-    ],
-    stems: [
-      "- acapella",
-      "(acapella",
-      "[acapella",
-      "- a cappella",
-      "(a cappella",
-      "[a cappella",
-      "- instrumental",
-      "(instrumental",
-      "[instrumental",
-      "- session",
-      "(session",
-      "[session",
-      "- studio session",
-      "(studio session",
-      "[studio session",
-      "- smart session",
-      "(smart session",
-      "[smart session",
-      "- boombox",
-      "(boombox",
-      "- mtv unplugged",
-      "(mtv unplugged",
-      "- unplugged",
-      "(unplugged",
-      "- the long pond studio",
-      "(the long pond studio"
-    ],
-    bonus: [
-      "- intro",
-      "(intro",
-      "[intro",
-      "- outro",
-      "(outro",
-      "[outro",
-      "dean outro",
-      "- interlude",
-      "(interlude",
-      "[interlude",
-      "- bonus",
-      "(bonus",
-      "[bonus",
-      "- edit",
-      "(edit",
-      "[edit",
-      "- from",
-      "(from",
-      "[from",
-      "- music from",
-      "(music from",
-      "- skit",
-      "(skit",
-      "- original",
-      "(original",
-      "[original",
-      "[clean",
-      "[explicit",
-      "- deluxe",
-      "(deluxe",
-      "[deluxe",
-      "- digital deluxe",
-      "(digital deluxe",
-      "[digital deluxe",
-      "- complete edition",
-      "(complete edition",
-      "[complete edition",
-      "- extended",
-      "(extended",
-      "[extended",
-      "- the extended edition",
-      // denzel
-      "- expanded",
-      "(expanded",
-      "[expanded",
-      "- anniversary",
-      "(anniversary",
-      "[anniversary",
-      "- b-side",
-      "- c-side",
-      "(b-side",
-      "(c-side",
-      "- lp",
-      "- ep",
-      "(lp",
-      "(ep",
-      "- single",
-      "(single",
-      "- mixtape",
-      "(mixtape",
-      "- box set",
-      "(box set",
-      //,
-      "- 19",
-      "- 20",
-      "(19",
-      "(20",
-      "- 10th",
-      "- 25th",
-      "- 30th",
-      "- 35th",
-      "- 40th",
-      "- 50th",
-      "- 60th",
-      "(10th",
-      "(25th",
-      "(30th",
-      "(35th",
-      "(40th",
-      "(50th",
-      "(60th"
-    ]
-  };
 
   // src/build/trans.js
   var lang;
@@ -1986,7 +1683,87 @@
     },
     activity: {
       en: "Activity",
-      de: "Aktivit\xE4t"
+      de: "Aktivit\xE4t",
+      listing: {
+        shout: {
+          en: "Shout",
+          de: "Shout hinterlassen"
+        },
+        image_upload: {
+          en: "Uploaded image",
+          de: "Bild hochgeladen"
+        },
+        image_star: {
+          en: "Starred image",
+          de: "Bild favorisiert"
+        },
+        obsess: {
+          en: "Obsessed"
+        },
+        unobsess: {
+          en: "Removed obsession",
+          de: "Nicht mehr obsessed"
+        },
+        love: {
+          en: "Loved",
+          de: "Liebst"
+        },
+        unlove: {
+          en: "Removed love",
+          de: "Liebst nicht mehr"
+        },
+        install_bwaa: {
+          en: "Installed bwaa",
+          de: "bwaa installiert"
+        },
+        update_bwaa: {
+          en: "Updated bwaa",
+          de: "bwaa aktualisiert"
+        },
+        install_bleh: {
+          en: "Installed bleh",
+          de: "bleh installiert"
+        },
+        update_bleh: {
+          en: "Updated bleh",
+          de: "bleh aktualisiert"
+        },
+        bookmark: {
+          en: "Bookmarked",
+          de: "Lesezeichen hinzugef\xFCgt"
+        },
+        unbookmark: {
+          en: "Removed bookmark",
+          de: "Lesezeichen entfernt"
+        },
+        wiki: {
+          en: "Edited",
+          de: "Editiert"
+        }
+      },
+      types: {
+        shout: {
+          en: "Comments and replies from you across the site"
+        },
+        image: {
+          en: "Uploading images and starring for your layout"
+        },
+        obsess: {
+          en: "Tracks you have on loop"
+        },
+        love: {
+          en: "Tracks you love"
+        },
+        bookmark: {
+          en: "Music you want to check out"
+        },
+        wiki: {
+          en: "Editing of any wiki"
+        },
+        install: {
+          en: "First installations and updating"
+        }
+      }
     },
     what_are_activities: {
       en: "Keep track of your most recent activity locally on your profile"
@@ -2002,8 +1779,14 @@
     clear_history: {
       en: "Clear history"
     },
+    cleared_activity_history: {
+      en: "Cleared your activity history"
+    },
     activity_settings: {
       en: "Activity settings"
+    },
+    installation: {
+      en: "Installation"
     },
     grid: {
       // as in the view mode
@@ -2044,6 +1827,10 @@
     last_year: {
       en: "Last year",
       de: "Letztes Jahr"
+    },
+    love: {
+      // as in loving tracks as a concept
+      en: "Love"
     },
     loved: {
       // as in loved tracks, this can be seen
@@ -2256,6 +2043,9 @@
     },
     obsession: {
       en: "Obsession"
+    },
+    obsessions: {
+      en: "Obsessions"
     },
     finding_your_tracks: {
       en: "Finding your tracks"
@@ -5508,6 +5298,317 @@
     moment.locale(lang);
   }
 
+  // src/build/music.js
+  var artist_corrections = {};
+  var album_track_corrections = {};
+  var ranks = {
+    15: {
+      start: 62e3,
+      hue: -135,
+      sat: 1.5,
+      lit: 0.35
+    },
+    14: {
+      start: 5e4,
+      hue: -105,
+      sat: 1,
+      lit: 0.85
+    },
+    13: {
+      start: 38e3,
+      hue: -85,
+      sat: 1.2,
+      lit: 0.95
+    },
+    12: {
+      start: 24e3,
+      hue: -55,
+      sat: 0.875,
+      lit: 0.85
+    },
+    11: {
+      start: 16e3,
+      hue: -25,
+      sat: 1.5,
+      lit: 0.875
+    },
+    10: {
+      start: 12500,
+      hue: -7,
+      sat: 1.5,
+      lit: 0.875
+    },
+    9: {
+      start: 6e3,
+      hue: 4,
+      sat: 1.425,
+      lit: 0.9
+    },
+    8: {
+      start: 4300,
+      hue: 25,
+      sat: 1.425,
+      lit: 0.925
+    },
+    7: {
+      start: 3200,
+      hue: 60,
+      sat: 1.375,
+      lit: 0.95
+    },
+    6: {
+      start: 2250,
+      hue: 80,
+      sat: 1.35,
+      lit: 0.925
+    },
+    5: {
+      start: 1500,
+      hue: 103,
+      sat: 1.35,
+      lit: 0.925
+    },
+    4: {
+      start: 1e3,
+      hue: 130,
+      sat: 1.35,
+      lit: 0.925
+    },
+    3: {
+      start: 500,
+      hue: 148,
+      sat: 1.35,
+      lit: 0.925
+    },
+    2: {
+      start: 300,
+      hue: 160,
+      sat: 1.5,
+      lit: 0.925
+    },
+    1: {
+      start: 100,
+      hue: 180,
+      sat: 1.5,
+      lit: 0.875
+    },
+    0: {
+      start: 0,
+      hue: 200,
+      sat: 1.5,
+      lit: 0.925
+    }
+  };
+  var includes = {
+    guests: [
+      "feat.",
+      "featuring",
+      "- with",
+      "(with",
+      "[with",
+      "w/ ",
+      "ft.",
+      "ref."
+    ],
+    versions: [
+      "(taylor",
+      "- spotify singles",
+      "(spotify",
+      "(+"
+    ],
+    remasters: [
+      "- remaster",
+      "(remaster"
+    ],
+    mixes: [
+      "- devonshire mix",
+      "(devonshire mix",
+      "mike dean master",
+      "- remix",
+      "(remix",
+      "[remix",
+      "- live",
+      "(live",
+      "- demo",
+      "(demo",
+      "- rehearsal",
+      "(rehearsal",
+      "- sample clearance",
+      "(sample clearance",
+      "[sample clearance",
+      "- home demo",
+      "(home demo",
+      "- solo acoustic",
+      "(solo acoustic",
+      "- acoustic",
+      "(acoustic",
+      "- alternative",
+      "(alternative",
+      "(mix 1",
+      "(mix 2",
+      "(mix 3",
+      "(mix 4",
+      "(mix 5",
+      "(mix 6",
+      "(mix 7",
+      "(mix 8",
+      "(mix 9",
+      "- chopped",
+      "(chopped",
+      "[chopped",
+      "(kate",
+      "(asmr",
+      "(agressive",
+      "(aggressive",
+      "brazilian phonk",
+      // lol
+      "- sped up",
+      "(sped up",
+      "[sped up",
+      "- slow",
+      "(slow",
+      "[slow",
+      "a. g. cook remix",
+      "- offline",
+      "- og mix",
+      "- club edit",
+      "(club edit",
+      "- radio",
+      "(radio"
+    ],
+    mixes_numbers: [
+      "(v1",
+      "(v2",
+      "(v3",
+      "(v4",
+      "(v5",
+      "(v6",
+      "(v7",
+      "(v8",
+      "(v9",
+      "[v1",
+      "[v2",
+      "[v3",
+      "[v4",
+      "[v5",
+      "[v6",
+      "[v7",
+      "[v8",
+      "[v9"
+    ],
+    stems: [
+      "- acapella",
+      "(acapella",
+      "[acapella",
+      "- a cappella",
+      "(a cappella",
+      "[a cappella",
+      "- instrumental",
+      "(instrumental",
+      "[instrumental",
+      "- session",
+      "(session",
+      "[session",
+      "- studio session",
+      "(studio session",
+      "[studio session",
+      "- smart session",
+      "(smart session",
+      "[smart session",
+      "- boombox",
+      "(boombox",
+      "- mtv unplugged",
+      "(mtv unplugged",
+      "- unplugged",
+      "(unplugged",
+      "- the long pond studio",
+      "(the long pond studio"
+    ],
+    bonus: [
+      "- intro",
+      "(intro",
+      "[intro",
+      "- outro",
+      "(outro",
+      "[outro",
+      "dean outro",
+      "- interlude",
+      "(interlude",
+      "[interlude",
+      "- bonus",
+      "(bonus",
+      "[bonus",
+      "- edit",
+      "(edit",
+      "[edit",
+      "- from",
+      "(from",
+      "[from",
+      "- music from",
+      "(music from",
+      "- skit",
+      "(skit",
+      "- original",
+      "(original",
+      "[original",
+      "[clean",
+      "[explicit",
+      "- deluxe",
+      "(deluxe",
+      "[deluxe",
+      "- digital deluxe",
+      "(digital deluxe",
+      "[digital deluxe",
+      "- complete edition",
+      "(complete edition",
+      "[complete edition",
+      "- extended",
+      "(extended",
+      "[extended",
+      "- the extended edition",
+      // denzel
+      "- expanded",
+      "(expanded",
+      "[expanded",
+      "- anniversary",
+      "(anniversary",
+      "[anniversary",
+      "- b-side",
+      "- c-side",
+      "(b-side",
+      "(c-side",
+      "- lp",
+      "- ep",
+      "(lp",
+      "(ep",
+      "- single",
+      "(single",
+      "- mixtape",
+      "(mixtape",
+      "- box set",
+      "(box set",
+      //,
+      "- 19",
+      "- 20",
+      "(19",
+      "(20",
+      "- 10th",
+      "- 25th",
+      "- 30th",
+      "- 35th",
+      "- 40th",
+      "- 50th",
+      "- 60th",
+      "(10th",
+      "(25th",
+      "(30th",
+      "(35th",
+      "(40th",
+      "(50th",
+      "(60th"
+    ]
+  };
+
   // src/build/seasonal.js
   var seasonal_timer = {
     state: void 0
@@ -5932,6 +6033,8 @@
     page.structure.notifications.appendChild(notif);
     if (type == "error")
       icon = "icon-16-x";
+    if (type == "success")
+      icon = "icon-16-check";
     if (!icon)
       icon = "icon-16-info";
     if (icon) {
@@ -13343,12 +13446,12 @@
                 </div>
                 <div class="sep"></div>
                 <div class="toggle-container" id="container-activity_shout" onclick="_update_item('activity_shout')">
-                    <button class="btn reset" onclick="_reset_item('activity_shout')">${tl(trans.reset)}</button>
                     <div class="icon">
                         <div class="bleh-icon" style="--icon: var(--icon-16-shoutbox)"></div>
                     </div>
                     <div class="heading">
-                        <h5>${trans_legacy[lang].settings.activities.types.shout}</h5>
+                        <h5>${tl(trans.shouts)}</h5>
+                        <p>${tl(trans.activity.types.shout)}</p>
                     </div>
                     <div class="toggle-wrap">
                         <button class="toggle" id="toggle-activity_shout" aria-checked="true">
@@ -13357,12 +13460,12 @@
                     </div>
                 </div>
                 <div class="toggle-container" id="container-activity_image" onclick="_update_item('activity_image')">
-                    <button class="btn reset" onclick="_reset_item('activity_image')">${tl(trans.reset)}</button>
                     <div class="icon">
                         <div class="bleh-icon" style="--icon: var(--icon-16-gallery-vertical)"></div>
                     </div>
                     <div class="heading">
-                        <h5>${trans_legacy[lang].settings.activities.types.image}</h5>
+                        <h5>${tl(trans.photos)}</h5>
+                        <p>${tl(trans.activity.types.image)}</p>
                     </div>
                     <div class="toggle-wrap">
                         <button class="toggle" id="toggle-activity_image" aria-checked="true">
@@ -13371,12 +13474,12 @@
                     </div>
                 </div>
                 <div class="toggle-container" id="container-activity_obsess" onclick="_update_item('activity_obsess')">
-                    <button class="btn reset" onclick="_reset_item('activity_obsess')">${tl(trans.reset)}</button>
                     <div class="icon">
                         <div class="bleh-icon" style="--icon: var(--icon-16-obsession)"></div>
                     </div>
                     <div class="heading">
-                        <h5>${trans_legacy[lang].settings.activities.types.obsess}</h5>
+                        <h5>${tl(trans.obsessions)}</h5>
+                        <p>${tl(trans.activity.types.obsess)}</p>
                     </div>
                     <div class="toggle-wrap">
                         <button class="toggle" id="toggle-activity_obsess" aria-checked="true">
@@ -13385,12 +13488,12 @@
                     </div>
                 </div>
                 <div class="toggle-container" id="container-activity_love" onclick="_update_item('activity_love')">
-                    <button class="btn reset" onclick="_reset_item('activity_love')">${tl(trans.reset)}</button>
                     <div class="icon">
                         <div class="bleh-icon" style="--icon: var(--icon-16-heart)"></div>
                     </div>
                     <div class="heading">
-                        <h5>${trans_legacy[lang].settings.activities.types.love}</h5>
+                        <h5>${tl(trans.love)}</h5>
+                        <p>${tl(trans.activity.types.love)}</p>
                     </div>
                     <div class="toggle-wrap">
                         <button class="toggle" id="toggle-activity_love" aria-checked="true">
@@ -13398,13 +13501,27 @@
                         </button>
                     </div>
                 </div>
+                <div class="toggle-container" id="container-activity_bookmark" onclick="_update_item('activity_bookmark')">
+                    <div class="icon">
+                        <div class="bleh-icon" style="--icon: var(--icon-16-bookmark)"></div>
+                    </div>
+                    <div class="heading">
+                        <h5>${tl(trans.bookmarks)}</h5>
+                        <p>${tl(trans.activity.types.bookmark)}</p>
+                    </div>
+                    <div class="toggle-wrap">
+                        <button class="toggle" id="toggle-activity_bookmark" aria-checked="true">
+                            <div class="dot"></div>
+                        </button>
+                    </div>
+                </div>
                 <div class="toggle-container" id="container-activity_wiki" onclick="_update_item('activity_wiki')">
-                    <button class="btn reset" onclick="_reset_item('activity_wiki')">${tl(trans.reset)}</button>
                     <div class="icon">
                         <div class="bleh-icon" style="--icon: var(--icon-16-bio)"></div>
                     </div>
                     <div class="heading">
-                        <h5>${trans_legacy[lang].settings.activities.types.wiki}</h5>
+                        <h5>${tl(trans.wiki)}</h5>
+                        <p>${tl(trans.activity.types.wiki)}</p>
                     </div>
                     <div class="toggle-wrap">
                         <button class="toggle" id="toggle-activity_wiki" aria-checked="true">
@@ -13413,12 +13530,12 @@
                     </div>
                 </div>
                 <div class="toggle-container" id="container-activity_install" onclick="_update_item('activity_install')">
-                    <button class="btn reset" onclick="_reset_item('activity_install')">${tl(trans.reset)}</button>
                     <div class="icon">
                         <div class="bleh-icon" style="--icon: var(--icon-16-download)"></div>
                     </div>
                     <div class="heading">
-                        <h5>${trans_legacy[lang].settings.activities.types.install}</h5>
+                        <h5>${tl(trans.installation)}</h5>
+                        <p>${tl(trans.activity.types.install)}</p>
                     </div>
                     <div class="toggle-wrap">
                         <button class="toggle" id="toggle-activity_install" aria-checked="true">
@@ -15726,23 +15843,19 @@
     if (!settings.activities)
       return;
     if (type == "shout") {
-      if (!settings.activity_shout)
-        return;
-    } else if (type == "image_upload" || type == "image_star" || type == "bookmark" || type == "unbookmark") {
-      if (!settings.activity_image)
-        return;
+      if (!settings.activity_shout) return;
+    } else if (type == "image_upload" || type == "image_star") {
+      if (!settings.activity_image) return;
     } else if (type == "obsess" || type == "unobsess") {
-      if (!settings.activity_obsess)
-        return;
+      if (!settings.activity_obsess) return;
     } else if (type == "love" || type == "unlove") {
-      if (!settings.activity_love)
-        return;
+      if (!settings.activity_love) return;
+    } else if (type == "bookmark" || type == "unbookmark") {
+      if (!settings.activity_bookmark) return;
     } else if (type == "install_bwaa" || type == "update_bwaa" || type == "install_bleh" || type == "update_bleh") {
-      if (!settings.activity_install)
-        return;
+      if (!settings.activity_install) return;
     } else if (type == "wiki") {
-      if (!settings.wiki)
-        return;
+      if (!settings.wiki) return;
     }
     recent_activity_list.length = 0;
     recent_activity_list.push(...JSON.parse(localStorage.getItem("bwaa_recent_activity")) || []);
@@ -15763,6 +15876,14 @@
     log("saved", "activity", "info", recent_activity_list);
     localStorage.setItem("bwaa_recent_activity", JSON.stringify(recent_activity_list));
   }
+  unsafeWindow._clear_activity_history = function() {
+    localStorage.removeItem("bwaa_recent_activity");
+    notify({
+      id: "cleared_history",
+      title: tl(trans.cleared_activity_history),
+      type: "success"
+    });
+  };
 
   // src/components/music_grid.js
   function music_grids() {

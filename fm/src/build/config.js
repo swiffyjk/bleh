@@ -72,6 +72,7 @@ export let settings_template = {
     activity_image: true,
     activity_obsess: true,
     activity_love: true,
+    activity_bookmark: true,
     activity_install: true,
     activity_wiki: true,
 
@@ -466,6 +467,13 @@ export let settings_base = {
     },
     activity_love: {
         css: 'activity_love',
+        unit: '',
+        value: true,
+        values: [true, false],
+        type: 'toggle'
+    },
+    activity_bookmark: {
+        css: 'activity_bookmark',
         unit: '',
         value: true,
         values: [true, false],

@@ -14689,7 +14689,8 @@ input[type="range"]::-moz-range-progress {
     .icon {
         display: flex;
         align-items: center;
-        margin-right: 6px;
+        height: 28px;
+        margin-right: -5px;
         --show-icon: none;
     }
 }
