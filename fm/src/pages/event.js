@@ -52,7 +52,7 @@ export function bleh_events() {
         return;
     }
 
-    page.name = '';
+    page.name = event_header.querySelector('.header-title').textContent.trim();
     page.sister = event_header.querySelector('.header-title').textContent.trim();
 
 
@@ -73,8 +73,8 @@ export function bleh_events() {
             </div>
         </div>
         <div class="info-side">
-            <div class="sub-text">${trans_legacy[lang].event.name}</div>
-            <h1>${page.sister}</h1>
+            <div class="sub-text">${tl(trans.event)}</div>
+            <h1>${page.name}</h1>
             <p class="sub-info">${event_description.innerHTML}</p>
         </div>
     `);

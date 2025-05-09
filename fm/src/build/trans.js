@@ -30,6 +30,17 @@ export let lang_info = {
 }
 
 export const trans = {
+    page_templates: {
+        type: {
+            en: '{page} on {brand} {build}.{sku}'
+        },
+        name_type: {
+            en: '{name} - {page} on {brand} {build}.{sku}'
+        },
+        name_sister_type: {
+            en: '{name} by {sister} - {page} on {brand} {build}.{sku}'
+        }
+    },
     badges: {
         missing: {
             name: {
@@ -128,6 +139,9 @@ export const trans = {
     library: {
         en: 'Library',
         de: 'Bibliothek'
+    },
+    playlists: {
+        en: 'Playlists'
     },
     view_profile: {
         en: 'View profile',
@@ -308,9 +322,18 @@ export const trans = {
         en: 'Configure',
         de: 'Konfigurieren'
     },
+    event: {
+        en: 'Event'
+    },
     events: {
         en: 'Events',
         de: 'Veranstaltungen'
+    },
+    lineup: {
+        en: 'Line-up'
+    },
+    attendance: {
+        en: 'Attendance'
     },
     top_badge: {
         en: 'Top Badge',
@@ -621,8 +644,14 @@ export const trans = {
         en: 'Listeners',
         de: 'Zuhörer*innen'
     },
+    tag: {
+        en: 'Tag'
+    },
     tags: {
         en: 'Tags'
+    },
+    reports: {
+        en: 'Reports'
     },
     artist_lower: {
         // used inside a sentence not on its own,

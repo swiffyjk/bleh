@@ -6,7 +6,7 @@ import { stored_season } from "./build/seasonal";
 import { lang, lookup_lang, non_override_lang, tl, trans, trans_legacy } from "./build/trans";
 import { auto_edit_modal } from "./components/auto_edit";
 import { dialog, load_dialogs } from "./components/dialog";
-import { correct_generic_combo, correct_generic_combo_no_artist, lotus } from "./components/lotus";
+import { correct_artist, correct_generic_combo, correct_generic_combo_no_artist, correct_item_by_artist, lotus } from "./components/lotus";
 import { music_grids } from "./components/music_grid";
 import { nag_bar } from "./components/nag_bar";
 import { load_notifications, notify } from "./components/notify";
@@ -54,6 +54,7 @@ export function bleh() {
     let pre_observer = new MutationObserver((mutations) => {
         if (document.body && document.body.querySelector('.adaptive-skin-container')) {
             bleh_main();
+            favi();
 
             pre_observer.disconnect();
         }
@@ -379,12 +380,79 @@ function load_page() {
     }
 
     if (ff('page_title')) {
-        //document.title = `${page.type}_${page.subpage} (${page.name}, ${page.sister}) - bleh ${version.build}.${version.sku}`;
-        try {
-            document.title = `${trans_legacy[lang].pages[page.type][page.subpage].replace('{name}', page.name).replace('{sister}', page.sister)} | ${version.brand} ${version.build}.${version.sku}`
-        } catch(e) {
-            log(`translation key for this page could not be found`, 'page', 'info', page);
+        let template = tl(trans.page_templates.type);
+        if (page.type == 'user' || page.type == 'artist' || page.type == 'events' || page.type == 'tag')
+            template = tl(trans.page_templates.name_type)
+        else if (page.type == 'album' || page.type == 'track')
+            template = tl(trans.page_templates.name_sister_type);
+
+        let name = page.name;
+        let sister = page.sister;
+
+        if (page.type == 'album' || page.type == 'track') {
+            name = correct_item_by_artist(name, sister);
+            sister = correct_artist(sister);
+        } else if (page.type == 'artist') {
+            name = correct_artist(name);
         }
+
+        let title;
+        if (page.subpage != 'overview' && page.subpage != 'event_overview' && (page.type == 'user' || page.type == 'artist' || page.type == 'album' || page.type == 'track' || page.type == 'events' || page.type == 'tag'))
+            title = tl(trans[page.subpage]);
+
+        if (page.type == 'settings')
+            title = tl(trans.settings);
+        else if (page.type == 'bleh_settings')
+            title = tl(trans.bleh_settings);
+        else if (page.type == 'bleh_setup')
+            title = tl(trans.bleh_setup);
+        else if (page.type == 'bleh_sponsor')
+            title = tl(trans.sponsor);
+
+        if (page.subpage.replace('event_', '').startsWith('shoutbox'))
+            title = tl(trans.shouts);
+        else if (page.subpage.startsWith('library'))
+            title = tl(trans.library);
+        else if (page.subpage == 'obsessions_overview')
+            title = tl(trans.obsessions);
+        else if (page.subpage == 'obsessions_obsession')
+            title = tl(trans.obsession);
+        else if (page.subpage.startsWith('tags'))
+            title = tl(trans.tags);
+        else if (page.subpage.startsWith('listening-report'))
+            title = tl(trans.reports);
+        else if (page.subpage.startsWith('event_attendance'))
+            title = tl(trans.attendance);
+        else if (page.subpage == 'event_lineup')
+            title = tl(trans.lineup);
+
+        if (page.type == 'search')
+            title = tl(trans.search);
+
+        if (page.subpage == 'overview' || page.subpage == 'event_overview') {
+            if (page.type == 'user')
+                title = tl(trans.profile);
+            else if (page.type == 'artist')
+                title = tl(trans.artist);
+            else if (page.type == 'album')
+                title = tl(trans.album);
+            else if (page.type == 'track')
+                title = tl(trans.track);
+            else if (page.type == 'events')
+                title = tl(trans.event);
+            else if (page.type == 'tag')
+                title = tl(trans.tag);
+        }
+
+        template = template
+        .replace('{name}', name)
+        .replace('{sister}', sister)
+        .replace('{page}', title)
+        .replace('{brand}', version.brand)
+        .replace('{build}', version.build)
+        .replace('{sku}', version.sku);
+
+        document.title = template;
     }
 
     page_title();
@@ -520,6 +588,10 @@ function favi() {
     let dark = "data:image/png;base64,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";
 
     let favicon = document.querySelector('link[rel="icon"]');
+
+    if (!favicon)
+        return;
+
     favicon.href = (window.matchMedia('(prefers-color-scheme: dark)').matches)
     ? dark
     : light;
