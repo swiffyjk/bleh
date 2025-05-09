@@ -2968,6 +2968,21 @@ function activity_preview() {
             name: 'Death Race For Love',
             type: 'album',
             sister: 'Juice WRLD'
+        },
+        {
+            name: 'Timeless',
+            type: 'track',
+            sister: 'The Weeknd'
+        },
+        {
+            name: 'SKITZO',
+            type: 'track',
+            sister: 'The Weeknd'
+        },
+        {
+            name: 'OPM BABI',
+            type: 'track',
+            sister: 'Playboi Carti'
         }
     ]
 
