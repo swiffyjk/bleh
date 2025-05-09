@@ -11637,8 +11637,9 @@ table.table tr:nth-child(2n) td {
                 gap: 6px;
 
                 .avatar {
-                    width: 18px;
-                    height: 18px;
+                    width: 20px;
+                    height: 20px;
+                    margin: -1px 0;
                     border-radius: var(--avatar-radius);
 
                     .avatar-status-dot {
@@ -11681,6 +11682,7 @@ table.table tr:nth-child(2n) td {
                 --sat-over: 1;
                 --lit-over: 1;
                 --mask: var(--icon-16-trash) !important;
+                opacity: unset;
             }
         }
 
