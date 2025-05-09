@@ -16135,6 +16135,10 @@ button.bleh--gallery-bookmark-image-btn {
         height: 40px;
         display: flex;
         align-items: center;
+
+        .alert {
+            margin: unset;
+        }
     }
 }
 .image-details .gallery-image-buttons,
@@ -21445,6 +21449,12 @@ h4 {
 .bleh--profile-note-panel,
 .about-me-sidebar {
     order: -9;
+}
+.user-events-sidebar {
+    order: 9;
+}
+.promo-v3 {
+    order: 10;
 }
 .listen-profile-panel {
     display: flex;
