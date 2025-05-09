@@ -7,7 +7,8 @@ export function bleh_auto_edits() {
     page.structure.main.appendChild(corrections_panel);
 
 
-    let nav = page.structure.nav.querySelector('ul');
+    // we want the other navigation
+    let nav = page.structure.container.querySelector('nav[data-more-string] .navlist-items');
     let back_nav = document.createElement('li');
     back_nav.classList.add('navlist-item', 'secondary-nav-item', 'secondary-nav-item--back');
     back_nav.innerHTML = (`

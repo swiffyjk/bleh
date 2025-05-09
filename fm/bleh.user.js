@@ -1305,9 +1305,12 @@
       en: "Goodnight, {user}",
       de: "Gute Nacht {user}"
     },
-    configure_bleh: {
+    bleh_settings: {
       en: "bleh Settings",
       de: "bleh Einstellungen"
+    },
+    bleh_setup: {
+      en: "Setup"
     },
     import: {
       en: "Import",
@@ -7697,8 +7700,8 @@
     image_container.appendChild(slides);
     gallery_section.appendChild(image_container);
     page.structure.nav.after(gallery_section);
-    let content_top2 = document.body.querySelector(".page-content");
-    content_top2.innerHTML = "";
+    let content_top = document.body.querySelector(".page-content");
+    content_top.innerHTML = "";
     let form = page.structure.main.querySelector(".form-horizontal");
     form.classList.add("panel-form");
     let upload_rules_group = form.querySelector(".form-group--description + .form-group");
@@ -9531,13 +9534,13 @@
         page.structure.nav = navlist;
       }
       if (is_subpage) {
-        let content_top2 = document.body.querySelector(".content-top");
-        if (content_top2) {
-          content_top2.classList.add("redesigned-content-top");
-          page.structure.content_top = content_top2;
-          navlist.after(content_top2);
-          if (content_top2.querySelector(".content-top-back-link"))
-            content_top2.style.setProperty("display", "none");
+        let content_top = document.body.querySelector(".content-top");
+        if (content_top) {
+          content_top.classList.add("redesigned-content-top");
+          page.structure.content_top = content_top;
+          navlist.after(content_top);
+          if (content_top.querySelector(".content-top-back-link"))
+            content_top.style.setProperty("display", "none");
         } else {
           let subpage_title = page.structure.main.querySelector(":scope > .subpage-title");
           if (!subpage_title)
@@ -9545,17 +9548,17 @@
           if (!subpage_title)
             subpage_title = page.structure.main.querySelector(":scope > section:first-child .section-controls > .subpage-title");
           if (subpage_title) {
-            content_top2 = document.createElement("div");
-            content_top2.classList.add("content-top", "redesigned-content-top");
-            content_top2.innerHTML = `
+            content_top = document.createElement("div");
+            content_top.classList.add("content-top", "redesigned-content-top");
+            content_top.innerHTML = `
                         <div class="content-top-inner-wrap">
                             <div class="container content-top-lower">
                                 <h1 class="content-top-header">${subpage_title.textContent.trim()}</h1>
                             </div>
                         </div>
                     `;
-            page.structure.content_top = content_top2;
-            navlist.after(content_top2);
+            page.structure.content_top = content_top;
+            navlist.after(content_top);
             try {
               page.structure.main.removeChild(subpage_title);
             } catch (e) {
@@ -9588,8 +9591,8 @@
           }
         }
       } else {
-        let content_top2 = document.body.querySelector(".content-top");
-        if (content_top2) content_top2.classList.add("legacy-content-top");
+        let content_top = document.body.querySelector(".content-top");
+        if (content_top) content_top.classList.add("legacy-content-top");
       }
     }
   }
@@ -9598,7 +9601,7 @@
   function bleh_auto_edits() {
     let corrections_panel = document.body.querySelector("#subscription-corrections");
     page.structure.main.appendChild(corrections_panel);
-    let nav = page.structure.nav.querySelector("ul");
+    let nav = page.structure.container.querySelector("nav[data-more-string] .navlist-items");
     let back_nav = document.createElement("li");
     back_nav.classList.add("navlist-item", "secondary-nav-item", "secondary-nav-item--back");
     back_nav.innerHTML = `
@@ -9669,8 +9672,6 @@
       }
     } else if (page.subpage.startsWith("subscription_automatic-edits")) {
       bleh_auto_edits();
-      let header = content_top.querySelector(".content-top-header");
-      header_text = header.textContent.trim();
     }
     if (ff("katsune")) return;
     let edit_header = document.createElement("section");
@@ -10464,8 +10465,8 @@
     } catch (e) {
       log("unable to find elements", "page structure");
     }
-    let content_top2 = document.body.querySelector(".content-top");
-    checkup_page_structure(false, content_top2);
+    let content_top = document.body.querySelector(".content-top");
+    checkup_page_structure(false, content_top);
     log("status is", "page", "info", page);
     update_page();
     let background = obsession_container.querySelector(".obsession-background-inner");
@@ -16466,12 +16467,12 @@
     bleh_container.classList.add("masthead-nav-item");
     bleh_container.innerHTML = `
         <a class="masthead-nav-control" href="${root}bleh${stored_season.id != "none" ? "?tab=seasonal" : ""}" data-label="bleh" data-season="${stored_season.id}" data-season-active="${stored_season.id != "none" ? "true" : "false"}">
-            ${stored_season.id == "none" ? tl(trans.configure_bleh) : moment(stored_season.end.replace("y0", stored_season.year).replace("{offset}", stored_season.offset)).to(stored_season.now, true)}
+            ${stored_season.id == "none" ? tl(trans.bleh_settings) : moment(stored_season.end.replace("y0", stored_season.year).replace("{offset}", stored_season.offset)).to(stored_season.now, true)}
         </a>
     `;
     if (stored_season.id == "none") {
       tippy(bleh_container, {
-        content: tl(trans.configure_bleh)
+        content: tl(trans.bleh_settings)
       });
     } else {
       page.header.season_tooltip = tippy(bleh_container, {
@@ -18282,8 +18283,8 @@
     } catch (e) {
       log("unable to find elements", "page structure");
     }
-    let content_top2 = document.body.querySelector(".content-top");
-    checkup_page_structure(false, content_top2);
+    let content_top = document.body.querySelector(".content-top");
+    checkup_page_structure(false, content_top);
     log("status is", "page", "info", page);
     update_page();
     register_background(auth.avatar.replace("/avatar42s/", "/ar0/"));
@@ -18642,9 +18643,9 @@
     } catch (e) {
       log("unable to find elements", "page structure");
     }
-    let content_top2 = document.body.querySelector(".content-top");
-    let header_text2 = content_top2.querySelector(".content-top-header").textContent;
-    checkup_page_structure(false, content_top2);
+    let content_top = document.body.querySelector(".content-top");
+    let header_text2 = content_top.querySelector(".content-top-header").textContent;
+    checkup_page_structure(false, content_top);
     log("status is", "page", "info", page);
     update_page();
     register_background(auth.avatar);
@@ -18712,8 +18713,8 @@
     } catch (e) {
       log("unable to find elements", "page structure");
     }
-    let content_top2 = document.body.querySelector(".content-top");
-    checkup_page_structure(false, content_top2);
+    let content_top = document.body.querySelector(".content-top");
+    checkup_page_structure(false, content_top);
     log("status is", "page", "info", page);
     update_page();
     if (page.subpage == "notifications") {
@@ -18775,7 +18776,7 @@
     } catch (e) {
       log("unable to find elements", "page structure");
     }
-    let content_top2 = document.body.querySelector(".content-top");
+    let content_top = document.body.querySelector(".content-top");
     let search_form = page.structure.main.querySelector(".search-form");
     let search = search_form.querySelector("#site-search");
     let value = search.getAttribute("value");
@@ -18784,7 +18785,7 @@
     site_search.focus();
     page.structure.main.removeChild(search_form);
     page.name = value != "" ? value : "empty..";
-    checkup_page_structure(false, content_top2);
+    checkup_page_structure(false, content_top);
     log("status is", "page", "info", page);
     update_page();
     if (page.subpage != "overview") {
@@ -19779,7 +19780,7 @@
     }
     if (ff("page_title")) {
       let template = tl(trans.page_templates.type);
-      if (page.type == "user" || page.type == "artist" || page.type == "events" || page.type == "tag")
+      if ((page.type == "user" || page.type == "artist" || page.type == "events" || page.type == "tag") && page.subpage != "home")
         template = tl(trans.page_templates.name_type);
       else if (page.type == "album" || page.type == "track")
         template = tl(trans.page_templates.name_sister_type);
@@ -19792,16 +19793,34 @@
         name = correct_artist(name);
       }
       let title;
-      if (page.subpage != "overview" && page.subpage != "event_overview" && (page.type == "user" || page.type == "artist" || page.type == "album" || page.type == "track" || page.type == "events" || page.type == "tag"))
+      if (page.subpage != "overview" && page.subpage != "event_overview" && page.subpage != "home" && (page.type == "user" || page.type == "artist" || page.type == "album" || page.type == "track" || page.type == "events" || page.type == "tag"))
         title = tl(trans[page.subpage]);
-      if (page.type == "settings")
+      if (page.type == "settings" || page.type == "bleh_settings")
         title = tl(trans.settings);
-      else if (page.type == "bleh_settings")
-        title = tl(trans.bleh_settings);
       else if (page.type == "bleh_setup")
         title = tl(trans.bleh_setup);
       else if (page.type == "bleh_sponsor")
         title = tl(trans.sponsor);
+      else if (page.type == "search")
+        title = tl(trans.search);
+      else if (page.type == "overview")
+        title = tl(trans.home);
+      else if (page.type == "recommended")
+        title = tl(trans.recommendations);
+      else if (page.type == "releases")
+        title = tl(trans.releases);
+      else if (page.type == "events" && page.subpage == "home")
+        title = tl(trans.events);
+      else if (page.type == "bookmarks")
+        title = tl(trans.bookmarks);
+      else if (page.type == "charts")
+        title = tl(trans.charts);
+      if (page.type == "inbox") {
+        if (page.subpage == "notifications")
+          title = tl(trans.notifications.name);
+        else
+          title = tl(trans.inbox.name);
+      }
       if (page.subpage.replace("event_", "").startsWith("shoutbox"))
         title = tl(trans.shouts);
       else if (page.subpage.startsWith("library"))
@@ -19818,8 +19837,6 @@
         title = tl(trans.attendance);
       else if (page.subpage == "event_lineup")
         title = tl(trans.lineup);
-      if (page.type == "search")
-        title = tl(trans.search);
       if (page.subpage == "overview" || page.subpage == "event_overview") {
         if (page.type == "user")
           title = tl(trans.profile);

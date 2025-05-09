@@ -47,9 +47,6 @@ export function bleh_native_settings() {
         }
     } else if (page.subpage.startsWith('subscription_automatic-edits')) {
         bleh_auto_edits();
-
-        let header = content_top.querySelector('.content-top-header');
-        header_text = header.textContent.trim();
     }
 
     if (ff('katsune')) return;

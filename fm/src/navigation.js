@@ -151,12 +151,12 @@ export function append_nav() {
     bleh_container.classList.add('masthead-nav-item');
     bleh_container.innerHTML = (`
         <a class="masthead-nav-control" href="${root}bleh${(stored_season.id != 'none') ? '?tab=seasonal' : ''}" data-label="bleh" data-season="${stored_season.id}" data-season-active="${(stored_season.id != 'none') ? 'true' : 'false'}">
-            ${(stored_season.id == 'none') ? tl(trans.configure_bleh) : moment(stored_season.end.replace('y0', stored_season.year).replace('{offset}', stored_season.offset)).to(stored_season.now, true)}
+            ${(stored_season.id == 'none') ? tl(trans.bleh_settings) : moment(stored_season.end.replace('y0', stored_season.year).replace('{offset}', stored_season.offset)).to(stored_season.now, true)}
         </a>
     `);
     if (stored_season.id == 'none') {
         tippy(bleh_container, {
-            content: tl(trans.configure_bleh)
+            content: tl(trans.bleh_settings)
         });
     } else {
         page.header.season_tooltip = tippy(bleh_container, {

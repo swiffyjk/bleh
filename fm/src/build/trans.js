@@ -443,9 +443,12 @@ export const trans = {
         en: 'Goodnight, {user}',
         de: 'Gute Nacht {user}'
     },
-    configure_bleh: {
+    bleh_settings: {
         en: 'bleh Settings',
         de: 'bleh Einstellungen'
+    },
+    bleh_setup: {
+        en: 'Setup'
     },
     import: {
         en: 'Import',

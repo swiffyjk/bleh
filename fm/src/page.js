@@ -381,7 +381,7 @@ function load_page() {
 
     if (ff('page_title')) {
         let template = tl(trans.page_templates.type);
-        if (page.type == 'user' || page.type == 'artist' || page.type == 'events' || page.type == 'tag')
+        if ((page.type == 'user' || page.type == 'artist' || page.type == 'events' || page.type == 'tag') && page.subpage != 'home')
             template = tl(trans.page_templates.name_type)
         else if (page.type == 'album' || page.type == 'track')
             template = tl(trans.page_templates.name_sister_type);
@@ -397,17 +397,36 @@ function load_page() {
         }
 
         let title;
-        if (page.subpage != 'overview' && page.subpage != 'event_overview' && (page.type == 'user' || page.type == 'artist' || page.type == 'album' || page.type == 'track' || page.type == 'events' || page.type == 'tag'))
+        if (page.subpage != 'overview' && page.subpage != 'event_overview' && page.subpage != 'home' && (page.type == 'user' || page.type == 'artist' || page.type == 'album' || page.type == 'track' || page.type == 'events' || page.type == 'tag'))
             title = tl(trans[page.subpage]);
 
-        if (page.type == 'settings')
+        if (page.type == 'settings' || page.type == 'bleh_settings')
             title = tl(trans.settings);
-        else if (page.type == 'bleh_settings')
-            title = tl(trans.bleh_settings);
         else if (page.type == 'bleh_setup')
             title = tl(trans.bleh_setup);
         else if (page.type == 'bleh_sponsor')
             title = tl(trans.sponsor);
+        else if (page.type == 'search')
+            title = tl(trans.search);
+        else if (page.type == 'overview')
+            title = tl(trans.home);
+        else if (page.type == 'recommended')
+            title = tl(trans.recommendations);
+        else if (page.type == 'releases')
+            title = tl(trans.releases);
+        else if (page.type == 'events' && page.subpage == 'home')
+            title = tl(trans.events);
+        else if (page.type == 'bookmarks')
+            title = tl(trans.bookmarks);
+        else if (page.type == 'charts')
+            title = tl(trans.charts);
+
+        if (page.type == 'inbox') {
+            if (page.subpage == 'notifications')
+                title = tl(trans.notifications.name);
+            else
+                title = tl(trans.inbox.name);
+        }
 
         if (page.subpage.replace('event_', '').startsWith('shoutbox'))
             title = tl(trans.shouts);
@@ -425,9 +444,6 @@ function load_page() {
             title = tl(trans.attendance);
         else if (page.subpage == 'event_lineup')
             title = tl(trans.lineup);
-
-        if (page.type == 'search')
-            title = tl(trans.search);
 
         if (page.subpage == 'overview' || page.subpage == 'event_overview') {
             if (page.type == 'user')
