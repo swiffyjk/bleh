@@ -86,3 +86,8 @@ function update_custom_select(element = document.body, value = '', select_id = '
         }
     });
 }
+
+unsafeWindow._update_inbuilt_selection = function(id, index) {
+    document.getElementById(id).selectedIndex = index;
+    update_inbuilt_select(id, document.getElementById(id).value);
+}

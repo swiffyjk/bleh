@@ -9473,6 +9473,10 @@
       }
     });
   }
+  unsafeWindow._update_inbuilt_selection = function(id, index) {
+    document.getElementById(id).selectedIndex = index;
+    update_inbuilt_select(id, document.getElementById(id).value);
+  };
 
   // src/components/structure.js
   function checkup_page_structure(is_subpage = false, header = null) {
@@ -11170,7 +11174,7 @@
       });
     }
     if (page.subpage != "overview") return;
-    if (page.name == "cutensilly") {
+    if (page.name == "katelyness") {
       let sponsor_cta = document.createElement("div");
       sponsor_cta.classList.add("cta", "first", "sponsor", "colourful");
       if (auth.sponsor) {

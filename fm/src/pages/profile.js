@@ -730,7 +730,7 @@ export function bleh_profiles() {
 
     if (page.subpage != 'overview') return;
 
-    if (page.name == 'cutensilly') {
+    if (page.name == 'katelyness') {
         let sponsor_cta = document.createElement('div');
         sponsor_cta.classList.add('cta', 'first', 'sponsor', 'colourful');
 
