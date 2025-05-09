@@ -6659,8 +6659,7 @@ button,
 .source-album,
 .language-nav,
 .out-now-btn,
-.show-more a,
-.music-more-link a
+.show-more a
 {
     --btn-right: calc(12px + 18px + 6px) !important;
 }
@@ -6962,8 +6961,7 @@ span.header-new-gallery-inner a:before,
 .form-group-controls:has(select):before,
 .dropdown-menu-list-button::after, .dropdown-menu-clickable-button::after, .dropdown-menu-clickable-button-js-only::after,
 .all-results-list li:before,
-.language-nav, .auth-link,
-.music-more-link a:before
+.language-nav, .auth-link
 {
     --left: none !important;
     --right: 12px !important;
@@ -7470,6 +7468,7 @@ very, very, very dated - who looks up a song on ebay? */
 }
 [data-menu-item="profile-shortcut"],
 [data-menu-item="profile"] {
+    display: block !important; /* labs */
     --mask: var(--icon-16-profile);
     text-align: center;
     --btn-top: calc(12px + 16px + 6px);
@@ -12960,12 +12959,12 @@ hr {
 }
 
 
-[style="background: rgba(102,102,102,1)"] {
+/*[style="background: rgba(102,102,102,1)"] {
     background: hsl(var(--b5)) !important;
 }
 [src="https://lastfm.freetls.fastly.net/i/u/300x300/dc3c775e076d40cac0124c80b258365c.jpg"] {
     content: url() !important;
-}
+}*/
 
 
 
@@ -21051,7 +21050,6 @@ h4 {
     }
     .music-more-link a {
         display: flex;
-        --mask: var(--icon-16-arrow-right);
     }
 
     .music-artists {
@@ -21690,6 +21688,7 @@ h4 {
 }
 
 
+.music-more-link a,
 .modal-body .js-close,
 .masthead-popup-text .btn-primary,
 .obsession-delete-button,

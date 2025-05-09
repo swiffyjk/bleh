@@ -19545,6 +19545,7 @@
       if (document.head) {
         append_style();
         favi();
+        document.title = "...";
         head_observer.disconnect();
       }
     });
@@ -19803,7 +19804,7 @@
         title = tl(trans.sponsor);
       else if (page.type == "search")
         title = tl(trans.search);
-      else if (page.type == "overview")
+      else if (page.type == "overview" || page.type == "home")
         title = tl(trans.home);
       else if (page.type == "recommended")
         title = tl(trans.recommendations);
@@ -19815,6 +19816,8 @@
         title = tl(trans.bookmarks);
       else if (page.type == "charts")
         title = tl(trans.charts);
+      else if (page.type == "labs")
+        title = tl(trans.labs.name);
       if (page.type == "inbox") {
         if (page.subpage == "notifications")
           title = tl(trans.notifications.name);
