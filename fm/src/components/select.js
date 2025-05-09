@@ -80,8 +80,7 @@ function update_custom_select(element = document.body, value = '', select_id = '
 
             console.log(sel_button);
 
-            if (sel_button == null)
-                return;
+            if (!sel_button) return;
             sel_button.textContent = btn.textContent;
         }
     });

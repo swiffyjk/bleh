@@ -47,6 +47,8 @@ export function bleh_native_settings() {
         }
     } else if (page.subpage.startsWith('subscription_automatic-edits')) {
         bleh_auto_edits();
+    } else if (page.subpage == 'account_overview') {
+        bleh_accounts();
     }
 
     if (ff('katsune')) return;
@@ -918,4 +920,168 @@ function patch_settings_privacy_panel(token, privacy_panel) {
         select.setAttribute('onchange', `_update_inbuilt_select('${select.getAttribute('id')}', this.value)`);
         update_inbuilt_select(select.getAttribute('id'), select.value);
     });
+}
+
+function bleh_accounts() {
+    let token = page.structure.main.querySelector('[name="csrfmiddlewaretoken"]').getAttribute('value');
+
+    // get info before destroying
+    let original_settings = {
+        email_language: page.structure.main.querySelector('[name="language"]').outerHTML,
+        marketing_emails: page.structure.main.querySelector('[name="opt_in_marketing"]').checked,
+        email: page.structure.main.querySelector('[name="email"]').value,
+        captcha: page.structure.main.querySelector('.lfm-recaptcha')
+    }
+
+    let information_panel = document.createElement('section');
+    information_panel.classList.add('bleh--panel');
+    information_panel.innerHTML = (`
+        <h4>${tl(trans.information)}</h4>
+        <form action="${root}settings/change-username/send-email" method="post">
+            <input type="hidden" name="csrfmiddlewaretoken" value="${token}">
+            <div class="text-container">
+                <div class="heading">
+                    <h5>${tl(trans.username.name)}</h5>
+                    <p>${tl(trans.username.body).replace('{a}', `<a href="https://support.last.fm/" target="_blank">`).replace('{/a}', '</a>')}</p>
+                </div>
+                <div class="input-container content-form">
+                    <input id="id_current_username" type="text" name="current_username" value="${auth.name}" disabled required>
+                    <button class="btn chibi icon primary submit">${tl(trans.send)}</button>
+                    <input type="hidden" value="change_username" name="submit">
+                </div>
+            </div>
+        </form>
+        <form action="${root}settings/account" name="change-email" method="post">
+            <input type="hidden" name="csrfmiddlewaretoken" value="${token}">
+            <div class="text-container">
+                <div class="heading">
+                    <h5>${tl(trans.email)}</h5>
+                </div>
+                <div class="input-container content-form">
+                    <input id="id_email" type="text" name="email" value="${original_settings.email}" required>
+                    <button class="btn chibi icon primary submit">${tl(trans.save)}</button>
+                    <input type="hidden" value="email_update" name="submit">
+                </div>
+            </div>
+        </form>
+        <div class="sep"></div>
+        <form class="password-container" action="${root}settings/account/password#change-password" name="change-password" method="post">
+            <input type="hidden" name="csrfmiddlewaretoken" value="${token}">
+            <div class="text-container">
+                <div class="heading">
+                    <h5>${tl(trans.password)}</h5>
+                </div>
+                <div class="input-container content-form">
+                    <input id="id_password" type="password" name="password" required>
+                </div>
+            </div>
+            <div class="text-container">
+                <div class="heading">
+                    <h5>${tl(trans.new_password)}</h5>
+                </div>
+                <div class="input-container content-form">
+                    <input id="id_new_password" type="password" name="new_password" required>
+                </div>
+            </div>
+            <div class="text-container">
+                <div class="heading">
+                    <h5>${tl(trans.confirm_password)}</h5>
+                </div>
+                <div class="input-container content-form">
+                    <input id="id_new_password_confirmation" type="password" name="new_password_confirmation" required>
+                </div>
+            </div>
+            <div class="settings-footer end">
+                <button class="btn-primary save" type="submit">
+                    ${tl(trans.change)}
+                </button>
+            </div>
+        </form>
+    `);
+
+    let password_container = information_panel.querySelector('.password-container');
+    password_container.insertBefore(original_settings.captcha, password_container.lastElementChild);
+
+    page.structure.main.insertBefore(information_panel, page.structure.main.firstElementChild);
+
+    let communication_panel = document.createElement('section');
+    communication_panel.classList.add('bleh--panel');
+    communication_panel.innerHTML = (`
+        <h4>${tl(trans.communication)}</h4>
+        <form action="${root}settings/account" name="email-settings" method="post">
+            <input type="hidden" name="csrfmiddlewaretoken" value="${token}">
+            <div class="select-container">
+                <div class="heading">
+                    <h5>${tl(trans.email_language)}</h5>
+                </div>
+                <div class="select-wrap custom-selector">
+                    ${original_settings.email_language}
+                </div>
+            </div>
+            <div class="toggle-container" id="container-marketing_emails" onclick="_update_inbuilt_item('marketing_emails')">
+                <div class="heading">
+                    <h5>${tl(trans.marketing_emails.name)}</h5>
+                    <p>${tl(trans.marketing_emails.body)}</p>
+                </div>
+                <div class="toggle-wrap">
+                    <input class="companion-checkbox" type="checkbox" name="opt_in_marketing" id="inbuilt-companion-checkbox-marketing_emails">
+                    <span class="btn toggle" id="toggle-marketing_emails" aria-checked="false">
+                        <div class="dot"></div>
+                    </span>
+                </div>
+            </div>
+            <div class="settings-footer end">
+                <button class="btn-primary save" type="submit">
+                    ${tl(trans.save)}
+                </button>
+                <input type="hidden" value="email_settings" name="submit">
+            </div>
+        </form>
+    `);
+
+    information_panel.after(communication_panel);
+
+    let security_panel = document.createElement('section');
+    security_panel.classList.add('bleh--panel');
+    security_panel.innerHTML = (`
+        <h4>${tl(trans.security)}</h4>
+        <form action="${root}settings/account" name="email-settings" method="post">
+            <input type="hidden" name="csrfmiddlewaretoken" value="${token}">
+            <div class="toggle-container">
+                <div class="heading">
+                    <h5>${tl(trans.logout_everywhere)}</h5>
+                </div>
+                <div class="toggle-wrap">
+                    <a class="see-more danger logout" href="${root}settings/account/logout-everywhere">
+                        ${tl(trans.logout)}
+                    </a>
+                </div>
+            </div>
+            <div class="sep"></div>
+            <div class="toggle-container">
+                <div class="heading">
+                    <h5>${tl(trans.delete_account.name)}</h5>
+                    <p>${tl(trans.delete_account.body)}</p>
+                </div>
+                <div class="toggle-wrap">
+                    <a class="see-more danger delete-account" href="${root}settings/account/delete">
+                        ${tl(trans.delete_account_permanently).replace('{u}', auth.name)}
+                    </a>
+                </div>
+            </div>
+        </form>
+    `);
+
+    communication_panel.after(security_panel);
+
+    let old_panels = page.structure.main.querySelectorAll(':scope > section:not(.bleh--panel)');
+    old_panels.forEach((panel) => {
+        page.structure.main.removeChild(panel);
+    });
+
+    for (let setting in original_settings) {
+        update_inbuilt_item(setting, original_settings[setting], false);
+    }
+
+    custom_select(communication_panel.querySelector('[name="language"]'), communication_panel.querySelector('[name="language"]').parentElement);
 }

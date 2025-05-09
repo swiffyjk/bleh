@@ -576,6 +576,13 @@ export let inbuilt_settings = {
         value: true,
         values: [true, false],
         type: 'toggle'
+    },
+    marketing_emails: {
+        css: 'marketing_emails',
+        unit: '',
+        value: true,
+        values: [true, false],
+        type: 'toggle'
     }
 }
 

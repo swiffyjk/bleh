@@ -1404,6 +1404,63 @@ export const trans = {
     },
     skip_to: {
         en: 'Skip to'
+    },
+    information: {
+        en: 'Information'
+    },
+    username: {
+        name: {
+            en: 'Username'
+        },
+        body: {
+            en: 'To change your username hit the button to send an email. Having problems? {a}contact support{/a}.'
+        }
+    },
+    email: {
+        en: 'Email'
+    },
+    password: {
+        en: 'Password'
+    },
+    new_password: {
+        en: 'New password'
+    },
+    confirm_password: {
+        en: 'Confirm password'
+    },
+    change: {
+        en: 'Change'
+    },
+    marketing_emails: {
+        name: {
+            en: 'Marketing emails'
+        },
+        body: {
+            en: 'Last.fm can optionally send promotional emails from time to time'
+        }
+    },
+    email_language: {
+        en: 'Email language'
+    },
+    communication: {
+        en: 'Communication'
+    },
+    security: {
+        en: 'Security'
+    },
+    logout_everywhere: {
+        en: 'Logout on all devices'
+    },
+    delete_account: {
+        name: {
+            en: 'Delete account'
+        },
+        body: {
+            en: 'Deletion will take 14 days to complete, after this time your account will either be deleted, anonymised or put beyond use and cannot be recovered. Once deleted, the username will no longer be available.'
+        }
+    },
+    delete_account_permanently: {
+        en: 'Delete {u} permanently'
     }
 }
 

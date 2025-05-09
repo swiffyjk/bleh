@@ -11350,12 +11350,8 @@ table.table tr:nth-child(2n) td {
     }
 
     h3 {
-        color: hsl(var(--l2-c));
+        color: hsl(var(--l3-c));
         --mask: var(--icon-16-pro);
-        background-image: linear-gradient(180deg, hsl(var(--c1)) 0%, hsl(var(--l3-c)) 100%);
-        background-clip: text;
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
     }
 
     h2 + p + p {
@@ -14565,6 +14561,10 @@ input[type="range"]::-moz-range-progress {
     display: flex;
     justify-content: center;
     gap: var(--button-list-gap);
+
+    &.end {
+        justify-content: end;
+    }
 }
 
 
@@ -14901,6 +14901,7 @@ input[type="range"]::-moz-range-progress {
                     display: flex;
                     align-items: end;
                     gap: 6px;
+                    height: unset;
 
                     .shout-username {
                         width: 80px;
@@ -17196,6 +17197,11 @@ button.bleh--gallery-bookmark-image-btn {
             width: 400px;
         }
     }
+}
+.lfm-recaptcha {
+    display: flex;
+    justify-content: end;
+    width: unset;
 }
 
 @keyframes requested {
