@@ -61,7 +61,7 @@ export function bleh_profiles() {
         let sub_wrap = profile_header.querySelector('.header-title-secondary');
 
         // new account
-        if (avatar == null) {
+        if (!avatar) {
             avatar = profile_header.querySelector('.header-avatar-add');
             new_account = true;
         }

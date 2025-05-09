@@ -3748,16 +3748,18 @@ button.navlist-more {
 
 
 /*     FOLLOW     */
-.user-list-follower-btn:before {
-    background-color: currentColor !important;
-    --left: 7px !important;
-}
+.user-list-follower-btn {
+    --font-size: 0;
+    --mask: var(--icon-16-plus);
 
-[data-toggle-button-current-state="unfollowed"] .user-list-follower-btn:before {
-    --mask: var(--icon-16-plus) !important;
-}
-[data-toggle-button-current-state="followed"] .user-list-follower-btn:before {
-    --mask: var(--icon-16-check) !important;
+    &:before {
+        background-color: currentColor !important;
+        --left: 7px !important;
+    }
+
+    [data-toggle-button-current-state="followed"] & {
+        --mask: var(--icon-16-check);
+    }
 }
 
 
@@ -11043,6 +11045,7 @@ text[style^="color: rgb(0, 0, 0)"] {
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
+    white-space: wrap !important;
     flex-shrink: 0;
 }
 .neighbours-items-section .user-list-about-me {
@@ -17576,7 +17579,7 @@ h4 {
             }
         }
 
-        a {
+        .involved--track, .involved--album {
             display: flex;
             gap: 6px;
         }

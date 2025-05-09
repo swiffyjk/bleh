@@ -854,7 +854,7 @@
   function sanitise(text, method = "+") {
     return encodeURI(text.replaceAll(" ", method).replaceAll("/", "%2F"));
   }
-  function sanitise_text(text) {
+  function sanitise_text2(text) {
     return text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
   }
   function desanitise(text) {
@@ -7009,7 +7009,7 @@
                 ${trans_legacy[lang][type].name}
             </div>
             <div class="glacier-library-metadata-item-value glacier-library-metadata-focus" data-type="${type}">
-                <a href="${link}">${type == "artist" ? correct_artist(header_title) : correct_item_by_artist(header_title, artist)}</a>${duration ? ` <span class="glacier-library-track-duration">${duration.textContent}</span>` : ""}${type != "artist" ? trans_legacy[lang].glacier.by_artist.replace("{a}", `<a href="${root}user/${page.name}/library/music/+noredirect/${sanitise(artist)}${current_suffix}">${correct_artist(artist)}</a>`) : ""}
+                <a href="${link}">${type == "artist" ? correct_artist2(header_title) : correct_item_by_artist2(header_title, artist)}</a>${duration ? ` <span class="glacier-library-track-duration">${duration.textContent}</span>` : ""}${type != "artist" ? trans_legacy[lang].glacier.by_artist.replace("{a}", `<a href="${root}user/${page.name}/library/music/+noredirect/${sanitise(artist)}${current_suffix}">${correct_artist2(artist)}</a>`) : ""}
             </div>
         </div>
     `;
@@ -7079,7 +7079,7 @@
       let search = document.createElement("a");
       search.classList.add("btn", "view-item", "glacier-library-button", "glacier-search-button");
       search.textContent = tl(trans.search);
-      search.setAttribute("href", `${root}user/${page.name}/library/tracks/search?query=${sanitise(correct_artist(header_title))}`);
+      search.setAttribute("href", `${root}user/${page.name}/library/tracks/search?query=${sanitise(correct_artist2(header_title))}`);
       tippy(search, {
         content: tl(trans.search_guest)
       });
@@ -8963,7 +8963,7 @@
       if (track_wrap) {
         let track_link = new_listener.querySelector(".user-list-about-me a");
         let artist = return_artist_from_track(track_link.getAttribute("href"), false);
-        let track = correct_item_by_artist(track_link.textContent.trim(), artist);
+        let track = correct_item_by_artist2(track_link.textContent.trim(), artist);
         track_link.textContent = track;
       }
       new_container.appendChild(new_listener);
@@ -9039,7 +9039,7 @@
       taste = taste_meter.classList[1].replace("tasteometer-compat-", "");
       let artists2 = taste_meter.querySelectorAll("a");
       artists2.forEach((artist) => {
-        taste_artists.push(correct_artist(artist.getAttribute("title")));
+        taste_artists.push(correct_artist2(artist.getAttribute("title")));
       });
       profile_avi = document.body.querySelector(".header-avatar img");
       if (profile_avi != null)
@@ -10721,7 +10721,7 @@
     }
     artist_name.classList.add("header-new-crumb");
     if (settings.format_guest_features) {
-      let formatted_title = name_includes(track_title.textContent.trim(), artist_name.textContent);
+      let formatted_title = name_includes2(track_title.textContent.trim(), artist_name.textContent);
       let song_title = formatted_title[0];
       let song_tags = formatted_title[1];
       page.corrected = formatted_title[4];
@@ -10729,7 +10729,7 @@
       for (let song_tag in song_tags) {
         song_tags_text = `${song_tags_text}<div class="feat" data-bleh--tag-type="${song_tags[song_tag].type}" data-bleh--tag-group="${song_tags[song_tag].group}">${song_tags[song_tag].text}</div>`;
       }
-      track_title.innerHTML = `<div class="title">${sanitise_text(song_title).trim()}</div>${song_tags_text}`;
+      track_title.innerHTML = `<div class="title">${sanitise_text2(song_title).trim()}</div>${song_tags_text}`;
       let song_guests = formatted_title[3];
       page.sister_others = formatted_title[3];
       for (let guest in song_guests) {
@@ -10743,7 +10743,7 @@
     } else {
       if (!track_title.hasAttribute("data-kate-processed")) {
         track_title.setAttribute("data-kate-processed", "true");
-        let corrected_title = correct_item_by_artist(track_title.textContent.trim(), artist_name.textContent);
+        let corrected_title = correct_item_by_artist2(track_title.textContent.trim(), artist_name.textContent);
         log(`corrected ${track_title.textContent} by ${artist_name.textContent} as ${corrected_title}`, "lotus");
         if (corrected_title != track_title.textContent)
           page.corrected = true;
@@ -10882,7 +10882,7 @@
       let avatar = profile_header.querySelector(".avatar");
       let title_wrap = profile_header.querySelector(".header-title-label-wrap");
       let sub_wrap = profile_header.querySelector(".header-title-secondary");
-      if (avatar == null) {
+      if (!avatar) {
         avatar = profile_header.querySelector(".header-avatar-add");
         new_account = true;
       }
@@ -10999,7 +10999,7 @@
               tooltip_sister = sister;
             }
             if (involved.type == "track" && settings.format_guest_features) {
-              let formatted_title = name_includes(name, sister);
+              let formatted_title = name_includes2(name, sister);
               let song_title;
               let song_tags;
               if (formatted_title) {
@@ -11011,16 +11011,16 @@
               }
               let song_tags_text = "";
               for (let song_tag in song_tags) {
-                song_tags_text = `${song_tags_text}<div class="feat" data-bleh--tag-type="${song_tags[song_tag].type}" data-bleh--tag-group="${song_tags[song_tag].group}">${sanitise_text(song_tags[song_tag].text)}</div>`;
+                song_tags_text = `${song_tags_text}<div class="feat" data-bleh--tag-type="${song_tags[song_tag].type}" data-bleh--tag-group="${song_tags[song_tag].group}">${sanitise_text2(song_tags[song_tag].text)}</div>`;
               }
-              name = `<div class="title">${sanitise_text(song_title).trim()}</div>${song_tags_text}`;
+              name = `<div class="title">${sanitise_text2(song_title).trim()}</div>${song_tags_text}`;
             } else if ((involved.type == "album" || involved.type == "track") && settings.corrections) {
-              name = correct_item_by_artist(name, sister);
+              name = correct_item_by_artist2(name, sister);
               tooltip_name = name;
-              sister = correct_artist(sister);
+              sister = correct_artist2(sister);
               tooltip_sister = sister;
             } else if (involved.type == "artist" && settings.corrections) {
-              name = correct_artist(name);
+              name = correct_artist2(name);
               tooltip_name = name;
             }
             if (involved_text != "")
@@ -11658,7 +11658,7 @@
       let name_elem = details.querySelector(".featured-item-name");
       let artist_elem = details.querySelector(".featured-item-artist");
       let song_title = name_elem.textContent;
-      let formatted_title = name_includes(song_title, artist_elem.textContent);
+      let formatted_title = name_includes2(song_title, artist_elem.textContent);
       let song_tags = {};
       if (formatted_title) {
         song_title = formatted_title[0];
@@ -11666,12 +11666,12 @@
       }
       let song_tags_text = "";
       for (let song_tag in song_tags) {
-        song_tags_text = `${song_tags_text}<div class="feat" data-bleh--tag-type="${song_tags[song_tag].type}" data-bleh--tag-group="${song_tags[song_tag].group}">${sanitise_text(song_tags[song_tag].text)}</div>`;
+        song_tags_text = `${song_tags_text}<div class="feat" data-bleh--tag-type="${song_tags[song_tag].type}" data-bleh--tag-group="${song_tags[song_tag].group}">${sanitise_text2(song_tags[song_tag].text)}</div>`;
       }
-      name_elem.innerHTML = `<div class="title">${sanitise_text(song_title).trim()}</div>${song_tags_text}`;
+      name_elem.innerHTML = `<div class="title">${sanitise_text2(song_title).trim()}</div>${song_tags_text}`;
       let song_artist_element = document.createElement("div");
       song_artist_element.classList.add("featured-item-artist");
-      song_artist_element.innerHTML = `<a href="${root}music/${sanitise(formatted_title[2])}">${sanitise_text(formatted_title[2])}</a>`;
+      song_artist_element.innerHTML = `<a href="${root}music/${sanitise(formatted_title[2])}">${sanitise_text2(formatted_title[2])}</a>`;
       let song_guests = formatted_title[3];
       for (let guest in song_guests) {
         song_artist_element.innerHTML = `${song_artist_element.innerHTML},`;
@@ -11685,8 +11685,8 @@
     } else if (settings.corrections) {
       let name_elem = details.querySelector(".featured-item-name");
       let artist_elem = details.querySelector(".featured-item-artist");
-      let name = correct_item_by_artist(name_elem.textContent.trim(), artist_elem.textContent.trim());
-      let artist = correct_artist(artist_elem.textContent.trim());
+      let name = correct_item_by_artist2(name_elem.textContent.trim(), artist_elem.textContent.trim());
+      let artist = correct_artist2(artist_elem.textContent.trim());
       name_elem.textContent = name;
       artist_elem.textContent = artist;
     }
@@ -15650,7 +15650,7 @@
       let name = involved.name;
       let sister = involved.sister;
       if (involved.type == "track" && settings.format_guest_features) {
-        let formatted_title = name_includes(name, sister);
+        let formatted_title = name_includes2(name, sister);
         let song_title;
         let song_tags;
         if (formatted_title) {
@@ -15660,14 +15660,14 @@
         }
         let song_tags_text = "";
         for (let song_tag in song_tags) {
-          song_tags_text = `${song_tags_text}<div class="feat" data-bleh--tag-type="${song_tags[song_tag].type}" data-bleh--tag-group="${song_tags[song_tag].group}">${sanitise_text(song_tags[song_tag].text)}</div>`;
+          song_tags_text = `${song_tags_text}<div class="feat" data-bleh--tag-type="${song_tags[song_tag].type}" data-bleh--tag-group="${song_tags[song_tag].group}">${sanitise_text2(song_tags[song_tag].text)}</div>`;
         }
-        name = `<div class="title">${sanitise_text(song_title).trim()}</div>${song_tags_text}`;
+        name = `<div class="title">${sanitise_text2(song_title).trim()}</div>${song_tags_text}`;
       } else if ((involved.type == "album" || involved.type == "track") && settings.corrections) {
-        name = correct_item_by_artist(name, sister);
-        sister = correct_artist(sister);
+        name = correct_item_by_artist2(name, sister);
+        sister = correct_artist2(sister);
       } else if (involved.type == "artist" && settings.corrections) {
-        sister = correct_artist(sister);
+        sister = correct_artist2(sister);
       }
       if (involved_text != "")
         involved_text = `${involved_text}, <a class="involved--${involved.type}">${name}</a>`;
@@ -15786,8 +15786,8 @@
         let artist_name = album.querySelector(`.${parent.replace("-details", "")}-artist a`);
         if (artist_name == void 0)
           return;
-        let corrected_album_name = correct_item_by_artist(album_name.textContent, artist_name.textContent);
-        let corrected_artist_name = correct_artist(artist_name.textContent);
+        let corrected_album_name = correct_item_by_artist2(album_name.textContent, artist_name.textContent);
+        let corrected_artist_name = correct_artist2(artist_name.textContent);
         album_name.textContent = corrected_album_name;
         artist_name.textContent = corrected_artist_name;
       }
@@ -15804,12 +15804,12 @@
         if (album_name == null)
           return;
         let artist_name = return_artist_from_generic(album_name.getAttribute("href"));
-        let corrected_album_name = correct_item_by_artist(album_name.textContent, artist_name);
+        let corrected_album_name = correct_item_by_artist2(album_name.textContent, artist_name);
         album_name.textContent = corrected_album_name;
       }
     });
   }
-  function correct_item_by_artist(item, artist) {
+  function correct_item_by_artist2(item, artist) {
     if (!settings.corrections)
       return item;
     artist = artist.toLowerCase();
@@ -15830,7 +15830,7 @@
       return item;
     }
   }
-  function correct_artist(artist, broadcast = false) {
+  function correct_artist2(artist, broadcast = false) {
     if (!settings.corrections)
       return artist;
     try {
@@ -15850,7 +15850,7 @@
       return artist;
     }
   }
-  function name_includes(original_title, original_artist) {
+  function name_includes2(original_title, original_artist) {
     console.log(original_title, original_artist);
     let formatted_title = original_title;
     let original_title_corrected = false;
@@ -15908,11 +15908,11 @@
       if (field_group == "guests") {
         song_guests = field_text.split(";");
         for (let guest in song_guests)
-          song_guests[guest] = correct_artist(song_guests[guest]);
+          song_guests[guest] = correct_artist2(song_guests[guest]);
       }
     }
     if (artist_corrections.hasOwnProperty(original_artist) && settings.corrections)
-      original_artist = correct_artist(artist_corrections[original_artist]);
+      original_artist = correct_artist2(artist_corrections[original_artist]);
     if (extras.length > 0)
       log(`parsed ${original_title} as ${formatted_title} by ${original_artist} with`, "guest features", "info", { extras, song_guests });
     return [formatted_title, extras, original_artist, song_guests, original_title_corrected];
@@ -15927,7 +15927,7 @@
     if (!has_multi) {
       if (!settings.corrections)
         return;
-      title.textContent = correct_artist(title_text, true);
+      title.textContent = correct_artist2(title_text, true);
     } else {
       title_text = title_text.replaceAll(" & ", ";").replaceAll(", ", ";").replace("Tyler;the", "Tyler, The").replace("Tyler;The", "Tyler, The").replace("Marina;the Diamonds", "Marina and The Diamonds").replaceAll(";;", ";");
       page.multi = true;
@@ -15937,7 +15937,7 @@
         page.multi = false;
         if (!settings.corrections)
           return;
-        title.textContent = correct_artist(title_text, true);
+        title.textContent = correct_artist2(title_text, true);
         return;
       }
       split.forEach((artist, index) => {
@@ -15947,7 +15947,7 @@
         part.classList.add("multi-artist-part");
         part.setAttribute("href", `${root}music/${sanitise(artist)}`);
         if (settings.corrections)
-          part.textContent = correct_artist(artist);
+          part.textContent = correct_artist2(artist);
         else
           part.textContent = artist;
         title.appendChild(part);
@@ -15981,7 +15981,7 @@
       try {
         if (!track_title.hasAttribute("data-kate-processed")) {
           track_title.setAttribute("data-kate-processed", "true");
-          let formatted_title = name_includes(track_title.textContent, track_artist.textContent);
+          let formatted_title = name_includes2(track_title.textContent, track_artist.textContent);
           let song_title = formatted_title[0];
           let song_tags = formatted_title[1];
           page.corrected = formatted_title[4];
@@ -15989,7 +15989,7 @@
           for (let song_tag in song_tags) {
             song_tags_text = `${song_tags_text}<div class="feat" data-bleh--tag-type="${song_tags[song_tag].type}" data-bleh--tag-group="${song_tags[song_tag].group}">${song_tags[song_tag].text}</div>`;
           }
-          track_title.innerHTML = `<div class="title">${sanitise_text(song_title).trim()}</div>${song_tags_text}`;
+          track_title.innerHTML = `<div class="title">${sanitise_text2(song_title).trim()}</div>${song_tags_text}`;
           let song_artist_element = document.body.querySelector('span[itemprop="byArtist"]');
           let song_guests = formatted_title[3];
           page.sister_others = formatted_title[3];
@@ -15998,7 +15998,7 @@
             let guest_element = document.createElement("a");
             guest_element.classList.add("header-new-crumb");
             guest_element.setAttribute("href", `${root}music/${sanitise(song_guests[guest])}`);
-            guest_element.setAttribute("title", sanitise_text(song_guests[guest]));
+            guest_element.setAttribute("title", sanitise_text2(song_guests[guest]));
             guest_element.textContent = song_guests[guest];
             song_artist_element.appendChild(guest_element);
           }
@@ -16008,7 +16008,7 @@
     } else {
       if (!track_title.hasAttribute("data-kate-processed")) {
         track_title.setAttribute("data-kate-processed", "true");
-        let corrected_title = correct_item_by_artist(track_title.textContent, track_artist.textContent);
+        let corrected_title = correct_item_by_artist2(track_title.textContent, track_artist.textContent);
         log(`corrected ${track_title.textContent} by ${track_artist.textContent} as ${corrected_title}`, "lotus");
         if (corrected_title != track_title.textContent)
           page.corrected = true;
@@ -16026,8 +16026,8 @@
       form.setAttribute("data-bleh-subscribed", "true");
       let track = form.querySelector('[name="track"]').getAttribute("value");
       let artist = form.querySelector('[name="artist"]').getAttribute("value");
-      artist = correct_artist(artist);
-      track = correct_item_by_artist(track, artist);
+      artist = correct_artist2(artist);
+      track = correct_item_by_artist2(track, artist);
       let btn = form.querySelector("button");
       btn.addEventListener("click", (event2) => {
         log("heard", "event", "info", event2);
@@ -16050,8 +16050,8 @@
       form.setAttribute("data-bleh-subscribed", "true");
       let track = form.querySelector('[name="name"]').getAttribute("value");
       let artist = form.querySelector('[name="artist_name"]').getAttribute("value");
-      artist = correct_artist(artist);
-      track = correct_item_by_artist(track, artist);
+      artist = correct_artist2(artist);
+      track = correct_item_by_artist2(track, artist);
       let btn = form.querySelector("button");
       btn.addEventListener("click", (event2) => {
         log("heard", "event", "info", event2);
@@ -16282,7 +16282,7 @@
       }
       let name = grid.querySelector(".grid-items-item-main-text a");
       if (!is_album) {
-        name.textContent = correct_artist(name.textContent.trim());
+        name.textContent = correct_artist2(name.textContent.trim());
         insights.artist.labels.push(name.textContent);
       } else {
         let artist = grid.querySelector(".grid-items-item-aux-block");
@@ -16291,7 +16291,7 @@
           let name_elem = name;
           let artist_elem = artist;
           let song_title = name_elem.getAttribute("title");
-          let formatted_title = name_includes(song_title, artist_elem.textContent.trim());
+          let formatted_title = name_includes2(song_title, artist_elem.textContent.trim());
           let song_tags = {};
           if (formatted_title) {
             song_title = formatted_title[0];
@@ -16301,12 +16301,12 @@
           }
           let song_tags_text = "";
           for (let song_tag in song_tags) {
-            song_tags_text = `${song_tags_text}<span class="feat" data-bleh--tag-type="${song_tags[song_tag].type}" data-bleh--tag-group="${song_tags[song_tag].group}">${sanitise_text(song_tags[song_tag].text)}</span>`;
+            song_tags_text = `${song_tags_text}<span class="feat" data-bleh--tag-type="${song_tags[song_tag].type}" data-bleh--tag-group="${song_tags[song_tag].group}">${sanitise_text2(song_tags[song_tag].text)}</span>`;
           }
-          name_elem.innerHTML = `<span class="title">${sanitise_text(song_title).trim()}</span>${song_tags_text}`;
+          name_elem.innerHTML = `<span class="title">${sanitise_text2(song_title).trim()}</span>${song_tags_text}`;
         } else {
-          artist.textContent = correct_artist(artist.textContent.trim());
-          name.textContent = correct_item_by_artist(name.textContent.trim(), artist.textContent.trim());
+          artist.textContent = correct_artist2(artist.textContent.trim());
+          name.textContent = correct_item_by_artist2(name.textContent.trim(), artist.textContent.trim());
         }
       }
     });
@@ -16415,7 +16415,7 @@
           if (settings.colourful_counts)
             patch_artist_ranks_in_list_view(track);
           if (settings.corrections)
-            track_title.textContent = correct_artist(track_title.getAttribute("title"));
+            track_title.textContent = correct_artist2(track_title.getAttribute("title"));
           insights.artist.display = true;
           let bar2 = track.querySelector(".chartlist-count-bar-slug");
           let value = parseInt(bar2.getAttribute("data-stat-value"));
@@ -16458,7 +16458,7 @@
           });
         }
         if (settings.format_guest_features) {
-          let formatted_title = name_includes(track_title.getAttribute("title"), track_artist);
+          let formatted_title = name_includes2(track_title.getAttribute("title"), track_artist);
           console.log("formatted", formatted_title);
           let song_title = track_title.getAttribute("title");
           let song_tags = {};
@@ -16466,12 +16466,12 @@
             song_title = formatted_title[0];
             song_tags = formatted_title[1];
           }
-          track_title.setAttribute("title", correct_item_by_artist(track_title.getAttribute("title"), track_artist));
+          track_title.setAttribute("title", correct_item_by_artist2(track_title.getAttribute("title"), track_artist));
           let song_tags_text = "";
           for (let song_tag in song_tags) {
-            song_tags_text = `${song_tags_text}<div class="feat" data-bleh--tag-type="${song_tags[song_tag].type}" data-bleh--tag-group="${song_tags[song_tag].group}">${sanitise_text(song_tags[song_tag].text)}</div>`;
+            song_tags_text = `${song_tags_text}<div class="feat" data-bleh--tag-type="${song_tags[song_tag].type}" data-bleh--tag-group="${song_tags[song_tag].group}">${sanitise_text2(song_tags[song_tag].text)}</div>`;
           }
-          track_title.innerHTML = `<div class="title">${sanitise_text(song_title).trim()}</div>${song_tags_text}`;
+          track_title.innerHTML = `<div class="title">${sanitise_text2(song_title).trim()}</div>${song_tags_text}`;
           let song_artist_element = track.querySelector(".chartlist-artist");
           if (!song_artist_element && !is_user) {
             song_artist_element = document.createElement("td");
@@ -16479,7 +16479,7 @@
             track.appendChild(song_artist_element);
           }
           if (song_artist_element.textContent.replaceAll("+", " ").trim() == track_artist || song_artist_element.textContent.trim() == "") {
-            song_artist_element.innerHTML = `<a href="${root}music/${sanitise(formatted_title[2])}" title="${sanitise_text(formatted_title[2])}">${sanitise_text(formatted_title[2])}</a>`;
+            song_artist_element.innerHTML = `<a href="${root}music/${sanitise(formatted_title[2])}" title="${sanitise_text2(formatted_title[2])}">${sanitise_text2(formatted_title[2])}</a>`;
             let song_guests = formatted_title[3];
             for (let guest in song_guests) {
               song_artist_element.innerHTML = `${song_artist_element.innerHTML},`;
@@ -16506,7 +16506,7 @@
                             <h5 class="title">${song_title}</h5>
                             <p class="artist">${song_artist_element.innerHTML}</p>
                             <div class="tags">${song_tags_text}</div>
-                            ${!is_library_track_page ? is_album ? "" : `<p class="album">${image ? correct_item_by_artist(sanitise_text(image.getAttribute("alt")), track_artist) : page.name}</p>` : ""}
+                            ${!is_library_track_page ? is_album ? "" : `<p class="album">${image ? correct_item_by_artist2(sanitise_text2(image.getAttribute("alt")), track_artist) : page.name}</p>` : ""}
                             ${track_timestamp && track_timestamp_contents ? `<p class="timestamp">${track_timestamp_contents}</p>` : ""}
                         </div>
                     `;
@@ -16515,14 +16515,14 @@
         } else if (settings.corrections) {
           let song_artist_element = track.querySelector(".chartlist-artist a");
           if (song_artist_element) {
-            let corrected_title = correct_item_by_artist(track_title.textContent, song_artist_element.textContent);
+            let corrected_title = correct_item_by_artist2(track_title.textContent, song_artist_element.textContent);
             track_title.textContent = corrected_title;
             track_title.setAttribute("title", corrected_title);
-            let corrected_artist = correct_artist(song_artist_element.textContent);
+            let corrected_artist = correct_artist2(song_artist_element.textContent);
             song_artist_element.textContent = corrected_artist;
             song_artist_element.setAttribute("title", corrected_artist);
           } else {
-            let corrected_title = correct_item_by_artist(track_title.textContent, track_artist);
+            let corrected_title = correct_item_by_artist2(track_title.textContent, track_artist);
             track_title.textContent = corrected_title;
             track_title.setAttribute("title", corrected_title);
           }
@@ -16562,7 +16562,7 @@
             let link = image_wrap.querySelector(".cover-art");
             let image = link.querySelector("img");
             if (!settings.album_text) {
-              let alt = correct_item_by_artist(image.getAttribute("alt"), track_artist);
+              let alt = correct_item_by_artist2(image.getAttribute("alt"), track_artist);
               let album_text = document.createElement("td");
               album_text.classList.add("chartlist-album", "custom-album-text");
               album_text.innerHTML = `
@@ -16874,7 +16874,7 @@
             </div>
             <div class="info-side">
                 <div class="sub-text">${trans_legacy[lang].music.about}</div>
-                <h1><a href="${root}music/${sanitise(page.sister)}">${sanitise_text(page.sister)}</a></h1>
+                <h1><a href="${root}music/${sanitise(page.sister)}">${sanitise_text2(page.sister)}</a></h1>
                 ${listeners != null ? listeners.outerHTML : ""}
                 ${tags != null ? tags.outerHTML : ""}
                 ${wiki != null ? wiki.outerHTML : ""}
@@ -18455,7 +18455,7 @@
         let link = name.getAttribute("href");
         image.setAttribute("src", image.getAttribute("src").replace("/avatar70s/", "/avatar300s/"));
         if (index == 1) {
-          name.textContent = correct_artist(name.textContent);
+          name.textContent = correct_artist2(name.textContent);
           list_item.classList.add("music-bookmarks-artists-item-wrap", "charts-list-item");
           list_item.innerHTML = `
                     <div class="music-bookmarks-artists-item charts-list-item-inner">
@@ -18476,8 +18476,8 @@
                 `;
         } else {
           let artist = item.querySelector(".globalchart-track-artist-name a");
-          artist.textContent = correct_artist(artist.textContent);
-          name.textContent = correct_item_by_artist(name.textContent, artist.textContent);
+          artist.textContent = correct_artist2(artist.textContent);
+          name.textContent = correct_item_by_artist2(name.textContent, artist.textContent);
           list_item.classList.add("music-bookmarks-albums-item-wrap", "charts-list-item");
           list_item.innerHTML = `
                     <div class="music-bookmarks-albums-item charts-list-item-inner">
@@ -18680,18 +18680,45 @@
             involved_link = `${root}bwaa`;
           else if (involved.type == "bleh")
             involved_link = `${root}bleh`;
+          let name = involved.name;
+          let sister = involved.sister;
           if (involved.type != "artist" && involved.type != "user" && involved.type != "tag" && involved.type != "bwaa" && involved.type != "bleh") {
-            tooltip_name = involved.name;
-            tooltip_sister = involved.sister;
+            tooltip_name = name;
+            tooltip_sister = sister;
+          }
+          if (involved.type == "track" && settings.format_guest_features) {
+            let formatted_title = name_includes(name, sister);
+            let song_title;
+            let song_tags;
+            if (formatted_title) {
+              song_title = formatted_title[0];
+              song_tags = formatted_title[1];
+              sister = formatted_title[2];
+              tooltip_name = song_title;
+              tooltip_sister = sister;
+            }
+            let song_tags_text = "";
+            for (let song_tag in song_tags) {
+              song_tags_text = `${song_tags_text}<div class="feat" data-bleh--tag-type="${song_tags[song_tag].type}" data-bleh--tag-group="${song_tags[song_tag].group}">${sanitise_text(song_tags[song_tag].text)}</div>`;
+            }
+            name = `<div class="title">${sanitise_text(song_title).trim()}</div>${song_tags_text}`;
+          } else if ((involved.type == "album" || involved.type == "track") && settings.corrections) {
+            name = correct_item_by_artist(name, sister);
+            tooltip_name = name;
+            sister = correct_artist(sister);
+            tooltip_sister = sister;
+          } else if (involved.type == "artist" && settings.corrections) {
+            name = correct_artist(name);
+            tooltip_name = name;
           }
           if (involved_text != "")
-            involved_text = `${involved_text}, <a class="involved--${involved.type}" href="${involved_link}">${involved.name}</a>`;
+            involved_text = `${involved_text}, <a class="involved--${involved.type}" href="${involved_link}">${name}</a>`;
           else
-            involved_text = `${involved_text}<a class="involved--${involved.type}" href="${involved_link}">${involved.name}</a>`;
+            involved_text = `${involved_text}<a class="involved--${involved.type}" href="${involved_link}">${name}</a>`;
         });
         activity_item.innerHTML = `
                 <div class="type">${trans_legacy[lang].activities[activity.type]}<div class="date">${moment(activity.date).fromNow(true)}</div></div>
-                <div class="title">${involved_text}</div>
+                <div class="name">${involved_text}</div>
             `;
         activity_list.appendChild(activity_item);
         if (tooltip_name != void 0)
@@ -18756,7 +18783,7 @@
     if (settings.corrections) {
       let links = event_description.querySelectorAll("a");
       links.forEach((link) => {
-        link.textContent = correct_artist(link.textContent);
+        link.textContent = correct_artist2(link.textContent);
       });
     }
     let redesigned_event_header = document.createElement("section");
@@ -19038,7 +19065,7 @@
     if (page.subpage == "artists" && settings.corrections) {
       let artists = page.structure.main.querySelectorAll(".artist-result-heading a");
       artists.forEach((artist) => {
-        artist.textContent = correct_artist(artist.textContent);
+        artist.textContent = correct_artist2(artist.textContent);
       });
     }
     if (page.subpage == "albums") {
@@ -19047,8 +19074,8 @@
         let heading = result.querySelector(".album-result-heading a");
         let artist_parent = result.querySelector(".album-result-artist");
         let artist = artist_parent.querySelector("a");
-        artist.textContent = correct_artist(artist.textContent);
-        heading.textContent = correct_item_by_artist(heading.textContent, artist.textContent);
+        artist.textContent = correct_artist2(artist.textContent);
+        heading.textContent = correct_item_by_artist2(heading.textContent, artist.textContent);
         let image = result.querySelector(".album-result-image");
         let image_parent = document.createElement("span");
         image_parent.classList.add("avatar", "album-result-image");
@@ -20023,10 +20050,10 @@
       let name = page.name;
       let sister = page.sister;
       if (page.type == "album" || page.type == "track") {
-        name = correct_item_by_artist(name, sister);
-        sister = correct_artist(sister);
+        name = correct_item_by_artist2(name, sister);
+        sister = correct_artist2(sister);
       } else if (page.type == "artist") {
-        name = correct_artist(name);
+        name = correct_artist2(name);
       }
       let title;
       if (page.subpage != "overview" && page.subpage != "event_overview" && page.subpage != "home" && (page.type == "user" || page.type == "artist" || page.type == "album" || page.type == "track" || page.type == "events" || page.type == "tag"))
@@ -20200,8 +20227,7 @@
     let light = "data:image/png;base64,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";
     let dark = "data:image/png;base64,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";
     let favicon = document.querySelector('link[rel="icon"]');
-    if (!favicon)
-      return;
+    if (!favicon) return;
     favicon.href = window.matchMedia("(prefers-color-scheme: dark)").matches ? dark : light;
     window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", function() {
       favicon.href = window.matchMedia("(prefers-color-scheme: dark)").matches ? dark : light;
