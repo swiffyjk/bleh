@@ -12931,6 +12931,7 @@
 
   // src/pages/bleh_config.js
   function bleh_settings() {
+    page.name = auth.name;
     page.type = "bleh_settings";
     page.subpage = "";
     update_page();

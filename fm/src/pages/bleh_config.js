@@ -18,6 +18,7 @@ import { ff } from "../sku";
 
 
 export function bleh_settings() {
+    page.name = auth.name;
     page.type = 'bleh_settings';
     page.subpage = '';
 
