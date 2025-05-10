@@ -854,7 +854,7 @@
   function sanitise(text, method = "+") {
     return encodeURI(text.replaceAll(" ", method).replaceAll("/", "%2F"));
   }
-  function sanitise_text2(text) {
+  function sanitise_text(text) {
     return text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
   }
   function desanitise(text) {
@@ -1704,9 +1704,6 @@
     mix: {
       // as in a playlist mix of music
       en: "Mix"
-    },
-    playlists: {
-      en: "Playlists"
     },
     recommended: {
       // recommended music
@@ -7021,7 +7018,7 @@
                 ${trans_legacy[lang][type].name}
             </div>
             <div class="glacier-library-metadata-item-value glacier-library-metadata-focus" data-type="${type}">
-                <a href="${link}">${type == "artist" ? correct_artist2(header_title) : correct_item_by_artist2(header_title, artist)}</a>${duration ? ` <span class="glacier-library-track-duration">${duration.textContent}</span>` : ""}${type != "artist" ? trans_legacy[lang].glacier.by_artist.replace("{a}", `<a href="${root}user/${page.name}/library/music/+noredirect/${sanitise(artist)}${current_suffix}">${correct_artist2(artist)}</a>`) : ""}
+                <a href="${link}">${type == "artist" ? correct_artist(header_title) : correct_item_by_artist(header_title, artist)}</a>${duration ? ` <span class="glacier-library-track-duration">${duration.textContent}</span>` : ""}${type != "artist" ? trans_legacy[lang].glacier.by_artist.replace("{a}", `<a href="${root}user/${page.name}/library/music/+noredirect/${sanitise(artist)}${current_suffix}">${correct_artist(artist)}</a>`) : ""}
             </div>
         </div>
     `;
@@ -7091,7 +7088,7 @@
       let search = document.createElement("a");
       search.classList.add("btn", "view-item", "glacier-library-button", "glacier-search-button");
       search.textContent = tl(trans.search);
-      search.setAttribute("href", `${root}user/${page.name}/library/tracks/search?query=${sanitise(correct_artist2(header_title))}`);
+      search.setAttribute("href", `${root}user/${page.name}/library/tracks/search?query=${sanitise(correct_artist(header_title))}`);
       tippy(search, {
         content: tl(trans.search_guest)
       });
@@ -8975,7 +8972,7 @@
       if (track_wrap) {
         let track_link = new_listener.querySelector(".user-list-about-me a");
         let artist = return_artist_from_track(track_link.getAttribute("href"), false);
-        let track = correct_item_by_artist2(track_link.textContent.trim(), artist);
+        let track = correct_item_by_artist(track_link.textContent.trim(), artist);
         track_link.textContent = track;
       }
       new_container.appendChild(new_listener);
@@ -9051,7 +9048,7 @@
       taste = taste_meter.classList[1].replace("tasteometer-compat-", "");
       let artists2 = taste_meter.querySelectorAll("a");
       artists2.forEach((artist) => {
-        taste_artists.push(correct_artist2(artist.getAttribute("title")));
+        taste_artists.push(correct_artist(artist.getAttribute("title")));
       });
       profile_avi = document.body.querySelector(".header-avatar img");
       if (profile_avi != null)
@@ -10733,7 +10730,7 @@
     }
     artist_name.classList.add("header-new-crumb");
     if (settings.format_guest_features) {
-      let formatted_title = name_includes2(track_title.textContent.trim(), artist_name.textContent);
+      let formatted_title = name_includes(track_title.textContent.trim(), artist_name.textContent);
       let song_title = formatted_title[0];
       let song_tags = formatted_title[1];
       page.corrected = formatted_title[4];
@@ -10741,7 +10738,7 @@
       for (let song_tag in song_tags) {
         song_tags_text = `${song_tags_text}<div class="feat" data-bleh--tag-type="${song_tags[song_tag].type}" data-bleh--tag-group="${song_tags[song_tag].group}">${song_tags[song_tag].text}</div>`;
       }
-      track_title.innerHTML = `<div class="title">${sanitise_text2(song_title).trim()}</div>${song_tags_text}`;
+      track_title.innerHTML = `<div class="title">${sanitise_text(song_title).trim()}</div>${song_tags_text}`;
       let song_guests = formatted_title[3];
       page.sister_others = formatted_title[3];
       for (let guest in song_guests) {
@@ -10755,7 +10752,7 @@
     } else {
       if (!track_title.hasAttribute("data-kate-processed")) {
         track_title.setAttribute("data-kate-processed", "true");
-        let corrected_title = correct_item_by_artist2(track_title.textContent.trim(), artist_name.textContent);
+        let corrected_title = correct_item_by_artist(track_title.textContent.trim(), artist_name.textContent);
         log(`corrected ${track_title.textContent} by ${artist_name.textContent} as ${corrected_title}`, "lotus");
         if (corrected_title != track_title.textContent)
           page.corrected = true;
@@ -11010,7 +11007,7 @@
               tooltip_sister = sister;
             }
             if (involved.type == "track" && settings.format_guest_features) {
-              let formatted_title = name_includes2(name, sister);
+              let formatted_title = name_includes(name, sister);
               let song_title;
               let song_tags;
               if (formatted_title) {
@@ -11022,16 +11019,16 @@
               }
               let song_tags_text = "";
               for (let song_tag in song_tags) {
-                song_tags_text = `${song_tags_text}<div class="feat" data-bleh--tag-type="${song_tags[song_tag].type}" data-bleh--tag-group="${song_tags[song_tag].group}">${sanitise_text2(song_tags[song_tag].text)}</div>`;
+                song_tags_text = `${song_tags_text}<div class="feat" data-bleh--tag-type="${song_tags[song_tag].type}" data-bleh--tag-group="${song_tags[song_tag].group}">${sanitise_text(song_tags[song_tag].text)}</div>`;
               }
-              name = `<div class="title">${sanitise_text2(song_title).trim()}</div>${song_tags_text}`;
+              name = `<div class="title">${sanitise_text(song_title).trim()}</div>${song_tags_text}`;
             } else if ((involved.type == "album" || involved.type == "track") && settings.corrections) {
-              name = correct_item_by_artist2(name, sister);
+              name = correct_item_by_artist(name, sister);
               tooltip_name = name;
-              sister = correct_artist2(sister);
+              sister = correct_artist(sister);
               tooltip_sister = sister;
             } else if (involved.type == "artist" && settings.corrections) {
-              name = correct_artist2(name);
+              name = correct_artist(name);
               tooltip_name = name;
             }
             if (involved_text != "")
@@ -11669,7 +11666,7 @@
       let name_elem = details.querySelector(".featured-item-name");
       let artist_elem = details.querySelector(".featured-item-artist");
       let song_title = name_elem.textContent;
-      let formatted_title = name_includes2(song_title, artist_elem.textContent);
+      let formatted_title = name_includes(song_title, artist_elem.textContent);
       let song_tags = {};
       if (formatted_title) {
         song_title = formatted_title[0];
@@ -11677,12 +11674,12 @@
       }
       let song_tags_text = "";
       for (let song_tag in song_tags) {
-        song_tags_text = `${song_tags_text}<div class="feat" data-bleh--tag-type="${song_tags[song_tag].type}" data-bleh--tag-group="${song_tags[song_tag].group}">${sanitise_text2(song_tags[song_tag].text)}</div>`;
+        song_tags_text = `${song_tags_text}<div class="feat" data-bleh--tag-type="${song_tags[song_tag].type}" data-bleh--tag-group="${song_tags[song_tag].group}">${sanitise_text(song_tags[song_tag].text)}</div>`;
       }
-      name_elem.innerHTML = `<div class="title">${sanitise_text2(song_title).trim()}</div>${song_tags_text}`;
+      name_elem.innerHTML = `<div class="title">${sanitise_text(song_title).trim()}</div>${song_tags_text}`;
       let song_artist_element = document.createElement("div");
       song_artist_element.classList.add("featured-item-artist");
-      song_artist_element.innerHTML = `<a href="${root}music/${sanitise(formatted_title[2])}">${sanitise_text2(formatted_title[2])}</a>`;
+      song_artist_element.innerHTML = `<a href="${root}music/${sanitise(formatted_title[2])}">${sanitise_text(formatted_title[2])}</a>`;
       let song_guests = formatted_title[3];
       for (let guest in song_guests) {
         song_artist_element.innerHTML = `${song_artist_element.innerHTML},`;
@@ -11696,8 +11693,8 @@
     } else if (settings.corrections) {
       let name_elem = details.querySelector(".featured-item-name");
       let artist_elem = details.querySelector(".featured-item-artist");
-      let name = correct_item_by_artist2(name_elem.textContent.trim(), artist_elem.textContent.trim());
-      let artist = correct_artist2(artist_elem.textContent.trim());
+      let name = correct_item_by_artist(name_elem.textContent.trim(), artist_elem.textContent.trim());
+      let artist = correct_artist(artist_elem.textContent.trim());
       name_elem.textContent = name;
       artist_elem.textContent = artist;
     }
@@ -15661,7 +15658,7 @@
       let name = involved.name;
       let sister = involved.sister;
       if (involved.type == "track" && settings.format_guest_features) {
-        let formatted_title = name_includes2(name, sister);
+        let formatted_title = name_includes(name, sister);
         let song_title;
         let song_tags;
         if (formatted_title) {
@@ -15671,14 +15668,14 @@
         }
         let song_tags_text = "";
         for (let song_tag in song_tags) {
-          song_tags_text = `${song_tags_text}<div class="feat" data-bleh--tag-type="${song_tags[song_tag].type}" data-bleh--tag-group="${song_tags[song_tag].group}">${sanitise_text2(song_tags[song_tag].text)}</div>`;
+          song_tags_text = `${song_tags_text}<div class="feat" data-bleh--tag-type="${song_tags[song_tag].type}" data-bleh--tag-group="${song_tags[song_tag].group}">${sanitise_text(song_tags[song_tag].text)}</div>`;
         }
-        name = `<div class="title">${sanitise_text2(song_title).trim()}</div>${song_tags_text}`;
+        name = `<div class="title">${sanitise_text(song_title).trim()}</div>${song_tags_text}`;
       } else if ((involved.type == "album" || involved.type == "track") && settings.corrections) {
-        name = correct_item_by_artist2(name, sister);
-        sister = correct_artist2(sister);
+        name = correct_item_by_artist(name, sister);
+        sister = correct_artist(sister);
       } else if (involved.type == "artist" && settings.corrections) {
-        sister = correct_artist2(sister);
+        sister = correct_artist(sister);
       }
       if (involved_text != "")
         involved_text = `${involved_text}, <a class="involved--${involved.type}">${name}</a>`;
@@ -15797,8 +15794,8 @@
         let artist_name = album.querySelector(`.${parent.replace("-details", "")}-artist a`);
         if (artist_name == void 0)
           return;
-        let corrected_album_name = correct_item_by_artist2(album_name.textContent, artist_name.textContent);
-        let corrected_artist_name = correct_artist2(artist_name.textContent);
+        let corrected_album_name = correct_item_by_artist(album_name.textContent, artist_name.textContent);
+        let corrected_artist_name = correct_artist(artist_name.textContent);
         album_name.textContent = corrected_album_name;
         artist_name.textContent = corrected_artist_name;
       }
@@ -15815,12 +15812,12 @@
         if (album_name == null)
           return;
         let artist_name = return_artist_from_generic(album_name.getAttribute("href"));
-        let corrected_album_name = correct_item_by_artist2(album_name.textContent, artist_name);
+        let corrected_album_name = correct_item_by_artist(album_name.textContent, artist_name);
         album_name.textContent = corrected_album_name;
       }
     });
   }
-  function correct_item_by_artist2(item, artist) {
+  function correct_item_by_artist(item, artist) {
     if (!settings.corrections)
       return item;
     artist = artist.toLowerCase();
@@ -15841,7 +15838,7 @@
       return item;
     }
   }
-  function correct_artist2(artist, broadcast = false) {
+  function correct_artist(artist, broadcast = false) {
     if (!settings.corrections)
       return artist;
     try {
@@ -15861,7 +15858,7 @@
       return artist;
     }
   }
-  function name_includes2(original_title, original_artist) {
+  function name_includes(original_title, original_artist) {
     console.log(original_title, original_artist);
     let formatted_title = original_title;
     let original_title_corrected = false;
@@ -15919,11 +15916,11 @@
       if (field_group == "guests") {
         song_guests = field_text.split(";");
         for (let guest in song_guests)
-          song_guests[guest] = correct_artist2(song_guests[guest]);
+          song_guests[guest] = correct_artist(song_guests[guest]);
       }
     }
     if (artist_corrections.hasOwnProperty(original_artist) && settings.corrections)
-      original_artist = correct_artist2(artist_corrections[original_artist]);
+      original_artist = correct_artist(artist_corrections[original_artist]);
     if (extras.length > 0)
       log(`parsed ${original_title} as ${formatted_title} by ${original_artist} with`, "guest features", "info", { extras, song_guests });
     return [formatted_title, extras, original_artist, song_guests, original_title_corrected];
@@ -15938,7 +15935,7 @@
     if (!has_multi) {
       if (!settings.corrections)
         return;
-      title.textContent = correct_artist2(title_text, true);
+      title.textContent = correct_artist(title_text, true);
     } else {
       title_text = title_text.replaceAll(" & ", ";").replaceAll(", ", ";").replace("Tyler;the", "Tyler, The").replace("Tyler;The", "Tyler, The").replace("Marina;the Diamonds", "Marina and The Diamonds").replaceAll(";;", ";");
       page.multi = true;
@@ -15948,7 +15945,7 @@
         page.multi = false;
         if (!settings.corrections)
           return;
-        title.textContent = correct_artist2(title_text, true);
+        title.textContent = correct_artist(title_text, true);
         return;
       }
       split.forEach((artist, index) => {
@@ -15958,7 +15955,7 @@
         part.classList.add("multi-artist-part");
         part.setAttribute("href", `${root}music/${sanitise(artist)}`);
         if (settings.corrections)
-          part.textContent = correct_artist2(artist);
+          part.textContent = correct_artist(artist);
         else
           part.textContent = artist;
         title.appendChild(part);
@@ -15992,7 +15989,7 @@
       try {
         if (!track_title.hasAttribute("data-kate-processed")) {
           track_title.setAttribute("data-kate-processed", "true");
-          let formatted_title = name_includes2(track_title.textContent, track_artist.textContent);
+          let formatted_title = name_includes(track_title.textContent, track_artist.textContent);
           let song_title = formatted_title[0];
           let song_tags = formatted_title[1];
           page.corrected = formatted_title[4];
@@ -16000,7 +15997,7 @@
           for (let song_tag in song_tags) {
             song_tags_text = `${song_tags_text}<div class="feat" data-bleh--tag-type="${song_tags[song_tag].type}" data-bleh--tag-group="${song_tags[song_tag].group}">${song_tags[song_tag].text}</div>`;
           }
-          track_title.innerHTML = `<div class="title">${sanitise_text2(song_title).trim()}</div>${song_tags_text}`;
+          track_title.innerHTML = `<div class="title">${sanitise_text(song_title).trim()}</div>${song_tags_text}`;
           let song_artist_element = document.body.querySelector('span[itemprop="byArtist"]');
           let song_guests = formatted_title[3];
           page.sister_others = formatted_title[3];
@@ -16009,7 +16006,7 @@
             let guest_element = document.createElement("a");
             guest_element.classList.add("header-new-crumb");
             guest_element.setAttribute("href", `${root}music/${sanitise(song_guests[guest])}`);
-            guest_element.setAttribute("title", sanitise_text2(song_guests[guest]));
+            guest_element.setAttribute("title", sanitise_text(song_guests[guest]));
             guest_element.textContent = song_guests[guest];
             song_artist_element.appendChild(guest_element);
           }
@@ -16019,7 +16016,7 @@
     } else {
       if (!track_title.hasAttribute("data-kate-processed")) {
         track_title.setAttribute("data-kate-processed", "true");
-        let corrected_title = correct_item_by_artist2(track_title.textContent, track_artist.textContent);
+        let corrected_title = correct_item_by_artist(track_title.textContent, track_artist.textContent);
         log(`corrected ${track_title.textContent} by ${track_artist.textContent} as ${corrected_title}`, "lotus");
         if (corrected_title != track_title.textContent)
           page.corrected = true;
@@ -16037,8 +16034,8 @@
       form.setAttribute("data-bleh-subscribed", "true");
       let track = form.querySelector('[name="track"]').getAttribute("value");
       let artist = form.querySelector('[name="artist"]').getAttribute("value");
-      artist = correct_artist2(artist);
-      track = correct_item_by_artist2(track, artist);
+      artist = correct_artist(artist);
+      track = correct_item_by_artist(track, artist);
       let btn = form.querySelector("button");
       btn.addEventListener("click", (event2) => {
         log("heard", "event", "info", event2);
@@ -16061,8 +16058,8 @@
       form.setAttribute("data-bleh-subscribed", "true");
       let track = form.querySelector('[name="name"]').getAttribute("value");
       let artist = form.querySelector('[name="artist_name"]').getAttribute("value");
-      artist = correct_artist2(artist);
-      track = correct_item_by_artist2(track, artist);
+      artist = correct_artist(artist);
+      track = correct_item_by_artist(track, artist);
       let btn = form.querySelector("button");
       btn.addEventListener("click", (event2) => {
         log("heard", "event", "info", event2);
@@ -16293,7 +16290,7 @@
       }
       let name = grid.querySelector(".grid-items-item-main-text a");
       if (!is_album) {
-        name.textContent = correct_artist2(name.textContent.trim());
+        name.textContent = correct_artist(name.textContent.trim());
         insights.artist.labels.push(name.textContent);
       } else {
         let artist = grid.querySelector(".grid-items-item-aux-block");
@@ -16302,7 +16299,7 @@
           let name_elem = name;
           let artist_elem = artist;
           let song_title = name_elem.getAttribute("title");
-          let formatted_title = name_includes2(song_title, artist_elem.textContent.trim());
+          let formatted_title = name_includes(song_title, artist_elem.textContent.trim());
           let song_tags = {};
           if (formatted_title) {
             song_title = formatted_title[0];
@@ -16312,12 +16309,12 @@
           }
           let song_tags_text = "";
           for (let song_tag in song_tags) {
-            song_tags_text = `${song_tags_text}<span class="feat" data-bleh--tag-type="${song_tags[song_tag].type}" data-bleh--tag-group="${song_tags[song_tag].group}">${sanitise_text2(song_tags[song_tag].text)}</span>`;
+            song_tags_text = `${song_tags_text}<span class="feat" data-bleh--tag-type="${song_tags[song_tag].type}" data-bleh--tag-group="${song_tags[song_tag].group}">${sanitise_text(song_tags[song_tag].text)}</span>`;
           }
-          name_elem.innerHTML = `<span class="title">${sanitise_text2(song_title).trim()}</span>${song_tags_text}`;
+          name_elem.innerHTML = `<span class="title">${sanitise_text(song_title).trim()}</span>${song_tags_text}`;
         } else {
-          artist.textContent = correct_artist2(artist.textContent.trim());
-          name.textContent = correct_item_by_artist2(name.textContent.trim(), artist.textContent.trim());
+          artist.textContent = correct_artist(artist.textContent.trim());
+          name.textContent = correct_item_by_artist(name.textContent.trim(), artist.textContent.trim());
         }
       }
     });
@@ -16426,7 +16423,7 @@
           if (settings.colourful_counts)
             patch_artist_ranks_in_list_view(track);
           if (settings.corrections)
-            track_title.textContent = correct_artist2(track_title.getAttribute("title"));
+            track_title.textContent = correct_artist(track_title.getAttribute("title"));
           insights.artist.display = true;
           let bar2 = track.querySelector(".chartlist-count-bar-slug");
           let value = parseInt(bar2.getAttribute("data-stat-value"));
@@ -16469,7 +16466,7 @@
           });
         }
         if (settings.format_guest_features) {
-          let formatted_title = name_includes2(track_title.getAttribute("title"), track_artist);
+          let formatted_title = name_includes(track_title.getAttribute("title"), track_artist);
           console.log("formatted", formatted_title);
           let song_title = track_title.getAttribute("title");
           let song_tags = {};
@@ -16477,12 +16474,12 @@
             song_title = formatted_title[0];
             song_tags = formatted_title[1];
           }
-          track_title.setAttribute("title", correct_item_by_artist2(track_title.getAttribute("title"), track_artist));
+          track_title.setAttribute("title", correct_item_by_artist(track_title.getAttribute("title"), track_artist));
           let song_tags_text = "";
           for (let song_tag in song_tags) {
-            song_tags_text = `${song_tags_text}<div class="feat" data-bleh--tag-type="${song_tags[song_tag].type}" data-bleh--tag-group="${song_tags[song_tag].group}">${sanitise_text2(song_tags[song_tag].text)}</div>`;
+            song_tags_text = `${song_tags_text}<div class="feat" data-bleh--tag-type="${song_tags[song_tag].type}" data-bleh--tag-group="${song_tags[song_tag].group}">${sanitise_text(song_tags[song_tag].text)}</div>`;
           }
-          track_title.innerHTML = `<div class="title">${sanitise_text2(song_title).trim()}</div>${song_tags_text}`;
+          track_title.innerHTML = `<div class="title">${sanitise_text(song_title).trim()}</div>${song_tags_text}`;
           let song_artist_element = track.querySelector(".chartlist-artist");
           if (!song_artist_element && !is_user) {
             song_artist_element = document.createElement("td");
@@ -16490,7 +16487,7 @@
             track.appendChild(song_artist_element);
           }
           if (song_artist_element.textContent.replaceAll("+", " ").trim() == track_artist || song_artist_element.textContent.trim() == "") {
-            song_artist_element.innerHTML = `<a href="${root}music/${sanitise(formatted_title[2])}" title="${sanitise_text2(formatted_title[2])}">${sanitise_text2(formatted_title[2])}</a>`;
+            song_artist_element.innerHTML = `<a href="${root}music/${sanitise(formatted_title[2])}" title="${sanitise_text(formatted_title[2])}">${sanitise_text(formatted_title[2])}</a>`;
             let song_guests = formatted_title[3];
             for (let guest in song_guests) {
               song_artist_element.innerHTML = `${song_artist_element.innerHTML},`;
@@ -16517,7 +16514,7 @@
                             <h5 class="title">${song_title}</h5>
                             <p class="artist">${song_artist_element.innerHTML}</p>
                             <div class="tags">${song_tags_text}</div>
-                            ${!is_library_track_page ? is_album ? "" : `<p class="album">${image ? correct_item_by_artist2(sanitise_text2(image.getAttribute("alt")), track_artist) : page.name}</p>` : ""}
+                            ${!is_library_track_page ? is_album ? "" : `<p class="album">${image ? correct_item_by_artist(sanitise_text(image.getAttribute("alt")), track_artist) : page.name}</p>` : ""}
                             ${track_timestamp && track_timestamp_contents ? `<p class="timestamp">${track_timestamp_contents}</p>` : ""}
                         </div>
                     `;
@@ -16526,14 +16523,14 @@
         } else if (settings.corrections) {
           let song_artist_element = track.querySelector(".chartlist-artist a");
           if (song_artist_element) {
-            let corrected_title = correct_item_by_artist2(track_title.textContent, song_artist_element.textContent);
+            let corrected_title = correct_item_by_artist(track_title.textContent, song_artist_element.textContent);
             track_title.textContent = corrected_title;
             track_title.setAttribute("title", corrected_title);
-            let corrected_artist = correct_artist2(song_artist_element.textContent);
+            let corrected_artist = correct_artist(song_artist_element.textContent);
             song_artist_element.textContent = corrected_artist;
             song_artist_element.setAttribute("title", corrected_artist);
           } else {
-            let corrected_title = correct_item_by_artist2(track_title.textContent, track_artist);
+            let corrected_title = correct_item_by_artist(track_title.textContent, track_artist);
             track_title.textContent = corrected_title;
             track_title.setAttribute("title", corrected_title);
           }
@@ -16573,7 +16570,7 @@
             let link = image_wrap.querySelector(".cover-art");
             let image = link.querySelector("img");
             if (!settings.album_text) {
-              let alt = correct_item_by_artist2(image.getAttribute("alt"), track_artist);
+              let alt = correct_item_by_artist(image.getAttribute("alt"), track_artist);
               let album_text = document.createElement("td");
               album_text.classList.add("chartlist-album", "custom-album-text");
               album_text.innerHTML = `
@@ -16885,7 +16882,7 @@
             </div>
             <div class="info-side">
                 <div class="sub-text">${trans_legacy[lang].music.about}</div>
-                <h1><a href="${root}music/${sanitise(page.sister)}">${sanitise_text2(page.sister)}</a></h1>
+                <h1><a href="${root}music/${sanitise(page.sister)}">${sanitise_text(page.sister)}</a></h1>
                 ${listeners != null ? listeners.outerHTML : ""}
                 ${tags != null ? tags.outerHTML : ""}
                 ${wiki != null ? wiki.outerHTML : ""}
@@ -18466,7 +18463,7 @@
         let link = name.getAttribute("href");
         image.setAttribute("src", image.getAttribute("src").replace("/avatar70s/", "/avatar300s/"));
         if (index == 1) {
-          name.textContent = correct_artist2(name.textContent);
+          name.textContent = correct_artist(name.textContent);
           list_item.classList.add("music-bookmarks-artists-item-wrap", "charts-list-item");
           list_item.innerHTML = `
                     <div class="music-bookmarks-artists-item charts-list-item-inner">
@@ -18487,8 +18484,8 @@
                 `;
         } else {
           let artist = item.querySelector(".globalchart-track-artist-name a");
-          artist.textContent = correct_artist2(artist.textContent);
-          name.textContent = correct_item_by_artist2(name.textContent, artist.textContent);
+          artist.textContent = correct_artist(artist.textContent);
+          name.textContent = correct_item_by_artist(name.textContent, artist.textContent);
           list_item.classList.add("music-bookmarks-albums-item-wrap", "charts-list-item");
           list_item.innerHTML = `
                     <div class="music-bookmarks-albums-item charts-list-item-inner">
@@ -18732,7 +18729,7 @@
                 <div class="name">${involved_text}</div>
             `;
         activity_list.appendChild(activity_item);
-        if (tooltip_name != void 0)
+        if (tooltip_name)
           tippy(activity_item.querySelector(".title a"), {
             content: `${tooltip_sister} - ${tooltip_name}`
           });
@@ -18794,7 +18791,7 @@
     if (settings.corrections) {
       let links = event_description.querySelectorAll("a");
       links.forEach((link) => {
-        link.textContent = correct_artist2(link.textContent);
+        link.textContent = correct_artist(link.textContent);
       });
     }
     let redesigned_event_header = document.createElement("section");
@@ -19076,7 +19073,7 @@
     if (page.subpage == "artists" && settings.corrections) {
       let artists = page.structure.main.querySelectorAll(".artist-result-heading a");
       artists.forEach((artist) => {
-        artist.textContent = correct_artist2(artist.textContent);
+        artist.textContent = correct_artist(artist.textContent);
       });
     }
     if (page.subpage == "albums") {
@@ -19085,8 +19082,8 @@
         let heading = result.querySelector(".album-result-heading a");
         let artist_parent = result.querySelector(".album-result-artist");
         let artist = artist_parent.querySelector("a");
-        artist.textContent = correct_artist2(artist.textContent);
-        heading.textContent = correct_item_by_artist2(heading.textContent, artist.textContent);
+        artist.textContent = correct_artist(artist.textContent);
+        heading.textContent = correct_item_by_artist(heading.textContent, artist.textContent);
         let image = result.querySelector(".album-result-image");
         let image_parent = document.createElement("span");
         image_parent.classList.add("avatar", "album-result-image");
@@ -20061,10 +20058,10 @@
       let name = page.name;
       let sister = page.sister;
       if (page.type == "album" || page.type == "track") {
-        name = correct_item_by_artist2(name, sister);
-        sister = correct_artist2(sister);
+        name = correct_item_by_artist(name, sister);
+        sister = correct_artist(sister);
       } else if (page.type == "artist") {
-        name = correct_artist2(name);
+        name = correct_artist(name);
       }
       let title;
       if (page.subpage != "overview" && page.subpage != "event_overview" && page.subpage != "home" && (page.type == "user" || page.type == "artist" || page.type == "album" || page.type == "track" || page.type == "events" || page.type == "tag"))

@@ -7,7 +7,8 @@ import { checkup_page_structure } from "../components/structure";
 import { register_background, update_page } from "../page";
 import { bleh_charts } from "./chart";
 import { bleh_native_settings } from './lastfm_settings';
-import { sanitise } from "../build/tools"
+import { sanitise, sanitise_text } from "../build/tools"
+import { correct_artist, correct_item_by_artist, name_includes } from '../components/lotus';
 
 export function bleh_home() {
     page.structure.container = document.body.querySelector('.page-content');
@@ -273,7 +274,7 @@ export function bleh_home() {
 
             activity_list.appendChild(activity_item);
 
-            if (tooltip_name != undefined)
+            if (tooltip_name)
                 tippy(activity_item.querySelector('.title a'), {
                     content: `${tooltip_sister} - ${tooltip_name}`
                 });

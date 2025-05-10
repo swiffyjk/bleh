@@ -836,9 +836,6 @@ export const trans = {
         // as in a playlist mix of music
         en: 'Mix'
     },
-    playlists: {
-        en: 'Playlists'
-    },
     recommended: {
         // recommended music
         en: 'Recommended',
