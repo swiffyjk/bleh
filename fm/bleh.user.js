@@ -10683,7 +10683,7 @@
   }
 
   // src/pages/obsession.js
-  function patch_obsession_view() {
+  function bleh_obsession() {
     let obsession_container = document.querySelector(".obsession-container");
     if (!obsession_container) return;
     page.structure.container = document.body.querySelector(".page-content:not(.obsession-container .page-content)");
@@ -10869,12 +10869,11 @@
   // src/pages/profile.js
   function bleh_profiles() {
     if (page.subpage == "obsessions_obsession") {
-      patch_obsession_view();
+      bleh_obsession();
       return;
     }
     let profile_header = document.body.querySelector(".header--user");
-    if (!profile_header)
-      return;
+    if (!profile_header) return;
     page.name = profile_header.querySelector(".header-title a").textContent;
     let is_subpage = page.subpage != "overview";
     page.structure.container = document.body.querySelector(".page-content:not(.profile-cards-container, .report-box-container .page-content)");
@@ -10887,7 +10886,6 @@
     }
     checkup_page_structure(is_subpage, profile_header);
     let new_account = false;
-    let katsune = ff("katsune");
     if (ff("refreshed_nav")) {
       let avatar = profile_header.querySelector(".avatar");
       let title_wrap = profile_header.querySelector(".header-title-label-wrap");
@@ -10924,13 +10922,13 @@
         register_background(null, "hidden");
       } else {
         if (settings.profile_avi_background) {
-          if (avatar != null)
+          if (avatar)
             register_background(avatar.querySelector("img").getAttribute("src").replace("/avatar170s/", "/ar0/"), "avatar");
           else
             register_background(null, "none");
         } else {
           let background = document.body.querySelector(".header-background--has-image");
-          if (background != null)
+          if (background)
             register_background(background.style.getPropertyValue("background-image").replace('url("', "").replace('")', ""), "artist");
           else
             register_background(null, "none");

@@ -11,7 +11,7 @@ import { load_badges } from "../components/badge"
 import { dialog } from "../components/dialog"
 import { correct_artist, correct_item_by_artist, name_includes } from "../components/lotus"
 import { markdown } from "../components/markdown"
-import { deliver_notif, notify } from "../components/notify"
+import { notify } from "../components/notify"
 import { create_profile_top_item, redesign_profile_header } from "../components/profile_header"
 import { custom_select, update_inbuilt_select } from "../components/select"
 import { checkup_page_structure } from "../components/structure"
@@ -20,20 +20,17 @@ import { register_background, update_page } from "../page"
 import { ff } from "../sku"
 import { bleh_user_library } from "./glacier"
 import { use_pronouns } from "./lastfm_settings"
-import { patch_obsession_view } from "./obsession"
+import { bleh_obsession } from "./obsession"
 
 export function bleh_profiles() {
     // the obsessions page is a user subpage but works very differently
     if (page.subpage == 'obsessions_obsession') {
-        patch_obsession_view();
+        bleh_obsession();
         return;
     }
 
-    // are we on a profile?
     let profile_header = document.body.querySelector('.header--user');
-
-    if (!profile_header)
-        return;
+    if (!profile_header) return;
 
     page.name = profile_header.querySelector('.header-title a').textContent;
 
@@ -52,8 +49,6 @@ export function bleh_profiles() {
     checkup_page_structure(is_subpage, profile_header);
 
     let new_account = false;
-
-    let katsune = ff('katsune');
 
     if (ff('refreshed_nav')) {
         let avatar = profile_header.querySelector('.avatar');
@@ -100,13 +95,13 @@ export function bleh_profiles() {
             register_background(null, 'hidden');
         } else {
             if (settings.profile_avi_background) {
-                if (avatar != null)
+                if (avatar)
                     register_background(avatar.querySelector('img').getAttribute('src').replace('/avatar170s/', '/ar0/'), 'avatar');
                 else
                     register_background(null, 'none');
             } else {
                 let background = document.body.querySelector('.header-background--has-image');
-                if (background != null)
+                if (background)
                     register_background(background.style.getPropertyValue('background-image').replace('url("', '').replace('")', ''), 'artist');
                 else
                     register_background(null, 'none');

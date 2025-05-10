@@ -2,15 +2,14 @@ import { patch_avatar } from "../avatar";
 import { settings } from '../build/config';
 import { log } from '../build/log';
 import { artist_corrections } from '../build/music';
-import { auth, page, root } from '../build/page';
+import { page, root } from '../build/page';
 import { clamp_sat, rgb_to_hsl, sanitise, sanitise_text } from '../build/tools';
-import { lang, tl, trans, trans_legacy } from '../build/trans';
+import { tl, trans } from '../build/trans';
 import { correct_item_by_artist, name_includes } from '../components/lotus';
-import { register_menu } from '../components/menu';
 import { checkup_page_structure } from '../components/structure';
 import { register_background, update_page } from '../page';
 
-export function patch_obsession_view() {
+export function bleh_obsession() {
     let obsession_container = document.querySelector('.obsession-container');
     if (!obsession_container) return;
 
