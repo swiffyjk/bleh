@@ -14,13 +14,13 @@ export let valid_langs = ['en', 'de', 'pl'];
 export let lang_info = {
     en: {
         name: 'English',
-        by: ['cutensilly'],
+        by: ['katelyness'],
         last_updated: 'latest'
     },
     de: {
         name: 'Deutsch',
-        by: ['stellasaur', 'cutensilly'],
-        last_updated:  '2025-04-27'
+        by: ['stellasaur', 'katelyness'],
+        last_updated:  '2025-05-10'
     },
     pl: {
         name: 'Polski',

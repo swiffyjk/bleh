@@ -217,12 +217,12 @@ export function bleh_wiki_editor() {
         <div class="sep"></div>
         <div class="syntax-listing">
             <div class="syntax-listing-item">
-                <div class="code-side">[url]https://cutensilly.org/bleh/fm[/url]</div>
-                <div class="detail-side">${tl(trans.links_to).replace('{link}', `<a href="https://cutensilly.org/bleh/fm" target="_blank">https://cutensilly.org/bleh/fm</a>`)}</div>
+                <div class="code-side">[url]https://katelyn.moe/bleh[/url]</div>
+                <div class="detail-side">${tl(trans.links_to).replace('{link}', `<a href="https://katelyn.moe/bleh" target="_blank">https://katelyn.moe/bleh</a>`)}</div>
             </div>
             <div class="syntax-listing-item">
-                <div class="code-side">[url=https://cutensilly.org/bleh/fm]blehhh[/url]</div>
-                <div class="detail-side">${tl(trans.links_to).replace('{link}', `<a href="https://cutensilly.org/bleh/fm" target="_blank">blehhh</a>`)}</div>
+                <div class="code-side">[url=https://katelyn.moe/bleh]blehhh[/url]</div>
+                <div class="detail-side">${tl(trans.links_to).replace('{link}', `<a href="https://katelyn.moe/bleh" target="_blank">blehhh</a>`)}</div>
             </div>
         </div>
         <div class="sep"></div>

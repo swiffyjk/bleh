@@ -1,8 +1,8 @@
-# [bleh for last.fm](https://cutensilly.org/bleh/)
+# [bleh for last.fm](https://katelyn.moe/bleh/)
 
 bleh is my passion project and a take on a full [Last.fm](https://last.fm) redesign. It is still a work-in-progress but is entering a very stable state as of recent. If you're interested in what it has to offer along with more screenshots, head to the site above (which has a convenient download link too :3 !!) Community contributions are welcome, please see below!
 
-![preview](https://cutensilly.org/img/bleh3-theme-dark.png)
+![preview](https://katelyn.moe/img/bleh3-theme-dark.png)
 
 ## Support
 

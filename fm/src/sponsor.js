@@ -99,7 +99,7 @@ function sponsor(replace=false) {
                     <span class="avatar-status-dot user-status--bleh-sponsor"></span>
                 </div>
                 <h1>${tl(trans.support_future_development)}</h1>
-                <p>${tl(trans.why_sponsor).replace('katelyn', `<a class="mention" href="${root}user/cutensilly">@cutensilly</a>`)}</p>
+                <p>${tl(trans.why_sponsor).replace('katelyn', `<a class="mention" href="${root}user/katelyness">@katelyness</a>`)}</p>
             </div>
             <div class="modal-footer">
                 <a class="btn primary sponsor" href="${sponsor_list.sponsor_link}" target="_blank">

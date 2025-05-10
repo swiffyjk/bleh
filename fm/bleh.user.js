@@ -884,13 +884,13 @@
   var lang_info = {
     en: {
       name: "English",
-      by: ["cutensilly"],
+      by: ["katelyness"],
       last_updated: "latest"
     },
     de: {
       name: "Deutsch",
-      by: ["stellasaur", "cutensilly"],
-      last_updated: "2025-04-27"
+      by: ["stellasaur", "katelyness"],
+      last_updated: "2025-05-10"
     },
     pl: {
       name: "Polski",
@@ -6204,15 +6204,17 @@
     if (date_items.length > 0)
       page.structure.side.appendChild(date_panel);
     page.structure.glacier.date_panel = date_panel;
-    let tabs = page.structure.container.querySelector(".library-controls .navlist-items");
-    let velocity_tab = document.createElement("li");
-    velocity_tab.classList.add("navlist-item", "secondary-nav-item", "secondary-nav-item--velocity");
-    velocity_tab.innerHTML = `
-        <a class="secondary-nav-item-link" href="${root}labs/artist-velocity" target="_blank">
-            ${tl(trans.velocity)}
-        </a>
-    `;
-    tabs.appendChild(velocity_tab);
+    if (page.name == auth.name) {
+      let tabs = page.structure.container.querySelector(".library-controls .navlist-items");
+      let velocity_tab = document.createElement("li");
+      velocity_tab.classList.add("navlist-item", "secondary-nav-item", "secondary-nav-item--velocity");
+      velocity_tab.innerHTML = `
+            <a class="secondary-nav-item-link" href="${root}labs/artist-velocity" target="_blank">
+                ${tl(trans.velocity)}
+            </a>
+        `;
+      tabs.appendChild(velocity_tab);
+    }
     if (!ff("glacier_library"))
       return;
     if (settings.glacier_library_graphs && date_items.length > 0) {
@@ -6602,6 +6604,7 @@
     }
     page.state.glacier.current_view = current_view;
     let scrobble_chart_content = page.structure.side.querySelector("#scrobble-chart-content");
+    if (!scrobble_chart_content) return;
     if (scrobble_chart_content.getAttribute("data-highcharts-chart") && scrobble_chart_content.getAttribute("data-highcharts-chart") == "0") {
       log("highchart registered", "glacier library");
       log("refresh is now marked false", "glacier library");
@@ -12492,12 +12495,12 @@
                     <br>
                     <div class="browser-choices">
                         <button class="btn browser" onclick="_chosen_chrome()">
-                            <img class="browser-icon" src="https://cutensilly.org/img/chrome.png">
+                            <img class="browser-icon" src="https://katelyn.moe/img/chrome.png">
                             <p>${trans_legacy[lang].settings.performance.dev.modals.prompt.browsers.chrome.name}</p>
                             <p class="caption">${trans_legacy[lang].settings.performance.dev.modals.prompt.browsers.chrome.bio}</p>
                         </button>
                         <button class="btn browser" onclick="_chosen_firefox()">
-                            <img class="browser-icon" src="https://cutensilly.org/img/firefox.png">
+                            <img class="browser-icon" src="https://katelyn.moe/img/firefox.png">
                             <p>${trans_legacy[lang].settings.performance.dev.modals.prompt.browsers.firefox.name}</p>
                             <p class="caption">${trans_legacy[lang].settings.performance.dev.modals.prompt.browsers.firefox.bio}</p>
                         </button>
@@ -17064,12 +17067,12 @@
         <div class="sep"></div>
         <div class="syntax-listing">
             <div class="syntax-listing-item">
-                <div class="code-side">[url]https://cutensilly.org/bleh/fm[/url]</div>
-                <div class="detail-side">${tl(trans.links_to).replace("{link}", `<a href="https://cutensilly.org/bleh/fm" target="_blank">https://cutensilly.org/bleh/fm</a>`)}</div>
+                <div class="code-side">[url]https://katelyn.moe/bleh[/url]</div>
+                <div class="detail-side">${tl(trans.links_to).replace("{link}", `<a href="https://katelyn.moe/bleh" target="_blank">https://katelyn.moe/bleh</a>`)}</div>
             </div>
             <div class="syntax-listing-item">
-                <div class="code-side">[url=https://cutensilly.org/bleh/fm]blehhh[/url]</div>
-                <div class="detail-side">${tl(trans.links_to).replace("{link}", `<a href="https://cutensilly.org/bleh/fm" target="_blank">blehhh</a>`)}</div>
+                <div class="code-side">[url=https://katelyn.moe/bleh]blehhh[/url]</div>
+                <div class="detail-side">${tl(trans.links_to).replace("{link}", `<a href="https://katelyn.moe/bleh" target="_blank">blehhh</a>`)}</div>
             </div>
         </div>
         <div class="sep"></div>
@@ -17759,7 +17762,7 @@
   function open_changelog(changelog) {
     let window2 = dialog({
       id: "changelog",
-      title: tl(trans.news_from_user).replace("{user}", `<a class="mention" href="${root}user/cutensilly">@cutensilly</a>`),
+      title: tl(trans.news_from_user).replace("{user}", `<a class="mention" href="${root}user/katelyness">@katelyness</a>`),
       body: `
             <div class="cta first sponsor colourful margin-bottom">
                 <strong>${tl(trans.news_sponsor_cta)}</strong>
@@ -19448,7 +19451,7 @@
                     <span class="avatar-status-dot user-status--bleh-sponsor"></span>
                 </div>
                 <h1>${tl(trans.support_future_development)}</h1>
-                <p>${tl(trans.why_sponsor).replace("katelyn", `<a class="mention" href="${root}user/cutensilly">@cutensilly</a>`)}</p>
+                <p>${tl(trans.why_sponsor).replace("katelyn", `<a class="mention" href="${root}user/katelyness">@katelyness</a>`)}</p>
             </div>
             <div class="modal-footer">
                 <a class="btn primary sponsor" href="${sponsor_list.sponsor_link}" target="_blank">

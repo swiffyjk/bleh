@@ -278,12 +278,12 @@ function update_item(item, value, modify=true, search = document) {
                     <br>
                     <div class="browser-choices">
                         <button class="btn browser" onclick="_chosen_chrome()">
-                            <img class="browser-icon" src="https://cutensilly.org/img/chrome.png">
+                            <img class="browser-icon" src="https://katelyn.moe/img/chrome.png">
                             <p>${trans_legacy[lang].settings.performance.dev.modals.prompt.browsers.chrome.name}</p>
                             <p class="caption">${trans_legacy[lang].settings.performance.dev.modals.prompt.browsers.chrome.bio}</p>
                         </button>
                         <button class="btn browser" onclick="_chosen_firefox()">
-                            <img class="browser-icon" src="https://cutensilly.org/img/firefox.png">
+                            <img class="browser-icon" src="https://katelyn.moe/img/firefox.png">
                             <p>${trans_legacy[lang].settings.performance.dev.modals.prompt.browsers.firefox.name}</p>
                             <p class="caption">${trans_legacy[lang].settings.performance.dev.modals.prompt.browsers.firefox.bio}</p>
                         </button>

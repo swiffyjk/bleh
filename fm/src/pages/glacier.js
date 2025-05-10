@@ -38,15 +38,17 @@ export function bleh_user_library() {
 
 
     // tabs
-    let tabs = page.structure.container.querySelector('.library-controls .navlist-items');
-    let velocity_tab = document.createElement('li');
-    velocity_tab.classList.add('navlist-item', 'secondary-nav-item', 'secondary-nav-item--velocity');
-    velocity_tab.innerHTML = (`
-        <a class="secondary-nav-item-link" href="${root}labs/artist-velocity" target="_blank">
-            ${tl(trans.velocity)}
-        </a>
-    `);
-    tabs.appendChild(velocity_tab);
+    if (page.name == auth.name) {
+        let tabs = page.structure.container.querySelector('.library-controls .navlist-items');
+        let velocity_tab = document.createElement('li');
+        velocity_tab.classList.add('navlist-item', 'secondary-nav-item', 'secondary-nav-item--velocity');
+        velocity_tab.innerHTML = (`
+            <a class="secondary-nav-item-link" href="${root}labs/artist-velocity" target="_blank">
+                ${tl(trans.velocity)}
+            </a>
+        `);
+        tabs.appendChild(velocity_tab);
+    }
 
 
     if (!ff('glacier_library'))
@@ -562,6 +564,8 @@ function bleh_glacier_date_graph(static_page = false, own_table = null) {
     page.state.glacier.current_view = current_view;
 
     let scrobble_chart_content = page.structure.side.querySelector('#scrobble-chart-content');
+    if (!scrobble_chart_content) return;
+
     if (scrobble_chart_content.getAttribute('data-highcharts-chart') && scrobble_chart_content.getAttribute('data-highcharts-chart') == '0') {
         log('highchart registered', 'glacier library');
         log('refresh is now marked false', 'glacier library');
