@@ -1486,6 +1486,12 @@
     following: {
       en: "Following"
     },
+    followers: {
+      en: "Followers"
+    },
+    neighbours: {
+      en: "Neighbours"
+    },
     website: {
       en: "Website"
     },
@@ -1698,6 +1704,9 @@
     mix: {
       // as in a playlist mix of music
       en: "Mix"
+    },
+    playlists: {
+      en: "Playlists"
     },
     recommended: {
       // recommended music
@@ -10778,6 +10787,7 @@
     }
     let obsession_author = document.querySelector(".obsession-details-intro a").textContent;
     let obsession_avatar = document.querySelector(".obsession-details-intro-avatar-wrap .avatar");
+    page.name = obsession_author;
     let date = obsession_container.querySelector(".obsession-details-date-short");
     quote.innerHTML = `
         ${obsession_reason ? `

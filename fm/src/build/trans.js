@@ -617,6 +617,12 @@ export const trans = {
     following: {
         en: 'Following'
     },
+    followers: {
+        en: 'Followers'
+    },
+    neighbours: {
+        en: 'Neighbours'
+    },
     website: {
         en: 'Website'
     },
@@ -829,6 +835,9 @@ export const trans = {
     mix: {
         // as in a playlist mix of music
         en: 'Mix'
+    },
+    playlists: {
+        en: 'Playlists'
     },
     recommended: {
         // recommended music
