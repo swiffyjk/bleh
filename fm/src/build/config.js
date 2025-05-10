@@ -304,7 +304,8 @@ export let settings_base = {
         unit: '',
         value: true,
         values: [true, false],
-        type: 'toggle'
+        type: 'toggle',
+        require_reload: 'partial'
     },
     hue_from_album: {
         css: 'hue_from_album',

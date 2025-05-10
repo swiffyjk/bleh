@@ -218,7 +218,7 @@ function update_item(item, value, modify=true, search = document) {
     if (value != settings[item])
         new_value = true;
 
-    if (settings_base[item].require_reload && new_value)
+    if ((settings_base[item].require_reload == true || (settings_base[item].require_reload == 'partial' && page.type != 'bleh_settings')) && new_value)
         request_reload();
 
 
