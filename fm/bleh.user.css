@@ -21799,6 +21799,9 @@ h4 {
 .lock {
     --mask: var(--icon-16-lock);
 }
+.connect {
+    --mask: var(--icon-16-add);
+}
 
 
 

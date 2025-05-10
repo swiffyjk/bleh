@@ -19874,7 +19874,7 @@
                     <form method="post" data-no-partial-refresh="">
                         <input type="hidden" name="csrfmiddlewaretoken" value="${token}">
                         <input type="hidden" name="confirmation" value="confirm">
-                        <button class="btn primary connect" type="submit" name="confirm">
+                        <button class="btn primary icon connect" type="submit" name="confirm">
                             ${tl(trans.connect)}
                         </button>
                     </form>
