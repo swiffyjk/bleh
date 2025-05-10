@@ -6512,6 +6512,19 @@
       theme: "window",
       content: `
             <div class="dialog-settings">
+                ${page.subpage == "library_artists" ? `
+                <div class="toggle-container" id="container-colourful_counts" onclick="_update_item('colourful_counts')">
+                    <div class="heading">
+                        <h5>${tl(trans.colourful_counts.name)}</h5>
+                        <p>${tl(trans.colourful_counts.body)}</p>
+                    </div>
+                    <div class="toggle-wrap">
+                        <button class="toggle" id="toggle-colourful_counts" aria-checked="true">
+                            <div class="dot"></div>
+                        </button>
+                    </div>
+                </div>
+                ` : `
                 <div class="toggle-container" id="container-format_guest_features" onclick="_update_item('format_guest_features')">
                     <button class="btn reset" onclick="_reset_item('format_guest_features')">${tl(trans.reset)}</button>
                     <div class="heading">
@@ -6536,7 +6549,9 @@
                         </button>
                     </div>
                 </div>
+                `}
                 <div class="sep"></div>
+                ${(page.subpage == "library_artists" || page.subpage == "library_albums") && auth.pro ? `
                 <div class="toggle-container" id="container-grid_glow" onclick="_update_item('grid_glow')">
                     <button class="btn reset" onclick="_reset_item('grid_glow')">${tl(trans.reset)}</button>
                     <div class="heading">
@@ -6549,6 +6564,7 @@
                         </button>
                     </div>
                 </div>
+                ` : ""}
                 <div class="toggle-container" id="container-glacier_library_graphs" onclick="_update_item('glacier_library_graphs')">
                     <button class="btn reset" onclick="_reset_item('glacier_library_graphs')">${tl(trans.reset)}</button>
                     <div class="heading">
