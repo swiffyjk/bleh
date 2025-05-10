@@ -1511,6 +1511,14 @@ export const trans = {
     sourced_from_own_plays: {
         // tracklist from your own album plays
         en: 'Sourced from your own plays as an official tracklist is unavailable'
+    },
+    submit_language: {
+        name: {
+            en: 'Are you fluent in a supported language?'
+        },
+        body: {
+            en: 'Translations are powered by community contributions from wonderful people like you'
+        }
     }
 }
 

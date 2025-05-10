@@ -1124,21 +1124,19 @@ export function render_setting_page(page_id) {
                 </div>
             </div>
             <div class="bleh--panel">
-                <h4 class="top-header">${trans_legacy[lang].settings.language.name}</h4>
-                ${(!valid_langs.includes(document.documentElement.getAttribute('lang'))) ? `
+                ${(!valid_langs.includes(non_override_lang)) ? `
                 <div class="alert alert-error">Selected language is not currently supported in bleh, sorry for the inconvenience.</div>
                 ` : ''}
-                <h4>${trans_legacy[lang].settings.language.supported}</h4>
+                <h4>${tl(trans.language)}</h4>
                 <div class="languages" id="languages"></div>
                 <div class="sep"></div>
-                <div class="alert alert-warning">This page is still under construction! A wiki page dedicated to submitting a language is not available currently.</div>
                 <div class="toggle-container">
                     <div class="heading">
-                        <h5>${trans_legacy[lang].settings.language.submit.name}</h5>
-                        <p>${trans_legacy[lang].settings.language.submit.bio}</p>
+                        <h5>${tl(trans.submit_language.name)}</h5>
+                        <p>${tl(trans.submit_language.body)}</p>
                     </div>
                     <div class="toggle-wrap">
-                        <a class="btn bleh--btn primary" href="https://github.com/katelyynn/bleh/wiki" target="_blank">${trans_legacy[lang].settings.language.submit.action}</a>
+                        <a class="see-more" href="https://github.com/katelyynn/bleh/wiki" target="_blank">${tl(trans.help_contribute)}</a>
                     </div>
                 </div>
             </div>
