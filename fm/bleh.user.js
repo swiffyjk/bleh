@@ -20110,6 +20110,8 @@
         title = tl(trans.attendance);
       else if (page.subpage == "event_lineup")
         title = tl(trans.lineup);
+      else if (page.subpage == "playlists_playlists")
+        title = tl(trans.playlists);
       if (page.subpage == "overview" || page.subpage == "event_overview") {
         if (page.type == "user")
           title = tl(trans.profile);

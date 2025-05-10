@@ -5889,7 +5889,10 @@ the body text becomes bigger by default - this reverts that */
     cursor: default;
     width: unset !important;
     margin-top: unset !important;
-    padding: unset;
+
+    &:not(.no-data-message--album) {
+        padding: unset;
+    }
 
     /* any icons or whatever */
     &:before {
