@@ -114,11 +114,11 @@ export function bleh_albums() {
                 content: (`
                     ${(avatar != null) ? (`
                     <button class="dropdown-menu-clickable-item" onclick="${expand_link}" data-menu-item="expand">
-                        ${trans_legacy[lang].gallery.open.name}
+                        ${tl(trans.expand)}
                     </button>
                     `) : ''}
                     <a class="dropdown-menu-clickable-item" href="${root}music/${sanitise(page.sister)}/${sanitise(page.name)}/+images" data-menu-item="gallery">
-                        ${trans_legacy[lang].gallery.view}
+                        ${tl(trans.photos)}
                     </a>
                     <div class="sep"></div>
                     <a class="dropdown-menu-clickable-item" href="${root}bleh?tab=customise" data-menu-item="settings">
@@ -204,10 +204,10 @@ export function bleh_albums() {
             let expand_link = document.createElement('a');
             expand_link.classList.add('btn');
             expand_link.setAttribute('onclick', `_expand_avatar('${avatar.getAttribute('content')}')`);
-            expand_link.textContent = trans_legacy[lang].gallery.open.name;
+            expand_link.textContent = tl(trans.expand);
 
             tippy(expand_link, {
-                content: trans_legacy[lang].gallery.open.name
+                content: tl(trans.expand)
             });
 
             expand_container.appendChild(expand_link);
@@ -254,9 +254,9 @@ function album_missing_a_tracklist() {
 
         tracklist = document.createElement('section');
         tracklist.innerHTML = (`
-            <h3 class="text-18">${trans_legacy[lang].music.fetch_plays.name}</h3>
+            <h3 class="text-18">${tl(trans.tracklist)}</h3>
             <div class="loading-data-container">
-                <p class="loading-data-text">${trans_legacy[lang].music.fetch_plays.loading}</p>
+                <p class="loading-data-text">${tl(trans.gathering_your_plays)}</p>
             </div>
         `);
         top_overview.after(tracklist);
@@ -272,10 +272,10 @@ function album_missing_a_tracklist() {
             let album_as_track_url = window.location.href.replace(album_url, `${url_split[(url_split.length - 2)]}/_/${url_split[(url_split.length - 1)]}`);
 
             tracklist.innerHTML = (`
-                <h3 class="text-18">${trans_legacy[lang].music.fetch_plays.name}</h3>
+                <h3 class="text-18">${tl(trans.tracklist)}</h3>
                 <div class="loading-data-container">
-                    <p class="loading-data-text failed">${trans_legacy[lang].music.fetch_plays.fail}</p>
-                    <a class="btn" href="${album_as_track_url}">${trans_legacy[lang].music.fetch_plays.open_as_track}</a>
+                    <p class="loading-data-text failed">${tl(trans.failed_to_find_tracks)}</p>
+                    <a class="btn" href="${album_as_track_url}">${tl(trans.open_album_as_track)}</a>
                 </div>
             `);
             return;
@@ -303,10 +303,10 @@ function album_missing_a_tracklist() {
                     let album_as_track_url = window.location.href.replace(album_url, `${url_split[(url_split.length - 2)]}/_/${url_split[(url_split.length - 1)]}`);
 
                     tracklist.innerHTML = (`
-                        <h3 class="text-18">${trans_legacy[lang].music.fetch_plays.name}</h3>
+                        <h3 class="text-18">${tl(trans.tracklist)}</h3>
                         <div class="loading-data-container">
-                            <p class="loading-data-text failed">${trans_legacy[lang].music.fetch_plays.fail}</p>
-                            <a class="btn" href="${album_as_track_url}">${trans_legacy[lang].music.fetch_plays.open_as_track}</a>
+                            <p class="loading-data-text failed">${tl(trans.failed_to_find_tracks)}</p>
+                            <a class="btn" href="${album_as_track_url}">${tl(trans.open_album_as_track)}</a>
                         </div>
                     `);
                     return;
@@ -315,8 +315,8 @@ function album_missing_a_tracklist() {
                 inner_tracklist.classList.remove('chartlist--with-image');
 
                 tracklist.innerHTML = (`
-                    <h3 class="text-18">${trans_legacy[lang].music.fetch_plays.name}</h3>
-                    <div class="alert alert-info">${trans_legacy[lang].music.fetch_plays.info}</div>
+                    <h3 class="text-18">${tl(trans.tracklist)}</h3>
+                    <div class="alert alert-info">${tl(trans.sourced_from_own_plays)}</div>
                     ${inner_tracklist.outerHTML}
                 `);
             })

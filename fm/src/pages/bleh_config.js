@@ -511,7 +511,7 @@ export function render_setting_page(page_id) {
                 <p>${trans_legacy[lang].settings.layout.avatar_action.bio}</p>
                 <div class="primary-selections artist-hover-image">
                     <div class="btn primary-selection" id="toggle-default_avatar_action-expand" data-toggle="default_avatar_action" data-toggle-value="expand" onclick="_update_item('default_avatar_action', 'expand')">
-                        <h5>${trans_legacy[lang].gallery.open.name}</h5>
+                        <h5>${tl(trans.expand)}</h5>
                     </div>
                     <div class="btn primary-selection" id="toggle-default_avatar_action-gallery" data-toggle="default_avatar_action" data-toggle-value="gallery" onclick="_update_item('default_avatar_action', 'gallery')">
                         <h5>${trans_legacy[lang].settings.layout.avatar_action.gallery}</h5>

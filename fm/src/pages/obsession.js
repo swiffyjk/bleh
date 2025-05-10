@@ -147,7 +147,7 @@ export function bleh_obsession() {
         theme: 'context-menu',
         content: (`
             <button class="dropdown-menu-clickable-item" onclick="${expand_link}" data-menu-item="expand">
-                ${trans_legacy[lang].gallery.open.name}
+                ${tl(trans.expand)}
             </button>
             <div class="sep"></div>
             <a class="dropdown-menu-clickable-item" href="${root}bleh?tab=customise" data-menu-item="settings">

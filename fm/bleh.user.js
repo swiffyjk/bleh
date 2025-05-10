@@ -2318,7 +2318,7 @@
         en: "Delete account"
       },
       body: {
-        en: "Deletion will take 14 days to complete, after this time your account will either be deleted, anonymised or put beyond use and cannot be recovered. Once deleted, the username will no longer be available."
+        en: "Deletion will take 14 days to complete, after this time your account will either be deleted, anonymised or put beyond use and cannot be recovered. Once deleted, your username will no longer be available."
       }
     },
     delete_account_permanently: {
@@ -2338,12 +2338,16 @@
       en: "Logged in as {user}"
     },
     ensure_you_trust: {
+      // API applications
+      // last.fm/settings/applications
       en: "Make sure you trust this application"
     },
     you_can_now_close_this_tab: {
       en: "You can now close this tab"
     },
     manage_applications: {
+      // API applications
+      // last.fm/settings/applications
       en: "Manage applications"
     },
     markdown_profiles: {
@@ -2353,6 +2357,16 @@
       body: {
         en: 'Allows the use of line breaks, bold text, italics, and images in all "About Me" panels'
       }
+    },
+    gathering_your_plays: {
+      en: "Gathering your album plays"
+    },
+    failed_to_find_tracks: {
+      en: "You do not have any plays"
+    },
+    sourced_from_own_plays: {
+      // tracklist from your own album plays
+      en: "Sourced from your own plays as an official tracklist is unavailable"
     }
   };
   var trans_legacy = {
@@ -7735,7 +7749,7 @@
     tippy(open_button, {
       content: trans_legacy[lang].gallery.open.tooltip
     });
-    open_button.textContent = trans_legacy[lang].gallery.open.name;
+    open_button.textContent = tl(trans.expand);
     open_button.setAttribute("onclick", `_expand_gallery_image()`);
     buttons_extra.appendChild(open_button);
     open_button.after(create_divider());
@@ -13359,7 +13373,7 @@
                 <p>${trans_legacy[lang].settings.layout.avatar_action.bio}</p>
                 <div class="primary-selections artist-hover-image">
                     <div class="btn primary-selection" id="toggle-default_avatar_action-expand" data-toggle="default_avatar_action" data-toggle-value="expand" onclick="_update_item('default_avatar_action', 'expand')">
-                        <h5>${trans_legacy[lang].gallery.open.name}</h5>
+                        <h5>${tl(trans.expand)}</h5>
                     </div>
                     <div class="btn primary-selection" id="toggle-default_avatar_action-gallery" data-toggle="default_avatar_action" data-toggle-value="gallery" onclick="_update_item('default_avatar_action', 'gallery')">
                         <h5>${trans_legacy[lang].settings.layout.avatar_action.gallery}</h5>
@@ -17390,11 +17404,11 @@
           content: `
                     ${avatar != null ? `
                     <button class="dropdown-menu-clickable-item" onclick="${expand_link}" data-menu-item="expand">
-                        ${trans_legacy[lang].gallery.open.name}
+                        ${tl(trans.expand)}
                     </button>
                     ` : ""}
                     <a class="dropdown-menu-clickable-item" href="${root}music/${sanitise(page.sister)}/${sanitise(page.name)}/+images" data-menu-item="gallery">
-                        ${trans_legacy[lang].gallery.view}
+                        ${tl(trans.photos)}
                     </a>
                     <div class="sep"></div>
                     <a class="dropdown-menu-clickable-item" href="${root}bleh?tab=customise" data-menu-item="settings">
@@ -17460,9 +17474,9 @@
         let expand_link = document.createElement("a");
         expand_link.classList.add("btn");
         expand_link.setAttribute("onclick", `_expand_avatar('${avatar.getAttribute("content")}')`);
-        expand_link.textContent = trans_legacy[lang].gallery.open.name;
+        expand_link.textContent = tl(trans.expand);
         tippy(expand_link, {
-          content: trans_legacy[lang].gallery.open.name
+          content: tl(trans.expand)
         });
         expand_container.appendChild(expand_link);
         upload_container.after(expand_container);
@@ -17499,9 +17513,9 @@
       }
       tracklist = document.createElement("section");
       tracklist.innerHTML = `
-            <h3 class="text-18">${trans_legacy[lang].music.fetch_plays.name}</h3>
+            <h3 class="text-18">${tl(trans.tracklist)}</h3>
             <div class="loading-data-container">
-                <p class="loading-data-text">${trans_legacy[lang].music.fetch_plays.loading}</p>
+                <p class="loading-data-text">${tl(trans.gathering_your_plays)}</p>
             </div>
         `;
       top_overview.after(tracklist);
@@ -17511,10 +17525,10 @@
         let album_url = `${url_split[url_split.length - 2]}/${url_split[url_split.length - 1]}`;
         let album_as_track_url = window.location.href.replace(album_url, `${url_split[url_split.length - 2]}/_/${url_split[url_split.length - 1]}`);
         tracklist.innerHTML = `
-                <h3 class="text-18">${trans_legacy[lang].music.fetch_plays.name}</h3>
+                <h3 class="text-18">${tl(trans.tracklist)}</h3>
                 <div class="loading-data-container">
-                    <p class="loading-data-text failed">${trans_legacy[lang].music.fetch_plays.fail}</p>
-                    <a class="btn" href="${album_as_track_url}">${trans_legacy[lang].music.fetch_plays.open_as_track}</a>
+                    <p class="loading-data-text failed">${tl(trans.failed_to_find_tracks)}</p>
+                    <a class="btn" href="${album_as_track_url}">${tl(trans.open_album_as_track)}</a>
                 </div>
             `;
         return;
@@ -17532,18 +17546,18 @@
           let album_url = `${url_split[url_split.length - 2]}/${url_split[url_split.length - 1]}`;
           let album_as_track_url = window.location.href.replace(album_url, `${url_split[url_split.length - 2]}/_/${url_split[url_split.length - 1]}`);
           tracklist.innerHTML = `
-                        <h3 class="text-18">${trans_legacy[lang].music.fetch_plays.name}</h3>
+                        <h3 class="text-18">${tl(trans.tracklist)}</h3>
                         <div class="loading-data-container">
-                            <p class="loading-data-text failed">${trans_legacy[lang].music.fetch_plays.fail}</p>
-                            <a class="btn" href="${album_as_track_url}">${trans_legacy[lang].music.fetch_plays.open_as_track}</a>
+                            <p class="loading-data-text failed">${tl(trans.failed_to_find_tracks)}</p>
+                            <a class="btn" href="${album_as_track_url}">${tl(trans.open_album_as_track)}</a>
                         </div>
                     `;
           return;
         }
         inner_tracklist.classList.remove("chartlist--with-image");
         tracklist.innerHTML = `
-                    <h3 class="text-18">${trans_legacy[lang].music.fetch_plays.name}</h3>
-                    <div class="alert alert-info">${trans_legacy[lang].music.fetch_plays.info}</div>
+                    <h3 class="text-18">${tl(trans.tracklist)}</h3>
+                    <div class="alert alert-info">${tl(trans.sourced_from_own_plays)}</div>
                     ${inner_tracklist.outerHTML}
                 `;
       });
@@ -17652,11 +17666,11 @@
           content: `
                     ${avatar != null ? `
                     <button class="dropdown-menu-clickable-item" onclick="${expand_link}" data-menu-item="expand">
-                        ${trans_legacy[lang].gallery.open.name}
+                        ${tl(trans.expand)}
                     </button>
                     ` : ""}
                     <a class="dropdown-menu-clickable-item" href="${root}music/${sanitise(page.name)}/+images" data-menu-item="gallery">
-                        ${trans_legacy[lang].gallery.view}
+                        ${tl(trans.photos)}
                     </a>
                     <div class="sep"></div>
                     <a class="dropdown-menu-clickable-item" href="${root}bleh?tab=customise" data-menu-item="settings">
@@ -19216,7 +19230,7 @@
         content: `
                 ${album_avatar != null || artist_avatar != null ? `
                 <button class="dropdown-menu-clickable-item" onclick="${expand_link}" data-menu-item="expand">
-                    ${trans_legacy[lang].gallery.open.name}
+                    ${tl(trans.expand)}
                 </button>
                 ` : ""}
                 ${album_avatar != null ? `

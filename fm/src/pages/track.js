@@ -127,7 +127,7 @@ export function bleh_tracks() {
             content: (`
                 ${(album_avatar != null || artist_avatar != null) ? (`
                 <button class="dropdown-menu-clickable-item" onclick="${expand_link}" data-menu-item="expand">
-                    ${trans_legacy[lang].gallery.open.name}
+                    ${tl(trans.expand)}
                 </button>
                 `) : ''}
                 ${(album_avatar != null) ? (`

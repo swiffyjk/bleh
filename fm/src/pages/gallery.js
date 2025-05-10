@@ -141,7 +141,7 @@ export function bleh_gallery() {
     tippy(open_button, {
         content: trans_legacy[lang].gallery.open.tooltip
     });
-    open_button.textContent = trans_legacy[lang].gallery.open.name;
+    open_button.textContent = tl(trans.expand);
 
     open_button.setAttribute('onclick', `_expand_gallery_image()`);
 

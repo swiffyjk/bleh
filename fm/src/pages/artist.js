@@ -143,11 +143,11 @@ export function bleh_artists() {
                 content: (`
                     ${(avatar != null) ? (`
                     <button class="dropdown-menu-clickable-item" onclick="${expand_link}" data-menu-item="expand">
-                        ${trans_legacy[lang].gallery.open.name}
+                        ${tl(trans.expand)}
                     </button>
                     `) : ''}
                     <a class="dropdown-menu-clickable-item" href="${root}music/${sanitise(page.name)}/+images" data-menu-item="gallery">
-                        ${trans_legacy[lang].gallery.view}
+                        ${tl(trans.photos)}
                     </a>
                     <div class="sep"></div>
                     <a class="dropdown-menu-clickable-item" href="${root}bleh?tab=customise" data-menu-item="settings">

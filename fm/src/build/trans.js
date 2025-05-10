@@ -1462,7 +1462,7 @@ export const trans = {
             en: 'Delete account'
         },
         body: {
-            en: 'Deletion will take 14 days to complete, after this time your account will either be deleted, anonymised or put beyond use and cannot be recovered. Once deleted, the username will no longer be available.'
+            en: 'Deletion will take 14 days to complete, after this time your account will either be deleted, anonymised or put beyond use and cannot be recovered. Once deleted, your username will no longer be available.'
         }
     },
     delete_account_permanently: {
@@ -1482,12 +1482,16 @@ export const trans = {
         en: 'Logged in as {user}'
     },
     ensure_you_trust: {
+        // API applications
+        // last.fm/settings/applications
         en: 'Make sure you trust this application'
     },
     you_can_now_close_this_tab: {
         en: 'You can now close this tab'
     },
     manage_applications: {
+        // API applications
+        // last.fm/settings/applications
         en: 'Manage applications'
     },
     markdown_profiles: {
@@ -1497,6 +1501,16 @@ export const trans = {
         body: {
             en: 'Allows the use of line breaks, bold text, italics, and images in all "About Me" panels'
         }
+    },
+    gathering_your_plays: {
+        en: 'Gathering your album plays'
+    },
+    failed_to_find_tracks: {
+        en: 'You do not have any plays'
+    },
+    sourced_from_own_plays: {
+        // tracklist from your own album plays
+        en: 'Sourced from your own plays as an official tracklist is unavailable'
     }
 }
 
