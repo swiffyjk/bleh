@@ -888,13 +888,16 @@
   var trans = {
     page_templates: {
       type: {
-        en: "{page} on {brand} {build}.{sku}"
+        en: "{page} on {brand} {build}.{sku}",
+        de: "{page} auf {brand} {build}.{sku}"
       },
       name_type: {
-        en: "{name} - {page} on {brand} {build}.{sku}"
+        en: "{name} - {page} on {brand} {build}.{sku}",
+        de: "{name} - {page} auf {brand} {build}.{sku}"
       },
       name_sister_type: {
-        en: "{name} by {sister} - {page} on {brand} {build}.{sku}"
+        en: "{name} by {sister} - {page} on {brand} {build}.{sku}",
+        de: "{name} von {sister} - {page} auf {brand} {build}.{sku}"
       }
     },
     badges: {
@@ -1112,14 +1115,16 @@
       en: "Multiple artists are grouped into this profile"
     },
     album: {
-      en: "Album"
+      en: "Album",
+      de: "Album"
     },
     albums: {
       en: "Albums",
       de: "Alben"
     },
     track: {
-      en: "Track"
+      en: "Track",
+      de: "Titel"
     },
     tracks: {
       en: "Tracks",
@@ -1139,7 +1144,8 @@
         de: "Hell"
       },
       ink: {
-        en: "Ink"
+        en: "Ink",
+        de: "Tinte"
       },
       dark: {
         en: "Ash",
@@ -1559,13 +1565,16 @@
       de: "K\xFCrzlich gespielte Titel"
     },
     top_artists: {
-      en: "Top Artists"
+      en: "Top Artists",
+      de: "Top K\xFCnstler"
     },
     top_albums: {
-      en: "Top Albums"
+      en: "Top Albums",
+      de: "Top Alben"
     },
     top_tracks: {
-      en: "Top Tracks"
+      en: "Top Tracks",
+      de: "Top Titel"
     },
     you_share_count_with: {
       // as in your musical taste between you and someone else
@@ -1610,7 +1619,8 @@
       en: "Receive an accompanying badge on your profile and a big thank you from katelyn for supporting <3"
     },
     you_are_a_sponsor: {
-      en: "You are a sponsor, thank you!"
+      en: "You are a sponsor, thank you! :3",
+      de: "Du bist ein Sponsor, dankesch\xF6n! :3"
     },
     sponsor_get_badge: {
       en: "A monthly sponsorship grants you a custom badge of your choosing."
@@ -1635,7 +1645,7 @@
     sponsor_info: {
       en: "This is a special bleh-managed profile to handle sponsors",
       // TODO(stel): change account (Konto) to profile
-      de: "Dies ist ein bleh verwaltetes Konto zur Verwaltung von Sponsoren"
+      de: "Dies ist ein bleh verwaltetes Profil zur Verwaltung von Sponsoren"
     },
     loading: {
       en: "Loading",
@@ -1703,7 +1713,8 @@
       de: "H\xF6rverlauf"
     },
     you: {
-      en: "You"
+      en: "You",
+      de: "Du"
     },
     open: {
       en: "Open",
@@ -2023,10 +2034,12 @@
       en: "Chart style"
     },
     country: {
-      en: "Country"
+      en: "Country",
+      de: "Land"
     },
     subtitle: {
-      en: "Subtitle"
+      en: "Subtitle",
+      de: "Untertitel"
     },
     pronoun_tip: {
       en: "Pronouns are specially supported if placed first"
@@ -2041,10 +2054,12 @@
       en: "You have blocked {c} profiles"
     },
     enter_username: {
-      en: "Enter username"
+      en: "Enter username",
+      de: "Benutzername eingeben"
     },
     block: {
-      en: "Block"
+      en: "Block",
+      de: "Blockieren"
     },
     blocked_user_public: {
       en: "Can leave shouts but not viewable to you"
@@ -2108,10 +2123,12 @@
       en: "Help contribute"
     },
     delete: {
-      en: "Delete"
+      en: "Delete",
+      de: "L\xF6schen"
     },
     search: {
-      en: "Search"
+      en: "Search",
+      de: "Suchen"
     },
     search_guest: {
       en: "Search guest appearances"
@@ -2140,7 +2157,8 @@
       en: "Profile avatar shape"
     },
     notes: {
-      en: "Notes"
+      en: "Notes",
+      de: "Notizen"
     },
     no_notes: {
       en: "No profiles here... (\uFF61\u2022\u0301\uFE3F\u2022\u0300\uFF61)"
@@ -2272,7 +2290,8 @@
     },
     username: {
       name: {
-        en: "Username"
+        en: "Username",
+        de: "Benuztername"
       },
       body: {
         en: "To change your username hit the button to send an email. Having problems? {a}contact support{/a}."
@@ -2282,13 +2301,16 @@
       en: "Email"
     },
     password: {
-      en: "Password"
+      en: "Password",
+      de: "Passwort"
     },
     new_password: {
-      en: "New password"
+      en: "New password",
+      de: "Neues Passwort"
     },
     confirm_password: {
-      en: "Confirm password"
+      en: "Confirm password",
+      de: "Passwort best\xE4tigen"
     },
     change: {
       en: "Change"
@@ -2305,7 +2327,8 @@
       en: "Email language"
     },
     communication: {
-      en: "Communication"
+      en: "Communication",
+      de: "Kommunikation"
     },
     security: {
       en: "Security"
@@ -2315,7 +2338,8 @@
     },
     delete_account: {
       name: {
-        en: "Delete account"
+        en: "Delete account",
+        de: "Account l\xF6schen"
       },
       body: {
         en: "Deletion will take 14 days to complete, after this time your account will either be deleted, anonymised or put beyond use and cannot be recovered. Once deleted, your username will no longer be available."

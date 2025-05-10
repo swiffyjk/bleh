@@ -32,13 +32,16 @@ export let lang_info = {
 export const trans = {
     page_templates: {
         type: {
-            en: '{page} on {brand} {build}.{sku}'
+            en: '{page} on {brand} {build}.{sku}',
+            de: '{page} auf {brand} {build}.{sku}'
         },
         name_type: {
-            en: '{name} - {page} on {brand} {build}.{sku}'
+            en: '{name} - {page} on {brand} {build}.{sku}',
+            de: '{name} - {page} auf {brand} {build}.{sku}'
         },
         name_sister_type: {
-            en: '{name} by {sister} - {page} on {brand} {build}.{sku}'
+            en: '{name} by {sister} - {page} on {brand} {build}.{sku}',
+            de: '{name} von {sister} - {page} auf {brand} {build}.{sku}'
         }
     },
     badges: {
@@ -256,14 +259,16 @@ export const trans = {
         en: 'Multiple artists are grouped into this profile'
     },
     album: {
-        en: 'Album'
+        en: 'Album',
+        de: 'Album'
     },
     albums: {
         en: 'Albums',
         de: 'Alben'
     },
     track: {
-        en: 'Track'
+        en: 'Track',
+        de: 'Titel'
     },
     tracks: {
         en: 'Tracks',
@@ -283,7 +288,8 @@ export const trans = {
             de: 'Hell'
         },
         ink: {
-            en: 'Ink'
+            en: 'Ink',
+            de: 'Tinte'
         },
         dark: {
             en: 'Ash',
@@ -703,13 +709,16 @@ export const trans = {
         de: 'Kürzlich gespielte Titel'
     },
     top_artists: {
-        en: 'Top Artists'
+        en: 'Top Artists',
+        de: 'Top Künstler'
     },
     top_albums: {
-        en: 'Top Albums'
+        en: 'Top Albums',
+        de: 'Top Alben'
     },
     top_tracks: {
-        en: 'Top Tracks'
+        en: 'Top Tracks',
+        de: 'Top Titel'
     },
     you_share_count_with: {
         // as in your musical taste between you and someone else
@@ -754,7 +763,8 @@ export const trans = {
         en: 'Receive an accompanying badge on your profile and a big thank you from katelyn for supporting <3'
     },
     you_are_a_sponsor: {
-        en: 'You are a sponsor, thank you!'
+        en: 'You are a sponsor, thank you! :3',
+        de: 'Du bist ein Sponsor, dankeschön! :3'
     },
     sponsor_get_badge: {
         en: 'A monthly sponsorship grants you a custom badge of your choosing.'
@@ -779,7 +789,7 @@ export const trans = {
     sponsor_info: {
         en: 'This is a special bleh-managed profile to handle sponsors',
         // TODO(stel): change account (Konto) to profile
-        de: 'Dies ist ein bleh verwaltetes Konto zur Verwaltung von Sponsoren'
+        de: 'Dies ist ein bleh verwaltetes Profil zur Verwaltung von Sponsoren'
     },
     loading: {
         en: 'Loading',
@@ -847,7 +857,8 @@ export const trans = {
         de: 'Hörverlauf'
     },
     you: {
-        en: 'You'
+        en: 'You',
+        de: 'Du'
     },
     open: {
         en: 'Open',
@@ -1167,10 +1178,12 @@ export const trans = {
         en: 'Chart style'
     },
     country: {
-        en: 'Country'
+        en: 'Country',
+        de: 'Land'
     },
     subtitle: {
-        en: 'Subtitle'
+        en: 'Subtitle',
+        de: 'Untertitel'
     },
     pronoun_tip: {
         en: 'Pronouns are specially supported if placed first'
@@ -1185,10 +1198,12 @@ export const trans = {
         en: 'You have blocked {c} profiles'
     },
     enter_username: {
-        en: 'Enter username'
+        en: 'Enter username',
+        de: 'Benutzername eingeben'
     },
     block: {
-        en: 'Block'
+        en: 'Block',
+        de: 'Blockieren'
     },
     blocked_user_public: {
         en: 'Can leave shouts but not viewable to you'
@@ -1252,10 +1267,12 @@ export const trans = {
         en: 'Help contribute'
     },
     delete: {
-        en: 'Delete'
+        en: 'Delete',
+        de: 'Löschen'
     },
     search: {
-        en: 'Search'
+        en: 'Search',
+        de: 'Suchen'
     },
     search_guest: {
         en: 'Search guest appearances'
@@ -1284,7 +1301,8 @@ export const trans = {
         en: 'Profile avatar shape'
     },
     notes: {
-        en: 'Notes'
+        en: 'Notes',
+        de: 'Notizen'
     },
     no_notes: {
         en: 'No profiles here... (｡•́︿•̀｡)'
@@ -1416,7 +1434,8 @@ export const trans = {
     },
     username: {
         name: {
-            en: 'Username'
+            en: 'Username',
+            de: 'Benuztername'
         },
         body: {
             en: 'To change your username hit the button to send an email. Having problems? {a}contact support{/a}.'
@@ -1426,13 +1445,16 @@ export const trans = {
         en: 'Email'
     },
     password: {
-        en: 'Password'
+        en: 'Password',
+        de: 'Passwort'
     },
     new_password: {
-        en: 'New password'
+        en: 'New password',
+        de: 'Neues Passwort'
     },
     confirm_password: {
-        en: 'Confirm password'
+        en: 'Confirm password',
+        de: 'Passwort bestätigen'
     },
     change: {
         en: 'Change'
@@ -1449,7 +1471,8 @@ export const trans = {
         en: 'Email language'
     },
     communication: {
-        en: 'Communication'
+        en: 'Communication',
+        de: 'Kommunikation'
     },
     security: {
         en: 'Security'
@@ -1459,7 +1482,8 @@ export const trans = {
     },
     delete_account: {
         name: {
-            en: 'Delete account'
+            en: 'Delete account',
+            de: 'Account löschen'
         },
         body: {
             en: 'Deletion will take 14 days to complete, after this time your account will either be deleted, anonymised or put beyond use and cannot be recovered. Once deleted, your username will no longer be available.'
