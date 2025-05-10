@@ -80,9 +80,9 @@ function bleh_setup_start() {
             <p>${tl(trans.welcome_to_bleh)}</p>
         `);
         page.structure.setup_footer.innerHTML = (`
-            <button class="see-more cancel" onclick="_setup_skip()">
+            <a class="see-more cancel" href="${root}user/${auth.name}">
                 ${tl(trans.skip)}
-            </button>
+            </a>
             <div class="fill"></div>
             <button class="btn primary continue" onclick="_setup_accessibility()">
                 ${tl(trans.next)}
@@ -361,13 +361,6 @@ unsafeWindow._setup_end = function() {
             </a>
         `);
     }, page.state.trans);
-}
-
-unsafeWindow._setup_skip = function() {
-    dialog_rm({
-        all: true
-    });
-    document.location.href = `${root}user/${auth.name}`;
 }
 
 
