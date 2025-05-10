@@ -309,7 +309,8 @@
       unit: "",
       value: true,
       values: [true, false],
-      type: "toggle"
+      type: "toggle",
+      require_reload: "partial"
     },
     hue_from_album: {
       css: "hue_from_album",
@@ -2358,6 +2359,14 @@
     },
     manage_applications: {
       en: "Manage applications"
+    },
+    markdown_profiles: {
+      name: {
+        en: "Use fancy formatting on profiles"
+      },
+      body: {
+        en: 'Allows the use of line breaks, bold text, italics, and images in all "About Me" panels'
+      }
     }
   };
   var trans_legacy = {
@@ -11480,11 +11489,11 @@
         theme: "window",
         content: `
                 <div class="dialog-settings">
-                    <h4>${trans_legacy[lang].settings.text.markdown.name}</h4>
                     <div class="toggle-container" id="container-bio_markdown" onclick="_update_item('bio_markdown')">
                         <button class="btn reset" onclick="_reset_item('bio_markdown')">${tl(trans.reset)}</button>
                         <div class="heading">
-                            <h5>${trans_legacy[lang].settings.text.markdown.profile}</h5>
+                            <h5>${tl(trans.markdown_profiles.name)}</h5>
+                            <p>${tl(trans.markdown_profiles.body)}</p>
                         </div>
                         <div class="toggle-wrap">
                             <button class="toggle" id="toggle-bio_markdown" aria-checked="false">
@@ -12470,7 +12479,7 @@
       let new_value = false;
       if (value != settings[item])
         new_value = true;
-      if (settings_base[item].require_reload && new_value)
+      if ((settings_base[item].require_reload == true || settings_base[item].require_reload == "partial" && page.type != "bleh_settings") && new_value)
         request_reload();
       if (settings_base[item].type == "slider" && modify)
         settings[item] = value;
@@ -13690,6 +13699,18 @@
                         <p id="value-avatar_radius">0</p>
                     </div>
                 </div>
+                <div class="toggle-container" id="container-bio_markdown" onclick="_update_item('bio_markdown')">
+                    <button class="btn reset" onclick="_reset_item('bio_markdown')">${tl(trans.reset)}</button>
+                    <div class="heading">
+                        <h5>${tl(trans.markdown_profiles.name)}</h5>
+                        <p>${tl(trans.markdown_profiles.body)}</p>
+                    </div>
+                    <div class="toggle-wrap">
+                        <button class="toggle" id="toggle-bio_markdown" aria-checked="false">
+                            <div class="dot"></div>
+                        </button>
+                    </div>
+                </div>
             </div>
             <div class="bleh--panel">
                 <h4>${tl(trans.notes)}</h4>
@@ -13938,17 +13959,6 @@
                     </div>
                     <div class="toggle-wrap">
                         <button class="toggle" id="toggle-shout_markdown" aria-checked="false">
-                            <div class="dot"></div>
-                        </button>
-                    </div>
-                </div>
-                <div class="toggle-container" id="container-bio_markdown" onclick="_update_item('bio_markdown')">
-                    <button class="btn reset" onclick="_reset_item('bio_markdown')">${tl(trans.reset)}</button>
-                    <div class="heading">
-                        <h5>${trans_legacy[lang].settings.text.markdown.profile}</h5>
-                    </div>
-                    <div class="toggle-wrap">
-                        <button class="toggle" id="toggle-bio_markdown" aria-checked="false">
                             <div class="dot"></div>
                         </button>
                     </div>

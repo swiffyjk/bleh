@@ -810,11 +810,11 @@ export function bleh_profiles() {
             theme: 'window',
             content: (`
                 <div class="dialog-settings">
-                    <h4>${trans_legacy[lang].settings.text.markdown.name}</h4>
                     <div class="toggle-container" id="container-bio_markdown" onclick="_update_item('bio_markdown')">
                         <button class="btn reset" onclick="_reset_item('bio_markdown')">${tl(trans.reset)}</button>
                         <div class="heading">
-                            <h5>${trans_legacy[lang].settings.text.markdown.profile}</h5>
+                            <h5>${tl(trans.markdown_profiles.name)}</h5>
+                            <p>${tl(trans.markdown_profiles.body)}</p>
                         </div>
                         <div class="toggle-wrap">
                             <button class="toggle" id="toggle-bio_markdown" aria-checked="false">

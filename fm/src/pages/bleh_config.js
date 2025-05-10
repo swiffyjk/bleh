@@ -856,6 +856,18 @@ export function render_setting_page(page_id) {
                         <p id="value-avatar_radius">0</p>
                     </div>
                 </div>
+                <div class="toggle-container" id="container-bio_markdown" onclick="_update_item('bio_markdown')">
+                    <button class="btn reset" onclick="_reset_item('bio_markdown')">${tl(trans.reset)}</button>
+                    <div class="heading">
+                        <h5>${tl(trans.markdown_profiles.name)}</h5>
+                        <p>${tl(trans.markdown_profiles.body)}</p>
+                    </div>
+                    <div class="toggle-wrap">
+                        <button class="toggle" id="toggle-bio_markdown" aria-checked="false">
+                            <div class="dot"></div>
+                        </button>
+                    </div>
+                </div>
             </div>
             <div class="bleh--panel">
                 <h4>${tl(trans.notes)}</h4>
@@ -1106,17 +1118,6 @@ export function render_setting_page(page_id) {
                     </div>
                     <div class="toggle-wrap">
                         <button class="toggle" id="toggle-shout_markdown" aria-checked="false">
-                            <div class="dot"></div>
-                        </button>
-                    </div>
-                </div>
-                <div class="toggle-container" id="container-bio_markdown" onclick="_update_item('bio_markdown')">
-                    <button class="btn reset" onclick="_reset_item('bio_markdown')">${tl(trans.reset)}</button>
-                    <div class="heading">
-                        <h5>${trans_legacy[lang].settings.text.markdown.profile}</h5>
-                    </div>
-                    <div class="toggle-wrap">
-                        <button class="toggle" id="toggle-bio_markdown" aria-checked="false">
                             <div class="dot"></div>
                         </button>
                     </div>

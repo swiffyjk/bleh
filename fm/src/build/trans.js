@@ -1489,6 +1489,14 @@ export const trans = {
     },
     manage_applications: {
         en: 'Manage applications'
+    },
+    markdown_profiles: {
+        name: {
+            en: 'Use fancy formatting on profiles'
+        },
+        body: {
+            en: 'Allows the use of line breaks, bold text, italics, and images in all "About Me" panels'
+        }
     }
 }
 
