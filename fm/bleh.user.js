@@ -2336,6 +2336,28 @@
     },
     delete_account_permanently: {
       en: "Delete {u} permanently"
+    },
+    connect_app: {
+      en: "Connect {name}"
+    },
+    connect: {
+      en: "Connect"
+    },
+    app_would_like_to_connect: {
+      // app name is above
+      en: "would like to use your account"
+    },
+    logged_in_as: {
+      en: "Logged in as {user}"
+    },
+    ensure_you_trust: {
+      en: "Make sure you trust this application"
+    },
+    you_can_now_close_this_tab: {
+      en: "You can now close this tab"
+    },
+    manage_applications: {
+      en: "Manage applications"
     }
   };
   var trans_legacy = {
@@ -19809,6 +19831,79 @@
     }
   }
 
+  // src/pages/api.js
+  function bleh_api() {
+    page.structure.container = document.body.querySelector(".page-content");
+    try {
+      page.structure.row = page.structure.container.querySelector(".row");
+      page.structure.main = page.structure.row.querySelector(".col-main");
+      page.structure.side = page.structure.row.querySelector(".col-sidebar");
+    } catch (e) {
+      log("unable to find elements", "page structure");
+    }
+    let content_top = document.body.querySelector(".content-top");
+    checkup_page_structure(false, content_top);
+    log("status is", "page", "info", page);
+    update_page();
+    register_background(auth.avatar.replace("/avatar42s/", "/ar0/"));
+    let success = page.structure.container.querySelector(".alert-success");
+    if (!success) {
+      let old = page.structure.main.querySelector("section");
+      if (!old) return;
+      page.name = old.querySelector(".api-app-name").textContent;
+      let description = old.querySelector(".api-app-description").textContent.trim();
+      let token = old.querySelector('form [name="csrfmiddlewaretoken"]').value;
+      let cancel = old.querySelector(".form-submit a").getAttribute("href");
+      page.structure.main.innerHTML = `
+            <section class="api-connector">
+                <div class="avatar">
+                    <img src="${auth.avatar.replace("/avatar42s/", "/avatar170s/")}" alt="${tl(trans.your_avatar)}">
+                </div>
+                <div class="info">
+                    <h1>${page.name}</h1>
+                    <div class="sub-text no-margin">${tl(trans.app_would_like_to_connect)}</div>
+                    <div class="subtle">${tl(trans.logged_in_as).replace("{user}", `<a class="mention" href="${root}user/${auth.name}">@${auth.name}</a>`)}</div>
+                </div>
+                <div class="sep"></div>
+                <div class="description">${description}</div>
+                <div class="small-label with-icon lock">${tl(trans.ensure_you_trust)}</div>
+                <div class="connector-footer">
+                    <a class="see-more cancel" href="${cancel}">
+                        ${tl(trans.cancel)}
+                    </a>
+                    <form method="post" data-no-partial-refresh="">
+                        <input type="hidden" name="csrfmiddlewaretoken" value="${token}">
+                        <input type="hidden" name="confirmation" value="confirm">
+                        <button class="btn primary connect" type="submit" name="confirm">
+                            ${tl(trans.connect)}
+                        </button>
+                    </form>
+                </div>
+            </section>
+        `;
+    } else {
+      page.name = success.querySelector("strong").textContent;
+      page.structure.main.innerHTML = `
+            <section class="api-connector">
+                <div class="avatar">
+                    <img src="${auth.avatar.replace("/avatar42s/", "/avatar170s/")}" alt="${tl(trans.your_avatar)}">
+                </div>
+                <div class="info">
+                    <h1>${page.name}</h1>
+                    <div class="sub-text no-margin">${tl(trans.has_been_connected)}</div>
+                </div>
+                <div class="sep"></div>
+                <div class="description">${tl(trans.you_can_now_close_this_tab)}</div>
+                <div class="connector-footer">
+                    <a class="see-more" href="${root}settings/applications">
+                        ${tl(trans.manage_applications)}
+                    </a>
+                </div>
+            </section>
+        `;
+    }
+  }
+
   // src/page.js
   function bleh() {
     let head_observer = new MutationObserver((mutations) => {
@@ -20044,6 +20139,8 @@
         bleh_home_legacy();
       else if (page.type == "overview" || page.type == "recommended" || page.type == "releases" || page.type == "bookmarks" || page.type == "charts" || page.type == "settings")
         bleh_home();
+      else if (page.type == "api")
+        bleh_api();
       if ((page.type == "artist" || page.type == "album" || page.type == "track" || page.type == "tag") && page.subpage == "overview")
         patch_wiki();
       if ((page.type == "user" || page.type == "tag" || page.type == "events") && (page.subpage == "overview" || page.subpage == "event_overview"))
@@ -20112,6 +20209,8 @@
         title = tl(trans.lineup);
       else if (page.subpage == "playlists_playlists")
         title = tl(trans.playlists);
+      else if (page.subpage == "auth")
+        title = tl(trans.connect_app);
       if (page.subpage == "overview" || page.subpage == "event_overview") {
         if (page.type == "user")
           title = tl(trans.profile);
@@ -20126,7 +20225,7 @@
         else if (page.type == "tag")
           title = tl(trans.tag);
       }
-      template = template.replace("{name}", name).replace("{sister}", sister).replace("{page}", title).replace("{brand}", version.brand).replace("{build}", version.build).replace("{sku}", version.sku);
+      template = template.replace("{page}", title).replace("{name}", name).replace("{sister}", sister).replace("{brand}", version.brand).replace("{build}", version.build).replace("{sku}", version.sku);
       document.title = template;
     }
     page_title();

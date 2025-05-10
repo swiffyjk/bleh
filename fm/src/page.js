@@ -36,6 +36,7 @@ import { ff } from "./sku";
 import { bleh_sponsor_page, sponsors } from "./sponsor";
 import { append_style, prompt_for_update } from "./style";
 import { bleh_radio } from "./components/radio";
+import { bleh_api } from './pages/api';
 
 export function bleh() {
     let head_observer = new MutationObserver((mutations) => {
@@ -369,6 +370,8 @@ function load_page() {
             bleh_home_legacy();
         else if (page.type == 'overview' || page.type == 'recommended' || page.type == 'releases' || page.type == 'bookmarks' || page.type == 'charts' || page.type == 'settings')
             bleh_home();
+        else if (page.type == 'api')
+            bleh_api();
 
         if (
             (page.type == 'artist' || page.type == 'album' || page.type == 'track' || page.type == 'tag') &&
@@ -449,6 +452,8 @@ function load_page() {
             title = tl(trans.lineup);
         else if (page.subpage == 'playlists_playlists')
             title = tl(trans.playlists);
+        else if (page.subpage == 'auth')
+            title = tl(trans.connect_app);
 
         if (page.subpage == 'overview' || page.subpage == 'event_overview') {
             if (page.type == 'user')
@@ -466,9 +471,9 @@ function load_page() {
         }
 
         template = template
+        .replace('{page}', title)
         .replace('{name}', name)
         .replace('{sister}', sister)
-        .replace('{page}', title)
         .replace('{brand}', version.brand)
         .replace('{build}', version.build)
         .replace('{sku}', version.sku);

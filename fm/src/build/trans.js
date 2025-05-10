@@ -1467,6 +1467,28 @@ export const trans = {
     },
     delete_account_permanently: {
         en: 'Delete {u} permanently'
+    },
+    connect_app: {
+        en: 'Connect {name}'
+    },
+    connect: {
+        en: 'Connect'
+    },
+    app_would_like_to_connect: {
+        // app name is above
+        en: 'would like to use your account'
+    },
+    logged_in_as: {
+        en: 'Logged in as {user}'
+    },
+    ensure_you_trust: {
+        en: 'Make sure you trust this application'
+    },
+    you_can_now_close_this_tab: {
+        en: 'You can now close this tab'
+    },
+    manage_applications: {
+        en: 'Manage applications'
     }
 }
 

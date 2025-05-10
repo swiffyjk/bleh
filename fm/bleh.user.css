@@ -6738,6 +6738,7 @@ button,
 
 
 /*     ICON MASK     */
+.with-icon:before,
 .markdown-enabled:before,
 .lotus-preview .before:before,
 .masthead-popup-text .btn-primary:before,
@@ -12744,7 +12745,8 @@ hr {
     [data-page-type="inbox"],
     [data-page-type="overview"],
     [data-page-subpage="obsessions_obsession"],
-    [data-page-subpage="playlists_playlists"]
+    [data-page-subpage="playlists_playlists"],
+    [data-page-subpage="auth"]
     ),
 .namespace--music_bookmarks_overview {
     .col-main {
@@ -17905,6 +17907,10 @@ h4 {
     cursor: default;
     margin-bottom: 2px;
 
+    &.no-margin {
+        margin: unset;
+    }
+
     display: flex;
     justify-content: space-between;
     width: 100%;
@@ -21719,6 +21725,7 @@ h4 {
     transition-duration: var(--trans);
     transition-timing-function: var(--trans-function);
 
+    &.cancel,
     &.sponsor,
     &.update-check,
     &.obsession-delete-button,
@@ -21740,6 +21747,9 @@ h4 {
     }
     &.sponsor {
         --mask: var(--icon-16-heart);
+    }
+    &.cancel {
+        --mask: var(--icon-16-arrow-left);
     }
 
     &:hover {
@@ -21771,6 +21781,23 @@ h4 {
             --mask: var(--icon-16-location);
         }
     }
+}
+
+.small-label {
+    color: hsl(var(--c3));
+    font-weight: var(--font-weight-medium);
+    cursor: default;
+    --left: 0;
+    --mask-size: 12px;
+    --margin-top: -6px;
+
+    &.with-icon {
+        position: relative;
+        padding-left: calc(12px + 4px);
+    }
+}
+.lock {
+    --mask: var(--icon-16-lock);
 }
 
 
@@ -21960,5 +21987,65 @@ h4 {
 
 .submit {
     --mask: var(--icon-16-arrow-f-up);
+}
+
+
+[data-page-subpage="auth"] {
+    .col-main {
+        display: flex !important;
+        align-items: center;
+    }
+}
+.api-connector {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--card-gap);
+
+    width: 400px;
+    text-align: center;
+
+    .info {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 6px;
+    }
+
+    .sub-text {
+        justify-content: center;
+    }
+
+    .avatar {
+        width: 80px;
+        height: 80px;
+        border-radius: var(--avatar-radius);
+        box-shadow: var(--interact-shadow);
+    }
+
+    h1 {
+        font-size: 24px;
+        line-height: 30px;
+        font-weight: var(--font-weight-bold);
+        letter-spacing: unset;
+        margin: unset;
+        cursor: default;
+        color: hsl(var(--c1));
+    }
+
+    .connector-footer {
+        padding-top: var(--card-gap);
+        border-top: 1px solid var(--card-border-base);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        width: 100%;
+    }
+}
+
+.subtle {
+    font-size: 13px;
+    color: hsl(var(--c3));
+    cursor: default;
 }
 }
