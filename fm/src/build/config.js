@@ -141,19 +141,6 @@ export let settings_base = {
         values: [true, false],
         type: 'toggle'
     },
-    main_width: {
-        css: 'main_width',
-        unit: 'px',
-        value: 902,
-        type: 'slider'
-    },
-    nav: {
-        css: 'show_extra_nav',
-        unit: '',
-        value: true,
-        values: [true, false],
-        type: 'toggle'
-    },
     gendered_tags: {
         css: 'gendered_tags',
         unit: '',
@@ -196,19 +183,13 @@ export let settings_base = {
         values: [true, false],
         type: 'toggle'
     },
-    big_numbers: {
-        css: 'big_numbers',
-        unit: '',
-        value: false,
-        values: [true, false],
-        type: 'toggle'
-    },
     format_guest_features: {
         css: 'format_guest_features',
         unit: '',
         value: true,
         values: [true, false],
-        type: 'toggle'
+        type: 'toggle',
+        require_reload: 'partial'
     },
     show_guest_features: {
         css: 'show_guest_features',
@@ -265,7 +246,8 @@ export let settings_base = {
         unit: '',
         value: true,
         values: [true, false],
-        type: 'toggle'
+        type: 'toggle',
+        require_reload: 'partial'
     },
     travis: {
         css: 'travis',
@@ -297,7 +279,8 @@ export let settings_base = {
         unit: '',
         value: true,
         values: [true, false],
-        type: 'toggle'
+        type: 'toggle',
+        require_reload: 'partial'
     },
     bio_markdown: {
         css: 'bio_markdown',
@@ -312,7 +295,8 @@ export let settings_base = {
         unit: '',
         value: true,
         values: [true, false],
-        type: 'toggle'
+        type: 'toggle',
+        require_reload: 'partial'
     },
     seasonal: {
         css: 'seasonal',
@@ -500,7 +484,7 @@ export let settings_base = {
         value: true,
         values: [true, false],
         type: 'toggle',
-        require_reload: true
+        require_reload: 'partial'
     },
     toggle_icon: {
         css: 'toggle_icon',
