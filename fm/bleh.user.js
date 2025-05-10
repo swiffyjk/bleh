@@ -236,7 +236,8 @@
       unit: "",
       value: true,
       values: [true, false],
-      type: "toggle"
+      type: "toggle",
+      require_reload: "partial"
     },
     rain: {
       css: "rain",
