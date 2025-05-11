@@ -1503,8 +1503,10 @@
     },
     markdown_tip: {
       // use <br><br> to add a space between the first sentence and the next
+      // keep the alt text as "banner", english and lowercase as thats how its detected rn
+      // may change in the future
       en: 'You can use line breaks, bold text, italics, underlines, images, and headers visible to other bleh users.<br><br>Images are created via ![alt text](link). Changing the alt text to "banner" applies a profile banner.',
-      de: "Du kannst Zeilenumbr\xFCche, Fettdruck, Kursivschrift, Unterstreichungen, Bilder und \xDCberschriften verwenden, die f\xFCr andere bleh-Nutzer sichtbar sind.<br><br>Bilder werden \xFCber ![Alt-Text](Link) erstellt. Wenn du den Alt-Text in \u201EBanner\u201C \xE4nderst, wird ein Profilbanner angewendet."
+      de: "Du kannst Zeilenumbr\xFCche, Fettdruck, Kursivschrift, Unterstreichungen, Bilder und \xDCberschriften verwenden, die f\xFCr andere bleh-Nutzer sichtbar sind.<br><br>Bilder werden \xFCber ![Alt-Text](Link) erstellt. Wenn du den Alt-Text in \u201Ebanner\u201C \xE4nderst, wird ein Profilbanner angewendet."
     },
     find_on: {
       en: "Find on",
@@ -20461,8 +20463,8 @@
   // src/build/build.json
   var build_default = {
     brand: "bleh",
-    build: "2025.0428",
-    sku: "wakaba",
+    build: "2025.0511",
+    sku: "corin",
     bio: "bleh!!! ^-^",
     author: "kate",
     url: "https://github.com/katelyynn/bleh/raw/uwu/fm/bleh.user.js",

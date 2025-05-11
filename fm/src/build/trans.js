@@ -657,8 +657,10 @@ export const trans = {
     },
     markdown_tip: {
         // use <br><br> to add a space between the first sentence and the next
+        // keep the alt text as "banner", english and lowercase as thats how its detected rn
+        // may change in the future
         en: 'You can use line breaks, bold text, italics, underlines, images, and headers visible to other bleh users.<br><br>Images are created via ![alt text](link). Changing the alt text to "banner" applies a profile banner.',
-        de: 'Du kannst Zeilenumbrüche, Fettdruck, Kursivschrift, Unterstreichungen, Bilder und Überschriften verwenden, die für andere bleh-Nutzer sichtbar sind.<br><br>Bilder werden über ![Alt-Text](Link) erstellt. Wenn du den Alt-Text in „Banner“ änderst, wird ein Profilbanner angewendet.'
+        de: 'Du kannst Zeilenumbrüche, Fettdruck, Kursivschrift, Unterstreichungen, Bilder und Überschriften verwenden, die für andere bleh-Nutzer sichtbar sind.<br><br>Bilder werden über ![Alt-Text](Link) erstellt. Wenn du den Alt-Text in „banner“ änderst, wird ein Profilbanner angewendet.'
     },
     find_on: {
         en: 'Find on',
