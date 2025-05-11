@@ -63,14 +63,14 @@ export function set_season() {
             document.documentElement.setAttribute('data-bleh--season', season.id);
 
             // snow
-            if (season.snowflakes.state && settings.seasonal_particles) {
+            if (season.snowflakes.state && settings.seasonal_particles != 'none') {
                 log('let the snow start!', 'season');
                 prep_snow();
 
                 let snowflakes_enabled = true;
                 let snowflakes_count = season.snowflakes.count;
 
-                if (settings.seasonal_particles_reduced && snowflakes_count > 10)
+                if (settings.seasonal_particles == 'less' && snowflakes_count > 10)
                     snowflakes_count = snowflakes_count * 0.45;
 
                 begin_snowflakes(snowflakes_enabled, snowflakes_count);

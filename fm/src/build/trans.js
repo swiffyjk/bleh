@@ -1713,6 +1713,52 @@ export const trans = {
         // tracklist from your own album plays
         en: 'Sourced from your own plays as an official tracklist is unavailable',
         de: 'Aus deinen eigenen Plays stammend, da keine offizielle Titelliste verfügbar ist'
+    },
+    submit_language: {
+        name: {
+            en: 'Are you fluent in a supported language?'
+        },
+        body: {
+            en: 'Translations are powered by community contributions from wonderful people like you'
+        }
+    },
+    welcome_to_bleh: {
+        en: 'Welcome to bleh, thank you for installing!<br>You can continue through this quick setup to get you started or skip right to your profile and figure it all out yourself <3'
+    },
+    next: {
+        en: 'Next'
+    },
+    choose_a_theme: {
+        en: 'Choose a theme that suits you best!'
+    },
+    accessibility_explain: {
+        en: 'Before we continue, let\'s assess your accessibility settings.'
+    },
+    colours_explain: {
+        en: 'Choose a colour you like or make your own favourite.'
+    },
+    music_explain: {
+        en: 'We offer a variety of options to help you manage your music library.'
+    },
+    setup_end: {
+        en: 'That\'s all for now, to configure your bleh installation in the future head to {a}the settings{/a} in your menu!'
+    },
+    seasonal_particles: {
+        name: {
+            en: 'Show particles during select seasons'
+        },
+        body: {
+            en: 'During Winter seasons watch pretty snowflakes fall :3'
+        }
+    },
+    all_particles: {
+        en: 'Show full particles'
+    },
+    less_particles: {
+        en: 'Show less particles'
+    },
+    no_particles: {
+        en: 'Disable particles'
     }
 }
 

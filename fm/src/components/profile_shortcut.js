@@ -6,7 +6,7 @@ import { deliver_notif, notify } from "./notify";
 
 unsafeWindow._open_profile_shortcut_window = function() {
     dialog_legacy('profile_shortcut',trans_legacy[lang].settings.music.profile_shortcut.name,(`
-        <div class="text-container" id="container-profile_shortcut">
+        <div class="setting" data-type="text" id="container-profile_shortcut">
             <button class="btn reset" onclick="_reset_item('profile_shortcut')">${tl(trans.reset)}</button>
             <div class="avatar-container">
                 <div class="avatar-inner" id="avatar-profile_shortcut">
@@ -32,7 +32,7 @@ export function other_listener(id) {
         id: 'other_listener',
         title: trans_legacy[lang].music.listens.custom.name,
         body: (`
-        <div class="text-container">
+        <div class="setting" data-type="text">
             <div class="avatar-container">
                 <div class="avatar-inner avatar--bleh-missing">
                     <img>

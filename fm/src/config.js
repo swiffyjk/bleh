@@ -36,9 +36,19 @@ export function load_settings(skip = false) {
         if (settings[setting] == undefined)
             settings[setting] = settings_template[setting];
 
-    // todo: remove
-    if (settings.dev == 1)
-        settings.dev = true;
+    // migrates old season settings
+    // todo: remove soon
+    if (settings.seasonal_particles == true)
+        settings.seasonal_particles = 'all';
+    else if (settings.seasonal_particles == false)
+        settings.seasonal_particles = 'none';
+
+    if (settings.seasonal_particles_reduced == true) {
+        settings.seasonal_particles = 'less';
+        delete settings.seasonal_particles_reduced;
+    } else if (settings.seasonal_particles_reduced == false) {
+        delete settings.seasonal_particles_reduced;
+    }
 
     // save setting into body
     for (let setting in settings) {
