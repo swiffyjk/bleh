@@ -6,7 +6,7 @@ export function log(text, system, type = 'info', append={}) {
         let logs = document.createElement('div');
         logs.classList.add('logs');
         logs.innerHTML = (`
-            <div class="toggle-container" id="container-log_show_all" onclick="_update_item('log_show_all')">
+            <div class="setting" data-type="toggle" id="container-log_show_all" onclick="_update_item('log_show_all')">
                 <div class="toggle-wrap">
                     <button id="toggle-log_show_all">
                         show all

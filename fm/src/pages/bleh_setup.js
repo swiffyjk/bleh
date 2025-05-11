@@ -183,7 +183,7 @@ unsafeWindow._setup_accessibility = function() {
         page.structure.setup_content.innerHTML = (`
             <p>${tl(trans.accessibility_explain)}</p>
             <div class="settings">
-                <div class="toggle-container" id="container-reduced_motion" onclick="_update_item('reduced_motion')">
+                <div class="setting" data-type="toggle" id="container-reduced_motion" onclick="_update_item('reduced_motion')">
                     <button class="btn reset" onclick="_reset_item('reduced_motion')">${tl(trans.reset)}</button>
                     <div class="heading">
                         <h5>${trans_legacy[lang].settings.accessibility.reduced_motion.name}</h5>
@@ -195,7 +195,7 @@ unsafeWindow._setup_accessibility = function() {
                         </button>
                     </div>
                 </div>
-                <div class="toggle-container" id="container-underline_links" onclick="_update_item('underline_links')">
+                <div class="setting" data-type="toggle" id="container-underline_links" onclick="_update_item('underline_links')">
                     <button class="btn reset" onclick="_reset_item('underline_links')">${tl(trans.reset)}</button>
                     <div class="heading">
                         <h5>${trans_legacy[lang].settings.accessibility.underline_links.name}</h5>
@@ -207,7 +207,7 @@ unsafeWindow._setup_accessibility = function() {
                         </button>
                     </div>
                 </div>
-                <div class="toggle-container" id="container-toggle_icon" onclick="_update_item('toggle_icon')">
+                <div class="setting" data-type="toggle" id="container-toggle_icon" onclick="_update_item('toggle_icon')">
                     <button class="btn reset" onclick="_reset_item('toggle_icon')">${tl(trans.reset)}</button>
                     <div class="heading">
                         <h5>${trans_legacy[lang].settings.accessibility.toggle_icon.name}</h5>
@@ -303,7 +303,7 @@ unsafeWindow._setup_music = function() {
                         </div>
                     </section>
                 </div>
-                <div class="toggle-container" id="container-corrections" onclick="_update_item('corrections')">
+                <div class="setting" data-type="toggle" id="container-corrections" onclick="_update_item('corrections')">
                     <button class="btn reset" onclick="_reset_item('corrections')">${tl(trans.reset)}</button>
                     <div class="heading">
                         <h5>${tl(trans.correct_titles_with_lotus)}</h5>
@@ -314,7 +314,7 @@ unsafeWindow._setup_music = function() {
                         </button>
                     </div>
                 </div>
-                <div class="toggle-container" id="container-format_guest_features" onclick="_update_item('format_guest_features')">
+                <div class="setting" data-type="toggle" id="container-format_guest_features" onclick="_update_item('format_guest_features')">
                     <button class="btn reset" onclick="_reset_item('format_guest_features')">${tl(trans.reset)}</button>
                     <div class="heading">
                         <h5>${tl(trans.format_guest_features.name)}</h5>

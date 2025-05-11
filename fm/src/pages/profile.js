@@ -810,7 +810,7 @@ export function bleh_profiles() {
             theme: 'window',
             content: (`
                 <div class="dialog-settings">
-                    <div class="toggle-container" id="container-bio_markdown" onclick="_update_item('bio_markdown')">
+                    <div class="setting" data-type="toggle" id="container-bio_markdown" onclick="_update_item('bio_markdown')">
                         <button class="btn reset" onclick="_reset_item('bio_markdown')">${tl(trans.reset)}</button>
                         <div class="heading">
                             <h5>${tl(trans.markdown_profiles.name)}</h5>
@@ -1224,7 +1224,7 @@ function profile_recents() {
 
             form.innerHTML = (`
                 <input type="hidden" name="csrfmiddlewaretoken" value="${page.token}">
-                <div class="select-container">
+                <div class="setting" data-type="select">
                     <div class="heading">
                         <h5>${tl(trans.amount_to_display)}</h5>
                     </div>
@@ -1232,7 +1232,7 @@ function profile_recents() {
                         ${original_chart_settings.count}
                     </div>
                 </div>
-                <div class="toggle-container" id="container-recent_artwork" onclick="_update_inbuilt_item('recent_artwork')">
+                <div class="setting" data-type="toggle" id="container-recent_artwork" onclick="_update_inbuilt_item('recent_artwork')">
                     <button class="btn reset" onclick="_reset_inbuilt_item('recent_artwork')">Reset to default</button>
                     <div class="heading">
                         <h5>${tl(trans.recent_artwork)}</h5>
@@ -1244,7 +1244,7 @@ function profile_recents() {
                         </span>
                     </div>
                 </div>
-                <div class="toggle-container" id="container-recent_realtime" onclick="_update_inbuilt_item('recent_realtime')">
+                <div class="setting" data-type="toggle" id="container-recent_realtime" onclick="_update_inbuilt_item('recent_realtime')">
                     <button class="btn reset" onclick="_reset_inbuilt_item('recent_realtime')">Reset to default</button>
                     <div class="heading">
                         <h5>${tl(trans.recent_realtime.name)}</h5>
@@ -1258,7 +1258,7 @@ function profile_recents() {
                     </div>
                 </div>
                 <div class="sep"></div>
-                <div class="toggle-container" id="container-format_guest_features" onclick="_update_item('format_guest_features')">
+                <div class="setting" data-type="toggle" id="container-format_guest_features" onclick="_update_item('format_guest_features')">
                     <button class="btn reset" onclick="_reset_item('format_guest_features')">${tl(trans.reset)}</button>
                     <div class="heading">
                         <h5>${tl(trans.format_guest_features.name)}</h5>
@@ -1270,7 +1270,7 @@ function profile_recents() {
                         </button>
                     </div>
                 </div>
-                <div class="toggle-container" id="container-stacked_chartlist_info" onclick="_update_item('stacked_chartlist_info')">
+                <div class="setting" data-type="toggle" id="container-stacked_chartlist_info" onclick="_update_item('stacked_chartlist_info')">
                     <button class="btn reset" onclick="_reset_item('stacked_chartlist_info')">${tl(trans.reset)}</button>
                     <div class="heading">
                         <h5>${tl(trans.track_column_view)}</h5>
@@ -1281,7 +1281,7 @@ function profile_recents() {
                         </button>
                     </div>
                 </div>
-                <div class="toggle-container" id="container-colourful_tracks" onclick="_update_item('colourful_tracks')">
+                <div class="setting" data-type="toggle" id="container-colourful_tracks" onclick="_update_item('colourful_tracks')">
                     <button class="btn reset" onclick="_reset_item('colourful_tracks')">${tl(trans.reset)}</button>
                     <div class="heading">
                         <h5>${tl(trans.colourful_tracks.name)}</h5>
@@ -1389,7 +1389,7 @@ function profile_artists() {
 
             form.innerHTML = (`
                 <input type="hidden" name="csrfmiddlewaretoken" value="${page.token}">
-                <div class="select-container">
+                <div class="setting" data-type="select">
                     <div class="heading">
                         <h5>${tl(trans.default_timeframe)}</h5>
                     </div>
@@ -1397,7 +1397,7 @@ function profile_artists() {
                         ${original_chart_settings.timeframe}
                     </div>
                 </div>
-                <div class="select-container">
+                <div class="setting" data-type="select">
                     <div class="heading">
                         <h5>${tl(trans.chart_style)}</h5>
                     </div>
@@ -1512,7 +1512,7 @@ function profile_albums() {
 
             form.innerHTML = (`
                 <input type="hidden" name="csrfmiddlewaretoken" value="${page.token}">
-                <div class="select-container">
+                <div class="setting" data-type="select">
                     <div class="heading">
                         <h5>${trans_legacy[lang].settings.inbuilt.charts.albums.timeframe.name}</h5>
                     </div>
@@ -1520,7 +1520,7 @@ function profile_albums() {
                         ${original_chart_settings.timeframe}
                     </div>
                 </div>
-                <div class="select-container">
+                <div class="setting" data-type="select">
                     <div class="heading">
                         <h5>${trans_legacy[lang].settings.inbuilt.charts.albums.style.name}</h5>
                     </div>
@@ -1635,7 +1635,7 @@ function profile_tracks() {
 
             form.innerHTML = (`
                 <input type="hidden" name="csrfmiddlewaretoken" value="${page.token}">
-                <div class="select-container">
+                <div class="setting" data-type="select">
                     <div class="heading">
                         <h5>${trans_legacy[lang].settings.inbuilt.charts.tracks.timeframe.name}</h5>
                     </div>
@@ -1643,7 +1643,7 @@ function profile_tracks() {
                         ${original_chart_settings.timeframe}
                     </div>
                 </div>
-                <div class="select-container">
+                <div class="setting" data-type="select">
                     <div class="heading">
                         <h5>${tl(trans.amount_to_display)}</h5>
                     </div>
@@ -1652,7 +1652,7 @@ function profile_tracks() {
                     </div>
                 </div>
                 <div class="sep"></div>
-                <div class="toggle-container" id="container-format_guest_features" onclick="_update_item('format_guest_features')">
+                <div class="setting" data-type="toggle" id="container-format_guest_features" onclick="_update_item('format_guest_features')">
                     <button class="btn reset" onclick="_reset_item('format_guest_features')">${tl(trans.reset)}</button>
                     <div class="heading">
                         <h5>${tl(trans.format_guest_features.name)}</h5>

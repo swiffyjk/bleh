@@ -148,7 +148,7 @@ function patch_settings_charts_panel(token) {
                     </div>
                 </div>
             </div>
-            <div class="select-container">
+            <div class="setting" data-type="select">
                 <div class="heading">
                     <h5>${tl(trans.amount_to_display)}</h5>
                 </div>
@@ -156,7 +156,7 @@ function patch_settings_charts_panel(token) {
                     ${original_chart_settings.recent.count}
                 </div>
             </div>
-            <div class="toggle-container" id="container-recent_artwork">
+            <div class="setting" data-type="toggle" id="container-recent_artwork">
                 <button class="btn reset" onclick="_reset_inbuilt_item('recent_artwork')">Reset to default</button>
                 <div class="heading">
                     <h5>${tl(trans.recent_artwork)}</h5>
@@ -168,7 +168,7 @@ function patch_settings_charts_panel(token) {
                     </span>
                 </div>
             </div>
-            <div class="toggle-container" id="container-recent_realtime">
+            <div class="setting" data-type="toggle" id="container-recent_realtime">
                 <button class="btn reset" onclick="_reset_inbuilt_item('recent_realtime')">Reset to default</button>
                 <div class="heading">
                     <h5>${tl(trans.recent_realtime.name)}</h5>
@@ -241,7 +241,7 @@ function patch_settings_charts_panel(token) {
                     </div>
                 </div>
             </div>
-            <div class="select-container">
+            <div class="setting" data-type="select">
                 <div class="heading">
                     <h5>${tl(trans.default_timeframe)}</h5>
                 </div>
@@ -249,7 +249,7 @@ function patch_settings_charts_panel(token) {
                     ${original_chart_settings.artists.timeframe}
                 </div>
             </div>
-            <div class="select-container">
+            <div class="setting" data-type="select">
                 <div class="heading">
                     <h5>${tl(trans.chart_style)}</h5>
                 </div>
@@ -317,7 +317,7 @@ function patch_settings_charts_panel(token) {
                     </div>
                 </div>
             </div>
-            <div class="select-container">
+            <div class="setting" data-type="select">
                 <div class="heading">
                     <h5>${trans_legacy[lang].settings.inbuilt.charts.albums.timeframe.name}</h5>
                 </div>
@@ -325,7 +325,7 @@ function patch_settings_charts_panel(token) {
                     ${original_chart_settings.albums.timeframe}
                 </div>
             </div>
-            <div class="select-container">
+            <div class="setting" data-type="select">
                 <div class="heading">
                     <h5>${trans_legacy[lang].settings.inbuilt.charts.albums.style.name}</h5>
                 </div>
@@ -379,7 +379,7 @@ function patch_settings_charts_panel(token) {
                     </div>
                 </div>
             </div>
-            <div class="select-container">
+            <div class="setting" data-type="select">
                 <div class="heading">
                     <h5>${trans_legacy[lang].settings.inbuilt.charts.tracks.timeframe.name}</h5>
                 </div>
@@ -387,7 +387,7 @@ function patch_settings_charts_panel(token) {
                     ${original_chart_settings.tracks.timeframe}
                 </div>
             </div>
-            <div class="select-container">
+            <div class="setting" data-type="select">
                 <div class="heading">
                     <h5>${tl(trans.amount_to_display)}</h5>
                 </div>
@@ -732,7 +732,7 @@ function bleh_communication_panel(token) {
         </div>
         <div class="sides">
             <div class="left main">
-                <div class="text-container">
+                <div class="setting" data-type="text">
                     <div class="heading">
                         <h5>${trans_legacy[lang].settings.music.profile_shortcut.placeholder}</h5>
                         <form action="${root}settings/privacy#ignorelist" name="ignorelist" method="post">
@@ -818,7 +818,7 @@ function patch_settings_privacy_panel(token, privacy_panel) {
                     </div>
                 </div>
             </div>
-            <div class="toggle-container" id="container-recent_listening">
+            <div class="setting" data-type="toggle" id="container-recent_listening">
                 <button class="btn reset" onclick="_reset_inbuilt_item('recent_listening')">Reset to default</button>
                 <div class="heading">
                     <h5>${trans_legacy[lang].settings.inbuilt.privacy.recent_listening.name}</h5>
@@ -889,7 +889,7 @@ function patch_settings_privacy_panel(token, privacy_panel) {
                     </div>
                 </div>
             </div>
-            <div class="toggle-container" id="container-disable_shoutbox">
+            <div class="setting" data-type="toggle" id="container-disable_shoutbox">
                 <button class="btn reset" onclick="_reset_inbuilt_item('disable_shoutbox')">Reset to default</button>
                 <div class="heading">
                     <h5>${trans_legacy[lang].settings.inbuilt.privacy.disable_shoutbox.name}</h5>
@@ -939,7 +939,7 @@ function bleh_accounts() {
         <h4>${tl(trans.information)}</h4>
         <form action="${root}settings/change-username/send-email" method="post">
             <input type="hidden" name="csrfmiddlewaretoken" value="${token}">
-            <div class="text-container">
+            <div class="setting" data-type="text">
                 <div class="heading">
                     <h5>${tl(trans.username.name)}</h5>
                     <p>${tl(trans.username.body).replace('{a}', `<a href="https://support.last.fm/" target="_blank">`).replace('{/a}', '</a>')}</p>
@@ -953,7 +953,7 @@ function bleh_accounts() {
         </form>
         <form action="${root}settings/account" name="change-email" method="post">
             <input type="hidden" name="csrfmiddlewaretoken" value="${token}">
-            <div class="text-container">
+            <div class="setting" data-type="text">
                 <div class="heading">
                     <h5>${tl(trans.email)}</h5>
                 </div>
@@ -967,7 +967,7 @@ function bleh_accounts() {
         <div class="sep"></div>
         <form class="password-container" action="${root}settings/account/password#change-password" name="change-password" method="post">
             <input type="hidden" name="csrfmiddlewaretoken" value="${token}">
-            <div class="text-container">
+            <div class="setting" data-type="text">
                 <div class="heading">
                     <h5>${tl(trans.password)}</h5>
                 </div>
@@ -975,7 +975,7 @@ function bleh_accounts() {
                     <input id="id_password" type="password" name="password" required>
                 </div>
             </div>
-            <div class="text-container">
+            <div class="setting" data-type="text">
                 <div class="heading">
                     <h5>${tl(trans.new_password)}</h5>
                 </div>
@@ -983,7 +983,7 @@ function bleh_accounts() {
                     <input id="id_new_password" type="password" name="new_password" required>
                 </div>
             </div>
-            <div class="text-container">
+            <div class="setting" data-type="text">
                 <div class="heading">
                     <h5>${tl(trans.confirm_password)}</h5>
                 </div>
@@ -1010,7 +1010,7 @@ function bleh_accounts() {
         <h4>${tl(trans.communication)}</h4>
         <form action="${root}settings/account" name="email-settings" method="post">
             <input type="hidden" name="csrfmiddlewaretoken" value="${token}">
-            <div class="select-container">
+            <div class="setting" data-type="select">
                 <div class="heading">
                     <h5>${tl(trans.email_language)}</h5>
                 </div>
@@ -1018,7 +1018,7 @@ function bleh_accounts() {
                     ${original_settings.email_language}
                 </div>
             </div>
-            <div class="toggle-container" id="container-marketing_emails" onclick="_update_inbuilt_item('marketing_emails')">
+            <div class="setting" data-type="toggle" id="container-marketing_emails" onclick="_update_inbuilt_item('marketing_emails')">
                 <div class="heading">
                     <h5>${tl(trans.marketing_emails.name)}</h5>
                     <p>${tl(trans.marketing_emails.body)}</p>
@@ -1047,7 +1047,7 @@ function bleh_accounts() {
         <h4>${tl(trans.security)}</h4>
         <form action="${root}settings/account" name="email-settings" method="post">
             <input type="hidden" name="csrfmiddlewaretoken" value="${token}">
-            <div class="toggle-container">
+            <div class="setting" data-type="toggle">
                 <div class="heading">
                     <h5>${tl(trans.logout_everywhere)}</h5>
                 </div>
@@ -1058,7 +1058,7 @@ function bleh_accounts() {
                 </div>
             </div>
             <div class="sep"></div>
-            <div class="toggle-container">
+            <div class="setting" data-type="toggle">
                 <div class="heading">
                     <h5>${tl(trans.delete_account.name)}</h5>
                     <p>${tl(trans.delete_account.body)}</p>
