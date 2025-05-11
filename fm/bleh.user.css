@@ -7992,11 +7992,15 @@ very, very, very dated - who looks up a song on ebay? */
     display: flex;
     justify-content: center;
     align-items: center;
-    gap: var(--button-list-gap);
+    gap: var(--card-gap);
     margin-left: unset !important;
 
     button {
         margin: unset !important;
+    }
+
+    .btn-secondary.js-close {
+        order: -1;
     }
 }
 
@@ -18191,17 +18195,17 @@ h4 {
         }
     }
     .edit-scrobble-form {
-        margin-top: var(--card-gap);
+        margin-top: var(--card-gap) !important;
     }
 
     .edit-scrobble-label {
         color: hsl(var(--c3));
-        font-weight: var(--font-weight-medium);
-        margin-bottom: var(--item-list-gap);
+        font-weight: var(--font-weight-medium) !important;
+        margin-bottom: 4px;
 
         .control-label.hidden + &,
         .form-group + & {
-            margin: var(--item-list-gap) 0;
+            margin: var(--item-list-gap) 0 4px;
         }
     }
     .control-label.hidden {
@@ -21703,6 +21707,7 @@ h4 {
     transition-duration: var(--trans);
     transition-timing-function: var(--trans-function);
 
+    &.btn-secondary.js-close,
     &.cancel,
     &.sponsor,
     &.update-check,
@@ -21726,6 +21731,7 @@ h4 {
     &.sponsor {
         --mask: var(--icon-16-heart);
     }
+    &.btn-secondary.js-close,
     &.cancel {
         --mask: var(--icon-16-arrow-left);
     }

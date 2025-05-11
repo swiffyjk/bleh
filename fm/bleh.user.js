@@ -9781,7 +9781,8 @@
     checkboxes.forEach((checkbox) => {
       let id = checkbox.querySelector("input").getAttribute("name");
       let text = checkbox.textContent.trim();
-      checkbox.classList = "toggle-container";
+      checkbox.classList = "setting";
+      checkbox.setAttribute("data-type", "toggle");
       checkbox.setAttribute("onclick", `_update_inbuilt_item('${id}')`);
       checkbox.innerHTML = `
             <div class="heading">
