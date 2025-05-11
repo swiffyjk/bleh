@@ -18593,6 +18593,7 @@ h4 {
         display: flex;
         width: fit-content;
         flex-shrink: 0;
+        text-shadow: unset !important;
 
         .calendar {
             display: flex;
@@ -18618,7 +18619,7 @@ h4 {
     }
 
     [data-ff--katsune="true"] &:not(.about-artist-panel) {
-        text-shadow: 0 0 14px hsl(var(--b5));
+        text-shadow: 0 0 10px hsl(var(--b5));
         margin: -20px -40px !important;
         padding: var(--card-gap) calc(var(--card-gap) + var(--card-padding)) !important;
 
