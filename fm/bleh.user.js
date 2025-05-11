@@ -58,8 +58,7 @@
     bio_markdown: true,
     hue_from_album: true,
     seasonal: true,
-    seasonal_particles: true,
-    seasonal_particles_reduced: false,
+    seasonal_particles: "all",
     seasonal_particles_fps: false,
     seasonal_overlays: true,
     profile_header_own: true,
@@ -316,17 +315,8 @@
     seasonal_particles: {
       css: "seasonal_particles",
       unit: "",
-      value: true,
-      values: [true, false],
-      type: "toggle",
-      require_reload: true
-    },
-    seasonal_particles_reduced: {
-      css: "seasonal_particles_reduced",
-      unit: "",
-      value: false,
-      values: [true, false],
-      type: "toggle",
+      value: "all",
+      type: "options",
       require_reload: true
     },
     seasonal_particles_fps: {
@@ -2396,6 +2386,23 @@
     },
     setup_end: {
       en: "That's all for now, to configure your bleh installation in the future head to {a}the settings{/a} in your menu!"
+    },
+    seasonal_particles: {
+      name: {
+        en: "Show particles during select seasons"
+      },
+      body: {
+        en: "During Winter seasons watch pretty snowflakes fall :3"
+      }
+    },
+    all_particles: {
+      en: "Show full particles"
+    },
+    less_particles: {
+      en: "Show less particles"
+    },
+    no_particles: {
+      en: "Disable particles"
     }
   };
   var trans_legacy = {
@@ -12400,8 +12407,16 @@
     for (let setting in settings_template)
       if (settings[setting] == void 0)
         settings[setting] = settings_template[setting];
-    if (settings.dev == 1)
-      settings.dev = true;
+    if (settings.seasonal_particles == true)
+      settings.seasonal_particles = "all";
+    else if (settings.seasonal_particles == false)
+      settings.seasonal_particles = "none";
+    if (settings.seasonal_particles_reduced == true) {
+      settings.seasonal_particles = "less";
+      delete settings.seasonal_particles_reduced;
+    } else if (settings.seasonal_particles_reduced == false) {
+      delete settings.seasonal_particles_reduced;
+    }
     for (let setting in settings) {
       if ((setting == "hue" || setting == "sat" || setting == "lit") && settings.hue == settings_base.hue.value && settings.sat == settings_base.sat.value && settings.lit == settings_base.lit.value) continue;
       try {
@@ -12796,12 +12811,12 @@
         log(`${season.id} from ${season.start} to ${season.end}`, "season");
         log(`next will be ${stored_season.next_id} from ${stored_season.next_start} (is new year? ${stored_season.next_is_new_year})`, "season");
         document.documentElement.setAttribute("data-bleh--season", season.id);
-        if (season.snowflakes.state && settings.seasonal_particles) {
+        if (season.snowflakes.state && settings.seasonal_particles != "none") {
           log("let the snow start!", "season");
           prep_snow();
           let snowflakes_enabled = true;
           let snowflakes_count = season.snowflakes.count;
-          if (settings.seasonal_particles_reduced && snowflakes_count > 10)
+          if (settings.seasonal_particles == "less" && snowflakes_count > 10)
             snowflakes_count = snowflakes_count * 0.45;
           begin_snowflakes(snowflakes_enabled, snowflakes_count);
         }
@@ -13399,14 +13414,18 @@
                         <div class="profile-mockup-background" style="background-image: url(https://lastfm.freetls.fastly.net/i/u/avatar170s/383d6c03304e720075d0050e8a6a4644);"></div>
                     </div>
                 </div>
-                <h4>${trans_legacy[lang].settings.layout.avatar_action.name}</h4>
-                <p>${trans_legacy[lang].settings.layout.avatar_action.bio}</p>
-                <div class="primary-selections artist-hover-image">
-                    <div class="btn primary-selection" id="toggle-default_avatar_action-expand" data-toggle="default_avatar_action" data-toggle-value="expand" onclick="_update_item('default_avatar_action', 'expand')">
-                        <h5>${tl(trans.expand)}</h5>
+                <div class="setting" data-type="options">
+                    <div class="heading">
+                        <h5>${trans_legacy[lang].settings.layout.avatar_action.name}</h5>
+                        <p>${trans_legacy[lang].settings.layout.avatar_action.bio}</p>
                     </div>
-                    <div class="btn primary-selection" id="toggle-default_avatar_action-gallery" data-toggle="default_avatar_action" data-toggle-value="gallery" onclick="_update_item('default_avatar_action', 'gallery')">
-                        <h5>${trans_legacy[lang].settings.layout.avatar_action.gallery}</h5>
+                    <div class="primary-selections artist-hover-image">
+                        <div class="btn primary-selection" id="toggle-default_avatar_action-expand" data-toggle="default_avatar_action" data-toggle-value="expand" onclick="_update_item('default_avatar_action', 'expand')">
+                            <h5>${tl(trans.expand)}</h5>
+                        </div>
+                        <div class="btn primary-selection" id="toggle-default_avatar_action-gallery" data-toggle="default_avatar_action" data-toggle-value="gallery" onclick="_update_item('default_avatar_action', 'gallery')">
+                            <h5>${tl(trans.photos)}</h5>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -13545,27 +13564,21 @@
                     </div>
                 </div>
                 <div class="sep"></div>
-                <div class="setting hide-if-seasonal-disabled" data-type="toggle" id="container-seasonal_particles" onclick="_update_item('seasonal_particles')">
-                    <button class="btn reset" onclick="_reset_item('seasonal_particles')">${tl(trans.reset)}</button>
+                <div class="setting" data-type="options">
                     <div class="heading">
-                        <h5>${trans_legacy[lang].settings.customise.seasonal.particles.name}</h5>
-                        <p>${trans_legacy[lang].settings.customise.seasonal.particles.bio}</p>
+                        <h5>${tl(trans.seasonal_particles.name)}</h5>
+                        <p>${tl(trans.seasonal_particles.body)}</p>
                     </div>
-                    <div class="toggle-wrap">
-                        <button class="toggle" id="toggle-seasonal_particles" aria-checked="true">
-                            <div class="dot"></div>
-                        </button>
-                    </div>
-                </div>
-                <div class="setting hide-if-seasonal-disabled" data-type="toggle" id="container-seasonal_particles_reduced" onclick="_update_item('seasonal_particles_reduced')">
-                    <button class="btn reset" onclick="_reset_item('seasonal_particles_reduced')">${tl(trans.reset)}</button>
-                    <div class="heading">
-                        <h5>${trans_legacy[lang].settings.customise.seasonal.show_less_particles.name}</h5>
-                    </div>
-                    <div class="toggle-wrap">
-                        <button class="toggle" id="toggle-seasonal_particles_reduced" aria-checked="true">
-                            <div class="dot"></div>
-                        </button>
+                    <div class="primary-selections">
+                        <div class="btn primary-selection no-icon" id="toggle-seasonal_particles-all" data-toggle="seasonal_particles" data-toggle-value="all" onclick="_update_item('seasonal_particles', 'all')">
+                            <h5>${tl(trans.all_particles)}</h5>
+                        </div>
+                        <div class="btn primary-selection no-icon" id="toggle-seasonal_particles-less" data-toggle="seasonal_particles" data-toggle-value="less" onclick="_update_item('seasonal_particles', 'less')">
+                            <h5>${tl(trans.less_particles)}</h5>
+                        </div>
+                        <div class="btn primary-selection no-icon" id="toggle-seasonal_particles-none" data-toggle="seasonal_particles" data-toggle-value="none" onclick="_update_item('seasonal_particles', 'none')">
+                            <h5>${tl(trans.no_particles)}</h5>
+                        </div>
                     </div>
                 </div>
                 <div class="setting hide-if-seasonal-disabled" data-type="toggle" id="container-seasonal_particles_fps" onclick="_update_item('seasonal_particles_fps')">

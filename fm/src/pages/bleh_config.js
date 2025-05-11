@@ -508,14 +508,18 @@ export function render_setting_page(page_id) {
                         <div class="profile-mockup-background" style="background-image: url(https://lastfm.freetls.fastly.net/i/u/avatar170s/383d6c03304e720075d0050e8a6a4644);"></div>
                     </div>
                 </div>
-                <h4>${trans_legacy[lang].settings.layout.avatar_action.name}</h4>
-                <p>${trans_legacy[lang].settings.layout.avatar_action.bio}</p>
-                <div class="primary-selections artist-hover-image">
-                    <div class="btn primary-selection" id="toggle-default_avatar_action-expand" data-toggle="default_avatar_action" data-toggle-value="expand" onclick="_update_item('default_avatar_action', 'expand')">
-                        <h5>${tl(trans.expand)}</h5>
+                <div class="setting" data-type="options">
+                    <div class="heading">
+                        <h5>${trans_legacy[lang].settings.layout.avatar_action.name}</h5>
+                        <p>${trans_legacy[lang].settings.layout.avatar_action.bio}</p>
                     </div>
-                    <div class="btn primary-selection" id="toggle-default_avatar_action-gallery" data-toggle="default_avatar_action" data-toggle-value="gallery" onclick="_update_item('default_avatar_action', 'gallery')">
-                        <h5>${trans_legacy[lang].settings.layout.avatar_action.gallery}</h5>
+                    <div class="primary-selections artist-hover-image">
+                        <div class="btn primary-selection" id="toggle-default_avatar_action-expand" data-toggle="default_avatar_action" data-toggle-value="expand" onclick="_update_item('default_avatar_action', 'expand')">
+                            <h5>${tl(trans.expand)}</h5>
+                        </div>
+                        <div class="btn primary-selection" id="toggle-default_avatar_action-gallery" data-toggle="default_avatar_action" data-toggle-value="gallery" onclick="_update_item('default_avatar_action', 'gallery')">
+                            <h5>${tl(trans.photos)}</h5>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -655,27 +659,21 @@ export function render_setting_page(page_id) {
                     </div>
                 </div>
                 <div class="sep"></div>
-                <div class="setting hide-if-seasonal-disabled" data-type="toggle" id="container-seasonal_particles" onclick="_update_item('seasonal_particles')">
-                    <button class="btn reset" onclick="_reset_item('seasonal_particles')">${tl(trans.reset)}</button>
+                <div class="setting" data-type="options">
                     <div class="heading">
-                        <h5>${trans_legacy[lang].settings.customise.seasonal.particles.name}</h5>
-                        <p>${trans_legacy[lang].settings.customise.seasonal.particles.bio}</p>
+                        <h5>${tl(trans.seasonal_particles.name)}</h5>
+                        <p>${tl(trans.seasonal_particles.body)}</p>
                     </div>
-                    <div class="toggle-wrap">
-                        <button class="toggle" id="toggle-seasonal_particles" aria-checked="true">
-                            <div class="dot"></div>
-                        </button>
-                    </div>
-                </div>
-                <div class="setting hide-if-seasonal-disabled" data-type="toggle" id="container-seasonal_particles_reduced" onclick="_update_item('seasonal_particles_reduced')">
-                    <button class="btn reset" onclick="_reset_item('seasonal_particles_reduced')">${tl(trans.reset)}</button>
-                    <div class="heading">
-                        <h5>${trans_legacy[lang].settings.customise.seasonal.show_less_particles.name}</h5>
-                    </div>
-                    <div class="toggle-wrap">
-                        <button class="toggle" id="toggle-seasonal_particles_reduced" aria-checked="true">
-                            <div class="dot"></div>
-                        </button>
+                    <div class="primary-selections">
+                        <div class="btn primary-selection no-icon" id="toggle-seasonal_particles-all" data-toggle="seasonal_particles" data-toggle-value="all" onclick="_update_item('seasonal_particles', 'all')">
+                            <h5>${tl(trans.all_particles)}</h5>
+                        </div>
+                        <div class="btn primary-selection no-icon" id="toggle-seasonal_particles-less" data-toggle="seasonal_particles" data-toggle-value="less" onclick="_update_item('seasonal_particles', 'less')">
+                            <h5>${tl(trans.less_particles)}</h5>
+                        </div>
+                        <div class="btn primary-selection no-icon" id="toggle-seasonal_particles-none" data-toggle="seasonal_particles" data-toggle-value="none" onclick="_update_item('seasonal_particles', 'none')">
+                            <h5>${tl(trans.no_particles)}</h5>
+                        </div>
                     </div>
                 </div>
                 <div class="setting hide-if-seasonal-disabled" data-type="toggle" id="container-seasonal_particles_fps" onclick="_update_item('seasonal_particles_fps')">

@@ -6813,7 +6813,7 @@ button,
 .btn--has-icon:before,
 .avatar-overlay:before,
 .grid-item:before,
-.primary-selection:after,
+.primary-selection:not(.no-icon):after,
 :is(.shout-body, .about-me-sidebar, .bleh--about-me-preview) a:before,
 /*     DROPDOWNS     */
 .dropdown-menu-clickable-item:before, .auth-dropdown-menu-item:before,
@@ -14380,7 +14380,6 @@ input[type="range"]::-moz-range-progress {
     .heading {
         display: flex;
         flex-direction: column;
-        justify-content: center;
         gap: 2px;
         width: 100%;
 
@@ -14396,6 +14395,18 @@ input[type="range"]::-moz-range-progress {
             font-size: 13px;
             cursor: default;
         }
+    }
+
+    &:not([data-type="options"]) {
+        .heading {
+            justify-content: center;
+        }
+    }
+
+    .primary-selections {
+        flex-shrink: 0;
+        width: 100%;
+        max-width: 280px;
     }
 
     h5, .toggle-wrap {
@@ -14584,24 +14595,31 @@ input[type="range"]::-moz-range-progress {
     display: flex;
     flex-direction: column;
     gap: var(--item-list-gap);
-    /*padding: var(--item-list-gap);
-    border: 1px solid var(--card-border-base);
-    border-radius: var(--item-big-radius);*/
 
     select {
         display: none;
     }
 
     .primary-selection {
-        --btn-left: calc(12px + 18px + 6px);
+        --bg: transparent;
+        --bg-hov: transparent;
+        --bg-atv: transparent;
+        --shadow: none;
+
+        --padding: 0 0 0 calc(14px + var(--card-gap) + 18px + 6px);
+        --left: calc(14px + var(--card-gap));
         /*--mask: var(--icon-16-dot);*/
         width: 100% !important;
-        min-height: 40px !important;
+        min-height: fit-content !important;
         position: relative;
 
         display: flex;
         flex-direction: column;
         justify-content: center;
+
+        &.no-icon {
+            --padding: 0 0 0 calc(14px + var(--card-gap));
+        }
 
         color: inherit !important;
 
@@ -14613,6 +14631,24 @@ input[type="range"]::-moz-range-progress {
             font-size: var(--font-size-sm);
             line-height: var(--line-height-sm);
             opacity: 0.7;
+        }
+
+        &:before {
+            content: '';
+            position: absolute;
+            width: 14px;
+            height: 14px;
+            box-sizing: border-box;
+            border: 1px solid var(--card-border-base);
+            border-radius: 50px;
+
+            left: 0;
+            top: 50%;
+            margin-top: -7px;
+
+            transition-property: border-width, border-color;
+            transition-duration: var(--trans);
+            transition-timing-function: var(--trans-function);
         }
 
         &#primary-selection-receiving_msgs-everyone {
@@ -14663,17 +14699,30 @@ input[type="range"]::-moz-range-progress {
             --mask: var(--icon-16-moon-fill);
         }
 
+        transform: unset !important;
+
+        &:active,
+        &:hover {
+            &:before {
+                border-width: 2px;
+                border-color: hsl(var(--l2-c));
+            }
+        }
+
+        &:active {
+            &:before {
+                border-width: 4px;
+            }
+        }
+
         &[aria-checked="true"],
         [data-bleh--inbuilt-id_message_privacy="all"] &#primary-selection-receiving_msgs-everyone,
         [data-bleh--inbuilt-id_message_privacy="n"] &#primary-selection-receiving_msgs-neighbours,
         [data-bleh--inbuilt-id_message_privacy="f"] &#primary-selection-receiving_msgs-follow {
-            --bg: var(--cards-overlay-image-subtlest, none), hsl(var(--h3)) !important;
-            --bg-hov: var(--cards-overlay-image-subtlest, none), hsla(var(--h3), 80%) !important;
-            --bg-atv: var(--cards-overlay-image-subtlest, none), hsla(var(--h3), 60%) !important;
-            --col: hsl(var(--b7)) !important;
-            --shadow: 0 3px 12px hsl(var(--h4), 25%), var(--interactable-outer);
-
-            color: var(--col) !important;
+            &:before {
+                border-width: 4px;
+                border-color: hsl(var(--l3-c));
+            }
         }
     }
 }

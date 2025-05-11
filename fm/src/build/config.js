@@ -42,8 +42,7 @@ export let settings_template = {
     bio_markdown: true,
     hue_from_album: true,
     seasonal: true,
-    seasonal_particles: true,
-    seasonal_particles_reduced: false,
+    seasonal_particles: 'all',
     seasonal_particles_fps: false,
     seasonal_overlays: true,
 
@@ -311,17 +310,8 @@ export let settings_base = {
     seasonal_particles: {
         css: 'seasonal_particles',
         unit: '',
-        value: true,
-        values: [true, false],
-        type: 'toggle',
-        require_reload: true
-    },
-    seasonal_particles_reduced: {
-        css: 'seasonal_particles_reduced',
-        unit: '',
-        value: false,
-        values: [true, false],
-        type: 'toggle',
+        value: 'all',
+        type: 'options',
         require_reload: true
     },
     seasonal_particles_fps: {
@@ -687,13 +677,8 @@ export let settings_store = {
         default: true
     },
     seasonal_particles: {
-        default: true
-    },
-    seasonal_particles_reduced: {
-        default: false
-    },
-    seasonal_particles_fps: {
-        default: false
+        default: 'all',
+        type: 'options'
     },
     seasonal_overlays: {
         default: true

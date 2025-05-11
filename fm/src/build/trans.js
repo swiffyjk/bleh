@@ -1540,6 +1540,23 @@ export const trans = {
     },
     setup_end: {
         en: 'That\'s all for now, to configure your bleh installation in the future head to {a}the settings{/a} in your menu!'
+    },
+    seasonal_particles: {
+        name: {
+            en: 'Show particles during select seasons'
+        },
+        body: {
+            en: 'During Winter seasons watch pretty snowflakes fall :3'
+        }
+    },
+    all_particles: {
+        en: 'Show full particles'
+    },
+    less_particles: {
+        en: 'Show less particles'
+    },
+    no_particles: {
+        en: 'Disable particles'
     }
 }
 
