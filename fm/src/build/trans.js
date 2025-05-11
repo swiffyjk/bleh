@@ -10,7 +10,7 @@ export let non_override_lang;
 // lists all languages with valid bleh translations
 // any custom translations will not load if not listed here!!
 export let valid_langs = ['en', 'de', 'pl'];
-
+// hello my name is stel :3
 export let lang_info = {
     en: {
         name: 'English',
@@ -20,7 +20,7 @@ export let lang_info = {
     de: {
         name: 'Deutsch',
         by: ['stellasaur', 'katelyness'],
-        last_updated:  '2025-05-10'
+        last_updated:  '2025-05-11'
     },
     pl: {
         name: 'Polski',
@@ -32,13 +32,16 @@ export let lang_info = {
 export const trans = {
     page_templates: {
         type: {
-            en: '{page} on {brand} {build}.{sku}'
+            en: '{page} on {brand} {build}.{sku}',
+            de: '{page} auf {brand} {build}.{sku}'
         },
         name_type: {
-            en: '{name} - {page} on {brand} {build}.{sku}'
+            en: '{name} - {page} on {brand} {build}.{sku}',
+            de: '{name} - {page} auf {brand} {build}.{sku}'
         },
         name_sister_type: {
-            en: '{name} by {sister} - {page} on {brand} {build}.{sku}'
+            en: '{name} by {sister} - {page} on {brand} {build}.{sku}',
+            de: '{name} von {sister} - {page} auf {brand} {build}.{sku}'
         }
     },
     badges: {
@@ -48,7 +51,8 @@ export const trans = {
                 de: 'Kein Abzeichen'
             },
             reason: {
-                en: 'Become a sponsor to get a badge!'
+                en: 'Become a sponsor to get a badge!',
+                de: 'Werde Sponsor und erhalte ein Abzeichen'
             }
         },
         'user-status-subscriber': {
@@ -56,7 +60,8 @@ export const trans = {
                 en: 'Last.fm Pro'
             },
             reason: {
-                en: 'Active Pro subscription'
+                en: 'Active Pro subscription',
+                de: 'Aktives Pro-Abonnement'
             }
         },
         'user-status-staff': {
@@ -65,7 +70,8 @@ export const trans = {
                 de: 'Angestellter'
             },
             reason: {
-                en: 'Official member of Last.fm'
+                en: 'Official member of Last.fm',
+                de: 'Ofizielles Mitglied von Last FM'
             }
         },
         'user-status-mod': {
@@ -73,7 +79,8 @@ export const trans = {
                 en: 'Mod'
             },
             reason: {
-                en: 'Official member of Last.fm'
+                en: 'Official member of Last.fm',
+                de: 'Ofizielles Mitglied von Last FM'
             }
         },
         'user-status-alum': {
@@ -81,12 +88,14 @@ export const trans = {
                 en: 'Alum'
             },
             reason: {
-                en: 'Since the beginning'
+                en: 'Since the beginning',
+                de: 'Von Anfang an'
             }
         },
         'label--fade': {
             reason: {
-                en: 'They follow you!'
+                en: 'They follow you!',
+                de: 'Sie folgen dir!'
             }
         },
         contributor: {
@@ -95,7 +104,8 @@ export const trans = {
                 de: 'Mitwirkender'
             },
             reason: {
-                en: 'Has worked on bleh or bwaa'
+                en: 'Has worked on bleh or bwaa',
+                de: 'Hat an bleh oder bwaa gearbeitet'
             }
         },
         translation: {
@@ -175,17 +185,20 @@ export const trans = {
         de: 'Obsessen'
     },
     obsession_first: {
-        en: 'First to claim this obsession!'
+        en: 'First to claim this obsession!',
+        de: 'Die erste Person, die sich diese Obsession für sich beansprucht!'
     },
     compare: {
         en: 'Compare',
         de: 'Vergleichen'
     },
     compare_plays: {
-        en: 'Compare plays'
+        en: 'Compare plays',
+        de: 'Plays vergleichen'
     },
     others_featured: {
-        en: 'Others featured'
+        en: 'Others featured',
+        de: 'Andere gefeatured'
     },
     your_scrobbles: {
         en: 'Your scrobbles',
@@ -195,17 +208,20 @@ export const trans = {
         en: 'Plays'
     },
     try_again: {
-        en: 'Try again'
+        en: 'Try again',
+        de: 'Erneut versuchen'
     },
     back: {
-        en: 'Back'
+        en: 'Back',
+        de: 'Zurück'
     },
     settings: {
         en: 'Settings',
         de: 'Einstellungen'
     },
     on_ignore_list: {
-        en: 'Ignored'
+        en: 'Ignored',
+        de: 'Ignoriert'
     },
     friends: {
         en: 'Friends',
@@ -219,7 +235,8 @@ export const trans = {
         de: 'pronomen'
     },
     account_created: {
-        en: 'created'
+        en: 'created',
+        de: 'erstellt'
     },
     account_scrobbling_since_replace: {
         // copy this from last.fm 1:1 (including the space at the end if there)
@@ -253,17 +270,20 @@ export const trans = {
         de: 'Künstler'
     },
     artists_tooltip: {
-        en: 'Multiple artists are grouped into this profile'
+        en: 'Multiple artists are grouped into this profile',
+        de: 'Mehrere Künstler sind in diesem Profil sortiert'
     },
     album: {
-        en: 'Album'
+        en: 'Album',
+        de: 'Album'
     },
     albums: {
         en: 'Albums',
         de: 'Alben'
     },
     track: {
-        en: 'Track'
+        en: 'Track',
+        de: 'Titel'
     },
     tracks: {
         en: 'Tracks',
@@ -283,7 +303,8 @@ export const trans = {
             de: 'Hell'
         },
         ink: {
-            en: 'Ink'
+            en: 'Ink',
+            de: 'Tinte'
         },
         dark: {
             en: 'Ash',
@@ -312,33 +333,37 @@ export const trans = {
     },
     colourful_tracks: {
         name: {
-            en: 'Colour active track based on album art'
+            en: 'Colour active track based on album art',
+            de: 'Farbe des aktiven Titels basierend auf dem Albumcover'
         },
         body: {
-            en: 'Highlights the primary colour from the album art for the individual track'
+            en: 'Highlights the primary colour from the album art for the individual track',
+            de: 'Hebt die Farbe des Albumcovers für den einzelnen Titel hervor'
         }
     },
     configure: {
         en: 'Configure',
         de: 'Konfigurieren'
     },
+    //sounds kinda weird so i changed back to english as the final version for event ; german festival sites use 'line-up' aswell so ill stick to that ~stel
     event: {
         en: 'Event'
     },
     events: {
         en: 'Events',
-        de: 'Veranstaltungen'
     },
     lineup: {
         en: 'Line-up'
     },
     attendance: {
-        en: 'Attendance'
+        en: 'Attendance',
+        de: 'Teilnahme'
     },
     top_badge: {
         en: 'Top Badge',
         de: 'Top-Abzeichen'
     },
+    //souns betta englush
     layout: {
         en: 'Layout'
     },
@@ -358,7 +383,8 @@ export const trans = {
         },
         listing: {
             none: {
-                en: 'None active'
+                en: 'None active',
+                de: 'Keine Aktiv'
             },
             easter: {
                 en: 'Easter',
@@ -388,13 +414,17 @@ export const trans = {
         }
     },
     seasonal_timeline: {
-        en: 'Seasonal timeline'
+        en: 'Seasonal timeline',
+        de: 'Saisonale Zeitleiste'
     },
+    //i removed the 'current' cus it soyunds better without lol, add back if u disagree or sum :3 and add 'aktuellen' infront of Zeitzone in german
     seasonal_offset: {
-        en: 'Seasonal events are ran in your current timezone, which we calculated as {offset}'
+        en: 'Seasonal events are ran in your timezone, which we calculated as {offset}',
+        de: 'Saisonale Events werden in deiner Zeitzone ausgeführt, die wir als {offset} berechnet haben.'
     },
     started: {
-        en: 'Started'
+        en: 'Started',
+        de: 'Gestartet'
     },
     ends_in: {
         en: 'Ends in',
@@ -408,14 +438,16 @@ export const trans = {
         de: 'Barrierefreiheit'
     },
     troubleshooting: {
-        en: 'Advanced'
+        en: 'Advanced',
+        de: 'Fortgeschritten'
     },
     recommendations: {
         en: 'Recommendations',
         de: 'Empfelungen'
     },
     releases: {
-        en: 'Releases'
+        en: 'Releases',
+        de: 'Veröffentlichungen'
     },
     bookmarks: {
         en: 'Bookmarks',
@@ -428,16 +460,18 @@ export const trans = {
         en: 'Welcome back {user}!',
         de: 'Willkommen züruck {user}!'
     },
-    // TODO(stel): is my capitalisation correct here at all lol
+    // TODO(stel): is my capitalisation correct here at all lol ; yes cutie, well done <3
     good_morning_user: {
         en: 'Good morning, {user}',
         de: 'Guten Morgen {user}'
     },
     good_afternoon_user: {
-        en: 'Good afternoon, {user}'
+        en: 'Good afternoon, {user}',
+        de: 'Guten Nachmittag, {user}'
     },
     good_evening_user: {
-        en: 'Good evening, {user}'
+        en: 'Good evening, {user}',
+        de: 'Guten Abend, {user}'
     },
     goodnight_user: {
         en: 'Goodnight, {user}',
@@ -448,7 +482,8 @@ export const trans = {
         de: 'bleh Einstellungen'
     },
     bleh_setup: {
-        en: 'Setup'
+        en: 'Setup',
+        de: 'Einrichtung'
     },
     import: {
         en: 'Import',
@@ -463,7 +498,8 @@ export const trans = {
         de: 'Zurücksetzen'
     },
     changelog: {
-        en: 'News'
+        en: 'News',
+        de: 'Neuigkeiten'
     },
     default: {
         en: 'Default',
@@ -501,14 +537,17 @@ export const trans = {
         de: 'Helligkeit'
     },
     seasonal_warning: {
-        en: 'This season has a custom default accent colour!'
+        en: 'This season has a custom default accent colour!',
+        de: 'Diese Saison hat eine benutzerdefinierte Akzentfarbe'
     },
     card_background_saturation: {
         name: {
-            en: 'Card background vibrancy'
+            en: 'Card background vibrancy',
+            de: 'Lebendigkeit des Kartenhintergrunds'
         },
         body: {
-            en: 'Bring some colour into your world (or reduce it)'
+            en: 'Bring some colour into your world (or reduce it)',
+            de: 'Bringe etwas Farbe in deiner Welt (oder reduziere sie)'
         }
     },
     save: {
@@ -560,14 +599,17 @@ export const trans = {
         de: 'Fortsetzen'
     },
     right_click_for_more_options: {
-        en: 'Right click for more options'
+        en: 'Right click for more options',
+        de: 'Rechtsklick für weitere optionen'
     },
     refresh_pending: {
         name: {
-            en: 'Refresh pending'
+            en: 'Refresh pending',
+            de: 'Aktualisierung anstehend'
         },
         body: {
-            en: 'A setting you changed requires a page refresh to take effect.'
+            en: 'A setting you changed requires a page refresh to take effect.',
+            de: 'Eine von dir geänderte Einstellung erfordert eine Seitenaktualisierung, damit sie wirksam wird'
         }
     },
     new: {
@@ -583,24 +625,30 @@ export const trans = {
     },
     notifications: {
         name: {
-            en: 'Notifications'
+            en: 'Notifications',
+            de: 'Benachrichtigungen'
         },
         count: {
-            en: '{count} notifications'
+            en: '{count} notifications',
+            de: '{count} Benachrichtigungen'
         },
         none: {
-            en: 'No new notifications'
+            en: 'No new notifications',
+            de: 'Keine neuen Benachrichtigungen'
         }
     },
     inbox: {
         name: {
-            en: 'Messages'
+            en: 'Messages',
+            de: 'Nachrichten'
         },
         count: {
-            en: '{count} messages'
+            en: '{count} messages',
+            de: '{count} Nachrichten'
         },
         none: {
-            en: 'No new messages'
+            en: 'No new messages',
+            de: 'Keine neuen Nachrichten'
         }
     },
     about_me_preview: {
@@ -609,22 +657,28 @@ export const trans = {
     },
     markdown_tip: {
         // use <br><br> to add a space between the first sentence and the next
-        en: 'You can use line breaks, bold text, italics, underlines, images, and headers visible to other bleh users.<br><br>Images are created via ![alt text](link). Changing the alt text to "banner" applies a profile banner.'
+        en: 'You can use line breaks, bold text, italics, underlines, images, and headers visible to other bleh users.<br><br>Images are created via ![alt text](link). Changing the alt text to "banner" applies a profile banner.',
+        de: 'Du kannst Zeilenumbrüche, Fettdruck, Kursivschrift, Unterstreichungen, Bilder und Überschriften verwenden, die für andere bleh-Nutzer sichtbar sind.<br><br>Bilder werden über ![Alt-Text](Link) erstellt. Wenn du den Alt-Text in „Banner“ änderst, wird ein Profilbanner angewendet.'
     },
     find_on: {
-        en: 'Find on'
+        en: 'Find on',
+        de: 'Finde auf'
     },
     following: {
-        en: 'Following'
+        en: 'Following',
+        de: 'Gefolgt'
     },
     followers: {
-        en: 'Followers'
+        en: 'Followers',
+        de: 'Follower*innen'
     },
     neighbours: {
-        en: 'Neighbours'
+        en: 'Neighbours',
+        de: 'Nachbarn'
     },
     website: {
-        en: 'Website'
+        en: 'Website',
+        de: 'Webseite'
     },
     overview: {
         en: 'Overview',
@@ -653,6 +707,7 @@ export const trans = {
         en: 'Listeners',
         de: 'Zuhörer*innen'
     },
+    // tag sounds better in english
     tag: {
         en: 'Tag'
     },
@@ -660,7 +715,8 @@ export const trans = {
         en: 'Tags'
     },
     reports: {
-        en: 'Reports'
+        en: 'Reports',
+        de: 'Berichte'
     },
     artist_lower: {
         // used inside a sentence not on its own,
@@ -703,13 +759,16 @@ export const trans = {
         de: 'Kürzlich gespielte Titel'
     },
     top_artists: {
-        en: 'Top Artists'
+        en: 'Top Artists',
+        de: 'Top Künstler'
     },
     top_albums: {
-        en: 'Top Albums'
+        en: 'Top Albums',
+        de: 'Top Alben'
     },
     top_tracks: {
-        en: 'Top Tracks'
+        en: 'Top Tracks',
+        de: 'Top Titel'
     },
     you_share_count_with: {
         // as in your musical taste between you and someone else
@@ -732,11 +791,12 @@ export const trans = {
         de: 'Anschreiben'
     },
     sponsor_data: {
-        en: 'Sponsor and badge data version {v}'
+        en: 'Sponsor and badge data version {v}',
+        de: 'Sponsoren- und Abzeichen Version {v}'
     },
     sponsor: {
         en: 'Become a sponsor',
-        de: 'Werde sponsor'
+        de: 'Werde Sponsor'
     },
     message_sponsor: {
         // rewards meaning a badge for example
@@ -744,33 +804,40 @@ export const trans = {
         de: 'Sponsorenprämien erhalten'
     },
     news_sponsor_cta: {
-        en: 'Want to support future development of bleh?'
+        en: 'Want to support future development of bleh?',
+        de: 'Möchten du die zukünftige Entwicklung von bleh unterstützen?'
     },
     support_future_development: {
         // in the context of sponsoring
-        en: 'Support future development'
+        en: 'Support future development',
+        de: 'Unterstütze die zukünftige Entwicklung'
     },
     why_sponsor: {
-        en: 'Receive an accompanying badge on your profile and a big thank you from katelyn for supporting <3'
+        en: 'Receive an accompanying badge on your profile and a big thank you from katelyn for supporting <3',
+        de: 'Erhalte ein Abzeichen auf deinem Profil und ein großes Dankeschön von katelyn für deine Unterstützung <3'
     },
     you_are_a_sponsor: {
-        en: 'You are a sponsor, thank you!'
+        en: 'You are a sponsor, thank you! :3',
+        de: 'Du bist ein Sponsor, dankeschön! :3'
     },
     sponsor_get_badge: {
-        en: 'A monthly sponsorship grants you a custom badge of your choosing.'
+        en: 'A monthly sponsorship grants you a custom badge of your choosing.',
+        de: 'Mit einem monatlichen Sponsoring erhältst du ein individuelles Abzeichen deiner Wahl'
     },
     sponsor_no_badge: {
-        en: 'A custom badge is only available with a monthly sponsorship.'
+        en: 'A custom badge is only available with a monthly sponsorship.',
+        de: 'Ein individuelles Abzeichen ist nur mit einem montalichen Sponsoring erhältlich'
     },
     manage_sponsor: {
-        en: 'Manage sponsorship'
+        en: 'Manage sponsorship',
+        de: 'Sponsoring verwalten'
     },
     labs: {
         en: 'Labs'
     },
     labs_by_last: {
         en: 'Labs by Last.fm',
-        de: 'Labs vom Last.fm',
+        de: 'Labs von Last.fm',
         tagline: {
             en: 'Interactive tools and infographics',
             de: 'Interaktiven Tools und Infografiken'
@@ -779,7 +846,7 @@ export const trans = {
     sponsor_info: {
         en: 'This is a special bleh-managed profile to handle sponsors',
         // TODO(stel): change account (Konto) to profile
-        de: 'Dies ist ein bleh verwaltetes Konto zur Verwaltung von Sponsoren'
+        de: 'Dies ist ein bleh verwaltetes Profil zur Verwaltung von Sponsoren'
     },
     loading: {
         en: 'Loading',
@@ -847,7 +914,8 @@ export const trans = {
         de: 'Hörverlauf'
     },
     you: {
-        en: 'You'
+        en: 'You',
+        de: 'Du'
     },
     open: {
         en: 'Open',
@@ -882,11 +950,11 @@ export const trans = {
             },
             love: {
                 en: 'Loved',
-                de: 'Liebst'
+                de: 'Du liebst'
             },
             unlove: {
                 en: 'Removed love',
-                de: 'Liebst nicht mehr'
+                de: 'Du liebst nicht mehr'
             },
             install_bwaa: {
                 en: 'Installed bwaa',
@@ -919,50 +987,63 @@ export const trans = {
         },
         types: {
             shout: {
-                en: 'Comments and replies from you across the site'
+                en: 'Comments and replies from you across the site',
+                de: 'Kommentare und Antworten von dir auf der gesamten Site'
             },
             image: {
-                en: 'Uploading images and starring for your layout'
+                en: 'Uploading images and starring for your layout',
+                de: 'Bilder hochladen und Sterne für Ihr Layout vergeben'
             },
             obsess: {
-                en: 'Tracks you have on loop'
+                en: 'Tracks you have on loop',
+                de: 'Titel, die du auf Dauerschleife hast'
             },
             love: {
-                en: 'Tracks you love'
+                en: 'Tracks you love',
+                de: 'Titel, die du liebst'
             },
             bookmark: {
-                en: 'Music you want to check out'
+                en: 'Music you want to check out',
+                de: 'Musik, die du abchecken solltest'
             },
             wiki: {
-                en: 'Editing of any wiki'
+                en: 'Editing of any wiki',
+                de: 'Bearbeiten jeglicher Wiki'
             },
             install: {
-                en: 'First installations and updating'
+                en: 'First installations and updating',
+                de: 'Erstinstallationen und Aktualisierungen'
             }
         }
     },
     what_are_activities: {
-        en: 'Keep track of your most recent activity locally on your profile'
+        en: 'Keep track of your most recent activity locally on your profile',
+        de: 'Verfolge deine letzten Aktivitäten lokal auf dein Profil'
     },
     activity_tracking: {
         name: {
-            en: 'Track my activities'
+            en: 'Track my activities',
+            de: 'Meine Aktivitäten tracken'
         },
         body: {
-            en: 'Activities will only be registered while enabled'
+            en: 'Activities will only be registered while enabled',
+            de: 'Aktivitäten werden nur getracked, wenn du es aktivierst'
         }
     },
     clear_history: {
         en: 'Clear history'
     },
     cleared_activity_history: {
-        en: 'Cleared your activity history'
+        en: 'Cleared your activity history',
+        de: 'Verlauf löschen'
     },
     activity_settings: {
-        en: 'Activity settings'
+        en: 'Activity settings',
+        de: 'Aktivitätseinstellungen'
     },
     installation: {
-        en: 'Installation'
+        en: 'Installation',
+        de: 'Installation'
     },
     grid: {
         // as in the view mode
@@ -1006,7 +1087,8 @@ export const trans = {
     },
     love: {
         // as in loving tracks as a concept
-        en: 'Love'
+        en: 'Love',
+        de: 'Liebst'
     },
     loved: {
         // as in loved tracks, this can be seen
@@ -1028,7 +1110,8 @@ export const trans = {
         de: 'Titelliste'
     },
     tracklist_from_plays_info: {
-        en: 'Retrieved own plays as official tracklist is unavailable'
+        en: 'Retrieved own plays as official tracklist is unavailable',
+        de: 'Eigene Plays abgerufen, da die offizielle Titelliste nicht verfügbar ist'
     },
     from_the_album: {
         en: 'From {album}',
@@ -1046,32 +1129,39 @@ export const trans = {
     others_count: {
         // the amount of other users
         en: '{c} others',
-        de: '{c} hörer'
+        de: '{c} weitere'
     },
     loading_album_plays: {
-        en: 'Collecting your album plays'
+        en: 'Collecting your album plays',
+        de: 'Sammeln deiner Albumwiedergaben'
     },
     fail_album_plays: {
-        en: 'No plays could be found'
+        en: 'No plays could be found',
+        de: 'Es konnten keine Plays gefunden werden'
     },
     open_album_as_track: {
         en: 'Open album title as track',
         de: 'Albumtitel als Titel öffnen'
     },
     ignored: {
-        en: 'Ignored'
+        en: 'Ignored',
+        de: 'Ignoriert'
     },
     all_time: {
-        en: 'All time'
+        en: 'All time',
+        de: 'Aller Zeiten'
     },
     count_total: {
-        en: '{c} total'
+        en: '{c} total',
+        de: '{c} insgesamt'
     },
     video_removed: {
-        en: 'Video removed by Last.fm'
+        en: 'Video removed by Last.fm',
+        de: 'Video von Last.fm entfernt'
     },
     blocked_page: {
-        en: 'This page has been limited by Last.fm'
+        en: 'This page has been limited by Last.fm',
+        de: 'Diese Seite wurde von Last.fm eingeschränkt'
     },
     cancel: {
         en: 'Cancel',
@@ -1081,16 +1171,20 @@ export const trans = {
         // used as a header above the actual search eg.
         // Results for
         // "random search text"
-        en: 'Results for'
+        en: 'Results for',
+        de: 'Ergebnisse für'
     },
     create_new_event: {
-        en: 'Create new event'
+        en: 'Create new event',
+        de: 'Neues Event kreieren'
     },
     related_to: {
-        en: 'Related to'
+        en: 'Related to',
+        de: 'Verwandt mit'
     },
     personal_tag: {
-        en: 'Personal tag'
+        en: 'Personal tag',
+        de: 'Persönliches Tag'
     },
     your_avatar: {
         en: 'Your avatar',
@@ -1107,112 +1201,144 @@ export const trans = {
     },
     by_artist: {
         // {name} by {artist} - hence the space in english
-        en: ' by {a}'
+        en: ' by {a}',
+        de: ' von {a}'
     },
     average: {
         // scrobble average
-        en: 'Average'
+        en: 'Average',
+        de: 'Durchschnitt'
     },
     from_user: {
-        en: 'from {u}'
+        en: 'from {u}',
+        de: 'Von {u}'
     },
     open_new_tab: {
-        en: 'Open in a new tab'
+        en: 'Open in a new tab',
+        de: 'Im neuen Tab öffnen '
     },
     event_cancelled: {
         // obviously remove the emoji or replace it as
         // you see fit if desired
-        en: 'This event has been cancelled (╥﹏╥)'
+        en: 'This event has been cancelled (╥﹏╥)',
+        de: 'Dieses Event wurde abgesagt (╥﹏╥)'
     },
     format_guest_features: {
         name: {
-            en: 'Smart credited artists and song tags'
+            en: 'Smart credited artists and song tags',
+            de: 'Schlaue Künstler- und Song-Tags'
         },
         body: {
-            en: 'Analyses album and track titles into their guests, versions, remixes, etc.'
+            en: 'Analyses album and track titles into their guests, versions, remixes, etc.',
+            de: 'Analysiert Album- und Tracktitel hinsichtlich ihrer Versionen, Remixe usw.'
         }
     },
     show_guest_features: {
         name: {
-            en: 'Duplicate credited artists in title'
+            en: 'Duplicate credited artists in title',
+            de: 'Doppelte Nennung der Künstler im Titel'
         },
         body: {
-            en: 'Otherwise guests are neatly placed next to the primary artist'
+            en: 'Otherwise guests are neatly placed next to the primary artist',
+            de: 'Ansonsten werden Features neben dem Hauptkünstler platziert'
         }
     },
     track_column_view: {
-        en: 'Use column view for tracklist information'
+        en: 'Use column view for tracklist information',
+        de: 'Verwende die Spaltenansicht für Titellisteninformationen'
     },
     show_remaster_tags: {
-        en: 'Show remaster tags'
+        en: 'Show remaster tags',
+        de: 'Remaster-Tags anzeigen'
     },
     recent_realtime: {
         name: {
-            en: 'Refresh tracks automatically'
+            en: 'Refresh tracks automatically',
+            de: 'Titel automatisch aktualisieren'
         },
         body: {
-            en: 'View your listening history in realtime'
+            en: 'View your listening history in realtime',
+            de: 'Sehe deinen Hörverlauf in Echtzeit an'
         }
     },
     amount_to_display: {
-        en: 'Amount to display'
+        en: 'Amount to display',
+        de: 'Anzuzeigender Betrag'
     },
     recent_artwork: {
-        en: 'Accompany tracks with artwork'
+        en: 'Accompany tracks with artwork',
+        de: 'Titel mit Albumcover anzeigen'
     },
     default_timeframe: {
-        en: 'Default timeframe'
+        en: 'Default timeframe',
+        de: 'Standardzeitrahmen'
     },
     chart_style: {
-        en: 'Chart style'
+        en: 'Chart style',
+        de: 'Diagrammstil'
     },
     country: {
-        en: 'Country'
+        en: 'Country',
+        de: 'Land'
     },
     subtitle: {
-        en: 'Subtitle'
+        en: 'Subtitle',
+        de: 'Untertitel'
     },
     pronoun_tip: {
-        en: 'Pronouns are specially supported if placed first'
+        en: 'Pronouns are specially supported if placed first',
+        de: 'Pronomen werden unterstützt, wenn sie an erster Stelle stehen'
     },
     block_list: {
-        en: 'Block list'
+        en: 'Block list',
+        de: 'Blockierliste'
     },
     when_blocked: {
-        en: 'What happens with blocked users?'
+        en: 'What happens with blocked users?',
+        de: 'Was passiert mit beblockten Nutzern?'
     },
     blocked_count: {
-        en: 'You have blocked {c} profiles'
+        en: 'You have blocked {c} profiles',
+        de: 'Du hast {c} Nutzer blockiert'
     },
     enter_username: {
-        en: 'Enter username'
+        en: 'Enter username',
+        de: 'Benutzername eingeben'
     },
     block: {
-        en: 'Block'
+        en: 'Block',
+        de: 'Blockieren'
     },
     blocked_user_public: {
-        en: 'Can leave shouts but not viewable to you'
+        en: 'Can leave shouts but not viewable to you',
+        de: 'Kann Shouts hinterlassen, aber nicht sichtbar für dich'
     },
     blocked_user_message: {
-        en: 'Cannot direct message you'
+        en: 'Cannot direct message you',
+        de: 'Kann keine Direktnachricht senden.'
     },
     blocked_user_new_shouts: {
-        en: 'Cannot leave shouts or reply to you'
+        en: 'Cannot leave shouts or reply to you',
+        de: 'Kann keine Shouts hinterlassen oder dir antworten'
     },
     blocked_user_old_shouts: {
-        en: 'You cannot delete pre-existing shouts on your profile'
+        en: 'You cannot delete pre-existing shouts on your profile',
+        de: 'Du kannst bereits vorhandene Shouts auf deinem Profil nicht löschen'
     },
     blocked_user_view_profile: {
-        en: 'They can still view your profile'
+        en: 'They can still view your profile',
+        de: 'Sie können dein Profil weiterhin sehen'
     },
     no_quote: {
         en: '...'
     },
     shared_with_others: {
-        en: 'Shared with others'
+        en: 'Shared with others',
+        de: 'Mit anderen geteilt'
     },
     others_from_profile: {
-        en: 'More from {user}'
+        en: 'More from {user}',
+        de: 'Mehr von {user}'
     },
     obsess: {
         en: 'Obsess'
@@ -1224,49 +1350,62 @@ export const trans = {
         en: 'Obsessions'
     },
     finding_your_tracks: {
-        en: 'Finding your tracks'
+        en: 'Finding your tracks',
+        de: 'Finde deine Titel'
     },
     news_from_user: {
-        en: 'News from {user}'
+        en: 'News from {user}',
+        de: 'Neuigkeiten von {user}'
     },
     update_check: {
-        en: 'Check for updates'
+        en: 'Check for updates',
+        de: 'Nach Updates suchen'
     },
     brand_version_number: {
         // used for the lotus header where:
         // brand = "lotus"
         // number = "2025.0507"
         // making: 'lotus version 2025.0507'
-        en: '{brand} version {number}'
+        en: '{brand} version {number}',
+        de: '{brand} Version {number}'
     },
     what_is_lotus: {
-        en: 'A capitalisation correction system for artists, albums, and tracks - all powered by community contributions.'
+        en: 'A capitalisation correction system for artists, albums, and tracks - all powered by community contributions.',
+        de: 'Ein System zur Korrektur der Groß- und Kleinschreibung von Künstlern, Alben und Titeln - alles unterstützt durch Beiträge der Community.'
     },
     correct_titles_with_lotus: {
-        en: 'Correct titles with lotus'
+        en: 'Correct titles with lotus',
+        de: 'Titel korrigieren mit Lotus'
     },
     view_all: {
-        en: 'View all'
+        en: 'View all',
+        de: 'Alle ansehen'
     },
     help_contribute: {
-        en: 'Help contribute'
+        en: 'Help contribute',
+        de: 'Helfe mit'
     },
     delete: {
-        en: 'Delete'
+        en: 'Delete',
+        de: 'Löschen'
     },
     search: {
-        en: 'Search'
+        en: 'Search',
+        de: 'Suchen'
     },
     search_guest: {
-        en: 'Search guest appearances'
+        en: 'Search guest appearances',
+        de: 'Suche nach Features'
     },
     anything_you_can_imagine: {
         // placeholder for your about me
-        en: 'Anything you can imagine...'
+        en: 'Anything you can imagine...',
+        de: 'Alles, was du dir vorstellen kannst ...'
     },
     supports_markdown: {
         // markdown: https://www.markdownguide.org/cheat-sheet/
-        en: 'Supports Markdown'
+        en: 'Supports Markdown',
+        de: 'Unterstützt Markdown'
     },
     profile_shortcut: {
         name: {
@@ -1274,243 +1413,306 @@ export const trans = {
             de: 'Profilverknüpfung'
         },
         body: {
-            en: 'View their scrobbles alongside yours at all times'
+            en: 'View their scrobbles alongside yours at all times',
+            de: 'Sehe ihre Scrobbels jederzeit neben deine an'
         },
         linked: {
-            en: 'Profile shortcut linked!'
+            en: 'Profile shortcut linked!',
+            de: 'Profile verknüpft!'
         }
     },
     avatar_radius: {
-        en: 'Profile avatar shape'
+        en: 'Profile avatar shape',
+        de: 'Profil-Avatarform'
     },
     notes: {
-        en: 'Notes'
+        en: 'Notes',
+        de: 'Notizen'
     },
     no_notes: {
-        en: 'No profiles here... (｡•́︿•̀｡)'
+        en: 'No profiles here... (｡•́︿•̀｡)',
+        de: 'Keine Profile hier... (｡•́︿•̀｡)'
     },
     font: {
         name: {
-            en: 'Font choice'
+            en: 'Font choice',
+            de: 'Schriftartauswahl'
         },
         body: {
-            en: 'Choose a custom selection of fonts that suit you'
+            en: 'Choose a custom selection of fonts that suit you',
+            de: 'Wähle eine benutzerdefinierte Auswahl an Schriftarten, die zu dir passt'
         }
     },
     font_weight: {
         name: {
-            en: 'Font weight'
+            en: 'Font weight',
+            de: 'Schriftstärke'
         },
         body: {
-            en: 'Used for regular text paragraphs'
+            en: 'Used for regular text paragraphs',
+            de: 'Wird für normale Textabsätze verwendet'
         }
     },
     font_weight_medium: {
         name: {
-            en: 'Medium font weight'
+            en: 'Medium font weight',
+            de: 'Mittlere Schriftstärke'
         },
         body: {
-            en: 'Used for button text and small headers'
+            en: 'Used for button text and small headers',
+            de: 'Wird für Schaltflächentext und kleine Überschriften verwendet'
         }
     },
     font_weight_bold: {
         name: {
-            en: 'Bold font weight'
+            en: 'Bold font weight',
+            de: 'Fette Schriftstärke'
         },
         body: {
-            en: 'Used for large headers'
+            en: 'Used for large headers',
+            de: 'Wird für große Überschriften verwendet'
         }
     },
     font_emoji: {
         name: {
-            en: 'Emoji compatibility'
+            en: 'Emoji compatibility',
+            de: 'Emoji-Kompatibilität'
         },
         body: {
-            en: 'Required to render emoji properly before Windows 11 🏳️‍⚧️'
+            en: 'Required to render emoji properly before Windows 11 🏳️‍⚧️',
+            de: 'Erforderlich, um Emojis vor Windows 11 richtig darzustellen 🏳️‍⚧️'
         }
     },
     enter_font_names: {
-        en: 'Enter installed font name(s), separated by commas'
+        en: 'Enter installed font name(s), separated by commas',
+        de: 'Geben die installierte Schriftart durch Kommas getrennt ein'
     },
     change_now: {
-        en: 'Change now'
+        en: 'Change now',
+        de: 'Jetzt ändern'
     },
     profiles: {
-        en: 'Profiles'
+        en: 'Profiles',
+        de: 'Profile'
     },
     redirections: {
-        en: 'Redirections'
+        en: 'Redirections',
+        de: 'Umleitungen'
     },
     legacy_redirects: {
         name: {
-            en: 'Legacy scrobble redirection'
+            en: 'Legacy scrobble redirection',
+            de: 'Legacy-Scrobbel-Umleitung'
         },
         body: {
-            en: 'By default, Last.fm will "auto-correct" some of your scrobbles to (mostly) faulty redirections. By disabling this it does not fully fix the system but keeps artist names in your library intact.'
+            en: 'By default, Last.fm will "auto-correct" some of your scrobbles to (mostly) faulty redirections. By disabling this it does not fully fix the system but keeps artist names in your library intact.',
+            de: 'Standardmäßig korrigiert Last.fm einige deiner Scrobbel-Dateien automatisch und führt (meist) fehlerhafte Weiterleitungen aus. Durch die Deaktivierung dieser Funktion wird das System zwar nicht vollständig repariert, die Künstlernamen in Ihrer Bibliothek bleiben jedoch erhalten.'
         }
     },
     redirect_messages: {
         name: {
-            en: 'Remove page redirection notifications'
+            en: 'Remove page redirection notifications',
+            de: 'Benachrichtigungen zur Seitenumleitung entfernen'
         },
         body: {
-            en: 'These notifications can let you undo redirections Last.fm forced upon you, but can also be annoying'
+            en: 'These notifications can let you undo redirections Last.fm forced upon you, but can also be annoying',
+            de: 'Mit diesen Benachrichtigungen kannst du die von Last.fm aufgezwungenen Weiterleitungen rückgängig machen, sie können aber auch lästig sein.'
         }
     },
     colourful_counts: {
         name: {
-            en: 'Rank-based colours for artist charts'
+            en: 'Rank-based colours for artist charts',
+            de: 'Rangbasierte Farben für Künstlerdiagramme'
         },
         body: {
-            en: 'Assigns a colour based on an artist\'s all-time ranking in your library'
+            en: 'Assigns a colour based on an artist\'s all-time ranking in your library',
+            de: 'Weist eine Farbe basierend auf dem Allzeit-Ranking eines Künstlers in deiner Bibliothek zu'
         }
     },
     glacier_graphs: {
         name: {
-            en: 'Visualise scrobble graphs better'
+            en: 'Visualise scrobble graphs better',
+            de: 'Scrobbel-Diagramme besser visualisieren'
         },
         body: {
-            en: 'Choose between a tiny delay for a wide range of graph options or legacy Last.fm graphs'
+            en: 'Choose between a tiny delay for a wide range of graph options or legacy Last.fm graphs',
+            de: 'Wähle zwischen einer kleinen Verzögerung für eine breite Palette von Diagrammoptionen oder älteren Last.fm-Diagrammen'
         }
     },
     show_bulk_edit_album: {
         name: {
-            en: 'Show "Bulk Edit" powered album name in tracklists'
+            en: 'Show "Bulk Edit" powered album name in tracklists',
+            de: 'Albumnamen mit „Massenbearbeitung“ in Titellisten anzeigen'
         },
         body: {
-            en: 'With this extension the album name is displayed on all tracks by default, whereas with bleh the album name is only displayed on active tracks'
+            en: 'With this extension the album name is displayed on all tracks by default, whereas with bleh the album name is only displayed on active tracks',
+            de: 'Mit dieser Erweiterung wird der Albumname standardmäßig auf allen Titeln angezeigt, während mit bleh der Albumname nur auf aktiven Titeln angezeigt wird'
         }
     },
     gendered_tags: {
         name: {
-            en: 'Hide gender-based tags'
+            en: 'Hide gender-based tags',
+            de: 'Geschlechtsspezifische Tags ausblenden'
         },
         body: {
-            en: 'These tags are often redundant and can never apply to the full range of what they\'re intending'
+            en: 'These tags are often redundant and can never apply to the full range of what they\'re intending',
+            de: 'Diese Tags sind oft überflüssig und können nie auf die gesamte Bandbreite dessen angewendet werden, was sie beabsichtigen'
         }
     },
     artwork_and_grids: {
-        en: 'Artwork and grids'
+        en: 'Artwork and grids',
+        de: 'Albencover und Raster'
     },
     gloss: {
         name: {
-            en: 'Gloss overlay'
+            en: 'Gloss overlay',
+            de: 'Glanz-Overlay'
         },
         body: {
-            en: 'Very shiny'
+            en: 'Very shiny',
+            de: 'Sehr glänzend'
         }
     },
     grid_glow: {
         name: {
-            en: 'Reflect colour below grid items'
+            en: 'Reflect colour below grid items',
+            de: 'Farbe unter Rasterelementen reflektieren'
         },
         body: {
-            en: 'Glows in the colour of said album cover'
+            en: 'Glows in the colour of said album cover',
+            de: 'Leuchtet in der Farbe des Albumcovers'
         }
     },
     skip_to: {
-        en: 'Skip to'
+        en: 'Skip to',
+        de: 'überspringen zu'
     },
     information: {
         en: 'Information'
     },
     username: {
         name: {
-            en: 'Username'
+            en: 'Username',
+            de: 'Benuztername'
         },
         body: {
-            en: 'To change your username hit the button to send an email. Having problems? {a}contact support{/a}.'
+            en: 'To change your username hit the button to send an email. Having problems? {a}contact support{/a}.',
+            de: 'Um deinen Nutzernamen zu ändern, klicke auf die Schaltfläche „E-Mail senden“. Gibt es Probleme? {a}kontaktieren Sie den Support{/a}.'
         }
     },
     email: {
         en: 'Email'
     },
     password: {
-        en: 'Password'
+        en: 'Password',
+        de: 'Passwort'
     },
     new_password: {
-        en: 'New password'
+        en: 'New password',
+        de: 'Neues Passwort'
     },
     confirm_password: {
-        en: 'Confirm password'
+        en: 'Confirm password',
+        de: 'Passwort bestätigen'
     },
     change: {
-        en: 'Change'
+        en: 'Change',
+        de: 'Ändern'
     },
     marketing_emails: {
         name: {
             en: 'Marketing emails'
         },
         body: {
-            en: 'Last.fm can optionally send promotional emails from time to time'
+            en: 'Last.fm can optionally send promotional emails from time to time',
+            de: 'Last.fm kann optional von Zeit zu Zeit Werbe-emails senden'
         }
     },
     email_language: {
-        en: 'Email language'
+        en: 'Email language',
+        de: 'Email Sprache'
     },
     communication: {
-        en: 'Communication'
+        en: 'Communication',
+        de: 'Kommunikation'
     },
     security: {
-        en: 'Security'
+        en: 'Security',
+        de: 'Sicherheit'
     },
     logout_everywhere: {
-        en: 'Logout on all devices'
+        en: 'Logout on all devices',
+        de: 'Auf allen Geräten abmelden'
     },
     delete_account: {
         name: {
-            en: 'Delete account'
+            en: 'Delete account',
+            de: 'Account löschen'
         },
         body: {
-            en: 'Deletion will take 14 days to complete, after this time your account will either be deleted, anonymised or put beyond use and cannot be recovered. Once deleted, your username will no longer be available.'
+            en: 'Deletion will take 14 days to complete, after this time your account will either be deleted, anonymised or put beyond use and cannot be recovered. Once deleted, your username will no longer be available.',
+            de: 'Die Löschung dauert 14 Tage. Nach Ablauf dieser Frist wird dein Konto entweder gelöscht, anonymisiert oder unbrauchbar gemacht und kann nicht wiederhergestellt werden. Nach der Löschung ist dein Nutzername nicht mehr verfügbar.'
         }
     },
     delete_account_permanently: {
-        en: 'Delete {u} permanently'
+        en: 'Delete {u} permanently',
+        de: '{u} dauerhaft löschen'
     },
     connect_app: {
-        en: 'Connect {name}'
+        en: 'Connect {name}',
+        de: 'Verbinde {name}'
     },
     connect: {
-        en: 'Connect'
+        en: 'Connect',
+        de: 'Verbinden'
     },
     app_would_like_to_connect: {
         // app name is above
-        en: 'would like to use your account'
+        en: 'would like to use your account',
+        de: 'möchte Ihr Konto nutzen'
     },
     logged_in_as: {
-        en: 'Logged in as {user}'
+        en: 'Logged in as {user}',
+        de: 'Angemeldet als {user}'
     },
     ensure_you_trust: {
         // API applications
         // last.fm/settings/applications
-        en: 'Make sure you trust this application'
+        en: 'Make sure you trust this application',
+        de: 'Stelle sicher, dass du dieser Anwendung vertraust'
     },
     you_can_now_close_this_tab: {
-        en: 'You can now close this tab'
+        en: 'You can now close this tab',
+        de: 'Du kannst diesen Tab jetzt schließen'
     },
     manage_applications: {
         // API applications
         // last.fm/settings/applications
-        en: 'Manage applications'
+        en: 'Manage applications',
+        de: 'Anwendungen verwalten'
     },
     markdown_profiles: {
         name: {
-            en: 'Use fancy formatting on profiles'
+            en: 'Use fancy formatting on profiles',
+            de: 'Verwende schicke Formatierungen für Profile'
         },
         body: {
-            en: 'Allows the use of line breaks, bold text, italics, and images in all "About Me" panels'
+            en: 'Allows the use of line breaks, bold text, italics, and images in all "About Me" panels',
+            de: 'Ermöglicht die Verwendung von Zeilenumbrüchen, fettem Text, Kursivschrift und Bildern in allen „Über mich“-Bereichen'
         }
     },
     gathering_your_plays: {
-        en: 'Gathering your album plays'
+        en: 'Gathering your album plays',
+        de: 'Sammeln deiner Albumwiedergaben'
     },
     failed_to_find_tracks: {
-        en: 'You do not have any plays'
+        en: 'You do not have any plays',
+        de: 'Du hast keine Plays'
     },
     sourced_from_own_plays: {
         // tracklist from your own album plays
-        en: 'Sourced from your own plays as an official tracklist is unavailable'
+        en: 'Sourced from your own plays as an official tracklist is unavailable',
+        de: 'Aus deinen eigenen Plays stammend, da keine offizielle Titelliste verfügbar ist'
     },
     submit_language: {
         name: {
