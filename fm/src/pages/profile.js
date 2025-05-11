@@ -4,14 +4,14 @@ import { settings } from "../build/config"
 import { log } from "../build/log"
 import { auth, page, recent_activity_list, root } from "../build/page"
 import { cute, sponsor_list } from "../build/sponsor"
-import { clean_number, sanitise } from "../build/tools"
+import { clean_number, sanitise, sanitise_text } from "../build/tools"
 import { lang, trans_legacy, trans, tl } from "../build/trans"
 import { prep_chart_colours } from '../chart'
 import { load_badges } from "../components/badge"
 import { dialog } from "../components/dialog"
-import { correct_artist, correct_item_by_artist } from "../components/lotus"
+import { correct_artist, correct_item_by_artist, name_includes } from "../components/lotus"
 import { markdown } from "../components/markdown"
-import { deliver_notif, notify } from "../components/notify"
+import { notify } from "../components/notify"
 import { create_profile_top_item, redesign_profile_header } from "../components/profile_header"
 import { custom_select, update_inbuilt_select } from "../components/select"
 import { checkup_page_structure } from "../components/structure"
@@ -20,20 +20,17 @@ import { register_background, update_page } from "../page"
 import { ff } from "../sku"
 import { bleh_user_library } from "./glacier"
 import { use_pronouns } from "./lastfm_settings"
-import { patch_obsession_view } from "./obsession"
+import { bleh_obsession } from "./obsession"
 
 export function bleh_profiles() {
     // the obsessions page is a user subpage but works very differently
     if (page.subpage == 'obsessions_obsession') {
-        patch_obsession_view();
+        bleh_obsession();
         return;
     }
 
-    // are we on a profile?
     let profile_header = document.body.querySelector('.header--user');
-
-    if (!profile_header)
-        return;
+    if (!profile_header) return;
 
     page.name = profile_header.querySelector('.header-title a').textContent;
 
@@ -53,15 +50,13 @@ export function bleh_profiles() {
 
     let new_account = false;
 
-    let katsune = ff('katsune');
-
     if (ff('refreshed_nav')) {
         let avatar = profile_header.querySelector('.avatar');
         let title_wrap = profile_header.querySelector('.header-title-label-wrap');
         let sub_wrap = profile_header.querySelector('.header-title-secondary');
 
         // new account
-        if (avatar == null) {
+        if (!avatar) {
             avatar = profile_header.querySelector('.header-avatar-add');
             new_account = true;
         }
@@ -79,12 +74,12 @@ export function bleh_profiles() {
                 ${avatar.innerHTML}
             </div>
             <div class="info-side">
-                <div class="sub-text">${trans_legacy[lang].profile.name}</div>
+                <div class="sub-text">${tl(trans.profile)}</div>
                 ${(title_wrap != null) ? `<div class="title-container">${title_wrap.innerHTML}</div>` : ''}
                 ${(sub_wrap != null) ? sub_wrap.outerHTML : ''}
             </div>
             <div class="expand-side">
-                <button class="header-expand-button icon" onclick="_toggle_profile_header(this)" aria-expanded="${settings.profile_header_expand}">${trans_legacy[lang].gallery.open.name}</button>
+                <button class="header-expand-button icon" onclick="_toggle_profile_header(this)" aria-expanded="${settings.profile_header_expand}">${tl(trans.expand)}</button>
             </div>
         `);
 
@@ -100,13 +95,13 @@ export function bleh_profiles() {
             register_background(null, 'hidden');
         } else {
             if (settings.profile_avi_background) {
-                if (avatar != null)
+                if (avatar)
                     register_background(avatar.querySelector('img').getAttribute('src').replace('/avatar170s/', '/ar0/'), 'avatar');
                 else
                     register_background(null, 'none');
             } else {
                 let background = document.body.querySelector('.header-background--has-image');
-                if (background != null)
+                if (background)
                     register_background(background.style.getPropertyValue('background-image').replace('url("', '').replace('")', ''), 'artist');
                 else
                     register_background(null, 'none');
@@ -141,13 +136,13 @@ export function bleh_profiles() {
 
         let beta = document.createElement('span');
         beta.classList.add('new-badge', 'beta-badge');
-        beta.textContent = trans_legacy[lang].settings.new;
+        beta.textContent = tl(trans.new);
 
         tab.appendChild(beta);
     }
 
     let library_tab = page.structure.nav.querySelector('.secondary-nav-item--library a');
-    library_tab.textContent = trans_legacy[lang].auth_menu.library;
+    library_tab.textContent = tl(trans.library);
 
 
     let is_own_profile = (page.name == auth.name);
@@ -155,9 +150,7 @@ export function bleh_profiles() {
         profile_header.setAttribute('data-is-own-profile', 'true');
 
     if (!is_subpage) {
-        let is_following = false;
-        if (profile_header.querySelector('.label.user-follow'))
-            is_following = true;
+        let is_following = profile_header.querySelector('.label.user-follow');
 
 
         //
@@ -173,7 +166,7 @@ export function bleh_profiles() {
             let recent_activity_section = document.createElement('section');
             recent_activity_section.classList.add('recent-activity-section');
             recent_activity_section.innerHTML = (`
-                <h2>${trans_legacy[lang].activities.name}</h2>
+                <h2>${tl(trans.activity)}</h2>
             `);
 
             load_activities();
@@ -216,34 +209,74 @@ export function bleh_profiles() {
                     else if (involved.type == 'bleh')
                         involved_link = `${root}bleh`;
 
+                    let name = involved.name;
+                    let sister = involved.sister;
+
                     // tooltip
                     if (involved.type != 'artist' && involved.type != 'user' && involved.type != 'tag' && involved.type != 'bwaa' && involved.type != 'bleh') {
-                        tooltip_name = involved.name;
-                        tooltip_sister = involved.sister;
+                        tooltip_name = name;
+                        tooltip_sister = sister;
+                    }
+
+                    if (involved.type == 'track' && settings.format_guest_features) {
+                        let formatted_title = name_includes(name, sister);
+
+                        let song_title;
+                        let song_tags;
+                        if (formatted_title) {
+                            song_title = formatted_title[0];
+                            song_tags = formatted_title[1];
+                            sister = formatted_title[2];
+                            tooltip_name = song_title;
+                            tooltip_sister = sister;
+                        }
+
+                        // parse tags into text
+                        let song_tags_text = '';
+                        for (let song_tag in song_tags) {
+                            song_tags_text = `${song_tags_text}<div class="feat" data-bleh--tag-type="${song_tags[song_tag].type}" data-bleh--tag-group="${song_tags[song_tag].group}">${sanitise_text(song_tags[song_tag].text)}</div>`;
+                        }
+
+                        // combine
+                        name = `<div class="title">${sanitise_text(song_title).trim()}</div>${song_tags_text}`;
+                    } else if ((involved.type == 'album' || involved.type == 'track') && settings.corrections) {
+                        name = correct_item_by_artist(name, sister);
+                        tooltip_name = name;
+                        sister = correct_artist(sister);
+                        tooltip_sister = sister;
+                    }  else if (involved.type == 'artist' && settings.corrections) {
+                        name = correct_artist(name);
+                        tooltip_name = name;
                     }
 
                     if (involved_text != '')
-                        involved_text = `${involved_text}, <a class="involved--${involved.type}" href="${involved_link}">${involved.name}</a>`;
+                        involved_text = `${involved_text}, <a class="involved--${involved.type}" href="${involved_link}">${name}</a>`;
                     else
-                        involved_text = `${involved_text}<a class="involved--${involved.type}" href="${involved_link}">${involved.name}</a>`;
+                        involved_text = `${involved_text}<a class="involved--${involved.type}" href="${involved_link}">${name}</a>`;
                 });
 
                 activity_item.innerHTML = (`
                     <div class="type">${trans_legacy[lang].activities[activity.type]}<div class="date">${moment(activity.date).fromNow(true)}</div></div>
-                    <div class="title">${involved_text}</div>
+                    <div class="name">${involved_text}</div>
                 `);
 
                 recent_activity_section.appendChild(activity_item);
 
-                if (tooltip_name != undefined)
-                    tippy(activity_item.querySelector('.title a'), {
+                if (tooltip_name)
+                    tippy(activity_item.querySelector('.name a'), {
                         content: `${tooltip_sister} - ${tooltip_name}`
                     });
-
-                let reports = page.structure.side.querySelector('.promo-v3');
-                if (reports)
-                    reports.after(recent_activity_section);
             });
+
+            let edit = document.createElement('div');
+            edit.classList.add('more-link');
+
+            edit.innerHTML = (`
+                <a href="${root}bleh?tab=profiles&setting=activities">${tl(trans.activity_settings)}</a>
+            `);
+            recent_activity_section.appendChild(edit);
+
+            page.structure.side.appendChild(recent_activity_section);
         }
 
 
@@ -253,7 +286,7 @@ export function bleh_profiles() {
             page.structure.side.innerHTML = '';
 
             let alert = document.createElement('section');
-            alert.classList.add('cta', 'colourful', 'sponsor');
+            alert.classList.add('cta');
             alert.innerHTML = `<strong>${tl(trans.sponsor_info)}</strong>`;
 
             page.structure.main.appendChild(alert);
@@ -311,15 +344,15 @@ export function bleh_profiles() {
         listen_container.innerHTML = (`
             <div class="listener-row">
                 <div class="scrobble-side" id="scrobbles_tooltip">
-                    <h3>${trans_legacy[lang].profile.scrobbles}</h3>
+                    <h3>${tl(trans.scrobbles)}</h3>
                     <p>${scrobbles}</p>
                 </div>
                 <div>
-                    <h3>${trans_legacy[lang].profile.artists}</h3>
+                    <h3>${tl(trans.artists)}</h3>
                     <p>${artists}</p>
                 </div>
                 <div>
-                    <h3>${trans_legacy[lang].profile.loved}</h3>
+                    <h3>${tl(trans.loved)}</h3>
                     <p>${loved}</p>
                 </div>
             </div>
@@ -328,6 +361,11 @@ export function bleh_profiles() {
                     <div class="loading-data-text">${tl(trans.loading_90_days)}</div>
                 </div>
             </a>
+            <div class="more-link">
+                <a href="${root}user/${page.name}/library/artists?date_preset=LAST_90_DAYS&page=1">
+                    ${tl(trans.explore_in_library)}
+                </a>
+            </div>
         `);
 
         tippy(listen_container.querySelector('#scrobbles_tooltip'), {
@@ -357,7 +395,7 @@ export function bleh_profiles() {
             let value_panel = document.createElement('section');
             value_panel.classList.add('value-panel');
             value_panel.innerHTML = (`
-                <h2 class="text-18">${(selected_tab != null) ? selected_tab.textContent : trans_legacy[lang].profile.events}</h2>
+                <h2 class="text-18">${(selected_tab) ? selected_tab.firstChild.textContent : tl(trans.events)}</h2>
             `);
 
             let values = page.structure.main.querySelectorAll('.metadata-display');
@@ -385,7 +423,7 @@ export function bleh_profiles() {
             if (total_value != null) {
                 let total_text = document.createElement('h2');
                 total_text.classList.add('text-18');
-                total_text.textContent = trans_legacy[lang].event.all_time;
+                total_text.textContent = tl(trans.all_time);
 
                 value_panel.appendChild(total_text);
 
@@ -396,7 +434,7 @@ export function bleh_profiles() {
                     name: page.name,
                     text: total_value.textContent,
                     type: 'total',
-                    tooltip:  trans_legacy[lang].event.total.replace('{c}', total_value.textContent)
+                    tooltip:  tl(trans.count_total).replace('{c}', total_value.textContent)
                 });
 
                 value_panel.appendChild(total_header);
@@ -421,18 +459,17 @@ export function bleh_profiles() {
             } else {
                 let dashboard = page.structure.container.querySelector('.user-dashboard');
 
-                if (dashboard == null)
+                if (!dashboard)
                     return;
 
                 // v2
                 dialog({
                     id: 'listening_report_v2',
-                    title: 'Listening reports v2',
+                    title: 'oh no :c',
                     body: (`
-                        <div class="alert alert-error">Unfortunately, legacy listening reports are not yet supported in bleh3.</div>
+                        <div class="alert alert-error">This listening report is too old</div>
                         <br>
-                        <p>To view this page properly it's recommended to temporarily disable bleh :3</p>
-                        <p>Don't worry, they will be looked at eventually. Sorry for the inconvenience !!</p>
+                        <p>Legacy listening reports are not properly viewable yet in bleh for now. Sorry for the inconvenience.</p>
                     `)
                 });
                 return;
@@ -471,7 +508,7 @@ export function bleh_profiles() {
                         content: button.textContent
                     });
 
-                    button.textContent = trans_legacy[lang].music.obsession;
+                    button.textContent = tl(trans.obsess);
                 }
 
                 button.classList.add('btn', 'view-item', 'interact-item', 'obsession-top-item');
@@ -537,7 +574,7 @@ export function bleh_profiles() {
 
                 if (obsession_is_first) {
                     tippy(grid_item, {
-                        content: trans_legacy[lang].music.obsession_first
+                        content: tl(trans.obsession_first)
                     });
                 }
 
@@ -548,8 +585,67 @@ export function bleh_profiles() {
 
 
             let no_data = page.structure.container.querySelector('.no-data-message--obsession-history');
-            if (no_data != null) {
+            if (no_data)
                 wrap.after(no_data);
+
+
+            let pagination = page.structure.container.querySelector('.pagination');
+            if (pagination)
+                new_panel.appendChild(pagination);
+        } else if (page.subpage == 'playlists_playlists') {
+            let section_controls = page.structure.container.querySelector('.section-controls-full-width');
+            let buttons;
+            if (section_controls) {
+                section_controls.classList.add('legacy-section-controls');
+                buttons = section_controls.querySelectorAll(':is(button, a)');
+
+                let header = page.structure.container.querySelector('.content-top-header');
+                page.structure.content_top.innerHTML = (`
+                    <div class="content-top-inner-wrap">
+                        <div class="container content-top-lower">
+                            <h1 class="content-top-header">${header.textContent.trim()}</h1>
+                        </div>
+                    </div>
+                `);
+            }
+
+            let new_panel = document.createElement('section');
+            new_panel.classList.add('obsessions-panel');
+
+            page.structure.main.appendChild(new_panel);
+
+            if (buttons.length > 0) {
+                let wrap = document.createElement('div');
+                wrap.classList.add('view-buttons-wrapper');
+                wrap.innerHTML = `<div class="info"><div class="alert alert-info">Playlists are a work in progress</div></div>`;
+
+                let button_header = document.createElement('div');
+                button_header.classList.add('view-buttons', 'playlist-home-buttons');
+
+                buttons.forEach((button) => {
+                    if (button.getAttribute('data-analytics-action') == 'create')
+                        button.innerHTML = `${tl(trans.new)} <div class="new-badge">${tl(trans.beta)}</div>`; //button.textContent = tl(trans.new);
+
+                    button.classList.add('btn', 'view-item', 'interact-item', 'playlist-home-top-item');
+
+                    button_header.appendChild(button);
+                });
+                wrap.appendChild(button_header);
+                new_panel.appendChild(wrap);
+            }
+
+
+            //
+
+
+            let playlists = page.structure.container.querySelector('.playlisting-playlists');
+            if (playlists) {
+                page.structure.container.removeChild(playlists.parentElement);
+                new_panel.appendChild(playlists);
+            } else {
+                let no_data = page.structure.container.querySelector('.no-data-message--playlists');
+                page.structure.container.removeChild(no_data.parentElement);
+                new_panel.appendChild(no_data);
             }
         }
     }
@@ -604,7 +700,7 @@ export function bleh_profiles() {
     if (badges) {
         badges.forEach((this_badge) => {
             let badge = document.createElement('span');
-            badge.classList.add('label',`user-status--bleh-${this_badge.type}`,`user-status--bleh-user-${page.name}`);
+            badge.classList.add('label', `user-status--bleh-${this_badge.type}`, `user-status--bleh-user-${page.name}`);
             badge.textContent = this_badge.name;
             profile_name_obj.appendChild(badge);
 
@@ -627,6 +723,27 @@ export function bleh_profiles() {
         });
     }
 
+    if (page.subpage != 'overview') return;
+
+    if (page.name == 'katelyness') {
+        let sponsor_cta = document.createElement('div');
+        sponsor_cta.classList.add('cta', 'first', 'sponsor', 'colourful');
+
+        if (auth.sponsor) {
+            sponsor_cta.innerHTML = (`
+                <strong>${tl(trans.you_are_a_sponsor)}</strong>
+                <a class="see-more" onclick="_sponsor_manage()">${tl(trans.manage_sponsor)}</a>
+            `);
+        } else {
+            sponsor_cta.innerHTML = (`
+                <strong>${tl(trans.news_sponsor_cta)}</strong>
+                <a class="see-more" onclick="_sponsor()">${tl(trans.sponsor)}</a>
+            `);
+        }
+
+        page.structure.side.insertBefore(sponsor_cta, page.structure.side.firstElementChild);
+    }
+
     // secondary text
     let profile_sub_text;
     if (ff('refreshed_nav'))
@@ -634,12 +751,11 @@ export function bleh_profiles() {
     else
         profile_sub_text = document.body.querySelector('.header-title-secondary');
 
-    if (!profile_sub_text)
-        return;
+    if (!profile_sub_text) return;
 
     let display_name = profile_sub_text.querySelector('.header-title-display-name');
     let scrobble_since = profile_sub_text.querySelector('.header-scrobble-since');
-    scrobble_since.textContent = scrobble_since.textContent.replace(trans_legacy[lang].profile.created.replace,'');
+    scrobble_since.textContent = scrobble_since.textContent.replace(tl(trans.account_scrobbling_since_replace),'');
 
     /*tippy(display_name, {
         content: display_name.textContent
@@ -650,12 +766,12 @@ export function bleh_profiles() {
 
     let display_name_pre = document.createElement('span');
     display_name_pre.classList.add('header-title-secondary--pre');
-    display_name_pre.textContent = pronouns ? trans_legacy[lang].profile.display_name.pronouns : trans_legacy[lang].profile.display_name.aka;
+    display_name_pre.textContent = pronouns ? tl(trans.account_pronouns) : tl(trans.aka);
     profile_sub_text.insertBefore(display_name_pre, display_name);
 
     let scrobble_since_pre = document.createElement('span');
     scrobble_since_pre.classList.add('header-title-secondary--pre');
-    scrobble_since_pre.textContent = trans_legacy[lang].profile.created.name;
+    scrobble_since_pre.textContent = tl(trans.account_created);
     profile_sub_text.insertBefore(scrobble_since_pre, scrobble_since);
 
     let about_me_sidebar = document.body.querySelector('.about-me-sidebar');
@@ -681,41 +797,24 @@ export function bleh_profiles() {
         let buttons = document.createElement('div');
         buttons.classList.add('user-about-buttons');
 
-        if (!profile_has_note) {
-            let add_note_button = document.createElement('button');
-            add_note_button.classList.add('btn', 'icon');
-            add_note_button.setAttribute('data-action-type', 'note');
-            add_note_button.setAttribute('id', 'bleh--add-note');
-            add_note_button.textContent = trans_legacy[lang].settings.profiles.notes.edit_user.replace('{u}', page.name);
-            add_note_button.setAttribute('onclick',`_add_profile_note('${page.name}',${profile_has_note})`);
-
-            tippy(add_note_button, {
-                content: trans_legacy[lang].settings.profiles.notes.edit_user.replace('{u}', page.name)
-            });
-
-            buttons.appendChild(add_note_button);
-        } else {
-            create_profile_note_panel(page.name, true);
-        }
-
         let about_more = document.createElement('button');
         about_more.classList.add('btn', 'icon');
         about_more.setAttribute('data-action-type', 'configure');
-        about_more.textContent = trans_legacy[lang].settings.configure;
+        about_more.textContent = tl(trans.settings);
 
         tippy(about_more, {
-            content: trans_legacy[lang].settings.configure
+            content: tl(trans.settings)
         });
 
         tippy(about_more, {
             theme: 'window',
             content: (`
                 <div class="dialog-settings">
-                    <h4>${trans_legacy[lang].settings.text.markdown.name}</h4>
-                    <div class="toggle-container" id="container-bio_markdown" onclick="_update_item('bio_markdown')">
-                        <button class="btn reset" onclick="_reset_item('bio_markdown')">${trans_legacy[lang].settings.reset}</button>
+                    <div class="setting" data-type="toggle" id="container-bio_markdown" onclick="_update_item('bio_markdown')">
+                        <button class="btn reset" onclick="_reset_item('bio_markdown')">${tl(trans.reset)}</button>
                         <div class="heading">
-                            <h5>${trans_legacy[lang].settings.text.markdown.profile}</h5>
+                            <h5>${tl(trans.markdown_profiles.name)}</h5>
+                            <p>${tl(trans.markdown_profiles.body)}</p>
                         </div>
                         <div class="toggle-wrap">
                             <button class="toggle" id="toggle-bio_markdown" aria-checked="false">
@@ -740,6 +839,28 @@ export function bleh_profiles() {
 
         let about_me_header = about_me_sidebar.querySelector('h2');
         about_me_header.appendChild(buttons);
+
+
+        let edit = document.createElement('div');
+        edit.classList.add('more-link');
+
+        if (is_own_profile) {
+            edit.innerHTML = (`
+                <a href="${root}settings#id_about_me">${tl(trans.edit)}</a>
+            `);
+            about_me_sidebar.appendChild(edit);
+
+            return;
+        }
+
+        if (!profile_has_note) {
+            edit.innerHTML = (`
+                <a class="inline-add-icon" onclick="_add_profile_note('${page.name}',${profile_has_note})">${tl(trans.add_note)}</a>
+            `);
+            about_me_sidebar.appendChild(edit);
+        } else {
+            create_profile_note_panel(page.name, true);
+        }
     }
 }
 
@@ -765,7 +886,7 @@ function create_profile_note_panel(username, has_note) {
         </div>
         <div class="actions">
             <button class="btn" onclick="_clear_profile_note('${username}')">${trans_legacy[lang].settings.clear}</button>
-            <button class="btn primary" onclick="_save_profile_note('${username}')">${trans_legacy[lang].settings.save}</button>
+            <button class="btn primary" onclick="_save_profile_note('${username}')">${tl(trans.save)}</button>
         </div>
         `);
     } else {
@@ -776,7 +897,7 @@ function create_profile_note_panel(username, has_note) {
         </div>
         <div class="actions">
             <button class="btn" onclick="_clear_profile_note('${username}')">${trans_legacy[lang].settings.clear}</button>
-            <button class="btn primary" onclick="_save_profile_note('${username}')">${trans_legacy[lang].settings.save}</button>
+            <button class="btn primary" onclick="_save_profile_note('${username}')">${tl(trans.save)}</button>
         </div>
         `);
     }
@@ -811,55 +932,57 @@ function save_profile_note(username) {
 
 // patch following
 function patch_profile_following() {
-    // this happens on your main profile, no matter the tab
-    let following_tab = page.structure.nav.querySelector('.secondary-nav-item--following');
-    let following_tab_html = following_tab.outerHTML;
-    if (following_tab == undefined)
+    let navlist = page.structure.nav.querySelector('.navlist-items');
+    let following_tab = navlist.querySelector('.secondary-nav-item--following');
+
+    let link = following_tab.querySelector('a');
+
+    if (page.subpage != 'following' && page.subpage != 'followers' && page.subpage != 'neighbours') {
+        // if we're not on one of these tabs we don't need to preserve the 'Following' text
+        link.textContent = tl(trans.friends);
         return;
+    }
 
-    if (following_tab.hasAttribute('data-kate-processed'))
-        return;
+    if (page.subpage != 'following')
+        link.classList.add('secondary-nav-item-link--active');
 
-    following_tab.setAttribute('data-kate-processed', 'true');
-    following_tab.querySelector('a').textContent = trans_legacy[lang].profile.friends.name;
+    let followers_tab = navlist.querySelector('.secondary-nav-item--followers');
+    let neighbours_tab = navlist.querySelector('.secondary-nav-item--neighbours');
 
-
-    // the rest happens on a following/followers page
-    if (page.subpage != 'following' && page.subpage != 'followers' && page.subpage != 'neighbours')
-        return;
-
-    //let following_tab = document.body.querySelector('.secondary-nav-item--following');
-    let followers_tab = page.structure.nav.querySelector('.secondary-nav-item--followers');
-    let followers_tab_html = followers_tab.outerHTML;
-    let neighbours_tab = page.structure.nav.querySelector('.secondary-nav-item--neighbours');
-    let neighbours_tab_html = neighbours_tab.outerHTML;
-
-    let tab = undefined;
-    if (page.subpage == 'followers')
-        tab = followers_tab;
-    else if (page.subpage == 'following')
-        tab = following_tab;
-    else
-        tab = neighbours_tab;
-
-    tab.querySelector('a').textContent = trans_legacy[lang].profile.friends.name;
+    navlist.removeChild(followers_tab);
+    navlist.removeChild(neighbours_tab);
 
 
     // create nav
-    let follow_nav = document.createElement('div');
-    follow_nav.classList.add('bleh--nav-wrap', 'bleh--friends-nav');
-    follow_nav.innerHTML = (`
+    let friends_nav = document.createElement('div');
+    friends_nav.classList.add('bleh--nav-wrap', 'bleh--friends-nav');
+    friends_nav.innerHTML = (`
         <nav class="navlist secondary-nav redesigned-navigation">
             <ul class="navlist-items bleh--navlist-items">
-                ${following_tab_html}
-                ${followers_tab_html}
-                ${neighbours_tab_html}
+                ${following_tab.outerHTML}
+                ${followers_tab.outerHTML}
+                ${neighbours_tab.outerHTML}
             </ul>
         </nav>
     `);
 
-    page.structure.content_top.after(follow_nav);
+    // we do this later to preserve the 'Following' text
+    link.textContent = tl(trans.friends);
+
+    page.structure.content_top.after(friends_nav);
     page.structure.row.classList.add('col-main-is-primary');
+
+    following_tab = friends_nav.querySelector('.secondary-nav-item--following a');
+
+    let highlighted_tab = following_tab;
+    if (page.subpage == 'followers')
+        highlighted_tab = friends_nav.querySelector('.secondary-nav-item--followers a');
+    else if (page.subpage == 'neighbours')
+        highlighted_tab = friends_nav.querySelector('.secondary-nav-item--neighbours a');
+
+    if (page.subpage != 'following') {
+        following_tab.classList.remove('secondary-nav-item-link--active');
+    }
 
 
     if (ff('katsune') && page.subpage != 'neighbours') {
@@ -873,7 +996,7 @@ function patch_profile_following() {
         let count_badge = document.createElement('div');
         count_badge.classList.add('new-badge', 'count-badge');
         count_badge.textContent = count;
-        follow_nav.querySelector('.secondary-nav-item-link--active').appendChild(count_badge);
+        highlighted_tab.appendChild(count_badge);
     }
 
 
@@ -883,10 +1006,10 @@ function patch_profile_following() {
     view_buttons.innerHTML = (`
         <div class="view-buttons">
             <button class="btn view-item" id="toggle-list_view-1" data-toggle="list_view" data-toggle-value="1" onclick="_update_item('list_view', 1)">
-                ${trans_legacy[lang].glacier.view.grid}
+                ${tl(trans.grid)}
             </button>
             <button class="btn view-item" id="toggle-list_view-0" data-toggle="list_view" data-toggle-value="0" onclick="_update_item('list_view', 0)">
-                ${trans_legacy[lang].glacier.view.list}
+                ${tl(trans.list)}
             </button>
         </div>
     `);
@@ -962,9 +1085,51 @@ function bleh_featured_profile_track(object) {
     let heading_link = heading.outerHTML;
     details.removeChild(heading);
 
-    if (settings.corrections) {
-        let name_elem = object.querySelector('.featured-item-name');
-        let artist_elem = object.querySelector('.featured-item-artist');
+    if (settings.format_guest_features) {
+        let name_elem = details.querySelector('.featured-item-name');
+        let artist_elem = details.querySelector('.featured-item-artist');
+
+        let song_title = name_elem.textContent;
+
+        let formatted_title = name_includes(song_title, artist_elem.textContent);
+        let song_tags = {};
+
+        if (formatted_title) {
+            song_title = formatted_title[0];
+            song_tags = formatted_title[1];
+        }
+
+        // parse tags into text
+        let song_tags_text = '';
+        for (let song_tag in song_tags) {
+            song_tags_text = `${song_tags_text}<div class="feat" data-bleh--tag-type="${song_tags[song_tag].type}" data-bleh--tag-group="${song_tags[song_tag].group}">${sanitise_text(song_tags[song_tag].text)}</div>`;
+        }
+
+        // combine
+        name_elem.innerHTML = `<div class="title">${sanitise_text(song_title).trim()}</div>${song_tags_text}`;
+
+        let song_artist_element = document.createElement('div');
+        song_artist_element.classList.add('featured-item-artist');
+        song_artist_element.innerHTML = `<a href="${root}music/${sanitise(formatted_title[2])}">${sanitise_text(formatted_title[2])}</a>`;
+
+        // append guests
+        let song_guests = formatted_title[3];
+        for (let guest in song_guests) {
+            // &
+            song_artist_element.innerHTML = `${song_artist_element.innerHTML},`;
+
+            let guest_element = document.createElement('a');
+            guest_element.setAttribute('href', `${root}music/${sanitise(song_guests[guest])}`);
+            guest_element.textContent = song_guests[guest];
+
+            song_artist_element.appendChild(guest_element);
+        }
+
+        details.removeChild(artist_elem);
+        details.appendChild(song_artist_element);
+    } else if (settings.corrections) {
+        let name_elem = details.querySelector('.featured-item-name');
+        let artist_elem = details.querySelector('.featured-item-artist');
 
         let name = correct_item_by_artist(name_elem.textContent.trim(), artist_elem.textContent.trim());
         let artist = correct_artist(artist_elem.textContent.trim());
@@ -1023,12 +1188,8 @@ function profile_recents() {
     // refresh
     let refresh_btn = document.createElement('button');
     refresh_btn.classList.add('btn', 'view-item', 'interact-item', 'refresh-tracklist-btn');
-    refresh_btn.textContent = trans_legacy[lang].music.refresh;
+    refresh_btn.textContent = tl(trans.refresh);
     refresh_btn.setAttribute('onclick', '_refresh_tracks(this)');
-
-    tippy(refresh_btn, {
-        content: trans_legacy[lang].music.refresh_tracks
-    });
 
     view_buttons.appendChild(refresh_btn);
 
@@ -1045,7 +1206,7 @@ function profile_recents() {
 
     let new_button = document.createElement('button');
     new_button.classList.add('panel-settings-button', 'btn', 'view-item', 'interact-item');
-    new_button.textContent = trans_legacy[lang].profile.settings;
+    new_button.textContent = tl(trans.settings);
 
     form.classList = '';
 
@@ -1063,18 +1224,18 @@ function profile_recents() {
 
             form.innerHTML = (`
                 <input type="hidden" name="csrfmiddlewaretoken" value="${page.token}">
-                <div class="select-container">
+                <div class="setting" data-type="select">
                     <div class="heading">
-                        <h5>${trans_legacy[lang].settings.inbuilt.charts.recent.count.name}</h5>
+                        <h5>${tl(trans.amount_to_display)}</h5>
                     </div>
                     <div class="select-wrap custom-selector" id="id_chart_length_recent_tracks_select">
                         ${original_chart_settings.count}
                     </div>
                 </div>
-                <div class="toggle-container" id="container-recent_artwork" onclick="_update_inbuilt_item('recent_artwork')">
+                <div class="setting" data-type="toggle" id="container-recent_artwork" onclick="_update_inbuilt_item('recent_artwork')">
                     <button class="btn reset" onclick="_reset_inbuilt_item('recent_artwork')">Reset to default</button>
                     <div class="heading">
-                        <h5>${trans_legacy[lang].settings.inbuilt.charts.recent.artwork.name}</h5>
+                        <h5>${tl(trans.recent_artwork)}</h5>
                     </div>
                     <div class="toggle-wrap">
                         <input class="companion-checkbox" type="checkbox" name="show_recent_tracks_artwork" id="inbuilt-companion-checkbox-recent_artwork">
@@ -1083,11 +1244,11 @@ function profile_recents() {
                         </span>
                     </div>
                 </div>
-                <div class="toggle-container" id="container-recent_realtime" onclick="_update_inbuilt_item('recent_realtime')">
+                <div class="setting" data-type="toggle" id="container-recent_realtime" onclick="_update_inbuilt_item('recent_realtime')">
                     <button class="btn reset" onclick="_reset_inbuilt_item('recent_realtime')">Reset to default</button>
                     <div class="heading">
-                        <h5>${trans_legacy[lang].settings.inbuilt.charts.recent.realtime.name}</h5>
-                        <p>${trans_legacy[lang].settings.inbuilt.charts.recent.realtime.bio}</p>
+                        <h5>${tl(trans.recent_realtime.name)}</h5>
+                        <p>${tl(trans.recent_realtime.body)}</p>
                     </div>
                     <div class="toggle-wrap">
                         <input class="companion-checkbox" type="checkbox" name="auto_refresh_recent_tracks" id="inbuilt-companion-checkbox-recent_realtime">
@@ -1097,11 +1258,11 @@ function profile_recents() {
                     </div>
                 </div>
                 <div class="sep"></div>
-                <div class="toggle-container" id="container-format_guest_features" onclick="_update_item('format_guest_features')">
-                    <button class="btn reset" onclick="_reset_item('format_guest_features')">${trans_legacy[lang].settings.reset}</button>
+                <div class="setting" data-type="toggle" id="container-format_guest_features" onclick="_update_item('format_guest_features')">
+                    <button class="btn reset" onclick="_reset_item('format_guest_features')">${tl(trans.reset)}</button>
                     <div class="heading">
-                        <h5>${trans_legacy[lang].settings.corrections.format_guest_features.name}</h5>
-                        <p>${trans_legacy[lang].settings.corrections.format_guest_features.bio}</p>
+                        <h5>${tl(trans.format_guest_features.name)}</h5>
+                        <p>${tl(trans.format_guest_features.body)}</p>
                     </div>
                     <div class="toggle-wrap">
                         <button class="toggle" id="toggle-format_guest_features" aria-checked="true" type="button">
@@ -1109,23 +1270,10 @@ function profile_recents() {
                         </button>
                     </div>
                 </div>
-                <div class="toggle-container hide-if-format-guest-disabled" id="container-show_guest_features" onclick="_update_item('show_guest_features')">
-                    <button class="btn reset" onclick="_reset_item('show_guest_features')">${trans_legacy[lang].settings.reset}</button>
+                <div class="setting" data-type="toggle" id="container-stacked_chartlist_info" onclick="_update_item('stacked_chartlist_info')">
+                    <button class="btn reset" onclick="_reset_item('stacked_chartlist_info')">${tl(trans.reset)}</button>
                     <div class="heading">
-                        <h5>${trans_legacy[lang].settings.corrections.show_guest_features.name}</h5>
-                        <p>${trans_legacy[lang].settings.corrections.show_guest_features.bio}</p>
-                    </div>
-                    <div class="toggle-wrap">
-                        <button class="toggle" id="toggle-show_guest_features" aria-checked="true" type="button">
-                            <div class="dot"></div>
-                        </button>
-                    </div>
-                </div>
-                <div class="toggle-container" id="container-stacked_chartlist_info" onclick="_update_item('stacked_chartlist_info')">
-                    <button class="btn reset" onclick="_reset_item('stacked_chartlist_info')">${trans_legacy[lang].settings.reset}</button>
-                    <div class="heading">
-                        <h5>${trans_legacy[lang].settings.corrections.stacked_chartlist_info.name}</h5>
-                        <p>${trans_legacy[lang].settings.corrections.stacked_chartlist_info.bio}</p>
+                        <h5>${tl(trans.track_column_view)}</h5>
                     </div>
                     <div class="toggle-wrap">
                         <button class="toggle" id="toggle-stacked_chartlist_info" aria-checked="true" type="button">
@@ -1133,11 +1281,11 @@ function profile_recents() {
                         </button>
                     </div>
                 </div>
-                <div class="toggle-container" id="container-colourful_tracks" onclick="_update_item('colourful_tracks')">
-                    <button class="btn reset" onclick="_reset_item('colourful_tracks')">${trans_legacy[lang].settings.reset}</button>
+                <div class="setting" data-type="toggle" id="container-colourful_tracks" onclick="_update_item('colourful_tracks')">
+                    <button class="btn reset" onclick="_reset_item('colourful_tracks')">${tl(trans.reset)}</button>
                     <div class="heading">
-                        <h5>${trans_legacy[lang].settings.customise.colourful_tracks.name}</h5>
-                        <p>${trans_legacy[lang].settings.customise.colourful_tracks.bio}</p>
+                        <h5>${tl(trans.colourful_tracks.name)}</h5>
+                        <p>${tl(trans.colourful_tracks.body)}</p>
                     </div>
                     <div class="toggle-wrap">
                         <button class="toggle" id="toggle-colourful_tracks" aria-checked="true">
@@ -1147,10 +1295,10 @@ function profile_recents() {
                 </div>
                 <div class="settings-footer">
                     <button type="submit" class="btn-primary save">
-                        ${trans_legacy[lang].settings.save}
+                        ${tl(trans.save)}
                     </button>
                     <a class="btn icon settings not-a-view-button" href="${root}bleh">
-                        ${trans_legacy[lang].settings.configure}
+                        ${tl(trans.settings)}
                     </a>
                 </div>
             `);
@@ -1223,7 +1371,7 @@ function profile_artists() {
 
     let new_button = document.createElement('button');
     new_button.classList.add('panel-settings-button', 'btn', 'view-item', 'interact-item');
-    new_button.textContent = trans_legacy[lang].profile.settings;
+    new_button.textContent = tl(trans.settings);
 
     form.classList = '';
 
@@ -1241,17 +1389,17 @@ function profile_artists() {
 
             form.innerHTML = (`
                 <input type="hidden" name="csrfmiddlewaretoken" value="${page.token}">
-                <div class="select-container">
+                <div class="setting" data-type="select">
                     <div class="heading">
-                        <h5>${trans_legacy[lang].settings.inbuilt.charts.artists.timeframe.name}</h5>
+                        <h5>${tl(trans.default_timeframe)}</h5>
                     </div>
                     <div class="select-wrap custom-selector" id="id_chart_range_top_artists_select">
                         ${original_chart_settings.timeframe}
                     </div>
                 </div>
-                <div class="select-container">
+                <div class="setting" data-type="select">
                     <div class="heading">
-                        <h5>${trans_legacy[lang].settings.inbuilt.charts.artists.style.name}</h5>
+                        <h5>${tl(trans.chart_style)}</h5>
                     </div>
                     <div class="select-wrap custom-selector" id="id_chart_style_top_artists_select">
                         ${original_chart_settings.style}
@@ -1275,7 +1423,7 @@ function profile_artists() {
                 </div>
                 <div class="settings-footer">
                     <button type="submit" class="btn-primary save">
-                        ${trans_legacy[lang].settings.save}
+                        ${tl(trans.save)}
                     </button>
                 </div>
             `);
@@ -1346,7 +1494,7 @@ function profile_albums() {
 
     let new_button = document.createElement('button');
     new_button.classList.add('panel-settings-button', 'btn', 'view-item', 'interact-item');
-    new_button.textContent = trans_legacy[lang].profile.settings;
+    new_button.textContent = tl(trans.settings);
 
     form.classList = '';
 
@@ -1364,7 +1512,7 @@ function profile_albums() {
 
             form.innerHTML = (`
                 <input type="hidden" name="csrfmiddlewaretoken" value="${page.token}">
-                <div class="select-container">
+                <div class="setting" data-type="select">
                     <div class="heading">
                         <h5>${trans_legacy[lang].settings.inbuilt.charts.albums.timeframe.name}</h5>
                     </div>
@@ -1372,7 +1520,7 @@ function profile_albums() {
                         ${original_chart_settings.timeframe}
                     </div>
                 </div>
-                <div class="select-container">
+                <div class="setting" data-type="select">
                     <div class="heading">
                         <h5>${trans_legacy[lang].settings.inbuilt.charts.albums.style.name}</h5>
                     </div>
@@ -1398,7 +1546,7 @@ function profile_albums() {
                 </div>
                 <div class="settings-footer">
                     <button type="submit" class="btn-primary save">
-                        ${trans_legacy[lang].settings.save}
+                        ${tl(trans.save)}
                     </button>
                 </div>
             `);
@@ -1469,7 +1617,7 @@ function profile_tracks() {
 
     let new_button = document.createElement('button');
     new_button.classList.add('panel-settings-button', 'btn', 'view-item', 'interact-item');
-    new_button.textContent = trans_legacy[lang].profile.settings;
+    new_button.textContent = tl(trans.settings);
 
     form.classList = '';
 
@@ -1487,7 +1635,7 @@ function profile_tracks() {
 
             form.innerHTML = (`
                 <input type="hidden" name="csrfmiddlewaretoken" value="${page.token}">
-                <div class="select-container">
+                <div class="setting" data-type="select">
                     <div class="heading">
                         <h5>${trans_legacy[lang].settings.inbuilt.charts.tracks.timeframe.name}</h5>
                     </div>
@@ -1495,20 +1643,20 @@ function profile_tracks() {
                         ${original_chart_settings.timeframe}
                     </div>
                 </div>
-                <div class="select-container">
+                <div class="setting" data-type="select">
                     <div class="heading">
-                        <h5>${trans_legacy[lang].settings.inbuilt.charts.tracks.count.name}</h5>
+                        <h5>${tl(trans.amount_to_display)}</h5>
                     </div>
                     <div class="select-wrap custom-selector" id="id_chart_length_top_tracks_select">
                         ${original_chart_settings.count}
                     </div>
                 </div>
                 <div class="sep"></div>
-                <div class="toggle-container" id="container-format_guest_features" onclick="_update_item('format_guest_features')">
-                    <button class="btn reset" onclick="_reset_item('format_guest_features')">${trans_legacy[lang].settings.reset}</button>
+                <div class="setting" data-type="toggle" id="container-format_guest_features" onclick="_update_item('format_guest_features')">
+                    <button class="btn reset" onclick="_reset_item('format_guest_features')">${tl(trans.reset)}</button>
                     <div class="heading">
-                        <h5>${trans_legacy[lang].settings.corrections.format_guest_features.name}</h5>
-                        <p>${trans_legacy[lang].settings.corrections.format_guest_features.bio}</p>
+                        <h5>${tl(trans.format_guest_features.name)}</h5>
+                        <p>${tl(trans.format_guest_features.body)}</p>
                     </div>
                     <div class="toggle-wrap">
                         <button class="toggle" id="toggle-format_guest_features" aria-checked="true" type="button">
@@ -1517,10 +1665,10 @@ function profile_tracks() {
                     </div>
                 </div>
                 <div class="toggle-container hide-if-format-guest-disabled" id="container-show_guest_features" onclick="_update_item('show_guest_features')">
-                    <button class="btn reset" onclick="_reset_item('show_guest_features')">${trans_legacy[lang].settings.reset}</button>
+                    <button class="btn reset" onclick="_reset_item('show_guest_features')">${tl(trans.reset)}</button>
                     <div class="heading">
-                        <h5>${trans_legacy[lang].settings.corrections.show_guest_features.name}</h5>
-                        <p>${trans_legacy[lang].settings.corrections.show_guest_features.bio}</p>
+                        <h5>${tl(trans.show_guest_features.name)}</h5>
+                        <p>${tl(trans.show_guest_features.body)}</p>
                     </div>
                     <div class="toggle-wrap">
                         <button class="toggle" id="toggle-show_guest_features" aria-checked="true" type="button">
@@ -1530,7 +1678,7 @@ function profile_tracks() {
                 </div>
                 <div class="settings-footer">
                     <button type="submit" class="btn-primary save">
-                        ${trans_legacy[lang].settings.save}
+                        ${tl(trans.save)}
                     </button>
                     <a class="btn icon settings not-a-view-button" href="${root}bleh">
                         ${trans_legacy[lang].settings.configure}
@@ -1562,7 +1710,9 @@ function profile_tracks() {
 }
 
 function bio_parse(text, cache = false) {
-    let result = markdown(text.textContent);
+    let result = markdown(text.textContent, {
+        allow_headers: true
+    });
 
     let temp = document.createElement('div');
     temp.innerHTML = result;

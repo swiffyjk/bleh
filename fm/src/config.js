@@ -24,14 +24,31 @@ export function load_settings(skip = false) {
         Object.assign(settings, JSON.parse(localStorage.getItem('bleh')) || create_settings_template());
     }
 
+    if (!settings.theme_type) {
+        if (settings.theme == 'light' || settings.theme == 'ink')
+            settings.theme_type = 'light';
+        else
+            settings.theme_type = 'dark';
+    }
+
     // missing? set to default value
     for (let setting in settings_template)
         if (settings[setting] == undefined)
             settings[setting] = settings_template[setting];
 
-    // todo: remove
-    if (settings.dev == 1)
-        settings.dev = true;
+    // migrates old season settings
+    // todo: remove soon
+    if (settings.seasonal_particles == true)
+        settings.seasonal_particles = 'all';
+    else if (settings.seasonal_particles == false)
+        settings.seasonal_particles = 'none';
+
+    if (settings.seasonal_particles_reduced == true) {
+        settings.seasonal_particles = 'less';
+        delete settings.seasonal_particles_reduced;
+    } else if (settings.seasonal_particles_reduced == false) {
+        delete settings.seasonal_particles_reduced;
+    }
 
     // save setting into body
     for (let setting in settings) {
@@ -78,13 +95,20 @@ unsafeWindow.toggle_theme = function() {
     else if (current_theme == 'oled' || current_theme == 'classic')
         current_theme = 'light';
     else if (current_theme == 'light')
+        current_theme = 'ink';
+    else if (current_theme == 'ink')
         current_theme = 'dark';
 
     show_theme_change_in_menu(current_theme);
 
     // save value
     settings.theme = current_theme;
+    if (current_theme == 'light' || current_theme == 'ink')
+        settings.theme_type = 'light';
+    else
+        settings.theme_type = 'dark';
     document.documentElement.setAttribute(`data-bleh--theme`, `${current_theme}`);
+    document.documentElement.setAttribute(`data-bleh--theme_type`, `${settings.theme_type}`);
 
     // save to settings
     localStorage.setItem('bleh', JSON.stringify(settings));
@@ -107,7 +131,12 @@ unsafeWindow.toggle_theme = function() {
 unsafeWindow.change_theme_from_settings = function(theme) {
     // save value
     settings.theme = theme;
+    if (theme == 'light' || theme == 'ink')
+        settings.theme_type = 'light';
+    else
+        settings.theme_type = 'dark';
     document.documentElement.setAttribute(`data-bleh--theme`, `${theme}`);
+    document.documentElement.setAttribute(`data-bleh--theme_type`, `${settings.theme_type}`);
 
     // show in settings
     show_theme_change_in_settings(theme);
@@ -122,7 +151,12 @@ unsafeWindow.change_theme_from_menu = function(theme) {
 
     // save value
     settings.theme = theme;
+    if (theme == 'light' || theme == 'ink')
+        settings.theme_type = 'light';
+    else
+        settings.theme_type = 'dark';
     document.documentElement.setAttribute(`data-bleh--theme`, `${theme}`);
+    document.documentElement.setAttribute(`data-bleh--theme_type`, `${settings.theme_type}`);
 
     // show in settings
     show_theme_change_in_menu(theme);
@@ -194,7 +228,7 @@ function update_item(item, value, modify=true, search = document) {
     if (value != settings[item])
         new_value = true;
 
-    if (settings_base[item].require_reload && new_value)
+    if ((settings_base[item].require_reload == true || (settings_base[item].require_reload == 'partial' && page.type != 'bleh_settings')) && new_value)
         request_reload();
 
 
@@ -254,12 +288,12 @@ function update_item(item, value, modify=true, search = document) {
                     <br>
                     <div class="browser-choices">
                         <button class="btn browser" onclick="_chosen_chrome()">
-                            <img class="browser-icon" src="https://cutensilly.org/img/chrome.png">
+                            <img class="browser-icon" src="https://katelyn.moe/img/chrome.png">
                             <p>${trans_legacy[lang].settings.performance.dev.modals.prompt.browsers.chrome.name}</p>
                             <p class="caption">${trans_legacy[lang].settings.performance.dev.modals.prompt.browsers.chrome.bio}</p>
                         </button>
                         <button class="btn browser" onclick="_chosen_firefox()">
-                            <img class="browser-icon" src="https://cutensilly.org/img/firefox.png">
+                            <img class="browser-icon" src="https://katelyn.moe/img/firefox.png">
                             <p>${trans_legacy[lang].settings.performance.dev.modals.prompt.browsers.firefox.name}</p>
                             <p class="caption">${trans_legacy[lang].settings.performance.dev.modals.prompt.browsers.firefox.bio}</p>
                         </button>

@@ -43,7 +43,7 @@ unsafeWindow._notify = function({
     classname = null,
     action = null,
     persist = false,
-    type = type
+    type = null
 }) {
     notify({
         title: title,
@@ -96,6 +96,9 @@ export function notify({
 
     if (type == 'error')
         icon = 'icon-16-x';
+
+    if (type == 'success')
+        icon = 'icon-16-check';
 
     if (!icon)
         icon = 'icon-16-info';

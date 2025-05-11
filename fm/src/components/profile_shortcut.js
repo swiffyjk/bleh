@@ -6,8 +6,8 @@ import { deliver_notif, notify } from "./notify";
 
 unsafeWindow._open_profile_shortcut_window = function() {
     dialog_legacy('profile_shortcut',trans_legacy[lang].settings.music.profile_shortcut.name,(`
-        <div class="text-container" id="container-profile_shortcut">
-            <button class="btn reset" onclick="_reset_item('profile_shortcut')">${trans_legacy[lang].settings.reset}</button>
+        <div class="setting" data-type="text" id="container-profile_shortcut">
+            <button class="btn reset" onclick="_reset_item('profile_shortcut')">${tl(trans.reset)}</button>
             <div class="avatar-container">
                 <div class="avatar-inner" id="avatar-profile_shortcut">
                     <img id="avatar_src-profile_shortcut" src="${localStorage.getItem('bleh_profile_shortcut_avi') || ''}">
@@ -16,8 +16,8 @@ unsafeWindow._open_profile_shortcut_window = function() {
             <div class="heading content-form">
                 <h5>${trans_legacy[lang].settings.music.profile_shortcut.placeholder}</h5>
                 <div class="input-container">
-                    <input type="text" maxlength="40" id="text-profile_shortcut" value="${settings.profile_shortcut}" placeholder="${trans_legacy[lang].settings.music.profile_shortcut.header}">
-                    <button class="bleh--btn primary save" onclick="_save_profile_shortcut()">${trans_legacy[lang].settings.save}</button>
+                    <input type="text" maxlength="40" id="text-profile_shortcut" value="${settings.profile_shortcut}" placeholder="${tl(trans.enter_username)}">
+                    <button class="bleh--btn primary save" onclick="_save_profile_shortcut()">${tl(trans.save)}</button>
                 </div>
             </div>
         </div>
@@ -32,7 +32,7 @@ export function other_listener(id) {
         id: 'other_listener',
         title: trans_legacy[lang].music.listens.custom.name,
         body: (`
-        <div class="text-container">
+        <div class="setting" data-type="text">
             <div class="avatar-container">
                 <div class="avatar-inner avatar--bleh-missing">
                     <img>
@@ -41,7 +41,7 @@ export function other_listener(id) {
             <div class="heading content-form">
                 <h5>${trans_legacy[lang].settings.music.profile_shortcut.placeholder}</h5>
                 <div class="input-container">
-                    <input type="text" maxlength="40" id="text-profile" placeholder="${trans_legacy[lang].settings.music.profile_shortcut.header}">
+                    <input type="text" maxlength="40" id="text-profile" placeholder="${tl(trans.enter_username)}">
                     <button class="bleh--btn primary save" onclick="_send_other_listener('${id}')">${trans_legacy[lang].settings.done}</button>
                 </div>
             </div>

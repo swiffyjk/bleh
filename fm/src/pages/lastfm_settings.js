@@ -47,13 +47,11 @@ export function bleh_native_settings() {
         }
     } else if (page.subpage.startsWith('subscription_automatic-edits')) {
         bleh_auto_edits();
-
-        let header = content_top.querySelector('.content-top-header');
-        header_text = header.textContent.trim();
+    } else if (page.subpage == 'account_overview') {
+        bleh_accounts();
     }
 
-    if (ff('katsune'))
-        return;
+    if (ff('katsune')) return;
 
     let edit_header = document.createElement('section');
     edit_header.classList.add('redesigned-header', 'edit-header', 'no-background');
@@ -62,7 +60,7 @@ export function bleh_native_settings() {
             <div class="tag-icon cog-icon"></div>
         </div>
         <div class="info-side">
-            <div class="sub-text">${trans_legacy[lang].settings.name}</div>
+            <div class="sub-text">${tl(trans.settings)}</div>
             <h1>${header_text}</h1>
         </div>
     `);
@@ -73,8 +71,7 @@ export function bleh_native_settings() {
 function patch_settings_profile_tab() {
     let update_picture = document.getElementById('update-picture');
 
-    if (update_picture == undefined)
-        return;
+    if (!update_picture) return;
 
     // if we can continue, we are on profile tab
     let token = document.body.querySelector('[name="csrfmiddlewaretoken"]').getAttribute('value');
@@ -114,7 +111,7 @@ function patch_settings_charts_panel(token) {
     };
 
     charts_panel.innerHTML = (`
-        <h4>${trans_legacy[lang].settings.inbuilt.charts.name}</h4>
+        <h4>${tl(trans.recent_tracks)}</h4>
         <form action="${root}settings#update-chart" name="chart-form" method="post">
             <input type="hidden" name="csrfmiddlewaretoken" value="${token}">
             <div class="inner-preview pad">
@@ -151,18 +148,18 @@ function patch_settings_charts_panel(token) {
                     </div>
                 </div>
             </div>
-            <div class="select-container">
+            <div class="setting" data-type="select">
                 <div class="heading">
-                    <h5>${trans_legacy[lang].settings.inbuilt.charts.recent.count.name}</h5>
+                    <h5>${tl(trans.amount_to_display)}</h5>
                 </div>
                 <div class="select-wrap custom-selector" id="id_chart_length_recent_tracks_select">
                     ${original_chart_settings.recent.count}
                 </div>
             </div>
-            <div class="toggle-container" id="container-recent_artwork">
+            <div class="setting" data-type="toggle" id="container-recent_artwork">
                 <button class="btn reset" onclick="_reset_inbuilt_item('recent_artwork')">Reset to default</button>
                 <div class="heading">
-                    <h5>${trans_legacy[lang].settings.inbuilt.charts.recent.artwork.name}</h5>
+                    <h5>${tl(trans.recent_artwork)}</h5>
                 </div>
                 <div class="toggle-wrap">
                     <input class="companion-checkbox" type="checkbox" name="show_recent_tracks_artwork" id="inbuilt-companion-checkbox-recent_artwork">
@@ -171,11 +168,11 @@ function patch_settings_charts_panel(token) {
                     </span>
                 </div>
             </div>
-            <div class="toggle-container" id="container-recent_realtime">
+            <div class="setting" data-type="toggle" id="container-recent_realtime">
                 <button class="btn reset" onclick="_reset_inbuilt_item('recent_realtime')">Reset to default</button>
                 <div class="heading">
-                    <h5>${trans_legacy[lang].settings.inbuilt.charts.recent.realtime.name}</h5>
-                    <p>${trans_legacy[lang].settings.inbuilt.charts.recent.realtime.bio}</p>
+                    <h5>${tl(trans.recent_realtime.name)}</h5>
+                    <p>${tl(trans.recent_realtime.body)}</p>
                 </div>
                 <div class="toggle-wrap">
                     <input class="companion-checkbox" type="checkbox" name="auto_refresh_recent_tracks" id="inbuilt-companion-checkbox-recent_realtime">
@@ -185,6 +182,7 @@ function patch_settings_charts_panel(token) {
                 </div>
             </div>
             <div class="sep"></div>
+            <h4>${tl(trans.top_artists)}</h4>
             <div class="inner-preview pad">
                 <div class="item-grid artist">
                     <div class="grid-primary artist">
@@ -243,23 +241,24 @@ function patch_settings_charts_panel(token) {
                     </div>
                 </div>
             </div>
-            <div class="select-container">
+            <div class="setting" data-type="select">
                 <div class="heading">
-                    <h5>${trans_legacy[lang].settings.inbuilt.charts.artists.timeframe.name}</h5>
+                    <h5>${tl(trans.default_timeframe)}</h5>
                 </div>
                 <div class="select-wrap custom-selector" id="id_chart_range_top_artists_select">
                     ${original_chart_settings.artists.timeframe}
                 </div>
             </div>
-            <div class="select-container">
+            <div class="setting" data-type="select">
                 <div class="heading">
-                    <h5>${trans_legacy[lang].settings.inbuilt.charts.artists.style.name}</h5>
+                    <h5>${tl(trans.chart_style)}</h5>
                 </div>
                 <div class="select-wrap custom-selector" id="id_chart_style_and_length_top_artists_select">
                     ${original_chart_settings.artists.style}
                 </div>
             </div>
             <div class="sep"></div>
+            <h4>${tl(trans.top_albums)}</h4>
             <div class="inner-preview pad">
                 <div class="item-grid album">
                     <div class="grid-primary album">
@@ -318,7 +317,7 @@ function patch_settings_charts_panel(token) {
                     </div>
                 </div>
             </div>
-            <div class="select-container">
+            <div class="setting" data-type="select">
                 <div class="heading">
                     <h5>${trans_legacy[lang].settings.inbuilt.charts.albums.timeframe.name}</h5>
                 </div>
@@ -326,7 +325,7 @@ function patch_settings_charts_panel(token) {
                     ${original_chart_settings.albums.timeframe}
                 </div>
             </div>
-            <div class="select-container">
+            <div class="setting" data-type="select">
                 <div class="heading">
                     <h5>${trans_legacy[lang].settings.inbuilt.charts.albums.style.name}</h5>
                 </div>
@@ -335,6 +334,7 @@ function patch_settings_charts_panel(token) {
                 </div>
             </div>
             <div class="sep"></div>
+            <h4>${tl(trans.top_tracks)}</h4>
             <div class="inner-preview pad">
                 <div class="tracks">
                     <div class="track">
@@ -379,7 +379,7 @@ function patch_settings_charts_panel(token) {
                     </div>
                 </div>
             </div>
-            <div class="select-container">
+            <div class="setting" data-type="select">
                 <div class="heading">
                     <h5>${trans_legacy[lang].settings.inbuilt.charts.tracks.timeframe.name}</h5>
                 </div>
@@ -387,9 +387,9 @@ function patch_settings_charts_panel(token) {
                     ${original_chart_settings.tracks.timeframe}
                 </div>
             </div>
-            <div class="select-container">
+            <div class="setting" data-type="select">
                 <div class="heading">
-                    <h5>${trans_legacy[lang].settings.inbuilt.charts.tracks.count.name}</h5>
+                    <h5>${tl(trans.amount_to_display)}</h5>
                 </div>
                 <div class="select-wrap custom-selector" id="id_chart_length_top_tracks_select">
                     ${original_chart_settings.tracks.count}
@@ -397,7 +397,7 @@ function patch_settings_charts_panel(token) {
             </div>
             <div class="settings-footer">
                 <button type="submit" class="btn-primary save">
-                    ${trans_legacy[lang].settings.save}
+                    ${tl(trans.save)}
                 </button>
                 <input type="hidden" value="chart" name="submit">
             </div>
@@ -441,22 +441,13 @@ function patch_settings_profile_panel(token, update_picture) {
 
     document.getElementById('update-profile').outerHTML = '';
 
-    let new_sidebar = document.createElement('section');
-    new_sidebar.classList.add('bleh--panel', 'about-me-preview');
-    new_sidebar.innerHTML = (`
-        <h4>${tl(trans.about_me_preview)}</h4>
-        <span class="bleh--about-me-preview" id="about_me_preview"></span>
-    `);
-
-    page.structure.side.appendChild(new_sidebar);
-
     update_picture.innerHTML = (`
-        <h4>${trans_legacy[lang].settings.inbuilt.profile.name}</h4>
+        <h4>${tl(trans.profile)}</h4>
         <div class="banner-preview"></div>
         <div class="profile-container">
             <div class="avatar-side">
                 <div class="avatar image-upload-preview" onclick="_open_avatar_changer('${token}')">
-                    <img src="${avatar_url}" alt="Your avatar" loading="lazy">
+                    <img src="${avatar_url}" alt="${tl(trans.your_avatar)}" loading="lazy">
                     <div class="avatar-overlay"></div>
                 </div>
             </div>
@@ -475,44 +466,52 @@ function patch_settings_profile_panel(token, update_picture) {
                 <div class="sub-info">
                     <form action="${root}settings#update-profile" name="profile-form" data-form-type="identity" method="post">
                         <input type="hidden" name="csrfmiddlewaretoken" value="${token}">
-                        <div class="info-row">
-                            <div class="title">
-                                ${trans_legacy[lang].settings.inbuilt.profile.subtitle.name}
+                        <div class="info-grid">
+                            <div class="info-row">
+                                <div class="title">
+                                    ${tl(trans.subtitle)}
+                                </div>
+                                <div class="input">
+                                    <input type="text" name="full_name" value="${form_display_name}" maxlength="36" id="id_full_name" oninput="_update_display_name(this.value)" data-form-type="other">
+                                    <div class="tip">${tl(trans.pronoun_tip)}</div>
+                                </div>
                             </div>
-                            <div class="input">
-                                <input type="text" name="full_name" value="${form_display_name}" maxlength="36" id="id_full_name" oninput="_update_display_name(this.value)" data-form-type="other">
-                                <div class="tip">${trans_legacy[lang].settings.inbuilt.profile.pronoun_tip}</div>
+                            <div class="info-row">
+                                <div class="title">
+                                    ${tl(trans.country)}
+                                </div>
+                                <div class="input custom-selector" id="country_select">
+                                    ${form_country}
+                                </div>
                             </div>
-                        </div>
-                        <div class="info-row">
-                            <div class="title">
-                                ${trans_legacy[lang].settings.inbuilt.profile.country}
+                            <div class="info-row">
+                                <div class="title">
+                                    ${tl(trans.about)}
+                                </div>
+                                <div class="input about-me" id="about_me">
+                                    <textarea name="about_me" placeholder="${tl(trans.anything_you_can_imagine)}" cols="40" rows="10" class="textarea--s" maxlength="500" id="id_about_me" oninput="_update_about_me_preview(this.value)" data-form-type="other">${form_about_me}</textarea>
+                                    <div class="tip markdown-enabled">${tl(trans.supports_markdown)}</div>
+                                </div>
                             </div>
-                            <div class="input custom-selector" id="country_select">
-                                ${form_country}
+                            <div class="info-row">
+                                <div class="title">
+                                    ${tl(trans.about_me_preview)}
+                                </div>
+                                <span class="bleh--about-me-preview" id="about_me_preview"></span>
                             </div>
-                        </div>
-                        <div class="info-row">
-                            <div class="title">
-                                ${trans_legacy[lang].settings.inbuilt.profile.website}
-                            </div>
-                            <div class="input">
-                                <input type="url" name="homepage" value="${form_website}" id="id_homepage" data-form-type="website">
-                            </div>
-                        </div>
-                        <div class="info-row">
-                            <div class="title">
-                                ${trans_legacy[lang].settings.inbuilt.profile.about}
-                            </div>
-                            <div class="input about-me" data-bleh--show-preview="false" id="about_me">
-                                <textarea name="about_me" cols="40" rows="10" class="textarea--s" maxlength="500" id="id_about_me" oninput="_update_about_me_preview(this.value)" data-form-type="other">${form_about_me}</textarea>
-                                <div class="tip">${tl(trans.markdown_tip)}</div>
+                            <div class="info-row" style="display: none">
+                                <div class="title">
+                                    ${tl(trans.website)}
+                                </div>
+                                <div class="input">
+                                    <input type="url" name="homepage" value="${form_website}" id="id_homepage" data-form-type="website">
+                                </div>
                             </div>
                         </div>
                         <div class="save-row">
                             <div class="form-submit">
                                 <button type="submit" class="btn-primary save" data-form-type="action">
-                                    ${trans_legacy[lang].settings.save}
+                                    ${tl(trans.save)}
                                 </button>
                                 <input type="hidden" value="profile" name="submit">
                             </div>
@@ -522,6 +521,11 @@ function patch_settings_profile_panel(token, update_picture) {
             </div>
         </div>
     `);
+
+    tippy(update_picture.querySelector('.markdown-enabled'), {
+        content: tl(trans.markdown_tip),
+        allowHTML: true
+    });
 
     custom_select(update_picture.querySelector('#id_country'), update_picture.querySelector('#country_select'));
 
@@ -537,17 +541,6 @@ function patch_settings_profile_panel(token, update_picture) {
     tippy(document.getElementById('btn--toggle-about-me-preview'), {
         content: trans_legacy[lang].settings.inbuilt.profile.toggle_preview.bio
     });
-}
-
-unsafeWindow._toggle_about_me_preview = function() {
-    toggle_about_me_preview();
-}
-function toggle_about_me_preview() {
-    let about_me = document.getElementById('about_me');
-    if (about_me.getAttribute('data-bleh--show-preview') == 'false')
-        about_me.setAttribute('data-bleh--show-preview', 'true');
-    else
-        about_me.setAttribute('data-bleh--show-preview', 'false');
 }
 
 unsafeWindow._update_display_name = function(value) {
@@ -598,7 +591,7 @@ function open_avatar_changer(token) {
                 </div>
                 <div class="modal-footer">
                     <button type="submit" class="btn-primary save" onclick="_save_avatar_changer()">
-                        ${trans_legacy[lang].settings.save}
+                        ${tl(trans.save)}
                     </button>
                     <input type="hidden" value="avatar" name="submit">
                 </div>
@@ -634,8 +627,10 @@ unsafeWindow._update_about_me_preview = function(value) {
     update_about_me_preview(value);
 }
 function update_about_me_preview(value) {
-    let result = markdown(value);
-    let about_me = page.structure.side.querySelector('#about_me_preview');
+    let result = markdown(value, {
+        allow_headers: true
+    });
+    let about_me = page.structure.main.querySelector('#about_me_preview');
 
     about_me.innerHTML = result;
 
@@ -729,44 +724,50 @@ function bleh_communication_panel(token) {
         page.token = form.querySelector('[name="csrfmiddlewaretoken"]').getAttribute('value');
 
     panel.innerHTML = (`
-        <h4>${trans_legacy[lang].settings.inbuilt.ignore.name}</h4>
+        <h4>${tl(trans.block_list)}</h4>
         <div class="user-top-panel">
             <div class="user-top-avatar user-top-avatar-side-left"><div class="bleh-icon"></div></div>
             <img class="user-top-avatar user-top-avatar-main" src="${auth.avatar.replace('avatar42s', 'avatar300s')}" alt="${auth.name}">
             <div class="user-top-avatar user-top-avatar-side-right"><div class="bleh-icon"></div></div>
         </div>
-        <h5>${trans_legacy[lang].settings.inbuilt.ignore.consider.name}</h5>
-        <div class="to-consider">
-            <ul class="to-consider-good">
-                <li>${trans_legacy[lang].settings.inbuilt.ignore.consider.good[0]}</li>
-                <li>${trans_legacy[lang].settings.inbuilt.ignore.consider.good[1]}</li>
-                <li>${trans_legacy[lang].settings.inbuilt.ignore.consider.good[2]}</li>
-            </ul>
-            <ul class="to-consider-bad">
-                <li>${trans_legacy[lang].settings.inbuilt.ignore.consider.bad[0]}</li>
-                <li>${trans_legacy[lang].settings.inbuilt.ignore.consider.bad[1]}</li>
-            </ul>
-        </div>
-        <div class="text-container">
-            <div class="heading">
-                <h5>${trans_legacy[lang].settings.music.profile_shortcut.placeholder}</h5>
-                <form action="${root}settings/privacy#ignorelist" name="ignorelist" method="post">
-                    <input type="hidden" name="csrfmiddlewaretoken" value="${page.token}">
-                    <div class="input-container">
-                        <input type="text" maxlength="80" id="id_user" name="user" placeholder="${trans_legacy[lang].settings.music.profile_shortcut.header}">
-                        <input type="hidden" name="listaction" value="add">
-                        <input type="hidden" name="submit" value="ignorelist">
-                        <button class="bleh--btn primary icon add" type="submit">${trans_legacy[lang].settings.add}</button>
+        <div class="sides">
+            <div class="left main">
+                <div class="setting" data-type="text">
+                    <div class="heading">
+                        <h5>${trans_legacy[lang].settings.music.profile_shortcut.placeholder}</h5>
+                        <form action="${root}settings/privacy#ignorelist" name="ignorelist" method="post">
+                            <input type="hidden" name="csrfmiddlewaretoken" value="${page.token}">
+                            <div class="input-container">
+                                <input type="text" maxlength="80" id="id_user" name="user" placeholder="${tl(trans.enter_username)}">
+                                <input type="hidden" name="listaction" value="add">
+                                <input type="hidden" name="submit" value="ignorelist">
+                                <button class="bleh--btn primary icon block" type="submit">${tl(trans.block)}</button>
+                            </div>
+                        </form>
                     </div>
-                </form>
+                </div>
+                <div class="alert alert-info">
+                    ${tl(trans.blocked_count).replace('{c}', amount)}
+                </div>
             </div>
-        </div>
-        <div class="alert alert-info">
-            ${trans_legacy[lang].settings.inbuilt.ignore.count.replace('{c}', amount)}
+            <div class="right">
+                <h5>${tl(trans.when_blocked)}</h5>
+                <div class="to-consider">
+                    <ul class="to-consider-good">
+                        <li>${tl(trans.blocked_user_public)}</li>
+                        <li>${tl(trans.blocked_user_message)}</li>
+                        <li>${tl(trans.blocked_user_new_shouts)}</li>
+                    </ul>
+                    <ul class="to-consider-bad">
+                        <li>${tl(trans.blocked_user_old_shouts)}</li>
+                        <li>${tl(trans.blocked_user_view_profile)}</li>
+                    </ul>
+                </div>
+            </div>
         </div>
     `);
 
-    panel.appendChild(new_list);
+    panel.querySelector('.left').appendChild(new_list);
 }
 
 function patch_settings_privacy_panel(token, privacy_panel) {
@@ -817,7 +818,7 @@ function patch_settings_privacy_panel(token, privacy_panel) {
                     </div>
                 </div>
             </div>
-            <div class="toggle-container" id="container-recent_listening">
+            <div class="setting" data-type="toggle" id="container-recent_listening">
                 <button class="btn reset" onclick="_reset_inbuilt_item('recent_listening')">Reset to default</button>
                 <div class="heading">
                     <h5>${trans_legacy[lang].settings.inbuilt.privacy.recent_listening.name}</h5>
@@ -888,7 +889,7 @@ function patch_settings_privacy_panel(token, privacy_panel) {
                     </div>
                 </div>
             </div>
-            <div class="toggle-container" id="container-disable_shoutbox">
+            <div class="setting" data-type="toggle" id="container-disable_shoutbox">
                 <button class="btn reset" onclick="_reset_inbuilt_item('disable_shoutbox')">Reset to default</button>
                 <div class="heading">
                     <h5>${trans_legacy[lang].settings.inbuilt.privacy.disable_shoutbox.name}</h5>
@@ -903,7 +904,7 @@ function patch_settings_privacy_panel(token, privacy_panel) {
             </div>
             <div class="settings-footer">
                 <button type="submit" class="btn-primary save">
-                    ${trans_legacy[lang].settings.save}
+                    ${tl(trans.save)}
                 </button>
                 <input type="hidden" value="privacy" name="submit">
             </div>
@@ -919,4 +920,168 @@ function patch_settings_privacy_panel(token, privacy_panel) {
         select.setAttribute('onchange', `_update_inbuilt_select('${select.getAttribute('id')}', this.value)`);
         update_inbuilt_select(select.getAttribute('id'), select.value);
     });
+}
+
+function bleh_accounts() {
+    let token = page.structure.main.querySelector('[name="csrfmiddlewaretoken"]').getAttribute('value');
+
+    // get info before destroying
+    let original_settings = {
+        email_language: page.structure.main.querySelector('[name="language"]').outerHTML,
+        marketing_emails: page.structure.main.querySelector('[name="opt_in_marketing"]').checked,
+        email: page.structure.main.querySelector('[name="email"]').value,
+        captcha: page.structure.main.querySelector('.lfm-recaptcha')
+    }
+
+    let information_panel = document.createElement('section');
+    information_panel.classList.add('bleh--panel');
+    information_panel.innerHTML = (`
+        <h4>${tl(trans.information)}</h4>
+        <form action="${root}settings/change-username/send-email" method="post">
+            <input type="hidden" name="csrfmiddlewaretoken" value="${token}">
+            <div class="setting" data-type="text">
+                <div class="heading">
+                    <h5>${tl(trans.username.name)}</h5>
+                    <p>${tl(trans.username.body).replace('{a}', `<a href="https://support.last.fm/" target="_blank">`).replace('{/a}', '</a>')}</p>
+                </div>
+                <div class="input-container content-form">
+                    <input id="id_current_username" type="text" name="current_username" value="${auth.name}" disabled required>
+                    <button class="btn chibi icon primary submit">${tl(trans.send)}</button>
+                    <input type="hidden" value="change_username" name="submit">
+                </div>
+            </div>
+        </form>
+        <form action="${root}settings/account" name="change-email" method="post">
+            <input type="hidden" name="csrfmiddlewaretoken" value="${token}">
+            <div class="setting" data-type="text">
+                <div class="heading">
+                    <h5>${tl(trans.email)}</h5>
+                </div>
+                <div class="input-container content-form">
+                    <input id="id_email" type="text" name="email" value="${original_settings.email}" required>
+                    <button class="btn chibi icon primary submit">${tl(trans.save)}</button>
+                    <input type="hidden" value="email_update" name="submit">
+                </div>
+            </div>
+        </form>
+        <div class="sep"></div>
+        <form class="password-container" action="${root}settings/account/password#change-password" name="change-password" method="post">
+            <input type="hidden" name="csrfmiddlewaretoken" value="${token}">
+            <div class="setting" data-type="text">
+                <div class="heading">
+                    <h5>${tl(trans.password)}</h5>
+                </div>
+                <div class="input-container content-form">
+                    <input id="id_password" type="password" name="password" required>
+                </div>
+            </div>
+            <div class="setting" data-type="text">
+                <div class="heading">
+                    <h5>${tl(trans.new_password)}</h5>
+                </div>
+                <div class="input-container content-form">
+                    <input id="id_new_password" type="password" name="new_password" required>
+                </div>
+            </div>
+            <div class="setting" data-type="text">
+                <div class="heading">
+                    <h5>${tl(trans.confirm_password)}</h5>
+                </div>
+                <div class="input-container content-form">
+                    <input id="id_new_password_confirmation" type="password" name="new_password_confirmation" required>
+                </div>
+            </div>
+            <div class="settings-footer end">
+                <button class="btn-primary save" type="submit">
+                    ${tl(trans.change)}
+                </button>
+            </div>
+        </form>
+    `);
+
+    let password_container = information_panel.querySelector('.password-container');
+    password_container.insertBefore(original_settings.captcha, password_container.lastElementChild);
+
+    page.structure.main.insertBefore(information_panel, page.structure.main.firstElementChild);
+
+    let communication_panel = document.createElement('section');
+    communication_panel.classList.add('bleh--panel');
+    communication_panel.innerHTML = (`
+        <h4>${tl(trans.communication)}</h4>
+        <form action="${root}settings/account" name="email-settings" method="post">
+            <input type="hidden" name="csrfmiddlewaretoken" value="${token}">
+            <div class="setting" data-type="select">
+                <div class="heading">
+                    <h5>${tl(trans.email_language)}</h5>
+                </div>
+                <div class="select-wrap custom-selector">
+                    ${original_settings.email_language}
+                </div>
+            </div>
+            <div class="setting" data-type="toggle" id="container-marketing_emails" onclick="_update_inbuilt_item('marketing_emails')">
+                <div class="heading">
+                    <h5>${tl(trans.marketing_emails.name)}</h5>
+                    <p>${tl(trans.marketing_emails.body)}</p>
+                </div>
+                <div class="toggle-wrap">
+                    <input class="companion-checkbox" type="checkbox" name="opt_in_marketing" id="inbuilt-companion-checkbox-marketing_emails">
+                    <span class="btn toggle" id="toggle-marketing_emails" aria-checked="false">
+                        <div class="dot"></div>
+                    </span>
+                </div>
+            </div>
+            <div class="settings-footer end">
+                <button class="btn-primary save" type="submit">
+                    ${tl(trans.save)}
+                </button>
+                <input type="hidden" value="email_settings" name="submit">
+            </div>
+        </form>
+    `);
+
+    information_panel.after(communication_panel);
+
+    let security_panel = document.createElement('section');
+    security_panel.classList.add('bleh--panel');
+    security_panel.innerHTML = (`
+        <h4>${tl(trans.security)}</h4>
+        <form action="${root}settings/account" name="email-settings" method="post">
+            <input type="hidden" name="csrfmiddlewaretoken" value="${token}">
+            <div class="setting" data-type="toggle">
+                <div class="heading">
+                    <h5>${tl(trans.logout_everywhere)}</h5>
+                </div>
+                <div class="toggle-wrap">
+                    <a class="see-more danger logout" href="${root}settings/account/logout-everywhere">
+                        ${tl(trans.logout)}
+                    </a>
+                </div>
+            </div>
+            <div class="sep"></div>
+            <div class="setting" data-type="toggle">
+                <div class="heading">
+                    <h5>${tl(trans.delete_account.name)}</h5>
+                    <p>${tl(trans.delete_account.body)}</p>
+                </div>
+                <div class="toggle-wrap">
+                    <a class="see-more danger delete-account" href="${root}settings/account/delete">
+                        ${tl(trans.delete_account_permanently).replace('{u}', auth.name)}
+                    </a>
+                </div>
+            </div>
+        </form>
+    `);
+
+    communication_panel.after(security_panel);
+
+    let old_panels = page.structure.main.querySelectorAll(':scope > section:not(.bleh--panel)');
+    old_panels.forEach((panel) => {
+        page.structure.main.removeChild(panel);
+    });
+
+    for (let setting in original_settings) {
+        update_inbuilt_item(setting, original_settings[setting], false);
+    }
+
+    custom_select(communication_panel.querySelector('[name="language"]'), communication_panel.querySelector('[name="language"]').parentElement);
 }

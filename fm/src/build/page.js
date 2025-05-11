@@ -19,6 +19,7 @@ tippy.setDefaultProps({
 export let auth = {
     name: null,
     pro: false,
+    sponsor: false,
     avatar: null,
     sets: {
         hue: 255,

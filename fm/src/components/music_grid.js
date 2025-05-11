@@ -1,10 +1,10 @@
 import { settings } from "../build/config";
 import { page } from "../build/page";
-import { clamp_sat, clean_number, rgb_to_hsl } from "../build/tools";
+import { clamp_sat, clean_number, rgb_to_hsl, sanitise_text } from "../build/tools";
 import { lang, trans_legacy, trans, tl } from "../build/trans";
 import { bleh_glacier_insights } from "../pages/glacier";
 import { parse_scrobbles_as_rank } from "./colourful_counts";
-import { correct_artist, correct_item_by_artist } from "./lotus";
+import { correct_artist, correct_item_by_artist, name_includes } from "./lotus";
 
 export function music_grids() {
     if (page.structure.main == null)
@@ -49,9 +49,7 @@ export function music_grids() {
     let grids = page.structure.main.querySelectorAll('.grid-items-item:not([data-bleh-music-grids])');
     grids.forEach((grid) => {
         let is_loading = (grid.querySelector('.grid-items-empty-inner') != null);
-
-        if (is_loading)
-            return;
+        if (is_loading) return;
 
         grid.setAttribute('data-bleh-music-grids', 'true');
 
@@ -66,7 +64,7 @@ export function music_grids() {
 
         let image_wrap = grid.querySelector('.grid-items-cover-image-image');
         let image = image_wrap.querySelector('img');
-        if (image != null && !image_wrap.classList.contains('grid-items-cover-default')) {
+        if (image && !image_wrap.classList.contains('grid-items-cover-default')) {
             let grid_colour = document.createElement('div');
             grid_colour.classList.add('grid-item-colour-bg');
             image_wrap.appendChild(grid_colour);
@@ -105,8 +103,7 @@ export function music_grids() {
         } else if (page.type == 'tag') {
             let aux_text = grid.querySelector('.grid-items-item-aux-text');
             let stat_name = aux_text.querySelector('.stat-name');
-            if (stat_name == null)
-                return;
+            if (!stat_name) return;
 
             aux_text.removeChild(stat_name);
 
@@ -176,13 +173,37 @@ export function music_grids() {
             insights.artist.labels.push(name.textContent);
         } else {
             let artist = grid.querySelector('.grid-items-item-aux-block');
-            if (artist == null)
-                return;
+            if (!artist) return;
 
-            artist.textContent = correct_artist(artist.textContent.trim());
+            if (settings.format_guest_features) {
+                let name_elem = name;
+                let artist_elem = artist;
 
-            name.textContent = correct_item_by_artist(name.textContent.trim(), artist.textContent.trim());
-            insights.album.labels.push(name.textContent);
+                let song_title = name_elem.getAttribute('title');
+
+                let formatted_title = name_includes(song_title, artist_elem.textContent.trim());
+                let song_tags = {};
+
+                if (formatted_title) {
+                    song_title = formatted_title[0];
+                    insights.album.labels.push(song_title);
+                    song_tags = formatted_title[1];
+                    artist.textContent = formatted_title[2];
+                }
+
+                // parse tags into text
+                let song_tags_text = '';
+                for (let song_tag in song_tags) {
+                    song_tags_text = `${song_tags_text}<span class="feat" data-bleh--tag-type="${song_tags[song_tag].type}" data-bleh--tag-group="${song_tags[song_tag].group}">${sanitise_text(song_tags[song_tag].text)}</span>`;
+                }
+
+                // combine
+                name_elem.innerHTML = `<span class="title">${sanitise_text(song_title).trim()}</span>${song_tags_text}`;
+            } else {
+                artist.textContent = correct_artist(artist.textContent.trim());
+
+                name.textContent = correct_item_by_artist(name.textContent.trim(), artist.textContent.trim());
+            }
         }
     });
 

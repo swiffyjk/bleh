@@ -2,7 +2,9 @@ import { settings } from "./build/config";
 import { log } from "./build/log";
 import { auth, page, recent_activity_list, root } from "./build/page";
 import { sanitise } from "./build/tools";
+import { tl, trans } from './build/trans';
 import { correct_artist, correct_item_by_artist } from "./components/lotus";
+import { notify } from './components/notify';
 
 export function subscribe_to_events() {
     if (!settings.activities)
@@ -80,8 +82,7 @@ export function subscribe_to_events() {
                 let is_loading = actual_btn.classList.contains('btn--loading');
                 console.log('is button loading', is_loading, actual_btn, event.target);
 
-                if (!is_loading)
-                    return;
+                if (!is_loading) return;
 
                 register_activity('shout', [{name: page.name, type: page.type, sister: page.sister}], window.location.href);
             }, 150);
@@ -148,23 +149,19 @@ export function register_activity(type, involved, context, date=new Date()) {
         return;
 
     if (type == 'shout') {
-        if (!settings.activity_shout)
-            return;
-    } else if (type == 'image_upload' || type == 'image_star' || type == 'bookmark' || type == 'unbookmark') {
-        if (!settings.activity_image)
-            return;
+        if (!settings.activity_shout) return;
+    } else if (type == 'image_upload' || type == 'image_star') {
+        if (!settings.activity_image) return;
     } else if (type == 'obsess' || type == 'unobsess') {
-        if (!settings.activity_obsess)
-            return;
+        if (!settings.activity_obsess) return;
     } else if (type == 'love' || type == 'unlove') {
-        if (!settings.activity_love)
-            return;
+        if (!settings.activity_love) return;
+    } else if (type == 'bookmark' || type == 'unbookmark') {
+        if (!settings.activity_bookmark) return;
     } else if (type == 'install_bwaa' || type == 'update_bwaa' || type == 'install_bleh' || type == 'update_bleh') {
-        if (!settings.activity_install)
-            return;
+        if (!settings.activity_install) return;
     } else if (type == 'wiki') {
-        if (!settings.wiki)
-            return;
+        if (!settings.wiki) return;
     }
 
     recent_activity_list.length = 0
@@ -191,4 +188,13 @@ export function register_activity(type, involved, context, date=new Date()) {
 
     log('saved', 'activity', 'info', recent_activity_list);
     localStorage.setItem('bwaa_recent_activity', JSON.stringify(recent_activity_list));
+}
+
+unsafeWindow._clear_activity_history = function() {
+    localStorage.removeItem('bwaa_recent_activity');
+    notify({
+        id: 'cleared_history',
+        title: tl(trans.cleared_activity_history),
+        type: 'success'
+    });
 }

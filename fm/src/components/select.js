@@ -80,9 +80,13 @@ function update_custom_select(element = document.body, value = '', select_id = '
 
             console.log(sel_button);
 
-            if (sel_button == null)
-                return;
+            if (!sel_button) return;
             sel_button.textContent = btn.textContent;
         }
     });
+}
+
+unsafeWindow._update_inbuilt_selection = function(id, index) {
+    document.getElementById(id).selectedIndex = index;
+    update_inbuilt_select(id, document.getElementById(id).value);
 }

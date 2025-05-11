@@ -4,6 +4,7 @@ import { log } from "./build/log";
 import { auth, page, root, shout_parse_queue } from "./build/page";
 import { lang, trans_legacy } from "./build/trans";
 import { deliver_notif, notify } from "./components/notify";
+import { trans, tl } from "./build/trans";
 
 export function patch_shouts() {
     if (page.structure.main == null)
@@ -16,9 +17,8 @@ export function patch_shouts() {
             shout.setAttribute('data-kate-processed', 'true');
 
             let shout_name = shout.querySelector('.shout-user a');
+            if (!shout_name) return;
 
-            if (!shout_name)
-                return;
             let shout_name_text = shout_name.textContent;
 
             let shout_avatar = shout.querySelector('.shout-user-avatar');
@@ -45,7 +45,7 @@ export function patch_shouts() {
 
             // timestamp
             let shout_timestamp = shout.querySelector('.shout-timestamp time');
-            if (shout_timestamp != null) {
+            if (shout_timestamp) {
                 tippy(shout_timestamp, {
                     content: shout_timestamp.getAttribute('title')
                 });
@@ -105,10 +105,10 @@ function shout_send(send_button) {
 
     button.classList.add('btn-send-shout-generic');
     //button.innerHTML = 'Send with Copilot<span class="new-badge">PREMIUM</span>';
-    button.textContent = trans_legacy[lang].settings.send;
+    button.textContent = tl(trans.send);
 
     tippy(button, {
-        content: trans_legacy[lang].settings.send_quickly.replace('{kbd}', '<kbd>ctrl+↵</kbd>'),
+        content: tl(trans.send_quickly_with).replace('{kbd}', '<kbd>ctrl+↵</kbd>'),
         delay: [500, 0],
         allowHTML: true
     });
@@ -117,8 +117,7 @@ function shout_send(send_button) {
 export function parse_shout_queue() {
     let response = parse_shout(0);
 
-    if (response == 0)
-        return;
+    if (response == 0) return;
 
     setTimeout(function() {
         parse_shout(0);
@@ -131,7 +130,7 @@ function parse_shout(index) {
 
     let shout = shout_parse_queue[index];
 
-    console.info(index, shout_parse_queue, shout);
+    console.log(index, shout_parse_queue, shout);
 
     let converter = new showdown.Converter({
         emoji: true,

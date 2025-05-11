@@ -112,8 +112,7 @@ export let includes = {
         '(spotify', '(+'
     ],
     remasters: [
-        '- remaster', '(remaster',
-        '- 19', '- 20', '(19', '(20'
+        '- remaster', '(remaster'
     ],
     mixes: [
         '- devonshire mix', '(devonshire mix',
@@ -132,9 +131,11 @@ export let includes = {
         '(kate',
         '(asmr',
         '(agressive', '(aggressive', 'brazilian phonk', // lol
-        '- sped up', '(sped up', '- slow', '(slow',
+        '- sped up', '(sped up', '[sped up', '- slow', '(slow', '[slow',
         'a. g. cook remix',
-        '- offline', '- og mix'
+        '- offline', '- og mix',
+        '- club edit', '(club edit',
+        '- radio', '(radio'
     ],
     mixes_numbers: [
         '(v1', '(v2', '(v3', '(v4', '(v5', '(v6', '(v7', '(v8', '(v9',
@@ -158,6 +159,7 @@ export let includes = {
         '- bonus', '(bonus', '[bonus',
         '- edit', '(edit', '[edit',
         '- from', '(from', '[from',
+        '- music from', '(music from',
         '- skit', '(skit',
         '- original', '(original', '[original',
         '[clean', '[explicit',
@@ -171,10 +173,11 @@ export let includes = {
         '- b-side', '- c-side', '(b-side', '(c-side',
         '- lp', '- ep', '(lp', '(ep',
         '- single', '(single',
+        '- mixtape', '(mixtape',
         '- box set', '(box set',
         //,
         '- 19', '- 20', '(19', '(20',
-        '- 10th', '- 19th', '- 20th', '- 25th', '- 30th', '- 35th', '- 40th', '- 50th', '- 60th',
-        '(10th', '(19th', '(20th', '(25th', '(30th', '(35th', '(40th', '(50th', '(60th'
+        '- 10th', '- 25th', '- 30th', '- 35th', '- 40th', '- 50th', '- 60th',
+        '(10th', '(25th', '(30th', '(35th', '(40th', '(50th', '(60th'
     ]
 }

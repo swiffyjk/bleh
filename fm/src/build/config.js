@@ -42,8 +42,7 @@ export let settings_template = {
     bio_markdown: true,
     hue_from_album: true,
     seasonal: true,
-    seasonal_particles: true,
-    seasonal_particles_reduced: false,
+    seasonal_particles: 'all',
     seasonal_particles_fps: false,
     seasonal_overlays: true,
 
@@ -72,6 +71,7 @@ export let settings_template = {
     activity_image: true,
     activity_obsess: true,
     activity_love: true,
+    activity_bookmark: true,
     activity_install: true,
     activity_wiki: true,
 
@@ -140,19 +140,6 @@ export let settings_base = {
         values: [true, false],
         type: 'toggle'
     },
-    main_width: {
-        css: 'main_width',
-        unit: 'px',
-        value: 902,
-        type: 'slider'
-    },
-    nav: {
-        css: 'show_extra_nav',
-        unit: '',
-        value: true,
-        values: [true, false],
-        type: 'toggle'
-    },
     gendered_tags: {
         css: 'gendered_tags',
         unit: '',
@@ -195,19 +182,13 @@ export let settings_base = {
         values: [true, false],
         type: 'toggle'
     },
-    big_numbers: {
-        css: 'big_numbers',
-        unit: '',
-        value: false,
-        values: [true, false],
-        type: 'toggle'
-    },
     format_guest_features: {
         css: 'format_guest_features',
         unit: '',
         value: true,
         values: [true, false],
-        type: 'toggle'
+        type: 'toggle',
+        require_reload: 'partial'
     },
     show_guest_features: {
         css: 'show_guest_features',
@@ -242,14 +223,16 @@ export let settings_base = {
         unit: '',
         value: true,
         values: [true, false],
-        type: 'toggle'
+        type: 'toggle',
+        require_reload: 'partial'
     },
     colourful_tracks: {
         css: 'colourful_tracks',
         unit: '',
         value: true,
         values: [true, false],
-        type: 'toggle'
+        type: 'toggle',
+        require_reload: 'partial'
     },
     rain: {
         css: 'rain',
@@ -264,7 +247,8 @@ export let settings_base = {
         unit: '',
         value: true,
         values: [true, false],
-        type: 'toggle'
+        type: 'toggle',
+        require_reload: 'partial'
     },
     travis: {
         css: 'travis',
@@ -296,21 +280,24 @@ export let settings_base = {
         unit: '',
         value: true,
         values: [true, false],
-        type: 'toggle'
+        type: 'toggle',
+        require_reload: 'partial'
     },
     bio_markdown: {
         css: 'bio_markdown',
         unit: '',
         value: true,
         values: [true, false],
-        type: 'toggle'
+        type: 'toggle',
+        require_reload: 'partial'
     },
     hue_from_album: {
         css: 'hue_from_album',
         unit: '',
         value: true,
         values: [true, false],
-        type: 'toggle'
+        type: 'toggle',
+        require_reload: 'partial'
     },
     seasonal: {
         css: 'seasonal',
@@ -323,17 +310,8 @@ export let settings_base = {
     seasonal_particles: {
         css: 'seasonal_particles',
         unit: '',
-        value: true,
-        values: [true, false],
-        type: 'toggle',
-        require_reload: true
-    },
-    seasonal_particles_reduced: {
-        css: 'seasonal_particles_reduced',
-        unit: '',
-        value: false,
-        values: [true, false],
-        type: 'toggle',
+        value: 'all',
+        type: 'options',
         require_reload: true
     },
     seasonal_particles_fps: {
@@ -471,6 +449,13 @@ export let settings_base = {
         values: [true, false],
         type: 'toggle'
     },
+    activity_bookmark: {
+        css: 'activity_bookmark',
+        unit: '',
+        value: true,
+        values: [true, false],
+        type: 'toggle'
+    },
     activity_install: {
         css: 'activity_install',
         unit: '',
@@ -491,7 +476,7 @@ export let settings_base = {
         value: true,
         values: [true, false],
         type: 'toggle',
-        require_reload: true
+        require_reload: 'partial'
     },
     toggle_icon: {
         css: 'toggle_icon',
@@ -564,6 +549,13 @@ export let inbuilt_settings = {
     },
     create_automatic_edit_rule: {
         css: 'create_automatic_edit_rule',
+        unit: '',
+        value: true,
+        values: [true, false],
+        type: 'toggle'
+    },
+    marketing_emails: {
+        css: 'marketing_emails',
         unit: '',
         value: true,
         values: [true, false],
@@ -685,13 +677,8 @@ export let settings_store = {
         default: true
     },
     seasonal_particles: {
-        default: true
-    },
-    seasonal_particles_reduced: {
-        default: false
-    },
-    seasonal_particles_fps: {
-        default: false
+        default: 'all',
+        type: 'options'
     },
     seasonal_overlays: {
         default: true

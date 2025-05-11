@@ -1,16 +1,23 @@
 import { patch_avatar } from "../avatar";
 import { settings } from "../build/config";
 import { log } from "../build/log";
-import { auth, page } from "../build/page";
+import { auth, page, root } from "../build/page";
 import { clean_number } from "../build/tools";
 import { lang, trans_legacy, trans, tl } from "../build/trans";
 import { correct_artist } from "../components/lotus";
 import { checkup_page_structure } from "../components/structure";
 import { refresh_all } from "../config";
 import { register_background, update_page } from "../page";
+import { bleh_home } from './home';
 
 export function bleh_events() {
-    let is_subpage = (page.subpage != 'event_overview' && page.subpage != 'festival_overview');
+    if (page.subpage == 'overview') {
+        // not an individual event
+        bleh_events_home();
+        return;
+    }
+
+    let is_subpage = page.subpage != 'event_overview';
 
     // without pro theres two containers
     if (auth.pro) {
@@ -45,7 +52,7 @@ export function bleh_events() {
         return;
     }
 
-    page.name = '';
+    page.name = event_header.querySelector('.header-title').textContent.trim();
     page.sister = event_header.querySelector('.header-title').textContent.trim();
 
 
@@ -66,8 +73,8 @@ export function bleh_events() {
             </div>
         </div>
         <div class="info-side">
-            <div class="sub-text">${trans_legacy[lang].event.name}</div>
-            <h1>${page.sister}</h1>
+            <div class="sub-text">${tl(trans.event)}</div>
+            <h1>${page.name}</h1>
             <p class="sub-info">${event_description.innerHTML}</p>
         </div>
     `);
@@ -114,7 +121,7 @@ export function bleh_events() {
 
 
         let main_panel = page.structure.main.querySelector('.event-summary-with-poster');
-        if (main_panel == null)
+        if (!main_panel)
             main_panel = page.structure.main.querySelector('.event-details');
 
         main_panel.insertBefore(event_top_header, main_panel.firstElementChild);
@@ -126,7 +133,7 @@ export function bleh_events() {
         // move poster
         let poster = main_panel.querySelector('.event-poster-preview');
         let poster_panel;
-        if (poster != null) {
+        if (poster) {
             poster_panel = document.createElement('section');
             poster_panel.classList.add('poster-panel', 'view-all-panel');
 
@@ -140,14 +147,14 @@ export function bleh_events() {
 
         // edit button
         let edit_button = main_panel.querySelector('.event-metadata + .event-metadata a');
-        if (edit_button != null) {
+        if (edit_button) {
             edit_button.classList.add('btn', 'view-all-button', 'back', 'edit-event-button');
 
             let edit_panel = document.createElement('section');
             edit_panel.classList.add('view-all-panel');
 
             edit_panel.appendChild(edit_button);
-            if (poster != null)
+            if (poster)
                 poster_panel.after(edit_panel);
             else
                 page.structure.side.insertBefore(edit_panel, page.structure.side.firstElementChild);
@@ -164,6 +171,19 @@ export function bleh_events() {
 
             patch_avatar(avatar, name, 'event');
         });
+
+
+        // cancelled
+        let cancelled = page.structure.main.querySelector('.event-status--cancelled');
+        if (cancelled) {
+            page.structure.main.removeChild(cancelled);
+
+            let alert = document.createElement('section');
+            alert.classList.add('cta', 'first', 'colourful', 'error');
+            alert.innerHTML = `<strong>${tl(trans.event_cancelled)}</strong>`;
+
+            page.structure.main.insertBefore(alert, page.structure.main.firstElementChild);
+        }
     } else {
         if (page.subpage == 'event_attendance_going' || page.subpage == 'event_attendance_interested') {
             // view-related buttons
@@ -205,8 +225,6 @@ export function bleh_events() {
 }
 
 function bleh_events_manage() {
-    register_background(auth.avatar);
-
     page.structure.container = document.body.querySelector('.page-content');
     try {
         page.structure.row = page.structure.container.querySelector('.row');
@@ -222,6 +240,8 @@ function bleh_events_manage() {
     checkup_page_structure(false, content_top);
     log('status is', 'page', 'info', page);
     update_page();
+
+    register_background(auth.avatar);
 
     page.structure.nav.classList.add('navlist--more');
 
@@ -259,4 +279,35 @@ function bleh_events_edit() {
     `);
 
     nav.insertBefore(back_nav, nav.firstElementChild);
+}
+
+function bleh_events_home() {
+    page.subpage = 'home';
+
+    bleh_home();
+
+    let filters = page.structure.container.querySelector('.events-filters');
+    let panel = page.structure.main.querySelector('section');
+
+    filters.classList = 'view-buttons';
+
+    let buttons = filters.querySelectorAll('.events-filter > button');
+    buttons.forEach((button) => {
+        button.classList.add('btn', 'view-item');
+
+        if (button.classList.contains('disclose-trigger')) {
+            button.classList.remove('disclose-trigger');
+            button.classList.add('select-button');
+        }
+    });
+
+    panel.insertBefore(filters, panel.firstElementChild);
+
+    page.structure.side.innerHTML = (`
+        <section class="view-all-panel">
+            <a class="btn view-all-button add-button" href="${root}events/add?reset=true">
+                ${tl(trans.create_new_event)}
+            </a>
+        </section>
+    `);
 }

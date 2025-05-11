@@ -1,6 +1,6 @@
 import { log } from "./build/log";
 import { root } from "./build/page";
-import { lang, trans_legacy } from "./build/trans";
+import { lang, tl, trans, trans_legacy } from "./build/trans";
 import { dialog } from "./components/dialog";
 import { deliver_notif } from "./components/notify";
 import { ff } from "./sku";
@@ -75,9 +75,12 @@ export function request_changelog(open_after = true) {
 function open_changelog(changelog) {
     let window = dialog({
         id: 'changelog',
-        title: trans_legacy[lang].changelog.name,
-        subtitle: trans_legacy[lang].changelog.subtitle.replace('{u}', `<a class="mention" href="${root}user/cutensilly">@cutensilly</a>`),
+        title: tl(trans.news_from_user).replace('{user}', `<a class="mention" href="${root}user/katelyness">@katelyness</a>`),
         body: (`
+            <div class="cta first sponsor colourful margin-bottom">
+                <strong>${tl(trans.news_sponsor_cta)}</strong>
+                <a class="see-more" onclick="_sponsor(true)">${tl(trans.sponsor)}</a>
+            </div>
             <div class="changelog-list"></div>
             <div class="modal-footer">
                 <a class="btn primary skip" href="#latest_major_release">
@@ -94,6 +97,9 @@ function open_changelog(changelog) {
     let index = 0;
     for (let version in changelog) {
         if (version == 'updated' || version == 'latest')
+            continue;
+
+        if (index > 10)
             continue;
 
         let version_item = document.createElement('div');

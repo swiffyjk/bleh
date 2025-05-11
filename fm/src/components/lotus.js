@@ -346,7 +346,8 @@ export function name_includes(original_title, original_artist) {
         .replaceAll(' with ', ';')
         .replaceAll('- ', '')
         .replaceAll(',; ', ';')
-        .replaceAll('Tyler;the', 'Tyler, the').replaceAll('Tyler;The', 'Tyler, The');
+        .replaceAll('Tyler;the', 'Tyler, the').replaceAll('Tyler;The', 'Tyler, The')
+        .replaceAll(' of BTS', ';BTS');
 
         console.log('pre-split', field_text);
 
@@ -389,6 +390,7 @@ export function artist_title() {
         title_text = title_text
         .replaceAll(' & ', ';').replaceAll(', ', ';')
         .replace('Tyler;the', 'Tyler, The').replace('Tyler;The', 'Tyler, The')
+        .replace('Marina;the Diamonds', 'Marina and The Diamonds')
         .replaceAll(';;', ';');
 
         page.multi = true;
@@ -438,7 +440,7 @@ export function patch_header_title() {
         return;
 
     // correct artist
-    if (track_artist == null) {
+    if (!track_artist) {
         // must be on artist page
         if (artist_corrections.hasOwnProperty(track_title.textContent)) {
             let corrected_artist = artist_corrections[track_title.textContent];
@@ -447,6 +449,8 @@ export function patch_header_title() {
 
             page.corrected = true;
         }
+
+        return;
     } else {
         // album/track page
         if (artist_corrections.hasOwnProperty(track_artist.textContent)) {
@@ -455,9 +459,6 @@ export function patch_header_title() {
             track_artist.textContent = corrected_artist;
         }
     }
-
-    if (track_artist == null)
-        return;
 
     if (settings.format_guest_features) {
         try {
@@ -477,7 +478,7 @@ export function patch_header_title() {
             }
 
             // combine
-            track_title.innerHTML = `<div class="title">${sanitise_text(song_title)}</div>${song_tags_text}`;
+            track_title.innerHTML = `<div class="title">${sanitise_text(song_title).trim()}</div>${song_tags_text}`;
 
             let song_artist_element = document.body.querySelector('span[itemprop="byArtist"]');
             let song_guests = formatted_title[3];

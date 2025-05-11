@@ -130,20 +130,6 @@ export function redesign_profile_header(is_own_profile, is_following) {
     }
 
     if (!is_own_profile) {
-        if (page.name == 'cutensilly') {
-            create_profile_top_item(profile_header, {
-                name: page.name,
-                type: 'sponsor',
-                link: '_sponsor()',
-                full: true,
-                action: 'button',
-                primary: true,
-                katsune: katsune,
-                mini: true
-            });
-        }
-
-
         // message
         let msg_button = document.body.querySelector('.header-message-user');
         if (msg_button) {
@@ -193,7 +179,7 @@ export function redesign_profile_header(is_own_profile, is_following) {
         // edit
         create_profile_top_item(profile_header, {
             name: page.name,
-            type: 'edit',
+            type: 'edit_profile',
             link: `${root}settings`,
             katsune: katsune
         });
@@ -232,9 +218,9 @@ export function redesign_profile_header(is_own_profile, is_following) {
                 <div class="info">
                     <h3>${tl(trans.you_share_count_with).replace('{c}', `<span class="colourful" data-taste="${taste}">${taste_percentage}</span>`)}</h3>
                     <p>
-                        ${(taste_artists.length == 1) ? trans_legacy[lang].profile.taste_meter.you_share_1.replace('{artist}', taste_artists[0]) : ''}
-                        ${(taste_artists.length == 2) ? trans_legacy[lang].profile.taste_meter.you_share_2.replace('{artist1}', taste_artists[0]).replace('{artist2}', taste_artists[1]) : ''}
-                        ${(taste_artists.length == 3) ? trans_legacy[lang].profile.taste_meter.you_share_3.replace('{artist1}', taste_artists[0]).replace('{artist2}', taste_artists[1]).replace('{artist3}', taste_artists[2]) : ''}
+                        ${(taste_artists.length == 1) ? tl(trans.you_share_count_with.one).replace('{artist}', taste_artists[0]) : ''}
+                        ${(taste_artists.length == 2) ? tl(trans.you_share_count_with.two).replace('{artist1}', taste_artists[0]).replace('{artist2}', taste_artists[1]) : ''}
+                        ${(taste_artists.length == 3) ? tl(trans.you_share_count_with.three).replace('{artist1}', taste_artists[0]).replace('{artist2}', taste_artists[1]).replace('{artist3}', taste_artists[2]) : ''}
                     </p>
                 </div>
             </div>
@@ -454,9 +440,9 @@ export function create_profile_top_item(parent, {name, link, text='', type, tast
             <img class="view-item-avatar" src="${auth.avatar}" alt="${auth.name}">
             <!--<div class="taste-badge">${trans_legacy[lang].profile.taste_meter.level[taste]}</div>-->
             <div class="taste-badge">${percent}</div>
-            ${(artists.length == 1) ? trans_legacy[lang].profile.taste_meter.you_share_1.replace('{artist}', artists[0]) : ''}
-            ${(artists.length == 2) ? trans_legacy[lang].profile.taste_meter.you_share_2.replace('{artist1}', artists[0]).replace('{artist2}', artists[1]) : ''}
-            ${(artists.length == 3) ? trans_legacy[lang].profile.taste_meter.you_share_3.replace('{artist1}', artists[0]).replace('{artist2}', artists[1]).replace('{artist3}', artists[2]) : ''}
+            ${(artists.length == 1) ? tl(trans.you_share_count_with.one).replace('{artist}', artists[0]) : ''}
+            ${(artists.length == 2) ? tl(trans.you_share_count_with.two).replace('{artist1}', artists[0]).replace('{artist2}', artists[1]) : ''}
+            ${(artists.length == 3) ? tl(trans.you_share_count_with.three).replace('{artist1}', artists[0]).replace('{artist2}', artists[1]).replace('{artist3}', artists[2]) : ''}
         `);
     }
 
@@ -467,7 +453,7 @@ export function create_profile_top_item(parent, {name, link, text='', type, tast
 
     if (full) {
         listen_item.classList.add('profile-top-item-full');
-        listen_item.textContent = trans_legacy[lang].profile[type];
+        listen_item.textContent = tl(trans[type]);
     }
 
     parent.appendChild(listen_item);
@@ -478,19 +464,19 @@ export function create_profile_top_item(parent, {name, link, text='', type, tast
             listen_item.removeAttribute('onclick');
 
             if (katsune && !mini)
-                listen_item.textContent = trans_legacy[lang].profile.shortcut.remove;
+                listen_item.textContent = tl(trans.profile_shortcut.linked);
             else
                 tippy(listen_item, {
-                    content: trans_legacy[lang].profile.shortcut.remove
+                    content: tl(trans.profile_shortcut.linked)
                 });
         } else {
             listen_item.setAttribute('data-is-shortcut', 'false');
 
             if (katsune && !mini)
-                listen_item.textContent = trans_legacy[lang].profile.shortcut.add;
+                listen_item.textContent = tl(trans.profile_shortcut.name);
             else
                 tippy(listen_item, {
-                    content: trans_legacy[lang].profile.shortcut.add
+                    content: tl(trans.profile_shortcut.name)
                 });
         }
 

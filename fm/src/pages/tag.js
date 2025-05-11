@@ -20,8 +20,6 @@ export function bleh_tags() {
 
     patch_header_title();
 
-    page.name = tag_header.querySelector('.header-title').textContent.trim();
-
     let is_subpage = tag_header.classList.contains('header--sub-page');
 
 
@@ -45,6 +43,7 @@ export function bleh_tags() {
             index = 5;
 
         let title = desanitise(split[index]);
+        page.name = title;
 
         let redesigned_tag_header = document.createElement('section');
         redesigned_tag_header.classList.add('redesigned-header', 'redesigned-tag-header', 'no-background');
@@ -61,13 +60,42 @@ export function bleh_tags() {
         let background = document.body.querySelector('.header-background--has-image');
         if (background != null)
             register_background(background.style.getPropertyValue('background-image').replace('url("', '').replace('")', ''));
+        else
+            register_background();
 
         page.structure.container.insertBefore(redesigned_tag_header, page.structure.container.firstElementChild);
         tag_header.classList.add('legacy-header');
     }
 
     if (!is_subpage) {
-        //
+        let col_main = page.structure.main.querySelector('.wiki-section');
+
+        let tags = document.createElement('div');
+        tags.classList.add('catalogue-tags');
+        let related = page.structure.main.querySelector('.tags-list');
+
+        if (related) {
+            page.structure.main.removeChild(related.parentElement);
+            tags.appendChild(related);
+
+            let header_tags = document.createElement('div');
+            header_tags.classList.add('sub-text', 'music-small-header');
+            header_tags.textContent = tl(trans.related_to);
+            col_main.appendChild(header_tags);
+
+            col_main.appendChild(tags);
+        }
+
+
+        let bookmark_form = page.structure.side.querySelector(':scope > div');
+        let view_all_panel = document.createElement('section');
+        view_all_panel.classList.add('view-all-panel');
+
+        let button = bookmark_form.querySelector('button');
+        button.classList = 'toggle-button header-new-bookmark-button btn view-item interact-item icon';
+
+        view_all_panel.appendChild(bookmark_form);
+        page.structure.side.appendChild(view_all_panel);
     } else {
         if (page.subpage == 'wiki_overview')
             bleh_wiki();
@@ -84,9 +112,7 @@ export function bleh_tags() {
 
 export function bleh_tags_mini() {
     let tag_user_avatar = page.structure.main.querySelector('.tags-user-avatar');
-
-    if (!tag_user_avatar)
-        return;
+    if (!tag_user_avatar) return;
 
     let tags_list = tag_user_avatar.nextElementSibling;
     let tags = tags_list.querySelectorAll('.tag a');
@@ -94,7 +120,7 @@ export function bleh_tags_mini() {
         tag.classList.add('user-created-tag');
 
         tippy(tag, {
-            content: 'Personal tag'
+            content: tl(trans.personal_tag)
         });
     });
 }

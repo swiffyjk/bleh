@@ -1,6 +1,6 @@
 import { settings } from "../build/config";
 import { log } from "../build/log";
-import { page, root } from "../build/page";
+import { auth, page, root } from "../build/page";
 import { sanitise } from "../build/tools";
 import { lang, trans_legacy, trans, tl } from "../build/trans";
 import { prep_chart_colours } from "../chart";
@@ -31,27 +31,42 @@ export function bleh_user_library() {
     });
 
     //page.structure.side.appendChild(date_button_panel);
-    page.structure.side.appendChild(date_panel);
+    if (date_items.length > 0)
+        page.structure.side.appendChild(date_panel);
 
     page.structure.glacier.date_panel = date_panel;
+
+
+    // tabs
+    if (page.name == auth.name) {
+        let tabs = page.structure.container.querySelector('.library-controls .navlist-items');
+        let velocity_tab = document.createElement('li');
+        velocity_tab.classList.add('navlist-item', 'secondary-nav-item', 'secondary-nav-item--velocity');
+        velocity_tab.innerHTML = (`
+            <a class="secondary-nav-item-link" href="${root}labs/artist-velocity" target="_blank">
+                ${tl(trans.velocity)}
+            </a>
+        `);
+        tabs.appendChild(velocity_tab);
+    }
 
 
     if (!ff('glacier_library'))
         return;
 
 
-    if (settings.glacier_library_graphs) {
+    if (settings.glacier_library_graphs && date_items.length > 0) {
         let chart_view_selector = document.createElement('div');
         chart_view_selector.classList.add('view-buttons', 'chart-view-selector', 'view-buttons-middle');
         chart_view_selector.innerHTML = (`
             <button class="btn view-item" id="toggle-chart_view-line" data-toggle="chart_view" data-toggle-value="line" onclick="_update_item('chart_view', 'line')">
-                ${trans_legacy[lang].glacier.view.line}
+                ${tl(trans.line)}
             </button>
             <button class="btn view-item" id="toggle-chart_view-pie" data-toggle="chart_view" data-toggle-value="pie" onclick="_update_item('chart_view', 'pie')">
-                ${trans_legacy[lang].glacier.view.pie}
+                ${tl(trans.pie)}
             </button>
             <button class="btn view-item" id="toggle-chart_view-bar" data-toggle="chart_view" data-toggle-value="bar" onclick="_update_item('chart_view', 'bar')">
-                ${trans_legacy[lang].glacier.view.bar}
+                ${tl(trans.bar)}
             </button>
         `);
 
@@ -61,10 +76,10 @@ export function bleh_user_library() {
         chart_axis_selector.classList.add('view-buttons', 'chart-axis-selector', 'view-buttons-middle');
         chart_axis_selector.innerHTML = (`
             <button class="btn view-item" id="toggle-chart_bar_axis-horizontal" data-toggle="chart_bar_axis" data-toggle-value="horizontal" onclick="_update_item('chart_bar_axis', 'horizontal')">
-                ${trans_legacy[lang].glacier.axis.horizontal}
+                ${tl(trans.horizontal)}
             </button>
             <button class="btn view-item" id="toggle-chart_bar_axis-vertical" data-toggle="chart_bar_axis" data-toggle-value="vertical" onclick="_update_item('chart_bar_axis', 'vertical')">
-                ${trans_legacy[lang].glacier.axis.vertical}
+                ${tl(trans.vertical)}
             </button>
         `);
 
@@ -75,10 +90,11 @@ export function bleh_user_library() {
 
 
     //let picker_content = date_button_panel.querySelector('.date-range-picker-content');
-    bleh_glacier_library_date();
+    if (date_items.length > 0)
+        bleh_glacier_library_date();
 
 
-    if (page.subpage == 'library_overview') {
+    if (page.subpage == 'library_overview' || page.subpage.endsWith('-search')) {
         // scrobbles tab
         bleh_glacier_library_top(true);
 
@@ -119,8 +135,9 @@ export function bleh_user_library() {
         };
     }
 
-    if (page.subpage == 'library_overview' || page.subpage.startsWith('library_artist_') ||
-    page.subpage.startsWith('library_album_') || page.subpage.startsWith('library_track_')) {
+    if (date_items.length > 0 && (
+        page.subpage == 'library_overview' || page.subpage.startsWith('library_artist_') ||
+    page.subpage.startsWith('library_album_') || page.subpage.startsWith('library_track_'))) {
         // new graph
         log('refresh is now marked true', 'glacier library');
         page.structure.glacier.refresh = true;
@@ -195,7 +212,7 @@ function bleh_glacier_library_date() {
         this_year.classList.add('date-range-picker-preset', 'date-range-picker-preset-custom', 'date-range-picker-preset-this-year');
         this_year.innerHTML = (`
             <a href="${window.location.href.replace(window.location.search, '')}?from=${current_year}-01-01&rangetype=year">
-                ${current_year}<span class="new-badge">${trans_legacy[lang].settings.new}</span>
+                ${current_year}<span class="new-badge">${tl(trans.new)}</span>
             </a>
         `);
         new_presets.appendChild(this_year);
@@ -264,8 +281,7 @@ function bleh_glacier_library_top(static_page = false) {
     else
         legacy_top_header = page.structure.main.querySelector('.metadata-list');
 
-    if (legacy_top_header == null)
-        return;
+    if (!legacy_top_header) return;
 
     legacy_top_header.classList.add('glacier-legacy-top-header');
 
@@ -286,7 +302,7 @@ function bleh_glacier_library_top(static_page = false) {
 
     let first_run = false;
     let glacier_top = page.structure.glacier.top;
-    if (glacier_top == null || !page.structure.main.contains(glacier_top))
+    if (!glacier_top || !page.structure.main.contains(glacier_top))
         first_run = true;
 
     if (first_run) {
@@ -306,24 +322,37 @@ function bleh_glacier_library_top(static_page = false) {
     }
 
     metadata.forEach((meta, index) => {
-        let text = meta.querySelector('.metadata-title').textContent;
+        let text = meta.querySelector('.metadata-title');
+        let value = meta.querySelector('.metadata-display').textContent;
 
-        if (page.subpage == 'library_overview') {
-            if (index == 1)
-                text = trans_legacy[lang].glacier.meta.average;
-        } else if (page.subpage == 'library_artists') {
-            text = trans_legacy[lang].glacier.meta.artists;
-        } else if (page.subpage == 'library_albums') {
-            text = trans_legacy[lang].glacier.meta.albums;
-        } else if (page.subpage == 'library_tracks') {
-            text = trans_legacy[lang].glacier.meta.tracks;
+        if (text) {
+            text = text.textContent;
+
+            if (page.subpage == 'library_overview') {
+                if (index == 1)
+                    text = trans_legacy[lang].glacier.meta.average;
+            } else if (page.subpage == 'library_artists') {
+                text = tl(trans.artists);
+            } else if (page.subpage == 'library_albums') {
+                text = trans_legacy[lang].glacier.meta.albums;
+            } else if (page.subpage == 'library_tracks') {
+                text = trans_legacy[lang].glacier.meta.tracks;
+            }
+        } else {
+            // search results
+            text = tl(trans.results_for);
+            value = meta.querySelector('.metadata-display').textContent;
+
+            let start = value.indexOf('“') + 1;
+            let end = value.indexOf('”');
+            value = value.substring(start, end);
         }
 
         let glacier_meta_item = document.createElement('div');
         glacier_meta_item.classList.add('glacier-library-metadata-item');
         glacier_meta_item.innerHTML = (`
             <div class="sub-text">${text}</div>
-            <div class="glacier-library-metadata-item-value">${meta.querySelector('.metadata-display').textContent}</div>
+            <div class="glacier-library-metadata-item-value">${value}</div>
         `);
 
         glacier_meta.appendChild(glacier_meta_item);
@@ -347,11 +376,11 @@ function bleh_glacier_library_top(static_page = false) {
     let sort = legacy_top_header.querySelector('.library-sort');
     if (!static_page) {
         let sort_button;
-        if (sort != null) {
+        if (sort) {
             sort_button = sort.querySelector('.dropdown-menu-clickable-button');
             add_divider = true;
 
-            if (sort_button != null) {
+            if (sort_button) {
                 sort_button.classList.add('btn', 'view-item', 'glacier-library-button');
                 let sort_menu = sort.querySelector('.dropdown-menu-clickable');
 
@@ -387,21 +416,34 @@ function bleh_glacier_library_top(static_page = false) {
 
     let configure_button = document.createElement('button');
     configure_button.classList.add('btn', 'view-item', 'glacier-library-button', 'glacier-configure-button', 'panel-settings-button');
-    configure_button.textContent = trans_legacy[lang].settings.configure;
+    configure_button.textContent = tl(trans.settings);
 
     tippy(configure_button, {
-        content: trans_legacy[lang].settings.configure
+        content: tl(trans.settings)
     });
 
     tippy(configure_button, {
         theme: 'window',
         content: (`
             <div class="dialog-settings">
-                <div class="toggle-container" id="container-format_guest_features" onclick="_update_item('format_guest_features')">
-                    <button class="btn reset" onclick="_reset_item('format_guest_features')">${trans_legacy[lang].settings.reset}</button>
+                ${(page.subpage == 'library_artists') ? (`
+                <div class="setting" data-type="toggle" id="container-colourful_counts" onclick="_update_item('colourful_counts')">
                     <div class="heading">
-                        <h5>${trans_legacy[lang].settings.corrections.format_guest_features.name}</h5>
-                        <p>${trans_legacy[lang].settings.corrections.format_guest_features.bio}</p>
+                        <h5>${tl(trans.colourful_counts.name)}</h5>
+                        <p>${tl(trans.colourful_counts.body)}</p>
+                    </div>
+                    <div class="toggle-wrap">
+                        <button class="toggle" id="toggle-colourful_counts" aria-checked="true">
+                            <div class="dot"></div>
+                        </button>
+                    </div>
+                </div>
+                `) : (`
+                <div class="setting" data-type="toggle" id="container-format_guest_features" onclick="_update_item('format_guest_features')">
+                    <button class="btn reset" onclick="_reset_item('format_guest_features')">${tl(trans.reset)}</button>
+                    <div class="heading">
+                        <h5>${tl(trans.format_guest_features.name)}</h5>
+                        <p>${tl(trans.format_guest_features.body)}</p>
                     </div>
                     <div class="toggle-wrap">
                         <button class="toggle" id="toggle-format_guest_features" aria-checked="true">
@@ -410,10 +452,10 @@ function bleh_glacier_library_top(static_page = false) {
                     </div>
                 </div>
                 <div class="toggle-container hide-if-format-guest-disabled" id="container-show_guest_features" onclick="_update_item('show_guest_features')">
-                    <button class="btn reset" onclick="_reset_item('show_guest_features')">${trans_legacy[lang].settings.reset}</button>
+                    <button class="btn reset" onclick="_reset_item('show_guest_features')">${tl(trans.reset)}</button>
                     <div class="heading">
-                        <h5>${trans_legacy[lang].settings.corrections.show_guest_features.name}</h5>
-                        <p>${trans_legacy[lang].settings.corrections.show_guest_features.bio}</p>
+                        <h5>${tl(trans.show_guest_features.name)}</h5>
+                        <p>${tl(trans.show_guest_features.body)}</p>
                     </div>
                     <div class="toggle-wrap">
                         <button class="toggle" id="toggle-show_guest_features" aria-checked="true" type="button">
@@ -421,23 +463,14 @@ function bleh_glacier_library_top(static_page = false) {
                         </button>
                     </div>
                 </div>
-                <div class="toggle-container" id="container-stacked_chartlist_info" onclick="_update_item('stacked_chartlist_info')">
-                    <button class="btn reset" onclick="_reset_item('stacked_chartlist_info')">${trans_legacy[lang].settings.reset}</button>
-                    <div class="heading">
-                        <h5>${trans_legacy[lang].settings.corrections.stacked_chartlist_info.name}</h5>
-                        <p>${trans_legacy[lang].settings.corrections.stacked_chartlist_info.bio}</p>
-                    </div>
-                    <div class="toggle-wrap">
-                        <button class="toggle" id="toggle-stacked_chartlist_info" aria-checked="true" type="button">
-                            <div class="dot"></div>
-                        </button>
-                    </div>
-                </div>
+                `)}
                 <div class="sep"></div>
-                <div class="toggle-container" id="container-grid_glow" onclick="_update_item('grid_glow')">
-                    <button class="btn reset" onclick="_reset_item('grid_glow')">${trans_legacy[lang].settings.reset}</button>
+                ${((page.subpage == 'library_artists' || page.subpage == 'library_albums') && auth.pro) ? (`
+                <div class="setting" data-type="toggle" id="container-grid_glow" onclick="_update_item('grid_glow')">
+                    <button class="btn reset" onclick="_reset_item('grid_glow')">${tl(trans.reset)}</button>
                     <div class="heading">
-                        <h5>${trans_legacy[lang].settings.music.grid_glow.name}</h5>
+                        <h5>${tl(trans.grid_glow.name)}</h5>
+                        <p>${tl(trans.grid_glow.body)}</p>
                     </div>
                     <div class="toggle-wrap">
                         <button class="toggle" id="toggle-grid_glow" aria-checked="true" type="button">
@@ -445,11 +478,12 @@ function bleh_glacier_library_top(static_page = false) {
                         </button>
                     </div>
                 </div>
-                <div class="toggle-container" id="container-glacier_library_graphs" onclick="_update_item('glacier_library_graphs')">
-                    <button class="btn reset" onclick="_reset_item('glacier_library_graphs')">${trans_legacy[lang].settings.reset}</button>
+                `) : ''}
+                <div class="setting" data-type="toggle" id="container-glacier_library_graphs" onclick="_update_item('glacier_library_graphs')">
+                    <button class="btn reset" onclick="_reset_item('glacier_library_graphs')">${tl(trans.reset)}</button>
                     <div class="heading">
-                        <h5>${trans_legacy[lang].glacier.option.name}</h5>
-                        <p>${trans_legacy[lang].glacier.option.bio}</p>
+                        <h5>${tl(trans.glacier_graphs.name)}</h5>
+                        <p>${tl(trans.glacier_graphs.body)}</p>
                     </div>
                     <div class="toggle-wrap">
                         <button class="toggle" id="toggle-glacier_library_graphs" aria-checked="true" type="button">
@@ -528,23 +562,26 @@ function bleh_glacier_date_graph(static_page = false, own_table = null) {
     current_view = current_view.textContent.trim();
 
     let tab_matches;
-    if ((page.subpage == 'library_overview' || page.subpage == 'library_artists' || page.subpage == 'library_albums' || page.subpage == 'library_tracks') &&
+    if (page.name == page.state.glacier.name &&
+        (page.subpage == 'library_overview' || page.subpage == 'library_artists' || page.subpage == 'library_albums' || page.subpage == 'library_tracks') &&
         (page.state.glacier.current_tab == 'library_overview' || page.state.glacier.current_tab == 'library_artists' || page.state.glacier.current_tab == 'library_albums' || page.state.glacier.current_tab == 'library_tracks'))
         tab_matches = true;
 
-    if (page.state.glacier.current_view == current_view && own_table == null && tab_matches) {
+    if (page.state.glacier.current_view == current_view && !own_table && tab_matches) {
         // re-use old values as view matches
         bleh_glacier_date_graph_generate();
         log('refresh is now marked false', 'glacier library');
         page.structure.glacier.refresh = false;
 
-        log(`returned as view (${current_view}) matches ${page.state.glacier.current_view}. last tab was ${page.state.glacier.current_tab} and current tab is ${page.subpage}`, 'glacier library');
+        log(`returned as view (${current_view}) matches ${page.state.glacier.current_view}. last tab was ${page.state.glacier.current_tab} (${page.state.glacier.name}) and current tab is ${page.subpage} (${page.name})`, 'glacier library');
         return;
     }
 
     page.state.glacier.current_view = current_view;
 
     let scrobble_chart_content = page.structure.side.querySelector('#scrobble-chart-content');
+    if (!scrobble_chart_content) return;
+
     if (scrobble_chart_content.getAttribute('data-highcharts-chart') && scrobble_chart_content.getAttribute('data-highcharts-chart') == '0') {
         log('highchart registered', 'glacier library');
         log('refresh is now marked false', 'glacier library');
@@ -554,16 +591,16 @@ function bleh_glacier_date_graph(static_page = false, own_table = null) {
 
     let scrobble_chart_wrap = page.structure.side.querySelector('.scrobble-table');
 
-    if (scrobble_chart_wrap == null)
+    if (!scrobble_chart_wrap)
         return;
 
     let scrobble_table;
-    if (own_table != null)
+    if (own_table)
         scrobble_table = own_table;
     else
         scrobble_table = scrobble_chart_wrap.querySelector('.table');
 
-    if (scrobble_table == null) {
+    if (!scrobble_table) {
         // lets see if we can make this request ourselves
         let request_url;
         if (window.location.search == '')
@@ -629,7 +666,7 @@ function bleh_glacier_date_graph(static_page = false, own_table = null) {
 }
 
 export function bleh_glacier_insights(insights = null) {
-    if (insights != null) {
+    if (insights) {
         if (page.subpage == 'library_artists') {
             page.state.glacier.insights.album.display = false;
             page.state.glacier.insights.track.display = false;
@@ -668,7 +705,7 @@ function bleh_glacier_insights_generate(type, item) {
 
     let new_run = false;
     let scrobble_insights_panel = page.structure.side.querySelector(`.scrobble-insights-panel[data-type="${type}"]`);
-    if (scrobble_insights_panel == null) {
+    if (!scrobble_insights_panel) {
         scrobble_insights_panel = document.createElement('section');
         scrobble_insights_panel.classList.add('scrobble-insights-panel');
         scrobble_insights_panel.setAttribute('data-type', type);
@@ -841,6 +878,7 @@ function bleh_glacier_library_request(request_url) {
 
 export function bleh_glacier_date_graph_generate() {
     page.state.glacier.current_tab = page.subpage;
+    page.state.glacier.name = page.name;
     log('generating', 'glacier library', 'info', {
         labels: page.state.glacier.labels,
         links: page.state.glacier.links,
@@ -1000,17 +1038,17 @@ function bleh_glacier_library_focused() {
 
 
     let header_title = legacy_header.querySelector('.library-header-crumb'); // subpage
-    if (header_title == null)
+    if (!header_title)
         header_title = legacy_header.querySelector('.library-header-title'); // main
 
     let duration = header_title.querySelector('.library-header-title-duration');
-    if (duration != null)
+    if (duration)
         header_title.removeChild(duration);
 
     header_title = header_title.textContent.trim();
 
     let artist = legacy_header.querySelector('.text-colour-link');
-    if (artist != null)
+    if (artist)
         artist = artist.textContent.trim();
 
     let image = legacy_header.querySelector('.library-header-image img');
@@ -1041,7 +1079,7 @@ function bleh_glacier_library_focused() {
                 ${trans_legacy[lang][type].name}
             </div>
             <div class="glacier-library-metadata-item-value glacier-library-metadata-focus" data-type="${type}">
-                <a href="${link}">${(type == 'artist') ? correct_artist(header_title) : correct_item_by_artist(header_title, artist)}</a>${(duration != null) ? ` <span class="glacier-library-track-duration">${duration.textContent}</span>` : ''}${(type != 'artist') ? trans_legacy[lang].glacier.by_artist.replace('{a}', `<a href="${root}user/${page.name}/library/music/+noredirect/${sanitise(artist)}${current_suffix}">${correct_artist(artist)}</a>`) : ''}
+                <a href="${link}">${(type == 'artist') ? correct_artist(header_title) : correct_item_by_artist(header_title, artist)}</a>${(duration) ? ` <span class="glacier-library-track-duration">${duration.textContent}</span>` : ''}${(type != 'artist') ? trans_legacy[lang].glacier.by_artist.replace('{a}', `<a href="${root}user/${page.name}/library/music/+noredirect/${sanitise(artist)}${current_suffix}">${correct_artist(artist)}</a>`) : ''}
             </div>
         </div>
     `);
@@ -1086,8 +1124,7 @@ function bleh_glacier_library_focused() {
             if (!button)
                 button = wrapper.querySelector('span');
 
-            if (!button)
-                return;
+            if (!button) return;
 
             console.info('libraryyy', wrapper, button);
             button.classList.add('btn', 'view-item', 'glacier-library-button');
@@ -1113,13 +1150,13 @@ function bleh_glacier_library_focused() {
 
                     // we need to target the other button too lol
                     button = wrapper.querySelector('button:not(.btn)');
-                    if (button != null)
+                    if (button)
                         button.classList.add('btn', 'view-item', 'glacier-library-button');
                 }
             } else {
                 // have to read classlist
                 if (button.classList.contains('delete-icon')) {
-                    button.textContent = trans_legacy[lang].glacier.delete;
+                    button.textContent = tl(trans.delete);
                 }
             }
         });
@@ -1131,23 +1168,40 @@ function bleh_glacier_library_focused() {
         }
     }
 
+
+
+    if (page.subpage == 'library_artist_overview' && auth.pro) {
+        let search = document.createElement('a');
+        search.classList.add('btn', 'view-item', 'glacier-library-button', 'glacier-search-button');
+        search.textContent = tl(trans.search);
+        search.setAttribute('href', `${root}user/${page.name}/library/tracks/search?query=${sanitise(correct_artist(header_title))}`);
+
+        tippy(search, {
+            content: tl(trans.search_guest)
+        });
+
+        let divider = view_buttons.querySelector('.listen-divider');
+        if (divider)
+            view_buttons.insertBefore(search, divider);
+    }
+
     let configure_button = document.createElement('button');
     configure_button.classList.add('btn', 'view-item', 'glacier-library-button', 'glacier-configure-button', 'panel-settings-button');
-    configure_button.textContent = trans_legacy[lang].settings.configure;
+    configure_button.textContent = tl(trans.settings);
 
     tippy(configure_button, {
-        content: trans_legacy[lang].settings.configure
+        content: tl(trans.settings)
     });
 
     tippy(configure_button, {
         theme: 'window',
         content: (`
             <div class="dialog-settings">
-                <div class="toggle-container" id="container-format_guest_features" onclick="_update_item('format_guest_features')">
-                    <button class="btn reset" onclick="_reset_item('format_guest_features')">${trans_legacy[lang].settings.reset}</button>
+                <div class="setting" data-type="toggle" id="container-format_guest_features" onclick="_update_item('format_guest_features')">
+                    <button class="btn reset" onclick="_reset_item('format_guest_features')">${tl(trans.reset)}</button>
                     <div class="heading">
-                        <h5>${trans_legacy[lang].settings.corrections.format_guest_features.name}</h5>
-                        <p>${trans_legacy[lang].settings.corrections.format_guest_features.bio}</p>
+                        <h5>${tl(trans.format_guest_features.name)}</h5>
+                        <p>${tl(trans.format_guest_features.body)}</p>
                     </div>
                     <div class="toggle-wrap">
                         <button class="toggle" id="toggle-format_guest_features" aria-checked="true">
@@ -1156,10 +1210,10 @@ function bleh_glacier_library_focused() {
                     </div>
                 </div>
                 <div class="toggle-container hide-if-format-guest-disabled" id="container-show_guest_features" onclick="_update_item('show_guest_features')">
-                    <button class="btn reset" onclick="_reset_item('show_guest_features')">${trans_legacy[lang].settings.reset}</button>
+                    <button class="btn reset" onclick="_reset_item('show_guest_features')">${tl(trans.reset)}</button>
                     <div class="heading">
-                        <h5>${trans_legacy[lang].settings.corrections.show_guest_features.name}</h5>
-                        <p>${trans_legacy[lang].settings.corrections.show_guest_features.bio}</p>
+                        <h5>${tl(trans.show_guest_features.name)}</h5>
+                        <p>${tl(trans.show_guest_features.body)}</p>
                     </div>
                     <div class="toggle-wrap">
                         <button class="toggle" id="toggle-show_guest_features" aria-checked="true" type="button">
@@ -1167,24 +1221,12 @@ function bleh_glacier_library_focused() {
                         </button>
                     </div>
                 </div>
-                <div class="toggle-container" id="container-stacked_chartlist_info" onclick="_update_item('stacked_chartlist_info')">
-                    <button class="btn reset" onclick="_reset_item('stacked_chartlist_info')">${trans_legacy[lang].settings.reset}</button>
-                    <div class="heading">
-                        <h5>${trans_legacy[lang].settings.corrections.stacked_chartlist_info.name}</h5>
-                        <p>${trans_legacy[lang].settings.corrections.stacked_chartlist_info.bio}</p>
-                    </div>
-                    <div class="toggle-wrap">
-                        <button class="toggle" id="toggle-stacked_chartlist_info" aria-checked="true" type="button">
-                            <div class="dot"></div>
-                        </button>
-                    </div>
-                </div>
                 <div class="sep"></div>
-                <div class="toggle-container" id="container-glacier_library_graphs" onclick="_update_item('glacier_library_graphs')">
-                    <button class="btn reset" onclick="_reset_item('glacier_library_graphs')">${trans_legacy[lang].settings.reset}</button>
+                <div class="setting" data-type="toggle" id="container-glacier_library_graphs" onclick="_update_item('glacier_library_graphs')">
+                    <button class="btn reset" onclick="_reset_item('glacier_library_graphs')">${tl(trans.reset)}</button>
                     <div class="heading">
-                        <h5>${trans_legacy[lang].glacier.option.name}</h5>
-                        <p>${trans_legacy[lang].glacier.option.bio}</p>
+                        <h5>${tl(trans.glacier_graphs.name)}</h5>
+                        <p>${tl(trans.glacier_graphs.body)}</p>
                     </div>
                     <div class="toggle-wrap">
                         <button class="toggle" id="toggle-glacier_library_graphs" aria-checked="true" type="button">
@@ -1216,7 +1258,7 @@ function bleh_glacier_library_focused() {
     lower_metadata.classList.add('glacier-library-metadata');
 
     let legacy_meta_wrap = page.structure.main.querySelector('.metadata-list');
-    if (legacy_meta_wrap != null) {
+    if (legacy_meta_wrap) {
         let metadatas = legacy_meta_wrap.querySelectorAll('.metadata-item:not(.library-header-ctas__wrapper)');
 
         metadatas.forEach((meta) => {
@@ -1240,9 +1282,7 @@ function bleh_glacier_library_focused() {
 
     // move random overview header into their section below
     let overview_header = page.structure.main.querySelector(':scope > .library-overview-header');
-
-    if (overview_header == null)
-        return;
+    if (!overview_header) return;
 
     overview_header.nextElementSibling.insertBefore(overview_header, overview_header.nextElementSibling.firstElementChild);
 }
@@ -1252,26 +1292,20 @@ export function bleh_glacier_library_bulk_edit() {
     let library_header = page.structure.main.querySelector('.library-header');
 
     let bulk_edit = library_header.querySelector('[href="javascript:void(0)"]');
-
-    if (bulk_edit == null)
-        return;
+    if (!bulk_edit) return;
 
     // move to new area
     let view_buttons = page.structure.main.querySelector('.glacier-library-buttons');
-
-    if (view_buttons == null)
-        return;
+    if (!view_buttons) return;
 
     let edit_form = view_buttons.querySelector(':scope > .library-header-edit-form');
     let delete_button = view_buttons.querySelector(':scope > .delete-icon');
-
-    if (delete_button == null)
-        return;
+    if (!delete_button) return;
 
     bulk_edit.classList.add('btn', 'view-item', 'glacier-library-button', 'bulk-edit-button');
     bulk_edit.textContent = trans_legacy[lang].glacier.bulk_edit;
 
-    if (edit_form == null)
+    if (!edit_form)
         view_buttons.insertBefore(bulk_edit, delete_button);
     else
         view_buttons.insertBefore(bulk_edit, edit_form);

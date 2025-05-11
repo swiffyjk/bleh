@@ -7,12 +7,13 @@ export function bleh_auto_edits() {
     page.structure.main.appendChild(corrections_panel);
 
 
-    let nav = page.structure.nav.querySelector('ul');
+    // we want the other navigation
+    let nav = page.structure.container.querySelector('nav[data-more-string] .navlist-items');
     let back_nav = document.createElement('li');
     back_nav.classList.add('navlist-item', 'secondary-nav-item', 'secondary-nav-item--back');
     back_nav.innerHTML = (`
         <a class="secondary-nav-item-link" href="${root}settings/subscription">
-            ${trans_legacy[lang].settings.back}
+            ${tl(trans.back)}
         </a>
     `);
 
@@ -22,8 +23,7 @@ export function bleh_auto_edits() {
 export function auto_edit_modal() {
     let modal = document.querySelector('.automatic-edit-modal-body-v2');
 
-    if (modal == null)
-        return;
+    if (!modal) return;
 
     if (modal.hasAttribute('data-bwaa-edit'))
         return;
@@ -38,7 +38,8 @@ export function auto_edit_modal() {
         let id = checkbox.querySelector('input').getAttribute('name');
         let text = checkbox.textContent.trim();
 
-        checkbox.classList = 'toggle-container';
+        checkbox.classList = 'setting';
+        checkbox.setAttribute('data-type', 'toggle');
         checkbox.setAttribute('onclick', `_update_inbuilt_item('${id}')`);
         checkbox.innerHTML = (`
             <div class="heading">

@@ -7,8 +7,8 @@ import { checkup_page_structure } from "../components/structure";
 import { register_background, update_page } from "../page";
 import { bleh_charts } from "./chart";
 import { bleh_native_settings } from './lastfm_settings';
-import { sponsor_list } from "../build/sponsor";
-import { sanitise } from "../build/tools"
+import { sanitise, sanitise_text } from "../build/tools"
+import { correct_artist, correct_item_by_artist, name_includes } from '../components/lotus';
 
 export function bleh_home() {
     page.structure.container = document.body.querySelector('.page-content');
@@ -32,21 +32,17 @@ export function bleh_home() {
     let banner = document.createElement('div');
     banner.classList.add('top-banner', 'home-banner', 'colourful');
 
-    let sponsoring = false;
-    if (sponsor_list)
-        sponsoring = sponsor_list.sponsors.includes(auth.name);
-
     banner.innerHTML = (`
         <a class="home-avatar" href="${root}user/${auth.name}">
             <img src="${auth.avatar.replace('/avatar42s/', '/avatar170s/')}">
         </a>
-        ${(sponsoring) ? (`
+        ${(auth.sponsor) ? (`
         <div class="subtext sponsor-message colourful">
             <div class="bleh-icon-container"><div class="bleh-icon" style="--icon: var(--icon-16-heart-solid); --icon-size: 14px"></div></div>
-            Thank you for sponsoring!
+            ${tl(trans.you_are_a_sponsor)}
         </div>
         `) : ''}
-        <h1>${trans_legacy[lang].home.welcome.replace('{m}', `<a class="mention" href="${root}user/${auth.name}">@${auth.name}</a>`)}</h1>
+        <h1>${tl(trans.welcome_back_user).replace('{user}', `<a class="mention" href="${root}user/${auth.name}">@${auth.name}</a>`)}</h1>
     `);
 
     page.structure.container.insertBefore(banner, page.structure.container.firstElementChild);
@@ -57,17 +53,22 @@ export function bleh_home() {
         <ul class="navlist-items">
             <li class="navlist-item secondary-nav-item secondary-nav-item--home">
                 <a href="${root}music" class="secondary-nav-item-link ${(page.subpage == 'music') ? 'secondary-nav-item-link--active' : ''}">
-                    ${tl(trans.home)}
+                    ${tl(trans.home)}<div class="new-badge">${tl(trans.beta)}</div>
                 </a>
             </li>
             <li class="navlist-item secondary-nav-item secondary-nav-item--recommendations">
                 <a href="${root}music/+recommended" class="secondary-nav-item-link ${(page.type == 'recommended') ? 'secondary-nav-item-link--active' : ''}">
-                    ${tl(trans.recommendations)}
+                    ${tl(trans.recommendations)}<div class="new-badge">${tl(trans.beta)}</div>
                 </a>
             </li>
             <li class="navlist-item secondary-nav-item secondary-nav-item--releases">
                 <a href="${root}music/+releases/out-now" class="secondary-nav-item-link ${(page.type == 'releases') ? 'secondary-nav-item-link--active' : ''}">
                     ${tl(trans.releases)}
+                </a>
+            </li>
+            <li class="navlist-item secondary-nav-item secondary-nav-item--events dont-rearrange">
+                <a href="${root}events" class="secondary-nav-item-link ${(page.type == 'events') ? 'secondary-nav-item-link--active' : ''}">
+                    ${tl(trans.events)}<div class="new-badge">${tl(trans.beta)}</div>
                 </a>
             </li>
             <li class="navlist-item secondary-nav-item secondary-nav-item--bookmarks">
@@ -88,7 +89,7 @@ export function bleh_home() {
             </li>
             <li class="navlist-item secondary-nav-item secondary-nav-item--bleh">
                 <a href="${root}bleh" class="secondary-nav-item-link ${(page.type == 'error') ? 'secondary-nav-item-link--active' : ''}">
-                    bleh
+                    ${tl(trans.settings)}
                 </a>
             </li>
             <li class="navlist-item secondary-nav-item secondary-nav-item--more">
@@ -121,7 +122,7 @@ export function bleh_home() {
             </a>
             `) : '')}
             <button class="dropdown-menu-clickable-item sponsor" onclick="_sponsor()">
-                ${trans_legacy[lang].settings.home.sponsor.name}<div class="new-badge">${trans_legacy[lang].settings.new}</div>
+                ${trans_legacy[lang].settings.home.sponsor.name}
             </button>
             <a class="dropdown-menu-clickable-item issues" href="https://github.com/katelyynn/bleh/issues" target="_blank">
                 ${trans_legacy[lang].settings.home.issues.name}
@@ -131,7 +132,13 @@ export function bleh_home() {
         placement: "bottom",
         interactive: true,
         interactiveBorder: 10,
-        trigger: "click"
+        trigger: "click",
+
+        onShow(instance) {
+            instance.popper.addEventListener('click', event => {
+                instance.hide();
+            });
+        }
     });
 
 
@@ -142,15 +149,15 @@ export function bleh_home() {
 
         beret.innerHTML = (`
             <div class="panel-side panel-side-main">
-                <h4>Recent listening</h4>
+                <h4>${tl(trans.recent_tracks)}</h4>
                 <div class="recent-listening-container">
                     <div class="loading-data-container">
-                        <p class="loading-data-text">Finding your tracks</p>
+                        <p class="loading-data-text">${tl(trans.finding_your_tracks)}</p>
                     </div>
                 </div>
             </div>
             <div class="panel-side panel-side-alt">
-                <h4>Recent activities</h4>
+                <h4>${tl(trans.activity)}</h4>
             </div>
         `);
 
@@ -214,26 +221,60 @@ export function bleh_home() {
                 else if (involved.type == 'bleh')
                     involved_link = `${root}bleh`;
 
+                let name = involved.name;
+                let sister = involved.sister;
+
                 // tooltip
                 if (involved.type != 'artist' && involved.type != 'user' && involved.type != 'tag' && involved.type != 'bwaa' && involved.type != 'bleh') {
-                    tooltip_name = involved.name;
-                    tooltip_sister = involved.sister;
+                    tooltip_name = name;
+                    tooltip_sister = sister;
+                }
+
+                if (involved.type == 'track' && settings.format_guest_features) {
+                    let formatted_title = name_includes(name, sister);
+
+                    let song_title;
+                    let song_tags;
+                    if (formatted_title) {
+                        song_title = formatted_title[0];
+                        song_tags = formatted_title[1];
+                        sister = formatted_title[2];
+                        tooltip_name = song_title;
+                        tooltip_sister = sister;
+                    }
+
+                    // parse tags into text
+                    let song_tags_text = '';
+                    for (let song_tag in song_tags) {
+                        song_tags_text = `${song_tags_text}<div class="feat" data-bleh--tag-type="${song_tags[song_tag].type}" data-bleh--tag-group="${song_tags[song_tag].group}">${sanitise_text(song_tags[song_tag].text)}</div>`;
+                    }
+
+                    // combine
+                    name = `<div class="title">${sanitise_text(song_title).trim()}</div>${song_tags_text}`;
+                } else if ((involved.type == 'album' || involved.type == 'track') && settings.corrections) {
+                    name = correct_item_by_artist(name, sister);
+                    tooltip_name = name;
+                    sister = correct_artist(sister);
+                    tooltip_sister = sister;
+                }  else if (involved.type == 'artist' && settings.corrections) {
+                    name = correct_artist(name);
+                    tooltip_name = name;
                 }
 
                 if (involved_text != '')
-                    involved_text = `${involved_text}, <a class="involved--${involved.type}" href="${involved_link}">${involved.name}</a>`;
+                    involved_text = `${involved_text}, <a class="involved--${involved.type}" href="${involved_link}">${name}</a>`;
                 else
-                    involved_text = `${involved_text}<a class="involved--${involved.type}" href="${involved_link}">${involved.name}</a>`;
+                    involved_text = `${involved_text}<a class="involved--${involved.type}" href="${involved_link}">${name}</a>`;
             });
 
             activity_item.innerHTML = (`
                 <div class="type">${trans_legacy[lang].activities[activity.type]}<div class="date">${moment(activity.date).fromNow(true)}</div></div>
-                <div class="title">${involved_text}</div>
+                <div class="name">${involved_text}</div>
             `);
 
             activity_list.appendChild(activity_item);
 
-            if (tooltip_name != undefined)
+            if (tooltip_name)
                 tippy(activity_item.querySelector('.title a'), {
                     content: `${tooltip_sister} - ${tooltip_name}`
                 });
