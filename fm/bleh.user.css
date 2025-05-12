@@ -14287,7 +14287,7 @@ input[type="range"] {
 }
 .slider-track {
     display: flex;
-    background: hsl(var(--b4));
+    background: hsl(var(--b3));
     border-radius: var(--item-big-radius);
     width: calc(100% - (30px + var(--card-gap))); /* 30px = value width */
     height: 8px;
@@ -14305,8 +14305,8 @@ input[type="range"] {
     .slider-nub {
         display: flex;
         width: 12px;
-        background-color: hsl(var(--b6));
-        border: 2px solid hsl(var(--h3));
+        background-color: hsl(var(--h3));
+        border: 2px solid hsl(var(--b5));
         border-radius: var(--item-big-radius);
         margin: -5px -5px;
     }
