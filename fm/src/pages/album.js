@@ -104,7 +104,7 @@ export function bleh_albums() {
             if (avatar)
                 expand_link = `_expand_avatar('${avatar.getAttribute('content')}')`;
 
-            if (settings.default_avatar_action == 'expand' && avatar != null)
+            if (settings.default_avatar_action == 'expand' && avatar)
                 avatar_link.setAttribute('onclick', expand_link);
             else if (settings.default_avatar_action == 'gallery')
                 avatar_link.href = `${root}music/${sanitise(page.sister)}/${sanitise(page.name)}/+images`;
@@ -112,13 +112,13 @@ export function bleh_albums() {
             let menu = tippy(avatar_side, {
                 theme: 'context-menu',
                 content: (`
-                    ${(avatar != null) ? (`
+                    ${(avatar) ? (`
                     <button class="dropdown-menu-clickable-item" onclick="${expand_link}" data-menu-item="expand">
                         ${tl(trans.expand)}
                     </button>
                     `) : ''}
                     <a class="dropdown-menu-clickable-item" href="${root}music/${sanitise(page.sister)}/${sanitise(page.name)}/+images" data-menu-item="gallery">
-                        ${tl(trans.photos)}
+                        ${tl(trans.artwork)}
                     </a>
                     <div class="sep"></div>
                     <a class="dropdown-menu-clickable-item" href="${root}bleh?tab=customise" data-menu-item="settings">

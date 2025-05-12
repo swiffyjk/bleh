@@ -122,7 +122,7 @@ export function bleh_home() {
             </a>
             `) : '')}
             <button class="dropdown-menu-clickable-item sponsor" onclick="_sponsor()">
-                ${trans_legacy[lang].settings.home.sponsor.name}
+                ${tl(trans.sponsor)}
             </button>
             <a class="dropdown-menu-clickable-item issues" href="https://github.com/katelyynn/bleh/issues" target="_blank">
                 ${trans_legacy[lang].settings.home.issues.name}
@@ -286,19 +286,6 @@ export function bleh_home() {
         let music_sections = document.body.querySelectorAll('.music-section');
         music_sections.forEach((music_section) => {
             page.structure.main.appendChild(music_section);
-        });
-
-        let items = page.structure.main.querySelectorAll('.music-featured-item');
-        items.forEach((item) => {
-            let bg = item.querySelector('.music-featured-item-background');
-
-            if (!bg) return;
-
-            let style = bg.style.getPropertyValue('background-image');
-            let cover_substr = style.indexOf('url');
-            let cover = style.substring(cover_substr);
-
-            bg.style.setProperty('background', cover);
         });
     }
 }

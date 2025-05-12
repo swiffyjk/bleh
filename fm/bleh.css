@@ -7,7 +7,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Ubuntu+Sans:ital,wght@0,100..800;1,100..800&display=swap');
 
 body {
-    --version-build: '2025.0511';
+    --version-build: '2025.0512';
 
     --hue:  var(--hue-over,
             var(--hue-album,
@@ -1067,7 +1067,12 @@ last.fm changes as of 2024-05-20 */
         line-height: 28px;
         margin-top: -6px;
         font-family: var(--font-brand);
-        color: hsl(var(--l3-c-theme-switch));
+        color: hsl(var(--c1));
+        text-shadow: 0 3px 0 color-mix(in hsl, hsl(var(--l3-c)), #000 30%);
+
+        [data-bleh--theme_type="light"] & {
+            text-shadow: 0 3px 0 color-mix(in hsl, hsl(var(--l2-c)), #fff 43%);
+        }
 
         [data-bleh--season="pride"] & {
             /* this isnt using https://cesque.com/gaydient/ but shoutout,
@@ -1099,6 +1104,7 @@ last.fm changes as of 2024-05-20 */
             background-clip: text;
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
+            text-shadow: unset;
         }
     }
 
@@ -1470,6 +1476,10 @@ last.fm changes as of 2024-05-20 */
     color: hsl(var(--c3));
     line-height: 16px;
     order: 20;
+}
+
+.related-ads, .lastfm-ad {
+    order: 30 !important;
 }
 
 
@@ -4828,7 +4838,7 @@ better than the default selector '#app a' i suppose */
         margin-top: -6px;
         background: hsl(var(--h3), 50%);
         border-radius: 50px;
-        box-shadow: 0 0 20px 1px hsl(var(--h3));
+        box-shadow: 0 0 30px 2px hsl(var(--h3));
         transition-property: opacity;
         transition-duration: var(--trans);
         transition-timing-function: var(--trans-function);
@@ -6728,6 +6738,7 @@ button,
 
 
 /*     ICON MASK     */
+.palette .swatch:before,
 .with-icon:before,
 .markdown-enabled:before,
 .lotus-preview .before:before,
@@ -6920,6 +6931,7 @@ span.header-new-gallery-inner a:before,
     position: absolute;
     right: var(--right, auto) !important;
     top: var(--top, 50%) !important;
+    bottom: var(--bottom, unset) !important;
     background-repeat: no-repeat;
     background-image: var(--flag-url, unset) !important;
     background-color: currentColor;
@@ -14013,11 +14025,26 @@ pre {
     height: unset !important;
 
     position: relative;
+    --mask-size: 14px;
+    --mask: var(--icon-16-check);
+    --top: none;
+    --left: none;
+    --margin-top: 0;
+    --right: 6px;
+    --bottom: 6px;
+
+    &:before {
+        opacity: 0;
+    }
 
     min-height: 50px;
 
     &[aria-checked="true"] {
         --shadow: 0 0 20px hsl(var(--h4));
+
+        &:before {
+            opacity: 1;
+        }
 
         [data-bleh--theme_type="light"] & {
             --shadow: 0 0 20px hsla(var(--h4), 70%);
@@ -14250,7 +14277,7 @@ input[type="range"] {
 }
 .slider-track {
     display: flex;
-    background: hsl(var(--b4));
+    background: hsl(var(--b3));
     border-radius: var(--item-big-radius);
     width: calc(100% - (30px + var(--card-gap))); /* 30px = value width */
     height: 8px;
@@ -14268,8 +14295,8 @@ input[type="range"] {
     .slider-nub {
         display: flex;
         width: 12px;
-        background-color: hsl(var(--b6));
-        border: 2px solid hsl(var(--h3));
+        background-color: hsl(var(--h3));
+        border: 2px solid hsl(var(--b5));
         border-radius: var(--item-big-radius);
         margin: -5px -5px;
     }
@@ -15241,6 +15268,12 @@ input[type="range"]::-moz-range-progress {
     line-height: 30px;
     margin-top: -8px;
 
+    text-shadow: 0 4px 0 color-mix(in hsl, hsl(var(--l3-c)), #000 30%);
+
+    [data-bleh--theme_type="light"] & {
+        text-shadow: 0 4px 0 color-mix(in hsl, hsl(var(--l2-c)), #fff 43%);
+    }
+
     [data-bleh--season="christmas"] & {
         --hue-seasonal: 352;
         --sat-seasonal: 1.8;
@@ -15253,6 +15286,7 @@ input[type="range"]::-moz-range-progress {
         background-clip: text;
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
+        text-shadow: unset;
 
         [data-bleh--theme_type="light"] & {
             --candy-cane-1: hsl(-2, var(--l3-c-sat), 60%);
@@ -17219,6 +17253,12 @@ h4 {
     &.spacing {
         gap: 6px;
     }
+
+    &.subtle {
+        background-color: hsl(var(--b5));
+        box-shadow: inset 0 0 0 1px var(--card-border-base);
+        color: hsl(var(--l3-c));
+    }
 }
 
 
@@ -18393,14 +18433,9 @@ h4 {
                 text-shadow: 0 0 20px hsla(var(--h4), 40%);
                 font-weight: var(--font-weight-medium);
 
-                --hue-over: 40;
+                --hue-over: 17;
                 --sat-over: 1;
                 --lit-over: 1.1;
-
-                [data-bleh--theme_type="light"] & {
-                    --hue-over: var(--hue-fav);
-                    --lit-over: 1;
-                }
 
                 code {
                     font-weight: var(--font-weight);
@@ -21160,6 +21195,7 @@ h4 {
         margin: unset;
         width: unset;
 
+        .cover-art--placeholder, .avatar--placeholder,
         .playlist-image,
         .cover-art,
         .avatar {
@@ -21657,6 +21693,10 @@ h4 {
         padding-left: calc(var(--card-padding) + 18px + var(--card-gap)) !important;
         --left: var(--card-padding);
     }
+
+    &:before {
+        color: hsl(var(--l3-c));
+    }
 }
 .big-modal-alert {
     &:before {
@@ -21896,6 +21936,17 @@ h4 {
         text-shadow: 0 0 12px rgba(0, 0, 0, 0.3);
         overflow: hidden;
     }
+}
+
+.music-page-placeholder {
+    display: flex;
+    flex-direction: column;
+    gap: var(--card-gap);
+}
+
+.music-featured-item--placeholder,
+.music-more-tags-tag--placeholder {
+    background: var(--avatar-generic-background);
 }
 
 

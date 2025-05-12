@@ -254,6 +254,23 @@ function main_flow() {
         correct_generic_combo('similar-items-sidebar-item');
     }
 
+    if (page.type == 'overview' && page.subpage == 'music') {
+        let items = page.structure.main.querySelectorAll('.music-featured-item:not(.music-featured-tag)');
+        items.forEach((item) => {
+            let bg = item.querySelector('.music-featured-item-background');
+
+            if (!bg) return;
+
+            let style = bg.style.getPropertyValue('background-image');
+            if (!style)
+                style = bg.style.getPropertyValue('background');
+            let cover_substr = style.indexOf('url');
+            let cover = style.substring(cover_substr);
+
+            bg.style.setProperty('background', cover);
+        });
+    }
+
     subscribe_to_events();
     auto_edit_modal();
 }
@@ -454,6 +471,10 @@ function load_page() {
             title = tl(trans.playlists);
         else if (page.subpage == 'auth')
             title = tl(trans.connect_app);
+        else if (page.subpage.startsWith('image') && page.type == 'artist')
+            title = tl(trans.photos);
+        else if (page.subpage.startsWith('image') && page.type == 'album')
+            title = tl(trans.artwork);
 
         if (page.subpage == 'overview' || page.subpage == 'event_overview') {
             if (page.type == 'user')

@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         bleh
 // @namespace    http://last.fm/
-// @version      2025.0428
+// @version      2025.0511
 // @description  bleh!!! ^-^
 // @author       kate
 // @match        https://www.last.fm/*
@@ -16258,7 +16258,7 @@
     }
   }
   function patch_header_title() {
-    if (!settings.corrections && !settings.format_guest_features && !multi)
+    if (!settings.corrections && !settings.format_guest_features && !page.multi)
       return;
     page.corrected = false;
     let track_title = document.body.querySelector(".header-new-title");
@@ -16908,7 +16908,7 @@
       let version_text = document.createElement("a");
       version_text.classList.add("bleh--version");
       version_text.setAttribute("href", `${root}bleh`);
-      version_text.textContent = `${version.build}.${version.sku}${settings.dev ? ` (dev)` : ""}`;
+      version_text.innerHTML = `${version.build}.${version.sku}${settings.dev ? `<div class="new-badge subtle">\u2726</div>` : ""}`;
       masthead_logo.appendChild(version_text);
     }
   }
@@ -17642,20 +17642,20 @@
         let expand_link;
         if (avatar)
           expand_link = `_expand_avatar('${avatar.getAttribute("content")}')`;
-        if (settings.default_avatar_action == "expand" && avatar != null)
+        if (settings.default_avatar_action == "expand" && avatar)
           avatar_link.setAttribute("onclick", expand_link);
         else if (settings.default_avatar_action == "gallery")
           avatar_link.href = `${root}music/${sanitise(page.sister)}/${sanitise(page.name)}/+images`;
         let menu = tippy(avatar_side, {
           theme: "context-menu",
           content: `
-                    ${avatar != null ? `
+                    ${avatar ? `
                     <button class="dropdown-menu-clickable-item" onclick="${expand_link}" data-menu-item="expand">
                         ${tl(trans.expand)}
                     </button>
                     ` : ""}
                     <a class="dropdown-menu-clickable-item" href="${root}music/${sanitise(page.sister)}/${sanitise(page.name)}/+images" data-menu-item="gallery">
-                        ${tl(trans.photos)}
+                        ${tl(trans.artwork)}
                     </a>
                     <div class="sep"></div>
                     <a class="dropdown-menu-clickable-item" href="${root}bleh?tab=customise" data-menu-item="settings">
@@ -18756,7 +18756,7 @@
             </a>
             ` : ""}
             <button class="dropdown-menu-clickable-item sponsor" onclick="_sponsor()">
-                ${trans_legacy[lang].settings.home.sponsor.name}
+                ${tl(trans.sponsor)}
             </button>
             <a class="dropdown-menu-clickable-item issues" href="https://github.com/katelyynn/bleh/issues" target="_blank">
                 ${trans_legacy[lang].settings.home.issues.name}
@@ -18877,15 +18877,6 @@
       let music_sections = document.body.querySelectorAll(".music-section");
       music_sections.forEach((music_section) => {
         page.structure.main.appendChild(music_section);
-      });
-      let items = page.structure.main.querySelectorAll(".music-featured-item");
-      items.forEach((item) => {
-        let bg = item.querySelector(".music-featured-item-background");
-        if (!bg) return;
-        let style = bg.style.getPropertyValue("background-image");
-        let cover_substr = style.indexOf("url");
-        let cover = style.substring(cover_substr);
-        bg.style.setProperty("background", cover);
       });
     }
   }
@@ -19273,16 +19264,16 @@
       let position = track_header.querySelector(".header-new-chart-position-number");
       let source_album = page.structure.main.querySelector(".source-album");
       let album_avatar;
-      if (source_album != null)
+      if (source_album)
         album_avatar = source_album.querySelector(".source-album-art img");
       let redesigned_track_header = document.createElement("section");
       redesigned_track_header.classList.add("redesigned-header", "redesigned-track-header", "no-background");
       redesigned_track_header.innerHTML = `
             <div class="avatar-side">
-                ${album_avatar != null ? `
+                ${album_avatar ? `
                 <img src="${album_avatar.getAttribute("src").replace("300x300", "avatar300s")}">
                 <a class="bleh--avatar-clickable-link"></a>
-                ` : artist_avatar != null ? `
+                ` : artist_avatar ? `
                 <img src="${artist_avatar.getAttribute("content").replace("/ar0/", "/avatar170s/")}">
                 <a class="bleh--avatar-clickable-link"></a>
                 ` : '<img class="missing-track">'}
@@ -19312,26 +19303,26 @@
         expand_link = `_expand_avatar('${album_avatar.getAttribute("src").replace("300x300", "ar0")}')`;
       else if (artist_avatar)
         expand_link = `_expand_avatar('${artist_avatar.getAttribute("content")}')`;
-      if (settings.default_avatar_action == "expand" && (album_avatar != null || artist_avatar != null))
+      if (settings.default_avatar_action == "expand" && (album_avatar || artist_avatar))
         avatar_link.setAttribute("onclick", expand_link);
-      else if (settings.default_avatar_action == "gallery" && album_avatar != null)
+      else if (settings.default_avatar_action == "gallery" && album_avatar)
         avatar_link.href = source_album.querySelector(".link-block-cover-link").getAttribute("href");
       let menu = tippy(avatar_side, {
         theme: "context-menu",
         content: `
-                ${album_avatar != null || artist_avatar != null ? `
+                ${album_avatar || artist_avatar ? `
                 <button class="dropdown-menu-clickable-item" onclick="${expand_link}" data-menu-item="expand">
                     ${tl(trans.expand)}
                 </button>
                 ` : ""}
-                ${album_avatar != null ? `
+                ${album_avatar ? `
                 <a class="dropdown-menu-clickable-item" href="${source_album.querySelector(".link-block-cover-link").getAttribute("href")}" data-menu-item="album">
-                    ${trans_legacy[lang].settings.layout.avatar_action.album}
+                    ${tl(trans.album)}
                 </a>
                 ` : ""}
                 <div class="sep"></div>
                 <a class="dropdown-menu-clickable-item" href="${root}bleh?tab=customise" data-menu-item="settings">
-                    ${trans_legacy[lang].settings.configure}
+                    ${tl(trans.settings)}
                 </a>
             `,
         allowHTML: true,
@@ -20161,6 +20152,19 @@
       correct_generic_combo("track-similar-tracks-item");
       correct_generic_combo("similar-items-sidebar-item");
     }
+    if (page.type == "overview" && page.subpage == "music") {
+      let items = page.structure.main.querySelectorAll(".music-featured-item:not(.music-featured-tag)");
+      items.forEach((item) => {
+        let bg = item.querySelector(".music-featured-item-background");
+        if (!bg) return;
+        let style = bg.style.getPropertyValue("background-image");
+        if (!style)
+          style = bg.style.getPropertyValue("background");
+        let cover_substr = style.indexOf("url");
+        let cover = style.substring(cover_substr);
+        bg.style.setProperty("background", cover);
+      });
+    }
     subscribe_to_events();
     auto_edit_modal();
   }
@@ -20328,6 +20332,10 @@
         title = tl(trans.playlists);
       else if (page.subpage == "auth")
         title = tl(trans.connect_app);
+      else if (page.subpage.startsWith("image") && page.type == "artist")
+        title = tl(trans.photos);
+      else if (page.subpage.startsWith("image") && page.type == "album")
+        title = tl(trans.artwork);
       if (page.subpage == "overview" || page.subpage == "event_overview") {
         if (page.type == "user")
           title = tl(trans.profile);
@@ -20463,7 +20471,7 @@
   // src/build/build.json
   var build_default = {
     brand: "bleh",
-    build: "2025.0511",
+    build: "2025.0512",
     sku: "corin",
     bio: "bleh!!! ^-^",
     author: "kate",
