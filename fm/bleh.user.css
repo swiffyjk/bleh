@@ -1488,6 +1488,10 @@ last.fm changes as of 2024-05-20 */
     order: 20;
 }
 
+.related-ads, .lastfm-ad {
+    order: 30 !important;
+}
+
 
 /*     TRENDING     */
 .trending-tracks-section-wrapper {
