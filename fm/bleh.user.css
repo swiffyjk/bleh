@@ -21170,6 +21170,7 @@ h4 {
         margin: unset;
         width: unset;
 
+        .cover-art--placeholder, .avatar--placeholder,
         .playlist-image,
         .cover-art,
         .avatar {
@@ -21906,6 +21907,17 @@ h4 {
         text-shadow: 0 0 12px rgba(0, 0, 0, 0.3);
         overflow: hidden;
     }
+}
+
+.music-page-placeholder {
+    display: flex;
+    flex-direction: column;
+    gap: var(--card-gap);
+}
+
+.music-featured-item--placeholder,
+.music-more-tags-tag--placeholder {
+    background: var(--avatar-generic-background);
 }
 
 

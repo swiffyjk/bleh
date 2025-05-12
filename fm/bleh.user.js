@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         bleh
 // @namespace    http://last.fm/
-// @version      2025.0428
+// @version      2025.0511
 // @description  bleh!!! ^-^
 // @author       kate
 // @match        https://www.last.fm/*
@@ -18756,7 +18756,7 @@
             </a>
             ` : ""}
             <button class="dropdown-menu-clickable-item sponsor" onclick="_sponsor()">
-                ${trans_legacy[lang].settings.home.sponsor.name}
+                ${tl(trans.sponsor)}
             </button>
             <a class="dropdown-menu-clickable-item issues" href="https://github.com/katelyynn/bleh/issues" target="_blank">
                 ${trans_legacy[lang].settings.home.issues.name}
@@ -18883,6 +18883,8 @@
         let bg = item.querySelector(".music-featured-item-background");
         if (!bg) return;
         let style = bg.style.getPropertyValue("background-image");
+        if (!style)
+          style = bg.style.getPropertyValue("background");
         let cover_substr = style.indexOf("url");
         let cover = style.substring(cover_substr);
         bg.style.setProperty("background", cover);
