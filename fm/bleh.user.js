@@ -17642,20 +17642,20 @@
         let expand_link;
         if (avatar)
           expand_link = `_expand_avatar('${avatar.getAttribute("content")}')`;
-        if (settings.default_avatar_action == "expand" && avatar != null)
+        if (settings.default_avatar_action == "expand" && avatar)
           avatar_link.setAttribute("onclick", expand_link);
         else if (settings.default_avatar_action == "gallery")
           avatar_link.href = `${root}music/${sanitise(page.sister)}/${sanitise(page.name)}/+images`;
         let menu = tippy(avatar_side, {
           theme: "context-menu",
           content: `
-                    ${avatar != null ? `
+                    ${avatar ? `
                     <button class="dropdown-menu-clickable-item" onclick="${expand_link}" data-menu-item="expand">
                         ${tl(trans.expand)}
                     </button>
                     ` : ""}
                     <a class="dropdown-menu-clickable-item" href="${root}music/${sanitise(page.sister)}/${sanitise(page.name)}/+images" data-menu-item="gallery">
-                        ${tl(trans.photos)}
+                        ${tl(trans.artwork)}
                     </a>
                     <div class="sep"></div>
                     <a class="dropdown-menu-clickable-item" href="${root}bleh?tab=customise" data-menu-item="settings">
@@ -19264,16 +19264,16 @@
       let position = track_header.querySelector(".header-new-chart-position-number");
       let source_album = page.structure.main.querySelector(".source-album");
       let album_avatar;
-      if (source_album != null)
+      if (source_album)
         album_avatar = source_album.querySelector(".source-album-art img");
       let redesigned_track_header = document.createElement("section");
       redesigned_track_header.classList.add("redesigned-header", "redesigned-track-header", "no-background");
       redesigned_track_header.innerHTML = `
             <div class="avatar-side">
-                ${album_avatar != null ? `
+                ${album_avatar ? `
                 <img src="${album_avatar.getAttribute("src").replace("300x300", "avatar300s")}">
                 <a class="bleh--avatar-clickable-link"></a>
-                ` : artist_avatar != null ? `
+                ` : artist_avatar ? `
                 <img src="${artist_avatar.getAttribute("content").replace("/ar0/", "/avatar170s/")}">
                 <a class="bleh--avatar-clickable-link"></a>
                 ` : '<img class="missing-track">'}
@@ -19303,26 +19303,26 @@
         expand_link = `_expand_avatar('${album_avatar.getAttribute("src").replace("300x300", "ar0")}')`;
       else if (artist_avatar)
         expand_link = `_expand_avatar('${artist_avatar.getAttribute("content")}')`;
-      if (settings.default_avatar_action == "expand" && (album_avatar != null || artist_avatar != null))
+      if (settings.default_avatar_action == "expand" && (album_avatar || artist_avatar))
         avatar_link.setAttribute("onclick", expand_link);
-      else if (settings.default_avatar_action == "gallery" && album_avatar != null)
+      else if (settings.default_avatar_action == "gallery" && album_avatar)
         avatar_link.href = source_album.querySelector(".link-block-cover-link").getAttribute("href");
       let menu = tippy(avatar_side, {
         theme: "context-menu",
         content: `
-                ${album_avatar != null || artist_avatar != null ? `
+                ${album_avatar || artist_avatar ? `
                 <button class="dropdown-menu-clickable-item" onclick="${expand_link}" data-menu-item="expand">
                     ${tl(trans.expand)}
                 </button>
                 ` : ""}
-                ${album_avatar != null ? `
+                ${album_avatar ? `
                 <a class="dropdown-menu-clickable-item" href="${source_album.querySelector(".link-block-cover-link").getAttribute("href")}" data-menu-item="album">
-                    ${trans_legacy[lang].settings.layout.avatar_action.album}
+                    ${tl(trans.album)}
                 </a>
                 ` : ""}
                 <div class="sep"></div>
                 <a class="dropdown-menu-clickable-item" href="${root}bleh?tab=customise" data-menu-item="settings">
-                    ${trans_legacy[lang].settings.configure}
+                    ${tl(trans.settings)}
                 </a>
             `,
         allowHTML: true,
