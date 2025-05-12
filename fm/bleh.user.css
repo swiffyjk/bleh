@@ -1077,7 +1077,13 @@ last.fm changes as of 2024-05-20 */
         line-height: 28px;
         margin-top: -6px;
         font-family: var(--font-brand);
-        color: hsl(var(--l3-c-theme-switch));
+        color: hsl(var(--c1));
+        text-shadow: 0 3px 0 hsl(var(--l3-c));
+
+        [data-bleh--theme_type="light"] & {
+            color: hsl(var(--l2-c));
+            text-shadow: 0 3px 0 hsl(var(--b5));
+        }
 
         [data-bleh--season="pride"] & {
             /* this isnt using https://cesque.com/gaydient/ but shoutout,
@@ -1109,6 +1115,7 @@ last.fm changes as of 2024-05-20 */
             background-clip: text;
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
+            text-shadow: unset;
         }
     }
 
