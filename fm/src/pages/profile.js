@@ -5,7 +5,7 @@ import { log } from "../build/log"
 import { auth, page, recent_activity_list, root } from "../build/page"
 import { cute, sponsor_list } from "../build/sponsor"
 import { clean_number, sanitise, sanitise_text } from "../build/tools"
-import { lang, trans_legacy, trans, tl } from "../build/trans"
+import { lang, trans, tl } from "../build/trans"
 import { prep_chart_colours } from '../chart'
 import { load_badges } from "../components/badge"
 import { dialog } from "../components/dialog"
@@ -256,7 +256,7 @@ export function bleh_profiles() {
                 });
 
                 activity_item.innerHTML = (`
-                    <div class="type">${trans_legacy[lang].activities[activity.type]}<div class="date">${moment(activity.date).fromNow(true)}</div></div>
+                    <div class="type">${tl(trans.activity.listing[activity.type])}<div class="date">${moment(activity.date).fromNow(true)}</div></div>
                     <div class="name">${involved_text}</div>
                 `);
 
@@ -412,7 +412,7 @@ export function bleh_profiles() {
                     name: page.name,
                     text: value.textContent,
                     type: type,
-                    tooltip:  trans_legacy[lang].event[type].replace('{c}', value.textContent)
+                    tooltip:  tl(trans[type]).replace('{c}', value.textContent)
                 });
             });
 
@@ -880,23 +880,23 @@ function create_profile_note_panel(username, has_note) {
 
     if (has_note) {
         note_panel.innerHTML = (`
-        <h2>${trans_legacy[lang].settings.profiles.notes.header}</h2>
+        <h2>${tl(trans.notes)}</h2>
         <div class="content-form">
-            <textarea id="bleh--profile-note" placeholder="${trans_legacy[lang].settings.profiles.notes.placeholder}">${JSON.parse(localStorage.getItem('bleh_profile_notes'))[username]}</textarea>
+            <textarea id="bleh--profile-note" placeholder="${tl(trans.anything_you_can_imagine)}">${JSON.parse(localStorage.getItem('bleh_profile_notes'))[username]}</textarea>
         </div>
         <div class="actions">
-            <button class="btn" onclick="_clear_profile_note('${username}')">${trans_legacy[lang].settings.clear}</button>
+            <button class="btn" onclick="_clear_profile_note('${username}')">${tl(trans.clear)}</button>
             <button class="btn primary" onclick="_save_profile_note('${username}')">${tl(trans.save)}</button>
         </div>
         `);
     } else {
         note_panel.innerHTML = (`
-        <h2>Your notes</h2>
+        <h2>${tl(trans.notes)}</h2>
         <div class="content-form">
-            <textarea id="bleh--profile-note" placeholder="${trans_legacy[lang].settings.profiles.notes.placeholder}"></textarea>
+            <textarea id="bleh--profile-note" placeholder="${tl(trans.anything_you_can_imagine)}"></textarea>
         </div>
         <div class="actions">
-            <button class="btn" onclick="_clear_profile_note('${username}')">${trans_legacy[lang].settings.clear}</button>
+            <button class="btn" onclick="_clear_profile_note('${username}')">${tl(trans.clear)}</button>
             <button class="btn primary" onclick="_save_profile_note('${username}')">${tl(trans.save)}</button>
         </div>
         `);
@@ -1141,7 +1141,7 @@ function bleh_featured_profile_track(object) {
     if (form) {
         let button = form.querySelector('button');
         button.classList = 'featured-item-manage';
-        button.textContent = trans_legacy[lang].settings.remove;
+        button.textContent = tl(trans.remove);
     }
 
     let panel = document.createElement('section');
@@ -1405,17 +1405,17 @@ function profile_artists() {
                         ${original_chart_settings.style}
                     </div>
                 </div>
-                <div class="select-container hide-if-artist-list">
+                <div class="setting hide-if-artist-list" data-type="select">
                     <div class="heading">
-                        <h5>${trans_legacy[lang].settings.inbuilt.charts.artists.length.name}</h5>
+                        <h5>${tl(trans.chart_size)}</h5>
                     </div>
                     <div class="select-wrap custom-selector" id="id_artists_image_grid_length_select">
                         ${original_chart_settings.length}
                     </div>
                 </div>
-                <div class="select-container hide-if-artist-grid">
+                <div class="setting hide-if-artist-grid" data-type="select">
                     <div class="heading">
-                        <h5>${trans_legacy[lang].settings.inbuilt.charts.artists.length.name}</h5>
+                        <h5>${tl(trans.chart_size)}</h5>
                     </div>
                     <div class="select-wrap custom-selector" id="id_artists_chartlist_length_select">
                         ${original_chart_settings.length_list}
@@ -1456,8 +1456,7 @@ function profile_artists() {
 function profile_albums() {
     let panel = page.structure.main.querySelector('#top-albums');
 
-    if (panel == null)
-        return;
+    if (!panel) return;
 
     panel.classList.remove('section-with-settings');
 
@@ -1514,7 +1513,7 @@ function profile_albums() {
                 <input type="hidden" name="csrfmiddlewaretoken" value="${page.token}">
                 <div class="setting" data-type="select">
                     <div class="heading">
-                        <h5>${trans_legacy[lang].settings.inbuilt.charts.albums.timeframe.name}</h5>
+                        <h5>${tl(trans.timeframe)}</h5>
                     </div>
                     <div class="select-wrap custom-selector" id="id_chart_range_top_albums_select">
                         ${original_chart_settings.timeframe}
@@ -1522,23 +1521,23 @@ function profile_albums() {
                 </div>
                 <div class="setting" data-type="select">
                     <div class="heading">
-                        <h5>${trans_legacy[lang].settings.inbuilt.charts.albums.style.name}</h5>
+                        <h5>${tl(trans.chart_style)}</h5>
                     </div>
                     <div class="select-wrap custom-selector" id="id_chart_style_top_albums_select">
                         ${original_chart_settings.style}
                     </div>
                 </div>
-                <div class="select-container hide-if-album-list">
+                <div class="setting hide-if-album-list" data-type="select">
                     <div class="heading">
-                        <h5>${trans_legacy[lang].settings.inbuilt.charts.albums.length.name}</h5>
+                        <h5>${tl(trans.chart_size)}</h5>
                     </div>
                     <div class="select-wrap custom-selector" id="id_albums_image_grid_length_select">
                         ${original_chart_settings.length}
                     </div>
                 </div>
-                <div class="select-container hide-if-album-grid">
+                <div class="setting hide-if-album-grid" data-type="select">
                     <div class="heading">
-                        <h5>${trans_legacy[lang].settings.inbuilt.charts.albums.length.name}</h5>
+                        <h5>${tl(trans.chart_size)}</h5>
                     </div>
                     <div class="select-wrap custom-selector" id="id_albums_chartlist_length_select">
                         ${original_chart_settings.length_list}
@@ -1637,7 +1636,7 @@ function profile_tracks() {
                 <input type="hidden" name="csrfmiddlewaretoken" value="${page.token}">
                 <div class="setting" data-type="select">
                     <div class="heading">
-                        <h5>${trans_legacy[lang].settings.inbuilt.charts.tracks.timeframe.name}</h5>
+                        <h5>${tl(trans.timeframe)}</h5>
                     </div>
                     <div class="select-wrap custom-selector" id="id_chart_range_top_tracks_select">
                         ${original_chart_settings.timeframe}
@@ -1664,7 +1663,7 @@ function profile_tracks() {
                         </button>
                     </div>
                 </div>
-                <div class="toggle-container hide-if-format-guest-disabled" id="container-show_guest_features" onclick="_update_item('show_guest_features')">
+                <div class="setting hide-if-format-guest-disabled" data-type="toggle" id="container-show_guest_features" onclick="_update_item('show_guest_features')">
                     <button class="btn reset" onclick="_reset_item('show_guest_features')">${tl(trans.reset)}</button>
                     <div class="heading">
                         <h5>${tl(trans.show_guest_features.name)}</h5>
@@ -1681,7 +1680,7 @@ function profile_tracks() {
                         ${tl(trans.save)}
                     </button>
                     <a class="btn icon settings not-a-view-button" href="${root}bleh">
-                        ${trans_legacy[lang].settings.configure}
+                        ${tl(trans.settings)}
                     </a>
                 </div>
             `);

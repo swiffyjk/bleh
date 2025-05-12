@@ -1,7 +1,7 @@
 import { settings } from "./build/config";
 import { auth, page, root } from "./build/page";
 import { stored_season } from "./build/seasonal";
-import { lang, non_override_lang, trans_legacy, tl, trans } from "./build/trans";
+import { lang, trans_legacy, tl, trans } from "./build/trans";
 import { load_badges } from "./components/badge";
 import { version } from "./main";
 import { show_theme_change_in_menu } from "./pages/bleh_config";
@@ -138,11 +138,11 @@ export function append_nav() {
     changelog_container.classList.add('masthead-nav-item');
     changelog_container.innerHTML = (`
         <a class="masthead-nav-control" onclick="_query_changelog()" data-label="changelog">
-            ${tl(trans.changelog)}
+            ${tl(trans.news)}
         </a>
     `);
     tippy(changelog_container, {
-        content: tl(trans.changelog)
+        content: tl(trans.news)
     });
     links.appendChild(changelog_container);
 
@@ -182,8 +182,8 @@ export function append_nav() {
 
     let sel_button = document.createElement('button');
     sel_button.classList.add('dropdown-menu-clickable-item', 'lang-item', 'active');
-    sel_button.setAttribute('data-lang', non_override_lang);
-    sel_button.style.setProperty('--flag-url', `url('https://katelyynn.github.io/bleh/fm/flags/${non_override_lang}.svg')`);
+    sel_button.setAttribute('data-lang', lang);
+    sel_button.style.setProperty('--flag-url', `url('https://katelyynn.github.io/bleh/fm/flags/${lang}.svg')`);
     sel_button.textContent = selected_language;
 
     language_menu.appendChild(sel_button);

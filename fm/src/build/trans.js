@@ -5,11 +5,6 @@ import { clamp_sat, rgb_to_hsl } from "./tools";
 
 // loads your selected language in last.fm
 export let lang;
-export let non_override_lang;
-// WARN: fill this out if translating
-// lists all languages with valid bleh translations
-// any custom translations will not load if not listed here!!
-export let valid_langs = ['en', 'de', 'pl'];
 // hello my name is stel :3
 export let lang_info = {
     en: {
@@ -148,7 +143,8 @@ export const trans = {
     },
     library: {
         en: 'Library',
-        de: 'Bibliothek'
+        de: 'Bibliothek',
+        ja: 'ライブラリ'
     },
     playlists: {
         en: 'Playlists'
@@ -420,7 +416,7 @@ export const trans = {
     //i removed the 'current' cus it soyunds better without lol, add back if u disagree or sum :3 and add 'aktuellen' infront of Zeitzone in german
     seasonal_offset: {
         en: 'Seasonal events are ran in your timezone, which we calculated as {offset}',
-        de: 'Saisonale Events werden in deiner Zeitzone ausgeführt, die wir als {offset} berechnet haben.'
+        de: 'Saisonale Events werden in deiner Zeitzone ausgeführt, die wir als {offset} berechnet haben'
     },
     started: {
         en: 'Started',
@@ -463,7 +459,7 @@ export const trans = {
     // TODO(stel): is my capitalisation correct here at all lol ; yes cutie, well done <3
     good_morning_user: {
         en: 'Good morning, {user}',
-        de: 'Guten Morgen {user}'
+        de: 'Guten Morgen, {user}'
     },
     good_afternoon_user: {
         en: 'Good afternoon, {user}',
@@ -475,7 +471,7 @@ export const trans = {
     },
     goodnight_user: {
         en: 'Goodnight, {user}',
-        de: 'Gute Nacht {user}'
+        de: 'Gute Nacht, {user}'
     },
     bleh_settings: {
         en: 'bleh Settings',
@@ -497,9 +493,13 @@ export const trans = {
         en: 'Reset',
         de: 'Zurücksetzen'
     },
-    changelog: {
+    news: {
         en: 'News',
         de: 'Neuigkeiten'
+    },
+    news_from_user: {
+        en: 'News from {user}',
+        de: 'Neuigkeiten von {user}'
     },
     default: {
         en: 'Default',
@@ -653,7 +653,7 @@ export const trans = {
     },
     about_me_preview: {
         en: 'About Me (preview)',
-        de: 'Über mich (preview)'
+        de: 'Über mich (Vorschau)'
     },
     markdown_tip: {
         // use <br><br> to add a space between the first sentence and the next
@@ -717,8 +717,10 @@ export const trans = {
         en: 'Tags'
     },
     reports: {
+        // last.fm listening reports
         en: 'Reports',
-        de: 'Berichte'
+        de: 'Berichte',
+        ja: 'レポート'
     },
     artist_lower: {
         // used inside a sentence not on its own,
@@ -787,6 +789,15 @@ export const trans = {
             en: '{artist1}, {artist2}, {artist3}'
         }
     },
+    taste_similarity: {
+        en: 'Taste similarity'
+    },
+    your_scrobbles: {
+        en: 'Your scrobbles'
+    },
+    plays: {
+        en: 'plays'
+    },
     message: {
         // as in a direct message
         en: 'Message',
@@ -847,7 +858,6 @@ export const trans = {
     },
     sponsor_info: {
         en: 'This is a special bleh-managed profile to handle sponsors',
-        // TODO(stel): change account (Konto) to profile
         de: 'Dies ist ein bleh verwaltetes Profil zur Verwaltung von Sponsoren'
     },
     loading: {
@@ -1279,6 +1289,9 @@ export const trans = {
         en: 'Chart style',
         de: 'Diagrammstil'
     },
+    chart_size: {
+        en: 'Chart size'
+    },
     country: {
         en: 'Country',
         de: 'Land'
@@ -1310,6 +1323,9 @@ export const trans = {
     block: {
         en: 'Block',
         de: 'Blockieren'
+    },
+    blocked: {
+        en: 'Blocked'
     },
     blocked_user_public: {
         en: 'Can leave shouts but not viewable to you',
@@ -1354,10 +1370,6 @@ export const trans = {
     finding_your_tracks: {
         en: 'Finding your tracks',
         de: 'Finde deine Titel'
-    },
-    news_from_user: {
-        en: 'News from {user}',
-        de: 'Neuigkeiten von {user}'
     },
     update_check: {
         en: 'Check for updates',
@@ -1761,6 +1773,12 @@ export const trans = {
     },
     no_particles: {
         en: 'Disable particles'
+    },
+    going: {
+        en: '{c} going'
+    },
+    maybe: {
+        en: '{c} interested'
     }
 }
 
@@ -4839,12 +4857,6 @@ export function lookup_lang() {
         }
     }
     lang = document.documentElement.getAttribute('lang');
-    non_override_lang = lang;
-
-    if (!valid_langs.includes(lang)) {
-        log(`language fallback from ${lang} to en - not supported`, 'trans');
-        lang = 'en';
-    }
 
     moment.locale(lang);
 }

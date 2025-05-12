@@ -268,7 +268,7 @@ export function bleh_home() {
             });
 
             activity_item.innerHTML = (`
-                <div class="type">${trans_legacy[lang].activities[activity.type]}<div class="date">${moment(activity.date).fromNow(true)}</div></div>
+                <div class="type">${tl(trans.activity.listing[activity.type])}<div class="date">${moment(activity.date).fromNow(true)}</div></div>
                 <div class="name">${involved_text}</div>
             `);
 

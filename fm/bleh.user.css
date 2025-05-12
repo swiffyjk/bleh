@@ -15057,9 +15057,6 @@ input[type="range"]::-moz-range-progress {
 }
 
 
-.toggle-container {
-    cursor: pointer;
-}
 .toggle {
     display: flex;
     justify-content: center;

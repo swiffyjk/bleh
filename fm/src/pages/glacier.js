@@ -451,7 +451,7 @@ function bleh_glacier_library_top(static_page = false) {
                         </button>
                     </div>
                 </div>
-                <div class="toggle-container hide-if-format-guest-disabled" id="container-show_guest_features" onclick="_update_item('show_guest_features')">
+                <div class="setting hide-if-format-guest-disabled" data-type="toggle" id="container-show_guest_features" onclick="_update_item('show_guest_features')">
                     <button class="btn reset" onclick="_reset_item('show_guest_features')">${tl(trans.reset)}</button>
                     <div class="heading">
                         <h5>${tl(trans.show_guest_features.name)}</h5>
@@ -1209,7 +1209,7 @@ function bleh_glacier_library_focused() {
                         </button>
                     </div>
                 </div>
-                <div class="toggle-container hide-if-format-guest-disabled" id="container-show_guest_features" onclick="_update_item('show_guest_features')">
+                <div class="setting hide-if-format-guest-disabled" data-type="toggle" id="container-show_guest_features" onclick="_update_item('show_guest_features')">
                     <button class="btn reset" onclick="_reset_item('show_guest_features')">${tl(trans.reset)}</button>
                     <div class="heading">
                         <h5>${tl(trans.show_guest_features.name)}</h5>

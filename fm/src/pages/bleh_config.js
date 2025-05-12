@@ -5,7 +5,7 @@ import { auth, page, root, theme_preview } from "../build/page";
 import { stored_season } from "../build/seasonal";
 import { sponsor_list } from "../build/sponsor";
 import { hex_to_hsl, clamp_sat, sanitise_text } from '../build/tools';
-import { lang, lang_info, non_override_lang, trans_legacy, valid_langs, trans, tl } from "../build/trans";
+import { lang, lang_info, trans_legacy, trans, tl } from "../build/trans";
 import { load_badges } from '../components/badge';
 import { dialog, dialog_legacy, dialog_rm, kill_window } from "../components/dialog";
 import { correct_artist, correct_item_by_artist, name_includes } from '../components/lotus';
@@ -1123,9 +1123,6 @@ export function render_setting_page(page_id) {
                 </div>
             </div>
             <div class="bleh--panel">
-                ${(!valid_langs.includes(non_override_lang)) ? `
-                <div class="alert alert-error">Selected language is not currently supported in bleh, sorry for the inconvenience.</div>
-                ` : ''}
                 <h4>${tl(trans.language)}</h4>
                 <div class="languages" id="languages"></div>
                 <div class="sep"></div>
@@ -2608,7 +2605,7 @@ function prepare_language_page() {
         let lang_row = document.createElement('div');
         lang_row.classList.add('language-row');
 
-        if (non_override_lang == language)
+        if (lang == language)
             lang_row.classList.add('active');
 
         let users = '';
@@ -3052,7 +3049,7 @@ function activity_preview_new(parent, activity) {
     });
 
     activity_item.innerHTML = (`
-        <div class="type">${trans_legacy[lang].activities[activity.type]}<div class="date">${moment(activity.date).fromNow(true)}</div></div>
+        <div class="type">${tl(trans.activity.listing[activity.type])}<div class="date">${moment(activity.date).fromNow(true)}</div></div>
         <div class="name">${involved_text}</div>
     `);
 

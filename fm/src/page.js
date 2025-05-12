@@ -3,7 +3,7 @@ import { settings } from "./build/config";
 import { log } from "./build/log";
 import { auth, auth_link, bleh_url, has_prompted_for_update, last_page_subpage, last_page_type, page, root, setup_url, shout_parse_queue, sponsor_url } from "./build/page";
 import { stored_season } from "./build/seasonal";
-import { lang, lookup_lang, non_override_lang, tl, trans, trans_legacy } from "./build/trans";
+import { lang, lookup_lang, tl, trans, trans_legacy } from "./build/trans";
 import { auto_edit_modal } from "./components/auto_edit";
 import { dialog, load_dialogs } from "./components/dialog";
 import { correct_artist, correct_generic_combo, correct_generic_combo_no_artist, correct_item_by_artist, lotus } from "./components/lotus";
@@ -502,45 +502,8 @@ function load_page() {
         document.title = template;
     }
 
-    page_title();
-
     if (page.structure.indicator)
         page_indicator();
-}
-
-function page_title() {
-    if (!ff('katsune'))
-        return;
-
-    if (!page.structure.container)
-        return;
-
-    let title = page.structure.container.querySelector('.page-title');
-    if (!title) {
-        title = document.createElement('section');
-        title.classList.add('page-header');
-
-        page.structure.container.insertBefore(title, page.structure.container.firstElementChild);
-    }
-
-    let name = page.type;
-
-    if (trans_legacy[lang].hasOwnProperty(page.type))
-        name = tl(trans[page.type]);
-    else if (page.type == 'user')
-        name = tl(trans.profile);
-    else if (page.type == 'bleh_settings')
-        name = tl(trans.settings);
-    else if (page.type == 'events' || page.type == 'festival')
-        name = tl(trans.event);
-
-    title.setAttribute('data-page-type', page.type);
-    title.innerHTML = (`
-        <div class="bleh-icon page-header-icon"></div>
-        <div class="page-header-title">
-            ${name}
-        </div>
-    `);
 }
 
 function page_indicator() {
@@ -554,7 +517,7 @@ function page_indicator() {
         <div class="page">
             <strong>auth</strong>
             <span>${auth.name}</span>
-            <span>${lang} (${non_override_lang})</span>
+            <span>${lang}</span>
         </div>
         <div class="page">
             <strong>page</strong>

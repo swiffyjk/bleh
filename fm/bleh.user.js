@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         bleh
 // @namespace    http://last.fm/
-// @version      2025.0511
+// @version      2025.0512
 // @description  bleh!!! ^-^
 // @author       kate
 // @match        https://www.last.fm/*
@@ -856,8 +856,6 @@
 
   // src/build/trans.js
   var lang;
-  var non_override_lang;
-  var valid_langs = ["en", "de", "pl"];
   var lang_info = {
     en: {
       name: "English",
@@ -994,7 +992,8 @@
     },
     library: {
       en: "Library",
-      de: "Bibliothek"
+      de: "Bibliothek",
+      ja: "\u30E9\u30A4\u30D6\u30E9\u30EA"
     },
     playlists: {
       en: "Playlists"
@@ -1266,7 +1265,7 @@
     //i removed the 'current' cus it soyunds better without lol, add back if u disagree or sum :3 and add 'aktuellen' infront of Zeitzone in german
     seasonal_offset: {
       en: "Seasonal events are ran in your timezone, which we calculated as {offset}",
-      de: "Saisonale Events werden in deiner Zeitzone ausgef\xFChrt, die wir als {offset} berechnet haben."
+      de: "Saisonale Events werden in deiner Zeitzone ausgef\xFChrt, die wir als {offset} berechnet haben"
     },
     started: {
       en: "Started",
@@ -1309,7 +1308,7 @@
     // TODO(stel): is my capitalisation correct here at all lol ; yes cutie, well done <3
     good_morning_user: {
       en: "Good morning, {user}",
-      de: "Guten Morgen {user}"
+      de: "Guten Morgen, {user}"
     },
     good_afternoon_user: {
       en: "Good afternoon, {user}",
@@ -1321,7 +1320,7 @@
     },
     goodnight_user: {
       en: "Goodnight, {user}",
-      de: "Gute Nacht {user}"
+      de: "Gute Nacht, {user}"
     },
     bleh_settings: {
       en: "bleh Settings",
@@ -1343,9 +1342,13 @@
       en: "Reset",
       de: "Zur\xFCcksetzen"
     },
-    changelog: {
+    news: {
       en: "News",
       de: "Neuigkeiten"
+    },
+    news_from_user: {
+      en: "News from {user}",
+      de: "Neuigkeiten von {user}"
     },
     default: {
       en: "Default",
@@ -1499,7 +1502,7 @@
     },
     about_me_preview: {
       en: "About Me (preview)",
-      de: "\xDCber mich (preview)"
+      de: "\xDCber mich (Vorschau)"
     },
     markdown_tip: {
       // use <br><br> to add a space between the first sentence and the next
@@ -1563,8 +1566,10 @@
       en: "Tags"
     },
     reports: {
+      // last.fm listening reports
       en: "Reports",
-      de: "Berichte"
+      de: "Berichte",
+      ja: "\u30EC\u30DD\u30FC\u30C8"
     },
     artist_lower: {
       // used inside a sentence not on its own,
@@ -1633,6 +1638,15 @@
         en: "{artist1}, {artist2}, {artist3}"
       }
     },
+    taste_similarity: {
+      en: "Taste similarity"
+    },
+    your_scrobbles: {
+      en: "Your scrobbles"
+    },
+    plays: {
+      en: "plays"
+    },
     message: {
       // as in a direct message
       en: "Message",
@@ -1693,7 +1707,6 @@
     },
     sponsor_info: {
       en: "This is a special bleh-managed profile to handle sponsors",
-      // TODO(stel): change account (Konto) to profile
       de: "Dies ist ein bleh verwaltetes Profil zur Verwaltung von Sponsoren"
     },
     loading: {
@@ -2125,6 +2138,9 @@
       en: "Chart style",
       de: "Diagrammstil"
     },
+    chart_size: {
+      en: "Chart size"
+    },
     country: {
       en: "Country",
       de: "Land"
@@ -2156,6 +2172,9 @@
     block: {
       en: "Block",
       de: "Blockieren"
+    },
+    blocked: {
+      en: "Blocked"
     },
     blocked_user_public: {
       en: "Can leave shouts but not viewable to you",
@@ -2200,10 +2219,6 @@
     finding_your_tracks: {
       en: "Finding your tracks",
       de: "Finde deine Titel"
-    },
-    news_from_user: {
-      en: "News from {user}",
-      de: "Neuigkeiten von {user}"
     },
     update_check: {
       en: "Check for updates",
@@ -2607,6 +2622,12 @@
     },
     no_particles: {
       en: "Disable particles"
+    },
+    going: {
+      en: "{c} going"
+    },
+    maybe: {
+      en: "{c} interested"
     }
   };
   var trans_legacy = {
@@ -5663,11 +5684,6 @@
       }
     }
     lang = document.documentElement.getAttribute("lang");
-    non_override_lang = lang;
-    if (!valid_langs.includes(lang)) {
-      log(`language fallback from ${lang} to en - not supported`, "trans");
-      lang = "en";
-    }
     moment.locale(lang);
   }
 
@@ -6791,7 +6807,7 @@
                         </button>
                     </div>
                 </div>
-                <div class="toggle-container hide-if-format-guest-disabled" id="container-show_guest_features" onclick="_update_item('show_guest_features')">
+                <div class="setting hide-if-format-guest-disabled" data-type="toggle" id="container-show_guest_features" onclick="_update_item('show_guest_features')">
                     <button class="btn reset" onclick="_reset_item('show_guest_features')">${tl(trans.reset)}</button>
                     <div class="heading">
                         <h5>${tl(trans.show_guest_features.name)}</h5>
@@ -7405,7 +7421,7 @@
                         </button>
                     </div>
                 </div>
-                <div class="toggle-container hide-if-format-guest-disabled" id="container-show_guest_features" onclick="_update_item('show_guest_features')">
+                <div class="setting hide-if-format-guest-disabled" data-type="toggle" id="container-show_guest_features" onclick="_update_item('show_guest_features')">
                     <button class="btn reset" onclick="_reset_item('show_guest_features')">${tl(trans.reset)}</button>
                     <div class="heading">
                         <h5>${tl(trans.show_guest_features.name)}</h5>
@@ -7760,14 +7776,13 @@
                     </div>
                     <div class="info">
                         <h5 class="title">${name}</h5>
-                        <p class="descriptor">${trans_legacy[lang].profile.top_badge}</p>
                         <p class="badge user-status--bleh-${this_badge.type} user-status--bleh-user-${name}" data-badge-type="${this_badge.type}" data-badge-user="${name}">${this_badge.name}</p>
                     </div>
                     <a href="${root}user/${name}" class="link-over"></a>
                 </div>
                 <div class="user-buttons view-buttons">
-                    <a class="btn view-item user-button view-library-btn" href="${root}user/${name}/library">${trans_legacy[lang].actions.view_library}</a>
-                    <a class="btn view-item user-button leave-shout-btn" href="${root}user/${name}/shoutbox">${trans_legacy[lang].actions.leave_a_shout}</a>
+                    <a class="btn view-item user-button view-library-btn" href="${root}user/${name}/library">${tl(trans.library)}</a>
+                    <a class="btn view-item user-button leave-shout-btn" href="${root}user/${name}/shoutbox">${tl(trans.shouts)}</a>
                 </div>
             `,
         allowHTML: true,
@@ -7778,7 +7793,7 @@
       return this_badge;
     } else {
       let pre_existing_badge = avatar.querySelector(".avatar-status-dot");
-      if (pre_existing_badge == null) {
+      if (!pre_existing_badge) {
         if (!parent)
           avatar.classList.add("avatar-can-hoverbox");
         else
@@ -7796,8 +7811,8 @@
                         <a href="${root}user/${name}" class="link-over"></a>
                     </div>
                     <div class="user-buttons view-buttons">
-                        <a class="btn view-item user-button view-library-btn" href="${root}user/${name}/library">${trans_legacy[lang].actions.view_library}</a>
-                        <a class="btn view-item user-button leave-shout-btn" href="${root}user/${name}/shoutbox">${trans_legacy[lang].actions.leave_a_shout}</a>
+                        <a class="btn view-item user-button view-library-btn" href="${root}user/${name}/library">${tl(trans.library)}</a>
+                        <a class="btn view-item user-button leave-shout-btn" href="${root}user/${name}/shoutbox">${tl(trans.shouts)}</a>
                     </div>
                 `,
           allowHTML: true,
@@ -7820,14 +7835,13 @@
                         </div>
                         <div class="info">
                             <h5 class="title">${name}</h5>
-                            <p class="descriptor">${trans_legacy[lang].profile.top_badge}</p>
                             <p class="badge ${pre_existing_badge.classList[1]}">${avatar.getAttribute("title")}</p>
                         </div>
                         <a href="${root}user/${name}" class="link-over"></a>
                     </div>
                     <div class="user-buttons view-buttons">
-                        <a class="btn view-item user-button view-library-btn" href="${root}user/${name}/library">${trans_legacy[lang].actions.view_library}</a>
-                        <a class="btn view-item user-button leave-shout-btn" href="${root}user/${name}/shoutbox">${trans_legacy[lang].actions.leave_a_shout}</a>
+                        <a class="btn view-item user-button view-library-btn" href="${root}user/${name}/library">${tl(trans.library)}</a>
+                        <a class="btn view-item user-button leave-shout-btn" href="${root}user/${name}/shoutbox">${tl(trans.shouts)}</a>
                     </div>
                 `,
           allowHTML: true,
@@ -7864,7 +7878,7 @@
                 </div>
                 <div class="modal-footer">
                     <a class="btn primary open" href="${src}" target="_blank">
-                        ${trans_legacy[lang].profile.open_avatar}
+                        ${tl(trans.open_new_tab)}
                     </a>
                 </div>
             </div>
@@ -8956,7 +8970,7 @@
                 </a>
                 <div class="sep"></div>
                 <button class="dropdown-menu-clickable-item" onclick="_open_profile_shortcut_window()" data-menu-item="settings">
-                    ${trans_legacy[lang].settings.configure}
+                    ${tl(trans.settings)}
                 </button>
             `,
         allowHTML: true,
@@ -9371,12 +9385,12 @@
       } else {
         let follow_placeholder = document.createElement("button");
         follow_placeholder.classList.add("btn", "profile-top-item", "profile-top-item--follow", "view-item", katsune ? "icon" : "");
-        follow_placeholder.textContent = trans_legacy[lang].profile.on_ignore_list;
+        follow_placeholder.textContent = tl(trans.blocked);
         follow_placeholder.setAttribute("disabled", "true");
         follow_placeholder.setAttribute("data-ignored", "true");
         if (!katsune)
           tippy(follow_placeholder, {
-            content: trans_legacy[lang].profile.on_ignore_list
+            content: tl(trans.blocked)
           });
         profile_header.appendChild(follow_placeholder);
       }
@@ -9476,13 +9490,9 @@
         theme: "stack",
         content: `
             <span>
-                ${trans_legacy[lang].profile.taste}
-                <!--<div class="taste-badge spacing">
-                    <span>${trans_legacy[lang].profile.taste_meter.level[taste]}</span>
-                    <span>${taste_percentage}</span>
-                </div>-->
+                ${tl(trans.taste_similarity)}
             </span>
-            <div class="hint">${trans_legacy[lang].settings.right_click}</div>
+            <div class="hint">${tl(trans.right_click_for_more_options)}</div>
             `,
         allowHTML: true
       });
@@ -9491,7 +9501,7 @@
         let menu = tippy(taste_wrap, {
           theme: "context-menu",
           content: `
-                    <h4 class="menu-header">${trans_legacy[lang].music.compare.header}</h4>
+                    <h4 class="menu-header">${tl(trans.compare_plays)}</h4>
                     <a class="dropdown-menu-clickable-item" href="${root}user/${page.name}/library/music/${sanitise(taste_artists[0])}" data-menu-item="shared-artist">
                         <img class="view-item-avatar" src="${profile_avi}" alt="${page.name}">${taste_artists[0]}
                     </a>
@@ -9527,111 +9537,6 @@
         register_menu(taste_wrap, menu);
       }
     }
-    if (page.name != sponsor_list.sponsor_account && katsune) {
-      let progress = document.createElement("div");
-      progress.classList.add("katsune-scrobble-progress", "colourful");
-      let metadata = header_meta.querySelector(".header-metadata-display");
-      scrobbles = clean_number(metadata.querySelector("p").textContent.trim());
-      let tier = 0;
-      if (scrobbles > 1e5) {
-        tier = Math.floor(scrobbles / 1e5);
-        scrobbles -= tier * 1e5;
-      }
-      if (tier > 4)
-        tier = 4;
-      progress.setAttribute("data-tier", tier);
-      let left = 1e5 - scrobbles;
-      let percent = scrobbles / 1e5 * 100;
-      progress.innerHTML = `
-            <div class="progress-info">
-                <div class="progress-value">${trans_legacy[lang].profile.progress.to_go.replace("{s}", left.toLocaleString(lang))}</div>
-                <div class="progress-bar">
-                    <div class="progress-bar-fill" style="width: ${percent}%"></div>
-                </div>
-            </div>
-            <div class="progress-badge">
-                <div class="progress-icon"></div>
-                <div class="progress-percent">${Math.round(percent)}</div>
-            </div>
-        `;
-      listen_container.appendChild(progress);
-      tippy(progress, {
-        theme: "progress-badges",
-        content: `
-                <span class="progress-badges-title">${trans_legacy[lang].profile.progress.explain}</span>
-                <div class="progress-badges-list">
-                    <div class="progress-badges-item colourful ${tier == 0 ? "active" : ""}" data-tier="0">
-                        <div class="bleh-icon" style="--icon: var(--icon-16-progress-tier-0)"></div>
-                        <span class="tier-name">${trans_legacy[lang].profile.progress.tier.replace("{t}", "0")}</span>
-                    </div>
-                    <div class="progress-badges-item colourful ${tier == 1 ? "active" : ""}" data-tier="1">
-                        <div class="bleh-icon" style="--icon: var(--icon-16-progress-tier-1)"></div>
-                        <span class="tier-name">${trans_legacy[lang].profile.progress.tier.replace("{t}", "1")}</span>
-                    </div>
-                    <div class="progress-badges-item colourful ${tier == 2 ? "active" : ""}" data-tier="2">
-                        <div class="bleh-icon" style="--icon: var(--icon-16-progress-tier-2)"></div>
-                        <span class="tier-name">${trans_legacy[lang].profile.progress.tier.replace("{t}", "2")}</span>
-                    </div>
-                    <div class="progress-badges-item colourful ${tier == 3 ? "active" : ""}" data-tier="3">
-                        <div class="bleh-icon" style="--icon: var(--icon-16-progress-tier-3)"></div>
-                        <span class="tier-name">${trans_legacy[lang].profile.progress.tier.replace("{t}", "3")}</span>
-                    </div>
-                    <div class="progress-badges-item colourful ${tier == 4 ? "active" : ""}" data-tier="4">
-                        <div class="bleh-icon" style="--icon: var(--icon-16-progress-tier-4)"></div>
-                        <span class="tier-name">${trans_legacy[lang].profile.progress.tier.replace("{t}", "4")}</span>
-                    </div>
-                </div>
-            `,
-        allowHTML: true
-      });
-    }
-    if (page.name != sponsor_list.sponsor_account && !katsune) {
-      let listen_divider = document.createElement("div");
-      listen_divider.classList.add("listen-divider");
-      profile_header.appendChild(listen_divider);
-      create_profile_top_item(profile_header, {
-        name: page.name,
-        text: scrobbles,
-        type: "scrobbles",
-        link: `${root}user/${page.name}/library`,
-        tooltip: average
-      });
-      create_profile_top_item(profile_header, {
-        name: page.name,
-        text: artists,
-        type: "artists",
-        link: `${root}user/${page.name}/library/artists`
-      });
-      create_profile_top_item(profile_header, {
-        name: page.name,
-        text: loved,
-        type: "loved",
-        link: `${root}user/${page.name}/loved`
-      });
-      if (!is_own_profile) {
-        create_profile_top_item(profile_header, {
-          name: page.name,
-          type: "taste",
-          link: `${root}user/${page.name}/library/artists?date_preset=LAST_30_DAYS&page=1`,
-          taste,
-          artists: taste_artists,
-          avi: profile_avi,
-          percent: taste_percentage,
-          tooltip: `
-                    <span>
-                        ${trans_legacy[lang].profile.taste}
-                        <!--<div class="taste-badge spacing">
-                            <span>${trans_legacy[lang].profile.taste_meter.level[taste]}</span>
-                            <span>${taste_percentage}</span>
-                        </div>-->
-                    </span>
-                    <div class="hint">${trans_legacy[lang].settings.right_click}</div>
-                `,
-          allow_html: true,
-          tooltip_theme: "stack"
-        });
-      }
-    }
     page.structure.side.insertBefore(profile_header, page.structure.side.firstElementChild);
   }
   function create_profile_top_item(parent, { name, link, text = "", type, taste = "", artists = [], avi = "", percent = "", action = "", tooltip = "", allow_html = false, tooltip_theme = "", full = false, primary = false, katsune = false, mini = false }) {
@@ -9650,18 +9555,6 @@
     if (type != "taste") {
       text = text.toLocaleString(lang);
       listen_item.innerHTML = text;
-    } else {
-      listen_item.setAttribute("data-taste", taste);
-      listen_item.style.setProperty("--data-taste-percent", percent);
-      listen_item.innerHTML = `
-            <img class="view-item-avatar" src="${avi}" alt="${name}">
-            <img class="view-item-avatar" src="${auth.avatar}" alt="${auth.name}">
-            <!--<div class="taste-badge">${trans_legacy[lang].profile.taste_meter.level[taste]}</div>-->
-            <div class="taste-badge">${percent}</div>
-            ${artists.length == 1 ? tl(trans.you_share_count_with.one).replace("{artist}", artists[0]) : ""}
-            ${artists.length == 2 ? tl(trans.you_share_count_with.two).replace("{artist1}", artists[0]).replace("{artist2}", artists[1]) : ""}
-            ${artists.length == 3 ? tl(trans.you_share_count_with.three).replace("{artist1}", artists[0]).replace("{artist2}", artists[1]).replace("{artist3}", artists[2]) : ""}
-        `;
     }
     if (katsune) {
       full = true;
@@ -9712,45 +9605,6 @@
       });
       register_menu(listen_item, menu);
       return;
-    }
-    if (type == "taste" && artists.length >= 1) {
-      let menu = tippy(listen_item, {
-        theme: "context-menu",
-        content: `
-                <h4 class="menu-header">${trans_legacy[lang].music.compare.header}</h4>
-                <a class="dropdown-menu-clickable-item" href="${root}user/${name}/library/music/${sanitise(artists[0])}" data-menu-item="shared-artist">
-                    <img class="view-item-avatar" src="${avi}" alt="${name}">${artists[0]}
-                </a>
-                <a class="dropdown-menu-clickable-item" href="${root}user/${auth.name}/library/music/${sanitise(artists[0])}" data-menu-item="shared-artist">
-                    <img class="view-item-avatar" src="${auth.avatar}" alt="${auth.name}">${artists[0]}
-                </a>
-                ${artists.length >= 2 ? `
-                <div class="sep"></div>
-                <a class="dropdown-menu-clickable-item" href="${root}user/${name}/library/music/${sanitise(artists[1])}" data-menu-item="shared-artist">
-                    <img class="view-item-avatar" src="${avi}" alt="${name}">${artists[1]}
-                </a>
-                <a class="dropdown-menu-clickable-item" href="${root}user/${auth.name}/library/music/${sanitise(artists[1])}" data-menu-item="shared-artist">
-                    <img class="view-item-avatar" src="${auth.avatar}" alt="${auth.name}">${artists[1]}
-                </a>
-                ` : ""}
-                ${artists.length >= 3 ? `
-                <div class="sep"></div>
-                <a class="dropdown-menu-clickable-item" href="${root}user/${name}/library/music/${sanitise(artists[2])}" data-menu-item="shared-artist">
-                    <img class="view-item-avatar" src="${avi}" alt="${name}">${artists[2]}
-                </a>
-                <a class="dropdown-menu-clickable-item" href="${root}user/${auth.name}/library/music/${sanitise(artists[2])}" data-menu-item="shared-artist">
-                    <img class="view-item-avatar" src="${auth.avatar}" alt="${auth.name}">${artists[2]}
-                </a>
-                ` : ""}
-            `,
-        allowHTML: true,
-        placement: "right-start",
-        trigger: "manual",
-        interactive: true,
-        interactiveBorder: 10,
-        offset: [0, 0]
-      });
-      register_menu(listen_item, menu);
     }
     if (katsune && !mini)
       return;
@@ -10294,7 +10148,7 @@
             </div>
             <div class="setting" data-type="select">
                 <div class="heading">
-                    <h5>${trans_legacy[lang].settings.inbuilt.charts.albums.timeframe.name}</h5>
+                    <h5>${tl(trans.timeframe)}</h5>
                 </div>
                 <div class="select-wrap custom-selector" id="id_chart_range_top_albums_select">
                     ${original_chart_settings.albums.timeframe}
@@ -10302,7 +10156,7 @@
             </div>
             <div class="setting" data-type="select">
                 <div class="heading">
-                    <h5>${trans_legacy[lang].settings.inbuilt.charts.albums.style.name}</h5>
+                    <h5>${tl(trans.chart_style)}</h5>
                 </div>
                 <div class="select-wrap custom-selector" id="id_chart_style_and_length_top_albums_select">
                     ${original_chart_settings.albums.style}
@@ -10356,7 +10210,7 @@
             </div>
             <div class="setting" data-type="select">
                 <div class="heading">
-                    <h5>${trans_legacy[lang].settings.inbuilt.charts.tracks.timeframe.name}</h5>
+                    <h5>${tl(trans.timeframe)}</h5>
                 </div>
                 <div class="select-wrap custom-selector" id="id_chart_range_top_tracks_select">
                     ${original_chart_settings.tracks.timeframe}
@@ -11325,7 +11179,7 @@
               involved_text = `${involved_text}<a class="involved--${involved.type}" href="${involved_link}">${name}</a>`;
           });
           activity_item.innerHTML = `
-                    <div class="type">${trans_legacy[lang].activities[activity.type]}<div class="date">${moment(activity.date).fromNow(true)}</div></div>
+                    <div class="type">${tl(trans.activity.listing[activity.type])}<div class="date">${moment(activity.date).fromNow(true)}</div></div>
                     <div class="name">${involved_text}</div>
                 `;
           recent_activity_section.appendChild(activity_item);
@@ -11449,7 +11303,7 @@
             name: page.name,
             text: value.textContent,
             type,
-            tooltip: trans_legacy[lang].event[type].replace("{c}", value.textContent)
+            tooltip: tl(trans[type]).replace("{c}", value.textContent)
           });
         });
         value_panel.appendChild(value_header);
@@ -11803,23 +11657,23 @@
     note_panel.classList.add("bleh--panel", "bleh--profile-note-panel");
     if (has_note) {
       note_panel.innerHTML = `
-        <h2>${trans_legacy[lang].settings.profiles.notes.header}</h2>
+        <h2>${tl(trans.notes)}</h2>
         <div class="content-form">
-            <textarea id="bleh--profile-note" placeholder="${trans_legacy[lang].settings.profiles.notes.placeholder}">${JSON.parse(localStorage.getItem("bleh_profile_notes"))[username]}</textarea>
+            <textarea id="bleh--profile-note" placeholder="${tl(trans.anything_you_can_imagine)}">${JSON.parse(localStorage.getItem("bleh_profile_notes"))[username]}</textarea>
         </div>
         <div class="actions">
-            <button class="btn" onclick="_clear_profile_note('${username}')">${trans_legacy[lang].settings.clear}</button>
+            <button class="btn" onclick="_clear_profile_note('${username}')">${tl(trans.clear)}</button>
             <button class="btn primary" onclick="_save_profile_note('${username}')">${tl(trans.save)}</button>
         </div>
         `;
     } else {
       note_panel.innerHTML = `
-        <h2>Your notes</h2>
+        <h2>${tl(trans.notes)}</h2>
         <div class="content-form">
-            <textarea id="bleh--profile-note" placeholder="${trans_legacy[lang].settings.profiles.notes.placeholder}"></textarea>
+            <textarea id="bleh--profile-note" placeholder="${tl(trans.anything_you_can_imagine)}"></textarea>
         </div>
         <div class="actions">
-            <button class="btn" onclick="_clear_profile_note('${username}')">${trans_legacy[lang].settings.clear}</button>
+            <button class="btn" onclick="_clear_profile_note('${username}')">${tl(trans.clear)}</button>
             <button class="btn primary" onclick="_save_profile_note('${username}')">${tl(trans.save)}</button>
         </div>
         `;
@@ -11989,7 +11843,7 @@
     if (form) {
       let button = form.querySelector("button");
       button.classList = "featured-item-manage";
-      button.textContent = trans_legacy[lang].settings.remove;
+      button.textContent = tl(trans.remove);
     }
     let panel = document.createElement("section");
     panel.classList.add("featured-item-panel");
@@ -12204,17 +12058,17 @@
                         ${original_chart_settings.style}
                     </div>
                 </div>
-                <div class="select-container hide-if-artist-list">
+                <div class="setting hide-if-artist-list" data-type="select">
                     <div class="heading">
-                        <h5>${trans_legacy[lang].settings.inbuilt.charts.artists.length.name}</h5>
+                        <h5>${tl(trans.chart_size)}</h5>
                     </div>
                     <div class="select-wrap custom-selector" id="id_artists_image_grid_length_select">
                         ${original_chart_settings.length}
                     </div>
                 </div>
-                <div class="select-container hide-if-artist-grid">
+                <div class="setting hide-if-artist-grid" data-type="select">
                     <div class="heading">
-                        <h5>${trans_legacy[lang].settings.inbuilt.charts.artists.length.name}</h5>
+                        <h5>${tl(trans.chart_size)}</h5>
                     </div>
                     <div class="select-wrap custom-selector" id="id_artists_chartlist_length_select">
                         ${original_chart_settings.length_list}
@@ -12248,8 +12102,7 @@
   }
   function profile_albums() {
     let panel = page.structure.main.querySelector("#top-albums");
-    if (panel == null)
-      return;
+    if (!panel) return;
     panel.classList.remove("section-with-settings");
     let form = panel.querySelector("#albums-chart-settings");
     let link = panel.querySelector('[aria-controls="albums-chart-settings"]');
@@ -12289,7 +12142,7 @@
                 <input type="hidden" name="csrfmiddlewaretoken" value="${page.token}">
                 <div class="setting" data-type="select">
                     <div class="heading">
-                        <h5>${trans_legacy[lang].settings.inbuilt.charts.albums.timeframe.name}</h5>
+                        <h5>${tl(trans.timeframe)}</h5>
                     </div>
                     <div class="select-wrap custom-selector" id="id_chart_range_top_albums_select">
                         ${original_chart_settings.timeframe}
@@ -12297,23 +12150,23 @@
                 </div>
                 <div class="setting" data-type="select">
                     <div class="heading">
-                        <h5>${trans_legacy[lang].settings.inbuilt.charts.albums.style.name}</h5>
+                        <h5>${tl(trans.chart_style)}</h5>
                     </div>
                     <div class="select-wrap custom-selector" id="id_chart_style_top_albums_select">
                         ${original_chart_settings.style}
                     </div>
                 </div>
-                <div class="select-container hide-if-album-list">
+                <div class="setting hide-if-album-list" data-type="select">
                     <div class="heading">
-                        <h5>${trans_legacy[lang].settings.inbuilt.charts.albums.length.name}</h5>
+                        <h5>${tl(trans.chart_size)}</h5>
                     </div>
                     <div class="select-wrap custom-selector" id="id_albums_image_grid_length_select">
                         ${original_chart_settings.length}
                     </div>
                 </div>
-                <div class="select-container hide-if-album-grid">
+                <div class="setting hide-if-album-grid" data-type="select">
                     <div class="heading">
-                        <h5>${trans_legacy[lang].settings.inbuilt.charts.albums.length.name}</h5>
+                        <h5>${tl(trans.chart_size)}</h5>
                     </div>
                     <div class="select-wrap custom-selector" id="id_albums_chartlist_length_select">
                         ${original_chart_settings.length_list}
@@ -12388,7 +12241,7 @@
                 <input type="hidden" name="csrfmiddlewaretoken" value="${page.token}">
                 <div class="setting" data-type="select">
                     <div class="heading">
-                        <h5>${trans_legacy[lang].settings.inbuilt.charts.tracks.timeframe.name}</h5>
+                        <h5>${tl(trans.timeframe)}</h5>
                     </div>
                     <div class="select-wrap custom-selector" id="id_chart_range_top_tracks_select">
                         ${original_chart_settings.timeframe}
@@ -12415,7 +12268,7 @@
                         </button>
                     </div>
                 </div>
-                <div class="toggle-container hide-if-format-guest-disabled" id="container-show_guest_features" onclick="_update_item('show_guest_features')">
+                <div class="setting hide-if-format-guest-disabled" data-type="toggle" id="container-show_guest_features" onclick="_update_item('show_guest_features')">
                     <button class="btn reset" onclick="_reset_item('show_guest_features')">${tl(trans.reset)}</button>
                     <div class="heading">
                         <h5>${tl(trans.show_guest_features.name)}</h5>
@@ -12432,7 +12285,7 @@
                         ${tl(trans.save)}
                     </button>
                     <a class="btn icon settings not-a-view-button" href="${root}bleh">
-                        ${trans_legacy[lang].settings.configure}
+                        ${tl(trans.settings)}
                     </a>
                 </div>
             `;
@@ -14229,9 +14082,6 @@
                 </div>
             </div>
             <div class="bleh--panel">
-                ${!valid_langs.includes(non_override_lang) ? `
-                <div class="alert alert-error">Selected language is not currently supported in bleh, sorry for the inconvenience.</div>
-                ` : ""}
                 <h4>${tl(trans.language)}</h4>
                 <div class="languages" id="languages"></div>
                 <div class="sep"></div>
@@ -15575,7 +15425,7 @@
     for (let language in lang_info) {
       let lang_row = document.createElement("div");
       lang_row.classList.add("language-row");
-      if (non_override_lang == language)
+      if (lang == language)
         lang_row.classList.add("active");
       let users = "";
       for (let user in lang_info[language].by)
@@ -15978,7 +15828,7 @@
         involved_text = `${involved_text}<a class="involved--${involved.type}">${name}</a>`;
     });
     activity_item.innerHTML = `
-        <div class="type">${trans_legacy[lang].activities[activity.type]}<div class="date">${moment(activity.date).fromNow(true)}</div></div>
+        <div class="type">${tl(trans.activity.listing[activity.type])}<div class="date">${moment(activity.date).fromNow(true)}</div></div>
         <div class="name">${involved_text}</div>
     `;
     parent.insertBefore(activity_item, parent.firstElementChild);
@@ -16556,7 +16406,7 @@
         plays_elem = grid.querySelector(".grid-items-item-aux-text a:last-child");
       }
       if (plays_elem != null && !grid.classList.contains("obsessions-item")) {
-        let plays = clean_number(plays_elem.textContent.trim().replace(` ${trans_legacy[lang].statistics.plays.name}`, ""));
+        let plays = clean_number(plays_elem.textContent.trim().replace(` ${tl(trans.plays)}`, ""));
         plays_elem.classList.add("grid-item-plays");
         if (is_album)
           plays_elem.textContent = plays.toLocaleString(lang);
@@ -16994,11 +16844,11 @@
     changelog_container.classList.add("masthead-nav-item");
     changelog_container.innerHTML = `
         <a class="masthead-nav-control" onclick="_query_changelog()" data-label="changelog">
-            ${tl(trans.changelog)}
+            ${tl(trans.news)}
         </a>
     `;
     tippy(changelog_container, {
-      content: tl(trans.changelog)
+      content: tl(trans.news)
     });
     links.appendChild(changelog_container);
     let bleh_container = document.createElement("li");
@@ -17030,8 +16880,8 @@
     language_menu.classList.add("language-menu");
     let sel_button = document.createElement("button");
     sel_button.classList.add("dropdown-menu-clickable-item", "lang-item", "active");
-    sel_button.setAttribute("data-lang", non_override_lang);
-    sel_button.style.setProperty("--flag-url", `url('https://katelyynn.github.io/bleh/fm/flags/${non_override_lang}.svg')`);
+    sel_button.setAttribute("data-lang", lang);
+    sel_button.style.setProperty("--flag-url", `url('https://katelyynn.github.io/bleh/fm/flags/${lang}.svg')`);
     sel_button.textContent = selected_language;
     language_menu.appendChild(sel_button);
     language_options.forEach((language_option) => {
@@ -18533,7 +18383,7 @@
         <div class="right">
             <div class="view-buttons">
                 <button class="btn view-item glacier-configure-button panel-settings-button">
-                    ${trans_legacy[lang].settings.configure}
+                    ${tl(trans.settings)}
                 </button>
             </div>
         </div>
@@ -18864,7 +18714,7 @@
             involved_text = `${involved_text}<a class="involved--${involved.type}" href="${involved_link}">${name}</a>`;
         });
         activity_item.innerHTML = `
-                <div class="type">${trans_legacy[lang].activities[activity.type]}<div class="date">${moment(activity.date).fromNow(true)}</div></div>
+                <div class="type">${tl(trans.activity.listing[activity.type])}<div class="date">${moment(activity.date).fromNow(true)}</div></div>
                 <div class="name">${involved_text}</div>
             `;
         activity_list.appendChild(activity_item);
@@ -20353,37 +20203,8 @@
       template = template.replace("{page}", title).replace("{name}", name).replace("{sister}", sister).replace("{brand}", version.brand).replace("{build}", version.build).replace("{sku}", version.sku);
       document.title = template;
     }
-    page_title();
     if (page.structure.indicator)
       page_indicator();
-  }
-  function page_title() {
-    if (!ff("katsune"))
-      return;
-    if (!page.structure.container)
-      return;
-    let title = page.structure.container.querySelector(".page-title");
-    if (!title) {
-      title = document.createElement("section");
-      title.classList.add("page-header");
-      page.structure.container.insertBefore(title, page.structure.container.firstElementChild);
-    }
-    let name = page.type;
-    if (trans_legacy[lang].hasOwnProperty(page.type))
-      name = tl(trans[page.type]);
-    else if (page.type == "user")
-      name = tl(trans.profile);
-    else if (page.type == "bleh_settings")
-      name = tl(trans.settings);
-    else if (page.type == "events" || page.type == "festival")
-      name = tl(trans.event);
-    title.setAttribute("data-page-type", page.type);
-    title.innerHTML = `
-        <div class="bleh-icon page-header-icon"></div>
-        <div class="page-header-title">
-            ${name}
-        </div>
-    `;
   }
   function page_indicator() {
     page.structure.indicator.innerHTML = `
@@ -20396,7 +20217,7 @@
         <div class="page">
             <strong>auth</strong>
             <span>${auth.name}</span>
-            <span>${lang} (${non_override_lang})</span>
+            <span>${lang}</span>
         </div>
         <div class="page">
             <strong>page</strong>

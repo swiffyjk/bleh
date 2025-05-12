@@ -708,7 +708,7 @@ function create_listen_item(parent, {name, listens, link, avi, count=0, button=f
                 </a>
                 <div class="sep"></div>
                 <button class="dropdown-menu-clickable-item" onclick="_open_profile_shortcut_window()" data-menu-item="settings">
-                    ${trans_legacy[lang].settings.configure}
+                    ${tl(trans.settings)}
                 </button>
             `),
             allowHTML: true,
