@@ -16908,7 +16908,7 @@
       let version_text = document.createElement("a");
       version_text.classList.add("bleh--version");
       version_text.setAttribute("href", `${root}bleh`);
-      version_text.textContent = `${version.build}.${version.sku}${settings.dev ? ` (dev)` : ""}`;
+      version_text.innerHTML = `${version.build}.${version.sku}${settings.dev ? `<div class="new-badge subtle">\u2726</div>` : ""}`;
       masthead_logo.appendChild(version_text);
     }
   }
