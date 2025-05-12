@@ -6744,6 +6744,7 @@ button,
 
 
 /*     ICON MASK     */
+.palette .swatch:before,
 .with-icon:before,
 .markdown-enabled:before,
 .lotus-preview .before:before,
@@ -6936,6 +6937,7 @@ span.header-new-gallery-inner a:before,
     position: absolute;
     right: var(--right, auto) !important;
     top: var(--top, 50%) !important;
+    bottom: var(--bottom, unset) !important;
     background-repeat: no-repeat;
     background-image: var(--flag-url, unset) !important;
     background-color: currentColor;
@@ -14029,11 +14031,26 @@ pre {
     height: unset !important;
 
     position: relative;
+    --mask-size: 14px;
+    --mask: var(--icon-16-check);
+    --top: none;
+    --left: none;
+    --margin-top: 0;
+    --right: 6px;
+    --bottom: 6px;
+
+    &:before {
+        opacity: 0;
+    }
 
     min-height: 50px;
 
     &[aria-checked="true"] {
         --shadow: 0 0 20px hsl(var(--h4));
+
+        &:before {
+            opacity: 1;
+        }
 
         [data-bleh--theme_type="light"] & {
             --shadow: 0 0 20px hsla(var(--h4), 70%);
