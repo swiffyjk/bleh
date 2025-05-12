@@ -428,7 +428,7 @@ export function artist_title() {
 }
 
 export function patch_header_title() {
-    if (!settings.corrections && !settings.format_guest_features && !multi)
+    if (!settings.corrections && !settings.format_guest_features && !page.multi)
         return;
 
     page.corrected = false;

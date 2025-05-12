@@ -16258,7 +16258,7 @@
     }
   }
   function patch_header_title() {
-    if (!settings.corrections && !settings.format_guest_features && !multi)
+    if (!settings.corrections && !settings.format_guest_features && !page.multi)
       return;
     page.corrected = false;
     let track_title = document.body.querySelector(".header-new-title");
