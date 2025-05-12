@@ -471,6 +471,10 @@ function load_page() {
             title = tl(trans.playlists);
         else if (page.subpage == 'auth')
             title = tl(trans.connect_app);
+        else if (page.subpage.startsWith('image') && page.type == 'artist')
+            title = tl(trans.photos);
+        else if (page.subpage.startsWith('image') && page.type == 'album')
+            title = tl(trans.artwork);
 
         if (page.subpage == 'overview' || page.subpage == 'event_overview') {
             if (page.type == 'user')
