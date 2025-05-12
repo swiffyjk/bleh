@@ -1078,11 +1078,10 @@ last.fm changes as of 2024-05-20 */
         margin-top: -6px;
         font-family: var(--font-brand);
         color: hsl(var(--c1));
-        text-shadow: 0 3px 0 hsl(var(--l3-c));
+        text-shadow: 0 3px 0 hsl(var(--l3-c), 70%);
 
         [data-bleh--theme_type="light"] & {
-            color: hsl(var(--l2-c));
-            text-shadow: 0 3px 0 hsl(var(--b5));
+            text-shadow: 0 3px 0 hsl(var(--l2-c), 25%);
         }
 
         [data-bleh--season="pride"] & {
@@ -4845,7 +4844,7 @@ better than the default selector '#app a' i suppose */
         margin-top: -6px;
         background: hsl(var(--h3), 50%);
         border-radius: 50px;
-        box-shadow: 0 0 20px 1px hsl(var(--h3));
+        box-shadow: 0 0 30px 2px hsl(var(--h3));
         transition-property: opacity;
         transition-duration: var(--trans);
         transition-timing-function: var(--trans-function);
@@ -15258,6 +15257,12 @@ input[type="range"]::-moz-range-progress {
     line-height: 30px;
     margin-top: -8px;
 
+    text-shadow: 0 4px 0 hsl(var(--l3-c), 70%);
+
+    [data-bleh--theme_type="light"] & {
+        text-shadow: 0 4px 0 hsl(var(--l2-c), 25%);
+    }
+
     [data-bleh--season="christmas"] & {
         --hue-seasonal: 352;
         --sat-seasonal: 1.8;
@@ -15270,6 +15275,7 @@ input[type="range"]::-moz-range-progress {
         background-clip: text;
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
+        text-shadow: unset;
 
         [data-bleh--theme_type="light"] & {
             --candy-cane-1: hsl(-2, var(--l3-c-sat), 60%);
