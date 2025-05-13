@@ -1,14 +1,15 @@
 {
-    "latest": "2025.0503",
+    "latest": "2025.0513",
     "sponsors": [
         "katelyness", "kateshapedbox", "stellasaur",
         "astrablooms", "ItsProyal", "vwvwvwvwvwvwv", "Orofil",
         "EliteHimself", "iwas15with100k", "keepsweet", "yourfriendoss",
-        "softmancy"
+        "softmancy", "carbon1k", "uix-uix"
     ],
     "sponsors_one_time": [
         "kateshapedbox",
-        "vwvwvwvwvwvwv", "EliteHimself", "yourfriendoss"
+        "vwvwvwvwvwvwv", "EliteHimself", "yourfriendoss",
+        "carbon1k", "uix-uix"
     ],
     "sponsor_count_remove": 3,
     "sponsor_account": "kateshapedbox",
@@ -166,6 +167,12 @@
                 "name": "the fleshpoet",
                 "reason": "sponsor"
             }
-        ]
+        ],
+        "carbon1k": {
+            "type": "sponsor"
+        },
+        "uix-uix": {
+            "type": "sponsor"
+        }
     }
 }
