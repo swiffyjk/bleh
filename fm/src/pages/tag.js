@@ -52,7 +52,7 @@ export function bleh_tags() {
                 <div class="tag-icon"></div>
             </div>
             <div class="info-side">
-                <div class="sub-text">${trans_legacy[lang].tag.name}</div>
+                <div class="sub-text">${trans_legacy.en.tag.name}</div>
                 <h1>${title}</h1>
             </div>
         `);

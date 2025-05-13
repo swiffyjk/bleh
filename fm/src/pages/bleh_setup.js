@@ -186,8 +186,8 @@ unsafeWindow._setup_accessibility = function() {
                 <div class="setting" data-type="toggle" id="container-reduced_motion" onclick="_update_item('reduced_motion')">
                     <button class="btn reset" onclick="_reset_item('reduced_motion')">${tl(trans.reset)}</button>
                     <div class="heading">
-                        <h5>${trans_legacy[lang].settings.accessibility.reduced_motion.name}</h5>
-                        <p>${trans_legacy[lang].settings.accessibility.reduced_motion.bio}</p>
+                        <h5>${trans_legacy.en.settings.accessibility.reduced_motion.name}</h5>
+                        <p>${trans_legacy.en.settings.accessibility.reduced_motion.bio}</p>
                     </div>
                     <div class="toggle-wrap">
                         <button class="toggle" id="toggle-reduced_motion" aria-checked="false">
@@ -198,8 +198,8 @@ unsafeWindow._setup_accessibility = function() {
                 <div class="setting" data-type="toggle" id="container-underline_links" onclick="_update_item('underline_links')">
                     <button class="btn reset" onclick="_reset_item('underline_links')">${tl(trans.reset)}</button>
                     <div class="heading">
-                        <h5>${trans_legacy[lang].settings.accessibility.underline_links.name}</h5>
-                        <p>${trans_legacy[lang].settings.accessibility.underline_links.bio}</p>
+                        <h5>${trans_legacy.en.settings.accessibility.underline_links.name}</h5>
+                        <p>${trans_legacy.en.settings.accessibility.underline_links.bio}</p>
                     </div>
                     <div class="toggle-wrap">
                         <button class="toggle" id="toggle-underline_links" aria-checked="false">
@@ -210,8 +210,8 @@ unsafeWindow._setup_accessibility = function() {
                 <div class="setting" data-type="toggle" id="container-toggle_icon" onclick="_update_item('toggle_icon')">
                     <button class="btn reset" onclick="_reset_item('toggle_icon')">${tl(trans.reset)}</button>
                     <div class="heading">
-                        <h5>${trans_legacy[lang].settings.accessibility.toggle_icon.name}</h5>
-                        <p>${trans_legacy[lang].settings.accessibility.toggle_icon.bio}</p>
+                        <h5>${trans_legacy.en.settings.accessibility.toggle_icon.name}</h5>
+                        <p>${trans_legacy.en.settings.accessibility.toggle_icon.bio}</p>
                     </div>
                     <div class="toggle-wrap">
                         <button class="toggle" id="toggle-toggle_icon" aria-checked="false">
@@ -382,7 +382,7 @@ export function notify_if_new_update() {
     // otherwise, it's a usual update
     if (last_version_used != version.build) {
         notify({
-            title: trans_legacy[lang].messaging.update.replace('{v}', `${version.build}.${version.sku}`),
+            title: trans_legacy.en.messaging.update.replace('{v}', `${version.build}.${version.sku}`),
             persist: true,
             icon: 'icon-16-download'
         });

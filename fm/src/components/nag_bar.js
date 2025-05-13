@@ -20,7 +20,7 @@ export function nag_bar() {
             if (!settings.travis) {
                 notify({
                     id: 'corrections',
-                    title: trans_legacy[lang].nag_bar.corrections.title,
+                    title: trans_legacy.en.nag_bar.corrections.title,
                     body: active_nag.querySelector('strong').innerHTML,
                     icon: 'icon-16-refresh'
                 });

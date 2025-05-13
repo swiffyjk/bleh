@@ -163,7 +163,7 @@ export function append_nav() {
             theme: 'seasonal-swatch',
             content: (`
                 <span class="season-colour-name">${tl(trans.seasonal.listing[stored_season.id])}</span>
-                <span class="season-exclusive">${trans_legacy[lang].auth_menu.seasonal_notice}</span>
+                <span class="season-exclusive">${trans_legacy.en.auth_menu.seasonal_notice}</span>
             `),
             allowHTML: true
         });
@@ -220,7 +220,7 @@ export function append_nav() {
             </a>
             ${(settings.auth_menu_obsessions) ? (`
             <a class="dropdown-menu-clickable-item" data-menu-item="obsessions" href="${root}user/${auth.name}/obsessions">
-                ${trans_legacy[lang].auth_menu.obsessions}
+                ${trans_legacy.en.auth_menu.obsessions}
             </a>
             `) : ''}
             <button class="dropdown-menu-clickable-item" data-menu-item="themes" onclick="toggle_theme()">

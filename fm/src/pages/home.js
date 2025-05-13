@@ -114,18 +114,18 @@ export function bleh_home() {
         theme: "menu",
         content: (`
             <button class="dropdown-menu-clickable-item update" onclick="_force_refresh_theme()">
-                ${trans_legacy[lang].settings.home.update.update_now}
+                ${trans_legacy.en.settings.home.update.update_now}
             </button>
             ${(settings.dev ? (`
             <a class="dropdown-menu-clickable-item update" href="https://github.com/katelyynn/bleh/raw/uwu/fm/bleh.user.css">
-                ${trans_legacy[lang].settings.home.update.css}
+                ${trans_legacy.en.settings.home.update.css}
             </a>
             `) : '')}
             <button class="dropdown-menu-clickable-item sponsor" onclick="_sponsor()">
                 ${tl(trans.sponsor)}
             </button>
             <a class="dropdown-menu-clickable-item issues" href="https://github.com/katelyynn/bleh/issues" target="_blank">
-                ${trans_legacy[lang].settings.home.issues.name}
+                ${trans_legacy.en.settings.home.issues.name}
             </a>
         `),
         allowHTML: true,

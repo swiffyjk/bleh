@@ -330,13 +330,13 @@ function bleh_glacier_library_top(static_page = false) {
 
             if (page.subpage == 'library_overview') {
                 if (index == 1)
-                    text = trans_legacy[lang].glacier.meta.average;
+                    text = trans_legacy.en.glacier.meta.average;
             } else if (page.subpage == 'library_artists') {
                 text = tl(trans.artists);
             } else if (page.subpage == 'library_albums') {
-                text = trans_legacy[lang].glacier.meta.albums;
+                text = trans_legacy.en.glacier.meta.albums;
             } else if (page.subpage == 'library_tracks') {
-                text = trans_legacy[lang].glacier.meta.tracks;
+                text = trans_legacy.en.glacier.meta.tracks;
             }
         } else {
             // search results
@@ -399,10 +399,10 @@ function bleh_glacier_library_top(static_page = false) {
 
         if (top_wrap.getAttribute('data-current-format') == 'grid') {
             format_button.setAttribute('data-glacier-view', 'grid');
-            format_button.textContent = trans_legacy[lang].glacier.view.grid;
+            format_button.textContent = trans_legacy.en.glacier.view.grid;
         } else {
             format_button.setAttribute('data-glacier-view', 'list');
-            format_button.textContent = trans_legacy[lang].glacier.view.list;
+            format_button.textContent = trans_legacy.en.glacier.view.list;
         }
 
         view_buttons.appendChild(format_button);
@@ -522,10 +522,10 @@ unsafeWindow._update_glacier_view = function() {
 
     if (format.getAttribute('href') && format.getAttribute('href').endsWith('reset')) {
         page.structure.glacier.format.setAttribute('data-glacier-view', 'list');
-        page.structure.glacier.format.textContent = trans_legacy[lang].glacier.view.list;
+        page.structure.glacier.format.textContent = trans_legacy.en.glacier.view.list;
     } else {
         page.structure.glacier.format.setAttribute('data-glacier-view', 'grid');
-        page.structure.glacier.format.textContent = trans_legacy[lang].glacier.view.grid;
+        page.structure.glacier.format.textContent = trans_legacy.en.glacier.view.grid;
     }
 }
 
@@ -711,7 +711,7 @@ function bleh_glacier_insights_generate(type, item) {
         scrobble_insights_panel.setAttribute('data-type', type);
         new_run = true;
     }
-    scrobble_insights_panel.innerHTML = `<h2>${trans_legacy[lang][type].plural}</h2>`;
+    scrobble_insights_panel.innerHTML = `<h2>${trans_legacy.en[type].plural}</h2>`;
 
     let scrobble_canvas_container = document.createElement('div');
     scrobble_canvas_container.classList.add('scrobble-insights-canvas-container');
@@ -1076,10 +1076,10 @@ function bleh_glacier_library_focused() {
         </div>
         <div class="glacier-library-metadata-item">
             <div class="sub-text">
-                ${trans_legacy[lang][type].name}
+                ${trans_legacy.en[type].name}
             </div>
             <div class="glacier-library-metadata-item-value glacier-library-metadata-focus" data-type="${type}">
-                <a href="${link}">${(type == 'artist') ? correct_artist(header_title) : correct_item_by_artist(header_title, artist)}</a>${(duration) ? ` <span class="glacier-library-track-duration">${duration.textContent}</span>` : ''}${(type != 'artist') ? trans_legacy[lang].glacier.by_artist.replace('{a}', `<a href="${root}user/${page.name}/library/music/+noredirect/${sanitise(artist)}${current_suffix}">${correct_artist(artist)}</a>`) : ''}
+                <a href="${link}">${(type == 'artist') ? correct_artist(header_title) : correct_item_by_artist(header_title, artist)}</a>${(duration) ? ` <span class="glacier-library-track-duration">${duration.textContent}</span>` : ''}${(type != 'artist') ? trans_legacy.en.glacier.by_artist.replace('{a}', `<a href="${root}user/${page.name}/library/music/+noredirect/${sanitise(artist)}${current_suffix}">${correct_artist(artist)}</a>`) : ''}
             </div>
         </div>
     `);
@@ -1139,9 +1139,9 @@ function bleh_glacier_library_focused() {
             let action = button.getAttribute('data-analytics-action');
             if (action) {
                 if (action == 'EditScrobbleOpen') {
-                    button.textContent = trans_legacy[lang].glacier.edit;
+                    button.textContent = trans_legacy.en.glacier.edit;
                 } else if (action == 'UnloveTrack' || action == 'LoveTrack') {
-                    //button.textContent = trans_legacy[lang].glacier.love;
+                    //button.textContent = trans_legacy.en.glacier.love;
 
                     let listen_divider = document.createElement('div');
                     listen_divider.classList.add('listen-divider');
@@ -1303,7 +1303,7 @@ export function bleh_glacier_library_bulk_edit() {
     if (!delete_button) return;
 
     bulk_edit.classList.add('btn', 'view-item', 'glacier-library-button', 'bulk-edit-button');
-    bulk_edit.textContent = trans_legacy[lang].glacier.bulk_edit;
+    bulk_edit.textContent = trans_legacy.en.glacier.bulk_edit;
 
     if (!edit_form)
         view_buttons.insertBefore(bulk_edit, delete_button);

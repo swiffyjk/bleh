@@ -155,31 +155,31 @@ export function render_setting_page(page_id) {
                 <div class="user-top-avatar user-top-avatar-side-right"></div>
             </div>
             ${(sponsoring) ? (`
-            <h4>${trans_legacy[lang].settings.home.sponsor.thanks
+            <h4>${trans_legacy.en.settings.home.sponsor.thanks
             .replace('{m}', `<a class="mention" href="${root}user/${auth.name}">@${auth.name}</a>`)
             .replace('{v}', `<span class="version-link" onclick="_change_settings_page('sku')">${version.build}.${version.sku}</span>`)}</h4>
             `) : (`
-            <h4>${trans_legacy[lang].settings.home.thanks
+            <h4>${trans_legacy.en.settings.home.thanks
             .replace('{m}', `<a class="mention" href="${root}user/${auth.name}">@${auth.name}</a>`)
             .replace('{v}', `<span class="version-link" onclick="_change_settings_page('sku')">${version.build}.${version.sku}</span>`)}</h4>
             `)}
             <div class="screen-row actions-only">
                 <div class="actions">
                     <button class="btn primary update icon" onclick="_force_refresh_theme()">
-                        ${trans_legacy[lang].settings.home.update.update_now}
+                        ${trans_legacy.en.settings.home.update.update_now}
                     </button>
                     ${(settings.dev ? (`
                     <a class="btn primary update icon" href="https://github.com/katelyynn/bleh/raw/uwu/fm/bleh.user.css">
-                        ${trans_legacy[lang].settings.home.update.css}
+                        ${trans_legacy.en.settings.home.update.css}
                     </a>
                     `) : '')}
                     ${(ff('sponsor') ? (`
                     <button class="btn primary sponsor" onclick="_sponsor()">
-                        ${trans_legacy[lang].settings.home.sponsor.name}<div class="new-badge">${tl(trans.new)}</div>
+                        ${trans_legacy.en.settings.home.sponsor.name}<div class="new-badge">${tl(trans.new)}</div>
                     </button>
                     `) : '')}
                     <a class="btn action bleh--issues" href="https://github.com/katelyynn/bleh/issues" target="_blank">
-                        ${trans_legacy[lang].settings.home.issues.name}
+                        ${trans_legacy.en.settings.home.issues.name}
                     </a>
                 </div>
             </div>
@@ -188,17 +188,17 @@ export function render_setting_page(page_id) {
             <div class="current-season-box no-margin" data-season="${stored_season.id}">
                 <div class="current-season-info">
                     <div class="bleh-icon bleh-seasonal-icon" data-season="${stored_season.id}"></div>
-                    <h4>${trans_legacy[lang].settings.customise.seasonal.listing[stored_season.id]}</h4>
+                    <h4>${trans_legacy.en.settings.customise.seasonal.listing[stored_season.id]}</h4>
                 </div>
                 <div class="glacier-library-top season-top">
                     <div class="glacier-library-metadata">
                         ${(stored_season.id != 'none' && stored_season.start && stored_season.end) ? (`
                         <div class="glacier-library-metadata-item">
-                            <div class="sub-text">${trans_legacy[lang].settings.customise.seasonal.started}</div>
+                            <div class="sub-text">${trans_legacy.en.settings.customise.seasonal.started}</div>
                             <div class="glacier-library-metadata-item-value" id="current_season">${moment(stored_season.start.replace('y0', stored_season.year).replace('{offset}', stored_season.offset)).from(stored_season.now)}</div>
                         </div>
                         <div class="glacier-library-metadata-item">
-                            <div class="sub-text">${trans_legacy[lang].settings.customise.seasonal.ends_in}</div>
+                            <div class="sub-text">${trans_legacy.en.settings.customise.seasonal.ends_in}</div>
                             <div class="glacier-library-metadata-item-value" id="current_season_start">${moment(stored_season.end.replace('y0', stored_season.year).replace('{offset}', stored_season.offset)).to(stored_season.now, true)}</div>
                         </div>
                         `) : ''}
@@ -206,39 +206,39 @@ export function render_setting_page(page_id) {
                 </div>
             </div>
             <button class="btn continue" onclick="_change_settings_page('seasonal')">
-                ${trans_legacy[lang].settings.customise.seasonal.view}
+                ${trans_legacy.en.settings.customise.seasonal.view}
             </button>
-            <h4>${trans_legacy[lang].settings.home.recommended}</h4>
+            <h4>${trans_legacy.en.settings.home.recommended}</h4>
             <div class="setting-items full">
                 <div class="side-right full">
                     <button class="btn setting-item bleh--themes" onclick="_change_settings_page('themes')">
                         <div class="text">
                             <h5>${tl(trans.themes.name)}</h5>
-                            <p>${trans_legacy[lang].settings.themes.bio}</p>
+                            <p>${trans_legacy.en.settings.themes.bio}</p>
                         </div>
                     </button>
                     <button class="btn setting-item bleh--palette" onclick="_change_settings_page('themes')">
                         <div class="text">
-                            <h5>${trans_legacy[lang].settings.home.colours.name}</h5>
-                            <p>${trans_legacy[lang].settings.home.colours.bio}</p>
+                            <h5>${trans_legacy.en.settings.home.colours.name}</h5>
+                            <p>${trans_legacy.en.settings.home.colours.bio}</p>
                         </div>
                     </button>
                     <button class="btn setting-item bleh--corrections" onclick="_change_settings_page('music', 'corrections')">
                         <div class="text">
-                            <h5>${trans_legacy[lang].settings.corrections.name}</h5>
-                            <p>${trans_legacy[lang].settings.corrections.bio}</p>
+                            <h5>${trans_legacy.en.settings.corrections.name}</h5>
+                            <p>${trans_legacy.en.settings.corrections.bio}</p>
                         </div>
                     </button>
                     <button class="btn setting-item bleh--motion" onclick="_change_settings_page('accessibility')">
                         <div class="text">
-                            <h5>${trans_legacy[lang].settings.accessibility.reduced_motion.name}</h5>
-                            <p>${trans_legacy[lang].settings.accessibility.reduced_motion.bio}</p>
+                            <h5>${trans_legacy.en.settings.accessibility.reduced_motion.name}</h5>
+                            <p>${trans_legacy.en.settings.accessibility.reduced_motion.bio}</p>
                         </div>
                     </button>
                     <button class="btn setting-item bleh--link" onclick="_change_settings_page('accessibility')">
                         <div class="text">
-                            <h5>${trans_legacy[lang].settings.accessibility.underline_links.name}</h5>
-                            <p>${trans_legacy[lang].settings.accessibility.underline_links.bio}</p>
+                            <h5>${trans_legacy.en.settings.accessibility.underline_links.name}</h5>
+                            <p>${trans_legacy.en.settings.accessibility.underline_links.bio}</p>
                         </div>
                     </button>
                 </div>
@@ -338,7 +338,7 @@ export function render_setting_page(page_id) {
                 <div class="setting" data-type="toggle" id="container-high_contrast" onclick="_update_item('high_contrast')">
                     <button class="btn reset" onclick="_reset_item('high_contrast')">${tl(trans.reset)}</button>
                     <div class="heading">
-                        <h5>${trans_legacy[lang].settings.customise.high_contrast.name}</h5>
+                        <h5>${trans_legacy.en.settings.customise.high_contrast.name}</h5>
                     </div>
                     <div class="toggle-wrap">
                         <button class="toggle" id="toggle-high_contrast" aria-checked="true">
@@ -463,22 +463,22 @@ export function render_setting_page(page_id) {
         register_skip_to([
             {
                 id: 'profile_avi_background',
-                name: trans_legacy[lang].settings.customise.profile_header.see_type
+                name: trans_legacy.en.settings.customise.profile_header.see_type
             },
             {
                 id: 'profile_header_own',
-                name: trans_legacy[lang].settings.customise.profile_header.view_on
+                name: trans_legacy.en.settings.customise.profile_header.view_on
             },
             {
                 id: 'show_your_progress',
-                name: trans_legacy[lang].settings.customise.show_your_progress.name
+                name: trans_legacy.en.settings.customise.show_your_progress.name
             }
         ]);
 
         return (`
             <div class="bleh--panel check-artist-hover">
                 <h4 class="top-header">${tl(trans.layout)}</h4>
-                <h4>${trans_legacy[lang].settings.layout.header}</h4>
+                <h4>${trans_legacy.en.settings.layout.header}</h4>
                 <div class="inner-preview pad">
                     <div class="profile-mockup artist">
                         <div class="mockup-header">
@@ -510,8 +510,8 @@ export function render_setting_page(page_id) {
                 </div>
                 <div class="setting" data-type="options">
                     <div class="heading">
-                        <h5>${trans_legacy[lang].settings.layout.avatar_action.name}</h5>
-                        <p>${trans_legacy[lang].settings.layout.avatar_action.bio}</p>
+                        <h5>${trans_legacy.en.settings.layout.avatar_action.name}</h5>
+                        <p>${trans_legacy.en.settings.layout.avatar_action.bio}</p>
                     </div>
                     <div class="primary-selections artist-hover-image">
                         <div class="btn primary-selection" id="toggle-default_avatar_action-expand" data-toggle="default_avatar_action" data-toggle-value="expand" onclick="_update_item('default_avatar_action', 'expand')">
@@ -524,7 +524,7 @@ export function render_setting_page(page_id) {
                 </div>
             </div>
             <div class="bleh--panel">
-                <h4>${trans_legacy[lang].settings.customise.profile_header.name}</h4>
+                <h4>${trans_legacy.en.settings.customise.profile_header.name}</h4>
                 <div class="inner-preview pad">
                     <div class="profile-mockup">
                         <div class="mockup-header">
@@ -553,7 +553,7 @@ export function render_setting_page(page_id) {
                 <div class="setting" data-type="toggle" id="container-profile_avi_background" onclick="_update_item('profile_avi_background')">
                     <button class="btn reset" onclick="_reset_item('profile_avi_background')">${tl(trans.reset)}</button>
                     <div class="heading">
-                        <h5>${trans_legacy[lang].settings.customise.profile_header.see_type}</h5>
+                        <h5>${trans_legacy.en.settings.customise.profile_header.see_type}</h5>
                     </div>
                     <div class="toggle-wrap">
                         <button class="toggle" id="toggle-profile_avi_background" aria-checked="false">
@@ -561,11 +561,11 @@ export function render_setting_page(page_id) {
                         </button>
                     </div>
                 </div>
-                <h4>${trans_legacy[lang].settings.customise.profile_header.view_on}</h4>
+                <h4>${trans_legacy.en.settings.customise.profile_header.view_on}</h4>
                 <div class="setting" data-type="toggle" id="container-profile_header_own" onclick="_update_item('profile_header_own')">
                     <button class="btn reset" onclick="_reset_item('profile_header_own')">${tl(trans.reset)}</button>
                     <div class="heading">
-                        <h5>${trans_legacy[lang].settings.customise.profile_header.for_own}</h5>
+                        <h5>${trans_legacy.en.settings.customise.profile_header.for_own}</h5>
                     </div>
                     <div class="toggle-wrap">
                         <button class="toggle" id="toggle-profile_header_own" aria-checked="false">
@@ -576,7 +576,7 @@ export function render_setting_page(page_id) {
                 <div class="setting" data-type="toggle" id="container-profile_header_others" onclick="_update_item('profile_header_others')">
                     <button class="btn reset" onclick="_reset_item('profile_header_others')">${tl(trans.reset)}</button>
                     <div class="heading">
-                        <h5>${trans_legacy[lang].settings.customise.profile_header.for_others}</h5>
+                        <h5>${trans_legacy.en.settings.customise.profile_header.for_others}</h5>
                     </div>
                     <div class="toggle-wrap">
                         <button class="toggle" id="toggle-profile_header_others" aria-checked="false">
@@ -588,8 +588,8 @@ export function render_setting_page(page_id) {
                 <div class="setting" data-type="toggle" id="container-show_your_progress" onclick="_update_item('show_your_progress')">
                     <button class="btn reset" onclick="_reset_item('show_your_progress')">${tl(trans.reset)}</button>
                     <div class="heading">
-                        <h5>${trans_legacy[lang].settings.customise.show_your_progress.name}</h5>
-                        <p>${trans_legacy[lang].settings.customise.show_your_progress.bio}</p>
+                        <h5>${trans_legacy.en.settings.customise.show_your_progress.name}</h5>
+                        <p>${trans_legacy.en.settings.customise.show_your_progress.bio}</p>
                     </div>
                     <div class="toggle-wrap">
                         <button class="toggle" id="toggle-show_your_progress" aria-checked="true">
@@ -601,8 +601,8 @@ export function render_setting_page(page_id) {
                 <div class="setting" data-type="toggle" id="container-rain" onclick="_update_item('rain')">
                     <button class="btn reset" onclick="_reset_item('rain')">${tl(trans.reset)}</button>
                     <div class="heading">
-                        <h5>${trans_legacy[lang].settings.customise.rain.name}</h5>
-                        <p>${trans_legacy[lang].settings.customise.rain.bio}</p>
+                        <h5>${trans_legacy.en.settings.customise.rain.name}</h5>
+                        <p>${trans_legacy.en.settings.customise.rain.bio}</p>
                     </div>
                     <div class="toggle-wrap">
                         <button class="toggle" id="toggle-rain" aria-checked="true">
@@ -650,7 +650,7 @@ export function render_setting_page(page_id) {
                 <div class="setting" data-type="toggle" id="container-seasonal" onclick="_update_item('seasonal')">
                     <button class="btn reset" onclick="_reset_item('seasonal')">${tl(trans.reset)}</button>
                     <div class="heading">
-                        <h5>${trans_legacy[lang].settings.customise.seasonal.option.name}</h5>
+                        <h5>${trans_legacy.en.settings.customise.seasonal.option.name}</h5>
                     </div>
                     <div class="toggle-wrap">
                         <button class="toggle" id="toggle-seasonal" aria-checked="true">
@@ -679,8 +679,8 @@ export function render_setting_page(page_id) {
                 <div class="setting hide-if-seasonal-disabled" data-type="toggle" id="container-seasonal_particles_fps" onclick="_update_item('seasonal_particles_fps')">
                     <button class="btn reset" onclick="_reset_item('seasonal_particles_fps')">${tl(trans.reset)}</button>
                     <div class="heading">
-                        <h5>${trans_legacy[lang].settings.customise.seasonal.fps_particles.name}</h5>
-                        <p>${trans_legacy[lang].settings.customise.seasonal.fps_particles.bio}</p>
+                        <h5>${trans_legacy.en.settings.customise.seasonal.fps_particles.name}</h5>
+                        <p>${trans_legacy.en.settings.customise.seasonal.fps_particles.bio}</p>
                     </div>
                     <div class="toggle-wrap">
                         <button class="toggle" id="toggle-seasonal_particles_fps" aria-checked="true">
@@ -692,8 +692,8 @@ export function render_setting_page(page_id) {
                 <div class="setting hide-if-seasonal-disabled" data-type="toggle" id="container-seasonal_overlays" onclick="_update_item('seasonal_overlays')">
                     <button class="btn reset" onclick="_reset_item('seasonal_overlays')">${tl(trans.reset)}</button>
                     <div class="heading">
-                        <h5>${trans_legacy[lang].settings.customise.seasonal.overlays.name}</h5>
-                        <p>${trans_legacy[lang].settings.customise.seasonal.overlays.bio}</p>
+                        <h5>${trans_legacy.en.settings.customise.seasonal.overlays.name}</h5>
+                        <p>${trans_legacy.en.settings.customise.seasonal.overlays.bio}</p>
                     </div>
                     <div class="toggle-wrap">
                         <button class="toggle" id="toggle-seasonal_overlays" aria-checked="true">
@@ -709,7 +709,7 @@ export function render_setting_page(page_id) {
         return (`
             <div class="bleh--panel">
                 <h4 class="top-header">${tl(trans.troubleshooting)}</h4>
-                <p>${trans_legacy[lang].settings.performance.bio}</p>
+                <p>${trans_legacy.en.settings.performance.bio}</p>
                 <div class="setting" data-type="toggle">
                     <div class="heading">
                         <h5>Refresh theme</h5>
@@ -722,8 +722,8 @@ export function render_setting_page(page_id) {
                 <div class="setting" data-type="toggle" id="container-dev" onclick="_update_item('dev')">
                     <button class="btn reset" onclick="_reset_item('dev')">${tl(trans.reset)}</button>
                     <div class="heading">
-                        <h5>${trans_legacy[lang].settings.performance.dev.name}</h5>
-                        <p>${trans_legacy[lang].settings.performance.dev.bio}</p>
+                        <h5>${trans_legacy.en.settings.performance.dev.name}</h5>
+                        <p>${trans_legacy.en.settings.performance.dev.bio}</p>
                     </div>
                     <div class="toggle-wrap">
                         <button class="toggle" id="toggle-dev" aria-checked="false">
@@ -734,11 +734,11 @@ export function render_setting_page(page_id) {
                 <div class="sep"></div>
                 <div class="setting" data-type="toggle">
                     <div class="heading">
-                        <h5>${trans_legacy[lang].settings.performance.bug.name}</h5>
-                        <p>${trans_legacy[lang].settings.performance.bug.bio}</p>
+                        <h5>${trans_legacy.en.settings.performance.bug.name}</h5>
+                        <p>${trans_legacy.en.settings.performance.bug.bio}</p>
                     </div>
                     <div class="toggle-wrap">
-                        <a class="btn bleh--btn primary" href="https://github.com/katelyynn/bleh/issues/new/choose" target="_blank">${trans_legacy[lang].settings.go}</a>
+                        <a class="btn bleh--btn primary" href="https://github.com/katelyynn/bleh/issues/new/choose" target="_blank">${trans_legacy.en.settings.go}</a>
                     </div>
                 </div>
                 <div class="sep"></div>
@@ -782,7 +782,7 @@ export function render_setting_page(page_id) {
             },
             {
                 id: 'activities',
-                name: trans_legacy[lang].settings.activities.toggle.name
+                name: trans_legacy.en.settings.activities.toggle.name
             }
         ]);
 
@@ -807,15 +807,15 @@ export function render_setting_page(page_id) {
                     </div>
                 </div>
                 ${(ff('api')) ? (`
-                <h4>${trans_legacy[lang].settings.profiles.api.name}</h4>
-                <div class="alert alert-info">${trans_legacy[lang].settings.profiles.api.bio}</div>
+                <h4>${trans_legacy.en.settings.profiles.api.name}</h4>
+                <div class="alert alert-info">${trans_legacy.en.settings.profiles.api.bio}</div>
                 <div class="setting" data-type="text" id="container-api_key">
                     <button class="btn reset" onclick="_reset_item('api_key')">${tl(trans.reset)}</button>
                     <div class="heading content-form">
                         <div class="input-container">
-                            <input type="password" maxlength="120" id="text-api_key" value="${settings.api_key}" placeholder="${trans_legacy[lang].settings.profiles.api.placeholder}">
+                            <input type="password" maxlength="120" id="text-api_key" value="${settings.api_key}" placeholder="${trans_legacy.en.settings.profiles.api.placeholder}">
                             <button class="btn primary save" onclick="_save_api_key()">${tl(trans.save)}</button>
-                            <a class="btn-add" href="${root}api/account/create" target="_blank">${trans_legacy[lang].settings.create}</a>
+                            <a class="btn-add" href="${root}api/account/create" target="_blank">${trans_legacy.en.settings.create}</a>
                         </div>
                     </div>
                 </div>
@@ -1016,8 +1016,8 @@ export function render_setting_page(page_id) {
                 <div class="setting" data-type="toggle" id="container-reduced_motion" onclick="_update_item('reduced_motion')">
                     <button class="btn reset" onclick="_reset_item('reduced_motion')">${tl(trans.reset)}</button>
                     <div class="heading">
-                        <h5>${trans_legacy[lang].settings.accessibility.reduced_motion.name}</h5>
-                        <p>${trans_legacy[lang].settings.accessibility.reduced_motion.bio}</p>
+                        <h5>${trans_legacy.en.settings.accessibility.reduced_motion.name}</h5>
+                        <p>${trans_legacy.en.settings.accessibility.reduced_motion.bio}</p>
                     </div>
                     <div class="toggle-wrap">
                         <button class="toggle" id="toggle-reduced_motion" aria-checked="false">
@@ -1039,15 +1039,15 @@ export function render_setting_page(page_id) {
                             </time>
                         </a>
                         <div class="shout-body">
-                            <p>${trans_legacy[lang].settings.accessibility.shout_preview}</p>
+                            <p>${trans_legacy.en.settings.accessibility.shout_preview}</p>
                         </div>
                     </div>
                 </div>
                 <div class="setting" data-type="toggle" id="container-accessible_name_colours" onclick="_update_item('accessible_name_colours')">
                     <button class="btn reset" onclick="_reset_item('accessible_name_colours')">${tl(trans.reset)}</button>
                     <div class="heading">
-                        <h5>${trans_legacy[lang].settings.accessibility.accessible_name_colours.name}</h5>
-                        <p>${trans_legacy[lang].settings.accessibility.accessible_name_colours.bio}</p>
+                        <h5>${trans_legacy.en.settings.accessibility.accessible_name_colours.name}</h5>
+                        <p>${trans_legacy.en.settings.accessibility.accessible_name_colours.bio}</p>
                     </div>
                     <div class="toggle-wrap">
                         <button class="toggle" id="toggle-accessible_name_colours" aria-checked="false">
@@ -1058,8 +1058,8 @@ export function render_setting_page(page_id) {
                 <div class="setting" data-type="toggle" id="container-underline_links" onclick="_update_item('underline_links')">
                     <button class="btn reset" onclick="_reset_item('underline_links')">${tl(trans.reset)}</button>
                     <div class="heading">
-                        <h5>${trans_legacy[lang].settings.accessibility.underline_links.name}</h5>
-                        <p>${trans_legacy[lang].settings.accessibility.underline_links.bio}</p>
+                        <h5>${trans_legacy.en.settings.accessibility.underline_links.name}</h5>
+                        <p>${trans_legacy.en.settings.accessibility.underline_links.bio}</p>
                     </div>
                     <div class="toggle-wrap">
                         <button class="toggle" id="toggle-underline_links" aria-checked="false">
@@ -1070,8 +1070,8 @@ export function render_setting_page(page_id) {
                 <div class="setting" data-type="toggle" id="container-toggle_icon" onclick="_update_item('toggle_icon')">
                     <button class="btn reset" onclick="_reset_item('toggle_icon')">${tl(trans.reset)}</button>
                     <div class="heading">
-                        <h5>${trans_legacy[lang].settings.accessibility.toggle_icon.name}</h5>
-                        <p>${trans_legacy[lang].settings.accessibility.toggle_icon.bio}</p>
+                        <h5>${trans_legacy.en.settings.accessibility.toggle_icon.name}</h5>
+                        <p>${trans_legacy.en.settings.accessibility.toggle_icon.bio}</p>
                     </div>
                     <div class="toggle-wrap">
                         <button class="toggle" id="toggle-toggle_icon" aria-checked="false">
@@ -1086,7 +1086,7 @@ export function render_setting_page(page_id) {
 
         return (`
             <div class="bleh--panel">
-                <h4 class="top-header">${trans_legacy[lang].settings.text.name}</h4>
+                <h4 class="top-header">${trans_legacy.en.settings.text.name}</h4>
                 <div class="inner-preview pad flex">
                     <div class="shout js-shout js-link-block" data-kate-processed="true">
                         <h3 class="shout-user">
@@ -1101,19 +1101,19 @@ export function render_setting_page(page_id) {
                             </time>
                         </a>
                         <div class="shout-body if-markdown-on">
-                            <p>${trans_legacy[lang].settings.text.shout_preview_md}</p>
+                            <p>${trans_legacy.en.settings.text.shout_preview_md}</p>
                         </div>
                         <div class="shout-body if-markdown-off">
-                            <p>${trans_legacy[lang].settings.text.shout_preview}</p>
+                            <p>${trans_legacy.en.settings.text.shout_preview}</p>
                         </div>
                     </div>
                 </div>
-                <h4>${trans_legacy[lang].settings.text.markdown.name}</h4>
-                <p>${trans_legacy[lang].settings.text.markdown.bio}</p>
+                <h4>${trans_legacy.en.settings.text.markdown.name}</h4>
+                <p>${trans_legacy.en.settings.text.markdown.bio}</p>
                 <div class="setting" data-type="toggle" id="container-shout_markdown" onclick="_update_item('shout_markdown')">
                     <button class="btn reset" onclick="_reset_item('shout_markdown')">${tl(trans.reset)}</button>
                     <div class="heading">
-                        <h5>${trans_legacy[lang].settings.text.markdown.shouts}</h5>
+                        <h5>${trans_legacy.en.settings.text.markdown.shouts}</h5>
                     </div>
                     <div class="toggle-wrap">
                         <button class="toggle" id="toggle-shout_markdown" aria-checked="false">
@@ -1270,7 +1270,7 @@ export function render_setting_page(page_id) {
                 </div>
             </div>
             <div class="bleh--panel">
-                <h4>${trans_legacy[lang].settings.corrections.formatting}</h4>
+                <h4>${trans_legacy.en.settings.corrections.formatting}</h4>
                 <div class="inner-preview pad flex">
                     <section class="redesigned-header mockup redesigned-track-header no-top-margin">
                         <div class="avatar-side">
@@ -1558,7 +1558,7 @@ export function render_setting_page(page_id) {
                 </div>
             </div>
             <div class="bleh--panel">
-                <h4>${trans_legacy[lang].settings.customise.display.name}</h4>
+                <h4>${trans_legacy.en.settings.customise.display.name}</h4>
                 <div class="inner-preview pad flex">
                     <section class="catalogue-tags">
                         <ul class="tags-list tags-list--global">
@@ -1692,7 +1692,7 @@ function change_settings_page(page_id, setting = null) {
 
     if (page_id == 'music') {
         tippy(document.getElementById('container-show_bulk_edit_album'), {
-            content: trans_legacy[lang].settings.music.show_bulk_edit_album.require
+            content: trans_legacy.en.settings.music.show_bulk_edit_album.require
         });
     }
 
@@ -2141,7 +2141,7 @@ export function display_colour_presets() {
         christmas: [
             {
                 type: 'season',
-                name: trans_legacy[lang].settings.customise.seasonal.nonsense,
+                name: trans_legacy.en.settings.customise.seasonal.nonsense,
                 sets: {
                     hue: 352,
                     sat: 1.8,
@@ -2150,7 +2150,7 @@ export function display_colour_presets() {
             },
             {
                 type: 'season',
-                name: trans_legacy[lang].settings.customise.seasonal.fruitcake,
+                name: trans_legacy.en.settings.customise.seasonal.fruitcake,
                 sets: {
                     hue: 24,
                     sat: 0.93,
@@ -2159,7 +2159,7 @@ export function display_colour_presets() {
             },
             {
                 type: 'season',
-                name: trans_legacy[lang].settings.customise.seasonal.mistletoe,
+                name: trans_legacy.en.settings.customise.seasonal.mistletoe,
                 sets: {
                     hue: 130,
                     sat: 0.45,
@@ -2168,7 +2168,7 @@ export function display_colour_presets() {
             },
             {
                 type: 'season',
-                name: trans_legacy[lang].settings.customise.seasonal.festival,
+                name: trans_legacy.en.settings.customise.seasonal.festival,
                 sets: {
                     hue: 240,
                     sat: 1.4,
@@ -2505,7 +2505,7 @@ unsafeWindow._delete_profile_note = function(username) {
 unsafeWindow._edit_profile_note = function(username) {
     let profile_notes = JSON.parse(localStorage.getItem('bleh_profile_notes')) || {};
 
-    dialog_legacy('edit_profile_note',trans_legacy[lang].settings.profiles.notes.edit_user.replace('{u}', username),`
+    dialog_legacy('edit_profile_note',trans_legacy.en.settings.profiles.notes.edit_user.replace('{u}', username),`
     <textarea id="bleh--profile-note" placeholder="Enter a local note for this user">${profile_notes[username]}</textarea>
     <div class="modal-footer">
         <button class="btn primary save" onclick="_save_profile_note_in_window('${username}')">
@@ -2618,7 +2618,7 @@ function prepare_language_page() {
         </div>
         <div class="name">
             <h5>${lang_info[language].name}</h5>
-            <p>${trans_legacy[lang].settings.language.by.replace('{users}', users)}</p>
+            <p>${trans_legacy.en.settings.language.by.replace('{users}', users)}</p>
         </div>
         ${(lang_info[language].new ? (`
         <div class="badges">
@@ -2638,9 +2638,9 @@ function prepare_language_page() {
 unsafeWindow._import_settings = function() {
     dialog({
         id: 'import_settings',
-        title: trans_legacy[lang].settings.actions.import.modals.initial.name,
+        title: trans_legacy.en.settings.actions.import.modals.initial.name,
         body: (`
-            <p class="alert alert-warning">${trans_legacy[lang].settings.actions.import.modals.initial.alert}</p>
+            <p class="alert alert-warning">${trans_legacy.en.settings.actions.import.modals.initial.alert}</p>
             <br>
             <textarea id="import_area"></textarea>
             <div class="modal-footer">
@@ -2676,12 +2676,12 @@ unsafeWindow._confirm_import = function() {
         });
         dialog({
             id: 'import_failed',
-            title: trans_legacy[lang].settings.actions.import.modals.failed.name,
+            title: trans_legacy.en.settings.actions.import.modals.failed.name,
             body: (`
-                <p class="alert alert-error">${trans_legacy[lang].settings.actions.import.modals.failed.alert}</p>
+                <p class="alert alert-error">${trans_legacy.en.settings.actions.import.modals.failed.alert}</p>
                 <div class="modal-footer">
                     <button class="btn primary done" onclick="_dialog_rm({id: 'import_failed'})">
-                        ${trans_legacy[lang].settings.done}
+                        ${trans_legacy.en.settings.done}
                     </button>
                 </div>
             `)
@@ -2694,14 +2694,14 @@ unsafeWindow._confirm_import = function() {
 function export_settings() {
     dialog({
         id: 'export_settings',
-        title: trans_legacy[lang].settings.actions.export.modals.initial.name,
+        title: trans_legacy.en.settings.actions.export.modals.initial.name,
         body: (`
-            <p class="alert alert-success">${trans_legacy[lang].settings.actions.export.modals.initial.alert}</p>
+            <p class="alert alert-success">${trans_legacy.en.settings.actions.export.modals.initial.alert}</p>
             <br>
             <textarea>${JSON.stringify(settings)}</textarea>
             <div class="modal-footer">
                 <button class="btn primary done" onclick="_dialog_rm({id: 'export_settings'})">
-                    ${trans_legacy[lang].settings.done}
+                    ${trans_legacy.en.settings.done}
                 </button>
             </div>
         `)
@@ -2716,15 +2716,15 @@ unsafeWindow._export_settings = function() {
 unsafeWindow._reset_settings = function() {
     dialog({
         id: 'reset_settings',
-        title: trans_legacy[lang].settings.actions.reset.modals.initial.name,
+        title: trans_legacy.en.settings.actions.reset.modals.initial.name,
         body: (`
-            <p class="alert alert-error">${trans_legacy[lang].settings.actions.reset.modals.initial.alert}</p>
+            <p class="alert alert-error">${trans_legacy.en.settings.actions.reset.modals.initial.alert}</p>
             <div class="modal-footer">
                 <button class="btn done danger" onclick="_confirm_reset()">
-                    ${trans_legacy[lang].settings.actions.reset.modals.initial.confirm}
+                    ${trans_legacy.en.settings.actions.reset.modals.initial.confirm}
                 </button>
                 <button class="btn upload" onclick="_export_first()">
-                    ${trans_legacy[lang].settings.actions.reset.modals.initial.export}
+                    ${trans_legacy.en.settings.actions.reset.modals.initial.export}
                 </button>
                 <button class="btn primary cancel" onclick="_dialog_rm({id: 'reset_settings'})">
                     ${tl(trans.cancel)}
