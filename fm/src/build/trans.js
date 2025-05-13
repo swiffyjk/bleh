@@ -1664,8 +1664,8 @@ export const trans = {
             de: 'Account löschen'
         },
         body: {
-            en: 'Deletion will take 14 days to complete, after this time your account will either be deleted, anonymised or put beyond use and cannot be recovered. Once deleted, your username will no longer be available.',
-            de: 'Die Löschung dauert 14 Tage. Nach Ablauf dieser Frist wird dein Konto entweder gelöscht, anonymisiert oder unbrauchbar gemacht und kann nicht wiederhergestellt werden. Nach der Löschung ist dein Nutzername nicht mehr verfügbar.'
+            en: 'Deletion will take 14 days to complete, after this time your account will either be deleted, anonymised, or put beyond use and cannot be recovered. Once deleted, your username will no longer be available.',
+            de: 'Die Löschung dauert 14 Tage. Nach Ablauf dieser Frist wird dein Konto entweder gelöscht, anonymisiert, oder unbrauchbar gemacht und kann nicht wiederhergestellt werden. Nach der Löschung ist dein Nutzername nicht mehr verfügbar.'
         }
     },
     delete_account_permanently: {

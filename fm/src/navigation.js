@@ -319,4 +319,28 @@ export function append_nav() {
     auth_link.removeAttribute('data-disclose-hover');
     auth_link.removeAttribute('data-disclose-hover--allow-enter-open');
     auth_link.removeAttribute('href');
+
+
+    // mobile
+    let mobile = document.createElement('div');
+    mobile.classList.add('mobile-controls');
+    mobile.innerHTML = (`
+        <a class="btn mobile-control" data-menu-item="home" href="${root}music">
+            ${tl(trans.home)}
+        </a>
+        <a class="btn mobile-control" data-menu-item="search" href="${root}search">
+            ${tl(trans.search)}
+        </a>
+        <a class="btn mobile-control" data-menu-item="profile_mobile" href="${root}user/${auth.name}">
+            ${auth.name}
+        </a>
+        <a class="btn mobile-control" data-menu-item="notifications" href="${root}inbox/notifications">
+            ${tl(trans.inbox.name)}
+        </a>
+        <a class="btn mobile-control" data-menu-item="settings" href="${root}bleh">
+            ${tl(trans.settings)}
+        </a>
+    `);
+
+    masthead.appendChild(mobile);
 }

@@ -319,7 +319,7 @@ function patch_settings_charts_panel(token) {
             </div>
             <div class="setting" data-type="select">
                 <div class="heading">
-                    <h5>${tl(trans.timeframe)}</h5>
+                    <h5>${tl(trans.default_timeframe)}</h5>
                 </div>
                 <div class="select-wrap custom-selector" id="id_chart_range_top_albums_select">
                     ${original_chart_settings.albums.timeframe}
@@ -381,7 +381,7 @@ function patch_settings_charts_panel(token) {
             </div>
             <div class="setting" data-type="select">
                 <div class="heading">
-                    <h5>${tl(trans.timeframe)}</h5>
+                    <h5>${tl(trans.default_timeframe)}</h5>
                 </div>
                 <div class="select-wrap custom-selector" id="id_chart_range_top_tracks_select">
                     ${original_chart_settings.tracks.timeframe}

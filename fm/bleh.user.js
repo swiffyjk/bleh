@@ -2513,8 +2513,8 @@
         de: "Account l\xF6schen"
       },
       body: {
-        en: "Deletion will take 14 days to complete, after this time your account will either be deleted, anonymised or put beyond use and cannot be recovered. Once deleted, your username will no longer be available.",
-        de: "Die L\xF6schung dauert 14 Tage. Nach Ablauf dieser Frist wird dein Konto entweder gel\xF6scht, anonymisiert oder unbrauchbar gemacht und kann nicht wiederhergestellt werden. Nach der L\xF6schung ist dein Nutzername nicht mehr verf\xFCgbar."
+        en: "Deletion will take 14 days to complete, after this time your account will either be deleted, anonymised, or put beyond use and cannot be recovered. Once deleted, your username will no longer be available.",
+        de: "Die L\xF6schung dauert 14 Tage. Nach Ablauf dieser Frist wird dein Konto entweder gel\xF6scht, anonymisiert, oder unbrauchbar gemacht und kann nicht wiederhergestellt werden. Nach der L\xF6schung ist dein Nutzername nicht mehr verf\xFCgbar."
       }
     },
     delete_account_permanently: {
@@ -10148,7 +10148,7 @@
             </div>
             <div class="setting" data-type="select">
                 <div class="heading">
-                    <h5>${tl(trans.timeframe)}</h5>
+                    <h5>${tl(trans.default_timeframe)}</h5>
                 </div>
                 <div class="select-wrap custom-selector" id="id_chart_range_top_albums_select">
                     ${original_chart_settings.albums.timeframe}
@@ -10210,7 +10210,7 @@
             </div>
             <div class="setting" data-type="select">
                 <div class="heading">
-                    <h5>${tl(trans.timeframe)}</h5>
+                    <h5>${tl(trans.default_timeframe)}</h5>
                 </div>
                 <div class="select-wrap custom-selector" id="id_chart_range_top_tracks_select">
                     ${original_chart_settings.tracks.timeframe}
@@ -17005,6 +17005,26 @@
     auth_link2.removeAttribute("data-disclose-hover");
     auth_link2.removeAttribute("data-disclose-hover--allow-enter-open");
     auth_link2.removeAttribute("href");
+    let mobile = document.createElement("div");
+    mobile.classList.add("mobile-controls");
+    mobile.innerHTML = `
+        <a class="btn mobile-control" data-menu-item="home" href="${root}music">
+            ${tl(trans.home)}
+        </a>
+        <a class="btn mobile-control" data-menu-item="search" href="${root}search">
+            ${tl(trans.search)}
+        </a>
+        <a class="btn mobile-control" data-menu-item="profile_mobile" href="${root}user/${auth.name}">
+            ${auth.name}
+        </a>
+        <a class="btn mobile-control" data-menu-item="notifications" href="${root}inbox/notifications">
+            ${tl(trans.inbox.name)}
+        </a>
+        <a class="btn mobile-control" data-menu-item="settings" href="${root}bleh">
+            ${tl(trans.settings)}
+        </a>
+    `;
+    masthead.appendChild(mobile);
   }
 
   // src/components/about_artist.js

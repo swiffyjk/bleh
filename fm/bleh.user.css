@@ -503,6 +503,14 @@ body {
     --cover-size-100: 40px;
     --cover-size-200: 72px;
     --cover-size-300: 96px;
+
+    @media (max-width: 600px) {
+        --card-radius: 0;
+        --card-padding: 15px;
+        --cards-width: 100vw;
+        --cards-main-width: 100vw;
+        --cards-sidebar-width: 100vw;
+    }
 }
 
 .preview[data-bleh--theme_type="light"],
@@ -941,6 +949,14 @@ html body {
 
     /* overflow on library page for some rsn 2024-11-10 */
     overflow-x: hidden;
+
+    @media (max-width: 600px) {
+        padding-top: unset !important;
+
+        &:before {
+            display: none;
+        }
+    }
 }
 
 
@@ -1027,7 +1043,7 @@ last.fm changes as of 2024-05-20 */
 
     &.scrolled {
         background: hsl(var(--b5), 85%);
-        backdrop-filter: blur(10px) saturate(120%);
+        backdrop-filter: blur(20px) saturate(120%);
         box-shadow: var(--interact-shadow);
 
         &:before {
@@ -1038,6 +1054,46 @@ last.fm changes as of 2024-05-20 */
     &:not(.scrolled) {
         --b3: var(--b5);
     }
+
+    .mobile-controls {
+        display: none;
+    }
+
+    @media (max-width: 600px) {
+        position: fixed;
+        top: unset !important;
+        bottom: 0 !important;
+        height: 58px !important;
+
+        background: hsl(var(--b6), 85%) !important;
+        backdrop-filter: blur(20px) saturate(120%) !important;
+        box-shadow: var(--menu-shadow) !important;
+
+        &:before {
+            display: none;
+        }
+
+        .mobile-controls {
+            flex: 1;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(60px, 1fr));
+
+            .mobile-control {
+                --bg: transparent;
+                --bg-hov: var(--bg);
+                --bg-atv: var(--bg);
+                --shadow: none;
+                --font-size: 10px;
+                text-align: center;
+                --padding: calc(10px + 18px + 2px) 10px 10px;
+                --left: 50%;
+                --top: 10px;
+                --margin-top: none;
+                --margin-left: -9px;
+                position: relative;
+            }
+        }
+    }
 }
 .masthead-inner-wrap {
     width: var(--cards-width) !important;
@@ -1047,6 +1103,10 @@ last.fm changes as of 2024-05-20 */
     display: flex;
     gap: var(--button-list-gap);
     z-index: 20;
+
+    @media (max-width: 600px) {
+        display: none;
+    }
 }
 .masthead-logo {
     position: relative !important;
@@ -1143,6 +1203,10 @@ last.fm changes as of 2024-05-20 */
 .masthead-nav {
     display: flex !important;
     margin-left: 4px !important;
+
+    @media (max-width: 600px) {
+        display: none !important;
+    }
 }
 
 .masthead-nav-item {
@@ -1249,8 +1313,9 @@ last.fm changes as of 2024-05-20 */
     }
 
 
-    .navlist-more-wrap {
-        display: none;
+    .navlist-more-wrap,
+    .visible-xs {
+        display: none !important;
     }
 }
 
@@ -1687,6 +1752,12 @@ last.fm changes as of 2024-05-20 */
     &:before, &:after {
         display: none;
     }
+
+    @media (max-width: 600px) {
+        display: flex;
+        flex-direction: column;
+        gap: var(--card-gap);
+    }
 }
 
 .col-main, .col-sidebar {
@@ -1724,6 +1795,25 @@ last.fm changes as of 2024-05-20 */
     & > form {
         order: 10;
         margin-top: unset;
+    }
+
+    & > .visible-xs {
+        display: none !important;
+    }
+
+    @media (max-width: 600px) {
+        gap: unset !important;
+
+        & > div,
+        & > section {
+            &:not(:first-child) {
+                border-top: 1px solid hsl(var(--b6)) !important;
+            }
+        }
+
+        &.col-sidebar {
+            border-top: 1px solid hsl(var(--b6)) !important;
+        }
     }
 }
 
@@ -1956,6 +2046,10 @@ article, section, .buffer-standard, .buffer-standard:not(.col-sidebar) .buffer-s
 }
 .track-overview-video-column {
     position: relative;
+
+    &.visible-xs {
+        display: none !important;
+    }
 }
 .track-overview-new .video-preview, .video-preview-upload-cta.link-block, .album-artwork-upload-cta {
     --bg: hsl(var(--b5)) !important;
@@ -2088,13 +2182,6 @@ span.header-new-gallery-inner a,
     padding-bottom: var(--card-gap) !important;
     margin-top: var(--card-gap) !important;
 
-    [data-ff--refreshed_music_nav="false"] & {
-        header.header-new--subpage + &,
-        header.header-new--subpage + .full-bleed-ad-container + &
-        {
-            padding-top: calc(46px + (var(--card-gap))) !important;
-        }
-    }
 
     &:before, &:after {
         display: none !important;
@@ -2106,16 +2193,40 @@ span.header-new-gallery-inner a,
         max-width: calc(var(--cards-width) + (var(--card-gap) * 2));
         width: calc(var(--cards-width) + (var(--card-gap) * 2));
 
+        @media (max-width: 600px) {
+            min-width: var(--cards-width);
+            max-width: var(--cards-width);
+            width: var(--cards-width);
+        }
+
         .listening-report-row,
         & > .row {
             margin-left: var(--card-gap);
             margin-right: var(--card-gap);
+
+            @media (max-width: 600px) {
+                margin-left: unset;
+                margin-right: unset;
+            }
         }
 
         .bleh--nav-wrap .navlist,
         .redesigned-navigation {
             margin-left: calc(var(--card-gap) + var(--card-padding)) !important;
             margin-right: calc(var(--card-gap) + var(--card-padding)) !important;
+
+            @media (max-width: 600px) {
+                width: var(--cards-width) !important;
+                padding: unset !important;
+                margin-left: unset !important;
+                margin-right: unset !important;
+
+                .navlist-items {
+                    overflow-x: auto !important;
+                    overflow-y: hidden !important;
+                    margin-bottom: 0 !important;
+                }
+            }
 
             .navlist-items {
                 margin: unset;
@@ -2170,6 +2281,7 @@ span.header-new-gallery-inner a,
 
 
 /*     FEATURED TRACK     */
+.profile-mobile-featured-track,
 .header-featured-track {
     display: none !important;
 }
@@ -2611,7 +2723,7 @@ span.header-new-gallery-inner a,
         right: 12px;
         bottom: 0;
         height: 1px;
-        background: hsl(var(--b4));
+        background: var(--card-border-base);
     }
 }
 
@@ -2997,6 +3109,7 @@ button.navlist-more {
         --mask: var(--icon-16-home);
     }
 }
+[data-menu-item="home"],
 [data-analytics-label="home"]:before {
     --mask: var(--icon-16-home);
 }
@@ -3020,6 +3133,10 @@ button.navlist-more {
     a {
         --mask: var(--icon-16-playlist);
     }
+}
+
+[data-menu-item="search"] {
+    --mask: var(--icon-16-search);
 }
 
 
@@ -3894,6 +4011,28 @@ button.navlist-more {
             right: calc(-1 * var(--card-padding));
             z-index: 10;
         }
+
+        .wiki-block:not(.visible-lg) {
+            display: none !important;
+        }
+
+        .visible-lg {
+            display: block !important;
+            margin: unset !important;
+            padding: unset !important;
+
+            &:before, &:after {
+                display: none !important;
+            }
+
+            .wiki-block-inner > div {
+                padding-right: unset;
+
+                &:before {
+                    display: none;
+                }
+            }
+        }
     }
 
     .metadata-column {
@@ -4153,6 +4292,9 @@ better than the default selector '#app a' i suppose */
 /*     ARTIST / ALBUM GRID ON PROFILES / TAGS     */
 .grid-items-section > .buffer-standard, .grid-items, .chartlist {
     margin-top: 0 !important;
+
+    margin-left: unset !important;
+    margin-right: unset !important;
 }
 .grid-items:not(.grid-items--big-first) {
     display: grid;
@@ -4167,6 +4309,11 @@ better than the default selector '#app a' i suppose */
         grid-template-rows: auto;
         grid-template-areas:
         ". . . . .";
+    }
+
+    @media (max-width: 600px) {
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+        grid-template-areas: unset;
     }
 }
 .grid-items .grid-items-item {
@@ -4995,6 +5142,14 @@ better than the default selector '#app a' i suppose */
     mask-repeat: var(--mask-repeat);
     -webkit-mask-repeat: var(--mask-repeat);
     font-weight: var(--font-weight-medium);
+
+    @media (max-width: 600px) {
+        padding-right: unset !important;
+
+        &:after {
+            display: none;
+        }
+    }
 }
 .chartlist-name a {
     display: flex;
@@ -5715,6 +5870,10 @@ p + .chartlist {
 [data-ff--shout_popover="true"] .shout-body {
     margin-top: 2px;
     margin-right: 180px;
+
+    @media (max-width: 600px) {
+        margin-right: unset;
+    }
 }
 
 .shout-action {
@@ -5807,11 +5966,16 @@ the body text becomes bigger by default - this reverts that */
     display: inline-flex;
     margin-right: 6px;
     font-weight: var(--font-weight-medium);
+
+    @media (max-width: 600px) {
+        margin-left: unset;
+    }
 }
 .shout-timestamp {
     height: fit-content;
     color: hsla(var(--c3), 85%) !important;
     font-size: 12px;
+    line-height: var(--line-height);
     display: inline-flex;
     align-items: center;
     right: unset;
@@ -5822,6 +5986,10 @@ the body text becomes bigger by default - this reverts that */
     transition-timing-function: var(--trans-function);
     cursor: pointer;
     position: relative;
+
+    @media (max-width: 600px) {
+        margin: unset;
+    }
 
     /* text */
     /*&:before {
@@ -6748,6 +6916,7 @@ button,
 
 
 /*     ICON MASK     */
+.mobile-control:before,
 .palette .swatch:before,
 .with-icon:before,
 .markdown-enabled:before,
@@ -6762,6 +6931,7 @@ button,
 .listen-item p:before,
 .metadata-column .cta-link-wrap a:before, .lyrics-snippet-more-link a:before,
 .see-more:before, #events-section > p > a:before,
+.more-link-fullwidth a:before,
 .modal-body .js-close:before,
 .view-all-button:before,
 .music-featured-item-background:before,
@@ -7273,6 +7443,9 @@ section:has(.dropdown-menu-clickable-button.section-control) {
         margin: unset;
     }
 }
+.promo-v3.visible-xs {
+    display: none !important;
+}
 .promo-v3 .listening-report-promo {
     position: relative;
     background-image: unset !important;
@@ -7353,6 +7526,11 @@ section:has(.dropdown-menu-clickable-button.section-control) {
         --bg-atv: var(--cards-overlay-image-subtlest, none), hsla(var(--h3), 60%) !important;
         --col: hsl(var(--b7)) !important;
         --shadow: 0 3px 12px hsl(var(--h4), 25%), var(--interactable-outer);
+    }
+
+    /* mobile separator */
+    &:after {
+        display: none !important;
     }
 }
 
@@ -7469,6 +7647,9 @@ very, very, very dated - who looks up a song on ebay? */
 }
 .more-item--play {
     --mask: var(--icon-16-track);
+}
+[data-menu-item="profile_mobile"] {
+    --mask: var(--icon-16-user);
 }
 [data-menu-item="profile-shortcut"],
 [data-menu-item="profile"] {
@@ -8125,7 +8306,7 @@ input:is([name^="track_name"], [name^="artist_name"], [name^="album_name"], [nam
 /*     WINDOW     */
 .bleh-modal {
     background: hsl(var(--b5));
-    border-radius: var(--card-radius);
+    border-radius: var(--item-big-radius);
     box-shadow: var(--override-full-shadow, var(--menu-shadow));
     color: hsl(var(--c2));
     padding: var(--card-padding);
@@ -8255,10 +8436,6 @@ input:is([name^="track_name"], [name^="artist_name"], [name^="album_name"], [nam
 
     &.modal-body {
         background: hsl(var(--b5)) !important;
-        border-radius: var(--card-radius) !important;
-    }
-    &.date-range-picker-content {
-        border-radius: var(--card-radius) !important;
     }
 
     &:not(
@@ -8430,6 +8607,12 @@ input:is([name^="track_name"], [name^="artist_name"], [name^="album_name"], [nam
 
     & + .modal-inner-content {
         margin: unset;
+    }
+}
+
+.modal-dialog {
+    @media (max-width: 600px) {
+        max-width: var(--cards-width) !important;
     }
 }
 
@@ -10500,6 +10683,7 @@ text[style^="color: rgb(0, 0, 0)"] {
 }
 
 .similar-panel {
+    display: block !important;
     order: 10;
 }
 .track-similar-tracks {
@@ -12612,7 +12796,7 @@ table.table tr:nth-child(2n) td {
 
 /*     TRACK FEATURED ON     */
 .album-and-lyrics-row {
-    display: grid;
+    display: grid !important;
     grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
     gap: var(--card-gap);
     margin-top: var(--card-gap);
@@ -12623,6 +12807,12 @@ table.table tr:nth-child(2n) td {
 
     section {
         width: unset;
+    }
+
+    @media (max-width: 600px) {
+        .secondary-album-column {
+            display: none;
+        }
     }
 }
 
@@ -13856,6 +14046,10 @@ pre {
         }
         &.even-more {
             grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+
+            @media (max-width: 600px) {
+                grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+            }
         }
     }
 
@@ -13942,7 +14136,7 @@ pre {
                 height: 100%;
                 background-color: hsl(var(--b5));
                 box-shadow: var(--card-shadow);
-                border-top-left-radius: var(--card-radius);
+                border-top-left-radius: var(--item-big-radius);
 
                 padding: 13px;
 
@@ -14011,6 +14205,15 @@ pre {
     .palette {
         display: flex;
         flex-direction: column;
+
+        @media (max-width: 600px) {
+            flex-direction: row;
+        }
+    }
+
+    @media (max-width: 600px) {
+        flex-direction: column;
+        justify-content: unset;
     }
 }
 
@@ -14021,6 +14224,10 @@ pre {
     .swatch {
         width: 64px !important;
         height: 50px !important;
+
+        @media (max-width: 600px) {
+            width: 100% !important;
+        }
     }
 }
 .palette .swatch {
@@ -14142,6 +14349,10 @@ pre {
 
     &.pad {
         padding: calc(var(--card-gap) * 2) calc(var(--card-gap) * 6);
+
+        @media (max-width: 600px) {
+            padding: var(--card-gap) !important;
+        }
     }
     &.flex {
         display: flex;
@@ -14406,6 +14617,10 @@ input[type="range"]::-moz-range-progress {
             --mask-size: 10px;
             --mask: var(--icon-10-revert);
         }
+    }
+
+    @media (max-width: 600px) {
+        flex-direction: column;
     }
 
     .heading {
@@ -15734,6 +15949,10 @@ trying to list every song ever made by someone identifying as a female, which is
     border-radius: var(--card-radius);*/
     z-index: 2;
 
+    @media (max-width: 600px) {
+        flex-direction: column;
+    }
+
     .avatar-side {
         display: flex;
         width: 96px;
@@ -16553,6 +16772,12 @@ button.bleh--gallery-bookmark-image-btn {
 }
 .metadata-and-wiki-row {
     --only-card-gap: 0;
+
+    @media (max-width: 600px) {
+        display: flex;
+        flex-direction: column;
+        gap: var(--card-gap);
+    }
 }
 [data-ff--redesigned_profile_header="true"] body {
     --profile-header-avatar-size: 104px;
@@ -16624,7 +16849,7 @@ button.bleh--gallery-bookmark-image-btn {
 
 
 .personal-stats {
-    display: none;
+    display: none !important;
 }
 .personal-stats-preview-bar {
     display: block;
@@ -16780,36 +17005,6 @@ button.bleh--gallery-bookmark-image-btn {
 
 
 
-
-.bleh-setup {
-    background-size: 100%;
-    background-position: 40%;
-
-    .main-content {
-        position: absolute;
-        inset: 0;
-        backdrop-filter: blur(60px) saturate(180%);
-        -webkit-backdrop-filter: blur(60px) saturate(180%);
-
-        &:after {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background-color: hsl(var(--b6));
-            opacity: 0.5; /* 0.9 */
-        }
-
-        [data-bleh--theme_type="light"] &:after {
-            opacity: 0.3; /* 0.7 */
-        }
-    }
-
-    .footer {
-        display: none;
-    }
-}
-
-
 .icon {
     position: relative;
 }
@@ -16944,6 +17139,14 @@ button.bleh--gallery-bookmark-image-btn {
             display: block;
             margin-left: auto;
             margin-right: auto;
+        }
+    }
+
+    @media (max-width: 600px) {
+        padding: var(--card-gap);
+
+        .bleh-modal {
+            max-width: var(--cards-width);
         }
     }
 }
@@ -18655,6 +18858,31 @@ h4 {
         margin: -20px -40px !important;
         padding: var(--card-gap) calc(var(--card-gap) + var(--card-padding)) !important;
 
+        @media (max-width: 600px) {
+            padding: var(--card-padding) !important;
+            flex-direction: column !important;
+            align-items: center !important;
+            gap: 15px !important;
+
+            /*.info-side {
+                width: calc(var(--cards-width) - (15px * 2));
+            }*/
+
+            .info-side {
+                flex: unset;
+
+                h2,
+                .sub-text,
+                .title-container {
+                    justify-content: center;
+                }
+            }
+
+            .expand-side {
+                display: none !important;
+            }
+        }
+
         &:not(.no-top-margin) {
             margin: -150px 0 0 0 !important;
         }
@@ -19213,6 +19441,11 @@ h4 {
         margin-top: calc(-1 * (20px + 32px));
         margin-left: calc(-1 * ((100vw - (var(--cards-width) + (var(--card-gap) * 2))) / 2));
         margin-right: calc(-1 * ((100vw - (var(--cards-width) + (var(--card-gap) * 2))) / 2));
+
+        @media (max-width: 600px) {
+            margin-left: unset;
+            margin-right: unset;
+        }
 
         filter: none;
         height: 280px;
@@ -21344,7 +21577,11 @@ h4 {
         display: flex;
     }
 
+    .visible-xs {
+        display: none !important;
+    }
     .music-link {
+        display: flex !important;
         --bg: hsl(var(--h3), 10%);
         --bg-hov: hsl(var(--h3), 20%);
         --bg-atv: hsl(var(--h3), 30%);
@@ -21712,6 +21949,16 @@ h4 {
 }
 
 
+.more-link-fullwidth {
+    box-shadow: unset;
+    margin: unset !important;
+
+    @media (max-width: 600px) {
+        margin-top: var(--card-gap) !important;
+    }
+}
+
+.more-link-fullwidth a,
 .music-more-link a,
 .modal-body .js-close,
 .masthead-popup-text .btn-primary,
@@ -21735,11 +21982,14 @@ h4 {
     position: relative;
     --mask-size: 12px;
     --margin-top: -6px;
-    padding-right: calc(12px + 4px) !important;
     --left: none;
     --right: 0;
     --show-icon: block;
     cursor: pointer;
+
+    margin: unset !important;
+    padding: unset !important;
+    padding-right: calc(12px + 4px) !important;
 
     transition-property: transform, color;
     transition-duration: var(--trans);
@@ -21789,7 +22039,7 @@ h4 {
 }
 
 .labs-cta {
-    display: none;
+    display: none !important;
 }
 
 .events-filter {
