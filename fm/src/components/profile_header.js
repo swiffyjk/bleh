@@ -3,7 +3,7 @@ import { log } from "../build/log";
 import { auth, page, root } from "../build/page";
 import { sponsor_list } from "../build/sponsor";
 import { clean_number, sanitise } from "../build/tools";
-import { lang, trans_legacy, trans, tl } from "../build/trans";
+import { lang, trans, tl } from "../build/trans";
 import { ff } from "../sku";
 import { correct_artist } from "./lotus";
 import { register_menu } from "./menu";
@@ -115,14 +115,14 @@ export function redesign_profile_header(is_own_profile, is_following) {
             // ignore list
             let follow_placeholder = document.createElement('button');
             follow_placeholder.classList.add('btn', 'profile-top-item', 'profile-top-item--follow', 'view-item', (katsune) ? 'icon' : '');
-            follow_placeholder.textContent = trans_legacy[lang].profile.on_ignore_list;
+            follow_placeholder.textContent = tl(trans.blocked);
 
             follow_placeholder.setAttribute('disabled', 'true');
             follow_placeholder.setAttribute('data-ignored', 'true');
 
             if (!katsune)
                 tippy(follow_placeholder, {
-                    content: trans_legacy[lang].profile.on_ignore_list
+                    content: tl(trans.blocked)
                 });
 
             profile_header.appendChild(follow_placeholder);
@@ -233,13 +233,9 @@ export function redesign_profile_header(is_own_profile, is_following) {
             theme: 'stack',
             content: (`
             <span>
-                ${trans_legacy[lang].profile.taste}
-                <!--<div class="taste-badge spacing">
-                    <span>${trans_legacy[lang].profile.taste_meter.level[taste]}</span>
-                    <span>${taste_percentage}</span>
-                </div>-->
+                ${tl(trans.taste_similarity)}
             </span>
-            <div class="hint">${trans_legacy[lang].settings.right_click}</div>
+            <div class="hint">${tl(trans.right_click_for_more_options)}</div>
             `),
             allowHTML: true
         });
@@ -250,7 +246,7 @@ export function redesign_profile_header(is_own_profile, is_following) {
             let menu = tippy(taste_wrap, {
                 theme: 'context-menu',
                 content: (`
-                    <h4 class="menu-header">${trans_legacy[lang].music.compare.header}</h4>
+                    <h4 class="menu-header">${tl(trans.compare_plays)}</h4>
                     <a class="dropdown-menu-clickable-item" href="${root}user/${page.name}/library/music/${sanitise(taste_artists[0])}" data-menu-item="shared-artist">
                         <img class="view-item-avatar" src="${profile_avi}" alt="${page.name}">${taste_artists[0]}
                     </a>
@@ -288,124 +284,6 @@ export function redesign_profile_header(is_own_profile, is_following) {
         }
     }
 
-    if (page.name != sponsor_list.sponsor_account && katsune) {
-        let progress = document.createElement('div');
-        progress.classList.add('katsune-scrobble-progress', 'colourful');
-
-        let metadata = header_meta.querySelector('.header-metadata-display');
-        scrobbles = clean_number(metadata.querySelector('p').textContent.trim());
-
-        let tier = 0;
-        if (scrobbles > 100_000) {
-            tier = Math.floor(scrobbles / 100_000);
-            scrobbles -= (tier * 100_000);
-        }
-
-        if (tier > 4)
-            tier = 4;
-        progress.setAttribute('data-tier', tier);
-
-        let left = 100_000 - scrobbles;
-        let percent = (scrobbles / 100_000) * 100;
-
-        progress.innerHTML = (`
-            <div class="progress-info">
-                <div class="progress-value">${trans_legacy[lang].profile.progress.to_go.replace('{s}', left.toLocaleString(lang))}</div>
-                <div class="progress-bar">
-                    <div class="progress-bar-fill" style="width: ${percent}%"></div>
-                </div>
-            </div>
-            <div class="progress-badge">
-                <div class="progress-icon"></div>
-                <div class="progress-percent">${Math.round(percent)}</div>
-            </div>
-        `);
-
-        listen_container.appendChild(progress);
-
-        tippy(progress, {
-            theme: 'progress-badges',
-            content: (`
-                <span class="progress-badges-title">${trans_legacy[lang].profile.progress.explain}</span>
-                <div class="progress-badges-list">
-                    <div class="progress-badges-item colourful ${(tier == 0) ? 'active' : ''}" data-tier="0">
-                        <div class="bleh-icon" style="--icon: var(--icon-16-progress-tier-0)"></div>
-                        <span class="tier-name">${trans_legacy[lang].profile.progress.tier.replace('{t}', '0')}</span>
-                    </div>
-                    <div class="progress-badges-item colourful ${(tier == 1) ? 'active' : ''}" data-tier="1">
-                        <div class="bleh-icon" style="--icon: var(--icon-16-progress-tier-1)"></div>
-                        <span class="tier-name">${trans_legacy[lang].profile.progress.tier.replace('{t}', '1')}</span>
-                    </div>
-                    <div class="progress-badges-item colourful ${(tier == 2) ? 'active' : ''}" data-tier="2">
-                        <div class="bleh-icon" style="--icon: var(--icon-16-progress-tier-2)"></div>
-                        <span class="tier-name">${trans_legacy[lang].profile.progress.tier.replace('{t}', '2')}</span>
-                    </div>
-                    <div class="progress-badges-item colourful ${(tier == 3) ? 'active' : ''}" data-tier="3">
-                        <div class="bleh-icon" style="--icon: var(--icon-16-progress-tier-3)"></div>
-                        <span class="tier-name">${trans_legacy[lang].profile.progress.tier.replace('{t}', '3')}</span>
-                    </div>
-                    <div class="progress-badges-item colourful ${(tier == 4) ? 'active' : ''}" data-tier="4">
-                        <div class="bleh-icon" style="--icon: var(--icon-16-progress-tier-4)"></div>
-                        <span class="tier-name">${trans_legacy[lang].profile.progress.tier.replace('{t}', '4')}</span>
-                    </div>
-                </div>
-            `),
-            allowHTML: true
-        });
-    }
-
-    if (page.name != sponsor_list.sponsor_account && !katsune) {
-        let listen_divider = document.createElement('div');
-        listen_divider.classList.add('listen-divider');
-
-        profile_header.appendChild(listen_divider);
-
-        create_profile_top_item(profile_header, {
-            name: page.name,
-            text: scrobbles,
-            type: 'scrobbles',
-            link: `${root}user/${page.name}/library`,
-            tooltip: average
-        });
-        create_profile_top_item(profile_header, {
-            name: page.name,
-            text: artists,
-            type: 'artists',
-            link: `${root}user/${page.name}/library/artists`
-        });
-        create_profile_top_item(profile_header, {
-            name: page.name,
-            text: loved,
-            type: 'loved',
-            link: `${root}user/${page.name}/loved`
-        });
-
-        if (!is_own_profile) {
-            // taste
-            create_profile_top_item(profile_header, {
-                name: page.name,
-                type: 'taste',
-                link: `${root}user/${page.name}/library/artists?date_preset=LAST_30_DAYS&page=1`,
-                taste: taste,
-                artists: taste_artists,
-                avi: profile_avi,
-                percent: taste_percentage,
-                tooltip: (`
-                    <span>
-                        ${trans_legacy[lang].profile.taste}
-                        <!--<div class="taste-badge spacing">
-                            <span>${trans_legacy[lang].profile.taste_meter.level[taste]}</span>
-                            <span>${taste_percentage}</span>
-                        </div>-->
-                    </span>
-                    <div class="hint">${trans_legacy[lang].settings.right_click}</div>
-                `),
-                allow_html: true,
-                tooltip_theme: 'stack'
-            });
-        }
-    }
-
     page.structure.side.insertBefore(profile_header, page.structure.side.firstElementChild);
 }
 
@@ -431,19 +309,6 @@ export function create_profile_top_item(parent, {name, link, text='', type, tast
     if (type != 'taste') {
         text = text.toLocaleString(lang);
         listen_item.innerHTML = text;
-    } else {
-        // taste
-        listen_item.setAttribute('data-taste', taste);
-        listen_item.style.setProperty('--data-taste-percent', percent);
-        listen_item.innerHTML = (`
-            <img class="view-item-avatar" src="${avi}" alt="${name}">
-            <img class="view-item-avatar" src="${auth.avatar}" alt="${auth.name}">
-            <!--<div class="taste-badge">${trans_legacy[lang].profile.taste_meter.level[taste]}</div>-->
-            <div class="taste-badge">${percent}</div>
-            ${(artists.length == 1) ? tl(trans.you_share_count_with.one).replace('{artist}', artists[0]) : ''}
-            ${(artists.length == 2) ? tl(trans.you_share_count_with.two).replace('{artist1}', artists[0]).replace('{artist2}', artists[1]) : ''}
-            ${(artists.length == 3) ? tl(trans.you_share_count_with.three).replace('{artist1}', artists[0]).replace('{artist2}', artists[1]).replace('{artist3}', artists[2]) : ''}
-        `);
     }
 
     if (katsune) {
@@ -504,47 +369,6 @@ export function create_profile_top_item(parent, {name, link, text='', type, tast
         register_menu(listen_item, menu);
 
         return;
-    }
-
-    if (type == 'taste' && artists.length >= 1) {
-        let menu = tippy(listen_item, {
-            theme: 'context-menu',
-            content: (`
-                <h4 class="menu-header">${trans_legacy[lang].music.compare.header}</h4>
-                <a class="dropdown-menu-clickable-item" href="${root}user/${name}/library/music/${sanitise(artists[0])}" data-menu-item="shared-artist">
-                    <img class="view-item-avatar" src="${avi}" alt="${name}">${artists[0]}
-                </a>
-                <a class="dropdown-menu-clickable-item" href="${root}user/${auth.name}/library/music/${sanitise(artists[0])}" data-menu-item="shared-artist">
-                    <img class="view-item-avatar" src="${auth.avatar}" alt="${auth.name}">${artists[0]}
-                </a>
-                ${(artists.length >= 2) ? (`
-                <div class="sep"></div>
-                <a class="dropdown-menu-clickable-item" href="${root}user/${name}/library/music/${sanitise(artists[1])}" data-menu-item="shared-artist">
-                    <img class="view-item-avatar" src="${avi}" alt="${name}">${artists[1]}
-                </a>
-                <a class="dropdown-menu-clickable-item" href="${root}user/${auth.name}/library/music/${sanitise(artists[1])}" data-menu-item="shared-artist">
-                    <img class="view-item-avatar" src="${auth.avatar}" alt="${auth.name}">${artists[1]}
-                </a>
-                `) : ''}
-                ${(artists.length >= 3) ? (`
-                <div class="sep"></div>
-                <a class="dropdown-menu-clickable-item" href="${root}user/${name}/library/music/${sanitise(artists[2])}" data-menu-item="shared-artist">
-                    <img class="view-item-avatar" src="${avi}" alt="${name}">${artists[2]}
-                </a>
-                <a class="dropdown-menu-clickable-item" href="${root}user/${auth.name}/library/music/${sanitise(artists[2])}" data-menu-item="shared-artist">
-                    <img class="view-item-avatar" src="${auth.avatar}" alt="${auth.name}">${artists[2]}
-                </a>
-                `) : ''}
-            `),
-            allowHTML: true,
-            placement: 'right-start',
-            trigger: 'manual',
-            interactive: true,
-            interactiveBorder: 10,
-            offset: [0, 0]
-        });
-
-        register_menu(listen_item, menu);
     }
 
     if (katsune && !mini)

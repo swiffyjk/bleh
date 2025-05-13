@@ -211,7 +211,7 @@ export function dialog_legacy(id, title, inner_content, dismiss = false, classna
         actions.innerHTML = (`
             <div class="modal-buttons">
                 <button class="modal-action-button modal-dismiss" onclick="_kill_window('${id}')">
-                    ${trans_legacy[lang].settings.close}
+                    ${trans_legacy.en.settings.close}
                 </button>
             </div>
         `);

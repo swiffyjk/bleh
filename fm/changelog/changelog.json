@@ -1,6 +1,12 @@
 {
-    "updated": "2025-05-12",
-    "latest": "2025.0512",
+    "updated": "2025-05-14",
+    "latest": "2025.0514",
+    "2025.0514": {
+        "name": "corinnnnn",
+        "type": "minor",
+        "force": false,
+        "bio": "# Music\n- Added Tidal as a link\n- Fixed searches with spaces in them\n- Fixed '(orchestral version)' tags\n\n# Mobile\n- __Started work on mobile usability__\n\n# Other\n- Forced English for legacy translations"
+    },
     "2025.0512": {
         "name": "corin hotfix",
         "type": "minor",

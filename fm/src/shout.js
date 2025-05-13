@@ -88,8 +88,8 @@ export function patch_shouts() {
                 send_button.querySelector('.btn-post-shout').click();
                 notify({
                     id: 'shout',
-                    title: trans_legacy[lang].shout.name,
-                    body: trans_legacy[lang].shout.sent,
+                    title: trans_legacy.en.shout.name,
+                    body: trans_legacy.en.shout.sent,
                     icon: 'icon-16-send'
                 });
             }

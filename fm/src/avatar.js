@@ -58,14 +58,13 @@ export function patch_avatar(avatar, name, type = '', parent=null, side='right')
                     </div>
                     <div class="info">
                         <h5 class="title">${name}</h5>
-                        <p class="descriptor">${trans_legacy[lang].profile.top_badge}</p>
                         <p class="badge user-status--bleh-${this_badge.type} user-status--bleh-user-${name}" data-badge-type="${this_badge.type}" data-badge-user="${name}">${this_badge.name}</p>
                     </div>
                     <a href="${root}user/${name}" class="link-over"></a>
                 </div>
                 <div class="user-buttons view-buttons">
-                    <a class="btn view-item user-button view-library-btn" href="${root}user/${name}/library">${trans_legacy[lang].actions.view_library}</a>
-                    <a class="btn view-item user-button leave-shout-btn" href="${root}user/${name}/shoutbox">${trans_legacy[lang].actions.leave_a_shout}</a>
+                    <a class="btn view-item user-button view-library-btn" href="${root}user/${name}/library">${tl(trans.library)}</a>
+                    <a class="btn view-item user-button leave-shout-btn" href="${root}user/${name}/shoutbox">${tl(trans.shouts)}</a>
                 </div>
             `),
             allowHTML: true,
@@ -77,7 +76,7 @@ export function patch_avatar(avatar, name, type = '', parent=null, side='right')
         return this_badge;
     } else {
         let pre_existing_badge = avatar.querySelector('.avatar-status-dot');
-        if (pre_existing_badge == null) {
+        if (!pre_existing_badge) {
             if (!parent)
                 avatar.classList.add('avatar-can-hoverbox');
             else
@@ -95,8 +94,8 @@ export function patch_avatar(avatar, name, type = '', parent=null, side='right')
                         <a href="${root}user/${name}" class="link-over"></a>
                     </div>
                     <div class="user-buttons view-buttons">
-                        <a class="btn view-item user-button view-library-btn" href="${root}user/${name}/library">${trans_legacy[lang].actions.view_library}</a>
-                        <a class="btn view-item user-button leave-shout-btn" href="${root}user/${name}/shoutbox">${trans_legacy[lang].actions.leave_a_shout}</a>
+                        <a class="btn view-item user-button view-library-btn" href="${root}user/${name}/library">${tl(trans.library)}</a>
+                        <a class="btn view-item user-button leave-shout-btn" href="${root}user/${name}/shoutbox">${tl(trans.shouts)}</a>
                     </div>
                 `),
                 allowHTML: true,
@@ -120,14 +119,13 @@ export function patch_avatar(avatar, name, type = '', parent=null, side='right')
                         </div>
                         <div class="info">
                             <h5 class="title">${name}</h5>
-                            <p class="descriptor">${trans_legacy[lang].profile.top_badge}</p>
                             <p class="badge ${pre_existing_badge.classList[1]}">${avatar.getAttribute('title')}</p>
                         </div>
                         <a href="${root}user/${name}" class="link-over"></a>
                     </div>
                     <div class="user-buttons view-buttons">
-                        <a class="btn view-item user-button view-library-btn" href="${root}user/${name}/library">${trans_legacy[lang].actions.view_library}</a>
-                        <a class="btn view-item user-button leave-shout-btn" href="${root}user/${name}/shoutbox">${trans_legacy[lang].actions.leave_a_shout}</a>
+                        <a class="btn view-item user-button view-library-btn" href="${root}user/${name}/library">${tl(trans.library)}</a>
+                        <a class="btn view-item user-button leave-shout-btn" href="${root}user/${name}/shoutbox">${tl(trans.shouts)}</a>
                     </div>
                 `),
                 allowHTML: true,
@@ -170,7 +168,7 @@ export function expand_avatar(src) {
                 </div>
                 <div class="modal-footer">
                     <a class="btn primary open" href="${src}" target="_blank">
-                        ${trans_legacy[lang].profile.open_avatar}
+                        ${tl(trans.open_new_tab)}
                     </a>
                 </div>
             </div>

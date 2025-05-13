@@ -192,10 +192,10 @@ export function bleh_events() {
             view_buttons.innerHTML = (`
                 <div class="view-buttons">
                     <button class="btn view-item" id="toggle-list_view-1" data-toggle="list_view" data-toggle-value="1" onclick="_update_item('list_view', 1)">
-                        ${trans_legacy[lang].glacier.view.grid}
+                        ${trans_legacy.en.glacier.view.grid}
                     </button>
                     <button class="btn view-item" id="toggle-list_view-0" data-toggle="list_view" data-toggle-value="0" onclick="_update_item('list_view', 0)">
-                        ${trans_legacy[lang].glacier.view.list}
+                        ${trans_legacy.en.glacier.view.list}
                     </button>
                 </div>
             `);
@@ -252,7 +252,7 @@ function bleh_events_manage() {
             <div class="tag-icon event-icon"></div>
         </div>
         <div class="info-side">
-            <div class="sub-text">${trans_legacy[lang].event.name}</div>
+            <div class="sub-text">${trans_legacy.en.event.name}</div>
             <h1>${header_text}</h1>
         </div>
     `);
@@ -274,7 +274,7 @@ function bleh_events_edit() {
     back_nav.classList.add('navlist-item', 'secondary-nav-item', 'secondary-nav-item--back');
     back_nav.innerHTML = (`
         <a class="secondary-nav-item-link" href="${back.getAttribute('href')}">
-            ${trans_legacy[lang].settings.back}
+            ${trans_legacy.en.settings.back}
         </a>
     `);
 

@@ -258,7 +258,7 @@ export function show_your_scrobbles() {
                 <img class="view-item-avatar" src="${shortcut_listens.avi}" alt="${shortcut_listens.name}">
                 <div class="info">
                     <h3>${shortcut_listens.name}</h3>
-                    <p>${trans_legacy[lang].music.listens.count_listens.replace('{c}', listens.toLocaleString(lang))}</p>
+                    <p>${trans_legacy.en.music.listens.count_listens.replace('{c}', listens.toLocaleString(lang))}</p>
                 </div>
             `);
 
@@ -375,7 +375,7 @@ export function show_your_scrobbles() {
         tippy(obsession_btn, {
             content: obsession_btn.textContent
         });
-        obsession_btn.textContent = trans_legacy[lang].music.obsession;
+        obsession_btn.textContent = trans_legacy.en.music.obsession;
 
         interact_container.appendChild(obsession_form);
     }
@@ -384,12 +384,12 @@ export function show_your_scrobbles() {
     // search similar!
     /*let search_btn = document.createElement('a');
     search_btn.classList.add('btn', 'view-item', 'interact-item', 'search-similar-btn', (katsune) ? 'icon' : '');
-    search_btn.textContent = trans_legacy[lang].music.search_variations.name;
+    search_btn.textContent = trans_legacy.en.music.search_variations.name;
     search_btn.href = `${root}search/${page.type}s?q=${text}`;
     search_btn.target = '_blank';
 
     tippy(search_btn, {
-        content: trans_legacy[lang].music.search_variations.tooltip
+        content: trans_legacy.en.music.search_variations.tooltip
     });
 
     interact_container.appendChild(search_btn);*/
@@ -401,7 +401,7 @@ export function show_your_scrobbles() {
         lotus_btn = document.createElement('a');
         /*lotus_btn.classList.add('btn', 'view-item', 'interact-item', 'lotus', 'lotus-btn');*/
         lotus_btn.classList.add('dropdown-menu-clickable-item', 'lotus', 'lotus-btn');
-        lotus_btn.textContent = trans_legacy[lang].lotus.correct.name;
+        lotus_btn.textContent = trans_legacy.en.lotus.correct.name;
         lotus_btn.href = 'https://github.com/katelyynn/lotus/issues/new/choose';
         lotus_btn.target = '_blank';
 
@@ -410,12 +410,12 @@ export function show_your_scrobbles() {
 
         /*if (page.corrected)
             tippy(lotus_btn, {
-                content: (`<span class="lotus-active">${trans_legacy[lang].lotus.correct.tooltip_active}</span><br><div class="tooltip-sub">${document.body.querySelector('.main-content > [itemscope]').getAttribute('data-page-resource-name')}</div>`),
+                content: (`<span class="lotus-active">${trans_legacy.en.lotus.correct.tooltip_active}</span><br><div class="tooltip-sub">${document.body.querySelector('.main-content > [itemscope]').getAttribute('data-page-resource-name')}</div>`),
                 allowHTML: true
             });
         else
             tippy(lotus_btn, {
-                content: (`${trans_legacy[lang].lotus.correct.tooltip}<br><div class="tooltip-sub">${document.body.querySelector('.main-content > [itemscope]').getAttribute('data-page-resource-name')}</div>`),
+                content: (`${trans_legacy.en.lotus.correct.tooltip}<br><div class="tooltip-sub">${document.body.querySelector('.main-content > [itemscope]').getAttribute('data-page-resource-name')}</div>`),
                 allowHTML: true
             });
 
@@ -556,19 +556,22 @@ export function show_your_scrobbles() {
 
         if (page.type == 'album') {
             link_container.innerHTML = (`
-                <a class="play-this-track-playlink music-link play-this-track-playlink--spotify" href="https://open.spotify.com/search/${sanitise(page.sister)}%20${sanitise(page.name, '%20')}" target="_blank">
+                <a class="play-this-track-playlink music-link play-this-track-playlink--spotify" href="https://open.spotify.com/search/${sanitise(page.sister, ' ')} ${sanitise(page.name, ' ')}" target="_blank">
                     Spotify
                 </a>
-                <a class="play-this-track-playlink music-link play-this-track-playlink--itunes" href="https://music.apple.com/gb/search?term=${sanitise(page.sister)}%20${sanitise(page.name, '%20')}" target="_blank">
+                <a class="play-this-track-playlink music-link play-this-track-playlink--itunes" href="https://music.apple.com/gb/search?term=${sanitise(page.sister, ' ')} ${sanitise(page.name, ' ')}" target="_blank">
                     Apple Music
                 </a>
                 <a class="play-this-track-playlink music-link play-this-track-playlink--youtube-music" href="https://music.youtube.com/search?q=${sanitise(page.sister)}+${sanitise(page.name)}" target="_blank">
                     YT Music
                 </a>
+                <a class="play-this-track-playlink music-link play-this-track-playlink--tidal" href="https://listen.tidal.com/search?q=${sanitise(page.sister, ' ')} ${sanitise(page.name, ' ')}" target="_blank">
+                    Tidal
+                </a>
                 <a class="play-this-track-playlink music-link play-this-track-playlink--aoty" href="https://www.albumoftheyear.org/search/?q=${sanitise(page.sister)}+${sanitise(page.name)}" target="_blank">
                     AOTY
                 </a>
-                <a class="play-this-track-playlink music-link play-this-track-playlink--rym" href="https://rateyourmusic.com/search?searchterm=${sanitise(page.sister)}%20${sanitise(page.name, '%20')}" target="_blank">
+                <a class="play-this-track-playlink music-link play-this-track-playlink--rym" href="https://rateyourmusic.com/search?searchterm=${sanitise(page.sister, ' ')} ${sanitise(page.name, ' ')}" target="_blank">
                     RYM
                 </a>
                 <a class="play-this-track-playlink music-link play-this-track-playlink--genius" href="https://genius.com/search?q=${sanitise(page.sister)}+${sanitise(page.name)}" target="_blank">
@@ -577,19 +580,22 @@ export function show_your_scrobbles() {
             `);
         } else {
             link_container.innerHTML = (`
-                <a class="play-this-track-playlink music-link play-this-track-playlink--spotify" href="https://open.spotify.com/search/${sanitise(page.name, '%20')}" target="_blank">
+                <a class="play-this-track-playlink music-link play-this-track-playlink--spotify" href="https://open.spotify.com/search/${sanitise(page.name, ' ')}" target="_blank">
                     Spotify
                 </a>
-                <a class="play-this-track-playlink music-link play-this-track-playlink--itunes" href="https://music.apple.com/gb/search?term=${sanitise(page.name, '%20')}" target="_blank">
+                <a class="play-this-track-playlink music-link play-this-track-playlink--itunes" href="https://music.apple.com/gb/search?term=${sanitise(page.name, ' ')}" target="_blank">
                     Apple Music
                 </a>
                 <a class="play-this-track-playlink music-link play-this-track-playlink--youtube-music" href="https://music.youtube.com/search?q=${sanitise(page.name)}" target="_blank">
                     YT Music
                 </a>
+                <a class="play-this-track-playlink music-link play-this-track-playlink--tidal" href="https://listen.tidal.com/search?q=${sanitise(page.name, ' ')}" target="_blank">
+                    Tidal
+                </a>
                 <a class="play-this-track-playlink music-link play-this-track-playlink--aoty" href="https://www.albumoftheyear.org/search/?q=${sanitise(page.name)}" target="_blank">
                     AOTY
                 </a>
-                <a class="play-this-track-playlink music-link play-this-track-playlink--rym" href="https://rateyourmusic.com/search?searchterm=${sanitise(page.name, '%20')}" target="_blank">
+                <a class="play-this-track-playlink music-link play-this-track-playlink--rym" href="https://rateyourmusic.com/search?searchterm=${sanitise(page.name, ' ')}" target="_blank">
                     RYM
                 </a>
                 <a class="play-this-track-playlink music-link play-this-track-playlink--genius" href="https://genius.com/search?q=${sanitise(page.name)}" target="_blank">
@@ -664,7 +670,7 @@ function create_listen_item(parent, {name, listens, link, avi, count=0, button=f
             <img class="view-item-avatar" src="${avi}" alt="${name}">
             <div class="info">
                 <h3>${name}</h3>
-                <p>${trans_legacy[lang].music.listens.count_listens.replace('{c}', listens.toLocaleString(lang))}</p>
+                <p>${trans_legacy.en.music.listens.count_listens.replace('{c}', listens.toLocaleString(lang))}</p>
             </div>
         `);
 
@@ -672,7 +678,7 @@ function create_listen_item(parent, {name, listens, link, avi, count=0, button=f
             theme: 'context-menu',
             content: (`
                 <a class="dropdown-menu-clickable-item" href="${root}user/${name}" data-menu-item="view_profile">
-                    ${trans_legacy[lang].music.view_profile}
+                    ${trans_legacy.en.music.view_profile}
                 </a>
             `),
             allowHTML: true,
@@ -696,7 +702,7 @@ function create_listen_item(parent, {name, listens, link, avi, count=0, button=f
             <img class="view-item-avatar" src="${avi}" alt="${name}">
             <div class="info">
                 <h3>${name}</h3>
-                <p>${trans_legacy[lang].music.listens.loading_listens}</p>
+                <p>${trans_legacy.en.music.listens.loading_listens}</p>
             </div>
         `);
 
@@ -704,11 +710,11 @@ function create_listen_item(parent, {name, listens, link, avi, count=0, button=f
             theme: 'context-menu',
             content: (`
                 <a class="dropdown-menu-clickable-item" href="${root}user/${name}" data-menu-item="view_profile">
-                    ${trans_legacy[lang].music.view_profile}
+                    ${trans_legacy.en.music.view_profile}
                 </a>
                 <div class="sep"></div>
                 <button class="dropdown-menu-clickable-item" onclick="_open_profile_shortcut_window()" data-menu-item="settings">
-                    ${trans_legacy[lang].settings.configure}
+                    ${tl(trans.settings)}
                 </button>
             `),
             allowHTML: true,
@@ -733,7 +739,7 @@ function create_listen_item(parent, {name, listens, link, avi, count=0, button=f
         listen_item.setAttribute('onclick', `_other_listener('${link}')`);
 
         tippy(listen_item, {
-            content: trans_legacy[lang].music.listens.custom.tooltip
+            content: trans_legacy.en.music.listens.custom.tooltip
         });
     } else {
         // other listeners by clicking this link (artist)
@@ -743,7 +749,7 @@ function create_listen_item(parent, {name, listens, link, avi, count=0, button=f
             ${avi[2] ? `<img class="view-item-avatar" src="${avi[2].getAttribute('src')}">` : ''}
             <div class="info">
                 <h3>${tl(trans.following)}</h3>
-                <p>${trans_legacy[lang].music.listens.other_listeners.replace('{c}', count)}</p>
+                <p>${trans_legacy.en.music.listens.other_listeners.replace('{c}', count)}</p>
             </div>
         `);
         listen_item.setAttribute('href', `${window.location.href}/+listeners/you-know`);
@@ -1044,10 +1050,10 @@ export function bleh_top_listeners() {
     view_buttons.innerHTML = (`
         <div class="view-buttons">
             <button class="btn view-item" id="toggle-list_view-1" data-toggle="list_view" data-toggle-value="1" onclick="_update_item('list_view', 1)">
-                ${trans_legacy[lang].glacier.view.grid}
+                ${trans_legacy.en.glacier.view.grid}
             </button>
             <button class="btn view-item" id="toggle-list_view-0" data-toggle="list_view" data-toggle-value="0" onclick="_update_item('list_view', 0)">
-                ${trans_legacy[lang].glacier.view.list}
+                ${trans_legacy.en.glacier.view.list}
             </button>
         </div>
     `);

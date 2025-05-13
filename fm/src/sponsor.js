@@ -63,7 +63,7 @@ function sponsor_request(notify = false) {
                 auth.sponsor = sponsor_list.sponsors.includes(auth.name);
 
             if (notify)
-                deliver_notif(trans_legacy[lang].settings.home.sponsor.download, false, true, 'sponsor');
+                deliver_notif(trans_legacy.en.settings.home.sponsor.download, false, true, 'sponsor');
 
             // save to cache for next page load
             localStorage.setItem('kat_sponsors', this.response);
@@ -119,7 +119,7 @@ function sponsor_manage() {
     if (sponsor_list.sponsors_one_time && sponsor_list.sponsors_one_time.includes(auth.name)) {
         dialog({
             id: 'sponsor_manage',
-            title: trans_legacy[lang].settings.home.sponsor.header,
+            title: trans_legacy.en.settings.home.sponsor.header,
             body: (`
                 <div class="modal-vertical-inner support-inner">
                     <div class="avatar">
@@ -135,7 +135,7 @@ function sponsor_manage() {
     } else {
         dialog({
             id: 'sponsor_manage',
-            title: trans_legacy[lang].settings.home.sponsor.header,
+            title: trans_legacy.en.settings.home.sponsor.header,
             body: (`
                 <div class="modal-vertical-inner support-inner">
                     <div class="avatar">

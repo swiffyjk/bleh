@@ -281,21 +281,21 @@ function update_item(item, value, modify=true, search = document) {
 
 
             if (item == 'dev') {
-                dialog_legacy('prompt_dev',trans_legacy[lang].settings.performance.dev.name,`
-                    <p class="alert alert-info">${trans_legacy[lang].settings.performance.dev.modals.prompt.alert}</p>
+                dialog_legacy('prompt_dev',trans_legacy.en.settings.performance.dev.name,`
+                    <p class="alert alert-info">${trans_legacy.en.settings.performance.dev.modals.prompt.alert}</p>
                     <br>
-                    ${trans_legacy[lang].settings.performance.dev.modals.prompt.stylus}
+                    ${trans_legacy.en.settings.performance.dev.modals.prompt.stylus}
                     <br>
                     <div class="browser-choices">
                         <button class="btn browser" onclick="_chosen_chrome()">
                             <img class="browser-icon" src="https://katelyn.moe/img/chrome.png">
-                            <p>${trans_legacy[lang].settings.performance.dev.modals.prompt.browsers.chrome.name}</p>
-                            <p class="caption">${trans_legacy[lang].settings.performance.dev.modals.prompt.browsers.chrome.bio}</p>
+                            <p>${trans_legacy.en.settings.performance.dev.modals.prompt.browsers.chrome.name}</p>
+                            <p class="caption">${trans_legacy.en.settings.performance.dev.modals.prompt.browsers.chrome.bio}</p>
                         </button>
                         <button class="btn browser" onclick="_chosen_firefox()">
                             <img class="browser-icon" src="https://katelyn.moe/img/firefox.png">
-                            <p>${trans_legacy[lang].settings.performance.dev.modals.prompt.browsers.firefox.name}</p>
-                            <p class="caption">${trans_legacy[lang].settings.performance.dev.modals.prompt.browsers.firefox.bio}</p>
+                            <p>${trans_legacy.en.settings.performance.dev.modals.prompt.browsers.firefox.name}</p>
+                            <p class="caption">${trans_legacy.en.settings.performance.dev.modals.prompt.browsers.firefox.bio}</p>
                         </button>
                     </div>
                 `, true);
@@ -379,8 +379,8 @@ function request_reload() {
     log('requesting reload', 'settings');
     reload_pending.state = true;
     notify({
-        title: trans_legacy[lang].settings.reload.name,
-        body: trans_legacy[lang].settings.reload.body,
+        title: trans_legacy.en.settings.reload.name,
+        body: trans_legacy.en.settings.reload.body,
         icon: 'icon-16-refresh',
         persist: true,
         action: '_invoke_reload()'
@@ -500,11 +500,11 @@ unsafeWindow._chosen_firefox = function() {
 
 function continue_dev() {
     kill_window('prompt_dev');
-    dialog_legacy('continue_dev',trans_legacy[lang].settings.performance.dev.name,`
-        ${trans_legacy[lang].settings.performance.dev.modals.continue.next_step}
+    dialog_legacy('continue_dev',trans_legacy.en.settings.performance.dev.name,`
+        ${trans_legacy.en.settings.performance.dev.modals.continue.next_step}
         <div class="modal-footer">
             <button class="btn primary continue" onclick="_finish_dev()">
-                ${trans_legacy[lang].settings.continue}
+                ${trans_legacy.en.settings.continue}
             </button>
         </div>
     `);
@@ -513,11 +513,11 @@ function continue_dev() {
 unsafeWindow._finish_dev = function() {
     open('https://github.com/katelyynn/bleh/raw/uwu/fm/bleh.user.css');
     kill_window('continue_dev');
-    dialog_legacy('finish_dev',trans_legacy[lang].settings.performance.dev.name,`
-        <p class="alert alert-success">${trans_legacy[lang].settings.performance.dev.modals.finish.alert}</p>
+    dialog_legacy('finish_dev',trans_legacy.en.settings.performance.dev.name,`
+        <p class="alert alert-success">${trans_legacy.en.settings.performance.dev.modals.finish.alert}</p>
         <div class="modal-footer">
             <button class="btn primary done" onclick="_kill_window('finish_dev')">
-                ${trans_legacy[lang].settings.done}
+                ${trans_legacy.en.settings.done}
             </button>
         </div>
     `);

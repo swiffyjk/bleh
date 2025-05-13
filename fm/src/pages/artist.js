@@ -110,7 +110,7 @@ export function bleh_artists() {
         position = redesigned_artist_header.querySelector('.header-new-chart-position-number');
         if (position) {
             tippy(position, {
-                content: trans_legacy[lang].charts.view
+                content: trans_legacy.en.charts.view
             });
         }
 

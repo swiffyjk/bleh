@@ -1,7 +1,7 @@
 import { settings } from "../build/config";
 import { page } from "../build/page";
 import { clamp_sat, clean_number, rgb_to_hsl, sanitise_text } from "../build/tools";
-import { lang, trans_legacy, trans, tl } from "../build/trans";
+import { lang, trans, tl } from "../build/trans";
 import { bleh_glacier_insights } from "../pages/glacier";
 import { parse_scrobbles_as_rank } from "./colourful_counts";
 import { correct_artist, correct_item_by_artist, name_includes } from "./lotus";
@@ -127,7 +127,7 @@ export function music_grids() {
         }
 
         if (plays_elem != null && !grid.classList.contains('obsessions-item')) {
-            let plays = clean_number(plays_elem.textContent.trim().replace(` ${trans_legacy[lang].statistics.plays.name}`, ''));
+            let plays = clean_number(plays_elem.textContent.trim().replace(` ${tl(trans.plays)}`, ''));
             plays_elem.classList.add('grid-item-plays');
             if (is_album)
                 plays_elem.textContent = plays.toLocaleString(lang);

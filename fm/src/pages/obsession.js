@@ -151,7 +151,7 @@ export function bleh_obsession() {
             </button>
             <div class="sep"></div>
             <a class="dropdown-menu-clickable-item" href="${root}bleh?tab=customise" data-menu-item="settings">
-                ${trans_legacy[lang].settings.configure}
+                ${tl(trans.settings)}
             </a>
         `),
         allowHTML: true,

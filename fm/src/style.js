@@ -119,20 +119,20 @@ export function prompt_for_update() {
     // prompt the user
     dialog({
         id: 'bleh_update',
-        title: trans_legacy[lang].settings.home.update.update_to_v.replace('{v}', theme_version.state),
+        title: trans_legacy.en.settings.home.update.update_to_v.replace('{v}', theme_version.state),
         body: (`
             <div class="bleh--update-checker-container">
                 <div class="form">
                     <div class="form-group">
                         <button class="big-btn ignore" onclick="_ignore_update()"></button>
-                        ${trans_legacy[lang].settings.home.update.ignore}
+                        ${trans_legacy.en.settings.home.update.ignore}
                         <div class="small-alert red">${version.build}</div>
                     </div>
                 </div>
                 <div class="form">
                     <div class="form-group">
                         <button class="big-btn primary update" onclick="_start_update()"></button>
-                        ${trans_legacy[lang].settings.home.update.update_now}
+                        ${trans_legacy.en.settings.home.update.update_now}
                         <div class="small-alert green">${theme_version.state}</div>
                     </div>
                 </div>
@@ -169,13 +169,13 @@ unsafeWindow._start_update = function() {
     } else {
         dialog({
             id: 'bleh_update',
-            title: trans_legacy[lang].settings.home.update.update_to_v.replace('{v}', theme_version.state),
+            title: trans_legacy.en.settings.home.update.update_to_v.replace('{v}', theme_version.state),
             body: (`
                 <div class="bleh--update-checker-container">
                     <div class="form">
                         <div class="form-group">
                             <button class="big-btn primary update" onclick="_start_css_update()"></button>
-                            ${trans_legacy[lang].settings.home.update.css}
+                            ${trans_legacy.en.settings.home.update.css}
                             <div class="small-alert green">${theme_version.state}</div>
                         </div>
                     </div>
@@ -199,13 +199,13 @@ unsafeWindow._start_css_update = function() {
 unsafeWindow._final_update = function() {
     dialog({
         id: 'bleh_update',
-        title: trans_legacy[lang].settings.home.update.update_to_v.replace('{v}', theme_version.state),
+        title: trans_legacy.en.settings.home.update.update_to_v.replace('{v}', theme_version.state),
         body: (`
             <div class="bleh--update-checker-container">
                 <div class="form">
                     <div class="form-group">
                         <button class="big-btn primary finish" onclick="_finish_update()"></button>
-                        ${trans_legacy[lang].settings.finish}
+                        ${trans_legacy.en.settings.finish}
                     </div>
                 </div>
             </div>
@@ -223,7 +223,7 @@ unsafeWindow._finish_update = function() {
     if (!settings.dev) {
         dialog({
             id: 'bleh_wait',
-            title: trans_legacy[lang].settings.home.update.name,
+            title: trans_legacy.en.settings.home.update.name,
             type: 'wait',
             dismiss: false
         });

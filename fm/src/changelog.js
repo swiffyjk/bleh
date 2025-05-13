@@ -82,11 +82,6 @@ function open_changelog(changelog) {
                 <a class="see-more" onclick="_sponsor(true)">${tl(trans.sponsor)}</a>
             </div>
             <div class="changelog-list"></div>
-            <div class="modal-footer">
-                <a class="btn primary skip" href="#latest_major_release">
-                    ${trans_legacy[lang].changelog.view_major}
-                </a>
-            </div>
         `),
         type: 'changelog',
         allow_scroll: true
@@ -115,12 +110,12 @@ function open_changelog(changelog) {
                             ${version}
                         </div>
                         <div class="breadcrumb-name">
-                            ${trans_legacy[lang].changelog.type[changelog[version].type]}
+                            ${trans_legacy.en.changelog.type[changelog[version].type]}
                         </div>
                     </div>
                     ${(index == 0) ? (`
                     <!--<div class="latest-line">
-                        <div>${trans_legacy[lang].changelog.latest}</div>
+                        <div>${trans_legacy.en.changelog.latest}</div>
                     </div>-->
                     `) : ''}
                 </div>

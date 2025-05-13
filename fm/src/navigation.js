@@ -1,7 +1,7 @@
 import { settings } from "./build/config";
 import { auth, page, root } from "./build/page";
 import { stored_season } from "./build/seasonal";
-import { lang, non_override_lang, trans_legacy, tl, trans } from "./build/trans";
+import { lang, trans_legacy, tl, trans } from "./build/trans";
 import { load_badges } from "./components/badge";
 import { version } from "./main";
 import { show_theme_change_in_menu } from "./pages/bleh_config";
@@ -138,11 +138,11 @@ export function append_nav() {
     changelog_container.classList.add('masthead-nav-item');
     changelog_container.innerHTML = (`
         <a class="masthead-nav-control" onclick="_query_changelog()" data-label="changelog">
-            ${tl(trans.changelog)}
+            ${tl(trans.news)}
         </a>
     `);
     tippy(changelog_container, {
-        content: tl(trans.changelog)
+        content: tl(trans.news)
     });
     links.appendChild(changelog_container);
 
@@ -163,7 +163,7 @@ export function append_nav() {
             theme: 'seasonal-swatch',
             content: (`
                 <span class="season-colour-name">${tl(trans.seasonal.listing[stored_season.id])}</span>
-                <span class="season-exclusive">${trans_legacy[lang].auth_menu.seasonal_notice}</span>
+                <span class="season-exclusive">${trans_legacy.en.auth_menu.seasonal_notice}</span>
             `),
             allowHTML: true
         });
@@ -182,8 +182,8 @@ export function append_nav() {
 
     let sel_button = document.createElement('button');
     sel_button.classList.add('dropdown-menu-clickable-item', 'lang-item', 'active');
-    sel_button.setAttribute('data-lang', non_override_lang);
-    sel_button.style.setProperty('--flag-url', `url('https://katelyynn.github.io/bleh/fm/flags/${non_override_lang}.svg')`);
+    sel_button.setAttribute('data-lang', lang);
+    sel_button.style.setProperty('--flag-url', `url('https://katelyynn.github.io/bleh/fm/flags/${lang}.svg')`);
     sel_button.textContent = selected_language;
 
     language_menu.appendChild(sel_button);
@@ -220,7 +220,7 @@ export function append_nav() {
             </a>
             ${(settings.auth_menu_obsessions) ? (`
             <a class="dropdown-menu-clickable-item" data-menu-item="obsessions" href="${root}user/${auth.name}/obsessions">
-                ${trans_legacy[lang].auth_menu.obsessions}
+                ${trans_legacy.en.auth_menu.obsessions}
             </a>
             `) : ''}
             <button class="dropdown-menu-clickable-item" data-menu-item="themes" onclick="toggle_theme()">
@@ -319,4 +319,28 @@ export function append_nav() {
     auth_link.removeAttribute('data-disclose-hover');
     auth_link.removeAttribute('data-disclose-hover--allow-enter-open');
     auth_link.removeAttribute('href');
+
+
+    // mobile
+    let mobile = document.createElement('div');
+    mobile.classList.add('mobile-controls');
+    mobile.innerHTML = (`
+        <a class="btn mobile-control" data-menu-item="home" href="${root}music">
+            ${tl(trans.home)}
+        </a>
+        <a class="btn mobile-control" data-menu-item="search" href="${root}search">
+            ${tl(trans.search)}
+        </a>
+        <a class="btn mobile-control" data-menu-item="profile_mobile" href="${root}user/${auth.name}">
+            ${auth.name}
+        </a>
+        <a class="btn mobile-control" data-menu-item="notifications" href="${root}inbox/notifications">
+            ${tl(trans.inbox.name)}
+        </a>
+        <a class="btn mobile-control" data-menu-item="settings" href="${root}bleh">
+            ${tl(trans.settings)}
+        </a>
+    `);
+
+    masthead.appendChild(mobile);
 }
