@@ -1785,6 +1785,10 @@ last.fm changes as of 2024-05-20 */
         & > section {
             margin-top: unset;
         }
+
+        & > .hidden-xs {
+            display: block !important;
+        }
     }
 
     & > :first-child {
@@ -4312,8 +4316,8 @@ better than the default selector '#app a' i suppose */
     }
 
     @media (max-width: 600px) {
-        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-        grid-template-areas: unset;
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)) !important;
+        grid-template-areas: unset !important;
     }
 }
 .grid-items .grid-items-item {
@@ -4785,6 +4789,8 @@ better than the default selector '#app a' i suppose */
     transition-timing-function: var(--trans-function);
     padding-right: 42px !important;
     border-top: 1px solid var(--card-border-base);
+    margin: unset !important;
+    display: flex !important;
 
     &[aria-expanded="true"],
     &:hover {
@@ -4794,6 +4800,33 @@ better than the default selector '#app a' i suppose */
 
     .kate-placeholder {
         display: none;
+    }
+
+    @media (max-width: 600px) {
+        td {
+            display: inline-block;
+        }
+
+        .chartlist-play {
+            display: none !important;
+        }
+
+        .chartlist-timestamp {
+            max-width: 60px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            -webkit-box-orient: vertical;
+            display: -webkit-box;
+            -webkit-line-clamp: 1;
+        }
+    }
+}
+
+.chartlist {
+    tr {
+        @media (max-width: 600px) {
+
+        }
     }
 }
 
@@ -4933,6 +4966,8 @@ better than the default selector '#app a' i suppose */
     .chartlist-more-button {
         --left: 7px;
         --mask: var(--icon-16-dots);
+        top: 50%;
+        margin-top: -16px;
     }
 }
 
@@ -4973,6 +5008,11 @@ better than the default selector '#app a' i suppose */
     display: flex !important;
     align-items: center;
 
+    @media (max-width: 600px) {
+        display: none !important;
+        padding: 0 5px;
+    }
+
     [data-bleh--season="halloween"] & {
         --hue-seasonal: 70;
         --sat-seasonal: 1;
@@ -5010,6 +5050,8 @@ better than the default selector '#app a' i suppose */
 }*/
 .chartlist-timestamp {
     z-index: 4;
+    line-height: var(--line-height);
+    margin-top: unset;
 }
 
 
@@ -5290,6 +5332,10 @@ better than the default selector '#app a' i suppose */
                         .chartlist-artist {
                             left: calc(18px + 84px - 2px - 28px);
                             margin-top: unset;
+
+                            @media (max-width: 600px) {
+                                margin-top: 16px;
+                            }
                         }
                         .chartlist-album.custom-album-text {
                             left: calc(18px + 84px - 2px - 28px);
@@ -5372,6 +5418,12 @@ better than the default selector '#app a' i suppose */
 
     .avatar-status-dot {
         display: none;
+    }
+}
+.chartlist-image {
+    @media (max-width: 600px) {
+        position: static;
+        margin-top: unset;
     }
 }
 .chartlist-row--now-scrobbling .chartlist-image {
@@ -7613,7 +7665,7 @@ li:first-child .more-item--delete {
 /* this hides buylinks from the menu as they are
 very, very, very dated - who looks up a song on ebay? */
 .dropdown-menu-clickable li:has(.buylinks-dropdown-menu) {
-    display: none;
+    display: none !important;
 }
 
 
@@ -7647,6 +7699,14 @@ very, very, very dated - who looks up a song on ebay? */
 }
 .more-item--play {
     --mask: var(--icon-16-track);
+}
+.chartlist-more-menu-love {
+    --mask: var(--icon-16-heart);
+    --col: hsl(var(--l3-c)) !important;
+
+    &[data-analytics-action="UnloveTrack"] {
+        --mask: var(--icon-16-heart-solid);
+    }
 }
 [data-menu-item="profile_mobile"] {
     --mask: var(--icon-16-user);
@@ -8753,6 +8813,7 @@ input:is([name^="track_name"], [name^="artist_name"], [name^="album_name"], [nam
     flex-grow: unset;
     display: flex;
     gap: var(--button-list-gap);
+    width: fit-content;
 }
 .gallery-image-vote-buttons:before, .gallery-image-vote-buttons:after {
     display: none !important;
@@ -8775,6 +8836,7 @@ input:is([name^="track_name"], [name^="artist_name"], [name^="album_name"], [nam
     margin: 0 0 0 var(--card-gap) !important;
 }
 .gallery-image-votes {
+    display: flex;
     padding-left: calc(18px + 6px) !important;
 }
 
@@ -10544,6 +10606,10 @@ text[style^="color: rgb(0, 0, 0)"] {
     margin-top: 12px;
 }
 
+.similar-albums-body.visible-xs {
+    display: none !important;
+}
+
 
 
 
@@ -11056,6 +11122,10 @@ text[style^="color: rgb(0, 0, 0)"] {
     [data-bleh--list_view="1"] & {
         display: grid;
         grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+
+        @media (max-width: 600px) {
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+        }
 
         .user-list-item {
             padding: var(--item-list-gap);
@@ -16769,6 +16839,11 @@ button.bleh--gallery-bookmark-image-btn {
 .top-container {
     display: flex;
     justify-content: space-between;
+
+    @media (max-width: 600px) {
+        flex-direction: column;
+        justify-content: unset;
+    }
 }
 .metadata-and-wiki-row {
     --only-card-gap: 0;
@@ -17876,7 +17951,7 @@ h4 {
         background: unset !important;
         padding: unset !important;
         box-shadow: inset 0 0 0 1px var(--card-border-base) !important;
-        border-radius: var(--card-radius);
+        border-radius: var(--item-big-radius);
 
         position: relative;
 
@@ -18033,6 +18108,10 @@ h4 {
         .gallery-image-buttons {
             margin: calc(var(--card-gap) - var(--item-list-gap)) 0 0 0;
             flex-grow: 0;
+
+            @media (max-width: 600px) {
+                width: 100%;
+            }
 
             /* non-pro */ .gallery-image-preferred-button,
             button,
@@ -21695,6 +21774,10 @@ h4 {
 
     .listen-divider {
         flex: 1;
+    }
+
+    @media (max-width: 600px) {
+        flex-wrap: wrap;
     }
 }
 .medium-interactions,
