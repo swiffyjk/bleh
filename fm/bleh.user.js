@@ -6508,8 +6508,12 @@
       if (index == 0)
         page.structure.glacier.selector = item;
     });
-    if (date_items.length > 0)
-      page.structure.side.appendChild(date_panel);
+    if (date_items.length > 0) {
+      if (!page.mobile)
+        page.structure.side.appendChild(date_panel);
+      else
+        page.structure.main.insertBefore(date_panel, page.structure.main.firstChild);
+    }
     page.structure.glacier.date_panel = date_panel;
     if (page.name == auth.name) {
       let tabs = page.structure.container.querySelector(".library-controls .navlist-items");
@@ -6926,7 +6930,7 @@
       return;
     }
     page.state.glacier.current_view = current_view;
-    let scrobble_chart_content = page.structure.side.querySelector("#scrobble-chart-content");
+    let scrobble_chart_content = page.structure.row.querySelector("#scrobble-chart-content");
     if (!scrobble_chart_content) return;
     if (scrobble_chart_content.getAttribute("data-highcharts-chart") && scrobble_chart_content.getAttribute("data-highcharts-chart") == "0") {
       log("highchart registered", "glacier library");
@@ -6934,7 +6938,7 @@
       page.structure.glacier.refresh = false;
       return;
     }
-    let scrobble_chart_wrap = page.structure.side.querySelector(".scrobble-table");
+    let scrobble_chart_wrap = page.structure.row.querySelector(".scrobble-table");
     if (!scrobble_chart_wrap)
       return;
     let scrobble_table;

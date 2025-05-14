@@ -1065,6 +1065,7 @@ last.fm changes as of 2024-05-20 */
         top: unset !important;
         bottom: 0 !important;
         height: 58px !important;
+        z-index: 1000000000;
 
         background: hsl(var(--b6), 85%) !important;
         backdrop-filter: blur(20px) saturate(120%) !important;
@@ -5002,11 +5003,15 @@ better than the default selector '#app a' i suppose */
                 background: hsl(var(--l4-c)) !important;
             }
 
+            .chartlist-count-bar-link {
+                padding: 0 !important;
+            }
+
             .chartlist-count-bar-value {
                 color: hsl(var(--c1));
                 overflow: unset !important;
                 position: relative;
-                bottom: 2px;
+                bottom: 9px;
             }
         }
     }
@@ -5808,6 +5813,11 @@ p + .chartlist {
 .shout-form + .shout-list,
 .shout-list {
     margin-top: var(--card-gap);
+}
+
+.shoutbox-sort-toggle {
+    position: relative;
+    inset: unset !important;
 }
 
 
@@ -8051,6 +8061,8 @@ very, very, very dated - who looks up a song on ebay? */
 
 /*     DATE PICKER     */
 .date-panel {
+    order: -1;
+
     .row {
         display: flex;
         flex-direction: column;
@@ -8059,6 +8071,10 @@ very, very, very dated - who looks up a song on ebay? */
         .user-sidebar-header {
             margin: unset !important;
             color: hsl(var(--c3));
+        }
+
+        .library-controls-datepicker {
+            display: flex !important;
         }
 
         .library-controls-datepicker > .library-date-picker {
@@ -8075,13 +8091,28 @@ very, very, very dated - who looks up a song on ebay? */
                 --mask: var(--icon-16-dropdown);
                 --btn-top: 0;
                 --btn-left: 0;
-                --btn-right: calc(16px + 6px) !important;
+                --btn-right: calc(12px + 4px) !important;
                 --left: none;
+                --margin-top: -6px;
+                --mask-size: 12px;
                 --right: 0;
                 --btn-bottom: 0;
 
                 font-size: 16px !important;
                 line-height: 20px !important;
+
+                &:after {
+                    transition-property: transform !important;
+                    transition-duration: var(--trans) !important;
+                    transition-timing-function: var(--trans-function) !important;
+                    color: hsl(var(--c3));
+                }
+
+                &[aria-expanded="true"] {
+                    &:after {
+                        transform: scaleY(-1) !important;
+                    }
+                }
 
                 .date-range-picker-button-inner {
                     max-width: 340px;
@@ -8094,10 +8125,6 @@ very, very, very dated - who looks up a song on ebay? */
 
                 &:before {
                     display: none;
-                }
-
-                &:after {
-                    color: hsl(var(--c3));
                 }
             }
         }
@@ -20484,6 +20511,12 @@ h4 {
 .glacier-library-top {
     display: flex;
     justify-content: space-between;
+
+    @media (max-width: 600px) {
+        flex-direction: column;
+        gap: var(--card-gap);
+        justify-contenet: unset;
+    }
 
     .glacier-library-metadata {
         display: flex;
