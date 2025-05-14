@@ -4850,6 +4850,7 @@ better than the default selector '#app a' i suppose */
     border-top: 1px solid var(--card-border-base);
     margin: unset !important;
     display: flex !important;
+    align-items: center;
 
     &[aria-expanded="true"],
     &:hover {
@@ -4861,6 +4862,18 @@ better than the default selector '#app a' i suppose */
         display: none;
     }
 
+    &.show-focus-controls {
+        .chartlist-more {
+            opacity: 1 !important;
+        }
+    }
+
+    &:hover {
+        .chartlist-play, .chartlist-more {
+            display: var(--override, block) !important;
+        }
+    }
+
     @media (max-width: 600px) {
         td {
             display: inline-block;
@@ -4868,6 +4881,7 @@ better than the default selector '#app a' i suppose */
 
         .chartlist-play {
             display: none !important;
+            --override: none;
         }
 
         .chartlist-timestamp {
@@ -4882,11 +4896,7 @@ better than the default selector '#app a' i suppose */
 }
 
 .chartlist {
-    tr {
-        @media (max-width: 600px) {
-
-        }
-    }
+    line-height: var(--line-height) !important;
 }
 
 .lastfm-bulk-edit-chartlist-scrobbles {
@@ -4960,6 +4970,26 @@ better than the default selector '#app a' i suppose */
     margin-left: calc(var(--chartlist-inner-gap) / 2) !important;
     margin-right: calc(var(--chartlist-inner-gap) / 2) !important;
 }
+.chartlist-bar {
+    @media (max-width: 600px) {
+        margin: unset !important;
+        position: absolute;
+        left: 12px;
+        right: 12px;
+        bottom: 0;
+
+        .chartlist-count-bar {
+            line-height: 3px;
+            width: 100%;
+
+            .chartlist-count-bar-value {
+                overflow: unset !important;
+                position: relative;
+                bottom: 2px;
+            }
+        }
+    }
+}
 .chartlist-image {
     margin-left: unset !important;
     overflow: unset !important;
@@ -5006,21 +5036,11 @@ better than the default selector '#app a' i suppose */
 {
     margin-right: 12px;
     text-align: center !important;
+    position: relative;
+    inset: unset !important;
+    margin-top: unset !important;
 }
 
-.chartlist-row {
-    &.show-focus-controls {
-        .chartlist-more {
-            opacity: 1 !important;
-        }
-    }
-
-    &:hover {
-        .chartlist-play, .chartlist-more {
-            display: block !important;
-        }
-    }
-}
 .chartlist-more {
     .chartlist-more-button {
         --left: 7px;
@@ -5456,6 +5476,7 @@ better than the default selector '#app a' i suppose */
     color: hsl(var(--c3));
     text-align: right;
     cursor: default;
+    width: 16px;
 }
 
 .obsession-candidate-image,
@@ -5481,8 +5502,9 @@ better than the default selector '#app a' i suppose */
 }
 .chartlist-image {
     @media (max-width: 600px) {
-        position: static;
+        position: relative;
         margin-top: unset;
+        inset: unset !important;
     }
 }
 .chartlist-row--now-scrobbling .chartlist-image {
@@ -9997,7 +10019,7 @@ text[style^="color: rgb(255, 172, 172)"] {
     &[data-theme="window"] {
         padding: var(--card-gap) !important;
         background: hsl(var(--b6), 95%) !important;
-        border-radius: var(--card-radius) !important;
+        border-radius: var(--item-big-radius) !important;
         box-shadow: var(--override-full-shadow, var(--overlay-shadow)) !important;
         color: hsl(var(--c2));
 
@@ -10030,6 +10052,11 @@ text[style^="color: rgb(255, 172, 172)"] {
 
 
         max-width: 630px !important;
+
+        @media (max-width: 600px) {
+            width: var(--cards-width) !important;
+        }
+
         & > .tippy-content {
             display: flex;
         }
