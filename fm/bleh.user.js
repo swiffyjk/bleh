@@ -19741,7 +19741,8 @@
   };
   function fetch_new_style(delete_old_style = false, reload_on_finish = false) {
     let xhr = new XMLHttpRequest();
-    let url = `https://github.com/katelyynn/bleh/raw/${settings.branch}/fm/bleh.css?${Math.random()}`;
+    let url = `https://katelyynn.github.io/bleh/fm/bleh.css?${Math.random()}`;
+    log(`making request ${url}`, "style");
     xhr.open("GET", url, true);
     xhr.onload = function() {
       log(`style responded ${xhr.status}`, "style");
