@@ -510,6 +510,7 @@ body {
         --cards-width: 100vw;
         --cards-main-width: 100vw;
         --cards-sidebar-width: 100vw;
+        --card-shadow: unset;
     }
 }
 
@@ -2484,6 +2485,7 @@ span.header-new-gallery-inner a,
 
 /*     ADD NOTE     */
 .about-me-sidebar {
+    display: block;
     z-index: 10;
     position: relative;
 

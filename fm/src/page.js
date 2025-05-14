@@ -351,6 +351,8 @@ function load_page() {
             masthead.classList.remove('scrolled');
     });
 
+    detect_mobile();
+
     if (window.location.href.startsWith(setup_url.replace('{root}', root))) {
         bleh_setup();
     } else if (window.location.href.startsWith(sponsor_url.replace('{root}', root))) {
@@ -361,8 +363,7 @@ function load_page() {
     } else {
         bleh_error();
 
-        if (page.state.error)
-            return;
+        if (page.state.error) return;
 
         if (page.type == 'user')
             bleh_profiles();
@@ -503,6 +504,14 @@ function load_page() {
 
     if (page.structure.indicator)
         page_indicator();
+}
+
+function detect_mobile() {
+    if (window.innerWidth <= 600) {
+        page.mobile = true;
+    } else {
+        page.mobile = false;
+    }
 }
 
 function page_indicator() {

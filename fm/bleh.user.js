@@ -9473,7 +9473,7 @@
         mini: true
       });
     }
-    let listen_container = page.structure.side.querySelector(".listen-panel");
+    let listen_container = page.structure.row.querySelector(".listen-panel");
     if (!is_own_profile && page.name != sponsor_list.sponsor_account && katsune) {
       let taste_wrap = document.createElement("div");
       taste_wrap.classList.add("btn", "listen-item", "icon");
@@ -9545,7 +9545,10 @@
         register_menu(taste_wrap, menu);
       }
     }
-    page.structure.side.insertBefore(profile_header, page.structure.side.firstElementChild);
+    if (!page.mobile)
+      page.structure.side.insertBefore(profile_header, page.structure.side.firstElementChild);
+    else
+      page.structure.main.insertBefore(profile_header, page.structure.main.firstElementChild);
   }
   function create_profile_top_item(parent, { name, link, text = "", type, taste = "", artists = [], avi = "", percent = "", action = "", tooltip = "", allow_html = false, tooltip_theme = "", full = false, primary = false, katsune = false, mini = false }) {
     log(`creating top item of ${name}, ${link}, ${text}`, "profile");
@@ -11281,7 +11284,10 @@
         content: average
       });
       if (page.name != sponsor_list.sponsor_account) {
-        page.structure.side.insertBefore(listen_container, page.structure.firstChild);
+        if (!page.mobile)
+          page.structure.side.insertBefore(listen_container, page.structure.side.firstChild);
+        else
+          page.structure.main.insertBefore(listen_container, page.structure.main.firstChild);
         bleh_profile_chart();
       }
       if (ff("redesigned_profile_header"))
@@ -11562,7 +11568,10 @@
                 <a class="see-more" onclick="_sponsor()">${tl(trans.sponsor)}</a>
             `;
       }
-      page.structure.side.insertBefore(sponsor_cta, page.structure.side.firstElementChild);
+      if (!page.mobile)
+        page.structure.side.insertBefore(sponsor_cta, page.structure.side.firstElementChild);
+      else
+        page.structure.main.insertBefore(sponsor_cta, page.structure.main.firstElementChild);
     }
     let profile_sub_text;
     if (ff("refreshed_nav"))
@@ -11582,11 +11591,13 @@
     scrobble_since_pre.classList.add("header-title-secondary--pre");
     scrobble_since_pre.textContent = tl(trans.account_created);
     profile_sub_text.insertBefore(scrobble_since_pre, scrobble_since);
-    let about_me_sidebar = document.body.querySelector(".about-me-sidebar");
+    let about_me_sidebar = page.structure.row.querySelector(".about-me-sidebar");
     if (!about_me_sidebar) {
       if (settings.bio_markdown)
         save_banner_to_cache("none");
       return;
+    } else if (page.mobile) {
+      page.structure.main.insertBefore(about_me_sidebar, page.structure.main.firstElementChild);
     }
     if (!about_me_sidebar.hasAttribute("data-kate-processed")) {
       about_me_sidebar.setAttribute("data-kate-processed", "true");
@@ -11686,7 +11697,7 @@
         </div>
         `;
     }
-    let about_me_sidebar = document.body.querySelector(".about-me-sidebar");
+    let about_me_sidebar = page.structure.row.querySelector(".about-me-sidebar");
     about_me_sidebar.after(note_panel);
   }
   unsafeWindow._clear_profile_note = function(username) {
@@ -12378,7 +12389,7 @@
     localStorage.setItem("bleh_profile_banners", JSON.stringify(banners));
   }
   function bleh_profile_chart() {
-    let panel = page.structure.side.querySelector(".listen-panel");
+    let panel = page.structure.row.querySelector(".listen-panel");
     let table = panel.querySelector("table");
     if (table) {
       bleh_profile_chart_render2(panel, table);
@@ -20099,6 +20110,7 @@
       else
         masthead.classList.remove("scrolled");
     });
+    detect_mobile();
     if (window.location.href.startsWith(setup_url.replace("{root}", root))) {
       bleh_setup();
     } else if (window.location.href.startsWith(sponsor_url.replace("{root}", root))) {
@@ -20108,8 +20120,7 @@
       bleh_settings();
     } else {
       bleh_error();
-      if (page.state.error)
-        return;
+      if (page.state.error) return;
       if (page.type == "user")
         bleh_profiles();
       else if (page.type == "artist")
@@ -20226,6 +20237,13 @@
     }
     if (page.structure.indicator)
       page_indicator();
+  }
+  function detect_mobile() {
+    if (window.innerWidth <= 600) {
+      page.mobile = true;
+    } else {
+      page.mobile = false;
+    }
   }
   function page_indicator() {
     page.structure.indicator.innerHTML = `

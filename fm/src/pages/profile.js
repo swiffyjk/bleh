@@ -373,7 +373,10 @@ export function bleh_profiles() {
         });
 
         if (page.name != sponsor_list.sponsor_account) {
-            page.structure.side.insertBefore(listen_container, page.structure.firstChild);
+            if (!page.mobile)
+                page.structure.side.insertBefore(listen_container, page.structure.side.firstChild);
+            else
+                page.structure.main.insertBefore(listen_container, page.structure.main.firstChild);
             bleh_profile_chart();
         }
 
@@ -741,7 +744,10 @@ export function bleh_profiles() {
             `);
         }
 
-        page.structure.side.insertBefore(sponsor_cta, page.structure.side.firstElementChild);
+        if (!page.mobile)
+            page.structure.side.insertBefore(sponsor_cta, page.structure.side.firstElementChild);
+        else
+            page.structure.main.insertBefore(sponsor_cta, page.structure.main.firstElementChild);
     }
 
     // secondary text
@@ -774,13 +780,15 @@ export function bleh_profiles() {
     scrobble_since_pre.textContent = tl(trans.account_created);
     profile_sub_text.insertBefore(scrobble_since_pre, scrobble_since);
 
-    let about_me_sidebar = document.body.querySelector('.about-me-sidebar');
+    let about_me_sidebar = page.structure.row.querySelector('.about-me-sidebar');
 
     if (!about_me_sidebar) {
         if (settings.bio_markdown)
             save_banner_to_cache('none');
 
         return;
+    } else if (page.mobile) {
+        page.structure.main.insertBefore(about_me_sidebar, page.structure.main.firstElementChild);
     }
 
     if (!about_me_sidebar.hasAttribute('data-kate-processed')) {
@@ -902,7 +910,7 @@ function create_profile_note_panel(username, has_note) {
         `);
     }
 
-    let about_me_sidebar = document.body.querySelector('.about-me-sidebar');
+    let about_me_sidebar = page.structure.row.querySelector('.about-me-sidebar');
     about_me_sidebar.after(note_panel);
 }
 
@@ -1795,7 +1803,7 @@ function save_banner_to_cache(img) {
 
 
 function bleh_profile_chart() {
-    let panel = page.structure.side.querySelector('.listen-panel');
+    let panel = page.structure.row.querySelector('.listen-panel');
     let table = panel.querySelector('table');
 
     if (table) {

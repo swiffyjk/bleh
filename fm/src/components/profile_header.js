@@ -205,7 +205,7 @@ export function redesign_profile_header(is_own_profile, is_following) {
         });
     }
 
-    let listen_container = page.structure.side.querySelector('.listen-panel');
+    let listen_container = page.structure.row.querySelector('.listen-panel');
 
     if (!is_own_profile && page.name != sponsor_list.sponsor_account && katsune) {
         let taste_wrap = document.createElement('div');
@@ -284,7 +284,10 @@ export function redesign_profile_header(is_own_profile, is_following) {
         }
     }
 
-    page.structure.side.insertBefore(profile_header, page.structure.side.firstElementChild);
+    if (!page.mobile)
+        page.structure.side.insertBefore(profile_header, page.structure.side.firstElementChild);
+    else
+        page.structure.main.insertBefore(profile_header, page.structure.main.firstElementChild);
 }
 
 export function create_profile_top_item(parent, {name, link, text='', type, taste='', artists=[], avi='', percent='', action='', tooltip='', allow_html=false, tooltip_theme='', full=false, primary=false, katsune=false, mini=false}) {
