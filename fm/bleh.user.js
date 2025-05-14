@@ -12150,7 +12150,7 @@
                 <input type="hidden" name="csrfmiddlewaretoken" value="${page.token}">
                 <div class="setting" data-type="select">
                     <div class="heading">
-                        <h5>${tl(trans.timeframe)}</h5>
+                        <h5>${tl(trans.default_timeframe)}</h5>
                     </div>
                     <div class="select-wrap custom-selector" id="id_chart_range_top_albums_select">
                         ${original_chart_settings.timeframe}
@@ -12249,7 +12249,7 @@
                 <input type="hidden" name="csrfmiddlewaretoken" value="${page.token}">
                 <div class="setting" data-type="select">
                     <div class="heading">
-                        <h5>${tl(trans.timeframe)}</h5>
+                        <h5>${tl(trans.default_timeframe)}</h5>
                     </div>
                     <div class="select-wrap custom-selector" id="id_chart_range_top_tracks_select">
                         ${original_chart_settings.timeframe}
