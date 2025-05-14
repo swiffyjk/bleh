@@ -500,6 +500,7 @@ body {
         --cards-width: 100vw;
         --cards-main-width: 100vw;
         --cards-sidebar-width: 100vw;
+        --card-shadow: unset;
     }
 }
 
@@ -1081,6 +1082,41 @@ last.fm changes as of 2024-05-20 */
                 --margin-top: none;
                 --margin-left: -9px;
                 position: relative;
+
+                &:after {
+                    content: '';
+                    position: absolute;
+                    bottom: 0 !important;
+                    left: 12px !important;
+                    right: 12px !important;
+                    border-radius: var(--item-big-radius) !important;
+                    opacity: 0;
+
+                    display: block !important;
+                    background: unset !important;
+                    width: unset !important;
+                    height: 3px !important;
+                    margin: unset !important;
+
+                    background: hsl(var(--l3-c-theme-switch)) !important;
+
+                    transition-property: opacity !important;
+                    transition-duration: var(--trans) !important;
+                    transition-timing-function: var(--trans-function) !important;
+                }
+
+                &[aria-checked="true"] {
+                    &:after {
+                        opacity: 1;
+                    }
+                }
+
+                .notification-count-badge {
+                    position: absolute;
+                    top: calc(10px - 3px);
+                    right: 50%;
+                    margin-right: calc(-5px - 7px);
+                }
             }
         }
     }
@@ -1470,6 +1506,7 @@ last.fm changes as of 2024-05-20 */
 }
 
 
+.mobile-control .notification-count-badge,
 .masthead-nav .masthead-nav-item .notification-count-badge,
 .auth-avatar-notification-count-badge {
     font-family: var(--font-code);
@@ -1694,6 +1731,14 @@ last.fm changes as of 2024-05-20 */
     opacity: 0;
 }
 
+.ot-sdk-show-settings {
+    @media (max-width: 600px) {
+        bottom: unset !important;
+        top: 10px;
+        --font-size: 0;
+    }
+}
+
 .footer .footer-legal {
     color: hsl(var(--c3));
     font-size: var(--font-size);
@@ -1746,7 +1791,7 @@ last.fm changes as of 2024-05-20 */
     @media (max-width: 600px) {
         display: flex;
         flex-direction: column;
-        gap: var(--card-gap);
+        gap: 1px;
     }
 }
 
@@ -1776,7 +1821,7 @@ last.fm changes as of 2024-05-20 */
             margin-top: unset;
         }
 
-        & > .hidden-xs {
+        & > .hidden-xs:not(.labs-cta) {
             display: block !important;
         }
     }
@@ -1796,17 +1841,10 @@ last.fm changes as of 2024-05-20 */
     }
 
     @media (max-width: 600px) {
-        gap: unset !important;
-
-        & > div,
-        & > section {
-            &:not(:first-child) {
-                border-top: 1px solid hsl(var(--b6)) !important;
-            }
-        }
+        gap: 1px !important;
 
         &.col-sidebar {
-            border-top: 1px solid hsl(var(--b6)) !important;
+            margin-top: unset !important;
         }
     }
 }
@@ -2293,6 +2331,13 @@ span.header-new-gallery-inner a,
         background: linear-gradient(180deg, hsla(var(--h3), 20%) 0%, var(--avatar-generic-background) 100%);
     }*/
 
+    @media (max-width: 600px) {
+        --card-specific-background:
+        linear-gradient(hsl(var(--b5)), hsl(var(--g4))) padding-box;
+        border: unset !important;
+        padding: var(--card-padding) !important;
+    }
+
     display: flex;
     flex-direction: column;
     gap: var(--card-gap);
@@ -2300,6 +2345,13 @@ span.header-new-gallery-inner a,
     .track-template {
         display: flex;
         gap: var(--item-list-gap);
+    }
+
+    .sub-text {
+        flex-direction: row;
+        justify-content: space-between;
+        gap: 0;
+        margin: unset;
     }
 
     form {
@@ -2423,6 +2475,7 @@ span.header-new-gallery-inner a,
 
 /*     ADD NOTE     */
 .about-me-sidebar {
+    display: block;
     z-index: 10;
     position: relative;
 
@@ -3067,6 +3120,12 @@ button.navlist-more {
     [data-bleh--theme_type="light"] & {
         --bg-hov: hsl(var(--b5), 60%) !important;
         --bg-atv: hsl(var(--b5), 80%) !important;
+    }
+
+    @media (max-width: 600px) {
+        &:after {
+            bottom: 0 !important;
+        }
     }
 }
 .navlist-more {
@@ -5664,11 +5723,6 @@ a.chartlist-love-button:after {
 }
 
 
-.more-items {
-    margin-top: var(--card-gap);
-}
-
-
 .footnotes, .content-form .form-row-help-text {
     color: hsl(var(--c3));
     font-size: var(--font-size);
@@ -5881,6 +5935,10 @@ p + .chartlist {
 
         &:before, &:after {
             display: none;
+        }
+
+        @media (max-width: 600px) {
+            top: -8px;
         }
     }
 }
@@ -6837,7 +6895,6 @@ button,
 .header-new-playlink,
 .btn-add, /*form[action*="+images/upload"] .btn-primary[type="submit"],*/ .btn-file,
 .header-message-user,
-.pagination-previous a,
 .resource-external-link, .play-this-track-playlink, .replace-playlink,
 .shout-more-replies-before,
 .coloured-cta,
@@ -6862,7 +6919,6 @@ button,
 .external, .open,
 .btn--has-icon-right,
 .dropdown-menu-clickable-button, .dropdown-menu-clickable-button-js-only,
-.pagination-next a,
 .btn-shortcut,
 .gallery-next .arrow,
 .header-new-gallery--link .header-new-gallery-inner,
@@ -7170,7 +7226,6 @@ span.header-new-gallery-inner a:before,
 .out-now-btn:before,
 .select-button:after,
 .external:before, .open:before,
-.pagination-next a:before,
 .btn-shortcut:before,
 .gallery-next .arrow,
 .header-new-gallery--link .header-new-gallery-inner:before,
@@ -9426,8 +9481,21 @@ a.gallery-image-preferred-off {
     gap: var(--button-list-gap);
 }
 
+.pagination-next, .pagination-page, .pagination-previous {
+    display: flex;
+    line-height: inherit;
+
+    a {
+        height: fit-content;
+    }
+}
+
 .pagination-page {
     box-shadow: unset !important;
+
+    &.pagination-page--hide-mobile {
+        display: none;
+    }
 }
 .pagination-page--ellipsis span,
 .pagination-page a {
@@ -9437,15 +9505,17 @@ a.gallery-image-preferred-off {
     --shadow: none !important;
     --shadow-hov: none !important;
 }
+.pagination-page--ellipsis span {
+    --btn-left: 0;
+    --btn-right: 0;
+}
 .pagination-page[aria-current="page"] span {
     cursor: default;
 }
 
-.pagination-previous {
-    --mask: var(--icon-16-arrow-left);
-}
-.pagination-next {
-    --mask: var(--icon-16-arrow-right);
+.pagination-next, .pagination-previous {
+    top: 50%;
+    margin-top: -9px;
 }
 
 
@@ -11590,6 +11660,13 @@ table.table tr:nth-child(2n) td {
             top: calc(var(--card-padding) - 2px);
             right: calc(var(--card-padding) - 2px);
         }
+
+        @media (max-width: 600px) {
+            --card-specific-background:
+            linear-gradient(hsl(var(--b5)), hsl(var(--g4))) padding-box;
+            border: unset !important;
+            padding: var(--card-padding) !important;
+        }
     }
 
     h2 {
@@ -11701,7 +11778,7 @@ table.table tr:nth-child(2n) td {
 
 .wiki-style-rules,
 .wiki-author,
-.wiki-history-link--desktop,
+.wiki-history-link--desktop, .wiki-history-link--mobile,
 .qa-wiki-edit.btn-primary {
     display: none;
 }
@@ -14688,6 +14765,7 @@ input[type="range"]::-moz-range-progress {
 
     @media (max-width: 600px) {
         flex-direction: column;
+        gap: var(--item-list-gap);
     }
 
     .heading {
@@ -15622,15 +15700,13 @@ input[type="range"]::-moz-range-progress {
 
 
 /*     UNDER CONSTRUCTION     */
-.nag-bar--alert,
-body:is(.namespace--user_playlists_create_overview, .music-landing-overview):after {
+.nag-bar--alert {
     position: fixed;
     padding: 10px var(--card-gap);
     border-radius: var(--item-big-radius);
     box-shadow: var(--card-shadow);
     right: var(--card-gap);
     bottom: var(--card-gap);
-    content: 'This page or a component on it is not finished, things may look weird.';
     font-size: var(--font-size);
     font-weight: var(--font-weight-medium);
     display: flex;
@@ -18213,6 +18289,12 @@ h4 {
     justify-content: space-between;
     width: 100%;
 
+    @media (max-width: 600px) {
+        flex-direction: column;
+        gap: 2px;
+        justify-content: unset;
+    }
+
     &.space-below {
         margin-bottom: var(--card-gap);
     }
@@ -18303,6 +18385,10 @@ h4 {
     padding: unset !important;
     box-shadow: unset !important;
 
+    @media (max-width: 600px) {
+        gap: 1px;
+    }
+
     &.mini-interactions {
         display: grid;
         grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
@@ -18329,6 +18415,10 @@ h4 {
             text-align: left;
             position: relative;
 
+            @media (max-width: 600px) {
+                --radius: 0;
+            }
+
             &:not(.mini) {
                 flex: 1;
             }
@@ -18338,6 +18428,11 @@ h4 {
                 --padding: var(--card-gap) var(--card-padding);
                 width: 48px;
                 --left: 15px;
+
+                @media (max-width: 600px) {
+                    width: 56px;
+                    --left: 19px;
+                }
             }
 
             [data-bleh--theme_type="light"] & {
@@ -18938,6 +19033,7 @@ h4 {
             padding: var(--card-padding) !important;
             flex-direction: column !important;
             align-items: center !important;
+            text-align: center;
             gap: 15px !important;
 
             /*.info-side {
@@ -19068,6 +19164,7 @@ h4 {
 
             &.obsession-track-header {
                 justify-content: center;
+                text-align: center;
                 /*margin: -630px 0 0 0 !important;*/
                 margin: -580px 0 300px 0 !important;
 
@@ -19328,7 +19425,7 @@ h4 {
         .title-container {
             display: flex;
             align-items: center;
-            gap: 6px;
+            gap: var(--item-list-gap);
             cursor: default;
 
             h1 {
@@ -19356,6 +19453,15 @@ h4 {
                 [data-bleh--theme_type="light"] & {
                     text-shadow: 0 0 15px hsl(var(--b5));
                 }
+            }
+
+            .badges {
+                display: flex;
+                gap: var(--item-list-gap);
+            }
+
+            @media (max-width: 600px) {
+                flex-direction: column;
             }
 
             &[data-multi="true"] {
@@ -21230,6 +21336,11 @@ h4 {
 
     padding: 30px calc(var(--card-padding) * 6);
 
+    @media (max-width: 600px) {
+        padding: 30px var(--card-padding);
+        text-align: center;
+    }
+
     margin-top: -205px;
 
     .sponsor-message {
@@ -22037,7 +22148,11 @@ h4 {
         margin-top: var(--card-gap) !important;
     }
 }
+.more-link-fullwidth-right {
+    margin-bottom: unset !important;
+}
 
+.pagination-next a, .pagination-previous a,
 .more-link-fullwidth a,
 .music-more-link a,
 .modal-body .js-close,
@@ -22075,6 +22190,7 @@ h4 {
     transition-duration: var(--trans);
     transition-timing-function: var(--trans-function);
 
+    &:is(.pagination-previous a),
     &.btn-secondary.js-close,
     &.cancel,
     &.sponsor,
@@ -22099,9 +22215,14 @@ h4 {
     &.sponsor {
         --mask: var(--icon-16-heart);
     }
+    &:is(.pagination-previous a),
     &.btn-secondary.js-close,
     &.cancel {
         --mask: var(--icon-16-arrow-left);
+    }
+
+    &.more-items {
+        margin-top: var(--card-gap) !important;
     }
 
     &:hover {
@@ -22312,6 +22433,13 @@ h4 {
     linear-gradient(0deg, hsla(var(--l3-c), 80%) 0%, hsl(var(--b5)) 100%) border-box;
     border: 2px solid transparent !important;
     padding: calc(var(--card-padding) - 2px) !important;
+
+    @media (max-width: 600px) {
+        --card-specific-background:
+        linear-gradient(hsl(var(--b5)), hsl(var(--g4))) padding-box;
+        border: unset !important;
+        padding: var(--card-padding) !important;
+    }
 }
 .lotus-preview {
     display: flex;
@@ -22537,4 +22665,12 @@ h4 {
     font-size: 13px;
     color: hsl(var(--c3));
     cursor: default;
+}
+
+
+@media (max-width: 600px) {
+    /* wiki editing */
+    .not-a-panel > section > .visible-xs {
+        display: none !important;
+    }
 }

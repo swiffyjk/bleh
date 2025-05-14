@@ -19435,7 +19435,7 @@ h4 {
         .title-container {
             display: flex;
             align-items: center;
-            gap: 6px;
+            gap: var(--item-list-gap);
             cursor: default;
 
             h1 {
@@ -19463,6 +19463,15 @@ h4 {
                 [data-bleh--theme_type="light"] & {
                     text-shadow: 0 0 15px hsl(var(--b5));
                 }
+            }
+
+            .badges {
+                display: flex;
+                gap: var(--item-list-gap);
+            }
+
+            @media (max-width: 600px) {
+                flex-direction: column;
             }
 
             &[data-multi="true"] {

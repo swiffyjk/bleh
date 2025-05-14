@@ -11526,14 +11526,11 @@
     let profile_notes = JSON.parse(localStorage.getItem("bleh_profile_notes")) || {};
     let profile_note = profile_notes[page.name];
     let profile_has_note = false;
-    if (profile_note != void 0)
+    if (profile_note)
       profile_has_note = true;
     log(`querying badges for ${page.name}`, "profile");
     let profile_name_obj;
-    if (ff("refreshed_nav"))
-      profile_name_obj = page.structure.container.querySelector(".redesigned-profile-header .title-container");
-    else
-      profile_name_obj = profile_header.querySelector(".header-title-label-wrap");
+    profile_name_obj = page.structure.container.querySelector(".redesigned-profile-header .title-container");
     if (ff("badges")) {
       let stock_badges = profile_name_obj.querySelectorAll(".label");
       stock_badges.forEach((badge) => {
@@ -11574,6 +11571,13 @@
           badge.setAttribute("onclick", "_sponsor()");
       });
     }
+    let badge_elements = profile_name_obj.querySelectorAll(".label");
+    let label_container = document.createElement("div");
+    label_container.classList.add("badges");
+    badge_elements.forEach((badge) => {
+      label_container.appendChild(badge);
+    });
+    profile_name_obj.appendChild(label_container);
     if (page.subpage != "overview") return;
     if (page.name == "katelyness") {
       let sponsor_cta = document.createElement("div");
@@ -16803,7 +16807,7 @@
       let version_text = document.createElement("a");
       version_text.classList.add("bleh--version");
       version_text.setAttribute("href", `${root}bleh`);
-      version_text.innerHTML = `${version.build}.${version.sku}${settings.dev ? `<div class="new-badge subtle">\u2726</div>` : ""}`;
+      version_text.innerHTML = `${version.build}.${version.sku}${settings.branch != "uwu" ? `.${settings.branch}` : ""}${settings.dev ? `<div class="new-badge subtle">\u2726</div>` : ""}`;
       masthead_logo.appendChild(version_text);
     }
   }

@@ -664,17 +664,14 @@ export function bleh_profiles() {
     let profile_note = profile_notes[page.name];
 
     let profile_has_note = false;
-    if (profile_note != undefined)
+    if (profile_note)
         profile_has_note = true;
 
     // badges
     log(`querying badges for ${page.name}`, 'profile');
 
     let profile_name_obj;
-    if (ff('refreshed_nav'))
-        profile_name_obj = page.structure.container.querySelector('.redesigned-profile-header .title-container');
-    else
-        profile_name_obj = profile_header.querySelector('.header-title-label-wrap');
+    profile_name_obj = page.structure.container.querySelector('.redesigned-profile-header .title-container');
 
 
     if (ff('badges')) {
@@ -725,6 +722,14 @@ export function bleh_profiles() {
                 badge.setAttribute('onclick', '_sponsor()');
         });
     }
+
+    let badge_elements = profile_name_obj.querySelectorAll('.label');
+    let label_container = document.createElement('div');
+    label_container.classList.add('badges');
+    badge_elements.forEach((badge) => {
+        label_container.appendChild(badge);
+    });
+    profile_name_obj.appendChild(label_container);
 
     if (page.subpage != 'overview') return;
 
