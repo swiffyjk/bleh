@@ -13,6 +13,7 @@ export let settings_template = {
     lit: 1,
 
     dev: false,
+    branch: 'uwu',
 
     api_key: '',
 
@@ -348,6 +349,12 @@ export let settings_base = {
         value: false,
         values: [true, false],
         type: 'toggle'
+    },
+    branch: {
+        css: 'branch',
+        unit: '',
+        value: '',
+        type: 'text'
     },
     font: {
         css: 'custom_font',

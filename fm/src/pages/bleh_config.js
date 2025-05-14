@@ -708,15 +708,15 @@ export function render_setting_page(page_id) {
 
         return (`
             <div class="bleh--panel">
-                <h4 class="top-header">${tl(trans.troubleshooting)}</h4>
-                <p>${trans_legacy.en.settings.performance.bio}</p>
-                <div class="setting" data-type="toggle">
+                <div class="alert alert-danger">${tl(trans.beware_notice)}</div>
+                <div class="setting" data-type="text" id="container-branch">
                     <div class="heading">
-                        <h5>Refresh theme</h5>
-                        <p>Force download the latest version of the stylesheet</p>
+                        <h5>${tl(trans.branch.name)}</h5>
+                        <p>${tl(trans.branch.body)}</p>
                     </div>
-                    <div class="toggle-wrap">
-                        <button class="bleh--btn primary" onclick="_force_refresh_theme()">Refresh</button>
+                    <div class="input-container content-form">
+                        <input type="text" maxlength="120" id="text-branch" value="${settings.branch}" placeholder="${tl(trans.enter_branch_name)}">
+                        <button class="bbtn chibi icon primary submit" onclick="_save_branch()">${tl(trans.save)}</button>
                     </div>
                 </div>
                 <div class="setting" data-type="toggle" id="container-dev" onclick="_update_item('dev')">
@@ -731,14 +731,13 @@ export function render_setting_page(page_id) {
                         </button>
                     </div>
                 </div>
-                <div class="sep"></div>
                 <div class="setting" data-type="toggle">
                     <div class="heading">
-                        <h5>${trans_legacy.en.settings.performance.bug.name}</h5>
-                        <p>${trans_legacy.en.settings.performance.bug.bio}</p>
+                        <h5>Refresh theme</h5>
+                        <p>Force download the latest version of the stylesheet</p>
                     </div>
                     <div class="toggle-wrap">
-                        <a class="btn bleh--btn primary" href="https://github.com/katelyynn/bleh/issues/new/choose" target="_blank">${trans_legacy.en.settings.go}</a>
+                        <button class="bleh--btn primary" onclick="_force_refresh_theme()">Refresh</button>
                     </div>
                 </div>
                 <div class="sep"></div>
@@ -2759,6 +2758,14 @@ unsafeWindow._save_font = function() {
 
     // save to settings
     settings.font = font;
+    localStorage.setItem('bleh', JSON.stringify(settings));
+}
+
+unsafeWindow._save_branch = function() {
+    let branch = document.getElementById('text-branch').value;
+
+    // save to settings
+    settings.branch = branch;
     localStorage.setItem('bleh', JSON.stringify(settings));
 }
 

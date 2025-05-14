@@ -32,6 +32,7 @@
     sat_bg: 1,
     lit: 1,
     dev: false,
+    branch: "uwu",
     api_key: "",
     profile_header_expand: true,
     hide_hateful: true,
@@ -353,6 +354,12 @@
       value: false,
       values: [true, false],
       type: "toggle"
+    },
+    branch: {
+      css: "branch",
+      unit: "",
+      value: "",
+      type: "text"
     },
     font: {
       css: "custom_font",
@@ -2628,6 +2635,20 @@
     },
     maybe: {
       en: "{c} interested"
+    },
+    branch: {
+      name: {
+        en: "Branch name"
+      },
+      body: {
+        en: "Control which development branch you are using"
+      }
+    },
+    enter_branch_name: {
+      en: "Type branch name (default is uwu)"
+    },
+    beware_notice: {
+      en: "Beware! Only change these settings if you know what you're doing"
     }
   };
   var trans_legacy = {
@@ -12475,6 +12496,7 @@
       for (var member in settings) delete settings[member];
       Object.assign(settings, JSON.parse(localStorage.getItem("bleh")) || create_settings_template());
     }
+    log(`branch ${settings.branch}`, "load");
     if (!settings.theme_type) {
       if (settings.theme == "light" || settings.theme == "ink")
         settings.theme_type = "light";
@@ -12499,7 +12521,7 @@
       try {
         document.body.style.setProperty(`--${settings_base[setting].css}`, `${settings[setting]}${settings_base[setting].unit}`);
       } catch (e) {
-        console.log("bleh - setting base entry for", setting, "is not accessible");
+        log(`information for ${setting} not accessible`, "settings", "log");
       }
       document.documentElement.setAttribute(`data-bleh--${setting}`, `${settings[setting]}`);
     }
@@ -13689,15 +13711,15 @@
       register_skip_to([]);
       return `
             <div class="bleh--panel">
-                <h4 class="top-header">${tl(trans.troubleshooting)}</h4>
-                <p>${trans_legacy.en.settings.performance.bio}</p>
-                <div class="setting" data-type="toggle">
+                <div class="alert alert-danger">${tl(trans.beware_notice)}</div>
+                <div class="setting" data-type="text" id="container-branch">
                     <div class="heading">
-                        <h5>Refresh theme</h5>
-                        <p>Force download the latest version of the stylesheet</p>
+                        <h5>${tl(trans.branch.name)}</h5>
+                        <p>${tl(trans.branch.body)}</p>
                     </div>
-                    <div class="toggle-wrap">
-                        <button class="bleh--btn primary" onclick="_force_refresh_theme()">Refresh</button>
+                    <div class="input-container content-form">
+                        <input type="text" maxlength="120" id="text-branch" value="${settings.branch}" placeholder="${tl(trans.enter_branch_name)}">
+                        <button class="bbtn chibi icon primary submit" onclick="_save_branch()">${tl(trans.save)}</button>
                     </div>
                 </div>
                 <div class="setting" data-type="toggle" id="container-dev" onclick="_update_item('dev')">
@@ -13712,14 +13734,13 @@
                         </button>
                     </div>
                 </div>
-                <div class="sep"></div>
                 <div class="setting" data-type="toggle">
                     <div class="heading">
-                        <h5>${trans_legacy.en.settings.performance.bug.name}</h5>
-                        <p>${trans_legacy.en.settings.performance.bug.bio}</p>
+                        <h5>Refresh theme</h5>
+                        <p>Force download the latest version of the stylesheet</p>
                     </div>
                     <div class="toggle-wrap">
-                        <a class="btn bleh--btn primary" href="https://github.com/katelyynn/bleh/issues/new/choose" target="_blank">${trans_legacy.en.settings.go}</a>
+                        <button class="bleh--btn primary" onclick="_force_refresh_theme()">Refresh</button>
                     </div>
                 </div>
                 <div class="sep"></div>
@@ -15573,6 +15594,11 @@
     document.body.style.setProperty(`--${settings_base.font.css}`, font);
     document.documentElement.setAttribute(`data-bleh--font`, font);
     settings.font = font;
+    localStorage.setItem("bleh", JSON.stringify(settings));
+  };
+  unsafeWindow._save_branch = function() {
+    let branch = document.getElementById("text-branch").value;
+    settings.branch = branch;
     localStorage.setItem("bleh", JSON.stringify(settings));
   };
   unsafeWindow._convert_hex = function() {
@@ -19642,7 +19668,7 @@
     log(`cached until ${api_expire}`, "style");
   };
   unsafeWindow._start_update = function() {
-    open("https://github.com/katelyynn/bleh/raw/uwu/fm/bleh.user.js");
+    open(`https://github.com/katelyynn/bleh/raw/${settings.branch}/fm/bleh.user.js`);
     dialog_rm({
       id: "bleh_update"
     });
@@ -19669,7 +19695,7 @@
     }
   };
   unsafeWindow._start_css_update = function() {
-    open("https://github.com/katelyynn/bleh/raw/uwu/fm/bleh.user.css");
+    open(`https://github.com/katelyynn/bleh/raw/${settings.branch}/fm/bleh.user.css`);
     dialog_rm({
       id: "bleh_update"
     });
@@ -19711,7 +19737,7 @@
   };
   function fetch_new_style(delete_old_style = false, reload_on_finish = false) {
     let xhr = new XMLHttpRequest();
-    let url = `https://katelyynn.github.io/bleh/fm/bleh.css?${Math.random()}`;
+    let url = `https://github.com/katelyynn/bleh/raw/${settings.branch}/fm/bleh.css?${Math.random()}`;
     xhr.open("GET", url, true);
     xhr.onload = function() {
       log(`style responded ${xhr.status}`, "style");

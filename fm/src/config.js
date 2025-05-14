@@ -24,6 +24,8 @@ export function load_settings(skip = false) {
         Object.assign(settings, JSON.parse(localStorage.getItem('bleh')) || create_settings_template());
     }
 
+    log(`branch ${settings.branch}`, 'load');
+
     if (!settings.theme_type) {
         if (settings.theme == 'light' || settings.theme == 'ink')
             settings.theme_type = 'light';
@@ -62,7 +64,7 @@ export function load_settings(skip = false) {
         try {
             document.body.style.setProperty(`--${settings_base[setting].css}`, `${settings[setting]}${settings_base[setting].unit}`);
         } catch(e) {
-            console.log('bleh - setting base entry for', setting, 'is not accessible');
+            log(`information for ${setting} not accessible`, 'settings', 'log');
         }
         document.documentElement.setAttribute(`data-bleh--${setting}`, `${settings[setting]}`);
     }

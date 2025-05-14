@@ -1779,6 +1779,20 @@ export const trans = {
     },
     maybe: {
         en: '{c} interested'
+    },
+    branch: {
+        name: {
+            en: 'Branch name'
+        },
+        body: {
+            en: 'Control which development branch you are using'
+        }
+    },
+    enter_branch_name: {
+        en: 'Type branch name (default is uwu)'
+    },
+    beware_notice: {
+        en: 'Beware! Only change these settings if you know what you\'re doing'
     }
 }
 
