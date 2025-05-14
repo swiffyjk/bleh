@@ -795,7 +795,7 @@ export const trans = {
     your_scrobbles: {
         en: 'Your scrobbles'
     },
-    plays: {
+    plays_lower: {
         en: 'plays'
     },
     message: {

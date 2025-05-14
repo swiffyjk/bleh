@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         bleh
 // @namespace    http://last.fm/
-// @version      2025.0512
+// @version      2025.0514
 // @description  bleh!!! ^-^
 // @author       kate
 // @match        https://www.last.fm/*
@@ -1644,7 +1644,7 @@
     your_scrobbles: {
       en: "Your scrobbles"
     },
-    plays: {
+    plays_lower: {
       en: "plays"
     },
     message: {
@@ -16414,7 +16414,7 @@
         plays_elem = grid.querySelector(".grid-items-item-aux-text a:last-child");
       }
       if (plays_elem != null && !grid.classList.contains("obsessions-item")) {
-        let plays = clean_number(plays_elem.textContent.trim().replace(` ${tl(trans.plays)}`, ""));
+        let plays = clean_number(plays_elem.textContent.trim().replace(` ${tl(trans.plays_lower)}`, ""));
         plays_elem.classList.add("grid-item-plays");
         if (is_album)
           plays_elem.textContent = plays.toLocaleString(lang);
