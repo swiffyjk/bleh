@@ -5071,8 +5071,11 @@ better than the default selector '#app a' i suppose */
     .chartlist-more-button {
         --left: 7px;
         --mask: var(--icon-16-dots);
-        top: 50%;
-        margin-top: -16px;
+
+        @media (max-width: 600px) {
+            top: 50%;
+            margin-top: -16px;
+        }
     }
 }
 
