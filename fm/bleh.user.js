@@ -16780,10 +16780,8 @@
     let masthead = document.body.querySelector(".masthead");
     let new_auth = masthead.querySelector(".auth-dropdown-menu");
     let auth_link2 = masthead.querySelector(".masthead-nav-wrap > .site-auth .auth-link");
-    if (!auth_link2)
-      return;
-    if (auth_link2.hasAttribute("data-bleh"))
-      return;
+    if (!auth_link2) return;
+    if (auth_link2.hasAttribute("data-bleh")) return;
     auth_link2.setAttribute("data-bleh", "true");
     let text = document.createElement("p");
     text.textContent = auth.name;
@@ -17016,19 +17014,20 @@
     let mobile = document.createElement("div");
     mobile.classList.add("mobile-controls");
     mobile.innerHTML = `
-        <a class="btn mobile-control" data-menu-item="home" href="${root}music">
+        <a class="btn mobile-control" aria-checked="${page.type == "overview" || page.type == "recommended" || page.type == "releases" || page.type == "bookmarks" || page.type == "charts"}" data-menu-item="home" href="${root}music">
             ${tl(trans.home)}
         </a>
-        <a class="btn mobile-control" data-menu-item="search" href="${root}search">
+        <a class="btn mobile-control" aria-checked="${page.type == "search"}" data-menu-item="search" href="${root}search">
             ${tl(trans.search)}
         </a>
-        <a class="btn mobile-control" data-menu-item="profile_mobile" href="${root}user/${auth.name}">
+        <a class="btn mobile-control" aria-checked="${page.type == "user" && page.name == auth.name}" data-menu-item="profile_mobile" href="${root}user/${auth.name}">
             ${auth.name}
         </a>
-        <a class="btn mobile-control" data-menu-item="notifications" href="${root}inbox/notifications">
+        <a class="btn mobile-control" aria-checked="${page.type == "inbox"}" data-menu-item="notifications" href="${root}inbox/notifications">
             ${tl(trans.inbox.name)}
+            ${inbox_count || notif_count ? `<div class="notification-count-badge"></div>` : ""}
         </a>
-        <a class="btn mobile-control" data-menu-item="settings" href="${root}bleh">
+        <a class="btn mobile-control" aria-checked="${page.type == "settings" || page.type == "bleh_settings"}" data-menu-item="settings" href="${root}bleh">
             ${tl(trans.settings)}
         </a>
     `;
@@ -19936,7 +19935,6 @@
     notify_if_new_update();
     lotus();
     sponsors();
-    append_nav();
     try {
       main_flow();
       const observer = new MutationObserver((mutations) => {
@@ -20091,7 +20089,6 @@
     }
   }
   function load_page() {
-    append_nav();
     set_season();
     seasonal_timer_end();
     let masthead = document.body.querySelector(".masthead");
@@ -20140,6 +20137,7 @@
       if ((page.type == "user" || page.type == "tag" || page.type == "events") && (page.subpage == "overview" || page.subpage == "event_overview"))
         bleh_radio();
     }
+    append_nav();
     if (ff("page_title")) {
       let template = tl(trans.page_templates.type);
       if ((page.type == "user" || page.type == "artist" || page.type == "events" || page.type == "tag") && page.subpage != "home")

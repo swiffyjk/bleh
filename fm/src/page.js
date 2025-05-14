@@ -110,8 +110,6 @@ function bleh_main() {
     lotus();
     sponsors();
 
-    append_nav();
-
     try {
         //throw new Error;
         main_flow();
@@ -340,7 +338,6 @@ function assign_page_subpage() {
 }
 
 function load_page() {
-    append_nav();
     set_season();
     seasonal_timer_end();
 
@@ -399,6 +396,8 @@ function load_page() {
         if ((page.type == 'user' || page.type == 'tag' || page.type == 'events') && (page.subpage == 'overview' || page.subpage == 'event_overview'))
             bleh_radio();
     }
+
+    append_nav();
 
     if (ff('page_title')) {
         let template = tl(trans.page_templates.type);
