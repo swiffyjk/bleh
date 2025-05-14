@@ -8758,7 +8758,10 @@
     let play_btn = interact_container.querySelector(".header-new-playlink");
     if (play_btn)
       interact_container.removeChild(play_btn);
-    page.structure.side.insertBefore(interact_container, page.structure.side.firstElementChild);
+    if (!page.mobile)
+      page.structure.side.insertBefore(interact_container, page.structure.side.firstElementChild);
+    else
+      page.structure.main.insertBefore(interact_container, page.structure.main.firstElementChild);
     let metadata = col_main.querySelector(".metadata-column");
     if (metadata) {
       if (settings.simulate_scroll) {
@@ -8857,6 +8860,13 @@
             </a>
         `;
       link_container.appendChild(genius);
+      let tidal = document.createElement("li");
+      tidal.innerHTML = `
+            <a class="play-this-track-playlink music-link play-this-track-playlink--tidal" href="https://listen.tidal.com/search?q=${sanitise(page.sister, " ")} ${sanitise(page.name, " ")}" target="_blank">
+                Tidal
+            </a>
+        `;
+      link_container.appendChild(tidal);
     } else {
       let header = document.createElement("div");
       header.classList.add("sub-text", "music-small-header");
@@ -9075,11 +9085,15 @@
         metascore.link = link.getAttribute("href");
       }
     });
+    page.structure.side.classList.remove("hidden-xs");
     let panel = page.structure.side.querySelector("section.section-with-separator:has(.listener-trend)");
     if (!panel) {
       panel = document.createElement("section");
       panel.classList.add("section-with-separator");
-      page.structure.side.insertBefore(panel, page.structure.side.firstElementChild);
+      if (!page.mobile)
+        page.structure.side.insertBefore(panel, page.structure.side.firstElementChild);
+      else
+        page.structure.main.insertBefore(panel, page.structure.main.firstElementChild);
     }
     panel.classList.add("listen-panel");
     let row = document.createElement("div");
@@ -9101,6 +9115,8 @@
         ` : ""}
     `;
     panel.insertBefore(row, panel.firstElementChild);
+    if (page.mobile)
+      page.structure.main.insertBefore(panel, page.structure.main.firstElementChild);
     tippy(document.getElementById("listeners"), {
       content: listeners.value.toLocaleString(lang)
     });
@@ -11237,9 +11253,6 @@
         alert.innerHTML = `<strong>${tl(trans.sponsor_info)}</strong>`;
         page.structure.main.appendChild(alert);
       }
-      let featured_track_panel = profile_header.querySelector(".header-featured-track");
-      if (featured_track_panel)
-        bleh_featured_profile_track(featured_track_panel);
       let recent_tracks = page.structure.main.querySelector("#recent-tracks-section");
       if (!recent_tracks) {
         recent_tracks = page.structure.main.querySelector(".no-data-message");
@@ -11624,6 +11637,9 @@
     } else if (page.mobile) {
       page.structure.main.insertBefore(about_me_sidebar, page.structure.main.firstElementChild);
     }
+    let featured_track_panel = profile_header.querySelector(".header-featured-track");
+    if (featured_track_panel)
+      bleh_featured_profile_track(featured_track_panel, about_me_sidebar);
     if (!about_me_sidebar.hasAttribute("data-kate-processed")) {
       about_me_sidebar.setAttribute("data-kate-processed", "true");
       if (settings.bio_markdown) {
@@ -11841,7 +11857,7 @@
       page.structure.main.querySelector("#recent-tracks-section .chartlist").outerHTML = tracklist_panel.outerHTML;
     });
   }
-  function bleh_featured_profile_track(object) {
+  function bleh_featured_profile_track(object, about_me) {
     let art = object.querySelector(".featured-item-art");
     let details = object.querySelector(".featured-item-details");
     let form = document.body.querySelector(".header-info-primary form");
@@ -11898,7 +11914,6 @@
             ${details.outerHTML}
         </div>
     `;
-    let about_me = page.structure.side.querySelector(".about-me-sidebar");
     if (about_me)
       about_me.after(panel);
     else

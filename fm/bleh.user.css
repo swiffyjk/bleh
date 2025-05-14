@@ -2801,6 +2801,10 @@ span.header-new-gallery-inner a,
 
 .library-controls {
     margin: unset !important;
+
+    .library-controls-datepicker {
+        display: none !important;
+    }
 }
 .library-controls .secondary-nav {
     margin-top: var(--card-gap) !important;
@@ -2809,6 +2813,11 @@ span.header-new-gallery-inner a,
     [data-ff--katsune="true"] & {
         margin-left: var(--card-padding) !important;
         margin-right: var(--card-padding) !important;
+
+        @media (max-width: 600px) {
+            margin-left: unset !important;
+            margin-right: unset !important;
+        }
     }
 }
 
@@ -2837,6 +2846,13 @@ span.header-new-gallery-inner a,
 
     [data-ff--katsune="true"] & {
         top: 15px;
+    }
+
+    @media (max-width: 600px) {
+        position: relative;
+        inset: unset !important;
+        margin-top: var(--card-gap) !important;
+        margin-left: var(--card-padding);
     }
 }
 .library-search-submit {
@@ -4982,7 +4998,12 @@ better than the default selector '#app a' i suppose */
             line-height: 3px;
             width: 100%;
 
+            .chartlist-count-bar-slug {
+                background: hsl(var(--l4-c)) !important;
+            }
+
             .chartlist-count-bar-value {
+                color: hsl(var(--c1));
                 overflow: unset !important;
                 position: relative;
                 bottom: 2px;
@@ -6161,8 +6182,11 @@ the body text becomes bigger by default - this reverts that */
     left: calc(-1 * (var(--shout-avatar-size) + 12px)) !important;
     box-shadow: var(--interact-shadow);
     border-radius: var(--avatar-radius);
+    display: flex !important;
 }
 .shout-user-avatar {
+    z-index: 20;
+
     &[data-avatar-themed] {
         box-shadow: 0 4px 10px hsl(var(--h4), 10%), var(--interact-shadow);
 
@@ -10096,7 +10120,7 @@ text[style^="color: rgb(255, 172, 172)"] {
 
     &[data-theme="user"] {
         padding: var(--card-gap) 30px !important;
-        border-radius: var(--card-radius) !important;
+        border-radius: var(--item-big-radius) !important;
         transform-origin: center;
         color: hsl(var(--c2));
         max-width: 500px !important;
@@ -10179,6 +10203,23 @@ text[style^="color: rgb(255, 172, 172)"] {
 
         &[data-state="hidden"] {
             opacity: 0;
+        }
+
+        @media (max-width: 600px) {
+            [data-tippy-root]:has(&) {
+                transform: unset !important;
+                top: unset !important;
+                bottom: 0 !important;
+                left: 0 !important;
+                right: 0 !important;
+                position: fixed !important;
+            }
+
+            border-bottom-left-radius: 0 !important;
+            border-bottom-right-radius: 0 !important;
+
+            background: hsl(var(--b6), 75%) !important;
+            box-shadow: var(--menu-shadow) !important;
         }
     }
 
@@ -11945,6 +11986,7 @@ table.table tr:nth-child(2n) td {
         --card-specific-background: transparent;
         box-shadow: none !important;
         width: 600px;
+        max-width: var(--cards-width);
 
         position: relative;
 
@@ -12037,6 +12079,12 @@ table.table tr:nth-child(2n) td {
             }
         }
 
+        @media (max-width: 600px) {
+            .sub-text {
+                flex-direction: row;
+            }
+        }
+
         form {
             margin: unset;
 
@@ -12062,12 +12110,17 @@ table.table tr:nth-child(2n) td {
     .obsession-related {
         width: 700px;
 
+        @media (max-width: 600px) {
+            width: var(--cards-width);
+        }
+
         .other-obsessions,
         .fellow-obsessors {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
             gap: var(--item-list-gap);
             margin: unset;
+            padding: unset;
 
             &:before, &:after {
                 display: none;
@@ -12196,6 +12249,10 @@ table.table tr:nth-child(2n) td {
 
 .obsession-video-container {
     width: 533.33333333px;
+
+    @media (max-width: 600px) {
+        width: calc(var(--cards-width) - (var(--card-padding) * 2));
+    }
 }
 
 
@@ -12243,6 +12300,12 @@ table.table tr:nth-child(2n) td {
     pointer-events: none;
     top: 68px;
     max-height: 638px;
+
+    @media (max-width: 600px) {
+        top: 0;
+        max-height: 150px;
+        z-index: 30;
+    }
 }
 .obsession-pagination-next, .obsession-pagination-previous {
     top: 0;
@@ -20429,6 +20492,7 @@ h4 {
         .glacier-library-metadata-item {
             display: flex;
             flex-direction: column;
+            overflow: hidden;
 
             .glacier-library-metadata-item-value {
                 font-size: 16px;
@@ -20467,6 +20531,7 @@ h4 {
             border-radius: var(--item-big-radius);
             box-shadow: var(--card-shadow);
             overflow: hidden;
+            flex-shrink: 0;
 
             img {
                 width: 40px;
@@ -20527,6 +20592,12 @@ h4 {
     .glacier-library-top-upper {
         display: flex;
         justify-content: space-between;
+
+        @media (max-width: 600px) {
+            justify-content: unset;
+            flex-direction: column;
+            gap: var(--card-gap);
+        }
     }
 }
 
@@ -22186,6 +22257,7 @@ h4 {
     }
 }
 .more-link-fullwidth-right {
+    box-shadow: unset;
     margin-bottom: unset !important;
 }
 
@@ -22203,6 +22275,7 @@ h4 {
 #events-section > p > a,
 .see-more {
     display: inline-flex;
+    background: var(--bg) !important;
     --bg: transparent;
     --bg-hov: transparent;
     --bg-atv: transparent;

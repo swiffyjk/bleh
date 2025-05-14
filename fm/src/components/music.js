@@ -426,7 +426,10 @@ export function show_your_scrobbles() {
     if (play_btn)
         interact_container.removeChild(play_btn);
 
-    page.structure.side.insertBefore(interact_container, page.structure.side.firstElementChild);
+    if (!page.mobile)
+        page.structure.side.insertBefore(interact_container, page.structure.side.firstElementChild);
+    else
+        page.structure.main.insertBefore(interact_container, page.structure.main.firstElementChild);
 
 
 
@@ -548,6 +551,14 @@ export function show_your_scrobbles() {
             </a>
         `);
         link_container.appendChild(genius);
+
+        let tidal = document.createElement('li');
+        tidal.innerHTML = (`
+            <a class="play-this-track-playlink music-link play-this-track-playlink--tidal" href="https://listen.tidal.com/search?q=${sanitise(page.sister, ' ')} ${sanitise(page.name, ' ')}" target="_blank">
+                Tidal
+            </a>
+        `);
+        link_container.appendChild(tidal);
     } else {
         let header = document.createElement('div');
         header.classList.add('sub-text', 'music-small-header');
@@ -810,6 +821,8 @@ function show_numbers_on_side(header_type) {
         }
     });
 
+    page.structure.side.classList.remove('hidden-xs');
+
 
     // get panel
     let panel = page.structure.side.querySelector('section.section-with-separator:has(.listener-trend)');
@@ -818,7 +831,10 @@ function show_numbers_on_side(header_type) {
         panel = document.createElement('section');
         panel.classList.add('section-with-separator');
 
-        page.structure.side.insertBefore(panel, page.structure.side.firstElementChild);
+        if (!page.mobile)
+            page.structure.side.insertBefore(panel, page.structure.side.firstElementChild);
+        else
+            page.structure.main.insertBefore(panel, page.structure.main.firstElementChild);
     }
 
     panel.classList.add('listen-panel');
@@ -844,6 +860,9 @@ function show_numbers_on_side(header_type) {
     `);
 
     panel.insertBefore(row, panel.firstElementChild);
+
+    if (page.mobile)
+        page.structure.main.insertBefore(panel, page.structure.main.firstElementChild);
 
     tippy(document.getElementById('listeners'), {
         content: listeners.value.toLocaleString(lang)

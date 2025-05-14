@@ -293,12 +293,6 @@ export function bleh_profiles() {
         }
 
 
-        // featured track
-        let featured_track_panel = profile_header.querySelector('.header-featured-track');
-        if (featured_track_panel)
-            bleh_featured_profile_track(featured_track_panel);
-
-
         // recent tracks
         let recent_tracks = page.structure.main.querySelector('#recent-tracks-section');
         if (!recent_tracks) {
@@ -796,6 +790,11 @@ export function bleh_profiles() {
         page.structure.main.insertBefore(about_me_sidebar, page.structure.main.firstElementChild);
     }
 
+    // featured track
+    let featured_track_panel = profile_header.querySelector('.header-featured-track');
+    if (featured_track_panel)
+        bleh_featured_profile_track(featured_track_panel, about_me_sidebar);
+
     if (!about_me_sidebar.hasAttribute('data-kate-processed')) {
         about_me_sidebar.setAttribute('data-kate-processed','true');
 
@@ -1089,7 +1088,7 @@ function refresh_tracks(button) {
     });
 }
 
-function bleh_featured_profile_track(object) {
+function bleh_featured_profile_track(object, about_me) {
     let art = object.querySelector('.featured-item-art');
     let details = object.querySelector('.featured-item-details');
     let form = document.body.querySelector('.header-info-primary form');
@@ -1167,7 +1166,6 @@ function bleh_featured_profile_track(object) {
         </div>
     `);
 
-    let about_me = page.structure.side.querySelector('.about-me-sidebar');
     if (about_me)
         about_me.after(panel);
     else
