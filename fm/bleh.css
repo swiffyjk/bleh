@@ -1055,6 +1055,7 @@ last.fm changes as of 2024-05-20 */
         top: unset !important;
         bottom: 0 !important;
         height: 58px !important;
+        z-index: 1000000000;
 
         background: hsl(var(--b6), 85%) !important;
         backdrop-filter: blur(20px) saturate(120%) !important;
@@ -2791,6 +2792,10 @@ span.header-new-gallery-inner a,
 
 .library-controls {
     margin: unset !important;
+
+    .library-controls-datepicker {
+        display: none !important;
+    }
 }
 .library-controls .secondary-nav {
     margin-top: var(--card-gap) !important;
@@ -2799,6 +2804,11 @@ span.header-new-gallery-inner a,
     [data-ff--katsune="true"] & {
         margin-left: var(--card-padding) !important;
         margin-right: var(--card-padding) !important;
+
+        @media (max-width: 600px) {
+            margin-left: unset !important;
+            margin-right: unset !important;
+        }
     }
 }
 
@@ -2827,6 +2837,13 @@ span.header-new-gallery-inner a,
 
     [data-ff--katsune="true"] & {
         top: 15px;
+    }
+
+    @media (max-width: 600px) {
+        position: relative;
+        inset: unset !important;
+        margin-top: var(--card-gap) !important;
+        margin-left: var(--card-padding);
     }
 }
 .library-search-submit {
@@ -4840,6 +4857,7 @@ better than the default selector '#app a' i suppose */
     border-top: 1px solid var(--card-border-base);
     margin: unset !important;
     display: flex !important;
+    align-items: center;
 
     &[aria-expanded="true"],
     &:hover {
@@ -4851,6 +4869,18 @@ better than the default selector '#app a' i suppose */
         display: none;
     }
 
+    &.show-focus-controls {
+        .chartlist-more {
+            opacity: 1 !important;
+        }
+    }
+
+    &:hover {
+        .chartlist-play, .chartlist-more {
+            display: var(--override, block) !important;
+        }
+    }
+
     @media (max-width: 600px) {
         td {
             display: inline-block;
@@ -4858,6 +4888,7 @@ better than the default selector '#app a' i suppose */
 
         .chartlist-play {
             display: none !important;
+            --override: none;
         }
 
         .chartlist-timestamp {
@@ -4872,11 +4903,7 @@ better than the default selector '#app a' i suppose */
 }
 
 .chartlist {
-    tr {
-        @media (max-width: 600px) {
-
-        }
-    }
+    line-height: var(--line-height) !important;
 }
 
 .lastfm-bulk-edit-chartlist-scrobbles {
@@ -4950,6 +4977,35 @@ better than the default selector '#app a' i suppose */
     margin-left: calc(var(--chartlist-inner-gap) / 2) !important;
     margin-right: calc(var(--chartlist-inner-gap) / 2) !important;
 }
+.chartlist-bar {
+    @media (max-width: 600px) {
+        margin: unset !important;
+        position: absolute;
+        left: 12px;
+        right: 12px;
+        bottom: 0;
+
+        .chartlist-count-bar {
+            line-height: 3px;
+            width: 100%;
+
+            .chartlist-count-bar-slug {
+                background: hsl(var(--l4-c)) !important;
+            }
+
+            .chartlist-count-bar-link {
+                padding: 0 !important;
+            }
+
+            .chartlist-count-bar-value {
+                color: hsl(var(--c1));
+                overflow: unset !important;
+                position: relative;
+                bottom: 9px;
+            }
+        }
+    }
+}
 .chartlist-image {
     margin-left: unset !important;
     overflow: unset !important;
@@ -4996,27 +5052,20 @@ better than the default selector '#app a' i suppose */
 {
     margin-right: 12px;
     text-align: center !important;
+    position: relative;
+    inset: unset !important;
+    margin-top: unset !important;
 }
 
-.chartlist-row {
-    &.show-focus-controls {
-        .chartlist-more {
-            opacity: 1 !important;
-        }
-    }
-
-    &:hover {
-        .chartlist-play, .chartlist-more {
-            display: block !important;
-        }
-    }
-}
 .chartlist-more {
     .chartlist-more-button {
         --left: 7px;
         --mask: var(--icon-16-dots);
-        top: 50%;
-        margin-top: -16px;
+
+        @media (max-width: 600px) {
+            top: 50%;
+            margin-top: -16px;
+        }
     }
 }
 
@@ -5446,6 +5495,7 @@ better than the default selector '#app a' i suppose */
     color: hsl(var(--c3));
     text-align: right;
     cursor: default;
+    width: 16px;
 }
 
 .obsession-candidate-image,
@@ -5471,8 +5521,9 @@ better than the default selector '#app a' i suppose */
 }
 .chartlist-image {
     @media (max-width: 600px) {
-        position: static;
+        position: relative;
         margin-top: unset;
+        inset: unset !important;
     }
 }
 .chartlist-row--now-scrobbling .chartlist-image {
@@ -5755,6 +5806,11 @@ p + .chartlist {
 .shout-form + .shout-list,
 .shout-list {
     margin-top: var(--card-gap);
+}
+
+.shoutbox-sort-toggle {
+    position: relative;
+    inset: unset !important;
 }
 
 
@@ -6129,8 +6185,11 @@ the body text becomes bigger by default - this reverts that */
     left: calc(-1 * (var(--shout-avatar-size) + 12px)) !important;
     box-shadow: var(--interact-shadow);
     border-radius: var(--avatar-radius);
+    display: flex !important;
 }
 .shout-user-avatar {
+    z-index: 20;
+
     &[data-avatar-themed] {
         box-shadow: 0 4px 10px hsl(var(--h4), 10%), var(--interact-shadow);
 
@@ -7995,6 +8054,8 @@ very, very, very dated - who looks up a song on ebay? */
 
 /*     DATE PICKER     */
 .date-panel {
+    order: -1;
+
     .row {
         display: flex;
         flex-direction: column;
@@ -8003,6 +8064,10 @@ very, very, very dated - who looks up a song on ebay? */
         .user-sidebar-header {
             margin: unset !important;
             color: hsl(var(--c3));
+        }
+
+        .library-controls-datepicker {
+            display: flex !important;
         }
 
         .library-controls-datepicker > .library-date-picker {
@@ -8019,13 +8084,28 @@ very, very, very dated - who looks up a song on ebay? */
                 --mask: var(--icon-16-dropdown);
                 --btn-top: 0;
                 --btn-left: 0;
-                --btn-right: calc(16px + 6px) !important;
+                --btn-right: calc(12px + 4px) !important;
                 --left: none;
+                --margin-top: -6px;
+                --mask-size: 12px;
                 --right: 0;
                 --btn-bottom: 0;
 
                 font-size: 16px !important;
                 line-height: 20px !important;
+
+                &:after {
+                    transition-property: transform !important;
+                    transition-duration: var(--trans) !important;
+                    transition-timing-function: var(--trans-function) !important;
+                    color: hsl(var(--c3));
+                }
+
+                &[aria-expanded="true"] {
+                    &:after {
+                        transform: scaleY(-1) !important;
+                    }
+                }
 
                 .date-range-picker-button-inner {
                     max-width: 340px;
@@ -8038,10 +8118,6 @@ very, very, very dated - who looks up a song on ebay? */
 
                 &:before {
                     display: none;
-                }
-
-                &:after {
-                    color: hsl(var(--c3));
                 }
             }
         }
@@ -9987,7 +10063,7 @@ text[style^="color: rgb(255, 172, 172)"] {
     &[data-theme="window"] {
         padding: var(--card-gap) !important;
         background: hsl(var(--b6), 95%) !important;
-        border-radius: var(--card-radius) !important;
+        border-radius: var(--item-big-radius) !important;
         box-shadow: var(--override-full-shadow, var(--overlay-shadow)) !important;
         color: hsl(var(--c2));
 
@@ -10020,6 +10096,11 @@ text[style^="color: rgb(255, 172, 172)"] {
 
 
         max-width: 630px !important;
+
+        @media (max-width: 600px) {
+            width: var(--cards-width) !important;
+        }
+
         & > .tippy-content {
             display: flex;
         }
@@ -10059,7 +10140,7 @@ text[style^="color: rgb(255, 172, 172)"] {
 
     &[data-theme="user"] {
         padding: var(--card-gap) 30px !important;
-        border-radius: var(--card-radius) !important;
+        border-radius: var(--item-big-radius) !important;
         transform-origin: center;
         color: hsl(var(--c2));
         max-width: 500px !important;
@@ -10142,6 +10223,23 @@ text[style^="color: rgb(255, 172, 172)"] {
 
         &[data-state="hidden"] {
             opacity: 0;
+        }
+
+        @media (max-width: 600px) {
+            [data-tippy-root]:has(&) {
+                transform: unset !important;
+                top: unset !important;
+                bottom: 0 !important;
+                left: 0 !important;
+                right: 0 !important;
+                position: fixed !important;
+            }
+
+            border-bottom-left-radius: 0 !important;
+            border-bottom-right-radius: 0 !important;
+
+            background: hsl(var(--b6), 75%) !important;
+            box-shadow: var(--menu-shadow) !important;
         }
     }
 
@@ -11908,6 +12006,7 @@ table.table tr:nth-child(2n) td {
         --card-specific-background: transparent;
         box-shadow: none !important;
         width: 600px;
+        max-width: var(--cards-width);
 
         position: relative;
 
@@ -12000,6 +12099,12 @@ table.table tr:nth-child(2n) td {
             }
         }
 
+        @media (max-width: 600px) {
+            .sub-text {
+                flex-direction: row;
+            }
+        }
+
         form {
             margin: unset;
 
@@ -12025,12 +12130,17 @@ table.table tr:nth-child(2n) td {
     .obsession-related {
         width: 700px;
 
+        @media (max-width: 600px) {
+            width: var(--cards-width);
+        }
+
         .other-obsessions,
         .fellow-obsessors {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
             gap: var(--item-list-gap);
             margin: unset;
+            padding: unset;
 
             &:before, &:after {
                 display: none;
@@ -12159,6 +12269,10 @@ table.table tr:nth-child(2n) td {
 
 .obsession-video-container {
     width: 533.33333333px;
+
+    @media (max-width: 600px) {
+        width: calc(var(--cards-width) - (var(--card-padding) * 2));
+    }
 }
 
 
@@ -12206,6 +12320,12 @@ table.table tr:nth-child(2n) td {
     pointer-events: none;
     top: 68px;
     max-height: 638px;
+
+    @media (max-width: 600px) {
+        top: 0;
+        max-height: 150px;
+        z-index: 30;
+    }
 }
 .obsession-pagination-next, .obsession-pagination-previous {
     top: 0;
@@ -20385,6 +20505,12 @@ h4 {
     display: flex;
     justify-content: space-between;
 
+    @media (max-width: 600px) {
+        flex-direction: column;
+        gap: var(--card-gap);
+        justify-contenet: unset;
+    }
+
     .glacier-library-metadata {
         display: flex;
         gap: var(--card-gap);
@@ -20392,6 +20518,7 @@ h4 {
         .glacier-library-metadata-item {
             display: flex;
             flex-direction: column;
+            overflow: hidden;
 
             .glacier-library-metadata-item-value {
                 font-size: 16px;
@@ -20430,6 +20557,7 @@ h4 {
             border-radius: var(--item-big-radius);
             box-shadow: var(--card-shadow);
             overflow: hidden;
+            flex-shrink: 0;
 
             img {
                 width: 40px;
@@ -20490,6 +20618,12 @@ h4 {
     .glacier-library-top-upper {
         display: flex;
         justify-content: space-between;
+
+        @media (max-width: 600px) {
+            justify-content: unset;
+            flex-direction: column;
+            gap: var(--card-gap);
+        }
     }
 }
 
@@ -22149,6 +22283,7 @@ h4 {
     }
 }
 .more-link-fullwidth-right {
+    box-shadow: unset;
     margin-bottom: unset !important;
 }
 
@@ -22166,6 +22301,7 @@ h4 {
 #events-section > p > a,
 .see-more {
     display: inline-flex;
+    background: var(--bg) !important;
     --bg: transparent;
     --bg-hov: transparent;
     --bg-atv: transparent;
