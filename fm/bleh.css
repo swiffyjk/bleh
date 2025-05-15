@@ -4103,6 +4103,12 @@ button.navlist-more {
                 }
             }
         }
+
+        .sub-text {
+            flex-direction: row;
+            gap: unset;
+            justify-content: space-between;
+        }
     }
 
     .metadata-column {
@@ -5467,6 +5473,7 @@ better than the default selector '#app a' i suppose */
 .chartlist-artist {
     display: flex !important;
     color: hsl(var(--c3)) !important;
+    position: absolute !important;
 
     a + a {
         margin-left: 4px;
@@ -5809,8 +5816,7 @@ p + .chartlist {
 }
 
 .shoutbox-sort-toggle {
-    position: relative;
-    inset: unset !important;
+    top: 0 !important;
 }
 
 
@@ -10229,7 +10235,7 @@ text[style^="color: rgb(255, 172, 172)"] {
             [data-tippy-root]:has(&) {
                 transform: unset !important;
                 top: unset !important;
-                bottom: 0 !important;
+                bottom: 58px !important;
                 left: 0 !important;
                 right: 0 !important;
                 position: fixed !important;
@@ -14700,6 +14706,7 @@ pre {
     display: flex;
     gap: var(--button-list-gap);
     justify-content: center;
+    flex-wrap: wrap;
     margin: var(--card-gap) 0 calc(-1 * var(--card-padding)) 0;
     padding: var(--card-padding) 0;
 
@@ -19167,6 +19174,10 @@ h4 {
                 .sub-text,
                 .title-container {
                     justify-content: center;
+                }
+
+                h2 {
+                    flex-wrap: wrap;
                 }
             }
 
