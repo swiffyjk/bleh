@@ -17156,7 +17156,10 @@
                 ${original_edit_button.textContent}
             </a>
         `;
-      page.structure.side.insertBefore(new_edit_panel, page.structure.side.firstElementChild);
+      if (!page.mobile)
+        page.structure.side.insertBefore(new_edit_panel, page.structure.side.firstElementChild);
+      else
+        page.structure.main.insertBefore(new_edit_panel, page.structure.main.firstElementChild);
     }
     if (original_version_history) {
       let new_version_panel = document.createElement("section");
@@ -17166,10 +17169,14 @@
                 ${original_version_history.textContent}
             </a>
         `;
-      if (original_edit_button)
+      if (original_edit_button) {
         new_edit_panel.after(new_version_panel);
-      else
-        page.structure.side.insertBefore(new_version_panel, page.structure.side.firstElementChild);
+      } else {
+        if (!page.mobile)
+          page.structure.side.insertBefore(new_version_panel, page.structure.side.firstElementChild);
+        else
+          page.structure.main.insertBefore(new_version_panel, page.structure.main.firstElementChild);
+      }
     }
     let wiki_author = wiki_panel.querySelector(".wiki-author");
     if (wiki_author) {
@@ -17231,7 +17238,10 @@
             ${tl(trans.view_latest_version)}
         </a>
     `;
-    page.structure.side.appendChild(latest_version_panel);
+    if (!page.mobile)
+      page.structure.side.appendChild(latest_version_panel);
+    else
+      page.structure.main.insertBefore(latest_version_panel, page.structure.main.firstElementChild);
     let entries = page.structure.main.querySelectorAll(".wiki-history-entry");
     entries.forEach((entry) => {
       let author = entry.querySelector(".wiki-history-author");
@@ -17324,7 +17334,10 @@
             ${tl(trans.view_latest_version)}
         </a>
     `;
-    page.structure.side.appendChild(latest_version_panel);
+    if (!page.mobile)
+      page.structure.side.appendChild(latest_version_panel);
+    else
+      page.structure.main.appendChild(latest_version_panel);
     let wiki_presets_panel = document.createElement("section");
     wiki_presets_panel.classList.add("wiki-presets-panel");
     wiki_presets_panel.innerHTML = `
@@ -19398,6 +19411,7 @@
     if (!button) return;
     button.classList.add("btn-send-shout-generic");
     button.textContent = tl(trans.send);
+    if (page.mobile) return;
     tippy(button, {
       content: tl(trans.send_quickly_with).replace("{kbd}", "<kbd>ctrl+\u21B5</kbd>"),
       delay: [500, 0],
@@ -20291,6 +20305,20 @@
   function detect_mobile() {
     if (window.innerWidth <= 600) {
       page.mobile = true;
+      let theme = document.createElement("meta");
+      theme.setAttribute("name", "theme-color");
+      theme.setAttribute("content", "#000000");
+      document.head.appendChild(theme);
+      let icon = document.head.querySelector('[rel="apple-touch-icon"]');
+      icon.setAttribute("href", "https://github.com/katelyynn/bleh/raw/uwu/fm/app.png");
+      let capable = document.createElement("meta");
+      capable.setAttribute("name", "apple-mobile-web-app-capable");
+      capable.setAttribute("content", "yes");
+      document.head.appendChild(capable);
+      let manifest = document.createElement("link");
+      manifest.setAttribute("rel", "manifest");
+      manifest.setAttribute("href", "https://github.com/katelyynn/bleh/raw/uwu/fm/app.webmanifest");
+      document.head.appendChild(manifest);
     } else {
       page.mobile = false;
     }

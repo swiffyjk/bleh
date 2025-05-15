@@ -27,7 +27,10 @@ export function bleh_wiki() {
             </a>
         `);
 
-        page.structure.side.insertBefore(new_edit_panel, page.structure.side.firstElementChild);
+        if (!page.mobile)
+            page.structure.side.insertBefore(new_edit_panel, page.structure.side.firstElementChild);
+        else
+            page.structure.main.insertBefore(new_edit_panel, page.structure.main.firstElementChild);
     }
 
     if (original_version_history) {
@@ -39,10 +42,14 @@ export function bleh_wiki() {
             </a>
         `);
 
-        if (original_edit_button)
+        if (original_edit_button) {
             new_edit_panel.after(new_version_panel);
-        else
-            page.structure.side.insertBefore(new_version_panel, page.structure.side.firstElementChild);
+        } else {
+            if (!page.mobile)
+                page.structure.side.insertBefore(new_version_panel, page.structure.side.firstElementChild);
+            else
+                page.structure.main.insertBefore(new_version_panel, page.structure.main.firstElementChild);
+        }
     }
 
 
@@ -134,7 +141,10 @@ export function bleh_wiki_history() {
         </a>
     `);
 
-    page.structure.side.appendChild(latest_version_panel);
+    if (!page.mobile)
+        page.structure.side.appendChild(latest_version_panel);
+    else
+        page.structure.main.insertBefore(latest_version_panel, page.structure.main.firstElementChild);
 
 
     // entries
@@ -249,7 +259,10 @@ export function bleh_wiki_editor() {
         </a>
     `);
 
-    page.structure.side.appendChild(latest_version_panel);
+    if (!page.mobile)
+        page.structure.side.appendChild(latest_version_panel);
+    else
+        page.structure.main.appendChild(latest_version_panel);
 
 
     // presets

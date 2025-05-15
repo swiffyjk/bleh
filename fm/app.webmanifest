@@ -1,0 +1,7 @@
+{
+    "name": "bleh",
+    "short_name": "bleh",
+    "theme_color": "#000000",
+    "start_url": "/music",
+    "display": "standalone"
+}
