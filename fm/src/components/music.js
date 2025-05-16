@@ -258,7 +258,7 @@ export function show_your_scrobbles() {
                 <img class="view-item-avatar" src="${shortcut_listens.avi}" alt="${shortcut_listens.name}">
                 <div class="info">
                     <h3>${shortcut_listens.name}</h3>
-                    <p>${trans_legacy.en.music.listens.count_listens.replace('{c}', listens.toLocaleString(lang))}</p>
+                    <p>${tl(trans.listens.count).replace('{c}', listens.toLocaleString(lang))}</p>
                 </div>
             `);
 
@@ -373,9 +373,9 @@ export function show_your_scrobbles() {
         obsession_btn.classList = 'btn view-item interact-item obsession-btn';
 
         tippy(obsession_btn, {
-            content: obsession_btn.textContent
+            content: tl(trans.set_obsession)
         });
-        obsession_btn.textContent = trans_legacy.en.music.obsession;
+        obsession_btn.textContent = tl(trans.obsess);
 
         interact_container.appendChild(obsession_form);
     }
@@ -681,7 +681,7 @@ function create_listen_item(parent, {name, listens, link, avi, count=0, button=f
             <img class="view-item-avatar" src="${avi}" alt="${name}">
             <div class="info">
                 <h3>${name}</h3>
-                <p>${trans_legacy.en.music.listens.count_listens.replace('{c}', listens.toLocaleString(lang))}</p>
+                <p>${tl(trans.listens.count).replace('{c}', listens.toLocaleString(lang))}</p>
             </div>
         `);
 
@@ -689,7 +689,7 @@ function create_listen_item(parent, {name, listens, link, avi, count=0, button=f
             theme: 'context-menu',
             content: (`
                 <a class="dropdown-menu-clickable-item" href="${root}user/${name}" data-menu-item="view_profile">
-                    ${trans_legacy.en.music.view_profile}
+                    ${tl(trans.profile)}
                 </a>
             `),
             allowHTML: true,
@@ -713,7 +713,7 @@ function create_listen_item(parent, {name, listens, link, avi, count=0, button=f
             <img class="view-item-avatar" src="${avi}" alt="${name}">
             <div class="info">
                 <h3>${name}</h3>
-                <p>${trans_legacy.en.music.listens.loading_listens}</p>
+                <p>${tl(trans.listens)}</p>
             </div>
         `);
 
@@ -721,7 +721,7 @@ function create_listen_item(parent, {name, listens, link, avi, count=0, button=f
             theme: 'context-menu',
             content: (`
                 <a class="dropdown-menu-clickable-item" href="${root}user/${name}" data-menu-item="view_profile">
-                    ${trans_legacy.en.music.view_profile}
+                    ${tl(trans.profile)}
                 </a>
                 <div class="sep"></div>
                 <button class="dropdown-menu-clickable-item" onclick="_open_profile_shortcut_window()" data-menu-item="settings">
@@ -760,7 +760,7 @@ function create_listen_item(parent, {name, listens, link, avi, count=0, button=f
             ${avi[2] ? `<img class="view-item-avatar" src="${avi[2].getAttribute('src')}">` : ''}
             <div class="info">
                 <h3>${tl(trans.following)}</h3>
-                <p>${trans_legacy.en.music.listens.other_listeners.replace('{c}', count)}</p>
+                <p>${tl(trans.others_count).replace('{c}', count)}</p>
             </div>
         `);
         listen_item.setAttribute('href', `${window.location.href}/+listeners/you-know`);
@@ -1069,10 +1069,10 @@ export function bleh_top_listeners() {
     view_buttons.innerHTML = (`
         <div class="view-buttons">
             <button class="btn view-item" id="toggle-list_view-1" data-toggle="list_view" data-toggle-value="1" onclick="_update_item('list_view', 1)">
-                ${trans_legacy.en.glacier.view.grid}
+                ${tl(trans.grid)}
             </button>
             <button class="btn view-item" id="toggle-list_view-0" data-toggle="list_view" data-toggle-value="0" onclick="_update_item('list_view', 0)">
-                ${trans_legacy.en.glacier.view.list}
+                ${tl(trans.list)}
             </button>
         </div>
     `);

@@ -1,7 +1,7 @@
 import { patch_avatar } from "../avatar";
 import { auth, page, root } from "../build/page";
 import { desanitise } from "../build/tools";
-import { lang, trans_legacy, trans, tl } from "../build/trans";
+import { trans, tl } from "../build/trans";
 import { ff } from "../sku";
 
 export function bleh_wiki() {
@@ -63,7 +63,7 @@ export function bleh_wiki() {
         sub_text.classList.add('sub-text', 'space-below', 'header-style');
         sub_text.innerHTML = (`
             <div class="breadcrumb-origin prominent">
-                ${(h2) ? h2.innerHTML : page.structure.container.querySelector('.content-top-header').textContent}
+                ${h2 ? h2.innerHTML : page.structure.container.querySelector('.content-top-header').textContent}
             </div>
             <div class="wiki-author-side">
                 ${wiki_author.innerHTML}

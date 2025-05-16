@@ -1,6 +1,6 @@
 import { log } from "../build/log";
 import { page, root } from "../build/page";
-import { lang, trans_legacy, trans, tl } from "../build/trans";
+import { trans, tl } from "../build/trans";
 
 export function bleh_auto_edits() {
     let corrections_panel = document.body.querySelector('#subscription-corrections');

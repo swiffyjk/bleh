@@ -38,12 +38,9 @@ export function other_listener(id) {
                     <img>
                 </div>
             </div>
-            <div class="heading content-form">
-                <h5>${trans_legacy.en.settings.music.profile_shortcut.placeholder}</h5>
-                <div class="input-container">
-                    <input type="text" maxlength="40" id="text-profile" placeholder="${tl(trans.enter_username)}">
-                    <button class="bleh--btn primary save" onclick="_send_other_listener('${id}')">${trans_legacy.en.settings.done}</button>
-                </div>
+            <div class="input-container content-form">
+                <input type="text" maxlength="40" id="text-profile" placeholder="${tl(trans.enter_username)}">
+                <button class="btn chibi icon primary submit" onclick="_send_other_listener('${id}')">${tl(trans.done)}</button>
             </div>
         </div>
         `)

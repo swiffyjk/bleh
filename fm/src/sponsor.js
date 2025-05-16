@@ -119,7 +119,7 @@ function sponsor_manage() {
     if (sponsor_list.sponsors_one_time && sponsor_list.sponsors_one_time.includes(auth.name)) {
         dialog({
             id: 'sponsor_manage',
-            title: trans_legacy.en.settings.home.sponsor.header,
+            title: tl(trans.sponsor),
             body: (`
                 <div class="modal-vertical-inner support-inner">
                     <div class="avatar">
@@ -135,7 +135,7 @@ function sponsor_manage() {
     } else {
         dialog({
             id: 'sponsor_manage',
-            title: trans_legacy.en.settings.home.sponsor.header,
+            title: tl(trans.sponsor),
             body: (`
                 <div class="modal-vertical-inner support-inner">
                     <div class="avatar">

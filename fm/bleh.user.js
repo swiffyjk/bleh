@@ -1648,9 +1648,6 @@
     taste_similarity: {
       en: "Taste similarity"
     },
-    your_scrobbles: {
-      en: "Your scrobbles"
-    },
     plays_lower: {
       en: "plays"
     },
@@ -2649,6 +2646,36 @@
     },
     beware_notice: {
       en: "Beware! Only change these settings if you know what you're doing"
+    },
+    privacy: {
+      en: "Privacy",
+      de: "Datenschutz",
+      pl: "Prywatno\u015B\u0107"
+    },
+    recent_listening: {
+      name: {
+        en: "Hide your recent listening history"
+      },
+      body: {
+        en: "Keeps your activity more private"
+      }
+    },
+    allow_messages_from: {
+      en: "Allow messages from"
+    },
+    everyone: {
+      en: "Everyone"
+    },
+    following_and_neighbours: {
+      en: "Following and neighbours"
+    },
+    close_shouts: {
+      name: {
+        en: "Close my shoutbox"
+      },
+      body: {
+        en: "Removes visibility for everyone (including you)"
+      }
     }
   };
   var trans_legacy = {
@@ -8395,12 +8422,9 @@
                     <img>
                 </div>
             </div>
-            <div class="heading content-form">
-                <h5>${trans_legacy.en.settings.music.profile_shortcut.placeholder}</h5>
-                <div class="input-container">
-                    <input type="text" maxlength="40" id="text-profile" placeholder="${tl(trans.enter_username)}">
-                    <button class="bleh--btn primary save" onclick="_send_other_listener('${id}')">${trans_legacy.en.settings.done}</button>
-                </div>
+            <div class="input-container content-form">
+                <input type="text" maxlength="40" id="text-profile" placeholder="${tl(trans.enter_username)}">
+                <button class="btn chibi icon primary submit" onclick="_send_other_listener('${id}')">${tl(trans.done)}</button>
             </div>
         </div>
         `
@@ -8668,7 +8692,7 @@
                 <img class="view-item-avatar" src="${shortcut_listens.avi}" alt="${shortcut_listens.name}">
                 <div class="info">
                     <h3>${shortcut_listens.name}</h3>
-                    <p>${trans_legacy.en.music.listens.count_listens.replace("{c}", listens.toLocaleString(lang))}</p>
+                    <p>${tl(trans.listens.count).replace("{c}", listens.toLocaleString(lang))}</p>
                 </div>
             `;
         if (settings.colourful_counts && page.type == "artist") {
@@ -8744,9 +8768,9 @@
       let obsession_btn = obsession_form.querySelector("button");
       obsession_btn.classList = "btn view-item interact-item obsession-btn";
       tippy(obsession_btn, {
-        content: obsession_btn.textContent
+        content: tl(trans.set_obsession)
       });
-      obsession_btn.textContent = trans_legacy.en.music.obsession;
+      obsession_btn.textContent = tl(trans.obsess);
       interact_container.appendChild(obsession_form);
     }
     let lotus_btn = null;
@@ -8974,14 +8998,14 @@
             <img class="view-item-avatar" src="${avi}" alt="${name}">
             <div class="info">
                 <h3>${name}</h3>
-                <p>${trans_legacy.en.music.listens.count_listens.replace("{c}", listens.toLocaleString(lang))}</p>
+                <p>${tl(trans.listens.count).replace("{c}", listens.toLocaleString(lang))}</p>
             </div>
         `;
       let menu = tippy(listen_item, {
         theme: "context-menu",
         content: `
                 <a class="dropdown-menu-clickable-item" href="${root}user/${name}" data-menu-item="view_profile">
-                    ${trans_legacy.en.music.view_profile}
+                    ${tl(trans.profile)}
                 </a>
             `,
         allowHTML: true,
@@ -9002,14 +9026,14 @@
             <img class="view-item-avatar" src="${avi}" alt="${name}">
             <div class="info">
                 <h3>${name}</h3>
-                <p>${trans_legacy.en.music.listens.loading_listens}</p>
+                <p>${tl(trans.listens)}</p>
             </div>
         `;
       let menu = tippy(listen_item, {
         theme: "context-menu",
         content: `
                 <a class="dropdown-menu-clickable-item" href="${root}user/${name}" data-menu-item="view_profile">
-                    ${trans_legacy.en.music.view_profile}
+                    ${tl(trans.profile)}
                 </a>
                 <div class="sep"></div>
                 <button class="dropdown-menu-clickable-item" onclick="_open_profile_shortcut_window()" data-menu-item="settings">
@@ -9043,7 +9067,7 @@
             ${avi[2] ? `<img class="view-item-avatar" src="${avi[2].getAttribute("src")}">` : ""}
             <div class="info">
                 <h3>${tl(trans.following)}</h3>
-                <p>${trans_legacy.en.music.listens.other_listeners.replace("{c}", count)}</p>
+                <p>${tl(trans.others_count).replace("{c}", count)}</p>
             </div>
         `;
       listen_item.setAttribute("href", `${window.location.href}/+listeners/you-know`);
@@ -9270,10 +9294,10 @@
     view_buttons.innerHTML = `
         <div class="view-buttons">
             <button class="btn view-item" id="toggle-list_view-1" data-toggle="list_view" data-toggle-value="1" onclick="_update_item('list_view', 1)">
-                ${trans_legacy.en.glacier.view.grid}
+                ${tl(trans.grid)}
             </button>
             <button class="btn view-item" id="toggle-list_view-0" data-toggle="list_view" data-toggle-value="0" onclick="_update_item('list_view', 0)">
-                ${trans_legacy.en.glacier.view.list}
+                ${tl(trans.list)}
             </button>
         </div>
     `;
@@ -10411,7 +10435,7 @@
   function update_display_name(value) {
     document.getElementById("header-title-display-name").textContent = value;
     let pronouns = use_pronouns(value);
-    document.getElementById("header-title-display-name--pre").textContent = pronouns ? trans_legacy.en.profile.display_name.pronouns : trans_legacy.en.profile.display_name.aka;
+    document.getElementById("header-title-display-name--pre").textContent = pronouns ? tl(trans.account_pronouns) : tl(trans.aka);
   }
   function use_pronouns(value) {
     value = value.replaceAll(" ", "");
@@ -10449,7 +10473,7 @@
                     ${trans_legacy.en.settings.inbuilt.profile.avatar.delete}
                 </div>
                 <div class="modal-footer">
-                    <button class="btn cancel" onclick="_kill_window('edit_avatar')" type="button">${trans_legacy.en.settings.cancel}</button>
+                    <button class="btn cancel" onclick="_kill_window('edit_avatar')" type="button">${tl(trans.cancel)}</button>
                 </div>
             </form>
         </div>
@@ -10586,7 +10610,7 @@
       disable_shoutbox: document.getElementById("id_shoutbox_disabled").checked
     };
     privacy_panel.innerHTML = `
-        <h4>${trans_legacy.en.settings.inbuilt.privacy.name}</h4>
+        <h4>${tl(trans.privacy)}</h4>
         <form action="${root}settings/privacy" name="privacy" method="post">
             <input type="hidden" name="csrfmiddlewaretoken" value="${token}">
             <div class="inner-preview pad">
@@ -10626,8 +10650,8 @@
             <div class="setting" data-type="toggle" id="container-recent_listening">
                 <button class="btn reset" onclick="_reset_inbuilt_item('recent_listening')">Reset to default</button>
                 <div class="heading">
-                    <h5>${trans_legacy.en.settings.inbuilt.privacy.recent_listening.name}</h5>
-                    <p>${trans_legacy.en.settings.inbuilt.privacy.recent_listening.bio}</p>
+                    <h5>${tl(trans.recent_listening.name)}</h5>
+                    <p>${tl(trans.recent_listening.body)}</p>
                 </div>
                 <div class="toggle-wrap">
                     <input class="companion-checkbox" type="checkbox" name="hide_realtime" id="inbuilt-companion-checkbox-recent_listening">
@@ -10637,17 +10661,21 @@
                 </div>
             </div>
             <div class="sep"></div>
-            <h5>Who can send you messages?</h5>
-            <div class="primary-selections">
-                ${original_privacy_settings.receiving_msgs}
-                <div class="btn primary-selection" id="primary-selection-receiving_msgs-everyone" onclick="_update_inbuilt_selection('id_message_privacy', 0)">
-                    <h5>${trans_legacy.en.settings.inbuilt.privacy.receiving_msgs.settings.everyone.name}</h5>
+            <div class="setting" data-type="options">
+                <div class="heading">
+                    <h5>${tl(trans.allow_messages_from)}</h5>
                 </div>
-                <div class="btn primary-selection" id="primary-selection-receiving_msgs-neighbours" onclick="_update_inbuilt_selection('id_message_privacy', 1)">
-                    <h5>${trans_legacy.en.settings.inbuilt.privacy.receiving_msgs.settings.neighbours.name}</h5>
-                </div>
-                <div class="btn primary-selection" id="primary-selection-receiving_msgs-follow" onclick="_update_inbuilt_selection('id_message_privacy', 2)">
-                    <h5>${trans_legacy.en.settings.inbuilt.privacy.receiving_msgs.settings.follow.name}</h5>
+                <div class="primary-selections">
+                    ${original_privacy_settings.receiving_msgs}
+                    <div class="btn primary-selection" id="primary-selection-receiving_msgs-everyone" onclick="_update_inbuilt_selection('id_message_privacy', 0)">
+                        <h5>${tl(trans.everyone)}</h5>
+                    </div>
+                    <div class="btn primary-selection" id="primary-selection-receiving_msgs-neighbours" onclick="_update_inbuilt_selection('id_message_privacy', 1)">
+                        <h5>${tl(trans.following_and_neighbours)}</h5>
+                    </div>
+                    <div class="btn primary-selection" id="primary-selection-receiving_msgs-follow" onclick="_update_inbuilt_selection('id_message_privacy', 2)">
+                        <h5>${tl(trans.following)}</h5>
+                    </div>
                 </div>
             </div>
             <div class="sep"></div>
@@ -10697,8 +10725,8 @@
             <div class="setting" data-type="toggle" id="container-disable_shoutbox">
                 <button class="btn reset" onclick="_reset_inbuilt_item('disable_shoutbox')">Reset to default</button>
                 <div class="heading">
-                    <h5>${trans_legacy.en.settings.inbuilt.privacy.disable_shoutbox.name}</h5>
-                    <p>${trans_legacy.en.settings.inbuilt.privacy.disable_shoutbox.bio}</p>
+                    <h5>${tl(trans.close_shouts.name)}</h5>
+                    <p>${tl(trans.close_shouts.body)}</p>
                 </div>
                 <div class="toggle-wrap">
                     <input class="companion-checkbox" type="checkbox" name="shoutbox_disabled" id="inbuilt-companion-checkbox-disable_shoutbox">
@@ -13175,123 +13203,7 @@
     }
   }
   function render_setting_page(page_id) {
-    if (page_id == "home") {
-      register_skip_to([]);
-      let sponsoring = false;
-      if (sponsor_list)
-        sponsoring = sponsor_list.sponsors.includes(auth.name);
-      return `
-        <div class="bleh--panel">
-            <h4 class="top-header">${tl(trans.home)}</h4>
-            <div class="user-top-panel" data-sponsoring="${sponsoring}">
-                <div class="user-top-avatar user-top-avatar-side-left"></div>
-                <img class="user-top-avatar user-top-avatar-main" src="${auth.avatar.replace("avatar42s", "avatar300s")}" alt="${auth.name}">
-                <div class="user-top-avatar user-top-avatar-side-right"></div>
-            </div>
-            ${sponsoring ? `
-            <h4>${trans_legacy.en.settings.home.sponsor.thanks.replace("{m}", `<a class="mention" href="${root}user/${auth.name}">@${auth.name}</a>`).replace("{v}", `<span class="version-link" onclick="_change_settings_page('sku')">${version.build}.${version.sku}</span>`)}</h4>
-            ` : `
-            <h4>${trans_legacy.en.settings.home.thanks.replace("{m}", `<a class="mention" href="${root}user/${auth.name}">@${auth.name}</a>`).replace("{v}", `<span class="version-link" onclick="_change_settings_page('sku')">${version.build}.${version.sku}</span>`)}</h4>
-            `}
-            <div class="screen-row actions-only">
-                <div class="actions">
-                    <button class="btn primary update icon" onclick="_force_refresh_theme()">
-                        ${trans_legacy.en.settings.home.update.update_now}
-                    </button>
-                    ${settings.dev ? `
-                    <a class="btn primary update icon" href="https://github.com/katelyynn/bleh/raw/uwu/fm/bleh.user.css">
-                        ${trans_legacy.en.settings.home.update.css}
-                    </a>
-                    ` : ""}
-                    ${ff("sponsor") ? `
-                    <button class="btn primary sponsor" onclick="_sponsor()">
-                        ${trans_legacy.en.settings.home.sponsor.name}<div class="new-badge">${tl(trans.new)}</div>
-                    </button>
-                    ` : ""}
-                    <a class="btn action bleh--issues" href="https://github.com/katelyynn/bleh/issues" target="_blank">
-                        ${trans_legacy.en.settings.home.issues.name}
-                    </a>
-                </div>
-            </div>
-            <div class="sep"></div>
-            <h4>${tl(trans.seasonal.name)}</h4>
-            <div class="current-season-box no-margin" data-season="${stored_season.id}">
-                <div class="current-season-info">
-                    <div class="bleh-icon bleh-seasonal-icon" data-season="${stored_season.id}"></div>
-                    <h4>${trans_legacy.en.settings.customise.seasonal.listing[stored_season.id]}</h4>
-                </div>
-                <div class="glacier-library-top season-top">
-                    <div class="glacier-library-metadata">
-                        ${stored_season.id != "none" && stored_season.start && stored_season.end ? `
-                        <div class="glacier-library-metadata-item">
-                            <div class="sub-text">${trans_legacy.en.settings.customise.seasonal.started}</div>
-                            <div class="glacier-library-metadata-item-value" id="current_season">${moment(stored_season.start.replace("y0", stored_season.year).replace("{offset}", stored_season.offset)).from(stored_season.now)}</div>
-                        </div>
-                        <div class="glacier-library-metadata-item">
-                            <div class="sub-text">${trans_legacy.en.settings.customise.seasonal.ends_in}</div>
-                            <div class="glacier-library-metadata-item-value" id="current_season_start">${moment(stored_season.end.replace("y0", stored_season.year).replace("{offset}", stored_season.offset)).to(stored_season.now, true)}</div>
-                        </div>
-                        ` : ""}
-                    </div>
-                </div>
-            </div>
-            <button class="btn continue" onclick="_change_settings_page('seasonal')">
-                ${trans_legacy.en.settings.customise.seasonal.view}
-            </button>
-            <h4>${trans_legacy.en.settings.home.recommended}</h4>
-            <div class="setting-items full">
-                <div class="side-right full">
-                    <button class="btn setting-item bleh--themes" onclick="_change_settings_page('themes')">
-                        <div class="text">
-                            <h5>${tl(trans.themes.name)}</h5>
-                            <p>${trans_legacy.en.settings.themes.bio}</p>
-                        </div>
-                    </button>
-                    <button class="btn setting-item bleh--palette" onclick="_change_settings_page('themes')">
-                        <div class="text">
-                            <h5>${trans_legacy.en.settings.home.colours.name}</h5>
-                            <p>${trans_legacy.en.settings.home.colours.bio}</p>
-                        </div>
-                    </button>
-                    <button class="btn setting-item bleh--corrections" onclick="_change_settings_page('music', 'corrections')">
-                        <div class="text">
-                            <h5>${trans_legacy.en.settings.corrections.name}</h5>
-                            <p>${trans_legacy.en.settings.corrections.bio}</p>
-                        </div>
-                    </button>
-                    <button class="btn setting-item bleh--motion" onclick="_change_settings_page('accessibility')">
-                        <div class="text">
-                            <h5>${trans_legacy.en.settings.accessibility.reduced_motion.name}</h5>
-                            <p>${trans_legacy.en.settings.accessibility.reduced_motion.bio}</p>
-                        </div>
-                    </button>
-                    <button class="btn setting-item bleh--link" onclick="_change_settings_page('accessibility')">
-                        <div class="text">
-                            <h5>${trans_legacy.en.settings.accessibility.underline_links.name}</h5>
-                            <p>${trans_legacy.en.settings.accessibility.underline_links.bio}</p>
-                        </div>
-                    </button>
-                </div>
-            </div>
-            <div class="sep"></div>
-            <h4>Try out the latest</h4>
-            <div class="setting-items">
-                <div class="side-left">
-                    <a class="btn setting-item has-image bleh--bwaa" href="https://cutensilly.org/bwaa/fm" target="_blank">
-                        <div class="image"></div>
-                        <div class="text">
-                            <h5>bwaa (BETA) for Last.fm</h5>
-                            <p>bring last.fm back to 2012 while retaining all modern features. (includes a dark mode)</p>
-                        </div>
-                        <div class="image-row">
-                            <img src="https://cutensilly.org/img/bwaa-image.png">
-                        </div>
-                    </a>
-                </div>
-            </div>
-        </div>
-        `;
-    } else if (page_id == "themes") {
+    if (page_id == "themes") {
       register_skip_to([
         {
           id: "hue_from_album",
@@ -17113,7 +17025,7 @@
                 ${avatar != null ? `<img src="${avatar.getAttribute("src")}"><a onclick="_expand_avatar('${avatar.getAttribute("src").replace("/300x300/", "/ar0/")}')" class="bleh--avatar-clickable-link"></a>` : '<img class="missing-artist">'}
             </div>
             <div class="info-side">
-                <div class="sub-text">${trans_legacy.en.music.about}</div>
+                <div class="sub-text">${tl(trans.about)}</div>
                 <h1><a href="${root}music/${sanitise(page.sister)}">${sanitise_text(page.sister)}</a></h1>
                 ${listeners != null ? listeners.outerHTML : ""}
                 ${tags != null ? tags.outerHTML : ""}
@@ -17468,12 +17380,12 @@
                 <div class="tag-icon"></div>
             </div>
             <div class="info-side">
-                <div class="sub-text">${trans_legacy.en.tag.name}</div>
+                <div class="sub-text">${tl(trans.tag)}</div>
                 <h1>${title}</h1>
             </div>
         `;
       let background = document.body.querySelector(".header-background--has-image");
-      if (background != null)
+      if (background)
         register_background(background.style.getPropertyValue("background-image").replace('url("', "").replace('")', ""));
       else
         register_background();
@@ -18038,11 +17950,6 @@
                             ${trans_legacy.en.changelog.type[changelog[version2].type]}
                         </div>
                     </div>
-                    ${index == 0 ? `
-                    <!--<div class="latest-line">
-                        <div>${trans_legacy.en.changelog.latest}</div>
-                    </div>-->
-                    ` : ""}
                 </div>
                 <h3>${changelog[version2].name}</h3>
                 ${version2 == "2025.0113" ? `<h4 class="header-over">${changelog[version2].name}</h4>` : ""}
@@ -19543,7 +19450,7 @@
     if (sponsor_list.sponsors_one_time && sponsor_list.sponsors_one_time.includes(auth.name)) {
       dialog({
         id: "sponsor_manage",
-        title: trans_legacy.en.settings.home.sponsor.header,
+        title: tl(trans.sponsor),
         body: `
                 <div class="modal-vertical-inner support-inner">
                     <div class="avatar">
@@ -19559,7 +19466,7 @@
     } else {
       dialog({
         id: "sponsor_manage",
-        title: trans_legacy.en.settings.home.sponsor.header,
+        title: tl(trans.sponsor),
         body: `
                 <div class="modal-vertical-inner support-inner">
                     <div class="avatar">

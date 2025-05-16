@@ -792,9 +792,6 @@ export const trans = {
     taste_similarity: {
         en: 'Taste similarity'
     },
-    your_scrobbles: {
-        en: 'Your scrobbles'
-    },
     plays_lower: {
         en: 'plays'
     },
@@ -1793,6 +1790,36 @@ export const trans = {
     },
     beware_notice: {
         en: 'Beware! Only change these settings if you know what you\'re doing'
+    },
+    privacy: {
+        en: 'Privacy',
+        de: 'Datenschutz',
+        pl: 'Prywatność'
+    },
+    recent_listening: {
+        name: {
+            en: 'Hide your recent listening history'
+        },
+        body: {
+            en: 'Keeps your activity more private'
+        }
+    },
+    allow_messages_from: {
+        en: 'Allow messages from'
+    },
+    everyone: {
+        en: 'Everyone'
+    },
+    following_and_neighbours: {
+        en: 'Following and neighbours'
+    },
+    close_shouts: {
+        name: {
+            en: 'Close my shoutbox'
+        },
+        body: {
+            en: 'Removes visibility for everyone (including you)'
+        }
     }
 }
 

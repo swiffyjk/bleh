@@ -3,7 +3,7 @@ import { settings } from "./build/config";
 import { log } from "./build/log";
 import { auth, auth_link, bleh_url, has_prompted_for_update, last_page_subpage, last_page_type, page, root, setup_url, shout_parse_queue, sponsor_url } from "./build/page";
 import { stored_season } from "./build/seasonal";
-import { lang, lookup_lang, tl, trans, trans_legacy } from "./build/trans";
+import { lang, lookup_lang, tl, trans } from "./build/trans";
 import { auto_edit_modal } from "./components/auto_edit";
 import { dialog, load_dialogs } from "./components/dialog";
 import { correct_artist, correct_generic_combo, correct_generic_combo_no_artist, correct_item_by_artist, lotus } from "./components/lotus";

@@ -113,11 +113,6 @@ function open_changelog(changelog) {
                             ${trans_legacy.en.changelog.type[changelog[version].type]}
                         </div>
                     </div>
-                    ${(index == 0) ? (`
-                    <!--<div class="latest-line">
-                        <div>${trans_legacy.en.changelog.latest}</div>
-                    </div>-->
-                    `) : ''}
                 </div>
                 <h3>${changelog[version].name}</h3>
                 ${(version == '2025.0113') ? `<h4 class="header-over">${changelog[version].name}</h4>` : ''}

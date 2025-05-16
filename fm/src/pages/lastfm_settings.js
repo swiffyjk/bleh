@@ -552,7 +552,7 @@ function update_display_name(value) {
     // pronouns?
     let pronouns = use_pronouns(value);
 
-    document.getElementById('header-title-display-name--pre').textContent = pronouns ? trans_legacy.en.profile.display_name.pronouns : trans_legacy.en.profile.display_name.aka;
+    document.getElementById('header-title-display-name--pre').textContent = pronouns ? tl(trans.account_pronouns) : tl(trans.aka);
 }
 
 
@@ -603,7 +603,7 @@ function open_avatar_changer(token) {
                     ${trans_legacy.en.settings.inbuilt.profile.avatar.delete}
                 </div>
                 <div class="modal-footer">
-                    <button class="btn cancel" onclick="_kill_window('edit_avatar')" type="button">${trans_legacy.en.settings.cancel}</button>
+                    <button class="btn cancel" onclick="_kill_window('edit_avatar')" type="button">${tl(trans.cancel)}</button>
                 </div>
             </form>
         </div>
@@ -781,7 +781,7 @@ function patch_settings_privacy_panel(token, privacy_panel) {
     }
 
     privacy_panel.innerHTML = (`
-        <h4>${trans_legacy.en.settings.inbuilt.privacy.name}</h4>
+        <h4>${tl(trans.privacy)}</h4>
         <form action="${root}settings/privacy" name="privacy" method="post">
             <input type="hidden" name="csrfmiddlewaretoken" value="${token}">
             <div class="inner-preview pad">
@@ -821,8 +821,8 @@ function patch_settings_privacy_panel(token, privacy_panel) {
             <div class="setting" data-type="toggle" id="container-recent_listening">
                 <button class="btn reset" onclick="_reset_inbuilt_item('recent_listening')">Reset to default</button>
                 <div class="heading">
-                    <h5>${trans_legacy.en.settings.inbuilt.privacy.recent_listening.name}</h5>
-                    <p>${trans_legacy.en.settings.inbuilt.privacy.recent_listening.bio}</p>
+                    <h5>${tl(trans.recent_listening.name)}</h5>
+                    <p>${tl(trans.recent_listening.body)}</p>
                 </div>
                 <div class="toggle-wrap">
                     <input class="companion-checkbox" type="checkbox" name="hide_realtime" id="inbuilt-companion-checkbox-recent_listening">
@@ -832,17 +832,21 @@ function patch_settings_privacy_panel(token, privacy_panel) {
                 </div>
             </div>
             <div class="sep"></div>
-            <h5>Who can send you messages?</h5>
-            <div class="primary-selections">
-                ${original_privacy_settings.receiving_msgs}
-                <div class="btn primary-selection" id="primary-selection-receiving_msgs-everyone" onclick="_update_inbuilt_selection('id_message_privacy', 0)">
-                    <h5>${trans_legacy.en.settings.inbuilt.privacy.receiving_msgs.settings.everyone.name}</h5>
+            <div class="setting" data-type="options">
+                <div class="heading">
+                    <h5>${tl(trans.allow_messages_from)}</h5>
                 </div>
-                <div class="btn primary-selection" id="primary-selection-receiving_msgs-neighbours" onclick="_update_inbuilt_selection('id_message_privacy', 1)">
-                    <h5>${trans_legacy.en.settings.inbuilt.privacy.receiving_msgs.settings.neighbours.name}</h5>
-                </div>
-                <div class="btn primary-selection" id="primary-selection-receiving_msgs-follow" onclick="_update_inbuilt_selection('id_message_privacy', 2)">
-                    <h5>${trans_legacy.en.settings.inbuilt.privacy.receiving_msgs.settings.follow.name}</h5>
+                <div class="primary-selections">
+                    ${original_privacy_settings.receiving_msgs}
+                    <div class="btn primary-selection" id="primary-selection-receiving_msgs-everyone" onclick="_update_inbuilt_selection('id_message_privacy', 0)">
+                        <h5>${tl(trans.everyone)}</h5>
+                    </div>
+                    <div class="btn primary-selection" id="primary-selection-receiving_msgs-neighbours" onclick="_update_inbuilt_selection('id_message_privacy', 1)">
+                        <h5>${tl(trans.following_and_neighbours)}</h5>
+                    </div>
+                    <div class="btn primary-selection" id="primary-selection-receiving_msgs-follow" onclick="_update_inbuilt_selection('id_message_privacy', 2)">
+                        <h5>${tl(trans.following)}</h5>
+                    </div>
                 </div>
             </div>
             <div class="sep"></div>
@@ -892,8 +896,8 @@ function patch_settings_privacy_panel(token, privacy_panel) {
             <div class="setting" data-type="toggle" id="container-disable_shoutbox">
                 <button class="btn reset" onclick="_reset_inbuilt_item('disable_shoutbox')">Reset to default</button>
                 <div class="heading">
-                    <h5>${trans_legacy.en.settings.inbuilt.privacy.disable_shoutbox.name}</h5>
-                    <p>${trans_legacy.en.settings.inbuilt.privacy.disable_shoutbox.bio}</p>
+                    <h5>${tl(trans.close_shouts.name)}</h5>
+                    <p>${tl(trans.close_shouts.body)}</p>
                 </div>
                 <div class="toggle-wrap">
                     <input class="companion-checkbox" type="checkbox" name="shoutbox_disabled" id="inbuilt-companion-checkbox-disable_shoutbox">
