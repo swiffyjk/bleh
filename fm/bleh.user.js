@@ -11327,15 +11327,15 @@
             <div class="listener-row">
                 <div class="scrobble-side" id="scrobbles_tooltip">
                     <h3>${tl(trans.scrobbles)}</h3>
-                    <p>${scrobbles}</p>
+                    <p><a href="${root}user/${page.name}/library">${scrobbles}</a></p>
                 </div>
-                <div>
+                <div class="artist-side">
                     <h3>${tl(trans.artists)}</h3>
-                    <p>${artists}</p>
+                    <p><a href="${root}user/${page.name}/library/artists">${artists}</a></p>
                 </div>
-                <div>
+                <div class="loved-side">
                     <h3>${tl(trans.loved)}</h3>
-                    <p>${loved}</p>
+                    <p><a href="${root}user/${page.name}/library/loved">${loved}</a></p>
                 </div>
             </div>
             <a class="scrobble-canvas-container mini" href="${root}user/${page.name}/library/artists?date_preset=LAST_90_DAYS&page=1">

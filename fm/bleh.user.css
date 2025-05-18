@@ -7092,6 +7092,7 @@ button,
 
 
 /*     ICON MASK     */
+.listener-row div:before,
 .mobile-control:before,
 .palette .swatch:before,
 .with-icon:before,
@@ -9751,12 +9752,43 @@ text[style^="color: rgb(255, 172, 172)"] {
 
     .listener-row {
         display: flex;
-        justify-content: space-evenly;
+        gap: var(--card-padding);
+
+        padding-bottom: var(--card-padding);
+        border-bottom: 1px solid var(--card-border-base);
+        margin-bottom: var(--card-padding);
+
+        .scrobble-side {
+            --mask: var(--icon-16-scrobble);
+        }
+        .artist-side {
+            --mask: var(--icon-16-artist);
+        }
+        .loved-side {
+            --mask: var(--icon-16-heart);
+        }
+        .listener-side {
+            --mask: var(--icon-16-users);
+        }
 
         div {
             display: flex;
             flex-direction: column;
             gap: 2px;
+
+            position: relative;
+            --left: 0;
+            padding-left: calc(18px + 10px);
+
+            &:before {
+                color: hsl(var(--c3));
+            }
+
+            /*& + div {
+                padding-left: calc(var(--card-gap) + 18px + 10px);
+                --left: var(--card-gap);
+                border-left: 1px solid var(--card-border-base);
+            }*/
 
             h3 {
                 font-size: var(--font-size);
@@ -9766,8 +9798,6 @@ text[style^="color: rgb(255, 172, 172)"] {
                 cursor: default;
 
                 display: flex;
-                justify-content: center;
-                align-items: center;
                 gap: 2px;
 
                 img {
@@ -9784,13 +9814,11 @@ text[style^="color: rgb(255, 172, 172)"] {
             p {
                 color: hsl(var(--c1));
                 font-weight: var(--font-weight-bold);
-                font-size: 24px;
-                line-height: 28px;
+                font-size: 20px;
+                line-height: 20px;
                 cursor: default;
 
                 display: flex;
-                justify-content: center;
-                align-items: center;
                 gap: 6px;
 
                 margin: 0 -6px;
@@ -9801,7 +9829,7 @@ text[style^="color: rgb(255, 172, 172)"] {
                 transition-timing-function: var(--trans-function);
 
                 .listener-side[aria-describedby] &, .scrobble-side[aria-describedby] & {
-                    background-color: hsla(var(--h4), 30%);
+                    color: hsl(var(--l2-c-theme-switch));
                     transition: none;
                 }
 
