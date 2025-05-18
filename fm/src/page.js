@@ -475,6 +475,10 @@ function load_page() {
             title = tl(trans.photos);
         else if (page.subpage.startsWith('image') && page.type == 'album')
             title = tl(trans.artwork);
+        else if (page.subpage.startsWith('listeners'))
+            title = tl(trans.listeners);
+        else if (page.subpage == 'similar')
+            title = tl(trans.similar_artists);
 
         if (page.subpage == 'overview' || page.subpage == 'event_overview') {
             if (page.type == 'user')

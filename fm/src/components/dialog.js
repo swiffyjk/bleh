@@ -50,6 +50,7 @@ export function dialog({
     if (!replace || replace && !dialogs.hasOwnProperty(replace_id)) {
         modal = document.createElement('div');
         modal.classList.add('bleh-modal');
+        modal.setAttribute('role', 'dialog');
     } else {
         log(`window set to replace ${replace_id}`, 'window');
 
@@ -68,11 +69,13 @@ export function dialog({
     if (title != null) {
         let modal_title = document.createElement('div');
         modal_title.classList.add('bleh-modal-title');
+        modal_title.setAttribute('id', 'modal_title');
         modal_title.innerHTML = (`
             <h1>${title}</h1>
             ${(subtitle != null) ? `<p class="bleh-modal-subtitle">${subtitle}</p>` : ''}
         `);
 
+        modal.setAttribute('aria-labelledby', 'modal_title');
         modal.appendChild(modal_title);
     }
 

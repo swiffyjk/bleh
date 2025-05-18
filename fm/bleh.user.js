@@ -6199,6 +6199,7 @@
     if (!replace || replace && !dialogs.hasOwnProperty(replace_id)) {
       modal = document.createElement("div");
       modal.classList.add("bleh-modal");
+      modal.setAttribute("role", "dialog");
     } else {
       log(`window set to replace ${replace_id}`, "window");
       modal = dialogs[replace_id].instance;
@@ -6212,10 +6213,12 @@
     if (title != null) {
       let modal_title = document.createElement("div");
       modal_title.classList.add("bleh-modal-title");
+      modal_title.setAttribute("id", "modal_title");
       modal_title.innerHTML = `
             <h1>${title}</h1>
             ${subtitle != null ? `<p class="bleh-modal-subtitle">${subtitle}</p>` : ""}
         `;
+      modal.setAttribute("aria-labelledby", "modal_title");
       modal.appendChild(modal_title);
     }
     if (dismiss) {
@@ -20189,6 +20192,10 @@
         title = tl(trans.photos);
       else if (page.subpage.startsWith("image") && page.type == "album")
         title = tl(trans.artwork);
+      else if (page.subpage.startsWith("listeners"))
+        title = tl(trans.listeners);
+      else if (page.subpage == "similar")
+        title = tl(trans.similar_artists);
       if (page.subpage == "overview" || page.subpage == "event_overview") {
         if (page.type == "user")
           title = tl(trans.profile);
