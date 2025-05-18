@@ -158,7 +158,6 @@ body, [data-page-resource-type="album"], [data-page-resource-type="track"],
 [data-bleh--label="bleh"], [data-bleh-page="seasonal"]
 {
     /* any additional highlights */
-    --b2: var(--hue), calc(var(--sat) * 3% * var(--sat-bg, 1)), 34%;
     --b3: var(--hue), calc(var(--sat) * 4% * var(--sat-bg, 1)), 30%;
 
     /* card border */
@@ -178,7 +177,6 @@ body, [data-page-resource-type="album"], [data-page-resource-type="track"],
     .preview[data-bleh--theme="darker"], .redesigned-header[data-bleh--theme="darker"],
     [data-bleh--theme="darker"] &:not(.preview) {
         /* any additional highlights */
-        --b2: var(--hue), calc(var(--sat) * 4% * var(--sat-bg, 1)), 28%;
         --b3: var(--hue), calc(var(--sat) * 5% * var(--sat-bg, 1)), 23%;
 
         /* card border */
@@ -195,7 +193,6 @@ body, [data-page-resource-type="album"], [data-page-resource-type="track"],
     .preview[data-bleh--theme="oled"], .redesigned-header[data-bleh--theme="oled"],
     [data-bleh--theme="oled"] &:not(.preview) {
         /* any additional highlights */
-        --b2: var(--hue), calc(var(--sat) * 1% * var(--sat-bg, 1)), 19%;
         --b3: var(--hue), calc(var(--sat) * 2% * var(--sat-bg, 1)), 14%;
 
         /* card border */
@@ -212,8 +209,7 @@ body, [data-page-resource-type="album"], [data-page-resource-type="track"],
     .preview[data-bleh--theme="light"], .redesigned-header[data-bleh--theme="light"],
     [data-bleh--theme="light"] &:not(.preview) {
         /* any additional highlights */
-        --b2: 0, 0%, 87%;
-        --b3: 0, 0%, 96%;
+        --b3: 0, 0%, 90%;
 
         /* card border */
         --b4: 0, 0%, 84%;
@@ -229,8 +225,7 @@ body, [data-page-resource-type="album"], [data-page-resource-type="track"],
     .preview[data-bleh--theme="ink"], .redesigned-header[data-bleh--theme="ink"],
     [data-bleh--theme="ink"] &:not(.preview) {
         /* any additional highlights */
-        --b2: var(--hue), calc(var(--sat) * 15% * var(--sat-bg, 1)), 68%;
-        --b3: var(--hue), calc(var(--sat) * 14% * var(--sat-bg, 1)), 76%;
+        --b3: var(--hue), calc(var(--sat) * 14% * var(--sat-bg, 1)), 73%;
 
         /* card border */
         --b4: var(--hue), calc(var(--sat) * 12% * var(--sat-bg, 1)), 66%;
@@ -6709,7 +6704,7 @@ button,
     --bg-hov: var(--cards-overlay-image-subtlest, none), hsla(var(--b3), 80%);
     --bg-atv: var(--cards-overlay-image-subtlest, none), hsla(var(--b3), 60%);
     --col: hsl(var(--c2));
-    --shadow: 0 0 0 1px hsl(var(--b2)), var(--interact-shadow);
+    --shadow: var(--interact-shadow);
     --shadow-hov: var(--active-shadow);
     --btn-top: 7px;
     --btn-right: 12px;
@@ -18551,7 +18546,7 @@ h4 {
     a, button,
     .view-all-button {
         &:not(.dropdown-menu-clickable-item) {
-            --shadow: 0 0 0 1px hsl(var(--b2)), var(--interact-shadow);
+            --shadow: var(--card-shadow);
             min-width: 48px;
             height: 48px;
             --padding: var(--card-gap) var(--card-padding) var(--card-gap) calc(var(--card-padding) + 18px + var(--card-gap));
@@ -18578,6 +18573,12 @@ h4 {
                     width: 56px;
                     --left: 19px;
                 }
+            }
+
+            [data-bleh--theme_type="light"] & {
+                --bg: var(--cards-overlay-image-subtlest, none), hsl(var(--b5));
+                --bg-hov: var(--cards-overlay-image-subtlest, none), hsla(var(--b5), 80%);
+                --bg-atv: var(--cards-overlay-image-subtlest, none), hsla(var(--b5), 60%);
             }
 
             &.upload-button {
