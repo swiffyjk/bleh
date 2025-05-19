@@ -11342,7 +11342,7 @@
                 </div>
                 <div class="loved-side">
                     <h3>${tl(trans.loved)}</h3>
-                    <p><a href="${root}user/${page.name}/library/loved">${loved}</a></p>
+                    <p><a href="${root}user/${page.name}/loved">${loved}</a></p>
                 </div>
             </div>
             <a class="scrobble-canvas-container mini" href="${root}user/${page.name}/library/artists?date_preset=LAST_90_DAYS&page=1">
