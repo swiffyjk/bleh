@@ -11538,6 +11538,7 @@ text[style^="color: rgb(0, 0, 0)"] {
         margin: unset !important;
     }
 
+    img,
     br {
         display: none;
     }
@@ -15780,14 +15781,14 @@ input[type="range"]::-moz-range-progress {
 }
 .involved--user,
 .mention,
-:is(.shout-body, .about-me-sidebar, .bleh--about-me-preview, .wiki-content, .markdown-body) a[href*="/user/"]:not([href^=https]) {
+:is(.shout-body, .about-me-sidebar, .bleh--about-me-preview, .wiki-content, .markdown-body, .user-list-about-me) a[href*="/user/"]:not([href^=https]) {
     padding: 0 4px;
     background-color: hsla(var(--h4), 20%);
     border-radius: var(--item-small-radius);
     font-weight: var(--font-weight-medium);
     text-decoration: var(--force-underline, none) !important;
 }
-:is(.shout-body, .about-me-sidebar, .bleh--about-me-preview) a[href^="https://open.spotify.com/user/"] {
+:is(.shout-body, .about-me-sidebar, .bleh--about-me-preview, .user-list-about-me) a[href^="https://open.spotify.com/user/"] {
     padding: 0 4px 0 calc(4px + 14px + 4px);
     background-color: hsla(var(--h4), 20%);
     border-radius: var(--item-small-radius);
