@@ -25,6 +25,13 @@ export function compare() {
                     </div>
                 </div>
                 <div class="compare-selection">
+                    <div class="select-wrap custom-selector" id="type_select">
+                        <select id="type">
+                            <option value="artists">${tl(trans.artists)}</option>
+                            <option value="albums">${tl(trans.albums)}</option>
+                            <option value="tracks">${tl(trans.tracks)}</option>
+                        </select>
+                    </div>
                     <div class="select-wrap custom-selector" id="range_select">
                         <select id="range">
                             <option value="LAST_7_DAYS">${tl(trans.last_count_days).replace('{c}', '7')}</option>
@@ -50,6 +57,7 @@ export function compare() {
         content: tl(trans.compare)
     });
 
+    custom_select(page.state.compare_modal.querySelector('#type'), page.state.compare_modal.querySelector('#type_select'));
     custom_select(page.state.compare_modal.querySelector('#range'), page.state.compare_modal.querySelector('#range_select'));
 }
 
@@ -58,6 +66,8 @@ unsafeWindow._compare = function() {
 }
 
 unsafeWindow._begin_comparing = function() {
-    let body = page.state.compare_modal.querySelector('modal-body');
-    body.innerHTML = '';
+    let buttons = page.state.compare_modal.querySelectorAll('.compare-header button');
+    buttons.forEach((button) => {
+        button.setAttribute('disabled', 'true');
+    });
 }
