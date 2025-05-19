@@ -121,6 +121,7 @@ export function bleh_profiles() {
 
         if (!new_account) {
             let src = header_avatar.querySelector('img').getAttribute('src');
+            page.avatar = src;
 
             let avatar_link = document.createElement('a');
             avatar_link.classList.add('bleh--avatar-clickable-link');

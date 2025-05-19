@@ -1830,6 +1830,12 @@ export const trans = {
     },
     shortcut: {
         en: 'Shortcut'
+    },
+    last_count_days: {
+        en: 'Last {c} days'
+    },
+    choose_a_timeframe_above: {
+        en: 'Choose a timeframe above'
     }
 }
 

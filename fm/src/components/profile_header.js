@@ -5,6 +5,7 @@ import { sponsor_list } from "../build/sponsor";
 import { clean_number, sanitise } from "../build/tools";
 import { lang, trans, tl } from "../build/trans";
 import { ff } from "../sku";
+import { compare } from './compare';
 import { correct_artist } from "./lotus";
 import { register_menu } from "./menu";
 
@@ -136,6 +137,15 @@ export function redesign_profile_header(is_own_profile, is_following) {
         let msg_button = document.body.querySelector('.header-message-user');
         if (msg_button) {
             if (page.name != sponsor_list.sponsor_account) {
+                if (ff('compare')) {
+                    create_profile_top_item(profile_header, {
+                        name: page.name,
+                        type: 'compare',
+                        link: '_compare()',
+                        action: 'button',
+                        katsune: katsune
+                    });
+                }
                 create_profile_top_item(profile_header, {
                     name: page.name,
                     type: 'message',
@@ -149,7 +159,6 @@ export function redesign_profile_header(is_own_profile, is_following) {
                     link: '_sponsor()',
                     full: true,
                     action: 'button',
-                    primary: true,
                     katsune: katsune
                 });
                 create_profile_top_item(profile_header, {
@@ -157,7 +166,6 @@ export function redesign_profile_header(is_own_profile, is_following) {
                     type: 'message_sponsor',
                     link: msg_button.getAttribute('href'),
                     full: true,
-                    primary: true,
                     katsune: katsune
                 });
             }

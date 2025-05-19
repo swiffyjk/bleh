@@ -164,6 +164,11 @@
             "default": true,
             "name": "Set colour based on hex",
             "date": "2025-04-26"
+        },
+        "compare": {
+            "default": false,
+            "name": "Profile comparison",
+            "date": "2025-05-19"
         }
     }
 }

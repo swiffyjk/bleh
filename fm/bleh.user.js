@@ -2686,6 +2686,12 @@
     },
     shortcut: {
       en: "Shortcut"
+    },
+    last_count_days: {
+      en: "Last {c} days"
+    },
+    choose_a_timeframe_above: {
+      en: "Choose a timeframe above"
     }
   };
   var trans_legacy = {
@@ -9406,6 +9412,133 @@
     return parsed_body;
   }
 
+  // src/components/select.js
+  unsafeWindow._update_inbuilt_select = function(id, value) {
+    update_inbuilt_select(id, value);
+  };
+  function update_inbuilt_select(id, value) {
+    document.documentElement.setAttribute(`data-bleh--inbuilt-${id}`, value);
+  }
+  function custom_select(select, element_to_append) {
+    console.info(select);
+    let id = select.getAttribute("id");
+    let value = select.value;
+    let value_objects = select.querySelectorAll("option");
+    let menu_list = document.createElement("div");
+    value_objects.forEach((object) => {
+      let object_value = object.getAttribute("value");
+      let object_text = object.textContent;
+      let item = document.createElement("button");
+      item.classList.add("btn", "dropdown-menu-clickable-item", "select-item");
+      item.setAttribute("onclick", `_set_custom_select_value('${id}', '${object_value}')`);
+      item.setAttribute("data-value", object_value);
+      item.setAttribute("type", "button");
+      item.textContent = object_text;
+      menu_list.appendChild(item);
+    });
+    let button = document.createElement("button");
+    button.classList.add("select-button");
+    button.setAttribute("id", `select-${id}`);
+    button.setAttribute("type", "button");
+    button.textContent = menu_list.querySelector(`[data-value="${value}"]`).textContent;
+    let theme_menu_item = tippy(button, {
+      theme: "select-menu",
+      content: `
+            ${menu_list.innerHTML}
+        `,
+      allowHTML: true,
+      placement: "bottom",
+      interactive: true,
+      interactiveBorder: 10,
+      trigger: "click",
+      onShow(instance) {
+        update_custom_select(instance.popper, select.value);
+      }
+    });
+    element_to_append.appendChild(button);
+  }
+  unsafeWindow._set_custom_select_value = function(select_id, value) {
+    let select = document.getElementById(select_id);
+    select.value = value;
+    console.info(select, `#select-${select_id}`);
+    update_custom_select(document.getElementById(`select-${select_id}`)._tippy.popper, value, select_id);
+    document.documentElement.setAttribute(`data-bleh--inbuilt-${select_id}`, value);
+  };
+  function update_custom_select(element = document.body, value = "", select_id = "") {
+    let btns = element.querySelectorAll(".dropdown-menu-clickable-item");
+    btns.forEach((btn) => {
+      if (btn.getAttribute("data-value") != value) {
+        btn.classList.remove("active");
+      } else {
+        btn.classList.add("active");
+        let sel_button = document.body.querySelector(`#select-${select_id}`);
+        console.log(sel_button);
+        if (!sel_button) return;
+        sel_button.textContent = btn.textContent;
+      }
+    });
+  }
+  unsafeWindow._update_inbuilt_selection = function(id, index) {
+    document.getElementById(id).selectedIndex = index;
+    update_inbuilt_select(id, document.getElementById(id).value);
+  };
+
+  // src/components/compare.js
+  function compare() {
+    page.state.compare_modal = dialog({
+      id: "compare",
+      title: tl(trans.compare),
+      body: `
+            <div class="compare-header">
+                <div class="compare-users">
+                    <div class="compare-user">
+                        <div class="avatar">
+                            <img src="${auth.avatar.replace("/avatar42s/", "/avatar170s/")}" alt="${tl(trans.your_avatar)}">
+                        </div>
+                        <strong>${auth.name}</strong>
+                    </div>
+                    <div class="bleh-icon"></div>
+                    <div class="compare-user">
+                        <div class="avatar">
+                            <img src="${page.avatar}" alt="${tl(trans.avatar_for_user).replace("{u}", page.name)}">
+                        </div>
+                        <strong>${page.name}</strong>
+                    </div>
+                </div>
+                <div class="compare-selection">
+                    <div class="select-wrap custom-selector" id="range_select">
+                        <select id="range">
+                            <option value="LAST_7_DAYS">${tl(trans.last_count_days).replace("{c}", "7")}</option>
+                            <option value="LAST_30_DAYS">${tl(trans.last_count_days).replace("{c}", "30")}</option>
+                            <option value="LAST_90_DAYS">${tl(trans.last_count_days).replace("{c}", "90")}</option>
+                            <option value="LAST_180_DAYS">${tl(trans.last_count_days).replace("{c}", "180")}</option>
+                            <option value="LAST_365_DAYS">${tl(trans.last_count_days).replace("{c}", "365")}</option>
+                        </select>
+                    </div>
+                    <button class="btn chibi icon primary compare" onclick="_begin_comparing()">${tl(trans.compare)}</button>
+                </div>
+            </div>
+            <div class="compare-body">
+                <div class="loading-data-container">
+                    <div class="loading-data-text info">${tl(trans.choose_a_timeframe_above)}</div>
+                </div>
+            </div>
+        `,
+      type: "compare"
+    });
+    tippy(page.state.compare_modal.querySelector(".chibi.compare"), {
+      content: tl(trans.compare)
+    });
+    custom_select(page.state.compare_modal.querySelector("#range"), page.state.compare_modal.querySelector("#range_select"));
+  }
+  unsafeWindow._compare = function() {
+    compare();
+  };
+  unsafeWindow._begin_comparing = function() {
+    let body = page.state.compare_modal.querySelector("modal-body");
+    body.innerHTML = "";
+  };
+
   // src/components/profile_header.js
   unsafeWindow._toggle_profile_header = function(button) {
     let current = settings.profile_header_expand;
@@ -9500,6 +9633,15 @@
       let msg_button = document.body.querySelector(".header-message-user");
       if (msg_button) {
         if (page.name != sponsor_list.sponsor_account) {
+          if (ff("compare")) {
+            create_profile_top_item(profile_header, {
+              name: page.name,
+              type: "compare",
+              link: "_compare()",
+              action: "button",
+              katsune
+            });
+          }
           create_profile_top_item(profile_header, {
             name: page.name,
             type: "message",
@@ -9513,7 +9655,6 @@
             link: "_sponsor()",
             full: true,
             action: "button",
-            primary: true,
             katsune
           });
           create_profile_top_item(profile_header, {
@@ -9521,7 +9662,6 @@
             type: "message_sponsor",
             link: msg_button.getAttribute("href"),
             full: true,
-            primary: true,
             katsune
           });
         }
@@ -9707,77 +9847,6 @@
         theme: tooltip_theme
       });
   }
-
-  // src/components/select.js
-  unsafeWindow._update_inbuilt_select = function(id, value) {
-    update_inbuilt_select(id, value);
-  };
-  function update_inbuilt_select(id, value) {
-    document.documentElement.setAttribute(`data-bleh--inbuilt-${id}`, value);
-  }
-  function custom_select(select, element_to_append) {
-    console.info(select);
-    let id = select.getAttribute("id");
-    let value = select.value;
-    let value_objects = select.querySelectorAll("option");
-    let menu_list = document.createElement("div");
-    value_objects.forEach((object) => {
-      let object_value = object.getAttribute("value");
-      let object_text = object.textContent;
-      let item = document.createElement("button");
-      item.classList.add("btn", "dropdown-menu-clickable-item", "select-item");
-      item.setAttribute("onclick", `_set_custom_select_value('${id}', '${object_value}')`);
-      item.setAttribute("data-value", object_value);
-      item.setAttribute("type", "button");
-      item.textContent = object_text;
-      menu_list.appendChild(item);
-    });
-    let button = document.createElement("button");
-    button.classList.add("select-button");
-    button.setAttribute("id", `select-${id}`);
-    button.setAttribute("type", "button");
-    button.textContent = menu_list.querySelector(`[data-value="${value}"]`).textContent;
-    let theme_menu_item = tippy(button, {
-      theme: "select-menu",
-      content: `
-            ${menu_list.innerHTML}
-        `,
-      allowHTML: true,
-      placement: "bottom",
-      interactive: true,
-      interactiveBorder: 10,
-      trigger: "click",
-      onShow(instance) {
-        update_custom_select(instance.popper, select.value);
-      }
-    });
-    element_to_append.appendChild(button);
-  }
-  unsafeWindow._set_custom_select_value = function(select_id, value) {
-    let select = document.getElementById(select_id);
-    select.value = value;
-    console.info(select, `#select-${select_id}`);
-    update_custom_select(document.getElementById(`select-${select_id}`)._tippy.popper, value, select_id);
-    document.documentElement.setAttribute(`data-bleh--inbuilt-${select_id}`, value);
-  };
-  function update_custom_select(element = document.body, value = "", select_id = "") {
-    let btns = element.querySelectorAll(".dropdown-menu-clickable-item");
-    btns.forEach((btn) => {
-      if (btn.getAttribute("data-value") != value) {
-        btn.classList.remove("active");
-      } else {
-        btn.classList.add("active");
-        let sel_button = document.body.querySelector(`#select-${select_id}`);
-        console.log(sel_button);
-        if (!sel_button) return;
-        sel_button.textContent = btn.textContent;
-      }
-    });
-  }
-  unsafeWindow._update_inbuilt_selection = function(id, index) {
-    document.getElementById(id).selectedIndex = index;
-    update_inbuilt_select(id, document.getElementById(id).value);
-  };
 
   // src/components/structure.js
   function checkup_page_structure(is_subpage = false, header = null) {
@@ -11183,6 +11252,7 @@
         header_avatar = document.querySelector(".header-avatar .avatar");
       if (!new_account) {
         let src = header_avatar.querySelector("img").getAttribute("src");
+        page.avatar = src;
         let avatar_link = document.createElement("a");
         avatar_link.classList.add("bleh--avatar-clickable-link");
         avatar_link.setAttribute("onclick", `_expand_avatar('${src.replace("avatar170s", "ar0")}')`);
@@ -16183,11 +16253,13 @@
       btn.addEventListener("click", (event2) => {
         log("heard", "event", "info", event2);
         let action = btn.getAttribute("data-analytics-action");
-        if (btn.getAttribute("data-type") == "love" && !btn.querySelector("span")) {
+        if (btn.getAttribute("data-type") == "love") {
           setTimeout(function() {
-            let new_text = document.createElement("span");
-            new_text.textContent = tl(trans.love);
-            btn.appendChild(new_text);
+            if (!btn.querySelector("span")) {
+              let new_text = document.createElement("span");
+              new_text.textContent = tl(trans.love);
+              btn.appendChild(new_text);
+            }
           }, 1);
         }
         register_activity(action == "LoveTrack" ? "love" : "unlove", [{ name: track, type: "track", sister: artist }], `${root}music/${sanitise(artist)}/_/${sanitise(track)}`);
@@ -20544,6 +20616,11 @@
         default: true,
         name: "Set colour based on hex",
         date: "2025-04-26"
+      },
+      compare: {
+        default: false,
+        name: "Profile comparison",
+        date: "2025-05-19"
       }
     }
   };
