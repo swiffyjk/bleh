@@ -1827,6 +1827,9 @@ export const trans = {
     erm: {
         // used when a page is taken down
         en: 'erm...'
+    },
+    shortcut: {
+        en: 'Shortcut'
     }
 }
 

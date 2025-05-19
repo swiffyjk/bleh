@@ -2683,6 +2683,9 @@
     erm: {
       // used when a page is taken down
       en: "erm..."
+    },
+    shortcut: {
+      en: "Shortcut"
     }
   };
   var trans_legacy = {
@@ -9411,8 +9414,7 @@
   };
   function redesign_profile_header(is_own_profile, is_following) {
     let base_header = document.body.querySelector(".header-info-secondary");
-    if (base_header == null)
-      return;
+    if (!base_header) return;
     let katsune = ff("katsune");
     let header_meta = base_header.querySelector(".header-metadata");
     header_meta.classList.add("profile-header-metadata-legacy");
@@ -9455,18 +9457,20 @@
         taste_percentage = "100%";
     }
     let profile_header = document.createElement("section");
-    profile_header.classList.add("view-all-panel", "medium-interactions");
+    profile_header.classList.add("side-actions");
     if (!is_own_profile && page.name != sponsor_list.sponsor_account) {
       let follow_wrap = document.body.querySelector(".header-avatar .class > div");
       if (follow_wrap != null) {
         let follow_btn = follow_wrap.querySelector("button");
-        follow_btn.classList.add("btn", "profile-top-item", "profile-top-item--follow", "view-item", katsune ? "icon" : "");
+        follow_btn.classList.add("btn", "side-action");
         follow_btn.classList.remove("toggle-button", "header-follower-btn");
+        follow_btn.setAttribute("data-type", "follow");
         profile_header.appendChild(follow_wrap);
-        if (is_following && follow_wrap.getAttribute("data-toggle-button-current-state") == "followed") {
-          follow_btn.setAttribute("data-mutuals", "true");
-          follow_btn.setAttribute("data-mutuals-text", tl(trans.following_mutuals));
-        }
+        if (follow_wrap.getAttribute("data-toggle-button-current-state") == "followed")
+          follow_btn.setAttribute("data-followed", "true");
+        let mutual_text = document.createElement("i");
+        mutual_text.textContent = tl(trans.following_mutuals);
+        follow_btn.appendChild(mutual_text);
         if (!katsune)
           tippy(follow_btn, {
             content: follow_btn.textContent
@@ -9478,7 +9482,8 @@
         });
       } else {
         let follow_placeholder = document.createElement("button");
-        follow_placeholder.classList.add("btn", "profile-top-item", "profile-top-item--follow", "view-item", katsune ? "icon" : "");
+        follow_placeholder.classList.add("btn", "side-action");
+        follow_placeholder.setAttribute("data-type", "follow");
         follow_placeholder.textContent = tl(trans.blocked);
         follow_placeholder.setAttribute("disabled", "true");
         follow_placeholder.setAttribute("data-ignored", "true");
@@ -9497,8 +9502,7 @@
             name: page.name,
             type: "message",
             link: msg_button.getAttribute("href"),
-            katsune,
-            mini: true
+            katsune
           });
         } else {
           create_profile_top_item(profile_header, {
@@ -9516,8 +9520,7 @@
             link: msg_button.getAttribute("href"),
             full: true,
             primary: true,
-            katsune,
-            mini: true
+            katsune
           });
         }
       }
@@ -9527,14 +9530,13 @@
           type: "shortcut",
           link: `_set_profile_as_shortcut(this, '${page.name}')`,
           action: "button",
-          katsune,
-          mini: true
+          katsune
         });
       }
     } else {
       create_profile_top_item(profile_header, {
         name: page.name,
-        type: "edit_profile",
+        type: "edit",
         link: `${root}settings`,
         katsune
       });
@@ -9543,7 +9545,6 @@
         type: "labs",
         link: `${root}labs`,
         katsune,
-        mini: true,
         tooltip: `
                 <strong>${tl(trans.labs_by_last)}</strong>
                 <p>${tl(trans.labs_by_last.tagline)}</p>
@@ -9555,8 +9556,7 @@
         name: page.name,
         type: "obsess",
         link: `${root}user/${page.name}/obsessions/set`,
-        katsune,
-        mini: true
+        katsune
       });
     }
     let listen_container = page.structure.row.querySelector(".listen-panel");
@@ -9639,7 +9639,8 @@
   function create_profile_top_item(parent, { name, link, text = "", type, taste = "", artists = [], avi = "", percent = "", action = "", tooltip = "", allow_html = false, tooltip_theme = "", full = false, primary = false, katsune = false, mini = false }) {
     log(`creating top item of ${name}, ${link}, ${text}`, "profile");
     let listen_item = document.createElement(action != "button" ? "a" : "button");
-    listen_item.classList.add("btn", "profile-top-item", `profile-top-item--${type}`, "view-item");
+    listen_item.classList.add("btn", "side-action");
+    listen_item.setAttribute("data-type", type);
     if (mini)
       listen_item.classList.add("mini");
     if (action != "button" && type != "going" && type != "maybe" && type != "total") {
@@ -9655,7 +9656,6 @@
     }
     if (katsune) {
       full = true;
-      listen_item.classList.add("icon");
     }
     if (full) {
       listen_item.classList.add("profile-top-item-full");
@@ -9663,29 +9663,18 @@
     }
     parent.appendChild(listen_item);
     if (type == "shortcut") {
+      listen_item.textContent = tl(trans.shortcut);
       if (name == settings.profile_shortcut) {
         listen_item.setAttribute("data-is-shortcut", "true");
         listen_item.removeAttribute("onclick");
-        if (katsune && !mini)
-          listen_item.textContent = tl(trans.profile_shortcut.linked);
-        else
-          tippy(listen_item, {
-            content: tl(trans.profile_shortcut.linked)
-          });
       } else {
         listen_item.setAttribute("data-is-shortcut", "false");
-        if (katsune && !mini)
-          listen_item.textContent = tl(trans.profile_shortcut.name);
-        else
-          tippy(listen_item, {
-            content: tl(trans.profile_shortcut.name)
-          });
       }
       let menu = tippy(listen_item, {
         theme: "context-menu",
         content: `
                 <button class="dropdown-menu-clickable-item" onclick="_open_profile_shortcut_window()" data-menu-item="settings">
-                    ${tl(trans.configure)}
+                    ${tl(trans.settings)}
                 </button>
             `,
         allowHTML: true,
