@@ -2676,6 +2676,13 @@
       body: {
         en: "Removes visibility for everyone (including you)"
       }
+    },
+    error: {
+      en: "Error"
+    },
+    erm: {
+      // used when a page is taken down
+      en: "erm..."
     }
   };
   var trans_legacy = {
@@ -18337,27 +18344,36 @@
   function bleh_error() {
     page.state.error = false;
     let page_content = document.body.querySelector(".page-content");
-    if (page_content == null)
-      return;
+    if (!page_content) return;
     let error_marvin = page_content.querySelector(".error-page-marvin:not([data-bleh])");
-    if (error_marvin == null)
-      return;
+    if (!error_marvin) return;
     page.state.error = true;
     error_marvin.setAttribute("data-bleh", "true");
     let error_content = page_content.querySelector("h1");
     let back_link = page_content.querySelector("a");
+    let reason = page_content.querySelector("p");
     page_content.classList.add("has-error");
     page_content.innerHTML = `
-        <div class="error-page">
-            <h3>${trans_legacy.en.error.name}</h3>
-            <h4>${error_content.textContent}</h4>
-            <div class="button-footer">
-                <a class="btn back" href="${back_link.getAttribute("href")}">
-                    ${trans_legacy.en.error.go_back}
-                </a>
-                <a class="btn continue primary" href="${root}user/${auth.name}">
-                    ${trans_legacy.en.error.visit_profile}
-                </a>
+        <div class="row">
+            <div class="col-main">
+                <section class="error">
+                    <div class="info">
+                        <h1>${tl(trans.erm)}</h1>
+                        <div class="subtle">${error_content.textContent}</div>
+                    </div>
+                    <div class="error-content">
+                        ${reason.outerHTML}
+                    </div>
+                    <div class="subtle">${window.location.pathname}</div>
+                    <div class="error-footer">
+                        <a class="see-more cancel" href="${back_link.getAttribute("href")}">
+                            ${tl(trans.back)}
+                        </a>
+                        <a class="btn primary continue" href="${root}user/${auth.name}">
+                            ${tl(trans.profile)}
+                        </a>
+                    </div>
+                </section>
             </div>
         </div>
     `;
@@ -20094,7 +20110,11 @@
       bleh_settings();
     } else {
       bleh_error();
-      if (page.state.error) return;
+      if (page.state.error) {
+        append_nav();
+        page_title();
+        return;
+      }
       if (page.type == "user")
         bleh_profiles();
       else if (page.type == "artist")
@@ -20123,12 +20143,17 @@
         bleh_radio();
     }
     append_nav();
+    page_title();
+  }
+  function page_title() {
     if (ff("page_title")) {
       let template = tl(trans.page_templates.type);
-      if ((page.type == "user" || page.type == "artist" || page.type == "events" || page.type == "tag") && page.subpage != "home")
-        template = tl(trans.page_templates.name_type);
-      else if (page.type == "album" || page.type == "track")
-        template = tl(trans.page_templates.name_sister_type);
+      if (!page.state.error) {
+        if ((page.type == "user" || page.type == "artist" || page.type == "events" || page.type == "tag") && page.subpage != "home")
+          template = tl(trans.page_templates.name_type);
+        else if (page.type == "album" || page.type == "track")
+          template = tl(trans.page_templates.name_sister_type);
+      }
       let name = page.name;
       let sister = page.sister;
       if (page.type == "album" || page.type == "track") {
@@ -20210,6 +20235,8 @@
         else if (page.type == "tag")
           title = tl(trans.tag);
       }
+      if (page.state.error)
+        title = tl(trans.error);
       template = template.replace("{page}", title).replace("{name}", name).replace("{sister}", sister).replace("{brand}", version.brand).replace("{build}", version.build).replace("{sku}", version.sku);
       document.title = template;
     }

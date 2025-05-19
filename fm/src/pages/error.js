@@ -4,14 +4,11 @@ import { lang, trans_legacy, trans, tl } from "../build/trans";
 export function bleh_error() {
     page.state.error = false;
     let page_content = document.body.querySelector('.page-content');
-
-    if (page_content == null)
-        return;
+    if (!page_content) return;
 
     let error_marvin = page_content.querySelector('.error-page-marvin:not([data-bleh])');
+    if (!error_marvin) return;
 
-    if (error_marvin == null)
-        return;
     page.state.error = true;
     error_marvin.setAttribute('data-bleh', 'true');
 
@@ -20,18 +17,30 @@ export function bleh_error() {
 
     let back_link = page_content.querySelector('a');
 
+    let reason = page_content.querySelector('p');
+
     page_content.classList.add('has-error');
     page_content.innerHTML = (`
-        <div class="error-page">
-            <h3>${trans_legacy.en.error.name}</h3>
-            <h4>${error_content.textContent}</h4>
-            <div class="button-footer">
-                <a class="btn back" href="${back_link.getAttribute('href')}">
-                    ${trans_legacy.en.error.go_back}
-                </a>
-                <a class="btn continue primary" href="${root}user/${auth.name}">
-                    ${trans_legacy.en.error.visit_profile}
-                </a>
+        <div class="row">
+            <div class="col-main">
+                <section class="error">
+                    <div class="info">
+                        <h1>${tl(trans.erm)}</h1>
+                        <div class="subtle">${error_content.textContent}</div>
+                    </div>
+                    <div class="error-content">
+                        ${reason.outerHTML}
+                    </div>
+                    <div class="subtle">${window.location.pathname}</div>
+                    <div class="error-footer">
+                        <a class="see-more cancel" href="${back_link.getAttribute('href')}">
+                            ${tl(trans.back)}
+                        </a>
+                        <a class="btn primary continue" href="${root}user/${auth.name}">
+                            ${tl(trans.profile)}
+                        </a>
+                    </div>
+                </section>
             </div>
         </div>
     `);

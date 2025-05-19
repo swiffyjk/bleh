@@ -363,7 +363,11 @@ function load_page() {
     } else {
         bleh_error();
 
-        if (page.state.error) return;
+        if (page.state.error) {
+            append_nav();
+            page_title();
+            return;
+        }
 
         if (page.type == 'user')
             bleh_profiles();
@@ -400,12 +404,18 @@ function load_page() {
 
     append_nav();
 
+    page_title();
+}
+
+function page_title() {
     if (ff('page_title')) {
         let template = tl(trans.page_templates.type);
-        if ((page.type == 'user' || page.type == 'artist' || page.type == 'events' || page.type == 'tag') && page.subpage != 'home')
-            template = tl(trans.page_templates.name_type)
-        else if (page.type == 'album' || page.type == 'track')
-            template = tl(trans.page_templates.name_sister_type);
+        if (!page.state.error) {
+            if ((page.type == 'user' || page.type == 'artist' || page.type == 'events' || page.type == 'tag') && page.subpage != 'home')
+                template = tl(trans.page_templates.name_type)
+            else if (page.type == 'album' || page.type == 'track')
+                template = tl(trans.page_templates.name_sister_type);
+        }
 
         let name = page.name;
         let sister = page.sister;
@@ -494,6 +504,9 @@ function load_page() {
             else if (page.type == 'tag')
                 title = tl(trans.tag);
         }
+
+        if (page.state.error)
+            title = tl(trans.error);
 
         template = template
         .replace('{page}', title)

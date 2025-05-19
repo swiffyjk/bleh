@@ -1820,6 +1820,13 @@ export const trans = {
         body: {
             en: 'Removes visibility for everyone (including you)'
         }
+    },
+    error: {
+        en: 'Error'
+    },
+    erm: {
+        // used when a page is taken down
+        en: 'erm...'
     }
 }
 
