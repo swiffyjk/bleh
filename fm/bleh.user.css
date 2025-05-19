@@ -11523,11 +11523,24 @@ text[style^="color: rgb(0, 0, 0)"] {
 }
 .user-list-description .text-light {
     flex-shrink: 0;
+    font-weight: var(--font-weight-medium);
 }
 .user-list-about-me {
+    display: inline;
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
+
+    * {
+        display: inline;
+        font-size: var(--font-size);
+        line-height: var(--line-height);
+        margin: unset !important;
+    }
+
+    br {
+        display: none;
+    }
 }
 
 .user-list-item .class {

@@ -37,6 +37,7 @@ import { bleh_sponsor_page, sponsors } from "./sponsor";
 import { append_style, prompt_for_update } from "./style";
 import { bleh_radio } from "./components/radio";
 import { bleh_api } from './pages/api';
+import { bleh_users } from './pages/users';
 
 export function bleh() {
     let head_observer = new MutationObserver((mutations) => {
@@ -391,6 +392,10 @@ function load_page() {
             bleh_home();
         else if (page.type == 'api')
             bleh_api();
+
+        if (page.type == 'user' || page.type == 'events') {
+            bleh_users();
+        }
 
         if (
             (page.type == 'artist' || page.type == 'album' || page.type == 'track' || page.type == 'tag') &&

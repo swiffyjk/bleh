@@ -2,7 +2,8 @@ import { root } from "../build/page";
 
 export function markdown(text, {
     allow_headers = false,
-    allow_links = true
+    allow_links = true,
+    line_breaks = true
 }={}) {
     let converter = new showdown.Converter({
         emoji: true,
@@ -13,7 +14,7 @@ export function markdown(text, {
         noHeaderId: true,
         openLinksInNewWindow: true,
         requireSpaceBeforeHeadingText: true,
-        simpleLineBreaks: true,
+        simpleLineBreaks: line_breaks,
         simplifiedAutoLink: allow_links,
         strikethrough: true,
         underline: true,

@@ -9368,7 +9368,8 @@
   // src/components/markdown.js
   function markdown(text, {
     allow_headers = false,
-    allow_links = true
+    allow_links = true,
+    line_breaks = true
   } = {}) {
     let converter = new showdown.Converter({
       emoji: true,
@@ -9379,7 +9380,7 @@
       noHeaderId: true,
       openLinksInNewWindow: true,
       requireSpaceBeforeHeadingText: true,
-      simpleLineBreaks: true,
+      simpleLineBreaks: line_breaks,
       simplifiedAutoLink: allow_links,
       strikethrough: true,
       underline: true,
@@ -19885,6 +19886,18 @@
     }
   }
 
+  // src/pages/users.js
+  function bleh_users() {
+    let users = page.structure.main.querySelectorAll(".user-list-about-me");
+    users.forEach((user) => {
+      let result = markdown(user.textContent, {
+        allow_headers: true,
+        line_breaks: false
+      });
+      user.innerHTML = result;
+    });
+  }
+
   // src/page.js
   function bleh() {
     let head_observer = new MutationObserver((mutations) => {
@@ -20137,6 +20150,9 @@
         bleh_home();
       else if (page.type == "api")
         bleh_api();
+      if (page.type == "user" || page.type == "events") {
+        bleh_users();
+      }
       if ((page.type == "artist" || page.type == "album" || page.type == "track" || page.type == "tag") && page.subpage == "overview")
         patch_wiki();
       if ((page.type == "user" || page.type == "tag" || page.type == "events") && (page.subpage == "overview" || page.subpage == "event_overview"))
