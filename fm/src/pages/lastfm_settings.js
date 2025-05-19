@@ -49,6 +49,8 @@ export function bleh_native_settings() {
         bleh_auto_edits();
     } else if (page.subpage == 'account_overview') {
         bleh_accounts();
+    } else if (page.subpage == 'change-username_overview') {
+        bleh_name_change();
     }
 
     if (ff('katsune')) return;
@@ -1088,4 +1090,9 @@ function bleh_accounts() {
     }
 
     custom_select(communication_panel.querySelector('[name="language"]'), communication_panel.querySelector('[name="language"]').parentElement);
+}
+function bleh_name_change() {
+    let token = page.structure.main.querySelector('[name="csrfmiddlewaretoken"]').getAttribute('value');
+
+    return;
 }

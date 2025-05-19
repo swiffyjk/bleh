@@ -866,12 +866,12 @@
   var lang_info = {
     en: {
       name: "English",
-      by: ["katelyness"],
+      by: ["katesia"],
       last_updated: "latest"
     },
     de: {
       name: "Deutsch",
-      by: ["stellasaur", "katelyness"],
+      by: ["stellasaur", "katesia"],
       last_updated: "2025-05-11"
     },
     pl: {
@@ -6127,7 +6127,7 @@
   ];
 
   // src/build/sponsor.js
-  var cute = ["katelyness", "stellasaur", "kateshapedbox"];
+  var cute = ["katesia", "stellasaur", "kateshapedbox"];
   var sponsor_list = {};
 
   // src/components/badge.js
@@ -9979,6 +9979,8 @@
       bleh_auto_edits();
     } else if (page.subpage == "account_overview") {
       bleh_accounts();
+    } else if (page.subpage == "change-username_overview") {
+      bleh_name_change();
     }
     if (ff("katsune")) return;
     let edit_header = document.createElement("section");
@@ -10914,6 +10916,10 @@
     }
     custom_select(communication_panel.querySelector('[name="language"]'), communication_panel.querySelector('[name="language"]').parentElement);
   }
+  function bleh_name_change() {
+    let token = page.structure.main.querySelector('[name="csrfmiddlewaretoken"]').getAttribute("value");
+    return;
+  }
 
   // src/pages/obsession.js
   function bleh_obsession() {
@@ -11635,7 +11641,7 @@
     });
     profile_name_obj.appendChild(label_container);
     if (page.subpage != "overview") return;
-    if (page.name == "katelyness") {
+    if (page.name == "katesia") {
       let sponsor_cta = document.createElement("div");
       sponsor_cta.classList.add("cta", "first", "sponsor", "colourful");
       if (auth.sponsor) {
@@ -17927,7 +17933,7 @@
   function open_changelog(changelog) {
     let window2 = dialog({
       id: "changelog",
-      title: tl(trans.news_from_user).replace("{user}", `<a class="mention" href="${root}user/katelyness">@katelyness</a>`),
+      title: tl(trans.news_from_user).replace("{user}", `<a class="mention" href="${root}user/katesia">@katesia</a>`),
       body: `
             <div class="cta first sponsor colourful margin-bottom">
                 <strong>${tl(trans.news_sponsor_cta)}</strong>
@@ -19451,7 +19457,7 @@
                     <span class="avatar-status-dot user-status--bleh-sponsor"></span>
                 </div>
                 <h1>${tl(trans.support_future_development)}</h1>
-                <p>${tl(trans.why_sponsor).replace("katelyn", `<a class="mention" href="${root}user/katelyness">@katelyness</a>`)}</p>
+                <p>${tl(trans.why_sponsor).replace("katelyn", `<a class="mention" href="${root}user/katesia">@katesia</a>`)}</p>
             </div>
             <div class="modal-footer">
                 <a class="btn primary sponsor" href="${sponsor_list.sponsor_link}" target="_blank">

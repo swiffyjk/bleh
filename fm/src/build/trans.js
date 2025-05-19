@@ -9,12 +9,12 @@ export let lang;
 export let lang_info = {
     en: {
         name: 'English',
-        by: ['katelyness'],
+        by: ['katesia'],
         last_updated: 'latest'
     },
     de: {
         name: 'Deutsch',
-        by: ['stellasaur', 'katelyness'],
+        by: ['stellasaur', 'katesia'],
         last_updated:  '2025-05-11'
     },
     pl: {

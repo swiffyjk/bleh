@@ -727,7 +727,7 @@ export function bleh_profiles() {
 
     if (page.subpage != 'overview') return;
 
-    if (page.name == 'katelyness') {
+    if (page.name == 'katesia') {
         let sponsor_cta = document.createElement('div');
         sponsor_cta.classList.add('cta', 'first', 'sponsor', 'colourful');
 

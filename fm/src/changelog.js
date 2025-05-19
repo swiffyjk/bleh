@@ -75,7 +75,7 @@ export function request_changelog(open_after = true) {
 function open_changelog(changelog) {
     let window = dialog({
         id: 'changelog',
-        title: tl(trans.news_from_user).replace('{user}', `<a class="mention" href="${root}user/katelyness">@katelyness</a>`),
+        title: tl(trans.news_from_user).replace('{user}', `<a class="mention" href="${root}user/katesia">@katesia</a>`),
         body: (`
             <div class="cta first sponsor colourful margin-bottom">
                 <strong>${tl(trans.news_sponsor_cta)}</strong>
