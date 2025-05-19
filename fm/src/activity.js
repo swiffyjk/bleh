@@ -27,6 +27,14 @@ export function subscribe_to_events() {
 
             let action = btn.getAttribute('data-analytics-action');
 
+            if (btn.getAttribute('data-type') == 'love' && !btn.querySelector('span')) {
+                setTimeout(function() {
+                    let new_text = document.createElement('span');
+                    new_text.textContent = tl(trans.love);
+                    btn.appendChild(new_text);
+                }, 1);
+            }
+
             register_activity((action == 'LoveTrack') ? 'love' : 'unlove', [{name: track, type: 'track', sister: artist}], `${root}music/${sanitise(artist)}/_/${sanitise(track)}`);
         }, false);
     });

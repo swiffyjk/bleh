@@ -8776,6 +8776,12 @@
         button.classList.add("dropdown-menu-clickable-item");
       if (button.classList[0] == "header-new-more-button")
         interact_container.removeChild(button.parentElement);
+      if (button.classList[1] == "header-new-love-button") {
+        button.setAttribute("data-type", "love");
+        let new_text = document.createElement("span");
+        new_text.textContent = tl(trans.love);
+        button.appendChild(new_text);
+      }
     });
     let links = interact_container.querySelectorAll("a");
     links.forEach((button) => {
@@ -16177,6 +16183,13 @@
       btn.addEventListener("click", (event2) => {
         log("heard", "event", "info", event2);
         let action = btn.getAttribute("data-analytics-action");
+        if (btn.getAttribute("data-type") == "love" && !btn.querySelector("span")) {
+          setTimeout(function() {
+            let new_text = document.createElement("span");
+            new_text.textContent = tl(trans.love);
+            btn.appendChild(new_text);
+          }, 1);
+        }
         register_activity(action == "LoveTrack" ? "love" : "unlove", [{ name: track, type: "track", sister: artist }], `${root}music/${sanitise(artist)}/_/${sanitise(track)}`);
       }, false);
     });
