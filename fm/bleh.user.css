@@ -6861,8 +6861,6 @@ button,
         #manage_data .btn-primary,
         .primary,
         .btn-subscribe,
-        [data-toggle-button-current-state="followed"] &.profile-top-item--follow.icon, .profile-top-item--shortcut.icon&[data-is-shortcut="true"],
-        .header-new-love-button.icon[data-analytics-action="UnloveTrack"], .header-new-bookmark-button.icon[data-analytics-action^="Unbookmark"],
         .view-item[aria-checked="true"]
     ) {
         --bg: var(--cards-overlay-image-subtlest, none), hsl(var(--h3)) !important;
@@ -7233,7 +7231,7 @@ button,
 .inline-section-control:before,
 .header .header-message-user:before,
 /*     TRACK/ALBUM/ARTIST HEADER     */
-.header-new-love-button:before, .header-new-more-button:before, .header-new-bookmark-button:before,
+.header-new-more-button:before,
 /*     TAGS     */
 .tags-add:before,
 /*     CHARTLIST     */
@@ -7561,6 +7559,7 @@ section:has(.dropdown-menu-clickable-button.section-control) {
             left: 0;
             top: 50%;
             margin-top: -12px;
+            margin-left: unset !important;
             right: unset;
             transition-property: background;
             transition-duration: var(--trans);
@@ -7620,6 +7619,8 @@ section:has(.dropdown-menu-clickable-button.section-control) {
                 background: hsl(var(--b4), 30%) !important;
             }
         }
+        [data-toggle-button-current-state="loved"] > form > &,
+        [data-toggle-button-current-state="bookmarked"] > form > &,
         &[data-is-shortcut="true"],
         [data-toggle-button-current-state="followed"] > form > & {
             --col: hsl(var(--l3-c));
@@ -7696,7 +7697,7 @@ section:has(.dropdown-menu-clickable-button.section-control) {
         --mask: var(--icon-16-profile-shortcut);
     }
 }
-[data-type="obsess"] {
+[data-type="obsession"] {
     --mask: var(--icon-16-obsession);
 }
 

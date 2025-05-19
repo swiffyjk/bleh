@@ -324,10 +324,8 @@ export function show_your_scrobbles() {
 
 
     // interactables on the right
-    let interact_container = document.createElement('div');
-    interact_container.classList.add('view-all-panel');
-    if (page.type == 'track')
-        interact_container.classList.add('mini-interactions');
+    let interact_container = document.createElement('section');
+    interact_container.classList.add('side-actions');
 
 
     let text = document.body.querySelector('.header-new-title').textContent
@@ -350,7 +348,7 @@ export function show_your_scrobbles() {
     let buttons = interact_container.querySelectorAll('button');
     buttons.forEach((button) => {
         if (button.classList[0] != 'header-new-playlink')
-            button.classList.add('btn', 'view-item', 'interact-item', (katsune) ? 'icon' : '');
+            button.classList.add('btn', 'side-action');
         else
             button.classList.add('dropdown-menu-clickable-item');
 
@@ -360,7 +358,7 @@ export function show_your_scrobbles() {
     let links = interact_container.querySelectorAll('a');
     links.forEach((button) => {
         if (button.classList[0] != 'header-new-playlink')
-            button.classList.add('btn', 'view-item', 'interact-item');
+            button.classList.add('btn', 'side-action');
         else
             button.classList.add('dropdown-menu-clickable-item');
     });
@@ -368,14 +366,11 @@ export function show_your_scrobbles() {
 
     // obsession
     let obsession_form = header_actions.querySelector('form[action$="obsessions"]');
-    if (obsession_form != null) {
+    if (obsession_form) {
         let obsession_btn = obsession_form.querySelector('button');
-        obsession_btn.classList = 'btn view-item interact-item obsession-btn';
-
-        tippy(obsession_btn, {
-            content: tl(trans.set_obsession)
-        });
-        obsession_btn.textContent = tl(trans.obsess);
+        obsession_btn.classList = 'btn side-action';
+        obsession_btn.setAttribute('data-type', 'obsession');
+        obsession_btn.textContent = tl(trans.obsession);
 
         interact_container.appendChild(obsession_form);
     }
@@ -383,7 +378,7 @@ export function show_your_scrobbles() {
 
     // search similar!
     /*let search_btn = document.createElement('a');
-    search_btn.classList.add('btn', 'view-item', 'interact-item', 'search-similar-btn', (katsune) ? 'icon' : '');
+    search_btn.classList.add('btn', 'side-action', 'search-similar-btn');
     search_btn.textContent = trans_legacy.en.music.search_variations.name;
     search_btn.href = `${root}search/${page.type}s?q=${text}`;
     search_btn.target = '_blank';
@@ -399,7 +394,7 @@ export function show_your_scrobbles() {
     let lotus_btn = null;
     if (settings.corrections) {
         lotus_btn = document.createElement('a');
-        /*lotus_btn.classList.add('btn', 'view-item', 'interact-item', 'lotus', 'lotus-btn');*/
+        /*lotus_btn.classList.add('btn', 'side-action', 'lotus', 'lotus-btn');*/
         lotus_btn.classList.add('dropdown-menu-clickable-item', 'lotus', 'lotus-btn');
         lotus_btn.textContent = trans_legacy.en.lotus.correct.name;
         lotus_btn.href = 'https://github.com/katelyynn/lotus/issues/new/choose';

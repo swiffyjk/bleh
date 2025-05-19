@@ -8760,10 +8760,8 @@
         create_listen_item(listen_container, other_listeners, page.type);
       }
     }
-    let interact_container = document.createElement("div");
-    interact_container.classList.add("view-all-panel");
-    if (page.type == "track")
-      interact_container.classList.add("mini-interactions");
+    let interact_container = document.createElement("section");
+    interact_container.classList.add("side-actions");
     let text = document.body.querySelector(".header-new-title").textContent.replaceAll(" ", "+").replaceAll("&", "%26");
     let artist = document.body.querySelector(".header-new-crumb");
     if (artist != void 0)
@@ -8773,7 +8771,7 @@
     let buttons = interact_container.querySelectorAll("button");
     buttons.forEach((button) => {
       if (button.classList[0] != "header-new-playlink")
-        button.classList.add("btn", "view-item", "interact-item", katsune ? "icon" : "");
+        button.classList.add("btn", "side-action");
       else
         button.classList.add("dropdown-menu-clickable-item");
       if (button.classList[0] == "header-new-more-button")
@@ -8782,18 +8780,16 @@
     let links = interact_container.querySelectorAll("a");
     links.forEach((button) => {
       if (button.classList[0] != "header-new-playlink")
-        button.classList.add("btn", "view-item", "interact-item");
+        button.classList.add("btn", "side-action");
       else
         button.classList.add("dropdown-menu-clickable-item");
     });
     let obsession_form = header_actions.querySelector('form[action$="obsessions"]');
-    if (obsession_form != null) {
+    if (obsession_form) {
       let obsession_btn = obsession_form.querySelector("button");
-      obsession_btn.classList = "btn view-item interact-item obsession-btn";
-      tippy(obsession_btn, {
-        content: tl(trans.set_obsession)
-      });
-      obsession_btn.textContent = tl(trans.obsess);
+      obsession_btn.classList = "btn side-action";
+      obsession_btn.setAttribute("data-type", "obsession");
+      obsession_btn.textContent = tl(trans.obsession);
       interact_container.appendChild(obsession_form);
     }
     let lotus_btn = null;
@@ -9554,7 +9550,7 @@
       });
       create_profile_top_item(profile_header, {
         name: page.name,
-        type: "obsess",
+        type: "obsession",
         link: `${root}user/${page.name}/obsessions/set`,
         katsune
       });
