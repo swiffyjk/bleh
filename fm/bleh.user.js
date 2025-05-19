@@ -6179,9 +6179,11 @@
     type = "",
     has_overlays = true,
     replace = false,
-    replace_if_possible = false,
+    replace_if_possible = true,
     replace_id = "",
-    allow_scroll = false
+    allow_scroll = false,
+    colourful = false,
+    colourful_bg = false
   }) {
     log(`creating ${id}`, "window", "info", {
       id,
@@ -6193,9 +6195,13 @@
       has_overlays,
       replace,
       replace_id,
-      allow_scroll
+      allow_scroll,
+      colourful,
+      colourful_bg
     });
     let modal;
+    if (replace && replace_if_possible)
+      replace_if_possible = false;
     if (replace_if_possible && Object.keys(dialogs).length > 0) {
       replace = true;
       for (let dialog2 in dialogs) {
@@ -6207,6 +6213,10 @@
       modal = document.createElement("div");
       modal.classList.add("bleh-modal");
       modal.setAttribute("role", "dialog");
+      if (colourful)
+        modal.classList.add("colourful");
+      if (colourful_bg)
+        modal.classList.add("colourful-bg");
     } else {
       log(`window set to replace ${replace_id}`, "window");
       modal = dialogs[replace_id].instance;
@@ -19457,7 +19467,7 @@
                     <span class="avatar-status-dot user-status--bleh-sponsor"></span>
                 </div>
                 <h1>${tl(trans.support_future_development)}</h1>
-                <p>${tl(trans.why_sponsor).replace("katelyn", `<a class="mention" href="${root}user/katesia">@katesia</a>`)}</p>
+                <p>${tl(trans.why_sponsor).replace("katelyn", `<a class="mention" href="${root}user/katelyness">@katelyness</a>`)}</p>
             </div>
             <div class="modal-footer">
                 <a class="btn primary sponsor" href="${sponsor_list.sponsor_link}" target="_blank">

@@ -155,7 +155,8 @@ body, [data-page-resource-type="album"], [data-page-resource-type="track"],
 .preview, .preview[data-bleh--theme="dark"], .redesigned-header[data-bleh--theme="dark"],
 .listen-item,
 .lotus.bleh--panel,
-[data-bleh--label="bleh"], [data-bleh-page="seasonal"]
+[data-bleh--label="bleh"], [data-bleh-page="seasonal"],
+.colourful-bg
 {
     /* any additional highlights */
     --b3: var(--hue), calc(var(--sat) * 4% * var(--sat-bg, 1)), 30%;
