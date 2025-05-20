@@ -1048,8 +1048,14 @@
       en: "Compare plays",
       de: "Plays vergleichen"
     },
-    compare_notice: {
-      en: "Only the top 50 items are loaded currently, meaning album and especially track similarities can be smaller than expected"
+    one_page: {
+      en: "1 page"
+    },
+    count_pages: {
+      en: "{c} pages"
+    },
+    gathering_plays_for_user_pages: {
+      en: "Gathering plays for {u} ({current_page}/{pages})"
     },
     nothing_in_common: {
       en: "Nothing in common (\u0E51-\uFE4F-\u0E51)"
@@ -9941,7 +9947,14 @@
                     </div>
                 </div>
                 <div class="compare-selection">
-                    <div class="bleh-icon"></div>
+                    <div class="select-wrap custom-selector" id="pages_select">
+                        <select id="pages">
+                            <option value="1">50</option>
+                            <option value="2">100</option>
+                            <option value="3" selected>150</option>
+                            <option value="4">200</option>
+                        </select>
+                    </div>
                     <div class="select-wrap custom-selector" id="type_select">
                         <select id="type">
                             <option value="artists">${tl(trans.artists)}</option>
@@ -9972,9 +9985,7 @@
     tippy(page.state.compare_modal.querySelector(".chibi.compare"), {
       content: tl(trans.compare)
     });
-    tippy(page.state.compare_modal.querySelector(".compare-selection > .bleh-icon"), {
-      content: tl(trans.compare_notice)
-    });
+    custom_select(page.state.compare_modal.querySelector("#pages"), page.state.compare_modal.querySelector("#pages_select"));
     custom_select(page.state.compare_modal.querySelector("#type"), page.state.compare_modal.querySelector("#type_select"));
     custom_select(page.state.compare_modal.querySelector("#range"), page.state.compare_modal.querySelector("#range_select"));
   }
@@ -9987,27 +9998,29 @@
     buttons.forEach((button) => {
       button.setAttribute("disabled", "true");
     });
+    let pages = page.state.compare_modal.querySelector("#pages").value;
     let type = page.state.compare_modal.querySelector("#type").value;
     let range = page.state.compare_modal.querySelector("#range").value;
-    page.state.compare_modal.querySelector(".bleh-modal-body .compare-body").innerHTML = `
-        <div class="loading-data-container">
-            <div class="loading-data-text">${tl(trans.gathering_plays)}</div>
-        </div>
-    `;
     page.state.compare = {
       you: [],
       other: [],
       shared: []
     };
-    get_grid(auth.name, type, range, page.name);
+    get_grid(auth.name, type, range, 1, pages, page.name, pages);
   };
-  function get_grid(user, type, range, next_user = null) {
-    fetch(`${root}user/${user}/library/${type}?format=list&date_preset=${range}&page=1&ajax=1`).then(function(response) {
+  function get_grid(user, type, range, current_page, pages, next_user = null) {
+    page.state.compare_modal.querySelector(".bleh-modal-body .compare-body").innerHTML = `
+        <div class="loading-data-container">
+            <div class="loading-data-text">${tl(trans.gathering_plays_for_user_pages).replace("{u}", user).replace("{current_page}", current_page).replace("{pages}", pages)}</div>
+        </div>
+    `;
+    fetch(`${root}user/${user}/library/${type}?format=list&date_preset=${range}&page=${current_page}&ajax=1`).then(function(response) {
       console.log("returned", response, response.text);
       return response.text();
     }).then(function(html) {
       let doc = new DOMParser().parseFromString(html, "text/html");
       console.log("DOC", doc);
+      let next_button = doc.querySelector(".pagination-next");
       try {
         let tracks = doc.querySelectorAll(".chartlist-row");
         tracks.forEach((track) => {
@@ -10033,14 +10046,16 @@
         });
         console.error(e);
       }
-      if (!next_user) {
+      if (next_button && current_page < pages) {
+        get_grid(user, type, range, current_page + 1, pages, next_user);
+      } else if (next_user) {
+        get_grid(next_user, type, range, 1, pages);
+      } else {
         let buttons = page.state.compare_modal.querySelectorAll(".compare-selection > button");
         buttons.forEach((button) => {
           button.removeAttribute("disabled");
         });
         continue_comparing(type, range);
-      } else {
-        get_grid(next_user, type, range);
       }
     });
   }

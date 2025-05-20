@@ -192,8 +192,14 @@ export const trans = {
         en: 'Compare plays',
         de: 'Plays vergleichen'
     },
-    compare_notice: {
-        en: 'Only the top 50 items are loaded currently, meaning album and especially track similarities can be smaller than expected'
+    one_page: {
+        en: '1 page'
+    },
+    count_pages: {
+        en: '{c} pages'
+    },
+    gathering_plays_for_user_pages: {
+        en: 'Gathering plays for {u} ({current_page}/{pages})'
     },
     nothing_in_common: {
         en: 'Nothing in common (๑-﹏-๑)'
