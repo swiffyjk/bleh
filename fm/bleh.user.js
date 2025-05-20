@@ -9138,9 +9138,6 @@
     parent.appendChild(listen_item);
     if (listens < -1)
       return;
-    tippy(listen_item, {
-      content: name
-    });
   }
   function show_numbers_on_side(header_type) {
     let metadata = document.body.querySelectorAll(".header-metadata-tnew-item");

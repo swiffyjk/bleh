@@ -786,10 +786,6 @@ function create_listen_item(parent, {name, listens, link, avi, count=0, button=f
     // ensure proper listeners element
     if (listens < -1)
         return;
-
-    tippy(listen_item, {
-        content: name
-    });
 }
 
 
