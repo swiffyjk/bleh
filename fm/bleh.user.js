@@ -9709,7 +9709,7 @@
     compare();
   };
   unsafeWindow._begin_comparing = function() {
-    let buttons = page.state.compare_modal.querySelectorAll(".compare-header button");
+    let buttons = page.state.compare_modal.querySelectorAll(".compare-selection > button");
     buttons.forEach((button) => {
       button.setAttribute("disabled", "true");
     });
@@ -9760,7 +9760,7 @@
         console.error(e);
       }
       if (!next_user) {
-        let buttons = page.state.compare_modal.querySelectorAll(".compare-header button");
+        let buttons = page.state.compare_modal.querySelectorAll(".compare-selection > button");
         buttons.forEach((button) => {
           button.removeAttribute("disabled");
         });
@@ -9815,7 +9815,7 @@
           template = `${sanitise(data.sister)}/${sanitise(data.name)}`;
         item2.innerHTML = `
                 <div class="grid-items-cover-image js-link-block link-block">
-                    <div class="grid-items-cover-image-image ${data.avatar.endsWith("/c6f59c1e5e7240a4c0d427abd71f3dbb.jpg") ? "grid-items-cover-default" : ""}">
+                    <div class="grid-items-cover-image-image ${data.avatar.endsWith("/c6f59c1e5e7240a4c0d427abd71f3dbb.jpg") || data.avatar.endsWith("/2a96cbd8b46e442fc41c2b86b821562f.jpg") ? "grid-items-cover-default" : ""}">
                         <img src="${data.avatar.replace("/avatar70s/", "/avatar300s/").replace("/64s/", "/avatar300s/")}" alt="${data.name}">
                     </div>
                     <div class="grid-items-item-details">
@@ -9950,15 +9950,6 @@
       let msg_button = document.body.querySelector(".header-message-user");
       if (msg_button) {
         if (page.name != sponsor_list.sponsor_account) {
-          if (ff("compare")) {
-            create_profile_top_item(profile_header, {
-              name: page.name,
-              type: "compare",
-              link: "_compare()",
-              action: "button",
-              katsune
-            });
-          }
           create_profile_top_item(profile_header, {
             name: page.name,
             type: "message",
@@ -9982,6 +9973,15 @@
             katsune
           });
         }
+      }
+      if (ff("compare")) {
+        create_profile_top_item(profile_header, {
+          name: page.name,
+          type: "compare",
+          link: "_compare()",
+          action: "button",
+          katsune
+        });
       }
       if (page.name != sponsor_list.sponsor_account) {
         create_profile_top_item(profile_header, {

@@ -137,15 +137,6 @@ export function redesign_profile_header(is_own_profile, is_following) {
         let msg_button = document.body.querySelector('.header-message-user');
         if (msg_button) {
             if (page.name != sponsor_list.sponsor_account) {
-                if (ff('compare')) {
-                    create_profile_top_item(profile_header, {
-                        name: page.name,
-                        type: 'compare',
-                        link: '_compare()',
-                        action: 'button',
-                        katsune: katsune
-                    });
-                }
                 create_profile_top_item(profile_header, {
                     name: page.name,
                     type: 'message',
@@ -171,6 +162,16 @@ export function redesign_profile_header(is_own_profile, is_following) {
             }
         }
 
+
+        if (ff('compare')) {
+            create_profile_top_item(profile_header, {
+                name: page.name,
+                type: 'compare',
+                link: '_compare()',
+                action: 'button',
+                katsune: katsune
+            });
+        }
 
         // shortcut
         if (page.name != sponsor_list.sponsor_account) {
