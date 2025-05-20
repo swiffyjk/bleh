@@ -20845,7 +20845,7 @@
         date: "2025-04-26"
       },
       compare: {
-        default: false,
+        default: true,
         name: "Profile comparison",
         date: "2025-05-19"
       }
