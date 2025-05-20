@@ -4739,6 +4739,24 @@ better than the default selector '#app a' i suppose */
         &[data-bleh--scrobble-milestone] {
             color: hsl(var(--l2-c));
         }
+
+        &.with-avatar {
+            padding-left: unset;
+            --show-icon: none;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .avatar {
+            width: 16px;
+            height: 16px;
+            border-radius: var(--avatar-radius);
+
+            &:after {
+                display: none !important;
+            }
+        }
     }
 }
 .grid-items-item-details {
@@ -22936,6 +22954,10 @@ h4 {
             border-radius: var(--avatar-radius);
         }
     }
+}
+.compare-body {
+    max-height: 600px;
+    overflow-y: auto;
 }
 .compare {
     --mask: var(--icon-16-compare);

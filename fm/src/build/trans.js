@@ -863,9 +863,12 @@ export const trans = {
         en: 'Loading',
         de: 'Laden'
     },
-    loading_90_days: {
-        en: 'Collecting the last 90 days',
-        de: 'Sammeln der letzten 90 Tage'
+    loading_count_days: {
+        en: 'Collecting the last {c} days',
+        de: 'Sammeln der letzten {c} Tage'
+    },
+    gathering_plays: {
+        en: 'Gathering plays'
     },
     following_mutuals: {
         // this is appended after the following button text if mutuals

@@ -3,6 +3,7 @@ import { auth, page, root } from '../build/page';
 import { clean_number } from '../build/tools';
 import { tl, trans } from '../build/trans';
 import { dialog } from './dialog';
+import { music_grids } from './music_grid';
 import { notify } from './notify';
 import { custom_select } from './select';
 
@@ -77,15 +78,22 @@ unsafeWindow._begin_comparing = function() {
     let type = page.state.compare_modal.querySelector('#type').value;
     let range = page.state.compare_modal.querySelector('#range').value;
 
+    page.state.compare_modal.querySelector('.bleh-modal-body .compare-body').innerHTML = (`
+        <div class="loading-data-container">
+            <div class="loading-data-text">${tl(trans.gathering_plays)}</div>
+        </div>
+    `);
+
     page.state.compare = {
         you: [],
-        other: []
+        other: [],
+        shared: []
     };
     get_grid(auth.name, type, range, page.name);
 }
 
 function get_grid(user, type, range, next_user=null) {
-    fetch(`${root}user/${user}/library/${type}?format=grid&date_preset=${range}&page=1&ajax=1`)
+    fetch(`${root}user/${user}/library/${type}?format=list&date_preset=${range}&page=1&ajax=1`)
     .then(function(response) {
         console.log('returned', response, response.text);
 
@@ -96,36 +104,23 @@ function get_grid(user, type, range, next_user=null) {
         console.log('DOC', doc);
 
         try {
-            if (type != 'tracks') {
-                let grids = doc.querySelectorAll('.grid-items-item');
-                grids.forEach((grid) => {
-                    item = {};
+            let tracks = doc.querySelectorAll('.chartlist-row');
+            tracks.forEach((track) => {
+                item = {};
 
-                    item.name = grid.querySelector('.grid-items-item-main-text a').textContent.trim();
-                    if (type == 'albums')
-                        item.sister = grid.querySelector('.grid-items-item-aux-block').textContent.trim();
-                    item.plays = clean_number(grid.querySelector('.grid-items-item-aux-text a:last-child').textContent.trim().replace(`${tl(trans.plays_lower)}`, ''));
-
-                    if (next_user)
-                        page.state.compare.you.push(item);
-                    else
-                        page.state.compare.other.push(item);
-                });
-            } else {
-                let tracks = doc.querySelectorAll('.chartlist-row');
-                tracks.forEach((track) => {
-                    item = {};
-
-                    item.name = track.querySelector('.chartlist-name a').textContent.trim();
+                item.avatar = track.querySelector('.chartlist-image img');
+                if (item.avatar)
+                    item.avatar = item.avatar.getAttribute('src');
+                item.name = track.querySelector('.chartlist-name a').textContent.trim();
+                if (type != 'artists')
                     item.sister = track.querySelector('.chartlist-artist a').textContent.trim();
-                    item.plays = track.querySelector('.chartlist-count-bar-slug').getAttribute('data-stat-value');
+                item.plays = clean_number(track.querySelector('.chartlist-count-bar-slug').getAttribute('data-stat-value'));
 
-                    if (next_user)
-                        page.state.compare.you.push(item);
-                    else
-                        page.state.compare.other.push(item);
-                });
-            }
+                if (next_user)
+                    page.state.compare.you.push(item);
+                else
+                    page.state.compare.other.push(item);
+            });
         } catch(e) {
             notify({
                 id: 'compare',
@@ -142,13 +137,99 @@ function get_grid(user, type, range, next_user=null) {
                 button.removeAttribute('disabled');
             });
 
-            continue_comparing();
+            continue_comparing(type);
         } else {
             get_grid(next_user, type, range);
         }
     });
 }
 
-function continue_comparing() {
-    log('finished gathering values', 'compare', 'info', page.state.compare);
+function continue_comparing(type) {
+    log('gathered initial values', 'compare', 'info', page.state.compare);
+
+    page.state.compare.you.forEach((your_item) => {
+        let other_item;
+        if (type == 'albums')
+            other_item = page.state.compare.other.find(other => (your_item.name === other.name) && (your_item.sister === other.sister));
+        else
+            other_item = page.state.compare.other.find(other => your_item.name === other.name);
+
+        if (other_item) {
+            page.state.compare.shared.push({
+                avatar: your_item.avatar,
+                name: your_item.name,
+                sister: (your_item.sister) ? your_item.sister : '',
+                plays: {
+                    you: your_item.plays,
+                    other: other_item.plays,
+                    shared: your_item.plays + other_item.plays
+                }
+            });
+        }
+    });
+
+    page.state.compare.shared.sort((a, b) => b.plays.shared - a.plays.shared)
+
+    log('gathered shared values', 'compare', 'info', page.state.compare);
+
+    page.state.compare_modal.querySelector('.bleh-modal-body .compare-body').innerHTML = '';
+
+    if (type != 'tracks') {
+        let grid = document.createElement('ol');
+        grid.classList.add('grid-items', 'grid-items--numbered', 'compare-grid');
+
+        page.state.compare.shared.forEach((data) => {
+            let item = document.createElement('li');
+            item.classList.add('grid-items-item', 'compare-item');
+
+            let template;
+            if (type == 'artists')
+                template = data.name;
+            else
+                template = `${data.sister}/${data.name}`;
+
+            item.innerHTML = (`
+                <div class="grid-items-cover-image js-link-block link-block">
+                    <div class="grid-items-cover-image-image">
+                        <img src="${data.avatar.replace('/avatar70s/', '/avatar300s/')}" alt="${data.name}">
+                    </div>
+                    <div class="grid-items-item-details">
+                        <p class="grid-items-item-main-text">
+                            <a class="link-block-target" href="${root}music/${template}">
+                                ${data.name}
+                            </a>
+                        </p>
+                        ${(type == 'albums') ? (`
+                        <p class="grid-items-item-aux-text">
+                            <a class="grid-items-item-aux-block" href="${root}music/${data.sister}">
+                                ${data.sister}
+                            </a>
+                        </p>
+                        `) : ''}
+                        <p class="grid-items-item-aux-text">
+                            <a class="grid-item-plays with-avatar" href="${root}user/${auth.name}/library/music/${template}" target="_blank">
+                                <span class="avatar">
+                                    <img src="${auth.avatar}" alt="${tl(trans.your_avatar)}">
+                                </span>
+                                ${data.plays.you}
+                            </a>
+                            <a class="grid-item-plays with-avatar" href="${root}user/${page.name}/library/music/${template}" target="_blank">
+                                <span class="avatar">
+                                    <img src="${page.avatar}" alt="${tl(trans.avatar_for_user).replace('{u}', page.name)}">
+                                </span>
+                                ${data.plays.other}
+                            </a>
+                        </p>
+                    </div>
+                    <a class="js-link-block-cover-link link-block-cover-link" href="${root}music/${template}" tabindex="-1" aria-hidden="true"></a>
+                </div>
+            `);
+
+            grid.appendChild(item);
+        });
+
+        page.state.compare_modal.querySelector('.bleh-modal-body .compare-body').appendChild(grid);
+
+        music_grids(grid);
+    }
 }

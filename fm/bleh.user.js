@@ -1719,9 +1719,12 @@
       en: "Loading",
       de: "Laden"
     },
-    loading_90_days: {
-      en: "Collecting the last 90 days",
-      de: "Sammeln der letzten 90 Tage"
+    loading_count_days: {
+      en: "Collecting the last {c} days",
+      de: "Sammeln der letzten {c} Tage"
+    },
+    gathering_plays: {
+      en: "Gathering plays"
     },
     following_mutuals: {
       // this is appended after the following button text if mutuals
@@ -9414,6 +9417,164 @@
     return parsed_body;
   }
 
+  // src/components/music_grid.js
+  function music_grids(search = page.structure.main) {
+    if (!search) return;
+    let insights = {
+      artist: {
+        display: false,
+        values: [],
+        labels: [],
+        highest: {
+          value: 0,
+          label: "",
+          link: "",
+          img: ""
+        }
+      },
+      album: {
+        display: false,
+        values: [],
+        labels: [],
+        highest: {
+          value: 0,
+          label: "",
+          link: "",
+          img: ""
+        }
+      },
+      track: {
+        display: false,
+        values: [],
+        labels: [],
+        highest: {
+          value: 0,
+          label: "",
+          link: "",
+          img: ""
+        }
+      }
+    };
+    let grids = search.querySelectorAll(".grid-items-item:not([data-bleh-music-grids])");
+    grids.forEach((grid) => {
+      let is_loading = grid.querySelector(".grid-items-empty-inner") != null;
+      if (is_loading) return;
+      grid.setAttribute("data-bleh-music-grids", "true");
+      let is_album;
+      if (page.type == "search") {
+        is_album = grid.querySelector(".stat-name") == null;
+      } else {
+        is_album = grid.querySelector(".grid-items-item-aux-block") != null;
+      }
+      let image_wrap = grid.querySelector(".grid-items-cover-image-image");
+      let image = image_wrap.querySelector("img");
+      if (image && !image_wrap.classList.contains("grid-items-cover-default")) {
+        let grid_colour = document.createElement("div");
+        grid_colour.classList.add("grid-item-colour-bg");
+        image_wrap.appendChild(grid_colour);
+        image.setAttribute("crossorigin", "anonymous");
+        try {
+          image.addEventListener("load", function() {
+            let thief = new ColorThief();
+            let colour = thief.getColor(image);
+            let hsl = rgb_to_hsl(colour[0], colour[1], colour[2]);
+            grid_colour.style.setProperty("background", `rgb(${colour})`);
+            grid.classList.add("grid-items-item-has-colour");
+            grid.style.setProperty("--hue-over", hsl.h);
+            grid.style.setProperty("--sat-over", clamp_sat(hsl.s / 100 * 3));
+            grid.style.setProperty("--lit-over", 1);
+          });
+        } catch (e) {
+        }
+      }
+      let plays_elem;
+      if (page.type == "search") {
+        if (!is_album) {
+          let aux_text = grid.querySelector(".grid-items-item-aux-text");
+          let stat_name = aux_text.querySelector(".stat-name");
+          aux_text.removeChild(stat_name);
+          plays_elem = aux_text;
+        }
+      } else if (page.type == "tag") {
+        let aux_text = grid.querySelector(".grid-items-item-aux-text");
+        let stat_name = aux_text.querySelector(".stat-name");
+        if (!stat_name) return;
+        aux_text.removeChild(stat_name);
+        plays_elem = aux_text;
+        if (is_album) {
+          let artist = grid.querySelector(".grid-items-item-aux-block");
+          aux_text.removeChild(artist);
+          plays_elem = document.createElement("a");
+          plays_elem.textContent = aux_text.textContent;
+          aux_text.textContent = "";
+          aux_text.appendChild(artist);
+          aux_text.appendChild(plays_elem);
+        }
+      } else {
+        plays_elem = grid.querySelector(".grid-items-item-aux-text a:last-child");
+      }
+      if (plays_elem && !grid.classList.contains("obsessions-item") && !grid.classList.contains("compare-item")) {
+        let plays = clean_number(plays_elem.textContent.trim().replace(`${tl(trans.plays_lower)}`, ""));
+        plays_elem.classList.add("grid-item-plays");
+        if (is_album)
+          plays_elem.textContent = plays.toLocaleString(lang);
+        if (!is_album) {
+          insights.artist.display = true;
+          insights.artist.values.push(plays);
+          if (plays > insights.artist.highest.value)
+            insights.artist.highest.value = plays;
+        } else {
+          insights.album.display = true;
+          insights.album.values.push(plays);
+          if (plays > insights.album.highest.value)
+            insights.album.highest.value = plays;
+        }
+        if (page.type == "search" || page.type == "tag")
+          plays_elem.classList.add("grid-item-listeners");
+        if (!is_album && settings.colourful_counts && page.type == "user") {
+          if (!plays_elem.getAttribute("href").includes("?from=") && (!plays_elem.getAttribute("href").includes("?date_preset=") || plays_elem.getAttribute("href").endsWith("?date_preset=ALL") || plays_elem.getAttribute("href").endsWith("?date_preset=null"))) {
+            let parsed_scrobble_as_rank = parse_scrobbles_as_rank(plays);
+            plays_elem.setAttribute("data-bleh--scrobble-milestone", parsed_scrobble_as_rank.milestone);
+            plays_elem.style.setProperty("--hue-over", parsed_scrobble_as_rank.hue);
+            plays_elem.style.setProperty("--sat-over", parsed_scrobble_as_rank.sat);
+            plays_elem.style.setProperty("--lit-over", parsed_scrobble_as_rank.lit);
+          }
+        }
+      }
+      let name = grid.querySelector(".grid-items-item-main-text a");
+      if (!is_album) {
+        name.textContent = correct_artist(name.textContent.trim());
+        insights.artist.labels.push(name.textContent);
+      } else {
+        let artist = grid.querySelector(".grid-items-item-aux-block");
+        if (!artist) return;
+        if (settings.format_guest_features) {
+          let name_elem = name;
+          let artist_elem = artist;
+          let song_title = name_elem.getAttribute("title");
+          let formatted_title = name_includes(song_title, artist_elem.textContent.trim());
+          let song_tags = {};
+          if (formatted_title) {
+            song_title = formatted_title[0];
+            insights.album.labels.push(song_title);
+            song_tags = formatted_title[1];
+            artist.textContent = formatted_title[2];
+          }
+          let song_tags_text = "";
+          for (let song_tag in song_tags) {
+            song_tags_text = `${song_tags_text}<span class="feat" data-bleh--tag-type="${song_tags[song_tag].type}" data-bleh--tag-group="${song_tags[song_tag].group}">${sanitise_text(song_tags[song_tag].text)}</span>`;
+          }
+          name_elem.innerHTML = `<span class="title">${sanitise_text(song_title).trim()}</span>${song_tags_text}`;
+        } else {
+          artist.textContent = correct_artist(artist.textContent.trim());
+          name.textContent = correct_item_by_artist(name.textContent.trim(), artist.textContent.trim());
+        }
+      }
+    });
+    if (page.subpage.startsWith("library"))
+      bleh_glacier_insights(insights);
+  }
+
   // src/components/select.js
   unsafeWindow._update_inbuilt_select = function(id, value) {
     update_inbuilt_select(id, value);
@@ -9551,46 +9712,41 @@
     });
     let type = page.state.compare_modal.querySelector("#type").value;
     let range = page.state.compare_modal.querySelector("#range").value;
+    page.state.compare_modal.querySelector(".bleh-modal-body .compare-body").innerHTML = `
+        <div class="loading-data-container">
+            <div class="loading-data-text">${tl(trans.gathering_plays)}</div>
+        </div>
+    `;
     page.state.compare = {
       you: [],
-      other: []
+      other: [],
+      shared: []
     };
     get_grid(auth.name, type, range, page.name);
   };
   function get_grid(user, type, range, next_user = null) {
-    fetch(`${root}user/${user}/library/${type}?format=grid&date_preset=${range}&page=1&ajax=1`).then(function(response) {
+    fetch(`${root}user/${user}/library/${type}?format=list&date_preset=${range}&page=1&ajax=1`).then(function(response) {
       console.log("returned", response, response.text);
       return response.text();
     }).then(function(html) {
       let doc = new DOMParser().parseFromString(html, "text/html");
       console.log("DOC", doc);
       try {
-        if (type != "tracks") {
-          let grids = doc.querySelectorAll(".grid-items-item");
-          grids.forEach((grid) => {
-            item = {};
-            item.name = grid.querySelector(".grid-items-item-main-text a").textContent.trim();
-            if (type == "albums")
-              item.sister = grid.querySelector(".grid-items-item-aux-block").textContent.trim();
-            item.plays = clean_number(grid.querySelector(".grid-items-item-aux-text a:last-child").textContent.trim().replace(`${tl(trans.plays_lower)}`, ""));
-            if (next_user)
-              page.state.compare.you.push(item);
-            else
-              page.state.compare.other.push(item);
-          });
-        } else {
-          let tracks = doc.querySelectorAll(".chartlist-row");
-          tracks.forEach((track) => {
-            item = {};
-            item.name = track.querySelector(".chartlist-name a").textContent.trim();
+        let tracks = doc.querySelectorAll(".chartlist-row");
+        tracks.forEach((track) => {
+          item = {};
+          item.avatar = track.querySelector(".chartlist-image img");
+          if (item.avatar)
+            item.avatar = item.avatar.getAttribute("src");
+          item.name = track.querySelector(".chartlist-name a").textContent.trim();
+          if (type != "artists")
             item.sister = track.querySelector(".chartlist-artist a").textContent.trim();
-            item.plays = track.querySelector(".chartlist-count-bar-slug").getAttribute("data-stat-value");
-            if (next_user)
-              page.state.compare.you.push(item);
-            else
-              page.state.compare.other.push(item);
-          });
-        }
+          item.plays = clean_number(track.querySelector(".chartlist-count-bar-slug").getAttribute("data-stat-value"));
+          if (next_user)
+            page.state.compare.you.push(item);
+          else
+            page.state.compare.other.push(item);
+        });
       } catch (e) {
         notify({
           id: "compare",
@@ -9605,14 +9761,88 @@
         buttons.forEach((button) => {
           button.removeAttribute("disabled");
         });
-        continue_comparing();
+        continue_comparing(type);
       } else {
         get_grid(next_user, type, range);
       }
     });
   }
-  function continue_comparing() {
-    log("finished gathering values", "compare", "info", page.state.compare);
+  function continue_comparing(type) {
+    log("gathered initial values", "compare", "info", page.state.compare);
+    page.state.compare.you.forEach((your_item) => {
+      let other_item;
+      if (type == "albums")
+        other_item = page.state.compare.other.find((other) => your_item.name === other.name && your_item.sister === other.sister);
+      else
+        other_item = page.state.compare.other.find((other) => your_item.name === other.name);
+      if (other_item) {
+        page.state.compare.shared.push({
+          avatar: your_item.avatar,
+          name: your_item.name,
+          sister: your_item.sister ? your_item.sister : "",
+          plays: {
+            you: your_item.plays,
+            other: other_item.plays,
+            shared: your_item.plays + other_item.plays
+          }
+        });
+      }
+    });
+    page.state.compare.shared.sort((a, b) => b.plays.shared - a.plays.shared);
+    log("gathered shared values", "compare", "info", page.state.compare);
+    page.state.compare_modal.querySelector(".bleh-modal-body .compare-body").innerHTML = "";
+    if (type != "tracks") {
+      let grid = document.createElement("ol");
+      grid.classList.add("grid-items", "grid-items--numbered", "compare-grid");
+      page.state.compare.shared.forEach((data) => {
+        let item2 = document.createElement("li");
+        item2.classList.add("grid-items-item", "compare-item");
+        let template;
+        if (type == "artists")
+          template = data.name;
+        else
+          template = `${data.sister}/${data.name}`;
+        item2.innerHTML = `
+                <div class="grid-items-cover-image js-link-block link-block">
+                    <div class="grid-items-cover-image-image">
+                        <img src="${data.avatar.replace("/avatar70s/", "/avatar300s/")}" alt="${data.name}">
+                    </div>
+                    <div class="grid-items-item-details">
+                        <p class="grid-items-item-main-text">
+                            <a class="link-block-target" href="${root}music/${template}">
+                                ${data.name}
+                            </a>
+                        </p>
+                        ${type == "albums" ? `
+                        <p class="grid-items-item-aux-text">
+                            <a class="grid-items-item-aux-block" href="${root}music/${data.sister}">
+                                ${data.sister}
+                            </a>
+                        </p>
+                        ` : ""}
+                        <p class="grid-items-item-aux-text">
+                            <a class="grid-item-plays with-avatar" href="${root}user/${auth.name}/library/music/${template}" target="_blank">
+                                <span class="avatar">
+                                    <img src="${auth.avatar}" alt="${tl(trans.your_avatar)}">
+                                </span>
+                                ${data.plays.you}
+                            </a>
+                            <a class="grid-item-plays with-avatar" href="${root}user/${page.name}/library/music/${template}" target="_blank">
+                                <span class="avatar">
+                                    <img src="${page.avatar}" alt="${tl(trans.avatar_for_user).replace("{u}", page.name)}">
+                                </span>
+                                ${data.plays.other}
+                            </a>
+                        </p>
+                    </div>
+                    <a class="js-link-block-cover-link link-block-cover-link" href="${root}music/${template}" tabindex="-1" aria-hidden="true"></a>
+                </div>
+            `;
+        grid.appendChild(item2);
+      });
+      page.state.compare_modal.querySelector(".bleh-modal-body .compare-body").appendChild(grid);
+      music_grids(grid);
+    }
   }
 
   // src/components/profile_header.js
@@ -11501,7 +11731,7 @@
             </div>
             <a class="scrobble-canvas-container mini" href="${root}user/${page.name}/library/artists?date_preset=LAST_90_DAYS&page=1">
                 <div class="loading-data-container">
-                    <div class="loading-data-text">${tl(trans.loading_90_days)}</div>
+                    <div class="loading-data-text">${tl(trans.loading_count_days).replace("{c}", "90")}</div>
                 </div>
             </a>
             <div class="more-link">
@@ -16460,165 +16690,6 @@
       type: "success"
     });
   };
-
-  // src/components/music_grid.js
-  function music_grids() {
-    if (page.structure.main == null)
-      return;
-    let insights = {
-      artist: {
-        display: false,
-        values: [],
-        labels: [],
-        highest: {
-          value: 0,
-          label: "",
-          link: "",
-          img: ""
-        }
-      },
-      album: {
-        display: false,
-        values: [],
-        labels: [],
-        highest: {
-          value: 0,
-          label: "",
-          link: "",
-          img: ""
-        }
-      },
-      track: {
-        display: false,
-        values: [],
-        labels: [],
-        highest: {
-          value: 0,
-          label: "",
-          link: "",
-          img: ""
-        }
-      }
-    };
-    let grids = page.structure.main.querySelectorAll(".grid-items-item:not([data-bleh-music-grids])");
-    grids.forEach((grid) => {
-      let is_loading = grid.querySelector(".grid-items-empty-inner") != null;
-      if (is_loading) return;
-      grid.setAttribute("data-bleh-music-grids", "true");
-      let is_album;
-      if (page.type == "search") {
-        is_album = grid.querySelector(".stat-name") == null;
-      } else {
-        is_album = grid.querySelector(".grid-items-item-aux-block") != null;
-      }
-      let image_wrap = grid.querySelector(".grid-items-cover-image-image");
-      let image = image_wrap.querySelector("img");
-      if (image && !image_wrap.classList.contains("grid-items-cover-default")) {
-        let grid_colour = document.createElement("div");
-        grid_colour.classList.add("grid-item-colour-bg");
-        image_wrap.appendChild(grid_colour);
-        image.setAttribute("crossorigin", "anonymous");
-        try {
-          image.addEventListener("load", function() {
-            let thief = new ColorThief();
-            let colour = thief.getColor(image);
-            let hsl = rgb_to_hsl(colour[0], colour[1], colour[2]);
-            grid_colour.style.setProperty("background", `rgb(${colour})`);
-            grid.classList.add("grid-items-item-has-colour");
-            grid.style.setProperty("--hue-over", hsl.h);
-            grid.style.setProperty("--sat-over", clamp_sat(hsl.s / 100 * 3));
-            grid.style.setProperty("--lit-over", 1);
-          });
-        } catch (e) {
-        }
-      }
-      let plays_elem;
-      if (page.type == "search") {
-        if (!is_album) {
-          let aux_text = grid.querySelector(".grid-items-item-aux-text");
-          let stat_name = aux_text.querySelector(".stat-name");
-          aux_text.removeChild(stat_name);
-          plays_elem = aux_text;
-        }
-      } else if (page.type == "tag") {
-        let aux_text = grid.querySelector(".grid-items-item-aux-text");
-        let stat_name = aux_text.querySelector(".stat-name");
-        if (!stat_name) return;
-        aux_text.removeChild(stat_name);
-        plays_elem = aux_text;
-        if (is_album) {
-          let artist = grid.querySelector(".grid-items-item-aux-block");
-          aux_text.removeChild(artist);
-          plays_elem = document.createElement("a");
-          plays_elem.textContent = aux_text.textContent;
-          aux_text.textContent = "";
-          aux_text.appendChild(artist);
-          aux_text.appendChild(plays_elem);
-        }
-      } else {
-        plays_elem = grid.querySelector(".grid-items-item-aux-text a:last-child");
-      }
-      if (plays_elem != null && !grid.classList.contains("obsessions-item")) {
-        let plays = clean_number(plays_elem.textContent.trim().replace(`${tl(trans.plays_lower)}`, ""));
-        plays_elem.classList.add("grid-item-plays");
-        if (is_album)
-          plays_elem.textContent = plays.toLocaleString(lang);
-        if (!is_album) {
-          insights.artist.display = true;
-          insights.artist.values.push(plays);
-          if (plays > insights.artist.highest.value)
-            insights.artist.highest.value = plays;
-        } else {
-          insights.album.display = true;
-          insights.album.values.push(plays);
-          if (plays > insights.album.highest.value)
-            insights.album.highest.value = plays;
-        }
-        if (page.type == "search" || page.type == "tag")
-          plays_elem.classList.add("grid-item-listeners");
-        if (!is_album && settings.colourful_counts && page.type == "user") {
-          if (!plays_elem.getAttribute("href").includes("?from=") && (!plays_elem.getAttribute("href").includes("?date_preset=") || plays_elem.getAttribute("href").endsWith("?date_preset=ALL") || plays_elem.getAttribute("href").endsWith("?date_preset=null"))) {
-            let parsed_scrobble_as_rank = parse_scrobbles_as_rank(plays);
-            plays_elem.setAttribute("data-bleh--scrobble-milestone", parsed_scrobble_as_rank.milestone);
-            plays_elem.style.setProperty("--hue-over", parsed_scrobble_as_rank.hue);
-            plays_elem.style.setProperty("--sat-over", parsed_scrobble_as_rank.sat);
-            plays_elem.style.setProperty("--lit-over", parsed_scrobble_as_rank.lit);
-          }
-        }
-      }
-      let name = grid.querySelector(".grid-items-item-main-text a");
-      if (!is_album) {
-        name.textContent = correct_artist(name.textContent.trim());
-        insights.artist.labels.push(name.textContent);
-      } else {
-        let artist = grid.querySelector(".grid-items-item-aux-block");
-        if (!artist) return;
-        if (settings.format_guest_features) {
-          let name_elem = name;
-          let artist_elem = artist;
-          let song_title = name_elem.getAttribute("title");
-          let formatted_title = name_includes(song_title, artist_elem.textContent.trim());
-          let song_tags = {};
-          if (formatted_title) {
-            song_title = formatted_title[0];
-            insights.album.labels.push(song_title);
-            song_tags = formatted_title[1];
-            artist.textContent = formatted_title[2];
-          }
-          let song_tags_text = "";
-          for (let song_tag in song_tags) {
-            song_tags_text = `${song_tags_text}<span class="feat" data-bleh--tag-type="${song_tags[song_tag].type}" data-bleh--tag-group="${song_tags[song_tag].group}">${sanitise_text(song_tags[song_tag].text)}</span>`;
-          }
-          name_elem.innerHTML = `<span class="title">${sanitise_text(song_title).trim()}</span>${song_tags_text}`;
-        } else {
-          artist.textContent = correct_artist(artist.textContent.trim());
-          name.textContent = correct_item_by_artist(name.textContent.trim(), artist.textContent.trim());
-        }
-      }
-    });
-    if (page.subpage.startsWith("library"))
-      bleh_glacier_insights(insights);
-  }
 
   // src/components/nag_bar.js
   function nag_bar() {

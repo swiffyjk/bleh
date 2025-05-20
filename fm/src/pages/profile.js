@@ -353,7 +353,7 @@ export function bleh_profiles() {
             </div>
             <a class="scrobble-canvas-container mini" href="${root}user/${page.name}/library/artists?date_preset=LAST_90_DAYS&page=1">
                 <div class="loading-data-container">
-                    <div class="loading-data-text">${tl(trans.loading_90_days)}</div>
+                    <div class="loading-data-text">${tl(trans.loading_count_days).replace('{c}', '90')}</div>
                 </div>
             </a>
             <div class="more-link">
