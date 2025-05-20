@@ -1048,6 +1048,9 @@
       en: "Compare plays",
       de: "Plays vergleichen"
     },
+    compare_notice: {
+      en: "Only the top 50 items are loaded currently, meaning album and especially track similarities can be smaller than expected"
+    },
     nothing_in_common: {
       en: "Nothing in common (\u0E51-\uFE4F-\u0E51)"
     },
@@ -9938,6 +9941,7 @@
                     </div>
                 </div>
                 <div class="compare-selection">
+                    <div class="bleh-icon"></div>
                     <div class="select-wrap custom-selector" id="type_select">
                         <select id="type">
                             <option value="artists">${tl(trans.artists)}</option>
@@ -9967,6 +9971,9 @@
     });
     tippy(page.state.compare_modal.querySelector(".chibi.compare"), {
       content: tl(trans.compare)
+    });
+    tippy(page.state.compare_modal.querySelector(".compare-selection > .bleh-icon"), {
+      content: tl(trans.compare_notice)
     });
     custom_select(page.state.compare_modal.querySelector("#type"), page.state.compare_modal.querySelector("#type_select"));
     custom_select(page.state.compare_modal.querySelector("#range"), page.state.compare_modal.querySelector("#range_select"));
@@ -10031,13 +10038,13 @@
         buttons.forEach((button) => {
           button.removeAttribute("disabled");
         });
-        continue_comparing(type);
+        continue_comparing(type, range);
       } else {
         get_grid(next_user, type, range);
       }
     });
   }
-  function continue_comparing(type) {
+  function continue_comparing(type, range) {
     log("gathered initial values", "compare", "info", page.state.compare);
     page.state.compare.you.forEach((your_item) => {
       let other_item;
@@ -10101,13 +10108,13 @@
                         </p>
                         ` : ""}
                         <p class="grid-items-item-aux-text">
-                            <a class="grid-item-plays with-avatar" href="${root}user/${auth.name}/library/music/${template}" target="_blank">
+                            <a class="grid-item-plays with-avatar" href="${root}user/${auth.name}/library/music/${template}?date_preset=${range}" target="_blank">
                                 <span class="avatar">
                                     <img src="${auth.avatar}" alt="${tl(trans.your_avatar)}">
                                 </span>
                                 ${data.plays.you}
                             </a>
-                            <a class="grid-item-plays with-avatar" href="${root}user/${page.name}/library/music/${template}" target="_blank">
+                            <a class="grid-item-plays with-avatar" href="${root}user/${page.name}/library/music/${template}?date_preset=${range}" target="_blank">
                                 <span class="avatar">
                                     <img src="${page.avatar}" alt="${tl(trans.avatar_for_user).replace("{u}", page.name)}">
                                 </span>
@@ -10157,7 +10164,7 @@
                 </td>
                 <td class="chartlist-bar with-multiple">
                     <span class="chartlist-count-bar">
-                        <a class="chartlist-count-bar-link" href="${root}user/${auth.name}/library/music/${template}" target="_blank">
+                        <a class="chartlist-count-bar-link" href="${root}user/${auth.name}/library/music/${template}?date_preset=${range}" target="_blank">
                             <span class="chartlist-count-bar-slug" data-max-stat-value="${max}" data-stat-value="${data.plays.you}" style="width: ${data.plays.you / max * 100}%;"></span>
                             <span class="chartlist-count-bar-value">${data.plays.you}</span>
                         </a>
@@ -10166,7 +10173,7 @@
                         </span>
                     </span>
                     <span class="chartlist-count-bar">
-                        <a class="chartlist-count-bar-link" href="${root}user/${page.name}/library/music/${template}" target="_blank">
+                        <a class="chartlist-count-bar-link" href="${root}user/${page.name}/library/music/${template}?date_preset=${range}" target="_blank">
                             <span class="chartlist-count-bar-slug" data-max-stat-value="${max}" data-stat-value="${data.plays.other}" style="width: ${data.plays.other / max * 100}%;"></span>
                             <span class="chartlist-count-bar-value">${data.plays.other}</span>
                         </a>

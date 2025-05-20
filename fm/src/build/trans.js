@@ -192,6 +192,9 @@ export const trans = {
         en: 'Compare plays',
         de: 'Plays vergleichen'
     },
+    compare_notice: {
+        en: 'Only the top 50 items are loaded currently, meaning album and especially track similarities can be smaller than expected'
+    },
     nothing_in_common: {
         en: 'Nothing in common (๑-﹏-๑)'
     },

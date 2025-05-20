@@ -22971,7 +22971,14 @@ h4 {
 
     .compare-selection {
         display: flex;
+        align-items: center;
         gap: var(--button-list-gap);
+
+        & > .bleh-icon {
+            --icon: var(--icon-16-info);
+            color: hsl(var(--c3));
+            cursor: pointer;
+        }
     }
 
     .compare-user {
