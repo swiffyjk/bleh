@@ -9,6 +9,7 @@ import { lang, lang_info, trans_legacy, trans, tl } from "../build/trans";
 import { load_badges } from '../components/badge';
 import { dialog, dialog_legacy, dialog_rm, kill_window } from "../components/dialog";
 import { correct_artist, correct_item_by_artist, name_includes } from '../components/lotus';
+import { markdown } from '../components/markdown';
 import { notify } from "../components/notify";
 import { create_settings_template, load_settings, refresh_all, update_params } from "../config";
 import { version } from "../main";
@@ -93,7 +94,7 @@ export function bleh_settings() {
     `);
 
     page.structure.side.innerHTML = (`
-        <div class="cta first sponsor colourful">
+        <div class="cta first priority sponsor colourful">
             ${(auth.sponsor) ? (`
             <strong>${tl(trans.you_are_a_sponsor)}</strong>
             <a class="see-more" onclick="_sponsor_manage()">${tl(trans.manage_sponsor)}</a>
@@ -102,18 +103,14 @@ export function bleh_settings() {
             <a class="see-more" onclick="_sponsor()">${tl(trans.sponsor)}</a>
             `)}
         </div>
-        <section class="view-all-panel">
-            <button class="btn view-all-button import" onclick="_import_settings()">
+        <section class="side-actions">
+            <button class="btn side-action" data-type="import" onclick="_import_settings()">
                 ${tl(trans.import)}
             </button>
-        </section>
-        <section class="view-all-panel">
-            <button class="btn view-all-button export" onclick="_export_settings()">
+            <button class="btn side-action" data-type="export" onclick="_export_settings()">
                 ${tl(trans.export)}
             </button>
-        </section>
-        <section class="view-all-panel">
-            <button class="btn view-all-button reset-settings" onclick="_reset_settings()">
+            <button class="btn side-action" data-type="reset" onclick="_reset_settings()">
                 ${tl(trans.reset)}
             </button>
         </section>
@@ -969,8 +966,8 @@ export function render_setting_page(page_id) {
                         <h3 class="shout-user">
                             <a>${auth.name}</a>
                         </h3>
-                        <span class="avatar shout-user-avatar avatar--bleh-missing">
-                            <img src="" alt="${tl(trans.your_avatar)}" loading="lazy">
+                        <span class="avatar shout-user-avatar">
+                            <img src="${auth.avatar.replace('/avatar42s/', '/avatar170s/')}" alt="${tl(trans.your_avatar)}" loading="lazy">
                         </span>
                         <a class="shout-permalink shout-timestamp">
                             <time datetime="2024-06-05T02:33:39+01:00" title="Wednesday 5 Jun 2024, 2:33am">
@@ -978,19 +975,18 @@ export function render_setting_page(page_id) {
                             </time>
                         </a>
                         <div class="shout-body if-markdown-on">
-                            <p>${trans_legacy.en.settings.text.shout_preview_md}</p>
+                            ${markdown(tl(trans.markdown_shouts.preview))}
                         </div>
                         <div class="shout-body if-markdown-off">
-                            <p>${trans_legacy.en.settings.text.shout_preview}</p>
+                            <p>${tl(trans.markdown_shouts.preview)}</p>
                         </div>
                     </div>
                 </div>
-                <h4>${trans_legacy.en.settings.text.markdown.name}</h4>
-                <p>${trans_legacy.en.settings.text.markdown.bio}</p>
                 <div class="setting" data-type="toggle" id="container-shout_markdown" onclick="_update_item('shout_markdown')">
                     <button class="btn reset" onclick="_reset_item('shout_markdown')">${tl(trans.reset)}</button>
                     <div class="heading">
-                        <h5>${trans_legacy.en.settings.text.markdown.shouts}</h5>
+                        <h5>${tl(trans.markdown_shouts.name)}</h5>
+                        <p>${tl(trans.markdown_shouts.body)}</p>
                     </div>
                     <div class="toggle-wrap">
                         <button class="toggle" id="toggle-shout_markdown" aria-checked="false">
@@ -1002,7 +998,6 @@ export function render_setting_page(page_id) {
             <div class="bleh--panel">
                 <h4>${tl(trans.language)}</h4>
                 <div class="languages" id="languages"></div>
-                <div class="sep"></div>
                 <div class="setting" data-type="toggle">
                     <div class="heading">
                         <h5>${tl(trans.submit_language.name)}</h5>
@@ -2507,6 +2502,12 @@ function prepare_language_page() {
         </div>
         `);
 
+        if (lang_info[language].last_updated != 'latest') {
+            tippy(lang_row.querySelector('.date'), {
+                content: lang_info[language].last_updated
+            });
+        }
+
         languages_table.appendChild(lang_row);
     }
 }
@@ -2515,11 +2516,11 @@ function prepare_language_page() {
 unsafeWindow._import_settings = function() {
     dialog({
         id: 'import_settings',
-        title: trans_legacy.en.settings.actions.import.modals.initial.name,
+        title: tl(trans.import_settings),
         body: (`
-            <p class="alert alert-warning">${trans_legacy.en.settings.actions.import.modals.initial.alert}</p>
+            <p class="big-modal-alert alert-danger">${tl(trans.import_notice)}</p>
             <br>
-            <textarea id="import_area"></textarea>
+            <textarea class="modal-text" id="import_area"></textarea>
             <div class="modal-footer">
                 <button class="btn primary download" onclick="_confirm_import()">
                     ${tl(trans.import)}
@@ -2548,17 +2549,14 @@ unsafeWindow._confirm_import = function() {
         });
     } catch(e) {
         // cannot continue, halt
-        dialog_rm({
-            id: 'import_settings'
-        });
         dialog({
             id: 'import_failed',
             title: trans_legacy.en.settings.actions.import.modals.failed.name,
             body: (`
-                <p class="alert alert-error">${trans_legacy.en.settings.actions.import.modals.failed.alert}</p>
+                <p class="big-modal-alert alert-error">${trans_legacy.en.settings.actions.import.modals.failed.alert}</p>
                 <div class="modal-footer">
                     <button class="btn primary done" onclick="_dialog_rm({id: 'import_failed'})">
-                        ${trans_legacy.en.settings.done}
+                        ${tl(trans.done)}
                     </button>
                 </div>
             `)
@@ -2571,14 +2569,12 @@ unsafeWindow._confirm_import = function() {
 function export_settings() {
     dialog({
         id: 'export_settings',
-        title: trans_legacy.en.settings.actions.export.modals.initial.name,
+        title: tl(trans.export_settings),
         body: (`
-            <p class="alert alert-success">${trans_legacy.en.settings.actions.export.modals.initial.alert}</p>
-            <br>
-            <textarea>${JSON.stringify(settings)}</textarea>
+            <textarea class="modal-text">${JSON.stringify(settings)}</textarea>
             <div class="modal-footer">
                 <button class="btn primary done" onclick="_dialog_rm({id: 'export_settings'})">
-                    ${trans_legacy.en.settings.done}
+                    ${tl(trans.done)}
                 </button>
             </div>
         `)
@@ -2593,15 +2589,15 @@ unsafeWindow._export_settings = function() {
 unsafeWindow._reset_settings = function() {
     dialog({
         id: 'reset_settings',
-        title: trans_legacy.en.settings.actions.reset.modals.initial.name,
+        title: tl(trans.reset_settings),
         body: (`
-            <p class="alert alert-error">${trans_legacy.en.settings.actions.reset.modals.initial.alert}</p>
+            <p class="big-modal-alert alert-error">${trans_legacy.en.settings.actions.reset.modals.initial.alert}</p>
             <div class="modal-footer">
-                <button class="btn done danger" onclick="_confirm_reset()">
-                    ${trans_legacy.en.settings.actions.reset.modals.initial.confirm}
+                <button class="btn icon danger" data-type="reset" onclick="_confirm_reset()">
+                    ${tl(trans.reset)}
                 </button>
                 <button class="btn upload" onclick="_export_first()">
-                    ${trans_legacy.en.settings.actions.reset.modals.initial.export}
+                    ${tl(trans.export)}
                 </button>
                 <button class="btn primary cancel" onclick="_dialog_rm({id: 'reset_settings'})">
                     ${tl(trans.cancel)}
@@ -2622,9 +2618,6 @@ unsafeWindow._confirm_reset = function() {
 }
 
 unsafeWindow._export_first = function() {
-    dialog_rm({
-        id: 'reset_settings'
-    });
     export_settings();
 }
 

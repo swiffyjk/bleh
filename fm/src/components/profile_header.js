@@ -182,6 +182,16 @@ export function redesign_profile_header(is_own_profile, is_following) {
                 katsune: katsune
             });
         }
+
+
+        if (page.structure.container.querySelector('.user-status-staff')) {
+            create_profile_top_item(profile_header, {
+                name: page.name,
+                type: 'support',
+                link: 'https://support.last.fm',
+                katsune: katsune
+            });
+        }
     } else {
         // edit
         create_profile_top_item(profile_header, {

@@ -497,13 +497,25 @@ export const trans = {
         en: 'Import',
         de: 'Importieren'
     },
+    import_settings: {
+        en: 'Import settings'
+    },
+    import_notice: {
+        en: 'This is a permanent action, beware of where you are copying from'
+    },
     export: {
         en: 'Export',
         de: 'Exportieren'
     },
+    export_settings: {
+        en: 'Export settings'
+    },
     reset: {
         en: 'Reset',
         de: 'Zurücksetzen'
+    },
+    reset_settings: {
+        en: 'Reset settings to default'
     },
     news: {
         en: 'News',
@@ -1729,6 +1741,17 @@ export const trans = {
             de: 'Ermöglicht die Verwendung von Zeilenumbrüchen, fettem Text, Kursivschrift und Bildern in allen „Über mich“-Bereichen'
         }
     },
+    markdown_shouts: {
+        name: {
+            en: 'Use fancy formatting on shouts'
+        },
+        body: {
+            en: 'Allows the use of line breaks, bold text, italics, and images in all shouts'
+        },
+        preview: {
+            en: 'hello! **hello!** *hello!*\n[here\'s a link](https://katelyn.moe) HAII @stellasaur'
+        }
+    },
     gathering_your_plays: {
         en: 'Gathering your album plays',
         de: 'Sammeln deiner Albumwiedergaben'
@@ -1859,6 +1882,9 @@ export const trans = {
     },
     there_was_a_network_error: {
         en: 'There was a network error'
+    },
+    support: {
+        en: 'Support'
     }
 }
 

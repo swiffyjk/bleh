@@ -675,6 +675,7 @@ body {
     --icon-16-chart-axis-y: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxOCIgaGVpZ2h0PSIxOCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyLjI1IiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWNoYXJ0LWJhci1kZWNyZWFzaW5nLWljb24gbHVjaWRlLWNoYXJ0LWJhci1kZWNyZWFzaW5nIj48cGF0aCBkPSJNMyAzdjE2YTIgMiAwIDAgMCAyIDJoMTYiLz48cGF0aCBkPSJNNyAxMWg4Ii8+PHBhdGggZD0iTTcgMTZoMyIvPjxwYXRoIGQ9Ik03IDZoMTIiLz48L3N2Zz4=');
     --icon-16-heart: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxOCIgaGVpZ2h0PSIxOCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyLjI1IiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWhlYXJ0LWljb24gbHVjaWRlLWhlYXJ0Ij48cGF0aCBkPSJNMTkgMTRjMS40OS0xLjQ2IDMtMy4yMSAzLTUuNUE1LjUgNS41IDAgMCAwIDE2LjUgM2MtMS43NiAwLTMgLjUtNC41IDItMS41LTEuNS0yLjc0LTItNC41LTJBNS41IDUuNSAwIDAgMCAyIDguNWMwIDIuMyAxLjUgNC4wNSAzIDUuNWw3IDdaIi8+PC9zdmc+');
     --icon-16-heart-solid: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxOCIgaGVpZ2h0PSIxOCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJjdXJyZW50Q29sb3IiIHN0cm9rZT0iY3VycmVudENvbG9yIiBzdHJva2Utd2lkdGg9IjIuMjUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgY2xhc3M9Imx1Y2lkZSBsdWNpZGUtaGVhcnQtaWNvbiBsdWNpZGUtaGVhcnQiPjxwYXRoIGQ9Ik0xOSAxNGMxLjQ5LTEuNDYgMy0zLjIxIDMtNS41QTUuNSA1LjUgMCAwIDAgMTYuNSAzYy0xLjc2IDAtMyAuNS00LjUgMi0xLjUtMS41LTIuNzQtMi00LjUtMkE1LjUgNS41IDAgMCAwIDIgOC41YzAgMi4zIDEuNSA0LjA1IDMgNS41bDcgN1oiLz48L3N2Zz4=');
+    --icon-16-support: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxOCIgaGVpZ2h0PSIxOCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyLjI1IiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWhlYXJ0LXBsdXMtaWNvbiBsdWNpZGUtaGVhcnQtcGx1cyI+PHBhdGggZD0iTTEzLjUgMTkuNSAxMiAyMWwtNy03Yy0xLjUtMS40NS0zLTMuMi0zLTUuNUE1LjUgNS41IDAgMCAxIDcuNSAzYzEuNzYgMCAzIC41IDQuNSAyIDEuNS0xLjUgMi43NC0yIDQuNS0yYTUuNSA1LjUgMCAwIDEgNS40MDIgNi41Ii8+PHBhdGggZD0iTTE1IDE1aDYiLz48cGF0aCBkPSJNMTggMTJ2NiIvPjwvc3ZnPg==');
     --icon-16-sponsor-rewards: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxOCIgaGVpZ2h0PSIxOCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyLjI1IiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLXNob3BwaW5nLWJhZy1pY29uIGx1Y2lkZS1zaG9wcGluZy1iYWciPjxwYXRoIGQ9Ik02IDIgMyA2djE0YTIgMiAwIDAgMCAyIDJoMTRhMiAyIDAgMCAwIDItMlY2bC0zLTRaIi8+PHBhdGggZD0iTTMgNmgxOCIvPjxwYXRoIGQ9Ik0xNiAxMGE0IDQgMCAwIDEtOCAwIi8+PC9zdmc+');
     --icon-16-home: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxOCIgaGVpZ2h0PSIxOCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyLjI1IiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWhvdXNlLWljb24gbHVjaWRlLWhvdXNlIj48cGF0aCBkPSJNMTUgMjF2LThhMSAxIDAgMCAwLTEtMWgtNGExIDEgMCAwIDAtMSAxdjgiLz48cGF0aCBkPSJNMyAxMGEyIDIgMCAwIDEgLjcwOS0xLjUyOGw3LTUuOTk5YTIgMiAwIDAgMSAyLjU4MiAwbDcgNS45OTlBMiAyIDAgMCAxIDIxIDEwdjlhMiAyIDAgMCAxLTIgMkg1YTIgMiAwIDAgMS0yLTJ6Ii8+PC9zdmc+');
     --icon-16-users: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxOCIgaGVpZ2h0PSIxOCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyLjI1IiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLXVzZXJzLWljb24gbHVjaWRlLXVzZXJzIj48cGF0aCBkPSJNMTYgMjF2LTJhNCA0IDAgMCAwLTQtNEg2YTQgNCAwIDAgMC00IDR2MiIvPjxwYXRoIGQ9Ik0xNiAzLjEyOGE0IDQgMCAwIDEgMCA3Ljc0NCIvPjxwYXRoIGQ9Ik0yMiAyMXYtMmE0IDQgMCAwIDAtMy0zLjg3Ii8+PGNpcmNsZSBjeD0iOSIgY3k9IjciIHI9IjQiLz48L3N2Zz4=');
@@ -2669,37 +2670,20 @@ span.header-new-gallery-inner a,
 .languages {
     display: flex;
     flex-direction: column;
-    margin: -7px 0;
+    margin-bottom: -5px;
 
     .language-row {
         display: flex;
         align-items: center;
-        gap: var(--card-gap);
-        padding: 7px 12px;
-
-        &.active {
-            position: relative;
-            background-color: hsla(var(--h4), 20%);
-            border-radius: var(--item-big-radius);
-
-            [data-bleh--theme_type="light"] & {
-                background-color: hsla(var(--h4), 10%);
-            }
-
-            /*&:before {
-                content: '';
-                inset: 0;
-                position: absolute;
-                border-radius: var(--item-med-radius);
-                display: block;
-                background-color: hsla(var(--h4), 20%);
-            }*/
-        }
+        gap: var(--item-list-gap);
+        padding: 5px 0;
+        height: 43px;
+        border-top: 1px solid var(--card-border-base);
 
         .flag-container {
             display: block;
-            width: 32px;
-            height: 32px;
+            width: 24px;
+            height: 24px;
             border-radius: var(--item-big-radius);
         }
 
@@ -2714,25 +2698,28 @@ span.header-new-gallery-inner a,
             -webkit-line-clamp: 1;
             -webkit-box-orient: vertical;*/
             display: flex;
-            flex-direction: column;
+            gap: 4px;
 
             h5 {
                 color: hsl(var(--c2));
             }
             p {
                 color: hsla(var(--c2), 80%);
+                cursor: default;
             }
         }
 
         .date {
             flex-shrink: 0;
             color: hsl(var(--c3));
+            font-size: 13px;
             display: -webkit-box;
             overflow: hidden;
             text-overflow: ellipsis;
             line-clamp: 1;
             -webkit-line-clamp: 1;
             -webkit-box-orient: vertical;
+            cursor: default;
         }
 
         .badges {
@@ -4755,6 +4742,7 @@ better than the default selector '#app a' i suppose */
         .avatar {
             width: 16px;
             height: 16px;
+            background: var(--avatar-generic-background);
             border-radius: var(--avatar-radius);
 
             &:after {
@@ -5796,6 +5784,7 @@ a.chartlist-love-button:after {
             right: calc(-18px - 14px);
             width: 18px;
             height: 18px;
+            background: var(--avatar-generic-background);
             --mask-size: 18px;
             border-radius: var(--avatar-radius);
         }
@@ -7758,6 +7747,18 @@ section:has(.dropdown-menu-clickable-button.section-control) {
 [data-type="obsession"] {
     --mask: var(--icon-16-obsession);
 }
+[data-type="support"] {
+    --mask: var(--icon-16-support);
+}
+[data-type="import"] {
+    --mask: var(--icon-16-import);
+}
+[data-type="export"] {
+    --mask: var(--icon-16-export);
+}
+[data-type="reset"] {
+    --mask: var(--icon-16-revert);
+}
 .header-new-love-button {
     font-size: 0 !important;
 
@@ -8535,6 +8536,10 @@ very, very, very dated - who looks up a song on ebay? */
 }
 .content-form textarea {
     height: unset;
+}
+
+.modal-text {
+    width: 600px !important;
 }
 
 .content-form .checkbox label, .content-form .form-group .form-group-controls--checkbox label, .content-form .form-group .form-group-controls--radio label, .content-form .form-group ul:not(.bulleted-list):not(.redactor-toolbar) li label, .content-form .radio label {
@@ -14917,7 +14922,7 @@ pre {
 
     .shout {
         position: relative;
-        height: 52px;
+        height: 62px;
         padding-bottom: unset;
         border-bottom: none;
 
@@ -18688,70 +18693,8 @@ h4 {
                 }
             }
 
-            &.import {
-                --mask: var(--icon-16-import);
-            }
-            &.export {
-                --mask: var(--icon-16-export);
-            }
-            &.reset-settings {
-                --mask: var(--icon-16-revert);
-            }
             &.changelog {
                 --mask: var(--icon-16-changelog);
-            }
-            &.profile-top-item--message {
-                --mask: var(--icon-16-mail);
-            }
-            &.profile-top-item--shortcut {
-                --mask: var(--icon-16-profile-shortcut);
-
-                &[data-is-shortcut="false"] {
-                    --mask: var(--icon-16-unlink);
-                }
-            }
-
-            &.profile-top-item--follow {
-                --mask: var(--icon-16-user-plus);
-
-                &[data-ignored="true"] {
-                    --mask: var(--icon-16-block);
-                }
-
-                [data-toggle-button-current-state="followed"] & {
-                    --mask: var(--icon-16-user);
-                }
-
-                &[data-mutuals="true"] {
-                    --mask: var(--icon-16-users) !important;
-
-                    &:after {
-                        content: attr(data-mutuals-text);
-                        font-size: var(--font-size-sm);
-                        opacity: 0.6;
-                    }
-                }
-            }
-            &.profile-top-item--edit_profile {
-                --mask: var(--icon-16-settings);
-            }
-            &.profile-top-item--sponsor {
-                --mask: var(--icon-16-heart);
-                --hue-over: 333;
-                --sat-over: 1;
-                --lit-over: 1;
-            }
-            &.profile-top-item--message_sponsor {
-                --mask: var(--icon-16-sponsor-rewards);
-                --hue-over: 333;
-                --sat-over: 1;
-                --lit-over: 1;
-            }
-            &.profile-top-item--obsess {
-                --mask: var(--icon-16-obsession);
-            }
-            &.profile-top-item--labs {
-                --mask: var(--icon-16-labs);
             }
         }
     }
@@ -22339,6 +22282,9 @@ h4 {
     &.blocked-cta {
         order: -10;
     }
+    &.priority {
+        order: -12;
+    }
 
     &.margin-bottom {
         margin-bottom: var(--card-gap);
@@ -22980,9 +22926,13 @@ h4 {
 
         .bleh-icon {
             --icon: var(--icon-16-dots);
-            background-image: linear-gradient(90deg, hsl(var(--c1)), hsl(var(--c3)), hsl(var(--c1)), hsl(var(--c3)), hsl(var(--c1)));
+            background-image: linear-gradient(90deg, hsl(var(--b4)), hsl(var(--c1)), hsl(var(--b4)), hsl(var(--c1)), hsl(var(--b4)));
             background-size: 200% 100%;
             animation: gradient 1.3s linear infinite;
+
+            [data-bleh--theme_type="light"] & {
+                background-image: linear-gradient(90deg, hsl(var(--c3)), hsl(var(--b5)), hsl(var(--c3)), hsl(var(--b5)), hsl(var(--c3)));
+            }
         }
     }
 
@@ -23007,6 +22957,7 @@ h4 {
         .avatar {
             width: 32px;
             height: 32px;
+            background: var(--avatar-generic-background);
             border-radius: var(--avatar-radius);
             --mask-size: 18px;
         }
@@ -23034,7 +22985,7 @@ h4 {
         background-position: 0% 0%;
     }
     to {
-        background-position: 100% 0%;
+        background-position: -100% 0%;
     }
 }
 }
