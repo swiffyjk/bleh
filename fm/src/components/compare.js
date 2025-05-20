@@ -279,7 +279,7 @@ function continue_comparing(type, range) {
             let item = document.createElement('tr');
             item.classList.add('chartlist-row', 'chartlist-row--with-artist', 'compare-item');
 
-            let template = `${sanitise(data.sister)}/${sanitise(data.name)}`;
+            let template = `${sanitise(data.sister)}/_/${sanitise(data.name)}`;
 
             item.innerHTML = (`
                 <td class="chartlist-index">${index + 1}</td>

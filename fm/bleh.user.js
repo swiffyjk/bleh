@@ -10159,7 +10159,7 @@
       page.state.compare.shared.forEach((data, index) => {
         let item2 = document.createElement("tr");
         item2.classList.add("chartlist-row", "chartlist-row--with-artist", "compare-item");
-        let template = `${sanitise(data.sister)}/${sanitise(data.name)}`;
+        let template = `${sanitise(data.sister)}/_/${sanitise(data.name)}`;
         item2.innerHTML = `
                 <td class="chartlist-index">${index + 1}</td>
                 <td class="chartlist-image">

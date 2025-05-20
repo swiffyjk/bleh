@@ -296,7 +296,7 @@ a,
 .colourful,
 .redesigned-header[data-bleh--theme="dark"],
 .events-list-item-attendees,
-.side-action:after
+.side-action
 {
     --hue:  var(--hue-over,
             var(--hue-album,
