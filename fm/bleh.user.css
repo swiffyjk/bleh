@@ -22985,11 +22985,17 @@ h4 {
     }
 }
 .compare-body {
-    max-height: 600px;
+    height: 118px;
     overflow-y: auto;
 
     padding: var(--card-padding);
     margin: calc(-1 * var(--card-padding));
+
+    transition: height 0.5s var(--trans-function);
+
+    &[data-filled="true"] {
+        height: 600px;
+    }
 }
 .compare {
     --mask: var(--icon-16-arrows);

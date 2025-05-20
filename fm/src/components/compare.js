@@ -49,7 +49,7 @@ export function compare() {
                     <button class="btn chibi icon primary compare" onclick="_begin_comparing()">${tl(trans.compare)}</button>
                 </div>
             </div>
-            <div class="compare-body">
+            <div class="compare-body" data-filled="false">
                 <div class="loading-data-container">
                     <div class="loading-data-text info">${tl(trans.choose_a_timeframe_above)}</div>
                 </div>
@@ -71,6 +71,7 @@ unsafeWindow._compare = function() {
 }
 
 unsafeWindow._begin_comparing = function() {
+    page.state.compare_modal.querySelector('.bleh-modal-body .compare-body').setAttribute('data-filled', 'false');
     let buttons = page.state.compare_modal.querySelectorAll('.compare-selection > button');
     buttons.forEach((button) => {
         button.setAttribute('disabled', 'true');
@@ -181,9 +182,12 @@ function continue_comparing(type) {
                 <div class="loading-data-text failed">${tl(trans.nothing_in_common)}</div>
             </div>
         `);
+    page.state.compare_modal.querySelector('.bleh-modal-body .compare-body').setAttribute('data-filled', 'false');
 
         return;
     }
+
+    page.state.compare_modal.querySelector('.bleh-modal-body .compare-body').setAttribute('data-filled', 'true');
 
     if (type != 'tracks') {
         let grid = document.createElement('ol');
