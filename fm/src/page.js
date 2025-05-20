@@ -494,6 +494,8 @@ function page_title() {
             title = tl(trans.listeners);
         else if (page.subpage == 'similar')
             title = tl(trans.similar_artists);
+        else if (page.subpage.startsWith('wiki'))
+            title = tl(trans.wiki);
 
         if (page.subpage == 'overview' || page.subpage == 'event_overview') {
             if (page.type == 'user')

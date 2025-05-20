@@ -6511,8 +6511,7 @@ leading to a gap from their own css */
 }
 
 .attendee-summary-user-avatar .avatar-status-dot,
-.playlisting-playlist-author-image .avatar-status-dot,
-.wiki-history-author-avatar .avatar-status-dot {
+.playlisting-playlist-author-image .avatar-status-dot {
     width: 18px;
     height: 18px;
     --mask-size: 18px;
@@ -7570,6 +7569,9 @@ section:has(.dropdown-menu-clickable-button.section-control) {
 .stationlinks {
     order: 10;
 }
+.side-actions > div:not([data-toggle-button]) {
+    display: none;
+}
 .side-actions,
 .listening-report-promos,
 .stationlink-list {
@@ -7766,12 +7768,10 @@ section:has(.dropdown-menu-clickable-button.section-control) {
 }
 [data-type="message_sponsor"],
 [data-type="sponsor"] {
-    &:after {
-        --c2: var(--l3-c) !important;
-        --hue-over: 333;
-        --sat-over: 1;
-        --lit-over: 1;
-    }
+    --hue-over: 333;
+    --sat-over: 1;
+    --lit-over: 1;
+    --c2: var(--l3-c) !important;
 }
 [data-type="sponsor"] {
     --mask: var(--icon-16-heart);
@@ -8942,9 +8942,14 @@ input:is([name^="track_name"], [name^="artist_name"], [name^="album_name"], [nam
     width: calc(650px + (5px * 2));
 }
 /* modal dialog v3 */
+.modal-actions {
+    position: absolute;
+    top: 13px;
+    right: 13px;
+}
 .modal-actions .modal-buttons {
     width: fit-content;
-    margin-right: -16px !important;
+    margin-right: 0 !important;
     z-index: 100000000000000;
 
     gap: var(--button-list-gap);
@@ -8956,6 +8961,10 @@ input:is([name^="track_name"], [name^="artist_name"], [name^="album_name"], [nam
     margin: unset;
 }
 .modal-action-button {
+    --bg: transparent;
+    --bg-hov: hsl(var(--b3), 40%);
+    --bg-atv: hsl(var(--b3), 60%);
+    --shadow: none;
     --left: 7px;
     --font-size: 0;
 
@@ -8981,7 +8990,7 @@ input:is([name^="track_name"], [name^="artist_name"], [name^="album_name"], [nam
 .report-share-modal,
 .top-item-modal,
 .modal-share-content {
-    margin-top: -16px;
+    margin-top: 0;
 }
 
 .modal-body .content-form .form-horizontal .form-submit {
@@ -8999,6 +9008,7 @@ input:is([name^="track_name"], [name^="artist_name"], [name^="album_name"], [nam
     font-weight: var(--font-weight-medium);
     letter-spacing: unset;
     text-align: left;
+    margin-right: 32px !important;
 
     & + .modal-inner-content {
         margin: unset;
@@ -12158,20 +12168,15 @@ table.table tr:nth-child(2n) td {
 .wiki-history-table tbody {
     display: flex;
     flex-direction: column;
-    gap: 4px;
-    animation: slide_down var(--trans) var(--trans-function);
-    transform-origin: top;
-
-    [data-bleh--reduced_motion="true"] & {
-        animation: fade_popup_reduced var(--trans) var(--trans-function) !important;
-    }
 }
 .wiki-history-entry {
-    --bg: hsla(var(--b4), 40%);
-    --bg-hov: hsla(var(--b4), 80%);
-    --bg-atv: hsl(var(--b4));
-    --shadow: none !important;
-    --shadow-hov: none !important;
+    --bg: transparent;
+    --bg-hov: transparent;
+    --bg-atv: transparent;
+    --shadow: none;
+    border-top: 1px solid var(--card-border-base) !important;
+    --radius: 0;
+    transform: none !important;
 
     .wiki-history-revision {
         padding: unset;
@@ -12212,6 +12217,14 @@ table.table tr:nth-child(2n) td {
             right: 0;
             --mask-size: var(--cover-size-32);
             border-radius: var(--avatar-radius);
+
+            .avatar-status-dot {
+                width: 14px;
+                height: 14px;
+                --mask-size: 14px;
+                /* remove the heavy bottom shadow */
+                filter: drop-shadow(2px 0px 0 hsl(var(--b5))) drop-shadow(0px 2px 0 hsl(var(--b5))) drop-shadow(-2px -0px 0 hsl(var(--b5))) drop-shadow(-0px -2px 0 hsl(var(--b5)));
+            }
         }
     }
 }
@@ -22089,9 +22102,12 @@ h4 {
     display: flex;
     align-items: center;
     gap: var(--card-padding);
-    padding-bottom: var(--card-padding);
-    border-bottom: 1px solid var(--card-border-base);
-    margin-bottom: var(--card-padding);
+
+    &:not(:last-child) {
+        padding-bottom: var(--card-padding);
+        border-bottom: 1px solid var(--card-border-base);
+        margin-bottom: var(--card-padding);
+    }
 
     .listen-divider {
         flex: 1;

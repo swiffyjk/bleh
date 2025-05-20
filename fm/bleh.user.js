@@ -10323,16 +10323,16 @@
           });
         }
       }
-      if (ff("compare")) {
-        create_profile_top_item(profile_header, {
-          name: page.name,
-          type: "compare",
-          link: "_compare()",
-          action: "button",
-          katsune
-        });
-      }
       if (page.name != sponsor_list.sponsor_account) {
+        if (ff("compare")) {
+          create_profile_top_item(profile_header, {
+            name: page.name,
+            type: "compare",
+            link: "_compare()",
+            action: "button",
+            katsune
+          });
+        }
         create_profile_top_item(profile_header, {
           name: page.name,
           type: "shortcut",
@@ -17513,8 +17513,9 @@
       let name = author.querySelector(".link-block-target");
       if (name && avatar) {
         let badge = patch_avatar(avatar, name.textContent, "wiki");
-        if (badge.type == "avatar-status-dot--staff")
-          entry.classList.add("staff-shout");
+        avatar.setAttribute("data-avatar-themed", "true");
+        avatar.classList.add(`user-status--bleh-${badge.type}`, `user-status--bleh-user-${name.textContent}`);
+        name.classList.add(`user-status--bleh-${badge.type}`, `user-status--bleh-user-${name.textContent}`);
       }
     });
   }
@@ -19746,7 +19747,7 @@
   }
   function sponsor_request(notify2 = false) {
     let button = document.body.querySelector('[onclick="_sponsor_check()"]');
-    if (button != null)
+    if (button)
       button.setAttribute("disabled", "");
     let xhr = new XMLHttpRequest();
     let url = `https://katelyynn.github.io/bleh/fm/badges/badges.json?${Math.random()}`;
@@ -19792,7 +19793,7 @@
                     <span class="avatar-status-dot user-status--bleh-sponsor"></span>
                 </div>
                 <h1>${tl(trans.support_future_development)}</h1>
-                <p>${tl(trans.why_sponsor).replace("katelyn", `<a class="mention" href="${root}user/katelyness">@katelyness</a>`)}</p>
+                <p>${tl(trans.why_sponsor).replace("katelyn", `<a class="mention" href="${root}user/katesia">@katesia</a>`)}</p>
             </div>
             <div class="modal-footer">
                 <a class="btn primary sponsor" href="${sponsor_list.sponsor_link}" target="_blank">
@@ -20578,6 +20579,8 @@
         title = tl(trans.listeners);
       else if (page.subpage == "similar")
         title = tl(trans.similar_artists);
+      else if (page.subpage.startsWith("wiki"))
+        title = tl(trans.wiki);
       if (page.subpage == "overview" || page.subpage == "event_overview") {
         if (page.type == "user")
           title = tl(trans.profile);

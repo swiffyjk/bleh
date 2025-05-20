@@ -156,9 +156,9 @@ export function bleh_wiki_history() {
 
         if (name && avatar) {
             let badge = patch_avatar(avatar, name.textContent, 'wiki');
-
-            if (badge.type == 'avatar-status-dot--staff')
-                entry.classList.add('staff-shout');
+            avatar.setAttribute('data-avatar-themed', 'true');
+            avatar.classList.add(`user-status--bleh-${badge.type}`, `user-status--bleh-user-${name.textContent}`);
+            name.classList.add(`user-status--bleh-${badge.type}`, `user-status--bleh-user-${name.textContent}`);
         }
     });
 }
