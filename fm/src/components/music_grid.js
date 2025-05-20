@@ -127,7 +127,7 @@ export function music_grids() {
         }
 
         if (plays_elem != null && !grid.classList.contains('obsessions-item')) {
-            let plays = clean_number(plays_elem.textContent.trim().replace(` ${tl(trans.plays_lower)}`, ''));
+            let plays = clean_number(plays_elem.textContent.trim().replace(`${tl(trans.plays_lower)}`, ''));
             plays_elem.classList.add('grid-item-plays');
             if (is_album)
                 plays_elem.textContent = plays.toLocaleString(lang);

@@ -793,7 +793,9 @@ export const trans = {
         en: 'Taste similarity'
     },
     plays_lower: {
-        en: 'plays'
+        // 20 plays in artist/album grid
+        // copy from last.fm
+        en: ' plays'
     },
     message: {
         // as in a direct message

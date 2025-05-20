@@ -22913,9 +22913,9 @@ h4 {
 
         .bleh-icon {
             --icon: var(--icon-16-dots);
-            background-image: linear-gradient(90deg, hsl(var(--l3-c)), hsl(var(--c2)), hsl(var(--l3-c)), hsl(var(--c2)), hsl(var(--l3-c)));
+            background-image: linear-gradient(90deg, hsl(var(--c1)), hsl(var(--c3)), hsl(var(--c1)), hsl(var(--c3)), hsl(var(--c1)));
             background-size: 200% 100%;
-            animation: gradient 2s infinite;
+            animation: gradient 1.3s linear infinite;
         }
     }
 
