@@ -1,6 +1,6 @@
 import { log } from '../build/log';
 import { auth, page, root } from '../build/page';
-import { clean_number } from '../build/tools';
+import { clean_number, sanitise } from '../build/tools';
 import { tl, trans } from '../build/trans';
 import { dialog } from './dialog';
 import { music_grids } from './music_grid';
@@ -174,6 +174,16 @@ function continue_comparing(type) {
 
     page.state.compare_modal.querySelector('.bleh-modal-body .compare-body').innerHTML = '';
 
+    if (page.state.compare.shared.length == 0) {
+        page.state.compare_modal.querySelector('.bleh-modal-body .compare-body').innerHTML = (`
+            <div class="loading-data-container">
+                <div class="loading-data-text failed">${tl(trans.nothing_in_common)}</div>
+            </div>
+        `);
+
+        return;
+    }
+
     if (type != 'tracks') {
         let grid = document.createElement('ol');
         grid.classList.add('grid-items', 'grid-items--numbered', 'compare-grid');
@@ -184,18 +194,18 @@ function continue_comparing(type) {
 
             let template;
             if (type == 'artists')
-                template = data.name;
+                template = sanitise(data.name);
             else
-                template = `${data.sister}/${data.name}`;
+                template = `${sanitise(data.sister)}/${sanitise(data.name)}`;
 
             item.innerHTML = (`
                 <div class="grid-items-cover-image js-link-block link-block">
-                    <div class="grid-items-cover-image-image">
-                        <img src="${data.avatar.replace('/avatar70s/', '/avatar300s/')}" alt="${data.name}">
+                    <div class="grid-items-cover-image-image ${(data.avatar.endsWith('/c6f59c1e5e7240a4c0d427abd71f3dbb.jpg')) ? 'grid-items-cover-default' : ''}">
+                        <img src="${data.avatar.replace('/avatar70s/', '/avatar300s/').replace('/64s/', '/avatar300s/')}" alt="${data.name}">
                     </div>
                     <div class="grid-items-item-details">
                         <p class="grid-items-item-main-text">
-                            <a class="link-block-target" href="${root}music/${template}">
+                            <a class="link-block-target" href="${root}music/${template}" title="${data.name}">
                                 ${data.name}
                             </a>
                         </p>

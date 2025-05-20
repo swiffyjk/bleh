@@ -192,6 +192,9 @@ export const trans = {
         en: 'Compare plays',
         de: 'Plays vergleichen'
     },
+    nothing_in_common: {
+        en: 'Nothing in common (๑-﹏-๑)'
+    },
     others_featured: {
         en: 'Others featured',
         de: 'Andere gefeatured'

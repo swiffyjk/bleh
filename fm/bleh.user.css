@@ -7710,7 +7710,7 @@ section:has(.dropdown-menu-clickable-button.section-control) {
     --mask: var(--icon-16-labs);
 }
 [data-type="compare"] {
-    --mask: var(--icon-16-compare);
+    --mask: var(--icon-16-arrows);
 }
 [data-type="message"] {
     --mask: var(--icon-16-mail);
@@ -22918,7 +22918,7 @@ h4 {
 .compare-header {
     display: flex;
     justify-content: space-between;
-    width: 700px;
+    width: 750px;
     padding-bottom: var(--card-gap);
     margin-bottom: var(--card-gap);
     border-bottom: 1px solid var(--card-border-base);
@@ -22958,9 +22958,12 @@ h4 {
 .compare-body {
     max-height: 600px;
     overflow-y: auto;
+
+    padding: var(--card-padding);
+    margin: calc(-1 * var(--card-padding));
 }
 .compare {
-    --mask: var(--icon-16-compare);
+    --mask: var(--icon-16-arrows);
 }
 
 @keyframes gradient {
