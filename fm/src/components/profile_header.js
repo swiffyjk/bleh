@@ -330,6 +330,10 @@ export function create_profile_top_item(parent, {name, link, text='', type, tast
         listen_item.textContent = tl(trans[type]);
     }
 
+    if (type == 'compare') {
+        listen_item.innerHTML = `${tl(trans.compare)}<div class="new-badge">${tl(trans.new)}</div>`;
+    }
+
     parent.appendChild(listen_item);
 
     if (type == 'shortcut') {

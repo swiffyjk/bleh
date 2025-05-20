@@ -1796,6 +1796,7 @@ last.fm changes as of 2024-05-20 */
 
 .row {
     margin: unset;
+    /*animation: modal 0.35s var(--trans-function);*/
 }
 .container > .row {
     display: flex;
@@ -5777,6 +5778,31 @@ a.chartlist-love-button:after {
         transform: scale(0.98);
     }
 }
+.chartlist-bar.with-multiple {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+
+    .chartlist-count-bar {
+        line-height: 18px;
+
+        .avatar {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            right: calc(-18px - 14px);
+            width: 18px;
+            height: 18px;
+            border-radius: var(--avatar-radius);
+        }
+
+        &:last-child {
+            .chartlist-count-bar-slug {
+                background: color-mix(in hsl, hsl(var(--h3)), hsl(var(--h4)) 40%) !important;
+            }
+        }
+    }
+}
 .chartlist-count-bar-link {
     text-decoration: var(--force-underline, none) !important;
     padding: 0 9px !important; /* 14 */
@@ -7555,7 +7581,7 @@ section:has(.dropdown-menu-clickable-button.section-control) {
         --bg-hov: transparent;
         --bg-atv: transparent;
         --shadow: none;
-        overflow: hidden;
+        overflow: unset;
         text-overflow: ellipsis;
         --mask-size: 12px;
         --btn-top: 5px;
@@ -7603,7 +7629,7 @@ section:has(.dropdown-menu-clickable-button.section-control) {
         &.side-action,
         &.listening-report-promo {
             &:before {
-                border-radius: 4px;
+                border-radius: var(--item-med-radius);
             }
 
             &:after {
@@ -7649,6 +7675,7 @@ section:has(.dropdown-menu-clickable-button.section-control) {
 
             &:before {
                 background: hsl(var(--h3)) !important;
+                box-shadow: 0 3px 12px hsl(var(--h4), 32%), var(--interactable-outer) !important;
             }
 
             &:after {
@@ -9917,9 +9944,11 @@ text[style^="color: rgb(255, 172, 172)"] {
         display: flex;
         gap: var(--card-padding);
 
-        padding-bottom: var(--card-padding);
-        border-bottom: 1px solid var(--card-border-base);
-        margin-bottom: var(--card-padding);
+        &:not(:last-child) {
+            padding-bottom: var(--card-padding);
+            border-bottom: 1px solid var(--card-border-base);
+            margin-bottom: var(--card-padding);
+        }
 
         .scrobble-side {
             --mask: var(--icon-16-scrobble);
@@ -9975,7 +10004,7 @@ text[style^="color: rgb(255, 172, 172)"] {
                 }
             }
             p {
-                color: hsl(var(--c1));
+                color: hsl(var(--c2));
                 font-weight: var(--font-weight-bold);
                 font-size: 20px;
                 line-height: 20px;
@@ -11391,7 +11420,7 @@ text[style^="color: rgb(0, 0, 0)"] {
 }
 
 .alert-info {
-    color: hsl(var(--c3)) !important;
+    --l3-c: var(--c3) !important;
 
     [data-bleh--season="halloween"] & {
         --hue-seasonal: 255;

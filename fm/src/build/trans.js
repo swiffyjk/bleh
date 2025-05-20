@@ -1844,6 +1844,12 @@ export const trans = {
     },
     choose_a_timeframe_above: {
         en: 'Choose a timeframe above'
+    },
+    failed: {
+        en: 'Failed'
+    },
+    there_was_a_network_error: {
+        en: 'There was a network error'
     }
 }
 

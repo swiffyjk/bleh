@@ -7,14 +7,13 @@ import { patch_artist_ranks_in_list_view } from "./colourful_counts";
 import { correct_artist, correct_item_by_artist, name_includes } from "./lotus";
 import { register_menu } from "./menu";
 
-export function patch_titles() {
+export function patch_titles(search=page.structure.main) {
     if (page.subpage == 'tags_overview')
         return;
 
-    if (!page.structure.main)
-        return;
+    if (!search) return;
 
-    let tracklists = page.structure.main.querySelectorAll('.chartlist:not(.chartlist__placeholder)');
+    let tracklists = search.querySelectorAll('.chartlist:not(.chartlist__placeholder)');
 
     let insights = {
         artist: {

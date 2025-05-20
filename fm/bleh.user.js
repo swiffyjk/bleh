@@ -2700,6 +2700,12 @@
     },
     choose_a_timeframe_above: {
       en: "Choose a timeframe above"
+    },
+    failed: {
+      en: "Failed"
+    },
+    there_was_a_network_error: {
+      en: "There was a network error"
     }
   };
   var trans_legacy = {
@@ -9649,6 +9655,260 @@
     update_inbuilt_select(id, document.getElementById(id).value);
   };
 
+  // src/components/track.js
+  function patch_titles(search = page.structure.main) {
+    if (page.subpage == "tags_overview")
+      return;
+    if (!search) return;
+    let tracklists = search.querySelectorAll(".chartlist:not(.chartlist__placeholder)");
+    let insights = {
+      artist: {
+        display: false,
+        values: [],
+        labels: [],
+        highest: {
+          value: 0,
+          label: "",
+          link: "",
+          img: ""
+        }
+      },
+      album: {
+        display: false,
+        values: [],
+        labels: [],
+        highest: {
+          value: 0,
+          label: "",
+          link: "",
+          img: ""
+        }
+      },
+      track: {
+        display: false,
+        values: [],
+        labels: [],
+        highest: {
+          value: 0,
+          label: "",
+          link: "",
+          img: ""
+        }
+      }
+    };
+    tracklists.forEach((tracklist) => {
+      if (tracklist == null)
+        return;
+      console.log("tracklist found", tracklist);
+      if (tracklist.querySelector("tbody > .chartlist-row:first-child > .kate-placeholder") != null)
+        return;
+      console.log("tracklist has not been run thru", tracklist);
+      let tracks = tracklist.querySelectorAll(".chartlist-row:not(.chartlist__placeholder-row)");
+      let is_library_track_page = page.subpage == "library_track_overview";
+      tracks.forEach((track) => {
+        console.log("track", track);
+        if (track.getAttribute("data-track-type"))
+          return;
+        let bla = document.createElement("div");
+        bla.classList.add("kate-placeholder");
+        track.appendChild(bla);
+        let track_title = track.querySelector(".chartlist-name a:not(.offset-section-anchor)");
+        if (!track_title) return;
+        let is_user = track.querySelector(".chartlist-image .avatar") != null;
+        let is_artist = false;
+        if (is_user) {
+          let link = track_title.getAttribute("href");
+          if (link.startsWith(`${root}music/`)) {
+            is_user = false;
+            is_artist = true;
+          }
+        }
+        if (is_user) {
+          track.setAttribute("data-track-type", "user");
+          if (settings.colourful_counts)
+            patch_artist_ranks_in_list_view(track);
+          return;
+        }
+        if (is_artist) {
+          track.setAttribute("data-track-type", "artist");
+          if (settings.colourful_counts)
+            patch_artist_ranks_in_list_view(track);
+          if (settings.corrections)
+            track_title.textContent = correct_artist(track_title.getAttribute("title"));
+          insights.artist.display = true;
+          let bar2 = track.querySelector(".chartlist-count-bar-slug");
+          let value = parseInt(bar2.getAttribute("data-stat-value"));
+          insights.artist.values.push(value);
+          if (value > insights.artist.highest.value)
+            insights.artist.highest.value = value;
+          log(`pushed insight artist label of ${track_title.textContent}`, "glacier library", "log");
+          insights.artist.labels.push(track_title.textContent);
+          return;
+        }
+        let is_album = track.hasAttribute("data-album-row");
+        if (is_album)
+          track.classList.add("bleh--is-album");
+        let track_artist = return_artist_from_track(track_title.getAttribute("href"), is_album);
+        track.classList.add("chartlist-row--with-artist");
+        let bar = track.querySelector(".chartlist-count-bar-slug");
+        if (bar) {
+          let value = parseInt(bar.getAttribute("data-stat-value"));
+          if (is_album) {
+            insights.album.display = true;
+            insights.album.values.push(value);
+            if (value > insights.album.highest.value)
+              insights.album.highest.value = value;
+          } else {
+            insights.track.display = true;
+            insights.track.values.push(value);
+            if (value > insights.track.highest.value)
+              insights.track.highest.value = value;
+          }
+        }
+        let is_active = track.classList.contains("chartlist-row--now-scrobbling");
+        let track_legacy_menu = track.querySelector(".chartlist-more-menu");
+        let track_timestamp = track.querySelector(".chartlist-timestamp span");
+        let track_timestamp_contents;
+        if (track_timestamp && !is_active) {
+          track_timestamp_contents = track_timestamp.getAttribute("title");
+          track_timestamp.setAttribute("title", "");
+          tippy(track_timestamp, {
+            content: track_timestamp_contents
+          });
+        }
+        if (settings.format_guest_features) {
+          let formatted_title = name_includes(track_title.getAttribute("title"), track_artist);
+          console.log("formatted", formatted_title);
+          let song_title = track_title.getAttribute("title");
+          let song_tags = {};
+          if (formatted_title) {
+            song_title = formatted_title[0];
+            song_tags = formatted_title[1];
+          }
+          track_title.setAttribute("title", correct_item_by_artist(track_title.getAttribute("title"), track_artist));
+          let song_tags_text = "";
+          for (let song_tag in song_tags) {
+            song_tags_text = `${song_tags_text}<div class="feat" data-bleh--tag-type="${song_tags[song_tag].type}" data-bleh--tag-group="${song_tags[song_tag].group}">${sanitise_text(song_tags[song_tag].text)}</div>`;
+          }
+          track_title.innerHTML = `<div class="title">${sanitise_text(song_title).trim()}</div>${song_tags_text}`;
+          let song_artist_element = track.querySelector(".chartlist-artist");
+          if (!song_artist_element && !is_user) {
+            song_artist_element = document.createElement("td");
+            song_artist_element.classList.add("chartlist-artist");
+            track.appendChild(song_artist_element);
+          }
+          if (song_artist_element.textContent.replaceAll("+", " ").trim() == track_artist || song_artist_element.textContent.trim() == "") {
+            song_artist_element.innerHTML = `<a href="${root}music/${sanitise(formatted_title[2])}" title="${sanitise_text(formatted_title[2])}">${sanitise_text(formatted_title[2])}</a>`;
+            let song_guests = formatted_title[3];
+            for (let guest in song_guests) {
+              song_artist_element.innerHTML = `${song_artist_element.innerHTML},`;
+              let guest_element = document.createElement("a");
+              guest_element.setAttribute("href", `${root}music/${sanitise(song_guests[guest])}`);
+              guest_element.setAttribute("title", song_guests[guest]);
+              guest_element.textContent = song_guests[guest];
+              song_artist_element.appendChild(guest_element);
+            }
+          }
+          let image = track.querySelector(".chartlist-image img");
+          if (!image && page.type == "user")
+            is_library_track_page = true;
+          if (track_legacy_menu) {
+            let track_preview = document.createElement("div");
+            track_preview.classList.add("track-preview");
+            track_preview.innerHTML = `
+                        <div class="image">
+                            <div class="inner-image">
+                                ${image ? image.outerHTML : '<img class="missing-track">'}
+                            </div>
+                        </div>
+                        <div class="info">
+                            <h5 class="title">${song_title}</h5>
+                            <p class="artist">${song_artist_element.innerHTML}</p>
+                            <div class="tags">${song_tags_text}</div>
+                            ${!is_library_track_page ? is_album ? "" : `<p class="album">${image ? correct_item_by_artist(sanitise_text(image.getAttribute("alt")), track_artist) : page.name}</p>` : ""}
+                            ${track_timestamp && track_timestamp_contents ? `<p class="timestamp">${track_timestamp_contents}</p>` : ""}
+                        </div>
+                    `;
+            track_legacy_menu.insertBefore(track_preview, track_legacy_menu.firstElementChild);
+          }
+        } else if (settings.corrections) {
+          let song_artist_element = track.querySelector(".chartlist-artist a");
+          if (song_artist_element) {
+            let corrected_title = correct_item_by_artist(track_title.textContent, song_artist_element.textContent);
+            track_title.textContent = corrected_title;
+            track_title.setAttribute("title", corrected_title);
+            let corrected_artist = correct_artist(song_artist_element.textContent);
+            song_artist_element.textContent = corrected_artist;
+            song_artist_element.setAttribute("title", corrected_artist);
+          } else {
+            let corrected_title = correct_item_by_artist(track_title.textContent, track_artist);
+            track_title.textContent = corrected_title;
+            track_title.setAttribute("title", corrected_title);
+          }
+        }
+        if (track_legacy_menu) {
+          let menu = tippy(track, {
+            theme: "context-menu",
+            content: `
+                        ${track_legacy_menu.innerHTML}
+                    `,
+            allowHTML: true,
+            placement: "right-start",
+            trigger: "manual",
+            interactive: true,
+            interactiveBorder: 10,
+            offset: [0, 0],
+            onShow(instance) {
+              instance.popper.addEventListener("click", (event2) => {
+                instance.hide();
+              });
+            }
+          });
+          register_menu(track, menu);
+        }
+        if (is_album) {
+          log(`pushed insight album label of ${track_title.getAttribute("title")}`, "glacier library", "log");
+          insights.album.labels.push(track_title.getAttribute("title"));
+        } else {
+          log(`pushed insight track label of ${track_title.getAttribute("title")}`, "glacier library", "log");
+          insights.track.labels.push(track_title.getAttribute("title"));
+        }
+        if (!settings.colourful_tracks)
+          return;
+        if (!is_album && is_active) {
+          let image_wrap = track.querySelector(".chartlist-image");
+          if (image_wrap) {
+            let link = image_wrap.querySelector(".cover-art");
+            let image = link.querySelector("img");
+            if (!settings.album_text) {
+              let alt = correct_item_by_artist(image.getAttribute("alt"), track_artist);
+              let album_text = document.createElement("td");
+              album_text.classList.add("chartlist-album", "custom-album-text");
+              album_text.innerHTML = `
+                            <a href="${link.getAttribute("href")}">${alt}</a>
+                        `;
+              track.appendChild(album_text);
+            }
+            image.setAttribute("crossorigin", "anonymous");
+            try {
+              image.addEventListener("load", function() {
+                let thief = new ColorThief();
+                let colour = thief.getColor(image);
+                let hsl = rgb_to_hsl(colour[0], colour[1], colour[2]);
+                track.style.setProperty("--hue-over", hsl.h);
+                track.style.setProperty("--sat-over", clamp_sat(hsl.s / 100 * 3));
+                track.style.setProperty("--lit-over", 1);
+              });
+            } catch (e) {
+            }
+          }
+        }
+      });
+    });
+    if (page.subpage.startsWith("library"))
+      bleh_glacier_insights(insights);
+  }
+
   // src/components/compare.js
   function compare() {
     page.state.compare_modal = dialog({
@@ -9754,7 +10014,7 @@
         notify({
           id: "compare",
           title: tl(trans.failed),
-          body: tl(trans.there_was_an_error_network),
+          body: tl(trans.there_was_a_network_error),
           type: "error"
         });
         console.error(e);
@@ -9816,7 +10076,7 @@
         item2.innerHTML = `
                 <div class="grid-items-cover-image js-link-block link-block">
                     <div class="grid-items-cover-image-image ${data.avatar.endsWith("/c6f59c1e5e7240a4c0d427abd71f3dbb.jpg") || data.avatar.endsWith("/2a96cbd8b46e442fc41c2b86b821562f.jpg") ? "grid-items-cover-default" : ""}">
-                        <img src="${data.avatar.replace("/avatar70s/", "/avatar300s/").replace("/64s/", "/avatar300s/")}" alt="${data.name}">
+                        <img src="${data.avatar.replace("/avatar70s/", "/avatar300s/").replace("/64s/", "/avatar300s/")}" alt="${data.name}" loading="lazy">
                     </div>
                     <div class="grid-items-item-details">
                         <p class="grid-items-item-main-text">
@@ -9853,6 +10113,64 @@
       });
       page.state.compare_modal.querySelector(".bleh-modal-body .compare-body").appendChild(grid);
       music_grids(grid);
+    } else {
+      let table = document.createElement("table");
+      table.classList.add("chartlist", "chartlist--with-index", "chartlist--with-index--length-2", "chartlist--with-image", "chartlist--with-artist", "chartlist--with-bar", "compare-chartlist");
+      let body = document.createElement("tbody");
+      table.appendChild(body);
+      let max = 0;
+      page.state.compare.shared.forEach((item2) => {
+        if (item2.plays.you > max)
+          max = item2.plays.you;
+        if (item2.plays.other > max)
+          max = item2.plays.other;
+      });
+      page.state.compare.shared.forEach((data, index) => {
+        let item2 = document.createElement("tr");
+        item2.classList.add("chartlist-row", "chartlist-row--with-artist", "compare-item");
+        let template = `${sanitise(data.sister)}/${sanitise(data.name)}`;
+        item2.innerHTML = `
+                <td class="chartlist-index">${index + 1}</td>
+                <td class="chartlist-image">
+                    <a class="cover-art" href="${root}music/${template}">
+                        <img src="${data.avatar}" alt="${data.name}" loading="lazy">
+                    </a>
+                </td>
+                <td class="chartlist-name">
+                    <a href="${root}music/${template}" title="${data.name}">
+                        ${data.name}
+                    </a>
+                </td>
+                <td class="chartlist-artist">
+                    <a href="${root}music/${data.sister}" title="${data.sister}">
+                        ${data.sister}
+                    </a>
+                </td>
+                <td class="chartlist-bar with-multiple">
+                    <span class="chartlist-count-bar">
+                        <a class="chartlist-count-bar-link" href="${root}user/${auth.name}/library/music/${template}" target="_blank">
+                            <span class="chartlist-count-bar-slug" data-max-stat-value="${max}" data-stat-value="${data.plays.you}" style="width: ${data.plays.you / max * 100}%;"></span>
+                            <span class="chartlist-count-bar-value">${data.plays.you}</span>
+                        </a>
+                        <span class="avatar">
+                            <img src="${auth.avatar}" alt="${tl(trans.your_avatar)}">
+                        </span>
+                    </span>
+                    <span class="chartlist-count-bar">
+                        <a class="chartlist-count-bar-link" href="${root}user/${page.name}/library/music/${template}" target="_blank">
+                            <span class="chartlist-count-bar-slug" data-max-stat-value="${max}" data-stat-value="${data.plays.other}" style="width: ${data.plays.other / max * 100}%;"></span>
+                            <span class="chartlist-count-bar-value">${data.plays.other}</span>
+                        </a>
+                        <span class="avatar">
+                            <img src="${page.avatar}" alt="${tl(trans.avatar_for_user).replace("{u}", page.name)}">
+                        </span>
+                    </span>
+                </td>
+            `;
+        body.appendChild(item2);
+      });
+      page.state.compare_modal.querySelector(".bleh-modal-body .compare-body").appendChild(table);
+      patch_titles(page.state.compare_modal);
     }
   }
 
@@ -10119,6 +10437,9 @@
     if (full) {
       listen_item.classList.add("profile-top-item-full");
       listen_item.textContent = tl(trans[type]);
+    }
+    if (type == "compare") {
+      listen_item.innerHTML = `${tl(trans.compare)}<div class="new-badge">${tl(trans.new)}</div>`;
     }
     parent.appendChild(listen_item);
     if (type == "shortcut") {
@@ -16721,261 +17042,6 @@
       }
       active_nag.parentElement.removeChild(active_nag);
     });
-  }
-
-  // src/components/track.js
-  function patch_titles() {
-    if (page.subpage == "tags_overview")
-      return;
-    if (!page.structure.main)
-      return;
-    let tracklists = page.structure.main.querySelectorAll(".chartlist:not(.chartlist__placeholder)");
-    let insights = {
-      artist: {
-        display: false,
-        values: [],
-        labels: [],
-        highest: {
-          value: 0,
-          label: "",
-          link: "",
-          img: ""
-        }
-      },
-      album: {
-        display: false,
-        values: [],
-        labels: [],
-        highest: {
-          value: 0,
-          label: "",
-          link: "",
-          img: ""
-        }
-      },
-      track: {
-        display: false,
-        values: [],
-        labels: [],
-        highest: {
-          value: 0,
-          label: "",
-          link: "",
-          img: ""
-        }
-      }
-    };
-    tracklists.forEach((tracklist) => {
-      if (tracklist == null)
-        return;
-      console.log("tracklist found", tracklist);
-      if (tracklist.querySelector("tbody > .chartlist-row:first-child > .kate-placeholder") != null)
-        return;
-      console.log("tracklist has not been run thru", tracklist);
-      let tracks = tracklist.querySelectorAll(".chartlist-row:not(.chartlist__placeholder-row)");
-      let is_library_track_page = page.subpage == "library_track_overview";
-      tracks.forEach((track) => {
-        console.log("track", track);
-        if (track.getAttribute("data-track-type"))
-          return;
-        let bla = document.createElement("div");
-        bla.classList.add("kate-placeholder");
-        track.appendChild(bla);
-        let track_title = track.querySelector(".chartlist-name a:not(.offset-section-anchor)");
-        if (!track_title) return;
-        let is_user = track.querySelector(".chartlist-image .avatar") != null;
-        let is_artist = false;
-        if (is_user) {
-          let link = track_title.getAttribute("href");
-          if (link.startsWith(`${root}music/`)) {
-            is_user = false;
-            is_artist = true;
-          }
-        }
-        if (is_user) {
-          track.setAttribute("data-track-type", "user");
-          if (settings.colourful_counts)
-            patch_artist_ranks_in_list_view(track);
-          return;
-        }
-        if (is_artist) {
-          track.setAttribute("data-track-type", "artist");
-          if (settings.colourful_counts)
-            patch_artist_ranks_in_list_view(track);
-          if (settings.corrections)
-            track_title.textContent = correct_artist(track_title.getAttribute("title"));
-          insights.artist.display = true;
-          let bar2 = track.querySelector(".chartlist-count-bar-slug");
-          let value = parseInt(bar2.getAttribute("data-stat-value"));
-          insights.artist.values.push(value);
-          if (value > insights.artist.highest.value)
-            insights.artist.highest.value = value;
-          log(`pushed insight artist label of ${track_title.textContent}`, "glacier library", "log");
-          insights.artist.labels.push(track_title.textContent);
-          return;
-        }
-        let is_album = track.hasAttribute("data-album-row");
-        if (is_album)
-          track.classList.add("bleh--is-album");
-        let track_artist = return_artist_from_track(track_title.getAttribute("href"), is_album);
-        track.classList.add("chartlist-row--with-artist");
-        let bar = track.querySelector(".chartlist-count-bar-slug");
-        if (bar) {
-          let value = parseInt(bar.getAttribute("data-stat-value"));
-          if (is_album) {
-            insights.album.display = true;
-            insights.album.values.push(value);
-            if (value > insights.album.highest.value)
-              insights.album.highest.value = value;
-          } else {
-            insights.track.display = true;
-            insights.track.values.push(value);
-            if (value > insights.track.highest.value)
-              insights.track.highest.value = value;
-          }
-        }
-        let is_active = track.classList.contains("chartlist-row--now-scrobbling");
-        let track_legacy_menu = track.querySelector(".chartlist-more-menu");
-        let track_timestamp = track.querySelector(".chartlist-timestamp span");
-        let track_timestamp_contents;
-        if (track_timestamp && !is_active) {
-          track_timestamp_contents = track_timestamp.getAttribute("title");
-          track_timestamp.setAttribute("title", "");
-          tippy(track_timestamp, {
-            content: track_timestamp_contents
-          });
-        }
-        if (settings.format_guest_features) {
-          let formatted_title = name_includes(track_title.getAttribute("title"), track_artist);
-          console.log("formatted", formatted_title);
-          let song_title = track_title.getAttribute("title");
-          let song_tags = {};
-          if (formatted_title) {
-            song_title = formatted_title[0];
-            song_tags = formatted_title[1];
-          }
-          track_title.setAttribute("title", correct_item_by_artist(track_title.getAttribute("title"), track_artist));
-          let song_tags_text = "";
-          for (let song_tag in song_tags) {
-            song_tags_text = `${song_tags_text}<div class="feat" data-bleh--tag-type="${song_tags[song_tag].type}" data-bleh--tag-group="${song_tags[song_tag].group}">${sanitise_text(song_tags[song_tag].text)}</div>`;
-          }
-          track_title.innerHTML = `<div class="title">${sanitise_text(song_title).trim()}</div>${song_tags_text}`;
-          let song_artist_element = track.querySelector(".chartlist-artist");
-          if (!song_artist_element && !is_user) {
-            song_artist_element = document.createElement("td");
-            song_artist_element.classList.add("chartlist-artist");
-            track.appendChild(song_artist_element);
-          }
-          if (song_artist_element.textContent.replaceAll("+", " ").trim() == track_artist || song_artist_element.textContent.trim() == "") {
-            song_artist_element.innerHTML = `<a href="${root}music/${sanitise(formatted_title[2])}" title="${sanitise_text(formatted_title[2])}">${sanitise_text(formatted_title[2])}</a>`;
-            let song_guests = formatted_title[3];
-            for (let guest in song_guests) {
-              song_artist_element.innerHTML = `${song_artist_element.innerHTML},`;
-              let guest_element = document.createElement("a");
-              guest_element.setAttribute("href", `${root}music/${sanitise(song_guests[guest])}`);
-              guest_element.setAttribute("title", song_guests[guest]);
-              guest_element.textContent = song_guests[guest];
-              song_artist_element.appendChild(guest_element);
-            }
-          }
-          let image = track.querySelector(".chartlist-image img");
-          if (!image && page.type == "user")
-            is_library_track_page = true;
-          if (track_legacy_menu) {
-            let track_preview = document.createElement("div");
-            track_preview.classList.add("track-preview");
-            track_preview.innerHTML = `
-                        <div class="image">
-                            <div class="inner-image">
-                                ${image ? image.outerHTML : '<img class="missing-track">'}
-                            </div>
-                        </div>
-                        <div class="info">
-                            <h5 class="title">${song_title}</h5>
-                            <p class="artist">${song_artist_element.innerHTML}</p>
-                            <div class="tags">${song_tags_text}</div>
-                            ${!is_library_track_page ? is_album ? "" : `<p class="album">${image ? correct_item_by_artist(sanitise_text(image.getAttribute("alt")), track_artist) : page.name}</p>` : ""}
-                            ${track_timestamp && track_timestamp_contents ? `<p class="timestamp">${track_timestamp_contents}</p>` : ""}
-                        </div>
-                    `;
-            track_legacy_menu.insertBefore(track_preview, track_legacy_menu.firstElementChild);
-          }
-        } else if (settings.corrections) {
-          let song_artist_element = track.querySelector(".chartlist-artist a");
-          if (song_artist_element) {
-            let corrected_title = correct_item_by_artist(track_title.textContent, song_artist_element.textContent);
-            track_title.textContent = corrected_title;
-            track_title.setAttribute("title", corrected_title);
-            let corrected_artist = correct_artist(song_artist_element.textContent);
-            song_artist_element.textContent = corrected_artist;
-            song_artist_element.setAttribute("title", corrected_artist);
-          } else {
-            let corrected_title = correct_item_by_artist(track_title.textContent, track_artist);
-            track_title.textContent = corrected_title;
-            track_title.setAttribute("title", corrected_title);
-          }
-        }
-        if (track_legacy_menu) {
-          let menu = tippy(track, {
-            theme: "context-menu",
-            content: `
-                        ${track_legacy_menu.innerHTML}
-                    `,
-            allowHTML: true,
-            placement: "right-start",
-            trigger: "manual",
-            interactive: true,
-            interactiveBorder: 10,
-            offset: [0, 0],
-            onShow(instance) {
-              instance.popper.addEventListener("click", (event2) => {
-                instance.hide();
-              });
-            }
-          });
-          register_menu(track, menu);
-        }
-        if (is_album) {
-          log(`pushed insight album label of ${track_title.getAttribute("title")}`, "glacier library", "log");
-          insights.album.labels.push(track_title.getAttribute("title"));
-        } else {
-          log(`pushed insight track label of ${track_title.getAttribute("title")}`, "glacier library", "log");
-          insights.track.labels.push(track_title.getAttribute("title"));
-        }
-        if (!settings.colourful_tracks)
-          return;
-        if (!is_album && is_active) {
-          let image_wrap = track.querySelector(".chartlist-image");
-          if (image_wrap) {
-            let link = image_wrap.querySelector(".cover-art");
-            let image = link.querySelector("img");
-            if (!settings.album_text) {
-              let alt = correct_item_by_artist(image.getAttribute("alt"), track_artist);
-              let album_text = document.createElement("td");
-              album_text.classList.add("chartlist-album", "custom-album-text");
-              album_text.innerHTML = `
-                            <a href="${link.getAttribute("href")}">${alt}</a>
-                        `;
-              track.appendChild(album_text);
-            }
-            image.setAttribute("crossorigin", "anonymous");
-            try {
-              image.addEventListener("load", function() {
-                let thief = new ColorThief();
-                let colour = thief.getColor(image);
-                let hsl = rgb_to_hsl(colour[0], colour[1], colour[2]);
-                track.style.setProperty("--hue-over", hsl.h);
-                track.style.setProperty("--sat-over", clamp_sat(hsl.s / 100 * 3));
-                track.style.setProperty("--lit-over", 1);
-              });
-            } catch (e) {
-            }
-          }
-        }
-      });
-    });
-    if (page.subpage.startsWith("library"))
-      bleh_glacier_insights(insights);
   }
 
   // src/navigation.js
