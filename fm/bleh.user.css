@@ -3339,6 +3339,9 @@ button.navlist-more {
 .secondary-nav-item--velocity {
     --mask: var(--icon-16-labs);
 }
+.secondary-nav-item--compare {
+    --mask: var(--icon-16-arrows);
+}
 
 
 /* library scrobbles tab */

@@ -6585,8 +6585,8 @@
         page.structure.main.insertBefore(date_panel, page.structure.main.firstChild);
     }
     page.structure.glacier.date_panel = date_panel;
+    let tabs = page.structure.container.querySelector(".library-controls .navlist-items");
     if (page.name == auth.name) {
-      let tabs = page.structure.container.querySelector(".library-controls .navlist-items");
       let velocity_tab = document.createElement("li");
       velocity_tab.classList.add("navlist-item", "secondary-nav-item", "secondary-nav-item--velocity");
       velocity_tab.innerHTML = `
@@ -6595,6 +6595,15 @@
             </a>
         `;
       tabs.appendChild(velocity_tab);
+    } else {
+      let compare_tab = document.createElement("li");
+      compare_tab.classList.add("navlist-item", "secondary-nav-item", "secondary-nav-item--compare");
+      compare_tab.innerHTML = `
+            <a class="secondary-nav-item-link" onclick="_compare()">
+                ${tl(trans.compare)}
+            </a>
+        `;
+      tabs.appendChild(compare_tab);
     }
     if (!ff("glacier_library"))
       return;
