@@ -12662,6 +12662,10 @@
       let badge = patch_avatar(avatar, name, "follow");
       if (badge.type == "avatar-status-dot--staff")
         user.classList.add("staff-user");
+      let artists = user.querySelectorAll(".user-list-shared-artists a");
+      artists.forEach((artist) => {
+        artist.textContent = correct_artist(artist.textContent);
+      });
     });
   }
   unsafeWindow._refresh_tracks = function(button) {

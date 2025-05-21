@@ -1041,6 +1041,11 @@ function patch_profile_following() {
 
         if (badge.type == 'avatar-status-dot--staff')
             user.classList.add('staff-user');
+
+        let artists = user.querySelectorAll('.user-list-shared-artists a');
+        artists.forEach((artist) => {
+            artist.textContent = correct_artist(artist.textContent);
+        });
     });
 }
 
