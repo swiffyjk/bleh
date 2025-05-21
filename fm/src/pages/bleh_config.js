@@ -511,12 +511,17 @@ export function render_setting_page(page_id) {
                                     <div class="sub-text">${tl(trans.ends_in)}</div>
                                     <div class="glacier-library-metadata-item-value" id="current_season">${moment(stored_season.end.replace('y0', stored_season.year).replace('{offset}', stored_season.offset)).to(stored_season.now, true)}</div>
                                 </div>
+                                `) : (settings.seasonal) ? (`
+                                <div class="glacier-library-metadata-item">
+                                    <div class="sub-text">${tl(trans.next_in)}</div>
+                                    <div class="glacier-library-metadata-item-value" id="next_season_start">${moment(stored_season.next_start.replace('y0', (stored_season.next_is_new_year) ? stored_season.year + 1 : stored_season.year).replace('{offset}', stored_season.offset)).to(stored_season.now, true)}</div>
+                                </div>
                                 `) : ''}
                             </div>
                         </div>
                     </div>
                 </div>
-                ${(stored_season.id != 'none' && stored_season.start && stored_season.end) ? (`
+                ${(settings.seasonal) ? (`
                 <div class="alert alert-info">
                     ${tl(trans.seasonal_offset).replace('{offset}', `<strong>${stored_season.offset}</strong>`)}
                 </div>
@@ -1574,6 +1579,9 @@ function change_settings_page(page_id, setting = null) {
         });
         tippy(document.getElementById('current_season_start'), {
             content: new Date(stored_season.start.replace('y0', stored_season.year).replace('{offset}', stored_season.offset)).toLocaleString(lang)
+        });
+        tippy(document.getElementById('next_season_start'), {
+            content: new Date(stored_season.next_start.replace('y0', (stored_season.next_is_new_year) ? stored_season.year + 1 : stored_season.year).replace('{offset}', stored_season.offset)).toLocaleString(lang)
         });
     }
 

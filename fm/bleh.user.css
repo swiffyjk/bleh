@@ -15986,14 +15986,14 @@ input[type="range"]::-moz-range-progress {
 .mention,
 :is(.shout-body, .about-me-sidebar, .bleh--about-me-preview, .wiki-content, .markdown-body, .user-list-about-me) a[href*="/user/"]:not([href^=https]) {
     padding: 0 4px;
-    background-color: hsla(var(--h4), 20%);
+    background-color: color-mix(in hsl, hsl(var(--h4)), hsl(var(--b5)) 65%);
     border-radius: var(--item-small-radius);
     font-weight: var(--font-weight-medium);
     text-decoration: var(--force-underline, none) !important;
 }
 :is(.shout-body, .about-me-sidebar, .bleh--about-me-preview, .user-list-about-me) a[href^="https://open.spotify.com/user/"] {
     padding: 0 4px 0 calc(4px + 14px + 4px);
-    background-color: hsla(var(--h4), 20%);
+    background-color: color-mix(in hsl, hsl(var(--h4)), hsl(var(--b5)) 65%);
     border-radius: var(--item-small-radius);
     font-weight: var(--font-weight-medium);
     text-decoration: none;
@@ -21538,19 +21538,14 @@ h4 {
         }
     }
 
-    .home-avatar {
-        width: 100px;
-        height: 100px;
+    .avatar {
+        width: 84px;
+        height: 84px;
         border-radius: var(--avatar-radius);
         box-shadow: var(--interact-shadow);
-        overflow: hidden;
         position: relative;
 
         margin-bottom: var(--card-padding);
-
-        img {
-            width: 100%;
-        }
 
         &:after {
             content: '';
@@ -21560,6 +21555,12 @@ h4 {
             background: radial-gradient(transparent 40%, hsl(var(--h4), 50%));
 
             display: none;
+        }
+
+        .avatar-status-dot {
+            width: 22px;
+            height: 22px;
+            --mask-size: 22px;
         }
     }
 

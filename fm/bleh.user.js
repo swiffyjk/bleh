@@ -1290,6 +1290,9 @@
       en: "Started",
       de: "Gestartet"
     },
+    next_in: {
+      en: "Next in"
+    },
     ends_in: {
       en: "Ends in",
       de: "Endet in"
@@ -1337,7 +1340,7 @@
       en: "Good evening, {user}",
       de: "Guten Abend, {user}"
     },
-    goodnight_user: {
+    good_night_user: {
       en: "Goodnight, {user}",
       de: "Gute Nacht, {user}"
     },
@@ -13740,6 +13743,12 @@
     seasonal_events.forEach((season, index) => {
       log(`running thru, ${season.id} - ${new Date(season.start.replace("y0", current_year).replace("{offset}", stored_season.offset))} ${new Date(season.end.replace("y0", current_year).replace("{offset}", stored_season.offset))}`, "season", "log");
       log(`${now >= new Date(season.start.replace("y0", current_year).replace("{offset}", stored_season.offset))} ${now <= new Date(season.end.replace("y0", current_year).replace("{offset}", stored_season.offset))}`, "season", "log");
+      season.days_until = -moment().diff(season.start.replace("y0", current_year).replace("{offset}", stored_season.offset), "days");
+      season.is_next_year = false;
+      if (season.days_until < 0) {
+        season.days_until = -moment().diff(season.start.replace("y0", current_year + 1).replace("{offset}", stored_season.offset), "days");
+        season.is_next_year = true;
+      }
       if (now >= new Date(season.start.replace("y0", current_year).replace("{offset}", stored_season.offset)) && now <= new Date(season.end.replace("y0", current_year).replace("{offset}", stored_season.offset))) {
         stored_season.now = now;
         stored_season.year = current_year;
@@ -13784,6 +13793,22 @@
         return;
       }
     });
+    let lowest = 400;
+    let next_season = {};
+    if (stored_season.id == "none") {
+      seasonal_events.forEach((season) => {
+        if (season.days_until < lowest) {
+          lowest = season.days_until;
+          next_season = season;
+        }
+      });
+      stored_season.now = now;
+      stored_season.year = current_year;
+      stored_season.next_id = next_season.id;
+      stored_season.next_start = next_season.start;
+      stored_season.next_is_new_year = next_season.is_next_year;
+      log("next season found", "season", "info", { next: next_season, stored: stored_season, date: stored_season.next_start.replace("y0", stored_season.next_is_new_year ? stored_season.year + 1 : stored_season.year).replace("{offset}", stored_season.offset) });
+    }
   }
   function calculate_offset(now) {
     let offset = now.getTimezoneOffset();
@@ -14378,12 +14403,17 @@
                                     <div class="sub-text">${tl(trans.ends_in)}</div>
                                     <div class="glacier-library-metadata-item-value" id="current_season">${moment(stored_season.end.replace("y0", stored_season.year).replace("{offset}", stored_season.offset)).to(stored_season.now, true)}</div>
                                 </div>
+                                ` : settings.seasonal ? `
+                                <div class="glacier-library-metadata-item">
+                                    <div class="sub-text">${tl(trans.next_in)}</div>
+                                    <div class="glacier-library-metadata-item-value" id="next_season_start">${moment(stored_season.next_start.replace("y0", stored_season.next_is_new_year ? stored_season.year + 1 : stored_season.year).replace("{offset}", stored_season.offset)).to(stored_season.now, true)}</div>
+                                </div>
                                 ` : ""}
                             </div>
                         </div>
                     </div>
                 </div>
-                ${stored_season.id != "none" && stored_season.start && stored_season.end ? `
+                ${settings.seasonal ? `
                 <div class="alert alert-info">
                     ${tl(trans.seasonal_offset).replace("{offset}", `<strong>${stored_season.offset}</strong>`)}
                 </div>
@@ -15400,6 +15430,9 @@
       });
       tippy(document.getElementById("current_season_start"), {
         content: new Date(stored_season.start.replace("y0", stored_season.year).replace("{offset}", stored_season.offset)).toLocaleString(lang)
+      });
+      tippy(document.getElementById("next_season_start"), {
+        content: new Date(stored_season.next_start.replace("y0", stored_season.next_is_new_year ? stored_season.year + 1 : stored_season.year).replace("{offset}", stored_season.offset)).toLocaleString(lang)
       });
     }
     if (setting != null) {
@@ -18929,17 +18962,25 @@
     register_background(auth.avatar.replace("/avatar42s/", "/ar0/"));
     let banner = document.createElement("div");
     banner.classList.add("top-banner", "home-banner", "colourful");
+    let hour = (/* @__PURE__ */ new Date()).getHours();
+    let time;
+    if (hour >= 22 || hour <= 6)
+      time = "night";
+    else if (hour >= 7 && hour <= 10)
+      time = "morning";
+    else if (hour >= 11 && hour <= 17)
+      time = "afternoon";
+    else
+      time = "evening";
+    log(`hour ${hour} time ${time}`, "time");
     banner.innerHTML = `
-        <a class="home-avatar" href="${root}user/${auth.name}">
-            <img src="${auth.avatar.replace("/avatar42s/", "/avatar170s/")}">
-        </a>
-        ${auth.sponsor ? `
-        <div class="subtext sponsor-message colourful">
-            <div class="bleh-icon-container"><div class="bleh-icon" style="--icon: var(--icon-16-heart-solid); --icon-size: 14px"></div></div>
-            ${tl(trans.you_are_a_sponsor)}
+        <div class="avatar">
+            <img src="${auth.avatar.replace("/avatar42s/", "/avatar170s/")}" alt="${tl(trans.your_avatar)}">
+            ${auth.sponsor ? `
+            <span class="avatar-status-dot user-status--bleh-sponsor"></span>
+            ` : ""}
         </div>
-        ` : ""}
-        <h1>${tl(trans.welcome_back_user).replace("{user}", `<a class="mention" href="${root}user/${auth.name}">@${auth.name}</a>`)}</h1>
+        <h1>${tl(trans[`good_${time}_user`]).replace("{user}", `<a class="mention" href="${root}user/${auth.name}">@${auth.name}</a>`)}</h1>
     `;
     page.structure.container.insertBefore(banner, page.structure.container.firstElementChild);
     let nav = document.createElement("nav");

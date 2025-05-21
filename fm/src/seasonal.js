@@ -23,6 +23,15 @@ export function set_season() {
     seasonal_events.forEach((season, index) => {
         log(`running thru, ${season.id} - ${new Date(season.start.replace('y0', current_year).replace('{offset}', stored_season.offset))} ${new Date(season.end.replace('y0', current_year).replace('{offset}', stored_season.offset))}`, 'season', 'log');
         log(`${now >= new Date(season.start.replace('y0', current_year).replace('{offset}', stored_season.offset))} ${now <= new Date(season.end.replace('y0', current_year).replace('{offset}', stored_season.offset))}`, 'season', 'log');
+
+        season.days_until = -moment().diff(season.start.replace('y0', current_year).replace('{offset}', stored_season.offset), 'days');
+        season.is_next_year = false;
+        if (season.days_until < 0) {
+            // new year
+            season.days_until = -moment().diff(season.start.replace('y0', current_year + 1).replace('{offset}', stored_season.offset), 'days');
+            season.is_next_year = true;
+        }
+
         if (
             now >= new Date(season.start.replace('y0', current_year).replace('{offset}', stored_season.offset)) &&
             now <= new Date(season.end.replace('y0', current_year).replace('{offset}', stored_season.offset))
@@ -86,6 +95,25 @@ export function set_season() {
             return;
         }
     });
+
+    let lowest = 400;
+    let next_season = {};
+    if (stored_season.id == 'none') {
+        seasonal_events.forEach((season) => {
+            if (season.days_until < lowest) {
+                lowest = season.days_until;
+                next_season = season;
+            }
+        });
+
+        stored_season.now = now;
+        stored_season.year = current_year;
+
+        stored_season.next_id = next_season.id;
+        stored_season.next_start = next_season.start;
+        stored_season.next_is_new_year = next_season.is_next_year;
+        log('next season found', 'season', 'info', {next: next_season, stored: stored_season, date: stored_season.next_start.replace('y0', (stored_season.next_is_new_year) ? stored_season.year + 1 : stored_season.year).replace('{offset}', stored_season.offset)});
+    }
 }
 
 function calculate_offset(now) {

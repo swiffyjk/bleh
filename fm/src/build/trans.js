@@ -434,6 +434,9 @@ export const trans = {
         en: 'Started',
         de: 'Gestartet'
     },
+    next_in: {
+        en: 'Next in'
+    },
     ends_in: {
         en: 'Ends in',
         de: 'Endet in'
@@ -481,7 +484,7 @@ export const trans = {
         en: 'Good evening, {user}',
         de: 'Guten Abend, {user}'
     },
-    goodnight_user: {
+    good_night_user: {
         en: 'Goodnight, {user}',
         de: 'Gute Nacht, {user}'
     },
