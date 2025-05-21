@@ -1151,7 +1151,7 @@ last.fm changes as of 2024-05-20 */
 .masthead-inner-wrap {
     width: var(--cards-width) !important;
     max-width: unset !important;
-    padding: 0 var(--card-padding) !important;
+    padding: 0 calc(var(--card-padding) - 12px) !important;
     float: unset !important;
     display: flex;
     gap: var(--button-list-gap);
@@ -2272,8 +2272,8 @@ span.header-new-gallery-inner a,
 
         .bleh--nav-wrap .navlist,
         .redesigned-navigation {
-            margin-left: calc(var(--card-gap) + var(--card-padding)) !important;
-            margin-right: calc(var(--card-gap) + var(--card-padding)) !important;
+            margin-left: calc(var(--card-gap) + var(--card-padding) - 12px) !important;
+            margin-right: calc(var(--card-gap) + var(--card-padding) - 12px) !important;
 
             @media (max-width: 600px) {
                 width: var(--cards-width) !important;
@@ -2735,23 +2735,17 @@ span.header-new-gallery-inner a,
 
 
 
-.header-new--subpage .secondary-nav {
-    position: relative;
-    top: calc(67px + var(--card-gap));
-    left: calc(-1 * var(--card-padding));
-    right: calc(-1 * var(--card-padding));
-}
-
 .header--user .secondary-nav {
     position: relative;
     top: calc((var(--profile-header-avatar-size) - 50px) + var(--card-gap) + 15px - 19px);
 }
+.content-top .secondary-nav,
 .bleh--nav-wrap .navlist,
 .secondary-nav, .user-dashboard-controls .secondary-nav {
     box-shadow: unset;
     padding-bottom: 1px;
-    margin: 0 var(--card-padding) !important;
-    width: calc(var(--cards-width) - (var(--card-padding) * 2));
+    margin: 0 calc(var(--card-gap) + var(--card-padding) - 12px) !important;
+    width: calc(var(--cards-width) - ((var(--card-padding) - 12px) * 2));
 
     .content-top + &, .katsune-button-row + .bleh-background + & {
         margin-top: var(--card-gap) !important;
@@ -2803,6 +2797,9 @@ span.header-new-gallery-inner a,
     margin-top: unset !important;
 }
 
+.listening-report-top {
+    margin: 0 calc(-1 * var(--card-gap));
+}
 .library-controls {
     margin: unset !important;
 
@@ -2811,13 +2808,10 @@ span.header-new-gallery-inner a,
     }
 }
 .library-controls .secondary-nav {
-    margin-top: var(--card-gap) !important;
+    margin: var(--card-gap) calc(var(--card-padding) - 12px) 0 !important;
     padding: unset !important;
 
     [data-ff--katsune="true"] & {
-        margin-left: var(--card-padding) !important;
-        margin-right: var(--card-padding) !important;
-
         @media (max-width: 600px) {
             margin-left: unset !important;
             margin-right: unset !important;
@@ -3001,7 +2995,6 @@ input::placeholder {
 }
 .content-top .secondary-nav {
     padding: 0 0 1px 0 !important;
-    width: calc(var(--cards-width) - (var(--card-padding) * 2));
     /* ensure tab highlight is visible */
     overflow-y: unset;
     overflow: visible;
@@ -3092,8 +3085,8 @@ button.navlist-more {
     /* left padding for icon, otherwise just 12px 16px */
     --padding: 12px 12px 12px calc(12px + 18px + 6px) !important;
     --bg: transparent !important;
-    --bg-hov: hsl(var(--b3), 40%) !important;
-    --bg-atv: hsl(var(--b3), 60%) !important;
+    --bg-hov: transparent !important;
+    --bg-atv: transparent !important;
     --shadow: none !important;
     --shadow-hov: none !important;
     --col: hsl(var(--c2)) !important;
@@ -3137,13 +3130,20 @@ button.navlist-more {
         transition-timing-function: var(--trans-function) !important;
     }
 
+    &:hover {
+        &:after {
+            opacity: 0.4;
+            transition: none !important;
+        }
+    }
+
     [data-bleh--gallery-tab="overview"] .secondary-nav-item--gallery-overview  &,
     [data-bleh--gallery-tab="bookmarks"] .secondary-nav-item--gallery-bookmarks &,
     &.secondary-nav-item-link.active,
     &.secondary-nav-item-link--active {
         &:after {
             opacity: 1;
-            transition: none;
+            transition: none !important;
         }
     }
 
