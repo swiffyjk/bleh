@@ -169,11 +169,11 @@ body, [data-page-resource-type="album"], [data-page-resource-type="track"],
 
     /* root */
     --b6: var(--hue), calc(var(--sat) * 7% * var(--sat-bg, 1)), 10%;
-    --b8: var(--hue), calc(var(--sat) * 4% * var(--sat-bg, 1)), 35%;
+    --b8: var(--hue), calc(var(--sat) * 4% * var(--sat-bg, 1)), 25%;
     --b7: 0, 0%, 0%;
 
     --card-border: 1px solid hsla(var(--b4), 0.7);
-    --card-border-base: hsl(var(--b3));
+    --card-border-base: hsl(var(--b3), 0.7);
 
     .preview[data-bleh--theme="darker"], .redesigned-header[data-bleh--theme="darker"],
     [data-bleh--theme="darker"] &:not(.preview) {
@@ -188,7 +188,7 @@ body, [data-page-resource-type="album"], [data-page-resource-type="track"],
 
         /* root */
         --b6: var(--hue), calc(var(--sat) * 8% * var(--sat-bg, 1)), 7%;
-        --b8: var(--hue), calc(var(--sat) * 5% * var(--sat-bg, 1)), 33%;
+        --b8: var(--hue), calc(var(--sat) * 5% * var(--sat-bg, 1)), 19%;
         --b7: 0, 0%, 0%;
     }
     .preview[data-bleh--theme="oled"], .redesigned-header[data-bleh--theme="oled"],
@@ -204,7 +204,7 @@ body, [data-page-resource-type="album"], [data-page-resource-type="track"],
 
         /* root */
         --b6: 0, 0%, 0%;
-        --b8: var(--hue), calc(var(--sat) * 0% * var(--sat-bg, 1)), 24%;
+        --b8: var(--hue), calc(var(--sat) * 2% * var(--sat-bg, 1)), 11%;
         --b7: 0, 0%, 0%;
     }
     .preview[data-bleh--theme="light"], .redesigned-header[data-bleh--theme="light"],
@@ -220,7 +220,7 @@ body, [data-page-resource-type="album"], [data-page-resource-type="track"],
 
         /* root */
         --b6: 0, 0%, 90%;
-        --b8: 0, 0%, 80%;
+        --b8: 0, 0%, 100%;
         --b7: 0, 0%, 0%;
     }
     .preview[data-bleh--theme="ink"], .redesigned-header[data-bleh--theme="ink"],
@@ -236,7 +236,7 @@ body, [data-page-resource-type="album"], [data-page-resource-type="track"],
 
         /* root */
         --b6: var(--hue), calc(var(--sat) * 9% * var(--sat-bg, 1)), 69%;
-        --b8: var(--hue), calc(var(--sat) * 12% * var(--sat-bg, 1)), 88%;
+        --b8: var(--hue), calc(var(--sat) * 12% * var(--sat-bg, 1)), 86%;
         --b7: var(--c1);
     }
 }
@@ -335,6 +335,7 @@ a,
     --h3-sat: calc(clamp(min(0), var(--sat), max(1.5)) * 60%);
     --h3-lit: calc(clamp(min(0.5), var(--lit), max(1.5)) * 70%);
     --h4: var(--l4-c);
+    --f4: var(--hue), calc(clamp(min(0), var(--sat), max(1.5)) * 20%), calc(clamp(min(0.5), var(--lit), max(1.5)) * 22%);
     --g4: var(--hue), calc(clamp(min(0), var(--sat), max(1.5)) * 60%), calc(clamp(min(0.5), var(--lit), max(1.5)) * 15%);
 
     /* l2-c in dark modes, l4-c in light modes */
@@ -369,6 +370,7 @@ a,
         --h3-sat: calc(clamp(min(0), var(--sat), max(1.5)) * 50%);
         --h3-lit: calc(clamp(min(0.5), var(--lit), max(1.5)) * 70%);
         --h4: var(--l4-c);
+        --f4: var(--hue), calc(clamp(min(0), var(--sat), max(1.5)) * 28%), calc(clamp(min(0.5), var(--lit), max(1.5)) * 14%);
         --g4: var(--hue), calc(clamp(min(0), var(--sat), max(1.5)) * 60%), calc(clamp(min(0.5), var(--lit), max(1.5)) * 10%);
 
         --avatar-generic-background: hsl(var(--b6));
@@ -397,6 +399,7 @@ a,
         --h3-sat: calc(clamp(min(0), var(--sat), max(1.5)) * 50%);
         --h3-lit: calc(clamp(min(0.5), var(--lit), max(1.1)) * 80%);
         --h4: var(--hue), calc(clamp(min(0), var(--sat), max(1.5)) * 60%), calc(clamp(min(0.7), var(--lit), max(1.1)) * 65%);
+        --f4: var(--hue), calc(clamp(min(0), var(--sat), max(1.5)) * 25%), calc(clamp(min(0.5), var(--lit), max(1.5)) * 76%);
         --g4: var(--hue), calc(clamp(min(0), var(--sat), max(1.5)) * 70%), 92%;
 
         /* l2-c in dark modes, l4-c in light modes */
@@ -432,6 +435,7 @@ a,
         --h3-sat: calc(clamp(min(0), var(--sat), max(1.5)) * 50%);
         --h3-lit: calc(clamp(min(0.5), var(--lit), max(1.1)) * 80%);
         --h4: var(--hue), calc(clamp(min(0), var(--sat), max(1.5)) * 30%), calc(clamp(min(0.7), var(--lit), max(1.1)) * 55%);
+        --f4: var(--hue), calc(clamp(min(0), var(--sat), max(1.5)) * 7%), calc(clamp(min(0.5), var(--lit), max(1.5)) * 63%);
         --g4: var(--hue), calc(clamp(min(0), var(--sat), max(1.5)) * 25%), 75%;
 
         /* l2-c in dark modes, l4-c in light modes */
@@ -518,13 +522,11 @@ body {
 
 .preview[data-bleh--theme_type="light"],
 [data-bleh--theme_type="light"] body {
-    --card-border: 1px solid hsl(var(--b4));
-    --card-border-base: hsl(var(--b4));
     --card-shadow: hsla(var(--b7), 0.05) 0 2px 4px 0;
     --card-shadow: 0 1.5px 4px 0 hsla(var(--b7), 0.05);
 
     --card-border: 1px solid hsl(var(--b4)) !important;
-    --card-border-base: hsl(var(--b4)) !important;
+    --card-border-base: hsl(var(--c3), 0.18) !important;
 
     --menu-shadow: 2px 2px 24px 0 hsla(var(--b7), 0.15), 3px 6px 48px 16px hsla(var(--b7), 0.03);
     --overlay-shadow: 2px 2px 24px 0 hsla(var(--b7), 0.15), 3px 6px 48px 16px hsla(var(--b7), 0.03);
@@ -3147,11 +3149,6 @@ button.navlist-more {
         }
     }
 
-    [data-bleh--theme_type="light"] & {
-        --bg-hov: hsl(var(--b5), 60%) !important;
-        --bg-atv: hsl(var(--b5), 80%) !important;
-    }
-
     @media (max-width: 600px) {
         &:after {
             bottom: 0 !important;
@@ -3736,8 +3733,8 @@ button.navlist-more {
         padding-left: calc(18px + (8px * 2));
         transition-delay: 0s !important;
 
-        --bg: hsla(var(--h4), 12%);
-        --bg-hov: hsla(var(--h4), 32%);
+        --bg: hsl(var(--f4));
+        --bg-hov: color-mix(in hsl, hsl(var(--f4)), hsl(var(--h4)) 20%);
         background-color: var(--bg) !important;
         border-radius: 50px !important;
         cursor: pointer;
@@ -4981,12 +4978,34 @@ better than the default selector '#app a' i suppose */
     }
 }
 
-.chartlist--wide-artist-column .chartlist-album {
-    order: 1;
-    color: hsl(var(--c3));
+.chartlist--wide-artist-column {
+    .chartlist-artist {
+        position: static !important;
+        display: none !important;
+    }
 
-    /* no hover offset nonsense */
-    margin-right: var(--item-list-gap) !important;
+    .chartlist-album {
+        order: 1;
+        color: hsl(var(--c3));
+
+        /* no hover offset nonsense */
+        margin-right: var(--item-list-gap) !important;
+    }
+}
+.chartlist-artist {
+    display: flex !important;
+    color: hsl(var(--c3)) !important;
+    position: absolute !important;
+
+    a + a {
+        margin-left: 4px;
+    }
+}
+.chartlist-album {
+    /* fix weird hover effect */
+    &:before {
+        display: none !important;
+    }
 }
 
 @keyframes slide_down {
@@ -5493,17 +5512,6 @@ better than the default selector '#app a' i suppose */
                 }
             }
         }
-    }
-}
-
-
-.chartlist-artist {
-    display: flex !important;
-    color: hsl(var(--c3)) !important;
-    position: absolute !important;
-
-    a + a {
-        margin-left: 4px;
     }
 }
 
@@ -8830,13 +8838,9 @@ input:is([name^="track_name"], [name^="artist_name"], [name^="album_name"], [nam
     margin: unset !important;
     background: hsl(var(--b6), 95%) !important;
     border-radius: var(--item-big-radius) !important;
-    box-shadow: var(--override-full-shadow, var(--menu-shadow)) !important;
+    box-shadow: var(--override-full-shadow, var(--overlay-shadow)) !important;
     color: hsl(var(--c2));
     overflow: hidden;
-
-    &.modal-body {
-        background: hsl(var(--b5)) !important;
-    }
 
     &:not(
         .date-range-picker-content,
@@ -8861,6 +8865,7 @@ input:is([name^="track_name"], [name^="artist_name"], [name^="album_name"], [nam
     &.date-range-picker-content,
     &.modal-body {
         background: hsl(var(--b5)) !important;
+        box-shadow: var(--override-full-shadow, var(--menu-shadow)) !important;
     }
 }
 
@@ -10144,7 +10149,7 @@ text[style^="color: rgb(255, 172, 172)"] {
     backdrop-filter: blur(20px) saturate(220%);
     -webkit-backdrop-filter: blur(20px) saturate(220%);
     border-radius: var(--item-big-radius);
-    box-shadow: var(--card-shadow);
+    box-shadow: var(--overlay-shadow);
     padding: 6px 10px;
     font-size: calc(var(--font-size) - 1px);
     font-weight: var(--font-weight);
@@ -10308,9 +10313,7 @@ text[style^="color: rgb(255, 172, 172)"] {
         }
 
         .sep {
-            border-bottom: 1px solid var(--card-border-base);
             margin: 4px 0;
-            height: 0;
 
             &:first-child {
                 display: none;
