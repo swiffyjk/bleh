@@ -2750,6 +2750,22 @@
     },
     support: {
       en: "Support"
+    },
+    accessible_name_colours: {
+      name: {
+        en: "Prefer accessible name colours"
+      },
+      body: {
+        en: "Replaces badge and link-coloured names with your theme's header colour"
+      }
+    },
+    underline_links: {
+      name: {
+        en: "Always underline links"
+      },
+      body: {
+        en: "Forces buttons, links, and other interactables to have an underline"
+      }
     }
   };
   var trans_legacy = {
@@ -14266,11 +14282,6 @@
                                 <div class="mockup-subtext"></div>
                                 <div class="mockup-name"></div>
                             </div>
-                            <div class="mockup-actions">
-                                <div class="mockup-big-button">
-                                    <div class="mockup-text"></div>
-                                </div>
-                            </div>
                         </div>
                         <div class="mockup-container">
                             <div class="mockup-col-main">
@@ -14561,7 +14572,7 @@
         },
         {
           id: "activities",
-          name: trans_legacy.en.settings.activities.toggle.name
+          name: tl(trans.activity_tracking.name)
         }
       ]);
       return `
@@ -14577,9 +14588,11 @@
                             <div class="sub-text">${tl(trans.you)}</div>
                             <div class="header standalone title-container">
                                 <h1>${auth.name}</h1>
-                                ${auth.pro ? `
-                                <span class="label user-status-subscriber">${tl(trans.badges["user-status-subscriber"].name)}</span>
-                                ` : ""}
+                                <div class="badges">
+                                    ${auth.pro ? `
+                                    <span class="label user-status-subscriber">${tl(trans.badges["user-status-subscriber"].name)}</span>
+                                    ` : ""}
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -14820,30 +14833,6 @@
                         </div>
                     </div>
                 </div>
-                <div class="setting" data-type="toggle" id="container-accessible_name_colours" onclick="_update_item('accessible_name_colours')">
-                    <button class="btn reset" onclick="_reset_item('accessible_name_colours')">${tl(trans.reset)}</button>
-                    <div class="heading">
-                        <h5>${trans_legacy.en.settings.accessibility.accessible_name_colours.name}</h5>
-                        <p>${trans_legacy.en.settings.accessibility.accessible_name_colours.bio}</p>
-                    </div>
-                    <div class="toggle-wrap">
-                        <button class="toggle" id="toggle-accessible_name_colours" aria-checked="false">
-                            <div class="dot"></div>
-                        </button>
-                    </div>
-                </div>
-                <div class="setting" data-type="toggle" id="container-underline_links" onclick="_update_item('underline_links')">
-                    <button class="btn reset" onclick="_reset_item('underline_links')">${tl(trans.reset)}</button>
-                    <div class="heading">
-                        <h5>${trans_legacy.en.settings.accessibility.underline_links.name}</h5>
-                        <p>${trans_legacy.en.settings.accessibility.underline_links.bio}</p>
-                    </div>
-                    <div class="toggle-wrap">
-                        <button class="toggle" id="toggle-underline_links" aria-checked="false">
-                            <div class="dot"></div>
-                        </button>
-                    </div>
-                </div>
                 <div class="setting" data-type="toggle" id="container-toggle_icon" onclick="_update_item('toggle_icon')">
                     <button class="btn reset" onclick="_reset_item('toggle_icon')">${tl(trans.reset)}</button>
                     <div class="heading">
@@ -14892,6 +14881,31 @@
                     </div>
                     <div class="toggle-wrap">
                         <button class="toggle" id="toggle-shout_markdown" aria-checked="false">
+                            <div class="dot"></div>
+                        </button>
+                    </div>
+                </div>
+                <div class="sep"></div>
+                <div class="setting" data-type="toggle" id="container-accessible_name_colours" onclick="_update_item('accessible_name_colours')">
+                    <button class="btn reset" onclick="_reset_item('accessible_name_colours')">${tl(trans.reset)}</button>
+                    <div class="heading">
+                        <h5>${tl(trans.accessible_name_colours.name)}</h5>
+                        <p>${tl(trans.accessible_name_colours.body)}</p>
+                    </div>
+                    <div class="toggle-wrap">
+                        <button class="toggle" id="toggle-accessible_name_colours" aria-checked="false">
+                            <div class="dot"></div>
+                        </button>
+                    </div>
+                </div>
+                <div class="setting" data-type="toggle" id="container-underline_links" onclick="_update_item('underline_links')">
+                    <button class="btn reset" onclick="_reset_item('underline_links')">${tl(trans.reset)}</button>
+                    <div class="heading">
+                        <h5>${tl(trans.underline_links.name)}</h5>
+                        <p>${tl(trans.underline_links.body)}</p>
+                    </div>
+                    <div class="toggle-wrap">
+                        <button class="toggle" id="toggle-underline_links" aria-checked="false">
                             <div class="dot"></div>
                         </button>
                     </div>
@@ -16075,7 +16089,7 @@
     });
   }
   function init_profile_page() {
-    let profile_name_obj = document.body.querySelector(".title-container");
+    let profile_name_obj = document.body.querySelector(".title-container .badges");
     if (ff("badges")) {
       let stock_badges = profile_name_obj.querySelectorAll(".label");
       stock_badges.forEach((badge) => {
@@ -18590,8 +18604,8 @@
                 <div class="setting" data-type="toggle" id="container-underline_links" onclick="_update_item('underline_links')">
                     <button class="btn reset" onclick="_reset_item('underline_links')">${tl(trans.reset)}</button>
                     <div class="heading">
-                        <h5>${trans_legacy.en.settings.accessibility.underline_links.name}</h5>
-                        <p>${trans_legacy.en.settings.accessibility.underline_links.bio}</p>
+                        <h5>${tl(trans.underline_links.name)}</h5>
+                        <p>${tl(trans.underline_links.body)}</p>
                     </div>
                     <div class="toggle-wrap">
                         <button class="toggle" id="toggle-underline_links" aria-checked="false">

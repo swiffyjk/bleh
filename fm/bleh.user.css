@@ -222,6 +222,8 @@ body, [data-page-resource-type="album"], [data-page-resource-type="track"],
         --b6: 0, 0%, 90%;
         --b8: 0, 0%, 100%;
         --b7: 0, 0%, 0%;
+
+        --card-border-base: hsl(var(--c3), 0.2) !important;
     }
     .preview[data-bleh--theme="ink"], .redesigned-header[data-bleh--theme="ink"],
     [data-bleh--theme="ink"] &:not(.preview) {
@@ -238,6 +240,8 @@ body, [data-page-resource-type="album"], [data-page-resource-type="track"],
         --b6: var(--hue), calc(var(--sat) * 9% * var(--sat-bg, 1)), 69%;
         --b8: var(--hue), calc(var(--sat) * 12% * var(--sat-bg, 1)), 86%;
         --b7: var(--c1);
+
+        --card-border-base: hsl(var(--c3), 0.2) !important;
     }
 }
 
@@ -399,7 +403,7 @@ a,
         --h3-sat: calc(clamp(min(0), var(--sat), max(1.5)) * 50%);
         --h3-lit: calc(clamp(min(0.5), var(--lit), max(1.1)) * 80%);
         --h4: var(--hue), calc(clamp(min(0), var(--sat), max(1.5)) * 60%), calc(clamp(min(0.7), var(--lit), max(1.1)) * 65%);
-        --f4: var(--hue), calc(clamp(min(0), var(--sat), max(1.5)) * 25%), calc(clamp(min(0.5), var(--lit), max(1.5)) * 76%);
+        --f4: var(--hue), calc(clamp(min(0), var(--sat), max(1.5)) * 25%), calc(clamp(min(0.5), var(--lit), max(1.5)) * 80%);
         --g4: var(--hue), calc(clamp(min(0), var(--sat), max(1.5)) * 70%), 92%;
 
         /* l2-c in dark modes, l4-c in light modes */
@@ -477,6 +481,7 @@ body {
 
     --shout-avatar-size: 48px;
     --shout-inset: 48px;
+    --shout-margin-left: var(--shout-avatar-size) + 8px;
 
     --highlight-shadow: hsla(var(--b3), 0.25) 0 0 2px 1px;
     --menu-shadow: 2px 2px 24px 0 hsla(var(--b7), 0.35), 0 6px 48px 16px hsla(var(--b7), 0.65);
@@ -526,8 +531,6 @@ body {
     --card-shadow: 0 1.5px 4px 0 hsla(var(--b7), 0.05);
 
     --card-border: 1px solid hsl(var(--b4)) !important;
-    --card-border-base: hsl(var(--c3), 0.18) !important;
-
     --menu-shadow: 2px 2px 24px 0 hsla(var(--b7), 0.15), 3px 6px 48px 16px hsla(var(--b7), 0.03);
     --overlay-shadow: 2px 2px 24px 0 hsla(var(--b7), 0.15), 3px 6px 48px 16px hsla(var(--b7), 0.03);
     --menu-shadow: 0 12px 36px 0 hsla(var(--b7), 0.15);
@@ -5896,7 +5899,7 @@ p + .chartlist {
     border-bottom: 1px solid hsl(var(--b4));
     padding-bottom: 6px;
     min-height: unset;
-    margin-left: calc(var(--shout-avatar-size) + 12px) !important;
+    margin-left: calc(var(--shout-margin-left)) !important;
     --show-icon: none;
 }
 .shout-form {
@@ -5969,8 +5972,8 @@ p + .chartlist {
 .shout-list-item > .shout-list:before {
     content: '';
     position: absolute;
-    top: calc(var(--shout-avatar-size) + 18px + 14px);
-    bottom: 0;
+    top: calc(var(--shout-avatar-size));
+    bottom: -15px;
     left: calc(var(--shout-avatar-size) / 2);
     display: block;
     width: 1px;
@@ -6075,8 +6078,8 @@ p + .chartlist {
 [data-ff--shout_popover="true"] .shout {
     border: unset;
     min-height: 52px;
-    padding: 6px;
-    margin: -6px;
+    padding: 6px 8px;
+    margin: -6px -8px;
     border-radius: var(--item-big-radius);
 
     &.shout--deleted {
@@ -6250,7 +6253,7 @@ the body text becomes bigger by default - this reverts that */
 .shout-user-avatar, .shout-user-avatar-link {
     width: var(--shout-avatar-size);
     height: var(--shout-avatar-size);
-    left: calc(-1 * (var(--shout-avatar-size) + 12px)) !important;
+    left: calc(-1 * (var(--shout-margin-left))) !important;
     box-shadow: var(--interact-shadow);
     border-radius: var(--avatar-radius);
     display: flex !important;
@@ -7435,6 +7438,11 @@ span.header-new-gallery-inner a:before,
     --bg-atv: hsla(var(--b4), 80%) !important;
     --shadow: none !important;
     --shadow-hov: none !important;
+
+    .chartlist-row--now-scrobbling > td & {
+        --bg-hov: hsla(var(--h4), 20%) !important;
+        --bg-atv: hsla(var(--h4), 40%) !important;
+    }
 }
 
 
@@ -15131,6 +15139,7 @@ input[type="range"]::-moz-range-progress {
 
     display: flex;
     gap: var(--card-gap);
+    user-select: none;
 
     .btn.reset {
         width: 14px !important;
@@ -15987,7 +15996,7 @@ input[type="range"]::-moz-range-progress {
 }
 .involved--user,
 .mention,
-:is(.shout-body, .about-me-sidebar, .bleh--about-me-preview, .wiki-content, .markdown-body, .user-list-about-me) a[href*="/user/"]:not([href^=https]) {
+:is(.shout-body, .about-me-sidebar, .bleh--about-me-preview, .wiki-content, .markdown-body, .user-list-about-me) a[href*="/user/"]:not([href^=https], [href*="/library/music/"]) {
     padding: 0 4px;
     background-color: color-mix(in hsl, hsl(var(--h4)), hsl(var(--b5)) 65%);
     border-radius: var(--item-small-radius);
@@ -16508,8 +16517,8 @@ trying to list every song ever made by someone identifying as a female, which is
         height: 96px;
 
         &.small {
-            width: 50px;
-            height: 50px;
+            width: 60px;
+            height: 60px;
         }
 
         cursor: pointer;
@@ -16625,11 +16634,16 @@ trying to list every song ever made by someone identifying as a female, which is
             &.title-container {
                 display: flex;
                 align-items: center;
-                gap: 6px;
+                gap: var(--item-list-gap);
                 cursor: default;
 
                 h1 {
                     margin: unset !important;
+                }
+
+                .badges {
+                    display: flex;
+                    gap: var(--item-list-gap);
                 }
             }
         }
@@ -19137,6 +19151,15 @@ h4 {
             img {
                 object-fit: cover;
                 border-radius: unset !important;
+            }
+        }
+
+        .info-side {
+            z-index: 30;
+            pointer-events: none;
+
+            .wiki-block, a {
+                pointer-events: auto;
             }
         }
 

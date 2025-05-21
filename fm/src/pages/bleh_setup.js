@@ -198,8 +198,8 @@ unsafeWindow._setup_accessibility = function() {
                 <div class="setting" data-type="toggle" id="container-underline_links" onclick="_update_item('underline_links')">
                     <button class="btn reset" onclick="_reset_item('underline_links')">${tl(trans.reset)}</button>
                     <div class="heading">
-                        <h5>${trans_legacy.en.settings.accessibility.underline_links.name}</h5>
-                        <p>${trans_legacy.en.settings.accessibility.underline_links.bio}</p>
+                        <h5>${tl(trans.underline_links.name)}</h5>
+                        <p>${tl(trans.underline_links.body)}</p>
                     </div>
                     <div class="toggle-wrap">
                         <button class="toggle" id="toggle-underline_links" aria-checked="false">

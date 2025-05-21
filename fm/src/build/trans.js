@@ -1894,6 +1894,22 @@ export const trans = {
     },
     support: {
         en: 'Support'
+    },
+    accessible_name_colours: {
+        name: {
+            en: 'Prefer accessible name colours'
+        },
+        body: {
+            en: 'Replaces badge and link-coloured names with your theme\'s header colour'
+        }
+    },
+    underline_links: {
+        name: {
+            en: 'Always underline links'
+        },
+        body: {
+            en: 'Forces buttons, links, and other interactables to have an underline'
+        }
     }
 }
 
