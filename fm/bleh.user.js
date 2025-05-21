@@ -18977,7 +18977,7 @@
       time = "night";
     else if (hour >= 7 && hour <= 10)
       time = "morning";
-    else if (hour >= 11 && hour <= 17)
+    else if (hour >= 11 && hour <= 18)
       time = "afternoon";
     else
       time = "evening";
