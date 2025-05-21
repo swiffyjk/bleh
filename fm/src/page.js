@@ -159,9 +159,11 @@ function handle_error(e = null) {
                 <p>It would be helpful if you could report this bug on Github, including the error message above and a screenshot of your browser console (the error is highlighted).</p>
             </div>
             <div class="modal-footer">
+                <div class="fill"></div>
                 <a class="see-more" href="https://github.com/katelyynn/bleh/issues/new/choose" target="_blank">
                     Report bug now
                 </a>
+                <div class="fill"></div>
             </div>
         `),
         type: 'error'

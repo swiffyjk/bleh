@@ -102,9 +102,11 @@ function sponsor(replace=false) {
                 <p>${tl(trans.why_sponsor).replace('katelyn', `<a class="mention" href="${root}user/katesia">@katesia</a>`)}</p>
             </div>
             <div class="modal-footer">
+                <div class="fill"></div>
                 <a class="btn primary sponsor" href="${sponsor_list.sponsor_link}" target="_blank">
                     ${tl(trans.sponsor)}
                 </a>
+                <div class="fill"></div>
             </div>
         `),
         type: 'sponsor',
@@ -146,9 +148,11 @@ function sponsor_manage() {
                     <p>${tl(trans.sponsor_get_badge)}</p>
                 </div>
                 <div class="modal-footer">
+                    <div class="fill"></div>
                     <a class="btn primary sponsor" href="${root}user/${sponsor_list.sponsor_account}" target="_blank">
                         ${tl(trans.manage_sponsor)}
                     </a>
+                    <div class="fill"></div>
                 </div>
             `),
             type: 'sponsor'

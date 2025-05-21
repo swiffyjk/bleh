@@ -517,6 +517,12 @@ export const trans = {
     reset_settings: {
         en: 'Reset settings to default'
     },
+    reset_notice: {
+        en: 'Your settings will be permanently reset, are you sure?'
+    },
+    make_a_backup: {
+        en: 'Make a backup'
+    },
     news: {
         en: 'News',
         de: 'Neuigkeiten'

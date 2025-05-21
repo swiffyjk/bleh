@@ -1373,6 +1373,12 @@
     reset_settings: {
       en: "Reset settings to default"
     },
+    reset_notice: {
+      en: "Your settings will be permanently reset, are you sure?"
+    },
+    make_a_backup: {
+      en: "Make a backup"
+    },
     news: {
       en: "News",
       de: "Neuigkeiten"
@@ -8044,9 +8050,11 @@
                     <img src="${src}">
                 </div>
                 <div class="modal-footer">
+                    <div class="fill"></div>
                     <a class="btn primary open" href="${src}" target="_blank">
                         ${tl(trans.open_new_tab)}
                     </a>
+                    <div class="fill"></div>
                 </div>
             </div>
         `,
@@ -11246,9 +11254,11 @@
                     ${trans_legacy.en.settings.inbuilt.profile.avatar.upload}
                 </div>
                 <div class="modal-footer">
+                    <div class="fill"></div>
                     <button type="submit" class="btn-primary save" onclick="_save_avatar_changer()">
                         ${tl(trans.save)}
                     </button>
+                    <div class="fill"></div>
                     <input type="hidden" value="avatar" name="submit">
                 </div>
             </form>
@@ -11259,7 +11269,9 @@
                     ${trans_legacy.en.settings.inbuilt.profile.avatar.delete}
                 </div>
                 <div class="modal-footer">
+                    <div class="fill"></div>
                     <button class="btn cancel" onclick="_kill_window('edit_avatar')" type="button">${tl(trans.cancel)}</button>
+                    <div class="fill"></div>
                 </div>
             </form>
         </div>
@@ -13692,9 +13704,11 @@
     dialog_legacy("continue_dev", trans_legacy.en.settings.performance.dev.name, `
         ${trans_legacy.en.settings.performance.dev.modals.continue.next_step}
         <div class="modal-footer">
+            <div class="fill"></div>
             <button class="btn primary continue" onclick="_finish_dev()">
                 ${trans_legacy.en.settings.continue}
             </button>
+            <div class="fill"></div>
         </div>
     `);
   }
@@ -13704,9 +13718,11 @@
     dialog_legacy("finish_dev", trans_legacy.en.settings.performance.dev.name, `
         <p class="alert alert-success">${trans_legacy.en.settings.performance.dev.modals.finish.alert}</p>
         <div class="modal-footer">
+            <div class="fill"></div>
             <button class="btn primary done" onclick="_kill_window('finish_dev')">
                 ${trans_legacy.en.settings.done}
             </button>
+            <div class="fill"></div>
         </div>
     `);
   };
@@ -16117,11 +16133,12 @@
     dialog_legacy("edit_profile_note", trans_legacy.en.settings.profiles.notes.edit_user.replace("{u}", username), `
     <textarea id="bleh--profile-note" placeholder="Enter a local note for this user">${profile_notes[username]}</textarea>
     <div class="modal-footer">
+        <button class="see-more cancel" onclick="_kill_window('edit_profile_note')">
+            ${tl(trans.cancel)}
+        </button>
+        <div class="fill"></div>
         <button class="btn primary save" onclick="_save_profile_note_in_window('${username}')">
             ${tl(trans.save)}
-        </button>
-        <button class="btn cancel" onclick="_kill_window('edit_profile_note')">
-            ${tl(trans.cancel)}
         </button>
     </div>
     `, true);
@@ -16224,11 +16241,12 @@
             <br>
             <textarea class="modal-text" id="import_area"></textarea>
             <div class="modal-footer">
+                <button class="see-more cancel" onclick="_dialog_rm({id: 'import_settings'})">
+                    ${tl(trans.cancel)}
+                </button>
+                <div class="fill"></div>
                 <button class="btn primary download" onclick="_confirm_import()">
                     ${tl(trans.import)}
-                </button>
-                <button class="btn cancel" onclick="_dialog_rm({id: 'import_settings'})">
-                    ${tl(trans.cancel)}
                 </button>
             </div>
         `
@@ -16250,6 +16268,7 @@
         body: `
                 <p class="big-modal-alert alert-error">${trans_legacy.en.settings.actions.import.modals.failed.alert}</p>
                 <div class="modal-footer">
+                    <div class="fill"></div>
                     <button class="btn primary done" onclick="_dialog_rm({id: 'import_failed'})">
                         ${tl(trans.done)}
                     </button>
@@ -16265,6 +16284,7 @@
       body: `
             <textarea class="modal-text">${JSON.stringify(settings)}</textarea>
             <div class="modal-footer">
+                <div class="fill"></div>
                 <button class="btn primary done" onclick="_dialog_rm({id: 'export_settings'})">
                     ${tl(trans.done)}
                 </button>
@@ -16280,16 +16300,17 @@
       id: "reset_settings",
       title: tl(trans.reset_settings),
       body: `
-            <p class="big-modal-alert alert-error">${trans_legacy.en.settings.actions.reset.modals.initial.alert}</p>
+            <div class="big-modal-alert alert-error">
+                <strong>${tl(trans.reset_notice)}</strong>
+                <a class="see-more" onclick="_export_settings()">${tl(trans.make_a_backup)}</a>
+            </div>
             <div class="modal-footer">
-                <button class="btn icon danger" data-type="reset" onclick="_confirm_reset()">
-                    ${tl(trans.reset)}
-                </button>
-                <button class="btn upload" onclick="_export_first()">
-                    ${tl(trans.export)}
-                </button>
-                <button class="btn primary cancel" onclick="_dialog_rm({id: 'reset_settings'})">
+                <button class="see-more cancel" onclick="_dialog_rm({id: 'reset_settings'})">
                     ${tl(trans.cancel)}
+                </button>
+                <div class="fill"></div>
+                <button class="btn primary icon" data-type="reset" onclick="_confirm_reset()">
+                    ${tl(trans.reset)}
                 </button>
             </div>
         `
@@ -16302,9 +16323,6 @@
     dialog_rm({
       id: "reset_settings"
     });
-  };
-  unsafeWindow._export_first = function() {
-    export_settings();
   };
   unsafeWindow._save_font = function() {
     let font = document.getElementById("text-font").value;
@@ -19821,9 +19839,11 @@
                 <p>${tl(trans.why_sponsor).replace("katelyn", `<a class="mention" href="${root}user/katesia">@katesia</a>`)}</p>
             </div>
             <div class="modal-footer">
+                <div class="fill"></div>
                 <a class="btn primary sponsor" href="${sponsor_list.sponsor_link}" target="_blank">
                     ${tl(trans.sponsor)}
                 </a>
+                <div class="fill"></div>
             </div>
         `,
       type: "sponsor",
@@ -19864,9 +19884,11 @@
                     <p>${tl(trans.sponsor_get_badge)}</p>
                 </div>
                 <div class="modal-footer">
+                    <div class="fill"></div>
                     <a class="btn primary sponsor" href="${root}user/${sponsor_list.sponsor_account}" target="_blank">
                         ${tl(trans.manage_sponsor)}
                     </a>
+                    <div class="fill"></div>
                 </div>
             `,
         type: "sponsor"
@@ -20353,9 +20375,11 @@
                 <p>It would be helpful if you could report this bug on Github, including the error message above and a screenshot of your browser console (the error is highlighted).</p>
             </div>
             <div class="modal-footer">
+                <div class="fill"></div>
                 <a class="see-more" href="https://github.com/katelyynn/bleh/issues/new/choose" target="_blank">
                     Report bug now
                 </a>
+                <div class="fill"></div>
             </div>
         `,
       type: "error"

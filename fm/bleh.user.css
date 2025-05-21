@@ -8539,7 +8539,7 @@ very, very, very dated - who looks up a song on ebay? */
 }
 
 .modal-text {
-    width: 600px !important;
+    width: 500px !important;
 }
 
 .content-form .checkbox label, .content-form .form-group .form-group-controls--checkbox label, .content-form .form-group .form-group-controls--radio label, .content-form .form-group ul:not(.bulleted-list):not(.redactor-toolbar) li label, .content-form .radio label {
@@ -14986,6 +14986,12 @@ pre {
     .modal-button {
         margin: unset;
     }
+}
+.modal-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
 }
 .modal-body .form-group--submit {
     padding-top: var(--card-gap) !important;

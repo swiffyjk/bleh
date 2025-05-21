@@ -505,9 +505,11 @@ function continue_dev() {
     dialog_legacy('continue_dev',trans_legacy.en.settings.performance.dev.name,`
         ${trans_legacy.en.settings.performance.dev.modals.continue.next_step}
         <div class="modal-footer">
+            <div class="fill"></div>
             <button class="btn primary continue" onclick="_finish_dev()">
                 ${trans_legacy.en.settings.continue}
             </button>
+            <div class="fill"></div>
         </div>
     `);
 }
@@ -518,9 +520,11 @@ unsafeWindow._finish_dev = function() {
     dialog_legacy('finish_dev',trans_legacy.en.settings.performance.dev.name,`
         <p class="alert alert-success">${trans_legacy.en.settings.performance.dev.modals.finish.alert}</p>
         <div class="modal-footer">
+            <div class="fill"></div>
             <button class="btn primary done" onclick="_kill_window('finish_dev')">
                 ${trans_legacy.en.settings.done}
             </button>
+            <div class="fill"></div>
         </div>
     `);
 }

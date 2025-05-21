@@ -167,9 +167,11 @@ export function expand_avatar(src) {
                     <img src="${src}">
                 </div>
                 <div class="modal-footer">
+                    <div class="fill"></div>
                     <a class="btn primary open" href="${src}" target="_blank">
                         ${tl(trans.open_new_tab)}
                     </a>
+                    <div class="fill"></div>
                 </div>
             </div>
         `),

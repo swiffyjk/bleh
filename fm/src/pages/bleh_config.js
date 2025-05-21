@@ -2380,11 +2380,12 @@ unsafeWindow._edit_profile_note = function(username) {
     dialog_legacy('edit_profile_note',trans_legacy.en.settings.profiles.notes.edit_user.replace('{u}', username),`
     <textarea id="bleh--profile-note" placeholder="Enter a local note for this user">${profile_notes[username]}</textarea>
     <div class="modal-footer">
+        <button class="see-more cancel" onclick="_kill_window('edit_profile_note')">
+            ${tl(trans.cancel)}
+        </button>
+        <div class="fill"></div>
         <button class="btn primary save" onclick="_save_profile_note_in_window('${username}')">
             ${tl(trans.save)}
-        </button>
-        <button class="btn cancel" onclick="_kill_window('edit_profile_note')">
-            ${tl(trans.cancel)}
         </button>
     </div>
     `, true);
@@ -2522,11 +2523,12 @@ unsafeWindow._import_settings = function() {
             <br>
             <textarea class="modal-text" id="import_area"></textarea>
             <div class="modal-footer">
+                <button class="see-more cancel" onclick="_dialog_rm({id: 'import_settings'})">
+                    ${tl(trans.cancel)}
+                </button>
+                <div class="fill"></div>
                 <button class="btn primary download" onclick="_confirm_import()">
                     ${tl(trans.import)}
-                </button>
-                <button class="btn cancel" onclick="_dialog_rm({id: 'import_settings'})">
-                    ${tl(trans.cancel)}
                 </button>
             </div>
         `)
@@ -2555,6 +2557,7 @@ unsafeWindow._confirm_import = function() {
             body: (`
                 <p class="big-modal-alert alert-error">${trans_legacy.en.settings.actions.import.modals.failed.alert}</p>
                 <div class="modal-footer">
+                    <div class="fill"></div>
                     <button class="btn primary done" onclick="_dialog_rm({id: 'import_failed'})">
                         ${tl(trans.done)}
                     </button>
@@ -2573,6 +2576,7 @@ function export_settings() {
         body: (`
             <textarea class="modal-text">${JSON.stringify(settings)}</textarea>
             <div class="modal-footer">
+                <div class="fill"></div>
                 <button class="btn primary done" onclick="_dialog_rm({id: 'export_settings'})">
                     ${tl(trans.done)}
                 </button>
@@ -2591,16 +2595,17 @@ unsafeWindow._reset_settings = function() {
         id: 'reset_settings',
         title: tl(trans.reset_settings),
         body: (`
-            <p class="big-modal-alert alert-error">${trans_legacy.en.settings.actions.reset.modals.initial.alert}</p>
+            <div class="big-modal-alert alert-error">
+                <strong>${tl(trans.reset_notice)}</strong>
+                <a class="see-more" onclick="_export_settings()">${tl(trans.make_a_backup)}</a>
+            </div>
             <div class="modal-footer">
-                <button class="btn icon danger" data-type="reset" onclick="_confirm_reset()">
-                    ${tl(trans.reset)}
-                </button>
-                <button class="btn upload" onclick="_export_first()">
-                    ${tl(trans.export)}
-                </button>
-                <button class="btn primary cancel" onclick="_dialog_rm({id: 'reset_settings'})">
+                <button class="see-more cancel" onclick="_dialog_rm({id: 'reset_settings'})">
                     ${tl(trans.cancel)}
+                </button>
+                <div class="fill"></div>
+                <button class="btn primary icon" data-type="reset" onclick="_confirm_reset()">
+                    ${tl(trans.reset)}
                 </button>
             </div>
         `)
@@ -2615,10 +2620,6 @@ unsafeWindow._confirm_reset = function() {
     dialog_rm({
         id: 'reset_settings'
     });
-}
-
-unsafeWindow._export_first = function() {
-    export_settings();
 }
 
 unsafeWindow._save_font = function() {

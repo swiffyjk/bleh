@@ -592,9 +592,11 @@ function open_avatar_changer(token) {
                     ${trans_legacy.en.settings.inbuilt.profile.avatar.upload}
                 </div>
                 <div class="modal-footer">
+                    <div class="fill"></div>
                     <button type="submit" class="btn-primary save" onclick="_save_avatar_changer()">
                         ${tl(trans.save)}
                     </button>
+                    <div class="fill"></div>
                     <input type="hidden" value="avatar" name="submit">
                 </div>
             </form>
@@ -605,7 +607,9 @@ function open_avatar_changer(token) {
                     ${trans_legacy.en.settings.inbuilt.profile.avatar.delete}
                 </div>
                 <div class="modal-footer">
+                    <div class="fill"></div>
                     <button class="btn cancel" onclick="_kill_window('edit_avatar')" type="button">${tl(trans.cancel)}</button>
+                    <div class="fill"></div>
                 </div>
             </form>
         </div>
