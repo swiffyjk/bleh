@@ -901,24 +901,6 @@ export function render_setting_page(page_id) {
                         </button>
                     </div>
                 </div>
-                <div class="inner-preview pad flex">
-                    <div class="shout js-shout js-link-block" data-kate-processed="true">
-                        <h3 class="shout-user">
-                            <a>${auth.name}</a>
-                        </h3>
-                        <span class="avatar shout-user-avatar">
-                            <img src="${auth.avatar.replace('/avatar42s/', '/avatar170s/')}" alt="${tl(trans.your_avatar)}" loading="lazy">
-                        </span>
-                        <a class="shout-permalink shout-timestamp">
-                            <time datetime="2024-06-05T02:33:39+01:00" title="Wednesday 5 Jun 2024, 2:33am">
-                                5 Jun 2:33am
-                            </time>
-                        </a>
-                        <div class="shout-body">
-                            <p>${trans_legacy.en.settings.accessibility.shout_preview}</p>
-                        </div>
-                    </div>
-                </div>
                 <div class="setting" data-type="toggle" id="container-toggle_icon" onclick="_update_item('toggle_icon')">
                     <button class="btn reset" onclick="_reset_item('toggle_icon')">${tl(trans.reset)}</button>
                     <div class="heading">

@@ -292,9 +292,11 @@ export function bleh_wiki_editor() {
 
     // rules
     let rules = page.structure.main.querySelector('.wiki-style-rules');
+    rules.removeAttribute('id');
 
     let rules_panel = document.createElement('section');
     rules_panel.classList.add('rules-panel');
+    rules_panel.setAttribute('id', 'stylerules');
     rules_panel.innerHTML = rules.innerHTML;
 
     page.structure.side.appendChild(rules_panel);

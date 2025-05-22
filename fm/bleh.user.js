@@ -2322,9 +2322,17 @@
         de: "Sehe ihre Scrobbels jederzeit neben deine an"
       },
       linked: {
-        en: "Profile shortcut linked!",
-        de: "Profile verkn\xFCpft!"
+        en: "Linked with {u}"
+      },
+      notice: {
+        en: "You already have {u} as your shortcut, are you sure?"
       }
+    },
+    failed_to_find_profile: {
+      en: "Failed to find profile"
+    },
+    replace: {
+      en: "Replace"
     },
     avatar_radius: {
       en: "Profile avatar shape",
@@ -8536,24 +8544,28 @@
 
   // src/components/profile_shortcut.js
   unsafeWindow._open_profile_shortcut_window = function() {
-    dialog_legacy("profile_shortcut", trans_legacy.en.settings.music.profile_shortcut.name, `
+    open_profile_shortcut_window();
+  };
+  function open_profile_shortcut_window() {
+    let modal = dialog({
+      id: "profile_shortcut",
+      title: tl(trans.profile_shortcut.name),
+      body: `
         <div class="setting" data-type="text" id="container-profile_shortcut">
-            <button class="btn reset" onclick="_reset_item('profile_shortcut')">${tl(trans.reset)}</button>
             <div class="avatar-container">
                 <div class="avatar-inner" id="avatar-profile_shortcut">
                     <img id="avatar_src-profile_shortcut" src="${localStorage.getItem("bleh_profile_shortcut_avi") || ""}">
                 </div>
             </div>
-            <div class="heading content-form">
-                <h5>${trans_legacy.en.settings.music.profile_shortcut.placeholder}</h5>
-                <div class="input-container">
-                    <input type="text" maxlength="40" id="text-profile_shortcut" value="${settings.profile_shortcut}" placeholder="${tl(trans.enter_username)}">
-                    <button class="bleh--btn primary save" onclick="_save_profile_shortcut()">${tl(trans.save)}</button>
-                </div>
+            <div class="input-container content-form">
+                <input type="text" maxlength="40" id="text-profile_shortcut" value="${settings.profile_shortcut}" placeholder="${tl(trans.enter_username)}">
+                <button class="btn chibi icon primary submit" onclick="_save_profile_shortcut()">${tl(trans.save)}</button>
             </div>
         </div>
-    `, true);
-  };
+        `
+    });
+    modal.querySelector("#text-profile_shortcut").focus();
+  }
   unsafeWindow._other_listener = function(id) {
     other_listener(id);
   };
@@ -8584,17 +8596,47 @@
     });
     window.location.href = `${root}user/${name}/library/music/${link}`;
   };
-  unsafeWindow._set_profile_as_shortcut = function(button, profile_name) {
+  unsafeWindow._set_profile_as_shortcut = function(button) {
+    page.state.profile_shortcut_button = button;
+    dialog({
+      id: "profile_shortcut",
+      title: tl(trans.profile_shortcut.name),
+      body: `
+        <div class="big-modal-alert alert-danger">
+            ${tl(trans.profile_shortcut.notice).replace("{u}", `<a class="mention" href="${root}user/${settings.profile_shortcut}" target="_blank">@${settings.profile_shortcut}</a>`)}
+        </div>
+        <div class="modal-footer">
+            <button class="see-more cancel" onclick="_dialog_rm({id:'profile_shortcut'})">
+                ${tl(trans.back)}
+            </button>
+            <div class="fill"></div>
+            <button class="btn primary save" onclick="_confirm_set_profile_as_shortcut()">
+                ${tl(trans.replace)}
+            </button>
+        </div>
+        `
+    });
+  };
+  unsafeWindow._confirm_set_profile_as_shortcut = function() {
+    confirm_set_profile_as_shortcut();
+  };
+  function confirm_set_profile_as_shortcut() {
+    dialog_rm({
+      id: "profile_shortcut"
+    });
     let avatar_src = document.body.querySelector(".header-avatar-inner-wrap img").getAttribute("src");
     localStorage.setItem("bleh_profile_shortcut_avi", avatar_src);
-    deliver_notif(trans_legacy.en.settings.music.profile_shortcut.saved);
-    button.setAttribute("data-is-shortcut", "true");
-    button.removeAttribute("onclick");
-    if (button.classList.contains("icon"))
-      button.textContent = trans_legacy.en.profile.shortcut.remove;
-    settings.profile_shortcut = profile_name;
+    notify({
+      id: "profile_shortcut_saved",
+      title: tl(trans.profile_shortcut.name),
+      body: tl(trans.profile_shortcut.linked).replace("{u}", page.name),
+      icon: "icon-16-profile-shortcut"
+    });
+    page.state.profile_shortcut_button.setAttribute("data-is-shortcut", "true");
+    page.state.profile_shortcut_button.removeAttribute("onclick");
+    settings.profile_shortcut = page.name;
     localStorage.setItem("bleh", JSON.stringify(settings));
-  };
+  }
   unsafeWindow._save_profile_shortcut = function() {
     let profile_name = document.getElementById("text-profile_shortcut").value;
     let profile_img = document.getElementById("avatar-profile_shortcut");
@@ -8619,8 +8661,8 @@
         document.getElementById("avatar_src-profile_shortcut").setAttribute("src", avatar_src);
         notify({
           id: "profile_shortcut_saved",
-          title: trans_legacy.en.settings.music.profile_shortcut.name,
-          body: trans_legacy.en.settings.music.profile_shortcut.saved,
+          title: tl(trans.profile_shortcut.name),
+          body: tl(trans.profile_shortcut.linked).replace("{u}", profile_name),
           icon: "icon-16-profile-shortcut"
         });
         settings.profile_shortcut = profile_name;
@@ -8628,8 +8670,8 @@
       } catch (e) {
         notify({
           id: "profile_shortcut_saved",
-          title: trans_legacy.en.settings.music.profile_shortcut.name,
-          body: trans_legacy.en.settings.music.profile_shortcut.failed,
+          title: tl(trans.profile_shortcut.name),
+          body: tl(trans.failed_to_find_profile),
           type: "error"
         });
         localStorage.removeItem("bleh_profile_shortcut_avi");
@@ -10553,26 +10595,10 @@
       } else {
         listen_item.setAttribute("data-is-shortcut", "false");
       }
-      let menu = tippy(listen_item, {
-        theme: "context-menu",
-        content: `
-                <button class="dropdown-menu-clickable-item" onclick="_open_profile_shortcut_window()" data-menu-item="settings">
-                    ${tl(trans.settings)}
-                </button>
-            `,
-        allowHTML: true,
-        placement: "right-start",
-        trigger: "manual",
-        interactive: true,
-        interactiveBorder: 10,
-        offset: [0, 0],
-        onShow(instance) {
-          instance.popper.addEventListener("click", (event2) => {
-            instance.hide();
-          });
-        }
+      listen_item.addEventListener("contextmenu", (e) => {
+        e.preventDefault();
+        open_profile_shortcut_window();
       });
-      register_menu(listen_item, menu);
       return;
     }
     if (katsune && !mini)
@@ -14829,24 +14855,6 @@
                         </button>
                     </div>
                 </div>
-                <div class="inner-preview pad flex">
-                    <div class="shout js-shout js-link-block" data-kate-processed="true">
-                        <h3 class="shout-user">
-                            <a>${auth.name}</a>
-                        </h3>
-                        <span class="avatar shout-user-avatar">
-                            <img src="${auth.avatar.replace("/avatar42s/", "/avatar170s/")}" alt="${tl(trans.your_avatar)}" loading="lazy">
-                        </span>
-                        <a class="shout-permalink shout-timestamp">
-                            <time datetime="2024-06-05T02:33:39+01:00" title="Wednesday 5 Jun 2024, 2:33am">
-                                5 Jun 2:33am
-                            </time>
-                        </a>
-                        <div class="shout-body">
-                            <p>${trans_legacy.en.settings.accessibility.shout_preview}</p>
-                        </div>
-                    </div>
-                </div>
                 <div class="setting" data-type="toggle" id="container-toggle_icon" onclick="_update_item('toggle_icon')">
                     <button class="btn reset" onclick="_reset_item('toggle_icon')">${tl(trans.reset)}</button>
                     <div class="heading">
@@ -17191,8 +17199,7 @@
   // src/navigation.js
   function patch_masthead(element) {
     let masthead_logo = element.querySelector(".masthead-logo");
-    if (!masthead_logo)
-      return;
+    if (!masthead_logo) return;
     if (!masthead_logo.hasAttribute("data-kate-processed")) {
       masthead_logo.setAttribute("data-kate-processed", "true");
       let link = document.createElement("a");
@@ -17213,6 +17220,18 @@
       page_indicator2.classList.add("page-indicator");
       document.documentElement.appendChild(page_indicator2);
       page.structure.indicator = page_indicator2;
+    }
+    if (!page.structure.loader) {
+      let loader = document.createElement("div");
+      loader.classList.add("loader");
+      loader.innerHTML = `
+            <div class="loader-bar">
+                <div class="loader-bar-fill"></div>
+            </div>
+            <div class="bleh-icon"></div>
+        `;
+      document.body.appendChild(loader);
+      page.structure.loader = loader;
     }
     let masthead = document.body.querySelector(".masthead");
     let new_auth = masthead.querySelector(".auth-dropdown-menu");
@@ -17736,8 +17755,10 @@
     page.structure.side.appendChild(wiki_presets_panel);
     page.structure.side.appendChild(wiki_syntax);
     let rules = page.structure.main.querySelector(".wiki-style-rules");
+    rules.removeAttribute("id");
     let rules_panel = document.createElement("section");
     rules_panel.classList.add("rules-panel");
+    rules_panel.setAttribute("id", "stylerules");
     rules_panel.innerHTML = rules.innerHTML;
     page.structure.side.appendChild(rules_panel);
   }
@@ -18030,40 +18051,9 @@
         let similar_panel = similar_albums.parentElement;
         similar_panel.classList.add("similar-panel");
       }
-      let button_row = page.structure.side.querySelector(".album-overview-cover-art-action-row");
-      if (button_row) {
-        let buttons = button_row.querySelectorAll("a");
-        buttons.forEach((button) => {
-          button.classList.add("btn");
-          tippy(button, {
-            content: button.textContent
-          });
-        });
-      }
-      let upload_container = page.structure.side.querySelector(".album-overview-cover-art-upload-action");
-      let avatar = album_header.querySelector(".header-new-background-image");
-      let katsune = ff("katsune");
-      if (avatar && !katsune) {
-        let expand_container = document.createElement("span");
-        expand_container.classList.add("album-overview-cover-art-expand-action");
-        let expand_link = document.createElement("a");
-        expand_link.classList.add("btn");
-        expand_link.setAttribute("onclick", `_expand_avatar('${avatar.getAttribute("content")}')`);
-        expand_link.textContent = tl(trans.expand);
-        tippy(expand_link, {
-          content: tl(trans.expand)
-        });
-        expand_container.appendChild(expand_link);
-        upload_container.after(expand_container);
-      }
-      if (katsune) {
-        let row = page.structure.side.querySelector(".album-overview-cover-art-actions");
-        if (row)
-          page.structure.container.querySelector(".avatar-side").appendChild(row);
-      }
     } else {
       let btn_add = page.structure.side.querySelector(".add-button");
-      if (btn_add != null)
+      if (btn_add)
         btn_add.setAttribute("data-page-subpage", page.subpage);
       if (page.subpage == "images_image-upload")
         bleh_gallery_upload();
@@ -18081,11 +18071,9 @@
   }
   function album_missing_a_tracklist() {
     let tracklist = document.getElementById("tracklist");
-    if (tracklist == null) {
+    if (!tracklist) {
       let top_overview = document.querySelector(".top-overview-panel");
-      if (top_overview == null) {
-        return;
-      }
+      if (!top_overview) return;
       tracklist = document.createElement("section");
       tracklist.innerHTML = `
             <h3 class="text-18">${tl(trans.tracklist)}</h3>

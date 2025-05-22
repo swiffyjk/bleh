@@ -8,6 +8,7 @@ import { ff } from "../sku";
 import { compare } from './compare';
 import { correct_artist } from "./lotus";
 import { register_menu } from "./menu";
+import { open_profile_shortcut_window } from './profile_shortcut';
 
 unsafeWindow._toggle_profile_header = function(button) {
     let current = settings.profile_header_expand;
@@ -355,28 +356,11 @@ export function create_profile_top_item(parent, {name, link, text='', type, tast
             listen_item.setAttribute('data-is-shortcut', 'false');
         }
 
-        let menu = tippy(listen_item, {
-            theme: 'context-menu',
-            content: (`
-                <button class="dropdown-menu-clickable-item" onclick="_open_profile_shortcut_window()" data-menu-item="settings">
-                    ${tl(trans.settings)}
-                </button>
-            `),
-            allowHTML: true,
-            placement: 'right-start',
-            trigger: 'manual',
-            interactive: true,
-            interactiveBorder: 10,
-            offset: [0, 0],
+        listen_item.addEventListener('contextmenu', (e) => {
+            e.preventDefault();
 
-            onShow(instance) {
-                instance.popper.addEventListener('click', event => {
-                    instance.hide();
-                });
-            }
+            open_profile_shortcut_window();
         });
-
-        register_menu(listen_item, menu);
 
         return;
     }

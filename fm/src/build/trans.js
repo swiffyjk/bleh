@@ -1466,9 +1466,17 @@ export const trans = {
             de: 'Sehe ihre Scrobbels jederzeit neben deine an'
         },
         linked: {
-            en: 'Profile shortcut linked!',
-            de: 'Profile verknüpft!'
+            en: 'Linked with {u}'
+        },
+        notice: {
+            en: 'You already have {u} as your shortcut, are you sure?'
         }
+    },
+    failed_to_find_profile: {
+        en: 'Failed to find profile'
+    },
+    replace: {
+        en: 'Replace'
     },
     avatar_radius: {
         en: 'Profile avatar shape',

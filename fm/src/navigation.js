@@ -9,9 +9,7 @@ import { ff } from "./sku";
 
 export function patch_masthead(element) {
     let masthead_logo = element.querySelector('.masthead-logo');
-
-    if (!masthead_logo)
-        return;
+    if (!masthead_logo) return;
 
     if (!masthead_logo.hasAttribute('data-kate-processed')) {
         masthead_logo.setAttribute('data-kate-processed','true');
@@ -38,6 +36,19 @@ export function append_nav() {
         document.documentElement.appendChild(page_indicator);
 
         page.structure.indicator = page_indicator;
+    }
+
+    if (!page.structure.loader) {
+        let loader = document.createElement('div');
+        loader.classList.add('loader');
+        loader.innerHTML = (`
+            <div class="loader-bar">
+                <div class="loader-bar-fill"></div>
+            </div>
+            <div class="bleh-icon"></div>
+        `);
+        document.body.appendChild(loader);
+        page.structure.loader = loader;
     }
 
     // 2025-04-14
