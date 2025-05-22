@@ -8104,7 +8104,7 @@ very, very, very dated - who looks up a song on ebay? */
     display: block !important; /* labs */
     --mask: var(--icon-16-profile);
     text-align: center;
-    --btn-top: calc(12px + 16px + 6px);
+    --btn-top: calc(12px + 18px + 6px);
     --btn-bottom: 12px;
     --left: 50%;
     --margin-left: -8px;
@@ -10974,7 +10974,7 @@ text[style^="color: rgb(0, 0, 0)"] {
 }
 
 .nag-bar-message {
-    padding-left: calc(16px + 6px) !important;
+    padding-left: calc(18px + 6px) !important;
     font-size: var(--font-size);
     line-height: var(--line-height);
     color: hsl(var(--c3));
@@ -12145,7 +12145,7 @@ table.table tr:nth-child(2n) td {
         margin-top: unset;
         margin-bottom: var(--card-gap);
         position: relative;
-        padding-left: calc(16px + 6px);
+        padding-left: calc(18px + 6px);
         font-size: 16px;
         line-height: 20px;
         font-weight: var(--font-weight-bold);
@@ -12342,7 +12342,7 @@ table.table tr:nth-child(2n) td {
 }
 
 .wiki-history-action {
-    padding-left: calc(16px + 6px) !important;
+    padding-left: calc(18px + 6px) !important;
 }
 
 .wiki-history-revision-number {
@@ -12889,7 +12889,7 @@ table.table tr:nth-child(2n) td {
 
 .event-metadata:not(:last-child),
 .event-detail {
-    padding-left: calc(16px + 6px);
+    padding-left: calc(18px + 6px);
     position: relative;
     font-size: var(--font-size);
     line-height: var(--line-height);
@@ -13692,7 +13692,7 @@ hr {
 }
 
 .artist-similar-sidebar > h3 {
-    padding-right: calc(16px + 6px);
+    padding-right: calc(18px + 6px);
     position: relative;
     width: fit-content;
     --left: none;
@@ -16853,7 +16853,7 @@ button.bleh--gallery-bookmark-image-btn {
     }
 
     .nag-bar-message {
-        padding-left: calc(16px + 6px);
+        padding-left: calc(18px + 6px);
         padding-right: unset;
         --left: 0;
         --mask: var(--icon-16-warning);
@@ -17977,7 +17977,7 @@ h4 {
     .lastfm-bulk-edit-progress {
         font-weight: var(--font-weight-medium);
         color: hsl(var(--c3));
-        padding-left: calc(16px + 6px);
+        padding-left: calc(18px + 6px);
         position: relative;
         --left: 0;
         --mask: var(--icon-16-spinner);
@@ -20611,8 +20611,8 @@ h4 {
     .weeklychart-listeners,
     .weeklychart-scrobblers {
         position: relative;
-        min-width: calc(90px + 16px + 6px);
-        padding-right: calc(16px + 6px) !important;
+        min-width: calc(90px + 18px + 6px);
+        padding-right: calc(18px + 6px) !important;
         text-align: right;
 
         --left: none;
@@ -20620,7 +20620,7 @@ h4 {
     }
 
     .weeklychart-change {
-        min-width: 16px;
+        min-width: 18px;
         --left: 0;
         color: hsl(var(--c3));
         position: relative;
