@@ -3235,6 +3235,12 @@ button.navlist-more {
             bottom: 0 !important;
         }
     }
+
+    @media (max-width: 600px) {
+        &:after {
+            bottom: 0 !important;
+        }
+    }
 }
 .navlist-more {
     --font-size: 0;
@@ -22545,6 +22551,10 @@ h4 {
     &.shout-more-replies-after, &.shout-more-replies-before {
         margin-top: var(--card-gap) !important;
         margin-left: var(--shout-inset) !important;
+    }
+
+    &.more-items {
+        margin-top: var(--card-gap) !important;
     }
 
     &:hover {
