@@ -6913,7 +6913,7 @@ button,
         .primary,
         .btn-subscribe,
         .view-item[aria-checked="true"]
-    ) {
+    ):not([data-has-file]) {
         --bg: var(--cards-overlay-image-subtlest, none), hsl(var(--h3)) !important;
         --bg-hov: var(--cards-overlay-image-subtlest, none), color-mix(in hsl, hsl(var(--h4)), hsl(var(--h3)) 80%) !important;
         --bg-atv: var(--cards-overlay-image-subtlest, none), color-mix(in hsl, hsl(var(--h4)), hsl(var(--h3)) 60%) !important;
@@ -9019,7 +9019,7 @@ input:is([name^="track_name"], [name^="artist_name"], [name^="album_name"], [nam
     width: 320px;
 }
 
-.modal-body .modal-title {
+.modal-body > .modal-title {
     padding-bottom: unset;
     font-size: 16px;
     line-height: 20px;
@@ -9030,6 +9030,10 @@ input:is([name^="track_name"], [name^="artist_name"], [name^="album_name"], [nam
 
     & + .modal-inner-content {
         margin: unset;
+    }
+
+    img {
+        padding-bottom: var(--card-gap);
     }
 }
 
@@ -14982,6 +14986,18 @@ pre {
 }
 
 
+.modal-body .modal-buttons {
+    align-items: center;
+
+    .modal-button {
+        flex: 1;
+
+        &:has(.js-close) {
+            display: flex;
+            justify-content: start;
+        }
+    }
+}
 .modal-body .modal-buttons,
 .modal-footer {
     display: flex;
@@ -22365,7 +22381,7 @@ h4 {
 .pagination-next a, .pagination-previous a,
 .more-link-fullwidth a,
 .music-more-link a,
-.modal-body .js-close,
+.modal-body .btn-cancel.js-close,
 .masthead-popup-text .btn-primary,
 .obsession-delete-button,
 .featured-item-manage,
@@ -22402,7 +22418,7 @@ h4 {
     transition-timing-function: var(--trans-function);
 
     &:is(.pagination-previous a),
-    &.btn-secondary.js-close,
+    &.js-close,
     &.cancel,
     &.sponsor,
     &.update-check,
@@ -22426,8 +22442,8 @@ h4 {
     &.sponsor {
         --mask: var(--icon-16-heart);
     }
+    &.js-close,
     &:is(.pagination-previous a),
-    &.btn-secondary.js-close,
     &.cancel {
         --mask: var(--icon-16-arrow-left);
     }
@@ -23019,6 +23035,94 @@ h4 {
     }
     to {
         background-position: -100% 0%;
+    }
+}
+
+
+[data-modal-id="edit_avatar"] {
+    .forms {
+        display: flex;
+        gap: var(--card-gap);
+    }
+
+    #avatar_saver {
+        display: none;
+    }
+
+    .upload-avatar {
+        .form-group-controls {
+            position: relative;
+
+            img {
+                width: 130px;
+                height: 130px;
+                position: absolute;
+                inset: 0;
+                border-radius: var(--item-big-radius);
+                object-fit: cover;
+                object-position: top;
+
+                &:not([src]) {
+                    opacity: 0;
+                }
+            }
+
+            & > .btn-file {
+                --mask-size: 24px;
+                --btn-left: 12px !important;
+                width: 130px;
+                height: 130px;
+
+                display: flex;
+                justify-content: center;
+                align-items: end;
+
+                --left: 50%;
+                --margin-left: -12px;
+                --margin-top: calc(-12px - 7px);
+
+                &[data-has-file] {
+                    --bg: transparent !important;
+                    --bg-hov: hsl(var(--b5), 10%) !important;
+                    --bg-atv: hsl(var(--b5), 20%) !important;
+                    --col: #000;
+
+                    text-shadow: 0 0 8px #fff;
+                    --col: transparent;
+
+                    &:before {
+                        opacity: 0;
+                    }
+                }
+
+                .btn-file {
+                    position: absolute;
+                    inset: 0;
+                    opacity: 0 !important;
+                }
+                .btn-file-label {
+                    display: none;
+                }
+            }
+        }
+    }
+
+    .delete-avatar {
+        .image-upload-remove {
+            --mask: var(--icon-16-x);
+            --mask-size: 24px;
+            --btn-left: 12px !important;
+            width: 130px;
+            height: 130px;
+
+            display: flex;
+            justify-content: center;
+            align-items: end;
+
+            --left: 50%;
+            --margin-left: -12px;
+            --margin-top: calc(-12px - 7px);
+        }
     }
 }
 }

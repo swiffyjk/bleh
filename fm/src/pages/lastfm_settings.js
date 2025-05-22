@@ -1,7 +1,7 @@
-import { auth, auth_link, page, root } from "../build/page";
-import { lang, trans_legacy, trans, tl } from "../build/trans";
+import { auth, page, root } from "../build/page";
+import { trans_legacy, trans, tl } from "../build/trans";
 import { bleh_auto_edits } from "../components/auto_edit";
-import { dialog_legacy, kill_window } from "../components/dialog";
+import { dialog } from "../components/dialog";
 import { custom_select, update_inbuilt_select } from "../components/select";
 import { update_inbuilt_item } from "../config";
 import { ff } from "../sku";
@@ -538,11 +538,6 @@ function patch_settings_profile_panel(token, update_picture) {
 
     // subtitle
     update_display_name(form_display_name);
-
-    // preview
-    tippy(document.getElementById('btn--toggle-about-me-preview'), {
-        content: trans_legacy.en.settings.inbuilt.profile.toggle_preview.bio
-    });
 }
 
 unsafeWindow._update_display_name = function(value) {
@@ -578,54 +573,68 @@ unsafeWindow._open_avatar_changer = function(token) {
     open_avatar_changer(token);
 }
 function open_avatar_changer(token) {
-    dialog_legacy('edit_avatar',trans_legacy.en.settings.inbuilt.profile.avatar.name,`
-        <div class="bleh--upload-avatar-container">
-            <form class="avatar-upload-form bleh--upload-avatar-form" action="${root}settings" name="avatar-form" method="post" enctype="multipart/form-data">
-                <input type="hidden" name="csrfmiddlewaretoken" value="${token}">
-                <div class="form-group form-group--avatar js-form-group">
-                    <div class="js-form-group-controls form-group-controls">
-                        <span class="btn-secondary btn primary btn-file" data-kate-processed="true">
-                        Choose file
-                            <input type="file" name="avatar" data-require="components/file-input" data-file-input-copy="Choose file" data-no-file-copy="No file chosen" accept="image/*" required="" id="id_avatar" data-kate-processed="true">
-                        </span>
+    page.state.avatar_changer = dialog({
+        id: 'edit_avatar',
+        title: tl(trans.change_avatar),
+        body: (`
+            <div class="forms">
+                <form action="${root}settings" name="avatar-form" method="post" enctype="multipart/form-data">
+                    <input type="hidden" name="csrfmiddlewaretoken" value="${token}">
+                    <div class="form-group form-group--avatar js-form-group upload-avatar">
+                        <div class="js-form-group-controls form-group-controls">
+                            <img class="preview">
+                            <span class="btn-secondary btn primary btn-file" data-kate-processed="true">
+                                ${tl(trans.upload)}
+                                <input type="file" onchange="_update_avatar_preview(event)" name="avatar" data-require="components/file-input" data-file-input-copy="${tl(trans.upload)}" data-no-file-copy="No file chosen" accept="image/*" required="" id="id_avatar" data-kate-processed="true">
+                            </span>
+                        </div>
                     </div>
-                    ${trans_legacy.en.settings.inbuilt.profile.avatar.upload}
-                </div>
-                <div class="modal-footer">
-                    <div class="fill"></div>
-                    <button type="submit" class="btn-primary save" onclick="_save_avatar_changer()">
+                    <button type="submit" class="btn-primary save" id="avatar_saver">
                         ${tl(trans.save)}
                     </button>
-                    <div class="fill"></div>
                     <input type="hidden" value="avatar" name="submit">
-                </div>
-            </form>
-            <form class="image-remove-form bleh--upload-avatar-form" action="${root}settings/avatar/delete" method="post">
-                <input type="hidden" name="csrfmiddlewaretoken" value="${token}">
-                <div class="form-group">
-                    <button class="mimic-link image-upload-remove" type="submit" value="delete-avatar" name="delete-avatar">Delete picture</button>
-                    ${trans_legacy.en.settings.inbuilt.profile.avatar.delete}
-                </div>
-                <div class="modal-footer">
-                    <div class="fill"></div>
-                    <button class="btn cancel" onclick="_kill_window('edit_avatar')" type="button">${tl(trans.cancel)}</button>
-                    <div class="fill"></div>
-                </div>
-            </form>
-        </div>
-        `, true, 'upload-avatar');
+                </form>
+                <form action="${root}settings/avatar/delete" method="post">
+                    <input type="hidden" name="csrfmiddlewaretoken" value="${token}">
+                    <div class="form-group delete-avatar">
+                        <button class="mimic-link image-upload-remove" type="submit" value="delete-avatar" name="delete-avatar">${tl(trans.delete)}</button>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="see-more cancel" onclick="_dialog_rm({id:'edit_avatar'})">${tl(trans.cancel)}</button>
+                <div class="fill"></div>
+                <button class="btn primary save" onclick="_save_avatar()" disabled>${tl(trans.save)}</button>
+            </div>
+        `)
+    });
+
+    page.state.avatar_changer.querySelector('[name="avatar-form"]').onsubmit = finish_saving_avatar;
+    page.state.avatar_changer_image = page.state.avatar_changer.querySelector('img');
+    page.state.avatar_changer_button = page.state.avatar_changer.querySelector('.btn-file');
+    page.state.avatar_changer_save = page.state.avatar_changer.querySelector('.modal-footer .primary');
+    console.info(page.structure.dialogs);
 }
 
+unsafeWindow._update_avatar_preview = function(event) {
+    let reader = new FileReader();
+    reader.onload = function() {
+        page.state.avatar_changer_image.src = reader.result;
+        page.state.avatar_changer_button.setAttribute('data-has-file', 'true');
+        page.state.avatar_changer_save.removeAttribute('disabled');
+    }
+    reader.readAsDataURL(event.target.files[0]);
+}
 
-unsafeWindow._save_avatar_changer = function() {
-    document.getElementById('bleh--window-edit_avatar--body').classList.add('modal-processing');
-
-    setTimeout(function() {
-        kill_window('edit_avatar');
-
-        auth.avatar = auth_link.state.querySelector('img').getAttribute('src');
-        document.querySelector('.auth-dropdown-menu').style.setProperty('--url', `url(${auth.avatar.replace('avatar42s', 'avatar170s')})`);
-    }, 5000);
+unsafeWindow._save_avatar = function() {
+    page.state.avatar_changer.querySelector('#avatar_saver').click();
+}
+function finish_saving_avatar() {
+    page.state.avatar_changer.setAttribute('data-loading', 'true');
+    page.state.avatar_changer.querySelectorAll('button').forEach((button) => {
+        button.setAttribute('disabled', 'true');
+        button.removeAttribute('onclick');
+    });
 }
 
 
@@ -664,11 +673,6 @@ function bleh_communication_panel(token) {
     let panel = page.structure.main.querySelector('#ignorelist');
     panel.classList.add('bleh--panel');
 
-    let label = panel.querySelector('.control-label').textContent;
-    let input = panel.querySelector('#id_user').outerHTML;
-    let button_text = panel.querySelector('.btn-primary').textContent;
-
-    let current = panel.querySelector('form + .form-horizontal .control-label').textContent;
     let list = panel.querySelectorAll('.ignore-list tr');
 
 
@@ -740,7 +744,7 @@ function bleh_communication_panel(token) {
             <div class="left main">
                 <div class="setting" data-type="text">
                     <div class="heading">
-                        <h5>${trans_legacy.en.settings.music.profile_shortcut.placeholder}</h5>
+                        <h5>${tl(trans.profile)}</h5>
                         <form action="${root}settings/privacy#ignorelist" name="ignorelist" method="post">
                             <input type="hidden" name="csrfmiddlewaretoken" value="${page.token}">
                             <div class="input-container">

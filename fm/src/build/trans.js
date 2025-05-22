@@ -1867,7 +1867,7 @@ export const trans = {
             en: 'Close my shoutbox'
         },
         body: {
-            en: 'Removes visibility for everyone (including you)'
+            en: 'Removes visibility from everyone (including you)'
         }
     },
     error: {
@@ -1910,6 +1910,12 @@ export const trans = {
         body: {
             en: 'Forces buttons, links, and other interactables to have an underline'
         }
+    },
+    upload: {
+        en: 'Upload'
+    },
+    change_avatar: {
+        en: 'Change avatar'
     }
 }
 
