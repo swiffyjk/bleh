@@ -107,6 +107,8 @@ function shout_send(send_button) {
     //button.innerHTML = 'Send with Copilot<span class="new-badge">PREMIUM</span>';
     button.textContent = tl(trans.send);
 
+    if (page.mobile) return;
+
     tippy(button, {
         content: tl(trans.send_quickly_with).replace('{kbd}', '<kbd>ctrl+↵</kbd>'),
         delay: [500, 0],

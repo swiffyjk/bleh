@@ -158,7 +158,7 @@ unsafeWindow._ignore_update = function() {
 }
 
 unsafeWindow._start_update = function() {
-    open('https://github.com/katelyynn/bleh/raw/uwu/fm/bleh.user.js');
+    open(`https://github.com/katelyynn/bleh/raw/${settings.branch}/fm/bleh.user.js`);
 
     dialog_rm({
         id: 'bleh_update'
@@ -188,7 +188,7 @@ unsafeWindow._start_update = function() {
 }
 
 unsafeWindow._start_css_update = function() {
-    open('https://github.com/katelyynn/bleh/raw/uwu/fm/bleh.user.css');
+    open(`https://github.com/katelyynn/bleh/raw/${settings.branch}/fm/bleh.user.css`);
 
     dialog_rm({
         id: 'bleh_update'
@@ -237,6 +237,7 @@ unsafeWindow._finish_update = function() {
 function fetch_new_style(delete_old_style = false, reload_on_finish = false) {
     let xhr = new XMLHttpRequest();
     let url = `https://katelyynn.github.io/bleh/fm/bleh.css?${Math.random()}`;
+    log(`making request ${url}`, 'style');
     xhr.open('GET',url,true);
 
     xhr.onload = function() {

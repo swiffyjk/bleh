@@ -37,7 +37,7 @@ export function sponsors(force = false) {
 
 function sponsor_request(notify = false) {
     let button = document.body.querySelector('[onclick="_sponsor_check()"]');
-    if (button != null)
+    if (button)
         button.setAttribute('disabled', '');
 
     let xhr = new XMLHttpRequest();
@@ -99,12 +99,14 @@ function sponsor(replace=false) {
                     <span class="avatar-status-dot user-status--bleh-sponsor"></span>
                 </div>
                 <h1>${tl(trans.support_future_development)}</h1>
-                <p>${tl(trans.why_sponsor).replace('katelyn', `<a class="mention" href="${root}user/katelyness">@katelyness</a>`)}</p>
+                <p>${tl(trans.why_sponsor).replace('katelyn', `<a class="mention" href="${root}user/katesia">@katesia</a>`)}</p>
             </div>
             <div class="modal-footer">
+                <div class="fill"></div>
                 <a class="btn primary sponsor" href="${sponsor_list.sponsor_link}" target="_blank">
                     ${tl(trans.sponsor)}
                 </a>
+                <div class="fill"></div>
             </div>
         `),
         type: 'sponsor',
@@ -119,7 +121,7 @@ function sponsor_manage() {
     if (sponsor_list.sponsors_one_time && sponsor_list.sponsors_one_time.includes(auth.name)) {
         dialog({
             id: 'sponsor_manage',
-            title: trans_legacy.en.settings.home.sponsor.header,
+            title: tl(trans.sponsor),
             body: (`
                 <div class="modal-vertical-inner support-inner">
                     <div class="avatar">
@@ -135,7 +137,7 @@ function sponsor_manage() {
     } else {
         dialog({
             id: 'sponsor_manage',
-            title: trans_legacy.en.settings.home.sponsor.header,
+            title: tl(trans.sponsor),
             body: (`
                 <div class="modal-vertical-inner support-inner">
                     <div class="avatar">
@@ -146,9 +148,11 @@ function sponsor_manage() {
                     <p>${tl(trans.sponsor_get_badge)}</p>
                 </div>
                 <div class="modal-footer">
+                    <div class="fill"></div>
                     <a class="btn primary sponsor" href="${root}user/${sponsor_list.sponsor_account}" target="_blank">
                         ${tl(trans.manage_sponsor)}
                     </a>
+                    <div class="fill"></div>
                 </div>
             `),
             type: 'sponsor'

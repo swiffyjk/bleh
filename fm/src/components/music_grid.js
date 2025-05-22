@@ -6,9 +6,8 @@ import { bleh_glacier_insights } from "../pages/glacier";
 import { parse_scrobbles_as_rank } from "./colourful_counts";
 import { correct_artist, correct_item_by_artist, name_includes } from "./lotus";
 
-export function music_grids() {
-    if (page.structure.main == null)
-        return;
+export function music_grids(search=page.structure.main) {
+    if (!search) return;
 
     let insights = {
         artist: {
@@ -46,7 +45,7 @@ export function music_grids() {
         }
     };
 
-    let grids = page.structure.main.querySelectorAll('.grid-items-item:not([data-bleh-music-grids])');
+    let grids = search.querySelectorAll('.grid-items-item:not([data-bleh-music-grids])');
     grids.forEach((grid) => {
         let is_loading = (grid.querySelector('.grid-items-empty-inner') != null);
         if (is_loading) return;
@@ -126,8 +125,8 @@ export function music_grids() {
             plays_elem = grid.querySelector('.grid-items-item-aux-text a:last-child');
         }
 
-        if (plays_elem != null && !grid.classList.contains('obsessions-item')) {
-            let plays = clean_number(plays_elem.textContent.trim().replace(` ${tl(trans.plays)}`, ''));
+        if (plays_elem && !grid.classList.contains('obsessions-item') && !grid.classList.contains('compare-item')) {
+            let plays = clean_number(plays_elem.textContent.trim().replace(`${tl(trans.plays_lower)}`, ''));
             plays_elem.classList.add('grid-item-plays');
             if (is_album)
                 plays_elem.textContent = plays.toLocaleString(lang);

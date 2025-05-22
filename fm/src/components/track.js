@@ -7,14 +7,13 @@ import { patch_artist_ranks_in_list_view } from "./colourful_counts";
 import { correct_artist, correct_item_by_artist, name_includes } from "./lotus";
 import { register_menu } from "./menu";
 
-export function patch_titles() {
+export function patch_titles(search=page.structure.main) {
     if (page.subpage == 'tags_overview')
         return;
 
-    if (!page.structure.main)
-        return;
+    if (!search) return;
 
-    let tracklists = page.structure.main.querySelectorAll('.chartlist:not(.chartlist__placeholder)');
+    let tracklists = search.querySelectorAll('.chartlist:not(.chartlist__placeholder)');
 
     let insights = {
         artist: {
@@ -63,6 +62,8 @@ export function patch_titles() {
             return;
 
         console.log('tracklist has not been run thru', tracklist);
+
+        let wide = tracklist.classList.contains('chartlist--wide-artist-column');
 
         let tracks = tracklist.querySelectorAll('.chartlist-row:not(.chartlist__placeholder-row)');
 
@@ -131,7 +132,8 @@ export function patch_titles() {
                 track.classList.add('bleh--is-album');
 
             let track_artist = return_artist_from_track(track_title.getAttribute('href'), is_album);
-            track.classList.add('chartlist-row--with-artist');
+            if (!wide)
+                track.classList.add('chartlist-row--with-artist');
 
             let bar = track.querySelector('.chartlist-count-bar-slug');
             if (bar) {
@@ -167,6 +169,10 @@ export function patch_titles() {
                     content: track_timestamp_contents
                 });
             }
+
+            let album = track.querySelector('.chartlist-album a');
+            if (!is_album && album)
+                album.textContent = correct_item_by_artist(album.textContent, track_artist);
 
             if (settings.format_guest_features) {
                 let formatted_title = name_includes(track_title.getAttribute('title'), track_artist);
@@ -236,7 +242,7 @@ export function patch_titles() {
                             <h5 class="title">${song_title}</h5>
                             <p class="artist">${song_artist_element.innerHTML}</p>
                             <div class="tags">${song_tags_text}</div>
-                            ${(!is_library_track_page) ? (is_album) ? '' : `<p class="album">${(image) ? correct_item_by_artist(sanitise_text(image.getAttribute('alt')), track_artist) : page.name}</p>` : ''}
+                            ${(is_album) ? '' : `<p class="album">${(image) ? correct_item_by_artist(sanitise_text(image.getAttribute('alt')), track_artist) : (album) ? album.textContent : page.name}</p>`}
                             ${(track_timestamp && track_timestamp_contents) ? `<p class="timestamp">${track_timestamp_contents}</p>` : ''}
                         </div>
                     `);
@@ -297,8 +303,6 @@ export function patch_titles() {
                 insights.track.labels.push(track_title.getAttribute('title'));
             }
 
-            if (!settings.colourful_tracks)
-                return;
 
             if (!is_album && is_active) {
                 let image_wrap = track.querySelector('.chartlist-image');
@@ -316,6 +320,9 @@ export function patch_titles() {
                         `);
                         track.appendChild(album_text);
                     }
+
+                    if (!settings.colourful_tracks)
+                        return;
 
                     image.setAttribute('crossorigin', 'anonymous');
                     try {

@@ -24,6 +24,8 @@ export function load_settings(skip = false) {
         Object.assign(settings, JSON.parse(localStorage.getItem('bleh')) || create_settings_template());
     }
 
+    log(`branch ${settings.branch}`, 'load');
+
     if (!settings.theme_type) {
         if (settings.theme == 'light' || settings.theme == 'ink')
             settings.theme_type = 'light';
@@ -62,7 +64,7 @@ export function load_settings(skip = false) {
         try {
             document.body.style.setProperty(`--${settings_base[setting].css}`, `${settings[setting]}${settings_base[setting].unit}`);
         } catch(e) {
-            console.log('bleh - setting base entry for', setting, 'is not accessible');
+            log(`information for ${setting} not accessible`, 'settings', 'log');
         }
         document.documentElement.setAttribute(`data-bleh--${setting}`, `${settings[setting]}`);
     }
@@ -503,9 +505,11 @@ function continue_dev() {
     dialog_legacy('continue_dev',trans_legacy.en.settings.performance.dev.name,`
         ${trans_legacy.en.settings.performance.dev.modals.continue.next_step}
         <div class="modal-footer">
+            <div class="fill"></div>
             <button class="btn primary continue" onclick="_finish_dev()">
                 ${trans_legacy.en.settings.continue}
             </button>
+            <div class="fill"></div>
         </div>
     `);
 }
@@ -516,9 +520,11 @@ unsafeWindow._finish_dev = function() {
     dialog_legacy('finish_dev',trans_legacy.en.settings.performance.dev.name,`
         <p class="alert alert-success">${trans_legacy.en.settings.performance.dev.modals.finish.alert}</p>
         <div class="modal-footer">
+            <div class="fill"></div>
             <button class="btn primary done" onclick="_kill_window('finish_dev')">
                 ${trans_legacy.en.settings.done}
             </button>
+            <div class="fill"></div>
         </div>
     `);
 }

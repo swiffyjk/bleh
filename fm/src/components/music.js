@@ -258,7 +258,7 @@ export function show_your_scrobbles() {
                 <img class="view-item-avatar" src="${shortcut_listens.avi}" alt="${shortcut_listens.name}">
                 <div class="info">
                     <h3>${shortcut_listens.name}</h3>
-                    <p>${trans_legacy.en.music.listens.count_listens.replace('{c}', listens.toLocaleString(lang))}</p>
+                    <p>${tl(trans.listens.count).replace('{c}', listens.toLocaleString(lang))}</p>
                 </div>
             `);
 
@@ -324,10 +324,8 @@ export function show_your_scrobbles() {
 
 
     // interactables on the right
-    let interact_container = document.createElement('div');
-    interact_container.classList.add('view-all-panel');
-    if (page.type == 'track')
-        interact_container.classList.add('mini-interactions');
+    let interact_container = document.createElement('section');
+    interact_container.classList.add('side-actions');
 
 
     let text = document.body.querySelector('.header-new-title').textContent
@@ -350,17 +348,24 @@ export function show_your_scrobbles() {
     let buttons = interact_container.querySelectorAll('button');
     buttons.forEach((button) => {
         if (button.classList[0] != 'header-new-playlink')
-            button.classList.add('btn', 'view-item', 'interact-item', (katsune) ? 'icon' : '');
+            button.classList.add('btn', 'side-action');
         else
             button.classList.add('dropdown-menu-clickable-item');
 
         if (button.classList[0] == 'header-new-more-button')
             interact_container.removeChild(button.parentElement);
+
+        if (button.classList[1] == 'header-new-love-button') {
+            button.setAttribute('data-type', 'love');
+            let new_text = document.createElement('span');
+            new_text.textContent = tl(trans.love);
+            button.appendChild(new_text);
+        }
     });
     let links = interact_container.querySelectorAll('a');
     links.forEach((button) => {
         if (button.classList[0] != 'header-new-playlink')
-            button.classList.add('btn', 'view-item', 'interact-item');
+            button.classList.add('btn', 'side-action');
         else
             button.classList.add('dropdown-menu-clickable-item');
     });
@@ -368,14 +373,11 @@ export function show_your_scrobbles() {
 
     // obsession
     let obsession_form = header_actions.querySelector('form[action$="obsessions"]');
-    if (obsession_form != null) {
+    if (obsession_form) {
         let obsession_btn = obsession_form.querySelector('button');
-        obsession_btn.classList = 'btn view-item interact-item obsession-btn';
-
-        tippy(obsession_btn, {
-            content: obsession_btn.textContent
-        });
-        obsession_btn.textContent = trans_legacy.en.music.obsession;
+        obsession_btn.classList = 'btn side-action';
+        obsession_btn.setAttribute('data-type', 'obsession');
+        obsession_btn.textContent = tl(trans.obsession);
 
         interact_container.appendChild(obsession_form);
     }
@@ -383,7 +385,7 @@ export function show_your_scrobbles() {
 
     // search similar!
     /*let search_btn = document.createElement('a');
-    search_btn.classList.add('btn', 'view-item', 'interact-item', 'search-similar-btn', (katsune) ? 'icon' : '');
+    search_btn.classList.add('btn', 'side-action', 'search-similar-btn');
     search_btn.textContent = trans_legacy.en.music.search_variations.name;
     search_btn.href = `${root}search/${page.type}s?q=${text}`;
     search_btn.target = '_blank';
@@ -399,7 +401,7 @@ export function show_your_scrobbles() {
     let lotus_btn = null;
     if (settings.corrections) {
         lotus_btn = document.createElement('a');
-        /*lotus_btn.classList.add('btn', 'view-item', 'interact-item', 'lotus', 'lotus-btn');*/
+        /*lotus_btn.classList.add('btn', 'side-action', 'lotus', 'lotus-btn');*/
         lotus_btn.classList.add('dropdown-menu-clickable-item', 'lotus', 'lotus-btn');
         lotus_btn.textContent = trans_legacy.en.lotus.correct.name;
         lotus_btn.href = 'https://github.com/katelyynn/lotus/issues/new/choose';
@@ -426,7 +428,10 @@ export function show_your_scrobbles() {
     if (play_btn)
         interact_container.removeChild(play_btn);
 
-    page.structure.side.insertBefore(interact_container, page.structure.side.firstElementChild);
+    if (!page.mobile)
+        page.structure.side.insertBefore(interact_container, page.structure.side.firstElementChild);
+    else
+        page.structure.main.insertBefore(interact_container, page.structure.main.firstElementChild);
 
 
 
@@ -548,6 +553,14 @@ export function show_your_scrobbles() {
             </a>
         `);
         link_container.appendChild(genius);
+
+        let tidal = document.createElement('li');
+        tidal.innerHTML = (`
+            <a class="play-this-track-playlink music-link play-this-track-playlink--tidal" href="https://listen.tidal.com/search?q=${sanitise(page.sister, ' ')} ${sanitise(page.name, ' ')}" target="_blank">
+                Tidal
+            </a>
+        `);
+        link_container.appendChild(tidal);
     } else {
         let header = document.createElement('div');
         header.classList.add('sub-text', 'music-small-header');
@@ -670,7 +683,7 @@ function create_listen_item(parent, {name, listens, link, avi, count=0, button=f
             <img class="view-item-avatar" src="${avi}" alt="${name}">
             <div class="info">
                 <h3>${name}</h3>
-                <p>${trans_legacy.en.music.listens.count_listens.replace('{c}', listens.toLocaleString(lang))}</p>
+                <p>${tl(trans.listens.count).replace('{c}', listens.toLocaleString(lang))}</p>
             </div>
         `);
 
@@ -678,7 +691,7 @@ function create_listen_item(parent, {name, listens, link, avi, count=0, button=f
             theme: 'context-menu',
             content: (`
                 <a class="dropdown-menu-clickable-item" href="${root}user/${name}" data-menu-item="view_profile">
-                    ${trans_legacy.en.music.view_profile}
+                    ${tl(trans.profile)}
                 </a>
             `),
             allowHTML: true,
@@ -702,7 +715,7 @@ function create_listen_item(parent, {name, listens, link, avi, count=0, button=f
             <img class="view-item-avatar" src="${avi}" alt="${name}">
             <div class="info">
                 <h3>${name}</h3>
-                <p>${trans_legacy.en.music.listens.loading_listens}</p>
+                <p>${tl(trans.listens)}</p>
             </div>
         `);
 
@@ -710,7 +723,7 @@ function create_listen_item(parent, {name, listens, link, avi, count=0, button=f
             theme: 'context-menu',
             content: (`
                 <a class="dropdown-menu-clickable-item" href="${root}user/${name}" data-menu-item="view_profile">
-                    ${trans_legacy.en.music.view_profile}
+                    ${tl(trans.profile)}
                 </a>
                 <div class="sep"></div>
                 <button class="dropdown-menu-clickable-item" onclick="_open_profile_shortcut_window()" data-menu-item="settings">
@@ -739,7 +752,7 @@ function create_listen_item(parent, {name, listens, link, avi, count=0, button=f
         listen_item.setAttribute('onclick', `_other_listener('${link}')`);
 
         tippy(listen_item, {
-            content: trans_legacy.en.music.listens.custom.tooltip
+            content: tl(trans.view_others_library)
         });
     } else {
         // other listeners by clicking this link (artist)
@@ -749,7 +762,7 @@ function create_listen_item(parent, {name, listens, link, avi, count=0, button=f
             ${avi[2] ? `<img class="view-item-avatar" src="${avi[2].getAttribute('src')}">` : ''}
             <div class="info">
                 <h3>${tl(trans.following)}</h3>
-                <p>${trans_legacy.en.music.listens.other_listeners.replace('{c}', count)}</p>
+                <p>${tl(trans.others_count).replace('{c}', count)}</p>
             </div>
         `);
         listen_item.setAttribute('href', `${window.location.href}/+listeners/you-know`);
@@ -773,10 +786,6 @@ function create_listen_item(parent, {name, listens, link, avi, count=0, button=f
     // ensure proper listeners element
     if (listens < -1)
         return;
-
-    tippy(listen_item, {
-        content: name
-    });
 }
 
 
@@ -810,6 +819,8 @@ function show_numbers_on_side(header_type) {
         }
     });
 
+    page.structure.side.classList.remove('hidden-xs');
+
 
     // get panel
     let panel = page.structure.side.querySelector('section.section-with-separator:has(.listener-trend)');
@@ -818,7 +829,10 @@ function show_numbers_on_side(header_type) {
         panel = document.createElement('section');
         panel.classList.add('section-with-separator');
 
-        page.structure.side.insertBefore(panel, page.structure.side.firstElementChild);
+        if (!page.mobile)
+            page.structure.side.insertBefore(panel, page.structure.side.firstElementChild);
+        else
+            page.structure.main.insertBefore(panel, page.structure.main.firstElementChild);
     }
 
     panel.classList.add('listen-panel');
@@ -827,15 +841,15 @@ function show_numbers_on_side(header_type) {
     let row = document.createElement('div');
     row.classList.add('listener-row');
     row.innerHTML = (`
-        <div class="listener-side" id="listeners">
+        <div class="listener-side">
             <h3>${listeners.text}</h3>
             <p>${listeners.abbr}</p>
         </div>
-        <div class="scrobble-side" id="scrobbles">
+        <div class="scrobble-side">
             <h3>${scrobbles.text}</h3>
             <p>${scrobbles.abbr}</p>
         </div>
-        ${(metascore.text != undefined) ? (`
+        ${(metascore.text) ? (`
         <div class="metascore-side">
             <h3>${metascore.text}</h3>
             <p><a href="${metascore.link}" target="_blank">${metascore.abbr}</a></p>
@@ -845,11 +859,14 @@ function show_numbers_on_side(header_type) {
 
     panel.insertBefore(row, panel.firstElementChild);
 
-    tippy(document.getElementById('listeners'), {
-        content: listeners.value.toLocaleString(lang)
+    if (page.mobile)
+        page.structure.main.insertBefore(panel, page.structure.main.firstElementChild);
+
+    tippy(row.querySelector('.listener-side p'), {
+        content: tl(trans.count_listeners).replace('{c}', listeners.value.toLocaleString(lang))
     });
-    tippy(document.getElementById('scrobbles'), {
-        content: scrobbles.value.toLocaleString(lang)
+    tippy(row.querySelector('.scrobble-side p'), {
+        content: tl(trans.count_scrobbles).replace('{c}', scrobbles.value.toLocaleString(lang))
     });
 
 
@@ -961,7 +978,7 @@ export function bleh_music_page_charts() {
 
     // is this a chart reflow due to style loading?
     let previous_chart = panel.querySelector('.scrobble-canvas-container');
-    if (previous_chart != null)
+    if (previous_chart)
         panel.removeChild(previous_chart);
 
     let table = trend.querySelector('tbody');
@@ -1050,10 +1067,10 @@ export function bleh_top_listeners() {
     view_buttons.innerHTML = (`
         <div class="view-buttons">
             <button class="btn view-item" id="toggle-list_view-1" data-toggle="list_view" data-toggle-value="1" onclick="_update_item('list_view', 1)">
-                ${trans_legacy.en.glacier.view.grid}
+                ${tl(trans.grid)}
             </button>
             <button class="btn view-item" id="toggle-list_view-0" data-toggle="list_view" data-toggle-value="0" onclick="_update_item('list_view', 0)">
-                ${trans_legacy.en.glacier.view.list}
+                ${tl(trans.list)}
             </button>
         </div>
     `);

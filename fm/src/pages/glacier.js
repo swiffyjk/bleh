@@ -31,15 +31,19 @@ export function bleh_user_library() {
     });
 
     //page.structure.side.appendChild(date_button_panel);
-    if (date_items.length > 0)
-        page.structure.side.appendChild(date_panel);
+    if (date_items.length > 0) {
+        if (!page.mobile)
+            page.structure.side.appendChild(date_panel);
+        else
+            page.structure.main.insertBefore(date_panel, page.structure.main.firstChild);
+    }
 
     page.structure.glacier.date_panel = date_panel;
 
 
     // tabs
+    let tabs = page.structure.container.querySelector('.library-controls .navlist-items');
     if (page.name == auth.name) {
-        let tabs = page.structure.container.querySelector('.library-controls .navlist-items');
         let velocity_tab = document.createElement('li');
         velocity_tab.classList.add('navlist-item', 'secondary-nav-item', 'secondary-nav-item--velocity');
         velocity_tab.innerHTML = (`
@@ -48,6 +52,15 @@ export function bleh_user_library() {
             </a>
         `);
         tabs.appendChild(velocity_tab);
+    } else {
+        let compare_tab = document.createElement('li');
+        compare_tab.classList.add('navlist-item', 'secondary-nav-item', 'secondary-nav-item--compare');
+        compare_tab.innerHTML = (`
+            <a class="secondary-nav-item-link" onclick="_compare()">
+                ${tl(trans.compare)}
+            </a>
+        `);
+        tabs.appendChild(compare_tab);
     }
 
 
@@ -579,7 +592,7 @@ function bleh_glacier_date_graph(static_page = false, own_table = null) {
 
     page.state.glacier.current_view = current_view;
 
-    let scrobble_chart_content = page.structure.side.querySelector('#scrobble-chart-content');
+    let scrobble_chart_content = page.structure.row.querySelector('#scrobble-chart-content');
     if (!scrobble_chart_content) return;
 
     if (scrobble_chart_content.getAttribute('data-highcharts-chart') && scrobble_chart_content.getAttribute('data-highcharts-chart') == '0') {
@@ -589,7 +602,7 @@ function bleh_glacier_date_graph(static_page = false, own_table = null) {
         return;
     }
 
-    let scrobble_chart_wrap = page.structure.side.querySelector('.scrobble-table');
+    let scrobble_chart_wrap = page.structure.row.querySelector('.scrobble-table');
 
     if (!scrobble_chart_wrap)
         return;

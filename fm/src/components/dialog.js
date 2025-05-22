@@ -19,9 +19,11 @@ export function dialog({
     type = '',
     has_overlays = true,
     replace = false,
-    replace_if_possible = false,
+    replace_if_possible = true,
     replace_id = '',
-    allow_scroll = false
+    allow_scroll = false,
+    colourful = false,
+    colourful_bg = false
 }) {
     log(`creating ${id}`, 'window', 'info', {
         id: id,
@@ -33,10 +35,15 @@ export function dialog({
         has_overlays: has_overlays,
         replace: replace,
         replace_id: replace_id,
-        allow_scroll: allow_scroll
+        allow_scroll: allow_scroll,
+        colourful: colourful,
+        colourful_bg: colourful_bg
     });
 
     let modal;
+
+    if (replace && replace_if_possible)
+        replace_if_possible = false;
 
     if (replace_if_possible && Object.keys(dialogs).length > 0) {
         replace = true;
@@ -50,6 +57,12 @@ export function dialog({
     if (!replace || replace && !dialogs.hasOwnProperty(replace_id)) {
         modal = document.createElement('div');
         modal.classList.add('bleh-modal');
+        modal.setAttribute('role', 'dialog');
+
+        if (colourful)
+            modal.classList.add('colourful');
+        if (colourful_bg)
+            modal.classList.add('colourful-bg');
     } else {
         log(`window set to replace ${replace_id}`, 'window');
 
@@ -68,11 +81,13 @@ export function dialog({
     if (title != null) {
         let modal_title = document.createElement('div');
         modal_title.classList.add('bleh-modal-title');
+        modal_title.setAttribute('id', 'modal_title');
         modal_title.innerHTML = (`
             <h1>${title}</h1>
             ${(subtitle != null) ? `<p class="bleh-modal-subtitle">${subtitle}</p>` : ''}
         `);
 
+        modal.setAttribute('aria-labelledby', 'modal_title');
         modal.appendChild(modal_title);
     }
 

@@ -9,12 +9,12 @@ export let lang;
 export let lang_info = {
     en: {
         name: 'English',
-        by: ['katelyness'],
+        by: ['katesia'],
         last_updated: 'latest'
     },
     de: {
         name: 'Deutsch',
-        by: ['stellasaur', 'katelyness'],
+        by: ['stellasaur', 'katesia'],
         last_updated:  '2025-05-11'
     },
     pl: {
@@ -192,6 +192,18 @@ export const trans = {
         en: 'Compare plays',
         de: 'Plays vergleichen'
     },
+    one_page: {
+        en: '1 page'
+    },
+    count_pages: {
+        en: '{c} pages'
+    },
+    gathering_plays_for_user_pages: {
+        en: 'Gathering plays for {u} ({current_page}/{pages})'
+    },
+    nothing_in_common: {
+        en: 'Nothing in common (๑-﹏-๑)'
+    },
     others_featured: {
         en: 'Others featured',
         de: 'Andere gefeatured'
@@ -255,6 +267,10 @@ export const trans = {
     scrobbles: {
         en: 'Scrobbles',
         de: 'Scrobbels'
+    },
+    count_scrobbles: {
+        en: '{c} scrobbles',
+        de: '{c} scrobbels'
     },
     // TODO(stel): are all these correct (singular/plural)?
     artist: {
@@ -422,6 +438,9 @@ export const trans = {
         en: 'Started',
         de: 'Gestartet'
     },
+    next_in: {
+        en: 'Next in'
+    },
     ends_in: {
         en: 'Ends in',
         de: 'Endet in'
@@ -469,7 +488,7 @@ export const trans = {
         en: 'Good evening, {user}',
         de: 'Guten Abend, {user}'
     },
-    goodnight_user: {
+    good_night_user: {
         en: 'Goodnight, {user}',
         de: 'Gute Nacht, {user}'
     },
@@ -485,13 +504,31 @@ export const trans = {
         en: 'Import',
         de: 'Importieren'
     },
+    import_settings: {
+        en: 'Import settings'
+    },
+    import_notice: {
+        en: 'This is a permanent action, beware of where you are copying from'
+    },
     export: {
         en: 'Export',
         de: 'Exportieren'
     },
+    export_settings: {
+        en: 'Export settings'
+    },
     reset: {
         en: 'Reset',
         de: 'Zurücksetzen'
+    },
+    reset_settings: {
+        en: 'Reset settings to default'
+    },
+    reset_notice: {
+        en: 'Your settings will be permanently reset, are you sure?'
+    },
+    make_a_backup: {
+        en: 'Make a backup'
     },
     news: {
         en: 'News',
@@ -709,6 +746,9 @@ export const trans = {
         en: 'Listeners',
         de: 'Zuhörer*innen'
     },
+    count_listeners: {
+        en: '{c} listeners'
+    },
     // tag sounds better in english
     tag: {
         en: 'Tag'
@@ -792,11 +832,10 @@ export const trans = {
     taste_similarity: {
         en: 'Taste similarity'
     },
-    your_scrobbles: {
-        en: 'Your scrobbles'
-    },
-    plays: {
-        en: 'plays'
+    plays_lower: {
+        // 20 plays in artist/album grid
+        // copy from last.fm
+        en: ' plays'
     },
     message: {
         // as in a direct message
@@ -864,9 +903,12 @@ export const trans = {
         en: 'Loading',
         de: 'Laden'
     },
-    loading_90_days: {
-        en: 'Collecting the last 90 days',
-        de: 'Sammeln der letzten 90 Tage'
+    loading_count_days: {
+        en: 'Collecting the last {c} days',
+        de: 'Sammeln der letzten {c} Tage'
+    },
+    gathering_plays: {
+        en: 'Gathering plays'
     },
     following_mutuals: {
         // this is appended after the following button text if mutuals
@@ -1431,9 +1473,20 @@ export const trans = {
             de: 'Sehe ihre Scrobbels jederzeit neben deine an'
         },
         linked: {
-            en: 'Profile shortcut linked!',
-            de: 'Profile verknüpft!'
+            en: 'Linked with {u}'
+        },
+        notice: {
+            en: 'You already have {u} as your shortcut, are you sure?'
         }
+    },
+    failed_to_find_profile: {
+        en: 'Failed to find profile'
+    },
+    replace: {
+        en: 'Replace'
+    },
+    view_others_library: {
+        en: 'View others library'
     },
     avatar_radius: {
         en: 'Profile avatar shape',
@@ -1715,6 +1768,17 @@ export const trans = {
             de: 'Ermöglicht die Verwendung von Zeilenumbrüchen, fettem Text, Kursivschrift und Bildern in allen „Über mich“-Bereichen'
         }
     },
+    markdown_shouts: {
+        name: {
+            en: 'Use fancy formatting on shouts'
+        },
+        body: {
+            en: 'Allows the use of line breaks, bold text, italics, and images in all shouts'
+        },
+        preview: {
+            en: 'hello! **hello!** *hello!*\n[here\'s a link](https://katelyn.moe) HAII @stellasaur'
+        }
+    },
     gathering_your_plays: {
         en: 'Gathering your album plays',
         de: 'Sammeln deiner Albumwiedergaben'
@@ -1779,6 +1843,97 @@ export const trans = {
     },
     maybe: {
         en: '{c} interested'
+    },
+    branch: {
+        name: {
+            en: 'Branch name'
+        },
+        body: {
+            en: 'Control which development branch you are using'
+        }
+    },
+    enter_branch_name: {
+        en: 'Type branch name (default is uwu)'
+    },
+    beware_notice: {
+        en: 'Beware! Only change these settings if you know what you\'re doing'
+    },
+    privacy: {
+        en: 'Privacy',
+        de: 'Datenschutz',
+        pl: 'Prywatność'
+    },
+    recent_listening: {
+        name: {
+            en: 'Hide your recent listening history'
+        },
+        body: {
+            en: 'Keeps your activity more private'
+        }
+    },
+    allow_messages_from: {
+        en: 'Allow messages from'
+    },
+    everyone: {
+        en: 'Everyone'
+    },
+    following_and_neighbours: {
+        en: 'Following and neighbours'
+    },
+    close_shouts: {
+        name: {
+            en: 'Close my shoutbox'
+        },
+        body: {
+            en: 'Removes visibility from everyone (including you)'
+        }
+    },
+    error: {
+        en: 'Error'
+    },
+    erm: {
+        // used when a page is taken down
+        en: 'erm...'
+    },
+    shortcut: {
+        en: 'Shortcut'
+    },
+    last_count_days: {
+        en: 'Last {c} days'
+    },
+    choose_a_timeframe_above: {
+        en: 'Choose a timeframe above'
+    },
+    failed: {
+        en: 'Failed'
+    },
+    there_was_a_network_error: {
+        en: 'There was a network error'
+    },
+    support: {
+        en: 'Support'
+    },
+    accessible_name_colours: {
+        name: {
+            en: 'Prefer accessible name colours'
+        },
+        body: {
+            en: 'Replaces badge and link-coloured names with your theme\'s header colour'
+        }
+    },
+    underline_links: {
+        name: {
+            en: 'Always underline links'
+        },
+        body: {
+            en: 'Forces buttons, links, and other interactables to have an underline'
+        }
+    },
+    upload: {
+        en: 'Upload'
+    },
+    change_avatar: {
+        en: 'Change avatar'
     }
 }
 

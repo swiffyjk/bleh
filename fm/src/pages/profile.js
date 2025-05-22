@@ -121,6 +121,7 @@ export function bleh_profiles() {
 
         if (!new_account) {
             let src = header_avatar.querySelector('img').getAttribute('src');
+            page.avatar = src;
 
             let avatar_link = document.createElement('a');
             avatar_link.classList.add('bleh--avatar-clickable-link');
@@ -293,12 +294,6 @@ export function bleh_profiles() {
         }
 
 
-        // featured track
-        let featured_track_panel = profile_header.querySelector('.header-featured-track');
-        if (featured_track_panel)
-            bleh_featured_profile_track(featured_track_panel);
-
-
         // recent tracks
         let recent_tracks = page.structure.main.querySelector('#recent-tracks-section');
         if (!recent_tracks) {
@@ -343,22 +338,22 @@ export function bleh_profiles() {
 
         listen_container.innerHTML = (`
             <div class="listener-row">
-                <div class="scrobble-side" id="scrobbles_tooltip">
+                <div class="scrobble-side">
                     <h3>${tl(trans.scrobbles)}</h3>
-                    <p>${scrobbles}</p>
+                    <p><a href="${root}user/${page.name}/library">${scrobbles}</a></p>
                 </div>
-                <div>
+                <div class="artist-side">
                     <h3>${tl(trans.artists)}</h3>
-                    <p>${artists}</p>
+                    <p><a href="${root}user/${page.name}/library/artists">${artists}</a></p>
                 </div>
-                <div>
+                <div class="loved-side">
                     <h3>${tl(trans.loved)}</h3>
-                    <p>${loved}</p>
+                    <p><a href="${root}user/${page.name}/loved">${loved}</a></p>
                 </div>
             </div>
             <a class="scrobble-canvas-container mini" href="${root}user/${page.name}/library/artists?date_preset=LAST_90_DAYS&page=1">
                 <div class="loading-data-container">
-                    <div class="loading-data-text">${tl(trans.loading_90_days)}</div>
+                    <div class="loading-data-text">${tl(trans.loading_count_days).replace('{c}', '90')}</div>
                 </div>
             </a>
             <div class="more-link">
@@ -368,12 +363,15 @@ export function bleh_profiles() {
             </div>
         `);
 
-        tippy(listen_container.querySelector('#scrobbles_tooltip'), {
+        tippy(listen_container.querySelector('.scrobble-side p'), {
             content: average
         });
 
         if (page.name != sponsor_list.sponsor_account) {
-            page.structure.side.insertBefore(listen_container, page.structure.firstChild);
+            if (!page.mobile)
+                page.structure.side.insertBefore(listen_container, page.structure.side.firstChild);
+            else
+                page.structure.main.insertBefore(listen_container, page.structure.main.firstChild);
             bleh_profile_chart();
         }
 
@@ -661,17 +659,14 @@ export function bleh_profiles() {
     let profile_note = profile_notes[page.name];
 
     let profile_has_note = false;
-    if (profile_note != undefined)
+    if (profile_note)
         profile_has_note = true;
 
     // badges
     log(`querying badges for ${page.name}`, 'profile');
 
     let profile_name_obj;
-    if (ff('refreshed_nav'))
-        profile_name_obj = page.structure.container.querySelector('.redesigned-profile-header .title-container');
-    else
-        profile_name_obj = profile_header.querySelector('.header-title-label-wrap');
+    profile_name_obj = page.structure.container.querySelector('.redesigned-profile-header .title-container');
 
 
     if (ff('badges')) {
@@ -723,9 +718,17 @@ export function bleh_profiles() {
         });
     }
 
+    let badge_elements = profile_name_obj.querySelectorAll('.label');
+    let label_container = document.createElement('div');
+    label_container.classList.add('badges');
+    badge_elements.forEach((badge) => {
+        label_container.appendChild(badge);
+    });
+    profile_name_obj.appendChild(label_container);
+
     if (page.subpage != 'overview') return;
 
-    if (page.name == 'katelyness') {
+    if (page.name == 'katesia') {
         let sponsor_cta = document.createElement('div');
         sponsor_cta.classList.add('cta', 'first', 'sponsor', 'colourful');
 
@@ -741,7 +744,10 @@ export function bleh_profiles() {
             `);
         }
 
-        page.structure.side.insertBefore(sponsor_cta, page.structure.side.firstElementChild);
+        if (!page.mobile)
+            page.structure.side.insertBefore(sponsor_cta, page.structure.side.firstElementChild);
+        else
+            page.structure.main.insertBefore(sponsor_cta, page.structure.main.firstElementChild);
     }
 
     // secondary text
@@ -774,14 +780,21 @@ export function bleh_profiles() {
     scrobble_since_pre.textContent = tl(trans.account_created);
     profile_sub_text.insertBefore(scrobble_since_pre, scrobble_since);
 
-    let about_me_sidebar = document.body.querySelector('.about-me-sidebar');
+    let about_me_sidebar = page.structure.row.querySelector('.about-me-sidebar');
 
     if (!about_me_sidebar) {
         if (settings.bio_markdown)
             save_banner_to_cache('none');
 
         return;
+    } else if (page.mobile) {
+        page.structure.main.insertBefore(about_me_sidebar, page.structure.main.firstElementChild);
     }
+
+    // featured track
+    let featured_track_panel = profile_header.querySelector('.header-featured-track');
+    if (featured_track_panel)
+        bleh_featured_profile_track(featured_track_panel, about_me_sidebar);
 
     if (!about_me_sidebar.hasAttribute('data-kate-processed')) {
         about_me_sidebar.setAttribute('data-kate-processed','true');
@@ -902,7 +915,7 @@ function create_profile_note_panel(username, has_note) {
         `);
     }
 
-    let about_me_sidebar = document.body.querySelector('.about-me-sidebar');
+    let about_me_sidebar = page.structure.row.querySelector('.about-me-sidebar');
     about_me_sidebar.after(note_panel);
 }
 
@@ -1028,6 +1041,11 @@ function patch_profile_following() {
 
         if (badge.type == 'avatar-status-dot--staff')
             user.classList.add('staff-user');
+
+        let artists = user.querySelectorAll('.user-list-shared-artists a');
+        artists.forEach((artist) => {
+            artist.textContent = correct_artist(artist.textContent);
+        });
     });
 }
 
@@ -1076,7 +1094,7 @@ function refresh_tracks(button) {
     });
 }
 
-function bleh_featured_profile_track(object) {
+function bleh_featured_profile_track(object, about_me) {
     let art = object.querySelector('.featured-item-art');
     let details = object.querySelector('.featured-item-details');
     let form = document.body.querySelector('.header-info-primary form');
@@ -1154,7 +1172,6 @@ function bleh_featured_profile_track(object) {
         </div>
     `);
 
-    let about_me = page.structure.side.querySelector('.about-me-sidebar');
     if (about_me)
         about_me.after(panel);
     else
@@ -1513,7 +1530,7 @@ function profile_albums() {
                 <input type="hidden" name="csrfmiddlewaretoken" value="${page.token}">
                 <div class="setting" data-type="select">
                     <div class="heading">
-                        <h5>${tl(trans.timeframe)}</h5>
+                        <h5>${tl(trans.default_timeframe)}</h5>
                     </div>
                     <div class="select-wrap custom-selector" id="id_chart_range_top_albums_select">
                         ${original_chart_settings.timeframe}
@@ -1636,7 +1653,7 @@ function profile_tracks() {
                 <input type="hidden" name="csrfmiddlewaretoken" value="${page.token}">
                 <div class="setting" data-type="select">
                     <div class="heading">
-                        <h5>${tl(trans.timeframe)}</h5>
+                        <h5>${tl(trans.default_timeframe)}</h5>
                     </div>
                     <div class="select-wrap custom-selector" id="id_chart_range_top_tracks_select">
                         ${original_chart_settings.timeframe}
@@ -1795,7 +1812,7 @@ function save_banner_to_cache(img) {
 
 
 function bleh_profile_chart() {
-    let panel = page.structure.side.querySelector('.listen-panel');
+    let panel = page.structure.row.querySelector('.listen-panel');
     let table = panel.querySelector('table');
 
     if (table) {

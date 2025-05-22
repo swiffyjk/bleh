@@ -32,17 +32,26 @@ export function bleh_home() {
     let banner = document.createElement('div');
     banner.classList.add('top-banner', 'home-banner', 'colourful');
 
+    let hour = new Date().getHours();
+    let time;
+    if (hour >= 22 || hour <= 6)
+        time = 'night';
+    else if (hour >= 7 && hour <= 10)
+        time = 'morning';
+    else if (hour >= 11 && hour <= 18)
+        time = 'afternoon';
+    else
+        time = 'evening';
+    log(`hour ${hour} time ${time}`, 'time');
+
     banner.innerHTML = (`
-        <a class="home-avatar" href="${root}user/${auth.name}">
-            <img src="${auth.avatar.replace('/avatar42s/', '/avatar170s/')}">
-        </a>
-        ${(auth.sponsor) ? (`
-        <div class="subtext sponsor-message colourful">
-            <div class="bleh-icon-container"><div class="bleh-icon" style="--icon: var(--icon-16-heart-solid); --icon-size: 14px"></div></div>
-            ${tl(trans.you_are_a_sponsor)}
+        <div class="avatar">
+            <img src="${auth.avatar.replace('/avatar42s/', '/avatar170s/')}" alt="${tl(trans.your_avatar)}">
+            ${(auth.sponsor) ? (`
+            <span class="avatar-status-dot user-status--bleh-sponsor"></span>
+            `) : ''}
         </div>
-        `) : ''}
-        <h1>${tl(trans.welcome_back_user).replace('{user}', `<a class="mention" href="${root}user/${auth.name}">@${auth.name}</a>`)}</h1>
+        <h1>${tl(trans[`good_${time}_user`]).replace('{user}', `<a class="mention" href="${root}user/${auth.name}">@${auth.name}</a>`)}</h1>
     `);
 
     page.structure.container.insertBefore(banner, page.structure.container.firstElementChild);

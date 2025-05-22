@@ -1,7 +1,7 @@
-import { auth, auth_link, page, root } from "../build/page";
-import { lang, trans_legacy, trans, tl } from "../build/trans";
+import { auth, page, root } from "../build/page";
+import { trans_legacy, trans, tl } from "../build/trans";
 import { bleh_auto_edits } from "../components/auto_edit";
-import { dialog_legacy, kill_window } from "../components/dialog";
+import { dialog } from "../components/dialog";
 import { custom_select, update_inbuilt_select } from "../components/select";
 import { update_inbuilt_item } from "../config";
 import { ff } from "../sku";
@@ -49,6 +49,8 @@ export function bleh_native_settings() {
         bleh_auto_edits();
     } else if (page.subpage == 'account_overview') {
         bleh_accounts();
+    } else if (page.subpage == 'change-username_overview') {
+        bleh_name_change();
     }
 
     if (ff('katsune')) return;
@@ -536,11 +538,6 @@ function patch_settings_profile_panel(token, update_picture) {
 
     // subtitle
     update_display_name(form_display_name);
-
-    // preview
-    tippy(document.getElementById('btn--toggle-about-me-preview'), {
-        content: trans_legacy.en.settings.inbuilt.profile.toggle_preview.bio
-    });
 }
 
 unsafeWindow._update_display_name = function(value) {
@@ -552,7 +549,7 @@ function update_display_name(value) {
     // pronouns?
     let pronouns = use_pronouns(value);
 
-    document.getElementById('header-title-display-name--pre').textContent = pronouns ? trans_legacy.en.profile.display_name.pronouns : trans_legacy.en.profile.display_name.aka;
+    document.getElementById('header-title-display-name--pre').textContent = pronouns ? tl(trans.account_pronouns) : tl(trans.aka);
 }
 
 
@@ -576,50 +573,68 @@ unsafeWindow._open_avatar_changer = function(token) {
     open_avatar_changer(token);
 }
 function open_avatar_changer(token) {
-    dialog_legacy('edit_avatar',trans_legacy.en.settings.inbuilt.profile.avatar.name,`
-        <div class="bleh--upload-avatar-container">
-            <form class="avatar-upload-form bleh--upload-avatar-form" action="${root}settings" name="avatar-form" method="post" enctype="multipart/form-data">
-                <input type="hidden" name="csrfmiddlewaretoken" value="${token}">
-                <div class="form-group form-group--avatar js-form-group">
-                    <div class="js-form-group-controls form-group-controls">
-                        <span class="btn-secondary btn primary btn-file" data-kate-processed="true">
-                        Choose file
-                            <input type="file" name="avatar" data-require="components/file-input" data-file-input-copy="Choose file" data-no-file-copy="No file chosen" accept="image/*" required="" id="id_avatar" data-kate-processed="true">
-                        </span>
+    page.state.avatar_changer = dialog({
+        id: 'edit_avatar',
+        title: tl(trans.change_avatar),
+        body: (`
+            <div class="forms">
+                <form action="${root}settings" name="avatar-form" method="post" enctype="multipart/form-data">
+                    <input type="hidden" name="csrfmiddlewaretoken" value="${token}">
+                    <div class="form-group form-group--avatar js-form-group upload-avatar">
+                        <div class="js-form-group-controls form-group-controls">
+                            <img class="preview">
+                            <span class="btn-secondary btn primary btn-file" data-kate-processed="true">
+                                ${tl(trans.upload)}
+                                <input type="file" onchange="_update_avatar_preview(event)" name="avatar" data-require="components/file-input" data-file-input-copy="${tl(trans.upload)}" data-no-file-copy="No file chosen" accept="image/*" required="" id="id_avatar" data-kate-processed="true">
+                            </span>
+                        </div>
                     </div>
-                    ${trans_legacy.en.settings.inbuilt.profile.avatar.upload}
-                </div>
-                <div class="modal-footer">
-                    <button type="submit" class="btn-primary save" onclick="_save_avatar_changer()">
+                    <button type="submit" class="btn-primary save" id="avatar_saver">
                         ${tl(trans.save)}
                     </button>
                     <input type="hidden" value="avatar" name="submit">
-                </div>
-            </form>
-            <form class="image-remove-form bleh--upload-avatar-form" action="${root}settings/avatar/delete" method="post">
-                <input type="hidden" name="csrfmiddlewaretoken" value="${token}">
-                <div class="form-group">
-                    <button class="mimic-link image-upload-remove" type="submit" value="delete-avatar" name="delete-avatar">Delete picture</button>
-                    ${trans_legacy.en.settings.inbuilt.profile.avatar.delete}
-                </div>
-                <div class="modal-footer">
-                    <button class="btn cancel" onclick="_kill_window('edit_avatar')" type="button">${trans_legacy.en.settings.cancel}</button>
-                </div>
-            </form>
-        </div>
-        `, true, 'upload-avatar');
+                </form>
+                <form action="${root}settings/avatar/delete" method="post">
+                    <input type="hidden" name="csrfmiddlewaretoken" value="${token}">
+                    <div class="form-group delete-avatar">
+                        <button class="mimic-link image-upload-remove" type="submit" value="delete-avatar" name="delete-avatar">${tl(trans.delete)}</button>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="see-more cancel" onclick="_dialog_rm({id:'edit_avatar'})">${tl(trans.cancel)}</button>
+                <div class="fill"></div>
+                <button class="btn primary save" onclick="_save_avatar()" disabled>${tl(trans.save)}</button>
+            </div>
+        `)
+    });
+
+    page.state.avatar_changer.querySelector('[name="avatar-form"]').onsubmit = finish_saving_avatar;
+    page.state.avatar_changer_image = page.state.avatar_changer.querySelector('img');
+    page.state.avatar_changer_button = page.state.avatar_changer.querySelector('.btn-file');
+    page.state.avatar_changer_save = page.state.avatar_changer.querySelector('.modal-footer .primary');
+    console.info(page.structure.dialogs);
 }
 
+unsafeWindow._update_avatar_preview = function(event) {
+    let reader = new FileReader();
+    reader.onload = function() {
+        page.state.avatar_changer_image.src = reader.result;
+        page.state.avatar_changer_button.setAttribute('data-has-file', 'true');
+        page.state.avatar_changer_save.removeAttribute('disabled');
+    }
+    reader.readAsDataURL(event.target.files[0]);
+}
 
-unsafeWindow._save_avatar_changer = function() {
-    document.getElementById('bleh--window-edit_avatar--body').classList.add('modal-processing');
-
-    setTimeout(function() {
-        kill_window('edit_avatar');
-
-        auth.avatar = auth_link.state.querySelector('img').getAttribute('src');
-        document.querySelector('.auth-dropdown-menu').style.setProperty('--url', `url(${auth.avatar.replace('avatar42s', 'avatar170s')})`);
-    }, 5000);
+unsafeWindow._save_avatar = function() {
+    page.state.avatar_changer.querySelector('#avatar_saver').click();
+}
+function finish_saving_avatar() {
+    page.state.avatar_changer.setAttribute('data-loading', 'true');
+    page.state.avatar_changer.querySelectorAll('button').forEach((button) => {
+        button.setAttribute('disabled', 'true');
+        button.removeAttribute('onclick');
+    });
 }
 
 
@@ -658,11 +673,6 @@ function bleh_communication_panel(token) {
     let panel = page.structure.main.querySelector('#ignorelist');
     panel.classList.add('bleh--panel');
 
-    let label = panel.querySelector('.control-label').textContent;
-    let input = panel.querySelector('#id_user').outerHTML;
-    let button_text = panel.querySelector('.btn-primary').textContent;
-
-    let current = panel.querySelector('form + .form-horizontal .control-label').textContent;
     let list = panel.querySelectorAll('.ignore-list tr');
 
 
@@ -734,7 +744,7 @@ function bleh_communication_panel(token) {
             <div class="left main">
                 <div class="setting" data-type="text">
                     <div class="heading">
-                        <h5>${trans_legacy.en.settings.music.profile_shortcut.placeholder}</h5>
+                        <h5>${tl(trans.profile)}</h5>
                         <form action="${root}settings/privacy#ignorelist" name="ignorelist" method="post">
                             <input type="hidden" name="csrfmiddlewaretoken" value="${page.token}">
                             <div class="input-container">
@@ -781,7 +791,7 @@ function patch_settings_privacy_panel(token, privacy_panel) {
     }
 
     privacy_panel.innerHTML = (`
-        <h4>${trans_legacy.en.settings.inbuilt.privacy.name}</h4>
+        <h4>${tl(trans.privacy)}</h4>
         <form action="${root}settings/privacy" name="privacy" method="post">
             <input type="hidden" name="csrfmiddlewaretoken" value="${token}">
             <div class="inner-preview pad">
@@ -821,8 +831,8 @@ function patch_settings_privacy_panel(token, privacy_panel) {
             <div class="setting" data-type="toggle" id="container-recent_listening">
                 <button class="btn reset" onclick="_reset_inbuilt_item('recent_listening')">Reset to default</button>
                 <div class="heading">
-                    <h5>${trans_legacy.en.settings.inbuilt.privacy.recent_listening.name}</h5>
-                    <p>${trans_legacy.en.settings.inbuilt.privacy.recent_listening.bio}</p>
+                    <h5>${tl(trans.recent_listening.name)}</h5>
+                    <p>${tl(trans.recent_listening.body)}</p>
                 </div>
                 <div class="toggle-wrap">
                     <input class="companion-checkbox" type="checkbox" name="hide_realtime" id="inbuilt-companion-checkbox-recent_listening">
@@ -832,17 +842,21 @@ function patch_settings_privacy_panel(token, privacy_panel) {
                 </div>
             </div>
             <div class="sep"></div>
-            <h5>Who can send you messages?</h5>
-            <div class="primary-selections">
-                ${original_privacy_settings.receiving_msgs}
-                <div class="btn primary-selection" id="primary-selection-receiving_msgs-everyone" onclick="_update_inbuilt_selection('id_message_privacy', 0)">
-                    <h5>${trans_legacy.en.settings.inbuilt.privacy.receiving_msgs.settings.everyone.name}</h5>
+            <div class="setting" data-type="options">
+                <div class="heading">
+                    <h5>${tl(trans.allow_messages_from)}</h5>
                 </div>
-                <div class="btn primary-selection" id="primary-selection-receiving_msgs-neighbours" onclick="_update_inbuilt_selection('id_message_privacy', 1)">
-                    <h5>${trans_legacy.en.settings.inbuilt.privacy.receiving_msgs.settings.neighbours.name}</h5>
-                </div>
-                <div class="btn primary-selection" id="primary-selection-receiving_msgs-follow" onclick="_update_inbuilt_selection('id_message_privacy', 2)">
-                    <h5>${trans_legacy.en.settings.inbuilt.privacy.receiving_msgs.settings.follow.name}</h5>
+                <div class="primary-selections">
+                    ${original_privacy_settings.receiving_msgs}
+                    <div class="btn primary-selection" id="primary-selection-receiving_msgs-everyone" onclick="_update_inbuilt_selection('id_message_privacy', 0)">
+                        <h5>${tl(trans.everyone)}</h5>
+                    </div>
+                    <div class="btn primary-selection" id="primary-selection-receiving_msgs-neighbours" onclick="_update_inbuilt_selection('id_message_privacy', 1)">
+                        <h5>${tl(trans.following_and_neighbours)}</h5>
+                    </div>
+                    <div class="btn primary-selection" id="primary-selection-receiving_msgs-follow" onclick="_update_inbuilt_selection('id_message_privacy', 2)">
+                        <h5>${tl(trans.following)}</h5>
+                    </div>
                 </div>
             </div>
             <div class="sep"></div>
@@ -892,8 +906,8 @@ function patch_settings_privacy_panel(token, privacy_panel) {
             <div class="setting" data-type="toggle" id="container-disable_shoutbox">
                 <button class="btn reset" onclick="_reset_inbuilt_item('disable_shoutbox')">Reset to default</button>
                 <div class="heading">
-                    <h5>${trans_legacy.en.settings.inbuilt.privacy.disable_shoutbox.name}</h5>
-                    <p>${trans_legacy.en.settings.inbuilt.privacy.disable_shoutbox.bio}</p>
+                    <h5>${tl(trans.close_shouts.name)}</h5>
+                    <p>${tl(trans.close_shouts.body)}</p>
                 </div>
                 <div class="toggle-wrap">
                     <input class="companion-checkbox" type="checkbox" name="shoutbox_disabled" id="inbuilt-companion-checkbox-disable_shoutbox">
@@ -1084,4 +1098,9 @@ function bleh_accounts() {
     }
 
     custom_select(communication_panel.querySelector('[name="language"]'), communication_panel.querySelector('[name="language"]').parentElement);
+}
+function bleh_name_change() {
+    let token = page.structure.main.querySelector('[name="csrfmiddlewaretoken"]').getAttribute('value');
+
+    return;
 }

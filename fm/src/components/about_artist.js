@@ -25,7 +25,7 @@ export function bleh_about_artist() {
                 ${(avatar != null) ? `<img src="${avatar.getAttribute('src')}"><a onclick="_expand_avatar('${avatar.getAttribute('src').replace('/300x300/', '/ar0/')}')" class="bleh--avatar-clickable-link"></a>` : '<img class="missing-artist">'}
             </div>
             <div class="info-side">
-                <div class="sub-text">${trans_legacy.en.music.about}</div>
+                <div class="sub-text">${tl(trans.about)}</div>
                 <h1><a href="${root}music/${sanitise(page.sister)}">${sanitise_text(page.sister)}</a></h1>
                 ${(listeners != null) ? listeners.outerHTML : ''}
                 ${(tags != null) ? tags.outerHTML : ''}

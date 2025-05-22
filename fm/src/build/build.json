@@ -1,7 +1,7 @@
 {
     "brand": "bleh",
-    "build": "2025.0514",
-    "sku": "corin",
+    "build": "2025.0522",
+    "sku": "wickes",
     "bio": "bleh!!! ^-^",
     "author": "kate",
     "url": "https://github.com/katelyynn/bleh/raw/uwu/fm/bleh.user.js",
@@ -164,6 +164,11 @@
             "default": true,
             "name": "Set colour based on hex",
             "date": "2025-04-26"
+        },
+        "compare": {
+            "default": true,
+            "name": "Profile comparison",
+            "date": "2025-05-19"
         }
     }
 }

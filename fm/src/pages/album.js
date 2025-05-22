@@ -178,52 +178,9 @@ export function bleh_albums() {
             let similar_panel = similar_albums.parentElement;
             similar_panel.classList.add('similar-panel');
         }
-
-        // tooltips on album cover
-        let button_row = page.structure.side.querySelector('.album-overview-cover-art-action-row');
-        if (button_row) {
-            let buttons = button_row.querySelectorAll('a');
-            buttons.forEach((button) => {
-                button.classList.add('btn');
-
-                tippy(button, {
-                    content: button.textContent
-                });
-            });
-        }
-
-        let upload_container = page.structure.side.querySelector('.album-overview-cover-art-upload-action');
-        let avatar = album_header.querySelector('.header-new-background-image');
-
-        let katsune = ff('katsune');
-
-        if (avatar && !katsune) {
-            let expand_container = document.createElement('span');
-            expand_container.classList.add('album-overview-cover-art-expand-action');
-
-            let expand_link = document.createElement('a');
-            expand_link.classList.add('btn');
-            expand_link.setAttribute('onclick', `_expand_avatar('${avatar.getAttribute('content')}')`);
-            expand_link.textContent = tl(trans.expand);
-
-            tippy(expand_link, {
-                content: tl(trans.expand)
-            });
-
-            expand_container.appendChild(expand_link);
-
-            upload_container.after(expand_container);
-        }
-
-        if (katsune) {
-            let row = page.structure.side.querySelector('.album-overview-cover-art-actions');
-
-            if (row)
-                page.structure.container.querySelector('.avatar-side').appendChild(row);
-        }
     } else {
         let btn_add = page.structure.side.querySelector('.add-button');
-        if (btn_add != null)
+        if (btn_add)
             btn_add.setAttribute('data-page-subpage', page.subpage);
 
         if (page.subpage == 'images_image-upload')
@@ -245,12 +202,9 @@ export function bleh_albums() {
 function album_missing_a_tracklist() {
     // tracklist
     let tracklist = document.getElementById('tracklist');
-    if (tracklist == null) {
+    if (!tracklist) {
         let top_overview = document.querySelector('.top-overview-panel');
-
-        if (top_overview == null) {
-            return;
-        }
+        if (!top_overview) return;
 
         tracklist = document.createElement('section');
         tracklist.innerHTML = (`

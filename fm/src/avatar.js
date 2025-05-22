@@ -1,7 +1,7 @@
 import { log } from "./build/log";
 import { auth, root } from "./build/page";
 import { sponsor_list } from "./build/sponsor";
-import { lang, tl, trans, trans_legacy } from "./build/trans";
+import { tl, trans } from "./build/trans";
 import { load_badges } from "./components/badge";
 import { dialog } from "./components/dialog";
 
@@ -167,9 +167,11 @@ export function expand_avatar(src) {
                     <img src="${src}">
                 </div>
                 <div class="modal-footer">
+                    <div class="fill"></div>
                     <a class="btn primary open" href="${src}" target="_blank">
                         ${tl(trans.open_new_tab)}
                     </a>
+                    <div class="fill"></div>
                 </div>
             </div>
         `),

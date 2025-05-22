@@ -1,27 +1,32 @@
 import { settings } from "../build/config";
-import { auth, dialogs, root } from "../build/page";
-import { lang, trans_legacy, trans, tl } from "../build/trans";
-import { dialog, dialog_legacy, dialog_rm } from "./dialog";
-import { deliver_notif, notify } from "./notify";
+import { auth, dialogs, page, root } from "../build/page";
+import { trans, tl } from "../build/trans";
+import { dialog, dialog_rm } from "./dialog";
+import { notify } from "./notify";
 
 unsafeWindow._open_profile_shortcut_window = function() {
-    dialog_legacy('profile_shortcut',trans_legacy.en.settings.music.profile_shortcut.name,(`
+    open_profile_shortcut_window();
+}
+export function open_profile_shortcut_window() {
+    let modal = dialog({
+        id: 'profile_shortcut',
+        title: tl(trans.profile_shortcut.name),
+        body: (`
         <div class="setting" data-type="text" id="container-profile_shortcut">
-            <button class="btn reset" onclick="_reset_item('profile_shortcut')">${tl(trans.reset)}</button>
             <div class="avatar-container">
                 <div class="avatar-inner" id="avatar-profile_shortcut">
                     <img id="avatar_src-profile_shortcut" src="${localStorage.getItem('bleh_profile_shortcut_avi') || ''}">
                 </div>
             </div>
-            <div class="heading content-form">
-                <h5>${trans_legacy.en.settings.music.profile_shortcut.placeholder}</h5>
-                <div class="input-container">
-                    <input type="text" maxlength="40" id="text-profile_shortcut" value="${settings.profile_shortcut}" placeholder="${tl(trans.enter_username)}">
-                    <button class="bleh--btn primary save" onclick="_save_profile_shortcut()">${tl(trans.save)}</button>
-                </div>
+            <div class="input-container content-form">
+                <input type="text" maxlength="40" id="text-profile_shortcut" value="${settings.profile_shortcut}" placeholder="${tl(trans.enter_username)}">
+                <button class="btn chibi icon primary submit" onclick="_save_profile_shortcut()">${tl(trans.save)}</button>
             </div>
         </div>
-    `), true);
+        `)
+    });
+
+    modal.querySelector('#text-profile_shortcut').focus();
 }
 
 unsafeWindow._other_listener = function(id) {
@@ -30,7 +35,7 @@ unsafeWindow._other_listener = function(id) {
 export function other_listener(id) {
     let modal = dialog({
         id: 'other_listener',
-        title: trans_legacy.en.music.listens.custom.name,
+        title: tl(trans.view_others_library),
         body: (`
         <div class="setting" data-type="text">
             <div class="avatar-container">
@@ -38,12 +43,9 @@ export function other_listener(id) {
                     <img>
                 </div>
             </div>
-            <div class="heading content-form">
-                <h5>${trans_legacy.en.settings.music.profile_shortcut.placeholder}</h5>
-                <div class="input-container">
-                    <input type="text" maxlength="40" id="text-profile" placeholder="${tl(trans.enter_username)}">
-                    <button class="bleh--btn primary save" onclick="_send_other_listener('${id}')">${trans_legacy.en.settings.done}</button>
-                </div>
+            <div class="input-container content-form">
+                <input type="text" maxlength="40" id="text-profile" placeholder="${tl(trans.enter_username)}">
+                <button class="btn chibi icon primary submit" onclick="_send_other_listener('${id}')">${tl(trans.done)}</button>
             </div>
         </div>
         `)
@@ -61,22 +63,52 @@ unsafeWindow._send_other_listener = function(link) {
 }
 
 
-unsafeWindow._set_profile_as_shortcut = function(button, profile_name) {
+unsafeWindow._set_profile_as_shortcut = function(button) {
+    page.state.profile_shortcut_button = button;
+
+    dialog({
+        id: 'profile_shortcut',
+        title: tl(trans.profile_shortcut.name),
+        body: (`
+        <div class="big-modal-alert alert-danger">
+            ${tl(trans.profile_shortcut.notice).replace('{u}', `<a class="mention" href="${root}user/${settings.profile_shortcut}" target="_blank">@${settings.profile_shortcut}</a>`)}
+        </div>
+        <div class="modal-footer">
+            <button class="see-more cancel" onclick="_dialog_rm({id:'profile_shortcut'})">
+                ${tl(trans.back)}
+            </button>
+            <div class="fill"></div>
+            <button class="btn primary save" onclick="_confirm_set_profile_as_shortcut()">
+                ${tl(trans.replace)}
+            </button>
+        </div>
+        `)
+    });
+}
+
+unsafeWindow._confirm_set_profile_as_shortcut = function() {
+    confirm_set_profile_as_shortcut();
+}
+function confirm_set_profile_as_shortcut() {
+    dialog_rm({
+        id: 'profile_shortcut'
+    });
+
     let avatar_src = document.body.querySelector('.header-avatar-inner-wrap img').getAttribute('src');
     localStorage.setItem('bleh_profile_shortcut_avi', avatar_src);
-    deliver_notif(trans_legacy.en.settings.music.profile_shortcut.saved);
+    notify({
+        id: 'profile_shortcut_saved',
+        title: tl(trans.profile_shortcut.name),
+        body: tl(trans.profile_shortcut.linked).replace('{u}', page.name),
+        icon: 'icon-16-profile-shortcut'
+    });
 
     // show on button
-    button.setAttribute('data-is-shortcut', 'true');
-    button.removeAttribute('onclick');
-    // this breaks the configure menu
-    //button._tippy.setContent(trans_legacy.en.profile.shortcut.remove);
-
-    if (button.classList.contains('icon'))
-        button.textContent = trans_legacy.en.profile.shortcut.remove;
+    page.state.profile_shortcut_button.setAttribute('data-is-shortcut', 'true');
+    page.state.profile_shortcut_button.removeAttribute('onclick');
 
     // save to settings
-    settings.profile_shortcut = profile_name;
+    settings.profile_shortcut = page.name;
     localStorage.setItem('bleh', JSON.stringify(settings));
 }
 
@@ -115,8 +147,8 @@ unsafeWindow._save_profile_shortcut = function() {
             document.getElementById('avatar_src-profile_shortcut').setAttribute('src', avatar_src);
             notify({
                 id: 'profile_shortcut_saved',
-                title: trans_legacy.en.settings.music.profile_shortcut.name,
-                body: trans_legacy.en.settings.music.profile_shortcut.saved,
+                title: tl(trans.profile_shortcut.name),
+                body: tl(trans.profile_shortcut.linked).replace('{u}', profile_name),
                 icon: 'icon-16-profile-shortcut'
             });
 
@@ -126,8 +158,8 @@ unsafeWindow._save_profile_shortcut = function() {
         } catch(e) {
             notify({
                 id: 'profile_shortcut_saved',
-                title: trans_legacy.en.settings.music.profile_shortcut.name,
-                body: trans_legacy.en.settings.music.profile_shortcut.failed,
+                title: tl(trans.profile_shortcut.name),
+                body: tl(trans.failed_to_find_profile),
                 type: 'error'
             });
             localStorage.removeItem('bleh_profile_shortcut_avi');

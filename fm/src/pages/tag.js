@@ -1,7 +1,7 @@
 import { log } from "../build/log";
 import { page } from "../build/page";
 import { desanitise } from "../build/tools";
-import { lang, trans_legacy, trans, tl } from "../build/trans";
+import { trans, tl } from "../build/trans";
 import { patch_header_title } from "../components/lotus";
 import { checkup_page_structure } from "../components/structure";
 import { register_background, update_page } from "../page";
@@ -52,13 +52,13 @@ export function bleh_tags() {
                 <div class="tag-icon"></div>
             </div>
             <div class="info-side">
-                <div class="sub-text">${trans_legacy.en.tag.name}</div>
+                <div class="sub-text">${tl(trans.tag)}</div>
                 <h1>${title}</h1>
             </div>
         `);
 
         let background = document.body.querySelector('.header-background--has-image');
-        if (background != null)
+        if (background)
             register_background(background.style.getPropertyValue('background-image').replace('url("', '').replace('")', ''));
         else
             register_background();

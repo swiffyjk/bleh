@@ -3,7 +3,7 @@ import { settings } from "./build/config";
 import { log } from "./build/log";
 import { auth, auth_link, bleh_url, has_prompted_for_update, last_page_subpage, last_page_type, page, root, setup_url, shout_parse_queue, sponsor_url } from "./build/page";
 import { stored_season } from "./build/seasonal";
-import { lang, lookup_lang, tl, trans, trans_legacy } from "./build/trans";
+import { lang, lookup_lang, tl, trans } from "./build/trans";
 import { auto_edit_modal } from "./components/auto_edit";
 import { dialog, load_dialogs } from "./components/dialog";
 import { correct_artist, correct_generic_combo, correct_generic_combo_no_artist, correct_item_by_artist, lotus } from "./components/lotus";
@@ -37,6 +37,7 @@ import { bleh_sponsor_page, sponsors } from "./sponsor";
 import { append_style, prompt_for_update } from "./style";
 import { bleh_radio } from "./components/radio";
 import { bleh_api } from './pages/api';
+import { bleh_users } from './pages/users';
 
 export function bleh() {
     let head_observer = new MutationObserver((mutations) => {
@@ -110,8 +111,6 @@ function bleh_main() {
     lotus();
     sponsors();
 
-    append_nav();
-
     try {
         //throw new Error;
         main_flow();
@@ -160,9 +159,11 @@ function handle_error(e = null) {
                 <p>It would be helpful if you could report this bug on Github, including the error message above and a screenshot of your browser console (the error is highlighted).</p>
             </div>
             <div class="modal-footer">
+                <div class="fill"></div>
                 <a class="see-more" href="https://github.com/katelyynn/bleh/issues/new/choose" target="_blank">
                     Report bug now
                 </a>
+                <div class="fill"></div>
             </div>
         `),
         type: 'error'
@@ -340,7 +341,6 @@ function assign_page_subpage() {
 }
 
 function load_page() {
-    append_nav();
     set_season();
     seasonal_timer_end();
 
@@ -354,6 +354,8 @@ function load_page() {
             masthead.classList.remove('scrolled');
     });
 
+    detect_mobile();
+
     if (window.location.href.startsWith(setup_url.replace('{root}', root))) {
         bleh_setup();
     } else if (window.location.href.startsWith(sponsor_url.replace('{root}', root))) {
@@ -364,8 +366,11 @@ function load_page() {
     } else {
         bleh_error();
 
-        if (page.state.error)
+        if (page.state.error) {
+            append_nav();
+            page_title();
             return;
+        }
 
         if (page.type == 'user')
             bleh_profiles();
@@ -390,6 +395,10 @@ function load_page() {
         else if (page.type == 'api')
             bleh_api();
 
+        if (page.type == 'user' || page.type == 'events') {
+            bleh_users();
+        }
+
         if (
             (page.type == 'artist' || page.type == 'album' || page.type == 'track' || page.type == 'tag') &&
             page.subpage == 'overview'
@@ -400,12 +409,20 @@ function load_page() {
             bleh_radio();
     }
 
+    append_nav();
+
+    page_title();
+}
+
+function page_title() {
     if (ff('page_title')) {
         let template = tl(trans.page_templates.type);
-        if ((page.type == 'user' || page.type == 'artist' || page.type == 'events' || page.type == 'tag') && page.subpage != 'home')
-            template = tl(trans.page_templates.name_type)
-        else if (page.type == 'album' || page.type == 'track')
-            template = tl(trans.page_templates.name_sister_type);
+        if (!page.state.error) {
+            if ((page.type == 'user' || page.type == 'artist' || page.type == 'events' || page.type == 'tag') && page.subpage != 'home')
+                template = tl(trans.page_templates.name_type)
+            else if (page.type == 'album' || page.type == 'track')
+                template = tl(trans.page_templates.name_sister_type);
+        }
 
         let name = page.name;
         let sister = page.sister;
@@ -475,6 +492,12 @@ function load_page() {
             title = tl(trans.photos);
         else if (page.subpage.startsWith('image') && page.type == 'album')
             title = tl(trans.artwork);
+        else if (page.subpage.startsWith('listeners'))
+            title = tl(trans.listeners);
+        else if (page.subpage == 'similar')
+            title = tl(trans.similar_artists);
+        else if (page.subpage.startsWith('wiki'))
+            title = tl(trans.wiki);
 
         if (page.subpage == 'overview' || page.subpage == 'event_overview') {
             if (page.type == 'user')
@@ -491,6 +514,9 @@ function load_page() {
                 title = tl(trans.tag);
         }
 
+        if (page.state.error)
+            title = tl(trans.error);
+
         template = template
         .replace('{page}', title)
         .replace('{name}', name)
@@ -504,6 +530,32 @@ function load_page() {
 
     if (page.structure.indicator)
         page_indicator();
+}
+
+function detect_mobile() {
+    if (window.innerWidth <= 600) {
+        page.mobile = true;
+
+        let theme = document.createElement('meta');
+        theme.setAttribute('name', 'theme-color');
+        theme.setAttribute('content', '#000000');
+        document.head.appendChild(theme);
+
+        let icon = document.head.querySelector('[rel="apple-touch-icon"]');
+        icon.setAttribute('href', 'https://github.com/katelyynn/bleh/raw/uwu/fm/app.png');
+
+        let capable = document.createElement('meta');
+        capable.setAttribute('name', 'apple-mobile-web-app-capable');
+        capable.setAttribute('content', 'yes');
+        document.head.appendChild(capable);
+
+        let manifest = document.createElement('link');
+        manifest.setAttribute('rel', 'manifest');
+        manifest.setAttribute('href', 'https://github.com/katelyynn/bleh/raw/uwu/fm/app.webmanifest');
+        document.head.appendChild(manifest);
+    } else {
+        page.mobile = false;
+    }
 }
 
 function page_indicator() {

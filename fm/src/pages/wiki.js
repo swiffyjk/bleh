@@ -1,7 +1,7 @@
 import { patch_avatar } from "../avatar";
 import { auth, page, root } from "../build/page";
 import { desanitise } from "../build/tools";
-import { lang, trans_legacy, trans, tl } from "../build/trans";
+import { trans, tl } from "../build/trans";
 import { ff } from "../sku";
 
 export function bleh_wiki() {
@@ -27,7 +27,10 @@ export function bleh_wiki() {
             </a>
         `);
 
-        page.structure.side.insertBefore(new_edit_panel, page.structure.side.firstElementChild);
+        if (!page.mobile)
+            page.structure.side.insertBefore(new_edit_panel, page.structure.side.firstElementChild);
+        else
+            page.structure.main.insertBefore(new_edit_panel, page.structure.main.firstElementChild);
     }
 
     if (original_version_history) {
@@ -39,10 +42,14 @@ export function bleh_wiki() {
             </a>
         `);
 
-        if (original_edit_button)
+        if (original_edit_button) {
             new_edit_panel.after(new_version_panel);
-        else
-            page.structure.side.insertBefore(new_version_panel, page.structure.side.firstElementChild);
+        } else {
+            if (!page.mobile)
+                page.structure.side.insertBefore(new_version_panel, page.structure.side.firstElementChild);
+            else
+                page.structure.main.insertBefore(new_version_panel, page.structure.main.firstElementChild);
+        }
     }
 
 
@@ -56,7 +63,7 @@ export function bleh_wiki() {
         sub_text.classList.add('sub-text', 'space-below', 'header-style');
         sub_text.innerHTML = (`
             <div class="breadcrumb-origin prominent">
-                ${(h2) ? h2.innerHTML : page.structure.container.querySelector('.content-top-header').textContent}
+                ${h2 ? h2.innerHTML : page.structure.container.querySelector('.content-top-header').textContent}
             </div>
             <div class="wiki-author-side">
                 ${wiki_author.innerHTML}
@@ -134,7 +141,10 @@ export function bleh_wiki_history() {
         </a>
     `);
 
-    page.structure.side.appendChild(latest_version_panel);
+    if (!page.mobile)
+        page.structure.side.appendChild(latest_version_panel);
+    else
+        page.structure.main.insertBefore(latest_version_panel, page.structure.main.firstElementChild);
 
 
     // entries
@@ -146,9 +156,9 @@ export function bleh_wiki_history() {
 
         if (name && avatar) {
             let badge = patch_avatar(avatar, name.textContent, 'wiki');
-
-            if (badge.type == 'avatar-status-dot--staff')
-                entry.classList.add('staff-shout');
+            avatar.setAttribute('data-avatar-themed', 'true');
+            avatar.classList.add(`user-status--bleh-${badge.type}`, `user-status--bleh-user-${name.textContent}`);
+            name.classList.add(`user-status--bleh-${badge.type}`, `user-status--bleh-user-${name.textContent}`);
         }
     });
 }
@@ -249,7 +259,10 @@ export function bleh_wiki_editor() {
         </a>
     `);
 
-    page.structure.side.appendChild(latest_version_panel);
+    if (!page.mobile)
+        page.structure.side.appendChild(latest_version_panel);
+    else
+        page.structure.main.appendChild(latest_version_panel);
 
 
     // presets
@@ -279,9 +292,11 @@ export function bleh_wiki_editor() {
 
     // rules
     let rules = page.structure.main.querySelector('.wiki-style-rules');
+    rules.removeAttribute('id');
 
     let rules_panel = document.createElement('section');
     rules_panel.classList.add('rules-panel');
+    rules_panel.setAttribute('id', 'stylerules');
     rules_panel.innerHTML = rules.innerHTML;
 
     page.structure.side.appendChild(rules_panel);
