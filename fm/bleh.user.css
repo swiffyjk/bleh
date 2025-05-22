@@ -5938,6 +5938,10 @@ a.chartlist-love-button:after {
     color: hsl(var(--c3));
     font-size: var(--font-size);
     line-height: var(--line-height);
+    cursor: default;
+}
+.content-form .form-row-help-text {
+    margin-top: var(--button-list-gap);
 }
 
 .alert + .chartlist,
@@ -8663,7 +8667,7 @@ very, very, very dated - who looks up a song on ebay? */
 }
 
 .content-form .control-label, .events-filter-location-dropdown .control-label {
-    color: hsl(var(--c3));
+    color: hsl(var(--c2));
     font-size: var(--font-size);
     line-height: var(--line-height);
     font-weight: var(--font-weight-medium);
@@ -8687,7 +8691,7 @@ very, very, very dated - who looks up a song on ebay? */
 
 
 .content-form .form-group-controls {
-    margin-top: var(--item-list-gap);
+    margin-top: 6px;
 }
 
 
@@ -16622,22 +16626,15 @@ trying to list every song ever made by someone identifying as a female, which is
                 display: none !important;
             }
 
-            &:hover .avatar-overlay {
-                opacity: 1;
-                transition: none;
-            }
-
             .avatar-overlay {
                 position: absolute;
                 inset: 0;
-                border-radius: var(--avatar-radius);
-                background-color: hsla(var(--b6), 80%);
-                --mask-size: 32px;
+                --mask-size: 24px;
                 --left: 50%;
                 --top: 50%;
                 --margin-left: calc(-1 * (var(--mask-size) / 2));
                 --margin-top: calc(-1 * (var(--mask-size) / 2));
-                --mask: var(--icon-40-edit);
+                --mask: var(--icon-16-edit);
                 color: hsl(var(--c1));
                 opacity: 0;
 
@@ -16649,6 +16646,22 @@ trying to list every song ever made by someone identifying as a female, which is
             img {
                 --mask-size: 40px;
                 position: static;
+
+                transition-property: filter;
+                transition-duration: var(--trans);
+                transition-timing-function: var(--trans-function);
+            }
+
+            &:hover {
+                img {
+                    filter: brightness(50%);
+                    transition: none;
+                }
+
+                .avatar-overlay {
+                    opacity: 1;
+                    transition: none;
+                }
             }
         }
     }
