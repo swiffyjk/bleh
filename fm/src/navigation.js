@@ -188,14 +188,12 @@ export function append_nav() {
 
     let language_menu = document.createElement('div');
     language_menu.classList.add('language-menu');
-
-    let sel_button = document.createElement('button');
-    sel_button.classList.add('dropdown-menu-clickable-item', 'lang-item', 'active');
-    sel_button.setAttribute('data-lang', lang);
-    sel_button.style.setProperty('--flag-url', `url('https://katelyynn.github.io/bleh/fm/flags/${lang}.svg')`);
-    sel_button.textContent = selected_language;
-
-    language_menu.appendChild(sel_button);
+    language_menu.innerHTML = (`
+        <button class="dropdown-menu-clickable-item lang-item active" data-lang="${lang}" style="--flag-url: url('https://katelyynn.github.io/bleh/fm/flags/${lang}.svg')">
+            ${selected_language}
+        </button>
+        <div class="sep"></div>
+    `);
 
     language_options.forEach((language_option) => {
         let button = language_option.querySelector('button');

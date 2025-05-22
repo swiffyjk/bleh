@@ -1,7 +1,7 @@
 /* ==UserStyle==
 @name           bleh (dev)
 @namespace      github.com/katelyynn/bleh
-@version        2025.0514
+@version        2025.0522
 @license        GPL-3.0
 @author         kate
 @updateURL      https://github.com/katelyynn/bleh/raw/uwu/fm/bleh.user.css
@@ -17,7 +17,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Ubuntu+Sans:ital,wght@0,100..800;1,100..800&display=swap');
 
 body {
-    --version-build: '2025.0514';
+    --version-build: '2025.0522';
 
     --hue:  var(--hue-over,
             var(--hue-album,
@@ -339,7 +339,7 @@ a,
     --h3-sat: calc(clamp(min(0), var(--sat), max(1.5)) * 60%);
     --h3-lit: calc(clamp(min(0.5), var(--lit), max(1.5)) * 70%);
     --h4: var(--l4-c);
-    --f4: var(--hue), calc(clamp(min(0), var(--sat), max(1.5)) * 20%), calc(clamp(min(0.5), var(--lit), max(1.5)) * 22%);
+    --f4: var(--hue), calc(clamp(min(0), var(--sat), max(1.5)) * 26%), calc(clamp(min(0.5), var(--lit), max(1.5)) * 26%);
     --g4: var(--hue), calc(clamp(min(0), var(--sat), max(1.5)) * 60%), calc(clamp(min(0.5), var(--lit), max(1.5)) * 15%);
 
     /* l2-c in dark modes, l4-c in light modes */
@@ -374,7 +374,7 @@ a,
         --h3-sat: calc(clamp(min(0), var(--sat), max(1.5)) * 50%);
         --h3-lit: calc(clamp(min(0.5), var(--lit), max(1.5)) * 70%);
         --h4: var(--l4-c);
-        --f4: var(--hue), calc(clamp(min(0), var(--sat), max(1.5)) * 28%), calc(clamp(min(0.5), var(--lit), max(1.5)) * 14%);
+        --f4: var(--hue), calc(clamp(min(0), var(--sat), max(1.5)) * 32%), calc(clamp(min(0.5), var(--lit), max(1.5)) * 15%);
         --g4: var(--hue), calc(clamp(min(0), var(--sat), max(1.5)) * 60%), calc(clamp(min(0.5), var(--lit), max(1.5)) * 10%);
 
         --avatar-generic-background: hsl(var(--b6));
@@ -457,7 +457,7 @@ a,
 .preview,
 body {
     --card-padding: 20px;
-    --card-radius: calc(var(--item-big-radius) + 2px);
+    --card-radius: var(--item-big-radius);
     --card-shadow: 0 4px 8px 1px rgba(0, 0, 0, 0.25);
     --card-gap: 15px;
 
@@ -469,9 +469,9 @@ body {
         --cards-width: calc(var(--cards-main-width) + var(--cards-sidebar-width) + 1px);
     }
 
-    --item-small-radius: 4px;
-    --item-med-radius: 6px;
-    --item-big-radius: 10px;
+    --item-small-radius: 6px;
+    --item-med-radius: 8px;
+    --item-big-radius: 12px;
 
     --profile-header-background-height: 350px;
     --profile-header-background-offset: 27%;
@@ -536,7 +536,7 @@ body {
     --menu-shadow: 0 12px 36px 0 hsla(var(--b7), 0.15);
     --standout-shadow: 3px 6px 20px 7px hsla(var(--b7), 0.06);
 
-    --interactable-outer: hsla(var(--b7), 0.3) 0 1px 1px 0;
+    --interactable-outer: hsla(var(--b7), 0.2) 0 1px 2px 0;
     --interactable-active-outer: transparent 0 0 0;
 
     color-scheme: light !important;
@@ -2773,7 +2773,7 @@ span.header-new-gallery-inner a,
             display: block;
             width: 24px;
             height: 24px;
-            border-radius: var(--item-big-radius);
+            border-radius: var(--item-med-radius);
         }
 
         .name {
@@ -3824,7 +3824,7 @@ button.navlist-more {
         padding-left: calc(18px + (8px * 2));
         transition-delay: 0s !important;
 
-        --bg: hsl(var(--f4));
+        --bg: hsl(var(--f4), 60%);
         --bg-hov: color-mix(in hsl, hsl(var(--f4)), hsl(var(--h4)) 20%);
         background-color: var(--bg) !important;
         border-radius: 50px !important;
@@ -4500,7 +4500,7 @@ better than the default selector '#app a' i suppose */
     width: auto;
     height: auto;
     aspect-ratio: 1 / 1;
-    border-radius: var(--item-big-radius);
+    border-radius: var(--item-med-radius);
     /*overflow: hidden;*/
     box-shadow: var(--grid-colour-shadow, none), var(--standout-shadow);
 
@@ -4603,7 +4603,7 @@ better than the default selector '#app a' i suppose */
         transition-property: filter;
         transition-duration: var(--trans);
         transition-timing-function: var(--trans-function);
-        border-radius: var(--item-big-radius);
+        border-radius: var(--item-med-radius);
         overflow: hidden;
 
         position: relative;
@@ -4694,7 +4694,7 @@ better than the default selector '#app a' i suppose */
     background: hsla(var(--b4), 60%);
     width: 100%;
     height: 100%;
-    border-radius: var(--item-big-radius);
+    border-radius: var(--item-med-radius);
 }
 .grid-items__placeholder .grid-items-item--loading {
     background-image: linear-gradient(270deg,hsla(var(--b3),.05),hsla(var(--b3),.3),hsla(var(--b3),.6),hsla(var(--b3),.3),hsla(var(--b3),.05));
@@ -4909,7 +4909,7 @@ better than the default selector '#app a' i suppose */
         content: '';
         position: absolute;
         inset: -2px;
-        border-radius: calc(var(--item-big-radius) + 2px);
+        border-radius: var(--card-radius);
         opacity: 0;
 
         background-image: linear-gradient(180deg, rgba(0,0,0,0) 0%, hsl(var(--l3-c)) 50%, rgba(0,0,0,0) 100%);
@@ -6102,7 +6102,7 @@ p + .chartlist {
 
         padding: 4px;
         background-color: hsl(var(--b6));
-        border-radius: calc(var(--item-big-radius) + 4px);
+        border-radius: calc(var(--item-med-radius) + 4px);
 
         [data-bleh--theme_type="light"] & {
             background-color: hsl(var(--b5));
@@ -6173,7 +6173,7 @@ p + .chartlist {
     min-height: 52px;
     padding: 6px 8px;
     margin: -6px -8px;
-    border-radius: var(--item-big-radius);
+    border-radius: var(--item-med-radius);
 
     &.shout--deleted {
         min-height: 24px;
@@ -6275,7 +6275,7 @@ the body text becomes bigger by default - this reverts that */
 
         img {
             max-height: 320px;
-            border-radius: var(--item-big-radius);
+            border-radius: var(--item-med-radius);
         }
     }
 }
@@ -6856,7 +6856,7 @@ button,
     font-family: var(--font) !important;
     font-size: var(--font-size) !important;
     font-weight: var(--force-font-weight, var(--font-weight-medium)) !important;
-    border-radius: var(--radius, var(--item-big-radius)) !important;
+    border-radius: var(--radius, var(--item-med-radius)) !important;
     box-shadow: var(--shadow) !important;
     border: unset !important;
     text-decoration: var(--force-underline, none) !important;
@@ -7620,9 +7620,21 @@ section:has(.dropdown-menu-clickable-button.section-control) {
         transition-timing-function: var(--trans-function) !important;
     }
 
+    &:active {
+        &:after {
+            transform: translateY(1px) !important;
+        }
+    }
+
     &.disclose-active {
         &:after {
             transform: scaleY(-1) !important;
+        }
+
+        &:active {
+            &:after {
+                transform: scaleY(-1) translateY(-1px) !important;
+            }
         }
     }
 }
@@ -8022,7 +8034,6 @@ section:has(.dropdown-menu-clickable-button.section-control) {
     display: none !important;
 }
 
-.lang-item.active,
 .bleh--configure-menu-item,
 .more-item--edit-old
 {
@@ -8033,7 +8044,6 @@ section:has(.dropdown-menu-clickable-button.section-control) {
 {
     margin-top: 4px !important;
 }
-.lang-item.active:after,
 .more-item--submit-correction:after,
 .bleh--configure-menu-item:after,
 .more-item--edit-old:after,
@@ -8129,8 +8139,8 @@ very, very, very dated - who looks up a song on ebay? */
         content: '';
         display: block !important;
 
-        border-top-left-radius: var(--item-big-radius);
-        border-top-right-radius: var(--item-big-radius);
+        border-top-left-radius: var(--item-med-radius);
+        border-top-right-radius: var(--item-med-radius);
 
         background-image: var(--url) !important;
         position: absolute;
@@ -8582,7 +8592,7 @@ very, very, very dated - who looks up a song on ebay? */
     line-height: var(--line-height);
     font-size: var(--font-size) !important;
     font-weight: var(--font-weight) !important;
-    border-radius: var(--radius, var(--item-big-radius)) !important;
+    border-radius: var(--radius, var(--item-med-radius)) !important;
     box-shadow: var(--shadow, var(--interact-shadow)) !important;
     border: unset !important;
     height: 32px;
@@ -8925,7 +8935,7 @@ input:is([name^="track_name"], [name^="artist_name"], [name^="album_name"], [nam
 .dropdown-menu-clickable, .auth-dropdown-menu, .navlist-hidden-list, .modal-body, .library-search-results, .events-filter-location-dropdown {
     margin: unset !important;
     background: hsl(var(--b6), 95%) !important;
-    border-radius: var(--item-big-radius) !important;
+    border-radius: var(--item-med-radius) !important;
     box-shadow: var(--override-full-shadow, var(--overlay-shadow)) !important;
     color: hsl(var(--c2));
     overflow: hidden;
@@ -8954,6 +8964,7 @@ input:is([name^="track_name"], [name^="artist_name"], [name^="album_name"], [nam
     &.modal-body {
         background: hsl(var(--b5)) !important;
         box-shadow: var(--override-full-shadow, var(--menu-shadow)) !important;
+        border-radius: var(--item-big-radius) !important;
     }
 }
 
@@ -10136,7 +10147,7 @@ text[style^="color: rgb(255, 172, 172)"] {
                 transition-duration: var(--trans);
                 transition-timing-function: var(--trans-function);
 
-                .listener-side[aria-describedby] &, .scrobble-side[aria-describedby] & {
+                &[aria-describedby] {
                     color: hsl(var(--l2-c-theme-switch));
                     transition: none;
                 }
@@ -10241,7 +10252,7 @@ text[style^="color: rgb(255, 172, 172)"] {
     backdrop-filter: blur(20px) saturate(220%);
     -webkit-backdrop-filter: blur(20px) saturate(220%);
     border-radius: var(--item-big-radius);
-    box-shadow: var(--overlay-shadow);
+    box-shadow: inset 0 0 0 1px var(--card-border-base), var(--overlay-shadow);
     padding: 6px 10px;
     font-size: calc(var(--font-size) - 1px);
     font-weight: var(--font-weight);
@@ -10285,17 +10296,17 @@ text[style^="color: rgb(255, 172, 172)"] {
     &[data-theme="menu"] {
         padding: 0 !important;
         background: hsl(var(--b6), 95%) !important;
-        border-radius: var(--item-big-radius) !important;
+        border-radius: var(--item-med-radius) !important;
         box-shadow: var(--override-full-shadow, var(--overlay-shadow)) !important;
         color: hsl(var(--c2));
 
         & > .tippy-content > :first-child {
-            border-top-left-radius: var(--item-big-radius) !important;
-            border-top-right-radius: var(--item-big-radius) !important;
+            border-top-left-radius: var(--item-med-radius) !important;
+            border-top-right-radius: var(--item-med-radius) !important;
         }
         & > .tippy-content > :last-child {
-            border-bottom-left-radius: var(--item-big-radius) !important;
-            border-bottom-right-radius: var(--item-big-radius) !important;
+            border-bottom-left-radius: var(--item-med-radius) !important;
+            border-bottom-right-radius: var(--item-med-radius) !important;
 
             &:is(form) {
                 overflow: hidden;
@@ -10493,7 +10504,7 @@ text[style^="color: rgb(255, 172, 172)"] {
 
     &[data-theme="user"] {
         padding: var(--card-gap) 30px !important;
-        border-radius: var(--item-big-radius) !important;
+        border-radius: var(--item-med-radius) !important;
         transform-origin: center;
         color: hsl(var(--c2));
         max-width: 500px !important;
@@ -14573,7 +14584,7 @@ code, kbd, samp {
 
 pre {
     padding: 4px 8px;
-    border-radius: var(--item-big-radius);
+    border-radius: var(--item-med-radius);
 }
 
 
@@ -14733,7 +14744,7 @@ pre {
     }
 
     .preview-container {
-        border-radius: var(--item-big-radius);
+        border-radius: var(--item-med-radius);
         margin-bottom: 10px;
         box-shadow: var(--interact-shadow);
     }
@@ -14755,7 +14766,7 @@ pre {
         height: 130px;
         background-color: hsl(var(--b6));
         position: relative;
-        border-radius: var(--item-big-radius);
+        border-radius: var(--item-med-radius);
         overflow: hidden;
 
         .preview-inner {
@@ -14906,7 +14917,7 @@ pre {
 
 .swatch {
     background-color: var(--col, hsl(var(--b6)));
-    border-radius: var(--item-big-radius);
+    border-radius: var(--item-med-radius);
 }
 
 .colour-btn {
@@ -14964,7 +14975,7 @@ pre {
 .inner-preview {
     background: hsl(var(--b6));
     padding: var(--card-gap);
-    border-radius: var(--item-big-radius);
+    border-radius: var(--item-med-radius);
     overflow: hidden;
 
     &.gap-top {
@@ -15760,7 +15771,7 @@ input[type="range"]::-moz-range-progress {
             .grid-item {
                 width: 224px;
                 height: 224px;
-                border-radius: var(--item-big-radius);
+                border-radius: var(--item-med-radius);
                 background-color: hsl(var(--b4));
                 position: relative;
                 color: hsl(var(--c3));
@@ -17121,7 +17132,7 @@ button.bleh--gallery-bookmark-image-btn {
     gap: var(--button-list-gap);
     padding: 4px;
     background-color: hsl(var(--b6));
-    border-radius: calc(var(--item-big-radius) + 4px);
+    border-radius: calc(var(--item-med-radius) + 4px);
 
     [data-bleh--theme_type="light"] & {
         background-color: hsl(var(--b5));
@@ -17861,7 +17872,7 @@ button.bleh--gallery-bookmark-image-btn {
 .user-top-panel {
     padding: calc(var(--card-gap) * 2) calc(var(--card-gap) * 6);
     background-color: hsl(var(--b6));
-    border-radius: var(--item-big-radius);
+    border-radius: var(--item-med-radius);
     user-select: none;
 
     display: flex;
@@ -17947,7 +17958,7 @@ h4 {
     font-size: var(--font-size-sm);
     font-weight: var(--font-weight-medium);
     padding: 0 6px;
-    border-radius: var(--item-med-radius);
+    border-radius: var(--item-small-radius);
 
     &.spacing {
         gap: 6px;
@@ -18178,7 +18189,7 @@ h4 {
     margin: 0 calc(-1 * var(--card-padding)) calc(-1 * var(--card-padding)) calc(-1 * var(--card-padding)) !important;
     overflow-y: hidden;
 
-    border-radius: var(--item-big-radius);
+    border-radius: var(--item-bigmedradius);
 
     &:hover {
         overflow-y: auto;
@@ -18347,9 +18358,21 @@ h4 {
         color: hsl(var(--c3));
     }
 
+    &:active {
+        &:after {
+            transform: translateY(1px) !important;
+        }
+    }
+
     &[aria-expanded="true"] {
         &:after {
             transform: scaleY(-1) !important;
+        }
+
+        &:active {
+            &:after {
+                transform: scaleY(-1) translateY(-1px) !important;
+            }
         }
     }
 }
@@ -18951,7 +18974,7 @@ h4 {
 
         padding: var(--card-gap) var(--card-padding);
         background-color: hsla(var(--h4), 8%);
-        border-radius: var(--item-big-radius);
+        border-radius: var(--item-med-radius);
 
         [data-bleh--theme_type="light"] & {
             background-color: hsla(var(--h4), 15%);
@@ -19163,7 +19186,7 @@ h4 {
         justify-content: center;
         padding: 12px;
         box-shadow: 0 0 0 1px var(--card-border-base) inset;
-        border-radius: var(--item-big-radius);
+        border-radius: var(--item-med-radius);
         font-size: 20px;
         font-weight: var(--font-weight-medium);
     }
@@ -19300,7 +19323,7 @@ h4 {
             align-items: center;
             flex-direction: column;
 
-            border-radius: var(--item-big-radius);
+            border-radius: var(--item-med-radius);
             box-shadow: var(--card-shadow);
 
             [data-bleh--seasonal_overlays="true"][data-bleh--season="fall"] &,
@@ -20579,13 +20602,13 @@ h4 {
     .weeklychart-image {
         width: fit-content;
         box-shadow: var(--card-shadow);
-        border-radius: var(--item-big-radius);
+        border-radius: var(--item-med-radius);
 
         .avatar {
             margin: unset;
             width: 36px;
             height: 36px;
-            border-radius: var(--item-big-radius);
+            border-radius: var(--item-med-radius);
 
             img {
                 border-radius: inherit;
@@ -20707,7 +20730,7 @@ h4 {
             width: 40px;
             height: 40px;
             background: var(--avatar-generic-background);
-            border-radius: var(--item-big-radius);
+            border-radius: var(--item-med-radius);
             box-shadow: var(--card-shadow);
             overflow: hidden;
             flex-shrink: 0;
@@ -21054,7 +21077,7 @@ h4 {
 
         .album-result-image,
         .artist-result-image {
-            border-radius: var(--item-big-radius);
+            border-radius: var(--item-med-radius);
             background: var(--avatar-generic-background);
 
             img {
@@ -21703,7 +21726,7 @@ h4 {
             height: 60px;
             background: hsl(var(--b5));
             box-shadow: var(--card-shadow);
-            border-radius: var(--item-big-radius);
+            border-radius: var(--item-med-radius);
             overflow: hidden;
 
             img {
@@ -21804,7 +21827,7 @@ h4 {
                     width: var(--size);
                     height: var(--size);
                     background-size: cover !important;
-                    border-radius: var(--item-big-radius);
+                    border-radius: var(--item-med-radius);
                     box-shadow: var(--card-shadow);
                     flex-shrink: 0;
 
@@ -21915,7 +21938,7 @@ h4 {
         .cover-art,
         .avatar {
             background: var(--avatar-generic-background);
-            border-radius: var(--item-big-radius);
+            border-radius: var(--item-med-radius);
             box-shadow: var(--interact-shadow);
             aspect-ratio: 1 / 1;
             --mask-size: var(--cover-size-200);
@@ -22668,7 +22691,7 @@ h4 {
                         .avatar {
                             width: var(--size);
                             height: var(--size);
-                            border-radius: var(--item-big-radius);
+                            border-radius: var(--item-med-radius);
 
                             &:after {
                                 display: none;
@@ -22698,7 +22721,7 @@ h4 {
     }
 
     .music-more-tags-tag {
-        border-radius: var(--item-big-radius);
+        border-radius: var(--item-med-radius);
         box-shadow: var(--interact-shadow);
         text-shadow: 0 0 12px rgba(0, 0, 0, 0.3);
         overflow: hidden;
@@ -23140,7 +23163,7 @@ h4 {
                 height: 130px;
                 position: absolute;
                 inset: 0;
-                border-radius: var(--item-big-radius);
+                border-radius: var(--item-med-radius);
                 object-fit: cover;
                 object-position: top;
 

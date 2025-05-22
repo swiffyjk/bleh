@@ -1124,6 +1124,10 @@
       en: "Scrobbles",
       de: "Scrobbels"
     },
+    count_scrobbles: {
+      en: "{c} scrobbles",
+      de: "{c} scrobbels"
+    },
     // TODO(stel): are all these correct (singular/plural)?
     artist: {
       en: "Artist",
@@ -1597,6 +1601,9 @@
     listeners: {
       en: "Listeners",
       de: "Zuh\xF6rer*innen"
+    },
+    count_listeners: {
+      en: "{c} listeners"
     },
     // tag sounds better in english
     tag: {
@@ -9317,15 +9324,15 @@
     let row = document.createElement("div");
     row.classList.add("listener-row");
     row.innerHTML = `
-        <div class="listener-side" id="listeners">
+        <div class="listener-side">
             <h3>${listeners.text}</h3>
             <p>${listeners.abbr}</p>
         </div>
-        <div class="scrobble-side" id="scrobbles">
+        <div class="scrobble-side">
             <h3>${scrobbles.text}</h3>
             <p>${scrobbles.abbr}</p>
         </div>
-        ${metascore.text != void 0 ? `
+        ${metascore.text ? `
         <div class="metascore-side">
             <h3>${metascore.text}</h3>
             <p><a href="${metascore.link}" target="_blank">${metascore.abbr}</a></p>
@@ -9335,11 +9342,11 @@
     panel.insertBefore(row, panel.firstElementChild);
     if (page.mobile)
       page.structure.main.insertBefore(panel, page.structure.main.firstElementChild);
-    tippy(document.getElementById("listeners"), {
-      content: listeners.value.toLocaleString(lang)
+    tippy(row.querySelector(".listener-side p"), {
+      content: tl(trans.count_listeners).replace("{c}", listeners.value.toLocaleString(lang))
     });
-    tippy(document.getElementById("scrobbles"), {
-      content: scrobbles.value.toLocaleString(lang)
+    tippy(row.querySelector(".scrobble-side p"), {
+      content: tl(trans.count_scrobbles).replace("{c}", scrobbles.value.toLocaleString(lang))
     });
     if (page.type == "album") {
       let album_artwork = document.body.querySelector(".artwork-and-metadata-row");
@@ -12192,7 +12199,7 @@
       });
       listen_container.innerHTML = `
             <div class="listener-row">
-                <div class="scrobble-side" id="scrobbles_tooltip">
+                <div class="scrobble-side">
                     <h3>${tl(trans.scrobbles)}</h3>
                     <p><a href="${root}user/${page.name}/library">${scrobbles}</a></p>
                 </div>
@@ -12216,7 +12223,7 @@
                 </a>
             </div>
         `;
-      tippy(listen_container.querySelector("#scrobbles_tooltip"), {
+      tippy(listen_container.querySelector(".scrobble-side p"), {
         content: average
       });
       if (page.name != sponsor_list.sponsor_account) {
@@ -17343,12 +17350,12 @@
     let language_options = document.querySelectorAll(".footer-language-form");
     let language_menu = document.createElement("div");
     language_menu.classList.add("language-menu");
-    let sel_button = document.createElement("button");
-    sel_button.classList.add("dropdown-menu-clickable-item", "lang-item", "active");
-    sel_button.setAttribute("data-lang", lang);
-    sel_button.style.setProperty("--flag-url", `url('https://katelyynn.github.io/bleh/fm/flags/${lang}.svg')`);
-    sel_button.textContent = selected_language;
-    language_menu.appendChild(sel_button);
+    language_menu.innerHTML = `
+        <button class="dropdown-menu-clickable-item lang-item active" data-lang="${lang}" style="--flag-url: url('https://katelyynn.github.io/bleh/fm/flags/${lang}.svg')">
+            ${selected_language}
+        </button>
+        <div class="sep"></div>
+    `;
     language_options.forEach((language_option) => {
       let button = language_option.querySelector("button");
       button.classList.remove("mimic-link");
@@ -20828,7 +20835,7 @@
   // src/build/build.json
   var build_default = {
     brand: "bleh",
-    build: "2025.0514",
+    build: "2025.0522",
     sku: "corin",
     bio: "bleh!!! ^-^",
     author: "kate",

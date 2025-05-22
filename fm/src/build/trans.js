@@ -268,6 +268,10 @@ export const trans = {
         en: 'Scrobbles',
         de: 'Scrobbels'
     },
+    count_scrobbles: {
+        en: '{c} scrobbles',
+        de: '{c} scrobbels'
+    },
     // TODO(stel): are all these correct (singular/plural)?
     artist: {
         en: 'Artist',
@@ -741,6 +745,9 @@ export const trans = {
     listeners: {
         en: 'Listeners',
         de: 'Zuhörer*innen'
+    },
+    count_listeners: {
+        en: '{c} listeners'
     },
     // tag sounds better in english
     tag: {

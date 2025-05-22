@@ -841,15 +841,15 @@ function show_numbers_on_side(header_type) {
     let row = document.createElement('div');
     row.classList.add('listener-row');
     row.innerHTML = (`
-        <div class="listener-side" id="listeners">
+        <div class="listener-side">
             <h3>${listeners.text}</h3>
             <p>${listeners.abbr}</p>
         </div>
-        <div class="scrobble-side" id="scrobbles">
+        <div class="scrobble-side">
             <h3>${scrobbles.text}</h3>
             <p>${scrobbles.abbr}</p>
         </div>
-        ${(metascore.text != undefined) ? (`
+        ${(metascore.text) ? (`
         <div class="metascore-side">
             <h3>${metascore.text}</h3>
             <p><a href="${metascore.link}" target="_blank">${metascore.abbr}</a></p>
@@ -862,11 +862,11 @@ function show_numbers_on_side(header_type) {
     if (page.mobile)
         page.structure.main.insertBefore(panel, page.structure.main.firstElementChild);
 
-    tippy(document.getElementById('listeners'), {
-        content: listeners.value.toLocaleString(lang)
+    tippy(row.querySelector('.listener-side p'), {
+        content: tl(trans.count_listeners).replace('{c}', listeners.value.toLocaleString(lang))
     });
-    tippy(document.getElementById('scrobbles'), {
-        content: scrobbles.value.toLocaleString(lang)
+    tippy(row.querySelector('.scrobble-side p'), {
+        content: tl(trans.count_scrobbles).replace('{c}', scrobbles.value.toLocaleString(lang))
     });
 
 

@@ -338,7 +338,7 @@ export function bleh_profiles() {
 
         listen_container.innerHTML = (`
             <div class="listener-row">
-                <div class="scrobble-side" id="scrobbles_tooltip">
+                <div class="scrobble-side">
                     <h3>${tl(trans.scrobbles)}</h3>
                     <p><a href="${root}user/${page.name}/library">${scrobbles}</a></p>
                 </div>
@@ -363,7 +363,7 @@ export function bleh_profiles() {
             </div>
         `);
 
-        tippy(listen_container.querySelector('#scrobbles_tooltip'), {
+        tippy(listen_container.querySelector('.scrobble-side p'), {
             content: average
         });
 
