@@ -752,7 +752,7 @@ function create_listen_item(parent, {name, listens, link, avi, count=0, button=f
         listen_item.setAttribute('onclick', `_other_listener('${link}')`);
 
         tippy(listen_item, {
-            content: trans_legacy.en.music.listens.custom.tooltip
+            content: tl(trans.view_others_library)
         });
     } else {
         // other listeners by clicking this link (artist)
@@ -978,7 +978,7 @@ export function bleh_music_page_charts() {
 
     // is this a chart reflow due to style loading?
     let previous_chart = panel.querySelector('.scrobble-canvas-container');
-    if (previous_chart != null)
+    if (previous_chart)
         panel.removeChild(previous_chart);
 
     let table = trend.querySelector('tbody');

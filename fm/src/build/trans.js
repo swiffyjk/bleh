@@ -1478,6 +1478,9 @@ export const trans = {
     replace: {
         en: 'Replace'
     },
+    view_others_library: {
+        en: 'View others library'
+    },
     avatar_radius: {
         en: 'Profile avatar shape',
         de: 'Profil-Avatarform'

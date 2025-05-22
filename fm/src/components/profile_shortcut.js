@@ -1,8 +1,8 @@
 import { settings } from "../build/config";
 import { auth, dialogs, page, root } from "../build/page";
-import { lang, trans_legacy, trans, tl } from "../build/trans";
-import { dialog, dialog_legacy, dialog_rm } from "./dialog";
-import { deliver_notif, notify } from "./notify";
+import { trans, tl } from "../build/trans";
+import { dialog, dialog_rm } from "./dialog";
+import { notify } from "./notify";
 
 unsafeWindow._open_profile_shortcut_window = function() {
     open_profile_shortcut_window();
@@ -35,7 +35,7 @@ unsafeWindow._other_listener = function(id) {
 export function other_listener(id) {
     let modal = dialog({
         id: 'other_listener',
-        title: trans_legacy.en.music.listens.custom.name,
+        title: tl(trans.view_others_library),
         body: (`
         <div class="setting" data-type="text">
             <div class="avatar-container">

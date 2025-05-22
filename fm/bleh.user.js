@@ -2334,6 +2334,9 @@
     replace: {
       en: "Replace"
     },
+    view_others_library: {
+      en: "View others library"
+    },
     avatar_radius: {
       en: "Profile avatar shape",
       de: "Profil-Avatarform"
@@ -8572,7 +8575,7 @@
   function other_listener(id) {
     let modal = dialog({
       id: "other_listener",
-      title: trans_legacy.en.music.listens.custom.name,
+      title: tl(trans.view_others_library),
       body: `
         <div class="setting" data-type="text">
             <div class="avatar-container">
@@ -9248,7 +9251,7 @@
       listen_item.removeAttribute("href");
       listen_item.setAttribute("onclick", `_other_listener('${link}')`);
       tippy(listen_item, {
-        content: trans_legacy.en.music.listens.custom.tooltip
+        content: tl(trans.view_others_library)
       });
     } else {
       listen_item.innerHTML = `
@@ -9413,7 +9416,7 @@
     let trend = panel.querySelector(".listener-trend");
     if (!trend) return;
     let previous_chart = panel.querySelector(".scrobble-canvas-container");
-    if (previous_chart != null)
+    if (previous_chart)
       panel.removeChild(previous_chart);
     let table = trend.querySelector("tbody");
     let days = table.querySelectorAll("tr");
