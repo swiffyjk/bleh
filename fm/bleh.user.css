@@ -159,7 +159,7 @@ body, [data-page-resource-type="album"], [data-page-resource-type="track"],
 .colourful-bg
 {
     /* any additional highlights */
-    --b3: var(--hue), calc(var(--sat) * 4% * var(--sat-bg, 1)), 30%;
+    --b3: var(--hue), calc(var(--sat) * 6% * var(--sat-bg, 1)), 30%;
 
     /* card border */
     --b4: var(--hue), calc(var(--sat) * 5% * var(--sat-bg, 1)), 26%;
@@ -219,7 +219,7 @@ body, [data-page-resource-type="album"], [data-page-resource-type="track"],
         --b5: 0, 0%, 100%;
 
         /* root */
-        --b6: 0, 0%, 90%;
+        --b6: 0, 0%, 93%;
         --b8: 0, 0%, 100%;
         --b7: 0, 0%, 0%;
 
@@ -319,7 +319,7 @@ a,
             1))));
 
     --c1: var(--hue), calc(var(--sat) * 40%), 100%;
-    --c2: var(--hue), calc(var(--sat) * 60%), 90%;
+    --c2: var(--hue), calc(var(--sat) * 50%), 90%;
     --c3: var(--hue), calc(var(--sat) * 10%), 60%;
     --ov-c1: var(--c1);
 
@@ -403,7 +403,7 @@ a,
         --h3-sat: calc(clamp(min(0), var(--sat), max(1.5)) * 50%);
         --h3-lit: calc(clamp(min(0.5), var(--lit), max(1.1)) * 80%);
         --h4: var(--hue), calc(clamp(min(0), var(--sat), max(1.5)) * 60%), calc(clamp(min(0.7), var(--lit), max(1.1)) * 65%);
-        --f4: var(--hue), calc(clamp(min(0), var(--sat), max(1.5)) * 25%), calc(clamp(min(0.5), var(--lit), max(1.5)) * 80%);
+        --f4: var(--hue), calc(clamp(min(0), var(--sat), max(1.5)) * 35%), calc(clamp(min(0.5), var(--lit), max(1.5)) * 73%);
         --g4: var(--hue), calc(clamp(min(0), var(--sat), max(1.5)) * 70%), 92%;
 
         /* l2-c in dark modes, l4-c in light modes */
@@ -439,7 +439,7 @@ a,
         --h3-sat: calc(clamp(min(0), var(--sat), max(1.5)) * 50%);
         --h3-lit: calc(clamp(min(0.5), var(--lit), max(1.1)) * 80%);
         --h4: var(--hue), calc(clamp(min(0), var(--sat), max(1.5)) * 30%), calc(clamp(min(0.7), var(--lit), max(1.1)) * 55%);
-        --f4: var(--hue), calc(clamp(min(0), var(--sat), max(1.5)) * 7%), calc(clamp(min(0.5), var(--lit), max(1.5)) * 63%);
+        --f4: var(--hue), calc(clamp(min(0), var(--sat), max(1.5)) * 43%), calc(clamp(min(0.5), var(--lit), max(1.5)) * 68%);
         --g4: var(--hue), calc(clamp(min(0), var(--sat), max(1.5)) * 25%), 75%;
 
         /* l2-c in dark modes, l4-c in light modes */
@@ -495,7 +495,7 @@ body {
     --gloss: 0;
 
     --interactable-inset: inset hsl(var(--b3)) 0 -1px 0;
-    --interactable-outer: 0 2px 3px rgba(0, 0, 0, 0.25);
+    --interactable-outer: 0 1px 1px rgba(0, 0, 0, 0.35);
     --interactable-active-outer: hsla(var(--c1), 0.03) 0 2px 25px 0;
 
     --interact-shadow: var(--interactable-outer);
@@ -536,7 +536,7 @@ body {
     --menu-shadow: 0 12px 36px 0 hsla(var(--b7), 0.15);
     --standout-shadow: 3px 6px 20px 7px hsla(var(--b7), 0.06);
 
-    --interactable-outer: hsla(var(--b7), 0.03) 0 2px 2px 0;
+    --interactable-outer: hsla(var(--b7), 0.3) 0 1px 1px 0;
     --interactable-active-outer: transparent 0 0 0;
 
     color-scheme: light !important;
@@ -1150,7 +1150,7 @@ last.fm changes as of 2024-05-20 */
     &.scrolled {
         background: hsl(var(--b5), 85%);
         backdrop-filter: blur(20px) saturate(120%);
-        box-shadow: var(--interact-shadow);
+        box-shadow: var(--card-shadow);
 
         &:before {
             opacity: 0;
@@ -5821,6 +5821,7 @@ a.chartlist-love-button:after {
 .chartlist-count-bar {
     line-height: 22px; /* 22 */
     background: linear-gradient(90deg, hsl(var(--b3)), hsl(var(--c3), 40%));
+    box-shadow: var(--interact-shadow);
     width: 180px;
     display: flex;
 
@@ -7702,6 +7703,7 @@ section:has(.dropdown-menu-clickable-button.section-control) {
             transition-duration: var(--trans);
             transition-timing-function: var(--trans-function);
             border-radius: 50px;
+            box-shadow: var(--interact-shadow) !important;
         }
 
         &:after {
@@ -16092,14 +16094,14 @@ input[type="range"]::-moz-range-progress {
 .mention,
 :is(.shout-body, .about-me-sidebar, .bleh--about-me-preview, .wiki-content, .markdown-body, .user-list-about-me) a[href*="/user/"]:not([href^=https], [href*="/library/music/"]) {
     padding: 0 4px;
-    background-color: color-mix(in hsl, hsl(var(--h4)), hsl(var(--b5)) 65%);
+    background-color: hsl(var(--h4), 25%);
     border-radius: var(--item-small-radius);
     font-weight: var(--font-weight-medium);
     text-decoration: var(--force-underline, none) !important;
 }
 :is(.shout-body, .about-me-sidebar, .bleh--about-me-preview, .user-list-about-me) a[href^="https://open.spotify.com/user/"] {
     padding: 0 4px 0 calc(4px + 14px + 4px);
-    background-color: color-mix(in hsl, hsl(var(--h4)), hsl(var(--b5)) 65%);
+    background-color: hsl(var(--h4), 25%);
     border-radius: var(--item-small-radius);
     font-weight: var(--font-weight-medium);
     text-decoration: none;
@@ -22389,6 +22391,7 @@ h4 {
 
     a {
         font-weight: var(--font-weight-medium);
+        color: hsl(var(--l3-c)) !important;
     }
 
     [data-bleh--theme_type="light"] & {
