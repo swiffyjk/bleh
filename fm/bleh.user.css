@@ -495,7 +495,7 @@ body {
     --gloss: 0;
 
     --interactable-inset: inset hsl(var(--b3)) 0 -1px 0;
-    --interactable-outer: 0 1px 1px rgba(0, 0, 0, 0.35);
+    --interactable-outer: 0 4px 7px rgba(0, 0, 0, 0.18);
     --interactable-active-outer: hsla(var(--c1), 0.03) 0 2px 25px 0;
 
     --interact-shadow: var(--interactable-outer);
@@ -4502,7 +4502,7 @@ better than the default selector '#app a' i suppose */
     aspect-ratio: 1 / 1;
     border-radius: var(--item-med-radius);
     /*overflow: hidden;*/
-    box-shadow: var(--grid-colour-shadow, none), var(--standout-shadow);
+    box-shadow: var(--grid-colour-shadow, none), var(--interact-shadow);
 
     transition-property: transform;
     transition-duration: var(--trans);
@@ -17231,16 +17231,11 @@ button.bleh--gallery-bookmark-image-btn {
             &.delete-icon {
                 --bg-hov: hsla(var(--h4), 15%);
                 --bg-atv: hsla(var(--h4), 25%);
+                --col: hsl(var(--l3-c));
+                --sat-over: 1;
+                --lit-over: 1;
             }
         }
-    }
-
-    .gallery-image-buttons button:not(.image-open-button),
-    .swatch:not([data-swatch-type="seasonal"], [data-swatch-type="custom"]),
-    .delete-icon {
-        --col: hsl(var(--l3-c));
-        --sat-over: 1;
-        --lit-over: 1;
     }
 
     &.album-overview-cover-art-action-row a,
