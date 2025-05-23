@@ -1998,7 +1998,6 @@ last.fm changes as of 2024-05-20 */
 /* individual library selection */
 /* listening reports */ .user-dashboard > .user-dashboard-buffer,
 .recent-tracks-section,
-/* quick create playlists */ .section-with-separator[action*="/create/from-"],
 .event-summary-with-poster,
 /* event overview thing */ .event-details:not(.event-summary-with-poster .event-details),
 .wiki-history,
@@ -7139,7 +7138,6 @@ button,
 .coloured-cta,
 .gallery-previous .arrow,
 .section-playlink,
-.attendance-btn--turn-off, .attendance-btn--turn-on:hover, .attendance-btn--turn-off:hover + .attendance-btn--turn-on,
 .image-upload-remove,
 .profile-header-set-obsession,
 .back-button, .delete-button,
@@ -7360,7 +7358,6 @@ button,
 /* managing an inbox msg */ :is(.back-button, .delete-button):before,
 /*     EVENTS     */
 .event-detail:before, .event-metadata:not(:last-child):before,
-.attendance-btn:before,
 /*     BREADCRUMBS     */
 .content-top-back-link:after, .subpage-breadcrumb li:after,
 /*     HEADER     */
@@ -7691,7 +7688,7 @@ section:has(.dropdown-menu-clickable-button.section-control) {
 .stationlinks {
     order: 10;
 }
-.side-actions > div:not([data-toggle-button], [data-tippy-root]) {
+.side-actions > div:not([data-toggle-button], [data-tippy-root], .sep) {
     display: none;
 }
 .side-actions,
@@ -7701,6 +7698,10 @@ section:has(.dropdown-menu-clickable-button.section-control) {
     flex-direction: column;
     gap: var(--card-gap);
     margin-top: var(--card-gap);
+
+    & > form {
+        margin: unset;
+    }
 
     .side-action,
     .listening-report-promo,
@@ -7796,6 +7797,7 @@ section:has(.dropdown-menu-clickable-button.section-control) {
                 background: hsl(var(--b4), 30%) !important;
             }
         }
+        &.attendance-btn--turn-off,
         [data-toggle-button-current-state="loved"] > form > &,
         [data-toggle-button-current-state="bookmarked"] > form > &,
         &[data-is-shortcut="true"],
@@ -7913,6 +7915,12 @@ section:has(.dropdown-menu-clickable-button.section-control) {
 }
 [data-type="message_sponsor"] {
     --mask: var(--icon-16-sponsor-rewards);
+}
+[data-type="bookmark"] {
+    --mask: var(--icon-16-bookmark);
+}
+[data-type="playlist"] {
+    --mask: var(--icon-16-playlist);
 }
 
 
@@ -13390,9 +13398,13 @@ table.table tr:nth-child(2n) td {
 
 
 /*     EVENT ATTENDANCE     */
+.attendance-control {
+    display: flex;
+    flex-direction: column;
+    gap: var(--card-gap);
+}
 .attendance-btn {
     position: relative;
-    --show-icon: block;
 
     /* weirdly displaying if u have none selected */
     [data-ajax-form-state=""] &.attendance-btn--turn-off,
@@ -19250,6 +19262,7 @@ h4 {
 
     position: relative;
     z-index: 9;
+    margin: unset;
 
     .bleh--avatar-clickable-link {
         position: absolute;
@@ -19262,8 +19275,8 @@ h4 {
     transition-duration: var(--trans);
     transition-timing-function: var(--trans-function);
 
-    &:hover {
-        transform: scale(1.03);
+    &:active {
+        transform: scale(0.96);
     }
 }
 

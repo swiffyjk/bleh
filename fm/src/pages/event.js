@@ -80,8 +80,10 @@ export function bleh_events() {
     `);
 
     let background = document.body.querySelector('.header-background--has-image');
-    if (background != null)
+    if (background)
         register_background(background.style.getPropertyValue('background-image').replace('url("', '').replace('")', ''));
+    else
+        register_background(null);
 
     page.structure.container.insertBefore(redesigned_event_header, page.structure.container.firstElementChild);
     document.body.querySelector('.header').classList.add('legacy-header');
@@ -108,39 +110,27 @@ export function bleh_events() {
 
 
         // create new
-        let event_top_header = document.createElement('div');
-        event_top_header.classList.add('view-buttons', 'event-top-header');
+        let side_actions = document.createElement('section');
+        side_actions.classList.add('side-actions');
+
+        page.structure.side.appendChild(side_actions);
 
         let form = document.body.querySelector('.attendance-control');
         let buttons = form.querySelectorAll('button');
         buttons.forEach((button) => {
-            button.classList.add('btn', 'event-top-item', 'view-item');
+            button.classList.add('btn', 'side-action');
         });
 
-        event_top_header.appendChild(form);
+        side_actions.appendChild(form);
+
+        let sep = document.createElement('div');
+        sep.classList.add('sep');
+        side_actions.appendChild(sep);
 
 
         let main_panel = page.structure.main.querySelector('.event-summary-with-poster');
         if (!main_panel)
             main_panel = page.structure.main.querySelector('.event-details');
-
-        main_panel.insertBefore(event_top_header, main_panel.firstElementChild);
-        console.info('event top header', event_top_header);
-
-
-
-
-        // move poster
-        let poster = main_panel.querySelector('.event-poster-preview');
-        let poster_panel;
-        if (poster) {
-            poster_panel = document.createElement('section');
-            poster_panel.classList.add('poster-panel', 'view-all-panel');
-
-            poster_panel.innerHTML = (`${poster.outerHTML}<a onclick="_expand_avatar('${poster.getAttribute('src').replace('/arXL/', '/ar0/')}')" class="bleh--avatar-clickable-link"></a>`);
-
-            page.structure.side.insertBefore(poster_panel, page.structure.side.firstElementChild);
-        }
 
 
 
@@ -148,16 +138,28 @@ export function bleh_events() {
         // edit button
         let edit_button = main_panel.querySelector('.event-metadata + .event-metadata a');
         if (edit_button) {
-            edit_button.classList.add('btn', 'view-all-button', 'back', 'edit-event-button');
+            edit_button.classList.add('btn', 'side-action');
+            edit_button.setAttribute('data-type', 'edit');
+            side_actions.appendChild(edit_button);
+        }
 
-            let edit_panel = document.createElement('section');
-            edit_panel.classList.add('view-all-panel');
 
-            edit_panel.appendChild(edit_button);
-            if (poster)
-                poster_panel.after(edit_panel);
-            else
-                page.structure.side.insertBefore(edit_panel, page.structure.side.firstElementChild);
+        // move poster
+        let poster = main_panel.querySelector('.event-poster-preview');
+        let poster_panel;
+        if (poster) {
+            poster_panel = document.createElement('section');
+            poster_panel.classList.add('poster-panel');
+
+            poster.setAttribute('src', poster.getAttribute('src').replace('/arXL/', '/ar0/'));
+
+            poster_panel.innerHTML = (`${poster.outerHTML}<a onclick="_expand_avatar('${poster.getAttribute('src')}')" class="bleh--avatar-clickable-link"></a>`);
+
+            let sep2 = document.createElement('div');
+            sep2.classList.add('sep');
+            side_actions.appendChild(sep2);
+
+            side_actions.appendChild(poster_panel);
         }
 
 
@@ -192,10 +194,10 @@ export function bleh_events() {
             view_buttons.innerHTML = (`
                 <div class="view-buttons">
                     <button class="btn view-item" id="toggle-list_view-1" data-toggle="list_view" data-toggle-value="1" onclick="_update_item('list_view', 1)">
-                        ${trans_legacy.en.glacier.view.grid}
+                        ${tl(trans.grid)}
                     </button>
                     <button class="btn view-item" id="toggle-list_view-0" data-toggle="list_view" data-toggle-value="0" onclick="_update_item('list_view', 0)">
-                        ${trans_legacy.en.glacier.view.list}
+                        ${tl(trans.list)}
                     </button>
                 </div>
             `);
