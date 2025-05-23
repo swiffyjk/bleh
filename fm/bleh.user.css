@@ -5234,6 +5234,8 @@ better than the default selector '#app a' i suppose */
 /*     CHARTLIST TYPE     */
 /* only viewable in a user's tags */
 .chartlist-type {
+    width: 18px;
+    height: 18px;
     --left: 0;
     color: hsl(var(--c3));
 
@@ -5534,8 +5536,15 @@ better than the default selector '#app a' i suppose */
     }
 }
 
+.chartlist {
+    --chartlist-type: 0px;
+}
+.chartlist--with-type {
+    --chartlist-type: calc(18px + 12px);
+}
+
 .chartlist.chartlist--with-artist {
-    [data-bleh--stacked_chartlist_info="true"] &, &.chartlist--with-bar {
+    [data-bleh--stacked_chartlist_info="true"] &, &.chartlist--with-bar, &.chartlist--with-type {
         &:not(.chartlist--with-bar) {
             .chartlist-row {
                 .chartlist-name {
@@ -5543,13 +5552,13 @@ better than the default selector '#app a' i suppose */
                 }
                 .chartlist-artist {
                     position: absolute;
-                    left: calc(38px + 2px - 28px);
+                    left: calc(var(--chartlist-type) + 38px + 2px - 28px);
                     margin-top: 16px;
                     right: 300px;
                 }
                 .chartlist-album.custom-album-text {
                     position: absolute;
-                    left: calc(38px + 2px - 28px);
+                    left: calc(var(--chartlist-type) + 38px + 2px - 28px);
                     margin-top: 32px;
                     margin-left: calc(var(--chartlist-inner-gap) / 2) !important;
                     margin-right: unset !important;
@@ -5568,11 +5577,11 @@ better than the default selector '#app a' i suppose */
             &.chartlist--with-image {
                 .chartlist-row {
                     .chartlist-artist {
-                        left: calc(84px - 2px - 28px);
+                        left: calc(var(--chartlist-type) + 84px - 2px - 28px);
                     }
                     .chartlist-album.custom-album-text {
                         position: absolute;
-                        left: calc(84px - 2px - 28px);
+                        left: calc(var(--chartlist-type) + 84px - 2px - 28px);
                     }
 
                     &.chartlist-row--now-scrobbling {
@@ -5581,7 +5590,7 @@ better than the default selector '#app a' i suppose */
                             margin-bottom: 32px;
                         }
                         .chartlist-artist {
-                            left: calc(18px + 84px - 2px - 28px);
+                            left: calc(var(--chartlist-type) + 18px + 84px - 2px - 28px);
                             margin-top: unset;
 
                             @media (max-width: 600px) {
@@ -5589,7 +5598,7 @@ better than the default selector '#app a' i suppose */
                             }
                         }
                         .chartlist-album.custom-album-text {
-                            left: calc(18px + 84px - 2px - 28px);
+                            left: calc(var(--chartlist-type) + 18px + 84px - 2px - 28px);
                             margin-top: 32px;
 
                             font-size: var(--font-size-sm);
@@ -5606,7 +5615,7 @@ better than the default selector '#app a' i suppose */
                 }
                 .chartlist-artist {
                     position: absolute;
-                    left: calc(84px - 2px - 42px);
+                    left: calc(var(--chartlist-type) + 84px - 2px - 42px);
                     margin-top: 16px;
                     right: 300px;
                     width: 50%;
@@ -7322,7 +7331,7 @@ button,
 .avatar-overlay:before,
 .grid-item:before,
 .primary-selection:not(.no-icon):after,
-:is(.shout-body, .about-me-sidebar, .bleh--about-me-preview) a:before,
+:is(.shout-body, .about-me-sidebar, .bleh--about-me-preview, .user-list-about-me) a:before,
 /*     DROPDOWNS     */
 .dropdown-menu-clickable-item:before, .auth-dropdown-menu-item:before,
 .dropdown-menu-list-button::after, .dropdown-menu-clickable-button::after, .dropdown-menu-clickable-button-js-only::after,
@@ -16104,12 +16113,12 @@ input[type="range"]::-moz-range-progress {
         text-decoration: none;
     }
 }
-:is(.shout-body, .about-me-sidebar, .bleh--about-me-preview) a {
+:is(.shout-body, .about-me-sidebar, .bleh--about-me-preview, .user-list-about-me) a {
     position: relative;
     --show-icon: none;
     --top: 50%;
     --margin-top: -7px;
-    --left: 4px;
+    --left: 0;
     --mask-size: 14px;
 }
 .involved--user,
@@ -16122,11 +16131,7 @@ input[type="range"]::-moz-range-progress {
     text-decoration: var(--force-underline, none) !important;
 }
 :is(.shout-body, .about-me-sidebar, .bleh--about-me-preview, .user-list-about-me) a[href^="https://open.spotify.com/user/"] {
-    padding: 0 4px 0 calc(4px + 14px + 4px);
-    background-color: hsl(var(--h4), 25%);
-    border-radius: var(--item-small-radius);
-    font-weight: var(--font-weight-medium);
-    text-decoration: none;
+    padding-left: calc(14px + 4px);
     --show-icon: block;
     --mask: url('data:image/svg+xml;base64,PHN2ZyByb2xlPSJpbWciIHZpZXdCb3g9IjAgMCAyNCAyNCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48dGl0bGU+U3BvdGlmeTwvdGl0bGU+PHBhdGggZD0iTTEyIDBDNS40IDAgMCA1LjQgMCAxMnM1LjQgMTIgMTIgMTIgMTItNS40IDEyLTEyUzE4LjY2IDAgMTIgMHptNS41MjEgMTcuMzRjLS4yNC4zNTktLjY2LjQ4LTEuMDIxLjI0LTIuODItMS43NC02LjM2LTIuMTAxLTEwLjU2MS0xLjE0MS0uNDE4LjEyMi0uNzc5LS4xNzktLjg5OS0uNTM5LS4xMi0uNDIxLjE4LS43OC41NC0uOSA0LjU2LTEuMDIxIDguNTItLjYgMTEuNjQgMS4zMi40Mi4xOC40NzkuNjU5LjMwMSAxLjAyem0xLjQ0LTMuM2MtLjMwMS40Mi0uODQxLjYtMS4yNjIuMy0zLjIzOS0xLjk4LTguMTU5LTIuNTgtMTEuOTM5LTEuMzgtLjQ3OS4xMi0xLjAyLS4xMi0xLjE0LS42LS4xMi0uNDguMTItMS4wMjEuNi0xLjE0MUM5LjYgOS45IDE1IDEwLjU2MSAxOC43MiAxMi44NGMuMzYxLjE4MS41NC43OC4yNDEgMS4yem0uMTItMy4zNkMxNS4yNCA4LjQgOC44MiA4LjE2IDUuMTYgOS4zMDFjLS42LjE3OS0xLjItLjE4MS0xLjM4LS43MjEtLjE4LS42MDEuMTgtMS4yLjcyLTEuMzgxIDQuMjYtMS4yNiAxMS4yOC0xLjAyIDE1LjcyMSAxLjYyMS41MzkuMy43MTkgMS4wMi40MTkgMS41Ni0uMjk5LjQyMS0xLjAyLjU5OS0xLjU1OS4zeiIvPjwvc3ZnPg==');
     --hue-over: var(--hue-brand-sp);
