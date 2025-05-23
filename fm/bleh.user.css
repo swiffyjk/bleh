@@ -172,7 +172,7 @@ body, [data-page-resource-type="album"], [data-page-resource-type="track"],
     --b8: var(--hue), calc(var(--sat) * 4% * var(--sat-bg, 1)), 25%;
     --b7: 0, 0%, 0%;
 
-    --card-border: 1px solid hsla(var(--b4), 0.7);
+    --card-border: inset 0 0 0 1px hsla(var(--b4), 0.6);
     --card-border-base: hsl(var(--b3), 0.7);
 
     .preview[data-bleh--theme="darker"], .redesigned-header[data-bleh--theme="darker"],
@@ -200,7 +200,7 @@ body, [data-page-resource-type="album"], [data-page-resource-type="track"],
         --b4: var(--hue), calc(var(--sat) * 2% * var(--sat-bg, 1)), 9%;
 
         /* card */
-        --b5: var(--hue), calc(var(--sat) * 2% * var(--sat-bg, 1)), 4%;
+        --b5: var(--hue), calc(var(--sat) * 2% * var(--sat-bg, 1)), 3%;
 
         /* root */
         --b6: 0, 0%, 0%;
@@ -319,8 +319,8 @@ a,
             1))));
 
     --c1: var(--hue), calc(var(--sat) * 40%), 100%;
-    --c2: var(--hue), calc(var(--sat) * 50%), 90%;
-    --c3: var(--hue), calc(var(--sat) * 10%), 60%;
+    --c2: var(--hue), calc(var(--sat) * 40%), 90%;
+    --c3: var(--hue), calc(var(--sat) * 7%), 60%;
     --ov-c1: var(--c1);
 
     --l2: var(--hue), calc(var(--sat) * 50%), calc(var(--lit) * 83%);
@@ -469,7 +469,7 @@ body {
         --cards-width: calc(var(--cards-main-width) + var(--cards-sidebar-width) + 1px);
     }
 
-    --item-small-radius: 6px;
+    --item-small-radius: 5px;
     --item-med-radius: 8px;
     --item-big-radius: 12px;
 
@@ -530,7 +530,7 @@ body {
     --card-shadow: hsla(var(--b7), 0.05) 0 2px 4px 0;
     --card-shadow: 0 1.5px 4px 0 hsla(var(--b7), 0.05);
 
-    --card-border: 1px solid hsl(var(--b4)) !important;
+    --card-border: inset 0 0 0 1px hsla(var(--b4), 0.7) !important;
     --menu-shadow: 2px 2px 24px 0 hsla(var(--b7), 0.15), 3px 6px 48px 16px hsla(var(--b7), 0.03);
     --overlay-shadow: 2px 2px 24px 0 hsla(var(--b7), 0.15), 3px 6px 48px 16px hsla(var(--b7), 0.03);
     --menu-shadow: 0 12px 36px 0 hsla(var(--b7), 0.15);
@@ -546,7 +546,7 @@ body {
 
 .preview[data-bleh--theme="oled"],
 [data-bleh--theme="oled"] body {
-    --card-border: 1px solid hsl(var(--b4));
+    --card-border: inset 0 0 0 1px hsla(var(--b4), 0.8);
 }
 
 /* icons (from lucide.dev <3) */
@@ -2023,7 +2023,7 @@ last.fm changes as of 2024-05-20 */
     --override-background: hsl(var(--card-specific-background, var(--card-background, var(--b5))));
     background: var(--card-specific-background, var(--card-background, hsl(var(--b5))));
     border-radius: var(--card-specific-radius, var(--card-radius));
-    box-shadow: var(--card-specific-shadow, var(--card-shadow));
+    box-shadow: var(--card-specific-shadow, var(--card-border), var(--card-shadow));
     padding: var(--card-padding);
     margin-left: unset;
     margin-right: unset;
@@ -4962,6 +4962,10 @@ better than the default selector '#app a' i suppose */
     & + .chartlist {
         margin-top: 4px !important;
     }
+
+    .buffer-standard:has(> &) {
+        margin-top: unset;
+    }
 }
 .chartlist tbody {
     display: flex;
@@ -4970,7 +4974,7 @@ better than the default selector '#app a' i suppose */
 .obsession-candidate,
 .chartlist-row {
     --bg: transparent;
-    --bg-hov: transparent;
+    --bg-hov: hsl(var(--b3), 20%);
     --shadow: none !important;
     color: hsl(var(--c2));
     background-color: var(--bg);
@@ -4982,8 +4986,7 @@ better than the default selector '#app a' i suppose */
     transition-property: background-color;
     transition-duration: var(--trans);
     transition-timing-function: var(--trans-function);
-    padding-right: 42px !important;
-    border-top: 1px solid var(--card-border-base);
+    border-bottom: 1px solid var(--card-border-base);
     margin: unset !important;
     display: flex !important;
     align-items: center;
@@ -4994,8 +4997,16 @@ better than the default selector '#app a' i suppose */
         transition: none !important;
     }
 
+    .chartlist--with-loved > tbody > & {
+        padding-right: 42px !important;
+    }
+
     .kate-placeholder {
         display: none;
+    }
+
+    .chartlist-more, .chartlist-play {
+        z-index: 30;
     }
 
     &.show-focus-controls {
@@ -5148,7 +5159,7 @@ better than the default selector '#app a' i suppose */
             }
 
             .chartlist-count-bar-value {
-                color: hsl(var(--c1));
+                color: hsl(var(--c2));
                 overflow: unset !important;
                 position: relative;
                 bottom: 9px;
@@ -5647,6 +5658,23 @@ better than the default selector '#app a' i suppose */
         border-radius: inherit !important;
     }
 
+    .avatar {
+        font-size: 0 !important;
+        aspect-ratio: 1 / 1;
+
+        &:after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background-image: var(--gloss-image) !important;
+            background-size: 100% !important;
+            opacity: var(--gloss, 0);
+            pointer-events: none;
+            padding: unset !important;
+            box-shadow: unset !important;
+        }
+    }
+
     .avatar-status-dot {
         display: none;
     }
@@ -5839,26 +5867,23 @@ a.chartlist-love-button:after {
         --lit-seasonal: 0.75;
     }
 
-    &:before {
-        content: '';
-        position: absolute;
-        inset: -4px;
-        border-radius: calc(var(--item-med-radius) + 4px);
-        opacity: 0;
+    .chartlist-count-bar-slug {
+        background: hsl(var(--h3)) !important;
+        box-shadow: 0px 0px 20px hsla(var(--h4), 50%);
+        left: unset;
+        right: 0;
 
-        border: 2px solid hsl(var(--h4), 30%);
-        box-shadow: 0 0 30px hsl(var(--h4), 10%);
-
-        transition-property: opacity;
+        transition-property: background;
         transition-duration: var(--trans);
         transition-timing-function: var(--trans-function);
     }
 
     &:hover {
+        text-decoration: underline !important;
         transition-duration: 0.1s !important;
 
-        &:before {
-            opacity: 1;
+        .chartlist-count-bar-slug {
+            background: color-mix(in hsl, hsl(var(--h4)), hsl(var(--h3)) 80%) !important;
             transition: none;
         }
     }
@@ -5896,8 +5921,8 @@ a.chartlist-love-button:after {
 }
 .chartlist-count-bar-link {
     text-decoration: var(--force-underline, none) !important;
-    padding: 0 9px !important; /* 14 */
-    font-weight: var(--font-weight-medium);
+    padding: 0 6px !important; /* 14 */
+    font-weight: var(--font-weight-bold);
     flex: 1;
     text-align: right;
 }
@@ -5909,13 +5934,7 @@ a.chartlist-love-button:after {
 
 .chartlist-count-bar,
 .chartlist-count-bar-slug {
-    border-radius: var(--item-med-radius); /* 50 */
-}
-.chartlist-count-bar-slug {
-    background: hsl(var(--h3)) !important;
-    box-shadow: 0px 0px 16px hsla(var(--h3), 50%);
-    left: unset;
-    right: 0;
+    border-radius: var(--item-small-radius); /* 50 */
 }
 .chartlist-count-bar-value {
     color: hsl(var(--b7));
@@ -7948,7 +7967,7 @@ section:has(.dropdown-menu-clickable-button.section-control) {
 .library-search-results,
 .player-bar-playback-options-wrap,
 .dropdown-menu-clickable, .auth-dropdown-menu, .navlist-hidden-list-wrap .navlist-hidden-list {
-    padding: 0 !important;
+    padding: 4px !important;
 }
 .dropdown-menu-item-dark,
 .dropdown-menu-clickable-item, .auth-dropdown-menu-item, .navlist-hidden-list a,
@@ -7961,7 +7980,7 @@ section:has(.dropdown-menu-clickable-button.section-control) {
     --shadow: none !important;
     --shadow-hov: none !important;
     --col: hsl(var(--c2)) !important;
-    --radius: 0;
+    --radius: var(--item-med-radius);
     position: relative !important;
     min-width: 170px !important;
     --show-icon: block;
@@ -7989,6 +8008,9 @@ section:has(.dropdown-menu-clickable-button.section-control) {
 .dropdown-menu-clickable-item[aria-checked="true"],
 .dropdown-menu-clickable-item--selected {
     --mask: var(--icon-16-check) !important;
+    --mask-size: 12px !important;
+    --btn-left: calc(12px + 12px + 4px) !important;
+    --margin-top: -6px !important;
 }
 
 .dropdown-menu-clickable-item {
@@ -8137,20 +8159,20 @@ very, very, very dated - who looks up a song on ebay? */
         content: '';
         display: block !important;
 
-        border-top-left-radius: var(--item-med-radius);
-        border-top-right-radius: var(--item-med-radius);
+        border-top-left-radius: calc(var(--item-med-radius) + 4px);
+        border-top-right-radius: calc(var(--item-med-radius) + 4px);
 
         background-image: var(--url) !important;
         position: absolute;
         inset: 0 !important;
         width: unset !important;
-        height: calc(64px + var(--button-list-gap) + var(--button-list-gap)) !important;
+        height: calc(84px + var(--button-list-gap) + var(--button-list-gap)) !important;
         background-size: cover !important;
         background-position-y: 30% !important;
         --mask: linear-gradient(0deg, transparent 0%, rgb(0, 0, 0) 100%);
         mask-image: var(--mask);
         -webkit-mask-image: var(--mask);
-        opacity: 0.22;
+        opacity: 0.3;
     }
 
     /*&:after {
@@ -8786,12 +8808,10 @@ input:is([name^="track_name"], [name^="artist_name"], [name^="album_name"], [nam
 .bleh-modal {
     background: hsl(var(--b5));
     border-radius: var(--item-big-radius);
-    box-shadow: var(--override-full-shadow, var(--menu-shadow));
+    box-shadow: var(--override-full-shadow, var(--card-border), var(--menu-shadow));
     color: hsl(var(--c2));
     padding: var(--card-padding);
     position: relative;
-
-    box-shadow: var(--override-full-shadow, var(--menu-shadow));
 
     display: flex;
     flex-direction: column;
@@ -8933,8 +8953,8 @@ input:is([name^="track_name"], [name^="artist_name"], [name^="album_name"], [nam
 .dropdown-menu-clickable, .auth-dropdown-menu, .navlist-hidden-list, .modal-body, .library-search-results, .events-filter-location-dropdown {
     margin: unset !important;
     background: hsl(var(--b6), 95%) !important;
-    border-radius: var(--item-med-radius) !important;
-    box-shadow: var(--override-full-shadow, var(--overlay-shadow)) !important;
+    border-radius: calc(var(--item-med-radius) + 4px) !important;
+    box-shadow: var(--override-full-shadow, var(--card-border), var(--overlay-shadow)) !important;
     color: hsl(var(--c2));
     overflow: hidden;
 
@@ -8961,7 +8981,7 @@ input:is([name^="track_name"], [name^="artist_name"], [name^="album_name"], [nam
     &.date-range-picker-content,
     &.modal-body {
         background: hsl(var(--b5)) !important;
-        box-shadow: var(--override-full-shadow, var(--menu-shadow)) !important;
+        box-shadow: var(--override-full-shadow, var(--card-border), var(--menu-shadow)) !important;
         border-radius: var(--item-big-radius) !important;
     }
 }
@@ -10292,24 +10312,11 @@ text[style^="color: rgb(255, 172, 172)"] {
     &[data-theme="select-menu"],
     &[data-theme="language-menu"],
     &[data-theme="menu"] {
-        padding: 0 !important;
+        padding: 4px !important;
         background: hsl(var(--b6), 95%) !important;
-        border-radius: var(--item-med-radius) !important;
-        box-shadow: var(--override-full-shadow, var(--overlay-shadow)) !important;
+        border-radius: calc(var(--item-med-radius) + 4px) !important;
+        box-shadow: var(--override-full-shadow, var(--card-border), var(--overlay-shadow)) !important;
         color: hsl(var(--c2));
-
-        & > .tippy-content > :first-child {
-            border-top-left-radius: var(--item-med-radius) !important;
-            border-top-right-radius: var(--item-med-radius) !important;
-        }
-        & > .tippy-content > :last-child {
-            border-bottom-left-radius: var(--item-med-radius) !important;
-            border-bottom-right-radius: var(--item-med-radius) !important;
-
-            &:is(form) {
-                overflow: hidden;
-            }
-        }
 
         /*[data-theme="window"] & {
             box-shadow: var(--highlight-shadow), var(--menu-shadow) !important;
@@ -10341,8 +10348,14 @@ text[style^="color: rgb(255, 172, 172)"] {
             overflow-y: auto;
             scrollbar-width: thin;
 
+            .dropdown-menu-clickable-item {
+                --btn-left: calc(12px + 12px + 4px) !important;
+            }
+
             .active {
                 --mask: var(--icon-16-check);
+                --mask-size: 12px;
+                --margin-top: -6px;
             }
         }
 
@@ -17137,6 +17150,13 @@ button.bleh--gallery-bookmark-image-btn {
         box-shadow: inset 0 0 0 1px var(--card-border-base);
     }
 
+    &.blend {
+        background: transparent;
+        box-shadow: unset;
+        padding: unset;
+        border-radius: unset;
+    }
+
     &.view-buttons-middle {
         justify-content: center;
     }
@@ -17185,34 +17205,42 @@ button.bleh--gallery-bookmark-image-btn {
         }
     }
 
-    :is(.btn, a, button):not(.not-a-view-button, .toggle, .reset, .select-button, .btn-primary) {
-        --bg: var(--cards-overlay-image-subtlest, none), hsl(var(--h3));
-        --bg-hov: var(--cards-overlay-image-subtlest, none), hsla(var(--h3), 80%);
-        --bg-atv: var(--cards-overlay-image-subtlest, none), hsla(var(--h3), 60%);
-        --col: hsl(var(--b7));
-        --shadow: 0 3px 12px hsl(var(--h4), 25%), var(--interactable-outer);
-        position: relative;
-    }
-    &.gallery-image-buttons :is(button, a):not(.gallery-image-vote-up-on, .gallery-image-vote-down-on, .gallery-image-preferred-on, .gallery-image-report--reported, [data-bleh--image-is-bookmarked="true"]),
-    &.album-overview-cover-art-action-row a,
-    &.tab-container button:not(.tab--selected),
-    .footer-language .mimic-link,
-    .btn:not(.not-a-view-button, .toggle, [aria-checked="true"], .love-button--loved, [data-toggle-button-current-state="loved"] > form > .btn, [data-toggle-button-current-state="bookmarked"] > form > .btn, .btn-primary.profile-header-set-obsession, [data-analytics-action="UnfollowUser"], [data-is-shortcut="true"], .attendance-btn--turn-off) {
-        --bg: transparent;
-        --bg-hov: hsl(var(--b4), 60%);
-        --bg-atv: hsl(var(--b4), 80%);
-        --shadow: none;
-        --col: hsl(var(--c2));
-
-        &.swatch:not([data-swatch-type="seasonal"], [data-swatch-type="custom"]),
-        .gallery-image-buttons &:not(.image-open-button),
-        &.delete-icon {
-            --bg-hov: hsla(var(--h4), 15%);
-            --bg-atv: hsla(var(--h4), 25%);
-            --col: hsl(var(--l3-c));
-            --sat-over: 1;
-            --lit-over: 1;
+    &:not(.blend) {
+        :is(.btn, a, button):not(.not-a-view-button, .toggle, .reset, .select-button, .btn-primary) {
+            --bg: var(--cards-overlay-image-subtlest, none), hsl(var(--h3));
+            --bg-hov: var(--cards-overlay-image-subtlest, none), hsla(var(--h3), 80%);
+            --bg-atv: var(--cards-overlay-image-subtlest, none), hsla(var(--h3), 60%);
+            --col: hsl(var(--b7));
+            --shadow: 0 3px 12px hsl(var(--h4), 25%), var(--interactable-outer);
+            position: relative;
         }
+
+        &.gallery-image-buttons :is(button, a):not(.gallery-image-vote-up-on, .gallery-image-vote-down-on, .gallery-image-preferred-on, .gallery-image-report--reported, [data-bleh--image-is-bookmarked="true"]),
+        &.album-overview-cover-art-action-row a,
+        &.tab-container button:not(.tab--selected),
+        .footer-language .mimic-link,
+        .btn:not(.not-a-view-button, .toggle, [aria-checked="true"], .love-button--loved, [data-toggle-button-current-state="loved"] > form > .btn, [data-toggle-button-current-state="bookmarked"] > form > .btn, .btn-primary.profile-header-set-obsession, [data-analytics-action="UnfollowUser"], [data-is-shortcut="true"], .attendance-btn--turn-off) {
+            --bg: transparent;
+            --bg-hov: hsl(var(--b4), 60%);
+            --bg-atv: hsl(var(--b4), 80%);
+            --shadow: none;
+            --col: hsl(var(--c2));
+
+            &.swatch:not([data-swatch-type="seasonal"], [data-swatch-type="custom"]),
+            .gallery-image-buttons &:not(.image-open-button),
+            &.delete-icon {
+                --bg-hov: hsla(var(--h4), 15%);
+                --bg-atv: hsla(var(--h4), 25%);
+            }
+        }
+    }
+
+    .gallery-image-buttons button:not(.image-open-button),
+    .swatch:not([data-swatch-type="seasonal"], [data-swatch-type="custom"]),
+    .delete-icon {
+        --col: hsl(var(--l3-c));
+        --sat-over: 1;
+        --lit-over: 1;
     }
 
     &.album-overview-cover-art-action-row a,

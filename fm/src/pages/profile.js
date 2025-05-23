@@ -1192,7 +1192,7 @@ function profile_recents() {
 
 
     let view_buttons = document.createElement('div');
-    view_buttons.classList.add('view-buttons');
+    view_buttons.classList.add('view-buttons', 'blend');
 
     let header = document.createElement('div');
     header.classList.add('top-container');
@@ -1359,7 +1359,7 @@ function profile_artists() {
 
 
     let view_buttons = document.createElement('div');
-    view_buttons.classList.add('view-buttons');
+    view_buttons.classList.add('view-buttons', 'blend');
 
     let header = document.createElement('div');
     header.classList.add('top-container');
@@ -1481,7 +1481,7 @@ function profile_albums() {
 
 
     let view_buttons = document.createElement('div');
-    view_buttons.classList.add('view-buttons');
+    view_buttons.classList.add('view-buttons', 'blend');
 
     let header = document.createElement('div');
     header.classList.add('top-container');
@@ -1604,7 +1604,7 @@ function profile_tracks() {
 
 
     let view_buttons = document.createElement('div');
-    view_buttons.classList.add('view-buttons');
+    view_buttons.classList.add('view-buttons', 'blend');
 
     let header = document.createElement('div');
     header.classList.add('top-container');

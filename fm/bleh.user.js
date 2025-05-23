@@ -12841,7 +12841,7 @@
     let link = panel.querySelector('[aria-controls="recent-tracks-settings"]');
     let tooltip;
     let view_buttons = document.createElement("div");
-    view_buttons.classList.add("view-buttons");
+    view_buttons.classList.add("view-buttons", "blend");
     let header = document.createElement("div");
     header.classList.add("top-container");
     let header_text2 = panel.querySelector("h2");
@@ -12981,7 +12981,7 @@
     let link = panel.querySelector('[aria-controls="artist-chart-settings"]');
     let tooltip;
     let view_buttons = document.createElement("div");
-    view_buttons.classList.add("view-buttons");
+    view_buttons.classList.add("view-buttons", "blend");
     let header = document.createElement("div");
     header.classList.add("top-container");
     let header_text2 = panel.querySelector("h2");
@@ -13079,7 +13079,7 @@
     let link = panel.querySelector('[aria-controls="albums-chart-settings"]');
     let tooltip;
     let view_buttons = document.createElement("div");
-    view_buttons.classList.add("view-buttons");
+    view_buttons.classList.add("view-buttons", "blend");
     let header = document.createElement("div");
     header.classList.add("top-container");
     let header_text2 = panel.querySelector("h2");
@@ -13178,7 +13178,7 @@
     let link = panel.querySelector('[aria-controls="track-chart-settings"]');
     let tooltip;
     let view_buttons = document.createElement("div");
-    view_buttons.classList.add("view-buttons");
+    view_buttons.classList.add("view-buttons", "blend");
     let header = document.createElement("div");
     header.classList.add("top-container");
     let header_text2 = panel.querySelector("h2");
