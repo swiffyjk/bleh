@@ -21676,6 +21676,7 @@ h4 {
         height: 84px;
         border-radius: var(--avatar-radius);
         box-shadow: var(--interact-shadow);
+        --mask-size: var(--cover-size-100);
         position: relative;
 
         margin-bottom: var(--card-padding);
