@@ -5086,7 +5086,6 @@ better than the default selector '#app a' i suppose */
 .chartlist-artist {
     display: flex !important;
     color: hsl(var(--c3)) !important;
-    position: absolute !important;
 
     a + a {
         margin-left: 4px;
@@ -5524,8 +5523,8 @@ better than the default selector '#app a' i suppose */
     }
 }
 
-[data-bleh--stacked_chartlist_info="true"] {
-    .chartlist.chartlist--with-artist {
+.chartlist.chartlist--with-artist {
+    [data-bleh--stacked_chartlist_info="true"] &, &.chartlist--with-bar {
         &:not(.chartlist--with-bar) {
             .chartlist-row {
                 .chartlist-name {
@@ -5685,7 +5684,6 @@ better than the default selector '#app a' i suppose */
 }
 .chartlist-row--with-artist .chartlist-artist {
     width: 35%;
-    position: relative;
     left: 30px;
 }
 .chartlist-timestamp {
@@ -5709,15 +5707,15 @@ better than the default selector '#app a' i suppose */
 }
 .chartlist--with-index--length-1 .chartlist-artist,
 .chartlist--with-index--length-2 .chartlist-artist {
-    left: calc(var(--side-left) + 27px + var(--image-offset)) !important;
+    left: calc(var(--side-left) + 26px + var(--image-offset)) !important;
     margin-top: 16px !important;
 }
 .chartlist--with-index--length-3 .chartlist-artist {
-    left: calc(var(--side-left) + 34px + var(--image-offset)) !important;
+    left: calc(var(--side-left) + 33px + var(--image-offset)) !important;
     margin-top: 16px !important;
 }
 .chartlist--with-index--length-4 .chartlist-artist {
-    left: calc(var(--side-left) + 45px + var(--image-offset)) !important;
+    left: calc(var(--side-left) + 44px + var(--image-offset)) !important;
     margin-top: 16px !important;
 }
 
