@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         bleh
 // @namespace    http://last.fm/
-// @version      2025.0514
+// @version      2025.0522
 // @description  bleh!!! ^-^
 // @author       kate
 // @match        https://www.last.fm/*
@@ -12834,8 +12834,7 @@
   }
   function profile_recents() {
     let panel = page.structure.main.querySelector("#recent-tracks-section");
-    if (!panel)
-      return;
+    if (!panel) return;
     let more_link = panel.nextElementSibling;
     panel.appendChild(more_link);
     let form = panel.querySelector("#recent-tracks-settings");
@@ -20377,7 +20376,9 @@
       childList: true
     });
     let pre_observer = new MutationObserver((mutations) => {
-      if (document.body && document.body.querySelector(".adaptive-skin-container")) {
+      if (document.body)
+        log(`${JSON.stringify(document.body.classList)}`, "load");
+      if (document.body && document.body.querySelector(".adaptive-skin-container") && document.body.querySelector(".footer")) {
         bleh_main();
         favi();
         pre_observer.disconnect();

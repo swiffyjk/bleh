@@ -1181,9 +1181,7 @@ function bleh_featured_profile_track(object, about_me) {
 
 function profile_recents() {
     let panel = page.structure.main.querySelector('#recent-tracks-section');
-
-    if (!panel)
-        return;
+    if (!panel) return;
 
     let more_link = panel.nextElementSibling;
     panel.appendChild(more_link);
