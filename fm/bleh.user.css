@@ -4966,6 +4966,12 @@ better than the default selector '#app a' i suppose */
         margin-top: unset;
     }
 }
+#tracklist,
+.artist-overview-top-tracks {
+    .chartlist {
+        margin-top: var(--card-gap) !important;
+    }
+}
 .chartlist tbody {
     display: flex;
     flex-direction: column;
@@ -22805,6 +22811,7 @@ h4 {
     linear-gradient(0deg, hsla(var(--l3-c), 80%) 0%, hsl(var(--b5)) 100%) border-box;
     border: 2px solid transparent !important;
     padding: calc(var(--card-padding) - 2px) !important;
+    box-shadow: var(--card-shadow) !important;
 
     @media (max-width: 600px) {
         --card-specific-background:
