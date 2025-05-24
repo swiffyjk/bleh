@@ -1,3 +1,4 @@
+import { html } from "lighterhtml";
 // require page reload
 export let reload_pending = {
     state: false
@@ -132,7 +133,7 @@ export let has_prompted_for_update = {
     state: false
 };
 
-export let theme_preview = (`
+export let theme_preview = () => html.node`
     <div class="preview-inner">
         <div class="preview-card">
             <div class="preview-header">Aa</div>
@@ -151,4 +152,4 @@ export let theme_preview = (`
             </div>
         </div>
     </div>
-`);
+`;

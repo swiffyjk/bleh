@@ -575,6 +575,984 @@
     }
   };
 
+  // node_modules/@ungap/weakmap/esm/index.js
+  var self = {};
+  try {
+    self.WeakMap = WeakMap;
+  } catch (WeakMap2) {
+    self.WeakMap = function(id, Object2) {
+      "use strict";
+      var dP = Object2.defineProperty;
+      var hOP = Object2.hasOwnProperty;
+      var proto = WeakMap3.prototype;
+      proto.delete = function(key) {
+        return this.has(key) && delete key[this._];
+      };
+      proto.get = function(key) {
+        return this.has(key) ? key[this._] : void 0;
+      };
+      proto.has = function(key) {
+        return hOP.call(key, this._);
+      };
+      proto.set = function(key, value) {
+        dP(key, this._, { configurable: true, value });
+        return this;
+      };
+      return WeakMap3;
+      function WeakMap3(iterable) {
+        dP(this, "_", { value: "_@ungap/weakmap" + id++ });
+        if (iterable)
+          iterable.forEach(add, this);
+      }
+      function add(pair) {
+        this.set(pair[0], pair[1]);
+      }
+    }(Math.random(), Object);
+  }
+  var esm_default = self.WeakMap;
+
+  // node_modules/domconstants/esm/index.js
+  var UID = "-" + Math.random().toFixed(6) + "%";
+  var UID_IE = false;
+  try {
+    if (!function(template, content, tabindex) {
+      return content in template && (template.innerHTML = "<p " + tabindex + '="' + UID + '"></p>', template[content].childNodes[0].getAttribute(tabindex) == UID);
+    }(document.createElement("template"), "content", "tabindex")) {
+      UID = "_dt: " + UID.slice(1, -1) + ";";
+      UID_IE = true;
+    }
+  } catch (meh) {
+  }
+  var UIDC = "<!--" + UID + "-->";
+  var COMMENT_NODE = 8;
+  var ELEMENT_NODE = 1;
+  var TEXT_NODE = 3;
+  var SHOULD_USE_TEXT_CONTENT = /^(?:plaintext|script|style|textarea|title|xmp)$/i;
+  var VOID_ELEMENTS = /^(?:area|base|br|col|embed|hr|img|input|keygen|link|menuitem|meta|param|source|track|wbr)$/i;
+
+  // node_modules/domsanitizer/esm/index.js
+  function esm_default2(template) {
+    return template.join(UIDC).replace(selfClosing, fullClosing).replace(attrSeeker, attrReplacer);
+  }
+  var spaces = " \\f\\n\\r\\t";
+  var almostEverything = "[^" + spaces + `\\/>"'=]+`;
+  var attrName = "[" + spaces + "]+" + almostEverything;
+  var tagName = "<([A-Za-z]+[A-Za-z0-9:._-]*)((?:";
+  var attrPartials = `(?:\\s*=\\s*(?:'[^']*?'|"[^"]*?"|<[^>]*?>|` + almostEverything.replace("\\/", "") + "))?)";
+  var attrSeeker = new RegExp(tagName + attrName + attrPartials + "+)([" + spaces + "]*/?>)", "g");
+  var selfClosing = new RegExp(tagName + attrName + attrPartials + "*)([" + spaces + "]*/>)", "g");
+  var findAttributes = new RegExp("(" + attrName + `\\s*=\\s*)(['"]?)` + UIDC + "\\2", "gi");
+  function attrReplacer($0, $1, $2, $3) {
+    return "<" + $1 + $2.replace(findAttributes, replaceAttributes) + $3;
+  }
+  function replaceAttributes($0, $1, $2) {
+    return $1 + ($2 || '"') + UID + ($2 || '"');
+  }
+  function fullClosing($0, $1, $2) {
+    return VOID_ELEMENTS.test($1) ? $0 : "<" + $1 + $2 + "></" + $1 + ">";
+  }
+
+  // node_modules/uarray/esm/index.js
+  var { isArray } = Array;
+  var { indexOf, slice } = [];
+
+  // node_modules/umap/esm/index.js
+  var esm_default3 = (_) => ({
+    // About: get: _.get.bind(_)
+    // It looks like WebKit/Safari didn't optimize bind at all,
+    // so that using bind slows it down by 60%.
+    // Firefox and Chrome are just fine in both cases,
+    // so let's use the approach that works fast everywhere 👍
+    get: (key) => _.get(key),
+    set: (key, value) => (_.set(key, value), value)
+  });
+
+  // node_modules/uwire/esm/index.js
+  var ELEMENT_NODE2 = 1;
+  var nodeType = 111;
+  var remove = ({ firstChild, lastChild }) => {
+    const range = document.createRange();
+    range.setStartAfter(firstChild);
+    range.setEndAfter(lastChild);
+    range.deleteContents();
+    return firstChild;
+  };
+  var diffable = (node, operation) => node.nodeType === nodeType ? 1 / operation < 0 ? operation ? remove(node) : node.lastChild : operation ? node.valueOf() : node.firstChild : node;
+  var persistent = (fragment) => {
+    const { childNodes } = fragment;
+    const { length } = childNodes;
+    if (length < 2)
+      return length ? childNodes[0] : fragment;
+    const nodes = slice.call(childNodes, 0);
+    const firstChild = nodes[0];
+    const lastChild = nodes[length - 1];
+    return {
+      ELEMENT_NODE: ELEMENT_NODE2,
+      nodeType,
+      firstChild,
+      lastChild,
+      valueOf() {
+        if (childNodes.length !== length) {
+          let i = 0;
+          while (i < length)
+            fragment.appendChild(nodes[i++]);
+        }
+        return fragment;
+      }
+    };
+  };
+
+  // node_modules/@ungap/create-content/esm/index.js
+  var createContent = function(document2) {
+    "use strict";
+    var FRAGMENT = "fragment";
+    var TEMPLATE = "template";
+    var HAS_CONTENT = "content" in create2(TEMPLATE);
+    var createHTML = HAS_CONTENT ? function(html2) {
+      var template = create2(TEMPLATE);
+      template.innerHTML = html2;
+      return template.content;
+    } : function(html2) {
+      var content = create2(FRAGMENT);
+      var template = create2(TEMPLATE);
+      var childNodes = null;
+      if (/^[^\S]*?<(col(?:group)?|t(?:head|body|foot|r|d|h))/i.test(html2)) {
+        var selector = RegExp.$1;
+        template.innerHTML = "<table>" + html2 + "</table>";
+        childNodes = template.querySelectorAll(selector);
+      } else {
+        template.innerHTML = html2;
+        childNodes = template.childNodes;
+      }
+      append(content, childNodes);
+      return content;
+    };
+    return function createContent2(markup, type) {
+      return (type === "svg" ? createSVG : createHTML)(markup);
+    };
+    function append(root2, childNodes) {
+      var length = childNodes.length;
+      while (length--)
+        root2.appendChild(childNodes[0]);
+    }
+    function create2(element) {
+      return element === FRAGMENT ? document2.createDocumentFragment() : document2.createElementNS("http://www.w3.org/1999/xhtml", element);
+    }
+    function createSVG(svg2) {
+      var content = create2(FRAGMENT);
+      var template = create2("div");
+      template.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg">' + svg2 + "</svg>";
+      append(content, template.firstChild.childNodes);
+      return content;
+    }
+  }(document);
+  var esm_default4 = createContent;
+
+  // node_modules/udomdiff/esm/index.js
+  var esm_default5 = (parentNode, a, b, get, before) => {
+    const bLength = b.length;
+    let aEnd = a.length;
+    let bEnd = bLength;
+    let aStart = 0;
+    let bStart = 0;
+    let map = null;
+    while (aStart < aEnd || bStart < bEnd) {
+      if (aEnd === aStart) {
+        const node = bEnd < bLength ? bStart ? get(b[bStart - 1], -0).nextSibling : get(b[bEnd], 0) : before;
+        while (bStart < bEnd)
+          parentNode.insertBefore(get(b[bStart++], 1), node);
+      } else if (bEnd === bStart) {
+        while (aStart < aEnd) {
+          if (!map || !map.has(a[aStart]))
+            parentNode.removeChild(get(a[aStart], -1));
+          aStart++;
+        }
+      } else if (a[aStart] === b[bStart]) {
+        aStart++;
+        bStart++;
+      } else if (a[aEnd - 1] === b[bEnd - 1]) {
+        aEnd--;
+        bEnd--;
+      } else if (a[aStart] === b[bEnd - 1] && b[bStart] === a[aEnd - 1]) {
+        const node = get(a[--aEnd], -0).nextSibling;
+        parentNode.insertBefore(
+          get(b[bStart++], 1),
+          get(a[aStart++], -0).nextSibling
+        );
+        parentNode.insertBefore(get(b[--bEnd], 1), node);
+        a[aEnd] = b[bEnd];
+      } else {
+        if (!map) {
+          map = /* @__PURE__ */ new Map();
+          let i = bStart;
+          while (i < bEnd)
+            map.set(b[i], i++);
+        }
+        if (map.has(a[aStart])) {
+          const index = map.get(a[aStart]);
+          if (bStart < index && index < bEnd) {
+            let i = aStart;
+            let sequence = 1;
+            while (++i < aEnd && i < bEnd && map.get(a[i]) === index + sequence)
+              sequence++;
+            if (sequence > index - bStart) {
+              const node = get(a[aStart], 0);
+              while (bStart < index)
+                parentNode.insertBefore(get(b[bStart++], 1), node);
+            } else {
+              parentNode.replaceChild(
+                get(b[bStart++], 1),
+                get(a[aStart++], -1)
+              );
+            }
+          } else
+            aStart++;
+        } else
+          parentNode.removeChild(get(a[aStart++], -1));
+      }
+    }
+    return b;
+  };
+
+  // node_modules/@ungap/import-node/esm/index.js
+  var importNode = function(document2, appendChild, cloneNode, createTextNode, importNode2) {
+    var native = importNode2 in document2;
+    var fragment = document2.createDocumentFragment();
+    fragment[appendChild](document2[createTextNode]("g"));
+    fragment[appendChild](document2[createTextNode](""));
+    var content = native ? document2[importNode2](fragment, true) : fragment[cloneNode](true);
+    return content.childNodes.length < 2 ? function importNode3(node, deep) {
+      var clone = node[cloneNode]();
+      for (var childNodes = node.childNodes || [], length = childNodes.length, i = 0; deep && i < length; i++) {
+        clone[appendChild](importNode3(childNodes[i], deep));
+      }
+      return clone;
+    } : (
+      /* istanbul ignore next */
+      native ? document2[importNode2] : function(node, deep) {
+        return node[cloneNode](!!deep);
+      }
+    );
+  }(
+    document,
+    "appendChild",
+    "cloneNode",
+    "createTextNode",
+    "importNode"
+  );
+  var esm_default6 = importNode;
+
+  // node_modules/@ungap/trim/esm/index.js
+  var trim = "".trim || /* istanbul ignore next */
+  function() {
+    return String(this).replace(/^\s+|\s+/g, "");
+  };
+  var esm_default7 = trim;
+
+  // node_modules/domtagger/esm/walker.js
+  var normalizeAttributes = UID_IE ? function(attributes, parts) {
+    var html2 = parts.join(" ");
+    return parts.slice.call(attributes, 0).sort(function(left, right) {
+      return html2.indexOf(left.name) <= html2.indexOf(right.name) ? -1 : 1;
+    });
+  } : function(attributes, parts) {
+    return parts.slice.call(attributes, 0);
+  };
+  function find(node, path) {
+    var length = path.length;
+    var i = 0;
+    while (i < length)
+      node = node.childNodes[path[i++]];
+    return node;
+  }
+  function parse(node, holes, parts, path) {
+    var childNodes = node.childNodes;
+    var length = childNodes.length;
+    var i = 0;
+    while (i < length) {
+      var child = childNodes[i];
+      switch (child.nodeType) {
+        case ELEMENT_NODE:
+          var childPath = path.concat(i);
+          parseAttributes(child, holes, parts, childPath);
+          parse(child, holes, parts, childPath);
+          break;
+        case COMMENT_NODE:
+          var textContent = child.textContent;
+          if (textContent === UID) {
+            parts.shift();
+            holes.push(
+              // basicHTML or other non standard engines
+              // might end up having comments in nodes
+              // where they shouldn't, hence this check.
+              SHOULD_USE_TEXT_CONTENT.test(node.nodeName) ? Text(node, path) : Any(child, path.concat(i))
+            );
+          } else {
+            switch (textContent.slice(0, 2)) {
+              case "/*":
+                if (textContent.slice(-2) !== "*/")
+                  break;
+              case "\u{1F47B}":
+                node.removeChild(child);
+                i--;
+                length--;
+            }
+          }
+          break;
+        case TEXT_NODE:
+          if (SHOULD_USE_TEXT_CONTENT.test(node.nodeName) && esm_default7.call(child.textContent) === UIDC) {
+            parts.shift();
+            holes.push(Text(node, path));
+          }
+          break;
+      }
+      i++;
+    }
+  }
+  function parseAttributes(node, holes, parts, path) {
+    var attributes = node.attributes;
+    var cache2 = [];
+    var remove2 = [];
+    var array = normalizeAttributes(attributes, parts);
+    var length = array.length;
+    var i = 0;
+    while (i < length) {
+      var attribute2 = array[i++];
+      var direct = attribute2.value === UID;
+      var sparse;
+      if (direct || 1 < (sparse = attribute2.value.split(UIDC)).length) {
+        var name = attribute2.name;
+        if (cache2.indexOf(name) < 0) {
+          cache2.push(name);
+          var realName = parts.shift().replace(
+            direct ? /^(?:|[\S\s]*?\s)(\S+?)\s*=\s*('|")?$/ : new RegExp(
+              "^(?:|[\\S\\s]*?\\s)(" + name + `)\\s*=\\s*('|")[\\S\\s]*`,
+              "i"
+            ),
+            "$1"
+          );
+          var value = attributes[realName] || // the following ignore is covered by browsers
+          // while basicHTML is already case-sensitive
+          /* istanbul ignore next */
+          attributes[realName.toLowerCase()];
+          if (direct)
+            holes.push(Attr(value, path, realName, null));
+          else {
+            var skip = sparse.length - 2;
+            while (skip--)
+              parts.shift();
+            holes.push(Attr(value, path, realName, sparse));
+          }
+        }
+        remove2.push(attribute2);
+      }
+    }
+    length = remove2.length;
+    i = 0;
+    var cleanValue = 0 < length && UID_IE && !("ownerSVGElement" in node);
+    while (i < length) {
+      var attr = remove2[i++];
+      if (cleanValue)
+        attr.value = "";
+      node.removeAttribute(attr.name);
+    }
+    var nodeName = node.nodeName;
+    if (/^script$/i.test(nodeName)) {
+      var script = document.createElement(nodeName);
+      length = attributes.length;
+      i = 0;
+      while (i < length)
+        script.setAttributeNode(attributes[i++].cloneNode(true));
+      script.textContent = node.textContent;
+      node.parentNode.replaceChild(script, node);
+    }
+  }
+  function Any(node, path) {
+    return {
+      type: "any",
+      node,
+      path
+    };
+  }
+  function Attr(node, path, name, sparse) {
+    return {
+      type: "attr",
+      node,
+      path,
+      name,
+      sparse
+    };
+  }
+  function Text(node, path) {
+    return {
+      type: "text",
+      node,
+      path
+    };
+  }
+
+  // node_modules/domtagger/esm/index.js
+  var esm_default8 = domtagger;
+  var parsed = esm_default3(new esm_default());
+  function createInfo(options, template) {
+    var markup = (options.convert || esm_default2)(template);
+    var transform = options.transform;
+    if (transform)
+      markup = transform(markup);
+    var content = esm_default4(markup, options.type);
+    cleanContent(content);
+    var holes = [];
+    parse(content, holes, template.slice(0), []);
+    return {
+      content,
+      updates: function(content2) {
+        var updates = [];
+        var len = holes.length;
+        var i = 0;
+        var off = 0;
+        while (i < len) {
+          var info = holes[i++];
+          var node = find(content2, info.path);
+          switch (info.type) {
+            case "any":
+              updates.push({ fn: options.any(node, []), sparse: false });
+              break;
+            case "attr":
+              var sparse = info.sparse;
+              var fn = options.attribute(node, info.name, info.node);
+              if (sparse === null)
+                updates.push({ fn, sparse: false });
+              else {
+                off += sparse.length - 2;
+                updates.push({ fn, sparse: true, values: sparse });
+              }
+              break;
+            case "text":
+              updates.push({ fn: options.text(node), sparse: false });
+              node.textContent = "";
+              break;
+          }
+        }
+        len += off;
+        return function() {
+          var length = arguments.length;
+          if (len !== length - 1) {
+            throw new Error(
+              length - 1 + " values instead of " + len + "\n" + template.join("${value}")
+            );
+          }
+          var i2 = 1;
+          var off2 = 1;
+          while (i2 < length) {
+            var update = updates[i2 - off2];
+            if (update.sparse) {
+              var values = update.values;
+              var value = values[0];
+              var j = 1;
+              var l = values.length;
+              off2 += l - 2;
+              while (j < l)
+                value += arguments[i2++] + values[j++];
+              update.fn(value);
+            } else
+              update.fn(arguments[i2++]);
+          }
+          return content2;
+        };
+      }
+    };
+  }
+  function createDetails(options, template) {
+    var info = parsed.get(template) || parsed.set(template, createInfo(options, template));
+    return info.updates(esm_default6.call(document, info.content, true));
+  }
+  var empty = [];
+  function domtagger(options) {
+    var previous = empty;
+    var updates = cleanContent;
+    return function(template) {
+      if (previous !== template)
+        updates = createDetails(options, previous = template);
+      return updates.apply(null, arguments);
+    };
+  }
+  function cleanContent(fragment) {
+    var childNodes = fragment.childNodes;
+    var i = childNodes.length;
+    while (i--) {
+      var child = childNodes[i];
+      if (child.nodeType !== 1 && esm_default7.call(child.textContent).length === 0) {
+        fragment.removeChild(child);
+      }
+    }
+  }
+
+  // node_modules/hyperhtml-style/esm/index.js
+  var hyperStyle = function() {
+    "use strict";
+    var IS_NON_DIMENSIONAL = /acit|ex(?:s|g|n|p|$)|rph|ows|mnc|ntw|ine[ch]|zoo|^ord/i;
+    var hyphen = /([^A-Z])([A-Z]+)/g;
+    return function hyperStyle2(node, original) {
+      return "ownerSVGElement" in node ? svg2(node, original) : update(node.style, false);
+    };
+    function ized($0, $1, $2) {
+      return $1 + "-" + $2.toLowerCase();
+    }
+    function svg2(node, original) {
+      var style;
+      if (original)
+        style = original.cloneNode(true);
+      else {
+        node.setAttribute("style", "--hyper:style;");
+        style = node.getAttributeNode("style");
+      }
+      style.value = "";
+      node.setAttributeNode(style);
+      return update(style, true);
+    }
+    function toStyle(object) {
+      var key, css = [];
+      for (key in object)
+        css.push(key.replace(hyphen, ized), ":", object[key], ";");
+      return css.join("");
+    }
+    function update(style, isSVG) {
+      var oldType, oldValue;
+      return function(newValue) {
+        var info, key, styleValue, value;
+        switch (typeof newValue) {
+          case "object":
+            if (newValue) {
+              if (oldType === "object") {
+                if (!isSVG) {
+                  if (oldValue !== newValue) {
+                    for (key in oldValue) {
+                      if (!(key in newValue)) {
+                        style[key] = "";
+                      }
+                    }
+                  }
+                }
+              } else {
+                if (isSVG)
+                  style.value = "";
+                else
+                  style.cssText = "";
+              }
+              info = isSVG ? {} : style;
+              for (key in newValue) {
+                value = newValue[key];
+                styleValue = typeof value === "number" && !IS_NON_DIMENSIONAL.test(key) ? value + "px" : value;
+                if (!isSVG && /^--/.test(key))
+                  info.setProperty(key, styleValue);
+                else
+                  info[key] = styleValue;
+              }
+              oldType = "object";
+              if (isSVG)
+                style.value = toStyle(oldValue = info);
+              else
+                oldValue = newValue;
+              break;
+            }
+          default:
+            if (oldValue != newValue) {
+              oldType = "string";
+              oldValue = newValue;
+              if (isSVG)
+                style.value = newValue || "";
+              else
+                style.cssText = newValue || "";
+            }
+            break;
+        }
+      };
+    }
+  }();
+  var esm_default9 = hyperStyle;
+
+  // node_modules/uhandlers/esm/index.js
+  var aria = (node) => (values) => {
+    for (const key in values) {
+      const name = key === "role" ? key : `aria-${key}`;
+      const value = values[key];
+      if (value == null)
+        node.removeAttribute(name);
+      else
+        node.setAttribute(name, value);
+    }
+  };
+  var attribute = (node, name) => {
+    let oldValue, orphan = true;
+    const attributeNode = document.createAttributeNS(null, name);
+    return (newValue) => {
+      if (oldValue !== newValue) {
+        oldValue = newValue;
+        if (oldValue == null) {
+          if (!orphan) {
+            node.removeAttributeNode(attributeNode);
+            orphan = true;
+          }
+        } else {
+          attributeNode.value = newValue;
+          if (orphan) {
+            node.setAttributeNodeNS(attributeNode);
+            orphan = false;
+          }
+        }
+      }
+    };
+  };
+  var boolean = (node, key, oldValue) => (newValue) => {
+    if (oldValue !== !!newValue) {
+      if (oldValue = !!newValue)
+        node.setAttribute(key, "");
+      else
+        node.removeAttribute(key);
+    }
+  };
+  var data = ({ dataset }) => (values) => {
+    for (const key in values) {
+      const value = values[key];
+      if (value == null)
+        delete dataset[key];
+      else
+        dataset[key] = value;
+    }
+  };
+  var event2 = (node, name) => {
+    let oldValue, type = name.slice(2);
+    if (!(name in node) && name.toLowerCase() in node)
+      type = type.toLowerCase();
+    return (newValue) => {
+      const info = isArray(newValue) ? newValue : [newValue, false];
+      if (oldValue !== info[0]) {
+        if (oldValue)
+          node.removeEventListener(type, oldValue, info[1]);
+        if (oldValue = info[0])
+          node.addEventListener(type, oldValue, info[1]);
+      }
+    };
+  };
+  var ref = (node) => (value) => {
+    if (typeof value === "function")
+      value(node);
+    else
+      value.current = node;
+  };
+  var setter = (node, key) => key === "dataset" ? data(node) : (value) => {
+    node[key] = value;
+  };
+
+  // node_modules/lighterhtml/esm/tagger.js
+  var hyperProperty = (node, name) => {
+    let oldValue;
+    return (newValue) => {
+      if (oldValue !== newValue) {
+        oldValue = newValue;
+        if (node[name] !== newValue) {
+          if (newValue == null) {
+            node[name] = "";
+            node.removeAttribute(name);
+          } else
+            node[name] = newValue;
+        }
+      }
+    };
+  };
+  var readOnly = /^(?:form|list)$/i;
+  var text = (node, text2) => node.ownerDocument.createTextNode(text2);
+  function Tagger(type) {
+    this.type = type;
+    return esm_default8(this);
+  }
+  Tagger.prototype = {
+    // there are four kind of attributes, and related behavior:
+    //  * events, with a name starting with `on`, to add/remove event listeners
+    //  * special, with a name present in their inherited prototype, accessed directly
+    //  * regular, accessed through get/setAttribute standard DOM methods
+    //  * style, the only regular attribute that also accepts an object as value
+    //    so that you can style=${{width: 120}}. In this case, the behavior has been
+    //    fully inspired by Preact library and its simplicity.
+    attribute(node, name, original) {
+      const isSVG = this.type === "svg";
+      switch (name) {
+        case "class":
+          if (isSVG)
+            return attribute(node, name, isSVG);
+          name = "className";
+        case "props":
+          return setter(node, name);
+        case "aria":
+          return aria(node);
+        case "style":
+          return esm_default9(node, original, isSVG);
+        case "ref":
+          return ref(node);
+        case ".dataset":
+          return data(node);
+        default:
+          if (name.slice(0, 1) === ".")
+            return setter(node, name.slice(1));
+          if (name.slice(0, 1) === "?")
+            return boolean(node, name.slice(1));
+          if (name.slice(0, 2) === "on")
+            return event2(node, name);
+          if (name in node && !(isSVG || readOnly.test(name)))
+            return hyperProperty(node, name);
+          return attribute(node, name, isSVG);
+      }
+    },
+    // in a hyper(node)`<div>${content}</div>` case
+    // everything could happen:
+    //  * it's a JS primitive, stored as text
+    //  * it's null or undefined, the node should be cleaned
+    //  * it's a promise, update the content once resolved
+    //  * it's an explicit intent, perform the desired operation
+    //  * it's an Array, resolve all values if Promises and/or
+    //    update the node with the resulting list of content
+    any(node, childNodes) {
+      const { type } = this;
+      let fastPath = false;
+      let oldValue;
+      const anyContent = (value) => {
+        switch (typeof value) {
+          case "string":
+          case "number":
+          case "boolean":
+            if (fastPath) {
+              if (oldValue !== value) {
+                oldValue = value;
+                childNodes[0].textContent = value;
+              }
+            } else {
+              fastPath = true;
+              oldValue = value;
+              childNodes = esm_default5(
+                node.parentNode,
+                childNodes,
+                [text(node, value)],
+                diffable,
+                node
+              );
+            }
+            break;
+          case "function":
+            anyContent(value(node));
+            break;
+          case "object":
+          case "undefined":
+            if (value == null) {
+              fastPath = false;
+              childNodes = esm_default5(
+                node.parentNode,
+                childNodes,
+                [],
+                diffable,
+                node
+              );
+              break;
+            }
+          default:
+            fastPath = false;
+            oldValue = value;
+            if (isArray(value)) {
+              if (value.length === 0) {
+                if (childNodes.length) {
+                  childNodes = esm_default5(
+                    node.parentNode,
+                    childNodes,
+                    [],
+                    diffable,
+                    node
+                  );
+                }
+              } else {
+                switch (typeof value[0]) {
+                  case "string":
+                  case "number":
+                  case "boolean":
+                    anyContent(String(value));
+                    break;
+                  case "function":
+                    anyContent(value.map(invoke, node));
+                    break;
+                  case "object":
+                    if (isArray(value[0])) {
+                      value = value.concat.apply([], value);
+                    }
+                  default:
+                    childNodes = esm_default5(
+                      node.parentNode,
+                      childNodes,
+                      value,
+                      diffable,
+                      node
+                    );
+                    break;
+                }
+              }
+            } else if ("ELEMENT_NODE" in value) {
+              childNodes = esm_default5(
+                node.parentNode,
+                childNodes,
+                value.nodeType === 11 ? slice.call(value.childNodes) : [value],
+                diffable,
+                node
+              );
+            } else if ("text" in value) {
+              anyContent(String(value.text));
+            } else if ("any" in value) {
+              anyContent(value.any);
+            } else if ("html" in value) {
+              childNodes = esm_default5(
+                node.parentNode,
+                childNodes,
+                slice.call(
+                  esm_default4(
+                    [].concat(value.html).join(""),
+                    type
+                  ).childNodes
+                ),
+                diffable,
+                node
+              );
+            } else if ("length" in value) {
+              anyContent(slice.call(value));
+            }
+            break;
+        }
+      };
+      return anyContent;
+    },
+    // style or textareas don't accept HTML as content
+    // it's pointless to transform or analyze anything
+    // different from text there but it's worth checking
+    // for possible defined intents.
+    text(node) {
+      let oldValue;
+      const textContent = (value) => {
+        if (oldValue !== value) {
+          oldValue = value;
+          const type = typeof value;
+          if (type === "object" && value) {
+            if ("text" in value) {
+              textContent(String(value.text));
+            } else if ("any" in value) {
+              textContent(value.any);
+            } else if ("html" in value) {
+              textContent([].concat(value.html).join(""));
+            } else if ("length" in value) {
+              textContent(slice.call(value).join(""));
+            }
+          } else if (type === "function") {
+            textContent(value(node));
+          } else {
+            node.textContent = value == null ? "" : value;
+          }
+        }
+      };
+      return textContent;
+    }
+  };
+  function invoke(callback) {
+    return callback(this);
+  }
+
+  // node_modules/lighterhtml/esm/index.js
+  var { create, freeze, keys } = Object;
+  var tProto = Tagger.prototype;
+  var cache = esm_default3(new esm_default());
+  var createRender = (Tagger2) => ({
+    html: outer("html", Tagger2),
+    svg: outer("svg", Tagger2),
+    render(where, what) {
+      const hole = typeof what === "function" ? what() : what;
+      const info = cache.get(where) || cache.set(where, createCache());
+      const wire = hole instanceof LighterHole ? unroll(Tagger2, info, hole) : hole;
+      if (wire !== info.wire) {
+        info.wire = wire;
+        where.textContent = "";
+        where.appendChild(wire.valueOf());
+      }
+      return where;
+    }
+  });
+  var createCache = () => ({ stack: [], entry: null, wire: null });
+  var outer = (type, Tagger2) => {
+    const cache2 = esm_default3(new esm_default());
+    const fixed = (info) => function() {
+      return unroll(Tagger2, info, hole.apply(null, arguments));
+    };
+    hole.for = (ref2, id) => {
+      const memo = cache2.get(ref2) || cache2.set(ref2, create(null));
+      return memo[id] || (memo[id] = fixed(createCache()));
+    };
+    hole.node = function() {
+      return unroll(
+        Tagger2,
+        createCache(),
+        hole.apply(null, arguments)
+      ).valueOf();
+    };
+    return hole;
+    function hole() {
+      return new LighterHole(type, tta.apply(null, arguments));
+    }
+  };
+  var unroll = (Tagger2, info, { type, template, values }) => {
+    const { length } = values;
+    unrollValues(Tagger2, info, values, length);
+    let { entry } = info;
+    if (!entry || (entry.template !== template || entry.type !== type)) {
+      const tag = new Tagger2(type);
+      info.entry = entry = {
+        type,
+        template,
+        tag,
+        wire: persistent(tag(template, ...values))
+      };
+    } else
+      entry.tag(template, ...values);
+    return entry.wire;
+  };
+  var unrollValues = (Tagger2, { stack }, values, length) => {
+    for (let i = 0; i < length; i++) {
+      const hole = values[i];
+      if (hole instanceof Hole)
+        values[i] = unroll(
+          Tagger2,
+          stack[i] || (stack[i] = createCache()),
+          hole
+        );
+      else if (isArray(hole))
+        unrollValues(
+          Tagger2,
+          stack[i] || (stack[i] = createCache()),
+          hole,
+          hole.length
+        );
+      else
+        stack[i] = null;
+    }
+    if (length < stack.length)
+      stack.splice(length);
+  };
+  freeze(LighterHole);
+  function LighterHole(type, args) {
+    this.type = type;
+    this.template = args.shift();
+    this.values = args;
+  }
+  var Hole = LighterHole;
+  var { render, html, svg } = createRender(Tagger);
+  function tta() {
+    let out = [], i = 0, { length } = arguments;
+    while (i < length)
+      out.push(arguments[i++]);
+    return out;
+  }
+
   // src/build/page.js
   var reload_pending = {
     state: false
@@ -599,8 +1577,8 @@
     state: ""
   };
   var root = "";
-  function setRoot(data) {
-    root = data;
+  function setRoot(data2) {
+    root = data2;
   }
   var recent_activity_list = [];
   var last_page_type = {
@@ -686,7 +1664,7 @@
   var has_prompted_for_update = {
     state: false
   };
-  var theme_preview = `
+  var theme_preview = () => html.node`
     <div class="preview-inner">
         <div class="preview-card">
             <div class="preview-header">Aa</div>
@@ -708,7 +1686,7 @@
 `;
 
   // src/build/log.js
-  function log(text, system, type = "info", append = {}) {
+  function log(text2, system, type = "info", append = {}) {
     if (!page.structure.logs) {
       let logs = document.createElement("div");
       logs.classList.add("logs");
@@ -758,9 +1736,9 @@
         break;
     }
     if (Object.keys(append).length > 0)
-      console[type](`%c${system}%c ${text}`, `background: ${system_colour}; display: block; width: fit-content; font-weight: bold; color: #000; padding: 0 4px; border-radius: 4px`, "color: unset", append);
+      console[type](`%c${system}%c ${text2}`, `background: ${system_colour}; display: block; width: fit-content; font-weight: bold; color: #000; padding: 0 4px; border-radius: 4px`, "color: unset", append);
     else
-      console[type](`%c${system}%c ${text}`, `background: ${system_colour}; display: block; width: fit-content; font-weight: bold; color: #000; padding: 0 4px; border-radius: 4px`, "color: unset");
+      console[type](`%c${system}%c ${text2}`, `background: ${system_colour}; display: block; width: fit-content; font-weight: bold; color: #000; padding: 0 4px; border-radius: 4px`, "color: unset");
     if (settings && settings.feature_flags) {
       if (settings.feature_flags.developer == true) {
         let log_e = document.createElement("div");
@@ -768,7 +1746,7 @@
         log_e.setAttribute("data-type", type);
         log_e.innerHTML = `
                 <span class="system" style="color: ${system_colour}">${system}</span>
-                <span class="text">${text}</span>
+                <span class="text">${text2}</span>
             `;
         page.structure.logs.appendChild(log_e);
       }
@@ -835,14 +1813,14 @@
       string.replaceAll(",", "").replaceAll(".", "")
     );
   }
-  function sanitise(text, method = "+") {
-    return encodeURI(text.replaceAll(" ", method).replaceAll("/", "%2F"));
+  function sanitise(text2, method = "+") {
+    return encodeURI(text2.replaceAll(" ", method).replaceAll("/", "%2F"));
   }
-  function sanitise_text(text) {
-    return text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
+  function sanitise_text(text2) {
+    return text2.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
   }
-  function desanitise(text) {
-    return decodeURI(text.replaceAll("+", " ").replaceAll("%2F", "/"));
+  function desanitise(text2) {
+    return decodeURI(text2.replaceAll("+", " ").replaceAll("%2F", "/"));
   }
   function return_artist_from_track(url, is_album) {
     let split = url.split("/");
@@ -6516,7 +7494,7 @@
   };
 
   // src/components/markdown.js
-  function markdown(text, {
+  function markdown(text2, {
     allow_headers = false,
     allow_links = true,
     line_breaks = true
@@ -6537,8 +7515,10 @@
       ghCodeBlocks: false,
       smartIndentationFix: true
     });
-    let parsed_body = converter.makeHtml(text.replace(/([@])([a-zA-Z0-9_]+)/g, `[$1$2](${root}user/$2)`).replace(/\[artist\]([a-zA-Z0-9]+)\[\/artist\]/g, `[$1](${root}music/$1)`).replace(/\[album artist=([a-zA-Z0-9]+)\]([a-zA-Z0-9\s]+)\[\/album\]/g, `[$2](${root}music/$1/$2)`).replace(/\[track artist=([a-zA-Z0-9]+)\]([a-zA-Z0-9\s]+)\[\/track\]/g, `[$2](${root}music/$1/_/$2)`).replace(/https:\/\/open\.spotify\.com\/user\/([A-Za-z0-9]+)\?si=([A-Za-z0-9]+)/g, "[Spotify](https://open.spotify.com/user/$1)").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;"));
-    return parsed_body;
+    let parsed_body = converter.makeHtml(text2.replace(/([@])([a-zA-Z0-9_]+)/g, `[$1$2](${root}user/$2)`).replace(/\[artist\]([a-zA-Z0-9]+)\[\/artist\]/g, `[$1](${root}music/$1)`).replace(/\[album artist=([a-zA-Z0-9]+)\]([a-zA-Z0-9\s]+)\[\/album\]/g, `[$2](${root}music/$1/$2)`).replace(/\[track artist=([a-zA-Z0-9]+)\]([a-zA-Z0-9\s]+)\[\/track\]/g, `[$2](${root}music/$1/_/$2)`).replace(/https:\/\/open\.spotify\.com\/user\/([A-Za-z0-9]+)\?si=([A-Za-z0-9]+)/g, "[Spotify](https://open.spotify.com/user/$1)").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;"));
+    return html.node([
+      parsed_body
+    ]);
   }
 
   // src/components/notify.js
@@ -6917,22 +7897,22 @@
       glacier_meta.innerHTML = "";
     }
     metadata.forEach((meta, index) => {
-      let text = meta.querySelector(".metadata-title");
+      let text2 = meta.querySelector(".metadata-title");
       let value = meta.querySelector(".metadata-display").textContent;
-      if (text) {
-        text = text.textContent;
+      if (text2) {
+        text2 = text2.textContent;
         if (page.subpage == "library_overview") {
           if (index == 1)
-            text = trans_legacy.en.glacier.meta.average;
+            text2 = trans_legacy.en.glacier.meta.average;
         } else if (page.subpage == "library_artists") {
-          text = tl(trans.artists);
+          text2 = tl(trans.artists);
         } else if (page.subpage == "library_albums") {
-          text = trans_legacy.en.glacier.meta.albums;
+          text2 = trans_legacy.en.glacier.meta.albums;
         } else if (page.subpage == "library_tracks") {
-          text = trans_legacy.en.glacier.meta.tracks;
+          text2 = trans_legacy.en.glacier.meta.tracks;
         }
       } else {
-        text = tl(trans.results_for);
+        text2 = tl(trans.results_for);
         value = meta.querySelector(".metadata-display").textContent;
         let start = value.indexOf("\u201C") + 1;
         let end = value.indexOf("\u201D");
@@ -6941,7 +7921,7 @@
       let glacier_meta_item = document.createElement("div");
       glacier_meta_item.classList.add("glacier-library-metadata-item");
       glacier_meta_item.innerHTML = `
-            <div class="sub-text">${text}</div>
+            <div class="sub-text">${text2}</div>
             <div class="glacier-library-metadata-item-value">${value}</div>
         `;
       glacier_meta.appendChild(glacier_meta_item);
@@ -7338,8 +8318,8 @@
       if (response.status != 200)
         throw new Error();
       return response.text();
-    }).then(function(html) {
-      let doc = new DOMParser().parseFromString(html, "text/html");
+    }).then(function(html2) {
+      let doc = new DOMParser().parseFromString(html2, "text/html");
       console.log("glacier library DOC", doc, doc.querySelector(".table"));
       log("received response", "glacier library");
       log("refresh is now marked true", "glacier library");
@@ -8238,8 +9218,8 @@
     let star_buttons = image_details.querySelectorAll(".gallery-image-preferred-button :is(button, a)");
     star_buttons.forEach((star_button) => {
       star_button.removeAttribute("title");
-      let text = star_button.querySelector(".gallery-image-preferred-states");
-      text.textContent = trans_legacy.en.gallery.prefer.name;
+      let text2 = star_button.querySelector(".gallery-image-preferred-states");
+      text2.textContent = trans_legacy.en.gallery.prefer.name;
     });
     let view_all_container = page.structure.main.querySelector(".more-link-fullwidth-right-flush-top");
     if (view_all_container != null) {
@@ -8405,7 +9385,7 @@
             interactiveBorder: 10,
             offset: [0, 0],
             onShow(instance) {
-              instance.popper.addEventListener("click", (event2) => {
+              instance.popper.addEventListener("click", (event3) => {
                 instance.hide();
               });
             }
@@ -8661,8 +9641,8 @@
     fetch(`${root}user/${profile_name}/tags`).then(function(response) {
       console.log("returned", response, response.text);
       return response.text();
-    }).then(function(html) {
-      let doc = new DOMParser().parseFromString(html, "text/html");
+    }).then(function(html2) {
+      let doc = new DOMParser().parseFromString(html2, "text/html");
       console.log("DOC", doc);
       profile_img.classList.remove("requesting");
       try {
@@ -8877,8 +9857,8 @@
       fetch(`${root}user/${shortcut_listens.name}/library/music/${scrobble_page}`).then(function(response) {
         console.log("returned", response, response.text);
         return response.text();
-      }).then(function(html) {
-        let doc = new DOMParser().parseFromString(html, "text/html");
+      }).then(function(html2) {
+        let doc = new DOMParser().parseFromString(html2, "text/html");
         console.log("DOC", doc);
         let first_metadata_item = doc.querySelector(".metadata-item .metadata-display");
         let listens = 0;
@@ -8937,10 +9917,10 @@
     }
     let interact_container = document.createElement("section");
     interact_container.classList.add("side-actions");
-    let text = document.body.querySelector(".header-new-title").textContent.replaceAll(" ", "+").replaceAll("&", "%26");
+    let text2 = document.body.querySelector(".header-new-title").textContent.replaceAll(" ", "+").replaceAll("&", "%26");
     let artist = document.body.querySelector(".header-new-crumb");
     if (artist != void 0)
-      text = `${text}+${artist.textContent.replaceAll(" ", "+").replaceAll("&", "%26")}`;
+      text2 = `${text2}+${artist.textContent.replaceAll(" ", "+").replaceAll("&", "%26")}`;
     let header_actions = document.body.querySelector(".header-new-actions");
     interact_container.innerHTML = header_actions.innerHTML;
     let buttons = interact_container.querySelectorAll("button");
@@ -9072,7 +10052,7 @@
             interactiveBorder: 10,
             offset: [0, 0],
             onShow(instance) {
-              instance.popper.addEventListener("click", (event2) => {
+              instance.popper.addEventListener("click", (event3) => {
                 instance.hide();
               });
             }
@@ -9215,7 +10195,7 @@
         interactiveBorder: 10,
         offset: [0, 0],
         onShow(instance) {
-          instance.popper.addEventListener("click", (event2) => {
+          instance.popper.addEventListener("click", (event3) => {
             instance.hide();
           });
         }
@@ -9247,7 +10227,7 @@
         interactiveBorder: 10,
         offset: [0, 0],
         onShow(instance) {
-          instance.popper.addEventListener("click", (event2) => {
+          instance.popper.addEventListener("click", (event3) => {
             instance.hide();
           });
         }
@@ -9291,21 +10271,21 @@
     let scrobbles = {};
     let metascore = {};
     metadata.forEach((item2, index) => {
-      let text = item2.querySelector(".header-metadata-tnew-title").textContent.trim();
+      let text2 = item2.querySelector(".header-metadata-tnew-title").textContent.trim();
       let value = item2.querySelector(".header-metadata-tnew-display abbr");
       if (index == 0) {
-        listeners.text = text;
+        listeners.text = text2;
         listeners.value = clean_number(value.getAttribute("title"));
         listeners.abbr = value.textContent.trim();
       } else if (index == 1) {
-        scrobbles.text = text;
+        scrobbles.text = text2;
         scrobbles.value = clean_number(value.getAttribute("title"));
         scrobbles.abbr = value.textContent.trim();
       } else if (index == 2) {
         let link = item2.querySelector("a");
         if (!link)
           return;
-        metascore.text = text;
+        metascore.text = text2;
         metascore.abbr = value.textContent.trim();
         metascore.link = link.getAttribute("href");
       }
@@ -9990,7 +10970,7 @@
             interactiveBorder: 10,
             offset: [0, 0],
             onShow(instance) {
-              instance.popper.addEventListener("click", (event2) => {
+              instance.popper.addEventListener("click", (event3) => {
                 instance.hide();
               });
             }
@@ -10133,8 +11113,8 @@
     fetch(`${root}user/${user}/library/${type}?format=list&date_preset=${range}&page=${current_page}&ajax=1`).then(function(response) {
       console.log("returned", response, response.text);
       return response.text();
-    }).then(function(html) {
-      let doc = new DOMParser().parseFromString(html, "text/html");
+    }).then(function(html2) {
+      let doc = new DOMParser().parseFromString(html2, "text/html");
       console.log("DOC", doc);
       let next_button = doc.querySelector(".pagination-next");
       try {
@@ -10212,29 +11192,29 @@
     if (type != "tracks") {
       let grid = document.createElement("ol");
       grid.classList.add("grid-items", "grid-items--numbered", "compare-grid");
-      page.state.compare.shared.forEach((data) => {
+      page.state.compare.shared.forEach((data2) => {
         let item2 = document.createElement("li");
         item2.classList.add("grid-items-item", "compare-item");
         let template;
         if (type == "artists")
-          template = sanitise(data.name);
+          template = sanitise(data2.name);
         else
-          template = `${sanitise(data.sister)}/${sanitise(data.name)}`;
+          template = `${sanitise(data2.sister)}/${sanitise(data2.name)}`;
         item2.innerHTML = `
                 <div class="grid-items-cover-image js-link-block link-block">
-                    <div class="grid-items-cover-image-image ${data.avatar.endsWith("/c6f59c1e5e7240a4c0d427abd71f3dbb.jpg") || data.avatar.endsWith("/2a96cbd8b46e442fc41c2b86b821562f.jpg") ? "grid-items-cover-default" : ""}">
-                        <img src="${data.avatar.replace("/avatar70s/", "/avatar300s/").replace("/64s/", "/avatar300s/")}" alt="${data.name}" loading="lazy">
+                    <div class="grid-items-cover-image-image ${data2.avatar.endsWith("/c6f59c1e5e7240a4c0d427abd71f3dbb.jpg") || data2.avatar.endsWith("/2a96cbd8b46e442fc41c2b86b821562f.jpg") ? "grid-items-cover-default" : ""}">
+                        <img src="${data2.avatar.replace("/avatar70s/", "/avatar300s/").replace("/64s/", "/avatar300s/")}" alt="${data2.name}" loading="lazy">
                     </div>
                     <div class="grid-items-item-details">
                         <p class="grid-items-item-main-text">
-                            <a class="link-block-target" href="${root}music/${template}" title="${data.name}">
-                                ${data.name}
+                            <a class="link-block-target" href="${root}music/${template}" title="${data2.name}">
+                                ${data2.name}
                             </a>
                         </p>
                         ${type == "albums" ? `
                         <p class="grid-items-item-aux-text">
-                            <a class="grid-items-item-aux-block" href="${root}music/${data.sister}">
-                                ${data.sister}
+                            <a class="grid-items-item-aux-block" href="${root}music/${data2.sister}">
+                                ${data2.sister}
                             </a>
                         </p>
                         ` : ""}
@@ -10243,13 +11223,13 @@
                                 <span class="avatar">
                                     <img src="${auth.avatar}" alt="${tl(trans.your_avatar)}">
                                 </span>
-                                ${data.plays.you}
+                                ${data2.plays.you}
                             </a>
                             <a class="grid-item-plays with-avatar" href="${root}user/${page.name}/library/music/${template}?date_preset=${range}" target="_blank">
                                 <span class="avatar">
                                     <img src="${page.avatar}" alt="${tl(trans.avatar_for_user).replace("{u}", page.name)}">
                                 </span>
-                                ${data.plays.other}
+                                ${data2.plays.other}
                             </a>
                         </p>
                     </div>
@@ -10272,32 +11252,32 @@
         if (item2.plays.other > max)
           max = item2.plays.other;
       });
-      page.state.compare.shared.forEach((data, index) => {
+      page.state.compare.shared.forEach((data2, index) => {
         let item2 = document.createElement("tr");
         item2.classList.add("chartlist-row", "chartlist-row--with-artist", "compare-item");
-        let template = `${sanitise(data.sister)}/_/${sanitise(data.name)}`;
+        let template = `${sanitise(data2.sister)}/_/${sanitise(data2.name)}`;
         item2.innerHTML = `
                 <td class="chartlist-index">${index + 1}</td>
                 <td class="chartlist-image">
                     <a class="cover-art" href="${root}music/${template}">
-                        <img src="${data.avatar}" alt="${data.name}" loading="lazy">
+                        <img src="${data2.avatar}" alt="${data2.name}" loading="lazy">
                     </a>
                 </td>
                 <td class="chartlist-name">
-                    <a href="${root}music/${template}" title="${data.name}">
-                        ${data.name}
+                    <a href="${root}music/${template}" title="${data2.name}">
+                        ${data2.name}
                     </a>
                 </td>
                 <td class="chartlist-artist">
-                    <a href="${root}music/${data.sister}" title="${data.sister}">
-                        ${data.sister}
+                    <a href="${root}music/${data2.sister}" title="${data2.sister}">
+                        ${data2.sister}
                     </a>
                 </td>
                 <td class="chartlist-bar with-multiple">
                     <span class="chartlist-count-bar">
                         <a class="chartlist-count-bar-link" href="${root}user/${auth.name}/library/music/${template}?date_preset=${range}" target="_blank">
-                            <span class="chartlist-count-bar-slug" data-max-stat-value="${max}" data-stat-value="${data.plays.you}" style="width: ${data.plays.you / max * 100}%;"></span>
-                            <span class="chartlist-count-bar-value">${data.plays.you}</span>
+                            <span class="chartlist-count-bar-slug" data-max-stat-value="${max}" data-stat-value="${data2.plays.you}" style="width: ${data2.plays.you / max * 100}%;"></span>
+                            <span class="chartlist-count-bar-value">${data2.plays.you}</span>
                         </a>
                         <span class="avatar">
                             <img src="${auth.avatar}" alt="${tl(trans.your_avatar)}">
@@ -10305,8 +11285,8 @@
                     </span>
                     <span class="chartlist-count-bar">
                         <a class="chartlist-count-bar-link" href="${root}user/${page.name}/library/music/${template}?date_preset=${range}" target="_blank">
-                            <span class="chartlist-count-bar-slug" data-max-stat-value="${max}" data-stat-value="${data.plays.other}" style="width: ${data.plays.other / max * 100}%;"></span>
-                            <span class="chartlist-count-bar-value">${data.plays.other}</span>
+                            <span class="chartlist-count-bar-slug" data-max-stat-value="${max}" data-stat-value="${data2.plays.other}" style="width: ${data2.plays.other / max * 100}%;"></span>
+                            <span class="chartlist-count-bar-value">${data2.plays.other}</span>
                         </a>
                         <span class="avatar">
                             <img src="${page.avatar}" alt="${tl(trans.avatar_for_user).replace("{u}", page.name)}">
@@ -10568,8 +11548,8 @@
     else
       page.structure.main.insertBefore(profile_header, page.structure.main.firstElementChild);
   }
-  function create_profile_top_item(parent, { name, link, text = "", type, taste = "", artists = [], avi = "", percent = "", action = "", tooltip = "", allow_html = false, tooltip_theme = "", full = false, primary = false, katsune = false, mini = false }) {
-    log(`creating top item of ${name}, ${link}, ${text}`, "profile");
+  function create_profile_top_item(parent, { name, link, text: text2 = "", type, taste = "", artists = [], avi = "", percent = "", action = "", tooltip = "", allow_html = false, tooltip_theme = "", full = false, primary = false, katsune = false, mini = false }) {
+    log(`creating top item of ${name}, ${link}, ${text2}`, "profile");
     let listen_item = document.createElement(action != "button" ? "a" : "button");
     listen_item.classList.add("btn", "side-action");
     listen_item.setAttribute("data-type", type);
@@ -10583,8 +11563,8 @@
     if (primary)
       listen_item.classList.add("primary");
     if (type != "taste") {
-      text = text.toLocaleString(lang);
-      listen_item.innerHTML = text;
+      text2 = text2.toLocaleString(lang);
+      listen_item.innerHTML = text2;
     }
     if (katsune) {
       full = true;
@@ -10772,13 +11752,13 @@
     let checkboxes = modal.querySelectorAll(".checkbox");
     checkboxes.forEach((checkbox) => {
       let id = checkbox.querySelector("input").getAttribute("name");
-      let text = checkbox.textContent.trim();
+      let text2 = checkbox.textContent.trim();
       checkbox.classList = "setting";
       checkbox.setAttribute("data-type", "toggle");
       checkbox.setAttribute("onclick", `_update_inbuilt_item('${id}')`);
       checkbox.innerHTML = `
             <div class="heading">
-                <h5>${text}</h5>
+                <h5>${text2}</h5>
             </div>
             <div class="toggle-wrap">
                 <input class="companion-checkbox" type="checkbox" name="${id}" id="inbuilt-companion-checkbox-${id}">
@@ -11344,14 +12324,14 @@
     page.state.avatar_changer_save = page.state.avatar_changer.querySelector(".modal-footer .primary");
     console.info(page.structure.dialogs);
   }
-  unsafeWindow._update_avatar_preview = function(event2) {
+  unsafeWindow._update_avatar_preview = function(event3) {
     let reader = new FileReader();
     reader.onload = function() {
       page.state.avatar_changer_image.src = reader.result;
       page.state.avatar_changer_button.setAttribute("data-has-file", "true");
       page.state.avatar_changer_save.removeAttribute("disabled");
     };
-    reader.readAsDataURL(event2.target.files[0]);
+    reader.readAsDataURL(event3.target.files[0]);
   };
   unsafeWindow._save_avatar = function() {
     page.state.avatar_changer.querySelector("#avatar_saver").click();
@@ -12749,8 +13729,8 @@
     fetch(`${root}user/${page.name}/partial/recenttracks?ajax=1`).then(function(response) {
       console.log("returned", response, response.text);
       return response.text();
-    }).then(function(html) {
-      let doc = new DOMParser().parseFromString(html, "text/html");
+    }).then(function(html2) {
+      let doc = new DOMParser().parseFromString(html2, "text/html");
       console.log("DOC", doc);
       let tracklist_panel = doc.querySelector(".chartlist");
       button.removeAttribute("disabled");
@@ -13277,29 +14257,29 @@
     };
     form.innerHTML = "";
   }
-  function bio_parse(text, cache = false) {
-    let result = markdown(text.textContent, {
+  function bio_parse(text2, cache2 = false) {
+    let result = markdown(text2.textContent, {
       allow_headers: true
     });
     let temp = document.createElement("div");
     temp.innerHTML = result;
-    use_banner(temp, cache);
+    use_banner(temp, cache2);
     return result;
   }
-  function use_banner(temp, cache) {
+  function use_banner(temp, cache2) {
     if (page.name == auth.name && !settings.profile_header_own || page.name != auth.name && !settings.profile_header_others)
       return;
     let banner = temp.querySelector('img[alt="banner"]');
     if (banner) {
-      set_profile_banner(banner, cache);
+      set_profile_banner(banner, cache2);
     } else {
       save_banner_to_cache("none");
     }
   }
-  function set_profile_banner(img, cache) {
+  function set_profile_banner(img, cache2) {
     let src = img.getAttribute("src");
     register_background(src, "bio");
-    if (cache)
+    if (cache2)
       save_banner_to_cache(src);
   }
   function load_banner_from_cache() {
@@ -13316,8 +14296,8 @@
     fetch(`${root}user/${page.name}`).then(function(response) {
       console.log("returned", response, response.text);
       return response.text();
-    }).then(function(html) {
-      let doc = new DOMParser().parseFromString(html, "text/html");
+    }).then(function(html2) {
+      let doc = new DOMParser().parseFromString(html2, "text/html");
       console.log("DOC", doc);
       let about_me_sidebar = doc.querySelector(".about-me-sidebar");
       if (about_me_sidebar) {
@@ -13352,8 +14332,8 @@
         if (response.status != 200)
           throw new Error();
         return response.text();
-      }).then(function(html) {
-        let doc = new DOMParser().parseFromString(html, "text/html");
+      }).then(function(html2) {
+        let doc = new DOMParser().parseFromString(html2, "text/html");
         console.log("glacier library DOC", doc, doc.querySelector(".table"));
         log("received response", "glacier library");
         table = doc.querySelector(".table");
@@ -14013,7 +14993,7 @@
     page.requested.setting = params.get("setting");
     let nav = document.createElement("nav");
     nav.classList.add("navlist", "secondary-nav", "navlist--more", "redesigned-navigation", "bleh-settings-navigation");
-    nav.innerHTML = `
+    render(nav, html`
         <ul class="navlist-items">
             <li class="navlist-item secondary-nav-item">
                 <a class="secondary-nav-item-link bleh--nav" data-bleh-page="home" onclick="_change_settings_page('home')">
@@ -14066,13 +15046,13 @@
                 </a>
             </li>
         </ul>
-    `;
-    page.structure.side.innerHTML = `
+    `);
+    render(page.structure.side, html`
         <div class="cta first priority sponsor colourful">
-            ${auth.sponsor ? `
+            ${auth.sponsor ? html.node`
             <strong>${tl(trans.you_are_a_sponsor)}</strong>
             <a class="see-more" onclick="_sponsor_manage()">${tl(trans.manage_sponsor)}</a>
-            ` : `
+            ` : html.node`
             <strong>${tl(trans.news_sponsor_cta)}</strong>
             <a class="see-more" onclick="_sponsor()">${tl(trans.sponsor)}</a>
             `}
@@ -14089,12 +15069,12 @@
             </button>
         </section>
         <div class="bleh--panel">
-            ${ff("skip_to_setting") ? `
+            ${ff("skip_to_setting") ? html.node`
             <h4>${tl(trans.skip_to)}</h4>
             <div class="skip-to-list"></div>
             ` : ""}
         </div>
-    `;
+    `);
     page.structure.container.insertBefore(nav, page.structure.row);
     if (!page.requested.tab)
       change_settings_page("themes");
@@ -14116,7 +15096,7 @@
           name: tl(trans.colourful_tracks.name)
         }
       ]);
-      return `
+      return html`
             <div class="bleh--panel">
                 <h4>${tl(trans.themes.name)}</h4>
                 <div class="setting-items full">
@@ -14124,7 +15104,7 @@
                         <button class="btn theme-item" data-bleh-theme="light" data-bleh--theme_type="light" onclick="change_theme_from_settings('light')">
                             <div class="preview-container">
                             <div class="preview" data-bleh--theme="light" data-bleh--theme_type="light">
-                                ${theme_preview}
+                                ${theme_preview()}
                             </div>
                             </div>
                             <div class="text">
@@ -14134,7 +15114,7 @@
                         <button class="btn theme-item" data-bleh-theme="ink" data-bleh--theme_type="light" onclick="change_theme_from_settings('ink')">
                             <div class="preview-container">
                             <div class="preview" data-bleh--theme="ink" data-bleh--theme_type="light">
-                                ${theme_preview}
+                                ${theme_preview()}
                             </div>
                             </div>
                             <div class="text">
@@ -14148,7 +15128,7 @@
                         <button class="btn theme-item" data-bleh-theme="dark" onclick="change_theme_from_settings('dark')">
                             <div class="preview-container">
                             <div class="preview" data-bleh--theme="dark">
-                                ${theme_preview}
+                                ${theme_preview()}
                             </div>
                             </div>
                             <div class="text">
@@ -14158,7 +15138,7 @@
                         <button class="btn theme-item" data-bleh-theme="darker" onclick="change_theme_from_settings('darker')">
                             <div class="preview-container">
                             <div class="preview" data-bleh--theme="darker">
-                                ${theme_preview}
+                                ${theme_preview()}
                             </div>
                             </div>
                             <div class="text">
@@ -14168,7 +15148,7 @@
                         <button class="btn theme-item" data-bleh-theme="oled" onclick="change_theme_from_settings('oled')">
                             <div class="preview-container">
                             <div class="preview" data-bleh--theme="oled">
-                                ${theme_preview}
+                                ${theme_preview()}
                             </div>
                             </div>
                             <div class="text">
@@ -14177,7 +15157,7 @@
                         </button>
                     </div>
                 </div>
-                ${ff("high_contrast") ? `
+                ${ff("high_contrast") ? html.node`
                 <div class="setting" data-type="toggle" id="container-high_contrast" onclick="_update_item('high_contrast')">
                     <button class="btn reset" onclick="_reset_item('high_contrast')">${tl(trans.reset)}</button>
                     <div class="heading">
@@ -14227,7 +15207,7 @@
                         </button>
                     </div>
                 </div>
-                ${ff("card_saturation") ? `
+                ${ff("card_saturation") ? html.node`
                 <div class="setting hide-if-light-theme" data-type="slider" id="container-sat_bg">
                     <button class="btn reset" onclick="_reset_item('sat_bg')">${tl(trans.reset)}</button>
                     <div class="heading">
@@ -14317,7 +15297,7 @@
           name: trans_legacy.en.settings.customise.show_your_progress.name
         }
       ]);
-      return `
+      return html`
             <div class="bleh--panel check-artist-hover">
                 <h4 class="top-header">${tl(trans.layout)}</h4>
                 <h4>${trans_legacy.en.settings.layout.header}</h4>
@@ -14451,7 +15431,7 @@
             `;
     } else if (page_id == "seasonal") {
       register_skip_to([]);
-      return `
+      return html`
             <div class="bleh--panel">
                 <div class="seasonal-inner">
                     <div class="sub-text">${tl(trans.seasonal_timeline)}</div>
@@ -14463,7 +15443,7 @@
                         </div>
                         <div class="glacier-library-top season-top">
                             <div class="glacier-library-metadata">
-                                ${stored_season.id != "none" && stored_season.start && stored_season.end ? `
+                                ${stored_season.id != "none" && stored_season.start && stored_season.end ? html.node`
                                 <div class="glacier-library-metadata-item">
                                     <div class="sub-text">${tl(trans.started)}</div>
                                     <div class="glacier-library-metadata-item-value" id="current_season_start">${moment(stored_season.start.replace("y0", stored_season.year).replace("{offset}", stored_season.offset)).from(stored_season.now)}</div>
@@ -14472,7 +15452,7 @@
                                     <div class="sub-text">${tl(trans.ends_in)}</div>
                                     <div class="glacier-library-metadata-item-value" id="current_season">${moment(stored_season.end.replace("y0", stored_season.year).replace("{offset}", stored_season.offset)).to(stored_season.now, true)}</div>
                                 </div>
-                                ` : settings.seasonal ? `
+                                ` : settings.seasonal ? html.node`
                                 <div class="glacier-library-metadata-item">
                                     <div class="sub-text">${tl(trans.next_in)}</div>
                                     <div class="glacier-library-metadata-item-value" id="next_season_start">${moment(stored_season.next_start.replace("y0", stored_season.next_is_new_year ? stored_season.year + 1 : stored_season.year).replace("{offset}", stored_season.offset)).to(stored_season.now, true)}</div>
@@ -14482,7 +15462,7 @@
                         </div>
                     </div>
                 </div>
-                ${settings.seasonal ? `
+                ${settings.seasonal ? html.node`
                 <div class="alert alert-info">
                     ${tl(trans.seasonal_offset).replace("{offset}", `<strong>${stored_season.offset}</strong>`)}
                 </div>
@@ -14546,7 +15526,7 @@
         `;
     } else if (page_id == "performance") {
       register_skip_to([]);
-      return `
+      return html`
             <div class="bleh--panel">
                 <div class="alert alert-danger">${tl(trans.beware_notice)}</div>
                 <div class="setting" data-type="text" id="container-branch">
@@ -14624,7 +15604,7 @@
           name: tl(trans.activity_tracking.name)
         }
       ]);
-      return `
+      return html`
             <div class="bleh--panel sponsor-badge-panel" data-sponsoring="${auth.sponsor}">
                 <div class="profile-container">
                     <div class="avatar-side small">
@@ -14638,7 +15618,7 @@
                             <div class="header standalone title-container">
                                 <h1>${auth.name}</h1>
                                 <div class="badges">
-                                    ${auth.pro ? `
+                                    ${auth.pro ? html.node`
                                     <span class="label user-status-subscriber">${tl(trans.badges["user-status-subscriber"].name)}</span>
                                     ` : ""}
                                 </div>
@@ -14646,7 +15626,7 @@
                         </div>
                     </div>
                 </div>
-                ${ff("api") ? `
+                ${ff("api") ? html.node`
                 <h4>${trans_legacy.en.settings.profiles.api.name}</h4>
                 <div class="alert alert-info">${trans_legacy.en.settings.profiles.api.bio}</div>
                 <div class="setting" data-type="text" id="container-api_key">
@@ -14663,7 +15643,9 @@
                 <div class="sep"></div>
                 <div class="setting" data-type="toggle">
                     <div class="heading">
-                        <h5>${tl(trans.sponsor_data).replace("{v}", `<span class="version-link sponsor-related">${sponsor_list.latest}</span>`)}</h5>
+                        <h5>${html.node([
+        tl(trans.sponsor_data).replace("{v}", `<span class="version-link sponsor-related">${sponsor_list.latest}</span>`)
+      ])}</h5>
                     </div>
                     <div class="toggle-wrap">
                         <button class="see-more update-check sponsor-related" onclick="_sponsor_check()">${tl(trans.update_check)}</button>
@@ -14849,7 +15831,7 @@
             `;
     } else if (page_id == "accessibility") {
       register_skip_to([]);
-      return `
+      return html`
             <div class="bleh--panel">
                 <h4 class="top-header">${tl(trans.accessibility)}</h4>
                 <div class="setting" data-type="toggle" id="container-reduced_motion" onclick="_update_item('reduced_motion')">
@@ -14880,7 +15862,7 @@
             `;
     } else if (page_id == "text") {
       register_skip_to([]);
-      return `
+      return html`
             <div class="bleh--panel">
                 <h4 class="top-header">${trans_legacy.en.settings.text.name}</h4>
                 <div class="inner-preview pad flex">
@@ -14958,10 +15940,10 @@
             `;
     } else if (page_id == "sku") {
       register_skip_to([]);
-      return `
+      return html`
             <div class="bleh--panel shh">
                 <div class="sub-text">${version.build}.${version.sku}</div>
-                \u2606\u2312(>w<)
+                ☆⌒(>w<)
             </div>
             <div class="bleh--panel">
                 <h4>Manage active flags</h4>
@@ -15019,14 +16001,16 @@
         let percent = this_rank.start / maximum * 100;
         preview_bar = `${preview_bar}, hsl(${this_rank.hue}, ${h3_sat.replace(global_sat, this_rank.sat)}, ${h3_lit.replace(global_lit, this_rank.lit)}) ${percent}%`;
         if ((this_rank.start > 500 || this_rank.start == 0) && this_rank.start != 1500) {
-          let text = `${this_rank.start}`;
-          preview_bar_text = `${preview_bar_text}<div class="preview-bar-text-entry" style="left: ${percent}%">${text.replaceAll("_", ",")}</div>`;
+          let text2 = `${this_rank.start}`;
+          preview_bar_text = `${preview_bar_text}<div class="preview-bar-text-entry" style="left: ${percent}%">${text2.replaceAll("_", ",")}</div>`;
         }
       }
       preview_bar = `${preview_bar});`;
-      return `
+      return html`
             <div class="bleh--panel lotus">
-                <h4>${tl(trans.brand_version_number).replace("{brand}", `<a class="lotus lotus-name" href="https://github.com/katelyynn/lotus" target="_blank">lotus</a>`).replace("{number}", `<span class="version-link lotus">${artist_corrections.version >= album_track_corrections.version ? artist_corrections.version : album_track_corrections.version}</span>`)}</h4>
+                <h4>${html.node([
+        tl(trans.brand_version_number).replace("{brand}", `<a class="lotus lotus-name" href="https://github.com/katelyynn/lotus" target="_blank">lotus</a>`).replace("{number}", `<span class="version-link lotus">${artist_corrections.version >= album_track_corrections.version ? artist_corrections.version : album_track_corrections.version}</span>`)
+      ])}</h4>
                 <p>${tl(trans.what_is_lotus)}</p>
                 <div class="inner-preview pad">
                     <div class="lotus-preview">
@@ -15237,7 +16221,7 @@
                 <div class="inner-preview pad">
                     <div class="personal-stats-preview-bar-container">
                         <div class="personal-stats-preview-bar" style="${preview_bar}"></div>
-                        <div class="personal-stats-preview-text">${preview_bar_text}</div>
+                        <div class="personal-stats-preview-text">${html.node([preview_bar_text])}</div>
                     </div>
                     <div class="sep"></div>
                     <div class="tracks">
@@ -15456,7 +16440,7 @@
       seasonal_timer_start();
     else
       seasonal_timer_end();
-    page.structure.main.innerHTML = render_setting_page(page_id);
+    render(page.structure.main, render_setting_page(page_id));
     if (page_id == "themes") {
       show_theme_change_in_settings();
       display_colour_presets();
@@ -15544,7 +16528,7 @@
       feature_flag_element.classList.add("setting");
       feature_flag_element.setAttribute("data-type", "toggle");
       feature_flag_element.setAttribute("onclick", `_update_flag_toggle('${flag}', this)`);
-      feature_flag_element.innerHTML = `
+      render(feature_flag_element, html`
             <div class="heading">
                 <h5>${version.feature_flags[flag].name}</h5>
                 ${version.feature_flags[flag].notice ? `<p>${version.feature_flags[flag].notice}</p>` : ""}
@@ -15557,7 +16541,7 @@
                     <div class="dot"></div>
                 </button>
             </div>
-        `;
+        `);
       flags_container.appendChild(feature_flag_element);
       document.documentElement.setAttribute(`data-ff--${flag}`, current_state);
     }
@@ -16190,7 +17174,7 @@
       let profile_note = document.createElement("div");
       profile_note.classList.add("generic-table-list-entry", "user-vertical-list-item");
       profile_note.setAttribute("id", `profile-note-row--${user}`);
-      profile_note.innerHTML = `
+      render(profile_note, html`
         <div class="name">
             <a class="mention" href="${root}user/${user}">@${user}</a>
         </div>
@@ -16205,7 +17189,7 @@
                 ${tl(trans.delete)}
             </button>
         </div>
-        `;
+        `);
       profile_notes_table.appendChild(profile_note);
     }
   }
@@ -16245,71 +17229,67 @@
     for (let artist in artist_corrections) {
       if (artist == "version")
         continue;
-      let correction = document.createElement("div");
-      correction.classList.add("correction-row");
-      correction.innerHTML = `
-        <div class="primary-name pre-transition">
-            <h5>${artist}</h5>
-        </div>
-        <div class="arrow-divider"></div>
-        <div class="primary-name post-transition">
-            <h5>${artist_corrections[artist]}</h5>
-        </div>
-        `;
-      corrections_table_artist.appendChild(correction);
+      corrections_table_artist.appendChild(html.node`
+        <div class="correction-row">
+                <div class="primary-name pre-transition">
+                    <h5>${artist}</h5>
+                </div>
+                <div class="arrow-divider"></div>
+                <div class="primary-name post-transition">
+                    <h5>${artist_corrections[artist]}</h5>
+                </div>
+        </div>`);
     }
     let corrections_table_albums_tracks = document.getElementById("corrections-albums_tracks");
     for (let artist in album_track_corrections) {
       if (artist == "version")
         continue;
-      let artist_row = document.createElement("div");
-      artist_row.classList.add("artist-row");
-      artist_row.innerHTML = `
-            <h5>${artist}</h5>
-        `;
-      corrections_table_albums_tracks.appendChild(artist_row);
+      corrections_table_albums_tracks.appendChild(html.node`
+            <div class="artist-row">
+                <h5>${artist}</h5>
+            </div>
+        `);
       for (let media in album_track_corrections[artist]) {
-        let correction = document.createElement("div");
-        correction.classList.add("correction-row");
-        correction.innerHTML = `
-            <div class="primary-name pre-transition">
-                <h5>${media}</h5>
-            </div>
-            <div class="arrow-divider"></div>
-            <div class="primary-name post-transition">
-                <h5>${album_track_corrections[artist][media]}</h5>
-            </div>
-            `;
-        corrections_table_albums_tracks.appendChild(correction);
+        corrections_table_albums_tracks.appendChild(html.node`
+                <div class="correction-row">
+                    <div class="primary-name pre-transition">
+                        <h5>${media}</h5>
+                    </div>
+                    <div class="arrow-divider"></div>
+                    <div class="primary-name post-transition">
+                        <h5>${album_track_corrections[artist][media]}</h5>
+                    </div>
+                </div>
+            `);
       }
     }
   }
   function prepare_language_page() {
     let languages_table = document.getElementById("languages");
     for (let language in lang_info) {
-      let lang_row = document.createElement("div");
-      lang_row.classList.add("language-row");
-      if (lang == language)
-        lang_row.classList.add("active");
       let users = "";
       for (let user in lang_info[language].by)
         users = `${users}<a class="mention" href="${root}user/${lang_info[language].by[user]}" target="_blank">@${lang_info[language].by[user]}</a> `;
-      lang_row.innerHTML = `
-        <div class="flag-container">
-            <img src="https://katelyynn.github.io/bleh/fm/flags/${language}.svg" alt="flag for ${language}">
-        </div>
-        <div class="name">
-            <h5>${lang_info[language].name}</h5>
-            <p>${trans_legacy.en.settings.language.by.replace("{users}", users)}</p>
-        </div>
-        ${lang_info[language].new ? `
-        <div class="badges">
-            <div class="new-badge">${tl(trans.new)}</div>
-        </div>
-        ` : '<div class="badges"></div>'}
-        <div class="date">
-            <p>${lang_info[language].last_updated != "latest" ? moment(lang_info[language].last_updated).fromNow() : lang_info[language].last_updated}</p>
-        </div>
+      let lang_row = html.node`
+            <div class="language-row${lang == language ? " active" : ""}">
+                <div class="flag-container">
+                    <img src="https://katelyynn.github.io/bleh/fm/flags/${language}.svg" alt="flag for ${language}">
+                </div>
+                <div class="name">
+                    <h5>${lang_info[language].name}</h5>
+                    <p>${html.node([
+        trans_legacy.en.settings.language.by.replace("{users}", users)
+      ])}</p>
+                </div>
+                ${lang_info[language].new ? html.node`
+                <div class="badges">
+                    <div class="new-badge">${tl(trans.new)}</div>
+                </div>
+                ` : html.node`<div class="badges"></div>`}
+                <div class="date">
+                    <p>${lang_info[language].last_updated != "latest" ? moment(lang_info[language].last_updated).fromNow() : lang_info[language].last_updated}</p>
+                </div>
+            </div>
         `;
       if (lang_info[language].last_updated != "latest") {
         tippy(lang_row.querySelector(".date"), {
@@ -16682,22 +17662,27 @@
         for (let song_tag in song_tags) {
           song_tags_text = `${song_tags_text}<div class="feat" data-bleh--tag-type="${song_tags[song_tag].type}" data-bleh--tag-group="${song_tags[song_tag].group}">${sanitise_text(song_tags[song_tag].text)}</div>`;
         }
-        name = `<div class="title">${sanitise_text(song_title).trim()}</div>${song_tags_text}`;
+        name = html.node`<div class="title">${sanitise_text(song_title).trim()}</div>${song_tags_text}`;
       } else if ((involved.type == "album" || involved.type == "track") && settings.corrections) {
-        name = correct_item_by_artist(name, sister);
+        name = html.node`${correct_item_by_artist(name, sister)}`;
         sister = correct_artist(sister);
       } else if (involved.type == "artist" && settings.corrections) {
         sister = correct_artist(sister);
       }
       if (involved_text != "")
-        involved_text = `${involved_text}, <a class="involved--${involved.type}">${name}</a>`;
+        involved_text = html.node`${involved_text}, <a class="involved--${involved.type}">${name}</a>`;
       else
-        involved_text = `${involved_text}<a class="involved--${involved.type}">${name}</a>`;
+        involved_text = html.node`${involved_text}<a class="involved--${involved.type}">${name}</a>`;
     });
-    activity_item.innerHTML = `
-        <div class="type">${tl(trans.activity.listing[activity.type])}<div class="date">${moment(activity.date).fromNow(true)}</div></div>
+    render(activity_item, html`
+        <div class="type">
+            ${tl(trans.activity.listing[activity.type])}
+            <div class="date">
+                ${moment(activity.date).fromNow(true)}
+            </div>
+        </div>
         <div class="name">${involved_text}</div>
-    `;
+    `);
     parent.insertBefore(activity_item, parent.firstElementChild);
     if (parent.childElementCount > 3)
       parent.removeChild(parent.lastElementChild);
@@ -17049,8 +18034,8 @@
       artist = correct_artist(artist);
       track = correct_item_by_artist(track, artist);
       let btn = form.querySelector("button");
-      btn.addEventListener("click", (event2) => {
-        log("heard", "event", "info", event2);
+      btn.addEventListener("click", (event3) => {
+        log("heard", "event", "info", event3);
         let action = btn.getAttribute("data-analytics-action");
         if (btn.getAttribute("data-type") == "love") {
           setTimeout(function() {
@@ -17068,8 +18053,8 @@
     bookmark_item.forEach((form) => {
       form.setAttribute("data-bleh-subscribed", "true");
       let btn = form.querySelector("button");
-      btn.addEventListener("click", (event2) => {
-        log("heard", "event", "info", event2);
+      btn.addEventListener("click", (event3) => {
+        log("heard", "event", "info", event3);
         let action = btn.getAttribute("data-analytics-action");
         register_activity(action.startsWith("Bookmark") ? "bookmark" : "unbookmark", [{ name: page.name, type: page.type, sister: page.sister }], window.location.href);
       }, false);
@@ -17082,20 +18067,20 @@
       artist = correct_artist(artist);
       track = correct_item_by_artist(track, artist);
       let btn = form.querySelector("button");
-      btn.addEventListener("click", (event2) => {
-        log("heard", "event", "info", event2);
+      btn.addEventListener("click", (event3) => {
+        log("heard", "event", "info", event3);
         register_activity("obsess", [{ name: track, type: "track", sister: artist }], window.location.href);
       }, false);
     });
     let post_shouts_btn = document.body.querySelector(".btn-post-shout:not([data-bleh-subscribed])");
     if (post_shouts_btn != null) {
       post_shouts_btn.setAttribute("data-bleh-subscribed", "true");
-      post_shouts_btn.addEventListener("click", (event2) => {
-        log("heard", "event", "info", event2);
+      post_shouts_btn.addEventListener("click", (event3) => {
+        log("heard", "event", "info", event3);
         window.setTimeout(function() {
-          let actual_btn = event2.target.parentElement;
+          let actual_btn = event3.target.parentElement;
           let is_loading = actual_btn.classList.contains("btn--loading");
-          console.log("is button loading", is_loading, actual_btn, event2.target);
+          console.log("is button loading", is_loading, actual_btn, event3.target);
           if (!is_loading) return;
           register_activity("shout", [{ name: page.name, type: page.type, sister: page.sister }], window.location.href);
         }, 150);
@@ -17105,8 +18090,8 @@
     if (save_wiki_form != null) {
       save_wiki_form.setAttribute("data-bleh-subscribed", "true");
       let btn = save_wiki_form.querySelector(".form-submit button");
-      btn.addEventListener("click", (event2) => {
-        log("heard", "event", "info", event2);
+      btn.addEventListener("click", (event3) => {
+        log("heard", "event", "info", event3);
         register_activity("wiki", [{ name: page.name, type: page.type, sister: page.sister }], window.location.href);
       }, false);
     }
@@ -17114,8 +18099,8 @@
     if (upload_img_form != null) {
       upload_img_form.setAttribute("data-bleh-subscribed", "true");
       let btn = upload_img_form.querySelector(".form-submit button");
-      btn.addEventListener("click", (event2) => {
-        log("heard", "event", "info", event2);
+      btn.addEventListener("click", (event3) => {
+        log("heard", "event", "info", event3);
         register_activity("image_upload", [{ name: page.name, type: page.type, sister: page.sister }], window.location.href);
       }, false);
     }
@@ -17248,9 +18233,9 @@
     if (!auth_link2) return;
     if (auth_link2.hasAttribute("data-bleh")) return;
     auth_link2.setAttribute("data-bleh", "true");
-    let text = document.createElement("p");
-    text.textContent = auth.name;
-    auth_link2.appendChild(text);
+    let text2 = document.createElement("p");
+    text2.textContent = auth.name;
+    auth_link2.appendChild(text2);
     if (masthead.querySelector(".masthead-pro-wrap"))
       auth.pro = true;
     else
@@ -18034,7 +19019,7 @@
           interactiveBorder: 10,
           offset: [0, 0],
           onShow(instance) {
-            instance.popper.addEventListener("click", (event2) => {
+            instance.popper.addEventListener("click", (event3) => {
               instance.hide();
             });
           }
@@ -18116,8 +19101,8 @@
       fetch(url).then(function(response) {
         console.error("returned", response, response.text);
         return response.text();
-      }).then(function(html) {
-        let doc = new DOMParser().parseFromString(html, "text/html");
+      }).then(function(html2) {
+        let doc = new DOMParser().parseFromString(html2, "text/html");
         console.error("DOC", doc);
         let inner_tracklist = doc.querySelector('#top-tracks-section [v-else=""] .chartlist');
         if (inner_tracklist == null) {
@@ -18263,7 +19248,7 @@
           interactiveBorder: 10,
           offset: [0, 0],
           onShow(instance) {
-            instance.popper.addEventListener("click", (event2) => {
+            instance.popper.addEventListener("click", (event3) => {
               instance.hide();
             });
           }
@@ -18287,7 +19272,7 @@
             interactiveBorder: 10,
             offset: [0, 0],
             onShow(instance) {
-              instance.popper.addEventListener("click", (event2) => {
+              instance.popper.addEventListener("click", (event3) => {
                 instance.hide();
               });
             }
@@ -18532,7 +19517,7 @@
                     <button class="btn theme-item" data-bleh-theme="light" data-bleh--theme_type="light" onclick="change_theme_from_settings('light')">
                         <div class="preview-container">
                         <div class="preview" data-bleh--theme="light" data-bleh--theme_type="light">
-                            ${theme_preview}
+                            ${theme_preview()}
                         </div>
                         </div>
                         <div class="text">
@@ -18542,7 +19527,7 @@
                     <button class="btn theme-item" data-bleh-theme="ink" data-bleh--theme_type="light" onclick="change_theme_from_settings('ink')">
                         <div class="preview-container">
                         <div class="preview" data-bleh--theme="ink" data-bleh--theme_type="light">
-                            ${theme_preview}
+                            ${theme_preview()}
                         </div>
                         </div>
                         <div class="text">
@@ -18556,7 +19541,7 @@
                     <button class="btn theme-item" data-bleh-theme="dark" onclick="change_theme_from_settings('dark')">
                         <div class="preview-container">
                         <div class="preview" data-bleh--theme="dark">
-                            ${theme_preview}
+                            ${theme_preview()}
                         </div>
                         </div>
                         <div class="text">
@@ -18566,7 +19551,7 @@
                     <button class="btn theme-item" data-bleh-theme="darker" onclick="change_theme_from_settings('darker')">
                         <div class="preview-container">
                         <div class="preview" data-bleh--theme="darker">
-                            ${theme_preview}
+                            ${theme_preview()}
                         </div>
                         </div>
                         <div class="text">
@@ -18576,7 +19561,7 @@
                     <button class="btn theme-item" data-bleh-theme="oled" onclick="change_theme_from_settings('oled')">
                         <div class="preview-container">
                         <div class="preview" data-bleh--theme="oled">
-                            ${theme_preview}
+                            ${theme_preview()}
                         </div>
                         </div>
                         <div class="text">
@@ -19107,7 +20092,7 @@
       interactiveBorder: 10,
       trigger: "click",
       onShow(instance) {
-        instance.popper.addEventListener("click", (event2) => {
+        instance.popper.addEventListener("click", (event3) => {
           instance.hide();
         });
       }
@@ -19132,8 +20117,8 @@
       fetch(`${root}user/${auth.name}/partial/recenttracks?ajax=1`).then(function(response) {
         console.log("returned", response, response.text);
         return response.text();
-      }).then(function(html) {
-        let doc = new DOMParser().parseFromString(html, "text/html");
+      }).then(function(html2) {
+        let doc = new DOMParser().parseFromString(html2, "text/html");
         console.log("DOC", doc);
         let tracklist_panel = doc.querySelector(".chartlist");
         if (tracklist_panel)
@@ -19674,7 +20659,7 @@
         interactiveBorder: 10,
         offset: [0, 0],
         onShow(instance) {
-          instance.popper.addEventListener("click", (event2) => {
+          instance.popper.addEventListener("click", (event3) => {
             instance.hide();
           });
         }
@@ -20251,14 +21236,14 @@
     radios.forEach((radio) => {
       let type = radio.getAttribute("data-analytics-label");
       radio.classList.add("radio-button");
-      let text = tl(trans[type]);
+      let text2 = tl(trans[type]);
       if (type == "tag")
-        text = page.name;
+        text2 = page.name;
       else if (type == "event")
-        text = tl(trans.artists);
+        text2 = tl(trans.artists);
       radio.innerHTML = `
             <h3 class="sub-text">${tl(trans.radio)}</h3>
-            <h4>${text}</h4>
+            <h4>${text2}</h4>
         `;
       radio.removeAttribute("title");
     });
@@ -21027,3 +22012,23 @@
   log(`starting ${version.build}.${version.sku}`, "load");
   bleh();
 })();
+/*! Bundled license information:
+
+@ungap/weakmap/esm/index.js:
+  (*! (c) Andrea Giammarchi - ISC *)
+
+domconstants/esm/index.js:
+  (*! (c) Andrea Giammarchi - ISC *)
+
+domsanitizer/esm/index.js:
+  (*! (c) Andrea Giammarchi - ISC *)
+
+@ungap/create-content/esm/index.js:
+  (*! (c) Andrea Giammarchi - ISC *)
+
+@ungap/import-node/esm/index.js:
+  (*! (c) Andrea Giammarchi - ISC *)
+
+hyperhtml-style/esm/index.js:
+  (*! (c) Andrea Giammarchi - ISC *)
+*/

@@ -106,7 +106,7 @@ unsafeWindow._setup_themes = function() {
                     <button class="btn theme-item" data-bleh-theme="light" data-bleh--theme_type="light" onclick="change_theme_from_settings('light')">
                         <div class="preview-container">
                         <div class="preview" data-bleh--theme="light" data-bleh--theme_type="light">
-                            ${theme_preview}
+                            ${theme_preview()}
                         </div>
                         </div>
                         <div class="text">
@@ -116,7 +116,7 @@ unsafeWindow._setup_themes = function() {
                     <button class="btn theme-item" data-bleh-theme="ink" data-bleh--theme_type="light" onclick="change_theme_from_settings('ink')">
                         <div class="preview-container">
                         <div class="preview" data-bleh--theme="ink" data-bleh--theme_type="light">
-                            ${theme_preview}
+                            ${theme_preview()}
                         </div>
                         </div>
                         <div class="text">
@@ -130,7 +130,7 @@ unsafeWindow._setup_themes = function() {
                     <button class="btn theme-item" data-bleh-theme="dark" onclick="change_theme_from_settings('dark')">
                         <div class="preview-container">
                         <div class="preview" data-bleh--theme="dark">
-                            ${theme_preview}
+                            ${theme_preview()}
                         </div>
                         </div>
                         <div class="text">
@@ -140,7 +140,7 @@ unsafeWindow._setup_themes = function() {
                     <button class="btn theme-item" data-bleh-theme="darker" onclick="change_theme_from_settings('darker')">
                         <div class="preview-container">
                         <div class="preview" data-bleh--theme="darker">
-                            ${theme_preview}
+                            ${theme_preview()}
                         </div>
                         </div>
                         <div class="text">
@@ -150,7 +150,7 @@ unsafeWindow._setup_themes = function() {
                     <button class="btn theme-item" data-bleh-theme="oled" onclick="change_theme_from_settings('oled')">
                         <div class="preview-container">
                         <div class="preview" data-bleh--theme="oled">
-                            ${theme_preview}
+                            ${theme_preview()}
                         </div>
                         </div>
                         <div class="text">

@@ -16,7 +16,7 @@ import { version } from "../main";
 import { update_page } from "../page";
 import { seasonal_timer_end, seasonal_timer_start } from "../seasonal";
 import { ff } from "../sku";
-
+import { html, render } from "lighterhtml"
 
 export function bleh_settings() {
     page.name = auth.name;
@@ -38,7 +38,7 @@ export function bleh_settings() {
     let nav = document.createElement('nav');
     nav.classList.add('navlist', 'secondary-nav', 'navlist--more', 'redesigned-navigation', 'bleh-settings-navigation');
 
-    nav.innerHTML = (`
+    render(nav, html`
         <ul class="navlist-items">
             <li class="navlist-item secondary-nav-item">
                 <a class="secondary-nav-item-link bleh--nav" data-bleh-page="home" onclick="_change_settings_page('home')">
@@ -91,17 +91,18 @@ export function bleh_settings() {
                 </a>
             </li>
         </ul>
-    `);
+    `)
 
-    page.structure.side.innerHTML = (`
+
+    render(page.structure.side, html`
         <div class="cta first priority sponsor colourful">
-            ${(auth.sponsor) ? (`
+            ${(auth.sponsor) ? html.node`
             <strong>${tl(trans.you_are_a_sponsor)}</strong>
             <a class="see-more" onclick="_sponsor_manage()">${tl(trans.manage_sponsor)}</a>
-            `) : (`
+            ` : html.node`
             <strong>${tl(trans.news_sponsor_cta)}</strong>
             <a class="see-more" onclick="_sponsor()">${tl(trans.sponsor)}</a>
-            `)}
+            `}
         </div>
         <section class="side-actions">
             <button class="btn side-action" data-type="import" onclick="_import_settings()">
@@ -115,10 +116,10 @@ export function bleh_settings() {
             </button>
         </section>
         <div class="bleh--panel">
-            ${(ff('skip_to_setting')) ? (`
+            ${(ff('skip_to_setting')) ? html.node`
             <h4>${tl(trans.skip_to)}</h4>
             <div class="skip-to-list"></div>
-            `) : ''}
+            ` : ''}
         </div>
     `);
 
@@ -148,7 +149,7 @@ export function render_setting_page(page_id) {
             }
         ]);
 
-        return (`
+        return html`
             <div class="bleh--panel">
                 <h4>${tl(trans.themes.name)}</h4>
                 <div class="setting-items full">
@@ -156,7 +157,7 @@ export function render_setting_page(page_id) {
                         <button class="btn theme-item" data-bleh-theme="light" data-bleh--theme_type="light" onclick="change_theme_from_settings('light')">
                             <div class="preview-container">
                             <div class="preview" data-bleh--theme="light" data-bleh--theme_type="light">
-                                ${theme_preview}
+                                ${theme_preview()}
                             </div>
                             </div>
                             <div class="text">
@@ -166,7 +167,7 @@ export function render_setting_page(page_id) {
                         <button class="btn theme-item" data-bleh-theme="ink" data-bleh--theme_type="light" onclick="change_theme_from_settings('ink')">
                             <div class="preview-container">
                             <div class="preview" data-bleh--theme="ink" data-bleh--theme_type="light">
-                                ${theme_preview}
+                                ${theme_preview()}
                             </div>
                             </div>
                             <div class="text">
@@ -180,7 +181,7 @@ export function render_setting_page(page_id) {
                         <button class="btn theme-item" data-bleh-theme="dark" onclick="change_theme_from_settings('dark')">
                             <div class="preview-container">
                             <div class="preview" data-bleh--theme="dark">
-                                ${theme_preview}
+                                ${theme_preview()}
                             </div>
                             </div>
                             <div class="text">
@@ -190,7 +191,7 @@ export function render_setting_page(page_id) {
                         <button class="btn theme-item" data-bleh-theme="darker" onclick="change_theme_from_settings('darker')">
                             <div class="preview-container">
                             <div class="preview" data-bleh--theme="darker">
-                                ${theme_preview}
+                                ${theme_preview()}
                             </div>
                             </div>
                             <div class="text">
@@ -200,7 +201,7 @@ export function render_setting_page(page_id) {
                         <button class="btn theme-item" data-bleh-theme="oled" onclick="change_theme_from_settings('oled')">
                             <div class="preview-container">
                             <div class="preview" data-bleh--theme="oled">
-                                ${theme_preview}
+                                ${theme_preview()}
                             </div>
                             </div>
                             <div class="text">
@@ -209,7 +210,7 @@ export function render_setting_page(page_id) {
                         </button>
                     </div>
                 </div>
-                ${(ff('high_contrast')) ? (`
+                ${(ff('high_contrast')) ? html.node`
                 <div class="setting" data-type="toggle" id="container-high_contrast" onclick="_update_item('high_contrast')">
                     <button class="btn reset" onclick="_reset_item('high_contrast')">${tl(trans.reset)}</button>
                     <div class="heading">
@@ -221,7 +222,7 @@ export function render_setting_page(page_id) {
                         </button>
                     </div>
                 </div>
-                `) : ''}
+                ` : ''}
                 <h4>${tl(trans.colours)}</h4>
                 <div class="view-buttons colour-buttons view-buttons-middle" id="colour_custom"></div>
                 <div class="swatch-group">
@@ -259,7 +260,7 @@ export function render_setting_page(page_id) {
                         </button>
                     </div>
                 </div>
-                ${(ff('card_saturation')) ? (`
+                ${(ff('card_saturation')) ? html.node`
                 <div class="setting hide-if-light-theme" data-type="slider" id="container-sat_bg">
                     <button class="btn reset" onclick="_reset_item('sat_bg')">${tl(trans.reset)}</button>
                     <div class="heading">
@@ -272,7 +273,7 @@ export function render_setting_page(page_id) {
                         <p id="value-sat_bg">0</p>
                     </div>
                 </div>
-                `) : ''}
+                ` : ''}
                 <div class="sep"></div>
                 <div class="setting" data-type="text" id="container-font">
                     <div class="heading">
@@ -333,7 +334,7 @@ export function render_setting_page(page_id) {
                     </div>
                 </div>
             </div>
-            `);
+            `;
     } else if (page_id == 'customise') {
         register_skip_to([
             {
@@ -350,7 +351,7 @@ export function render_setting_page(page_id) {
             }
         ]);
 
-        return (`
+        return html`
             <div class="bleh--panel check-artist-hover">
                 <h4 class="top-header">${tl(trans.layout)}</h4>
                 <h4>${trans_legacy.en.settings.layout.header}</h4>
@@ -481,11 +482,11 @@ export function render_setting_page(page_id) {
                     </div>
                 </div>
             </div>
-            `);
+            `;
     } else if (page_id == 'seasonal') {
         register_skip_to([]);
 
-        return (`
+        return html`
             <div class="bleh--panel">
                 <div class="seasonal-inner">
                     <div class="sub-text">${tl(trans.seasonal_timeline)}</div>
@@ -497,7 +498,7 @@ export function render_setting_page(page_id) {
                         </div>
                         <div class="glacier-library-top season-top">
                             <div class="glacier-library-metadata">
-                                ${(stored_season.id != 'none' && stored_season.start && stored_season.end) ? (`
+                                ${(stored_season.id != 'none' && stored_season.start && stored_season.end) ? html.node`
                                 <div class="glacier-library-metadata-item">
                                     <div class="sub-text">${tl(trans.started)}</div>
                                     <div class="glacier-library-metadata-item-value" id="current_season_start">${moment(stored_season.start.replace('y0', stored_season.year).replace('{offset}', stored_season.offset)).from(stored_season.now)}</div>
@@ -506,21 +507,21 @@ export function render_setting_page(page_id) {
                                     <div class="sub-text">${tl(trans.ends_in)}</div>
                                     <div class="glacier-library-metadata-item-value" id="current_season">${moment(stored_season.end.replace('y0', stored_season.year).replace('{offset}', stored_season.offset)).to(stored_season.now, true)}</div>
                                 </div>
-                                `) : (settings.seasonal) ? (`
+                                ` : (settings.seasonal) ? html.node`
                                 <div class="glacier-library-metadata-item">
                                     <div class="sub-text">${tl(trans.next_in)}</div>
                                     <div class="glacier-library-metadata-item-value" id="next_season_start">${moment(stored_season.next_start.replace('y0', (stored_season.next_is_new_year) ? stored_season.year + 1 : stored_season.year).replace('{offset}', stored_season.offset)).to(stored_season.now, true)}</div>
                                 </div>
-                                `) : ''}
+                                ` : ''}
                             </div>
                         </div>
                     </div>
                 </div>
-                ${(settings.seasonal) ? (`
+                ${(settings.seasonal) ? html.node`
                 <div class="alert alert-info">
                     ${tl(trans.seasonal_offset).replace('{offset}', `<strong>${stored_season.offset}</strong>`)}
                 </div>
-                `) : ''}
+                ` : ''}
                 <h4>${tl(trans.settings)}</h4>
                 <div class="setting" data-type="toggle" id="container-seasonal" onclick="_update_item('seasonal')">
                     <button class="btn reset" onclick="_reset_item('seasonal')">${tl(trans.reset)}</button>
@@ -577,11 +578,11 @@ export function render_setting_page(page_id) {
                     </div>
                 </div>
             </div>
-        `);
+        `;
     } else if (page_id == 'performance') {
         register_skip_to([]);
 
-        return (`
+        return html`
             <div class="bleh--panel">
                 <div class="alert alert-danger">${tl(trans.beware_notice)}</div>
                 <div class="setting" data-type="text" id="container-branch">
@@ -646,7 +647,7 @@ export function render_setting_page(page_id) {
                 <h4>Manage flags</h4>
                 <button class="continue" onclick="_change_settings_page('sku')">Open sku page</button>
             </div>
-            `);
+            `;
     } else if (page_id == 'profiles') {
         register_skip_to([
             {
@@ -660,7 +661,7 @@ export function render_setting_page(page_id) {
             }
         ]);
 
-        return (`
+        return html`
             <div class="bleh--panel sponsor-badge-panel" data-sponsoring="${auth.sponsor}">
                 <div class="profile-container">
                     <div class="avatar-side small">
@@ -674,15 +675,15 @@ export function render_setting_page(page_id) {
                             <div class="header standalone title-container">
                                 <h1>${auth.name}</h1>
                                 <div class="badges">
-                                    ${(auth.pro) ? (`
+                                    ${(auth.pro) ? html.node`
                                     <span class="label user-status-subscriber">${tl(trans.badges['user-status-subscriber'].name)}</span>
-                                    `) : ''}
+                                    ` : ''}
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-                ${(ff('api')) ? (`
+                ${(ff('api')) ? html.node`
                 <h4>${trans_legacy.en.settings.profiles.api.name}</h4>
                 <div class="alert alert-info">${trans_legacy.en.settings.profiles.api.bio}</div>
                 <div class="setting" data-type="text" id="container-api_key">
@@ -695,11 +696,14 @@ export function render_setting_page(page_id) {
                         </div>
                     </div>
                 </div>
-                `) : ''}
+                ` : ''}
                 <div class="sep"></div>
                 <div class="setting" data-type="toggle">
                     <div class="heading">
-                        <h5>${tl(trans.sponsor_data).replace('{v}', `<span class="version-link sponsor-related">${sponsor_list.latest}</span>`)}</h5>
+                        <h5>${
+                            html.node([
+                                tl(trans.sponsor_data).replace('{v}', `<span class="version-link sponsor-related">${sponsor_list.latest}</span>`)
+                            ])}</h5>
                     </div>
                     <div class="toggle-wrap">
                         <button class="see-more update-check sponsor-related" onclick="_sponsor_check()">${tl(trans.update_check)}</button>
@@ -882,11 +886,11 @@ export function render_setting_page(page_id) {
                     </div>
                 </div>
             </div>
-            `);
+            `;
     } else if (page_id == 'accessibility') {
         register_skip_to([]);
 
-        return (`
+        return html`
             <div class="bleh--panel">
                 <h4 class="top-header">${tl(trans.accessibility)}</h4>
                 <div class="setting" data-type="toggle" id="container-reduced_motion" onclick="_update_item('reduced_motion')">
@@ -914,11 +918,11 @@ export function render_setting_page(page_id) {
                     </div>
                 </div>
             </div>
-            `);
+            `;
     } else if (page_id == 'text') {
         register_skip_to([]);
 
-        return (`
+        return html`
             <div class="bleh--panel">
                 <h4 class="top-header">${trans_legacy.en.settings.text.name}</h4>
                 <div class="inner-preview pad flex">
@@ -993,11 +997,11 @@ export function render_setting_page(page_id) {
                     </div>
                 </div>
             </div>
-            `);
+            `;
     } else if (page_id == 'sku') {
         register_skip_to([]);
 
-        return (`
+        return html`
             <div class="bleh--panel shh">
                 <div class="sub-text">${version.build}.${version.sku}</div>
                 ☆⌒(>w<)
@@ -1007,7 +1011,7 @@ export function render_setting_page(page_id) {
                 <div class="alert alert-danger">Be careful! Only manage these if you know what you are doing.</div>
                 <div class="feature-flags" id="feature-flags"></div>
             </div>
-            `);
+            `;
     } else if (page_id == 'music') {
         register_skip_to([
             {
@@ -1079,11 +1083,13 @@ export function render_setting_page(page_id) {
         preview_bar = `${preview_bar});`;
         //console.info('preview bar', preview_bar, global_sat, h3_sat, global_lit, h3_lit);
 
-        return (`
+        return html`
             <div class="bleh--panel lotus">
-                <h4>${tl(trans.brand_version_number)
-                .replace('{brand}', `<a class="lotus lotus-name" href="https://github.com/katelyynn/lotus" target="_blank">lotus</a>`)
-                .replace('{number}', `<span class="version-link lotus">${(artist_corrections.version >= album_track_corrections.version) ? artist_corrections.version : album_track_corrections.version}</span>`)}</h4>
+                <h4>${html.node([
+                    tl(trans.brand_version_number)
+                    .replace('{brand}', `<a class="lotus lotus-name" href="https://github.com/katelyynn/lotus" target="_blank">lotus</a>`)
+                    .replace('{number}', `<span class="version-link lotus">${(artist_corrections.version >= album_track_corrections.version) ? artist_corrections.version : album_track_corrections.version}</span>`)
+                ])}</h4>
                 <p>${tl(trans.what_is_lotus)}</p>
                 <div class="inner-preview pad">
                     <div class="lotus-preview">
@@ -1294,7 +1300,7 @@ export function render_setting_page(page_id) {
                 <div class="inner-preview pad">
                     <div class="personal-stats-preview-bar-container">
                         <div class="personal-stats-preview-bar" style="${preview_bar}"></div>
-                        <div class="personal-stats-preview-text">${preview_bar_text}</div>
+                        <div class="personal-stats-preview-text">${html.node([preview_bar_text])}</div>
                     </div>
                     <div class="sep"></div>
                     <div class="tracks">
@@ -1450,7 +1456,7 @@ export function render_setting_page(page_id) {
                     </div>
                 </div>
             </div>
-            `);
+            `;
     }
 }
 
@@ -1527,8 +1533,8 @@ function change_settings_page(page_id, setting = null) {
     else
         seasonal_timer_end();
 
-    page.structure.main.innerHTML = render_setting_page(page_id);
-
+    render(page.structure.main, render_setting_page(page_id));
+    
     if (page_id == 'themes') {
         show_theme_change_in_settings();
         display_colour_presets();
@@ -1632,7 +1638,7 @@ function bleh_sku_page() {
         feature_flag_element.classList.add('setting');
         feature_flag_element.setAttribute('data-type', 'toggle');
         feature_flag_element.setAttribute('onclick', `_update_flag_toggle('${flag}', this)`);
-        feature_flag_element.innerHTML = (`
+        render(feature_flag_element, html`
             <div class="heading">
                 <h5>${version.feature_flags[flag].name}</h5>
                 ${(version.feature_flags[flag].notice) ? `<p>${version.feature_flags[flag].notice}</p>` : ''}
@@ -2333,7 +2339,7 @@ function init_profile_notes() {
         let profile_note = document.createElement('div');
         profile_note.classList.add('generic-table-list-entry', 'user-vertical-list-item');
         profile_note.setAttribute('id',`profile-note-row--${user}`);
-        profile_note.innerHTML = (`
+        render(profile_note, html`
         <div class="name">
             <a class="mention" href="${root}user/${user}">@${user}</a>
         </div>
@@ -2409,19 +2415,16 @@ export function prepare_corrections_page() {
         if (artist == 'version')
             continue;
 
-        let correction = document.createElement('div');
-        correction.classList.add('correction-row');
-        correction.innerHTML = (`
-        <div class="primary-name pre-transition">
-            <h5>${artist}</h5>
-        </div>
-        <div class="arrow-divider"></div>
-        <div class="primary-name post-transition">
-            <h5>${artist_corrections[artist]}</h5>
-        </div>
-        `);
-
-        corrections_table_artist.appendChild(correction);
+        corrections_table_artist.appendChild(html.node`
+        <div class="correction-row">
+                <div class="primary-name pre-transition">
+                    <h5>${artist}</h5>
+                </div>
+                <div class="arrow-divider"></div>
+                <div class="primary-name post-transition">
+                    <h5>${artist_corrections[artist]}</h5>
+                </div>
+        </div>`);
     }
 
     //
@@ -2432,28 +2435,24 @@ export function prepare_corrections_page() {
         if (artist == 'version')
             continue;
 
-        let artist_row = document.createElement('div');
-        artist_row.classList.add('artist-row');
-        artist_row.innerHTML = (`
-            <h5>${artist}</h5>
+        corrections_table_albums_tracks.appendChild(html.node`
+            <div class="artist-row">
+                <h5>${artist}</h5>
+            </div>
         `);
 
-        corrections_table_albums_tracks.appendChild(artist_row);
-
         for (let media in album_track_corrections[artist]) {
-            let correction = document.createElement('div');
-            correction.classList.add('correction-row');
-            correction.innerHTML = (`
-            <div class="primary-name pre-transition">
-                <h5>${media}</h5>
-            </div>
-            <div class="arrow-divider"></div>
-            <div class="primary-name post-transition">
-                <h5>${album_track_corrections[artist][media]}</h5>
-            </div>
+            corrections_table_albums_tracks.appendChild(html.node`
+                <div class="correction-row">
+                    <div class="primary-name pre-transition">
+                        <h5>${media}</h5>
+                    </div>
+                    <div class="arrow-divider"></div>
+                    <div class="primary-name post-transition">
+                        <h5>${album_track_corrections[artist][media]}</h5>
+                    </div>
+                </div>
             `);
-
-            corrections_table_albums_tracks.appendChild(correction);
         }
     }
 }
@@ -2463,33 +2462,32 @@ function prepare_language_page() {
     let languages_table = document.getElementById('languages');
 
     for (let language in lang_info) {
-        let lang_row = document.createElement('div');
-        lang_row.classList.add('language-row');
-
-        if (lang == language)
-            lang_row.classList.add('active');
 
         let users = '';
         for (let user in lang_info[language].by)
             users = `${users}<a class="mention" href="${root}user/${lang_info[language].by[user]}" target="_blank">@${lang_info[language].by[user]}</a> `;
 
-        lang_row.innerHTML = (`
-        <div class="flag-container">
-            <img src="https://katelyynn.github.io/bleh/fm/flags/${language}.svg" alt="flag for ${language}">
-        </div>
-        <div class="name">
-            <h5>${lang_info[language].name}</h5>
-            <p>${trans_legacy.en.settings.language.by.replace('{users}', users)}</p>
-        </div>
-        ${(lang_info[language].new ? (`
-        <div class="badges">
-            <div class="new-badge">${tl(trans.new)}</div>
-        </div>
-        `): '<div class="badges"></div>')}
-        <div class="date">
-            <p>${(lang_info[language].last_updated != 'latest') ? moment(lang_info[language].last_updated).fromNow() : lang_info[language].last_updated}</p>
-        </div>
-        `);
+        let lang_row = html.node`
+            <div class="language-row${lang == language ? " active" : ""}">
+                <div class="flag-container">
+                    <img src="https://katelyynn.github.io/bleh/fm/flags/${language}.svg" alt="flag for ${language}">
+                </div>
+                <div class="name">
+                    <h5>${lang_info[language].name}</h5>
+                    <p>${html.node([
+                        trans_legacy.en.settings.language.by.replace('{users}', users)
+                    ])}</p>
+                </div>
+                ${(lang_info[language].new ? html.node`
+                <div class="badges">
+                    <div class="new-badge">${tl(trans.new)}</div>
+                </div>
+                ` : html.node`<div class="badges"></div>`)}
+                <div class="date">
+                    <p>${(lang_info[language].last_updated != 'latest') ? moment(lang_info[language].last_updated).fromNow() : lang_info[language].last_updated}</p>
+                </div>
+            </div>
+        `
 
         if (lang_info[language].last_updated != 'latest') {
             tippy(lang_row.querySelector('.date'), {
@@ -2901,22 +2899,27 @@ function activity_preview_new(parent, activity) {
             }
 
             // combine
-            name = `<div class="title">${sanitise_text(song_title).trim()}</div>${song_tags_text}`;
+            name = html.node`<div class="title">${sanitise_text(song_title).trim()}</div>${song_tags_text}`;
         } else if ((involved.type == 'album' || involved.type == 'track') && settings.corrections) {
-            name = correct_item_by_artist(name, sister);
+            name = html.node`${correct_item_by_artist(name, sister)}`;
             sister = correct_artist(sister);
         }  else if (involved.type == 'artist' && settings.corrections) {
             sister = correct_artist(sister);
         }
 
         if (involved_text != '')
-            involved_text = `${involved_text}, <a class="involved--${involved.type}">${name}</a>`;
+            involved_text = html.node`${involved_text}, <a class="involved--${involved.type}">${name}</a>`;
         else
-            involved_text = `${involved_text}<a class="involved--${involved.type}">${name}</a>`;
+            involved_text = html.node`${involved_text}<a class="involved--${involved.type}">${name}</a>`;
     });
 
-    activity_item.innerHTML = (`
-        <div class="type">${tl(trans.activity.listing[activity.type])}<div class="date">${moment(activity.date).fromNow(true)}</div></div>
+    render(activity_item, html`
+        <div class="type">
+            ${tl(trans.activity.listing[activity.type])}
+            <div class="date">
+                ${moment(activity.date).fromNow(true)}
+            </div>
+        </div>
         <div class="name">${involved_text}</div>
     `);
 

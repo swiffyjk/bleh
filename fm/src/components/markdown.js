@@ -1,5 +1,5 @@
 import { root } from "../build/page";
-
+import { html } from "lighterhtml";
 export function markdown(text, {
     allow_headers = false,
     allow_links = true,
@@ -33,5 +33,7 @@ export function markdown(text, {
     .replace(/"/g, '&quot;')
     .replace(/'/g, '&#039;'));
 
-    return parsed_body;
+    return html.node([
+        parsed_body
+    ]);
 }
