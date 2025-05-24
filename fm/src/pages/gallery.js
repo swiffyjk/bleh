@@ -311,7 +311,7 @@ export function bleh_gallery_upload_check() {
 
 export function bleh_gallery_list() {
     let upload_btn = page.structure.main.querySelector('.btn-add');
-    if (upload_btn != null) {
+    if (upload_btn) {
         upload_btn.classList = 'btn view-all-button back upload-button';
 
         let upload_panel = document.createElement('section');
@@ -320,32 +320,13 @@ export function bleh_gallery_list() {
         upload_panel.appendChild(upload_btn);
         page.structure.side.insertBefore(upload_panel, page.structure.side.firstElementChild)
     }
-}
 
-export function patch_gallery_page() {
-    let header = document.body.querySelector('header');
-
-    if (header == undefined)
-        return;
-
-    if (header.classList.contains('header-new--album'))
-        return;
-
-    let image_list = document.body.querySelector('.image-list');
-
-    if (image_list != undefined) {
-        // we are on the gallery main page
-        patch_gallery_image_listing(image_list);
-    }
+    if (page.type == 'artist')
+        patch_gallery_image_listing();
 }
 
 // gallery main page
-function patch_gallery_image_listing(image_list) {
-    if (image_list.hasAttribute('data-kate-processed'))
-        return;
-
-    image_list.setAttribute('data-kate-processed', 'true');
-
+function patch_gallery_image_listing() {
     let bookmarked_images = JSON.parse(localStorage.getItem('bleh_bookmarked_images')) || {};
 
     if (page.requested.tab != 'saved' || page.requested.page != null)

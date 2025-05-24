@@ -212,7 +212,6 @@ function main_flow() {
         if (shout_parse_queue.length > 0)
             parse_shout_queue();
     }
-    patch_gallery_page();
 
     if (page.type == 'user' && page.subpage.startsWith('library') && (
         page.subpage != 'library_overview' && !page.subpage.startsWith('library_artist_') &&
