@@ -20,7 +20,7 @@ import { bleh_settings } from "./pages/bleh_config";
 import { bleh_setup, notify_if_new_update } from "./pages/bleh_setup";
 import { bleh_error } from "./pages/error";
 import { bleh_events } from "./pages/event";
-import { bleh_gallery, bleh_gallery_upload_check, patch_gallery_page } from "./pages/gallery";
+import { bleh_gallery, bleh_gallery_upload_check } from "./pages/gallery";
 import { bleh_glacier_library, bleh_glacier_library_bulk_edit } from "./pages/glacier";
 import { bleh_home, bleh_home_legacy } from "./pages/home";
 import { bleh_inbox } from "./pages/inbox";
@@ -119,6 +119,7 @@ function bleh_main() {
 
         // last.fm is a single page application
         const observer = new MutationObserver((mutations) => {
+            log('loop', 'mutation', 'log', {mutations: mutations});
             lookup_lang();
             patch_masthead(document.body);
 
