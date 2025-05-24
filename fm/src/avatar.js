@@ -159,7 +159,7 @@ unsafeWindow._expand_avatar = function(src) {
 export function expand_avatar(src) {
     dialog({
         id: 'avatar',
-        body: (`
+        body: html.node`
             <div class="full-avatar-wrapper">
                 <div class="full-avatar">
                     <img src="${src}">
@@ -172,7 +172,7 @@ export function expand_avatar(src) {
                     <div class="fill"></div>
                 </div>
             </div>
-        `),
+        `,
         type: 'avatar',
         has_overlays: false
     });

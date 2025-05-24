@@ -577,7 +577,7 @@ function open_avatar_changer(token) {
     page.state.avatar_changer = dialog({
         id: 'edit_avatar',
         title: tl(trans.change_avatar),
-        body: (`
+        body: html.node`
             <div class="forms">
                 <form action="${root}settings" name="avatar-form" method="post" enctype="multipart/form-data">
                     <input type="hidden" name="csrfmiddlewaretoken" value="${token}">
@@ -607,7 +607,7 @@ function open_avatar_changer(token) {
                 <div class="fill"></div>
                 <button class="btn primary save" onclick="_save_avatar()" disabled>${tl(trans.save)}</button>
             </div>
-        `)
+        `
     });
 
     page.state.avatar_changer.querySelector('[name="avatar-form"]').onsubmit = finish_saving_avatar;

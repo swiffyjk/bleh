@@ -2389,7 +2389,7 @@ unsafeWindow._delete_profile_note = function(username) {
 unsafeWindow._edit_profile_note = function(username) {
     let profile_notes = JSON.parse(localStorage.getItem('bleh_profile_notes')) || {};
 
-    dialog_legacy('edit_profile_note',trans_legacy.en.settings.profiles.notes.edit_user.replace('{u}', username),`
+    dialog_legacy('edit_profile_note',trans_legacy.en.settings.profiles.notes.edit_user.replace('{u}', username),html.node`
     <textarea id="bleh--profile-note" placeholder="Enter a local note for this user">${profile_notes[username]}</textarea>
     <div class="modal-footer">
         <button class="see-more cancel" onclick="_kill_window('edit_profile_note')">
@@ -2522,7 +2522,7 @@ unsafeWindow._import_settings = function() {
     dialog({
         id: 'import_settings',
         title: tl(trans.import_settings),
-        body: (`
+        body: html.node`
             <p class="big-modal-alert alert-danger">${tl(trans.import_notice)}</p>
             <br>
             <textarea class="modal-text" id="import_area"></textarea>
@@ -2535,7 +2535,7 @@ unsafeWindow._import_settings = function() {
                     ${tl(trans.import)}
                 </button>
             </div>
-        `)
+        `
     });
 }
 
@@ -2558,7 +2558,7 @@ unsafeWindow._confirm_import = function() {
         dialog({
             id: 'import_failed',
             title: trans_legacy.en.settings.actions.import.modals.failed.name,
-            body: (`
+            body: html.node`
                 <p class="big-modal-alert alert-error">${trans_legacy.en.settings.actions.import.modals.failed.alert}</p>
                 <div class="modal-footer">
                     <div class="fill"></div>
@@ -2566,7 +2566,7 @@ unsafeWindow._confirm_import = function() {
                         ${tl(trans.done)}
                     </button>
                 </div>
-            `)
+            `
         });
     }
 }
@@ -2577,7 +2577,7 @@ function export_settings() {
     dialog({
         id: 'export_settings',
         title: tl(trans.export_settings),
-        body: (`
+        body: html.node`
             <textarea class="modal-text">${JSON.stringify(settings)}</textarea>
             <div class="modal-footer">
                 <div class="fill"></div>
@@ -2585,7 +2585,7 @@ function export_settings() {
                     ${tl(trans.done)}
                 </button>
             </div>
-        `)
+        `
     });
 }
 unsafeWindow._export_settings = function() {
@@ -2598,7 +2598,7 @@ unsafeWindow._reset_settings = function() {
     dialog({
         id: 'reset_settings',
         title: tl(trans.reset_settings),
-        body: (`
+        body: html.node`
             <div class="big-modal-alert alert-error">
                 <strong>${tl(trans.reset_notice)}</strong>
                 <a class="see-more" onclick="_export_settings()">${tl(trans.make_a_backup)}</a>
@@ -2612,7 +2612,7 @@ unsafeWindow._reset_settings = function() {
                     ${tl(trans.reset)}
                 </button>
             </div>
-        `)
+        `
     });
 }
 

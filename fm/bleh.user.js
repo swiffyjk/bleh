@@ -7512,7 +7512,7 @@
     let modal_body = document.createElement("div");
     modal_body.classList.add("bleh-modal-body");
     modal_body.setAttribute("data-allow-scroll", allow_scroll);
-    modal_body.innerHTML = body;
+    render(modal_body, body);
     modal.appendChild(modal_body);
     dialogs[id] = {
       instance: modal
@@ -7622,7 +7622,7 @@
     header.setAttribute("data-kate-processed", "true");
     let inner_content_em = document.createElement("div");
     inner_content_em.classList.add("modal-inner-content");
-    inner_content_em.innerHTML = inner_content;
+    render(inner_content_em, inner_content);
     inner_content_em.setAttribute("data-kate-processed", "true");
     if (allow_scroll)
       inner_content_em.classList.add("allow-scroll");
@@ -9112,7 +9112,7 @@
   function expand_avatar(src) {
     dialog({
       id: "avatar",
-      body: `
+      body: html2.node`
             <div class="full-avatar-wrapper">
                 <div class="full-avatar">
                     <img src="${src}">
@@ -9584,7 +9584,7 @@
     let modal = dialog({
       id: "profile_shortcut",
       title: tl(trans.profile_shortcut.name),
-      body: `
+      body: html2.node`
         <div class="setting" data-type="text" id="container-profile_shortcut">
             <div class="avatar-container">
                 <div class="avatar-inner" id="avatar-profile_shortcut">
@@ -9607,7 +9607,7 @@
     let modal = dialog({
       id: "other_listener",
       title: tl(trans.view_others_library),
-      body: `
+      body: html2.node`
         <div class="setting" data-type="text">
             <div class="avatar-container">
                 <div class="avatar-inner avatar--bleh-missing">
@@ -9635,19 +9635,19 @@
     dialog({
       id: "profile_shortcut",
       title: tl(trans.profile_shortcut.name),
-      body: `
-        <div class="big-modal-alert alert-danger">
-            ${tl(trans.profile_shortcut.notice).replace("{u}", `<a class="mention" href="${root}user/${settings.profile_shortcut}" target="_blank">@${settings.profile_shortcut}</a>`)}
-        </div>
-        <div class="modal-footer">
-            <button class="see-more cancel" onclick="_dialog_rm({id:'profile_shortcut'})">
-                ${tl(trans.back)}
-            </button>
-            <div class="fill"></div>
-            <button class="btn primary save" onclick="_confirm_set_profile_as_shortcut()">
-                ${tl(trans.replace)}
-            </button>
-        </div>
+      body: html2.node`
+            <div class="big-modal-alert alert-danger">
+                ${tl(trans.profile_shortcut.notice).replace("{u}", `<a class="mention" href="${root}user/${settings.profile_shortcut}" target="_blank">@${settings.profile_shortcut}</a>`)}
+            </div>
+            <div class="modal-footer">
+                <button class="see-more cancel" onclick="_dialog_rm({id:'profile_shortcut'})">
+                    ${tl(trans.back)}
+                </button>
+                <div class="fill"></div>
+                <button class="btn primary save" onclick="_confirm_set_profile_as_shortcut()">
+                    ${tl(trans.replace)}
+                </button>
+            </div>
         `
     });
   };
@@ -12318,7 +12318,7 @@
     page.state.avatar_changer = dialog({
       id: "edit_avatar",
       title: tl(trans.change_avatar),
-      body: `
+      body: html.node`
             <div class="forms">
                 <form action="${root}settings" name="avatar-form" method="post" enctype="multipart/form-data">
                     <input type="hidden" name="csrfmiddlewaretoken" value="${token}">
@@ -13310,7 +13310,7 @@
           dialog({
             id: "listening_report_v2",
             title: "oh no :c",
-            body: `
+            body: html2.node`
                         <div class="alert alert-error">This listening report is too old</div>
                         <br>
                         <p>Legacy listening reports are not properly viewable yet in bleh for now. Sorry for the inconvenience.</p>
@@ -14613,7 +14613,10 @@
           console.log(`toggle-${item2}`);
           search.querySelector(`#toggle-${item2}`).setAttribute("aria-checked", true);
           if (item2 == "dev") {
-            dialog_legacy("prompt_dev", trans_legacy.en.settings.performance.dev.name, `
+            dialog_legacy(
+              "prompt_dev",
+              trans_legacy.en.settings.performance.dev.name,
+              html2.node`
                     <p class="alert alert-info">${trans_legacy.en.settings.performance.dev.modals.prompt.alert}</p>
                     <br>
                     ${trans_legacy.en.settings.performance.dev.modals.prompt.stylus}
@@ -14630,7 +14633,9 @@
                             <p class="caption">${trans_legacy.en.settings.performance.dev.modals.prompt.browsers.firefox.bio}</p>
                         </button>
                     </div>
-                `, true);
+                `,
+              true
+            );
           }
           document.body.style.setProperty(`--${item2}`, settings_base[item2].values[0]);
           document.documentElement.setAttribute(`data-bleh--${item2}`, `${settings_base[item2].values[0]}`);
@@ -14785,7 +14790,7 @@
   };
   function continue_dev() {
     kill_window("prompt_dev");
-    dialog_legacy("continue_dev", trans_legacy.en.settings.performance.dev.name, `
+    dialog_legacy("continue_dev", trans_legacy.en.settings.performance.dev.name, html2.node`
         ${trans_legacy.en.settings.performance.dev.modals.continue.next_step}
         <div class="modal-footer">
             <div class="fill"></div>
@@ -17238,7 +17243,7 @@
   };
   unsafeWindow._edit_profile_note = function(username) {
     let profile_notes = JSON.parse(localStorage.getItem("bleh_profile_notes")) || {};
-    dialog_legacy("edit_profile_note", trans_legacy.en.settings.profiles.notes.edit_user.replace("{u}", username), `
+    dialog_legacy("edit_profile_note", trans_legacy.en.settings.profiles.notes.edit_user.replace("{u}", username), html2.node`
     <textarea id="bleh--profile-note" placeholder="Enter a local note for this user">${profile_notes[username]}</textarea>
     <div class="modal-footer">
         <button class="see-more cancel" onclick="_kill_window('edit_profile_note')">
@@ -17340,7 +17345,7 @@
     dialog({
       id: "import_settings",
       title: tl(trans.import_settings),
-      body: `
+      body: html2.node`
             <p class="big-modal-alert alert-danger">${tl(trans.import_notice)}</p>
             <br>
             <textarea class="modal-text" id="import_area"></textarea>
@@ -17369,7 +17374,7 @@
       dialog({
         id: "import_failed",
         title: trans_legacy.en.settings.actions.import.modals.failed.name,
-        body: `
+        body: html2.node`
                 <p class="big-modal-alert alert-error">${trans_legacy.en.settings.actions.import.modals.failed.alert}</p>
                 <div class="modal-footer">
                     <div class="fill"></div>
@@ -17385,7 +17390,7 @@
     dialog({
       id: "export_settings",
       title: tl(trans.export_settings),
-      body: `
+      body: html2.node`
             <textarea class="modal-text">${JSON.stringify(settings)}</textarea>
             <div class="modal-footer">
                 <div class="fill"></div>
@@ -17403,7 +17408,7 @@
     dialog({
       id: "reset_settings",
       title: tl(trans.reset_settings),
-      body: `
+      body: html2.node`
             <div class="big-modal-alert alert-error">
                 <strong>${tl(trans.reset_notice)}</strong>
                 <a class="see-more" onclick="_export_settings()">${tl(trans.make_a_backup)}</a>
@@ -17801,7 +17806,7 @@
     dialog({
       id: "corrections",
       title: trans_legacy.en.settings.corrections.name,
-      body: `
+      body: html.node`
             <h4>${trans_legacy.en.settings.corrections.listing.artists}</h4>
             <div class="corrections artist" id="corrections-artist"></div>
             <h4>${trans_legacy.en.settings.corrections.listing.albums_tracks}</h4>
@@ -19389,7 +19394,7 @@
     let window2 = dialog({
       id: "changelog",
       title: tl(trans.news_from_user).replace("{user}", `<a class="mention" href="${root}user/katesia">@katesia</a>`),
-      body: `
+      body: html2.node`
             <div class="cta first sponsor colourful margin-bottom">
                 <strong>${tl(trans.news_sponsor_cta)}</strong>
                 <a class="see-more" onclick="_sponsor(true)">${tl(trans.sponsor)}</a>
@@ -19406,7 +19411,7 @@
         continue;
       if (index > 10)
         continue;
-      let version_item = html.node`
+      let version_item = html2.node`
             <div class="changelog-version-item" data-changelog-type="${changelog[version2].type}" data-changelog-latest="${index == 0 ? "true" : "false"}" data-changelog-version="${version2}">
             <div class="version-item-header">
                 <div class="sub-text">
@@ -19420,7 +19425,7 @@
                 </div>
                 </div>
                 <h3>${changelog[version2].name}</h3>
-                ${version2 == "2025.0113" ? html.node`<h4 class="header-over">${changelog[version2].name}</h4>` : ""}
+                ${version2 == "2025.0113" ? html2.node`<h4 class="header-over">${changelog[version2].name}</h4>` : ""}
             </div>
             </div>
         `;
@@ -20908,14 +20913,16 @@
     dialog({
       id: "sponsor",
       title: tl(trans.support_future_development),
-      body: `
+      body: html2.node`
             <div class="modal-vertical-inner support-inner">
                 <div class="avatar">
                     <img src="${auth.avatar.replace("/avatar42s/", "/avatar170s/")}" alt="${tl(trans.your_avatar)}">
                     <span class="avatar-status-dot user-status--bleh-sponsor"></span>
                 </div>
                 <h1>${tl(trans.support_future_development)}</h1>
-                <p>${tl(trans.why_sponsor).replace("katelyn", `<a class="mention" href="${root}user/katesia">@katesia</a>`)}</p>
+                <p>${html2.node([
+        tl(trans.why_sponsor).replace("katelyn", `<a class="mention" href="${root}user/katesia">@katesia</a>`)
+      ])}</p>
             </div>
             <div class="modal-footer">
                 <div class="fill"></div>
@@ -20937,7 +20944,7 @@
       dialog({
         id: "sponsor_manage",
         title: tl(trans.sponsor),
-        body: `
+        body: html2.node`
                 <div class="modal-vertical-inner support-inner">
                     <div class="avatar">
                         <img src="${auth.avatar.replace("/avatar42s/", "/avatar170s/")}" alt="${tl(trans.your_avatar)}">
@@ -20953,7 +20960,7 @@
       dialog({
         id: "sponsor_manage",
         title: tl(trans.sponsor),
-        body: `
+        body: html2.node`
                 <div class="modal-vertical-inner support-inner">
                     <div class="avatar">
                         <img src="${auth.avatar.replace("/avatar42s/", "/avatar170s/")}" alt="${tl(trans.your_avatar)}">
@@ -21066,7 +21073,7 @@
     dialog({
       id: "bleh_update",
       title: trans_legacy.en.settings.home.update.update_to_v.replace("{v}", theme_version.state),
-      body: `
+      body: html2.node`
             <div class="bleh--update-checker-container">
                 <div class="form">
                     <div class="form-group">
@@ -21110,7 +21117,7 @@
       dialog({
         id: "bleh_update",
         title: trans_legacy.en.settings.home.update.update_to_v.replace("{v}", theme_version.state),
-        body: `
+        body: html2.node`
                 <div class="bleh--update-checker-container">
                     <div class="form">
                         <div class="form-group">
@@ -21137,7 +21144,7 @@
     dialog({
       id: "bleh_update",
       title: trans_legacy.en.settings.home.update.update_to_v.replace("{v}", theme_version.state),
-      body: `
+      body: html2.node`
             <div class="bleh--update-checker-container">
                 <div class="form">
                     <div class="form-group">
@@ -21446,12 +21453,12 @@
     dialog({
       id: "error",
       title: "An error has occured",
-      body: `
+      body: html2.node`
             <div class="modal-vertical-inner error-inner">
                 <div class="bleh-icon" style="--icon: var(--icon-error)"></div>
                 <h1>oops.. something broke</h1>
                 <p>An error prevented bleh from finishing loading, it's recommended to leave the page and refresh.</p>
-                <pre class="error-info">${e ? `<span class="error-type">${e.name}</span>: ${e.message}` : ""}<br>on: ${page.type}/${page.subpage}<br>    ${window.location.pathname}</pre>
+                <pre class="error-info">${e ? html2.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}<br>on: ${page.type}/${page.subpage}<br>    ${window.location.pathname}</pre>
                 <p>It would be helpful if you could report this bug on Github, including the error message above and a screenshot of your browser console (the error is highlighted).</p>
             </div>
             <div class="modal-footer">

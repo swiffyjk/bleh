@@ -1,4 +1,4 @@
-import { html } from "lighterhtml";
+import { html, render } from "lighterhtml";
 import { log } from "../build/log";
 import { dialogs, page } from "../build/page";
 import { lang, trans_legacy, trans, tl } from "../build/trans";
@@ -105,7 +105,8 @@ export function dialog({
     let modal_body = document.createElement('div');
     modal_body.classList.add('bleh-modal-body');
     modal_body.setAttribute('data-allow-scroll', allow_scroll);
-    modal_body.innerHTML = body;
+
+    render(modal_body, body)
 
     modal.appendChild(modal_body);
 
@@ -251,7 +252,7 @@ export function dialog_legacy(id, title, inner_content, dismiss = false, classna
     // inner content
     let inner_content_em = document.createElement('div');
     inner_content_em.classList.add('modal-inner-content');
-    inner_content_em.innerHTML = inner_content;
+    render(inner_content_em, inner_content);
     inner_content_em.setAttribute('data-kate-processed','true');
 
     if (allow_scroll)

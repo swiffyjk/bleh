@@ -465,11 +465,11 @@ export function bleh_profiles() {
                 dialog({
                     id: 'listening_report_v2',
                     title: 'oh no :c',
-                    body: (`
+                    body: html.node`
                         <div class="alert alert-error">This listening report is too old</div>
                         <br>
                         <p>Legacy listening reports are not properly viewable yet in bleh for now. Sorry for the inconvenience.</p>
-                    `)
+                    `
                 });
                 return;
             }

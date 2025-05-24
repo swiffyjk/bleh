@@ -153,12 +153,12 @@ function handle_error(e = null) {
     dialog({
         id: 'error',
         title: 'An error has occured',
-        body: (`
+        body: html.node`
             <div class="modal-vertical-inner error-inner">
                 <div class="bleh-icon" style="--icon: var(--icon-error)"></div>
                 <h1>oops.. something broke</h1>
                 <p>An error prevented bleh from finishing loading, it's recommended to leave the page and refresh.</p>
-                <pre class="error-info">${(e) ? `<span class="error-type">${e.name}</span>: ${e.message}` : ''}<br>on: ${page.type}/${page.subpage}<br>    ${window.location.pathname}</pre>
+                <pre class="error-info">${(e) ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ''}<br>on: ${page.type}/${page.subpage}<br>    ${window.location.pathname}</pre>
                 <p>It would be helpful if you could report this bug on Github, including the error message above and a screenshot of your browser console (the error is highlighted).</p>
             </div>
             <div class="modal-footer">
@@ -168,7 +168,7 @@ function handle_error(e = null) {
                 </a>
                 <div class="fill"></div>
             </div>
-        `),
+        `,
         type: 'error'
     });
 

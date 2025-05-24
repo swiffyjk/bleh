@@ -1,3 +1,4 @@
+import { html } from "lighterhtml";
 import { settings } from "./build/config";
 import { log } from "./build/log";
 import { page } from "./build/page";
@@ -120,7 +121,7 @@ export function prompt_for_update() {
     dialog({
         id: 'bleh_update',
         title: trans_legacy.en.settings.home.update.update_to_v.replace('{v}', theme_version.state),
-        body: (`
+        body: html.node`
             <div class="bleh--update-checker-container">
                 <div class="form">
                     <div class="form-group">
@@ -137,7 +138,7 @@ export function prompt_for_update() {
                     </div>
                 </div>
             </div>
-        `),
+        `,
         dismiss: false,
         type: 'update',
         replace_id: 'bleh_update',
@@ -170,7 +171,7 @@ unsafeWindow._start_update = function() {
         dialog({
             id: 'bleh_update',
             title: trans_legacy.en.settings.home.update.update_to_v.replace('{v}', theme_version.state),
-            body: (`
+            body: html.node`
                 <div class="bleh--update-checker-container">
                     <div class="form">
                         <div class="form-group">
@@ -180,7 +181,7 @@ unsafeWindow._start_update = function() {
                         </div>
                     </div>
                 </div>
-            `),
+            `,
             dismiss: false,
             type: 'update'
         });
@@ -200,7 +201,7 @@ unsafeWindow._final_update = function() {
     dialog({
         id: 'bleh_update',
         title: trans_legacy.en.settings.home.update.update_to_v.replace('{v}', theme_version.state),
-        body: (`
+        body: html.node`
             <div class="bleh--update-checker-container">
                 <div class="form">
                     <div class="form-group">
@@ -209,7 +210,7 @@ unsafeWindow._final_update = function() {
                     </div>
                 </div>
             </div>
-        `),
+        `,
         dismiss: false,
         type: 'update'
     });

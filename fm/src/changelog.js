@@ -1,3 +1,4 @@
+import { html } from "lighterhtml";
 import { log } from "./build/log";
 import { root } from "./build/page";
 import { lang, tl, trans, trans_legacy } from "./build/trans";
@@ -76,13 +77,13 @@ function open_changelog(changelog) {
     let window = dialog({
         id: 'changelog',
         title: tl(trans.news_from_user).replace('{user}', `<a class="mention" href="${root}user/katesia">@katesia</a>`),
-        body: (`
+        body: html.node`
             <div class="cta first sponsor colourful margin-bottom">
                 <strong>${tl(trans.news_sponsor_cta)}</strong>
                 <a class="see-more" onclick="_sponsor(true)">${tl(trans.sponsor)}</a>
             </div>
             <div class="changelog-list"></div>
-        `),
+        `,
         type: 'changelog',
         allow_scroll: true
     });

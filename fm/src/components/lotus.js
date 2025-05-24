@@ -111,12 +111,12 @@ unsafeWindow._open_correction_modal = function() {
     dialog({
         id: 'corrections',
         title: trans_legacy.en.settings.corrections.name,
-        body: (`
+        body: html.node`
             <h4>${trans_legacy.en.settings.corrections.listing.artists}</h4>
             <div class="corrections artist" id="corrections-artist"></div>
             <h4>${trans_legacy.en.settings.corrections.listing.albums_tracks}</h4>
             <div class="corrections album_tracks" id="corrections-albums_tracks"></div>
-        `),
+        `,
         has_close: true,
         type: 'corrections',
         allow_scroll: true
