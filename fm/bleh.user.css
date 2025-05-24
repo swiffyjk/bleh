@@ -10462,7 +10462,7 @@ text[style^="color: rgb(255, 172, 172)"] {
         padding: var(--card-gap) !important;
         background: hsl(var(--b6), 95%) !important;
         border-radius: var(--item-big-radius) !important;
-        box-shadow: var(--override-full-shadow, var(--overlay-shadow)) !important;
+        box-shadow: var(--override-full-shadow, var(--card-border), var(--overlay-shadow)) !important;
         color: hsl(var(--c2));
 
         text-align: left;
