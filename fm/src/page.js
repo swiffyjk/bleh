@@ -38,6 +38,7 @@ import { append_style, prompt_for_update } from "./style";
 import { bleh_radio } from "./components/radio";
 import { bleh_api } from './pages/api';
 import { bleh_users } from './pages/users';
+import { render, html } from "lighterhtml";
 
 export function bleh() {
     let head_observer = new MutationObserver((mutations) => {
@@ -561,7 +562,7 @@ function detect_mobile() {
 }
 
 function page_indicator() {
-    page.structure.indicator.innerHTML = (`
+    render(page.structure.indicator, html`
         <div class="bleh">
             <strong>ver</strong>
             <span>${version.brand}</span>

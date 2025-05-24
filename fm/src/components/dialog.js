@@ -1,3 +1,4 @@
+import { html } from "lighterhtml";
 import { log } from "../build/log";
 import { dialogs, page } from "../build/page";
 import { lang, trans_legacy, trans, tl } from "../build/trans";
@@ -79,16 +80,13 @@ export function dialog({
         modal.setAttribute('data-modal-type', type);
 
     if (title != null) {
-        let modal_title = document.createElement('div');
-        modal_title.classList.add('bleh-modal-title');
-        modal_title.setAttribute('id', 'modal_title');
-        modal_title.innerHTML = (`
-            <h1>${title}</h1>
-            ${(subtitle != null) ? `<p class="bleh-modal-subtitle">${subtitle}</p>` : ''}
-        `);
-
         modal.setAttribute('aria-labelledby', 'modal_title');
-        modal.appendChild(modal_title);
+        modal.appendChild(html.node`
+            <div class="bleh-modal-title" id="modal_title">
+                <h1>${title}</h1>
+                ${(subtitle != null) ? html.node`<p class="bleh-modal-subtitle">${subtitle}</p>` : ''}
+            </div>
+        `);
     }
 
     if (dismiss) {
@@ -216,22 +214,17 @@ export function dialog_legacy(id, title, inner_content, dismiss = false, classna
     content.setAttribute('data-kate-processed','true');
 
     if (dismiss) {
-        let actions = document.createElement('div');
-        actions.classList.add('modal-actions');
-        actions.setAttribute('id',`bleh--window-${id}--actions`);
-        actions.setAttribute('data-kate-processed','true');
-
         background.setAttribute('onclick', `_kill_window('${id}')`);
 
-        actions.innerHTML = (`
-            <div class="modal-buttons">
-                <button class="modal-action-button modal-dismiss" onclick="_kill_window('${id}')">
-                    ${trans_legacy.en.settings.close}
-                </button>
+        content.insertBefore(html.node`
+            <div class="modal-actions" id="bleh--window-${id}--actions" data-kate-processed="true">
+                <div class="modal-buttons">
+                    <button class="modal-action-button modal-dismiss" onclick="_kill_window('${id}')">
+                        ${trans_legacy.en.settings.close}
+                    </button>
+                </div>
             </div>
-        `);
-
-        content.insertBefore(actions, content.firstElementChild);
+        `, content.firstElementChild);
     }
 
     // share content

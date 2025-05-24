@@ -15,18 +15,15 @@ export function patch_masthead(element) {
     if (!masthead_logo.hasAttribute('data-kate-processed')) {
         masthead_logo.setAttribute('data-kate-processed','true');
 
-        let link = document.createElement('a');
-        link.classList.add('home-link');
-        link.setAttribute('href', `${root}music`);
-        link.innerHTML = `<div class="bleh-logo">${version.brand}</div>`;
-        masthead_logo.appendChild(link);
+        masthead_logo.appendChild(html.node`
+            <a class="home-link" href="${root}music">
+                <div class="bleh-logo">${version.brand}</div>
+            </a>`);
 
-        let version_text = document.createElement('a');
-        version_text.classList.add('bleh--version');
-        version_text.setAttribute('href', `${root}bleh`);
-        version_text.innerHTML = `${version.build}.${version.sku}${(settings.branch != 'uwu') ? `.${settings.branch}` : ''}${(settings.dev) ? `<div class="new-badge subtle">✦</div>` : ''}`;
-
-        masthead_logo.appendChild(version_text);
+        masthead_logo.appendChild(html.node`
+            <a class="bleh--version" href="${root}bleh">
+                ${version.build}.${version.sku}${(settings.branch != 'uwu') ? `.${settings.branch}` : ''}${(settings.dev) ? html.node`<div class="new-badge subtle">✦</div>` : ''}
+            </a>`);
     }
 }
 
@@ -38,16 +35,16 @@ export function append_nav() {
 
         page.structure.indicator = page_indicator;
     }
-
+        
     if (!page.structure.loader) {
-        let loader = document.createElement('div');
-        loader.classList.add('loader');
-        loader.innerHTML = (`
-            <div class="loader-bar">
-                <div class="loader-bar-fill"></div>
-            </div>
-            <div class="bleh-icon"></div>
-        `);
+        const loader = html.node`
+            <div class="loader"
+                <div class="loader-bar">
+                    <div class="loader-bar-fill"></div>
+                </div>
+                <div class="bleh-icon"></div>
+            <div>
+        `;
         document.body.appendChild(loader);
         page.structure.loader = loader;
     }
@@ -93,14 +90,13 @@ export function append_nav() {
     let links = masthead.querySelector('.masthead-nav .navlist-items');
     links.innerHTML = '';
 
-    let notif_container = document.createElement('li');
-    notif_container.classList.add('masthead-nav-item');
-    notif_container.innerHTML = (`
+    let notif_container = html.node`
+    <li class="masthead-nav-item">
         <a class="masthead-nav-control" href="${root}inbox/notifications" data-label="notifications">
             ${tl(trans.notifications.name)}
-            ${(notif_count) ? `<div class="notification-count-badge"></div>` : ''}
+            ${(notif_count) ? html.node`<div class="notification-count-badge"></div>` : ''}
         </a>
-    `);
+    </li>`;
 
     if (notif_count) {
         notif_count = notif_count.textContent;
@@ -118,14 +114,14 @@ export function append_nav() {
 
     links.appendChild(notif_container);
 
-    let inbox_container = document.createElement('li');
-    inbox_container.classList.add('masthead-nav-item');
-    inbox_container.innerHTML = (`
-        <a class="masthead-nav-control" href="${root}inbox" data-label="inbox">
-            ${tl(trans.inbox.name)}
-            ${(inbox_count) ? `<div class="notification-count-badge"></div>` : ''}
-        </a>
-    `);
+    let inbox_container = html.node`
+        <li class="masthead-nav-item">
+            <a class="masthead-nav-control" href="${root}inbox" data-label="inbox">
+                ${tl(trans.inbox.name)}
+                ${(inbox_count) ? `<div class="notification-count-badge"></div>` : ''}
+            </a>
+        </li>
+    `;
 
     if (inbox_count) {
         inbox_count = inbox_count.textContent;
@@ -144,26 +140,27 @@ export function append_nav() {
     links.appendChild(inbox_container);
 
     // what's new?
-    let changelog_container = document.createElement('li');
-    changelog_container.classList.add('masthead-nav-item');
-    changelog_container.innerHTML = (`
-        <a class="masthead-nav-control" onclick="_query_changelog()" data-label="changelog">
-            ${tl(trans.news)}
-        </a>
-    `);
+    let changelog_container = html.node`
+        <li class="masthead-nav-item">
+            <a class="masthead-nav-control" onclick="_query_changelog()" data-label="changelog">
+                ${tl(trans.news)}
+            </a>
+        </li>
+    `
+
     tippy(changelog_container, {
         content: tl(trans.news)
     });
     links.appendChild(changelog_container);
 
     // configure bleh
-    let bleh_container = document.createElement('li');
-    bleh_container.classList.add('masthead-nav-item');
-    bleh_container.innerHTML = (`
-        <a class="masthead-nav-control" href="${root}bleh${(stored_season.id != 'none') ? '?tab=seasonal' : ''}" data-label="bleh" data-season="${stored_season.id}" data-season-active="${(stored_season.id != 'none') ? 'true' : 'false'}">
-            ${(stored_season.id == 'none') ? tl(trans.bleh_settings) : moment(stored_season.end.replace('y0', stored_season.year).replace('{offset}', stored_season.offset)).to(stored_season.now, true)}
-        </a>
-    `);
+    let bleh_container = html.node`
+        <li class="masthead-nav-item">
+            <a class="masthead-nav-control" href="${root}bleh${(stored_season.id != 'none') ? '?tab=seasonal' : ''}" data-label="bleh" data-season="${stored_season.id}" data-season-active="${(stored_season.id != 'none') ? 'true' : 'false'}">
+                ${(stored_season.id == 'none') ? tl(trans.bleh_settings) : moment(stored_season.end.replace('y0', stored_season.year).replace('{offset}', stored_season.offset)).to(stored_season.now, true)}
+            </a>
+        </li>
+    `;
     if (stored_season.id == 'none') {
         tippy(bleh_container, {
             content: tl(trans.bleh_settings)
@@ -186,14 +183,14 @@ export function append_nav() {
     let selected_language = document.querySelector('.footer-language--active strong')?.textContent;
     let language_options = document.querySelectorAll('.footer-language-form');
 
-    let language_menu = document.createElement('div');
-    language_menu.classList.add('language-menu');
-    language_menu.innerHTML = (`
-        <button class="dropdown-menu-clickable-item lang-item active" data-lang="${lang}" style="--flag-url: url('https://katelyynn.github.io/bleh/fm/flags/${lang}.svg')">
-            ${selected_language}
-        </button>
-        <div class="sep"></div>
-    `);
+    let language_menu = html.node`
+        <div class="language-menu">
+            <button class="dropdown-menu-clickable-item lang-item active" data-lang="${lang}" style="--flag-url: url('https://katelyynn.github.io/bleh/fm/flags/${lang}.svg')">
+                ${selected_language}
+            </button>
+            <div class="sep"></div>
+        </div>
+    `;
 
     language_options.forEach((language_option) => {
         let button = language_option.querySelector('button');
@@ -322,28 +319,25 @@ export function append_nav() {
     auth_link.removeAttribute('data-disclose-hover--allow-enter-open');
     auth_link.removeAttribute('href');
 
-
     // mobile
-    let mobile = document.createElement('div');
-    mobile.classList.add('mobile-controls');
-    mobile.innerHTML = (`
-        <a class="btn mobile-control" aria-checked="${page.type == 'overview' || page.type == 'recommended' || page.type == 'releases' || page.type == 'bookmarks' || page.type == 'charts'}" data-menu-item="home" href="${root}music">
-            ${tl(trans.home)}
-        </a>
-        <a class="btn mobile-control" aria-checked="${page.type == 'search'}" data-menu-item="search" href="${root}search">
-            ${tl(trans.search)}
-        </a>
-        <a class="btn mobile-control" aria-checked="${page.type == 'user' && page.name == auth.name}" data-menu-item="profile_mobile" href="${root}user/${auth.name}">
-            ${auth.name}
-        </a>
-        <a class="btn mobile-control" aria-checked="${page.type == 'inbox'}" data-menu-item="notifications" href="${root}inbox/notifications">
-            ${tl(trans.inbox.name)}
-            ${(inbox_count || notif_count) ? `<div class="notification-count-badge"></div>` : ''}
-        </a>
-        <a class="btn mobile-control" aria-checked="${page.type == 'settings' || page.type == 'bleh_settings'}" data-menu-item="settings" href="${root}bleh">
-            ${tl(trans.settings)}
-        </a>
+    masthead.appendChild(html.node`
+        <div class="mobile-controls">
+            <a class="btn mobile-control" aria-checked="${page.type == 'overview' || page.type == 'recommended' || page.type == 'releases' || page.type == 'bookmarks' || page.type == 'charts'}" data-menu-item="home" href="${root}music">
+                ${tl(trans.home)}
+            </a>
+            <a class="btn mobile-control" aria-checked="${page.type == 'search'}" data-menu-item="search" href="${root}search">
+                ${tl(trans.search)}
+            </a>
+            <a class="btn mobile-control" aria-checked="${page.type == 'user' && page.name == auth.name}" data-menu-item="profile_mobile" href="${root}user/${auth.name}">
+                ${auth.name}
+            </a>
+            <a class="btn mobile-control" aria-checked="${page.type == 'inbox'}" data-menu-item="notifications" href="${root}inbox/notifications">
+                ${tl(trans.inbox.name)}
+                ${(inbox_count || notif_count) ? `<div class="notification-count-badge"></div>` : ''}
+            </a>
+            <a class="btn mobile-control" aria-checked="${page.type == 'settings' || page.type == 'bleh_settings'}" data-menu-item="settings" href="${root}bleh">
+                ${tl(trans.settings)}
+            </a>
+        </div>
     `);
-
-    masthead.appendChild(mobile);
 }

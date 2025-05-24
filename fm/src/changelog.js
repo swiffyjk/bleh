@@ -96,28 +96,24 @@ function open_changelog(changelog) {
 
         if (index > 10)
             continue;
-
-        let version_item = document.createElement('div');
-        version_item.classList.add('changelog-version-item');
-        version_item.setAttribute('data-changelog-type', changelog[version].type);
-        version_item.setAttribute('data-changelog-latest', (index == 0) ? 'true' : 'false');
-        version_item.setAttribute('data-changelog-version', version);
-        version_item.innerHTML = (`
+       let version_item = html.node`
+            <div class="changelog-version-item" data-changelog-type="${changelog[version].type}" data-changelog-latest="${index == 0 ? 'true' : 'false'}" data-changelog-version="${version}">
             <div class="version-item-header">
                 <div class="sub-text">
-                    <div class="breadcrumb">
-                        <div class="breadcrumb-origin">
-                            ${version}
-                        </div>
-                        <div class="breadcrumb-name">
-                            ${trans_legacy.en.changelog.type[changelog[version].type]}
-                        </div>
+                <div class="breadcrumb">
+                    <div class="breadcrumb-origin">
+                    ${version}
+                    </div>
+                    <div class="breadcrumb-name">
+                    ${trans_legacy.en.changelog.type[changelog[version].type]}
                     </div>
                 </div>
+                </div>
                 <h3>${changelog[version].name}</h3>
-                ${(version == '2025.0113') ? `<h4 class="header-over">${changelog[version].name}</h4>` : ''}
+                ${(version == '2025.0113') ? html.node`<h4 class="header-over">${changelog[version].name}</h4>` : ''}
             </div>
-        `);
+            </div>
+        `;
 
         if (changelog[version].type == 'major')
             version_item.setAttribute('id', 'latest_major_release');

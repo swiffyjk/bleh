@@ -151,20 +151,20 @@
     var FRAGMENT = "fragment";
     var TEMPLATE = "template";
     var HAS_CONTENT = "content" in create2(TEMPLATE);
-    var createHTML = HAS_CONTENT ? function(html2) {
+    var createHTML = HAS_CONTENT ? function(html3) {
       var template = create2(TEMPLATE);
-      template.innerHTML = html2;
+      template.innerHTML = html3;
       return template.content;
-    } : function(html2) {
+    } : function(html3) {
       var content = create2(FRAGMENT);
       var template = create2(TEMPLATE);
       var childNodes = null;
-      if (/^[^\S]*?<(col(?:group)?|t(?:head|body|foot|r|d|h))/i.test(html2)) {
+      if (/^[^\S]*?<(col(?:group)?|t(?:head|body|foot|r|d|h))/i.test(html3)) {
         var selector = RegExp.$1;
-        template.innerHTML = "<table>" + html2 + "</table>";
+        template.innerHTML = "<table>" + html3 + "</table>";
         childNodes = template.querySelectorAll(selector);
       } else {
-        template.innerHTML = html2;
+        template.innerHTML = html3;
         childNodes = template.childNodes;
       }
       append(content, childNodes);
@@ -294,9 +294,9 @@
 
   // node_modules/domtagger/esm/walker.js
   var normalizeAttributes = UID_IE ? function(attributes, parts) {
-    var html2 = parts.join(" ");
+    var html3 = parts.join(" ");
     return parts.slice.call(attributes, 0).sort(function(left, right) {
-      return html2.indexOf(left.name) <= html2.indexOf(right.name) ? -1 : 1;
+      return html3.indexOf(left.name) <= html3.indexOf(right.name) ? -1 : 1;
     });
   } : function(attributes, parts) {
     return parts.slice.call(attributes, 0);
@@ -988,7 +988,7 @@
     this.values = args;
   }
   var Hole = LighterHole;
-  var { render, html, svg } = createRender(Tagger);
+  var { render, html: html2, svg } = createRender(Tagger);
   function tta() {
     let out = [], i = 0, { length } = arguments;
     while (i < length)
@@ -1664,7 +1664,7 @@
   var has_prompted_for_update = {
     state: false
   };
-  var theme_preview = () => html.node`
+  var theme_preview = () => html2.node`
     <div class="preview-inner">
         <div class="preview-card">
             <div class="preview-header">Aa</div>
@@ -1688,7 +1688,7 @@
   // src/build/log.js
   function log(text2, system, type = "info", append = {}) {
     if (!page.structure.logs) {
-      let logs = html.node`<div class="logs">
+      let logs = html2.node`<div class="logs">
             <div class="setting" data-type="toggle" id="container-log_show_all" onclick="_update_item('log_show_all')">
                 <div class="toggle-wrap">
                     <button id="toggle-log_show_all">
@@ -1740,7 +1740,7 @@
     if (settings && settings.feature_flags) {
       if (settings.feature_flags.developer == true) {
         page.structure.logs.appendChild(
-          html.node`
+          html2.node`
             <div class="log" data-type=${type}>
                 <span class="system" style="color: ${system_colour}">${system}</span>
                 <span class="text">${text2}</span>
@@ -7492,15 +7492,13 @@
     if (type != "")
       modal.setAttribute("data-modal-type", type);
     if (title != null) {
-      let modal_title = document.createElement("div");
-      modal_title.classList.add("bleh-modal-title");
-      modal_title.setAttribute("id", "modal_title");
-      modal_title.innerHTML = `
-            <h1>${title}</h1>
-            ${subtitle != null ? `<p class="bleh-modal-subtitle">${subtitle}</p>` : ""}
-        `;
       modal.setAttribute("aria-labelledby", "modal_title");
-      modal.appendChild(modal_title);
+      modal.appendChild(html2.node`
+            <div class="bleh-modal-title" id="modal_title">
+                <h1>${title}</h1>
+                ${subtitle != null ? html2.node`<p class="bleh-modal-subtitle">${subtitle}</p>` : ""}
+            </div>
+        `);
     }
     if (dismiss) {
       let modal_close = document.createElement("button");
@@ -7597,19 +7595,16 @@
     content.setAttribute("id", `bleh--window-${id}--content`);
     content.setAttribute("data-kate-processed", "true");
     if (dismiss) {
-      let actions = document.createElement("div");
-      actions.classList.add("modal-actions");
-      actions.setAttribute("id", `bleh--window-${id}--actions`);
-      actions.setAttribute("data-kate-processed", "true");
       background.setAttribute("onclick", `_kill_window('${id}')`);
-      actions.innerHTML = `
-            <div class="modal-buttons">
-                <button class="modal-action-button modal-dismiss" onclick="_kill_window('${id}')">
-                    ${trans_legacy.en.settings.close}
-                </button>
+      content.insertBefore(html2.node`
+            <div class="modal-actions" id="bleh--window-${id}--actions" data-kate-processed="true">
+                <div class="modal-buttons">
+                    <button class="modal-action-button modal-dismiss" onclick="_kill_window('${id}')">
+                        ${trans_legacy.en.settings.close}
+                    </button>
+                </div>
             </div>
-        `;
-      content.insertBefore(actions, content.firstElementChild);
+        `, content.firstElementChild);
     }
     let share = document.createElement("div");
     share.classList.add("modal-share-content");
@@ -7695,7 +7690,7 @@
       smartIndentationFix: true
     });
     let parsed_body = converter.makeHtml(text2.replace(/([@])([a-zA-Z0-9_]+)/g, `[$1$2](${root}user/$2)`).replace(/\[artist\]([a-zA-Z0-9]+)\[\/artist\]/g, `[$1](${root}music/$1)`).replace(/\[album artist=([a-zA-Z0-9]+)\]([a-zA-Z0-9\s]+)\[\/album\]/g, `[$2](${root}music/$1/$2)`).replace(/\[track artist=([a-zA-Z0-9]+)\]([a-zA-Z0-9\s]+)\[\/track\]/g, `[$2](${root}music/$1/_/$2)`).replace(/https:\/\/open\.spotify\.com\/user\/([A-Za-z0-9]+)\?si=([A-Za-z0-9]+)/g, "[Spotify](https://open.spotify.com/user/$1)").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;"));
-    return html.node([
+    return html2.node([
       parsed_body
     ]);
   }
@@ -8031,9 +8026,9 @@
     });
     tippy(configure_button, {
       theme: "window",
-      content: html.node`
+      content: html2.node`
             <div class="dialog-settings">
-                ${page.subpage == "library_artists" ? html.node`
+                ${page.subpage == "library_artists" ? html2.node`
                 <div class="setting" data-type="toggle" id="container-colourful_counts" onclick="_update_item('colourful_counts')">
                     <div class="heading">
                         <h5>${tl(trans.colourful_counts.name)}</h5>
@@ -8045,7 +8040,7 @@
                         </button>
                     </div>
                 </div>
-                ` : html.node`
+                ` : html2.node`
                 <div class="setting" data-type="toggle" id="container-format_guest_features" onclick="_update_item('format_guest_features')">
                     <button class="btn reset" onclick="_reset_item('format_guest_features')">${tl(trans.reset)}</button>
                     <div class="heading">
@@ -8072,7 +8067,7 @@
                 </div>
                 `}
                 <div class="sep"></div>
-                ${(page.subpage == "library_artists" || page.subpage == "library_albums") && auth.pro ? html.node`
+                ${(page.subpage == "library_artists" || page.subpage == "library_albums") && auth.pro ? html2.node`
                 <div class="setting" data-type="toggle" id="container-grid_glow" onclick="_update_item('grid_glow')">
                     <button class="btn reset" onclick="_reset_item('grid_glow')">${tl(trans.reset)}</button>
                     <div class="heading">
@@ -8372,8 +8367,8 @@
       if (response.status != 200)
         throw new Error();
       return response.text();
-    }).then(function(html2) {
-      let doc = new DOMParser().parseFromString(html2, "text/html");
+    }).then(function(html3) {
+      let doc = new DOMParser().parseFromString(html3, "text/html");
       console.log("glacier library DOC", doc, doc.querySelector(".table"));
       log("received response", "glacier library");
       log("refresh is now marked true", "glacier library");
@@ -8657,7 +8652,7 @@
     });
     tippy(configure_button, {
       theme: "window",
-      content: html.node`
+      content: html2.node`
             <div class="dialog-settings">
                 <div class="setting" data-type="toggle" id="container-format_guest_features" onclick="_update_item('format_guest_features')">
                     <button class="btn reset" onclick="_reset_item('format_guest_features')">${tl(trans.reset)}</button>
@@ -9018,10 +9013,10 @@
         parent.classList.add("parent-can-hoverbox");
       tippy(parent ? parent : avatar, {
         theme: "user",
-        content: html.node`
+        content: html2.node`
                 <div class="image-info">
                     <div class="inner-image">
-                        ${html.node([avatar_img.outerHTML])}
+                        ${html2.node([avatar_img.outerHTML])}
                     </div>
                     <div class="info">
                         <h5 class="title">${name}</h5>
@@ -9048,10 +9043,10 @@
           parent.classList.add("parent-can-hoverbox");
         tippy(parent ? parent : avatar, {
           theme: "user",
-          content: html.node`
+          content: html2.node`
                     <div class="image-info">
                         <div class="inner-image">
-                            ${html.node([avatar_img.outerHTML])}
+                            ${html2.node([avatar_img.outerHTML])}
                         </div>
                         <div class="info">
                             <h5 class="title">${name}</h5>
@@ -9075,10 +9070,10 @@
           parent.classList.add("parent-can-hoverbox");
         tippy(parent ? parent : avatar, {
           theme: "user",
-          content: html.node`
+          content: html2.node`
                     <div class="image-info">
                         <div class="inner-image">
-                            ${html.node([avatar_img.outerHTML])}
+                            ${html2.node([avatar_img.outerHTML])}
                         </div>
                         <div class="info">
                             <h5 class="title">${name}</h5>
@@ -9423,7 +9418,7 @@
         if (ff("remove_bookmark")) {
           let menu = tippy(image_element, {
             theme: "context-menu",
-            content: html.node`
+            content: html2.node`
                         <button class="dropdown-menu-clickable-item" onclick="_update_image_bookmark(this, '${image}', false)" data-menu-item="remove-bookmark" data-bleh--image-is-bookmarked="true">
                             ${trans_legacy.en.gallery.bookmarks.button.unbookmark_this_image.name}
                         </button>
@@ -9690,8 +9685,8 @@
     fetch(`${root}user/${profile_name}/tags`).then(function(response) {
       console.log("returned", response, response.text);
       return response.text();
-    }).then(function(html2) {
-      let doc = new DOMParser().parseFromString(html2, "text/html");
+    }).then(function(html3) {
+      let doc = new DOMParser().parseFromString(html3, "text/html");
       console.log("DOC", doc);
       profile_img.classList.remove("requesting");
       try {
@@ -9731,7 +9726,7 @@
       let tabs = document.createElement("nav");
       tabs.classList.add("navlist", "secondary-nav", "navlist--more", "redesigned-navigation");
       if (page.type == "artist") {
-        tabs.innerHTML = `
+        tabs.appendChild(html2.node`
                 <ul class="navlist-items">
                     <li class="navlist-item secondary-nav-item secondary-nav-item--overview">
                         <a class="secondary-nav-item-link secondary-nav-item-link--active" href="${window.location.href}">
@@ -9748,7 +9743,7 @@
                             ${tl(trans.albums)}
                         </a>
                     </li>
-                    ${!page_is_blocked ? `
+                    ${!page_is_blocked ? html2.node`
                     <li class="navlist-item secondary-nav-item secondary-nav-item--images">
                         <a class="secondary-nav-item-link" href="${window.location.href}/+images">
                             ${tl(trans.photos)}
@@ -9786,16 +9781,16 @@
                     </li>
                     ` : ""}
                 </ul>
-            `;
+            `);
       } else if (page.type == "album") {
-        tabs.innerHTML = `
+        tabs.appendChild(html2.node`
                 <ul class="navlist-items">
                     <li class="navlist-item secondary-nav-item secondary-nav-item--overview">
                         <a class="secondary-nav-item-link secondary-nav-item-link--active" href="${window.location.href}">
                             ${tl(trans.overview)}
                         </a>
                     </li>
-                    ${!page_is_blocked ? `
+                    ${!page_is_blocked ? html2.node`
                     <li class="navlist-item secondary-nav-item secondary-nav-item--wiki">
                         <a class="secondary-nav-item-link" href="${window.location.href}/+wiki">
                             ${tl(trans.wiki)}
@@ -9818,9 +9813,9 @@
                     </li>
                     ` : ""}
                 </ul>
-            `;
+            `);
       } else if (page.type == "track") {
-        tabs.innerHTML = `
+        tabs.appendChild(html2.node`
                 <ul class="navlist-items">
                     <li class="navlist-item secondary-nav-item secondary-nav-item--overview">
                         <a class="secondary-nav-item-link secondary-nav-item-link--active" href="${window.location.href}">
@@ -9832,7 +9827,7 @@
                             ${tl(trans.albums)}
                         </a>
                     </li>
-                    ${!page_is_blocked ? `
+                    ${!page_is_blocked ? html2.body`
                     <li class="navlist-item secondary-nav-item secondary-nav-item--wiki">
                         <a class="secondary-nav-item-link" href="${window.location.href}/+wiki">
                             ${tl(trans.wiki)}
@@ -9850,7 +9845,7 @@
                     </li>
                     ` : ""}
                 </ul>
-            `;
+            `);
       }
       page.structure.container.insertBefore(tabs, page.structure.row);
       page.structure.tabs = tabs;
@@ -9906,8 +9901,8 @@
       fetch(`${root}user/${shortcut_listens.name}/library/music/${scrobble_page}`).then(function(response) {
         console.log("returned", response, response.text);
         return response.text();
-      }).then(function(html2) {
-        let doc = new DOMParser().parseFromString(html2, "text/html");
+      }).then(function(html3) {
+        let doc = new DOMParser().parseFromString(html3, "text/html");
         console.log("DOC", doc);
         let first_metadata_item = doc.querySelector(".metadata-item .metadata-display");
         let listens = 0;
@@ -9915,13 +9910,13 @@
         if (first_metadata_item != null)
           listens = clean_number(first_metadata_item.textContent.trim());
         listen_item.setAttribute("data-listens", listens);
-        listen_item.innerHTML = `
+        render(listen_item, html3`
                 <img class="view-item-avatar" src="${shortcut_listens.avi}" alt="${shortcut_listens.name}">
                 <div class="info">
                     <h3>${shortcut_listens.name}</h3>
                     <p>${tl(trans.listens.count).replace("{c}", listens.toLocaleString(lang))}</p>
                 </div>
-            `;
+            `);
         if (settings.colourful_counts && page.type == "artist") {
           let parsed_scrobble_as_rank = parse_scrobbles_as_rank(listens);
           listen_item.setAttribute("data-bleh--scrobble-milestone", parsed_scrobble_as_rank.milestone);
@@ -10107,27 +10102,28 @@
         }
         link_container.appendChild(item2);
       });
-      let genius = document.createElement("li");
-      genius.innerHTML = `
-            <a class="play-this-track-playlink music-link play-this-track-playlink--genius" href="https://genius.com/search?q=${sanitise(page.sister)}+${sanitise(page.name)}" target="_blank">
-                Genius
-            </a>
-        `;
-      link_container.appendChild(genius);
-      let tidal = document.createElement("li");
-      tidal.innerHTML = `
+      link_container.appendChild(html2.node`
+            <li>
+                <a class="play-this-track-playlink music-link play-this-track-playlink--genius" href="https://genius.com/search?q=${sanitise(page.sister)}+${sanitise(page.name)}" target="_blank">
+                    Genius
+                </a>
+            </li>
+        `);
+      link_container.appendChild(html2.node`
+            <li>
             <a class="play-this-track-playlink music-link play-this-track-playlink--tidal" href="https://listen.tidal.com/search?q=${sanitise(page.sister, " ")} ${sanitise(page.name, " ")}" target="_blank">
                 Tidal
             </a>
-        `;
-      link_container.appendChild(tidal);
+
+            </li>
+        `);
     } else {
       let header = document.createElement("div");
       header.classList.add("sub-text", "music-small-header");
       header.textContent = tl(trans.find_on);
       link_group.appendChild(header);
       if (page.type == "album") {
-        link_container.innerHTML = `
+        render(link_container, html2`
                 <a class="play-this-track-playlink music-link play-this-track-playlink--spotify" href="https://open.spotify.com/search/${sanitise(page.sister, " ")} ${sanitise(page.name, " ")}" target="_blank">
                     Spotify
                 </a>
@@ -10149,9 +10145,9 @@
                 <a class="play-this-track-playlink music-link play-this-track-playlink--genius" href="https://genius.com/search?q=${sanitise(page.sister)}+${sanitise(page.name)}" target="_blank">
                     Genius
                 </a>
-            `;
+            `);
       } else {
-        link_container.innerHTML = `
+        render(link_container, html2`
                 <a class="play-this-track-playlink music-link play-this-track-playlink--spotify" href="https://open.spotify.com/search/${sanitise(page.name, " ")}" target="_blank">
                     Spotify
                 </a>
@@ -10173,7 +10169,7 @@
                 <a class="play-this-track-playlink music-link play-this-track-playlink--genius" href="https://genius.com/search?q=${sanitise(page.name)}" target="_blank">
                     Genius
                 </a>
-            `;
+            `);
         let externals = page.structure.side.querySelector(".resource-external-links");
         if (externals) {
           page.structure.side.removeChild(externals.parentElement);
@@ -10204,13 +10200,12 @@
     }
     if (!settings.corrections)
       return;
-    let lotus_handler = document.createElement("section");
-    lotus_handler.classList.add("lotus", "cta");
-    lotus_handler.innerHTML = `
-        <strong>${tl(trans.lotus_cta[page.corrected]).replace("{t}", tl(trans[`${page.type}_lower`]))}</strong>
-        <a class="see-more" href="https://github.com/katelyynn/lotus/issues/new/choose" target="_blank">${tl(trans.suggest_correction)}</a>
-    `;
-    page.structure.side.appendChild(lotus_handler);
+    page.structure.side.appendChild(html2.node`
+        <section class="lotus cta">
+             <strong>${tl(trans.lotus_cta[page.corrected]).replace("{t}", tl(trans[`${page.type}_lower`]))}</strong>
+            <a class="see-more" href="https://github.com/katelyynn/lotus/issues/new/choose" target="_blank">${tl(trans.suggest_correction)}</a>
+        </section>
+    `);
   }
   function create_listen_item(parent, { name, listens, link, avi, count = 0, button = false, katsune = false }, header_type) {
     log(`creating listen item of ${name}, ${count}, ${listens}`, "artist", "info", { avi, link });
@@ -10220,16 +10215,16 @@
     listen_item.setAttribute("data-listens", listens);
     listen_item.setAttribute("id", `listen-item--${name}`);
     if (listens > -1) {
-      listen_item.innerHTML = `
+      render(listen_item, html2`
             <img class="view-item-avatar" src="${avi}" alt="${name}">
             <div class="info">
                 <h3>${name}</h3>
                 <p>${tl(trans.listens.count).replace("{c}", listens.toLocaleString(lang))}</p>
             </div>
-        `;
+        `);
       let menu = tippy(listen_item, {
         theme: "context-menu",
-        content: html.node`
+        content: html2.node`
                 <a class="dropdown-menu-clickable-item" href="${root}user/${name}" data-menu-item="view_profile">
                     ${tl(trans.profile)}
                 </a>
@@ -10247,16 +10242,16 @@
       });
       register_menu(listen_item, menu);
     } else if (listens > -2) {
-      listen_item.innerHTML = `
+      render(listen_item, html2`
             <img class="view-item-avatar" src="${avi}" alt="${name}">
             <div class="info">
                 <h3>${name}</h3>
                 <p>${tl(trans.listens)}</p>
             </div>
-        `;
+        `);
       let menu = tippy(listen_item, {
         theme: "context-menu",
-        content: html.node`
+        content: html2.node`
                 <a class="dropdown-menu-clickable-item" href="${root}user/${name}" data-menu-item="view_profile">
                     ${tl(trans.profile)}
                 </a>
@@ -10285,7 +10280,7 @@
         content: tl(trans.view_others_library)
       });
     } else {
-      listen_item.innerHTML = `
+      render(listen_item, html2`
             ${avi[0] ? `<img class="view-item-avatar" src="${avi[0].getAttribute("src")}">` : ""}
             ${avi[1] ? `<img class="view-item-avatar" src="${avi[1].getAttribute("src")}">` : ""}
             ${avi[2] ? `<img class="view-item-avatar" src="${avi[2].getAttribute("src")}">` : ""}
@@ -10293,7 +10288,7 @@
                 <h3>${tl(trans.following)}</h3>
                 <p>${tl(trans.others_count).replace("{c}", count)}</p>
             </div>
-        `;
+        `);
       listen_item.setAttribute("href", `${window.location.href}/+listeners/you-know`);
     }
     if (settings.colourful_counts && listens > -1 && header_type == "artist") {
@@ -10345,23 +10340,23 @@
         page.structure.main.insertBefore(panel, page.structure.main.firstElementChild);
     }
     panel.classList.add("listen-panel");
-    let row = document.createElement("div");
-    row.classList.add("listener-row");
-    row.innerHTML = `
-        <div class="listener-side">
-            <h3>${listeners.text}</h3>
-            <p>${listeners.abbr}</p>
+    let row = html2.node`
+        <div class="listener-row">
+            <div class="listener-side">
+                <h3>${listeners.text}</h3>
+                <p>${listeners.abbr}</p>
+            </div>
+            <div class="scrobble-side">
+                <h3>${scrobbles.text}</h3>
+                <p>${scrobbles.abbr}</p>
+            </div>
+            ${metascore.text ? html2.node`
+            <div class="metascore-side">
+                <h3>${metascore.text}</h3>
+                <p><a href="${metascore.link}" target="_blank">${metascore.abbr}</a></p>
+            </div>
+            ` : ""}
         </div>
-        <div class="scrobble-side">
-            <h3>${scrobbles.text}</h3>
-            <p>${scrobbles.abbr}</p>
-        </div>
-        ${metascore.text ? `
-        <div class="metascore-side">
-            <h3>${metascore.text}</h3>
-            <p><a href="${metascore.link}" target="_blank">${metascore.abbr}</a></p>
-        </div>
-        ` : ""}
     `;
     panel.insertBefore(row, panel.firstElementChild);
     if (page.mobile)
@@ -10765,7 +10760,7 @@
     button.textContent = menu_list.querySelector(`[data-value="${value}"]`).textContent;
     let theme_menu_item = tippy(button, {
       theme: "select-menu",
-      content: html.node([
+      content: html2.node([
         menu_list.innerHTML
       ]),
       placement: "bottom",
@@ -11003,7 +10998,7 @@
         if (track_legacy_menu) {
           let menu = tippy(track, {
             theme: "context-menu",
-            content: html.node([
+            content: html2.node([
               track_legacy_menu.innerHTML
             ]),
             placement: "right-start",
@@ -11147,16 +11142,16 @@
     get_grid(auth.name, type, range, 1, pages, page.name, pages);
   };
   function get_grid(user, type, range, current_page, pages, next_user = null) {
-    page.state.compare_modal.querySelector(".bleh-modal-body .compare-body").innerHTML = `
+    render(page.state.compare_modal.querySelector(".bleh-modal-body .compare-body"), html2`
         <div class="loading-data-container">
             <div class="loading-data-text">${tl(trans.gathering_plays_for_user_pages).replace("{u}", user).replace("{current_page}", current_page).replace("{pages}", pages)}</div>
         </div>
-    `;
+    `);
     fetch(`${root}user/${user}/library/${type}?format=list&date_preset=${range}&page=${current_page}&ajax=1`).then(function(response) {
       console.log("returned", response, response.text);
       return response.text();
-    }).then(function(html2) {
-      let doc = new DOMParser().parseFromString(html2, "text/html");
+    }).then(function(html3) {
+      let doc = new DOMParser().parseFromString(html3, "text/html");
       console.log("DOC", doc);
       let next_button = doc.querySelector(".pagination-next");
       try {
@@ -11222,11 +11217,11 @@
     log("gathered shared values", "compare", "info", page.state.compare);
     page.state.compare_modal.querySelector(".bleh-modal-body .compare-body").innerHTML = "";
     if (page.state.compare.shared.length == 0) {
-      page.state.compare_modal.querySelector(".bleh-modal-body .compare-body").innerHTML = `
+      render(page.state.compare_modal.querySelector(".bleh-modal-body .compare-body"), html2`
             <div class="loading-data-container">
                 <div class="loading-data-text failed">${tl(trans.nothing_in_common)}</div>
             </div>
-        `;
+        `);
       page.state.compare_modal.querySelector(".bleh-modal-body .compare-body").setAttribute("data-filled", "false");
       return;
     }
@@ -11235,50 +11230,49 @@
       let grid = document.createElement("ol");
       grid.classList.add("grid-items", "grid-items--numbered", "compare-grid");
       page.state.compare.shared.forEach((data2) => {
-        let item2 = document.createElement("li");
-        item2.classList.add("grid-items-item", "compare-item");
         let template;
         if (type == "artists")
           template = sanitise(data2.name);
         else
           template = `${sanitise(data2.sister)}/${sanitise(data2.name)}`;
-        item2.innerHTML = `
-                <div class="grid-items-cover-image js-link-block link-block">
-                    <div class="grid-items-cover-image-image ${data2.avatar.endsWith("/c6f59c1e5e7240a4c0d427abd71f3dbb.jpg") || data2.avatar.endsWith("/2a96cbd8b46e442fc41c2b86b821562f.jpg") ? "grid-items-cover-default" : ""}">
-                        <img src="${data2.avatar.replace("/avatar70s/", "/avatar300s/").replace("/64s/", "/avatar300s/")}" alt="${data2.name}" loading="lazy">
+        grid.appendChild(html2.node`
+                <li class="compare-item grid-items-item">
+                    <div class="grid-items-cover-image js-link-block link-block">
+                        <div class="grid-items-cover-image-image ${data2.avatar.endsWith("/c6f59c1e5e7240a4c0d427abd71f3dbb.jpg") || data2.avatar.endsWith("/2a96cbd8b46e442fc41c2b86b821562f.jpg") ? "grid-items-cover-default" : ""}">
+                            <img src="${data2.avatar.replace("/avatar70s/", "/avatar300s/").replace("/64s/", "/avatar300s/")}" alt="${data2.name}" loading="lazy">
+                        </div>
+                        <div class="grid-items-item-details">
+                            <p class="grid-items-item-main-text">
+                                <a class="link-block-target" href="${root}music/${template}" title="${data2.name}">
+                                    ${data2.name}
+                                </a>
+                            </p>
+                            ${type == "albums" ? `
+                            <p class="grid-items-item-aux-text">
+                                <a class="grid-items-item-aux-block" href="${root}music/${data2.sister}">
+                                    ${data2.sister}
+                                </a>
+                            </p>
+                            ` : ""}
+                            <p class="grid-items-item-aux-text">
+                                <a class="grid-item-plays with-avatar" href="${root}user/${auth.name}/library/music/${template}?date_preset=${range}" target="_blank">
+                                    <span class="avatar">
+                                        <img src="${auth.avatar}" alt="${tl(trans.your_avatar)}">
+                                    </span>
+                                    ${data2.plays.you}
+                                </a>
+                                <a class="grid-item-plays with-avatar" href="${root}user/${page.name}/library/music/${template}?date_preset=${range}" target="_blank">
+                                    <span class="avatar">
+                                        <img src="${page.avatar}" alt="${tl(trans.avatar_for_user).replace("{u}", page.name)}">
+                                    </span>
+                                    ${data2.plays.other}
+                                </a>
+                            </p>
+                        </div>
+                        <a class="js-link-block-cover-link link-block-cover-link" href="${root}music/${template}" tabindex="-1" aria-hidden="true"></a>
                     </div>
-                    <div class="grid-items-item-details">
-                        <p class="grid-items-item-main-text">
-                            <a class="link-block-target" href="${root}music/${template}" title="${data2.name}">
-                                ${data2.name}
-                            </a>
-                        </p>
-                        ${type == "albums" ? `
-                        <p class="grid-items-item-aux-text">
-                            <a class="grid-items-item-aux-block" href="${root}music/${data2.sister}">
-                                ${data2.sister}
-                            </a>
-                        </p>
-                        ` : ""}
-                        <p class="grid-items-item-aux-text">
-                            <a class="grid-item-plays with-avatar" href="${root}user/${auth.name}/library/music/${template}?date_preset=${range}" target="_blank">
-                                <span class="avatar">
-                                    <img src="${auth.avatar}" alt="${tl(trans.your_avatar)}">
-                                </span>
-                                ${data2.plays.you}
-                            </a>
-                            <a class="grid-item-plays with-avatar" href="${root}user/${page.name}/library/music/${template}?date_preset=${range}" target="_blank">
-                                <span class="avatar">
-                                    <img src="${page.avatar}" alt="${tl(trans.avatar_for_user).replace("{u}", page.name)}">
-                                </span>
-                                ${data2.plays.other}
-                            </a>
-                        </p>
-                    </div>
-                    <a class="js-link-block-cover-link link-block-cover-link" href="${root}music/${template}" tabindex="-1" aria-hidden="true"></a>
-                </div>
-            `;
-        grid.appendChild(item2);
+                </li>
+            `);
       });
       page.state.compare_modal.querySelector(".bleh-modal-body .compare-body").appendChild(grid);
       music_grids(grid);
@@ -11295,48 +11289,47 @@
           max = item2.plays.other;
       });
       page.state.compare.shared.forEach((data2, index) => {
-        let item2 = document.createElement("tr");
-        item2.classList.add("chartlist-row", "chartlist-row--with-artist", "compare-item");
         let template = `${sanitise(data2.sister)}/_/${sanitise(data2.name)}`;
-        item2.innerHTML = `
-                <td class="chartlist-index">${index + 1}</td>
-                <td class="chartlist-image">
-                    <a class="cover-art" href="${root}music/${template}">
-                        <img src="${data2.avatar}" alt="${data2.name}" loading="lazy">
-                    </a>
-                </td>
-                <td class="chartlist-name">
-                    <a href="${root}music/${template}" title="${data2.name}">
-                        ${data2.name}
-                    </a>
-                </td>
-                <td class="chartlist-artist">
-                    <a href="${root}music/${data2.sister}" title="${data2.sister}">
-                        ${data2.sister}
-                    </a>
-                </td>
-                <td class="chartlist-bar with-multiple">
-                    <span class="chartlist-count-bar">
-                        <a class="chartlist-count-bar-link" href="${root}user/${auth.name}/library/music/${template}?date_preset=${range}" target="_blank">
-                            <span class="chartlist-count-bar-slug" data-max-stat-value="${max}" data-stat-value="${data2.plays.you}" style="width: ${data2.plays.you / max * 100}%;"></span>
-                            <span class="chartlist-count-bar-value">${data2.plays.you}</span>
+        body.appendChild(html2.node`
+                <tr class="chartlist-row chartlist-row--with-artist compare-item">
+                    <td class="chartlist-index">${index + 1}</td>
+                    <td class="chartlist-image">
+                        <a class="cover-art" href="${root}music/${template}">
+                            <img src="${data2.avatar}" alt="${data2.name}" loading="lazy">
                         </a>
-                        <span class="avatar">
-                            <img src="${auth.avatar}" alt="${tl(trans.your_avatar)}">
-                        </span>
-                    </span>
-                    <span class="chartlist-count-bar">
-                        <a class="chartlist-count-bar-link" href="${root}user/${page.name}/library/music/${template}?date_preset=${range}" target="_blank">
-                            <span class="chartlist-count-bar-slug" data-max-stat-value="${max}" data-stat-value="${data2.plays.other}" style="width: ${data2.plays.other / max * 100}%;"></span>
-                            <span class="chartlist-count-bar-value">${data2.plays.other}</span>
+                    </td>
+                    <td class="chartlist-name">
+                        <a href="${root}music/${template}" title="${data2.name}">
+                            ${data2.name}
                         </a>
-                        <span class="avatar">
-                            <img src="${page.avatar}" alt="${tl(trans.avatar_for_user).replace("{u}", page.name)}">
+                    </td>
+                    <td class="chartlist-artist">
+                        <a href="${root}music/${data2.sister}" title="${data2.sister}">
+                            ${data2.sister}
+                        </a>
+                    </td>
+                    <td class="chartlist-bar with-multiple">
+                        <span class="chartlist-count-bar">
+                            <a class="chartlist-count-bar-link" href="${root}user/${auth.name}/library/music/${template}?date_preset=${range}" target="_blank">
+                                <span class="chartlist-count-bar-slug" data-max-stat-value="${max}" data-stat-value="${data2.plays.you}" style="width: ${data2.plays.you / max * 100}%;"></span>
+                                <span class="chartlist-count-bar-value">${data2.plays.you}</span>
+                            </a>
+                            <span class="avatar">
+                                <img src="${auth.avatar}" alt="${tl(trans.your_avatar)}">
+                            </span>
                         </span>
-                    </span>
-                </td>
-            `;
-        body.appendChild(item2);
+                        <span class="chartlist-count-bar">
+                            <a class="chartlist-count-bar-link" href="${root}user/${page.name}/library/music/${template}?date_preset=${range}" target="_blank">
+                                <span class="chartlist-count-bar-slug" data-max-stat-value="${max}" data-stat-value="${data2.plays.other}" style="width: ${data2.plays.other / max * 100}%;"></span>
+                                <span class="chartlist-count-bar-value">${data2.plays.other}</span>
+                            </a>
+                            <span class="avatar">
+                                <img src="${page.avatar}" alt="${tl(trans.avatar_for_user).replace("{u}", page.name)}">
+                            </span>
+                        </span>
+                    </td>
+                </tr>
+            `);
       });
       page.state.compare_modal.querySelector(".bleh-modal-body .compare-body").appendChild(table);
       patch_titles(page.state.compare_modal);
@@ -11536,7 +11529,7 @@
         `;
       tippy(taste_wrap, {
         theme: "stack",
-        content: html.node`
+        content: html2.node`
                 <span>
                     ${tl(trans.taste_similarity)}
                 </span>
@@ -11547,7 +11540,7 @@
       if (taste_artists.length > 1) {
         let menu = tippy(taste_wrap, {
           theme: "context-menu",
-          content: html.node`
+          content: html2.node`
                     <h4 class="menu-header">${tl(trans.compare_plays)}</h4>
                     <a class="dropdown-menu-clickable-item" href="${root}user/${page.name}/library/music/${sanitise(taste_artists[0])}" data-menu-item="shared-artist">
                         <img class="view-item-avatar" src="${profile_avi}" alt="${page.name}">${taste_artists[0]}
@@ -11555,7 +11548,7 @@
                     <a class="dropdown-menu-clickable-item" href="${root}user/${auth.name}/library/music/${sanitise(taste_artists[0])}" data-menu-item="shared-artist">
                         <img class="view-item-avatar" src="${auth.avatar}" alt="${auth.name}">${taste_artists[0]}
                     </a>
-                    ${taste_artists.length >= 2 ? html.node`
+                    ${taste_artists.length >= 2 ? html2.node`
                     <div class="sep"></div>
                     <a class="dropdown-menu-clickable-item" href="${root}user/${page.name}/library/music/${sanitise(taste_artists[1])}" data-menu-item="shared-artist">
                         <img class="view-item-avatar" src="${profile_avi}" alt="${page.name}">${taste_artists[1]}
@@ -11564,7 +11557,7 @@
                         <img class="view-item-avatar" src="${auth.avatar}" alt="${auth.name}">${taste_artists[1]}
                     </a>
                     ` : ""}
-                    ${taste_artists.length >= 3 ? html.node`
+                    ${taste_artists.length >= 3 ? html2.node`
                     <div class="sep"></div>
                     <a class="dropdown-menu-clickable-item" href="${root}user/${page.name}/library/music/${sanitise(taste_artists[2])}" data-menu-item="shared-artist">
                         <img class="view-item-avatar" src="${profile_avi}" alt="${page.name}">${taste_artists[2]}
@@ -11773,7 +11766,7 @@
     let corrections_panel = document.body.querySelector("#subscription-corrections");
     page.structure.main.appendChild(corrections_panel);
     let nav = page.structure.container.querySelector("nav[data-more-string] .navlist-items");
-    nav.insertBefore(html.node`
+    nav.insertBefore(html2.node`
         <li class="navlist-item secondary-nav-item secondary-nav-item--back">
             <a class="secondary-nav-item-link" href="${root}settings/subscription">
                 ${tl(trans.back)}
@@ -11795,7 +11788,7 @@
       checkbox.classList = "setting";
       checkbox.setAttribute("data-type", "toggle");
       checkbox.setAttribute("onclick", `_update_inbuilt_item('${id}')`);
-      render(checkbox, html`
+      render(checkbox, html2`
             <div class="heading">
                 <h5>${text2}</h5>
             </div>
@@ -13480,7 +13473,7 @@
         tippy(badge, {
           theme: "badge",
           placement: "bottom",
-          content: html.node`
+          content: html2.node`
                     <div class="badge-name">${badge.textContent}</div>
                     <div class="badge-reason">${tl(trans.badges[badge.classList[1]].reason)}</div>
                 `
@@ -13499,7 +13492,7 @@
           tippy(badge, {
             theme: "badge",
             placement: "bottom",
-            content: html.node`
+            content: html2.node`
                         <div class="badge-name">${this_badge.name}</div>
                         <div class="badge-reason">${tl(trans.badges[this_badge.reason].reason)}</div>
                     `
@@ -13583,7 +13576,7 @@
       });
       tippy(about_more, {
         theme: "window",
-        content: html.node`
+        content: html2.node`
                 <div class="dialog-settings">
                     <div class="setting" data-type="toggle" id="container-bio_markdown" onclick="_update_item('bio_markdown')">
                         <button class="btn reset" onclick="_reset_item('bio_markdown')">${tl(trans.reset)}</button>
@@ -13764,8 +13757,8 @@
     fetch(`${root}user/${page.name}/partial/recenttracks?ajax=1`).then(function(response) {
       console.log("returned", response, response.text);
       return response.text();
-    }).then(function(html2) {
-      let doc = new DOMParser().parseFromString(html2, "text/html");
+    }).then(function(html3) {
+      let doc = new DOMParser().parseFromString(html3, "text/html");
       console.log("DOC", doc);
       let tracklist_panel = doc.querySelector(".chartlist");
       button.removeAttribute("disabled");
@@ -14330,8 +14323,8 @@
     fetch(`${root}user/${page.name}`).then(function(response) {
       console.log("returned", response, response.text);
       return response.text();
-    }).then(function(html2) {
-      let doc = new DOMParser().parseFromString(html2, "text/html");
+    }).then(function(html3) {
+      let doc = new DOMParser().parseFromString(html3, "text/html");
       console.log("DOC", doc);
       let about_me_sidebar = doc.querySelector(".about-me-sidebar");
       if (about_me_sidebar) {
@@ -14366,8 +14359,8 @@
         if (response.status != 200)
           throw new Error();
         return response.text();
-      }).then(function(html2) {
-        let doc = new DOMParser().parseFromString(html2, "text/html");
+      }).then(function(html3) {
+        let doc = new DOMParser().parseFromString(html3, "text/html");
         console.log("glacier library DOC", doc, doc.querySelector(".table"));
         log("received response", "glacier library");
         table = doc.querySelector(".table");
@@ -14990,13 +14983,10 @@
     let prev_container = document.getElementById("snowflakes");
     if (prev_container != null)
       return;
-    let container = document.createElement("div");
-    container.classList.add("snow-container");
-    container.setAttribute("id", "snowflakes");
-    container.innerHTML = `
-        <span class="snow snowflake"></span>
-    `;
-    document.documentElement.appendChild(container);
+    document.documentElement.appendChild(html.node`
+        <div class="snow-container" id="snowflakes">
+            <span class="snow snowflake"></span>
+        </div>`);
   }
   function begin_snowflakes(enabled, count) {
     if (!enabled)
@@ -15027,7 +15017,7 @@
     page.requested.setting = params.get("setting");
     let nav = document.createElement("nav");
     nav.classList.add("navlist", "secondary-nav", "navlist--more", "redesigned-navigation", "bleh-settings-navigation");
-    render(nav, html`
+    render(nav, html2`
         <ul class="navlist-items">
             <li class="navlist-item secondary-nav-item">
                 <a class="secondary-nav-item-link bleh--nav" data-bleh-page="home" onclick="_change_settings_page('home')">
@@ -15081,12 +15071,12 @@
             </li>
         </ul>
     `);
-    render(page.structure.side, html`
+    render(page.structure.side, html2`
         <div class="cta first priority sponsor colourful">
-            ${auth.sponsor ? html.node`
+            ${auth.sponsor ? html2.node`
             <strong>${tl(trans.you_are_a_sponsor)}</strong>
             <a class="see-more" onclick="_sponsor_manage()">${tl(trans.manage_sponsor)}</a>
-            ` : html.node`
+            ` : html2.node`
             <strong>${tl(trans.news_sponsor_cta)}</strong>
             <a class="see-more" onclick="_sponsor()">${tl(trans.sponsor)}</a>
             `}
@@ -15103,7 +15093,7 @@
             </button>
         </section>
         <div class="bleh--panel">
-            ${ff("skip_to_setting") ? html.node`
+            ${ff("skip_to_setting") ? html2.node`
             <h4>${tl(trans.skip_to)}</h4>
             <div class="skip-to-list"></div>
             ` : ""}
@@ -15130,7 +15120,7 @@
           name: tl(trans.colourful_tracks.name)
         }
       ]);
-      return html`
+      return html2`
             <div class="bleh--panel">
                 <h4>${tl(trans.themes.name)}</h4>
                 <div class="setting-items full">
@@ -15191,7 +15181,7 @@
                         </button>
                     </div>
                 </div>
-                ${ff("high_contrast") ? html.node`
+                ${ff("high_contrast") ? html2.node`
                 <div class="setting" data-type="toggle" id="container-high_contrast" onclick="_update_item('high_contrast')">
                     <button class="btn reset" onclick="_reset_item('high_contrast')">${tl(trans.reset)}</button>
                     <div class="heading">
@@ -15241,7 +15231,7 @@
                         </button>
                     </div>
                 </div>
-                ${ff("card_saturation") ? html.node`
+                ${ff("card_saturation") ? html2.node`
                 <div class="setting hide-if-light-theme" data-type="slider" id="container-sat_bg">
                     <button class="btn reset" onclick="_reset_item('sat_bg')">${tl(trans.reset)}</button>
                     <div class="heading">
@@ -15331,7 +15321,7 @@
           name: trans_legacy.en.settings.customise.show_your_progress.name
         }
       ]);
-      return html`
+      return html2`
             <div class="bleh--panel check-artist-hover">
                 <h4 class="top-header">${tl(trans.layout)}</h4>
                 <h4>${trans_legacy.en.settings.layout.header}</h4>
@@ -15465,7 +15455,7 @@
             `;
     } else if (page_id == "seasonal") {
       register_skip_to([]);
-      return html`
+      return html2`
             <div class="bleh--panel">
                 <div class="seasonal-inner">
                     <div class="sub-text">${tl(trans.seasonal_timeline)}</div>
@@ -15477,7 +15467,7 @@
                         </div>
                         <div class="glacier-library-top season-top">
                             <div class="glacier-library-metadata">
-                                ${stored_season.id != "none" && stored_season.start && stored_season.end ? html.node`
+                                ${stored_season.id != "none" && stored_season.start && stored_season.end ? html2.node`
                                 <div class="glacier-library-metadata-item">
                                     <div class="sub-text">${tl(trans.started)}</div>
                                     <div class="glacier-library-metadata-item-value" id="current_season_start">${moment(stored_season.start.replace("y0", stored_season.year).replace("{offset}", stored_season.offset)).from(stored_season.now)}</div>
@@ -15486,7 +15476,7 @@
                                     <div class="sub-text">${tl(trans.ends_in)}</div>
                                     <div class="glacier-library-metadata-item-value" id="current_season">${moment(stored_season.end.replace("y0", stored_season.year).replace("{offset}", stored_season.offset)).to(stored_season.now, true)}</div>
                                 </div>
-                                ` : settings.seasonal ? html.node`
+                                ` : settings.seasonal ? html2.node`
                                 <div class="glacier-library-metadata-item">
                                     <div class="sub-text">${tl(trans.next_in)}</div>
                                     <div class="glacier-library-metadata-item-value" id="next_season_start">${moment(stored_season.next_start.replace("y0", stored_season.next_is_new_year ? stored_season.year + 1 : stored_season.year).replace("{offset}", stored_season.offset)).to(stored_season.now, true)}</div>
@@ -15496,7 +15486,7 @@
                         </div>
                     </div>
                 </div>
-                ${settings.seasonal ? html.node`
+                ${settings.seasonal ? html2.node`
                 <div class="alert alert-info">
                     ${tl(trans.seasonal_offset).replace("{offset}", `<strong>${stored_season.offset}</strong>`)}
                 </div>
@@ -15560,7 +15550,7 @@
         `;
     } else if (page_id == "performance") {
       register_skip_to([]);
-      return html`
+      return html2`
             <div class="bleh--panel">
                 <div class="alert alert-danger">${tl(trans.beware_notice)}</div>
                 <div class="setting" data-type="text" id="container-branch">
@@ -15638,7 +15628,7 @@
           name: tl(trans.activity_tracking.name)
         }
       ]);
-      return html`
+      return html2`
             <div class="bleh--panel sponsor-badge-panel" data-sponsoring="${auth.sponsor}">
                 <div class="profile-container">
                     <div class="avatar-side small">
@@ -15652,7 +15642,7 @@
                             <div class="header standalone title-container">
                                 <h1>${auth.name}</h1>
                                 <div class="badges">
-                                    ${auth.pro ? html.node`
+                                    ${auth.pro ? html2.node`
                                     <span class="label user-status-subscriber">${tl(trans.badges["user-status-subscriber"].name)}</span>
                                     ` : ""}
                                 </div>
@@ -15660,7 +15650,7 @@
                         </div>
                     </div>
                 </div>
-                ${ff("api") ? html.node`
+                ${ff("api") ? html2.node`
                 <h4>${trans_legacy.en.settings.profiles.api.name}</h4>
                 <div class="alert alert-info">${trans_legacy.en.settings.profiles.api.bio}</div>
                 <div class="setting" data-type="text" id="container-api_key">
@@ -15687,7 +15677,7 @@
                 <div class="sep"></div>
                 <div class="setting" data-type="toggle">
                     <div class="heading">
-                        <h5>${html.node([
+                        <h5>${html2.node([
         tl(trans.sponsor_data).replace("{v}", `<span class="version-link sponsor-related">${sponsor_list.latest}</span>`)
       ])}</h5>
                     </div>
@@ -15882,7 +15872,7 @@
             `;
     } else if (page_id == "accessibility") {
       register_skip_to([]);
-      return html`
+      return html2`
             <div class="bleh--panel">
                 <h4 class="top-header">${tl(trans.accessibility)}</h4>
                 <div class="setting" data-type="toggle" id="container-reduced_motion" onclick="_update_item('reduced_motion')">
@@ -15913,7 +15903,7 @@
             `;
     } else if (page_id == "text") {
       register_skip_to([]);
-      return html`
+      return html2`
             <div class="bleh--panel">
                 <h4 class="top-header">${trans_legacy.en.settings.text.name}</h4>
                 <div class="inner-preview pad flex">
@@ -15991,7 +15981,7 @@
             `;
     } else if (page_id == "sku") {
       register_skip_to([]);
-      return html`
+      return html2`
             <div class="bleh--panel shh">
                 <div class="sub-text">${version.build}.${version.sku}</div>
                 ☆⌒(>w<)
@@ -16057,9 +16047,9 @@
         }
       }
       preview_bar = `${preview_bar});`;
-      return html`
+      return html2`
             <div class="bleh--panel lotus">
-                <h4>${html.node([
+                <h4>${html2.node([
         tl(trans.brand_version_number).replace("{brand}", `<a class="lotus lotus-name" href="https://github.com/katelyynn/lotus" target="_blank">lotus</a>`).replace("{number}", `<span class="version-link lotus">${artist_corrections.version >= album_track_corrections.version ? artist_corrections.version : album_track_corrections.version}</span>`)
       ])}</h4>
                 <p>${tl(trans.what_is_lotus)}</p>
@@ -16272,7 +16262,7 @@
                 <div class="inner-preview pad">
                     <div class="personal-stats-preview-bar-container">
                         <div class="personal-stats-preview-bar" style="${preview_bar}"></div>
-                        <div class="personal-stats-preview-text">${html.node([preview_bar_text])}</div>
+                        <div class="personal-stats-preview-text">${html2.node([preview_bar_text])}</div>
                     </div>
                     <div class="sep"></div>
                     <div class="tracks">
@@ -16579,7 +16569,7 @@
       feature_flag_element.classList.add("setting");
       feature_flag_element.setAttribute("data-type", "toggle");
       feature_flag_element.setAttribute("onclick", `_update_flag_toggle('${flag}', this)`);
-      render(feature_flag_element, html`
+      render(feature_flag_element, html2`
             <div class="heading">
                 <h5>${version.feature_flags[flag].name}</h5>
                 ${version.feature_flags[flag].notice ? `<p>${version.feature_flags[flag].notice}</p>` : ""}
@@ -17022,12 +17012,12 @@
           swatch.classList.add("select-button");
           tippy(swatch, {
             theme: "window",
-            content: html.node`
+            content: html2.node`
                         <div class="dialog-settings">
                             <div class="alert alert-info seasonal-hsl-alert">
                                 ${tl(trans.seasonal_warning)}
                             </div>
-                            ${ff("colour_based_on_hex") ? html.node`
+                            ${ff("colour_based_on_hex") ? html2.node`
                             <div class="setting" data-type="text">
                                 <div class="heading">
                                     <h5>${tl(trans.convert_from_hex)}</h5>
@@ -17105,7 +17095,7 @@
           swatch.style.setProperty("--lit-over", colour.displays.lit);
           tippy(swatch, {
             theme: "key_value",
-            content: html.node`
+            content: html2.node`
                         <span class="key">hue<span class="value">${colour.sets.hue}</span></span>
                         <span class="key">sat<span class="value">${colour.sets.sat}</span></span>
                         <span class="key">lit<span class="value">${colour.sets.lit}</span></span>
@@ -17163,7 +17153,7 @@
         tippy(badge, {
           theme: "badge",
           placement: "bottom",
-          content: html.node`
+          content: html2.node`
                     <div class="badge-name">${badge.textContent}</div>
                     <div class="badge-reason">${tl(trans.badges[badge.classList[1]].reason)}</div>
                 `
@@ -17182,7 +17172,7 @@
           tippy(badge, {
             theme: "badge",
             placement: "bottom",
-            content: html.node`
+            content: html2.node`
                         <div class="badge-name">${this_badge.name}</div>
                         <div class="badge-reason">${tl(trans.badges[this_badge.reason].reason)}</div>
                     `
@@ -17201,7 +17191,7 @@
         tippy(badge, {
           theme: "badge",
           placement: "bottom",
-          content: html.node`
+          content: html2.node`
                     <div class="badge-name">${tl(trans.badges.missing.name)}</div>
                     <div class="badge-reason">${tl(trans.badges.missing.reason)}</div>
                 `,
@@ -17221,7 +17211,7 @@
       let profile_note = document.createElement("div");
       profile_note.classList.add("generic-table-list-entry", "user-vertical-list-item");
       profile_note.setAttribute("id", `profile-note-row--${user}`);
-      render(profile_note, html`
+      render(profile_note, html2`
         <div class="name">
             <a class="mention" href="${root}user/${user}">@${user}</a>
         </div>
@@ -17276,7 +17266,7 @@
     for (let artist in artist_corrections) {
       if (artist == "version")
         continue;
-      corrections_table_artist.appendChild(html.node`
+      corrections_table_artist.appendChild(html2.node`
         <div class="correction-row">
                 <div class="primary-name pre-transition">
                     <h5>${artist}</h5>
@@ -17291,13 +17281,13 @@
     for (let artist in album_track_corrections) {
       if (artist == "version")
         continue;
-      corrections_table_albums_tracks.appendChild(html.node`
+      corrections_table_albums_tracks.appendChild(html2.node`
             <div class="artist-row">
                 <h5>${artist}</h5>
             </div>
         `);
       for (let media in album_track_corrections[artist]) {
-        corrections_table_albums_tracks.appendChild(html.node`
+        corrections_table_albums_tracks.appendChild(html2.node`
                 <div class="correction-row">
                     <div class="primary-name pre-transition">
                         <h5>${media}</h5>
@@ -17317,22 +17307,22 @@
       let users = "";
       for (let user in lang_info[language].by)
         users = `${users}<a class="mention" href="${root}user/${lang_info[language].by[user]}" target="_blank">@${lang_info[language].by[user]}</a> `;
-      let lang_row = html.node`
+      let lang_row = html2.node`
             <div class="language-row${lang == language ? " active" : ""}">
                 <div class="flag-container">
                     <img src="https://katelyynn.github.io/bleh/fm/flags/${language}.svg" alt="flag for ${language}">
                 </div>
                 <div class="name">
                     <h5>${lang_info[language].name}</h5>
-                    <p>${html.node([
+                    <p>${html2.node([
         trans_legacy.en.settings.language.by.replace("{users}", users)
       ])}</p>
                 </div>
-                ${lang_info[language].new ? html.node`
+                ${lang_info[language].new ? html2.node`
                 <div class="badges">
                     <div class="new-badge">${tl(trans.new)}</div>
                 </div>
-                ` : html.node`<div class="badges"></div>`}
+                ` : html2.node`<div class="badges"></div>`}
                 <div class="date">
                     <p>${lang_info[language].last_updated != "latest" ? moment(lang_info[language].last_updated).fromNow() : lang_info[language].last_updated}</p>
                 </div>
@@ -17709,19 +17699,19 @@
         for (let song_tag in song_tags) {
           song_tags_text = `${song_tags_text}<div class="feat" data-bleh--tag-type="${song_tags[song_tag].type}" data-bleh--tag-group="${song_tags[song_tag].group}">${sanitise_text(song_tags[song_tag].text)}</div>`;
         }
-        name = html.node`<div class="title">${sanitise_text(song_title).trim()}</div>${song_tags_text}`;
+        name = html2.node`<div class="title">${sanitise_text(song_title).trim()}</div>${song_tags_text}`;
       } else if ((involved.type == "album" || involved.type == "track") && settings.corrections) {
-        name = html.node`${correct_item_by_artist(name, sister)}`;
+        name = html2.node`${correct_item_by_artist(name, sister)}`;
         sister = correct_artist(sister);
       } else if (involved.type == "artist" && settings.corrections) {
         sister = correct_artist(sister);
       }
       if (involved_text != "")
-        involved_text = html.node`${involved_text}, <a class="involved--${involved.type}">${name}</a>`;
+        involved_text = html2.node`${involved_text}, <a class="involved--${involved.type}">${name}</a>`;
       else
-        involved_text = html.node`${involved_text}<a class="involved--${involved.type}">${name}</a>`;
+        involved_text = html2.node`${involved_text}<a class="involved--${involved.type}">${name}</a>`;
     });
-    render(activity_item, html`
+    render(activity_item, html2`
         <div class="type">
             ${tl(trans.activity.listing[activity.type])}
             <div class="date">
@@ -18235,16 +18225,14 @@
     if (!masthead_logo) return;
     if (!masthead_logo.hasAttribute("data-kate-processed")) {
       masthead_logo.setAttribute("data-kate-processed", "true");
-      let link = document.createElement("a");
-      link.classList.add("home-link");
-      link.setAttribute("href", `${root}music`);
-      link.innerHTML = `<div class="bleh-logo">${version.brand}</div>`;
-      masthead_logo.appendChild(link);
-      let version_text = document.createElement("a");
-      version_text.classList.add("bleh--version");
-      version_text.setAttribute("href", `${root}bleh`);
-      version_text.innerHTML = `${version.build}.${version.sku}${settings.branch != "uwu" ? `.${settings.branch}` : ""}${settings.dev ? `<div class="new-badge subtle">\u2726</div>` : ""}`;
-      masthead_logo.appendChild(version_text);
+      masthead_logo.appendChild(html2.node`
+            <a class="home-link" href="${root}music">
+                <div class="bleh-logo">${version.brand}</div>
+            </a>`);
+      masthead_logo.appendChild(html2.node`
+            <a class="bleh--version" href="${root}bleh">
+                ${version.build}.${version.sku}${settings.branch != "uwu" ? `.${settings.branch}` : ""}${settings.dev ? html2.node`<div class="new-badge subtle">✦</div>` : ""}
+            </a>`);
     }
   }
   function append_nav() {
@@ -18255,13 +18243,13 @@
       page.structure.indicator = page_indicator2;
     }
     if (!page.structure.loader) {
-      let loader = document.createElement("div");
-      loader.classList.add("loader");
-      loader.innerHTML = `
-            <div class="loader-bar">
-                <div class="loader-bar-fill"></div>
-            </div>
-            <div class="bleh-icon"></div>
+      const loader = html2.node`
+            <div class="loader"
+                <div class="loader-bar">
+                    <div class="loader-bar-fill"></div>
+                </div>
+                <div class="bleh-icon"></div>
+            <div>
         `;
       document.body.appendChild(loader);
       page.structure.loader = loader;
@@ -18295,14 +18283,13 @@
     let inbox_count = new_auth.querySelector('[data-analytics-label="inbox"] + .auth-avatar-notification-count-badge');
     let links = masthead.querySelector(".masthead-nav .navlist-items");
     links.innerHTML = "";
-    let notif_container = document.createElement("li");
-    notif_container.classList.add("masthead-nav-item");
-    notif_container.innerHTML = `
+    let notif_container = html2.node`
+    <li class="masthead-nav-item">
         <a class="masthead-nav-control" href="${root}inbox/notifications" data-label="notifications">
             ${tl(trans.notifications.name)}
-            ${notif_count ? `<div class="notification-count-badge"></div>` : ""}
+            ${notif_count ? html2.node`<div class="notification-count-badge"></div>` : ""}
         </a>
-    `;
+    </li>`;
     if (notif_count) {
       notif_count = notif_count.textContent;
       tippy(notif_container, {
@@ -18315,13 +18302,13 @@
       });
     }
     links.appendChild(notif_container);
-    let inbox_container = document.createElement("li");
-    inbox_container.classList.add("masthead-nav-item");
-    inbox_container.innerHTML = `
-        <a class="masthead-nav-control" href="${root}inbox" data-label="inbox">
-            ${tl(trans.inbox.name)}
-            ${inbox_count ? `<div class="notification-count-badge"></div>` : ""}
-        </a>
+    let inbox_container = html2.node`
+        <li class="masthead-nav-item">
+            <a class="masthead-nav-control" href="${root}inbox" data-label="inbox">
+                ${tl(trans.inbox.name)}
+                ${inbox_count ? `<div class="notification-count-badge"></div>` : ""}
+            </a>
+        </li>
     `;
     if (inbox_count) {
       inbox_count = inbox_count.textContent;
@@ -18335,23 +18322,23 @@
       });
     }
     links.appendChild(inbox_container);
-    let changelog_container = document.createElement("li");
-    changelog_container.classList.add("masthead-nav-item");
-    changelog_container.innerHTML = `
-        <a class="masthead-nav-control" onclick="_query_changelog()" data-label="changelog">
-            ${tl(trans.news)}
-        </a>
+    let changelog_container = html2.node`
+        <li class="masthead-nav-item">
+            <a class="masthead-nav-control" onclick="_query_changelog()" data-label="changelog">
+                ${tl(trans.news)}
+            </a>
+        </li>
     `;
     tippy(changelog_container, {
       content: tl(trans.news)
     });
     links.appendChild(changelog_container);
-    let bleh_container = document.createElement("li");
-    bleh_container.classList.add("masthead-nav-item");
-    bleh_container.innerHTML = `
-        <a class="masthead-nav-control" href="${root}bleh${stored_season.id != "none" ? "?tab=seasonal" : ""}" data-label="bleh" data-season="${stored_season.id}" data-season-active="${stored_season.id != "none" ? "true" : "false"}">
-            ${stored_season.id == "none" ? tl(trans.bleh_settings) : moment(stored_season.end.replace("y0", stored_season.year).replace("{offset}", stored_season.offset)).to(stored_season.now, true)}
-        </a>
+    let bleh_container = html2.node`
+        <li class="masthead-nav-item">
+            <a class="masthead-nav-control" href="${root}bleh${stored_season.id != "none" ? "?tab=seasonal" : ""}" data-label="bleh" data-season="${stored_season.id}" data-season-active="${stored_season.id != "none" ? "true" : "false"}">
+                ${stored_season.id == "none" ? tl(trans.bleh_settings) : moment(stored_season.end.replace("y0", stored_season.year).replace("{offset}", stored_season.offset)).to(stored_season.now, true)}
+            </a>
+        </li>
     `;
     if (stored_season.id == "none") {
       tippy(bleh_container, {
@@ -18360,7 +18347,7 @@
     } else {
       page.header.season_tooltip = tippy(bleh_container, {
         theme: "seasonal-swatch",
-        content: html.node`
+        content: html2.node`
                 <span class="season-colour-name">${tl(trans.seasonal.listing[stored_season.id])}</span>
                 <span class="season-exclusive">${trans_legacy.en.auth_menu.seasonal_notice}</span>
             `
@@ -18370,13 +18357,13 @@
     page.header.season = bleh_container.querySelector("a");
     let selected_language = document.querySelector(".footer-language--active strong")?.textContent;
     let language_options = document.querySelectorAll(".footer-language-form");
-    let language_menu = document.createElement("div");
-    language_menu.classList.add("language-menu");
-    language_menu.innerHTML = `
-        <button class="dropdown-menu-clickable-item lang-item active" data-lang="${lang}" style="--flag-url: url('https://katelyynn.github.io/bleh/fm/flags/${lang}.svg')">
-            ${selected_language}
-        </button>
-        <div class="sep"></div>
+    let language_menu = html2.node`
+        <div class="language-menu">
+            <button class="dropdown-menu-clickable-item lang-item active" data-lang="${lang}" style="--flag-url: url('https://katelyynn.github.io/bleh/fm/flags/${lang}.svg')">
+                ${selected_language}
+            </button>
+            <div class="sep"></div>
+        </div>
     `;
     language_options.forEach((language_option) => {
       let button = language_option.querySelector("button");
@@ -18390,7 +18377,7 @@
     let token = new_auth.querySelector('[name="csrfmiddlewaretoken"]').getAttribute("value");
     let auth_menu = tippy(auth_link2, {
       theme: "auth-menu",
-      content: html.node`
+      content: html2.node`
             <a class="dropdown-menu-clickable-item" data-menu-item="profile" href="${root}user/${auth.name}">
                 ${auth.name}
             </a>
@@ -18404,7 +18391,7 @@
             <a class="dropdown-menu-clickable-item" data-menu-item="shouts" href="${root}user/${auth.name}/shoutbox">
                 ${tl(trans.shouts)}
             </a>
-            ${settings.auth_menu_obsessions ? html.node`
+            ${settings.auth_menu_obsessions ? html2.node`
             <a class="dropdown-menu-clickable-item" data-menu-item="obsessions" href="${root}user/${auth.name}/obsessions">
                 ${trans_legacy.en.auth_menu.obsessions}
             </a>
@@ -18461,7 +18448,7 @@
         });
         let theme_menu_item = tippy(instance.popper.querySelector('[data-menu-item="themes"]:not([aria-expanded])'), {
           theme: "menu",
-          content: html.node`
+          content: html2.node`
                     <button class="dropdown-menu-clickable-item theme-item-in-menu" data-bleh-theme="light" onclick="change_theme_from_menu('light')">
                         ${tl(trans.themes.light)}
                     </button>
@@ -18494,27 +18481,26 @@
     auth_link2.removeAttribute("data-disclose-hover");
     auth_link2.removeAttribute("data-disclose-hover--allow-enter-open");
     auth_link2.removeAttribute("href");
-    let mobile = document.createElement("div");
-    mobile.classList.add("mobile-controls");
-    mobile.innerHTML = `
-        <a class="btn mobile-control" aria-checked="${page.type == "overview" || page.type == "recommended" || page.type == "releases" || page.type == "bookmarks" || page.type == "charts"}" data-menu-item="home" href="${root}music">
-            ${tl(trans.home)}
-        </a>
-        <a class="btn mobile-control" aria-checked="${page.type == "search"}" data-menu-item="search" href="${root}search">
-            ${tl(trans.search)}
-        </a>
-        <a class="btn mobile-control" aria-checked="${page.type == "user" && page.name == auth.name}" data-menu-item="profile_mobile" href="${root}user/${auth.name}">
-            ${auth.name}
-        </a>
-        <a class="btn mobile-control" aria-checked="${page.type == "inbox"}" data-menu-item="notifications" href="${root}inbox/notifications">
-            ${tl(trans.inbox.name)}
-            ${inbox_count || notif_count ? `<div class="notification-count-badge"></div>` : ""}
-        </a>
-        <a class="btn mobile-control" aria-checked="${page.type == "settings" || page.type == "bleh_settings"}" data-menu-item="settings" href="${root}bleh">
-            ${tl(trans.settings)}
-        </a>
-    `;
-    masthead.appendChild(mobile);
+    masthead.appendChild(html2.node`
+        <div class="mobile-controls">
+            <a class="btn mobile-control" aria-checked="${page.type == "overview" || page.type == "recommended" || page.type == "releases" || page.type == "bookmarks" || page.type == "charts"}" data-menu-item="home" href="${root}music">
+                ${tl(trans.home)}
+            </a>
+            <a class="btn mobile-control" aria-checked="${page.type == "search"}" data-menu-item="search" href="${root}search">
+                ${tl(trans.search)}
+            </a>
+            <a class="btn mobile-control" aria-checked="${page.type == "user" && page.name == auth.name}" data-menu-item="profile_mobile" href="${root}user/${auth.name}">
+                ${auth.name}
+            </a>
+            <a class="btn mobile-control" aria-checked="${page.type == "inbox"}" data-menu-item="notifications" href="${root}inbox/notifications">
+                ${tl(trans.inbox.name)}
+                ${inbox_count || notif_count ? `<div class="notification-count-badge"></div>` : ""}
+            </a>
+            <a class="btn mobile-control" aria-checked="${page.type == "settings" || page.type == "bleh_settings"}" data-menu-item="settings" href="${root}bleh">
+                ${tl(trans.settings)}
+            </a>
+        </div>
+    `);
   }
 
   // src/components/about_artist.js
@@ -18530,26 +18516,26 @@
       wiki.classList.remove("visible-lg");
     let about_artist_container = legacy_container.parentElement;
     about_artist_container.classList.add("about-artist-container");
-    render(about_artist_container, html`
+    render(about_artist_container, html2`
         <div class="about-artist-panel">
             <div class="avatar-side">
-                ${avatar != null ? html.node`<img src="${avatar.getAttribute("src")}"><a onclick=${() => expand_avatar(avatar.getAttribute("src").replace("/300x300/", "/ar0/"))} class="bleh--avatar-clickable-link"></a>` : html.node`<img class="missing-artist">`}
+                ${avatar != null ? html2.node`<img src="${avatar.getAttribute("src")}"><a onclick=${() => expand_avatar(avatar.getAttribute("src").replace("/300x300/", "/ar0/"))} class="bleh--avatar-clickable-link"></a>` : html2.node`<img class="missing-artist">`}
             </div>
             <div class="info-side">
                 <div class="sub-text">${tl(trans.about)}</div>
                 <h1><a href="${root}music/${sanitise(page.sister)}">${sanitise_text(page.sister)}</a></h1>
-                ${listeners != null ? html.node([listeners.outerHTML]) : ""}
-                ${tags != null ? html.node([tags.outerHTML]) : ""}
-                ${wiki != null ? html.node([wiki.outerHTML]) : ""}
+                ${listeners != null ? html2.node([listeners.outerHTML]) : ""}
+                ${tags != null ? html2.node([tags.outerHTML]) : ""}
+                ${wiki != null ? html2.node([wiki.outerHTML]) : ""}
             </div>
         </div>
-        ${page.sister_others.length > 0 ? html.node`<div class="sep"></div><div class="sub-text">${trans_legacy.en.music.about_guests}</div>` : ""}
+        ${page.sister_others.length > 0 ? html2.node`<div class="sep"></div><div class="sub-text">${trans_legacy.en.music.about_guests}</div>` : ""}
     `);
     if (page.sister_others.length > 0) {
-      about_artist_container.appendChild(html.node`
+      about_artist_container.appendChild(html2.node`
             <div class="about-guest-features-panel">
                 ${page.sister_others.map((z) => {
-        return html.node`
+        return html2.node`
                         <a class="about-guest-feature" href="${root}music/${sanitise(page.sister_others[guest])}">
                             ${page.sister_others[guest]}
                         </a>
@@ -19032,8 +19018,8 @@
           avatar_link.href = `${root}music/${sanitise(page.sister)}/${sanitise(page.name)}/+images`;
         let menu = tippy(avatar_side, {
           theme: "context-menu",
-          content: html.node`
-                    ${avatar ? html.node`
+          content: html2.node`
+                    ${avatar ? html2.node`
                     <button class="dropdown-menu-clickable-item" onclick="${expand_link}" data-menu-item="expand">
                         ${tl(trans.expand)}
                     </button>
@@ -19134,8 +19120,8 @@
       fetch(url).then(function(response) {
         console.error("returned", response, response.text);
         return response.text();
-      }).then(function(html2) {
-        let doc = new DOMParser().parseFromString(html2, "text/html");
+      }).then(function(html3) {
+        let doc = new DOMParser().parseFromString(html3, "text/html");
         console.error("DOC", doc);
         let inner_tracklist = doc.querySelector('#top-tracks-section [v-else=""] .chartlist');
         if (inner_tracklist == null) {
@@ -19260,8 +19246,8 @@
           avatar_link.href = `${root}music/${sanitise(page.name)}/+images`;
         let menu = tippy(avatar_side, {
           theme: "context-menu",
-          content: html.node`
-                    ${avatar != null ? html.node`
+          content: html2.node`
+                    ${avatar != null ? html2.node`
                     <button class="dropdown-menu-clickable-item" onclick="${expand_link}" data-menu-item="expand">
                         ${tl(trans.expand)}
                     </button>
@@ -19292,7 +19278,7 @@
         if (view_button) {
           let view_menu = tippy(view_button, {
             theme: "context-menu",
-            content: html.node`
+            content: html2.node`
                         <a class="dropdown-menu-clickable-item" href="${root}bleh?tab=customise" data-menu-item="settings">
                             ${tl(trans.settings)}
                         </a>
@@ -19420,25 +19406,22 @@
         continue;
       if (index > 10)
         continue;
-      let version_item = document.createElement("div");
-      version_item.classList.add("changelog-version-item");
-      version_item.setAttribute("data-changelog-type", changelog[version2].type);
-      version_item.setAttribute("data-changelog-latest", index == 0 ? "true" : "false");
-      version_item.setAttribute("data-changelog-version", version2);
-      version_item.innerHTML = `
+      let version_item = html.node`
+            <div class="changelog-version-item" data-changelog-type="${changelog[version2].type}" data-changelog-latest="${index == 0 ? "true" : "false"}" data-changelog-version="${version2}">
             <div class="version-item-header">
                 <div class="sub-text">
-                    <div class="breadcrumb">
-                        <div class="breadcrumb-origin">
-                            ${version2}
-                        </div>
-                        <div class="breadcrumb-name">
-                            ${trans_legacy.en.changelog.type[changelog[version2].type]}
-                        </div>
+                <div class="breadcrumb">
+                    <div class="breadcrumb-origin">
+                    ${version2}
+                    </div>
+                    <div class="breadcrumb-name">
+                    ${trans_legacy.en.changelog.type[changelog[version2].type]}
                     </div>
                 </div>
+                </div>
                 <h3>${changelog[version2].name}</h3>
-                ${version2 == "2025.0113" ? `<h4 class="header-over">${changelog[version2].name}</h4>` : ""}
+                ${version2 == "2025.0113" ? html.node`<h4 class="header-over">${changelog[version2].name}</h4>` : ""}
+            </div>
             </div>
         `;
       if (changelog[version2].type == "major")
@@ -19889,7 +19872,7 @@
     let settings_btn = header.querySelector(".panel-settings-button");
     tippy(settings_btn, {
       theme: "window",
-      content: html.node`
+      content: html2.node`
             <div class="dialog-settings">
                 <div class="setting" data-type="toggle" id="container-simulate_scroll" onclick="_update_item('simulate_scroll')">
                     <button class="btn reset" onclick="_reset_item('simulate_scroll')">${tl(trans.reset)}</button>
@@ -20100,11 +20083,11 @@
     let menu_button = nav.querySelector(".secondary-nav-item--more a");
     tippy(menu_button, {
       theme: "menu",
-      content: html.node`
+      content: html2.node`
             <button class="dropdown-menu-clickable-item update" onclick="_force_refresh_theme()">
                 ${trans_legacy.en.settings.home.update.update_now}
             </button>
-            ${settings.dev ? html.node`
+            ${settings.dev ? html2.node`
             <a class="dropdown-menu-clickable-item update" href="https://github.com/katelyynn/bleh/raw/uwu/fm/bleh.user.css">
                 ${trans_legacy.en.settings.home.update.css}
             </a>
@@ -20146,8 +20129,8 @@
       fetch(`${root}user/${auth.name}/partial/recenttracks?ajax=1`).then(function(response) {
         console.log("returned", response, response.text);
         return response.text();
-      }).then(function(html2) {
-        let doc = new DOMParser().parseFromString(html2, "text/html");
+      }).then(function(html3) {
+        let doc = new DOMParser().parseFromString(html3, "text/html");
         console.log("DOC", doc);
         let tracklist_panel = doc.querySelector(".chartlist");
         if (tracklist_panel)
@@ -20665,13 +20648,13 @@
         avatar_link.href = source_album.querySelector(".link-block-cover-link").getAttribute("href");
       let menu = tippy(avatar_side, {
         theme: "context-menu",
-        content: html.node`
-                ${album_avatar || artist_avatar ? html.node`
+        content: html2.node`
+                ${album_avatar || artist_avatar ? html2.node`
                 <button class="dropdown-menu-clickable-item" onclick="${expand_link}" data-menu-item="expand">
                     ${tl(trans.expand)}
                 </button>
                 ` : ""}
-                ${album_avatar ? html.node`
+                ${album_avatar ? html2.node`
                 <a class="dropdown-menu-clickable-item" href="${source_album.querySelector(".link-block-cover-link").getAttribute("href")}" data-menu-item="album">
                     ${tl(trans.album)}
                 </a>
@@ -20724,14 +20707,12 @@
     let rain_container_old = document.getElementById("rain-container");
     if (rain_container_old != void 0)
       document.body.removeChild(rain_container_old);
-    let rain_container = document.createElement("div");
-    rain_container.classList.add("rain-container");
-    rain_container.setAttribute("id", "rain-container");
-    rain_container.innerHTML = `
-        <div class="rain" id="rain"></div>
-        <div class="rain rain-back" id="rain-back"></div>
-    `;
-    document.body.appendChild(rain_container);
+    document.body.appendChild(html.node`
+        <div class="rain-container" id="rain-container">
+            <div class="rain" id="rain"></div>
+            <div class="rain rain-back" id="rain-back"></div>
+        </div>
+        `);
     let increment = 0;
     let drops = "";
     let subtle_drops = "";
@@ -21773,7 +21754,7 @@
     }
   }
   function page_indicator() {
-    page.structure.indicator.innerHTML = `
+    render(page.structure.indicator, html2`
         <div class="bleh">
             <strong>ver</strong>
             <span>${version.brand}</span>
@@ -21801,7 +21782,7 @@
             <span>${stored_season.year}</span>
             <span>${stored_season.offset}</span>
         </div>
-    `;
+    `);
   }
   function update_page() {
     page.structure.container.setAttribute("data-page-type", page.type);

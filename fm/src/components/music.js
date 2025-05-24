@@ -1,4 +1,4 @@
-import { html } from "lighterhtml";
+import { html, render } from "lighterhtml";
 import { patch_avatar } from "../avatar";
 import { settings } from "../build/config";
 import { log } from "../build/log";
@@ -31,7 +31,7 @@ export function show_your_scrobbles() {
         tabs.classList.add('navlist', 'secondary-nav', 'navlist--more', 'redesigned-navigation');
 
         if (page.type == 'artist') {
-            tabs.innerHTML = (`
+            tabs.appendChild(html.node`
                 <ul class="navlist-items">
                     <li class="navlist-item secondary-nav-item secondary-nav-item--overview">
                         <a class="secondary-nav-item-link secondary-nav-item-link--active" href="${window.location.href}">
@@ -48,7 +48,7 @@ export function show_your_scrobbles() {
                             ${tl(trans.albums)}
                         </a>
                     </li>
-                    ${(!page_is_blocked) ? (`
+                    ${(!page_is_blocked) ? html.node`
                     <li class="navlist-item secondary-nav-item secondary-nav-item--images">
                         <a class="secondary-nav-item-link" href="${window.location.href}/+images">
                             ${tl(trans.photos)}
@@ -84,18 +84,18 @@ export function show_your_scrobbles() {
                             ${tl(trans.tags)}
                         </a>
                     </li>
-                    `) : ''}
+                    ` : ''}
                 </ul>
             `);
         } else if (page.type == 'album') {
-            tabs.innerHTML = (`
+            tabs.appendChild(html.node`
                 <ul class="navlist-items">
                     <li class="navlist-item secondary-nav-item secondary-nav-item--overview">
                         <a class="secondary-nav-item-link secondary-nav-item-link--active" href="${window.location.href}">
                             ${tl(trans.overview)}
                         </a>
                     </li>
-                    ${(!page_is_blocked) ? (`
+                    ${(!page_is_blocked) ? html.node`
                     <li class="navlist-item secondary-nav-item secondary-nav-item--wiki">
                         <a class="secondary-nav-item-link" href="${window.location.href}/+wiki">
                             ${tl(trans.wiki)}
@@ -116,11 +116,11 @@ export function show_your_scrobbles() {
                             ${tl(trans.tags)}
                         </a>
                     </li>
-                    `) : ''}
+                    ` : ''}
                 </ul>
             `);
         } else if (page.type == 'track') {
-            tabs.innerHTML = (`
+            tabs.appendChild(html.node`
                 <ul class="navlist-items">
                     <li class="navlist-item secondary-nav-item secondary-nav-item--overview">
                         <a class="secondary-nav-item-link secondary-nav-item-link--active" href="${window.location.href}">
@@ -132,7 +132,7 @@ export function show_your_scrobbles() {
                             ${tl(trans.albums)}
                         </a>
                     </li>
-                    ${(!page_is_blocked) ? (`
+                    ${(!page_is_blocked) ? html.body`
                     <li class="navlist-item secondary-nav-item secondary-nav-item--wiki">
                         <a class="secondary-nav-item-link" href="${window.location.href}/+wiki">
                             ${tl(trans.wiki)}
@@ -148,7 +148,7 @@ export function show_your_scrobbles() {
                             ${tl(trans.tags)}
                         </a>
                     </li>
-                    `) : ''}
+                    ` : ''}
                 </ul>
             `);
         }
@@ -255,13 +255,13 @@ export function show_your_scrobbles() {
 
             listen_item.setAttribute('data-listens', listens);
 
-            listen_item.innerHTML = (`
+            render(listen_item, html`
                 <img class="view-item-avatar" src="${shortcut_listens.avi}" alt="${shortcut_listens.name}">
                 <div class="info">
                     <h3>${shortcut_listens.name}</h3>
                     <p>${tl(trans.listens.count).replace('{c}', listens.toLocaleString(lang))}</p>
                 </div>
-            `);
+            `)
 
             // colourful counts
             if (settings.colourful_counts && page.type == 'artist') {
@@ -544,21 +544,22 @@ export function show_your_scrobbles() {
             link_container.appendChild(item);
         });
 
-        let genius = document.createElement('li');
-        genius.innerHTML = (`
-            <a class="play-this-track-playlink music-link play-this-track-playlink--genius" href="https://genius.com/search?q=${sanitise(page.sister)}+${sanitise(page.name)}" target="_blank">
-                Genius
-            </a>
+        link_container.appendChild(html.node`
+            <li>
+                <a class="play-this-track-playlink music-link play-this-track-playlink--genius" href="https://genius.com/search?q=${sanitise(page.sister)}+${sanitise(page.name)}" target="_blank">
+                    Genius
+                </a>
+            </li>
         `);
-        link_container.appendChild(genius);
-
-        let tidal = document.createElement('li');
-        tidal.innerHTML = (`
+        
+        link_container.appendChild(html.node`
+            <li>
             <a class="play-this-track-playlink music-link play-this-track-playlink--tidal" href="https://listen.tidal.com/search?q=${sanitise(page.sister, ' ')} ${sanitise(page.name, ' ')}" target="_blank">
                 Tidal
             </a>
+
+            </li>
         `);
-        link_container.appendChild(tidal);
     } else {
         let header = document.createElement('div');
         header.classList.add('sub-text', 'music-small-header');
@@ -566,7 +567,7 @@ export function show_your_scrobbles() {
         link_group.appendChild(header);
 
         if (page.type == 'album') {
-            link_container.innerHTML = (`
+            render(link_container, html`
                 <a class="play-this-track-playlink music-link play-this-track-playlink--spotify" href="https://open.spotify.com/search/${sanitise(page.sister, ' ')} ${sanitise(page.name, ' ')}" target="_blank">
                     Spotify
                 </a>
@@ -590,7 +591,7 @@ export function show_your_scrobbles() {
                 </a>
             `);
         } else {
-            link_container.innerHTML = (`
+            render(link_container, html`
                 <a class="play-this-track-playlink music-link play-this-track-playlink--spotify" href="https://open.spotify.com/search/${sanitise(page.name, ' ')}" target="_blank">
                     Spotify
                 </a>
@@ -654,15 +655,12 @@ export function show_your_scrobbles() {
     if (!settings.corrections )
         return;
 
-    let lotus_handler = document.createElement('section');
-    lotus_handler.classList.add('lotus', 'cta');
-
-    lotus_handler.innerHTML = (`
-        <strong>${tl(trans.lotus_cta[page.corrected]).replace('{t}', tl(trans[`${page.type}_lower`]))}</strong>
-        <a class="see-more" href="https://github.com/katelyynn/lotus/issues/new/choose" target="_blank">${tl(trans.suggest_correction)}</a>
+    page.structure.side.appendChild(html.node`
+        <section class="lotus cta">
+             <strong>${tl(trans.lotus_cta[page.corrected]).replace('{t}', tl(trans[`${page.type}_lower`]))}</strong>
+            <a class="see-more" href="https://github.com/katelyynn/lotus/issues/new/choose" target="_blank">${tl(trans.suggest_correction)}</a>
+        </section>
     `);
-
-    page.structure.side.appendChild(lotus_handler);
 }
 
 function create_listen_item(parent, {name, listens, link, avi, count=0, button=false, katsune=false}, header_type) {
@@ -677,7 +675,7 @@ function create_listen_item(parent, {name, listens, link, avi, count=0, button=f
 
     if (listens > -1) {
         // 0 listens
-        listen_item.innerHTML = (`
+        render(listen_item, html`
             <img class="view-item-avatar" src="${avi}" alt="${name}">
             <div class="info">
                 <h3>${name}</h3>
@@ -708,7 +706,7 @@ function create_listen_item(parent, {name, listens, link, avi, count=0, button=f
         register_menu(listen_item, menu);
     } else if (listens > -2) {
         // loading listens
-        listen_item.innerHTML = (`
+        render(listen_item, html`
             <img class="view-item-avatar" src="${avi}" alt="${name}">
             <div class="info">
                 <h3>${name}</h3>
@@ -752,7 +750,7 @@ function create_listen_item(parent, {name, listens, link, avi, count=0, button=f
         });
     } else {
         // other listeners by clicking this link (artist)
-        listen_item.innerHTML = (`
+        render(listen_item, html`
             ${avi[0] ? `<img class="view-item-avatar" src="${avi[0].getAttribute('src')}">` : ''}
             ${avi[1] ? `<img class="view-item-avatar" src="${avi[1].getAttribute('src')}">` : ''}
             ${avi[2] ? `<img class="view-item-avatar" src="${avi[2].getAttribute('src')}">` : ''}
@@ -834,25 +832,25 @@ function show_numbers_on_side(header_type) {
     panel.classList.add('listen-panel');
 
 
-    let row = document.createElement('div');
-    row.classList.add('listener-row');
-    row.innerHTML = (`
-        <div class="listener-side">
-            <h3>${listeners.text}</h3>
-            <p>${listeners.abbr}</p>
+    let row = html.node`
+        <div class="listener-row">
+            <div class="listener-side">
+                <h3>${listeners.text}</h3>
+                <p>${listeners.abbr}</p>
+            </div>
+            <div class="scrobble-side">
+                <h3>${scrobbles.text}</h3>
+                <p>${scrobbles.abbr}</p>
+            </div>
+            ${(metascore.text) ? html.node`
+            <div class="metascore-side">
+                <h3>${metascore.text}</h3>
+                <p><a href="${metascore.link}" target="_blank">${metascore.abbr}</a></p>
+            </div>
+            ` : ''}
         </div>
-        <div class="scrobble-side">
-            <h3>${scrobbles.text}</h3>
-            <p>${scrobbles.abbr}</p>
-        </div>
-        ${(metascore.text) ? (`
-        <div class="metascore-side">
-            <h3>${metascore.text}</h3>
-            <p><a href="${metascore.link}" target="_blank">${metascore.abbr}</a></p>
-        </div>
-        `) : ''}
-    `);
-
+    `
+    
     panel.insertBefore(row, panel.firstElementChild);
 
     if (page.mobile)
