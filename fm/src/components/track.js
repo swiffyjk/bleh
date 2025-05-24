@@ -1,3 +1,4 @@
+import { html } from "lighterhtml";
 import { settings } from "../build/config";
 import { log } from "../build/log";
 import { page, root } from "../build/page";
@@ -268,10 +269,9 @@ export function patch_titles(search=page.structure.main) {
             if (track_legacy_menu) {
                 let menu = tippy(track, {
                     theme: 'context-menu',
-                    content: (`
-                        ${track_legacy_menu.innerHTML}
-                    `),
-                    allowHTML: true,
+                    content: html.node([
+                        track_legacy_menu.innerHTML
+                    ]),
                     placement: 'right-start',
                     trigger: 'manual',
                     interactive: true,

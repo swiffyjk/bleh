@@ -6,6 +6,7 @@ import { load_badges } from "./components/badge";
 import { version } from "./main";
 import { show_theme_change_in_menu } from "./pages/bleh_config";
 import { ff } from "./sku";
+import { html } from "lighterhtml";
 
 export function patch_masthead(element) {
     let masthead_logo = element.querySelector('.masthead-logo');
@@ -170,11 +171,10 @@ export function append_nav() {
     } else {
         page.header.season_tooltip = tippy(bleh_container, {
             theme: 'seasonal-swatch',
-            content: (`
+            content: html.node`
                 <span class="season-colour-name">${tl(trans.seasonal.listing[stored_season.id])}</span>
                 <span class="season-exclusive">${trans_legacy.en.auth_menu.seasonal_notice}</span>
-            `),
-            allowHTML: true
+            `,
         });
     }
     links.appendChild(bleh_container);
@@ -211,7 +211,7 @@ export function append_nav() {
     let token = new_auth.querySelector('[name="csrfmiddlewaretoken"]').getAttribute('value');
     let auth_menu = tippy(auth_link, {
         theme: 'auth-menu',
-        content: (`
+        content: html.node`
             <a class="dropdown-menu-clickable-item" data-menu-item="profile" href="${root}user/${auth.name}">
                 ${auth.name}
             </a>
@@ -225,11 +225,11 @@ export function append_nav() {
             <a class="dropdown-menu-clickable-item" data-menu-item="shouts" href="${root}user/${auth.name}/shoutbox">
                 ${tl(trans.shouts)}
             </a>
-            ${(settings.auth_menu_obsessions) ? (`
+            ${(settings.auth_menu_obsessions) ? html.node`
             <a class="dropdown-menu-clickable-item" data-menu-item="obsessions" href="${root}user/${auth.name}/obsessions">
                 ${trans_legacy.en.auth_menu.obsessions}
             </a>
-            `) : ''}
+            ` : ''}
             <button class="dropdown-menu-clickable-item" data-menu-item="themes" onclick="toggle_theme()">
                 <span class="auth-dropdown-item-row">
                     <span class="auth-dropdown-item-left">${tl(trans.themes.name)}</span>
@@ -258,8 +258,7 @@ export function append_nav() {
                     ${tl(trans.logout)}
                 </a>
             </form>
-        `),
-        allowHTML: true,
+        `,
         placement: 'top',
         interactive: true,
         interactiveBorder: 10,
@@ -279,10 +278,7 @@ export function append_nav() {
 
             tippy(instance.popper.querySelector('[data-menu-item="language"]:not([aria-expanded])'), {
                 theme: 'language-menu',
-                content: (`
-                    ${language_menu.innerHTML}
-                `),
-                allowHTML: true,
+                content: language_menu,
                 placement: 'left',
                 hideOnClick: false,
                 interactive: true,
@@ -291,7 +287,7 @@ export function append_nav() {
 
             let theme_menu_item = tippy(instance.popper.querySelector('[data-menu-item="themes"]:not([aria-expanded])'), {
                 theme: 'menu',
-                content: (`
+                content: html.node`
                     <button class="dropdown-menu-clickable-item theme-item-in-menu" data-bleh-theme="light" onclick="change_theme_from_menu('light')">
                         ${tl(trans.themes.light)}
                     </button>
@@ -307,8 +303,7 @@ export function append_nav() {
                     <button class="dropdown-menu-clickable-item theme-item-in-menu" data-bleh-theme="oled" onclick="change_theme_from_menu('oled')">
                         ${tl(trans.themes.oled)}
                     </button>
-                `),
-                allowHTML: true,
+                `,
                 placement: 'left',
                 hideOnClick: false,
                 interactive: true,

@@ -14,6 +14,7 @@ import { ff } from "../sku";
 import { bleh_gallery_list, bleh_gallery_upload } from "./gallery";
 import { bleh_tags_mini } from "./tag";
 import { bleh_wiki, bleh_wiki_editor, bleh_wiki_history } from "./wiki";
+import { html } from "lighterhtml";
 
 export function bleh_albums() {
     let album_header = document.body.querySelector('.header-new--album');
@@ -111,12 +112,12 @@ export function bleh_albums() {
 
             let menu = tippy(avatar_side, {
                 theme: 'context-menu',
-                content: (`
-                    ${(avatar) ? (`
+                content: html.node`
+                    ${(avatar) ? html.node`
                     <button class="dropdown-menu-clickable-item" onclick="${expand_link}" data-menu-item="expand">
                         ${tl(trans.expand)}
                     </button>
-                    `) : ''}
+                    ` : ''}
                     <a class="dropdown-menu-clickable-item" href="${root}music/${sanitise(page.sister)}/${sanitise(page.name)}/+images" data-menu-item="gallery">
                         ${tl(trans.artwork)}
                     </a>
@@ -124,8 +125,7 @@ export function bleh_albums() {
                     <a class="dropdown-menu-clickable-item" href="${root}bleh?tab=customise" data-menu-item="settings">
                         ${tl(trans.settings)}
                     </a>
-                `),
-                allowHTML: true,
+                `,
                 placement: 'right-start',
                 trigger: 'manual',
                 interactive: true,

@@ -6,6 +6,7 @@ import { custom_select, update_inbuilt_select } from "../components/select";
 import { update_inbuilt_item } from "../config";
 import { ff } from "../sku";
 import { markdown } from "../components/markdown";
+import { render } from "lighterhtml";
 
 // patch last.fm settings
 export function bleh_native_settings() {
@@ -642,12 +643,11 @@ unsafeWindow._update_about_me_preview = function(value) {
     update_about_me_preview(value);
 }
 function update_about_me_preview(value) {
-    let result = markdown(value, {
-        allow_headers: true
-    });
     let about_me = page.structure.main.querySelector('#about_me_preview');
 
-    about_me.innerHTML = result;
+    render(about_me, markdown(value, {
+        allow_headers: true
+    }))
 
     let banner = about_me.querySelector('img[alt="banner"]');
     let banner_img = page.structure.main.querySelector('.banner-preview');

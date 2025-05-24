@@ -1,3 +1,4 @@
+import { test_api_key } from "../api";
 import { settings, settings_base } from "../build/config";
 import { log } from "../build/log";
 import { album_track_corrections, artist_corrections, ranks } from "../build/music";
@@ -691,7 +692,21 @@ export function render_setting_page(page_id) {
                     <div class="heading content-form">
                         <div class="input-container">
                             <input type="password" maxlength="120" id="text-api_key" value="${settings.api_key}" placeholder="${trans_legacy.en.settings.profiles.api.placeholder}">
-                            <button class="btn primary save" onclick="_save_api_key()">${tl(trans.save)}</button>
+                            <button class="btn primary save" onclick=${() => {
+                                let key = document.getElementById('text-api_key').value;
+                            
+                                // save to settings
+                                settings.api_key = key;
+                                localStorage.setItem('bleh', JSON.stringify(settings));
+                            
+                                notify({
+                                    title: trans_legacy.en.settings.profiles.api.name,
+                                    body: trans_legacy.en.settings.profiles.api.saved,
+                                    icon: 'icon-16-api'
+                                });
+                            
+                                test_api_key();
+                            }}>${tl(trans.save)}</button>
                             <a class="btn-add" href="${root}api/account/create" target="_blank">${trans_legacy.en.settings.create}</a>
                         </div>
                     </div>
@@ -781,7 +796,14 @@ export function render_setting_page(page_id) {
                         <h5>${tl(trans.clear_history)}</h5>
                     </div>
                     <div class="toggle-wrap">
-                        <button class="see-more" onclick="_clear_activity_history()">
+                        <button class="see-more" onclick=${() => {
+                            localStorage.removeItem('bwaa_recent_activity');
+                            notify({
+                                id: 'cleared_history',
+                                title: tl(trans.cleared_activity_history),
+                                type: 'success'
+                            });
+                        }}>
                             ${tl(trans.clear)}
                         </button>
                     </div>
@@ -2106,12 +2128,12 @@ export function display_colour_presets() {
 
                 tippy(swatch, {
                     theme: 'window',
-                    content: (`
+                    content: html.node`
                         <div class="dialog-settings">
                             <div class="alert alert-info seasonal-hsl-alert">
                                 ${tl(trans.seasonal_warning)}
                             </div>
-                            ${(ff('colour_based_on_hex')) ? (`
+                            ${(ff('colour_based_on_hex')) ? html.node`
                             <div class="setting" data-type="text">
                                 <div class="heading">
                                     <h5>${tl(trans.convert_from_hex)}</h5>
@@ -2121,7 +2143,7 @@ export function display_colour_presets() {
                                     <button class="btn primary icon convert" onclick="_convert_hex()">${tl(trans.convert)}</button>
                                 </div>
                             </div>
-                            `) : ''}
+                            ` : ''}
                             <div class="setting dim-using-hue-gradient dim-during-seasonal" data-type="slider" id="container-hue">
                                 <button class="btn reset" onclick="_reset_item('hue')">${tl(trans.reset)}</button>
                                 <div class="heading">
@@ -2171,8 +2193,7 @@ export function display_colour_presets() {
                                 </div>
                             </div>
                         </div>
-                    `),
-                    allowHTML: true,
+                    `,
                     placement: 'bottom',
                     interactive: true,
                     interactiveBorder: 10,
@@ -2195,12 +2216,11 @@ export function display_colour_presets() {
 
                 tippy(swatch, {
                     theme: 'key_value',
-                    content: (`
+                    content: html.node`
                         <span class="key">hue<span class="value">${colour.sets.hue}</span></span>
                         <span class="key">sat<span class="value">${colour.sets.sat}</span></span>
                         <span class="key">lit<span class="value">${colour.sets.lit}</span></span>
-                    `),
-                    allowHTML: true,
+                    `,
                     delay: [250, 0]
                 });
             }
@@ -2268,11 +2288,10 @@ function init_profile_page() {
             tippy(badge, {
                 theme: 'badge',
                 placement: 'bottom',
-                content: (`
+                content: html.node`
                     <div class="badge-name">${badge.textContent}</div>
                     <div class="badge-reason">${tl(trans.badges[badge.classList[1]].reason)}</div>
-                `),
-                allowHTML: true
+                `
             });
         });
     }
@@ -2292,11 +2311,10 @@ function init_profile_page() {
                 tippy(badge, {
                     theme: 'badge',
                     placement: 'bottom',
-                    content: (`
+                    content: html.node`
                         <div class="badge-name">${this_badge.name}</div>
                         <div class="badge-reason">${tl(trans.badges[this_badge.reason].reason)}</div>
-                    `),
-                    allowHTML: true
+                    `
                 });
             }
 
@@ -2315,10 +2333,10 @@ function init_profile_page() {
             tippy(badge, {
                 theme: 'badge',
                 placement: 'bottom',
-                content: (`
+                content: html.node`
                     <div class="badge-name">${tl(trans.badges.missing.name)}</div>
                     <div class="badge-reason">${tl(trans.badges.missing.reason)}</div>
-                `),
+                `,
                 allowHTML: true
             });
         }

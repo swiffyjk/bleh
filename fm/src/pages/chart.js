@@ -6,6 +6,7 @@ import { correct_artist, correct_item_by_artist } from "../components/lotus";
 import { checkup_page_structure } from "../components/structure";
 import { refresh_all } from "../config";
 import { update_page } from "../page";
+import { html } from "lighterhtml";
 
 export function bleh_charts() {
     if (page.subpage != 'overview')
@@ -48,7 +49,7 @@ export function bleh_charts() {
 
     tippy(settings_btn, {
         theme: 'window',
-        content: (`
+        content: html.node`
             <div class="dialog-settings">
                 <div class="setting" data-type="toggle" id="container-simulate_scroll" onclick="_update_item('simulate_scroll')">
                     <button class="btn reset" onclick="_reset_item('simulate_scroll')">${tl(trans.reset)}</button>
@@ -63,8 +64,7 @@ export function bleh_charts() {
                     </div>
                 </div>
             </div>
-        `),
-        allowHTML: true,
+        `,
         placement: 'bottom',
         interactive: true,
         interactiveBorder: 10,

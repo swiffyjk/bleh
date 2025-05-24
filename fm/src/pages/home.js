@@ -9,6 +9,7 @@ import { bleh_charts } from "./chart";
 import { bleh_native_settings } from './lastfm_settings';
 import { sanitise, sanitise_text } from "../build/tools"
 import { correct_artist, correct_item_by_artist, name_includes } from '../components/lotus';
+import { html } from "lighterhtml";
 
 export function bleh_home() {
     page.structure.container = document.body.querySelector('.page-content');
@@ -121,23 +122,22 @@ export function bleh_home() {
     let menu_button = nav.querySelector('.secondary-nav-item--more a');
     tippy(menu_button, {
         theme: "menu",
-        content: (`
+        content: html.node`
             <button class="dropdown-menu-clickable-item update" onclick="_force_refresh_theme()">
                 ${trans_legacy.en.settings.home.update.update_now}
             </button>
-            ${(settings.dev ? (`
+            ${(settings.dev ? html.node`
             <a class="dropdown-menu-clickable-item update" href="https://github.com/katelyynn/bleh/raw/uwu/fm/bleh.user.css">
                 ${trans_legacy.en.settings.home.update.css}
             </a>
-            `) : '')}
+            ` : '')}
             <button class="dropdown-menu-clickable-item sponsor" onclick="_sponsor()">
                 ${tl(trans.sponsor)}
             </button>
             <a class="dropdown-menu-clickable-item issues" href="https://github.com/katelyynn/bleh/issues" target="_blank">
                 ${trans_legacy.en.settings.home.issues.name}
             </a>
-        `),
-        allowHTML: true,
+        `,
         placement: "bottom",
         interactive: true,
         interactiveBorder: 10,

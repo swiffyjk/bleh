@@ -1,3 +1,4 @@
+import { html } from "lighterhtml";
 import { patch_avatar } from "../avatar";
 import { settings } from "../build/config";
 import { log } from "../build/log";
@@ -523,10 +524,7 @@ export function show_your_scrobbles() {
 
                 let menu = tippy(link, {
                     theme: 'context-menu',
-                    content: (`
-                        ${replace.outerHTML}
-                    `),
-                    allowHTML: true,
+                    content: replace,
                     placement: 'right-start',
                     trigger: 'manual',
                     interactive: true,
@@ -689,12 +687,11 @@ function create_listen_item(parent, {name, listens, link, avi, count=0, button=f
 
         let menu = tippy(listen_item, {
             theme: 'context-menu',
-            content: (`
+            content: (html.node`
                 <a class="dropdown-menu-clickable-item" href="${root}user/${name}" data-menu-item="view_profile">
                     ${tl(trans.profile)}
                 </a>
             `),
-            allowHTML: true,
             placement: 'right-start',
             trigger: 'manual',
             interactive: true,
@@ -721,7 +718,7 @@ function create_listen_item(parent, {name, listens, link, avi, count=0, button=f
 
         let menu = tippy(listen_item, {
             theme: 'context-menu',
-            content: (`
+            content: (html.node`
                 <a class="dropdown-menu-clickable-item" href="${root}user/${name}" data-menu-item="view_profile">
                     ${tl(trans.profile)}
                 </a>
@@ -730,7 +727,6 @@ function create_listen_item(parent, {name, listens, link, avi, count=0, button=f
                     ${tl(trans.settings)}
                 </button>
             `),
-            allowHTML: true,
             placement: 'right-start',
             trigger: 'manual',
             interactive: true,

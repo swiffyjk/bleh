@@ -4,6 +4,7 @@ import { page, root } from "../build/page";
 import { lang, trans_legacy, trans, tl } from "../build/trans";
 import { register_menu } from "../components/menu";
 import { ff } from "../sku";
+import { html } from "lighterhtml";
 
 export function bleh_gallery() {
     if (page.subpage != 'image')
@@ -423,12 +424,11 @@ function patch_gallery_image_listing(image_list) {
             if (ff('remove_bookmark')) {
                 let menu = tippy(image_element, {
                     theme: 'context-menu',
-                    content: (`
+                    content: html.node`
                         <button class="dropdown-menu-clickable-item" onclick="_update_image_bookmark(this, '${image}', false)" data-menu-item="remove-bookmark" data-bleh--image-is-bookmarked="true">
                             ${trans_legacy.en.gallery.bookmarks.button.unbookmark_this_image.name}
                         </button>
-                    `),
-                    allowHTML: true,
+                    `,
                     placement: 'right-start',
                     trigger: 'manual',
                     interactive: true,

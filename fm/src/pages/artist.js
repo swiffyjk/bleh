@@ -12,6 +12,7 @@ import { ff } from "../sku";
 import { bleh_gallery_list, bleh_gallery_upload } from "./gallery";
 import { bleh_tags_mini } from "./tag";
 import { bleh_wiki, bleh_wiki_editor, bleh_wiki_history } from "./wiki";
+import { html } from "lighterhtml";
 
 export function bleh_artists() {
     let artist_header = document.body.querySelector('.header-new--artist');
@@ -140,12 +141,12 @@ export function bleh_artists() {
 
             let menu = tippy(avatar_side, {
                 theme: 'context-menu',
-                content: (`
-                    ${(avatar != null) ? (`
+                content: html.node`
+                    ${(avatar != null) ? html.node`
                     <button class="dropdown-menu-clickable-item" onclick="${expand_link}" data-menu-item="expand">
                         ${tl(trans.expand)}
                     </button>
-                    `) : ''}
+                    ` : ''}
                     <a class="dropdown-menu-clickable-item" href="${root}music/${sanitise(page.name)}/+images" data-menu-item="gallery">
                         ${tl(trans.photos)}
                     </a>
@@ -153,8 +154,7 @@ export function bleh_artists() {
                     <a class="dropdown-menu-clickable-item" href="${root}bleh?tab=customise" data-menu-item="settings">
                         ${tl(trans.settings)}
                     </a>
-                `),
-                allowHTML: true,
+                `,
                 placement: 'right-start',
                 trigger: 'manual',
                 interactive: true,
@@ -177,12 +177,11 @@ export function bleh_artists() {
             if (view_button) {
                 let view_menu = tippy(view_button, {
                     theme: 'context-menu',
-                    content: (`
+                    content: html.node`
                         <a class="dropdown-menu-clickable-item" href="${root}bleh?tab=customise" data-menu-item="settings">
                             ${tl(trans.settings)}
                         </a>
-                    `),
-                    allowHTML: true,
+                    `,
                     placement: 'right-start',
                     trigger: 'manual',
                     interactive: true,

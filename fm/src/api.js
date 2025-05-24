@@ -3,23 +3,7 @@ import { auth } from "./build/page";
 import { lang, trans_legacy } from "./build/trans";
 import { notify } from "./components/notify";
 
-unsafeWindow._save_api_key = function() {
-    let key = document.getElementById('text-api_key').value;
-
-    // save to settings
-    settings.api_key = key;
-    localStorage.setItem('bleh', JSON.stringify(settings));
-
-    notify({
-        title: trans_legacy.en.settings.profiles.api.name,
-        body: trans_legacy.en.settings.profiles.api.saved,
-        icon: 'icon-16-api'
-    });
-
-    test_api_key();
-}
-
-function test_api_key() {
+export function test_api_key() {
     let xhr = api(`user.getTopTags&user=${auth.name}&limit=1`);
 
     xhr.onload = function() {

@@ -1,11 +1,10 @@
+import { html } from "lighterhtml";
 import { settings } from "./config";
 import { page } from "./page";
 
 export function log(text, system, type = 'info', append={}) {
     if (!page.structure.logs) {
-        let logs = document.createElement('div');
-        logs.classList.add('logs');
-        logs.innerHTML = (`
+        let logs = html.node`<div class="logs">
             <div class="setting" data-type="toggle" id="container-log_show_all" onclick="_update_item('log_show_all')">
                 <div class="toggle-wrap">
                     <button id="toggle-log_show_all">
@@ -13,7 +12,7 @@ export function log(text, system, type = 'info', append={}) {
                     </button>
                 </div>
             </div>
-        `);
+        </div>`
 
         document.documentElement.appendChild(logs);
         page.structure.logs = logs;
@@ -60,15 +59,12 @@ export function log(text, system, type = 'info', append={}) {
         console[type](`%c${system}%c ${text}`, `background: ${system_colour}; display: block; width: fit-content; font-weight: bold; color: #000; padding: 0 4px; border-radius: 4px`, 'color: unset');
     if(settings && settings.feature_flags) {
         if (settings.feature_flags.developer == true) {
-            let log_e = document.createElement('div');
-            log_e.classList.add('log');
-            log_e.setAttribute('data-type', type);
-            log_e.innerHTML = (`
+            page.structure.logs.appendChild(html.node`
+            <div class="log" data-type=${type}>
                 <span class="system" style="color: ${system_colour}">${system}</span>
                 <span class="text">${text}</span>
-            `);
-
-            page.structure.logs.appendChild(log_e);
+            </div>`
+);
         }
     }
 }

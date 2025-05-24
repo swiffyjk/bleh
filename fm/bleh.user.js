@@ -18,563 +18,6 @@
 // @require      https://cdn.jsdelivr.net/npm/chartjs-adapter-moment@^1
 // ==/UserScript==
 (() => {
-  // src/build/config.js
-  var settings = {};
-  var settings_template = {
-    theme: "dark",
-    high_contrast: false,
-    gloss: 0,
-    gendered_tags: true,
-    show_extra_nav: true,
-    accent_type: "avatar",
-    hue: 255,
-    sat: 1,
-    sat_bg: 1,
-    lit: 1,
-    dev: false,
-    branch: "uwu",
-    api_key: "",
-    profile_header_expand: true,
-    hide_hateful: true,
-    accessible_name_colours: false,
-    reduced_motion: false,
-    underline_links: false,
-    big_numbers: false,
-    format_guest_features: true,
-    show_guest_features: false,
-    stacked_chartlist_info: true,
-    show_remaster_tags: true,
-    corrections: true,
-    colourful_counts: true,
-    colourful_tracks: true,
-    rain: false,
-    feature_flags: {},
-    show_your_progress: true,
-    travis: false,
-    list_view: 1,
-    chart_view: "line",
-    chart_bar_axis: "horizontal",
-    chart_insights_view: "pie",
-    shout_markdown: true,
-    bio_markdown: true,
-    hue_from_album: true,
-    seasonal: true,
-    seasonal_particles: "all",
-    seasonal_particles_fps: false,
-    seasonal_overlays: true,
-    profile_header_own: true,
-    profile_header_others: true,
-    profile_avi_background: false,
-    profile_shortcut: "",
-    font: "",
-    font_weight: 480,
-    font_weight_medium: 650,
-    font_weight_bold: 730,
-    font_emoji: true,
-    show_bulk_edit_album: false,
-    grid_glow: true,
-    auth_menu_obsessions: false,
-    default_avatar_action: "expand",
-    glacier_library_graphs: true,
-    activities: true,
-    activity_shout: true,
-    activity_image: true,
-    activity_obsess: true,
-    activity_love: true,
-    activity_bookmark: true,
-    activity_install: true,
-    activity_wiki: true,
-    simulate_scroll: true,
-    toggle_icon: false,
-    log_show_all: false,
-    avatar_radius: 50
-  };
-  var settings_base = {
-    theme: {
-      css: "theme",
-      unit: "",
-      value: "dark",
-      type: "options"
-    },
-    high_contrast: {
-      css: "high_contrast",
-      unit: "",
-      value: false,
-      values: [true, false],
-      type: "toggle"
-    },
-    hue: {
-      css: "hue-user",
-      unit: "",
-      value: 255,
-      type: "slider"
-    },
-    sat: {
-      css: "sat-user",
-      unit: "",
-      value: 1,
-      type: "slider"
-    },
-    sat_bg: {
-      css: "sat-bg",
-      unit: "",
-      value: 1,
-      type: "slider"
-    },
-    lit: {
-      css: "lit-user",
-      unit: "",
-      value: 1,
-      type: "slider"
-    },
-    accent_type: {
-      css: "accent_type",
-      unit: "",
-      value: "colour",
-      type: "options"
-    },
-    gloss: {
-      css: "gloss",
-      unit: "",
-      value: 0,
-      type: "slider"
-    },
-    profile_header_expand: {
-      css: "profile_header_expand",
-      unit: "",
-      value: true,
-      values: [true, false],
-      type: "toggle"
-    },
-    gendered_tags: {
-      css: "gendered_tags",
-      unit: "",
-      value: true,
-      values: [true, false],
-      type: "toggle"
-    },
-    hide_hateful: {
-      css: "hide_hateful",
-      unit: "",
-      value: true,
-      values: [true, false],
-      type: "toggle"
-    },
-    accessible_name_colours: {
-      css: "accessible_name_colours",
-      unit: "",
-      value: false,
-      values: [true, false],
-      type: "toggle"
-    },
-    reduced_motion: {
-      css: "reduced_motion",
-      unit: "",
-      value: false,
-      values: [true, false],
-      type: "toggle"
-    },
-    underline_links: {
-      css: "underline_links",
-      unit: "",
-      value: false,
-      values: [true, false],
-      type: "toggle"
-    },
-    dev: {
-      css: "dev",
-      unit: "",
-      value: false,
-      values: [true, false],
-      type: "toggle"
-    },
-    format_guest_features: {
-      css: "format_guest_features",
-      unit: "",
-      value: true,
-      values: [true, false],
-      type: "toggle",
-      require_reload: "partial"
-    },
-    show_guest_features: {
-      css: "show_guest_features",
-      unit: "",
-      value: false,
-      values: [true, false],
-      type: "toggle"
-    },
-    stacked_chartlist_info: {
-      css: "stacked_chartlist_info",
-      unit: "",
-      value: true,
-      values: [true, false],
-      type: "toggle"
-    },
-    show_remaster_tags: {
-      css: "show_remaster_tags",
-      unit: "",
-      value: true,
-      values: [true, false],
-      type: "toggle"
-    },
-    corrections: {
-      css: "corrections",
-      unit: "",
-      value: true,
-      values: [true, false],
-      type: "toggle"
-    },
-    colourful_counts: {
-      css: "colourful_counts",
-      unit: "",
-      value: true,
-      values: [true, false],
-      type: "toggle",
-      require_reload: "partial"
-    },
-    colourful_tracks: {
-      css: "colourful_tracks",
-      unit: "",
-      value: true,
-      values: [true, false],
-      type: "toggle",
-      require_reload: "partial"
-    },
-    rain: {
-      css: "rain",
-      unit: "",
-      value: false,
-      values: [true, false],
-      type: "toggle",
-      require_reload: true
-    },
-    show_your_progress: {
-      css: "show_your_progress",
-      unit: "",
-      value: true,
-      values: [true, false],
-      type: "toggle",
-      require_reload: "partial"
-    },
-    travis: {
-      css: "travis",
-      unit: "",
-      value: false,
-      values: [true, false],
-      type: "toggle"
-    },
-    list_view: {
-      css: "list_view",
-      unit: "",
-      value: 0,
-      type: "options"
-    },
-    chart_view: {
-      css: "chart_view",
-      unit: "",
-      value: "line",
-      type: "options"
-    },
-    chart_bar_axis: {
-      css: "chart_bar_axis",
-      unit: "",
-      value: "horizontal",
-      type: "options"
-    },
-    shout_markdown: {
-      css: "shout_markdown",
-      unit: "",
-      value: true,
-      values: [true, false],
-      type: "toggle",
-      require_reload: "partial"
-    },
-    bio_markdown: {
-      css: "bio_markdown",
-      unit: "",
-      value: true,
-      values: [true, false],
-      type: "toggle",
-      require_reload: "partial"
-    },
-    hue_from_album: {
-      css: "hue_from_album",
-      unit: "",
-      value: true,
-      values: [true, false],
-      type: "toggle",
-      require_reload: "partial"
-    },
-    seasonal: {
-      css: "seasonal",
-      unit: "",
-      value: true,
-      values: [true, false],
-      type: "toggle",
-      require_reload: true
-    },
-    seasonal_particles: {
-      css: "seasonal_particles",
-      unit: "",
-      value: "all",
-      type: "options",
-      require_reload: true
-    },
-    seasonal_particles_fps: {
-      css: "seasonal_particles_fps",
-      unit: "",
-      value: false,
-      values: [true, false],
-      type: "toggle"
-    },
-    seasonal_overlays: {
-      css: "seasonal_overlays",
-      unit: "",
-      value: true,
-      values: [true, false],
-      type: "toggle"
-    },
-    profile_header_own: {
-      css: "profile_header_own",
-      unit: "",
-      value: true,
-      values: [true, false],
-      type: "toggle"
-    },
-    profile_header_others: {
-      css: "profile_header_others",
-      unit: "",
-      value: true,
-      values: [true, false],
-      type: "toggle"
-    },
-    profile_avi_background: {
-      css: "profile_avi_background",
-      unit: "",
-      value: false,
-      values: [true, false],
-      type: "toggle"
-    },
-    branch: {
-      css: "branch",
-      unit: "",
-      value: "",
-      type: "text"
-    },
-    font: {
-      css: "custom_font",
-      unit: "",
-      value: "",
-      type: "text"
-    },
-    font_weight: {
-      css: "custom_font_weight",
-      unit: "",
-      value: 480,
-      type: "slider"
-    },
-    font_weight_medium: {
-      css: "custom_font_weight_medium",
-      unit: "",
-      value: 650,
-      type: "slider"
-    },
-    font_weight_bold: {
-      css: "custom_font_weight_bold",
-      unit: "",
-      value: 730,
-      type: "slider"
-    },
-    font_emoji: {
-      css: "font_emoji",
-      unit: "",
-      value: true,
-      values: [true, false],
-      type: "toggle"
-    },
-    show_bulk_edit_album: {
-      css: "show_bulk_edit_album",
-      unit: "",
-      value: false,
-      values: [true, false],
-      type: "toggle"
-    },
-    grid_glow: {
-      css: "show_grid_glow",
-      unit: "",
-      value: true,
-      values: [true, false],
-      type: "toggle"
-    },
-    activities: {
-      css: "activities",
-      unit: "",
-      value: true,
-      values: [true, false],
-      type: "toggle"
-    },
-    auth_menu_obsessions: {
-      css: "auth_menu_obsessions",
-      unit: "",
-      value: true,
-      values: [true, false],
-      type: "toggle"
-    },
-    default_avatar_action: {
-      css: "default_avatar_action",
-      unit: "",
-      value: "expand",
-      type: "options"
-    },
-    glacier_library_graphs: {
-      css: "glacier_library_graphs",
-      unit: "",
-      value: true,
-      values: [true, false],
-      type: "toggle"
-    },
-    activity_shout: {
-      css: "activity_shout",
-      unit: "",
-      value: true,
-      values: [true, false],
-      type: "toggle"
-    },
-    activity_image: {
-      css: "activity_image",
-      unit: "",
-      value: true,
-      values: [true, false],
-      type: "toggle"
-    },
-    activity_obsess: {
-      css: "activity_obsess",
-      unit: "",
-      value: true,
-      values: [true, false],
-      type: "toggle"
-    },
-    activity_love: {
-      css: "activity_love",
-      unit: "",
-      value: true,
-      values: [true, false],
-      type: "toggle"
-    },
-    activity_bookmark: {
-      css: "activity_bookmark",
-      unit: "",
-      value: true,
-      values: [true, false],
-      type: "toggle"
-    },
-    activity_install: {
-      css: "activity_install",
-      unit: "",
-      value: true,
-      values: [true, false],
-      type: "toggle"
-    },
-    activity_wiki: {
-      css: "activity_wiki",
-      unit: "",
-      value: true,
-      values: [true, false],
-      type: "toggle"
-    },
-    simulate_scroll: {
-      css: "simulate_scroll",
-      unit: "",
-      value: true,
-      values: [true, false],
-      type: "toggle",
-      require_reload: "partial"
-    },
-    toggle_icon: {
-      css: "toggle_icon",
-      unit: "",
-      value: true,
-      values: [true, false],
-      type: "toggle"
-    },
-    log_show_all: {
-      css: "log_show_all",
-      unit: "",
-      value: false,
-      values: [true, false],
-      type: "toggle"
-    },
-    avatar_radius: {
-      css: "avatar-radius",
-      unit: "%",
-      value: 50,
-      type: "slider"
-    },
-    profile_shortcut: {
-      css: "profile_shortcut",
-      unit: "",
-      value: "",
-      type: "text"
-    },
-    api_key: {
-      css: "api_key",
-      unit: "",
-      value: "",
-      type: "text"
-    }
-  };
-  var inbuilt_settings = {
-    recent_artwork: {
-      css: "recent_artwork",
-      unit: "",
-      value: true,
-      values: [true, false],
-      type: "toggle"
-    },
-    recent_realtime: {
-      css: "recent_realtime",
-      unit: "",
-      value: true,
-      values: [true, false],
-      type: "toggle"
-    },
-    recent_listening: {
-      css: "recent_listening",
-      unit: "",
-      value: true,
-      values: [true, false],
-      type: "toggle"
-    },
-    disable_shoutbox: {
-      css: "disable_shoutbox",
-      unit: "",
-      value: true,
-      values: [true, false],
-      type: "toggle"
-    },
-    edit_all: {
-      css: "edit_all",
-      unit: "",
-      value: true,
-      values: [true, false],
-      type: "toggle"
-    },
-    create_automatic_edit_rule: {
-      css: "create_automatic_edit_rule",
-      unit: "",
-      value: true,
-      values: [true, false],
-      type: "toggle"
-    },
-    marketing_emails: {
-      css: "marketing_emails",
-      unit: "",
-      value: true,
-      values: [true, false],
-      type: "toggle"
-    }
-  };
-
   // node_modules/@ungap/weakmap/esm/index.js
   var self = {};
   try {
@@ -1553,6 +996,563 @@
     return out;
   }
 
+  // src/build/config.js
+  var settings = {};
+  var settings_template = {
+    theme: "dark",
+    high_contrast: false,
+    gloss: 0,
+    gendered_tags: true,
+    show_extra_nav: true,
+    accent_type: "avatar",
+    hue: 255,
+    sat: 1,
+    sat_bg: 1,
+    lit: 1,
+    dev: false,
+    branch: "uwu",
+    api_key: "",
+    profile_header_expand: true,
+    hide_hateful: true,
+    accessible_name_colours: false,
+    reduced_motion: false,
+    underline_links: false,
+    big_numbers: false,
+    format_guest_features: true,
+    show_guest_features: false,
+    stacked_chartlist_info: true,
+    show_remaster_tags: true,
+    corrections: true,
+    colourful_counts: true,
+    colourful_tracks: true,
+    rain: false,
+    feature_flags: {},
+    show_your_progress: true,
+    travis: false,
+    list_view: 1,
+    chart_view: "line",
+    chart_bar_axis: "horizontal",
+    chart_insights_view: "pie",
+    shout_markdown: true,
+    bio_markdown: true,
+    hue_from_album: true,
+    seasonal: true,
+    seasonal_particles: "all",
+    seasonal_particles_fps: false,
+    seasonal_overlays: true,
+    profile_header_own: true,
+    profile_header_others: true,
+    profile_avi_background: false,
+    profile_shortcut: "",
+    font: "",
+    font_weight: 480,
+    font_weight_medium: 650,
+    font_weight_bold: 730,
+    font_emoji: true,
+    show_bulk_edit_album: false,
+    grid_glow: true,
+    auth_menu_obsessions: false,
+    default_avatar_action: "expand",
+    glacier_library_graphs: true,
+    activities: true,
+    activity_shout: true,
+    activity_image: true,
+    activity_obsess: true,
+    activity_love: true,
+    activity_bookmark: true,
+    activity_install: true,
+    activity_wiki: true,
+    simulate_scroll: true,
+    toggle_icon: false,
+    log_show_all: false,
+    avatar_radius: 50
+  };
+  var settings_base = {
+    theme: {
+      css: "theme",
+      unit: "",
+      value: "dark",
+      type: "options"
+    },
+    high_contrast: {
+      css: "high_contrast",
+      unit: "",
+      value: false,
+      values: [true, false],
+      type: "toggle"
+    },
+    hue: {
+      css: "hue-user",
+      unit: "",
+      value: 255,
+      type: "slider"
+    },
+    sat: {
+      css: "sat-user",
+      unit: "",
+      value: 1,
+      type: "slider"
+    },
+    sat_bg: {
+      css: "sat-bg",
+      unit: "",
+      value: 1,
+      type: "slider"
+    },
+    lit: {
+      css: "lit-user",
+      unit: "",
+      value: 1,
+      type: "slider"
+    },
+    accent_type: {
+      css: "accent_type",
+      unit: "",
+      value: "colour",
+      type: "options"
+    },
+    gloss: {
+      css: "gloss",
+      unit: "",
+      value: 0,
+      type: "slider"
+    },
+    profile_header_expand: {
+      css: "profile_header_expand",
+      unit: "",
+      value: true,
+      values: [true, false],
+      type: "toggle"
+    },
+    gendered_tags: {
+      css: "gendered_tags",
+      unit: "",
+      value: true,
+      values: [true, false],
+      type: "toggle"
+    },
+    hide_hateful: {
+      css: "hide_hateful",
+      unit: "",
+      value: true,
+      values: [true, false],
+      type: "toggle"
+    },
+    accessible_name_colours: {
+      css: "accessible_name_colours",
+      unit: "",
+      value: false,
+      values: [true, false],
+      type: "toggle"
+    },
+    reduced_motion: {
+      css: "reduced_motion",
+      unit: "",
+      value: false,
+      values: [true, false],
+      type: "toggle"
+    },
+    underline_links: {
+      css: "underline_links",
+      unit: "",
+      value: false,
+      values: [true, false],
+      type: "toggle"
+    },
+    dev: {
+      css: "dev",
+      unit: "",
+      value: false,
+      values: [true, false],
+      type: "toggle"
+    },
+    format_guest_features: {
+      css: "format_guest_features",
+      unit: "",
+      value: true,
+      values: [true, false],
+      type: "toggle",
+      require_reload: "partial"
+    },
+    show_guest_features: {
+      css: "show_guest_features",
+      unit: "",
+      value: false,
+      values: [true, false],
+      type: "toggle"
+    },
+    stacked_chartlist_info: {
+      css: "stacked_chartlist_info",
+      unit: "",
+      value: true,
+      values: [true, false],
+      type: "toggle"
+    },
+    show_remaster_tags: {
+      css: "show_remaster_tags",
+      unit: "",
+      value: true,
+      values: [true, false],
+      type: "toggle"
+    },
+    corrections: {
+      css: "corrections",
+      unit: "",
+      value: true,
+      values: [true, false],
+      type: "toggle"
+    },
+    colourful_counts: {
+      css: "colourful_counts",
+      unit: "",
+      value: true,
+      values: [true, false],
+      type: "toggle",
+      require_reload: "partial"
+    },
+    colourful_tracks: {
+      css: "colourful_tracks",
+      unit: "",
+      value: true,
+      values: [true, false],
+      type: "toggle",
+      require_reload: "partial"
+    },
+    rain: {
+      css: "rain",
+      unit: "",
+      value: false,
+      values: [true, false],
+      type: "toggle",
+      require_reload: true
+    },
+    show_your_progress: {
+      css: "show_your_progress",
+      unit: "",
+      value: true,
+      values: [true, false],
+      type: "toggle",
+      require_reload: "partial"
+    },
+    travis: {
+      css: "travis",
+      unit: "",
+      value: false,
+      values: [true, false],
+      type: "toggle"
+    },
+    list_view: {
+      css: "list_view",
+      unit: "",
+      value: 0,
+      type: "options"
+    },
+    chart_view: {
+      css: "chart_view",
+      unit: "",
+      value: "line",
+      type: "options"
+    },
+    chart_bar_axis: {
+      css: "chart_bar_axis",
+      unit: "",
+      value: "horizontal",
+      type: "options"
+    },
+    shout_markdown: {
+      css: "shout_markdown",
+      unit: "",
+      value: true,
+      values: [true, false],
+      type: "toggle",
+      require_reload: "partial"
+    },
+    bio_markdown: {
+      css: "bio_markdown",
+      unit: "",
+      value: true,
+      values: [true, false],
+      type: "toggle",
+      require_reload: "partial"
+    },
+    hue_from_album: {
+      css: "hue_from_album",
+      unit: "",
+      value: true,
+      values: [true, false],
+      type: "toggle",
+      require_reload: "partial"
+    },
+    seasonal: {
+      css: "seasonal",
+      unit: "",
+      value: true,
+      values: [true, false],
+      type: "toggle",
+      require_reload: true
+    },
+    seasonal_particles: {
+      css: "seasonal_particles",
+      unit: "",
+      value: "all",
+      type: "options",
+      require_reload: true
+    },
+    seasonal_particles_fps: {
+      css: "seasonal_particles_fps",
+      unit: "",
+      value: false,
+      values: [true, false],
+      type: "toggle"
+    },
+    seasonal_overlays: {
+      css: "seasonal_overlays",
+      unit: "",
+      value: true,
+      values: [true, false],
+      type: "toggle"
+    },
+    profile_header_own: {
+      css: "profile_header_own",
+      unit: "",
+      value: true,
+      values: [true, false],
+      type: "toggle"
+    },
+    profile_header_others: {
+      css: "profile_header_others",
+      unit: "",
+      value: true,
+      values: [true, false],
+      type: "toggle"
+    },
+    profile_avi_background: {
+      css: "profile_avi_background",
+      unit: "",
+      value: false,
+      values: [true, false],
+      type: "toggle"
+    },
+    branch: {
+      css: "branch",
+      unit: "",
+      value: "",
+      type: "text"
+    },
+    font: {
+      css: "custom_font",
+      unit: "",
+      value: "",
+      type: "text"
+    },
+    font_weight: {
+      css: "custom_font_weight",
+      unit: "",
+      value: 480,
+      type: "slider"
+    },
+    font_weight_medium: {
+      css: "custom_font_weight_medium",
+      unit: "",
+      value: 650,
+      type: "slider"
+    },
+    font_weight_bold: {
+      css: "custom_font_weight_bold",
+      unit: "",
+      value: 730,
+      type: "slider"
+    },
+    font_emoji: {
+      css: "font_emoji",
+      unit: "",
+      value: true,
+      values: [true, false],
+      type: "toggle"
+    },
+    show_bulk_edit_album: {
+      css: "show_bulk_edit_album",
+      unit: "",
+      value: false,
+      values: [true, false],
+      type: "toggle"
+    },
+    grid_glow: {
+      css: "show_grid_glow",
+      unit: "",
+      value: true,
+      values: [true, false],
+      type: "toggle"
+    },
+    activities: {
+      css: "activities",
+      unit: "",
+      value: true,
+      values: [true, false],
+      type: "toggle"
+    },
+    auth_menu_obsessions: {
+      css: "auth_menu_obsessions",
+      unit: "",
+      value: true,
+      values: [true, false],
+      type: "toggle"
+    },
+    default_avatar_action: {
+      css: "default_avatar_action",
+      unit: "",
+      value: "expand",
+      type: "options"
+    },
+    glacier_library_graphs: {
+      css: "glacier_library_graphs",
+      unit: "",
+      value: true,
+      values: [true, false],
+      type: "toggle"
+    },
+    activity_shout: {
+      css: "activity_shout",
+      unit: "",
+      value: true,
+      values: [true, false],
+      type: "toggle"
+    },
+    activity_image: {
+      css: "activity_image",
+      unit: "",
+      value: true,
+      values: [true, false],
+      type: "toggle"
+    },
+    activity_obsess: {
+      css: "activity_obsess",
+      unit: "",
+      value: true,
+      values: [true, false],
+      type: "toggle"
+    },
+    activity_love: {
+      css: "activity_love",
+      unit: "",
+      value: true,
+      values: [true, false],
+      type: "toggle"
+    },
+    activity_bookmark: {
+      css: "activity_bookmark",
+      unit: "",
+      value: true,
+      values: [true, false],
+      type: "toggle"
+    },
+    activity_install: {
+      css: "activity_install",
+      unit: "",
+      value: true,
+      values: [true, false],
+      type: "toggle"
+    },
+    activity_wiki: {
+      css: "activity_wiki",
+      unit: "",
+      value: true,
+      values: [true, false],
+      type: "toggle"
+    },
+    simulate_scroll: {
+      css: "simulate_scroll",
+      unit: "",
+      value: true,
+      values: [true, false],
+      type: "toggle",
+      require_reload: "partial"
+    },
+    toggle_icon: {
+      css: "toggle_icon",
+      unit: "",
+      value: true,
+      values: [true, false],
+      type: "toggle"
+    },
+    log_show_all: {
+      css: "log_show_all",
+      unit: "",
+      value: false,
+      values: [true, false],
+      type: "toggle"
+    },
+    avatar_radius: {
+      css: "avatar-radius",
+      unit: "%",
+      value: 50,
+      type: "slider"
+    },
+    profile_shortcut: {
+      css: "profile_shortcut",
+      unit: "",
+      value: "",
+      type: "text"
+    },
+    api_key: {
+      css: "api_key",
+      unit: "",
+      value: "",
+      type: "text"
+    }
+  };
+  var inbuilt_settings = {
+    recent_artwork: {
+      css: "recent_artwork",
+      unit: "",
+      value: true,
+      values: [true, false],
+      type: "toggle"
+    },
+    recent_realtime: {
+      css: "recent_realtime",
+      unit: "",
+      value: true,
+      values: [true, false],
+      type: "toggle"
+    },
+    recent_listening: {
+      css: "recent_listening",
+      unit: "",
+      value: true,
+      values: [true, false],
+      type: "toggle"
+    },
+    disable_shoutbox: {
+      css: "disable_shoutbox",
+      unit: "",
+      value: true,
+      values: [true, false],
+      type: "toggle"
+    },
+    edit_all: {
+      css: "edit_all",
+      unit: "",
+      value: true,
+      values: [true, false],
+      type: "toggle"
+    },
+    create_automatic_edit_rule: {
+      css: "create_automatic_edit_rule",
+      unit: "",
+      value: true,
+      values: [true, false],
+      type: "toggle"
+    },
+    marketing_emails: {
+      css: "marketing_emails",
+      unit: "",
+      value: true,
+      values: [true, false],
+      type: "toggle"
+    }
+  };
+
   // src/build/page.js
   var reload_pending = {
     state: false
@@ -1688,9 +1688,7 @@
   // src/build/log.js
   function log(text2, system, type = "info", append = {}) {
     if (!page.structure.logs) {
-      let logs = document.createElement("div");
-      logs.classList.add("logs");
-      logs.innerHTML = `
+      let logs = html.node`<div class="logs">
             <div class="setting" data-type="toggle" id="container-log_show_all" onclick="_update_item('log_show_all')">
                 <div class="toggle-wrap">
                     <button id="toggle-log_show_all">
@@ -1698,7 +1696,7 @@
                     </button>
                 </div>
             </div>
-        `;
+        </div>`;
       document.documentElement.appendChild(logs);
       page.structure.logs = logs;
     }
@@ -1741,14 +1739,13 @@
       console[type](`%c${system}%c ${text2}`, `background: ${system_colour}; display: block; width: fit-content; font-weight: bold; color: #000; padding: 0 4px; border-radius: 4px`, "color: unset");
     if (settings && settings.feature_flags) {
       if (settings.feature_flags.developer == true) {
-        let log_e = document.createElement("div");
-        log_e.classList.add("log");
-        log_e.setAttribute("data-type", type);
-        log_e.innerHTML = `
+        page.structure.logs.appendChild(
+          html.node`
+            <div class="log" data-type=${type}>
                 <span class="system" style="color: ${system_colour}">${system}</span>
                 <span class="text">${text2}</span>
-            `;
-        page.structure.logs.appendChild(log_e);
+            </div>`
+        );
       }
     }
   }
@@ -7140,6 +7137,188 @@
     ]
   };
 
+  // src/components/notify.js
+  function load_notifications() {
+    let prev_notif = document.getElementById("bleh-notifications");
+    if (prev_notif == null) {
+      let notifs = document.createElement("div");
+      notifs.classList.add("bleh-notifications");
+      page.structure.notifications = notifs;
+      document.body.appendChild(notifs);
+    }
+  }
+  function deliver_notif(content, persist = false, has_icon = false, append_class = "", action = "") {
+    let notif = document.createElement("button");
+    notif.classList.add("bleh-notification");
+    notif.setAttribute("onclick", "_kill_notif(this)");
+    notif.textContent = content;
+    page.structure.notifications.appendChild(notif);
+    if (has_icon)
+      notif.classList.add("btn--has-icon");
+    if (append_class != "")
+      notif.classList.add(append_class);
+    if (action != "")
+      notif.setAttribute("onclick", action);
+    if (persist)
+      return;
+    setTimeout(function() {
+      kill_notif(notif);
+    }, 3500);
+  }
+  unsafeWindow._notify = function({
+    title = null,
+    body = null,
+    icon = null,
+    classname = null,
+    action = null,
+    persist = false,
+    type = null
+  }) {
+    notify({
+      title,
+      body,
+      icon,
+      classname,
+      action,
+      persist,
+      type
+    });
+  };
+  function notify({
+    id = null,
+    title = null,
+    body = null,
+    icon = null,
+    classname = null,
+    action = null,
+    persist = false,
+    type = "generic"
+  }) {
+    log(`creating ${title}`, "notification", "info", {
+      id,
+      title,
+      body,
+      icon,
+      classname,
+      action,
+      persist,
+      type
+    });
+    let notif = document.createElement("button");
+    notif.classList.add("bleh-notification");
+    notif.setAttribute("data-type", type);
+    notif.setAttribute("onclick", "_notify_rm(this)");
+    if (!body) {
+      notif.innerHTML = `
+            <div class="notification-title margin-below">${title}</div>
+        `;
+    } else {
+      notif.innerHTML = `
+            <div class="notification-title">${title}</div>
+            <div class="notification-body margin-below">${body}</div>
+        `;
+    }
+    page.structure.notifications.appendChild(notif);
+    if (type == "error")
+      icon = "icon-16-x";
+    if (type == "success")
+      icon = "icon-16-check";
+    if (!icon)
+      icon = "icon-16-info";
+    if (icon) {
+      notif.classList.add("icon");
+      notif.style.setProperty("--mask", `var(--${icon})`);
+    }
+    if (classname)
+      notif.classList.add(classname);
+    if (action)
+      notif.setAttribute("onclick", action);
+    if (persist)
+      return;
+    let bar = document.createElement("div");
+    bar.classList.add("notification-progress");
+    notif.appendChild(bar);
+    setTimeout(function() {
+      bar.style.setProperty("left", "100%");
+    }, 1);
+    setTimeout(function() {
+      notify_rm(notif);
+    }, 1e4);
+  }
+  unsafeWindow._notify_rm = function(notif) {
+    notify_rm(notif);
+  };
+  function notify_rm(notif) {
+    notif.classList.add("fade-out");
+    setTimeout(function() {
+      page.structure.notifications.removeChild(notif);
+    }, 400);
+  }
+  unsafeWindow._kill_notif = function(notif) {
+    kill_notif(notif);
+  };
+  function kill_notif(notif) {
+    notify_rm(notif);
+  }
+
+  // src/api.js
+  function test_api_key() {
+    let xhr = api(`user.getTopTags&user=${auth.name}&limit=1`);
+    xhr.onload = function() {
+      let data2 = JSON.parse(this.response);
+      console.info(data2, this.response);
+      if (!data2.error) {
+        notify({
+          title: trans_legacy.en.settings.profiles.api.name,
+          body: trans_legacy.en.settings.profiles.api.confirmed,
+          icon: "icon-16-api"
+        });
+        return;
+      } else {
+        if (data2.error == 8 || data2.error == 11 || data2.error == 16) {
+          notify({
+            title: trans_legacy.en.settings.profiles.api.name,
+            body: trans_legacy.en.settings.profiles.api.inaccessible,
+            icon: "icon-16-api",
+            persist: true
+          });
+          return;
+        } else if (data2.error == 10 || data2.error == 26) {
+          notify({
+            title: trans_legacy.en.settings.profiles.api.name,
+            body: trans_legacy.en.settings.profiles.api.invalid,
+            icon: "icon-16-api",
+            persist: true
+          });
+          return;
+        } else if (data2.error == 29) {
+          notify({
+            title: trans_legacy.en.settings.profiles.api.name,
+            body: trans_legacy.en.settings.profiles.api.rate_limit,
+            icon: "icon-16-api",
+            persist: true
+          });
+          return;
+        } else {
+          notify({
+            title: trans_legacy.en.settings.profiles.api.name,
+            body: data2.error,
+            icon: "icon-16-api",
+            persist: true
+          });
+          return;
+        }
+      }
+    };
+    xhr.send();
+  }
+  function api(endpoint) {
+    let xhr = new XMLHttpRequest();
+    let url = `https://ws.audioscrobbler.com/2.0/?method=${endpoint}&api_key=${settings.api_key}&format=json`;
+    xhr.open("GET", url, true);
+    return xhr;
+  }
+
   // src/build/seasonal.js
   var seasonal_timer = {
     state: void 0
@@ -7521,130 +7700,6 @@
     ]);
   }
 
-  // src/components/notify.js
-  function load_notifications() {
-    let prev_notif = document.getElementById("bleh-notifications");
-    if (prev_notif == null) {
-      let notifs = document.createElement("div");
-      notifs.classList.add("bleh-notifications");
-      page.structure.notifications = notifs;
-      document.body.appendChild(notifs);
-    }
-  }
-  function deliver_notif(content, persist = false, has_icon = false, append_class = "", action = "") {
-    let notif = document.createElement("button");
-    notif.classList.add("bleh-notification");
-    notif.setAttribute("onclick", "_kill_notif(this)");
-    notif.textContent = content;
-    page.structure.notifications.appendChild(notif);
-    if (has_icon)
-      notif.classList.add("btn--has-icon");
-    if (append_class != "")
-      notif.classList.add(append_class);
-    if (action != "")
-      notif.setAttribute("onclick", action);
-    if (persist)
-      return;
-    setTimeout(function() {
-      kill_notif(notif);
-    }, 3500);
-  }
-  unsafeWindow._notify = function({
-    title = null,
-    body = null,
-    icon = null,
-    classname = null,
-    action = null,
-    persist = false,
-    type = null
-  }) {
-    notify({
-      title,
-      body,
-      icon,
-      classname,
-      action,
-      persist,
-      type
-    });
-  };
-  function notify({
-    id = null,
-    title = null,
-    body = null,
-    icon = null,
-    classname = null,
-    action = null,
-    persist = false,
-    type = "generic"
-  }) {
-    log(`creating ${title}`, "notification", "info", {
-      id,
-      title,
-      body,
-      icon,
-      classname,
-      action,
-      persist,
-      type
-    });
-    let notif = document.createElement("button");
-    notif.classList.add("bleh-notification");
-    notif.setAttribute("data-type", type);
-    notif.setAttribute("onclick", "_notify_rm(this)");
-    if (!body) {
-      notif.innerHTML = `
-            <div class="notification-title margin-below">${title}</div>
-        `;
-    } else {
-      notif.innerHTML = `
-            <div class="notification-title">${title}</div>
-            <div class="notification-body margin-below">${body}</div>
-        `;
-    }
-    page.structure.notifications.appendChild(notif);
-    if (type == "error")
-      icon = "icon-16-x";
-    if (type == "success")
-      icon = "icon-16-check";
-    if (!icon)
-      icon = "icon-16-info";
-    if (icon) {
-      notif.classList.add("icon");
-      notif.style.setProperty("--mask", `var(--${icon})`);
-    }
-    if (classname)
-      notif.classList.add(classname);
-    if (action)
-      notif.setAttribute("onclick", action);
-    if (persist)
-      return;
-    let bar = document.createElement("div");
-    bar.classList.add("notification-progress");
-    notif.appendChild(bar);
-    setTimeout(function() {
-      bar.style.setProperty("left", "100%");
-    }, 1);
-    setTimeout(function() {
-      notify_rm(notif);
-    }, 1e4);
-  }
-  unsafeWindow._notify_rm = function(notif) {
-    notify_rm(notif);
-  };
-  function notify_rm(notif) {
-    notif.classList.add("fade-out");
-    setTimeout(function() {
-      page.structure.notifications.removeChild(notif);
-    }, 400);
-  }
-  unsafeWindow._kill_notif = function(notif) {
-    kill_notif(notif);
-  };
-  function kill_notif(notif) {
-    notify_rm(notif);
-  }
-
   // src/sku.js
   function ff(flag) {
     log(`parsing ${flag}`, "flag", "log", {
@@ -7976,9 +8031,9 @@
     });
     tippy(configure_button, {
       theme: "window",
-      content: `
+      content: html.node`
             <div class="dialog-settings">
-                ${page.subpage == "library_artists" ? `
+                ${page.subpage == "library_artists" ? html.node`
                 <div class="setting" data-type="toggle" id="container-colourful_counts" onclick="_update_item('colourful_counts')">
                     <div class="heading">
                         <h5>${tl(trans.colourful_counts.name)}</h5>
@@ -7990,7 +8045,7 @@
                         </button>
                     </div>
                 </div>
-                ` : `
+                ` : html.node`
                 <div class="setting" data-type="toggle" id="container-format_guest_features" onclick="_update_item('format_guest_features')">
                     <button class="btn reset" onclick="_reset_item('format_guest_features')">${tl(trans.reset)}</button>
                     <div class="heading">
@@ -8017,7 +8072,7 @@
                 </div>
                 `}
                 <div class="sep"></div>
-                ${(page.subpage == "library_artists" || page.subpage == "library_albums") && auth.pro ? `
+                ${(page.subpage == "library_artists" || page.subpage == "library_albums") && auth.pro ? html.node`
                 <div class="setting" data-type="toggle" id="container-grid_glow" onclick="_update_item('grid_glow')">
                     <button class="btn reset" onclick="_reset_item('grid_glow')">${tl(trans.reset)}</button>
                     <div class="heading">
@@ -8045,7 +8100,6 @@
                 </div>
             </div>
         `,
-      allowHTML: true,
       placement: "bottom",
       interactive: true,
       interactiveBorder: 10,
@@ -8603,7 +8657,7 @@
     });
     tippy(configure_button, {
       theme: "window",
-      content: `
+      content: html.node`
             <div class="dialog-settings">
                 <div class="setting" data-type="toggle" id="container-format_guest_features" onclick="_update_item('format_guest_features')">
                     <button class="btn reset" onclick="_reset_item('format_guest_features')">${tl(trans.reset)}</button>
@@ -8644,7 +8698,6 @@
                 </div>
             </div>
         `,
-      allowHTML: true,
       placement: "bottom",
       interactive: true,
       interactiveBorder: 10,
@@ -8965,10 +9018,10 @@
         parent.classList.add("parent-can-hoverbox");
       tippy(parent ? parent : avatar, {
         theme: "user",
-        content: `
+        content: html.node`
                 <div class="image-info">
                     <div class="inner-image">
-                        ${avatar_img.outerHTML}
+                        ${html.node([avatar_img.outerHTML])}
                     </div>
                     <div class="info">
                         <h5 class="title">${name}</h5>
@@ -8981,7 +9034,6 @@
                     <a class="btn view-item user-button leave-shout-btn" href="${root}user/${name}/shoutbox">${tl(trans.shouts)}</a>
                 </div>
             `,
-        allowHTML: true,
         placement: side,
         interactive: true,
         delay: [200, 0]
@@ -8996,10 +9048,10 @@
           parent.classList.add("parent-can-hoverbox");
         tippy(parent ? parent : avatar, {
           theme: "user",
-          content: `
+          content: html.node`
                     <div class="image-info">
                         <div class="inner-image">
-                            ${avatar_img.outerHTML}
+                            ${html.node([avatar_img.outerHTML])}
                         </div>
                         <div class="info">
                             <h5 class="title">${name}</h5>
@@ -9011,7 +9063,6 @@
                         <a class="btn view-item user-button leave-shout-btn" href="${root}user/${name}/shoutbox">${tl(trans.shouts)}</a>
                     </div>
                 `,
-          allowHTML: true,
           placement: side,
           interactive: true,
           delay: [200, 0]
@@ -9024,10 +9075,10 @@
           parent.classList.add("parent-can-hoverbox");
         tippy(parent ? parent : avatar, {
           theme: "user",
-          content: `
+          content: html.node`
                     <div class="image-info">
                         <div class="inner-image">
-                            ${avatar_img.outerHTML}
+                            ${html.node([avatar_img.outerHTML])}
                         </div>
                         <div class="info">
                             <h5 class="title">${name}</h5>
@@ -9040,7 +9091,6 @@
                         <a class="btn view-item user-button leave-shout-btn" href="${root}user/${name}/shoutbox">${tl(trans.shouts)}</a>
                     </div>
                 `,
-          allowHTML: true,
           placement: side,
           interactive: true,
           delay: [200, 0]
@@ -9373,12 +9423,11 @@
         if (ff("remove_bookmark")) {
           let menu = tippy(image_element, {
             theme: "context-menu",
-            content: `
+            content: html.node`
                         <button class="dropdown-menu-clickable-item" onclick="_update_image_bookmark(this, '${image}', false)" data-menu-item="remove-bookmark" data-bleh--image-is-bookmarked="true">
                             ${trans_legacy.en.gallery.bookmarks.button.unbookmark_this_image.name}
                         </button>
                     `,
-            allowHTML: true,
             placement: "right-start",
             trigger: "manual",
             interactive: true,
@@ -10042,10 +10091,7 @@
           item2.removeChild(replace);
           let menu = tippy(link, {
             theme: "context-menu",
-            content: `
-                        ${replace.outerHTML}
-                    `,
-            allowHTML: true,
+            content: replace,
             placement: "right-start",
             trigger: "manual",
             interactive: true,
@@ -10183,12 +10229,11 @@
         `;
       let menu = tippy(listen_item, {
         theme: "context-menu",
-        content: `
+        content: html.node`
                 <a class="dropdown-menu-clickable-item" href="${root}user/${name}" data-menu-item="view_profile">
                     ${tl(trans.profile)}
                 </a>
             `,
-        allowHTML: true,
         placement: "right-start",
         trigger: "manual",
         interactive: true,
@@ -10211,7 +10256,7 @@
         `;
       let menu = tippy(listen_item, {
         theme: "context-menu",
-        content: `
+        content: html.node`
                 <a class="dropdown-menu-clickable-item" href="${root}user/${name}" data-menu-item="view_profile">
                     ${tl(trans.profile)}
                 </a>
@@ -10220,7 +10265,6 @@
                     ${tl(trans.settings)}
                 </button>
             `,
-        allowHTML: true,
         placement: "right-start",
         trigger: "manual",
         interactive: true,
@@ -10721,10 +10765,9 @@
     button.textContent = menu_list.querySelector(`[data-value="${value}"]`).textContent;
     let theme_menu_item = tippy(button, {
       theme: "select-menu",
-      content: `
-            ${menu_list.innerHTML}
-        `,
-      allowHTML: true,
+      content: html.node([
+        menu_list.innerHTML
+      ]),
       placement: "bottom",
       interactive: true,
       interactiveBorder: 10,
@@ -10911,12 +10954,12 @@
           if (song_artist_element.textContent.replaceAll("+", " ").trim() == track_artist || song_artist_element.textContent.trim() == "") {
             song_artist_element.innerHTML = `<a href="${root}music/${sanitise(formatted_title[2])}" title="${sanitise_text(formatted_title[2])}">${sanitise_text(formatted_title[2])}</a>`;
             let song_guests = formatted_title[3];
-            for (let guest in song_guests) {
+            for (let guest2 in song_guests) {
               song_artist_element.innerHTML = `${song_artist_element.innerHTML},`;
               let guest_element = document.createElement("a");
-              guest_element.setAttribute("href", `${root}music/${sanitise(song_guests[guest])}`);
-              guest_element.setAttribute("title", song_guests[guest]);
-              guest_element.textContent = song_guests[guest];
+              guest_element.setAttribute("href", `${root}music/${sanitise(song_guests[guest2])}`);
+              guest_element.setAttribute("title", song_guests[guest2]);
+              guest_element.textContent = song_guests[guest2];
               song_artist_element.appendChild(guest_element);
             }
           }
@@ -10960,10 +11003,9 @@
         if (track_legacy_menu) {
           let menu = tippy(track, {
             theme: "context-menu",
-            content: `
-                        ${track_legacy_menu.innerHTML}
-                    `,
-            allowHTML: true,
+            content: html.node([
+              track_legacy_menu.innerHTML
+            ]),
             placement: "right-start",
             trigger: "manual",
             interactive: true,
@@ -11494,19 +11536,18 @@
         `;
       tippy(taste_wrap, {
         theme: "stack",
-        content: `
-            <span>
-                ${tl(trans.taste_similarity)}
-            </span>
-            <div class="hint">${tl(trans.right_click_for_more_options)}</div>
-            `,
-        allowHTML: true
+        content: html.node`
+                <span>
+                    ${tl(trans.taste_similarity)}
+                </span>
+                <div class="hint">${tl(trans.right_click_for_more_options)}</div>
+            `
       });
       listen_container.appendChild(taste_wrap);
       if (taste_artists.length > 1) {
         let menu = tippy(taste_wrap, {
           theme: "context-menu",
-          content: `
+          content: html.node`
                     <h4 class="menu-header">${tl(trans.compare_plays)}</h4>
                     <a class="dropdown-menu-clickable-item" href="${root}user/${page.name}/library/music/${sanitise(taste_artists[0])}" data-menu-item="shared-artist">
                         <img class="view-item-avatar" src="${profile_avi}" alt="${page.name}">${taste_artists[0]}
@@ -11514,7 +11555,7 @@
                     <a class="dropdown-menu-clickable-item" href="${root}user/${auth.name}/library/music/${sanitise(taste_artists[0])}" data-menu-item="shared-artist">
                         <img class="view-item-avatar" src="${auth.avatar}" alt="${auth.name}">${taste_artists[0]}
                     </a>
-                    ${taste_artists.length >= 2 ? `
+                    ${taste_artists.length >= 2 ? html.node`
                     <div class="sep"></div>
                     <a class="dropdown-menu-clickable-item" href="${root}user/${page.name}/library/music/${sanitise(taste_artists[1])}" data-menu-item="shared-artist">
                         <img class="view-item-avatar" src="${profile_avi}" alt="${page.name}">${taste_artists[1]}
@@ -11523,7 +11564,7 @@
                         <img class="view-item-avatar" src="${auth.avatar}" alt="${auth.name}">${taste_artists[1]}
                     </a>
                     ` : ""}
-                    ${taste_artists.length >= 3 ? `
+                    ${taste_artists.length >= 3 ? html.node`
                     <div class="sep"></div>
                     <a class="dropdown-menu-clickable-item" href="${root}user/${page.name}/library/music/${sanitise(taste_artists[2])}" data-menu-item="shared-artist">
                         <img class="view-item-avatar" src="${profile_avi}" alt="${page.name}">${taste_artists[2]}
@@ -11533,7 +11574,6 @@
                     </a>
                     ` : ""}
                 `,
-          allowHTML: true,
           placement: "right-start",
           trigger: "manual",
           interactive: true,
@@ -11733,14 +11773,13 @@
     let corrections_panel = document.body.querySelector("#subscription-corrections");
     page.structure.main.appendChild(corrections_panel);
     let nav = page.structure.container.querySelector("nav[data-more-string] .navlist-items");
-    let back_nav = document.createElement("li");
-    back_nav.classList.add("navlist-item", "secondary-nav-item", "secondary-nav-item--back");
-    back_nav.innerHTML = `
-        <a class="secondary-nav-item-link" href="${root}settings/subscription">
-            ${tl(trans.back)}
-        </a>
-    `;
-    nav.insertBefore(back_nav, nav.firstElementChild);
+    nav.insertBefore(html.node`
+        <li class="navlist-item secondary-nav-item secondary-nav-item--back">
+            <a class="secondary-nav-item-link" href="${root}settings/subscription">
+                ${tl(trans.back)}
+            </a>
+        <li>
+    `, nav.firstElementChild);
   }
   function auto_edit_modal() {
     let modal = document.querySelector(".automatic-edit-modal-body-v2");
@@ -11756,7 +11795,7 @@
       checkbox.classList = "setting";
       checkbox.setAttribute("data-type", "toggle");
       checkbox.setAttribute("onclick", `_update_inbuilt_item('${id}')`);
-      checkbox.innerHTML = `
+      render(checkbox, html`
             <div class="heading">
                 <h5>${text2}</h5>
             </div>
@@ -11766,7 +11805,7 @@
                     <div class="dot"></div>
                 </span>
             </div>
-        `;
+        `);
     });
   }
 
@@ -12347,11 +12386,10 @@
     update_about_me_preview(value);
   };
   function update_about_me_preview(value) {
-    let result = markdown(value, {
-      allow_headers: true
-    });
     let about_me = page.structure.main.querySelector("#about_me_preview");
-    about_me.innerHTML = result;
+    render(about_me, markdown(value, {
+      allow_headers: true
+    }));
     let banner = about_me.querySelector('img[alt="banner"]');
     let banner_img = page.structure.main.querySelector(".banner-preview");
     if (!banner)
@@ -12819,12 +12857,12 @@
       track_title.innerHTML = `<div class="title">${sanitise_text(song_title).trim()}</div>${song_tags_text}`;
       let song_guests = formatted_title[3];
       page.sister_others = formatted_title[3];
-      for (let guest in song_guests) {
+      for (let guest2 in song_guests) {
         track_artist.innerHTML = `${track_artist.innerHTML},`;
         let guest_element = document.createElement("a");
         guest_element.classList.add("header-new-crumb");
-        guest_element.setAttribute("href", `${root}music/${sanitise(song_guests[guest])}`);
-        guest_element.textContent = song_guests[guest];
+        guest_element.setAttribute("href", `${root}music/${sanitise(song_guests[guest2])}`);
+        guest_element.textContent = song_guests[guest2];
         track_artist.appendChild(guest_element);
       }
     } else {
@@ -13442,11 +13480,10 @@
         tippy(badge, {
           theme: "badge",
           placement: "bottom",
-          content: `
+          content: html.node`
                     <div class="badge-name">${badge.textContent}</div>
                     <div class="badge-reason">${tl(trans.badges[badge.classList[1]].reason)}</div>
-                `,
-          allowHTML: true
+                `
         });
       });
     }
@@ -13462,11 +13499,10 @@
           tippy(badge, {
             theme: "badge",
             placement: "bottom",
-            content: `
+            content: html.node`
                         <div class="badge-name">${this_badge.name}</div>
                         <div class="badge-reason">${tl(trans.badges[this_badge.reason].reason)}</div>
-                    `,
-            allowHTML: true
+                    `
           });
         }
         if (this_badge.type == "sponsor")
@@ -13547,7 +13583,7 @@
       });
       tippy(about_more, {
         theme: "window",
-        content: `
+        content: html.node`
                 <div class="dialog-settings">
                     <div class="setting" data-type="toggle" id="container-bio_markdown" onclick="_update_item('bio_markdown')">
                         <button class="btn reset" onclick="_reset_item('bio_markdown')">${tl(trans.reset)}</button>
@@ -13563,7 +13599,6 @@
                     </div>
                 </div>
             `,
-        allowHTML: true,
         placement: "bottom",
         interactive: true,
         interactiveBorder: 10,
@@ -13776,11 +13811,11 @@
       song_artist_element.classList.add("featured-item-artist");
       song_artist_element.innerHTML = `<a href="${root}music/${sanitise(formatted_title[2])}">${sanitise_text(formatted_title[2])}</a>`;
       let song_guests = formatted_title[3];
-      for (let guest in song_guests) {
+      for (let guest2 in song_guests) {
         song_artist_element.innerHTML = `${song_artist_element.innerHTML},`;
         let guest_element = document.createElement("a");
-        guest_element.setAttribute("href", `${root}music/${sanitise(song_guests[guest])}`);
-        guest_element.textContent = song_guests[guest];
+        guest_element.setAttribute("href", `${root}music/${sanitise(song_guests[guest2])}`);
+        guest_element.textContent = song_guests[guest2];
         song_artist_element.appendChild(guest_element);
       }
       details.removeChild(artist_elem);
@@ -14258,13 +14293,12 @@
     form.innerHTML = "";
   }
   function bio_parse(text2, cache2 = false) {
-    let result = markdown(text2.textContent, {
-      allow_headers: true
-    });
     let temp = document.createElement("div");
-    temp.innerHTML = result;
+    render(temp, markdown(text2.textContent, {
+      allow_headers: true
+    }));
     use_banner(temp, cache2);
-    return result;
+    return temp.innerHTML;
   }
   function use_banner(temp, cache2) {
     if (page.name == auth.name && !settings.profile_header_own || page.name != auth.name && !settings.profile_header_others)
@@ -15634,7 +15668,17 @@
                     <div class="heading content-form">
                         <div class="input-container">
                             <input type="password" maxlength="120" id="text-api_key" value="${settings.api_key}" placeholder="${trans_legacy.en.settings.profiles.api.placeholder}">
-                            <button class="btn primary save" onclick="_save_api_key()">${tl(trans.save)}</button>
+                            <button class="btn primary save" onclick=${() => {
+        let key = document.getElementById("text-api_key").value;
+        settings.api_key = key;
+        localStorage.setItem("bleh", JSON.stringify(settings));
+        notify({
+          title: trans_legacy.en.settings.profiles.api.name,
+          body: trans_legacy.en.settings.profiles.api.saved,
+          icon: "icon-16-api"
+        });
+        test_api_key();
+      }}>${tl(trans.save)}</button>
                             <a class="btn-add" href="${root}api/account/create" target="_blank">${trans_legacy.en.settings.create}</a>
                         </div>
                     </div>
@@ -15723,7 +15767,14 @@
                         <h5>${tl(trans.clear_history)}</h5>
                     </div>
                     <div class="toggle-wrap">
-                        <button class="see-more" onclick="_clear_activity_history()">
+                        <button class="see-more" onclick=${() => {
+        localStorage.removeItem("bwaa_recent_activity");
+        notify({
+          id: "cleared_history",
+          title: tl(trans.cleared_activity_history),
+          type: "success"
+        });
+      }}>
                             ${tl(trans.clear)}
                         </button>
                     </div>
@@ -16971,12 +17022,12 @@
           swatch.classList.add("select-button");
           tippy(swatch, {
             theme: "window",
-            content: `
+            content: html.node`
                         <div class="dialog-settings">
                             <div class="alert alert-info seasonal-hsl-alert">
                                 ${tl(trans.seasonal_warning)}
                             </div>
-                            ${ff("colour_based_on_hex") ? `
+                            ${ff("colour_based_on_hex") ? html.node`
                             <div class="setting" data-type="text">
                                 <div class="heading">
                                     <h5>${tl(trans.convert_from_hex)}</h5>
@@ -17037,7 +17088,6 @@
                             </div>
                         </div>
                     `,
-            allowHTML: true,
             placement: "bottom",
             interactive: true,
             interactiveBorder: 10,
@@ -17055,12 +17105,11 @@
           swatch.style.setProperty("--lit-over", colour.displays.lit);
           tippy(swatch, {
             theme: "key_value",
-            content: `
+            content: html.node`
                         <span class="key">hue<span class="value">${colour.sets.hue}</span></span>
                         <span class="key">sat<span class="value">${colour.sets.sat}</span></span>
                         <span class="key">lit<span class="value">${colour.sets.lit}</span></span>
                     `,
-            allowHTML: true,
             delay: [250, 0]
           });
         }
@@ -17114,11 +17163,10 @@
         tippy(badge, {
           theme: "badge",
           placement: "bottom",
-          content: `
+          content: html.node`
                     <div class="badge-name">${badge.textContent}</div>
                     <div class="badge-reason">${tl(trans.badges[badge.classList[1]].reason)}</div>
-                `,
-          allowHTML: true
+                `
         });
       });
     }
@@ -17134,11 +17182,10 @@
           tippy(badge, {
             theme: "badge",
             placement: "bottom",
-            content: `
+            content: html.node`
                         <div class="badge-name">${this_badge.name}</div>
                         <div class="badge-reason">${tl(trans.badges[this_badge.reason].reason)}</div>
-                    `,
-            allowHTML: true
+                    `
           });
         }
         if (this_badge.type == "sponsor")
@@ -17154,7 +17201,7 @@
         tippy(badge, {
           theme: "badge",
           placement: "bottom",
-          content: `
+          content: html.node`
                     <div class="badge-name">${tl(trans.badges.missing.name)}</div>
                     <div class="badge-reason">${tl(trans.badges.missing.reason)}</div>
                 `,
@@ -17912,8 +17959,8 @@
       console.log("pre-split", field_text);
       if (field_group == "guests") {
         song_guests = field_text.split(";");
-        for (let guest in song_guests)
-          song_guests[guest] = correct_artist(song_guests[guest]);
+        for (let guest2 in song_guests)
+          song_guests[guest2] = correct_artist(song_guests[guest2]);
       }
     }
     if (artist_corrections.hasOwnProperty(original_artist) && settings.corrections)
@@ -17998,13 +18045,13 @@
           let song_artist_element = document.body.querySelector('span[itemprop="byArtist"]');
           let song_guests = formatted_title[3];
           page.sister_others = formatted_title[3];
-          for (let guest in song_guests) {
+          for (let guest2 in song_guests) {
             song_artist_element.innerHTML = `${song_artist_element.innerHTML},`;
             let guest_element = document.createElement("a");
             guest_element.classList.add("header-new-crumb");
-            guest_element.setAttribute("href", `${root}music/${sanitise(song_guests[guest])}`);
-            guest_element.setAttribute("title", sanitise_text(song_guests[guest]));
-            guest_element.textContent = song_guests[guest];
+            guest_element.setAttribute("href", `${root}music/${sanitise(song_guests[guest2])}`);
+            guest_element.setAttribute("title", sanitise_text(song_guests[guest2]));
+            guest_element.textContent = song_guests[guest2];
             song_artist_element.appendChild(guest_element);
           }
         }
@@ -18160,14 +18207,6 @@
     log("saved", "activity", "info", recent_activity_list);
     localStorage.setItem("bwaa_recent_activity", JSON.stringify(recent_activity_list));
   }
-  unsafeWindow._clear_activity_history = function() {
-    localStorage.removeItem("bwaa_recent_activity");
-    notify({
-      id: "cleared_history",
-      title: tl(trans.cleared_activity_history),
-      type: "success"
-    });
-  };
 
   // src/components/nag_bar.js
   function nag_bar() {
@@ -18321,11 +18360,10 @@
     } else {
       page.header.season_tooltip = tippy(bleh_container, {
         theme: "seasonal-swatch",
-        content: `
+        content: html.node`
                 <span class="season-colour-name">${tl(trans.seasonal.listing[stored_season.id])}</span>
                 <span class="season-exclusive">${trans_legacy.en.auth_menu.seasonal_notice}</span>
-            `,
-        allowHTML: true
+            `
       });
     }
     links.appendChild(bleh_container);
@@ -18352,7 +18390,7 @@
     let token = new_auth.querySelector('[name="csrfmiddlewaretoken"]').getAttribute("value");
     let auth_menu = tippy(auth_link2, {
       theme: "auth-menu",
-      content: `
+      content: html.node`
             <a class="dropdown-menu-clickable-item" data-menu-item="profile" href="${root}user/${auth.name}">
                 ${auth.name}
             </a>
@@ -18366,7 +18404,7 @@
             <a class="dropdown-menu-clickable-item" data-menu-item="shouts" href="${root}user/${auth.name}/shoutbox">
                 ${tl(trans.shouts)}
             </a>
-            ${settings.auth_menu_obsessions ? `
+            ${settings.auth_menu_obsessions ? html.node`
             <a class="dropdown-menu-clickable-item" data-menu-item="obsessions" href="${root}user/${auth.name}/obsessions">
                 ${trans_legacy.en.auth_menu.obsessions}
             </a>
@@ -18400,7 +18438,6 @@
                 </a>
             </form>
         `,
-      allowHTML: true,
       placement: "top",
       interactive: true,
       interactiveBorder: 10,
@@ -18416,10 +18453,7 @@
         instance.popper.querySelector("#theme-value").textContent = tl(trans.themes[settings.theme]);
         tippy(instance.popper.querySelector('[data-menu-item="language"]:not([aria-expanded])'), {
           theme: "language-menu",
-          content: `
-                    ${language_menu.innerHTML}
-                `,
-          allowHTML: true,
+          content: language_menu,
           placement: "left",
           hideOnClick: false,
           interactive: true,
@@ -18427,7 +18461,7 @@
         });
         let theme_menu_item = tippy(instance.popper.querySelector('[data-menu-item="themes"]:not([aria-expanded])'), {
           theme: "menu",
-          content: `
+          content: html.node`
                     <button class="dropdown-menu-clickable-item theme-item-in-menu" data-bleh-theme="light" onclick="change_theme_from_menu('light')">
                         ${tl(trans.themes.light)}
                     </button>
@@ -18444,7 +18478,6 @@
                         ${tl(trans.themes.oled)}
                     </button>
                 `,
-          allowHTML: true,
           placement: "left",
           hideOnClick: false,
           interactive: true,
@@ -18497,32 +18530,33 @@
       wiki.classList.remove("visible-lg");
     let about_artist_container = legacy_container.parentElement;
     about_artist_container.classList.add("about-artist-container");
-    about_artist_container.innerHTML = `
+    render(about_artist_container, html`
         <div class="about-artist-panel">
             <div class="avatar-side">
-                ${avatar != null ? `<img src="${avatar.getAttribute("src")}"><a onclick="_expand_avatar('${avatar.getAttribute("src").replace("/300x300/", "/ar0/")}')" class="bleh--avatar-clickable-link"></a>` : '<img class="missing-artist">'}
+                ${avatar != null ? html.node`<img src="${avatar.getAttribute("src")}"><a onclick=${() => expand_avatar(avatar.getAttribute("src").replace("/300x300/", "/ar0/"))} class="bleh--avatar-clickable-link"></a>` : html.node`<img class="missing-artist">`}
             </div>
             <div class="info-side">
                 <div class="sub-text">${tl(trans.about)}</div>
                 <h1><a href="${root}music/${sanitise(page.sister)}">${sanitise_text(page.sister)}</a></h1>
-                ${listeners != null ? listeners.outerHTML : ""}
-                ${tags != null ? tags.outerHTML : ""}
-                ${wiki != null ? wiki.outerHTML : ""}
+                ${listeners != null ? html.node([listeners.outerHTML]) : ""}
+                ${tags != null ? html.node([tags.outerHTML]) : ""}
+                ${wiki != null ? html.node([wiki.outerHTML]) : ""}
             </div>
         </div>
-        ${page.sister_others.length > 0 ? `<div class="sep"></div><div class="sub-text">${trans_legacy.en.music.about_guests}</div>` : ""}
-    `;
+        ${page.sister_others.length > 0 ? html.node`<div class="sep"></div><div class="sub-text">${trans_legacy.en.music.about_guests}</div>` : ""}
+    `);
     if (page.sister_others.length > 0) {
-      let guest_feature_panel = document.createElement("div");
-      guest_feature_panel.classList.add("about-guest-features-panel");
-      for (let guest in page.sister_others) {
-        let guest_element = document.createElement("a");
-        guest_element.classList.add("about-guest-feature");
-        guest_element.setAttribute("href", `${root}music/${sanitise(page.sister_others[guest])}`);
-        guest_element.textContent = page.sister_others[guest];
-        guest_feature_panel.appendChild(guest_element);
-      }
-      about_artist_container.appendChild(guest_feature_panel);
+      about_artist_container.appendChild(html.node`
+            <div class="about-guest-features-panel">
+                ${page.sister_others.map((z) => {
+        return html.node`
+                        <a class="about-guest-feature" href="${root}music/${sanitise(page.sister_others[guest])}">
+                            ${page.sister_others[guest]}
+                        </a>
+                    `;
+      })}
+            </div>
+        `);
     }
     page.structure.side.appendChild(about_artist_container);
   }
@@ -18998,8 +19032,8 @@
           avatar_link.href = `${root}music/${sanitise(page.sister)}/${sanitise(page.name)}/+images`;
         let menu = tippy(avatar_side, {
           theme: "context-menu",
-          content: `
-                    ${avatar ? `
+          content: html.node`
+                    ${avatar ? html.node`
                     <button class="dropdown-menu-clickable-item" onclick="${expand_link}" data-menu-item="expand">
                         ${tl(trans.expand)}
                     </button>
@@ -19012,7 +19046,6 @@
                         ${tl(trans.settings)}
                     </a>
                 `,
-          allowHTML: true,
           placement: "right-start",
           trigger: "manual",
           interactive: true,
@@ -19227,8 +19260,8 @@
           avatar_link.href = `${root}music/${sanitise(page.name)}/+images`;
         let menu = tippy(avatar_side, {
           theme: "context-menu",
-          content: `
-                    ${avatar != null ? `
+          content: html.node`
+                    ${avatar != null ? html.node`
                     <button class="dropdown-menu-clickable-item" onclick="${expand_link}" data-menu-item="expand">
                         ${tl(trans.expand)}
                     </button>
@@ -19241,7 +19274,6 @@
                         ${tl(trans.settings)}
                     </a>
                 `,
-          allowHTML: true,
           placement: "right-start",
           trigger: "manual",
           interactive: true,
@@ -19260,12 +19292,11 @@
         if (view_button) {
           let view_menu = tippy(view_button, {
             theme: "context-menu",
-            content: `
+            content: html.node`
                         <a class="dropdown-menu-clickable-item" href="${root}bleh?tab=customise" data-menu-item="settings">
                             ${tl(trans.settings)}
                         </a>
                     `,
-            allowHTML: true,
             placement: "right-start",
             trigger: "manual",
             interactive: true,
@@ -19858,7 +19889,7 @@
     let settings_btn = header.querySelector(".panel-settings-button");
     tippy(settings_btn, {
       theme: "window",
-      content: `
+      content: html.node`
             <div class="dialog-settings">
                 <div class="setting" data-type="toggle" id="container-simulate_scroll" onclick="_update_item('simulate_scroll')">
                     <button class="btn reset" onclick="_reset_item('simulate_scroll')">${tl(trans.reset)}</button>
@@ -19874,7 +19905,6 @@
                 </div>
             </div>
         `,
-      allowHTML: true,
       placement: "bottom",
       interactive: true,
       interactiveBorder: 10,
@@ -20070,11 +20100,11 @@
     let menu_button = nav.querySelector(".secondary-nav-item--more a");
     tippy(menu_button, {
       theme: "menu",
-      content: `
+      content: html.node`
             <button class="dropdown-menu-clickable-item update" onclick="_force_refresh_theme()">
                 ${trans_legacy.en.settings.home.update.update_now}
             </button>
-            ${settings.dev ? `
+            ${settings.dev ? html.node`
             <a class="dropdown-menu-clickable-item update" href="https://github.com/katelyynn/bleh/raw/uwu/fm/bleh.user.css">
                 ${trans_legacy.en.settings.home.update.css}
             </a>
@@ -20086,7 +20116,6 @@
                 ${trans_legacy.en.settings.home.issues.name}
             </a>
         `,
-      allowHTML: true,
       placement: "bottom",
       interactive: true,
       interactiveBorder: 10,
@@ -20636,13 +20665,13 @@
         avatar_link.href = source_album.querySelector(".link-block-cover-link").getAttribute("href");
       let menu = tippy(avatar_side, {
         theme: "context-menu",
-        content: `
-                ${album_avatar || artist_avatar ? `
+        content: html.node`
+                ${album_avatar || artist_avatar ? html.node`
                 <button class="dropdown-menu-clickable-item" onclick="${expand_link}" data-menu-item="expand">
                     ${tl(trans.expand)}
                 </button>
                 ` : ""}
-                ${album_avatar ? `
+                ${album_avatar ? html.node`
                 <a class="dropdown-menu-clickable-item" href="${source_album.querySelector(".link-block-cover-link").getAttribute("href")}" data-menu-item="album">
                     ${tl(trans.album)}
                 </a>
@@ -20652,7 +20681,6 @@
                     ${tl(trans.settings)}
                 </a>
             `,
-        allowHTML: true,
         placement: "right-start",
         trigger: "manual",
         interactive: true,
@@ -21349,11 +21377,10 @@
   function bleh_users() {
     let users = page.structure.main.querySelectorAll(".user-list-about-me");
     users.forEach((user) => {
-      let result = markdown(user.textContent, {
+      render(user, markdown(user.textContent, {
         allow_headers: true,
         line_breaks: false
-      });
-      user.innerHTML = result;
+      }));
     });
   }
 
