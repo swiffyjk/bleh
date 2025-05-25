@@ -8130,8 +8130,7 @@
       return;
     log("focusing on image", "gallery");
     let image_sidebar = page.structure.side.querySelector(".js-gallery-image-details > div");
-    if (image_sidebar == null)
-      return;
+    if (!image_sidebar) return;
     if (image_sidebar.hasAttribute("data-bleh-gallery"))
       return;
     image_sidebar.setAttribute("data-bleh-gallery", "true");
@@ -8143,7 +8142,7 @@
     let gallery_section;
     try {
       gallery_section = page.structure.main.querySelector(".gallery-section");
-      if (gallery_section != null) {
+      if (gallery_section) {
         page.structure.nav.after(gallery_section);
         image_details = document.createElement("section");
         image_details.classList.add("image-details");
@@ -8226,7 +8225,7 @@
     buttons_extra.appendChild(open_button);
     open_button.after(create_divider());
     let delete_button = image_details.querySelector(".gallery-image-delete");
-    if (delete_button != null)
+    if (delete_button)
       buttons_extra.appendChild(delete_button);
     let report_button = image_details.querySelector(".gallery-image-report-form");
     let report_text = report_button.querySelector("button");
@@ -8242,23 +8241,25 @@
       text.textContent = trans_legacy.en.gallery.prefer.name;
     });
     let view_all_container = page.structure.main.querySelector(".more-link-fullwidth-right-flush-top");
-    if (view_all_container != null) {
+    if (view_all_container) {
+      let side_actions = document.createElement("section");
+      side_actions.classList.add("side-actions");
+      if (!page.mobile)
+        page.structure.side.appendChild(side_actions);
+      else
+        page.structure.main.appendChild(side_actions);
       let view_all = view_all_container.querySelector("a");
-      view_all.classList.add("btn", "view-all-button", "back");
-      let view_all_panel = document.createElement("section");
-      view_all_panel.classList.add("view-all-panel");
-      view_all_panel.appendChild(view_all);
-      page.structure.side.insertBefore(view_all_panel, page.structure.side.firstElementChild);
+      view_all.classList.add("btn", "side-action");
+      view_all.setAttribute("data-type", "gallery");
+      side_actions.appendChild(view_all);
       page.structure.main.removeChild(view_all_container);
       if (page.type == "artist" || ff("display_album_bookmark")) {
-        let all_saved_panel = document.createElement("section");
-        all_saved_panel.classList.add("view-all-panel");
-        all_saved_panel.innerHTML = `
-                <a class="btn view-all-button back all-saved-button" href="${view_all.getAttribute("href")}?tab=saved">
-                    ${trans_legacy.en.gallery.bookmarks.link}
-                </a>
-            `;
-        view_all_panel.after(all_saved_panel);
+        let view_saved = document.createElement("a");
+        view_saved.classList.add("btn", "side-action");
+        view_saved.setAttribute("href", `${view_all.getAttribute("href")}?tab=saved`);
+        view_saved.setAttribute("data-type", "gallery-saved");
+        view_saved.textContent = trans_legacy.en.gallery.bookmarks.link;
+        side_actions.appendChild(view_saved);
       }
     }
     if (page.type == "artist" || ff("display_album_bookmark"))
@@ -8308,8 +8309,7 @@
     if (page.subpage != "images_image-upload")
       return;
     let image_preview = page.structure.main.querySelector(".form-image-preview");
-    if (image_preview == null)
-      return;
+    if (!image_preview) return;
     let image_preview_container = page.structure.container.querySelector(".image-preview-hook");
     image_preview_container.setAttribute("src", image_preview.getAttribute("src"));
   }
@@ -8978,6 +8978,13 @@
       page.structure.side.insertBefore(interact_container, page.structure.side.firstElementChild);
     else
       page.structure.main.insertBefore(interact_container, page.structure.main.firstElementChild);
+    let new_playlist = page.structure.side.querySelector(":scope > form");
+    let header = new_playlist.querySelector("h3");
+    new_playlist.removeChild(header);
+    let playlist_button = new_playlist.querySelector("button");
+    playlist_button.classList = "btn side-action";
+    playlist_button.setAttribute("data-type", "playlist");
+    interact_container.appendChild(new_playlist);
     let metadata = col_main.querySelector(".metadata-column");
     if (metadata) {
       if (settings.simulate_scroll) {
@@ -9034,10 +9041,10 @@
     let link_container = document.createElement("div");
     link_container.classList.add("music-links");
     if (page.type == "track") {
-      let header = document.createElement("div");
-      header.classList.add("sub-text", "music-small-header");
-      header.textContent = tl(trans.find_on);
-      link_group.appendChild(header);
+      let header2 = document.createElement("div");
+      header2.classList.add("sub-text", "music-small-header");
+      header2.textContent = tl(trans.find_on);
+      link_group.appendChild(header2);
       play_on = page.structure.side.querySelector(".play-this-track-playlinks");
       page.structure.side.removeChild(play_on.parentElement);
       play_links = play_on.querySelectorAll("li");
@@ -9084,10 +9091,10 @@
         `;
       link_container.appendChild(tidal);
     } else {
-      let header = document.createElement("div");
-      header.classList.add("sub-text", "music-small-header");
-      header.textContent = tl(trans.find_on);
-      link_group.appendChild(header);
+      let header2 = document.createElement("div");
+      header2.classList.add("sub-text", "music-small-header");
+      header2.textContent = tl(trans.find_on);
+      link_group.appendChild(header2);
       if (page.type == "album") {
         link_container.innerHTML = `
                 <a class="play-this-track-playlink music-link play-this-track-playlink--spotify" href="https://open.spotify.com/search/${sanitise(page.sister, " ")} ${sanitise(page.name, " ")}" target="_blank">
@@ -10677,7 +10684,10 @@
         if (content_top) {
           content_top.classList.add("redesigned-content-top");
           page.structure.content_top = content_top;
-          navlist.after(content_top);
+          if (navlist)
+            navlist.after(content_top);
+          else
+            page.structure.container.insertBefore(content_top, page.structure.container.firstElementChild);
           if (content_top.querySelector(".content-top-back-link"))
             content_top.style.setProperty("display", "none");
         } else {
@@ -10714,19 +10724,27 @@
           let btn_add = page.structure.main.querySelector(":scope > .btn-add");
           if (!btn_add) btn_add = page.structure.main.querySelector(":scope > section:first-child .btn-add");
           if (btn_add) {
-            btn_add.classList = "btn view-all-button back add-button";
-            let add_panel = document.createElement("section");
-            add_panel.classList.add("view-all-panel");
-            add_panel.appendChild(btn_add);
-            page.structure.side.insertBefore(add_panel, page.structure.side.firstElementChild);
+            let side_actions = document.createElement("section");
+            side_actions.classList.add("side-actions");
+            if (!page.mobile)
+              page.structure.side.appendChild(side_actions);
+            else
+              page.structure.main.appendChild(side_actions);
+            btn_add.classList = "btn side-action";
+            btn_add.setAttribute("data-type", "add");
+            side_actions.appendChild(btn_add);
           }
           let playlink = page.structure.main.querySelector(":scope > .section-controls > .section-playlink");
           if (playlink) {
-            playlink.classList.add("btn", "view-all-button", "back", "play-button");
-            let playlink_panel = document.createElement("section");
-            playlink_panel.classList.add("view-all-panel");
-            playlink_panel.appendChild(playlink);
-            page.structure.side.insertBefore(playlink_panel, page.structure.side.firstElementChild);
+            let side_actions = document.createElement("section");
+            side_actions.classList.add("side-actions");
+            if (!page.mobile)
+              page.structure.side.appendChild(side_actions);
+            else
+              page.structure.main.appendChild(side_actions);
+            playlink.classList = "btn side-action";
+            playlink.setAttribute("data-type", "play");
+            side_actions.appendChild(playlink);
           }
         }
       } else {
@@ -17540,36 +17558,27 @@
     page.structure.main.classList.add("not-a-panel");
     let original_edit_button = page.structure.main.querySelector(".qa-wiki-edit");
     let original_version_history = page.structure.main.querySelector(".wiki-history-link--desktop a");
-    let new_edit_panel;
+    let side_actions = document.createElement("section");
+    side_actions.classList.add("side-actions");
+    if (!page.mobile)
+      page.structure.side.appendChild(side_actions);
+    else
+      page.structure.main.appendChild(side_actions);
     if (original_edit_button) {
-      new_edit_panel = document.createElement("section");
-      new_edit_panel.classList.add("view-all-panel");
-      new_edit_panel.innerHTML = `
-            <a class="btn view-all-button back wiki-edit-button" href="${original_edit_button.getAttribute("href")}">
-                ${original_edit_button.textContent}
-            </a>
-        `;
-      if (!page.mobile)
-        page.structure.side.insertBefore(new_edit_panel, page.structure.side.firstElementChild);
-      else
-        page.structure.main.insertBefore(new_edit_panel, page.structure.main.firstElementChild);
+      let side_edit = document.createElement("a");
+      side_edit.classList.add("btn", "side-action");
+      side_edit.setAttribute("href", original_edit_button.getAttribute("href"));
+      side_edit.setAttribute("data-type", "edit");
+      side_edit.textContent = original_edit_button.textContent;
+      side_actions.appendChild(side_edit);
     }
     if (original_version_history) {
-      let new_version_panel = document.createElement("section");
-      new_version_panel.classList.add("view-all-panel");
-      new_version_panel.innerHTML = `
-            <a class="btn view-all-button back wiki-history-button" href="${original_version_history.getAttribute("href")}">
-                ${original_version_history.textContent}
-            </a>
-        `;
-      if (original_edit_button) {
-        new_edit_panel.after(new_version_panel);
-      } else {
-        if (!page.mobile)
-          page.structure.side.insertBefore(new_version_panel, page.structure.side.firstElementChild);
-        else
-          page.structure.main.insertBefore(new_version_panel, page.structure.main.firstElementChild);
-      }
+      let side_history = document.createElement("section");
+      side_history.classList.add("btn", "side-action");
+      side_history.setAttribute("href", original_version_history.getAttribute("href"));
+      side_history.setAttribute("data-type", "history");
+      side_history.textContent = original_version_history.textContent;
+      side_actions.appendChild(side_history);
     }
     let wiki_author = wiki_panel.querySelector(".wiki-author");
     if (wiki_author) {
@@ -17624,17 +17633,17 @@
     buffer_container.style.setProperty("display", "none");
     if (pagination)
       wiki_panel.appendChild(pagination);
-    let latest_version_panel = document.createElement("section");
-    latest_version_panel.classList.add("view-all-panel");
-    latest_version_panel.innerHTML = `
-        <a class="btn view-all-button back wiki-latest-button" href="${sub_text.querySelector("a").getAttribute("href")}">
+    let side_actions = document.createElement("section");
+    side_actions.classList.add("side-actions");
+    side_actions.innerHTML = `
+        <a class="btn side-action" data-type="latest-wiki" href="${sub_text.querySelector("a").getAttribute("href")}">
             ${tl(trans.view_latest_version)}
         </a>
     `;
     if (!page.mobile)
-      page.structure.side.appendChild(latest_version_panel);
+      page.structure.side.appendChild(side_actions);
     else
-      page.structure.main.insertBefore(latest_version_panel, page.structure.main.firstElementChild);
+      page.structure.main.appendChild(side_actions);
     let entries = page.structure.main.querySelectorAll(".wiki-history-entry");
     entries.forEach((entry) => {
       let author = entry.querySelector(".wiki-history-author");
@@ -17721,17 +17730,17 @@
         </div>
     `;
     page.structure.side.innerHTML = "";
-    let latest_version_panel = document.createElement("section");
-    latest_version_panel.classList.add("view-all-panel");
-    latest_version_panel.innerHTML = `
-        <a class="btn view-all-button back wiki-latest-button" href="${sub_text.querySelector("a").getAttribute("href")}">
+    let side_actions = document.createElement("section");
+    side_actions.classList.add("side-actions");
+    side_actions.innerHTML = `
+        <a class="btn side-action" data-type="latest-wiki" href="${sub_text.querySelector("a").getAttribute("href")}">
             ${tl(trans.view_latest_version)}
         </a>
     `;
     if (!page.mobile)
-      page.structure.side.appendChild(latest_version_panel);
+      page.structure.side.appendChild(side_actions);
     else
-      page.structure.main.appendChild(latest_version_panel);
+      page.structure.main.appendChild(side_actions);
     let wiki_presets_panel = document.createElement("section");
     wiki_presets_panel.classList.add("wiki-presets-panel");
     wiki_presets_panel.innerHTML = `

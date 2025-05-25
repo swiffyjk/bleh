@@ -7870,6 +7870,12 @@ section:has(.dropdown-menu-clickable-button.section-control) {
 [data-type="edit"] {
     --mask: var(--icon-16-edit);
 }
+[data-type="history"] {
+    --mask: var(--icon-16-bio-history);
+}
+[data-type="latest-wiki"] {
+    --mask: var(--icon-16-bio);
+}
 [data-type="labs"] {
     --mask: var(--icon-16-labs);
 }
@@ -7900,6 +7906,18 @@ section:has(.dropdown-menu-clickable-button.section-control) {
 }
 [data-type="reset"] {
     --mask: var(--icon-16-revert);
+}
+[data-type="gallery"] {
+    --mask: var(--icon-16-gallery-vertical);
+}
+[data-type="gallery-saved"] {
+    --mask: var(--icon-16-bookmark);
+}
+[data-type="add"] {
+    --mask: var(--icon-16-plus);
+}
+[data-type="play"] {
+    --mask: var(--icon-16-play);
 }
 .header-new-love-button {
     font-size: 0 !important;

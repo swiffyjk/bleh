@@ -1,7 +1,7 @@
 import { expand_avatar } from "../avatar";
 import { log } from "../build/log";
 import { page, root } from "../build/page";
-import { lang, trans_legacy, trans, tl } from "../build/trans";
+import { trans_legacy, trans, tl } from "../build/trans";
 import { register_menu } from "../components/menu";
 import { ff } from "../sku";
 
@@ -12,9 +12,7 @@ export function bleh_gallery() {
     log('focusing on image', 'gallery');
 
     let image_sidebar = page.structure.side.querySelector('.js-gallery-image-details > div');
-
-    if (image_sidebar == null)
-        return;
+    if (!image_sidebar) return;
 
     if (image_sidebar.hasAttribute('data-bleh-gallery'))
         return;
@@ -30,7 +28,7 @@ export function bleh_gallery() {
     let gallery_section;
     try {
         gallery_section = page.structure.main.querySelector('.gallery-section');
-        if (gallery_section != null) {
+        if (gallery_section) {
             page.structure.nav.after(gallery_section);
 
             // move image details to main column
@@ -150,7 +148,7 @@ export function bleh_gallery() {
 
     // delete
     let delete_button = image_details.querySelector('.gallery-image-delete');
-    if (delete_button != null)
+    if (delete_button)
         buttons_extra.appendChild(delete_button);
 
     // report
@@ -178,31 +176,33 @@ export function bleh_gallery() {
 
     // view all artwork
     let view_all_container = page.structure.main.querySelector('.more-link-fullwidth-right-flush-top');
-    if (view_all_container != null) {
+    if (view_all_container) {
+        let side_actions = document.createElement('section');
+        side_actions.classList.add('side-actions');
+
+        if (!page.mobile)
+            page.structure.side.appendChild(side_actions);
+        else
+            page.structure.main.appendChild(side_actions);
+
         let view_all = view_all_container.querySelector('a');
-        view_all.classList.add('btn', 'view-all-button', 'back');
+        view_all.classList.add('btn', 'side-action');
+        view_all.setAttribute('data-type', 'gallery');
 
-        let view_all_panel = document.createElement('section');
-        view_all_panel.classList.add('view-all-panel');
-
-        view_all_panel.appendChild(view_all);
-        page.structure.side.insertBefore(view_all_panel, page.structure.side.firstElementChild);
+        side_actions.appendChild(view_all);
 
         page.structure.main.removeChild(view_all_container);
 
 
         // saved button
         if (page.type == 'artist' || ff('display_album_bookmark')) {
-            let all_saved_panel = document.createElement('section');
-            all_saved_panel.classList.add('view-all-panel');
+            let view_saved = document.createElement('a');
+            view_saved.classList.add('btn', 'side-action');
+            view_saved.setAttribute('href', `${view_all.getAttribute('href')}?tab=saved`);
+            view_saved.setAttribute('data-type', 'gallery-saved');
+            view_saved.textContent = trans_legacy.en.gallery.bookmarks.link;
 
-            all_saved_panel.innerHTML = (`
-                <a class="btn view-all-button back all-saved-button" href="${view_all.getAttribute('href')}?tab=saved">
-                    ${trans_legacy.en.gallery.bookmarks.link}
-                </a>
-            `);
-
-            view_all_panel.after(all_saved_panel);
+            side_actions.appendChild(view_saved);
         }
     }
 
@@ -300,9 +300,7 @@ export function bleh_gallery_upload_check() {
 
     // update image preview
     let image_preview = page.structure.main.querySelector('.form-image-preview');
-
-    if (image_preview == null)
-        return;
+    if (!image_preview) return;
 
     let image_preview_container = page.structure.container.querySelector('.image-preview-hook');
     image_preview_container.setAttribute('src', image_preview.getAttribute('src'));

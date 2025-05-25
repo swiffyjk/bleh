@@ -17,39 +17,30 @@ export function bleh_wiki() {
     let original_edit_button = page.structure.main.querySelector('.qa-wiki-edit');
     let original_version_history = page.structure.main.querySelector('.wiki-history-link--desktop a');
 
-    let new_edit_panel;
-    if (original_edit_button) {
-        new_edit_panel = document.createElement('section');
-        new_edit_panel.classList.add('view-all-panel');
-        new_edit_panel.innerHTML = (`
-            <a class="btn view-all-button back wiki-edit-button" href="${original_edit_button.getAttribute('href')}">
-                ${original_edit_button.textContent}
-            </a>
-        `);
+    let side_actions = document.createElement('section');
+    side_actions.classList.add('side-actions');
 
-        if (!page.mobile)
-            page.structure.side.insertBefore(new_edit_panel, page.structure.side.firstElementChild);
-        else
-            page.structure.main.insertBefore(new_edit_panel, page.structure.main.firstElementChild);
+    if (!page.mobile)
+        page.structure.side.appendChild(side_actions);
+    else
+        page.structure.main.appendChild(side_actions);
+
+    if (original_edit_button) {
+        let side_edit = document.createElement('a');
+        side_edit.classList.add('btn', 'side-action');
+        side_edit.setAttribute('href', original_edit_button.getAttribute('href'));
+        side_edit.setAttribute('data-type', 'edit');
+        side_edit.textContent = original_edit_button.textContent;
+        side_actions.appendChild(side_edit);
     }
 
     if (original_version_history) {
-        let new_version_panel = document.createElement('section');
-        new_version_panel.classList.add('view-all-panel');
-        new_version_panel.innerHTML = (`
-            <a class="btn view-all-button back wiki-history-button" href="${original_version_history.getAttribute('href')}">
-                ${original_version_history.textContent}
-            </a>
-        `);
-
-        if (original_edit_button) {
-            new_edit_panel.after(new_version_panel);
-        } else {
-            if (!page.mobile)
-                page.structure.side.insertBefore(new_version_panel, page.structure.side.firstElementChild);
-            else
-                page.structure.main.insertBefore(new_version_panel, page.structure.main.firstElementChild);
-        }
+        let side_history = document.createElement('section');
+        side_history.classList.add('btn', 'side-action');
+        side_history.setAttribute('href', original_version_history.getAttribute('href'));
+        side_history.setAttribute('data-type', 'history');
+        side_history.textContent = original_version_history.textContent;
+        side_actions.appendChild(side_history);
     }
 
 
@@ -133,18 +124,18 @@ export function bleh_wiki_history() {
 
 
     // latest
-    let latest_version_panel = document.createElement('section');
-    latest_version_panel.classList.add('view-all-panel');
-    latest_version_panel.innerHTML = (`
-        <a class="btn view-all-button back wiki-latest-button" href="${sub_text.querySelector('a').getAttribute('href')}">
+    let side_actions = document.createElement('section');
+    side_actions.classList.add('side-actions');
+    side_actions.innerHTML = (`
+        <a class="btn side-action" data-type="latest-wiki" href="${sub_text.querySelector('a').getAttribute('href')}">
             ${tl(trans.view_latest_version)}
         </a>
     `);
 
     if (!page.mobile)
-        page.structure.side.appendChild(latest_version_panel);
+        page.structure.side.appendChild(side_actions);
     else
-        page.structure.main.insertBefore(latest_version_panel, page.structure.main.firstElementChild);
+        page.structure.main.appendChild(side_actions);
 
 
     // entries
@@ -251,18 +242,18 @@ export function bleh_wiki_editor() {
     page.structure.side.innerHTML = '';
 
     // latest
-    let latest_version_panel = document.createElement('section');
-    latest_version_panel.classList.add('view-all-panel');
-    latest_version_panel.innerHTML = (`
-        <a class="btn view-all-button back wiki-latest-button" href="${sub_text.querySelector('a').getAttribute('href')}">
+    let side_actions = document.createElement('section');
+    side_actions.classList.add('side-actions');
+    side_actions.innerHTML = (`
+        <a class="btn side-action" data-type="latest-wiki" href="${sub_text.querySelector('a').getAttribute('href')}">
             ${tl(trans.view_latest_version)}
         </a>
     `);
 
     if (!page.mobile)
-        page.structure.side.appendChild(latest_version_panel);
+        page.structure.side.appendChild(side_actions);
     else
-        page.structure.main.appendChild(latest_version_panel);
+        page.structure.main.appendChild(side_actions);
 
 
     // presets

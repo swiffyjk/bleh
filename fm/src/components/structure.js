@@ -103,7 +103,11 @@ export function checkup_page_structure(is_subpage = false, header = null) {
             if (content_top) {
                 content_top.classList.add('redesigned-content-top');
                 page.structure.content_top = content_top;
-                navlist.after(content_top);
+
+                if (navlist)
+                    navlist.after(content_top);
+                else
+                    page.structure.container.insertBefore(content_top, page.structure.container.firstElementChild);
 
                 // should be covered by bleh
                 if (content_top.querySelector('.content-top-back-link'))
@@ -152,13 +156,18 @@ export function checkup_page_structure(is_subpage = false, header = null) {
                 if (!btn_add) btn_add = page.structure.main.querySelector(':scope > section:first-child .btn-add');
 
                 if (btn_add) {
-                    btn_add.classList = 'btn view-all-button back add-button';
+                    let side_actions = document.createElement('section');
+                    side_actions.classList.add('side-actions');
 
-                    let add_panel = document.createElement('section');
-                    add_panel.classList.add('view-all-panel');
+                    if (!page.mobile)
+                        page.structure.side.appendChild(side_actions);
+                    else
+                        page.structure.main.appendChild(side_actions);
 
-                    add_panel.appendChild(btn_add);
-                    page.structure.side.insertBefore(add_panel, page.structure.side.firstElementChild);
+                    btn_add.classList = 'btn side-action';
+                    btn_add.setAttribute('data-type', 'add');
+
+                    side_actions.appendChild(btn_add);
                 }
 
 
@@ -166,13 +175,18 @@ export function checkup_page_structure(is_subpage = false, header = null) {
                 let playlink = page.structure.main.querySelector(':scope > .section-controls > .section-playlink');
 
                 if (playlink) {
-                    playlink.classList.add('btn', 'view-all-button', 'back', 'play-button');
+                    let side_actions = document.createElement('section');
+                    side_actions.classList.add('side-actions');
 
-                    let playlink_panel = document.createElement('section');
-                    playlink_panel.classList.add('view-all-panel');
+                    if (!page.mobile)
+                        page.structure.side.appendChild(side_actions);
+                    else
+                        page.structure.main.appendChild(side_actions);
 
-                    playlink_panel.appendChild(playlink);
-                    page.structure.side.insertBefore(playlink_panel, page.structure.side.firstElementChild);
+                    playlink.classList = 'btn side-action';
+                    playlink.setAttribute('data-type', 'play');
+
+                    side_actions.appendChild(playlink);
                 }
             }
         } else {
