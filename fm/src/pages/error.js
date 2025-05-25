@@ -1,5 +1,5 @@
 import { auth, page, root } from "../build/page";
-import { lang, trans_legacy, trans, tl } from "../build/trans";
+import { trans, tl } from "../build/trans";
 
 export function bleh_error() {
     page.state.error = false;

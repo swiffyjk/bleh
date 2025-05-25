@@ -82,38 +82,38 @@ function bleh_main() {
     // messaging
     load_dialogs();
 
-    theme_version.state = getComputedStyle(document.body).getPropertyValue('--version-build').replaceAll("'", '').replaceAll('"', ''); // remove quotations
-
-    lookup_lang();
-    patch_masthead(document.body);
-
-
-    load_notifications();
-
-    // load seasonal data
-    set_season();
-
-    start_rain();
-
-    // everything past this point requires authorisation
-    if (!auth.name) {
-        notify({
-            title: 'No account added',
-            body: 'Please sign in to an account to access bleh features.',
-            icon: 'icon-16-user',
-            persist: true
-        });
-        document.body.classList.add('bleh-loaded');
-        return;
-    }
-
-    load_activities();
-    notify_if_new_update();
-
-    lotus();
-    sponsors();
-
     try {
+        lookup_lang();
+
+        theme_version.state = getComputedStyle(document.body).getPropertyValue('--version-build').replaceAll("'", '').replaceAll('"', ''); // remove quotations
+
+        patch_masthead(document.body);
+
+        load_notifications();
+
+        // load seasonal data
+        set_season();
+
+        start_rain();
+
+        // everything past this point requires authorisation
+        if (!auth.name) {
+            notify({
+                title: 'No account added',
+                body: 'Please sign in to an account to access bleh features.',
+                icon: 'icon-16-user',
+                persist: true
+            });
+            document.body.classList.add('bleh-loaded');
+            return;
+        }
+
+        load_activities();
+        notify_if_new_update();
+
+        lotus();
+        sponsors();
+
         //throw new Error;
         main_flow();
 

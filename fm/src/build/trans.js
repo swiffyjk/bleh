@@ -4,7 +4,7 @@ import { auth, auth_link, setRoot } from "./page";
 import { clamp_sat, rgb_to_hsl } from "./tools";
 
 // loads your selected language in last.fm
-export let lang;
+export let lang = 'en';
 // hello my name is stel :3
 export let lang_info = {
     en: {
@@ -4979,13 +4979,10 @@ export function tl(key) {
 export function lookup_lang() {
     const troot = document.querySelector('.masthead-logo a');
 
-    console.log(troot)
     if (!troot) {
         handle_error_500();
         return;
     }
-
-    console.log(troot.getAttribute("href"));
 
     setRoot(troot.getAttribute('href'));
 
