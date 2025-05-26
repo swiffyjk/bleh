@@ -85,15 +85,6 @@ export function notify({
 
     page.structure.notifications.appendChild(notif);
 
-    if (type == 'error')
-        icon = 'icon-16-x';
-
-    if (type == 'success')
-        icon = 'icon-16-check';
-
-    if (!icon)
-        icon = 'icon-16-info';
-
     if (icon) {
         notif.classList.add('icon');
         notif.style.setProperty('--mask', `var(--${icon})`);
