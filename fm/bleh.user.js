@@ -8977,12 +8977,14 @@
     else
       page.structure.main.insertBefore(interact_container, page.structure.main.firstElementChild);
     let new_playlist = page.structure.side.querySelector(":scope > form");
-    let header = new_playlist.querySelector("h3");
-    new_playlist.removeChild(header);
-    let playlist_button = new_playlist.querySelector("button");
-    playlist_button.classList = "btn side-action";
-    playlist_button.setAttribute("data-type", "playlist");
-    interact_container.appendChild(new_playlist);
+    if (new_playlist) {
+      let header = new_playlist.querySelector("h3");
+      new_playlist.removeChild(header);
+      let playlist_button = new_playlist.querySelector("button");
+      playlist_button.classList = "btn side-action";
+      playlist_button.setAttribute("data-type", "playlist");
+      interact_container.appendChild(new_playlist);
+    }
     let metadata = col_main.querySelector(".metadata-column");
     if (metadata) {
       if (settings.simulate_scroll) {
@@ -9039,10 +9041,10 @@
     let link_container = document.createElement("div");
     link_container.classList.add("music-links");
     if (page.type == "track") {
-      let header2 = document.createElement("div");
-      header2.classList.add("sub-text", "music-small-header");
-      header2.textContent = tl(trans.find_on);
-      link_group.appendChild(header2);
+      let header = document.createElement("div");
+      header.classList.add("sub-text", "music-small-header");
+      header.textContent = tl(trans.find_on);
+      link_group.appendChild(header);
       play_on = page.structure.side.querySelector(".play-this-track-playlinks");
       page.structure.side.removeChild(play_on.parentElement);
       play_links = play_on.querySelectorAll("li");
@@ -9089,10 +9091,10 @@
         `;
       link_container.appendChild(tidal);
     } else {
-      let header2 = document.createElement("div");
-      header2.classList.add("sub-text", "music-small-header");
-      header2.textContent = tl(trans.find_on);
-      link_group.appendChild(header2);
+      let header = document.createElement("div");
+      header.classList.add("sub-text", "music-small-header");
+      header.textContent = tl(trans.find_on);
+      link_group.appendChild(header);
       if (page.type == "album") {
         link_container.innerHTML = `
                 <a class="play-this-track-playlink music-link play-this-track-playlink--spotify" href="https://open.spotify.com/search/${sanitise(page.sister, " ")} ${sanitise(page.name, " ")}" target="_blank">

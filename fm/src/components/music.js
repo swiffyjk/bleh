@@ -438,15 +438,16 @@ export function show_your_scrobbles() {
 
     // new playlist
     let new_playlist = page.structure.side.querySelector(':scope > form');
+    if (new_playlist) {
+        let header = new_playlist.querySelector('h3');
+        new_playlist.removeChild(header);
 
-    let header = new_playlist.querySelector('h3');
-    new_playlist.removeChild(header);
+        let playlist_button = new_playlist.querySelector('button');
+        playlist_button.classList = 'btn side-action';
+        playlist_button.setAttribute('data-type', 'playlist');
 
-    let playlist_button = new_playlist.querySelector('button');
-    playlist_button.classList = 'btn side-action';
-    playlist_button.setAttribute('data-type', 'playlist');
-
-    interact_container.appendChild(new_playlist);
+        interact_container.appendChild(new_playlist);
+    }
 
 
 
