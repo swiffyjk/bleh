@@ -1,5 +1,6 @@
 import { log } from "../build/log";
 import { page } from "../build/page";
+import { html, render } from "lighterhtml";
 
 export function load_notifications() {
     let prev_notif = document.getElementById('bleh-notifications');
@@ -36,32 +37,13 @@ export function deliver_notif(content, persist=false, has_icon=false, append_cla
     }, 3500);
 }
 
-unsafeWindow._notify = function({
-    title = null,
-    body = null,
-    icon = null,
-    classname = null,
-    action = null,
-    persist = false,
-    type = null
-}) {
-    notify({
-        title: title,
-        body: body,
-        icon: icon,
-        classname: classname,
-        action: action,
-        persist: persist,
-        type: type
-    });
-}
 export function notify({
-    id = null,
-    title = null,
-    body = null,
-    icon = null,
-    classname = null,
-    action = null,
+    id,
+    title,
+    body,
+    icon,
+    classname,
+    action,
     persist = false,
     type = 'generic'
 }) {
@@ -76,17 +58,26 @@ export function notify({
         type: type
     });
 
+    if (type === 'error')
+        icon = 'icon-16-x';
+
+    if (type === 'success')
+        icon = 'icon-16-check';
+
+    if (!icon)
+        icon = 'icon-16-info';
+
     let notif = document.createElement('button');
     notif.classList.add('bleh-notification');
     notif.setAttribute('data-type', type);
     notif.setAttribute('onclick', '_notify_rm(this)');
 
     if (!body) {
-        notif.innerHTML = (`
+        render(notif, html`
             <div class="notification-title margin-below">${title}</div>
         `);
     } else {
-        notif.innerHTML = (`
+        render(notif, html`
             <div class="notification-title">${title}</div>
             <div class="notification-body margin-below">${body}</div>
         `);
@@ -117,9 +108,12 @@ export function notify({
     if (persist)
         return;
 
-    let bar = document.createElement('div');
-    bar.classList.add('notification-progress');
+    let bar = html.node`
+    <div class="notification-progress"></div>
+    `;
     notif.appendChild(bar);
+
+    console.info(bar);
 
     setTimeout(function() {
         bar.style.setProperty('left', '100%');
@@ -133,15 +127,13 @@ unsafeWindow._notify_rm = function(notif) {
     notify_rm(notif);
 }
 function notify_rm(notif) {
+    console.info('notif', notif);
     notif.classList.add('fade-out');
     setTimeout(function() {
         page.structure.notifications.removeChild(notif);
     }, 400);
 }
 
-unsafeWindow._kill_notif = function(notif) {
-    kill_notif(notif);
-}
 function kill_notif(notif) {
     notify_rm(notif);
 }

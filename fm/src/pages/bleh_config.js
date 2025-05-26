@@ -1,6 +1,5 @@
 import { test_api_key } from "../api";
 import { settings, settings_base } from "../build/config";
-import { log } from "../build/log";
 import { album_track_corrections, artist_corrections, ranks } from "../build/music";
 import { auth, page, root, theme_preview } from "../build/page";
 import { stored_season } from "../build/seasonal";
@@ -633,17 +632,17 @@ export function render_setting_page(page_id) {
                 </ul>
                 <div class="sep"></div>
                 <h4>Debugging interactions</h4>
-                <button class="continue" onclick="_notify({
+                <button class="continue" onclick=${() => notify({
                 id: 'test',
                 title: 'testing!',
                 body: 'haaaiaiii test bodyyy.......'
-                })">Deliver notification</button>
-                <button class="continue" onclick="_notify({
+                })}>Deliver notification</button>
+                <button class="continue" onclick=${() => notify({
                 id: 'test',
                 title: 'testing!',
                 body: 'haaaiaiii test bodyyy.......',
                 persist: true
-                })">Deliver persistent notification</button>
+                })}>Deliver persistent notification</button>
                 <div class="sep"></div>
                 <h4>Manage flags</h4>
                 <button class="continue" onclick="_change_settings_page('sku')">Open sku page</button>

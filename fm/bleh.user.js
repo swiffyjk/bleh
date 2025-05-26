@@ -7165,32 +7165,13 @@
       kill_notif(notif);
     }, 3500);
   }
-  unsafeWindow._notify = function({
-    title = null,
-    body = null,
-    icon = null,
-    classname = null,
-    action = null,
-    persist = false,
-    type = null
-  }) {
-    notify({
-      title,
-      body,
-      icon,
-      classname,
-      action,
-      persist,
-      type
-    });
-  };
   function notify({
-    id = null,
-    title = null,
-    body = null,
-    icon = null,
-    classname = null,
-    action = null,
+    id,
+    title,
+    body,
+    icon,
+    classname,
+    action,
     persist = false,
     type = "generic"
   }) {
@@ -7204,19 +7185,25 @@
       persist,
       type
     });
+    if (type === "error")
+      icon = "icon-16-x";
+    if (type === "success")
+      icon = "icon-16-check";
+    if (!icon)
+      icon = "icon-16-info";
     let notif = document.createElement("button");
     notif.classList.add("bleh-notification");
     notif.setAttribute("data-type", type);
     notif.setAttribute("onclick", "_notify_rm(this)");
     if (!body) {
-      notif.innerHTML = `
+      render(notif, html2`
             <div class="notification-title margin-below">${title}</div>
-        `;
+        `);
     } else {
-      notif.innerHTML = `
+      render(notif, html2`
             <div class="notification-title">${title}</div>
             <div class="notification-body margin-below">${body}</div>
-        `;
+        `);
     }
     page.structure.notifications.appendChild(notif);
     if (type == "error")
@@ -7235,9 +7222,11 @@
       notif.setAttribute("onclick", action);
     if (persist)
       return;
-    let bar = document.createElement("div");
-    bar.classList.add("notification-progress");
+    let bar = html2.node`
+    <div class="notification-progress"></div>
+    `;
     notif.appendChild(bar);
+    console.info(bar);
     setTimeout(function() {
       bar.style.setProperty("left", "100%");
     }, 1);
@@ -7249,14 +7238,12 @@
     notify_rm(notif);
   };
   function notify_rm(notif) {
+    console.info("notif", notif);
     notif.classList.add("fade-out");
     setTimeout(function() {
       page.structure.notifications.removeChild(notif);
     }, 400);
   }
-  unsafeWindow._kill_notif = function(notif) {
-    kill_notif(notif);
-  };
   function kill_notif(notif) {
     notify_rm(notif);
   }
@@ -15605,17 +15592,17 @@
                 </ul>
                 <div class="sep"></div>
                 <h4>Debugging interactions</h4>
-                <button class="continue" onclick="_notify({
-                id: 'test',
-                title: 'testing!',
-                body: 'haaaiaiii test bodyyy.......'
-                })">Deliver notification</button>
-                <button class="continue" onclick="_notify({
-                id: 'test',
-                title: 'testing!',
-                body: 'haaaiaiii test bodyyy.......',
-                persist: true
-                })">Deliver persistent notification</button>
+                <button class="continue" onclick=${() => notify({
+        id: "test",
+        title: "testing!",
+        body: "haaaiaiii test bodyyy......."
+      })}>Deliver notification</button>
+                <button class="continue" onclick=${() => notify({
+        id: "test",
+        title: "testing!",
+        body: "haaaiaiii test bodyyy.......",
+        persist: true
+      })}>Deliver persistent notification</button>
                 <div class="sep"></div>
                 <h4>Manage flags</h4>
                 <button class="continue" onclick="_change_settings_page('sku')">Open sku page</button>
