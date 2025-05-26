@@ -152,7 +152,7 @@ function handle_error(e = null) {
 
     dialog({
         id: 'error',
-        title: 'An error has occured',
+        title: 'An error has occurred',
         body: (`
             <div class="modal-vertical-inner error-inner">
                 <div class="bleh-icon" style="--icon: var(--icon-error)"></div>
