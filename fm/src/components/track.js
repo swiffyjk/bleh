@@ -56,7 +56,7 @@ export function patch_titles(search=page.structure.main) {
 
         log('found, checking', 'tracks', 'log', {tracklist: tracklist});
 
-        // used to ensure this hasnt been ran thru
+        // used to ensure this hasnt been run thru
         if (tracklist.querySelector('tbody > .chartlist-row:first-child > .kate-placeholder'))
             return;
 
@@ -71,8 +71,11 @@ export function patch_titles(search=page.structure.main) {
             if (track.getAttribute('data-track-type'))
                 return;
 
-            if (track.classList[0] == 'chartlist-row--interlist-ad')
+            // ads slowly move up the tree until eventually causing a crash
+            if (track.classList[0] === 'chartlist-row--interlist-ad') {
                 track.parentElement.removeChild(track);
+                return;
+            }
 
             let bla = document.createElement('div');
             bla.classList.add('kate-placeholder');
@@ -80,15 +83,18 @@ export function patch_titles(search=page.structure.main) {
 
 
             let track_title = track.querySelector('.chartlist-name a:not(.offset-section-anchor)');
-
             if (!track_title) return;
 
+            // for albums and tracks 'avatar' is replaced with 'cover-art'
+            // we can use this to detect if the item is either a user or an artist
             let is_user = track.querySelector('.chartlist-image .avatar');
             let is_artist = false;
+
+            // now lets check if we have a user or an artist
             if (is_user) {
-                // is it really a user?
                 let link = track_title.getAttribute('href');
                 if (link.startsWith(`${root}music/`)) {
+                    // this is an artist
                     is_user = false;
                     is_artist = true;
                 }
@@ -131,6 +137,7 @@ export function patch_titles(search=page.structure.main) {
                 track.classList.add('bleh--is-album');
 
             let track_artist = return_artist_from_track(track_title.getAttribute('href'), is_album);
+            // when focused on a track in a library, an artist field is redundant
             if (!wide)
                 track.classList.add('chartlist-row--with-artist');
 
@@ -224,17 +231,13 @@ export function patch_titles(search=page.structure.main) {
 
                 let image = track.querySelector('.chartlist-image img');
 
-                // hacky workaround to chartlists with no image
-                if (!image && page.type == 'user')
-                    is_library_track_page = true;
-
                 if (track_legacy_menu) {
                     let track_preview = document.createElement('div');
                     track_preview.classList.add('track-preview');
                     track_preview.innerHTML = (`
                         <div class="image">
                             <div class="inner-image">
-                                ${(image) ? image.outerHTML : '<img class="missing-track">'}
+                                ${(image) ? image.outerHTML : '<img class="missing-track" alt="">'}
                             </div>
                         </div>
                         <div class="info">
