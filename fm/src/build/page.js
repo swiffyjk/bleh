@@ -36,7 +36,7 @@ export let auth_link = {
 // en: /
 // jp: /jp/
 // etc.
-export let root = '';
+export let root = '/';
 export function setRoot(data) {
     root = data;
 }

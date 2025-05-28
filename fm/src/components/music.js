@@ -437,6 +437,22 @@ export function show_your_scrobbles() {
 
 
 
+    // new playlist
+    let new_playlist = page.structure.side.querySelector(':scope > form');
+    if (new_playlist) {
+        let header = new_playlist.querySelector('h3');
+        new_playlist.removeChild(header);
+
+        let playlist_button = new_playlist.querySelector('button');
+        playlist_button.classList = 'btn side-action';
+        playlist_button.setAttribute('data-type', 'playlist');
+
+        interact_container.appendChild(new_playlist);
+    }
+
+
+
+
     let metadata = col_main.querySelector('.metadata-column');
     if (metadata) {
         if (settings.simulate_scroll) {

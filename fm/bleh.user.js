@@ -1576,9 +1576,10 @@
   var auth_link = {
     state: ""
   };
-  var root = "";
-  function setRoot(data2) {
-    root = data2;
+
+  var root = "/";
+  function setRoot(data) {
+    root = data;
   }
   var recent_activity_list = [];
   var last_page_type = {
@@ -1837,7 +1838,7 @@
   }
 
   // src/build/trans.js
-  var lang;
+  var lang = "en";
   var lang_info = {
     en: {
       name: "English",
@@ -6794,12 +6795,10 @@
   }
   function lookup_lang() {
     const troot = document.querySelector(".masthead-logo a");
-    console.log(troot);
     if (!troot) {
       handle_error_500();
       return;
     }
-    console.log(troot.getAttribute("href"));
     setRoot(troot.getAttribute("href"));
     let previous_avi = auth.avatar;
     if (auth_link.state) {
@@ -9142,8 +9141,7 @@
       return;
     log("focusing on image", "gallery");
     let image_sidebar = page.structure.side.querySelector(".js-gallery-image-details > div");
-    if (image_sidebar == null)
-      return;
+    if (!image_sidebar) return;
     if (image_sidebar.hasAttribute("data-bleh-gallery"))
       return;
     image_sidebar.setAttribute("data-bleh-gallery", "true");
@@ -9155,7 +9153,7 @@
     let gallery_section;
     try {
       gallery_section = page.structure.main.querySelector(".gallery-section");
-      if (gallery_section != null) {
+      if (gallery_section) {
         page.structure.nav.after(gallery_section);
         image_details = document.createElement("section");
         image_details.classList.add("image-details");
@@ -9238,7 +9236,7 @@
     buttons_extra.appendChild(open_button);
     open_button.after(create_divider());
     let delete_button = image_details.querySelector(".gallery-image-delete");
-    if (delete_button != null)
+    if (delete_button)
       buttons_extra.appendChild(delete_button);
     let report_button = image_details.querySelector(".gallery-image-report-form");
     let report_text = report_button.querySelector("button");
@@ -9254,23 +9252,25 @@
       text2.textContent = trans_legacy.en.gallery.prefer.name;
     });
     let view_all_container = page.structure.main.querySelector(".more-link-fullwidth-right-flush-top");
-    if (view_all_container != null) {
+    if (view_all_container) {
+      let side_actions = document.createElement("section");
+      side_actions.classList.add("side-actions");
+      if (!page.mobile)
+        page.structure.side.appendChild(side_actions);
+      else
+        page.structure.main.appendChild(side_actions);
       let view_all = view_all_container.querySelector("a");
-      view_all.classList.add("btn", "view-all-button", "back");
-      let view_all_panel = document.createElement("section");
-      view_all_panel.classList.add("view-all-panel");
-      view_all_panel.appendChild(view_all);
-      page.structure.side.insertBefore(view_all_panel, page.structure.side.firstElementChild);
+      view_all.classList.add("btn", "side-action");
+      view_all.setAttribute("data-type", "gallery");
+      side_actions.appendChild(view_all);
       page.structure.main.removeChild(view_all_container);
       if (page.type == "artist" || ff("display_album_bookmark")) {
-        let all_saved_panel = document.createElement("section");
-        all_saved_panel.classList.add("view-all-panel");
-        all_saved_panel.innerHTML = `
-                <a class="btn view-all-button back all-saved-button" href="${view_all.getAttribute("href")}?tab=saved">
-                    ${trans_legacy.en.gallery.bookmarks.link}
-                </a>
-            `;
-        view_all_panel.after(all_saved_panel);
+        let view_saved = document.createElement("a");
+        view_saved.classList.add("btn", "side-action");
+        view_saved.setAttribute("href", `${view_all.getAttribute("href")}?tab=saved`);
+        view_saved.setAttribute("data-type", "gallery-saved");
+        view_saved.textContent = trans_legacy.en.gallery.bookmarks.link;
+        side_actions.appendChild(view_saved);
       }
     }
     if (page.type == "artist" || ff("display_album_bookmark"))
@@ -9320,36 +9320,23 @@
     if (page.subpage != "images_image-upload")
       return;
     let image_preview = page.structure.main.querySelector(".form-image-preview");
-    if (image_preview == null)
-      return;
+    if (!image_preview) return;
     let image_preview_container = page.structure.container.querySelector(".image-preview-hook");
     image_preview_container.setAttribute("src", image_preview.getAttribute("src"));
   }
   function bleh_gallery_list() {
     let upload_btn = page.structure.main.querySelector(".btn-add");
-    if (upload_btn != null) {
+    if (upload_btn) {
       upload_btn.classList = "btn view-all-button back upload-button";
       let upload_panel = document.createElement("section");
       upload_panel.classList.add("view-all-panel", "upload-panel");
       upload_panel.appendChild(upload_btn);
       page.structure.side.insertBefore(upload_panel, page.structure.side.firstElementChild);
     }
+    if (page.type == "artist")
+      patch_gallery_image_listing();
   }
-  function patch_gallery_page() {
-    let header = document.body.querySelector("header");
-    if (header == void 0)
-      return;
-    if (header.classList.contains("header-new--album"))
-      return;
-    let image_list = document.body.querySelector(".image-list");
-    if (image_list != void 0) {
-      patch_gallery_image_listing(image_list);
-    }
-  }
-  function patch_gallery_image_listing(image_list) {
-    if (image_list.hasAttribute("data-kate-processed"))
-      return;
-    image_list.setAttribute("data-kate-processed", "true");
+  function patch_gallery_image_listing() {
     let bookmarked_images = JSON.parse(localStorage.getItem("bleh_bookmarked_images")) || {};
     if (page.requested.tab != "saved" || page.requested.page != null)
       page.structure.container.setAttribute("data-bleh--gallery-tab", "overview");
@@ -9424,8 +9411,8 @@
           register_menu(image_element, menu);
         }
       });
-      let image_list2 = page.structure.main.querySelectorAll(".image-list-item");
-      image_list2.forEach((image_list_item) => {
+      let image_list = page.structure.main.querySelectorAll(".image-list-item");
+      image_list.forEach((image_list_item) => {
         let image_id_split = image_list_item.getAttribute("href").split("/");
         let image_id_length = image_id_split.length;
         let image_id = image_id_split[image_id_length - 1];
@@ -10001,6 +9988,15 @@
       page.structure.side.insertBefore(interact_container, page.structure.side.firstElementChild);
     else
       page.structure.main.insertBefore(interact_container, page.structure.main.firstElementChild);
+    let new_playlist = page.structure.side.querySelector(":scope > form");
+    if (new_playlist) {
+      let header = new_playlist.querySelector("h3");
+      new_playlist.removeChild(header);
+      let playlist_button = new_playlist.querySelector("button");
+      playlist_button.classList = "btn side-action";
+      playlist_button.setAttribute("data-type", "playlist");
+      interact_container.appendChild(new_playlist);
+    }
     let metadata = col_main.querySelector(".metadata-column");
     if (metadata) {
       if (settings.simulate_scroll) {
@@ -10828,25 +10824,25 @@
       }
     };
     tracklists.forEach((tracklist) => {
-      if (tracklist == null)
+      if (!tracklist) return;
+      log("found, checking", "tracks", "log", { tracklist });
+      if (tracklist.querySelector("tbody > .chartlist-row:first-child > .kate-placeholder"))
         return;
-      console.log("tracklist found", tracklist);
-      if (tracklist.querySelector("tbody > .chartlist-row:first-child > .kate-placeholder") != null)
-        return;
-      console.log("tracklist has not been run thru", tracklist);
+      log("new!", "tracks", "info", { tracklist });
       let wide = tracklist.classList.contains("chartlist--wide-artist-column");
-      let tracks = tracklist.querySelectorAll(".chartlist-row:not(.chartlist__placeholder-row)");
-      let is_library_track_page = page.subpage == "library_track_overview";
+      let tracks = tracklist.querySelectorAll(":is(.chartlist-row:not(.chartlist__placeholder-row), .chartlist-row--interlist-ad)");
       tracks.forEach((track) => {
         console.log("track", track);
         if (track.getAttribute("data-track-type"))
           return;
+        if (track.classList[0] == "chartlist-row--interlist-ad")
+          track.parentElement.removeChild(track);
         let bla = document.createElement("div");
         bla.classList.add("kate-placeholder");
         track.appendChild(bla);
         let track_title = track.querySelector(".chartlist-name a:not(.offset-section-anchor)");
         if (!track_title) return;
-        let is_user = track.querySelector(".chartlist-image .avatar") != null;
+        let is_user = track.querySelector(".chartlist-image .avatar");
         let is_artist = false;
         if (is_user) {
           let link = track_title.getAttribute("href");
@@ -11689,7 +11685,10 @@
         if (content_top) {
           content_top.classList.add("redesigned-content-top");
           page.structure.content_top = content_top;
-          navlist.after(content_top);
+          if (navlist)
+            navlist.after(content_top);
+          else
+            page.structure.container.insertBefore(content_top, page.structure.container.firstElementChild);
           if (content_top.querySelector(".content-top-back-link"))
             content_top.style.setProperty("display", "none");
         } else {
@@ -11726,19 +11725,27 @@
           let btn_add = page.structure.main.querySelector(":scope > .btn-add");
           if (!btn_add) btn_add = page.structure.main.querySelector(":scope > section:first-child .btn-add");
           if (btn_add) {
-            btn_add.classList = "btn view-all-button back add-button";
-            let add_panel = document.createElement("section");
-            add_panel.classList.add("view-all-panel");
-            add_panel.appendChild(btn_add);
-            page.structure.side.insertBefore(add_panel, page.structure.side.firstElementChild);
+            let side_actions = document.createElement("section");
+            side_actions.classList.add("side-actions");
+            if (!page.mobile)
+              page.structure.side.appendChild(side_actions);
+            else
+              page.structure.main.appendChild(side_actions);
+            btn_add.classList = "btn side-action";
+            btn_add.setAttribute("data-type", "add");
+            side_actions.appendChild(btn_add);
           }
           let playlink = page.structure.main.querySelector(":scope > .section-controls > .section-playlink");
           if (playlink) {
-            playlink.classList.add("btn", "view-all-button", "back", "play-button");
-            let playlink_panel = document.createElement("section");
-            playlink_panel.classList.add("view-all-panel");
-            playlink_panel.appendChild(playlink);
-            page.structure.side.insertBefore(playlink_panel, page.structure.side.firstElementChild);
+            let side_actions = document.createElement("section");
+            side_actions.classList.add("side-actions");
+            if (!page.mobile)
+              page.structure.side.appendChild(side_actions);
+            else
+              page.structure.main.appendChild(side_actions);
+            playlink.classList = "btn side-action";
+            playlink.setAttribute("data-type", "play");
+            side_actions.appendChild(playlink);
           }
         }
       } else {
@@ -18549,36 +18556,27 @@
     page.structure.main.classList.add("not-a-panel");
     let original_edit_button = page.structure.main.querySelector(".qa-wiki-edit");
     let original_version_history = page.structure.main.querySelector(".wiki-history-link--desktop a");
-    let new_edit_panel;
+    let side_actions = document.createElement("section");
+    side_actions.classList.add("side-actions");
+    if (!page.mobile)
+      page.structure.side.appendChild(side_actions);
+    else
+      page.structure.main.appendChild(side_actions);
     if (original_edit_button) {
-      new_edit_panel = document.createElement("section");
-      new_edit_panel.classList.add("view-all-panel");
-      new_edit_panel.innerHTML = `
-            <a class="btn view-all-button back wiki-edit-button" href="${original_edit_button.getAttribute("href")}">
-                ${original_edit_button.textContent}
-            </a>
-        `;
-      if (!page.mobile)
-        page.structure.side.insertBefore(new_edit_panel, page.structure.side.firstElementChild);
-      else
-        page.structure.main.insertBefore(new_edit_panel, page.structure.main.firstElementChild);
+      let side_edit = document.createElement("a");
+      side_edit.classList.add("btn", "side-action");
+      side_edit.setAttribute("href", original_edit_button.getAttribute("href"));
+      side_edit.setAttribute("data-type", "edit");
+      side_edit.textContent = original_edit_button.textContent;
+      side_actions.appendChild(side_edit);
     }
     if (original_version_history) {
-      let new_version_panel = document.createElement("section");
-      new_version_panel.classList.add("view-all-panel");
-      new_version_panel.innerHTML = `
-            <a class="btn view-all-button back wiki-history-button" href="${original_version_history.getAttribute("href")}">
-                ${original_version_history.textContent}
-            </a>
-        `;
-      if (original_edit_button) {
-        new_edit_panel.after(new_version_panel);
-      } else {
-        if (!page.mobile)
-          page.structure.side.insertBefore(new_version_panel, page.structure.side.firstElementChild);
-        else
-          page.structure.main.insertBefore(new_version_panel, page.structure.main.firstElementChild);
-      }
+      let side_history = document.createElement("section");
+      side_history.classList.add("btn", "side-action");
+      side_history.setAttribute("href", original_version_history.getAttribute("href"));
+      side_history.setAttribute("data-type", "history");
+      side_history.textContent = original_version_history.textContent;
+      side_actions.appendChild(side_history);
     }
     let wiki_author = wiki_panel.querySelector(".wiki-author");
     if (wiki_author) {
@@ -18633,17 +18631,17 @@
     buffer_container.style.setProperty("display", "none");
     if (pagination)
       wiki_panel.appendChild(pagination);
-    let latest_version_panel = document.createElement("section");
-    latest_version_panel.classList.add("view-all-panel");
-    latest_version_panel.innerHTML = `
-        <a class="btn view-all-button back wiki-latest-button" href="${sub_text.querySelector("a").getAttribute("href")}">
+    let side_actions = document.createElement("section");
+    side_actions.classList.add("side-actions");
+    side_actions.innerHTML = `
+        <a class="btn side-action" data-type="latest-wiki" href="${sub_text.querySelector("a").getAttribute("href")}">
             ${tl(trans.view_latest_version)}
         </a>
     `;
     if (!page.mobile)
-      page.structure.side.appendChild(latest_version_panel);
+      page.structure.side.appendChild(side_actions);
     else
-      page.structure.main.insertBefore(latest_version_panel, page.structure.main.firstElementChild);
+      page.structure.main.appendChild(side_actions);
     let entries = page.structure.main.querySelectorAll(".wiki-history-entry");
     entries.forEach((entry) => {
       let author = entry.querySelector(".wiki-history-author");
@@ -18730,17 +18728,17 @@
         </div>
     `;
     page.structure.side.innerHTML = "";
-    let latest_version_panel = document.createElement("section");
-    latest_version_panel.classList.add("view-all-panel");
-    latest_version_panel.innerHTML = `
-        <a class="btn view-all-button back wiki-latest-button" href="${sub_text.querySelector("a").getAttribute("href")}">
+    let side_actions = document.createElement("section");
+    side_actions.classList.add("side-actions");
+    side_actions.innerHTML = `
+        <a class="btn side-action" data-type="latest-wiki" href="${sub_text.querySelector("a").getAttribute("href")}">
             ${tl(trans.view_latest_version)}
         </a>
     `;
     if (!page.mobile)
-      page.structure.side.appendChild(latest_version_panel);
+      page.structure.side.appendChild(side_actions);
     else
-      page.structure.main.appendChild(latest_version_panel);
+      page.structure.main.appendChild(side_actions);
     let wiki_presets_panel = document.createElement("section");
     wiki_presets_panel.classList.add("wiki-presets-panel");
     wiki_presets_panel.innerHTML = `
@@ -21392,29 +21390,30 @@
       auth.name = auth_link.state.querySelector("img").getAttribute("alt");
     load_settings();
     load_dialogs();
-    theme_version.state = getComputedStyle(document.body).getPropertyValue("--version-build").replaceAll("'", "").replaceAll('"', "");
-    lookup_lang();
-    patch_masthead(document.body);
-    load_notifications();
-    set_season();
-    start_rain();
-    if (!auth.name) {
-      notify({
-        title: "No account added",
-        body: "Please sign in to an account to access bleh features.",
-        icon: "icon-16-user",
-        persist: true
-      });
-      document.body.classList.add("bleh-loaded");
-      return;
-    }
-    load_activities();
-    notify_if_new_update();
-    lotus();
-    sponsors();
     try {
+      lookup_lang();
+      theme_version.state = getComputedStyle(document.body).getPropertyValue("--version-build").replaceAll("'", "").replaceAll('"', "");
+      patch_masthead(document.body);
+      load_notifications();
+      set_season();
+      start_rain();
+      if (!auth.name) {
+        notify({
+          title: "No account added",
+          body: "Please sign in to an account to access bleh features.",
+          icon: "icon-16-user",
+          persist: true
+        });
+        document.body.classList.add("bleh-loaded");
+        return;
+      }
+      load_activities();
+      notify_if_new_update();
+      lotus();
+      sponsors();
       main_flow();
       const observer = new MutationObserver((mutations) => {
+        log("loop", "mutation", "log", { mutations });
         lookup_lang();
         patch_masthead(document.body);
         theme_version.state = getComputedStyle(document.body).getPropertyValue("--version-build").replaceAll("'", "").replaceAll('"', "");
@@ -21439,7 +21438,7 @@
     document.body.classList.add("bleh-loaded");
     dialog({
       id: "error",
-      title: "An error has occured",
+      title: "An error has occurred",
       body: html2.node`
             <div class="modal-vertical-inner error-inner">
                 <div class="bleh-icon" style="--icon: var(--icon-error)"></div>
@@ -21481,7 +21480,6 @@
       if (shout_parse_queue.length > 0)
         parse_shout_queue();
     }
-    patch_gallery_page();
     if (page.type == "user" && page.subpage.startsWith("library") && (page.subpage != "library_overview" && !page.subpage.startsWith("library_artist_") && !page.subpage.startsWith("library_album_") && !page.subpage.startsWith("library_track_")))
       bleh_glacier_library();
     if (auth.pro && page.type == "user" && page.name == auth.name && page.subpage == "library_artist_overview" || page.subpage == "library_album_overview" || page.subpage == "library_track_overview") {

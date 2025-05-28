@@ -20,7 +20,7 @@ import { bleh_settings } from "./pages/bleh_config";
 import { bleh_setup, notify_if_new_update } from "./pages/bleh_setup";
 import { bleh_error } from "./pages/error";
 import { bleh_events } from "./pages/event";
-import { bleh_gallery, bleh_gallery_upload_check, patch_gallery_page } from "./pages/gallery";
+import { bleh_gallery, bleh_gallery_upload_check } from "./pages/gallery";
 import { bleh_glacier_library, bleh_glacier_library_bulk_edit } from "./pages/glacier";
 import { bleh_home, bleh_home_legacy } from "./pages/home";
 import { bleh_inbox } from "./pages/inbox";
@@ -83,43 +83,44 @@ function bleh_main() {
     // messaging
     load_dialogs();
 
-    theme_version.state = getComputedStyle(document.body).getPropertyValue('--version-build').replaceAll("'", '').replaceAll('"', ''); // remove quotations
-
-    lookup_lang();
-    patch_masthead(document.body);
-
-
-    load_notifications();
-
-    // load seasonal data
-    set_season();
-
-    start_rain();
-
-    // everything past this point requires authorisation
-    if (!auth.name) {
-        notify({
-            title: 'No account added',
-            body: 'Please sign in to an account to access bleh features.',
-            icon: 'icon-16-user',
-            persist: true
-        });
-        document.body.classList.add('bleh-loaded');
-        return;
-    }
-
-    load_activities();
-    notify_if_new_update();
-
-    lotus();
-    sponsors();
-
     try {
+        lookup_lang();
+
+        theme_version.state = getComputedStyle(document.body).getPropertyValue('--version-build').replaceAll("'", '').replaceAll('"', ''); // remove quotations
+
+        patch_masthead(document.body);
+
+        load_notifications();
+
+        // load seasonal data
+        set_season();
+
+        start_rain();
+
+        // everything past this point requires authorisation
+        if (!auth.name) {
+            notify({
+                title: 'No account added',
+                body: 'Please sign in to an account to access bleh features.',
+                icon: 'icon-16-user',
+                persist: true
+            });
+            document.body.classList.add('bleh-loaded');
+            return;
+        }
+
+        load_activities();
+        notify_if_new_update();
+
+        lotus();
+        sponsors();
+
         //throw new Error;
         main_flow();
 
         // last.fm is a single page application
         const observer = new MutationObserver((mutations) => {
+            log('loop', 'mutation', 'log', {mutations: mutations});
             lookup_lang();
             patch_masthead(document.body);
 
@@ -152,7 +153,7 @@ function handle_error(e = null) {
 
     dialog({
         id: 'error',
-        title: 'An error has occured',
+        title: 'An error has occurred',
         body: html.node`
             <div class="modal-vertical-inner error-inner">
                 <div class="bleh-icon" style="--icon: var(--icon-error)"></div>
@@ -213,7 +214,6 @@ function main_flow() {
         if (shout_parse_queue.length > 0)
             parse_shout_queue();
     }
-    patch_gallery_page();
 
     if (page.type == 'user' && page.subpage.startsWith('library') && (
         page.subpage != 'library_overview' && !page.subpage.startsWith('library_artist_') &&

@@ -2,7 +2,7 @@ import { load_activities } from "../activity"
 import { settings } from "../build/config";
 import { log } from "../build/log";
 import { auth, page, recent_activity_list, root } from "../build/page";
-import { lang, trans_legacy, trans, tl } from "../build/trans";
+import { trans_legacy, trans, tl } from "../build/trans";
 import { checkup_page_structure } from "../components/structure";
 import { register_background, update_page } from "../page";
 import { bleh_charts } from "./chart";
