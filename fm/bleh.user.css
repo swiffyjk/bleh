@@ -318,9 +318,9 @@ a,
             var(--lit-seasonal,
             1))));
 
-    --c1: var(--hue), calc(var(--sat) * 40%), 100%;
-    --c2: var(--hue), calc(var(--sat) * 40%), 90%;
-    --c3: var(--hue), calc(var(--sat) * 7%), 60%;
+    --c1: var(--hue), calc(clamp(min(0), var(--sat), max(1)) * 40%), 100%;
+    --c2: var(--hue), calc(clamp(min(0), var(--sat), max(1)) * 40%), 90%;
+    --c3: var(--hue), calc(clamp(min(0), var(--sat), max(1)) * 7%), 60%;
     --ov-c1: var(--c1);
 
     --l2: var(--hue), calc(var(--sat) * 50%), calc(var(--lit) * 83%);
@@ -356,9 +356,9 @@ a,
 
     .preview[data-bleh--theme="oled"], .redesigned-header[data-bleh--theme="oled"], .redesigned-header[data-bleh--theme="oled"] a,
     [data-bleh--theme="oled"] &:not(.preview) {
-        --c1: var(--hue), calc(var(--sat) * 40%), 100%;
-        --c2: var(--hue), calc(var(--sat) * 70%), 90%;
-        --c3: var(--hue), calc(var(--sat) * 10%), 50%;
+        --c1: var(--hue), calc(clamp(min(0), var(--sat), max(1)) * 40%), 100%;
+        --c2: var(--hue), calc(clamp(min(0), var(--sat), max(1)) * 70%), 90%;
+        --c3: var(--hue), calc(clamp(min(0), var(--sat), max(1)) * 10%), 50%;
 
         --l3: var(--hue), calc(var(--sat) * 50%), calc(var(--lit) * 75%);
         --l4: var(--hue), calc(var(--sat) * 60%), calc(var(--lit) * 45%);
@@ -7870,6 +7870,12 @@ section:has(.dropdown-menu-clickable-button.section-control) {
 [data-type="edit"] {
     --mask: var(--icon-16-edit);
 }
+[data-type="history"] {
+    --mask: var(--icon-16-bio-history);
+}
+[data-type="latest-wiki"] {
+    --mask: var(--icon-16-bio);
+}
 [data-type="labs"] {
     --mask: var(--icon-16-labs);
 }
@@ -7900,6 +7906,18 @@ section:has(.dropdown-menu-clickable-button.section-control) {
 }
 [data-type="reset"] {
     --mask: var(--icon-16-revert);
+}
+[data-type="gallery"] {
+    --mask: var(--icon-16-gallery-vertical);
+}
+[data-type="gallery-saved"] {
+    --mask: var(--icon-16-bookmark);
+}
+[data-type="add"] {
+    --mask: var(--icon-16-plus);
+}
+[data-type="play"] {
+    --mask: var(--icon-16-play);
 }
 .header-new-love-button {
     font-size: 0 !important;
