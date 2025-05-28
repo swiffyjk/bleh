@@ -1,7 +1,7 @@
-import { html, render } from "lighterhtml";
-import { log } from "../build/log";
-import { dialogs, page } from "../build/page";
-import { lang, trans_legacy, trans, tl } from "../build/trans";
+import {html, render} from "lighterhtml";
+import {log} from "../build/log";
+import {dialogs, page} from "../build/page";
+import {trans_legacy} from "../build/trans";
 
 export function load_dialogs() {
     let dialogs = document.createElement('div');
@@ -15,7 +15,7 @@ export function dialog({
     id = '',
     title = null,
     subtitle = null,
-    body = document.createElement('div').innerHTML,
+    body = html.node``,
     dismiss = true,
     type = '',
     has_overlays = true,
@@ -41,8 +41,6 @@ export function dialog({
         colourful_bg: colourful_bg
     });
 
-    let modal;
-
     if (replace && replace_if_possible)
         replace_if_possible = false;
 
@@ -55,29 +53,19 @@ export function dialog({
         }
     }
 
-    if (!replace || replace && !dialogs.hasOwnProperty(replace_id)) {
-        modal = document.createElement('div');
-        modal.classList.add('bleh-modal');
-        modal.setAttribute('role', 'dialog');
-
-        if (colourful)
-            modal.classList.add('colourful');
-        if (colourful_bg)
-            modal.classList.add('colourful-bg');
-    } else {
-        log(`window set to replace ${replace_id}`, 'window');
-
-        modal = dialogs[replace_id].instance;
-        delete dialogs[replace_id];
-
-        modal.innerHTML = '';
-    }
-
-    modal.setAttribute('data-modal-id', id);
-    modal.setAttribute('data-modal-has-overlays', has_overlays);
-
-    if (type != '')
-        modal.setAttribute('data-modal-type', type);
+    let modal = html.node`
+        <div
+        class=${[
+            'bleh-modal',
+            colourful ? 'colorful' : '',
+            colourful_bg ? 'colourful-bg' : ''
+        ].join(' ')}
+        role="dialog"
+        data-modal-id=${id}
+        data-modal-has-overlays=${has_overlays}
+        data-modal-type=${type}
+        />
+    `;
 
     if (title != null) {
         modal.setAttribute('aria-labelledby', 'modal_title');
@@ -106,13 +94,20 @@ export function dialog({
     modal_body.classList.add('bleh-modal-body');
     modal_body.setAttribute('data-allow-scroll', allow_scroll);
 
-    render(modal_body, body)
+    modal_body.appendChild(body);
 
     modal.appendChild(modal_body);
 
     dialogs[id] = {
         instance: modal
     };
+
+    if (replace || (!replace && dialogs.hasOwnProperty(replace_id))) {
+        log(`window set to replace ${replace_id}`, 'window');
+
+        dialog_rm({id: replace_id});
+        delete dialogs[replace_id];
+    }
 
     page.structure.dialogs.appendChild(modal);
     page.structure.dialogs.classList.add('has-dialog');
@@ -131,7 +126,7 @@ unsafeWindow._dialog_rm = function({
     });
 }
 export function dialog_rm({
-    id = null,
+    id,
     all = false,
     modal_bg = false
 }) {
@@ -154,11 +149,9 @@ export function dialog_rm({
         return;
     }
 
-    if (id == null)
-        return;
+    if (!id) return;
 
-    if (page.structure.dialogs == null)
-        return;
+    if (!page.structure.dialogs)  return;
 
     if (dialogs.hasOwnProperty(id)) {
         let dialog = dialogs[id];

@@ -17866,6 +17866,10 @@ button.bleh--gallery-bookmark-image-btn {
         position: relative;
         z-index: 9999;
 
+        &:not(:last-child) {
+            display: none;
+        }
+
         animation: var(--display-under-reduced-motion, modal_out 0.35s var(--trans-function));
 
         &[data-modal-type="setup"] {

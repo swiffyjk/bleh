@@ -1,22 +1,22 @@
-import { test_api_key } from "../api";
-import { settings, settings_base } from "../build/config";
-import { album_track_corrections, artist_corrections, ranks } from "../build/music";
-import { auth, page, root, theme_preview } from "../build/page";
-import { stored_season } from "../build/seasonal";
-import { sponsor_list } from "../build/sponsor";
-import { hex_to_hsl, clamp_sat, sanitise_text } from '../build/tools';
-import { lang, lang_info, trans_legacy, trans, tl } from "../build/trans";
-import { load_badges } from '../components/badge';
-import { dialog, dialog_legacy, dialog_rm, kill_window } from "../components/dialog";
-import { correct_artist, correct_item_by_artist, name_includes } from '../components/lotus';
-import { markdown } from '../components/markdown';
-import { notify } from "../components/notify";
-import { create_settings_template, load_settings, refresh_all, update_params } from "../config";
-import { version } from "../main";
-import { update_page } from "../page";
-import { seasonal_timer_end, seasonal_timer_start } from "../seasonal";
-import { ff } from "../sku";
-import { html, render } from "lighterhtml"
+import {test_api_key} from "../api";
+import {settings, settings_base} from "../build/config";
+import {album_track_corrections, artist_corrections, ranks} from "../build/music";
+import {auth, page, root, theme_preview} from "../build/page";
+import {stored_season} from "../build/seasonal";
+import {sponsor_list} from "../build/sponsor";
+import {clamp_sat, hex_to_hsl, sanitise_text} from '../build/tools';
+import {lang, lang_info, tl, trans, trans_legacy} from "../build/trans";
+import {load_badges} from '../components/badge';
+import {dialog, dialog_rm} from "../components/dialog";
+import {correct_artist, correct_item_by_artist, name_includes} from '../components/lotus';
+import {markdown} from '../components/markdown';
+import {notify} from "../components/notify";
+import {create_settings_template, load_settings, refresh_all, update_params} from "../config";
+import {version} from "../main";
+import {update_page} from "../page";
+import {seasonal_timer_end, seasonal_timer_start} from "../seasonal";
+import {ff} from "../sku";
+import {html, render} from "lighterhtml"
 
 export function bleh_settings() {
     page.name = auth.name;
@@ -2353,31 +2353,28 @@ function init_profile_notes() {
     profile_notes_table.innerHTML = '';
 
     for (let user in profile_notes) {
-        let profile_note = document.createElement('div');
-        profile_note.classList.add('generic-table-list-entry', 'user-vertical-list-item');
-        profile_note.setAttribute('id',`profile-note-row--${user}`);
-        render(profile_note, html`
-        <div class="name">
-            <a class="mention" href="${root}user/${user}">@${user}</a>
-        </div>
-        <div class="text preview">
-            <p id="profile-note-row-preview--${user}">${profile_notes[user]}</p>
-        </div>
-        <div class="actions">
-            <button class="icon chibi edit" onclick="_edit_profile_note('${user}')">
-                ${tl(trans.delete)}
-            </button>
-            <button class="delete icon delete-user-button danger-subtle" onclick="_delete_profile_note('${user}')">
-                ${tl(trans.delete)}
-            </button>
-        </div>
+        profile_notes_table.appendChild(html.node`
+            <div class="generic-table-list-entry user-vertical-list-item" id="profile-note-row--${user}">
+                <div class="name">
+                    <a class="mention" href="${root}user/${user}">@${user}</a>
+                </div>
+                <div class="text preview">
+                    <p id="profile-note-row-preview--${user}">${profile_notes[user]}</p>
+                </div>
+                <div class="actions">
+                    <button class="icon chibi edit" onclick=${() => edit_profile_note(user)}>
+                        ${tl(trans.delete)}
+                    </button>
+                    <button class="delete icon delete-user-button danger-subtle" onclick=${() => delete_profile_note(user)}>
+                        ${tl(trans.delete)}
+                    </button>
+                </div>
+            </div>
         `);
-
-        profile_notes_table.appendChild(profile_note);
     }
 }
 
-unsafeWindow._delete_profile_note = function(username) {
+function delete_profile_note(user) {
     let profile_notes = JSON.parse(localStorage.getItem('bleh_profile_notes')) || {};
     delete profile_notes[username];
     document.getElementById(`profile-note-row--${username}`).style.setProperty('display','none');
@@ -2385,41 +2382,41 @@ unsafeWindow._delete_profile_note = function(username) {
     localStorage.setItem('bleh_profile_notes',JSON.stringify(profile_notes));
 }
 
-unsafeWindow._edit_profile_note = function(username) {
+function edit_profile_note(user) {
     let profile_notes = JSON.parse(localStorage.getItem('bleh_profile_notes')) || {};
 
-    dialog_legacy('edit_profile_note',trans_legacy.en.settings.profiles.notes.edit_user.replace('{u}', username),html.node`
-    <textarea id="bleh--profile-note" placeholder="Enter a local note for this user">${profile_notes[username]}</textarea>
-    <div class="modal-footer">
-        <button class="see-more cancel" onclick="_kill_window('edit_profile_note')">
-            ${tl(trans.cancel)}
-        </button>
-        <div class="fill"></div>
-        <button class="btn primary save" onclick="_save_profile_note_in_window('${username}')">
-            ${tl(trans.save)}
-        </button>
-    </div>
-    `, true);
-
-    profile_notes[username] = document.getElementById('bleh--profile-note').value;
-
-    localStorage.setItem('bleh_profile_notes',JSON.stringify(profile_notes));
+    let modal = dialog({
+        id: 'edit_profile_note',
+        title: tl(trans.edit_profile_note),
+        body: html.node`
+            <textarea class="modal-text" id="bleh--profile-note" placeholder=${tl(trans.anything_you_can_imagine)}>${profile_notes[user]}</textarea>
+            <div class="modal-footer">
+                <button class="see-more cancel" onclick=${() => dialog_rm({id: 'edit_profile_note'})}>
+                    ${tl(trans.cancel)}
+                </button>
+                <div class="fill"></div>
+                <button class="btn primary save" onclick=${() => save_profile_note_in_window(modal, user)}>
+                    ${tl(trans.save)}
+                </button>
+            </div>
+        `
+    });
 }
 
-unsafeWindow._save_profile_note_in_window = function(username) {
+function save_profile_note_in_window(modal, user) {
     let profile_notes = JSON.parse(localStorage.getItem('bleh_profile_notes')) || {};
-    let value_to_save = document.getElementById('bleh--profile-note').value
+    let value_to_save = modal.querySelector('#bleh--profile-note').value
     .replace(/&/g, '&amp;')
     .replace(/</g, '&lt;')
     .replace(/>/g, '&gt;')
     .replace(/"/g, '&quot;')
     .replace(/'/g, '&#039;');
-    profile_notes[username] = value_to_save;
+    profile_notes[user] = value_to_save;
 
-    document.getElementById(`profile-note-row-preview--${username}`).textContent = value_to_save;
+    document.getElementById(`profile-note-row-preview--${user}`).textContent = value_to_save;
 
     localStorage.setItem('bleh_profile_notes',JSON.stringify(profile_notes));
-    kill_window('edit_profile_note');
+    dialog_rm({id: 'edit_profile_note'});
 }
 
 

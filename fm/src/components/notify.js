@@ -73,7 +73,7 @@ export function notify({
             icon ? 'icon' : '',
             classname ? classname : ''
             ].join(' ')}
-        data-type="${type}"
+        data-type=${type}
         onclick=${() => notify_rm(notif)}
         style=${[
             icon ? `--mask: var(--${icon})` : '',

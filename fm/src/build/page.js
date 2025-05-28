@@ -16,7 +16,14 @@ tippy.setDefaultProps({
     duration: [120, 220]
 });
 
-// use the top-right link to determine the current user
+/**
+ * Current profile auth details
+ * @param {string|null} name - Profile name if authorised
+ * @param {boolean} pro - Last.fm Pro status
+ * @param {boolean} sponsor - Sponsor of the project
+ * @param {string|null} avatar - Profile avatar if present
+ * @param {{hue: number, sat: number, lit: number}} sets - Set of colours based on avatar
+ */
 export let auth = {
     name: null,
     pro: false,
@@ -32,10 +39,17 @@ export let auth_link = {
     state: ''
 }
 
-// stores the current root of the page, most applicable in other languages:
-// en: /
-// jp: /jp/
-// etc.
+/**
+ * Start of page URL based on language, examples:
+ * en: / and jp: /jp/
+ *
+ *
+ * Build a language-aware URL like
+ *
+ *
+ * {root}user = /user or /jp/user
+ * @type {string}
+ */
 export let root = '/';
 export function setRoot(data) {
     root = data;

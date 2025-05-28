@@ -3759,6 +3759,9 @@
     },
     change_avatar: {
       en: "Change avatar"
+    },
+    edit_profile_note: {
+      en: "Edit profile note"
     }
   };
   var trans_legacy = {
@@ -7179,7 +7182,7 @@
       icon ? "icon" : "",
       classname ? classname : ""
     ].join(" ")}
-        data-type="${type}"
+        data-type=${type}
         onclick=${() => notify_rm(notif)}
         style=${[
       icon ? `--mask: var(--${icon})` : ""
@@ -7398,7 +7401,7 @@
     id = "",
     title = null,
     subtitle = null,
-    body = document.createElement("div").innerHTML,
+    body = html2.node``,
     dismiss = true,
     type = "",
     has_overlays = true,
@@ -7423,7 +7426,6 @@
       colourful,
       colourful_bg
     });
-    let modal;
     if (replace && replace_if_possible)
       replace_if_possible = false;
     if (replace_if_possible && Object.keys(dialogs).length > 0) {
@@ -7433,24 +7435,19 @@
         break;
       }
     }
-    if (!replace || replace && !dialogs.hasOwnProperty(replace_id)) {
-      modal = document.createElement("div");
-      modal.classList.add("bleh-modal");
-      modal.setAttribute("role", "dialog");
-      if (colourful)
-        modal.classList.add("colourful");
-      if (colourful_bg)
-        modal.classList.add("colourful-bg");
-    } else {
-      log(`window set to replace ${replace_id}`, "window");
-      modal = dialogs[replace_id].instance;
-      delete dialogs[replace_id];
-      modal.innerHTML = "";
-    }
-    modal.setAttribute("data-modal-id", id);
-    modal.setAttribute("data-modal-has-overlays", has_overlays);
-    if (type != "")
-      modal.setAttribute("data-modal-type", type);
+    let modal = html2.node`
+        <div
+        class=${[
+      "bleh-modal",
+      colourful ? "colorful" : "",
+      colourful_bg ? "colourful-bg" : ""
+    ].join(" ")}
+        role="dialog"
+        data-modal-id=${id}
+        data-modal-has-overlays=${has_overlays}
+        data-modal-type=${type}
+        />
+    `;
     if (title != null) {
       modal.setAttribute("aria-labelledby", "modal_title");
       modal.appendChild(html2.node`
@@ -7472,11 +7469,16 @@
     let modal_body = document.createElement("div");
     modal_body.classList.add("bleh-modal-body");
     modal_body.setAttribute("data-allow-scroll", allow_scroll);
-    render(modal_body, body);
+    modal_body.appendChild(body);
     modal.appendChild(modal_body);
     dialogs[id] = {
       instance: modal
     };
+    if (replace || !replace && dialogs.hasOwnProperty(replace_id)) {
+      log(`window set to replace ${replace_id}`, "window");
+      dialog_rm({ id: replace_id });
+      delete dialogs[replace_id];
+    }
     page.structure.dialogs.appendChild(modal);
     page.structure.dialogs.classList.add("has-dialog");
     return modal;
@@ -7493,7 +7495,7 @@
     });
   };
   function dialog_rm({
-    id = null,
+    id,
     all = false,
     modal_bg = false
   }) {
@@ -7512,10 +7514,8 @@
       }
       return;
     }
-    if (id == null)
-      return;
-    if (page.structure.dialogs == null)
-      return;
+    if (!id) return;
+    if (!page.structure.dialogs) return;
     if (dialogs.hasOwnProperty(id)) {
       let dialog2 = dialogs[id];
       if (!page.structure.dialogs.contains(dialog2.instance))
@@ -13590,25 +13590,25 @@
       }
     }
   }
-  unsafeWindow._add_profile_note = function(username, has_note) {
-    add_profile_note(username, has_note);
+  unsafeWindow._add_profile_note = function(username2, has_note) {
+    add_profile_note(username2, has_note);
   };
-  function add_profile_note(username, has_note) {
+  function add_profile_note(username2, has_note) {
     document.getElementById("bleh--add-note").style.setProperty("display", "none");
-    create_profile_note_panel(username, has_note);
+    create_profile_note_panel(username2, has_note);
   }
-  function create_profile_note_panel(username, has_note) {
+  function create_profile_note_panel(username2, has_note) {
     let note_panel = document.createElement("section");
     note_panel.classList.add("bleh--panel", "bleh--profile-note-panel");
     if (has_note) {
       note_panel.innerHTML = `
         <h2>${tl(trans.notes)}</h2>
         <div class="content-form">
-            <textarea id="bleh--profile-note" placeholder="${tl(trans.anything_you_can_imagine)}">${JSON.parse(localStorage.getItem("bleh_profile_notes"))[username]}</textarea>
+            <textarea id="bleh--profile-note" placeholder="${tl(trans.anything_you_can_imagine)}">${JSON.parse(localStorage.getItem("bleh_profile_notes"))[username2]}</textarea>
         </div>
         <div class="actions">
-            <button class="btn" onclick="_clear_profile_note('${username}')">${tl(trans.clear)}</button>
-            <button class="btn primary" onclick="_save_profile_note('${username}')">${tl(trans.save)}</button>
+            <button class="btn" onclick="_clear_profile_note('${username2}')">${tl(trans.clear)}</button>
+            <button class="btn primary" onclick="_save_profile_note('${username2}')">${tl(trans.save)}</button>
         </div>
         `;
     } else {
@@ -13618,26 +13618,26 @@
             <textarea id="bleh--profile-note" placeholder="${tl(trans.anything_you_can_imagine)}"></textarea>
         </div>
         <div class="actions">
-            <button class="btn" onclick="_clear_profile_note('${username}')">${tl(trans.clear)}</button>
-            <button class="btn primary" onclick="_save_profile_note('${username}')">${tl(trans.save)}</button>
+            <button class="btn" onclick="_clear_profile_note('${username2}')">${tl(trans.clear)}</button>
+            <button class="btn primary" onclick="_save_profile_note('${username2}')">${tl(trans.save)}</button>
         </div>
         `;
     }
     let about_me_sidebar = page.structure.row.querySelector(".about-me-sidebar");
     about_me_sidebar.after(note_panel);
   }
-  unsafeWindow._clear_profile_note = function(username) {
+  unsafeWindow._clear_profile_note = function(username2) {
     let profile_notes = JSON.parse(localStorage.getItem("bleh_profile_notes")) || {};
-    delete profile_notes[username];
+    delete profile_notes[username2];
     document.getElementById("bleh--profile-note").value = "";
     localStorage.setItem("bleh_profile_notes", JSON.stringify(profile_notes));
   };
-  unsafeWindow._save_profile_note = function(username) {
-    save_profile_note(username);
+  unsafeWindow._save_profile_note = function(username2) {
+    save_profile_note(username2);
   };
-  function save_profile_note(username) {
+  function save_profile_note(username2) {
     let profile_notes = JSON.parse(localStorage.getItem("bleh_profile_notes")) || {};
-    profile_notes[username] = document.getElementById("bleh--profile-note").value.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
+    profile_notes[username2] = document.getElementById("bleh--profile-note").value.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
     localStorage.setItem("bleh_profile_notes", JSON.stringify(profile_notes));
   }
   function patch_profile_following() {
@@ -17181,59 +17181,59 @@
     profile_notes_table.classList = "generic-table-list user-vertical-list take-space profile-notes";
     profile_notes_table.innerHTML = "";
     for (let user in profile_notes) {
-      let profile_note = document.createElement("div");
-      profile_note.classList.add("generic-table-list-entry", "user-vertical-list-item");
-      profile_note.setAttribute("id", `profile-note-row--${user}`);
-      render(profile_note, html2`
-        <div class="name">
-            <a class="mention" href="${root}user/${user}">@${user}</a>
-        </div>
-        <div class="text preview">
-            <p id="profile-note-row-preview--${user}">${profile_notes[user]}</p>
-        </div>
-        <div class="actions">
-            <button class="icon chibi edit" onclick="_edit_profile_note('${user}')">
-                ${tl(trans.delete)}
-            </button>
-            <button class="delete icon delete-user-button danger-subtle" onclick="_delete_profile_note('${user}')">
-                ${tl(trans.delete)}
-            </button>
-        </div>
+      profile_notes_table.appendChild(html2.node`
+            <div class="generic-table-list-entry user-vertical-list-item" id="profile-note-row--${user}">
+                <div class="name">
+                    <a class="mention" href="${root}user/${user}">@${user}</a>
+                </div>
+                <div class="text preview">
+                    <p id="profile-note-row-preview--${user}">${profile_notes[user]}</p>
+                </div>
+                <div class="actions">
+                    <button class="icon chibi edit" onclick=${() => edit_profile_note(user)}>
+                        ${tl(trans.delete)}
+                    </button>
+                    <button class="delete icon delete-user-button danger-subtle" onclick=${() => delete_profile_note(user)}>
+                        ${tl(trans.delete)}
+                    </button>
+                </div>
+            </div>
         `);
-      profile_notes_table.appendChild(profile_note);
     }
   }
-  unsafeWindow._delete_profile_note = function(username) {
+  function delete_profile_note(user) {
     let profile_notes = JSON.parse(localStorage.getItem("bleh_profile_notes")) || {};
     delete profile_notes[username];
     document.getElementById(`profile-note-row--${username}`).style.setProperty("display", "none");
     localStorage.setItem("bleh_profile_notes", JSON.stringify(profile_notes));
-  };
-  unsafeWindow._edit_profile_note = function(username) {
+  }
+  function edit_profile_note(user) {
     let profile_notes = JSON.parse(localStorage.getItem("bleh_profile_notes")) || {};
-    dialog_legacy("edit_profile_note", trans_legacy.en.settings.profiles.notes.edit_user.replace("{u}", username), html2.node`
-    <textarea id="bleh--profile-note" placeholder="Enter a local note for this user">${profile_notes[username]}</textarea>
-    <div class="modal-footer">
-        <button class="see-more cancel" onclick="_kill_window('edit_profile_note')">
-            ${tl(trans.cancel)}
-        </button>
-        <div class="fill"></div>
-        <button class="btn primary save" onclick="_save_profile_note_in_window('${username}')">
-            ${tl(trans.save)}
-        </button>
-    </div>
-    `, true);
-    profile_notes[username] = document.getElementById("bleh--profile-note").value;
-    localStorage.setItem("bleh_profile_notes", JSON.stringify(profile_notes));
-  };
-  unsafeWindow._save_profile_note_in_window = function(username) {
+    let modal = dialog({
+      id: "edit_profile_note",
+      title: tl(trans.edit_profile_note),
+      body: html2.node`
+            <textarea class="modal-text" id="bleh--profile-note" placeholder=${tl(trans.anything_you_can_imagine)}>${profile_notes[user]}</textarea>
+            <div class="modal-footer">
+                <button class="see-more cancel" onclick=${() => dialog_rm({ id: "edit_profile_note" })}>
+                    ${tl(trans.cancel)}
+                </button>
+                <div class="fill"></div>
+                <button class="btn primary save" onclick=${() => save_profile_note_in_window(modal, user)}>
+                    ${tl(trans.save)}
+                </button>
+            </div>
+        `
+    });
+  }
+  function save_profile_note_in_window(modal, user) {
     let profile_notes = JSON.parse(localStorage.getItem("bleh_profile_notes")) || {};
-    let value_to_save = document.getElementById("bleh--profile-note").value.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
-    profile_notes[username] = value_to_save;
-    document.getElementById(`profile-note-row-preview--${username}`).textContent = value_to_save;
+    let value_to_save = modal.querySelector("#bleh--profile-note").value.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
+    profile_notes[user] = value_to_save;
+    document.getElementById(`profile-note-row-preview--${user}`).textContent = value_to_save;
     localStorage.setItem("bleh_profile_notes", JSON.stringify(profile_notes));
-    kill_window("edit_profile_note");
-  };
+    dialog_rm({ id: "edit_profile_note" });
+  }
   function prepare_corrections_page() {
     let corrections_table_artist = document.getElementById("corrections-artist");
     for (let artist in artist_corrections) {

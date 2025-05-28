@@ -1,7 +1,7 @@
-import { handle_error_500 } from "../page";
-import { log } from "./log";
-import { auth, auth_link, setRoot } from "./page";
-import { clamp_sat, rgb_to_hsl } from "./tools";
+import {handle_error_500} from "../page";
+import {log} from "./log";
+import {auth, auth_link, setRoot} from "./page";
+import {clamp_sat, rgb_to_hsl} from "./tools";
 
 // loads your selected language in last.fm
 export let lang = 'en';
@@ -1934,6 +1934,9 @@ export const trans = {
     },
     change_avatar: {
         en: 'Change avatar'
+    },
+    edit_profile_note: {
+        en: 'Edit profile note'
     }
 }
 
