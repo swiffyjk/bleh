@@ -9829,8 +9829,10 @@
         console.log("track", track);
         if (track.getAttribute("data-track-type"))
           return;
-        if (track.classList[0] == "chartlist-row--interlist-ad")
+        if (track.classList[0] === "chartlist-row--interlist-ad") {
           track.parentElement.removeChild(track);
+          return;
+        }
         let bla = document.createElement("div");
         bla.classList.add("kate-placeholder");
         track.appendChild(bla);
@@ -9936,15 +9938,13 @@
             }
           }
           let image = track.querySelector(".chartlist-image img");
-          if (!image && page.type == "user")
-            is_library_track_page = true;
           if (track_legacy_menu) {
             let track_preview = document.createElement("div");
             track_preview.classList.add("track-preview");
             track_preview.innerHTML = `
                         <div class="image">
                             <div class="inner-image">
-                                ${image ? image.outerHTML : '<img class="missing-track">'}
+                                ${image ? image.outerHTML : '<img class="missing-track" alt="">'}
                             </div>
                         </div>
                         <div class="info">

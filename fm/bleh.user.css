@@ -495,7 +495,7 @@ body {
     --gloss: 0;
 
     --interactable-inset: inset hsl(var(--b3)) 0 -1px 0;
-    --interactable-outer: 0 4px 7px rgba(0, 0, 0, 0.18);
+    --interactable-outer: 0 2px 2px rgba(0, 0, 0, 0.18);
     --interactable-active-outer: hsla(var(--c1), 0.03) 0 2px 25px 0;
 
     --interact-shadow: var(--interactable-outer);
@@ -3196,6 +3196,10 @@ button.navlist-more {
         margin-left: 6px;
     }
 
+    &:before {
+        background: var(--mask-colour, currentColor) !important;
+    }
+
     &:after {
         content: '';
         position: absolute;
@@ -3256,10 +3260,6 @@ button.navlist-more {
 /* create event arrow */
 .secondary-nav-item:before {
     display: none;
-}
-
-.secondary-nav-item-link:before {
-    background: currentColor !important;
 }
 
 
@@ -6870,6 +6870,7 @@ button,
     --bg-hov: var(--cards-overlay-image-subtlest, none), color-mix(in hsl, hsl(var(--b5)), hsl(var(--b3)) 80%);
     --bg-atv: var(--cards-overlay-image-subtlest, none), color-mix(in hsl, hsl(var(--b5)), hsl(var(--b3)) 60%);
     --col: hsl(var(--c2));
+    --mask-colour: color-mix(in hsl, hsl(var(--c2)), hsl(var(--c3)) 50%);
     --shadow: var(--interact-shadow);
     --shadow-hov: var(--active-shadow);
     --btn-top: 7px;
@@ -7032,11 +7033,13 @@ button,
         --bg-hov: var(--cards-overlay-image-subtlest, none), color-mix(in hsl, hsl(var(--h4)), hsl(var(--h3)) 80%) !important;
         --bg-atv: var(--cards-overlay-image-subtlest, none), color-mix(in hsl, hsl(var(--h4)), hsl(var(--h3)) 60%) !important;
         --col: hsl(var(--b7)) !important;
+        --mask-colour: color-mix(in hsl, hsl(var(--b7)), hsl(var(--h4)) 40%) !important;
         --shadow: 0 3px 12px hsl(var(--h4), 32%), var(--interactable-outer);
         --shadow-hov: var(--interactable-outer), var(--interactable-active-outer);
 
         [data-bleh--invert_interactable_colour="true"] & {
             --col: hsl(var(--ov-c1)) !important;
+            --mask-colour: color-mix(in hsl, hsl(var(--ov-c1)), hsl(var(--h4)) 40%);
         }
 
         [data-bleh--season="christmas"] & {
@@ -7088,6 +7091,7 @@ button,
     &[disabled] {
         opacity: 0.7 !important;
         --col: hsl(var(--c3)) !important;
+        --mask-colour: hsl(var(--c3)) !important;
         transform: unset !important;
     }
 
@@ -7112,6 +7116,7 @@ button,
 .image-upload-remove
 {
     --col: hsl(var(--l3-c)) !important;
+    --mask-colour: color-mix(in hsl, hsl(var(--l3-c)), hsl(var(--b3)) 20%);
     --hue: var(--hue-neg);
     --sat: 1;
     --lit: 1;
@@ -7453,7 +7458,7 @@ span.header-new-gallery-inner a:before,
     bottom: var(--bottom, unset) !important;
     background-repeat: no-repeat;
     background-image: var(--flag-url, unset) !important;
-    background-color: currentColor;
+    background-color: var(--mask-colour, currentColor);
     border-radius: unset;
     mask-image: var(--mask, var(--icon-16-placeholder));
     -webkit-mask-image: var(--mask, var(--icon-16-placeholder));
@@ -7809,6 +7814,7 @@ section:has(.dropdown-menu-clickable-button.section-control) {
         &[data-is-shortcut="true"],
         [data-toggle-button-current-state="followed"] > form > & {
             --col: hsl(var(--l3-c));
+            --mask-colour: color-mix(in hsl, hsl(var(--l3-c)), hsl(var(--b3)) 20%);
 
             &:before {
                 background: hsl(var(--h3)) !important;
@@ -8037,6 +8043,7 @@ section:has(.dropdown-menu-clickable-button.section-control) {
         --bg-hov: var(--cards-overlay-image-subtlest, none), hsla(var(--h3), 80%) !important;
         --bg-atv: var(--cards-overlay-image-subtlest, none), hsla(var(--h3), 60%) !important;
         --col: hsl(var(--b7)) !important;
+        --mask-colour: color-mix(in hsl, hsl(var(--b7)), hsl(var(--h4)) 40%);
         --shadow: 0 3px 12px hsl(var(--h4), 25%), var(--interactable-outer);
     }
 
@@ -8164,6 +8171,7 @@ very, very, very dated - who looks up a song on ebay? */
 .chartlist-more-menu-love {
     --mask: var(--icon-16-heart);
     --col: hsl(var(--l3-c)) !important;
+    --mask-colour: color-mix(in hsl, hsl(var(--l3-c)), hsl(var(--b3)) 20%);
 
     &[data-analytics-action="UnloveTrack"] {
         --mask: var(--icon-16-heart-solid);
@@ -8350,6 +8358,7 @@ very, very, very dated - who looks up a song on ebay? */
     --bg-hov: hsla(var(--h4), 12%) !important;
     --bg-atv: hsla(var(--h4), 22%) !important;
     --col: hsl(var(--l3-c)) !important;
+    --mask-colour: color-mix(in hsl, hsl(var(--l3-c)), hsl(var(--b3)) 20%);
 
     [data-bleh--theme_type="light"] & {
         --bg-hov: hsla(var(--h4), 15%) !important;
@@ -8398,6 +8407,7 @@ very, very, very dated - who looks up a song on ebay? */
     --bg-hov: hsla(var(--h3), 8%) !important;
     --bg-atv: hsla(var(--h3), 18%) !important;
     --col: hsl(var(--l3-c)) !important;
+    --mask-colour: color-mix(in hsl, hsl(var(--l3-c)), hsl(var(--b3)) 20%);
     --hue-over: var(--hue-pro);
     --sat-over: 1;
     --lit-over: 1;
@@ -8647,6 +8657,7 @@ very, very, very dated - who looks up a song on ebay? */
     /* ^ on firefox (at least) transparent backgrounds get
     overlayed over white, which is not readable at all */
     --col: hsl(var(--c2));
+    --mask-colour: color-mix(in hsl, hsl(var(--c2)), hsl(var(--c3)) 50%);
     background-color: var(--bg) !important;
     color: var(--col) !important;
     padding: var(--padding, 7px 12px) !important;
@@ -17252,6 +17263,7 @@ button.bleh--gallery-bookmark-image-btn {
             --bg-hov: var(--cards-overlay-image-subtlest, none), hsla(var(--h3), 80%);
             --bg-atv: var(--cards-overlay-image-subtlest, none), hsla(var(--h3), 60%);
             --col: hsl(var(--b7));
+            --mask-colour: color-mix(in hsl, hsl(var(--b7)), hsl(var(--h4)) 40%);
             --shadow: 0 3px 12px hsl(var(--h4), 25%), var(--interactable-outer);
             position: relative;
         }
@@ -17266,6 +17278,7 @@ button.bleh--gallery-bookmark-image-btn {
             --bg-atv: hsl(var(--b4), 80%);
             --shadow: none;
             --col: hsl(var(--c2));
+            --mask-colour: color-mix(in hsl, hsl(var(--c2)), hsl(var(--c3)) 50%);
 
             &.swatch:not([data-swatch-type="seasonal"], [data-swatch-type="custom"]),
             .gallery-image-buttons &:not(.image-open-button),
@@ -17273,6 +17286,7 @@ button.bleh--gallery-bookmark-image-btn {
                 --bg-hov: hsla(var(--h4), 15%);
                 --bg-atv: hsla(var(--h4), 25%);
                 --col: hsl(var(--l3-c));
+                --mask-colour: color-mix(in hsl, hsl(var(--l3-c)), hsl(var(--l4-c)) 30%);
                 --sat-over: 1;
                 --lit-over: 1;
             }
@@ -18628,7 +18642,7 @@ h4 {
 
                 .gallery-image-preferred-states:before,
                 &:before {
-                    background: currentColor !important;
+                    background: var(--mask-colour, currentColor) !important;
                 }
             }
             .gallery-image-preferred-button :is(button, a) {
@@ -22558,6 +22572,7 @@ h4 {
     --padding: 0;
     --shadow: none;
     --col: hsl(var(--l3-c));
+    --mask-colour: color-mix(in hsl, hsl(var(--l3-c)), hsl(var(--l4-c)) 30%);
     font-weight: var(--font-weight-medium);
     --mask: var(--icon-16-arrow-right);
     position: relative;
