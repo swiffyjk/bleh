@@ -1576,10 +1576,9 @@
   var auth_link = {
     state: ""
   };
-
   var root = "/";
-  function setRoot(data) {
-    root = data;
+  function setRoot(data2) {
+    root = data2;
   }
   var recent_activity_list = [];
   var last_page_type = {
@@ -7190,10 +7189,20 @@
       icon = "icon-16-check";
     if (!icon)
       icon = "icon-16-info";
-    let notif = document.createElement("button");
-    notif.classList.add("bleh-notification");
-    notif.setAttribute("data-type", type);
-    notif.setAttribute("onclick", "_notify_rm(this)");
+    let notif = html2.node`
+        <button
+        class=${[
+      "bleh-notification",
+      icon ? "icon" : "",
+      classname ? classname : ""
+    ].join(" ")}
+        data-type="${type}"
+        onclick=${() => notify_rm(notif)}
+        style=${[
+      icon ? `--mask: var(--${icon})` : ""
+    ].join(";")}
+        />
+    `;
     if (!body) {
       render(notif, html2`
             <div class="notification-title margin-below">${title}</div>
@@ -7205,27 +7214,12 @@
         `);
     }
     page.structure.notifications.appendChild(notif);
-    if (type == "error")
-      icon = "icon-16-x";
-    if (type == "success")
-      icon = "icon-16-check";
-    if (!icon)
-      icon = "icon-16-info";
-    if (icon) {
-      notif.classList.add("icon");
-      notif.style.setProperty("--mask", `var(--${icon})`);
-    }
-    if (classname)
-      notif.classList.add(classname);
-    if (action)
-      notif.setAttribute("onclick", action);
     if (persist)
       return;
     let bar = html2.node`
     <div class="notification-progress"></div>
     `;
     notif.appendChild(bar);
-    console.info(bar);
     setTimeout(function() {
       bar.style.setProperty("left", "100%");
     }, 1);
@@ -10835,8 +10829,10 @@
         console.log("track", track);
         if (track.getAttribute("data-track-type"))
           return;
-        if (track.classList[0] == "chartlist-row--interlist-ad")
+        if (track.classList[0] === "chartlist-row--interlist-ad") {
           track.parentElement.removeChild(track);
+          return;
+        }
         let bla = document.createElement("div");
         bla.classList.add("kate-placeholder");
         track.appendChild(bla);
@@ -10942,15 +10938,13 @@
             }
           }
           let image = track.querySelector(".chartlist-image img");
-          if (!image && page.type == "user")
-            is_library_track_page = true;
           if (track_legacy_menu) {
             let track_preview = document.createElement("div");
             track_preview.classList.add("track-preview");
             track_preview.innerHTML = `
                         <div class="image">
                             <div class="inner-image">
-                                ${image ? image.outerHTML : '<img class="missing-track">'}
+                                ${image ? image.outerHTML : '<img class="missing-track" alt="">'}
                             </div>
                         </div>
                         <div class="info">

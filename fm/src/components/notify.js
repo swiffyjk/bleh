@@ -67,10 +67,20 @@ export function notify({
     if (!icon)
         icon = 'icon-16-info';
 
-    let notif = document.createElement('button');
-    notif.classList.add('bleh-notification');
-    notif.setAttribute('data-type', type);
-    notif.setAttribute('onclick', '_notify_rm(this)');
+    let notif = html.node`
+        <button
+        class=${[
+            'bleh-notification',
+            icon ? 'icon' : '',
+            classname ? classname : ''
+            ].join(' ')}
+        data-type="${type}"
+        onclick=${() => notify_rm(notif)}
+        style=${[
+            icon ? `--mask: var(--${icon})` : '',
+            ].join(';')}
+        />
+    `;
 
     if (!body) {
         render(notif, html`
@@ -85,17 +95,6 @@ export function notify({
 
     page.structure.notifications.appendChild(notif);
 
-    if (icon) {
-        notif.classList.add('icon');
-        notif.style.setProperty('--mask', `var(--${icon})`);
-    }
-
-    if (classname)
-        notif.classList.add(classname);
-
-    if (action)
-        notif.setAttribute('onclick', action);
-
     if (persist)
         return;
 
@@ -103,8 +102,6 @@ export function notify({
     <div class="notification-progress"></div>
     `;
     notif.appendChild(bar);
-
-    console.info(bar);
 
     setTimeout(function() {
         bar.style.setProperty('left', '100%');
