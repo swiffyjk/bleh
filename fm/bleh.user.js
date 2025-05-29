@@ -10720,10 +10720,6 @@
           }
         }
         if (track_legacy_menu) {
-          console.log("0".repeat(20));
-          console.log("0".repeat(40));
-          console.log("0".repeat(20));
-          console.log(track_legacy_menu);
           let menu = tippy(track, {
             theme: "context-menu",
             content: track_legacy_menu.innerHTML,
