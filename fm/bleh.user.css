@@ -129,6 +129,7 @@ body {
 
     --button-sides: 10px;
     --icon-size: 16px;
+    --icon-half: 8px;
     --icon-gap: 6px;
 
     [data-ff--astra="true"] & {
@@ -3225,7 +3226,7 @@ button.navlist-more {
     --font-size: 0;
     width: 32px;
     --mask: var(--icon-16-dots);
-    --left: 7px;
+    --left: var(--icon-half);
     position: relative;
 }
 
@@ -4029,7 +4030,7 @@ button.navlist-more {
 
     &:before {
         background-color: currentColor !important;
-        --left: 7px !important;
+        --left: var(--icon-half) !important;
     }
 
     [data-toggle-button-current-state="followed"] & {
@@ -5200,7 +5201,7 @@ better than the default selector '#app a' i suppose */
 
 .chartlist-more {
     .chartlist-more-button {
-        --left: 7px;
+        --left: var(--icon-half);
         --mask: var(--icon-16-dots);
 
         @media (max-width: 600px) {
@@ -5754,7 +5755,7 @@ better than the default selector '#app a' i suppose */
     --bg-atv: transparent !important;
     --shadow: none !important;
     position: relative;
-    --left: 7px;
+    --left: var(--icon-half);
     --mask: var(--icon-16-heart);
     --col: hsl(var(--l3-c));
     color: var(--col);
@@ -5815,7 +5816,7 @@ a.chartlist-love-button:after {
     order: 1;
 }
 .chartlist-play-button {
-    --left: 7px;
+    --left: var(--icon-half);
     --mask: var(--icon-16-play);
 
     &:before {
@@ -6143,7 +6144,7 @@ p + .chartlist {
                 height: 32px !important;
                 --force-font-weight: var(--font-weight-medium) !important;
                 width: unset;
-                --left: 7px !important;
+                --left: var(--icon-half) !important;
                 min-width: 32px !important;
             }
 
@@ -6210,7 +6211,7 @@ p + .chartlist {
 .shout-more-actions {
     margin-right: unset !important;
     --mask: var(--icon-16-dots);
-    --left: 7px;
+    --left: var(--icon-half);
 }
 
 /* apply some sizing adjustments to all except menu items */
@@ -6957,7 +6958,7 @@ button,
         position: relative;
 
         &:before {
-            --left: 7px !important;
+            --left: var(--icon-half) !important;
             --right: none !important;
         }
     }
@@ -7536,7 +7537,7 @@ span.header-new-gallery-inner a:before,
     margin-top: unset;
     margin-bottom: unset;
     opacity: 1;
-    --left: 7px;
+    --left: var(--icon-half);
     --font-size: 0;
 }
 .section-with-settings .section-control:before
@@ -8905,7 +8906,7 @@ input:is([name^="track_name"], [name^="artist_name"], [name^="album_name"], [nam
         position: absolute;
         top: 13px;
         right: 13px;
-        --left: 7px;
+        --left: var(--icon-half);
         width: 32px;
         height: 32px;
     }
@@ -9108,7 +9109,7 @@ input:is([name^="track_name"], [name^="artist_name"], [name^="album_name"], [nam
     --bg-hov: hsl(var(--b3), 40%);
     --bg-atv: hsl(var(--b3), 60%);
     --shadow: none;
-    --left: 7px;
+    --left: var(--icon-half);
     --font-size: 0;
 
     width: 32px !important;
@@ -9268,7 +9269,7 @@ input:is([name^="track_name"], [name^="artist_name"], [name^="album_name"], [nam
     height: 32px;
     position: relative;
     margin: unset !important;
-    --left: 7px;
+    --left: var(--icon-half);
 }
 .view-icon, #list-view-icon {
     display: none;
@@ -10871,7 +10872,7 @@ text[style^="color: rgb(255, 172, 172)"] {
 }
 .report-headline-share {
     position: relative;
-    --left: 7px;
+    --left: var(--icon-half);
     --mask: var(--icon-16-share);
     margin: unset;
 
@@ -10880,7 +10881,7 @@ text[style^="color: rgb(255, 172, 172)"] {
     }
 }
 .user-dashboard-pagination-previous-link, .user-dashboard-pagination-next-link {
-    --left: 7px;
+    --left: var(--icon-half);
     --mask: var(--icon-16-arrow-left);
     transform: unset !important;
 }
@@ -10928,7 +10929,7 @@ text[style^="color: rgb(255, 172, 172)"] {
     width: 32px;
 
     &:after {
-        --left: 7px !important;
+        --left: var(--icon-half) !important;
         --mask: var(--icon-16-dots);
     }
 
@@ -11063,8 +11064,8 @@ text[style^="color: rgb(0, 0, 0)"] {
     position: relative;
     --show-icon: none;
     --left: none;
-    --top: 7px;
-    --right: 7px;
+    --top: var(--icon-half);
+    --right: var(--icon-half);
     --margin-top: none;
 
     transition-property: opacity;
@@ -12821,7 +12822,7 @@ table.table tr:nth-child(2n) td {
 
                 .api-session-connect, .api-session-disconnect {
                     --font-size: 0;
-                    --left: 7px;
+                    --left: var(--icon-half);
                     width: 32px;
                     position: relative;
                 }
@@ -13669,7 +13670,7 @@ hr {
         right: 4px;
 
         --col: hsl(var(--l3-c));
-        --left: 7px;
+        --left: var(--icon-half);
         --mask: var(--icon-16-bookmark-saved);
 
         --bg: hsla(var(--b4), 40%);
@@ -13921,7 +13922,7 @@ h2.playlisting-create-option-title {
 .playlisting-playlists-item-toggle {
     --font-size: 0;
     --mask: var(--icon-16-dots);
-    --left: 7px;
+    --left: var(--icon-half);
     right: 8px;
     top: 8px;
 }
@@ -14031,7 +14032,7 @@ h2.playlisting-create-option-title {
     --font-size: 0;
     width: 32px;
     --mask: var(--icon-16-dots);
-    --left: 7px;
+    --left: var(--icon-half);
 }
 .playlisting-playlist-header-actions > * {
     margin-left: unset !important;
@@ -14223,7 +14224,7 @@ h2.playlisting-create-option-title {
 
     .btn-sm {
         --font-size: 0;
-        --left: 7px;
+        --left: var(--icon-half);
         --mask: var(--icon-16-add);
         width: 32px;
         --col: hsl(var(--l3-c));
@@ -16865,7 +16866,7 @@ button.bleh--gallery-bookmark-image-btn {
             --bg: transparent;
             --bg-hov: hsl(var(--b3), 40%);
             --bg-hov: hsl(var(--b3), 60%);
-            --left: 7px;
+            --left: var(--icon-half);
             --font-size: 0;
             --mask: var(--icon-16-x);
             opacity: unset !important;
@@ -20779,7 +20780,7 @@ h4 {
                             height: 32px;
                             position: relative;
                             --mask: var(--icon-16-edit);
-                            --left: 7px;
+                            --left: var(--icon-half);
 
                             --bg: transparent !important;
                             --bg-hov: hsla(var(--b3), 30%) !important;
@@ -21397,7 +21398,7 @@ h4 {
                 width: 32px;
                 --font-size: 0;
                 --btn-left: var(--button-sides) !important;
-                --left: 7px;
+                --left: var(--icon-half);
                 --bg: transparent;
                 --shadow: none;
             }
@@ -22136,7 +22137,7 @@ h4 {
 
         &:before {
             --mask: var(--icon-16-plus);
-            --left: 7px;
+            --left: var(--icon-half);
 
             --show-icon: block;
             opacity: 1;
