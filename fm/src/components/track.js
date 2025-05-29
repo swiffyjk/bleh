@@ -1,4 +1,4 @@
-import { html } from "lighterhtml";
+import { html, render } from "lighterhtml";
 import { settings } from "../build/config";
 import { log } from "../build/log";
 import { page, root } from "../build/page";
@@ -195,13 +195,15 @@ export function patch_titles(search=page.structure.main) {
                 track_title.setAttribute('title', correct_item_by_artist(track_title.getAttribute('title'), track_artist));
 
                 // parse tags into text
-                let song_tags_text = '';
+                let song_tags_text = []
                 for (let song_tag in song_tags) {
-                    song_tags_text = `${song_tags_text}<div class="feat" data-bleh--tag-type="${song_tags[song_tag].type}" data-bleh--tag-group="${song_tags[song_tag].group}">${sanitise_text(song_tags[song_tag].text)}</div>`;
+                    song_tags_text.push(html.node`
+                        <div class="feat" data-bleh--tag-type="${song_tags[song_tag].type}" data-bleh--tag-group="${song_tags[song_tag].group}">${sanitise_text(song_tags[song_tag].text)}</div>
+                    `);
                 }
 
                 // combine
-                track_title.innerHTML = `<div class="title">${sanitise_text(song_title).trim()}</div>${song_tags_text}`;
+                render(track_title, html`<div class="title">${sanitise_text(song_title).trim()}</div>${song_tags_text}`);
 
                 let song_artist_element = track.querySelector('.chartlist-artist');
                 if (!song_artist_element && !is_user) {
@@ -213,7 +215,7 @@ export function patch_titles(search=page.structure.main) {
                 // if artist matches OR artist is blank
                 if (song_artist_element.textContent.replaceAll('+', ' ').trim() == track_artist || song_artist_element.textContent.trim() == '') {
                     // replaces with corrected artist if applicable
-                    song_artist_element.innerHTML = `<a href="${root}music/${sanitise(formatted_title[2])}" title="${sanitise_text(formatted_title[2])}">${sanitise_text(formatted_title[2])}</a>`;
+                    render(song_artist_element, html`<a href="${root}music/${sanitise(formatted_title[2])}" title="${sanitise_text(formatted_title[2])}">${sanitise_text(formatted_title[2])}</a>`);
 
                     // append guests
                     let song_guests = formatted_title[3];
@@ -233,22 +235,23 @@ export function patch_titles(search=page.structure.main) {
                 let image = track.querySelector('.chartlist-image img');
 
                 if (track_legacy_menu) {
-                    let track_preview = document.createElement('div');
-                    track_preview.classList.add('track-preview');
-                    track_preview.innerHTML = (`
-                        <div class="image">
-                            <div class="inner-image">
-                                ${(image) ? image.outerHTML : '<img class="missing-track" alt="">'}
+                    let track_preview = html.node`
+                        <div class="track-preview">
+                            <div class="image">
+                                <div class="inner-image">
+                                    ${(image) ? image : html.node`<img class="missing-track" alt="">`}
+                                </div>
+                            </div>
+                            <div class="info">
+                                <h5 class="title">${song_title}</h5>
+                                <p class="artist">${song_artist_element.firstElementChild}</p>
+                                <div class="tags">${song_tags_text}</div>
+                                ${(is_album) ? '' : html.node`<p class="album">${(image) ? correct_item_by_artist(sanitise_text(image.getAttribute('alt')), track_artist) : (album) ? album.textContent : page.name}</p>`}
+                                ${(track_timestamp && track_timestamp_contents) ? html.node`<p class="timestamp">${track_timestamp_contents}</p>` : ''}
                             </div>
                         </div>
-                        <div class="info">
-                            <h5 class="title">${song_title}</h5>
-                            <p class="artist">${song_artist_element.innerHTML}</p>
-                            <div class="tags">${song_tags_text}</div>
-                            ${(is_album) ? '' : `<p class="album">${(image) ? correct_item_by_artist(sanitise_text(image.getAttribute('alt')), track_artist) : (album) ? album.textContent : page.name}</p>`}
-                            ${(track_timestamp && track_timestamp_contents) ? `<p class="timestamp">${track_timestamp_contents}</p>` : ''}
-                        </div>
-                    `);
+                    `
+
                     track_legacy_menu.insertBefore(track_preview, track_legacy_menu.firstElementChild);
                 }
             } else if (settings.corrections) {
@@ -269,11 +272,15 @@ export function patch_titles(search=page.structure.main) {
             }
 
             if (track_legacy_menu) {
+                console.log('0'.repeat(20))
+                console.log('0'.repeat(40))
+                console.log('0'.repeat(20))
+                
+                console.log(track_legacy_menu)
                 let menu = tippy(track, {
                     theme: 'context-menu',
-                    content: html.node([
-                        track_legacy_menu.innerHTML
-                    ]),
+                    content: track_legacy_menu.innerHTML,
+                    allowHTML: true,
                     placement: 'right-start',
                     trigger: 'manual',
                     interactive: true,
@@ -311,16 +318,15 @@ export function patch_titles(search=page.structure.main) {
                 if (image_wrap) {
                     let link = image_wrap.querySelector('.cover-art');
                     let image = link.querySelector('img');
-
+                    
                     if (!settings.album_text) {
                         let alt = correct_item_by_artist(image.getAttribute('alt'), track_artist);
-
-                        let album_text = document.createElement('td');
-                        album_text.classList.add('chartlist-album', 'custom-album-text');
-                        album_text.innerHTML = (`
-                            <a href="${link.getAttribute('href')}">${alt}</a>
+                        
+                        track.appendChild(html.node`
+                            <td class="chartlist-album custom-album-text">
+                                <a href="${link.getAttribute('href')}">${alt}</a>
+                            </td>
                         `);
-                        track.appendChild(album_text);
                     }
 
                     if (!settings.colourful_tracks)

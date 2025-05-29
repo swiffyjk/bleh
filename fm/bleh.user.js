@@ -988,7 +988,7 @@
     this.values = args;
   }
   var Hole = LighterHole;
-  var { render, html: html2, svg } = createRender(Tagger);
+  var { render: render2, html: html2, svg } = createRender(Tagger);
   function tta() {
     let out = [], i = 0, { length } = arguments;
     while (i < length)
@@ -7193,11 +7193,11 @@
         />
     `;
     if (!body) {
-      render(notif, html2`
+      render2(notif, html2`
             <div class="notification-title margin-below">${title}</div>
         `);
     } else {
-      render(notif, html2`
+      render2(notif, html2`
             <div class="notification-title">${title}</div>
             <div class="notification-body margin-below">${body}</div>
         `);
@@ -7585,7 +7585,7 @@
     header.setAttribute("data-kate-processed", "true");
     let inner_content_em = document.createElement("div");
     inner_content_em.classList.add("modal-inner-content");
-    render(inner_content_em, inner_content);
+    render2(inner_content_em, inner_content);
     inner_content_em.setAttribute("data-kate-processed", "true");
     if (allow_scroll)
       inner_content_em.classList.add("allow-scroll");
@@ -9624,7 +9624,7 @@
         if (first_metadata_item != null)
           listens = clean_number(first_metadata_item.textContent.trim());
         listen_item.setAttribute("data-listens", listens);
-        render(listen_item, html3`
+        render2(listen_item, html3`
                 <img class="view-item-avatar" src="${shortcut_listens.avi}" alt="${shortcut_listens.name}">
                 <div class="info">
                     <h3>${shortcut_listens.name}</h3>
@@ -9846,7 +9846,7 @@
       header.textContent = tl(trans.find_on);
       link_group.appendChild(header);
       if (page.type == "album") {
-        render(link_container, html2`
+        render2(link_container, html2`
                 <a class="play-this-track-playlink music-link play-this-track-playlink--spotify" href="https://open.spotify.com/search/${sanitise(page.sister, " ")} ${sanitise(page.name, " ")}" target="_blank">
                     Spotify
                 </a>
@@ -9870,7 +9870,7 @@
                 </a>
             `);
       } else {
-        render(link_container, html2`
+        render2(link_container, html2`
                 <a class="play-this-track-playlink music-link play-this-track-playlink--spotify" href="https://open.spotify.com/search/${sanitise(page.name, " ")}" target="_blank">
                     Spotify
                 </a>
@@ -9938,7 +9938,7 @@
     listen_item.setAttribute("data-listens", listens);
     listen_item.setAttribute("id", `listen-item--${name}`);
     if (listens > -1) {
-      render(listen_item, html2`
+      render2(listen_item, html2`
             <img class="view-item-avatar" src="${avi}" alt="${name}">
             <div class="info">
                 <h3>${name}</h3>
@@ -9965,7 +9965,7 @@
       });
       register_menu(listen_item, menu);
     } else if (listens > -2) {
-      render(listen_item, html2`
+      render2(listen_item, html2`
             <img class="view-item-avatar" src="${avi}" alt="${name}">
             <div class="info">
                 <h3>${name}</h3>
@@ -10003,7 +10003,7 @@
         content: tl(trans.view_others_library)
       });
     } else {
-      render(listen_item, html2`
+      render2(listen_item, html2`
             ${avi[0] ? `<img class="view-item-avatar" src="${avi[0].getAttribute("src")}">` : ""}
             ${avi[1] ? `<img class="view-item-avatar" src="${avi[1].getAttribute("src")}">` : ""}
             ${avi[2] ? `<img class="view-item-avatar" src="${avi[2].getAttribute("src")}">` : ""}
@@ -10146,13 +10146,12 @@
       return;
     if (video_col)
       page.structure.side.removeChild(video_col);
-    let video_placeholder = document.createElement("section");
-    video_placeholder.classList.add("video-placeholder");
-    video_placeholder.innerHTML = `
-        <div class="bleh-icon" style="--icon: var(--icon-16-video-broken)"></div>
-        ${tl(trans.video_removed)}
-    `;
-    page.structure.side.insertBefore(video_placeholder, page.structure.side.firstElementChild);
+    page.structure.side.insertBefore(html2.node`
+        <section class="video-placeholder">
+            <div class="bleh-icon" style="--icon: var(--icon-16-video-broken)"></div>
+            ${tl(trans.video_removed)}
+        </section>
+    `, page.structure.side.firstElementChild);
     let links = page.structure.side.querySelector(".external-links-section .play-this-track-playlinks");
     if (links)
       links.classList.add("video-unavailable");
@@ -10660,11 +10659,13 @@
             song_tags = formatted_title[1];
           }
           track_title.setAttribute("title", correct_item_by_artist(track_title.getAttribute("title"), track_artist));
-          let song_tags_text = "";
+          let song_tags_text = [];
           for (let song_tag in song_tags) {
-            song_tags_text = `${song_tags_text}<div class="feat" data-bleh--tag-type="${song_tags[song_tag].type}" data-bleh--tag-group="${song_tags[song_tag].group}">${sanitise_text(song_tags[song_tag].text)}</div>`;
+            song_tags_text.push(html2.node`
+                        <div class="feat" data-bleh--tag-type="${song_tags[song_tag].type}" data-bleh--tag-group="${song_tags[song_tag].group}">${sanitise_text(song_tags[song_tag].text)}</div>
+                    `);
           }
-          track_title.innerHTML = `<div class="title">${sanitise_text(song_title).trim()}</div>${song_tags_text}`;
+          render2(track_title, html2`<div class="title">${sanitise_text(song_title).trim()}</div>${song_tags_text}`);
           let song_artist_element = track.querySelector(".chartlist-artist");
           if (!song_artist_element && !is_user) {
             song_artist_element = document.createElement("td");
@@ -10672,7 +10673,7 @@
             track.appendChild(song_artist_element);
           }
           if (song_artist_element.textContent.replaceAll("+", " ").trim() == track_artist || song_artist_element.textContent.trim() == "") {
-            song_artist_element.innerHTML = `<a href="${root}music/${sanitise(formatted_title[2])}" title="${sanitise_text(formatted_title[2])}">${sanitise_text(formatted_title[2])}</a>`;
+            render2(song_artist_element, html2`<a href="${root}music/${sanitise(formatted_title[2])}" title="${sanitise_text(formatted_title[2])}">${sanitise_text(formatted_title[2])}</a>`);
             let song_guests = formatted_title[3];
             for (let guest2 in song_guests) {
               song_artist_element.innerHTML = `${song_artist_element.innerHTML},`;
@@ -10685,20 +10686,20 @@
           }
           let image = track.querySelector(".chartlist-image img");
           if (track_legacy_menu) {
-            let track_preview = document.createElement("div");
-            track_preview.classList.add("track-preview");
-            track_preview.innerHTML = `
-                        <div class="image">
-                            <div class="inner-image">
-                                ${image ? image.outerHTML : '<img class="missing-track" alt="">'}
+            let track_preview = html2.node`
+                        <div class="track-preview">
+                            <div class="image">
+                                <div class="inner-image">
+                                    ${image ? image : html2.node`<img class="missing-track" alt="">`}
+                                </div>
                             </div>
-                        </div>
-                        <div class="info">
-                            <h5 class="title">${song_title}</h5>
-                            <p class="artist">${song_artist_element.innerHTML}</p>
-                            <div class="tags">${song_tags_text}</div>
-                            ${is_album ? "" : `<p class="album">${image ? correct_item_by_artist(sanitise_text(image.getAttribute("alt")), track_artist) : album ? album.textContent : page.name}</p>`}
-                            ${track_timestamp && track_timestamp_contents ? `<p class="timestamp">${track_timestamp_contents}</p>` : ""}
+                            <div class="info">
+                                <h5 class="title">${song_title}</h5>
+                                <p class="artist">${song_artist_element.firstElementChild}</p>
+                                <div class="tags">${song_tags_text}</div>
+                                ${is_album ? "" : html2.node`<p class="album">${image ? correct_item_by_artist(sanitise_text(image.getAttribute("alt")), track_artist) : album ? album.textContent : page.name}</p>`}
+                                ${track_timestamp && track_timestamp_contents ? html2.node`<p class="timestamp">${track_timestamp_contents}</p>` : ""}
+                            </div>
                         </div>
                     `;
             track_legacy_menu.insertBefore(track_preview, track_legacy_menu.firstElementChild);
@@ -10719,11 +10720,14 @@
           }
         }
         if (track_legacy_menu) {
+          console.log("0".repeat(20));
+          console.log("0".repeat(40));
+          console.log("0".repeat(20));
+          console.log(track_legacy_menu);
           let menu = tippy(track, {
             theme: "context-menu",
-            content: html2.node([
-              track_legacy_menu.innerHTML
-            ]),
+            content: track_legacy_menu.innerHTML,
+            allowHTML: true,
             placement: "right-start",
             trigger: "manual",
             interactive: true,
@@ -10751,12 +10755,11 @@
             let image = link.querySelector("img");
             if (!settings.album_text) {
               let alt = correct_item_by_artist(image.getAttribute("alt"), track_artist);
-              let album_text = document.createElement("td");
-              album_text.classList.add("chartlist-album", "custom-album-text");
-              album_text.innerHTML = `
-                            <a href="${link.getAttribute("href")}">${alt}</a>
-                        `;
-              track.appendChild(album_text);
+              track.appendChild(html2.node`
+                            <td class="chartlist-album custom-album-text">
+                                <a href="${link.getAttribute("href")}">${alt}</a>
+                            </td>
+                        `);
             }
             if (!settings.colourful_tracks)
               return;
@@ -10865,7 +10868,7 @@
     get_grid(auth.name, type, range, 1, pages, page.name, pages);
   };
   function get_grid(user, type, range, current_page, pages, next_user = null) {
-    render(page.state.compare_modal.querySelector(".bleh-modal-body .compare-body"), html2`
+    render2(page.state.compare_modal.querySelector(".bleh-modal-body .compare-body"), html2`
         <div class="loading-data-container">
             <div class="loading-data-text">${tl(trans.gathering_plays_for_user_pages).replace("{u}", user).replace("{current_page}", current_page).replace("{pages}", pages)}</div>
         </div>
@@ -10940,7 +10943,7 @@
     log("gathered shared values", "compare", "info", page.state.compare);
     page.state.compare_modal.querySelector(".bleh-modal-body .compare-body").innerHTML = "";
     if (page.state.compare.shared.length == 0) {
-      render(page.state.compare_modal.querySelector(".bleh-modal-body .compare-body"), html2`
+      render2(page.state.compare_modal.querySelector(".bleh-modal-body .compare-body"), html2`
             <div class="loading-data-container">
                 <div class="loading-data-text failed">${tl(trans.nothing_in_common)}</div>
             </div>
@@ -11231,23 +11234,25 @@
     }
     let listen_container = page.structure.row.querySelector(".listen-panel");
     if (!is_own_profile && page.name != sponsor_list.sponsor_account && katsune) {
-      let taste_wrap = document.createElement("div");
-      taste_wrap.classList.add("btn", "listen-item", "icon");
-      taste_wrap.innerHTML = `
-            <div class="span">
-                <img class="view-item-avatar" src="${auth.avatar}">
-                <img class="view-item-avatar" src="${profile_avi}">
-                <div class="info">
-                    <h3>${tl(trans.you_share_count_with).replace("{c}", `<span class="colourful" data-taste="${taste}">${taste_percentage}</span>`)}</h3>
-                    <p>
-                        ${taste_artists.length == 1 ? tl(trans.you_share_count_with.one).replace("{artist}", taste_artists[0]) : ""}
-                        ${taste_artists.length == 2 ? tl(trans.you_share_count_with.two).replace("{artist1}", taste_artists[0]).replace("{artist2}", taste_artists[1]) : ""}
-                        ${taste_artists.length == 3 ? tl(trans.you_share_count_with.three).replace("{artist1}", taste_artists[0]).replace("{artist2}", taste_artists[1]).replace("{artist3}", taste_artists[2]) : ""}
-                    </p>
+      let taste_wrap = html2.node`
+            <div class="btn listen-item icon">
+                <div class="span">
+                    <img class="view-item-avatar" src="${auth.avatar}">
+                    <img class="view-item-avatar" src="${profile_avi}">
+                    <div class="info">
+                        <h3>${html2.node([
+        tl(trans.you_share_count_with).replace("{c}", `<span class="colourful" data-taste="${taste}">${taste_percentage}</span>`)
+      ])}</h3>
+                        <p>
+                            ${taste_artists.length == 1 ? tl(trans.you_share_count_with.one).replace("{artist}", taste_artists[0]) : ""}
+                            ${taste_artists.length == 2 ? tl(trans.you_share_count_with.two).replace("{artist1}", taste_artists[0]).replace("{artist2}", taste_artists[1]) : ""}
+                            ${taste_artists.length == 3 ? tl(trans.you_share_count_with.three).replace("{artist1}", taste_artists[0]).replace("{artist2}", taste_artists[1]).replace("{artist3}", taste_artists[2]) : ""}
+                        </p>
+                    </div>
                 </div>
-            </div>
-            <div class="taste-bar colourful" data-taste="${taste}">
-                <div class="taste-bar-fill" style="width: ${taste_percentage}"></div>
+                <div class="taste-bar colourful" data-taste="${taste}">
+                    <div class="taste-bar-fill" style="width: ${taste_percentage}"></div>
+                </div>
             </div>
         `;
       tippy(taste_wrap, {
@@ -11438,12 +11443,12 @@
           if (!subpage_title)
             subpage_title = page.structure.main.querySelector(":scope > section:first-child .section-controls > .subpage-title");
           if (subpage_title) {
-            content_top = document.createElement("div");
-            content_top.classList.add("content-top", "redesigned-content-top");
-            content_top.innerHTML = `
-                        <div class="content-top-inner-wrap">
-                            <div class="container content-top-lower">
-                                <h1 class="content-top-header">${subpage_title.textContent.trim()}</h1>
+            content_top = html.node`
+                        <div class="content-top redesigned-content-top">
+                            <div class="content-top-inner-wrap">
+                                <div class="container content-top-lower">
+                                    <h1 class="content-top-header">${subpage_title.textContent.trim()}</h1>
+                                </div>
                             </div>
                         </div>
                     `;
@@ -11522,7 +11527,7 @@
       checkbox.classList = "setting";
       checkbox.setAttribute("data-type", "toggle");
       checkbox.setAttribute("onclick", `_update_inbuilt_item('${id}')`);
-      render(checkbox, html2`
+      render2(checkbox, html2`
             <div class="heading">
                 <h5>${text2}</h5>
             </div>
@@ -12114,7 +12119,7 @@
   };
   function update_about_me_preview(value) {
     let about_me = page.structure.main.querySelector("#about_me_preview");
-    render(about_me, markdown(value, {
+    render2(about_me, markdown(value, {
       allow_headers: true
     }));
     let banner = about_me.querySelector('img[alt="banner"]');
@@ -14021,7 +14026,7 @@
   }
   function bio_parse(text2, cache2 = false) {
     let temp = document.createElement("div");
-    render(temp, markdown(text2.textContent, {
+    render2(temp, markdown(text2.textContent, {
       allow_headers: true
     }));
     use_banner(temp, cache2);
@@ -15004,7 +15009,7 @@
     page.requested.setting = params.get("setting");
     let nav = document.createElement("nav");
     nav.classList.add("navlist", "secondary-nav", "navlist--more", "redesigned-navigation", "bleh-settings-navigation");
-    render(nav, html2`
+    render2(nav, html2`
         <ul class="navlist-items">
             <li class="navlist-item secondary-nav-item">
                 <a class="secondary-nav-item-link bleh--nav" data-bleh-page="home" onclick="_change_settings_page('home')">
@@ -15058,7 +15063,7 @@
             </li>
         </ul>
     `);
-    render(page.structure.side, html2`
+    render2(page.structure.side, html2`
         <div class="cta first priority sponsor colourful">
             ${auth.sponsor ? html2.node`
             <strong>${tl(trans.you_are_a_sponsor)}</strong>
@@ -16468,7 +16473,7 @@
       seasonal_timer_start();
     else
       seasonal_timer_end();
-    render(page.structure.main, render_setting_page(page_id));
+    render2(page.structure.main, render_setting_page(page_id));
     if (page_id == "themes") {
       show_theme_change_in_settings();
       display_colour_presets();
@@ -16556,7 +16561,7 @@
       feature_flag_element.classList.add("setting");
       feature_flag_element.setAttribute("data-type", "toggle");
       feature_flag_element.setAttribute("onclick", `_update_flag_toggle('${flag}', this)`);
-      render(feature_flag_element, html2`
+      render2(feature_flag_element, html2`
             <div class="heading">
                 <h5>${version.feature_flags[flag].name}</h5>
                 ${version.feature_flags[flag].notice ? `<p>${version.feature_flags[flag].notice}</p>` : ""}
@@ -17698,7 +17703,7 @@
       else
         involved_text = html2.node`${involved_text}<a class="involved--${involved.type}">${name}</a>`;
     });
-    render(activity_item, html2`
+    render2(activity_item, html2`
         <div class="type">
             ${tl(trans.activity.listing[activity.type])}
             <div class="date">
@@ -18503,7 +18508,7 @@
       wiki.classList.remove("visible-lg");
     let about_artist_container = legacy_container.parentElement;
     about_artist_container.classList.add("about-artist-container");
-    render(about_artist_container, html2`
+    render2(about_artist_container, html2`
         <div class="about-artist-panel">
             <div class="avatar-side">
                 ${avatar != null ? html2.node`<img src="${avatar.getAttribute("src")}"><a onclick=${() => expand_avatar(avatar.getAttribute("src").replace("/300x300/", "/ar0/"))} class="bleh--avatar-clickable-link"></a>` : html2.node`<img class="missing-artist">`}
@@ -18957,25 +18962,24 @@
       let title = album_header.querySelector(".header-new-title");
       let artist = album_header.querySelector('[itemprop="byArtist"]');
       let position = album_header.querySelector(".header-new-chart-position-number");
-      let redesigned_album_header = document.createElement("section");
-      redesigned_album_header.classList.add("redesigned-header", "redesigned-album-header", "no-background");
-      redesigned_album_header.innerHTML = `
-            ${is_subpage || ff("show_album_cover_always") ? `
-            <div class="avatar-side">
-                ${avatar ? `
-                <img src="${avatar.getAttribute("content").replace("/ar0/", "/avatar170s/")}">
-                <a class="bleh--avatar-clickable-link"></a>
-                ` : '<img class="missing-album">'}
-            </div>
-            ` : ""}
-            <div class="info-side">
-                <div class="sub-text">${tl(trans.album)}</div>
-                <div class="title-container">
-                    <h1>${title.innerHTML}</h1>
-                    ${position ? position.outerHTML : ""}
+      let redesigned_album_header = html2.node`
+            <section class="redesigned-header redesigned-album-header no-background">
+                ${is_subpage || ff("show_album_cover_always") ? html2.node`
+                <div class="avatar-side">
+                    ${avatar ? html2.node`
+                    <img src="${avatar.getAttribute("content").replace("/ar0/", "/avatar170s/")}">
+                    <a class="bleh--avatar-clickable-link"></a>
+                    ` : '<img class="missing-album">'}
                 </div>
-                <h2>${artist.innerHTML}</h2>
-            </div>
+                ` : ""}
+                <div class="info-side">
+                    <div class="sub-text">${tl(trans.album)}</div>
+                    <div class="title-container">
+                        <h1>${html2.node([title.innerHTML])}</h1>
+                        ${position ? position : ""}
+                    </div>
+                    <h2>${html2.node([artist.innerHTML])}</h2>
+                </div>
         `;
       let bg;
       if (avatar)
@@ -19072,12 +19076,13 @@
     if (!tracklist) {
       let top_overview = document.querySelector(".top-overview-panel");
       if (!top_overview) return;
-      tracklist = document.createElement("section");
-      tracklist.innerHTML = `
-            <h3 class="text-18">${tl(trans.tracklist)}</h3>
-            <div class="loading-data-container">
-                <p class="loading-data-text">${tl(trans.gathering_your_plays)}</p>
-            </div>
+      tracklist = html2.node`
+            <section>
+                <h3 class="text-18">${tl(trans.tracklist)}</h3>
+                <div class="loading-data-container">
+                    <p class="loading-data-text">${tl(trans.gathering_your_plays)}</p>
+                </div>
+            </section>
         `;
       top_overview.after(tracklist);
       let url = document.querySelector(".header-metadata-display a");
@@ -19085,13 +19090,13 @@
         let url_split = window.location.href.split("/");
         let album_url = `${url_split[url_split.length - 2]}/${url_split[url_split.length - 1]}`;
         let album_as_track_url = window.location.href.replace(album_url, `${url_split[url_split.length - 2]}/_/${url_split[url_split.length - 1]}`);
-        tracklist.innerHTML = `
+        render2(tracklist, html2`
                 <h3 class="text-18">${tl(trans.tracklist)}</h3>
                 <div class="loading-data-container">
                     <p class="loading-data-text failed">${tl(trans.failed_to_find_tracks)}</p>
                     <a class="btn" href="${album_as_track_url}">${tl(trans.open_album_as_track)}</a>
                 </div>
-            `;
+            `);
         return;
       }
       url = url.getAttribute("href");
@@ -19106,21 +19111,21 @@
           let url_split = window.location.href.split("/");
           let album_url = `${url_split[url_split.length - 2]}/${url_split[url_split.length - 1]}`;
           let album_as_track_url = window.location.href.replace(album_url, `${url_split[url_split.length - 2]}/_/${url_split[url_split.length - 1]}`);
-          tracklist.innerHTML = `
+          render2(tracklist, html3`
                         <h3 class="text-18">${tl(trans.tracklist)}</h3>
                         <div class="loading-data-container">
                             <p class="loading-data-text failed">${tl(trans.failed_to_find_tracks)}</p>
                             <a class="btn" href="${album_as_track_url}">${tl(trans.open_album_as_track)}</a>
                         </div>
-                    `;
+                    `);
           return;
         }
         inner_tracklist.classList.remove("chartlist--with-image");
-        tracklist.innerHTML = `
+        render2(tracklist, html3`
                     <h3 class="text-18">${tl(trans.tracklist)}</h3>
                     <div class="alert alert-info">${tl(trans.sourced_from_own_plays)}</div>
-                    ${inner_tracklist.outerHTML}
-                `;
+                    ${html3.node([inner_tracklist.outerHTML])}
+                `);
       });
     }
   }
@@ -21214,10 +21219,10 @@
         text2 = page.name;
       else if (type == "event")
         text2 = tl(trans.artists);
-      radio.innerHTML = `
+      render2(radio, html2`
             <h3 class="sub-text">${tl(trans.radio)}</h3>
             <h4>${text2}</h4>
-        `;
+        `);
       radio.removeAttribute("title");
     });
     if (page.type == "user") {
@@ -21268,7 +21273,7 @@
       let description = old.querySelector(".api-app-description").textContent.trim();
       let token = old.querySelector('form [name="csrfmiddlewaretoken"]').value;
       let cancel = old.querySelector(".form-submit a").getAttribute("href");
-      page.structure.main.innerHTML = `
+      render(page.structure.main, html`
             <section class="api-connector">
                 <div class="avatar">
                     <img src="${auth.avatar.replace("/avatar42s/", "/avatar170s/")}" alt="${tl(trans.your_avatar)}">
@@ -21276,7 +21281,11 @@
                 <div class="info">
                     <h1>${page.name}</h1>
                     <div class="sub-text no-margin">${tl(trans.app_would_like_to_connect)}</div>
-                    <div class="subtle">${tl(trans.logged_in_as).replace("{user}", `<a class="mention" href="${root}user/${auth.name}">@${auth.name}</a>`)}</div>
+                    <div class="subtle">
+                        ${html.node([
+        tl(trans.logged_in_as).replace("{user}", `<a class="mention" href="${root}user/${auth.name}">@${auth.name}</a>`)
+      ])}
+                    </div>
                 </div>
                 <div class="sep"></div>
                 <div class="description">${description}</div>
@@ -21294,7 +21303,7 @@
                     </form>
                 </div>
             </section>
-        `;
+        `);
     } else {
       page.name = success.querySelector("strong").textContent;
       page.structure.main.innerHTML = `
@@ -21322,7 +21331,7 @@
   function bleh_users() {
     let users = page.structure.main.querySelectorAll(".user-list-about-me");
     users.forEach((user) => {
-      render(user, markdown(user.textContent, {
+      render2(user, markdown(user.textContent, {
         allow_headers: true,
         line_breaks: false
       }));
@@ -21718,7 +21727,7 @@
     }
   }
   function page_indicator() {
-    render(page.structure.indicator, html2`
+    render2(page.structure.indicator, html2`
         <div class="bleh">
             <strong>ver</strong>
             <span>${version.brand}</span>

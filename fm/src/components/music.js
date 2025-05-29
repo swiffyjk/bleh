@@ -960,14 +960,12 @@ function video_unavailable(video_col=null) {
     if (video_col)
         page.structure.side.removeChild(video_col);
 
-    let video_placeholder = document.createElement('section');
-    video_placeholder.classList.add('video-placeholder');
-    video_placeholder.innerHTML = (`
-        <div class="bleh-icon" style="--icon: var(--icon-16-video-broken)"></div>
-        ${tl(trans.video_removed)}
-    `);
-
-    page.structure.side.insertBefore(video_placeholder, page.structure.side.firstElementChild);
+    page.structure.side.insertBefore(html.node`
+        <section class="video-placeholder">
+            <div class="bleh-icon" style="--icon: var(--icon-16-video-broken)"></div>
+            ${tl(trans.video_removed)}
+        </section>
+    `, page.structure.side.firstElementChild);
 
 
     let links = page.structure.side.querySelector('.external-links-section .play-this-track-playlinks');

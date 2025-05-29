@@ -14,7 +14,7 @@ import { ff } from "../sku";
 import { bleh_gallery_list, bleh_gallery_upload } from "./gallery";
 import { bleh_tags_mini } from "./tag";
 import { bleh_wiki, bleh_wiki_editor, bleh_wiki_history } from "./wiki";
-import { html } from "lighterhtml";
+import { html, render } from "lighterhtml";
 
 export function bleh_albums() {
     let album_header = document.body.querySelector('.header-new--album');
@@ -65,26 +65,25 @@ export function bleh_albums() {
         let artist = album_header.querySelector('[itemprop="byArtist"]');
         let position = album_header.querySelector('.header-new-chart-position-number');
 
-        let redesigned_album_header = document.createElement('section');
-        redesigned_album_header.classList.add('redesigned-header', 'redesigned-album-header', 'no-background');
-        redesigned_album_header.innerHTML = (`
-            ${(is_subpage || ff('show_album_cover_always')) ? (`
-            <div class="avatar-side">
-                ${(avatar) ? (`
-                <img src="${avatar.getAttribute('content').replace('/ar0/', '/avatar170s/')}">
-                <a class="bleh--avatar-clickable-link"></a>
-                `) : '<img class="missing-album">'}
-            </div>
-            `) : ''}
-            <div class="info-side">
-                <div class="sub-text">${tl(trans.album)}</div>
-                <div class="title-container">
-                    <h1>${title.innerHTML}</h1>
-                    ${(position) ? position.outerHTML : ''}
+        let redesigned_album_header = html.node`
+            <section class="redesigned-header redesigned-album-header no-background">
+                ${(is_subpage || ff('show_album_cover_always')) ? html.node`
+                <div class="avatar-side">
+                    ${(avatar) ? html.node`
+                    <img src="${avatar.getAttribute('content').replace('/ar0/', '/avatar170s/')}">
+                    <a class="bleh--avatar-clickable-link"></a>
+                    ` : '<img class="missing-album">'}
                 </div>
-                <h2>${artist.innerHTML}</h2>
-            </div>
-        `);
+                ` : ''}
+                <div class="info-side">
+                    <div class="sub-text">${tl(trans.album)}</div>
+                    <div class="title-container">
+                        <h1>${html.node([title.innerHTML])}</h1>
+                        ${(position) ? position : ''}
+                    </div>
+                    <h2>${html.node([artist.innerHTML])}</h2>
+                </div>
+        `
 
         let bg;
 
@@ -206,13 +205,14 @@ function album_missing_a_tracklist() {
         let top_overview = document.querySelector('.top-overview-panel');
         if (!top_overview) return;
 
-        tracklist = document.createElement('section');
-        tracklist.innerHTML = (`
-            <h3 class="text-18">${tl(trans.tracklist)}</h3>
-            <div class="loading-data-container">
-                <p class="loading-data-text">${tl(trans.gathering_your_plays)}</p>
-            </div>
-        `);
+        tracklist = html.node`
+            <section>
+                <h3 class="text-18">${tl(trans.tracklist)}</h3>
+                <div class="loading-data-container">
+                    <p class="loading-data-text">${tl(trans.gathering_your_plays)}</p>
+                </div>
+            </section>
+        `;
         top_overview.after(tracklist);
 
         /*let url_split = window.location.href.split('/');
@@ -225,7 +225,7 @@ function album_missing_a_tracklist() {
             let album_url = `${url_split[(url_split.length - 2)]}/${url_split[(url_split.length - 1)]}`;
             let album_as_track_url = window.location.href.replace(album_url, `${url_split[(url_split.length - 2)]}/_/${url_split[(url_split.length - 1)]}`);
 
-            tracklist.innerHTML = (`
+            render(tracklist, html`
                 <h3 class="text-18">${tl(trans.tracklist)}</h3>
                 <div class="loading-data-container">
                     <p class="loading-data-text failed">${tl(trans.failed_to_find_tracks)}</p>
@@ -256,7 +256,7 @@ function album_missing_a_tracklist() {
                     let album_url = `${url_split[(url_split.length - 2)]}/${url_split[(url_split.length - 1)]}`;
                     let album_as_track_url = window.location.href.replace(album_url, `${url_split[(url_split.length - 2)]}/_/${url_split[(url_split.length - 1)]}`);
 
-                    tracklist.innerHTML = (`
+                    render(tracklist, html`
                         <h3 class="text-18">${tl(trans.tracklist)}</h3>
                         <div class="loading-data-container">
                             <p class="loading-data-text failed">${tl(trans.failed_to_find_tracks)}</p>
@@ -268,10 +268,10 @@ function album_missing_a_tracklist() {
 
                 inner_tracklist.classList.remove('chartlist--with-image');
 
-                tracklist.innerHTML = (`
+                render(tracklist, html`
                     <h3 class="text-18">${tl(trans.tracklist)}</h3>
                     <div class="alert alert-info">${tl(trans.sourced_from_own_plays)}</div>
-                    ${inner_tracklist.outerHTML}
+                    ${html.node([inner_tracklist.outerHTML])}
                 `);
             })
     }

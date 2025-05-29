@@ -120,16 +120,15 @@ export function checkup_page_structure(is_subpage = false, header = null) {
                     subpage_title = page.structure.main.querySelector(':scope > section:first-child .section-controls > .subpage-title');
 
                 if (subpage_title) {
-                    content_top = document.createElement('div');
-                    content_top.classList.add('content-top', 'redesigned-content-top');
-
-                    content_top.innerHTML = (`
-                        <div class="content-top-inner-wrap">
-                            <div class="container content-top-lower">
-                                <h1 class="content-top-header">${subpage_title.textContent.trim()}</h1>
+                    content_top = html.node`
+                        <div class="content-top redesigned-content-top">
+                            <div class="content-top-inner-wrap">
+                                <div class="container content-top-lower">
+                                    <h1 class="content-top-header">${subpage_title.textContent.trim()}</h1>
+                                </div>
                             </div>
                         </div>
-                    `);
+                    `
 
                     page.structure.content_top = content_top;
                     navlist.after(content_top);

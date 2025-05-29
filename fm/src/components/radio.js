@@ -1,3 +1,4 @@
+import { html, render } from 'lighterhtml';
 import { page } from '../build/page';
 import { tl, trans } from '../build/trans';
 
@@ -14,7 +15,7 @@ export function bleh_radio() {
         else if (type == 'event')
             text = tl(trans.artists);
 
-        radio.innerHTML = (`
+        render(radio, html`
             <h3 class="sub-text">${tl(trans.radio)}</h3>
             <h4>${text}</h4>
         `);
