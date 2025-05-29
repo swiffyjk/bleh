@@ -127,6 +127,10 @@ body {
     --trans: 0.1s;
     --trans-function: cubic-bezier(0.785, 0.135, 0.15, 0.86);
 
+    --button-sides: 10px;
+    --icon-size: 16px;
+    --icon-gap: 6px;
+
     [data-ff--astra="true"] & {
         --font: var(--custom_font, ''), Work Sans, Ubuntu Sans, Spline Sans, Inter, Roboto, Noto Sans, Noto Sans JP, Noto Sans KR, Noto Sans TC, var(--font_emoji_name, ''), Lucida Grande, Verdana, Tahoma, -apple-system, BlinkMacSystemFont, sans-serif;
     }
@@ -1192,7 +1196,7 @@ last.fm changes as of 2024-05-20 */
                 --shadow: none;
                 --font-size: 10px;
                 text-align: center;
-                --padding: calc(10px + 18px + 2px) 10px 10px;
+                --padding: calc(10px + var(--icon-size) + 2px) 10px 10px;
                 --left: 50%;
                 --top: 10px;
                 --margin-top: none;
@@ -1203,8 +1207,8 @@ last.fm changes as of 2024-05-20 */
                     content: '';
                     position: absolute;
                     bottom: 0 !important;
-                    left: 12px !important;
-                    right: 12px !important;
+                    left: var(--button-sides) !important;
+                    right: var(--button-sides) !important;
                     border-radius: var(--item-big-radius) !important;
                     opacity: 0;
 
@@ -1240,7 +1244,7 @@ last.fm changes as of 2024-05-20 */
 .masthead-inner-wrap {
     width: var(--cards-width) !important;
     max-width: unset !important;
-    padding: 0 calc(var(--card-padding) - 12px) !important;
+    padding: 0 calc(var(--card-padding) - var(--button-sides)) !important;
     float: unset !important;
     display: flex;
     gap: var(--button-list-gap);
@@ -1535,7 +1539,7 @@ last.fm changes as of 2024-05-20 */
         --bg-atv: hsl(var(--h4), 50%) !important;
     }
 
-    --btn-right: calc(12px + 12px + 4px) !important;
+    --btn-right: calc(var(--button-sides) + 12px + 4px) !important;
     --mask-size: 12px;
     --margin-top: -6px;
     --right: 12px;
@@ -2360,8 +2364,8 @@ span.header-new-gallery-inner a,
 
         .bleh--nav-wrap .navlist,
         .redesigned-navigation {
-            margin-left: calc(var(--card-gap) + var(--card-padding) - 12px) !important;
-            margin-right: calc(var(--card-gap) + var(--card-padding) - 12px) !important;
+            margin-left: calc(var(--card-gap) + var(--card-padding) - var(--button-sides)) !important;
+            margin-right: calc(var(--card-gap) + var(--card-padding) - var(--button-sides)) !important;
 
             @media (max-width: 600px) {
                 width: var(--cards-width) !important;
@@ -2598,34 +2602,6 @@ span.header-new-gallery-inner a,
     h2 {
         display: flex;
         justify-content: space-between;
-
-        .user-about-buttons {
-            display: flex;
-            gap: var(--card-gap);
-
-            & > button {
-                --btn-left: 9px !important;
-                --btn-right: 9px !important;
-                height: 18px;
-                --bg: transparent !important;
-                --bg-hov: transparent !important;
-                --bg-atv: transparent !important;
-                --shadow: none !important;
-                --shadow-hov: none !important;
-                --font-size: 0;
-                position: relative;
-                --left: 0;
-
-                margin-top: -1px;
-
-                &[data-action-type="note"] {
-                    --mask: var(--icon-16-note-add);
-                }
-                &[data-action-type="configure"] {
-                    --mask: var(--icon-16-dots);
-                }
-            }
-        }
     }
 }
 .about-me-preview {
@@ -2832,8 +2808,8 @@ span.header-new-gallery-inner a,
 .secondary-nav, .user-dashboard-controls .secondary-nav {
     box-shadow: unset;
     padding-bottom: 1px;
-    margin: 0 calc(var(--card-gap) + var(--card-padding) - 12px) !important;
-    width: calc(var(--cards-width) - ((var(--card-padding) - 12px) * 2));
+    margin: 0 calc(var(--card-gap) + var(--card-padding) - var(--button-sides)) !important;
+    width: calc(var(--cards-width) - ((var(--card-padding) - var(--button-sides)) * 2));
 
     .content-top + &, .katsune-button-row + .bleh-background + & {
         margin-top: var(--card-gap) !important;
@@ -2862,8 +2838,8 @@ span.header-new-gallery-inner a,
     &:after {
         content: '';
         position: absolute;
-        left: 12px;
-        right: 12px;
+        left: var(--button-sides);
+        right: var(--button-sides);
         bottom: 0;
         height: 1px;
         background: var(--card-border-base);
@@ -2896,7 +2872,7 @@ span.header-new-gallery-inner a,
     }
 }
 .library-controls .secondary-nav {
-    margin: var(--card-gap) calc(var(--card-padding) - 12px) 0 !important;
+    margin: var(--card-gap) calc(var(--card-padding) - var(--button-sides)) 0 !important;
     padding: unset !important;
 
     [data-ff--katsune="true"] & {
@@ -2948,7 +2924,7 @@ span.header-new-gallery-inner a,
 .library-search-form .search-field[type="text"] {
     width: 100%;
     caret-color: hsl(var(--l3-c)) !important;
-    --padding: 12px 12px 12px calc(12px + 18px + 6px) !important;
+    --padding: 12px var(--button-sides) 12px calc(var(--button-sides) + var(--icon-size) + var(--icon-gap)) !important;
     --bg: transparent !important;
     --bg-hov: hsl(var(--b3), 40%) !important;
     --bg-atv: hsl(var(--b3), 60%) !important;
@@ -3006,7 +2982,7 @@ input::placeholder {
 .library-search-results .library-search-results-header {
     height: unset;
     color: hsl(var(--c3));
-    padding: 0 12px;
+    padding: 0 var(--button-sides);
     font-weight: var(--font-weight-medium);
     margin-bottom: var(--button-list-gap) !important;
     cursor: default;
@@ -3123,7 +3099,7 @@ button.navlist-more {
 
 .masthead-nav-control {
     /* left padding for icon, otherwise just 12px 16px */
-    --padding: 7px 12px 7px calc(12px + 18px + 6px) !important;
+    --padding: 7px var(--button-sides) 7px calc(var(--button-sides) + var(--icon-size) + var(--icon-gap)) !important;
     --bg: transparent !important;
     --bg-hov: hsl(var(--b3), 60%) !important;
     --bg-atv: hsl(var(--b3), 80%) !important;
@@ -3171,7 +3147,7 @@ button.navlist-more {
 }
 .navlist-more, .secondary-nav-item-link {
     /* left padding for icon, otherwise just 12px 16px */
-    --padding: 12px 12px 12px calc(12px + 18px + 6px) !important;
+    --padding: 12px var(--button-sides) 12px calc(var(--button-sides) + var(--icon-size) + var(--icon-gap)) !important;
     --bg: transparent !important;
     --bg-hov: transparent !important;
     --bg-atv: transparent !important;
@@ -3200,8 +3176,8 @@ button.navlist-more {
         content: '';
         position: absolute;
         bottom: -2px !important;
-        left: 12px !important;
-        right: 12px !important;
+        left: var(--button-sides) !important;
+        right: var(--button-sides) !important;
         border-radius: var(--item-big-radius) !important;
         opacity: 0.6;
 
@@ -3444,7 +3420,7 @@ button.navlist-more {
 }
 
 .secondary-nav-item-link[href*="events/1"], .secondary-nav-item-link[href*="events/2"] {
-    padding-left: 12px !important;
+    padding-left: var(--button-sides) !important;
 }
 .secondary-nav-item-link[href*="events/1"]:before, .secondary-nav-item-link[href*="events/2"]:before {
     display: none !important;
@@ -3558,13 +3534,13 @@ button.navlist-more {
 }
 .secondary-nav-item--bleh a {
     --mask: var(--icon-16-bleh);
-    --mask-size: 18px;
+    --mask-size: var(--icon-size);
     --col: hsl(var(--l3-c)) !important;
 }
 .secondary-nav-item--more > a {
     --mask: var(--icon-16-dots);
     --font-size: 0;
-    padding-left: calc(12px + 18px) !important;
+    padding-left: calc(var(--button-sides) + var(--icon-size)) !important;
 }
 
 
@@ -3773,8 +3749,8 @@ button.navlist-more {
 .label.auth-badge,
 .title-container .label, .header-new-on-tour {
     /*width: 100%;*/
-    max-width: 18px;
-    height: 18px;
+    max-width: var(--icon-size);
+    height: var(--icon-size);
     font-size: var(--font-size);
     font-weight: var(--font-weight-medium) !important;
     display: flex;
@@ -3787,8 +3763,7 @@ button.navlist-more {
     overflow: hidden;
     letter-spacing: unset;
     text-transform: unset;
-    font-weight: unset;
-    padding-left: calc(18px + 6px);
+    padding-left: calc(var(--icon-size) + var(--icon-gap));
     box-shadow: unset !important;
     min-height: unset;
     line-height: unset;
@@ -4095,7 +4070,7 @@ button.navlist-more {
 
 
 .metadata-item {
-    padding: 7px 12px !important; /* tasteometer overrides with padding-left: 20px */
+    padding: 7px var(--button-sides) !important; /* tasteometer overrides with padding-left: 20px */
     background-color: hsla(var(--b4), 50%); /* would be b5, but we have a background */
     border-radius: var(--item-med-radius);
     display: flex;
@@ -5239,8 +5214,8 @@ better than the default selector '#app a' i suppose */
 /*     CHARTLIST TYPE     */
 /* only viewable in a user's tags */
 .chartlist-type {
-    width: 18px;
-    height: 18px;
+    width: var(--icon-size);
+    height: var(--icon-size);
     --left: 0;
     color: hsl(var(--c3));
 
@@ -6173,8 +6148,8 @@ p + .chartlist {
             }
 
             .vote-button {
-                --padding: 7px 12px 7px calc(12px + 14px + 4px) !important;
-                --left: 12px !important;
+                --padding: 7px var(--button-sides) 7px calc(var(--button-sides) + 14px + 4px) !important;
+                --left: var(--button-sides) !important;
                 --mask-size: 14px;
                 --margin-top: -7px;
             }
@@ -6467,7 +6442,7 @@ the body text becomes bigger by default - this reverts that */
         font-weight: var(--font-weight-medium);
         color: hsl(var(--c3));
         position: relative;
-        padding-left: calc(18px + 6px);
+        padding-left: calc(var(--icon-size) + var(--icon-gap));
         --left: 0;
         --mask: var(--icon-16-spinner);
         user-select: none;
@@ -6873,9 +6848,9 @@ button,
     --shadow: var(--interact-shadow);
     --shadow-hov: var(--active-shadow);
     --btn-top: 7px;
-    --btn-right: 12px;
+    --btn-right: var(--button-sides);
     --btn-bottom: 7px;
-    --btn-left: 12px;
+    --btn-left: var(--button-sides);
     background: var(--bg) !important;
     color: var(--col) !important;
     padding: var(--padding, var(--button-padding, var(--btn-top) var(--btn-right) var(--btn-bottom) var(--btn-left))) !important;
@@ -6975,8 +6950,8 @@ button,
     }
 
     &.chibi {
-        --btn-left: 12px !important;
-        --btn-right: 12px !important;
+        --btn-left: var(--button-sides) !important;
+        --btn-right: var(--button-sides) !important;
         --font-size: 0 !important;
         width: 32px !important;
         position: relative;
@@ -7152,10 +7127,10 @@ button,
 .done, .cancel, .btn-cancel, .download, .upload, .save, .btn-secondary.js-close:not(.modal-action-button), .form-group button[type="submit"], .modal-button button[type="submit"],
 .masthead-nav .masthead-nav-control
 {
-    --btn-left: calc(12px + 18px + 6px) !important;
+    --btn-left: calc(var(--button-sides) + var(--icon-size) + var(--icon-gap)) !important;
 
     &.lang-item {
-        --btn-left: calc(12px + 18px + 6px) !important;
+        --btn-left: calc(var(--button-sides) + var(--icon-size) + var(--icon-gap)) !important;
     }
 }
 .side-right .setting-item,
@@ -7171,7 +7146,7 @@ button,
 .out-now-btn,
 .show-more a
 {
-    --btn-right: calc(12px + 18px + 6px) !important;
+    --btn-right: calc(var(--button-sides) + var(--icon-size) + var(--icon-gap)) !important;
 }
 
 .btn-shortcut {
@@ -7440,12 +7415,12 @@ span.header-new-gallery-inner a:before,
     content: '';
     display: var(--show-icon, block) !important;
     mask-position: 0 0 !important;
-    left: var(--left, 12px) !important;
-    margin-top: var(--margin-top, -9px) !important;
+    left: var(--left, var(--button-sides)) !important;
+    margin-top: var(--margin-top, calc(-1 * (var(--mask-size, var(--icon-size)) / 2))) !important;
     margin-left: var(--margin-left, unset) !important;
     margin-right: var(--margin-right, unset) !important;
-    width: var(--mask-size, 18px) !important;
-    height: var(--mask-size, 18px) !important;
+    width: var(--mask-size, var(--icon-size)) !important;
+    height: var(--mask-size, var(--icon-size)) !important;
     box-shadow: unset !important;
     position: absolute;
     right: var(--right, auto) !important;
@@ -7457,8 +7432,8 @@ span.header-new-gallery-inner a:before,
     border-radius: unset;
     mask-image: var(--mask, var(--icon-16-placeholder));
     -webkit-mask-image: var(--mask, var(--icon-16-placeholder));
-    mask-size: var(--mask-size, unset);
-    -webkit-mask-size: var(--mask-size, unset);
+    mask-size: var(--mask-size, var(--icon-size));
+    -webkit-mask-size: var(--mask-size, var(--icon-size));
     transition-property: var(--transition-property, opacity, left, background) !important;
     transition-duration: var(--trans) !important;
     transition-timing-function: var(--trans-function) !important;
@@ -7476,7 +7451,7 @@ span.header-new-gallery-inner a:before,
 .language-nav, .auth-link
 {
     --left: none !important;
-    --right: 12px !important;
+    --right: var(--button-sides) !important;
 }
 
 .bleh-icon {
@@ -7637,10 +7612,10 @@ section:has(.dropdown-menu-clickable-button.section-control) {
 
 
 .dropdown-menu-list-button, .dropdown-menu-clickable-button, .dropdown-menu-clickable-button-js-only {
-    --btn-right: calc(12px + 12px + 4px) !important;
+    --btn-right: calc(var(--button-sides) + 12px + 4px) !important;
     --mask-size: 12px;
     --margin-top: -6px;
-    --right: 12px;
+    --right: var(--button-sides);
 
     &:after {
         color: hsl(var(--c3));
@@ -8026,7 +8001,7 @@ section:has(.dropdown-menu-clickable-button.section-control) {
     min-width: 170px !important;
     --show-icon: block;
 
-    --left: 12px;
+    --left: var(--button-sides);
     --right: none;
 
     &[aria-checked="true"],
@@ -8050,7 +8025,7 @@ section:has(.dropdown-menu-clickable-button.section-control) {
 .dropdown-menu-clickable-item--selected {
     --mask: var(--icon-16-check) !important;
     --mask-size: 12px !important;
-    --btn-left: calc(12px + 12px + 4px) !important;
+    --btn-left: calc(var(--button-sides) + 12px + 4px) !important;
     --margin-top: -6px !important;
 }
 
@@ -8177,13 +8152,13 @@ very, very, very dated - who looks up a song on ebay? */
     display: block !important; /* labs */
     --mask: var(--icon-16-profile);
     text-align: center;
-    --btn-top: calc(12px + 18px + 6px);
+    --btn-top: calc(12px + var(--icon-size) + var(--icon-gap));
     --btn-bottom: 12px;
     --left: 50%;
     --margin-left: -8px;
     --top: 12px;
     --margin-top: 0;
-    --btn-left: 12px !important;
+    --btn-left: var(--button-sides) !important;
 
     &[data-menu-item="profile-shortcut"] {
         --mask: var(--icon-16-profile-shortcut);
@@ -8649,7 +8624,7 @@ very, very, very dated - who looks up a song on ebay? */
     --col: hsl(var(--c2));
     background-color: var(--bg) !important;
     color: var(--col) !important;
-    padding: var(--padding, 7px 12px) !important;
+    padding: var(--padding, 7px var(--button-sides)) !important;
     line-height: var(--line-height);
     font-size: var(--font-size) !important;
     font-weight: var(--font-weight) !important;
@@ -9354,7 +9329,7 @@ input:is([name^="track_name"], [name^="artist_name"], [name^="album_name"], [nam
 }
 .gallery-image-votes {
     display: flex;
-    padding-left: calc(18px + 6px) !important;
+    padding-left: calc(var(--icon-size) + var(--icon-gap)) !important;
 }
 
 .js-gallery-image-details > div {
@@ -9450,7 +9425,7 @@ a.gallery-image-preferred-off {
 
             .inbox-notifications__item-avatar {
                 margin: unset;
-                padding: 0 calc(18px + 6px) 0 0;
+                padding: 0 calc(var(--icon-size) + var(--icon-gap)) 0 0;
 
                 .avatar {
                     box-shadow: var(--card-shadow);
@@ -9466,7 +9441,7 @@ a.gallery-image-preferred-off {
 
                     top: 50%;
                     --margin-top: -8px;
-                    left: calc(18px + 6px);
+                    left: calc(var(--icon-size) + var(--icon-gap));
                     right: unset;
                     bottom: unset;
 
@@ -10007,7 +9982,7 @@ a.gallery-image-preferred-off {
 
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: var(--card-gap);
     --padding: 0;
 
     --bg: transparent;
@@ -10390,7 +10365,7 @@ text[style^="color: rgb(255, 172, 172)"] {
             scrollbar-width: thin;
 
             .dropdown-menu-clickable-item {
-                --btn-left: calc(12px + 12px + 4px) !important;
+                --btn-left: calc(var(--button-sides)+ 12px + 4px) !important;
             }
 
             .active {
@@ -10406,7 +10381,7 @@ text[style^="color: rgb(255, 172, 172)"] {
             .menu-header {
                 color: hsl(var(--c3));
                 font-weight: var(--font-weight-medium);
-                padding: 0 12px;
+                padding: 0 var(--button-sides);
                 cursor: default;
             }
 
@@ -10422,7 +10397,7 @@ text[style^="color: rgb(255, 172, 172)"] {
 
                 &[data-menu-item="shared-artist"] {
                     --show-icon: none;
-                    padding-left: 12px !important;
+                    padding-left: var(--button-sides) !important;
                 }
 
                 .view-item-avatar {
@@ -10625,7 +10600,7 @@ text[style^="color: rgb(255, 172, 172)"] {
                     color: hsl(var(--l3-c));
                     margin: unset;
                     font-weight: var(--font-weight-medium);
-                    padding-left: calc(18px + 6px);
+                    padding-left: calc(var(--icon-size) + var(--icon-gap));
                     width: fit-content;
                     --left: 0 !important;
                     cursor: default;
@@ -10949,7 +10924,7 @@ text[style^="color: rgb(255, 172, 172)"] {
     --bg-hov: hsla(var(--b7), 15%);
     --bg-atv: hsla(var(--b7), 25%);
     --shadow: none;
-    --btn-right: 12px !important;
+    --btn-right: var(--button-sides) !important;
     width: 32px;
 
     &:after {
@@ -11039,7 +11014,7 @@ text[style^="color: rgb(0, 0, 0)"] {
 }
 
 .nag-bar-message {
-    padding-left: calc(18px + 6px) !important;
+    padding-left: calc(var(--icon-size) + var(--icon-gap)) !important;
     font-size: var(--font-size);
     line-height: var(--line-height);
     color: hsl(var(--c3));
@@ -11548,7 +11523,7 @@ text[style^="color: rgb(0, 0, 0)"] {
     font-size: var(--font-size);
     line-height: var(--line-height);
     margin-top: var(--card-gap);
-    padding: 0 0 0 calc(18px + 6px) !important;
+    padding: 0 0 0 calc(var(--icon-size) + var(--icon-gap)) !important;
     background: unset !important;
     color: hsl(var(--l3-c)) !important;
     font-weight: var(--font-weight-medium) !important;
@@ -12024,7 +11999,7 @@ text[style^="color: rgb(0, 0, 0)"] {
 .btn-file-label, .btn-sm {
     min-height: 32px;
     line-height: var(--line-height);
-    padding: 7px 12px;
+    padding: 7px var(--button-sides);
 }
 .btn-file-label {
     color: hsl(var(--c3));
@@ -12210,7 +12185,7 @@ table.table tr:nth-child(2n) td {
         margin-top: unset;
         margin-bottom: var(--card-gap);
         position: relative;
-        padding-left: calc(18px + 6px);
+        padding-left: calc(var(--icon-size) + var(--icon-gap));
         font-size: 16px;
         line-height: 20px;
         font-weight: var(--font-weight-bold);
@@ -12407,7 +12382,7 @@ table.table tr:nth-child(2n) td {
 }
 
 .wiki-history-action {
-    padding-left: calc(18px + 6px) !important;
+    padding-left: calc(var(--icon-size) + var(--icon-gap)) !important;
 }
 
 .wiki-history-revision-number {
@@ -12783,8 +12758,8 @@ table.table tr:nth-child(2n) td {
     color: hsl(var(--c1)) !important;
 
     --left: 50%;
-    --margin-left: -12px;
-    --margin-top: -12px;
+    --margin-left: calc(-1 * var(--button-sides));
+    --margin-top: calc(-1 * var(--button-sides));
     --mask-size: 24px;
 
     &:before {
@@ -12954,7 +12929,7 @@ table.table tr:nth-child(2n) td {
 
 .event-metadata:not(:last-child),
 .event-detail {
-    padding-left: calc(18px + 6px);
+    padding-left: calc(var(--icon-size) + var(--icon-gap));
     position: relative;
     font-size: var(--font-size);
     line-height: var(--line-height);
@@ -13761,7 +13736,7 @@ hr {
 }
 
 .artist-similar-sidebar > h3 {
-    padding-right: calc(18px + 6px);
+    padding-right: calc(var(--icon-size) + var(--icon-gap));
     position: relative;
     width: fit-content;
     --left: none;
@@ -14156,143 +14131,6 @@ h2.playlisting-create-option-title {
 
 
 
-/*     HOME PAGE     */
-
-
-/*     WELCOME     */
-.home-welcome {
-    margin-bottom: var(--card-gap);
-    padding-bottom: var(--card-gap);
-    border-bottom: 1px solid hsl(var(--b4));
-    /* home-welcome handles margin instead */
-}
-.home-welcome-header {
-    font-size: 20px;
-    letter-spacing: unset;
-    line-height: 24px;
-    font-weight: var(--font-weight-bold);
-    color: hsl(var(--c1));
-    margin: 0 0 12px 0;
-}
-
-
-/*     DISMISS WELCOME     */
-.home-welcome-close {
-    width: fit-content;
-    height: fit-content;
-    --font-size: 0;
-    width: 32px;
-    --mask: var(--icon-16-x);
-    --left: 7px;
-}
-
-
-/*     RECS     */
-.recs-feed {
-    margin: unset !important;
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-    gap: var(--item-list-gap);
-    font-size: var(--font-size-sm);
-    line-height: var(--line-height-sm);
-    height: fit-content !important;
-}
-.recs-feed .recs-feed-item {
-    padding: unset !important;
-    margin-top: unset;
-    position: relative !important;
-    width: unset !important;
-    min-height: unset !important;
-    inset: unset !important;
-}
-
-
-
-.recs-feed-item:before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    aspect-ratio: 1 / 1;
-    border-radius: var(--item-med-radius);
-    background: linear-gradient(145deg, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0) 25%);
-    z-index: 9;
-    pointer-events: none;
-}
-.recs-feed-item:after {
-    content: '';
-    --w: 32px;
-    width: var(--w);
-    height: var(--w);
-    position: absolute;
-    left: 12px;
-    top: 12px;
-    background-color: #fff;
-    mask-image: var(--mask);
-    -webkit-mask-image: var(--mask);
-    mask-size: 100%;
-    -webkit-mask-size: 100%;
-    opacity: 0.7;
-    z-index: 10;
-    /*mix-blend-mode: difference;*/
-}
-.recs-feed-item--track {
-    --mask: var(--icon-track);
-}
-.recs-feed-item--artist {
-    --mask: var(--icon-artist);
-}
-.recs-feed-item--album {
-    --mask: var(--icon-album);
-}
-.recs-feed-item--event {
-    --mask: var(--icon-event);
-}
-
-
-.recs-feed .context {
-    padding: 12px;
-    box-shadow: unset;
-    background: unset;
-    color: hsl(var(--c2));
-}
-.recs-feed .recs-feed-title {
-    line-height: 22px;
-    font-weight: var(--font-weight-medium);
-    margin: unset;
-}
-
-
-.recs-feed-playlink {
-    display: none !important;
-}
-.recs-feed-cover-image-content {
-    font-size: var(--font-size);
-    line-height: var(--line-height);
-    padding: 12px !important;
-}
-
-.recs-feed-cover-image,
-.recs-feed-cover-image .layout-image,
-.recs-feed-cover-image img {
-    aspect-ratio: 1 / 1;
-    object-fit: cover;
-}
-.recs-feed-cover-image-wrap {
-    border-radius: var(--item-med-radius);
-    box-shadow: var(--card-shadow);
-    --mask-size: var(--cover-size-300);
-    overflow: hidden;
-    aspect-ratio: 1 / 1;
-}
-
-
-.recs-feed-item .context:after {
-    display: none;
-}
-
-
-
-
 /*     SET AN OBSESSION     */
 .obsession-search {
     margin-top: var(--card-gap);
@@ -14455,7 +14293,7 @@ h2.playlisting-create-option-title {
         --bg-atv: transparent;
         --shadow: none;
         --shadow-hov: none;
-        --padding: 7px 0 7px calc(18px + 6px);
+        --padding: 7px 0 7px calc(var(--icon-size) + var(--icon-gap));
         margin: -7px 0;
         --left: 0;
         text-align: left;
@@ -14486,7 +14324,7 @@ h2.playlisting-create-option-title {
     }
 
     .btn {
-        --btn-left: calc(12px + 18px + 6px);
+        --btn-left: calc(var(--button-sides) + var(--icon-size) + var(--icon-gap));
         width: 100%;
         text-align: left;
         position: relative;
@@ -15575,7 +15413,7 @@ input[type="range"]::-moz-range-progress {
         --bg-atv: transparent;
         --shadow: none;
 
-        --padding: 0 0 0 calc(14px + var(--card-gap) + 18px + 6px);
+        --padding: 0 0 0 calc(14px + var(--card-gap) + var(--icon-size) + var(--icon-gap));
         --left: calc(14px + var(--card-gap));
         /*--mask: var(--icon-16-dot);*/
         width: 100% !important;
@@ -16860,7 +16698,7 @@ button.bleh--gallery-bookmark-image-btn {
         overflow: visible !important;
 
         .navlist-items {
-            margin: 0 -12px;
+            margin: 0 calc(-1 * var(--button-sides));
         }
     }
 
@@ -16918,7 +16756,7 @@ button.bleh--gallery-bookmark-image-btn {
     }
 
     .nag-bar-message {
-        padding-left: calc(18px + 6px);
+        padding-left: calc(var(--icon-size) + var(--icon-gap));
         padding-right: unset;
         --left: 0;
         --mask: var(--icon-16-warning);
@@ -17323,130 +17161,6 @@ button.bleh--gallery-bookmark-image-btn {
             --mask: var(--icon-16-list);
         }
 
-        &.listen-item {
-            /*--left: calc(12px + 2px);*/
-
-            p {
-                &:before {
-                    animation: spinner 1.2s linear infinite;
-                    --mask: var(--icon-16-spinner);
-                    --show-icon: none;
-                    background-color: hsl(var(--c3)) !important;
-                }
-            }
-
-            &[data-listens="-1"] {
-                .view-item-avatar {
-                    margin-right: calc(6px + 16px + 6px) !important;
-                }
-
-                p {
-                    padding-left: calc(18px + 6px);
-
-                    &:before {
-                        --show-icon: block;
-                        opacity: 1;
-                    }
-                }
-            }
-
-            &[data-listens="-3"] {
-                &:before {
-                    --mask: var(--icon-16-plus);
-                    --left: 12px;
-
-                    --show-icon: block;
-                    opacity: 1;
-                    animation: unset;
-                    background-color: currentColor !important;
-                }
-            }
-
-            &[data-bleh--scrobble-milestone] {
-                --bg: transparent;
-                --bg-hov: hsla(var(--h4), 10%);
-                --bg-atv: hsla(var(--h4), 20%);
-                --col: hsl(var(--l2-c));
-                text-shadow: 0 0 10px hsla(var(--h4), 90%);
-
-                [data-bleh--theme_type="light"] & {
-                    --col: hsl(var(--l3-c));
-                    text-shadow: 0 0 10px hsla(var(--h4), 45%);
-                }
-            }
-        }
-
-        &.profile-top-item {
-            &.profile-top-item--scrobbles {
-                --mask: var(--icon-16-track);
-            }
-            &.profile-top-item--artists {
-                --mask: var(--icon-16-artist);
-            }
-            &.profile-top-item--loved {
-                --mask: var(--icon-16-heart);
-                /*--mask: var(--icon-16-heart-solid);
-
-                &:before {
-                    color: hsl(var(--l3-c));
-                }*/
-            }
-            &.profile-top-item--going {
-                --mask: var(--icon-16-check);
-            }
-            &.profile-top-item--maybe {
-                --mask: var(--icon-16-question);
-            }
-            &.profile-top-item--total {
-                --mask: var(--icon-16-event);
-            }
-
-            &.profile-top-item--taste {
-                --show-icon: none;
-
-                &:after {
-                    content: '';
-                    opacity: 1 !important;
-                    position: absolute;
-                    left: 12px;
-                    right: 12px;
-                    bottom: -4px;
-                    height: 2px;
-                    background-color: hsl(var(--l3-c));
-                    box-shadow: 0 -2px 18px 2px hsl(var(--l4-c));
-                    border-top-left-radius: var(--item-med-radius);
-                    border-top-right-radius: var(--item-med-radius);
-
-                    width: calc(var(--data-taste-percent) - (12px * 2));
-                }
-            }
-
-            .taste-badge {
-                margin-right: 6px;
-            }
-        }
-
-        &.interact-item {
-            &.search-similar-btn {
-                --mask: var(--icon-16-search);
-            }
-            &.lotus-btn {
-                --mask: var(--icon-16-lotus);
-                --bg-hov: hsla(var(--h4), 10%) !important;
-                --bg-atv: hsla(var(--h4), 20%) !important;
-                --col: hsl(var(--l3-c));
-            }
-            &.obsession-btn {
-                --mask: var(--icon-16-obsession);
-            }
-
-            &.menu-btn {
-                --font-size: 0;
-                width: 42px;
-                --mask: var(--icon-16-dots);
-            }
-        }
-
         &.dropdown-menu-clickable-button {
             &:before {
                 --show-icon: none;
@@ -17488,7 +17202,7 @@ button.bleh--gallery-bookmark-image-btn {
                 --font-size: 0;
             }*/
 
-            --btn-left: 12px !important;
+            --btn-left: var(--button-sides) !important;
             --show-icon: block;
             --font-size: 0;
             color: inherit !important;
@@ -17761,10 +17475,10 @@ button.bleh--gallery-bookmark-image-btn {
 }
 .continue {
     position: relative;
-    --btn-right: calc(12px + 12px + 6px);
+    --btn-right: calc(var(--button-sides) + 12px + 6px);
     --mask: var(--icon-16-arrow-right);
     --mask-size: 12px;
-    --right: 12px;
+    --right: var(--button-sides);
     --left: none;
     --margin-top: -6px;
 }
@@ -18056,7 +17770,7 @@ h4 {
     .lastfm-bulk-edit-progress {
         font-weight: var(--font-weight-medium);
         color: hsl(var(--c3));
-        padding-left: calc(18px + 6px);
+        padding-left: calc(var(--icon-size) + var(--icon-gap));
         position: relative;
         --left: 0;
         --mask: var(--icon-16-spinner);
@@ -18410,13 +18124,13 @@ h4 {
     width: max-content;
     position: relative;
 
-    --btn-right: calc(12px + 12px + 4px) !important;
+    --btn-right: calc(var(--button-sides) + 12px + 4px) !important;
 
     &:after {
         --mask: var(--icon-16-dropdown);
         --mask-size: 12px;
         --margin-top: -6px;
-        --right: 12px;
+        --right: var(--button-sides);
 
         transition-property: transform !important;
         transition-duration: var(--trans) !important;
@@ -18656,7 +18370,7 @@ h4 {
 
             .gallery-image-preferred-states {
                 color: inherit !important;
-                padding-left: calc(18px + 6px) !important;
+                padding-left: calc(var(--icon-size) + var(--icon-gap)) !important;
             }
 
             .gallery-image-delete {
@@ -18787,7 +18501,7 @@ h4 {
 
     .gallery-image-uploaded-by {
         position: relative;
-        padding-left: calc(18px + 6px);
+        padding-left: calc(var(--icon-size) + var(--icon-gap));
         --mask: var(--icon-16-upload);
         --left: 0;
         min-width: unset;
@@ -19584,7 +19298,7 @@ h4 {
         .expand-side {
             .header-expand-button {
                 --font-size: 0;
-                --padding: 7px 12px !important;
+                --padding: 7px var(--button-sides) !important;
                 min-width: 42px !important;
                 height: 40px !important;
 
@@ -20046,7 +19760,7 @@ h4 {
         z-index: 100;
 
         .view-item {
-            --btn-left: 12px !important;
+            --btn-left: var(--button-sides) !important;
         }
 
         .origin-button {
@@ -20703,8 +20417,8 @@ h4 {
     .weeklychart-listeners,
     .weeklychart-scrobblers {
         position: relative;
-        min-width: calc(90px + 18px + 6px);
-        padding-right: calc(18px + 6px) !important;
+        min-width: calc(90px + var(--icon-size) + var(--icon-gap));
+        padding-right: calc(var(--icon-size) + var(--icon-gap)) !important;
         text-align: right;
 
         --left: none;
@@ -21021,7 +20735,7 @@ h4 {
                 color: inherit;
             }
 
-            padding: 7px 12px;
+            padding: 7px var(--button-sides);
             flex: 1;
 
             &:last-child {
@@ -21046,7 +20760,7 @@ h4 {
             align-items: center;
 
             td {
-                padding: 7px 12px;
+                padding: 7px var(--button-sides);
                 flex: 1;
 
                 &.chart-table--buttons {
@@ -21594,7 +21308,7 @@ h4 {
 
         li {
             background: hsl(var(--h4), 20%);
-            padding: 10px var(--card-padding) 10px calc(var(--card-padding) + 18px + 6px);
+            padding: 10px var(--card-padding) 10px calc(var(--card-padding) + var(--icon-size) + var(--icon-gap));
             border-radius: var(--item-big-radius);
             position: relative;
             --left: var(--card-padding);
@@ -21682,7 +21396,7 @@ h4 {
             button, a {
                 width: 32px;
                 --font-size: 0;
-                --btn-left: 12px !important;
+                --btn-left: var(--button-sides) !important;
                 --left: 7px;
                 --bg: transparent;
                 --shadow: none;
@@ -22417,7 +22131,7 @@ h4 {
     }
 
     &[data-listens="-3"] {
-        --btn-left: 12px !important;
+        --btn-left: var(--button-sides) !important;
         height: 32px;
 
         &:before {
@@ -23243,7 +22957,7 @@ h4 {
 
             & > .btn-file {
                 --mask-size: 24px;
-                --btn-left: 12px !important;
+                --btn-left: var(--button-sides) !important;
                 width: 130px;
                 height: 130px;
 
@@ -23285,7 +22999,7 @@ h4 {
         .image-upload-remove {
             --mask: var(--icon-16-x);
             --mask-size: 24px;
-            --btn-left: 12px !important;
+            --btn-left: var(--button-sides) !important;
             width: 130px;
             height: 130px;
 
