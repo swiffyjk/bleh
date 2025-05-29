@@ -1937,6 +1937,9 @@ export const trans = {
     },
     edit_profile_note: {
         en: 'Edit profile note'
+    },
+    update_to_version: {
+        en: 'Update to {v}'
     }
 }
 

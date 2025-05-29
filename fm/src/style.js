@@ -1,14 +1,11 @@
-import { html } from "lighterhtml";
-import { settings } from "./build/config";
-import { log } from "./build/log";
-import { page } from "./build/page";
-import { lang, trans_legacy } from "./build/trans";
-import { load_chart_colours } from "./chart";
-import { dialog, dialog_rm } from "./components/dialog";
-import { bleh_music_page_charts } from "./components/music";
-import { create_settings_template, invoke_reload } from "./config";
-import { theme_version, version } from "./main";
-import { bleh_glacier_date_graph_generate, bleh_glacier_insights } from "./pages/glacier";
+import {html} from "lighterhtml";
+import {settings} from "./build/config";
+import {log} from "./build/log";
+import {tl, trans, trans_legacy} from "./build/trans";
+import {chart_reflow} from "./chart";
+import {dialog, dialog_rm} from "./components/dialog";
+import {create_settings_template, invoke_reload} from "./config";
+import {theme_version, version} from "./main";
 
 export function append_style() {
     document.documentElement.classList.add('bleh-supports-loading');
@@ -20,7 +17,7 @@ export function append_style() {
     let url_split = url.split('/');
     let url_length = url_split.length - 1;
 
-    // style is neither fetched or applied in these interfaces
+    // style is neither fetched nor applied in these interfaces
     if (url_split[url_length] == 'playback' || url_split[url_length - 1] == 'labs')
         return;
 
@@ -59,19 +56,7 @@ function load_cached_style(cached_style) {
         theme_version.state = getComputedStyle(document.body).getPropertyValue('--version-build').replaceAll("'", '').replaceAll('"', ''); // remove quotations
         log(`theme version reporting as ${theme_version.state}`, 'style');
 
-        load_chart_colours();
-
-        // trigger re-flow of chart
-        if ((page.type == 'artist' || page.type == 'album' || page.type == 'track') && page.subpage == 'overview')
-            bleh_music_page_charts();
-
-        if (page.type == 'user' && page.subpage == 'overview')
-            bleh_profile_chart_render();
-
-        if (page.type == 'user' && page.subpage.startsWith('library')) {
-            bleh_glacier_date_graph_generate();
-            bleh_glacier_insights();
-        }
+        chart_reflow();
 
         // now, analyse if we should fetch a new one
         log('checking timeout', 'style');
@@ -89,7 +74,7 @@ function check_if_style_cache_is_valid() {
         // we can use this to compare if we should fetch a new one
         // as we don't want to fetch a new css while the js is out of date
         if (theme_version.state != version.build && theme_version.state != '') {
-            // script is either out of date, or more in date (not gonna happen)
+            // script is either out of date, or more in date (not going to happen)
             log(`version mismatch! running ${version.build}, downloaded theme ${theme_version.state}`, 'update');
 
             prompt_for_update();
@@ -120,7 +105,7 @@ export function prompt_for_update() {
     // prompt the user
     dialog({
         id: 'bleh_update',
-        title: trans_legacy.en.settings.home.update.update_to_v.replace('{v}', theme_version.state),
+        title: tl(trans.update_to_version).replace('{v}', theme_version.state),
         body: html.node`
             <div class="bleh--update-checker-container">
                 <div class="form">
@@ -170,7 +155,7 @@ unsafeWindow._start_update = function() {
     } else {
         dialog({
             id: 'bleh_update',
-            title: trans_legacy.en.settings.home.update.update_to_v.replace('{v}', theme_version.state),
+            title: tl(trans.update_to_version).replace('{v}', theme_version.state),
             body: html.node`
                 <div class="bleh--update-checker-container">
                     <div class="form">
@@ -200,7 +185,7 @@ unsafeWindow._start_css_update = function() {
 unsafeWindow._final_update = function() {
     dialog({
         id: 'bleh_update',
-        title: trans_legacy.en.settings.home.update.update_to_v.replace('{v}', theme_version.state),
+        title: tl(trans.update_to_version).replace('{v}', theme_version.state),
         body: html.node`
             <div class="bleh--update-checker-container">
                 <div class="form">
@@ -269,25 +254,13 @@ function fetch_new_style(delete_old_style = false, reload_on_finish = false) {
             document.body.classList.add('bleh');
             theme_version.state = getComputedStyle(document.body).getPropertyValue('--version-build').replaceAll("'", '').replaceAll('"', ''); // remove quotations
 
-            load_chart_colours();
-
-            // trigger re-flow of chart
-            if ((page.type == 'artist' || page.type == 'album' || page.type == 'track') && page.subpage == 'overview')
-                bleh_music_page_charts();
-
-            if (page.type == 'user' && page.subpage == 'overview')
-                bleh_profile_chart_render();
-
-            if (page.type == 'user' && page.subpage.startsWith('library')) {
-                bleh_glacier_date_graph_generate();
-                bleh_glacier_insights();
-            }
+            chart_reflow();
 
             // in versions 2024.1019 and onwards, the css stores version itself
             // we can use this to compare if we should fetch a new one
             // as we don't want to fetch a new css while the js is out of date
             if (theme_version.state != version.build && theme_version.state != '') {
-                // script is either out of date, or more in date (not gonna happen)
+                // script is either out of date, or more in date (not going to happen)
                 log(`version mismatch! running ${version.build}, downloaded theme ${theme_version.state}`, 'update');
 
                 prompt_for_update();
@@ -331,7 +304,7 @@ function fetch_style_info(delete_old_style = false, reload_on_finish = false) {
             // we can use this to compare if we should fetch a new one
             // as we don't want to fetch a new css while the js is out of date
             if (theme_version.state != version.build && theme_version.state != '') {
-                // script is either out of date, or more in date (not gonna happen)
+                // script is either out of date, or more in date (not going to happen)
                 log(`version mismatch! running ${version.build}, downloaded theme ${theme_version.state}`, 'update');
 
                 prompt_for_update();

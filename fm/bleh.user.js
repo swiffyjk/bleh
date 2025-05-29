@@ -3762,6 +3762,9 @@
     },
     edit_profile_note: {
       en: "Edit profile note"
+    },
+    update_to_version: {
+      en: "Update to {v}"
     }
   };
   var trans_legacy = {
@@ -8702,243 +8705,6 @@
       view_buttons.insertBefore(bulk_edit, delete_button);
     else
       view_buttons.insertBefore(bulk_edit, edit_form);
-  }
-
-  // src/chart.js
-  function prep_chart_colours() {
-    if (page.state.chart_colours.link_col == "hsl()")
-      load_chart_colours();
-  }
-  function load_chart_colours() {
-    let link_col = `hsl(${getComputedStyle(document.body).getPropertyValue("--l3-c")})`;
-    let link_h_col = getComputedStyle(document.body).getPropertyValue("--h3-s");
-    let link_bg_col = `hsla(${getComputedStyle(document.body).getPropertyValue("--h4")}, 30%)`;
-    let link_bg_col_2 = `hsla(${getComputedStyle(document.body).getPropertyValue("--h4")}, 2%)`;
-    let text_col = `hsl(${getComputedStyle(document.body).getPropertyValue("--c3")})`;
-    let axis_col = `hsla(${getComputedStyle(document.body).getPropertyValue("--b4")}, 40%)`;
-    let text_primary_col = `hsl(${getComputedStyle(document.body).getPropertyValue("--c2")})`;
-    let bg_col = `hsl(${getComputedStyle(document.body).getPropertyValue("--b5")})`;
-    let root_bg_col = `hsla(${getComputedStyle(document.body).getPropertyValue("--b6")}, 92%)`;
-    let hue = getComputedStyle(document.body).getPropertyValue("--hue");
-    page.state.chart_colours = {
-      link_col,
-      link_h_col,
-      link_bg_col,
-      link_bg_col_2,
-      text_col,
-      axis_col,
-      text_primary_col,
-      bg_col,
-      root_bg_col,
-      hue
-    };
-    console.log("chart colours", page.state.chart_colours);
-    page.state.chart_line_options = {
-      maintainAspectRatio: false,
-      plugins: {
-        legend: {
-          display: false
-        },
-        tooltip: {
-          backgroundColor: root_bg_col,
-          titleColor: text_primary_col,
-          bodyColor: text_primary_col,
-          multiKeyBackground: root_bg_col,
-          boxPadding: 6,
-          padding: 9,
-          cornerRadius: 9,
-          caretSize: 0
-        }
-      },
-      scales: {
-        x: {
-          type: "time",
-          time: {
-            unit: "month",
-            displayFormats: {
-              month: "MMM"
-            },
-            tooltipFormat: "dddd, MMMM Do YYYY"
-          },
-          grid: {
-            color: axis_col,
-            display: false
-          }
-        },
-        y: {
-          display: false,
-          grid: {
-            display: false
-          },
-          suggestedMax: 10
-        }
-      }
-    };
-    page.state.chart_library_line_options = {
-      maintainAspectRatio: false,
-      plugins: {
-        legend: {
-          display: false
-        },
-        tooltip: {
-          backgroundColor: root_bg_col,
-          titleColor: text_primary_col,
-          bodyColor: text_primary_col,
-          multiKeyBackground: root_bg_col,
-          boxPadding: 6,
-          padding: 9,
-          cornerRadius: 9,
-          caretSize: 0
-        }
-      },
-      scales: {
-        x: {
-          grid: {
-            color: axis_col,
-            display: false
-          }
-        },
-        y: {
-          grid: {
-            display: false
-          },
-          suggestedMax: 10
-        }
-      },
-      onClick: (e, active, chart) => {
-        bleh_glacier_library_open_index(active[0].index);
-      }
-    };
-    page.state.chart_library_line_options_no_click = {
-      maintainAspectRatio: false,
-      plugins: {
-        legend: {
-          display: false
-        },
-        tooltip: {
-          backgroundColor: root_bg_col,
-          titleColor: text_primary_col,
-          bodyColor: text_primary_col,
-          multiKeyBackground: root_bg_col,
-          boxPadding: 6,
-          padding: 9,
-          cornerRadius: 9,
-          caretSize: 0
-        }
-      },
-      scales: {
-        x: {
-          grid: {
-            color: axis_col,
-            display: false
-          }
-        },
-        y: {
-          grid: {
-            display: false
-          },
-          suggestedMax: 10
-        }
-      }
-    };
-    page.state.chart_library_pie_options = {
-      maintainAspectRatio: false,
-      plugins: {
-        legend: {
-          display: false
-        },
-        tooltip: {
-          backgroundColor: root_bg_col,
-          titleColor: text_primary_col,
-          bodyColor: text_primary_col,
-          multiKeyBackground: root_bg_col,
-          boxPadding: 6,
-          padding: 9,
-          cornerRadius: 9,
-          caretSize: 0
-        }
-      },
-      onClick: (e, active, chart) => {
-        bleh_glacier_library_open_index(active[0].index);
-      }
-    };
-    page.state.chart_library_pie_options_no_click = {
-      maintainAspectRatio: false,
-      plugins: {
-        legend: {
-          display: false
-        },
-        tooltip: {
-          backgroundColor: root_bg_col,
-          titleColor: text_primary_col,
-          bodyColor: text_primary_col,
-          padding: 7,
-          cornerRadius: 10,
-          caretSize: 0
-        }
-      }
-    };
-    page.state.chart_library_bar_options = {
-      maintainAspectRatio: false,
-      plugins: {
-        legend: {
-          display: false
-        },
-        tooltip: {
-          backgroundColor: root_bg_col,
-          titleColor: text_primary_col,
-          bodyColor: text_primary_col,
-          multiKeyBackground: root_bg_col,
-          boxPadding: 6,
-          padding: 9,
-          cornerRadius: 9,
-          caretSize: 0
-        }
-      },
-      onClick: (e, active, chart) => {
-        bleh_glacier_library_open_index(active[0].index);
-      }
-    };
-    page.state.chart_library_bar_v_options = {
-      indexAxis: "y",
-      maintainAspectRatio: false,
-      plugins: {
-        legend: {
-          display: false
-        },
-        tooltip: {
-          backgroundColor: root_bg_col,
-          titleColor: text_primary_col,
-          bodyColor: text_primary_col,
-          multiKeyBackground: root_bg_col,
-          boxPadding: 6,
-          padding: 9,
-          cornerRadius: 9,
-          caretSize: 0
-        }
-      },
-      onClick: (e, active, chart) => {
-        bleh_glacier_library_open_index(active[0].index);
-      }
-    };
-    page.state.chart_library_bar_options_no_click = {
-      maintainAspectRatio: false,
-      plugins: {
-        legend: {
-          display: false
-        },
-        tooltip: {
-          backgroundColor: root_bg_col,
-          titleColor: text_primary_col,
-          bodyColor: text_primary_col,
-          multiKeyBackground: root_bg_col,
-          boxPadding: 6,
-          padding: 9,
-          cornerRadius: 9,
-          caretSize: 0
-        }
-      }
-    };
   }
 
   // src/avatar.js
@@ -14319,7 +14085,7 @@
     let panel = page.structure.row.querySelector(".listen-panel");
     let table = panel.querySelector("table");
     if (table) {
-      bleh_profile_chart_render2(panel, table);
+      bleh_profile_chart_render(panel, table);
       return;
     } else {
       fetch(`${root}user/${page.name}/library/artists/chart?date_preset=LAST_90_DAYS&page=1&ajax=1`).then(function(response) {
@@ -14334,7 +14100,7 @@
         table = doc.querySelector(".table");
         if (table) {
           panel.appendChild(table);
-          bleh_profile_chart_render2(panel, table);
+          bleh_profile_chart_render(panel, table);
         } else {
           log("table is null?", "glacier library", "error");
           console.info("glacier library", doc.body.innerHTML);
@@ -14344,7 +14110,7 @@
       });
     }
   }
-  function bleh_profile_chart_render2(panel = page.structure.side.querySelector(".listen-profile-panel"), table = null) {
+  function bleh_profile_chart_render(panel = page.structure.side.querySelector(".listen-profile-panel"), table = null) {
     if (!table)
       table = panel.querySelector("table");
     let entries = table.querySelectorAll("tbody tr");
@@ -14390,6 +14156,254 @@
       options: page.state.chart_library_line_options
     });
     scrobble_canvas_container.appendChild(scrobble_canvas);
+  }
+
+  // src/chart.js
+  function chart_reflow() {
+    load_chart_colours();
+    if ((page.type == "artist" || page.type == "album" || page.type == "track") && page.subpage == "overview")
+      bleh_music_page_charts();
+    if (page.type == "user" && page.subpage == "overview")
+      bleh_profile_chart_render();
+    if (page.type == "user" && page.subpage.startsWith("library")) {
+      bleh_glacier_date_graph_generate();
+      bleh_glacier_insights();
+    }
+  }
+  function prep_chart_colours() {
+    if (page.state.chart_colours.link_col == "hsl()")
+      load_chart_colours();
+  }
+  function load_chart_colours() {
+    let link_col = `hsl(${getComputedStyle(document.body).getPropertyValue("--l3-c")})`;
+    let link_h_col = getComputedStyle(document.body).getPropertyValue("--h3-s");
+    let link_bg_col = `hsla(${getComputedStyle(document.body).getPropertyValue("--h4")}, 30%)`;
+    let link_bg_col_2 = `hsla(${getComputedStyle(document.body).getPropertyValue("--h4")}, 2%)`;
+    let text_col = `hsl(${getComputedStyle(document.body).getPropertyValue("--c3")})`;
+    let axis_col = `hsla(${getComputedStyle(document.body).getPropertyValue("--b4")}, 40%)`;
+    let text_primary_col = `hsl(${getComputedStyle(document.body).getPropertyValue("--c2")})`;
+    let bg_col = `hsl(${getComputedStyle(document.body).getPropertyValue("--b5")})`;
+    let root_bg_col = `hsla(${getComputedStyle(document.body).getPropertyValue("--b6")}, 92%)`;
+    let hue = getComputedStyle(document.body).getPropertyValue("--hue");
+    page.state.chart_colours = {
+      link_col,
+      link_h_col,
+      link_bg_col,
+      link_bg_col_2,
+      text_col,
+      axis_col,
+      text_primary_col,
+      bg_col,
+      root_bg_col,
+      hue
+    };
+    console.log("chart colours", page.state.chart_colours);
+    page.state.chart_line_options = {
+      maintainAspectRatio: false,
+      plugins: {
+        legend: {
+          display: false
+        },
+        tooltip: {
+          backgroundColor: root_bg_col,
+          titleColor: text_primary_col,
+          bodyColor: text_primary_col,
+          multiKeyBackground: root_bg_col,
+          boxPadding: 6,
+          padding: 9,
+          cornerRadius: 9,
+          caretSize: 0
+        }
+      },
+      scales: {
+        x: {
+          type: "time",
+          time: {
+            unit: "month",
+            displayFormats: {
+              month: "MMM"
+            },
+            tooltipFormat: "dddd, MMMM Do YYYY"
+          },
+          grid: {
+            color: axis_col,
+            display: false
+          }
+        },
+        y: {
+          display: false,
+          grid: {
+            display: false
+          },
+          suggestedMax: 10
+        }
+      }
+    };
+    page.state.chart_library_line_options = {
+      maintainAspectRatio: false,
+      plugins: {
+        legend: {
+          display: false
+        },
+        tooltip: {
+          backgroundColor: root_bg_col,
+          titleColor: text_primary_col,
+          bodyColor: text_primary_col,
+          multiKeyBackground: root_bg_col,
+          boxPadding: 6,
+          padding: 9,
+          cornerRadius: 9,
+          caretSize: 0
+        }
+      },
+      scales: {
+        x: {
+          grid: {
+            color: axis_col,
+            display: false
+          }
+        },
+        y: {
+          grid: {
+            display: false
+          },
+          suggestedMax: 10
+        }
+      },
+      onClick: (e, active, chart) => {
+        bleh_glacier_library_open_index(active[0].index);
+      }
+    };
+    page.state.chart_library_line_options_no_click = {
+      maintainAspectRatio: false,
+      plugins: {
+        legend: {
+          display: false
+        },
+        tooltip: {
+          backgroundColor: root_bg_col,
+          titleColor: text_primary_col,
+          bodyColor: text_primary_col,
+          multiKeyBackground: root_bg_col,
+          boxPadding: 6,
+          padding: 9,
+          cornerRadius: 9,
+          caretSize: 0
+        }
+      },
+      scales: {
+        x: {
+          grid: {
+            color: axis_col,
+            display: false
+          }
+        },
+        y: {
+          grid: {
+            display: false
+          },
+          suggestedMax: 10
+        }
+      }
+    };
+    page.state.chart_library_pie_options = {
+      maintainAspectRatio: false,
+      plugins: {
+        legend: {
+          display: false
+        },
+        tooltip: {
+          backgroundColor: root_bg_col,
+          titleColor: text_primary_col,
+          bodyColor: text_primary_col,
+          multiKeyBackground: root_bg_col,
+          boxPadding: 6,
+          padding: 9,
+          cornerRadius: 9,
+          caretSize: 0
+        }
+      },
+      onClick: (e, active, chart) => {
+        bleh_glacier_library_open_index(active[0].index);
+      }
+    };
+    page.state.chart_library_pie_options_no_click = {
+      maintainAspectRatio: false,
+      plugins: {
+        legend: {
+          display: false
+        },
+        tooltip: {
+          backgroundColor: root_bg_col,
+          titleColor: text_primary_col,
+          bodyColor: text_primary_col,
+          padding: 7,
+          cornerRadius: 10,
+          caretSize: 0
+        }
+      }
+    };
+    page.state.chart_library_bar_options = {
+      maintainAspectRatio: false,
+      plugins: {
+        legend: {
+          display: false
+        },
+        tooltip: {
+          backgroundColor: root_bg_col,
+          titleColor: text_primary_col,
+          bodyColor: text_primary_col,
+          multiKeyBackground: root_bg_col,
+          boxPadding: 6,
+          padding: 9,
+          cornerRadius: 9,
+          caretSize: 0
+        }
+      },
+      onClick: (e, active, chart) => {
+        bleh_glacier_library_open_index(active[0].index);
+      }
+    };
+    page.state.chart_library_bar_v_options = {
+      indexAxis: "y",
+      maintainAspectRatio: false,
+      plugins: {
+        legend: {
+          display: false
+        },
+        tooltip: {
+          backgroundColor: root_bg_col,
+          titleColor: text_primary_col,
+          bodyColor: text_primary_col,
+          multiKeyBackground: root_bg_col,
+          boxPadding: 6,
+          padding: 9,
+          cornerRadius: 9,
+          caretSize: 0
+        }
+      },
+      onClick: (e, active, chart) => {
+        bleh_glacier_library_open_index(active[0].index);
+      }
+    };
+    page.state.chart_library_bar_options_no_click = {
+      maintainAspectRatio: false,
+      plugins: {
+        legend: {
+          display: false
+        },
+        tooltip: {
+          backgroundColor: root_bg_col,
+          titleColor: text_primary_col,
+          bodyColor: text_primary_col,
+          multiKeyBackground: root_bg_col,
+          boxPadding: 6,
+          padding: 9,
+          cornerRadius: 9,
+          caretSize: 0
+        }
+      }
+    };
   }
 
   // src/config.js
@@ -14466,7 +14480,7 @@
     if ((page.type == "artist" || page.type == "album" || page.type == "track") && page.subpage == "overview")
       bleh_music_page_charts();
     if (page.type == "user" && page.subpage == "overview")
-      bleh_profile_chart_render2();
+      bleh_profile_chart_render();
     if (page.type == "user" && page.subpage.startsWith("library")) {
       bleh_glacier_date_graph_generate();
       bleh_glacier_insights();
@@ -14500,7 +14514,7 @@
     if ((page.type == "artist" || page.type == "album" || page.type == "track") && page.subpage == "overview")
       bleh_music_page_charts();
     if (page.type == "user" && page.subpage == "overview")
-      bleh_profile_chart_render2();
+      bleh_profile_chart_render();
     if (page.type == "user" && page.subpage.startsWith("library")) {
       bleh_glacier_date_graph_generate();
       bleh_glacier_insights();
@@ -20990,15 +21004,7 @@
       document.body.classList.add("bleh");
       theme_version.state = getComputedStyle(document.body).getPropertyValue("--version-build").replaceAll("'", "").replaceAll('"', "");
       log(`theme version reporting as ${theme_version.state}`, "style");
-      load_chart_colours();
-      if ((page.type == "artist" || page.type == "album" || page.type == "track") && page.subpage == "overview")
-        bleh_music_page_charts();
-      if (page.type == "user" && page.subpage == "overview")
-        bleh_profile_chart_render();
-      if (page.type == "user" && page.subpage.startsWith("library")) {
-        bleh_glacier_date_graph_generate();
-        bleh_glacier_insights();
-      }
+      chart_reflow();
       log("checking timeout", "style");
       check_if_style_cache_is_valid();
     }, 200);
@@ -21031,7 +21037,7 @@
   function prompt_for_update() {
     dialog({
       id: "bleh_update",
-      title: trans_legacy.en.settings.home.update.update_to_v.replace("{v}", theme_version.state),
+      title: tl(trans.update_to_version).replace("{v}", theme_version.state),
       body: html2.node`
             <div class="bleh--update-checker-container">
                 <div class="form">
@@ -21075,7 +21081,7 @@
     } else {
       dialog({
         id: "bleh_update",
-        title: trans_legacy.en.settings.home.update.update_to_v.replace("{v}", theme_version.state),
+        title: tl(trans.update_to_version).replace("{v}", theme_version.state),
         body: html2.node`
                 <div class="bleh--update-checker-container">
                     <div class="form">
@@ -21102,7 +21108,7 @@
   unsafeWindow._final_update = function() {
     dialog({
       id: "bleh_update",
-      title: trans_legacy.en.settings.home.update.update_to_v.replace("{v}", theme_version.state),
+      title: tl(trans.update_to_version).replace("{v}", theme_version.state),
       body: html2.node`
             <div class="bleh--update-checker-container">
                 <div class="form">
@@ -21155,15 +21161,7 @@
       setTimeout(function() {
         document.body.classList.add("bleh");
         theme_version.state = getComputedStyle(document.body).getPropertyValue("--version-build").replaceAll("'", "").replaceAll('"', "");
-        load_chart_colours();
-        if ((page.type == "artist" || page.type == "album" || page.type == "track") && page.subpage == "overview")
-          bleh_music_page_charts();
-        if (page.type == "user" && page.subpage == "overview")
-          bleh_profile_chart_render();
-        if (page.type == "user" && page.subpage.startsWith("library")) {
-          bleh_glacier_date_graph_generate();
-          bleh_glacier_insights();
-        }
+        chart_reflow();
         if (theme_version.state != version.build && theme_version.state != "") {
           log(`version mismatch! running ${version.build}, downloaded theme ${theme_version.state}`, "update");
           prompt_for_update();
