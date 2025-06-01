@@ -16402,61 +16402,6 @@ trying to list every song ever made by someone identifying as a female, which is
         display: none;
     }
 }
-.modal-dialog--upload-avatar {
-    width: calc(450px + (5px * 2)) !important;
-}
-.bleh--upload-avatar-container {
-    display: flex;
-
-    form {
-        display: flex;
-        flex-direction: column;
-        flex: 1;
-
-        &.avatar-upload-form {
-            .modal-footer {
-                margin-right: unset;
-                padding-right: unset;
-            }
-        }
-        &.image-remove-form {
-            .modal-footer {
-                margin-left: unset;
-                padding-left: unset;
-            }
-        }
-
-        .form-group {
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            flex: 1;
-            gap: var(--card-gap);
-            font-weight: var(--font-weight-medium);
-
-            .btn, button {
-                width: 100px;
-                aspect-ratio: 1 / 1;
-                --radius: 50%;
-                --font-size: 0;
-                --left: 50%;
-                --top: 50%;
-                --mask-size: 40px;
-                --margin-left: calc(-1 * (var(--mask-size) / 2));
-                --margin-top: calc(-1 * (var(--mask-size) / 2));
-                margin: unset !important;
-
-                &.primary {
-                    --mask: var(--icon-40-upload);
-                }
-                &.image-upload-remove {
-                    --mask: var(--icon-40-trash);
-                }
-            }
-        }
-    }
-}
 [data-modal-type="update"] {
     width: calc(450px + (5px * 2)) !important;
 }
@@ -16549,7 +16494,7 @@ trying to list every song ever made by someone identifying as a female, which is
                 --margin-left: calc(-1 * (var(--mask-size) / 2));
                 --margin-top: calc(-1 * (var(--mask-size) / 2));
                 --mask: var(--icon-16-edit);
-                color: hsl(var(--c1));
+                color: #fff;
                 opacity: 0;
 
                 transition-property: opacity;
@@ -22991,7 +22936,6 @@ h4 {
                     --col: #000;
 
                     text-shadow: 0 0 8px #fff;
-                    --col: transparent;
 
                     &:before {
                         opacity: 0;

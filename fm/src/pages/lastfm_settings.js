@@ -584,7 +584,7 @@ function avatar(token) {
                             <img class="preview">
                             <span class="btn-secondary btn primary btn-file" data-kate-processed="true">
                                 ${tl(trans.upload)}
-                                <input type="file" onchange="_update_avatar_preview(event)" name="avatar" data-require="components/file-input" data-file-input-copy="${tl(trans.upload)}" data-no-file-copy="No file chosen" accept="image/*" required="" id="id_avatar" data-kate-processed="true">
+                                <input type="file" onchange=${() => update_avatar(event)} name="avatar" data-require="components/file-input" data-file-input-copy="${tl(trans.upload)}" data-no-file-copy="No file chosen" accept="image/*" required="" id="id_avatar" data-kate-processed="true">
                             </span>
                         </div>
                     </div>
@@ -601,9 +601,9 @@ function avatar(token) {
                 </form>
             </div>
             <div class="modal-footer">
-                <button class="see-more cancel" onclick="_dialog_rm({id:'edit_avatar'})">${tl(trans.cancel)}</button>
+                <button class="see-more cancel" onclick=${() => dialog_rm({id:'edit_avatar'})}>${tl(trans.cancel)}</button>
                 <div class="fill"></div>
-                <button class="btn primary save" onclick="_save_avatar()" disabled>${tl(trans.save)}</button>
+                <button class="btn primary save" onclick=${() => save_avatar()} disabled>${tl(trans.save)}</button>
             </div>
         `
     });
@@ -615,7 +615,7 @@ function avatar(token) {
     console.info(page.structure.dialogs);
 }
 
-unsafeWindow._update_avatar_preview = function(event) {
+function update_avatar(event) {
     let reader = new FileReader();
     reader.onload = function() {
         page.state.avatar_changer_image.src = reader.result;
@@ -625,12 +625,12 @@ unsafeWindow._update_avatar_preview = function(event) {
     reader.readAsDataURL(event.target.files[0]);
 }
 
-unsafeWindow._save_avatar = function() {
+function save_avatar() {
     page.state.avatar_changer.querySelector('#avatar_saver').click();
 }
 function finish_saving_avatar() {
     page.state.avatar_changer.setAttribute('data-loading', 'true');
-    page.state.avatar_changer.querySelectorAll('button').forEach((button) => {
+    page.state.avatar_changer.querySelectorAll('.bleh-modal-body button').forEach((button) => {
         button.setAttribute('disabled', 'true');
         button.removeAttribute('onclick');
     });

@@ -7479,7 +7479,7 @@
     };
     if (replace || !replace && dialogs.hasOwnProperty(replace_id)) {
       log(`window set to replace ${replace_id}`, "window");
-      dialog_rm({ id: replace_id });
+      dialog_rm2({ id: replace_id });
       delete dialogs[replace_id];
     }
     page.structure.dialogs.appendChild(modal);
@@ -7491,13 +7491,13 @@
     all = false,
     modal_bg = false
   }) {
-    dialog_rm({
+    dialog_rm2({
       id,
       all,
       modal_bg
     });
   };
-  function dialog_rm({
+  function dialog_rm2({
     id,
     all = false,
     modal_bg = false
@@ -7511,7 +7511,7 @@
       log("requested kill all", "window");
       console.info(dialogs);
       for (let dialog2 in dialogs) {
-        dialog_rm({
+        dialog_rm2({
           id: dialog2
         });
       }
@@ -9339,7 +9339,7 @@
   }
   unsafeWindow._send_other_listener = function(link) {
     let name = dialogs["other_listener"].instance.querySelector("#text-profile").value;
-    dialog_rm({
+    dialog_rm2({
       id: "other_listener"
     });
     window.location.href = `${root}user/${name}/library/music/${link}`;
@@ -9369,7 +9369,7 @@
     confirm_set_profile_as_shortcut();
   };
   function confirm_set_profile_as_shortcut() {
-    dialog_rm({
+    dialog_rm2({
       id: "profile_shortcut"
     });
     let avatar_src = document.body.querySelector(".header-avatar-inner-wrap img").getAttribute("src");
@@ -12063,7 +12063,7 @@
                             <img class="preview">
                             <span class="btn-secondary btn primary btn-file" data-kate-processed="true">
                                 ${tl(trans.upload)}
-                                <input type="file" onchange="_update_avatar_preview(event)" name="avatar" data-require="components/file-input" data-file-input-copy="${tl(trans.upload)}" data-no-file-copy="No file chosen" accept="image/*" required="" id="id_avatar" data-kate-processed="true">
+                                <input type="file" onchange=${() => update_avatar(event)} name="avatar" data-require="components/file-input" data-file-input-copy="${tl(trans.upload)}" data-no-file-copy="No file chosen" accept="image/*" required="" id="id_avatar" data-kate-processed="true">
                             </span>
                         </div>
                     </div>
@@ -12080,9 +12080,9 @@
                 </form>
             </div>
             <div class="modal-footer">
-                <button class="see-more cancel" onclick="_dialog_rm({id:'edit_avatar'})">${tl(trans.cancel)}</button>
+                <button class="see-more cancel" onclick=${() => dialog_rm({ id: "edit_avatar" })}>${tl(trans.cancel)}</button>
                 <div class="fill"></div>
-                <button class="btn primary save" onclick="_save_avatar()" disabled>${tl(trans.save)}</button>
+                <button class="btn primary save" onclick=${() => save_avatar()} disabled>${tl(trans.save)}</button>
             </div>
         `
     });
@@ -12092,7 +12092,7 @@
     page.state.avatar_changer_save = page.state.avatar_changer.querySelector(".modal-footer .primary");
     console.info(page.structure.dialogs);
   }
-  unsafeWindow._update_avatar_preview = function(event3) {
+  function update_avatar(event3) {
     let reader = new FileReader();
     reader.onload = function() {
       page.state.avatar_changer_image.src = reader.result;
@@ -12100,13 +12100,13 @@
       page.state.avatar_changer_save.removeAttribute("disabled");
     };
     reader.readAsDataURL(event3.target.files[0]);
-  };
-  unsafeWindow._save_avatar = function() {
+  }
+  function save_avatar() {
     page.state.avatar_changer.querySelector("#avatar_saver").click();
-  };
+  }
   function finish_saving_avatar() {
     page.state.avatar_changer.setAttribute("data-loading", "true");
-    page.state.avatar_changer.querySelectorAll("button").forEach((button) => {
+    page.state.avatar_changer.querySelectorAll(".bleh-modal-body button").forEach((button) => {
       button.setAttribute("disabled", "true");
       button.removeAttribute("onclick");
     });
@@ -17231,7 +17231,7 @@
       body: html2.node`
             <textarea class="modal-text" id="bleh--profile-note" placeholder=${tl(trans.anything_you_can_imagine)}>${profile_notes[user]}</textarea>
             <div class="modal-footer">
-                <button class="see-more cancel" onclick=${() => dialog_rm({ id: "edit_profile_note" })}>
+                <button class="see-more cancel" onclick=${() => dialog_rm2({ id: "edit_profile_note" })}>
                     ${tl(trans.cancel)}
                 </button>
                 <div class="fill"></div>
@@ -17248,7 +17248,7 @@
     profile_notes[user] = value_to_save;
     document.getElementById(`profile-note-row-preview--${user}`).textContent = value_to_save;
     localStorage.setItem("bleh_profile_notes", JSON.stringify(profile_notes));
-    dialog_rm({ id: "edit_profile_note" });
+    dialog_rm2({ id: "edit_profile_note" });
   }
   function prepare_corrections_page() {
     let corrections_table_artist = document.getElementById("corrections-artist");
@@ -17351,7 +17351,7 @@
       let try_parse = JSON.parse(requesting_setting);
       localStorage.setItem("bleh", requesting_setting);
       load_settings();
-      dialog_rm({
+      dialog_rm2({
         id: "import_settings"
       });
     } catch (e) {
@@ -17413,7 +17413,7 @@
     for (var member in settings) delete settings[member];
     Object.assign(settings, create_settings_template());
     load_settings(true);
-    dialog_rm({
+    dialog_rm2({
       id: "reset_settings"
     });
   };
@@ -21065,7 +21065,7 @@
     });
   }
   unsafeWindow._ignore_update = function() {
-    dialog_rm({
+    dialog_rm2({
       id: "bleh_update"
     });
     let api_expire = /* @__PURE__ */ new Date();
@@ -21075,7 +21075,7 @@
   };
   unsafeWindow._start_update = function() {
     open(`https://github.com/katelyynn/bleh/raw/${settings.branch}/fm/bleh.user.js`);
-    dialog_rm({
+    dialog_rm2({
       id: "bleh_update"
     });
     if (!settings.dev) {
@@ -21102,7 +21102,7 @@
   };
   unsafeWindow._start_css_update = function() {
     open(`https://github.com/katelyynn/bleh/raw/${settings.branch}/fm/bleh.user.css`);
-    dialog_rm({
+    dialog_rm2({
       id: "bleh_update"
     });
     _final_update();
@@ -21126,7 +21126,7 @@
     });
   };
   unsafeWindow._finish_update = function() {
-    dialog_rm({
+    dialog_rm2({
       id: "bleh_update"
     });
     if (!settings.dev) {
