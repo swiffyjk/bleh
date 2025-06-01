@@ -10523,7 +10523,7 @@
 
   // src/components/track.js
   function patch_titles(search = page.structure.main) {
-    if (page.subpage == "tags_overview")
+    if (page.subpage === "tags_overview")
       return;
     if (!search) return;
     let tracklists = search.querySelectorAll(".chartlist:not(.chartlist__placeholder)");
@@ -10592,10 +10592,12 @@
             is_artist = true;
           }
         }
+        log(`is user: ${is_user}, is artist: ${is_artist}`, "tracks", "log");
         if (is_user) {
           track.setAttribute("data-track-type", "user");
           if (settings.colourful_counts)
             patch_artist_ranks_in_list_view(track);
+          log("finished user stuff, returning", "tracks", "log");
           return;
         }
         if (is_artist) {
@@ -10612,6 +10614,7 @@
             insights.artist.highest.value = value;
           log(`pushed insight artist label of ${track_title.textContent}`, "glacier library", "log");
           insights.artist.labels.push(track_title.textContent);
+          log("finished artist stuff, returning", "tracks", "log");
           return;
         }
         let is_album = track.hasAttribute("data-album-row");
@@ -10659,13 +10662,12 @@
             song_tags = formatted_title[1];
           }
           track_title.setAttribute("title", correct_item_by_artist(track_title.getAttribute("title"), track_artist));
-          let song_tags_text = [];
-          for (let song_tag in song_tags) {
-            song_tags_text.push(html2.node`
-                        <div class="feat" data-bleh--tag-type="${song_tags[song_tag].type}" data-bleh--tag-group="${song_tags[song_tag].group}">${sanitise_text(song_tags[song_tag].text)}</div>
-                    `);
-          }
-          render2(track_title, html2`<div class="title">${sanitise_text(song_title).trim()}</div>${song_tags_text}`);
+          render2(track_title, html2`
+                    <div class="title">${sanitise_text(song_title).trim()}</div>
+                    ${song_tags.map((tag) => html2.node`
+                        <div class="feat" data-bleh--tag-type="${tag.type}" data-bleh--tag-group="${tag.group}">${sanitise_text(tag.text)}</div>
+                    `)}
+                `);
           let song_artist_element = track.querySelector(".chartlist-artist");
           if (!song_artist_element && !is_user) {
             song_artist_element = document.createElement("td");
@@ -10696,7 +10698,11 @@
                             <div class="info">
                                 <h5 class="title">${song_title}</h5>
                                 <p class="artist">${song_artist_element.firstElementChild}</p>
-                                <div class="tags">${song_tags_text}</div>
+                                <div class="tags">
+                                    ${song_tags.map((tag) => html2.node`
+                                        <div class="feat" data-bleh--tag-type="${tag.type}" data-bleh--tag-group="${tag.group}">${sanitise_text(tag.text)}</div>
+                                    `)}
+                                </div>
                                 ${is_album ? "" : html2.node`<p class="album">${image ? correct_item_by_artist(sanitise_text(image.getAttribute("alt")), track_artist) : album ? album.textContent : page.name}</p>`}
                                 ${track_timestamp && track_timestamp_contents ? html2.node`<p class="timestamp">${track_timestamp_contents}</p>` : ""}
                             </div>

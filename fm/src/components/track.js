@@ -1,15 +1,15 @@
-import { html, render } from "lighterhtml";
-import { settings } from "../build/config";
-import { log } from "../build/log";
-import { page, root } from "../build/page";
-import { clamp_sat, return_artist_from_track, rgb_to_hsl, sanitise, sanitise_text } from "../build/tools";
-import { bleh_glacier_insights } from "../pages/glacier";
-import { patch_artist_ranks_in_list_view } from "./colourful_counts";
-import { correct_artist, correct_item_by_artist, name_includes } from "./lotus";
-import { register_menu } from "./menu";
+import {html, render} from "lighterhtml";
+import {settings} from "../build/config";
+import {log} from "../build/log";
+import {page, root} from "../build/page";
+import {clamp_sat, return_artist_from_track, rgb_to_hsl, sanitise, sanitise_text} from "../build/tools";
+import {bleh_glacier_insights} from "../pages/glacier";
+import {patch_artist_ranks_in_list_view} from "./colourful_counts";
+import {correct_artist, correct_item_by_artist, name_includes} from "./lotus";
+import {register_menu} from "./menu";
 
 export function patch_titles(search=page.structure.main) {
-    if (page.subpage == 'tags_overview')
+    if (page.subpage === 'tags_overview')
         return;
 
     if (!search) return;
@@ -67,7 +67,7 @@ export function patch_titles(search=page.structure.main) {
 
         let tracks = tracklist.querySelectorAll(':is(.chartlist-row:not(.chartlist__placeholder-row), .chartlist-row--interlist-ad)');
 
-        tracks.forEach((track => {
+        tracks.forEach((track) => {
             console.log('track', track);
             if (track.getAttribute('data-track-type'))
                 return;
@@ -101,12 +101,15 @@ export function patch_titles(search=page.structure.main) {
                 }
             }
 
+            log(`is user: ${is_user}, is artist: ${is_artist}`, 'tracks', 'log');
+
             if (is_user) {
                 track.setAttribute('data-track-type', 'user');
 
                 if (settings.colourful_counts)
                     patch_artist_ranks_in_list_view(track);
 
+                log('finished user stuff, returning', 'tracks', 'log');
                 return;
             }
 
@@ -130,6 +133,7 @@ export function patch_titles(search=page.structure.main) {
                 log(`pushed insight artist label of ${track_title.textContent}`, 'glacier library', 'log');
                 insights.artist.labels.push(track_title.textContent);
 
+                log('finished artist stuff, returning', 'tracks', 'log');
                 return;
             }
 
@@ -195,15 +199,12 @@ export function patch_titles(search=page.structure.main) {
                 track_title.setAttribute('title', correct_item_by_artist(track_title.getAttribute('title'), track_artist));
 
                 // parse tags into text
-                let song_tags_text = []
-                for (let song_tag in song_tags) {
-                    song_tags_text.push(html.node`
-                        <div class="feat" data-bleh--tag-type="${song_tags[song_tag].type}" data-bleh--tag-group="${song_tags[song_tag].group}">${sanitise_text(song_tags[song_tag].text)}</div>
-                    `);
-                }
-
-                // combine
-                render(track_title, html`<div class="title">${sanitise_text(song_title).trim()}</div>${song_tags_text}`);
+                render(track_title, html`
+                    <div class="title">${sanitise_text(song_title).trim()}</div>
+                    ${song_tags.map((tag) => html.node`
+                        <div class="feat" data-bleh--tag-type="${tag.type}" data-bleh--tag-group="${tag.group}">${sanitise_text(tag.text)}</div>
+                    `)}
+                `);
 
                 let song_artist_element = track.querySelector('.chartlist-artist');
                 if (!song_artist_element && !is_user) {
@@ -245,7 +246,11 @@ export function patch_titles(search=page.structure.main) {
                             <div class="info">
                                 <h5 class="title">${song_title}</h5>
                                 <p class="artist">${song_artist_element.firstElementChild}</p>
-                                <div class="tags">${song_tags_text}</div>
+                                <div class="tags">
+                                    ${song_tags.map((tag) => html.node`
+                                        <div class="feat" data-bleh--tag-type="${tag.type}" data-bleh--tag-group="${tag.group}">${sanitise_text(tag.text)}</div>
+                                    `)}
+                                </div>
                                 ${(is_album) ? '' : html.node`<p class="album">${(image) ? correct_item_by_artist(sanitise_text(image.getAttribute('alt')), track_artist) : (album) ? album.textContent : page.name}</p>`}
                                 ${(track_timestamp && track_timestamp_contents) ? html.node`<p class="timestamp">${track_timestamp_contents}</p>` : ''}
                             </div>
@@ -342,7 +347,7 @@ export function patch_titles(search=page.structure.main) {
                     } catch(e) {}
                 }
             }
-        }));
+        });
     });
 
     if (page.subpage.startsWith('library'))
