@@ -1,12 +1,13 @@
-import { settings } from "./build/config";
-import { auth, page, root } from "./build/page";
-import { stored_season } from "./build/seasonal";
-import { lang, trans_legacy, tl, trans } from "./build/trans";
-import { load_badges } from "./components/badge";
-import { version } from "./main";
-import { show_theme_change_in_menu } from "./pages/bleh_config";
-import { ff } from "./sku";
-import { html } from "lighterhtml";
+import {settings} from "./build/config";
+import {auth, page, root} from "./build/page";
+import {stored_season} from "./build/seasonal";
+import {lang, tl, trans, trans_legacy} from "./build/trans";
+import {load_badges} from "./components/badge";
+import {version} from "./main";
+import {show_theme_change_in_menu} from "./pages/bleh_config";
+import {ff} from "./sku";
+import {html} from "lighterhtml";
+import {news} from "./news.js";
 
 export function patch_masthead(element) {
     let masthead_logo = element.querySelector('.masthead-logo');
@@ -23,7 +24,8 @@ export function patch_masthead(element) {
         masthead_logo.appendChild(html.node`
             <a class="bleh--version" href="${root}bleh">
                 ${version.build}.${version.sku}${(settings.branch != 'uwu') ? `.${settings.branch}` : ''}${(settings.dev) ? html.node`<div class="new-badge subtle">✦</div>` : ''}
-            </a>`);
+            </a>
+        `);
     }
 }
 
@@ -84,7 +86,9 @@ export function append_nav() {
 
 
     let notif_count = new_auth.querySelector('[data-analytics-label="notifications"] + .auth-avatar-notification-count-badge');
+    if (!notif_count) notif_count = '0';
     let inbox_count = new_auth.querySelector('[data-analytics-label="inbox"] + .auth-avatar-notification-count-badge');
+    if (!inbox_count) inbox_count = '0';
 
 
     let links = masthead.querySelector('.masthead-nav .navlist-items');
@@ -92,20 +96,16 @@ export function append_nav() {
 
     let notif_container = html.node`
     <li class="masthead-nav-item">
-        <a class="masthead-nav-control" href="${root}inbox/notifications" data-label="notifications">
-            ${tl(trans.notifications.name)}
-            ${(notif_count) ? html.node`<div class="notification-count-badge"></div>` : ''}
+        <a class="masthead-nav-control" href="${root}inbox/notifications" data-label="notifications" data-count=${notif_count}>
+            <span class="sr-only">${tl(trans.notifications.name)}</span>
+            <div class="counter">${notif_count}</div>
         </a>
     </li>`;
 
-    if (notif_count) {
-        notif_count = notif_count.textContent;
-
+    if (notif_count > 0) {
         tippy(notif_container, {
             content: tl(trans.notifications.count).replace('{count}', notif_count)
         });
-
-        notif_container.setAttribute('data-count', notif_count);
     } else {
         tippy(notif_container, {
             content: tl(trans.notifications.none)
@@ -116,21 +116,17 @@ export function append_nav() {
 
     let inbox_container = html.node`
         <li class="masthead-nav-item">
-            <a class="masthead-nav-control" href="${root}inbox" data-label="inbox">
-                ${tl(trans.inbox.name)}
-                ${(inbox_count) ? `<div class="notification-count-badge"></div>` : ''}
+            <a class="masthead-nav-control" href="${root}inbox" data-label="inbox" data-count=${inbox_count}>
+                <span class="sr-only">${tl(trans.inbox.name)}</span>
+                <div class="counter">${inbox_count}</div>
             </a>
         </li>
     `;
 
-    if (inbox_count) {
-        inbox_count = inbox_count.textContent;
-
+    if (inbox_count > 0) {
         tippy(inbox_container, {
             content: tl(trans.inbox.count).replace('{count}', inbox_count)
         });
-
-        inbox_container.setAttribute('data-count', inbox_count);
     } else {
         tippy(inbox_container, {
             content: tl(trans.inbox.none)
@@ -138,20 +134,6 @@ export function append_nav() {
     }
 
     links.appendChild(inbox_container);
-
-    // what's new?
-    let changelog_container = html.node`
-        <li class="masthead-nav-item">
-            <a class="masthead-nav-control" onclick="_query_changelog()" data-label="changelog">
-                ${tl(trans.news)}
-            </a>
-        </li>
-    `
-
-    tippy(changelog_container, {
-        content: tl(trans.news)
-    });
-    links.appendChild(changelog_container);
 
     // configure bleh
     let bleh_container = html.node`
@@ -238,6 +220,9 @@ export function append_nav() {
                     <span class="auth-dropdown-item-left">${tl(trans.language)}</span>
                     <span class="auth-dropdown-item-right" id="theme-value">${selected_language}</span>
                 </span>
+            </button>
+            <button class="dropdown-menu-clickable-item" data-menu-item="news" onclick=${() => news()}>
+                ${tl(trans.news)}
             </button>
             <a class="dropdown-menu-clickable-item" data-menu-item="bleh" href="${root}bleh">
                 ${tl(trans.settings)}

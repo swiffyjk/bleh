@@ -1,18 +1,14 @@
-import { register_activity } from "../activity";
-import { settings } from "../build/config";
-import { log } from "../build/log";
-import { auth, page, root, theme_preview } from "../build/page";
-import { stored_season } from "../build/seasonal";
-import { lang, trans_legacy, trans, tl } from "../build/trans";
-import { request_changelog } from "../changelog";
-import { dialog, dialog_rm } from "../components/dialog";
-import { notify } from "../components/notify";
-import { checkup_page_structure } from '../components/structure';
-import { refresh_all } from "../config";
-import { version } from "../main";
-import { register_background, update_page } from '../page';
-import { ff } from "../sku";
-import { display_colour_presets, show_theme_change_in_settings } from "./bleh_config";
+import {register_activity} from "../activity";
+import {log} from "../build/log";
+import {auth, page, root, theme_preview} from "../build/page";
+import {tl, trans, trans_legacy} from "../build/trans";
+import {request_changelog} from "../news.js";
+import {notify} from "../components/notify";
+import {checkup_page_structure} from '../components/structure';
+import {refresh_all} from "../config";
+import {version} from "../main";
+import {register_background, update_page} from '../page';
+import {display_colour_presets, show_theme_change_in_settings} from "./bleh_config";
 
 export function bleh_setup() {
     page.structure.container = document.body.querySelector('.page-content');

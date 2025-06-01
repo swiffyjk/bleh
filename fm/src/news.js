@@ -1,23 +1,17 @@
-import { html } from "lighterhtml";
-import { log } from "./build/log";
-import { root } from "./build/page";
-import { lang, tl, trans, trans_legacy } from "./build/trans";
-import { dialog } from "./components/dialog";
-import { deliver_notif } from "./components/notify";
-import { ff } from "./sku";
+import {html} from "lighterhtml";
+import {log} from "./build/log";
+import {root} from "./build/page";
+import {tl, trans, trans_legacy} from "./build/trans";
+import {dialog} from "./components/dialog";
+import {deliver_notif} from "./components/notify";
 
-unsafeWindow._query_changelog = function() {
-    if (!ff('changelogs')) {
-        deliver_notif('not just yet..');
-        return;
-    }
-
+export function news() {
     let changelog = localStorage.getItem('bleh_changelog');
     let changelog_expire = new Date(localStorage.getItem('bleh_changelog_expire'));
 
     let current_time = new Date();
 
-    if (changelog == null) {
+    if (!changelog) {
         log('not cached, fetching', 'changelog');
         request_changelog();
     } else {
@@ -30,7 +24,7 @@ unsafeWindow._query_changelog = function() {
 
 export function request_changelog(open_after = true) {
     let button = document.body.querySelector('[data-bleh-page="changelog"]');
-    if (button != null)
+    if (button)
         button.setAttribute('disabled', '');
 
     let xhr = new XMLHttpRequest();
@@ -76,7 +70,7 @@ export function request_changelog(open_after = true) {
 function open_changelog(changelog) {
     let window = dialog({
         id: 'changelog',
-        title: tl(trans.news_from_user).replace('{user}', `<a class="mention" href="${root}user/katesia">@katesia</a>`),
+        title: tl(trans.news_from_user).replace('{user}', 'katesia'),
         body: html.node`
             <div class="cta first sponsor colourful margin-bottom">
                 <strong>${tl(trans.news_sponsor_cta)}</strong>

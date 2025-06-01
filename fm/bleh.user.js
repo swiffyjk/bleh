@@ -9541,7 +9541,7 @@
                             ${tl(trans.albums)}
                         </a>
                     </li>
-                    ${!page_is_blocked ? html2.body`
+                    ${!page_is_blocked ? html2.node`
                     <li class="navlist-item secondary-nav-item secondary-nav-item--wiki">
                         <a class="secondary-nav-item-link" href="${window.location.href}/+wiki">
                             ${tl(trans.wiki)}
@@ -18208,6 +18208,124 @@
     });
   }
 
+  // src/news.js
+  function news() {
+    let changelog = localStorage.getItem("bleh_changelog");
+    let changelog_expire = new Date(localStorage.getItem("bleh_changelog_expire"));
+    let current_time = /* @__PURE__ */ new Date();
+    if (!changelog) {
+      log("not cached, fetching", "changelog");
+      request_changelog();
+    } else {
+      if (changelog_expire < current_time)
+        request_changelog();
+      else
+        open_changelog(JSON.parse(changelog));
+    }
+  }
+  function request_changelog(open_after = true) {
+    let button = document.body.querySelector('[data-bleh-page="changelog"]');
+    if (button)
+      button.setAttribute("disabled", "");
+    let xhr = new XMLHttpRequest();
+    let url = `https://katelyynn.github.io/bleh/fm/changelog/changelog.json?${Math.random()}`;
+    xhr.open("GET", url, true);
+    xhr.onload = function() {
+      log(`responded with ${xhr.status}`, "changelog");
+      if (xhr.status != 200) {
+        log("request has been cancelled, will request again in 1h", "changelog");
+        api_expire.setHours(api_expire.getHours() + 1);
+      }
+      let api_expire = /* @__PURE__ */ new Date();
+      if (xhr.status == 200) {
+        if (open_after) {
+          try {
+            open_changelog(JSON.parse(this.response));
+            localStorage.setItem("bleh_changelog", this.response);
+            api_expire.setHours(api_expire.getHours() + 2);
+            log(`cached until ${api_expire}`, "changelog");
+            localStorage.setItem("bleh_changelog_expire", api_expire);
+          } catch (e) {
+            deliver_notif("The changelog is currently unavailable due to errors, try again later.", true);
+            console.error(e);
+          }
+        }
+      }
+      if (button != null)
+        button.removeAttribute("disabled");
+    };
+    xhr.send();
+  }
+  function open_changelog(changelog) {
+    let window2 = dialog({
+      id: "changelog",
+      title: tl(trans.news_from_user).replace("{user}", "katesia"),
+      body: html2.node`
+            <div class="cta first sponsor colourful margin-bottom">
+                <strong>${tl(trans.news_sponsor_cta)}</strong>
+                <a class="see-more" onclick="_sponsor(true)">${tl(trans.sponsor)}</a>
+            </div>
+            <div class="changelog-list"></div>
+        `,
+      type: "changelog",
+      allow_scroll: true
+    });
+    let changelog_list = window2.querySelector(".changelog-list");
+    let index = 0;
+    for (let version2 in changelog) {
+      if (version2 == "updated" || version2 == "latest")
+        continue;
+      if (index > 10)
+        continue;
+      let version_item = html2.node`
+            <div class="changelog-version-item" data-changelog-type="${changelog[version2].type}" data-changelog-latest="${index == 0 ? "true" : "false"}" data-changelog-version="${version2}">
+            <div class="version-item-header">
+                <div class="sub-text">
+                <div class="breadcrumb">
+                    <div class="breadcrumb-origin">
+                    ${version2}
+                    </div>
+                    <div class="breadcrumb-name">
+                    ${trans_legacy.en.changelog.type[changelog[version2].type]}
+                    </div>
+                </div>
+                </div>
+                <h3>${changelog[version2].name}</h3>
+                ${version2 == "2025.0113" ? html2.node`<h4 class="header-over">${changelog[version2].name}</h4>` : ""}
+            </div>
+            </div>
+        `;
+      if (changelog[version2].type == "major")
+        version_item.setAttribute("id", "latest_major_release");
+      let body = document.createElement("div");
+      body.classList.add("version-item-body", "markdown-body");
+      let converter = new showdown.Converter({
+        emoji: true,
+        excludeTrailingPunctuationFromURLs: true,
+        ghMentions: true,
+        ghMentionsLink: `${root}user/{u}`,
+        headerLevelStart: 5,
+        noHeaderId: true,
+        openLinksInNewWindow: true,
+        requireSpaceBeforeHeadingText: true,
+        simpleLineBreaks: true,
+        simplifiedAutoLink: true,
+        strikethrough: true,
+        underline: true,
+        ghCodeBlocks: false,
+        smartIndentationFix: true
+      });
+      let parsed_text = converter.makeHtml(changelog[version2].bio.replace(/([@])([a-zA-Z0-9_]+)/g, `[$1$2](${root}user/$2)`).replace(/\[artist\]([a-zA-Z0-9]+)\[\/artist\]/g, `[$1](${root}music/$1)`).replace(/\[album artist=([a-zA-Z0-9]+)\]([a-zA-Z0-9\s]+)\[\/album\]/g, `[$2](${root}music/$1/$2)`).replace(/\[track artist=([a-zA-Z0-9]+)\]([a-zA-Z0-9\s]+)\[\/track\]/g, `[$2](${root}music/$1/_/$2)`).replace(/https:\/\/open\.spotify\.com\/user\/([A-Za-z0-9]+)\?si=([A-Za-z0-9]+)/g, "[@$1](https://open.spotify.com/user/$1)").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;"));
+      body.innerHTML = parsed_text;
+      version_item.appendChild(body);
+      changelog_list.appendChild(version_item);
+      index += 1;
+    }
+  }
+  unsafeWindow._update_local_changelog_cache = function(json) {
+    localStorage.setItem("bleh_changelog", JSON.stringify(json));
+  };
+
   // src/navigation.js
   function patch_masthead(element) {
     let masthead_logo = element.querySelector(".masthead-logo");
@@ -18221,7 +18339,8 @@
       masthead_logo.appendChild(html2.node`
             <a class="bleh--version" href="${root}bleh">
                 ${version.build}.${version.sku}${settings.branch != "uwu" ? `.${settings.branch}` : ""}${settings.dev ? html2.node`<div class="new-badge subtle">✦</div>` : ""}
-            </a>`);
+            </a>
+        `);
     }
   }
   function append_nav() {
@@ -18269,22 +18388,22 @@
       auth_link2.appendChild(pro_badge);
     }
     let notif_count = new_auth.querySelector('[data-analytics-label="notifications"] + .auth-avatar-notification-count-badge');
+    if (!notif_count) notif_count = "0";
     let inbox_count = new_auth.querySelector('[data-analytics-label="inbox"] + .auth-avatar-notification-count-badge');
+    if (!inbox_count) inbox_count = "0";
     let links = masthead.querySelector(".masthead-nav .navlist-items");
     links.innerHTML = "";
     let notif_container = html2.node`
     <li class="masthead-nav-item">
-        <a class="masthead-nav-control" href="${root}inbox/notifications" data-label="notifications">
-            ${tl(trans.notifications.name)}
-            ${notif_count ? html2.node`<div class="notification-count-badge"></div>` : ""}
+        <a class="masthead-nav-control" href="${root}inbox/notifications" data-label="notifications" data-count=${notif_count}>
+            <span class="sr-only">${tl(trans.notifications.name)}</span>
+            <div class="counter">${notif_count}</div>
         </a>
     </li>`;
-    if (notif_count) {
-      notif_count = notif_count.textContent;
+    if (notif_count > 0) {
       tippy(notif_container, {
         content: tl(trans.notifications.count).replace("{count}", notif_count)
       });
-      notif_container.setAttribute("data-count", notif_count);
     } else {
       tippy(notif_container, {
         content: tl(trans.notifications.none)
@@ -18293,35 +18412,22 @@
     links.appendChild(notif_container);
     let inbox_container = html2.node`
         <li class="masthead-nav-item">
-            <a class="masthead-nav-control" href="${root}inbox" data-label="inbox">
-                ${tl(trans.inbox.name)}
-                ${inbox_count ? `<div class="notification-count-badge"></div>` : ""}
+            <a class="masthead-nav-control" href="${root}inbox" data-label="inbox" data-count=${inbox_count}>
+                <span class="sr-only">${tl(trans.inbox.name)}</span>
+                <div class="counter">${inbox_count}</div>
             </a>
         </li>
     `;
-    if (inbox_count) {
-      inbox_count = inbox_count.textContent;
+    if (inbox_count > 0) {
       tippy(inbox_container, {
         content: tl(trans.inbox.count).replace("{count}", inbox_count)
       });
-      inbox_container.setAttribute("data-count", inbox_count);
     } else {
       tippy(inbox_container, {
         content: tl(trans.inbox.none)
       });
     }
     links.appendChild(inbox_container);
-    let changelog_container = html2.node`
-        <li class="masthead-nav-item">
-            <a class="masthead-nav-control" onclick="_query_changelog()" data-label="changelog">
-                ${tl(trans.news)}
-            </a>
-        </li>
-    `;
-    tippy(changelog_container, {
-      content: tl(trans.news)
-    });
-    links.appendChild(changelog_container);
     let bleh_container = html2.node`
         <li class="masthead-nav-item">
             <a class="masthead-nav-control" href="${root}bleh${stored_season.id != "none" ? "?tab=seasonal" : ""}" data-label="bleh" data-season="${stored_season.id}" data-season-active="${stored_season.id != "none" ? "true" : "false"}">
@@ -18396,6 +18502,9 @@
                     <span class="auth-dropdown-item-left">${tl(trans.language)}</span>
                     <span class="auth-dropdown-item-right" id="theme-value">${selected_language}</span>
                 </span>
+            </button>
+            <button class="dropdown-menu-clickable-item" data-menu-item="news" onclick=${() => news()}>
+                ${tl(trans.news)}
             </button>
             <a class="dropdown-menu-clickable-item" data-menu-item="bleh" href="${root}bleh">
                 ${tl(trans.settings)}
@@ -19305,128 +19414,6 @@
     log("status is", "page", "info", page);
     update_page();
   }
-
-  // src/changelog.js
-  unsafeWindow._query_changelog = function() {
-    if (!ff("changelogs")) {
-      deliver_notif("not just yet..");
-      return;
-    }
-    let changelog = localStorage.getItem("bleh_changelog");
-    let changelog_expire = new Date(localStorage.getItem("bleh_changelog_expire"));
-    let current_time = /* @__PURE__ */ new Date();
-    if (changelog == null) {
-      log("not cached, fetching", "changelog");
-      request_changelog();
-    } else {
-      if (changelog_expire < current_time)
-        request_changelog();
-      else
-        open_changelog(JSON.parse(changelog));
-    }
-  };
-  function request_changelog(open_after = true) {
-    let button = document.body.querySelector('[data-bleh-page="changelog"]');
-    if (button != null)
-      button.setAttribute("disabled", "");
-    let xhr = new XMLHttpRequest();
-    let url = `https://katelyynn.github.io/bleh/fm/changelog/changelog.json?${Math.random()}`;
-    xhr.open("GET", url, true);
-    xhr.onload = function() {
-      log(`responded with ${xhr.status}`, "changelog");
-      if (xhr.status != 200) {
-        log("request has been cancelled, will request again in 1h", "changelog");
-        api_expire.setHours(api_expire.getHours() + 1);
-      }
-      let api_expire = /* @__PURE__ */ new Date();
-      if (xhr.status == 200) {
-        if (open_after) {
-          try {
-            open_changelog(JSON.parse(this.response));
-            localStorage.setItem("bleh_changelog", this.response);
-            api_expire.setHours(api_expire.getHours() + 2);
-            log(`cached until ${api_expire}`, "changelog");
-            localStorage.setItem("bleh_changelog_expire", api_expire);
-          } catch (e) {
-            deliver_notif("The changelog is currently unavailable due to errors, try again later.", true);
-            console.error(e);
-          }
-        }
-      }
-      if (button != null)
-        button.removeAttribute("disabled");
-    };
-    xhr.send();
-  }
-  function open_changelog(changelog) {
-    let window2 = dialog({
-      id: "changelog",
-      title: tl(trans.news_from_user).replace("{user}", `<a class="mention" href="${root}user/katesia">@katesia</a>`),
-      body: html2.node`
-            <div class="cta first sponsor colourful margin-bottom">
-                <strong>${tl(trans.news_sponsor_cta)}</strong>
-                <a class="see-more" onclick="_sponsor(true)">${tl(trans.sponsor)}</a>
-            </div>
-            <div class="changelog-list"></div>
-        `,
-      type: "changelog",
-      allow_scroll: true
-    });
-    let changelog_list = window2.querySelector(".changelog-list");
-    let index = 0;
-    for (let version2 in changelog) {
-      if (version2 == "updated" || version2 == "latest")
-        continue;
-      if (index > 10)
-        continue;
-      let version_item = html2.node`
-            <div class="changelog-version-item" data-changelog-type="${changelog[version2].type}" data-changelog-latest="${index == 0 ? "true" : "false"}" data-changelog-version="${version2}">
-            <div class="version-item-header">
-                <div class="sub-text">
-                <div class="breadcrumb">
-                    <div class="breadcrumb-origin">
-                    ${version2}
-                    </div>
-                    <div class="breadcrumb-name">
-                    ${trans_legacy.en.changelog.type[changelog[version2].type]}
-                    </div>
-                </div>
-                </div>
-                <h3>${changelog[version2].name}</h3>
-                ${version2 == "2025.0113" ? html2.node`<h4 class="header-over">${changelog[version2].name}</h4>` : ""}
-            </div>
-            </div>
-        `;
-      if (changelog[version2].type == "major")
-        version_item.setAttribute("id", "latest_major_release");
-      let body = document.createElement("div");
-      body.classList.add("version-item-body", "markdown-body");
-      let converter = new showdown.Converter({
-        emoji: true,
-        excludeTrailingPunctuationFromURLs: true,
-        ghMentions: true,
-        ghMentionsLink: `${root}user/{u}`,
-        headerLevelStart: 5,
-        noHeaderId: true,
-        openLinksInNewWindow: true,
-        requireSpaceBeforeHeadingText: true,
-        simpleLineBreaks: true,
-        simplifiedAutoLink: true,
-        strikethrough: true,
-        underline: true,
-        ghCodeBlocks: false,
-        smartIndentationFix: true
-      });
-      let parsed_text = converter.makeHtml(changelog[version2].bio.replace(/([@])([a-zA-Z0-9_]+)/g, `[$1$2](${root}user/$2)`).replace(/\[artist\]([a-zA-Z0-9]+)\[\/artist\]/g, `[$1](${root}music/$1)`).replace(/\[album artist=([a-zA-Z0-9]+)\]([a-zA-Z0-9\s]+)\[\/album\]/g, `[$2](${root}music/$1/$2)`).replace(/\[track artist=([a-zA-Z0-9]+)\]([a-zA-Z0-9\s]+)\[\/track\]/g, `[$2](${root}music/$1/_/$2)`).replace(/https:\/\/open\.spotify\.com\/user\/([A-Za-z0-9]+)\?si=([A-Za-z0-9]+)/g, "[@$1](https://open.spotify.com/user/$1)").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;"));
-      body.innerHTML = parsed_text;
-      version_item.appendChild(body);
-      changelog_list.appendChild(version_item);
-      index += 1;
-    }
-  }
-  unsafeWindow._update_local_changelog_cache = function(json) {
-    localStorage.setItem("bleh_changelog", JSON.stringify(json));
-  };
 
   // src/pages/bleh_setup.js
   function bleh_setup() {

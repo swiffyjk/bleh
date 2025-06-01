@@ -132,7 +132,7 @@ export function show_your_scrobbles() {
                             ${tl(trans.albums)}
                         </a>
                     </li>
-                    ${(!page_is_blocked) ? html.body`
+                    ${(!page_is_blocked) ? html.node`
                     <li class="navlist-item secondary-nav-item secondary-nav-item--wiki">
                         <a class="secondary-nav-item-link" href="${window.location.href}/+wiki">
                             ${tl(trans.wiki)}
