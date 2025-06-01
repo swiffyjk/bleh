@@ -6556,7 +6556,6 @@ leading to a gap from their own css */
     box-shadow: unset;
     border-radius: unset;
     background-color: unset;
-    z-index: 200 !important;
     /* */
     content: '';
     position: absolute;
@@ -10377,7 +10376,7 @@ text[style^="color: rgb(255, 172, 172)"] {
             scrollbar-width: thin;
 
             .dropdown-menu-clickable-item {
-                --btn-left: calc(var(--button-sides)+ 12px + 4px) !important;
+                --btn-left: calc(var(--button-sides) + 12px + 4px) !important;
             }
 
             .active {

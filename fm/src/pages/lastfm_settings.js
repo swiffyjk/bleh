@@ -1,12 +1,12 @@
-import { auth, page, root } from "../build/page";
-import { trans_legacy, trans, tl } from "../build/trans";
-import { bleh_auto_edits } from "../components/auto_edit";
-import { dialog } from "../components/dialog";
-import { custom_select, update_inbuilt_select } from "../components/select";
-import { update_inbuilt_item } from "../config";
-import { ff } from "../sku";
-import { markdown } from "../components/markdown";
-import { render } from "lighterhtml";
+import {auth, page, root} from "../build/page";
+import {tl, trans, trans_legacy} from "../build/trans";
+import {bleh_auto_edits} from "../components/auto_edit";
+import {dialog} from "../components/dialog";
+import {custom_select, update_inbuilt_select} from "../components/select";
+import {update_inbuilt_item} from "../config";
+import {ff} from "../sku";
+import {markdown} from "../components/markdown";
+import {html, render} from "lighterhtml";
 
 // patch last.fm settings
 export function bleh_native_settings() {
@@ -439,17 +439,16 @@ function patch_settings_profile_panel(token, update_picture) {
 
     let form_display_name = document.getElementById('id_full_name').value;
     let form_website = document.getElementById('id_homepage').value;
-    let form_country = document.getElementById('id_country').outerHTML;
+    let form_country = document.getElementById('id_country');
     let form_about_me = document.getElementById('id_about_me').textContent;
 
-    document.getElementById('update-profile').outerHTML = '';
 
-    update_picture.innerHTML = (`
-        <h4>${tl(trans.profile)}</h4>
+    render(update_picture, html`
+       <h4>${tl(trans.profile)}</h4>
         <div class="banner-preview"></div>
         <div class="profile-container">
             <div class="avatar-side">
-                <div class="avatar image-upload-preview" onclick="_open_avatar_changer('${token}')">
+                <div class="avatar image-upload-preview" onclick=${() => avatar(token)}>
                     <img src="${avatar_url}" alt="${tl(trans.your_avatar)}" loading="lazy">
                     <div class="avatar-overlay"></div>
                 </div>
@@ -475,7 +474,7 @@ function patch_settings_profile_panel(token, update_picture) {
                                     ${tl(trans.subtitle)}
                                 </div>
                                 <div class="input">
-                                    <input type="text" name="full_name" value="${form_display_name}" maxlength="36" id="id_full_name" oninput="_update_display_name(this.value)" data-form-type="other">
+                                    <input type="text" name="full_name" value=${form_display_name} maxlength="36" id="id_full_name" oninput="_update_display_name(this.value)" data-form-type="other">
                                     <div class="tip">${tl(trans.pronoun_tip)}</div>
                                 </div>
                             </div>
@@ -492,7 +491,7 @@ function patch_settings_profile_panel(token, update_picture) {
                                     ${tl(trans.about)}
                                 </div>
                                 <div class="input about-me" id="about_me">
-                                    <textarea name="about_me" placeholder="${tl(trans.anything_you_can_imagine)}" cols="40" rows="10" class="textarea--s" maxlength="500" id="id_about_me" oninput="_update_about_me_preview(this.value)" data-form-type="other">${form_about_me}</textarea>
+                                    <textarea name="about_me" placeholder=${tl(trans.anything_you_can_imagine)} cols="40" rows="10" class="textarea--s" maxlength="500" id="id_about_me" oninput="_update_about_me_preview(this.value)" data-form-type="other">${form_about_me}</textarea>
                                     <div class="tip markdown-enabled">${tl(trans.supports_markdown)}</div>
                                 </div>
                             </div>
@@ -522,8 +521,10 @@ function patch_settings_profile_panel(token, update_picture) {
                     </form>
                 </div>
             </div>
-        </div>
+        </div> 
     `);
+
+    page.structure.main.removeChild(page.structure.main.querySelector('#update-profile'));
 
     tippy(update_picture.querySelector('.markdown-enabled'), {
         content: tl(trans.markdown_tip),
@@ -570,10 +571,7 @@ export function use_pronouns(value) {
 }
 
 
-unsafeWindow._open_avatar_changer = function(token) {
-    open_avatar_changer(token);
-}
-function open_avatar_changer(token) {
+function avatar(token) {
     page.state.avatar_changer = dialog({
         id: 'edit_avatar',
         title: tl(trans.change_avatar),
