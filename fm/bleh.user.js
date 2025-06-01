@@ -10674,16 +10674,14 @@
             song_artist_element.classList.add("chartlist-artist");
             track.appendChild(song_artist_element);
           }
-          if (song_artist_element.textContent.replaceAll("+", " ").trim() == track_artist || song_artist_element.textContent.trim() == "") {
+          if (song_artist_element.textContent.replaceAll("+", " ").trim() === track_artist || song_artist_element.textContent.trim() === "") {
+            log("artist either matches or is blank, replacing", "tracks", "log");
             render2(song_artist_element, html2`<a href="${root}music/${sanitise(formatted_title[2])}" title="${sanitise_text(formatted_title[2])}">${sanitise_text(formatted_title[2])}</a>`);
             let song_guests = formatted_title[3];
             for (let guest2 in song_guests) {
-              song_artist_element.innerHTML = `${song_artist_element.innerHTML},`;
-              let guest_element = document.createElement("a");
-              guest_element.setAttribute("href", `${root}music/${sanitise(song_guests[guest2])}`);
-              guest_element.setAttribute("title", song_guests[guest2]);
-              guest_element.textContent = song_guests[guest2];
-              song_artist_element.appendChild(guest_element);
+              song_artist_element.appendChild(html2.node`
+                            ,<a href="${root}music/${sanitise(song_guests[guest2])}" title="${sanitise_text(song_guests[guest2])}">${sanitise_text(song_guests[guest2])}</a>
+                        `);
             }
           }
           let image = track.querySelector(".chartlist-image img");
@@ -10692,12 +10690,12 @@
                         <div class="track-preview">
                             <div class="image">
                                 <div class="inner-image">
-                                    ${image ? image : html2.node`<img class="missing-track" alt="">`}
+                                    ${image ? html2.node`<img src=${image.getAttribute("src")} alt=${song_title}>` : html2.node`<img class="missing-track" alt="">`}
                                 </div>
                             </div>
                             <div class="info">
                                 <h5 class="title">${song_title}</h5>
-                                <p class="artist">${song_artist_element.firstElementChild}</p>
+                                <p class="artist">${song_artist_element.firstElementChild.textContent}</p>
                                 <div class="tags">
                                     ${song_tags.map((tag) => html2.node`
                                         <div class="feat" data-bleh--tag-type="${tag.type}" data-bleh--tag-group="${tag.group}">${sanitise_text(tag.text)}</div>

@@ -214,22 +214,17 @@ export function patch_titles(search=page.structure.main) {
                 }
 
                 // if artist matches OR artist is blank
-                if (song_artist_element.textContent.replaceAll('+', ' ').trim() == track_artist || song_artist_element.textContent.trim() == '') {
+                if (song_artist_element.textContent.replaceAll('+', ' ').trim() === track_artist || song_artist_element.textContent.trim() === '') {
+                    log('artist either matches or is blank, replacing', 'tracks', 'log');
                     // replaces with corrected artist if applicable
                     render(song_artist_element, html`<a href="${root}music/${sanitise(formatted_title[2])}" title="${sanitise_text(formatted_title[2])}">${sanitise_text(formatted_title[2])}</a>`);
 
                     // append guests
                     let song_guests = formatted_title[3];
                     for (let guest in song_guests) {
-                        // &
-                        song_artist_element.innerHTML = `${song_artist_element.innerHTML},`;
-
-                        let guest_element = document.createElement('a');
-                        guest_element.setAttribute('href', `${root}music/${sanitise(song_guests[guest])}`);
-                        guest_element.setAttribute('title', song_guests[guest]);
-                        guest_element.textContent = song_guests[guest];
-
-                        song_artist_element.appendChild(guest_element);
+                        song_artist_element.appendChild(html.node`
+                            ,<a href="${root}music/${sanitise(song_guests[guest])}" title="${sanitise_text(song_guests[guest])}">${sanitise_text(song_guests[guest])}</a>
+                        `);
                     }
                 }
 
@@ -240,12 +235,12 @@ export function patch_titles(search=page.structure.main) {
                         <div class="track-preview">
                             <div class="image">
                                 <div class="inner-image">
-                                    ${(image) ? image : html.node`<img class="missing-track" alt="">`}
+                                    ${(image) ? html.node`<img src=${image.getAttribute('src')} alt=${song_title}>` : html.node`<img class="missing-track" alt="">`}
                                 </div>
                             </div>
                             <div class="info">
                                 <h5 class="title">${song_title}</h5>
-                                <p class="artist">${song_artist_element.firstElementChild}</p>
+                                <p class="artist">${song_artist_element.firstElementChild.textContent}</p>
                                 <div class="tags">
                                     ${song_tags.map((tag) => html.node`
                                         <div class="feat" data-bleh--tag-type="${tag.type}" data-bleh--tag-group="${tag.group}">${sanitise_text(tag.text)}</div>
