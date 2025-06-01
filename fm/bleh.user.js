@@ -6803,12 +6803,12 @@
     if (auth_link.state) {
       auth.avatar = auth_link.state.querySelector("img").getAttribute("src");
       if (auth.avatar != previous_avi) {
-        let avatar2 = auth_link.state.querySelector("img");
-        avatar2.setAttribute("crossorigin", "anonymous");
+        let avatar3 = auth_link.state.querySelector("img");
+        avatar3.setAttribute("crossorigin", "anonymous");
         try {
-          avatar2.addEventListener("load", function() {
+          avatar3.addEventListener("load", function() {
             let thief = new ColorThief();
-            let colour = thief.getColor(avatar2);
+            let colour = thief.getColor(avatar3);
             let hsl = rgb_to_hsl(colour[0], colour[1], colour[2]);
             auth.sets.hue = hsl.h;
             auth.sets.sat = clamp_sat(hsl.s / 100 * 3);
@@ -8708,19 +8708,19 @@
   }
 
   // src/avatar.js
-  function patch_avatar(avatar2, name, type = "", parent = null, side = "right") {
-    if (avatar2.hasAttribute("data-bleh-avatar"))
+  function patch_avatar(avatar3, name, type = "", parent = null, side = "right") {
+    if (avatar3.hasAttribute("data-bleh-avatar"))
       return;
-    avatar2.setAttribute("data-bleh-avatar", "true");
-    let avatar_img = avatar2.querySelector("img");
+    avatar3.setAttribute("data-bleh-avatar", "true");
+    let avatar_img = avatar3.querySelector("img");
     if (!avatar_img) return;
     avatar_img.setAttribute("src", avatar_img.getAttribute("src").replace("/64s/", "/avatar70s/"));
     let badges = load_badges(name, true);
     if (badges) {
-      let pre_existing_badge = avatar2.querySelector(".avatar-status-dot");
+      let pre_existing_badge = avatar3.querySelector(".avatar-status-dot");
       if (pre_existing_badge)
-        avatar2.removeChild(pre_existing_badge);
-      avatar2.setAttribute("title", "");
+        avatar3.removeChild(pre_existing_badge);
+      avatar3.setAttribute("title", "");
       let this_badge = sponsor_list.badges[name];
       if (!Array.isArray(sponsor_list.badges[name])) {
         log(`@${name} 1 badge:`, "shout", "info", sponsor_list.badges[name]);
@@ -8732,12 +8732,12 @@
       }
       let badge = document.createElement("span");
       badge.classList.add("avatar-status-dot", `user-status--bleh-${this_badge.type}`, `user-status--bleh-user-${name}`);
-      avatar2.appendChild(badge);
+      avatar3.appendChild(badge);
       if (!parent)
-        avatar2.classList.add("avatar-can-hoverbox");
+        avatar3.classList.add("avatar-can-hoverbox");
       else
         parent.classList.add("parent-can-hoverbox");
-      tippy(parent ? parent : avatar2, {
+      tippy(parent ? parent : avatar3, {
         theme: "user",
         content: html2.node`
                 <div class="image-info">
@@ -8761,13 +8761,13 @@
       });
       return this_badge;
     } else {
-      let pre_existing_badge = avatar2.querySelector(".avatar-status-dot");
+      let pre_existing_badge = avatar3.querySelector(".avatar-status-dot");
       if (!pre_existing_badge) {
         if (!parent)
-          avatar2.classList.add("avatar-can-hoverbox");
+          avatar3.classList.add("avatar-can-hoverbox");
         else
           parent.classList.add("parent-can-hoverbox");
-        tippy(parent ? parent : avatar2, {
+        tippy(parent ? parent : avatar3, {
           theme: "user",
           content: html2.node`
                     <div class="image-info">
@@ -8791,10 +8791,10 @@
         return {};
       } else {
         if (!parent)
-          avatar2.classList.add("avatar-can-hoverbox");
+          avatar3.classList.add("avatar-can-hoverbox");
         else
           parent.classList.add("parent-can-hoverbox");
-        tippy(parent ? parent : avatar2, {
+        tippy(parent ? parent : avatar3, {
           theme: "user",
           content: html2.node`
                     <div class="image-info">
@@ -8803,7 +8803,7 @@
                         </div>
                         <div class="info">
                             <h5 class="title">${name}</h5>
-                            <p class="badge ${pre_existing_badge.classList[1]}">${avatar2.getAttribute("title")}</p>
+                            <p class="badge ${pre_existing_badge.classList[1]}">${avatar3.getAttribute("title")}</p>
                         </div>
                         <a href="${root}user/${name}" class="link-over"></a>
                     </div>
@@ -8816,21 +8816,21 @@
           interactive: true,
           delay: [200, 0]
         });
-        avatar2.setAttribute("title", "");
+        avatar3.setAttribute("title", "");
         return {
           type: pre_existing_badge.classList[1]
         };
       }
     }
   }
-  function return_name_from_avatar(avatar2) {
-    if (!avatar2)
+  function return_name_from_avatar(avatar3) {
+    if (!avatar3)
       return;
-    if (!avatar2.hasAttribute("alt"))
+    if (!avatar3.hasAttribute("alt"))
       return;
-    if (avatar2.getAttribute("alt") == tl(trans.your_avatar))
+    if (avatar3.getAttribute("alt") == tl(trans.your_avatar))
       return auth;
-    return avatar2.getAttribute("alt").replace(tl(trans.avatar_for_user), "");
+    return avatar3.getAttribute("alt").replace(tl(trans.avatar_for_user), "");
   }
   unsafeWindow._expand_avatar = function(src) {
     expand_avatar(src);
@@ -9615,16 +9615,16 @@
       fetch(`${root}user/${shortcut_listens.name}/library/music/${scrobble_page}`).then(function(response) {
         console.log("returned", response, response.text);
         return response.text();
-      }).then(function(html3) {
-        let doc = new DOMParser().parseFromString(html3, "text/html");
+      }).then(function(dom) {
+        let doc = new DOMParser().parseFromString(dom, "text/html");
         console.log("DOC", doc);
         let first_metadata_item = doc.querySelector(".metadata-item .metadata-display");
         let listens = 0;
-        let listen_item = document.getElementById(`listen-item--${shortcut_listens.name}`);
+        let listen_item = page.structure.main.querySelector(`#listen-item--${shortcut_listens.name}`);
         if (first_metadata_item != null)
           listens = clean_number(first_metadata_item.textContent.trim());
         listen_item.setAttribute("data-listens", listens);
-        render2(listen_item, html3`
+        render2(listen_item, html2`
                 <img class="view-item-avatar" src="${shortcut_listens.avi}" alt="${shortcut_listens.name}">
                 <div class="info">
                     <h3>${shortcut_listens.name}</h3>
@@ -10004,9 +10004,9 @@
       });
     } else {
       render2(listen_item, html2`
-            ${avi[0] ? `<img class="view-item-avatar" src="${avi[0].getAttribute("src")}">` : ""}
-            ${avi[1] ? `<img class="view-item-avatar" src="${avi[1].getAttribute("src")}">` : ""}
-            ${avi[2] ? `<img class="view-item-avatar" src="${avi[2].getAttribute("src")}">` : ""}
+            ${avi[0] ? html2.node`<img class="view-item-avatar" src="${avi[0].getAttribute("src")}" alt="">` : ""}
+            ${avi[1] ? html2.node`<img class="view-item-avatar" src="${avi[1].getAttribute("src")}" alt="">` : ""}
+            ${avi[2] ? html2.node`<img class="view-item-avatar" src="${avi[2].getAttribute("src")}" alt="">` : ""}
             <div class="info">
                 <h3>${tl(trans.following)}</h3>
                 <p>${tl(trans.others_count).replace("{c}", count)}</p>
@@ -10255,7 +10255,7 @@
       let name_wrap = listener.querySelector(".top-listeners-item-name a");
       let name = name_wrap.textContent;
       let track_wrap = listener.querySelector(".top-listeners-track");
-      let avatar2 = listener.querySelector(".top-listeners-item-image");
+      let avatar3 = listener.querySelector(".top-listeners-item-image");
       let follow = listener.querySelector(".class");
       new_listener.innerHTML = `
             <div class="user-list-inner-wrap">
@@ -10268,7 +10268,7 @@
                     </a>
                 </h4>
                 <span class="avatar user-list-avatar">
-                    ${avatar2.innerHTML}
+                    ${avatar3.innerHTML}
                 </span>
                 ${follow ? follow.outerHTML : ""}
                 ${track_wrap ? `
@@ -11443,7 +11443,7 @@
           if (!subpage_title)
             subpage_title = page.structure.main.querySelector(":scope > section:first-child .section-controls > .subpage-title");
           if (subpage_title) {
-            content_top = html.node`
+            content_top = html2.node`
                         <div class="content-top redesigned-content-top">
                             <div class="content-top-inner-wrap">
                                 <div class="container content-top-lower">
@@ -11952,7 +11952,7 @@
         <div class="banner-preview"></div>
         <div class="profile-container">
             <div class="avatar-side">
-                <div class="avatar image-upload-preview" onclick=${() => avatar(token)}>
+                <div class="avatar image-upload-preview" onclick=${() => avatar2(token)}>
                     <img src="${avatar_url}" alt="${tl(trans.your_avatar)}" loading="lazy">
                     <div class="avatar-overlay"></div>
                 </div>
@@ -12050,7 +12050,7 @@
     if (value.startsWith("she/") || value.startsWith("he/") || value.startsWith("they/") || value.startsWith("it/") || value.startsWith("xe/") || value.startsWith("any/")) return true;
     return false;
   }
-  function avatar(token) {
+  function avatar2(token) {
     page.state.avatar_changer = dialog({
       id: "edit_avatar",
       title: tl(trans.change_avatar),
@@ -12732,11 +12732,11 @@
     checkup_page_structure(is_subpage, profile_header);
     let new_account = false;
     if (ff("refreshed_nav")) {
-      let avatar2 = profile_header.querySelector(".avatar");
+      let avatar3 = profile_header.querySelector(".avatar");
       let title_wrap = profile_header.querySelector(".header-title-label-wrap");
       let sub_wrap = profile_header.querySelector(".header-title-secondary");
-      if (!avatar2) {
-        avatar2 = profile_header.querySelector(".header-avatar-add");
+      if (!avatar3) {
+        avatar3 = profile_header.querySelector(".header-avatar-add");
         new_account = true;
       }
       if (cute.includes(page.name)) {
@@ -12746,7 +12746,7 @@
       redesigned_profile_header.classList.add("redesigned-header", "redesigned-profile-header", "no-background");
       redesigned_profile_header.innerHTML = `
             <div class="avatar-side">
-                ${avatar2.innerHTML}
+                ${avatar3.innerHTML}
             </div>
             <div class="info-side">
                 <div class="sub-text">${tl(trans.profile)}</div>
@@ -12767,8 +12767,8 @@
         register_background(null, "hidden");
       } else {
         if (settings.profile_avi_background) {
-          if (avatar2)
-            register_background(avatar2.querySelector("img").getAttribute("src").replace("/avatar170s/", "/ar0/"), "avatar");
+          if (avatar3)
+            register_background(avatar3.querySelector("img").getAttribute("src").replace("/avatar170s/", "/ar0/"), "avatar");
           else
             register_background(null, "none");
         } else {
@@ -13472,9 +13472,9 @@
     refresh_all();
     let users = page.structure.main.querySelectorAll(".user-list-inner-wrap");
     users.forEach((user) => {
-      let avatar2 = user.querySelector(".user-list-avatar");
+      let avatar3 = user.querySelector(".user-list-avatar");
       let name = user.querySelector(".user-list-link").textContent;
-      let badge = patch_avatar(avatar2, name, "follow");
+      let badge = patch_avatar(avatar3, name, "follow");
       if (badge.type == "avatar-status-dot--staff")
         user.classList.add("staff-user");
       let artists = user.querySelectorAll(".user-list-shared-artists a");
@@ -18497,7 +18497,7 @@
     let legacy_container = page.structure.main.querySelector(".about-artist");
     if (!legacy_container)
       return;
-    let avatar2 = legacy_container.querySelector(".gallery-preview-image--0 img");
+    let avatar3 = legacy_container.querySelector(".gallery-preview-image--0 img");
     let listeners = legacy_container.querySelector(".about-artist-listeners");
     let tags = legacy_container.querySelector(".about-artist-tags");
     let wiki = legacy_container.querySelector(".wiki-block.visible-lg");
@@ -18508,7 +18508,7 @@
     render2(about_artist_container, html2`
         <div class="about-artist-panel">
             <div class="avatar-side">
-                ${avatar2 != null ? html2.node`<img src="${avatar2.getAttribute("src")}"><a onclick=${() => expand_avatar(avatar2.getAttribute("src").replace("/300x300/", "/ar0/"))} class="bleh--avatar-clickable-link"></a>` : html2.node`<img class="missing-artist">`}
+                ${avatar3 != null ? html2.node`<img src="${avatar3.getAttribute("src")}"><a onclick=${() => expand_avatar(avatar3.getAttribute("src").replace("/300x300/", "/ar0/"))} class="bleh--avatar-clickable-link"></a>` : html2.node`<img class="missing-artist">`}
             </div>
             <div class="info-side">
                 <div class="sub-text">${tl(trans.about)}</div>
@@ -18635,12 +18635,12 @@
     let entries = page.structure.main.querySelectorAll(".wiki-history-entry");
     entries.forEach((entry) => {
       let author = entry.querySelector(".wiki-history-author");
-      let avatar2 = author.querySelector(".wiki-history-author-avatar");
+      let avatar3 = author.querySelector(".wiki-history-author-avatar");
       let name = author.querySelector(".link-block-target");
-      if (name && avatar2) {
-        let badge = patch_avatar(avatar2, name.textContent, "wiki");
-        avatar2.setAttribute("data-avatar-themed", "true");
-        avatar2.classList.add(`user-status--bleh-${badge.type}`, `user-status--bleh-user-${name.textContent}`);
+      if (name && avatar3) {
+        let badge = patch_avatar(avatar3, name.textContent, "wiki");
+        avatar3.setAttribute("data-avatar-themed", "true");
+        avatar3.classList.add(`user-status--bleh-${badge.type}`, `user-status--bleh-user-${name.textContent}`);
         name.classList.add(`user-status--bleh-${badge.type}`, `user-status--bleh-user-${name.textContent}`);
       }
     });
@@ -18955,7 +18955,7 @@
     }
     checkup_page_structure(is_subpage, album_header);
     if (ff("refreshed_music_nav")) {
-      let avatar2 = album_header.querySelector(".header-new-background-image");
+      let avatar3 = album_header.querySelector(".header-new-background-image");
       let title = album_header.querySelector(".header-new-title");
       let artist = album_header.querySelector('[itemprop="byArtist"]');
       let position = album_header.querySelector(".header-new-chart-position-number");
@@ -18963,8 +18963,8 @@
             <section class="redesigned-header redesigned-album-header no-background">
                 ${is_subpage || ff("show_album_cover_always") ? html2.node`
                 <div class="avatar-side">
-                    ${avatar2 ? html2.node`
-                    <img src="${avatar2.getAttribute("content").replace("/ar0/", "/avatar170s/")}">
+                    ${avatar3 ? html2.node`
+                    <img src="${avatar3.getAttribute("content").replace("/ar0/", "/avatar170s/")}">
                     <a class="bleh--avatar-clickable-link"></a>
                     ` : '<img class="missing-album">'}
                 </div>
@@ -18978,28 +18978,24 @@
                     <h2>${html2.node([artist.innerHTML])}</h2>
                 </div>
         `;
-      let bg;
-      if (avatar2)
-        bg = register_background(avatar2.getAttribute("content"));
+      if (avatar3)
+        register_background(avatar3.getAttribute("content"));
       else
-        bg = register_background(null);
+        register_background(null);
       page.structure.container.insertBefore(redesigned_album_header, page.structure.container.firstElementChild);
       album_header.classList.add("legacy-header");
       let avatar_side = redesigned_album_header.querySelector(".avatar-side");
       let avatar_link = avatar_side.querySelector("a");
-      if (avatar2 && avatar_link) {
-        let expand_link;
-        if (avatar2)
-          expand_link = `_expand_avatar('${avatar2.getAttribute("content")}')`;
-        if (settings.default_avatar_action == "expand" && avatar2)
-          avatar_link.setAttribute("onclick", expand_link);
+      if (avatar3 && avatar_link) {
+        if (settings.default_avatar_action == "expand" && avatar3)
+          avatar_link.setAttribute("onclick", `_expand_avatar('${avatar3.getAttribute("content")}')`);
         else if (settings.default_avatar_action == "gallery")
           avatar_link.href = `${root}music/${sanitise(page.sister)}/${sanitise(page.name)}/+images`;
         let menu = tippy(avatar_side, {
           theme: "context-menu",
           content: html2.node`
-                    ${avatar2 ? html2.node`
-                    <button class="dropdown-menu-clickable-item" onclick="${expand_link}" data-menu-item="expand">
+                    ${avatar3 ? html2.node`
+                    <button class="dropdown-menu-clickable-item" onclick=${() => expand_avatar(avatar3.getAttribute("content"))} data-menu-item="expand">
                         ${tl(trans.expand)}
                     </button>
                     ` : ""}
@@ -19163,7 +19159,7 @@
     let katsune = ff("katsune");
     let featured_items = artist_header.querySelector(".artist-header-featured-items");
     if (ff("refreshed_music_nav")) {
-      let avatar2 = artist_header.querySelector(".header-new-background-image");
+      let avatar3 = artist_header.querySelector(".header-new-background-image");
       let title = artist_header.querySelector(".header-new-title");
       let on_tour = artist_header.querySelector(".header-new-on-tour");
       let position = artist_header.querySelector(".header-new-chart-position-number");
@@ -19171,8 +19167,8 @@
       redesigned_artist_header.classList.add("redesigned-header", "redesigned-artist-header", "no-background");
       redesigned_artist_header.innerHTML = `
             <div class="avatar-side">
-                ${avatar2 ? `
-                <img src="${avatar2.getAttribute("content").replace("/ar0/", "/avatar300s/")}">
+                ${avatar3 ? `
+                <img src="${avatar3.getAttribute("content").replace("/ar0/", "/avatar300s/")}">
                 <a class="bleh--avatar-clickable-link"></a>
                 ` : '<img class="missing-artist">'}
             </div>
@@ -19208,27 +19204,24 @@
         });
       }
       let bg;
-      if (avatar2)
-        bg = register_background(avatar2.getAttribute("content"));
+      if (avatar3)
+        bg = register_background(avatar3.getAttribute("content"));
       else
         bg = register_background(null);
       page.structure.container.insertBefore(redesigned_artist_header, page.structure.container.firstElementChild);
       artist_header.classList.add("legacy-header");
       let avatar_side = redesigned_artist_header.querySelector(".avatar-side");
       let avatar_link = avatar_side.querySelector("a");
-      if (avatar2 != null && avatar_link != null) {
-        let expand_link;
-        if (avatar2 != null)
-          expand_link = `_expand_avatar('${avatar2.getAttribute("content")}')`;
-        if (settings.default_avatar_action == "expand" && avatar2 != null)
-          avatar_link.setAttribute("onclick", expand_link);
+      if (avatar3 != null && avatar_link != null) {
+        if (settings.default_avatar_action == "expand" && avatar3 != null)
+          avatar_link.setAttribute("onclick", `_expand_avatar('${avatar3.getAttribute("content")}')`);
         else if (settings.default_avatar_action == "gallery")
           avatar_link.href = `${root}music/${sanitise(page.name)}/+images`;
         let menu = tippy(avatar_side, {
           theme: "context-menu",
           content: html2.node`
-                    ${avatar2 != null ? html2.node`
-                    <button class="dropdown-menu-clickable-item" onclick="${expand_link}" data-menu-item="expand">
+                    ${avatar3 != null ? html2.node`
+                    <button class="dropdown-menu-clickable-item" onclick=${() => expand_avatar(avatar3.getAttribute("content"))} data-menu-item="expand">
                         ${tl(trans.expand)}
                     </button>
                     ` : ""}
@@ -20310,9 +20303,9 @@
       }
       let users = page.structure.main.querySelectorAll(".attendee-summary-user-inner-wrap");
       users.forEach((user) => {
-        let avatar2 = user.querySelector(".attendee-summary-user-avatar");
+        let avatar3 = user.querySelector(".attendee-summary-user-avatar");
         let name = user.querySelector(".attendee-summary-user-link").textContent;
-        patch_avatar(avatar2, name, "event");
+        patch_avatar(avatar3, name, "event");
       });
       let cancelled = page.structure.main.querySelector(".event-status--cancelled");
       if (cancelled) {
@@ -20342,9 +20335,9 @@
         refresh_all();
         let users = page.structure.main.querySelectorAll(".user-list-inner-wrap");
         users.forEach((user) => {
-          let avatar2 = user.querySelector(".user-list-avatar");
+          let avatar3 = user.querySelector(".user-list-avatar");
           let name = user.querySelector(".user-list-link").textContent;
-          let badge = patch_avatar(avatar2, name, "follow");
+          let badge = patch_avatar(avatar3, name, "follow");
           if (badge.type == "avatar-status-dot--staff")
             user.classList.add("staff-user");
         });
@@ -20455,11 +20448,11 @@
       notif_links.forEach((notification) => {
         let link = notification.getAttribute("href");
         if (link.endsWith("/obsessions/set") || link.endsWith("/listening-report/month")) return;
-        let avatar2 = notification.querySelector(".avatar");
+        let avatar3 = notification.querySelector(".avatar");
         let name = notification.querySelector(".inbox-notifications__item-description strong");
         if (!name) return;
-        let name_text = sanitise(return_name_from_avatar(avatar2.querySelector("img")));
-        let badge = patch_avatar(avatar2, name_text);
+        let name_text = sanitise(return_name_from_avatar(avatar3.querySelector("img")));
+        let badge = patch_avatar(avatar3, name_text);
         name.classList.add("notification-user-name", `user-status--bleh-${badge.type}`, `user-status--bleh-user-${name_text}`);
         if (notification.classList.contains("inbox-notifications__item--highlight"))
           notification.classList.add("notification-user-name", `user-status--bleh-${badge.type}`, `user-status--bleh-user-${name_text}`);
@@ -20472,9 +20465,9 @@
       let sender_time = inbox.querySelector(".inbox-message-timestamp");
       sender_panel.appendChild(sender_name);
       sender_panel.appendChild(sender_time);
-      let avatar2 = sender_panel.querySelector(".avatar");
+      let avatar3 = sender_panel.querySelector(".avatar");
       let name_text = sanitise(sender_name.textContent.trim());
-      let badge = patch_avatar(avatar2, name_text);
+      let badge = patch_avatar(avatar3, name_text);
       sender_panel.classList.add(`user-status--bleh-${badge.type}`, `user-status--bleh-user-${name_text}`);
     } else if (page.subpage == "compose") {
       let inbox = page.structure.container.querySelector(".inbox-compose-view");
@@ -20630,7 +20623,7 @@
         theme: "context-menu",
         content: html2.node`
                 ${album_avatar || artist_avatar ? html2.node`
-                <button class="dropdown-menu-clickable-item" onclick="${expand_link}" data-menu-item="expand">
+                <button class="dropdown-menu-clickable-item" onclick=${() => expand_avatar(avatar.getAttribute("content"))} data-menu-item="expand">
                     ${tl(trans.expand)}
                 </button>
                 ` : ""}

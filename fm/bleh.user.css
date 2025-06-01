@@ -1766,6 +1766,7 @@ last.fm changes as of 2024-05-20 */
 
             &:hover {
                 --col: hsl(var(--l3-c));
+                --mask-colour: color-mix(in hsl, hsl(var(--l3-c)), hsl(var(--l4-c)) 30%);
                 text-decoration: underline !important;
 
                 transition-property: transform;
@@ -5758,6 +5759,7 @@ better than the default selector '#app a' i suppose */
     --left: var(--icon-half);
     --mask: var(--icon-16-heart);
     --col: hsl(var(--l3-c));
+    --mask-colour: hsl(var(--l3-c));
     color: var(--col);
 }
 [data-toggle-button-current-state=loved] .chartlist-love-button {
@@ -6248,6 +6250,7 @@ p + .chartlist {
     --shadow: none !important;
     --shadow-hov: none !important;
     --col: hsl(var(--l3-c)) !important;
+    --mask-colour: color-mix(in hsl, hsl(var(--l3-c)), hsl(var(--l4-c)) 30%);
     --force-font-weight: var(--font-weight-medium) !important;
 }
 
@@ -11439,6 +11442,7 @@ text[style^="color: rgb(0, 0, 0)"] {
 
 .play-this-track-playlink, .resource-external-link:not(.resource-external-link--homepage) {
     --col: hsl(var(--l3-c));
+    --mask-colour: color-mix(in hsl, hsl(var(--l3-c)), hsl(var(--l4-c)) 30%);
     --sat: 1;
     --lit: 1;
 }
@@ -11765,6 +11769,7 @@ text[style^="color: rgb(0, 0, 0)"] {
 
                         .user-list-item:not(:hover) [data-toggle-button-current-state="followed"] & {
                             --col: hsl(var(--l3-c));
+                            --mask-colour: color-mix(in hsl, hsl(var(--l3-c)), hsl(var(--l4-c)) 30%);
                         }
                     }
                 }
@@ -13680,6 +13685,7 @@ hr {
         right: 4px;
 
         --col: hsl(var(--l3-c));
+        --mask-colour: color-mix(in hsl, hsl(var(--l3-c)), hsl(var(--l4-c)) 30%);
         --left: var(--icon-half);
         --mask: var(--icon-16-bookmark-saved);
 
@@ -14238,6 +14244,7 @@ h2.playlisting-create-option-title {
         --mask: var(--icon-16-add);
         width: 32px;
         --col: hsl(var(--l3-c));
+        --mask-colour: color-mix(in hsl, hsl(var(--l3-c)), hsl(var(--l4-c)) 30%);
         margin-left: 4px; /* 12px total */
     }
 }
@@ -17464,6 +17471,7 @@ button.bleh--gallery-bookmark-image-btn {
 
     &:not(.primary, .btn-primary) {
         --col: hsl(var(--l3-c));
+        --mask-colour: color-mix(in hsl, hsl(var(--l3-c)), hsl(var(--l4-c)) 30%);
     }
 }
 .block {
@@ -19619,6 +19627,7 @@ h4 {
             &:hover {
                 text-decoration: underline !important;
                 --col: hsl(var(--l3-c));
+                --mask-colour: color-mix(in hsl, hsl(var(--l3-c)), hsl(var(--l4-c)) 30%);
             }
         }
     }
@@ -20753,6 +20762,7 @@ h4 {
 
                         [value="delete"] ~ button {
                             --col: hsl(var(--l3-c));
+                            --mask-colour: color-mix(in hsl, hsl(var(--l3-c)), hsl(var(--l4-c)) 30%);
                             --hue-over: var(--hue-neg);
                             --sat-over: 1;
                             --lit-over: 1;
@@ -21372,6 +21382,7 @@ h4 {
                 --bg-hov: hsl(var(--h4), 20%);
                 --bg-atv: hsl(var(--h4), 40%);
                 --col: hsl(var(--l3-c));
+                --mask-colour: color-mix(in hsl, hsl(var(--l3-c)), hsl(var(--l4-c)) 30%);
             }
         }
     }
@@ -21825,6 +21836,7 @@ h4 {
         --bg-hov: hsl(var(--h3), 20%);
         --bg-atv: hsl(var(--h3), 30%);
         --col: hsl(var(--l3-c));
+        --mask-colour: color-mix(in hsl, hsl(var(--l3-c)), hsl(var(--l4-c)) 30%);
         --shadow: inset 0 0 0 1px hsl(var(--l3-c), 50%);
         flex: unset;
     }

@@ -1,18 +1,18 @@
-import { html, render } from "lighterhtml";
-import { patch_avatar } from "../avatar";
-import { settings } from "../build/config";
-import { log } from "../build/log";
-import { auth, page, root } from "../build/page";
-import { clean_number, return_artist_from_track, sanitise } from "../build/tools";
-import { lang, trans_legacy, trans, tl } from "../build/trans";
-import { prep_chart_colours } from "../chart";
-import { refresh_all } from "../config";
-import { create_divider } from "../pages/gallery";
-import { ff } from "../sku";
-import { parse_scrobbles_as_rank } from "./colourful_counts";
-import { correct_item_by_artist } from "./lotus";
-import { register_menu } from "./menu";
-import { other_listener } from "./profile_shortcut";
+import {html, render} from "lighterhtml";
+import {patch_avatar} from "../avatar";
+import {settings} from "../build/config";
+import {log} from "../build/log";
+import {auth, page, root} from "../build/page";
+import {clean_number, return_artist_from_track, sanitise} from "../build/tools";
+import {lang, tl, trans, trans_legacy} from "../build/trans";
+import {prep_chart_colours} from "../chart";
+import {refresh_all} from "../config";
+import {create_divider} from "../pages/gallery";
+import {ff} from "../sku";
+import {parse_scrobbles_as_rank} from "./colourful_counts";
+import {correct_item_by_artist} from "./lotus";
+import {register_menu} from "./menu";
+import {other_listener} from "./profile_shortcut";
 
 unsafeWindow._other_listener = function(id) {
     other_listener(id);
@@ -237,15 +237,15 @@ export function show_your_scrobbles() {
 
             return response.text();
         })
-        .then(function(html) {
-            let doc = new DOMParser().parseFromString(html, 'text/html');
+        .then(function(dom) {
+            let doc = new DOMParser().parseFromString(dom, 'text/html');
             console.log('DOC', doc);
 
             let first_metadata_item = doc.querySelector('.metadata-item .metadata-display');
 
             let listens = 0;
 
-            let listen_item = document.getElementById(`listen-item--${shortcut_listens.name}`);
+            let listen_item = page.structure.main.querySelector(`#listen-item--${shortcut_listens.name}`);
 
             // sometimes this fails even thou they do have plays, this is just a last.fm bug
             // i dont feel comfortable displaying 0 here as it may not be true
@@ -261,7 +261,7 @@ export function show_your_scrobbles() {
                     <h3>${shortcut_listens.name}</h3>
                     <p>${tl(trans.listens.count).replace('{c}', listens.toLocaleString(lang))}</p>
                 </div>
-            `)
+            `);
 
             // colourful counts
             if (settings.colourful_counts && page.type == 'artist') {
@@ -767,9 +767,9 @@ function create_listen_item(parent, {name, listens, link, avi, count=0, button=f
     } else {
         // other listeners by clicking this link (artist)
         render(listen_item, html`
-            ${avi[0] ? `<img class="view-item-avatar" src="${avi[0].getAttribute('src')}">` : ''}
-            ${avi[1] ? `<img class="view-item-avatar" src="${avi[1].getAttribute('src')}">` : ''}
-            ${avi[2] ? `<img class="view-item-avatar" src="${avi[2].getAttribute('src')}">` : ''}
+            ${avi[0] ? html.node`<img class="view-item-avatar" src="${avi[0].getAttribute('src')}" alt="">` : ''}
+            ${avi[1] ? html.node`<img class="view-item-avatar" src="${avi[1].getAttribute('src')}" alt="">` : ''}
+            ${avi[2] ? html.node`<img class="view-item-avatar" src="${avi[2].getAttribute('src')}" alt="">` : ''}
             <div class="info">
                 <h3>${tl(trans.following)}</h3>
                 <p>${tl(trans.others_count).replace('{c}', count)}</p>
