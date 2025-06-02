@@ -1,17 +1,18 @@
-import { patch_avatar } from "../avatar";
-import { settings } from "../build/config";
-import { log } from "../build/log";
-import { auth, page, root } from "../build/page";
-import { clean_number, return_artist_from_track, sanitise } from "../build/tools";
-import { lang, trans_legacy, trans, tl } from "../build/trans";
-import { prep_chart_colours } from "../chart";
-import { refresh_all } from "../config";
-import { create_divider } from "../pages/gallery";
-import { ff } from "../sku";
-import { parse_scrobbles_as_rank } from "./colourful_counts";
-import { correct_item_by_artist } from "./lotus";
-import { register_menu } from "./menu";
-import { other_listener } from "./profile_shortcut";
+import {html, render} from "lighterhtml";
+import {patch_avatar} from "../avatar";
+import {settings} from "../build/config";
+import {log} from "../build/log";
+import {auth, page, root} from "../build/page";
+import {clean_number, return_artist_from_track, sanitise} from "../build/tools";
+import {lang, tl, trans, trans_legacy} from "../build/trans";
+import {prep_chart_colours} from "../chart";
+import {refresh_all} from "../config";
+import {create_divider} from "../pages/gallery";
+import {ff} from "../sku";
+import {parse_scrobbles_as_rank} from "./colourful_counts";
+import {correct_item_by_artist} from "./lotus";
+import {register_menu} from "./menu";
+import {other_listener} from "./profile_shortcut";
 
 unsafeWindow._other_listener = function(id) {
     other_listener(id);
@@ -30,7 +31,7 @@ export function show_your_scrobbles() {
         tabs.classList.add('navlist', 'secondary-nav', 'navlist--more', 'redesigned-navigation');
 
         if (page.type == 'artist') {
-            tabs.innerHTML = (`
+            tabs.appendChild(html.node`
                 <ul class="navlist-items">
                     <li class="navlist-item secondary-nav-item secondary-nav-item--overview">
                         <a class="secondary-nav-item-link secondary-nav-item-link--active" href="${window.location.href}">
@@ -47,7 +48,7 @@ export function show_your_scrobbles() {
                             ${tl(trans.albums)}
                         </a>
                     </li>
-                    ${(!page_is_blocked) ? (`
+                    ${(!page_is_blocked) ? html.node`
                     <li class="navlist-item secondary-nav-item secondary-nav-item--images">
                         <a class="secondary-nav-item-link" href="${window.location.href}/+images">
                             ${tl(trans.photos)}
@@ -83,18 +84,18 @@ export function show_your_scrobbles() {
                             ${tl(trans.tags)}
                         </a>
                     </li>
-                    `) : ''}
+                    ` : ''}
                 </ul>
             `);
         } else if (page.type == 'album') {
-            tabs.innerHTML = (`
+            tabs.appendChild(html.node`
                 <ul class="navlist-items">
                     <li class="navlist-item secondary-nav-item secondary-nav-item--overview">
                         <a class="secondary-nav-item-link secondary-nav-item-link--active" href="${window.location.href}">
                             ${tl(trans.overview)}
                         </a>
                     </li>
-                    ${(!page_is_blocked) ? (`
+                    ${(!page_is_blocked) ? html.node`
                     <li class="navlist-item secondary-nav-item secondary-nav-item--wiki">
                         <a class="secondary-nav-item-link" href="${window.location.href}/+wiki">
                             ${tl(trans.wiki)}
@@ -115,11 +116,11 @@ export function show_your_scrobbles() {
                             ${tl(trans.tags)}
                         </a>
                     </li>
-                    `) : ''}
+                    ` : ''}
                 </ul>
             `);
         } else if (page.type == 'track') {
-            tabs.innerHTML = (`
+            tabs.appendChild(html.node`
                 <ul class="navlist-items">
                     <li class="navlist-item secondary-nav-item secondary-nav-item--overview">
                         <a class="secondary-nav-item-link secondary-nav-item-link--active" href="${window.location.href}">
@@ -131,7 +132,7 @@ export function show_your_scrobbles() {
                             ${tl(trans.albums)}
                         </a>
                     </li>
-                    ${(!page_is_blocked) ? (`
+                    ${(!page_is_blocked) ? html.node`
                     <li class="navlist-item secondary-nav-item secondary-nav-item--wiki">
                         <a class="secondary-nav-item-link" href="${window.location.href}/+wiki">
                             ${tl(trans.wiki)}
@@ -147,7 +148,7 @@ export function show_your_scrobbles() {
                             ${tl(trans.tags)}
                         </a>
                     </li>
-                    `) : ''}
+                    ` : ''}
                 </ul>
             `);
         }
@@ -236,15 +237,15 @@ export function show_your_scrobbles() {
 
             return response.text();
         })
-        .then(function(html) {
-            let doc = new DOMParser().parseFromString(html, 'text/html');
+        .then(function(dom) {
+            let doc = new DOMParser().parseFromString(dom, 'text/html');
             console.log('DOC', doc);
 
             let first_metadata_item = doc.querySelector('.metadata-item .metadata-display');
 
             let listens = 0;
 
-            let listen_item = document.getElementById(`listen-item--${shortcut_listens.name}`);
+            let listen_item = page.structure.main.querySelector(`#listen-item--${shortcut_listens.name}`);
 
             // sometimes this fails even thou they do have plays, this is just a last.fm bug
             // i dont feel comfortable displaying 0 here as it may not be true
@@ -254,7 +255,7 @@ export function show_your_scrobbles() {
 
             listen_item.setAttribute('data-listens', listens);
 
-            listen_item.innerHTML = (`
+            render(listen_item, html`
                 <img class="view-item-avatar" src="${shortcut_listens.avi}" alt="${shortcut_listens.name}">
                 <div class="info">
                     <h3>${shortcut_listens.name}</h3>
@@ -539,10 +540,7 @@ export function show_your_scrobbles() {
 
                 let menu = tippy(link, {
                     theme: 'context-menu',
-                    content: (`
-                        ${replace.outerHTML}
-                    `),
-                    allowHTML: true,
+                    content: replace,
                     placement: 'right-start',
                     trigger: 'manual',
                     interactive: true,
@@ -562,21 +560,22 @@ export function show_your_scrobbles() {
             link_container.appendChild(item);
         });
 
-        let genius = document.createElement('li');
-        genius.innerHTML = (`
-            <a class="play-this-track-playlink music-link play-this-track-playlink--genius" href="https://genius.com/search?q=${sanitise(page.sister)}+${sanitise(page.name)}" target="_blank">
-                Genius
-            </a>
+        link_container.appendChild(html.node`
+            <li>
+                <a class="play-this-track-playlink music-link play-this-track-playlink--genius" href="https://genius.com/search?q=${sanitise(page.sister)}+${sanitise(page.name)}" target="_blank">
+                    Genius
+                </a>
+            </li>
         `);
-        link_container.appendChild(genius);
-
-        let tidal = document.createElement('li');
-        tidal.innerHTML = (`
+        
+        link_container.appendChild(html.node`
+            <li>
             <a class="play-this-track-playlink music-link play-this-track-playlink--tidal" href="https://listen.tidal.com/search?q=${sanitise(page.sister, ' ')} ${sanitise(page.name, ' ')}" target="_blank">
                 Tidal
             </a>
+
+            </li>
         `);
-        link_container.appendChild(tidal);
     } else {
         let header = document.createElement('div');
         header.classList.add('sub-text', 'music-small-header');
@@ -584,7 +583,7 @@ export function show_your_scrobbles() {
         link_group.appendChild(header);
 
         if (page.type == 'album') {
-            link_container.innerHTML = (`
+            render(link_container, html`
                 <a class="play-this-track-playlink music-link play-this-track-playlink--spotify" href="https://open.spotify.com/search/${sanitise(page.sister, ' ')} ${sanitise(page.name, ' ')}" target="_blank">
                     Spotify
                 </a>
@@ -608,7 +607,7 @@ export function show_your_scrobbles() {
                 </a>
             `);
         } else {
-            link_container.innerHTML = (`
+            render(link_container, html`
                 <a class="play-this-track-playlink music-link play-this-track-playlink--spotify" href="https://open.spotify.com/search/${sanitise(page.name, ' ')}" target="_blank">
                     Spotify
                 </a>
@@ -672,15 +671,12 @@ export function show_your_scrobbles() {
     if (!settings.corrections )
         return;
 
-    let lotus_handler = document.createElement('section');
-    lotus_handler.classList.add('lotus', 'cta');
-
-    lotus_handler.innerHTML = (`
-        <strong>${tl(trans.lotus_cta[page.corrected]).replace('{t}', tl(trans[`${page.type}_lower`]))}</strong>
-        <a class="see-more" href="https://github.com/katelyynn/lotus/issues/new/choose" target="_blank">${tl(trans.suggest_correction)}</a>
+    page.structure.side.appendChild(html.node`
+        <section class="lotus cta">
+             <strong>${tl(trans.lotus_cta[page.corrected]).replace('{t}', tl(trans[`${page.type}_lower`]))}</strong>
+            <a class="see-more" href="https://github.com/katelyynn/lotus/issues/new/choose" target="_blank">${tl(trans.suggest_correction)}</a>
+        </section>
     `);
-
-    page.structure.side.appendChild(lotus_handler);
 }
 
 function create_listen_item(parent, {name, listens, link, avi, count=0, button=false, katsune=false}, header_type) {
@@ -695,7 +691,7 @@ function create_listen_item(parent, {name, listens, link, avi, count=0, button=f
 
     if (listens > -1) {
         // 0 listens
-        listen_item.innerHTML = (`
+        render(listen_item, html`
             <img class="view-item-avatar" src="${avi}" alt="${name}">
             <div class="info">
                 <h3>${name}</h3>
@@ -705,12 +701,11 @@ function create_listen_item(parent, {name, listens, link, avi, count=0, button=f
 
         let menu = tippy(listen_item, {
             theme: 'context-menu',
-            content: (`
+            content: (html.node`
                 <a class="dropdown-menu-clickable-item" href="${root}user/${name}" data-menu-item="view_profile">
                     ${tl(trans.profile)}
                 </a>
             `),
-            allowHTML: true,
             placement: 'right-start',
             trigger: 'manual',
             interactive: true,
@@ -727,7 +722,7 @@ function create_listen_item(parent, {name, listens, link, avi, count=0, button=f
         register_menu(listen_item, menu);
     } else if (listens > -2) {
         // loading listens
-        listen_item.innerHTML = (`
+        render(listen_item, html`
             <img class="view-item-avatar" src="${avi}" alt="${name}">
             <div class="info">
                 <h3>${name}</h3>
@@ -737,7 +732,7 @@ function create_listen_item(parent, {name, listens, link, avi, count=0, button=f
 
         let menu = tippy(listen_item, {
             theme: 'context-menu',
-            content: (`
+            content: (html.node`
                 <a class="dropdown-menu-clickable-item" href="${root}user/${name}" data-menu-item="view_profile">
                     ${tl(trans.profile)}
                 </a>
@@ -746,7 +741,6 @@ function create_listen_item(parent, {name, listens, link, avi, count=0, button=f
                     ${tl(trans.settings)}
                 </button>
             `),
-            allowHTML: true,
             placement: 'right-start',
             trigger: 'manual',
             interactive: true,
@@ -772,10 +766,10 @@ function create_listen_item(parent, {name, listens, link, avi, count=0, button=f
         });
     } else {
         // other listeners by clicking this link (artist)
-        listen_item.innerHTML = (`
-            ${avi[0] ? `<img class="view-item-avatar" src="${avi[0].getAttribute('src')}">` : ''}
-            ${avi[1] ? `<img class="view-item-avatar" src="${avi[1].getAttribute('src')}">` : ''}
-            ${avi[2] ? `<img class="view-item-avatar" src="${avi[2].getAttribute('src')}">` : ''}
+        render(listen_item, html`
+            ${avi[0] ? html.node`<img class="view-item-avatar" src="${avi[0].getAttribute('src')}" alt="">` : ''}
+            ${avi[1] ? html.node`<img class="view-item-avatar" src="${avi[1].getAttribute('src')}" alt="">` : ''}
+            ${avi[2] ? html.node`<img class="view-item-avatar" src="${avi[2].getAttribute('src')}" alt="">` : ''}
             <div class="info">
                 <h3>${tl(trans.following)}</h3>
                 <p>${tl(trans.others_count).replace('{c}', count)}</p>
@@ -854,25 +848,25 @@ function show_numbers_on_side(header_type) {
     panel.classList.add('listen-panel');
 
 
-    let row = document.createElement('div');
-    row.classList.add('listener-row');
-    row.innerHTML = (`
-        <div class="listener-side">
-            <h3>${listeners.text}</h3>
-            <p>${listeners.abbr}</p>
+    let row = html.node`
+        <div class="listener-row">
+            <div class="listener-side">
+                <h3>${listeners.text}</h3>
+                <p>${listeners.abbr}</p>
+            </div>
+            <div class="scrobble-side">
+                <h3>${scrobbles.text}</h3>
+                <p>${scrobbles.abbr}</p>
+            </div>
+            ${(metascore.text) ? html.node`
+            <div class="metascore-side">
+                <h3>${metascore.text}</h3>
+                <p><a href="${metascore.link}" target="_blank">${metascore.abbr}</a></p>
+            </div>
+            ` : ''}
         </div>
-        <div class="scrobble-side">
-            <h3>${scrobbles.text}</h3>
-            <p>${scrobbles.abbr}</p>
-        </div>
-        ${(metascore.text) ? (`
-        <div class="metascore-side">
-            <h3>${metascore.text}</h3>
-            <p><a href="${metascore.link}" target="_blank">${metascore.abbr}</a></p>
-        </div>
-        `) : ''}
-    `);
-
+    `
+    
     panel.insertBefore(row, panel.firstElementChild);
 
     if (page.mobile)
@@ -966,14 +960,12 @@ function video_unavailable(video_col=null) {
     if (video_col)
         page.structure.side.removeChild(video_col);
 
-    let video_placeholder = document.createElement('section');
-    video_placeholder.classList.add('video-placeholder');
-    video_placeholder.innerHTML = (`
-        <div class="bleh-icon" style="--icon: var(--icon-16-video-broken)"></div>
-        ${tl(trans.video_removed)}
-    `);
-
-    page.structure.side.insertBefore(video_placeholder, page.structure.side.firstElementChild);
+    page.structure.side.insertBefore(html.node`
+        <section class="video-placeholder">
+            <div class="bleh-icon" style="--icon: var(--icon-16-video-broken)"></div>
+            ${tl(trans.video_removed)}
+        </section>
+    `, page.structure.side.firstElementChild);
 
 
     let links = page.structure.side.querySelector('.external-links-section .play-this-track-playlinks');

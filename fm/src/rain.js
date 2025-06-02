@@ -7,14 +7,12 @@ export function rain() {
         document.body.removeChild(rain_container_old);
 
     // make anew
-    let rain_container = document.createElement('div');
-    rain_container.classList.add('rain-container');
-    rain_container.setAttribute('id', 'rain-container');
-    rain_container.innerHTML = (`
-        <div class="rain" id="rain"></div>
-        <div class="rain rain-back" id="rain-back"></div>
-    `);
-    document.body.appendChild(rain_container);
+    document.body.appendChild(html.node`
+        <div class="rain-container" id="rain-container">
+            <div class="rain" id="rain"></div>
+            <div class="rain rain-back" id="rain-back"></div>
+        </div>
+        `);
 
     let increment = 0;
     let drops = '';

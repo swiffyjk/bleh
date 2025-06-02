@@ -1,17 +1,19 @@
-import { settings } from "../build/config";
-import { log } from "../build/log";
-import { auth, page, root } from "../build/page";
-import { sanitise } from "../build/tools";
-import { lang, trans_legacy, trans, tl } from "../build/trans";
-import { artist_title } from "../components/lotus";
-import { register_menu } from "../components/menu";
-import { bleh_music_page_charts, bleh_top_listeners, show_your_scrobbles } from "../components/music";
-import { checkup_page_structure } from "../components/structure";
-import { register_background, update_page } from "../page";
-import { ff } from "../sku";
-import { bleh_gallery_list, bleh_gallery_upload } from "./gallery";
-import { bleh_tags_mini } from "./tag";
-import { bleh_wiki, bleh_wiki_editor, bleh_wiki_history } from "./wiki";
+import {settings} from "../build/config";
+import {log} from "../build/log";
+import {auth, page, root} from "../build/page";
+import {sanitise} from "../build/tools";
+import {tl, trans, trans_legacy} from "../build/trans";
+import {artist_title} from "../components/lotus";
+import {register_menu} from "../components/menu";
+import {bleh_music_page_charts, bleh_top_listeners, show_your_scrobbles} from "../components/music";
+import {checkup_page_structure} from "../components/structure";
+import {register_background, update_page} from "../page";
+import {ff} from "../sku";
+import {bleh_gallery_list, bleh_gallery_upload} from "./gallery";
+import {bleh_tags_mini} from "./tag";
+import {bleh_wiki, bleh_wiki_editor, bleh_wiki_history} from "./wiki";
+import {html} from "lighterhtml";
+import {expand_avatar} from "../avatar.js";
 
 export function bleh_artists() {
     let artist_header = document.body.querySelector('.header-new--artist');
@@ -129,23 +131,19 @@ export function bleh_artists() {
         let avatar_link = avatar_side.querySelector('a');
 
         if (avatar != null && avatar_link != null) {
-            let expand_link;
-            if (avatar != null)
-                expand_link = `_expand_avatar('${avatar.getAttribute('content')}')`;
-
             if (settings.default_avatar_action == 'expand' && avatar != null)
-                avatar_link.setAttribute('onclick', expand_link);
+                avatar_link.setAttribute('onclick', `_expand_avatar('${avatar.getAttribute('content')}')`);
             else if (settings.default_avatar_action == 'gallery')
                 avatar_link.href = `${root}music/${sanitise(page.name)}/+images`;
 
             let menu = tippy(avatar_side, {
                 theme: 'context-menu',
-                content: (`
-                    ${(avatar != null) ? (`
-                    <button class="dropdown-menu-clickable-item" onclick="${expand_link}" data-menu-item="expand">
+                content: html.node`
+                    ${(avatar != null) ? html.node`
+                    <button class="dropdown-menu-clickable-item" onclick=${() => expand_avatar(avatar.getAttribute('content'))} data-menu-item="expand">
                         ${tl(trans.expand)}
                     </button>
-                    `) : ''}
+                    ` : ''}
                     <a class="dropdown-menu-clickable-item" href="${root}music/${sanitise(page.name)}/+images" data-menu-item="gallery">
                         ${tl(trans.photos)}
                     </a>
@@ -153,8 +151,7 @@ export function bleh_artists() {
                     <a class="dropdown-menu-clickable-item" href="${root}bleh?tab=customise" data-menu-item="settings">
                         ${tl(trans.settings)}
                     </a>
-                `),
-                allowHTML: true,
+                `,
                 placement: 'right-start',
                 trigger: 'manual',
                 interactive: true,
@@ -177,12 +174,11 @@ export function bleh_artists() {
             if (view_button) {
                 let view_menu = tippy(view_button, {
                     theme: 'context-menu',
-                    content: (`
+                    content: html.node`
                         <a class="dropdown-menu-clickable-item" href="${root}bleh?tab=customise" data-menu-item="settings">
                             ${tl(trans.settings)}
                         </a>
-                    `),
-                    allowHTML: true,
+                    `,
                     placement: 'right-start',
                     trigger: 'manual',
                     interactive: true,

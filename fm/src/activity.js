@@ -200,11 +200,3 @@ export function register_activity(type, involved, context, date=new Date()) {
     localStorage.setItem('bwaa_recent_activity', JSON.stringify(recent_activity_list));
 }
 
-unsafeWindow._clear_activity_history = function() {
-    localStorage.removeItem('bwaa_recent_activity');
-    notify({
-        id: 'cleared_history',
-        title: tl(trans.cleared_activity_history),
-        type: 'success'
-    });
-}

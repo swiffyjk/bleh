@@ -1,8 +1,9 @@
-import { settings } from "../build/config";
-import { auth, dialogs, page, root } from "../build/page";
-import { trans, tl } from "../build/trans";
-import { dialog, dialog_rm } from "./dialog";
-import { notify } from "./notify";
+import {html} from "lighterhtml";
+import {settings} from "../build/config";
+import {auth, dialogs, page, root} from "../build/page";
+import {tl, trans} from "../build/trans";
+import {dialog, dialog_rm} from "./dialog";
+import {notify} from "./notify";
 
 unsafeWindow._open_profile_shortcut_window = function() {
     open_profile_shortcut_window();
@@ -11,7 +12,7 @@ export function open_profile_shortcut_window() {
     let modal = dialog({
         id: 'profile_shortcut',
         title: tl(trans.profile_shortcut.name),
-        body: (`
+        body: html.node`
         <div class="setting" data-type="text" id="container-profile_shortcut">
             <div class="avatar-container">
                 <div class="avatar-inner" id="avatar-profile_shortcut">
@@ -23,7 +24,7 @@ export function open_profile_shortcut_window() {
                 <button class="btn chibi icon primary submit" onclick="_save_profile_shortcut()">${tl(trans.save)}</button>
             </div>
         </div>
-        `)
+        `
     });
 
     modal.querySelector('#text-profile_shortcut').focus();
@@ -36,7 +37,7 @@ export function other_listener(id) {
     let modal = dialog({
         id: 'other_listener',
         title: tl(trans.view_others_library),
-        body: (`
+        body: html.node`
         <div class="setting" data-type="text">
             <div class="avatar-container">
                 <div class="avatar-inner avatar--bleh-missing">
@@ -48,7 +49,7 @@ export function other_listener(id) {
                 <button class="btn chibi icon primary submit" onclick="_send_other_listener('${id}')">${tl(trans.done)}</button>
             </div>
         </div>
-        `)
+        `
     });
 
     modal.querySelector('#text-profile').focus();
@@ -69,20 +70,20 @@ unsafeWindow._set_profile_as_shortcut = function(button) {
     dialog({
         id: 'profile_shortcut',
         title: tl(trans.profile_shortcut.name),
-        body: (`
-        <div class="big-modal-alert alert-danger">
-            ${tl(trans.profile_shortcut.notice).replace('{u}', `<a class="mention" href="${root}user/${settings.profile_shortcut}" target="_blank">@${settings.profile_shortcut}</a>`)}
-        </div>
-        <div class="modal-footer">
-            <button class="see-more cancel" onclick="_dialog_rm({id:'profile_shortcut'})">
-                ${tl(trans.back)}
-            </button>
-            <div class="fill"></div>
-            <button class="btn primary save" onclick="_confirm_set_profile_as_shortcut()">
-                ${tl(trans.replace)}
-            </button>
-        </div>
-        `)
+        body: html.node`
+            <div class="big-modal-alert alert-danger">
+                ${{html: tl(trans.profile_shortcut.notice).replace('{u}', `<a class="mention" href="${root}user/${settings.profile_shortcut}" target="_blank">@${settings.profile_shortcut}</a>`)}}
+            </div>
+            <div class="modal-footer">
+                <button class="see-more cancel" onclick=${() => dialog_rm({id:'profile_shortcut'})}>
+                    ${tl(trans.back)}
+                </button>
+                <div class="fill"></div>
+                <button class="btn primary save" onclick=${() => confirm_set_profile_as_shortcut()}>
+                    ${tl(trans.replace)}
+                </button>
+            </div>
+        `
     });
 }
 

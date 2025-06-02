@@ -1,19 +1,21 @@
-import { settings } from "../build/config";
-import { log } from "../build/log";
-import { auth, page, root } from "../build/page";
-import { clamp_sat, hex_to_hsl, sanitise } from "../build/tools";
-import { lang, trans_legacy, trans, tl } from "../build/trans";
-import { load_chart_colours } from "../chart";
-import { bleh_about_artist } from "../components/about_artist";
-import { correct_item_by_artist, patch_header_title } from "../components/lotus";
-import { register_menu } from "../components/menu";
-import { bleh_music_page_charts, show_your_scrobbles } from "../components/music";
-import { checkup_page_structure } from "../components/structure";
-import { register_background, update_page } from "../page";
-import { ff } from "../sku";
-import { bleh_gallery_list, bleh_gallery_upload } from "./gallery";
-import { bleh_tags_mini } from "./tag";
-import { bleh_wiki, bleh_wiki_editor, bleh_wiki_history } from "./wiki";
+import {settings} from "../build/config";
+import {log} from "../build/log";
+import {auth, page, root} from "../build/page";
+import {clamp_sat, hex_to_hsl, sanitise} from "../build/tools";
+import {tl, trans} from "../build/trans";
+import {load_chart_colours} from "../chart";
+import {bleh_about_artist} from "../components/about_artist";
+import {patch_header_title} from "../components/lotus";
+import {register_menu} from "../components/menu";
+import {bleh_music_page_charts, show_your_scrobbles} from "../components/music";
+import {checkup_page_structure} from "../components/structure";
+import {register_background, update_page} from "../page";
+import {ff} from "../sku";
+import {bleh_gallery_list, bleh_gallery_upload} from "./gallery";
+import {bleh_tags_mini} from "./tag";
+import {bleh_wiki, bleh_wiki_editor, bleh_wiki_history} from "./wiki";
+import {html, render} from "lighterhtml";
+import {expand_avatar} from "../avatar.js";
 
 export function bleh_albums() {
     let album_header = document.body.querySelector('.header-new--album');
@@ -64,33 +66,30 @@ export function bleh_albums() {
         let artist = album_header.querySelector('[itemprop="byArtist"]');
         let position = album_header.querySelector('.header-new-chart-position-number');
 
-        let redesigned_album_header = document.createElement('section');
-        redesigned_album_header.classList.add('redesigned-header', 'redesigned-album-header', 'no-background');
-        redesigned_album_header.innerHTML = (`
-            ${(is_subpage || ff('show_album_cover_always')) ? (`
-            <div class="avatar-side">
-                ${(avatar) ? (`
-                <img src="${avatar.getAttribute('content').replace('/ar0/', '/avatar170s/')}">
-                <a class="bleh--avatar-clickable-link"></a>
-                `) : '<img class="missing-album">'}
-            </div>
-            `) : ''}
-            <div class="info-side">
-                <div class="sub-text">${tl(trans.album)}</div>
-                <div class="title-container">
-                    <h1>${title.innerHTML}</h1>
-                    ${(position) ? position.outerHTML : ''}
+        let redesigned_album_header = html.node`
+            <section class="redesigned-header redesigned-album-header no-background">
+                ${(is_subpage || ff('show_album_cover_always')) ? html.node`
+                <div class="avatar-side">
+                    ${(avatar) ? html.node`
+                    <img src="${avatar.getAttribute('content').replace('/ar0/', '/avatar170s/')}">
+                    <a class="bleh--avatar-clickable-link"></a>
+                    ` : '<img class="missing-album">'}
                 </div>
-                <h2>${artist.innerHTML}</h2>
-            </div>
-        `);
-
-        let bg;
+                ` : ''}
+                <div class="info-side">
+                    <div class="sub-text">${tl(trans.album)}</div>
+                    <div class="title-container">
+                        <h1>${html.node([title.innerHTML])}</h1>
+                        ${(position) ? position : ''}
+                    </div>
+                    <h2>${html.node([artist.innerHTML])}</h2>
+                </div>
+        `
 
         if (avatar)
-            bg = register_background(avatar.getAttribute('content'));
+            register_background(avatar.getAttribute('content'));
         else
-            bg = register_background(null);
+            register_background(null);
 
         page.structure.container.insertBefore(redesigned_album_header, page.structure.container.firstElementChild);
         album_header.classList.add('legacy-header');
@@ -100,23 +99,19 @@ export function bleh_albums() {
         let avatar_link = avatar_side.querySelector('a');
 
         if (avatar && avatar_link) {
-            let expand_link;
-            if (avatar)
-                expand_link = `_expand_avatar('${avatar.getAttribute('content')}')`;
-
             if (settings.default_avatar_action == 'expand' && avatar)
-                avatar_link.setAttribute('onclick', expand_link);
+                avatar_link.setAttribute('onclick', `_expand_avatar('${avatar.getAttribute('content')}')`);
             else if (settings.default_avatar_action == 'gallery')
                 avatar_link.href = `${root}music/${sanitise(page.sister)}/${sanitise(page.name)}/+images`;
 
             let menu = tippy(avatar_side, {
                 theme: 'context-menu',
-                content: (`
-                    ${(avatar) ? (`
-                    <button class="dropdown-menu-clickable-item" onclick="${expand_link}" data-menu-item="expand">
+                content: html.node`
+                    ${(avatar) ? html.node`
+                    <button class="dropdown-menu-clickable-item" onclick=${() => expand_avatar(avatar.getAttribute('content'))} data-menu-item="expand">
                         ${tl(trans.expand)}
                     </button>
-                    `) : ''}
+                    ` : ''}
                     <a class="dropdown-menu-clickable-item" href="${root}music/${sanitise(page.sister)}/${sanitise(page.name)}/+images" data-menu-item="gallery">
                         ${tl(trans.artwork)}
                     </a>
@@ -124,8 +119,7 @@ export function bleh_albums() {
                     <a class="dropdown-menu-clickable-item" href="${root}bleh?tab=customise" data-menu-item="settings">
                         ${tl(trans.settings)}
                     </a>
-                `),
-                allowHTML: true,
+                `,
                 placement: 'right-start',
                 trigger: 'manual',
                 interactive: true,
@@ -206,13 +200,14 @@ function album_missing_a_tracklist() {
         let top_overview = document.querySelector('.top-overview-panel');
         if (!top_overview) return;
 
-        tracklist = document.createElement('section');
-        tracklist.innerHTML = (`
-            <h3 class="text-18">${tl(trans.tracklist)}</h3>
-            <div class="loading-data-container">
-                <p class="loading-data-text">${tl(trans.gathering_your_plays)}</p>
-            </div>
-        `);
+        tracklist = html.node`
+            <section>
+                <h3 class="text-18">${tl(trans.tracklist)}</h3>
+                <div class="loading-data-container">
+                    <p class="loading-data-text">${tl(trans.gathering_your_plays)}</p>
+                </div>
+            </section>
+        `;
         top_overview.after(tracklist);
 
         /*let url_split = window.location.href.split('/');
@@ -225,7 +220,7 @@ function album_missing_a_tracklist() {
             let album_url = `${url_split[(url_split.length - 2)]}/${url_split[(url_split.length - 1)]}`;
             let album_as_track_url = window.location.href.replace(album_url, `${url_split[(url_split.length - 2)]}/_/${url_split[(url_split.length - 1)]}`);
 
-            tracklist.innerHTML = (`
+            render(tracklist, html`
                 <h3 class="text-18">${tl(trans.tracklist)}</h3>
                 <div class="loading-data-container">
                     <p class="loading-data-text failed">${tl(trans.failed_to_find_tracks)}</p>
@@ -256,7 +251,7 @@ function album_missing_a_tracklist() {
                     let album_url = `${url_split[(url_split.length - 2)]}/${url_split[(url_split.length - 1)]}`;
                     let album_as_track_url = window.location.href.replace(album_url, `${url_split[(url_split.length - 2)]}/_/${url_split[(url_split.length - 1)]}`);
 
-                    tracklist.innerHTML = (`
+                    render(tracklist, html`
                         <h3 class="text-18">${tl(trans.tracklist)}</h3>
                         <div class="loading-data-container">
                             <p class="loading-data-text failed">${tl(trans.failed_to_find_tracks)}</p>
@@ -268,10 +263,10 @@ function album_missing_a_tracklist() {
 
                 inner_tracklist.classList.remove('chartlist--with-image');
 
-                tracklist.innerHTML = (`
+                render(tracklist, html`
                     <h3 class="text-18">${tl(trans.tracklist)}</h3>
                     <div class="alert alert-info">${tl(trans.sourced_from_own_plays)}</div>
-                    ${inner_tracklist.outerHTML}
+                    ${html.node([inner_tracklist.outerHTML])}
                 `);
             })
     }

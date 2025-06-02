@@ -1,16 +1,18 @@
-import { settings } from "../build/config";
-import { log } from "../build/log";
-import { auth, page, root } from "../build/page";
-import { trans, tl } from "../build/trans";
-import { bleh_about_artist } from "../components/about_artist";
-import { patch_header_title } from "../components/lotus";
-import { register_menu } from "../components/menu";
-import { bleh_music_page_charts, show_your_scrobbles } from "../components/music";
-import { checkup_page_structure } from "../components/structure";
-import { register_background, update_page } from "../page";
-import { ff } from "../sku";
-import { bleh_tags_mini } from "./tag";
-import { bleh_wiki, bleh_wiki_editor, bleh_wiki_history } from "./wiki";
+import {settings} from "../build/config";
+import {log} from "../build/log";
+import {auth, page, root} from "../build/page";
+import {tl, trans} from "../build/trans";
+import {bleh_about_artist} from "../components/about_artist";
+import {patch_header_title} from "../components/lotus";
+import {register_menu} from "../components/menu";
+import {bleh_music_page_charts, show_your_scrobbles} from "../components/music";
+import {checkup_page_structure} from "../components/structure";
+import {register_background, update_page} from "../page";
+import {ff} from "../sku";
+import {bleh_tags_mini} from "./tag";
+import {bleh_wiki, bleh_wiki_editor, bleh_wiki_history} from "./wiki";
+import {html} from "lighterhtml";
+import {expand_avatar} from "../avatar.js";
 
 export function bleh_tracks() {
     let track_header = document.body.querySelector('.header-new--track');
@@ -124,23 +126,22 @@ export function bleh_tracks() {
 
         let menu = tippy(avatar_side, {
             theme: 'context-menu',
-            content: (`
-                ${(album_avatar || artist_avatar) ? (`
-                <button class="dropdown-menu-clickable-item" onclick="${expand_link}" data-menu-item="expand">
+            content: html.node`
+                ${(album_avatar || artist_avatar) ? html.node`
+                <button class="dropdown-menu-clickable-item" onclick=${() => expand_avatar(avatar.getAttribute('content'))} data-menu-item="expand">
                     ${tl(trans.expand)}
                 </button>
-                `) : ''}
-                ${(album_avatar) ? (`
+                ` : ''}
+                ${(album_avatar) ? html.node`
                 <a class="dropdown-menu-clickable-item" href="${source_album.querySelector('.link-block-cover-link').getAttribute('href')}" data-menu-item="album">
                     ${tl(trans.album)}
                 </a>
-                `) : ''}
+                ` : ''}
                 <div class="sep"></div>
                 <a class="dropdown-menu-clickable-item" href="${root}bleh?tab=customise" data-menu-item="settings">
                     ${tl(trans.settings)}
                 </a>
-            `),
-            allowHTML: true,
+            `,
             placement: 'right-start',
             trigger: 'manual',
             interactive: true,

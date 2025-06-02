@@ -1,14 +1,15 @@
-import { settings } from "../build/config";
-import { log } from "../build/log";
-import { page, root } from "../build/page";
-import { clamp_sat, return_artist_from_track, rgb_to_hsl, sanitise, sanitise_text } from "../build/tools";
-import { bleh_glacier_insights } from "../pages/glacier";
-import { patch_artist_ranks_in_list_view } from "./colourful_counts";
-import { correct_artist, correct_item_by_artist, name_includes } from "./lotus";
-import { register_menu } from "./menu";
+import {html, render} from "lighterhtml";
+import {settings} from "../build/config";
+import {log} from "../build/log";
+import {page, root} from "../build/page";
+import {clamp_sat, return_artist_from_track, rgb_to_hsl, sanitise, sanitise_text} from "../build/tools";
+import {bleh_glacier_insights} from "../pages/glacier";
+import {patch_artist_ranks_in_list_view} from "./colourful_counts";
+import {correct_artist, correct_item_by_artist, name_includes} from "./lotus";
+import {register_menu} from "./menu";
 
 export function patch_titles(search=page.structure.main) {
-    if (page.subpage == 'tags_overview')
+    if (page.subpage === 'tags_overview')
         return;
 
     if (!search) return;
@@ -66,7 +67,7 @@ export function patch_titles(search=page.structure.main) {
 
         let tracks = tracklist.querySelectorAll(':is(.chartlist-row:not(.chartlist__placeholder-row), .chartlist-row--interlist-ad)');
 
-        tracks.forEach((track => {
+        tracks.forEach((track) => {
             console.log('track', track);
             if (track.getAttribute('data-track-type'))
                 return;
@@ -100,12 +101,15 @@ export function patch_titles(search=page.structure.main) {
                 }
             }
 
+            log(`is user: ${is_user}, is artist: ${is_artist}`, 'tracks', 'log');
+
             if (is_user) {
                 track.setAttribute('data-track-type', 'user');
 
                 if (settings.colourful_counts)
                     patch_artist_ranks_in_list_view(track);
 
+                log('finished user stuff, returning', 'tracks', 'log');
                 return;
             }
 
@@ -129,6 +133,7 @@ export function patch_titles(search=page.structure.main) {
                 log(`pushed insight artist label of ${track_title.textContent}`, 'glacier library', 'log');
                 insights.artist.labels.push(track_title.textContent);
 
+                log('finished artist stuff, returning', 'tracks', 'log');
                 return;
             }
 
@@ -194,13 +199,12 @@ export function patch_titles(search=page.structure.main) {
                 track_title.setAttribute('title', correct_item_by_artist(track_title.getAttribute('title'), track_artist));
 
                 // parse tags into text
-                let song_tags_text = '';
-                for (let song_tag in song_tags) {
-                    song_tags_text = `${song_tags_text}<div class="feat" data-bleh--tag-type="${song_tags[song_tag].type}" data-bleh--tag-group="${song_tags[song_tag].group}">${sanitise_text(song_tags[song_tag].text)}</div>`;
-                }
-
-                // combine
-                track_title.innerHTML = `<div class="title">${sanitise_text(song_title).trim()}</div>${song_tags_text}`;
+                render(track_title, html`
+                    <div class="title">${sanitise_text(song_title).trim()}</div>
+                    ${song_tags.map((tag) => html.node`
+                        <div class="feat" data-bleh--tag-type="${tag.type}" data-bleh--tag-group="${tag.group}">${sanitise_text(tag.text)}</div>
+                    `)}
+                `);
 
                 let song_artist_element = track.querySelector('.chartlist-artist');
                 if (!song_artist_element && !is_user) {
@@ -210,44 +214,44 @@ export function patch_titles(search=page.structure.main) {
                 }
 
                 // if artist matches OR artist is blank
-                if (song_artist_element.textContent.replaceAll('+', ' ').trim() == track_artist || song_artist_element.textContent.trim() == '') {
+                if (song_artist_element.textContent.replaceAll('+', ' ').trim() === track_artist || song_artist_element.textContent.trim() === '') {
+                    log('artist either matches or is blank, replacing', 'tracks', 'log');
                     // replaces with corrected artist if applicable
-                    song_artist_element.innerHTML = `<a href="${root}music/${sanitise(formatted_title[2])}" title="${sanitise_text(formatted_title[2])}">${sanitise_text(formatted_title[2])}</a>`;
+                    render(song_artist_element, html`<a href="${root}music/${sanitise(formatted_title[2])}" title="${sanitise_text(formatted_title[2])}">${sanitise_text(formatted_title[2])}</a>`);
 
                     // append guests
                     let song_guests = formatted_title[3];
                     for (let guest in song_guests) {
-                        // &
-                        song_artist_element.innerHTML = `${song_artist_element.innerHTML},`;
-
-                        let guest_element = document.createElement('a');
-                        guest_element.setAttribute('href', `${root}music/${sanitise(song_guests[guest])}`);
-                        guest_element.setAttribute('title', song_guests[guest]);
-                        guest_element.textContent = song_guests[guest];
-
-                        song_artist_element.appendChild(guest_element);
+                        song_artist_element.appendChild(html.node`
+                            ,<a href="${root}music/${sanitise(song_guests[guest])}" title="${sanitise_text(song_guests[guest])}">${sanitise_text(song_guests[guest])}</a>
+                        `);
                     }
                 }
 
                 let image = track.querySelector('.chartlist-image img');
 
                 if (track_legacy_menu) {
-                    let track_preview = document.createElement('div');
-                    track_preview.classList.add('track-preview');
-                    track_preview.innerHTML = (`
-                        <div class="image">
-                            <div class="inner-image">
-                                ${(image) ? image.outerHTML : '<img class="missing-track" alt="">'}
+                    let track_preview = html.node`
+                        <div class="track-preview">
+                            <div class="image">
+                                <div class="inner-image">
+                                    ${(image) ? html.node`<img src=${image.getAttribute('src')} alt=${song_title}>` : html.node`<img class="missing-track" alt="">`}
+                                </div>
+                            </div>
+                            <div class="info">
+                                <h5 class="title">${song_title}</h5>
+                                <p class="artist">${song_artist_element.firstElementChild.textContent}</p>
+                                <div class="tags">
+                                    ${song_tags.map((tag) => html.node`
+                                        <div class="feat" data-bleh--tag-type="${tag.type}" data-bleh--tag-group="${tag.group}">${sanitise_text(tag.text)}</div>
+                                    `)}
+                                </div>
+                                ${(is_album) ? '' : html.node`<p class="album">${(image) ? correct_item_by_artist(sanitise_text(image.getAttribute('alt')), track_artist) : (album) ? album.textContent : page.name}</p>`}
+                                ${(track_timestamp && track_timestamp_contents) ? html.node`<p class="timestamp">${track_timestamp_contents}</p>` : ''}
                             </div>
                         </div>
-                        <div class="info">
-                            <h5 class="title">${song_title}</h5>
-                            <p class="artist">${song_artist_element.innerHTML}</p>
-                            <div class="tags">${song_tags_text}</div>
-                            ${(is_album) ? '' : `<p class="album">${(image) ? correct_item_by_artist(sanitise_text(image.getAttribute('alt')), track_artist) : (album) ? album.textContent : page.name}</p>`}
-                            ${(track_timestamp && track_timestamp_contents) ? `<p class="timestamp">${track_timestamp_contents}</p>` : ''}
-                        </div>
-                    `);
+                    `
+
                     track_legacy_menu.insertBefore(track_preview, track_legacy_menu.firstElementChild);
                 }
             } else if (settings.corrections) {
@@ -270,9 +274,7 @@ export function patch_titles(search=page.structure.main) {
             if (track_legacy_menu) {
                 let menu = tippy(track, {
                     theme: 'context-menu',
-                    content: (`
-                        ${track_legacy_menu.innerHTML}
-                    `),
+                    content: track_legacy_menu.innerHTML,
                     allowHTML: true,
                     placement: 'right-start',
                     trigger: 'manual',
@@ -311,16 +313,15 @@ export function patch_titles(search=page.structure.main) {
                 if (image_wrap) {
                     let link = image_wrap.querySelector('.cover-art');
                     let image = link.querySelector('img');
-
+                    
                     if (!settings.album_text) {
                         let alt = correct_item_by_artist(image.getAttribute('alt'), track_artist);
-
-                        let album_text = document.createElement('td');
-                        album_text.classList.add('chartlist-album', 'custom-album-text');
-                        album_text.innerHTML = (`
-                            <a href="${link.getAttribute('href')}">${alt}</a>
+                        
+                        track.appendChild(html.node`
+                            <td class="chartlist-album custom-album-text">
+                                <a href="${link.getAttribute('href')}">${alt}</a>
+                            </td>
                         `);
-                        track.appendChild(album_text);
                     }
 
                     if (!settings.colourful_tracks)
@@ -341,7 +342,7 @@ export function patch_titles(search=page.structure.main) {
                     } catch(e) {}
                 }
             }
-        }));
+        });
     });
 
     if (page.subpage.startsWith('library'))

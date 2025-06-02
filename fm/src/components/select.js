@@ -1,3 +1,5 @@
+import { html } from "lighterhtml";
+
 unsafeWindow._update_inbuilt_select = function(id, value) {
     update_inbuilt_select(id, value);
 }
@@ -34,10 +36,9 @@ export function custom_select(select, element_to_append) {
 
     let theme_menu_item = tippy(button, {
         theme: 'select-menu',
-        content: (`
-            ${menu_list.innerHTML}
-        `),
-        allowHTML: true,
+        content: html.node([
+            menu_list.innerHTML
+        ]),
         placement: 'bottom',
         interactive: true,
         interactiveBorder: 10,

@@ -239,14 +239,10 @@ function prep_snow() {
     if (prev_container != null)
         return;
 
-    let container = document.createElement('div');
-    container.classList.add('snow-container');
-    container.setAttribute('id', 'snowflakes');
-    container.innerHTML = (`
-        <span class="snow snowflake"></span>
-    `);
-
-    document.documentElement.appendChild(container);
+    document.documentElement.appendChild(html.node`
+        <div class="snow-container" id="snowflakes">
+            <span class="snow snowflake"></span>
+        </div>`);
 }
 
 // based on https://app.embed.im/snow.js

@@ -18,6 +18,984 @@
 // @require      https://cdn.jsdelivr.net/npm/chartjs-adapter-moment@^1
 // ==/UserScript==
 (() => {
+  // node_modules/@ungap/weakmap/esm/index.js
+  var self = {};
+  try {
+    self.WeakMap = WeakMap;
+  } catch (WeakMap2) {
+    self.WeakMap = function(id, Object2) {
+      "use strict";
+      var dP = Object2.defineProperty;
+      var hOP = Object2.hasOwnProperty;
+      var proto = WeakMap3.prototype;
+      proto.delete = function(key) {
+        return this.has(key) && delete key[this._];
+      };
+      proto.get = function(key) {
+        return this.has(key) ? key[this._] : void 0;
+      };
+      proto.has = function(key) {
+        return hOP.call(key, this._);
+      };
+      proto.set = function(key, value) {
+        dP(key, this._, { configurable: true, value });
+        return this;
+      };
+      return WeakMap3;
+      function WeakMap3(iterable) {
+        dP(this, "_", { value: "_@ungap/weakmap" + id++ });
+        if (iterable)
+          iterable.forEach(add, this);
+      }
+      function add(pair) {
+        this.set(pair[0], pair[1]);
+      }
+    }(Math.random(), Object);
+  }
+  var esm_default = self.WeakMap;
+
+  // node_modules/domconstants/esm/index.js
+  var UID = "-" + Math.random().toFixed(6) + "%";
+  var UID_IE = false;
+  try {
+    if (!function(template, content, tabindex) {
+      return content in template && (template.innerHTML = "<p " + tabindex + '="' + UID + '"></p>', template[content].childNodes[0].getAttribute(tabindex) == UID);
+    }(document.createElement("template"), "content", "tabindex")) {
+      UID = "_dt: " + UID.slice(1, -1) + ";";
+      UID_IE = true;
+    }
+  } catch (meh) {
+  }
+  var UIDC = "<!--" + UID + "-->";
+  var COMMENT_NODE = 8;
+  var ELEMENT_NODE = 1;
+  var TEXT_NODE = 3;
+  var SHOULD_USE_TEXT_CONTENT = /^(?:plaintext|script|style|textarea|title|xmp)$/i;
+  var VOID_ELEMENTS = /^(?:area|base|br|col|embed|hr|img|input|keygen|link|menuitem|meta|param|source|track|wbr)$/i;
+
+  // node_modules/domsanitizer/esm/index.js
+  function esm_default2(template) {
+    return template.join(UIDC).replace(selfClosing, fullClosing).replace(attrSeeker, attrReplacer);
+  }
+  var spaces = " \\f\\n\\r\\t";
+  var almostEverything = "[^" + spaces + `\\/>"'=]+`;
+  var attrName = "[" + spaces + "]+" + almostEverything;
+  var tagName = "<([A-Za-z]+[A-Za-z0-9:._-]*)((?:";
+  var attrPartials = `(?:\\s*=\\s*(?:'[^']*?'|"[^"]*?"|<[^>]*?>|` + almostEverything.replace("\\/", "") + "))?)";
+  var attrSeeker = new RegExp(tagName + attrName + attrPartials + "+)([" + spaces + "]*/?>)", "g");
+  var selfClosing = new RegExp(tagName + attrName + attrPartials + "*)([" + spaces + "]*/>)", "g");
+  var findAttributes = new RegExp("(" + attrName + `\\s*=\\s*)(['"]?)` + UIDC + "\\2", "gi");
+  function attrReplacer($0, $1, $2, $3) {
+    return "<" + $1 + $2.replace(findAttributes, replaceAttributes) + $3;
+  }
+  function replaceAttributes($0, $1, $2) {
+    return $1 + ($2 || '"') + UID + ($2 || '"');
+  }
+  function fullClosing($0, $1, $2) {
+    return VOID_ELEMENTS.test($1) ? $0 : "<" + $1 + $2 + "></" + $1 + ">";
+  }
+
+  // node_modules/uarray/esm/index.js
+  var { isArray } = Array;
+  var { indexOf, slice } = [];
+
+  // node_modules/umap/esm/index.js
+  var esm_default3 = (_) => ({
+    // About: get: _.get.bind(_)
+    // It looks like WebKit/Safari didn't optimize bind at all,
+    // so that using bind slows it down by 60%.
+    // Firefox and Chrome are just fine in both cases,
+    // so let's use the approach that works fast everywhere 👍
+    get: (key) => _.get(key),
+    set: (key, value) => (_.set(key, value), value)
+  });
+
+  // node_modules/uwire/esm/index.js
+  var ELEMENT_NODE2 = 1;
+  var nodeType = 111;
+  var remove = ({ firstChild, lastChild }) => {
+    const range = document.createRange();
+    range.setStartAfter(firstChild);
+    range.setEndAfter(lastChild);
+    range.deleteContents();
+    return firstChild;
+  };
+  var diffable = (node, operation) => node.nodeType === nodeType ? 1 / operation < 0 ? operation ? remove(node) : node.lastChild : operation ? node.valueOf() : node.firstChild : node;
+  var persistent = (fragment) => {
+    const { childNodes } = fragment;
+    const { length } = childNodes;
+    if (length < 2)
+      return length ? childNodes[0] : fragment;
+    const nodes = slice.call(childNodes, 0);
+    const firstChild = nodes[0];
+    const lastChild = nodes[length - 1];
+    return {
+      ELEMENT_NODE: ELEMENT_NODE2,
+      nodeType,
+      firstChild,
+      lastChild,
+      valueOf() {
+        if (childNodes.length !== length) {
+          let i = 0;
+          while (i < length)
+            fragment.appendChild(nodes[i++]);
+        }
+        return fragment;
+      }
+    };
+  };
+
+  // node_modules/@ungap/create-content/esm/index.js
+  var createContent = function(document2) {
+    "use strict";
+    var FRAGMENT = "fragment";
+    var TEMPLATE = "template";
+    var HAS_CONTENT = "content" in create2(TEMPLATE);
+    var createHTML = HAS_CONTENT ? function(html3) {
+      var template = create2(TEMPLATE);
+      template.innerHTML = html3;
+      return template.content;
+    } : function(html3) {
+      var content = create2(FRAGMENT);
+      var template = create2(TEMPLATE);
+      var childNodes = null;
+      if (/^[^\S]*?<(col(?:group)?|t(?:head|body|foot|r|d|h))/i.test(html3)) {
+        var selector = RegExp.$1;
+        template.innerHTML = "<table>" + html3 + "</table>";
+        childNodes = template.querySelectorAll(selector);
+      } else {
+        template.innerHTML = html3;
+        childNodes = template.childNodes;
+      }
+      append(content, childNodes);
+      return content;
+    };
+    return function createContent2(markup, type) {
+      return (type === "svg" ? createSVG : createHTML)(markup);
+    };
+    function append(root2, childNodes) {
+      var length = childNodes.length;
+      while (length--)
+        root2.appendChild(childNodes[0]);
+    }
+    function create2(element) {
+      return element === FRAGMENT ? document2.createDocumentFragment() : document2.createElementNS("http://www.w3.org/1999/xhtml", element);
+    }
+    function createSVG(svg2) {
+      var content = create2(FRAGMENT);
+      var template = create2("div");
+      template.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg">' + svg2 + "</svg>";
+      append(content, template.firstChild.childNodes);
+      return content;
+    }
+  }(document);
+  var esm_default4 = createContent;
+
+  // node_modules/udomdiff/esm/index.js
+  var esm_default5 = (parentNode, a, b, get, before) => {
+    const bLength = b.length;
+    let aEnd = a.length;
+    let bEnd = bLength;
+    let aStart = 0;
+    let bStart = 0;
+    let map = null;
+    while (aStart < aEnd || bStart < bEnd) {
+      if (aEnd === aStart) {
+        const node = bEnd < bLength ? bStart ? get(b[bStart - 1], -0).nextSibling : get(b[bEnd], 0) : before;
+        while (bStart < bEnd)
+          parentNode.insertBefore(get(b[bStart++], 1), node);
+      } else if (bEnd === bStart) {
+        while (aStart < aEnd) {
+          if (!map || !map.has(a[aStart]))
+            parentNode.removeChild(get(a[aStart], -1));
+          aStart++;
+        }
+      } else if (a[aStart] === b[bStart]) {
+        aStart++;
+        bStart++;
+      } else if (a[aEnd - 1] === b[bEnd - 1]) {
+        aEnd--;
+        bEnd--;
+      } else if (a[aStart] === b[bEnd - 1] && b[bStart] === a[aEnd - 1]) {
+        const node = get(a[--aEnd], -0).nextSibling;
+        parentNode.insertBefore(
+          get(b[bStart++], 1),
+          get(a[aStart++], -0).nextSibling
+        );
+        parentNode.insertBefore(get(b[--bEnd], 1), node);
+        a[aEnd] = b[bEnd];
+      } else {
+        if (!map) {
+          map = /* @__PURE__ */ new Map();
+          let i = bStart;
+          while (i < bEnd)
+            map.set(b[i], i++);
+        }
+        if (map.has(a[aStart])) {
+          const index = map.get(a[aStart]);
+          if (bStart < index && index < bEnd) {
+            let i = aStart;
+            let sequence = 1;
+            while (++i < aEnd && i < bEnd && map.get(a[i]) === index + sequence)
+              sequence++;
+            if (sequence > index - bStart) {
+              const node = get(a[aStart], 0);
+              while (bStart < index)
+                parentNode.insertBefore(get(b[bStart++], 1), node);
+            } else {
+              parentNode.replaceChild(
+                get(b[bStart++], 1),
+                get(a[aStart++], -1)
+              );
+            }
+          } else
+            aStart++;
+        } else
+          parentNode.removeChild(get(a[aStart++], -1));
+      }
+    }
+    return b;
+  };
+
+  // node_modules/@ungap/import-node/esm/index.js
+  var importNode = function(document2, appendChild, cloneNode, createTextNode, importNode2) {
+    var native = importNode2 in document2;
+    var fragment = document2.createDocumentFragment();
+    fragment[appendChild](document2[createTextNode]("g"));
+    fragment[appendChild](document2[createTextNode](""));
+    var content = native ? document2[importNode2](fragment, true) : fragment[cloneNode](true);
+    return content.childNodes.length < 2 ? function importNode3(node, deep) {
+      var clone = node[cloneNode]();
+      for (var childNodes = node.childNodes || [], length = childNodes.length, i = 0; deep && i < length; i++) {
+        clone[appendChild](importNode3(childNodes[i], deep));
+      }
+      return clone;
+    } : (
+      /* istanbul ignore next */
+      native ? document2[importNode2] : function(node, deep) {
+        return node[cloneNode](!!deep);
+      }
+    );
+  }(
+    document,
+    "appendChild",
+    "cloneNode",
+    "createTextNode",
+    "importNode"
+  );
+  var esm_default6 = importNode;
+
+  // node_modules/@ungap/trim/esm/index.js
+  var trim = "".trim || /* istanbul ignore next */
+  function() {
+    return String(this).replace(/^\s+|\s+/g, "");
+  };
+  var esm_default7 = trim;
+
+  // node_modules/domtagger/esm/walker.js
+  var normalizeAttributes = UID_IE ? function(attributes, parts) {
+    var html3 = parts.join(" ");
+    return parts.slice.call(attributes, 0).sort(function(left, right) {
+      return html3.indexOf(left.name) <= html3.indexOf(right.name) ? -1 : 1;
+    });
+  } : function(attributes, parts) {
+    return parts.slice.call(attributes, 0);
+  };
+  function find(node, path) {
+    var length = path.length;
+    var i = 0;
+    while (i < length)
+      node = node.childNodes[path[i++]];
+    return node;
+  }
+  function parse(node, holes, parts, path) {
+    var childNodes = node.childNodes;
+    var length = childNodes.length;
+    var i = 0;
+    while (i < length) {
+      var child = childNodes[i];
+      switch (child.nodeType) {
+        case ELEMENT_NODE:
+          var childPath = path.concat(i);
+          parseAttributes(child, holes, parts, childPath);
+          parse(child, holes, parts, childPath);
+          break;
+        case COMMENT_NODE:
+          var textContent = child.textContent;
+          if (textContent === UID) {
+            parts.shift();
+            holes.push(
+              // basicHTML or other non standard engines
+              // might end up having comments in nodes
+              // where they shouldn't, hence this check.
+              SHOULD_USE_TEXT_CONTENT.test(node.nodeName) ? Text(node, path) : Any(child, path.concat(i))
+            );
+          } else {
+            switch (textContent.slice(0, 2)) {
+              case "/*":
+                if (textContent.slice(-2) !== "*/")
+                  break;
+              case "\u{1F47B}":
+                node.removeChild(child);
+                i--;
+                length--;
+            }
+          }
+          break;
+        case TEXT_NODE:
+          if (SHOULD_USE_TEXT_CONTENT.test(node.nodeName) && esm_default7.call(child.textContent) === UIDC) {
+            parts.shift();
+            holes.push(Text(node, path));
+          }
+          break;
+      }
+      i++;
+    }
+  }
+  function parseAttributes(node, holes, parts, path) {
+    var attributes = node.attributes;
+    var cache2 = [];
+    var remove2 = [];
+    var array = normalizeAttributes(attributes, parts);
+    var length = array.length;
+    var i = 0;
+    while (i < length) {
+      var attribute2 = array[i++];
+      var direct = attribute2.value === UID;
+      var sparse;
+      if (direct || 1 < (sparse = attribute2.value.split(UIDC)).length) {
+        var name = attribute2.name;
+        if (cache2.indexOf(name) < 0) {
+          cache2.push(name);
+          var realName = parts.shift().replace(
+            direct ? /^(?:|[\S\s]*?\s)(\S+?)\s*=\s*('|")?$/ : new RegExp(
+              "^(?:|[\\S\\s]*?\\s)(" + name + `)\\s*=\\s*('|")[\\S\\s]*`,
+              "i"
+            ),
+            "$1"
+          );
+          var value = attributes[realName] || // the following ignore is covered by browsers
+          // while basicHTML is already case-sensitive
+          /* istanbul ignore next */
+          attributes[realName.toLowerCase()];
+          if (direct)
+            holes.push(Attr(value, path, realName, null));
+          else {
+            var skip = sparse.length - 2;
+            while (skip--)
+              parts.shift();
+            holes.push(Attr(value, path, realName, sparse));
+          }
+        }
+        remove2.push(attribute2);
+      }
+    }
+    length = remove2.length;
+    i = 0;
+    var cleanValue = 0 < length && UID_IE && !("ownerSVGElement" in node);
+    while (i < length) {
+      var attr = remove2[i++];
+      if (cleanValue)
+        attr.value = "";
+      node.removeAttribute(attr.name);
+    }
+    var nodeName = node.nodeName;
+    if (/^script$/i.test(nodeName)) {
+      var script = document.createElement(nodeName);
+      length = attributes.length;
+      i = 0;
+      while (i < length)
+        script.setAttributeNode(attributes[i++].cloneNode(true));
+      script.textContent = node.textContent;
+      node.parentNode.replaceChild(script, node);
+    }
+  }
+  function Any(node, path) {
+    return {
+      type: "any",
+      node,
+      path
+    };
+  }
+  function Attr(node, path, name, sparse) {
+    return {
+      type: "attr",
+      node,
+      path,
+      name,
+      sparse
+    };
+  }
+  function Text(node, path) {
+    return {
+      type: "text",
+      node,
+      path
+    };
+  }
+
+  // node_modules/domtagger/esm/index.js
+  var esm_default8 = domtagger;
+  var parsed = esm_default3(new esm_default());
+  function createInfo(options, template) {
+    var markup = (options.convert || esm_default2)(template);
+    var transform = options.transform;
+    if (transform)
+      markup = transform(markup);
+    var content = esm_default4(markup, options.type);
+    cleanContent(content);
+    var holes = [];
+    parse(content, holes, template.slice(0), []);
+    return {
+      content,
+      updates: function(content2) {
+        var updates = [];
+        var len = holes.length;
+        var i = 0;
+        var off = 0;
+        while (i < len) {
+          var info = holes[i++];
+          var node = find(content2, info.path);
+          switch (info.type) {
+            case "any":
+              updates.push({ fn: options.any(node, []), sparse: false });
+              break;
+            case "attr":
+              var sparse = info.sparse;
+              var fn = options.attribute(node, info.name, info.node);
+              if (sparse === null)
+                updates.push({ fn, sparse: false });
+              else {
+                off += sparse.length - 2;
+                updates.push({ fn, sparse: true, values: sparse });
+              }
+              break;
+            case "text":
+              updates.push({ fn: options.text(node), sparse: false });
+              node.textContent = "";
+              break;
+          }
+        }
+        len += off;
+        return function() {
+          var length = arguments.length;
+          if (len !== length - 1) {
+            throw new Error(
+              length - 1 + " values instead of " + len + "\n" + template.join("${value}")
+            );
+          }
+          var i2 = 1;
+          var off2 = 1;
+          while (i2 < length) {
+            var update = updates[i2 - off2];
+            if (update.sparse) {
+              var values = update.values;
+              var value = values[0];
+              var j = 1;
+              var l = values.length;
+              off2 += l - 2;
+              while (j < l)
+                value += arguments[i2++] + values[j++];
+              update.fn(value);
+            } else
+              update.fn(arguments[i2++]);
+          }
+          return content2;
+        };
+      }
+    };
+  }
+  function createDetails(options, template) {
+    var info = parsed.get(template) || parsed.set(template, createInfo(options, template));
+    return info.updates(esm_default6.call(document, info.content, true));
+  }
+  var empty = [];
+  function domtagger(options) {
+    var previous = empty;
+    var updates = cleanContent;
+    return function(template) {
+      if (previous !== template)
+        updates = createDetails(options, previous = template);
+      return updates.apply(null, arguments);
+    };
+  }
+  function cleanContent(fragment) {
+    var childNodes = fragment.childNodes;
+    var i = childNodes.length;
+    while (i--) {
+      var child = childNodes[i];
+      if (child.nodeType !== 1 && esm_default7.call(child.textContent).length === 0) {
+        fragment.removeChild(child);
+      }
+    }
+  }
+
+  // node_modules/hyperhtml-style/esm/index.js
+  var hyperStyle = function() {
+    "use strict";
+    var IS_NON_DIMENSIONAL = /acit|ex(?:s|g|n|p|$)|rph|ows|mnc|ntw|ine[ch]|zoo|^ord/i;
+    var hyphen = /([^A-Z])([A-Z]+)/g;
+    return function hyperStyle2(node, original) {
+      return "ownerSVGElement" in node ? svg2(node, original) : update(node.style, false);
+    };
+    function ized($0, $1, $2) {
+      return $1 + "-" + $2.toLowerCase();
+    }
+    function svg2(node, original) {
+      var style;
+      if (original)
+        style = original.cloneNode(true);
+      else {
+        node.setAttribute("style", "--hyper:style;");
+        style = node.getAttributeNode("style");
+      }
+      style.value = "";
+      node.setAttributeNode(style);
+      return update(style, true);
+    }
+    function toStyle(object) {
+      var key, css = [];
+      for (key in object)
+        css.push(key.replace(hyphen, ized), ":", object[key], ";");
+      return css.join("");
+    }
+    function update(style, isSVG) {
+      var oldType, oldValue;
+      return function(newValue) {
+        var info, key, styleValue, value;
+        switch (typeof newValue) {
+          case "object":
+            if (newValue) {
+              if (oldType === "object") {
+                if (!isSVG) {
+                  if (oldValue !== newValue) {
+                    for (key in oldValue) {
+                      if (!(key in newValue)) {
+                        style[key] = "";
+                      }
+                    }
+                  }
+                }
+              } else {
+                if (isSVG)
+                  style.value = "";
+                else
+                  style.cssText = "";
+              }
+              info = isSVG ? {} : style;
+              for (key in newValue) {
+                value = newValue[key];
+                styleValue = typeof value === "number" && !IS_NON_DIMENSIONAL.test(key) ? value + "px" : value;
+                if (!isSVG && /^--/.test(key))
+                  info.setProperty(key, styleValue);
+                else
+                  info[key] = styleValue;
+              }
+              oldType = "object";
+              if (isSVG)
+                style.value = toStyle(oldValue = info);
+              else
+                oldValue = newValue;
+              break;
+            }
+          default:
+            if (oldValue != newValue) {
+              oldType = "string";
+              oldValue = newValue;
+              if (isSVG)
+                style.value = newValue || "";
+              else
+                style.cssText = newValue || "";
+            }
+            break;
+        }
+      };
+    }
+  }();
+  var esm_default9 = hyperStyle;
+
+  // node_modules/uhandlers/esm/index.js
+  var aria = (node) => (values) => {
+    for (const key in values) {
+      const name = key === "role" ? key : `aria-${key}`;
+      const value = values[key];
+      if (value == null)
+        node.removeAttribute(name);
+      else
+        node.setAttribute(name, value);
+    }
+  };
+  var attribute = (node, name) => {
+    let oldValue, orphan = true;
+    const attributeNode = document.createAttributeNS(null, name);
+    return (newValue) => {
+      if (oldValue !== newValue) {
+        oldValue = newValue;
+        if (oldValue == null) {
+          if (!orphan) {
+            node.removeAttributeNode(attributeNode);
+            orphan = true;
+          }
+        } else {
+          attributeNode.value = newValue;
+          if (orphan) {
+            node.setAttributeNodeNS(attributeNode);
+            orphan = false;
+          }
+        }
+      }
+    };
+  };
+  var boolean = (node, key, oldValue) => (newValue) => {
+    if (oldValue !== !!newValue) {
+      if (oldValue = !!newValue)
+        node.setAttribute(key, "");
+      else
+        node.removeAttribute(key);
+    }
+  };
+  var data = ({ dataset }) => (values) => {
+    for (const key in values) {
+      const value = values[key];
+      if (value == null)
+        delete dataset[key];
+      else
+        dataset[key] = value;
+    }
+  };
+  var event2 = (node, name) => {
+    let oldValue, type = name.slice(2);
+    if (!(name in node) && name.toLowerCase() in node)
+      type = type.toLowerCase();
+    return (newValue) => {
+      const info = isArray(newValue) ? newValue : [newValue, false];
+      if (oldValue !== info[0]) {
+        if (oldValue)
+          node.removeEventListener(type, oldValue, info[1]);
+        if (oldValue = info[0])
+          node.addEventListener(type, oldValue, info[1]);
+      }
+    };
+  };
+  var ref = (node) => (value) => {
+    if (typeof value === "function")
+      value(node);
+    else
+      value.current = node;
+  };
+  var setter = (node, key) => key === "dataset" ? data(node) : (value) => {
+    node[key] = value;
+  };
+
+  // node_modules/lighterhtml/esm/tagger.js
+  var hyperProperty = (node, name) => {
+    let oldValue;
+    return (newValue) => {
+      if (oldValue !== newValue) {
+        oldValue = newValue;
+        if (node[name] !== newValue) {
+          if (newValue == null) {
+            node[name] = "";
+            node.removeAttribute(name);
+          } else
+            node[name] = newValue;
+        }
+      }
+    };
+  };
+  var readOnly = /^(?:form|list)$/i;
+  var text = (node, text2) => node.ownerDocument.createTextNode(text2);
+  function Tagger(type) {
+    this.type = type;
+    return esm_default8(this);
+  }
+  Tagger.prototype = {
+    // there are four kind of attributes, and related behavior:
+    //  * events, with a name starting with `on`, to add/remove event listeners
+    //  * special, with a name present in their inherited prototype, accessed directly
+    //  * regular, accessed through get/setAttribute standard DOM methods
+    //  * style, the only regular attribute that also accepts an object as value
+    //    so that you can style=${{width: 120}}. In this case, the behavior has been
+    //    fully inspired by Preact library and its simplicity.
+    attribute(node, name, original) {
+      const isSVG = this.type === "svg";
+      switch (name) {
+        case "class":
+          if (isSVG)
+            return attribute(node, name, isSVG);
+          name = "className";
+        case "props":
+          return setter(node, name);
+        case "aria":
+          return aria(node);
+        case "style":
+          return esm_default9(node, original, isSVG);
+        case "ref":
+          return ref(node);
+        case ".dataset":
+          return data(node);
+        default:
+          if (name.slice(0, 1) === ".")
+            return setter(node, name.slice(1));
+          if (name.slice(0, 1) === "?")
+            return boolean(node, name.slice(1));
+          if (name.slice(0, 2) === "on")
+            return event2(node, name);
+          if (name in node && !(isSVG || readOnly.test(name)))
+            return hyperProperty(node, name);
+          return attribute(node, name, isSVG);
+      }
+    },
+    // in a hyper(node)`<div>${content}</div>` case
+    // everything could happen:
+    //  * it's a JS primitive, stored as text
+    //  * it's null or undefined, the node should be cleaned
+    //  * it's a promise, update the content once resolved
+    //  * it's an explicit intent, perform the desired operation
+    //  * it's an Array, resolve all values if Promises and/or
+    //    update the node with the resulting list of content
+    any(node, childNodes) {
+      const { type } = this;
+      let fastPath = false;
+      let oldValue;
+      const anyContent = (value) => {
+        switch (typeof value) {
+          case "string":
+          case "number":
+          case "boolean":
+            if (fastPath) {
+              if (oldValue !== value) {
+                oldValue = value;
+                childNodes[0].textContent = value;
+              }
+            } else {
+              fastPath = true;
+              oldValue = value;
+              childNodes = esm_default5(
+                node.parentNode,
+                childNodes,
+                [text(node, value)],
+                diffable,
+                node
+              );
+            }
+            break;
+          case "function":
+            anyContent(value(node));
+            break;
+          case "object":
+          case "undefined":
+            if (value == null) {
+              fastPath = false;
+              childNodes = esm_default5(
+                node.parentNode,
+                childNodes,
+                [],
+                diffable,
+                node
+              );
+              break;
+            }
+          default:
+            fastPath = false;
+            oldValue = value;
+            if (isArray(value)) {
+              if (value.length === 0) {
+                if (childNodes.length) {
+                  childNodes = esm_default5(
+                    node.parentNode,
+                    childNodes,
+                    [],
+                    diffable,
+                    node
+                  );
+                }
+              } else {
+                switch (typeof value[0]) {
+                  case "string":
+                  case "number":
+                  case "boolean":
+                    anyContent(String(value));
+                    break;
+                  case "function":
+                    anyContent(value.map(invoke, node));
+                    break;
+                  case "object":
+                    if (isArray(value[0])) {
+                      value = value.concat.apply([], value);
+                    }
+                  default:
+                    childNodes = esm_default5(
+                      node.parentNode,
+                      childNodes,
+                      value,
+                      diffable,
+                      node
+                    );
+                    break;
+                }
+              }
+            } else if ("ELEMENT_NODE" in value) {
+              childNodes = esm_default5(
+                node.parentNode,
+                childNodes,
+                value.nodeType === 11 ? slice.call(value.childNodes) : [value],
+                diffable,
+                node
+              );
+            } else if ("text" in value) {
+              anyContent(String(value.text));
+            } else if ("any" in value) {
+              anyContent(value.any);
+            } else if ("html" in value) {
+              childNodes = esm_default5(
+                node.parentNode,
+                childNodes,
+                slice.call(
+                  esm_default4(
+                    [].concat(value.html).join(""),
+                    type
+                  ).childNodes
+                ),
+                diffable,
+                node
+              );
+            } else if ("length" in value) {
+              anyContent(slice.call(value));
+            }
+            break;
+        }
+      };
+      return anyContent;
+    },
+    // style or textareas don't accept HTML as content
+    // it's pointless to transform or analyze anything
+    // different from text there but it's worth checking
+    // for possible defined intents.
+    text(node) {
+      let oldValue;
+      const textContent = (value) => {
+        if (oldValue !== value) {
+          oldValue = value;
+          const type = typeof value;
+          if (type === "object" && value) {
+            if ("text" in value) {
+              textContent(String(value.text));
+            } else if ("any" in value) {
+              textContent(value.any);
+            } else if ("html" in value) {
+              textContent([].concat(value.html).join(""));
+            } else if ("length" in value) {
+              textContent(slice.call(value).join(""));
+            }
+          } else if (type === "function") {
+            textContent(value(node));
+          } else {
+            node.textContent = value == null ? "" : value;
+          }
+        }
+      };
+      return textContent;
+    }
+  };
+  function invoke(callback) {
+    return callback(this);
+  }
+
+  // node_modules/lighterhtml/esm/index.js
+  var { create, freeze, keys } = Object;
+  var tProto = Tagger.prototype;
+  var cache = esm_default3(new esm_default());
+  var createRender = (Tagger2) => ({
+    html: outer("html", Tagger2),
+    svg: outer("svg", Tagger2),
+    render(where, what) {
+      const hole = typeof what === "function" ? what() : what;
+      const info = cache.get(where) || cache.set(where, createCache());
+      const wire = hole instanceof LighterHole ? unroll(Tagger2, info, hole) : hole;
+      if (wire !== info.wire) {
+        info.wire = wire;
+        where.textContent = "";
+        where.appendChild(wire.valueOf());
+      }
+      return where;
+    }
+  });
+  var createCache = () => ({ stack: [], entry: null, wire: null });
+  var outer = (type, Tagger2) => {
+    const cache2 = esm_default3(new esm_default());
+    const fixed = (info) => function() {
+      return unroll(Tagger2, info, hole.apply(null, arguments));
+    };
+    hole.for = (ref2, id) => {
+      const memo = cache2.get(ref2) || cache2.set(ref2, create(null));
+      return memo[id] || (memo[id] = fixed(createCache()));
+    };
+    hole.node = function() {
+      return unroll(
+        Tagger2,
+        createCache(),
+        hole.apply(null, arguments)
+      ).valueOf();
+    };
+    return hole;
+    function hole() {
+      return new LighterHole(type, tta.apply(null, arguments));
+    }
+  };
+  var unroll = (Tagger2, info, { type, template, values }) => {
+    const { length } = values;
+    unrollValues(Tagger2, info, values, length);
+    let { entry } = info;
+    if (!entry || (entry.template !== template || entry.type !== type)) {
+      const tag = new Tagger2(type);
+      info.entry = entry = {
+        type,
+        template,
+        tag,
+        wire: persistent(tag(template, ...values))
+      };
+    } else
+      entry.tag(template, ...values);
+    return entry.wire;
+  };
+  var unrollValues = (Tagger2, { stack }, values, length) => {
+    for (let i = 0; i < length; i++) {
+      const hole = values[i];
+      if (hole instanceof Hole)
+        values[i] = unroll(
+          Tagger2,
+          stack[i] || (stack[i] = createCache()),
+          hole
+        );
+      else if (isArray(hole))
+        unrollValues(
+          Tagger2,
+          stack[i] || (stack[i] = createCache()),
+          hole,
+          hole.length
+        );
+      else
+        stack[i] = null;
+    }
+    if (length < stack.length)
+      stack.splice(length);
+  };
+  freeze(LighterHole);
+  function LighterHole(type, args) {
+    this.type = type;
+    this.template = args.shift();
+    this.values = args;
+  }
+  var Hole = LighterHole;
+  var { render: render2, html: html2, svg } = createRender(Tagger);
+  function tta() {
+    let out = [], i = 0, { length } = arguments;
+    while (i < length)
+      out.push(arguments[i++]);
+    return out;
+  }
+
   // src/build/config.js
   var settings = {};
   var settings_template = {
@@ -599,8 +1577,8 @@
     state: ""
   };
   var root = "/";
-  function setRoot(data) {
-    root = data;
+  function setRoot(data2) {
+    root = data2;
   }
   var recent_activity_list = [];
   var last_page_type = {
@@ -686,33 +1664,25 @@
   var has_prompted_for_update = {
     state: false
   };
-  var theme_preview = `
+  var theme_preview = () => html2.node`
     <div class="preview-inner">
         <div class="preview-card">
             <div class="preview-header">Aa</div>
             <div class="preview-text"></div>
             <div class="preview-text row-2"></div>
             <div class="preview-buttons">
-                <div class="preview-button preview-button-primary">
-
-                </div>
-                <div class="preview-button">
-
-                </div>
-                <div class="preview-button preview-track">
-
-                </div>
+                <div class="preview-button preview-button-primary"></div>
+                <div class="preview-button"></div>
+                <div class="preview-button preview-track"></div>
             </div>
         </div>
     </div>
 `;
 
   // src/build/log.js
-  function log(text, system, type = "info", append = {}) {
+  function log(text2, system, type = "info", append = {}) {
     if (!page.structure.logs) {
-      let logs = document.createElement("div");
-      logs.classList.add("logs");
-      logs.innerHTML = `
+      let logs = html2.node`<div class="logs">
             <div class="setting" data-type="toggle" id="container-log_show_all" onclick="_update_item('log_show_all')">
                 <div class="toggle-wrap">
                     <button id="toggle-log_show_all">
@@ -720,7 +1690,7 @@
                     </button>
                 </div>
             </div>
-        `;
+        </div>`;
       document.documentElement.appendChild(logs);
       page.structure.logs = logs;
     }
@@ -758,19 +1728,18 @@
         break;
     }
     if (Object.keys(append).length > 0)
-      console[type](`%c${system}%c ${text}`, `background: ${system_colour}; display: block; width: fit-content; font-weight: bold; color: #000; padding: 0 4px; border-radius: 4px`, "color: unset", append);
+      console[type](`%c${system}%c ${text2}`, `background: ${system_colour}; display: block; width: fit-content; font-weight: bold; color: #000; padding: 0 4px; border-radius: 4px`, "color: unset", append);
     else
-      console[type](`%c${system}%c ${text}`, `background: ${system_colour}; display: block; width: fit-content; font-weight: bold; color: #000; padding: 0 4px; border-radius: 4px`, "color: unset");
+      console[type](`%c${system}%c ${text2}`, `background: ${system_colour}; display: block; width: fit-content; font-weight: bold; color: #000; padding: 0 4px; border-radius: 4px`, "color: unset");
     if (settings && settings.feature_flags) {
       if (settings.feature_flags.developer == true) {
-        let log_e = document.createElement("div");
-        log_e.classList.add("log");
-        log_e.setAttribute("data-type", type);
-        log_e.innerHTML = `
+        page.structure.logs.appendChild(
+          html2.node`
+            <div class="log" data-type=${type}>
                 <span class="system" style="color: ${system_colour}">${system}</span>
-                <span class="text">${text}</span>
-            `;
-        page.structure.logs.appendChild(log_e);
+                <span class="text">${text2}</span>
+            </div>`
+        );
       }
     }
   }
@@ -835,14 +1804,14 @@
       string.replaceAll(",", "").replaceAll(".", "")
     );
   }
-  function sanitise(text, method = "+") {
-    return encodeURI(text.replaceAll(" ", method).replaceAll("/", "%2F"));
+  function sanitise(text2, method = "+") {
+    return encodeURI(text2.replaceAll(" ", method).replaceAll("/", "%2F"));
   }
-  function sanitise_text(text) {
-    return text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
+  function sanitise_text(text2) {
+    return text2.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
   }
-  function desanitise(text) {
-    return decodeURI(text.replaceAll("+", " ").replaceAll("%2F", "/"));
+  function desanitise(text2) {
+    return decodeURI(text2.replaceAll("+", " ").replaceAll("%2F", "/"));
   }
   function return_artist_from_track(url, is_album) {
     let split = url.split("/");
@@ -1835,6 +2804,19 @@
       en: "Expand",
       de: "Erweitern"
     },
+    expand_to_full_resolution: {
+      en: "Expand to full resolution"
+    },
+    share: {
+      en: "Share",
+      de: "Teilen"
+    },
+    copy: {
+      en: "Copy"
+    },
+    copied_to_clipboard: {
+      en: "Copied to clipboard"
+    },
     activity: {
       en: "Activity",
       de: "Aktivit\xE4t",
@@ -2790,6 +3772,12 @@
     },
     change_avatar: {
       en: "Change avatar"
+    },
+    edit_profile_note: {
+      en: "Edit profile note"
+    },
+    update_to_version: {
+      en: "Update to {v}"
     }
   };
   var trans_legacy = {
@@ -5828,12 +6816,12 @@
     if (auth_link.state) {
       auth.avatar = auth_link.state.querySelector("img").getAttribute("src");
       if (auth.avatar != previous_avi) {
-        let avatar = auth_link.state.querySelector("img");
-        avatar.setAttribute("crossorigin", "anonymous");
+        let avatar3 = auth_link.state.querySelector("img");
+        avatar3.setAttribute("crossorigin", "anonymous");
         try {
-          avatar.addEventListener("load", function() {
+          avatar3.addEventListener("load", function() {
             let thief = new ColorThief();
-            let colour = thief.getColor(avatar);
+            let colour = thief.getColor(avatar3);
             let hsl = rgb_to_hsl(colour[0], colour[1], colour[2]);
             auth.sets.hue = hsl.h;
             auth.sets.sat = clamp_sat(hsl.s / 100 * 3);
@@ -6160,6 +7148,156 @@
     ]
   };
 
+  // src/components/notify.js
+  function load_notifications() {
+    if (!page.structure.notifications) {
+      let notification_host = html2.node`
+            <div class="bleh-notifications" />
+        `;
+      page.structure.notifications = notification_host;
+      document.body.appendChild(notification_host);
+    }
+  }
+  function deliver_notif(content, persist = false, has_icon = false, append_class = null, action = "") {
+    return notify({
+      id: "legacy_notification",
+      title: content,
+      icon: "icon-16-info",
+      classname: append_class
+    });
+  }
+  function notify({
+    id,
+    title,
+    body,
+    icon,
+    classname,
+    action,
+    persist = false,
+    type = "generic"
+  }) {
+    log(`creating ${title}`, "notification", "info", {
+      id,
+      title,
+      body,
+      icon,
+      classname,
+      persist,
+      type
+    });
+    if (type === "error")
+      icon = "icon-16-x";
+    else if (type === "success")
+      icon = "icon-16-check";
+    if (!icon)
+      icon = "icon-16-info";
+    let notif = html2.node`
+        <button
+        class=${[
+      "bleh-notification",
+      icon ? "icon" : "",
+      classname ? classname : ""
+    ].join(" ")}
+        data-type=${type}
+        onclick=${() => notify_rm(notif)}
+        style=${[
+      icon ? `--mask: var(--${icon})` : ""
+    ].join(";")}
+        />
+    `;
+    if (!body) {
+      render2(notif, html2`
+            <div class="notification-title margin-below">${title}</div>
+        `);
+    } else {
+      render2(notif, html2`
+            <div class="notification-title">${title}</div>
+            <div class="notification-body margin-below">${body}</div>
+        `);
+    }
+    page.structure.notifications.appendChild(notif);
+    if (persist)
+      return notif;
+    let bar = html2.node`
+    <div class="notification-progress"></div>
+    `;
+    notif.appendChild(bar);
+    setTimeout(function() {
+      bar.style.setProperty("left", "100%");
+    }, 1);
+    setTimeout(function() {
+      notify_rm(notif);
+    }, 1e4);
+    return notif;
+  }
+  unsafeWindow._notify_rm = function(notif) {
+    notify_rm(notif);
+  };
+  function notify_rm(notif) {
+    notif.classList.add("fade-out");
+    setTimeout(function() {
+      page.structure.notifications.removeChild(notif);
+    }, 400);
+  }
+
+  // src/api.js
+  function test_api_key() {
+    let xhr = api(`user.getTopTags&user=${auth.name}&limit=1`);
+    xhr.onload = function() {
+      let data2 = JSON.parse(this.response);
+      console.info(data2, this.response);
+      if (!data2.error) {
+        notify({
+          title: trans_legacy.en.settings.profiles.api.name,
+          body: trans_legacy.en.settings.profiles.api.confirmed,
+          icon: "icon-16-api"
+        });
+        return;
+      } else {
+        if (data2.error == 8 || data2.error == 11 || data2.error == 16) {
+          notify({
+            title: trans_legacy.en.settings.profiles.api.name,
+            body: trans_legacy.en.settings.profiles.api.inaccessible,
+            icon: "icon-16-api",
+            persist: true
+          });
+          return;
+        } else if (data2.error == 10 || data2.error == 26) {
+          notify({
+            title: trans_legacy.en.settings.profiles.api.name,
+            body: trans_legacy.en.settings.profiles.api.invalid,
+            icon: "icon-16-api",
+            persist: true
+          });
+          return;
+        } else if (data2.error == 29) {
+          notify({
+            title: trans_legacy.en.settings.profiles.api.name,
+            body: trans_legacy.en.settings.profiles.api.rate_limit,
+            icon: "icon-16-api",
+            persist: true
+          });
+          return;
+        } else {
+          notify({
+            title: trans_legacy.en.settings.profiles.api.name,
+            body: data2.error,
+            icon: "icon-16-api",
+            persist: true
+          });
+          return;
+        }
+      }
+    };
+    xhr.send();
+  }
+  function api(endpoint) {
+    let xhr = new XMLHttpRequest();
+    let url = `https://ws.audioscrobbler.com/2.0/?method=${endpoint}&api_key=${settings.api_key}&format=json`;
+    xhr.open("GET", url, true);
+    return xhr;
+  }
+
   // src/build/seasonal.js
   var seasonal_timer = {
     state: void 0
@@ -6279,7 +7417,7 @@
     id = "",
     title = null,
     subtitle = null,
-    body = document.createElement("div").innerHTML,
+    body = html2.node``,
     dismiss = true,
     type = "",
     has_overlays = true,
@@ -6304,7 +7442,6 @@
       colourful,
       colourful_bg
     });
-    let modal;
     if (replace && replace_if_possible)
       replace_if_possible = false;
     if (replace_if_possible && Object.keys(dialogs).length > 0) {
@@ -6314,34 +7451,27 @@
         break;
       }
     }
-    if (!replace || replace && !dialogs.hasOwnProperty(replace_id)) {
-      modal = document.createElement("div");
-      modal.classList.add("bleh-modal");
-      modal.setAttribute("role", "dialog");
-      if (colourful)
-        modal.classList.add("colourful");
-      if (colourful_bg)
-        modal.classList.add("colourful-bg");
-    } else {
-      log(`window set to replace ${replace_id}`, "window");
-      modal = dialogs[replace_id].instance;
-      delete dialogs[replace_id];
-      modal.innerHTML = "";
-    }
-    modal.setAttribute("data-modal-id", id);
-    modal.setAttribute("data-modal-has-overlays", has_overlays);
-    if (type != "")
-      modal.setAttribute("data-modal-type", type);
+    let modal = html2.node`
+        <div
+        class=${[
+      "bleh-modal",
+      colourful ? "colorful" : "",
+      colourful_bg ? "colourful-bg" : ""
+    ].join(" ")}
+        role="dialog"
+        data-modal-id=${id}
+        data-modal-has-overlays=${has_overlays}
+        data-modal-type=${type}
+        />
+    `;
     if (title != null) {
-      let modal_title = document.createElement("div");
-      modal_title.classList.add("bleh-modal-title");
-      modal_title.setAttribute("id", "modal_title");
-      modal_title.innerHTML = `
-            <h1>${title}</h1>
-            ${subtitle != null ? `<p class="bleh-modal-subtitle">${subtitle}</p>` : ""}
-        `;
       modal.setAttribute("aria-labelledby", "modal_title");
-      modal.appendChild(modal_title);
+      modal.appendChild(html2.node`
+            <div class="bleh-modal-title" id="modal_title">
+                <h1>${title}</h1>
+                ${subtitle != null ? html2.node`<p class="bleh-modal-subtitle">${subtitle}</p>` : ""}
+            </div>
+        `);
     }
     if (dismiss) {
       let modal_close = document.createElement("button");
@@ -6355,11 +7485,16 @@
     let modal_body = document.createElement("div");
     modal_body.classList.add("bleh-modal-body");
     modal_body.setAttribute("data-allow-scroll", allow_scroll);
-    modal_body.innerHTML = body;
+    modal_body.appendChild(body);
     modal.appendChild(modal_body);
     dialogs[id] = {
       instance: modal
     };
+    if (replace || !replace && dialogs.hasOwnProperty(replace_id)) {
+      log(`window set to replace ${replace_id}`, "window");
+      dialog_rm2({ id: replace_id });
+      delete dialogs[replace_id];
+    }
     page.structure.dialogs.appendChild(modal);
     page.structure.dialogs.classList.add("has-dialog");
     return modal;
@@ -6369,14 +7504,14 @@
     all = false,
     modal_bg = false
   }) {
-    dialog_rm({
+    dialog_rm2({
       id,
       all,
       modal_bg
     });
   };
-  function dialog_rm({
-    id = null,
+  function dialog_rm2({
+    id,
     all = false,
     modal_bg = false
   }) {
@@ -6389,16 +7524,14 @@
       log("requested kill all", "window");
       console.info(dialogs);
       for (let dialog2 in dialogs) {
-        dialog_rm({
+        dialog_rm2({
           id: dialog2
         });
       }
       return;
     }
-    if (id == null)
-      return;
-    if (page.structure.dialogs == null)
-      return;
+    if (!id) return;
+    if (!page.structure.dialogs) return;
     if (dialogs.hasOwnProperty(id)) {
       let dialog2 = dialogs[id];
       if (!page.structure.dialogs.contains(dialog2.instance))
@@ -6438,24 +7571,21 @@
     content.setAttribute("id", `bleh--window-${id}--content`);
     content.setAttribute("data-kate-processed", "true");
     if (dismiss) {
-      let actions = document.createElement("div");
-      actions.classList.add("modal-actions");
-      actions.setAttribute("id", `bleh--window-${id}--actions`);
-      actions.setAttribute("data-kate-processed", "true");
       background.setAttribute("onclick", `_kill_window('${id}')`);
-      actions.innerHTML = `
-            <div class="modal-buttons">
-                <button class="modal-action-button modal-dismiss" onclick="_kill_window('${id}')">
-                    ${trans_legacy.en.settings.close}
-                </button>
+      content.insertBefore(html2.node`
+            <div class="modal-actions" id="bleh--window-${id}--actions" data-kate-processed="true">
+                <div class="modal-buttons">
+                    <button class="modal-action-button modal-dismiss" onclick="_kill_window('${id}')">
+                        ${trans_legacy.en.settings.close}
+                    </button>
+                </div>
             </div>
-        `;
-      content.insertBefore(actions, content.firstElementChild);
+        `, content.firstElementChild);
     }
-    let share = document.createElement("div");
-    share.classList.add("modal-share-content");
-    share.setAttribute("id", `bleh--window-${id}--share`);
-    share.setAttribute("data-kate-processed", "true");
+    let share2 = document.createElement("div");
+    share2.classList.add("modal-share-content");
+    share2.setAttribute("id", `bleh--window-${id}--share`);
+    share2.setAttribute("data-kate-processed", "true");
     let body = document.createElement("div");
     body.classList.add("modal-body");
     body.setAttribute("id", `bleh--window-${id}--body`);
@@ -6468,7 +7598,7 @@
     header.setAttribute("data-kate-processed", "true");
     let inner_content_em = document.createElement("div");
     inner_content_em.classList.add("modal-inner-content");
-    inner_content_em.innerHTML = inner_content;
+    render2(inner_content_em, inner_content);
     inner_content_em.setAttribute("data-kate-processed", "true");
     if (allow_scroll)
       inner_content_em.classList.add("allow-scroll");
@@ -6479,8 +7609,8 @@
     align.setAttribute("data-kate-processed", "true");
     body.appendChild(header);
     body.appendChild(inner_content_em);
-    share.appendChild(body);
-    content.appendChild(share);
+    share2.appendChild(body);
+    content.appendChild(share2);
     dialog2.appendChild(content);
     wrapper.appendChild(dialog2);
     wrapper.appendChild(align);
@@ -6514,7 +7644,7 @@
   };
 
   // src/components/markdown.js
-  function markdown(text, {
+  function markdown(text2, {
     allow_headers = false,
     allow_links = true,
     line_breaks = true
@@ -6535,132 +7665,10 @@
       ghCodeBlocks: false,
       smartIndentationFix: true
     });
-    let parsed_body = converter.makeHtml(text.replace(/([@])([a-zA-Z0-9_]+)/g, `[$1$2](${root}user/$2)`).replace(/\[artist\]([a-zA-Z0-9]+)\[\/artist\]/g, `[$1](${root}music/$1)`).replace(/\[album artist=([a-zA-Z0-9]+)\]([a-zA-Z0-9\s]+)\[\/album\]/g, `[$2](${root}music/$1/$2)`).replace(/\[track artist=([a-zA-Z0-9]+)\]([a-zA-Z0-9\s]+)\[\/track\]/g, `[$2](${root}music/$1/_/$2)`).replace(/https:\/\/open\.spotify\.com\/user\/([A-Za-z0-9]+)\?si=([A-Za-z0-9]+)/g, "[Spotify](https://open.spotify.com/user/$1)").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;"));
-    return parsed_body;
-  }
-
-  // src/components/notify.js
-  function load_notifications() {
-    let prev_notif = document.getElementById("bleh-notifications");
-    if (prev_notif == null) {
-      let notifs = document.createElement("div");
-      notifs.classList.add("bleh-notifications");
-      page.structure.notifications = notifs;
-      document.body.appendChild(notifs);
-    }
-  }
-  function deliver_notif(content, persist = false, has_icon = false, append_class = "", action = "") {
-    let notif = document.createElement("button");
-    notif.classList.add("bleh-notification");
-    notif.setAttribute("onclick", "_kill_notif(this)");
-    notif.textContent = content;
-    page.structure.notifications.appendChild(notif);
-    if (has_icon)
-      notif.classList.add("btn--has-icon");
-    if (append_class != "")
-      notif.classList.add(append_class);
-    if (action != "")
-      notif.setAttribute("onclick", action);
-    if (persist)
-      return;
-    setTimeout(function() {
-      kill_notif(notif);
-    }, 3500);
-  }
-  unsafeWindow._notify = function({
-    title = null,
-    body = null,
-    icon = null,
-    classname = null,
-    action = null,
-    persist = false,
-    type = null
-  }) {
-    notify({
-      title,
-      body,
-      icon,
-      classname,
-      action,
-      persist,
-      type
-    });
-  };
-  function notify({
-    id = null,
-    title = null,
-    body = null,
-    icon = null,
-    classname = null,
-    action = null,
-    persist = false,
-    type = "generic"
-  }) {
-    log(`creating ${title}`, "notification", "info", {
-      id,
-      title,
-      body,
-      icon,
-      classname,
-      action,
-      persist,
-      type
-    });
-    let notif = document.createElement("button");
-    notif.classList.add("bleh-notification");
-    notif.setAttribute("data-type", type);
-    notif.setAttribute("onclick", "_notify_rm(this)");
-    if (!body) {
-      notif.innerHTML = `
-            <div class="notification-title margin-below">${title}</div>
-        `;
-    } else {
-      notif.innerHTML = `
-            <div class="notification-title">${title}</div>
-            <div class="notification-body margin-below">${body}</div>
-        `;
-    }
-    page.structure.notifications.appendChild(notif);
-    if (type == "error")
-      icon = "icon-16-x";
-    if (type == "success")
-      icon = "icon-16-check";
-    if (!icon)
-      icon = "icon-16-info";
-    if (icon) {
-      notif.classList.add("icon");
-      notif.style.setProperty("--mask", `var(--${icon})`);
-    }
-    if (classname)
-      notif.classList.add(classname);
-    if (action)
-      notif.setAttribute("onclick", action);
-    if (persist)
-      return;
-    let bar = document.createElement("div");
-    bar.classList.add("notification-progress");
-    notif.appendChild(bar);
-    setTimeout(function() {
-      bar.style.setProperty("left", "100%");
-    }, 1);
-    setTimeout(function() {
-      notify_rm(notif);
-    }, 1e4);
-  }
-  unsafeWindow._notify_rm = function(notif) {
-    notify_rm(notif);
-  };
-  function notify_rm(notif) {
-    notif.classList.add("fade-out");
-    setTimeout(function() {
-      page.structure.notifications.removeChild(notif);
-    }, 400);
-  }
-  unsafeWindow._kill_notif = function(notif) {
-    kill_notif(notif);
-  };
-  function kill_notif(notif) {
-    notify_rm(notif);
+    let parsed_body = converter.makeHtml(text2.replace(/([@])([a-zA-Z0-9_]+)/g, `[$1$2](${root}user/$2)`).replace(/\[artist\]([a-zA-Z0-9]+)\[\/artist\]/g, `[$1](${root}music/$1)`).replace(/\[album artist=([a-zA-Z0-9]+)\]([a-zA-Z0-9\s]+)\[\/album\]/g, `[$2](${root}music/$1/$2)`).replace(/\[track artist=([a-zA-Z0-9]+)\]([a-zA-Z0-9\s]+)\[\/track\]/g, `[$2](${root}music/$1/_/$2)`).replace(/https:\/\/open\.spotify\.com\/user\/([A-Za-z0-9]+)\?si=([A-Za-z0-9]+)/g, "[Spotify](https://open.spotify.com/user/$1)").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;"));
+    return html2.node([
+      parsed_body
+    ]);
   }
 
   // src/sku.js
@@ -6681,10 +7689,10 @@
     let date_panel = document.createElement("section");
     date_panel.classList.add("date-panel");
     date_panel.setAttribute("data-glacier-graphs", settings.glacier_library_graphs);
-    date_items.forEach((item2, index) => {
-      date_panel.appendChild(item2);
+    date_items.forEach((item, index) => {
+      date_panel.appendChild(item);
       if (index == 0)
-        page.structure.glacier.selector = item2;
+        page.structure.glacier.selector = item;
     });
     if (date_items.length > 0) {
       if (!page.mobile)
@@ -6915,22 +7923,22 @@
       glacier_meta.innerHTML = "";
     }
     metadata.forEach((meta, index) => {
-      let text = meta.querySelector(".metadata-title");
+      let text2 = meta.querySelector(".metadata-title");
       let value = meta.querySelector(".metadata-display").textContent;
-      if (text) {
-        text = text.textContent;
+      if (text2) {
+        text2 = text2.textContent;
         if (page.subpage == "library_overview") {
           if (index == 1)
-            text = trans_legacy.en.glacier.meta.average;
+            text2 = trans_legacy.en.glacier.meta.average;
         } else if (page.subpage == "library_artists") {
-          text = tl(trans.artists);
+          text2 = tl(trans.artists);
         } else if (page.subpage == "library_albums") {
-          text = trans_legacy.en.glacier.meta.albums;
+          text2 = trans_legacy.en.glacier.meta.albums;
         } else if (page.subpage == "library_tracks") {
-          text = trans_legacy.en.glacier.meta.tracks;
+          text2 = trans_legacy.en.glacier.meta.tracks;
         }
       } else {
-        text = tl(trans.results_for);
+        text2 = tl(trans.results_for);
         value = meta.querySelector(".metadata-display").textContent;
         let start = value.indexOf("\u201C") + 1;
         let end = value.indexOf("\u201D");
@@ -6939,7 +7947,7 @@
       let glacier_meta_item = document.createElement("div");
       glacier_meta_item.classList.add("glacier-library-metadata-item");
       glacier_meta_item.innerHTML = `
-            <div class="sub-text">${text}</div>
+            <div class="sub-text">${text2}</div>
             <div class="glacier-library-metadata-item-value">${value}</div>
         `;
       glacier_meta.appendChild(glacier_meta_item);
@@ -6994,9 +8002,9 @@
     });
     tippy(configure_button, {
       theme: "window",
-      content: `
+      content: html2.node`
             <div class="dialog-settings">
-                ${page.subpage == "library_artists" ? `
+                ${page.subpage == "library_artists" ? html2.node`
                 <div class="setting" data-type="toggle" id="container-colourful_counts" onclick="_update_item('colourful_counts')">
                     <div class="heading">
                         <h5>${tl(trans.colourful_counts.name)}</h5>
@@ -7008,7 +8016,7 @@
                         </button>
                     </div>
                 </div>
-                ` : `
+                ` : html2.node`
                 <div class="setting" data-type="toggle" id="container-format_guest_features" onclick="_update_item('format_guest_features')">
                     <button class="btn reset" onclick="_reset_item('format_guest_features')">${tl(trans.reset)}</button>
                     <div class="heading">
@@ -7035,7 +8043,7 @@
                 </div>
                 `}
                 <div class="sep"></div>
-                ${(page.subpage == "library_artists" || page.subpage == "library_albums") && auth.pro ? `
+                ${(page.subpage == "library_artists" || page.subpage == "library_albums") && auth.pro ? html2.node`
                 <div class="setting" data-type="toggle" id="container-grid_glow" onclick="_update_item('grid_glow')">
                     <button class="btn reset" onclick="_reset_item('grid_glow')">${tl(trans.reset)}</button>
                     <div class="heading">
@@ -7063,7 +8071,6 @@
                 </div>
             </div>
         `,
-      allowHTML: true,
       placement: "bottom",
       interactive: true,
       interactiveBorder: 10,
@@ -7181,25 +8188,25 @@
         page.state.glacier.insights.artist.display = false;
         page.state.glacier.insights.album.display = false;
       }
-      for (let item2 in insights) {
-        log(`checking insights status of item ${item2} - display of ${insights[item2].display}`, "glacier library", "info", { checking: insights[item2], global: page.state.glacier.insights[item2] });
-        if (insights[item2].display && JSON.stringify(insights[item2]) != JSON.stringify(page.state.glacier.insights[item2])) {
-          log(`confirmed insights status of item ${item2} - is different`, "glacier library");
-          page.state.glacier.insights[item2] = insights[item2];
-          bleh_glacier_insights_generate(item2, page.state.glacier.insights[item2]);
+      for (let item in insights) {
+        log(`checking insights status of item ${item} - display of ${insights[item].display}`, "glacier library", "info", { checking: insights[item], global: page.state.glacier.insights[item] });
+        if (insights[item].display && JSON.stringify(insights[item]) != JSON.stringify(page.state.glacier.insights[item])) {
+          log(`confirmed insights status of item ${item} - is different`, "glacier library");
+          page.state.glacier.insights[item] = insights[item];
+          bleh_glacier_insights_generate(item, page.state.glacier.insights[item]);
         }
       }
     } else {
-      for (let item2 in page.state.glacier.insights) {
-        if (page.state.glacier.insights[item2].display)
-          bleh_glacier_insights_generate(item2, page.state.glacier.insights[item2]);
+      for (let item in page.state.glacier.insights) {
+        if (page.state.glacier.insights[item].display)
+          bleh_glacier_insights_generate(item, page.state.glacier.insights[item]);
       }
     }
   }
-  function bleh_glacier_insights_generate(type, item2) {
-    if (item2.highest.value == 0)
+  function bleh_glacier_insights_generate(type, item) {
+    if (item.highest.value == 0)
       return;
-    log(`requesting insights generator for ${type}`, "glacier library", "info", item2);
+    log(`requesting insights generator for ${type}`, "glacier library", "info", item);
     let new_run = false;
     let scrobble_insights_panel = page.structure.side.querySelector(`.scrobble-insights-panel[data-type="${type}"]`);
     if (!scrobble_insights_panel) {
@@ -7226,9 +8233,9 @@
       let scrobble_chart = new Chart(scrobble_canvas.getContext("2d"), {
         type: "line",
         data: {
-          labels: item2.labels,
+          labels: item.labels,
           datasets: [{
-            data: item2.values,
+            data: item.values,
             borderWidth: 2,
             backgroundColor: gradient,
             borderColor: page.state.chart_colours.link_col,
@@ -7244,9 +8251,9 @@
       let scrobble_chart = new Chart(scrobble_canvas.getContext("2d"), {
         type: "pie",
         data: {
-          labels: item2.labels,
+          labels: item.labels,
           datasets: [{
-            data: item2.values,
+            data: item.values,
             borderWidth: 2,
             backgroundColor: [
               `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "360")})`,
@@ -7282,9 +8289,9 @@
       let scrobble_chart = new Chart(scrobble_canvas.getContext("2d"), {
         type: "bar",
         data: {
-          labels: item2.labels,
+          labels: item.labels,
           datasets: [{
-            data: item2.values,
+            data: item.values,
             borderWidth: 0,
             backgroundColor: [
               `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "360")})`,
@@ -7336,8 +8343,8 @@
       if (response.status != 200)
         throw new Error();
       return response.text();
-    }).then(function(html) {
-      let doc = new DOMParser().parseFromString(html, "text/html");
+    }).then(function(html3) {
+      let doc = new DOMParser().parseFromString(html3, "text/html");
       console.log("glacier library DOC", doc, doc.querySelector(".table"));
       log("received response", "glacier library");
       log("refresh is now marked true", "glacier library");
@@ -7552,10 +8559,10 @@
       else
         state = 1;
       let love_form_items = love_form.querySelectorAll(":scope > div > div");
-      love_form_items.forEach((item2, index) => {
+      love_form_items.forEach((item, index) => {
         if (state != index)
-          item2.classList.add("hide");
-        cta.appendChild(item2);
+          item.classList.add("hide");
+        cta.appendChild(item);
       });
     }
     if (cta) {
@@ -7621,7 +8628,7 @@
     });
     tippy(configure_button, {
       theme: "window",
-      content: `
+      content: html2.node`
             <div class="dialog-settings">
                 <div class="setting" data-type="toggle" id="container-format_guest_features" onclick="_update_item('format_guest_features')">
                     <button class="btn reset" onclick="_reset_item('format_guest_features')">${tl(trans.reset)}</button>
@@ -7662,7 +8669,6 @@
                 </div>
             </div>
         `,
-      allowHTML: true,
       placement: "bottom",
       interactive: true,
       interactiveBorder: 10,
@@ -7714,257 +8720,20 @@
       view_buttons.insertBefore(bulk_edit, edit_form);
   }
 
-  // src/chart.js
-  function prep_chart_colours() {
-    if (page.state.chart_colours.link_col == "hsl()")
-      load_chart_colours();
-  }
-  function load_chart_colours() {
-    let link_col = `hsl(${getComputedStyle(document.body).getPropertyValue("--l3-c")})`;
-    let link_h_col = getComputedStyle(document.body).getPropertyValue("--h3-s");
-    let link_bg_col = `hsla(${getComputedStyle(document.body).getPropertyValue("--h4")}, 30%)`;
-    let link_bg_col_2 = `hsla(${getComputedStyle(document.body).getPropertyValue("--h4")}, 2%)`;
-    let text_col = `hsl(${getComputedStyle(document.body).getPropertyValue("--c3")})`;
-    let axis_col = `hsla(${getComputedStyle(document.body).getPropertyValue("--b4")}, 40%)`;
-    let text_primary_col = `hsl(${getComputedStyle(document.body).getPropertyValue("--c2")})`;
-    let bg_col = `hsl(${getComputedStyle(document.body).getPropertyValue("--b5")})`;
-    let root_bg_col = `hsla(${getComputedStyle(document.body).getPropertyValue("--b6")}, 92%)`;
-    let hue = getComputedStyle(document.body).getPropertyValue("--hue");
-    page.state.chart_colours = {
-      link_col,
-      link_h_col,
-      link_bg_col,
-      link_bg_col_2,
-      text_col,
-      axis_col,
-      text_primary_col,
-      bg_col,
-      root_bg_col,
-      hue
-    };
-    console.log("chart colours", page.state.chart_colours);
-    page.state.chart_line_options = {
-      maintainAspectRatio: false,
-      plugins: {
-        legend: {
-          display: false
-        },
-        tooltip: {
-          backgroundColor: root_bg_col,
-          titleColor: text_primary_col,
-          bodyColor: text_primary_col,
-          multiKeyBackground: root_bg_col,
-          boxPadding: 6,
-          padding: 9,
-          cornerRadius: 9,
-          caretSize: 0
-        }
-      },
-      scales: {
-        x: {
-          type: "time",
-          time: {
-            unit: "month",
-            displayFormats: {
-              month: "MMM"
-            },
-            tooltipFormat: "dddd, MMMM Do YYYY"
-          },
-          grid: {
-            color: axis_col,
-            display: false
-          }
-        },
-        y: {
-          display: false,
-          grid: {
-            display: false
-          },
-          suggestedMax: 10
-        }
-      }
-    };
-    page.state.chart_library_line_options = {
-      maintainAspectRatio: false,
-      plugins: {
-        legend: {
-          display: false
-        },
-        tooltip: {
-          backgroundColor: root_bg_col,
-          titleColor: text_primary_col,
-          bodyColor: text_primary_col,
-          multiKeyBackground: root_bg_col,
-          boxPadding: 6,
-          padding: 9,
-          cornerRadius: 9,
-          caretSize: 0
-        }
-      },
-      scales: {
-        x: {
-          grid: {
-            color: axis_col,
-            display: false
-          }
-        },
-        y: {
-          grid: {
-            display: false
-          },
-          suggestedMax: 10
-        }
-      },
-      onClick: (e, active, chart) => {
-        bleh_glacier_library_open_index(active[0].index);
-      }
-    };
-    page.state.chart_library_line_options_no_click = {
-      maintainAspectRatio: false,
-      plugins: {
-        legend: {
-          display: false
-        },
-        tooltip: {
-          backgroundColor: root_bg_col,
-          titleColor: text_primary_col,
-          bodyColor: text_primary_col,
-          multiKeyBackground: root_bg_col,
-          boxPadding: 6,
-          padding: 9,
-          cornerRadius: 9,
-          caretSize: 0
-        }
-      },
-      scales: {
-        x: {
-          grid: {
-            color: axis_col,
-            display: false
-          }
-        },
-        y: {
-          grid: {
-            display: false
-          },
-          suggestedMax: 10
-        }
-      }
-    };
-    page.state.chart_library_pie_options = {
-      maintainAspectRatio: false,
-      plugins: {
-        legend: {
-          display: false
-        },
-        tooltip: {
-          backgroundColor: root_bg_col,
-          titleColor: text_primary_col,
-          bodyColor: text_primary_col,
-          multiKeyBackground: root_bg_col,
-          boxPadding: 6,
-          padding: 9,
-          cornerRadius: 9,
-          caretSize: 0
-        }
-      },
-      onClick: (e, active, chart) => {
-        bleh_glacier_library_open_index(active[0].index);
-      }
-    };
-    page.state.chart_library_pie_options_no_click = {
-      maintainAspectRatio: false,
-      plugins: {
-        legend: {
-          display: false
-        },
-        tooltip: {
-          backgroundColor: root_bg_col,
-          titleColor: text_primary_col,
-          bodyColor: text_primary_col,
-          padding: 7,
-          cornerRadius: 10,
-          caretSize: 0
-        }
-      }
-    };
-    page.state.chart_library_bar_options = {
-      maintainAspectRatio: false,
-      plugins: {
-        legend: {
-          display: false
-        },
-        tooltip: {
-          backgroundColor: root_bg_col,
-          titleColor: text_primary_col,
-          bodyColor: text_primary_col,
-          multiKeyBackground: root_bg_col,
-          boxPadding: 6,
-          padding: 9,
-          cornerRadius: 9,
-          caretSize: 0
-        }
-      },
-      onClick: (e, active, chart) => {
-        bleh_glacier_library_open_index(active[0].index);
-      }
-    };
-    page.state.chart_library_bar_v_options = {
-      indexAxis: "y",
-      maintainAspectRatio: false,
-      plugins: {
-        legend: {
-          display: false
-        },
-        tooltip: {
-          backgroundColor: root_bg_col,
-          titleColor: text_primary_col,
-          bodyColor: text_primary_col,
-          multiKeyBackground: root_bg_col,
-          boxPadding: 6,
-          padding: 9,
-          cornerRadius: 9,
-          caretSize: 0
-        }
-      },
-      onClick: (e, active, chart) => {
-        bleh_glacier_library_open_index(active[0].index);
-      }
-    };
-    page.state.chart_library_bar_options_no_click = {
-      maintainAspectRatio: false,
-      plugins: {
-        legend: {
-          display: false
-        },
-        tooltip: {
-          backgroundColor: root_bg_col,
-          titleColor: text_primary_col,
-          bodyColor: text_primary_col,
-          multiKeyBackground: root_bg_col,
-          boxPadding: 6,
-          padding: 9,
-          cornerRadius: 9,
-          caretSize: 0
-        }
-      }
-    };
-  }
-
   // src/avatar.js
-  function patch_avatar(avatar, name, type = "", parent = null, side = "right") {
-    if (avatar.hasAttribute("data-bleh-avatar"))
+  function patch_avatar(avatar3, name, type = "", parent = null, side = "right") {
+    if (avatar3.hasAttribute("data-bleh-avatar"))
       return;
-    avatar.setAttribute("data-bleh-avatar", "true");
-    let avatar_img = avatar.querySelector("img");
+    avatar3.setAttribute("data-bleh-avatar", "true");
+    let avatar_img = avatar3.querySelector("img");
     if (!avatar_img) return;
     avatar_img.setAttribute("src", avatar_img.getAttribute("src").replace("/64s/", "/avatar70s/"));
     let badges = load_badges(name, true);
     if (badges) {
-      let pre_existing_badge = avatar.querySelector(".avatar-status-dot");
+      let pre_existing_badge = avatar3.querySelector(".avatar-status-dot");
       if (pre_existing_badge)
-        avatar.removeChild(pre_existing_badge);
-      avatar.setAttribute("title", "");
+        avatar3.removeChild(pre_existing_badge);
+      avatar3.setAttribute("title", "");
       let this_badge = sponsor_list.badges[name];
       if (!Array.isArray(sponsor_list.badges[name])) {
         log(`@${name} 1 badge:`, "shout", "info", sponsor_list.badges[name]);
@@ -7976,17 +8745,17 @@
       }
       let badge = document.createElement("span");
       badge.classList.add("avatar-status-dot", `user-status--bleh-${this_badge.type}`, `user-status--bleh-user-${name}`);
-      avatar.appendChild(badge);
+      avatar3.appendChild(badge);
       if (!parent)
-        avatar.classList.add("avatar-can-hoverbox");
+        avatar3.classList.add("avatar-can-hoverbox");
       else
         parent.classList.add("parent-can-hoverbox");
-      tippy(parent ? parent : avatar, {
+      tippy(parent ? parent : avatar3, {
         theme: "user",
-        content: `
+        content: html2.node`
                 <div class="image-info">
                     <div class="inner-image">
-                        ${avatar_img.outerHTML}
+                        ${html2.node([avatar_img.outerHTML])}
                     </div>
                     <div class="info">
                         <h5 class="title">${name}</h5>
@@ -7999,25 +8768,24 @@
                     <a class="btn view-item user-button leave-shout-btn" href="${root}user/${name}/shoutbox">${tl(trans.shouts)}</a>
                 </div>
             `,
-        allowHTML: true,
         placement: side,
         interactive: true,
         delay: [200, 0]
       });
       return this_badge;
     } else {
-      let pre_existing_badge = avatar.querySelector(".avatar-status-dot");
+      let pre_existing_badge = avatar3.querySelector(".avatar-status-dot");
       if (!pre_existing_badge) {
         if (!parent)
-          avatar.classList.add("avatar-can-hoverbox");
+          avatar3.classList.add("avatar-can-hoverbox");
         else
           parent.classList.add("parent-can-hoverbox");
-        tippy(parent ? parent : avatar, {
+        tippy(parent ? parent : avatar3, {
           theme: "user",
-          content: `
+          content: html2.node`
                     <div class="image-info">
                         <div class="inner-image">
-                            ${avatar_img.outerHTML}
+                            ${html2.node([avatar_img.outerHTML])}
                         </div>
                         <div class="info">
                             <h5 class="title">${name}</h5>
@@ -8029,7 +8797,6 @@
                         <a class="btn view-item user-button leave-shout-btn" href="${root}user/${name}/shoutbox">${tl(trans.shouts)}</a>
                     </div>
                 `,
-          allowHTML: true,
           placement: side,
           interactive: true,
           delay: [200, 0]
@@ -8037,19 +8804,19 @@
         return {};
       } else {
         if (!parent)
-          avatar.classList.add("avatar-can-hoverbox");
+          avatar3.classList.add("avatar-can-hoverbox");
         else
           parent.classList.add("parent-can-hoverbox");
-        tippy(parent ? parent : avatar, {
+        tippy(parent ? parent : avatar3, {
           theme: "user",
-          content: `
+          content: html2.node`
                     <div class="image-info">
                         <div class="inner-image">
-                            ${avatar_img.outerHTML}
+                            ${html2.node([avatar_img.outerHTML])}
                         </div>
                         <div class="info">
                             <h5 class="title">${name}</h5>
-                            <p class="badge ${pre_existing_badge.classList[1]}">${avatar.getAttribute("title")}</p>
+                            <p class="badge ${pre_existing_badge.classList[1]}">${avatar3.getAttribute("title")}</p>
                         </div>
                         <a href="${root}user/${name}" class="link-over"></a>
                     </div>
@@ -8058,26 +8825,25 @@
                         <a class="btn view-item user-button leave-shout-btn" href="${root}user/${name}/shoutbox">${tl(trans.shouts)}</a>
                     </div>
                 `,
-          allowHTML: true,
           placement: side,
           interactive: true,
           delay: [200, 0]
         });
-        avatar.setAttribute("title", "");
+        avatar3.setAttribute("title", "");
         return {
           type: pre_existing_badge.classList[1]
         };
       }
     }
   }
-  function return_name_from_avatar(avatar) {
-    if (!avatar)
+  function return_name_from_avatar(avatar3) {
+    if (!avatar3)
       return;
-    if (!avatar.hasAttribute("alt"))
+    if (!avatar3.hasAttribute("alt"))
       return;
-    if (avatar.getAttribute("alt") == tl(trans.your_avatar))
+    if (avatar3.getAttribute("alt") == tl(trans.your_avatar))
       return auth;
-    return avatar.getAttribute("alt").replace(tl(trans.avatar_for_user), "");
+    return avatar3.getAttribute("alt").replace(tl(trans.avatar_for_user), "");
   }
   unsafeWindow._expand_avatar = function(src) {
     expand_avatar(src);
@@ -8085,7 +8851,7 @@
   function expand_avatar(src) {
     dialog({
       id: "avatar",
-      body: `
+      body: html2.node`
             <div class="full-avatar-wrapper">
                 <div class="full-avatar">
                     <img src="${src}">
@@ -8119,6 +8885,49 @@
         })
       });
       menu.show();
+    });
+  }
+
+  // src/components/share.js
+  function share(url) {
+    let input;
+    dialog({
+      id: "share",
+      title: tl(trans.share),
+      body: html2.node`
+            <div class="share-top content-form">
+                <input
+                    type="text"
+                    readonly
+                    value=${url}
+                    class="share-input"
+                    ref=${(el) => input = el}
+                />
+                <button 
+                    class="btn icon copy"
+                    onclick=${() => {
+        input.select();
+        document.execCommand("copy");
+        notify({
+          title: tl(trans.copied_to_clipboard),
+          type: "success"
+        });
+      }}
+                >${tl(trans.copy)}</button>
+            </div>
+            <div class="share-links">
+                <a 
+                    href=${`https://twitter.com/intent/tweet?url=${encodeURIComponent(url)}`}
+                    target="_blank"
+                    class="share-link share-link-twitter"
+                >Twitter</a>
+                <a 
+                    href=${`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`}
+                    target="_blank"
+                    class="share-link share-link-facebook"
+                >Facebook</a>
+            </div>
+        `
     });
   }
 
@@ -8213,15 +9022,22 @@
     buttons_extra.classList.add("gallery-image-buttons", "gallery-image-buttons-extra");
     button_container.appendChild(buttons_extra);
     image_details.appendChild(button_container);
-    let open_button = document.createElement("button");
-    open_button.classList.add("image-open-button");
+    let open_button = html2.node`
+        <button class="image-open-button" onclick=${() => expand_gallery_image()}>
+            ${tl(trans.expand)}
+        </button>
+    `;
     tippy(open_button, {
-      content: trans_legacy.en.gallery.open.tooltip
+      content: tl(trans.expand_to_full_resolution)
     });
-    open_button.textContent = tl(trans.expand);
-    open_button.setAttribute("onclick", `_expand_gallery_image()`);
     buttons_extra.appendChild(open_button);
-    open_button.after(create_divider());
+    let share_button = html2.node`
+        <button class="image-share-button" onclick=${() => share_gallery_image()}>
+            ${tl(trans.share)}
+        </button>
+    `;
+    buttons_extra.appendChild(share_button);
+    share_button.after(create_divider());
     let delete_button = image_details.querySelector(".gallery-image-delete");
     if (delete_button)
       buttons_extra.appendChild(delete_button);
@@ -8235,8 +9051,8 @@
     let star_buttons = image_details.querySelectorAll(".gallery-image-preferred-button :is(button, a)");
     star_buttons.forEach((star_button) => {
       star_button.removeAttribute("title");
-      let text = star_button.querySelector(".gallery-image-preferred-states");
-      text.textContent = trans_legacy.en.gallery.prefer.name;
+      let text2 = star_button.querySelector(".gallery-image-preferred-states");
+      text2.textContent = trans_legacy.en.gallery.prefer.name;
     });
     let view_all_container = page.structure.main.querySelector(".more-link-fullwidth-right-flush-top");
     if (view_all_container) {
@@ -8263,12 +9079,13 @@
     if (page.type == "artist" || ff("display_album_bookmark"))
       patch_gallery_focused_image(image_sidebar, buttons);
   }
-  unsafeWindow._expand_gallery_image = function() {
-    expand_gallery_image();
-  };
   function expand_gallery_image() {
     let image_src = page.structure.container.querySelector(".active-slide .js-gallery-image").getAttribute("src").replace("770x0", "ar0");
     expand_avatar(image_src);
+  }
+  function share_gallery_image() {
+    let image_src = page.structure.container.querySelector(".active-slide .js-gallery-image").getAttribute("src").replace("770x0", "ar0");
+    share(image_src);
   }
   function create_divider() {
     let divider = document.createElement("div");
@@ -8326,37 +9143,35 @@
   function patch_gallery_image_listing() {
     let bookmarked_images = JSON.parse(localStorage.getItem("bleh_bookmarked_images")) || {};
     if (page.requested.tab != "saved" || page.requested.page != null)
-      page.structure.container.setAttribute("data-bleh--gallery-tab", "overview");
+      page.structure.container.setAttribute("data-bleh--gallery-tab", "all");
     else
-      page.structure.container.setAttribute("data-bleh--gallery-tab", "bookmarks");
-    let bookmark_nav = document.createElement("div");
-    bookmark_nav.classList.add("bleh--nav-wrap", "bleh--nav-wrap--bookmarks");
-    bookmark_nav.innerHTML = `
-        <nav class="navlist secondary-nav">
-            <ul class="navlist-items">
-                <li class="navlist-item secondary-nav-item secondary-nav-item--gallery-overview">
-                    <a class="secondary-nav-item-link" onclick="_set_gallery_page('overview')">
-                        ${trans_legacy.en.gallery.tabs.overview}
-                    </a>
-                </li>
-                <li class="navlist-item secondary-nav-item secondary-nav-item--gallery-bookmarks">
-                    <a class="secondary-nav-item-link" onclick="_set_gallery_page('bookmarks')">
-                        ${trans_legacy.en.gallery.tabs.bookmarks}
-                    </a>
-                </li>
-            </ul>
-        </nav>
-    `;
-    page.structure.content_top.after(bookmark_nav);
-    let bookmarks_content = document.createElement("div");
-    bookmarks_content.classList.add("col-main", "bleh--bookmarks", "not-a-panel");
-    bookmarks_content.innerHTML = `
-        <section class="bookmarks-panel">
-            <ul class="image-list" id="bleh--bookmarked-images" data-kate-processed="true"></ul>
-        </section>
-    `;
+      page.structure.container.setAttribute("data-bleh--gallery-tab", "saved");
+    page.structure.content_top.after(html2.node`
+        <div class="bleh--nav-wrap bleh--nav-wrap--bookmarks">
+            <nav class="navlist secondary-nav">
+                <ul class="navlist-items">
+                    <li class="navlist-item secondary-nav-item secondary-nav-item--gallery-overview">
+                        <a class="secondary-nav-item-link" onclick=${() => gallery_tab("all")}>
+                            ${tl(trans.all)}
+                        </a>
+                    </li>
+                    <li class="navlist-item secondary-nav-item secondary-nav-item--gallery-bookmarks">
+                        <a class="secondary-nav-item-link" onclick=${() => gallery_tab("saved")}>
+                            ${tl(trans.saved)}
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    `);
     page.structure.main.classList.add("bleh--gallery");
-    page.structure.main.after(bookmarks_content);
+    page.structure.main.after(html2.node`
+        <div class="col-main bleh--bookmarks not-a-panel">
+            <section class="bookmarks-panel">
+                <ul class="image-list" data-kate-processed="true"></ul>
+            </section>
+        </div>
+    `);
     let sort_button = page.structure.main.querySelector(".dropdown-menu-clickable-button");
     let sort_menu = page.structure.main.querySelector(".dropdown-menu-clickable");
     let sort_wrap = document.createElement("div");
@@ -8366,32 +9181,30 @@
     page.structure.main.insertBefore(sort_wrap, page.structure.main.firstElementChild);
     if (bookmarked_images.hasOwnProperty(page.name)) {
       bookmarked_images[page.name].forEach((image) => {
-        console.info(image);
         let image_element = document.createElement("li");
         image_element.classList.add("image-list-item-wrapper");
         image_element.setAttribute("data-image-id", image);
         image_element.innerHTML = `
                 <a class="image-list-item" href="${root}music/+noredirect/${page.name}/+images/${image}">
-                    <img src="https://lastfm.freetls.fastly.net/i/u/avatar170s/${image}" loading="lazy">
+                    <img src="https://lastfm.freetls.fastly.net/i/u/avatar170s/${image}" alt=${image} loading="lazy">
                 </a>
             `;
-        document.getElementById("bleh--bookmarked-images").appendChild(image_element);
+        page.structure.container.querySelector(".bookmarks-panel .image-list").appendChild(image_element);
         if (ff("remove_bookmark")) {
           let menu = tippy(image_element, {
             theme: "context-menu",
-            content: `
-                        <button class="dropdown-menu-clickable-item" onclick="_update_image_bookmark(this, '${image}', false)" data-menu-item="remove-bookmark" data-bleh--image-is-bookmarked="true">
+            content: html2.node`
+                        <button class="dropdown-menu-clickable-item" onclick=${() => update_image_bookmark(image_element, image, false)} data-menu-item="remove-bookmark" data-bleh--image-is-bookmarked="true">
                             ${trans_legacy.en.gallery.bookmarks.button.unbookmark_this_image.name}
                         </button>
                     `,
-            allowHTML: true,
             placement: "right-start",
             trigger: "manual",
             interactive: true,
             interactiveBorder: 10,
             offset: [0, 0],
             onShow(instance) {
-              instance.popper.addEventListener("click", (event2) => {
+              instance.popper.addEventListener("click", (event3) => {
                 instance.hide();
               });
             }
@@ -8416,10 +9229,7 @@
         `;
     }
   }
-  unsafeWindow._set_gallery_page = function(id) {
-    set_gallery_page(id);
-  };
-  function set_gallery_page(id) {
+  function gallery_tab(id) {
     page.structure.container.setAttribute("data-bleh--gallery-tab", id);
   }
   function patch_gallery_focused_image(focused_image_details, gallery_interactions) {
@@ -8546,7 +9356,7 @@
     let modal = dialog({
       id: "profile_shortcut",
       title: tl(trans.profile_shortcut.name),
-      body: `
+      body: html2.node`
         <div class="setting" data-type="text" id="container-profile_shortcut">
             <div class="avatar-container">
                 <div class="avatar-inner" id="avatar-profile_shortcut">
@@ -8569,7 +9379,7 @@
     let modal = dialog({
       id: "other_listener",
       title: tl(trans.view_others_library),
-      body: `
+      body: html2.node`
         <div class="setting" data-type="text">
             <div class="avatar-container">
                 <div class="avatar-inner avatar--bleh-missing">
@@ -8587,7 +9397,7 @@
   }
   unsafeWindow._send_other_listener = function(link) {
     let name = dialogs["other_listener"].instance.querySelector("#text-profile").value;
-    dialog_rm({
+    dialog_rm2({
       id: "other_listener"
     });
     window.location.href = `${root}user/${name}/library/music/${link}`;
@@ -8597,19 +9407,19 @@
     dialog({
       id: "profile_shortcut",
       title: tl(trans.profile_shortcut.name),
-      body: `
-        <div class="big-modal-alert alert-danger">
-            ${tl(trans.profile_shortcut.notice).replace("{u}", `<a class="mention" href="${root}user/${settings.profile_shortcut}" target="_blank">@${settings.profile_shortcut}</a>`)}
-        </div>
-        <div class="modal-footer">
-            <button class="see-more cancel" onclick="_dialog_rm({id:'profile_shortcut'})">
-                ${tl(trans.back)}
-            </button>
-            <div class="fill"></div>
-            <button class="btn primary save" onclick="_confirm_set_profile_as_shortcut()">
-                ${tl(trans.replace)}
-            </button>
-        </div>
+      body: html2.node`
+            <div class="big-modal-alert alert-danger">
+                ${{ html: tl(trans.profile_shortcut.notice).replace("{u}", `<a class="mention" href="${root}user/${settings.profile_shortcut}" target="_blank">@${settings.profile_shortcut}</a>`) }}
+            </div>
+            <div class="modal-footer">
+                <button class="see-more cancel" onclick=${() => dialog_rm2({ id: "profile_shortcut" })}>
+                    ${tl(trans.back)}
+                </button>
+                <div class="fill"></div>
+                <button class="btn primary save" onclick=${() => confirm_set_profile_as_shortcut()}>
+                    ${tl(trans.replace)}
+                </button>
+            </div>
         `
     });
   };
@@ -8617,7 +9427,7 @@
     confirm_set_profile_as_shortcut();
   };
   function confirm_set_profile_as_shortcut() {
-    dialog_rm({
+    dialog_rm2({
       id: "profile_shortcut"
     });
     let avatar_src = document.body.querySelector(".header-avatar-inner-wrap img").getAttribute("src");
@@ -8647,8 +9457,8 @@
     fetch(`${root}user/${profile_name}/tags`).then(function(response) {
       console.log("returned", response, response.text);
       return response.text();
-    }).then(function(html) {
-      let doc = new DOMParser().parseFromString(html, "text/html");
+    }).then(function(html3) {
+      let doc = new DOMParser().parseFromString(html3, "text/html");
       console.log("DOC", doc);
       profile_img.classList.remove("requesting");
       try {
@@ -8688,7 +9498,7 @@
       let tabs = document.createElement("nav");
       tabs.classList.add("navlist", "secondary-nav", "navlist--more", "redesigned-navigation");
       if (page.type == "artist") {
-        tabs.innerHTML = `
+        tabs.appendChild(html2.node`
                 <ul class="navlist-items">
                     <li class="navlist-item secondary-nav-item secondary-nav-item--overview">
                         <a class="secondary-nav-item-link secondary-nav-item-link--active" href="${window.location.href}">
@@ -8705,7 +9515,7 @@
                             ${tl(trans.albums)}
                         </a>
                     </li>
-                    ${!page_is_blocked ? `
+                    ${!page_is_blocked ? html2.node`
                     <li class="navlist-item secondary-nav-item secondary-nav-item--images">
                         <a class="secondary-nav-item-link" href="${window.location.href}/+images">
                             ${tl(trans.photos)}
@@ -8743,16 +9553,16 @@
                     </li>
                     ` : ""}
                 </ul>
-            `;
+            `);
       } else if (page.type == "album") {
-        tabs.innerHTML = `
+        tabs.appendChild(html2.node`
                 <ul class="navlist-items">
                     <li class="navlist-item secondary-nav-item secondary-nav-item--overview">
                         <a class="secondary-nav-item-link secondary-nav-item-link--active" href="${window.location.href}">
                             ${tl(trans.overview)}
                         </a>
                     </li>
-                    ${!page_is_blocked ? `
+                    ${!page_is_blocked ? html2.node`
                     <li class="navlist-item secondary-nav-item secondary-nav-item--wiki">
                         <a class="secondary-nav-item-link" href="${window.location.href}/+wiki">
                             ${tl(trans.wiki)}
@@ -8775,9 +9585,9 @@
                     </li>
                     ` : ""}
                 </ul>
-            `;
+            `);
       } else if (page.type == "track") {
-        tabs.innerHTML = `
+        tabs.appendChild(html2.node`
                 <ul class="navlist-items">
                     <li class="navlist-item secondary-nav-item secondary-nav-item--overview">
                         <a class="secondary-nav-item-link secondary-nav-item-link--active" href="${window.location.href}">
@@ -8789,7 +9599,7 @@
                             ${tl(trans.albums)}
                         </a>
                     </li>
-                    ${!page_is_blocked ? `
+                    ${!page_is_blocked ? html2.node`
                     <li class="navlist-item secondary-nav-item secondary-nav-item--wiki">
                         <a class="secondary-nav-item-link" href="${window.location.href}/+wiki">
                             ${tl(trans.wiki)}
@@ -8807,7 +9617,7 @@
                     </li>
                     ` : ""}
                 </ul>
-            `;
+            `);
       }
       page.structure.container.insertBefore(tabs, page.structure.row);
       page.structure.tabs = tabs;
@@ -8863,22 +9673,22 @@
       fetch(`${root}user/${shortcut_listens.name}/library/music/${scrobble_page}`).then(function(response) {
         console.log("returned", response, response.text);
         return response.text();
-      }).then(function(html) {
-        let doc = new DOMParser().parseFromString(html, "text/html");
+      }).then(function(dom) {
+        let doc = new DOMParser().parseFromString(dom, "text/html");
         console.log("DOC", doc);
         let first_metadata_item = doc.querySelector(".metadata-item .metadata-display");
         let listens = 0;
-        let listen_item = document.getElementById(`listen-item--${shortcut_listens.name}`);
+        let listen_item = page.structure.main.querySelector(`#listen-item--${shortcut_listens.name}`);
         if (first_metadata_item != null)
           listens = clean_number(first_metadata_item.textContent.trim());
         listen_item.setAttribute("data-listens", listens);
-        listen_item.innerHTML = `
+        render2(listen_item, html2`
                 <img class="view-item-avatar" src="${shortcut_listens.avi}" alt="${shortcut_listens.name}">
                 <div class="info">
                     <h3>${shortcut_listens.name}</h3>
                     <p>${tl(trans.listens.count).replace("{c}", listens.toLocaleString(lang))}</p>
                 </div>
-            `;
+            `);
         if (settings.colourful_counts && page.type == "artist") {
           let parsed_scrobble_as_rank = parse_scrobbles_as_rank(listens);
           listen_item.setAttribute("data-bleh--scrobble-milestone", parsed_scrobble_as_rank.milestone);
@@ -8923,10 +9733,10 @@
     }
     let interact_container = document.createElement("section");
     interact_container.classList.add("side-actions");
-    let text = document.body.querySelector(".header-new-title").textContent.replaceAll(" ", "+").replaceAll("&", "%26");
+    let text2 = document.body.querySelector(".header-new-title").textContent.replaceAll(" ", "+").replaceAll("&", "%26");
     let artist = document.body.querySelector(".header-new-crumb");
     if (artist != void 0)
-      text = `${text}+${artist.textContent.replaceAll(" ", "+").replaceAll("&", "%26")}`;
+      text2 = `${text2}+${artist.textContent.replaceAll(" ", "+").replaceAll("&", "%26")}`;
     let header_actions = document.body.querySelector(".header-new-actions");
     interact_container.innerHTML = header_actions.innerHTML;
     let buttons = interact_container.querySelectorAll("button");
@@ -9009,14 +9819,14 @@
       }
       let groups = [];
       let headers = metadata.querySelectorAll(".catalogue-metadata-heading:not(.visible-xs)");
-      headers.forEach((item2, index) => {
+      headers.forEach((item, index) => {
         groups[index] = {
-          header: item2
+          header: item
         };
       });
       let values = metadata.querySelectorAll(".catalogue-metadata-description:not(.visible-xs)");
-      values.forEach((item2, index) => {
-        groups[index].value = item2;
+      values.forEach((item, index) => {
+        groups[index].value = item;
       });
       metadata.innerHTML = "";
       groups.forEach((group) => {
@@ -9048,55 +9858,53 @@
       play_on = page.structure.side.querySelector(".play-this-track-playlinks");
       page.structure.side.removeChild(play_on.parentElement);
       play_links = play_on.querySelectorAll("li");
-      play_links.forEach((item2) => {
-        let link = item2.querySelector(".play-this-track-playlink:not(.visible-xs)");
+      play_links.forEach((item) => {
+        let link = item.querySelector(".play-this-track-playlink:not(.visible-xs)");
         link.classList.add("music-link");
-        let replace = item2.querySelector(".replace-playlink");
+        let replace = item.querySelector(".replace-playlink");
         if (replace) {
           replace.classList.add("dropdown-menu-clickable-item");
-          item2.removeChild(replace);
+          item.removeChild(replace);
           let menu = tippy(link, {
             theme: "context-menu",
-            content: `
-                        ${replace.outerHTML}
-                    `,
-            allowHTML: true,
+            content: replace,
             placement: "right-start",
             trigger: "manual",
             interactive: true,
             interactiveBorder: 10,
             offset: [0, 0],
             onShow(instance) {
-              instance.popper.addEventListener("click", (event2) => {
+              instance.popper.addEventListener("click", (event3) => {
                 instance.hide();
               });
             }
           });
           register_menu(link, menu);
         }
-        link_container.appendChild(item2);
+        link_container.appendChild(item);
       });
-      let genius = document.createElement("li");
-      genius.innerHTML = `
-            <a class="play-this-track-playlink music-link play-this-track-playlink--genius" href="https://genius.com/search?q=${sanitise(page.sister)}+${sanitise(page.name)}" target="_blank">
-                Genius
-            </a>
-        `;
-      link_container.appendChild(genius);
-      let tidal = document.createElement("li");
-      tidal.innerHTML = `
+      link_container.appendChild(html2.node`
+            <li>
+                <a class="play-this-track-playlink music-link play-this-track-playlink--genius" href="https://genius.com/search?q=${sanitise(page.sister)}+${sanitise(page.name)}" target="_blank">
+                    Genius
+                </a>
+            </li>
+        `);
+      link_container.appendChild(html2.node`
+            <li>
             <a class="play-this-track-playlink music-link play-this-track-playlink--tidal" href="https://listen.tidal.com/search?q=${sanitise(page.sister, " ")} ${sanitise(page.name, " ")}" target="_blank">
                 Tidal
             </a>
-        `;
-      link_container.appendChild(tidal);
+
+            </li>
+        `);
     } else {
       let header = document.createElement("div");
       header.classList.add("sub-text", "music-small-header");
       header.textContent = tl(trans.find_on);
       link_group.appendChild(header);
       if (page.type == "album") {
-        link_container.innerHTML = `
+        render2(link_container, html2`
                 <a class="play-this-track-playlink music-link play-this-track-playlink--spotify" href="https://open.spotify.com/search/${sanitise(page.sister, " ")} ${sanitise(page.name, " ")}" target="_blank">
                     Spotify
                 </a>
@@ -9118,9 +9926,9 @@
                 <a class="play-this-track-playlink music-link play-this-track-playlink--genius" href="https://genius.com/search?q=${sanitise(page.sister)}+${sanitise(page.name)}" target="_blank">
                     Genius
                 </a>
-            `;
+            `);
       } else {
-        link_container.innerHTML = `
+        render2(link_container, html2`
                 <a class="play-this-track-playlink music-link play-this-track-playlink--spotify" href="https://open.spotify.com/search/${sanitise(page.name, " ")}" target="_blank">
                     Spotify
                 </a>
@@ -9142,7 +9950,7 @@
                 <a class="play-this-track-playlink music-link play-this-track-playlink--genius" href="https://genius.com/search?q=${sanitise(page.name)}" target="_blank">
                     Genius
                 </a>
-            `;
+            `);
         let externals = page.structure.side.querySelector(".resource-external-links");
         if (externals) {
           page.structure.side.removeChild(externals.parentElement);
@@ -9173,13 +9981,12 @@
     }
     if (!settings.corrections)
       return;
-    let lotus_handler = document.createElement("section");
-    lotus_handler.classList.add("lotus", "cta");
-    lotus_handler.innerHTML = `
-        <strong>${tl(trans.lotus_cta[page.corrected]).replace("{t}", tl(trans[`${page.type}_lower`]))}</strong>
-        <a class="see-more" href="https://github.com/katelyynn/lotus/issues/new/choose" target="_blank">${tl(trans.suggest_correction)}</a>
-    `;
-    page.structure.side.appendChild(lotus_handler);
+    page.structure.side.appendChild(html2.node`
+        <section class="lotus cta">
+             <strong>${tl(trans.lotus_cta[page.corrected]).replace("{t}", tl(trans[`${page.type}_lower`]))}</strong>
+            <a class="see-more" href="https://github.com/katelyynn/lotus/issues/new/choose" target="_blank">${tl(trans.suggest_correction)}</a>
+        </section>
+    `);
   }
   function create_listen_item(parent, { name, listens, link, avi, count = 0, button = false, katsune = false }, header_type) {
     log(`creating listen item of ${name}, ${count}, ${listens}`, "artist", "info", { avi, link });
@@ -9189,44 +9996,43 @@
     listen_item.setAttribute("data-listens", listens);
     listen_item.setAttribute("id", `listen-item--${name}`);
     if (listens > -1) {
-      listen_item.innerHTML = `
+      render2(listen_item, html2`
             <img class="view-item-avatar" src="${avi}" alt="${name}">
             <div class="info">
                 <h3>${name}</h3>
                 <p>${tl(trans.listens.count).replace("{c}", listens.toLocaleString(lang))}</p>
             </div>
-        `;
+        `);
       let menu = tippy(listen_item, {
         theme: "context-menu",
-        content: `
+        content: html2.node`
                 <a class="dropdown-menu-clickable-item" href="${root}user/${name}" data-menu-item="view_profile">
                     ${tl(trans.profile)}
                 </a>
             `,
-        allowHTML: true,
         placement: "right-start",
         trigger: "manual",
         interactive: true,
         interactiveBorder: 10,
         offset: [0, 0],
         onShow(instance) {
-          instance.popper.addEventListener("click", (event2) => {
+          instance.popper.addEventListener("click", (event3) => {
             instance.hide();
           });
         }
       });
       register_menu(listen_item, menu);
     } else if (listens > -2) {
-      listen_item.innerHTML = `
+      render2(listen_item, html2`
             <img class="view-item-avatar" src="${avi}" alt="${name}">
             <div class="info">
                 <h3>${name}</h3>
                 <p>${tl(trans.listens)}</p>
             </div>
-        `;
+        `);
       let menu = tippy(listen_item, {
         theme: "context-menu",
-        content: `
+        content: html2.node`
                 <a class="dropdown-menu-clickable-item" href="${root}user/${name}" data-menu-item="view_profile">
                     ${tl(trans.profile)}
                 </a>
@@ -9235,14 +10041,13 @@
                     ${tl(trans.settings)}
                 </button>
             `,
-        allowHTML: true,
         placement: "right-start",
         trigger: "manual",
         interactive: true,
         interactiveBorder: 10,
         offset: [0, 0],
         onShow(instance) {
-          instance.popper.addEventListener("click", (event2) => {
+          instance.popper.addEventListener("click", (event3) => {
             instance.hide();
           });
         }
@@ -9256,15 +10061,15 @@
         content: tl(trans.view_others_library)
       });
     } else {
-      listen_item.innerHTML = `
-            ${avi[0] ? `<img class="view-item-avatar" src="${avi[0].getAttribute("src")}">` : ""}
-            ${avi[1] ? `<img class="view-item-avatar" src="${avi[1].getAttribute("src")}">` : ""}
-            ${avi[2] ? `<img class="view-item-avatar" src="${avi[2].getAttribute("src")}">` : ""}
+      render2(listen_item, html2`
+            ${avi[0] ? html2.node`<img class="view-item-avatar" src="${avi[0].getAttribute("src")}" alt="">` : ""}
+            ${avi[1] ? html2.node`<img class="view-item-avatar" src="${avi[1].getAttribute("src")}" alt="">` : ""}
+            ${avi[2] ? html2.node`<img class="view-item-avatar" src="${avi[2].getAttribute("src")}" alt="">` : ""}
             <div class="info">
                 <h3>${tl(trans.following)}</h3>
                 <p>${tl(trans.others_count).replace("{c}", count)}</p>
             </div>
-        `;
+        `);
       listen_item.setAttribute("href", `${window.location.href}/+listeners/you-know`);
     }
     if (settings.colourful_counts && listens > -1 && header_type == "artist") {
@@ -9285,22 +10090,22 @@
     let listeners = {};
     let scrobbles = {};
     let metascore = {};
-    metadata.forEach((item2, index) => {
-      let text = item2.querySelector(".header-metadata-tnew-title").textContent.trim();
-      let value = item2.querySelector(".header-metadata-tnew-display abbr");
+    metadata.forEach((item, index) => {
+      let text2 = item.querySelector(".header-metadata-tnew-title").textContent.trim();
+      let value = item.querySelector(".header-metadata-tnew-display abbr");
       if (index == 0) {
-        listeners.text = text;
+        listeners.text = text2;
         listeners.value = clean_number(value.getAttribute("title"));
         listeners.abbr = value.textContent.trim();
       } else if (index == 1) {
-        scrobbles.text = text;
+        scrobbles.text = text2;
         scrobbles.value = clean_number(value.getAttribute("title"));
         scrobbles.abbr = value.textContent.trim();
       } else if (index == 2) {
-        let link = item2.querySelector("a");
+        let link = item.querySelector("a");
         if (!link)
           return;
-        metascore.text = text;
+        metascore.text = text2;
         metascore.abbr = value.textContent.trim();
         metascore.link = link.getAttribute("href");
       }
@@ -9316,23 +10121,23 @@
         page.structure.main.insertBefore(panel, page.structure.main.firstElementChild);
     }
     panel.classList.add("listen-panel");
-    let row = document.createElement("div");
-    row.classList.add("listener-row");
-    row.innerHTML = `
-        <div class="listener-side">
-            <h3>${listeners.text}</h3>
-            <p>${listeners.abbr}</p>
+    let row = html2.node`
+        <div class="listener-row">
+            <div class="listener-side">
+                <h3>${listeners.text}</h3>
+                <p>${listeners.abbr}</p>
+            </div>
+            <div class="scrobble-side">
+                <h3>${scrobbles.text}</h3>
+                <p>${scrobbles.abbr}</p>
+            </div>
+            ${metascore.text ? html2.node`
+            <div class="metascore-side">
+                <h3>${metascore.text}</h3>
+                <p><a href="${metascore.link}" target="_blank">${metascore.abbr}</a></p>
+            </div>
+            ` : ""}
         </div>
-        <div class="scrobble-side">
-            <h3>${scrobbles.text}</h3>
-            <p>${scrobbles.abbr}</p>
-        </div>
-        ${metascore.text ? `
-        <div class="metascore-side">
-            <h3>${metascore.text}</h3>
-            <p><a href="${metascore.link}" target="_blank">${metascore.abbr}</a></p>
-        </div>
-        ` : ""}
     `;
     panel.insertBefore(row, panel.firstElementChild);
     if (page.mobile)
@@ -9399,13 +10204,12 @@
       return;
     if (video_col)
       page.structure.side.removeChild(video_col);
-    let video_placeholder = document.createElement("section");
-    video_placeholder.classList.add("video-placeholder");
-    video_placeholder.innerHTML = `
-        <div class="bleh-icon" style="--icon: var(--icon-16-video-broken)"></div>
-        ${tl(trans.video_removed)}
-    `;
-    page.structure.side.insertBefore(video_placeholder, page.structure.side.firstElementChild);
+    page.structure.side.insertBefore(html2.node`
+        <section class="video-placeholder">
+            <div class="bleh-icon" style="--icon: var(--icon-16-video-broken)"></div>
+            ${tl(trans.video_removed)}
+        </section>
+    `, page.structure.side.firstElementChild);
     let links = page.structure.side.querySelector(".external-links-section .play-this-track-playlinks");
     if (links)
       links.classList.add("video-unavailable");
@@ -9509,7 +10313,7 @@
       let name_wrap = listener.querySelector(".top-listeners-item-name a");
       let name = name_wrap.textContent;
       let track_wrap = listener.querySelector(".top-listeners-track");
-      let avatar = listener.querySelector(".top-listeners-item-image");
+      let avatar3 = listener.querySelector(".top-listeners-item-image");
       let follow = listener.querySelector(".class");
       new_listener.innerHTML = `
             <div class="user-list-inner-wrap">
@@ -9522,7 +10326,7 @@
                     </a>
                 </h4>
                 <span class="avatar user-list-avatar">
-                    ${avatar.innerHTML}
+                    ${avatar3.innerHTML}
                 </span>
                 ${follow ? follow.outerHTML : ""}
                 ${track_wrap ? `
@@ -9721,13 +10525,13 @@
     value_objects.forEach((object) => {
       let object_value = object.getAttribute("value");
       let object_text = object.textContent;
-      let item2 = document.createElement("button");
-      item2.classList.add("btn", "dropdown-menu-clickable-item", "select-item");
-      item2.setAttribute("onclick", `_set_custom_select_value('${id}', '${object_value}')`);
-      item2.setAttribute("data-value", object_value);
-      item2.setAttribute("type", "button");
-      item2.textContent = object_text;
-      menu_list.appendChild(item2);
+      let item = document.createElement("button");
+      item.classList.add("btn", "dropdown-menu-clickable-item", "select-item");
+      item.setAttribute("onclick", `_set_custom_select_value('${id}', '${object_value}')`);
+      item.setAttribute("data-value", object_value);
+      item.setAttribute("type", "button");
+      item.textContent = object_text;
+      menu_list.appendChild(item);
     });
     let button = document.createElement("button");
     button.classList.add("select-button");
@@ -9736,10 +10540,9 @@
     button.textContent = menu_list.querySelector(`[data-value="${value}"]`).textContent;
     let theme_menu_item = tippy(button, {
       theme: "select-menu",
-      content: `
-            ${menu_list.innerHTML}
-        `,
-      allowHTML: true,
+      content: html2.node([
+        menu_list.innerHTML
+      ]),
       placement: "bottom",
       interactive: true,
       interactiveBorder: 10,
@@ -9778,7 +10581,7 @@
 
   // src/components/track.js
   function patch_titles(search = page.structure.main) {
-    if (page.subpage == "tags_overview")
+    if (page.subpage === "tags_overview")
       return;
     if (!search) return;
     let tracklists = search.querySelectorAll(".chartlist:not(.chartlist__placeholder)");
@@ -9847,10 +10650,12 @@
             is_artist = true;
           }
         }
+        log(`is user: ${is_user}, is artist: ${is_artist}`, "tracks", "log");
         if (is_user) {
           track.setAttribute("data-track-type", "user");
           if (settings.colourful_counts)
             patch_artist_ranks_in_list_view(track);
+          log("finished user stuff, returning", "tracks", "log");
           return;
         }
         if (is_artist) {
@@ -9867,6 +10672,7 @@
             insights.artist.highest.value = value;
           log(`pushed insight artist label of ${track_title.textContent}`, "glacier library", "log");
           insights.artist.labels.push(track_title.textContent);
+          log("finished artist stuff, returning", "tracks", "log");
           return;
         }
         let is_album = track.hasAttribute("data-album-row");
@@ -9914,45 +10720,48 @@
             song_tags = formatted_title[1];
           }
           track_title.setAttribute("title", correct_item_by_artist(track_title.getAttribute("title"), track_artist));
-          let song_tags_text = "";
-          for (let song_tag in song_tags) {
-            song_tags_text = `${song_tags_text}<div class="feat" data-bleh--tag-type="${song_tags[song_tag].type}" data-bleh--tag-group="${song_tags[song_tag].group}">${sanitise_text(song_tags[song_tag].text)}</div>`;
-          }
-          track_title.innerHTML = `<div class="title">${sanitise_text(song_title).trim()}</div>${song_tags_text}`;
+          render2(track_title, html2`
+                    <div class="title">${sanitise_text(song_title).trim()}</div>
+                    ${song_tags.map((tag) => html2.node`
+                        <div class="feat" data-bleh--tag-type="${tag.type}" data-bleh--tag-group="${tag.group}">${sanitise_text(tag.text)}</div>
+                    `)}
+                `);
           let song_artist_element = track.querySelector(".chartlist-artist");
           if (!song_artist_element && !is_user) {
             song_artist_element = document.createElement("td");
             song_artist_element.classList.add("chartlist-artist");
             track.appendChild(song_artist_element);
           }
-          if (song_artist_element.textContent.replaceAll("+", " ").trim() == track_artist || song_artist_element.textContent.trim() == "") {
-            song_artist_element.innerHTML = `<a href="${root}music/${sanitise(formatted_title[2])}" title="${sanitise_text(formatted_title[2])}">${sanitise_text(formatted_title[2])}</a>`;
+          if (song_artist_element.textContent.replaceAll("+", " ").trim() === track_artist || song_artist_element.textContent.trim() === "") {
+            log("artist either matches or is blank, replacing", "tracks", "log");
+            render2(song_artist_element, html2`<a href="${root}music/${sanitise(formatted_title[2])}" title="${sanitise_text(formatted_title[2])}">${sanitise_text(formatted_title[2])}</a>`);
             let song_guests = formatted_title[3];
-            for (let guest in song_guests) {
-              song_artist_element.innerHTML = `${song_artist_element.innerHTML},`;
-              let guest_element = document.createElement("a");
-              guest_element.setAttribute("href", `${root}music/${sanitise(song_guests[guest])}`);
-              guest_element.setAttribute("title", song_guests[guest]);
-              guest_element.textContent = song_guests[guest];
-              song_artist_element.appendChild(guest_element);
+            for (let guest2 in song_guests) {
+              song_artist_element.appendChild(html2.node`
+                            ,<a href="${root}music/${sanitise(song_guests[guest2])}" title="${sanitise_text(song_guests[guest2])}">${sanitise_text(song_guests[guest2])}</a>
+                        `);
             }
           }
           let image = track.querySelector(".chartlist-image img");
           if (track_legacy_menu) {
-            let track_preview = document.createElement("div");
-            track_preview.classList.add("track-preview");
-            track_preview.innerHTML = `
-                        <div class="image">
-                            <div class="inner-image">
-                                ${image ? image.outerHTML : '<img class="missing-track" alt="">'}
+            let track_preview = html2.node`
+                        <div class="track-preview">
+                            <div class="image">
+                                <div class="inner-image">
+                                    ${image ? html2.node`<img src=${image.getAttribute("src")} alt=${song_title}>` : html2.node`<img class="missing-track" alt="">`}
+                                </div>
                             </div>
-                        </div>
-                        <div class="info">
-                            <h5 class="title">${song_title}</h5>
-                            <p class="artist">${song_artist_element.innerHTML}</p>
-                            <div class="tags">${song_tags_text}</div>
-                            ${is_album ? "" : `<p class="album">${image ? correct_item_by_artist(sanitise_text(image.getAttribute("alt")), track_artist) : album ? album.textContent : page.name}</p>`}
-                            ${track_timestamp && track_timestamp_contents ? `<p class="timestamp">${track_timestamp_contents}</p>` : ""}
+                            <div class="info">
+                                <h5 class="title">${song_title}</h5>
+                                <p class="artist">${song_artist_element.firstElementChild.textContent}</p>
+                                <div class="tags">
+                                    ${song_tags.map((tag) => html2.node`
+                                        <div class="feat" data-bleh--tag-type="${tag.type}" data-bleh--tag-group="${tag.group}">${sanitise_text(tag.text)}</div>
+                                    `)}
+                                </div>
+                                ${is_album ? "" : html2.node`<p class="album">${image ? correct_item_by_artist(sanitise_text(image.getAttribute("alt")), track_artist) : album ? album.textContent : page.name}</p>`}
+                                ${track_timestamp && track_timestamp_contents ? html2.node`<p class="timestamp">${track_timestamp_contents}</p>` : ""}
+                            </div>
                         </div>
                     `;
             track_legacy_menu.insertBefore(track_preview, track_legacy_menu.firstElementChild);
@@ -9975,9 +10784,7 @@
         if (track_legacy_menu) {
           let menu = tippy(track, {
             theme: "context-menu",
-            content: `
-                        ${track_legacy_menu.innerHTML}
-                    `,
+            content: track_legacy_menu.innerHTML,
             allowHTML: true,
             placement: "right-start",
             trigger: "manual",
@@ -9985,7 +10792,7 @@
             interactiveBorder: 10,
             offset: [0, 0],
             onShow(instance) {
-              instance.popper.addEventListener("click", (event2) => {
+              instance.popper.addEventListener("click", (event3) => {
                 instance.hide();
               });
             }
@@ -10006,12 +10813,11 @@
             let image = link.querySelector("img");
             if (!settings.album_text) {
               let alt = correct_item_by_artist(image.getAttribute("alt"), track_artist);
-              let album_text = document.createElement("td");
-              album_text.classList.add("chartlist-album", "custom-album-text");
-              album_text.innerHTML = `
-                            <a href="${link.getAttribute("href")}">${alt}</a>
-                        `;
-              track.appendChild(album_text);
+              track.appendChild(html2.node`
+                            <td class="chartlist-album custom-album-text">
+                                <a href="${link.getAttribute("href")}">${alt}</a>
+                            </td>
+                        `);
             }
             if (!settings.colourful_tracks)
               return;
@@ -10037,10 +10843,11 @@
 
   // src/components/compare.js
   function compare() {
+    let compare_button;
     page.state.compare_modal = dialog({
       id: "compare",
       title: tl(trans.compare),
-      body: `
+      body: html2.node`
             <div class="compare-header">
                 <div class="compare-users">
                     <div class="compare-user">
@@ -10082,7 +10889,7 @@
                             <option value="LAST_365_DAYS">${tl(trans.last_count_days).replace("{c}", "365")}</option>
                         </select>
                     </div>
-                    <button class="btn chibi icon primary compare" onclick="_begin_comparing()">${tl(trans.compare)}</button>
+                    <button class="btn chibi icon primary compare" ref=${(el) => compare_button = el} onclick=${() => begin_comparing()}>${tl(trans.compare)}</button>
                 </div>
             </div>
             <div class="compare-body" data-filled="false">
@@ -10093,7 +10900,7 @@
         `,
       type: "compare"
     });
-    tippy(page.state.compare_modal.querySelector(".chibi.compare"), {
+    tippy(compare_button, {
       content: tl(trans.compare)
     });
     custom_select(page.state.compare_modal.querySelector("#pages"), page.state.compare_modal.querySelector("#pages_select"));
@@ -10103,7 +10910,7 @@
   unsafeWindow._compare = function() {
     compare();
   };
-  unsafeWindow._begin_comparing = function() {
+  function begin_comparing() {
     page.state.compare_modal.querySelector(".bleh-modal-body .compare-body").setAttribute("data-filled", "false");
     let buttons = page.state.compare_modal.querySelectorAll(".compare-selection > button");
     buttons.forEach((button) => {
@@ -10117,25 +10924,25 @@
       other: [],
       shared: []
     };
-    get_grid(auth.name, type, range, 1, pages, page.name, pages);
-  };
+    get_grid(auth.name, type, range, 1, pages, page.name);
+  }
   function get_grid(user, type, range, current_page, pages, next_user = null) {
-    page.state.compare_modal.querySelector(".bleh-modal-body .compare-body").innerHTML = `
+    render2(page.state.compare_modal.querySelector(".bleh-modal-body .compare-body"), html2`
         <div class="loading-data-container">
             <div class="loading-data-text">${tl(trans.gathering_plays_for_user_pages).replace("{u}", user).replace("{current_page}", current_page).replace("{pages}", pages)}</div>
         </div>
-    `;
+    `);
     fetch(`${root}user/${user}/library/${type}?format=list&date_preset=${range}&page=${current_page}&ajax=1`).then(function(response) {
       console.log("returned", response, response.text);
       return response.text();
-    }).then(function(html) {
-      let doc = new DOMParser().parseFromString(html, "text/html");
+    }).then(function(html3) {
+      let doc = new DOMParser().parseFromString(html3, "text/html");
       console.log("DOC", doc);
       let next_button = doc.querySelector(".pagination-next");
       try {
         let tracks = doc.querySelectorAll(".chartlist-row");
         tracks.forEach((track) => {
-          item = {};
+          let item = {};
           item.avatar = track.querySelector(".chartlist-image img");
           if (item.avatar)
             item.avatar = item.avatar.getAttribute("src");
@@ -10195,11 +11002,11 @@
     log("gathered shared values", "compare", "info", page.state.compare);
     page.state.compare_modal.querySelector(".bleh-modal-body .compare-body").innerHTML = "";
     if (page.state.compare.shared.length == 0) {
-      page.state.compare_modal.querySelector(".bleh-modal-body .compare-body").innerHTML = `
+      render2(page.state.compare_modal.querySelector(".bleh-modal-body .compare-body"), html2`
             <div class="loading-data-container">
                 <div class="loading-data-text failed">${tl(trans.nothing_in_common)}</div>
             </div>
-        `;
+        `);
       page.state.compare_modal.querySelector(".bleh-modal-body .compare-body").setAttribute("data-filled", "false");
       return;
     }
@@ -10207,51 +11014,50 @@
     if (type != "tracks") {
       let grid = document.createElement("ol");
       grid.classList.add("grid-items", "grid-items--numbered", "compare-grid");
-      page.state.compare.shared.forEach((data) => {
-        let item2 = document.createElement("li");
-        item2.classList.add("grid-items-item", "compare-item");
+      page.state.compare.shared.forEach((data2) => {
         let template;
         if (type == "artists")
-          template = sanitise(data.name);
+          template = sanitise(data2.name);
         else
-          template = `${sanitise(data.sister)}/${sanitise(data.name)}`;
-        item2.innerHTML = `
-                <div class="grid-items-cover-image js-link-block link-block">
-                    <div class="grid-items-cover-image-image ${data.avatar.endsWith("/c6f59c1e5e7240a4c0d427abd71f3dbb.jpg") || data.avatar.endsWith("/2a96cbd8b46e442fc41c2b86b821562f.jpg") ? "grid-items-cover-default" : ""}">
-                        <img src="${data.avatar.replace("/avatar70s/", "/avatar300s/").replace("/64s/", "/avatar300s/")}" alt="${data.name}" loading="lazy">
+          template = `${sanitise(data2.sister)}/${sanitise(data2.name)}`;
+        grid.appendChild(html2.node`
+                <li class="compare-item grid-items-item">
+                    <div class="grid-items-cover-image js-link-block link-block">
+                        <div class="grid-items-cover-image-image ${data2.avatar.endsWith("/c6f59c1e5e7240a4c0d427abd71f3dbb.jpg") || data2.avatar.endsWith("/2a96cbd8b46e442fc41c2b86b821562f.jpg") ? "grid-items-cover-default" : ""}">
+                            <img src="${data2.avatar.replace("/avatar70s/", "/avatar300s/").replace("/64s/", "/avatar300s/")}" alt="${data2.name}" loading="lazy">
+                        </div>
+                        <div class="grid-items-item-details">
+                            <p class="grid-items-item-main-text">
+                                <a class="link-block-target" href="${root}music/${template}" title="${data2.name}">
+                                    ${data2.name}
+                                </a>
+                            </p>
+                            ${type == "albums" ? `
+                            <p class="grid-items-item-aux-text">
+                                <a class="grid-items-item-aux-block" href="${root}music/${data2.sister}">
+                                    ${data2.sister}
+                                </a>
+                            </p>
+                            ` : ""}
+                            <p class="grid-items-item-aux-text">
+                                <a class="grid-item-plays with-avatar" href="${root}user/${auth.name}/library/music/${template}?date_preset=${range}" target="_blank">
+                                    <span class="avatar">
+                                        <img src="${auth.avatar}" alt="${tl(trans.your_avatar)}">
+                                    </span>
+                                    ${data2.plays.you}
+                                </a>
+                                <a class="grid-item-plays with-avatar" href="${root}user/${page.name}/library/music/${template}?date_preset=${range}" target="_blank">
+                                    <span class="avatar">
+                                        <img src="${page.avatar}" alt="${tl(trans.avatar_for_user).replace("{u}", page.name)}">
+                                    </span>
+                                    ${data2.plays.other}
+                                </a>
+                            </p>
+                        </div>
+                        <a class="js-link-block-cover-link link-block-cover-link" href="${root}music/${template}" tabindex="-1" aria-hidden="true"></a>
                     </div>
-                    <div class="grid-items-item-details">
-                        <p class="grid-items-item-main-text">
-                            <a class="link-block-target" href="${root}music/${template}" title="${data.name}">
-                                ${data.name}
-                            </a>
-                        </p>
-                        ${type == "albums" ? `
-                        <p class="grid-items-item-aux-text">
-                            <a class="grid-items-item-aux-block" href="${root}music/${data.sister}">
-                                ${data.sister}
-                            </a>
-                        </p>
-                        ` : ""}
-                        <p class="grid-items-item-aux-text">
-                            <a class="grid-item-plays with-avatar" href="${root}user/${auth.name}/library/music/${template}?date_preset=${range}" target="_blank">
-                                <span class="avatar">
-                                    <img src="${auth.avatar}" alt="${tl(trans.your_avatar)}">
-                                </span>
-                                ${data.plays.you}
-                            </a>
-                            <a class="grid-item-plays with-avatar" href="${root}user/${page.name}/library/music/${template}?date_preset=${range}" target="_blank">
-                                <span class="avatar">
-                                    <img src="${page.avatar}" alt="${tl(trans.avatar_for_user).replace("{u}", page.name)}">
-                                </span>
-                                ${data.plays.other}
-                            </a>
-                        </p>
-                    </div>
-                    <a class="js-link-block-cover-link link-block-cover-link" href="${root}music/${template}" tabindex="-1" aria-hidden="true"></a>
-                </div>
-            `;
-        grid.appendChild(item2);
+                </li>
+            `);
       });
       page.state.compare_modal.querySelector(".bleh-modal-body .compare-body").appendChild(grid);
       music_grids(grid);
@@ -10261,55 +11067,54 @@
       let body = document.createElement("tbody");
       table.appendChild(body);
       let max = 0;
-      page.state.compare.shared.forEach((item2) => {
-        if (item2.plays.you > max)
-          max = item2.plays.you;
-        if (item2.plays.other > max)
-          max = item2.plays.other;
+      page.state.compare.shared.forEach((item) => {
+        if (item.plays.you > max)
+          max = item.plays.you;
+        if (item.plays.other > max)
+          max = item.plays.other;
       });
-      page.state.compare.shared.forEach((data, index) => {
-        let item2 = document.createElement("tr");
-        item2.classList.add("chartlist-row", "chartlist-row--with-artist", "compare-item");
-        let template = `${sanitise(data.sister)}/_/${sanitise(data.name)}`;
-        item2.innerHTML = `
-                <td class="chartlist-index">${index + 1}</td>
-                <td class="chartlist-image">
-                    <a class="cover-art" href="${root}music/${template}">
-                        <img src="${data.avatar}" alt="${data.name}" loading="lazy">
-                    </a>
-                </td>
-                <td class="chartlist-name">
-                    <a href="${root}music/${template}" title="${data.name}">
-                        ${data.name}
-                    </a>
-                </td>
-                <td class="chartlist-artist">
-                    <a href="${root}music/${data.sister}" title="${data.sister}">
-                        ${data.sister}
-                    </a>
-                </td>
-                <td class="chartlist-bar with-multiple">
-                    <span class="chartlist-count-bar">
-                        <a class="chartlist-count-bar-link" href="${root}user/${auth.name}/library/music/${template}?date_preset=${range}" target="_blank">
-                            <span class="chartlist-count-bar-slug" data-max-stat-value="${max}" data-stat-value="${data.plays.you}" style="width: ${data.plays.you / max * 100}%;"></span>
-                            <span class="chartlist-count-bar-value">${data.plays.you}</span>
+      page.state.compare.shared.forEach((data2, index) => {
+        let template = `${sanitise(data2.sister)}/_/${sanitise(data2.name)}`;
+        body.appendChild(html2.node`
+                <tr class="chartlist-row chartlist-row--with-artist compare-item">
+                    <td class="chartlist-index">${index + 1}</td>
+                    <td class="chartlist-image">
+                        <a class="cover-art" href="${root}music/${template}">
+                            <img src="${data2.avatar}" alt="${data2.name}" loading="lazy">
                         </a>
-                        <span class="avatar">
-                            <img src="${auth.avatar}" alt="${tl(trans.your_avatar)}">
-                        </span>
-                    </span>
-                    <span class="chartlist-count-bar">
-                        <a class="chartlist-count-bar-link" href="${root}user/${page.name}/library/music/${template}?date_preset=${range}" target="_blank">
-                            <span class="chartlist-count-bar-slug" data-max-stat-value="${max}" data-stat-value="${data.plays.other}" style="width: ${data.plays.other / max * 100}%;"></span>
-                            <span class="chartlist-count-bar-value">${data.plays.other}</span>
+                    </td>
+                    <td class="chartlist-name">
+                        <a href="${root}music/${template}" title="${data2.name}">
+                            ${data2.name}
                         </a>
-                        <span class="avatar">
-                            <img src="${page.avatar}" alt="${tl(trans.avatar_for_user).replace("{u}", page.name)}">
+                    </td>
+                    <td class="chartlist-artist">
+                        <a href="${root}music/${data2.sister}" title="${data2.sister}">
+                            ${data2.sister}
+                        </a>
+                    </td>
+                    <td class="chartlist-bar with-multiple">
+                        <span class="chartlist-count-bar">
+                            <a class="chartlist-count-bar-link" href="${root}user/${auth.name}/library/music/${template}?date_preset=${range}" target="_blank">
+                                <span class="chartlist-count-bar-slug" data-max-stat-value="${max}" data-stat-value="${data2.plays.you}" style="width: ${data2.plays.you / max * 100}%;"></span>
+                                <span class="chartlist-count-bar-value">${data2.plays.you}</span>
+                            </a>
+                            <span class="avatar">
+                                <img src="${auth.avatar}" alt="${tl(trans.your_avatar)}">
+                            </span>
                         </span>
-                    </span>
-                </td>
-            `;
-        body.appendChild(item2);
+                        <span class="chartlist-count-bar">
+                            <a class="chartlist-count-bar-link" href="${root}user/${page.name}/library/music/${template}?date_preset=${range}" target="_blank">
+                                <span class="chartlist-count-bar-slug" data-max-stat-value="${max}" data-stat-value="${data2.plays.other}" style="width: ${data2.plays.other / max * 100}%;"></span>
+                                <span class="chartlist-count-bar-value">${data2.plays.other}</span>
+                            </a>
+                            <span class="avatar">
+                                <img src="${page.avatar}" alt="${tl(trans.avatar_for_user).replace("{u}", page.name)}">
+                            </span>
+                        </span>
+                    </td>
+                </tr>
+            `);
       });
       page.state.compare_modal.querySelector(".bleh-modal-body .compare-body").appendChild(table);
       patch_titles(page.state.compare_modal);
@@ -10336,15 +11141,15 @@
     let loved = 0;
     if (!katsune) {
       let metadata = header_meta.querySelectorAll(".header-metadata-display");
-      metadata.forEach((item2, index) => {
+      metadata.forEach((item, index) => {
         if (index == 0) {
-          let para = item2.querySelector("p");
+          let para = item.querySelector("p");
           scrobbles = clean_number(para.textContent.trim());
           average = para.getAttribute("title");
         } else if (index == 1) {
-          artists = clean_number(item2.textContent.trim());
+          artists = clean_number(item.textContent.trim());
         } else if (index == 2) {
-          loved = clean_number(item2.textContent.trim());
+          loved = clean_number(item.textContent.trim());
         }
       });
     }
@@ -10488,40 +11293,41 @@
     }
     let listen_container = page.structure.row.querySelector(".listen-panel");
     if (!is_own_profile && page.name != sponsor_list.sponsor_account && katsune) {
-      let taste_wrap = document.createElement("div");
-      taste_wrap.classList.add("btn", "listen-item", "icon");
-      taste_wrap.innerHTML = `
-            <div class="span">
-                <img class="view-item-avatar" src="${auth.avatar}">
-                <img class="view-item-avatar" src="${profile_avi}">
-                <div class="info">
-                    <h3>${tl(trans.you_share_count_with).replace("{c}", `<span class="colourful" data-taste="${taste}">${taste_percentage}</span>`)}</h3>
-                    <p>
-                        ${taste_artists.length == 1 ? tl(trans.you_share_count_with.one).replace("{artist}", taste_artists[0]) : ""}
-                        ${taste_artists.length == 2 ? tl(trans.you_share_count_with.two).replace("{artist1}", taste_artists[0]).replace("{artist2}", taste_artists[1]) : ""}
-                        ${taste_artists.length == 3 ? tl(trans.you_share_count_with.three).replace("{artist1}", taste_artists[0]).replace("{artist2}", taste_artists[1]).replace("{artist3}", taste_artists[2]) : ""}
-                    </p>
+      let taste_wrap = html2.node`
+            <div class="btn listen-item icon">
+                <div class="span">
+                    <img class="view-item-avatar" src="${auth.avatar}">
+                    <img class="view-item-avatar" src="${profile_avi}">
+                    <div class="info">
+                        <h3>${html2.node([
+        tl(trans.you_share_count_with).replace("{c}", `<span class="colourful" data-taste="${taste}">${taste_percentage}</span>`)
+      ])}</h3>
+                        <p>
+                            ${taste_artists.length == 1 ? tl(trans.you_share_count_with.one).replace("{artist}", taste_artists[0]) : ""}
+                            ${taste_artists.length == 2 ? tl(trans.you_share_count_with.two).replace("{artist1}", taste_artists[0]).replace("{artist2}", taste_artists[1]) : ""}
+                            ${taste_artists.length == 3 ? tl(trans.you_share_count_with.three).replace("{artist1}", taste_artists[0]).replace("{artist2}", taste_artists[1]).replace("{artist3}", taste_artists[2]) : ""}
+                        </p>
+                    </div>
                 </div>
-            </div>
-            <div class="taste-bar colourful" data-taste="${taste}">
-                <div class="taste-bar-fill" style="width: ${taste_percentage}"></div>
+                <div class="taste-bar colourful" data-taste="${taste}">
+                    <div class="taste-bar-fill" style="width: ${taste_percentage}"></div>
+                </div>
             </div>
         `;
       tippy(taste_wrap, {
         theme: "stack",
-        content: `
-            <span>
-                ${tl(trans.taste_similarity)}
-            </span>
-            <div class="hint">${tl(trans.right_click_for_more_options)}</div>
-            `,
-        allowHTML: true
+        content: html2.node`
+                <span>
+                    ${tl(trans.taste_similarity)}
+                </span>
+                <div class="hint">${tl(trans.right_click_for_more_options)}</div>
+            `
       });
       listen_container.appendChild(taste_wrap);
       if (taste_artists.length > 1) {
         let menu = tippy(taste_wrap, {
           theme: "context-menu",
-          content: `
+          content: html2.node`
                     <h4 class="menu-header">${tl(trans.compare_plays)}</h4>
                     <a class="dropdown-menu-clickable-item" href="${root}user/${page.name}/library/music/${sanitise(taste_artists[0])}" data-menu-item="shared-artist">
                         <img class="view-item-avatar" src="${profile_avi}" alt="${page.name}">${taste_artists[0]}
@@ -10529,7 +11335,7 @@
                     <a class="dropdown-menu-clickable-item" href="${root}user/${auth.name}/library/music/${sanitise(taste_artists[0])}" data-menu-item="shared-artist">
                         <img class="view-item-avatar" src="${auth.avatar}" alt="${auth.name}">${taste_artists[0]}
                     </a>
-                    ${taste_artists.length >= 2 ? `
+                    ${taste_artists.length >= 2 ? html2.node`
                     <div class="sep"></div>
                     <a class="dropdown-menu-clickable-item" href="${root}user/${page.name}/library/music/${sanitise(taste_artists[1])}" data-menu-item="shared-artist">
                         <img class="view-item-avatar" src="${profile_avi}" alt="${page.name}">${taste_artists[1]}
@@ -10538,7 +11344,7 @@
                         <img class="view-item-avatar" src="${auth.avatar}" alt="${auth.name}">${taste_artists[1]}
                     </a>
                     ` : ""}
-                    ${taste_artists.length >= 3 ? `
+                    ${taste_artists.length >= 3 ? html2.node`
                     <div class="sep"></div>
                     <a class="dropdown-menu-clickable-item" href="${root}user/${page.name}/library/music/${sanitise(taste_artists[2])}" data-menu-item="shared-artist">
                         <img class="view-item-avatar" src="${profile_avi}" alt="${page.name}">${taste_artists[2]}
@@ -10548,7 +11354,6 @@
                     </a>
                     ` : ""}
                 `,
-          allowHTML: true,
           placement: "right-start",
           trigger: "manual",
           interactive: true,
@@ -10563,8 +11368,8 @@
     else
       page.structure.main.insertBefore(profile_header, page.structure.main.firstElementChild);
   }
-  function create_profile_top_item(parent, { name, link, text = "", type, taste = "", artists = [], avi = "", percent = "", action = "", tooltip = "", allow_html = false, tooltip_theme = "", full = false, primary = false, katsune = false, mini = false }) {
-    log(`creating top item of ${name}, ${link}, ${text}`, "profile");
+  function create_profile_top_item(parent, { name, link, text: text2 = "", type, taste = "", artists = [], avi = "", percent = "", action = "", tooltip = "", allow_html = false, tooltip_theme = "", full = false, primary = false, katsune = false, mini = false }) {
+    log(`creating top item of ${name}, ${link}, ${text2}`, "profile");
     let listen_item = document.createElement(action != "button" ? "a" : "button");
     listen_item.classList.add("btn", "side-action");
     listen_item.setAttribute("data-type", type);
@@ -10578,8 +11383,8 @@
     if (primary)
       listen_item.classList.add("primary");
     if (type != "taste") {
-      text = text.toLocaleString(lang);
-      listen_item.innerHTML = text;
+      text2 = text2.toLocaleString(lang);
+      listen_item.innerHTML = text2;
     }
     if (katsune) {
       full = true;
@@ -10697,12 +11502,12 @@
           if (!subpage_title)
             subpage_title = page.structure.main.querySelector(":scope > section:first-child .section-controls > .subpage-title");
           if (subpage_title) {
-            content_top = document.createElement("div");
-            content_top.classList.add("content-top", "redesigned-content-top");
-            content_top.innerHTML = `
-                        <div class="content-top-inner-wrap">
-                            <div class="container content-top-lower">
-                                <h1 class="content-top-header">${subpage_title.textContent.trim()}</h1>
+            content_top = html2.node`
+                        <div class="content-top redesigned-content-top">
+                            <div class="content-top-inner-wrap">
+                                <div class="container content-top-lower">
+                                    <h1 class="content-top-header">${subpage_title.textContent.trim()}</h1>
+                                </div>
                             </div>
                         </div>
                     `;
@@ -10734,17 +11539,22 @@
             btn_add.setAttribute("data-type", "add");
             side_actions.appendChild(btn_add);
           }
-          let playlink = page.structure.main.querySelector(":scope > .section-controls > .section-playlink");
-          if (playlink) {
+          let radio = page.structure.main.querySelector(":scope > .section-controls > .section-playlink");
+          if (radio) {
             let side_actions = document.createElement("section");
             side_actions.classList.add("side-actions");
             if (!page.mobile)
               page.structure.side.appendChild(side_actions);
             else
               page.structure.main.appendChild(side_actions);
-            playlink.classList = "btn side-action";
-            playlink.setAttribute("data-type", "play");
-            side_actions.appendChild(playlink);
+            radio.classList = "btn stationlink js-playlink-station radio-button";
+            let type = radio.getAttribute("data-analytics-label");
+            render2(radio, html2`
+                        <h3 class="sub-text">${tl(trans.radio)}</h3>
+                        <h4>${tl(trans[type])}</h4>
+                    `);
+            radio.removeAttribute("title");
+            side_actions.appendChild(radio);
           }
         }
       } else {
@@ -10759,14 +11569,13 @@
     let corrections_panel = document.body.querySelector("#subscription-corrections");
     page.structure.main.appendChild(corrections_panel);
     let nav = page.structure.container.querySelector("nav[data-more-string] .navlist-items");
-    let back_nav = document.createElement("li");
-    back_nav.classList.add("navlist-item", "secondary-nav-item", "secondary-nav-item--back");
-    back_nav.innerHTML = `
-        <a class="secondary-nav-item-link" href="${root}settings/subscription">
-            ${tl(trans.back)}
-        </a>
-    `;
-    nav.insertBefore(back_nav, nav.firstElementChild);
+    nav.insertBefore(html2.node`
+        <li class="navlist-item secondary-nav-item secondary-nav-item--back">
+            <a class="secondary-nav-item-link" href="${root}settings/subscription">
+                ${tl(trans.back)}
+            </a>
+        <li>
+    `, nav.firstElementChild);
   }
   function auto_edit_modal() {
     let modal = document.querySelector(".automatic-edit-modal-body-v2");
@@ -10778,13 +11587,13 @@
     let checkboxes = modal.querySelectorAll(".checkbox");
     checkboxes.forEach((checkbox) => {
       let id = checkbox.querySelector("input").getAttribute("name");
-      let text = checkbox.textContent.trim();
+      let text2 = checkbox.textContent.trim();
       checkbox.classList = "setting";
       checkbox.setAttribute("data-type", "toggle");
       checkbox.setAttribute("onclick", `_update_inbuilt_item('${id}')`);
-      checkbox.innerHTML = `
+      render2(checkbox, html2`
             <div class="heading">
-                <h5>${text}</h5>
+                <h5>${text2}</h5>
             </div>
             <div class="toggle-wrap">
                 <input class="companion-checkbox" type="checkbox" name="${id}" id="inbuilt-companion-checkbox-${id}">
@@ -10792,7 +11601,7 @@
                     <div class="dot"></div>
                 </span>
             </div>
-        `;
+        `);
     });
   }
 
@@ -11200,15 +12009,14 @@
     let avatar_url = document.body.querySelector(".image-upload-preview img").getAttribute("src");
     let form_display_name = document.getElementById("id_full_name").value;
     let form_website = document.getElementById("id_homepage").value;
-    let form_country = document.getElementById("id_country").outerHTML;
+    let form_country = document.getElementById("id_country");
     let form_about_me = document.getElementById("id_about_me").textContent;
-    document.getElementById("update-profile").outerHTML = "";
-    update_picture.innerHTML = `
-        <h4>${tl(trans.profile)}</h4>
+    render2(update_picture, html2`
+       <h4>${tl(trans.profile)}</h4>
         <div class="banner-preview"></div>
         <div class="profile-container">
             <div class="avatar-side">
-                <div class="avatar image-upload-preview" onclick="_open_avatar_changer('${token}')">
+                <div class="avatar image-upload-preview" onclick=${() => avatar2(token)}>
                     <img src="${avatar_url}" alt="${tl(trans.your_avatar)}" loading="lazy">
                     <div class="avatar-overlay"></div>
                 </div>
@@ -11234,7 +12042,7 @@
                                     ${tl(trans.subtitle)}
                                 </div>
                                 <div class="input">
-                                    <input type="text" name="full_name" value="${form_display_name}" maxlength="36" id="id_full_name" oninput="_update_display_name(this.value)" data-form-type="other">
+                                    <input type="text" name="full_name" value=${form_display_name} maxlength="36" id="id_full_name" oninput="_update_display_name(this.value)" data-form-type="other">
                                     <div class="tip">${tl(trans.pronoun_tip)}</div>
                                 </div>
                             </div>
@@ -11251,7 +12059,7 @@
                                     ${tl(trans.about)}
                                 </div>
                                 <div class="input about-me" id="about_me">
-                                    <textarea name="about_me" placeholder="${tl(trans.anything_you_can_imagine)}" cols="40" rows="10" class="textarea--s" maxlength="500" id="id_about_me" oninput="_update_about_me_preview(this.value)" data-form-type="other">${form_about_me}</textarea>
+                                    <textarea name="about_me" placeholder=${tl(trans.anything_you_can_imagine)} cols="40" rows="10" class="textarea--s" maxlength="500" id="id_about_me" oninput="_update_about_me_preview(this.value)" data-form-type="other">${form_about_me}</textarea>
                                     <div class="tip markdown-enabled">${tl(trans.supports_markdown)}</div>
                                 </div>
                             </div>
@@ -11281,8 +12089,9 @@
                     </form>
                 </div>
             </div>
-        </div>
-    `;
+        </div> 
+    `);
+    page.structure.main.removeChild(page.structure.main.querySelector("#update-profile"));
     tippy(update_picture.querySelector(".markdown-enabled"), {
       content: tl(trans.markdown_tip),
       allowHTML: true
@@ -11305,14 +12114,11 @@
     if (value.startsWith("she/") || value.startsWith("he/") || value.startsWith("they/") || value.startsWith("it/") || value.startsWith("xe/") || value.startsWith("any/")) return true;
     return false;
   }
-  unsafeWindow._open_avatar_changer = function(token) {
-    open_avatar_changer(token);
-  };
-  function open_avatar_changer(token) {
+  function avatar2(token) {
     page.state.avatar_changer = dialog({
       id: "edit_avatar",
       title: tl(trans.change_avatar),
-      body: `
+      body: html2.node`
             <div class="forms">
                 <form action="${root}settings" name="avatar-form" method="post" enctype="multipart/form-data">
                     <input type="hidden" name="csrfmiddlewaretoken" value="${token}">
@@ -11321,7 +12127,7 @@
                             <img class="preview">
                             <span class="btn-secondary btn primary btn-file" data-kate-processed="true">
                                 ${tl(trans.upload)}
-                                <input type="file" onchange="_update_avatar_preview(event)" name="avatar" data-require="components/file-input" data-file-input-copy="${tl(trans.upload)}" data-no-file-copy="No file chosen" accept="image/*" required="" id="id_avatar" data-kate-processed="true">
+                                <input type="file" onchange=${() => update_avatar(event)} name="avatar" data-require="components/file-input" data-file-input-copy="${tl(trans.upload)}" data-no-file-copy="No file chosen" accept="image/*" required="" id="id_avatar" data-kate-processed="true">
                             </span>
                         </div>
                     </div>
@@ -11338,9 +12144,9 @@
                 </form>
             </div>
             <div class="modal-footer">
-                <button class="see-more cancel" onclick="_dialog_rm({id:'edit_avatar'})">${tl(trans.cancel)}</button>
+                <button class="see-more cancel" onclick=${() => dialog_rm({ id: "edit_avatar" })}>${tl(trans.cancel)}</button>
                 <div class="fill"></div>
-                <button class="btn primary save" onclick="_save_avatar()" disabled>${tl(trans.save)}</button>
+                <button class="btn primary save" onclick=${() => save_avatar()} disabled>${tl(trans.save)}</button>
             </div>
         `
     });
@@ -11350,21 +12156,21 @@
     page.state.avatar_changer_save = page.state.avatar_changer.querySelector(".modal-footer .primary");
     console.info(page.structure.dialogs);
   }
-  unsafeWindow._update_avatar_preview = function(event2) {
+  function update_avatar(event3) {
     let reader = new FileReader();
     reader.onload = function() {
       page.state.avatar_changer_image.src = reader.result;
       page.state.avatar_changer_button.setAttribute("data-has-file", "true");
       page.state.avatar_changer_save.removeAttribute("disabled");
     };
-    reader.readAsDataURL(event2.target.files[0]);
-  };
-  unsafeWindow._save_avatar = function() {
+    reader.readAsDataURL(event3.target.files[0]);
+  }
+  function save_avatar() {
     page.state.avatar_changer.querySelector("#avatar_saver").click();
-  };
+  }
   function finish_saving_avatar() {
     page.state.avatar_changer.setAttribute("data-loading", "true");
-    page.state.avatar_changer.querySelectorAll("button").forEach((button) => {
+    page.state.avatar_changer.querySelectorAll(".bleh-modal-body button").forEach((button) => {
       button.setAttribute("disabled", "true");
       button.removeAttribute("onclick");
     });
@@ -11373,11 +12179,10 @@
     update_about_me_preview(value);
   };
   function update_about_me_preview(value) {
-    let result = markdown(value, {
-      allow_headers: true
-    });
     let about_me = page.structure.main.querySelector("#about_me_preview");
-    about_me.innerHTML = result;
+    render2(about_me, markdown(value, {
+      allow_headers: true
+    }));
     let banner = about_me.querySelector('img[alt="banner"]');
     let banner_img = page.structure.main.querySelector(".banner-preview");
     if (!banner)
@@ -11400,11 +12205,11 @@
     let exceeded = false;
     let exceed_amount = 10;
     let amount = 0;
-    list.forEach((item2, index) => {
+    list.forEach((item, index) => {
       let entry = document.createElement("div");
       entry.classList.add("generic-table-list-entry", "user-vertical-list-item");
-      let name = item2.querySelector("td").textContent.trim();
-      let form2 = item2.querySelector("form");
+      let name = item.querySelector("td").textContent.trim();
+      let form2 = item.querySelector("form");
       let button = form2.querySelector("button");
       button.classList.add("icon", "delete-user-button", "danger-subtle");
       entry.innerHTML = `
@@ -11845,12 +12650,12 @@
       track_title.innerHTML = `<div class="title">${sanitise_text(song_title).trim()}</div>${song_tags_text}`;
       let song_guests = formatted_title[3];
       page.sister_others = formatted_title[3];
-      for (let guest in song_guests) {
+      for (let guest2 in song_guests) {
         track_artist.innerHTML = `${track_artist.innerHTML},`;
         let guest_element = document.createElement("a");
         guest_element.classList.add("header-new-crumb");
-        guest_element.setAttribute("href", `${root}music/${sanitise(song_guests[guest])}`);
-        guest_element.textContent = song_guests[guest];
+        guest_element.setAttribute("href", `${root}music/${sanitise(song_guests[guest2])}`);
+        guest_element.textContent = song_guests[guest2];
         track_artist.appendChild(guest_element);
       }
     } else {
@@ -11991,11 +12796,11 @@
     checkup_page_structure(is_subpage, profile_header);
     let new_account = false;
     if (ff("refreshed_nav")) {
-      let avatar = profile_header.querySelector(".avatar");
+      let avatar3 = profile_header.querySelector(".avatar");
       let title_wrap = profile_header.querySelector(".header-title-label-wrap");
       let sub_wrap = profile_header.querySelector(".header-title-secondary");
-      if (!avatar) {
-        avatar = profile_header.querySelector(".header-avatar-add");
+      if (!avatar3) {
+        avatar3 = profile_header.querySelector(".header-avatar-add");
         new_account = true;
       }
       if (cute.includes(page.name)) {
@@ -12005,7 +12810,7 @@
       redesigned_profile_header.classList.add("redesigned-header", "redesigned-profile-header", "no-background");
       redesigned_profile_header.innerHTML = `
             <div class="avatar-side">
-                ${avatar.innerHTML}
+                ${avatar3.innerHTML}
             </div>
             <div class="info-side">
                 <div class="sub-text">${tl(trans.profile)}</div>
@@ -12026,8 +12831,8 @@
         register_background(null, "hidden");
       } else {
         if (settings.profile_avi_background) {
-          if (avatar)
-            register_background(avatar.querySelector("img").getAttribute("src").replace("/avatar170s/", "/ar0/"), "avatar");
+          if (avatar3)
+            register_background(avatar3.querySelector("img").getAttribute("src").replace("/avatar170s/", "/ar0/"), "avatar");
           else
             register_background(null, "none");
         } else {
@@ -12192,15 +12997,15 @@
       let artists = 0;
       let loved = 0;
       let metadata = profile_header.querySelectorAll(".header-metadata-display");
-      metadata.forEach((item2, index) => {
+      metadata.forEach((item, index) => {
         if (index == 0) {
-          let para = item2.querySelector("p");
+          let para = item.querySelector("p");
           scrobbles = clean_number(para.textContent.trim()).toLocaleString(lang);
           average = para.getAttribute("title");
         } else if (index == 1) {
-          artists = clean_number(item2.textContent.trim()).toLocaleString(lang);
+          artists = clean_number(item.textContent.trim()).toLocaleString(lang);
         } else if (index == 2) {
-          loved = clean_number(item2.textContent.trim()).toLocaleString(lang);
+          loved = clean_number(item.textContent.trim()).toLocaleString(lang);
         }
       });
       listen_container.innerHTML = `
@@ -12305,7 +13110,7 @@
           dialog({
             id: "listening_report_v2",
             title: "oh no :c",
-            body: `
+            body: html2.node`
                         <div class="alert alert-error">This listening report is too old</div>
                         <br>
                         <p>Legacy listening reports are not properly viewable yet in bleh for now. Sorry for the inconvenience.</p>
@@ -12352,18 +13157,18 @@
         let grid = document.createElement("ol");
         grid.classList.add("grid-items", "grid-items--numbered", "obsessions-grid");
         let items = page.structure.container.querySelectorAll(".obsession-history-item");
-        items.forEach((item2) => {
-          let bg = item2.querySelector(".obsession-history-item-background").style.getPropertyValue("background-image").trim();
+        items.forEach((item) => {
+          let bg = item.querySelector(".obsession-history-item-background").style.getPropertyValue("background-image").trim();
           let cover_substr = bg.indexOf("url");
           let cover = bg.substring(cover_substr).replace('url("', "").replace('")', "").trim();
-          let link = item2.querySelector(".obsession-history-item-heading-link");
-          let artist = item2.querySelector(".obsession-history-item-artist a");
+          let link = item.querySelector(".obsession-history-item-heading-link");
+          let artist = item.querySelector(".obsession-history-item-artist a");
           let artist_link = artist.getAttribute("href");
           artist = artist.textContent.trim();
           let title = link.textContent.trim();
           link = link.getAttribute("href");
-          let date = item2.querySelector(".obsession-history-item-date").textContent.trim();
-          let obsession_is_first = item2.querySelector(".obsession-first") != null;
+          let date = item.querySelector(".obsession-history-item-date").textContent.trim();
+          let obsession_is_first = item.querySelector(".obsession-first") != null;
           let grid_item = document.createElement("li");
           grid_item.classList.add("grid-items-item", "obsessions-item");
           grid_item.innerHTML = `
@@ -12468,11 +13273,10 @@
         tippy(badge, {
           theme: "badge",
           placement: "bottom",
-          content: `
+          content: html2.node`
                     <div class="badge-name">${badge.textContent}</div>
                     <div class="badge-reason">${tl(trans.badges[badge.classList[1]].reason)}</div>
-                `,
-          allowHTML: true
+                `
         });
       });
     }
@@ -12488,11 +13292,10 @@
           tippy(badge, {
             theme: "badge",
             placement: "bottom",
-            content: `
+            content: html2.node`
                         <div class="badge-name">${this_badge.name}</div>
                         <div class="badge-reason">${tl(trans.badges[this_badge.reason].reason)}</div>
-                    `,
-            allowHTML: true
+                    `
           });
         }
         if (this_badge.type == "sponsor")
@@ -12573,7 +13376,7 @@
       });
       tippy(about_more, {
         theme: "window",
-        content: `
+        content: html2.node`
                 <div class="dialog-settings">
                     <div class="setting" data-type="toggle" id="container-bio_markdown" onclick="_update_item('bio_markdown')">
                         <button class="btn reset" onclick="_reset_item('bio_markdown')">${tl(trans.reset)}</button>
@@ -12589,7 +13392,6 @@
                     </div>
                 </div>
             `,
-        allowHTML: true,
         placement: "bottom",
         interactive: true,
         interactiveBorder: 10,
@@ -12620,25 +13422,25 @@
       }
     }
   }
-  unsafeWindow._add_profile_note = function(username, has_note) {
-    add_profile_note(username, has_note);
+  unsafeWindow._add_profile_note = function(username2, has_note) {
+    add_profile_note(username2, has_note);
   };
-  function add_profile_note(username, has_note) {
+  function add_profile_note(username2, has_note) {
     document.getElementById("bleh--add-note").style.setProperty("display", "none");
-    create_profile_note_panel(username, has_note);
+    create_profile_note_panel(username2, has_note);
   }
-  function create_profile_note_panel(username, has_note) {
+  function create_profile_note_panel(username2, has_note) {
     let note_panel = document.createElement("section");
     note_panel.classList.add("bleh--panel", "bleh--profile-note-panel");
     if (has_note) {
       note_panel.innerHTML = `
         <h2>${tl(trans.notes)}</h2>
         <div class="content-form">
-            <textarea id="bleh--profile-note" placeholder="${tl(trans.anything_you_can_imagine)}">${JSON.parse(localStorage.getItem("bleh_profile_notes"))[username]}</textarea>
+            <textarea id="bleh--profile-note" placeholder="${tl(trans.anything_you_can_imagine)}">${JSON.parse(localStorage.getItem("bleh_profile_notes"))[username2]}</textarea>
         </div>
         <div class="actions">
-            <button class="btn" onclick="_clear_profile_note('${username}')">${tl(trans.clear)}</button>
-            <button class="btn primary" onclick="_save_profile_note('${username}')">${tl(trans.save)}</button>
+            <button class="btn" onclick="_clear_profile_note('${username2}')">${tl(trans.clear)}</button>
+            <button class="btn primary" onclick="_save_profile_note('${username2}')">${tl(trans.save)}</button>
         </div>
         `;
     } else {
@@ -12648,26 +13450,26 @@
             <textarea id="bleh--profile-note" placeholder="${tl(trans.anything_you_can_imagine)}"></textarea>
         </div>
         <div class="actions">
-            <button class="btn" onclick="_clear_profile_note('${username}')">${tl(trans.clear)}</button>
-            <button class="btn primary" onclick="_save_profile_note('${username}')">${tl(trans.save)}</button>
+            <button class="btn" onclick="_clear_profile_note('${username2}')">${tl(trans.clear)}</button>
+            <button class="btn primary" onclick="_save_profile_note('${username2}')">${tl(trans.save)}</button>
         </div>
         `;
     }
     let about_me_sidebar = page.structure.row.querySelector(".about-me-sidebar");
     about_me_sidebar.after(note_panel);
   }
-  unsafeWindow._clear_profile_note = function(username) {
+  unsafeWindow._clear_profile_note = function(username2) {
     let profile_notes = JSON.parse(localStorage.getItem("bleh_profile_notes")) || {};
-    delete profile_notes[username];
+    delete profile_notes[username2];
     document.getElementById("bleh--profile-note").value = "";
     localStorage.setItem("bleh_profile_notes", JSON.stringify(profile_notes));
   };
-  unsafeWindow._save_profile_note = function(username) {
-    save_profile_note(username);
+  unsafeWindow._save_profile_note = function(username2) {
+    save_profile_note(username2);
   };
-  function save_profile_note(username) {
+  function save_profile_note(username2) {
     let profile_notes = JSON.parse(localStorage.getItem("bleh_profile_notes")) || {};
-    profile_notes[username] = document.getElementById("bleh--profile-note").value.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
+    profile_notes[username2] = document.getElementById("bleh--profile-note").value.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
     localStorage.setItem("bleh_profile_notes", JSON.stringify(profile_notes));
   }
   function patch_profile_following() {
@@ -12734,9 +13536,9 @@
     refresh_all();
     let users = page.structure.main.querySelectorAll(".user-list-inner-wrap");
     users.forEach((user) => {
-      let avatar = user.querySelector(".user-list-avatar");
+      let avatar3 = user.querySelector(".user-list-avatar");
       let name = user.querySelector(".user-list-link").textContent;
-      let badge = patch_avatar(avatar, name, "follow");
+      let badge = patch_avatar(avatar3, name, "follow");
       if (badge.type == "avatar-status-dot--staff")
         user.classList.add("staff-user");
       let artists = user.querySelectorAll(".user-list-shared-artists a");
@@ -12755,8 +13557,8 @@
     fetch(`${root}user/${page.name}/partial/recenttracks?ajax=1`).then(function(response) {
       console.log("returned", response, response.text);
       return response.text();
-    }).then(function(html) {
-      let doc = new DOMParser().parseFromString(html, "text/html");
+    }).then(function(html3) {
+      let doc = new DOMParser().parseFromString(html3, "text/html");
       console.log("DOC", doc);
       let tracklist_panel = doc.querySelector(".chartlist");
       button.removeAttribute("disabled");
@@ -12802,11 +13604,11 @@
       song_artist_element.classList.add("featured-item-artist");
       song_artist_element.innerHTML = `<a href="${root}music/${sanitise(formatted_title[2])}">${sanitise_text(formatted_title[2])}</a>`;
       let song_guests = formatted_title[3];
-      for (let guest in song_guests) {
+      for (let guest2 in song_guests) {
         song_artist_element.innerHTML = `${song_artist_element.innerHTML},`;
         let guest_element = document.createElement("a");
-        guest_element.setAttribute("href", `${root}music/${sanitise(song_guests[guest])}`);
-        guest_element.textContent = song_guests[guest];
+        guest_element.setAttribute("href", `${root}music/${sanitise(song_guests[guest2])}`);
+        guest_element.textContent = song_guests[guest2];
         song_artist_element.appendChild(guest_element);
       }
       details.removeChild(artist_elem);
@@ -13283,29 +14085,28 @@
     };
     form.innerHTML = "";
   }
-  function bio_parse(text, cache = false) {
-    let result = markdown(text.textContent, {
-      allow_headers: true
-    });
+  function bio_parse(text2, cache2 = false) {
     let temp = document.createElement("div");
-    temp.innerHTML = result;
-    use_banner(temp, cache);
-    return result;
+    render2(temp, markdown(text2.textContent, {
+      allow_headers: true
+    }));
+    use_banner(temp, cache2);
+    return temp.innerHTML;
   }
-  function use_banner(temp, cache) {
+  function use_banner(temp, cache2) {
     if (page.name == auth.name && !settings.profile_header_own || page.name != auth.name && !settings.profile_header_others)
       return;
     let banner = temp.querySelector('img[alt="banner"]');
     if (banner) {
-      set_profile_banner(banner, cache);
+      set_profile_banner(banner, cache2);
     } else {
       save_banner_to_cache("none");
     }
   }
-  function set_profile_banner(img, cache) {
+  function set_profile_banner(img, cache2) {
     let src = img.getAttribute("src");
     register_background(src, "bio");
-    if (cache)
+    if (cache2)
       save_banner_to_cache(src);
   }
   function load_banner_from_cache() {
@@ -13322,8 +14123,8 @@
     fetch(`${root}user/${page.name}`).then(function(response) {
       console.log("returned", response, response.text);
       return response.text();
-    }).then(function(html) {
-      let doc = new DOMParser().parseFromString(html, "text/html");
+    }).then(function(html3) {
+      let doc = new DOMParser().parseFromString(html3, "text/html");
       console.log("DOC", doc);
       let about_me_sidebar = doc.querySelector(".about-me-sidebar");
       if (about_me_sidebar) {
@@ -13350,7 +14151,7 @@
     let panel = page.structure.row.querySelector(".listen-panel");
     let table = panel.querySelector("table");
     if (table) {
-      bleh_profile_chart_render2(panel, table);
+      bleh_profile_chart_render(panel, table);
       return;
     } else {
       fetch(`${root}user/${page.name}/library/artists/chart?date_preset=LAST_90_DAYS&page=1&ajax=1`).then(function(response) {
@@ -13358,14 +14159,14 @@
         if (response.status != 200)
           throw new Error();
         return response.text();
-      }).then(function(html) {
-        let doc = new DOMParser().parseFromString(html, "text/html");
+      }).then(function(html3) {
+        let doc = new DOMParser().parseFromString(html3, "text/html");
         console.log("glacier library DOC", doc, doc.querySelector(".table"));
         log("received response", "glacier library");
         table = doc.querySelector(".table");
         if (table) {
           panel.appendChild(table);
-          bleh_profile_chart_render2(panel, table);
+          bleh_profile_chart_render(panel, table);
         } else {
           log("table is null?", "glacier library", "error");
           console.info("glacier library", doc.body.innerHTML);
@@ -13375,7 +14176,7 @@
       });
     }
   }
-  function bleh_profile_chart_render2(panel = page.structure.side.querySelector(".listen-profile-panel"), table = null) {
+  function bleh_profile_chart_render(panel = page.structure.side.querySelector(".listen-profile-panel"), table = null) {
     if (!table)
       table = panel.querySelector("table");
     let entries = table.querySelectorAll("tbody tr");
@@ -13421,6 +14222,254 @@
       options: page.state.chart_library_line_options
     });
     scrobble_canvas_container.appendChild(scrobble_canvas);
+  }
+
+  // src/chart.js
+  function chart_reflow() {
+    load_chart_colours();
+    if ((page.type == "artist" || page.type == "album" || page.type == "track") && page.subpage == "overview")
+      bleh_music_page_charts();
+    if (page.type == "user" && page.subpage == "overview")
+      bleh_profile_chart_render();
+    if (page.type == "user" && page.subpage.startsWith("library")) {
+      bleh_glacier_date_graph_generate();
+      bleh_glacier_insights();
+    }
+  }
+  function prep_chart_colours() {
+    if (page.state.chart_colours.link_col == "hsl()")
+      load_chart_colours();
+  }
+  function load_chart_colours() {
+    let link_col = `hsl(${getComputedStyle(document.body).getPropertyValue("--l3-c")})`;
+    let link_h_col = getComputedStyle(document.body).getPropertyValue("--h3-s");
+    let link_bg_col = `hsla(${getComputedStyle(document.body).getPropertyValue("--h4")}, 30%)`;
+    let link_bg_col_2 = `hsla(${getComputedStyle(document.body).getPropertyValue("--h4")}, 2%)`;
+    let text_col = `hsl(${getComputedStyle(document.body).getPropertyValue("--c3")})`;
+    let axis_col = `hsla(${getComputedStyle(document.body).getPropertyValue("--b4")}, 40%)`;
+    let text_primary_col = `hsl(${getComputedStyle(document.body).getPropertyValue("--c2")})`;
+    let bg_col = `hsl(${getComputedStyle(document.body).getPropertyValue("--b5")})`;
+    let root_bg_col = `hsla(${getComputedStyle(document.body).getPropertyValue("--b6")}, 92%)`;
+    let hue = getComputedStyle(document.body).getPropertyValue("--hue");
+    page.state.chart_colours = {
+      link_col,
+      link_h_col,
+      link_bg_col,
+      link_bg_col_2,
+      text_col,
+      axis_col,
+      text_primary_col,
+      bg_col,
+      root_bg_col,
+      hue
+    };
+    console.log("chart colours", page.state.chart_colours);
+    page.state.chart_line_options = {
+      maintainAspectRatio: false,
+      plugins: {
+        legend: {
+          display: false
+        },
+        tooltip: {
+          backgroundColor: root_bg_col,
+          titleColor: text_primary_col,
+          bodyColor: text_primary_col,
+          multiKeyBackground: root_bg_col,
+          boxPadding: 6,
+          padding: 9,
+          cornerRadius: 9,
+          caretSize: 0
+        }
+      },
+      scales: {
+        x: {
+          type: "time",
+          time: {
+            unit: "month",
+            displayFormats: {
+              month: "MMM"
+            },
+            tooltipFormat: "dddd, MMMM Do YYYY"
+          },
+          grid: {
+            color: axis_col,
+            display: false
+          }
+        },
+        y: {
+          display: false,
+          grid: {
+            display: false
+          },
+          suggestedMax: 10
+        }
+      }
+    };
+    page.state.chart_library_line_options = {
+      maintainAspectRatio: false,
+      plugins: {
+        legend: {
+          display: false
+        },
+        tooltip: {
+          backgroundColor: root_bg_col,
+          titleColor: text_primary_col,
+          bodyColor: text_primary_col,
+          multiKeyBackground: root_bg_col,
+          boxPadding: 6,
+          padding: 9,
+          cornerRadius: 9,
+          caretSize: 0
+        }
+      },
+      scales: {
+        x: {
+          grid: {
+            color: axis_col,
+            display: false
+          }
+        },
+        y: {
+          grid: {
+            display: false
+          },
+          suggestedMax: 10
+        }
+      },
+      onClick: (e, active, chart) => {
+        bleh_glacier_library_open_index(active[0].index);
+      }
+    };
+    page.state.chart_library_line_options_no_click = {
+      maintainAspectRatio: false,
+      plugins: {
+        legend: {
+          display: false
+        },
+        tooltip: {
+          backgroundColor: root_bg_col,
+          titleColor: text_primary_col,
+          bodyColor: text_primary_col,
+          multiKeyBackground: root_bg_col,
+          boxPadding: 6,
+          padding: 9,
+          cornerRadius: 9,
+          caretSize: 0
+        }
+      },
+      scales: {
+        x: {
+          grid: {
+            color: axis_col,
+            display: false
+          }
+        },
+        y: {
+          grid: {
+            display: false
+          },
+          suggestedMax: 10
+        }
+      }
+    };
+    page.state.chart_library_pie_options = {
+      maintainAspectRatio: false,
+      plugins: {
+        legend: {
+          display: false
+        },
+        tooltip: {
+          backgroundColor: root_bg_col,
+          titleColor: text_primary_col,
+          bodyColor: text_primary_col,
+          multiKeyBackground: root_bg_col,
+          boxPadding: 6,
+          padding: 9,
+          cornerRadius: 9,
+          caretSize: 0
+        }
+      },
+      onClick: (e, active, chart) => {
+        bleh_glacier_library_open_index(active[0].index);
+      }
+    };
+    page.state.chart_library_pie_options_no_click = {
+      maintainAspectRatio: false,
+      plugins: {
+        legend: {
+          display: false
+        },
+        tooltip: {
+          backgroundColor: root_bg_col,
+          titleColor: text_primary_col,
+          bodyColor: text_primary_col,
+          padding: 7,
+          cornerRadius: 10,
+          caretSize: 0
+        }
+      }
+    };
+    page.state.chart_library_bar_options = {
+      maintainAspectRatio: false,
+      plugins: {
+        legend: {
+          display: false
+        },
+        tooltip: {
+          backgroundColor: root_bg_col,
+          titleColor: text_primary_col,
+          bodyColor: text_primary_col,
+          multiKeyBackground: root_bg_col,
+          boxPadding: 6,
+          padding: 9,
+          cornerRadius: 9,
+          caretSize: 0
+        }
+      },
+      onClick: (e, active, chart) => {
+        bleh_glacier_library_open_index(active[0].index);
+      }
+    };
+    page.state.chart_library_bar_v_options = {
+      indexAxis: "y",
+      maintainAspectRatio: false,
+      plugins: {
+        legend: {
+          display: false
+        },
+        tooltip: {
+          backgroundColor: root_bg_col,
+          titleColor: text_primary_col,
+          bodyColor: text_primary_col,
+          multiKeyBackground: root_bg_col,
+          boxPadding: 6,
+          padding: 9,
+          cornerRadius: 9,
+          caretSize: 0
+        }
+      },
+      onClick: (e, active, chart) => {
+        bleh_glacier_library_open_index(active[0].index);
+      }
+    };
+    page.state.chart_library_bar_options_no_click = {
+      maintainAspectRatio: false,
+      plugins: {
+        legend: {
+          display: false
+        },
+        tooltip: {
+          backgroundColor: root_bg_col,
+          titleColor: text_primary_col,
+          bodyColor: text_primary_col,
+          multiKeyBackground: root_bg_col,
+          boxPadding: 6,
+          padding: 9,
+          cornerRadius: 9,
+          caretSize: 0
+        }
+      }
+    };
   }
 
   // src/config.js
@@ -13497,7 +14546,7 @@
     if ((page.type == "artist" || page.type == "album" || page.type == "track") && page.subpage == "overview")
       bleh_music_page_charts();
     if (page.type == "user" && page.subpage == "overview")
-      bleh_profile_chart_render2();
+      bleh_profile_chart_render();
     if (page.type == "user" && page.subpage.startsWith("library")) {
       bleh_glacier_date_graph_generate();
       bleh_glacier_insights();
@@ -13531,67 +14580,67 @@
     if ((page.type == "artist" || page.type == "album" || page.type == "track") && page.subpage == "overview")
       bleh_music_page_charts();
     if (page.type == "user" && page.subpage == "overview")
-      bleh_profile_chart_render2();
+      bleh_profile_chart_render();
     if (page.type == "user" && page.subpage.startsWith("library")) {
       bleh_glacier_date_graph_generate();
       bleh_glacier_insights();
     }
   };
   function reset_all() {
-    for (let item2 in settings_base)
-      reset_item(item2);
+    for (let item in settings_base)
+      reset_item(item);
   }
   function refresh_all(search = document) {
-    for (let item2 in settings_base)
-      update_item(item2, settings[item2], false, search);
+    for (let item in settings_base)
+      update_item(item, settings[item], false, search);
   }
-  function reset_item(item2) {
-    update_item(item2, settings_base[item2].value);
+  function reset_item(item) {
+    update_item(item, settings_base[item].value);
   }
   function update_params(params = {}) {
-    for (let item2 in params) {
-      update_item(item2, params[item2]);
+    for (let item in params) {
+      update_item(item, params[item]);
     }
   }
   unsafeWindow._reset_all = function() {
     reset_all();
   };
-  unsafeWindow._reset_item = function(item2) {
-    reset_item(item2);
+  unsafeWindow._reset_item = function(item) {
+    reset_item(item);
   };
   unsafeWindow._update_params = function(params = {}) {
     update_params(params);
   };
-  unsafeWindow._update_item = function(item2, value) {
-    update_item(item2, value);
+  unsafeWindow._update_item = function(item, value) {
+    update_item(item, value);
   };
-  function update_item(item2, value, modify = true, search = document) {
-    let container = search.querySelector(`#container-${item2}`);
+  function update_item(item, value, modify = true, search = document) {
+    let container = search.querySelector(`#container-${item}`);
     if (container)
       console.info(container);
-    else if (settings_base[item2].type != "slider" && settings_base[item2].type != "options")
+    else if (settings_base[item].type != "slider" && settings_base[item].type != "options")
       return;
     try {
       let new_value = false;
-      if (value != settings[item2])
+      if (value != settings[item])
         new_value = true;
-      if ((settings_base[item2].require_reload == true || settings_base[item2].require_reload == "partial" && page.type != "bleh_settings") && new_value)
+      if ((settings_base[item].require_reload == true || settings_base[item].require_reload == "partial" && page.type != "bleh_settings") && new_value)
         request_reload();
-      if (settings_base[item2].type == "slider" && modify)
-        settings[item2] = value;
+      if (settings_base[item].type == "slider" && modify)
+        settings[item] = value;
       if (!modify)
-        console.info(item2, value, modify);
-      if (settings_base[item2].type == "slider") {
+        console.info(item, value, modify);
+      if (settings_base[item].type == "slider") {
         try {
-          let slider = search.querySelector(`#slider-${item2}`);
-          search.querySelector(`#value-${item2}`).textContent = `${settings[item2]}${settings_base[item2].unit}`;
-          slider.value = settings[item2];
-          search.querySelector(`#slider-track-${item2}`).style.setProperty("--percent", `${settings[item2] / slider.getAttribute("max") * 100}%`);
+          let slider = search.querySelector(`#slider-${item}`);
+          search.querySelector(`#value-${item}`).textContent = `${settings[item]}${settings_base[item].unit}`;
+          slider.value = settings[item];
+          search.querySelector(`#slider-track-${item}`).style.setProperty("--percent", `${settings[item] / slider.getAttribute("max") * 100}%`);
         } catch (e) {
         }
-        document.body.style.setProperty(`--${settings_base[item2].css}`, `${value}${settings_base[item2].unit}`);
-        document.documentElement.setAttribute(`data-bleh--${item2}`, `${value}`);
-        if (item2 == "hue" || item2 == "sat" || item2 == "lit") {
+        document.body.style.setProperty(`--${settings_base[item].css}`, `${value}${settings_base[item].unit}`);
+        document.documentElement.setAttribute(`data-bleh--${item}`, `${value}`);
+        if (item == "hue" || item == "sat" || item == "lit") {
           if (settings.hue == settings_base.hue.value && settings.sat == settings_base.sat.value && settings.lit == settings_base.lit.value && settings.seasonal && stored_season.id != "none") {
             document.body.style.removeProperty(`--${settings_base.hue.css}`);
             document.body.style.removeProperty(`--${settings_base.sat.css}`);
@@ -13601,18 +14650,21 @@
             document.documentElement.setAttribute("data-bleh--hsl-override", "false");
           }
         }
-      } else if (settings_base[item2].type == "toggle") {
-        if (settings[item2] == settings_base[item2].values[0] && modify) {
-          settings[item2] = settings_base[item2].values[1];
-          search.querySelector(`#toggle-${item2}`).setAttribute("aria-checked", false);
-          document.body.style.setProperty(`--${item2}`, settings_base[item2].values[1]);
-          document.documentElement.setAttribute(`data-bleh--${item2}`, `${settings_base[item2].values[1]}`);
+      } else if (settings_base[item].type == "toggle") {
+        if (settings[item] == settings_base[item].values[0] && modify) {
+          settings[item] = settings_base[item].values[1];
+          search.querySelector(`#toggle-${item}`).setAttribute("aria-checked", false);
+          document.body.style.setProperty(`--${item}`, settings_base[item].values[1]);
+          document.documentElement.setAttribute(`data-bleh--${item}`, `${settings_base[item].values[1]}`);
         } else if (modify) {
-          settings[item2] = settings_base[item2].values[0];
-          console.log(`toggle-${item2}`);
-          search.querySelector(`#toggle-${item2}`).setAttribute("aria-checked", true);
-          if (item2 == "dev") {
-            dialog_legacy("prompt_dev", trans_legacy.en.settings.performance.dev.name, `
+          settings[item] = settings_base[item].values[0];
+          console.log(`toggle-${item}`);
+          search.querySelector(`#toggle-${item}`).setAttribute("aria-checked", true);
+          if (item == "dev") {
+            dialog_legacy(
+              "prompt_dev",
+              trans_legacy.en.settings.performance.dev.name,
+              html2.node`
                     <p class="alert alert-info">${trans_legacy.en.settings.performance.dev.modals.prompt.alert}</p>
                     <br>
                     ${trans_legacy.en.settings.performance.dev.modals.prompt.stylus}
@@ -13629,26 +14681,28 @@
                             <p class="caption">${trans_legacy.en.settings.performance.dev.modals.prompt.browsers.firefox.bio}</p>
                         </button>
                     </div>
-                `, true);
+                `,
+              true
+            );
           }
-          document.body.style.setProperty(`--${item2}`, settings_base[item2].values[0]);
-          document.documentElement.setAttribute(`data-bleh--${item2}`, `${settings_base[item2].values[0]}`);
+          document.body.style.setProperty(`--${item}`, settings_base[item].values[0]);
+          document.documentElement.setAttribute(`data-bleh--${item}`, `${settings_base[item].values[0]}`);
         } else {
-          if (settings[item2] == settings_base[item2].values[0]) {
-            search.querySelector(`#toggle-${item2}`).setAttribute("aria-checked", true);
+          if (settings[item] == settings_base[item].values[0]) {
+            search.querySelector(`#toggle-${item}`).setAttribute("aria-checked", true);
           } else {
-            search.querySelector(`#toggle-${item2}`).setAttribute("aria-checked", false);
+            search.querySelector(`#toggle-${item}`).setAttribute("aria-checked", false);
           }
         }
-      } else if (settings_base[item2].type == "options") {
+      } else if (settings_base[item].type == "options") {
         if (modify) {
-          settings[item2] = value;
-          document.body.style.setProperty(`--${item2}`, value);
-          document.documentElement.setAttribute(`data-bleh--${item2}`, value);
-          let toggle = document.getElementById(`toggle-${item2}-${value}`);
+          settings[item] = value;
+          document.body.style.setProperty(`--${item}`, value);
+          document.documentElement.setAttribute(`data-bleh--${item}`, value);
+          let toggle = document.getElementById(`toggle-${item}-${value}`);
           if (toggle)
             toggle.setAttribute("aria-checked", true);
-          let other_toggles = search.querySelectorAll(`[data-toggle="${item2}"]`);
+          let other_toggles = search.querySelectorAll(`[data-toggle="${item}"]`);
           other_toggles.forEach((toggle2) => {
             let other_value = toggle2.getAttribute("data-toggle-value");
             if (other_value == value)
@@ -13656,29 +14710,29 @@
             else
               toggle2.setAttribute("aria-checked", false);
           });
-          if ((item2 == "chart_view" || item2 == "chart_bar_axis") && page.type == "user" && page.subpage.startsWith("library"))
+          if ((item == "chart_view" || item == "chart_bar_axis") && page.type == "user" && page.subpage.startsWith("library"))
             bleh_glacier_date_graph_generate();
         } else {
-          if (settings[item2] == value) {
-            document.getElementById(`toggle-${item2}-${value}`).setAttribute("aria-checked", true);
+          if (settings[item] == value) {
+            document.getElementById(`toggle-${item}-${value}`).setAttribute("aria-checked", true);
           } else {
-            document.getElementById(`toggle-${item2}-${value}`).setAttribute("aria-checked", false);
+            document.getElementById(`toggle-${item}-${value}`).setAttribute("aria-checked", false);
           }
         }
       }
       if (modify)
-        log(`updated ${item2} to ${settings[item2]}`, "settings");
+        log(`updated ${item} to ${settings[item]}`, "settings");
       localStorage.setItem("bleh", JSON.stringify(settings));
     } catch (e) {
       console.error(e);
     }
     if (container) {
-      if (settings[item2] != settings_base[item2].value)
+      if (settings[item] != settings_base[item].value)
         container.classList.add("modified");
       else
         container.classList.remove("modified");
     }
-    if (item2 == "hue" || item2 == "sat" || item2 == "lit") {
+    if (item == "hue" || item == "sat" || item == "lit") {
       update_colour_swatches();
       load_chart_colours();
     }
@@ -13730,46 +14784,46 @@
     else if (seasonal)
       seasonal.setAttribute("aria-checked", "true");
   }
-  unsafeWindow._reset_inbuilt_item = function(item2) {
-    reset_inbuilt_item(item2);
+  unsafeWindow._reset_inbuilt_item = function(item) {
+    reset_inbuilt_item(item);
   };
   unsafeWindow._update_inbuilt_params = function(params = {}) {
     update_inbuilt_params(params);
   };
-  unsafeWindow._update_inbuilt_item = function(item2, value) {
-    update_inbuilt_item(item2, value);
+  unsafeWindow._update_inbuilt_item = function(item, value) {
+    update_inbuilt_item(item, value);
   };
-  function update_inbuilt_item(item2, value, modify = true, element = document.body) {
-    console.warn("update item", item2, value, "modify", modify);
-    let test_if_valid = element.querySelector(`#toggle-${item2}`);
-    console.warn(test_if_valid, `toggle-${item2}`);
+  function update_inbuilt_item(item, value, modify = true, element = document.body) {
+    console.warn("update item", item, value, "modify", modify);
+    let test_if_valid = element.querySelector(`#toggle-${item}`);
+    console.warn(test_if_valid, `toggle-${item}`);
     if (test_if_valid == void 0)
       return;
-    if (inbuilt_settings[item2].type == "toggle") {
+    if (inbuilt_settings[item].type == "toggle") {
       if (modify) {
-        value = document.getElementById(`toggle-${item2}`).getAttribute("aria-checked") === "true";
-        log(`updated (inbuilt) ${item2} to ${!value}`, "settings");
+        value = document.getElementById(`toggle-${item}`).getAttribute("aria-checked") === "true";
+        log(`updated (inbuilt) ${item} to ${!value}`, "settings");
       }
-      if (value == inbuilt_settings[item2].values[0] && modify) {
-        element.querySelector(`#inbuilt-companion-checkbox-${item2}`).checked = false;
-        element.querySelector(`#toggle-${item2}`).setAttribute("aria-checked", false);
-        document.documentElement.setAttribute(`data-bleh--inbuilt-${item2}`, inbuilt_settings[item2].values[1]);
+      if (value == inbuilt_settings[item].values[0] && modify) {
+        element.querySelector(`#inbuilt-companion-checkbox-${item}`).checked = false;
+        element.querySelector(`#toggle-${item}`).setAttribute("aria-checked", false);
+        document.documentElement.setAttribute(`data-bleh--inbuilt-${item}`, inbuilt_settings[item].values[1]);
       } else if (modify) {
-        element.querySelector(`#inbuilt-companion-checkbox-${item2}`).checked = true;
-        element.querySelector(`#toggle-${item2}`).setAttribute("aria-checked", true);
-        document.documentElement.setAttribute(`data-bleh--inbuilt-${item2}`, inbuilt_settings[item2].values[0]);
+        element.querySelector(`#inbuilt-companion-checkbox-${item}`).checked = true;
+        element.querySelector(`#toggle-${item}`).setAttribute("aria-checked", true);
+        document.documentElement.setAttribute(`data-bleh--inbuilt-${item}`, inbuilt_settings[item].values[0]);
       } else {
-        console.warn(item2, value, value == true, value == false, typeof value, "boolean");
+        console.warn(item, value, value == true, value == false, typeof value, "boolean");
         if (value == true) {
-          console.warn(item2, value, "TRUE");
-          element.querySelector(`#inbuilt-companion-checkbox-${item2}`).checked = true;
-          element.querySelector(`#toggle-${item2}`).setAttribute("aria-checked", true);
-          document.documentElement.setAttribute(`data-bleh--inbuilt-${item2}`, true);
+          console.warn(item, value, "TRUE");
+          element.querySelector(`#inbuilt-companion-checkbox-${item}`).checked = true;
+          element.querySelector(`#toggle-${item}`).setAttribute("aria-checked", true);
+          document.documentElement.setAttribute(`data-bleh--inbuilt-${item}`, true);
         } else if (value == false) {
-          console.warn(item2, value, "FALSE");
-          element.querySelector(`#inbuilt-companion-checkbox-${item2}`).checked = false;
-          element.querySelector(`#toggle-${item2}`).setAttribute("aria-checked", false);
-          document.documentElement.setAttribute(`data-bleh--inbuilt-${item2}`, false);
+          console.warn(item, value, "FALSE");
+          element.querySelector(`#inbuilt-companion-checkbox-${item}`).checked = false;
+          element.querySelector(`#toggle-${item}`).setAttribute("aria-checked", false);
+          document.documentElement.setAttribute(`data-bleh--inbuilt-${item}`, false);
         }
       }
     }
@@ -13784,7 +14838,7 @@
   };
   function continue_dev() {
     kill_window("prompt_dev");
-    dialog_legacy("continue_dev", trans_legacy.en.settings.performance.dev.name, `
+    dialog_legacy("continue_dev", trans_legacy.en.settings.performance.dev.name, html2.node`
         ${trans_legacy.en.settings.performance.dev.modals.continue.next_step}
         <div class="modal-footer">
             <div class="fill"></div>
@@ -13982,13 +15036,10 @@
     let prev_container = document.getElementById("snowflakes");
     if (prev_container != null)
       return;
-    let container = document.createElement("div");
-    container.classList.add("snow-container");
-    container.setAttribute("id", "snowflakes");
-    container.innerHTML = `
-        <span class="snow snowflake"></span>
-    `;
-    document.documentElement.appendChild(container);
+    document.documentElement.appendChild(html.node`
+        <div class="snow-container" id="snowflakes">
+            <span class="snow snowflake"></span>
+        </div>`);
   }
   function begin_snowflakes(enabled, count) {
     if (!enabled)
@@ -14019,7 +15070,7 @@
     page.requested.setting = params.get("setting");
     let nav = document.createElement("nav");
     nav.classList.add("navlist", "secondary-nav", "navlist--more", "redesigned-navigation", "bleh-settings-navigation");
-    nav.innerHTML = `
+    render2(nav, html2`
         <ul class="navlist-items">
             <li class="navlist-item secondary-nav-item">
                 <a class="secondary-nav-item-link bleh--nav" data-bleh-page="home" onclick="_change_settings_page('home')">
@@ -14072,13 +15123,13 @@
                 </a>
             </li>
         </ul>
-    `;
-    page.structure.side.innerHTML = `
+    `);
+    render2(page.structure.side, html2`
         <div class="cta first priority sponsor colourful">
-            ${auth.sponsor ? `
+            ${auth.sponsor ? html2.node`
             <strong>${tl(trans.you_are_a_sponsor)}</strong>
             <a class="see-more" onclick="_sponsor_manage()">${tl(trans.manage_sponsor)}</a>
-            ` : `
+            ` : html2.node`
             <strong>${tl(trans.news_sponsor_cta)}</strong>
             <a class="see-more" onclick="_sponsor()">${tl(trans.sponsor)}</a>
             `}
@@ -14095,12 +15146,12 @@
             </button>
         </section>
         <div class="bleh--panel">
-            ${ff("skip_to_setting") ? `
+            ${ff("skip_to_setting") ? html2.node`
             <h4>${tl(trans.skip_to)}</h4>
             <div class="skip-to-list"></div>
             ` : ""}
         </div>
-    `;
+    `);
     page.structure.container.insertBefore(nav, page.structure.row);
     if (!page.requested.tab)
       change_settings_page("themes");
@@ -14122,7 +15173,7 @@
           name: tl(trans.colourful_tracks.name)
         }
       ]);
-      return `
+      return html2`
             <div class="bleh--panel">
                 <h4>${tl(trans.themes.name)}</h4>
                 <div class="setting-items full">
@@ -14130,7 +15181,7 @@
                         <button class="btn theme-item" data-bleh-theme="light" data-bleh--theme_type="light" onclick="change_theme_from_settings('light')">
                             <div class="preview-container">
                             <div class="preview" data-bleh--theme="light" data-bleh--theme_type="light">
-                                ${theme_preview}
+                                ${theme_preview()}
                             </div>
                             </div>
                             <div class="text">
@@ -14140,7 +15191,7 @@
                         <button class="btn theme-item" data-bleh-theme="ink" data-bleh--theme_type="light" onclick="change_theme_from_settings('ink')">
                             <div class="preview-container">
                             <div class="preview" data-bleh--theme="ink" data-bleh--theme_type="light">
-                                ${theme_preview}
+                                ${theme_preview()}
                             </div>
                             </div>
                             <div class="text">
@@ -14154,7 +15205,7 @@
                         <button class="btn theme-item" data-bleh-theme="dark" onclick="change_theme_from_settings('dark')">
                             <div class="preview-container">
                             <div class="preview" data-bleh--theme="dark">
-                                ${theme_preview}
+                                ${theme_preview()}
                             </div>
                             </div>
                             <div class="text">
@@ -14164,7 +15215,7 @@
                         <button class="btn theme-item" data-bleh-theme="darker" onclick="change_theme_from_settings('darker')">
                             <div class="preview-container">
                             <div class="preview" data-bleh--theme="darker">
-                                ${theme_preview}
+                                ${theme_preview()}
                             </div>
                             </div>
                             <div class="text">
@@ -14174,7 +15225,7 @@
                         <button class="btn theme-item" data-bleh-theme="oled" onclick="change_theme_from_settings('oled')">
                             <div class="preview-container">
                             <div class="preview" data-bleh--theme="oled">
-                                ${theme_preview}
+                                ${theme_preview()}
                             </div>
                             </div>
                             <div class="text">
@@ -14183,7 +15234,7 @@
                         </button>
                     </div>
                 </div>
-                ${ff("high_contrast") ? `
+                ${ff("high_contrast") ? html2.node`
                 <div class="setting" data-type="toggle" id="container-high_contrast" onclick="_update_item('high_contrast')">
                     <button class="btn reset" onclick="_reset_item('high_contrast')">${tl(trans.reset)}</button>
                     <div class="heading">
@@ -14233,7 +15284,7 @@
                         </button>
                     </div>
                 </div>
-                ${ff("card_saturation") ? `
+                ${ff("card_saturation") ? html2.node`
                 <div class="setting hide-if-light-theme" data-type="slider" id="container-sat_bg">
                     <button class="btn reset" onclick="_reset_item('sat_bg')">${tl(trans.reset)}</button>
                     <div class="heading">
@@ -14323,7 +15374,7 @@
           name: trans_legacy.en.settings.customise.show_your_progress.name
         }
       ]);
-      return `
+      return html2`
             <div class="bleh--panel check-artist-hover">
                 <h4 class="top-header">${tl(trans.layout)}</h4>
                 <h4>${trans_legacy.en.settings.layout.header}</h4>
@@ -14457,7 +15508,7 @@
             `;
     } else if (page_id == "seasonal") {
       register_skip_to([]);
-      return `
+      return html2`
             <div class="bleh--panel">
                 <div class="seasonal-inner">
                     <div class="sub-text">${tl(trans.seasonal_timeline)}</div>
@@ -14469,7 +15520,7 @@
                         </div>
                         <div class="glacier-library-top season-top">
                             <div class="glacier-library-metadata">
-                                ${stored_season.id != "none" && stored_season.start && stored_season.end ? `
+                                ${stored_season.id != "none" && stored_season.start && stored_season.end ? html2.node`
                                 <div class="glacier-library-metadata-item">
                                     <div class="sub-text">${tl(trans.started)}</div>
                                     <div class="glacier-library-metadata-item-value" id="current_season_start">${moment(stored_season.start.replace("y0", stored_season.year).replace("{offset}", stored_season.offset)).from(stored_season.now)}</div>
@@ -14478,7 +15529,7 @@
                                     <div class="sub-text">${tl(trans.ends_in)}</div>
                                     <div class="glacier-library-metadata-item-value" id="current_season">${moment(stored_season.end.replace("y0", stored_season.year).replace("{offset}", stored_season.offset)).to(stored_season.now, true)}</div>
                                 </div>
-                                ` : settings.seasonal ? `
+                                ` : settings.seasonal ? html2.node`
                                 <div class="glacier-library-metadata-item">
                                     <div class="sub-text">${tl(trans.next_in)}</div>
                                     <div class="glacier-library-metadata-item-value" id="next_season_start">${moment(stored_season.next_start.replace("y0", stored_season.next_is_new_year ? stored_season.year + 1 : stored_season.year).replace("{offset}", stored_season.offset)).to(stored_season.now, true)}</div>
@@ -14488,7 +15539,7 @@
                         </div>
                     </div>
                 </div>
-                ${settings.seasonal ? `
+                ${settings.seasonal ? html2.node`
                 <div class="alert alert-info">
                     ${tl(trans.seasonal_offset).replace("{offset}", `<strong>${stored_season.offset}</strong>`)}
                 </div>
@@ -14552,7 +15603,7 @@
         `;
     } else if (page_id == "performance") {
       register_skip_to([]);
-      return `
+      return html2`
             <div class="bleh--panel">
                 <div class="alert alert-danger">${tl(trans.beware_notice)}</div>
                 <div class="setting" data-type="text" id="container-branch">
@@ -14602,17 +15653,17 @@
                 </ul>
                 <div class="sep"></div>
                 <h4>Debugging interactions</h4>
-                <button class="continue" onclick="_notify({
-                id: 'test',
-                title: 'testing!',
-                body: 'haaaiaiii test bodyyy.......'
-                })">Deliver notification</button>
-                <button class="continue" onclick="_notify({
-                id: 'test',
-                title: 'testing!',
-                body: 'haaaiaiii test bodyyy.......',
-                persist: true
-                })">Deliver persistent notification</button>
+                <button class="continue" onclick=${() => notify({
+        id: "test",
+        title: "testing!",
+        body: "haaaiaiii test bodyyy......."
+      })}>Deliver notification</button>
+                <button class="continue" onclick=${() => notify({
+        id: "test",
+        title: "testing!",
+        body: "haaaiaiii test bodyyy.......",
+        persist: true
+      })}>Deliver persistent notification</button>
                 <div class="sep"></div>
                 <h4>Manage flags</h4>
                 <button class="continue" onclick="_change_settings_page('sku')">Open sku page</button>
@@ -14630,7 +15681,7 @@
           name: tl(trans.activity_tracking.name)
         }
       ]);
-      return `
+      return html2`
             <div class="bleh--panel sponsor-badge-panel" data-sponsoring="${auth.sponsor}">
                 <div class="profile-container">
                     <div class="avatar-side small">
@@ -14644,7 +15695,7 @@
                             <div class="header standalone title-container">
                                 <h1>${auth.name}</h1>
                                 <div class="badges">
-                                    ${auth.pro ? `
+                                    ${auth.pro ? html2.node`
                                     <span class="label user-status-subscriber">${tl(trans.badges["user-status-subscriber"].name)}</span>
                                     ` : ""}
                                 </div>
@@ -14652,7 +15703,7 @@
                         </div>
                     </div>
                 </div>
-                ${ff("api") ? `
+                ${ff("api") ? html2.node`
                 <h4>${trans_legacy.en.settings.profiles.api.name}</h4>
                 <div class="alert alert-info">${trans_legacy.en.settings.profiles.api.bio}</div>
                 <div class="setting" data-type="text" id="container-api_key">
@@ -14660,7 +15711,17 @@
                     <div class="heading content-form">
                         <div class="input-container">
                             <input type="password" maxlength="120" id="text-api_key" value="${settings.api_key}" placeholder="${trans_legacy.en.settings.profiles.api.placeholder}">
-                            <button class="btn primary save" onclick="_save_api_key()">${tl(trans.save)}</button>
+                            <button class="btn primary save" onclick=${() => {
+        let key = document.getElementById("text-api_key").value;
+        settings.api_key = key;
+        localStorage.setItem("bleh", JSON.stringify(settings));
+        notify({
+          title: trans_legacy.en.settings.profiles.api.name,
+          body: trans_legacy.en.settings.profiles.api.saved,
+          icon: "icon-16-api"
+        });
+        test_api_key();
+      }}>${tl(trans.save)}</button>
                             <a class="btn-add" href="${root}api/account/create" target="_blank">${trans_legacy.en.settings.create}</a>
                         </div>
                     </div>
@@ -14669,7 +15730,9 @@
                 <div class="sep"></div>
                 <div class="setting" data-type="toggle">
                     <div class="heading">
-                        <h5>${tl(trans.sponsor_data).replace("{v}", `<span class="version-link sponsor-related">${sponsor_list.latest}</span>`)}</h5>
+                        <h5>${html2.node([
+        tl(trans.sponsor_data).replace("{v}", `<span class="version-link sponsor-related">${sponsor_list.latest}</span>`)
+      ])}</h5>
                     </div>
                     <div class="toggle-wrap">
                         <button class="see-more update-check sponsor-related" onclick="_sponsor_check()">${tl(trans.update_check)}</button>
@@ -14747,7 +15810,14 @@
                         <h5>${tl(trans.clear_history)}</h5>
                     </div>
                     <div class="toggle-wrap">
-                        <button class="see-more" onclick="_clear_activity_history()">
+                        <button class="see-more" onclick=${() => {
+        localStorage.removeItem("bwaa_recent_activity");
+        notify({
+          id: "cleared_history",
+          title: tl(trans.cleared_activity_history),
+          type: "success"
+        });
+      }}>
                             ${tl(trans.clear)}
                         </button>
                     </div>
@@ -14855,7 +15925,7 @@
             `;
     } else if (page_id == "accessibility") {
       register_skip_to([]);
-      return `
+      return html2`
             <div class="bleh--panel">
                 <h4 class="top-header">${tl(trans.accessibility)}</h4>
                 <div class="setting" data-type="toggle" id="container-reduced_motion" onclick="_update_item('reduced_motion')">
@@ -14886,7 +15956,7 @@
             `;
     } else if (page_id == "text") {
       register_skip_to([]);
-      return `
+      return html2`
             <div class="bleh--panel">
                 <h4 class="top-header">${trans_legacy.en.settings.text.name}</h4>
                 <div class="inner-preview pad flex">
@@ -14964,10 +16034,10 @@
             `;
     } else if (page_id == "sku") {
       register_skip_to([]);
-      return `
+      return html2`
             <div class="bleh--panel shh">
                 <div class="sub-text">${version.build}.${version.sku}</div>
-                \u2606\u2312(>w<)
+                ☆⌒(>w<)
             </div>
             <div class="bleh--panel">
                 <h4>Manage active flags</h4>
@@ -15025,14 +16095,16 @@
         let percent = this_rank.start / maximum * 100;
         preview_bar = `${preview_bar}, hsl(${this_rank.hue}, ${h3_sat.replace(global_sat, this_rank.sat)}, ${h3_lit.replace(global_lit, this_rank.lit)}) ${percent}%`;
         if ((this_rank.start > 500 || this_rank.start == 0) && this_rank.start != 1500) {
-          let text = `${this_rank.start}`;
-          preview_bar_text = `${preview_bar_text}<div class="preview-bar-text-entry" style="left: ${percent}%">${text.replaceAll("_", ",")}</div>`;
+          let text2 = `${this_rank.start}`;
+          preview_bar_text = `${preview_bar_text}<div class="preview-bar-text-entry" style="left: ${percent}%">${text2.replaceAll("_", ",")}</div>`;
         }
       }
       preview_bar = `${preview_bar});`;
-      return `
+      return html2`
             <div class="bleh--panel lotus">
-                <h4>${tl(trans.brand_version_number).replace("{brand}", `<a class="lotus lotus-name" href="https://github.com/katelyynn/lotus" target="_blank">lotus</a>`).replace("{number}", `<span class="version-link lotus">${artist_corrections.version >= album_track_corrections.version ? artist_corrections.version : album_track_corrections.version}</span>`)}</h4>
+                <h4>${html2.node([
+        tl(trans.brand_version_number).replace("{brand}", `<a class="lotus lotus-name" href="https://github.com/katelyynn/lotus" target="_blank">lotus</a>`).replace("{number}", `<span class="version-link lotus">${artist_corrections.version >= album_track_corrections.version ? artist_corrections.version : album_track_corrections.version}</span>`)
+      ])}</h4>
                 <p>${tl(trans.what_is_lotus)}</p>
                 <div class="inner-preview pad">
                     <div class="lotus-preview">
@@ -15243,7 +16315,7 @@
                 <div class="inner-preview pad">
                     <div class="personal-stats-preview-bar-container">
                         <div class="personal-stats-preview-bar" style="${preview_bar}"></div>
-                        <div class="personal-stats-preview-text">${preview_bar_text}</div>
+                        <div class="personal-stats-preview-text">${html2.node([preview_bar_text])}</div>
                     </div>
                     <div class="sep"></div>
                     <div class="tracks">
@@ -15409,13 +16481,13 @@
       return;
     let panel = page.structure.side.querySelector(".skip-to-list");
     panel.innerHTML = "";
-    list.forEach((item2) => {
+    list.forEach((item) => {
       let button = document.createElement("button");
       button.classList.add("skip-to-item");
-      button.setAttribute("onclick", `_scroll_to_setting('${item2.id}')`);
-      button.textContent = item2.name;
-      if (item2.type != null)
-        button.setAttribute("data-type", item2.type);
+      button.setAttribute("onclick", `_scroll_to_setting('${item.id}')`);
+      button.textContent = item.name;
+      if (item.type != null)
+        button.setAttribute("data-type", item.type);
       panel.appendChild(button);
     });
   }
@@ -15462,7 +16534,7 @@
       seasonal_timer_start();
     else
       seasonal_timer_end();
-    page.structure.main.innerHTML = render_setting_page(page_id);
+    render2(page.structure.main, render_setting_page(page_id));
     if (page_id == "themes") {
       show_theme_change_in_settings();
       display_colour_presets();
@@ -15550,7 +16622,7 @@
       feature_flag_element.classList.add("setting");
       feature_flag_element.setAttribute("data-type", "toggle");
       feature_flag_element.setAttribute("onclick", `_update_flag_toggle('${flag}', this)`);
-      feature_flag_element.innerHTML = `
+      render2(feature_flag_element, html2`
             <div class="heading">
                 <h5>${version.feature_flags[flag].name}</h5>
                 ${version.feature_flags[flag].notice ? `<p>${version.feature_flags[flag].notice}</p>` : ""}
@@ -15563,7 +16635,7 @@
                     <div class="dot"></div>
                 </button>
             </div>
-        `;
+        `);
       flags_container.appendChild(feature_flag_element);
       document.documentElement.setAttribute(`data-ff--${flag}`, current_state);
     }
@@ -15993,12 +17065,12 @@
           swatch.classList.add("select-button");
           tippy(swatch, {
             theme: "window",
-            content: `
+            content: html2.node`
                         <div class="dialog-settings">
                             <div class="alert alert-info seasonal-hsl-alert">
                                 ${tl(trans.seasonal_warning)}
                             </div>
-                            ${ff("colour_based_on_hex") ? `
+                            ${ff("colour_based_on_hex") ? html2.node`
                             <div class="setting" data-type="text">
                                 <div class="heading">
                                     <h5>${tl(trans.convert_from_hex)}</h5>
@@ -16059,7 +17131,6 @@
                             </div>
                         </div>
                     `,
-            allowHTML: true,
             placement: "bottom",
             interactive: true,
             interactiveBorder: 10,
@@ -16077,12 +17148,11 @@
           swatch.style.setProperty("--lit-over", colour.displays.lit);
           tippy(swatch, {
             theme: "key_value",
-            content: `
+            content: html2.node`
                         <span class="key">hue<span class="value">${colour.sets.hue}</span></span>
                         <span class="key">sat<span class="value">${colour.sets.sat}</span></span>
                         <span class="key">lit<span class="value">${colour.sets.lit}</span></span>
                     `,
-            allowHTML: true,
             delay: [250, 0]
           });
         }
@@ -16112,17 +17182,17 @@
     exclusives[stored_season.id].forEach((colour) => {
       colour.sets = { accent_type: colour.type, ...colour.sets };
       colour.displays = colour.sets;
-      let item2 = document.createElement("button");
-      item2.classList.add("dropdown-menu-clickable-item", "swatch");
-      item2.setAttribute("data-swatch-type", colour.type);
-      item2.textContent = colour.name;
-      item2.setAttribute("onclick", `_update_params(${JSON.stringify(colour.sets)})`);
-      item2.style.setProperty("--hue-over", colour.displays.hue);
-      item2.style.setProperty("--sat-over", colour.displays.sat);
-      item2.style.setProperty("--lit-over", colour.displays.lit);
+      let item = document.createElement("button");
+      item.classList.add("dropdown-menu-clickable-item", "swatch");
+      item.setAttribute("data-swatch-type", colour.type);
+      item.textContent = colour.name;
+      item.setAttribute("onclick", `_update_params(${JSON.stringify(colour.sets)})`);
+      item.style.setProperty("--hue-over", colour.displays.hue);
+      item.style.setProperty("--sat-over", colour.displays.sat);
+      item.style.setProperty("--lit-over", colour.displays.lit);
       if (colour.displays.hue == settings.hue && colour.displays.sat == settings.sat && colour.displays.lit)
-        item2.setAttribute("aria-checked", "true");
-      instance.appendChild(item2);
+        item.setAttribute("aria-checked", "true");
+      instance.appendChild(item);
     });
   }
   function init_profile_page() {
@@ -16136,11 +17206,10 @@
         tippy(badge, {
           theme: "badge",
           placement: "bottom",
-          content: `
+          content: html2.node`
                     <div class="badge-name">${badge.textContent}</div>
                     <div class="badge-reason">${tl(trans.badges[badge.classList[1]].reason)}</div>
-                `,
-          allowHTML: true
+                `
         });
       });
     }
@@ -16156,11 +17225,10 @@
           tippy(badge, {
             theme: "badge",
             placement: "bottom",
-            content: `
+            content: html2.node`
                         <div class="badge-name">${this_badge.name}</div>
                         <div class="badge-reason">${tl(trans.badges[this_badge.reason].reason)}</div>
-                    `,
-            allowHTML: true
+                    `
           });
         }
         if (this_badge.type == "sponsor")
@@ -16176,7 +17244,7 @@
         tippy(badge, {
           theme: "badge",
           placement: "bottom",
-          content: `
+          content: html2.node`
                     <div class="badge-name">${tl(trans.badges.missing.name)}</div>
                     <div class="badge-reason">${tl(trans.badges.missing.reason)}</div>
                 `,
@@ -16193,129 +17261,125 @@
     profile_notes_table.classList = "generic-table-list user-vertical-list take-space profile-notes";
     profile_notes_table.innerHTML = "";
     for (let user in profile_notes) {
-      let profile_note = document.createElement("div");
-      profile_note.classList.add("generic-table-list-entry", "user-vertical-list-item");
-      profile_note.setAttribute("id", `profile-note-row--${user}`);
-      profile_note.innerHTML = `
-        <div class="name">
-            <a class="mention" href="${root}user/${user}">@${user}</a>
-        </div>
-        <div class="text preview">
-            <p id="profile-note-row-preview--${user}">${profile_notes[user]}</p>
-        </div>
-        <div class="actions">
-            <button class="icon chibi edit" onclick="_edit_profile_note('${user}')">
-                ${tl(trans.delete)}
-            </button>
-            <button class="delete icon delete-user-button danger-subtle" onclick="_delete_profile_note('${user}')">
-                ${tl(trans.delete)}
-            </button>
-        </div>
-        `;
-      profile_notes_table.appendChild(profile_note);
+      profile_notes_table.appendChild(html2.node`
+            <div class="generic-table-list-entry user-vertical-list-item" id="profile-note-row--${user}">
+                <div class="name">
+                    <a class="mention" href="${root}user/${user}">@${user}</a>
+                </div>
+                <div class="text preview">
+                    <p id="profile-note-row-preview--${user}">${profile_notes[user]}</p>
+                </div>
+                <div class="actions">
+                    <button class="icon chibi edit" onclick=${() => edit_profile_note(user)}>
+                        ${tl(trans.delete)}
+                    </button>
+                    <button class="delete icon delete-user-button danger-subtle" onclick=${() => delete_profile_note(user)}>
+                        ${tl(trans.delete)}
+                    </button>
+                </div>
+            </div>
+        `);
     }
   }
-  unsafeWindow._delete_profile_note = function(username) {
+  function delete_profile_note(user) {
     let profile_notes = JSON.parse(localStorage.getItem("bleh_profile_notes")) || {};
     delete profile_notes[username];
     document.getElementById(`profile-note-row--${username}`).style.setProperty("display", "none");
     localStorage.setItem("bleh_profile_notes", JSON.stringify(profile_notes));
-  };
-  unsafeWindow._edit_profile_note = function(username) {
+  }
+  function edit_profile_note(user) {
     let profile_notes = JSON.parse(localStorage.getItem("bleh_profile_notes")) || {};
-    dialog_legacy("edit_profile_note", trans_legacy.en.settings.profiles.notes.edit_user.replace("{u}", username), `
-    <textarea id="bleh--profile-note" placeholder="Enter a local note for this user">${profile_notes[username]}</textarea>
-    <div class="modal-footer">
-        <button class="see-more cancel" onclick="_kill_window('edit_profile_note')">
-            ${tl(trans.cancel)}
-        </button>
-        <div class="fill"></div>
-        <button class="btn primary save" onclick="_save_profile_note_in_window('${username}')">
-            ${tl(trans.save)}
-        </button>
-    </div>
-    `, true);
-    profile_notes[username] = document.getElementById("bleh--profile-note").value;
-    localStorage.setItem("bleh_profile_notes", JSON.stringify(profile_notes));
-  };
-  unsafeWindow._save_profile_note_in_window = function(username) {
+    let modal = dialog({
+      id: "edit_profile_note",
+      title: tl(trans.edit_profile_note),
+      body: html2.node`
+            <textarea class="modal-text" id="bleh--profile-note" placeholder=${tl(trans.anything_you_can_imagine)}>${profile_notes[user]}</textarea>
+            <div class="modal-footer">
+                <button class="see-more cancel" onclick=${() => dialog_rm2({ id: "edit_profile_note" })}>
+                    ${tl(trans.cancel)}
+                </button>
+                <div class="fill"></div>
+                <button class="btn primary save" onclick=${() => save_profile_note_in_window(modal, user)}>
+                    ${tl(trans.save)}
+                </button>
+            </div>
+        `
+    });
+  }
+  function save_profile_note_in_window(modal, user) {
     let profile_notes = JSON.parse(localStorage.getItem("bleh_profile_notes")) || {};
-    let value_to_save = document.getElementById("bleh--profile-note").value.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
-    profile_notes[username] = value_to_save;
-    document.getElementById(`profile-note-row-preview--${username}`).textContent = value_to_save;
+    let value_to_save = modal.querySelector("#bleh--profile-note").value.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
+    profile_notes[user] = value_to_save;
+    document.getElementById(`profile-note-row-preview--${user}`).textContent = value_to_save;
     localStorage.setItem("bleh_profile_notes", JSON.stringify(profile_notes));
-    kill_window("edit_profile_note");
-  };
+    dialog_rm2({ id: "edit_profile_note" });
+  }
   function prepare_corrections_page() {
     let corrections_table_artist = document.getElementById("corrections-artist");
     for (let artist in artist_corrections) {
       if (artist == "version")
         continue;
-      let correction = document.createElement("div");
-      correction.classList.add("correction-row");
-      correction.innerHTML = `
-        <div class="primary-name pre-transition">
-            <h5>${artist}</h5>
-        </div>
-        <div class="arrow-divider"></div>
-        <div class="primary-name post-transition">
-            <h5>${artist_corrections[artist]}</h5>
-        </div>
-        `;
-      corrections_table_artist.appendChild(correction);
+      corrections_table_artist.appendChild(html2.node`
+        <div class="correction-row">
+                <div class="primary-name pre-transition">
+                    <h5>${artist}</h5>
+                </div>
+                <div class="arrow-divider"></div>
+                <div class="primary-name post-transition">
+                    <h5>${artist_corrections[artist]}</h5>
+                </div>
+        </div>`);
     }
     let corrections_table_albums_tracks = document.getElementById("corrections-albums_tracks");
     for (let artist in album_track_corrections) {
       if (artist == "version")
         continue;
-      let artist_row = document.createElement("div");
-      artist_row.classList.add("artist-row");
-      artist_row.innerHTML = `
-            <h5>${artist}</h5>
-        `;
-      corrections_table_albums_tracks.appendChild(artist_row);
+      corrections_table_albums_tracks.appendChild(html2.node`
+            <div class="artist-row">
+                <h5>${artist}</h5>
+            </div>
+        `);
       for (let media in album_track_corrections[artist]) {
-        let correction = document.createElement("div");
-        correction.classList.add("correction-row");
-        correction.innerHTML = `
-            <div class="primary-name pre-transition">
-                <h5>${media}</h5>
-            </div>
-            <div class="arrow-divider"></div>
-            <div class="primary-name post-transition">
-                <h5>${album_track_corrections[artist][media]}</h5>
-            </div>
-            `;
-        corrections_table_albums_tracks.appendChild(correction);
+        corrections_table_albums_tracks.appendChild(html2.node`
+                <div class="correction-row">
+                    <div class="primary-name pre-transition">
+                        <h5>${media}</h5>
+                    </div>
+                    <div class="arrow-divider"></div>
+                    <div class="primary-name post-transition">
+                        <h5>${album_track_corrections[artist][media]}</h5>
+                    </div>
+                </div>
+            `);
       }
     }
   }
   function prepare_language_page() {
     let languages_table = document.getElementById("languages");
     for (let language in lang_info) {
-      let lang_row = document.createElement("div");
-      lang_row.classList.add("language-row");
-      if (lang == language)
-        lang_row.classList.add("active");
       let users = "";
       for (let user in lang_info[language].by)
         users = `${users}<a class="mention" href="${root}user/${lang_info[language].by[user]}" target="_blank">@${lang_info[language].by[user]}</a> `;
-      lang_row.innerHTML = `
-        <div class="flag-container">
-            <img src="https://katelyynn.github.io/bleh/fm/flags/${language}.svg" alt="flag for ${language}">
-        </div>
-        <div class="name">
-            <h5>${lang_info[language].name}</h5>
-            <p>${trans_legacy.en.settings.language.by.replace("{users}", users)}</p>
-        </div>
-        ${lang_info[language].new ? `
-        <div class="badges">
-            <div class="new-badge">${tl(trans.new)}</div>
-        </div>
-        ` : '<div class="badges"></div>'}
-        <div class="date">
-            <p>${lang_info[language].last_updated != "latest" ? moment(lang_info[language].last_updated).fromNow() : lang_info[language].last_updated}</p>
-        </div>
+      let lang_row = html2.node`
+            <div class="language-row${lang == language ? " active" : ""}">
+                <div class="flag-container">
+                    <img src="https://katelyynn.github.io/bleh/fm/flags/${language}.svg" alt="flag for ${language}">
+                </div>
+                <div class="name">
+                    <h5>${lang_info[language].name}</h5>
+                    <p>${html2.node([
+        trans_legacy.en.settings.language.by.replace("{users}", users)
+      ])}</p>
+                </div>
+                ${lang_info[language].new ? html2.node`
+                <div class="badges">
+                    <div class="new-badge">${tl(trans.new)}</div>
+                </div>
+                ` : html2.node`<div class="badges"></div>`}
+                <div class="date">
+                    <p>${lang_info[language].last_updated != "latest" ? moment(lang_info[language].last_updated).fromNow() : lang_info[language].last_updated}</p>
+                </div>
+            </div>
         `;
       if (lang_info[language].last_updated != "latest") {
         tippy(lang_row.querySelector(".date"), {
@@ -16329,7 +17393,7 @@
     dialog({
       id: "import_settings",
       title: tl(trans.import_settings),
-      body: `
+      body: html2.node`
             <p class="big-modal-alert alert-danger">${tl(trans.import_notice)}</p>
             <br>
             <textarea class="modal-text" id="import_area"></textarea>
@@ -16351,14 +17415,14 @@
       let try_parse = JSON.parse(requesting_setting);
       localStorage.setItem("bleh", requesting_setting);
       load_settings();
-      dialog_rm({
+      dialog_rm2({
         id: "import_settings"
       });
     } catch (e) {
       dialog({
         id: "import_failed",
         title: trans_legacy.en.settings.actions.import.modals.failed.name,
-        body: `
+        body: html2.node`
                 <p class="big-modal-alert alert-error">${trans_legacy.en.settings.actions.import.modals.failed.alert}</p>
                 <div class="modal-footer">
                     <div class="fill"></div>
@@ -16374,7 +17438,7 @@
     dialog({
       id: "export_settings",
       title: tl(trans.export_settings),
-      body: `
+      body: html2.node`
             <textarea class="modal-text">${JSON.stringify(settings)}</textarea>
             <div class="modal-footer">
                 <div class="fill"></div>
@@ -16392,7 +17456,7 @@
     dialog({
       id: "reset_settings",
       title: tl(trans.reset_settings),
-      body: `
+      body: html2.node`
             <div class="big-modal-alert alert-error">
                 <strong>${tl(trans.reset_notice)}</strong>
                 <a class="see-more" onclick="_export_settings()">${tl(trans.make_a_backup)}</a>
@@ -16413,7 +17477,7 @@
     for (var member in settings) delete settings[member];
     Object.assign(settings, create_settings_template());
     load_settings(true);
-    dialog_rm({
+    dialog_rm2({
       id: "reset_settings"
     });
   };
@@ -16688,22 +17752,27 @@
         for (let song_tag in song_tags) {
           song_tags_text = `${song_tags_text}<div class="feat" data-bleh--tag-type="${song_tags[song_tag].type}" data-bleh--tag-group="${song_tags[song_tag].group}">${sanitise_text(song_tags[song_tag].text)}</div>`;
         }
-        name = `<div class="title">${sanitise_text(song_title).trim()}</div>${song_tags_text}`;
+        name = html2.node`<div class="title">${sanitise_text(song_title).trim()}</div>${song_tags_text}`;
       } else if ((involved.type == "album" || involved.type == "track") && settings.corrections) {
-        name = correct_item_by_artist(name, sister);
+        name = html2.node`${correct_item_by_artist(name, sister)}`;
         sister = correct_artist(sister);
       } else if (involved.type == "artist" && settings.corrections) {
         sister = correct_artist(sister);
       }
       if (involved_text != "")
-        involved_text = `${involved_text}, <a class="involved--${involved.type}">${name}</a>`;
+        involved_text = html2.node`${involved_text}, <a class="involved--${involved.type}">${name}</a>`;
       else
-        involved_text = `${involved_text}<a class="involved--${involved.type}">${name}</a>`;
+        involved_text = html2.node`${involved_text}<a class="involved--${involved.type}">${name}</a>`;
     });
-    activity_item.innerHTML = `
-        <div class="type">${tl(trans.activity.listing[activity.type])}<div class="date">${moment(activity.date).fromNow(true)}</div></div>
+    render2(activity_item, html2`
+        <div class="type">
+            ${tl(trans.activity.listing[activity.type])}
+            <div class="date">
+                ${moment(activity.date).fromNow(true)}
+            </div>
+        </div>
         <div class="name">${involved_text}</div>
-    `;
+    `);
     parent.insertBefore(activity_item, parent.firstElementChild);
     if (parent.childElementCount > 3)
       parent.removeChild(parent.lastElementChild);
@@ -16785,7 +17854,7 @@
     dialog({
       id: "corrections",
       title: trans_legacy.en.settings.corrections.name,
-      body: `
+      body: html.node`
             <h4>${trans_legacy.en.settings.corrections.listing.artists}</h4>
             <div class="corrections artist" id="corrections-artist"></div>
             <h4>${trans_legacy.en.settings.corrections.listing.albums_tracks}</h4>
@@ -16835,25 +17904,25 @@
       }
     });
   }
-  function correct_item_by_artist(item2, artist) {
+  function correct_item_by_artist(item, artist) {
     if (!settings.corrections)
-      return item2;
+      return item;
     artist = artist.toLowerCase();
     try {
       if (album_track_corrections.hasOwnProperty(artist)) {
-        if (album_track_corrections[artist].hasOwnProperty(item2)) {
-          log(`corrected ${item2} by ${artist} as ${album_track_corrections[artist][item2]}`, "lotus");
-          return album_track_corrections[artist][item2];
+        if (album_track_corrections[artist].hasOwnProperty(item)) {
+          log(`corrected ${item} by ${artist} as ${album_track_corrections[artist][item]}`, "lotus");
+          return album_track_corrections[artist][item];
         } else {
-          return item2;
+          return item;
         }
       } else {
-        return item2;
+        return item;
       }
     } catch (e) {
-      log(`correcting ${item2} by ${artist}`, "lotus");
+      log(`correcting ${item} by ${artist}`, "lotus");
       console.error(e);
-      return item2;
+      return item;
     }
   }
   function correct_artist(artist, broadcast = false) {
@@ -16933,8 +18002,8 @@
       console.log("pre-split", field_text);
       if (field_group == "guests") {
         song_guests = field_text.split(";");
-        for (let guest in song_guests)
-          song_guests[guest] = correct_artist(song_guests[guest]);
+        for (let guest2 in song_guests)
+          song_guests[guest2] = correct_artist(song_guests[guest2]);
       }
     }
     if (artist_corrections.hasOwnProperty(original_artist) && settings.corrections)
@@ -17019,13 +18088,13 @@
           let song_artist_element = document.body.querySelector('span[itemprop="byArtist"]');
           let song_guests = formatted_title[3];
           page.sister_others = formatted_title[3];
-          for (let guest in song_guests) {
+          for (let guest2 in song_guests) {
             song_artist_element.innerHTML = `${song_artist_element.innerHTML},`;
             let guest_element = document.createElement("a");
             guest_element.classList.add("header-new-crumb");
-            guest_element.setAttribute("href", `${root}music/${sanitise(song_guests[guest])}`);
-            guest_element.setAttribute("title", sanitise_text(song_guests[guest]));
-            guest_element.textContent = song_guests[guest];
+            guest_element.setAttribute("href", `${root}music/${sanitise(song_guests[guest2])}`);
+            guest_element.setAttribute("title", sanitise_text(song_guests[guest2]));
+            guest_element.textContent = song_guests[guest2];
             song_artist_element.appendChild(guest_element);
           }
         }
@@ -17055,8 +18124,8 @@
       artist = correct_artist(artist);
       track = correct_item_by_artist(track, artist);
       let btn = form.querySelector("button");
-      btn.addEventListener("click", (event2) => {
-        log("heard", "event", "info", event2);
+      btn.addEventListener("click", (event3) => {
+        log("heard", "event", "info", event3);
         let action = btn.getAttribute("data-analytics-action");
         if (btn.getAttribute("data-type") == "love") {
           setTimeout(function() {
@@ -17074,8 +18143,8 @@
     bookmark_item.forEach((form) => {
       form.setAttribute("data-bleh-subscribed", "true");
       let btn = form.querySelector("button");
-      btn.addEventListener("click", (event2) => {
-        log("heard", "event", "info", event2);
+      btn.addEventListener("click", (event3) => {
+        log("heard", "event", "info", event3);
         let action = btn.getAttribute("data-analytics-action");
         register_activity(action.startsWith("Bookmark") ? "bookmark" : "unbookmark", [{ name: page.name, type: page.type, sister: page.sister }], window.location.href);
       }, false);
@@ -17088,20 +18157,20 @@
       artist = correct_artist(artist);
       track = correct_item_by_artist(track, artist);
       let btn = form.querySelector("button");
-      btn.addEventListener("click", (event2) => {
-        log("heard", "event", "info", event2);
+      btn.addEventListener("click", (event3) => {
+        log("heard", "event", "info", event3);
         register_activity("obsess", [{ name: track, type: "track", sister: artist }], window.location.href);
       }, false);
     });
     let post_shouts_btn = document.body.querySelector(".btn-post-shout:not([data-bleh-subscribed])");
     if (post_shouts_btn != null) {
       post_shouts_btn.setAttribute("data-bleh-subscribed", "true");
-      post_shouts_btn.addEventListener("click", (event2) => {
-        log("heard", "event", "info", event2);
+      post_shouts_btn.addEventListener("click", (event3) => {
+        log("heard", "event", "info", event3);
         window.setTimeout(function() {
-          let actual_btn = event2.target.parentElement;
+          let actual_btn = event3.target.parentElement;
           let is_loading = actual_btn.classList.contains("btn--loading");
-          console.log("is button loading", is_loading, actual_btn, event2.target);
+          console.log("is button loading", is_loading, actual_btn, event3.target);
           if (!is_loading) return;
           register_activity("shout", [{ name: page.name, type: page.type, sister: page.sister }], window.location.href);
         }, 150);
@@ -17111,8 +18180,8 @@
     if (save_wiki_form != null) {
       save_wiki_form.setAttribute("data-bleh-subscribed", "true");
       let btn = save_wiki_form.querySelector(".form-submit button");
-      btn.addEventListener("click", (event2) => {
-        log("heard", "event", "info", event2);
+      btn.addEventListener("click", (event3) => {
+        log("heard", "event", "info", event3);
         register_activity("wiki", [{ name: page.name, type: page.type, sister: page.sister }], window.location.href);
       }, false);
     }
@@ -17120,8 +18189,8 @@
     if (upload_img_form != null) {
       upload_img_form.setAttribute("data-bleh-subscribed", "true");
       let btn = upload_img_form.querySelector(".form-submit button");
-      btn.addEventListener("click", (event2) => {
-        log("heard", "event", "info", event2);
+      btn.addEventListener("click", (event3) => {
+        log("heard", "event", "info", event3);
         register_activity("image_upload", [{ name: page.name, type: page.type, sister: page.sister }], window.location.href);
       }, false);
     }
@@ -17181,14 +18250,6 @@
     log("saved", "activity", "info", recent_activity_list);
     localStorage.setItem("bwaa_recent_activity", JSON.stringify(recent_activity_list));
   }
-  unsafeWindow._clear_activity_history = function() {
-    localStorage.removeItem("bwaa_recent_activity");
-    notify({
-      id: "cleared_history",
-      title: tl(trans.cleared_activity_history),
-      type: "success"
-    });
-  };
 
   // src/components/nag_bar.js
   function nag_bar() {
@@ -17211,22 +18272,139 @@
     });
   }
 
+  // src/news.js
+  function news() {
+    let changelog = localStorage.getItem("bleh_changelog");
+    let changelog_expire = new Date(localStorage.getItem("bleh_changelog_expire"));
+    let current_time = /* @__PURE__ */ new Date();
+    if (!changelog) {
+      log("not cached, fetching", "changelog");
+      request_changelog();
+    } else {
+      if (changelog_expire < current_time)
+        request_changelog();
+      else
+        open_changelog(JSON.parse(changelog));
+    }
+  }
+  function request_changelog(open_after = true) {
+    let button = document.body.querySelector('[data-bleh-page="changelog"]');
+    if (button)
+      button.setAttribute("disabled", "");
+    let xhr = new XMLHttpRequest();
+    let url = `https://katelyynn.github.io/bleh/fm/changelog/changelog.json?${Math.random()}`;
+    xhr.open("GET", url, true);
+    xhr.onload = function() {
+      log(`responded with ${xhr.status}`, "changelog");
+      if (xhr.status != 200) {
+        log("request has been cancelled, will request again in 1h", "changelog");
+        api_expire.setHours(api_expire.getHours() + 1);
+      }
+      let api_expire = /* @__PURE__ */ new Date();
+      if (xhr.status == 200) {
+        if (open_after) {
+          try {
+            open_changelog(JSON.parse(this.response));
+            localStorage.setItem("bleh_changelog", this.response);
+            api_expire.setHours(api_expire.getHours() + 2);
+            log(`cached until ${api_expire}`, "changelog");
+            localStorage.setItem("bleh_changelog_expire", api_expire);
+          } catch (e) {
+            deliver_notif("The changelog is currently unavailable due to errors, try again later.", true);
+            console.error(e);
+          }
+        }
+      }
+      if (button != null)
+        button.removeAttribute("disabled");
+    };
+    xhr.send();
+  }
+  function open_changelog(changelog) {
+    let window2 = dialog({
+      id: "changelog",
+      title: tl(trans.news_from_user).replace("{user}", "katesia"),
+      body: html2.node`
+            <div class="cta first sponsor colourful margin-bottom">
+                <strong>${tl(trans.news_sponsor_cta)}</strong>
+                <a class="see-more" onclick="_sponsor(true)">${tl(trans.sponsor)}</a>
+            </div>
+            <div class="changelog-list"></div>
+        `,
+      type: "changelog",
+      allow_scroll: true
+    });
+    let changelog_list = window2.querySelector(".changelog-list");
+    let index = 0;
+    for (let version2 in changelog) {
+      if (version2 == "updated" || version2 == "latest")
+        continue;
+      if (index > 10)
+        continue;
+      let version_item = html2.node`
+            <div class="changelog-version-item" data-changelog-type="${changelog[version2].type}" data-changelog-latest="${index == 0 ? "true" : "false"}" data-changelog-version="${version2}">
+            <div class="version-item-header">
+                <div class="sub-text">
+                <div class="breadcrumb">
+                    <div class="breadcrumb-origin">
+                    ${version2}
+                    </div>
+                    <div class="breadcrumb-name">
+                    ${trans_legacy.en.changelog.type[changelog[version2].type]}
+                    </div>
+                </div>
+                </div>
+                <h3>${changelog[version2].name}</h3>
+                ${version2 == "2025.0113" ? html2.node`<h4 class="header-over">${changelog[version2].name}</h4>` : ""}
+            </div>
+            </div>
+        `;
+      if (changelog[version2].type == "major")
+        version_item.setAttribute("id", "latest_major_release");
+      let body = document.createElement("div");
+      body.classList.add("version-item-body", "markdown-body");
+      let converter = new showdown.Converter({
+        emoji: true,
+        excludeTrailingPunctuationFromURLs: true,
+        ghMentions: true,
+        ghMentionsLink: `${root}user/{u}`,
+        headerLevelStart: 5,
+        noHeaderId: true,
+        openLinksInNewWindow: true,
+        requireSpaceBeforeHeadingText: true,
+        simpleLineBreaks: true,
+        simplifiedAutoLink: true,
+        strikethrough: true,
+        underline: true,
+        ghCodeBlocks: false,
+        smartIndentationFix: true
+      });
+      let parsed_text = converter.makeHtml(changelog[version2].bio.replace(/([@])([a-zA-Z0-9_]+)/g, `[$1$2](${root}user/$2)`).replace(/\[artist\]([a-zA-Z0-9]+)\[\/artist\]/g, `[$1](${root}music/$1)`).replace(/\[album artist=([a-zA-Z0-9]+)\]([a-zA-Z0-9\s]+)\[\/album\]/g, `[$2](${root}music/$1/$2)`).replace(/\[track artist=([a-zA-Z0-9]+)\]([a-zA-Z0-9\s]+)\[\/track\]/g, `[$2](${root}music/$1/_/$2)`).replace(/https:\/\/open\.spotify\.com\/user\/([A-Za-z0-9]+)\?si=([A-Za-z0-9]+)/g, "[@$1](https://open.spotify.com/user/$1)").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;"));
+      body.innerHTML = parsed_text;
+      version_item.appendChild(body);
+      changelog_list.appendChild(version_item);
+      index += 1;
+    }
+  }
+  unsafeWindow._update_local_changelog_cache = function(json) {
+    localStorage.setItem("bleh_changelog", JSON.stringify(json));
+  };
+
   // src/navigation.js
   function patch_masthead(element) {
     let masthead_logo = element.querySelector(".masthead-logo");
     if (!masthead_logo) return;
     if (!masthead_logo.hasAttribute("data-kate-processed")) {
       masthead_logo.setAttribute("data-kate-processed", "true");
-      let link = document.createElement("a");
-      link.classList.add("home-link");
-      link.setAttribute("href", `${root}music`);
-      link.innerHTML = `<div class="bleh-logo">${version.brand}</div>`;
-      masthead_logo.appendChild(link);
-      let version_text = document.createElement("a");
-      version_text.classList.add("bleh--version");
-      version_text.setAttribute("href", `${root}bleh`);
-      version_text.innerHTML = `${version.build}.${version.sku}${settings.branch != "uwu" ? `.${settings.branch}` : ""}${settings.dev ? `<div class="new-badge subtle">\u2726</div>` : ""}`;
-      masthead_logo.appendChild(version_text);
+      masthead_logo.appendChild(html2.node`
+            <a class="home-link" href="${root}music">
+                <div class="bleh-logo">${version.brand}</div>
+            </a>`);
+      masthead_logo.appendChild(html2.node`
+            <a class="bleh--version" href="${root}bleh">
+                ${version.build}.${version.sku}${settings.branch != "uwu" ? `.${settings.branch}` : ""}${settings.dev ? html2.node`<div class="new-badge subtle">✦</div>` : ""}
+            </a>
+        `);
     }
   }
   function append_nav() {
@@ -17237,13 +18415,13 @@
       page.structure.indicator = page_indicator2;
     }
     if (!page.structure.loader) {
-      let loader = document.createElement("div");
-      loader.classList.add("loader");
-      loader.innerHTML = `
-            <div class="loader-bar">
-                <div class="loader-bar-fill"></div>
-            </div>
-            <div class="bleh-icon"></div>
+      const loader = html2.node`
+            <div class="loader"
+                <div class="loader-bar">
+                    <div class="loader-bar-fill"></div>
+                </div>
+                <div class="bleh-icon"></div>
+            <div>
         `;
       document.body.appendChild(loader);
       page.structure.loader = loader;
@@ -17254,9 +18432,9 @@
     if (!auth_link2) return;
     if (auth_link2.hasAttribute("data-bleh")) return;
     auth_link2.setAttribute("data-bleh", "true");
-    let text = document.createElement("p");
-    text.textContent = auth.name;
-    auth_link2.appendChild(text);
+    let text2 = document.createElement("p");
+    text2.textContent = auth.name;
+    auth_link2.appendChild(text2);
     if (masthead.querySelector(".masthead-pro-wrap"))
       auth.pro = true;
     else
@@ -17274,66 +18452,54 @@
       auth_link2.appendChild(pro_badge);
     }
     let notif_count = new_auth.querySelector('[data-analytics-label="notifications"] + .auth-avatar-notification-count-badge');
+    if (!notif_count) notif_count = "0";
+    else notif_count = notif_count.textContent;
     let inbox_count = new_auth.querySelector('[data-analytics-label="inbox"] + .auth-avatar-notification-count-badge');
+    if (!inbox_count) inbox_count = "0";
+    else inbox_count = inbox_count.textContent;
     let links = masthead.querySelector(".masthead-nav .navlist-items");
     links.innerHTML = "";
-    let notif_container = document.createElement("li");
-    notif_container.classList.add("masthead-nav-item");
-    notif_container.innerHTML = `
-        <a class="masthead-nav-control" href="${root}inbox/notifications" data-label="notifications">
-            ${tl(trans.notifications.name)}
-            ${notif_count ? `<div class="notification-count-badge"></div>` : ""}
+    let notif_container = html2.node`
+    <li class="masthead-nav-item">
+        <a class="masthead-nav-control" href="${root}inbox/notifications" data-label="notifications" data-count=${notif_count}>
+            <span class="sr-only">${tl(trans.notifications.name)}</span>
+            <div class="counter">${notif_count}</div>
         </a>
-    `;
-    if (notif_count) {
-      notif_count = notif_count.textContent;
+    </li>`;
+    if (notif_count > 0) {
       tippy(notif_container, {
         content: tl(trans.notifications.count).replace("{count}", notif_count)
       });
-      notif_container.setAttribute("data-count", notif_count);
     } else {
       tippy(notif_container, {
         content: tl(trans.notifications.none)
       });
     }
     links.appendChild(notif_container);
-    let inbox_container = document.createElement("li");
-    inbox_container.classList.add("masthead-nav-item");
-    inbox_container.innerHTML = `
-        <a class="masthead-nav-control" href="${root}inbox" data-label="inbox">
-            ${tl(trans.inbox.name)}
-            ${inbox_count ? `<div class="notification-count-badge"></div>` : ""}
-        </a>
+    let inbox_container = html2.node`
+        <li class="masthead-nav-item">
+            <a class="masthead-nav-control" href="${root}inbox" data-label="inbox" data-count=${inbox_count}>
+                <span class="sr-only">${tl(trans.inbox.name)}</span>
+                <div class="counter">${inbox_count}</div>
+            </a>
+        </li>
     `;
-    if (inbox_count) {
-      inbox_count = inbox_count.textContent;
+    if (inbox_count > 0) {
       tippy(inbox_container, {
         content: tl(trans.inbox.count).replace("{count}", inbox_count)
       });
-      inbox_container.setAttribute("data-count", inbox_count);
     } else {
       tippy(inbox_container, {
         content: tl(trans.inbox.none)
       });
     }
     links.appendChild(inbox_container);
-    let changelog_container = document.createElement("li");
-    changelog_container.classList.add("masthead-nav-item");
-    changelog_container.innerHTML = `
-        <a class="masthead-nav-control" onclick="_query_changelog()" data-label="changelog">
-            ${tl(trans.news)}
-        </a>
-    `;
-    tippy(changelog_container, {
-      content: tl(trans.news)
-    });
-    links.appendChild(changelog_container);
-    let bleh_container = document.createElement("li");
-    bleh_container.classList.add("masthead-nav-item");
-    bleh_container.innerHTML = `
-        <a class="masthead-nav-control" href="${root}bleh${stored_season.id != "none" ? "?tab=seasonal" : ""}" data-label="bleh" data-season="${stored_season.id}" data-season-active="${stored_season.id != "none" ? "true" : "false"}">
-            ${stored_season.id == "none" ? tl(trans.bleh_settings) : moment(stored_season.end.replace("y0", stored_season.year).replace("{offset}", stored_season.offset)).to(stored_season.now, true)}
-        </a>
+    let bleh_container = html2.node`
+        <li class="masthead-nav-item">
+            <a class="masthead-nav-control" href="${root}bleh${stored_season.id != "none" ? "?tab=seasonal" : ""}" data-label="bleh" data-season="${stored_season.id}" data-season-active="${stored_season.id != "none" ? "true" : "false"}">
+                ${stored_season.id == "none" ? tl(trans.bleh_settings) : moment(stored_season.end.replace("y0", stored_season.year).replace("{offset}", stored_season.offset)).to(stored_season.now, true)}
+            </a>
+        </li>
     `;
     if (stored_season.id == "none") {
       tippy(bleh_container, {
@@ -17342,24 +18508,23 @@
     } else {
       page.header.season_tooltip = tippy(bleh_container, {
         theme: "seasonal-swatch",
-        content: `
+        content: html2.node`
                 <span class="season-colour-name">${tl(trans.seasonal.listing[stored_season.id])}</span>
                 <span class="season-exclusive">${trans_legacy.en.auth_menu.seasonal_notice}</span>
-            `,
-        allowHTML: true
+            `
       });
     }
     links.appendChild(bleh_container);
     page.header.season = bleh_container.querySelector("a");
     let selected_language = document.querySelector(".footer-language--active strong")?.textContent;
     let language_options = document.querySelectorAll(".footer-language-form");
-    let language_menu = document.createElement("div");
-    language_menu.classList.add("language-menu");
-    language_menu.innerHTML = `
-        <button class="dropdown-menu-clickable-item lang-item active" data-lang="${lang}" style="--flag-url: url('https://katelyynn.github.io/bleh/fm/flags/${lang}.svg')">
-            ${selected_language}
-        </button>
-        <div class="sep"></div>
+    let language_menu = html2.node`
+        <div class="language-menu">
+            <button class="dropdown-menu-clickable-item lang-item active" data-lang="${lang}" style="--flag-url: url('https://katelyynn.github.io/bleh/fm/flags/${lang}.svg')">
+                ${selected_language}
+            </button>
+            <div class="sep"></div>
+        </div>
     `;
     language_options.forEach((language_option) => {
       let button = language_option.querySelector("button");
@@ -17373,7 +18538,7 @@
     let token = new_auth.querySelector('[name="csrfmiddlewaretoken"]').getAttribute("value");
     let auth_menu = tippy(auth_link2, {
       theme: "auth-menu",
-      content: `
+      content: html2.node`
             <a class="dropdown-menu-clickable-item" data-menu-item="profile" href="${root}user/${auth.name}">
                 ${auth.name}
             </a>
@@ -17387,7 +18552,7 @@
             <a class="dropdown-menu-clickable-item" data-menu-item="shouts" href="${root}user/${auth.name}/shoutbox">
                 ${tl(trans.shouts)}
             </a>
-            ${settings.auth_menu_obsessions ? `
+            ${settings.auth_menu_obsessions ? html2.node`
             <a class="dropdown-menu-clickable-item" data-menu-item="obsessions" href="${root}user/${auth.name}/obsessions">
                 ${trans_legacy.en.auth_menu.obsessions}
             </a>
@@ -17403,6 +18568,9 @@
                     <span class="auth-dropdown-item-left">${tl(trans.language)}</span>
                     <span class="auth-dropdown-item-right" id="theme-value">${selected_language}</span>
                 </span>
+            </button>
+            <button class="dropdown-menu-clickable-item" data-menu-item="news" onclick=${() => news()}>
+                ${tl(trans.news)}
             </button>
             <a class="dropdown-menu-clickable-item" data-menu-item="bleh" href="${root}bleh">
                 ${tl(trans.settings)}
@@ -17421,7 +18589,6 @@
                 </a>
             </form>
         `,
-      allowHTML: true,
       placement: "top",
       interactive: true,
       interactiveBorder: 10,
@@ -17437,10 +18604,7 @@
         instance.popper.querySelector("#theme-value").textContent = tl(trans.themes[settings.theme]);
         tippy(instance.popper.querySelector('[data-menu-item="language"]:not([aria-expanded])'), {
           theme: "language-menu",
-          content: `
-                    ${language_menu.innerHTML}
-                `,
-          allowHTML: true,
+          content: language_menu,
           placement: "left",
           hideOnClick: false,
           interactive: true,
@@ -17448,7 +18612,7 @@
         });
         let theme_menu_item = tippy(instance.popper.querySelector('[data-menu-item="themes"]:not([aria-expanded])'), {
           theme: "menu",
-          content: `
+          content: html2.node`
                     <button class="dropdown-menu-clickable-item theme-item-in-menu" data-bleh-theme="light" onclick="change_theme_from_menu('light')">
                         ${tl(trans.themes.light)}
                     </button>
@@ -17465,7 +18629,6 @@
                         ${tl(trans.themes.oled)}
                     </button>
                 `,
-          allowHTML: true,
           placement: "left",
           hideOnClick: false,
           interactive: true,
@@ -17482,27 +18645,26 @@
     auth_link2.removeAttribute("data-disclose-hover");
     auth_link2.removeAttribute("data-disclose-hover--allow-enter-open");
     auth_link2.removeAttribute("href");
-    let mobile = document.createElement("div");
-    mobile.classList.add("mobile-controls");
-    mobile.innerHTML = `
-        <a class="btn mobile-control" aria-checked="${page.type == "overview" || page.type == "recommended" || page.type == "releases" || page.type == "bookmarks" || page.type == "charts"}" data-menu-item="home" href="${root}music">
-            ${tl(trans.home)}
-        </a>
-        <a class="btn mobile-control" aria-checked="${page.type == "search"}" data-menu-item="search" href="${root}search">
-            ${tl(trans.search)}
-        </a>
-        <a class="btn mobile-control" aria-checked="${page.type == "user" && page.name == auth.name}" data-menu-item="profile_mobile" href="${root}user/${auth.name}">
-            ${auth.name}
-        </a>
-        <a class="btn mobile-control" aria-checked="${page.type == "inbox"}" data-menu-item="notifications" href="${root}inbox/notifications">
-            ${tl(trans.inbox.name)}
-            ${inbox_count || notif_count ? `<div class="notification-count-badge"></div>` : ""}
-        </a>
-        <a class="btn mobile-control" aria-checked="${page.type == "settings" || page.type == "bleh_settings"}" data-menu-item="settings" href="${root}bleh">
-            ${tl(trans.settings)}
-        </a>
-    `;
-    masthead.appendChild(mobile);
+    masthead.appendChild(html2.node`
+        <div class="mobile-controls">
+            <a class="btn mobile-control" aria-checked="${page.type == "overview" || page.type == "recommended" || page.type == "releases" || page.type == "bookmarks" || page.type == "charts"}" data-menu-item="home" href="${root}music">
+                ${tl(trans.home)}
+            </a>
+            <a class="btn mobile-control" aria-checked="${page.type == "search"}" data-menu-item="search" href="${root}search">
+                ${tl(trans.search)}
+            </a>
+            <a class="btn mobile-control" aria-checked="${page.type == "user" && page.name == auth.name}" data-menu-item="profile_mobile" href="${root}user/${auth.name}">
+                ${auth.name}
+            </a>
+            <a class="btn mobile-control" aria-checked="${page.type == "inbox"}" data-menu-item="notifications" href="${root}inbox/notifications">
+                ${tl(trans.inbox.name)}
+                ${inbox_count || notif_count ? `<div class="notification-count-badge"></div>` : ""}
+            </a>
+            <a class="btn mobile-control" aria-checked="${page.type == "settings" || page.type == "bleh_settings"}" data-menu-item="settings" href="${root}bleh">
+                ${tl(trans.settings)}
+            </a>
+        </div>
+    `);
   }
 
   // src/components/about_artist.js
@@ -17510,7 +18672,7 @@
     let legacy_container = page.structure.main.querySelector(".about-artist");
     if (!legacy_container)
       return;
-    let avatar = legacy_container.querySelector(".gallery-preview-image--0 img");
+    let avatar3 = legacy_container.querySelector(".gallery-preview-image--0 img");
     let listeners = legacy_container.querySelector(".about-artist-listeners");
     let tags = legacy_container.querySelector(".about-artist-tags");
     let wiki = legacy_container.querySelector(".wiki-block.visible-lg");
@@ -17518,32 +18680,33 @@
       wiki.classList.remove("visible-lg");
     let about_artist_container = legacy_container.parentElement;
     about_artist_container.classList.add("about-artist-container");
-    about_artist_container.innerHTML = `
+    render2(about_artist_container, html2`
         <div class="about-artist-panel">
             <div class="avatar-side">
-                ${avatar != null ? `<img src="${avatar.getAttribute("src")}"><a onclick="_expand_avatar('${avatar.getAttribute("src").replace("/300x300/", "/ar0/")}')" class="bleh--avatar-clickable-link"></a>` : '<img class="missing-artist">'}
+                ${avatar3 != null ? html2.node`<img src="${avatar3.getAttribute("src")}"><a onclick=${() => expand_avatar(avatar3.getAttribute("src").replace("/300x300/", "/ar0/"))} class="bleh--avatar-clickable-link"></a>` : html2.node`<img class="missing-artist">`}
             </div>
             <div class="info-side">
                 <div class="sub-text">${tl(trans.about)}</div>
                 <h1><a href="${root}music/${sanitise(page.sister)}">${sanitise_text(page.sister)}</a></h1>
-                ${listeners != null ? listeners.outerHTML : ""}
-                ${tags != null ? tags.outerHTML : ""}
-                ${wiki != null ? wiki.outerHTML : ""}
+                ${listeners != null ? html2.node([listeners.outerHTML]) : ""}
+                ${tags != null ? html2.node([tags.outerHTML]) : ""}
+                ${wiki != null ? html2.node([wiki.outerHTML]) : ""}
             </div>
         </div>
-        ${page.sister_others.length > 0 ? `<div class="sep"></div><div class="sub-text">${trans_legacy.en.music.about_guests}</div>` : ""}
-    `;
+        ${page.sister_others.length > 0 ? html2.node`<div class="sep"></div><div class="sub-text">${trans_legacy.en.music.about_guests}</div>` : ""}
+    `);
     if (page.sister_others.length > 0) {
-      let guest_feature_panel = document.createElement("div");
-      guest_feature_panel.classList.add("about-guest-features-panel");
-      for (let guest in page.sister_others) {
-        let guest_element = document.createElement("a");
-        guest_element.classList.add("about-guest-feature");
-        guest_element.setAttribute("href", `${root}music/${sanitise(page.sister_others[guest])}`);
-        guest_element.textContent = page.sister_others[guest];
-        guest_feature_panel.appendChild(guest_element);
-      }
-      about_artist_container.appendChild(guest_feature_panel);
+      about_artist_container.appendChild(html2.node`
+            <div class="about-guest-features-panel">
+                ${page.sister_others.map((z) => {
+        return html2.node`
+                        <a class="about-guest-feature" href="${root}music/${sanitise(page.sister_others[guest])}">
+                            ${page.sister_others[guest]}
+                        </a>
+                    `;
+      })}
+            </div>
+        `);
     }
     page.structure.side.appendChild(about_artist_container);
   }
@@ -17647,12 +18810,12 @@
     let entries = page.structure.main.querySelectorAll(".wiki-history-entry");
     entries.forEach((entry) => {
       let author = entry.querySelector(".wiki-history-author");
-      let avatar = author.querySelector(".wiki-history-author-avatar");
+      let avatar3 = author.querySelector(".wiki-history-author-avatar");
       let name = author.querySelector(".link-block-target");
-      if (name && avatar) {
-        let badge = patch_avatar(avatar, name.textContent, "wiki");
-        avatar.setAttribute("data-avatar-themed", "true");
-        avatar.classList.add(`user-status--bleh-${badge.type}`, `user-status--bleh-user-${name.textContent}`);
+      if (name && avatar3) {
+        let badge = patch_avatar(avatar3, name.textContent, "wiki");
+        avatar3.setAttribute("data-avatar-themed", "true");
+        avatar3.classList.add(`user-status--bleh-${badge.type}`, `user-status--bleh-user-${name.textContent}`);
         name.classList.add(`user-status--bleh-${badge.type}`, `user-status--bleh-user-${name.textContent}`);
       }
     });
@@ -17967,52 +19130,47 @@
     }
     checkup_page_structure(is_subpage, album_header);
     if (ff("refreshed_music_nav")) {
-      let avatar = album_header.querySelector(".header-new-background-image");
+      let avatar3 = album_header.querySelector(".header-new-background-image");
       let title = album_header.querySelector(".header-new-title");
       let artist = album_header.querySelector('[itemprop="byArtist"]');
       let position = album_header.querySelector(".header-new-chart-position-number");
-      let redesigned_album_header = document.createElement("section");
-      redesigned_album_header.classList.add("redesigned-header", "redesigned-album-header", "no-background");
-      redesigned_album_header.innerHTML = `
-            ${is_subpage || ff("show_album_cover_always") ? `
-            <div class="avatar-side">
-                ${avatar ? `
-                <img src="${avatar.getAttribute("content").replace("/ar0/", "/avatar170s/")}">
-                <a class="bleh--avatar-clickable-link"></a>
-                ` : '<img class="missing-album">'}
-            </div>
-            ` : ""}
-            <div class="info-side">
-                <div class="sub-text">${tl(trans.album)}</div>
-                <div class="title-container">
-                    <h1>${title.innerHTML}</h1>
-                    ${position ? position.outerHTML : ""}
+      let redesigned_album_header = html2.node`
+            <section class="redesigned-header redesigned-album-header no-background">
+                ${is_subpage || ff("show_album_cover_always") ? html2.node`
+                <div class="avatar-side">
+                    ${avatar3 ? html2.node`
+                    <img src="${avatar3.getAttribute("content").replace("/ar0/", "/avatar170s/")}">
+                    <a class="bleh--avatar-clickable-link"></a>
+                    ` : '<img class="missing-album">'}
                 </div>
-                <h2>${artist.innerHTML}</h2>
-            </div>
+                ` : ""}
+                <div class="info-side">
+                    <div class="sub-text">${tl(trans.album)}</div>
+                    <div class="title-container">
+                        <h1>${html2.node([title.innerHTML])}</h1>
+                        ${position ? position : ""}
+                    </div>
+                    <h2>${html2.node([artist.innerHTML])}</h2>
+                </div>
         `;
-      let bg;
-      if (avatar)
-        bg = register_background(avatar.getAttribute("content"));
+      if (avatar3)
+        register_background(avatar3.getAttribute("content"));
       else
-        bg = register_background(null);
+        register_background(null);
       page.structure.container.insertBefore(redesigned_album_header, page.structure.container.firstElementChild);
       album_header.classList.add("legacy-header");
       let avatar_side = redesigned_album_header.querySelector(".avatar-side");
       let avatar_link = avatar_side.querySelector("a");
-      if (avatar && avatar_link) {
-        let expand_link;
-        if (avatar)
-          expand_link = `_expand_avatar('${avatar.getAttribute("content")}')`;
-        if (settings.default_avatar_action == "expand" && avatar)
-          avatar_link.setAttribute("onclick", expand_link);
+      if (avatar3 && avatar_link) {
+        if (settings.default_avatar_action == "expand" && avatar3)
+          avatar_link.setAttribute("onclick", `_expand_avatar('${avatar3.getAttribute("content")}')`);
         else if (settings.default_avatar_action == "gallery")
           avatar_link.href = `${root}music/${sanitise(page.sister)}/${sanitise(page.name)}/+images`;
         let menu = tippy(avatar_side, {
           theme: "context-menu",
-          content: `
-                    ${avatar ? `
-                    <button class="dropdown-menu-clickable-item" onclick="${expand_link}" data-menu-item="expand">
+          content: html2.node`
+                    ${avatar3 ? html2.node`
+                    <button class="dropdown-menu-clickable-item" onclick=${() => expand_avatar(avatar3.getAttribute("content"))} data-menu-item="expand">
                         ${tl(trans.expand)}
                     </button>
                     ` : ""}
@@ -18024,14 +19182,13 @@
                         ${tl(trans.settings)}
                     </a>
                 `,
-          allowHTML: true,
           placement: "right-start",
           trigger: "manual",
           interactive: true,
           interactiveBorder: 10,
           offset: [0, 0],
           onShow(instance) {
-            instance.popper.addEventListener("click", (event2) => {
+            instance.popper.addEventListener("click", (event3) => {
               instance.hide();
             });
           }
@@ -18087,12 +19244,13 @@
     if (!tracklist) {
       let top_overview = document.querySelector(".top-overview-panel");
       if (!top_overview) return;
-      tracklist = document.createElement("section");
-      tracklist.innerHTML = `
-            <h3 class="text-18">${tl(trans.tracklist)}</h3>
-            <div class="loading-data-container">
-                <p class="loading-data-text">${tl(trans.gathering_your_plays)}</p>
-            </div>
+      tracklist = html2.node`
+            <section>
+                <h3 class="text-18">${tl(trans.tracklist)}</h3>
+                <div class="loading-data-container">
+                    <p class="loading-data-text">${tl(trans.gathering_your_plays)}</p>
+                </div>
+            </section>
         `;
       top_overview.after(tracklist);
       let url = document.querySelector(".header-metadata-display a");
@@ -18100,42 +19258,42 @@
         let url_split = window.location.href.split("/");
         let album_url = `${url_split[url_split.length - 2]}/${url_split[url_split.length - 1]}`;
         let album_as_track_url = window.location.href.replace(album_url, `${url_split[url_split.length - 2]}/_/${url_split[url_split.length - 1]}`);
-        tracklist.innerHTML = `
+        render2(tracklist, html2`
                 <h3 class="text-18">${tl(trans.tracklist)}</h3>
                 <div class="loading-data-container">
                     <p class="loading-data-text failed">${tl(trans.failed_to_find_tracks)}</p>
                     <a class="btn" href="${album_as_track_url}">${tl(trans.open_album_as_track)}</a>
                 </div>
-            `;
+            `);
         return;
       }
       url = url.getAttribute("href");
       fetch(url).then(function(response) {
         console.error("returned", response, response.text);
         return response.text();
-      }).then(function(html) {
-        let doc = new DOMParser().parseFromString(html, "text/html");
+      }).then(function(html3) {
+        let doc = new DOMParser().parseFromString(html3, "text/html");
         console.error("DOC", doc);
         let inner_tracklist = doc.querySelector('#top-tracks-section [v-else=""] .chartlist');
         if (inner_tracklist == null) {
           let url_split = window.location.href.split("/");
           let album_url = `${url_split[url_split.length - 2]}/${url_split[url_split.length - 1]}`;
           let album_as_track_url = window.location.href.replace(album_url, `${url_split[url_split.length - 2]}/_/${url_split[url_split.length - 1]}`);
-          tracklist.innerHTML = `
+          render2(tracklist, html3`
                         <h3 class="text-18">${tl(trans.tracklist)}</h3>
                         <div class="loading-data-container">
                             <p class="loading-data-text failed">${tl(trans.failed_to_find_tracks)}</p>
                             <a class="btn" href="${album_as_track_url}">${tl(trans.open_album_as_track)}</a>
                         </div>
-                    `;
+                    `);
           return;
         }
         inner_tracklist.classList.remove("chartlist--with-image");
-        tracklist.innerHTML = `
+        render2(tracklist, html3`
                     <h3 class="text-18">${tl(trans.tracklist)}</h3>
                     <div class="alert alert-info">${tl(trans.sourced_from_own_plays)}</div>
-                    ${inner_tracklist.outerHTML}
-                `;
+                    ${html3.node([inner_tracklist.outerHTML])}
+                `);
       });
     }
   }
@@ -18176,7 +19334,7 @@
     let katsune = ff("katsune");
     let featured_items = artist_header.querySelector(".artist-header-featured-items");
     if (ff("refreshed_music_nav")) {
-      let avatar = artist_header.querySelector(".header-new-background-image");
+      let avatar3 = artist_header.querySelector(".header-new-background-image");
       let title = artist_header.querySelector(".header-new-title");
       let on_tour = artist_header.querySelector(".header-new-on-tour");
       let position = artist_header.querySelector(".header-new-chart-position-number");
@@ -18184,8 +19342,8 @@
       redesigned_artist_header.classList.add("redesigned-header", "redesigned-artist-header", "no-background");
       redesigned_artist_header.innerHTML = `
             <div class="avatar-side">
-                ${avatar ? `
-                <img src="${avatar.getAttribute("content").replace("/ar0/", "/avatar300s/")}">
+                ${avatar3 ? `
+                <img src="${avatar3.getAttribute("content").replace("/ar0/", "/avatar300s/")}">
                 <a class="bleh--avatar-clickable-link"></a>
                 ` : '<img class="missing-artist">'}
             </div>
@@ -18221,27 +19379,24 @@
         });
       }
       let bg;
-      if (avatar)
-        bg = register_background(avatar.getAttribute("content"));
+      if (avatar3)
+        bg = register_background(avatar3.getAttribute("content"));
       else
         bg = register_background(null);
       page.structure.container.insertBefore(redesigned_artist_header, page.structure.container.firstElementChild);
       artist_header.classList.add("legacy-header");
       let avatar_side = redesigned_artist_header.querySelector(".avatar-side");
       let avatar_link = avatar_side.querySelector("a");
-      if (avatar != null && avatar_link != null) {
-        let expand_link;
-        if (avatar != null)
-          expand_link = `_expand_avatar('${avatar.getAttribute("content")}')`;
-        if (settings.default_avatar_action == "expand" && avatar != null)
-          avatar_link.setAttribute("onclick", expand_link);
+      if (avatar3 != null && avatar_link != null) {
+        if (settings.default_avatar_action == "expand" && avatar3 != null)
+          avatar_link.setAttribute("onclick", `_expand_avatar('${avatar3.getAttribute("content")}')`);
         else if (settings.default_avatar_action == "gallery")
           avatar_link.href = `${root}music/${sanitise(page.name)}/+images`;
         let menu = tippy(avatar_side, {
           theme: "context-menu",
-          content: `
-                    ${avatar != null ? `
-                    <button class="dropdown-menu-clickable-item" onclick="${expand_link}" data-menu-item="expand">
+          content: html2.node`
+                    ${avatar3 != null ? html2.node`
+                    <button class="dropdown-menu-clickable-item" onclick=${() => expand_avatar(avatar3.getAttribute("content"))} data-menu-item="expand">
                         ${tl(trans.expand)}
                     </button>
                     ` : ""}
@@ -18253,14 +19408,13 @@
                         ${tl(trans.settings)}
                     </a>
                 `,
-          allowHTML: true,
           placement: "right-start",
           trigger: "manual",
           interactive: true,
           interactiveBorder: 10,
           offset: [0, 0],
           onShow(instance) {
-            instance.popper.addEventListener("click", (event2) => {
+            instance.popper.addEventListener("click", (event3) => {
               instance.hide();
             });
           }
@@ -18272,19 +19426,18 @@
         if (view_button) {
           let view_menu = tippy(view_button, {
             theme: "context-menu",
-            content: `
+            content: html2.node`
                         <a class="dropdown-menu-clickable-item" href="${root}bleh?tab=customise" data-menu-item="settings">
                             ${tl(trans.settings)}
                         </a>
                     `,
-            allowHTML: true,
             placement: "right-start",
             trigger: "manual",
             interactive: true,
             interactiveBorder: 10,
             offset: [0, 0],
             onShow(instance) {
-              instance.popper.addEventListener("click", (event2) => {
+              instance.popper.addEventListener("click", (event3) => {
                 instance.hide();
               });
             }
@@ -18327,131 +19480,6 @@
     log("status is", "page", "info", page);
     update_page();
   }
-
-  // src/changelog.js
-  unsafeWindow._query_changelog = function() {
-    if (!ff("changelogs")) {
-      deliver_notif("not just yet..");
-      return;
-    }
-    let changelog = localStorage.getItem("bleh_changelog");
-    let changelog_expire = new Date(localStorage.getItem("bleh_changelog_expire"));
-    let current_time = /* @__PURE__ */ new Date();
-    if (changelog == null) {
-      log("not cached, fetching", "changelog");
-      request_changelog();
-    } else {
-      if (changelog_expire < current_time)
-        request_changelog();
-      else
-        open_changelog(JSON.parse(changelog));
-    }
-  };
-  function request_changelog(open_after = true) {
-    let button = document.body.querySelector('[data-bleh-page="changelog"]');
-    if (button != null)
-      button.setAttribute("disabled", "");
-    let xhr = new XMLHttpRequest();
-    let url = `https://katelyynn.github.io/bleh/fm/changelog/changelog.json?${Math.random()}`;
-    xhr.open("GET", url, true);
-    xhr.onload = function() {
-      log(`responded with ${xhr.status}`, "changelog");
-      if (xhr.status != 200) {
-        log("request has been cancelled, will request again in 1h", "changelog");
-        api_expire.setHours(api_expire.getHours() + 1);
-      }
-      let api_expire = /* @__PURE__ */ new Date();
-      if (xhr.status == 200) {
-        if (open_after) {
-          try {
-            open_changelog(JSON.parse(this.response));
-            localStorage.setItem("bleh_changelog", this.response);
-            api_expire.setHours(api_expire.getHours() + 2);
-            log(`cached until ${api_expire}`, "changelog");
-            localStorage.setItem("bleh_changelog_expire", api_expire);
-          } catch (e) {
-            deliver_notif("The changelog is currently unavailable due to errors, try again later.", true);
-            console.error(e);
-          }
-        }
-      }
-      if (button != null)
-        button.removeAttribute("disabled");
-    };
-    xhr.send();
-  }
-  function open_changelog(changelog) {
-    let window2 = dialog({
-      id: "changelog",
-      title: tl(trans.news_from_user).replace("{user}", `<a class="mention" href="${root}user/katesia">@katesia</a>`),
-      body: `
-            <div class="cta first sponsor colourful margin-bottom">
-                <strong>${tl(trans.news_sponsor_cta)}</strong>
-                <a class="see-more" onclick="_sponsor(true)">${tl(trans.sponsor)}</a>
-            </div>
-            <div class="changelog-list"></div>
-        `,
-      type: "changelog",
-      allow_scroll: true
-    });
-    let changelog_list = window2.querySelector(".changelog-list");
-    let index = 0;
-    for (let version2 in changelog) {
-      if (version2 == "updated" || version2 == "latest")
-        continue;
-      if (index > 10)
-        continue;
-      let version_item = document.createElement("div");
-      version_item.classList.add("changelog-version-item");
-      version_item.setAttribute("data-changelog-type", changelog[version2].type);
-      version_item.setAttribute("data-changelog-latest", index == 0 ? "true" : "false");
-      version_item.setAttribute("data-changelog-version", version2);
-      version_item.innerHTML = `
-            <div class="version-item-header">
-                <div class="sub-text">
-                    <div class="breadcrumb">
-                        <div class="breadcrumb-origin">
-                            ${version2}
-                        </div>
-                        <div class="breadcrumb-name">
-                            ${trans_legacy.en.changelog.type[changelog[version2].type]}
-                        </div>
-                    </div>
-                </div>
-                <h3>${changelog[version2].name}</h3>
-                ${version2 == "2025.0113" ? `<h4 class="header-over">${changelog[version2].name}</h4>` : ""}
-            </div>
-        `;
-      if (changelog[version2].type == "major")
-        version_item.setAttribute("id", "latest_major_release");
-      let body = document.createElement("div");
-      body.classList.add("version-item-body", "markdown-body");
-      let converter = new showdown.Converter({
-        emoji: true,
-        excludeTrailingPunctuationFromURLs: true,
-        ghMentions: true,
-        ghMentionsLink: `${root}user/{u}`,
-        headerLevelStart: 5,
-        noHeaderId: true,
-        openLinksInNewWindow: true,
-        requireSpaceBeforeHeadingText: true,
-        simpleLineBreaks: true,
-        simplifiedAutoLink: true,
-        strikethrough: true,
-        underline: true,
-        ghCodeBlocks: false,
-        smartIndentationFix: true
-      });
-      let parsed_text = converter.makeHtml(changelog[version2].bio.replace(/([@])([a-zA-Z0-9_]+)/g, `[$1$2](${root}user/$2)`).replace(/\[artist\]([a-zA-Z0-9]+)\[\/artist\]/g, `[$1](${root}music/$1)`).replace(/\[album artist=([a-zA-Z0-9]+)\]([a-zA-Z0-9\s]+)\[\/album\]/g, `[$2](${root}music/$1/$2)`).replace(/\[track artist=([a-zA-Z0-9]+)\]([a-zA-Z0-9\s]+)\[\/track\]/g, `[$2](${root}music/$1/_/$2)`).replace(/https:\/\/open\.spotify\.com\/user\/([A-Za-z0-9]+)\?si=([A-Za-z0-9]+)/g, "[@$1](https://open.spotify.com/user/$1)").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;"));
-      body.innerHTML = parsed_text;
-      version_item.appendChild(body);
-      changelog_list.appendChild(version_item);
-      index += 1;
-    }
-  }
-  unsafeWindow._update_local_changelog_cache = function(json) {
-    localStorage.setItem("bleh_changelog", JSON.stringify(json));
-  };
 
   // src/pages/bleh_setup.js
   function bleh_setup() {
@@ -18529,7 +19557,7 @@
                     <button class="btn theme-item" data-bleh-theme="light" data-bleh--theme_type="light" onclick="change_theme_from_settings('light')">
                         <div class="preview-container">
                         <div class="preview" data-bleh--theme="light" data-bleh--theme_type="light">
-                            ${theme_preview}
+                            ${theme_preview()}
                         </div>
                         </div>
                         <div class="text">
@@ -18539,7 +19567,7 @@
                     <button class="btn theme-item" data-bleh-theme="ink" data-bleh--theme_type="light" onclick="change_theme_from_settings('ink')">
                         <div class="preview-container">
                         <div class="preview" data-bleh--theme="ink" data-bleh--theme_type="light">
-                            ${theme_preview}
+                            ${theme_preview()}
                         </div>
                         </div>
                         <div class="text">
@@ -18553,7 +19581,7 @@
                     <button class="btn theme-item" data-bleh-theme="dark" onclick="change_theme_from_settings('dark')">
                         <div class="preview-container">
                         <div class="preview" data-bleh--theme="dark">
-                            ${theme_preview}
+                            ${theme_preview()}
                         </div>
                         </div>
                         <div class="text">
@@ -18563,7 +19591,7 @@
                     <button class="btn theme-item" data-bleh-theme="darker" onclick="change_theme_from_settings('darker')">
                         <div class="preview-container">
                         <div class="preview" data-bleh--theme="darker">
-                            ${theme_preview}
+                            ${theme_preview()}
                         </div>
                         </div>
                         <div class="text">
@@ -18573,7 +19601,7 @@
                     <button class="btn theme-item" data-bleh-theme="oled" onclick="change_theme_from_settings('oled')">
                         <div class="preview-container">
                         <div class="preview" data-bleh--theme="oled">
-                            ${theme_preview}
+                            ${theme_preview()}
                         </div>
                         </div>
                         <div class="text">
@@ -18870,7 +19898,7 @@
     let settings_btn = header.querySelector(".panel-settings-button");
     tippy(settings_btn, {
       theme: "window",
-      content: `
+      content: html2.node`
             <div class="dialog-settings">
                 <div class="setting" data-type="toggle" id="container-simulate_scroll" onclick="_update_item('simulate_scroll')">
                     <button class="btn reset" onclick="_reset_item('simulate_scroll')">${tl(trans.reset)}</button>
@@ -18886,7 +19914,6 @@
                 </div>
             </div>
         `,
-      allowHTML: true,
       placement: "bottom",
       interactive: true,
       interactiveBorder: 10,
@@ -18922,11 +19949,11 @@
         });
       }
       let items = row.querySelectorAll(".globalchart-item");
-      items.forEach((item2, item_index) => {
+      items.forEach((item, item_index) => {
         let list_item = document.createElement("li");
-        let image = item2.querySelector(".globalchart-image img");
-        let rank = item2.querySelector(".globalchart-rank");
-        let name = item2.querySelector(".globalchart-name a");
+        let image = item.querySelector(".globalchart-image img");
+        let rank = item.querySelector(".globalchart-rank");
+        let name = item.querySelector(".globalchart-name a");
         let link = name.getAttribute("href");
         image.setAttribute("src", image.getAttribute("src").replace("/avatar70s/", "/avatar300s/"));
         if (index == 1) {
@@ -18950,7 +19977,7 @@
                     </div>
                 `;
         } else {
-          let artist = item2.querySelector(".globalchart-track-artist-name a");
+          let artist = item.querySelector(".globalchart-track-artist-name a");
           artist.textContent = correct_artist(artist.textContent);
           name.textContent = correct_item_by_artist(name.textContent, artist.textContent);
           list_item.classList.add("music-bookmarks-albums-item-wrap", "charts-list-item");
@@ -19082,11 +20109,11 @@
     let menu_button = nav.querySelector(".secondary-nav-item--more a");
     tippy(menu_button, {
       theme: "menu",
-      content: `
+      content: html2.node`
             <button class="dropdown-menu-clickable-item update" onclick="_force_refresh_theme()">
                 ${trans_legacy.en.settings.home.update.update_now}
             </button>
-            ${settings.dev ? `
+            ${settings.dev ? html2.node`
             <a class="dropdown-menu-clickable-item update" href="https://github.com/katelyynn/bleh/raw/uwu/fm/bleh.user.css">
                 ${trans_legacy.en.settings.home.update.css}
             </a>
@@ -19098,13 +20125,12 @@
                 ${trans_legacy.en.settings.home.issues.name}
             </a>
         `,
-      allowHTML: true,
       placement: "bottom",
       interactive: true,
       interactiveBorder: 10,
       trigger: "click",
       onShow(instance) {
-        instance.popper.addEventListener("click", (event2) => {
+        instance.popper.addEventListener("click", (event3) => {
           instance.hide();
         });
       }
@@ -19129,8 +20155,8 @@
       fetch(`${root}user/${auth.name}/partial/recenttracks?ajax=1`).then(function(response) {
         console.log("returned", response, response.text);
         return response.text();
-      }).then(function(html) {
-        let doc = new DOMParser().parseFromString(html, "text/html");
+      }).then(function(html3) {
+        let doc = new DOMParser().parseFromString(html3, "text/html");
         console.log("DOC", doc);
         let tracklist_panel = doc.querySelector(".chartlist");
         if (tracklist_panel)
@@ -19287,12 +20313,12 @@
       let metadata = header_meta.querySelectorAll(".header-metadata-display");
       let going = 0;
       let maybe = 0;
-      metadata.forEach((item2, index) => {
-        let para = item2.querySelector("p");
+      metadata.forEach((item, index) => {
+        let para = item.querySelector("p");
         if (index == 0) {
           going = clean_number(para.textContent.trim());
         } else if (index == 1) {
-          maybe = clean_number(item2.textContent.trim());
+          maybe = clean_number(item.textContent.trim());
         }
       });
       let side_actions = document.createElement("section");
@@ -19330,9 +20356,9 @@
       }
       let users = page.structure.main.querySelectorAll(".attendee-summary-user-inner-wrap");
       users.forEach((user) => {
-        let avatar = user.querySelector(".attendee-summary-user-avatar");
+        let avatar3 = user.querySelector(".attendee-summary-user-avatar");
         let name = user.querySelector(".attendee-summary-user-link").textContent;
-        patch_avatar(avatar, name, "event");
+        patch_avatar(avatar3, name, "event");
       });
       let cancelled = page.structure.main.querySelector(".event-status--cancelled");
       if (cancelled) {
@@ -19362,9 +20388,9 @@
         refresh_all();
         let users = page.structure.main.querySelectorAll(".user-list-inner-wrap");
         users.forEach((user) => {
-          let avatar = user.querySelector(".user-list-avatar");
+          let avatar3 = user.querySelector(".user-list-avatar");
           let name = user.querySelector(".user-list-link").textContent;
-          let badge = patch_avatar(avatar, name, "follow");
+          let badge = patch_avatar(avatar3, name, "follow");
           if (badge.type == "avatar-status-dot--staff")
             user.classList.add("staff-user");
         });
@@ -19475,11 +20501,11 @@
       notif_links.forEach((notification) => {
         let link = notification.getAttribute("href");
         if (link.endsWith("/obsessions/set") || link.endsWith("/listening-report/month")) return;
-        let avatar = notification.querySelector(".avatar");
+        let avatar3 = notification.querySelector(".avatar");
         let name = notification.querySelector(".inbox-notifications__item-description strong");
         if (!name) return;
-        let name_text = sanitise(return_name_from_avatar(avatar.querySelector("img")));
-        let badge = patch_avatar(avatar, name_text);
+        let name_text = sanitise(return_name_from_avatar(avatar3.querySelector("img")));
+        let badge = patch_avatar(avatar3, name_text);
         name.classList.add("notification-user-name", `user-status--bleh-${badge.type}`, `user-status--bleh-user-${name_text}`);
         if (notification.classList.contains("inbox-notifications__item--highlight"))
           notification.classList.add("notification-user-name", `user-status--bleh-${badge.type}`, `user-status--bleh-user-${name_text}`);
@@ -19492,9 +20518,9 @@
       let sender_time = inbox.querySelector(".inbox-message-timestamp");
       sender_panel.appendChild(sender_name);
       sender_panel.appendChild(sender_time);
-      let avatar = sender_panel.querySelector(".avatar");
+      let avatar3 = sender_panel.querySelector(".avatar");
       let name_text = sanitise(sender_name.textContent.trim());
-      let badge = patch_avatar(avatar, name_text);
+      let badge = patch_avatar(avatar3, name_text);
       sender_panel.classList.add(`user-status--bleh-${badge.type}`, `user-status--bleh-user-${name_text}`);
     } else if (page.subpage == "compose") {
       let inbox = page.structure.container.querySelector(".inbox-compose-view");
@@ -19648,13 +20674,13 @@
         avatar_link.href = source_album.querySelector(".link-block-cover-link").getAttribute("href");
       let menu = tippy(avatar_side, {
         theme: "context-menu",
-        content: `
-                ${album_avatar || artist_avatar ? `
-                <button class="dropdown-menu-clickable-item" onclick="${expand_link}" data-menu-item="expand">
+        content: html2.node`
+                ${album_avatar || artist_avatar ? html2.node`
+                <button class="dropdown-menu-clickable-item" onclick=${() => expand_avatar(avatar.getAttribute("content"))} data-menu-item="expand">
                     ${tl(trans.expand)}
                 </button>
                 ` : ""}
-                ${album_avatar ? `
+                ${album_avatar ? html2.node`
                 <a class="dropdown-menu-clickable-item" href="${source_album.querySelector(".link-block-cover-link").getAttribute("href")}" data-menu-item="album">
                     ${tl(trans.album)}
                 </a>
@@ -19664,14 +20690,13 @@
                     ${tl(trans.settings)}
                 </a>
             `,
-        allowHTML: true,
         placement: "right-start",
         trigger: "manual",
         interactive: true,
         interactiveBorder: 10,
         offset: [0, 0],
         onShow(instance) {
-          instance.popper.addEventListener("click", (event2) => {
+          instance.popper.addEventListener("click", (event3) => {
             instance.hide();
           });
         }
@@ -19708,14 +20733,12 @@
     let rain_container_old = document.getElementById("rain-container");
     if (rain_container_old != void 0)
       document.body.removeChild(rain_container_old);
-    let rain_container = document.createElement("div");
-    rain_container.classList.add("rain-container");
-    rain_container.setAttribute("id", "rain-container");
-    rain_container.innerHTML = `
-        <div class="rain" id="rain"></div>
-        <div class="rain rain-back" id="rain-back"></div>
-    `;
-    document.body.appendChild(rain_container);
+    document.body.appendChild(html.node`
+        <div class="rain-container" id="rain-container">
+            <div class="rain" id="rain"></div>
+            <div class="rain rain-back" id="rain-back"></div>
+        </div>
+        `);
     let increment = 0;
     let drops = "";
     let subtle_drops = "";
@@ -19911,14 +20934,16 @@
     dialog({
       id: "sponsor",
       title: tl(trans.support_future_development),
-      body: `
+      body: html2.node`
             <div class="modal-vertical-inner support-inner">
                 <div class="avatar">
                     <img src="${auth.avatar.replace("/avatar42s/", "/avatar170s/")}" alt="${tl(trans.your_avatar)}">
                     <span class="avatar-status-dot user-status--bleh-sponsor"></span>
                 </div>
                 <h1>${tl(trans.support_future_development)}</h1>
-                <p>${tl(trans.why_sponsor).replace("katelyn", `<a class="mention" href="${root}user/katesia">@katesia</a>`)}</p>
+                <p>${html2.node([
+        tl(trans.why_sponsor).replace("katelyn", `<a class="mention" href="${root}user/katesia">@katesia</a>`)
+      ])}</p>
             </div>
             <div class="modal-footer">
                 <div class="fill"></div>
@@ -19940,7 +20965,7 @@
       dialog({
         id: "sponsor_manage",
         title: tl(trans.sponsor),
-        body: `
+        body: html2.node`
                 <div class="modal-vertical-inner support-inner">
                     <div class="avatar">
                         <img src="${auth.avatar.replace("/avatar42s/", "/avatar170s/")}" alt="${tl(trans.your_avatar)}">
@@ -19956,7 +20981,7 @@
       dialog({
         id: "sponsor_manage",
         title: tl(trans.sponsor),
-        body: `
+        body: html2.node`
                 <div class="modal-vertical-inner support-inner">
                     <div class="avatar">
                         <img src="${auth.avatar.replace("/avatar42s/", "/avatar170s/")}" alt="${tl(trans.your_avatar)}">
@@ -20027,15 +21052,7 @@
       document.body.classList.add("bleh");
       theme_version.state = getComputedStyle(document.body).getPropertyValue("--version-build").replaceAll("'", "").replaceAll('"', "");
       log(`theme version reporting as ${theme_version.state}`, "style");
-      load_chart_colours();
-      if ((page.type == "artist" || page.type == "album" || page.type == "track") && page.subpage == "overview")
-        bleh_music_page_charts();
-      if (page.type == "user" && page.subpage == "overview")
-        bleh_profile_chart_render();
-      if (page.type == "user" && page.subpage.startsWith("library")) {
-        bleh_glacier_date_graph_generate();
-        bleh_glacier_insights();
-      }
+      chart_reflow();
       log("checking timeout", "style");
       check_if_style_cache_is_valid();
     }, 200);
@@ -20068,8 +21085,8 @@
   function prompt_for_update() {
     dialog({
       id: "bleh_update",
-      title: trans_legacy.en.settings.home.update.update_to_v.replace("{v}", theme_version.state),
-      body: `
+      title: tl(trans.update_to_version).replace("{v}", theme_version.state),
+      body: html2.node`
             <div class="bleh--update-checker-container">
                 <div class="form">
                     <div class="form-group">
@@ -20094,7 +21111,7 @@
     });
   }
   unsafeWindow._ignore_update = function() {
-    dialog_rm({
+    dialog_rm2({
       id: "bleh_update"
     });
     let api_expire = /* @__PURE__ */ new Date();
@@ -20104,7 +21121,7 @@
   };
   unsafeWindow._start_update = function() {
     open(`https://github.com/katelyynn/bleh/raw/${settings.branch}/fm/bleh.user.js`);
-    dialog_rm({
+    dialog_rm2({
       id: "bleh_update"
     });
     if (!settings.dev) {
@@ -20112,8 +21129,8 @@
     } else {
       dialog({
         id: "bleh_update",
-        title: trans_legacy.en.settings.home.update.update_to_v.replace("{v}", theme_version.state),
-        body: `
+        title: tl(trans.update_to_version).replace("{v}", theme_version.state),
+        body: html2.node`
                 <div class="bleh--update-checker-container">
                     <div class="form">
                         <div class="form-group">
@@ -20131,7 +21148,7 @@
   };
   unsafeWindow._start_css_update = function() {
     open(`https://github.com/katelyynn/bleh/raw/${settings.branch}/fm/bleh.user.css`);
-    dialog_rm({
+    dialog_rm2({
       id: "bleh_update"
     });
     _final_update();
@@ -20139,8 +21156,8 @@
   unsafeWindow._final_update = function() {
     dialog({
       id: "bleh_update",
-      title: trans_legacy.en.settings.home.update.update_to_v.replace("{v}", theme_version.state),
-      body: `
+      title: tl(trans.update_to_version).replace("{v}", theme_version.state),
+      body: html2.node`
             <div class="bleh--update-checker-container">
                 <div class="form">
                     <div class="form-group">
@@ -20155,7 +21172,7 @@
     });
   };
   unsafeWindow._finish_update = function() {
-    dialog_rm({
+    dialog_rm2({
       id: "bleh_update"
     });
     if (!settings.dev) {
@@ -20192,15 +21209,7 @@
       setTimeout(function() {
         document.body.classList.add("bleh");
         theme_version.state = getComputedStyle(document.body).getPropertyValue("--version-build").replaceAll("'", "").replaceAll('"', "");
-        load_chart_colours();
-        if ((page.type == "artist" || page.type == "album" || page.type == "track") && page.subpage == "overview")
-          bleh_music_page_charts();
-        if (page.type == "user" && page.subpage == "overview")
-          bleh_profile_chart_render();
-        if (page.type == "user" && page.subpage.startsWith("library")) {
-          bleh_glacier_date_graph_generate();
-          bleh_glacier_insights();
-        }
+        chart_reflow();
         if (theme_version.state != version.build && theme_version.state != "") {
           log(`version mismatch! running ${version.build}, downloaded theme ${theme_version.state}`, "update");
           prompt_for_update();
@@ -20248,15 +21257,15 @@
     radios.forEach((radio) => {
       let type = radio.getAttribute("data-analytics-label");
       radio.classList.add("radio-button");
-      let text = tl(trans[type]);
+      let text2 = tl(trans[type]);
       if (type == "tag")
-        text = page.name;
+        text2 = page.name;
       else if (type == "event")
-        text = tl(trans.artists);
-      radio.innerHTML = `
+        text2 = tl(trans.artists);
+      render2(radio, html2`
             <h3 class="sub-text">${tl(trans.radio)}</h3>
-            <h4>${text}</h4>
-        `;
+            <h4>${text2}</h4>
+        `);
       radio.removeAttribute("title");
     });
     if (page.type == "user") {
@@ -20307,7 +21316,7 @@
       let description = old.querySelector(".api-app-description").textContent.trim();
       let token = old.querySelector('form [name="csrfmiddlewaretoken"]').value;
       let cancel = old.querySelector(".form-submit a").getAttribute("href");
-      page.structure.main.innerHTML = `
+      render(page.structure.main, html`
             <section class="api-connector">
                 <div class="avatar">
                     <img src="${auth.avatar.replace("/avatar42s/", "/avatar170s/")}" alt="${tl(trans.your_avatar)}">
@@ -20315,7 +21324,11 @@
                 <div class="info">
                     <h1>${page.name}</h1>
                     <div class="sub-text no-margin">${tl(trans.app_would_like_to_connect)}</div>
-                    <div class="subtle">${tl(trans.logged_in_as).replace("{user}", `<a class="mention" href="${root}user/${auth.name}">@${auth.name}</a>`)}</div>
+                    <div class="subtle">
+                        ${html.node([
+        tl(trans.logged_in_as).replace("{user}", `<a class="mention" href="${root}user/${auth.name}">@${auth.name}</a>`)
+      ])}
+                    </div>
                 </div>
                 <div class="sep"></div>
                 <div class="description">${description}</div>
@@ -20333,7 +21346,7 @@
                     </form>
                 </div>
             </section>
-        `;
+        `);
     } else {
       page.name = success.querySelector("strong").textContent;
       page.structure.main.innerHTML = `
@@ -20361,11 +21374,10 @@
   function bleh_users() {
     let users = page.structure.main.querySelectorAll(".user-list-about-me");
     users.forEach((user) => {
-      let result = markdown(user.textContent, {
+      render2(user, markdown(user.textContent, {
         allow_headers: true,
         line_breaks: false
-      });
-      user.innerHTML = result;
+      }));
     });
   }
 
@@ -20451,12 +21463,12 @@
     dialog({
       id: "error",
       title: "An error has occurred",
-      body: `
+      body: html2.node`
             <div class="modal-vertical-inner error-inner">
                 <div class="bleh-icon" style="--icon: var(--icon-error)"></div>
                 <h1>oops.. something broke</h1>
-                <p>An error prevented bleh from finishing loading, it's recommended to leave the page and refresh.</p>
-                <pre class="error-info">${e ? `<span class="error-type">${e.name}</span>: ${e.message}` : ""}<br>on: ${page.type}/${page.subpage}<br>    ${window.location.pathname}</pre>
+                <p>An error prevented ${version.brand} from finishing loading, it's recommended to leave the page and refresh.</p>
+                <pre class="error-info">${e ? html2.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}<br>on: ${page.type}/${page.subpage}<br>    ${window.location.pathname}<br>    ${version.build}</pre>
                 <p>It would be helpful if you could report this bug on Github, including the error message above and a screenshot of your browser console (the error is highlighted).</p>
             </div>
             <div class="modal-footer">
@@ -20514,8 +21526,8 @@
     }
     if (page.type == "overview" && page.subpage == "music") {
       let items = page.structure.main.querySelectorAll(".music-featured-item:not(.music-featured-tag)");
-      items.forEach((item2) => {
-        let bg = item2.querySelector(".music-featured-item-background");
+      items.forEach((item) => {
+        let bg = item.querySelector(".music-featured-item-background");
         if (!bg) return;
         let style = bg.style.getPropertyValue("background-image");
         if (!style)
@@ -20758,7 +21770,7 @@
     }
   }
   function page_indicator() {
-    page.structure.indicator.innerHTML = `
+    render2(page.structure.indicator, html2`
         <div class="bleh">
             <strong>ver</strong>
             <span>${version.brand}</span>
@@ -20786,7 +21798,7 @@
             <span>${stored_season.year}</span>
             <span>${stored_season.offset}</span>
         </div>
-    `;
+    `);
   }
   function update_page() {
     page.structure.container.setAttribute("data-page-type", page.type);
@@ -21024,3 +22036,23 @@
   log(`starting ${version.build}.${version.sku}`, "load");
   bleh();
 })();
+/*! Bundled license information:
+
+@ungap/weakmap/esm/index.js:
+  (*! (c) Andrea Giammarchi - ISC *)
+
+domconstants/esm/index.js:
+  (*! (c) Andrea Giammarchi - ISC *)
+
+domsanitizer/esm/index.js:
+  (*! (c) Andrea Giammarchi - ISC *)
+
+@ungap/create-content/esm/index.js:
+  (*! (c) Andrea Giammarchi - ISC *)
+
+@ungap/import-node/esm/index.js:
+  (*! (c) Andrea Giammarchi - ISC *)
+
+hyperhtml-style/esm/index.js:
+  (*! (c) Andrea Giammarchi - ISC *)
+*/

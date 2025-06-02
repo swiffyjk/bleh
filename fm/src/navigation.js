@@ -1,11 +1,13 @@
-import { settings } from "./build/config";
-import { auth, page, root } from "./build/page";
-import { stored_season } from "./build/seasonal";
-import { lang, trans_legacy, tl, trans } from "./build/trans";
-import { load_badges } from "./components/badge";
-import { version } from "./main";
-import { show_theme_change_in_menu } from "./pages/bleh_config";
-import { ff } from "./sku";
+import {settings} from "./build/config";
+import {auth, page, root} from "./build/page";
+import {stored_season} from "./build/seasonal";
+import {lang, tl, trans, trans_legacy} from "./build/trans";
+import {load_badges} from "./components/badge";
+import {version} from "./main";
+import {show_theme_change_in_menu} from "./pages/bleh_config";
+import {ff} from "./sku";
+import {html} from "lighterhtml";
+import {news} from "./news.js";
 
 export function patch_masthead(element) {
     let masthead_logo = element.querySelector('.masthead-logo');
@@ -14,18 +16,16 @@ export function patch_masthead(element) {
     if (!masthead_logo.hasAttribute('data-kate-processed')) {
         masthead_logo.setAttribute('data-kate-processed','true');
 
-        let link = document.createElement('a');
-        link.classList.add('home-link');
-        link.setAttribute('href', `${root}music`);
-        link.innerHTML = `<div class="bleh-logo">${version.brand}</div>`;
-        masthead_logo.appendChild(link);
+        masthead_logo.appendChild(html.node`
+            <a class="home-link" href="${root}music">
+                <div class="bleh-logo">${version.brand}</div>
+            </a>`);
 
-        let version_text = document.createElement('a');
-        version_text.classList.add('bleh--version');
-        version_text.setAttribute('href', `${root}bleh`);
-        version_text.innerHTML = `${version.build}.${version.sku}${(settings.branch != 'uwu') ? `.${settings.branch}` : ''}${(settings.dev) ? `<div class="new-badge subtle">✦</div>` : ''}`;
-
-        masthead_logo.appendChild(version_text);
+        masthead_logo.appendChild(html.node`
+            <a class="bleh--version" href="${root}bleh">
+                ${version.build}.${version.sku}${(settings.branch != 'uwu') ? `.${settings.branch}` : ''}${(settings.dev) ? html.node`<div class="new-badge subtle">✦</div>` : ''}
+            </a>
+        `);
     }
 }
 
@@ -37,16 +37,16 @@ export function append_nav() {
 
         page.structure.indicator = page_indicator;
     }
-
+        
     if (!page.structure.loader) {
-        let loader = document.createElement('div');
-        loader.classList.add('loader');
-        loader.innerHTML = (`
-            <div class="loader-bar">
-                <div class="loader-bar-fill"></div>
-            </div>
-            <div class="bleh-icon"></div>
-        `);
+        const loader = html.node`
+            <div class="loader"
+                <div class="loader-bar">
+                    <div class="loader-bar-fill"></div>
+                </div>
+                <div class="bleh-icon"></div>
+            <div>
+        `;
         document.body.appendChild(loader);
         page.structure.loader = loader;
     }
@@ -86,29 +86,26 @@ export function append_nav() {
 
 
     let notif_count = new_auth.querySelector('[data-analytics-label="notifications"] + .auth-avatar-notification-count-badge');
+    if (!notif_count) notif_count = '0'; else notif_count = notif_count.textContent;
     let inbox_count = new_auth.querySelector('[data-analytics-label="inbox"] + .auth-avatar-notification-count-badge');
+    if (!inbox_count) inbox_count = '0'; else inbox_count = inbox_count.textContent;
 
 
     let links = masthead.querySelector('.masthead-nav .navlist-items');
     links.innerHTML = '';
 
-    let notif_container = document.createElement('li');
-    notif_container.classList.add('masthead-nav-item');
-    notif_container.innerHTML = (`
-        <a class="masthead-nav-control" href="${root}inbox/notifications" data-label="notifications">
-            ${tl(trans.notifications.name)}
-            ${(notif_count) ? `<div class="notification-count-badge"></div>` : ''}
+    let notif_container = html.node`
+    <li class="masthead-nav-item">
+        <a class="masthead-nav-control" href="${root}inbox/notifications" data-label="notifications" data-count=${notif_count}>
+            <span class="sr-only">${tl(trans.notifications.name)}</span>
+            <div class="counter">${notif_count}</div>
         </a>
-    `);
+    </li>`;
 
-    if (notif_count) {
-        notif_count = notif_count.textContent;
-
+    if (notif_count > 0) {
         tippy(notif_container, {
             content: tl(trans.notifications.count).replace('{count}', notif_count)
         });
-
-        notif_container.setAttribute('data-count', notif_count);
     } else {
         tippy(notif_container, {
             content: tl(trans.notifications.none)
@@ -117,23 +114,19 @@ export function append_nav() {
 
     links.appendChild(notif_container);
 
-    let inbox_container = document.createElement('li');
-    inbox_container.classList.add('masthead-nav-item');
-    inbox_container.innerHTML = (`
-        <a class="masthead-nav-control" href="${root}inbox" data-label="inbox">
-            ${tl(trans.inbox.name)}
-            ${(inbox_count) ? `<div class="notification-count-badge"></div>` : ''}
-        </a>
-    `);
+    let inbox_container = html.node`
+        <li class="masthead-nav-item">
+            <a class="masthead-nav-control" href="${root}inbox" data-label="inbox" data-count=${inbox_count}>
+                <span class="sr-only">${tl(trans.inbox.name)}</span>
+                <div class="counter">${inbox_count}</div>
+            </a>
+        </li>
+    `;
 
-    if (inbox_count) {
-        inbox_count = inbox_count.textContent;
-
+    if (inbox_count > 0) {
         tippy(inbox_container, {
             content: tl(trans.inbox.count).replace('{count}', inbox_count)
         });
-
-        inbox_container.setAttribute('data-count', inbox_count);
     } else {
         tippy(inbox_container, {
             content: tl(trans.inbox.none)
@@ -142,27 +135,14 @@ export function append_nav() {
 
     links.appendChild(inbox_container);
 
-    // what's new?
-    let changelog_container = document.createElement('li');
-    changelog_container.classList.add('masthead-nav-item');
-    changelog_container.innerHTML = (`
-        <a class="masthead-nav-control" onclick="_query_changelog()" data-label="changelog">
-            ${tl(trans.news)}
-        </a>
-    `);
-    tippy(changelog_container, {
-        content: tl(trans.news)
-    });
-    links.appendChild(changelog_container);
-
     // configure bleh
-    let bleh_container = document.createElement('li');
-    bleh_container.classList.add('masthead-nav-item');
-    bleh_container.innerHTML = (`
-        <a class="masthead-nav-control" href="${root}bleh${(stored_season.id != 'none') ? '?tab=seasonal' : ''}" data-label="bleh" data-season="${stored_season.id}" data-season-active="${(stored_season.id != 'none') ? 'true' : 'false'}">
-            ${(stored_season.id == 'none') ? tl(trans.bleh_settings) : moment(stored_season.end.replace('y0', stored_season.year).replace('{offset}', stored_season.offset)).to(stored_season.now, true)}
-        </a>
-    `);
+    let bleh_container = html.node`
+        <li class="masthead-nav-item">
+            <a class="masthead-nav-control" href="${root}bleh${(stored_season.id != 'none') ? '?tab=seasonal' : ''}" data-label="bleh" data-season="${stored_season.id}" data-season-active="${(stored_season.id != 'none') ? 'true' : 'false'}">
+                ${(stored_season.id == 'none') ? tl(trans.bleh_settings) : moment(stored_season.end.replace('y0', stored_season.year).replace('{offset}', stored_season.offset)).to(stored_season.now, true)}
+            </a>
+        </li>
+    `;
     if (stored_season.id == 'none') {
         tippy(bleh_container, {
             content: tl(trans.bleh_settings)
@@ -170,11 +150,10 @@ export function append_nav() {
     } else {
         page.header.season_tooltip = tippy(bleh_container, {
             theme: 'seasonal-swatch',
-            content: (`
+            content: html.node`
                 <span class="season-colour-name">${tl(trans.seasonal.listing[stored_season.id])}</span>
                 <span class="season-exclusive">${trans_legacy.en.auth_menu.seasonal_notice}</span>
-            `),
-            allowHTML: true
+            `,
         });
     }
     links.appendChild(bleh_container);
@@ -186,14 +165,14 @@ export function append_nav() {
     let selected_language = document.querySelector('.footer-language--active strong')?.textContent;
     let language_options = document.querySelectorAll('.footer-language-form');
 
-    let language_menu = document.createElement('div');
-    language_menu.classList.add('language-menu');
-    language_menu.innerHTML = (`
-        <button class="dropdown-menu-clickable-item lang-item active" data-lang="${lang}" style="--flag-url: url('https://katelyynn.github.io/bleh/fm/flags/${lang}.svg')">
-            ${selected_language}
-        </button>
-        <div class="sep"></div>
-    `);
+    let language_menu = html.node`
+        <div class="language-menu">
+            <button class="dropdown-menu-clickable-item lang-item active" data-lang="${lang}" style="--flag-url: url('https://katelyynn.github.io/bleh/fm/flags/${lang}.svg')">
+                ${selected_language}
+            </button>
+            <div class="sep"></div>
+        </div>
+    `;
 
     language_options.forEach((language_option) => {
         let button = language_option.querySelector('button');
@@ -211,7 +190,7 @@ export function append_nav() {
     let token = new_auth.querySelector('[name="csrfmiddlewaretoken"]').getAttribute('value');
     let auth_menu = tippy(auth_link, {
         theme: 'auth-menu',
-        content: (`
+        content: html.node`
             <a class="dropdown-menu-clickable-item" data-menu-item="profile" href="${root}user/${auth.name}">
                 ${auth.name}
             </a>
@@ -225,11 +204,11 @@ export function append_nav() {
             <a class="dropdown-menu-clickable-item" data-menu-item="shouts" href="${root}user/${auth.name}/shoutbox">
                 ${tl(trans.shouts)}
             </a>
-            ${(settings.auth_menu_obsessions) ? (`
+            ${(settings.auth_menu_obsessions) ? html.node`
             <a class="dropdown-menu-clickable-item" data-menu-item="obsessions" href="${root}user/${auth.name}/obsessions">
                 ${trans_legacy.en.auth_menu.obsessions}
             </a>
-            `) : ''}
+            ` : ''}
             <button class="dropdown-menu-clickable-item" data-menu-item="themes" onclick="toggle_theme()">
                 <span class="auth-dropdown-item-row">
                     <span class="auth-dropdown-item-left">${tl(trans.themes.name)}</span>
@@ -241,6 +220,9 @@ export function append_nav() {
                     <span class="auth-dropdown-item-left">${tl(trans.language)}</span>
                     <span class="auth-dropdown-item-right" id="theme-value">${selected_language}</span>
                 </span>
+            </button>
+            <button class="dropdown-menu-clickable-item" data-menu-item="news" onclick=${() => news()}>
+                ${tl(trans.news)}
             </button>
             <a class="dropdown-menu-clickable-item" data-menu-item="bleh" href="${root}bleh">
                 ${tl(trans.settings)}
@@ -258,8 +240,7 @@ export function append_nav() {
                     ${tl(trans.logout)}
                 </a>
             </form>
-        `),
-        allowHTML: true,
+        `,
         placement: 'top',
         interactive: true,
         interactiveBorder: 10,
@@ -279,10 +260,7 @@ export function append_nav() {
 
             tippy(instance.popper.querySelector('[data-menu-item="language"]:not([aria-expanded])'), {
                 theme: 'language-menu',
-                content: (`
-                    ${language_menu.innerHTML}
-                `),
-                allowHTML: true,
+                content: language_menu,
                 placement: 'left',
                 hideOnClick: false,
                 interactive: true,
@@ -291,7 +269,7 @@ export function append_nav() {
 
             let theme_menu_item = tippy(instance.popper.querySelector('[data-menu-item="themes"]:not([aria-expanded])'), {
                 theme: 'menu',
-                content: (`
+                content: html.node`
                     <button class="dropdown-menu-clickable-item theme-item-in-menu" data-bleh-theme="light" onclick="change_theme_from_menu('light')">
                         ${tl(trans.themes.light)}
                     </button>
@@ -307,8 +285,7 @@ export function append_nav() {
                     <button class="dropdown-menu-clickable-item theme-item-in-menu" data-bleh-theme="oled" onclick="change_theme_from_menu('oled')">
                         ${tl(trans.themes.oled)}
                     </button>
-                `),
-                allowHTML: true,
+                `,
                 placement: 'left',
                 hideOnClick: false,
                 interactive: true,
@@ -327,28 +304,25 @@ export function append_nav() {
     auth_link.removeAttribute('data-disclose-hover--allow-enter-open');
     auth_link.removeAttribute('href');
 
-
     // mobile
-    let mobile = document.createElement('div');
-    mobile.classList.add('mobile-controls');
-    mobile.innerHTML = (`
-        <a class="btn mobile-control" aria-checked="${page.type == 'overview' || page.type == 'recommended' || page.type == 'releases' || page.type == 'bookmarks' || page.type == 'charts'}" data-menu-item="home" href="${root}music">
-            ${tl(trans.home)}
-        </a>
-        <a class="btn mobile-control" aria-checked="${page.type == 'search'}" data-menu-item="search" href="${root}search">
-            ${tl(trans.search)}
-        </a>
-        <a class="btn mobile-control" aria-checked="${page.type == 'user' && page.name == auth.name}" data-menu-item="profile_mobile" href="${root}user/${auth.name}">
-            ${auth.name}
-        </a>
-        <a class="btn mobile-control" aria-checked="${page.type == 'inbox'}" data-menu-item="notifications" href="${root}inbox/notifications">
-            ${tl(trans.inbox.name)}
-            ${(inbox_count || notif_count) ? `<div class="notification-count-badge"></div>` : ''}
-        </a>
-        <a class="btn mobile-control" aria-checked="${page.type == 'settings' || page.type == 'bleh_settings'}" data-menu-item="settings" href="${root}bleh">
-            ${tl(trans.settings)}
-        </a>
+    masthead.appendChild(html.node`
+        <div class="mobile-controls">
+            <a class="btn mobile-control" aria-checked="${page.type == 'overview' || page.type == 'recommended' || page.type == 'releases' || page.type == 'bookmarks' || page.type == 'charts'}" data-menu-item="home" href="${root}music">
+                ${tl(trans.home)}
+            </a>
+            <a class="btn mobile-control" aria-checked="${page.type == 'search'}" data-menu-item="search" href="${root}search">
+                ${tl(trans.search)}
+            </a>
+            <a class="btn mobile-control" aria-checked="${page.type == 'user' && page.name == auth.name}" data-menu-item="profile_mobile" href="${root}user/${auth.name}">
+                ${auth.name}
+            </a>
+            <a class="btn mobile-control" aria-checked="${page.type == 'inbox'}" data-menu-item="notifications" href="${root}inbox/notifications">
+                ${tl(trans.inbox.name)}
+                ${(inbox_count || notif_count) ? `<div class="notification-count-badge"></div>` : ''}
+            </a>
+            <a class="btn mobile-control" aria-checked="${page.type == 'settings' || page.type == 'bleh_settings'}" data-menu-item="settings" href="${root}bleh">
+                ${tl(trans.settings)}
+            </a>
+        </div>
     `);
-
-    masthead.appendChild(mobile);
 }

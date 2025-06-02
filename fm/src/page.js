@@ -1,43 +1,62 @@
-import { load_activities, subscribe_to_events } from "./activity";
-import { settings } from "./build/config";
-import { log } from "./build/log";
-import { auth, auth_link, bleh_url, has_prompted_for_update, last_page_subpage, last_page_type, page, root, setup_url, shout_parse_queue, sponsor_url } from "./build/page";
-import { stored_season } from "./build/seasonal";
-import { lang, lookup_lang, tl, trans } from "./build/trans";
-import { auto_edit_modal } from "./components/auto_edit";
-import { dialog, load_dialogs } from "./components/dialog";
-import { correct_artist, correct_generic_combo, correct_generic_combo_no_artist, correct_item_by_artist, lotus } from "./components/lotus";
-import { music_grids } from "./components/music_grid";
-import { nag_bar } from "./components/nag_bar";
-import { load_notifications, notify } from "./components/notify";
-import { patch_titles } from "./components/track";
-import { load_settings } from "./config";
-import { theme_version, version } from "./main";
-import { append_nav, patch_masthead } from "./navigation";
-import { bleh_albums } from "./pages/album";
-import { bleh_artists } from "./pages/artist";
-import { bleh_settings } from "./pages/bleh_config";
-import { bleh_setup, notify_if_new_update } from "./pages/bleh_setup";
-import { bleh_error } from "./pages/error";
-import { bleh_events } from "./pages/event";
-import { bleh_gallery, bleh_gallery_upload_check } from "./pages/gallery";
-import { bleh_glacier_library, bleh_glacier_library_bulk_edit } from "./pages/glacier";
-import { bleh_home, bleh_home_legacy } from "./pages/home";
-import { bleh_inbox } from "./pages/inbox";
-import { bleh_profiles } from "./pages/profile";
-import { bleh_search } from "./pages/search";
-import { bleh_tags } from "./pages/tag";
-import { bleh_tracks } from "./pages/track";
-import { patch_wiki } from "./pages/wiki";
-import { start_rain } from "./rain";
-import { seasonal_timer_end, set_season } from "./seasonal";
-import { parse_shout_queue, patch_shouts } from "./shout";
-import { ff } from "./sku";
-import { bleh_sponsor_page, sponsors } from "./sponsor";
-import { append_style, prompt_for_update } from "./style";
-import { bleh_radio } from "./components/radio";
-import { bleh_api } from './pages/api';
-import { bleh_users } from './pages/users';
+import {load_activities, subscribe_to_events} from "./activity";
+import {settings} from "./build/config";
+import {log} from "./build/log";
+import {
+    auth,
+    auth_link,
+    bleh_url,
+    has_prompted_for_update,
+    last_page_subpage,
+    last_page_type,
+    page,
+    root,
+    setup_url,
+    shout_parse_queue,
+    sponsor_url
+} from "./build/page";
+import {stored_season} from "./build/seasonal";
+import {lang, lookup_lang, tl, trans} from "./build/trans";
+import {auto_edit_modal} from "./components/auto_edit";
+import {dialog, load_dialogs} from "./components/dialog";
+import {
+    correct_artist,
+    correct_generic_combo,
+    correct_generic_combo_no_artist,
+    correct_item_by_artist,
+    lotus
+} from "./components/lotus";
+import {music_grids} from "./components/music_grid";
+import {nag_bar} from "./components/nag_bar";
+import {load_notifications, notify} from "./components/notify";
+import {patch_titles} from "./components/track";
+import {load_settings} from "./config";
+import {theme_version, version} from "./main";
+import {append_nav, patch_masthead} from "./navigation";
+import {bleh_albums} from "./pages/album";
+import {bleh_artists} from "./pages/artist";
+import {bleh_settings} from "./pages/bleh_config";
+import {bleh_setup, notify_if_new_update} from "./pages/bleh_setup";
+import {bleh_error} from "./pages/error";
+import {bleh_events} from "./pages/event";
+import {bleh_gallery, bleh_gallery_upload_check} from "./pages/gallery";
+import {bleh_glacier_library, bleh_glacier_library_bulk_edit} from "./pages/glacier";
+import {bleh_home, bleh_home_legacy} from "./pages/home";
+import {bleh_inbox} from "./pages/inbox";
+import {bleh_profiles} from "./pages/profile";
+import {bleh_search} from "./pages/search";
+import {bleh_tags} from "./pages/tag";
+import {bleh_tracks} from "./pages/track";
+import {patch_wiki} from "./pages/wiki";
+import {start_rain} from "./rain";
+import {seasonal_timer_end, set_season} from "./seasonal";
+import {parse_shout_queue, patch_shouts} from "./shout";
+import {ff} from "./sku";
+import {bleh_sponsor_page, sponsors} from "./sponsor";
+import {append_style, prompt_for_update} from "./style";
+import {bleh_radio} from "./components/radio";
+import {bleh_api} from './pages/api';
+import {bleh_users} from './pages/users';
+import {html, render} from "lighterhtml";
 
 export function bleh() {
     let head_observer = new MutationObserver((mutations) => {
@@ -153,12 +172,12 @@ function handle_error(e = null) {
     dialog({
         id: 'error',
         title: 'An error has occurred',
-        body: (`
+        body: html.node`
             <div class="modal-vertical-inner error-inner">
                 <div class="bleh-icon" style="--icon: var(--icon-error)"></div>
                 <h1>oops.. something broke</h1>
-                <p>An error prevented bleh from finishing loading, it's recommended to leave the page and refresh.</p>
-                <pre class="error-info">${(e) ? `<span class="error-type">${e.name}</span>: ${e.message}` : ''}<br>on: ${page.type}/${page.subpage}<br>    ${window.location.pathname}</pre>
+                <p>An error prevented ${version.brand} from finishing loading, it's recommended to leave the page and refresh.</p>
+                <pre class="error-info">${(e) ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ''}<br>on: ${page.type}/${page.subpage}<br>    ${window.location.pathname}<br>    ${version.build}</pre>
                 <p>It would be helpful if you could report this bug on Github, including the error message above and a screenshot of your browser console (the error is highlighted).</p>
             </div>
             <div class="modal-footer">
@@ -168,7 +187,7 @@ function handle_error(e = null) {
                 </a>
                 <div class="fill"></div>
             </div>
-        `),
+        `,
         type: 'error'
     });
 
@@ -561,7 +580,7 @@ function detect_mobile() {
 }
 
 function page_indicator() {
-    page.structure.indicator.innerHTML = (`
+    render(page.structure.indicator, html`
         <div class="bleh">
             <strong>ver</strong>
             <span>${version.brand}</span>

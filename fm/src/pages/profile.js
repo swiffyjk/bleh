@@ -21,6 +21,7 @@ import { ff } from "../sku"
 import { bleh_user_library } from "./glacier"
 import { use_pronouns } from "./lastfm_settings"
 import { bleh_obsession } from "./obsession"
+import { html, render } from "lighterhtml";
 
 export function bleh_profiles() {
     // the obsessions page is a user subpage but works very differently
@@ -464,11 +465,11 @@ export function bleh_profiles() {
                 dialog({
                     id: 'listening_report_v2',
                     title: 'oh no :c',
-                    body: (`
+                    body: html.node`
                         <div class="alert alert-error">This listening report is too old</div>
                         <br>
                         <p>Legacy listening reports are not properly viewable yet in bleh for now. Sorry for the inconvenience.</p>
-                    `)
+                    `
                 });
                 return;
             }
@@ -680,11 +681,10 @@ export function bleh_profiles() {
             tippy(badge, {
                 theme: 'badge',
                 placement: 'bottom',
-                content: (`
+                content: html.node`
                     <div class="badge-name">${badge.textContent}</div>
                     <div class="badge-reason">${tl(trans.badges[badge.classList[1]].reason)}</div>
-                `),
-                allowHTML: true
+                `
             });
         });
     }
@@ -705,11 +705,10 @@ export function bleh_profiles() {
                 tippy(badge, {
                     theme: 'badge',
                     placement: 'bottom',
-                    content: (`
+                    content: html.node`
                         <div class="badge-name">${this_badge.name}</div>
                         <div class="badge-reason">${tl(trans.badges[this_badge.reason].reason)}</div>
-                    `),
-                    allowHTML: true
+                    `,
                 });
             }
 
@@ -821,7 +820,7 @@ export function bleh_profiles() {
 
         tippy(about_more, {
             theme: 'window',
-            content: (`
+            content: html.node`
                 <div class="dialog-settings">
                     <div class="setting" data-type="toggle" id="container-bio_markdown" onclick="_update_item('bio_markdown')">
                         <button class="btn reset" onclick="_reset_item('bio_markdown')">${tl(trans.reset)}</button>
@@ -836,8 +835,7 @@ export function bleh_profiles() {
                         </div>
                     </div>
                 </div>
-            `),
-            allowHTML: true,
+            `,
             placement: 'bottom',
             interactive: true,
             interactiveBorder: 10,
@@ -1724,16 +1722,15 @@ function profile_tracks() {
 }
 
 function bio_parse(text, cache = false) {
-    let result = markdown(text.textContent, {
-        allow_headers: true
-    });
-
     let temp = document.createElement('div');
-    temp.innerHTML = result;
+
+    render(temp, markdown(text.textContent, {
+        allow_headers: true
+    }))
 
     use_banner(temp, cache);
 
-    return result;
+    return temp.innerHTML;
 }
 
 function use_banner(temp, cache) {

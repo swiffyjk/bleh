@@ -1,3 +1,4 @@
+import { html } from "lighterhtml";
 import { inbuilt_settings, settings, settings_base, settings_template } from "./build/config";
 import { log } from "./build/log";
 import { page, reload_pending } from "./build/page";
@@ -283,7 +284,8 @@ function update_item(item, value, modify=true, search = document) {
 
 
             if (item == 'dev') {
-                dialog_legacy('prompt_dev',trans_legacy.en.settings.performance.dev.name,`
+                dialog_legacy('prompt_dev',trans_legacy.en.settings.performance.dev.name,
+                    html.node`
                     <p class="alert alert-info">${trans_legacy.en.settings.performance.dev.modals.prompt.alert}</p>
                     <br>
                     ${trans_legacy.en.settings.performance.dev.modals.prompt.stylus}
@@ -502,7 +504,7 @@ unsafeWindow._chosen_firefox = function() {
 
 function continue_dev() {
     kill_window('prompt_dev');
-    dialog_legacy('continue_dev',trans_legacy.en.settings.performance.dev.name,`
+    dialog_legacy('continue_dev',trans_legacy.en.settings.performance.dev.name,html.node`
         ${trans_legacy.en.settings.performance.dev.modals.continue.next_step}
         <div class="modal-footer">
             <div class="fill"></div>

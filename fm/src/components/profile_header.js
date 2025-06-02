@@ -9,6 +9,7 @@ import { compare } from './compare';
 import { correct_artist } from "./lotus";
 import { register_menu } from "./menu";
 import { open_profile_shortcut_window } from './profile_shortcut';
+import { html } from "lighterhtml";
 
 unsafeWindow._toggle_profile_header = function(button) {
     let current = settings.profile_header_expand;
@@ -224,36 +225,37 @@ export function redesign_profile_header(is_own_profile, is_following) {
     let listen_container = page.structure.row.querySelector('.listen-panel');
 
     if (!is_own_profile && page.name != sponsor_list.sponsor_account && katsune) {
-        let taste_wrap = document.createElement('div');
-        taste_wrap.classList.add('btn', 'listen-item', 'icon');
-
-        taste_wrap.innerHTML = (`
-            <div class="span">
-                <img class="view-item-avatar" src="${auth.avatar}">
-                <img class="view-item-avatar" src="${profile_avi}">
-                <div class="info">
-                    <h3>${tl(trans.you_share_count_with).replace('{c}', `<span class="colourful" data-taste="${taste}">${taste_percentage}</span>`)}</h3>
-                    <p>
-                        ${(taste_artists.length == 1) ? tl(trans.you_share_count_with.one).replace('{artist}', taste_artists[0]) : ''}
-                        ${(taste_artists.length == 2) ? tl(trans.you_share_count_with.two).replace('{artist1}', taste_artists[0]).replace('{artist2}', taste_artists[1]) : ''}
-                        ${(taste_artists.length == 3) ? tl(trans.you_share_count_with.three).replace('{artist1}', taste_artists[0]).replace('{artist2}', taste_artists[1]).replace('{artist3}', taste_artists[2]) : ''}
-                    </p>
+        let taste_wrap = html.node`
+            <div class="btn listen-item icon">
+                <div class="span">
+                    <img class="view-item-avatar" src="${auth.avatar}">
+                    <img class="view-item-avatar" src="${profile_avi}">
+                    <div class="info">
+                        <h3>${
+                            html.node([
+                                tl(trans.you_share_count_with).replace('{c}', `<span class="colourful" data-taste="${taste}">${taste_percentage}</span>`)
+                            ])}</h3>
+                        <p>
+                            ${(taste_artists.length == 1) ? tl(trans.you_share_count_with.one).replace('{artist}', taste_artists[0]) : ''}
+                            ${(taste_artists.length == 2) ? tl(trans.you_share_count_with.two).replace('{artist1}', taste_artists[0]).replace('{artist2}', taste_artists[1]) : ''}
+                            ${(taste_artists.length == 3) ? tl(trans.you_share_count_with.three).replace('{artist1}', taste_artists[0]).replace('{artist2}', taste_artists[1]).replace('{artist3}', taste_artists[2]) : ''}
+                        </p>
+                    </div>
+                </div>
+                <div class="taste-bar colourful" data-taste="${taste}">
+                    <div class="taste-bar-fill" style="width: ${taste_percentage}"></div>
                 </div>
             </div>
-            <div class="taste-bar colourful" data-taste="${taste}">
-                <div class="taste-bar-fill" style="width: ${taste_percentage}"></div>
-            </div>
-        `);
+        `
 
         tippy(taste_wrap, {
             theme: 'stack',
-            content: (`
-            <span>
-                ${tl(trans.taste_similarity)}
-            </span>
-            <div class="hint">${tl(trans.right_click_for_more_options)}</div>
-            `),
-            allowHTML: true
+            content: html.node`
+                <span>
+                    ${tl(trans.taste_similarity)}
+                </span>
+                <div class="hint">${tl(trans.right_click_for_more_options)}</div>
+            `,
         });
 
         listen_container.appendChild(taste_wrap);
@@ -261,7 +263,7 @@ export function redesign_profile_header(is_own_profile, is_following) {
         if (taste_artists.length > 1) {
             let menu = tippy(taste_wrap, {
                 theme: 'context-menu',
-                content: (`
+                content: (html.node`
                     <h4 class="menu-header">${tl(trans.compare_plays)}</h4>
                     <a class="dropdown-menu-clickable-item" href="${root}user/${page.name}/library/music/${sanitise(taste_artists[0])}" data-menu-item="shared-artist">
                         <img class="view-item-avatar" src="${profile_avi}" alt="${page.name}">${taste_artists[0]}
@@ -269,7 +271,7 @@ export function redesign_profile_header(is_own_profile, is_following) {
                     <a class="dropdown-menu-clickable-item" href="${root}user/${auth.name}/library/music/${sanitise(taste_artists[0])}" data-menu-item="shared-artist">
                         <img class="view-item-avatar" src="${auth.avatar}" alt="${auth.name}">${taste_artists[0]}
                     </a>
-                    ${(taste_artists.length >= 2) ? (`
+                    ${(taste_artists.length >= 2) ? html.node`
                     <div class="sep"></div>
                     <a class="dropdown-menu-clickable-item" href="${root}user/${page.name}/library/music/${sanitise(taste_artists[1])}" data-menu-item="shared-artist">
                         <img class="view-item-avatar" src="${profile_avi}" alt="${page.name}">${taste_artists[1]}
@@ -277,8 +279,8 @@ export function redesign_profile_header(is_own_profile, is_following) {
                     <a class="dropdown-menu-clickable-item" href="${root}user/${auth.name}/library/music/${sanitise(taste_artists[1])}" data-menu-item="shared-artist">
                         <img class="view-item-avatar" src="${auth.avatar}" alt="${auth.name}">${taste_artists[1]}
                     </a>
-                    `) : ''}
-                    ${(taste_artists.length >= 3) ? (`
+                    ` : ''}
+                    ${(taste_artists.length >= 3) ? html.node`
                     <div class="sep"></div>
                     <a class="dropdown-menu-clickable-item" href="${root}user/${page.name}/library/music/${sanitise(taste_artists[2])}" data-menu-item="shared-artist">
                         <img class="view-item-avatar" src="${profile_avi}" alt="${page.name}">${taste_artists[2]}
@@ -286,9 +288,8 @@ export function redesign_profile_header(is_own_profile, is_following) {
                     <a class="dropdown-menu-clickable-item" href="${root}user/${auth.name}/library/music/${sanitise(taste_artists[2])}" data-menu-item="shared-artist">
                         <img class="view-item-avatar" src="${auth.avatar}" alt="${auth.name}">${taste_artists[2]}
                     </a>
-                    `) : ''}
+                    ` : ''}
                 `),
-                allowHTML: true,
                 placement: 'right-start',
                 trigger: 'manual',
                 interactive: true,
