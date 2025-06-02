@@ -1,10 +1,11 @@
-import { expand_avatar } from "../avatar";
-import { log } from "../build/log";
-import { page, root } from "../build/page";
-import { trans_legacy, trans, tl } from "../build/trans";
-import { register_menu } from "../components/menu";
-import { ff } from "../sku";
-import { html } from "lighterhtml";
+import {expand_avatar} from "../avatar";
+import {log} from "../build/log";
+import {page, root} from "../build/page";
+import {tl, trans, trans_legacy} from "../build/trans";
+import {register_menu} from "../components/menu";
+import {ff} from "../sku";
+import {html} from "lighterhtml";
+import {share} from "../components/share.js";
 
 export function bleh_gallery() {
     if (page.subpage != 'image')
@@ -135,17 +136,26 @@ export function bleh_gallery() {
     image_details.appendChild(button_container);
 
     // open in a new tab button
-    let open_button = document.createElement('button');
-    open_button.classList.add('image-open-button');
+    let open_button = html.node`
+        <button class="image-open-button" onclick=${() => expand_gallery_image()}>
+            ${tl(trans.expand)}
+        </button>
+    `;
     tippy(open_button, {
-        content: trans_legacy.en.gallery.open.tooltip
+        content: tl(trans.expand_to_full_resolution)
     });
-    open_button.textContent = tl(trans.expand);
-
-    open_button.setAttribute('onclick', `_expand_gallery_image()`);
 
     buttons_extra.appendChild(open_button);
-    open_button.after(create_divider());
+
+    // share button
+    let share_button = html.node`
+        <button class="image-share-button" onclick=${() => share_gallery_image()}>
+            ${tl(trans.share)}
+        </button>
+    `;
+
+    buttons_extra.appendChild(share_button);
+    share_button.after(create_divider());
 
     // delete
     let delete_button = image_details.querySelector('.gallery-image-delete');
@@ -231,12 +241,13 @@ export function bleh_gallery() {
     });*/
 }
 
-unsafeWindow._expand_gallery_image = function() {
-    expand_gallery_image();
-}
 function expand_gallery_image() {
     let image_src = page.structure.container.querySelector('.active-slide .js-gallery-image').getAttribute('src').replace('770x0', 'ar0');
     expand_avatar(image_src);
+}
+function share_gallery_image() {
+    let image_src = page.structure.container.querySelector('.active-slide .js-gallery-image').getAttribute('src').replace('770x0', 'ar0');
+    share(image_src);
 }
 
 export function create_divider() {
@@ -329,45 +340,41 @@ function patch_gallery_image_listing() {
     let bookmarked_images = JSON.parse(localStorage.getItem('bleh_bookmarked_images')) || {};
 
     if (page.requested.tab != 'saved' || page.requested.page != null)
-        page.structure.container.setAttribute('data-bleh--gallery-tab', 'overview');
+        page.structure.container.setAttribute('data-bleh--gallery-tab', 'all');
     else
-    page.structure.container.setAttribute('data-bleh--gallery-tab', 'bookmarks');
+        page.structure.container.setAttribute('data-bleh--gallery-tab', 'saved');
 
 
     // create nav
-    let bookmark_nav = document.createElement('div');
-    bookmark_nav.classList.add('bleh--nav-wrap', 'bleh--nav-wrap--bookmarks');
-    bookmark_nav.innerHTML = (`
-        <nav class="navlist secondary-nav">
-            <ul class="navlist-items">
-                <li class="navlist-item secondary-nav-item secondary-nav-item--gallery-overview">
-                    <a class="secondary-nav-item-link" onclick="_set_gallery_page('overview')">
-                        ${trans_legacy.en.gallery.tabs.overview}
-                    </a>
-                </li>
-                <li class="navlist-item secondary-nav-item secondary-nav-item--gallery-bookmarks">
-                    <a class="secondary-nav-item-link" onclick="_set_gallery_page('bookmarks')">
-                        ${trans_legacy.en.gallery.tabs.bookmarks}
-                    </a>
-                </li>
-            </ul>
-        </nav>
+    page.structure.content_top.after(html.node`
+        <div class="bleh--nav-wrap bleh--nav-wrap--bookmarks">
+            <nav class="navlist secondary-nav">
+                <ul class="navlist-items">
+                    <li class="navlist-item secondary-nav-item secondary-nav-item--gallery-overview">
+                        <a class="secondary-nav-item-link" onclick=${() => gallery_tab('all')}>
+                            ${tl(trans.all)}
+                        </a>
+                    </li>
+                    <li class="navlist-item secondary-nav-item secondary-nav-item--gallery-bookmarks">
+                        <a class="secondary-nav-item-link" onclick=${() => gallery_tab('saved')}>
+                            ${tl(trans.saved)}
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
     `);
-
-    page.structure.content_top.after(bookmark_nav);
 
 
     // content
-    let bookmarks_content = document.createElement('div');
-    bookmarks_content.classList.add('col-main', 'bleh--bookmarks', 'not-a-panel');
-    bookmarks_content.innerHTML = (`
-        <section class="bookmarks-panel">
-            <ul class="image-list" id="bleh--bookmarked-images" data-kate-processed="true"></ul>
-        </section>
-    `);
-
     page.structure.main.classList.add('bleh--gallery');
-    page.structure.main.after(bookmarks_content);
+    page.structure.main.after(html.node`
+        <div class="col-main bleh--bookmarks not-a-panel">
+            <section class="bookmarks-panel">
+                <ul class="image-list" data-kate-processed="true"></ul>
+            </section>
+        </div>
+    `);
 
 
     let sort_button = page.structure.main.querySelector('.dropdown-menu-clickable-button');
@@ -385,26 +392,22 @@ function patch_gallery_image_listing() {
     // append images
     if (bookmarked_images.hasOwnProperty(page.name)) {
         bookmarked_images[page.name].forEach((image) => {
-            console.info(image);
             let image_element = document.createElement('li');
             image_element.classList.add('image-list-item-wrapper');
             image_element.setAttribute('data-image-id', image);
-            // link has to open in new tab as sometimes last.fm breaks the rendering
-            // of the gallery image, no clue..
             image_element.innerHTML = (`
                 <a class="image-list-item" href="${root}music/+noredirect/${page.name}/+images/${image}">
-                    <img src="https://lastfm.freetls.fastly.net/i/u/avatar170s/${image}" loading="lazy">
+                    <img src="https://lastfm.freetls.fastly.net/i/u/avatar170s/${image}" alt=${image} loading="lazy">
                 </a>
             `);
 
-            document.getElementById('bleh--bookmarked-images').appendChild(image_element);
-
+            page.structure.container.querySelector('.bookmarks-panel .image-list').appendChild(image_element);
 
             if (ff('remove_bookmark')) {
                 let menu = tippy(image_element, {
                     theme: 'context-menu',
                     content: html.node`
-                        <button class="dropdown-menu-clickable-item" onclick="_update_image_bookmark(this, '${image}', false)" data-menu-item="remove-bookmark" data-bleh--image-is-bookmarked="true">
+                        <button class="dropdown-menu-clickable-item" onclick=${() => update_image_bookmark(image_element, image, false)} data-menu-item="remove-bookmark" data-bleh--image-is-bookmarked="true">
                             ${trans_legacy.en.gallery.bookmarks.button.unbookmark_this_image.name}
                         </button>
                     `,
@@ -446,10 +449,7 @@ function patch_gallery_image_listing() {
     }
 }
 
-unsafeWindow._set_gallery_page = function(id) {
-    set_gallery_page(id);
-}
-function set_gallery_page(id) {
+function gallery_tab(id) {
     page.structure.container.setAttribute('data-bleh--gallery-tab', id);
 
     // remove ?tab=saved

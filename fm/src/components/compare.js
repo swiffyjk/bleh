@@ -1,19 +1,21 @@
-import { html, render } from 'lighterhtml';
-import { log } from '../build/log';
-import { auth, page, root } from '../build/page';
-import { clean_number, sanitise } from '../build/tools';
-import { tl, trans } from '../build/trans';
-import { dialog } from './dialog';
-import { music_grids } from './music_grid';
-import { notify } from './notify';
-import { custom_select } from './select';
-import { patch_titles } from './track';
+import {html, render} from 'lighterhtml';
+import {log} from '../build/log';
+import {auth, page, root} from '../build/page';
+import {clean_number, sanitise} from '../build/tools';
+import {tl, trans} from '../build/trans';
+import {dialog} from './dialog';
+import {music_grids} from './music_grid';
+import {notify} from './notify';
+import {custom_select} from './select';
+import {patch_titles} from './track';
 
 export function compare() {
+    let compare_button;
+
     page.state.compare_modal = dialog({
         id: 'compare',
         title: tl(trans.compare),
-        body: (`
+        body: html.node`
             <div class="compare-header">
                 <div class="compare-users">
                     <div class="compare-user">
@@ -55,7 +57,7 @@ export function compare() {
                             <option value="LAST_365_DAYS">${tl(trans.last_count_days).replace('{c}', '365')}</option>
                         </select>
                     </div>
-                    <button class="btn chibi icon primary compare" onclick="_begin_comparing()">${tl(trans.compare)}</button>
+                    <button class="btn chibi icon primary compare" ref=${el => compare_button = el} onclick=${() => begin_comparing()}>${tl(trans.compare)}</button>
                 </div>
             </div>
             <div class="compare-body" data-filled="false">
@@ -63,11 +65,11 @@ export function compare() {
                     <div class="loading-data-text info">${tl(trans.choose_a_timeframe_above)}</div>
                 </div>
             </div>
-        `),
+        `,
         type: 'compare'
     });
 
-    tippy(page.state.compare_modal.querySelector('.chibi.compare'), {
+    tippy(compare_button, {
         content: tl(trans.compare)
     });
 
@@ -80,7 +82,7 @@ unsafeWindow._compare = function() {
     compare();
 }
 
-unsafeWindow._begin_comparing = function() {
+function begin_comparing() {
     page.state.compare_modal.querySelector('.bleh-modal-body .compare-body').setAttribute('data-filled', 'false');
     let buttons = page.state.compare_modal.querySelectorAll('.compare-selection > button');
     buttons.forEach((button) => {
@@ -96,7 +98,7 @@ unsafeWindow._begin_comparing = function() {
         other: [],
         shared: []
     };
-    get_grid(auth.name, type, range, 1, pages, page.name, pages);
+    get_grid(auth.name, type, range, 1, pages, page.name);
 }
 
 function get_grid(user, type, range, current_page, pages, next_user=null) {
@@ -121,7 +123,7 @@ function get_grid(user, type, range, current_page, pages, next_user=null) {
         try {
             let tracks = doc.querySelectorAll('.chartlist-row');
             tracks.forEach((track) => {
-                item = {};
+                let item = {};
 
                 item.avatar = track.querySelector('.chartlist-image img');
                 if (item.avatar)

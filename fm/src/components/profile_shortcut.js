@@ -1,9 +1,9 @@
-import { html } from "lighterhtml";
-import { settings } from "../build/config";
-import { auth, dialogs, page, root } from "../build/page";
-import { trans, tl } from "../build/trans";
-import { dialog, dialog_rm } from "./dialog";
-import { notify } from "./notify";
+import {html} from "lighterhtml";
+import {settings} from "../build/config";
+import {auth, dialogs, page, root} from "../build/page";
+import {tl, trans} from "../build/trans";
+import {dialog, dialog_rm} from "./dialog";
+import {notify} from "./notify";
 
 unsafeWindow._open_profile_shortcut_window = function() {
     open_profile_shortcut_window();
@@ -72,14 +72,14 @@ unsafeWindow._set_profile_as_shortcut = function(button) {
         title: tl(trans.profile_shortcut.name),
         body: html.node`
             <div class="big-modal-alert alert-danger">
-                ${tl(trans.profile_shortcut.notice).replace('{u}', `<a class="mention" href="${root}user/${settings.profile_shortcut}" target="_blank">@${settings.profile_shortcut}</a>`)}
+                ${{html: tl(trans.profile_shortcut.notice).replace('{u}', `<a class="mention" href="${root}user/${settings.profile_shortcut}" target="_blank">@${settings.profile_shortcut}</a>`)}}
             </div>
             <div class="modal-footer">
-                <button class="see-more cancel" onclick="_dialog_rm({id:'profile_shortcut'})">
+                <button class="see-more cancel" onclick=${() => dialog_rm({id:'profile_shortcut'})}>
                     ${tl(trans.back)}
                 </button>
                 <div class="fill"></div>
-                <button class="btn primary save" onclick="_confirm_set_profile_as_shortcut()">
+                <button class="btn primary save" onclick=${() => confirm_set_profile_as_shortcut()}>
                     ${tl(trans.replace)}
                 </button>
             </div>

@@ -979,6 +979,19 @@ export const trans = {
         en: 'Expand',
         de: 'Erweitern'
     },
+    expand_to_full_resolution: {
+        en: 'Expand to full resolution'
+    },
+    share: {
+        en: 'Share',
+        de: 'Teilen',
+    },
+    copy: {
+        en: 'Copy'
+    },
+    copied_to_clipboard: {
+        en: 'Copied to clipboard'
+    },
     activity: {
         en: 'Activity',
         de: 'Aktivität',

@@ -86,9 +86,9 @@ export function append_nav() {
 
 
     let notif_count = new_auth.querySelector('[data-analytics-label="notifications"] + .auth-avatar-notification-count-badge');
-    if (!notif_count) notif_count = '0';
+    if (!notif_count) notif_count = '0'; else notif_count = notif_count.textContent;
     let inbox_count = new_auth.querySelector('[data-analytics-label="inbox"] + .auth-avatar-notification-count-badge');
-    if (!inbox_count) inbox_count = '0';
+    if (!inbox_count) inbox_count = '0'; else inbox_count = inbox_count.textContent;
 
 
     let links = masthead.querySelector('.masthead-nav .navlist-items');
