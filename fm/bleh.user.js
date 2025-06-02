@@ -11480,17 +11480,22 @@
             btn_add.setAttribute("data-type", "add");
             side_actions.appendChild(btn_add);
           }
-          let playlink = page.structure.main.querySelector(":scope > .section-controls > .section-playlink");
-          if (playlink) {
+          let radio = page.structure.main.querySelector(":scope > .section-controls > .section-playlink");
+          if (radio) {
             let side_actions = document.createElement("section");
             side_actions.classList.add("side-actions");
             if (!page.mobile)
               page.structure.side.appendChild(side_actions);
             else
               page.structure.main.appendChild(side_actions);
-            playlink.classList = "btn side-action";
-            playlink.setAttribute("data-type", "play");
-            side_actions.appendChild(playlink);
+            radio.classList = "btn stationlink js-playlink-station radio-button";
+            let type = radio.getAttribute("data-analytics-label");
+            render2(radio, html2`
+                        <h3 class="sub-text">${tl(trans.radio)}</h3>
+                        <h4>${tl(trans[type])}</h4>
+                    `);
+            radio.removeAttribute("title");
+            side_actions.appendChild(radio);
           }
         }
       } else {

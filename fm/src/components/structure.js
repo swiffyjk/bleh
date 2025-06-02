@@ -2,7 +2,8 @@ import {log} from "../build/log";
 import {page} from "../build/page";
 import {load_chart_colours} from "../chart";
 import {ff} from "../sku";
-import {html} from "lighterhtml";
+import {html, render} from "lighterhtml";
+import {tl, trans} from "../build/trans.js";
 
 export function basic_page_structure() {
     page.structure.container = document.body.querySelector('.page-content');
@@ -172,9 +173,9 @@ export function checkup_page_structure(is_subpage = false, header = null) {
 
 
                 // is there a playlink?
-                let playlink = page.structure.main.querySelector(':scope > .section-controls > .section-playlink');
+                let radio = page.structure.main.querySelector(':scope > .section-controls > .section-playlink');
 
-                if (playlink) {
+                if (radio) {
                     let side_actions = document.createElement('section');
                     side_actions.classList.add('side-actions');
 
@@ -183,10 +184,18 @@ export function checkup_page_structure(is_subpage = false, header = null) {
                     else
                         page.structure.main.appendChild(side_actions);
 
-                    playlink.classList = 'btn side-action';
-                    playlink.setAttribute('data-type', 'play');
+                    radio.classList = 'btn stationlink js-playlink-station radio-button';
 
-                    side_actions.appendChild(playlink);
+                    let type = radio.getAttribute('data-analytics-label');
+
+                    render(radio, html`
+                        <h3 class="sub-text">${tl(trans.radio)}</h3>
+                        <h4>${tl(trans[type])}</h4>
+                    `);
+
+                    radio.removeAttribute('title');
+
+                    side_actions.appendChild(radio);
                 }
             }
         } else {
