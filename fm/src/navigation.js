@@ -221,7 +221,7 @@ export function append_nav() {
                     <span class="auth-dropdown-item-right" id="theme-value">${selected_language}</span>
                 </span>
             </button>
-            <button class="dropdown-menu-clickable-item" data-menu-item="news" onclick=${() => news()}>
+            <button class="dropdown-menu-clickable-item" data-menu-item="news" ref=${el => page.state.navigation_menu_news = el} onclick=${() => news()}>
                 ${tl(trans.news)}
             </button>
             <a class="dropdown-menu-clickable-item" data-menu-item="bleh" href="${root}bleh">

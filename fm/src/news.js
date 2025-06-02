@@ -1,6 +1,6 @@
 import {html} from "lighterhtml";
 import {log} from "./build/log";
-import {root} from "./build/page";
+import {page, root} from "./build/page";
 import {tl, trans, trans_legacy} from "./build/trans";
 import {dialog} from "./components/dialog";
 import {deliver_notif} from "./components/notify";
@@ -23,7 +23,7 @@ export function news() {
 }
 
 export function request_changelog(open_after = true) {
-    let button = document.body.querySelector('[data-bleh-page="changelog"]');
+    let button = page.state.navigation_menu_news;
     if (button)
         button.setAttribute('disabled', '');
 
