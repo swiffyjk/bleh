@@ -1,6 +1,12 @@
-import { log } from "../build/log";
-import { sponsor_list } from "../build/sponsor";
-import { lang, trans_legacy, trans, tl } from "../build/trans";
+//
+// bleh, an extension for the music site Last.fm
+// Copyright (c) 2025 katelyn and contributors
+// Licensed under GPLv3
+//
+
+import {log} from "../build/log";
+import {sponsor_list} from "../build/sponsor";
+import {tl, trans} from "../build/trans";
 
 export function load_badges(user, solo = false) {
     if (sponsor_list == null)

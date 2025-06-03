@@ -1,6 +1,12 @@
-import { html, render } from 'lighterhtml';
-import { page } from '../build/page';
-import { tl, trans } from '../build/trans';
+//
+// bleh, an extension for the music site Last.fm
+// Copyright (c) 2025 katelyn and contributors
+// Licensed under GPLv3
+//
+
+import {html, render} from 'lighterhtml';
+import {page} from '../build/page';
+import {tl, trans} from '../build/trans';
 
 export function bleh_radio() {
     let radios = page.structure.side.querySelectorAll('.stationlink');

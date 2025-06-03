@@ -1,3 +1,9 @@
+//
+// bleh, an extension for the music site Last.fm
+// Copyright (c) 2025 katelyn and contributors
+// Licensed under GPLv3
+//
+
 import esbuild from "esbuild"
 import build from "./src/build/build.json" with {type: "json"};
 

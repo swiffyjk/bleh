@@ -1,15 +1,21 @@
-import { settings } from "../build/config";
-import { log } from "../build/log";
-import { auth, page, root } from "../build/page";
-import { sponsor_list } from "../build/sponsor";
-import { clean_number, sanitise } from "../build/tools";
-import { lang, trans, tl } from "../build/trans";
-import { ff } from "../sku";
-import { compare } from './compare';
-import { correct_artist } from "./lotus";
-import { register_menu } from "./menu";
-import { open_profile_shortcut_window } from './profile_shortcut';
-import { html } from "lighterhtml";
+//
+// bleh, an extension for the music site Last.fm
+// Copyright (c) 2025 katelyn and contributors
+// Licensed under GPLv3
+//
+
+import {settings} from "../build/config";
+import {log} from "../build/log";
+import {auth, page, root} from "../build/page";
+import {sponsor_list} from "../build/sponsor";
+import {clean_number, sanitise} from "../build/tools";
+import {lang, tl, trans} from "../build/trans";
+import {ff} from "../sku";
+import {compare} from './compare';
+import {correct_artist} from "./lotus";
+import {register_menu} from "./menu";
+import {open_profile_shortcut_window} from './profile_shortcut';
+import {html} from "lighterhtml";
 
 unsafeWindow._toggle_profile_header = function(button) {
     let current = settings.profile_header_expand;

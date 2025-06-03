@@ -1,10 +1,16 @@
-import { settings } from "./build/config";
-import { log } from "./build/log";
-import { page } from "./build/page";
-import { seasonal_events, seasonal_timer, stored_season } from "./build/seasonal";
-import { lang, trans_legacy } from "./build/trans";
-import { load_chart_colours } from "./chart";
-import { deliver_notif } from "./components/notify";
+//
+// bleh, an extension for the music site Last.fm
+// Copyright (c) 2025 katelyn and contributors
+// Licensed under GPLv3
+//
+
+import {settings} from "./build/config";
+import {log} from "./build/log";
+import {page} from "./build/page";
+import {seasonal_events, seasonal_timer, stored_season} from "./build/seasonal";
+import {trans_legacy} from "./build/trans";
+import {load_chart_colours} from "./chart";
+import {deliver_notif} from "./components/notify";
 
 export function set_season() {
     if (!settings.seasonal)

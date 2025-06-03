@@ -1,10 +1,15 @@
-import { patch_avatar } from "./avatar";
-import { settings } from "./build/config";
-import { log } from "./build/log";
-import { auth, page, root, shout_parse_queue } from "./build/page";
-import { lang, trans_legacy } from "./build/trans";
-import { deliver_notif, notify } from "./components/notify";
-import { trans, tl } from "./build/trans";
+//
+// bleh, an extension for the music site Last.fm
+// Copyright (c) 2025 katelyn and contributors
+// Licensed under GPLv3
+//
+
+import {patch_avatar} from "./avatar";
+import {settings} from "./build/config";
+import {log} from "./build/log";
+import {auth, page, root, shout_parse_queue} from "./build/page";
+import {tl, trans, trans_legacy} from "./build/trans";
+import {deliver_notif, notify} from "./components/notify";
 
 export function patch_shouts() {
     if (page.structure.main == null)

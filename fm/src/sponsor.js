@@ -1,11 +1,17 @@
-import { html } from "lighterhtml";
-import { log } from "./build/log";
-import { auth, page, root } from "./build/page";
-import { sponsor_list } from "./build/sponsor";
-import { lang, tl, trans, trans_legacy } from "./build/trans";
-import { dialog } from "./components/dialog";
-import { deliver_notif } from "./components/notify";
-import { ff } from "./sku";
+//
+// bleh, an extension for the music site Last.fm
+// Copyright (c) 2025 katelyn and contributors
+// Licensed under GPLv3
+//
+
+import {html} from "lighterhtml";
+import {log} from "./build/log";
+import {auth, page, root} from "./build/page";
+import {sponsor_list} from "./build/sponsor";
+import {tl, trans, trans_legacy} from "./build/trans";
+import {dialog} from "./components/dialog";
+import {deliver_notif} from "./components/notify";
+import {ff} from "./sku";
 
 export function sponsors(force = false) {
     if (!ff('sponsor'))

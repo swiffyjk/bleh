@@ -1,6 +1,12 @@
-import { html } from "lighterhtml";
-import { settings } from "./config";
-import { page } from "./page";
+//
+// bleh, an extension for the music site Last.fm
+// Copyright (c) 2025 katelyn and contributors
+// Licensed under GPLv3
+//
+
+import {html} from "lighterhtml";
+import {settings} from "./config";
+import {page} from "./page";
 
 export function log(text, system, type = 'info', append={}) {
     if (!page.structure.logs) {

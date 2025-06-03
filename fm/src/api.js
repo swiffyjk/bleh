@@ -1,7 +1,13 @@
-import { settings } from "./build/config";
-import { auth } from "./build/page";
-import { lang, trans_legacy } from "./build/trans";
-import { notify } from "./components/notify";
+//
+// bleh, an extension for the music site Last.fm
+// Copyright (c) 2025 katelyn and contributors
+// Licensed under GPLv3
+//
+
+import {settings} from "./build/config";
+import {auth} from "./build/page";
+import {trans_legacy} from "./build/trans";
+import {notify} from "./components/notify";
 
 export function test_api_key() {
     let xhr = api(`user.getTopTags&user=${auth.name}&limit=1`);

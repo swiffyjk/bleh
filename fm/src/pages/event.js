@@ -1,14 +1,20 @@
-import { patch_avatar } from "../avatar";
-import { settings } from "../build/config";
-import { log } from "../build/log";
-import { auth, page, root } from "../build/page";
-import { clean_number } from "../build/tools";
-import { lang, trans_legacy, trans, tl } from "../build/trans";
-import { correct_artist } from "../components/lotus";
-import { checkup_page_structure } from "../components/structure";
-import { refresh_all } from "../config";
-import { register_background, update_page } from "../page";
-import { bleh_home } from './home';
+//
+// bleh, an extension for the music site Last.fm
+// Copyright (c) 2025 katelyn and contributors
+// Licensed under GPLv3
+//
+
+import {patch_avatar} from "../avatar";
+import {settings} from "../build/config";
+import {log} from "../build/log";
+import {auth, page, root} from "../build/page";
+import {clean_number} from "../build/tools";
+import {tl, trans, trans_legacy} from "../build/trans";
+import {correct_artist} from "../components/lotus";
+import {checkup_page_structure} from "../components/structure";
+import {refresh_all} from "../config";
+import {register_background, update_page} from "../page";
+import {bleh_home} from './home';
 
 export function bleh_events() {
     if (page.subpage == 'overview') {

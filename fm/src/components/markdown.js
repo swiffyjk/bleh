@@ -1,5 +1,12 @@
-import { root } from "../build/page";
-import { html } from "lighterhtml";
+//
+// bleh, an extension for the music site Last.fm
+// Copyright (c) 2025 katelyn and contributors
+// Licensed under GPLv3
+//
+
+import {root} from "../build/page";
+import {html} from "lighterhtml";
+
 export function markdown(text, {
     allow_headers = false,
     allow_links = true,

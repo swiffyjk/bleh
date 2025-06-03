@@ -1,7 +1,13 @@
-import { log } from "../build/log";
-import { page, root } from "../build/page";
-import { trans, tl } from "../build/trans";
-import { html, render } from "lighterhtml";
+//
+// bleh, an extension for the music site Last.fm
+// Copyright (c) 2025 katelyn and contributors
+// Licensed under GPLv3
+//
+
+import {log} from "../build/log";
+import {page, root} from "../build/page";
+import {tl, trans} from "../build/trans";
+import {html, render} from "lighterhtml";
 
 export function bleh_auto_edits() {
     let corrections_panel = document.body.querySelector('#subscription-corrections');

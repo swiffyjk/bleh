@@ -1,10 +1,16 @@
-import { html } from "lighterhtml";
-import { log } from "./build/log";
-import { auth, root } from "./build/page";
-import { sponsor_list } from "./build/sponsor";
-import { tl, trans } from "./build/trans";
-import { load_badges } from "./components/badge";
-import { dialog } from "./components/dialog";
+//
+// bleh, an extension for the music site Last.fm
+// Copyright (c) 2025 katelyn and contributors
+// Licensed under GPLv3
+//
+
+import {html} from "lighterhtml";
+import {log} from "./build/log";
+import {auth, root} from "./build/page";
+import {sponsor_list} from "./build/sponsor";
+import {tl, trans} from "./build/trans";
+import {load_badges} from "./components/badge";
+import {dialog} from "./components/dialog";
 
 export function patch_avatar(avatar, name, type = '', parent=null, side='right') {
     if (avatar.hasAttribute('data-bleh-avatar'))
