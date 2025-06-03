@@ -191,10 +191,10 @@ body, [data-page-resource-type="album"], [data-page-resource-type="track"],
     .preview[data-bleh--theme="oled"], .redesigned-header[data-bleh--theme="oled"],
     [data-bleh--theme="oled"] &:not(.preview) {
         /* any additional highlights */
-        --b3: var(--hue), calc(var(--sat) * 2% * var(--sat-bg, 1)), 14%;
+        --b3: var(--hue), calc(var(--sat) * 5% * var(--sat-bg, 1)), 14%;
 
         /* card border */
-        --b4: var(--hue), calc(var(--sat) * 2% * var(--sat-bg, 1)), 9%;
+        --b4: var(--hue), calc(var(--sat) * 4% * var(--sat-bg, 1)), 9%;
 
         /* card */
         --b5: var(--hue), calc(var(--sat) * 2% * var(--sat-bg, 1)), 1%;
@@ -7829,12 +7829,8 @@ section:has(.dropdown-menu-clickable-button.section-control) {
 
         &:hover {
             &:before {
-                background: hsl(var(--b3)) !important;
+                background: hsl(var(--f4)) !important;
                 transition: none;
-            }
-
-            [data-bleh--theme_type="light"] &:before {
-                background: hsl(var(--b4), 30%) !important;
             }
         }
         &.attendance-btn--turn-off,
