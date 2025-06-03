@@ -6,7 +6,8 @@
 
 import {log} from "../build/log";
 import {page} from "../build/page";
-import {html, render} from "lighterhtml";
+import {html} from "lighterhtml";
+import {tl, trans} from "../build/trans.js";
 
 export function load_notifications() {
     if (!page.structure.notifications) {
@@ -72,41 +73,38 @@ export function notify({
     if (!icon)
         icon = 'icon-16-info';
 
+    let bar;
+
     let notif = html.node`
-        <button
-        class=${[
-            'bleh-notification',
-            icon ? 'icon' : '',
-            classname ? classname : ''
-            ].join(' ')}
-        data-type=${type}
-        onclick=${() => notify_rm(notif)}
-        style=${[
-            icon ? `--mask: var(--${icon})` : '',
-            ].join(';')}
-        />
+        <div
+            class=${[
+                'bleh-notification',
+                icon ? 'with-icon' : '',
+                classname ? classname : ''
+                ].join(' ')}
+            data-type=${type}
+            style=${[
+                icon ? `--mask: var(--${icon})` : '',
+                ].join(';')}
+        >
+            <div class="notification-information">
+                 <div class="notification-title">${title}</div>
+                ${(body) ? html.node`
+                <div class="notification-body">${body}</div>
+                ` : ''}
+            </div>
+            ${(!persist) ? html.node`
+            <div class="notification-progress" ref=${el => bar = el}></div>
+            ` : ''}
+            <div class="notification-actions">
+                <button class="notification-action" data-type="close" onclick=${() => notify_rm(notif)}>${tl(trans.close)}</button>
+            </div>
+        </div>
     `;
-
-    if (!body) {
-        render(notif, html`
-            <div class="notification-title margin-below">${title}</div>
-        `);
-    } else {
-        render(notif, html`
-            <div class="notification-title">${title}</div>
-            <div class="notification-body margin-below">${body}</div>
-        `);
-    }
-
     page.structure.notifications.appendChild(notif);
 
     if (persist)
         return notif;
-
-    let bar = html.node`
-    <div class="notification-progress"></div>
-    `;
-    notif.appendChild(bar);
 
     setTimeout(function() {
         bar.style.setProperty('left', '100%');
@@ -114,7 +112,7 @@ export function notify({
 
     setTimeout(function() {
         notify_rm(notif);
-    }, 10000);
+    }, 3000);
 
     return notif;
 }

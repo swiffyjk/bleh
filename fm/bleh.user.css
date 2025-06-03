@@ -7303,6 +7303,7 @@ button,
 
 
 /*     ICON MASK     */
+.notification-action:before,
 .inbox-compose-button:before,
 .share-link:before,
 .listener-row div:before,
@@ -16875,19 +16876,48 @@ button.bleh--gallery-bookmark-image-btn {
 
         overflow: hidden;
 
-        --btn-right: 24px;
+        background: hsl(var(--b5));
+        box-shadow: var(--card-border), var(--card-shadow);
+        padding: 12px var(--button-sides);
+        border-radius: var(--button-radius);
+        --mask-colour: color-mix(in hsl, hsl(var(--c2)), hsl(var(--c3)) 50%);
+
+        display: flex;
+        gap: var(--card-gap);
+
+        .notification-actions {
+            display: flex;
+
+            margin: -12px calc(-1 * var(--button-sides)) -12px 0;
+
+            .notification-action {
+                position: relative;
+                --bg: transparent;
+                --bg-hov: hsl(var(--b3), 40%);
+                --bg-atv: hsl(var(--b3), 40%);
+                --mask-colour: hsl(var(--c3));
+                --shadow: none;
+                --font-size: 0;
+                width: 38px;
+                --btn-top: 0;
+                --btn-bottom: 0;
+
+                --top: 50%;
+                --margin-top: calc(-1 * var(--icon-half));
+            }
+        }
+
+        &.with-icon {
+            padding-left: calc(var(--button-sides) + var(--icon-size) + 8px);
+            --top: 12px;
+            --margin-top: 0;
+        }
 
         text-align: left;
 
         .notification-title {
             color: hsl(var(--c1));
-        }
-        .notification-body {
-            font-weight: var(--font-weight);
-
-            a:not(:hover) {
-                color: inherit;
-            }
+            font-weight: var(--font-weight-medium);
         }
 
         &.fade-out {
@@ -16907,22 +16937,22 @@ button.bleh--gallery-bookmark-image-btn {
 
         .notification-progress {
             position: absolute;
-            left: 0;
-            right: 0;
+            left: var(--button-sides);
+            right: var(--button-sides);
             bottom: 0;
             pointer-events: none;
 
-            background-color: hsl(var(--h3), 30%);
-            box-shadow: 0 0 20px hsl(var(--h4), 30%);
-            /*height: 4px;*/
+            background-color: hsl(var(--l3-c), 60%);
+            height: 3px;
 
-            height: 100%;
+            transition: left 3.2s linear;
 
-            transition: left 14s; /* 4.999 */
-
-            border-radius: var(--item-big-radius);
+            border-radius: var(--button-radius);
         }
     }
+}
+[data-type="close"] {
+    --mask: var(--icon-16-x);
 }
 .masthead-popup {
     top: calc(52px + var(--card-gap));

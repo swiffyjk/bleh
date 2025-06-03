@@ -174,7 +174,7 @@ function update_text(id, input, submit, option, reset_btn, avatar) {
     notify({
         id: 'saved_setting',
         title: 'Saved setting'
-    })
+    });
 }
 
 export function save_setting(id, value) {

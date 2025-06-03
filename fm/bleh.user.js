@@ -1564,43 +1564,42 @@
       icon = "icon-16-check";
     if (!icon)
       icon = "icon-16-info";
+    let bar;
     let notif = html2.node`
-        <button
-        class=${[
+        <div
+            class=${[
       "bleh-notification",
-      icon ? "icon" : "",
+      icon ? "with-icon" : "",
       classname ? classname : ""
     ].join(" ")}
-        data-type=${type}
-        onclick=${() => notify_rm(notif)}
-        style=${[
+            data-type=${type}
+            style=${[
       icon ? `--mask: var(--${icon})` : ""
     ].join(";")}
-        />
+        >
+            <div class="notification-information">
+                 <div class="notification-title">${title}</div>
+                ${body ? html2.node`
+                <div class="notification-body">${body}</div>
+                ` : ""}
+            </div>
+            ${!persist ? html2.node`
+            <div class="notification-progress" ref=${(el) => bar = el}></div>
+            ` : ""}
+            <div class="notification-actions">
+                <button class="notification-action" data-type="close" onclick=${() => notify_rm(notif)}>${tl(trans.close)}</button>
+            </div>
+        </div>
     `;
-    if (!body) {
-      render(notif, html2`
-            <div class="notification-title margin-below">${title}</div>
-        `);
-    } else {
-      render(notif, html2`
-            <div class="notification-title">${title}</div>
-            <div class="notification-body margin-below">${body}</div>
-        `);
-    }
     page.structure.notifications.appendChild(notif);
     if (persist)
       return notif;
-    let bar = html2.node`
-    <div class="notification-progress"></div>
-    `;
-    notif.appendChild(bar);
     setTimeout(function() {
       bar.style.setProperty("left", "100%");
     }, 1);
     setTimeout(function() {
       notify_rm(notif);
-    }, 1e4);
+    }, 3e3);
     return notif;
   }
   unsafeWindow._notify_rm = function(notif) {
@@ -9871,14 +9870,14 @@
                 ${setting("colourful_tracks")}
                 ${ff("card_saturation") ? html2.node`
                 ${setting("sat_bg")}
-                <div class="setting hide-if-light-theme" data-type="slider" id="container-sat_bg">
+                <div class="setting hide-if-light-theme" data-type="range" id="container-sat_bg">
                     <button class="btn reset" onclick="_reset_item('sat_bg')">${tl(trans.reset)}</button>
                     <div class="heading">
                         <h5>${tl(trans.card_background_saturation.name)}</h5>
                         <p>${tl(trans.card_background_saturation.body)}</p>
                     </div>
-                    <div class="slider">
-                        <div class="slider-track" id="slider-track-sat_bg"><div class="slider-fill"></div><div class="slider-nub"></div></div>
+                    <div class="range">
+                        <div class="track" id="slider-track-sat_bg"><div class="fill"></div><div class="nub"></div></div>
                         <input type="range" min="0" max="3" value="0" step="0.1" id="slider-sat_bg" oninput="_update_item('sat_bg', this.value)">
                         <p id="value-sat_bg">0</p>
                     </div>
@@ -9886,38 +9885,38 @@
                 ` : ""}
                 <div class="sep"></div>
                 ${setting("font")}
-                <div class="setting" data-type="slider" id="container-font_weight">
+                <div class="setting" data-type="range" id="container-font_weight">
                     <button class="btn reset" onclick="_reset_item('font_weight')">${tl(trans.reset)}</button>
                     <div class="heading">
                         <h5>${tl(trans.font_weight.name)}</h5>
                         <p>${tl(trans.font_weight.body)}</p>
                     </div>
-                    <div class="slider">
-                        <div class="slider-track" id="slider-track-font_weight"><div class="slider-fill"></div><div class="slider-nub"></div></div>
+                    <div class="range">
+                        <div class="track" id="slider-track-font_weight"><div class="fill"></div><div class="nub"></div></div>
                         <input type="range" min="0" max="900" value="0" step="10" id="slider-font_weight" oninput="_update_item('font_weight', this.value)">
                         <p id="value-font_weight">0</p>
                     </div>
                 </div>
-                <div class="setting" data-type="slider" id="container-font_weight_medium">
+                <div class="setting" data-type="range" id="container-font_weight_medium">
                     <button class="btn reset" onclick="_reset_item('font_weight_medium')">${tl(trans.reset)}</button>
                     <div class="heading">
                         <h5>${tl(trans.font_weight_medium.name)}</h5>
                         <p>${tl(trans.font_weight_medium.body)}</p>
                     </div>
-                    <div class="slider">
-                        <div class="slider-track" id="slider-track-font_weight_medium"><div class="slider-fill"></div><div class="slider-nub"></div></div>
+                    <div class="range">
+                        <div class="track" id="slider-track-font_weight_medium"><div class="fill"></div><div class="nub"></div></div>
                         <input type="range" min="0" max="900" value="0" step="10" id="slider-font_weight_medium" oninput="_update_item('font_weight_medium', this.value)">
                         <p id="value-font_weight_medium">0</p>
                     </div>
                 </div>
-                <div class="setting" data-type="slider" id="container-font_weight_bold">
+                <div class="setting" data-type="range" id="container-font_weight_bold">
                     <button class="btn reset" onclick="_reset_item('font_weight_bold')">${tl(trans.reset)}</button>
                     <div class="heading">
                         <h5>${tl(trans.font_weight_bold.name)}</h5>
                         <p>${tl(trans.font_weight_bold.body)}</p>
                     </div>
-                    <div class="slider">
-                        <div class="slider-track" id="slider-track-font_weight_bold"><div class="slider-fill"></div><div class="slider-nub"></div></div>
+                    <div class="range">
+                        <div class="track" id="slider-track-font_weight_bold"><div class="fill"></div><div class="nub"></div></div>
                         <input type="range" min="0" max="900" value="0" step="10" id="slider-font_weight_bold" oninput="_update_item('font_weight_bold', this.value)">
                         <p id="value-font_weight_bold">0</p>
                     </div>
@@ -10331,13 +10330,13 @@
                         <button class="btn chibi icon primary submit" onclick="_save_profile_shortcut()">${tl(trans.save)}</button>
                     </div>
                 </div>
-                <div class="setting" data-type="slider" id="container-avatar_radius">
+                <div class="setting" data-type="range" id="container-avatar_radius">
                     <button class="btn reset" onclick="_reset_item('avatar_radius')">${tl(trans.reset)}</button>
                     <div class="heading">
                         <h5>${tl(trans.avatar_radius)}</h5>
                     </div>
-                    <div class="slider">
-                        <div class="slider-track" id="slider-track-avatar_radius"><div class="slider-fill"></div><div class="slider-nub"></div></div>
+                    <div class="range">
+                        <div class="track" id="slider-track-avatar_radius"><div class="fill"></div><div class="nub"></div></div>
                         <input type="range" min="0" max="50" value="0" step="1" id="slider-avatar_radius" oninput="_update_item('avatar_radius', this.value)">
                         <p id="value-avatar_radius">0</p>
                     </div>
@@ -10988,14 +10987,14 @@
                         <div class="album-cover swatch" style="background-image: url('https://lastfm.freetls.fastly.net/i/u/770x0/dd76702cea38c838a3090dd9496d92d9.jpg')"></div>
                     </div>
                 </div>
-                <div class="setting" data-type="slider" id="container-gloss">
+                <div class="setting" data-type="range" id="container-gloss">
                     <button class="btn reset" onclick="_reset_item('gloss')">${tl(trans.reset)}</button>
                     <div class="heading">
                         <h5>${tl(trans.gloss.name)}</h5>
                         <p>${tl(trans.gloss.body)}</p>
                     </div>
-                    <div class="slider">
-                        <div class="slider-track" id="slider-track-gloss"><div class="slider-fill"></div><div class="slider-nub"></div></div>
+                    <div class="range">
+                        <div class="track" id="slider-track-gloss"><div class="fill"></div><div class="nub"></div></div>
                         <input type="range" min="0" max="1" value="0" step="0.05" id="slider-gloss" oninput="_update_item('gloss', this.value)">
                         <p id="value-gloss">0</p>
                     </div>
@@ -11659,13 +11658,13 @@
                                 </div>
                             </div>
                             ` : ""}
-                            <div class="setting dim-using-hue-gradient dim-during-seasonal" data-type="slider" id="container-hue">
+                            <div class="setting dim-using-hue-gradient dim-during-seasonal" data-type="range" id="container-hue">
                                 <button class="btn reset" onclick="_reset_item('hue')">${tl(trans.reset)}</button>
                                 <div class="heading">
                                     <h5>${tl(trans.hue)}</h5>
                                 </div>
-                                <div class="slider">
-                                    <div class="slider-track" id="slider-track-hue"><div class="slider-fill"></div><div class="slider-nub"></div></div>
+                                <div class="range">
+                                    <div class="track" id="slider-track-hue" data-id="hue"><div class="fill"></div><div class="nub"></div></div>
                                     <input type="range" min="0" max="360" value="${settings.hue}" id="slider-hue" oninput="_update_item('hue', this.value)">
                                     <p id="value-hue">${settings.hue}${settings_base.hue.unit}</p>
                                     <div class="hint">
@@ -11675,13 +11674,13 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="setting dim-using-hue-gradient dim-during-seasonal" data-type="slider" id="container-sat">
+                            <div class="setting dim-using-hue-gradient dim-during-seasonal" data-type="range" id="container-sat">
                                 <button class="btn reset" onclick="_reset_item('sat')">${tl(trans.reset)}</button>
                                 <div class="heading">
                                     <h5>${tl(trans.sat)}</h5>
                                 </div>
-                                <div class="slider">
-                                    <div class="slider-track" id="slider-track-sat"><div class="slider-fill"></div><div class="slider-nub"></div></div>
+                                <div class="range">
+                                    <div class="track" id="slider-track-sat"><div class="fill"></div><div class="nub"></div></div>
                                     <input type="range" min="0" max="1.5" value="${settings.sat}" step="0.025" id="slider-sat" oninput="_update_item('sat', this.value)">
                                     <p id="value-sat">${settings.sat}${settings_base.sat.unit}</p>
                                     <div class="hint">
@@ -11691,13 +11690,13 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="setting dim-using-hue-gradient dim-during-seasonal" data-type="slider" id="container-lit">
+                            <div class="setting dim-using-hue-gradient dim-during-seasonal" data-type="range" id="container-lit">
                                 <button class="btn reset" onclick="_reset_item('lit')">${tl(trans.reset)}</button>
                                 <div class="heading">
                                     <h5>${tl(trans.lit)}</h5>
                                 </div>
-                                <div class="slider">
-                                    <div class="slider-track" id="slider-track-lit"><div class="slider-fill"></div><div class="slider-nub"></div></div>
+                                <div class="range">
+                                    <div class="track" id="slider-track-lit"><div class="fill"></div><div class="nub"></div></div>
                                     <input type="range" min="0" max="1.5" value="${settings.lit}" step="0.025" id="slider-lit" oninput="_update_item('lit', this.value)">
                                     <p id="value-lit">${settings.lit}${settings_base.lit.unit}</p>
                                     <div class="hint">
