@@ -1852,10 +1852,7 @@ export const trans = {
         en: 'Disable particles'
     },
     going: {
-        en: '{c} going'
-    },
-    maybe: {
-        en: '{c} interested'
+        en: 'Going'
     },
     branch: {
         name: {
@@ -1962,6 +1959,12 @@ export const trans = {
     },
     no_images_saved: {
         en: 'No photos saved'
+    },
+    interested: {
+        en: 'Interested'
+    },
+    total: {
+        en: 'Total'
     }
 }
 

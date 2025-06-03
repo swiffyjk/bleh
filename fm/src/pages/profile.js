@@ -12,7 +12,7 @@ import {dialog} from "../components/dialog"
 import {correct_artist, correct_item_by_artist, name_includes} from "../components/lotus"
 import {markdown} from "../components/markdown"
 import {notify} from "../components/notify"
-import {create_profile_top_item, redesign_profile_header} from "../components/profile_header"
+import {redesign_profile_header} from "../components/profile_header"
 import {custom_select, update_inbuilt_select} from "../components/select"
 import {checkup_page_structure} from "../components/structure"
 import {refresh_all, update_inbuilt_item} from "../config"
@@ -390,50 +390,52 @@ export function bleh_profiles() {
         } else if (page.subpage == 'events') {
             let selected_tab = page.structure.content_top.querySelector('.secondary-nav-item-link--active');
 
-            let value_panel = document.createElement('section');
-            value_panel.classList.add('value-panel');
-            value_panel.innerHTML = (`
-                <h2 class="text-18">${(selected_tab) ? selected_tab.firstChild.textContent : tl(trans.events)}</h2>
-            `);
+            let value_panel = html.node`
+                <section class="value-panel">
+                    <h2 class="text-18">${(selected_tab) ? selected_tab.firstChild.textContent : tl(trans.events)}</h2>
+                </section>
+            `;
 
             let values = page.structure.main.querySelectorAll('.metadata-display');
 
-            let value_header = document.createElement('div');
-            value_header.classList.add('event-value-top-header', 'view-buttons');
+            let value_header = html.node`
+                <div class="glacier-library-metadata"></div>
+            `;
 
             values.forEach((value, index) => {
-                let type = 'going';
+                let text = tl(trans.going);
                 if (index == 1)
-                    type = 'maybe';
+                    text = tl(trans.interested);
 
-                create_profile_top_item(value_header, {
-                    name: page.name,
-                    text: value.textContent,
-                    type: type,
-                    tooltip:  tl(trans[type]).replace('{c}', value.textContent)
-                });
+                value_header.appendChild(html.node`
+                    <div class="glacier-library-metadata-item">
+                        <div class="sub-text">${text}</div>
+                        <div class="glacier-library-metadata-item-value">${value.textContent}</div>
+                    </div>
+                `);
             });
 
             value_panel.appendChild(value_header);
 
 
             let total_value = page.structure.side.querySelector('.metadata-display');
-            if (total_value != null) {
+            if (total_value) {
                 let total_text = document.createElement('h2');
                 total_text.classList.add('text-18');
                 total_text.textContent = tl(trans.all_time);
 
                 value_panel.appendChild(total_text);
 
-                let total_header = document.createElement('div');
-                total_header.classList.add('event-value-top-header', 'view-buttons');
+                let total_header = html.node`
+                    <div class="glacier-library-metadata"></div>
+                `;
 
-                create_profile_top_item(total_header, {
-                    name: page.name,
-                    text: total_value.textContent,
-                    type: 'total',
-                    tooltip:  tl(trans.count_total).replace('{c}', total_value.textContent)
-                });
+                total_header.appendChild(html.node`
+                    <div class="glacier-library-metadata-item">
+                        <div class="sub-text">${tl(trans.total)}</div>
+                        <div class="glacier-library-metadata-item-value">${total_value.textContent}</div>
+                    </div>
+                `);
 
                 value_panel.appendChild(total_header);
             }
