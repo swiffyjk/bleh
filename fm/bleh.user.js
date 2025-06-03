@@ -10747,9 +10747,9 @@
             log("artist either matches or is blank, replacing", "tracks", "log");
             render2(song_artist_element, html2`<a href="${root}music/${sanitise(formatted_title[2])}" title="${sanitise_text(formatted_title[2])}">${sanitise_text(formatted_title[2])}</a>`);
             let song_guests = formatted_title[3];
-            for (let guest2 in song_guests) {
+            for (let guest in song_guests) {
               song_artist_element.appendChild(html2.node`
-                            ,<a href="${root}music/${sanitise(song_guests[guest2])}" title="${sanitise_text(song_guests[guest2])}">${sanitise_text(song_guests[guest2])}</a>
+                            ,<a href="${root}music/${sanitise(song_guests[guest])}" title="${sanitise_text(song_guests[guest])}">${sanitise_text(song_guests[guest])}</a>
                         `);
             }
           }
@@ -12662,12 +12662,12 @@
         `);
       let song_guests = formatted_title[3];
       page.sister_others = formatted_title[3];
-      for (let guest2 in song_guests) {
+      for (let guest in song_guests) {
         track_artist.innerHTML = `${track_artist.innerHTML},`;
         let guest_element = document.createElement("a");
         guest_element.classList.add("header-new-crumb");
-        guest_element.setAttribute("href", `${root}music/${sanitise(song_guests[guest2])}`);
-        guest_element.textContent = song_guests[guest2];
+        guest_element.setAttribute("href", `${root}music/${sanitise(song_guests[guest])}`);
+        guest_element.textContent = song_guests[guest];
         track_artist.appendChild(guest_element);
       }
     } else {
@@ -13618,11 +13618,11 @@
       song_artist_element.classList.add("featured-item-artist");
       song_artist_element.innerHTML = `<a href="${root}music/${sanitise(formatted_title[2])}">${sanitise_text(formatted_title[2])}</a>`;
       let song_guests = formatted_title[3];
-      for (let guest2 in song_guests) {
+      for (let guest in song_guests) {
         song_artist_element.innerHTML = `${song_artist_element.innerHTML},`;
         let guest_element = document.createElement("a");
-        guest_element.setAttribute("href", `${root}music/${sanitise(song_guests[guest2])}`);
-        guest_element.textContent = song_guests[guest2];
+        guest_element.setAttribute("href", `${root}music/${sanitise(song_guests[guest])}`);
+        guest_element.textContent = song_guests[guest];
         song_artist_element.appendChild(guest_element);
       }
       details.removeChild(artist_elem);
@@ -18017,8 +18017,8 @@
       console.log("pre-split", field_text);
       if (field_group == "guests") {
         song_guests = field_text.split(";");
-        for (let guest2 in song_guests)
-          song_guests[guest2] = correct_artist(song_guests[guest2]);
+        for (let guest in song_guests)
+          song_guests[guest] = correct_artist(song_guests[guest]);
       }
     }
     if (artist_corrections.hasOwnProperty(original_artist) && settings.corrections)
@@ -18104,13 +18104,13 @@
           let song_artist_element = document.body.querySelector('span[itemprop="byArtist"]');
           let song_guests = formatted_title[3];
           page.sister_others = formatted_title[3];
-          for (let guest2 in song_guests) {
+          for (let guest in song_guests) {
             song_artist_element.innerHTML = `${song_artist_element.innerHTML},`;
             let guest_element = document.createElement("a");
             guest_element.classList.add("header-new-crumb");
-            guest_element.setAttribute("href", `${root}music/${sanitise(song_guests[guest2])}`);
-            guest_element.setAttribute("title", sanitise_text(song_guests[guest2]));
-            guest_element.textContent = song_guests[guest2];
+            guest_element.setAttribute("href", `${root}music/${sanitise(song_guests[guest])}`);
+            guest_element.setAttribute("title", sanitise_text(song_guests[guest]));
+            guest_element.textContent = song_guests[guest];
             song_artist_element.appendChild(guest_element);
           }
         }
@@ -18714,10 +18714,10 @@
     if (page.sister_others.length > 0) {
       about_artist_container.appendChild(html2.node`
             <div class="about-guest-features-panel">
-                ${page.sister_others.map((z) => {
+                ${page.sister_others.map((guest) => {
         return html2.node`
-                        <a class="about-guest-feature" href="${root}music/${sanitise(page.sister_others[guest])}">
-                            ${page.sister_others[guest]}
+                        <a class="about-guest-feature" href="${root}music/${sanitise(guest)}">
+                            ${guest}
                         </a>
                     `;
       })}

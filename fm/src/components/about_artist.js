@@ -1,8 +1,8 @@
-import { html, render } from "lighterhtml";
-import { page, root } from "../build/page";
-import { sanitise, sanitise_text } from "../build/tools";
-import { trans_legacy, trans, tl } from "../build/trans";
-import { expand_avatar } from "../avatar";
+import {html, render} from "lighterhtml";
+import {page, root} from "../build/page";
+import {sanitise, sanitise_text} from "../build/tools";
+import {tl, trans, trans_legacy} from "../build/trans";
+import {expand_avatar} from "../avatar";
 
 export function bleh_about_artist() {
     let legacy_container = page.structure.main.querySelector('.about-artist');
@@ -39,12 +39,12 @@ export function bleh_about_artist() {
 
     // there are guest features
     if (page.sister_others.length > 0) {
-        about_artist_container.appendChild( html.node`
+        about_artist_container.appendChild(html.node`
             <div class="about-guest-features-panel">
-                ${page.sister_others.map(z => {
+                ${page.sister_others.map((guest) => {
                     return html.node`
-                        <a class="about-guest-feature" href="${root}music/${sanitise(page.sister_others[guest])}">
-                            ${page.sister_others[guest]}
+                        <a class="about-guest-feature" href="${root}music/${sanitise(guest)}">
+                            ${guest}
                         </a>
                     `
                 })}
