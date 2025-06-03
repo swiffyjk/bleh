@@ -10432,6 +10432,8 @@
           });
         } catch (e) {
         }
+      } else {
+        grid.classList.add("generic-cover");
       }
       let plays_elem;
       if (page.type == "search") {

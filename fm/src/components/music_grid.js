@@ -88,6 +88,8 @@ export function music_grids(search=page.structure.main) {
 
             // TODO: add a timeout to check if the image has had its
             // colour taken and if not do it manually after a set amount of time
+        } else {
+            grid.classList.add('generic-cover');
         }
 
         let plays_elem;

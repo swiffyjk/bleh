@@ -4524,6 +4524,10 @@ better than the default selector '#app a' i suppose */
     /*overflow: hidden;*/
     box-shadow: var(--grid-colour-shadow, none), var(--interact-shadow);
 
+    &.generic-cover {
+        --grid-colour-shadow: none;
+    }
+
     transition-property: transform;
     transition-duration: var(--trans);
     transition-timing-function: var(--trans-function);
