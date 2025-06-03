@@ -689,7 +689,7 @@ function bleh_communication_panel(token) {
         let form = item.querySelector('form');
         let button = form.querySelector('button');
 
-        button.classList.add('icon', 'delete-user-button', 'danger-subtle');
+        button.classList.add('icon', 'chibi', 'danger-subtle');
 
         entry.innerHTML = (`
             <span class="text">

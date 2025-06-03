@@ -4,7 +4,7 @@ import {page, root} from "../build/page";
 import {tl, trans, trans_legacy} from "../build/trans";
 import {register_menu} from "../components/menu";
 import {ff} from "../sku";
-import {html} from "lighterhtml";
+import {html, render} from "lighterhtml";
 import {share} from "../components/share.js";
 
 export function bleh_gallery() {
@@ -367,10 +367,11 @@ function patch_gallery_image_listing() {
 
 
     // content
+    let bookmarks_panel;
     page.structure.main.classList.add('bleh--gallery');
     page.structure.main.after(html.node`
         <div class="col-main bleh--bookmarks not-a-panel">
-            <section class="bookmarks-panel">
+            <section class="bookmarks-panel" ref=${el => bookmarks_panel = el}>
                 <ul class="image-list" data-kate-processed="true"></ul>
             </section>
         </div>
@@ -441,9 +442,9 @@ function patch_gallery_image_listing() {
             }
         });
     } else {
-        document.getElementById('bleh--bookmarked-images').outerHTML = (`
-            <div class="no-data-message bleh--no-image-bookmarks">
-                <p>${trans_legacy.en.gallery.bookmarks.no_data}</p>
+        render(bookmarks_panel, html`
+            <div class="loading-data-container">
+                <div class="loading-data-text failed">${tl(trans.no_images_saved)}</div>
             </div>
         `);
     }

@@ -1,27 +1,27 @@
-import { load_activities } from "../activity"
-import { patch_avatar } from "../avatar"
-import { settings } from "../build/config"
-import { log } from "../build/log"
-import { auth, page, recent_activity_list, root } from "../build/page"
-import { cute, sponsor_list } from "../build/sponsor"
-import { clean_number, sanitise, sanitise_text } from "../build/tools"
-import { lang, trans, tl } from "../build/trans"
-import { prep_chart_colours } from '../chart'
-import { load_badges } from "../components/badge"
-import { dialog } from "../components/dialog"
-import { correct_artist, correct_item_by_artist, name_includes } from "../components/lotus"
-import { markdown } from "../components/markdown"
-import { notify } from "../components/notify"
-import { create_profile_top_item, redesign_profile_header } from "../components/profile_header"
-import { custom_select, update_inbuilt_select } from "../components/select"
-import { checkup_page_structure } from "../components/structure"
-import { refresh_all, update_inbuilt_item } from "../config"
-import { register_background, update_page } from "../page"
-import { ff } from "../sku"
-import { bleh_user_library } from "./glacier"
-import { use_pronouns } from "./lastfm_settings"
-import { bleh_obsession } from "./obsession"
-import { html, render } from "lighterhtml";
+import {load_activities} from "../activity"
+import {patch_avatar} from "../avatar"
+import {settings} from "../build/config"
+import {log} from "../build/log"
+import {auth, page, recent_activity_list, root} from "../build/page"
+import {cute, sponsor_list} from "../build/sponsor"
+import {clean_number, sanitise, sanitise_text} from "../build/tools"
+import {lang, tl, trans} from "../build/trans"
+import {prep_chart_colours} from '../chart'
+import {load_badges} from "../components/badge"
+import {dialog} from "../components/dialog"
+import {correct_artist, correct_item_by_artist, name_includes} from "../components/lotus"
+import {markdown} from "../components/markdown"
+import {notify} from "../components/notify"
+import {create_profile_top_item, redesign_profile_header} from "../components/profile_header"
+import {custom_select, update_inbuilt_select} from "../components/select"
+import {checkup_page_structure} from "../components/structure"
+import {refresh_all, update_inbuilt_item} from "../config"
+import {register_background, update_page} from "../page"
+import {ff} from "../sku"
+import {bleh_user_library} from "./glacier"
+import {use_pronouns} from "./lastfm_settings"
+import {bleh_obsession} from "./obsession"
+import {html, render} from "lighterhtml";
 
 export function bleh_profiles() {
     // the obsessions page is a user subpage but works very differently
@@ -233,14 +233,13 @@ export function bleh_profiles() {
                             tooltip_sister = sister;
                         }
 
-                        // parse tags into text
-                        let song_tags_text = '';
-                        for (let song_tag in song_tags) {
-                            song_tags_text = `${song_tags_text}<div class="feat" data-bleh--tag-type="${song_tags[song_tag].type}" data-bleh--tag-group="${song_tags[song_tag].group}">${sanitise_text(song_tags[song_tag].text)}</div>`;
-                        }
-
                         // combine
-                        name = `<div class="title">${sanitise_text(song_title).trim()}</div>${song_tags_text}`;
+                        name = html.node`
+                            <div class="title">${sanitise_text(song_title).trim()}</div>
+                            ${song_tags.map((tag) => html.node`
+                                <div class="feat" data-bleh--tag-type="${tag.type}" data-bleh--tag-group="${tag.group}">${sanitise_text(tag.text)}</div>
+                            `)}
+                        `;
                     } else if ((involved.type == 'album' || involved.type == 'track') && settings.corrections) {
                         name = correct_item_by_artist(name, sister);
                         tooltip_name = name;
@@ -252,12 +251,12 @@ export function bleh_profiles() {
                     }
 
                     if (involved_text != '')
-                        involved_text = `${involved_text}, <a class="involved--${involved.type}" href="${involved_link}">${name}</a>`;
+                        involved_text = html.node`${involved_text}, <a class="involved--${involved.type}" href="${involved_link}">${name}</a>`;
                     else
-                        involved_text = `${involved_text}<a class="involved--${involved.type}" href="${involved_link}">${name}</a>`;
+                        involved_text = html.node`${involved_text}<a class="involved--${involved.type}" href="${involved_link}">${name}</a>`;
                 });
 
-                activity_item.innerHTML = (`
+                render(activity_item, html`
                     <div class="type">${tl(trans.activity.listing[activity.type])}<div class="date">${moment(activity.date).fromNow(true)}</div></div>
                     <div class="name">${involved_text}</div>
                 `);
@@ -1115,14 +1114,13 @@ function bleh_featured_profile_track(object, about_me) {
             song_tags = formatted_title[1];
         }
 
-        // parse tags into text
-        let song_tags_text = '';
-        for (let song_tag in song_tags) {
-            song_tags_text = `${song_tags_text}<div class="feat" data-bleh--tag-type="${song_tags[song_tag].type}" data-bleh--tag-group="${song_tags[song_tag].group}">${sanitise_text(song_tags[song_tag].text)}</div>`;
-        }
-
         // combine
-        name_elem.innerHTML = `<div class="title">${sanitise_text(song_title).trim()}</div>${song_tags_text}`;
+        render(name_elem, html.node`
+            <div class="title">${sanitise_text(song_title).trim()}</div>
+            ${song_tags.map((tag) => html.node`
+                <div class="feat" data-bleh--tag-type="${tag.type}" data-bleh--tag-group="${tag.group}">${sanitise_text(tag.text)}</div>
+            `)}
+        `);
 
         let song_artist_element = document.createElement('div');
         song_artist_element.classList.add('featured-item-artist');

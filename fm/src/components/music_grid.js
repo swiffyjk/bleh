@@ -1,10 +1,11 @@
-import { settings } from "../build/config";
-import { page } from "../build/page";
-import { clamp_sat, clean_number, rgb_to_hsl, sanitise_text } from "../build/tools";
-import { lang, trans, tl } from "../build/trans";
-import { bleh_glacier_insights } from "../pages/glacier";
-import { parse_scrobbles_as_rank } from "./colourful_counts";
-import { correct_artist, correct_item_by_artist, name_includes } from "./lotus";
+import {settings} from "../build/config";
+import {page} from "../build/page";
+import {clamp_sat, clean_number, rgb_to_hsl, sanitise_text} from "../build/tools";
+import {lang, tl, trans} from "../build/trans";
+import {bleh_glacier_insights} from "../pages/glacier";
+import {parse_scrobbles_as_rank} from "./colourful_counts";
+import {correct_artist, correct_item_by_artist, name_includes} from "./lotus";
+import {html, render} from "lighterhtml";
 
 export function music_grids(search=page.structure.main) {
     if (!search) return;
@@ -190,14 +191,13 @@ export function music_grids(search=page.structure.main) {
                     artist.textContent = formatted_title[2];
                 }
 
-                // parse tags into text
-                let song_tags_text = '';
-                for (let song_tag in song_tags) {
-                    song_tags_text = `${song_tags_text}<span class="feat" data-bleh--tag-type="${song_tags[song_tag].type}" data-bleh--tag-group="${song_tags[song_tag].group}">${sanitise_text(song_tags[song_tag].text)}</span>`;
-                }
-
                 // combine
-                name_elem.innerHTML = `<span class="title">${sanitise_text(song_title).trim()}</span>${song_tags_text}`;
+                render(name_elem, html.node`
+                    <div class="title">${sanitise_text(song_title).trim()}</div>
+                    ${song_tags.map((tag) => html.node`
+                        <div class="feat" data-bleh--tag-type="${tag.type}" data-bleh--tag-group="${tag.group}">${sanitise_text(tag.text)}</div>
+                    `)}
+                `);
             } else {
                 artist.textContent = correct_artist(artist.textContent.trim());
 

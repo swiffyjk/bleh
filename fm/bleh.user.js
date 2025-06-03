@@ -3778,6 +3778,15 @@
     },
     update_to_version: {
       en: "Update to {v}"
+    },
+    all: {
+      en: "All"
+    },
+    saved: {
+      en: "Saved"
+    },
+    no_images_saved: {
+      en: "No photos saved"
     }
   };
   var trans_legacy = {
@@ -9164,10 +9173,11 @@
             </nav>
         </div>
     `);
+    let bookmarks_panel;
     page.structure.main.classList.add("bleh--gallery");
     page.structure.main.after(html2.node`
         <div class="col-main bleh--bookmarks not-a-panel">
-            <section class="bookmarks-panel">
+            <section class="bookmarks-panel" ref=${(el) => bookmarks_panel = el}>
                 <ul class="image-list" data-kate-processed="true"></ul>
             </section>
         </div>
@@ -9222,11 +9232,11 @@
         }
       });
     } else {
-      document.getElementById("bleh--bookmarked-images").outerHTML = `
-            <div class="no-data-message bleh--no-image-bookmarks">
-                <p>${trans_legacy.en.gallery.bookmarks.no_data}</p>
+      render2(bookmarks_panel, html2`
+            <div class="loading-data-container">
+                <div class="loading-data-text failed">${tl(trans.no_images_saved)}</div>
             </div>
-        `;
+        `);
     }
   }
   function gallery_tab(id) {
@@ -10494,11 +10504,12 @@
             song_tags = formatted_title[1];
             artist.textContent = formatted_title[2];
           }
-          let song_tags_text = "";
-          for (let song_tag in song_tags) {
-            song_tags_text = `${song_tags_text}<span class="feat" data-bleh--tag-type="${song_tags[song_tag].type}" data-bleh--tag-group="${song_tags[song_tag].group}">${sanitise_text(song_tags[song_tag].text)}</span>`;
-          }
-          name_elem.innerHTML = `<span class="title">${sanitise_text(song_title).trim()}</span>${song_tags_text}`;
+          render2(name_elem, html2.node`
+                    <div class="title">${sanitise_text(song_title).trim()}</div>
+                    ${song_tags.map((tag) => html2.node`
+                        <div class="feat" data-bleh--tag-type="${tag.type}" data-bleh--tag-group="${tag.group}">${sanitise_text(tag.text)}</div>
+                    `)}
+                `);
         } else {
           artist.textContent = correct_artist(artist.textContent.trim());
           name.textContent = correct_item_by_artist(name.textContent.trim(), artist.textContent.trim());
@@ -12211,7 +12222,7 @@
       let name = item.querySelector("td").textContent.trim();
       let form2 = item.querySelector("form");
       let button = form2.querySelector("button");
-      button.classList.add("icon", "delete-user-button", "danger-subtle");
+      button.classList.add("icon", "chibi", "danger-subtle");
       entry.innerHTML = `
             <span class="text">
                 <a class="mention" href="${root}user/${name}" target="_blank">@${name}</a>
@@ -12643,11 +12654,12 @@
       let song_title = formatted_title[0];
       let song_tags = formatted_title[1];
       page.corrected = formatted_title[4];
-      let song_tags_text = "";
-      for (let song_tag in song_tags) {
-        song_tags_text = `${song_tags_text}<div class="feat" data-bleh--tag-type="${song_tags[song_tag].type}" data-bleh--tag-group="${song_tags[song_tag].group}">${song_tags[song_tag].text}</div>`;
-      }
-      track_title.innerHTML = `<div class="title">${sanitise_text(song_title).trim()}</div>${song_tags_text}`;
+      render2(track_title, html2.node`
+            <div class="title">${sanitise_text(song_title).trim()}</div>
+            ${song_tags.map((tag) => html2.node`
+                <div class="feat" data-bleh--tag-type="${tag.type}" data-bleh--tag-group="${tag.group}">${sanitise_text(tag.text)}</div>
+            `)}
+        `);
       let song_guests = formatted_title[3];
       page.sister_others = formatted_title[3];
       for (let guest2 in song_guests) {
@@ -12927,11 +12939,12 @@
                 tooltip_name = song_title;
                 tooltip_sister = sister;
               }
-              let song_tags_text = "";
-              for (let song_tag in song_tags) {
-                song_tags_text = `${song_tags_text}<div class="feat" data-bleh--tag-type="${song_tags[song_tag].type}" data-bleh--tag-group="${song_tags[song_tag].group}">${sanitise_text(song_tags[song_tag].text)}</div>`;
-              }
-              name = `<div class="title">${sanitise_text(song_title).trim()}</div>${song_tags_text}`;
+              name = html2.node`
+                            <div class="title">${sanitise_text(song_title).trim()}</div>
+                            ${song_tags.map((tag) => html2.node`
+                                <div class="feat" data-bleh--tag-type="${tag.type}" data-bleh--tag-group="${tag.group}">${sanitise_text(tag.text)}</div>
+                            `)}
+                        `;
             } else if ((involved.type == "album" || involved.type == "track") && settings.corrections) {
               name = correct_item_by_artist(name, sister);
               tooltip_name = name;
@@ -12942,14 +12955,14 @@
               tooltip_name = name;
             }
             if (involved_text != "")
-              involved_text = `${involved_text}, <a class="involved--${involved.type}" href="${involved_link}">${name}</a>`;
+              involved_text = html2.node`${involved_text}, <a class="involved--${involved.type}" href="${involved_link}">${name}</a>`;
             else
-              involved_text = `${involved_text}<a class="involved--${involved.type}" href="${involved_link}">${name}</a>`;
+              involved_text = html2.node`${involved_text}<a class="involved--${involved.type}" href="${involved_link}">${name}</a>`;
           });
-          activity_item.innerHTML = `
+          render2(activity_item, html2`
                     <div class="type">${tl(trans.activity.listing[activity.type])}<div class="date">${moment(activity.date).fromNow(true)}</div></div>
                     <div class="name">${involved_text}</div>
-                `;
+                `);
           recent_activity_section.appendChild(activity_item);
           if (tooltip_name)
             tippy(activity_item.querySelector(".name a"), {
@@ -13595,11 +13608,12 @@
         song_title = formatted_title[0];
         song_tags = formatted_title[1];
       }
-      let song_tags_text = "";
-      for (let song_tag in song_tags) {
-        song_tags_text = `${song_tags_text}<div class="feat" data-bleh--tag-type="${song_tags[song_tag].type}" data-bleh--tag-group="${song_tags[song_tag].group}">${sanitise_text(song_tags[song_tag].text)}</div>`;
-      }
-      name_elem.innerHTML = `<div class="title">${sanitise_text(song_title).trim()}</div>${song_tags_text}`;
+      render2(name_elem, html2.node`
+            <div class="title">${sanitise_text(song_title).trim()}</div>
+            ${song_tags.map((tag) => html2.node`
+                <div class="feat" data-bleh--tag-type="${tag.type}" data-bleh--tag-group="${tag.group}">${sanitise_text(tag.text)}</div>
+            `)}
+        `);
       let song_artist_element = document.createElement("div");
       song_artist_element.classList.add("featured-item-artist");
       song_artist_element.innerHTML = `<a href="${root}music/${sanitise(formatted_title[2])}">${sanitise_text(formatted_title[2])}</a>`;
@@ -15541,7 +15555,7 @@
                 </div>
                 ${settings.seasonal ? html2.node`
                 <div class="alert alert-info">
-                    ${tl(trans.seasonal_offset).replace("{offset}", `<strong>${stored_season.offset}</strong>`)}
+                    ${{ html: tl(trans.seasonal_offset).replace("{offset}", `<strong>${stored_season.offset}</strong>`) }}
                 </div>
                 ` : ""}
                 <h4>${tl(trans.settings)}</h4>
@@ -17273,7 +17287,7 @@
                     <button class="icon chibi edit" onclick=${() => edit_profile_note(user)}>
                         ${tl(trans.delete)}
                     </button>
-                    <button class="delete icon delete-user-button danger-subtle" onclick=${() => delete_profile_note(user)}>
+                    <button class="icon chibi delete danger-subtle" onclick=${() => delete_profile_note(user)}>
                         ${tl(trans.delete)}
                     </button>
                 </div>
@@ -17728,7 +17742,7 @@
       type: random_types[Math.floor(Math.random() * random_types.length)],
       date: /* @__PURE__ */ new Date(),
       involved: [
-        random_involved[Math.floor(Math.random() * random_involved.length)]
+        structuredClone(random_involved)[Math.floor(Math.random() * random_involved.length)]
       ]
     });
   }
@@ -17742,17 +17756,18 @@
       if (involved.type == "track" && settings.format_guest_features) {
         let formatted_title = name_includes(name, sister);
         let song_title;
-        let song_tags;
+        let song_tags = {};
         if (formatted_title) {
           song_title = formatted_title[0];
           song_tags = formatted_title[1];
           sister = formatted_title[2];
         }
-        let song_tags_text = "";
-        for (let song_tag in song_tags) {
-          song_tags_text = `${song_tags_text}<div class="feat" data-bleh--tag-type="${song_tags[song_tag].type}" data-bleh--tag-group="${song_tags[song_tag].group}">${sanitise_text(song_tags[song_tag].text)}</div>`;
-        }
-        name = html2.node`<div class="title">${sanitise_text(song_title).trim()}</div>${song_tags_text}`;
+        name = html2.node`
+                <div class="title">${sanitise_text(song_title).trim()}</div>
+                ${song_tags.map((tag) => html2.node`
+                    <div class="feat" data-bleh--tag-type="${tag.type}" data-bleh--tag-group="${tag.group}">${sanitise_text(tag.text)}</div>
+                `)}
+            `;
       } else if ((involved.type == "album" || involved.type == "track") && settings.corrections) {
         name = html2.node`${correct_item_by_artist(name, sister)}`;
         sister = correct_artist(sister);
@@ -17854,7 +17869,7 @@
     dialog({
       id: "corrections",
       title: trans_legacy.en.settings.corrections.name,
-      body: html.node`
+      body: html2.node`
             <h4>${trans_legacy.en.settings.corrections.listing.artists}</h4>
             <div class="corrections artist" id="corrections-artist"></div>
             <h4>${trans_legacy.en.settings.corrections.listing.albums_tracks}</h4>
@@ -18080,11 +18095,12 @@
           let song_title = formatted_title[0];
           let song_tags = formatted_title[1];
           page.corrected = formatted_title[4];
-          let song_tags_text = "";
-          for (let song_tag in song_tags) {
-            song_tags_text = `${song_tags_text}<div class="feat" data-bleh--tag-type="${song_tags[song_tag].type}" data-bleh--tag-group="${song_tags[song_tag].group}">${song_tags[song_tag].text}</div>`;
-          }
-          track_title.innerHTML = `<div class="title">${sanitise_text(song_title).trim()}</div>${song_tags_text}`;
+          render2(track_title, html2.node`
+                <div class="title">${sanitise_text(song_title).trim()}</div>
+                ${song_tags.map((tag) => html2.node`
+                    <div class="feat" data-bleh--tag-type="${tag.type}" data-bleh--tag-group="${tag.group}">${sanitise_text(tag.text)}</div>
+                `)}
+            `);
           let song_artist_element = document.body.querySelector('span[itemprop="byArtist"]');
           let song_guests = formatted_title[3];
           page.sister_others = formatted_title[3];
@@ -20206,11 +20222,12 @@
               tooltip_name = song_title;
               tooltip_sister = sister;
             }
-            let song_tags_text = "";
-            for (let song_tag in song_tags) {
-              song_tags_text = `${song_tags_text}<div class="feat" data-bleh--tag-type="${song_tags[song_tag].type}" data-bleh--tag-group="${song_tags[song_tag].group}">${sanitise_text(song_tags[song_tag].text)}</div>`;
-            }
-            name = `<div class="title">${sanitise_text(song_title).trim()}</div>${song_tags_text}`;
+            name = html2.node`
+                        <div class="title">${sanitise_text(song_title).trim()}</div>
+                        ${song_tags.map((tag) => html2.node`
+                            <div class="feat" data-bleh--tag-type="${tag.type}" data-bleh--tag-group="${tag.group}">${sanitise_text(tag.text)}</div>
+                        `)}
+                    `;
           } else if ((involved.type == "album" || involved.type == "track") && settings.corrections) {
             name = correct_item_by_artist(name, sister);
             tooltip_name = name;
@@ -20221,14 +20238,14 @@
             tooltip_name = name;
           }
           if (involved_text != "")
-            involved_text = `${involved_text}, <a class="involved--${involved.type}" href="${involved_link}">${name}</a>`;
+            involved_text = html2.node`${involved_text}, <a class="involved--${involved.type}" href="${involved_link}">${name}</a>`;
           else
-            involved_text = `${involved_text}<a class="involved--${involved.type}" href="${involved_link}">${name}</a>`;
+            involved_text = html2.node`${involved_text}<a class="involved--${involved.type}" href="${involved_link}">${name}</a>`;
         });
-        activity_item.innerHTML = `
+        render2(activity_item, html2`
                 <div class="type">${tl(trans.activity.listing[activity.type])}<div class="date">${moment(activity.date).fromNow(true)}</div></div>
                 <div class="name">${involved_text}</div>
-            `;
+            `);
         activity_list.appendChild(activity_item);
         if (tooltip_name)
           tippy(activity_item.querySelector(".title a"), {

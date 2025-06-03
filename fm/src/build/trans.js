@@ -1953,6 +1953,15 @@ export const trans = {
     },
     update_to_version: {
         en: 'Update to {v}'
+    },
+    all: {
+        en: 'All'
+    },
+    saved: {
+        en: 'Saved'
+    },
+    no_images_saved: {
+        en: 'No photos saved'
     }
 }
 

@@ -76,6 +76,7 @@ export function bleh() {
     let pre_observer = new MutationObserver((mutations) => {
         if (document.body)
             log(`${JSON.stringify(document.body.classList)}`, 'load');
+
         if (document.body && document.body.querySelector('.adaptive-skin-container') && document.body.querySelector('.footer')) {
             bleh_main();
             favi();

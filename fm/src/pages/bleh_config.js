@@ -519,7 +519,7 @@ export function render_setting_page(page_id) {
                 </div>
                 ${(settings.seasonal) ? html.node`
                 <div class="alert alert-info">
-                    ${tl(trans.seasonal_offset).replace('{offset}', `<strong>${stored_season.offset}</strong>`)}
+                    ${{html: tl(trans.seasonal_offset).replace('{offset}', `<strong>${stored_season.offset}</strong>`)}}
                 </div>
                 ` : ''}
                 <h4>${tl(trans.settings)}</h4>
@@ -2365,7 +2365,7 @@ function init_profile_notes() {
                     <button class="icon chibi edit" onclick=${() => edit_profile_note(user)}>
                         ${tl(trans.delete)}
                     </button>
-                    <button class="delete icon delete-user-button danger-subtle" onclick=${() => delete_profile_note(user)}>
+                    <button class="icon chibi delete danger-subtle" onclick=${() => delete_profile_note(user)}>
                         ${tl(trans.delete)}
                     </button>
                 </div>
@@ -2880,7 +2880,7 @@ function make_random_activity(preview, random_types, random_involved) {
         type: random_types[Math.floor(Math.random() * random_types.length)],
         date: new Date(),
         involved: [
-            random_involved[Math.floor(Math.random() * random_involved.length)]
+            structuredClone(random_involved)[Math.floor(Math.random() * random_involved.length)]
         ]
     });
 }
@@ -2899,21 +2899,20 @@ function activity_preview_new(parent, activity) {
             let formatted_title = name_includes(name, sister);
 
             let song_title;
-            let song_tags;
+            let song_tags = {};
             if (formatted_title) {
                 song_title = formatted_title[0];
                 song_tags = formatted_title[1];
                 sister = formatted_title[2];
             }
 
-            // parse tags into text
-            let song_tags_text = '';
-            for (let song_tag in song_tags) {
-                song_tags_text = `${song_tags_text}<div class="feat" data-bleh--tag-type="${song_tags[song_tag].type}" data-bleh--tag-group="${song_tags[song_tag].group}">${sanitise_text(song_tags[song_tag].text)}</div>`;
-            }
-
             // combine
-            name = html.node`<div class="title">${sanitise_text(song_title).trim()}</div>${song_tags_text}`;
+            name = html.node`
+                <div class="title">${sanitise_text(song_title).trim()}</div>
+                ${song_tags.map((tag) => html.node`
+                    <div class="feat" data-bleh--tag-type="${tag.type}" data-bleh--tag-group="${tag.group}">${sanitise_text(tag.text)}</div>
+                `)}
+            `;
         } else if ((involved.type == 'album' || involved.type == 'track') && settings.corrections) {
             name = html.node`${correct_item_by_artist(name, sister)}`;
             sister = correct_artist(sister);
