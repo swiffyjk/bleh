@@ -9490,6 +9490,7 @@
                 </div>
             `;
       } else if (type === "range") {
+        let option;
         let min = settings_store[id].min || 0;
         let max = settings_store[id].max || 0;
         let step = settings_store[id].step || 0;
@@ -9500,7 +9501,7 @@
         let marker;
         let working_max = settings_store[id].max - settings_store[id].min;
         return html2.node`
-                <div class="setting" data-type="range">
+                <div class="setting" data-type="range" ref=${(el) => option = el}>
                     <button class="btn reset" onclick=${() => reset(id)}>${tl(trans.reset)}</button>
                     <div class="heading">
                         <h5>${title} (v2)</h5>
@@ -9511,7 +9512,7 @@
                             <div class="fill" />
                             <div class="nub" />
                         </div>
-                        <input type="range" min=${min} max=${max} step=${step} value=${value} ref=${(el) => input = el} oninput=${() => update_range(id, track, input.value, marker)} />
+                        <input type="range" min=${min} max=${max} step=${step} value=${value} ref=${(el) => input = el} oninput=${() => update_range(id, option, track, input.value, marker)} />
                         <p class="value-marker" ref=${(el) => marker = el}>${value}</p>
                     </div>
                 </div>
@@ -9536,11 +9537,12 @@
     toggle.setAttribute("aria-checked", !value);
     save_setting(id, value);
   }
-  function update_range(id, track, value, marker) {
+  function update_range(id, option, track, value, marker) {
     let min = 0;
     let max = settings_store[id].max - settings_store[id].min;
     track.style.setProperty("--percent", `${value / max * 100}%`);
     marker.textContent = value;
+    option.setAttribute("data-modified", value != settings_store[id].default);
     save_setting(id, value);
   }
   function save_setting(id, value) {

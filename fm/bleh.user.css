@@ -15305,7 +15305,7 @@ input[type="range"]::-moz-range-progress {
         transition-duration: var(--trans) !important;
         transition-timing-function: var(--trans-function) !important;
 
-        .modified & {
+        [data-modified="true"] > & {
             opacity: 0.6;
 
             &:hover {
