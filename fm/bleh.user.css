@@ -6264,6 +6264,9 @@ p + .chartlist {
 
 /* apply some sizing adjustments to all except menu items */
 .shout-reply, .shout button:not(.dropdown-menu-clickable-item) {
+    position: relative !important;
+    inset: unset !important;
+
     --padding: 4px 9px;
     --left: 9px;
     height: 26px !important;
@@ -6540,8 +6543,8 @@ leading to a gap from their own css */
 /*     DELETED / REPORTED     */
 .shout {
     &:before {
-        --left: -46px;
-        --margin-top: -16px;
+        --left: -41px;
+        --margin-top: -17px;
     }
 }
 
@@ -6555,7 +6558,11 @@ leading to a gap from their own css */
 
     &:before {
         --show-icon: block;
-        --margin-top: -13px;
+        --margin-top: -14px;
+    }
+
+    .shout-actions {
+        top: 4px !important;
     }
 }
 
