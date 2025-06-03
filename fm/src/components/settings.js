@@ -54,7 +54,7 @@ export function setting(id) {
             let working_max = settings_store[id].max - settings_store[id].min;
 
             return html.node`
-                <div class="setting" data-type="range" ref=${el => option = el}>
+                <div class="setting" data-type="range" ref=${el => option = el} data-modified=${value != settings_store[id].default}>
                     <button class="btn reset" onclick=${() => reset(id)}>${tl(trans.reset)}</button>
                     <div class="heading">
                         <h5>${title} (v2)</h5>
@@ -84,7 +84,7 @@ export function setting(id) {
             let submit;
 
             let container = html.node`
-                <div class="setting" data-type="text" ref=${el => option = el}>
+                <div class="setting" data-type="text" ref=${el => option = el} data-modified=${value != settings_store[id].default}>
                     <button class="btn reset" ref=${el => reset_btn = el} onclick=${() => reset(id)}>${tl(trans.reset)}</button>
                     <div class="heading">
                         <h5>${title} (v2)</h5>
@@ -163,12 +163,12 @@ function update_text(id, input, submit, option, reset_btn, avatar) {
         submit.disabled = true;
     }
 
+    option.setAttribute('data-modified', value != settings_store[id].default);
+
     if (id === 'profile_shortcut') {
         save_profile_shortcut(input, submit, reset_btn, avatar);
         return;
     }
-
-    option.setAttribute('data-modified', value != settings_store[id].default);
 
     save_setting(id, value);
     notify({

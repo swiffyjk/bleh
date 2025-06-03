@@ -262,16 +262,6 @@ export function render_setting_page(page_id) {
                 ` : ''}
                 <div class="sep"></div>
                 ${setting('font')}
-                <div class="setting" data-type="text" id="container-font">
-                    <div class="heading">
-                        <h5>${tl(trans.font.name)}</h5>
-                        <p>${tl(trans.font.body)}</p>
-                    </div>
-                    <div class="input-container content-form">
-                        <input type="text" maxlength="120" id="text-font" value="${settings.font}" placeholder="${tl(trans.enter_font_names)}">
-                        <button class="bbtn chibi icon primary submit" onclick="_save_font()">${tl(trans.save)}</button>
-                    </div>
-                </div>
                 <div class="setting" data-type="slider" id="container-font_weight">
                     <button class="btn reset" onclick="_reset_item('font_weight')">${tl(trans.reset)}</button>
                     <div class="heading">
@@ -710,6 +700,7 @@ export function render_setting_page(page_id) {
                         <button class="see-more update-check sponsor-related" onclick="_sponsor_check()">${tl(trans.update_check)}</button>
                     </div>
                 </div>
+                ${setting('profile_shortcut')}
                 <div class="setting" data-type="text" id="container-profile_shortcut">
                     <div class="heading content-form">
                         <h5>${tl(trans.profile_shortcut.name)}</h5>

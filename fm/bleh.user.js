@@ -3721,6 +3721,157 @@
     };
   }
 
+  // src/components/settings.js
+  function setting(id) {
+    try {
+      let value = settings[id];
+      if (!settings_store[id])
+        return setting_fail(id, { message: "No settings store entry present" });
+      let type = settings_store[id].type || "toggle";
+      let title = settings_store[id].title || id;
+      let body = settings_store[id].body;
+      if (type === "toggle") {
+        let toggle;
+        return html2.node`
+                <div class="setting" data-type="toggle" onclick=${() => update_toggle(id, toggle)}>
+                    <div class="heading">
+                        <h5>${title} (v2)</h5>
+                        ${body ? html2.node`<p>${body}</p>` : ""}
+                    </div>
+                    <div class="toggle-wrap">
+                        <button class="toggle" ref=${(el) => toggle = el} aria-checked=${value}>
+                            <div class="dot"></div>
+                        </button>
+                    </div>
+                </div>
+            `;
+      } else if (type === "range") {
+        let option;
+        let min = settings_store[id].min || 0;
+        let max = settings_store[id].max || 0;
+        let step = settings_store[id].step || 0;
+        if (min >= max || step === 0)
+          return setting_fail(id, { message: "A range type requires a min, max, and step defined in the settings store" });
+        let track;
+        let input;
+        let marker;
+        let working_max = settings_store[id].max - settings_store[id].min;
+        return html2.node`
+                <div class="setting" data-type="range" ref=${(el) => option = el} data-modified=${value != settings_store[id].default}>
+                    <button class="btn reset" onclick=${() => reset(id)}>${tl(trans.reset)}</button>
+                    <div class="heading">
+                        <h5>${title} (v2)</h5>
+                        ${body ? html2.node`<p>${body}</p>` : ""}
+                    </div>
+                    <div class="range">
+                        <div class="track" style="--percent: ${value / working_max * 100}%" ref=${(el) => track = el}>
+                            <div class="fill" />
+                            <div class="nub" />
+                        </div>
+                        <input type="range" min=${min} max=${max} step=${step} value=${value} ref=${(el) => input = el} oninput=${() => update_range(id, option, track, input.value, marker)} />
+                        <p class="value-marker" ref=${(el) => marker = el}>${value}</p>
+                    </div>
+                </div>
+            `;
+      } else if (type === "text") {
+        let option;
+        let max = settings_store[id].max || 0;
+        if (max === 0)
+          return setting_fail(id, { message: "A text type requires a max defined in the settings store" });
+        let reset_btn;
+        let avatar3;
+        let input;
+        let submit;
+        let container = html2.node`
+                <div class="setting" data-type="text" ref=${(el) => option = el} data-modified=${value != settings_store[id].default}>
+                    <button class="btn reset" ref=${(el) => reset_btn = el} onclick=${() => reset(id)}>${tl(trans.reset)}</button>
+                    <div class="heading">
+                        <h5>${title} (v2)</h5>
+                        ${body ? html2.node`<p>${body}</p>` : ""}
+                    </div>
+                    ${settings_store[id].avatar ? html2.node`
+                    <div class="avatar-container">
+                        <div class="avatar-inner" ref=${(el) => avatar3 = el}>
+                            <img src=${localStorage.getItem(`bleh_${id}_avi`) || ""} alt=${value} />
+                        </div>
+                    </div>
+                    ` : ""}
+                    <div class="input-container content-form">
+                        <input type="text" maxlength=${max} value=${value} style="--max: ${max}px" ref=${(el) => input = el} placeholder=${settings_store[id].placeholder} />
+                        <button class="btn chibi icon primary submit" ref=${(el) => submit = el} onclick=${() => update_text(id, input, submit, option, reset_btn, avatar3)}>${tl(trans.save)}</button>
+                    </div>
+                </div>
+            `;
+        input.addEventListener("keydown", (event3) => {
+          if (event3.keyCode === 13) {
+            event3.preventDefault();
+            submit.click();
+          }
+        });
+        tippy(submit, {
+          content: tl(trans.save)
+        });
+        return container;
+      }
+    } catch (e) {
+      console.error(e);
+      return setting_fail(id, e);
+    }
+    return setting_fail(id);
+  }
+  function setting_fail(id, e = null) {
+    return html2.node`
+        <div class="alert alert-error">
+            ${tl(trans.value_failed_to_load).replace("{v}", id)}
+            ${e ? html2`<br>${e.message}` : ""}
+        </div>
+    `;
+  }
+  function update_toggle(id, toggle) {
+    let value = settings[id];
+    toggle.setAttribute("aria-checked", !value);
+    save_setting(id, value);
+  }
+  function update_range(id, option, track, value, marker) {
+    let min = 0;
+    let max = settings_store[id].max - settings_store[id].min;
+    track.style.setProperty("--percent", `${value / max * 100}%`);
+    marker.textContent = value;
+    option.setAttribute("data-modified", value != settings_store[id].default);
+    save_setting(id, value);
+  }
+  function update_text(id, input, submit, option, reset_btn, avatar3) {
+    let value = input.value;
+    if (settings_store[id].wait) {
+      reset_btn.disabled = true;
+      input.disabled = true;
+      submit.disabled = true;
+    }
+    option.setAttribute("data-modified", value != settings_store[id].default);
+    if (id === "profile_shortcut") {
+      save_profile_shortcut(input, submit, reset_btn, avatar3);
+      return;
+    }
+    save_setting(id, value);
+    notify({
+      id: "saved_setting",
+      title: "Saved setting"
+    });
+  }
+  function save_setting(id, value) {
+    settings[id] = value;
+    document.documentElement.setAttribute(`data-bleh--${id}`, value);
+    if (settings_store[id].css)
+      document.body.style.setProperty(`--${settings_store[id].css}`, `${value}${settings_store[id].suffix || ""}`);
+    localStorage.setItem("bleh", JSON.stringify(settings));
+  }
+  function reset(id) {
+    notify({
+      id: "reset_setting",
+      title: `Reset ${id} to default`
+    });
+  }
+
   // src/components/profile_shortcut.js
   unsafeWindow._open_profile_shortcut_window = function() {
     open_profile_shortcut_window();
@@ -3816,8 +3967,53 @@
     settings.profile_shortcut = page.name;
     localStorage.setItem("bleh", JSON.stringify(settings));
   }
-  function save_profile_shortcut(input, submit, avatar3) {
+  function save_profile_shortcut(input, submit, reset_btn, avatar3) {
     let value = input.value;
+    if (value == "" || value == auth.name) {
+      localStorage.removeItem("bleh_profile_shortcut_avi");
+      avatar3.querySelector("img").setAttribute("src", "");
+      avatar3.querySelector("img").setAttribute("alt", "");
+      reset_btn.disabled = false;
+      input.disabled = false;
+      submit.disabled = false;
+      save_setting("profile_shortcut", "");
+      return;
+    }
+    avatar3.classList.add("requesting");
+    fetch(`${root}user/${value}/tags`).then(function(response) {
+      console.log("returned", response, response.text);
+      return response.text();
+    }).then(function(dom) {
+      let doc = new DOMParser().parseFromString(dom, "text/html");
+      console.log("DOC", doc);
+      reset_btn.disabled = false;
+      input.disabled = false;
+      submit.disabled = false;
+      avatar3.classList.remove("requesting");
+      try {
+        let avatar_src = doc.querySelector(".header-avatar-inner-wrap img").getAttribute("src");
+        localStorage.setItem("bleh_profile_shortcut_avi", avatar_src);
+        avatar3.querySelector("img").setAttribute("src", avatar_src);
+        avatar3.querySelector("img").setAttribute("alt", value);
+        notify({
+          id: "profile_shortcut_saved",
+          title: tl(trans.profile_shortcut.name),
+          body: tl(trans.profile_shortcut.linked).replace("{u}", value),
+          icon: "icon-16-profile-shortcut"
+        });
+        save_setting("profile_shortcut", value);
+      } catch (e) {
+        notify({
+          id: "profile_shortcut_error",
+          title: tl(trans.profile_shortcut.name),
+          body: tl(trans.failed_to_find_profile),
+          type: "error"
+        });
+        localStorage.removeItem("bleh_profile_shortcut_avi");
+        avatar3.querySelector("img").setAttribute("src", "");
+        avatar3.querySelector("img").setAttribute("alt", "");
+      }
+    });
   }
   unsafeWindow._save_profile_shortcut = function() {
     let profile_name = document.getElementById("text-profile_shortcut").value;
@@ -9468,157 +9664,6 @@
     return Math.floor(Math.random() * (b - a + 1)) + a;
   }
 
-  // src/components/settings.js
-  function setting(id) {
-    try {
-      let value = settings[id];
-      if (!settings_store[id])
-        return setting_fail(id, { message: "No settings store entry present" });
-      let type = settings_store[id].type || "toggle";
-      let title = settings_store[id].title || id;
-      let body = settings_store[id].body;
-      if (type === "toggle") {
-        let toggle;
-        return html2.node`
-                <div class="setting" data-type="toggle" onclick=${() => update_toggle(id, toggle)}>
-                    <div class="heading">
-                        <h5>${title} (v2)</h5>
-                        ${body ? html2.node`<p>${body}</p>` : ""}
-                    </div>
-                    <div class="toggle-wrap">
-                        <button class="toggle" ref=${(el) => toggle = el} aria-checked=${value}>
-                            <div class="dot"></div>
-                        </button>
-                    </div>
-                </div>
-            `;
-      } else if (type === "range") {
-        let option;
-        let min = settings_store[id].min || 0;
-        let max = settings_store[id].max || 0;
-        let step = settings_store[id].step || 0;
-        if (min >= max || step === 0)
-          return setting_fail(id, { message: "A range type requires a min, max, and step defined in the settings store" });
-        let track;
-        let input;
-        let marker;
-        let working_max = settings_store[id].max - settings_store[id].min;
-        return html2.node`
-                <div class="setting" data-type="range" ref=${(el) => option = el}>
-                    <button class="btn reset" onclick=${() => reset(id)}>${tl(trans.reset)}</button>
-                    <div class="heading">
-                        <h5>${title} (v2)</h5>
-                        ${body ? html2.node`<p>${body}</p>` : ""}
-                    </div>
-                    <div class="range">
-                        <div class="track" style="--percent: ${value / working_max * 100}%" ref=${(el) => track = el}>
-                            <div class="fill" />
-                            <div class="nub" />
-                        </div>
-                        <input type="range" min=${min} max=${max} step=${step} value=${value} ref=${(el) => input = el} oninput=${() => update_range(id, option, track, input.value, marker)} />
-                        <p class="value-marker" ref=${(el) => marker = el}>${value}</p>
-                    </div>
-                </div>
-            `;
-      } else if (type === "text") {
-        let option;
-        let max = settings_store[id].max || 0;
-        if (max === 0)
-          return setting_fail(id, { message: "A text type requires a max defined in the settings store" });
-        let reset_btn;
-        let avatar3;
-        let input;
-        let submit;
-        let container = html2.node`
-                <div class="setting" data-type="text" ref=${(el) => option = el}>
-                    <button class="btn reset" ref=${(el) => reset_btn = el} onclick=${() => reset(id)}>${tl(trans.reset)}</button>
-                    <div class="heading">
-                        <h5>${title} (v2)</h5>
-                        ${body ? html2.node`<p>${body}</p>` : ""}
-                    </div>
-                    ${settings_store[id].avatar ? html2.node`
-                    <div class="avatar-container">
-                        <div class="avatar-inner" ref=${(el) => avatar3 = el}>
-                            <img src=${localStorage.getItem(`bleh_${id}_avi`) || ""} alt=${value} />
-                        </div>
-                    </div>
-                    ` : ""}
-                    <div class="input-container content-form">
-                        <input type="text" maxlength=${max} value=${value} style="--max: ${max}px" ref=${(el) => input = el} placeholder=${settings_store[id].placeholder} />
-                        <button class="btn chibi icon primary submit" ref=${(el) => submit = el} onclick=${() => update_text(id, input, submit, option, reset_btn, avatar3)}>${tl(trans.save)}</button>
-                    </div>
-                </div>
-            `;
-        input.addEventListener("keydown", (event3) => {
-          if (event3.keyCode === 13) {
-            event3.preventDefault();
-            submit.click();
-          }
-        });
-        tippy(submit, {
-          content: tl(trans.save)
-        });
-        return container;
-      }
-    } catch (e) {
-      console.error(e);
-      return setting_fail(id, e);
-    }
-    return setting_fail(id);
-  }
-  function setting_fail(id, e = null) {
-    return html2.node`
-        <div class="alert alert-error">
-            ${tl(trans.value_failed_to_load).replace("{v}", id)}
-            ${e ? html2`<br>${e.message}` : ""}
-        </div>
-    `;
-  }
-  function update_toggle(id, toggle) {
-    let value = settings[id];
-    toggle.setAttribute("aria-checked", !value);
-    save_setting(id, value);
-  }
-  function update_range(id, option, track, value, marker) {
-    let min = 0;
-    let max = settings_store[id].max - settings_store[id].min;
-    track.style.setProperty("--percent", `${value / max * 100}%`);
-    marker.textContent = value;
-    option.setAttribute("data-modified", value != settings_store[id].default);
-    save_setting(id, value);
-  }
-  function update_text(id, input, submit, option, reset_btn, avatar3) {
-    let value = input.value;
-    if (settings_store[id].wait) {
-      reset_btn.disabled = true;
-      input.disabled = true;
-      submit.disabled = true;
-    }
-    if (id === "profile_shortcut") {
-      save_profile_shortcut(input, submit, reset_btn, avatar3);
-      return;
-    }
-    option.setAttribute("data-modified", value != settings_store[id].default);
-    save_setting(id, value);
-    notify({
-      id: "saved_setting",
-      title: "Saved setting"
-    });
-  }
-  function save_setting(id, value) {
-    settings[id] = value;
-    document.documentElement.setAttribute(`data-bleh--${id}`, value);
-    if (settings_store[id].css)
-      document.body.style.setProperty(`--${settings_store[id].css}`, `${value}${settings_store[id].suffix || ""}`);
-    localStorage.setItem("bleh", JSON.stringify(settings));
-  }
-  function reset(id) {
-    notify({
-      id: "reset_setting",
-      title: `Reset ${id} to default`
-    });
-  }
-
   // src/pages/bleh_config.js
   function bleh_settings() {
     page.name = auth.name;
@@ -9841,16 +9886,6 @@
                 ` : ""}
                 <div class="sep"></div>
                 ${setting("font")}
-                <div class="setting" data-type="text" id="container-font">
-                    <div class="heading">
-                        <h5>${tl(trans.font.name)}</h5>
-                        <p>${tl(trans.font.body)}</p>
-                    </div>
-                    <div class="input-container content-form">
-                        <input type="text" maxlength="120" id="text-font" value="${settings.font}" placeholder="${tl(trans.enter_font_names)}">
-                        <button class="bbtn chibi icon primary submit" onclick="_save_font()">${tl(trans.save)}</button>
-                    </div>
-                </div>
                 <div class="setting" data-type="slider" id="container-font_weight">
                     <button class="btn reset" onclick="_reset_item('font_weight')">${tl(trans.reset)}</button>
                     <div class="heading">
@@ -10280,6 +10315,7 @@
                         <button class="see-more update-check sponsor-related" onclick="_sponsor_check()">${tl(trans.update_check)}</button>
                     </div>
                 </div>
+                ${setting("profile_shortcut")}
                 <div class="setting" data-type="text" id="container-profile_shortcut">
                     <div class="heading content-form">
                         <h5>${tl(trans.profile_shortcut.name)}</h5>
@@ -22117,6 +22153,7 @@
       type: "text",
       avatar: true,
       wait: true,
+      max: 40,
       title: tl(trans.profile_shortcut.name),
       body: tl(trans.profile_shortcut.body),
       placeholder: tl(trans.enter_username)

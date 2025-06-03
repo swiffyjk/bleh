@@ -10,6 +10,7 @@ import {auth, dialogs, page, root} from "../build/page";
 import {tl, trans} from "../build/trans";
 import {dialog, dialog_rm} from "./dialog";
 import {notify} from "./notify";
+import {save_setting} from "./settings.js";
 
 unsafeWindow._open_profile_shortcut_window = function() {
     open_profile_shortcut_window();
@@ -119,8 +120,66 @@ function confirm_set_profile_as_shortcut() {
     localStorage.setItem('bleh', JSON.stringify(settings));
 }
 
-export function save_profile_shortcut(input, submit, avatar) {
+export function save_profile_shortcut(input, submit, reset_btn, avatar) {
     let value = input.value;
+
+    if (value == '' || value == auth.name) {
+        localStorage.removeItem('bleh_profile_shortcut_avi');
+        avatar.querySelector('img').setAttribute('src', '');
+        avatar.querySelector('img').setAttribute('alt', '');
+
+        reset_btn.disabled = false;
+        input.disabled = false;
+        submit.disabled = false;
+        save_setting('profile_shortcut', '');
+        return;
+    }
+
+    avatar.classList.add('requesting');
+
+    fetch(`${root}user/${value}/tags`)
+    .then(function(response) {
+        console.log('returned', response, response.text);
+
+        return response.text();
+    })
+    .then(function(dom) {
+        let doc = new DOMParser().parseFromString(dom, 'text/html');
+        console.log('DOC', doc);
+
+        reset_btn.disabled = false;
+        input.disabled = false;
+        submit.disabled = false;
+        avatar.classList.remove('requesting');
+
+        try {
+            let avatar_src = doc.querySelector('.header-avatar-inner-wrap img').getAttribute('src');
+
+            localStorage.setItem('bleh_profile_shortcut_avi', avatar_src);
+            avatar.querySelector('img').setAttribute('src', avatar_src);
+            avatar.querySelector('img').setAttribute('alt', value);
+
+            notify({
+                id: 'profile_shortcut_saved',
+                title: tl(trans.profile_shortcut.name),
+                body: tl(trans.profile_shortcut.linked).replace('{u}', value),
+                icon: 'icon-16-profile-shortcut'
+            });
+
+            // save to settings
+            save_setting('profile_shortcut', value);
+        } catch(e) {
+            notify({
+                id: 'profile_shortcut_error',
+                title: tl(trans.profile_shortcut.name),
+                body: tl(trans.failed_to_find_profile),
+                type: 'error'
+            });
+            localStorage.removeItem('bleh_profile_shortcut_avi');
+            avatar.querySelector('img').setAttribute('src', '');
+            avatar.querySelector('img').setAttribute('alt', '');
+        }
+    });
 }
 
 unsafeWindow._save_profile_shortcut = function() {

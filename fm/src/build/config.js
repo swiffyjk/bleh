@@ -722,6 +722,7 @@ export let settings_store = {
         type: 'text',
         avatar: true,
         wait: true,
+        max: 40,
         title: tl(trans.profile_shortcut.name),
         body: tl(trans.profile_shortcut.body),
         placeholder: tl(trans.enter_username)

@@ -8785,6 +8785,7 @@ very, very, very dated - who looks up a song on ebay? */
         background-color: var(--bg-atv) !important;
     }
 
+    &[disabled],
     &::placeholder {
         color: hsl(var(--c3)) !important;
     }
@@ -15396,7 +15397,7 @@ input[type="range"]::-moz-range-progress {
         }
     }
 
-    &[data-type="toggle"], &[data-type="select"], &[data-type="text"] {
+    &[data-type="toggle"], &[data-type="select"] {
         .btn.reset {
             display: none;
         }
@@ -15506,7 +15507,7 @@ input[type="range"]::-moz-range-progress {
         margin: unset;
 
         input {
-            width: calc(var(--max) * 3.2);
+            width: calc(var(--max) * 6);
             max-width: 380px;
 
             &[type="color"] {
