@@ -1965,6 +1965,9 @@ export const trans = {
     },
     total: {
         en: 'Total'
+    },
+    value_failed_to_load: {
+        en: '{v} failed to load'
     }
 }
 

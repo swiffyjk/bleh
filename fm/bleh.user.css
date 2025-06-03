@@ -14442,7 +14442,7 @@ h2.playlisting-create-option-title {
         position: relative;
         --mask: var(--icon-16-setting-toggle);
 
-        &[data-type="slider"] {
+        &[data-type="range"] {
             --mask: var(--icon-16-setting-slider);
         }
         &[data-type="text"] {
@@ -15192,40 +15192,40 @@ input[type="range"] {
     overflow: hidden;
 }
 
-.slider {
-    &:not(:hover, :focus-within) .slider-fill {
+.range {
+    &:not(:hover, :focus-within) .fill {
         transition: width 0.3s var(--trans-function);
     }
-}
-.slider-track {
-    display: flex;
-    background: hsl(var(--b3));
-    border-radius: var(--item-big-radius);
-    width: calc(100% - (30px + var(--card-gap))); /* 30px = value width */
-    height: 8px;
-    position: absolute;
 
-    pointer-events: none;
-
-    .slider-fill {
+    .track {
         display: flex;
-        width: var(--percent);
-        background-color: hsl(var(--h3));
+        background: hsl(var(--b3));
         border-radius: var(--item-big-radius);
-    }
+        width: calc(100% - (30px + var(--card-gap))); /* 30px = value width */
+        height: 8px;
+        position: absolute;
 
-    .slider-nub {
-        display: flex;
-        width: 12px;
-        background-color: hsl(var(--h3));
-        border: 2px solid hsl(var(--b5));
-        border-radius: var(--item-big-radius);
-        margin: -5px -5px;
-    }
+        pointer-events: none;
 
-    #container-hue & {
-        box-shadow: unset;
-        background: linear-gradient(to right,
+        .fill {
+            display: flex;
+            width: var(--percent);
+            background-color: hsl(var(--h3));
+            border-radius: var(--item-big-radius);
+        }
+
+        .nub {
+            display: flex;
+            width: 12px;
+            background-color: hsl(var(--h3));
+            border: 2px solid hsl(var(--b5));
+            border-radius: var(--item-big-radius);
+            margin: -5px -5px;
+        }
+
+        &[data-id="hue"] {
+            box-shadow: unset;
+            background: linear-gradient(to right,
             hsl(0, var(--h3-sat), var(--h3-lit)) 0%,
             hsl(60, var(--h3-sat), var(--h3-lit)) 16.67%,
             hsl(120, var(--h3-sat), var(--h3-lit)) 33.33%,
@@ -15233,10 +15233,11 @@ input[type="range"] {
             hsl(240, var(--h3-sat), var(--h3-lit)) 66.67%,
             hsl(300, var(--h3-sat), var(--h3-lit)) 83.33%,
             hsl(360, var(--h3-sat), var(--h3-lit)) 100%
-        );
+            );
 
-        .slider-fill {
-            opacity: 0;
+            .fill {
+                opacity: 0;
+            }
         }
     }
 }
@@ -15409,7 +15410,7 @@ input[type="range"]::-moz-range-progress {
         --show-icon: none;
     }
 
-    .slider {
+    .range {
         display: flex;
         align-items: center;
         gap: var(--card-gap);

@@ -1,3 +1,5 @@
+import {tl, trans} from "./trans.js";
+
 export let settings = {};
 export let settings_template = {
     theme: 'dark',
@@ -591,8 +593,14 @@ export let settings_store = {
         type: 'range'
     },
     sat_bg: {
+        css: 'sat-bg',
         default: 1,
-        type: 'range'
+        type: 'range',
+        min: 0,
+        max: 1.5,
+        step: 0.1,
+        title: tl(trans.card_background_saturation.name),
+        body: tl(trans.card_background_saturation.body)
     },
     lit: {
         default: 1,
@@ -610,7 +618,7 @@ export let settings_store = {
     },
     api_key: {
         default: '',
-        type: 'string'
+        type: 'text'
     },
     profile_header_expand: {
         default: true
@@ -643,7 +651,9 @@ export let settings_store = {
         default: true
     },
     colourful_tracks: {
-        default: true
+        default: true,
+        title: tl(trans.colourful_tracks.name),
+        body: tl(trans.colourful_tracks.body)
     },
     feature_flags: {
         default: {},
@@ -678,7 +688,9 @@ export let settings_store = {
         default: true
     },
     hue_from_album: {
-        default: true
+        default: true,
+        title: tl(trans.hue_from_album.name),
+        body: tl(trans.hue_from_album.body)
     },
     seasonal: {
         default: true
@@ -701,12 +713,12 @@ export let settings_store = {
     },
     profile_shortcut: {
         default: '',
-        type: 'string'
+        type: 'text'
     },
     font: {
         css: 'custom_font',
         default: '',
-        type: 'string'
+        type: 'text'
     },
     font_weight: {
         css: 'custom_font_weight',
